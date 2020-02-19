@@ -39,7 +39,7 @@ Other things to include:
 
 **Screenshot**: If the software has visual components, place a screenshot after the description; e.g.,
 
-![](https://raw.githubusercontent.com/ZacharyWills/owp-open-source-project-template/master/doc/Screenshot.png)
+![](https://raw.githubusercontent.com/NOAA-OWP/owp-open-source-project-template/master/doc/images/Screenshot.png)
 
 
 ## Dependencies
