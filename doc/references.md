@@ -11,15 +11,15 @@ The Basic Model Interface (BMI) is a library specification created by the Commun
 ## Formulations
 # HYMOD
 
-![](https://raw.githubusercontent.com/NOAA-OWP/owp-open-source-project-template/master/doc/images/hymod.png)
+<img src="https://raw.githubusercontent.com/NOAA-OWP/ngen/master/doc/images/hymod.png" width=50%>
 
 # T-shirt
 
-![](https://raw.githubusercontent.com/NOAA-OWP/owp-open-source-project-template/master/doc/images/t-shirt.png)
+<img src="https://raw.githubusercontent.com/NOAA-OWP/ngen/master/doc/images/t-shirt.png" width=80%>
 
 # GIUH
 
-![](https://raw.githubusercontent.com/NOAA-OWP/owp-open-source-project-template/master/doc/watershed_schematic.jpg)
+![](https://raw.githubusercontent.com/NOAA-OWP/ngen/master/doc/images/watershed_schematic.jpg)
 
 ## Modeling References
 
