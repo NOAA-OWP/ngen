@@ -50,7 +50,11 @@ Use appropriate formatting when showing code snippets.
 
 ## How to test the software
 
-If the software includes automated tests, detail how to run those tests.
+The project uses the **Google Test** framework for creating automated tests.
+
+To execute the main automated test suite, run the `tests_run` target in **CMake**.
+
+Complete documentation on testing can be found [here](test/README.md).
 
 ## Known issues
 
