@@ -75,3 +75,9 @@ bower_components/
 .grunt/
 src/vendor/
 dist/
+
+# Certain IDE project files
+/.idea/
+
+# CMake artifact generation directory
+/cmake-build-*/
