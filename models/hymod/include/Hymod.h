@@ -1,6 +1,8 @@
 #ifndef HYMOD_H
 #define HYMOD_H
 
+#include <cmath>
+#include <vector>
 #include "LinearReservoir.h"
 
 //! Hymod paramaters struct
@@ -106,7 +108,7 @@ class hymod_kernel
         state.storage += input_flux;
 
         // calculate fs, runoff and slow
-        double fs = (1.0 - std::pow((1.0 - state.storage/params.max_storage),params.b) );
+        double fs = (1.0 - pow((1.0 - state.storage/params.max_storage),params.b) );
         double runoff = fs * params.a;
         double slow = fs * (1.0 - params.a );
         double soil_m = state.storage - fs;
