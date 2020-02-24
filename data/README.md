@@ -8,6 +8,8 @@ The `hy_geom.R` script in this directory creates a number of sample outputs for 
 
 ## Hydrologic and Hydrodynamic Graphs:
 
+![Example Image](https://github.com/NOAA-OWP/ngen/blob/master/data/demo.png)
+
 **Narrative**  
 At the top level we have a hydrologic graph of catchments and nexuses and a hydrodynamic graph of waterbodies that “pins” to the catchment graph at nexuses. 
 
