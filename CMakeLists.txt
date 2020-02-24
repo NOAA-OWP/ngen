@@ -22,6 +22,9 @@ target_include_directories(ngen PUBLIC
         "${HYMOD_INCLUDE_DIR}"
         )
 
+# For automated testing with Google Test
+add_subdirectory(test)
+
 #add_library(Hymod ${HYMOD_INCLUDE_DIR}/Hymod.h)
 #set_target_properties(Hymod PROPERTIES LINKER_LANGUAGE CXX)
 
