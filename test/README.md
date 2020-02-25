@@ -22,10 +22,18 @@ The submodule is checked out to a particular tagged commit of **Google Test**. O
 
 # Executing Automated Tests
 
-To execute the main automated test suite, run the `tests_run` target in **CMake**.
+There are several CMake testing executables/targets configured in the build for testing purpose.  They are discussed a bit [here](#adding-tests-to-cmake-builds). These targets each build a test executable file, which can then be executed to actually perform tests.
 
-(TODO: more detail on this, once it actually works)
+In particular the `test_unit`, `test_integration`, and `test_all` executables will build large collections of tests, but others applicable to the situation may also be available (see [test/CMakeLists.txt](./CMakeLists.txt)).
 
+## Testing From the Command Line
+
+Here is an example for (cleanly) building, then running, all unit tests.  It assumes executing the commands from the project root directory, and a build directory of `./cmake-build-dir`.
+
+    cmake --build cmake-build-dir --target clean -- -j 4    
+    cmake --build cmake-build-dir --target test_unit -- -j 4
+    ./cmake-build-dir/test/test_unit
+    
 # Creating New Automated Tests
 
 Automated testing design and infrastructure for this project are somewhat fluid while this project is in its early stages.  The only strict rules are (as of  `0.1.0`):
