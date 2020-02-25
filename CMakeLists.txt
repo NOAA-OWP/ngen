@@ -30,29 +30,6 @@ add_subdirectory(test)
 
 #target_compile_features(Hymod PUBLIC cxx_std_14)
 
-#add_executable(ngen
-#        include/GM_Object.h
-#        include/GridPolygon.h
-#        include/HY_CartographicRealization.h
-#        include/HY_CatchementDivide.h
-#        include/HY_Catchment.h
-#        include/HY_CatchmentAggregate.h
-#        include/HY_CatchmentArea.h
-#        include/HY_CatchmentDivide.h
-#        include/HY_CatchmentRealization.h
-#        include/HY_DendriticCatchment.h
-#        include/HY_DistanceDiscription.h
-#        include/HY_FlowPath.h
-#        include/HY_HydroFeature.h
-#        include/HY_HydroLocationType.h
-#        include/HY_HydroNetwork.h
-#        include/HY_HydroNexus.h
-#        include/HY_InteriorCatchment.h
-#        include/HY_PointHydroNexus.h
-#        include/LinearReservoir.h
-#        include/Simple_Lumped_Model_Realization.h
-#        models/hymod/include/Hymod.h)
-#
 #set_target_properties(ngen PROPERTIES LINKER_LANGUAGE CXX)
 #
 #target_compile_options(ngen PUBLIC -std=c++14 -Wall)
