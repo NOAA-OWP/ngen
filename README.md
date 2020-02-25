@@ -9,17 +9,19 @@ This framework includes an encapsulation strategy which focuses on the hydrologi
   - **Technology stack**: Core Framework using C++ (minimum standard c++14) to provide polymorphic interfaces with reasonable systems integration.
   - **Status**:  Version 0.1.0 in initial development including interfaces, logical data model, and framework structure.  See  [CHANGELOG](CHANGELOG.md) for revision details.
 
-**Structural Diagrams**:
-![](https://raw.githubusercontent.com/NOAA-OWP/ngen/master/doc/images/hy_features_catchment_diagram.png)
-Catchments represent arbitrary  spatial areas. They are the abstraction used to encapsulate a model. The three marked catchments could use three different models, 3 copies of the same model, or some combination of the previous options
+## Structural Diagrams
 
-**Realizations**
-![](https://raw.githubusercontent.com/NOAA-OWP/ngen/master/doc/images/realization_relations.png)
-Different kinds of catchment realizations can be used to encapsulate different types of models. These models will have different types of relations with neighbors. When a relation exists between two adjacent catchments synchronization is necessary.
+![Catchments](https://raw.githubusercontent.com/NOAA-OWP/ngen/master/doc/images/hy_features_catchment_diagram.png)
 
-**Complex Realizations**
-![](https://raw.githubusercontent.com/NOAA-OWP/ngen/master/doc/images/complex_realizations.png)
-An important type of catchment realization is the complex catchment realization. This allows a single catchment to be represented by a network of higher detail catchment realizations and their relationships. This allows the modeled area to be represented at multiple levels of detail and supports dynamic high resolution nesting.
+**Catchments**: Catchments represent arbitrary spatial areas. They are the abstraction used to encapsulate a model. The three marked catchments could use three different models, 3 copies of the same model, or some combination of the previous options 
+
+![Realizations](https://raw.githubusercontent.com/NOAA-OWP/ngen/master/doc/images/realization_relations.png)
+
+**Realizations**: Different kinds of catchment realizations can be used to encapsulate different types of models. These models will have different types of relations with neighbors. When a relation exists between two adjacent catchments synchronization is necessary.
+
+![Complex Realizations](https://raw.githubusercontent.com/NOAA-OWP/ngen/master/doc/images/complex_realizations.png)
+
+**Complex Realizations**: An important type of catchment realization is the complex catchment realization. This allows a single catchment to be represented by a network of higher detail catchment realizations and their relationships. This allows the modeled area to be represented at multiple levels of detail and supports dynamic high resolution nesting.
 
 ## Dependencies
 [gcc](https://gcc.gnu.org/)
