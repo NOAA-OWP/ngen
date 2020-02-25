@@ -52,11 +52,11 @@ Use appropriate formatting when showing code snippets.
 
 ## How to test the software
 
-The project uses the **Google Test** framework for creating automated tests.
+The project uses the **Google Test** framework for creating automated tests for C++ code.
 
-To execute the main automated test suite, run the `tests_run` target in **CMake**.
+To execute the main automated C++ test suite, run the `test_all` target in **CMake**, then execute the generated executable.  Keep in mind this will be everything, so is probably more than you need.
 
-Complete documentation on testing can be found [here](test/README.md).
+For more of an explanation on how to run the specific tests you want, along with other documentation on testing, see the [Testing ReadMe](test/README.md) file.
 
 ## Known issues
 
