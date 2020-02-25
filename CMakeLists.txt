@@ -3,6 +3,12 @@ cmake_minimum_required(VERSION 3.10)
 project(ngen VERSION 0.1.0)
 configure_file(include/NGenConfig.h.in include/NGenConfig.h)
 
+if("${PROJECT_NAME}" STREQUAL "${CMAKE_PROJECT_NAME}")
+    option(PACKAGE_TESTS "Build automated tests" ON)
+else()
+    option(PACKAGE_TESTS "Build automated tests")
+endif()
+
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
@@ -23,7 +29,11 @@ target_include_directories(ngen PUBLIC
         )
 
 # For automated testing with Google Test
-add_subdirectory(test)
+if(PACKAGE_TESTS)
+    enable_testing()
+    include(GoogleTest)
+    add_subdirectory(test)
+endif()
 
 #add_library(Hymod ${HYMOD_INCLUDE_DIR}/Hymod.h)
 #set_target_properties(Hymod PROPERTIES LINKER_LANGUAGE CXX)
