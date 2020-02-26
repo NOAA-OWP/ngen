@@ -54,9 +54,14 @@ Use appropriate formatting when showing code snippets.
 
 The project uses the **Google Test** framework for creating automated tests for C++ code.
 
-To execute the main automated C++ test suite, run the `test_all` target in **CMake**, then execute the generated executable.  Keep in mind this will be everything, so is probably more than you need.
+To execute the full collection of automated C++ tests, run the `test_all` target in **CMake**, then execute the generated executable (substituting `cmake-build-dir` with appropriate directory name as needed):  
 
-For more of an explanation on how to run the specific tests you want, along with other documentation on testing, see the [Testing ReadMe](test/README.md) file.
+    cmake --build cmake-build-dir --target test_all -- -j 4
+    ./cmake-build-dir/test/test_all
+
+Replace `test_all` with `test_unit` or `test_integration` to run only those tests.
+
+See the [Testing ReadMe](test/README.md) file for a more thorough overview of testing infrastructure.
 
 ## Known issues
 
