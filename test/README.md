@@ -12,23 +12,25 @@ Note: At present (`0.1.0`), there are no testing frameworks incorporated for aut
 
 ## **Google Test** 
 
-The project uses the **Google Test** framework for automated C++ tests.  Its source code and documentation can be found [here](https://github.com/google/googletest).  As discussed below, it's included as a submodule, so there are a few extra steps needed to get set up locally to use it.
+The project uses the **Google Test** framework for automated C++ tests.  Its source code and documentation can be found [here](https://github.com/google/googletest).  It is included as a [Git Submodule](https://git-scm.com/book/en/v2/Git-Tools-Submodules), so the submodule must be initialized locally, a step not automatically performed by default when cloning the repo.  
 
-### Initialization
+Initializing can be done by running the following command from the project root:
 
-In order to be able to run the **Google Test** tests, the submodule must be initialized locally, which can be done with the following command:
+    git submodule update --init --recursive -- test/googletest
+    
+Additionally, this command can be re-run to sync the local submodule working tree with the state expected upstream.  I.e., if this project gets updated to utilize a new version of **Google Test**, the command above can be run again locally to make sure the local copy also gets moved to that version.
 
-    git submodule update --init --recursive
+See the `git help submodule` command for more information.
 
-### Sync
+### (Re)generating CMake Project Buildsystem
 
-Additionally, this command can be re-run to sync the local submodule working tree with the state expected upstream.  I.e., if this project gets updated to utilize a new version of **Google Test**, this command can be run again locally to make sure the local copy also gets moved to that version.
+The CMake buildsystem will need to either be generated or regenerated after the submodule is initialized.  
 
-### Caveat: Other Submodules
+Regenerating just requires an initial step of removing the/an existing CMake build directory (frequently something like `cmake-build-debug/` in the project root). 
+ 
+If/once the desired build directory does not exist, use an appropriate CMake command to generate the buildsystem.  E.g.:
 
-Note that, as is, the example command above will operate on any and all project submodules that are configured, if any are added in the future.  
-
-See the [Git Submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules) documentation or the `git help submodule` command for more information.
+    cmake -DCMAKE_BUILD_TYPE=Debug -B cmake-build-debug -S .
 
 # Executing Automated Tests
 
@@ -50,13 +52,13 @@ There are several CMake testing executables/targets configured in [/test/CMakeLi
 * `test_integration` for all integration tests
 * `test_all` for all unit and integration tests
 
-When run with CMake, these and other like targets each build a target-specific test executable file.  E.g.:
+_Note_: make sure the CMake build system is [(re)generated](#regenerating-cmake-project-buildsystem) before trying to build the targets below.
+
+When built with CMake, these and other similar targets each produce a target-specific test executable file.  E.g.:
 
     cmake --build cmake-build-dir --target test_unit -- -j 4
     
-This produces an executable file with the same name in the analogous `test/` subdirectory of the build directory; e.g., `cmake-build-dir/test/test_unit`.
-
-This test file can then be run to actually perform a particular collection of tests:
+This produces an executable test file `cmake-build-dir/test/test_unit`, which can then be used to run the configured collection of tests:
 
     ./cmake-build-dir/test/test_unit
     
@@ -67,7 +69,7 @@ It is also possible to add the `--gtest_filter=` flag followed by a colon-delimi
 For example:
 
     ./cmake-build-dir/test/test_unit --gtest_filter=HymodKernelTest.TestCalcET0:HymodKernelTest.TestRun0
-        
+            
 # Creating New Automated Tests
 
 Automated testing design and infrastructure for this project are somewhat fluid while this project is in its early stages.  The only strict rules are (as of  `0.1.0`):
@@ -94,10 +96,17 @@ Existing target configurations must be updated with the test file for any newly 
 
 There are few additional rules of thumb to keep in mind when creating new tests.  These are not set in stone yet; rather, they seem like good practices, but feedback is still needed on how useful they are and if there are any situations where they are lacking.
 
+* [Test work before push or PR](#test-work-before-push-or-pr)
 * [Separate test types in separate files](#separate-test-types-in-separate-files)
 * [Use analogous names](#use-analogous-names)
 * [Use analogous paths](#use-analogous-paths)
 * [Keep unit test assertions to a minimum](#keep-unit-test-assertions-to-a-minimum)
+
+#### Test Work Before Push or PR
+
+Make sure existing tests related to a change are still applicable and still pass before distributing the change (i.e., pushing, making a pull request, etc.).  Add new tests as needed for changes not covered by existing tests.
+
+If new tests are needed, but creating them is not immediately feasible, create one or more tickets/issues for adding such tests in the future. 
 
 #### Separate Test Types in Separate Files
 
