@@ -16,6 +16,11 @@ void helloThere() {
 
 int _test_main(int argc, const char** argv)
 {
+    if (argc > 1 && strcmp(argv[1], "--hello") == 0) {
+        helloThere();
+        return 0;
+    }
+
     HY_Catchment catchment;
     HY_CatchmentRealization catchment_realization;
     HY_FlowPath flowpath;
