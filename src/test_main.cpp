@@ -6,6 +6,14 @@
 
 #include "GridPolygon.hpp"
 
+#include "NGenConfig.h"
+
+void helloThere() {
+    std::cout << "Hello there " << ngen_VERSION_MAJOR << "."
+              << ngen_VERSION_MINOR << "."
+              << ngen_VERSION_PATCH << std::endl;
+}
+
 int _test_main(int argc, const char** argv)
 {
     HY_Catchment catchment;
