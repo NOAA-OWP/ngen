@@ -21,7 +21,23 @@ set(HYMOD_INCLUDE_DIR ${HYMOD_DIR}/include)
 include_directories(${APP_INCLUDE_DIR})
 include_directories(${HYMOD_INCLUDE_DIR})
 
-add_executable(ngen src/core/NGen.cpp)
+add_executable(ngen
+        src/core/NGen.cpp
+        src/core/GM_Object.cpp
+        src/core/HY_HydroFeature.cpp
+        src/core/catchment/HY_CartographicRealization.cpp
+        src/core/catchment/HY_Catchment.cpp
+        src/core/catchment/HY_CatchmentAggregate.cpp
+        src/core/catchment/HY_CatchmentArea.cpp
+        src/core/catchment/HY_CatchmentDivide.cpp
+        src/core/catchment/HY_CatchmentRealization.cpp
+        src/core/catchment/HY_DendriticCatchment.cpp
+        src/core/catchment/HY_FlowPath.cpp
+        src/core/catchment/HY_HydroNetwork.cpp
+        src/core/catchment/HY_InteriorCatchment.cpp
+        src/core/nexus/HY_HydroNexus.cpp
+        src/core/nexus/HY_PointHydroNexus.cpp
+        src/realizations/catchment/Simple_Lumped_Model_Realization.cpp)
 
 # Adding to make sure location of generated config header file in binary tree is in include path
 target_include_directories(ngen PUBLIC
