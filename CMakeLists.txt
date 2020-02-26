@@ -23,9 +23,9 @@ include_directories(${HYMOD_INCLUDE_DIR})
 
 add_executable(ngen src/core/NGen.cpp)
 
+# Adding to make sure location of generated config header file in binary tree is in include path
 target_include_directories(ngen PUBLIC
-        "${PROJECT_BINARY_DIR}"
-        "${HYMOD_INCLUDE_DIR}"
+        "${PROJECT_BINARY_DIR}/include"
         )
 
 # For automated testing with Google Test
