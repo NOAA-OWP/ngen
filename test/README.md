@@ -120,7 +120,7 @@ To help give clarity to what relates to what, use analogous names for associated
     - prefix: `Test`
     - suffix: optional(\*\*) alphanumeric identifier (e.g., `1`, `1a`, `1b`)
 
-\* Underscores are not allowed in **test fixtures** by **Google Test**, thus the bases for these are belong to camel case.
+\* Underscores are not allowed in identifiers that become part of a test's **full name** by **Google Test**, which will be based on the **test fixture** name (when one is used) and the test's name; thus, for fixture classes and test functions, the applicable bases should be converted.
 
 \*\* The intent of an additional suffix on test name would be to differentiate a case such as two very similar tests, like two that have exactly the same logic but operate on two different example input cases.
 
