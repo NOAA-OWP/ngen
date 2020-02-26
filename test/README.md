@@ -6,34 +6,68 @@
 
 # Testing Frameworks
 
-The project uses the **Google Test** framework for automated C++ tests.  As discussed below, it's included as a submodule, so there are a few extra steps needed to get set up locally to use it.
+- [Google Test](#google-test)
 
-At present (`0.1.0`), there are no testing frameworks incorporated for automatically testing non-C++ code.  These may be added in the future.
+Note: At present (`0.1.0`), there are no testing frameworks incorporated for automatically testing non-C++ code.  These may be added in the future.
 
-## **Google Test** Initialization
+## **Google Test** 
 
-In order to be able to run the **Google Test** tests, the submodule must be initialized, which can be done with the following command:
+The project uses the **Google Test** framework for automated C++ tests.  Its source code and documentation can be found [here](https://github.com/google/googletest).  As discussed below, it's included as a submodule, so there are a few extra steps needed to get set up locally to use it.
+
+### Initialization
+
+In order to be able to run the **Google Test** tests, the submodule must be initialized locally, which can be done with the following command:
 
     git submodule update --init --recursive
 
-### Pulling Future Updates
+### Sync
 
-The submodule is checked out to a particular tagged commit of **Google Test**. Over time, as new releases for **Google Test** are available, the tagged version used by this project may change.  Clones of this repo can stay in sync with any such submodule changes by re-running the `git submodule update --init --recursive` command.
+Additionally, this command can be re-run to sync the local submodule working tree with the state expected upstream.  I.e., if this project gets updated to utilize a new version of **Google Test**, this command can be run again locally to make sure the local copy also gets moved to that version.
+
+### Caveat: Other Submodules
+
+Note that, as is, the example command above will operate on any and all project submodules that are configured, if any are added in the future.  
+
+See the [Git Submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules) documentation or the `git help submodule` command for more information.
 
 # Executing Automated Tests
 
-There are several CMake testing executables/targets configured in the build for testing purpose.  They are discussed a bit [here](#adding-tests-to-cmake-builds). These targets each build a test executable file, which can then be executed to actually perform tests.
+- [C++ Tests](#c-tests)
 
-In particular the `test_unit`, `test_integration`, and `test_all` executables will build large collections of tests, but others applicable to the situation may also be available (see [test/CMakeLists.txt](./CMakeLists.txt)).
+## C++ Tests
 
-## Testing From the Command Line
+The basic process for executing a group of C++ tests is:
 
-Here is an example for (cleanly) building, then running, all unit tests.  It assumes executing the commands from the project root directory, and a build directory of `./cmake-build-dir`.
+- execute an appropriate CMake test target 
+    - this generates an executable tests file
+- execute the generated tests file
 
-    cmake --build cmake-build-dir --target clean -- -j 4    
+### Test Targets and Executables
+
+There are several CMake testing executables/targets configured in [/test/CMakeLists.txt](./CMakeLists.txt), discussed in the section on [adding tests to CMake builds](#adding-tests-to-cmake-builds).  The primary ones, corresponding to important collections of tests, are:
+
+* `test_unit` for all unit tests
+* `test_integration` for all integration tests
+* `test_all` for all unit and integration tests
+
+When run with CMake, these and other like targets each build a target-specific test executable file.  E.g.:
+
     cmake --build cmake-build-dir --target test_unit -- -j 4
+    
+This produces an executable file with the same name in the analogous `test/` subdirectory of the build directory; e.g., `cmake-build-dir/test/test_unit`.
+
+This test file can then be run to actually perform a particular collection of tests:
+
     ./cmake-build-dir/test/test_unit
     
+It is also possible to add the `--gtest_filter=` flag followed by a colon-delimited series of tests' *full names*.  **Google Test** defines the *full name* of a test as:
+
+    test_suite_name.test_name
+    
+For example:
+
+    ./cmake-build-dir/test/test_unit --gtest_filter=HymodKernelTest.TestCalcET0:HymodKernelTest.TestRun0
+        
 # Creating New Automated Tests
 
 Automated testing design and infrastructure for this project are somewhat fluid while this project is in its early stages.  The only strict rules are (as of  `0.1.0`):
@@ -42,14 +76,28 @@ Automated testing design and infrastructure for this project are somewhat fluid 
 - C++ tests should be added to the CMake build via [/test/CMakeLists.txt](./CMakeLists.txt), as described [here](#adding-tests-to-cmake-builds)
 - test code should be placed under the [/test/](../test) directory
 
-However, there are few additional rules of thumb to keep in mind.  These are good to follow, but not set in stone yet, and (importantly) need feedback on how useful they are and if there are any situations where they are lacking.
+However, there are a few [rules of thumb](#test-creation-rules-of-thumb) discussed below to consider as the process matures in its early stages.
+
+## Adding Tests to CMake Builds
+
+Tests should be added to the CMake build using [/test/CMakeLists.txt](./CMakeLists.txt).  Within that file, there are several test targets that are already defined, using either the `add_automated_test()` or `add_automated_test_w_mock()` macro.  In particular:
+
+* `test_unit` for all unit tests
+* `test_integration` for all integration tests
+* `test_all` for all unit and integration tests
+
+These and other similar targets are configured (using either the `add_automated_test()` or `add_automated_test_w_mock()` macro) with the applicable `*.cpp` files that have the code for tests that should be included in the particular target.  
+
+Existing target configurations must be updated with the test file for any newly added tests, assuming the file is not already configured.  
+
+## Test Creation Rules of Thumb
+
+There are few additional rules of thumb to keep in mind when creating new tests.  These are not set in stone yet; rather, they seem like good practices, but feedback is still needed on how useful they are and if there are any situations where they are lacking.
 
 * [Separate test types in separate files](#separate-test-types-in-separate-files)
 * [Use analogous names](#use-analogous-names)
 * [Use analogous paths](#use-analogous-paths)
 * [Keep unit test assertions to a minimum](#keep-unit-test-assertions-to-a-minimum)
-
-### Test Creation Rules of Thumb
 
 #### Separate Test Types in Separate Files
 
@@ -83,11 +131,3 @@ To help with finding associated test code files, mirror the directory structure 
 #### Keep Unit Test Assertions to a Minimum
 
 For unit tests, try to keep the number of assertions (and perhaps comparisons in general) to a minimum, to help isolate individual aspect of behavior being tested. 
-
-## Adding Tests to CMake Builds
-
-Tests should be added to the CMake build using [/test/CMakeLists.txt](./CMakeLists.txt).  To do this, ensure the test file is added to the appropriate calls of the `add_automated_test()` or `add_automated_test_w_mock` macro.  
-
-In particular, the macro invocation creating either the `test_unit` or the `test_integration` executable should be updated to also have this file, depending on whether it is a unit or integration test.  Additionally, the line creating the `test_all` executable should have it added.
-  
-Optionally, a individual test executable can also be added for the test/test file.
