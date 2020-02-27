@@ -39,6 +39,26 @@ add_executable(ngen
         src/core/nexus/HY_PointHydroNexus.cpp
         src/realizations/catchment/Simple_Lumped_Model_Realization.cpp)
 
+# Find the Boost library and configure usage
+set(Boost_USE_STATIC_LIBS OFF)
+set(Boost_USE_MULTITHREADED ON)
+set(Boost_USE_STATIC_RUNTIME OFF)
+
+# TODO: add to documentation that a developer must have Boost locally and set the BOOST_ROOT environment var
+if(DEFINED ENV{BOOST_ROOT})
+    set(Boost_INCLUDE_DIR $ENV{BOOST_ROOT})
+else()
+    message(STATUS "No Boost root: $ENV{BOOST_ROOT}")
+endif()
+
+# TODO: consider setting a minimum or required version
+find_package(Boost)
+
+# Link appropriate libraries to main ngen executable target
+target_link_libraries(ngen PUBLIC
+        Boost::boost                # Headers-only Boost
+        )
+
 # Adding to make sure location of generated config header file in binary tree is in include path
 target_include_directories(ngen PUBLIC
         "${PROJECT_BINARY_DIR}/include"
