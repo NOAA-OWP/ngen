@@ -18,8 +18,15 @@ set(APP_MODELS_DIR ./models)
 set(HYMOD_DIR ${APP_MODELS_DIR}/hymod)
 set(HYMOD_INCLUDE_DIR ${HYMOD_DIR}/include)
 
-include_directories(${APP_INCLUDE_DIR})
-include_directories(${HYMOD_INCLUDE_DIR})
+include_directories(${APP_INCLUDE_DIR}/core
+        ${APP_INCLUDE_DIR}/core/catchment
+        ${APP_INCLUDE_DIR}/core/nexus
+        ${APP_INCLUDE_DIR}/core/utility
+        ${APP_INCLUDE_DIR}/realizations/catchment
+        ${APP_MODELS_DIR}
+        ${APP_MODELS_DIR}/kernels
+        #${HYMOD_INCLUDE_DIR}
+        )
 
 add_executable(ngen
         src/core/NGen.cpp
