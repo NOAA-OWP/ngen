@@ -1,6 +1,6 @@
 #include <vector>
 #include "gtest/gtest.h"
-#include "Hymod.h"
+#include "hymod/include/Hymod.h"
 
 class HymodKernelTest : public ::testing::Test {
 
