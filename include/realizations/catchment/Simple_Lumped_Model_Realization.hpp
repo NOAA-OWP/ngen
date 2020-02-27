@@ -3,7 +3,7 @@
 
 #include <HY_CatchmentArea.hpp>
 #include "LinearReservoir.hpp"
-#include "models/hymod/include/Hymod.h"
+#include "hymod/include/Hymod.h"
 
 #include <unordered_map>
 
