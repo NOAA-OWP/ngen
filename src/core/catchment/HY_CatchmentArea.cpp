@@ -1,4 +1,4 @@
-#include "HY_CatchmentArea.h"
+#include "HY_CatchmentArea.hpp"
 
 HY_CatchmentArea::HY_CatchmentArea()
 {

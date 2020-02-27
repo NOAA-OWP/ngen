@@ -1,4 +1,4 @@
-#include "GM_Object.h"
+#include "GM_Object.hpp"
 
 GM_Object::GM_Object()
 {

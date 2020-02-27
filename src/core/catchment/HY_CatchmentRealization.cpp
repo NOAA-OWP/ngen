@@ -1,4 +1,4 @@
-#include "HY_CatchmentRealization.h"
+#include "HY_CatchmentRealization.hpp"
 
 HY_CatchmentRealization::HY_CatchmentRealization()
 {

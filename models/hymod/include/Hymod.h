@@ -3,7 +3,7 @@
 
 #include <cmath>
 #include <vector>
-#include "LinearReservoir.h"
+#include "LinearReservoir.hpp"
 
 //! Hymod paramaters struct
 /*!

@@ -1,4 +1,4 @@
-#include "HY_HydroNetwork.h"
+#include "HY_HydroNetwork.hpp"
 
 HY_HydroNetwork::HY_HydroNetwork()
 {

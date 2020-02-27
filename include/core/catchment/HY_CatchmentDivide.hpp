@@ -1,8 +1,8 @@
 #ifndef HY_CATCHMENTDIVIDE_H
 #define HY_CATCHMENTDIVIDE_H
 
-#include "HY_CatchmentRealization.h"
-#include "GM_Object.h"
+#include "HY_CatchmentRealization.hpp"
+#include "GM_Object.hpp"
 
 #include <memory>
 #include <string>
@@ -12,15 +12,15 @@
 
 namespace bg = boost::geometry;
 
-class HY_CatchementDivide : public HY_CatchmentRealization, public GM_Object
+class HY_CatchmentDivide : public HY_CatchmentRealization, public GM_Object
 {
     public:
 
     typedef bg::model::point<double, 2, bg::cs::cartesian> point_t;
     typedef bg::model::linestring<point_t> linestring_t;
 
-    HY_CatchementDivide();
-    virtual ~HY_CatchementDivide();
+    HY_CatchmentDivide();
+    virtual ~HY_CatchmentDivide();
 
     protected:
 

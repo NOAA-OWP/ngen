@@ -1,4 +1,4 @@
-#include "Simple_Lumped_Model_Realization.h"
+#include "Simple_Lumped_Model_Realization.hpp"
 
 #include <cmath>
 
