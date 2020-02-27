@@ -1,9 +1,9 @@
 #ifndef HY_CATCHMENTAREA_H
 #define HY_CATCHMENTAREA_H
 
-#include "HY_CatchmentRealization.h"
+#include "HY_CatchmentRealization.hpp"
 
-#include "GM_Object.h"
+#include "GM_Object.hpp"
 
 #include <boost/geometry.hpp>
 #include <boost/geometry/geometries/geometries.hpp>

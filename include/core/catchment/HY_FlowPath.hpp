@@ -2,9 +2,9 @@
 #define HY_FLOWPATH_H
 
 
-#include "HY_CatchmentRealization.h"
+#include "HY_CatchmentRealization.hpp"
 
-#include "GM_Object.h"
+#include "GM_Object.hpp"
 
 #include <boost/geometry.hpp>
 #include <boost/geometry/geometries/geometries.hpp>

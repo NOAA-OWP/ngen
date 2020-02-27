@@ -1,12 +1,12 @@
-#include "HY_Catchment.h"
-#include "HY_CatchmentRealization.h"
-#include "HY_FlowPath.h"
-#include "HY_PointHydroNexus.h"
+#include "HY_Catchment.hpp"
+#include "HY_CatchmentRealization.hpp"
+#include "HY_FlowPath.hpp"
+#include "HY_PointHydroNexus.hpp"
 #include <iostream>
 
-#include "GridPolygon.h"
+#include "GridPolygon.hpp"
 
-int main(int argc, const char** argv)
+int _test_main(int argc, const char** argv)
 {
     HY_Catchment catchment;
     HY_CatchmentRealization catchment_realization;

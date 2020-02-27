@@ -1,4 +1,4 @@
-#include "HY_InteriorCatchment.h"
+#include "HY_InteriorCatchment.hpp"
 
 HY_InteriorCatchment::HY_InteriorCatchment() : HY_Catchment()
 {

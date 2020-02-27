@@ -1,7 +1,7 @@
 #ifndef HY_INTERIORCATCHMENT_H
 #define HY_INTERIORCATCHMENT_H
 
-#include "HY_Catchment.h"
+#include "HY_Catchment.hpp"
 
 
 class HY_InteriorCatchment : public HY_Catchment

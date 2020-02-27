@@ -5,8 +5,8 @@
 #include <string>
 #include <vector>
 
-#include "HY_CatchmentRealization.h"
-#include "HY_HydroFeature.h"
+#include "HY_CatchmentRealization.hpp"
+#include "HY_HydroFeature.hpp"
 
 class HY_HydroNexus;
 

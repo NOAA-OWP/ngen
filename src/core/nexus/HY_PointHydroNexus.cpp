@@ -1,4 +1,4 @@
-#include "HY_PointHydroNexus.h"
+#include "HY_PointHydroNexus.hpp"
 
 #include <boost/exception/all.hpp>
 

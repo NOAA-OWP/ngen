@@ -1,4 +1,4 @@
-#include "HY_HydroNexus.h"
+#include "HY_HydroNexus.hpp
 
 HY_HydroNexus::HY_HydroNexus(int nexus_id_num, std::string nexus_id, int num_downstream)
 {
