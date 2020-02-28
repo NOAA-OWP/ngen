@@ -95,4 +95,4 @@ General instructions on _how_ to contribute should be stated with a link to [CON
 
 ## Credits and references
 
-[Reference Document](https://github.com/NOAA-OWP/ngen/blob/ZacharyWills-review-1/doc/references.md)
+[Reference Document](doc/references.md)
