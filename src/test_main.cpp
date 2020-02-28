@@ -13,7 +13,7 @@ int _test_main(int argc, const char** argv)
     HY_FlowPath flowpath;
     HY_HydroNexus* hydro_nexus;
 
-    hydro_nexus = new HY_PointHydroNexus(1,"test nextus",1);
+    hydro_nexus = new HY_PointHydroNexus(1,"test nexus",1);
 
     std::cout << __cplusplus << std::endl;
     std::cout.flush();
