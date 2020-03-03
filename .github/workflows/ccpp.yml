@@ -18,6 +18,8 @@ jobs:
     - name: git submodule
       run: git submodule update --init --recursive
     - uses: actions/checkout@v2
+    - name: set ENVs
+      run: CMAKE_CXX_COMPILER=/usr/bin/gcc
     - name: cmake
       run: cmake .
     - name: make
