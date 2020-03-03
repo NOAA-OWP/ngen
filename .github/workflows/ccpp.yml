@@ -17,13 +17,13 @@ jobs:
       run: mkdir temp && cd temp
     - uses: actions/checkout@v2
     - name: git submodule
-      run: git submodule update --init --recursive 
+      run: git submodule update --init --recursive -- test/googletest
     - name: cmake_init_build
-      run: cmake -D CMAKE_CXX_COMPILER=/usr/bin/gcc -B cmake_build-S .
+      run: cmake -DCMAKE_CXX_COMPILER=/usr/bin/gcc -B cmake_build -S .
     - name: build_tests
-      run: cmake --build cmake_build-S --target test_all
-      timeout-minutes: 15    
-    - name: run tests
+      run: cmake --build cmake_build --target test_all
+      timeout-minutes: 15
+    - name: run_tests
       run: ./cmake_build/test/test_all
       timeout-minutes: 15
     #- name: make check
