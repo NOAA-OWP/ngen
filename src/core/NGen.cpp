@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "include/NGenConfig.h"
+#include "NGenConfig.h"
 
 int main(int argc, char *argv[]) {
     std::cout << "Hello there " << ngen_VERSION_MAJOR << "."
