@@ -18,8 +18,8 @@ jobs:
     - name: git submodule
       run: git submodule update --init --recursive
     - uses: actions/checkout@v2
-#    - name: configure
-#      run: ./configure
+    - name: cmake
+      run: cmake .
     - name: make
       run: cmake --build ./ --target /test/models/hymod/include/HymodTest.cpp
       timeout-minutes: 15
