@@ -17,7 +17,7 @@ jobs:
       run: mkdir temp && cd temp
     - uses: actions/checkout@v2
     - name: git submodule
-      run: git submodule update --init --recursive --test/googletest
+      run: git submodule update --init --recursive -test/googletest
     - name: cmake_init_build
       run: cmake -CMAKE_CXX_COMPILER=/usr/bin/gcc -B cmake_build-S .
     - name: build_tests
