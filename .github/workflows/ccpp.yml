@@ -18,8 +18,8 @@ jobs:
     - name: git submodule
       run: git submodule update --init --recursive
     - uses: actions/checkout@v2
-    - name: configure
-      run: ./configure
+#    - name: configure
+#      run: ./configure
     - name: make
       run: make
       timeout-minutes: 15
