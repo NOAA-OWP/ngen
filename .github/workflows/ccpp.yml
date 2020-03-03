@@ -15,19 +15,20 @@ jobs:
     steps:
     - name: mkdir temp
       run: mkdir temp && cd temp
-    - name: git submodule
-      run: git submodule update --init --recursive
     - uses: actions/checkout@v2
-    - name: set ENVs
-      run: CMAKE_CXX_COMPILER=/usr/bin/gcc
-    - name: cmake
-      run: cmake .
-    - name: make
-      run: cmake --build ./ --target /test/models/hymod/include/HymodTest.cpp
+    - name: git submodule
+      run: git submodule update --init --recursive --test/googletest
+    - name: cmake_init_build
+      run: cmake -CMAKE_CXX_COMPILER=/usr/bin/gcc -B cmake_build-S .
+    - name: build_tests
+      run: cmake --build cmake_build --target test_all
+      timeout-minutes: 15    
+    - name: run tests
+      run: ./cmake_build/test/test_all
       timeout-minutes: 15
-    - name: make check
-      run: make check
-    - name: make distcheck
-      run: make distcheck
+    #- name: make check
+    #  run: make check
+    #- name: make distcheck
+    #  run: make distcheck
     - name: cleanup 
       run: cd /home/Z/ && rm -rf /temp
