@@ -24,15 +24,12 @@ This framework includes an encapsulation strategy which focuses on the hydrologi
 **Complex Realizations**: An important type of catchment realization is the complex catchment realization. This allows a single catchment to be represented by a network of higher detail catchment realizations and their relationships. This allows the modeled area to be represented at multiple levels of detail and supports dynamic high resolution nesting.
 
 ## Dependencies
-[gcc](https://gcc.gnu.org/)
+- [gcc](https://gcc.gnu.org/) or [Clang](https://clang.llvm.org/)
+- [CMake](https://gitlab.kitware.com/cmake/cmake)
+- [Google Test](https://github.com/google/googletest) only for testing
+- [Boost.Geometry](https://www.boost.org/doc/libs/1_72_0/libs/geometry/doc/html/geometry/compilation.html)
 
-[CMake](https://gitlab.kitware.com/cmake/cmake)
-
-[Googletest](https://github.com/google/googletest) only for testing.
-
-[Boost.Geometry](https://www.boost.org/doc/libs/1_72_0/libs/geometry/doc/html/geometry/compilation.html)
-
-If specific versions of other software are required, or known not to work, call that out.
+See the [Dependencies](doc/DEPENDENCIES.md) document for more information.
 
 ## Installation
 
