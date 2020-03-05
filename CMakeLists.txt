@@ -73,7 +73,6 @@ set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 
-# TODO: add to documentation that a developer must have Boost locally and set the BOOST_ROOT environment var
 if(DEFINED ENV{BOOST_ROOT})
     set(Boost_INCLUDE_DIR $ENV{BOOST_ROOT})
 else()
