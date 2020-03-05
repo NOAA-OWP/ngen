@@ -11,7 +11,7 @@ jobs:
   build:
 
     runs-on: self-hosted
-    
+# host needs: g++, boost, boost-devel and cmake    
     steps:
     - name: clear previous temp dirs
       run: for i in $(seq 8 0); do [ -d temp_${i} ] && mv temp_${i} temp_$((i+1)) ; done
