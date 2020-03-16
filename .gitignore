@@ -5,6 +5,7 @@
 *.dll
 *.exe
 *.o
+*.a
 *.so
 _site/
 
@@ -75,6 +76,10 @@ bower_components/
 .grunt/
 src/vendor/
 dist/
+
+# Doxygen #
+###########
+docs/code/html/*
 
 # Certain IDE project files
 /.idea/

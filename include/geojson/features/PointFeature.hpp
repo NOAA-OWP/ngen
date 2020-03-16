@@ -1,0 +1,47 @@
+#ifndef GEOJSON_POINT_FEATURE_H
+#define GEOJSON_POINT_FEATURE_H
+
+#include "FeatureBase.hpp"
+#include <FeatureVisitor.hpp>
+#include <JSONGeometry.hpp>
+
+#include <string>
+#include <vector>
+#include <map>
+#include <exception>
+
+namespace geojson {
+
+    class PointFeature : public FeatureBase {
+        public:
+            PointFeature(const FeatureBase& feature) : FeatureBase(feature) {}
+
+            PointFeature(const PointFeature& feature) : FeatureBase(feature) {
+                this->geom = feature.geometry();
+                this->type = feature.get_type();
+            }
+
+            PointFeature(
+                coordinate_t coordinate,
+                std::string new_id = "",
+                PropertyMap new_properties = PropertyMap(),
+                std::vector<double> new_bounding_box = std::vector<double>(),
+                std::vector<FeatureBase*> upstream_features = std::vector<FeatureBase*>(),
+                std::vector<FeatureBase*> downstream_features = std::vector<FeatureBase*>(),
+                std::map<std::string, JSONProperty> members = std::map<std::string, JSONProperty>()
+            ) : FeatureBase(new_id, new_properties, new_bounding_box, upstream_features, downstream_features, members) {
+                this->geom = coordinate;
+                this->type = geojson::FeatureType::Point;
+            }
+
+            coordinate_t geometry() const {
+                return boost::get<coordinate_t>(this->geom);
+            }
+
+            void visit(FeatureVisitor& visitor) {
+                visitor.visit(this);
+            }
+    };
+}
+
+#endif // GEOJSON_POINT_FEATURE_H

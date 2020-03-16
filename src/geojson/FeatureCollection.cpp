@@ -1,66 +1,117 @@
 #include "FeatureCollection.hpp"
+#include "features/Features.hpp"
 
-geojson::FeatureCollection::FeatureCollection(const geojson::FeatureCollection &feature_collection) {
-    bounding_box = feature_collection.get_bounding_box();
-    for (Feature feature : feature_collection) {
-        features.push_back(feature);
-    }
-}
+using namespace geojson;
 
-int geojson::FeatureCollection::get_size() {
-    return features.size();
-}
-
-std::vector<double> geojson::FeatureCollection::get_bounding_box() const {
-    return bounding_box;
-}
-
-geojson::Feature geojson::FeatureCollection::get_feature(int index) const {
+Feature FeatureCollection::get_feature(int index) const {
     return features[index];
 }
 
-geojson::FeatureCollection::const_iterator geojson::FeatureCollection::begin() const {
+int FeatureCollection::get_size() {
+    return features.size();
+};
+
+std::vector<double> FeatureCollection::get_bounding_box() const {
+    return bounding_box;
+}
+
+Feature FeatureCollection::get_feature(std::string id) const {
+    return feature_by_id.at(id);
+}
+
+FeatureList::const_iterator FeatureCollection::begin() const {
     return features.cbegin();
 }
 
-geojson::FeatureCollection::const_iterator geojson::FeatureCollection::end() const {
+FeatureList::const_iterator FeatureCollection::end() const {
     return features.cend();
 }
 
-geojson::FeatureCollection geojson::FeatureCollection::read(const std::string &file_path) {
-    boost::property_tree::ptree tree;
-    boost::property_tree::json_parser::read_json(file_path, tree);
-    return FeatureCollection::parse(tree);
+JSONProperty FeatureCollection::get(std::string key) const {
+    return foreign_members.at(key);
 }
 
-geojson::FeatureCollection geojson::FeatureCollection::read(std::stringstream &data) {
-    boost::property_tree::ptree tree;
-    boost::property_tree::json_parser::read_json(data, tree);
-    return FeatureCollection::parse(tree);
+void FeatureCollection::visit_features(FeatureVisitor& visitor) {
+    for (Feature feature : this->features) {
+        feature->visit(visitor);
+    }
 }
 
-geojson::FeatureCollection geojson::FeatureCollection::parse(const boost::property_tree::ptree json) {
-    std::vector<std::string> bounding_box;
-    for (auto &feature : json.get_child("bbox")) {
-        bounding_box.push_back(feature.second.data());
-    }
-    std::vector<double> bbox_values;
+void FeatureCollection::set(std::string key, short value) {
+    foreign_members.emplace(key, JSONProperty(key, value));
+}
 
-    for (int point_index = 0; point_index < bounding_box.size(); point_index++) {
-        bbox_values.push_back(std::stod(bounding_box[point_index]));
-    }
+void FeatureCollection::set(std::string key, int value) {
+    foreign_members.emplace(key, JSONProperty(key, value));
+}
 
-    FeatureList features;
-    boost::optional<const boost::property_tree::ptree&> e = json.get_child_optional("features");
+void FeatureCollection::set(std::string key, long value) {
+    foreign_members.emplace(key, JSONProperty(key, value));
+}
 
-    if (e) {
-        for(auto feature_tree : *e) {
-            features.push_back(Feature(feature_tree.second));
+void FeatureCollection::set(std::string key, float value) {
+    foreign_members.emplace(key, JSONProperty(key, value));
+}
+
+void FeatureCollection::set(std::string key, double value) {
+    foreign_members.emplace(key, JSONProperty(key, value));
+}
+
+void FeatureCollection::set(std::string key, std::string value) {
+    foreign_members.emplace(key, JSONProperty(key, value));
+}
+
+void FeatureCollection::set(std::string key, JSONProperty& property) {
+    foreign_members.emplace(key, property);
+}
+
+int FeatureCollection::link_features_from_property(std::string* from_property, std::string* to_property) {
+    int links_found = 0;
+
+    for (Feature feature : features) {
+        if (from_property != nullptr) {
+            std::string from_id = feature->get_property(*from_property).as_string();
+            
+            if (feature_by_id.find(from_id) != feature_by_id.end()) {
+                feature->add_upstream_feature(feature_by_id[from_id].get());
+                links_found++;
+            }
+        }
+
+        if (to_property != nullptr) {
+            std::string to_id = feature->get_property(*to_property).as_string();
+
+            if (feature_by_id.find(to_id) != feature_by_id.end()) {
+                feature->add_downstream_feature(feature_by_id[to_id].get());
+                links_found++;
+            }
         }
     }
-    else {
-        std::cout << "No features were found" << std::endl;
-    }
 
-    return FeatureCollection(features, bbox_values);
+    return links_found;
+}
+
+int FeatureCollection::link_features_from_attribute(std::string* from_attribute, std::string* to_attribute) {
+    int links_found = 0;
+
+    for (Feature feature : features) {
+        if (from_attribute != nullptr) {
+            std::string from_id = feature->get(*from_attribute).as_string();
+            
+            if (from_id != "null" && feature_by_id.find(from_id) != feature_by_id.end()) {
+                feature->add_upstream_feature(feature_by_id[from_id].get());
+                links_found++;
+            }
+        }
+
+        if (to_attribute != nullptr) {
+            std::string to_id = feature->get(*to_attribute).as_string();
+
+            if (to_id != "null" && feature_by_id.find(to_id) != feature_by_id.end()) {
+                feature->add_downstream_feature(feature_by_id[to_id].get());
+                links_found++;
+            }
+        }
+    }
+    return links_found;
 }
