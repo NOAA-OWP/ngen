@@ -1,26 +1,35 @@
 # Next Gen Water Modeling Framework Prototype
 
-**Description**:  Put a meaningful, short, plain-language description of what
-this project is trying to accomplish and why it matters.
-Describe the problem(s) this project solves.
-Describe how this software can improve the lives of its audience.
+**Description**:  
+As we attempt to apply hydrological modeling at different scales, the traditional organizational structure and algorithms of model software begin to interfere with the ability of the model to represent complex and heterogeneous processes at appropriate scales.  While it is possible to do so, the code becomes highly specialized, and reasoning about the model and its states becomes more difficult.  Model implementations are often the result of taking for granted the availability of a particular form of data **and** solution -- attempting to map the solution to that data. This framework takes a data centric approach, organizing the data first and mapping appropriate solutions to the existing data.
 
-Other things to include:
-
-  - **Technology stack**: Indicate the technological nature of the software, including primary programming language(s) and whether the software is intended as standalone or as a module in a framework or other ecosystem.
-  - **Status**:  Alpha, Beta, 1.1, etc. It's OK to write a sentence, too. The goal is to let interested people know where this project is at. This is also a good place to link to the [CHANGELOG](CHANGELOG.md).
-  - **Links to production or demo instances**
-  - Describe what sets this apart from related-projects. Linking to another doc or page is OK if this can't be expressed in a sentence or two.
+This framework includes an encapsulation strategy which focuses on the hydrologic data first, and then builds a functional abstraction of hydrologic behavior.  This abstraction is naturally recursive, and unlocks a higher level of modeling and reasoning using computational modeling for hydrology.  This is done by organizing model components along well-defined flow boundaries, and then implementing strict API’s to define the movement of water amongst these components.  This organization also allows control and orchestration of first-class model components to leverage more sophisticated programming techniques and data structures.
 
 
-**Screenshot**: If the software has visual components, place a screenshot after the description; e.g.,
+  - **Technology stack**: Core Framework using C++ (minimum standard c++14) to provide polymorphic interfaces with reasonable systems integration.
+  - **Status**:  Version 0.1.0 in initial development including interfaces, logical data model, and framework structure.  See  [CHANGELOG](CHANGELOG.md) for revision details.
 
+## Structural Diagrams
+
+![Catchments](https://raw.githubusercontent.com/NOAA-OWP/ngen/master/doc/images/hy_features_catchment_diagram.png)
+
+**Catchments**: Catchments represent arbitrary spatial areas. They are the abstraction used to encapsulate a model. The three marked catchments could use three different models, 3 copies of the same model, or some combination of the previous options 
+
+![Realizations](https://raw.githubusercontent.com/NOAA-OWP/ngen/master/doc/images/realization_relations.png)
+
+**Realizations**: Different kinds of catchment realizations can be used to encapsulate different types of models. These models will have different types of relations with neighbors. When a relation exists between two adjacent catchments synchronization is necessary.
+
+![Complex Realizations](https://raw.githubusercontent.com/NOAA-OWP/ngen/master/doc/images/complex_realizations.png)
+
+**Complex Realizations**: An important type of catchment realization is the complex catchment realization. This allows a single catchment to be represented by a network of higher detail catchment realizations and their relationships. This allows the modeled area to be represented at multiple levels of detail and supports dynamic high resolution nesting.
 
 ## Dependencies
+- [gcc](https://gcc.gnu.org/) or [Clang](https://clang.llvm.org/)
+- [CMake](https://gitlab.kitware.com/cmake/cmake)
+- [Google Test](https://github.com/google/googletest) only for testing
+- [Boost.Geometry](https://www.boost.org/doc/libs/1_72_0/libs/geometry/doc/html/geometry/compilation.html)
 
-Describe any dependencies that must be installed for this software to work.
-This includes programming languages, databases or other storage mechanisms, build tools, frameworks, and so forth.
-If specific versions of other software are required, or known not to work, call that out.
+See the [Dependencies](doc/DEPENDENCIES.md) document for more information.
 
 ## Installation
 
@@ -40,7 +49,22 @@ Use appropriate formatting when showing code snippets.
 
 ## How to test the software
 
-If the software includes automated tests, detail how to run those tests.
+The project uses the **Google Test** framework for creating automated tests for C++ code.
+
+To execute the full collection of automated C++ tests, run the `test_all` target in **CMake**, then execute the generated executable.  Alternatively, replace `test_all` with `test_unit` or `test_integration` to run only those tests.
+For example:
+  
+    cmake --build cmake-build-debug --target test_all -- -j 4
+    ./cmake-build-debug/test/test_all
+    
+Or, if the build system has not yet been properly generated:
+
+    git submodule update --init --recursive -- test/googletest
+    cmake -DCMAKE_BUILD_TYPE=Debug -B cmake-build-debug -S .
+    cmake --build cmake-build-debug --target test_all -- -j 4
+    ./cmake-build-debug/test/test_all
+
+See the [Testing ReadMe](test/README.md) file for a more thorough discussion of testing.
 
 ## Known issues
 
