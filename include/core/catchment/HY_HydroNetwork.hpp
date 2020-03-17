@@ -2,9 +2,9 @@
 #define HY_HYDRONETWORK_H
 
 
-#include "HY_CatchmentRealization.h"
+#include "HY_CatchmentRealization.hpp"
 
-#include "GM_Object.h"
+#include "GM_Object.hpp"
 
 #include <memory>
 #include <vector>

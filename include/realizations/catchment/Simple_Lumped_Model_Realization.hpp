@@ -1,9 +1,9 @@
 #ifndef SIMPLE_LUMPED_MODEL_REALIZATION_H
 #define SIMPLE_LUMPED_MODEL_REALIZATION_H
 
-#include <HY_CatchmentArea.h>
-#include "LinearReservoir.h"
-#include "models/hymod/include/Hymod.h"
+#include <HY_CatchmentArea.hpp>
+#include "LinearReservoir.hpp"
+#include "hymod/include/Hymod.h"
 
 #include <unordered_map>
 

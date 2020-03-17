@@ -1,7 +1,7 @@
 #ifndef HY_CATCHMENTAGGREGATE_H
 #define HY_CATCHMENTAGGREGATE_H
 
-#include "HY_Catchment.h"
+#include "HY_Catchment.hpp"
 
 
 class HY_CatchmentAggregate : public HY_Catchment

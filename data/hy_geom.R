@@ -11,6 +11,10 @@ plot_nhdplus(outlets = list(8895396),
              plot_config = list(basin = list(border = NA),
                                 outlets = list(default = list(col = NA))))
 
+catchment_prefix <- "catchment"
+nexus_prefix <- "nexus"
+waterbody_prefix <- "waterbody"
+
 #st_layers("nhdplus_subset.gpkg")
 
 fline <- read_sf("nhdplus_subset.gpkg", "NHDFlowline_Network") %>%
@@ -21,53 +25,69 @@ cat <- read_sf("nhdplus_subset.gpkg", "CatchmentSP") %>%
   align_nhdplus_names() %>%
   filter(FEATUREID %in% fline$COMID)
 
+nexus <- fline %>%
+  st_coordinates() %>%
+  as.data.frame() %>%
+  group_by(L2) %>%
+  filter(row_number() == n()) %>%
+  ungroup() %>%
+  select(X, Y) %>%
+  st_as_sf(coords = c("X", "Y"), crs = st_crs(fline))
+
+nexus$ID <- fline$COMID
+
 plot(st_transform(st_geometry(cat), 3857), add = TRUE)
+plot(st_transform(st_geometry(nexus), 3857), add = TRUE)
 
 dev.off()
 
 unlink("rosm.cache", recursive = TRUE)
 
-c_edge_list <- bind_rows(
+catchment_edge_list <- bind_rows(
   
   st_drop_geometry(fline) %>%
     select(ID = COMID, toID = ToNode) %>%
-    mutate(ID = paste0("c", ID),
-           toID = paste0("n", toID)),
+    mutate(ID = paste0(catchment_prefix, ID),
+           toID = paste0(nexus_prefix, toID)),
   
   tibble(ID = unique(fline$ToNode)) %>%
     left_join(select(st_drop_geometry(fline), 
                      ID = FromNode, toID = COMID), 
               by = "ID") %>%
     mutate(toID = ifelse(is.na(toID), 0, toID)) %>%
-    mutate(ID = paste0("n", ID),
-           toID = paste0("c", toID))
+    mutate(ID = paste0(nexus_prefix, ID),
+           toID = paste0(catchment_prefix, toID))
   
 )
 
-w_edge_list <- mutate(c_edge_list,
-                      ID = gsub("c", "w", ID),
-                      toID = gsub("c", "w", toID))
+waterbody_edge_list <- mutate(catchment_edge_list,
+                      ID = gsub(catchment_prefix, waterbody_prefix, ID),
+                      toID = gsub(catchment_prefix, waterbody_prefix, toID))
 
-write.csv(c_edge_list, "c_edge_list.csv", row.names = FALSE)
+write.csv(catchment_edge_list, "catchment_edge_list.csv", row.names = FALSE)
 
-jsonlite::write_json(c_edge_list, "c_edge_list.json", pretty = TRUE)
+jsonlite::write_json(catchment_edge_list, "catchment_edge_list.json", pretty = TRUE)
 
-write.csv(c_edge_list, "w_edge_list.csv", row.names = FALSE)
+write.csv(waterbody_edge_list, "waterbody_edge_list.csv", row.names = FALSE)
 
-jsonlite::write_json(c_edge_list, "w_edge_list.json", pretty = TRUE)
+jsonlite::write_json(waterbody_edge_list, "waterbody_edge_list.json", pretty = TRUE)
 
-c_data <- select(cat, ID = FEATUREID, area_sqkm = AreaSqKM) %>%
-  mutate(ID = paste0("c", ID))
+catchment_data <- select(cat, ID = FEATUREID, area_sqkm = AreaSqKM) %>%
+  mutate(ID = paste0(catchment_prefix, ID))
 
-w_data <- select(fline, ID = COMID, 
+waterbody_data <- select(fline, ID = COMID, 
                  length_km = LENGTHKM, 
                  slope_percent = slope, 
                  main_id = LevelPathI) %>%
-  mutate(ID = paste0("w", ID))
+  mutate(ID = paste0(waterbody_prefix, ID))
 
-write_sf(c_data, "catchment_data.geojson")
+nexus_data <- select(nexus, ID)
 
-write_sf(w_data, "waterbody_data.geojson")
+write_sf(catchment_data, "catchment_data.geojson")
+
+write_sf(waterbody_data, "waterbody_data.geojson")
+
+write_sf(nexus_data, "nexus_data.geojson")
 
 ##### Code below runs hyRefactor of a larger region that
 ##### is a superset of the subset above.
