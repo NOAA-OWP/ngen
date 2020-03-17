@@ -4,6 +4,7 @@
 #include <cmath>
 #include <vector>
 #include "LinearReservoir.hpp"
+#include "Nonlinear_Reservoir.hpp"
 
 //! Hymod paramaters struct
 /*!
