@@ -5,6 +5,9 @@
 class NonlinearReservoirKernelTest : public ::testing::Test {
 
     protected:
+
+    //Nonlinear_Reservoir NoOutletReservoir;
+
 /*
     std::vector<hymod_params> params_examples;
 
@@ -33,15 +36,26 @@ class NonlinearReservoirKernelTest : public ::testing::Test {
     }
 */
 
+    //Nonlinear_Reservoir NoOutletReservoir;
+
     void SetUp() override;
 
     void TearDown() override;
 
     //void setupArbitraryExampleCase();
 
+    void setupNoOutletNonlinearReservoir();
+
+    void setupOneOutletNonlinearReservoir();
+ 
 };
 
 void NonlinearReservoirKernelTest::SetUp() {
+    
+    setupNoOutletNonlinearReservoir();
+
+    setupOneOutletNonlinearReservoir();
+
     //setupArbitraryExampleCase();
     //noutlet
  //1 outlet
@@ -53,6 +67,23 @@ void NonlinearReservoirKernelTest::SetUp() {
 void NonlinearReservoirKernelTest::TearDown() {
 
 }
+
+
+void NonlinearReservoirKernelTest::setupNoOutletNonlinearReservoir()
+{
+    Nonlinear_Reservoir NoOutletReservoir(0.0, 0.0, 0.0);
+
+}
+
+
+void NonlinearReservoirKernelTest::setupOneOutletNonlinearReservoir()
+{
+    Nonlinear_Reservoir OneOutletReservoir(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+
+}
+
+
+
 
 //! Setup an arbitrary example case with essentially made-up values for the components, and place the components in the
 /*!
@@ -89,6 +120,14 @@ void HymodKernelTest::setupArbitraryExampleCase() {
 }
 */
 
+
+
+TEST_F(NonlinearReservoirKernelTest, TestRun0) 
+{
+    cout << "Hi David";
+    //cout << NonlinearReservoirKernelTest::NoOutletReservoir.state.current_storage_height_meters;
+    ASSERT_TRUE(true);
+}
 
 /*
 //! Test that Hymod executes its 'run' function fully when passed arbitrary valid arguments.
