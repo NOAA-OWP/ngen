@@ -93,16 +93,30 @@ void NonlinearReservoirKernelTest::setupNoOutletNonlinearReservoir()
 
 void NonlinearReservoirKernelTest::setupOneOutletNonlinearReservoir()
 {
-    Nonlinear_Reservoir OneOutletReservoir(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+    OneOutletReservoir = std::make_shared<Nonlinear_Reservoir>(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+    //Nonlinear_Reservoir OneOutletReservoir(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 
 }
 
 
 void NonlinearReservoirKernelTest::setupMultipleOutletNonlinearReservoir()
 {
-    Nonlinear_Reservoir OneOutletReservoir(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+
+    //Nonlinear_Reservoir OneOutletReservoir(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+    MultipleOutletReservoir = std::make_shared<Nonlinear_Reservoir>(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 
 }
+
+
+void NonlinearReservoirKernelTest::setupVectorOfOutlets()
+{
+    //Nonlinear_Reservoir OneOutletReservoir(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+
+    //std::shared_ptr<Reservoir_Outlet> ReservoirOutlet;
+
+}
+
+
 
 
 
