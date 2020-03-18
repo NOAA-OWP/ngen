@@ -51,6 +51,8 @@ class NonlinearReservoirKernelTest : public ::testing::Test {
 
     void setupMultipleOutletNonlinearReservoir();
 
+    void setupVectorOfOutlets();
+
     std::shared_ptr<Nonlinear_Reservoir> NoOutletReservoir; //pointer to a Nonlinear_Reservoir
     //c++ smart ptrs
 
@@ -58,7 +60,17 @@ class NonlinearReservoirKernelTest : public ::testing::Test {
 
     std::shared_ptr<Nonlinear_Reservoir> MultipleOutletReservoir; //pointer to a Nonlinear_Reservoir
 
-    std::shared_ptr<Reservoir_Outlet> ReservoirOutlet;
+    std::shared_ptr<Reservoir_Outlet> ReservoirOutlet1;
+
+    std::shared_ptr<Reservoir_Outlet> ReservoirOutlet2;
+
+    std::shared_ptr<Reservoir_Outlet> ReservoirOutlet3;
+
+    //std::vector<std::shared_ptr<Reservoir_Outlet>> ReservoirOutletsVector;
+
+    std::vector<Reservoir_Outlet*> ReservoirOutletsVector;
+
+    //std::vector<Reservoir_Outlet *> ReservoirOutletsVector;
 
 };
 
@@ -68,9 +80,13 @@ void NonlinearReservoirKernelTest::SetUp() {
 
     setupOneOutletNonlinearReservoir();
 
+    setupVectorOfOutlets();
+
     setupMultipleOutletNonlinearReservoir();
 
-    //setupArbitraryExampleCase();
+
+    
+//setupArbitraryExampleCase();
     //noutlet
  //1 outlet
 //multiple outlet 
@@ -102,8 +118,31 @@ void NonlinearReservoirKernelTest::setupOneOutletNonlinearReservoir()
 void NonlinearReservoirKernelTest::setupMultipleOutletNonlinearReservoir()
 {
 
+    ReservoirOutlet1 = std::make_shared<Reservoir_Outlet>(0.0, 0.0, 0.0);
+
+    //ReservoirOutlet1 = Reservoir_Outlet(0.0, 0.0, 0.0);
+
+    ReservoirOutlet2 = std::make_shared<Reservoir_Outlet>(0.0, 0.0, 0.0);
+
+    ReservoirOutlet3 = std::make_shared<Reservoir_Outlet>(0.0, 0.0, 0.0);
+
+
+
+    //std::vector<Reservoir_Outlet> ReservoirOutletsVector;
+
+    //&ReservoirOutletsVector.push_back(ReservoirOutlet1);
+
+    ReservoirOutletsVector.push_back(ReservoirOutlet1);
+
+    //ReservoirOutletsVector.push_back(ReservoirOutlet2);
+
+    //ReservoirOutletsVector.push_back(ReservoirOutlet3);
+
+
+
+
     //Nonlinear_Reservoir OneOutletReservoir(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-    MultipleOutletReservoir = std::make_shared<Nonlinear_Reservoir>(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+    //MultipleOutletReservoir = std::make_shared<Nonlinear_Reservoir>(0.0, 0.0, 0.0, ReservoirOutletsVector);
 
 }
 
@@ -113,6 +152,24 @@ void NonlinearReservoirKernelTest::setupVectorOfOutlets()
     //Nonlinear_Reservoir OneOutletReservoir(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 
     //std::shared_ptr<Reservoir_Outlet> ReservoirOutlet;
+
+/*
+    ReservoirOutlet1 = std::make_shared<Reservoir_Outlet>(0.0, 0.0, 0.0);
+
+    ReservoirOutlet2 = std::make_shared<Reservoir_Outlet>(0.0, 0.0, 0.0);
+
+    ReservoirOutlet3 = std::make_shared<Reservoir_Outlet>(0.0, 0.0, 0.0);
+
+    ReservoirOutletsVector.push_back(ReservoirOutlet1);
+
+    ReservoirOutletsVector.push_back(ReservoirOutlet2);
+
+    ReservoirOutletsVector.push_back(ReservoirOutlet3);
+*/
+
+//ReservoirOutletsVector = std::make_shared
+
+//    std::vector<std::shared_ptr<Reservoir_Outlet>> ReservoirOutletsVector;
 
 }
 
@@ -157,7 +214,7 @@ void HymodKernelTest::setupArbitraryExampleCase() {
 
 
 
-TEST_F(NonlinearReservoirKernelTest, TestRun0) 
+TEST_F(NonlinearReservoirKernelTest, TestRunNoOutletReservoir) 
 {
     cout << "Hi David";
     //cout << NonlinearReservoirKernelTest::NoOutletReservoir.state.current_storage_height_meters;
@@ -167,6 +224,9 @@ TEST_F(NonlinearReservoirKernelTest, TestRun0)
     //NonlinearReservoirKernelTest::NoOutletReservoir.get_storage_meters();
 
     cout << NoOutletReservoir->get_storage_meters();
+
+
+    //cout << ReservoirOutletsVector;
 
     ASSERT_TRUE(true);
 }
