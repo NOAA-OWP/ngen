@@ -69,6 +69,8 @@ class Nonlinear_Reservoir
 {
   public:
 
+
+
     //TODO: DOC WHAT EACH OF THESE CONTRUCTORS DO
     //Nonlinear_Reservoir(double minimum_storage_meters, double maximum_storage_meters, double current_storage_height_meters) : outlets()
     //NO OUTLET
@@ -107,9 +109,7 @@ class Nonlinear_Reservoir
     {	
       state.current_storage_height_meters = in_flux_meters_per_second * delta_time_seconds;
 	
-      //for (auto Reservoir_Outlet &outlet : this->outlets)
-      //for (auto &outlet : this->outlets)
-      for (auto outlet : this->outlets)
+      for (auto& outlet : this->outlets) //pointer to outlets
       {
         //Update storage  
         state.current_storage_height_meters -= outlet.velocity_meters_per_second(parameters, state) * delta_time_seconds;

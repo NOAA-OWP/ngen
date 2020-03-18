@@ -1,6 +1,7 @@
 #include <vector>
 #include "gtest/gtest.h"
 #include "kernels/Nonlinear_Reservoir.hpp"
+#include <memory>
 
 class NonlinearReservoirKernelTest : public ::testing::Test {
 
@@ -47,7 +48,18 @@ class NonlinearReservoirKernelTest : public ::testing::Test {
     void setupNoOutletNonlinearReservoir();
 
     void setupOneOutletNonlinearReservoir();
- 
+
+    void setupMultipleOutletNonlinearReservoir();
+
+    std::shared_ptr<Nonlinear_Reservoir> NoOutletReservoir; //pointer to a Nonlinear_Reservoir
+    //c++ smart ptrs
+
+    std::shared_ptr<Nonlinear_Reservoir> OneOutletReservoir; //pointer to a Nonlinear_Reservoir
+
+    std::shared_ptr<Nonlinear_Reservoir> MultipleOutletReservoir; //pointer to a Nonlinear_Reservoir
+
+    std::shared_ptr<Reservoir_Outlet> ReservoirOutlet;
+
 };
 
 void NonlinearReservoirKernelTest::SetUp() {
@@ -55,6 +67,8 @@ void NonlinearReservoirKernelTest::SetUp() {
     setupNoOutletNonlinearReservoir();
 
     setupOneOutletNonlinearReservoir();
+
+    setupMultipleOutletNonlinearReservoir();
 
     //setupArbitraryExampleCase();
     //noutlet
@@ -71,7 +85,8 @@ void NonlinearReservoirKernelTest::TearDown() {
 
 void NonlinearReservoirKernelTest::setupNoOutletNonlinearReservoir()
 {
-    Nonlinear_Reservoir NoOutletReservoir(0.0, 0.0, 0.0);
+    NoOutletReservoir = std::make_shared<Nonlinear_Reservoir>(0.0, 0.0, 0.0); //make a shared ptr using the constructor
+
 
 }
 
@@ -82,6 +97,12 @@ void NonlinearReservoirKernelTest::setupOneOutletNonlinearReservoir()
 
 }
 
+
+void NonlinearReservoirKernelTest::setupMultipleOutletNonlinearReservoir()
+{
+    Nonlinear_Reservoir OneOutletReservoir(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+
+}
 
 
 
@@ -126,6 +147,13 @@ TEST_F(NonlinearReservoirKernelTest, TestRun0)
 {
     cout << "Hi David";
     //cout << NonlinearReservoirKernelTest::NoOutletReservoir.state.current_storage_height_meters;
+    //cout << Nonlinear_Reservoir::current_storage_height_meters
+    
+
+    //NonlinearReservoirKernelTest::NoOutletReservoir.get_storage_meters();
+
+    cout << NoOutletReservoir->get_storage_meters();
+
     ASSERT_TRUE(true);
 }
 
