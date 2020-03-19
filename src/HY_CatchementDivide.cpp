@@ -1,4 +1,4 @@
-#include "HY_CatchementDivide.h"
+#include "HY_CatchmentDivide.hpp"
 
 HY_CatchementDivide::HY_CatchementDivide()
 {

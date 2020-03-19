@@ -58,18 +58,18 @@ void HymodKernelTest::setupArbitraryExampleCase() {
 
     std::shared_ptr<double> storage_res_ptr = std::make_shared<double>(1.0);
     storage_res_ptr_examples.push_back(storage_res_ptr);
-    struct hymod_state h_state = {1.0, storage_res_ptr.get()};
+    struct hymod_state h_state = {1.0, 1.0, storage_res_ptr.get()};
     h_state_examples.push_back(h_state);
 
-    struct hymod_fluxes ks_fluxes = {1.0, 1.0, 1.0, 1.0};
+    struct hymod_fluxes ks_fluxes = {1.0, 1.0, 1.0};
     ks_fluxes_examples.push_back(ks_fluxes);
 
     std::shared_ptr<double> new_storage_res_ptr = std::make_shared<double>(2.0);
     new_storage_res_ptr_examples.push_back(new_storage_res_ptr);
-    struct hymod_state new_state = {2.0, new_storage_res_ptr.get()};
+    struct hymod_state new_state = {2.0, 2.0, new_storage_res_ptr.get()};
     new_state_examples.push_back(new_state);
 
-    struct hymod_fluxes new_fluxes = {2.0, 2.0, 2.0, 2.0};
+    struct hymod_fluxes new_fluxes = {2.0, 2.0, 2.0};
     new_fluxes_examples.push_back(new_fluxes);
 
     double input_flux = 2.0;
@@ -82,7 +82,7 @@ void HymodKernelTest::setupArbitraryExampleCase() {
 //! Test that Hymod executes its 'run' function fully when passed arbitrary valid arguments.
 TEST_F(HymodKernelTest, TestRun0) {
 
-    int test_case_index = 0;
+    int test_case_index = 0; 
 
     void* et_param = et_params_db_examples[0].get();
 
@@ -93,7 +93,7 @@ TEST_F(HymodKernelTest, TestRun0) {
             new_state_examples[test_case_index],
             new_fluxes_examples[test_case_index],
             input_flux_examples[test_case_index],
-            et_param);
+            et_param); 
     ASSERT_TRUE(true);
 }
 
