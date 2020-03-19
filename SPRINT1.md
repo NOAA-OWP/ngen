@@ -27,7 +27,7 @@
 - Flow of one realization into another via nexus needs described (could just better describe PointHydroNexus.cpp)
 - Non-Linear Reservoir PDF needs added to docs
 
-### Topics for tohught for next sprint:
+### Topics for thought for next sprint:
 - Model template, even psudocode
 - Error Handling Standard 
 
