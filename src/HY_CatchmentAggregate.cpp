@@ -1,4 +1,4 @@
-#include "HY_CatchmentAggregate.h"
+#include "HY_CatchmentAggregate.hpp"
 
 HY_CatchmentAggregate::HY_CatchmentAggregate() : HY_Catchment()
 {
