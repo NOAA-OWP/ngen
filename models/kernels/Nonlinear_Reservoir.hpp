@@ -2,27 +2,28 @@
 #include <cmath>
 #include <algorithm>
 
-
 using namespace std;
-
 
 struct reservoir_parameters
 {
-  double minimum_storage_meters; 
-  double maximum_storage_meters;
+    double minimum_storage_meters; 
+    double maximum_storage_meters;
 };
 
 
-//This struct is passed by reference
 struct reservoir_state
 {
-  double current_storage_height_meters;  
+    double current_storage_height_meters;  
 };
 
 
+//This class is for a single reservior outlet that holds the parameters a, b, and the activation threhold, which is
+//the height in meters the bottom of the outlet is above the bottom of the reservoir. This class also contains a 
+//function to return the velocity in meters per second of the discharge through the outlet. This function will only
+//run if the reservoir storage passed in is above the activation threshold.
 class Reservoir_Outlet
 {
-  public:
+    public:
 
     double activation_threshold_meters;       
    
@@ -32,116 +33,117 @@ class Reservoir_Outlet
 		
     }	
    
+    //Parameterized Constructor
     Reservoir_Outlet(double a, double b, double activation_threshold_meters): activation_threshold_meters(activation_threshold_meters), a(a), b(b)
     {
 
     }    
-   
-    //RETURN AS VELOCITY M/S. CONVERSION TO VELOCITY 
-	//2 OPTIONS: PASS AREA OF WATERSHED TO FUNCTION AND RETURN DISCHAGRG CMS 
-	//(IDEAL) OTHER OPTION: RETURN VELOCITY AND MULTIPLY BY WATERSHED AREA IN SUBROUTINE CALLING THIS IN HYMOD OR OTHER CALLING FUNCITON
-    //MOCK UP WATERSHED AREA IN HYMOD.
-	double velocity_meters_per_second(reservoir_parameters &parameters_struct, reservoir_state &storage_struct)
+  
+    //Function to return the velocity in meters per second of the discharge through the outlet
+    double velocity_meters_per_second(reservoir_parameters &parameters_struct, reservoir_state &storage_struct)
     {
-      if (storage_struct.current_storage_height_meters <= activation_threshold_meters)
-        return 0.0;  
-	  
-      return a * std::pow((storage_struct.current_storage_height_meters - activation_threshold_meters)
-      / (parameters_struct.maximum_storage_meters - activation_threshold_meters), b);
+        //Return velocity of 0.0 if the storage passed in is less than the activation threshold
+        if (storage_struct.current_storage_height_meters <= activation_threshold_meters)
+            return 0.0;  
+	
+        //Return the velocity in meters per second of the discharge through the outlet   
+        return a * std::pow((storage_struct.current_storage_height_meters - activation_threshold_meters)
+               / (parameters_struct.maximum_storage_meters - activation_threshold_meters), b);
     };
 
-  private:
+    private:
     double a;
     double b;
-    //double activation_threshold_meters;   
-
 };
 
-//LOCAL SUB TIMESTEP TO SEE IF CROSS A THRESHOLD BELOW ACTIVATION OR ABOVE TOP OF ACTIVATION. 
-
-
-//CORRECT FOR WATER LEVEL FALLING BELOW ACTIVATION THRESHOLD. RETURN FLAG AND MAYBE CALL ANOTHER FUNCTION THAT CALLS A PARTIAL TIMESTEP.
-
-//TODO: ADD CHECK TO ENSURE ACTIVATION THRESHOLD IS LESS THAN MAX
-
-//Vector of outlets. Each outlet has a Storage structure. Each outlet has a and b. 
+ 
+//This class is for a nonlinear reservoir that has zero, one, or multiple outlets. The nonlinear reservoir has parameters of minimum
+//and maximum storage height in meters and a state variable of current storage height in meters. A vector will be created that
+//stores pointers to the reservoir outlet objects. This class will also sort multiple outlets from lowest to highest activation
+//thresholds in the vector. The response_storage_meters function takes an inflow and cycles through the outlets from lowest to highest
+//activation thresholds and calls the outlet's function to return the discharge velocity in meters per second through the outlet.
+//The reservoir's storage is updated from velocities of each outlet and the delta time for the given timestep.
 class Nonlinear_Reservoir
 {
-  public:
+    public:
 
-
-
-    //TODO: DOC WHAT EACH OF THESE CONTRUCTORS DO
-    //Nonlinear_Reservoir(double minimum_storage_meters, double maximum_storage_meters, double current_storage_height_meters) : outlets()
-    //NO OUTLET
-	Nonlinear_Reservoir(double minimum_storage_meters, double maximum_storage_meters, double current_storage_height_meters)
+    //Constructor for a reservoir with no outlets.
+    Nonlinear_Reservoir(double minimum_storage_meters, double maximum_storage_meters, double current_storage_height_meters)
     {
-
-      parameters.minimum_storage_meters = minimum_storage_meters;
-      parameters.maximum_storage_meters = maximum_storage_meters;
-      state.current_storage_height_meters = current_storage_height_meters;
+        parameters.minimum_storage_meters = minimum_storage_meters;
+        parameters.maximum_storage_meters = maximum_storage_meters;
+        state.current_storage_height_meters = current_storage_height_meters;
     }
 
-	//ONE OUTLET
-    Nonlinear_Reservoir(double minimum_storage_meters, double maximum_storage_meters, double current_storage_height_meters, double a, double b, double activation_threshold_meters) : Nonlinear_Reservoir(minimum_storage_meters, maximum_storage_meters, current_storage_height_meters)
+    //Constructor for a reservoir with only one outlet.
+    Nonlinear_Reservoir(double minimum_storage_meters, double maximum_storage_meters, double current_storage_height_meters, double a, 
+    double b, double activation_threshold_meters) : Nonlinear_Reservoir(minimum_storage_meters, maximum_storage_meters, 	current_storage_height_meters)
     {
-      this->outlets.push_back(Reservoir_Outlet(a, b, activation_threshold_meters));
+        //Ensure that the activation threshold is less than the maximum storage
+        //if (activation_threshold_meters > maximum_storage_meters)
+        //TODO: Return appropriate error
+
+        this->outlets.push_back(Reservoir_Outlet(a, b, activation_threshold_meters));
     }
 
-    //MULTIPLE OUTLETS
+    //Constructor for a reservoir with multiple outlets.
     Nonlinear_Reservoir(double minimum_storage_meters, double maximum_storage_meters, double current_storage_height_meters, std::vector <Reservoir_Outlet> &outlets) : Nonlinear_Reservoir(minimum_storage_meters, maximum_storage_meters, current_storage_height_meters)
     {
 
-      this->outlets = outlets;
+        this->outlets = outlets;
 	  
-      //Ensure that reservoir outlet activation thresholds are sorted from least to greatest height
-      (this->outlets.begin(), this->outlets.end(), [](const Reservoir_Outlet &left, const Reservoir_Outlet &right) //-> bool
-      {
-        return left.activation_threshold_meters < right.activation_threshold_meters;
-      });
+        //Ensure that reservoir outlet activation thresholds are sorted from least to greatest height
+        (this->outlets.begin(), this->outlets.end(), [](const Reservoir_Outlet &left, const Reservoir_Outlet &right)
+        {
+            //Ensure that the activation threshold is less than the maximum storage
+            //if (left.activation_threshold_meters > maximum_storage_meters)
+            //TODO: Return appropriate error                
+
+            return left.activation_threshold_meters < right.activation_threshold_meters;
+        });
     }	
 
-//current_storage_height_meters**********
-//NOT GOOD TO UPDATE STATE AND FLUX CALCULATORS BACK TO THE CALLING FUNCTION. LET CALLING UPDATE ITSELF.
-
-    //This function assumes that the outlets are sorted from lowest to highest activation thresholds
-    double response_storage_meters(double &in_flux_meters_per_second, int delta_time_seconds)
+    //Function to update the response of storage in meters to an influx and timestep.
+    double response_storage_meters(double in_flux_meters_per_second, int delta_time_seconds)
     {	
-      state.current_storage_height_meters = in_flux_meters_per_second * delta_time_seconds;
+        state.current_storage_height_meters += in_flux_meters_per_second * delta_time_seconds;
 	
-      for (auto& outlet : this->outlets) //pointer to outlets
-      {
-        //Update storage  
-        state.current_storage_height_meters -= outlet.velocity_meters_per_second(parameters, state) * delta_time_seconds;
-      }
+        for (auto& outlet : this->outlets) //pointer to outlets
+        {
+            //Update storage from outlet velocity multiplied by delta time.
+            state.current_storage_height_meters -= outlet.velocity_meters_per_second(parameters, state) * delta_time_seconds;
 
-      //TODO: Return extra storage to caller
-      //Is this being called with an in_flux rate or storage as inputs?
-      //		
-      //if (state.current_storage_height_meters > state.maximum_storage_meters)
-      //  in_flux_meters_per_second += (maximum_storage_meters - current_storage_height_meters) / dt
-      //  current_storage_height_meters = maximum_storage_meters
+        }
+
+        //If storage is less than minimum storage, correct to minimum storage.
+        if (state.current_storage_height_meters < parameters.minimum_storage_meters)
+            state.current_storage_height_meters = parameters.minimum_storage_meters;
+
+        //If storage is greater than maximum storage, correct to maximum storage.
+        if (state.current_storage_height_meters > parameters.maximum_storage_meters)
+            state.current_storage_height_meters = parameters.maximum_storage_meters;   
+            //TODO: Return extra storage to caller	
+            //in_flux_meters_per_second += (parameters.maximum_storage_meters - state.current_storage_height_meters) / delta_time_seconds
     }
 
-    double get_storage_meters()
+    //Accessor to return storage
+    double get_storage_height_meters()
     {
-      return state.current_storage_height_meters;
+        return state.current_storage_height_meters;
     }
 
-  private:
+    //TODO: Potential Additions
+    //1. Local sub-timestep to see if storage level crosses threshold below activation height of an outlet
+    //   or above top of outlet.
+    //2. Correct for water level falling below an activation threshold and return a flag to possibly call another
+    //   function that calls a partial timestep.
+    //3. Return total velocity or individual outlet velocities and these would be multiplied by a watershed area
+    //   to get discharge in cubic meters per second.
+
+    private:
     reservoir_parameters parameters;
-    reservoir_state state; // State of storages for a given reservoir_parameters
+    reservoir_state state;
  
     std::vector <Reservoir_Outlet> outlets;	
 
 };
-
-
-
-//int main()
-//{
-//  reservoir = Nonlinear_Reservoir(1.0, 1.0, 1.0);
-
-
-//}
-
