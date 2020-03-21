@@ -93,14 +93,19 @@ class Nonlinear_Reservoir
         this->outlets = outlets;
 	  
         //Ensure that reservoir outlet activation thresholds are sorted from least to greatest height
-        (this->outlets.begin(), this->outlets.end(), [](const Reservoir_Outlet &left, const Reservoir_Outlet &right)
-        {
-            //Ensure that the activation threshold is less than the maximum storage
-            //if (left.activation_threshold_meters > maximum_storage_meters)
-            //TODO: Return appropriate error                
-
+        sort(this->outlets.begin(), this->outlets.end(), [](const Reservoir_Outlet &left, const Reservoir_Outlet &right)
+        {              
             return left.activation_threshold_meters < right.activation_threshold_meters;
         });
+
+        //Ensure that the activation threshold is less than the maximum storage
+        for (auto& outlet : this->outlets) //pointer to outlets
+        {
+            if (outlet.activation_threshold_meters > maximum_storage_meters)
+            //TODO: Return appropriate error
+                continue; 
+        }
+
     }	
 
     //Function to update the response of storage in meters to an influx and timestep.
@@ -112,7 +117,6 @@ class Nonlinear_Reservoir
         {
             //Update storage from outlet velocity multiplied by delta time.
             state.current_storage_height_meters -= outlet.velocity_meters_per_second(parameters, state) * delta_time_seconds;
-
         }
 
         //If storage is less than minimum storage, correct to minimum storage.
