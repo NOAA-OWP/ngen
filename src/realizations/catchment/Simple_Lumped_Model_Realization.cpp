@@ -61,6 +61,6 @@ double Simple_Lumped_Model_Realization::calc_et(double soil_m, void* et_params)
 double Simple_Lumped_Model_Realization::get_response(double input_flux, time_step_t t, void* et_params)
 {
     add_time(t+1, params.n);
-    hymod_kernel::run(params, state[t], fluxes[t-params.Ks], state[t+1], fluxes[t], input_flux, et_params);
+    hymod_kernel::run(params, state[t], state[t+1], fluxes[t], input_flux, et_params);
     return fluxes[t].slow_flow + fluxes[t].runnoff;
 }
