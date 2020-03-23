@@ -4,6 +4,7 @@
 #include <cmath>
 #include <vector>
 #include "LinearReservoir.hpp"
+#include "Pdm03.h"
 
 //! Hymod paramaters struct
 /*!
@@ -67,7 +68,7 @@ struct hymod_fluxes
     {}
 };
 
-enum HighModeErrorCodes
+enum HighModErrorCodes
 {
     NO_ERROR = 0,
     MASS_BALANCE_ERROR = 100
@@ -94,7 +95,6 @@ class hymod_kernel
     static int run(
         hymod_params params,        //!< static parameters for hymod
         hymod_state state,          //!< model state
-        hymod_fluxes ks_fluxes,     //!< fluxes from Ks time steps in the past
         hymod_state& new_state,     //!< model state struct to hold new model state
         hymod_fluxes& fluxes,       //!< model flux object to hold calculated fluxes
         double input_flux,          //!< the amount water entering the system this time step
@@ -188,13 +188,12 @@ extern "C"
 
     inline int hymod(hymod_params params,  //!< static parameters for hymod
         hymod_state state,                  //!< model state
-        hymod_fluxes ks_fluxes,             //!< fluxes from Ks time steps in the past
         hymod_state* new_state,             //!< model state struct to hold new model state
         hymod_fluxes* fluxes,               //!< model flux object to hold calculated fluxes
         double input_flux,                  //!< the amount water entering the system this time step
         void* et_params)                    //!< parameters for the et function
     {
-        return hymod_kernel::run(params, state, ks_fluxes, *new_state, *fluxes, input_flux, et_params);
+        return hymod_kernel::run(params, state, *new_state, *fluxes, input_flux, et_params);
     }
 }
 
