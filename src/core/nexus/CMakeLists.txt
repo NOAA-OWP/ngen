@@ -1,14 +1,19 @@
 cmake_minimum_required(VERSION 3.10)
 
-add_library(NGen::core_nexus STATIC
-        HY_HydroNexus.cpp,
+add_library(core_nexus STATIC
+        HY_HydroNexus.cpp
         HY_PointHydroNexus.cpp
         )
 
-target_include_directories(NGen:core_nexus PUBLIC
+add_library(NGen::core_nexus ALIAS core_nexus)
+
+target_include_directories(core_nexus PUBLIC
         ../../../include/core
         )
 
-target_link_libraries(NGen::core_nexus PUBLIC
+# TODO: consider setting a minimum or required version
+find_package(Boost)
+
+target_link_libraries(core_nexus PUBLIC
         Boost::boost                # Headers-only Boost
         )
