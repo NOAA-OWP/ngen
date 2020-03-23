@@ -7,6 +7,7 @@ add_library(NGen::realizations_catchment STATIC
 target_include_directories(NGen::realizations_catchment PUBLIC
         ../../../include/core
         ../../../include/core/catchment
+        ../../../include/realizations/catchment
         ../../../models
         ../../../models/kernels
         )
