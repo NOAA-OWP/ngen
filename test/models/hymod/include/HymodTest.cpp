@@ -1,4 +1,5 @@
 #include <vector>
+#include <fstream>
 #include "gtest/gtest.h"
 #include "hymod/include/Hymod.h"
 
@@ -78,7 +79,22 @@ TEST_F(HymodKernelTest, TestWithKnownInput)
     hymod_params params{400.0, 0.5, 1.3, 0.2, 0.02, 3};
 
     // initalize hymod state for time step zero
-    hymod_params state_zero{};
+    backing_storage.push_back(std::vector<double>{0.0, 0.0, 0.0});
+    states.push_back(hymod_state{0.9, 0.0, backing_storage[0].data()});
+
+    // initalize hymod fluxes
+    fluxes.push_back(hymod_fluxes(0.0, 0.0, 0.0));
+
+    // open the file that contains forcings
+    std::ifstream input_file("test/data/model/hymod/hymod_forcing.txt");
+
+    if ( !input_file )
+    {
+        std::cout << "Test file not found";
+
+    }
+
+
 
     ASSERT_TRUE(true);
 }

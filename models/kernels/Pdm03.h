@@ -8,6 +8,20 @@ using std::min;
 
 extern "C"
 {
+    struct pdm03_struct
+    {
+        int modelDay;
+        double Cpar;
+        double B;
+        double XHuz;
+        double OV;
+        double AE;
+        double XCuz;
+        double effPrecip;
+        double PE;
+        double Kv;
+    };
+
     void Pdm03(int modelDay,
         double Cpar,
         double B,
