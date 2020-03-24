@@ -4,7 +4,7 @@ The project uses the [CMake](https://gitlab.kitware.com/cmake/cmake) tool to man
 
 This document briefly discusses a few of the essential aspects as they relate to the project.
 
-## The TLDR;
+## The TL;DR
 
 - The project needs a (or multiple) CMake-base build system (or buildsystem) to compile code, build artifacts, and perform other project meta-tasks frequently referred to as "builds."
 - The build system has to be manually [generated](#generating-a-build-system); it does not exist by default after cloning.
@@ -14,6 +14,7 @@ This document briefly discusses a few of the essential aspects as they relate to
 - Generating the build system can be done either from [inside](#generating-from-build-directory) the (empty) build directory or [outside](#generating-from-project-root) of it, but the required commands are different.
 - Executing builds can also be done either from [inside](#building-from-build-directory) the build directory or [outside](#building-from-source-directory) of it, but again the required commands are different.
 - Ensure [dependencies](#dependencies) are available and that the build system is updated or regenerated appropriately when dependencies' statuses change
+- The project [build structure](#build-design) is designed using collections of [nested libraries](#library-based-structure), configured at the directory level by multiple `CMakeLists.txt` files
 
 # Generating a Build System
 
@@ -105,4 +106,24 @@ In some cases - in particular **Google Test** - the build system will need to be
 
 The Boost libraries must be available for the project to compile.  The details are discussed more in the [Dependencies](DEPENDENCIES.md) doc, but as a helpful hint, the **BOOST_ROOT** environmental variable can be set to the path of the applicable [Boost root directory](https://www.boost.org/doc/libs/1_72_0/more/getting_started/unix-variants.html#the-boost-distribution).  The project's [CMakeLists.txt](../CMakeLists.txt) is written to check for this env variable and use it to set the Boost include directory.
 
-Note that if the variable is not set, it may still be possible for CMake to find Boost, although a *status* message will be printed by CMake indicating **BOOST_ROOT** was not set. 
+Note that if the variable is not set, it may still be possible for CMake to find Boost, although a *status* message will be printed by CMake indicating **BOOST_ROOT** was not set.
+
+# Build Design
+
+## Library-Based Structure
+
+The general design of the CMake configuration is to have each of the various subdirectories containing source files have its own `CMakeLists.txt` file, creating a library for the sources of that directory.  This creates a nested structure of libraries for source files, essentially mirroring the directory structure.
+
+To incorporate these libraries into the main project, the top-level source directories are added within [CMakeLists.txt](../CMakeLists.txt) in the project root.  These get added first with `add_subdirectory`, and then the appropriate libraries being linked to targets as needed with `target_link_libraries`.  The sub-directory `CMakeLists.txt` files follow a similar setup to nest their child directories and libraries.
+
+## Handling Changes
+
+In general, existing `CMakeLists.txt` do not necessarily have to be modified to handle code changes, include the addition of a new source file.  A custom CMake function within [cmake/dynamic_sourced_library.cmake](../cmake/dynamic_sourced_library.cmake) allows for the libraries to dynamically determine the source files to use, in particular using any `*.cpp` files in the library's directory.
+
+However, this assumes includes and dependencies for the library aren't affected.  If the nature of a code change results in a change to the library's dependency or required include directories, that will have to be reflected in the `CMakeLists.txt`.
+
+### Adding New Subdirectories
+
+To add a new directory and library, follow a similar convention as an existing directory.  Ensure the necessary include directories are set for the library, and that any libraries it depends on are available first by setting them as dependencies.
+
+Also, keep in mind adding a new directory and library will require an adjustment to the `CMakeLists.txt` file handling the parent directory/library, within which the addition is nested. 
