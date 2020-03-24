@@ -61,11 +61,13 @@ target_include_directories(ngen PUBLIC
 
 add_subdirectory("src/core")
 add_subdirectory("src/realizations/catchment")
+add_subdirectory("src/geojson")
 
 target_link_libraries(ngen PUBLIC
         NGen::core
         NGen::core_catchment
         NGen::core_nexus
+        NGen::geojson
         NGen::realizations_catchment
         )
 
@@ -75,8 +77,6 @@ if(PACKAGE_TESTS)
     include(GoogleTest)
     add_subdirectory(test)
 endif()
-
-
 
 #add_library(Hymod ${HYMOD_INCLUDE_DIR}/Hymod.h)
 #set_target_properties(Hymod PROPERTIES LINKER_LANGUAGE CXX)
