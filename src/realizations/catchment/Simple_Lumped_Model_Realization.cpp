@@ -49,7 +49,7 @@ void Simple_Lumped_Model_Realization::add_time(time_t t, double n)
 
         // create storage for the state
 
-        state[t] = hymod_state(0.0,cascade_backing_storage[t].data());
+        state[t] = hymod_state(0.0, 0.0, cascade_backing_storage[t].data());
     }
 }
 
@@ -61,6 +61,6 @@ double Simple_Lumped_Model_Realization::calc_et(double soil_m, void* et_params)
 double Simple_Lumped_Model_Realization::get_response(double input_flux, time_step_t t, void* et_params)
 {
     add_time(t+1, params.n);
-    hymod_kernel::run(params, state[t], fluxes[t-params.Ks], state[t+1], fluxes[t], input_flux, et_params);
-    return fluxes[t].slow_flow_out + fluxes[t].runnoff;
+    hymod_kernel::run(params, state[t], state[t+1], fluxes[t], input_flux, et_params);
+    return fluxes[t].slow_flow + fluxes[t].runnoff;
 }
