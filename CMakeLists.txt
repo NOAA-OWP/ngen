@@ -40,9 +40,8 @@ set(PROJ_ROOT_MODELS_DIR ./models)
 set(HYMOD_DIR ${PROJ_ROOT_MODELS_DIR}/hymod)
 set(HYMOD_INCLUDE_DIR ${HYMOD_DIR}/include)
 
-# TODO: fix the setup for this, in particular this file's location in directory structure
 add_executable(ngen
-        src/core/NGen.cpp
+        src/NGen.cpp
         )
 
 # Find the Boost library and configure usage
