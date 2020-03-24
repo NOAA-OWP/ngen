@@ -1,18 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
-add_library(core_catchment STATIC
-        HY_CartographicRealization.cpp
-        HY_Catchment.cpp
-        HY_CatchmentAggregate.cpp
-        HY_CatchmentArea.cpp
-        HY_CatchmentDivide.cpp
-        HY_CatchmentRealization.cpp
-        HY_CartographicRealization.cpp
-        HY_DendriticCatchment.cpp
-        HY_FlowPath.cpp
-        HY_HydroNetwork.cpp
-        HY_InteriorCatchment.cpp
-        )
+include(${PROJECT_SOURCE_DIR}/cmake/dynamic_sourced_library.cmake)
+dynamic_sourced_cxx_library(core_catchment "${CMAKE_CURRENT_SOURCE_DIR}")
 
 add_library(NGen::core_catchment ALIAS core_catchment)
 
