@@ -9,7 +9,8 @@ include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
 macro(add_automated_test TESTNAME)
     add_executable(${TESTNAME} ${ARGN})
-    target_link_libraries(${TESTNAME} gtest gtest_main)
+    target_link_libraries(${TESTNAME} gtest gtest_main 
+        Boost::boost)
     gtest_discover_tests(${TESTNAME}
             WORKING_DIRECTORY ${PROJECT_DIR}
             PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${PROJECT_DIR}"
@@ -29,6 +30,8 @@ endmacro()
 
 # Individual tests
 add_automated_test(test_hymod models/hymod/include/HymodTest.cpp)
+add_automated_test(test_geojson geojson/JSONProperty_Test.cpp)
+
 
 # Unit tests
 add_automated_test(test_unit models/hymod/include/HymodTest.cpp)

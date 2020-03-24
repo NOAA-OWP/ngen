@@ -45,6 +45,7 @@ include_directories(${APP_INCLUDE_DIR}/core
         ${APP_INCLUDE_DIR}/core/nexus
         ${APP_INCLUDE_DIR}/core/utility
         ${APP_INCLUDE_DIR}/realizations/catchment
+        ${APP_INCLUDE_DIR}/geojson
         ${APP_MODELS_DIR}
         ${APP_MODELS_DIR}/kernels
         #${HYMOD_INCLUDE_DIR}
@@ -66,6 +67,10 @@ add_executable(ngen
         src/core/catchment/HY_InteriorCatchment.cpp
         src/core/nexus/HY_HydroNexus.cpp
         src/core/nexus/HY_PointHydroNexus.cpp
+        src/geojson/JSONProperty.cpp
+        src/geojson/JSONGeometry.cpp
+        src/geojson/Feature.cpp
+        src/geojson/FeatureCollection.cpp
         src/realizations/catchment/Simple_Lumped_Model_Realization.cpp)
 
 # Find the Boost library and configure usage
@@ -108,3 +113,4 @@ endif()
 #
 #target_compile_options(ngen PUBLIC -std=c++14 -Wall)
 #target_compile_features(ngen PUBLIC cxx_std_14)
+add_subdirectory("src/geojson")
