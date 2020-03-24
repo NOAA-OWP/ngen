@@ -12,16 +12,16 @@ class LinearReservoir
             this->storage += input_storage;
         }
 
-        double response()
+        double flux(double dt_secs)
         {
-            return (this->storage / this->max_storage) * this->linear_reservoir_constant;
+            return (this->storage / this->max_storage) * this->linear_reservoir_constant * (dt_secs/ 3600);
         }
 
-        double response_and_update(double input_storage)
+        double response(double input_storage, double dt_secs)
         {
-            this->update_storage(input_storage);
-            double output_flux = this->response();
-            this->update_storage(-output_flux);
+            this->storage += input_storage;
+            double output_flux = this->flux(dt_secs);
+            this->storage -= output_flux;
             return output_flux;
         }
 

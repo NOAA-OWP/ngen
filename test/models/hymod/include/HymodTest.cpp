@@ -91,8 +91,10 @@ TEST_F(HymodKernelTest, TestWithKnownInput)
     if ( !input_file )
     {
         std::cout << "Test file not found";
-
+        ASSERT_TRUE(false);
     }
+
+    // read forcing from the input file
 
 
 

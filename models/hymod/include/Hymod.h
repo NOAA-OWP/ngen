@@ -126,11 +126,11 @@ class hymod_kernel
         double et = calc_et(soil_m, et_params);
 
         // get the slow flow output for this time - ks
-        double slow_flow = groundwater.response_and_update(slow);
+        double slow_flow = groundwater.response(slow, 3600.0);
 
         for(unsigned long int i = 0; i < nash_cascade.size(); ++i)
         {
-            runoff = nash_cascade[i].response_and_update(runoff);
+            runoff = nash_cascade[i].response(runoff,3600.0);
         }
 
         // record all fluxs
