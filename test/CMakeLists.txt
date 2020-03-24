@@ -9,7 +9,12 @@ include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
 macro(add_automated_test TESTNAME)
     add_executable(${TESTNAME} ${ARGN})
-    target_link_libraries(${TESTNAME} gtest gtest_main)
+    # This should include the same as the main ngen executable
+    target_link_libraries(${TESTNAME}
+            gtest
+            gtest_main
+            NGen::core
+            NGen::realizations_catchment)
     gtest_discover_tests(${TESTNAME}
             WORKING_DIRECTORY ${PROJECT_DIR}
             PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${PROJECT_DIR}"
@@ -19,7 +24,14 @@ endmacro()
 
 macro(add_automated_test_w_mock TESTNAME)
     add_executable(${TESTNAME} ${ARGN})
-    target_link_libraries(${TESTNAME} gtest gmock gtest_main)
+    # This should include the same as the main ngen executable
+    target_link_libraries(${TESTNAME}
+            gtest
+            gmock
+            gtest_main
+            NGen::core
+            NGen::realizations_catchment
+            )
     gtest_discover_tests(${TESTNAME}
             WORKING_DIRECTORY ${PROJECT_DIR}
             PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${PROJECT_DIR}"
