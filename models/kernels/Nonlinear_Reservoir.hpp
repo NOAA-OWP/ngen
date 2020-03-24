@@ -16,6 +16,14 @@ struct reservoir_state
     double current_storage_height_meters;  
 };
 
+/*
+class Reservoir_Outlet;
+class Nonlinear_Reservoir
+{
+    //public:
+    void sort_outlets();
+};
+*/
 
 //This class is for a single reservior outlet that holds the parameters a, b, and the activation threhold, which is
 //the height in meters the bottom of the outlet is above the bottom of the reservoir. This class also contains a 
@@ -24,9 +32,8 @@ struct reservoir_state
 class Reservoir_Outlet
 {
     public:
+   //double activation_threshold_meters;
 
-    double activation_threshold_meters;       
-   
     //Default Constructor
     Reservoir_Outlet(): activation_threshold_meters(0.0), a(0.0), b(0.0)
     {
@@ -51,9 +58,20 @@ class Reservoir_Outlet
                / (parameters_struct.maximum_storage_meters - activation_threshold_meters), b);
     };
 
+    //Accessor to return activation_threshold_meters
+    double get_activation_threshold_meters()
+    {
+        return activation_threshold_meters;
+    };
+
+    //friend void Nonlinear_Reservoir::sort_outlets();
+
     private:
     double a;
     double b;
+    double activation_threshold_meters;
+
+
 };
 
  
@@ -91,25 +109,38 @@ class Nonlinear_Reservoir
     {
 
         this->outlets = outlets;
-	  
+	
+
+        sort_outlets();
+
+/*  
         //Ensure that reservoir outlet activation thresholds are sorted from least to greatest height
         sort(this->outlets.begin(), this->outlets.end(), [](const Reservoir_Outlet &left, const Reservoir_Outlet &right)
+        //sort(this->outlets.begin(), this->outlets.end(), [](Reservoir_Outlet &left, Reservoir_Outlet &right)
         {              
             return left.activation_threshold_meters < right.activation_threshold_meters;
+            //return left.get_activation_threshold_meters() < right.get_activation_threshold_meters();
+//get_activation_threshold_meters()
         });
 
+
+*/
         //Ensure that the activation threshold is less than the maximum storage
         for (auto& outlet : this->outlets) //pointer to outlets
         {
-            if (outlet.activation_threshold_meters > maximum_storage_meters)
+            //if (outlet.activation_threshold_meters > maximum_storage_meters)
+            if (outlet.get_activation_threshold_meters() > maximum_storage_meters)
             //TODO: Return appropriate error
                 continue; 
         }
 
+
     }	
 
+    //TODO:  Take in an explicit excess water variable
+    // that would be set to zero if no excess or the excess amount.
     //Function to update the response of storage in meters to an influx and timestep.
-    double response_storage_meters(double in_flux_meters_per_second, int delta_time_seconds)
+    double response_storage_meters(double in_flux_meters_per_second, int delta_time_seconds, double &excess_water_meters)
     {	
         state.current_storage_height_meters += in_flux_meters_per_second * delta_time_seconds;
 	
@@ -119,16 +150,44 @@ class Nonlinear_Reservoir
             state.current_storage_height_meters -= outlet.velocity_meters_per_second(parameters, state) * delta_time_seconds;
         }
 
-        //If storage is less than minimum storage, correct to minimum storage.
-        if (state.current_storage_height_meters < parameters.minimum_storage_meters)
-            state.current_storage_height_meters = parameters.minimum_storage_meters;
 
-        //If storage is greater than maximum storage, correct to maximum storage.
-        if (state.current_storage_height_meters > parameters.maximum_storage_meters)
+        //If storage is less than minimum storage, return negative excess water to be substracted from the input flux.
+        if (state.current_storage_height_meters < parameters.minimum_storage_meters)
+            //state.current_storage_height_meters = parameters.minimum_storage_meters;
+	    excess_water_meters = (state.current_storage_height_meters - parameters.minimum_storage_meters);
+
+
+        //If storage is greater than maximum storage, return excess water to be added to the input flux.
+        else if (state.current_storage_height_meters > parameters.maximum_storage_meters)
             state.current_storage_height_meters = parameters.maximum_storage_meters;   
-            //TODO: Return extra storage to caller	
-            //in_flux_meters_per_second += (parameters.maximum_storage_meters - state.current_storage_height_meters) / delta_time_seconds
+            //TODO: Return extra storage to caller
+             
+	    excess_water_meters = (state.current_storage_height_meters - parameters.maximum_storage_meters);
+
+        //If storage remains in bounds of the reservoir, return zero excess water to the input flux.
+        else
+            excess_water_meters = 0.0;
+
     }
+
+    void sort_outlets()
+    {
+  
+        //Ensure that reservoir outlet activation thresholds are sorted from least to greatest height
+        //sort(this->outlets.begin(), this->outlets.end(), [](const Reservoir_Outlet &left, const Reservoir_Outlet &right)
+
+        //sort(this->outlets.begin(), this->outlets.end(), [](Reservoir_Outlet &left, Reservoir_Outlet &right)
+        
+        sort(this->outlets.begin(), this->outlets.end(), [](auto &left, auto &right)
+
+        //sort(this->outlets.begin(), this->outlets.end(), [](Reservoir_Outlet &left, Reservoir_Outlet &right)
+        {              
+            //return left.activation_threshold_meters < right.activation_threshold_meters;
+            return left.get_activation_threshold_meters() < right.get_activation_threshold_meters();
+//get_activation_threshold_meters()
+        });
+     }
+
 
     //Accessor to return storage
     double get_storage_height_meters()
@@ -148,6 +207,6 @@ class Nonlinear_Reservoir
     reservoir_parameters parameters;
     reservoir_state state;
  
-    std::vector <Reservoir_Outlet> outlets;	
+    std::vector <Reservoir_Outlet> outlets;
 
 };
