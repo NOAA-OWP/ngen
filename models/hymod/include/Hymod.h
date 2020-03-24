@@ -68,7 +68,7 @@ struct hymod_fluxes
     {}
 };
 
-enum HighModErrorCodes
+enum HyModErrorCodes
 {
     NO_ERROR = 0,
     MASS_BALANCE_ERROR = 100
@@ -107,11 +107,11 @@ class hymod_kernel
         nash_cascade.resize(params.n);
         for ( unsigned long i = 0; i < nash_cascade.size(); ++i )
         {
-            nash_cascade[i] = LinearReservoir(params.Kq, state.Sr[i]);
+            nash_cascade[i] = LinearReservoir(state.Sr[i], params.max_storage, params.Kq);
         }
 
         // initalize groundwater reservoir
-        LinearReservoir groundwater(params.Ks, state.groundwater_storage);
+        LinearReservoir groundwater(state.groundwater_storage, params.max_storage, params.Ks);
 
         // add flux to the current state
         state.storage += input_flux;
@@ -126,11 +126,11 @@ class hymod_kernel
         double et = calc_et(soil_m, et_params);
 
         // get the slow flow output for this time - ks
-        double slow_flow = groundwater.response(slow);
+        double slow_flow = groundwater.response_and_update(slow);
 
         for(unsigned long int i = 0; i < nash_cascade.size(); ++i)
         {
-            runoff = nash_cascade[i].response(runoff);
+            runoff = nash_cascade[i].response_and_update(runoff);
         }
 
         // record all fluxs
