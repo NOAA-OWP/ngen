@@ -110,8 +110,8 @@ TEST_F(NonlinearReservoirKernelTest, TestRunNoOutletReservoir)
     double in_flux_meters_per_second;
 
     in_flux_meters_per_second = 0.05;
-
-    NoOutletReservoir->response_storage_meters(in_flux_meters_per_second, 10);
+    double excess;
+    NoOutletReservoir->response_storage_meters(in_flux_meters_per_second, 10, excess);
 
     double final_storage;
 
@@ -130,8 +130,8 @@ TEST_F(NonlinearReservoirKernelTest, TestRunOneOutletReservoir)
     double in_flux_meters_per_second;
 
     in_flux_meters_per_second = 0.2;
-
-    OneOutletReservoir->response_storage_meters(in_flux_meters_per_second, 10);
+    double excess;
+    OneOutletReservoir->response_storage_meters(in_flux_meters_per_second, 10, excess);
 
     double final_storage;
 
@@ -150,8 +150,8 @@ TEST_F(NonlinearReservoirKernelTest, TestRunOneOutletReservoirNoActivation)
     double in_flux_meters_per_second;
 
     in_flux_meters_per_second = 0.02;
-
-    OneOutletReservoir->response_storage_meters(in_flux_meters_per_second, 10);
+    double excess;
+    OneOutletReservoir->response_storage_meters(in_flux_meters_per_second, 10, excess);
 
     double final_storage;
 
@@ -170,8 +170,8 @@ TEST_F(NonlinearReservoirKernelTest, TestRunMultipleOutletReservoir)
     double in_flux_meters_per_second;
 
     in_flux_meters_per_second = 1.6;
-
-    MultipleOutletReservoir->response_storage_meters(in_flux_meters_per_second, 10);
+    double excess;
+    MultipleOutletReservoir->response_storage_meters(in_flux_meters_per_second, 10, excess);
 
     double final_storage;
 
@@ -190,8 +190,8 @@ TEST_F(NonlinearReservoirKernelTest, TestRunMultipleOutletOutOfOrderNonlinearRes
     double in_flux_meters_per_second;
 
     in_flux_meters_per_second = 1.6;
-
-    MultipleOutletOutOfOrderNonlinearReservoir->response_storage_meters(in_flux_meters_per_second, 10);
+    double excess;
+    MultipleOutletOutOfOrderNonlinearReservoir->response_storage_meters(in_flux_meters_per_second, 10, excess);
 
     double final_storage;
 
