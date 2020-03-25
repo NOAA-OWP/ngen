@@ -6,8 +6,8 @@ dynamic_sourced_cxx_library(core_nexus "${CMAKE_CURRENT_SOURCE_DIR}")
 add_library(NGen::core_nexus ALIAS core_nexus)
 
 target_include_directories(core_nexus PUBLIC
-        ../../../include/core
-        ../../../include/core/nexus
+        ${PROJECT_SOURCE_DIR}/include/core
+        ${PROJECT_SOURCE_DIR}/include/core/nexus
         )
 
 # TODO: consider setting a minimum or required version
