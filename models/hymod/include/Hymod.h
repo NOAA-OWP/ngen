@@ -93,6 +93,7 @@ class hymod_kernel
 
     //! run one time step of hymod
     static int run(
+        double dt,
         hymod_params params,        //!< static parameters for hymod
         hymod_state state,          //!< model state
         hymod_state& new_state,     //!< model state struct to hold new model state
@@ -107,11 +108,11 @@ class hymod_kernel
         nash_cascade.resize(params.n);
         for ( unsigned long i = 0; i < nash_cascade.size(); ++i )
         {
-            nash_cascade[i] = LinearReservoir(state.Sr[i], params.max_storage, params.Kq);
+            nash_cascade[i] = LinearReservoir(state.Sr[i], params.max_storage, params.Kq, 86400.0);
         }
 
         // initalize groundwater reservoir
-        LinearReservoir groundwater(state.groundwater_storage, params.max_storage, params.Ks);
+        LinearReservoir groundwater(state.groundwater_storage, params.max_storage, params.Ks, 86400.0);
 
         // add flux to the current state
         state.storage += input_flux;
@@ -126,11 +127,11 @@ class hymod_kernel
         double et = calc_et(soil_m, et_params);
 
         // get the slow flow output for this time - ks
-        double slow_flow = groundwater.response(slow, 3600.0);
+        double slow_flow = groundwater.response(slow, dt);
 
         for(unsigned long int i = 0; i < nash_cascade.size(); ++i)
         {
-            runoff = nash_cascade[i].response(runoff,3600.0);
+            runoff = nash_cascade[i].response(runoff, dt);
         }
 
         // record all fluxs
@@ -186,14 +187,16 @@ extern "C"
         C entry point for calling hymod_kernel::run
     */
 
-    inline int hymod(hymod_params params,  //!< static parameters for hymod
+    inline int hymod(
+        double dt,                          //!< size of time step
+        hymod_params params,                //!< static parameters for hymod
         hymod_state state,                  //!< model state
         hymod_state* new_state,             //!< model state struct to hold new model state
         hymod_fluxes* fluxes,               //!< model flux object to hold calculated fluxes
         double input_flux,                  //!< the amount water entering the system this time step
         void* et_params)                    //!< parameters for the et function
     {
-        return hymod_kernel::run(params, state, *new_state, *fluxes, input_flux, et_params);
+        return hymod_kernel::run(dt, params, state, *new_state, *fluxes, input_flux, et_params);
     }
 }
 

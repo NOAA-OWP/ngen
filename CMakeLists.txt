@@ -40,6 +40,20 @@ set(APP_MODELS_DIR ./models)
 set(HYMOD_DIR ${APP_MODELS_DIR}/hymod)
 set(HYMOD_INCLUDE_DIR ${HYMOD_DIR}/include)
 
+# Find the Boost library and configure usage
+set(Boost_USE_STATIC_LIBS OFF)
+set(Boost_USE_MULTITHREADED ON)
+set(Boost_USE_STATIC_RUNTIME OFF)
+
+if(DEFINED ENV{BOOST_ROOT})
+    set(Boost_INCLUDE_DIR $ENV{BOOST_ROOT})
+else()
+    message(STATUS "No Boost root: $ENV{BOOST_ROOT}")
+endif()
+
+# TODO: consider setting a minimum or required version
+find_package(Boost)
+
 include_directories(${APP_INCLUDE_DIR}/core
         ${APP_INCLUDE_DIR}/core/catchment
         ${APP_INCLUDE_DIR}/core/nexus
@@ -47,6 +61,7 @@ include_directories(${APP_INCLUDE_DIR}/core
         ${APP_INCLUDE_DIR}/realizations/catchment
         ${APP_MODELS_DIR}
         ${APP_MODELS_DIR}/kernels
+        ${Boost_INCLUDE_DIR}
         #${HYMOD_INCLUDE_DIR}
         )
 
@@ -67,20 +82,6 @@ add_executable(ngen
         src/core/nexus/HY_HydroNexus.cpp
         src/core/nexus/HY_PointHydroNexus.cpp
         src/realizations/catchment/Simple_Lumped_Model_Realization.cpp)
-
-# Find the Boost library and configure usage
-set(Boost_USE_STATIC_LIBS OFF)
-set(Boost_USE_MULTITHREADED ON)
-set(Boost_USE_STATIC_RUNTIME OFF)
-
-if(DEFINED ENV{BOOST_ROOT})
-    set(Boost_INCLUDE_DIR $ENV{BOOST_ROOT})
-else()
-    message(STATUS "No Boost root: $ENV{BOOST_ROOT}")
-endif()
-
-# TODO: consider setting a minimum or required version
-find_package(Boost)
 
 # Link appropriate libraries to main ngen executable target
 target_link_libraries(ngen PUBLIC

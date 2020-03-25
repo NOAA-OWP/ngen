@@ -1,5 +1,10 @@
 #include <vector>
 #include <fstream>
+#include <string>
+
+#include <boost/algorithm/string.hpp>
+#include <boost/lexical_cast.hpp>
+
 #include "gtest/gtest.h"
 #include "hymod/include/Hymod.h"
 
@@ -82,19 +87,54 @@ TEST_F(HymodKernelTest, TestWithKnownInput)
     backing_storage.push_back(std::vector<double>{0.0, 0.0, 0.0});
     states.push_back(hymod_state{0.9, 0.0, backing_storage[0].data()});
 
-    // initalize hymod fluxes
-    fluxes.push_back(hymod_fluxes(0.0, 0.0, 0.0));
-
     // open the file that contains forcings
     std::ifstream input_file("test/data/model/hymod/hymod_forcing.txt");
 
     if ( !input_file )
     {
-        std::cout << "Test file not found";
+        std::cout << "Test file not found\n";
         ASSERT_TRUE(false);
     }
 
     // read forcing from the input file
+    std::string buffer;
+
+    // skip to the beggining of forcing data
+    do
+    {
+        std::getline(input_file, buffer);
+    } while (input_file and !boost::starts_with(buffer, "<DATA_START>") );
+
+    // apply the forcings from the file
+    do
+    {
+        std::getline(input_file, buffer);
+
+        std::vector<std::string> parts;
+        boost::split(parts,buffer, boost::is_any_of(" "), boost::token_compress_on);
+
+        if ( parts.size() >= 5 )
+        {
+            //std::cout << parts[1] << " " << parts[2] << " " << parts[3] << " " << parts[4] << std::endl;
+            int year = boost::lexical_cast<int>(parts[1]);
+            int month = boost::lexical_cast<int>(parts[2]);
+            int day = boost::lexical_cast<int>(parts[3]);
+            double input_flux = boost::lexical_cast<double>(parts[4]);
+
+            // initalize hymod state for next time step
+            backing_storage.push_back(std::vector<double>{0.0, 0.0, 0.0});
+            states.push_back(hymod_state{0.9, 0.0, backing_storage[0].data()});
+
+            // initalize hymod fluxes for this time step
+            fluxes.push_back(hymod_fluxes(0.0, 0.0, 0.0));
+
+            int pos = fluxes.size() - 1;
+            double et_stand_in = 0;
+
+            hymod_kernel::run(params, states[pos], states[pos+1], fluxes[pos], input_flux, &et_stand_in);
+
+        }
+    } while( input_file );
 
 
 
