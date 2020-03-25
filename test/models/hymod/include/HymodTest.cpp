@@ -1,13 +1,11 @@
 #include <vector>
 #include <fstream>
-<<<<<<< HEAD
 #include <string>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 
-=======
->>>>>>> d11576c0aa4279d8978c5b48f83e08a20ffdb88b
+
 #include "gtest/gtest.h"
 #include "hymod/include/Hymod.h"
 
@@ -68,7 +66,8 @@ TEST_F(HymodKernelTest, TestRun0)
     double input_flux = 1.0;
 
     //hymod_kernel::run(params, h_state, ks_fluxes, new_state, new_fluxes, input_flux, et_params);
-    hymod_kernel::run(params,
+    hymod_kernel::run(86400.0,
+            params,
             state,
             new_state,
             fluxes,
@@ -90,27 +89,16 @@ TEST_F(HymodKernelTest, TestWithKnownInput)
     backing_storage.push_back(std::vector<double>{0.0, 0.0, 0.0});
     states.push_back(hymod_state{0.9, 0.0, backing_storage[0].data()});
 
-<<<<<<< HEAD
-=======
-    // initalize hymod fluxes
-    fluxes.push_back(hymod_fluxes(0.0, 0.0, 0.0));
-
->>>>>>> d11576c0aa4279d8978c5b48f83e08a20ffdb88b
     // open the file that contains forcings
     std::ifstream input_file("test/data/model/hymod/hymod_forcing.txt");
 
     if ( !input_file )
     {
-<<<<<<< HEAD
-        std::cout << "Test file not found\n";
-=======
-        std::cout << "Test file not found";
->>>>>>> d11576c0aa4279d8978c5b48f83e08a20ffdb88b
+        std::cerr << "Test file not found\n";
         ASSERT_TRUE(false);
     }
 
     // read forcing from the input file
-<<<<<<< HEAD
     std::string buffer;
 
     // skip to the beggining of forcing data
@@ -137,7 +125,7 @@ TEST_F(HymodKernelTest, TestWithKnownInput)
 
             // initalize hymod state for next time step
             backing_storage.push_back(std::vector<double>{0.0, 0.0, 0.0});
-            states.push_back(hymod_state{0.9, 0.0, backing_storage[0].data()});
+            states.push_back(hymod_state{0.0, 0.0, backing_storage[backing_storage.size()-1].data()});
 
             // initalize hymod fluxes for this time step
             fluxes.push_back(hymod_fluxes(0.0, 0.0, 0.0));
@@ -145,12 +133,10 @@ TEST_F(HymodKernelTest, TestWithKnownInput)
             int pos = fluxes.size() - 1;
             double et_stand_in = 0;
 
-            hymod_kernel::run(params, states[pos], states[pos+1], fluxes[pos], input_flux, &et_stand_in);
+            hymod_kernel::run(86400.0, params, states[pos], states[pos+1], fluxes[pos], input_flux, &et_stand_in);
 
         }
     } while( input_file );
-=======
->>>>>>> d11576c0aa4279d8978c5b48f83e08a20ffdb88b
 
 
 
