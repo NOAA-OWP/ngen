@@ -1,4 +1,5 @@
 #include <vector>
+#include <fstream>
 #include "gtest/gtest.h"
 #include "hymod/include/Hymod.h"
 
@@ -6,21 +7,7 @@ class HymodKernelTest : public ::testing::Test {
 
     protected:
 
-    std::vector<hymod_params> params_examples;
 
-    std::vector<std::shared_ptr<double>> storage_res_ptr_examples;
-    std::vector<hymod_state> h_state_examples;
-
-    std::vector<hymod_fluxes> ks_fluxes_examples;
-
-    std::vector<std::shared_ptr<double>> new_storage_res_ptr_examples;
-    std::vector<hymod_state> new_state_examples;
-
-    std::vector<hymod_fluxes> new_fluxes_examples;
-
-    std::vector<double> input_flux_examples;
-
-    std::vector<std::shared_ptr<double>> et_params_db_examples;
 
     HymodKernelTest() {
 
@@ -53,47 +40,64 @@ void HymodKernelTest::TearDown() {
  */
 void HymodKernelTest::setupArbitraryExampleCase() {
 
-    struct hymod_params params = {1.0, 1.0, 1.0, 1.0, 1.0, 1.0};
-    params_examples.push_back(params);
-
-    std::shared_ptr<double> storage_res_ptr = std::make_shared<double>(1.0);
-    storage_res_ptr_examples.push_back(storage_res_ptr);
-    struct hymod_state h_state = {1.0, storage_res_ptr.get()};
-    h_state_examples.push_back(h_state);
-
-    struct hymod_fluxes ks_fluxes = {1.0, 1.0, 1.0, 1.0};
-    ks_fluxes_examples.push_back(ks_fluxes);
-
-    std::shared_ptr<double> new_storage_res_ptr = std::make_shared<double>(2.0);
-    new_storage_res_ptr_examples.push_back(new_storage_res_ptr);
-    struct hymod_state new_state = {2.0, new_storage_res_ptr.get()};
-    new_state_examples.push_back(new_state);
-
-    struct hymod_fluxes new_fluxes = {2.0, 2.0, 2.0, 2.0};
-    new_fluxes_examples.push_back(new_fluxes);
-
-    double input_flux = 2.0;
-    input_flux_examples.push_back(input_flux);
-
-    std::shared_ptr<double> et_params_db = std::make_shared<double>(3.0);
-    et_params_db_examples.push_back(et_params_db);
 }
 
 //! Test that Hymod executes its 'run' function fully when passed arbitrary valid arguments.
-TEST_F(HymodKernelTest, TestRun0) {
+TEST_F(HymodKernelTest, TestRun0)
+{
+    double et_storage = 0.0;
 
-    int test_case_index = 0;
+    hymod_params params{1000.0, 1.0, 10.0, 0.1, 0.01, 3};
+    double storage = 1.0;
 
-    void* et_param = et_params_db_examples[0].get();
+    double reservior_storage[] = {1.0, 1.0, 1.0};
+    hymod_state state(0.0,0.0, reservior_storage);
+
+    double new_reservior_storage[] = {1.0, 1.0, 1.0};
+    hymod_state new_state(0.0,0.0, new_reservior_storage);
+
+    hymod_fluxes fluxes(0.0, 0.0, 0.0);
+    double input_flux = 1.0;
 
     //hymod_kernel::run(params, h_state, ks_fluxes, new_state, new_fluxes, input_flux, et_params);
-    hymod_kernel::run(params_examples[test_case_index],
-            h_state_examples[test_case_index],
-            ks_fluxes_examples[test_case_index],
-            new_state_examples[test_case_index],
-            new_fluxes_examples[test_case_index],
-            input_flux_examples[test_case_index],
-            et_param);
+    hymod_kernel::run(params,
+            state,
+            new_state,
+            fluxes,
+            input_flux,
+            &et_storage);
+    ASSERT_TRUE(true);
+}
+
+TEST_F(HymodKernelTest, TestWithKnownInput)
+{
+    std::vector<hymod_state> states;
+    std::vector<hymod_fluxes> fluxes;
+    std::vector< std::vector<double> > backing_storage;
+
+    // initalize hymod params
+    hymod_params params{400.0, 0.5, 1.3, 0.2, 0.02, 3};
+
+    // initalize hymod state for time step zero
+    backing_storage.push_back(std::vector<double>{0.0, 0.0, 0.0});
+    states.push_back(hymod_state{0.9, 0.0, backing_storage[0].data()});
+
+    // initalize hymod fluxes
+    fluxes.push_back(hymod_fluxes(0.0, 0.0, 0.0));
+
+    // open the file that contains forcings
+    std::ifstream input_file("test/data/model/hymod/hymod_forcing.txt");
+
+    if ( !input_file )
+    {
+        std::cout << "Test file not found";
+        ASSERT_TRUE(false);
+    }
+
+    // read forcing from the input file
+
+
+
     ASSERT_TRUE(true);
 }
 
@@ -104,9 +108,9 @@ TEST_F(HymodKernelTest, TestRun0) {
 */
 TEST_F(HymodKernelTest, TestCalcET0) {
     // Since currently the function doesn't care about params, borrow this from example 0 ...
-    void* et_param = et_params_db_examples[0].get();
+    double et_storage = 0.0;
 
-    ASSERT_EQ(hymod_kernel::calc_et(3.0, et_param), 0.0);
+    ASSERT_EQ(hymod_kernel::calc_et(3.0, &et_storage), 0.0);
 }
 
 
