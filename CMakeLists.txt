@@ -64,6 +64,8 @@ add_subdirectory("src/realizations/catchment")
 
 target_link_libraries(ngen PUBLIC
         NGen::core
+        NGen::core_catchment
+        NGen::core_nexus
         NGen::realizations_catchment
         )
 
