@@ -7,6 +7,7 @@ add_library(NGen::core_nexus ALIAS core_nexus)
 
 target_include_directories(core_nexus PUBLIC
         ../../../include/core
+        ../../../include/core/nexus
         )
 
 # TODO: consider setting a minimum or required version
