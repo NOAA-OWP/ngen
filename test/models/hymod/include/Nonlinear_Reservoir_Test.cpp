@@ -108,12 +108,12 @@ void NonlinearReservoirKernelTest::setupMultipleOutletOutOfOrderNonlinearReservo
 TEST_F(NonlinearReservoirKernelTest, TestRunNoOutletReservoir) 
 {   
     double in_flux_meters_per_second;
+    double excess;
+    double final_storage;
 
     in_flux_meters_per_second = 0.05;
-    double excess;
-    NoOutletReservoir->response_storage_meters(in_flux_meters_per_second, 10, excess);
 
-    double final_storage;
+    NoOutletReservoir->response_storage_meters(in_flux_meters_per_second, 10, excess);
 
     final_storage = NoOutletReservoir->get_storage_height_meters();
 
@@ -128,12 +128,12 @@ TEST_F(NonlinearReservoirKernelTest, TestRunNoOutletReservoir)
 TEST_F(NonlinearReservoirKernelTest, TestRunOneOutletReservoir) 
 {
     double in_flux_meters_per_second;
+    double excess;
+    double final_storage;
 
     in_flux_meters_per_second = 0.2;
-    double excess;
-    OneOutletReservoir->response_storage_meters(in_flux_meters_per_second, 10, excess);
 
-    double final_storage;
+    OneOutletReservoir->response_storage_meters(in_flux_meters_per_second, 10, excess);
 
     final_storage = OneOutletReservoir->get_storage_height_meters();
 
@@ -148,12 +148,12 @@ TEST_F(NonlinearReservoirKernelTest, TestRunOneOutletReservoir)
 TEST_F(NonlinearReservoirKernelTest, TestRunOneOutletReservoirNoActivation) 
 {   
     double in_flux_meters_per_second;
+    double excess;
+    double final_storage;
 
     in_flux_meters_per_second = 0.02;
-    double excess;
-    OneOutletReservoir->response_storage_meters(in_flux_meters_per_second, 10, excess);
 
-    double final_storage;
+    OneOutletReservoir->response_storage_meters(in_flux_meters_per_second, 10, excess);
 
     final_storage = OneOutletReservoir->get_storage_height_meters();
 
@@ -168,12 +168,12 @@ TEST_F(NonlinearReservoirKernelTest, TestRunOneOutletReservoirNoActivation)
 TEST_F(NonlinearReservoirKernelTest, TestRunMultipleOutletReservoir) 
 {    
     double in_flux_meters_per_second;
+    double excess;
+    double final_storage;
 
     in_flux_meters_per_second = 1.6;
-    double excess;
-    MultipleOutletReservoir->response_storage_meters(in_flux_meters_per_second, 10, excess);
 
-    double final_storage;
+    MultipleOutletReservoir->response_storage_meters(in_flux_meters_per_second, 10, excess);
 
     final_storage = MultipleOutletReservoir->get_storage_height_meters();
 
@@ -188,12 +188,12 @@ TEST_F(NonlinearReservoirKernelTest, TestRunMultipleOutletReservoir)
 TEST_F(NonlinearReservoirKernelTest, TestRunMultipleOutletOutOfOrderNonlinearReservoir) 
 {    
     double in_flux_meters_per_second;
+    double excess;
+    double final_storage;
 
     in_flux_meters_per_second = 1.6;
-    double excess;
-    MultipleOutletOutOfOrderNonlinearReservoir->response_storage_meters(in_flux_meters_per_second, 10, excess);
 
-    double final_storage;
+    MultipleOutletOutOfOrderNonlinearReservoir->response_storage_meters(in_flux_meters_per_second, 10, excess);
 
     final_storage = MultipleOutletOutOfOrderNonlinearReservoir->get_storage_height_meters();
 
