@@ -4,8 +4,8 @@
 class LinearReservoir
 {
     public:
-        LinearReservoir(double init_storage = 1.0,double res_max_storage = 2.0, double res_constant = 0.1) :
-            storage(init_storage), max_storage(res_max_storage), linear_reservoir_constant(res_constant) {}
+        LinearReservoir(double init_storage = 1.0,double res_max_storage = 2.0, double res_constant = 0.1, double internal_time_step = 3600.0 ) :
+            storage(init_storage), max_storage(res_max_storage), linear_reservoir_constant(res_constant),  internal_dt(internal_time_step) {}
 
         void update_storage(double input_storage)
         {
@@ -14,7 +14,7 @@ class LinearReservoir
 
         double flux(double dt_secs)
         {
-            return (this->storage / this->max_storage) * this->linear_reservoir_constant * (dt_secs/ 3600);
+            return (this->storage / this->max_storage) * this->linear_reservoir_constant * (dt_secs/ internal_dt);
         }
 
         double response(double input_storage, double dt_secs)
@@ -34,6 +34,7 @@ class LinearReservoir
         double linear_reservoir_constant;
         double storage;
         double max_storage;
+        double internal_dt;
 };
 
 
