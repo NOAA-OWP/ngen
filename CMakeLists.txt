@@ -34,11 +34,15 @@ endif()
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-set(APP_INCLUDE_DIR ./include)
-set(APP_MODELS_DIR ./models)
+set(PROJ_ROOT_INCLUDE_DIR ./include)
+set(PROJ_ROOT_MODELS_DIR ./models)
 
-set(HYMOD_DIR ${APP_MODELS_DIR}/hymod)
+set(HYMOD_DIR ${PROJ_ROOT_MODELS_DIR}/hymod)
 set(HYMOD_INCLUDE_DIR ${HYMOD_DIR}/include)
+
+add_executable(ngen
+        src/NGen.cpp
+        )
 
 # Find the Boost library and configure usage
 set(Boost_USE_STATIC_LIBS OFF)
@@ -51,46 +55,16 @@ else()
     message(STATUS "No Boost root: $ENV{BOOST_ROOT}")
 endif()
 
-# TODO: consider setting a minimum or required version
-find_package(Boost)
-
-include_directories(${APP_INCLUDE_DIR}/core
-        ${APP_INCLUDE_DIR}/core/catchment
-        ${APP_INCLUDE_DIR}/core/nexus
-        ${APP_INCLUDE_DIR}/core/utility
-        ${APP_INCLUDE_DIR}/realizations/catchment
-        ${APP_MODELS_DIR}
-        ${APP_MODELS_DIR}/kernels
-        ${Boost_INCLUDE_DIR}
-        #${HYMOD_INCLUDE_DIR}
-        )
-
-add_executable(ngen
-        src/core/NGen.cpp
-        src/core/GM_Object.cpp
-        src/core/HY_HydroFeature.cpp
-        src/core/catchment/HY_CartographicRealization.cpp
-        src/core/catchment/HY_Catchment.cpp
-        src/core/catchment/HY_CatchmentAggregate.cpp
-        src/core/catchment/HY_CatchmentArea.cpp
-        src/core/catchment/HY_CatchmentDivide.cpp
-        src/core/catchment/HY_CatchmentRealization.cpp
-        src/core/catchment/HY_DendriticCatchment.cpp
-        src/core/catchment/HY_FlowPath.cpp
-        src/core/catchment/HY_HydroNetwork.cpp
-        src/core/catchment/HY_InteriorCatchment.cpp
-        src/core/nexus/HY_HydroNexus.cpp
-        src/core/nexus/HY_PointHydroNexus.cpp
-        src/realizations/catchment/Simple_Lumped_Model_Realization.cpp)
-
-# Link appropriate libraries to main ngen executable target
-target_link_libraries(ngen PUBLIC
-        Boost::boost                # Headers-only Boost
-        )
-
-# Adding to make sure location of generated config header file in binary tree is in include path
 target_include_directories(ngen PUBLIC
-        "${PROJECT_BINARY_DIR}/include"
+        "${PROJECT_BINARY_DIR}/include" # For generated config header file in binary tree
+        )
+
+add_subdirectory("src/core")
+add_subdirectory("src/realizations/catchment")
+
+target_link_libraries(ngen PUBLIC
+        NGen::core
+        NGen::realizations_catchment
         )
 
 # For automated testing with Google Test
@@ -99,6 +73,8 @@ if(PACKAGE_TESTS)
     include(GoogleTest)
     add_subdirectory(test)
 endif()
+
+
 
 #add_library(Hymod ${HYMOD_INCLUDE_DIR}/Hymod.h)
 #set_target_properties(Hymod PROPERTIES LINKER_LANGUAGE CXX)

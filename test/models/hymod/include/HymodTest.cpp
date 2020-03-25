@@ -1,10 +1,13 @@
 #include <vector>
 #include <fstream>
+<<<<<<< HEAD
 #include <string>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 
+=======
+>>>>>>> d11576c0aa4279d8978c5b48f83e08a20ffdb88b
 #include "gtest/gtest.h"
 #include "hymod/include/Hymod.h"
 
@@ -87,16 +90,27 @@ TEST_F(HymodKernelTest, TestWithKnownInput)
     backing_storage.push_back(std::vector<double>{0.0, 0.0, 0.0});
     states.push_back(hymod_state{0.9, 0.0, backing_storage[0].data()});
 
+<<<<<<< HEAD
+=======
+    // initalize hymod fluxes
+    fluxes.push_back(hymod_fluxes(0.0, 0.0, 0.0));
+
+>>>>>>> d11576c0aa4279d8978c5b48f83e08a20ffdb88b
     // open the file that contains forcings
     std::ifstream input_file("test/data/model/hymod/hymod_forcing.txt");
 
     if ( !input_file )
     {
+<<<<<<< HEAD
         std::cout << "Test file not found\n";
+=======
+        std::cout << "Test file not found";
+>>>>>>> d11576c0aa4279d8978c5b48f83e08a20ffdb88b
         ASSERT_TRUE(false);
     }
 
     // read forcing from the input file
+<<<<<<< HEAD
     std::string buffer;
 
     // skip to the beggining of forcing data
@@ -135,6 +149,8 @@ TEST_F(HymodKernelTest, TestWithKnownInput)
 
         }
     } while( input_file );
+=======
+>>>>>>> d11576c0aa4279d8978c5b48f83e08a20ffdb88b
 
 
 
