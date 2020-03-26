@@ -1,6 +1,7 @@
 #ifndef GEOJSON_FEATURE_COLLECTION_H
 #define GEOJSON_FEATURE_COLLECTION_H
 
+#include "Feature.hpp"
 #include <memory>
 #include <iostream>
 #include <sstream>
@@ -10,20 +11,17 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 
-#include "Feature.hpp"
 namespace geojson {
     class FeatureCollection {
         public:
             typedef std::vector<Feature> FeatureList;
 
-            FeatureCollection(FeatureList &features, std::vector<double> bounding_box, std::string *name = nullptr)
+            FeatureCollection(FeatureList &features, std::vector<double> bounding_box)
             : features(features),
-                name(name),
                 bounding_box(bounding_box)
             {}
 
             FeatureCollection(const FeatureCollection &feature_collection) {
-                name = feature_collection.get_name();
                 bounding_box = feature_collection.get_bounding_box();
                 for (Feature feature : feature_collection) {
                     features.push_back(feature);
@@ -35,10 +33,6 @@ namespace geojson {
             typedef FeatureList::iterator iterator;
 
             typedef FeatureList::const_iterator const_iterator;
-
-            std::string *get_name() const {
-                return name;
-            }
 
             int get_size() {
                 return features.size();
@@ -87,21 +81,18 @@ namespace geojson {
                 boost::optional<const boost::property_tree::ptree&> e = json.get_child_optional("features");
 
                 if (e) {
-                    std::cout << "Found features" << std::endl;
-                    for(auto feature : *e) {                    
-                        std::string type_name = feature.second.get<std::string>("type");
-                        std::cout << type_name << std::endl;
+                    for(auto feature_tree : *e) {    
+                        features.push_back(Feature(feature_tree.second));
                     }
                 }
                 else {
                     std::cout << "No features were found" << std::endl;
                 }
 
-                return FeatureCollection(features, bbox_values, nullptr);
+                return FeatureCollection(features, bbox_values);
             }
 
         private:
-            std::string *name;
             FeatureList features;
             std::vector<double> bounding_box;
     };
