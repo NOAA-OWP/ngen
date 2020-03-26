@@ -126,7 +126,7 @@ namespace geojson {
                 return type;
             }
 
-            JSONProperty get_property(std::string key) const;
+            JSONProperty get_property(const std::string& key) const;
 
             std::vector<JSONGeometry> get_geometry_collection() const {
                 if (type == FeatureType::GeometryCollection) {
@@ -153,13 +153,16 @@ namespace geojson {
             property_map get_properties() const {
                 return properties;
             }
-        private:
-            FeatureType type;
-            JSONGeometry *geometry;
-            std::vector<JSONGeometry> geometry_collection;
 
-            property_map properties;
+        protected:
+            FeatureType type;
+            std::vector<JSONGeometry> geometry_collection;
             std::vector<double> bounding_box;
+
+        private:
+            JSONGeometry *geometry;
+            property_map properties;
+
     };
 }
 #endif // GEOJSON_FEATURE_H
