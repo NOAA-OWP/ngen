@@ -13,6 +13,7 @@
 
 namespace geojson {
     enum class FeatureType {
+        None,
         Point,
         LineString,
         Polygon,
@@ -50,6 +51,8 @@ namespace geojson {
                     case JSONGeometryType::MultiPolygon:
                         type = FeatureType::MultiPolygon;
                         break;
+                    default:
+                        type = FeatureType::None;
                 }
 
                 geometry = new_geometry;
@@ -90,6 +93,8 @@ namespace geojson {
                         case JSONGeometryType::MultiPolygon:
                             type = FeatureType::MultiPolygon;
                             break;
+                        default:
+                            type = FeatureType::None;
                     }
                 }
                 else if (tree.count("geometries") > 0) {
@@ -193,7 +198,7 @@ namespace geojson {
                 std::vector<std::string> property_keys;
 
                 for (auto &pair : properties) {
-                    property_keys.push_back(pair.first());
+                    property_keys.push_back(pair.first);
                 }
 
                 return property_keys;
