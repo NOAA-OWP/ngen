@@ -33,8 +33,8 @@ struct hymod_params
 struct hymod_state
 {
     double storage;             //!< the current water storage of the modeled area
-    double groundwater_storage; //!< the current water in the ground water linear reservoir
-    double* Sr;                 //!< amount of water in each linear reservoir unsafe for binding suport check latter
+    double groundwater_storage; //!< the current water in the ground water nonlinear reservoir
+    double* Sr;                 //!< amount of water in each nonlinear reservoir unsafe for binding suport check latter
 
     //! Constructuor for hymod state
     /*!
@@ -114,16 +114,17 @@ class hymod_kernel
     {
 
         // initalize the nash cascade
-        std::vector<LinearReservoir> nash_cascade;
+        std::vector<Nonlinear_Reservoir> nash_cascade;
 
         nash_cascade.resize(params.n);
         for ( unsigned long i = 0; i < nash_cascade.size(); ++i )
         {
-            nash_cascade[i] = LinearReservoir(state.Sr[i], params.max_storage, params.Kq, 86400.0);
+            //construct a single outlet nonlinear reservoir
+            nash_cascade[i] = Nonlinear_Reservoir(0, params.max_storage, state.Sr[i], params.Kq, 1, 0);
         }
 
         // initalize groundwater reservoir
-        LinearReservoir groundwater(state.groundwater_storage, params.max_storage, params.Ks, 86400.0);
+        Nonlinear_Reservoir groundwater(0, params.max_storage, state.groundwater_storage, params.Ks, 1, 0);
 
         // add flux to the current state
         state.storage += input_flux;
@@ -137,12 +138,17 @@ class hymod_kernel
         // calculate et
         double et = calc_et(soil_m, et_params);
 
+        double groundwater_excess;  //excess water from groundwater reservoir that can be positive or negative
+        double excess_water;        // excess water from reservoir that can be positive or negative
+
         // get the slow flow output for this time - ks
-        double slow_flow = groundwater.response(slow, dt);
+        double slow_flow = groundwater.response_storage_meters(slow, dt, groundwater_excess);
+        slow_flow += groundwater_excess / dt;
 
         for(unsigned long int i = 0; i < nash_cascade.size(); ++i)
         {
-            runoff = nash_cascade[i].response(runoff, dt);
+            runoff = nash_cascade[i].response_storage_meters(runoff, dt, excess_water);
+            runoff += excess_water / dt;
         }
 
         // record all fluxs
@@ -152,10 +158,10 @@ class hymod_kernel
 
         // update new state
         new_state.storage = soil_m - et;
-        new_state.groundwater_storage = groundwater.get_storage();
+        new_state.groundwater_storage = groundwater.get_storage_height_meters();
         for ( unsigned long i = 0; i < nash_cascade.size(); ++i )
         {
-            new_state.Sr[i] = nash_cascade[i].get_storage();
+            new_state.Sr[i] = nash_cascade[i].get_storage_height_meters();
         }
 
         return mass_check(params, state, input_flux, new_state, fluxes);
