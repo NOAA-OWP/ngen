@@ -64,7 +64,7 @@ namespace geojson {
             /**
              * The default constructor; creates a geometry with no real contents
              */
-            JSONGeometry(): type(JSONGeometry::None) {}
+            JSONGeometry(): type(JSONGeometryType::None) {}
 
             /**
              * A constructor for LineStrings
@@ -141,6 +141,8 @@ namespace geojson {
                         break;
                     case JSONGeometryType::MultiPolygon:
                         multi_polygon = json_geometry.as_multipolygon();
+                        break;
+                    case JSONGeometryType::None:
                         break;
                 }
 
