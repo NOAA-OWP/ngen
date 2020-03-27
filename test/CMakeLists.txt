@@ -14,6 +14,8 @@ macro(add_automated_test TESTNAME)
             gtest
             gtest_main
             NGen::core
+            NGen::core_catchment
+            NGen::core_nexus
             NGen::realizations_catchment)
     gtest_discover_tests(${TESTNAME}
             WORKING_DIRECTORY ${PROJECT_DIR}
@@ -30,6 +32,8 @@ macro(add_automated_test_w_mock TESTNAME)
             gmock
             gtest_main
             NGen::core
+            NGen::core_catchment
+            NGen::core_nexus
             NGen::realizations_catchment
             )
     gtest_discover_tests(${TESTNAME}

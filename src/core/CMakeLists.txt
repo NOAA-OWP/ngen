@@ -6,8 +6,8 @@ dynamic_sourced_cxx_library(core "${CMAKE_CURRENT_SOURCE_DIR}")
 add_library(NGen::core ALIAS core)
 
 target_include_directories(core PUBLIC
-        ../../include/core
-        ../../include/core/catchment
+        ${PROJECT_SOURCE_DIR}/include/core
+        ${PROJECT_SOURCE_DIR}/include/core/catchment
         )
 
 add_subdirectory("catchment")
