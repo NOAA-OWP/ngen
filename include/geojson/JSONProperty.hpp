@@ -244,21 +244,6 @@ namespace geojson {
                 throw std::runtime_error(message);
             }
 
-            std::vector<std::string> keys() const {
-                if (type == PropertyType::Object) {
-                    std::vector<std::string> key_names;
-
-                    for (auto &pair : values) {
-                        key_names.push_back(pair.first);
-                    }
-
-                    return key_names;
-                }
-
-                std::string message = key + " is not an object and cannot be referenced as one.";
-                throw std::runtime_error(message);
-            }
-
             std::map<std::string, JSONProperty> get_values() const {
                 if (type == PropertyType::Object) {
                     return values;
