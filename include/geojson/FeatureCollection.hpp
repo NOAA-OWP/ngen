@@ -21,12 +21,7 @@ namespace geojson {
                 bounding_box(bounding_box)
             {}
 
-            FeatureCollection(const FeatureCollection &feature_collection) {
-                bounding_box = feature_collection.get_bounding_box();
-                for (Feature feature : feature_collection) {
-                    features.push_back(feature);
-                }
-            }
+            FeatureCollection(const FeatureCollection &feature_collection);
 
             virtual ~FeatureCollection(){};
 
@@ -34,63 +29,21 @@ namespace geojson {
 
             typedef FeatureList::const_iterator const_iterator;
 
-            int get_size() {
-                return features.size();
-            };
+            int get_size();;
 
-            std::vector<double> get_bounding_box() const {
-                return bounding_box;
-            }
+            std::vector<double> get_bounding_box() const;
 
-            Feature get_feature(int index) const {
-                return features[index];
-            };
+            Feature get_feature(int index) const;;
 
-            const_iterator begin() const {
-                return features.cbegin();
-            }
+            const_iterator begin() const;
 
-            const_iterator end() const {
-                return features.cend();
-            }
+            const_iterator end() const;
 
-            static FeatureCollection read(const std::string &file_path) {
-                boost::property_tree::ptree tree;
-                boost::property_tree::json_parser::read_json(file_path, tree);
-                return FeatureCollection::parse(tree);
-            }
+            static FeatureCollection read(const std::string &file_path);
 
-            static FeatureCollection read(std::stringstream &data) {
-                boost::property_tree::ptree tree;
-                boost::property_tree::json_parser::read_json(data, tree);
-                return FeatureCollection::parse(tree);
-            }
+            static FeatureCollection read(std::stringstream &data);
 
-            static FeatureCollection parse(const boost::property_tree::ptree json) {
-                std::vector<std::string> bounding_box;
-                for (auto &feature : json.get_child("bbox")) {
-                    bounding_box.push_back(feature.second.data());
-                }
-                std::vector<double> bbox_values;
-
-                for (int point_index = 0; point_index < bounding_box.size(); point_index++) {
-                    bbox_values.push_back(std::stod(bounding_box[point_index]));
-                }
-
-                FeatureList features;
-                boost::optional<const boost::property_tree::ptree&> e = json.get_child_optional("features");
-
-                if (e) {
-                    for(auto feature_tree : *e) {    
-                        features.push_back(Feature(feature_tree.second));
-                    }
-                }
-                else {
-                    std::cout << "No features were found" << std::endl;
-                }
-
-                return FeatureCollection(features, bbox_values);
-            }
+            static FeatureCollection parse(const boost::property_tree::ptree json);
 
         private:
             FeatureList features;
