@@ -124,31 +124,42 @@ class Nonlinear_Reservoir
             //Update storage from outlet velocity multiplied by delta time.
             state.current_storage_height_meters -= outlet_velocity_meters_per_second * delta_time_seconds;
 
+
+        
+
+//GIVE AVAILABLE STORAGE TO THE RESPONSE
+//ADJUST OUTLET VELOCITY TO BE AVAILABLE STORAGE. DRAIN RESERVOIR
+            //If storage is less than minimum storage, set to minimum storage and 
+            //return negative excess water to be substracted from the input flux.
+            if (state.current_storage_height_meters < parameters.minimum_storage_meters)
+            {	    
+                outlet_velocity_meters_per_second = state.current_storage_height_meters * delta_time_seconds;
+
+                state.current_storage_height_meters = parameters.minimum_storage_meters;
+                    
+                excess_water_meters = 0.0;
+
+                //excess_water_meters = (state.current_storage_height_meters - parameters.minimum_storage_meters);
+
+                //outlet_velocity_meters_per_second = 0.0;
+            }
+
             //Add outlet velocity to the sum of velocities.
             sum_of_outlet_velocities_meters_per_second += outlet_velocity_meters_per_second;
+
         }
 
-        //If storage is less than minimum storage, set to minimum storage and 
-        //return negative excess water to be substracted from the input flux.
-        if (state.current_storage_height_meters < parameters.minimum_storage_meters)
-        {
-            state.current_storage_height_meters = parameters.minimum_storage_meters;
-	    
-            excess_water_meters = (state.current_storage_height_meters - parameters.minimum_storage_meters);
-        }
+//If storage is greater than maximum storage, set to maximum storage and 
+//return excess water to be added to the input flux.
+else if (state.current_storage_height_meters > parameters.maximum_storage_meters)
+{
+state.current_storage_height_meters = parameters.maximum_storage_meters;   
 
-        //If storage is greater than maximum storage, set to maximum storage and 
-        //return excess water to be added to the input flux.
-        else if (state.current_storage_height_meters > parameters.maximum_storage_meters)
-        {
-            state.current_storage_height_meters = parameters.maximum_storage_meters;   
-             
-	    excess_water_meters = (state.current_storage_height_meters - parameters.maximum_storage_meters);
-        }
+excess_water_meters = (state.current_storage_height_meters - parameters.maximum_storage_meters);
+}
 
-        //If storage remains in bounds of the reservoir, return zero excess water to the input flux.
-        else
-            excess_water_meters = 0.0;
+//CHECK TO MAKE SURE THAT EXCESS DOESN'T GO NEGATIVE. STD ERROR
+
 
         return sum_of_outlet_velocities_meters_per_second;
     }
