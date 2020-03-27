@@ -63,11 +63,7 @@ namespace geojson {
             Feature(std::vector<JSONGeometry> new_geometry_collection,
                 std::vector<double> new_bounding_box = std::vector<double>(),
                 property_map new_properties = property_map()
-            )  {
-                type = FeatureType::GeometryCollection;
-                geometry_collection = new_geometry_collection;
-                properties = new_properties;
-            }
+            );
 
             Feature(boost::property_tree::ptree &tree) {
                 if (tree.count("geometry") > 0) {
