@@ -55,8 +55,8 @@ struct hymod_state
 
 struct hymod_fluxes
 {
-    double slow_flow;       //!< The flow exiting slow flow at this time step
-    double runnoff;         //!< The caluclated runoff amount for this time step
+    double slow_flow_meters_per_second;  //!< The flow exiting slow flow at this time step
+    double runoff_meters_per_second; //!< The caluclated runoff amount for this time step
     double et_loss;         //!< The amount of water lost to
 
     //! Constructor for hymod fluxes
@@ -131,8 +131,8 @@ class hymod_kernel
 
         // calculate fs, runoff and slow
         double storage_function_value = (1.0 - pow((1.0 - state.storage/params.max_storage),params.b) );
-        double runoff = storage_function_value * params.a;
-        double slow = storage_function_value * (1.0 - params.a );
+        double runoff_meters_per_second = storage_function_value * params.a;
+        double slow_flow_meters_per_second = storage_function_value * (1.0 - params.a );
         double soil_m = state.storage - storage_function_value;
 
         // calculate et
@@ -142,18 +142,27 @@ class hymod_kernel
         double excess_water;        // excess water from reservoir that can be positive or negative
 
         // get the slow flow output for this time - ks
-        double slow_flow = groundwater.response_storage_meters(slow, dt, groundwater_excess);
-        slow_flow += groundwater_excess / dt;
+        double slow_flow_meters_per_second = groundwater.response_storage_meters(slow, dt, groundwater_excess);
+        
+        //TODO: Review issues with dt and internal timestep
+        runoff_meters_per_second += groundwater_excess / dt;
+
+        //else if (groundwater_excess < 0.0)
+        //    slow_flow_meters_per_second 
+            
 
         for(unsigned long int i = 0; i < nash_cascade.size(); ++i)
         {
-            runoff = nash_cascade[i].response_storage_meters(runoff, dt, excess_water);
-            runoff += excess_water / dt;
+            runoff_meters_per_second = nash_cascade[i].response_storage_meters(runoff_meters_per_second, dt, excess_water);
+            
+            //TODO: Review issues with dt and internal timestep
+            //excess_water / dt / intended_dt
+            runoff_meters_per_second += excess_water / dt;
         }
 
         // record all fluxs
-        fluxes.slow_flow = slow_flow;
-        fluxes.runnoff = runoff;
+        fluxes.slow_flow_meters_per_second = slow_flow_meters_per_second;
+        fluxes.runoff_meters_per_second = runoff_meters_per_second;
         fluxes.et_loss = et;
 
         // update new state
