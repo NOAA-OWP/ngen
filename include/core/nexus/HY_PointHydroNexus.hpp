@@ -1,7 +1,7 @@
 #ifndef HY_POINTHYDRONEXUS_H
 #define HY_POINTHYDRONEXUS_H
 
-#include <HY_HydroNexus.h>
+#include <HY_HydroNexus.hpp>
 
 #include <unordered_map>
 #include <unordered_set>

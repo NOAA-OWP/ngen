@@ -9,28 +9,27 @@ This framework includes an encapsulation strategy which focuses on the hydrologi
   - **Technology stack**: Core Framework using C++ (minimum standard c++14) to provide polymorphic interfaces with reasonable systems integration.
   - **Status**:  Version 0.1.0 in initial development including interfaces, logical data model, and framework structure.  See  [CHANGELOG](CHANGELOG.md) for revision details.
 
-**Structural Diagrams**:
-![](https://raw.githubusercontent.com/NOAA-OWP/ngen/master/doc/images/hy_features_catchment_diagram.png)
-Catchments represent arbitrary  spatial areas. They are the abstraction used to encapsulate a model. The three marked catchments could use three different models, 3 copies of the same model, or some combination of the previous options
+## Structural Diagrams
 
-**Realizations**
-![](https://raw.githubusercontent.com/NOAA-OWP/ngen/master/doc/images/realization_relations.png)
-Different kinds of catchment realizations can be used to encapsulate different types of models. These models will have different types of relations with neighbors. When a relation exists between two adjacent catchments synchronization is necessary.
+![Catchments](https://raw.githubusercontent.com/NOAA-OWP/ngen/master/doc/images/hy_features_catchment_diagram.png)
 
-**Complex Realizations**
-![](https://raw.githubusercontent.com/NOAA-OWP/ngen/master/doc/images/complex_realizations.png)
-An important type of catchment realization is the complex catchment realization. This allows a single catchment to be represented by a network of higher detail catchment realizations and their relationships. This allows the modeled area to be represented at multiple levels of detail and supports dynamic high resolution nesting.
+**Catchments**: Catchments represent arbitrary spatial areas. They are the abstraction used to encapsulate a model. The three marked catchments could use three different models, 3 copies of the same model, or some combination of the previous options 
+
+![Realizations](https://raw.githubusercontent.com/NOAA-OWP/ngen/master/doc/images/realization_relations.png)
+
+**Realizations**: Different kinds of catchment realizations can be used to encapsulate different types of models. These models will have different types of relations with neighbors. When a relation exists between two adjacent catchments synchronization is necessary.
+
+![Complex Realizations](https://raw.githubusercontent.com/NOAA-OWP/ngen/master/doc/images/complex_realizations.png)
+
+**Complex Realizations**: An important type of catchment realization is the complex catchment realization. This allows a single catchment to be represented by a network of higher detail catchment realizations and their relationships. This allows the modeled area to be represented at multiple levels of detail and supports dynamic high resolution nesting.
 
 ## Dependencies
-[gcc](https://gcc.gnu.org/)
+- [gcc](https://gcc.gnu.org/) or [Clang](https://clang.llvm.org/)
+- [CMake](https://gitlab.kitware.com/cmake/cmake)
+- [Google Test](https://github.com/google/googletest) only for testing
+- [Boost.Geometry](https://www.boost.org/doc/libs/1_72_0/libs/geometry/doc/html/geometry/compilation.html)
 
-[CMake](https://gitlab.kitware.com/cmake/cmake)
-
-[Googletest](https://github.com/google/googletest) only for testing.
-
-[Boost.Geometry](https://www.boost.org/doc/libs/1_72_0/libs/geometry/doc/html/geometry/compilation.html)
-
-If specific versions of other software are required, or known not to work, call that out.
+See the [Dependencies](doc/DEPENDENCIES.md) document for more information.
 
 ## Installation
 
@@ -50,11 +49,22 @@ Use appropriate formatting when showing code snippets.
 
 ## How to test the software
 
-The project uses the **Google Test** framework for creating automated tests.
+The project uses the **Google Test** framework for creating automated tests for C++ code.
 
-To execute the main automated test suite, run the `tests_run` target in **CMake**.
+To execute the full collection of automated C++ tests, run the `test_all` target in **CMake**, then execute the generated executable.  Alternatively, replace `test_all` with `test_unit` or `test_integration` to run only those tests.
+For example:
+  
+    cmake --build cmake-build-debug --target test_all -- -j 4
+    ./cmake-build-debug/test/test_all
+    
+Or, if the build system has not yet been properly generated:
 
-Complete documentation on testing can be found [here](test/README.md).
+    git submodule update --init --recursive -- test/googletest
+    cmake -DCMAKE_BUILD_TYPE=Debug -B cmake-build-debug -S .
+    cmake --build cmake-build-debug --target test_all -- -j 4
+    ./cmake-build-debug/test/test_all
+
+See the [Testing ReadMe](test/README.md) file for a more thorough discussion of testing.
 
 ## Known issues
 
