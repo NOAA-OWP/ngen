@@ -3,9 +3,13 @@
 "name": "nexus_data",
 "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
 "features": [
-{ "type": "Feature", "properties": { "ID": 8895442 }, "geometry": { "type": "Point", "coordinates": [ -79.139625987999977, 35.98955941010265 ] } },
-{ "type": "Feature", "properties": { "ID": 8895520 }, "geometry": { "type": "Point", "coordinates": [ -79.126527787999976, 35.988300210102672 ] } },
-{ "type": "Feature", "properties": { "ID": 8895396 }, "geometry": { "type": "Point", "coordinates": [ -79.118413520999965, 35.996128810102569 ] } },
-{ "type": "Feature", "properties": { "ID": 8895402 }, "geometry": { "type": "Point", "coordinates": [ -79.126527787999976, 35.988300210102672 ] } }
+{ "type": "Feature", "properties": { "ID": "nexus_250031932", "toID": "catchment_8895402" }, "geometry": { "type": "Point", "coordinates": [ -79.139625987999977, 35.98955941010265 ] } },
+{ "type": "Feature", "properties": { "ID": "nexus_250031932", "toID": "waterbody_8895402" }, "geometry": { "type": "Point", "coordinates": [ -79.139625987999977, 35.98955941010265 ] } },
+{ "type": "Feature", "properties": { "ID": "nexus_250031930", "toID": "catchment_8895396" }, "geometry": { "type": "Point", "coordinates": [ -79.126527787999976, 35.988300210102672 ] } },
+{ "type": "Feature", "properties": { "ID": "nexus_250031930", "toID": "waterbody_8895396" }, "geometry": { "type": "Point", "coordinates": [ -79.126527787999976, 35.988300210102672 ] } },
+{ "type": "Feature", "properties": { "ID": "nexus_250031903", "toID": "catchment_0" }, "geometry": { "type": "Point", "coordinates": [ -79.118413520999965, 35.996128810102569 ] } },
+{ "type": "Feature", "properties": { "ID": "nexus_250031903", "toID": "waterbody_0" }, "geometry": { "type": "Point", "coordinates": [ -79.118413520999965, 35.996128810102569 ] } },
+{ "type": "Feature", "properties": { "ID": "nexus_250031930", "toID": "catchment_8895396" }, "geometry": { "type": "Point", "coordinates": [ -79.126527787999976, 35.988300210102672 ] } },
+{ "type": "Feature", "properties": { "ID": "nexus_250031930", "toID": "waterbody_8895396" }, "geometry": { "type": "Point", "coordinates": [ -79.126527787999976, 35.988300210102672 ] } }
 ]
 }
