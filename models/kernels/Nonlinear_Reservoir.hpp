@@ -1,6 +1,7 @@
 #include <vector>
 #include <cmath>
 #include <algorithm>
+#include <iostream>
 
 using namespace std;
 
@@ -64,7 +65,7 @@ class Reservoir_Outlet
 //This class is for a nonlinear reservoir that has zero, one, or multiple outlets. The nonlinear reservoir has parameters of minimum
 //and maximum storage height in meters and a state variable of current storage height in meters. A vector will be created that
 //stores pointers to the reservoir outlet objects. This class will also sort multiple outlets from lowest to highest activation
-//thresholds in the vector. The response_storage_meters function takes an inflow and cycles through the outlets from lowest to highest
+//thresholds in the vector. The response_meters_per_second function takes an inflow and cycles through the outlets from lowest to highest
 //activation thresholds and calls the outlet's function to return the discharge velocity in meters per second through the outlet.
 //The reservoir's storage is updated from velocities of each outlet and the delta time for the given timestep.
 class Nonlinear_Reservoir
@@ -103,11 +104,12 @@ class Nonlinear_Reservoir
         if (outlets.back().get_activation_threshold_meters() > maximum_storage_meters)
         {
             //TODO: Return appropriate error
+            cerr << "ERROR: The activation_threshold_meters is greater than the maximum_storage_meters of a nonlinear reservoir.";
         }    
     }	
 
-    //Function to update the response of storage in meters to an influx and timestep.
-    double response_storage_meters(double in_flux_meters_per_second, int delta_time_seconds, double &excess_water_meters)
+    //Function to update the nonlinear reservoir storage in meters and return a response in meters per second to an influx and timestep.
+    double response_meters_per_second(double in_flux_meters_per_second, int delta_time_seconds, double &excess_water_meters)
     {	
         double outlet_velocity_meters_per_second = 0;
         double sum_of_outlet_velocities_meters_per_second = 0;
@@ -124,42 +126,39 @@ class Nonlinear_Reservoir
             //Update storage from outlet velocity multiplied by delta time.
             state.current_storage_height_meters -= outlet_velocity_meters_per_second * delta_time_seconds;
 
-
-        
-
-//GIVE AVAILABLE STORAGE TO THE RESPONSE
-//ADJUST OUTLET VELOCITY TO BE AVAILABLE STORAGE. DRAIN RESERVOIR
-            //If storage is less than minimum storage, set to minimum storage and 
-            //return negative excess water to be substracted from the input flux.
+            //If storage is less than minimum storage.
             if (state.current_storage_height_meters < parameters.minimum_storage_meters)
             {	    
-                outlet_velocity_meters_per_second = state.current_storage_height_meters * delta_time_seconds;
+                //Return to storage before falling below minimum storage.
+                state.current_storage_height_meters += outlet_velocity_meters_per_second * delta_time_seconds;
 
+                //Outlet velocity is set to drain the reservoir to the minimum storage.
+                outlet_velocity_meters_per_second = (state.current_storage_height_meters - parameters.minimum_storage_meters) /delta_time_seconds;               
+
+                //Set storage to minimum storage.
                 state.current_storage_height_meters = parameters.minimum_storage_meters;
                     
                 excess_water_meters = 0.0;
-
-                //excess_water_meters = (state.current_storage_height_meters - parameters.minimum_storage_meters);
-
-                //outlet_velocity_meters_per_second = 0.0;
             }
 
             //Add outlet velocity to the sum of velocities.
             sum_of_outlet_velocities_meters_per_second += outlet_velocity_meters_per_second;
-
         }
 
-//If storage is greater than maximum storage, set to maximum storage and 
-//return excess water to be added to the input flux.
-else if (state.current_storage_height_meters > parameters.maximum_storage_meters)
-{
-state.current_storage_height_meters = parameters.maximum_storage_meters;   
+        //If storage is greater than maximum storage, set to maximum storage and return excess water.
+        if (state.current_storage_height_meters > parameters.maximum_storage_meters)
+        {
+            state.current_storage_height_meters = parameters.maximum_storage_meters;   
 
-excess_water_meters = (state.current_storage_height_meters - parameters.maximum_storage_meters);
-}
+            excess_water_meters = (state.current_storage_height_meters - parameters.maximum_storage_meters);
+        }
 
-//CHECK TO MAKE SURE THAT EXCESS DOESN'T GO NEGATIVE. STD ERROR
-
+        //Ensure that excess_water_meters is not negative
+        if (excess_water_meters < 0.0)
+        {
+            //TODO: Return appropriate error
+            cerr << "ERROR: excess_water_meters from the nonlinear reservoir is calculated to be less than zero.";
+        }
 
         return sum_of_outlet_velocities_meters_per_second;
     }

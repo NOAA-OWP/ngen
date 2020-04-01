@@ -14,7 +14,7 @@
 
 struct hymod_params
 {
-    double max_storage;     //!< maximum amount of water stored
+    double max_storage_meters; //!< maximum amount of water stored
     double a;               //!< coefficent for distributing runoff and slowflow
     double b;               //!< exponent for flux equation
     double Ks;              //!< slow flow coefficent
@@ -32,8 +32,8 @@ struct hymod_params
 
 struct hymod_state
 {
-    double storage;             //!< the current water storage of the modeled area
-    double groundwater_storage; //!< the current water in the ground water nonlinear reservoir
+    double storage_meters;             //!< the current water storage of the modeled area
+    double groundwater_storage_meters; //!< the current water in the ground water nonlinear reservoir
     double* Sr;                 //!< amount of water in each nonlinear reservoir unsafe for binding suport check latter
 
     //! Constructuor for hymod state
@@ -41,8 +41,8 @@ struct hymod_state
         Default constructor for hymod_state objects. This is necessary for the structure to be usable in a map
         Warning: the value of the Sr pointer must be set before this object is used by the hymod_kernel::run() or hymod()
     */
-    hymod_state(double inital_storage = 0.0, double gw_storage = 0.0, double* storage_reservoir_ptr = 0x0) :
-        storage(inital_storage), groundwater_storage(gw_storage), Sr(storage_reservoir_ptr)
+    hymod_state(double inital_storage_meters = 0.0, double gw_storage_meters = 0.0, double* storage_reservoir_ptr = 0x0) :
+        storage_meters(inital_storage_meters), groundwater_storage_meters(gw_storage_meters), Sr(storage_reservoir_ptr)
     {
 
     }
@@ -55,9 +55,9 @@ struct hymod_state
 
 struct hymod_fluxes
 {
-    double slow_flow_meters_per_second;  //!< The flow exiting slow flow at this time step
-    double runoff_meters_per_second; //!< The caluclated runoff amount for this time step
-    double et_loss;         //!< The amount of water lost to
+    double slow_flow_meters;  //!< The flow exiting slow flow at this time step
+    double runoff_meters;     //!< The caluclated runoff amount for this time step
+    double et_loss_meters;    //!< The amount of water lost to evapotranspiration
 
     //! Constructor for hymod fluxes
     /*!
@@ -65,7 +65,7 @@ struct hymod_fluxes
     */
 
     hymod_fluxes(double sf = 0.0, double r = 0.0, double et = 0.0) :
-        slow_flow(sf), runnoff(r), et_loss(et)
+        slow_flow_meters(sf), runoff_meters(r), et_loss_meters(et)
     {}
 };
 
@@ -109,7 +109,7 @@ class hymod_kernel
         hymod_state state,          //!< model state
         hymod_state& new_state,     //!< model state struct to hold new model state
         hymod_fluxes& fluxes,       //!< model flux object to hold calculated fluxes
-        double input_flux,          //!< the amount water entering the system this time step
+        double input_flux_meters,          //!< the amount water entering the system this time step
         void* et_params)            //!< parameters for the et function
     {
 
@@ -120,14 +120,14 @@ class hymod_kernel
         for ( unsigned long i = 0; i < nash_cascade.size(); ++i )
         {
             //construct a single outlet nonlinear reservoir
-            nash_cascade[i] = Nonlinear_Reservoir(0, params.max_storage, state.Sr[i], params.Kq, 1, 0);
+            nash_cascade[i] = Nonlinear_Reservoir(0, params.max_storage_meters, state.Sr[i], params.Kq, 1, 0);
         }
 
         // initalize groundwater reservoir
-        Nonlinear_Reservoir groundwater(0, params.max_storage, state.groundwater_storage, params.Ks, 1, 0);
+        Nonlinear_Reservoir groundwater(0, params.max_storage_meters, state.groundwater_storage_meters, params.Ks, 1, 0);
 
         // add flux to the current state
-        state.storage += input_flux;
+        state.storage_meters += input_flux_meters;
 
         // calculate fs, runoff and slow
         double storage_function_value = (1.0 - pow((1.0 - state.storage/params.max_storage),params.b) );
@@ -136,67 +136,62 @@ class hymod_kernel
         double soil_m = state.storage - storage_function_value;
 
         // calculate et
-        double et = calc_et(soil_m, et_params);
+        double et_meters = calc_et(soil_m, et_params);
 
-        double groundwater_excess;  //excess water from groundwater reservoir that can be positive or negative
-        double excess_water;        // excess water from reservoir that can be positive or negative
+        double groundwater_excess_meters;  //excess water from groundwater reservoir that can be positive or negative
+        double excess_water_meters;        // excess water from reservoir that can be positive or negative
 
         // get the slow flow output for this time - ks
-        double slow_flow_meters_per_second = groundwater.response_storage_meters(slow, dt, groundwater_excess);
+        double slow_flow_meters = groundwater.response_meters_per_second(slow_meters, dt, groundwater_excess_meters) * dt;
         
         //TODO: Review issues with dt and internal timestep
-        runoff_meters_per_second += groundwater_excess / dt;
-
-        //else if (groundwater_excess < 0.0)
-        //    slow_flow_meters_per_second 
-            
+        runoff_meters += groundwater_excess_meters;
 
         for(unsigned long int i = 0; i < nash_cascade.size(); ++i)
         {
-            runoff_meters_per_second = nash_cascade[i].response_storage_meters(runoff_meters_per_second, dt, excess_water);
+            runoff_meters = nash_cascade[i].response_meters_per_second(runoff_meters, dt, excess_water_meters) * dt;
             
             //TODO: Review issues with dt and internal timestep
-            //excess_water / dt / intended_dt
-            runoff_meters_per_second += excess_water / dt;
+            runoff_meters += excess_water_meters;
         }
 
         // record all fluxs
-        fluxes.slow_flow_meters_per_second = slow_flow_meters_per_second;
-        fluxes.runoff_meters_per_second = runoff_meters_per_second;
-        fluxes.et_loss = et;
+        fluxes.slow_flow_meters = slow_flow_meters;
+        fluxes.runoff_meters = runoff_meters;
+        fluxes.et_loss_meters = et_meters;
 
         // update new state
-        new_state.storage = soil_m - et;
-        new_state.groundwater_storage = groundwater.get_storage_height_meters();
+        new_state.storage_meters = soil_m - et_meters;
+        new_state.groundwater_storage_meters = groundwater.get_storage_height_meters();
         for ( unsigned long i = 0; i < nash_cascade.size(); ++i )
         {
             new_state.Sr[i] = nash_cascade[i].get_storage_height_meters();
         }
 
-        return mass_check(params, state, input_flux, new_state, fluxes);
+        return mass_check(params, state, input_flux_meters, new_state, fluxes);
 
     }
 
-    static int mass_check(const hymod_params& params, const hymod_state& current_state, double input_flux, const hymod_state& next_state, const hymod_fluxes& calculated_fluxes)
+    static int mass_check(const hymod_params& params, const hymod_state& current_state, double input_flux_meters, const hymod_state& next_state, const hymod_fluxes& calculated_fluxes)
     {
         // initalize both mass values from current and next states storage
-        double inital_mass = current_state.storage + current_state.groundwater_storage;
-        double final_mass = next_state.storage + next_state.groundwater_storage;
+        double inital_mass_meters = current_state.storage_meters + current_state.groundwater_storage_meters;
+        double final_mass_meters = next_state.storage_meters + next_state.groundwater_storage_meters;
 
         // add the masses of the reservoirs before and after the time step
         for ( int i = 0; i < params.n; ++i)
         {
-            inital_mass += current_state.Sr[i];
-            final_mass += next_state.Sr[i];
+            inital_mass_meters += current_state.Sr[i];
+            final_mass_meters += next_state.Sr[i];
         }
 
         // increase the inital mass by input value
-        inital_mass += input_flux;
+        inital_mass_meters += input_flux_meters;
 
         // increase final mass by calculated fluxes
-        final_mass += (calculated_fluxes.et_loss + calculated_fluxes.runnoff + calculated_fluxes.slow_flow);
+        final_mass_meters += (calculated_fluxes.et_loss_meters + calculated_fluxes.runoff_meters + calculated_fluxes.slow_flow_meters);
 
-        if ( inital_mass - final_mass > 0.000001 )
+        if ( inital_mass_meters - final_mass_meters > 0.000001 )
         {
             return MASS_BALANCE_ERROR;
         }
