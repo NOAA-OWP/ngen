@@ -92,6 +92,16 @@ class hymod_kernel
         return 0.0;
     }
 
+    //! stub function to simulate losses due to evapotransportation
+    static double calc_et2(double soil_m, void* et_params)
+    {
+        pdm03_struct* pdm = (pdm03_struct*) et_params;
+        pdm->XHuz = soil_m;
+        pdm03_wrapper(pdm);
+
+        return pdm->XHuz - soil_m;
+    }
+
     //! run one time step of hymod
     static int run(
         double dt,
@@ -119,10 +129,10 @@ class hymod_kernel
         state.storage += input_flux;
 
         // calculate fs, runoff and slow
-        double fs = (1.0 - pow((1.0 - state.storage/params.max_storage),params.b) );
-        double runoff = fs * params.a;
-        double slow = fs * (1.0 - params.a );
-        double soil_m = state.storage - fs;
+        double storage_function_value = (1.0 - pow((1.0 - state.storage/params.max_storage),params.b) );
+        double runoff = storage_function_value * params.a;
+        double slow = storage_function_value * (1.0 - params.a );
+        double soil_m = state.storage - storage_function_value;
 
         // calculate et
         double et = calc_et(soil_m, et_params);
