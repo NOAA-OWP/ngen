@@ -3,6 +3,7 @@
 #include <string>
 #include <sstream>
 
+
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 
@@ -13,8 +14,6 @@
 class HymodKernelTest : public ::testing::Test {
 
     protected:
-
-
 
     HymodKernelTest() {
 
@@ -89,6 +88,7 @@ TEST_F(HymodKernelTest, TestWithKnownInput)
     // initalize hymod state for time step zero
     backing_storage.push_back(std::vector<double>{0.0, 0.0, 0.0});
     states.push_back(hymod_state{0.9, 0.0, backing_storage[0].data()});
+
 
     // create the struct used for ET
     pdm03_struct pdm_et_data;
@@ -167,7 +167,6 @@ TEST_F(HymodKernelTest, TestWithKnownInput)
         pdm_et_data.effPrecip = mean_areal_precipitation;
 
         hymod_kernel::run(86400.0, params, states[pos], states[pos+1], fluxes[pos], mean_areal_precipitation, &pdm_et_data);
-
 
     } while( input_file );
 
