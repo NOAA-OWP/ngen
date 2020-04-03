@@ -1,6 +1,8 @@
 #include <vector>
 #include <fstream>
 #include <string>
+#include <sstream>
+
 
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
@@ -12,8 +14,6 @@
 class HymodKernelTest : public ::testing::Test {
 
     protected:
-
-
 
     HymodKernelTest() {
 
@@ -89,6 +89,17 @@ TEST_F(HymodKernelTest, TestWithKnownInput)
     backing_storage.push_back(std::vector<double>{0.0, 0.0, 0.0});
     states.push_back(hymod_state{0.9, 0.0, backing_storage[0].data()});
 
+
+    // create the struct used for ET
+    pdm03_struct pdm_et_data;
+    pdm_et_data.B = 1.3;
+    pdm_et_data.Kv = 0.99;
+    pdm_et_data.modelDay = 0.0;
+    pdm_et_data.Huz = 400.0;
+    pdm_et_data.Cpar = pdm_et_data.Huz / (1.0+pdm_et_data.B);
+
+    double latitude = 41.13;
+
     // open the file that contains forcings
     std::ifstream input_file("test/data/model/hymod/hymod_forcing.txt");
 
@@ -112,30 +123,51 @@ TEST_F(HymodKernelTest, TestWithKnownInput)
     {
         std::getline(input_file, buffer);
 
-        std::vector<std::string> parts;
-        boost::split(parts,buffer, boost::is_any_of(" "), boost::token_compress_on);
+        long year;
+        long month;
+        long day;
+        double mean_areal_precipitation;
+        double climatic_potential_evaporation;
+        double daily_streamflow_discharge;
+        double daily_maximum_air_temperature;
+        double daily_minimum_air_temperature;
 
-        if ( parts.size() >= 5 )
-        {
-            //std::cout << parts[1] << " " << parts[2] << " " << parts[3] << " " << parts[4] << std::endl;
-            int year = boost::lexical_cast<int>(parts[1]);
-            int month = boost::lexical_cast<int>(parts[2]);
-            int day = boost::lexical_cast<int>(parts[3]);
-            double input_flux = boost::lexical_cast<double>(parts[4]);
+        std::stringstream ss(buffer);
 
-            // initalize hymod state for next time step
-            backing_storage.push_back(std::vector<double>{0.0, 0.0, 0.0});
-            states.push_back(hymod_state{0.0, 0.0, backing_storage[backing_storage.size()-1].data()});
+        ss >> year >> month >> day
+            >> mean_areal_precipitation
+            >> climatic_potential_evaporation
+            >> daily_streamflow_discharge
+            >> daily_maximum_air_temperature
+            >> daily_minimum_air_temperature;
 
-            // initalize hymod fluxes for this time step
-            fluxes.push_back(hymod_fluxes(0.0, 0.0, 0.0));
+//        std::cout << " " << year << " " << month << " " << day
+//            << " " << input_flux
+//            << " " << climatic_potential_evaporation
+//            << " " << daily_streamflow_discharge
+//            << " " << daily_maximum_air_temperature
+//            << " " << daily_minimum_air_temperature << "\n";
 
-            int pos = fluxes.size() - 1;
-            double et_stand_in = 0;
+        // initalize hymod state for next time step
+        backing_storage.push_back(std::vector<double>{0.0, 0.0, 0.0});
+        states.push_back(hymod_state{0.0, 0.0, backing_storage[backing_storage.size()-1].data()});
 
-            hymod_kernel::run(86400.0, params, states[pos], states[pos+1], fluxes[pos], input_flux, &et_stand_in);
+        // initalize hymod fluxes for this time step
+        fluxes.push_back(hymod_fluxes(0.0, 0.0, 0.0));
 
-        }
+        int pos = fluxes.size() - 1;
+        double et_stand_in = 0;
+
+        //calcuate inital PE
+        int day_of_year = (int)(greg_2_jul(year, month, day,12,0,0.0) - greg_2_jul(year,1,1,12,0,0.0) + 1);
+        double average_tmp = (daily_maximum_air_temperature + daily_minimum_air_temperature) / 2.0;
+        pdm_et_data.PE = calculateHamonPE(average_tmp, latitude, day_of_year);
+
+        // update other et values
+        pdm_et_data.effPrecip = mean_areal_precipitation;
+
+        hymod_kernel::run(86400.0, params, states[pos], states[pos+1], fluxes[pos], mean_areal_precipitation, &pdm_et_data);
+
     } while( input_file );
 
 
