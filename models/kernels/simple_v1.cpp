@@ -102,11 +102,11 @@ dt = 900.0;
 smcmax = 0.464;
 // smcwlt=0.26;
 smcwlt = 0.120;
-qinsur = 1.49491974E-10;
+qinsur = 1.49491974E-10;	/* in units of [m/s] */
 
 for(i=1;i<100;i++)
   {
-  // qinsur=1.0/3600.0*((double)i/100.0);   /* mm/s */ 
+  // qinsur=1.0/3600.0*((double)i/100.0);
   infil(nsoil,dt,refkdt,refdk,kdt,smcmax,smcwlt,dz,zsoil,sh2o,qinsur,&runsrf,&pddum);
   // fprintf(out_fptr,"%lf %lf\n",qinsur,runsrf);
   fprintf(out_fptr,"%e %e %e\n",qinsur,runsrf,pddum);
