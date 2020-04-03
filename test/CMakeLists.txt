@@ -14,6 +14,8 @@ macro(add_automated_test TESTNAME)
             gtest
             gtest_main
             NGen::core
+            NGen::core_catchment
+            NGen::core_nexus
             NGen::realizations_catchment)
     gtest_discover_tests(${TESTNAME}
             WORKING_DIRECTORY ${PROJECT_DIR}
@@ -30,6 +32,8 @@ macro(add_automated_test_w_mock TESTNAME)
             gmock
             gtest_main
             NGen::core
+            NGen::core_catchment
+            NGen::core_nexus
             NGen::realizations_catchment
             )
     gtest_discover_tests(${TESTNAME}
@@ -43,10 +47,10 @@ endmacro()
 add_automated_test(test_hymod models/hymod/include/HymodTest.cpp)
 
 # Unit tests
-add_automated_test(test_unit models/hymod/include/HymodTest.cpp)
+add_automated_test(test_unit models/hymod/include/HymodTest.cpp models/hymod/include/Nonlinear_Reservoir_Test.cpp)
 
 # Add for integration tests once we have some
 #add_automated_test(test_it models/hymod/include/HymodTest.cpp)
 
 # All automated tests
-add_automated_test_w_mock(test_all models/hymod/include/HymodTest.cpp)
+add_automated_test_w_mock(test_all models/hymod/include/HymodTest.cpp models/hymod/include/Nonlinear_Reservoir_Test.cpp)
