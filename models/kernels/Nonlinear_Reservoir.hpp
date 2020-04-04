@@ -104,7 +104,7 @@ class Nonlinear_Reservoir
         if (outlets.back().get_activation_threshold_meters() > maximum_storage_meters)
         {
             //TODO: Return appropriate error
-            cerr << "ERROR: The activation_threshold_meters is greater than the maximum_storage_meters of a nonlinear reservoir.";
+            cerr << "ERROR: The activation_threshold_meters is greater than the maximum_storage_meters of a nonlinear reservoir."  << endl;
         }    
     }	
 
@@ -128,7 +128,10 @@ class Nonlinear_Reservoir
 
             //If storage is less than minimum storage.
             if (state.current_storage_height_meters < parameters.minimum_storage_meters)
-            {	    
+            {	
+                //TODO: Return appropriate warning
+                //cout << "WARNING: Nonlinear reservoir calculated a storage below the minimum storage." << endl;
+    
                 //Return to storage before falling below minimum storage.
                 state.current_storage_height_meters += outlet_velocity_meters_per_second * delta_time_seconds;
 
@@ -148,6 +151,9 @@ class Nonlinear_Reservoir
         //If storage is greater than maximum storage, set to maximum storage and return excess water.
         if (state.current_storage_height_meters > parameters.maximum_storage_meters)
         {
+            //TODO: Return appropriate warning
+            //cout << "WARNING: Nonlinear reservoir calculated a storage above the maximum storage."  << endl;
+
             state.current_storage_height_meters = parameters.maximum_storage_meters;   
 
             excess_water_meters = (state.current_storage_height_meters - parameters.maximum_storage_meters);
@@ -157,7 +163,7 @@ class Nonlinear_Reservoir
         if (excess_water_meters < 0.0)
         {
             //TODO: Return appropriate error
-            cerr << "ERROR: excess_water_meters from the nonlinear reservoir is calculated to be less than zero.";
+            cerr << "ERROR: excess_water_meters from the nonlinear reservoir is calculated to be less than zero." << endl;
         }
 
         return sum_of_outlet_velocities_meters_per_second;

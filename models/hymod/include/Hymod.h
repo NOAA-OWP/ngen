@@ -55,8 +55,8 @@ struct hymod_state
 
 struct hymod_fluxes
 {
-    double slow_flow_meters;  //!< The flow exiting slow flow at this time step
-    double runoff_meters;     //!< The caluclated runoff amount for this time step
+    double slow_flow_meters_per_second;  //!< The flow exiting slow flow at this time step
+    double runoff_meters_per_second;     //!< The caluclated runoff amount for this time step
     double et_loss_meters;    //!< The amount of water lost to evapotranspiration
 
     //! Constructor for hymod fluxes
@@ -65,7 +65,7 @@ struct hymod_fluxes
     */
 
     hymod_fluxes(double sf = 0.0, double r = 0.0, double et = 0.0) :
-        slow_flow_meters(sf), runoff_meters(r), et_loss_meters(et)
+        slow_flow_meters_per_second(sf), runoff_meters_per_second(r), et_loss_meters(et)
     {}
 };
 
@@ -113,7 +113,7 @@ class hymod_kernel
         void* et_params)            //!< parameters for the et function
     {
 
-        // initalize the nash cascade
+        // initalize the Nash cascade of nonlinear reservoirs
         std::vector<Nonlinear_Reservoir> nash_cascade;
 
         nash_cascade.resize(params.n);
@@ -142,22 +142,24 @@ class hymod_kernel
         double excess_water_meters;        // excess water from reservoir that can be positive or negative
 
         // get the slow flow output for this time - ks
-        double slow_flow_meters = groundwater.response_meters_per_second(slow_meters, dt, groundwater_excess_meters) * dt;
+        double slow_flow_meters_per_second = groundwater.response_meters_per_second(slow_meters_per_second, dt, groundwater_excess_meters);
         
         //TODO: Review issues with dt and internal timestep
-        runoff_meters += groundwater_excess_meters;
+        runoff_meters_per_second += groundwater_excess_meters / dt;
 
+        // cycle through Quickflow Nash cascade of nonlinear reservoirs
         for(unsigned long int i = 0; i < nash_cascade.size(); ++i)
         {
-            runoff_meters = nash_cascade[i].response_meters_per_second(runoff_meters, dt, excess_water_meters) * dt;
+            // get response water velocity of nonlinear reservoir
+            runoff_meters_per_second = nash_cascade[i].response_meters_per_second(runoff_meters_per_second, dt, excess_water_meters);
             
             //TODO: Review issues with dt and internal timestep
-            runoff_meters += excess_water_meters;
+            runoff_meters_per_second += excess_water_meters / dt;
         }
 
         // record all fluxs
-        fluxes.slow_flow_meters = slow_flow_meters;
-        fluxes.runoff_meters = runoff_meters;
+        fluxes.slow_flow_meters_per_second = slow_flow_meters_per_second;
+        fluxes.runoff_meters_per_second = runoff_meters_per_second;
         fluxes.et_loss_meters = et_meters;
 
         // update new state
@@ -168,11 +170,11 @@ class hymod_kernel
             new_state.Sr[i] = nash_cascade[i].get_storage_height_meters();
         }
 
-        return mass_check(params, state, input_flux_meters, new_state, fluxes);
+        return mass_check(params, state, input_flux_meters, new_state, fluxes, dt);
 
     }
 
-    static int mass_check(const hymod_params& params, const hymod_state& current_state, double input_flux_meters, const hymod_state& next_state, const hymod_fluxes& calculated_fluxes)
+    static int mass_check(const hymod_params& params, const hymod_state& current_state, double input_flux_meters, const hymod_state& next_state, const hymod_fluxes& calculated_fluxes, double timestep_seconds)
     {
         // initalize both mass values from current and next states storage
         double inital_mass_meters = current_state.storage_meters + current_state.groundwater_storage_meters;
@@ -189,7 +191,7 @@ class hymod_kernel
         inital_mass_meters += input_flux_meters;
 
         // increase final mass by calculated fluxes
-        final_mass_meters += (calculated_fluxes.et_loss_meters + calculated_fluxes.runoff_meters + calculated_fluxes.slow_flow_meters);
+        final_mass_meters += (calculated_fluxes.et_loss_meters + calculated_fluxes.runoff_meters_per_second * timestep_seconds + calculated_fluxes.slow_flow_meters_per_second * timestep_seconds);
 
         if ( inital_mass_meters - final_mass_meters > 0.000001 )
         {
