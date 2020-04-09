@@ -1,88 +1,59 @@
 #include <math.h>
 
 
-void infil(int nsoil, double dt, double refkdt, double refdk, double kdt, double smcmax, double smcwlt,
-           double *dz, double *zsoil, double *sh2o, double qinsur,double *runsrf,double *pddum)
+void Schaake_partitioning_scheme(double timestep_s, double Schaake_adjusted_magic_constant_by_soil_type, double column_total_soil_moisture_deficit_m,
+           double surface_input_flux_m_per_s,double *surface_runoff_flux_m_per_s,double *infiltration_rate_m_per_s)
 {
 
 
 /*! ===============================================================================
-  SUBROUTINE INFIL (NSOIL  ,DT     ,ZSOIL  ,SH2O   ,SICE   , & !in
-                    SICEMAX,QINSUR ,                         & !in
-                    PDDUM  ,RUNSRF )                           !out
+  This subtroutine takes surface_input_flux_m_per_s and partitions it into surface_runoff_flux_m_per_sec and
+  infiltration_rate_m_per_sec using the scheme from Schaake et al. 1996.
 ! --------------------------------------------------------------------------------
-! compute inflitration rate at soil surface and surface runoff
+! ! modified by FLO April 2020 to eliminate reference to ice processes,
+! ! and to use descriptive and dimensionally consistent variable names.
 ! --------------------------------------------------------------------------------
     IMPLICIT NONE
 ! --------------------------------------------------------------------------------
 ! inputs
-  INTEGER,                  INTENT(IN) :: NSOIL  !no. of soil layers
-  REAL,                     INTENT(IN) :: DT     !time step (sec)
-  REAL, DIMENSION(1:NSOIL), INTENT(IN) :: ZSOIL  !depth of soil layer-bottom [m]
-  REAL, DIMENSION(1:NSOIL), INTENT(IN) :: SH2O   !soil liquid water content [m3/m3]
-  REAL, DIMENSION(1:NSOIL), INTENT(IN) :: SICE   !soil ice content [m3/m3]
-  REAL,                     INTENT(IN) :: QINSUR !water input on soil surface [mm/s]
-  REAL,                     INTENT(IN) :: SICEMAX!maximum soil ice content (m3/m3)
+  double timestep_s
+  double Schaake_adjusted_magic_constant_by_soil_type
+  double column_total_soil_moisture_deficit_m
+  double surface_input_flux_m_per_s
 
 ! outputs
-  REAL,                    INTENT(OUT) :: RUNSRF !surface runoff [mm/s]
-  REAL,                    INTENT(OUT) :: PDDUM  !infiltration rate at surface
+  double surface_runoff_flux_m_per_s
+  double infiltration_rate_m_per_s
 
-! locals
-  INTEGER :: IALP1, J, JJ,  K
-  REAL                     :: VAL
-  REAL                     :: DDT
-  REAL                     :: PX
-  REAL                     :: DT1, DD, DICE
-  REAL                     :: FCR
-  REAL                     :: SUM
-  REAL                     :: ACRT
-  REAL                     :: WDF
-  REAL                     :: WCND
-  REAL                     :: SMCAV
-  REAL                     :: INFMAX
-  REAL, DIMENSION(1:NSOIL) :: DMAX
-  INTEGER, PARAMETER       :: CVFRZ = 3
 --------------------------------------------------------------------------------*/
 int k;
-double dt1,dd,val,ddt,px,smcav,infmax;
-double dmax[5];
+double timestep_d,Schaake_parenthetical_term,Ic,Px,infmax;
 
-if (qinsur >  0.0)
+
+if (surface_input_flux_m_per_s >  0.0)
   {
-  dt1 = dt /86400.0;
-  smcav = smcmax - smcwlt;
+  // maximum infiltration rate calculations as per Schaake et al. 1996.
 
-// maximum infiltration rate
+  timestep_d = timestep_s /86400.0;                                                                         // timestep_d is the time step in days.   They switch from dt in [s] to dt1 in [d] because kdt has units of [d^(-1)]
+  Schaake_parenthetical_term = (1.0 - exp ( - Schaake_adjusted_magic_constant_by_soil_type * timestep_d));  // calculate the parenthetical part of Eqn. 34 from Schaake et al. Note the magic constant has units of [d^(-1)]
+  Ic = column_total_soil_moisture_deficit_m * Schaake_parenthetical_term; // From Schaake et al. Eqn. 2., using the column total moisture deficit
+                                                                          // BUT the way it is used here, it is the cumulative soil moisture deficit in the entire soil profile.  "Layer" info not used in this subroutine.
+                                                                          // NOTE: when column_total_soil_moisture_deficit_m becomes zero, which occurs when the soil column is saturated, then Ic=0
+                                                                          // Where Ic in the Schaake paper is called the "spatially averaged infiltration capacity", and is defined in Eqn. 12.
 
-  dmax[1]= -zsoil[1] * smcav;
-  dmax[1]= dmax[1]* (1.0-(sh2o[1] - smcwlt)/smcav);
-  for(k=1;k<=nsoil;k++)
-  for(k=1;k<=nsoil;k++)
+  Px=surface_input_flux_m_per_s * timestep_s;     // Total water input to soil surface this time step [m]
 
-  dd = dmax[1];
-
-  for(k = 2;k<=nsoil;k++)
-    {
-    dmax[k] = (zsoil[k-1] - zsoil[k]) * smcav;
-    dmax[k] = dmax[k] * (1.0-(sh2o[k] - smcwlt)/smcav);
-    dd      = dd + dmax[k];
-    }
-
-  val = (1.0 - exp ( - kdt * dt1));
-  ddt = dd * val;
-
-  if(qinsur>0.0) px=qinsur*dt;
-  else           px=0.0;
-
-  /* px  = max(0.,qinsur * dt) */
-  infmax = (px * (ddt / (px + ddt)))/ dt;
+  infmax = (Px * (Ic / (Px + Ic)))/ timestep_s ;  // NOTE: infmax=0 in the case of a saturated soil column, when Ic=0.   Physically happens only if soil has no-flow lower b.c.
 
 
-  if((qinsur-infmax)>0.0)  *runsrf= qinsur - infmax;
-  else                     *runsrf=0.0;
-  *pddum = qinsur - (*runsrf);
+  if((surface_input_flux_m_per_s-infmax)>0.0)  *surface_runoff_flux_m_per_s= surface_input_flux_m_per_s - infmax;
+  else                                         *surface_runoff_flux_m_per_s=0.0;
+  *infiltration_rate_m_per_s =                  surface_input_flux_m_per_s - (*surface_runoff_flux_m_per_s);
   }
-
+else
+  {
+  *surface_runoff_flux_m_per_s = 0.0;
+  *infiltration_rate_m_per_s = 0.0;
+  }
 return;
 }
