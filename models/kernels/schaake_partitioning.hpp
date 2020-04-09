@@ -1,3 +1,6 @@
+#ifndef SCHAAKE_PARTITIONING_SCHEME_H
+#define SCHAAKE_PARTITIONING_SCHEME_H
+
 #include <math.h>
 
 /*! ===============================================================================
@@ -68,3 +71,5 @@ void Schaake_partitioning_scheme(double timestep_s, double Schaake_adjusted_magi
   }
   return;
 }
+
+#endif // SCHAAKE_PARTITIONING_SCHEME_H
