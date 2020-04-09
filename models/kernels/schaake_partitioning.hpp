@@ -1,29 +1,29 @@
 #include <math.h>
 
+/*! ===============================================================================
+  This subtroutine takes surface_input_flux_m_per_s and partitions it into surface_runoff_flux_m_per_sec and
+  infiltration_rate_m_per_sec using the scheme from Schaake et al. 1996.
+! --------------------------------------------------------------------------------
+! ! modified by FLO April 2020 to eliminate reference to ice processes,
+! ! and to use descriptive and dimensionally consistent variable names.
+! --------------------------------------------------------------------------------
+    IMPLICIT NONE
+! --------------------------------------------------------------------------------
+! inputs
+  double timestep_s
+  double Schaake_adjusted_magic_constant_by_soil_type
+  double column_total_soil_moisture_deficit_m
+  double surface_input_flux_m_per_s
+
+! outputs
+  double surface_runoff_flux_m_per_s
+  double infiltration_rate_m_per_s
+
+--------------------------------------------------------------------------------*/
 void Schaake_partitioning_scheme(double timestep_s, double Schaake_adjusted_magic_constant_by_soil_type,
                                  double column_total_soil_moisture_deficit_m, double surface_input_flux_m_per_s,
                                  double *surface_runoff_flux_m_per_s,double *infiltration_rate_m_per_s)
 {
-  /*! ===============================================================================
-    This subtroutine takes surface_input_flux_m_per_s and partitions it into surface_runoff_flux_m_per_sec and
-    infiltration_rate_m_per_sec using the scheme from Schaake et al. 1996.
-  ! --------------------------------------------------------------------------------
-  ! ! modified by FLO April 2020 to eliminate reference to ice processes,
-  ! ! and to use descriptive and dimensionally consistent variable names.
-  ! --------------------------------------------------------------------------------
-      IMPLICIT NONE
-  ! --------------------------------------------------------------------------------
-  ! inputs
-    double timestep_s
-    double Schaake_adjusted_magic_constant_by_soil_type
-    double column_total_soil_moisture_deficit_m
-    double surface_input_flux_m_per_s
-
-  ! outputs
-    double surface_runoff_flux_m_per_s
-    double infiltration_rate_m_per_s
-
-  --------------------------------------------------------------------------------*/
   int k;
   double timestep_d,Schaake_parenthetical_term,Ic,Px,infmax;
 
