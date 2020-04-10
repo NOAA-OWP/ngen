@@ -113,7 +113,7 @@ TEST_F(NonlinearReservoirKernelTest, TestRunNoOutletReservoir)
 
     in_flux_meters_per_second = 0.05;
 
-    NoOutletReservoir->response_storage_meters(in_flux_meters_per_second, 10, excess);
+    NoOutletReservoir->response_meters_per_second(in_flux_meters_per_second, 10, excess);
 
     final_storage = NoOutletReservoir->get_storage_height_meters();
 
@@ -133,7 +133,7 @@ TEST_F(NonlinearReservoirKernelTest, TestRunOneOutletReservoir)
 
     in_flux_meters_per_second = 0.2;
 
-    OneOutletReservoir->response_storage_meters(in_flux_meters_per_second, 10, excess);
+    OneOutletReservoir->response_meters_per_second(in_flux_meters_per_second, 10, excess);
 
     final_storage = OneOutletReservoir->get_storage_height_meters();
 
@@ -153,7 +153,7 @@ TEST_F(NonlinearReservoirKernelTest, TestRunOneOutletReservoirNoActivation)
 
     in_flux_meters_per_second = 0.02;
 
-    OneOutletReservoir->response_storage_meters(in_flux_meters_per_second, 10, excess);
+    OneOutletReservoir->response_meters_per_second(in_flux_meters_per_second, 10, excess);
 
     final_storage = OneOutletReservoir->get_storage_height_meters();
 
@@ -164,6 +164,49 @@ TEST_F(NonlinearReservoirKernelTest, TestRunOneOutletReservoirNoActivation)
     ASSERT_TRUE(true);
 }
 
+
+//Test Nonlinear Reservoir with one outlet where the storage exceeds max storage.
+TEST_F(NonlinearReservoirKernelTest, TestRunOneOutletReservoirExceedMaxStorage) 
+{   
+    double in_flux_meters_per_second;
+    double excess;
+    double final_storage;
+
+    in_flux_meters_per_second = 3.0;
+
+    OneOutletReservoir->response_meters_per_second(in_flux_meters_per_second, 10, excess);
+
+    final_storage = OneOutletReservoir->get_storage_height_meters();
+
+    final_storage = round( final_storage * 100.0 ) / 100.0;
+
+    EXPECT_DOUBLE_EQ (8.0, final_storage);
+
+    ASSERT_TRUE(true);
+}
+
+
+//Test Nonlinear Reservoir with one outlet where the storage falls below the minimum storage of zero.
+TEST_F(NonlinearReservoirKernelTest, TestRunOneOutletReservoirFallsBelowMinimumStorage) 
+{   
+    double in_flux_meters_per_second;
+    double excess;
+    double final_storage;
+
+    in_flux_meters_per_second = -1.0;
+
+    OneOutletReservoir->response_meters_per_second(in_flux_meters_per_second, 10, excess);
+
+    final_storage = OneOutletReservoir->get_storage_height_meters();
+
+    final_storage = round( final_storage * 100.0 ) / 100.0;
+
+    EXPECT_DOUBLE_EQ (0.0, final_storage);
+
+    ASSERT_TRUE(true);
+}
+
+
 //Test Nonlinear Reservoir with multiple outlets
 TEST_F(NonlinearReservoirKernelTest, TestRunMultipleOutletReservoir) 
 {    
@@ -173,7 +216,7 @@ TEST_F(NonlinearReservoirKernelTest, TestRunMultipleOutletReservoir)
 
     in_flux_meters_per_second = 1.6;
 
-    MultipleOutletReservoir->response_storage_meters(in_flux_meters_per_second, 10, excess);
+    MultipleOutletReservoir->response_meters_per_second(in_flux_meters_per_second, 10, excess);
 
     final_storage = MultipleOutletReservoir->get_storage_height_meters();
 
@@ -193,7 +236,7 @@ TEST_F(NonlinearReservoirKernelTest, TestRunMultipleOutletOutOfOrderNonlinearRes
 
     in_flux_meters_per_second = 1.6;
 
-    MultipleOutletOutOfOrderNonlinearReservoir->response_storage_meters(in_flux_meters_per_second, 10, excess);
+    MultipleOutletOutOfOrderNonlinearReservoir->response_meters_per_second(in_flux_meters_per_second, 10, excess);
 
     final_storage = MultipleOutletOutOfOrderNonlinearReservoir->get_storage_height_meters();
 

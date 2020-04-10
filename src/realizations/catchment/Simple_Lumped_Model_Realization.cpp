@@ -5,8 +5,8 @@
 
 
 Simple_Lumped_Model_Realization::Simple_Lumped_Model_Realization(
-    double storage,
-    double max_storage,
+    double storage_meters,
+    double max_storage_meters,
     double a,
     double b,
     double Ks,
@@ -16,7 +16,7 @@ Simple_Lumped_Model_Realization::Simple_Lumped_Model_Realization(
     time_step_t t
     )
 {
-    params.max_storage = max_storage;
+    params.max_storage_meters = max_storage_meters;
     params.a = a;
     params.b = b;
     params.Ks = Ks;
@@ -25,7 +25,7 @@ Simple_Lumped_Model_Realization::Simple_Lumped_Model_Realization(
 
     add_time(t, n);
 
-    state[t].storage = storage;
+    state[t].storage_meters = storage_meters;
     for ( int i = 0; i < n; ++i)
     {
         state[t].Sr[i] = Sr[i];
@@ -62,5 +62,5 @@ double Simple_Lumped_Model_Realization::get_response(double input_flux, time_ste
 {
     add_time(t+1, params.n);
     hymod_kernel::run(68400.0, params, state[t], state[t+1], fluxes[t], input_flux, et_params);
-    return fluxes[t].slow_flow + fluxes[t].runnoff;
+    return fluxes[t].slow_flow_meters_per_second + fluxes[t].runoff_meters_per_second;
 }
