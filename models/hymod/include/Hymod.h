@@ -130,10 +130,10 @@ class hymod_kernel
         state.storage_meters += input_flux_meters;
 
         // calculate fs, runoff and slow
-        double storage_function_value = (1.0 - pow((1.0 - state.storage/params.max_storage),params.b) );
+        double storage_function_value = (1.0 - pow((1.0 - state.storage_meters / params.max_storage_meters), params.b) );
         double runoff_meters_per_second = storage_function_value * params.a;
-        double slow_flow_meters_per_second = storage_function_value * (1.0 - params.a );
-        double soil_m = state.storage - storage_function_value;
+        //double slow_flow_meters_per_second = storage_function_value * (1.0 - params.a );
+        double soil_m = state.storage_meters - storage_function_value;
 
         // calculate et
         double et_meters = calc_et(soil_m, et_params);
@@ -142,7 +142,8 @@ class hymod_kernel
         double excess_water_meters;        // excess water from reservoir that can be positive or negative
 
         // get the slow flow output for this time - ks
-        double slow_flow_meters_per_second = groundwater.response_meters_per_second(slow_meters_per_second, dt, groundwater_excess_meters);
+        double slow_flow_meters_per_second = groundwater.response_meters_per_second(
+                storage_function_value * (1.0 - params.a), dt, groundwater_excess_meters);
         
         //TODO: Review issues with dt and internal timestep
         runoff_meters_per_second += groundwater_excess_meters / dt;
