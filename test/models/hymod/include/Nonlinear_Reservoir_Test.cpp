@@ -16,6 +16,8 @@ class NonlinearReservoirKernelTest : public ::testing::Test {
 
     void setupOneOutletNonlinearReservoir();
 
+    void setupOneOutletHighStorageNonlinearReservoir();
+
     void setupMultipleOutletNonlinearReservoir();
 
     void setupMultipleOutletOutOfOrderNonlinearReservoir();
@@ -23,6 +25,8 @@ class NonlinearReservoirKernelTest : public ::testing::Test {
     std::shared_ptr<Nonlinear_Reservoir> NoOutletReservoir; //smart pointer to a Nonlinear_Reservoir with no outlets
 
     std::shared_ptr<Nonlinear_Reservoir> OneOutletReservoir; //smart pointer to a Nonlinear_Reservoir with one outlet
+
+    std::shared_ptr<Nonlinear_Reservoir> OneOutletHighStorageReservoir; //smart pointer to a Nonlinear_Reservoir with one outlet and high storage
 
     std::shared_ptr<Nonlinear_Reservoir> MultipleOutletReservoir; //smart pointer to a Nonlinear_Reservoir with multiple outlets
 
@@ -46,6 +50,8 @@ void NonlinearReservoirKernelTest::SetUp() {
 
     setupOneOutletNonlinearReservoir();
 
+    setupOneOutletHighStorageNonlinearReservoir();
+
     setupMultipleOutletNonlinearReservoir();
 
     setupMultipleOutletOutOfOrderNonlinearReservoir();
@@ -65,6 +71,12 @@ void NonlinearReservoirKernelTest::setupNoOutletNonlinearReservoir()
 void NonlinearReservoirKernelTest::setupOneOutletNonlinearReservoir()
 {
     OneOutletReservoir = std::make_shared<Nonlinear_Reservoir>(0.0, 8.0, 3.5, 0.5, 0.7, 4.0, 100.0);
+}
+
+//Construct a reservoir with one outlet and high storage
+void NonlinearReservoirKernelTest::setupOneOutletHighStorageNonlinearReservoir()
+{
+    OneOutletHighStorageReservoir = std::make_shared<Nonlinear_Reservoir>(0.0, 8000.0, 3.5, 1.1, 1.2, 4.0, 0.005);
 }
 
 //Construct a reservoir with multiple outlets
@@ -172,7 +184,7 @@ TEST_F(NonlinearReservoirKernelTest, TestRunOneOutletReservoirExceedMaxStorage)
     double excess;
     double final_storage;
 
-    in_flux_meters_per_second = 3.0;
+    in_flux_meters_per_second = 5.0;
 
     OneOutletReservoir->response_meters_per_second(in_flux_meters_per_second, 10, excess);
 
@@ -202,6 +214,27 @@ TEST_F(NonlinearReservoirKernelTest, TestRunOneOutletReservoirFallsBelowMinimumS
     final_storage = round( final_storage * 100.0 ) / 100.0;
 
     EXPECT_DOUBLE_EQ (0.0, final_storage);
+
+    ASSERT_TRUE(true);
+}
+
+
+//Test Nonlinear Reservoir with one outlet where the calculated outlet velocity exceeds max velocity.
+TEST_F(NonlinearReservoirKernelTest, TestRunOneOutletReservoirExceedMaxVelocity) 
+{   
+    double in_flux_meters_per_second;
+    double excess;
+    double final_storage;
+
+    in_flux_meters_per_second = 80.0;
+
+    OneOutletHighStorageReservoir->response_meters_per_second(in_flux_meters_per_second, 10, excess);
+
+    final_storage = OneOutletHighStorageReservoir->get_storage_height_meters();
+
+    final_storage = round( final_storage * 100.0 ) / 100.0;
+
+    EXPECT_DOUBLE_EQ (803.450, final_storage);
 
     ASSERT_TRUE(true);
 }

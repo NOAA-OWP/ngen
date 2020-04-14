@@ -54,7 +54,7 @@ class Reservoir_Outlet
         if (velocity_meters_per_second_local > max_velocity_meters_per_second)
         {
             velocity_meters_per_second_local = max_velocity_meters_per_second;
-            
+
             //TODO: Return appropriate warning
             cout << "WARNING: Nonlinear reservoir calculated an outlet velocity over max velocity, and therefore set the outlet velocity to max velocity." << endl;
         }
@@ -146,7 +146,7 @@ class Nonlinear_Reservoir
             if (state.current_storage_height_meters < parameters.minimum_storage_meters)
             {	
                 //TODO: Return appropriate warning
-                cout << "WARNING: Nonlinear reservoir calculated a storage below the minimum storage." << endl;
+                //cout << "WARNING: Nonlinear reservoir calculated a storage below the minimum storage." << endl;
     
                 //Return to storage before falling below minimum storage.
                 state.current_storage_height_meters += outlet_velocity_meters_per_second * delta_time_seconds;
