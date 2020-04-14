@@ -64,17 +64,17 @@ void NonlinearReservoirKernelTest::setupNoOutletNonlinearReservoir()
 //Construct a reservoir with one outlet
 void NonlinearReservoirKernelTest::setupOneOutletNonlinearReservoir()
 {
-    OneOutletReservoir = std::make_shared<Nonlinear_Reservoir>(0.0, 8.0, 3.5, 0.5, 0.7, 4.0);
+    OneOutletReservoir = std::make_shared<Nonlinear_Reservoir>(0.0, 8.0, 3.5, 0.5, 0.7, 4.0, 100.0);
 }
 
 //Construct a reservoir with multiple outlets
 void NonlinearReservoirKernelTest::setupMultipleOutletNonlinearReservoir()
 {
-    ReservoirOutlet1 = std::make_shared<Reservoir_Outlet>(0.2, 0.4, 4.0);
+    ReservoirOutlet1 = std::make_shared<Reservoir_Outlet>(0.2, 0.4, 4.0, 100.0);
 
-    ReservoirOutlet2 = std::make_shared<Reservoir_Outlet>(0.3, 0.5, 10.0);
+    ReservoirOutlet2 = std::make_shared<Reservoir_Outlet>(0.3, 0.5, 10.0, 100.0);
 
-    ReservoirOutlet3 = std::make_shared<Reservoir_Outlet>(0.4, 0.6, 15.0);
+    ReservoirOutlet3 = std::make_shared<Reservoir_Outlet>(0.4, 0.6, 15.0, 100.0);
 
     ReservoirOutletsVector.push_back(*ReservoirOutlet1);
 
@@ -88,11 +88,11 @@ void NonlinearReservoirKernelTest::setupMultipleOutletNonlinearReservoir()
 //Construct a reservoir with multiple outlets that are not ordered from lowest to highest activation threshold
 void NonlinearReservoirKernelTest::setupMultipleOutletOutOfOrderNonlinearReservoir()
 {
-    ReservoirOutlet1 = std::make_shared<Reservoir_Outlet>(0.2, 0.4, 4.0);
+    ReservoirOutlet1 = std::make_shared<Reservoir_Outlet>(0.2, 0.4, 4.0, 100.0);
 
-    ReservoirOutlet2 = std::make_shared<Reservoir_Outlet>(0.3, 0.5, 10.0);
+    ReservoirOutlet2 = std::make_shared<Reservoir_Outlet>(0.3, 0.5, 10.0, 100.0);
 
-    ReservoirOutlet3 = std::make_shared<Reservoir_Outlet>(0.4, 0.6, 15.0);
+    ReservoirOutlet3 = std::make_shared<Reservoir_Outlet>(0.4, 0.6, 15.0, 100.0);
 
     ReservoirOutletsVectorOutOfOrder.push_back(*ReservoirOutlet3);
 
