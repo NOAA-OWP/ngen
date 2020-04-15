@@ -74,7 +74,6 @@ class Reservoir_Outlet
     double b;
     double activation_threshold_meters;
     double max_velocity_meters_per_second;
-    //double velocity_meters_per_second;
 };
 
  
