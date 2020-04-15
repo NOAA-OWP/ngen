@@ -58,7 +58,7 @@ TEST_F(JSONGeometry_Test, point_test) {
     ASSERT_EQ(geometry.as_point().get<0>(), x);
     ASSERT_EQ(geometry.as_point().get<1>(), y);
 
-    stream = std::stringstream();
+    stream.str("");
     stream << data;
     boost::property_tree::ptree indirect_tree;
     boost::property_tree::json_parser::read_json(stream, indirect_tree);
@@ -108,7 +108,7 @@ TEST_F(JSONGeometry_Test, linestring_test) {
     ASSERT_EQ(geometry.as_linestring()[3].get<0>(), 105.0);
     ASSERT_EQ(geometry.as_linestring()[3].get<1>(), 1.0);
 
-    stream = std::stringstream();
+    stream.str("");
     stream << data;
     boost::property_tree::ptree indirect_tree;
     boost::property_tree::json_parser::read_json(stream, indirect_tree);
@@ -181,7 +181,7 @@ TEST_F(JSONGeometry_Test, polygon_test) {
     ASSERT_EQ(geometry.as_polygon().inners().size(), 1);
     ASSERT_EQ(geometry.as_polygon().inners()[0].size(), 4);
 
-    stream = std::stringstream();
+    stream.str("");
     stream << data;
     boost::property_tree::ptree indirect_tree;
     boost::property_tree::json_parser::read_json(stream, indirect_tree);
@@ -230,7 +230,7 @@ TEST_F(JSONGeometry_Test, multipoint_test) {
     ASSERT_EQ(geometry.as_multipoint()[3].get<0>(), 30);
     ASSERT_EQ(geometry.as_multipoint()[3].get<1>(), 10);
 
-    stream = std::stringstream();
+    stream.str("");
     stream << data;
     boost::property_tree::ptree indirect_tree;
     boost::property_tree::json_parser::read_json(stream, indirect_tree);
@@ -327,7 +327,7 @@ TEST_F(JSONGeometry_Test, multilinestring_test) {
     ASSERT_EQ(geometry.as_multilinestring()[1][1].get<0>(), -170.0);
     ASSERT_EQ(geometry.as_multilinestring()[1][1].get<1>(), 45.0);
 
-    stream = std::stringstream();
+    stream.str("");
     stream << data;
     boost::property_tree::ptree indirect_tree;
     boost::property_tree::json_parser::read_json(stream, indirect_tree);
@@ -429,7 +429,7 @@ TEST_F(JSONGeometry_Test, multipolygon_test) {
     ASSERT_EQ(geometry.as_multipolygon()[1].outer().size(), 5);
     ASSERT_EQ(geometry.as_multipolygon()[1].inners().size(), 0);
 
-    stream = std::stringstream();
+    stream.str("");
     stream << data;
     boost::property_tree::ptree indirect_tree;
     boost::property_tree::json_parser::read_json(stream, indirect_tree);
