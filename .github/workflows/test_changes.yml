@@ -1,0 +1,43 @@
+# Test changes that have been pushed to the master and dev branches
+
+name: Test Changes
+
+# Controls when the action will run.
+on:
+  push:
+    branches: [ master dev ]
+  pull_request:
+    branches: [ master dev ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a job called "unit_tests" for building and running unit tests
+  test_all_with_defaults:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+      
+    # TODO: make sure this step is still necessary
+    - name: git submodule
+      run: git submodule update --init --recursive -- test/googletest
+    
+    - name: cmake_init_build
+      run: cmake -B cmake_build -S .
+    
+    - name: build_tests
+      run: cmake --build cmake_build --target test_all
+      timeout-minutes: 15
+      
+    - name: run_tests
+      run: ./cmake_build/test/test_all
+      timeout-minutes: 15
+    
+    - name: clean_build
+      run: cmake --build cmake_build --target clean
+    
+    - name: cleanup_dir
+      run: rm -rf cmake_build
