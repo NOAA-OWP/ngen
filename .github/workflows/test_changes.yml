@@ -39,13 +39,13 @@ jobs:
         tar xjf boost_1_72_0.tar.bz2
     
     - name: cmake_init_build
-      run: cmake -B cmake_build -S .
-    
-    - name: build_tests
       run: |
         export BOOST_ROOT="$(pwd)/boost_1_72_0"
         [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
-         cmake --build cmake_build --target test_all
+        cmake -B cmake_build -S .
+    
+    - name: build_tests
+      run: cmake --build cmake_build --target test_all
       timeout-minutes: 15
       
     - name: run_tests
