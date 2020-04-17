@@ -24,24 +24,27 @@ jobs:
     - name: git submodule
       run: git submodule update --init --recursive -- test/googletest
     
-    - name: Cache Boost Dependency
-      id: cache-boost-dep
-      uses: actions/cache@v1
-      with:
-        path: boost_1_72_0
-        key: unix-boost-dep
-      
-    - name: Get Boost Dependency
-      if: steps.cache-boost-dep.outputs.cache-hit != 'true'
-      run: |
-        curl -L -O https://dl.bintray.com/boostorg/release/1.72.0/source/boost_1_72_0.tar.bz2
-        tar xjf boost_1_72_0.tar.bz2
-    
+#    - name: Cache Boost Dependency
+#      id: cache-boost-dep
+#      uses: actions/cache@v1
+#      with:
+#        path: boost_1_72_0
+#        key: unix-boost-dep
+#
+#    - name: Get Boost Dependency
+#      if: steps.cache-boost-dep.outputs.cache-hit != 'true'
+#      run: |
+#        curl -L -O https://dl.bintray.com/boostorg/release/1.72.0/source/boost_1_72_0.tar.bz2
+#        tar xjf boost_1_72_0.tar.bz2
+#
+#    - name: cmake_init_build
+#      run: |
+#        export BOOST_ROOT="$(pwd)/boost_1_72_0"
+#        [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
+#        cmake -B cmake_build -S .
+
     - name: cmake_init_build
-      run: |
-        export BOOST_ROOT="$(pwd)/boost_1_72_0"
-        [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
-        cmake -B cmake_build -S .
+      run: cmake -B cmake_build -S .
     
     - name: build_tests
       run: cmake --build cmake_build --target test_all
