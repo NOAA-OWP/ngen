@@ -11,7 +11,7 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  test_all_ubuntu_latest:
+  test_unit_ubuntu_latest:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -28,11 +28,11 @@ jobs:
       run: cmake -B cmake_build -S .
     
     - name: build_tests
-      run: cmake --build cmake_build --target test_all
+      run: cmake --build cmake_build --target test_unit
       timeout-minutes: 15
       
     - name: run_tests
-      run: ./cmake_build/test/test_all
+      run: ./cmake_build/test/test_unit
       timeout-minutes: 15
     
     - name: clean_build
@@ -41,7 +41,7 @@ jobs:
     - name: cleanup_dir
       run: rm -rf cmake_build
 
-  test_all_macos_latest:
+  test_unit_macos_latest:
     # The type of runner that the job will run on
     runs-on: macos-latest
 
@@ -73,11 +73,11 @@ jobs:
           cmake -B cmake_build -S .
 
       - name: build_tests
-        run: cmake --build cmake_build --target test_all
+        run: cmake --build cmake_build --target test_unit
         timeout-minutes: 15
 
       - name: run_tests
-        run: ./cmake_build/test/test_all
+        run: ./cmake_build/test/test_unit
         timeout-minutes: 15
 
       - name: clean_build
