@@ -120,11 +120,11 @@ class hymod_kernel
         for ( unsigned long i = 0; i < nash_cascade.size(); ++i )
         {
             //construct a single outlet nonlinear reservoir
-            nash_cascade[i] = Nonlinear_Reservoir(0, params.max_storage_meters, state.Sr[i], params.Kq, 1, 0);
+            nash_cascade[i] = Nonlinear_Reservoir(0, params.max_storage_meters, state.Sr[i], params.Kq, 1, 0, 100);
         }
 
         // initalize groundwater reservoir
-        Nonlinear_Reservoir groundwater(0, params.max_storage_meters, state.groundwater_storage_meters, params.Ks, 1, 0);
+        Nonlinear_Reservoir groundwater(0, params.max_storage_meters, state.groundwater_storage_meters, params.Ks, 1, 0, 100);
 
         // add flux to the current state
         state.storage_meters += input_flux_meters;
