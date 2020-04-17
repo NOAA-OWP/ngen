@@ -11,8 +11,7 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a job called "unit_tests" for building and running unit tests
-  test_all_with_defaults:
+  test_all_ubuntu_latest:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
