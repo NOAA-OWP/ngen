@@ -50,10 +50,13 @@ set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 
 if(DEFINED ENV{BOOST_ROOT})
-    set(Boost_INCLUDE_DIR $ENV{BOOST_ROOT})
+    #set(Boost_INCLUDE_DIR $ENV{BOOST_ROOT})
+    set(BOOST_ROOT $ENV{BOOST_ROOT})
 else()
     message(STATUS "No Boost root: $ENV{BOOST_ROOT}")
 endif()
+
+find_package(Boost 1.69.0 REQUIRED)
 
 target_include_directories(ngen PUBLIC
         "${PROJECT_BINARY_DIR}/include" # For generated config header file in binary tree
