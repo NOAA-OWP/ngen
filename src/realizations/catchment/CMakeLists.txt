@@ -10,6 +10,7 @@ target_include_directories(realizations_catchment PUBLIC
         ${PROJECT_SOURCE_DIR}/include/core/catchment
         ${PROJECT_SOURCE_DIR}/include/realizations/catchment
         ${PROJECT_SOURCE_DIR}/include/forcing
+        ${PROJECT_SOURCE_DIR}/include/utilities
         ${PROJECT_SOURCE_DIR}/models
         ${PROJECT_SOURCE_DIR}/models/kernels
         )
