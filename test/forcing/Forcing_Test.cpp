@@ -4,6 +4,10 @@
 //#include "forcing/Forcing.cpp"
 #include "Forcing.h"
 #include <memory>
+#include <string>
+#include <unistd.h>
+#include <stdio.h>
+#include <limits.h>
 
 
 class ForcingTest : public ::testing::Test {
@@ -38,7 +42,30 @@ void ForcingTest::setupForcing()
 }
 
 
+//Test Forcing object
+TEST_F(ForcingTest, TestForcingDataRead)
+{
+    //string forcing_file_name = "Sample_Tropical_Hourly_Rainfall.csv";
 
+    //string forcing_file_name = "/home/jdmattern/Documents/ngen/test/forcing/Sample_Tropical_Hourly_Rainfall.csv";
+
+    string forcing_file_name = "../test/forcing/Sample_Tropical_Hourly_Rainfall.csv";
+   
+   char cwd[PATH_MAX];
+   if (getcwd(cwd, sizeof(cwd)) != NULL) {
+       printf("Current working dir: %s\n", cwd);
+   } else {
+       perror("getcwd() error");
+   }
+
+   
+   //forcing_file_name = getcwd();
+
+   Forcing_Object1->read_forcing(forcing_file_name);
+
+
+
+}
 
 
 
