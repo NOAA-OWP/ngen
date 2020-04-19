@@ -1,7 +1,7 @@
 #include <vector>
 #include <cmath>
 #include <algorithm>
-//#include <string>
+#include <string>
 #include <fstream>
 #include <iostream>
 #include <boost/algorithm/string.hpp>
@@ -28,9 +28,30 @@ class Forcing
     }
 
     //Read Forcing Data from CSV
-    void read_forcing(std::string file_name) 
+    //void read_forcing(std::string file_name)
+    void read_forcing(string file_name)    //builds fine
     { 
-        CSVReader("name.csv");
+        //CSVReader(filename = file_name);
+
+        //CSVReader("file_name");  //Builds fine
+
+        CSVReader reader(file_name);
+
+	// Get the data from CSV File
+	std::vector<std::vector<std::string> > data_list = reader.getData();
+
+
+	// Print the content of row by row on screen
+	for(std::vector<std::string> vec : data_list)
+	{
+		for(std::string data : vec)
+		{
+			std::cout<<data << " , ";
+		}
+		std::cout<<std::endl;
+	}
+
+        cout << "hi";
 
 
     }
