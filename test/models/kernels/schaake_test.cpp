@@ -29,9 +29,9 @@ double soil_max_moisture_capacity;                      // smcmax;
 double column_total_soil_moisture_deficit_m;            // passed to partitioning function because that is what it really wants.
 double soil_max_avail_moisture_capacity;                // dimensionless soil water storage capacity given as (effective porosity-wilting point water content)
 double soil_saturated_hydraulic_conductivity_m_per_s;   // dksat;  This is the value read in from the soil parameter table.
-double Schaake_magic_constant_equal_to_three;           // refkdt from GENPARM.dat this is _really_ just a constant equal to 3.0.
-double Schaake_reference_saturated_hydraulic_conductivity_m_per_s;   // refdk; the magical value of reference hydraulic conductivity identified as super cool by Schaake et al.  A CONSTANT = 2.0e-06 [m/s]
-double Schaake_adjusted_magic_constant_by_soil_type;    // kdt, this is the constant given by 3*(dksat/
+double schaake_magic_constant_equal_to_three;           // refkdt from GENPARM.dat this is _really_ just a constant equal to 3.0.
+double schaake_reference_saturated_hydraulic_conductivity_m_per_s;   // refdk; the magical value of reference hydraulic conductivity identified as super cool by Schaake et al.  A CONSTANT = 2.0e-06 [m/s]
+double schaake_adjusted_magic_constant_by_soil_type;    // kdt, this is the constant given by 3*(dksat/
 
 
 if((out_fptr=fopen("inf_vs_rainrate.out","w"))==NULL)
@@ -83,12 +83,12 @@ soil_saturated_hydraulic_conductivity_m_per_s=5.23E-6;                   // was 
 /*! Set-up "universal" parameters <- a funny comment from the original noah-mp code...        */
 /*! ------------------------------------------------------------------------------------------*/
 
-Schaake_reference_saturated_hydraulic_conductivity_m_per_s=2.0e-06;      // was refdk, the magical value of reference hydraulic conductivity identified as super cool by Schaake et al.
-Schaake_magic_constant_equal_to_three=3.0;                               // refkdt=3.0;     from GENPARM.TBL.  A constant equal to three.
+schaake_reference_saturated_hydraulic_conductivity_m_per_s=2.0e-06;      // was refdk, the magical value of reference hydraulic conductivity identified as super cool by Schaake et al.
+schaake_magic_constant_equal_to_three=3.0;                               // refkdt=3.0;     from GENPARM.TBL.  A constant equal to three.
 
 // kdt    = refkdt * dksat / refdk;  <- this is the magic.
 
-Schaake_adjusted_magic_constant_by_soil_type = Schaake_magic_constant_equal_to_three*(soil_saturated_hydraulic_conductivity_m_per_s/Schaake_reference_saturated_hydraulic_conductivity_m_per_s); // was kdt
+schaake_adjusted_magic_constant_by_soil_type = schaake_magic_constant_equal_to_three*(soil_saturated_hydraulic_conductivity_m_per_s/schaake_reference_saturated_hydraulic_conductivity_m_per_s); // was kdt
 
 
 // forcing magnitude
@@ -119,7 +119,7 @@ for(k = 2;k<=num_soil_discretizations;k++)
 
   printf("column_total_soil_moisture_deficit_m= %lf\n", column_total_soil_moisture_deficit_m);
 
-  Schaake_partitioning_scheme(timestep_s,Schaake_adjusted_magic_constant_by_soil_type,column_total_soil_moisture_deficit_m,
+  schaake_partitioning_scheme(timestep_s,schaake_adjusted_magic_constant_by_soil_type,column_total_soil_moisture_deficit_m,
         water_input_depth_m,&surface_runoff_depth_m,&infiltration_depth_m);          // this is all that this function really needs.
 
 fprintf(out_fptr,"input water this timestep: %e mm partitioned into:\n            surface water: %e mm\n               soil water: %e mm\n                 residual: %e mm\n",
