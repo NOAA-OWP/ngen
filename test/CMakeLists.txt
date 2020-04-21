@@ -47,10 +47,7 @@ endmacro()
 
 # Individual tests
 add_automated_test(test_hymod models/hymod/include/HymodTest.cpp)
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> Finished the core functionality and tests for geojson utilization
+
 add_automated_test(
     test_geojson
     geojson/JSONProperty_Test.cpp
@@ -58,12 +55,6 @@ add_automated_test(
     geojson/Feature_Test.cpp
     geojson/FeatureCollection_Test.cpp
 )
-<<<<<<< HEAD
-=======
-add_automated_test(test_geojson geojson/JSONProperty_Test.cpp)
->>>>>>> Initial Geojson work
-=======
->>>>>>> Finished the core functionality and tests for geojson utilization
 
 
 # Unit tests
@@ -85,10 +76,7 @@ add_automated_test(
 add_automated_test_w_mock(
     test_all
     models/hymod/include/HymodTest.cpp
-<<<<<<< HEAD
     models/hymod/include/Nonlinear_Reservoir_Test.cpp
-=======
->>>>>>> Finished the core functionality and tests for geojson utilization
     geojson/JSONProperty_Test.cpp
     geojson/JSONGeometry_Test.cpp
     geojson/Feature_Test.cpp

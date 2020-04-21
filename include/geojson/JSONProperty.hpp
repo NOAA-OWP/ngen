@@ -3,6 +3,9 @@
 
 #include <string>
 #include <map>
+#include <vector>
+
+#include <boost/property_tree/ptree.hpp>
 
 namespace geojson {
     class JSONProperty;
@@ -29,6 +32,74 @@ namespace geojson {
      */
     class JSONProperty {
         public:
+            
+            JSONProperty(std::string value_key, const boost::property_tree::ptree& property_tree) {
+                key = value_key;
+
+                if (property_tree.empty() && !property_tree.data().empty()) {
+                    // This is a terminal node and has a raw value
+                        // TODO: Add handling for nested objects by determining if property.second is another ptree
+                        std::string value = property_tree.data();
+
+                        if (value == "true" || value == "false") {
+                            type = PropertyType::Boolean;
+                            boolean = value == "true";
+                        }
+                        else {
+                            bool is_numeric = true;
+                            bool is_real = true;
+                            bool decimal_already_hit = false;
+
+                            for(int character_index = 0; character_index < value.length(); character_index++) {
+                                char character = value[character_index];
+
+                                // If the first character is a '0' or isn't a digit, the whole value cannot be a number
+                                if (character_index == 0 && character == '0') {
+                                    is_numeric = false;
+                                }
+                                else if (character != '.' && !std::isdigit(character)) {
+                                    // If this character isn't a decimal point and isn't a digit, the whole value cannot be a number
+                                    is_numeric = false;
+                                    is_real = false;
+                                    break;
+                                }
+                                else if (character == '.' && decimal_already_hit) {
+                                    // If this character is a decimal point, but we've already seen one, the whole value cannot be a number
+                                    is_real = false;
+                                    break;
+                                }
+                                else if (character == '.') {
+                                    // If a decimal point is seen, the whole value cannot be an integer
+                                    is_numeric = false;
+                                    decimal_already_hit = true;
+                                }
+                            }
+
+                            // If the value can be represented as a whole number, we want to go with that
+                            if (is_numeric) {
+                                type = PropertyType::Natural;
+                                natural_number = std::stol(value);
+                            }
+                            else if (is_real) {
+                                type = PropertyType::Real;
+                                real_number = std::stod(value);
+                            }
+                            else {
+                                // Otherwise we'll store everything as a raw string
+                                type = PropertyType::String;
+                                string = value;
+                            }
+                        }
+                }
+                else {
+                    // This isn't a terminal node, therefore represents an object
+                    type = PropertyType::Object;
+                    for (auto &property : property_tree) {
+                        values.emplace(property.first, JSONProperty(property.first, property.second));
+                    }
+                }
+            }
+
             /**
              * Create a JSONProperty that stores a natural number
              * 
@@ -102,47 +173,32 @@ namespace geojson {
             }
 
             /**
+             * Create a JSONProperty that stores text
+             * 
+             * @param value_key: The name of the key that stores this value
+             * @param value: The text that will be stored
+             */
+            JSONProperty(std::string value_key, std::string value) {
+                type = PropertyType::String;
+                key = value_key;
+                string = value;
+            }
+
+            /**
              * A basic destructor
              */
             virtual ~JSONProperty(){};
 
             /**
-             * Get the type of the property (Natural, Real, String, etc)
+             * Create a JSONProperty that stores a true or false value
              * 
-             * @return The type of the property
+             * @param value_key: The name of the key that stores this value
+             * @param value: The true or false value that will be stored
              */
-            PropertyType get_type() const {
-                return type;
-            };
-
-            /**
-             * @brief Attempt to get the natural numeric value stored within the property
-             * 
-             * An exception will be thrown if this property doesn't store a natural number
-             * 
-             * @return The natural number that is stored within the property
-             */
-            long as_natural_number() const {
-                // Return a natural number if this IS a natural number
-                if (type == PropertyType::Natural) {
-                    return natural_number;
-                }
-
-                // Throw an exception since this can't be considered a natural number
-                std::string message = key + " cannot be converted into a natural number.";
-                throw std::runtime_error(message);
-            }
-
-            double as_real_number() const {
-                if (type == PropertyType::Real) {
-                    return real_number;
-                }
-                else if (type == PropertyType::Natural) {
-                    return double(natural_number);
-                }
-
-                std::string message = key + " cannot be converted into a real number.";
-                throw std::runtime_error(message);
+            JSONProperty(std::string value_key, bool value) {
+                type = PropertyType::Boolean;
+                key = value_key;
+                boolean = value;
             }
 
             /**
@@ -156,11 +212,6 @@ namespace geojson {
                     key(value_key),
                     values(value)
             {}
-
-            /**
-             * A basic destructor
-             */
-            virtual ~JSONProperty(){};
 
             /**
              * Get the type of the property (Natural, Real, String, etc)
@@ -199,7 +250,7 @@ namespace geojson {
             double real_number;
             std::string string;
             bool boolean;
-            std::map<std::string, JSONProperty> values;
+            PropertyMap values;
     };
 }
 #endif // GEOJSON_JSONPROPERTY_H

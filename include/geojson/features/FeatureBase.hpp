@@ -284,7 +284,8 @@ namespace geojson {
                     property_keys.push_back(pair.first);
                 }
 
-            std::vector<JSONGeometry> get_geometry_collection() const;
+                return property_keys;
+            }
 
             /**
              * Collects a collection of everything held within the inner geometry collection
@@ -297,7 +298,8 @@ namespace geojson {
                     return geometry_collection;
                 }
 
-            property_map get_properties() const;
+                throw std::runtime_error("There is no geometry collection to retrieve");
+            }
 
             /**
              * Collects all values describing the bounds of this feature
