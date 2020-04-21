@@ -12,8 +12,8 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
+  # This workflow contains a single job called "document"
+  document:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -23,13 +23,29 @@ jobs:
     - uses: actions/checkout@v2
 
     # Runs a single command using the runners shell
-    - name: Doxygen Action
-      uses: mattnotmitt/doxygen-action@v1.1.0
+    - uses: mattnotmitt/doxygen-action@v1
+      with:
+          working-directory: '.'
+          doxyfile-path: './Doxyfile'
+          
+    - name: Switch to gh-pages
+      uses: actions/checkout@v2
+      with:
+        ref: gh-pages
+        clean: false
 
-    - name: GitHub Push
+    - name: Commit files
+      run: echo ${{ github.ref }}
+        git add .
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git commit -m "Commiting Documentation" -a | exit 0
+
+    - name: Push to gh-pages
       uses: ad-m/github-push-action@v0.5.0
       with:
         # Token for the repo. Can be passed in using $\{{ secrets.GITHUB_TOKEN }}
         github_token: ${{ secrets.GITHUB_TOKEN }}
         # Destination branch to push changes
         branch: gh-pages
+        force: true
