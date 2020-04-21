@@ -45,35 +45,39 @@ TEST_F(Feature_Test, geometry_test) {
     ASSERT_EQ(basic_point.geometry().get<0>(), x);
     ASSERT_EQ(basic_point.geometry().get<1>(), y);
 
-    ASSERT_EQ(feature.get_geometry().as_point().get<0>(), x);
-    ASSERT_EQ(feature.get_geometry().as_point().get<1>(), y);
-    ASSERT_EQ(feature.get_geometry().get_type(), geojson::JSONGeometryType::Point);
+    ASSERT_EQ(basic_point.get_properties().size(), 0);
+    ASSERT_EQ(basic_point.get_bounding_box().size(), 0);
 
-    ASSERT_EQ(feature.get_properties().size(), 0);
-    ASSERT_EQ(feature.get_bounding_box().size(), 0);
+    ASSERT_TRUE(basic_point.is_leaf());
+    ASSERT_TRUE(basic_point.is_root());
+    ASSERT_EQ(basic_point.get_upstream_length(), 0);
+    ASSERT_EQ(basic_point.get_downstream_length(), 0);
+    ASSERT_EQ(basic_point.get_contributor_count(), 0);
 
-    ASSERT_ANY_THROW(feature.get_property("doesnotexist"));
+    ASSERT_ANY_THROW(basic_point.get_property("doesnotexist"));
 
     std::vector<double> bounding_box{1.0, 2.0};
 
     // Next, test the slightly more complicated case of the feature having bounds
-    geojson::PointFeature point_and_bound(geojson::coordinate_t(x, y), "Point and Bound test", geojson::PropertyMap(), bounding_box);
+    geojson::PointFeature point_and_bound(geojson::coordinate_t(x, y), "Point and Bound test", geojson::property_map(), bounding_box);
     
     ASSERT_EQ(point_and_bound.geometry().get<0>(), x);
     ASSERT_EQ(point_and_bound.geometry().get<1>(), y);
 
-    ASSERT_EQ(feature.get_geometry().as_point().get<0>(), x);
-    ASSERT_EQ(feature.get_geometry().as_point().get<1>(), y);
-    ASSERT_EQ(feature.get_geometry().get_type(), geojson::JSONGeometryType::Point);
+    ASSERT_TRUE(point_and_bound.is_leaf());
+    ASSERT_TRUE(point_and_bound.is_root());
+    ASSERT_EQ(point_and_bound.get_upstream_length(), 0);
+    ASSERT_EQ(point_and_bound.get_downstream_length(), 0);
+    ASSERT_EQ(point_and_bound.get_contributor_count(), 0);
 
-    ASSERT_EQ(feature.get_properties().size(), 0);
-    ASSERT_EQ(feature.get_bounding_box().size(), 2);
-    ASSERT_EQ(feature.get_bounding_box()[0], 1.0);
-    ASSERT_EQ(feature.get_bounding_box()[1], 2.0);
+    ASSERT_EQ(point_and_bound.get_properties().size(), 0);
+    ASSERT_EQ(point_and_bound.get_bounding_box().size(), 2);
+    ASSERT_EQ(point_and_bound.get_bounding_box()[0], 1.0);
+    ASSERT_EQ(point_and_bound.get_bounding_box()[1], 2.0);
 
-    ASSERT_ANY_THROW(feature.get_property("doesnotexist"));
+    ASSERT_ANY_THROW(point_and_bound.get_property("doesnotexist"));
 
-    geojson::PropertyMap properties{
+    geojson::property_map properties{
         {"prop_0", geojson::JSONProperty("prop_0", 0)},
         {"prop_1", geojson::JSONProperty("prop_1", "1")},
         {"prop_2", geojson::JSONProperty("prop_2", false)},
@@ -107,8 +111,8 @@ TEST_F(Feature_Test, geometry_test) {
     ASSERT_EQ(point_and_properties.get_property("prop_3").as_real_number(), 2.0);
     ASSERT_ANY_THROW(point_and_properties.get_property("doesnotexist"));
 
-    ASSERT_TRUE(point_and_properties.is_leaf());
     ASSERT_FALSE(point_and_properties.is_root());
+    ASSERT_TRUE(point_and_properties.is_leaf());
     ASSERT_EQ(point_and_properties.get_contributor_count(), 1);
     ASSERT_EQ(point_and_properties.get_upstream_length(), 1);
     ASSERT_EQ(point_and_properties.get_downstream_length(), 0);
@@ -196,16 +200,13 @@ TEST_F(Feature_Test, geometry_test) {
     ASSERT_EQ(basic_point.get_number_of_upstream_features(), 0);
     ASSERT_EQ(basic_point.get_downstream_length(), 2);
 
-    ASSERT_EQ(feature.get_properties().size(), 4);
-    ASSERT_EQ(feature.get_bounding_box().size(), 2);
-    ASSERT_EQ(feature.get_bounding_box()[0], 1.0);
-    ASSERT_EQ(feature.get_bounding_box()[1], 2.0);
+    ASSERT_EQ(point_and_bound.get_number_of_downstream_features(), 2);
+    ASSERT_EQ(point_and_bound.get_number_of_upstream_features(), 0);
+    ASSERT_EQ(point_and_bound.get_downstream_length(), 2);
 
-    ASSERT_EQ(feature.get_property("prop_0").as_natural_number(), 0);
-    ASSERT_EQ(feature.get_property("prop_1").as_string(), "1");
-    ASSERT_FALSE(feature.get_property("prop_2").as_boolean());
-    ASSERT_EQ(feature.get_property("prop_3").as_real_number(), 2.0);
-    ASSERT_ANY_THROW(feature.get_property("doesnotexist"));
+    ASSERT_EQ(point_and_properties.get_number_of_downstream_features(), 0);
+    ASSERT_EQ(point_and_properties.get_number_of_upstream_features(), 2);
+    ASSERT_EQ(point_and_properties.get_upstream_length(), 2);
 
     geojson::PolygonFeature polygon(
       geojson::polygon(three_dimensions),
@@ -234,8 +235,8 @@ TEST_F(Feature_Test, geometry_test) {
     ASSERT_EQ(polygon.get_property("prop_3").as_real_number(), 2.0);
     ASSERT_ANY_THROW(polygon.get_property("doesnotexist"));
 
-    ASSERT_TRUE(polygon.is_leaf());
     ASSERT_FALSE(polygon.is_root());
+    ASSERT_TRUE(polygon.is_leaf());
     ASSERT_EQ(polygon.get_upstream_length(), 2);
     ASSERT_EQ(polygon.get_downstream_length(), 0);
     ASSERT_EQ(polygon.get_contributor_count(), 3);
@@ -246,21 +247,18 @@ TEST_F(Feature_Test, geometry_test) {
     ASSERT_EQ(basic_point.get_number_of_upstream_features(), 0);
     ASSERT_EQ(basic_point.get_downstream_length(), 2);
 
-    ASSERT_EQ(feature.get_geometry().get_type(), geojson::JSONGeometryType::Polygon);
-    ASSERT_EQ(feature.get_geometry().as_polygon().outer().size(), 3);
-    ASSERT_EQ(feature.get_geometry().as_polygon().inners().size(), 1);
-    ASSERT_EQ(feature.get_geometry().as_polygon().inners()[0].size(), 3);
+    ASSERT_EQ(point_and_bound.get_number_of_downstream_features(), 2);
+    ASSERT_EQ(point_and_bound.get_number_of_upstream_features(), 0);
+    ASSERT_EQ(point_and_bound.get_downstream_length(), 2);
 
-    ASSERT_EQ(feature.get_properties().size(), 4);
-    ASSERT_EQ(feature.get_bounding_box().size(), 2);
-    ASSERT_EQ(feature.get_bounding_box()[0], 1.0);
-    ASSERT_EQ(feature.get_bounding_box()[1], 2.0);
+    ASSERT_EQ(point_and_properties.get_number_of_downstream_features(), 0);
+    ASSERT_EQ(point_and_properties.get_number_of_upstream_features(), 2);
+    ASSERT_EQ(point_and_properties.get_upstream_length(), 2);
 
-    ASSERT_EQ(feature.get_property("prop_0").as_natural_number(), 0);
-    ASSERT_EQ(feature.get_property("prop_1").as_string(), "1");
-    ASSERT_FALSE(feature.get_property("prop_2").as_boolean());
-    ASSERT_EQ(feature.get_property("prop_3").as_real_number(), 2.0);
-    ASSERT_ANY_THROW(feature.get_property("doesnotexist"));
+    ASSERT_EQ(linestring.get_number_of_downstream_features(), 2);
+    ASSERT_EQ(linestring.get_number_of_upstream_features(), 2);
+    ASSERT_EQ(linestring.get_upstream_length(), 1);
+    ASSERT_EQ(linestring.get_downstream_length(), 1);
 
     geojson::MultiPointFeature multipoint(
       geojson::multipoint(two_dimensions),
@@ -425,8 +423,8 @@ TEST_F(Feature_Test, geometry_test) {
     ASSERT_EQ(multipolygon.get_property("prop_3").as_real_number(), 2.0);
     ASSERT_ANY_THROW(multipolygon.get_property("doesnotexist"));
 
-    ASSERT_TRUE(multipolygon.is_leaf());
     ASSERT_FALSE(multipolygon.is_root());
+    ASSERT_TRUE(multipolygon.is_leaf());
     ASSERT_EQ(multipolygon.get_upstream_length(), 5);
     ASSERT_EQ(multipolygon.get_downstream_length(), 0);
     ASSERT_EQ(multipolygon.get_contributor_count(), 6);
@@ -494,16 +492,16 @@ TEST_F(Feature_Test, geometry_test) {
     ASSERT_EQ(copy.get_property("prop_3").as_real_number(), 2.0);
     ASSERT_ANY_THROW(copy.get_property("doesnotexist"));
 
-    ASSERT_TRUE(copy.is_leaf());
     ASSERT_FALSE(copy.is_root());
+    ASSERT_TRUE(copy.is_leaf());
     ASSERT_EQ(copy.get_upstream_length(), 5);
     ASSERT_EQ(copy.get_downstream_length(), 0);
     ASSERT_EQ(copy.get_contributor_count(), 6);
     ASSERT_EQ(copy.get_number_of_upstream_features(), 2);
     ASSERT_EQ(copy.get_number_of_downstream_features(), 0);
 
-    ASSERT_TRUE(multipolygon.is_leaf());
     ASSERT_FALSE(multipolygon.is_root());
+    ASSERT_TRUE(multipolygon.is_leaf());
     ASSERT_EQ(multipolygon.get_upstream_length(), 5);
     ASSERT_EQ(multipolygon.get_downstream_length(), 0);
     ASSERT_EQ(multipolygon.get_contributor_count(), 6);
@@ -708,7 +706,10 @@ TEST_F(Feature_Test, ptree_test) {
         "\"prop0\": \"value0\", "
         "\"prop1\": 0.0, "
         "\"prop2\": \"false\""
-      "} "
+      "}, "
+      "\"foreign_1\": \"member\", "
+      "\"foreign_2\": 2, "
+      "\"foreign_3\": true"
     "}";
 
     std::stringstream stream;
@@ -744,6 +745,7 @@ TEST_F(Feature_Test, ptree_test) {
     data = "{ "
       "\"type\": \"Feature\", "
       "\"bbox\": [102.0, 80, 14, 35], "
+      "\"id\": \"test_feature\", "
       "\"geometry\": { "
         "\"type\": \"Point\", "
         "\"coordinates\": [102.0, 0.0] "
@@ -752,10 +754,13 @@ TEST_F(Feature_Test, ptree_test) {
         "\"prop0\": \"value0\", "
         "\"prop1\": 0.0, "
         "\"prop2\": \"false\""
-      "} "
+      "}, "
+      "\"foreign_1\": \"member\", "
+      "\"foreign_2\": 2, "
+      "\"foreign_3\": true"
     "}";
 
-    stream.str("");
+    stream = std::stringstream();
     stream << data;
     tree = boost::property_tree::ptree();
     boost::property_tree::json_parser::read_json(stream, tree);
@@ -804,10 +809,13 @@ TEST_F(Feature_Test, ptree_test) {
         "\"prop0\": \"value0\", "
         "\"prop1\": 0.0, "
         "\"prop2\": \"false\""
-      "} "
+      "}, "
+      "\"foreign_1\": \"member\", "
+      "\"foreign_2\": 2, "
+      "\"foreign_3\": true"
     "}";
 
-    stream.str("");
+    stream = std::stringstream();
     stream << data;
     tree = boost::property_tree::ptree();
     boost::property_tree::json_parser::read_json(stream, tree);
@@ -848,10 +856,13 @@ TEST_F(Feature_Test, ptree_test) {
         "\"prop0\": \"value0\", "
         "\"prop1\": 0.0, "
         "\"prop2\": \"false\""
-      "} "
+      "}, "
+      "\"foreign_1\": \"member\", "
+      "\"foreign_2\": 2, "
+      "\"foreign_3\": true"
     "}";
 
-    stream.str("");
+    stream = std::stringstream();
     stream << data;
     tree = boost::property_tree::ptree();
     boost::property_tree::json_parser::read_json(stream, tree);
@@ -897,10 +908,13 @@ TEST_F(Feature_Test, ptree_test) {
         "\"prop0\": \"value0\", "
         "\"prop1\": 0.0, "
         "\"prop2\": \"false\""
-      "} "
+      "}, "
+      "\"foreign_1\": \"member\", "
+      "\"foreign_2\": 2, "
+      "\"foreign_3\": true"
     "}";
 
-    stream.str("");
+    stream = std::stringstream();
     stream << data;
     tree = boost::property_tree::ptree();
     boost::property_tree::json_parser::read_json(stream, tree);
@@ -954,10 +968,13 @@ TEST_F(Feature_Test, ptree_test) {
         "\"prop0\": \"value0\", "
         "\"prop1\": 0.0, "
         "\"prop2\": \"false\""
-      "} "
+      "}, "
+      "\"foreign_1\": \"member\", "
+      "\"foreign_2\": 2, "
+      "\"foreign_3\": true"
     "}";
 
-    stream.str("");
+    stream = std::stringstream();
     stream << data;
     tree = boost::property_tree::ptree();
     boost::property_tree::json_parser::read_json(stream, tree);

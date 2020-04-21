@@ -29,6 +29,12 @@ namespace geojson {
      */
     typedef bg::model::polygon<coordinate_t> polygon_t;
 
+    typedef bg::model::multi_point<coordinate_t> multipoint_t;
+
+    typedef bg::model::multi_linestring<linestring_t> multilinestring_t;
+
+    typedef bg::model::multi_polygon<polygon_t> multipolygon_t;
+
     /**
      * A two dimensional matrix of doubles
      */

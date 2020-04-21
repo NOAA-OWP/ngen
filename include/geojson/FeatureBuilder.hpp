@@ -224,8 +224,8 @@ namespace geojson {
         FeatureType type = FeatureType::None;
         std::string id = "";
         std::vector<double> bounding_box;
-        std::map<std::string, JSONProperty> properties;
-        std::map<std::string, JSONProperty> foreign_members;
+        PropertyMap properties;
+        PropertyMap foreign_members;
 
         for (auto& child : tree) {
             if (child.first == "geometry") {
@@ -274,11 +274,11 @@ namespace geojson {
             }
             else if (child.first == "properties") {
                 for (auto& property : child.second) {
-                    properties.emplace(property.first, JSONProperty(property.second, property.first));
+                    properties.emplace(property.first, JSONProperty(property.first, property.second));
                 }
             }
             else {
-                foreign_members.emplace(child.first, JSONProperty(child.second, child.first));
+                foreign_members.emplace(child.first, JSONProperty(child.first, child.second));
             }
         }
 
@@ -387,7 +387,7 @@ namespace geojson {
                 }
             }
             else {
-                foreign_members.emplace(child.first, JSONProperty(child.second, child.first));
+                foreign_members.emplace(child.first, JSONProperty(child.first, child.second));
             }
         }
 
