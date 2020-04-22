@@ -5,9 +5,9 @@ name: Testing and Validation
 # Controls when the action will run.
 on:
   push:
-    branches: [ master, dev ]
+    branches: [ master, dev, notreal ]
   pull_request:
-    branches: [ master, dev ]
+    branches: [ master, dev, notreal ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
