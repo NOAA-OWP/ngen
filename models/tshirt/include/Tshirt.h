@@ -76,7 +76,15 @@ struct tshirt_state
 
 struct tshirt_fluxes
 {
-    // TODO: implement
+    double surface_runoff;  //!< Direct surface runoff
+    double Qgw;             //!< Groundwater flow from groundwater reservoir to channel flow
+    double Qperc;           //!< Percolation flow from subsurface to groundwater reservoir
+    double Qlf;             //!< Lateral subsurface flow
+
+    tshirt_fluxes(double q_gw, double q_perc, double q_lf, double runoff ) : Qgw(q_gw), Qperc(q_perc), Qlf(q_lf), surface_runoff(runoff)
+    {
+
+    }
 };
 
 // TODO: consider combining with or differentiating from similar hymod enum
@@ -155,20 +163,24 @@ public:
 
         // TODO: account for Nash Cascade
 
-        // percolation flow
-        double Qperc;
-
+        // default percolation flow to 0
+        double Qperc = 0;
         // TODO: make sure this doesn't need to be the new state
         if (state.Ss > Sfc) {
-            // TODO: run percolation functions
+            // Calc percolation if storage exceeds field capacity storage
             Qperc = params.satdk * params.slope * (state.Ss - Sfc) / (Ssmax - Sfc)
         }
 
-        Qgw = params.Cgw * ( exp(params.expon * state.Sgw / params.Sgwmax) - 1 );
+        double Qgw = params.Cgw * ( exp(params.expon * state.Sgw / params.Sgwmax) - 1 );
 
-        // TODO: put everything together and update state details
+        // record fluxes
+        // TODO: properly calculate and set GIUH surface runoff
+        //fluxes.surface_runoff = ;
+        fluxes.Qlf = Qlf;
+        fluxes.Qperc = Qperc;
+        fluxes.Qgw = Qgw;
 
-        // TODO: properly account for GIUH surface runoff
+        // TODO: update state details
 
         return 0;
     }
