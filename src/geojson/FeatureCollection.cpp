@@ -115,3 +115,23 @@ int FeatureCollection::link_features_from_attribute(std::string* from_attribute,
     }
     return links_found;
 }
+
+void FeatureCollection::add_feature(Feature feature, std::string *id) {
+    features.push_back(feature);
+
+    if (id != nullptr) {
+        feature_by_id.emplace(*id, feature);
+    }
+    else if (feature->get_id() != "") {
+        feature_by_id.emplace(feature->get_id(), feature);
+    }
+}
+
+void FeatureCollection::update_ids() {
+    feature_by_id.clear();
+    for (auto feature : features) {
+        if (feature->get_id() != "") {
+            feature_by_id.emplace(feature->get_id(), feature);
+        }
+    }
+}

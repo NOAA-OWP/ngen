@@ -9,6 +9,7 @@
 #include <string>
 #include <exception>
 #include <memory>
+#include <algorithm>
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
@@ -90,6 +91,10 @@ namespace geojson {
             void set(std::string key, std::string value);
 
             void set(std::string key, JSONProperty& property);
+
+            void add_feature(Feature feature, std::string *id = nullptr);
+
+            void update_ids();
 
             int link_features_from_property(std::string* from_property = nullptr, std::string* to_property = nullptr);
 
