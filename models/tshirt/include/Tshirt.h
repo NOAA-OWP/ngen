@@ -2,6 +2,7 @@
 #ifndef TSHIRT_H
 #define TSHIRT_H
 
+#include "kernels/schaake_partitioning.hpp"
 #include <cmath>
 
 //! Tshirt parameters struct
@@ -153,7 +154,16 @@ public:
     {
         double Ssmax = calc_Ssmax(params);
 
-        double column_total_soil_moisture = Ssmax - state.Ss;
+        double column_total_soil_moisture_deficit = Ssmax - state.Ss;
+
+        double surface_runoff, subsurface_infiltration_flux;
+
+        Schaake_partitioning_scheme(dt, calc_Cschaake(params), column_total_soil_moisture_deficit, input_flux_meters,
+                &surface_runoff, &subsurface_infiltration_flux);
+
+        // TODO: properly handle GIUH surface runoff
+
+        state.Ss += subsurface_infiltration_flux;
 
         double Sfc = calc_Sfc(params, state);
 
@@ -164,7 +174,6 @@ public:
 
         // default percolation flow to 0
         double Qperc = 0;
-        // TODO: make sure this doesn't need to be the new state
         if (state.Ss > Sfc) {
             // Calc percolation if storage exceeds field capacity storage
             Qperc = params.satdk * params.slope * (state.Ss - Sfc) / (Ssmax - Sfc);
@@ -173,8 +182,7 @@ public:
         double Qgw = params.Cgw * ( exp(params.expon * state.Sgw / params.Sgwmax) - 1 );
 
         // record fluxes
-        // TODO: properly calculate and set GIUH surface runoff
-        //fluxes.surface_runoff = ;
+        fluxes.surface_runoff = surface_runoff;
         fluxes.Qlf = Qlf;
         fluxes.Qperc = Qperc;
         fluxes.Qgw = Qgw;
