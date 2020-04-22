@@ -64,6 +64,7 @@ add_automated_test(
         test_unit
         models/hymod/include/HymodTest.cpp
         models/hymod/include/Nonlinear_Reservoir_Test.cpp
+        models/tshirt/include/TshirtTest.cpp
         geojson/JSONProperty_Test.cpp
         geojson/JSONGeometry_Test.cpp
         geojson/Feature_Test.cpp
@@ -76,12 +77,13 @@ add_automated_test(
 
 # All automated tests
 add_automated_test_w_mock(
-    test_all
-    models/hymod/include/HymodTest.cpp
-    models/hymod/include/Nonlinear_Reservoir_Test.cpp
-    geojson/JSONProperty_Test.cpp
-    geojson/JSONGeometry_Test.cpp
-    geojson/Feature_Test.cpp
-    geojson/FeatureCollection_Test.cpp
-    forcing/Forcing_Test.cpp
+        test_all
+        models/hymod/include/HymodTest.cpp
+        models/hymod/include/Nonlinear_Reservoir_Test.cpp
+        models/tshirt/include/TshirtTest.cpp
+        geojson/JSONProperty_Test.cpp
+        geojson/JSONGeometry_Test.cpp
+        geojson/Feature_Test.cpp
+        geojson/FeatureCollection_Test.cpp
+        forcing/Forcing_Test.cpp
 )
