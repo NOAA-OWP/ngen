@@ -6,7 +6,7 @@ add_library(geojson STATIC
         )
 add_library(NGen::geojson ALIAS geojson)
 target_include_directories(geojson PUBLIC
-        ../../include/geojson
+        ${PROJECT_SOURCE_DIR}/include/geojson
         )
 # TODO: consider setting a minimum or required version
 find_package(Boost)
