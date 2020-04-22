@@ -1,6 +1,6 @@
 # Test changes that have been pushed to the master and dev branches
 
-name: Test Changes
+name: Testing and Validation
 
 # Controls when the action will run.
 on:
