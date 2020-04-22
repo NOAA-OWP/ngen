@@ -49,7 +49,7 @@ TEST_F(JSONProperty_Test, boolean_property_test) {
 }
 
 TEST_F(JSONProperty_Test, object_property_test) {
-    std::map<std::string, geojson::JSONProperty> object;
+    geojson::PropertyMap object;
     
     object.emplace("natural", geojson::JSONProperty("natural", 4));
     object.emplace("real", geojson::JSONProperty("real", 3.0));

@@ -3,7 +3,8 @@
 
 #include <exception>
 #include <string>
-#include <typeinfo>
+#include <iostream>
+#include <memory>
 
 #include <boost/geometry.hpp>
 #include <boost/geometry/geometries/geometries.hpp>
@@ -27,6 +28,12 @@ namespace geojson {
      * A polygon made up of points in geographic degrees
      */
     typedef bg::model::polygon<coordinate_t> polygon_t;
+
+    typedef bg::model::multi_point<coordinate_t> multipoint_t;
+
+    typedef bg::model::multi_linestring<linestring_t> multilinestring_t;
+
+    typedef bg::model::multi_polygon<polygon_t> multipolygon_t;
 
     /**
      * A two dimensional matrix of doubles
@@ -56,148 +63,117 @@ namespace geojson {
         MultiPolygon
     };
 
-    /**
-     * A wrapper for boost geometry objects
-     */
-    class JSONGeometry {
-        public:
-            /**
-             * The default constructor; creates a geometry with no real contents
-             */
-            JSONGeometry(): type(JSONGeometryType::None) {}
+    typedef boost::variant<coordinate_t, linestring_t, polygon_t, multipoint_t, multilinestring_t, multipolygon_t> geometry;
 
-            /**
-             * A constructor for LineStrings
-             * 
-             * @param new_linestring A boost geometry LineString
-             */
-            JSONGeometry(const linestring_t &new_linestring)
-            {
-                type = JSONGeometryType::LineString;
-                linestring = new_linestring;
+    template<typename T>
+    T get_shape(geometry geom) {
+        return boost::get<T>(geom);
+    }
+
+    inline std::string get_geometry_type(const geometry& geom) {
+        switch (geom.which()) {
+            case 0:
+                return "Point";
+            case 1:
+                return "LineString";
+            case 2:
+                return "Polygon";
+            case 3:
+                return "MultiPoint";
+            case 4:
+                return "MultiLineString";
+            default:
+                return "MultiPolygon";
+        }
+    }
+
+    static coordinate_t point(const double x, const double y) {
+        return coordinate_t(x, y);
+    }
+
+    static linestring_t linestring(const two_dimensional_coordinates &coordinates) {
+        linestring_t line;
+        for (auto &pair : coordinates) {
+            bg::append(line, coordinate_t(pair[0], pair[1]));
+        }
+        return line;
+    }
+
+    static polygon_t polygon(three_dimensional_coordinates &coordinates) {
+        polygon_t polygon;
+
+        bool is_outer = true;
+        int inner_index = 0;
+
+        if (coordinates.size() > 1) {
+            polygon.inners().resize(coordinates.size() - 1);
+        }
+
+        for (auto &shape : coordinates) {
+            if (is_outer) {
+                for (auto &shape_coordinates : shape) {
+                    polygon.outer().push_back(
+                        coordinate_t(shape_coordinates[0], shape_coordinates[1])
+                    );
+                }
+                is_outer = false;
+            }
+            else {
+                for (auto &shape_coordinates : shape) {
+                    polygon.inners()[inner_index].push_back(
+                        coordinate_t(shape_coordinates[0], shape_coordinates[1])
+                    );
+                }
+                inner_index++;
+            }
+        }
+
+        return polygon;
+    }
+
+    static multipoint_t multipoint(two_dimensional_coordinates &coordinates) {
+        bg::model::multi_point<coordinate_t> points;
+
+        for (auto &point: coordinates) {
+            bg::append(points, coordinate_t(point[0], point[1]));
+        }
+
+        return points;
+    }
+
+    static multilinestring_t multilinestring(three_dimensional_coordinates &coordinates) {
+        bg::model::multi_linestring<linestring_t> multi_linestring;
+
+        for (auto &linestring : coordinates) {
+            linestring_t line;
+
+            for(auto &coordinate : linestring) {
+                bg::append(line, coordinate_t(coordinate[0], coordinate[1]));
             }
 
-            /**
-             * A constructor for Points
-             * 
-             * @param point A boost geometry point
-             */
-            JSONGeometry(const coordinate_t &point)
-                : type(JSONGeometryType::Point),
-                point(point)
-            {}
+            multi_linestring.push_back(line);
+        }
 
-            /**
-             * A constructor for polygons
-             * 
-             * @param A boost geometry polygon
-             */
-            JSONGeometry(const polygon_t &polygon)
-                : type(JSONGeometryType::Polygon),
-                polygon(polygon)
-            {}
+        return multi_linestring;
+    }
 
-            /**
-             * A constructor for MultiPoints
-             * 
-             * @param A boost geometry MultiPoint
-             */
-            JSONGeometry(const bg::model::multi_point<coordinate_t> &multipoint)
-                : type(JSONGeometryType::MultiPoint),
-                multi_point(multipoint)
-            {}
+    static multipolygon_t multipolygon(four_dimensional_coordinates &coordinates) {
+        bg::model::multi_polygon<polygon_t> multi_polygon;
 
-            /**
-             * A constructor for MultiLineStrings
-             * 
-             * @param a boost geometry MultiLineString
-             */
-            JSONGeometry(const bg::model::multi_linestring<linestring_t> &multilinestring)
-                : type(JSONGeometryType::MultiLineString),
-                multi_linestring(multilinestring)
-            {}
+        for (auto& polygon_group : coordinates) {
+            for (auto &polygon_points : polygon_group) {
+                polygon_t polygon;
 
-            JSONGeometry(const bg::model::multi_polygon<polygon_t> &multipolygon)
-                : type(JSONGeometryType::MultiPolygon),
-                multi_polygon(multipolygon)
-            {}
+                for (auto &point : polygon_points) {
+                    bg::append(polygon, coordinate_t(point[0], point[1]));
+                }
 
-            JSONGeometry(const JSONGeometry &json_geometry);
+                multi_polygon.push_back(polygon);
+            }
+        }
 
-            static JSONGeometry of_point(const double x, const double y);
-
-            static JSONGeometry of_point(pt::ptree &tree);
-
-            static JSONGeometry of_linestring(two_dimensional_coordinates &coordinates);
-
-            static JSONGeometry of_linestring(pt::ptree &tree);
-
-            static JSONGeometry of_polygon(three_dimensional_coordinates &coordinates);
-
-            /**
-             * Generate a polyginal geometry from the details of coordinates passed in shaped like:
-             * 
-             * "coordinates": [
-             *          [
-             *              [100.0, 0.0],
-             *              [101.0, 0.0],
-             *              [101.0, 1.0],
-             *              [100.0, 1.0],
-             *              [100.0, 0.0]
-             *          ],
-             *          [
-             *              [90.0, 0.2],
-             *              [100.0, 0.2],
-             *              [100.0, 0.8],
-             *              [90.0, 0.8],
-             *              [90.0, 0.2]
-             *          ]
-             *      ]
-             * 
-             * @param tree: A ptree containing the json data describing the polygon.
-             *              Must have a 3D array keyed to "coordinates"
-             * @return A JSONGeometry representing the polygon
-             */
-            static JSONGeometry of_polygon(pt::ptree &tree);
-
-            static JSONGeometry of_multipoint(two_dimensional_coordinates &coordinates);
-
-            static JSONGeometry of_multipoint(pt::ptree &tree);
-
-            static JSONGeometry of_multilinestring(three_dimensional_coordinates &coordinates);
-
-            static JSONGeometry of_multilinestring(pt::ptree &tree);
-
-            static JSONGeometry of_multipolygon(four_dimensional_coordinates &coordinates);
-
-            static JSONGeometry of_multipolygon(pt::ptree &tree);
-
-            static JSONGeometry from_ptree(pt::ptree &tree);
-
-            virtual ~JSONGeometry(){};
-
-            JSONGeometryType get_type() const;;
-
-            linestring_t as_linestring() const;
-
-            coordinate_t as_point() const;
-
-            polygon_t as_polygon() const;
-
-            bg::model::multi_point<coordinate_t> as_multipoint() const;
-
-            bg::model::multi_linestring<linestring_t> as_multilinestring() const;
-
-            bg::model::multi_polygon<polygon_t> as_multipolygon() const;
-        private:
-            JSONGeometryType type;
-            linestring_t linestring;
-            coordinate_t point;
-            polygon_t polygon;
-            bg::model::multi_point<coordinate_t> multi_point;
-            bg::model::multi_linestring<linestring_t> multi_linestring;
-            bg::model::multi_polygon<polygon_t> multi_polygon;
-    };
+        return multi_polygon;
+    }
 }
 
 #endif // GEOJSON_GEOMETRY_H

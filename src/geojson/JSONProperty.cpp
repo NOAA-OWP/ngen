@@ -1,10 +1,15 @@
 #include "JSONProperty.hpp"
 
-geojson::PropertyType geojson::JSONProperty::get_type() const {
-    return type;
-}
+using namespace geojson;
 
-long geojson::JSONProperty::as_natural_number() const {
+/**
+ * @brief Attempt to get the natural numeric value stored within the property
+ * 
+ * An exception will be thrown if this property doesn't store a natural number
+ * 
+ * @return The natural number that is stored within the property
+ */
+long JSONProperty::as_natural_number() const {
     // Return a natural number if this IS a natural number
     if (type == PropertyType::Natural) {
         return natural_number;
@@ -13,9 +18,19 @@ long geojson::JSONProperty::as_natural_number() const {
     // Throw an exception since this can't be considered a natural number
     std::string message = key + " cannot be converted into a natural number.";
     throw std::runtime_error(message);
-}
+};
 
-double geojson::JSONProperty::as_real_number() const {
+/**
+ * Get the type of the property (Natural, Real, String, etc)
+ * 
+ * @return The type of the property
+ */
+PropertyType JSONProperty::get_type() const {
+    return type;
+};
+
+
+double JSONProperty::as_real_number() const {
     if (type == PropertyType::Real) {
         return real_number;
     }
@@ -25,18 +40,18 @@ double geojson::JSONProperty::as_real_number() const {
 
     std::string message = key + " cannot be converted into a real number.";
     throw std::runtime_error(message);
-}
+};
 
-bool geojson::JSONProperty::as_boolean() const {
+bool JSONProperty::as_boolean() const {
     if (type == PropertyType::Boolean) {
         return boolean;
     }
 
     std::string message = key + " cannot be converted into a boolean.";
     throw std::runtime_error(message);
-}
+};
 
-std::string geojson::JSONProperty::as_string() const {
+std::string JSONProperty::as_string() const {
     if (type == PropertyType::String) {
         return string;
     }
@@ -57,9 +72,9 @@ std::string geojson::JSONProperty::as_string() const {
 
     std::string message = key + " cannot be converted into a string.";
     throw std::runtime_error(message);
-}
+};
 
-geojson::JSONProperty geojson::JSONProperty::at(std::string key) const {
+JSONProperty JSONProperty::at(std::string key) const {
     if (type == PropertyType::Object) {
         return values.at(key);
     }
@@ -68,7 +83,22 @@ geojson::JSONProperty geojson::JSONProperty::at(std::string key) const {
     throw std::runtime_error(message);
 }
 
-std::map<std::string, geojson::JSONProperty> geojson::JSONProperty::get_values() const {
+std::vector<std::string> JSONProperty::keys() const {
+    if (type == PropertyType::Object) {
+        std::vector<std::string> key_names;
+
+        for (auto &pair : values) {
+            key_names.push_back(pair.first);
+        }
+
+        return key_names;
+    }
+
+    std::string message = key + " is not an object and cannot be referenced as one.";
+    throw std::runtime_error(message);
+}
+
+PropertyMap JSONProperty::get_values() const {
     if (type == PropertyType::Object) {
         return values;
     }
@@ -77,6 +107,6 @@ std::map<std::string, geojson::JSONProperty> geojson::JSONProperty::get_values()
     throw std::runtime_error(message);
 }
 
-std::string geojson::JSONProperty::get_key() const {
+std::string JSONProperty::get_key() const {
     return key;
 }

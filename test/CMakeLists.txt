@@ -47,6 +47,7 @@ endmacro()
 
 # Individual tests
 add_automated_test(test_hymod models/hymod/include/HymodTest.cpp)
+
 add_automated_test(
     test_geojson
     geojson/JSONProperty_Test.cpp
