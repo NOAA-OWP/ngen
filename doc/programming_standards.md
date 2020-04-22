@@ -93,15 +93,7 @@ int px;
 ```
 
 Control structures should _also_ have descriptive names, even though variables like
-<<<<<<< HEAD
-<<<<<<< HEAD
 `i`, `j`, `k`, and `l` are fairly standard. Algorithms based on matrix interpretation
-=======
-`i`, `j`, `k`, and `l` are fairly standard. Algorithms based matrix interpretation
->>>>>>> Added initial draft for programming standards
-=======
-`i`, `j`, `k`, and `l` are fairly standard. Algorithms based on matrix interpretation
->>>>>>> Added content to the programming standards
 become very difficult to read with short names. Take a longest common subsequence example:
 
 ```
