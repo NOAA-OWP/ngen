@@ -12,7 +12,6 @@
 struct tshirt_params
 {
     double maxsmc;              //!< saturated soil moisture content (sometimes theta_e)
-    // TODO: confirm that maxsmc and smcmax are the same param
     double wltsmc;              //!< wilting point soil moisture content
     double satdk;               //!< saturated hydraulic conductivity [m s^-1]
     double satpsi;              //!< saturated capillary head [m]
@@ -32,20 +31,20 @@ struct tshirt_params
     /*!
         Constructor for tshirt param objects.
     */
-    tshirt_params(double maxsmc, double wltsmc, double satdk, double satpsi, double, slope, double bb,
+    tshirt_params(double maxsmc, double wltsmc, double satdk, double satpsi, double slope, double b,
             double multiplier, double alpha_fc, double Klf, double Kn, double Cgw, double expon) :
             maxsmc(maxsmc),
             wltsmc(wltsmc),
             satdk(satdk),
             satpsi(satpsi),
             slope(slope),
-            bb(bb),
+            b(b),
             multiplier(multiplier),
             alpha_fc(alpha_fc),
             Klf(Klf),
             Kn(Kn),
             Cgw(Cgw),
-            expon(expon))
+            expon(expon)
     {
 
     }
@@ -66,7 +65,7 @@ struct tshirt_state
     // I think this doesn't belong in state, and so is just in run() below
     //double column_total_soil_moisture_deficit;    //!< soil column total moisture deficit
 
-
+    tshirt_state(double ss, double sgw) : Ss(ss), Sgw(sgw) {}
 };
 
 //! Tshirt flux structure
@@ -90,8 +89,8 @@ struct tshirt_fluxes
 // TODO: consider combining with or differentiating from similar hymod enum
 enum TshirtErrorCodes
 {
-    NO_ERROR = 0,
-    MASS_BALANCE_ERROR = 100
+    TSHIRT_NO_ERROR = 0,
+    TSHIRT_MASS_BALANCE_ERROR = 100
 };
 
 //! Tshirt kernel class
@@ -152,9 +151,9 @@ public:
             double input_flux_meters,          //!< the amount water entering the system this time step
             void* et_params)            //!< parameters for the et function
     {
-        double column_total_soil_moisture = tshirt_params.Ssmax - state.Ss;
-
         double Ssmax = calc_Ssmax(params);
+
+        double column_total_soil_moisture = Ssmax - state.Ss;
 
         double Sfc = calc_Sfc(params, state);
 
@@ -168,7 +167,7 @@ public:
         // TODO: make sure this doesn't need to be the new state
         if (state.Ss > Sfc) {
             // Calc percolation if storage exceeds field capacity storage
-            Qperc = params.satdk * params.slope * (state.Ss - Sfc) / (Ssmax - Sfc)
+            Qperc = params.satdk * params.slope * (state.Ss - Sfc) / (Ssmax - Sfc);
         }
 
         double Qgw = params.Cgw * ( exp(params.expon * state.Sgw / params.Sgwmax) - 1 );

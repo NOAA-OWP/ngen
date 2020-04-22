@@ -4,6 +4,7 @@
 #include <HY_CatchmentArea.hpp>
 #include "LinearReservoir.hpp"
 #include "hymod/include/Hymod.h"
+#include "tshirt/include/Tshirt.h"
 
 #include <unordered_map>
 
