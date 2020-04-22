@@ -2,7 +2,7 @@
 #ifndef TSHIRT_H
 #define TSHIRT_H
 
-#include <math.h>
+#include <cmath>
 
 //! Tshirt parameters struct
 /*!
