@@ -54,13 +54,13 @@ namespace geojson {
      * Represents the type of geometry to be represented within a JSONGeometry
      */
     enum class JSONGeometryType {
-        None,
-        LineString,
-        Point,
-        Polygon,
-        MultiLineString,
-        MultiPoint,
-        MultiPolygon
+        None,  /*<! Represents a non-existent geometry */
+        LineString, /*<! Represents a series of interconnected points */
+        Point,  /*<! Represents a point represented by an x and a y coordinate */
+        Polygon, /*<! Represents multiple points that form a shape */
+        MultiLineString, /*<! Represents a series of series of interconnected points */
+        MultiPoint, /*<! Represents multiple points represented by an x and y coordinate */
+        MultiPolygon /*<! Represents a series of shapes formed by several points */
     };
 
     typedef boost::variant<coordinate_t, linestring_t, polygon_t, multipoint_t, multilinestring_t, multipolygon_t> geometry;
