@@ -4,6 +4,7 @@
 
 #include "kernels/schaake_partitioning.hpp"
 #include <cmath>
+#include <vector>
 
 //! Tshirt parameters struct
 /*!
@@ -178,6 +179,8 @@ public:
             // Calc percolation if storage exceeds field capacity storage
             Qperc = params.satdk * params.slope * (state.Ss - Sfc) / (Ssmax - Sfc);
         }
+
+        // TODO: calculate updated Sgw for state given Qperc value
 
         double Qgw = params.Cgw * ( exp(params.expon * state.Sgw / params.Sgwmax) - 1 );
 
