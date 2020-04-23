@@ -142,7 +142,14 @@ namespace tshirt {
 
         static double calc_Sfc(const tshirt_params& params, const tshirt_state& state)
         {
-            // TODO: implement calculations appropriately for Sfc
+            // TODO: account for possiblity of Hwt being less than 0.5 (though initially, it looks like this will never be the case)
+            double z1 = calc_Hwt(params) - 0.5;
+            double z2 = z1 + 2;
+
+            // Note that z^( 1 - (1/b) ) / (1 - (1/b)) == b * (z^( (b - 1) / b ) / (b - 1)
+            return params.maxsmc * pow((1.0 / params.satpsi), (-1.0 / params.b)) *
+                   ((params.b * pow(z2, ((params.b - 1) / params.b)) / (params.b - 1)) -
+                    (params.b * pow(z1, ((params.b - 1) / params.b)) / (params.b - 1)));
         }
 
         //! run one time step of tshirt
