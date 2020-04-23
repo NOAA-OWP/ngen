@@ -189,6 +189,10 @@ namespace tshirt {
                 Qperc = params.satdk * params.slope * (state.Ss - Sfc) / (Ssmax - Sfc);
             }
 
+            double soil_m = state.Ss - (Qlf + Qperc);
+            // calculate et
+            double et_loss = calc_et(soil_m, et_params);
+
             // TODO: calculate updated Sgw for state given Qperc value
 
             double Qgw = params.Cgw * ( exp(params.expon * state.Sgw / params.Sgwmax) - 1 );
@@ -199,6 +203,7 @@ namespace tshirt {
             fluxes.Qperc = Qperc;
             fluxes.Qgw = Qgw;
 
+            new_state.Ss = soil_m - et_loss;
             // TODO: update state details
 
             return 0;
