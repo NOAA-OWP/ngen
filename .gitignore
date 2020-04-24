@@ -93,4 +93,3 @@ Makefile
 CMakeFiles
 CMakeCache.txt
 *.cmake
-include/NGenConfig.h
