@@ -28,6 +28,7 @@ namespace tshirt {
         double Kn;                  //!< Nash cascade linear reservoir coefficient lateral flow parameter
         double Cgw;                 //!< Ground water flow param
         double expon;               //!< Ground water flow exponent param (analogous to NWM 2.0 expon param)
+        double Ssmax;               //!< Subsurface soil water flow max storage param (calculated from maxsmc and depth)
         double Sgwmax;              //!< Ground water flow max storage param (analogous to NWM 2.0 zmax param)
         const double depth = 2.0;         //!< Total soil column depth ('D') [m]
 
@@ -50,7 +51,7 @@ namespace tshirt {
                 Cgw(Cgw),
                 expon(expon)
         {
-
+            this->Ssmax = this->depth * this->maxsmc;
         }
 
     };
@@ -113,12 +114,6 @@ namespace tshirt {
             return 0.0;
         }
 
-        //! Calculate the max water storage for soil based on the given Tshirt parameters
-        static double calc_Ssmax(const tshirt_params& params)
-        {
-            return params.depth * params.maxsmc;
-        }
-
         //! Calculate the Cschaake, or the Schaake adjusted magic constant by soil type, based on the given Tshirt parameters
         static double calc_Cschaake(const tshirt_params& params)
         {
@@ -162,9 +157,8 @@ namespace tshirt {
                 double input_flux_meters,          //!< the amount water entering the system this time step
                 void* et_params)            //!< parameters for the et function
         {
-            double Ssmax = calc_Ssmax(params);
 
-            double column_total_soil_moisture_deficit = Ssmax - state.Ss;
+            double column_total_soil_moisture_deficit = params.Ssmax - state.Ss;
 
             double surface_runoff, subsurface_infiltration_flux;
 
@@ -178,7 +172,7 @@ namespace tshirt {
             double Sfc = calc_Sfc(params, state);
 
             // lateral subsurface flow
-            double Qlf = params.Klf * (state.Ss - Sfc) / (Ssmax - Sfc);
+            double Qlf = params.Klf * (state.Ss - Sfc) / (params.Ssmax - Sfc);
 
             // TODO: account for Nash Cascade
 
@@ -186,7 +180,7 @@ namespace tshirt {
             double Qperc = 0;
             if (state.Ss > Sfc) {
                 // Calc percolation if storage exceeds field capacity storage
-                Qperc = params.satdk * params.slope * (state.Ss - Sfc) / (Ssmax - Sfc);
+                Qperc = params.satdk * params.slope * (state.Ss - Sfc) / (params.Ssmax - Sfc);
             }
 
             double soil_m = state.Ss - (Qlf + Qperc);
