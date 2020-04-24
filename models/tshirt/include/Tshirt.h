@@ -193,8 +193,8 @@ namespace tshirt {
             // calculate et
             double et_loss = calc_et(soil_m, et_params);
 
-            // TODO: calculate updated Sgw for state given Qperc value
-
+            // TODO: confirm this is correct and we don't need to use the (NextGen) nonlinear reservoir implementation
+            state.Sgw += Qperc;
             double Qgw = params.Cgw * ( exp(params.expon * state.Sgw / params.Sgwmax) - 1 );
 
             // record fluxes
@@ -203,8 +203,9 @@ namespace tshirt {
             fluxes.Qperc = Qperc;
             fluxes.Qgw = Qgw;
 
+            // update state details
             new_state.Ss = soil_m - et_loss;
-            // TODO: update state details
+            new_state.Sgw = state.Sgw - Qgw;
 
             return 0;
         }
