@@ -9,56 +9,32 @@
 #include <chrono>  // chrono::system_clock
 #include <ctime>
 #include <time.h>
-
-
-
-/*
-0. Pass in catchment ID?
-
-01. Should preprocessing of CSV line up times to relevant start time and/or time length of simulation?
-
-1. Set time frame?
-
-2. Parse dates from file?
-
-3. Passing current time, dt, and grid to forcing
-
-4. Pass timestep size to forcing.
-
-5. Realization will construct forcing object
-
-6. Every realization will have its own forcing object.
-. GDAL
-
-
-
-*/
+#include <memory>
 
 using namespace std;
-//using namespace boost;
-
 
 class Forcing
 {
     public:
 
-// Add start and end time to constructor
+    typedef struct tm time_type;
 
-//Make forcing csv subclass.
-
-//day_of_year would be a vector and not passed in. built alongside the precip vector
-//could be vector circular of vector of 365. Look into date-time. Maybe in AD hydro code. 
 
     //Default Constructor
-    Forcing(): air_temperature_fahrenheit(0.0), basin_latitude(0.0), day_of_year(0), forcing_file_name("")
+    Forcing(): air_temperature_fahrenheit(0.0), basin_id(0), forcing_file_name("")
     {
 
     }
 
-
-
-    Forcing(double air_temperature_fahrenheit, double basin_latitude, int day_of_year, string forcing_file_name, tm *start_date_time, tm *end_date_time): air_temperature_fahrenheit(air_temperature_fahrenheit), basin_latitude(basin_latitude), day_of_year(day_of_year), forcing_file_name(forcing_file_name), start_date_time(*start_date_time), end_date_time(*end_date_time)
+    //Parameterized Constuctor
+    Forcing(double air_temperature_fahrenheit, double basin_latitude, string forcing_file_name, std::shared_ptr<time_type>  start_date_time, std::shared_ptr<time_type> end_date_time): air_temperature_fahrenheit(air_temperature_fahrenheit), basin_id(basin_id), forcing_file_name(forcing_file_name), start_date_time(start_date_time), end_date_time(end_date_time)
     {
+        //Convert start and end time structs to epoch time
+        start_date_time_epoch = mktime(start_date_time.get());
+
+        end_date_time_epoch =  mktime(end_date_time.get());
+
+        current_date_time_epoch = start_date_time_epoch;
 
         //Call read_forcing function
         read_forcing(forcing_file_name); //also pass in start and end times
@@ -67,177 +43,125 @@ class Forcing
         *forcing_vector_index_ptr = 0;
     }
 
-
-
-
-/*
-template<typename Clock>
-Forcing(double air_temperature_fahrenheit, double basin_latitude, int day_of_year, std::chrono::time_point<Clock> start_date_time, std::chrono::time_point<Clock> end_date_time): air_temperature_fahrenheit(air_temperature_fahrenheit), basin_latitude(basin_latitude), day_of_year(day_of_year), std::chrono::time_point<Clock>(start_date_time), std::chrono::time_point<Clock>(end_date_time)
-    {
-
-    //call read forcing
-
-
-    }
-*/
-
-/*
-template<typename Clock>
-Forcing(double air_temperature_fahrenheit, double basin_latitude, int day_of_year, string forcing_file_name, std::chrono::time_point<Clock> start_date_time, std::chrono::time_point<Clock> end_date_time): air_temperature_fahrenheit(air_temperature_fahrenheit), basin_latitude(basin_latitude), day_of_year(day_of_year), forcing_file_name(forcing_file_name), start_date_time(start_date_time), end_date_time(end_date_time)
-    {
-
-        //Call read_forcing function
-        read_forcing(forcing_file_name); //also pass in start and end times
-
-        //Initialize forcing vector index to 0;
-        *forcing_vector_index_ptr = 0;
-    }
-*/
-
-/////////////PREVIOUS
-//add file name
-    //Parameterized Constructor
-/*
-    Forcing(double air_temperature_fahrenheit, double basin_latitude, int day_of_year): air_temperature_fahrenheit(air_temperature_fahrenheit), basin_latitude(basin_latitude), day_of_year(day_of_year)
-    {
-
-    //call read forcing
-    }
-*/
-
-
-//builds w/ 2 lines below
-//template<typename Clock>
-//void my_function(std::chrono::time_point<Clock> time_point);
-
-
-    private:
-
-    //Make private and call this function from constuctor
-    //Read Forcing Data from CSV
-    //void read_forcing(std::string file_name)
-    void read_forcing(string file_name)    //builds fine
-    { 
-
-        CSVReader reader(file_name);
-
-	// Get the data from CSV File
-	std::vector<std::vector<std::string> > data_list = reader.getData();
-
-        //vector<double> precipitation_vector_meters_per_second_vector;
-
-        std::string::size_type sz;     // alias of size_t
-
-        // Print the content of row by row on screen
-        for(std::vector<std::string> vec : data_list)
-        {
-                 
-                //Year
-                string year_str = vec[0];
-
-                //Month
-                string month_str = vec[1];
-              
-                if (sizeof(month_str) < 2)
-                    month_str = "0" + month_str;
- 
-                //Day
-                string day_str = vec[2];
-
-                if (sizeof(day_str) < 2)
-                    day_str = "0" + day_str;           
-
-                //Hour
-                string hour_str = vec[3];
-
-                if (sizeof(hour_str) < 2)
-                    hour_str = "0" + hour_str; 
-
-                //Concatentate full date-time
-                string date_time_str = year_str + month_str + day_str + hour_str;
-
-                ///////////////////
-                //if within date range, then add precip to precip vector
-
-                //Precipitation
-                string precip_str = vec[5];
-
-                //Convert from string to double and from mm/hr to m/s
-                double precip = atof(precip_str.c_str()) / (1000 * 3600);
-
-                precipitation_vector_meters_per_second_vector.push_back(precip);
-
-
-        }
-
-
-
-        /*
-	for (vector<double>::iterator i = precipitation_vector_meters_per_second.begin();
-		                   i != precipitation_vector_meters_per_second.end();
-		                   ++i)
-	{
-	    cout << *i << endl;
-	}
-        */
-
-    }
-
-
-//function for current (current time what forcing object is poitning at) no parameters, be clear of what frequency is
-
-//documeent assumption that it is hourly for now
-//function for get_next (inc ptr and then call return current function)  TODO: (could have dt for different freq data than model)
-
-//future quesiton: how do I agg data?
 
     //Precipitation frequency is assumed to be hourly for now.
     //TODO: Add input for dt (delta time) for different frequencies in the data than the model frequency.
     double get_current_hourly_precipitation_meters_per_second()
     { 
-        return precipitation_vector_meters_per_second_vector[*forcing_vector_index_ptr];
-
+        return precipitation_meters_per_second_vector[*forcing_vector_index_ptr];
     }
+
 
     //Precipitation frequency is assumed to be hourly for now.
     //TODO: Add input for dt (delta time) for different frequencies in the data than the model frequency.
     double get_next_hourly_precipitation_meters_per_second()
     {
         //Increment forcing index
-        //*forcing_vector_index = *forcing_vector_index + 1;
-        *forcing_vector_index_ptr++;
+        *forcing_vector_index_ptr = *forcing_vector_index_ptr + 1;
+
+        //Increment current time by 1 hour
+        current_date_time_epoch = current_date_time_epoch + 3600;
 
         return get_current_hourly_precipitation_meters_per_second();
+    }
 
+    //Get day of year
+    int get_day_of_year()
+    {
+        int current_day_of_year;
+
+        struct tm *current_date_time;
+
+        current_date_time = localtime(&current_date_time_epoch);
+                
+        current_day_of_year = current_date_time->tm_yday;    
+
+        return current_day_of_year;
+    }
+
+    private:
+
+    //Read Forcing Data from CSV
+    void read_forcing(string file_name)
+    { 
+        //Call CSVReader constuctor
+        CSVReader reader(file_name);
+
+	//Get the data from CSV File
+	std::vector<std::vector<std::string> > data_list = reader.getData();
+
+        //Iterate through CSV starting on the third row
+        for (int i = 2; i < data_list.size(); i++)
+        {
+                //Row vector
+                std::vector<std::string>& vec = data_list[i];
+               
+                //Declare pointer to struct for the current row date-time
+                struct tm *current_row_date_time;
+               
+                //Allocate memory to struct for the current row date-time
+                current_row_date_time = new tm();
+
+                //Year
+                string year_str = vec[0];
+                int year = stoi(year_str);
+                current_row_date_time->tm_year = year - 1900;
+
+                //Month
+                string month_str = vec[1];
+                int month = stoi(month_str);              
+                current_row_date_time->tm_mon = month - 1;
+
+                //Day
+                string day_str = vec[2];
+                int day = stoi(day_str);
+                current_row_date_time->tm_mday = day;
+
+                //Hour
+                string hour_str = vec[3];
+                int hour = stoi(hour_str);
+                current_row_date_time->tm_hour = hour;
+
+                //Convert current row date-time to epoch time
+                time_t current_row_date_time_epoch = mktime(current_row_date_time);
+
+                //If the current row date-time is within the model date-time range, then add precipitation to vector
+                if (start_date_time_epoch <= current_row_date_time_epoch &&  current_row_date_time_epoch <= end_date_time_epoch)
+                {
+                    //Precipitation
+                    string precip_str = vec[5];
+    
+                    //Convert from string to double and from mm/hr to m/s
+                    double precip = atof(precip_str.c_str()) / (1000 * 3600);
+
+                    //Add precip to vector
+                    precipitation_meters_per_second_vector.push_back(precip);
+                }
+
+                //Free memory from struct
+                delete current_row_date_time;
+        }        
     }
 
 
-//ptr for
-    vector<double> precipitation_vector_meters_per_second_vector;
+    vector<double> precipitation_meters_per_second_vector;
     int *forcing_vector_index_ptr; 
     double precipitation_rate_meters_per_second;
     double air_temperature_fahrenheit;
-    double basin_latitude;
+    int basin_id;
     int day_of_year;
     string forcing_file_name;
-    tm start_date_time;
-    tm end_date_time;
 
+    std::shared_ptr<time_type> start_date_time;
+    std::shared_ptr<time_type> end_date_time;
 
-/*
-    template<typename Clock>
-    std::chrono::time_point<Clock> start_date_time;
-    template<typename Clock>
-    std::chrono::time_point<Clock> end_date_time;
-*/
-    /////////////
-    //std::chrono::steady_clock::time_point start_date_time;
-    //std::chrono::steady_clock::time_point end_date_time;
-    //////////// 
-
-    //std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
-
-
-    //template<typename Clock>
-    //std::chrono::time_point<Clock> time_point;
+    time_t start_date_time_epoch;
+    time_t end_date_time_epoch;
+    time_t current_date_time_epoch;
 };
+
+//TODO: Consider aggregating precipiation data
+//TODO: Make CSV forcing a subclass
+//TODO: Consider passing grid to class
+//TODO: Consider following GDAL API functionality
+
