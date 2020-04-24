@@ -93,3 +93,5 @@ Makefile
 CMakeFiles
 CMakeCache.txt
 *.cmake
+
+temp/
