@@ -1,16 +1,13 @@
 #include <vector>
 #include "gtest/gtest.h"
-//#include "forcing/Forcing.h"
-//#include "forcing/Forcing.cpp"
 #include "Forcing.h"
 #include <memory>
 #include <string>
 #include <unistd.h>
 #include <stdio.h>
 #include <limits.h>
-#include <chrono>  // chrono::system_clock
 #include <ctime>
-
+#include <time.h>
 
 class ForcingTest : public ::testing::Test {
 
@@ -24,132 +21,67 @@ class ForcingTest : public ::testing::Test {
 
     std::shared_ptr<Forcing> Forcing_Object1; //smart pointer to a Forcing object
 
+    typedef struct tm time_type;
+
+    std::shared_ptr<time_type> start_date_time; //smart pointer to time struct
+
+    std::shared_ptr<time_type> end_date_time; //smart pointer to time struct
 };
 
 
 void ForcingTest::SetUp() {
-    
     setupForcing();
-
 }
 
-void ForcingTest::TearDown() {
 
+void ForcingTest::TearDown() {
 }
 
 
 //Construct a forcing object
 void ForcingTest::setupForcing()
 {
-    //auto now1 = std::chrono::system_clock::now();
-
-    //auto now2 = std::chrono::system_clock::now();
-
-    //auto now1 = std::chrono::high_resolution_clock::now();
-
-    //auto now2 = std::chrono::high_resolution_clock::now();
-
-
-    //std::chrono::system_clock::time_point now1 = std::chrono::system_clock::now();
-
-    //std::chrono::system_clock::time_point now2 = std::chrono::system_clock::now();
-
-
-    //std::chrono::steady_clock::time_point now1 = std::chrono::steady_clock::now();
-
-    //std::chrono::steady_clock::time_point now2 = std::chrono::steady_clock::now();
-
-
-    //std::chrono::steady_clock::time_point start_date_time;
-
-    //std::chrono::steady_clock::time_point end_date_time;
-
-
-    //Forcing_Object1 = std::make_shared<Forcing>(0.0, 0.0, 0);
-
-cout << "a0";
-
     string forcing_file_name = "../test/forcing/Sample_Tropical_Hourly_Rainfall.csv";
 
-cout << "a1";
-    
-    struct tm *start_date_time;
+    start_date_time = std::make_shared<time_type>();
 
     start_date_time->tm_year = 108;
     start_date_time->tm_mon = 5;
     start_date_time->tm_mday = 19;
     start_date_time->tm_hour = 15;
 
-cout << "a2";
-
-    //string start_date_time_str = asctime(start_date_time);
-
-    //cout << start_date_time_str;
-
-
-    //mktime ( start_date_time );
-
-    //cout << "start_date_time: " + start_date_time << endl; 
-
-    //cout << "start_date_time: " + asctime(start_date_time) << endl; 
-
-    //char buffer [80];
-    //strftime (buffer,80,"Now it's %I:%M%p.",start_date_time);
-    //puts (buffer);
-
-    //char* dt = ctime(&start_date_time);
-
-
-    //char buffer[26];
-    //strftime(buffer, 26, "%Y-%m-%d %H:%M:%S", start_date_time);
-    //puts(buffer);
-
-    //char buffer[26];
-    //strftime(buffer, 6, "%Y-%m-%d %H", start_date_time);
-    //puts(buffer);
-    //cout << buffer;
-cout << "a3";
-
-    struct tm *end_date_time;
+    end_date_time = std::make_shared<time_type>();
 
     end_date_time->tm_year = 108;
     end_date_time->tm_mon = 5;
     end_date_time->tm_mday = 22;
     end_date_time->tm_hour = 20;
 
-cout << "a4";
-
-    //cout << "end_date_time: " + asctime(end_date_time) << endl; 
-
-    Forcing_Object1 = std::make_shared<Forcing>(0.0, 0.0, 0, forcing_file_name, start_date_time, end_date_time);
-
-
-
-    //Forcing_Object1 = std::make_shared<Forcing>(0.0, 0.0, 0, forcing_file_name, now1, now2);
+    Forcing_Object1 = std::make_shared<Forcing>(0.0, 0, forcing_file_name, start_date_time, end_date_time);
 }
 
 
 //Test Forcing object
 TEST_F(ForcingTest, TestForcingDataRead)
 {
-    //string forcing_file_name = "Sample_Tropical_Hourly_Rainfall.csv";
+   double current_precipitation;
 
-    //string forcing_file_name = "/home/jdmattern/Documents/ngen/test/forcing/Sample_Tropical_Hourly_Rainfall.csv";
+   int current_day_of_year;   
 
-    string forcing_file_name = "../test/forcing/Sample_Tropical_Hourly_Rainfall.csv";
-   
-   char cwd[PATH_MAX];
-   if (getcwd(cwd, sizeof(cwd)) != NULL) {
-       printf("Current working dir: %s\n", cwd);
-   } else {
-       perror("getcwd() error");
+   for (int i = 0; i < 76; i++)
+   {
+      current_precipitation = Forcing_Object1->get_next_hourly_precipitation_meters_per_second();
    }
+    
+   double last_precipitation_rounded = round(current_precipitation * 1000.0) / 1000.0;
 
-   
-   //forcing_file_name = getcwd();
+   double compare_precipitation_rounded = round(3.24556e-06 * 1000.0) / 1000.0;
 
-   //Forcing_Object1->read_forcing(forcing_file_name);
+   EXPECT_DOUBLE_EQ(compare_precipitation_rounded, last_precipitation_rounded);
 
+   current_day_of_year = Forcing_Object1->get_day_of_year();
+
+   EXPECT_EQ(173, current_day_of_year);
 }
 
 
