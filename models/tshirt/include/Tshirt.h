@@ -3,6 +3,7 @@
 #define TSHIRT_H
 
 #include "kernels/schaake_partitioning.hpp"
+#include "Nonlinear_Reservoir.hpp"
 #include <cmath>
 #include <vector>
 
@@ -17,7 +18,7 @@ namespace tshirt {
     {
         double maxsmc;              //!< saturated soil moisture content (sometimes theta_e)
         double wltsmc;              //!< wilting point soil moisture content
-        double satdk;               //!< saturated hydraulic conductivity [m s^-1]
+        double satdk;               //!< saturated hydraulic conductivity [m s^-1] (sometimes Kperc)
         double satpsi;              //!< saturated capillary head [m]
         // TODO: explain more what this is
         double slope;               //!< SLOPE parameter
@@ -147,6 +148,11 @@ namespace tshirt {
                     (params.b * pow(z1, ((params.b - 1) / params.b)) / (params.b - 1)));
         }
 
+        static void init_nash_cascade_vector(vector<Nonlinear_Reservoir>& reservoirs)
+        {
+            // TODO: implement appropriate initialization of Nash Cascade reservoirs for lateral flow calcs
+        }
+
         //! run one time step of tshirt
         static int run(
                 double dt,
@@ -167,28 +173,54 @@ namespace tshirt {
 
             // TODO: properly handle GIUH surface runoff
 
-            state.Ss += subsurface_infiltration_flux;
-
             double Sfc = calc_Sfc(params, state);
 
+            vector<Reservoir_Outlet> subsurface_outlets;
+
+            // Keep track of the indexes of the specific outlets for later access
+            int lf_outlet_index = 0;
+            int perc_outlet_index = 1;
+
+            // TODO: these are likely not correct; figure out what values the max flow for the outlets should be
+            double max_lateral_flow = DBL_MAX;
+            double max_perc_flow = DBL_MAX;
+
+            // init subsurface later flow outlet
+            subsurface_outlets[lf_outlet_index] = Reservoir_Outlet(params.Klf, 1.0, Sfc, max_lateral_flow);
+            // init subsurface percolation flow outlet
+            subsurface_outlets[perc_outlet_index] = Reservoir_Outlet(params.satdk * params.slope, 1.0, Sfc, max_perc_flow);
+
+            Nonlinear_Reservoir subsurface_reservoir(0.0, params.depth, state.Ss, subsurface_outlets);
+
+            double subsurface_excess;
+            subsurface_reservoir.response_meters_per_second(subsurface_infiltration_flux, dt, subsurface_excess);
+
             // lateral subsurface flow
-            double Qlf = params.Klf * (state.Ss - Sfc) / (params.Ssmax - Sfc);
+            double Qlf = subsurface_reservoir.velocity_meters_per_second_for_outlet(lf_outlet_index);
 
-            // TODO: account for Nash Cascade
+            // percolation flow
+            double Qperc = subsurface_reservoir.velocity_meters_per_second_for_outlet(perc_outlet_index);
 
-            // default percolation flow to 0
-            double Qperc = 0;
-            if (state.Ss > Sfc) {
-                // Calc percolation if storage exceeds field capacity storage
-                Qperc = params.satdk * params.slope * (state.Ss - Sfc) / (params.Ssmax - Sfc);
+            // TODO: make sure ET doesn't need to be taken out sooner
+            state.Ss -= calc_et(state.Ss, et_params);
+
+            // initialize the Nash cascade of nonlinear reservoirs
+            std::vector<Nonlinear_Reservoir> nash_cascade;
+            init_nash_cascade_vector(nash_cascade);
+
+            // cycle through lateral flow Nash cascade of nonlinear reservoirs
+            // loop essentially copied from Hymod logic, but with different variable names
+            for(unsigned long int i = 0; i < nash_cascade.size(); ++i)
+            {
+                // get response water velocity of nonlinear reservoir
+                Qlf = nash_cascade[i].response_meters_per_second(Qlf, dt, subsurface_excess);
+                // TODO: confirm this is correct
+                Qlf += subsurface_excess / dt;
             }
 
-            double soil_m = state.Ss - (Qlf + Qperc);
-            // calculate et
-            double et_loss = calc_et(soil_m, et_params);
-
-            // TODO: confirm this is correct and we don't need to use the (NextGen) nonlinear reservoir implementation
-            state.Sgw += Qperc;
+            // TODO: implement nonlinear reservoir for groundwater calculations, rather than raw calculations below
+            // TODO: figure out how to make the flow equation for Qgw in Tshirt doc work for reservoir
+            state.Sgw += Qperc * dt;
             double Qgw = params.Cgw * ( exp(params.expon * state.Sgw / params.Sgwmax) - 1 );
 
             // record fluxes
@@ -198,7 +230,7 @@ namespace tshirt {
             fluxes.Qgw = Qgw;
 
             // update state details
-            new_state.Ss = soil_m - et_loss;
+            new_state.Ss = state.Ss;
             new_state.Sgw = state.Sgw - Qgw;
 
             return 0;
