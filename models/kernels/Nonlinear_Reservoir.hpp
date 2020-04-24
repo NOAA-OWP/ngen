@@ -1,3 +1,6 @@
+#ifndef NONLINEAR_RESERVOIR_HPP
+#define NONLINEAR_RESERVOIR_HPP
+
 #include <vector>
 #include <cmath>
 #include <algorithm>
@@ -361,3 +364,5 @@ class Nonlinear_Reservoir
     reservoir_state state;
     outlet_vector_type outlets;
 };
+
+#endif  // NONLINEAR_RESERVOIR_HPP
