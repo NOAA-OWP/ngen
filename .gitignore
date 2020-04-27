@@ -68,6 +68,7 @@ htmlcov/
 .cache
 nosetests.xml
 coverage.xml
+test/test_*
 
 # Front-End #
 #############
@@ -83,6 +84,13 @@ docs/code/html/*
 
 # Certain IDE project files
 /.idea/
+.vscode
+.project
 
 # CMake artifact generation directory
 /cmake-build-*/
+Makefile
+CMakeFiles
+CMakeCache.txt
+*.cmake
+include/NGenConfig.h

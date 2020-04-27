@@ -7,8 +7,8 @@ name: Documentation
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
+  #pull_request:
+    #branches: [ master ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -21,31 +21,39 @@ jobs:
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
+    
+    - name: Make sure initial ownership is correct
+      run: sudo chown -R runner:docker docs/
 
     # Runs a single command using the runners shell
     - uses: mattnotmitt/doxygen-action@v1
       with:
           working-directory: '.'
-          doxyfile-path: './Doxyfile'
+          doxyfile-path: './Doxyfile'       
+    
+    - name: Make sure ownership of generated items is correct
+      run: sudo chown -R runner:docker docs/
           
     - name: Switch to gh-pages
       uses: actions/checkout@v2
       with:
         ref: gh-pages
         clean: false
+        
+    - name: Move generated files where git can see them
+      run: cp -rp docs/html/* .
+
+    - name: Update branch information
+      run: git fetch --all; git branch --list -r;
+      
+    - name: Grab the latest markdown files
+      run: git checkout origin/master -- `git ls-tree origin/master -r --name-only | grep ".md"`;
+           git add -f .;
 
     - name: Commit files
-      run: echo ${{ github.ref }}
-        git add .
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git commit -m "Commiting Documentation" -a | exit 0
-
+      run: echo ${{ github.ref }};
+        git config --local user.name "GitHub Action";
+        git commit -m "Commiting Documentation" -a | exit 0;
+        
     - name: Push to gh-pages
-      uses: ad-m/github-push-action@v0.5.0
-      with:
-        # Token for the repo. Can be passed in using $\{{ secrets.GITHUB_TOKEN }}
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        # Destination branch to push changes
-        branch: gh-pages
-        force: true
+      run: git push;

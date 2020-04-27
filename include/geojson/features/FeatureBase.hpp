@@ -177,6 +177,10 @@ namespace geojson {
                 return properties.at(key);
             }
 
+            virtual void set_id(std::string new_id) {
+                id = new_id;
+            }
+
             /**
              * Get a foreign member value by name
              * 

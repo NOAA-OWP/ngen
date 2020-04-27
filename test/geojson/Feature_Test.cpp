@@ -760,7 +760,7 @@ TEST_F(Feature_Test, ptree_test) {
       "\"foreign_3\": true"
     "}";
 
-    stream = std::stringstream();
+    stream.str("");
     stream << data;
     tree = boost::property_tree::ptree();
     boost::property_tree::json_parser::read_json(stream, tree);
@@ -815,7 +815,7 @@ TEST_F(Feature_Test, ptree_test) {
       "\"foreign_3\": true"
     "}";
 
-    stream = std::stringstream();
+    stream.str("");
     stream << data;
     tree = boost::property_tree::ptree();
     boost::property_tree::json_parser::read_json(stream, tree);
@@ -862,7 +862,7 @@ TEST_F(Feature_Test, ptree_test) {
       "\"foreign_3\": true"
     "}";
 
-    stream = std::stringstream();
+    stream.str("");
     stream << data;
     tree = boost::property_tree::ptree();
     boost::property_tree::json_parser::read_json(stream, tree);
@@ -914,7 +914,7 @@ TEST_F(Feature_Test, ptree_test) {
       "\"foreign_3\": true"
     "}";
 
-    stream = std::stringstream();
+    stream.str("");
     stream << data;
     tree = boost::property_tree::ptree();
     boost::property_tree::json_parser::read_json(stream, tree);
@@ -974,7 +974,7 @@ TEST_F(Feature_Test, ptree_test) {
       "\"foreign_3\": true"
     "}";
 
-    stream = std::stringstream();
+    stream.str("");
     stream << data;
     tree = boost::property_tree::ptree();
     boost::property_tree::json_parser::read_json(stream, tree);
