@@ -42,6 +42,18 @@ namespace geojson {
         return coordinate_t(point[0], point[1]);
     }
 
+    /**
+     * @brief Reads a ptree entry and converts it into a linestring
+     * 
+     * The input should be a boost property tree that looks like:
+     * 
+     * - feature:
+     *     - "type": "doesn't matter here"
+     *     - "coordinates": [[0,0], [1,1], [2,2]]
+     * 
+     * @param tree A property tree node describing a line strig
+     * @return a boost geometry linestring 
+     */
     static linestring_t build_linestring(boost::property_tree::ptree &tree) {
         linestring_t line;
         
