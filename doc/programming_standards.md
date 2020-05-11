@@ -172,7 +172,7 @@ common courtesy.
 ### Spaces vs Tabs
 
 Use spaces in lieu of tabs. Tabs are easier to type, but may cause code to
-become vary difficult to read on systems with odd spacing. If you tab your code a couple times, it
+become very difficult to read on systems with odd spacing. If you tab your code a couple times, it
 may look fine on your machine, but code like
 
 ```
