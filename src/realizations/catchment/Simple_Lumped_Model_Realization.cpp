@@ -40,15 +40,14 @@ Simple_Lumped_Model_Realization::~Simple_Lumped_Model_Realization()
 
 void Simple_Lumped_Model_Realization::add_time(time_t t, double n)
 {
-    if ( state.find(t) != state.end() )
+    if ( state.find(t) == state.end() )
     {
         // create storage for fluxes
         fluxes[t] = hymod_fluxes();
         // create a safe backing array for the Sr arrays that are part of state
-        cascade_backing_storage[t].resize(params.n);
+        cascade_backing_storage[t].resize(params.n); //NJF TODO use params.n or input double n???  And why double?
 
         // create storage for the state
-
         state[t] = hymod_state(0.0, 0.0, cascade_backing_storage[t].data());
     }
 }
