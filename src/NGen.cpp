@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
       feature->set_id(feature->get_property("ID").as_string());
       //std::cout << "Got Nexus Feature " << feature->get_id() << std::endl;
     }
-
+    nexus_collection->update_ids();
     //Now read the collection of catchments, iterate it and add them to the nexus collection
     //also link them by to->id
     std::cout << "Building Catchment collection" << std::endl;
@@ -36,6 +36,7 @@ int main(int argc, char *argv[]) {
     for(auto& feature: *catchment_collection){
       feature->set_id(feature->get_property("ID").as_string());
       nexus_collection->add_feature(feature);
+      std::cout<<"Catchment "<<feature->get_id()<<" -> Nexus "<<feature->get_property("toID").as_string()<<std::endl;
     }
     std::string linkage = "toID";
     nexus_collection->link_features_from_property(nullptr, &linkage);
@@ -44,7 +45,7 @@ int main(int argc, char *argv[]) {
       //feature->set_id(feature->get_property("ID").as_string());
       //std::cout << "Got Nexus Feature " << feature->get_id() << std::endl;
       if( feature->get_id().substr(0, 3) == "cat") {
-        auto downstream = feature->upstream_features();
+        auto downstream = feature->downstream_features();
         if(downstream.size() > 1) {
           std::cerr << "catchment " << feature->get_id() << " has more than one downstream connection" << std::endl;
         }
