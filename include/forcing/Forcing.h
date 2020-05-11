@@ -6,29 +6,40 @@
 #include <iostream>
 #include <boost/algorithm/string.hpp>
 #include "CSV_Reader.h"
-#include <chrono>  // chrono::system_clock
 #include <ctime>
 #include <time.h>
 #include <memory>
 
 using namespace std;
 
+/**
+ * @brief Forcing class providing time-series precipiation forcing data to the model.
+ */
 class Forcing
 {
     public:
 
     typedef struct tm time_type;
 
-
-    //Default Constructor
+    /**
+     * Default Constructor building an empty Forcing object
+     */
     Forcing(): air_temperature_fahrenheit(0.0), basin_id(0), forcing_file_name("")
     {
 
     }
 
-    //Parameterized Constuctor
+    /**
+     * @brief Parameterized Constuctor that builds a Forcing object and reads an input forcing CSV into a vector. 
+     * @param air_temperature_fahrenheit Air temperatrure in Fahrenheit
+     * @param basin_latitude Basin Latitude
+     * @param forcing_file_name Forcing file name
+     * @param start_date_time Start date-time of model to select start of forcing time window of data
+     * @param end_date_time End date-time of model to select end of forcing time window of data
+     */
     Forcing(double air_temperature_fahrenheit, double basin_latitude, string forcing_file_name, std::shared_ptr<time_type>  start_date_time, std::shared_ptr<time_type> end_date_time): air_temperature_fahrenheit(air_temperature_fahrenheit), basin_id(basin_id), forcing_file_name(forcing_file_name), start_date_time(start_date_time), end_date_time(end_date_time)
     {
+
         //Convert start and end time structs to epoch time
         start_date_time_epoch = mktime(start_date_time.get());
 
@@ -37,23 +48,31 @@ class Forcing
         current_date_time_epoch = start_date_time_epoch;
 
         //Call read_forcing function
-        read_forcing(forcing_file_name); //also pass in start and end times
+        read_forcing(forcing_file_name);
 
         //Initialize forcing vector index to 0;
         *forcing_vector_index_ptr = 0;
     }
 
 
-    //Precipitation frequency is assumed to be hourly for now.
-    //TODO: Add input for dt (delta time) for different frequencies in the data than the model frequency.
+    /**
+     * @brief Gets current hourly precipitation in meters per second
+     * Precipitation frequency is assumed to be hourly for now.
+     * TODO: Add input for dt (delta time) for different frequencies in the data than the model frequency.
+     * @return the current hourly precipitation in meters per second
+     */
     double get_current_hourly_precipitation_meters_per_second()
     { 
         return precipitation_meters_per_second_vector[*forcing_vector_index_ptr];
     }
 
-
-    //Precipitation frequency is assumed to be hourly for now.
-    //TODO: Add input for dt (delta time) for different frequencies in the data than the model frequency.
+    /**
+     * @brief Gets next hourly precipitation in meters per second
+     * Increments pointer in forcing vector by one timestep
+     * Precipitation frequency is assumed to be hourly for now.
+     * TODO: Add input for dt (delta time) for different frequencies in the data than the model frequency.
+     * @return the current hourly precipitation in meters per second after pointer is incremented by one timestep
+     */
     double get_next_hourly_precipitation_meters_per_second()
     {
         //Increment forcing index
@@ -65,7 +84,10 @@ class Forcing
         return get_current_hourly_precipitation_meters_per_second();
     }
 
-    //Get day of year
+    /**
+     * @brief Gets day of year integer
+     * @return day of year integer
+     */
     int get_day_of_year()
     {
         int current_day_of_year;
@@ -81,7 +103,11 @@ class Forcing
 
     private:
 
-    //Read Forcing Data from CSV
+    /**
+     * @brief Read Forcing Data from CSV
+     * Reads only data within the specified model start and end date-times and adds to precipiation vector
+     * @param file_name Forcing file name
+     */
     void read_forcing(string file_name)
     { 
         //Call CSVReader constuctor
@@ -145,7 +171,7 @@ class Forcing
 
 
     vector<double> precipitation_meters_per_second_vector;
-    int *forcing_vector_index_ptr; 
+    int *forcing_vector_index_ptr = new int; 
     double precipitation_rate_meters_per_second;
     double air_temperature_fahrenheit;
     int basin_id;
@@ -160,8 +186,8 @@ class Forcing
     time_t current_date_time_epoch;
 };
 
-//TODO: Consider aggregating precipiation data
-//TODO: Make CSV forcing a subclass
-//TODO: Consider passing grid to class
-//TODO: Consider following GDAL API functionality
+/// \todo Consider aggregating precipiation data
+/// \todo Make CSV forcing a subclass
+/// \todo Consider passing grid to class
+/// \todo Consider following GDAL API functionality
 
