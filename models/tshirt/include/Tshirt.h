@@ -121,6 +121,20 @@ namespace tshirt {
             return 3.0 * params.satdk / (2.0e-6);
         }
 
+        /**
+         * Perform G.I.U.H. surface runoff calculations for the given catchment, using the external kernel class for
+         * such calculations.
+         *
+         * @param surface_runoff the basic surface runoff value from the Schaake calculations
+         * @return G.I.U.H. surface runoff value
+         */
+        static double calc_guih_surface_runoff(double surface_runoff, void* giuh_catchment_params)
+        {
+            // TODO: implement using separate GIUH kernel.
+            // TODO: likely will need to adjust signature to include other parameters, such as the catchment.
+            return 0.0;
+        }
+
         /*!
          * Calculate the height above water table based on the given Tshirt parameters
          *
@@ -163,15 +177,17 @@ namespace tshirt {
                 double input_flux_meters,          //!< the amount water entering the system this time step
                 void* et_params)            //!< parameters for the et function
         {
+            // TODO: likely will need to adjust signature to include other parameters, such as the catchment, for GIUH
+            //  calculations (that or the parameter structs), which should be saved here
+            void* giuh_catchment_params;
 
             double column_total_soil_moisture_deficit = params.Ssmax - state.Ss;
 
+            // Note this surface runoff value has not yet performed GIUH calculations
             double surface_runoff, subsurface_infiltration_flux;
 
             Schaake_partitioning_scheme(dt, calc_Cschaake(params), column_total_soil_moisture_deficit, input_flux_meters,
                     &surface_runoff, &subsurface_infiltration_flux);
-
-            // TODO: properly handle GIUH surface runoff
 
             double Sfc = calc_Sfc(params, state);
 
@@ -224,7 +240,8 @@ namespace tshirt {
             double Qgw = params.Cgw * ( exp(params.expon * state.Sgw / params.Sgwmax) - 1 );
 
             // record fluxes
-            fluxes.surface_runoff = surface_runoff;
+            // Calculate GIUH surface runoff
+            fluxes.surface_runoff = calc_guih_surface_runoff(surface_runoff, giuh_catchment_params);
             fluxes.Qlf = Qlf;
             fluxes.Qperc = Qperc;
             fluxes.Qgw = Qgw;
