@@ -23,7 +23,7 @@ extern "C"
         double Kv;
     };
 
-    void Pdm03(int modelDay,
+    inline void Pdm03(int modelDay,
         double Cpar,
         double B,
         double *XHuz,
@@ -54,7 +54,7 @@ extern "C"
     %%=========================================================================
     */
 
-    void Pdm03(int modelDay, double Cpar, double B, double *XHuz, double Huz,
+    inline void Pdm03(int modelDay, double Cpar, double B, double *XHuz, double Huz,
               double *OV, double *AE, double *XCuz, double effPrecip, double PE, double Kv)
     {
       /* local variables */
@@ -94,7 +94,7 @@ extern "C"
 
     }
 
-    void pdm03_wrapper(pdm03_struct* pdm_data)
+    inline void pdm03_wrapper(pdm03_struct* pdm_data)
     {
         return Pdm03(pdm_data->modelDay,
         pdm_data->Cpar,
