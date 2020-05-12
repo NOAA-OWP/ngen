@@ -4,6 +4,7 @@
 
 #include "kernels/schaake_partitioning.hpp"
 #include "Nonlinear_Reservoir.hpp"
+#include "GIUH.hpp"
 #include <cmath>
 #include <vector>
 
@@ -124,20 +125,6 @@ namespace tshirt {
             return 3.0 * params.satdk / (2.0e-6);
         }
 
-        /**
-         * Perform G.I.U.H. surface runoff calculations for the given catchment, using the external kernel class for
-         * such calculations.
-         *
-         * @param surface_runoff the basic surface runoff value from the Schaake calculations
-         * @return G.I.U.H. surface runoff value
-         */
-        static double calc_guih_surface_runoff(double surface_runoff, void* giuh_catchment_params)
-        {
-            // TODO: implement using separate GIUH kernel.
-            // TODO: likely will need to adjust signature to include other parameters, such as the catchment.
-            return 0.0;
-        }
-
         /*!
          * Calculate the height above water table based on the given Tshirt parameters
          *
@@ -184,12 +171,10 @@ namespace tshirt {
                 tshirt_state& new_state,     //!< model state struct to hold new model state
                 tshirt_fluxes& fluxes,       //!< model flux object to hold calculated fluxes
                 double input_flux_meters,          //!< the amount water entering the system this time step
+                // TODO: should/can this be a smart pointer?
+                giuh_kernel* giuh_obj,       //!< kernel object for calculating GIUH runoff from subsurface lateral flow
                 void* et_params)            //!< parameters for the et function
         {
-            // TODO: likely will need to adjust signature to include other parameters, such as the catchment, for GIUH
-            //  calculations (that or the parameter structs), which should be saved here
-            void* giuh_catchment_params;
-
             double column_total_soil_moisture_deficit = params.Ssmax - state.Ss;
 
             // Note this surface runoff value has not yet performed GIUH calculations
@@ -250,7 +235,7 @@ namespace tshirt {
 
             // record fluxes
             // Calculate GIUH surface runoff
-            fluxes.surface_runoff = calc_guih_surface_runoff(surface_runoff, giuh_catchment_params);
+            fluxes.surface_runoff = giuh_obj->calc_giuh_output(dt, surface_runoff);
             fluxes.Qlf = Qlf;
             fluxes.Qperc = Qperc;
             fluxes.Qgw = Qgw;
