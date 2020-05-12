@@ -50,8 +50,8 @@ TEST_F(Feature_Test, geometry_test) {
 
     ASSERT_TRUE(basic_point.is_leaf());
     ASSERT_TRUE(basic_point.is_root());
-    ASSERT_EQ(basic_point.get_upstream_length(), 0);
-    ASSERT_EQ(basic_point.get_downstream_length(), 0);
+    ASSERT_EQ(basic_point.get_origination_length(), 0);
+    ASSERT_EQ(basic_point.get_destination_length(), 0);
     ASSERT_EQ(basic_point.get_contributor_count(), 0);
 
     ASSERT_ANY_THROW(basic_point.get_property("doesnotexist"));
@@ -66,8 +66,8 @@ TEST_F(Feature_Test, geometry_test) {
 
     ASSERT_TRUE(point_and_bound.is_leaf());
     ASSERT_TRUE(point_and_bound.is_root());
-    ASSERT_EQ(point_and_bound.get_upstream_length(), 0);
-    ASSERT_EQ(point_and_bound.get_downstream_length(), 0);
+    ASSERT_EQ(point_and_bound.get_origination_length(), 0);
+    ASSERT_EQ(point_and_bound.get_destination_length(), 0);
     ASSERT_EQ(point_and_bound.get_contributor_count(), 0);
 
     ASSERT_EQ(point_and_bound.get_properties().size(), 0);
@@ -114,14 +114,14 @@ TEST_F(Feature_Test, geometry_test) {
     ASSERT_FALSE(point_and_properties.is_root());
     ASSERT_TRUE(point_and_properties.is_leaf());
     ASSERT_EQ(point_and_properties.get_contributor_count(), 1);
-    ASSERT_EQ(point_and_properties.get_upstream_length(), 1);
-    ASSERT_EQ(point_and_properties.get_downstream_length(), 0);
-    ASSERT_EQ(point_and_properties.get_number_of_upstream_features(), 1);
-    ASSERT_EQ(point_and_properties.get_number_of_downstream_features(), 0);
+    ASSERT_EQ(point_and_properties.get_origination_length(), 1);
+    ASSERT_EQ(point_and_properties.get_destination_length(), 0);
+    ASSERT_EQ(point_and_properties.get_number_of_origination_features(), 1);
+    ASSERT_EQ(point_and_properties.get_number_of_destination_features(), 0);
 
-    ASSERT_EQ(point_and_bound.get_downstream_length(), 1);
-    ASSERT_EQ(point_and_bound.get_number_of_upstream_features(), 0);
-    ASSERT_EQ(point_and_bound.get_number_of_downstream_features(), 1);
+    ASSERT_EQ(point_and_bound.get_destination_length(), 1);
+    ASSERT_EQ(point_and_bound.get_number_of_origination_features(), 0);
+    ASSERT_EQ(point_and_bound.get_number_of_destination_features(), 1);
 
     geojson::two_dimensional_coordinates two_dimensions {
         {1.0, 2.0},
@@ -190,23 +190,23 @@ TEST_F(Feature_Test, geometry_test) {
 
     ASSERT_FALSE(linestring.is_leaf());
     ASSERT_FALSE(linestring.is_root());
-    ASSERT_EQ(linestring.get_downstream_length(), 1);
-    ASSERT_EQ(linestring.get_upstream_length(), 1);
+    ASSERT_EQ(linestring.get_destination_length(), 1);
+    ASSERT_EQ(linestring.get_origination_length(), 1);
     ASSERT_EQ(linestring.get_contributor_count(), 2);
-    ASSERT_EQ(linestring.get_number_of_downstream_features(), 1);
-    ASSERT_EQ(linestring.get_number_of_upstream_features(), 2);
+    ASSERT_EQ(linestring.get_number_of_destination_features(), 1);
+    ASSERT_EQ(linestring.get_number_of_origination_features(), 2);
     
-    ASSERT_EQ(basic_point.get_number_of_downstream_features(), 1);
-    ASSERT_EQ(basic_point.get_number_of_upstream_features(), 0);
-    ASSERT_EQ(basic_point.get_downstream_length(), 2);
+    ASSERT_EQ(basic_point.get_number_of_destination_features(), 1);
+    ASSERT_EQ(basic_point.get_number_of_origination_features(), 0);
+    ASSERT_EQ(basic_point.get_destination_length(), 2);
 
-    ASSERT_EQ(point_and_bound.get_number_of_downstream_features(), 2);
-    ASSERT_EQ(point_and_bound.get_number_of_upstream_features(), 0);
-    ASSERT_EQ(point_and_bound.get_downstream_length(), 2);
+    ASSERT_EQ(point_and_bound.get_number_of_destination_features(), 2);
+    ASSERT_EQ(point_and_bound.get_number_of_origination_features(), 0);
+    ASSERT_EQ(point_and_bound.get_destination_length(), 2);
 
-    ASSERT_EQ(point_and_properties.get_number_of_downstream_features(), 0);
-    ASSERT_EQ(point_and_properties.get_number_of_upstream_features(), 2);
-    ASSERT_EQ(point_and_properties.get_upstream_length(), 2);
+    ASSERT_EQ(point_and_properties.get_number_of_destination_features(), 0);
+    ASSERT_EQ(point_and_properties.get_number_of_origination_features(), 2);
+    ASSERT_EQ(point_and_properties.get_origination_length(), 2);
 
     geojson::PolygonFeature polygon(
       geojson::polygon(three_dimensions),
@@ -237,28 +237,28 @@ TEST_F(Feature_Test, geometry_test) {
 
     ASSERT_FALSE(polygon.is_root());
     ASSERT_TRUE(polygon.is_leaf());
-    ASSERT_EQ(polygon.get_upstream_length(), 2);
-    ASSERT_EQ(polygon.get_downstream_length(), 0);
+    ASSERT_EQ(polygon.get_origination_length(), 2);
+    ASSERT_EQ(polygon.get_destination_length(), 0);
     ASSERT_EQ(polygon.get_contributor_count(), 3);
-    ASSERT_EQ(polygon.get_number_of_downstream_features(), 0);
-    ASSERT_EQ(polygon.get_number_of_upstream_features(), 1);
+    ASSERT_EQ(polygon.get_number_of_destination_features(), 0);
+    ASSERT_EQ(polygon.get_number_of_origination_features(), 1);
     
-    ASSERT_EQ(basic_point.get_number_of_downstream_features(), 1);
-    ASSERT_EQ(basic_point.get_number_of_upstream_features(), 0);
-    ASSERT_EQ(basic_point.get_downstream_length(), 2);
+    ASSERT_EQ(basic_point.get_number_of_destination_features(), 1);
+    ASSERT_EQ(basic_point.get_number_of_origination_features(), 0);
+    ASSERT_EQ(basic_point.get_destination_length(), 2);
 
-    ASSERT_EQ(point_and_bound.get_number_of_downstream_features(), 2);
-    ASSERT_EQ(point_and_bound.get_number_of_upstream_features(), 0);
-    ASSERT_EQ(point_and_bound.get_downstream_length(), 2);
+    ASSERT_EQ(point_and_bound.get_number_of_destination_features(), 2);
+    ASSERT_EQ(point_and_bound.get_number_of_origination_features(), 0);
+    ASSERT_EQ(point_and_bound.get_destination_length(), 2);
 
-    ASSERT_EQ(point_and_properties.get_number_of_downstream_features(), 0);
-    ASSERT_EQ(point_and_properties.get_number_of_upstream_features(), 2);
-    ASSERT_EQ(point_and_properties.get_upstream_length(), 2);
+    ASSERT_EQ(point_and_properties.get_number_of_destination_features(), 0);
+    ASSERT_EQ(point_and_properties.get_number_of_origination_features(), 2);
+    ASSERT_EQ(point_and_properties.get_origination_length(), 2);
 
-    ASSERT_EQ(linestring.get_number_of_downstream_features(), 2);
-    ASSERT_EQ(linestring.get_number_of_upstream_features(), 2);
-    ASSERT_EQ(linestring.get_upstream_length(), 1);
-    ASSERT_EQ(linestring.get_downstream_length(), 1);
+    ASSERT_EQ(linestring.get_number_of_destination_features(), 2);
+    ASSERT_EQ(linestring.get_number_of_origination_features(), 2);
+    ASSERT_EQ(linestring.get_origination_length(), 1);
+    ASSERT_EQ(linestring.get_destination_length(), 1);
 
     geojson::MultiPointFeature multipoint(
       geojson::multipoint(two_dimensions),
@@ -289,36 +289,36 @@ TEST_F(Feature_Test, geometry_test) {
     
     ASSERT_FALSE(multipoint.is_root());
     ASSERT_FALSE(multipoint.is_leaf());
-    ASSERT_EQ(multipoint.get_upstream_length(), 3);
-    ASSERT_EQ(multipoint.get_downstream_length(), 1);
+    ASSERT_EQ(multipoint.get_origination_length(), 3);
+    ASSERT_EQ(multipoint.get_destination_length(), 1);
     ASSERT_EQ(multipoint.get_contributor_count(), 4);
-    ASSERT_EQ(multipoint.get_number_of_upstream_features(), 1);
-    ASSERT_EQ(multipoint.get_number_of_downstream_features(), 1);
+    ASSERT_EQ(multipoint.get_number_of_origination_features(), 1);
+    ASSERT_EQ(multipoint.get_number_of_destination_features(), 1);
     
-    ASSERT_EQ(basic_point.get_number_of_downstream_features(), 1);
-    ASSERT_EQ(basic_point.get_number_of_upstream_features(), 0);
-    ASSERT_EQ(basic_point.get_downstream_length(), 4);
-    ASSERT_EQ(basic_point.get_upstream_length(), 0);
+    ASSERT_EQ(basic_point.get_number_of_destination_features(), 1);
+    ASSERT_EQ(basic_point.get_number_of_origination_features(), 0);
+    ASSERT_EQ(basic_point.get_destination_length(), 4);
+    ASSERT_EQ(basic_point.get_origination_length(), 0);
     
-    ASSERT_EQ(point_and_bound.get_number_of_downstream_features(), 2);
-    ASSERT_EQ(point_and_bound.get_number_of_upstream_features(), 0);
-    ASSERT_EQ(point_and_bound.get_downstream_length(), 4);
-    ASSERT_EQ(point_and_bound.get_upstream_length(), 0);
+    ASSERT_EQ(point_and_bound.get_number_of_destination_features(), 2);
+    ASSERT_EQ(point_and_bound.get_number_of_origination_features(), 0);
+    ASSERT_EQ(point_and_bound.get_destination_length(), 4);
+    ASSERT_EQ(point_and_bound.get_origination_length(), 0);
 
-    ASSERT_EQ(point_and_properties.get_number_of_downstream_features(), 0);
-    ASSERT_EQ(point_and_properties.get_number_of_upstream_features(), 3);
-    ASSERT_EQ(point_and_properties.get_upstream_length(), 4);
-    ASSERT_EQ(point_and_properties.get_downstream_length(), 0);
+    ASSERT_EQ(point_and_properties.get_number_of_destination_features(), 0);
+    ASSERT_EQ(point_and_properties.get_number_of_origination_features(), 3);
+    ASSERT_EQ(point_and_properties.get_origination_length(), 4);
+    ASSERT_EQ(point_and_properties.get_destination_length(), 0);
 
-    ASSERT_EQ(linestring.get_number_of_downstream_features(), 2);
-    ASSERT_EQ(linestring.get_number_of_upstream_features(), 2);
-    ASSERT_EQ(linestring.get_upstream_length(), 1);
-    ASSERT_EQ(linestring.get_downstream_length(), 3);
+    ASSERT_EQ(linestring.get_number_of_destination_features(), 2);
+    ASSERT_EQ(linestring.get_number_of_origination_features(), 2);
+    ASSERT_EQ(linestring.get_origination_length(), 1);
+    ASSERT_EQ(linestring.get_destination_length(), 3);
 
-    ASSERT_EQ(polygon.get_number_of_downstream_features(), 1);
-    ASSERT_EQ(polygon.get_number_of_upstream_features(), 1);
-    ASSERT_EQ(polygon.get_upstream_length(), 2);
-    ASSERT_EQ(polygon.get_downstream_length(), 2);
+    ASSERT_EQ(polygon.get_number_of_destination_features(), 1);
+    ASSERT_EQ(polygon.get_number_of_origination_features(), 1);
+    ASSERT_EQ(polygon.get_origination_length(), 2);
+    ASSERT_EQ(polygon.get_destination_length(), 2);
 
     geojson::MultiLineStringFeature multilinestring(
       geojson::multilinestring(three_dimensions),
@@ -353,44 +353,44 @@ TEST_F(Feature_Test, geometry_test) {
 
     ASSERT_FALSE(multilinestring.is_root());
     ASSERT_FALSE(multilinestring.is_leaf());
-    ASSERT_EQ(multilinestring.get_upstream_length(), 3);
-    ASSERT_EQ(multilinestring.get_downstream_length(), 2);
+    ASSERT_EQ(multilinestring.get_origination_length(), 3);
+    ASSERT_EQ(multilinestring.get_destination_length(), 2);
     ASSERT_EQ(multilinestring.get_contributor_count(), 4);
-    ASSERT_EQ(multilinestring.get_number_of_upstream_features(), 2);
-    ASSERT_EQ(multilinestring.get_number_of_downstream_features(), 1);
+    ASSERT_EQ(multilinestring.get_number_of_origination_features(), 2);
+    ASSERT_EQ(multilinestring.get_number_of_destination_features(), 1);
     
-    ASSERT_EQ(basic_point.get_number_of_downstream_features(), 1);
-    ASSERT_EQ(basic_point.get_number_of_upstream_features(), 0);
-    ASSERT_EQ(basic_point.get_downstream_length(), 5);
-    ASSERT_EQ(basic_point.get_upstream_length(), 0);
+    ASSERT_EQ(basic_point.get_number_of_destination_features(), 1);
+    ASSERT_EQ(basic_point.get_number_of_origination_features(), 0);
+    ASSERT_EQ(basic_point.get_destination_length(), 5);
+    ASSERT_EQ(basic_point.get_origination_length(), 0);
 
-    ASSERT_EQ(point_and_bound.get_number_of_downstream_features(), 2);
-    ASSERT_EQ(point_and_bound.get_number_of_upstream_features(), 0);
-    ASSERT_EQ(point_and_bound.get_downstream_length(), 5);
-    ASSERT_EQ(point_and_bound.get_upstream_length(), 0);
+    ASSERT_EQ(point_and_bound.get_number_of_destination_features(), 2);
+    ASSERT_EQ(point_and_bound.get_number_of_origination_features(), 0);
+    ASSERT_EQ(point_and_bound.get_destination_length(), 5);
+    ASSERT_EQ(point_and_bound.get_origination_length(), 0);
 
-    ASSERT_EQ(point_and_properties.get_number_of_downstream_features(), 0);
-    ASSERT_EQ(point_and_properties.get_number_of_upstream_features(), 3);
-    ASSERT_EQ(point_and_properties.get_upstream_length(), 5);
-    ASSERT_EQ(point_and_properties.get_downstream_length(), 0);
+    ASSERT_EQ(point_and_properties.get_number_of_destination_features(), 0);
+    ASSERT_EQ(point_and_properties.get_number_of_origination_features(), 3);
+    ASSERT_EQ(point_and_properties.get_origination_length(), 5);
+    ASSERT_EQ(point_and_properties.get_destination_length(), 0);
     ASSERT_EQ(point_and_properties.get_contributor_count(), 6);
 
-    ASSERT_EQ(linestring.get_number_of_downstream_features(), 3);
-    ASSERT_EQ(linestring.get_number_of_upstream_features(), 2);
-    ASSERT_EQ(linestring.get_upstream_length(), 1);
-    ASSERT_EQ(linestring.get_downstream_length(), 4);
+    ASSERT_EQ(linestring.get_number_of_destination_features(), 3);
+    ASSERT_EQ(linestring.get_number_of_origination_features(), 2);
+    ASSERT_EQ(linestring.get_origination_length(), 1);
+    ASSERT_EQ(linestring.get_destination_length(), 4);
     ASSERT_EQ(linestring.get_contributor_count(), 2);
 
-    ASSERT_EQ(polygon.get_number_of_downstream_features(), 2);
-    ASSERT_EQ(polygon.get_number_of_upstream_features(), 1);
-    ASSERT_EQ(polygon.get_upstream_length(), 2);
-    ASSERT_EQ(polygon.get_downstream_length(), 3);
+    ASSERT_EQ(polygon.get_number_of_destination_features(), 2);
+    ASSERT_EQ(polygon.get_number_of_origination_features(), 1);
+    ASSERT_EQ(polygon.get_origination_length(), 2);
+    ASSERT_EQ(polygon.get_destination_length(), 3);
     ASSERT_EQ(polygon.get_contributor_count(), 3);
 
-    ASSERT_EQ(multipoint.get_number_of_downstream_features(), 1);
-    ASSERT_EQ(multipoint.get_number_of_upstream_features(), 2);
-    ASSERT_EQ(multipoint.get_upstream_length(), 4);
-    ASSERT_EQ(multipoint.get_downstream_length(), 1);
+    ASSERT_EQ(multipoint.get_number_of_destination_features(), 1);
+    ASSERT_EQ(multipoint.get_number_of_origination_features(), 2);
+    ASSERT_EQ(multipoint.get_origination_length(), 4);
+    ASSERT_EQ(multipoint.get_destination_length(), 1);
     ASSERT_EQ(multipoint.get_contributor_count(), 5);
 
     geojson::MultiPolygonFeature multipolygon(
@@ -425,50 +425,50 @@ TEST_F(Feature_Test, geometry_test) {
 
     ASSERT_FALSE(multipolygon.is_root());
     ASSERT_TRUE(multipolygon.is_leaf());
-    ASSERT_EQ(multipolygon.get_upstream_length(), 5);
-    ASSERT_EQ(multipolygon.get_downstream_length(), 0);
+    ASSERT_EQ(multipolygon.get_origination_length(), 5);
+    ASSERT_EQ(multipolygon.get_destination_length(), 0);
     ASSERT_EQ(multipolygon.get_contributor_count(), 6);
-    ASSERT_EQ(multipolygon.get_number_of_upstream_features(), 2);
-    ASSERT_EQ(multipolygon.get_number_of_downstream_features(), 0);
+    ASSERT_EQ(multipolygon.get_number_of_origination_features(), 2);
+    ASSERT_EQ(multipolygon.get_number_of_destination_features(), 0);
     
-    ASSERT_EQ(basic_point.get_number_of_downstream_features(), 1);
-    ASSERT_EQ(basic_point.get_number_of_upstream_features(), 0);
-    ASSERT_EQ(basic_point.get_downstream_length(), 5);
-    ASSERT_EQ(basic_point.get_upstream_length(), 0);
+    ASSERT_EQ(basic_point.get_number_of_destination_features(), 1);
+    ASSERT_EQ(basic_point.get_number_of_origination_features(), 0);
+    ASSERT_EQ(basic_point.get_destination_length(), 5);
+    ASSERT_EQ(basic_point.get_origination_length(), 0);
 
-    ASSERT_EQ(point_and_bound.get_number_of_downstream_features(), 2);
-    ASSERT_EQ(point_and_bound.get_number_of_upstream_features(), 0);
-    ASSERT_EQ(point_and_bound.get_downstream_length(), 5);
-    ASSERT_EQ(point_and_bound.get_upstream_length(), 0);
+    ASSERT_EQ(point_and_bound.get_number_of_destination_features(), 2);
+    ASSERT_EQ(point_and_bound.get_number_of_origination_features(), 0);
+    ASSERT_EQ(point_and_bound.get_destination_length(), 5);
+    ASSERT_EQ(point_and_bound.get_origination_length(), 0);
 
-    ASSERT_EQ(point_and_properties.get_number_of_downstream_features(), 0);
-    ASSERT_EQ(point_and_properties.get_number_of_upstream_features(), 3);
-    ASSERT_EQ(point_and_properties.get_upstream_length(), 5);
-    ASSERT_EQ(point_and_properties.get_downstream_length(), 0);
+    ASSERT_EQ(point_and_properties.get_number_of_destination_features(), 0);
+    ASSERT_EQ(point_and_properties.get_number_of_origination_features(), 3);
+    ASSERT_EQ(point_and_properties.get_origination_length(), 5);
+    ASSERT_EQ(point_and_properties.get_destination_length(), 0);
     ASSERT_EQ(point_and_properties.get_contributor_count(), 6);
 
-    ASSERT_EQ(linestring.get_number_of_downstream_features(), 3);
-    ASSERT_EQ(linestring.get_number_of_upstream_features(), 2);
-    ASSERT_EQ(linestring.get_upstream_length(), 1);
-    ASSERT_EQ(linestring.get_downstream_length(), 4);
+    ASSERT_EQ(linestring.get_number_of_destination_features(), 3);
+    ASSERT_EQ(linestring.get_number_of_origination_features(), 2);
+    ASSERT_EQ(linestring.get_origination_length(), 1);
+    ASSERT_EQ(linestring.get_destination_length(), 4);
     ASSERT_EQ(linestring.get_contributor_count(), 2);
 
-    ASSERT_EQ(polygon.get_number_of_downstream_features(), 2);
-    ASSERT_EQ(polygon.get_number_of_upstream_features(), 1);
-    ASSERT_EQ(polygon.get_upstream_length(), 2);
-    ASSERT_EQ(polygon.get_downstream_length(), 3);
+    ASSERT_EQ(polygon.get_number_of_destination_features(), 2);
+    ASSERT_EQ(polygon.get_number_of_origination_features(), 1);
+    ASSERT_EQ(polygon.get_origination_length(), 2);
+    ASSERT_EQ(polygon.get_destination_length(), 3);
     ASSERT_EQ(polygon.get_contributor_count(), 3);
 
-    ASSERT_EQ(multipoint.get_number_of_downstream_features(), 2);
-    ASSERT_EQ(multipoint.get_number_of_upstream_features(), 2);
-    ASSERT_EQ(multipoint.get_upstream_length(), 4);
-    ASSERT_EQ(multipoint.get_downstream_length(), 1);
+    ASSERT_EQ(multipoint.get_number_of_destination_features(), 2);
+    ASSERT_EQ(multipoint.get_number_of_origination_features(), 2);
+    ASSERT_EQ(multipoint.get_origination_length(), 4);
+    ASSERT_EQ(multipoint.get_destination_length(), 1);
     ASSERT_EQ(multipoint.get_contributor_count(), 5);
 
-    ASSERT_EQ(multilinestring.get_number_of_downstream_features(), 2);
-    ASSERT_EQ(multilinestring.get_number_of_upstream_features(), 2);
-    ASSERT_EQ(multilinestring.get_upstream_length(), 3);
-    ASSERT_EQ(multilinestring.get_downstream_length(), 2);
+    ASSERT_EQ(multilinestring.get_number_of_destination_features(), 2);
+    ASSERT_EQ(multilinestring.get_number_of_origination_features(), 2);
+    ASSERT_EQ(multilinestring.get_origination_length(), 3);
+    ASSERT_EQ(multilinestring.get_destination_length(), 2);
     ASSERT_EQ(multilinestring.get_contributor_count(), 4);
 
     geojson::MultiPolygonFeature copy = geojson::MultiPolygonFeature(multipolygon);
@@ -494,58 +494,58 @@ TEST_F(Feature_Test, geometry_test) {
 
     ASSERT_FALSE(copy.is_root());
     ASSERT_TRUE(copy.is_leaf());
-    ASSERT_EQ(copy.get_upstream_length(), 5);
-    ASSERT_EQ(copy.get_downstream_length(), 0);
+    ASSERT_EQ(copy.get_origination_length(), 5);
+    ASSERT_EQ(copy.get_destination_length(), 0);
     ASSERT_EQ(copy.get_contributor_count(), 6);
-    ASSERT_EQ(copy.get_number_of_upstream_features(), 2);
-    ASSERT_EQ(copy.get_number_of_downstream_features(), 0);
+    ASSERT_EQ(copy.get_number_of_origination_features(), 2);
+    ASSERT_EQ(copy.get_number_of_destination_features(), 0);
 
     ASSERT_FALSE(multipolygon.is_root());
     ASSERT_TRUE(multipolygon.is_leaf());
-    ASSERT_EQ(multipolygon.get_upstream_length(), 5);
-    ASSERT_EQ(multipolygon.get_downstream_length(), 0);
+    ASSERT_EQ(multipolygon.get_origination_length(), 5);
+    ASSERT_EQ(multipolygon.get_destination_length(), 0);
     ASSERT_EQ(multipolygon.get_contributor_count(), 6);
-    ASSERT_EQ(multipolygon.get_number_of_upstream_features(), 2);
-    ASSERT_EQ(multipolygon.get_number_of_downstream_features(), 0);
+    ASSERT_EQ(multipolygon.get_number_of_origination_features(), 2);
+    ASSERT_EQ(multipolygon.get_number_of_destination_features(), 0);
     
-    ASSERT_EQ(basic_point.get_number_of_downstream_features(), 1);
-    ASSERT_EQ(basic_point.get_number_of_upstream_features(), 0);
-    ASSERT_EQ(basic_point.get_downstream_length(), 5);
-    ASSERT_EQ(basic_point.get_upstream_length(), 0);
+    ASSERT_EQ(basic_point.get_number_of_destination_features(), 1);
+    ASSERT_EQ(basic_point.get_number_of_origination_features(), 0);
+    ASSERT_EQ(basic_point.get_destination_length(), 5);
+    ASSERT_EQ(basic_point.get_origination_length(), 0);
 
-    ASSERT_EQ(point_and_bound.get_number_of_downstream_features(), 2);
-    ASSERT_EQ(point_and_bound.get_number_of_upstream_features(), 0);
-    ASSERT_EQ(point_and_bound.get_downstream_length(), 5);
-    ASSERT_EQ(point_and_bound.get_upstream_length(), 0);
+    ASSERT_EQ(point_and_bound.get_number_of_destination_features(), 2);
+    ASSERT_EQ(point_and_bound.get_number_of_origination_features(), 0);
+    ASSERT_EQ(point_and_bound.get_destination_length(), 5);
+    ASSERT_EQ(point_and_bound.get_origination_length(), 0);
 
-    ASSERT_EQ(point_and_properties.get_number_of_downstream_features(), 0);
-    ASSERT_EQ(point_and_properties.get_number_of_upstream_features(), 3);
-    ASSERT_EQ(point_and_properties.get_upstream_length(), 5);
-    ASSERT_EQ(point_and_properties.get_downstream_length(), 0);
+    ASSERT_EQ(point_and_properties.get_number_of_destination_features(), 0);
+    ASSERT_EQ(point_and_properties.get_number_of_origination_features(), 3);
+    ASSERT_EQ(point_and_properties.get_origination_length(), 5);
+    ASSERT_EQ(point_and_properties.get_destination_length(), 0);
     ASSERT_EQ(point_and_properties.get_contributor_count(), 6);
 
-    ASSERT_EQ(linestring.get_number_of_downstream_features(), 3);
-    ASSERT_EQ(linestring.get_number_of_upstream_features(), 2);
-    ASSERT_EQ(linestring.get_upstream_length(), 1);
-    ASSERT_EQ(linestring.get_downstream_length(), 4);
+    ASSERT_EQ(linestring.get_number_of_destination_features(), 3);
+    ASSERT_EQ(linestring.get_number_of_origination_features(), 2);
+    ASSERT_EQ(linestring.get_origination_length(), 1);
+    ASSERT_EQ(linestring.get_destination_length(), 4);
     ASSERT_EQ(linestring.get_contributor_count(), 2);
 
-    ASSERT_EQ(polygon.get_number_of_downstream_features(), 2);
-    ASSERT_EQ(polygon.get_number_of_upstream_features(), 1);
-    ASSERT_EQ(polygon.get_upstream_length(), 2);
-    ASSERT_EQ(polygon.get_downstream_length(), 3);
+    ASSERT_EQ(polygon.get_number_of_destination_features(), 2);
+    ASSERT_EQ(polygon.get_number_of_origination_features(), 1);
+    ASSERT_EQ(polygon.get_origination_length(), 2);
+    ASSERT_EQ(polygon.get_destination_length(), 3);
     ASSERT_EQ(polygon.get_contributor_count(), 3);
 
-    ASSERT_EQ(multipoint.get_number_of_downstream_features(), 2);
-    ASSERT_EQ(multipoint.get_number_of_upstream_features(), 2);
-    ASSERT_EQ(multipoint.get_upstream_length(), 4);
-    ASSERT_EQ(multipoint.get_downstream_length(), 1);
+    ASSERT_EQ(multipoint.get_number_of_destination_features(), 2);
+    ASSERT_EQ(multipoint.get_number_of_origination_features(), 2);
+    ASSERT_EQ(multipoint.get_origination_length(), 4);
+    ASSERT_EQ(multipoint.get_destination_length(), 1);
     ASSERT_EQ(multipoint.get_contributor_count(), 5);
 
-    ASSERT_EQ(multilinestring.get_number_of_downstream_features(), 2);
-    ASSERT_EQ(multilinestring.get_number_of_upstream_features(), 2);
-    ASSERT_EQ(multilinestring.get_upstream_length(), 3);
-    ASSERT_EQ(multilinestring.get_downstream_length(), 2);
+    ASSERT_EQ(multilinestring.get_number_of_destination_features(), 2);
+    ASSERT_EQ(multilinestring.get_number_of_origination_features(), 2);
+    ASSERT_EQ(multilinestring.get_origination_length(), 3);
+    ASSERT_EQ(multilinestring.get_destination_length(), 2);
     ASSERT_EQ(multilinestring.get_contributor_count(), 4);
 }
 

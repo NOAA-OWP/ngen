@@ -73,7 +73,7 @@ int FeatureCollection::link_features_from_property(std::string* from_property, s
             std::string from_id = feature->get_property(*from_property).as_string();
             
             if (feature_by_id.find(from_id) != feature_by_id.end()) {
-                feature->add_upstream_feature(feature_by_id[from_id].get());
+                feature->add_origination_feature(feature_by_id[from_id].get());
                 links_found++;
             }
         }
@@ -82,7 +82,7 @@ int FeatureCollection::link_features_from_property(std::string* from_property, s
             std::string to_id = feature->get_property(*to_property).as_string();
 
             if (feature_by_id.find(to_id) != feature_by_id.end()) {
-                feature->add_downstream_feature(feature_by_id[to_id].get());
+                feature->add_destination_feature(feature_by_id[to_id].get());
                 links_found++;
             }
         }
@@ -99,7 +99,7 @@ int FeatureCollection::link_features_from_attribute(std::string* from_attribute,
             std::string from_id = feature->get(*from_attribute).as_string();
             
             if (from_id != "null" && feature_by_id.find(from_id) != feature_by_id.end()) {
-                feature->add_upstream_feature(feature_by_id[from_id].get());
+                feature->add_origination_feature(feature_by_id[from_id].get());
                 links_found++;
             }
         }
@@ -108,7 +108,7 @@ int FeatureCollection::link_features_from_attribute(std::string* from_attribute,
             std::string to_id = feature->get(*to_attribute).as_string();
 
             if (to_id != "null" && feature_by_id.find(to_id) != feature_by_id.end()) {
-                feature->add_downstream_feature(feature_by_id[to_id].get());
+                feature->add_destination_feature(feature_by_id[to_id].get());
                 links_found++;
             }
         }
