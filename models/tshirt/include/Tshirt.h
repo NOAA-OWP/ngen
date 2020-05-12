@@ -218,7 +218,8 @@ namespace tshirt {
             double Qperc = subsurface_reservoir.velocity_meters_per_second_for_outlet(perc_outlet_index);
 
             // TODO: make sure ET doesn't need to be taken out sooner
-            state.Ss -= calc_et(state.Ss, et_params);
+            new_state.Ss = subsurface_reservoir.get_storage_height_meters() -
+                           calc_et(subsurface_reservoir.get_storage_height_meters(), et_params);
 
             // initialize the Nash cascade of nonlinear reservoirs
             std::vector<Nonlinear_Reservoir> nash_cascade;
@@ -235,21 +236,27 @@ namespace tshirt {
                 Qlf += subsurface_excess / dt;
             }
 
-            // TODO: implement nonlinear reservoir for groundwater calculations, rather than raw calculations below
-            // TODO: figure out how to make the flow equation for Qgw in Tshirt doc work for reservoir
-            state.Sgw += Qperc * dt;
-            double Qgw = params.Cgw * ( exp(params.expon * state.Sgw / params.Sgwmax) - 1 );
+            // "raw" GW calculations
+            //state.Sgw += Qperc * dt;
+            //double Qgw = params.Cgw * ( exp(params.expon * state.Sgw / params.Sgwmax) - 1 );
 
-            // record fluxes
-            // Calculate GIUH surface runoff
-            fluxes.surface_runoff = giuh_obj->calc_giuh_output(dt, surface_runoff);
+            // Given the equation:
+            //      double Qgw = params.Cgw * ( exp(params.expon * state.Sgw / params.Sgwmax) - 1 );
+            // The max value should be when Sgw == Sgwmax, or ...
+            double max_gw_velocity = params.Cgw * ( exp(params.expon) - 1 );
+            // TODO: verify activation threshold
+            Nonlinear_Reservoir groundwater_res(0, params.Sgwmax, state.Sgw, params.Cgw, 1, 0, max_gw_velocity);
+            // TODO: what needs to be done with this value?
+            double excess_gw_water;
+            fluxes.Qgw = groundwater_res.response_meters_per_second(Qperc, dt, excess_gw_water);
+            // update state
+            new_state.Sgw = groundwater_res.get_storage_height_meters();
+
+            // record other fluxes
             fluxes.Qlf = Qlf;
             fluxes.Qperc = Qperc;
-            fluxes.Qgw = Qgw;
-
-            // update state details
-            new_state.Ss = state.Ss;
-            new_state.Sgw = state.Sgw - Qgw;
+            // Calculate GIUH surface runoff
+            fluxes.surface_runoff = giuh_obj->calc_giuh_output(dt, surface_runoff);
 
             return 0;
         }
