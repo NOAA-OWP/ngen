@@ -5,6 +5,7 @@
 #include "kernels/schaake_partitioning.hpp"
 #include "Nonlinear_Reservoir.hpp"
 #include "GIUH.hpp"
+#include "Pdm03.h"
 #include <cmath>
 #include <vector>
 
