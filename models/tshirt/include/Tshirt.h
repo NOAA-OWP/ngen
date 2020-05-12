@@ -20,12 +20,12 @@ namespace tshirt {
     {
         double maxsmc;              //!< saturated soil moisture content (sometimes theta_e)
         double wltsmc;              //!< wilting point soil moisture content
-        double satdk;               //!< saturated hydraulic conductivity [m s^-1] (sometimes Kperc)
+        double satdk;               //!< vertical saturated hydraulic conductivity [m s^-1] (sometimes Kperc or Ks)
         double satpsi;              //!< saturated capillary head [m]
         // TODO: explain more what this is
         double slope;               //!< SLOPE parameter
         double b;                   //!< 'b' exponent on Clapp-Hornberger soil water relations (sometime bexp)
-        double multiplier;          //!< the multiplier applied to 'satdk' to route water rapidly downslope in subsurface
+        double multiplier;          //!< the multiplier applied to 'satdk' to route water rapidly downslope in subsurface (sometimes 'mult' or 'LKSATFAC')
         double alpha_fc;            //!< alpha constant for given soil type for relative suction head value, with respect to Hatm
         double Klf;                 //!< lateral flow independent calibration parameter
         double Kn;                  //!< Nash cascade linear reservoir coefficient lateral flow parameter
@@ -195,9 +195,10 @@ namespace tshirt {
             int lf_outlet_index = 0;
             int perc_outlet_index = 1;
 
-            // TODO: these are likely not correct; figure out what values the max flow for the outlets should be
-            double max_lateral_flow = DBL_MAX;
-            double max_perc_flow = DBL_MAX;
+            // TODO: confirm these are correct
+            // Max transmissivity
+            double max_lateral_flow = params.satdk * params.multiplier * params.Ssmax;
+            double max_perc_flow = params.satdk;
 
             // init subsurface later flow outlet
             subsurface_outlets[lf_outlet_index] = Reservoir_Outlet(params.Klf, 1.0, Sfc, max_lateral_flow);
