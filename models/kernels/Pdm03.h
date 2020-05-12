@@ -1,5 +1,6 @@
-#ifndef PDM03_H_INCLUDED
-#define PDM03_H_INCLUDED
+
+#ifndef PDM03_H
+#define PDM03_H
 
 #include <cstdlib>
 
@@ -54,7 +55,7 @@ extern "C"
     %%=========================================================================
     */
 
-    void Pdm03(int modelDay, double Cpar, double B, double *XHuz, double Huz,
+    inline void Pdm03(int modelDay, double Cpar, double B, double *XHuz, double Huz,
               double *OV, double *AE, double *XCuz, double effPrecip, double PE, double Kv)
     {
       /* local variables */
@@ -94,7 +95,7 @@ extern "C"
 
     }
 
-    void pdm03_wrapper(pdm03_struct* pdm_data)
+    inline void pdm03_wrapper(pdm03_struct* pdm_data)
     {
         return Pdm03(pdm_data->modelDay,
         pdm_data->Cpar,
@@ -243,4 +244,4 @@ extern "C"
 }
 
 
-#endif // PDM03_H_INCLUDED
+#endif // PDM03_H
