@@ -231,7 +231,7 @@ namespace tshirt {
 
             // initialize the Nash cascade of nonlinear reservoirs
             std::vector<Nonlinear_Reservoir> nash_cascade;
-            init_nash_cascade_vector(nash_cascade);
+            init_nash_cascade_vector(nash_cascade, params, state);
 
             // cycle through lateral flow Nash cascade of nonlinear reservoirs
             // loop essentially copied from Hymod logic, but with different variable names
