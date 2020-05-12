@@ -112,11 +112,14 @@ namespace tshirt {
     {
     public:
 
-        //! stub function to simulate losses due to evapotransportation
+        //! function to simulate losses due to evapotransportation
         static double calc_et(double soil_m, void* et_params)
         {
-            // TODO: implement
-            return 0.0;
+            pdm03_struct* pdm = (pdm03_struct*) et_params;
+            pdm->XHuz = soil_m;
+            pdm03_wrapper(pdm);
+
+            return pdm->XHuz - soil_m;
         }
 
         //! Calculate the Cschaake, or the Schaake adjusted magic constant by soil type, based on the given Tshirt parameters
