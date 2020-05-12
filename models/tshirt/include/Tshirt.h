@@ -27,6 +27,7 @@ namespace tshirt {
         double alpha_fc;            //!< alpha constant for given soil type for relative suction head value, with respect to Hatm
         double Klf;                 //!< lateral flow independent calibration parameter
         double Kn;                  //!< Nash cascade linear reservoir coefficient lateral flow parameter
+        int nash_n;                 //!< number of nash cascades
         double Cgw;                 //!< Ground water flow param
         double expon;               //!< Ground water flow exponent param (analogous to NWM 2.0 expon param)
         double Ssmax;               //!< Subsurface soil water flow max storage param (calculated from maxsmc and depth)
@@ -38,7 +39,7 @@ namespace tshirt {
             Constructor for tshirt param objects.
         */
         tshirt_params(double maxsmc, double wltsmc, double satdk, double satpsi, double slope, double b,
-                double multiplier, double alpha_fc, double Klf, double Kn, double Cgw, double expon) :
+                double multiplier, double alpha_fc, double Klf, double Kn, int nash_n, double Cgw, double expon) :
                 maxsmc(maxsmc),
                 wltsmc(wltsmc),
                 satdk(satdk),
@@ -49,6 +50,7 @@ namespace tshirt {
                 alpha_fc(alpha_fc),
                 Klf(Klf),
                 Kn(Kn),
+                nash_n(nash_n),
                 Cgw(Cgw),
                 expon(expon)
         {
@@ -67,11 +69,12 @@ namespace tshirt {
         // TODO: confirm this is correct
         double Ss;           //!< current water storage in soil column nonlinear reservoir
         double Sgw;          //!< current water storage in ground water nonlinear reservoir
+        double* Snash;       //!< water storage in nonlinear reservoirs of Nash Cascade for lateral subsurface flow
 
         // I think this doesn't belong in state, and so is just in run() below
         //double column_total_soil_moisture_deficit;    //!< soil column total moisture deficit
 
-        tshirt_state(double ss, double sgw) : Ss(ss), Sgw(sgw) {}
+        tshirt_state(double ss, double sgw, double* nash_res_ptr = 0x0) : Ss(ss), Sgw(sgw), Snash(nash_res_ptr) {}
     };
 
     /*!
@@ -162,9 +165,15 @@ namespace tshirt {
                     (params.b * pow(z1, ((params.b - 1) / params.b)) / (params.b - 1)));
         }
 
-        static void init_nash_cascade_vector(vector<Nonlinear_Reservoir>& reservoirs)
+        static void init_nash_cascade_vector(vector<Nonlinear_Reservoir>& reservoirs, const tshirt_params& params, const tshirt_state& state)
         {
-            // TODO: implement appropriate initialization of Nash Cascade reservoirs for lateral flow calcs
+            reservoirs.resize(params.nash_n);
+            for ( unsigned long i = 0; i < reservoirs.size(); ++i )
+            {
+                //construct a single outlet nonlinear reservoir
+                // TODO: verify whether the b, activation_threshold, and max_velocity arg values are valid
+                reservoirs[i] = Nonlinear_Reservoir(0, params.Ssmax, state.Snash[i], params.Kn, 1, 0, 100);
+            }
         }
 
         //! run one time step of tshirt
