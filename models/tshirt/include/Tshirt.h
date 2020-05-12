@@ -156,14 +156,15 @@ namespace tshirt {
                     (params.b * pow(z1, ((params.b - 1) / params.b)) / (params.b - 1)));
         }
 
-        static void init_nash_cascade_vector(vector<Nonlinear_Reservoir>& reservoirs, const tshirt_params& params, const tshirt_state& state)
+        static void init_nash_cascade_vector(vector<Nonlinear_Reservoir>& reservoirs, const tshirt_params& params,
+                const tshirt_state& state, const double activation, const double max_flow_velocity)
         {
             reservoirs.resize(params.nash_n);
             for ( unsigned long i = 0; i < reservoirs.size(); ++i )
             {
                 //construct a single outlet nonlinear reservoir
-                // TODO: verify whether the b, activation_threshold, and max_velocity arg values are valid
-                reservoirs[i] = Nonlinear_Reservoir(0, params.Ssmax, state.Snash[i], params.Kn, 1, 0, 100);
+                reservoirs[i] = Nonlinear_Reservoir(0, params.Ssmax, state.Snash[i], params.Kn, 1, activation,
+                        max_flow_velocity);
             }
         }
 
@@ -221,7 +222,8 @@ namespace tshirt {
 
             // initialize the Nash cascade of nonlinear reservoirs
             std::vector<Nonlinear_Reservoir> nash_cascade;
-            init_nash_cascade_vector(nash_cascade, params, state);
+            // TODO: verify correctness of activation_threshold (Sfc) and max_velocity (max_lateral_flow) arg values
+            init_nash_cascade_vector(nash_cascade, params, state, Sfc, max_lateral_flow);
 
             // cycle through lateral flow Nash cascade of nonlinear reservoirs
             // loop essentially copied from Hymod logic, but with different variable names
