@@ -35,6 +35,7 @@ namespace tshirt {
         double Kn;                  //!< Nash cascade linear reservoir coefficient lateral flow parameter
         int nash_n;                 //!< number of nash cascades
         double Cgw;                 //!< Ground water flow param
+        double Cschaake;            //!< The Schaake adjusted magic constant by soil type
         double expon;               //!< Ground water flow exponent param (analogous to NWM 2.0 expon param)
         double max_soil_storage_meters;  //!< Subsurface soil water flow max storage param ("Ssmax"), calculated from maxsmc and depth
         double max_groundwater_storage_meters;    //!< Ground water flow max storage param ("Sgwmax"; analogous to NWM 2.0 zmax param)
@@ -63,6 +64,7 @@ namespace tshirt {
                 max_groundwater_storage_meters(max_gw_storage)
         {
             this->max_soil_storage_meters = this->depth * this->maxsmc;
+            this->Cschaake = 3.0 * satdk / (2.0e-6);
         }
 
     };
@@ -135,12 +137,6 @@ namespace tshirt {
             return pdm->XHuz - soil_m;
         }
 
-        //! Calculate the Cschaake, or the Schaake adjusted magic constant by soil type, based on the given Tshirt parameters
-        static double calc_Cschaake(const tshirt_params& params)
-        {
-            return 3.0 * params.satdk / (2.0e-6);
-        }
-
         static double calc_Sfc(const tshirt_params& params, const tshirt_state& state)
         {
             // Calculate the suction head above water table (Hwt)
@@ -185,7 +181,7 @@ namespace tshirt {
             // Note this surface runoff value has not yet performed GIUH calculations
             double surface_runoff, subsurface_infiltration_flux;
 
-            Schaake_partitioning_scheme(dt, calc_Cschaake(params), column_total_soil_moisture_deficit, input_flux_meters,
+            Schaake_partitioning_scheme(dt, params.Cschaake, column_total_soil_moisture_deficit, input_flux_meters,
                     &surface_runoff, &subsurface_infiltration_flux);
 
             double Sfc = calc_Sfc(params, state);
