@@ -58,8 +58,6 @@ class Reservoir_Outlet
      */
     double velocity_meters_per_second(reservoir_parameters &parameters_struct, reservoir_state &storage_struct)
     {
-        double velocity_meters_per_second_local;
-
         //Return velocity of 0.0 if the storage passed in is less than the activation threshold
         if (storage_struct.current_storage_height_meters <= activation_threshold_meters)
             return 0.0;  
@@ -81,6 +79,14 @@ class Reservoir_Outlet
         return velocity_meters_per_second_local;
     };
 
+    /**
+     * @brief Accessor to return velocity_meters_per_second_local that is previously calculated
+     * @return velocity_meters_per_second_local
+     */
+    double get_previously_calculated_velocity_meters_per_second()
+    {
+        return velocity_meters_per_second_local;
+    };
 
     /**
      * @brief Accessor to return activation_threshold_meters
@@ -96,6 +102,7 @@ class Reservoir_Outlet
     double b;
     double activation_threshold_meters;
     double max_velocity_meters_per_second;
+    double velocity_meters_per_second_local;
 };
 
 
@@ -250,6 +257,20 @@ class Nonlinear_Reservoir
     double get_storage_height_meters()
     {
         return state.current_storage_height_meters;
+    }
+
+    /*!
+     * Return velocity in meters per second of discharge through the specified outlet.
+     *
+     * Essentially a wrapper for {@link Reservoir_Outlet#velocity_meters_per_second}, where the args for that come from
+     * the reservoir anyway.
+     *
+     * @param outlet_index The index of the desired outlet in this instance's vector of outlets
+     * @return
+     */
+    double velocity_meters_per_second_for_outlet(int outlet_index)
+    {
+        return this->outlets[outlet_index].get_previously_calculated_velocity_meters_per_second();
     }
 
     /**
