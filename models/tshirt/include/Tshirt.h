@@ -139,25 +139,13 @@ namespace tshirt {
             return 3.0 * params.satdk / (2.0e-6);
         }
 
-        /*!
-         * Calculate the height above water table based on the given Tshirt parameters
-         *
-         * Calculate the height above water table based on known constants and the particular `alpha` value given for
-         * relative soil suction head, as provided in the Tshirt parameters.
-         *
-         * @param params
-         * @return
-         */
-        static double calc_Hwt(const tshirt_params& params)
-        {
-            // H_wt = alpha_fc * H_atm ; H_atm = P_atm / gamma ; P_atm = 101,300 [Pa] ; gamma = 9,810 [N m^-3] ('very nearly')
-            return params.alpha_fc * (ATMOSPHERIC_PRESSURE_PASCALS / WATER_SPECIFIC_WEIGHT);
-        }
-
         static double calc_Sfc(const tshirt_params& params, const tshirt_state& state)
         {
-            // TODO: account for possiblity of Hwt being less than 0.5 (though initially, it looks like this will never be the case)
-            double z1 = calc_Hwt(params) - 0.5;
+            // Calculate the suction head above water table (Hwt)
+            double head_above_water_table = params.alpha_fc * (ATMOSPHERIC_PRESSURE_PASCALS / WATER_SPECIFIC_WEIGHT);
+            // TODO: account for possibility of Hwt being less than 0.5 (though initially, it looks like this will never be the case)
+
+            double z1 = head_above_water_table - 0.5;
             double z2 = z1 + 2;
 
             // Note that z^( 1 - (1/b) ) / (1 - (1/b)) == b * (z^( (b - 1) / b ) / (b - 1)
