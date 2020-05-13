@@ -90,8 +90,9 @@ namespace tshirt {
         double Qgw;             //!< Groundwater flow from groundwater reservoir to channel flow
         double Qperc;           //!< Percolation flow from subsurface to groundwater reservoir
         double Qlf;             //!< Lateral subsurface flow
+        double et_loss;             //!< Loss from ET
 
-        tshirt_fluxes(double q_gw, double q_perc, double q_lf, double runoff ) : Qgw(q_gw), Qperc(q_perc), Qlf(q_lf), surface_runoff(runoff)
+        tshirt_fluxes(double q_gw, double q_perc, double q_lf, double runoff, double et_loss) : Qgw(q_gw), Qperc(q_perc), Qlf(q_lf), surface_runoff(runoff), et_loss(et_loss)
         {
 
         }
@@ -218,8 +219,9 @@ namespace tshirt {
             double Qperc = subsurface_reservoir.velocity_meters_per_second_for_outlet(perc_outlet_index);
 
             // TODO: make sure ET doesn't need to be taken out sooner
-            new_state.Ss = subsurface_reservoir.get_storage_height_meters() -
-                           calc_et(subsurface_reservoir.get_storage_height_meters(), et_params);
+            double new_Ss = subsurface_reservoir.get_storage_height_meters();
+            fluxes.et_loss = calc_et(new_Ss, et_params);
+            new_state.Ss = new_Ss - fluxes.et_loss;
 
             // initialize the Nash cascade of nonlinear reservoirs
             std::vector<Nonlinear_Reservoir> nash_cascade;
