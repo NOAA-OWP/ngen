@@ -45,7 +45,8 @@ namespace tshirt {
             Constructor for tshirt param objects.
         */
         tshirt_params(double maxsmc, double wltsmc, double satdk, double satpsi, double slope, double b,
-                double multiplier, double alpha_fc, double Klf, double Kn, int nash_n, double Cgw, double expon) :
+                double multiplier, double alpha_fc, double Klf, double Kn, int nash_n, double Cgw, double expon,
+                double max_gw_storage) :
                 maxsmc(maxsmc),
                 wltsmc(wltsmc),
                 satdk(satdk),
@@ -58,7 +59,8 @@ namespace tshirt {
                 Kn(Kn),
                 nash_n(nash_n),
                 Cgw(Cgw),
-                expon(expon)
+                expon(expon),
+                max_groundwater_storage_meters(max_gw_storage)
         {
             this->max_soil_storage_meters = this->depth * this->maxsmc;
         }
