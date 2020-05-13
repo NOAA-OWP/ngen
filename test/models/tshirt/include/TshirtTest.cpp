@@ -37,7 +37,7 @@ TEST_F(TshirtKernelTest, TestRun0)
 
     double et_storage = 0.0;
 
-    tshirt::tshirt_params params{1000.0, 1.0, 10.0, 0.1, 0.01, 3, 1.0, 1.0, 1.0, 1.0, 8, 1.0, 1.0};
+    tshirt::tshirt_params params{1000.0, 1.0, 10.0, 0.1, 0.01, 3, 1.0, 1.0, 1.0, 1.0, 8, 1.0, 1.0, 100.0};
     double storage = 1.0;
 
     tshirt::tshirt_state state(1.0, 1.0);
