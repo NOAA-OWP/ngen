@@ -7,10 +7,7 @@ namespace giuh {
         // TODO: create more complete class definition and implementation
 
     public:
-        double calc_giuh_output(double dt, double direct_runoff) {
-            // TODO: implement to actually performs some real calculations
-            return direct_runoff;
-        }
+        virtual double calc_giuh_output(double dt, double direct_runoff);
 
     };
 }
