@@ -35,6 +35,7 @@ namespace tshirt {
         double expon;               //!< Ground water flow exponent param (analogous to NWM 2.0 expon param)
         double max_soil_storage_meters;  //!< Subsurface soil water flow max storage param ("Ssmax"), calculated from maxsmc and depth
         double max_groundwater_storage_meters;    //!< Ground water flow max storage param ("Sgwmax"; analogous to NWM 2.0 zmax param)
+        double max_lateral_flow;    //!< Max rate for subsurface lateral flow (i.e., max transmissivity)
         const double depth = 2.0;         //!< Total soil column depth ('D') [m]
 
         //! Constructor for tshirt parameters
@@ -58,8 +59,9 @@ namespace tshirt {
                 Cgw(Cgw),
                 expon(expon),
                 max_groundwater_storage_meters(max_gw_storage) {
-            this->max_soil_storage_meters = this->depth * this->maxsmc;
+            this->max_soil_storage_meters = this->depth * maxsmc;
             this->Cschaake = 3.0 * satdk / (2.0e-6);
+            this->max_lateral_flow = satdk * multiplier * this->max_soil_storage_meters;
         }
 
     };
@@ -182,16 +184,12 @@ namespace tshirt {
             int lf_outlet_index = 0;
             int perc_outlet_index = 1;
 
-            // TODO: confirm these are correct
-            // Max transmissivity
-            double max_lateral_flow = params.satdk * params.multiplier * params.max_soil_storage_meters;
-            double max_perc_flow = params.satdk;
-
             // init subsurface later flow outlet
-            subsurface_outlets[lf_outlet_index] = Reservoir_Outlet(params.Klf, 1.0, Sfc, max_lateral_flow);
+            subsurface_outlets[lf_outlet_index] = Reservoir_Outlet(params.Klf, 1.0, Sfc, params.max_lateral_flow);
             // init subsurface percolation flow outlet
+            // The max perc flow should be equal to the params.satdk value
             subsurface_outlets[perc_outlet_index] = Reservoir_Outlet(params.satdk * params.slope, 1.0, Sfc,
-                                                                     max_perc_flow);
+                                                                     params.satdk);
 
             Nonlinear_Reservoir subsurface_reservoir(0.0, params.depth, state.soil_storage_meters, subsurface_outlets);
 
@@ -212,7 +210,7 @@ namespace tshirt {
             // initialize the Nash cascade of nonlinear reservoirs
             std::vector<Nonlinear_Reservoir> nash_cascade;
             // TODO: verify correctness of activation_threshold (Sfc) and max_velocity (max_lateral_flow) arg values
-            init_nash_cascade_vector(nash_cascade, params, state, Sfc, max_lateral_flow);
+            init_nash_cascade_vector(nash_cascade, params, state, Sfc, params.max_lateral_flow);
 
             // cycle through lateral flow Nash cascade of nonlinear reservoirs
             // loop essentially copied from Hymod logic, but with different variable names
