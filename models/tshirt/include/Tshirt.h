@@ -90,10 +90,13 @@ namespace tshirt {
         double Qgw;             //!< Groundwater flow from groundwater reservoir to channel flow
         double Qperc;           //!< Percolation flow from subsurface to groundwater reservoir
         double Qlf;             //!< Lateral subsurface flow
-        double et_loss;             //!< Loss from ET
+        double et_loss;         //!< Loss from ET
 
-        tshirt_fluxes(double q_gw, double q_perc, double q_lf, double runoff, double et_loss) : Qgw(q_gw), Qperc(q_perc), Qlf(q_lf), surface_runoff(runoff), et_loss(et_loss)
-        {
+        tshirt_fluxes(double q_gw, double q_perc, double q_lf, double runoff, double et_loss) : Qgw(q_gw),
+                                                                                                Qperc(q_perc),
+                                                                                                Qlf(q_lf),
+                                                                                                surface_runoff(runoff),
+                                                                                                et_loss(et_loss) {
 
         }
     };
