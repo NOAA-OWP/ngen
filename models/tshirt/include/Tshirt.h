@@ -2,6 +2,10 @@
 #ifndef TSHIRT_H
 #define TSHIRT_H
 
+#define ATMOSPHERIC_PRESSURE_PASCALS 101325
+// Units for water specific weight value: Newtons / meters^3
+#define WATER_SPECIFIC_WEIGHT 9810
+
 #include "kernels/schaake_partitioning.hpp"
 #include "Nonlinear_Reservoir.hpp"
 #include "GIUH.hpp"
@@ -147,7 +151,7 @@ namespace tshirt {
         static double calc_Hwt(const tshirt_params& params)
         {
             // H_wt = alpha_fc * H_atm ; H_atm = P_atm / gamma ; P_atm = 101,300 [Pa] ; gamma = 9,810 [N m^-3] ('very nearly')
-            return params.alpha_fc * (101300 / 9810);
+            return params.alpha_fc * (ATMOSPHERIC_PRESSURE_PASCALS / WATER_SPECIFIC_WEIGHT);
         }
 
         static double calc_Sfc(const tshirt_params& params, const tshirt_state& state)
