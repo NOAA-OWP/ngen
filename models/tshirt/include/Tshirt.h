@@ -2,11 +2,8 @@
 #ifndef TSHIRT_H
 #define TSHIRT_H
 
-#define ATMOSPHERIC_PRESSURE_PASCALS 101325
-// Units for water specific weight value: Newtons / meters^3
-#define WATER_SPECIFIC_WEIGHT 9810
-
 #include "kernels/schaake_partitioning.hpp"
+#include "Constants.h"
 #include "Nonlinear_Reservoir.hpp"
 #include "GIUH.hpp"
 #include "Pdm03.h"
