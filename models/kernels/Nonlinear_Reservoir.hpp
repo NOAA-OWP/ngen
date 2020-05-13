@@ -28,34 +28,6 @@ class Reservoir_Outlet
 {
     public:
 
-    /**
-     * @brief Default Constructor building an empty Reservoir Oulet Object
-     */
-    Reservoir_Outlet(): a(0.0), b(0.0), activation_threshold_meters(0.0), max_velocity_meters_per_second(0.0)
-    {
-		
-    }	
-
-    /**
-     * @brief Parameterized Constuctor that builds a Reservoir Oulet object
-     * @param a outlet velocity calculation coefficient
-     * @param b outlet velocity calculation exponent
-     * @param activation_threshold_meters meters from the bottom of the reservoir to the bottom of the outlet
-     * @param max_velocity_meters_per_second max outlet velocity in meters per second
-     */
-    Reservoir_Outlet(double a, double b, double activation_threshold_meters, double max_velocity_meters_per_second): a(a), b(b), activation_threshold_meters(activation_threshold_meters), max_velocity_meters_per_second(max_velocity_meters_per_second)
-    {
-
-    }    
-  
-    /**
-     * @brief Function to return the velocity in meters per second of the discharge through the outlet
-     * @param parameters_struct reservoir parameters struct
-     * @param storage_struct reservoir state storage struct
-     * @param activation_threshold_meters meters from the bottom of the reservoir to the bottom of the outlet
-     * @param max_velocity_meters_per_second max outlet velocity in meters per second
-     * @return velocity_meters_per_second_local the velocity in meters per second of the discharge through the outlet
-     */
     double velocity_meters_per_second(reservoir_parameters &parameters_struct, reservoir_state &storage_struct)
     {
         //Return velocity of 0.0 if the storage passed in is less than the activation threshold
@@ -97,14 +69,52 @@ class Reservoir_Outlet
         return activation_threshold_meters;
     };
 
-    private:
-    double a;
-    double b;
+    protected:
+    //double a;
+    //double b;
     double activation_threshold_meters;
     double max_velocity_meters_per_second;
     double velocity_meters_per_second_local;
 };
 
+
+class Standard_Reservoir_Outlet: public Reservoir_Outlet 
+{
+    public:
+
+    /**
+     * @brief Default Constructor building an empty Reservoir Outlet Object
+     */
+    Standard_Reservoir_Outlet(): a(0.0), b(0.0), activation_threshold_meters(0.0), max_velocity_meters_per_second(0.0)
+    {
+		
+    }	
+
+    /**
+     * @brief Parameterized Constuctor that builds a Reservoir Oulet object
+     * @param a outlet velocity calculation coefficient
+     * @param b outlet velocity calculation exponent
+     * @param activation_threshold_meters meters from the bottom of the reservoir to the bottom of the outlet
+     * @param max_velocity_meters_per_second max outlet velocity in meters per second
+     */
+    Standard_Reservoir_Outlet(double a, double b, double activation_threshold_meters, double max_velocity_meters_per_second): a(a), b(b), activation_threshold_meters(activation_threshold_meters), max_velocity_meters_per_second(max_velocity_meters_per_second)
+    {
+
+    }    
+  
+    /**
+     * @brief Function to return the velocity in meters per second of the discharge through the outlet
+     * @param parameters_struct reservoir parameters struct
+     * @param storage_struct reservoir state storage struct
+     * @param activation_threshold_meters meters from the bottom of the reservoir to the bottom of the outlet
+     * @param max_velocity_meters_per_second max outlet velocity in meters per second
+     * @return velocity_meters_per_second_local the velocity in meters per second of the discharge through the outlet
+     */
+
+    private:
+    double a;
+    double b;
+};
 
 /**
  * @brief Nonlinear Reservoir that has zero, one, or multiple outlets.
