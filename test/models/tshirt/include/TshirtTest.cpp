@@ -44,7 +44,7 @@ TEST_F(TshirtKernelTest, TestRun0)
 
     tshirt::tshirt_state new_state(0.0, 0.0);
 
-    tshirt::tshirt_fluxes fluxes(0.0, 0.0, 0.0, 0.0);
+    tshirt::tshirt_fluxes fluxes(0.0, 0.0, 0.0, 0.0, 0.0);
     double input_flux = 1.0;
 
     giuh_kernel giuh_obj = giuh_kernel();
