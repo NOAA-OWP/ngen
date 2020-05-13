@@ -121,8 +121,14 @@ namespace tshirt {
     class tshirt_kernel {
     public:
 
-        //! function to simulate losses due to evapotransportation
-        static double calc_et(double soil_m, void *et_params) {
+        /**
+         * Calculate losses due to evapotranspiration.
+         *
+         * @param soil_m
+         * @param et_params
+         * @return
+         */
+        static double calc_evapotranspiration(double soil_m, void *et_params) {
             pdm03_struct *pdm = (pdm03_struct *) et_params;
             pdm->XHuz = soil_m;
             pdm03_wrapper(pdm);
@@ -130,7 +136,14 @@ namespace tshirt {
             return pdm->XHuz - soil_m;
         }
 
-        static double calc_Sfc(const tshirt_params &params, const tshirt_state &state) {
+        /**
+         * Calculate soil field capacity storage, the level at which free drainage stops (i.e., "Sfc").
+         *
+         * @param params
+         * @param state
+         * @return
+         */
+        static double calc_soil_field_capacity_storage(const tshirt_params &params, const tshirt_state &state) {
             // Calculate the suction head above water table (Hwt)
             double head_above_water_table = params.alpha_fc * (ATMOSPHERIC_PRESSURE_PASCALS / WATER_SPECIFIC_WEIGHT);
             // TODO: account for possibility of Hwt being less than 0.5 (though initially, it looks like this will never be the case)
@@ -176,7 +189,7 @@ namespace tshirt {
             Schaake_partitioning_scheme(dt, params.Cschaake, column_total_soil_moisture_deficit, input_flux_meters,
                                         &surface_runoff, &subsurface_infiltration_flux);
 
-            double Sfc = calc_Sfc(params, state);
+            double Sfc = calc_soil_field_capacity_storage(params, state);
 
             vector<Reservoir_Outlet> subsurface_outlets;
 
@@ -204,7 +217,7 @@ namespace tshirt {
 
             // TODO: make sure ET doesn't need to be taken out sooner
             double new_soil_storage = subsurface_reservoir.get_storage_height_meters();
-            fluxes.et_loss_meters = calc_et(new_soil_storage, et_params);
+            fluxes.et_loss_meters = calc_evapotranspiration(new_soil_storage, et_params);
             new_state.soil_storage_meters = new_soil_storage - fluxes.et_loss_meters;
 
             // initialize the Nash cascade of nonlinear reservoirs
