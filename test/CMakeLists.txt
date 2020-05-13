@@ -2,6 +2,7 @@ project(test)
 
 add_subdirectory(googletest)
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
+include_directories(${PROJ_ROOT_INCLUDE_DIR})
 
 # Add test source files (e.g., test1.cpp)
 #add_executable(test_hymod models/hymod/include/HymodTest.cpp)
@@ -67,6 +68,7 @@ add_automated_test(
         geojson/JSONGeometry_Test.cpp
         geojson/Feature_Test.cpp
         geojson/FeatureCollection_Test.cpp
+        forcing/Forcing_Test.cpp      
 )
 
 # Add for integration tests once we have some
@@ -81,4 +83,5 @@ add_automated_test_w_mock(
     geojson/JSONGeometry_Test.cpp
     geojson/Feature_Test.cpp
     geojson/FeatureCollection_Test.cpp
+    forcing/Forcing_Test.cpp
 )
