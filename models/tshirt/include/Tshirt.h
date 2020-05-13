@@ -5,7 +5,7 @@
 #include "schaake_partitioning.hpp"
 #include "Constants.h"
 #include "Nonlinear_Reservoir.hpp"
-#include "GIUH.hpp"
+#include "catchment/giuh/GIUH.hpp"
 #include "Pdm03.h"
 #include <cmath>
 #include <utility>
