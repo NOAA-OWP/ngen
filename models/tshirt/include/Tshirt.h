@@ -69,14 +69,16 @@ namespace tshirt {
     struct tshirt_state
     {
         // TODO: confirm this is correct
-        double Ss;           //!< current water storage in soil column nonlinear reservoir
-        double Sgw;          //!< current water storage in ground water nonlinear reservoir
-        double* Snash;       //!< water storage in nonlinear reservoirs of Nash Cascade for lateral subsurface flow
+        double soil_storage_meters;              //!< current water storage in soil column nonlinear reservoir ("Ss")
+        double groundwater_storage_meters;       //!< current water storage in ground water nonlinear reservoir ("Sgw")
+        double* nash_cascade_storeage_meters;    //!< water storage in nonlinear reservoirs of Nash Cascade for lateral subsurface flow
 
         // I think this doesn't belong in state, and so is just in run() below
         //double column_total_soil_moisture_deficit;    //!< soil column total moisture deficit
 
-        tshirt_state(double ss, double sgw, double* nash_res_ptr = 0x0) : Ss(ss), Sgw(sgw), Snash(nash_res_ptr) {}
+        tshirt_state(double ss, double sgw, double *nash_res_ptr = 0x0) : soil_storage_meters(ss),
+                                                                          groundwater_storage_meters(sgw),
+                                                                          nash_cascade_storeage_meters(nash_res_ptr) {}
     };
 
     /*!
@@ -167,8 +169,8 @@ namespace tshirt {
             for ( unsigned long i = 0; i < reservoirs.size(); ++i )
             {
                 //construct a single outlet nonlinear reservoir
-                reservoirs[i] = Nonlinear_Reservoir(0, params.Ssmax, state.Snash[i], params.Kn, 1, activation,
-                        max_flow_velocity);
+                reservoirs[i] = Nonlinear_Reservoir(0, params.Ssmax, state.nash_cascade_storeage_meters[i], params.Kn, 1, activation,
+                                                    max_flow_velocity);
             }
         }
 
@@ -184,7 +186,7 @@ namespace tshirt {
                 giuh_kernel* giuh_obj,       //!< kernel object for calculating GIUH runoff from subsurface lateral flow
                 void* et_params)            //!< parameters for the et function
         {
-            double column_total_soil_moisture_deficit = params.Ssmax - state.Ss;
+            double column_total_soil_moisture_deficit = params.Ssmax - state.soil_storage_meters;
 
             // Note this surface runoff value has not yet performed GIUH calculations
             double surface_runoff, subsurface_infiltration_flux;
@@ -210,7 +212,7 @@ namespace tshirt {
             // init subsurface percolation flow outlet
             subsurface_outlets[perc_outlet_index] = Reservoir_Outlet(params.satdk * params.slope, 1.0, Sfc, max_perc_flow);
 
-            Nonlinear_Reservoir subsurface_reservoir(0.0, params.depth, state.Ss, subsurface_outlets);
+            Nonlinear_Reservoir subsurface_reservoir(0.0, params.depth, state.soil_storage_meters, subsurface_outlets);
 
             double subsurface_excess;
             subsurface_reservoir.response_meters_per_second(subsurface_infiltration_flux, dt, subsurface_excess);
@@ -222,9 +224,9 @@ namespace tshirt {
             double Qperc = subsurface_reservoir.velocity_meters_per_second_for_outlet(perc_outlet_index);
 
             // TODO: make sure ET doesn't need to be taken out sooner
-            double new_Ss = subsurface_reservoir.get_storage_height_meters();
-            fluxes.et_loss = calc_et(new_Ss, et_params);
-            new_state.Ss = new_Ss - fluxes.et_loss;
+            double new_soil_storage = subsurface_reservoir.get_storage_height_meters();
+            fluxes.et_loss = calc_et(new_soil_storage, et_params);
+            new_state.soil_storage_meters = new_soil_storage - fluxes.et_loss;
 
             // initialize the Nash cascade of nonlinear reservoirs
             std::vector<Nonlinear_Reservoir> nash_cascade;
@@ -242,20 +244,20 @@ namespace tshirt {
             }
 
             // "raw" GW calculations
-            //state.Sgw += Qperc * dt;
-            //double Qgw = params.Cgw * ( exp(params.expon * state.Sgw / params.Sgwmax) - 1 );
+            //state.groundwater_storage_meters += Qperc * dt;
+            //double Qgw = params.Cgw * ( exp(params.expon * state.groundwater_storage_meters / params.Sgwmax) - 1 );
 
             // Given the equation:
-            //      double Qgw = params.Cgw * ( exp(params.expon * state.Sgw / params.Sgwmax) - 1 );
-            // The max value should be when Sgw == Sgwmax, or ...
+            //      double Qgw = params.Cgw * ( exp(params.expon * state.groundwater_storage_meters / params.Sgwmax) - 1 );
+            // The max value should be when groundwater_storage_meters == Sgwmax, or ...
             double max_gw_velocity = params.Cgw * ( exp(params.expon) - 1 );
             // TODO: verify activation threshold
-            Nonlinear_Reservoir groundwater_res(0, params.Sgwmax, state.Sgw, params.Cgw, 1, 0, max_gw_velocity);
+            Nonlinear_Reservoir groundwater_res(0, params.Sgwmax, state.groundwater_storage_meters, params.Cgw, 1, 0, max_gw_velocity);
             // TODO: what needs to be done with this value?
             double excess_gw_water;
             fluxes.Qgw = groundwater_res.response_meters_per_second(Qperc, dt, excess_gw_water);
             // update state
-            new_state.Sgw = groundwater_res.get_storage_height_meters();
+            new_state.groundwater_storage_meters = groundwater_res.get_storage_height_meters();
 
             // record other fluxes
             fluxes.Qlf = Qlf;
