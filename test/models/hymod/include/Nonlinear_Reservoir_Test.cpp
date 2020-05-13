@@ -280,3 +280,24 @@ TEST_F(NonlinearReservoirKernelTest, TestRunMultipleOutletOutOfOrderNonlinearRes
     ASSERT_TRUE(true);
 }
 
+//Test Nonlinear Reservoir with multiple outlets accessor to an outlet velocity
+TEST_F(NonlinearReservoirKernelTest, TestRunMultipleOutletReservoirOutletVelocity) 
+{    
+    double in_flux_meters_per_second;
+    double excess;
+    double final_storage;
+    double second_outlet_velocity;
+
+    in_flux_meters_per_second = 1.6;
+
+    MultipleOutletReservoir->response_meters_per_second(in_flux_meters_per_second, 10, excess);
+
+    second_outlet_velocity = MultipleOutletReservoir->velocity_meters_per_second_for_outlet(1);
+
+    second_outlet_velocity = round( second_outlet_velocity * 100.0 ) / 100.0;
+
+    EXPECT_DOUBLE_EQ (0.23, second_outlet_velocity);
+    
+    ASSERT_TRUE(true);
+}
+
