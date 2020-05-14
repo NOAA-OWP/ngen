@@ -51,7 +51,7 @@ class Forcing
         read_forcing(forcing_file_name);
 
         //Initialize forcing vector index to 0;
-        *forcing_vector_index_ptr = 0;
+        forcing_vector_index_ptr = 0;
     }
 
 
@@ -63,7 +63,7 @@ class Forcing
      */
     double get_current_hourly_precipitation_meters_per_second()
     { 
-        return precipitation_meters_per_second_vector[*forcing_vector_index_ptr];
+        return precipitation_meters_per_second_vector[forcing_vector_index_ptr];
     }
 
     /**
@@ -76,7 +76,7 @@ class Forcing
     double get_next_hourly_precipitation_meters_per_second()
     {
         //Increment forcing index
-        *forcing_vector_index_ptr = *forcing_vector_index_ptr + 1;
+        forcing_vector_index_ptr = forcing_vector_index_ptr + 1;
 
         //Increment current time by 1 hour
         current_date_time_epoch = current_date_time_epoch + 3600;
@@ -171,7 +171,7 @@ class Forcing
 
 
     vector<double> precipitation_meters_per_second_vector;
-    int *forcing_vector_index_ptr = new int; 
+    int forcing_vector_index_ptr; 
     double precipitation_rate_meters_per_second;
     double air_temperature_fahrenheit;
     int basin_id;
