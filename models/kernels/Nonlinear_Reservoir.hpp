@@ -18,7 +18,7 @@ struct reservoir_state
 
 
 /**
- * @brief Single Reservior Outlet
+ * @brief Abstract Base Single Reservior Outlet Class
  * This class is for a single reservior outlet that holds the parameters a, b, and the activation threhold, which is
  * the height in meters the bottom of the outlet is above the bottom of the reservoir. This class also contains a 
  * function to return the velocity in meters per second of the discharge through the outlet. This function will only
@@ -28,28 +28,32 @@ class Reservoir_Outlet
 {
     public:
 
-    double velocity_meters_per_second(reservoir_parameters &parameters_struct, reservoir_state &storage_struct)
+    /**
+     * @brief Default Constructor building an empty Reservoir Outlet Object
+     */
+    Reservoir_Outlet(): activation_threshold_meters(0.0), max_velocity_meters_per_second(0.0)
     {
-        //Return velocity of 0.0 if the storage passed in is less than the activation threshold
-        if (storage_struct.current_storage_height_meters <= activation_threshold_meters)
-            return 0.0;  
-	
-        //Calculate the velocity in meters per second of the discharge through the outlet 
-        velocity_meters_per_second_local = a * std::pow((storage_struct.current_storage_height_meters - activation_threshold_meters)
-                                     / (parameters_struct.maximum_storage_meters - activation_threshold_meters), b);
+		
+    }	
 
-        //If calculated oulet velocity is greater than max velocity, then set to max velocity and return a warning.
-        if (velocity_meters_per_second_local > max_velocity_meters_per_second)
-        {
-            velocity_meters_per_second_local = max_velocity_meters_per_second;
+    /**
+     * @brief Parameterized Constuctor that builds a Reservoir Oulet object
+     * @param a outlet velocity calculation coefficient
+     * @param b outlet velocity calculation exponent
+     * @param activation_threshold_meters meters from the bottom of the reservoir to the bottom of the outlet
+     * @param max_velocity_meters_per_second max outlet velocity in meters per second
+     */
+    Reservoir_Outlet(double activation_threshold_meters, double max_velocity_meters_per_second): activation_threshold_meters(activation_threshold_meters), max_velocity_meters_per_second(max_velocity_meters_per_second)
+    {
 
-            /// \todo TODO: Return appropriate warning
-            cout << "WARNING: Nonlinear reservoir calculated an outlet velocity over max velocity, and therefore set the outlet velocity to max velocity." << endl;
-        }
+    }    
+  
 
-        //Return the velocity in meters per second of the discharge through the outlet   
-        return velocity_meters_per_second_local;
+    virtual double velocity_meters_per_second(reservoir_parameters &parameters_struct, reservoir_state &storage_struct)
+    {
+        return 0; //expected to be overloaded
     };
+
 
     /**
      * @brief Accessor to return velocity_meters_per_second_local that is previously calculated
@@ -85,7 +89,7 @@ class Standard_Reservoir_Outlet: public Reservoir_Outlet
     /**
      * @brief Default Constructor building an empty Reservoir Outlet Object
      */
-    Standard_Reservoir_Outlet(): a(0.0), b(0.0), activation_threshold_meters(0.0), max_velocity_meters_per_second(0.0)
+    Standard_Reservoir_Outlet(): a(0.0), b(0.0), Reservoir_Outlet(activation_threshold_meters, max_velocity_meters_per_second)
     {
 		
     }	
@@ -97,11 +101,15 @@ class Standard_Reservoir_Outlet: public Reservoir_Outlet
      * @param activation_threshold_meters meters from the bottom of the reservoir to the bottom of the outlet
      * @param max_velocity_meters_per_second max outlet velocity in meters per second
      */
-    Standard_Reservoir_Outlet(double a, double b, double activation_threshold_meters, double max_velocity_meters_per_second): a(a), b(b), activation_threshold_meters(activation_threshold_meters), max_velocity_meters_per_second(max_velocity_meters_per_second)
+    Standard_Reservoir_Outlet(double a, double b, double activation_threshold_meters, double max_velocity_meters_per_second): a(a), b(b), Reservoir_Outlet(activation_threshold_meters, max_velocity_meters_per_second) 
     {
 
     }    
-  
+/*    Standard_Reservoir_Outlet(double a, double b, double activation_threshold_meters, double max_velocity_meters_per_second): a(a), b(b), activation_threshold_meters(activation_threshold_meters), max_velocity_meters_per_second(max_velocity_meters_per_second)
+    {
+
+    }    
+*/  
     /**
      * @brief Function to return the velocity in meters per second of the discharge through the outlet
      * @param parameters_struct reservoir parameters struct
@@ -110,6 +118,29 @@ class Standard_Reservoir_Outlet: public Reservoir_Outlet
      * @param max_velocity_meters_per_second max outlet velocity in meters per second
      * @return velocity_meters_per_second_local the velocity in meters per second of the discharge through the outlet
      */
+    double velocity_meters_per_second(reservoir_parameters &parameters_struct, reservoir_state &storage_struct)
+    {
+        //Return velocity of 0.0 if the storage passed in is less than the activation threshold
+        if (storage_struct.current_storage_height_meters <= activation_threshold_meters)
+            return 0.0;  
+	
+        //Calculate the velocity in meters per second of the discharge through the outlet 
+        velocity_meters_per_second_local = a * std::pow((storage_struct.current_storage_height_meters - activation_threshold_meters)
+                                     / (parameters_struct.maximum_storage_meters - activation_threshold_meters), b);
+
+        //If calculated oulet velocity is greater than max velocity, then set to max velocity and return a warning.
+        if (velocity_meters_per_second_local > max_velocity_meters_per_second)
+        {
+            velocity_meters_per_second_local = max_velocity_meters_per_second;
+
+            /// \todo TODO: Return appropriate warning
+            cout << "WARNING: Nonlinear reservoir calculated an outlet velocity over max velocity, and therefore set the outlet velocity to max velocity." << endl;
+        }
+
+        //Return the velocity in meters per second of the discharge through the outlet   
+        return velocity_meters_per_second_local;
+    };
+
 
     private:
     double a;
