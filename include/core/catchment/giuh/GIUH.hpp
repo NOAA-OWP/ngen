@@ -2,6 +2,7 @@
 #define NGEN_GIUH_H
 
 #include <string>
+#include <utility>
 #include <vector>
 
 namespace giuh {
@@ -20,16 +21,16 @@ namespace giuh {
                 vector<double> cdf_cumulative_freqs
                 )
         {
-            this->catchment_id = catchment_id;
-            this->cdf_times = cdf_times;
+            this->catchment_id = std::move(catchment_id);
+            this->cdf_times = std::move(cdf_times);
             // TODO: might be able to get this by calculating from times, rather than being passed
-            this->cdf_cumulative_freqs = cdf_cumulative_freqs;
+            this->cdf_cumulative_freqs = std::move(cdf_cumulative_freqs);
         }
 
         /**
           * Destructor
           */
-        virtual ~giuh_kernel(){};
+        virtual ~giuh_kernel()= default;;
 
         virtual double calc_giuh_output(double dt, double direct_runoff);
 
