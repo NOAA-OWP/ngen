@@ -100,7 +100,8 @@ namespace tshirt {
         double soil_lateral_flow_meters_per_second;        //!< Lateral subsurface flow ("Qlf")
         double et_loss_meters;         //!< Loss from ET, in meters
 
-        tshirt_fluxes(double q_gw, double q_perc, double q_lf, double runoff, double et_loss)
+        tshirt_fluxes(double q_gw = 0.0, double q_perc = 0.0, double q_lf = 0.0, double runoff = 0.0,
+                double et_loss = 0.0)
                 : groundwater_flow_meters_per_second(q_gw),
                   soil_percolation_flow_meters_per_second(q_perc),
                   soil_lateral_flow_meters_per_second(q_lf),
