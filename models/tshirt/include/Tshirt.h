@@ -287,7 +287,7 @@ namespace tshirt {
                 tshirt_fluxes &fluxes,       //!< model flux object to hold calculated fluxes
                 double input_flux_meters,          //!< the amount water entering the system this time step
                 // TODO: should/can this be a smart pointer?
-                giuh_kernel *giuh_obj,       //!< kernel object for calculating GIUH runoff from subsurface lateral flow
+                giuh::giuh_kernel *giuh_obj,       //!< kernel object for calculating GIUH runoff from subsurface lateral flow
                 void *et_params)            //!< parameters for the et function
         {
             double column_total_soil_moisture_deficit = params.max_soil_storage_meters - state.soil_storage_meters;

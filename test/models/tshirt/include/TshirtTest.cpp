@@ -75,7 +75,7 @@ TEST_F(TshirtKernelTest, TestRun0)
     tshirt::tshirt_fluxes fluxes(0.0, 0.0, 0.0, 0.0, 0.0);
     double input_flux = 1.0;
 
-    giuh_kernel giuh_obj = giuh_kernel();
+    giuh::giuh_kernel giuh_obj = giuh::giuh_kernel();
 
     //hymod_kernel::run(params, h_state, ks_fluxes, new_state, new_fluxes, input_flux, et_params);
     tshirt::tshirt_kernel::run(86400.0,
