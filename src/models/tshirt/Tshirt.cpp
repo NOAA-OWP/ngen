@@ -112,9 +112,13 @@ namespace tshirt {
         // record other fluxes
         fluxes->soil_lateral_flow_meters_per_second = Qlf;
         fluxes->soil_percolation_flow_meters_per_second = Qperc;
+
         // Save "raw" runoff here and have realization class calculate GIUH surface runoff
         //fluxes->surface_runoff_meters_per_second = giuh_obj->calc_giuh_output(dt, surface_runoff);
-        fluxes->surface_runoff_meters_per_second = surface_runoff;
+
+        // TODO: for now add this to runoff, but later adjust calculations to limit flow into reservoir to avoid excess
+        fluxes->surface_runoff_meters_per_second = surface_runoff + excess_gw_water;
+        //fluxes->surface_runoff_meters_per_second = surface_runoff;
 
         return 0;
     }
