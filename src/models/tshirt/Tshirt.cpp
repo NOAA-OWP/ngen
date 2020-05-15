@@ -26,7 +26,7 @@ namespace tshirt {
     {
         // Calculate the suction head above water table (Hwt)
         double head_above_water_table =
-                model_params.alpha_fc * ((double) ATMOSPHERIC_PRESSURE_PASCALS / WATER_SPECIFIC_WEIGHT);
+                model_params.alpha_fc * ((double) STANDARD_ATMOSPHERIC_PRESSURE_PASCALS / WATER_SPECIFIC_WEIGHT);
         // TODO: account for possibility of Hwt being less than 0.5 (though initially, it looks like this will never be the case)
 
         double z1 = head_above_water_table - 0.5;
