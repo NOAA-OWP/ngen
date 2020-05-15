@@ -38,6 +38,14 @@ namespace tshirt {
                 (model_params.b * pow(z1, ((model_params.b - 1) / model_params.b)) / (model_params.b - 1)));
     }
 
+    shared_ptr<tshirt_state> tshirt_model::get_current_state() {
+        return current_state;
+    }
+
+    shared_ptr<tshirt_fluxes> tshirt_model::get_fluxes() {
+        return fluxes;
+    }
+
     /**
      * Run the model to one time step, moving the initial `current_state` value to `previous_state` and resetting
      * other members applicable only to in the context of the current time step so that they are recalculated.
