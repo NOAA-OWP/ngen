@@ -181,7 +181,7 @@ namespace tshirt {
          * @param et_params
          * @return
          */
-        double calc_evapotranspiration(double soil_m, pdm03_struct *et_params);
+        double calc_evapotranspiration(double soil_m, shared_ptr<pdm03_struct> et_params);
 
         /**
          * Calculate soil field capacity storage, the level at which free drainage stops (i.e., "Sfc").
@@ -199,7 +199,7 @@ namespace tshirt {
          * @param et_params ET parameters struct
          * @return
          */
-        int run(double dt, double input_flux_meters, pdm03_struct *et_params);
+        int run(double dt, double input_flux_meters, shared_ptr<pdm03_struct> et_params);
 
     private:
         /** Model state for the "current" time step, which may not be calculated yet. */
