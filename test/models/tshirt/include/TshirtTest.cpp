@@ -103,9 +103,9 @@ TEST_F(TshirtModelTest, TestRun0) {
 
     tshirt::tshirt_model model(params, make_shared<tshirt::tshirt_state>(state));
 
-    pdm03_struct et_params = pdm03_struct();
+    shared_ptr<pdm03_struct> et_params = make_shared<pdm03_struct>(pdm03_struct());
 
-    model.run(86400.0, input_flux, &et_params);
+    model.run(86400.0, input_flux, et_params);
 
     ASSERT_TRUE(true);
 

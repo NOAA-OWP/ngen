@@ -10,9 +10,9 @@ namespace tshirt {
      * @param et_params
      * @return
      */
-    double tshirt_model::calc_evapotranspiration(double soil_m, pdm03_struct *et_params) {
+    double tshirt_model::calc_evapotranspiration(double soil_m, shared_ptr<pdm03_struct> et_params) {
         et_params->XHuz = soil_m;
-        pdm03_wrapper(et_params);
+        pdm03_wrapper(et_params.get());
 
         return et_params->XHuz - soil_m;
     }
@@ -46,11 +46,11 @@ namespace tshirt {
      * @param input_flux_meters the amount water entering the system this time step, in meters
      * @return
      */
-    int tshirt_model::run(double dt, double input_flux_meters, pdm03_struct *et_params) {
+    int tshirt_model::run(double dt, double input_flux_meters, shared_ptr<pdm03_struct> et_params) {
         // TODO: think about keep the old previous_state somewhere?
         // Do resetting/housekeeping for new calculations
         previous_state = current_state;
-        current_state = make_shared<tshirt_state>(tshirt_state(0.0, 0.0));
+        current_state = make_shared<tshirt_state>(tshirt_state(0.0, 0.0, vector<double>(model_params.nash_n)));
         fluxes = make_shared<tshirt_fluxes>(tshirt_fluxes(0.0, 0.0, 0.0, 0.0, 0.0));
 
         double soil_column_moisture_deficit =
@@ -102,7 +102,6 @@ namespace tshirt {
         // Right now, the groundwater reservoir activation threshold doesn't change, but if that is incorrect, it should
         // be updated here in the same way as above for the soil reservoir.
 
-        // TODO: what needs to be done with this value?
         double excess_gw_water;
         fluxes->groundwater_flow_meters_per_second = groundwater_reservoir.response_meters_per_second(Qperc, dt,
                                                                                                excess_gw_water);
