@@ -55,7 +55,6 @@ namespace tshirt {
      * @return
      */
     int tshirt_model::run(double dt, double input_flux_meters, shared_ptr<pdm03_struct> et_params) {
-        // TODO: think about keep the old previous_state somewhere?
         // Do resetting/housekeeping for new calculations
         previous_state = current_state;
         current_state = make_shared<tshirt_state>(tshirt_state(0.0, 0.0, vector<double>(model_params.nash_n)));
@@ -68,10 +67,7 @@ namespace tshirt {
         Schaake_partitioning_scheme(dt, model_params.Cschaake, soil_column_moisture_deficit, input_flux_meters,
                                     &surface_runoff, &subsurface_infiltration_flux);
 
-        // TODO: the activation thresholds for the soil reservoir outlets are set to the Sfc value, which is dependent
-        //  on state. Thus, to operate in the same way the static version did, the outlets need to be updated here.
-
-        double subsurface_excess;
+        double subsurface_excess, nash_subsurface_excess;
         soil_reservoir.response_meters_per_second(subsurface_infiltration_flux, dt, subsurface_excess);
 
         // lateral subsurface flow
@@ -85,9 +81,7 @@ namespace tshirt {
         fluxes->et_loss_meters = calc_evapotranspiration(new_soil_storage, et_params);
         current_state->soil_storage_meters = new_soil_storage - fluxes->et_loss_meters;
 
-        // TODO: update the activation with the new Sfc value (needs support within NonLinear_Reservoir class), as with
-        //  the main soil reservoir object above.
-        // TODO: potentially be able to update the max flow also (currently always just max_lateral_flow)
+        // TODO: potentially be able to update the max flow (currently always just max_lateral_flow)
         //for (unsigned long i = 0; i < get_soil_lf_nash_res()->size(); ++i) {
         //    get_soil_lf_nash_res()[i]->update_activation(*get_soil_field_capacity_storage());
         //}
@@ -96,19 +90,15 @@ namespace tshirt {
         // loop essentially copied from Hymod logic, but with different variable names
         for (unsigned long int i = 0; i < soil_lf_nash_res.size(); ++i) {
             // get response water velocity of nonlinear reservoir
-            Qlf = soil_lf_nash_res[i]->response_meters_per_second(Qlf, dt, subsurface_excess);
+            Qlf = soil_lf_nash_res[i]->response_meters_per_second(Qlf, dt, nash_subsurface_excess);
             // TODO: confirm this is correct
-            Qlf += subsurface_excess / dt;
+            Qlf += nash_subsurface_excess / dt;
             current_state->nash_cascade_storeage_meters[i] = soil_lf_nash_res[i]->get_storage_height_meters();
         }
 
         // "raw" GW calculations
         //state.groundwater_storage_meters += soil_percolation_flow_meters_per_second * dt;
         //double groundwater_flow_meters_per_second = params.Cgw * ( exp(params.expon * state.groundwater_storage_meters / params.max_groundwater_storage_meters) - 1 );
-
-        // TODO: verify activation threshold for groundwater reservoir should always be 0 (as it is when initialized)
-        // Right now, the groundwater reservoir activation threshold doesn't change, but if that is incorrect, it should
-        // be updated here in the same way as above for the soil reservoir.
 
         double excess_gw_water;
         fluxes->groundwater_flow_meters_per_second = groundwater_reservoir.response_meters_per_second(Qperc, dt,
@@ -124,9 +114,10 @@ namespace tshirt {
         //fluxes->surface_runoff_meters_per_second = giuh_obj->calc_giuh_output(dt, surface_runoff);
 
         // TODO: for now add this to runoff, but later adjust calculations to limit flow into reservoir to avoid excess
-        fluxes->surface_runoff_meters_per_second = surface_runoff + excess_gw_water;
+        fluxes->surface_runoff_meters_per_second = surface_runoff + (subsurface_excess / dt) + (excess_gw_water / dt);
         //fluxes->surface_runoff_meters_per_second = surface_runoff;
 
+        // TODO: later return the appropriate "code" from a mass balance check.
         return 0;
     }
 
