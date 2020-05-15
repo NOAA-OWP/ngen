@@ -18,6 +18,7 @@ macro(add_automated_test TESTNAME)
             NGen::core_catchment
             NGen::core_nexus
             NGen::geojson
+            NGen::models_tshirt
             NGen::realizations_catchment)
     gtest_discover_tests(${TESTNAME}
             WORKING_DIRECTORY ${PROJECT_DIR}
@@ -37,6 +38,7 @@ macro(add_automated_test_w_mock TESTNAME)
             NGen::core_catchment
             NGen::core_nexus
             NGen::geojson
+            NGen::models_tshirt
             NGen::realizations_catchment
             )
     gtest_discover_tests(${TESTNAME}
