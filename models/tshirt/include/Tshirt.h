@@ -2,7 +2,7 @@
 #ifndef TSHIRT_H
 #define TSHIRT_H
 
-#include "kernels/schaake_partitioning.hpp"
+#include "schaake_partitioning.hpp"
 #include "Constants.h"
 #include "Nonlinear_Reservoir.hpp"
 #include "GIUH.hpp"
@@ -76,14 +76,16 @@ namespace tshirt {
         // TODO: confirm this is correct
         double soil_storage_meters;              //!< current water storage in soil column nonlinear reservoir ("Ss")
         double groundwater_storage_meters;       //!< current water storage in ground water nonlinear reservoir ("Sgw")
-        double *nash_cascade_storeage_meters;    //!< water storage in nonlinear reservoirs of Nash Cascade for lateral subsurface flow
+        double* nash_cascade_storeage_meters;    //!< water storage in nonlinear reservoirs of Nash Cascade for lateral subsurface flow
 
         // I think this doesn't belong in state, and so is just in run() below
         //double column_total_soil_moisture_deficit;    //!< soil column total moisture deficit
 
-        tshirt_state(double ss, double sgw, double *nash_res_ptr = 0x0) : soil_storage_meters(ss),
-                                                                          groundwater_storage_meters(sgw),
-                                                                          nash_cascade_storeage_meters(nash_res_ptr) {}
+        tshirt_state(double soil_storage_meters, double groundwater_storage_meters,
+                     double* nash_cascade_storeage_meters = nullptr)
+                : soil_storage_meters(soil_storage_meters),
+                  groundwater_storage_meters(groundwater_storage_meters),
+                  nash_cascade_storeage_meters(nash_cascade_storeage_meters) {}
     };
 
     /*!
