@@ -190,6 +190,10 @@ namespace tshirt {
          */
         double calc_soil_field_capacity_storage();
 
+        shared_ptr<tshirt_state> get_current_state();
+
+        shared_ptr<tshirt_fluxes> get_fluxes();
+
         /**
          * Run the model to one time step, moving the initial `current_state` value to `previous_state` and resetting
          * other members applicable only to in the context of the current time step so that they are recalculated.
