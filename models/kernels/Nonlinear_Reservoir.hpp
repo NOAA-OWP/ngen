@@ -18,31 +18,45 @@ struct reservoir_state
 
 
 /**
- * @brief Abstract Base Single Reservior Outlet Class
+ * @brief Base Single Reservior Outlet Class
  * This class is for a single reservior outlet that holds the parameters a, b, and the activation threhold, which is
  * the height in meters the bottom of the outlet is above the bottom of the reservoir. This class also contains a 
  * function to return the velocity in meters per second of the discharge through the outlet. This function will only
  * run if the reservoir storage passed in is above the activation threshold.
  */ 
-
 class Reservoir_Outlet
 {
     public:
 
-    //Default Constructor
+    /**
+     * @brief Default Constructor building an empty Reservoir Outlet Object
+     */
     Reservoir_Outlet(): a(0.0), b(0.0), activation_threshold_meters(0.0), max_velocity_meters_per_second(0.0)
     {
 		
     }	
    
-    //Parameterized Constructor
+    /**
+     * @brief Parameterized Constuctor that builds a Reservoir Outlet object
+     * @param a outlet velocity calculation coefficient
+     * @param b outlet velocity calculation exponent
+     * @param activation_threshold_meters meters from the bottom of the reservoir to the bottom of the outlet
+     * @param max_velocity_meters_per_second max outlet velocity in meters per second
+     */
     Reservoir_Outlet(double a, double b, double activation_threshold_meters, double max_velocity_meters_per_second): a(a), b(b), activation_threshold_meters(activation_threshold_meters), max_velocity_meters_per_second(max_velocity_meters_per_second)
     {
 
     }    
   
-    //Function to return the velocity in meters per second of the discharge through the outlet
-    double velocity_meters_per_second(reservoir_parameters &parameters_struct, reservoir_state &storage_struct)
+    /**
+     * @brief Function to return the velocity in meters per second of the discharge through the outlet
+     * @param parameters_struct reservoir parameters struct
+     * @param storage_struct reservoir state storage struct
+     * @param activation_threshold_meters meters from the bottom of the reservoir to the bottom of the outlet
+     * @param max_velocity_meters_per_second max outlet velocity in meters per second
+     * @return velocity_meters_per_second_local the velocity in meters per second of the discharge through the outlet
+     */
+    virtual double velocity_meters_per_second(reservoir_parameters &parameters_struct, reservoir_state &storage_struct)
     {
 
         //Return velocity of 0.0 if the storage passed in is less than the activation threshold
@@ -66,12 +80,14 @@ class Reservoir_Outlet
         return velocity_meters_per_second_local;
     };
 
-    //Accessor to return activation_threshold_meters
+    /**
+     * @brief Accessor to return activation_threshold_meters
+     * @return activation_threshold_meters meters from the bottom of the reservoir to the bottom of the outlet
+     */
     inline double get_activation_threshold_meters() const
     {
         return activation_threshold_meters;
     };
-
 
     /**
      * @brief Accessor to return velocity_meters_per_second_local that is previously calculated
@@ -82,7 +98,7 @@ class Reservoir_Outlet
         return velocity_meters_per_second_local;
     };
 
-    private:
+    protected:
     double a;
     double b;
     double activation_threshold_meters;
@@ -91,6 +107,74 @@ class Reservoir_Outlet
 };
 
 
+/**
+ * @brief Single Exponential Reservior Outlet Class
+ * This class is for a single exponential reservoir outlet that is derived from the base Reservoir_Outlet class. 
+ * This derived class holds extra parameters for c and expon and overrides the base velocity_meters_per_second function
+ * with an exponential equation.
+ */ 
+class Reservoir_Exponential_Outlet: public Reservoir_Outlet
+{
+    public:
+
+    /**
+     * @brief Default Constructor building an empty Reservoir Exponential Outlet Object
+     */
+    Reservoir_Exponential_Outlet(): Reservoir_Outlet(), c(0.0), expon(0.0) 
+    {
+		
+    }	
+   
+    /**
+     * @brief Parameterized Constuctor that builds a Reservoir Outlet object
+     * @param c outlet velocity calculation coefficient
+     * @param expon outlet velocity calculation exponential coefficient
+     * @param activation_threshold_meters meters from the bottom of the reservoir to the bottom of the outlet
+     * @param max_velocity_meters_per_second max outlet velocity in meters per second
+     */
+    Reservoir_Exponential_Outlet(double c, double expon, double activation_threshold_meters, double max_velocity_meters_per_second): 
+        Reservoir_Outlet(-999.0, -999.0, activation_threshold_meters, max_velocity_meters_per_second),
+        c(c),
+        expon(expon)
+    {
+
+    }    
+
+    /**
+     * @brief Inherited and overridden function to return the velocity in meters per second of the discharge through the exponential outlet
+     * @param parameters_struct reservoir parameters struct
+     * @param storage_struct reservoir state storage struct
+     * @param activation_threshold_meters meters from the bottom of the reservoir to the bottom of the outlet
+     * @param max_velocity_meters_per_second max outlet velocity in meters per second
+     * @return velocity_meters_per_second_local the velocity in meters per second of the discharge through the outlet
+     */
+    double velocity_meters_per_second(reservoir_parameters &parameters_struct, reservoir_state &storage_struct)
+    {
+
+        //Return velocity of 0.0 if the storage passed in is less than the activation threshold
+        if (storage_struct.current_storage_height_meters <= activation_threshold_meters)
+            return 0.0;  
+	
+        //Calculate the velocity in meters per second of the discharge through the outlet 
+        velocity_meters_per_second_local =  c * ( exp(expon * storage_struct.current_storage_height_meters / parameters_struct.maximum_storage_meters) - 1 );
+
+        //If calculated oulet velocity is greater than max velocity, then set to max velocity and return a warning.
+        if (velocity_meters_per_second_local > max_velocity_meters_per_second)
+        {
+            velocity_meters_per_second_local = max_velocity_meters_per_second;
+
+            //TODO: Return appropriate warning
+            cout << "WARNING: Nonlinear reservoir calculated an outlet velocity over max velocity, and therefore set the outlet velocity to max velocity." << endl;
+        }
+
+        //Return the velocity in meters per second of the discharge through the outlet   
+        return velocity_meters_per_second_local;
+    };
+
+    private:
+    double c;
+    double expon;
+};
 
 
 /**
@@ -119,7 +203,7 @@ class Nonlinear_Reservoir
     }
 
     /**
-     * @brief Parameterized Constuctor building a reservoir with only one outlet.
+     * @brief Parameterized Constuctor building a reservoir with only one standard base outlet.
      * @param minimum_storage_meters minimum storage in meters
      * @param maximum_storage_meters maximum storage in meters
      * @param current_storage_height_meters current storage height in meters
@@ -134,15 +218,12 @@ class Nonlinear_Reservoir
         //Ensure that the activation threshold is less than the maximum storage
         //if (activation_threshold_meters > maximum_storage_meters)
         /// \todo TODO: Return appropriate error
-        //this->outlets.push_back(std::make_shared(Standard_Reservoir_Outlet(a, b, activation_threshold_meters,
-
-        //this->outlets.push_back(std::make_shared(Reservoir_Outlet(a, b, activation_threshold_meters, max_velocity_meters_per_second)));
-
         this->outlets.push_back(std::make_shared<Reservoir_Outlet>(a, b, activation_threshold_meters, max_velocity_meters_per_second));
     }
 
     /**
-     * @brief Parameterized Constuctor building a reservoir with multiple outlets.
+     * @brief Parameterized Constuctor building a reservoir with one or multiple outlets of the base standard and/or exponential type.
+     * A reservoir with an exponential outlet can only be instantiated with this constructor.
      * @param minimum_storage_meters minimum storage in meters
      * @param maximum_storage_meters maximum storage in meters
      * @param current_storage_height_meters current storage height in meters
@@ -237,16 +318,10 @@ class Nonlinear_Reservoir
      */
     void sort_outlets()
     {
-        //sort(this->outlets.begin(), this->outlets.end(), [](const Reservoir_Outlet &left, const Reservoir_Outlet &right)
-        //{              
-        //    return left.get_activation_threshold_meters() < right.get_activation_threshold_meters();
-        //});
-
-
-        //sort(this->outlets.begin(), this->outlets.end(), [](const Reservoir_Outlet &left, const Reservoir_Outlet &right)
-        //{              
-        //    return left->get_activation_threshold_meters() < right->get_activation_threshold_meters();
-        //});
+        sort(this->outlets.begin(), this->outlets.end(), [](const std::shared_ptr<Reservoir_Outlet> &left, const std::shared_ptr<Reservoir_Outlet> &right)
+        {              
+            return left->get_activation_threshold_meters() < right->get_activation_threshold_meters();
+        });
 
      }
 
@@ -259,18 +334,15 @@ class Nonlinear_Reservoir
         return state.current_storage_height_meters;
     }
 
-    /*!
-     * Return velocity in meters per second of discharge through the specified outlet.
-     *
+    /*
+     * @brief Return velocity in meters per second of discharge through the specified outlet.
      * Essentially a wrapper for {@link Reservoir_Outlet#velocity_meters_per_second}, where the args for that come from
      * the reservoir anyway.
-     *
      * @param outlet_index The index of the desired outlet in this instance's vector of outlets
      * @return
      */
     double velocity_meters_per_second_for_outlet(int outlet_index)
     {
-        //return this->outlets[outlet_index].get_previously_calculated_velocity_meters_per_second();
         return this->outlets[outlet_index]->get_previously_calculated_velocity_meters_per_second();
     }
 
@@ -287,6 +359,5 @@ class Nonlinear_Reservoir
     private:
     reservoir_parameters parameters;
     reservoir_state state;
-    //std::vector <Reservoir_Outlet> outlets;
     outlet_vector_type outlets;
 };
