@@ -38,9 +38,21 @@ class NonlinearReservoirKernelTest : public ::testing::Test {
 
     std::shared_ptr<Reservoir_Outlet> ReservoirOutlet3; //smart pointer to a Reservoir Outlet
 
-    std::vector<Reservoir_Outlet> ReservoirOutletsVector;
 
-    std::vector<Reservoir_Outlet> ReservoirOutletsVectorOutOfOrder;
+
+    typedef std::vector <std::shared_ptr<Reservoir_Outlet>> outlet_vector_type;
+
+    std::vector <std::shared_ptr<Reservoir_Outlet>> ReservoirOutletsVector;
+
+    std::vector <std::shared_ptr<Reservoir_Outlet>> ReservoirOutletsVectorOutOfOrder;
+
+    
+
+    //std::vector<Reservoir_Outlet> ReservoirOutletsVector;
+
+    //std::vector<Reservoir_Outlet> ReservoirOutletsVectorOutOfOrder;
+
+
 
 };
 
@@ -88,11 +100,13 @@ void NonlinearReservoirKernelTest::setupMultipleOutletNonlinearReservoir()
 
     ReservoirOutlet3 = std::make_shared<Reservoir_Outlet>(0.4, 0.6, 15.0, 100.0);
 
-    ReservoirOutletsVector.push_back(*ReservoirOutlet1);
+    //ReservoirOutletsVector.push_back(*ReservoirOutlet1);
 
-    ReservoirOutletsVector.push_back(*ReservoirOutlet2);
+    ReservoirOutletsVector.push_back(ReservoirOutlet1);
 
-    ReservoirOutletsVector.push_back(*ReservoirOutlet3);
+    ReservoirOutletsVector.push_back(ReservoirOutlet2);
+
+    ReservoirOutletsVector.push_back(ReservoirOutlet3);
 
     MultipleOutletReservoir = std::make_shared<Nonlinear_Reservoir>(0.0, 20.0, 2.0, ReservoirOutletsVector);
 }
@@ -106,11 +120,13 @@ void NonlinearReservoirKernelTest::setupMultipleOutletOutOfOrderNonlinearReservo
 
     ReservoirOutlet3 = std::make_shared<Reservoir_Outlet>(0.4, 0.6, 15.0, 100.0);
 
-    ReservoirOutletsVectorOutOfOrder.push_back(*ReservoirOutlet3);
+    //ReservoirOutletsVectorOutOfOrder.push_back(*ReservoirOutlet3);
 
-    ReservoirOutletsVectorOutOfOrder.push_back(*ReservoirOutlet2);
+    ReservoirOutletsVectorOutOfOrder.push_back(ReservoirOutlet3);
 
-    ReservoirOutletsVectorOutOfOrder.push_back(*ReservoirOutlet1);
+    ReservoirOutletsVectorOutOfOrder.push_back(ReservoirOutlet2);
+
+    ReservoirOutletsVectorOutOfOrder.push_back(ReservoirOutlet1);
 
     MultipleOutletOutOfOrderNonlinearReservoir = std::make_shared<Nonlinear_Reservoir>(0.0, 20.0, 2.0, ReservoirOutletsVectorOutOfOrder);
 }
