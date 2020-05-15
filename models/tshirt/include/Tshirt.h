@@ -257,7 +257,7 @@ namespace tshirt {
          * @param state
          * @return
          */
-        static double calc_soil_field_capacity_storage(const tshirt_params &params, const tshirt_state &state) {
+        static double calc_soil_field_capacity_storage(const tshirt_params &params) {
             // Calculate the suction head above water table (Hwt)
             double head_above_water_table = params.alpha_fc * ( (double) STANDARD_ATMOSPHERIC_PRESSURE_PASCALS / WATER_SPECIFIC_WEIGHT);
             // TODO: account for possibility of Hwt being less than 0.5 (though initially, it looks like this will never be the case)
