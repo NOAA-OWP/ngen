@@ -29,6 +29,34 @@ void TshirtKernelTest::TearDown() {
 
 }
 
+class TshirtModelTest : public ::testing::Test {
+
+protected:
+
+    TshirtModelTest() {
+
+    }
+
+    ~TshirtModelTest() override {
+
+    }
+
+    void SetUp() override;
+
+    void TearDown() override;
+
+    void setupArbitraryExampleCase();
+
+};
+
+void TshirtModelTest::SetUp() {
+
+}
+
+void TshirtModelTest::TearDown() {
+
+}
+
 //! Test that Tshirt executes its 'run' function fully when passed arbitrary valid arguments.
 TEST_F(TshirtKernelTest, TestRun0)
 {
@@ -60,5 +88,26 @@ TEST_F(TshirtKernelTest, TestRun0)
                                &et_storage);
 
     ASSERT_TRUE(true);
+}
+
+TEST_F(TshirtModelTest, TestRun0) {
+
+    double et_storage = 0.0;
+
+    tshirt::tshirt_params params{1000.0, 1.0, 10.0, 0.1, 0.01, 3, 1.0, 1.0, 1.0, 1.0, 8, 1.0, 1.0, 100.0};
+    double storage = 1.0;
+
+    tshirt::tshirt_state state(1.0, 1.0);
+
+    double input_flux = 1.0;
+
+    tshirt::tshirt_model model(params, make_shared<tshirt::tshirt_state>(state));
+
+    pdm03_struct et_params = pdm03_struct();
+
+    model.run(86400.0, input_flux, &et_params);
+
+    ASSERT_TRUE(true);
+
 }
 
