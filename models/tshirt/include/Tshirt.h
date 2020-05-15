@@ -303,7 +303,7 @@ namespace tshirt {
             Schaake_partitioning_scheme(dt, params.Cschaake, column_total_soil_moisture_deficit, input_flux_meters,
                                         &surface_runoff, &subsurface_infiltration_flux);
 
-            double Sfc = calc_soil_field_capacity_storage(params, state);
+            double Sfc = calc_soil_field_capacity_storage(params);
 
             vector<Reservoir_Outlet> subsurface_outlets;
 
