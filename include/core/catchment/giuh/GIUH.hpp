@@ -25,6 +25,36 @@ namespace giuh {
             this->cdf_times = std::move(cdf_times);
             // TODO: might be able to get this by calculating from times, rather than being passed
             this->cdf_cumulative_freqs = std::move(cdf_cumulative_freqs);
+
+            // TODO: look at not hard-coding this later
+            cdf_regularity_seconds = 60;
+
+            // Interpolate regularized CDF (might should be done out of constructor, perhaps concurrently)
+            cdf_ordinate_times_seconds.push_back(0);
+            regularized_cdf_ordinates.push_back(0);
+            // TODO: this condition may need to be refined slightly
+            while (regularized_cdf_ordinates.back() < 1.0) {
+                // Determine current regularity interval iteration (last iteration plus regularity)
+                int current_iteration_time = cdf_ordinate_times_seconds.back() + cdf_regularity_seconds;
+                cdf_ordinate_times_seconds.push_back(current_iteration_time);
+                // Find index 'i' of largest CDF time less that current regularity interval iteration
+                int cdf_times_index_for_iteration = 0;
+                while (this->cdf_times[cdf_times_index_for_iteration] < cdf_ordinate_times_seconds.back()) {
+                    cdf_times_index_for_iteration++;
+                }
+                // This has found the index of the first bigger, so we need to back up one to get the last smaller
+                cdf_times_index_for_iteration--;
+                // Then apply equation from spreadsheet
+
+                double result = (current_iteration_time - this->cdf_times[cdf_times_index_for_iteration]) /
+                                (this->cdf_times[cdf_times_index_for_iteration + 1] -
+                                 this->cdf_times[cdf_times_index_for_iteration]) *
+                                (this->cdf_cumulative_freqs[cdf_times_index_for_iteration + 1] -
+                                 this->cdf_cumulative_freqs[cdf_times_index_for_iteration]) +
+                                this->cdf_cumulative_freqs[cdf_times_index_for_iteration];
+                // Push that to the back of that collection
+                regularized_cdf_ordinates.push_back(result);
+            }
         }
 
         /**
@@ -45,6 +75,9 @@ namespace giuh {
         string catchment_id;                    //!< Associated catchment identifier, as a string
         vector<double> cdf_cumulative_freqs;    //!< ranked order of time of travel cell values
         vector<double> cdf_times;               //!< times in seconds
+        int cdf_regularity_seconds;             //!< the regularity used to interpolate and produce CDF ordinates, in seconds
+        vector<int> cdf_ordinate_times_seconds;
+        vector<double> regularized_cdf_ordinates;
 
     };
 }
