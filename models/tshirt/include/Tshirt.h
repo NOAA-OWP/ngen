@@ -130,10 +130,29 @@ namespace tshirt {
                      const shared_ptr<tshirt_state>& initial_state) : model_params(model_params),
                                                                       previous_state(initial_state),
                                                                       current_state(initial_state) {
-            // This will get used a few times ...
+            // ********** Calculate Sfc, as this will get used a few times ...
             double Sfc = calc_soil_field_capacity_storage();
 
-            // Create the vector of Nash Cascade reservoirs used at the end of the soil lateral flow outlet
+            // ********** Sanity check the size of the Nash Cascade storage vector in the state parameter.
+            // We expect the Nash size model parameter 'nash_n' to be equal to the size of the
+            // 'nash_cascade_storeage_meters' member of the passed 'initial_state param
+            if (initial_state->nash_cascade_storeage_meters.size() != model_params.nash_n) {
+                // Infer that empty vector should be initialized to a vector of size 'nash_n' with all 0.0 values
+                if (initial_state->nash_cascade_storeage_meters.empty()) {
+                    initial_state->nash_cascade_storeage_meters.resize(model_params.nash_n);
+                    for (unsigned i = 0; i < model_params.nash_n; ++i) {
+                        initial_state->nash_cascade_storeage_meters[i] = 0.0;
+                    }
+                }
+                else {
+
+                    cerr << "ERROR: Nash Cascade size parameter in tshirt model init doesn't match storage vector size";
+                    cerr << " in state parameter" << endl;
+                    // TODO: return error of some kind here
+                }
+            }
+
+            // ********** Create the vector of Nash Cascade reservoirs used at the end of the soil lateral flow outlet
             soil_lf_nash_res.resize(model_params.nash_n);
             // TODO: verify correctness of activation_threshold (Sfc) and max_velocity (max_lateral_flow) arg values
             for (unsigned long i = 0; i < soil_lf_nash_res.size(); ++i) {
@@ -144,7 +163,7 @@ namespace tshirt {
                                             Sfc, model_params.max_lateral_flow));
             }
 
-            // Create the soil reservoir
+            // ********** Create the soil reservoir
             // TODO: probably will need to change this to be vector of pointers once Reservoir class changes are done
             vector<Reservoir_Outlet> soil_res_outlets(2);
 
@@ -158,7 +177,7 @@ namespace tshirt {
 
             soil_reservoir = Nonlinear_Reservoir(0.0, model_params.depth, previous_state->soil_storage_meters, soil_res_outlets);
 
-            // Create the groundwater reservoir
+            // ********** Create the groundwater reservoir
             // Given the equation:
             //      double groundwater_flow_meters_per_second = params.Cgw * ( exp(params.expon * state.groundwater_storage_meters / params.max_groundwater_storage_meters) - 1 );
             // The max value should be when groundwater_storage_meters == max_groundwater_storage_meters, or ...
@@ -167,6 +186,8 @@ namespace tshirt {
             groundwater_reservoir = Nonlinear_Reservoir(0, model_params.max_groundwater_storage_meters,
                                                         previous_state->groundwater_storage_meters, model_params.Cgw, 1,
                                                         0, max_gw_velocity);
+
+            // ********** Set fluxes to null for now: it is bogus until first call of run function, which initializes it
             fluxes = nullptr;
 
         }
@@ -312,6 +333,8 @@ namespace tshirt {
             int perc_outlet_index = 1;
 
             // init subsurface later flow outlet
+            // TODO: look into this in debugging, as it looks like a EXC_BAD_ACCESS exception is actually happening
+            //  during unit testing and not being especially visible
             subsurface_outlets[lf_outlet_index] = Reservoir_Outlet(params.Klf, 1.0, Sfc, params.max_lateral_flow);
             // init subsurface percolation flow outlet
             // The max perc flow should be equal to the params.satdk value
