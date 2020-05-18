@@ -59,7 +59,6 @@ void prepare_features(geojson::GeoJSON& nexus, geojson::GeoJSON& catchments, boo
    }//end if(validate)
 }
 
-
 std::unordered_map<std::string, std::shared_ptr<HY_CatchmentRealization>>  catchment_realizations;
 std::unordered_map<std::string, std::shared_ptr<HY_HydroNexus>> nexus_realizations;
 std::unordered_map<std::string, std::string> catchment_to_nexus;
@@ -139,15 +138,18 @@ int main(int argc, char *argv[]) {
     }
 
     //Now loop some time, iterate catchments, do stuff
-    for(int time_step = 0; time_step < 5; time_step++)
+    for(int time_step = 0; time_step < 1; time_step++)
     {
       for(auto &catchment: catchment_realizations)
       {
+        if(catchment.first == "cat-88")
+        {
         double response = catchment.second->get_response(0, 0, &pdm_et_data);
         nexus_realizations[ catchment_to_nexus[catchment.first] ]->add_upstream_flow(response, catchment_id[catchment.first], time_step);
         std::cout<<"Reporting water for time_step "<<time_step<<std::endl<<\
                    "Nexus "<<catchment_to_nexus[catchment.first]<<" has "<<\
-                   response<<" meters of water ready to route downstream."<<std::endl;
+                   response<<" meters of water from "<<catchment.first<<" ready to route downstream."<<std::endl;
+      }
       }
     }
     /*
