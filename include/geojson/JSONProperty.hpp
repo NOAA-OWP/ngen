@@ -243,6 +243,35 @@ namespace geojson {
 
             std::string get_key() const;
 
+            bool has_key(std::string key) const;
+
+            bool inline operator==(const JSONProperty& other) {
+                if (not (this->type == other.type)) {
+                    return false;
+                }
+
+                if (this->type == PropertyType::Object) {
+                    if (this->values.size() != other.values.size()) {
+                        return false;
+                    }
+                    
+                    for (std::string their_key : other.keys()) {
+                        if (not this->has_key(their_key) or this->at(their_key) != other.at(their_key)) {
+                            return false;
+                        }
+                    }
+
+                }
+
+                return this->natural_number == other.natural_number 
+                    and this->real_number == other.real_number 
+                    and this->string == other.string 
+                    and this->boolean == other.boolean;
+            }
+
+            bool inline operator!=(const JSONProperty& other) {
+                return not this->operator==(other);
+            }
         private:
             PropertyType type;
             std::string key;
