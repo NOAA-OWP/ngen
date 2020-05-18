@@ -21,7 +21,7 @@ class HY_CatchmentRealization
     HY_CatchmentRealization();
     HY_CatchmentRealization(forcing_params forcing_config);
     virtual ~HY_CatchmentRealization();
-
+    virtual double get_response(double input_flux, time_step_t t, void* et_params)=0;
     protected:
 
     shared_ptr<HY_Catchment> realized_catchment;
