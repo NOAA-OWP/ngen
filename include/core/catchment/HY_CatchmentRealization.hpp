@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <string>
+#include <Forcing.h>
 
 using std::shared_ptr;
 
@@ -23,6 +24,9 @@ class HY_CatchmentRealization
 
     unsigned long id_number;
     std::string id;
+
+  private:
+    Forcing forcing;
 
 };
 

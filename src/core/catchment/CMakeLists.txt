@@ -8,6 +8,8 @@ add_library(NGen::core_catchment ALIAS core_catchment)
 target_include_directories(core_catchment PUBLIC
         ${PROJECT_SOURCE_DIR}/include/core
         ${PROJECT_SOURCE_DIR}/include/core/catchment
+        ${PROJECT_SOURCE_DIR}/include/forcing
+        ${PROJECT_SOURCE_DIR}/include/utilities
         ${PROJECT_SOURCE_DIR}/include/core/catchment/giuh
         )
 
@@ -22,4 +24,3 @@ target_link_libraries(core_catchment PUBLIC
 
 # TODO: this may not be correct, need to see
 #add_dependencies(core_catchment NGen::core)
-
