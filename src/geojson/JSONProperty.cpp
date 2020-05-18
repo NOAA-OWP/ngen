@@ -107,6 +107,16 @@ PropertyMap JSONProperty::get_values() const {
     throw std::runtime_error(message);
 }
 
+bool JSONProperty::has_key(std::string key) const {
+    for (std::string property_key : this->keys()) {
+        if (property_key == key) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 std::string JSONProperty::get_key() const {
     return key;
 }
