@@ -35,8 +35,8 @@ namespace giuh {
             // Increment the ordinate time based on the regularity (loop below will do this at the end of each iter)
             int time_for_ordinate = cdf_ordinate_times_seconds.back() + cdf_regularity_seconds;
 
-            // TODO: this condition may need to be refined slightly
-            while (regularized_cdf_ordinates.back() < 1.0) {
+            // Loop through ordinate times, initializing all but the last ordinate
+            while (time_for_ordinate < this->cdf_times.back()) {
                 cdf_ordinate_times_seconds.push_back(time_for_ordinate);
 
                 // Find index 'i' of largest CDF time less than the time for the current ordinate
@@ -61,6 +61,10 @@ namespace giuh {
                 // Finally, increment the ordinate time based on the regularity
                 time_for_ordinate = cdf_ordinate_times_seconds.back() + cdf_regularity_seconds;
             }
+
+            // Finally, the last ordinate time gets set to have everything
+            cdf_ordinate_times_seconds.push_back(time_for_ordinate);
+            regularized_cdf_ordinates.push_back(1.0);
         }
 
         /**
