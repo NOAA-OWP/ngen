@@ -82,11 +82,17 @@ namespace giuh {
         string get_catchment_id();
 
     private:
-        string catchment_id;                    //!< Associated catchment identifier, as a string
-        vector<double> cdf_cumulative_freqs;    //!< ranked order of time of travel cell values
-        vector<double> cdf_times;               //!< times in seconds
-        int cdf_regularity_seconds;             //!< the regularity used to interpolate and produce CDF ordinates, in seconds
+        /** Associated catchment identifier, as a string. */
+        string catchment_id;
+        /** Ranked order of time of travel cell values. */
+        vector<double> cdf_cumulative_freqs;
+        /** Times in seconds. */
+        vector<double> cdf_times;
+        /** The regularity used to interpolate and produce CDF ordinates, in seconds. */
+        int cdf_regularity_seconds;
+        /** The corresponding time values for each of the calculated CDF ordinates. */
         vector<int> cdf_ordinate_times_seconds;
+        /** The regularized CDF ordinate values. */
         vector<double> regularized_cdf_ordinates;
 
     };
