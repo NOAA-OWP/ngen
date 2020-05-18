@@ -44,7 +44,7 @@ void prepare_features(geojson::GeoJSON& nexus, geojson::GeoJSON& catchments, boo
       //feature->set_id(feature->get_property("ID").as_string());
       //std::cout << "Got Nexus Feature " << feature->get_id() << std::endl;
       if( feature->get_id().substr(0, 3) == "cat") {
-        auto downstream = feature->downstream_features();
+        auto downstream = feature->destination_features();
         if(downstream.size() > 1) {
           std::cerr << "catchment " << feature->get_id() << " has more than one downstream connection" << std::endl;
         }
@@ -86,7 +86,7 @@ int main(int argc, char *argv[]) {
     std::cout << "Building Catchment collection" << std::endl;
     geojson::GeoJSON catchment_collection = geojson::read(catchmentRealizationFile);
 
-    prepare_features(nexus_collection, catchment_collection, true);
+    prepare_features(nexus_collection, catchment_collection, !true);
 
     //TODO don't really need catchment_collection once catchments are added to nexus collection
     catchment_collection.reset();
@@ -111,9 +111,9 @@ int main(int argc, char *argv[]) {
       if( feature->get_id().substr(0, 3) == "cat" ){
         //Create catchment realization, add to map
         catchment_realizations[feature->get_id()] = std::make_shared<_hymod>( _hymod(storage, max_storage, a, b, Ks, Kq, n, sr_tmp, t) );
-        if(feature->get_number_of_downstream_features() == 1)
+        if(feature->get_number_of_destination_features() == 1)
         {
-          catchment_to_nexus[feature->get_id()] = feature->downstream_features()[0]->get_id();
+          catchment_to_nexus[feature->get_id()] = feature->destination_features()[0]->get_id();
         }
         else
         {
@@ -125,10 +125,10 @@ int main(int argc, char *argv[]) {
         int num = std::stoi( feature->get_id().substr(4) );
         nexus_realizations[feature->get_id()] = std::make_shared<HY_PointHydroNexus>(
                                       HY_PointHydroNexus(num, feature->get_id(),
-                                                         feature->get_number_of_downstream_features()));
-       if(feature->get_number_of_downstream_features() == 1)
+                                                         feature->get_number_of_destination_features()));
+       if(feature->get_number_of_destination_features() == 1)
        {
-         nexus_to_catchment[feature->get_id()] = feature->downstream_features()[0]->get_id();
+         nexus_to_catchment[feature->get_id()] = feature->destination_features()[0]->get_id();
        }
        else
        {
