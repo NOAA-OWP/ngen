@@ -65,6 +65,13 @@ namespace giuh {
             // Finally, the last ordinate time gets set to have everything
             cdf_ordinate_times_seconds.push_back(time_for_ordinate);
             regularized_cdf_ordinates.push_back(1.0);
+
+            // Also, now calculate the incremental values between each ordinate step
+            incremental_runoff_values.resize(regularized_cdf_ordinates.size());
+            for (unsigned i = 0; i < regularized_cdf_ordinates.size(); i++) {
+                incremental_runoff_values[i] =
+                        i == 0 ? 0 : regularized_cdf_ordinates[i] - regularized_cdf_ordinates[i - 1];
+            }
         }
 
         /**
@@ -94,6 +101,11 @@ namespace giuh {
         vector<int> cdf_ordinate_times_seconds;
         /** The regularized CDF ordinate values. */
         vector<double> regularized_cdf_ordinates;
+        /**
+         * The incremental increases in the regularized CDF ordinate at a given index from the value at the previous
+         * index.
+         */
+        vector<double> incremental_runoff_values;
 
     };
 }
