@@ -59,26 +59,26 @@ namespace geojson {
              * @param new_id An id for the feature so that it may be referenced by name
              * @param new_properties A mapping between a name for a property and its values
              * @param new_bounding_box A list of double values describing the boundaries for a feature
-             * @param upstream_features A series of raw pointers to features that lie upstream from this feature
-             * @param downstream_features A series of raw pointers to features that lie downstream from this feature
+             * @param origination_features A series of raw pointers to features that lie upstream from this feature
+             * @param destination_features A series of raw pointers to features that lie downstream from this feature
              * @param members A mapping of foreign members for the feature between the member name and its value
              */
             FeatureBase(
                 std::string new_id = "",
                 PropertyMap new_properties = PropertyMap(),
                 std::vector<double> new_bounding_box = std::vector<double>(),
-                std::vector<FeatureBase*> upstream_features = std::vector<FeatureBase*>(),
-                std::vector<FeatureBase*> downstream_features = std::vector<FeatureBase*>(),
+                std::vector<FeatureBase*> origination_features = std::vector<FeatureBase*>(),
+                std::vector<FeatureBase*> destination_features = std::vector<FeatureBase*>(),
                 PropertyMap members = PropertyMap()
             ) {
                 id = new_id;
 
-                for (auto& feature : upstream_features) {
-                    this->add_upstream_feature(feature);
+                for (auto& feature : origination_features) {
+                    this->add_origination_feature(feature);
                 }
 
-                for (auto& feature : downstream_features) {
-                    this->add_downstream_feature(feature);
+                for (auto& feature : destination_features) {
+                    this->add_destination_feature(feature);
                 }
                 
                 foreign_members = members;
@@ -110,12 +110,12 @@ namespace geojson {
                     this->geom = feature.geom;
                 }
 
-                for (FeatureBase *upstream_feature : feature.upstream_features()) {
-                    this->upstream.push_back(upstream_feature);
+                for (FeatureBase *origination_feature : feature.origination_features()) {
+                    this->origination.push_back(origination_feature);
                 }
 
-                for (FeatureBase *downstream_feature : feature.downstream_features()) {
-                    this->downstream.push_back(downstream_feature);
+                for (FeatureBase *destination_feature : feature.destination_features()) {
+                    this->destination.push_back(destination_feature);
                 }
             }
             
@@ -140,30 +140,50 @@ namespace geojson {
              * @param connect Whether or not to set this instance as downsteam from the newly attached 
              *                upstream feature
              */
-            virtual void add_upstream_feature(FeatureBase *feature, bool connect = true) {
-                if (std::find(upstream.begin(), upstream.end(), feature) == upstream.end()) {
-                    upstream.push_back(feature);
+            virtual void add_origination_feature(FeatureBase *feature, bool connect = true) {
+                if (std::find(origination.begin(), origination.end(), feature) == origination.end()) {
+                    origination.push_back(feature);
                 }
 
                 if (connect) {
-                    feature->add_downstream_feature(this, false);
+                    feature->add_destination_feature(this, false);
                 }
             }
 
             /**
-             * Set a separate feature as downstream from this instance
+             * Set a separate feature as destination from this instance
              * 
-             * @param feature The feature to link to that is downstream from this instance
+             * @param feature The feature to link to that is destination from this instance
              * @param connect Whether or not to set this instance as upstream from the newly attached 
-             *                downstream feature
+             *                destination feature
              */
-            virtual void add_downstream_feature(FeatureBase *feature, bool connect = true) {
-                if (not contains(downstream, feature)) {
-                    downstream.push_back(feature);
+            virtual void add_destination_feature(FeatureBase *feature, bool connect = true) {
+                if (not contains(destination, feature)) {
+                    destination.push_back(feature);
                 }
 
                 if (connect) {
-                    feature->add_upstream_feature(this, false);
+                    feature->add_origination_feature(this, false);
+                }
+            }
+
+            virtual void assign_neighbors() {
+                for (auto destination : this->destination_features()) {
+                    for (auto destination_source : destination->origination_features()) {
+                        if (destination_source != this) {
+                            this->add_neighbor_feature(destination_source);
+                        }
+                    }
+                }
+            }
+
+            virtual void add_neighbor_feature(FeatureBase *feature, bool connect = true) {
+                if (not contains(neighbors, feature)) {
+                    neighbors.push_back(feature);
+                }
+
+                if (connect) {
+                    feature->add_neighbor_feature(this, false);
                 }
             }
 
@@ -322,16 +342,20 @@ namespace geojson {
                 return id;
             }
 
-            int get_number_of_downstream_features() {
-                return downstream.size();
+            int get_number_of_destination_features() {
+                return destination.size();
             }
 
-            int get_number_of_upstream_features() {
-                return upstream.size();
+            int get_number_of_origination_features() {
+                return origination.size();
             }
 
-            FeatureBase* get_downstream_feature(std::string id) {
-                for (FeatureBase* feature : downstream) {
+            int get_number_of_neighbors() {
+                return neighbors.size();
+            }
+
+            FeatureBase* get_destination_feature(std::string id) {
+                for (FeatureBase* feature : destination) {
                     if (feature->get_id() == id) {
                         return feature;
                     }
@@ -339,8 +363,8 @@ namespace geojson {
                 return nullptr;
             }
 
-            FeatureBase* get_upstream_feature(std::string id) {
-                for (FeatureBase* feature : upstream) {
+            FeatureBase* get_origination_feature(std::string id) {
+                for (FeatureBase* feature : origination) {
                     if (feature->get_id() == id) {
                         return feature;
                     }
@@ -348,44 +372,48 @@ namespace geojson {
                 return nullptr;
             }
 
-            std::vector<FeatureBase*> upstream_features() const {
-                return upstream;
+            std::vector<FeatureBase*> origination_features() const {
+                return origination;
             }
 
-            std::vector<FeatureBase*> downstream_features() const {
-                return downstream;
+            std::vector<FeatureBase*> destination_features() const {
+                return destination;
             }
 
-            int get_upstream_length() {
+            std::vector<FeatureBase*> neighbor_features() const {
+                return neighbors;
+            }
+
+            int get_origination_length() {
                 if (this->is_root()) {
                     return 0;
                 }
 
                 int longest = -1;
 
-                for (FeatureBase *feature : upstream) {
-                    int upstream_height = feature->get_upstream_length();
+                for (FeatureBase *feature : origination) {
+                    int origination_height = feature->get_origination_length();
                     
-                    if (upstream_height > longest) {
-                        longest = upstream_height;
+                    if (origination_height > longest) {
+                        longest = origination_height;
                     }
                 }
                 
                 return longest + 1;
             }
 
-            int get_downstream_length() {
+            int get_destination_length() {
                 if (this->is_leaf()) {
                     return 0;
                 }
 
                 int longest = -1;
 
-                for (FeatureBase *feature : this->downstream) {
-                    int downstream_depth = feature->get_downstream_length();
+                for (FeatureBase *feature : this->destination) {
+                    int destination_depth = feature->get_destination_length();
                     
-                    if (downstream_depth > longest) {
-                        longest = downstream_depth;
+                    if (destination_depth > longest) {
+                        longest = destination_depth;
                     }
                 }
 
@@ -401,17 +429,17 @@ namespace geojson {
                 FeatureBase *current = this;
                 total.push_back(current);
 
-                for (FeatureBase *upstream_feature : current->upstream) {
-                    to_search.push_back(upstream_feature);
+                for (FeatureBase *origination_feature : current->origination) {
+                    to_search.push_back(origination_feature);
                 }
 
                 while (to_search.size() > 0) {
                     current = to_search.back();
                     to_search.pop_back();
                     total.push_back(current);
-                    for (FeatureBase *upstream_feature : current->upstream) {
-                        if (not contains(total, upstream_feature) and not contains(to_search, upstream_feature)) {
-                            to_search.push_back(upstream_feature);
+                    for (FeatureBase *origination_feature : current->origination) {
+                        if (not contains(total, origination_feature) and not contains(to_search, origination_feature)) {
+                            to_search.push_back(origination_feature);
                         }
                     }
                 }
@@ -420,11 +448,11 @@ namespace geojson {
             }
 
             bool is_leaf() {
-                return this->downstream.size() == 0;
+                return this->destination.size() == 0;
             }
 
             bool is_root() {
-                return this->upstream.size() == 0;
+                return this->origination.size() == 0;
             }
 
             template<class T>
@@ -466,8 +494,9 @@ namespace geojson {
             PropertyMap foreign_members;
             std::string id;
 
-            std::vector<FeatureBase*> upstream;
-            std::vector<FeatureBase*> downstream;
+            std::vector<FeatureBase*> origination;
+            std::vector<FeatureBase*> destination;
+            std::vector<FeatureBase*> neighbors;
 
             friend class FeatureCollection;
     };

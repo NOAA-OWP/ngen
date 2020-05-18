@@ -22,6 +22,8 @@ class NonlinearReservoirKernelTest : public ::testing::Test {
 
     void setupMultipleOutletOutOfOrderNonlinearReservoir();
 
+    void setupExponentialOutletReservoir();
+
     std::shared_ptr<Nonlinear_Reservoir> NoOutletReservoir; //smart pointer to a Nonlinear_Reservoir with no outlets
 
     std::shared_ptr<Nonlinear_Reservoir> OneOutletReservoir; //smart pointer to a Nonlinear_Reservoir with one outlet
@@ -32,16 +34,23 @@ class NonlinearReservoirKernelTest : public ::testing::Test {
 
     std::shared_ptr<Nonlinear_Reservoir> MultipleOutletOutOfOrderNonlinearReservoir; //smart pointer to a Nonlinear_Reservoir with multiple outlets out of order
 
+    std::shared_ptr<Nonlinear_Reservoir> SingleExponentialOutletReservoir; //smart pointer to a Nonlinear_Reservoir with one exponential outlet
+
     std::shared_ptr<Reservoir_Outlet> ReservoirOutlet1; //smart pointer to a Reservoir Outlet
 
     std::shared_ptr<Reservoir_Outlet> ReservoirOutlet2; //smart pointer to a Reservoir Outlet
 
     std::shared_ptr<Reservoir_Outlet> ReservoirOutlet3; //smart pointer to a Reservoir Outlet
 
-    std::vector<Reservoir_Outlet> ReservoirOutletsVector;
+    std::shared_ptr<Reservoir_Outlet> ReservoirExponentialOutlet; //smart pointer to a Reservoir Outlet    
 
-    std::vector<Reservoir_Outlet> ReservoirOutletsVectorOutOfOrder;
+    std::vector <std::shared_ptr<Reservoir_Outlet>> ReservoirOutletsVector;
 
+    std::vector <std::shared_ptr<Reservoir_Outlet>> ReservoirOutletsVectorOutOfOrder;
+
+    std::vector <std::shared_ptr<Reservoir_Outlet>> ReservoirExponentialSingleOutletVector;
+
+    std::vector <std::shared_ptr<Reservoir_Outlet>> ReservoirOutletsVectorMultipleTypes;    
 };
 
 void NonlinearReservoirKernelTest::SetUp() {
@@ -55,6 +64,8 @@ void NonlinearReservoirKernelTest::SetUp() {
     setupMultipleOutletNonlinearReservoir();
 
     setupMultipleOutletOutOfOrderNonlinearReservoir();
+
+    setupExponentialOutletReservoir();
 }
 
 void NonlinearReservoirKernelTest::TearDown() {
@@ -88,11 +99,11 @@ void NonlinearReservoirKernelTest::setupMultipleOutletNonlinearReservoir()
 
     ReservoirOutlet3 = std::make_shared<Reservoir_Outlet>(0.4, 0.6, 15.0, 100.0);
 
-    ReservoirOutletsVector.push_back(*ReservoirOutlet1);
+    ReservoirOutletsVector.push_back(ReservoirOutlet1);
 
-    ReservoirOutletsVector.push_back(*ReservoirOutlet2);
+    ReservoirOutletsVector.push_back(ReservoirOutlet2);
 
-    ReservoirOutletsVector.push_back(*ReservoirOutlet3);
+    ReservoirOutletsVector.push_back(ReservoirOutlet3);
 
     MultipleOutletReservoir = std::make_shared<Nonlinear_Reservoir>(0.0, 20.0, 2.0, ReservoirOutletsVector);
 }
@@ -106,15 +117,31 @@ void NonlinearReservoirKernelTest::setupMultipleOutletOutOfOrderNonlinearReservo
 
     ReservoirOutlet3 = std::make_shared<Reservoir_Outlet>(0.4, 0.6, 15.0, 100.0);
 
-    ReservoirOutletsVectorOutOfOrder.push_back(*ReservoirOutlet3);
+    ReservoirOutletsVectorOutOfOrder.push_back(ReservoirOutlet3);
 
-    ReservoirOutletsVectorOutOfOrder.push_back(*ReservoirOutlet2);
+    ReservoirOutletsVectorOutOfOrder.push_back(ReservoirOutlet2);
 
-    ReservoirOutletsVectorOutOfOrder.push_back(*ReservoirOutlet1);
+    ReservoirOutletsVectorOutOfOrder.push_back(ReservoirOutlet1);
 
     MultipleOutletOutOfOrderNonlinearReservoir = std::make_shared<Nonlinear_Reservoir>(0.0, 20.0, 2.0, ReservoirOutletsVectorOutOfOrder);
 }
 
+//Construct a reservoir with one exponential outlet
+void NonlinearReservoirKernelTest:: setupExponentialOutletReservoir()
+{
+    ReservoirExponentialOutlet = std::make_shared<Reservoir_Exponential_Outlet>(0.2, 0.4, 4.0, 100.0);
+
+    ReservoirOutlet1 = std::make_shared<Reservoir_Outlet>(0.2, 0.4, 4.0, 100.0);
+
+    ReservoirExponentialSingleOutletVector.push_back(ReservoirExponentialOutlet);
+
+    //Test added different type outlets to outlet vector
+    ReservoirOutletsVectorMultipleTypes.push_back(ReservoirOutlet1);
+
+    ReservoirOutletsVectorMultipleTypes.push_back(ReservoirExponentialOutlet);
+
+    SingleExponentialOutletReservoir = std::make_shared<Nonlinear_Reservoir>(0.0, 20.0, 2.0, ReservoirExponentialSingleOutletVector);
+}
 
 //Test Nonlinear Reservoir with no outlets.
 TEST_F(NonlinearReservoirKernelTest, TestRunNoOutletReservoir) 
@@ -260,6 +287,7 @@ TEST_F(NonlinearReservoirKernelTest, TestRunMultipleOutletReservoir)
     ASSERT_TRUE(true);
 }
 
+
 //Test Nonlinear Reservoir with multiple outlets that are initialized not in order from lowest to highest activation threshold
 TEST_F(NonlinearReservoirKernelTest, TestRunMultipleOutletOutOfOrderNonlinearReservoir) 
 {    
@@ -280,3 +308,46 @@ TEST_F(NonlinearReservoirKernelTest, TestRunMultipleOutletOutOfOrderNonlinearRes
     ASSERT_TRUE(true);
 }
 
+
+//Test Nonlinear Reservoir with multiple outlets accessor to an outlet velocity
+TEST_F(NonlinearReservoirKernelTest, TestRunMultipleOutletReservoirOutletVelocity) 
+{    
+    double in_flux_meters_per_second;
+    double excess;
+    double final_storage;
+    double second_outlet_velocity;
+
+    in_flux_meters_per_second = 1.6;
+
+    MultipleOutletReservoir->response_meters_per_second(in_flux_meters_per_second, 10, excess);
+
+    second_outlet_velocity = MultipleOutletReservoir->velocity_meters_per_second_for_outlet(1);
+
+    second_outlet_velocity = round( second_outlet_velocity * 100.0 ) / 100.0;
+
+    EXPECT_DOUBLE_EQ (0.23, second_outlet_velocity);
+    
+    ASSERT_TRUE(true);
+}
+
+
+//Test Nonlinear Reservoir with one exponential outlet 
+TEST_F(NonlinearReservoirKernelTest, TestRunSingleExponentialOutletReservoir) 
+{    
+    double in_flux_meters_per_second;
+    double excess;
+    double final_storage;
+    double exponential_outlet_velocity;
+
+    in_flux_meters_per_second = 1.6;
+
+    SingleExponentialOutletReservoir->response_meters_per_second(in_flux_meters_per_second, 10, excess);
+
+    exponential_outlet_velocity = SingleExponentialOutletReservoir->velocity_meters_per_second_for_outlet(0);
+
+    exponential_outlet_velocity = round( exponential_outlet_velocity * 100.0 ) / 100.0;
+
+    EXPECT_DOUBLE_EQ (0.09, exponential_outlet_velocity);
+    
+    ASSERT_TRUE(true);
+}
