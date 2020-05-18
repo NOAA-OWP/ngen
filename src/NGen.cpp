@@ -12,8 +12,8 @@
 
 #include "NGenConfig.h"
 
-std::string catchmentRealizationFile = "/Users/nels.frazier/workspace/ngen/data/sugar_creek/catchment_data_subset.geojson";
-std::string nexusRealizationFile = "/Users/nels.frazier/workspace/ngen/data/sugar_creek/nexus_data_subset.geojson";
+std::string catchmentRealizationFile = "../data/sugar_creek/catchment_data_subset.geojson";
+std::string nexusRealizationFile = "../data/sugar_creek/nexus_data_subset.geojson";
 
 //TODO this is possible, but ASSUMES realizations based on feature geom type, so not quite ready for prime time
 class RealizaitonVisitor : public geojson::FeatureVisitor {
