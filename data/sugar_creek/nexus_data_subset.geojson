@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "nexus_data",
+"features": [
+{ "type": "Feature", "properties": { "ID": "nex-94", "toID": "cat-94" }, "geometry": { "type": "Point", "coordinates": [ 1361792.276278155623004, 1464846.76590294460766 ] } },
+{ "type": "Feature", "properties": { "ID": "nex-92", "toID": "cat-92" }, "geometry": { "type": "Point", "coordinates": [ 1360328.808812404749915, 1467558.350883362349123 ] } }
+]
+}
