@@ -10,7 +10,9 @@ using std::shared_ptr;
 class HY_Catchment;
 
 //This is the base base for CatchmentRealizations
-
+typedef long time_step_t;
+//TODO template<forcing>
+//TODO template<et_datatype>
 class HY_CatchmentRealization
 {
     public:
