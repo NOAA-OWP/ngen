@@ -5,6 +5,7 @@
 
 
 Simple_Lumped_Model_Realization::Simple_Lumped_Model_Realization(
+    forcing_params forcing_config,
     double storage_meters,
     double max_storage_meters,
     double a,
@@ -14,7 +15,7 @@ Simple_Lumped_Model_Realization::Simple_Lumped_Model_Realization(
     long n,
     const std::vector<double>& Sr,
     time_step_t t
-  )//:HY_CatchmentRealization(start_time, end_time, id)
+  ):HY_CatchmentArea(forcing_config)
 {
     params.max_storage_meters = max_storage_meters;
     params.a = a;

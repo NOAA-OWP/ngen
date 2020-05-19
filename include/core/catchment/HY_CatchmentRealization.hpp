@@ -7,6 +7,7 @@
 
 using std::shared_ptr;
 
+//Forward Declarations
 class HY_Catchment;
 
 //This is the base base for CatchmentRealizations
@@ -16,8 +17,9 @@ typedef long time_step_t;
 class HY_CatchmentRealization
 {
     public:
-
+    //TODO remove the default constructor? leaving temporarily to satisfy non-used realizations
     HY_CatchmentRealization();
+    HY_CatchmentRealization(forcing_params forcing_config);
     virtual ~HY_CatchmentRealization();
 
     protected:
@@ -27,8 +29,10 @@ class HY_CatchmentRealization
     unsigned long id_number;
     std::string id;
 
-  private:
+  protected:
     Forcing forcing;
+
+  private:
 
 };
 

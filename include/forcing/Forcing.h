@@ -13,6 +13,36 @@
 using namespace std;
 
 /**
+ * @brief forcing_params providing configuration information for forcing time period and source.
+ */
+struct forcing_params
+{
+  std::string path;
+  std::string start_time;
+  std::string end_time;
+  std::string date_format =  "%Y-%m-%d %H:%M:%S";
+  time_t start_t;
+  time_t end_t;
+  /*
+    Constructor for forcing_params
+  */
+  forcing_params(std::string path, std::string start_time, std::string end_time):
+    path(path), start_time(start_time), end_time(end_time)
+    {
+      //TODO converting to UTC can be tricky, especially if thread safety is a concern
+      /* https://stackoverflow.com/questions/530519/stdmktime-and-timezone-info */
+      struct tm tm;
+      strptime(this->start_time.c_str(), this->date_format.c_str() , &tm);
+      //mktime returns time in local time based on system timezone
+      //FIXME use timegm (not standard)? or implement timegm (see above link)
+      this->start_t = timegm( &tm );
+
+      strptime(this->end_time.c_str(), this->date_format.c_str() , &tm);
+      this->end_t = timegm( &tm );
+    }
+};
+
+/**
  * @brief Forcing class providing time-series precipiation forcing data to the model.
  */
 class Forcing
@@ -29,8 +59,16 @@ class Forcing
 
     }
 
+    Forcing(forcing_params forcing_config):start_date_time_epoch(forcing_config.start_t),
+                                           end_date_time_epoch(forcing_config.end_t),
+                                           current_date_time_epoch(forcing_config.start_t),
+                                           forcing_vector_index_ptr(-1)
+    {
+        read_forcing_aorc(forcing_config.path);
+    }
+
     /**
-     * @brief Parameterized Constuctor that builds a Forcing object and reads an input forcing CSV into a vector. 
+     * @brief Parameterized Constuctor that builds a Forcing object and reads an input forcing CSV into a vector.
      * @param air_temperature_fahrenheit Air temperatrure in Fahrenheit
      * @param basin_latitude Basin Latitude
      * @param forcing_file_name Forcing file name
@@ -63,7 +101,7 @@ class Forcing
      * @return the current hourly precipitation in meters per second
      */
     double get_current_hourly_precipitation_meters_per_second()
-    { 
+    {
         return precipitation_rate_meters_per_second_vector[forcing_vector_index_ptr];
     }
 
@@ -96,8 +134,8 @@ class Forcing
         struct tm *current_date_time;
 
         current_date_time = localtime(&current_date_time_epoch);
-                
-        current_day_of_year = current_date_time->tm_yday;    
+
+        current_day_of_year = current_date_time->tm_yday;
 
         return current_day_of_year;
     }
@@ -110,7 +148,7 @@ class Forcing
      * @param file_name Forcing file name
      */
     void read_forcing(string file_name)
-    { 
+    {
         //Call CSVReader constuctor
         CSVReader reader(file_name);
 
@@ -122,10 +160,10 @@ class Forcing
         {
                 //Row vector
                 std::vector<std::string>& vec = data_list[i];
-               
+
                 //Declare pointer to struct for the current row date-time
                 struct tm *current_row_date_time;
-               
+
                 //Allocate memory to struct for the current row date-time
                 current_row_date_time = new tm();
 
@@ -136,7 +174,7 @@ class Forcing
 
                 //Month
                 string month_str = vec[1];
-                int month = stoi(month_str);              
+                int month = stoi(month_str);
                 current_row_date_time->tm_mon = month - 1;
 
                 //Day
@@ -157,7 +195,7 @@ class Forcing
                 {
                     //Precipitation
                     string precip_str = vec[5];
-    
+
                     //Convert from string to double and from mm/hr to m/s
                     double precip = atof(precip_str.c_str()) / (1000 * 3600);
 
@@ -167,7 +205,7 @@ class Forcing
 
                 //Free memory from struct
                 delete current_row_date_time;
-        }        
+        }
     }
 
 
@@ -177,7 +215,7 @@ class Forcing
      * @param file_name Forcing file name
      */
     void read_forcing_aorc(string file_name)
-    { 
+    {
         //Call CSVReader constuctor
         CSVReader reader(file_name);
 
@@ -189,10 +227,10 @@ class Forcing
         {
                 //Row vector
                 std::vector<std::string>& vec = data_list[i];
-               
+
                 //Declare struct for the current row date-time
                 struct tm current_row_date_time;
-               
+
                 //Allocate memory to struct for the current row date-time
                 current_row_date_time = tm();
 
@@ -218,7 +256,7 @@ class Forcing
                     string UGRD_10maboveground_str = vec[7];
                     string VGRD_10maboveground_str = vec[8];
                     string precip_rate_str = vec[9];
-    
+
                     //Convert from strings to doubles
                     double APCP_surface = atof(APCP_surface_str.c_str());
                     double DLWRF_surface = atof(DLWRF_surface_str.c_str());
@@ -244,7 +282,7 @@ class Forcing
 
                 //Free memory from struct
                 //delete current_row_date_time;
-        }    
+        }
     }
 
     vector<double> APCP_surface_kg_per_meters_squared_vector;
@@ -256,7 +294,7 @@ class Forcing
     vector<double> UGRD_10maboveground_meters_per_second_vector;
     vector<double> VGRD_10maboveground_meters_per_second_vector;
     vector<double> precipitation_rate_meters_per_second_vector;
-    int forcing_vector_index_ptr; 
+    int forcing_vector_index_ptr;
     double precipitation_rate_meters_per_second;
     double air_temperature_fahrenheit;
     int basin_id;
@@ -290,4 +328,3 @@ class Forcing
 /// \todo Make CSV forcing a subclass
 /// \todo Consider passing grid to class
 /// \todo Consider following GDAL API functionality
-
