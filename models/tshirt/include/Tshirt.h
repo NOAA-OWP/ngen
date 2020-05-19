@@ -190,8 +190,8 @@ namespace tshirt {
             // Build vector of pointers to outlets to pass the custom exponential outlet through
             vector<std::shared_ptr<Reservoir_Outlet>> gw_outlets_vector(1);
             // TODO: verify activation threshold
-            gw_outlets_vector.push_back(make_shared<Reservoir_Outlet>(
-                    Reservoir_Exponential_Outlet(model_params.Cgw, model_params.expon, 0.0, max_gw_velocity)));
+            gw_outlets_vector[0] = make_shared<Reservoir_Outlet>(
+                    Reservoir_Exponential_Outlet(model_params.Cgw, model_params.expon, 0.0, max_gw_velocity));
             // Create the reservoir, passing the outlet via the vector argument
             groundwater_reservoir = Nonlinear_Reservoir(0.0, model_params.max_groundwater_storage_meters,
                                                         previous_state->groundwater_storage_meters, gw_outlets_vector);
