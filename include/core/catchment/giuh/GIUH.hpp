@@ -13,24 +13,23 @@ namespace giuh {
         /** Index of the last 'cdf_ordinate_times_seconds' used to calculate and output contribution. */
         unsigned long last_outputted_cdf_index;
         /** A pointer to a "next" giuh_carry_over struct value, allowing these to self-assemble into a simple list. */
-        shared_ptr<giuh_carry_over> next;
+        std::shared_ptr<giuh_carry_over> next;
 
         giuh_carry_over(double original_runoff, unsigned long last_cdf_index) : original_input_amount(original_runoff),
                                                                                 last_outputted_cdf_index(last_cdf_index),
                                                                                 next(nullptr){}
     };
 
-    class giuh_kernel
-    {
+    class giuh_kernel {
 
     public:
 
         // TODO: perhaps add separate constructor or factory (or both) for getting info from file
 
         giuh_kernel(
-                string catchment_id,
-                vector<double> cdf_times,
-                vector<double> cdf_cumulative_freqs
+                std::string catchment_id,
+                std::vector<double> cdf_times,
+                std::vector<double> cdf_cumulative_freqs
                 )
         {
             this->catchment_id = std::move(catchment_id);
@@ -100,28 +99,28 @@ namespace giuh {
          *
          * @return the catchment id of the associated catchment.
          */
-        string get_catchment_id();
+        std::string get_catchment_id();
 
     private:
         /** Associated catchment identifier, as a string. */
-        string catchment_id;
+        std::string catchment_id;
         /** Ranked order of time of travel cell values. */
-        vector<double> cdf_cumulative_freqs;
+        std::vector<double> cdf_cumulative_freqs;
         /** Times in seconds. */
-        vector<double> cdf_times;
+        std::vector<double> cdf_times;
         /** The regularity used to interpolate and produce CDF ordinates, in seconds. */
         int cdf_regularity_seconds;
         /** The corresponding time values for each of the calculated CDF ordinates. */
-        vector<int> cdf_ordinate_times_seconds;
+        std::vector<int> cdf_ordinate_times_seconds;
         /** The regularized CDF ordinate values. */
-        vector<double> regularized_cdf_ordinates;
+        std::vector<double> regularized_cdf_ordinates;
         /**
          * The incremental increases in the regularized CDF ordinate at a given index from the value at the previous
          * index.
          */
-        vector<double> incremental_runoff_values;
+        std::vector<double> incremental_runoff_values;
         /** Queue to hold carry-over amounts from previous inputs, which didn't all flow out at that time step. */
-        shared_ptr<giuh_carry_over> carry_overs_list_head;
+        std::shared_ptr<giuh_carry_over> carry_overs_list_head;
 
     };
 }
