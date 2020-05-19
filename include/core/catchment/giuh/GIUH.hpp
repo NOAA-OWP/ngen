@@ -6,7 +6,22 @@
 #include <vector>
 
 namespace giuh {
-    class giuh_kernel {
+
+    struct giuh_carry_over {
+        /** The amount of the original runoff input. */
+        double original_input_amount;
+        /** Index of the last 'cdf_ordinate_times_seconds' used to calculate and output contribution. */
+        unsigned long last_outputted_cdf_index;
+        /** A pointer to a "next" giuh_carry_over struct value, allowing these to self-assemble into a simple list. */
+        shared_ptr<giuh_carry_over> next;
+
+        giuh_carry_over(double original_runoff, unsigned long last_cdf_index) : original_input_amount(original_runoff),
+                                                                                last_outputted_cdf_index(last_cdf_index),
+                                                                                next(nullptr){}
+    };
+
+    class giuh_kernel
+    {
 
         // TODO: create more complete class definition and implementation
 
@@ -25,6 +40,8 @@ namespace giuh {
             this->cdf_times = std::move(cdf_times);
             // TODO: might be able to get this by calculating from times, rather than being passed
             this->cdf_cumulative_freqs = std::move(cdf_cumulative_freqs);
+
+            carry_overs_list_head = nullptr;
 
             // TODO: look at not hard-coding this later
             cdf_regularity_seconds = 60;
@@ -106,6 +123,8 @@ namespace giuh {
          * index.
          */
         vector<double> incremental_runoff_values;
+        /** Queue to hold carry-over amounts from previous inputs, which didn't all flow out at that time step. */
+        shared_ptr<giuh_carry_over> carry_overs_list_head;
 
     };
 }
