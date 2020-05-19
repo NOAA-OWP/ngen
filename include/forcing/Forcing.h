@@ -184,8 +184,8 @@ class Forcing
 	//Get the data from CSV File
 	std::vector<std::vector<std::string> > data_list = reader.getData();
 
-        //Iterate through CSV starting on the third row
-        for (int i = 2; i < data_list.size(); i++)
+        //Iterate through CSV starting on the second row
+        for (int i = 1; i < data_list.size(); i++)
         {
                 //Row vector
                 std::vector<std::string>& vec = data_list[i];
