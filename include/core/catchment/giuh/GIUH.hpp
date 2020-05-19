@@ -23,13 +23,10 @@ namespace giuh {
     class giuh_kernel
     {
 
-        // TODO: create more complete class definition and implementation
-
     public:
 
         // TODO: perhaps add separate constructor or factory (or both) for getting info from file
 
-        // TODO: complete constructor
         giuh_kernel(
                 string catchment_id,
                 vector<double> cdf_times,
