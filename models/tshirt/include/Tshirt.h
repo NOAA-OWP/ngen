@@ -164,28 +164,37 @@ namespace tshirt {
             }
 
             // ********** Create the soil reservoir
-            // TODO: probably will need to change this to be vector of pointers once Reservoir class changes are done
-            vector<Reservoir_Outlet> soil_res_outlets(2);
+            // Build the vector of pointers to reservoir outlets
+            vector<std::shared_ptr<Reservoir_Outlet>> soil_res_outlets(2);
 
             // init subsurface later flow outlet
-            soil_res_outlets[lf_outlet_index] = Reservoir_Outlet(model_params.Klf, 1.0, Sfc,
-                                                                 model_params.max_lateral_flow);
+            soil_res_outlets[lf_outlet_index] = std::make_shared<Reservoir_Outlet>(
+                    Reservoir_Outlet(model_params.Klf, 1.0, Sfc, model_params.max_lateral_flow));
+
             // init subsurface percolation flow outlet
             // The max perc flow should be equal to the params.satdk value
-            soil_res_outlets[perc_outlet_index] = Reservoir_Outlet(model_params.satdk * model_params.slope, 1.0, Sfc,
-                                                                   model_params.satdk);
+            soil_res_outlets[perc_outlet_index] = std::make_shared<Reservoir_Outlet>(
+                    Reservoir_Outlet(model_params.satdk * model_params.slope, 1.0, Sfc,
+                                     model_params.satdk));
 
-            soil_reservoir = Nonlinear_Reservoir(0.0, model_params.depth, previous_state->soil_storage_meters, soil_res_outlets);
+            // Create the reservoir, included the created vector of outlet pointers
+            soil_reservoir = Nonlinear_Reservoir(0.0, model_params.depth, previous_state->soil_storage_meters,
+                                                 soil_res_outlets);
 
             // ********** Create the groundwater reservoir
             // Given the equation:
             //      double groundwater_flow_meters_per_second = params.Cgw * ( exp(params.expon * state.groundwater_storage_meters / params.max_groundwater_storage_meters) - 1 );
             // The max value should be when groundwater_storage_meters == max_groundwater_storage_meters, or ...
             double max_gw_velocity = model_params.Cgw * (exp(model_params.expon) - 1);
+
+            // Build vector of pointers to outlets to pass the custom exponential outlet through
+            vector<std::shared_ptr<Reservoir_Outlet>> gw_outlets_vector(1);
             // TODO: verify activation threshold
-            groundwater_reservoir = Nonlinear_Reservoir(0, model_params.max_groundwater_storage_meters,
-                                                        previous_state->groundwater_storage_meters, model_params.Cgw, 1,
-                                                        0, max_gw_velocity);
+            gw_outlets_vector.push_back(make_shared<Reservoir_Outlet>(
+                    Reservoir_Exponential_Outlet(model_params.Cgw, model_params.expon, 0.0, max_gw_velocity)));
+            // Create the reservoir, passing the outlet via the vector argument
+            groundwater_reservoir = Nonlinear_Reservoir(0.0, model_params.max_groundwater_storage_meters,
+                                                        previous_state->groundwater_storage_meters, gw_outlets_vector);
 
             // ********** Set fluxes to null for now: it is bogus until first call of run function, which initializes it
             fluxes = nullptr;
@@ -326,7 +335,7 @@ namespace tshirt {
 
             double Sfc = calc_soil_field_capacity_storage(params);
 
-            vector<Reservoir_Outlet> subsurface_outlets;
+            vector<std::shared_ptr<Reservoir_Outlet>> subsurface_outlets(2);
 
             // Keep track of the indexes of the specific outlets for later access
             int lf_outlet_index = 0;
@@ -335,11 +344,12 @@ namespace tshirt {
             // init subsurface later flow outlet
             // TODO: look into this in debugging, as it looks like a EXC_BAD_ACCESS exception is actually happening
             //  during unit testing and not being especially visible
-            subsurface_outlets[lf_outlet_index] = Reservoir_Outlet(params.Klf, 1.0, Sfc, params.max_lateral_flow);
+            subsurface_outlets[lf_outlet_index] = std::make_shared<Reservoir_Outlet>(
+                    Reservoir_Outlet(params.Klf, 1.0, Sfc, params.max_lateral_flow));
             // init subsurface percolation flow outlet
             // The max perc flow should be equal to the params.satdk value
-            subsurface_outlets[perc_outlet_index] = Reservoir_Outlet(params.satdk * params.slope, 1.0, Sfc,
-                                                                     params.satdk);
+            subsurface_outlets[perc_outlet_index] = std::make_shared<Reservoir_Outlet>(
+                    Reservoir_Outlet(params.satdk * params.slope, 1.0, Sfc, params.satdk));
 
             Nonlinear_Reservoir subsurface_reservoir(0.0, params.depth, state.soil_storage_meters, subsurface_outlets);
 
