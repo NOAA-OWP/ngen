@@ -8,6 +8,7 @@
 #include <HY_HydroNexus.hpp>
 #include <HY_Catchment.hpp>
 #include <Simple_Lumped_Model_Realization.hpp>
+#include <Tshirt_Realization.hpp>
 #include <HY_PointHydroNexus.hpp>
 
 #include "NGenConfig.h"
@@ -69,8 +70,32 @@ std::unordered_map<std::string, int> catchment_id;
 // create the struct used for ET
 pdm03_struct pdm_et_data;
 
-typedef Simple_Lumped_Model_Realization _hymod;
+//Define tshirt params
+//{maxsmc, wltsmc, satdk, satpsi, slope, b, multiplier, aplha_fx, klf, kn, nash_n, Cgw, expon, max_gw_storage}
+tshirt::tshirt_params tshirt_params{
+  1000.0, //maxsmc
+  1.0,    //wltsmc
+  10.0,   //satdk
+  0.1,    //satpsi
+  0.01,   //slope
+  3,      //b
+  1.0,    //multipier
+  1.0,    //aplha_fc
+  1.0,    //Klf
+  1.0,    //Kn
+  8,      //nash_n
+  1.0,    //Cgw
+  1.0,    //expon
+  100.0   //max_gw_storage
+};
+std::vector<double> cdf_times {0, 300, 600, 900, 1200};//, 1500, 1800, 2100, 2400, 2700};
+std::vector<double> cdf_freq {0.00, 0.38, 0.59, 0.03, 0.0};
 
+giuh::giuh_kernel giuh_k("cat-88", cdf_times, cdf_freq);
+unique_ptr<giuh::giuh_kernel> giuh_example = make_unique<giuh::giuh_kernel>(giuh_k);
+
+typedef Simple_Lumped_Model_Realization _hymod;
+typedef realization::Tshirt_Realization _tshirt;
 int main(int argc, char *argv[]) {
     std::cout << "Hello there " << ngen_VERSION_MAJOR << "."
               << ngen_VERSION_MINOR << "."
@@ -96,6 +121,7 @@ int main(int argc, char *argv[]) {
     pdm_et_data.Huz = 400.0;
     pdm_et_data.Cpar = pdm_et_data.Huz / (1.0+pdm_et_data.B);
 
+    //Hymod default params
     double storage = 1.0;
     double max_storage = 1000.0;
     double a = 1.0;
