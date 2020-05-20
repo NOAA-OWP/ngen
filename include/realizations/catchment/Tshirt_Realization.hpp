@@ -14,7 +14,8 @@ namespace realization {
 
         typedef long time_step_t;
 
-        Tshirt_Realization(double soil_storage_meters,
+        Tshirt_Realization(forcing_params forcing_config,
+                           double soil_storage_meters,
                            double groundwater_storage_meters,
                            unique_ptr<giuh::giuh_kernel> giuh_kernel,
                            tshirt::tshirt_params params,
@@ -22,6 +23,7 @@ namespace realization {
                            time_step_t t);
 
         Tshirt_Realization(
+                forcing_params forcing_config,
                 double soil_storage_meters,
                 double groundwater_storage_meters,
                 unique_ptr<giuh::giuh_kernel> giuh_kernel,
@@ -46,7 +48,7 @@ namespace realization {
         virtual ~Tshirt_Realization();
 
         double get_response(double input_flux, time_step_t t, const shared_ptr<pdm03_struct>& et_params);
-
+        double get_response(double input_flux, time_step_t t, time_step_t dt, void* et_params);
         void add_time(time_t t, double n);
 
     private:
@@ -56,6 +58,8 @@ namespace realization {
         tshirt::tshirt_params params;
         unique_ptr<tshirt::tshirt_model> model;
         unique_ptr<giuh::giuh_kernel> giuh_kernel;
+        //The delta time (dt) this instance is configured to use
+        time_step_t dt;
 
     };
 
