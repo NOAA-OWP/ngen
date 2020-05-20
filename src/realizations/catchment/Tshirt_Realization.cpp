@@ -69,7 +69,7 @@ double Tshirt_Realization::get_response(double input_flux, Tshirt_Realization::t
   return get_response(input_flux, t, std::make_shared<pdm03_struct>( *(pdm03_struct*) et_params ));
 }
 
-double Tshirt_Realization::get_response(double input_flux, Tshirt_Realization::time_step_t t,
+double Tshirt_Realization::get_response(double input_flux, time_step_t t,
                                         const shared_ptr<pdm03_struct> &et_params) {
     add_time(t+1, params.nash_n);
     model->run(86400.0, input_flux, et_params);
