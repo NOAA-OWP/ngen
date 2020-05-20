@@ -50,6 +50,10 @@ Tshirt_Realization::Tshirt_Realization(
 
 }
 
+Tshirt_Realization::~Tshirt_Realization()
+{
+  //destructor
+}
 void Tshirt_Realization::add_time(time_t t, double n) {
     // TODO: is this really needed anymore?
     if (state.find(t) != state.end()) {
