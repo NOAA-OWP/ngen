@@ -3,6 +3,7 @@
 using namespace realization;
 
 Tshirt_Realization::Tshirt_Realization(
+        forcing_params forcing_config,
         double soil_storage_meters,
         double groundwater_storage_meters,
         unique_ptr<giuh::giuh_kernel> giuh_kernel,
@@ -10,7 +11,7 @@ Tshirt_Realization::Tshirt_Realization(
         const vector<double> &nash_storage,
         Tshirt_Realization::time_step_t t
         )
-    : giuh_kernel(move(giuh_kernel)), params(params)
+    : HY_CatchmentArea(forcing_config), giuh_kernel(move(giuh_kernel)), params(params)
 {
     add_time(t, params.nash_n);
     state[0] = std::make_shared<tshirt::tshirt_state>(tshirt::tshirt_state(soil_storage_meters, groundwater_storage_meters, nash_storage));
@@ -26,6 +27,7 @@ Tshirt_Realization::Tshirt_Realization(
 }
 
 Tshirt_Realization::Tshirt_Realization(
+        forcing_params forcing_config,
         double soil_storage_meters,
         double groundwater_storage_meters,
         unique_ptr<giuh::giuh_kernel> giuh_kernel,
@@ -45,7 +47,7 @@ Tshirt_Realization::Tshirt_Realization(
         double max_gw_storage,
         const std::vector<double> &nash_storage,
         time_step_t t
-) : Tshirt_Realization::Tshirt_Realization(soil_storage_meters, groundwater_storage_meters, move(giuh_kernel),
+) : Tshirt_Realization::Tshirt_Realization(forcing_config, soil_storage_meters, groundwater_storage_meters, move(giuh_kernel),
         tshirt::tshirt_params(maxsmc, wltsmc, satdk, satpsi, slope, b, multiplier, alpha_fc, Klf, Kn, nash_n, Cgw,
                               expon, max_gw_storage), nash_storage, t) {
 
@@ -77,7 +79,8 @@ double Tshirt_Realization::get_response(double input_flux, Tshirt_Realization::t
 double Tshirt_Realization::get_response(double input_flux, time_step_t t,
                                         const shared_ptr<pdm03_struct> &et_params) {
     add_time(t+1, params.nash_n);
-    model->run(86400.0, input_flux, et_params);
+    double precip = this->forcing.get_next_hourly_precipitation_meters_per_second();
+    model->run(86400.0, precip, et_params);
     state[t+1] = model->get_current_state();
     fluxes[t] = model->get_fluxes();
 

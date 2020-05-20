@@ -14,7 +14,8 @@ namespace realization {
 
         typedef long time_step_t;
 
-        Tshirt_Realization(double soil_storage_meters,
+        Tshirt_Realization(forcing_params forcing_config,
+                           double soil_storage_meters,
                            double groundwater_storage_meters,
                            unique_ptr<giuh::giuh_kernel> giuh_kernel,
                            tshirt::tshirt_params params,
@@ -22,6 +23,7 @@ namespace realization {
                            time_step_t t);
 
         Tshirt_Realization(
+                forcing_params forcing_config,
                 double soil_storage_meters,
                 double groundwater_storage_meters,
                 unique_ptr<giuh::giuh_kernel> giuh_kernel,
