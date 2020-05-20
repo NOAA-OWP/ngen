@@ -66,7 +66,12 @@ std::unordered_map<std::string, std::string> catchment_to_nexus;
 std::unordered_map<std::string, std::string> nexus_to_catchment;
 //TODO move catchment int identity to relization, and update nexus to use string id
 std::unordered_map<std::string, int> catchment_id;
-
+std::unordered_map<std::string, std::string> forcing_paths {
+  {"cat-88", "../data/sugar_creek/forcing/cat-88_2015-12-01 00:00:00_2015-12-30 23:00:00.csv"},
+  {"cat-89", "../data/sugar_creek/forcing/cat-89_2015-12-01 00:00:00_2015-12-30 23:00:00.csv"},
+  {"cat-92", "../data/sugar_creek/forcing/cat-92_2015-12-01 00:00:00_2015-12-30 23:00:00.csv"},
+  {"cat-87", "../data/sugar_creek/forcing/cat-87_2015-12-01 00:00:00_2015-12-30 23:00:00.csv"}
+};
 // create the struct used for ET
 pdm03_struct pdm_et_data;
 
@@ -100,6 +105,10 @@ int main(int argc, char *argv[]) {
     std::cout << "Hello there " << ngen_VERSION_MAJOR << "."
               << ngen_VERSION_MINOR << "."
               << ngen_VERSION_PATCH << std::endl;
+
+    std::string start_time = "2015-12-01 00:00:00";
+    std::string end_time = "2015-12-30 23:00:00";
+
 
     //Read the collection of nexus
     std::cout << "Building Nexus collection" << std::endl;
@@ -180,7 +189,7 @@ int main(int argc, char *argv[]) {
       }
 
     }
-
+    std::cout<<"Running Models"<<std::endl;
     //Now loop some time, iterate catchments, do stuff for 720 hourly time steps
     for(int time_step = 0; time_step < 1; time_step++)
     {
