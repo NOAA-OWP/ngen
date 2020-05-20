@@ -21,9 +21,9 @@ jobs:
     - name: git submodule
       run: git submodule update --init --recursive -- test/googletest
     - name: cmake_init_build
-      run: cmake -DCMAKE_CXX_COMPILER=/usr/bin/g++ -B cmake_build -S .
+      run: cmake -DCMAKE_BUILD_TYPE=Debug -B cmake-build-debug -S .
     - name: build_tests
-      run: cmake --build . --target test_all
+      run: cmake --build cmake-build-debug --target test_all -- -j 4
       timeout-minutes: 15
     - name: run_tests
       run: ./cmake_build/test/test_all
