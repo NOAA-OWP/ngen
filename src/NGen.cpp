@@ -197,7 +197,8 @@ int main(int argc, char *argv[]) {
       {
         if(catchment.first == "cat-89")
         {
-        double response = catchment.second->get_response(0, 0, &pdm_et_data);
+        //Get response for an hour (3600 seconds) time step
+        double response = catchment.second->get_response(0, time_step, 3600.0, &pdm_et_data);
         nexus_realizations[ catchment_to_nexus[catchment.first] ]->add_upstream_flow(response, catchment_id[catchment.first], time_step);
         std::cout<<"Reporting water for time_step "<<time_step<<std::endl<<\
                    "Nexus "<<catchment_to_nexus[catchment.first]<<" has "<<\

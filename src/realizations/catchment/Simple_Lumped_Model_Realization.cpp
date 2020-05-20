@@ -59,12 +59,15 @@ double Simple_Lumped_Model_Realization::calc_et(double soil_m, void* et_params)
     return 0.0;
 }
 
-double Simple_Lumped_Model_Realization::get_response(double input_flux, time_step_t t, void* et_params)
+double Simple_Lumped_Model_Realization::get_response(double input_flux, time_step_t t, time_step_t dt, void* et_params)
 {   //TODO input_flux = this->forcing.get_input(t)
     //TODO input_et = this->forcing.get_et(t)
     double precip = this->forcing.get_next_hourly_precipitation_meters_per_second();
 
     add_time(t+1, params.n);
-    hymod_kernel::run(68400.0, params, state[t], state[t+1], fluxes[t], precip, et_params);
+    //FIXME should this run "daily" or hourly (t) which should really be dt
+    //Do we keep an "internal dt" i.e. this->dt and reconcile with t?
+    //hymod_kernel::run(68400.0, params, state[t], state[t+1], fluxes[t], precip, et_params);
+    hymod_kernel::run(dt, params, state[t], state[t+1], fluxes[t], precip, et_params);
     return fluxes[t].slow_flow_meters_per_second + fluxes[t].runoff_meters_per_second;
 }

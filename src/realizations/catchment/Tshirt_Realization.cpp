@@ -11,9 +11,10 @@ Tshirt_Realization::Tshirt_Realization(
         const vector<double> &nash_storage,
         Tshirt_Realization::time_step_t t
         )
-    : HY_CatchmentArea(forcing_config), giuh_kernel(move(giuh_kernel)), params(params)
+    : HY_CatchmentArea(forcing_config), giuh_kernel(move(giuh_kernel)), params(params), dt(t)
 {
-    add_time(t, params.nash_n);
+    //FIXME not really used, don't call???
+    //add_time(t, params.nash_n);
     state[0] = std::make_shared<tshirt::tshirt_state>(tshirt::tshirt_state(soil_storage_meters, groundwater_storage_meters, nash_storage));
     //state[0]->soil_storage_meters = soil_storage_meters;
     //state[0]->groundwater_storage_meters = groundwater_storage_meters;
@@ -71,16 +72,19 @@ void Tshirt_Realization::add_time(time_t t, double n) {
     }
 
 }
-double Tshirt_Realization::get_response(double input_flux, Tshirt_Realization::time_step_t t, void* et_params)
+double Tshirt_Realization::get_response(double input_flux, Tshirt_Realization::time_step_t t, time_step_t dt, void* et_params)
 {
-  return get_response(input_flux, t, std::make_shared<pdm03_struct>( *(pdm03_struct*) et_params ));
+  return get_response(input_flux, dt, std::make_shared<pdm03_struct>( *(pdm03_struct*) et_params ));
 }
 
 double Tshirt_Realization::get_response(double input_flux, time_step_t t,
                                         const shared_ptr<pdm03_struct> &et_params) {
-    add_time(t+1, params.nash_n);
+    //FIXME doesn't do anything, don't call???
+    //add_time(t+1, params.nash_n);
     double precip = this->forcing.get_next_hourly_precipitation_meters_per_second();
-    model->run(86400.0, precip, et_params);
+    //FIXME should this run "daily" or hourly (t) which should really be dt
+    //Do we keep an "internal dt" i.e. this->dt and reconcile with t?
+    model->run(t, precip, et_params);
     state[t+1] = model->get_current_state();
     fluxes[t] = model->get_fluxes();
 
