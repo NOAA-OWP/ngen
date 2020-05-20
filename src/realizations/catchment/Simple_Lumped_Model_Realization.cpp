@@ -5,6 +5,7 @@
 
 
 Simple_Lumped_Model_Realization::Simple_Lumped_Model_Realization(
+    forcing_params forcing_config,
     double storage_meters,
     double max_storage_meters,
     double a,
@@ -14,7 +15,7 @@ Simple_Lumped_Model_Realization::Simple_Lumped_Model_Realization(
     long n,
     const std::vector<double>& Sr,
     time_step_t t
-    )
+  ):HY_CatchmentArea(forcing_config)
 {
     params.max_storage_meters = max_storage_meters;
     params.a = a;
@@ -59,7 +60,8 @@ double Simple_Lumped_Model_Realization::calc_et(double soil_m, void* et_params)
 }
 
 double Simple_Lumped_Model_Realization::get_response(double input_flux, time_step_t t, void* et_params)
-{
+{   //TODO input_flux = this->forcing.get_input(t)
+    //TODO input_et = this->forcing.get_et(t)
     add_time(t+1, params.n);
     hymod_kernel::run(68400.0, params, state[t], state[t+1], fluxes[t], input_flux, et_params);
     return fluxes[t].slow_flow_meters_per_second + fluxes[t].runoff_meters_per_second;

@@ -14,6 +14,7 @@ class Simple_Lumped_Model_Realization : public HY_CatchmentArea
         typedef long time_step_t;
 
         Simple_Lumped_Model_Realization(
+            forcing_params forcing_config,
             double storage,
             double max_storage,
             double a,
