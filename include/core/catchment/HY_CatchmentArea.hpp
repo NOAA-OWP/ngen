@@ -18,6 +18,7 @@ class HY_CatchmentArea : public HY_CatchmentRealization, public GM_Object
     typedef bg::model::polygon<point_t> polygon_t;
 
     HY_CatchmentArea();
+    HY_CatchmentArea(forcing_params forcing_config); //TODO not sure I like this pattern
     virtual ~HY_CatchmentArea();
 
     protected:
