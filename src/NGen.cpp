@@ -78,21 +78,23 @@ pdm03_struct pdm_et_data;
 //Define tshirt params
 //{maxsmc, wltsmc, satdk, satpsi, slope, b, multiplier, aplha_fx, klf, kn, nash_n, Cgw, expon, max_gw_storage}
 tshirt::tshirt_params tshirt_params{
-  1000.0, //maxsmc
-  1.0,    //wltsmc
-  10.0,   //satdk
-  0.1,    //satpsi
-  0.01,   //slope
-  3,      //b
-  1.0,    //multipier
-  1.0,    //aplha_fc
-  1.0,    //Klf
-  1.0,    //Kn
-  8,      //nash_n
-  1.0,    //Cgw
-  1.0,    //expon
-  100.0   //max_gw_storage
+  0.81,   //maxsmc FWRFH
+  1.0,    //wltsmc  FIXME NOT USED IN TSHIRT?!?!
+  0.48,   //satdk FWRFH
+  0.1,    //satpsi    FIXME what is this and what should its value be?
+  0.58,   //slope FWRFH
+  1.3,      //b bexp? FWRFH
+  1.0,    //multipier  FIXMME what should this value be
+  1.0,    //aplha_fc   FIXME what should this value be
+  0.0000672,    //Klf F
+  0.1,    //Kn Kn	0.001-0.03 F
+  8,      //nash_n     FIXME is 8 a good number for the cascade?
+  1.08,    //Cgw C? FWRFH
+  6.0,    //expon FWRFH
+  16.0   //max_gw_storage Sgwmax FWRFH
 };
+
+//FIXME get real values for GIUH/Catchments
 std::vector<double> cdf_times {0, 300, 600, 900, 1200};//, 1500, 1800, 2100, 2400, 2700};
 std::vector<double> cdf_freq {0.00, 0.38, 0.59, 0.03, 0.0};
 
