@@ -64,6 +64,9 @@ std::unordered_map<std::string, std::unique_ptr<HY_CatchmentRealization>>  catch
 std::unordered_map<std::string, std::unique_ptr<HY_HydroNexus>> nexus_realizations;
 std::unordered_map<std::string, std::string> catchment_to_nexus;
 std::unordered_map<std::string, std::string> nexus_to_catchment;
+std::unordered_map<std::string, std::string> nexus_from_catchment;
+std::unordered_map<std::string, std::vector<double>> output_map;
+
 //TODO move catchment int identity to relization, and update nexus to use string id
 std::unordered_map<std::string, int> catchment_id;
 std::unordered_map<std::string, std::string> forcing_paths {
@@ -184,28 +187,45 @@ int main(int argc, char *argv[]) {
        {
          nexus_to_catchment[feat_id] = feature->destination_features()[0]->get_id();
        }
-       else
+       else if(feature->get_number_of_origination_features() == 1)
        {
+         nexus_from_catchment[feat_id] = feature->origination_features()[0]->get_id();
+       }
+       else{
          //TODO
        }
+       output_map[feat_id] = std::vector<double>();
       }
 
     }
     std::cout<<"Running Models"<<std::endl;
     //Now loop some time, iterate catchments, do stuff for 720 hourly time steps
-    for(int time_step = 0; time_step < 1; time_step++)
+    for(int time_step = 0; time_step < 100; time_step++)
     {
+      std::cout<<"Time step "<<time_step<<std::endl;
       for(auto &catchment: catchment_realizations)
       {
-        if(catchment.first == "cat-89")
+        if(catchment.first == "cat-88" || catchment.first == "cat-89")
         {
         //Get response for an hour (3600 seconds) time step
         double response = catchment.second->get_response(0, time_step, 3600.0, &pdm_et_data);
+
+        std::cout<<"\tCatchment "<<catchment.first<<" contributing "<<response<<" m/s to "<<catchment_to_nexus[catchment.first]<<std::endl;
+
         nexus_realizations[ catchment_to_nexus[catchment.first] ]->add_upstream_flow(response, catchment_id[catchment.first], time_step);
-        std::cout<<"Reporting water for time_step "<<time_step<<std::endl<<\
-                   "Nexus "<<catchment_to_nexus[catchment.first]<<" has "<<\
-                   response<<" meters of water from "<<catchment.first<<" ready to route downstream."<<std::endl;
       }
+      }
+      for(auto &nexus: nexus_realizations)
+      {
+        if(nexus.first == "nex-92"){
+        //TODO this ID isn't all that important is it?  And really it should connect to
+        //the downstream waterbody the way we are using it, so consider if this is needed
+        //it works for now though, so keep it
+        int id = catchment_id[nexus_from_catchment[nexus.first]];
+        double contribution_at_t = nexus_realizations[nexus.first]->get_downstream_flow(id, time_step, 100.0);
+        std::cout<<"\tNexus "<<nexus.first<<" has "<<contribution_at_t<<std::endl;
+        output_map[nexus.first].push_back(contribution_at_t);
+        }
       }
     }
     /*
