@@ -13,15 +13,16 @@ Tshirt_Realization::Tshirt_Realization(
     : giuh_kernel(move(giuh_kernel)), params(params)
 {
     add_time(t, params.nash_n);
-
-    state[t]->soil_storage_meters = soil_storage_meters;
-    state[t]->groundwater_storage_meters = groundwater_storage_meters;
+    state[0] = std::make_shared<tshirt::tshirt_state>(tshirt::tshirt_state(soil_storage_meters, groundwater_storage_meters, nash_storage));
+    //state[0]->soil_storage_meters = soil_storage_meters;
+    //state[0]->groundwater_storage_meters = groundwater_storage_meters;
 
     for (int i = 0; i < params.nash_n; ++i) {
-        state[t]->nash_cascade_storeage_meters[i] = nash_storage[i];
+
+        state[0]->nash_cascade_storeage_meters[i] = nash_storage[i];
     }
 
-    model = make_unique<tshirt::tshirt_model>(tshirt::tshirt_model(params, state[t]));
+    model = make_unique<tshirt::tshirt_model>(tshirt::tshirt_model(params, state[0]));
 }
 
 Tshirt_Realization::Tshirt_Realization(
