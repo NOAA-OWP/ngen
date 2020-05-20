@@ -59,7 +59,7 @@ double giuh_kernel::calc_giuh_output(double dt, double direct_runoff)
         --contribution_ordinate_index;
     }
     // Calculate ...
-    double current_contribution = direct_runoff * interpolated_ordinate_times_seconds[contribution_ordinate_index];
+    double current_contribution = direct_runoff * interpolated_regularized_ordinates[contribution_ordinate_index];
 
     // If we have the list's tail, append to it; otherwise there is no current list, so start one
     if (carry_over_node != nullptr) {
