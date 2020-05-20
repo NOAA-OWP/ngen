@@ -41,7 +41,7 @@ Simple_Lumped_Model_Realization::~Simple_Lumped_Model_Realization()
 
 void Simple_Lumped_Model_Realization::add_time(time_t t, double n)
 {
-    if ( state.find(t) != state.end() )
+    if ( state.find(t) == state.end() )
     {
         // create storage for fluxes
         fluxes[t] = hymod_fluxes();
