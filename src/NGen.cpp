@@ -60,8 +60,8 @@ void prepare_features(geojson::GeoJSON& nexus, geojson::GeoJSON& catchments, boo
    }//end if(validate)
 }
 
-std::unordered_map<std::string, std::shared_ptr<HY_CatchmentRealization>>  catchment_realizations;
-std::unordered_map<std::string, std::shared_ptr<HY_HydroNexus>> nexus_realizations;
+std::unordered_map<std::string, std::unique_ptr<HY_CatchmentRealization>>  catchment_realizations;
+std::unordered_map<std::string, std::unique_ptr<HY_HydroNexus>> nexus_realizations;
 std::unordered_map<std::string, std::string> catchment_to_nexus;
 std::unordered_map<std::string, std::string> nexus_to_catchment;
 //TODO move catchment int identity to relization, and update nexus to use string id
