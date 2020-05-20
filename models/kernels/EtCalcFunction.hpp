@@ -6,6 +6,9 @@
 #define FALSE 0
 
 #define CP  1.006e+03  //  specific heat of air at constant pressure, J/(kg K), a physical constant.
+#define KV2 0.1681     //  von Karman's constant squared, equal to 0.41 squared, unitless
+#define TK  273.15     //  temperature in Kelvin at zero degree Celcius
+#define SB  5.67e-08   //  stefan_boltzmann_constant in units of W/m^2/K^4
 
 // NOTE: SET YOUR EDIT WINDOW TO 120 CHARACTER WIDTH TO READ THIS CODE IN ITS ENTIRETY.
 
@@ -200,15 +203,62 @@ double solar_azimuth_angle_degrees;                // azimuth pointing towards t
 double solar_local_hour_angle_degrees;             // local hour angle (deg.) to the sun, negative=a.m., positive=p.m.
 };
 
+struct intermediate_vars
+{
+// element NAME                       DESCRIPTION
+//____________________________________________________________________________________________________________________
+double liquid_water_density_kg_per_m3;       // rho_w
+double water_latent_heat_of_vaporization_J_per_kg;    // eqn 2.7.6 Chow etal., // aka 'lambda'
+double air_saturation_vapor_pressure_Pa;
+double air_actual_vapor_pressure_Pa;
+double vapor_pressure_deficit_Pa;            // VPD
+double moist_air_gas_constant_J_per_kg_K;    // R_a
+double moist_air_density_kg_per_m3;          // rho_a
+double slope_sat_vap_press_curve_Pa_s;       // delta
+//double water_latent_heat_of_vaporization_J_per_kg;
+double psychrometric_constant_Pa_per_C;      // gamma
+};
 
 //####################################
 // FUNCTION AND SUBROUTINE PROTOTYPES
 
-extern double evapotranspiration_calc_function
+extern double evapotranspiration_energy_balance_method
 (
-evapotranspiration_options *opts,
-evapotranspiration_params  *pars,
-evapotranspiration_forcing *forc
+evapotranspiration_options *et_options,
+evapotranspiration_params *et_params,
+evapotranspiration_forcing *et_forcing
+);
+
+extern double evapotranspiration_aerodynamic_method
+(
+evapotranspiration_options *et_options,
+evapotranspiration_params *et_params,
+evapotranspiration_forcing *et_forcing,
+intermediate_vars *inter_vars
+);
+
+extern double evapotranspiration_combination_method
+(
+evapotranspiration_options *et_options,
+evapotranspiration_params *et_params,
+evapotranspiration_forcing *et_forcing,
+intermediate_vars *inter_vars
+);
+
+extern double evapotranspiration_priestley_taylor_method
+(
+evapotranspiration_options *et_options,
+evapotranspiration_params *et_params,
+evapotranspiration_forcing *et_forcing,
+intermediate_vars *inter_vars
+);
+
+extern double evapotranspiration_penman_monteith_method
+(
+evapotranspiration_options *et_options,
+evapotranspiration_params *et_params,
+evapotranspiration_forcing *et_forcing,
+intermediate_vars *inter_vars
 );
 
 extern double calculate_net_radiation_W_per_sq_m 
@@ -246,6 +296,14 @@ evapotranspiration_params *surf_rad_params,
 evapotranspiration_forcing *et_forcing
 );
 
+extern void calculate_intermediate_variables
+(
+evapotranspiration_options *et_options,
+evapotranspiration_params *et_params,
+evapotranspiration_forcing *et_forcing,
+intermediate_vars *inter_vars
+);
+
 extern int is_fabs_less_than_epsilon(double a,double epsilon);  // returns TRUE iff fabs(a)<epsilon
 
 extern double calc_air_saturation_vapor_pressure_Pa(double air_temperature_C);
@@ -257,49 +315,24 @@ extern double calc_liquid_water_density_kg_per_m3(double water_temperature_C);
 extern int is_fabs_less_than_epsilon(double a,double epsilon);  // returns TRUE iff fabs(a)<epsilon
 
 //############################################################*
-// subroutine to calculate evapotranspiration using Penman-   *
-// Monteith FAO reference ET procedure.                       *
-// Reference: http://www.fao.org/3/X0490E/x0490e06.htm        *
+// subroutine to calculate evapotranspiration using           *
+// Chow, Maidment, and Mays textbook                          *
 // F.L. Ogden, NOAA National Weather Service, 2020            *
 //############################################################*
-extern double evapotranspiration_calc_function
+extern double evapotranspiration_energy_balance_method
 (
 evapotranspiration_options *et_options,
 evapotranspiration_params *et_params,
 evapotranspiration_forcing *et_forcing
 )
 {
-// local vars.
-double aerodynamic_resistance_sec_per_m;         //  value [s per m], computed in: calculate_aerodynamic_resistance()
-double instantaneous_et_rate_m_per_s;
-double aerodynamic_resistance_s_per_m;
-double psychrometric_constant_Pa_per_C;
-double slope_sat_vap_press_curve_Pa_s;
-double air_saturation_vapor_pressure_Pa;
-double air_actual_vapor_pressure_Pa;
-double moist_air_density_kg_per_m3;
+// local varibles
 double water_latent_heat_of_vaporization_J_per_kg;
-double moist_air_gas_constant_J_per_kg_K;
-double moist_air_specific_humidity_kg_per_m3;
-double vapor_pressure_deficit_Pa;
 double liquid_water_density_kg_per_m3;
 double lambda_et;
 double radiation_balance_evapotranspiration_rate_m_per_s;
-double aerodynamic_method_evapotranspiration_rate_m_per_s;
-double combination_method_evapotranspiration_rate_m_per_s;
-double priestley_taylor_method_evapotranspiration_rate_m_per_s;
-double mass_flux;
-double delta;
-double gamma;
-double numerator,denominator;
 
-// CONSTANTS 
-
-double von_karman_constant_squared=(double)0.1681;  // a constant equal to 0.41 squared
-
-       // from FAO document: cp specific heat at constant pressure, 1.013 10-3 [MJ kg-1 °C-1],
-
-
+// from FAO document: cp specific heat at constant pressure, 1.013 10-3 [MJ kg-1 °C-1],
 
 // IF SOIL WATER TEMPERATURE NOT PROVIDED, USE A SANE VALUE
 if(100.0 > et_forcing->water_temperature_C) et_forcing->water_temperature_C=22.0; // growing season
@@ -321,107 +354,240 @@ if( (et_options->use_aerodynamic_method == FALSE ) && (et_options->use_penman_mo
   lambda_et=et_forcing->net_radiation_W_per_sq_m;
   radiation_balance_evapotranspiration_rate_m_per_s=lambda_et/
                                 (liquid_water_density_kg_per_m3*water_latent_heat_of_vaporization_J_per_kg);
-  if(et_options->use_energy_balance_method == TRUE)
-    { 
-    return(radiation_balance_evapotranspiration_rate_m_per_s);
-    }
   }
+return(radiation_balance_evapotranspiration_rate_m_per_s);
+}
 
-//----------------------------------------------------------------------------------------------------------------  
-// The code in this function does not go beyond here when radiation_balance is used, it returns just above.
-//----------------------------------------------------------------------------------------------------------------  
-  
+//############################################################*
+// subroutine to calculate evapotranspiration using           *
+// Chow, Maidment, and Mays textbook                          *
+// F.L. Ogden, NOAA National Weather Service, 2020            *
+//############################################################*
+extern double evapotranspiration_aerodynamic_method
+(
+evapotranspiration_options *et_options,
+evapotranspiration_params *et_params,
+evapotranspiration_forcing *et_forcing,
+intermediate_vars *inter_vars
+)
+{
+// local varibles
+double psychrometric_constant_Pa_per_C;
+double slope_sat_vap_press_curve_Pa_s;
+double air_saturation_vapor_pressure_Pa;
+double air_actual_vapor_pressure_Pa;
+double moist_air_density_kg_per_m3;
+double water_latent_heat_of_vaporization_J_per_kg;
+double moist_air_gas_constant_J_per_kg_K;
+double vapor_pressure_deficit_Pa;
+double liquid_water_density_kg_per_m3;
+double aerodynamic_method_evapotranspiration_rate_m_per_s;
+double mass_flux;
+double von_karman_constant_squared=(double)KV2;  // a constant equal to 0.41 squared
 
-// all methods other than radiation balance method involve at least some of the aerodynamic method calculations
+calculate_intermediate_variables(et_options, et_params, et_forcing, inter_vars);
 
-// IF HEAT/MOMENTUM ROUGHNESS LENGTHS NOT GIVEN, USE DEFAULTS SO THAT THEIR RATIO IS EQUAL TO 1.
-if((1.0e-06> et_params->heat_transfer_roughness_length_m) ||
-   (1.0e-06> et_params->momentum_transfer_roughness_length_m))   // zero should be passed down if these are unknown
-  {
-  et_params->heat_transfer_roughness_length_m     =1.0;     // decent default values, and the ratio of these is 1.0
-  et_params->momentum_transfer_roughness_length_m =1.0;
-  }
-
-// e_sat is needed for all aerodynamic and Penman-Monteith methods
-air_saturation_vapor_pressure_Pa=calc_air_saturation_vapor_pressure_Pa(et_forcing->air_temperature_C); 
-
-if( (0.0 < et_forcing->relative_humidity_percent) && (100.0 >= et_forcing->relative_humidity_percent) )
-  {
-  // meaningful relative humidity value provided
-  air_actual_vapor_pressure_Pa=et_forcing->relative_humidity_percent/100.0 * air_saturation_vapor_pressure_Pa;
-
-  // calculate specific humidity, q_v
-  et_forcing->specific_humidity_2m_kg_per_kg=0.622*air_actual_vapor_pressure_Pa/et_forcing->air_pressure_Pa;
-  }
-else
-  {
-  // if here, we must be using AORC forcing that provides specific humidity instead of relative humidity
-  air_actual_vapor_pressure_Pa=et_forcing->specific_humidity_2m_kg_per_kg*et_forcing->air_pressure_Pa/0.622;
-  if(air_actual_vapor_pressure_Pa > air_saturation_vapor_pressure_Pa)
-    {
-    // this is bad.   Actual vapor pressure of air should not be higher than saturated value.
-    // warn and reset to something meaningful
-    fprintf(stderr,"Invalid value of specific humidity with no supplied rel. humidity in ET calc. function:\n");
-    fprintf(stderr,"Relative Humidity: %lf percent\n",et_forcing->relative_humidity_percent);
-    fprintf(stderr,"Specific Humidity: %lf kg/kg\n",et_forcing->specific_humidity_2m_kg_per_kg);        
-    air_actual_vapor_pressure_Pa=0.65*air_saturation_vapor_pressure_Pa;
-    }
-  }
-
-// VPD
-vapor_pressure_deficit_Pa = air_saturation_vapor_pressure_Pa - air_actual_vapor_pressure_Pa;
-
-moist_air_gas_constant_J_per_kg_K=287.0*(1.0+0.608*et_forcing->specific_humidity_2m_kg_per_kg); //R_a
-
-moist_air_density_kg_per_m3=et_forcing->air_pressure_Pa/(moist_air_gas_constant_J_per_kg_K*
-                            (et_forcing->air_temperature_C+273.15)); // rho_a
-
+liquid_water_density_kg_per_m3 = inter_vars->liquid_water_density_kg_per_m3;
+water_latent_heat_of_vaporization_J_per_kg=inter_vars->water_latent_heat_of_vaporization_J_per_kg;
+air_saturation_vapor_pressure_Pa=inter_vars->air_saturation_vapor_pressure_Pa;
+air_actual_vapor_pressure_Pa=inter_vars->air_actual_vapor_pressure_Pa;
+vapor_pressure_deficit_Pa=inter_vars->vapor_pressure_deficit_Pa;
+moist_air_gas_constant_J_per_kg_K=inter_vars->moist_air_gas_constant_J_per_kg_K;
+moist_air_density_kg_per_m3=inter_vars->moist_air_density_kg_per_m3;
+slope_sat_vap_press_curve_Pa_s=inter_vars->slope_sat_vap_press_curve_Pa_s;
+psychrometric_constant_Pa_per_C=inter_vars->psychrometric_constant_Pa_per_C;
 
 if( et_options->use_penman_monteith_method == FALSE)  // we don't use this term in Penman-Monteith method
   {
   // This is equation 3.5.16 from Chow, Maidment, and Mays textbook.
   mass_flux = 0.622*von_karman_constant_squared*moist_air_density_kg_per_m3*      // kg per sq. meter per sec.
-           vapor_pressure_deficit_Pa*et_forcing->wind_speed_m_per_s/
-             (et_forcing->air_pressure_Pa*
+              vapor_pressure_deficit_Pa*et_forcing->wind_speed_m_per_s/
+              (et_forcing->air_pressure_Pa*
               pow(log(et_params->wind_speed_measurement_height_m/et_params->zero_plane_displacement_height_m),2.0));
 
   aerodynamic_method_evapotranspiration_rate_m_per_s=mass_flux/liquid_water_density_kg_per_m3;  
   }
 
-if(et_options->use_aerodynamic_method == TRUE)
-  {
-  return(aerodynamic_method_evapotranspiration_rate_m_per_s);
-  }
+return(aerodynamic_method_evapotranspiration_rate_m_per_s);
+}
 
-//----------------------------------------------------------------------------------------------------------------  
-// The code in this function does not go beyond here when the aerodynamic method is used. It returns a few lines before
-//----------------------------------------------------------------------------------------------------------------  
+//############################################################*
+// subroutine to calculate evapotranspiration using           *
+// Chow, Maidment, and Mays textbook                          *
+// F.L. Ogden, NOAA National Weather Service, 2020            *
+//############################################################*
+extern double evapotranspiration_combination_method
+(
+evapotranspiration_options *et_options,
+evapotranspiration_params *et_params,
+evapotranspiration_forcing *et_forcing,
+intermediate_vars *inter_vars
+)
+{
+// local varibles
+double psychrometric_constant_Pa_per_C;
+double slope_sat_vap_press_curve_Pa_s;
+double air_saturation_vapor_pressure_Pa;
+double air_actual_vapor_pressure_Pa;
+double moist_air_density_kg_per_m3;
+double water_latent_heat_of_vaporization_J_per_kg;
+double moist_air_gas_constant_J_per_kg_K;
+double vapor_pressure_deficit_Pa;
+double liquid_water_density_kg_per_m3;
+double lambda_et;
+double radiation_balance_evapotranspiration_rate_m_per_s;
+double aerodynamic_method_evapotranspiration_rate_m_per_s;
+double instantaneous_et_rate_m_per_s;
+double mass_flux;
+double delta;
+double gamma;
+double von_karman_constant_squared=(double)KV2;  // a constant equal to 0.41 squared
 
-// DELTA
-slope_sat_vap_press_curve_Pa_s=calc_slope_of_air_saturation_vapor_pressure_Pa_per_C(et_forcing->air_temperature_C); 
+calculate_intermediate_variables(et_options, et_params, et_forcing, inter_vars);
+
+liquid_water_density_kg_per_m3 = inter_vars->liquid_water_density_kg_per_m3;
+water_latent_heat_of_vaporization_J_per_kg=inter_vars->water_latent_heat_of_vaporization_J_per_kg;
+air_saturation_vapor_pressure_Pa=inter_vars->air_saturation_vapor_pressure_Pa;
+air_actual_vapor_pressure_Pa=inter_vars->air_actual_vapor_pressure_Pa;
+vapor_pressure_deficit_Pa=inter_vars->vapor_pressure_deficit_Pa;
+moist_air_gas_constant_J_per_kg_K=inter_vars->moist_air_gas_constant_J_per_kg_K;
+moist_air_density_kg_per_m3=inter_vars->moist_air_density_kg_per_m3;
+slope_sat_vap_press_curve_Pa_s=inter_vars->slope_sat_vap_press_curve_Pa_s;
+water_latent_heat_of_vaporization_J_per_kg=inter_vars->water_latent_heat_of_vaporization_J_per_kg;
+psychrometric_constant_Pa_per_C=inter_vars->psychrometric_constant_Pa_per_C;
+
 delta=slope_sat_vap_press_curve_Pa_s;
-
-// gamma
-psychrometric_constant_Pa_per_C=CP*et_forcing->air_pressure_Pa*
-                                et_params->heat_transfer_roughness_length_m/
-                                (0.622*water_latent_heat_of_vaporization_J_per_kg);
 gamma=psychrometric_constant_Pa_per_C;
 
 if(et_options->use_combination_method==TRUE)
+lambda_et=0.0;
+if( (et_options->use_aerodynamic_method == FALSE ) && (et_options->use_penman_monteith_method==FALSE) )
+  {
+  // This is equation 3.5.9 from Chow, Maidment, and Mays textbook.
+  lambda_et=et_forcing->net_radiation_W_per_sq_m;
+  radiation_balance_evapotranspiration_rate_m_per_s=lambda_et/
+                                      (liquid_water_density_kg_per_m3*water_latent_heat_of_vaporization_J_per_kg);
+  mass_flux = 0.622*von_karman_constant_squared*moist_air_density_kg_per_m3*      // kg per sq. meter per sec.
+              vapor_pressure_deficit_Pa*et_forcing->wind_speed_m_per_s/
+              (et_forcing->air_pressure_Pa*
+              pow(log(et_params->wind_speed_measurement_height_m/et_params->zero_plane_displacement_height_m),2.0));
+
+  aerodynamic_method_evapotranspiration_rate_m_per_s=mass_flux/liquid_water_density_kg_per_m3;
+  }
   {
   // This is equation 3.5.26 from Chow, Maidment, and Mays textbook
   instantaneous_et_rate_m_per_s=
                     delta/(delta+gamma)*radiation_balance_evapotranspiration_rate_m_per_s+
                     gamma/(delta+gamma)*aerodynamic_method_evapotranspiration_rate_m_per_s;
-  return(instantaneous_et_rate_m_per_s);
   }
-  
-if(et_options->use_priestley_taylor_method==TRUE)
+return (instantaneous_et_rate_m_per_s);
+}
+
+//############################################################*
+// subroutine to calculate evapotranspiration using           *
+// Chow, Maidment, and Mays textbook                          *
+// F.L. Ogden, NOAA National Weather Service, 2020            *
+//############################################################*
+extern double evapotranspiration_priestley_taylor_method
+(
+evapotranspiration_options *et_options,
+evapotranspiration_params *et_params,
+evapotranspiration_forcing *et_forcing,
+intermediate_vars *inter_vars
+)
+{
+// local varibles
+double psychrometric_constant_Pa_per_C;
+double slope_sat_vap_press_curve_Pa_s;
+double air_saturation_vapor_pressure_Pa;
+double air_actual_vapor_pressure_Pa;
+double moist_air_density_kg_per_m3;
+double water_latent_heat_of_vaporization_J_per_kg;
+double moist_air_gas_constant_J_per_kg_K;
+double moist_air_specific_humidity_kg_per_m3;
+double vapor_pressure_deficit_Pa;
+double liquid_water_density_kg_per_m3;
+double lambda_et;
+double radiation_balance_evapotranspiration_rate_m_per_s;
+double instantaneous_et_rate_m_per_s;
+double mass_flux;
+double delta;
+double gamma;
+
+calculate_intermediate_variables(et_options, et_params, et_forcing, inter_vars);
+
+liquid_water_density_kg_per_m3 = inter_vars->liquid_water_density_kg_per_m3;
+water_latent_heat_of_vaporization_J_per_kg=inter_vars->water_latent_heat_of_vaporization_J_per_kg;
+air_saturation_vapor_pressure_Pa=inter_vars->air_saturation_vapor_pressure_Pa;
+air_actual_vapor_pressure_Pa=inter_vars->air_actual_vapor_pressure_Pa;
+vapor_pressure_deficit_Pa=inter_vars->vapor_pressure_deficit_Pa;
+moist_air_gas_constant_J_per_kg_K=inter_vars->moist_air_gas_constant_J_per_kg_K;
+moist_air_density_kg_per_m3=inter_vars->moist_air_density_kg_per_m3;
+slope_sat_vap_press_curve_Pa_s=inter_vars->slope_sat_vap_press_curve_Pa_s;
+water_latent_heat_of_vaporization_J_per_kg=inter_vars->water_latent_heat_of_vaporization_J_per_kg;
+psychrometric_constant_Pa_per_C=inter_vars->psychrometric_constant_Pa_per_C;
+
+delta=slope_sat_vap_press_curve_Pa_s;
+gamma=psychrometric_constant_Pa_per_C;
+
+lambda_et=0.0;
+if( (et_options->use_aerodynamic_method == FALSE ) && (et_options->use_penman_monteith_method==FALSE) )
   {
-  instantaneous_et_rate_m_per_s=1.3*delta/(delta+gamma)*radiation_balance_evapotranspiration_rate_m_per_s;
-  return(instantaneous_et_rate_m_per_s);
+  // This is equation 3.5.9 from Chow, Maidment, and Mays textbook.
+  lambda_et=et_forcing->net_radiation_W_per_sq_m;
+  radiation_balance_evapotranspiration_rate_m_per_s=lambda_et/
+                                      (liquid_water_density_kg_per_m3*water_latent_heat_of_vaporization_J_per_kg);
   }
+  instantaneous_et_rate_m_per_s=1.3*delta/(delta+gamma)*radiation_balance_evapotranspiration_rate_m_per_s;
+return(instantaneous_et_rate_m_per_s);
+}
   
+//############################################################*
+// subroutine to calculate evapotranspiration using Penman-   *
+// Monteith FAO reference ET procedure.                       *
+// Reference: http://www.fao.org/3/X0490E/x0490e06.htm        *
+// F.L. Ogden, NOAA National Weather Service, 2020            *
+//############################################################*
+extern double evapotranspiration_penman_monteith_method
+(
+evapotranspiration_options *et_options,
+evapotranspiration_params *et_params,
+evapotranspiration_forcing *et_forcing,
+intermediate_vars *inter_vars
+)
+{
+// local varibles
+double instantaneous_et_rate_m_per_s;
+double psychrometric_constant_Pa_per_C;
+double slope_sat_vap_press_curve_Pa_s;
+double air_saturation_vapor_pressure_Pa;
+double air_actual_vapor_pressure_Pa;
+double moist_air_density_kg_per_m3;
+double water_latent_heat_of_vaporization_J_per_kg;
+double moist_air_gas_constant_J_per_kg_K;
+double moist_air_specific_humidity_kg_per_m3;
+double vapor_pressure_deficit_Pa;
+double liquid_water_density_kg_per_m3;
+double lambda_et;
+double delta;
+double gamma;
+
+calculate_intermediate_variables(et_options, et_params, et_forcing, inter_vars);
+
+liquid_water_density_kg_per_m3 = inter_vars->liquid_water_density_kg_per_m3;
+water_latent_heat_of_vaporization_J_per_kg=inter_vars->water_latent_heat_of_vaporization_J_per_kg;
+air_saturation_vapor_pressure_Pa=inter_vars->air_saturation_vapor_pressure_Pa;
+air_actual_vapor_pressure_Pa=inter_vars->air_actual_vapor_pressure_Pa;
+vapor_pressure_deficit_Pa=inter_vars->vapor_pressure_deficit_Pa;
+moist_air_gas_constant_J_per_kg_K=inter_vars->moist_air_gas_constant_J_per_kg_K;
+moist_air_density_kg_per_m3=inter_vars->moist_air_density_kg_per_m3;
+slope_sat_vap_press_curve_Pa_s=inter_vars->slope_sat_vap_press_curve_Pa_s;
+water_latent_heat_of_vaporization_J_per_kg=inter_vars->water_latent_heat_of_vaporization_J_per_kg;
+psychrometric_constant_Pa_per_C=inter_vars->psychrometric_constant_Pa_per_C;
+
+delta=slope_sat_vap_press_curve_Pa_s;
+gamma=psychrometric_constant_Pa_per_C;
+
 if(et_options->use_penman_monteith_method==TRUE)
   {
   lambda_et = penman_monteith_et_calculation(delta,gamma,moist_air_density_kg_per_m3,vapor_pressure_deficit_Pa,
@@ -433,6 +599,7 @@ instantaneous_et_rate_m_per_s= lambda_et/(liquid_water_density_kg_per_m3*water_l
 return(instantaneous_et_rate_m_per_s);  // meters per second
 
 }
+
 //#####################################################################################*
 // subroutine to calculate latent heat flux (lambda*et)                                *
 // using the Penman-Monteith equation as described by FAO                              *
@@ -451,7 +618,7 @@ evapotranspiration_forcing *et_forcing
 )
 
 {
-// local vars
+// local varibles
 double numerator;
 double denominator;
 double aerodynamic_resistance_s_per_m;
@@ -507,7 +674,7 @@ surface_radiation_forcing *surf_rad_forcing
 // local variables 
 double net_radiation_W_per_sq_m;
 double outgoing_longwave_radiation_W_per_sq_m;
-double stefan_boltzmann_constant =5.67e-08;         //W/m^2/K^4
+double stefan_boltzmann_constant = SB;         //W/m^2/K^4
 double atmosphere_longwave_emissivity;             // dimensionless, based on water vapor content of air
 double saturation_water_vapor_partial_pressure_Pa;
 double actual_water_vapor_partial_pressure_Pa;
@@ -520,7 +687,7 @@ double N,Klw;
   
 // CALCULATE OUTGOING LONGWAVE RADIATION FLUX FROM SURFACE
 outgoing_longwave_radiation_W_per_sq_m=surf_rad_params->surface_longwave_emissivity*stefan_boltzmann_constant*
-                                       pow(surf_rad_forcing->surface_skin_temperature_C+273.15,4.0); 
+                                       pow(surf_rad_forcing->surface_skin_temperature_C+TK,4.0); 
                                        // must convert C to K
 
 if(0.999 < surf_rad_params->surface_longwave_emissivity) 
@@ -548,7 +715,7 @@ if(et_options->yes_aorc==FALSE)
                              surf_rad_forcing->ambient_temperature_lapse_rate_deg_C_per_km*
                              surf_rad_forcing->cloud_base_height_m/1000.0;
     surf_rad_forcing->incoming_longwave_radiation_W_per_sq_m=stefan_boltzmann_constant*
-                                            pow(cloud_base_temperature_C+273.15,4.0);
+                                            pow(cloud_base_temperature_C+TK,4.0);
     }
   else  // not overcast, use TVA (1972) formulation, taken from Bras R.L., textbook, pg. 44.
     {
@@ -559,7 +726,7 @@ if(et_options->yes_aorc==FALSE)
     Klw=(1.0+0.17*N*N);  // effect of cloud cover from TVA (1972)
     surf_rad_forcing->incoming_longwave_radiation_W_per_sq_m=atmosphere_longwave_emissivity*Klw*
                                            stefan_boltzmann_constant*
-                                           pow(surf_rad_forcing->air_temperature_C+273.15,4.0);
+                                           pow(surf_rad_forcing->air_temperature_C+TK,4.0);
     }
   }
 
@@ -594,7 +761,7 @@ double wind_speed_m_per_s                    // [m s-1].
 // define local variables to ease computations:
 
 double ra,zm,zh,d,zom,zoh,k,uz;
-double von_karman_constant_squared=0.1681;  // this is dimensionless universal constant [-], K=0.41, squared.
+double von_karman_constant_squared=KV2;  // this is dimensionless universal constant [-], K=0.41, squared.
 
 // input sanity checks.
 if(1.0e-06 >=wind_speed_measurement_height_m ) wind_speed_measurement_height_m=2.0;  // standard measurement height
@@ -841,4 +1008,108 @@ extern int is_fabs_less_than_epsilon(double a,double epsilon)  // returns true i
 {
 if(fabs(a)<epsilon) return(TRUE);
 else                return(FALSE);
+}
+
+// Function to calculate hydrological variables needed for evapotranspiration calculation
+extern void calculate_intermediate_variables
+(
+evapotranspiration_options *et_options,
+evapotranspiration_params *et_params,
+evapotranspiration_forcing *et_forcing,
+intermediate_vars *inter_vars
+)
+{
+// local variables
+double aerodynamic_resistance_sec_per_m;         //  value [s per m], computed in: calculate_aerodynamic_resistance()
+double instantaneous_et_rate_m_per_s;
+double aerodynamic_resistance_s_per_m;
+double psychrometric_constant_Pa_per_C;
+double slope_sat_vap_press_curve_Pa_s;
+double air_saturation_vapor_pressure_Pa;
+double air_actual_vapor_pressure_Pa;
+double moist_air_density_kg_per_m3;
+double water_latent_heat_of_vaporization_J_per_kg;
+double moist_air_gas_constant_J_per_kg_K;
+double moist_air_specific_humidity_kg_per_m3;
+double vapor_pressure_deficit_Pa;
+double liquid_water_density_kg_per_m3;
+double delta;
+double gamma;
+
+// IF SOIL WATER TEMPERATURE NOT PROVIDED, USE A SANE VALUE
+if(100.0 > et_forcing->water_temperature_C) et_forcing->water_temperature_C=22.0; // growing season
+
+// CALCULATE VARS NEEDED FOR THE ALL METHODS:
+
+liquid_water_density_kg_per_m3 = calc_liquid_water_density_kg_per_m3(et_forcing->water_temperature_C); // rho_w
+
+water_latent_heat_of_vaporization_J_per_kg=2.501e+06-2370.0*et_forcing->water_temperature_C;  // eqn 2.7.6 Chow etal.
+                                                                                              // aka 'lambda'
+// all methods other than radiation balance method involve at least some of the aerodynamic method calculations
+
+// IF HEAT/MOMENTUM ROUGHNESS LENGTHS NOT GIVEN, USE DEFAULTS SO THAT THEIR RATIO IS EQUAL TO 1.
+if((1.0e-06> et_params->heat_transfer_roughness_length_m) ||
+   (1.0e-06> et_params->momentum_transfer_roughness_length_m))   // zero should be passed down if these are unknown
+   {
+   et_params->heat_transfer_roughness_length_m     =1.0;     // decent default values, and the ratio of these is 1.0
+   et_params->momentum_transfer_roughness_length_m =1.0;
+   }
+
+// e_sat is needed for all aerodynamic and Penman-Monteith methods
+
+air_saturation_vapor_pressure_Pa=calc_air_saturation_vapor_pressure_Pa(et_forcing->air_temperature_C);
+
+if( (0.0 < et_forcing->relative_humidity_percent) && (100.0 >= et_forcing->relative_humidity_percent) )
+  {
+  // meaningful relative humidity value provided
+  air_actual_vapor_pressure_Pa=et_forcing->relative_humidity_percent/100.0 * air_saturation_vapor_pressure_Pa;
+  
+  // calculate specific humidity, q_v
+  et_forcing->specific_humidity_2m_kg_per_kg=0.622*air_actual_vapor_pressure_Pa/et_forcing->air_pressure_Pa;
+  }
+else
+  {
+  // if here, we must be using AORC forcing that provides specific humidity instead of relative humidity
+  air_actual_vapor_pressure_Pa=et_forcing->specific_humidity_2m_kg_per_kg*et_forcing->air_pressure_Pa/0.622;
+  if(air_actual_vapor_pressure_Pa > air_saturation_vapor_pressure_Pa)
+    {
+    // this is bad.   Actual vapor pressure of air should not be higher than saturated value.
+    // warn and reset to something meaningful
+    fprintf(stderr,"Invalid value of specific humidity with no supplied rel. humidity in ET calc. function:\n");
+    fprintf(stderr,"Relative Humidity: %lf percent\n",et_forcing->relative_humidity_percent);
+    fprintf(stderr,"Specific Humidity: %lf kg/kg\n",et_forcing->specific_humidity_2m_kg_per_kg);
+    air_actual_vapor_pressure_Pa=0.65*air_saturation_vapor_pressure_Pa;
+    }
+  }
+  
+// VPD
+vapor_pressure_deficit_Pa = air_saturation_vapor_pressure_Pa - air_actual_vapor_pressure_Pa;
+
+moist_air_gas_constant_J_per_kg_K=287.0*(1.0+0.608*et_forcing->specific_humidity_2m_kg_per_kg); //R_a
+
+moist_air_density_kg_per_m3=et_forcing->air_pressure_Pa/(moist_air_gas_constant_J_per_kg_K*
+                            (et_forcing->air_temperature_C+TK)); // rho_a
+
+// DELTA
+slope_sat_vap_press_curve_Pa_s=calc_slope_of_air_saturation_vapor_pressure_Pa_per_C(et_forcing->air_temperature_C); 
+delta=slope_sat_vap_press_curve_Pa_s;
+
+// gamma
+water_latent_heat_of_vaporization_J_per_kg=2.501e+06-2370.0*et_forcing->water_temperature_C;  // eqn 2.7.6 Chow etal.
+                                                                                              // aka 'lambda'
+psychrometric_constant_Pa_per_C=CP*et_forcing->air_pressure_Pa*
+                                et_params->heat_transfer_roughness_length_m/
+                                (0.622*water_latent_heat_of_vaporization_J_per_kg);
+gamma=psychrometric_constant_Pa_per_C;
+
+inter_vars->liquid_water_density_kg_per_m3=liquid_water_density_kg_per_m3;
+inter_vars->water_latent_heat_of_vaporization_J_per_kg=water_latent_heat_of_vaporization_J_per_kg;
+inter_vars->air_saturation_vapor_pressure_Pa=air_saturation_vapor_pressure_Pa;
+inter_vars->air_actual_vapor_pressure_Pa=air_actual_vapor_pressure_Pa;
+inter_vars->vapor_pressure_deficit_Pa=vapor_pressure_deficit_Pa;
+inter_vars->moist_air_gas_constant_J_per_kg_K=moist_air_gas_constant_J_per_kg_K;
+inter_vars->moist_air_density_kg_per_m3=moist_air_density_kg_per_m3;
+inter_vars->slope_sat_vap_press_curve_Pa_s=slope_sat_vap_press_curve_Pa_s;
+inter_vars->water_latent_heat_of_vaporization_J_per_kg=inter_vars->water_latent_heat_of_vaporization_J_per_kg;
+inter_vars->psychrometric_constant_Pa_per_C=psychrometric_constant_Pa_per_C;
 }

@@ -2,8 +2,6 @@
 #include <stdio.h>
 #include "kernels/EtCalcFunction.hpp"
 
-#define CP  1.006e+03  //  specific heat of air at constant pressure, J/(kg K), a physical constant.
-
 class EtCalcKernelTest : public ::testing::Test {
 
     protected:
@@ -36,7 +34,7 @@ void EtCalcKernelTest::setupArbitraryExampleCase() {
 
 }
 
-TEST_F(EtCalcKernelTest, TestEtCalcFunction)
+TEST_F(EtCalcKernelTest, TestPenmanMonteithMethod)
 {
 
 // FLAGS
@@ -48,6 +46,7 @@ struct aorc_forcing_data aorc;
 struct evapotranspiration_options et_options;
 struct evapotranspiration_params  et_params;
 struct evapotranspiration_forcing et_forcing;
+struct intermediate_vars inter_vars;
 
 struct surface_radiation_params   surf_rad_params;
 struct surface_radiation_forcing  surf_rad_forcing;
@@ -73,8 +72,8 @@ et_options.yes_aorc = TRUE;                      // if TRUE, it means that we ar
 
 // set the et_options method value.  Only one of these should be TRUE
 et_options.use_energy_balance_method   = FALSE;  
-et_options.use_aerodynamic_method      = FALSE;     
-et_options.use_combination_method      = FALSE;     
+et_options.use_aerodynamic_method      = FALSE;
+et_options.use_combination_method      = FALSE;
 et_options.use_priestley_taylor_method = FALSE;
 et_options.use_penman_monteith_method  = TRUE; 
 
@@ -113,7 +112,7 @@ aorc.incoming_longwave_W_per_m2     =  117.1;
 aorc.incoming_shortwave_W_per_m2    =  599.7;
 aorc.surface_pressure_Pa            =  101300.0;
 aorc.specific_humidity_2m_kg_per_kg =  0.00778;      // results in a relative humidity of 40%
-aorc.air_temperature_2m_K           =  25.0+273.15;
+aorc.air_temperature_2m_K           =  25.0+TK;
 aorc.u_wind_speed_10m_m_per_s       =  1.54;
 aorc.v_wind_speed_10m_m_per_s       =  3.2;
 aorc.latitude                       =  37.865211;
@@ -124,7 +123,7 @@ aorc.time                           =  111111112;
 
 // populate the evapotranspiration forcing data structure:
 //---------------------------------------------------------------------------------------------------------------
-et_forcing.air_temperature_C             = (double)aorc.air_temperature_2m_K-273.15;  // gotta convert it to C
+et_forcing.air_temperature_C             = (double)aorc.air_temperature_2m_K-TK;  // gotta convert it to C
 et_forcing.relative_humidity_percent     = (double)-99.9; // this negative number means use specific humidity
 et_forcing.specific_humidity_2m_kg_per_kg= (double)aorc.specific_humidity_2m_kg_per_kg;
 et_forcing.air_pressure_Pa               = (double)aorc.surface_pressure_Pa;
@@ -167,7 +166,7 @@ if(et_options.yes_aorc==TRUE)
   // transfer aorc forcing data into our data structure for surface radiation calculations
   surf_rad_forcing.incoming_shortwave_radiation_W_per_sq_m = (double)aorc.incoming_shortwave_W_per_m2;
   surf_rad_forcing.incoming_longwave_radiation_W_per_sq_m  = (double)aorc.incoming_longwave_W_per_m2; 
-  surf_rad_forcing.air_temperature_C                       = (double)aorc.air_temperature_2m_K-273.15;
+  surf_rad_forcing.air_temperature_C                       = (double)aorc.air_temperature_2m_K-TK;
   // compute relative humidity from specific humidity..
   saturation_vapor_pressure_Pa=calc_air_saturation_vapor_pressure_Pa(surf_rad_forcing.air_temperature_C);
   actual_vapor_pressure_Pa=(double)aorc.specific_humidity_2m_kg_per_kg*(double)aorc.surface_pressure_Pa/0.622;
@@ -239,7 +238,16 @@ if(et_options.use_aerodynamic_method==FALSE)
                                                                          &surf_rad_forcing);
   }
 
-et_m_per_s=evapotranspiration_calc_function(&et_options,&et_params,&et_forcing);
+if(et_options.use_energy_balance_method ==TRUE)
+  et_m_per_s=evapotranspiration_energy_balance_method(&et_options,&et_params,&et_forcing);
+if(et_options.use_aerodynamic_method ==TRUE)
+  et_m_per_s=evapotranspiration_aerodynamic_method(&et_options,&et_params,&et_forcing,&inter_vars);
+if(et_options.use_combination_method ==TRUE)
+  et_m_per_s=evapotranspiration_combination_method(&et_options,&et_params,&et_forcing,&inter_vars);
+if(et_options.use_priestley_taylor_method ==TRUE)
+  et_m_per_s=evapotranspiration_priestley_taylor_method(&et_options,&et_params,&et_forcing,&inter_vars);
+if(et_options.use_penman_monteith_method ==TRUE)
+  et_m_per_s=evapotranspiration_penman_monteith_method(&et_options,&et_params,&et_forcing,&inter_vars);
 
 if(et_options.use_energy_balance_method ==TRUE)   printf("energy balance method:\n");
 if(et_options.use_aerodynamic_method ==TRUE)      printf("aerodynamic method:\n");
@@ -247,15 +255,15 @@ if(et_options.use_combination_method ==TRUE)      printf("combination method:\n"
 if(et_options.use_priestley_taylor_method ==TRUE) printf("Priestley-Taylor method:\n");
 if(et_options.use_penman_monteith_method ==TRUE)  printf("Penman Monteith method:\n");
                                                  
-printf("calculated instantaneous potential evapotranspiration (PET) =%8.6e m/s\n",et_m_per_s);
-printf("calculated instantaneous potential evapotranspiration (PET) =%8.6lf mm/d\n",et_m_per_s*86400.0*1000.0);
+//printf("calculated instantaneous potential evapotranspiration (PET) =%8.6e m/s\n",et_m_per_s);
+//printf("calculated instantaneous potential evapotranspiration (PET) =%8.6lf mm/d\n",et_m_per_s*86400.0*1000.0);
 
-//EXPECT_DOUBLE_EQ (0.0, water_input_depth_m-surface_runoff_depth_m-infiltration_depth_m);
+//EXPECT_DOUBLE_EQ (0.0, et_m_per_s-1.106268e-07);
 ASSERT_TRUE(true);
-
 }
 
-TEST_F(EtCalcKernelTest, TestEtEnergyBalance)
+
+TEST_F(EtCalcKernelTest, TestEnergyBalanceMethod)
 {
 
 // FLAGS
@@ -267,6 +275,7 @@ struct aorc_forcing_data aorc;
 struct evapotranspiration_options et_options;
 struct evapotranspiration_params  et_params;
 struct evapotranspiration_forcing et_forcing;
+struct intermediate_vars inter_vars;
 
 struct surface_radiation_params   surf_rad_params;
 struct surface_radiation_forcing  surf_rad_forcing;
@@ -292,8 +301,8 @@ et_options.yes_aorc = TRUE;                      // if TRUE, it means that we ar
 
 // set the et_options method value.  Only one of these should be TRUE
 et_options.use_energy_balance_method   = TRUE;  
-et_options.use_aerodynamic_method      = FALSE;     
-et_options.use_combination_method      = FALSE;     
+et_options.use_aerodynamic_method      = FALSE;
+et_options.use_combination_method      = FALSE;
 et_options.use_priestley_taylor_method = FALSE;
 et_options.use_penman_monteith_method  = FALSE; 
 
@@ -332,7 +341,7 @@ aorc.incoming_longwave_W_per_m2     =  117.1;
 aorc.incoming_shortwave_W_per_m2    =  599.7;
 aorc.surface_pressure_Pa            =  101300.0;
 aorc.specific_humidity_2m_kg_per_kg =  0.00778;      // results in a relative humidity of 40%
-aorc.air_temperature_2m_K           =  25.0+273.15;
+aorc.air_temperature_2m_K           =  25.0+TK;
 aorc.u_wind_speed_10m_m_per_s       =  1.54;
 aorc.v_wind_speed_10m_m_per_s       =  3.2;
 aorc.latitude                       =  37.865211;
@@ -343,7 +352,7 @@ aorc.time                           =  111111112;
 
 // populate the evapotranspiration forcing data structure:
 //---------------------------------------------------------------------------------------------------------------
-et_forcing.air_temperature_C             = (double)aorc.air_temperature_2m_K-273.15;  // gotta convert it to C
+et_forcing.air_temperature_C             = (double)aorc.air_temperature_2m_K-TK;  // gotta convert it to C
 et_forcing.relative_humidity_percent     = (double)-99.9; // this negative number means use specific humidity
 et_forcing.specific_humidity_2m_kg_per_kg= (double)aorc.specific_humidity_2m_kg_per_kg;
 et_forcing.air_pressure_Pa               = (double)aorc.surface_pressure_Pa;
@@ -386,7 +395,7 @@ if(et_options.yes_aorc==TRUE)
   // transfer aorc forcing data into our data structure for surface radiation calculations
   surf_rad_forcing.incoming_shortwave_radiation_W_per_sq_m = (double)aorc.incoming_shortwave_W_per_m2;
   surf_rad_forcing.incoming_longwave_radiation_W_per_sq_m  = (double)aorc.incoming_longwave_W_per_m2; 
-  surf_rad_forcing.air_temperature_C                       = (double)aorc.air_temperature_2m_K-273.15;
+  surf_rad_forcing.air_temperature_C                       = (double)aorc.air_temperature_2m_K-TK;
   // compute relative humidity from specific humidity..
   saturation_vapor_pressure_Pa=calc_air_saturation_vapor_pressure_Pa(surf_rad_forcing.air_temperature_C);
   actual_vapor_pressure_Pa=(double)aorc.specific_humidity_2m_kg_per_kg*(double)aorc.surface_pressure_Pa/0.622;
@@ -458,7 +467,16 @@ if(et_options.use_aerodynamic_method==FALSE)
                                                                          &surf_rad_forcing);
   }
 
-et_m_per_s=evapotranspiration_calc_function(&et_options,&et_params,&et_forcing);
+if(et_options.use_energy_balance_method ==TRUE)
+  et_m_per_s=evapotranspiration_energy_balance_method(&et_options,&et_params,&et_forcing);
+if(et_options.use_aerodynamic_method ==TRUE)
+  et_m_per_s=evapotranspiration_aerodynamic_method(&et_options,&et_params,&et_forcing,&inter_vars);
+if(et_options.use_combination_method ==TRUE)
+  et_m_per_s=evapotranspiration_combination_method(&et_options,&et_params,&et_forcing,&inter_vars);
+if(et_options.use_priestley_taylor_method ==TRUE)
+  et_m_per_s=evapotranspiration_priestley_taylor_method(&et_options,&et_params,&et_forcing,&inter_vars);
+if(et_options.use_penman_monteith_method ==TRUE)
+  et_m_per_s=evapotranspiration_penman_monteith_method(&et_options,&et_params,&et_forcing,&inter_vars);
 
 if(et_options.use_energy_balance_method ==TRUE)   printf("energy balance method:\n");
 if(et_options.use_aerodynamic_method ==TRUE)      printf("aerodynamic method:\n");
@@ -466,15 +484,15 @@ if(et_options.use_combination_method ==TRUE)      printf("combination method:\n"
 if(et_options.use_priestley_taylor_method ==TRUE) printf("Priestley-Taylor method:\n");
 if(et_options.use_penman_monteith_method ==TRUE)  printf("Penman Monteith method:\n");
                                                  
-printf("calculated instantaneous potential evapotranspiration (PET) =%8.6e m/s\n",et_m_per_s);
-printf("calculated instantaneous potential evapotranspiration (PET) =%8.6lf mm/d\n",et_m_per_s*86400.0*1000.0);
+//printf("calculated instantaneous potential evapotranspiration (PET) =%8.6e m/s\n",et_m_per_s);
+//printf("calculated instantaneous potential evapotranspiration (PET) =%8.6lf mm/d\n",et_m_per_s*86400.0*1000.0);
 
-//EXPECT_DOUBLE_EQ (0.0, water_input_depth_m-surface_runoff_depth_m-infiltration_depth_m);
+//EXPECT_DOUBLE_EQ (0.0, et_m_per_s-8.594743e-08);
 ASSERT_TRUE(true);
-
 }
 
-TEST_F(EtCalcKernelTest, TestEtAerodynamic)
+
+TEST_F(EtCalcKernelTest, TestAerodynamicMethod)
 {
 
 // FLAGS
@@ -486,6 +504,7 @@ struct aorc_forcing_data aorc;
 struct evapotranspiration_options et_options;
 struct evapotranspiration_params  et_params;
 struct evapotranspiration_forcing et_forcing;
+struct intermediate_vars inter_vars;
 
 struct surface_radiation_params   surf_rad_params;
 struct surface_radiation_forcing  surf_rad_forcing;
@@ -511,8 +530,8 @@ et_options.yes_aorc = TRUE;                      // if TRUE, it means that we ar
 
 // set the et_options method value.  Only one of these should be TRUE
 et_options.use_energy_balance_method   = FALSE;  
-et_options.use_aerodynamic_method      = TRUE;     
-et_options.use_combination_method      = FALSE;     
+et_options.use_aerodynamic_method      = TRUE;
+et_options.use_combination_method      = FALSE;
 et_options.use_priestley_taylor_method = FALSE;
 et_options.use_penman_monteith_method  = FALSE; 
 
@@ -551,7 +570,7 @@ aorc.incoming_longwave_W_per_m2     =  117.1;
 aorc.incoming_shortwave_W_per_m2    =  599.7;
 aorc.surface_pressure_Pa            =  101300.0;
 aorc.specific_humidity_2m_kg_per_kg =  0.00778;      // results in a relative humidity of 40%
-aorc.air_temperature_2m_K           =  25.0+273.15;
+aorc.air_temperature_2m_K           =  25.0+TK;
 aorc.u_wind_speed_10m_m_per_s       =  1.54;
 aorc.v_wind_speed_10m_m_per_s       =  3.2;
 aorc.latitude                       =  37.865211;
@@ -562,7 +581,7 @@ aorc.time                           =  111111112;
 
 // populate the evapotranspiration forcing data structure:
 //---------------------------------------------------------------------------------------------------------------
-et_forcing.air_temperature_C             = (double)aorc.air_temperature_2m_K-273.15;  // gotta convert it to C
+et_forcing.air_temperature_C             = (double)aorc.air_temperature_2m_K-TK;  // gotta convert it to C
 et_forcing.relative_humidity_percent     = (double)-99.9; // this negative number means use specific humidity
 et_forcing.specific_humidity_2m_kg_per_kg= (double)aorc.specific_humidity_2m_kg_per_kg;
 et_forcing.air_pressure_Pa               = (double)aorc.surface_pressure_Pa;
@@ -605,7 +624,7 @@ if(et_options.yes_aorc==TRUE)
   // transfer aorc forcing data into our data structure for surface radiation calculations
   surf_rad_forcing.incoming_shortwave_radiation_W_per_sq_m = (double)aorc.incoming_shortwave_W_per_m2;
   surf_rad_forcing.incoming_longwave_radiation_W_per_sq_m  = (double)aorc.incoming_longwave_W_per_m2; 
-  surf_rad_forcing.air_temperature_C                       = (double)aorc.air_temperature_2m_K-273.15;
+  surf_rad_forcing.air_temperature_C                       = (double)aorc.air_temperature_2m_K-TK;
   // compute relative humidity from specific humidity..
   saturation_vapor_pressure_Pa=calc_air_saturation_vapor_pressure_Pa(surf_rad_forcing.air_temperature_C);
   actual_vapor_pressure_Pa=(double)aorc.specific_humidity_2m_kg_per_kg*(double)aorc.surface_pressure_Pa/0.622;
@@ -677,7 +696,16 @@ if(et_options.use_aerodynamic_method==FALSE)
                                                                          &surf_rad_forcing);
   }
 
-et_m_per_s=evapotranspiration_calc_function(&et_options,&et_params,&et_forcing);
+if(et_options.use_energy_balance_method ==TRUE)
+  et_m_per_s=evapotranspiration_energy_balance_method(&et_options,&et_params,&et_forcing);
+if(et_options.use_aerodynamic_method ==TRUE)
+  et_m_per_s=evapotranspiration_aerodynamic_method(&et_options,&et_params,&et_forcing,&inter_vars);
+if(et_options.use_combination_method ==TRUE)
+  et_m_per_s=evapotranspiration_combination_method(&et_options,&et_params,&et_forcing,&inter_vars);
+if(et_options.use_priestley_taylor_method ==TRUE)
+  et_m_per_s=evapotranspiration_priestley_taylor_method(&et_options,&et_params,&et_forcing,&inter_vars);
+if(et_options.use_penman_monteith_method ==TRUE)
+  et_m_per_s=evapotranspiration_penman_monteith_method(&et_options,&et_params,&et_forcing,&inter_vars);
 
 if(et_options.use_energy_balance_method ==TRUE)   printf("energy balance method:\n");
 if(et_options.use_aerodynamic_method ==TRUE)      printf("aerodynamic method:\n");
@@ -685,15 +713,15 @@ if(et_options.use_combination_method ==TRUE)      printf("combination method:\n"
 if(et_options.use_priestley_taylor_method ==TRUE) printf("Priestley-Taylor method:\n");
 if(et_options.use_penman_monteith_method ==TRUE)  printf("Penman Monteith method:\n");
                                                  
-printf("calculated instantaneous potential evapotranspiration (PET) =%8.6e m/s\n",et_m_per_s);
-printf("calculated instantaneous potential evapotranspiration (PET) =%8.6lf mm/d\n",et_m_per_s*86400.0*1000.0);
+//printf("calculated instantaneous potential evapotranspiration (PET) =%8.6e m/s\n",et_m_per_s);
+//printf("calculated instantaneous potential evapotranspiration (PET) =%8.6lf mm/d\n",et_m_per_s*86400.0*1000.0);
 
-//EXPECT_DOUBLE_EQ (0.0, water_input_depth_m-surface_runoff_depth_m-infiltration_depth_m);
+//EXPECT_DOUBLE_EQ (0.0, et_m_per_s-8.977490e-08);
 ASSERT_TRUE(true);
-
 }
 
-TEST_F(EtCalcKernelTest, TestEtCombination)
+
+TEST_F(EtCalcKernelTest, TestCombinationMethod)
 {
 
 // FLAGS
@@ -705,6 +733,7 @@ struct aorc_forcing_data aorc;
 struct evapotranspiration_options et_options;
 struct evapotranspiration_params  et_params;
 struct evapotranspiration_forcing et_forcing;
+struct intermediate_vars inter_vars;
 
 struct surface_radiation_params   surf_rad_params;
 struct surface_radiation_forcing  surf_rad_forcing;
@@ -730,8 +759,8 @@ et_options.yes_aorc = TRUE;                      // if TRUE, it means that we ar
 
 // set the et_options method value.  Only one of these should be TRUE
 et_options.use_energy_balance_method   = FALSE;  
-et_options.use_aerodynamic_method      = FALSE;     
-et_options.use_combination_method      = TRUE;     
+et_options.use_aerodynamic_method      = FALSE;
+et_options.use_combination_method      = TRUE;
 et_options.use_priestley_taylor_method = FALSE;
 et_options.use_penman_monteith_method  = FALSE; 
 
@@ -770,7 +799,7 @@ aorc.incoming_longwave_W_per_m2     =  117.1;
 aorc.incoming_shortwave_W_per_m2    =  599.7;
 aorc.surface_pressure_Pa            =  101300.0;
 aorc.specific_humidity_2m_kg_per_kg =  0.00778;      // results in a relative humidity of 40%
-aorc.air_temperature_2m_K           =  25.0+273.15;
+aorc.air_temperature_2m_K           =  25.0+TK;
 aorc.u_wind_speed_10m_m_per_s       =  1.54;
 aorc.v_wind_speed_10m_m_per_s       =  3.2;
 aorc.latitude                       =  37.865211;
@@ -781,7 +810,7 @@ aorc.time                           =  111111112;
 
 // populate the evapotranspiration forcing data structure:
 //---------------------------------------------------------------------------------------------------------------
-et_forcing.air_temperature_C             = (double)aorc.air_temperature_2m_K-273.15;  // gotta convert it to C
+et_forcing.air_temperature_C             = (double)aorc.air_temperature_2m_K-TK;  // gotta convert it to C
 et_forcing.relative_humidity_percent     = (double)-99.9; // this negative number means use specific humidity
 et_forcing.specific_humidity_2m_kg_per_kg= (double)aorc.specific_humidity_2m_kg_per_kg;
 et_forcing.air_pressure_Pa               = (double)aorc.surface_pressure_Pa;
@@ -824,7 +853,7 @@ if(et_options.yes_aorc==TRUE)
   // transfer aorc forcing data into our data structure for surface radiation calculations
   surf_rad_forcing.incoming_shortwave_radiation_W_per_sq_m = (double)aorc.incoming_shortwave_W_per_m2;
   surf_rad_forcing.incoming_longwave_radiation_W_per_sq_m  = (double)aorc.incoming_longwave_W_per_m2; 
-  surf_rad_forcing.air_temperature_C                       = (double)aorc.air_temperature_2m_K-273.15;
+  surf_rad_forcing.air_temperature_C                       = (double)aorc.air_temperature_2m_K-TK;
   // compute relative humidity from specific humidity..
   saturation_vapor_pressure_Pa=calc_air_saturation_vapor_pressure_Pa(surf_rad_forcing.air_temperature_C);
   actual_vapor_pressure_Pa=(double)aorc.specific_humidity_2m_kg_per_kg*(double)aorc.surface_pressure_Pa/0.622;
@@ -896,7 +925,16 @@ if(et_options.use_aerodynamic_method==FALSE)
                                                                          &surf_rad_forcing);
   }
 
-et_m_per_s=evapotranspiration_calc_function(&et_options,&et_params,&et_forcing);
+if(et_options.use_energy_balance_method ==TRUE)
+  et_m_per_s=evapotranspiration_energy_balance_method(&et_options,&et_params,&et_forcing);
+if(et_options.use_aerodynamic_method ==TRUE)
+  et_m_per_s=evapotranspiration_aerodynamic_method(&et_options,&et_params,&et_forcing,&inter_vars);
+if(et_options.use_combination_method ==TRUE)
+  et_m_per_s=evapotranspiration_combination_method(&et_options,&et_params,&et_forcing,&inter_vars);
+if(et_options.use_priestley_taylor_method ==TRUE)
+  et_m_per_s=evapotranspiration_priestley_taylor_method(&et_options,&et_params,&et_forcing,&inter_vars);
+if(et_options.use_penman_monteith_method ==TRUE)
+  et_m_per_s=evapotranspiration_penman_monteith_method(&et_options,&et_params,&et_forcing,&inter_vars);
 
 if(et_options.use_energy_balance_method ==TRUE)   printf("energy balance method:\n");
 if(et_options.use_aerodynamic_method ==TRUE)      printf("aerodynamic method:\n");
@@ -904,15 +942,15 @@ if(et_options.use_combination_method ==TRUE)      printf("combination method:\n"
 if(et_options.use_priestley_taylor_method ==TRUE) printf("Priestley-Taylor method:\n");
 if(et_options.use_penman_monteith_method ==TRUE)  printf("Penman Monteith method:\n");
                                                  
-printf("calculated instantaneous potential evapotranspiration (PET) =%8.6e m/s\n",et_m_per_s);
-printf("calculated instantaneous potential evapotranspiration (PET) =%8.6lf mm/d\n",et_m_per_s*86400.0*1000.0);
+//printf("calculated instantaneous potential evapotranspiration (PET) =%8.6e m/s\n",et_m_per_s);
+//printf("calculated instantaneous potential evapotranspiration (PET) =%8.6lf mm/d\n",et_m_per_s*86400.0*1000.0);
 
-//EXPECT_DOUBLE_EQ (0.0, water_input_depth_m-surface_runoff_depth_m-infiltration_depth_m);
+//EXPECT_DOUBLE_EQ (0.0, et_m_per_s-8.249098e-08)
 ASSERT_TRUE(true);
-
 }
 
-TEST_F(EtCalcKernelTest, TestEtPriestlyTaylor)
+
+TEST_F(EtCalcKernelTest, TestPriestleyTaylorMethod)
 {
 
 // FLAGS
@@ -924,6 +962,7 @@ struct aorc_forcing_data aorc;
 struct evapotranspiration_options et_options;
 struct evapotranspiration_params  et_params;
 struct evapotranspiration_forcing et_forcing;
+struct intermediate_vars inter_vars;
 
 struct surface_radiation_params   surf_rad_params;
 struct surface_radiation_forcing  surf_rad_forcing;
@@ -949,8 +988,8 @@ et_options.yes_aorc = TRUE;                      // if TRUE, it means that we ar
 
 // set the et_options method value.  Only one of these should be TRUE
 et_options.use_energy_balance_method   = FALSE;  
-et_options.use_aerodynamic_method      = FALSE;     
-et_options.use_combination_method      = FALSE;     
+et_options.use_aerodynamic_method      = FALSE;
+et_options.use_combination_method      = FALSE;
 et_options.use_priestley_taylor_method = TRUE;
 et_options.use_penman_monteith_method  = FALSE; 
 
@@ -989,7 +1028,7 @@ aorc.incoming_longwave_W_per_m2     =  117.1;
 aorc.incoming_shortwave_W_per_m2    =  599.7;
 aorc.surface_pressure_Pa            =  101300.0;
 aorc.specific_humidity_2m_kg_per_kg =  0.00778;      // results in a relative humidity of 40%
-aorc.air_temperature_2m_K           =  25.0+273.15;
+aorc.air_temperature_2m_K           =  25.0+TK;
 aorc.u_wind_speed_10m_m_per_s       =  1.54;
 aorc.v_wind_speed_10m_m_per_s       =  3.2;
 aorc.latitude                       =  37.865211;
@@ -1000,7 +1039,7 @@ aorc.time                           =  111111112;
 
 // populate the evapotranspiration forcing data structure:
 //---------------------------------------------------------------------------------------------------------------
-et_forcing.air_temperature_C             = (double)aorc.air_temperature_2m_K-273.15;  // gotta convert it to C
+et_forcing.air_temperature_C             = (double)aorc.air_temperature_2m_K-TK;  // gotta convert it to C
 et_forcing.relative_humidity_percent     = (double)-99.9; // this negative number means use specific humidity
 et_forcing.specific_humidity_2m_kg_per_kg= (double)aorc.specific_humidity_2m_kg_per_kg;
 et_forcing.air_pressure_Pa               = (double)aorc.surface_pressure_Pa;
@@ -1043,7 +1082,7 @@ if(et_options.yes_aorc==TRUE)
   // transfer aorc forcing data into our data structure for surface radiation calculations
   surf_rad_forcing.incoming_shortwave_radiation_W_per_sq_m = (double)aorc.incoming_shortwave_W_per_m2;
   surf_rad_forcing.incoming_longwave_radiation_W_per_sq_m  = (double)aorc.incoming_longwave_W_per_m2; 
-  surf_rad_forcing.air_temperature_C                       = (double)aorc.air_temperature_2m_K-273.15;
+  surf_rad_forcing.air_temperature_C                       = (double)aorc.air_temperature_2m_K-TK;
   // compute relative humidity from specific humidity..
   saturation_vapor_pressure_Pa=calc_air_saturation_vapor_pressure_Pa(surf_rad_forcing.air_temperature_C);
   actual_vapor_pressure_Pa=(double)aorc.specific_humidity_2m_kg_per_kg*(double)aorc.surface_pressure_Pa/0.622;
@@ -1115,7 +1154,16 @@ if(et_options.use_aerodynamic_method==FALSE)
                                                                          &surf_rad_forcing);
   }
 
-et_m_per_s=evapotranspiration_calc_function(&et_options,&et_params,&et_forcing);
+if(et_options.use_energy_balance_method ==TRUE)
+  et_m_per_s=evapotranspiration_energy_balance_method(&et_options,&et_params,&et_forcing);
+if(et_options.use_aerodynamic_method ==TRUE)
+  et_m_per_s=evapotranspiration_aerodynamic_method(&et_options,&et_params,&et_forcing,&inter_vars);
+if(et_options.use_combination_method ==TRUE)
+  et_m_per_s=evapotranspiration_combination_method(&et_options,&et_params,&et_forcing,&inter_vars);
+if(et_options.use_priestley_taylor_method ==TRUE)
+  et_m_per_s=evapotranspiration_priestley_taylor_method(&et_options,&et_params,&et_forcing,&inter_vars);
+if(et_options.use_penman_monteith_method ==TRUE)
+  et_m_per_s=evapotranspiration_penman_monteith_method(&et_options,&et_params,&et_forcing,&inter_vars);
 
 if(et_options.use_energy_balance_method ==TRUE)   printf("energy balance method:\n");
 if(et_options.use_aerodynamic_method ==TRUE)      printf("aerodynamic method:\n");
@@ -1123,10 +1171,9 @@ if(et_options.use_combination_method ==TRUE)      printf("combination method:\n"
 if(et_options.use_priestley_taylor_method ==TRUE) printf("Priestley-Taylor method:\n");
 if(et_options.use_penman_monteith_method ==TRUE)  printf("Penman Monteith method:\n");
                                                  
-printf("calculated instantaneous potential evapotranspiration (PET) =%8.6e m/s\n",et_m_per_s);
-printf("calculated instantaneous potential evapotranspiration (PET) =%8.6lf mm/d\n",et_m_per_s*86400.0*1000.0);
+//printf("calculated instantaneous potential evapotranspiration (PET) =%8.6e m/s\n",et_m_per_s);
+//printf("calculated instantaneous potential evapotranspiration (PET) =%8.6lf mm/d\n",et_m_per_s*86400.0*1000.0);
 
-//EXPECT_DOUBLE_EQ (0.0, water_input_depth_m-surface_runoff_depth_m-infiltration_depth_m);
+//EXPECT_DOUBLE_EQ (0.0, et_m_per_s-8.249098e-08);
 ASSERT_TRUE(true);
-
 }
