@@ -61,6 +61,10 @@ add_automated_test(
     geojson/FeatureCollection_Test.cpp
 )
 
+add_automated_test(
+        test_giuh
+        core/catchment/giuh/GIUH_Test.cpp
+)
 
 # Unit tests
 # TODO: Make sure the geojson tests don't need to be added here also
@@ -73,7 +77,8 @@ add_automated_test(
         geojson/JSONGeometry_Test.cpp
         geojson/Feature_Test.cpp
         geojson/FeatureCollection_Test.cpp
-        forcing/Forcing_Test.cpp      
+        forcing/Forcing_Test.cpp
+        core/catchment/giuh/GIUH_Test.cpp
 )
 
 # Add for integration tests once we have some
@@ -90,4 +95,5 @@ add_automated_test_w_mock(
         geojson/Feature_Test.cpp
         geojson/FeatureCollection_Test.cpp
         forcing/Forcing_Test.cpp
+        core/catchment/giuh/GIUH_Test.cpp
 )
