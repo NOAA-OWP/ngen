@@ -46,7 +46,7 @@ namespace realization {
         virtual ~Tshirt_Realization();
 
         double get_response(double input_flux, time_step_t t, const shared_ptr<pdm03_struct>& et_params);
-
+        double get_response(double input_flux, time_step_t t, void* et_params);
         void add_time(time_t t, double n);
 
     private:

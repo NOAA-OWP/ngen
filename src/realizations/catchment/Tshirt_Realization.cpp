@@ -64,6 +64,10 @@ void Tshirt_Realization::add_time(time_t t, double n) {
     }
 
 }
+double Tshirt_Realization::get_response(double input_flux, Tshirt_Realization::time_step_t t, void* et_params)
+{
+  return get_response(input_flux, t, std::make_shared<pdm03_struct>( *(pdm03_struct*) et_params ));
+}
 
 double Tshirt_Realization::get_response(double input_flux, Tshirt_Realization::time_step_t t,
                                         const shared_ptr<pdm03_struct> &et_params) {
