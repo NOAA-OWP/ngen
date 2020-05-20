@@ -21,7 +21,7 @@ class HY_HydroNexus
     HY_HydroNexus(int nexus_id_num, std::string nexus_id, int num_dowstream);
     virtual ~HY_HydroNexus();
 
-    protected:
+    //NJF Why protect these intrfaces??? protected:
 
     /** Increase the downstream flow for timestep_t by input amount*/
     virtual void add_upstream_flow(double val, long catchement_id, time_step_t t)=0;

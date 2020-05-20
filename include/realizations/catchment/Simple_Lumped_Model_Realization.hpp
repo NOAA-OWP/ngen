@@ -28,7 +28,7 @@ class Simple_Lumped_Model_Realization : public HY_CatchmentArea
 
         virtual ~Simple_Lumped_Model_Realization();
 
-        double get_response(double input_flux, time_step_t t, void* et_params);
+        double get_response(double input_flux, time_step_t t, time_step_t dt, void* et_params);
         double calc_et(double soim_m, void* et_params);
 
         void add_time(time_t t, double n);
