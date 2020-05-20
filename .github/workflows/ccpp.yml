@@ -23,7 +23,7 @@ jobs:
     - name: cmake_init_build
       run: cmake -DCMAKE_CXX_COMPILER=/usr/bin/g++ -B cmake_build -S .
     - name: build_tests
-      run: cmake --build cmake_build --target test_all
+      run: cmake --build . --target test_all
       timeout-minutes: 15
     - name: run_tests
       run: ./cmake_build/test/test_all
