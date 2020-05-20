@@ -76,3 +76,62 @@ std::string giuh_kernel::get_catchment_id()
 {
     return catchment_id;
 }
+
+unsigned int giuh_kernel::get_interpolation_regularity_seconds() {
+    return interpolation_regularity_seconds;
+}
+
+void giuh_kernel::set_interpolation_regularity_seconds(unsigned int regularity_seconds) {
+    if (interpolation_regularity_seconds != regularity_seconds) {
+        interpolation_regularity_seconds = regularity_seconds;
+        // TODO: as with the constructor, consider setting up concurrency for this
+        interpolate_regularized_cdf();
+    }
+}
+
+void giuh_kernel::interpolate_regularized_cdf()
+{
+    // Interpolate regularized CDF (might should be done out of constructor, perhaps concurrently)
+    interpolated_ordinate_times_seconds.push_back(0);
+    interpolated_regularized_ordinates.push_back(0);
+    // Increment the ordinate time based on the regularity (loop below will do this at the end of each iter)
+    unsigned int time_for_ordinate = interpolated_ordinate_times_seconds.back() + interpolation_regularity_seconds;
+
+    // Loop through ordinate times, initializing all but the last ordinate
+    while (time_for_ordinate < this->cdf_times.back()) {
+        interpolated_ordinate_times_seconds.push_back(time_for_ordinate);
+
+        // Find index 'i' of largest CDF time less than the time for the current ordinate
+        // Start by getting the index of the first time greater than time_for_ordinate
+        int cdf_times_index_for_iteration = 0;
+        while (this->cdf_times[cdf_times_index_for_iteration] < interpolated_ordinate_times_seconds.back()) {
+            cdf_times_index_for_iteration++;
+        }
+        // With the index of the first larger, back up one to get the last smaller
+        cdf_times_index_for_iteration--;
+
+        // Then apply equation from spreadsheet
+        double result = (time_for_ordinate - this->cdf_times[cdf_times_index_for_iteration]) /
+                        (this->cdf_times[cdf_times_index_for_iteration + 1] -
+                         this->cdf_times[cdf_times_index_for_iteration]) *
+                        (this->cdf_cumulative_freqs[cdf_times_index_for_iteration + 1] -
+                         this->cdf_cumulative_freqs[cdf_times_index_for_iteration]) +
+                        this->cdf_cumulative_freqs[cdf_times_index_for_iteration];
+        // Push that to the back of that collection
+        interpolated_regularized_ordinates.push_back(result);
+
+        // At the end of each loop iteration, increment the ordinate time based on the regularity
+        time_for_ordinate = interpolated_ordinate_times_seconds.back() + interpolation_regularity_seconds;
+    }
+
+    // As the last step of the actual interpolation, the last ordinate time gets set to have everything
+    interpolated_ordinate_times_seconds.push_back(time_for_ordinate);
+    interpolated_regularized_ordinates.push_back(1.0);
+
+    // With the ordinate values interpolated, now calculate the derived, incremental values between each ordinate step
+    interpolated_incremental_runoff_values.resize(interpolated_regularized_ordinates.size());
+    for (unsigned i = 0; i < interpolated_regularized_ordinates.size(); i++) {
+        interpolated_incremental_runoff_values[i] =
+                i == 0 ? 0 : interpolated_regularized_ordinates[i] - interpolated_regularized_ordinates[i - 1];
+    }
+}
