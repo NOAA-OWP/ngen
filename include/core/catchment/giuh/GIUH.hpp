@@ -39,52 +39,10 @@ namespace giuh {
 
             carry_overs_list_head = nullptr;
 
-            // TODO: look at not hard-coding this later
             interpolation_regularity_seconds = 60;
 
-            // Interpolate regularized CDF (might should be done out of constructor, perhaps concurrently)
-            interpolated_ordinate_times_seconds.push_back(0);
-            interpolated_regularized_ordinates.push_back(0);
-            // Increment the ordinate time based on the regularity (loop below will do this at the end of each iter)
-            int time_for_ordinate = interpolated_ordinate_times_seconds.back() + interpolation_regularity_seconds;
-
-            // Loop through ordinate times, initializing all but the last ordinate
-            while (time_for_ordinate < this->cdf_times.back()) {
-                interpolated_ordinate_times_seconds.push_back(time_for_ordinate);
-
-                // Find index 'i' of largest CDF time less than the time for the current ordinate
-                // Start by getting the index of the first time greater than time_for_ordinate
-                int cdf_times_index_for_iteration = 0;
-                while (this->cdf_times[cdf_times_index_for_iteration] < interpolated_ordinate_times_seconds.back()) {
-                    cdf_times_index_for_iteration++;
-                }
-                // With the index of the first larger, back up one to get the last smaller
-                cdf_times_index_for_iteration--;
-
-                // Then apply equation from spreadsheet
-                double result = (time_for_ordinate - this->cdf_times[cdf_times_index_for_iteration]) /
-                                (this->cdf_times[cdf_times_index_for_iteration + 1] -
-                                 this->cdf_times[cdf_times_index_for_iteration]) *
-                                (this->cdf_cumulative_freqs[cdf_times_index_for_iteration + 1] -
-                                 this->cdf_cumulative_freqs[cdf_times_index_for_iteration]) +
-                                this->cdf_cumulative_freqs[cdf_times_index_for_iteration];
-                // Push that to the back of that collection
-                interpolated_regularized_ordinates.push_back(result);
-
-                // Finally, increment the ordinate time based on the regularity
-                time_for_ordinate = interpolated_ordinate_times_seconds.back() + interpolation_regularity_seconds;
-            }
-
-            // Finally, the last ordinate time gets set to have everything
-            interpolated_ordinate_times_seconds.push_back(time_for_ordinate);
-            interpolated_regularized_ordinates.push_back(1.0);
-
-            // Also, now calculate the incremental values between each ordinate step
-            interpolated_incremental_runoff_values.resize(interpolated_regularized_ordinates.size());
-            for (unsigned i = 0; i < interpolated_regularized_ordinates.size(); i++) {
-                interpolated_incremental_runoff_values[i] =
-                        i == 0 ? 0 : interpolated_regularized_ordinates[i] - interpolated_regularized_ordinates[i - 1];
-            }
+            // TODO: have this be called by constructor, but consider later handling this concurrently
+            interpolate_regularized_cdf();
         }
 
         /**
@@ -92,6 +50,14 @@ namespace giuh {
           */
         virtual ~giuh_kernel()= default;;
 
+        /**
+         * Calculate the GIUH output for the given time step and runoff value, lazily generating the necessary
+         * regularized CDF ordinates if appropriate.
+         *
+         * @param dt Time step value, in seconds.
+         * @param direct_runoff The runoff input for this time step.
+         * @return The calculated output for this time step.
+         */
         virtual double calc_giuh_output(double dt, double direct_runoff);
 
         /**
@@ -100,6 +66,17 @@ namespace giuh {
          * @return the catchment id of the associated catchment.
          */
         std::string get_catchment_id();
+
+        unsigned int get_interpolation_regularity_seconds();
+
+        /**
+         * Set the object's interpolation regularity value, triggering recalculation of the interpolated, regularized
+         * CDF ordinates IFF the new regularity value is different from the previous.
+         *
+         * @param regularity_seconds The interpolation regularity value - i.e., the difference between each of the
+         *                           corresponding times of regularized CDF ordinate - in seconds
+         */
+        void set_interpolation_regularity_seconds(unsigned int regularity_seconds);
 
     private:
         // TODO: document how member variables are named with 'cdf_*' being things that come from external data, and
@@ -114,7 +91,7 @@ namespace giuh {
         /**
          * The regularity (i.e., time between each increment) used to interpolate and produce CDF ordinates, in seconds.
          */
-        int interpolation_regularity_seconds;
+        unsigned int interpolation_regularity_seconds;
         /** The corresponding, regular time values for each of the interpolated CDF ordinates. */
         std::vector<int> interpolated_ordinate_times_seconds;
         /** The regularized CDF ordinate interpolated values. */
@@ -126,6 +103,11 @@ namespace giuh {
         std::vector<double> interpolated_incremental_runoff_values;
         /** List to hold carry-over amounts from previous inputs, which didn't all flow out at that time step. */
         std::shared_ptr<giuh_carry_over> carry_overs_list_head;
+
+        /**
+         * Perform the interpolation of regularized CDF ordinates.
+         */
+        void interpolate_regularized_cdf();
 
     };
 }
