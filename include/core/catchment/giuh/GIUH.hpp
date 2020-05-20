@@ -4,7 +4,7 @@
 #include <string>
 #include <utility>
 #include <vector>
-
+#include <memory>
 namespace giuh {
 
     struct giuh_carry_over {
