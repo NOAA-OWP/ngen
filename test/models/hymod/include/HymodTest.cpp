@@ -175,7 +175,7 @@ TEST_F(HymodKernelTest, TestWithKnownInput)
     ASSERT_TRUE(true);
 }
 
-//! Test that Hymod executes its 'calc_et' function and returns the expected result.
+//! Test that Hymod executes its 'calc_evapotranspiration' function and returns the expected result.
 /*!
     In the current implementation (at the time this test was created), the static method simple returns 0.0 regardless
     of the parameters.

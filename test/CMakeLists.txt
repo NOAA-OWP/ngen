@@ -16,8 +16,10 @@ macro(add_automated_test TESTNAME)
             gtest_main
             NGen::core
             NGen::core_catchment
+            NGen::core_catchment_giuh
             NGen::core_nexus
             NGen::geojson
+            NGen::models_tshirt
             NGen::realizations_catchment)
     gtest_discover_tests(${TESTNAME}
             WORKING_DIRECTORY ${PROJECT_DIR}
@@ -35,8 +37,10 @@ macro(add_automated_test_w_mock TESTNAME)
             gtest_main
             NGen::core
             NGen::core_catchment
+            NGen::core_catchment_giuh
             NGen::core_nexus
             NGen::geojson
+            NGen::models_tshirt
             NGen::realizations_catchment
             )
     gtest_discover_tests(${TESTNAME}
@@ -64,6 +68,7 @@ add_automated_test(
         test_unit
         models/hymod/include/HymodTest.cpp
         models/hymod/include/Nonlinear_Reservoir_Test.cpp
+        models/tshirt/include/TshirtTest.cpp
         geojson/JSONProperty_Test.cpp
         geojson/JSONGeometry_Test.cpp
         geojson/Feature_Test.cpp
@@ -76,12 +81,13 @@ add_automated_test(
 
 # All automated tests
 add_automated_test_w_mock(
-    test_all
-    models/hymod/include/HymodTest.cpp
-    models/hymod/include/Nonlinear_Reservoir_Test.cpp
-    geojson/JSONProperty_Test.cpp
-    geojson/JSONGeometry_Test.cpp
-    geojson/Feature_Test.cpp
-    geojson/FeatureCollection_Test.cpp
-    forcing/Forcing_Test.cpp
+        test_all
+        models/hymod/include/HymodTest.cpp
+        models/hymod/include/Nonlinear_Reservoir_Test.cpp
+        models/tshirt/include/TshirtTest.cpp
+        geojson/JSONProperty_Test.cpp
+        geojson/JSONGeometry_Test.cpp
+        geojson/Feature_Test.cpp
+        geojson/FeatureCollection_Test.cpp
+        forcing/Forcing_Test.cpp
 )

@@ -4,7 +4,7 @@
 #include <math.h>
 
 
-void Schaake_partitioning_scheme(double timestep_s, double Schaake_adjusted_magic_constant_by_soil_type,
+static void Schaake_partitioning_scheme(double timestep_s, double Schaake_adjusted_magic_constant_by_soil_type,
                                  double column_total_soil_moisture_deficit_m, double water_input_depth_m,
                                  double *surface_runoff_depth_m, double *infiltration_depth_m)
 {

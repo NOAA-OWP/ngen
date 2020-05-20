@@ -4,7 +4,6 @@
 #include <HY_CatchmentArea.hpp>
 #include "LinearReservoir.hpp"
 #include "hymod/include/Hymod.h"
-
 #include <unordered_map>
 
 

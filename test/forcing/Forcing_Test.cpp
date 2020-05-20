@@ -19,18 +19,32 @@ class ForcingTest : public ::testing::Test {
 
     void setupForcing();
 
+    void setupForcing_AORC();
+
     std::shared_ptr<Forcing> Forcing_Object1; //smart pointer to a Forcing object
+
+    std::shared_ptr<Forcing> Forcing_Object_AORC; //smart pointer to a Forcing object
 
     typedef struct tm time_type;
 
     std::shared_ptr<time_type> start_date_time; //smart pointer to time struct
 
     std::shared_ptr<time_type> end_date_time; //smart pointer to time struct
+
+
+    typedef struct tm time_type_AORC;
+
+    std::shared_ptr<time_type> start_date_time_AORC; //smart pointer to time struct
+
+    std::shared_ptr<time_type> end_date_time_AORC; //smart pointer to time struct
+
 };
 
 
 void ForcingTest::SetUp() {
-    setupForcing();
+    //setupForcing();
+
+    setupForcing_AORC();
 }
 
 
@@ -61,6 +75,29 @@ void ForcingTest::setupForcing()
 }
 
 
+//Construct a forcing object AORC
+void ForcingTest::setupForcing_AORC()
+{
+    string forcing_file_name_AORC = "../test/forcing/cat-10_2015-12-01 00_00_00_2015-12-30 23_00_00.csv";
+
+    start_date_time_AORC = std::make_shared<time_type>();
+
+    start_date_time_AORC->tm_year = 115;
+    start_date_time_AORC->tm_mon = 11;
+    start_date_time_AORC->tm_mday = 14;
+    start_date_time_AORC->tm_hour = 15;
+
+    end_date_time_AORC = std::make_shared<time_type>();
+
+    end_date_time_AORC->tm_year = 115;
+    end_date_time_AORC->tm_mon = 11;
+    end_date_time_AORC->tm_mday = 18;
+    end_date_time_AORC->tm_hour = 1;
+
+    Forcing_Object_AORC = std::make_shared<Forcing>(0.0, 0, forcing_file_name_AORC, start_date_time_AORC, end_date_time_AORC);
+}
+
+/*Original Forcing Object Test
 //Test Forcing object
 TEST_F(ForcingTest, TestForcingDataRead)
 {
@@ -83,7 +120,30 @@ TEST_F(ForcingTest, TestForcingDataRead)
 
    EXPECT_EQ(173, current_day_of_year);
 }
+*/
 
+///Test AORC Forcing Object
+TEST_F(ForcingTest, TestForcingDataRead)
+{
+   double current_precipitation;
+
+   int current_day_of_year;   
+
+   for (int i = 0; i < 71; i++)
+   {
+      current_precipitation = Forcing_Object_AORC->get_next_hourly_precipitation_meters_per_second();
+   }
+    
+   double last_precipitation_rounded = round(current_precipitation * 10000000.0) / 10000000.0;
+
+   double compare_precipitation_rounded = round(7.9999999999999996e-07 * 10000000.0) / 10000000.0;
+
+   EXPECT_DOUBLE_EQ(compare_precipitation_rounded, last_precipitation_rounded);
+
+   current_day_of_year = Forcing_Object_AORC->get_day_of_year();
+
+   EXPECT_EQ(350, current_day_of_year);
+}
 
 
 
