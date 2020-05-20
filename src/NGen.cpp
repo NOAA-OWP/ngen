@@ -131,29 +131,47 @@ int main(int argc, char *argv[]) {
     long n = 3;
     double t = 0;
     std::vector<double> sr_tmp = {1.0, 1.0, 1.0};
+    time_step_t dt = 3600; //tshirt time step
+
     for(auto& feature : *nexus_collection)
     {
-      if( feature->get_id().substr(0, 3) == "cat" ){
+      std::string feat_id = feature->get_id();
+
+      if( feat_id.substr(0, 3) == "cat" ){
         //Create catchment realization, add to map
-        catchment_realizations[feature->get_id()] = std::make_shared<_hymod>( _hymod(storage, max_storage, a, b, Ks, Kq, n, sr_tmp, t) );
+        forcing_params forcing_p(forcing_paths[feat_id], start_time, end_time);
+        if (feature->get_property("realization").as_string() == "hymod") {
+            //Create the hymod instance
+            catchment_realizations[feature->get_id()] = std::make_unique<_hymod>( _hymod(forcing_p, storage, max_storage, a, b, Ks, Kq, n, sr_tmp, t) );
+        }
+        else if(feature->get_property("realization").as_string() == "tshirt") {
+          //Create the tshirt instance
+          vector<double> nash_storage = {1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0};
+
+          catchment_realizations[feature->get_id()] = std::make_unique<_tshirt>(forcing_p,
+                 1.0, //soil_storage_meters
+                 1.0, //groundwater_storage_meters
+                 move(giuh_example), tshirt_params, nash_storage, dt);
+
+        }
         if(feature->get_number_of_destination_features() == 1)
         {
-          catchment_to_nexus[feature->get_id()] = feature->destination_features()[0]->get_id();
+          catchment_to_nexus[feat_id] = feature->destination_features()[0]->get_id();
         }
         else
         {
           //TODO
         }
-        catchment_id[feature->get_id()] = std::stoi(feature->get_id().substr(4));
+        catchment_id[feat_id] = std::stoi(feat_id.substr(4));
       }else{
         //Create nexus realization, add to map
-        int num = std::stoi( feature->get_id().substr(4) );
-        nexus_realizations[feature->get_id()] = std::make_shared<HY_PointHydroNexus>(
-                                      HY_PointHydroNexus(num, feature->get_id(),
+        int num = std::stoi( feat_id.substr(4) );
+        nexus_realizations[feat_id] = std::make_unique<HY_PointHydroNexus>(
+                                      HY_PointHydroNexus(num, feat_id,
                                                          feature->get_number_of_destination_features()));
        if(feature->get_number_of_destination_features() == 1)
        {
-         nexus_to_catchment[feature->get_id()] = feature->destination_features()[0]->get_id();
+         nexus_to_catchment[feat_id] = feature->destination_features()[0]->get_id();
        }
        else
        {
@@ -163,12 +181,12 @@ int main(int argc, char *argv[]) {
 
     }
 
-    //Now loop some time, iterate catchments, do stuff
+    //Now loop some time, iterate catchments, do stuff for 720 hourly time steps
     for(int time_step = 0; time_step < 1; time_step++)
     {
       for(auto &catchment: catchment_realizations)
       {
-        if(catchment.first == "cat-88")
+        if(catchment.first == "cat-89")
         {
         double response = catchment.second->get_response(0, 0, &pdm_et_data);
         nexus_realizations[ catchment_to_nexus[catchment.first] ]->add_upstream_flow(response, catchment_id[catchment.first], time_step);
