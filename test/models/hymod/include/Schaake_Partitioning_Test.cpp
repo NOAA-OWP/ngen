@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "kernels/schaake_partitioning.hpp"
+#include "kernels/SchaakePartitioning.hpp"
 #include "kernels/utility.hpp"
 
 class SchaakeKernelTest : public ::testing::Test {
