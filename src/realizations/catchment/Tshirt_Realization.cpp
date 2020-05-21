@@ -7,7 +7,7 @@ Tshirt_Realization::Tshirt_Realization(
         double soil_storage_meters,
         double groundwater_storage_meters,
         std::string catchment_id,
-        giuh::GiuhJsonReader giuh_json_reader,
+        giuh::GiuhJsonReader &giuh_json_reader,
         tshirt::tshirt_params params,
         const vector<double> &nash_storage,
         time_step_t t)
@@ -34,7 +34,7 @@ Tshirt_Realization::Tshirt_Realization(
         double soil_storage_meters,
         double groundwater_storage_meters,
         std::string catchment_id,
-        giuh::GiuhJsonReader giuh_json_reader,
+        giuh::GiuhJsonReader &giuh_json_reader,
         double maxsmc,
         double wltsmc,
         double satdk,
@@ -52,7 +52,7 @@ Tshirt_Realization::Tshirt_Realization(
         const std::vector<double> &nash_storage,
         time_step_t t
 ) : Tshirt_Realization::Tshirt_Realization(forcing_config, soil_storage_meters, groundwater_storage_meters,
-                                           catchment_id, move(giuh_json_reader),
+                                           catchment_id, giuh_json_reader,
                                            tshirt::tshirt_params(maxsmc, wltsmc, satdk, satpsi, slope, b, multiplier,
                                                                  alpha_fc, Klf, Kn, nash_n, Cgw, expon, max_gw_storage),
                                            nash_storage, t) {
