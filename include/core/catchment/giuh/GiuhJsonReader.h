@@ -16,18 +16,18 @@ namespace giuh {
     class GiuhJsonReader {
 
     public:
-        GiuhJsonReader(std::string file_path) : json_file_path(file_path) {
+        GiuhJsonReader(std::string data_file_path) : data_json_file_path(data_file_path) {
             // Confirm file exists and is readable
-            if (FILE *file = fopen(file_path.c_str(), "r")) {
+            if (FILE *file = fopen(data_file_path.c_str(), "r")) {
                 fclose(file);
-                file_readable = true;
+                data_json_file_readable = true;
                 ptree tree;
-                boost::property_tree::json_parser::read_json(json_file_path, tree);
-                json_tree = std::make_unique<ptree>(tree);
+                boost::property_tree::json_parser::read_json(data_json_file_path, tree);
+                data_json_tree = std::make_unique<ptree>(tree);
             }
             else {
-                file_readable = false;
-                json_tree = nullptr;
+                data_json_file_readable = false;
+                data_json_tree = nullptr;
             }
         }
 
@@ -35,12 +35,19 @@ namespace giuh {
 
         bool is_giuh_kernel_for_id_exists(std::string catchment_id);
 
-        bool is_json_file_readable();
+        /**
+         * Get whether a file at the path represented by `data_json_file_path` exists and is readable.
+         *
+         * @return Whether a file at the path represented by `data_json_file_path` exists and is readable.
+         */
+        bool is_data_json_file_readable();
 
     private:
-        bool file_readable;
-        std::string json_file_path;
-        std::unique_ptr<ptree> json_tree;
+        /** Whether a file at the path represented by `data_json_file_path` exists and is readable. */
+        bool data_json_file_readable;
+        /** The path to the JSON file containing GIUH data, as a string. */
+        std::string data_json_file_path;
+        std::unique_ptr<ptree> data_json_tree;
 
         std::unique_ptr<ptree> find_data_node_for_catchment_id(std::string catchment_id);
 

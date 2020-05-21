@@ -21,7 +21,7 @@ std::shared_ptr<giuh_kernel> GiuhJsonReader::build_giuh_kernel(std::string catch
 
 std::unique_ptr<ptree> GiuhJsonReader::find_data_node_for_catchment_id(std::string catchment_id) {
     // Traverse tree until finding node with correct id
-    for (ptree::iterator pos = json_tree->begin(); pos != json_tree->end(); ++pos) {
+    for (ptree::iterator pos = data_json_tree->begin(); pos != data_json_tree->end(); ++pos) {
         // TODO: confirm this logic is correct, with respect to iterator members and what they retrieve
         // When the right node is found, use it to build a referenced kernel, and return the reference
         if (pos->first == catchment_id) {
@@ -32,7 +32,7 @@ std::unique_ptr<ptree> GiuhJsonReader::find_data_node_for_catchment_id(std::stri
 }
 
 std::shared_ptr<giuh_kernel> GiuhJsonReader::get_giuh_kernel_for_id(std::string catchment_id) {
-    if (!is_json_file_readable()) {
+    if (!is_data_json_file_readable()) {
         return nullptr;
     }
     // Traverse tree until finding node with correct id
@@ -41,11 +41,11 @@ std::shared_ptr<giuh_kernel> GiuhJsonReader::get_giuh_kernel_for_id(std::string 
 }
 
 bool GiuhJsonReader::is_giuh_kernel_for_id_exists(std::string catchment_id) {
-    if (!is_json_file_readable()) {
+    if (!is_data_json_file_readable()) {
         return false;
     }
     // Traverse tree until finding node with correct id
-    for (ptree::iterator pos = json_tree->begin(); pos != json_tree->end(); ++pos) {
+    for (ptree::iterator pos = data_json_tree->begin(); pos != data_json_tree->end(); ++pos) {
         // TODO: confirm this logic is correct, with respect to iterator members and what they retrieve
         // When the right node is found, use it to build a referenced kernel, and return the reference
         if (pos->first == catchment_id) {
@@ -55,6 +55,6 @@ bool GiuhJsonReader::is_giuh_kernel_for_id_exists(std::string catchment_id) {
     return false;
 }
 
-bool GiuhJsonReader::is_json_file_readable() {
-    return file_readable;
+bool GiuhJsonReader::is_data_json_file_readable() {
+    return data_json_file_readable;
 }
