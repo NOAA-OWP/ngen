@@ -10,6 +10,7 @@
 #include <cmath>
 #include <utility>
 #include <vector>
+#include <memory>
 
 namespace tshirt {
 
