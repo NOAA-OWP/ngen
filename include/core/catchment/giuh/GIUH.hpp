@@ -28,11 +28,13 @@ namespace giuh {
 
         giuh_kernel(
                 std::string catchment_id,
+                std::string comid,
                 std::vector<double> cdf_times,
                 std::vector<double> cdf_cumulative_freqs
                 )
         {
             this->catchment_id = std::move(catchment_id);
+            this->comid = std::move(comid);
             this->cdf_times = std::move(cdf_times);
             // TODO: might be able to get this by calculating from times, rather than being passed
             this->cdf_cumulative_freqs = std::move(cdf_cumulative_freqs);
@@ -67,6 +69,13 @@ namespace giuh {
          */
         std::string get_catchment_id();
 
+        /**
+         * Accessor for the COMID of the associated catchment.
+         *
+         * @return the COMID of the associated catchment.
+         */
+        std::string get_comid();
+
         unsigned int get_interpolation_regularity_seconds();
 
         /**
@@ -82,8 +91,10 @@ namespace giuh {
         // TODO: document how member variables are named with 'cdf_*' being things that come from external data, and
         //  'interpolated_*' being things that get produced within the class (to help keep straight what things are).
 
-        /** Associated catchment identifier, as a string. */
+        /** Main catchment identifier, as a string. */
         std::string catchment_id;
+        /** COMID catchment identifier, as a string. */
+        std::string comid;
         /** Ranked order of time of travel cell values for CDF. */
         std::vector<double> cdf_cumulative_freqs;
         /** CDF times in seconds. */

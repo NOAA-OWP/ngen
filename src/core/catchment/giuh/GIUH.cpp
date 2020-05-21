@@ -77,6 +77,10 @@ std::string giuh_kernel::get_catchment_id()
     return catchment_id;
 }
 
+std::string giuh_kernel::get_comid() {
+    return comid;
+}
+
 unsigned int giuh_kernel::get_interpolation_regularity_seconds() {
     return interpolation_regularity_seconds;
 }
