@@ -102,7 +102,8 @@ class Forcing
      */
     double get_current_hourly_precipitation_meters_per_second()
     {
-        return precipitation_rate_meters_per_second_vector[forcing_vector_index_ptr];
+        //return precipitation_rate_meters_per_second_vector[forcing_vector_index_ptr];
+        return precipitation_rate_meters_per_second_vector.at(forcing_vector_index_ptr);
     }
 
     /**
@@ -114,8 +115,10 @@ class Forcing
      */
     double get_next_hourly_precipitation_meters_per_second()
     {
-        //Increment forcing index
-        forcing_vector_index_ptr = forcing_vector_index_ptr + 1;
+        //Check forcing vector bounds before incrementing forcing index
+        if (forcing_vector_index_ptr < forcing_vector_size - 1)
+            //Increment forcing index
+            forcing_vector_index_ptr = forcing_vector_index_ptr + 1;
 
         //Increment current time by 1 hour
         current_date_time_epoch = current_date_time_epoch + 3600;
@@ -161,34 +164,34 @@ class Forcing
                 //Row vector
                 std::vector<std::string>& vec = data_list[i];
 
-                //Declare pointer to struct for the current row date-time
-                struct tm *current_row_date_time;
+                //Declare pointer to struct for the current row date-time utc
+                struct tm *current_row_date_time_utc;
 
-                //Allocate memory to struct for the current row date-time
-                current_row_date_time = new tm();
+                //Allocate memory to struct for the current row date-time utc
+                current_row_date_time_utc = new tm();
 
                 //Year
                 string year_str = vec[0];
                 int year = stoi(year_str);
-                current_row_date_time->tm_year = year - 1900;
+                current_row_date_time_utc->tm_year = year - 1900;
 
                 //Month
                 string month_str = vec[1];
                 int month = stoi(month_str);
-                current_row_date_time->tm_mon = month - 1;
+                current_row_date_time_utc->tm_mon = month - 1;
 
                 //Day
                 string day_str = vec[2];
                 int day = stoi(day_str);
-                current_row_date_time->tm_mday = day;
+                current_row_date_time_utc->tm_mday = day;
 
                 //Hour
                 string hour_str = vec[3];
                 int hour = stoi(hour_str);
-                current_row_date_time->tm_hour = hour;
+                current_row_date_time_utc->tm_hour = hour;
 
-                //Convert current row date-time to epoch time
-                time_t current_row_date_time_epoch = mktime(current_row_date_time);
+                //Convert current row date-time utc to epoch time
+                time_t current_row_date_time_epoch = timegm(current_row_date_time_utc);
 
                 //If the current row date-time is within the model date-time range, then add precipitation to vector
                 if (start_date_time_epoch <= current_row_date_time_epoch && current_row_date_time_epoch <= end_date_time_epoch)
@@ -204,7 +207,7 @@ class Forcing
                 }
 
                 //Free memory from struct
-                delete current_row_date_time;
+                delete current_row_date_time_utc;
         }
     }
 
@@ -228,20 +231,20 @@ class Forcing
                 //Row vector
                 std::vector<std::string>& vec = data_list[i];
 
-                //Declare struct for the current row date-time
-                struct tm current_row_date_time;
+                //Declare struct for the current row date-time 
+                struct tm current_row_date_time_utc;
 
                 //Allocate memory to struct for the current row date-time
-                current_row_date_time = tm();
+                current_row_date_time_utc = tm();
 
                 //Grab time string from first column
                 string time_str = vec[0];
 
                 //Convert time string to time struct
-                strptime(time_str.c_str(), "%Y-%m-%d %H:%M:%S", &current_row_date_time);
+                strptime(time_str.c_str(), "%Y-%m-%d %H:%M:%S", &current_row_date_time_utc);
 
-                //Convert current row date-time to epoch time
-                time_t current_row_date_time_epoch = mktime(&current_row_date_time);
+                //Convert current row date-time UTC to epoch time
+                time_t current_row_date_time_epoch = timegm(&current_row_date_time_utc);
 
                 //If the current row date-time is within the model date-time range, then add precipitation to vector
                 if (start_date_time_epoch <= current_row_date_time_epoch && current_row_date_time_epoch <= end_date_time_epoch)
@@ -281,8 +284,11 @@ class Forcing
                 }
 
                 //Free memory from struct
-                //delete current_row_date_time;
+                //delete current_row_date_time_utc;
         }
+
+        //Get size of forcing precipitation rate vector
+        forcing_vector_size = precipitation_rate_meters_per_second_vector.size();
     }
 
     vector<double> APCP_surface_kg_per_meters_squared_vector;
@@ -295,6 +301,7 @@ class Forcing
     vector<double> VGRD_10maboveground_meters_per_second_vector;
     vector<double> precipitation_rate_meters_per_second_vector;
     int forcing_vector_index_ptr;
+    int forcing_vector_size;
     double precipitation_rate_meters_per_second;
     double air_temperature_fahrenheit;
     int basin_id;

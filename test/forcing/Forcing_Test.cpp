@@ -122,14 +122,14 @@ TEST_F(ForcingTest, TestForcingDataRead)
 }
 */
 
-///Test AORC Forcing Object
+//Test AORC Forcing Object
 TEST_F(ForcingTest, TestForcingDataRead)
 {
    double current_precipitation;
 
    int current_day_of_year;   
 
-   for (int i = 0; i < 71; i++)
+   for (int i = 0; i < 66; i++)
    {
       current_precipitation = Forcing_Object_AORC->get_next_hourly_precipitation_meters_per_second();
    }
@@ -143,8 +143,23 @@ TEST_F(ForcingTest, TestForcingDataRead)
    current_day_of_year = Forcing_Object_AORC->get_day_of_year();
 
    EXPECT_EQ(350, current_day_of_year);
-}
 
+   //Check exceeding the forcing range to retrieve the last forcing precipation rate
+   for (int i = 66; i < 460; i++)
+   {
+      current_precipitation = Forcing_Object_AORC->get_next_hourly_precipitation_meters_per_second();
+   }
+    
+   last_precipitation_rounded = round(current_precipitation * 10000000.0) / 10000000.0;
+
+   compare_precipitation_rounded = round(6.9999999999999996e-07 * 10000000.0) / 10000000.0;
+
+   EXPECT_DOUBLE_EQ(compare_precipitation_rounded, last_precipitation_rounded);
+
+   current_day_of_year = Forcing_Object_AORC->get_day_of_year();
+
+   EXPECT_EQ(1, current_day_of_year);
+}
 
 
 
