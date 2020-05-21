@@ -147,13 +147,20 @@ int main(int argc, char *argv[]) {
     double t = 0;
     time_step_t dt = 3600; //tshirt time step
 
-    // TODO: parameterize these values, rather than hard-code, but
+    // TODO: parameterize these values, rather than hard-code
     // TODO: current mapping file shows "wat-*" rather than "cat-*" for some reason ... figure out if this has further implications
     std::string example_catchment_id = "wat-88";
     // For now expect in working directory
     std::string giuh_json_file_path = "./GIUH.json";
     std::string comid_mapping_json_file_path = "./crosswalk.json";
     giuh::GiuhJsonReader giuh_json_reader(giuh_json_file_path, comid_mapping_json_file_path);
+
+    // Fall back to testing values if either of the above hard-coded paths doesn't work.
+    if (!giuh_json_reader.is_data_json_file_readable() || !giuh_json_reader.is_id_map_json_file_readable()) {
+        giuh_json_file_path = "../test/data/giuh/GIUH.json";
+        comid_mapping_json_file_path = "../data/sugar_creek/crosswalk_subset.json";
+        giuh_json_reader = giuh::GiuhJsonReader(giuh_json_file_path, comid_mapping_json_file_path);
+    }
 
     for(auto& feature : *nexus_collection)
     {
