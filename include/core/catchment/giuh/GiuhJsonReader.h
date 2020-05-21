@@ -17,17 +17,16 @@ namespace giuh {
 
     public:
         GiuhJsonReader(std::string file_path) : json_file_path(file_path) {
-            // TODO: confirm file exists
-            file_exists = true;
-            // TODO: confirm file can be read
-            file_readable = true;
-
-            if (file_exists && file_readable) {
+            // Confirm file exists and is readable
+            if (FILE *file = fopen(file_path.c_str(), "r")) {
+                fclose(file);
+                file_readable = true;
                 ptree tree;
                 boost::property_tree::json_parser::read_json(json_file_path, tree);
                 json_tree = std::make_unique<ptree>(tree);
             }
             else {
+                file_readable = false;
                 json_tree = nullptr;
             }
         }
@@ -36,12 +35,9 @@ namespace giuh {
 
         bool is_giuh_kernel_for_id_exists(std::string catchment_id);
 
-        bool is_json_file_exists();
-
         bool is_json_file_readable();
 
     private:
-        bool file_exists;
         bool file_readable;
         std::string json_file_path;
         std::unique_ptr<ptree> json_tree;

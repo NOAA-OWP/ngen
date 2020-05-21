@@ -32,7 +32,7 @@ std::unique_ptr<ptree> GiuhJsonReader::find_data_node_for_catchment_id(std::stri
 }
 
 std::shared_ptr<giuh_kernel> GiuhJsonReader::get_giuh_kernel_for_id(std::string catchment_id) {
-    if (!is_json_file_exists() || !is_json_file_readable()) {
+    if (!is_json_file_readable()) {
         return nullptr;
     }
     // Traverse tree until finding node with correct id
@@ -41,7 +41,7 @@ std::shared_ptr<giuh_kernel> GiuhJsonReader::get_giuh_kernel_for_id(std::string 
 }
 
 bool GiuhJsonReader::is_giuh_kernel_for_id_exists(std::string catchment_id) {
-    if (!is_json_file_exists() || !is_json_file_readable()) {
+    if (!is_json_file_readable()) {
         return false;
     }
     // Traverse tree until finding node with correct id
@@ -53,10 +53,6 @@ bool GiuhJsonReader::is_giuh_kernel_for_id_exists(std::string catchment_id) {
         }
     }
     return false;
-}
-
-bool GiuhJsonReader::is_json_file_exists() {
-    return file_exists;
 }
 
 bool GiuhJsonReader::is_json_file_readable() {
