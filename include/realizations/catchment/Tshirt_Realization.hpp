@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include "GIUH.hpp"
 #include "tshirt/include/Tshirt.h"
+#include <memory>
 
 namespace realization {
 
