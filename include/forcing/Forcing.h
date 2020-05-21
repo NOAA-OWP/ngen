@@ -102,7 +102,6 @@ class Forcing
      */
     double get_current_hourly_precipitation_meters_per_second()
     {
-        //return precipitation_rate_meters_per_second_vector[forcing_vector_index_ptr];
         return precipitation_rate_meters_per_second_vector.at(forcing_vector_index_ptr);
     }
 
