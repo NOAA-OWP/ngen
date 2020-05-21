@@ -101,8 +101,9 @@ tshirt::tshirt_params tshirt_params{
 std::vector<double> cdf_times {0, 300, 600, 900, 1200};//, 1500, 1800, 2100, 2400, 2700};
 std::vector<double> cdf_freq {0.00, 0.38, 0.59, 0.03, 0.0};
 
-giuh::giuh_kernel giuh_k("cat-88", cdf_times, cdf_freq);
-unique_ptr<giuh::giuh_kernel> giuh_example = make_unique<giuh::giuh_kernel>(giuh_k);
+// Now doing this via json reader
+//giuh::giuh_kernel giuh_k("cat-88", cdf_times, cdf_freq);
+//unique_ptr<giuh::giuh_kernel> giuh_example = make_unique<giuh::giuh_kernel>(giuh_k);
 
 typedef Simple_Lumped_Model_Realization _hymod;
 typedef realization::Tshirt_Realization _tshirt;
@@ -146,6 +147,14 @@ int main(int argc, char *argv[]) {
     double t = 0;
     time_step_t dt = 3600; //tshirt time step
 
+    // TODO: parameterize these values, rather than hard-code, but
+    // TODO: current mapping file shows "wat-*" rather than "cat-*" for some reason ... figure out if this has further implications
+    std::string example_catchment_id = "wat-88";
+    // For now expect in working directory
+    std::string giuh_json_file_path = "./GIUH.json";
+    std::string comid_mapping_json_file_path = "./crosswalk.json";
+    giuh::GiuhJsonReader giuh_json_reader(giuh_json_file_path, comid_mapping_json_file_path);
+
     for(auto& feature : *nexus_collection)
     {
       std::string feat_id = feature->get_id();
@@ -165,7 +174,9 @@ int main(int argc, char *argv[]) {
           catchment_realizations[feature->get_id()] = std::make_unique<_tshirt>(forcing_p,
                  1.0, //soil_storage_meters
                  1.0, //groundwater_storage_meters
-                 move(giuh_example), tshirt_params, nash_storage, dt);
+                 example_catchment_id, //used to cross-reference the COMID, need to look up the catchments GIUH data
+                 giuh_json_reader,     //used to actually lookup GIUH data and create a giuh_kernel obj for catchment
+                 tshirt_params, nash_storage, dt);
 
         }
         if(feature->get_number_of_destination_features() == 1)
