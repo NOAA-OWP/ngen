@@ -86,3 +86,6 @@ docs/code/html/*
 
 # CMake artifact generation directory
 /cmake-build-*/
+
+# Deleted files
+test/models/kernels/schaake_test.cpp
