@@ -29,7 +29,7 @@ struct forcing_params
   forcing_params(std::string path, std::string start_time, std::string end_time):
     path(path), start_time(start_time), end_time(end_time)
     {
-      //TODO converting to UTC can be tricky, especially if thread safety is a concern
+      /// \todo converting to UTC can be tricky, especially if thread safety is a concern
       /* https://stackoverflow.com/questions/530519/stdmktime-and-timezone-info */
       struct tm tm;
       strptime(this->start_time.c_str(), this->date_format.c_str() , &tm);
@@ -102,6 +102,14 @@ class Forcing
      */
     double get_current_hourly_precipitation_meters_per_second()
     {
+        //Check if forcing index is less than zero and if so, set to zero.
+        if (forcing_vector_index_ptr < 0)
+        {
+            forcing_vector_index_ptr = 0;
+            /// \todo: Return appropriate warning
+            cout << "WARNING: Forcing precipitation vector index is less than zero. Therefore, this index is set to zero." << endl;
+        }
+
         return precipitation_rate_meters_per_second_vector.at(forcing_vector_index_ptr);
     }
 
@@ -118,6 +126,10 @@ class Forcing
         if (forcing_vector_index_ptr < forcing_vector_size - 1)
             //Increment forcing index
             forcing_vector_index_ptr = forcing_vector_index_ptr + 1;
+
+        else
+            /// \todo: Return appropriate warning
+            cout << "WARNING: Reached beyond the size of the forcing precipitation vector. Therefore, returning the last precipitation value of the vector." << endl;
 
         //Increment current time by 1 hour
         current_date_time_epoch = current_date_time_epoch + 3600;
@@ -244,6 +256,18 @@ class Forcing
 
                 //Convert current row date-time UTC to epoch time
                 time_t current_row_date_time_epoch = timegm(&current_row_date_time_utc);
+
+                //Ensure that forcing data covers the entire model period. Otherwise, throw an error.
+                if (i == 1 && start_date_time_epoch < current_row_date_time_epoch)
+                    /// \todo TODO: Return appropriate error
+                    //cout << "WARNING: Forcing data begins after the model start time." << endl;
+                    throw std::runtime_error("Error: Forcing data begins after the model start time.");
+
+
+                else if (i == data_list.size() - 1 && current_row_date_time_epoch < end_date_time_epoch)
+                    /// \todo TODO: Return appropriate error
+                    cout << "WARNING: Forcing data ends before the model end time." << endl;
+                    //throw std::runtime_error("Error: Forcing data ends before the model end time.");
 
                 //If the current row date-time is within the model date-time range, then add precipitation to vector
                 if (start_date_time_epoch <= current_row_date_time_epoch && current_row_date_time_epoch <= end_date_time_epoch)
