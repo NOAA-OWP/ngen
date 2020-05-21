@@ -19,7 +19,7 @@ namespace realization {
                            double soil_storage_meters,
                            double groundwater_storage_meters,
                            std::string catchment_id,
-                           giuh::GiuhJsonReader giuh_json_reader,
+                           giuh::GiuhJsonReader &giuh_json_reader,
                            tshirt::tshirt_params params,
                            const std::vector<double>& nash_storage,
                            time_step_t t);
@@ -29,7 +29,7 @@ namespace realization {
                 double soil_storage_meters,
                 double groundwater_storage_meters,
                 std::string catchment_id,
-                giuh::GiuhJsonReader giuh_json_reader,
+                giuh::GiuhJsonReader &giuh_json_reader,
                 double maxsmc,
                 double wltsmc,
                 double satdk,
