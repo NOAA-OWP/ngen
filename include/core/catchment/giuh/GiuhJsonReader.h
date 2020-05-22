@@ -6,8 +6,8 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <memory>
 #include <string>
+#include <utility>
 #include <vector>
-
 
 namespace giuh {
 
@@ -16,8 +16,9 @@ namespace giuh {
     class GiuhJsonReader {
 
     public:
-        GiuhJsonReader(std::string data_file_path, std::string id_map_path) : data_json_file_path(data_file_path),
-                                                                              id_map_json_file_path(id_map_path) {
+        GiuhJsonReader(std::string data_file_path, std::string id_map_path)
+            : data_json_file_path(std::move(data_file_path)), id_map_json_file_path(std::move(id_map_path))
+        {
             // Confirm data JSON file exists and is readable
             if (FILE *file = fopen(data_json_file_path.c_str(), "r")) {
                 fclose(file);
