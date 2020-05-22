@@ -131,9 +131,6 @@ class Forcing
             /// \todo: Return appropriate warning
             cout << "WARNING: Reached beyond the size of the forcing precipitation vector. Therefore, returning the last precipitation value of the vector." << endl;
 
-        //Increment current time by 1 hour
-        current_date_time_epoch = current_date_time_epoch + 3600;
-
         return get_current_hourly_precipitation_meters_per_second();
     }
 
@@ -147,12 +144,88 @@ class Forcing
 
         struct tm *current_date_time;
 
+        current_date_time_epoch = time_epoch_vector.at(forcing_vector_index_ptr);
+
+        /// \todo: Sort out using local versus UTC time
         current_date_time = localtime(&current_date_time_epoch);
 
         current_day_of_year = current_date_time->tm_yday;
 
         return current_day_of_year;
     }
+
+    /**
+     * @brief Accessor to AORC APCP_surface_kg_per_meters_squared
+     * @return APCP_surface_kg_per_meters_squared
+     */
+    double get_AORC_APCP_surface_kg_per_meters_squared()
+    {
+        return AORC_vector.at(forcing_vector_index_ptr).APCP_surface_kg_per_meters_squared;
+    };
+
+    /**
+     * @brief Accessor to AORC DLWRF_surface_W_per_meters_squared
+     * @return DLWRF_surface_W_per_meters_squared
+     */
+    double get_AORC_DLWRF_surface_W_per_meters_squared()
+    {
+        return AORC_vector.at(forcing_vector_index_ptr).DLWRF_surface_W_per_meters_squared;
+    };
+
+    /**
+     * @brief Accessor to AORC DSWRF_surface_W_per_meters_squared
+     * @return DSWRF_surface_W_per_meters_squared
+     */
+    double get_AORC_DSWRF_surface_W_per_meters_squared()
+    {
+        return AORC_vector.at(forcing_vector_index_ptr).DSWRF_surface_W_per_meters_squared;
+    };
+
+    /**
+     * @brief Accessor to AORC PRES_surface_Pa
+     * @return PRES_surface_Pa
+     */
+    double get_AORC_PRES_surface_Pa()
+    {
+        return AORC_vector.at(forcing_vector_index_ptr).PRES_surface_Pa;
+    };
+
+    /**
+     * @brief Accessor to AORC SPFH_2maboveground_kg_per_kg
+     * @return SPFH_2maboveground_kg_per_kg
+     */
+    double get_AORC_SPFH_2maboveground_kg_per_kg()
+    {
+        return AORC_vector.at(forcing_vector_index_ptr).SPFH_2maboveground_kg_per_kg;
+    };
+
+    /**
+     * @brief Accessor to AORC TMP_2maboveground_K
+     * @return TMP_2maboveground_K
+     */
+    double get_AORC_()
+    {
+        return AORC_vector.at(forcing_vector_index_ptr).TMP_2maboveground_K;
+    };
+
+    /**
+     * @brief Accessor to AORC UGRD_10maboveground_meters_per_second
+     * @return UGRD_10maboveground_meters_per_second
+     */
+    double get_AORC_UGRD_10maboveground_meters_per_second()
+    {
+        return AORC_vector.at(forcing_vector_index_ptr).UGRD_10maboveground_meters_per_second;
+    };
+
+    /**
+     * @brief Accessor to AORC VGRD_10maboveground_meters_per_second
+     * @return VGRD_10maboveground_meters_per_second
+     */
+    double get_AORC_VGRD_10maboveground_meters_per_second()
+    {
+        return AORC_vector.at(forcing_vector_index_ptr).VGRD_10maboveground_meters_per_second;
+    };
+
 
     private:
 
@@ -283,27 +356,28 @@ class Forcing
                     string VGRD_10maboveground_str = vec[8];
                     string precip_rate_str = vec[9];
 
-                    //Convert from strings to doubles
-                    double APCP_surface = atof(APCP_surface_str.c_str());
-                    double DLWRF_surface = atof(DLWRF_surface_str.c_str());
-                    double DSWRF_surface = atof(DSWRF_surface_str.c_str());
-                    double PRES_surface = atof(PRES_surface_str.c_str());
-                    double SPFH_2maboveground = atof(SPFH_2maboveground_str.c_str());
-                    double TMP_2maboveground = atof(TMP_2maboveground_str.c_str());
-                    double UGRD_10maboveground = atof(UGRD_10maboveground_str.c_str());
-                    double VGRD_10maboveground = atof(VGRD_10maboveground_str.c_str());
+                    //Declare AORC struct
+                    AORC_data AORC;
+
+                    //Convert from strings to doubles and add to AORC struct
+                    AORC.APCP_surface_kg_per_meters_squared = atof(APCP_surface_str.c_str());
+                    AORC.DLWRF_surface_W_per_meters_squared = atof(DLWRF_surface_str.c_str());
+                    AORC.DSWRF_surface_W_per_meters_squared = atof(DSWRF_surface_str.c_str());
+                    AORC.PRES_surface_Pa = atof(PRES_surface_str.c_str());
+                    AORC.SPFH_2maboveground_kg_per_kg = atof(SPFH_2maboveground_str.c_str());
+                    AORC.TMP_2maboveground_K = atof(TMP_2maboveground_str.c_str());
+                    AORC.UGRD_10maboveground_meters_per_second = atof(UGRD_10maboveground_str.c_str());
+                    AORC.VGRD_10maboveground_meters_per_second = atof(VGRD_10maboveground_str.c_str());
+                  
+                    //Add AORC struct to AORC vector
+                    AORC_vector.push_back(AORC);
+            
+                    //Convert precip_rate from string to double
                     double precip_rate = atof(precip_rate_str.c_str());
 
                     //Add data to vectors
-                    APCP_surface_kg_per_meters_squared_vector.push_back(APCP_surface);
-                    DLWRF_surface_W_per_meters_squared_vector.push_back(DLWRF_surface);
-                    DSWRF_surface_W_per_meters_squared_vector.push_back(DSWRF_surface);
-                    PRES_surface_Pa_vector.push_back(PRES_surface);
-                    SPFH_2maboveground_kg_per_kg_vector.push_back(SPFH_2maboveground);
-                    TMP_2maboveground_K_vector.push_back(TMP_2maboveground);
-                    UGRD_10maboveground_meters_per_second_vector.push_back(UGRD_10maboveground);
-                    VGRD_10maboveground_meters_per_second_vector.push_back(VGRD_10maboveground);
                     precipitation_rate_meters_per_second_vector.push_back(precip_rate);
+                    time_epoch_vector.push_back(current_row_date_time_epoch);
                 }
 
                 //Free memory from struct
@@ -314,19 +388,29 @@ class Forcing
         forcing_vector_size = precipitation_rate_meters_per_second_vector.size();
     }
 
-    vector<double> APCP_surface_kg_per_meters_squared_vector;
-    vector<double> DLWRF_surface_W_per_meters_squared_vector;
-    vector<double> DSWRF_surface_W_per_meters_squared_vector;
-    vector<double> PRES_surface_Pa_vector;
-    vector<double> SPFH_2maboveground_kg_per_kg_vector;
-    vector<double> TMP_2maboveground_K_vector;
-    vector<double> UGRD_10maboveground_meters_per_second_vector;
-    vector<double> VGRD_10maboveground_meters_per_second_vector;
+    //AORC Forcing Data Struct
+    struct AORC_data
+    {
+        double APCP_surface_kg_per_meters_squared; //Total Precipitation (kg/m^2)
+        double DLWRF_surface_W_per_meters_squared; //Downward Long-Wave Rad. (Flux W/m^2)
+        double DSWRF_surface_W_per_meters_squared; //Downward Short-Wave Radiation (Flux W/m^2)
+        double PRES_surface_Pa; //Pressure (Pa)
+        double SPFH_2maboveground_kg_per_kg; //Specific Humidity (kg/kg)
+        double TMP_2maboveground_K; //Temperature (K)
+        double UGRD_10maboveground_meters_per_second; //U-Component of Wind (m/s)
+        double VGRD_10maboveground_meters_per_second; //V-Component of Wind (m/s)
+    };
+
+    vector<AORC_data> AORC_vector;
+
     vector<double> precipitation_rate_meters_per_second_vector;
+    vector<time_t> time_epoch_vector; 
     int forcing_vector_index_ptr;
     int forcing_vector_size;
     double precipitation_rate_meters_per_second;
     double air_temperature_fahrenheit;
+    double latitude; //latitude (degrees_north)
+    double longitude; //longitude (degrees_east)
     int basin_id;
     int day_of_year;
     string forcing_file_name;
@@ -337,21 +421,6 @@ class Forcing
     time_t start_date_time_epoch;
     time_t end_date_time_epoch;
     time_t current_date_time_epoch;
-
-    /*
-    //AORC Forcing Variables
-    double APCP_surface; //Total Precipitation (kg/m^2)
-    double DLWRF_surface; //Downward Long-Wave Rad. (Flux W/m^2)
-    double DSWRF_surface; //Downward Short-Wave Radiation (Flux W/m^2)
-    double PRES_surface; //Pressure (Pa)
-    double SPFH_2maboveground; //Specific Humidity (kg/kg)
-    double TMP_2maboveground; //Temperature (K)
-    double UGRD_10maboveground; //U-Component of Wind (m/s)
-    double VGRD_10maboveground; //V-Component of Wind (m/s)
-    double latitude; //latitude (degrees_north)
-    double longitude; //longitude (degrees_east)
-    double time; //verification time generated by wgrib2 function verftime() (seconds since 1970-01-01 00:00:00.0 0:00)
-    */
 };
 
 /// \todo Consider aggregating precipiation data
