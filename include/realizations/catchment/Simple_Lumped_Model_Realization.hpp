@@ -26,6 +26,19 @@ class Simple_Lumped_Model_Realization : public HY_CatchmentArea
             time_step_t t
         );
 
+        /**
+         * @brief Explicit move constructor
+         * This constuctor explicitly moves a Simple_Lumped_Model_Realization
+         * and is required to properly move the HY_CatchmentRealization forcing object
+         */
+        Simple_Lumped_Model_Realization(Simple_Lumped_Model_Realization &&);
+        /**
+         * @brief Explicit copy constructor
+         * This constuctor explicitly copies Simple_Lumped_Model_Realization
+         * and is required to properly copy the HY_CatchmentRealization forcing object
+         * as well connectet the hymod_state.Sr* to the copied cascade_backing_storage vector
+         */
+        Simple_Lumped_Model_Realization(const Simple_Lumped_Model_Realization &);
         virtual ~Simple_Lumped_Model_Realization();
 
         double get_response(double input_flux, time_step_t t, time_step_t dt, void* et_params);
