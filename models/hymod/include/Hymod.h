@@ -17,9 +17,12 @@ struct hymod_params
     double max_storage_meters; //!< maximum amount of water stored
     double a;               //!< coefficent for distributing runoff and slowflow
     double b;               //!< exponent for flux equation
+    //Ks and Kq are coeeficint constants used by the non-linear reservoirs.  There is an implicit unit of time
+    //in these parameters to make `a*(dS/S)^b` have approriate units of meters/second
+    //this implies that for any given timstep, dt, the approriate coefficients may be different.
     double Ks;              //!< slow flow coefficent
     double Kq;              //!< quick flow coefficent
-    double n;               //!< number of nash cascades
+    int n;               //!< number of nash cascades
 };
 
 //! Hymod state structure
