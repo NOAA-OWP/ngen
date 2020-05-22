@@ -1,9 +1,9 @@
 #include "GIUH.hpp"
-#include "AbstractGiuhKernel.hpp"
+#include "giuh_kernel.hpp"
 
 using namespace giuh;
 
-double giuh_kernel::calc_giuh_output(double dt, double direct_runoff)
+double giuh_kernel_impl::calc_giuh_output(double dt, double direct_runoff)
 {
     // Init a running total of prior input proportional contributions to be output now
     double prior_inputs_contributions = 0.0;
@@ -73,15 +73,15 @@ double giuh_kernel::calc_giuh_output(double dt, double direct_runoff)
     return current_contribution + prior_inputs_contributions;
 }
 
-void giuh_kernel::set_interpolation_regularity_seconds(unsigned int regularity_seconds) {
+void giuh_kernel_impl::set_interpolation_regularity_seconds(unsigned int regularity_seconds) {
     if (get_interpolation_regularity_seconds() != regularity_seconds) {
-        AbstractGiuhKernel::set_interpolation_regularity_seconds(regularity_seconds);
+        giuh_kernel::set_interpolation_regularity_seconds(regularity_seconds);
         // TODO: as with the constructor, consider setting up concurrency for this
         interpolate_regularized_cdf();
     }
 }
 
-void giuh_kernel::interpolate_regularized_cdf()
+void giuh_kernel_impl::interpolate_regularized_cdf()
 {
     // Interpolate regularized CDF (might should be done out of constructor, perhaps concurrently)
     interpolated_ordinate_times_seconds.push_back(0);

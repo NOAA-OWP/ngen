@@ -52,7 +52,7 @@ namespace giuh {
 
         std::string get_associated_comid(std::string catchment_id);
 
-        std::shared_ptr<giuh_kernel> get_giuh_kernel_for_id(std::string catchment_id);
+        std::shared_ptr<giuh_kernel_impl> get_giuh_kernel_for_id(std::string catchment_id);
 
         bool is_giuh_kernel_for_id_exists(std::string catchment_id);
 
@@ -94,8 +94,8 @@ namespace giuh {
 
         std::string get_mapped_comid(std::string catchment_id);
 
-        std::shared_ptr<giuh_kernel> build_giuh_kernel(std::string catchment_id, std::string comid,
-                ptree catchment_data_node);
+        std::shared_ptr<giuh_kernel_impl> build_giuh_kernel(std::string catchment_id, std::string comid,
+                                                            ptree catchment_data_node);
 
     };
 
