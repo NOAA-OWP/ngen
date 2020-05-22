@@ -1,3 +1,4 @@
+#include "giuh_kernel.hpp"
 #include "Tshirt_Realization.hpp"
 
 using namespace realization;
@@ -14,6 +15,13 @@ Tshirt_Realization::Tshirt_Realization(
     : HY_CatchmentArea(forcing_config), catchment_id(catchment_id), params(params), dt(t)
 {
     giuh_kernel = giuh_json_reader.get_giuh_kernel_for_id(this->catchment_id);
+
+    // If the look-up failed in the reader for some reason, and we got back a null pointer ...
+    if (this->giuh_kernel == nullptr) {
+        // ... revert to a pass-through kernel
+        this->giuh_kernel = std::make_shared<giuh::giuh_kernel>(
+                giuh::giuh_kernel(this->catchment_id, giuh_json_reader.get_associated_comid(this->catchment_id)));
+    }
 
     //FIXME not really used, don't call???
     //add_time(t, params.nash_n);
