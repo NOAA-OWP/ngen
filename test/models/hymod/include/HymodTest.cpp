@@ -105,8 +105,12 @@ TEST_F(HymodKernelTest, TestWithKnownInput)
 
     if ( !input_file )
     {
-        std::cerr << "Test file not found\n";
-        ASSERT_TRUE(false);
+        // Account for possibly being within build directory also
+        input_file = std::ifstream("../test/data/model/hymod/hymod_forcing.txt");
+        if (!input_file) {
+            std::cerr << "Test file not found\n";
+            ASSERT_TRUE(false);
+        }
     }
 
     // read forcing from the input file
