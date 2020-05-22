@@ -31,6 +31,27 @@ Simple_Lumped_Model_Realization::Simple_Lumped_Model_Realization(
     state[0].storage_meters = storage_meters;
 }
 
+Simple_Lumped_Model_Realization::Simple_Lumped_Model_Realization(Simple_Lumped_Model_Realization && other)
+:fluxes( std::move(other.fluxes) ), params( std::move(other.params) ),
+cascade_backing_storage( std::move(other.cascade_backing_storage) ),
+state( std::move(other.state) )
+{
+  this->forcing = std::move(other.forcing);
+}
+
+Simple_Lumped_Model_Realization::Simple_Lumped_Model_Realization(const Simple_Lumped_Model_Realization & other)
+:fluxes( other.fluxes ), params( other.params),
+cascade_backing_storage( other.cascade_backing_storage ),
+state( other.state )
+{
+  this->forcing = other.forcing;
+  //rehook state.Sr* -> cascade_backing_storage
+  for(auto &s : state)
+  {
+    s.second.Sr = cascade_backing_storage[s.first].data();
+  }
+}
+
 Simple_Lumped_Model_Realization::~Simple_Lumped_Model_Realization()
 {
     //dtor
