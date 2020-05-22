@@ -144,7 +144,6 @@ int main(int argc, char *argv[]) {
     double Kq = 0.01;
     long n = 3;
     double t = 0;
-    std::vector<double> sr_tmp = {1.0, 1.0, 1.0};
     time_step_t dt = 3600; //tshirt time step
 
     for(auto& feature : *nexus_collection)
@@ -156,6 +155,7 @@ int main(int argc, char *argv[]) {
         forcing_params forcing_p(forcing_paths[feat_id], start_time, end_time);
         if (feature->get_property("realization").as_string() == "hymod") {
             //Create the hymod instance
+            std::vector<double> sr_tmp = {1.0, 1.0, 1.0};
             catchment_realizations[feature->get_id()] = std::make_unique<_hymod>( _hymod(forcing_p, storage, max_storage, a, b, Ks, Kq, n, sr_tmp, t) );
         }
         else if(feature->get_property("realization").as_string() == "tshirt") {
