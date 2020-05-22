@@ -1,7 +1,7 @@
 #ifndef NGEN_GIUH_H
 #define NGEN_GIUH_H
 
-#include "AbstractGiuhKernel.hpp"
+#include "giuh_kernel.hpp"
 #include <string>
 #include <utility>
 #include <vector>
@@ -24,16 +24,16 @@ namespace giuh {
     /**
      * A concrete implementation of a GIUH calculation kernel.
      */
-    class giuh_kernel : public AbstractGiuhKernel {
+    class giuh_kernel_impl : public giuh_kernel {
 
     public:
 
-        giuh_kernel(
+        giuh_kernel_impl(
                 std::string catchment_id,
                 std::string comid,
                 std::vector<double> cdf_times,
                 std::vector<double> cdf_cumulative_freqs
-                ) : AbstractGiuhKernel(std::move(catchment_id), std::move(comid))
+                ) : giuh_kernel(std::move(catchment_id), std::move(comid))
         {
             this->cdf_times = std::move(cdf_times);
             // TODO: might be able to get this by calculating from times, rather than being passed
@@ -48,7 +48,7 @@ namespace giuh {
         /**
           * Destructor
           */
-        virtual ~giuh_kernel()= default;
+        virtual ~giuh_kernel_impl()= default;
 
         /**
          * Calculate the GIUH output for the given time step and runoff value, lazily generating the necessary

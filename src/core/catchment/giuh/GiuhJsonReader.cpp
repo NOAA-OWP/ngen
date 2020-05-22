@@ -2,8 +2,8 @@
 
 using namespace giuh;
 
-std::shared_ptr<giuh_kernel> GiuhJsonReader::build_giuh_kernel(std::string catchment_id, std::string comid,
-        ptree catchment_data_node) {
+std::shared_ptr<giuh_kernel_impl> GiuhJsonReader::build_giuh_kernel(std::string catchment_id, std::string comid,
+                                                                    ptree catchment_data_node) {
     // Get times and freqs and convert to vectors
     std::vector<double> cumulative_freqs, cdf_times;
 
@@ -17,7 +17,7 @@ std::shared_ptr<giuh_kernel> GiuhJsonReader::build_giuh_kernel(std::string catch
         cdf_times.push_back(times.second.get_value<double>());
     }
 
-    return std::make_shared<giuh_kernel>(giuh_kernel(catchment_id, comid, cdf_times, cumulative_freqs));
+    return std::make_shared<giuh_kernel_impl>(giuh_kernel_impl(catchment_id, comid, cdf_times, cumulative_freqs));
 }
 
 std::unique_ptr<ptree> GiuhJsonReader::find_data_node_for_comid(std::string comid) {
@@ -37,7 +37,7 @@ std::string GiuhJsonReader::get_associated_comid(std::string catchment_id) {
     return id_map != nullptr && id_map->count(catchment_id) == 1 ? id_map->at(catchment_id) : "";
 }
 
-std::shared_ptr<giuh_kernel> GiuhJsonReader::get_giuh_kernel_for_id(std::string catchment_id) {
+std::shared_ptr<giuh_kernel_impl> GiuhJsonReader::get_giuh_kernel_for_id(std::string catchment_id) {
     if (!is_data_json_file_readable()) {
         return nullptr;
     }

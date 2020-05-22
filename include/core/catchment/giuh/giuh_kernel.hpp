@@ -1,29 +1,37 @@
-#ifndef NGEN_ABSTRACTGIUHKERNEL_HPP
-#define NGEN_ABSTRACTGIUHKERNEL_HPP
+#ifndef NGEN_GIUH_KERNEL_HPP
+#define NGEN_GIUH_KERNEL_HPP
 
+#include <iostream>
 #include <string>
 
 namespace giuh {
 
     /**
-     * Abstract class declaring the interface for a GIUH calculation kernel for a catchment.
+     * Pseudo-abstract class declaring the interface for a GIUH calculation kernel for a catchment.
      */
-    class AbstractGiuhKernel {
+    class giuh_kernel {
     public:
 
-        AbstractGiuhKernel(std::string catchment_id, std::string comid) : catchment_id(std::move(catchment_id)),
-                                                                          comid(std::move(comid)) {
+        giuh_kernel(std::string catchment_id, std::string comid) : catchment_id(std::move(catchment_id)),
+                                                                   comid(std::move(comid)) {
             interpolation_regularity_seconds = 60;
         }
 
         /**
          * Calculate the GIUH output for the given time step and runoff value.
          *
+         * The default implementation for the interface simply passes through the input value.
+         *
          * @param dt Time step value, in seconds.
          * @param direct_runoff The runoff input for this time step.
          * @return The calculated output for this time step.
          */
-        virtual double calc_giuh_output(double dt, double direct_runoff) = 0;
+        virtual double calc_giuh_output(double dt, double direct_runoff) {
+            // TODO: perhaps log this more effectively?
+            std::cerr << "Pass-through kernel being used for GIUH calculations; raw input value `" << direct_runoff
+                      << "` being passed through and immediately returned as output." << std::endl;
+            return direct_runoff;
+        }
 
         /**
          * Accessor for the catchment id of the associated catchment.
@@ -76,4 +84,4 @@ namespace giuh {
     };
 }
 
-#endif //NGEN_ABSTRACTGIUHKERNEL_HPP
+#endif //NGEN_GIUH_KERNEL_HPP
