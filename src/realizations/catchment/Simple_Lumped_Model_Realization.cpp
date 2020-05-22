@@ -24,14 +24,11 @@ Simple_Lumped_Model_Realization::Simple_Lumped_Model_Realization(
     params.Kq = Kq;
     params.n = n;
 
-    add_time(t, n);
-
-    state[t].storage_meters = storage_meters;
-    for ( int i = 0; i < n; ++i)
-    {
-        state[t].Sr[i] = Sr[i];
-    }
-
+    //Init the first time explicity using passed in data
+    fluxes[0] = hymod_fluxes();
+    cascade_backing_storage.emplace(0, Sr); //Move ownership of init vector to container
+    state[0] = hymod_state(0.0, 0.0, cascade_backing_storage[0].data());
+    state[0].storage_meters = storage_meters;
 }
 
 Simple_Lumped_Model_Realization::~Simple_Lumped_Model_Realization()
