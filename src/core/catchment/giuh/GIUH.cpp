@@ -1,4 +1,5 @@
 #include "GIUH.hpp"
+#include "AbstractGiuhKernel.hpp"
 
 using namespace giuh;
 
@@ -72,22 +73,9 @@ double giuh_kernel::calc_giuh_output(double dt, double direct_runoff)
     return current_contribution + prior_inputs_contributions;
 }
 
-std::string giuh_kernel::get_catchment_id()
-{
-    return catchment_id;
-}
-
-std::string giuh_kernel::get_comid() {
-    return comid;
-}
-
-unsigned int giuh_kernel::get_interpolation_regularity_seconds() {
-    return interpolation_regularity_seconds;
-}
-
 void giuh_kernel::set_interpolation_regularity_seconds(unsigned int regularity_seconds) {
-    if (interpolation_regularity_seconds != regularity_seconds) {
-        interpolation_regularity_seconds = regularity_seconds;
+    if (get_interpolation_regularity_seconds() != regularity_seconds) {
+        AbstractGiuhKernel::set_interpolation_regularity_seconds(regularity_seconds);
         // TODO: as with the constructor, consider setting up concurrency for this
         interpolate_regularized_cdf();
     }
@@ -99,7 +87,8 @@ void giuh_kernel::interpolate_regularized_cdf()
     interpolated_ordinate_times_seconds.push_back(0);
     interpolated_regularized_ordinates.push_back(0);
     // Increment the ordinate time based on the regularity (loop below will do this at the end of each iter)
-    unsigned int time_for_ordinate = interpolated_ordinate_times_seconds.back() + interpolation_regularity_seconds;
+    unsigned int time_for_ordinate =
+            interpolated_ordinate_times_seconds.back() + get_interpolation_regularity_seconds();
 
     // Loop through ordinate times, initializing all but the last ordinate
     while (time_for_ordinate < this->cdf_times.back()) {
@@ -125,7 +114,7 @@ void giuh_kernel::interpolate_regularized_cdf()
         interpolated_regularized_ordinates.push_back(result);
 
         // At the end of each loop iteration, increment the ordinate time based on the regularity
-        time_for_ordinate = interpolated_ordinate_times_seconds.back() + interpolation_regularity_seconds;
+        time_for_ordinate = interpolated_ordinate_times_seconds.back() + get_interpolation_regularity_seconds();
     }
 
     // As the last step of the actual interpolation, the last ordinate time gets set to have everything
