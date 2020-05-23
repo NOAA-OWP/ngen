@@ -102,22 +102,16 @@ void ForcingTest::setupForcing_AORC()
 TEST_F(ForcingTest, TestForcingDataRead)
 {
    double current_precipitation;
-
    int current_day_of_year;   
-
    for (int i = 0; i < 76; i++)
    {
       current_precipitation = Forcing_Object1->get_next_hourly_precipitation_meters_per_second();
    }
     
    double last_precipitation_rounded = round(current_precipitation * 1000.0) / 1000.0;
-
    double compare_precipitation_rounded = round(3.24556e-06 * 1000.0) / 1000.0;
-
    EXPECT_DOUBLE_EQ(compare_precipitation_rounded, last_precipitation_rounded);
-
    current_day_of_year = Forcing_Object1->get_day_of_year();
-
    EXPECT_EQ(173, current_day_of_year);
 }
 */
@@ -144,16 +138,6 @@ TEST_F(ForcingTest, TestForcingDataRead)
 
    EXPECT_EQ(350, current_day_of_year);
 
-   double APCP_surface_kg_per_meters_squared;
-
-   APCP_surface_kg_per_meters_squared = Forcing_Object_AORC->get_AORC_APCP_surface_kg_per_meters_squared();
-
-   double APCP_surface_kg_per_meters_squared_rounded = round(APCP_surface_kg_per_meters_squared * 10000000.0) / 10000000.0;
-
-   double compare_APCP_surface_kg_per_meters_squared_rounded = round(4.4000000999999997 * 10000000.0) / 10000000.0;
-
-   EXPECT_DOUBLE_EQ(APCP_surface_kg_per_meters_squared_rounded, compare_APCP_surface_kg_per_meters_squared_rounded);
-
    //Check exceeding the forcing range to retrieve the last forcing precipation rate
    for (int i = 66; i < 389; i++)
    {
@@ -170,3 +154,4 @@ TEST_F(ForcingTest, TestForcingDataRead)
 
    EXPECT_EQ(363, current_day_of_year);
 }
+
