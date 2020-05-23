@@ -134,9 +134,26 @@ TEST_F(ForcingTest, TestForcingDataRead)
 
    EXPECT_DOUBLE_EQ(compare_precipitation_rounded, last_precipitation_rounded);
 
+   //Test accessor to AORC data struct
+   AORC_data AORC_test_struct = Forcing_Object_AORC->get_AORC_data();
+
+   double temp_k = AORC_test_struct.TMP_2maboveground_K;
+
+   double temp_k_rounded = round(temp_k * 10000.0) / 10000.0;
+
+   double temp_k_compare_rounded = round(286.9 * 10000.0) / 10000.0;
+
+   EXPECT_DOUBLE_EQ(temp_k_compare_rounded, temp_k_rounded);
+
    current_day_of_year = Forcing_Object_AORC->get_day_of_year();
 
    EXPECT_EQ(350, current_day_of_year);
+
+   int current_epoch;
+
+   current_epoch = Forcing_Object_AORC->get_time_epoch();
+
+   EXPECT_EQ(1450360800, current_epoch);
 
    //Check exceeding the forcing range to retrieve the last forcing precipation rate
    for (int i = 66; i < 389; i++)
@@ -154,4 +171,3 @@ TEST_F(ForcingTest, TestForcingDataRead)
 
    EXPECT_EQ(363, current_day_of_year);
 }
-
