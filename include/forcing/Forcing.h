@@ -459,6 +459,8 @@ class Forcing
     }
 
     vector<AORC_data> AORC_vector;
+
+    /// \todo: Look into aggregation of data, relevant libraries, and storing frequency information
     vector<double> precipitation_rate_meters_per_second_vector;
 
     /// \todo: Consider making epoch time the iterator
