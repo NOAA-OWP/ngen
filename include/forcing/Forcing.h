@@ -42,6 +42,20 @@ struct forcing_params
     }
 };
 
+//AORC Forcing Data Struct
+struct AORC_data
+{
+  double APCP_surface_kg_per_meters_squared; //Total Precipitation (kg/m^2)
+  double DLWRF_surface_W_per_meters_squared; //Downward Long-Wave Rad. (Flux W/m^2)
+  double DSWRF_surface_W_per_meters_squared; //Downward Short-Wave Radiation (Flux W/m^2)
+  double PRES_surface_Pa; //Pressure (Pa)
+  double SPFH_2maboveground_kg_per_kg; //Specific Humidity (kg/kg)
+  double TMP_2maboveground_K; //Temperature (K)
+  double UGRD_10maboveground_meters_per_second; //U-Component of Wind (m/s)
+  double VGRD_10maboveground_meters_per_second; //V-Component of Wind (m/s)
+};
+
+
 /**
  * @brief Forcing class providing time-series precipiation forcing data to the model.
  */
@@ -179,7 +193,7 @@ class Forcing
      * @brief Accessor to time epoch
      * @return current_date_time_epoch
      */
-    double get_time_epoch()
+    time_t get_time_epoch()
     {
         check_forcing_vector_index_bounds();
 
@@ -187,9 +201,10 @@ class Forcing
     };
 
     /**
-     * @brief Accessor to AORC struct
+     * @brief Accessor to AORC data struct
      * @return AORC_data
      */
+
     AORC_data get_AORC_data()
     {
         check_forcing_vector_index_bounds();
@@ -256,7 +271,7 @@ class Forcing
      * @brief Accessor to AORC TMP_2maboveground_K
      * @return TMP_2maboveground_K
      */
-    double get_AORC_()
+    double get_AORC_TMP_2maboveground_K()
     {
         check_forcing_vector_index_bounds();
 
@@ -354,7 +369,6 @@ class Forcing
         }
     }
 
-
     /**
      * @brief Read Forcing Data from AORC CSV
      * Reads only data within the specified model start and end date-times and adds to precipiation vector
@@ -444,21 +458,7 @@ class Forcing
         }
     }
 
-    //AORC Forcing Data Struct
-    struct AORC_data
-    {
-        double APCP_surface_kg_per_meters_squared; //Total Precipitation (kg/m^2)
-        double DLWRF_surface_W_per_meters_squared; //Downward Long-Wave Rad. (Flux W/m^2)
-        double DSWRF_surface_W_per_meters_squared; //Downward Short-Wave Radiation (Flux W/m^2)
-        double PRES_surface_Pa; //Pressure (Pa)
-        double SPFH_2maboveground_kg_per_kg; //Specific Humidity (kg/kg)
-        double TMP_2maboveground_K; //Temperature (K)
-        double UGRD_10maboveground_meters_per_second; //U-Component of Wind (m/s)
-        double VGRD_10maboveground_meters_per_second; //V-Component of Wind (m/s)
-    };
-
     vector<AORC_data> AORC_vector;
-
     vector<double> precipitation_rate_meters_per_second_vector;
 
     /// \todo: Consider making epoch time the iterator
