@@ -109,6 +109,7 @@ class Forcing
 
     /**
      * @brief Checks forcing vector index bounds and adjusts index if out of vector bounds
+     * /// \todo: Bounds checking is based on precipitation vector. Consider potential for vectors of different sizes and indices.
      */
     void check_forcing_vector_index_bounds()
     {
@@ -134,7 +135,7 @@ class Forcing
     /**
      * @brief Gets current hourly precipitation in meters per second
      * Precipitation frequency is assumed to be hourly for now.
-     * TODO: Add input for dt (delta time) for different frequencies in the data than the model frequency.
+     * /// \todo: Add input for dt (delta time) for different frequencies in the data than the model frequency.
      * @return the current hourly precipitation in meters per second
      */
     double get_current_hourly_precipitation_meters_per_second()
