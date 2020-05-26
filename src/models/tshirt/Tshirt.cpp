@@ -46,6 +46,30 @@ namespace tshirt {
         return fluxes;
     }
 
+    int tshirt_model::mass_check(double input_flux_meters, double timestep_seconds) {
+        // Initialize both mass values from current and next states storage
+        double previous_mass_meters = previous_state->soil_storage_meters + previous_state->groundwater_storage_meters;
+        double current_mass_meters = current_state->soil_storage_meters + current_state->groundwater_storage_meters;
+
+        // Add the masses of the Nash reservoirs before and after the time step
+        for (unsigned int i = 0; i < previous_state->nash_cascade_storeage_meters.size(); ++i) {
+            previous_mass_meters += previous_state->nash_cascade_storeage_meters[i];
+            current_mass_meters += current_state->nash_cascade_storeage_meters[i];
+        }
+
+        // Increase the initial mass by input value
+        previous_mass_meters += input_flux_meters;
+
+        // Increase final mass by calculated fluxes that leave the system (i.e., not the percolation flow)
+        current_mass_meters += fluxes->et_loss_meters;
+        current_mass_meters += fluxes->surface_runoff_meters_per_second * timestep_seconds;
+        current_mass_meters += fluxes->soil_lateral_flow_meters_per_second * timestep_seconds;
+        current_mass_meters += fluxes->groundwater_flow_meters_per_second * timestep_seconds;
+
+        double mass_diff_meters = previous_mass_meters - current_mass_meters;
+        return mass_diff_meters > 0.000001 ? tshirt::TSHIRT_MASS_BALANCE_ERROR : tshirt::TSHIRT_NO_ERROR;
+    }
+
     /**
      * Run the model to one time step, moving the initial `current_state` value to `previous_state` and resetting
      * other members applicable only to in the context of the current time step so that they are recalculated.
@@ -117,8 +141,7 @@ namespace tshirt {
         fluxes->surface_runoff_meters_per_second = surface_runoff + (subsurface_excess / dt) + (excess_gw_water / dt);
         //fluxes->surface_runoff_meters_per_second = surface_runoff;
 
-        // TODO: later return the appropriate "code" from a mass balance check.
-        return 0;
+        return mass_check(input_flux_meters, dt);
     }
 
 }
