@@ -347,7 +347,22 @@ class Nonlinear_Reservoir
      */
     double velocity_meters_per_second_for_outlet(int outlet_index)
     {
-        return this->outlets[outlet_index]->get_previously_calculated_velocity_meters_per_second();
+        //Check bounds on outlet vector
+        /// \todo: Implement unordered_map outlet_map
+        if (outlet_index >= 0 && outlet_index < outlets.size())
+            return this->outlets.at(outlet_index)->get_previously_calculated_velocity_meters_per_second();
+
+        else if (outlets.size() > 0)
+        {
+            cout << "Warning, reservoir outlet requested is not in the outlets vector. Returning the velocity of the first outlet." << endl;
+            return this->outlets.at(0)->get_previously_calculated_velocity_meters_per_second();
+        }
+
+        else
+        {
+            cout << "Warning, reservoir outlet requested of reservoir with no outlets. Returning a velocity of 0.0 meters per second." << endl;
+            return 0.0;
+        }
     }
 
     /**
