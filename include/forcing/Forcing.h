@@ -111,7 +111,7 @@ class Forcing
      * @brief Checks forcing vector index bounds and adjusts index if out of vector bounds
      * /// \todo: Bounds checking is based on precipitation vector. Consider potential for vectors of different sizes and indices.
      */
-    void check_forcing_vector_index_bounds()
+    inline void check_forcing_vector_index_bounds()
     {
         //Check if forcing index is less than zero and if so, set to zero.
         if (forcing_vector_index < 0)
@@ -157,14 +157,15 @@ class Forcing
     double get_next_hourly_precipitation_meters_per_second()
     {
         //Check forcing vector bounds before incrementing forcing index
-        if (forcing_vector_index < precipitation_rate_meters_per_second_vector.size() - 1)
+        //\todo size() is unsigned, using -1 for initial offset isn't a good way, hacking for now.
+        if (forcing_vector_index == -1 || forcing_vector_index < precipitation_rate_meters_per_second_vector.size() - 1){
             //Increment forcing index
             forcing_vector_index = forcing_vector_index + 1;
-
-        else
+          }
+        else{
             /// \todo: Return appropriate warning
             cout << "WARNING: Reached beyond the size of the forcing precipitation vector. Therefore, returning the last precipitation value of the vector." << endl;
-
+          }
         return get_current_hourly_precipitation_meters_per_second();
     }
 
