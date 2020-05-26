@@ -63,7 +63,7 @@ namespace tshirt {
                 max_groundwater_storage_meters(max_gw_storage) {
             this->max_soil_storage_meters = this->depth * maxsmc;
             this->Cschaake = 3.0 * satdk / (2.0e-6);
-            this->max_lateral_flow = satdk * multiplier * this->max_soil_storage_meters;
+            this->max_lateral_flow = std::numeric_limits<double>::max();//satdk * multiplier * this->max_soil_storage_meters;
         }
 
     };
@@ -191,7 +191,7 @@ namespace tshirt {
             // Build vector of pointers to outlets to pass the custom exponential outlet through
             vector<std::shared_ptr<Reservoir_Outlet>> gw_outlets_vector(1);
             // TODO: verify activation threshold
-            gw_outlets_vector[0] = make_shared<Reservoir_Outlet>(
+            gw_outlets_vector[0] = make_shared<Reservoir_Exponential_Outlet>(
                     Reservoir_Exponential_Outlet(model_params.Cgw, model_params.expon, 0.0, max_gw_velocity));
             // Create the reservoir, passing the outlet via the vector argument
             groundwater_reservoir = Nonlinear_Reservoir(0.0, model_params.max_groundwater_storage_meters,
