@@ -53,7 +53,7 @@ TEST_F(HymodKernelTest, TestRun0)
 {
     double et_storage = 0.0;
 
-    hymod_params params{1000.0, 1.0, 10.0, 0.1, 0.01, 3};
+    hymod_params params{0.0, 1000.0, 0.0, 0.0, 100.0, 1.0, 1.0, 0.1, 0.01, 3};
     double storage = 1.0;
 
     double reservior_storage[] = {1.0, 1.0, 1.0};
@@ -83,7 +83,7 @@ TEST_F(HymodKernelTest, TestWithKnownInput)
     std::vector< std::vector<double> > backing_storage;
 
     // initalize hymod params
-    hymod_params params{400.0, 0.5, 1.3, 0.2, 0.02, 3};
+    hymod_params params{0.0, 400.0, 0.0, 0.0, 100.0, 0.5, 1.0, 0.2, 0.02, 3};
 
     // initalize hymod state for time step zero
     backing_storage.push_back(std::vector<double>{0.0, 0.0, 0.0});
