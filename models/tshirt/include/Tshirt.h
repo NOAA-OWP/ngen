@@ -225,6 +225,8 @@ namespace tshirt {
 
         shared_ptr<tshirt_fluxes> get_fluxes();
 
+        int mass_check(double input_flux_meters, double timestep_seconds);
+
         /**
          * Run the model to one time step, moving the initial `current_state` value to `previous_state` and resetting
          * other members applicable only to in the context of the current time step so that they are recalculated.
