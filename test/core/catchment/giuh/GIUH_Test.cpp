@@ -83,3 +83,22 @@ TEST_F(GIUH_Test, TestOutput0)
 
     ASSERT_TRUE(kernel_obj != nullptr);
 }
+
+TEST_F(GIUH_Test, TestManualOrdinates0)
+{
+    std::vector<double> cdf_times {0, 3600, 7200, 10800, 14400};
+    std::vector<double> cdf_freq {0.06, 0.51, 0.28, 0.12, 0.03};
+
+    std::vector<double> real_cdf_freq(cdf_freq.size());
+
+    double sum = 0;
+    for (unsigned int i = 0; i < cdf_freq.size(); ++i) {
+        sum += cdf_freq[i];
+        real_cdf_freq[i] = sum;
+    }
+
+    giuh::giuh_kernel_impl kernel = giuh::giuh_kernel_impl("cat-88","none", cdf_times, real_cdf_freq);
+    kernel.set_interpolation_regularity_seconds(3600);
+
+    ASSERT_TRUE(true);
+}

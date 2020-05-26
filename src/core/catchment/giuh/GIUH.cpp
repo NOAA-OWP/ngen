@@ -83,6 +83,14 @@ void giuh_kernel_impl::set_interpolation_regularity_seconds(unsigned int regular
 
 void giuh_kernel_impl::interpolate_regularized_cdf()
 {
+    // Clear any previous values
+    if (!interpolated_ordinate_times_seconds.empty()) {
+        interpolated_ordinate_times_seconds.clear();
+    }
+    if (!interpolated_regularized_ordinates.empty()) {
+        interpolated_regularized_ordinates.clear();
+    }
+
     // Interpolate regularized CDF (might should be done out of constructor, perhaps concurrently)
     interpolated_ordinate_times_seconds.push_back(0);
     interpolated_regularized_ordinates.push_back(0);
