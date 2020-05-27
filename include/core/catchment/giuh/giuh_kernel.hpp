@@ -12,10 +12,12 @@ namespace giuh {
     class giuh_kernel {
     public:
 
-        giuh_kernel(std::string catchment_id, std::string comid) : catchment_id(std::move(catchment_id)),
-                                                                   comid(std::move(comid)) {
-            interpolation_regularity_seconds = 60;
-        }
+        giuh_kernel(std::string catchment_id, std::string comid, unsigned int interpolation_regularity_seconds)
+                : catchment_id(std::move(catchment_id)),
+                  comid(std::move(comid)),
+                  interpolation_regularity_seconds(interpolation_regularity_seconds) { }
+
+        giuh_kernel(std::string catchment_id, std::string comid) : giuh_kernel(catchment_id, comid, 60) { }
 
         /**
          * Calculate the GIUH output for the given time step and runoff value.
