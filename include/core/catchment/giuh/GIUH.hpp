@@ -33,8 +33,9 @@ namespace giuh {
                 std::string catchment_id,
                 std::string comid,
                 std::vector<double> cdf_times,
-                std::vector<double> cdf_cumulative_freqs
-                ) : giuh_kernel(std::move(catchment_id), std::move(comid))
+                std::vector<double> cdf_cumulative_freqs,
+                unsigned int interpolation_regularity_seconds
+                ) : giuh_kernel(std::move(catchment_id), std::move(comid), interpolation_regularity_seconds)
         {
             this->cdf_times = std::move(cdf_times);
             // TODO: might be able to get this by calculating from times, rather than being passed
@@ -44,6 +45,15 @@ namespace giuh {
 
             // TODO: have this be called by constructor, but consider later handling this concurrently
             interpolate_regularized_cdf();
+        }
+
+        giuh_kernel_impl(
+                std::string catchment_id,
+                std::string comid,
+                std::vector<double> cdf_times,
+                std::vector<double> cdf_cumulative_freqs
+        ) : giuh_kernel_impl(std::move(catchment_id), std::move(comid), cdf_times, cdf_cumulative_freqs, 60) {
+
         }
 
         /**
