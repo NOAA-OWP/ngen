@@ -102,3 +102,64 @@ TEST_F(GIUH_Test, TestManualOrdinates0)
 
     ASSERT_TRUE(true);
 }
+
+//! Test that giuh_kernel objects output using some real sample data and manually passed ordinates.
+TEST_F(GIUH_Test, TestOutput1)
+{
+    // First make sure we have the file, looking in a few different places
+    std::vector<std::string> possible_files = {"./giuh_test_samples.json", "../giuh_test_samples.json",
+                                               "./test/data/giuh/giuh_test_samples.json",
+                                               "../test/data/giuh/giuh_test_samples.json"};
+    std::string sample_data_file;
+    bool found_sample_data_file = false;
+
+    for (unsigned int i = 0; i < possible_files.size(); ++i) {
+        if (FILE *file = fopen(possible_files[i].c_str(), "r")) {
+            fclose(file);
+            found_sample_data_file = true;
+            sample_data_file = possible_files[i];
+        }
+    }
+
+    ASSERT_TRUE(found_sample_data_file);
+
+    boost::property_tree::ptree json_sample_data;
+    boost::property_tree::json_parser::read_json(sample_data_file, json_sample_data);
+
+    std::vector<int> times;
+    std::vector<double> runoff_inputs;
+    std::vector<double> giuh_outputs;
+
+    for (boost::property_tree::ptree::iterator pos = json_sample_data.begin(); pos != json_sample_data.end(); ++pos) {
+        // TODO: might need to adjust the hour value to be explicit value plus 1, and then multiply by 60
+        int hours_time = pos->second.get_child("hours").get_value<int>();
+        times.push_back(hours_time * 3600);
+        runoff_inputs.push_back(pos->second.get_child("directRunoff").get_value<double>());
+        giuh_outputs.push_back(pos->second.get_child("giuh").get_value<double>());
+    }
+
+    std::vector<double> incremental_values {0.06, 0.51, 0.28, 0.12, 0.03};
+    std::vector<double> ordinates(incremental_values.size() + 1);
+    std::vector<double> ordinate_times(incremental_values.size() + 1);
+
+    double ordinate_sum = 0.0;
+    int time_sum = 0;
+    ordinates.push_back(ordinate_sum);
+    ordinate_times.push_back(time_sum);
+    for (unsigned int i = 1; i < ordinates.size(); ++i) {
+        ordinate_sum += incremental_values[i-1];
+        ordinates[i] = ordinate_sum;
+        time_sum += 3600;
+        ordinate_times[i] = time_sum;
+    }
+
+    giuh::giuh_kernel_impl kernel("test", "test", ordinate_times, ordinates, 3600);
+
+    double leaway = 0.000001;
+
+    for (unsigned int i = 0; i < times.size(); ++i) {
+        double kernel_output = kernel.calc_giuh_output(3600, runoff_inputs[i]);
+        double diff_abs = std::abs(kernel_output - giuh_outputs[i]);
+        EXPECT_LE(diff_abs, leaway);
+    }
+}
