@@ -47,24 +47,24 @@ namespace giuh {
          */
         static giuh_kernel_impl make_from_incremental_runoffs(std::string catchment_id,
                                                               std::string comid,
-                                                              unsigned int interpolation_regularity_seconds,
+                                                              int interpolation_regularity_seconds,
                                                               std::vector<double> incremental_runoffs)
         {
-            std::vector<double> times(incremental_runoffs.size());
-            std::vector<double> cdf_freq(incremental_runoffs.size());
+            std::vector<double> ordinates(incremental_runoffs.size() + 1);
+            std::vector<double> ordinate_times(incremental_runoffs.size() + 1);
 
-            unsigned int times_sum = 0;
-            double cdf_sum = 0.0;
-
-            for (unsigned int i = 0; i < incremental_runoffs.size(); ++i) {
-                times[i] = times_sum;
-                times_sum += interpolation_regularity_seconds;
-
-                cdf_sum += incremental_runoffs[i];
-                cdf_freq[i] = cdf_sum;
+            double ordinate_sum = 0.0;
+            int time_sum = 0;
+            ordinates.push_back(ordinate_sum);
+            ordinate_times.push_back(time_sum);
+            for (unsigned int i = 1; i < ordinates.size(); ++i) {
+                ordinate_sum += incremental_runoffs[i-1];
+                ordinates[i] = ordinate_sum;
+                time_sum += interpolation_regularity_seconds;
+                ordinate_times[i] = time_sum;
             }
 
-            return giuh_kernel_impl(catchment_id, comid, times, cdf_freq, interpolation_regularity_seconds);
+            return giuh_kernel_impl(catchment_id, comid, ordinate_times, ordinates, interpolation_regularity_seconds);
         }
 
         giuh_kernel_impl(
