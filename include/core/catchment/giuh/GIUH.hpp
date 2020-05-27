@@ -29,6 +29,44 @@ namespace giuh {
 
     public:
 
+        /**
+         * Factory create a ``giuh_kernel_impl`` object, deriving CDF times and frequencies from a regularized
+         * interpolation interval value and a collection of incremental runoff values.
+         *
+         * The function essentially transforms the provided runoff values vector into a CDF vector setting each ``i``-th
+         * ordinate to the ``i``-th incremental value plus the ``(i-1)``-th ordinate value.  A corresponding vector of
+         * times is also created, with each value being ``interpolation_regularity_seconds`` larger than the previous
+         * (starting at ``0``).  These are then used in a call to the ``giuh_kernel_impl`` constructor, with the
+         * resulting object returned.
+         *
+         * @param catchment_id
+         * @param comid
+         * @param interpolation_regularity_seconds
+         * @param incremental_runoffs
+         * @return
+         */
+        static giuh_kernel_impl make_from_incremental_runoffs(std::string catchment_id,
+                                                              std::string comid,
+                                                              unsigned int interpolation_regularity_seconds,
+                                                              std::vector<double> incremental_runoffs)
+        {
+            std::vector<double> times(incremental_runoffs.size());
+            std::vector<double> cdf_freq(incremental_runoffs.size());
+
+            unsigned int times_sum = 0;
+            double cdf_sum = 0.0;
+
+            for (unsigned int i = 0; i < incremental_runoffs.size(); ++i) {
+                times[i] = times_sum;
+                times_sum += interpolation_regularity_seconds;
+
+                cdf_sum += incremental_runoffs[i];
+                cdf_freq[i] = cdf_sum;
+            }
+
+            return giuh_kernel_impl(catchment_id, comid, times, cdf_freq, interpolation_regularity_seconds);
+        }
+
         giuh_kernel_impl(
                 std::string catchment_id,
                 std::string comid,
