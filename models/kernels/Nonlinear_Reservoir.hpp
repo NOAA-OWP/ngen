@@ -35,7 +35,8 @@ class Reservoir_Outlet
     /**
      * @brief Default Constructor building an empty Reservoir Outlet Object
      */
-    Reservoir_Outlet(): a(0.0), b(0.0), activation_threshold_meters(0.0), max_velocity_meters_per_second(0.0)
+    Reservoir_Outlet(): a(0.0), b(0.0), activation_threshold_meters(0.0), max_velocity_meters_per_second(0.0),
+    velocity_meters_per_second_local(0.0)
     {
 		
     }	
@@ -47,7 +48,8 @@ class Reservoir_Outlet
      * @param activation_threshold_meters meters from the bottom of the reservoir to the bottom of the outlet
      * @param max_velocity_meters_per_second max outlet velocity in meters per second
      */
-    Reservoir_Outlet(double a, double b, double activation_threshold_meters, double max_velocity_meters_per_second): a(a), b(b), activation_threshold_meters(activation_threshold_meters), max_velocity_meters_per_second(max_velocity_meters_per_second)
+    Reservoir_Outlet(double a, double b, double activation_threshold_meters, double max_velocity_meters_per_second): a(a), b(b), activation_threshold_meters(activation_threshold_meters), max_velocity_meters_per_second(max_velocity_meters_per_second),
+    velocity_meters_per_second_local(0.0)
     {
 
     }    
@@ -65,9 +67,11 @@ class Reservoir_Outlet
 
         //Return velocity of 0.0 if the storage passed in is less than the activation threshold
         if (storage_struct.current_storage_height_meters <= activation_threshold_meters)
-            return 0.0;  
-	
-        //Calculate the velocity in meters per second of the discharge through the outlet 
+        {
+            velocity_meters_per_second_local = 0.0;
+            return 0.0;
+        }
+        //Calculate the velocity in meters per second of the discharge through the outlet
         velocity_meters_per_second_local = a * std::pow((storage_struct.current_storage_height_meters - activation_threshold_meters)
                                      / (parameters_struct.maximum_storage_meters - activation_threshold_meters), b);
 
@@ -101,6 +105,11 @@ class Reservoir_Outlet
     {
         return velocity_meters_per_second_local;
     };
+
+    void adjust_velocity(double velocity_meters_per_second)
+    {
+      velocity_meters_per_second_local = velocity_meters_per_second;
+    }
 
     protected:
     double a;
@@ -157,8 +166,10 @@ class Reservoir_Exponential_Outlet: public Reservoir_Outlet
 
         //Return velocity of 0.0 if the storage passed in is less than the activation threshold
         if (storage_struct.current_storage_height_meters <= activation_threshold_meters)
+        {
+            velocity_meters_per_second_local = 0.0;
             return 0.0;
-
+        }
         //Calculate the velocity in meters per second of the discharge through the outlet
         velocity_meters_per_second_local =  c * ( exp(expon * storage_struct.current_storage_height_meters / parameters_struct.maximum_storage_meters) - 1 );
 
@@ -284,8 +295,8 @@ class Nonlinear_Reservoir
                 state.current_storage_height_meters += outlet_velocity_meters_per_second * delta_time_seconds;
 
                 //Outlet velocity is set to drain the reservoir to the minimum storage.
-                outlet_velocity_meters_per_second = (state.current_storage_height_meters - parameters.minimum_storage_meters) /delta_time_seconds;               
-
+                outlet_velocity_meters_per_second = (state.current_storage_height_meters - parameters.minimum_storage_meters) /delta_time_seconds;
+                outlet->adjust_velocity(outlet_velocity_meters_per_second);
                 //Set storage to minimum storage.
                 state.current_storage_height_meters = parameters.minimum_storage_meters;
                     
