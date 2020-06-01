@@ -161,7 +161,7 @@ namespace tshirt {
                 soil_lf_nash_res[i] = make_unique<Nonlinear_Reservoir>(
                         Nonlinear_Reservoir(0.0, model_params.max_soil_storage_meters,
                                             previous_state->nash_cascade_storeage_meters[i], model_params.Kn, 1.0,
-                                            Sfc, model_params.max_lateral_flow));
+                                            0.0, model_params.max_lateral_flow));
             }
 
             // ********** Create the soil reservoir
@@ -176,17 +176,16 @@ namespace tshirt {
             // The max perc flow should be equal to the params.satdk value
             soil_res_outlets[perc_outlet_index] = std::make_shared<Reservoir_Outlet>(
                     Reservoir_Outlet(model_params.satdk * model_params.slope, 1.0, Sfc,
-                                     model_params.satdk));
-
+                                     std::numeric_limits<double>::max()));
             // Create the reservoir, included the created vector of outlet pointers
-            soil_reservoir = Nonlinear_Reservoir(0.0, model_params.depth, previous_state->soil_storage_meters,
+            soil_reservoir = Nonlinear_Reservoir(0.0, model_params.max_soil_storage_meters, previous_state->soil_storage_meters,
                                                  soil_res_outlets);
 
             // ********** Create the groundwater reservoir
             // Given the equation:
             //      double groundwater_flow_meters_per_second = params.Cgw * ( exp(params.expon * state.groundwater_storage_meters / params.max_groundwater_storage_meters) - 1 );
             // The max value should be when groundwater_storage_meters == max_groundwater_storage_meters, or ...
-            double max_gw_velocity = model_params.Cgw * (exp(model_params.expon) - 1);
+            double max_gw_velocity = std::numeric_limits<double>::max();//model_params.Cgw * (exp(model_params.expon) - 1);
 
             // Build vector of pointers to outlets to pass the custom exponential outlet through
             vector<std::shared_ptr<Reservoir_Outlet>> gw_outlets_vector(1);
@@ -250,10 +249,14 @@ namespace tshirt {
          * reservoir.
          */
         vector<unique_ptr<Nonlinear_Reservoir>> soil_lf_nash_res;
+        //FIXME reservoir construction sorts outlets by activation_threshold
+        //so the fixed index assumption is invalid.  However, in the current use case
+        //they both have the save activation_threshold (Sfc), but we do want percolation fluxes to happen first
+        //so make it index 0
         /** The index of the subsurface lateral flow outlet in the soil reservoir. */
-        int lf_outlet_index = 0;
+        int lf_outlet_index = 1;
         /** The index of the percolation flow outlet in the soil reservoir. */
-        int perc_outlet_index = 1;
+        int perc_outlet_index = 0;
         Nonlinear_Reservoir soil_reservoir;
         Nonlinear_Reservoir groundwater_reservoir;
         shared_ptr<tshirt_fluxes> fluxes;
