@@ -6,9 +6,9 @@ namespace tshirt {
     /**
      * Calculate losses due to evapotranspiration.
      *
-     * @param soil_m
-     * @param et_params
-     * @return
+     * @param soil_m The soil moisture measured in meters.
+     * @param et_params A shared pointer to the struct holding the ET parameters.
+     * @return The calculated loss value due to evapotranspiration.
      */
     double tshirt_model::calc_evapotranspiration(double soil_m, shared_ptr<pdm03_struct> et_params) {
         et_params->XHuz = soil_m;
@@ -20,7 +20,7 @@ namespace tshirt {
     /**
      * Calculate soil field capacity storage, the level at which free drainage stops (i.e., "Sfc").
      *
-     * @return
+     * @return The calculated soil field capacity storage.
      */
     double tshirt_model::calc_soil_field_capacity_storage()
     {
@@ -38,14 +38,33 @@ namespace tshirt {
                 (model_params.b * pow(z1, ((model_params.b - 1) / model_params.b)) / (model_params.b - 1)));
     }
 
+    /**
+     * Return this object's member that is the smart shared pointer to the ``tshirt_model`` struct for holding the
+     * object's current state.
+     *
+     * @return The smart shared pointer to the ``tshirt_model`` struct for holding this object's current state.
+     */
     shared_ptr<tshirt_state> tshirt_model::get_current_state() {
         return current_state;
     }
 
+    /**
+     * Return this object's member that is the smart shared pointer to the ``tshirt_fluxes`` struct for holding the
+     * object's current fluxes.
+     *
+     * @return The smart shared pointer to the ``tshirt_fluxes`` struct for holding this object's current fluxes.
+     */
     shared_ptr<tshirt_fluxes> tshirt_model::get_fluxes() {
         return fluxes;
     }
 
+    /**
+     * Check that mass was conserved by the model's calculations of the current time step.
+     *
+     * @param input_flux_meters The amount of water input to the system at the time step, in meters.
+     * @param timestep_seconds The size of the time step, in seconds.
+     * @return The appropriate code value indicating whether mass was conserved in the current time step's calculations.
+     */
     int tshirt_model::mass_check(double input_flux_meters, double timestep_seconds) {
         // Initialize both mass values from current and next states storage
         double previous_mass_meters = previous_state->soil_storage_meters + previous_state->groundwater_storage_meters;
@@ -72,9 +91,9 @@ namespace tshirt {
 
     /**
      * Run the model to one time step, moving the initial `current_state` value to `previous_state` and resetting
-     * other members applicable only to in the context of the current time step so that they are recalculated.
+     * other members applicable only in the context of the current time step so that they are recalculated.
      *
-     * @param dt the time step
+     * @param dt the time step size in seconds
      * @param input_flux_meters the amount water entering the system this time step, in meters
      * @return
      */
