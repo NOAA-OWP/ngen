@@ -199,6 +199,9 @@ namespace tshirt {
             // ********** Set fluxes to null for now: it is bogus until first call of run function, which initializes it
             fluxes = nullptr;
 
+            // ********** Set this statically to this default value
+            mass_check_error_bound = 0.000001;
+
         }
 
         tshirt_model(tshirt_params model_params) :
@@ -224,6 +227,8 @@ namespace tshirt {
 
         shared_ptr<tshirt_fluxes> get_fluxes();
 
+        double get_mass_check_error_bound();
+
         int mass_check(double input_flux_meters, double timestep_seconds);
 
         /**
@@ -236,6 +241,10 @@ namespace tshirt {
          * @return
          */
         int run(double dt, double input_flux_meters, shared_ptr<pdm03_struct> et_params);
+
+    protected:
+
+        void set_mass_check_error_bound(double error_bound);
 
     private:
         /** Model state for the "current" time step, which may not be calculated yet. */
@@ -260,6 +269,8 @@ namespace tshirt {
         Nonlinear_Reservoir soil_reservoir;
         Nonlinear_Reservoir groundwater_reservoir;
         shared_ptr<tshirt_fluxes> fluxes;
+        /** The size of the error bound that is acceptable when performing mass check calculations. */
+        double mass_check_error_bound;
 
     };
 

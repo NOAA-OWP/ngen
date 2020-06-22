@@ -60,6 +60,16 @@ namespace tshirt {
     }
 
     /**
+     * Get the size of the error bound that is acceptable when performing mass check calculations.
+     *
+     * @return The size of the error bound that is acceptable when performing mass check calculations.
+     * @see tshirt_model::mass_check
+     */
+    double tshirt_model::get_mass_check_error_bound() {
+        return mass_check_error_bound;
+    }
+
+    /**
      * Check that mass was conserved by the model's calculations of the current time step.
      *
      * @param input_flux_meters The amount of water input to the system at the time step, in meters.
@@ -68,7 +78,6 @@ namespace tshirt {
      */
     int tshirt_model::mass_check(double input_flux_meters, double timestep_seconds) {
         // TODO: change this to have those be part of state somehow, either of object or struct, or just make private
-        // TODO: overload and parameterize the allowed error range that is acceptable
         // Initialize both mass values from current and next states storage
         double previous_mass_meters = previous_state->soil_storage_meters + previous_state->groundwater_storage_meters;
         double current_mass_meters = current_state->soil_storage_meters + current_state->groundwater_storage_meters;
@@ -89,7 +98,8 @@ namespace tshirt {
         current_mass_meters += fluxes->groundwater_flow_meters_per_second * timestep_seconds;
 
         double abs_mass_diff_meters = abs(previous_mass_meters - current_mass_meters);
-        return abs_mass_diff_meters > 0.000001 ? tshirt::TSHIRT_MASS_BALANCE_ERROR : tshirt::TSHIRT_NO_ERROR;
+        return abs_mass_diff_meters > get_mass_check_error_bound() ? tshirt::TSHIRT_MASS_BALANCE_ERROR
+                                                                   : tshirt::TSHIRT_NO_ERROR;
     }
 
     /**
@@ -158,6 +168,15 @@ namespace tshirt {
         //fluxes->surface_runoff_meters_per_second = surface_runoff;
 
         return mass_check(input_flux_meters, dt);
+    }
+
+    /**
+     * Set the mass_check_error_bound member to the absolute value of the given parameter.
+     *
+     * @param error_bound The value used to set the mass_check_error_bound member.
+     */
+    void tshirt_model::set_mass_check_error_bound(double error_bound) {
+        mass_check_error_bound = error_bound >= 0 ? error_bound : abs(error_bound);
     }
 
 }
