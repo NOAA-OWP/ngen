@@ -1,5 +1,6 @@
 #include "Tshirt.h"
 #include "Constants.h"
+#include <cmath>
 
 namespace tshirt {
 
@@ -87,9 +88,8 @@ namespace tshirt {
         current_mass_meters += fluxes->soil_lateral_flow_meters_per_second * timestep_seconds;
         current_mass_meters += fluxes->groundwater_flow_meters_per_second * timestep_seconds;
 
-        double mass_diff_meters = previous_mass_meters - current_mass_meters;
-        // TODO: fix this to use absolute value
-        return mass_diff_meters > 0.000001 ? tshirt::TSHIRT_MASS_BALANCE_ERROR : tshirt::TSHIRT_NO_ERROR;
+        double abs_mass_diff_meters = abs(previous_mass_meters - current_mass_meters);
+        return abs_mass_diff_meters > 0.000001 ? tshirt::TSHIRT_MASS_BALANCE_ERROR : tshirt::TSHIRT_NO_ERROR;
     }
 
     /**
