@@ -12,6 +12,7 @@
 #include <HY_PointHydroNexus.hpp>
 
 #include "NGenConfig.h"
+#include "tshirt_params.h"
 
 std::string catchmentRealizationFile = "../data/sugar_creek/catchment_data_subset.geojson";
 std::string nexusRealizationFile = "../data/sugar_creek/nexus_data_subset.geojson";
