@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <vector>
+#include "HymodErrorCodes.h"
 #include "LinearReservoir.hpp"
 #include "Nonlinear_Reservoir.hpp"
 #include "Pdm03.h"
@@ -70,12 +71,6 @@ struct hymod_fluxes
     hymod_fluxes(double sf = 0.0, double r = 0.0, double et = 0.0) :
         slow_flow_meters_per_second(sf), runoff_meters_per_second(r), et_loss_meters(et)
     {}
-};
-
-enum HyModErrorCodes
-{
-    NO_ERROR = 0,
-    MASS_BALANCE_ERROR = 100
 };
 
 //! Hymod kernel class
