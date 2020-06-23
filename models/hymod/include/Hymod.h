@@ -22,12 +22,6 @@ class hymod_kernel
     //! stub function to simulate losses due to evapotransportation
     static double calc_et(double soil_m, void* et_params)
     {
-        return 0.0;
-    }
-
-    //! stub function to simulate losses due to evapotransportation
-    static double calc_et2(double soil_m, void* et_params)
-    {
         pdm03_struct* pdm = (pdm03_struct*) et_params;
         pdm->XHuz = soil_m;
         pdm03_wrapper(pdm);
