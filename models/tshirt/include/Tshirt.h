@@ -17,12 +17,6 @@
 
 namespace tshirt {
 
-    // TODO: consider combining with or differentiating from similar hymod enum
-    enum TshirtErrorCodes {
-        TSHIRT_NO_ERROR = 0,
-        TSHIRT_MASS_BALANCE_ERROR = 100
-    };
-
     /**
      * Tshirt model class.
      *

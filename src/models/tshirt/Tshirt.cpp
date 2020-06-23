@@ -1,4 +1,5 @@
 #include "Tshirt.h"
+#include "TshirtErrorCodes.h"
 #include "tshirt_fluxes.h"
 #include "tshirt_state.h"
 #include "Constants.h"
