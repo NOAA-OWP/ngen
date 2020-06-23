@@ -54,6 +54,11 @@ endmacro()
 add_automated_test(test_hymod models/hymod/include/HymodTest.cpp)
 
 add_automated_test(
+        test_tshirt
+        models/tshirt/include/TshirtTest.cpp
+)
+
+add_automated_test(
     test_geojson
     geojson/JSONProperty_Test.cpp
     geojson/JSONGeometry_Test.cpp
