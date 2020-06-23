@@ -6,6 +6,7 @@
 #include "GIUH.hpp"
 #include "GiuhJsonReader.h"
 #include "tshirt/include/Tshirt.h"
+#include "tshirt/include/tshirt_params.h"
 #include <memory>
 
 namespace realization {
