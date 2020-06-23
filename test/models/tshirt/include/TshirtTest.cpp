@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 #include "tshirt/include/Tshirt.h"
+#include "tshirt/include/tshirt_params.h"
 #include "GIUH.hpp"
 
 class TshirtKernelTest : public ::testing::Test {
