@@ -7,6 +7,7 @@
 #include "Nonlinear_Reservoir.hpp"
 #include "Pdm03.h"
 #include "GIUH.hpp"
+#include "tshirt_params.h"
 #include <cmath>
 #include <utility>
 #include <vector>
@@ -15,58 +16,6 @@
 namespace tshirt {
 
     //! Tshirt parameters struct
-    /*!
-        This structure provides storage for the parameters of the Tshirt hydrological model
-    */
-
-    struct tshirt_params {
-        double maxsmc;              //!< saturated soil moisture content (sometimes theta_e or smcmax)
-        double wltsmc;              //!< wilting point soil moisture content
-        double satdk;               //!< vertical saturated hydraulic conductivity [m s^-1] (sometimes Kperc or Ks)
-        double satpsi;              //!< saturated capillary head [m]
-        // TODO: explain more what this is
-        double slope;               //!< SLOPE parameter
-        double b;                   //!< 'b' exponent on Clapp-Hornberger soil water relations (sometime bexp)
-        double multiplier;          //!< the multiplier applied to 'satdk' to route water rapidly downslope in subsurface (sometimes 'mult' or 'LKSATFAC')
-        double alpha_fc;            //!< alpha constant for given soil type for relative suction head value, with respect to Hatm
-        double Klf;                 //!< lateral flow independent calibration parameter
-        double Kn;                  //!< Nash cascade linear reservoir coefficient lateral flow parameter
-        int nash_n;                 //!< number of nash cascades
-        double Cgw;                 //!< Ground water flow param
-        double Cschaake;            //!< The Schaake adjusted magic constant by soil type
-        double expon;               //!< Ground water flow exponent param (analogous to NWM 2.0 expon param)
-        double max_soil_storage_meters;  //!< Subsurface soil water flow max storage param ("Ssmax"), calculated from maxsmc and depth
-        double max_groundwater_storage_meters;    //!< Ground water flow max storage param ("Sgwmax"; analogous to NWM 2.0 zmax param)
-        double max_lateral_flow;    //!< Max rate for subsurface lateral flow (i.e., max transmissivity)
-        const double depth = 2.0;         //!< Total soil column depth ('D') [m]
-
-        //! Constructor for tshirt parameters
-        /*!
-            Constructor for tshirt param objects.
-        */
-        tshirt_params(double maxsmc, double wltsmc, double satdk, double satpsi, double slope, double b,
-                      double multiplier, double alpha_fc, double Klf, double Kn, int nash_n, double Cgw, double expon,
-                      double max_gw_storage) :
-                maxsmc(maxsmc),
-                wltsmc(wltsmc),
-                satdk(satdk),
-                satpsi(satpsi),
-                slope(slope),
-                b(b),
-                multiplier(multiplier),
-                alpha_fc(alpha_fc),
-                Klf(Klf),
-                Kn(Kn),
-                nash_n(nash_n),
-                Cgw(Cgw),
-                expon(expon),
-                max_groundwater_storage_meters(max_gw_storage) {
-            this->max_soil_storage_meters = this->depth * maxsmc;
-            this->Cschaake = 3.0 * satdk / (2.0e-6);
-            this->max_lateral_flow = std::numeric_limits<double>::max();//satdk * multiplier * this->max_soil_storage_meters;
-        }
-
-    };
 
     /*!
      * Tshirt state structure
