@@ -1,8 +1,8 @@
-
-#ifndef PDM03_H
-#define PDM03_H
+#ifndef PDM03_H_INCLUDED
+#define PDM03_H_INCLUDED
 
 #include <cstdlib>
+#include <cmath>
 
 using std::max;
 using std::min;
@@ -11,131 +11,166 @@ extern "C"
 {
     struct pdm03_struct
     {
-        int modelDay;
-        double Cpar;
-        double B;
-        double XHuz;
-        double Huz;
-        double OV;
-        double AE;
-        double XCuz;
-        double effPrecip;
-        double PE;
-        double Kv;
+        int model_time_step;                             //int modelDay;
+        double maximum_combined_contents;                //double Cpar;
+        double scaled_distribution_fn_shape_parameter;   //double B;
+        double final_height_reservoir;                   //double XHuz
+        double max_height_soil_moisture_storerage_tank;  //double Huz;
+        double total_effective_rainfall;                 //double OV;
+        double actual_et;                                //double AE;
+        double final_storage_upper_zone;                 //double XCuz;
+        double precipitation;                            //double effPrecip;
+        double potential_et;                             //double PE;
+        double vegetation_adjustment;                    //double Kv;
     };
 
-    void Pdm03(int modelDay,
-        double Cpar,
-        double B,
-        double *XHuz,
-        double Huz,
-        double *OV,
-        double *AE,
-        double *XCuz,
-        double effPrecip,
-        double PE,
-        double Kv);
+    void Pdm03(int model_time_step,
+               double maximum_combined_contents,
+               double scaled_distribution_fn_shape_parameter,
+               double *final_height_reservoir,
+               double max_height_soil_moisture_storerage_tank,
+               double *total_effective_rainfall,
+               double *actual_et,
+               double *final_storage_upper_zone,
+               double precipitation,
+               double potential_et,
+               double vegetation_adjustment);
 
     /*
-    %%=========================================================================
-    %% Code to run Soil Moisture Accounting model
-    %% INPUTS
-    %%   modelDay   - model time step
-    %%   Cpar       - maximum combined contents of all stores, calculated using Huz and B
-    %%   B          - scaled distribution function shape parameter (0-2)
-    %%   Huz        - maximum hight of the soil moisture storage tank. (0-inf.)
-    %%   effPrecip  - precipitation this time step
-    %%   PE         - potential evapotranspiration this time step
-    %%   Kv         - vegetation adjustment to PE (0-1)
-    % OUTPUTS
-    %%   OV  - total effective rainfall (effective runoff?) this time step
-    %%   AE  - actual evapotranspiration this time step
-    %%   XCuz - final storage in the upper zone after ET at end of this time step
-    %%   XHuz - final height of the reservoir at end of this time step
-    %%=========================================================================
+    ========================================================================================================================================
+    Code to run Soil Moisture Accounting model
+    INPUTS
+        model_time_step                          - model time step  // modelDay
+        maximum_combined_contents                - maximum combined contents of all stores, calculated using Huz and B  // Cpar [mm]
+        scaled_distribution_fn_shape_parameter   - scaled distribution function shape parameter (0-2)  // B [unitless]
+        max_height_soil_moisture_storerage_tank  - maximum height of the soil moisture storage tank. (0-inf.)  // Huz [mm]
+        precipitation                            - precipitation this time step  // effPrecip [mm/day]
+        potential_et                             - potential evapotranspiration this time step  // PE [mm/day]
+        vegetation_adjustment                    - vegetation adjustment to PE (0-1)  // Kv [unitless]
+    OUTPUTS
+        total_effective_rainfall                 - total effective rainfall (effective runoff?) this time step  // OV [mm]
+        actual_et                                - actual evapotranspiration this time step  // AE [mm/day]
+        final_storage_upper_zone                 - final storage in the upper zone after ET at end of this time step  // Xcuz [mm]
+        final_height_reservoir                   - final height of the reservoir at end of this time step  // XHuz [mm]
+    ========================================================================================================================================
     */
 
-    inline void Pdm03(int modelDay, double Cpar, double B, double *XHuz, double Huz,
-              double *OV, double *AE, double *XCuz, double effPrecip, double PE, double Kv)
+    void Pdm03(int model_time_step,
+               double maximum_combined_contents,
+               double scaled_distribution_fn_shape_parameter,
+               double *final_height_reservoir,
+               double max_height_soil_moisture_storerage_tank,
+               double *total_effective_rainfall,
+               double *actual_et,
+               double *final_storage_upper_zone,
+               double precipitation,
+               double potential_et,
+               double vegetation_adjustment)
     {
       /* local variables */
-      double Cbeg, OV2, PPinf, Hint, Cint, OV1;
+      //double Cbeg, OV2, PPinf, Hint, Cint, OV1;
+      double cbeg, ov2, ppinf, hint, cint, ov1;
 
       //Storage contents at begining
-      Cbeg = Cpar * (1.0 - pow(1.0-(*XHuz/Huz),1.0+B));
+      //Cbeg = Cpar * (1.0 - pow(1.0-(*XHuz/Huz),1.0+B));
+      cbeg = maximum_combined_contents * (1.0 - pow(1.0-(*final_height_reservoir/max_height_soil_moisture_storerage_tank),
+                                                    1.0+scaled_distribution_fn_shape_parameter));
 
       //Compute effective rainfall filling all storage elements
-      OV2 = max(0.0, effPrecip + *XHuz - Huz);
+      //OV2 = max(0.0, effPrecip + *XHuz - Huz);
+      ov2 = max(0.0, precipitation + *final_height_reservoir - max_height_soil_moisture_storerage_tank);
 
       //Remaining net rainfall
-      PPinf = effPrecip - OV2;
+      //PPinf = effPrecip - OV2;
+      ppinf = precipitation - ov2;
 
       //New actual height
-      Hint = min(Huz, *XHuz+PPinf);
+      //Hint = min(Huz, *XHuz+PPinf);
+      hint = min(max_height_soil_moisture_storerage_tank, *final_height_reservoir+ppinf);
 
       //New storage content
-      Cint = Cpar*(1.0-pow(1.0-(Hint/Huz),1.0+B));
+      //Cint = Cpar*(1.0-pow(1.0-(Hint/Huz),1.0+B));
+      cint = maximum_combined_contents*(1.0-pow(1.0-(hint/max_height_soil_moisture_storerage_tank),
+                                                1.0+scaled_distribution_fn_shape_parameter));
 
       //Additional effective rainfall produced by stores smaller than Cmax
-      OV1 = max(0.0, PPinf + Cbeg - Cint);
+      //OV1 = max(0.0, PPinf + Cbeg - Cint);
+      ov1 = max(0.0, ppinf + cbeg - cint);
 
       //Compute total effective rainfall
-      *OV = OV1 + OV2;
+      //*OV = OV1 + OV2;
+      *total_effective_rainfall = ov1 + ov2;
 
       //Compute actual evapotranspiration
-      *AE = min(Cint,(Cint/Cpar)*PE*Kv);
+      //*AE = min(Cint,(Cint/Cpar)*PE*Kv);
+      *actual_et = min(cint,(cint/maximum_combined_contents)*potential_et*vegetation_adjustment);
 
       //Storage contents after ET
-      *XCuz = max(0.0,Cint - *AE);
+      //*XCuz = max(0.0,Cint - *AE);
+      *final_storage_upper_zone = max(0.0,cint - *actual_et);
 
       //Compute final height of the reservoir
-      *XHuz = Huz*(1.0-pow(1.0-(*XCuz/Cpar),1.0/(1.0+B)));
+      //*XHuz = Huz*(1.0-pow(1.0-(*XCuz/Cpar),1.0/(1.0+B)));
+      *final_height_reservoir = max_height_soil_moisture_storerage_tank*
+              (1.0-pow(1.0-(*final_storage_upper_zone/maximum_combined_contents),
+               1.0/(1.0+scaled_distribution_fn_shape_parameter)));
 
       return;
 
     }
 
-    inline void pdm03_wrapper(pdm03_struct* pdm_data)
+    void pdm03_wrapper(pdm03_struct* pdm_data)
     {
-        return Pdm03(pdm_data->modelDay,
-        pdm_data->Cpar,
-        pdm_data->B,
-        &pdm_data->XHuz,
-        pdm_data->Huz,
-        &pdm_data->OV,
-        &pdm_data->AE,
-        &pdm_data->XCuz,
-        pdm_data->effPrecip,
-        pdm_data->PE,
-        pdm_data->Kv);
+        return Pdm03(pdm_data->model_time_step,
+                     pdm_data->maximum_combined_contents,
+                     pdm_data->scaled_distribution_fn_shape_parameter,
+                     &pdm_data->final_height_reservoir,
+                     pdm_data->max_height_soil_moisture_storerage_tank,
+                     &pdm_data->total_effective_rainfall,
+                     &pdm_data->actual_et,
+                     &pdm_data->final_storage_upper_zone,
+                     pdm_data->precipitation,
+                     pdm_data->potential_et,
+                     pdm_data->vegetation_adjustment);
     }
 
+
     /*
-    %%=========================================================================
-    %% Hamon Potential ET model
-    %% INPUTS
-    %%   avgTemp      - average air temperature this time step (C)
-    %%   Latitude     - latitude of catchment centroid (degrees)
-    %%   day of year  - (1-365) or (1-366) in leap years
-    % OUTPUTS
-    %%   PE           - potential evapotranspiration this time step
-    %%=========================================================================
+    ==================================================================================================
+    Hamon Potential ET model
+    INPUTS
+        average_temp_degree_celcius           - average air temperature this time step (C)
+        latitude_of_catchment_centoid_degree  - latitude of catchment centroid (degrees)
+        day_of_year                           - (1-365) or (1-366) in leap years
+    OUTPUTS
+        potential_et                          - potential evapotranspiration this time step [mm/day]
+    ==================================================================================================
     */
 
-    inline double calculateHamonPE(double avgTemp, double Latitude, int day_of_year)
+    inline double calculate_hamon_pet(double average_temp_degree_celcius,
+                                      double latitude_of_catchment_centoid_degree,
+                                      int day_of_year)
     {
-        double solarDeclination, dayLength, eStar, PE;
+        /* local variables
+        solar_declination          - [radian]
+        day_length                 - [hours]
+        saturation_vapor_pressure  - [kPa]
+        potential_et               - potential evapotranspiration this time step [mm/day]
+        */
+        double solar_declination, day_length, saturation_vapor_pressure, potential_et;
 
-        solarDeclination =
+        solar_declination =
             asin(0.39795*cos(0.2163108 + 2.0 * atan(0.9671396*tan(0.00860*
                                                 (double)(day_of_year-186)))));
-        dayLength = 24.0 - (24.0/M_PI)*(acos((sin(0.8333*M_PI/180.0)+
-                    sin(Latitude*M_PI/180.0)*sin(solarDeclination))/
-                    (cos(Latitude*M_PI/180.0)*cos(solarDeclination))));
-        eStar = 0.6108*exp((17.27*avgTemp)/(237.3+avgTemp));
-        PE = (715.5*dayLength/24.0)*eStar/(avgTemp + 273.2);
+        day_length = 24.0 - (24.0/M_PI)*(acos((sin(0.8333*M_PI/180.0)+
+                    sin(latitude_of_catchment_centoid_degree*M_PI/180.0)*
+                    sin(solar_declination))/
+                    (cos(latitude_of_catchment_centoid_degree*M_PI/180.0)*
+                    cos(solar_declination))));
+        saturation_vapor_pressure = 0.6108*exp((17.27*average_temp_degree_celcius)/(237.3+average_temp_degree_celcius));
+        potential_et = (715.5*day_length/24.0)*saturation_vapor_pressure/(average_temp_degree_celcius+ 273.2);
 
-        return PE;
+        return potential_et;
     }
 
      /*
@@ -244,4 +279,4 @@ extern "C"
 }
 
 
-#endif // PDM03_H
+#endif // PDM03_H_INCLUDED
