@@ -59,7 +59,12 @@ TEST_F(Feature_Test, geometry_test) {
     std::vector<double> bounding_box{1.0, 2.0};
 
     // Next, test the slightly more complicated case of the feature having bounds
-    geojson::PointFeature point_and_bound(geojson::coordinate_t(x, y), "Point and Bound test", geojson::property_map(), bounding_box);
+    geojson::PointFeature point_and_bound(
+        geojson::coordinate_t(x, y),
+        "Point and Bound test",
+        geojson::PropertyMap(),
+        bounding_box
+    );
     
     ASSERT_EQ(point_and_bound.geometry().get<0>(), x);
     ASSERT_EQ(point_and_bound.geometry().get<1>(), y);
@@ -77,7 +82,7 @@ TEST_F(Feature_Test, geometry_test) {
 
     ASSERT_ANY_THROW(point_and_bound.get_property("doesnotexist"));
 
-    geojson::property_map properties{
+    geojson::PropertyMap properties{
         {"prop_0", geojson::JSONProperty("prop_0", 0)},
         {"prop_1", geojson::JSONProperty("prop_1", "1")},
         {"prop_2", geojson::JSONProperty("prop_2", false)},
@@ -536,6 +541,7 @@ TEST_F(Feature_Test, geometry_test) {
     ASSERT_EQ(polygon.get_destination_length(), 3);
     ASSERT_EQ(polygon.get_contributor_count(), 3);
 
+    // This number is larger than before due to the copy of the multipolygon feature
     ASSERT_EQ(multipoint.get_number_of_destination_features(), 2);
     ASSERT_EQ(multipoint.get_number_of_origination_features(), 2);
     ASSERT_EQ(multipoint.get_origination_length(), 4);
