@@ -20,6 +20,7 @@ namespace geojson {
     static bool contains(const std::vector<T*> &container, const T *value) {
         return not (std::find(container.begin(), container.end(), value) == container.end());
     }
+
     template<typename T>
     static bool contains(const std::vector<T> &container, const T value) {
         return not (std::find(container.begin(), container.end(), value) == container.end());
@@ -50,8 +51,6 @@ namespace geojson {
         MultiPolygon,           /*!< Represents a feature that is represented by multiple areas */
         GeometryCollection      /*!< Represents a feature that contains a collection of different types of geometry */
     };
-
-    typedef std::map<std::string, JSONProperty> property_map;
 
     /**
      * Represents an individual feature within a Geojson definition
@@ -514,7 +513,9 @@ namespace geojson {
                 }
             }
 
-            ::geojson::geometry geometry();
+            ::geojson::geometry geometry() const {
+                return this->geom;
+            }
 
             template<class T>
             T geometry(int index) const {
@@ -615,12 +616,13 @@ namespace geojson {
 
         protected:
             virtual void break_links() {
+                // Go through all of the originators and remove the reference to this feature
                 for (auto originator : this->origination) {
                     originator->remove_destination(this);
                 }
 
+                // Now the list of originators can be cleared because they no longer link to this feature
                 this->origination.clear();
-
                 for (auto target : this->destination) {
                     target->remove_origination(this);
                 }
@@ -636,38 +638,50 @@ namespace geojson {
 
             virtual void remove_destination(FeatureBase* feature) {
                 int feature_index = 0;
+                bool destination_found = false;
 
                 for (; feature_index < this->destination.size(); feature_index++) {
                     if (feature == this->destination[feature_index]) {
+                        destination_found = true;
                         break;
                     }
                 }
 
-                this->destination.erase(this->destination.begin() + feature_index);
+                if (destination_found) {
+                    this->destination.erase(this->destination.begin() + feature_index);
+                }
             }
 
             virtual void remove_origination(FeatureBase* feature) {
                 int feature_index = 0;
+                bool origination_found = false;
 
                 for (; feature_index < this->origination.size(); feature_index++) {
                     if (feature == this->origination[feature_index]) {
+                        origination_found = true;
                         break;
                     }
                 }
 
-                this->origination.erase(this->origination.begin() + feature_index);
+                if (origination_found) {
+                    this->origination.erase(this->origination.begin() + feature_index);
+                }
             }
 
             virtual void remove_neighbor(FeatureBase* feature) {
                 int feature_index = 0;
+                bool neighbor_found = false;
 
                 for (; feature_index < this->neighbors.size(); feature_index++) {
                     if (feature == this->neighbors[feature_index]) {
+                        neighbor_found = true;
                         break;
                     }
                 }
 
-                this->neighbors.erase(this->neighbors.begin() + feature_index);
+                if (neighbor_found) {
+                    this->neighbors.erase(this->neighbors.begin() + feature_index);
+                }
             }
 
             FeatureType type;
