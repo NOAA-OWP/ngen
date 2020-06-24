@@ -180,15 +180,14 @@ TEST_F(HymodKernelTest, TestWithKnownInput)
 }
 
 //! Test that Hymod executes its 'calc_evapotranspiration' function and returns the expected result.
-/*!
-    In the current implementation (at the time this test was created), the static method simple returns 0.0 regardless
-    of the parameters.
-*/
+/* TODO: get some actual examples to test with.
+ * For now, commenting this out until some valid tests can actual be set up, with expected ET values.
 TEST_F(HymodKernelTest, TestCalcET0) {
     // Since currently the function doesn't care about params, borrow this from example 0 ...
     double et_storage = 0.0;
 
     ASSERT_EQ(hymod_kernel::calc_et(3.0, &et_storage), 0.0);
 }
+*/
 
 
