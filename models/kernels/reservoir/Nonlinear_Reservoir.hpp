@@ -15,12 +15,12 @@ using namespace std;
 
 /**
  * @brief Nonlinear Reservoir that has zero, one, or multiple outlets.
- * The nonlinear reservoir has parameters of minimum and maximum storage height in meters and a state variable of current storage
- * height in meters. A vector will be created that stores pointers to the reservoir outlet objects. This class will also sort
- * multiple outlets from lowest to highest activation thresholds in the vector. The response_meters_per_second function takes an
- * inflow and cycles through the outlets from lowest to highest activation thresholds and calls the outlet's function to return
- * the discharge velocity in meters per second through the outlet. The reservoir's storage is updated from velocities of each
- * outlet and the delta time for the given timestep.
+ * The nonlinear reservoir has parameters of minimum and maximum storage height in meters and a state variable of
+ * current storage height in meters. A vector will be created that stores pointers to the reservoir outlet objects. This
+ * class will also sort multiple outlets from lowest to highest activation thresholds in the vector. The
+ * response_meters_per_second function takes an inflow and cycles through the outlets from lowest to highest activation
+ * thresholds and calls the outlet's function to return the discharge velocity in meters per second through the outlet.
+ * The reservoir's storage is updated from velocities of each outlet and the delta time for the given timestep.
  */
 class Nonlinear_Reservoir
 {
@@ -31,7 +31,8 @@ class Nonlinear_Reservoir
     /**
      * @brief Default Constructor building a reservoir with no outlets.
      */
-    Nonlinear_Reservoir(double minimum_storage_meters = 0.0, double maximum_storage_meters = 1.0, double current_storage_height_meters = 0.0)
+    Nonlinear_Reservoir(double minimum_storage_meters = 0.0, double maximum_storage_meters = 1.0,
+                        double current_storage_height_meters = 0.0)
     {
         parameters.minimum_storage_meters = minimum_storage_meters;
         parameters.maximum_storage_meters = maximum_storage_meters;
@@ -48,24 +49,30 @@ class Nonlinear_Reservoir
      * @param activation_threshold_meters meters from the bottom of the reservoir to the bottom of the outlet
      * @param max_velocity_meters_per_second max outlet velocity in meters per second
      */
-    Nonlinear_Reservoir(double minimum_storage_meters, double maximum_storage_meters, double current_storage_height_meters, double a,
-    double b, double activation_threshold_meters, double max_velocity_meters_per_second) : Nonlinear_Reservoir(minimum_storage_meters, maximum_storage_meters, current_storage_height_meters)
+    Nonlinear_Reservoir(double minimum_storage_meters, double maximum_storage_meters,
+                        double current_storage_height_meters, double a,
+                        double b, double activation_threshold_meters, double max_velocity_meters_per_second)
+            : Nonlinear_Reservoir(minimum_storage_meters, maximum_storage_meters, current_storage_height_meters)
     {
         //Ensure that the activation threshold is less than the maximum storage
         //if (activation_threshold_meters > maximum_storage_meters)
         /// \todo TODO: Return appropriate error
-        this->outlets.push_back(std::make_shared<Reservoir_Outlet>(a, b, activation_threshold_meters, max_velocity_meters_per_second));
+        this->outlets.push_back(
+                std::make_shared<Reservoir_Outlet>(a, b, activation_threshold_meters, max_velocity_meters_per_second));
     }
 
     /**
-     * @brief Parameterized Constuctor building a reservoir with one or multiple outlets of the base standard and/or exponential type.
+     * @brief Parameterized Constuctor building a reservoir with one or multiple outlets of the base standard and/or
+     * exponential type.
      * A reservoir with an exponential outlet can only be instantiated with this constructor.
      * @param minimum_storage_meters minimum storage in meters
      * @param maximum_storage_meters maximum storage in meters
      * @param current_storage_height_meters current storage height in meters
      * @param outlets vector of reservoir outlets
      */
-    Nonlinear_Reservoir(double minimum_storage_meters, double maximum_storage_meters, double current_storage_height_meters, outlet_vector_type &outlets) : Nonlinear_Reservoir(minimum_storage_meters, maximum_storage_meters, current_storage_height_meters)
+    Nonlinear_Reservoir(double minimum_storage_meters, double maximum_storage_meters,
+                        double current_storage_height_meters, outlet_vector_type &outlets)
+            : Nonlinear_Reservoir(minimum_storage_meters, maximum_storage_meters, current_storage_height_meters)
     {
         //Assign outlets vector to class outlets vector variable
         this->outlets = outlets;
@@ -77,18 +84,23 @@ class Nonlinear_Reservoir
         if (outlets.back()->get_activation_threshold_meters() > maximum_storage_meters)
         {
             /// \todo TODO: Return appropriate error
-            cerr << "ERROR: The activation_threshold_meters is greater than the maximum_storage_meters of a nonlinear reservoir."  << endl;
+            cerr
+                << "ERROR: The activation_threshold_meters is greater than the maximum_storage_meters of a nonlinear "
+                << "reservoir."
+                << endl;
         }
     }
 
     /**
-     * @brief Function to update the nonlinear reservoir storage in meters and return a response in meters per second to an influx and timestep.
+     * @brief Function to update the nonlinear reservoir storage in meters and return a response in meters per second to
+     * an influx and timestep.
      * @param in_flux_meters_per_second influx in meters per second
      * @param delta_time_seconds delta time in seconds
      * @param excess_water_meters excess water in meters
      * @return sum_of_outlet_velocities_meters_per_second sum of the outlet velocities in meters per second
      */
-    double response_meters_per_second(double in_flux_meters_per_second, int delta_time_seconds, double &excess_water_meters)
+    double response_meters_per_second(double in_flux_meters_per_second, int delta_time_seconds,
+                                      double &excess_water_meters)
     {
         double outlet_velocity_meters_per_second = 0;
         double sum_of_outlet_velocities_meters_per_second = 0;
@@ -143,7 +155,9 @@ class Nonlinear_Reservoir
         if (excess_water_meters < 0.0)
         {
             /// \todo TODO: Return appropriate error
-            cerr << "ERROR: excess_water_meters from the nonlinear reservoir is calculated to be less than zero." << endl;
+            cerr
+                << "ERROR: excess_water_meters from the nonlinear reservoir is calculated to be less than zero."
+                << endl;
         }
 
         return sum_of_outlet_velocities_meters_per_second;
@@ -154,10 +168,12 @@ class Nonlinear_Reservoir
      */
     void sort_outlets()
     {
-        sort(this->outlets.begin(), this->outlets.end(), [](const std::shared_ptr<Reservoir_Outlet> &left, const std::shared_ptr<Reservoir_Outlet> &right)
-        {
-            return left->get_activation_threshold_meters() < right->get_activation_threshold_meters();
-        });
+        sort(this->outlets.begin(), this->outlets.end(),
+                [](const std::shared_ptr<Reservoir_Outlet> &left, const std::shared_ptr<Reservoir_Outlet> &right)
+                    {
+                        return left->get_activation_threshold_meters() < right->get_activation_threshold_meters();
+                    }
+            );
 
      }
 
@@ -170,7 +186,7 @@ class Nonlinear_Reservoir
         return state.current_storage_height_meters;
     }
 
-    /*
+    /**
      * @brief Return velocity in meters per second of discharge through the specified outlet.
      * Essentially a wrapper for {@link Reservoir_Outlet#velocity_meters_per_second}, where the args for that come from
      * the reservoir anyway.
@@ -186,13 +202,19 @@ class Nonlinear_Reservoir
 
         else if (outlets.size() > 0)
         {
-            cout << "Warning, reservoir outlet requested is not in the outlets vector. Returning the velocity of the first outlet." << endl;
+            cout
+                << "Warning, reservoir outlet requested is not in the outlets vector. Returning the velocity of the "
+                << "first outlet."
+                << endl;
             return this->outlets.at(0)->get_previously_calculated_velocity_meters_per_second();
         }
 
         else
         {
-            cout << "Warning, reservoir outlet requested of reservoir with no outlets. Returning a velocity of 0.0 meters per second." << endl;
+            cout
+                << "Warning, reservoir outlet requested of reservoir with no outlets. Returning a velocity of 0.0 "
+                << "meters per second."
+                << endl;
             return 0.0;
         }
     }
