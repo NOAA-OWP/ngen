@@ -11,13 +11,13 @@ using namespace std;
 
 struct reservoir_parameters
 {
-    double minimum_storage_meters; 
+    double minimum_storage_meters;
     double maximum_storage_meters;
 };
 
 struct reservoir_state
 {
-    double current_storage_height_meters;  
+    double current_storage_height_meters;
 };
 
 
@@ -38,9 +38,9 @@ class Reservoir_Outlet
     Reservoir_Outlet(): a(0.0), b(0.0), activation_threshold_meters(0.0), max_velocity_meters_per_second(0.0),
     velocity_meters_per_second_local(0.0)
     {
-		
-    }	
-   
+
+    }
+
     /**
      * @brief Parameterized Constuctor that builds a Reservoir Outlet object
      * @param a outlet velocity calculation coefficient
@@ -52,8 +52,8 @@ class Reservoir_Outlet
     velocity_meters_per_second_local(0.0)
     {
 
-    }    
-  
+    }
+
     /**
      * @brief Function to return the velocity in meters per second of the discharge through the outlet
      * @param parameters_struct reservoir parameters struct
@@ -84,7 +84,7 @@ class Reservoir_Outlet
             cout << "WARNING: Nonlinear reservoir calculated an outlet velocity over max velocity, and therefore set the outlet velocity to max velocity." << endl;
         }
 
-        //Return the velocity in meters per second of the discharge through the outlet   
+        //Return the velocity in meters per second of the discharge through the outlet
         return velocity_meters_per_second_local;
     };
 
@@ -227,7 +227,7 @@ class Nonlinear_Reservoir
      * @param activation_threshold_meters meters from the bottom of the reservoir to the bottom of the outlet
      * @param max_velocity_meters_per_second max outlet velocity in meters per second
      */
-    Nonlinear_Reservoir(double minimum_storage_meters, double maximum_storage_meters, double current_storage_height_meters, double a, 
+    Nonlinear_Reservoir(double minimum_storage_meters, double maximum_storage_meters, double current_storage_height_meters, double a,
     double b, double activation_threshold_meters, double max_velocity_meters_per_second) : Nonlinear_Reservoir(minimum_storage_meters, maximum_storage_meters, current_storage_height_meters)
     {
         //Ensure that the activation threshold is less than the maximum storage
@@ -248,7 +248,7 @@ class Nonlinear_Reservoir
     {
         //Assign outlets vector to class outlets vector variable
         this->outlets = outlets;
-	
+
         //Call fuction to ensure that reservoir outlet activation thresholds are sorted from least to greatest height
         sort_outlets();
 
@@ -257,8 +257,8 @@ class Nonlinear_Reservoir
         {
             /// \todo TODO: Return appropriate error
             cerr << "ERROR: The activation_threshold_meters is greater than the maximum_storage_meters of a nonlinear reservoir."  << endl;
-        }    
-    }	
+        }
+    }
 
     /**
      * @brief Function to update the nonlinear reservoir storage in meters and return a response in meters per second to an influx and timestep.
@@ -268,13 +268,13 @@ class Nonlinear_Reservoir
      * @return sum_of_outlet_velocities_meters_per_second sum of the outlet velocities in meters per second
      */
     double response_meters_per_second(double in_flux_meters_per_second, int delta_time_seconds, double &excess_water_meters)
-    {	
+    {
         double outlet_velocity_meters_per_second = 0;
         double sum_of_outlet_velocities_meters_per_second = 0;
 
         //Update current storage from influx multiplied by delta time.
         state.current_storage_height_meters += in_flux_meters_per_second * delta_time_seconds;
-	
+
         //Loop through reservoir outlets.
         for (auto& outlet : this->outlets) //pointer to outlets
         {
@@ -287,19 +287,19 @@ class Nonlinear_Reservoir
 
             //If storage is less than minimum storage.
             if (state.current_storage_height_meters < parameters.minimum_storage_meters)
-            {	
+            {
                 /// \todo TODO: Return appropriate warning
                 //cout << "WARNING: Nonlinear reservoir calculated a storage below the minimum storage." << endl;
-    
+
                 //Return to storage before falling below minimum storage.
                 state.current_storage_height_meters += outlet_velocity_meters_per_second * delta_time_seconds;
 
                 //Outlet velocity is set to drain the reservoir to the minimum storage.
-                outlet_velocity_meters_per_second = (state.current_storage_height_meters - parameters.minimum_storage_meters) /delta_time_seconds;
+                outlet_velocity_meters_per_second = (state.current_storage_height_meters - parameters.minimum_storage_meters) / delta_time_seconds;
                 outlet->adjust_velocity(outlet_velocity_meters_per_second);
                 //Set storage to minimum storage.
                 state.current_storage_height_meters = parameters.minimum_storage_meters;
-                    
+
                 excess_water_meters = 0.0;
             }
 
@@ -313,7 +313,7 @@ class Nonlinear_Reservoir
             /// \todo TODO: Return appropriate warning
             cout << "WARNING: Nonlinear reservoir calculated a storage above the maximum storage."  << endl;
 
-            state.current_storage_height_meters = parameters.maximum_storage_meters;   
+            state.current_storage_height_meters = parameters.maximum_storage_meters;
 
             excess_water_meters = (state.current_storage_height_meters - parameters.maximum_storage_meters);
         }
@@ -334,7 +334,7 @@ class Nonlinear_Reservoir
     void sort_outlets()
     {
         sort(this->outlets.begin(), this->outlets.end(), [](const std::shared_ptr<Reservoir_Outlet> &left, const std::shared_ptr<Reservoir_Outlet> &right)
-        {              
+        {
             return left->get_activation_threshold_meters() < right->get_activation_threshold_meters();
         });
 
