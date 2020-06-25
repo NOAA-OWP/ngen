@@ -55,17 +55,17 @@ extern "C"
     ========================================================================================================================================
     */
 
-    void Pdm03(int model_time_step,
-               double maximum_combined_contents,
-               double scaled_distribution_fn_shape_parameter,
-               double *final_height_reservoir,
-               double max_height_soil_moisture_storerage_tank,
-               double *total_effective_rainfall,
-               double *actual_et,
-               double *final_storage_upper_zone,
-               double precipitation,
-               double potential_et,
-               double vegetation_adjustment)
+    inline void Pdm03(int model_time_step,
+                      double maximum_combined_contents,
+                      double scaled_distribution_fn_shape_parameter,
+                      double *final_height_reservoir,
+                      double max_height_soil_moisture_storerage_tank,
+                      double *total_effective_rainfall,
+                      double *actual_et,
+                      double *final_storage_upper_zone,
+                      double precipitation,
+                      double potential_et,
+                      double vegetation_adjustment)
     {
       /* local variables */
       //double Cbeg, OV2, PPinf, Hint, Cint, OV1;
@@ -119,7 +119,7 @@ extern "C"
 
     }
 
-    void pdm03_wrapper(pdm03_struct* pdm_data)
+    inline void pdm03_wrapper(pdm03_struct* pdm_data)
     {
         return Pdm03(pdm_data->model_time_step,
                      pdm_data->maximum_combined_contents,
