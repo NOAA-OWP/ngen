@@ -5,16 +5,16 @@
 
 /**
  * @brief Single Exponential Reservior Outlet Class
- * This class is for a single exponential reservoir outlet that is derived from the base Reservoir_Outlet class.
- * This derived class holds extra parameters for c and expon and overrides the base velocity_meters_per_second function
- * with an exponential equation.
+ * This class is for a single exponential reservoir outlet that is derived from the base Reservoir_Outlet class. It
+ * derived class holds extra parameters for c and expon and overrides the calc_velocity_meters_per_second_local
+ * function with an exponential equation.
  */
 class Reservoir_Exponential_Outlet: public Reservoir_Outlet
 {
     public:
 
     /**
-     * @brief Default Constructor building an empty Reservoir Exponential Outlet Object
+     * @brief Default Constructor building an empty Reservoir Exponential Outlet Object.
      */
     Reservoir_Exponential_Outlet(): Reservoir_Outlet(), c(0.0), expon(0.0)
     {
@@ -22,7 +22,7 @@ class Reservoir_Exponential_Outlet: public Reservoir_Outlet
     }
 
     /**
-     * @brief Parameterized Constuctor that builds a Reservoir Outlet object
+     * @brief Parameterized Constructor that builds a Reservoir Outlet object.
      * @param c outlet velocity calculation coefficient
      * @param expon outlet velocity calculation exponential coefficient
      * @param activation_threshold_meters meters from the bottom of the reservoir to the bottom of the outlet
@@ -37,40 +37,32 @@ class Reservoir_Exponential_Outlet: public Reservoir_Outlet
 
     }
 
+protected:
+
     /**
-     * @brief Inherited, overridden function to return discharge velocity through exponential outlet (meters per second)
+     * @brief Calculate outlet discharge velocity in meters per second.
+     *
+     * Perform appropriate calculations to return the velocity, in meters per second, of the discharge through this
+     * outlet.
+     *
+     * Typically this is only used by the velocity_meters_per_second function.
+     *
+     * This function should be overridden to adjust the behavior of subtypes with respect to how the discharge velocity
+     * is calculated, assuming the reservoir storage is above the activation threshold.  However, it is left to the
+     * velocity_meters_per_second function to actually update the object's state.
+     *
      * @param parameters_struct reservoir parameters struct
      * @param storage_struct reservoir state storage struct
      * @param activation_threshold_meters meters from the bottom of the reservoir to the bottom of the outlet
      * @param max_velocity_meters_per_second max outlet velocity in meters per second
      * @return velocity_meters_per_second_local the velocity in meters per second of the discharge through the outlet
      */
-    double velocity_meters_per_second(reservoir_parameters &parameters_struct, reservoir_state &storage_struct) override
+    double calc_velocity_meters_per_second_local(reservoir_parameters &parameters_struct,
+                                                 reservoir_state &storage_struct) override
     {
-
-        //Return velocity of 0.0 if the storage passed in is less than the activation threshold
-        if (storage_struct.current_storage_height_meters <= activation_threshold_meters) {
-            return 0.0;
-        }
-
-        //Calculate the velocity in meters per second of the discharge through the outlet
-        velocity_meters_per_second_local = c * (exp(expon * storage_struct.current_storage_height_meters /
-                                                    parameters_struct.maximum_storage_meters) - 1);
-
-        //If calculated oulet velocity is greater than max velocity, then set to max velocity and return a warning.
-        if (velocity_meters_per_second_local > max_velocity_meters_per_second) {
-            velocity_meters_per_second_local = max_velocity_meters_per_second;
-
-            //TODO: Return appropriate warning
-            std::__1::cout
-                    << "WARNING: Nonlinear reservoir calculated an outlet velocity over max velocity, and therefore "
-                    << "set the outlet velocity to max velocity."
-                    << std::__1::endl;
-        }
-
-        //Return the velocity in meters per second of the discharge through the outlet
-        return velocity_meters_per_second_local;
-    };
+        return c * (exp(expon * storage_struct.current_storage_height_meters /
+                        parameters_struct.maximum_storage_meters) - 1);
+    }
 
     private:
     double c;
