@@ -6,14 +6,9 @@
 #include <algorithm>
 #include <iostream>
 #include <memory>
+#include "reservoir_parameters.h"
 
 using namespace std;
-
-struct reservoir_parameters
-{
-    double minimum_storage_meters;
-    double maximum_storage_meters;
-};
 
 struct reservoir_state
 {
