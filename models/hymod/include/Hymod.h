@@ -23,10 +23,10 @@ class hymod_kernel
     static double calc_et(double soil_m, void* et_params)
     {
         pdm03_struct* pdm = (pdm03_struct*) et_params;
-        pdm->XHuz = soil_m;
+        pdm->final_height_reservoir = soil_m;
         pdm03_wrapper(pdm);
 
-        return pdm->XHuz - soil_m;
+        return pdm->final_height_reservoir - soil_m;
     }
 
     //! run one time step of hymod
