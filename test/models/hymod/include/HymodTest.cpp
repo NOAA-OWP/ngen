@@ -92,11 +92,12 @@ TEST_F(HymodKernelTest, TestWithKnownInput)
 
     // create the struct used for ET
     pdm03_struct pdm_et_data;
-    pdm_et_data.B = 1.3;
-    pdm_et_data.Kv = 0.99;
-    pdm_et_data.modelDay = 0.0;
-    pdm_et_data.Huz = 400.0;
-    pdm_et_data.Cpar = pdm_et_data.Huz / (1.0+pdm_et_data.B);
+    pdm_et_data.scaled_distribution_fn_shape_parameter = 1.3;
+    pdm_et_data.vegetation_adjustment = 0.99;
+    pdm_et_data.model_time_step = 0.0;
+    pdm_et_data.max_height_soil_moisture_storerage_tank = 400.0;
+    pdm_et_data.maximum_combined_contents = pdm_et_data.max_height_soil_moisture_storerage_tank /
+                                            (1.0 + pdm_et_data.scaled_distribution_fn_shape_parameter);
 
     double latitude = 41.13;
 
@@ -165,10 +166,10 @@ TEST_F(HymodKernelTest, TestWithKnownInput)
         //calcuate inital PE
         int day_of_year = (int)(greg_2_jul(year, month, day,12,0,0.0) - greg_2_jul(year,1,1,12,0,0.0) + 1);
         double average_tmp = (daily_maximum_air_temperature + daily_minimum_air_temperature) / 2.0;
-        pdm_et_data.PE = calculateHamonPE(average_tmp, latitude, day_of_year);
+        pdm_et_data.potential_et = calculate_hamon_pet(average_tmp, latitude, day_of_year);
 
         // update other et values
-        pdm_et_data.effPrecip = mean_areal_precipitation;
+        pdm_et_data.precipitation = mean_areal_precipitation;
 
         hymod_kernel::run(86400.0, params, states[pos], states[pos+1], fluxes[pos], mean_areal_precipitation, &pdm_et_data);
 
