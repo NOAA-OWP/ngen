@@ -6,6 +6,7 @@
 #include "reservoir/Nonlinear_Reservoir.hpp"
 #include "Pdm03.h"
 #include "GIUH.hpp"
+#include "reservoir/Reservoir_Outlet.hpp"
 #include "tshirt_fluxes.h"
 #include "tshirt_params.h"
 #include "tshirt_state.h"
