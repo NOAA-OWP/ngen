@@ -7,14 +7,9 @@
 #include <iostream>
 #include <memory>
 #include "reservoir_parameters.h"
+#include "reservoir_state.h"
 
 using namespace std;
-
-struct reservoir_state
-{
-    double current_storage_height_meters;
-};
-
 
 /**
  * @brief Base Single Reservior Outlet Class
