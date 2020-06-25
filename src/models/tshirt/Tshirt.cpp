@@ -15,10 +15,10 @@ namespace tshirt {
      * @return The calculated loss value due to evapotranspiration.
      */
     double tshirt_model::calc_evapotranspiration(double soil_m, shared_ptr<pdm03_struct> et_params) {
-        et_params->XHuz = soil_m;
+        et_params->final_height_reservoir = soil_m;
         pdm03_wrapper(et_params.get());
 
-        return et_params->XHuz - soil_m;
+        return et_params->final_height_reservoir - soil_m;
     }
 
     /**
