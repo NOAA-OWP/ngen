@@ -3,7 +3,7 @@
 
 #include "schaake_partitioning.hpp"
 #include "Constants.h"
-#include "Nonlinear_Reservoir.hpp"
+#include "reservoir/Nonlinear_Reservoir.hpp"
 #include "Pdm03.h"
 #include "GIUH.hpp"
 #include "tshirt_fluxes.h"
