@@ -4,6 +4,7 @@
 #include "GIUH.hpp"
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
+#include <map>
 #include <memory>
 #include <string>
 #include <utility>
