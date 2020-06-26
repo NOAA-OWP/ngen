@@ -71,10 +71,10 @@ std::unordered_map<std::string, std::vector<double>> output_map;
 //TODO move catchment int identity to relization, and update nexus to use string id
 std::unordered_map<std::string, int> catchment_id;
 std::unordered_map<std::string, std::string> forcing_paths {
-  {"cat-88", "../data/sugar_creek/forcing/cat-88_2015-12-01 00:00:00_2015-12-30 23:00:00.csv"},
-  {"cat-89", "../data/sugar_creek/forcing/cat-89_2015-12-01 00:00:00_2015-12-30 23:00:00.csv"},
-  {"cat-92", "../data/sugar_creek/forcing/cat-92_2015-12-01 00:00:00_2015-12-30 23:00:00.csv"},
-  {"cat-87", "../data/sugar_creek/forcing/cat-87_2015-12-01 00:00:00_2015-12-30 23:00:00.csv"}
+  {"cat-88", "../data/sugar_creek/forcing/cat-88_2015-12-01,00:00:00_2015-12-30,23:00:00.csv"},
+  {"cat-89", "../data/sugar_creek/forcing/cat-89_2015-12-01,00:00:00_2015-12-30,23:00:00.csv"},
+  {"cat-92", "../data/sugar_creek/forcing/cat-92_2015-12-01,00:00:00_2015-12-30,23:00:00.csv"},
+  {"cat-87", "../data/sugar_creek/forcing/cat-87_2015-12-01,00:00:00_2015-12-30,23:00:00.csv"}
 };
 // create the struct used for ET
 pdm03_struct pdm_et_data;
