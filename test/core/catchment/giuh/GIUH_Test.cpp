@@ -1,4 +1,5 @@
 #include "gtest/gtest.h"
+#include "FileChecker.h"
 #include "GIUH.hpp"
 #include "GiuhJsonReader.h"
 #include <vector>
@@ -7,9 +8,19 @@ class GIUH_Test : public ::testing::Test {
 
 protected:
 
-    GIUH_Test() : abridged_json_file("../test/data/giuh/GIUH_abridged.json"),
-                  complete_json_file("../test/data/giuh/GIUH.json"),
-                  id_map_json_file("../data/sugar_creek/crosswalk_subset.json") {}
+    GIUH_Test()
+    {
+        std::vector<std::string> abridged_choices = {"../test/data/giuh/GIUH_abridged.json",
+                                                     "test/data/giuh/GIUH_abridged.json"};
+        abridged_json_file = utils::FileChecker::find_first_readable(abridged_choices);
+
+        std::vector<std::string> complete_choices = {"../test/data/giuh/GIUH.json", "test/data/giuh/GIUH.json"};
+        complete_json_file = utils::FileChecker::find_first_readable(complete_choices);
+
+        std::vector<std::string> id_map_choices = {"../data/sugar_creek/crosswalk_subset.json",
+                                                   "data/sugar_creek/crosswalk_subset.json"};
+        id_map_json_file = utils::FileChecker::find_first_readable(id_map_choices);
+    }
 
     ~GIUH_Test() override {
 
