@@ -3,6 +3,7 @@
 #include "Forcing.h"
 #include "FileChecker.h"
 #include <memory>
+#include <vector>
 #include <string>
 #include <unistd.h>
 #include <stdio.h>
@@ -56,10 +57,9 @@ void ForcingTest::TearDown() {
 //Construct a forcing object
 void ForcingTest::setupForcing()
 {
-    string forcing_file_name = "../test/forcing/Sample_Tropical_Hourly_Rainfall.csv";
-    if (!utils::FileChecker::file_is_readable(forcing_file_name)) {
-        forcing_file_name = "test/forcing/Sample_Tropical_Hourly_Rainfall.csv";
-    }
+    std::vector<std::string> forcing_file_names = { "../test/forcing/Sample_Tropical_Hourly_Rainfall.csv",
+                                                    "test/forcing/Sample_Tropical_Hourly_Rainfall.csv" };
+    std::string forcing_file_name = utils::FileChecker::find_first_readable(forcing_file_names);
 
     start_date_time = std::make_shared<time_type>();
 
@@ -82,10 +82,13 @@ void ForcingTest::setupForcing()
 //Construct a forcing object AORC
 void ForcingTest::setupForcing_AORC()
 {
-    string forcing_file_name_AORC = "../test/forcing/cat-10_2015-12-01 00_00_00_2015-12-30 23_00_00.csv";
-    if (!utils::FileChecker::file_is_readable(forcing_file_name_AORC)) {
-        forcing_file_name_AORC = "test/forcing/cat-10_2015-12-01 00_00_00_2015-12-30 23_00_00.csv";
-    }
+    std::vector<std::string> forcing_file_names_AORC = {
+            "../test/forcing/cat-10_2015-12-01 00_00_00_2015-12-30 23_00_00.csv",
+            "test/forcing/cat-10_2015-12-01 00_00_00_2015-12-30 23_00_00.csv"
+    };
+
+    std::string forcing_file_name_AORC = utils::FileChecker::find_first_readable(forcing_file_names_AORC);
+
     forcing_params forcing_p(forcing_file_name_AORC, "2015-12-14 21:00:00", "2015-12-30 23:00:00");
 
     Forcing_Object_AORC = std::make_shared<Forcing>(forcing_p);
