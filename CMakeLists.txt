@@ -72,6 +72,7 @@ add_subdirectory("src/core")
 add_subdirectory("src/realizations/catchment")
 add_subdirectory("src/geojson")
 add_subdirectory("src/models/tshirt")
+add_subdirectory("src/models/kernels/reservoir")
 #add_subdirectory("src/forcing")
 
 target_link_libraries(ngen PUBLIC
@@ -82,6 +83,7 @@ target_link_libraries(ngen PUBLIC
         NGen::geojson
         NGen::models_tshirt
         NGen::realizations_catchment
+        NGen::kernels_reservoir
         #NGen::forcing
         )
 
