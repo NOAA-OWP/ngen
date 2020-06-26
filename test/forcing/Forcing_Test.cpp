@@ -83,8 +83,8 @@ void ForcingTest::setupForcing()
 void ForcingTest::setupForcing_AORC()
 {
     std::vector<std::string> forcing_file_names_AORC = {
-            "../test/forcing/cat-10_2015-12-01,00_00_00_2015-12-30,23_00_00.csv",
-            "test/forcing/cat-10_2015-12-01,00_00_00_2015-12-30,23_00_00.csv"
+            "../test/forcing/cat-10_2015-12-01 00_00_00_2015-12-30 23_00_00.csv",
+            "test/forcing/cat-10_2015-12-01 00_00_00_2015-12-30 23_00_00.csv"
     };
 
     std::string forcing_file_name_AORC = utils::FileChecker::find_first_readable(forcing_file_names_AORC);
