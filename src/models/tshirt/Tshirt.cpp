@@ -269,11 +269,8 @@ namespace tshirt {
      * @return
      */
     int tshirt_model::run(double dt, double input_flux_meters, shared_ptr<pdm03_struct> et_params) {
-        // Do resetting/housekeeping for new calculations
-        // TODO: move this to separate small function; e.g., reset_state_members_for_next_time_step_run
-        previous_state = current_state;
-        current_state = make_shared<tshirt_state>(tshirt_state(0.0, 0.0, vector<double>(model_params.nash_n)));
-        fluxes = make_shared<tshirt_fluxes>(tshirt_fluxes(0.0, 0.0, 0.0, 0.0, 0.0));
+        // Do resetting/housekeeping for new calculations and new state values
+        manage_state_before_next_time_step_run();
 
         double soil_column_moisture_deficit =
                 model_params.max_soil_storage_meters - previous_state->soil_storage_meters;
@@ -326,6 +323,24 @@ namespace tshirt {
         //fluxes->surface_runoff_meters_per_second = surface_runoff;
 
         return mass_check(input_flux_meters, dt);
+    }
+
+    /**
+     * Perform necessary steps prior to the execution of model calculations for a new time step, for managing member
+     * variables that contain model state.
+     *
+     * This function is intended to be run only at the start of a new execution of the tshirt_model::run method.  It
+     * performs three housekeeping tasks needed before running the next group of time step modeling operations:
+     *
+     *      * the initial maintained `current_state` is moved to `previous_state`
+     *      * a new `current_state` is created
+     *      * a new `fluxes` is created
+     */
+    void tshirt_model::manage_state_before_next_time_step_run()
+    {
+        previous_state = current_state;
+        current_state = make_shared<tshirt_state>(tshirt_state(0.0, 0.0, vector<double>(model_params.nash_n)));
+        fluxes = make_shared<tshirt_fluxes>(tshirt_fluxes(0.0, 0.0, 0.0, 0.0, 0.0));
     }
 
     /**
