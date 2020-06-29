@@ -261,8 +261,8 @@ namespace tshirt {
     }
 
     /**
-     * Run the model to one time step, moving the initial `current_state` value to `previous_state` and resetting
-     * other members applicable only in the context of the current time step so that they are recalculated.
+     * Run the model to one time step, after performing initial housekeeping steps via a call to
+     * `manage_state_before_next_time_step_run`.
      *
      * @param dt the time step size in seconds
      * @param input_flux_meters the amount water entering the system this time step, in meters
