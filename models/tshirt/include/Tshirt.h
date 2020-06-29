@@ -25,6 +25,19 @@ namespace tshirt {
      * Object oriented implementation of the Tshirt hydrological model, as documented at:
      *      https://github.com/NOAA-OWP/ngen/blob/master/doc/T-shirt_model_description.pdf
      *
+     * The core logic for the model is implemented within the `run` function.  The resulting state calculated by a call
+     * to `run` is stored by a struct referenced via the `current_state` member.  A `previous_state` member also
+     * exists for holding the state prior to the most recent call to `run`.  Calculated fluxes are held by the `fluxes`
+     * member, for which there is not 'previous' analog.
+     *
+     * How state members are adjusted at the start of a call to `run` should be controlled via the implementation of
+     * `manage_state_before_next_time_step_run`.
+     *
+     * Calls to run will return the result of a nested call to `mass_check`, which performs mass balance verification on
+     * the calculated state at the end of a call to `run`.  The amount of acceptable difference is accessible with the
+     * `get_mass_check_error_bound` function.  It is also possible to change the value of this (hard-coded in the
+     * default implementation) with the protected `set_mass_check_error_bound` function.
+     *
      */
     class tshirt_model {
 
@@ -73,8 +86,8 @@ namespace tshirt {
         int mass_check(double input_flux_meters, double timestep_seconds);
 
         /**
-         * Run the model to one time step, moving the initial `current_state` value to `previous_state` and resetting
-         * other members applicable only to in the context of the current time step so that they are recalculated.
+         * Run the model to one time step, after performing initial housekeeping steps via a call to
+         * `manage_state_before_next_time_step_run`.
          *
          * @param dt the time step
          * @param input_flux_meters the amount water entering the system this time step, in meters
@@ -179,19 +192,6 @@ namespace tshirt {
          * previous_state are used for current storage of reservoirs at each given index.
          */
         void initialize_subsurface_lateral_flow_nash_cascade();
-
-        /**
-         * Perform necessary steps prior to the execution of model calculations for a new time step, for managing member
-         * variables that contain model state.
-         *
-         * This function is intended to be run only at the start of a new execution of the tshirt_model::run method.  It
-         * performs three housekeeping tasks needed before running the next group of time step modeling operations:
-         *
-         *      * the initial maintained `current_state` is moved to `previous_state`
-         *      * a new `current_state` is created
-         *      * a new `fluxes` is created
-         */
-        void manage_state_before_next_time_step_run();
 
     };
 }
