@@ -131,11 +131,11 @@ int main(int argc, char *argv[]) {
     //TODO don't really need catchment_collection once catchments are added to nexus collection
     catchment_collection.reset();
 
-    pdm_et_data.B = 1.3;
-    pdm_et_data.Kv = 0.99;
-    pdm_et_data.modelDay = 0.0;
-    pdm_et_data.Huz = 400.0;
-    pdm_et_data.Cpar = pdm_et_data.Huz / (1.0+pdm_et_data.B);
+    pdm_et_data.scaled_distribution_fn_shape_parameter = 1.3;
+    pdm_et_data.vegetation_adjustment = 0.99;
+    pdm_et_data.model_time_step = 0.0;
+    pdm_et_data.max_height_soil_moisture_storerage_tank = 400.0;
+    pdm_et_data.maximum_combined_contents = pdm_et_data.max_height_soil_moisture_storerage_tank / (1.0+pdm_et_data.scaled_distribution_fn_shape_parameter);
 
     //Hymod default params
     double storage = 1.0;
