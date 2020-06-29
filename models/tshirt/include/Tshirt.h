@@ -85,6 +85,19 @@ namespace tshirt {
 
     protected:
 
+        /**
+         * Perform necessary steps prior to the execution of model calculations for a new time step, for managing member
+         * variables that contain model state.
+         *
+         * This function is intended to be run only at the start of a new execution of the tshirt_model::run method.  It
+         * performs three housekeeping tasks needed before running the next group of time step modeling operations:
+         *
+         *      * the initial maintained `current_state` is moved to `previous_state`
+         *      * a new `current_state` is created
+         *      * a new `fluxes` is created
+         */
+        void manage_state_before_next_time_step_run();
+
         void set_mass_check_error_bound(double error_bound);
 
     private:
