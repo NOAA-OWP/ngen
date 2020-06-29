@@ -61,7 +61,7 @@ namespace tshirt {
         /**
          * Calculate soil field capacity storage, the level at which free drainage stops (i.e., "Sfc").
          *
-         * @return
+         * @return The calculated soil field capacity storage.
          */
         double calc_soil_field_capacity_storage();
 
@@ -113,6 +113,60 @@ namespace tshirt {
         shared_ptr<tshirt_fluxes> fluxes;
         /** The size of the error bound that is acceptable when performing mass check calculations. */
         double mass_check_error_bound;
+        /** Soil field capacity storage, or the level at which free drainage stops (i.e., "Sfc"). */
+        double soil_field_capacity_storage;
+
+        /**
+         * Check that the current state of this model object (which could be its provided initial state) is valid, printing
+         * a message and raising an error if not.
+         *
+         * The model parameter for Nash Cascade size, `nash_n`, must correspond appropriately to the size of referenced
+         * `current_state->nash_cascade_storeage_meters` vector.  The latter holds the storage values of the individual
+         * reservoirs within the Nash Cascade.  Note that the function will interpret any `nash_n` greater than `0` as valid
+         * if the vector itself is empty, and initialize such a vector to the correct size with all `0.0` values.
+         */
+        void check_valid();
+
+        /**
+         * Initialize the subsurface groundwater reservoir for the model, in the `groundwater_reservoir` member field.
+         *
+         * Initialize the subsurface groundwater reservoir for the model as a Nonlinear_Reservoir object, creating the
+         * reservoir with a single outlet.  In particular, this is a Reservoir_Exponential_Outlet object, since the outlet
+         * requires the following be used to calculate discharge flow:
+         *
+         *      Cgw * ( exp(expon * S / S_max) - 1 );
+         *
+         * Note that this function should only be used during object construction.
+         *
+         * @see Nonlinear_Reservoir
+         * @see Reservoir_Exponential_Outlet
+         */
+        void initialize_groundwater_reservoir();
+
+        /**
+         * Initialize the subsurface soil reservoir for the model, in the `soil_reservoir` member field.
+         *
+         * Initialize the subsurface soil reservoir for the model as a Nonlinear_Reservoir object, creating the reservoir
+         * with outlets for both the subsurface lateral flow and the percolation flow. This should only be used during
+         * object construction.
+         *
+         * Per the class type of the reservoir, outlets have an associated index value within a reservoir, and certain
+         * outlet-specific functionality requires having appropriate outlet index.  This function also sets corresponding
+         * index values of the lateral flow and percolation flow outlets within the lf_outlet_index and
+         * perc_outlet_index member variables respectively.
+         *
+         * @see Nonlinear_Reservoir
+         */
+        void initialize_soil_reservoir();
+
+        /**
+         * Initialize the Nash Cascade reservoirs applied to the subsurface soil reservoir's lateral flow outlet.
+         *
+         * Initialize the soil_lf_nash_res member, containing the collection of Nonlinear_Reservoir objects used to create
+         * the Nash Cascade for soil_reservoir lateral flow outlet.  The analogous values for Nash Cascade storage from
+         * previous_state are used for current storage of reservoirs at each given index.
+         */
+        void initialize_subsurface_lateral_flow_nash_cascade();
 
     };
 }
