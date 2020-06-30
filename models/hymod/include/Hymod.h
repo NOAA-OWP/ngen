@@ -4,8 +4,8 @@
 #include <cmath>
 #include <vector>
 #include "HymodErrorCodes.h"
-#include "LinearReservoir.hpp"
-#include "Nonlinear_Reservoir.hpp"
+#include "reservoir/LinearReservoir.hpp"
+#include "reservoir/Nonlinear_Reservoir.hpp"
 #include "Pdm03.h"
 #include "hymod_params.h"
 #include "hymod_state.h"
