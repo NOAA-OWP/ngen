@@ -117,8 +117,8 @@ namespace tshirt {
      * object construction.
      *
      * Per the class type of the reservoir, outlets have an associated index value within a reservoir, and certain
-     * outlet-specific functionality requires having appropriate outlet index.  This function also sets corresponding
-     * index values of the lateral flow and percolation flow outlets within the lf_outlet_index and
+     * outlet-specific functionality requires having appropriate outlet index.  These outlet indexes are maintained in
+     * for the lateral flow and percolation flow outlets are maintained this class within the lf_outlet_index and
      * perc_outlet_index member variables respectively.
      *
      * @see Nonlinear_Reservoir
