@@ -118,10 +118,10 @@ double Reservoir_Outlet::velocity_meters_per_second(reservoir_parameters &parame
         velocity_meters_per_second_local = max_velocity_meters_per_second;
 
         //TODO: Return appropriate warning
-        std::__1::cout
+        std::cout
                 << "WARNING: Nonlinear reservoir calculated an outlet velocity over max velocity, and therefore "
                 << "set the outlet velocity to max velocity."
-                << std::__1::endl;
+                << std::endl;
     }
 
     //Return the velocity in meters per second of the discharge through the outlet

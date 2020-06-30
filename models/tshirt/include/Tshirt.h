@@ -1,6 +1,7 @@
 #ifndef TSHIRT_H
 #define TSHIRT_H
 
+#include "all.h"
 #include "schaake_partitioning.hpp"
 #include "Constants.h"
 #include "reservoir/Nonlinear_Reservoir.hpp"
