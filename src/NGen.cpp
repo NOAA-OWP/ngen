@@ -1,9 +1,11 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <unordered_map>
 
 #include <FeatureBuilder.hpp>
 #include <FeatureVisitor.hpp>
+#include "features/Features.hpp"
 
 #include <HY_HydroNexus.hpp>
 #include <HY_Catchment.hpp>
@@ -67,6 +69,9 @@ std::unordered_map<std::string, std::string> catchment_to_nexus;
 std::unordered_map<std::string, std::string> nexus_to_catchment;
 std::unordered_map<std::string, std::string> nexus_from_catchment;
 std::unordered_map<std::string, std::vector<double>> output_map;
+
+std::unordered_map<std::string, std::ofstream> catchment_outfiles;
+std::unordered_map<std::string, std::ofstream> nexus_outfiles;
 
 //TODO move catchment int identity to relization, and update nexus to use string id
 std::unordered_map<std::string, int> catchment_id;
@@ -132,7 +137,7 @@ int main(int argc, char *argv[]) {
     std::cout << "Hello there " << ngen_VERSION_MAJOR << "."
               << ngen_VERSION_MINOR << "."
               << ngen_VERSION_PATCH << std::endl;
-
+    std::ios::sync_with_stdio(false);
     std::string start_time = "2015-12-01 00:00:00";
     std::string end_time = "2015-12-30 23:00:00";
 
@@ -189,6 +194,7 @@ int main(int argc, char *argv[]) {
       std::string feat_id = feature->get_id();
 
       if( feat_id.substr(0, 3) == "cat" ){
+        catchment_outfiles.emplace(feat_id, std::ofstream(feature->get_id()+"_output.csv", std::ios::trunc));
         //Create catchment realization, add to map
         forcing_params forcing_p(forcing_paths[feat_id], start_time, end_time);
         if (feature->get_property("realization").as_string() == "hymod") {
@@ -220,6 +226,8 @@ int main(int argc, char *argv[]) {
       }else{
         //Create nexus realization, add to map
         int num = std::stoi( feat_id.substr(4) );
+        nexus_outfiles[feat_id] = std::ofstream("./"+feature->get_id()+"_output.csv", std::ios::trunc);
+
         nexus_realizations[feat_id] = std::make_unique<HY_PointHydroNexus>(
                                       HY_PointHydroNexus(num, feat_id,
                                                          feature->get_number_of_destination_features()));
@@ -240,34 +248,41 @@ int main(int argc, char *argv[]) {
     }
     std::cout<<"Running Models"<<std::endl;
     //Now loop some time, iterate catchments, do stuff for 720 hourly time steps
-    for(int time_step = 0; time_step < 100; time_step++)
+    for(int time_step = 0; time_step < 720; time_step++)
     {
       std::cout<<"Time step "<<time_step<<std::endl;
       for(auto &catchment: catchment_realizations)
       {
-        if(catchment.first == "cat-88" || catchment.first == "cat-89")
+        if(true || catchment.first == "cat-89")// || catchment.first == "cat-88")
         {
         //Get response for an hour (3600 seconds) time step
         double response = catchment.second->get_response(0, time_step, 3600.0, &pdm_et_data);
 
         std::cout<<"\tCatchment "<<catchment.first<<" contributing "<<response<<" m/s to "<<catchment_to_nexus[catchment.first]<<std::endl;
-
+        catchment_outfiles[catchment.first] << time_step <<", "<<response<<std::endl;
+        response = response * boost::geometry::area(nexus_collection->get_feature(catchment.first)->geometry<geojson::multipolygon_t>());
         nexus_realizations[ catchment_to_nexus[catchment.first] ]->add_upstream_flow(response, catchment_id[catchment.first], time_step);
       }
       }
+
       for(auto &nexus: nexus_realizations)
       {
-        if(nexus.first == "nex-92"){
+        if(true || nexus.first == "nex-92"){
         //TODO this ID isn't all that important is it?  And really it should connect to
         //the downstream waterbody the way we are using it, so consider if this is needed
         //it works for now though, so keep it
         int id = catchment_id[nexus_from_catchment[nexus.first]];
         double contribution_at_t = nexus_realizations[nexus.first]->get_downstream_flow(id, time_step, 100.0);
-        std::cout<<"\tNexus "<<nexus.first<<" has "<<contribution_at_t<<std::endl;
-        output_map[nexus.first].push_back(contribution_at_t);
+        if(nexus_outfiles[nexus.first].is_open())
+        {
+          nexus_outfiles[nexus.first] << time_step <<", "<<contribution_at_t<<std::endl;
         }
+        std::cout<<"\tNexus "<<nexus.first<<" has "<<contribution_at_t<<" m^3/s"<<std::endl;
+        output_map[nexus.first].push_back(contribution_at_t);
+      }
       }
     }
+
     /*
         The basic driving algorithm looks something like this:
 
