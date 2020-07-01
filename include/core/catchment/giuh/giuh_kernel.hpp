@@ -72,13 +72,14 @@ namespace giuh {
             interpolation_regularity_seconds = regularity_seconds;
         }
 
-    private:
+    protected:
         /** Main catchment identifier, as a string. */
         std::string catchment_id;
         /**
          * Associated COMID that is the look-up key for the GIUH serial data used to create this object, as a string.
          */
         std::string comid;
+    private:
         /**
          * The regularity (i.e., time between each increment) used to interpolate and produce CDF ordinates, in seconds.
          */
