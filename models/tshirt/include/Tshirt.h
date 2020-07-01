@@ -77,24 +77,41 @@ namespace tshirt {
          */
         double calc_soil_field_capacity_storage();
 
+        /**
+         * Return the smart pointer to the tshirt::tshirt_model struct for holding this object's current state.
+         *
+         * @return The smart pointer to the tshirt_model struct for holding this object's current state.
+         */
         shared_ptr<tshirt_state> get_current_state();
 
+        /**
+         * Return the shared pointer to the tshirt::tshirt_fluxes struct for holding this object's current fluxes.
+         *
+         * @return The shared pointer to the tshirt_fluxes struct for holding this object's current fluxes.
+         */
         shared_ptr<tshirt_fluxes> get_fluxes();
 
         double get_mass_check_error_bound();
 
-        int mass_check(double input_flux_meters, double timestep_seconds);
+        /**
+         * Check that mass was conserved by the model's calculations of the current time step.
+         *
+         * @param input_storage_m The amount of water input to the system at the time step, in meters.
+         * @param timestep_s The size of the time step, in seconds.
+         * @return The appropriate code value indicating whether mass was conserved in the current time step's calculations.
+         */
+        int mass_check(double input_storage_m, double timestep_s);
 
         /**
          * Run the model to one time step, after performing initial housekeeping steps via a call to
          * `manage_state_before_next_time_step_run`.
          *
          * @param dt the time step
-         * @param input_flux_meters the amount water entering the system this time step, in meters
+         * @param input_storage_m the amount water entering the system this time step, in meters
          * @param et_params ET parameters struct
          * @return
          */
-        int run(double dt, double input_flux_meters, shared_ptr<pdm03_struct> et_params);
+        int run(double dt, double input_storage_m, shared_ptr<pdm03_struct> et_params);
 
     protected:
 
@@ -111,6 +128,11 @@ namespace tshirt {
          */
         void manage_state_before_next_time_step_run();
 
+        /**
+         * Set the mass_check_error_bound member to the absolute value of the given parameter.
+         *
+         * @param error_bound The value used to set the mass_check_error_bound member.
+         */
         void set_mass_check_error_bound(double error_bound);
 
     private:
