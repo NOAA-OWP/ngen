@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <iostream>
 
 #include <boost/property_tree/ptree.hpp>
 
@@ -18,8 +19,26 @@ namespace geojson {
         Real,       /*!< Represents floating point numbers */
         String,     /*!< Represents text */
         Boolean,    /*!< Represents a true or false value */
+        List,       /*!< Represents a list of values */
         Object      /*!< Represents a nested map of properties */
     };
+
+    static inline std::string get_propertytype_name(PropertyType property_type) {
+        switch(property_type) {
+            case PropertyType::Natural:
+                return "Natural";
+            case PropertyType::Real:
+                return "Real";
+            case PropertyType::String:
+                return "String";
+            case PropertyType::Boolean:
+                return "Boolean";
+            case PropertyType::List:
+                return "List";
+            default:
+                return "Object";
+        }
+    }
 
     /**
      * Shorthand for a mapping between strings and properties
@@ -48,6 +67,7 @@ namespace geojson {
                         else {
                             bool is_numeric = true;
                             bool is_real = true;
+                            bool is_list = true;
                             bool decimal_already_hit = false;
 
                             for(int character_index = 0; character_index < value.length(); character_index++) {
@@ -92,10 +112,16 @@ namespace geojson {
                         }
                 }
                 else {
-                    // This isn't a terminal node, therefore represents an object
-                    type = PropertyType::Object;
+                    // This isn't a terminal node, therefore represents an object or array
                     for (auto &property : property_tree) {
-                        values.emplace(property.first, JSONProperty(property.first, property.second));
+                        if (property.first.empty() || type == PropertyType::List) {
+                            type = PropertyType::List;
+                            value_list.push_back(JSONProperty(value_key, property.second));
+                        }
+                        else {
+                            type = PropertyType::Object;
+                            values.emplace(property.first, JSONProperty(property.first, property.second));
+                        }
                     }
                 }
             }
@@ -179,9 +205,89 @@ namespace geojson {
              * @param value: The text that will be stored
              */
             JSONProperty(std::string value_key, std::string value) {
-                type = PropertyType::String;
                 key = value_key;
                 string = value;
+
+                if (value == "true" || value == "false") {
+                    type = PropertyType::Boolean;
+                    boolean = value == "true";
+                }
+                else {
+                    bool is_numeric = true;
+                    bool is_real = true;
+                    bool decimal_already_hit = false;
+
+                    for(int character_index = 0; character_index < value.length(); character_index++) {
+                        char character = value[character_index];
+
+                        // If the first character is a '0' or isn't a digit, the whole value cannot be a number
+                        if (character_index == 0 && character == '0') {
+                            is_numeric = false;
+                        }
+                        else if (character != '.' && !std::isdigit(character)) {
+                            // If this character isn't a decimal point and isn't a digit, the whole value cannot be a number
+                            is_numeric = false;
+                            is_real = false;
+                            break;
+                        }
+                        else if (character == '.' && decimal_already_hit) {
+                            // If this character is a decimal point, but we've already seen one, the whole value cannot be a number
+                            is_real = false;
+                            break;
+                        }
+                        else if (character == '.') {
+                            // If a decimal point is seen, the whole value cannot be an integer
+                            is_numeric = false;
+                            decimal_already_hit = true;
+                        }
+                    }
+
+                    // If the value can be represented as a whole number, we want to go with that
+                    if (is_numeric) {
+                        type = PropertyType::Natural;
+                        natural_number = std::stol(value);
+                    }
+                    else if (is_real) {
+                        type = PropertyType::Real;
+                        real_number = std::stod(value);
+                    }
+                    else {
+                        // Otherwise we'll store everything as a raw string
+                        type = PropertyType::String;
+                        string = value;
+                    }
+                }
+            }
+
+            JSONProperty(std::string value_key, std::vector<JSONProperty> properties) : type(PropertyType::List), key(value_key), value_list(properties) {}
+
+            JSONProperty(const JSONProperty &original) {
+                type = original.type;
+                key = original.key;
+
+                switch (type) {
+                    case PropertyType::Boolean:
+                        boolean = original.boolean;
+                        break;
+                    case PropertyType::Natural:
+                        natural_number = original.natural_number;
+                        break;
+                    case PropertyType::Real:
+                        real_number = original.real_number;
+                        break;
+                    case PropertyType::String:
+                        string = original.string;
+                        break;
+                    case PropertyType::List:
+                        for (JSONProperty property : original.value_list) {
+                            value_list.push_back(JSONProperty(property));
+                        }
+                        break;
+                    default:
+                        for (std::pair<std::string, JSONProperty> pair : original.values) {
+                            values.emplace(pair.first, JSONProperty(pair.second));
+                        }
+                }
             }
 
             /**
@@ -233,6 +339,16 @@ namespace geojson {
 
             bool as_boolean() const;
 
+            std::vector<JSONProperty> as_list() const;
+
+            std::vector<long> as_natural_vector() const;
+
+            std::vector<double> as_real_vector() const;
+
+            std::vector<std::string> as_string_vector() const;
+
+            std::vector<bool> as_boolean_vector() const;
+
             std::string as_string() const;
 
             JSONProperty at(std::string key) const;
@@ -280,6 +396,7 @@ namespace geojson {
             std::string string;
             bool boolean;
             PropertyMap values;
+            std::vector<JSONProperty> value_list;
     };
 }
 #endif // GEOJSON_JSONPROPERTY_H

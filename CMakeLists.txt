@@ -45,6 +45,7 @@ add_executable(ngen
         )
 
 # Find the Boost library and configure usage
+find_package(Boost COMPONENTS system filesystem REQUIRED)
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
@@ -69,8 +70,8 @@ target_include_directories(ngen PUBLIC
         )
 
 add_subdirectory("src/core")
-add_subdirectory("src/realizations/catchment")
 add_subdirectory("src/geojson")
+add_subdirectory("src/realizations/catchment")
 add_subdirectory("src/models/tshirt")
 add_subdirectory("src/models/kernels/reservoir")
 #add_subdirectory("src/forcing")

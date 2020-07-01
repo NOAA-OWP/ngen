@@ -69,6 +69,12 @@ add_automated_test(
 )
 
 add_automated_test(
+    test_realization_config
+    realizations/catchments/Realization_Config_Test.cpp
+    realizations/catchments/Realization_Config_Reader_Test.cpp
+)
+
+add_automated_test(
         test_giuh
         core/catchment/giuh/GIUH_Test.cpp
 )
