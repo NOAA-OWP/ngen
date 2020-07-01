@@ -198,20 +198,18 @@ namespace tshirt {
     }
 
     /**
-     * Return this object's member that is the smart shared pointer to the ``tshirt_model`` struct for holding the
-     * object's current state.
+     * Return the smart pointer to the tshirt::tshirt_model struct for holding this object's current state.
      *
-     * @return The smart shared pointer to the ``tshirt_model`` struct for holding this object's current state.
+     * @return The smart pointer to the tshirt_model struct for holding this object's current state.
      */
     shared_ptr<tshirt_state> tshirt_model::get_current_state() {
         return current_state;
     }
 
     /**
-     * Return this object's member that is the smart shared pointer to the ``tshirt_fluxes`` struct for holding the
-     * object's current fluxes.
+     * Return the shared pointer to the tshirt::tshirt_fluxes struct for holding this object's current fluxes.
      *
-     * @return The smart shared pointer to the ``tshirt_fluxes`` struct for holding this object's current fluxes.
+     * @return The shared pointer to the tshirt_fluxes struct for holding this object's current fluxes.
      */
     shared_ptr<tshirt_fluxes> tshirt_model::get_fluxes() {
         return fluxes;
@@ -230,32 +228,32 @@ namespace tshirt {
     /**
      * Check that mass was conserved by the model's calculations of the current time step.
      *
-     * @param input_flux_meters The amount of water input to the system at the time step, in meters.
-     * @param timestep_seconds The size of the time step, in seconds.
+     * @param input_storage_m The amount of water input to the system at the time step, in meters.
+     * @param timestep_s The size of the time step, in seconds.
      * @return The appropriate code value indicating whether mass was conserved in the current time step's calculations.
      */
-    int tshirt_model::mass_check(double input_flux_meters, double timestep_seconds) {
+    int tshirt_model::mass_check(double input_storage_m, double timestep_s) {
         // TODO: change this to have those be part of state somehow, either of object or struct, or just make private
         // Initialize both mass values from current and next states storage
-        double previous_mass_meters = previous_state->soil_storage_meters + previous_state->groundwater_storage_meters;
-        double current_mass_meters = current_state->soil_storage_meters + current_state->groundwater_storage_meters;
+        double previous_storage_m = previous_state->soil_storage_meters + previous_state->groundwater_storage_meters;
+        double current_storage_m = current_state->soil_storage_meters + current_state->groundwater_storage_meters;
 
         // Add the masses of the Nash reservoirs before and after the time step
         for (unsigned int i = 0; i < previous_state->nash_cascade_storeage_meters.size(); ++i) {
-            previous_mass_meters += previous_state->nash_cascade_storeage_meters[i];
-            current_mass_meters += current_state->nash_cascade_storeage_meters[i];
+            previous_storage_m += previous_state->nash_cascade_storeage_meters[i];
+            current_storage_m += current_state->nash_cascade_storeage_meters[i];
         }
 
         // Increase the initial mass by input value
-        previous_mass_meters += input_flux_meters;
+        previous_storage_m += input_storage_m;
 
         // Increase final mass by calculated fluxes that leave the system (i.e., not the percolation flow)
-        current_mass_meters += fluxes->et_loss_meters;
-        current_mass_meters += fluxes->surface_runoff_meters_per_second * timestep_seconds;
-        current_mass_meters += fluxes->soil_lateral_flow_meters_per_second * timestep_seconds;
-        current_mass_meters += fluxes->groundwater_flow_meters_per_second * timestep_seconds;
+        current_storage_m += fluxes->et_loss_meters;
+        current_storage_m += fluxes->surface_runoff_meters_per_second * timestep_s;
+        current_storage_m += fluxes->soil_lateral_flow_meters_per_second * timestep_s;
+        current_storage_m += fluxes->groundwater_flow_meters_per_second * timestep_s;
 
-        double abs_mass_diff_meters = abs(previous_mass_meters - current_mass_meters);
+        double abs_mass_diff_meters = abs(previous_storage_m - current_storage_m);
         return abs_mass_diff_meters > get_mass_check_error_bound() ? tshirt::TSHIRT_MASS_BALANCE_ERROR
                                                                    : tshirt::TSHIRT_NO_ERROR;
     }
@@ -265,19 +263,20 @@ namespace tshirt {
      * `manage_state_before_next_time_step_run`.
      *
      * @param dt the time step size in seconds
-     * @param input_flux_meters the amount water entering the system this time step, in meters
+     * @param input_storage_m the amount water entering the system this time step, in meters
      * @return
      */
-    int tshirt_model::run(double dt, double input_flux_meters, shared_ptr<pdm03_struct> et_params) {
+    int tshirt_model::run(double dt, double input_storage_m, shared_ptr<pdm03_struct> et_params) {
         // Do resetting/housekeeping for new calculations and new state values
         manage_state_before_next_time_step_run();
 
-        double soil_column_moisture_deficit =
+        // In meters
+        double soil_column_moisture_deficit_m =
                 model_params.max_soil_storage_meters - previous_state->soil_storage_meters;
 
         // Perform Schaake partitioning, passing some declared references to hold the calculated values.
         double surface_runoff, subsurface_infiltration_flux;
-        Schaake_partitioning_scheme(dt, model_params.Cschaake, soil_column_moisture_deficit, input_flux_meters,
+        Schaake_partitioning_scheme(dt, model_params.Cschaake, soil_column_moisture_deficit_m, input_storage_m,
                                     &surface_runoff, &subsurface_infiltration_flux);
 
         double subsurface_excess, nash_subsurface_excess;
@@ -291,11 +290,11 @@ namespace tshirt {
 
         // TODO: make sure ET doesn't need to be taken out sooner
         // Get new soil storage amount calculated by reservoir
-        double new_soil_storage = soil_reservoir.get_storage_height_meters();
+        double new_soil_storage_m = soil_reservoir.get_storage_height_meters();
         // Calculate and store ET
-        fluxes->et_loss_meters = calc_evapotranspiration(new_soil_storage, et_params);
+        fluxes->et_loss_meters = calc_evapotranspiration(new_soil_storage_m, et_params);
         // Update the current soil storage, accounting for ET
-        current_state->soil_storage_meters = new_soil_storage - fluxes->et_loss_meters;
+        current_state->soil_storage_meters = new_soil_storage_m - fluxes->et_loss_meters;
 
         // Cycle through lateral flow Nash cascade of nonlinear reservoirs
         // loop essentially copied from Hymod logic, but with different variable names
@@ -307,13 +306,14 @@ namespace tshirt {
             current_state->nash_cascade_storeage_meters[i] = soil_lf_nash_res[i]->get_storage_height_meters();
         }
 
+        // Get response and update gw res state
         double excess_gw_water;
         fluxes->groundwater_flow_meters_per_second = groundwater_reservoir.response_meters_per_second(Qperc, dt,
                                                                                                excess_gw_water);
-        // update state
+        // update local copy of state
         current_state->groundwater_storage_meters = groundwater_reservoir.get_storage_height_meters();
 
-        // record other fluxes
+        // record other fluxes in internal copy
         fluxes->soil_lateral_flow_meters_per_second = Qlf;
         fluxes->soil_percolation_flow_meters_per_second = Qperc;
 
@@ -322,7 +322,7 @@ namespace tshirt {
         fluxes->surface_runoff_meters_per_second = surface_runoff + (subsurface_excess / dt) + (excess_gw_water / dt);
         //fluxes->surface_runoff_meters_per_second = surface_runoff;
 
-        return mass_check(input_flux_meters, dt);
+        return mass_check(input_storage_m, dt);
     }
 
     /**
