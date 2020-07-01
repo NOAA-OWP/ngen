@@ -1,6 +1,6 @@
 #include "giuh_kernel.hpp"
 #include "Tshirt_Realization.hpp"
-
+#include "TshirtErrorCodes.h"
 using namespace realization;
 
 Tshirt_Realization::Tshirt_Realization(
@@ -107,4 +107,3 @@ double Tshirt_Realization::get_response(double input_flux, time_step_t t,
     return fluxes[t]->soil_lateral_flow_meters_per_second + fluxes[t]->groundwater_flow_meters_per_second +
            giuh;
 }
-
