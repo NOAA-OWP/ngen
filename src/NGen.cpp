@@ -226,7 +226,7 @@ int main(int argc, char *argv[]) {
       }else{
         //Create nexus realization, add to map
         int num = std::stoi( feat_id.substr(4) );
-        nexus_outfiles[feat_id] = std::ofstream("./"+feature->get_id()+"_output.csv", std::ios::trunc);
+        nexus_outfiles[feat_id].open("./"+feature->get_id()+"_output.csv", std::ios::trunc);
 
         nexus_realizations[feat_id] = std::make_unique<HY_PointHydroNexus>(
                                       HY_PointHydroNexus(num, feat_id,
