@@ -43,7 +43,7 @@ const std::string EXAMPLE = "{ "
                 "\"crosswalk_path\": \"./data/sugar_creek/crosswalk_subset.json\" "
             "}, "
             "\"forcing\": { "
-                "\"path\": \"./data/sugar_creek/forcing/cat-89_2015-12-01 00:00:00_2015-12-30 23:00:00.csv\", "
+                "\"path\": \"./data/sugar_creek/forcing/cat-89_2015-12-01 00_00_00_2015-12-30 23_00_00.csv\", "
                 "\"start_time\": \"2015-12-01 00:00:00\", "
                 "\"end_time\": \"2015-12-30 23:00:00\" "
             "} "
@@ -170,7 +170,7 @@ TEST_F(Realization_Config_Test, forcing) {
 
     forcing_params params = config->get_forcing_parameters();
 
-    ASSERT_EQ(params.path, "./data/sugar_creek/forcing/cat-89_2015-12-01 00:00:00_2015-12-30 23:00:00.csv");
+    ASSERT_EQ(params.path, "./data/sugar_creek/forcing/cat-89_2015-12-01 00_00_00_2015-12-30 23_00_00.csv");
     ASSERT_EQ(params.start_time, "2015-12-01 00:00:00");
     ASSERT_EQ(params.end_time, "2015-12-30 23:00:00");
 }

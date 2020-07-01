@@ -76,7 +76,7 @@
                     "crosswalk_path": "./data/sugar_creek/crosswalk_subset.json"
                 },
                 "forcing": {
-                    "path": "./data/sugar_creek/forcing/cat-88_2015-12-01 00:00:00_2015-12-30 23:00:00.csv",
+                    "path": "./data/sugar_creek/forcing/cat-88_2015-12-01 00_00_00_2015-12-30 23_00_00.csv",
                     "start_time": "2015-12-01 00:00:00",
                     "end_time": "2015-12-30 23:00:00"
                 }
@@ -98,7 +98,7 @@
                 "t": 0
             },
             "forcing": {
-                "path": "./data/sugar_creek/forcing/cat-89_2015-12-01 00:00:00_2015-12-30 23:00:00.csv",
+                "path": "./data/sugar_creek/forcing/cat-89_2015-12-01 00_00_00_2015-12-30 23_00_00.csv",
                 "start_time": "2015-12-01 00:00:00",
                 "end_time": "2015-12-30 23:00:00"
             }
