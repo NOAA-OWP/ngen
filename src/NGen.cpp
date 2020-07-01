@@ -81,6 +81,7 @@ pdm03_struct pdm_et_data;
 
 //Define tshirt params
 //{maxsmc, wltsmc, satdk, satpsi, slope, b, multiplier, aplha_fx, klf, kn, nash_n, Cgw, expon, max_gw_storage}
+/* Based on freds equivilant doc
 tshirt::tshirt_params tshirt_params{
   0.81,   //maxsmc FWRFH
   1.0,    //wltsmc  FIXME NOT USED IN TSHIRT?!?!
@@ -96,6 +97,25 @@ tshirt::tshirt_params tshirt_params{
   1.08,    //Cgw C? FWRFH
   6.0,    //expon FWRFH
   16.0   //max_gw_storage Sgwmax FWRFH
+};
+*/
+//Based on Freds t-shirt_0.99.c code
+tshirt::tshirt_params tshirt_params{
+  0.439,   //maxsmc FWRFH
+  0.066,  //wltsmc  from fred_t-shirt.c FIXME NOT USED IN TSHIRT?!?!
+  3.38e-06,   //satdk FWRFH
+  0.355,    //satpsi    FIXME what is this and what should its value be?
+  1.0,   //slope
+  4.05,      //b bexp? FWRFH
+  0.0,    //multipier  FIXMME (lksatfac)
+  0.33,    //aplha_fc   field_capacity_atm_press_fraction
+  //Reservoir params, may need time adjustments?
+  0.01,    //Klf lateral flow nash coefficient?
+  0.03,    //Kn Kn	0.001-0.03 F Nash Cascade coeeficient
+  2,      //number_lateral_flow_nash_reservoirs
+  0.01,    //fred_t-shirt gw res coeeficient (per h)
+  6.0,    //expon FWRFH
+  1.0   //max_gw_storage Sgwmax FWRFH
 };
 
 //FIXME get real values for GIUH/Catchments
@@ -143,8 +163,8 @@ int main(int argc, char *argv[]) {
     double max_storage = 1000.0;
     double a = 1.0;
     double b = 10.0;
-    double Ks = 0.1;
-    double Kq = 0.01;
+    double Ks = 0.1*3600/86400; //Implicitly connected to time used for DAILY dt need to account for hourly dt
+    double Kq = 0.01*3600/86400; //Implicitly connected to time used for DAILY dt need to account for hourly dt
     long n = 3;
     double t = 0;
     time_step_t dt = 3600; //tshirt time step
@@ -178,11 +198,11 @@ int main(int argc, char *argv[]) {
         }
         else if(feature->get_property("realization").as_string() == "tshirt") {
           //Create the tshirt instance
-          vector<double> nash_storage = {1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0};
+          vector<double> nash_storage = {0.0, 0.0};//, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0};
 
           catchment_realizations[feature->get_id()] = std::make_unique<_tshirt>(forcing_p,
-                 1.0, //soil_storage_meters
-                 1.0, //groundwater_storage_meters
+                 tshirt_params.max_soil_storage_meters*0.667, //soil_storage_meters
+                 tshirt_params.max_groundwater_storage_meters*0.5, //groundwater_storage_meters
                  example_catchment_id, //used to cross-reference the COMID, need to look up the catchments GIUH data
                  giuh_json_reader,     //used to actually lookup GIUH data and create a giuh_kernel obj for catchment
                  tshirt_params, nash_storage, dt);
