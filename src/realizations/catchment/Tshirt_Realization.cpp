@@ -97,11 +97,14 @@ double Tshirt_Realization::get_response(double input_flux, time_step_t t,
     double precip = this->forcing.get_next_hourly_precipitation_meters_per_second();
     //FIXME should this run "daily" or hourly (t) which should really be dt
     //Do we keep an "internal dt" i.e. this->dt and reconcile with t?
-    model->run(t, precip, et_params);
+    int error = model->run(t, precip*dt/1000, et_params);
+    if(error == tshirt::TSHIRT_MASS_BALANCE_ERROR){
+      std::cout<<"WARNING Tshirt_Realization::model mass balance error"<<std::endl;
+    }
     state[t+1] = model->get_current_state();
     fluxes[t] = model->get_fluxes();
-
+    double giuh = giuh_kernel->calc_giuh_output(t, fluxes[t]->surface_runoff_meters_per_second);
     return fluxes[t]->soil_lateral_flow_meters_per_second + fluxes[t]->groundwater_flow_meters_per_second +
-           giuh_kernel->calc_giuh_output(t, fluxes[t]->surface_runoff_meters_per_second);
+           giuh;
 }
 
