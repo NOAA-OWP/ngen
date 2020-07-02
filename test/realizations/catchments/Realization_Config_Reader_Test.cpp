@@ -165,7 +165,7 @@ TEST_F(Realization_Config_Reader_Test, global) {
 
     realization::Realization_Config config = reader->get("cat-87");
 
-    std::unique_ptr<realization::Tshirt_Realization> tshirt = config->get_tshirt();
+    std::shared_ptr<realization::Tshirt_Realization> tshirt = config->get_tshirt();
 
     double input_flux = 10.0;
     time_step_t timestep = 3600;
@@ -192,7 +192,7 @@ TEST_F(Realization_Config_Reader_Test, cat88) {
 
     realization::Realization_Config config = reader->get("cat-88");
 
-    std::unique_ptr<realization::Tshirt_Realization> tshirt = config->get_tshirt();
+    std::shared_ptr<realization::Tshirt_Realization> tshirt = config->get_tshirt();
 
     double input_flux = 10.0;
     time_step_t timestep = 3600;
@@ -219,7 +219,7 @@ TEST_F(Realization_Config_Reader_Test, cat89) {
 
     realization::Realization_Config config = reader->get("cat-89");
 
-    std::unique_ptr<Simple_Lumped_Model_Realization> simple_lumped = config->get_simple_lumped();
+    std::shared_ptr<Simple_Lumped_Model_Realization> simple_lumped = config->get_simple_lumped();
 
     double input_flux = 10.0;
     time_step_t timestep = 3600;
