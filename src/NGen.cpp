@@ -67,7 +67,6 @@ void prepare_features(geojson::GeoJSON& nexus, geojson::GeoJSON& catchments, boo
    }//end if(validate)
 }
 
-std::unordered_map<std::string, std::unique_ptr<HY_CatchmentRealization>>  catchment_realizations;
 std::unordered_map<std::string, std::unique_ptr<HY_HydroNexus>> nexus_realizations;
 std::unordered_map<std::string, std::string> catchment_to_nexus;
 std::unordered_map<std::string, std::string> nexus_to_catchment;
@@ -80,26 +79,27 @@ std::unordered_map<std::string, std::ofstream> nexus_outfiles;
 //TODO move catchment int identity to relization, and update nexus to use string id
 std::unordered_map<std::string, int> catchment_id;
 
-// create the struct used for ET
-pdm03_struct pdm_et_data;
 
-//FIXME get real values for GIUH/Catchments
-std::vector<double> cdf_times {0, 300, 600, 900, 1200};//, 1500, 1800, 2100, 2400, 2700};
-std::vector<double> cdf_freq {0.00, 0.38, 0.59, 0.03, 0.0};
-
-// Now doing this via json reader
-//giuh::giuh_kernel giuh_k("cat-88", cdf_times, cdf_freq);
-//unique_ptr<giuh::giuh_kernel> giuh_example = make_unique<giuh::giuh_kernel>(giuh_k);
+pdm03_struct get_et_params() {
+  // create the struct used for ET
+    pdm03_struct pdm_et_data;
+    pdm_et_data.scaled_distribution_fn_shape_parameter = 1.3;
+    pdm_et_data.vegetation_adjustment = 0.99;
+    pdm_et_data.model_time_step = 0.0;
+    pdm_et_data.max_height_soil_moisture_storerage_tank = 400.0;
+    pdm_et_data.maximum_combined_contents = pdm_et_data.max_height_soil_moisture_storerage_tank /
+                                            (1.0 + pdm_et_data.scaled_distribution_fn_shape_parameter);
+    return pdm_et_data;
+}
 
 typedef Simple_Lumped_Model_Realization _hymod;
 typedef realization::Tshirt_Realization _tshirt;
+
 int main(int argc, char *argv[]) {
     std::cout << "Hello there " << ngen_VERSION_MAJOR << "."
               << ngen_VERSION_MINOR << "."
               << ngen_VERSION_PATCH << std::endl;
     std::ios::sync_with_stdio(false);
-    std::string start_time = "2015-12-01 00:00:00";
-    std::string end_time = "2015-12-30 23:00:00";
 
 
     //Read the collection of nexus
@@ -119,12 +119,6 @@ int main(int argc, char *argv[]) {
     //TODO don't really need catchment_collection once catchments are added to nexus collection
     catchment_collection.reset();
 
-    pdm_et_data.scaled_distribution_fn_shape_parameter = 1.3;
-    pdm_et_data.vegetation_adjustment = 0.99;
-    pdm_et_data.model_time_step = 0.0;
-    pdm_et_data.max_height_soil_moisture_storerage_tank = 400.0;
-    pdm_et_data.maximum_combined_contents = pdm_et_data.max_height_soil_moisture_storerage_tank /
-                                            (1.0 + pdm_et_data.scaled_distribution_fn_shape_parameter);
 
     std::map<std::string, realization::Realization_Config> catchment_configs;
 
@@ -170,12 +164,13 @@ int main(int argc, char *argv[]) {
 
     }
     std::cout<<"Running Models"<<std::endl;
+
+    pdm03_struct pdm_et_data = get_et_params();
+
     //Now loop some time, iterate catchments, do stuff for 720 hourly time steps
-    //for(int time_step = 0; time_step < 720; time_step++)
-    for(int time_step = 0; time_step < 4; time_step++)
+    for(int time_step = 0; time_step < 720; time_step++)
     {
       std::cout<<"Time step "<<time_step<<std::endl;
-      /*issue may be GIUH not matching correctly*/
       for (std::pair<std::string, realization::Realization_Config> realization_config_pair : catchment_configs) {
         double response = realization_config_pair.second->get_response(0, time_step, 3600.0, &pdm_et_data);
         std::cout<<"\tCatchment "<<realization_config_pair.first<<" contributing "<<response<<" m/s to "<<catchment_to_nexus[realization_config_pair.first]<<std::endl;

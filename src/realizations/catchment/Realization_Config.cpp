@@ -102,8 +102,8 @@ std::shared_ptr<Tshirt_Realization> Realization_Config_Base::get_tshirt() {
         this->get_option("max_groundwater_storage_meters").as_real_number()   //max_gw_storage Sgwmax FWRFH
     };
 
-    double soil_storage_meters = tshirt_params.max_soil_storage_meters * this->get_option("soil_storage_meters").as_real_number();
-    double ground_water_storage = tshirt_params.max_groundwater_storage_meters * this->get_option("groundwater_storage_meters").as_real_number();
+    double soil_storage_meters = tshirt_params.max_soil_storage_meters * this->get_option("soil_storage_percentage").as_real_number();
+    double ground_water_storage = tshirt_params.max_groundwater_storage_meters * this->get_option("groundwater_storage_percentage").as_real_number();
     return std::make_shared<Tshirt_Realization>(        
             this->get_forcing_parameters(),
             soil_storage_meters, //soil_storage_meters
