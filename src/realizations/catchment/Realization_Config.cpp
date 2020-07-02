@@ -13,7 +13,7 @@ using namespace realization;
 
 namespace fs = boost::filesystem;
 
-std::unique_ptr<Simple_Lumped_Model_Realization> Realization_Config_Base::get_simple_lumped() {
+std::shared_ptr<Simple_Lumped_Model_Realization> Realization_Config_Base::get_simple_lumped() {
     std::vector<std::string> missing_parameters;
     for(std::string parameter : REQUIRED_HYMOD_PARAMETERS) {
         if (not this->has_option(parameter)) {
@@ -35,23 +35,35 @@ std::unique_ptr<Simple_Lumped_Model_Realization> Realization_Config_Base::get_si
         throw std::runtime_error(message);
     }
 
-    return std::make_unique<Simple_Lumped_Model_Realization>(
+    double seconds_to_day = 3600.0/86400.0;
+
+    double storage = this->get_option("storage").as_real_number();
+    double max_storage = this->get_option("max_storage").as_real_number();
+    double a = this->get_option("a").as_real_number();
+    double b = this->get_option("b").as_real_number();
+    double Ks = this->get_option("Ks").as_real_number() * seconds_to_day; //Implicitly connected to time used for DAILY dt need to account for hourly dt
+    double Kq = this->get_option("Kq").as_real_number() * seconds_to_day; //Implicitly connected to time used for DAILY dt need to account for hourly dt
+    long n = this->get_option("n").as_natural_number();
+    double t = this->get_option("t").as_real_number();
+
+    std::vector<double> sr_tmp = {1.0, 1.0, 1.0};
+    return std::make_shared<Simple_Lumped_Model_Realization>(
         Simple_Lumped_Model_Realization(
             this->get_forcing_parameters(),
-            this->options.at("storage").as_real_number(),
-            this->options.at("max_storage").as_real_number(),
-            this->options.at("a").as_real_number(),
-            this->options.at("b").as_real_number(),
-            this->options.at("Ks").as_real_number(),
-            this->options.at("Kq").as_real_number(),
-            this->options.at("n").as_natural_number(),
-            this->options.at("sr").as_real_vector(),
-            this->options.at("t").as_real_number()
+            storage,
+            max_storage,
+            a,
+            b,
+            Ks,
+            Kq,
+            n,
+            sr_tmp,
+            t
         )
     );
 }
 
-std::unique_ptr<Tshirt_Realization> Realization_Config_Base::get_tshirt() {
+std::shared_ptr<Tshirt_Realization> Realization_Config_Base::get_tshirt() {
     std::vector<std::string> missing_parameters;
     for(std::string parameter : REQUIRED_TSHIRT_PARAMETERS) {
         if (not this->has_option(parameter)) {
@@ -73,28 +85,34 @@ std::unique_ptr<Tshirt_Realization> Realization_Config_Base::get_tshirt() {
         throw std::runtime_error(message);
     }
 
-    return std::make_unique<Tshirt_Realization>(        
-        this->get_forcing_parameters(),
-        this->options.at("soil_storage_meters").as_real_number(),
-        this->options.at("groundwater_storage_meters").as_real_number(),
-        this->id,
-        *this->get_giuh_reader(),
-        this->options.at("maxsmc").as_real_number(),
-        this->options.at("wltsmc").as_real_number(),
-        this->options.at("satdk").as_real_number(),
-        this->options.at("satpsi").as_real_number(),
-        this->options.at("slope").as_real_number(),
-        this->options.at("scaled_distribution_fn_shape_parameter").as_real_number(),
-        this->options.at("multiplier").as_real_number(),
-        this->options.at("alpha_fc").as_real_number(),
-        this->options.at("Klf").as_real_number(),
-        this->options.at("Kn").as_real_number(),
-        this->options.at("nash_n").as_natural_number(),
-        this->options.at("Cgw").as_real_number(),
-        this->options.at("expon").as_real_number(),
-        this->options.at("max_groundwater_storage_meters").as_real_number(),
-        this->options.at("nash_storage").as_real_vector(),
-        this->options.at("timestep").as_natural_number()
+    tshirt::tshirt_params tshirt_params{
+        this->get_option("maxsmc").as_real_number(),   //maxsmc FWRFH
+        this->get_option("wltsmc").as_real_number(),  //wltsmc  from fred_t-shirt.c FIXME NOT USED IN TSHIRT?!?!
+        this->get_option("satdk").as_real_number(),   //satdk FWRFH
+        this->get_option("satpsi").as_real_number(),    //satpsi    FIXME what is this and what should its value be?
+        this->get_option("slope").as_real_number(),   //slope
+        this->get_option("scaled_distribution_fn_shape_parameter").as_real_number(),      //b bexp? FWRFH
+        this->get_option("multiplier").as_real_number(),    //multipier  FIXMME (lksatfac)
+        this->get_option("alpha_fc").as_real_number(),    //aplha_fc   field_capacity_atm_press_fraction
+        this->get_option("Klf").as_real_number(),    //Klf lateral flow nash coefficient?
+        this->get_option("Kn").as_real_number(),    //Kn Kn	0.001-0.03 F Nash Cascade coeeficient
+        static_cast<int>(this->get_option("nash_n").as_natural_number()),      //number_lateral_flow_nash_reservoirs
+        this->get_option("Cgw").as_real_number(),    //fred_t-shirt gw res coeeficient (per h)
+        this->get_option("expon").as_real_number(),    //expon FWRFH
+        this->get_option("max_groundwater_storage_meters").as_real_number()   //max_gw_storage Sgwmax FWRFH
+    };
+
+    double soil_storage_meters = tshirt_params.max_soil_storage_meters * this->get_option("soil_storage_meters").as_real_number();
+    double ground_water_storage = tshirt_params.max_groundwater_storage_meters * this->get_option("groundwater_storage_meters").as_real_number();
+    return std::make_shared<Tshirt_Realization>(        
+            this->get_forcing_parameters(),
+            soil_storage_meters, //soil_storage_meters
+            ground_water_storage, //groundwater_storage_meters
+            this->id, //used to cross-reference the COMID, need to look up the catchments GIUH data
+            *this->get_giuh_reader(),     //used to actually lookup GIUH data and create a giuh_kernel obj for catchment
+            tshirt_params,
+            this->get_option("nash_storage").as_real_vector(),
+            this->get_option("timestep").as_natural_number()
     );
 }
 
@@ -225,4 +243,26 @@ forcing_params Realization_Config_Base::get_forcing_parameters() {
     }
 
     throw std::runtime_error("Forcing data could not be found for '" + this->id + "' as '" + path.string() + "'");
+}
+
+double Realization_Config_Base::get_response(double input_flux, time_step_t t, time_step_t dt, void* et_params) {
+    return this->get_realization()->get_response(input_flux, t, dt, et_params);
+}
+
+std::shared_ptr<HY_CatchmentRealization> Realization_Config_Base::get_realization() {
+    if (this->realization == NULL) {
+        switch (this->realization_type)
+        {
+            case Realization_Type::TSHIRT:
+                this->realization = this->get_tshirt();
+                return this->realization;
+            case Realization_Type::SIMPLE_LUMPED:
+                this->realization = this->get_simple_lumped();
+                return this->realization;
+            default:
+                throw std::runtime_error("There is not a model connected for '" + get_realization_type_name(this->get_realization_type()) + "'");
+        }
+    }
+
+    return this->realization;
 }

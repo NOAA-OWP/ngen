@@ -123,7 +123,7 @@ namespace realization {
             Realization_Config assign_id(std::string new_id) {
                 return std::make_shared<Realization_Config_Base>(Realization_Config_Base(
                     new_id,
-                    *this
+                    this
                 ));
             }
 
@@ -131,9 +131,11 @@ namespace realization {
                 return this->realization_type;
             }
 
-            std::unique_ptr<Simple_Lumped_Model_Realization> get_simple_lumped();
+            std::shared_ptr<HY_CatchmentRealization> get_realization();
 
-            std::unique_ptr<Tshirt_Realization> get_tshirt();
+            std::shared_ptr<Simple_Lumped_Model_Realization> get_simple_lumped();
+
+            std::shared_ptr<Tshirt_Realization> get_tshirt();
 
             geojson::JSONProperty get_option(std::string option_name) const;
 
@@ -147,13 +149,15 @@ namespace realization {
 
             std::string get_id() const;
 
+            double get_response(double input_flux, time_step_t t, time_step_t dt, void* et_params);
+
         private:
-            Realization_Config_Base(std::string new_id, Realization_Config_Base original) {
+            Realization_Config_Base(std::string new_id, Realization_Config_Base *original) {
                 this->id = new_id;
-                this->options = original.options;
-                this->giuh = original.giuh;
-                this->forcing_parameters = original.forcing_parameters;
-                this->realization_type = original.realization_type;
+                this->options = original->options;
+                this->giuh = original->giuh;
+                this->forcing_parameters = original->forcing_parameters;
+                this->realization_type = original->realization_type;
             }
 
             std::shared_ptr<giuh::GiuhJsonReader> get_giuh_reader();
@@ -161,7 +165,8 @@ namespace realization {
             Realization_Type realization_type = Realization_Type::NONE;
             geojson::PropertyMap forcing_parameters;
             geojson::PropertyMap giuh;
-            std::string id; 
+            std::string id;
+            std::shared_ptr<HY_CatchmentRealization> realization = NULL;
     };
 
     static Realization_Config get_realizationconfig(std::string id, boost::property_tree::ptree &config, Realization_Config global = NULL) {
