@@ -186,7 +186,7 @@ TEST_F(Realization_Config_Test, tshirt) {
         config = realization::get_realizationconfig(child.first, child.second);
     }
 
-    std::unique_ptr<realization::Tshirt_Realization> tshirt = config->get_tshirt();
+    std::shared_ptr<realization::Tshirt_Realization> tshirt = config->get_tshirt();
 
     double input_flux = 10.0;
     time_step_t timestep = 3600;
