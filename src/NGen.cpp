@@ -194,7 +194,7 @@ int main(int argc, char *argv[]) {
       std::string feat_id = feature->get_id();
 
       if( feat_id.substr(0, 3) == "cat" ){
-        catchment_outfiles.emplace(feat_id, std::ofstream(feature->get_id()+"_output.csv", std::ios::trunc));
+        catchment_outfiles[feat_id].open(feature->get_id()+"_output.csv", std::ios::trunc);
         //Create catchment realization, add to map
         forcing_params forcing_p(forcing_paths[feat_id], start_time, end_time);
         if (feature->get_property("realization").as_string() == "hymod") {
@@ -226,7 +226,7 @@ int main(int argc, char *argv[]) {
       }else{
         //Create nexus realization, add to map
         int num = std::stoi( feat_id.substr(4) );
-        nexus_outfiles[feat_id] = std::ofstream("./"+feature->get_id()+"_output.csv", std::ios::trunc);
+        nexus_outfiles[feat_id].open("./"+feature->get_id()+"_output.csv", std::ios::trunc);
 
         nexus_realizations[feat_id] = std::make_unique<HY_PointHydroNexus>(
                                       HY_PointHydroNexus(num, feat_id,
