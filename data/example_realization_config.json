@@ -19,8 +19,8 @@
                 0.0,
                 0.0
             ],
-            "soil_storage_meters": 0.667,
-            "groundwater_storage_meters": 0.5,
+            "soil_storage_percentage": 0.667,
+            "groundwater_storage_percentage": 0.5,
             "timestep": 3600
         },
         "giuh": {
@@ -55,8 +55,8 @@
                         0.0,
                         0.0
                     ],
-                    "soil_storage_meters": 0.667,
-                    "groundwater_storage_meters": 0.5,
+                    "soil_storage_percentage": 0.667,
+                    "groundwater_storage_percentage": 0.5,
                     "timestep": 3600
                 },
                 "giuh": {
@@ -111,8 +111,8 @@
                     0.0,
                     0.0
                 ],
-                "soil_storage_meters": 0.667,
-                "groundwater_storage_meters": 0.5,
+                "soil_storage_percentage": 0.667,
+                "groundwater_storage_percentage": 0.5,
                 "timestep": 3600
             },
                 "giuh": {

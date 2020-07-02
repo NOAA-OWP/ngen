@@ -42,8 +42,8 @@ namespace realization {
         "expon",
         "max_groundwater_storage_meters",
         "nash_storage",
-        "soil_storage_meters",
-        "groundwater_storage_meters",
+        "soil_storage_percentage",
+        "groundwater_storage_percentage",
         "timestep"
     };
 
