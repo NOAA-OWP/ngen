@@ -126,7 +126,7 @@ namespace tshirt {
          *      * a new `current_state` is created
          *      * a new `fluxes` is created
          */
-        void manage_state_before_next_time_step_run();
+        virtual void manage_state_before_next_time_step_run();
 
         /**
          * Set the mass_check_error_bound member to the absolute value of the given parameter.
