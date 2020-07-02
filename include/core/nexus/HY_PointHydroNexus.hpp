@@ -18,6 +18,12 @@ class HY_PointHydroNexus : public HY_HydroNexus
         /** add flow to this nexus for timestep t. */
         void add_upstream_flow(double val, long catchment_id, time_step_t t);
 
+        /** inspect a nexus to see what flows are recorded at a time step. */
+        std::pair<double, int> inspect_upstream_flows(time_step_t t);
+
+        /** inspect a nexus to see what requests are recorded at a time step. */
+        virtual std::pair<double, int> inspect_downstream_requests(time_step_t t);
+
         /** get the units that flows are represented in. */
         std::string get_flow_units();
 

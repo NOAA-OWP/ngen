@@ -29,6 +29,9 @@ class HY_HydroNexus
     /** get a precentage of the downstream flow at requested time_step. Record the requesting percentage*/
     virtual double get_downstream_flow(long catchment_id, time_step_t t, double percent_flow)=0;
 
+    virtual std::pair<double, int> inspect_upstream_flows(time_step_t t)=0;
+    virtual std::pair<double, int> inspect_downstream_requests(time_step_t t)=0;
+
     /** get the units that the flows are described in */
     virtual std::string get_flow_units()=0;
 
