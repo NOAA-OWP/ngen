@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 add_library(kernels_reservoir STATIC
-        LinearReservoir.cpp
-        Nonlinear_Reservoir.cpp
+        Reservoir.cpp
         Reservoir_Exponential_Outlet.cpp
+        Reservoir_Linear_Outlet.cpp
         Reservoir_Outlet.cpp
         )
 add_library(NGen::kernels_reservoir ALIAS kernels_reservoir)

@@ -12,8 +12,8 @@
 struct hymod_state
 {
     double storage_meters;             //!< the current water storage of the modeled area
-    double groundwater_storage_meters; //!< the current water in the ground water nonlinear reservoir
-    double* Sr;                 //!< amount of water in each nonlinear reservoir unsafe for binding suport check latter
+    double groundwater_storage_meters; //!< the current water in the ground water reservoir
+    double* Sr;                 //!< amount of water in each reservoir unsafe for binding suport check latter
 
     //! Constructuor for hymod state
     /*!

@@ -119,7 +119,6 @@ To help give clarity to what relates to what, use analogous names for associated
 - files
     - base: source code filename
     - suffix: `_Test`/`Test` for unit tests or `_IT`/`IT` for integration tests
-        - e.g., `LinearReservoir.cpp` and `LinearReservoirTest.cpp`
         - e.g., `HY_FlowPath.cpp` and `HY_FlowPath_Test.cpp`
 - *test fixtures*, *test suites*, and associated classes
     - base: *upper camel case* form(\*) of source code class

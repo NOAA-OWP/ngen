@@ -23,4 +23,3 @@ target_link_libraries(realizations_catchment PUBLIC
         NGen::models_tshirt
         NGen::geojson
         )
-# TODO: confirm that don't need to link a library for "LinearReservoir.hpp"

@@ -296,10 +296,10 @@ namespace tshirt {
         // Update the current soil storage, accounting for ET
         current_state->soil_storage_meters = new_soil_storage_m - fluxes->et_loss_meters;
 
-        // Cycle through lateral flow Nash cascade of nonlinear reservoirs
+        // Cycle through lateral flow Nash cascade of reservoirs
         // loop essentially copied from Hymod logic, but with different variable names
         for (unsigned long int i = 0; i < soil_lf_nash_res.size(); ++i) {
-            // get response water velocity of nonlinear reservoir
+            // get response water velocity of reservoir
             Qlf = soil_lf_nash_res[i]->response_meters_per_second(Qlf, dt, nash_subsurface_excess);
             // TODO: confirm this is correct
             Qlf += nash_subsurface_excess / dt;
