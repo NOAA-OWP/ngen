@@ -1,5 +1,5 @@
-#ifndef NONLINEAR_RESERVOIR_HPP
-#define NONLINEAR_RESERVOIR_HPP
+#ifndef RESERVOIR_HPP
+#define RESERVOIR_HPP
 
 #include <vector>
 #include <cmath>
@@ -14,15 +14,15 @@
 using namespace std;
 
 /**
- * @brief Nonlinear Reservoir that has zero, one, or multiple outlets.
- * The nonlinear reservoir has parameters of minimum and maximum storage height in meters and a state variable of
+ * @brief Reservoir that has zero, one, or multiple outlets.
+ * The reservoir has parameters of minimum and maximum storage height in meters and a state variable of
  * current storage height in meters. A vector will be created that stores pointers to the reservoir outlet objects. This
  * class will also sort multiple outlets from lowest to highest activation thresholds in the vector. The
  * response_meters_per_second function takes an inflow and cycles through the outlets from lowest to highest activation
  * thresholds and calls the outlet's function to return the discharge velocity in meters per second through the outlet.
  * The reservoir's storage is updated from velocities of each outlet and the delta time for the given timestep.
  */
-class Nonlinear_Reservoir
+class Reservoir
 {
     public:
 
@@ -31,7 +31,7 @@ class Nonlinear_Reservoir
     /**
      * @brief Default Constructor building a reservoir with no outlets.
      */
-    Nonlinear_Reservoir(double minimum_storage_meters = 0.0, double maximum_storage_meters = 1.0,
+    Reservoir(double minimum_storage_meters = 0.0, double maximum_storage_meters = 1.0,
                         double current_storage_height_meters = 0.0);
 
     /**
@@ -44,7 +44,7 @@ class Nonlinear_Reservoir
      * @param activation_threshold_meters meters from the bottom of the reservoir to the bottom of the outlet
      * @param max_velocity_meters_per_second max outlet velocity in meters per second
      */
-    Nonlinear_Reservoir(double minimum_storage_meters, double maximum_storage_meters,
+    Reservoir(double minimum_storage_meters, double maximum_storage_meters,
                         double current_storage_height_meters, double a,
                         double b, double activation_threshold_meters, double max_velocity_meters_per_second);
 
@@ -57,11 +57,11 @@ class Nonlinear_Reservoir
      * @param current_storage_height_meters current storage height in meters
      * @param outlets vector of reservoir outlets
      */
-    Nonlinear_Reservoir(double minimum_storage_meters, double maximum_storage_meters,
+    Reservoir(double minimum_storage_meters, double maximum_storage_meters,
                         double current_storage_height_meters, outlet_vector_type &outlets);
 
     /**
-     * @brief Function to update the nonlinear reservoir storage in meters and return a response in meters per second to
+     * @brief Function to update the reservoir storage in meters and return a response in meters per second to
      * an influx and timestep.
      * @param in_flux_meters_per_second influx in meters per second
      * @param delta_time_seconds delta time in seconds
@@ -107,4 +107,4 @@ class Nonlinear_Reservoir
     outlet_vector_type outlets;
 };
 
-#endif  // NONLINEAR_RESERVOIR_HPP
+#endif  // RESERVOIR_HPP

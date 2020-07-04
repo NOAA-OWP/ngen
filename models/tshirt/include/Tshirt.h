@@ -4,10 +4,11 @@
 #include "all.h"
 #include "schaake_partitioning.hpp"
 #include "Constants.h"
-#include "reservoir/Nonlinear_Reservoir.hpp"
+#include "reservoir/Reservoir.hpp"
 #include "Pdm03.h"
 #include "GIUH.hpp"
 #include "reservoir/Reservoir_Exponential_Outlet.hpp"
+#include "reservoir/Reservoir_Linear_Outlet.hpp"
 #include "reservoir/Reservoir_Outlet.hpp"
 #include "tshirt_fluxes.h"
 #include "tshirt_params.h"
@@ -146,7 +147,7 @@ namespace tshirt {
          * A collection of reservoirs for a Nash Cascade at the end of the lateral flow output from the subsurface soil
          * reservoir.
          */
-        vector<unique_ptr<Nonlinear_Reservoir>> soil_lf_nash_res;
+        vector<unique_ptr<Reservoir>> soil_lf_nash_res;
         //FIXME reservoir construction sorts outlets by activation_threshold
         //so the fixed index assumption is invalid.  However, in the current use case
         //they both have the save activation_threshold (Sfc), but we do want percolation fluxes to happen first
@@ -155,8 +156,8 @@ namespace tshirt {
         int lf_outlet_index = 1;
         /** The index of the percolation flow outlet in the soil reservoir. */
         int perc_outlet_index = 0;
-        Nonlinear_Reservoir soil_reservoir;
-        Nonlinear_Reservoir groundwater_reservoir;
+        Reservoir soil_reservoir;
+        Reservoir groundwater_reservoir;
         shared_ptr<tshirt_fluxes> fluxes;
         /** The size of the error bound that is acceptable when performing mass check calculations. */
         double mass_check_error_bound;

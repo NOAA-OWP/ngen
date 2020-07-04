@@ -1,12 +1,13 @@
 #include <vector>
 #include "gtest/gtest.h"
-#include "reservoir/Nonlinear_Reservoir.hpp"
+#include "reservoir/Reservoir.hpp"
 #include "reservoir/Reservoir_Outlet.hpp"
+#include "reservoir/Reservoir_Linear_Outlet.hpp"
 #include "reservoir/Reservoir_Exponential_Outlet.hpp"
 #include <memory>
 
-//This class contains unit tests for the Nonlinear Reservoir
-class NonlinearReservoirKernelTest : public ::testing::Test {
+//This class contains unit tests for the Reservoir
+class ReservoirKernelTest : public ::testing::Test {
 
     protected:
 
@@ -14,29 +15,29 @@ class NonlinearReservoirKernelTest : public ::testing::Test {
 
     void TearDown() override;
 
-    void setupNoOutletNonlinearReservoir();
+    void setupNoOutletReservoir();
 
-    void setupOneOutletNonlinearReservoir();
+    void setupOneOutletReservoir();
 
-    void setupOneOutletHighStorageNonlinearReservoir();
+    void setupOneOutletHighStorageReservoir();
 
-    void setupMultipleOutletNonlinearReservoir();
+    void setupMultipleOutletReservoir();
 
-    void setupMultipleOutletOutOfOrderNonlinearReservoir();
+    void setupMultipleOutletOutOfOrderReservoir();
 
     void setupExponentialOutletReservoir();
 
-    std::shared_ptr<Nonlinear_Reservoir> NoOutletReservoir; //smart pointer to a Nonlinear_Reservoir with no outlets
+    std::shared_ptr<Reservoir> NoOutletReservoir; //smart pointer to a Reservoir with no outlets
 
-    std::shared_ptr<Nonlinear_Reservoir> OneOutletReservoir; //smart pointer to a Nonlinear_Reservoir with one outlet
+    std::shared_ptr<Reservoir> OneOutletReservoir; //smart pointer to a Reservoir with one outlet
 
-    std::shared_ptr<Nonlinear_Reservoir> OneOutletHighStorageReservoir; //smart pointer to a Nonlinear_Reservoir with one outlet and high storage
+    std::shared_ptr<Reservoir> OneOutletHighStorageReservoir; //smart pointer to a Reservoir with one outlet and high storage
 
-    std::shared_ptr<Nonlinear_Reservoir> MultipleOutletReservoir; //smart pointer to a Nonlinear_Reservoir with multiple outlets
+    std::shared_ptr<Reservoir> MultipleOutletReservoir; //smart pointer to a Reservoir with multiple outlets
 
-    std::shared_ptr<Nonlinear_Reservoir> MultipleOutletOutOfOrderNonlinearReservoir; //smart pointer to a Nonlinear_Reservoir with multiple outlets out of order
+    std::shared_ptr<Reservoir> MultipleOutletOutOfOrderReservoir; //smart pointer to a Reservoir with multiple outlets out of order
 
-    std::shared_ptr<Nonlinear_Reservoir> SingleExponentialOutletReservoir; //smart pointer to a Nonlinear_Reservoir with one exponential outlet
+    std::shared_ptr<Reservoir> SingleExponentialOutletReservoir; //smart pointer to a Reservoir with one exponential outlet
 
     std::shared_ptr<Reservoir_Outlet> ReservoirOutlet1; //smart pointer to a Reservoir Outlet
 
@@ -55,47 +56,49 @@ class NonlinearReservoirKernelTest : public ::testing::Test {
     std::vector <std::shared_ptr<Reservoir_Outlet>> ReservoirOutletsVectorMultipleTypes;    
 };
 
-void NonlinearReservoirKernelTest::SetUp() {
+void ReservoirKernelTest::SetUp() {
     
-    setupNoOutletNonlinearReservoir();
+    setupNoOutletReservoir();
 
-    setupOneOutletNonlinearReservoir();
+    setupOneOutletReservoir();
 
-    setupOneOutletHighStorageNonlinearReservoir();
+    setupOneOutletHighStorageReservoir();
 
-    setupMultipleOutletNonlinearReservoir();
+    setupMultipleOutletReservoir();
 
-    setupMultipleOutletOutOfOrderNonlinearReservoir();
+    setupMultipleOutletOutOfOrderReservoir();
 
     setupExponentialOutletReservoir();
 }
 
-void NonlinearReservoirKernelTest::TearDown() {
+void ReservoirKernelTest::TearDown() {
 
 }
 
 //Construct a reservoir with no outlets
-void NonlinearReservoirKernelTest::setupNoOutletNonlinearReservoir()
+void ReservoirKernelTest::setupNoOutletReservoir()
 {
-    NoOutletReservoir = std::make_shared<Nonlinear_Reservoir>(0.0, 8.0, 2.0);
+    NoOutletReservoir = std::make_shared<Reservoir>(0.0, 8.0, 2.0);
 }
 
 //Construct a reservoir with one outlet
-void NonlinearReservoirKernelTest::setupOneOutletNonlinearReservoir()
+void ReservoirKernelTest::setupOneOutletReservoir()
 {
-    OneOutletReservoir = std::make_shared<Nonlinear_Reservoir>(0.0, 8.0, 3.5, 0.5, 0.7, 4.0, 100.0);
+    OneOutletReservoir = std::make_shared<Reservoir>(0.0, 8.0, 3.5, 0.5, 0.7, 4.0, 100.0);
 }
 
 //Construct a reservoir with one outlet and high storage
-void NonlinearReservoirKernelTest::setupOneOutletHighStorageNonlinearReservoir()
+void ReservoirKernelTest::setupOneOutletHighStorageReservoir()
 {
-    OneOutletHighStorageReservoir = std::make_shared<Nonlinear_Reservoir>(0.0, 8000.0, 3.5, 1.1, 1.2, 4.0, 0.005);
+    OneOutletHighStorageReservoir = std::make_shared<Reservoir>(0.0, 8000.0, 3.5, 1.1, 1.2, 4.0, 0.005);
 }
 
 //Construct a reservoir with multiple outlets
-void NonlinearReservoirKernelTest::setupMultipleOutletNonlinearReservoir()
+void ReservoirKernelTest::setupMultipleOutletReservoir()
 {
-    ReservoirOutlet1 = std::make_shared<Reservoir_Outlet>(0.2, 0.4, 4.0, 100.0);
+    //ReservoirOutlet1 = std::make_shared<Reservoir_Outlet>(0.2, 0.4, 4.0, 100.0);
+
+    ReservoirOutlet1 = std::make_shared<Reservoir_Linear_Outlet>(0.2, 4.0, 100.0);
 
     ReservoirOutlet2 = std::make_shared<Reservoir_Outlet>(0.3, 0.5, 10.0, 100.0);
 
@@ -107,11 +110,11 @@ void NonlinearReservoirKernelTest::setupMultipleOutletNonlinearReservoir()
 
     ReservoirOutletsVector.push_back(ReservoirOutlet3);
 
-    MultipleOutletReservoir = std::make_shared<Nonlinear_Reservoir>(0.0, 20.0, 2.0, ReservoirOutletsVector);
+    MultipleOutletReservoir = std::make_shared<Reservoir>(0.0, 20.0, 2.0, ReservoirOutletsVector);
 }
 
 //Construct a reservoir with multiple outlets that are not ordered from lowest to highest activation threshold
-void NonlinearReservoirKernelTest::setupMultipleOutletOutOfOrderNonlinearReservoir()
+void ReservoirKernelTest::setupMultipleOutletOutOfOrderReservoir()
 {
     ReservoirOutlet1 = std::make_shared<Reservoir_Outlet>(0.2, 0.4, 4.0, 100.0);
 
@@ -125,11 +128,11 @@ void NonlinearReservoirKernelTest::setupMultipleOutletOutOfOrderNonlinearReservo
 
     ReservoirOutletsVectorOutOfOrder.push_back(ReservoirOutlet1);
 
-    MultipleOutletOutOfOrderNonlinearReservoir = std::make_shared<Nonlinear_Reservoir>(0.0, 20.0, 2.0, ReservoirOutletsVectorOutOfOrder);
+    MultipleOutletOutOfOrderReservoir = std::make_shared<Reservoir>(0.0, 20.0, 2.0, ReservoirOutletsVectorOutOfOrder);
 }
 
 //Construct a reservoir with one exponential outlet
-void NonlinearReservoirKernelTest:: setupExponentialOutletReservoir()
+void ReservoirKernelTest:: setupExponentialOutletReservoir()
 {
     ReservoirExponentialOutlet = std::make_shared<Reservoir_Exponential_Outlet>(0.2, 0.4, 4.0, 100.0);
 
@@ -142,11 +145,11 @@ void NonlinearReservoirKernelTest:: setupExponentialOutletReservoir()
 
     ReservoirOutletsVectorMultipleTypes.push_back(ReservoirExponentialOutlet);
 
-    SingleExponentialOutletReservoir = std::make_shared<Nonlinear_Reservoir>(0.0, 20.0, 2.0, ReservoirExponentialSingleOutletVector);
+    SingleExponentialOutletReservoir = std::make_shared<Reservoir>(0.0, 20.0, 2.0, ReservoirExponentialSingleOutletVector);
 }
 
-//Test Nonlinear Reservoir with no outlets.
-TEST_F(NonlinearReservoirKernelTest, TestRunNoOutletReservoir) 
+//Test Reservoir with no outlets.
+TEST_F(ReservoirKernelTest, TestRunNoOutletReservoir) 
 {   
     double in_flux_meters_per_second;
     double excess;
@@ -165,8 +168,8 @@ TEST_F(NonlinearReservoirKernelTest, TestRunNoOutletReservoir)
     ASSERT_TRUE(true);
 }
 
-//Test Nonlinear Reservoir with one outlet.
-TEST_F(NonlinearReservoirKernelTest, TestRunOneOutletReservoir) 
+//Test Reservoir with one outlet.
+TEST_F(ReservoirKernelTest, TestRunOneOutletReservoir) 
 {
     double in_flux_meters_per_second;
     double excess;
@@ -185,8 +188,8 @@ TEST_F(NonlinearReservoirKernelTest, TestRunOneOutletReservoir)
     ASSERT_TRUE(true);
 }
 
-//Test Nonlinear Reservoir with one outlet where the storage remains below the activation threshold.
-TEST_F(NonlinearReservoirKernelTest, TestRunOneOutletReservoirNoActivation) 
+//Test Reservoir with one outlet where the storage remains below the activation threshold.
+TEST_F(ReservoirKernelTest, TestRunOneOutletReservoirNoActivation) 
 {   
     double in_flux_meters_per_second;
     double excess;
@@ -206,8 +209,8 @@ TEST_F(NonlinearReservoirKernelTest, TestRunOneOutletReservoirNoActivation)
 }
 
 
-//Test Nonlinear Reservoir with one outlet where the storage exceeds max storage.
-TEST_F(NonlinearReservoirKernelTest, TestRunOneOutletReservoirExceedMaxStorage) 
+//Test Reservoir with one outlet where the storage exceeds max storage.
+TEST_F(ReservoirKernelTest, TestRunOneOutletReservoirExceedMaxStorage) 
 {   
     double in_flux_meters_per_second;
     double excess;
@@ -227,8 +230,8 @@ TEST_F(NonlinearReservoirKernelTest, TestRunOneOutletReservoirExceedMaxStorage)
 }
 
 
-//Test Nonlinear Reservoir with one outlet where the storage falls below the minimum storage of zero.
-TEST_F(NonlinearReservoirKernelTest, TestRunOneOutletReservoirFallsBelowMinimumStorage) 
+//Test Reservoir with one outlet where the storage falls below the minimum storage of zero.
+TEST_F(ReservoirKernelTest, TestRunOneOutletReservoirFallsBelowMinimumStorage) 
 {   
     double in_flux_meters_per_second;
     double excess;
@@ -248,8 +251,8 @@ TEST_F(NonlinearReservoirKernelTest, TestRunOneOutletReservoirFallsBelowMinimumS
 }
 
 
-//Test Nonlinear Reservoir with one outlet where the calculated outlet velocity exceeds max velocity.
-TEST_F(NonlinearReservoirKernelTest, TestRunOneOutletReservoirExceedMaxVelocity) 
+//Test Reservoir with one outlet where the calculated outlet velocity exceeds max velocity.
+TEST_F(ReservoirKernelTest, TestRunOneOutletReservoirExceedMaxVelocity) 
 {   
     double in_flux_meters_per_second;
     double excess;
@@ -269,8 +272,8 @@ TEST_F(NonlinearReservoirKernelTest, TestRunOneOutletReservoirExceedMaxVelocity)
 }
 
 
-//Test Nonlinear Reservoir with multiple outlets
-TEST_F(NonlinearReservoirKernelTest, TestRunMultipleOutletReservoir) 
+//Test Reservoir with multiple outlets
+TEST_F(ReservoirKernelTest, TestRunMultipleOutletReservoir) 
 {    
     double in_flux_meters_per_second;
     double excess;
@@ -284,14 +287,14 @@ TEST_F(NonlinearReservoirKernelTest, TestRunMultipleOutletReservoir)
 
     final_storage = round( final_storage * 100.0 ) / 100.0;
 
-    EXPECT_DOUBLE_EQ (13.76, final_storage);
+    EXPECT_DOUBLE_EQ (13.88, final_storage);
 
     ASSERT_TRUE(true);
 }
 
 
-//Test Nonlinear Reservoir with multiple outlets that are initialized not in order from lowest to highest activation threshold
-TEST_F(NonlinearReservoirKernelTest, TestRunMultipleOutletOutOfOrderNonlinearReservoir) 
+//Test Reservoir with multiple outlets that are initialized not in order from lowest to highest activation threshold
+TEST_F(ReservoirKernelTest, TestRunMultipleOutletOutOfOrderReservoir) 
 {    
     double in_flux_meters_per_second;
     double excess;
@@ -299,9 +302,9 @@ TEST_F(NonlinearReservoirKernelTest, TestRunMultipleOutletOutOfOrderNonlinearRes
 
     in_flux_meters_per_second = 1.6;
 
-    MultipleOutletOutOfOrderNonlinearReservoir->response_meters_per_second(in_flux_meters_per_second, 10, excess);
+    MultipleOutletOutOfOrderReservoir->response_meters_per_second(in_flux_meters_per_second, 10, excess);
 
-    final_storage = MultipleOutletOutOfOrderNonlinearReservoir->get_storage_height_meters();
+    final_storage = MultipleOutletOutOfOrderReservoir->get_storage_height_meters();
 
     final_storage = round( final_storage * 100.0 ) / 100.0;
 
@@ -311,8 +314,8 @@ TEST_F(NonlinearReservoirKernelTest, TestRunMultipleOutletOutOfOrderNonlinearRes
 }
 
 
-//Test Nonlinear Reservoir with multiple outlets accessor to an outlet velocity
-TEST_F(NonlinearReservoirKernelTest, TestRunMultipleOutletReservoirOutletVelocity) 
+//Test Reservoir with multiple outlets accessor to an outlet velocity
+TEST_F(ReservoirKernelTest, TestRunMultipleOutletReservoirOutletVelocity) 
 {    
     double in_flux_meters_per_second;
     double excess;
@@ -327,14 +330,14 @@ TEST_F(NonlinearReservoirKernelTest, TestRunMultipleOutletReservoirOutletVelocit
 
     second_outlet_velocity = round( second_outlet_velocity * 100.0 ) / 100.0;
 
-    EXPECT_DOUBLE_EQ (0.23, second_outlet_velocity);
+    EXPECT_DOUBLE_EQ (0.24, second_outlet_velocity);
     
     ASSERT_TRUE(true);
 }
 
 
-//Test Nonlinear Reservoir with one exponential outlet 
-TEST_F(NonlinearReservoirKernelTest, TestRunSingleExponentialOutletReservoir) 
+//Test Reservoir with one exponential outlet 
+TEST_F(ReservoirKernelTest, TestRunSingleExponentialOutletReservoir) 
 {    
     double in_flux_meters_per_second;
     double excess;

@@ -2,7 +2,6 @@
 #define SIMPLE_LUMPED_MODEL_REALIZATION_H
 
 #include <HY_CatchmentArea.hpp>
-#include "reservoir/LinearReservoir.hpp"
 #include "hymod/include/Hymod.h"
 #include <unordered_map>
 
