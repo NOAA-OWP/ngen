@@ -34,8 +34,8 @@ const std::string EXAMPLE = "{ "
                 "   1.0, "
                 "   1.0 "
                 "], "
-                "\"soil_storage_meters\": 1.0, "
-                "\"groundwater_storage_meters\": 1.0, "
+                "\"soil_storage_percentage\": 1.0, "
+                "\"groundwater_storage_percentage\": 1.0, "
                 "\"timestep\": 3600 "
             "}, "
             "\"giuh\": { "
@@ -147,11 +147,11 @@ TEST_F(Realization_Config_Test, basic_reading) {
     ASSERT_EQ(nash_storage[6], 1.0);
     ASSERT_EQ(nash_storage[7], 1.0);
 
-    ASSERT_TRUE(config->has_option("soil_storage_meters"));
-    ASSERT_EQ(config->get_option("soil_storage_meters").as_real_number(), 1.0);
+    ASSERT_TRUE(config->has_option("soil_storage_percentage"));
+    ASSERT_EQ(config->get_option("soil_storage_percentage").as_real_number(), 1.0);
 
-    ASSERT_TRUE(config->has_option("groundwater_storage_meters"));
-    ASSERT_EQ(config->get_option("groundwater_storage_meters").as_real_number(), 1.0);
+    ASSERT_TRUE(config->has_option("groundwater_storage_percentage"));
+    ASSERT_EQ(config->get_option("groundwater_storage_percentage").as_real_number(), 1.0);
 
     ASSERT_TRUE(config->has_option("timestep"));
     ASSERT_EQ(config->get_option("timestep").as_natural_number(), 3600);
@@ -199,5 +199,5 @@ TEST_F(Realization_Config_Test, tshirt) {
     pdm_et_data.maximum_combined_contents = pdm_et_data.max_height_soil_moisture_storerage_tank / (1.0+pdm_et_data.scaled_distribution_fn_shape_parameter);
 
     double response = tshirt->get_response(input_flux, 0, timestep, &pdm_et_data);
-    ASSERT_LT(std::abs(response - 0.00277778), EPSILON);
+    ASSERT_LT(std::abs(response - 0.00711667), EPSILON);
 }

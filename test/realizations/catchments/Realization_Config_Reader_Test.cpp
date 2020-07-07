@@ -57,8 +57,8 @@ const std::string EXAMPLE = "{ "
                 "1.0, "
                 "1.0 "
             "], "
-            "\"soil_storage_meters\": 1.0, "
-            "\"groundwater_storage_meters\": 1.0, "
+            "\"soil_storage_percentage\": 1.0, "
+            "\"groundwater_storage_percentage\": 1.0, "
             "\"timestep\": 3600 "
         "}, "
         "\"giuh\": { "
@@ -73,7 +73,7 @@ const std::string EXAMPLE = "{ "
         "} "
     "}, "
     "\"catchments\": { "
-        "\"cat-88\": { "
+        "\"wat-88\": { "
                 "\"tshirt\": { "
                     "\"maxsmc\": 0.81, "
                     "\"wltsmc\": 1.0, "
@@ -99,8 +99,8 @@ const std::string EXAMPLE = "{ "
                         "1.0, "
                         "1.0 "
                     "], "
-                    "\"soil_storage_meters\": 1.0, "
-                    "\"groundwater_storage_meters\": 1.0, "
+                    "\"soil_storage_percentage\": 1.0, "
+                    "\"groundwater_storage_percentage\": 1.0, "
                     "\"timestep\": 3600 "
                 "}, "
                 "\"giuh\": { "
@@ -113,7 +113,7 @@ const std::string EXAMPLE = "{ "
                     "\"end_time\": \"2015-12-30 23:00:00\" "
                 "} "
         "}, "
-        "\"cat-89\": { "
+        "\"wat-89\": { "
             "\"simple_lumped\": { "
                 "\"sr\": [ "
                     "1.0, "
@@ -148,8 +148,8 @@ TEST_F(Realization_Config_Reader_Test, basic_reading) {
 
     ASSERT_EQ(reader->get_size(), 2);
 
-    ASSERT_TRUE(reader->contains("cat-88"));
-    ASSERT_TRUE(reader->contains("cat-89"));
+    ASSERT_TRUE(reader->contains("wat-88"));
+    ASSERT_TRUE(reader->contains("wat-89"));
 
     ASSERT_NE(reader->get_global_configuration(), nullptr);
 }
@@ -178,7 +178,7 @@ TEST_F(Realization_Config_Reader_Test, global) {
     pdm_et_data.maximum_combined_contents = pdm_et_data.max_height_soil_moisture_storerage_tank / (1.0+pdm_et_data.scaled_distribution_fn_shape_parameter);
 
     double response = tshirt->get_response(input_flux, 0, timestep, &pdm_et_data);
-    ASSERT_LT(std::abs(response - 0.00277778), EPSILON);
+    ASSERT_LT(std::abs(response - 0.00711667), EPSILON);
 }
 
 TEST_F(Realization_Config_Reader_Test, cat88) {
@@ -190,7 +190,7 @@ TEST_F(Realization_Config_Reader_Test, cat88) {
 
     reader->read();
 
-    realization::Realization_Config config = reader->get("cat-88");
+    realization::Realization_Config config = reader->get("wat-88");
 
     std::shared_ptr<realization::Tshirt_Realization> tshirt = config->get_tshirt();
 
@@ -205,7 +205,7 @@ TEST_F(Realization_Config_Reader_Test, cat88) {
     pdm_et_data.maximum_combined_contents = pdm_et_data.max_height_soil_moisture_storerage_tank / (1.0+pdm_et_data.scaled_distribution_fn_shape_parameter);
 
     double response = tshirt->get_response(input_flux, 0, timestep, &pdm_et_data);
-    ASSERT_LT(std::abs(response - 0.00277778), EPSILON);
+    ASSERT_LT(std::abs(response - 0.00711667), EPSILON);
 }
 
 TEST_F(Realization_Config_Reader_Test, cat89) {
@@ -217,7 +217,7 @@ TEST_F(Realization_Config_Reader_Test, cat89) {
 
     reader->read();
 
-    realization::Realization_Config config = reader->get("cat-89");
+    realization::Realization_Config config = reader->get("wat-89");
 
     std::shared_ptr<Simple_Lumped_Model_Realization> simple_lumped = config->get_simple_lumped();
 
@@ -233,7 +233,7 @@ TEST_F(Realization_Config_Reader_Test, cat89) {
 
     double response = simple_lumped->get_response(input_flux, 0, timestep, &pdm_et_data);
     
-    ASSERT_LT(std::abs(response - 0.0000108374), EPSILON);
+    ASSERT_LT(std::abs(response - 4.17326e-07), EPSILON);
 }
 
 TEST_F(Realization_Config_Reader_Test, iterate) {
@@ -252,10 +252,10 @@ TEST_F(Realization_Config_Reader_Test, iterate) {
         config_index++;
 
         if (config_index == 1) {
-            ASSERT_EQ(pair.second->get_id(), "cat-88");
+            ASSERT_EQ(pair.second->get_id(), "wat-88");
         }
         else if (config_index == 2) {
-            ASSERT_EQ(pair.second->get_id(), "cat-89");
+            ASSERT_EQ(pair.second->get_id(), "wat-89");
         }
     }
 }

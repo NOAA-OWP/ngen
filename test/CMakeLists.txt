@@ -92,6 +92,8 @@ add_automated_test(
         geojson/FeatureCollection_Test.cpp
         forcing/Forcing_Test.cpp
         core/catchment/giuh/GIUH_Test.cpp
+        realizations/catchments/Realization_Config_Test.cpp
+        realizations/catchments/Realization_Config_Reader_Test.cpp
 )
 
 # Add for integration tests once we have some
@@ -109,4 +111,6 @@ add_automated_test_w_mock(
         geojson/FeatureCollection_Test.cpp
         forcing/Forcing_Test.cpp
         core/catchment/giuh/GIUH_Test.cpp
+        realizations/catchments/Realization_Config_Test.cpp
+        realizations/catchments/Realization_Config_Reader_Test.cpp
 )

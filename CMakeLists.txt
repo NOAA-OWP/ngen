@@ -45,7 +45,6 @@ add_executable(ngen
         )
 
 # Find the Boost library and configure usage
-find_package(Boost COMPONENTS system filesystem REQUIRED)
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)

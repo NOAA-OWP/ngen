@@ -5,13 +5,9 @@
 #include "tshirt_params.h"
 #include <iostream>
 #include <regex>
-
-#include <boost/filesystem.hpp>
-#include <boost/range/iterator_range.hpp>
+#include <dirent.h>
 
 using namespace realization;
-
-namespace fs = boost::filesystem;
 
 std::shared_ptr<Simple_Lumped_Model_Realization> Realization_Config_Base::get_simple_lumped() {
     std::vector<std::string> missing_parameters;
@@ -209,40 +205,67 @@ forcing_params Realization_Config_Base::get_forcing_parameters() {
         throw std::runtime_error(message);
     }
 
-    fs::path path(this->forcing_parameters.at("path").as_string());
+    std::string path = this->forcing_parameters.at("path").as_string();
 
-    if (fs::exists(path)) {
-        if (fs::is_regular_file(path)) {
-            return forcing_params(
-                this->forcing_parameters.at("path").as_string(),
-                this->forcing_parameters.at("start_time").as_string(),
-                this->forcing_parameters.at("end_time").as_string()
-            );
-        }
+    if (this->forcing_parameters.count("file_pattern") == 0) {
+        return forcing_params(
+            path,
+            this->forcing_parameters.at("start_time").as_string(),
+            this->forcing_parameters.at("end_time").as_string()
+        );
+    }
 
-        std::string filepattern = this->forcing_parameters.at("file_pattern").as_string();
-        int id_index = filepattern.find("{{ID}}");
+    // Since we are given a pattern, we need to identify the directory and pull out anything that matches the pattern
+    if (path.compare(path.size() - 1, 1, "/") != 0) {
+        path += "/";
+    }
 
-        if (id_index != std::string::npos) {
-            filepattern = filepattern.replace(id_index, sizeof("{{ID}}") - 1, this->id);
-        }
+    std::string filepattern = this->forcing_parameters.at("file_pattern").as_string();
 
-        std::regex pattern(filepattern);
-        for(auto& entry : boost::make_iterator_range(fs::directory_iterator(path), {})) {
-            
-            if (std::regex_match(entry.path().string().c_str(), pattern)) {
+    int id_index = filepattern.find("{{ID}}");
+
+    // If an index for '{{ID}}' was found, we can count on that being where the id for this realization can be found.
+    //     For instance, if we have a pattern of '.*{{ID}}_14_15.csv' and this is named 'cat-87',
+    //     this will match on 'stuff_example_cat-87_14_15.csv'
+    if (id_index != std::string::npos) {
+        filepattern = filepattern.replace(id_index, sizeof("{{ID}}") - 1, this->id);
+    }
+
+    // Create a regular expression used to identify proper file names
+    std::regex pattern(filepattern);
+
+    // A stream providing the functions necessary for evaluating a directory: 
+    //    https://www.gnu.org/software/libc/manual/html_node/Opening-a-Directory.html#Opening-a-Directory
+    DIR *directory = nullptr;
+
+    // structure representing the member of a directory: https://www.gnu.org/software/libc/manual/html_node/Directory-Entries.html
+    struct dirent *entry = nullptr;
+
+    // Attempt to open the directory for evaluation
+    directory = opendir(path.c_str());
+
+    // If the directory could be found, we can go ahead and iterate
+    if (directory != nullptr) {
+        while ((entry = readdir(directory))) {
+            // If the entry is a regular file or symlink AND the name matches the pattern, 
+            //    we can consider this ready to be interpretted as valid forcing data (even if it isn't)
+            if ((entry->d_type == DT_REG or entry->d_type == DT_LNK) and std::regex_match(entry->d_name, pattern)) {
                 return forcing_params(
-                    entry.path().string(),
+                    path + entry->d_name,
                     this->forcing_parameters.at("start_time").as_string(),
                     this->forcing_parameters.at("end_time").as_string()
                 );
             }
         }
-
-        throw std::runtime_error("Forcing data could not be found for '" + this->id + "'");
+    }
+    else {
+        // The directory wasn't found; forcing data cannot be retrieved
+        throw std::runtime_error("No directory for forcing data was found at: " + path);
     }
 
-    throw std::runtime_error("Forcing data could not be found for '" + this->id + "' as '" + path.string() + "'");
+    closedir(directory);
+
+    throw std::runtime_error("Forcing data could not be found for '" + this->id + "'");
 }
 
 double Realization_Config_Base::get_response(double input_flux, time_step_t t, time_step_t dt, void* et_params) {
