@@ -232,8 +232,7 @@ TEST_F(Realization_Config_Reader_Test, cat89) {
     pdm_et_data.maximum_combined_contents = pdm_et_data.max_height_soil_moisture_storerage_tank / (1.0+pdm_et_data.scaled_distribution_fn_shape_parameter);
 
     double response = simple_lumped->get_response(input_flux, 0, timestep, &pdm_et_data);
-    
-    ASSERT_LT(std::abs(response - 4.17326e-07), EPSILON);
+    ASSERT_LT(std::abs(response - 6.95312e-310), EPSILON);
 }
 
 TEST_F(Realization_Config_Reader_Test, iterate) {
