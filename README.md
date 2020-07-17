@@ -1,3 +1,6 @@
+![](https://github.com/noaa-owp/ngen/workflows/Testing%20and%20Validation/badge.svg)
+![](https://github.com/noaa-owp/ngen/workflows/Documentation/badge.svg)
+
 # Next Gen Water Modeling Framework Prototype
 
 **Description**:  
@@ -13,7 +16,7 @@ This framework includes an encapsulation strategy which focuses on the hydrologi
 
 ![Catchments](https://raw.githubusercontent.com/NOAA-OWP/ngen/master/doc/images/hy_features_catchment_diagram.png)
 
-**Catchments**: Catchments represent arbitrary spatial areas. They are the abstraction used to encapsulate a model. The three marked catchments could use three different models, 3 copies of the same model, or some combination of the previous options 
+**Catchments**: Catchments represent arbitrary spatial areas. They are the abstraction used to encapsulate a model. The three marked catchments could use three different models, 3 copies of the same model, or some combination of the previous options. 
 
 ![Realizations](https://raw.githubusercontent.com/NOAA-OWP/ngen/master/doc/images/realization_relations.png)
 

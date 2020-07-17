@@ -1,18 +1,28 @@
+#include "giuh_kernel.hpp"
 #include "Tshirt_Realization.hpp"
-
+#include "TshirtErrorCodes.h"
 using namespace realization;
 
 Tshirt_Realization::Tshirt_Realization(
         forcing_params forcing_config,
         double soil_storage_meters,
         double groundwater_storage_meters,
-        unique_ptr<giuh::giuh_kernel> giuh_kernel,
+        std::string catchment_id,
+        giuh::GiuhJsonReader &giuh_json_reader,
         tshirt::tshirt_params params,
         const vector<double> &nash_storage,
-        Tshirt_Realization::time_step_t t
-        )
-    : HY_CatchmentArea(forcing_config), giuh_kernel(move(giuh_kernel)), params(params), dt(t)
+        time_step_t t)
+    : HY_CatchmentArea(forcing_config), catchment_id(catchment_id), params(params), dt(t)
 {
+    giuh_kernel = giuh_json_reader.get_giuh_kernel_for_id(this->catchment_id);
+
+    // If the look-up failed in the reader for some reason, and we got back a null pointer ...
+    if (this->giuh_kernel == nullptr) {
+        // ... revert to a pass-through kernel
+        this->giuh_kernel = std::make_shared<giuh::giuh_kernel>(
+                giuh::giuh_kernel(this->catchment_id, giuh_json_reader.get_associated_comid(this->catchment_id)));
+    }
+
     //FIXME not really used, don't call???
     //add_time(t, params.nash_n);
     state[0] = std::make_shared<tshirt::tshirt_state>(tshirt::tshirt_state(soil_storage_meters, groundwater_storage_meters, nash_storage));
@@ -31,7 +41,8 @@ Tshirt_Realization::Tshirt_Realization(
         forcing_params forcing_config,
         double soil_storage_meters,
         double groundwater_storage_meters,
-        unique_ptr<giuh::giuh_kernel> giuh_kernel,
+        std::string catchment_id,
+        giuh::GiuhJsonReader &giuh_json_reader,
         double maxsmc,
         double wltsmc,
         double satdk,
@@ -48,9 +59,11 @@ Tshirt_Realization::Tshirt_Realization(
         double max_gw_storage,
         const std::vector<double> &nash_storage,
         time_step_t t
-) : Tshirt_Realization::Tshirt_Realization(forcing_config, soil_storage_meters, groundwater_storage_meters, move(giuh_kernel),
-        tshirt::tshirt_params(maxsmc, wltsmc, satdk, satpsi, slope, b, multiplier, alpha_fc, Klf, Kn, nash_n, Cgw,
-                              expon, max_gw_storage), nash_storage, t) {
+) : Tshirt_Realization::Tshirt_Realization(forcing_config, soil_storage_meters, groundwater_storage_meters,
+                                           catchment_id, giuh_json_reader,
+                                           tshirt::tshirt_params(maxsmc, wltsmc, satdk, satpsi, slope, b, multiplier,
+                                                                 alpha_fc, Klf, Kn, nash_n, Cgw, expon, max_gw_storage),
+                                           nash_storage, t) {
 
 }
 
@@ -84,10 +97,13 @@ double Tshirt_Realization::get_response(double input_flux, time_step_t t,
     double precip = this->forcing.get_next_hourly_precipitation_meters_per_second();
     //FIXME should this run "daily" or hourly (t) which should really be dt
     //Do we keep an "internal dt" i.e. this->dt and reconcile with t?
-    model->run(t, precip, et_params);
+    int error = model->run(t, precip*dt/1000, et_params);
+    if(error == tshirt::TSHIRT_MASS_BALANCE_ERROR){
+      std::cout<<"WARNING Tshirt_Realization::model mass balance error"<<std::endl;
+    }
     state[t+1] = model->get_current_state();
     fluxes[t] = model->get_fluxes();
-
+    double giuh = giuh_kernel->calc_giuh_output(t, fluxes[t]->surface_runoff_meters_per_second);
     return fluxes[t]->soil_lateral_flow_meters_per_second + fluxes[t]->groundwater_flow_meters_per_second +
-           giuh_kernel->calc_giuh_output(t, fluxes[t]->surface_runoff_meters_per_second);
+           giuh;
 }

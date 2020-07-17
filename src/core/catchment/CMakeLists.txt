@@ -20,6 +20,7 @@ add_subdirectory("giuh")
 
 target_link_libraries(core_catchment PUBLIC
         Boost::boost                # Headers-only Boost
+        NGen::core
         )
 
 # TODO: this may not be correct, need to see

@@ -129,7 +129,7 @@ double HY_PointHydroNexus::get_downstream_flow(long catchment_id, time_step_t t,
 
 void HY_PointHydroNexus::add_upstream_flow(double val, long catchment_id, time_step_t t)
 {
-    if ( t < min_timestep ) BOOST_THROW_EXCEPTION(invalid_time_step());
+     if ( t < min_timestep ) BOOST_THROW_EXCEPTION(invalid_time_step());
     if ( completed.find(t) != completed.end() ) BOOST_THROW_EXCEPTION(completed_time_step());
 
     auto s1 = upstream_flows.find(t);
@@ -141,7 +141,7 @@ void HY_PointHydroNexus::add_upstream_flow(double val, long catchment_id, time_s
 
         id_flow_vector v;
         v.push_back(std::pair<long,double>(catchment_id,val));
-        upstream_flows[t] = v;
+         upstream_flows[t] = v;
     }
     else
     {
@@ -152,15 +152,57 @@ void HY_PointHydroNexus::add_upstream_flow(double val, long catchment_id, time_s
             // case 2 there are no summed flow for the time
             // this means there have been no downstream request and we can add water
 
-            s1->second.push_back(std::pair<long,double>(catchment_id,val));
+             s1->second.push_back(std::pair<long,double>(catchment_id,val));
         }
         else
         {
             // case 3 summed flows exist we can not add water for a time step when
             // one or more catchments have made downstream requests
 
-            BOOST_THROW_EXCEPTION(add_to_summed_nexus());
+             BOOST_THROW_EXCEPTION(add_to_summed_nexus());
+         }
+    }
+}
+
+std::pair<double, int> HY_PointHydroNexus::inspect_upstream_flows(time_step_t t)
+{
+    auto s1 = upstream_flows.find(t);
+    if ( s1 == upstream_flows.end() )
+    {
+        return std::pair<double,long>(0.0, 0);
+    }
+    else
+    {
+        double total_upstream_flows = 0.0;
+
+        auto& id_flow_vector = s1->second;
+        for (auto& p : id_flow_vector )
+        {
+            total_upstream_flows += p.second;
         }
+
+        return std::pair<double, long>(total_upstream_flows, id_flow_vector.size() );
+    }
+}
+
+std::pair<double, int> HY_PointHydroNexus::inspect_downstream_requests(time_step_t t)
+{
+    auto s1 = downstream_requests.find(t);
+    if ( s1 == downstream_requests.end() )
+    {
+        return std::pair<double,long>(0.0, 0);
+    }
+    else
+    {
+        double total_downstream_requests = 0.0;
+
+        auto& id_request_vector = s1->second;
+        for (auto& p : id_request_vector )
+        {
+            total_downstream_requests += p.second;
+        }
+
+        return std::pair<double, long>(total_downstream_requests, id_request_vector.size() );
     }
 }
 

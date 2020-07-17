@@ -1,6 +1,8 @@
 #include <vector>
 #include "gtest/gtest.h"
-#include "kernels/Nonlinear_Reservoir.hpp"
+#include "reservoir/Nonlinear_Reservoir.hpp"
+#include "reservoir/Reservoir_Outlet.hpp"
+#include "reservoir/Reservoir_Exponential_Outlet.hpp"
 #include <memory>
 
 //This class contains unit tests for the Nonlinear Reservoir

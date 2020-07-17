@@ -50,10 +50,19 @@ set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 
 if(DEFINED ENV{BOOST_ROOT})
-    set(Boost_INCLUDE_DIR $ENV{BOOST_ROOT})
+    #set(Boost_INCLUDE_DIR $ENV{BOOST_ROOT})
+    set(BOOST_ROOT $ENV{BOOST_ROOT})
 else()
-    message(STATUS "No Boost root: $ENV{BOOST_ROOT}")
+    # Look for version-specific Boost directory if available (known from Github Actions VM docs)
+    if(DEFINED ENV{BOOST_ROOT_1_72_0})
+        set(BOOST_ROOT $ENV{BOOST_ROOT_1_72_0})
+        set(ENV{BOOST_ROOT} $ENV{BOOST_ROOT_1_72_0})
+    else()
+        message(STATUS "No Boost root: $ENV{BOOST_ROOT}")
+    endif()
 endif()
+
+find_package(Boost 1.69.0 REQUIRED)
 
 target_include_directories(ngen PUBLIC
         "${PROJECT_BINARY_DIR}/include" # For generated config header file in binary tree
@@ -63,6 +72,7 @@ add_subdirectory("src/core")
 add_subdirectory("src/realizations/catchment")
 add_subdirectory("src/geojson")
 add_subdirectory("src/models/tshirt")
+add_subdirectory("src/models/kernels/reservoir")
 #add_subdirectory("src/forcing")
 
 target_link_libraries(ngen PUBLIC
@@ -73,6 +83,7 @@ target_link_libraries(ngen PUBLIC
         NGen::geojson
         NGen::models_tshirt
         NGen::realizations_catchment
+        NGen::kernels_reservoir
         #NGen::forcing
         )
 

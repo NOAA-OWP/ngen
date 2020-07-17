@@ -29,7 +29,7 @@ struct forcing_params
   forcing_params(std::string path, std::string start_time, std::string end_time):
     path(path), start_time(start_time), end_time(end_time)
     {
-      //TODO converting to UTC can be tricky, especially if thread safety is a concern
+      /// \todo converting to UTC can be tricky, especially if thread safety is a concern
       /* https://stackoverflow.com/questions/530519/stdmktime-and-timezone-info */
       struct tm tm;
       strptime(this->start_time.c_str(), this->date_format.c_str() , &tm);
@@ -41,6 +41,20 @@ struct forcing_params
       this->end_t = timegm( &tm );
     }
 };
+
+//AORC Forcing Data Struct
+struct AORC_data
+{
+  double APCP_surface_kg_per_meters_squared; //Total Precipitation (kg/m^2)
+  double DLWRF_surface_W_per_meters_squared; //Downward Long-Wave Rad. (Flux W/m^2)
+  double DSWRF_surface_W_per_meters_squared; //Downward Short-Wave Radiation (Flux W/m^2)
+  double PRES_surface_Pa; //Pressure (Pa)
+  double SPFH_2maboveground_kg_per_kg; //Specific Humidity (kg/kg)
+  double TMP_2maboveground_K; //Temperature (K)
+  double UGRD_10maboveground_meters_per_second; //U-Component of Wind (m/s)
+  double VGRD_10maboveground_meters_per_second; //V-Component of Wind (m/s)
+};
+
 
 /**
  * @brief Forcing class providing time-series precipiation forcing data to the model.
@@ -62,7 +76,7 @@ class Forcing
     Forcing(forcing_params forcing_config):start_date_time_epoch(forcing_config.start_t),
                                            end_date_time_epoch(forcing_config.end_t),
                                            current_date_time_epoch(forcing_config.start_t),
-                                           forcing_vector_index_ptr(-1)
+                                           forcing_vector_index(-1)
     {
         read_forcing_aorc(forcing_config.path);
     }
@@ -90,36 +104,68 @@ class Forcing
         read_forcing_aorc(forcing_file_name);
 
         //Initialize forcing vector index to 0;
-        forcing_vector_index_ptr = 0;
+        forcing_vector_index = 0;
     }
 
+    /**
+     * @brief Checks forcing vector index bounds and adjusts index if out of vector bounds
+     * /// \todo: Bounds checking is based on precipitation vector. Consider potential for vectors of different sizes and indices.
+     */
+    inline void check_forcing_vector_index_bounds()
+    {
+        //Check if forcing index is less than zero and if so, set to zero.
+        if (forcing_vector_index < 0)
+        {
+            forcing_vector_index = 0;
+            /// \todo: Return appropriate warning
+            cout << "WARNING: Forcing vector index is less than zero. Therefore, setting index to zero." << endl;
+        }
+
+        //Check if forcing index is greater than or equal to the size of the size of the precipiation vector and if so, set to zero.
+        else if (forcing_vector_index >= precipitation_rate_meters_per_second_vector.size())
+        {
+            forcing_vector_index = precipitation_rate_meters_per_second_vector.size() - 1;
+            /// \todo: Return appropriate warning
+            cout << "WARNING: Reached beyond the size of the forcing vector. Therefore, setting index to last value of the vector." << endl;
+        }
+
+        return;
+    }
 
     /**
      * @brief Gets current hourly precipitation in meters per second
      * Precipitation frequency is assumed to be hourly for now.
-     * TODO: Add input for dt (delta time) for different frequencies in the data than the model frequency.
+     * /// \todo: Add input for dt (delta time) for different frequencies in the data than the model frequency.
      * @return the current hourly precipitation in meters per second
      */
     double get_current_hourly_precipitation_meters_per_second()
     {
-        return precipitation_rate_meters_per_second_vector[forcing_vector_index_ptr];
+        check_forcing_vector_index_bounds();
+
+        return precipitation_rate_meters_per_second_vector.at(forcing_vector_index);
     }
 
     /**
      * @brief Gets next hourly precipitation in meters per second
      * Increments pointer in forcing vector by one timestep
      * Precipitation frequency is assumed to be hourly for now.
-     * TODO: Add input for dt (delta time) for different frequencies in the data than the model frequency.
+     * /// \todo: Add input for dt (delta time) for different frequencies in the data than the model frequency.
+     * /// \todo: Reconsider incrementing the forcing_vector_index because other functions rely on this, and it
+     *            could have side effects
      * @return the current hourly precipitation in meters per second after pointer is incremented by one timestep
      */
     double get_next_hourly_precipitation_meters_per_second()
     {
-        //Increment forcing index
-        forcing_vector_index_ptr = forcing_vector_index_ptr + 1;
-
-        //Increment current time by 1 hour
-        current_date_time_epoch = current_date_time_epoch + 3600;
-
+        //Check forcing vector bounds before incrementing forcing index
+        //\todo size() is unsigned, using -1 for initial offset isn't a good way, hacking for now.
+        if (forcing_vector_index == -1 || forcing_vector_index < precipitation_rate_meters_per_second_vector.size() - 1){
+            //Increment forcing index
+            forcing_vector_index = forcing_vector_index + 1;
+          }
+        else{
+            /// \todo: Return appropriate warning
+            cout << "WARNING: Reached beyond the size of the forcing precipitation vector. Therefore, returning the last precipitation value of the vector." << endl;
+          }
         return get_current_hourly_precipitation_meters_per_second();
     }
 
@@ -133,12 +179,129 @@ class Forcing
 
         struct tm *current_date_time;
 
+        check_forcing_vector_index_bounds();
+
+        current_date_time_epoch = time_epoch_vector.at(forcing_vector_index);
+
+        /// \todo: Sort out using local versus UTC time
         current_date_time = localtime(&current_date_time_epoch);
 
         current_day_of_year = current_date_time->tm_yday;
 
         return current_day_of_year;
     }
+
+    /**
+     * @brief Accessor to time epoch
+     * @return current_date_time_epoch
+     */
+    time_t get_time_epoch()
+    {
+        check_forcing_vector_index_bounds();
+
+        return current_date_time_epoch = time_epoch_vector.at(forcing_vector_index);
+    };
+
+    /**
+     * @brief Accessor to AORC data struct
+     * @return AORC_data
+     */
+
+    AORC_data get_AORC_data()
+    {
+        check_forcing_vector_index_bounds();
+
+        return AORC_vector.at(forcing_vector_index);
+    };
+
+    /**
+     * @brief Accessor to AORC APCP_surface_kg_per_meters_squared
+     * @return APCP_surface_kg_per_meters_squared
+     */
+    double get_AORC_APCP_surface_kg_per_meters_squared()
+    {
+        check_forcing_vector_index_bounds();
+
+        return AORC_vector.at(forcing_vector_index).APCP_surface_kg_per_meters_squared;
+    };
+
+    /**
+     * @brief Accessor to AORC DLWRF_surface_W_per_meters_squared
+     * @return DLWRF_surface_W_per_meters_squared
+     */
+    double get_AORC_DLWRF_surface_W_per_meters_squared()
+    {
+        check_forcing_vector_index_bounds();
+
+        return AORC_vector.at(forcing_vector_index).DLWRF_surface_W_per_meters_squared;
+    };
+
+    /**
+     * @brief Accessor to AORC DSWRF_surface_W_per_meters_squared
+     * @return DSWRF_surface_W_per_meters_squared
+     */
+    double get_AORC_DSWRF_surface_W_per_meters_squared()
+    {
+        check_forcing_vector_index_bounds();
+
+        return AORC_vector.at(forcing_vector_index).DSWRF_surface_W_per_meters_squared;
+    };
+
+    /**
+     * @brief Accessor to AORC PRES_surface_Pa
+     * @return PRES_surface_Pa
+     */
+    double get_AORC_PRES_surface_Pa()
+    {
+        check_forcing_vector_index_bounds();
+
+        return AORC_vector.at(forcing_vector_index).PRES_surface_Pa;
+    };
+
+    /**
+     * @brief Accessor to AORC SPFH_2maboveground_kg_per_kg
+     * @return SPFH_2maboveground_kg_per_kg
+     */
+    double get_AORC_SPFH_2maboveground_kg_per_kg()
+    {
+        check_forcing_vector_index_bounds();
+
+        return AORC_vector.at(forcing_vector_index).SPFH_2maboveground_kg_per_kg;
+    };
+
+    /**
+     * @brief Accessor to AORC TMP_2maboveground_K
+     * @return TMP_2maboveground_K
+     */
+    double get_AORC_TMP_2maboveground_K()
+    {
+        check_forcing_vector_index_bounds();
+
+        return AORC_vector.at(forcing_vector_index).TMP_2maboveground_K;
+    };
+
+    /**
+     * @brief Accessor to AORC UGRD_10maboveground_meters_per_second
+     * @return UGRD_10maboveground_meters_per_second
+     */
+    double get_AORC_UGRD_10maboveground_meters_per_second()
+    {
+        check_forcing_vector_index_bounds();
+
+        return AORC_vector.at(forcing_vector_index).UGRD_10maboveground_meters_per_second;
+    };
+
+    /**
+     * @brief Accessor to AORC VGRD_10maboveground_meters_per_second
+     * @return VGRD_10maboveground_meters_per_second
+     */
+    double get_AORC_VGRD_10maboveground_meters_per_second()
+    {
+        check_forcing_vector_index_bounds();
+
+        return AORC_vector.at(forcing_vector_index).VGRD_10maboveground_meters_per_second;
+    };
+
 
     private:
 
@@ -161,34 +324,34 @@ class Forcing
                 //Row vector
                 std::vector<std::string>& vec = data_list[i];
 
-                //Declare pointer to struct for the current row date-time
-                struct tm *current_row_date_time;
+                //Declare pointer to struct for the current row date-time utc
+                struct tm *current_row_date_time_utc;
 
-                //Allocate memory to struct for the current row date-time
-                current_row_date_time = new tm();
+                //Allocate memory to struct for the current row date-time utc
+                current_row_date_time_utc = new tm();
 
                 //Year
                 string year_str = vec[0];
                 int year = stoi(year_str);
-                current_row_date_time->tm_year = year - 1900;
+                current_row_date_time_utc->tm_year = year - 1900;
 
                 //Month
                 string month_str = vec[1];
                 int month = stoi(month_str);
-                current_row_date_time->tm_mon = month - 1;
+                current_row_date_time_utc->tm_mon = month - 1;
 
                 //Day
                 string day_str = vec[2];
                 int day = stoi(day_str);
-                current_row_date_time->tm_mday = day;
+                current_row_date_time_utc->tm_mday = day;
 
                 //Hour
                 string hour_str = vec[3];
                 int hour = stoi(hour_str);
-                current_row_date_time->tm_hour = hour;
+                current_row_date_time_utc->tm_hour = hour;
 
-                //Convert current row date-time to epoch time
-                time_t current_row_date_time_epoch = mktime(current_row_date_time);
+                //Convert current row date-time utc to epoch time
+                time_t current_row_date_time_epoch = timegm(current_row_date_time_utc);
 
                 //If the current row date-time is within the model date-time range, then add precipitation to vector
                 if (start_date_time_epoch <= current_row_date_time_epoch && current_row_date_time_epoch <= end_date_time_epoch)
@@ -204,10 +367,9 @@ class Forcing
                 }
 
                 //Free memory from struct
-                delete current_row_date_time;
+                delete current_row_date_time_utc;
         }
     }
-
 
     /**
      * @brief Read Forcing Data from AORC CSV
@@ -228,20 +390,32 @@ class Forcing
                 //Row vector
                 std::vector<std::string>& vec = data_list[i];
 
-                //Declare struct for the current row date-time
-                struct tm current_row_date_time;
+                //Declare struct for the current row date-time 
+                struct tm current_row_date_time_utc;
 
                 //Allocate memory to struct for the current row date-time
-                current_row_date_time = tm();
+                current_row_date_time_utc = tm();
 
                 //Grab time string from first column
                 string time_str = vec[0];
 
                 //Convert time string to time struct
-                strptime(time_str.c_str(), "%Y-%m-%d %H:%M:%S", &current_row_date_time);
+                strptime(time_str.c_str(), "%Y-%m-%d %H:%M:%S", &current_row_date_time_utc);
 
-                //Convert current row date-time to epoch time
-                time_t current_row_date_time_epoch = mktime(&current_row_date_time);
+                //Convert current row date-time UTC to epoch time
+                time_t current_row_date_time_epoch = timegm(&current_row_date_time_utc);
+
+                //Ensure that forcing data covers the entire model period. Otherwise, throw an error.
+                if (i == 1 && start_date_time_epoch < current_row_date_time_epoch)
+                    /// \todo TODO: Return appropriate error
+                    //cout << "WARNING: Forcing data begins after the model start time." << endl;
+                    throw std::runtime_error("Error: Forcing data begins after the model start time.");
+
+
+                else if (i == data_list.size() - 1 && current_row_date_time_epoch < end_date_time_epoch)
+                    /// \todo TODO: Return appropriate error
+                    cout << "WARNING: Forcing data ends before the model end time." << endl;
+                    //throw std::runtime_error("Error: Forcing data ends before the model end time.");
 
                 //If the current row date-time is within the model date-time range, then add precipitation to vector
                 if (start_date_time_epoch <= current_row_date_time_epoch && current_row_date_time_epoch <= end_date_time_epoch)
@@ -257,46 +431,47 @@ class Forcing
                     string VGRD_10maboveground_str = vec[8];
                     string precip_rate_str = vec[9];
 
-                    //Convert from strings to doubles
-                    double APCP_surface = atof(APCP_surface_str.c_str());
-                    double DLWRF_surface = atof(DLWRF_surface_str.c_str());
-                    double DSWRF_surface = atof(DSWRF_surface_str.c_str());
-                    double PRES_surface = atof(PRES_surface_str.c_str());
-                    double SPFH_2maboveground = atof(SPFH_2maboveground_str.c_str());
-                    double TMP_2maboveground = atof(TMP_2maboveground_str.c_str());
-                    double UGRD_10maboveground = atof(UGRD_10maboveground_str.c_str());
-                    double VGRD_10maboveground = atof(VGRD_10maboveground_str.c_str());
+                    //Declare AORC struct
+                    AORC_data AORC;
+
+                    //Convert from strings to doubles and add to AORC struct
+                    AORC.APCP_surface_kg_per_meters_squared = atof(APCP_surface_str.c_str());
+                    AORC.DLWRF_surface_W_per_meters_squared = atof(DLWRF_surface_str.c_str());
+                    AORC.DSWRF_surface_W_per_meters_squared = atof(DSWRF_surface_str.c_str());
+                    AORC.PRES_surface_Pa = atof(PRES_surface_str.c_str());
+                    AORC.SPFH_2maboveground_kg_per_kg = atof(SPFH_2maboveground_str.c_str());
+                    AORC.TMP_2maboveground_K = atof(TMP_2maboveground_str.c_str());
+                    AORC.UGRD_10maboveground_meters_per_second = atof(UGRD_10maboveground_str.c_str());
+                    AORC.VGRD_10maboveground_meters_per_second = atof(VGRD_10maboveground_str.c_str());
+                  
+                    //Add AORC struct to AORC vector
+                    AORC_vector.push_back(AORC);
+            
+                    //Convert precip_rate from string to double
                     double precip_rate = atof(precip_rate_str.c_str());
 
                     //Add data to vectors
-                    APCP_surface_kg_per_meters_squared_vector.push_back(APCP_surface);
-                    DLWRF_surface_W_per_meters_squared_vector.push_back(DLWRF_surface);
-                    DSWRF_surface_W_per_meters_squared_vector.push_back(DSWRF_surface);
-                    PRES_surface_Pa_vector.push_back(PRES_surface);
-                    SPFH_2maboveground_kg_per_kg_vector.push_back(SPFH_2maboveground);
-                    TMP_2maboveground_K_vector.push_back(TMP_2maboveground);
-                    UGRD_10maboveground_meters_per_second_vector.push_back(UGRD_10maboveground);
-                    VGRD_10maboveground_meters_per_second_vector.push_back(VGRD_10maboveground);
                     precipitation_rate_meters_per_second_vector.push_back(precip_rate);
+                    time_epoch_vector.push_back(current_row_date_time_epoch);
                 }
 
                 //Free memory from struct
-                //delete current_row_date_time;
+                //delete current_row_date_time_utc;
         }
     }
 
-    vector<double> APCP_surface_kg_per_meters_squared_vector;
-    vector<double> DLWRF_surface_W_per_meters_squared_vector;
-    vector<double> DSWRF_surface_W_per_meters_squared_vector;
-    vector<double> PRES_surface_Pa_vector;
-    vector<double> SPFH_2maboveground_kg_per_kg_vector;
-    vector<double> TMP_2maboveground_K_vector;
-    vector<double> UGRD_10maboveground_meters_per_second_vector;
-    vector<double> VGRD_10maboveground_meters_per_second_vector;
+    vector<AORC_data> AORC_vector;
+
+    /// \todo: Look into aggregation of data, relevant libraries, and storing frequency information
     vector<double> precipitation_rate_meters_per_second_vector;
-    int forcing_vector_index_ptr;
+
+    /// \todo: Consider making epoch time the iterator
+    vector<time_t> time_epoch_vector;     
+    int forcing_vector_index;
     double precipitation_rate_meters_per_second;
     double air_temperature_fahrenheit;
+    double latitude; //latitude (degrees_north)
+    double longitude; //longitude (degrees_east)
     int basin_id;
     int day_of_year;
     string forcing_file_name;
@@ -307,21 +482,6 @@ class Forcing
     time_t start_date_time_epoch;
     time_t end_date_time_epoch;
     time_t current_date_time_epoch;
-
-    /*
-    //AORC Forcing Variables
-    double APCP_surface; //Total Precipitation (kg/m^2)
-    double DLWRF_surface; //Downward Long-Wave Rad. (Flux W/m^2)
-    double DSWRF_surface; //Downward Short-Wave Radiation (Flux W/m^2)
-    double PRES_surface; //Pressure (Pa)
-    double SPFH_2maboveground; //Specific Humidity (kg/kg)
-    double TMP_2maboveground; //Temperature (K)
-    double UGRD_10maboveground; //U-Component of Wind (m/s)
-    double VGRD_10maboveground; //V-Component of Wind (m/s)
-    double latitude; //latitude (degrees_north)
-    double longitude; //longitude (degrees_east)
-    double time; //verification time generated by wgrib2 function verftime() (seconds since 1970-01-01 00:00:00.0 0:00)
-    */
 };
 
 /// \todo Consider aggregating precipiation data

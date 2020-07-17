@@ -13,9 +13,16 @@
 #include <boost/type_index.hpp>
 #include <boost/property_tree/ptree.hpp>
 
+namespace bg = boost::geometry;
+
 namespace geojson {
     template<typename T>
     static bool contains(const std::vector<T*> &container, const T *value) {
+        return not (std::find(container.begin(), container.end(), value) == container.end());
+    }
+
+    template<typename T>
+    static bool contains(const std::vector<T> &container, const T value) {
         return not (std::find(container.begin(), container.end(), value) == container.end());
     }
 
@@ -44,8 +51,6 @@ namespace geojson {
         MultiPolygon,           /*!< Represents a feature that is represented by multiple areas */
         GeometryCollection      /*!< Represents a feature that contains a collection of different types of geometry */
     };
-
-    typedef std::map<std::string, JSONProperty> property_map;
 
     /**
      * Represents an individual feature within a Geojson definition
@@ -122,7 +127,9 @@ namespace geojson {
             /**
              * Destructor
              */
-            virtual ~FeatureBase(){};
+            virtual ~FeatureBase(){
+                this->break_links();
+            }
 
             /**
              * Retrieve an indicator as to what type of feature this is
@@ -167,6 +174,9 @@ namespace geojson {
                 }
             }
 
+            /**
+             * Searches for features that share common destinations and links them
+             */
             virtual void assign_neighbors() {
                 for (auto destination : this->destination_features()) {
                     for (auto destination_source : destination->origination_features()) {
@@ -177,6 +187,12 @@ namespace geojson {
                 }
             }
 
+            /**
+             * Links this feature to a feature that shares a common destination
+             * 
+             * @param feature A feature with a common destination
+             * @param connect Whether or not this feature should be linked to the neighbor as well
+             */
             virtual void add_neighbor_feature(FeatureBase *feature, bool connect = true) {
                 if (not contains(neighbors, feature)) {
                     neighbors.push_back(feature);
@@ -197,6 +213,11 @@ namespace geojson {
                 return properties.at(key);
             }
 
+            /**
+             * Sets the ID for the Feature
+             * 
+             * @param new_id The new identifier for this feature
+             */
             virtual void set_id(std::string new_id) {
                 id = new_id;
             }
@@ -281,6 +302,18 @@ namespace geojson {
                 foreign_members.emplace(key, property);
             }
 
+            virtual bool has_key(std::string key) {
+                std::vector<std::string> all_keys = this->keys();
+
+                for(auto member_key : all_keys) {
+                    if (member_key == key) {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
             /**
              * Retrieves a listing of all foreign member keys
              * 
@@ -309,6 +342,18 @@ namespace geojson {
                 }
 
                 return property_keys;
+            }
+
+            virtual bool has_property(std::string property_name) const {
+                std::vector<std::string> all_properties = this->property_keys();
+
+                for (auto name : all_properties) {
+                    if (property_name == name) {
+                        return true;
+                    }
+                }
+
+                return false;
             }
 
             /**
@@ -468,7 +513,9 @@ namespace geojson {
                 }
             }
 
-            ::geojson::geometry geometry();
+            ::geojson::geometry geometry() const {
+                return this->geom;
+            }
 
             template<class T>
             T geometry(int index) const {
@@ -484,7 +531,159 @@ namespace geojson {
             }
 
             virtual void visit(FeatureVisitor &visitor) = 0;
+
+            inline bool operator==(const FeatureBase& rhs) {
+                if (this->get_id() != rhs.get_id()) {
+                    return false;
+                }
+
+                if (not (this->get_type() == rhs.get_type())) {
+                    return false;
+                }
+
+                if (this->bounding_box != rhs.bounding_box) {
+                    return false;
+                }
+
+                if (this->get_type() == FeatureType::GeometryCollection) {
+                    if (this->geometry_collection.size() != rhs.geometry_collection.size()) {
+                        return false;
+                    }
+
+                    for (int geometry_index = 0; geometry_index < this->geometry_collection.size(); geometry_index++) {
+                        if (not bg::equals(this->geometry_collection[geometry_index], rhs.geometry_collection[geometry_index])) {
+                            return false;
+                        }
+                    }
+                }
+                else if (not bg::equals(this->geom, rhs.geom)) {
+                    return false;
+                }
+
+                if (this->keys().size() != rhs.keys().size() or this->property_keys().size() != rhs.property_keys().size()) {
+                    return false;
+                }
+
+                std::vector<std::string> these_keys = this->keys();
+                std::vector<std::string> these_property_keys = this->property_keys();
+
+                for (std::string key : rhs.keys()) {
+                    if (not contains(these_keys, key) or this->get(key) != rhs.get(key)) {
+                        return false;
+                    }
+                }
+                
+                for (std::string key : rhs.property_keys()) {
+                    if (not contains(these_keys, key) or this->get_property(key) != rhs.get_property(key)) {
+                        return false;
+                    }
+                }
+
+                if (
+                    not (
+                        this->origination.size() == rhs.origination.size() 
+                            or this->destination.size() == rhs.destination.size() 
+                            or this->neighbors.size() == rhs.neighbors.size()
+                    )
+                ) {
+                    return false;
+                }
+
+                for (auto feature : rhs.origination) {
+                    if (not contains(this->origination, feature)) {
+                        return false;
+                    }
+                }
+
+                for (auto feature : rhs.destination) {
+                    if (not contains(this->destination, feature)) {
+                        return false;
+                    }
+                }
+
+                for (auto feature : rhs.neighbors) {
+                    if (not contains(this->neighbors, feature)) {
+                        return false;
+                    }
+                }
+                
+                return true; 
+            }
+
+            inline bool operator!=(const FeatureBase &other) {
+                return not this->operator==(other);
+            }
+
         protected:
+            virtual void break_links() {
+                // Go through all of the originators and remove the reference to this feature
+                for (auto originator : this->origination) {
+                    originator->remove_destination(this);
+                }
+
+                // Now the list of originators can be cleared because they no longer link to this feature
+                this->origination.clear();
+                for (auto target : this->destination) {
+                    target->remove_origination(this);
+                }
+
+                this->destination.clear();
+
+                for (auto neighbor : this->neighbors) {
+                    neighbor->remove_neighbor(this);
+                }
+
+                this->neighbors.clear();
+            }
+
+            virtual void remove_destination(FeatureBase* feature) {
+                int feature_index = 0;
+                bool destination_found = false;
+
+                for (; feature_index < this->destination.size(); feature_index++) {
+                    if (feature == this->destination[feature_index]) {
+                        destination_found = true;
+                        break;
+                    }
+                }
+
+                if (destination_found) {
+                    this->destination.erase(this->destination.begin() + feature_index);
+                }
+            }
+
+            virtual void remove_origination(FeatureBase* feature) {
+                int feature_index = 0;
+                bool origination_found = false;
+
+                for (; feature_index < this->origination.size(); feature_index++) {
+                    if (feature == this->origination[feature_index]) {
+                        origination_found = true;
+                        break;
+                    }
+                }
+
+                if (origination_found) {
+                    this->origination.erase(this->origination.begin() + feature_index);
+                }
+            }
+
+            virtual void remove_neighbor(FeatureBase* feature) {
+                int feature_index = 0;
+                bool neighbor_found = false;
+
+                for (; feature_index < this->neighbors.size(); feature_index++) {
+                    if (feature == this->neighbors[feature_index]) {
+                        neighbor_found = true;
+                        break;
+                    }
+                }
+
+                if (neighbor_found) {
+                    this->neighbors.erase(this->neighbors.begin() + feature_index);
+                }
+            }
+
             FeatureType type;
             ::geojson::geometry geom;
             std::vector<::geojson::geometry> geometry_collection;

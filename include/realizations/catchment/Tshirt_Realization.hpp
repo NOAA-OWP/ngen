@@ -4,7 +4,10 @@
 #include <HY_CatchmentArea.hpp>
 #include <unordered_map>
 #include "GIUH.hpp"
+#include "GiuhJsonReader.h"
 #include "tshirt/include/Tshirt.h"
+#include "tshirt/include/tshirt_params.h"
+#include <memory>
 
 namespace realization {
 
@@ -17,7 +20,8 @@ namespace realization {
         Tshirt_Realization(forcing_params forcing_config,
                            double soil_storage_meters,
                            double groundwater_storage_meters,
-                           unique_ptr<giuh::giuh_kernel> giuh_kernel,
+                           std::string catchment_id,
+                           giuh::GiuhJsonReader &giuh_json_reader,
                            tshirt::tshirt_params params,
                            const std::vector<double>& nash_storage,
                            time_step_t t);
@@ -26,7 +30,8 @@ namespace realization {
                 forcing_params forcing_config,
                 double soil_storage_meters,
                 double groundwater_storage_meters,
-                unique_ptr<giuh::giuh_kernel> giuh_kernel,
+                std::string catchment_id,
+                giuh::GiuhJsonReader &giuh_json_reader,
                 double maxsmc,
                 double wltsmc,
                 double satdk,
@@ -52,12 +57,13 @@ namespace realization {
         void add_time(time_t t, double n);
 
     private:
+        std::string catchment_id;
         std::unordered_map<time_step_t, shared_ptr<tshirt::tshirt_state>> state;
         std::unordered_map<time_step_t, shared_ptr<tshirt::tshirt_fluxes>> fluxes;
         std::unordered_map<time_step_t, std::vector<double> > cascade_backing_storage;
         tshirt::tshirt_params params;
-        unique_ptr<tshirt::tshirt_model> model;
-        unique_ptr<giuh::giuh_kernel> giuh_kernel;
+        std::unique_ptr<tshirt::tshirt_model> model;
+        std::shared_ptr<giuh::giuh_kernel> giuh_kernel;
         //The delta time (dt) this instance is configured to use
         time_step_t dt;
 
