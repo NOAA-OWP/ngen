@@ -17,7 +17,7 @@ jobs:
     - name: Checkout the code
       uses: actions/checkout@v2
     - name: Change working dir
-      run: cd .. && pwd && ls
+      run: pwd && ls
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag localbuild/testimage:latest      
     - name: Run the local Anchore scan action itself with GitHub Advanced Security code scanning integration enabled
