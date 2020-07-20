@@ -72,11 +72,11 @@ namespace tshirt {
         double calc_evapotranspiration(double soil_m, shared_ptr<pdm03_struct> et_params);
 
         /**
-         * Calculate soil field capacity storage, the level at which free drainage stops (i.e., "Sfc").
+         * Calculate soil field capacity storage threshold, the level at which free drainage stops (i.e., "Sfc").
          *
          * @return The calculated soil field capacity storage.
          */
-        double calc_soil_field_capacity_storage();
+        double calc_soil_field_capacity_storage_threshold();
 
         /**
          * Return the smart pointer to the tshirt::tshirt_model struct for holding this object's current state.
@@ -161,8 +161,8 @@ namespace tshirt {
         shared_ptr<tshirt_fluxes> fluxes;
         /** The size of the error bound that is acceptable when performing mass check calculations. */
         double mass_check_error_bound;
-        /** Soil field capacity storage, or the level at which free drainage stops (i.e., "Sfc"). */
-        double soil_field_capacity_storage;
+        /** Soil field capacity storage threshold, or the level at which free drainage stops (i.e., "Sfc"). */
+        double soil_field_capacity_storage_threshold;
 
         /**
          * Check that the current state of this model object (which could be its provided initial state) is valid, printing
