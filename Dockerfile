@@ -7,5 +7,7 @@ RUN git clone https://github.com/NOAA-OWP/ngen.git
 
 RUN cmake --build cmake_build --target test_unit
 
+FROM scratch
+COPY --from=builder cmake_build .
 
 ENTRYPOINT [./cmake_build/test/test_unit]
