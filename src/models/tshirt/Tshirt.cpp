@@ -17,7 +17,7 @@ namespace tshirt {
             : model_params(model_params), previous_state(initial_state), current_state(initial_state)
     {
         // ********** Start by calculating Sfc, as this will get by several other things
-        soil_field_capacity_storage = calc_soil_field_capacity_storage();
+        soil_field_capacity_storage_threshold = calc_soil_field_capacity_storage_threshold();
 
         // ********** Sanity check init (in particular, size of Nash Cascade storage vector in the state parameter).
         check_valid();
@@ -130,12 +130,12 @@ namespace tshirt {
 
         // init subsurface lateral flow linear outlet
         soil_res_outlets[lf_outlet_index] = std::make_shared<Reservoir::Explicit_Time::Reservoir_Linear_Outlet>(
-                Reservoir::Explicit_Time::Reservoir_Linear_Outlet(model_params.Klf, soil_field_capacity_storage, model_params.max_lateral_flow));
+                Reservoir::Explicit_Time::Reservoir_Linear_Outlet(model_params.Klf, soil_field_capacity_storage_threshold, model_params.max_lateral_flow));
 
         // init subsurface percolation flow linear outlet
         // The max perc flow should be equal to the params.satdk value
         soil_res_outlets[perc_outlet_index] = std::make_shared<Reservoir::Explicit_Time::Reservoir_Linear_Outlet>(
-                Reservoir::Explicit_Time::Reservoir_Linear_Outlet(model_params.satdk * model_params.slope, soil_field_capacity_storage,
+                Reservoir::Explicit_Time::Reservoir_Linear_Outlet(model_params.satdk * model_params.slope, soil_field_capacity_storage_threshold,
                                  std::numeric_limits<double>::max()));
         // Create the reservoir, included the created vector of outlet pointers
         soil_reservoir = Reservoir::Explicit_Time::Reservoir(0.0, model_params.max_soil_storage_meters,
@@ -177,11 +177,11 @@ namespace tshirt {
     }
 
     /**
-     * Calculate soil field capacity storage, the level at which free drainage stops (i.e., "Sfc").
+     * Calculate soil field capacity storage threshold, the level at which free drainage stops (i.e., "Sfc").
      *
      * @return The calculated soil field capacity storage.
      */
-    double tshirt_model::calc_soil_field_capacity_storage()
+    double tshirt_model::calc_soil_field_capacity_storage_threshold()
     {
         // Calculate the suction head above water table (Hwt)
         double head_above_water_table =
