@@ -188,13 +188,26 @@ namespace tshirt {
                 model_params.alpha_fc * ((double) STANDARD_ATMOSPHERIC_PRESSURE_PASCALS / WATER_SPECIFIC_WEIGHT);
         // TODO: account for possibility of Hwt being less than 0.5 (though initially, it looks like this will never be the case)
 
-        double z1 = head_above_water_table - 0.5;
-        double z2 = z1 + 2;
+        // distance from the bottom of the soil column to the center of the lowest discretization
+        double trigger_z_m = 0.5;
+
+        // Previous way this was calculated, but which seems to disagree with Fred's implementation ...
+        //double z1 = head_above_water_table - trigger_z_m;
+        //double z2 = z1 + 2;
+        //double lower_lim = model_params.b * pow(z1, ((model_params.b - 1) / model_params.b)) / (model_params.b - 1);
+        //double upper_lim = model_params.b * pow(z2, ((model_params.b - 1) / model_params.b)) / (model_params.b - 1);
+
+        // ... so changing to this to reflect Fred's code
+        double omega = head_above_water_table - trigger_z_m;
+        // Use this several times
+        double one_minus_one_over_b = (1.0 - (1.0 / model_params.b));
+        double lower_lim = pow(omega, one_minus_one_over_b) / one_minus_one_over_b;
+        double upper_lim = pow(omega + model_params.depth, one_minus_one_over_b) / one_minus_one_over_b;
+
+        double lim_diff = upper_lim - lower_lim;
 
         // Note that z^( 1 - (1/b) ) / (1 - (1/b)) == b * (z^( (b - 1) / b ) / (b - 1)
-        return model_params.maxsmc * pow((1.0 / model_params.satpsi), (-1.0 / model_params.b)) *
-               ((model_params.b * pow(z2, ((model_params.b - 1) / model_params.b)) / (model_params.b - 1)) -
-                (model_params.b * pow(z1, ((model_params.b - 1) / model_params.b)) / (model_params.b - 1)));
+        return model_params.maxsmc * pow((1.0 / model_params.satpsi), (-1.0 / model_params.b)) * lim_diff;
     }
 
     /**
