@@ -10,15 +10,23 @@ protected:
 
     GIUH_Test()
     {
-        std::vector<std::string> abridged_choices = {"../test/data/giuh/GIUH_abridged.json",
-                                                     "test/data/giuh/GIUH_abridged.json"};
+        std::vector<std::string> abridged_choices = {"test/data/giuh/GIUH_abridged.json",
+                                                     "../test/data/giuh/GIUH_abridged.json",
+                                                     "../../test/data/giuh/GIUH_abridged.json",
+                                                     "data/giuh/GIUH_abridged.json"};
         abridged_json_file = utils::FileChecker::find_first_readable(abridged_choices);
 
-        std::vector<std::string> complete_choices = {"../test/data/giuh/GIUH.json", "test/data/giuh/GIUH.json"};
+        std::vector<std::string> complete_choices = {"test/data/giuh/GIUH.json",
+                                                     "../test/data/giuh/GIUH.json",
+                                                     "../../test/data/giuh/GIUH.json",
+                                                     "data/giuh/GIUH.json"};
         complete_json_file = utils::FileChecker::find_first_readable(complete_choices);
 
         std::vector<std::string> id_map_choices = {"../data/crosswalk.json",
-                                                   "data/crosswalk.json"};
+                                                   "data/crosswalk.json",
+                                                   "data/sugar_creek/crosswalk_subset.json",
+                                                   "../data/sugar_creek/crosswalk_subset.json",
+                                                   "../../data/sugar_creek/crosswalk_subset.json"};
         id_map_json_file = utils::FileChecker::find_first_readable(id_map_choices);
     }
 
@@ -120,7 +128,8 @@ TEST_F(GIUH_Test, TestOutput1)
     // First make sure we have the file, looking in a few different places
     std::vector<std::string> possible_files = {"./giuh_test_samples.json", "../giuh_test_samples.json",
                                                "./test/data/giuh/giuh_test_samples.json",
-                                               "../test/data/giuh/giuh_test_samples.json"};
+                                               "../test/data/giuh/giuh_test_samples.json",
+                                               "../../test/data/giuh/giuh_test_samples.json"};
     std::string sample_data_file;
     bool found_sample_data_file = false;
 
@@ -179,7 +188,8 @@ TEST_F(GIUH_Test, TestOutput2) {
     // First make sure we have the file, looking in a few different places
     std::vector<std::string> possible_files = {"./giuh_test_samples.json", "../giuh_test_samples.json",
                                                "./test/data/giuh/giuh_test_samples.json",
-                                               "../test/data/giuh/giuh_test_samples.json"};
+                                               "../test/data/giuh/giuh_test_samples.json",
+                                               "../../test/data/giuh/giuh_test_samples.json"};
     std::string sample_data_file;
     bool found_sample_data_file = false;
 
