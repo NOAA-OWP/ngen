@@ -22,7 +22,8 @@ protected:
                                                      "data/giuh/GIUH.json"};
         complete_json_file = utils::FileChecker::find_first_readable(complete_choices);
 
-        std::vector<std::string> id_map_choices = {"../data/crosswalk.json",
+        std::vector<std::string> id_map_choices = {"../../data/crosswalk.json",
+                                                   "../data/crosswalk.json",
                                                    "data/crosswalk.json",
                                                    "data/sugar_creek/crosswalk_subset.json",
                                                    "../data/sugar_creek/crosswalk_subset.json",
