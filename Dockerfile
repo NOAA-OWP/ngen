@@ -10,7 +10,7 @@ ENV CXX=/usr/bin/g++
 
 RUN git submodule update --init --recursive -- test/googletest
 
-RUn curl -L -O https://dl.bintray.com/boostorg/release/1.72.0/source/boost_1_72_0.tar.bz2
+RUN curl -L -O https://dl.bintray.com/boostorg/release/1.72.0/source/boost_1_72_0.tar.bz2
 
 RUN tar -xjf boost_1_72_0.tar.bz2
 
