@@ -10,6 +10,7 @@
 
 #include "gtest/gtest.h"
 #include "hymod/include/Hymod.h"
+#include "FileChecker.h"
 
 class HymodKernelTest : public ::testing::Test {
 
@@ -101,18 +102,19 @@ TEST_F(HymodKernelTest, TestWithKnownInput)
 
     double latitude = 41.13;
 
-    // open the file that contains forcings
-    std::ifstream input_file("test/data/model/hymod/hymod_forcing.txt");
+    std::vector<std::string> hymod_forcing_choices = {"test/data/model/hymod/hymod_forcing.txt",
+                                                 "../test/data/model/hymod/hymod_forcing.txt",
+                                                 "../../test/data/model/hymod/hymod_forcing.txt",
+                                                 "data/model/hymod/hymod_forcing.txt"};
+    std::string input_file_name = utils::FileChecker::find_first_readable(hymod_forcing_choices);
 
-    if ( !input_file )
-    {
-        // Account for possibly being within build directory also
-        input_file.open("../test/data/model/hymod/hymod_forcing.txt");
-        if (!input_file) {
-            std::cerr << "Test file not found\n";
-            ASSERT_TRUE(false);
-        }
+    if (input_file_name.empty()) {
+        std::cerr << "Test file not found\n";
+        ASSERT_TRUE(false);
     }
+
+    // open the file that contains forcings
+    std::ifstream input_file(input_file_name.c_str());
 
     // read forcing from the input file
     std::string buffer;
