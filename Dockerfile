@@ -6,7 +6,7 @@ RUN git clone https://github.com/NOAA-OWP/ngen.git
 
 WORKDIR ngen
 
-ENV CXX=/usr/bin/gcc
+ENV CXX=/usr/bin/g++
 
 RUN git submodule update --init --recursive -- test/googletest
 
@@ -24,8 +24,6 @@ RUN cmake -B /ngen -S .
 
 RUN cmake --build /ngen --target test_unit
 
-FROM scratch
+WORKDIR /ngen/test/
 
-COPY --from=builder cmake_build .
-
-ENTRYPOINT [./cmake_build/test/test_unit]
+CMD ["/bin/bash", "-l", "-c", "./test_unit"]
