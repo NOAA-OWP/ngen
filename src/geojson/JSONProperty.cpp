@@ -16,7 +16,7 @@ long JSONProperty::as_natural_number() const {
     }
 
     // Throw an exception since this can't be considered a natural number
-    std::string message = key + " cannot be converted into a natural number.";
+    std::string message = key + " is a " + get_propertytype_name(get_type()) + " and cannot be converted into a natural number.";
     throw std::runtime_error(message);
 };
 
@@ -38,7 +38,7 @@ double JSONProperty::as_real_number() const {
         return double(natural_number);
     }
 
-    std::string message = key + " cannot be converted into a real number.";
+    std::string message = key + " is a " + get_propertytype_name(get_type()) + " and cannot be converted into a real number.";
     throw std::runtime_error(message);
 };
 
@@ -47,9 +47,67 @@ bool JSONProperty::as_boolean() const {
         return boolean;
     }
 
-    std::string message = key + " cannot be converted into a boolean.";
+    std::string message = key + " is a " + get_propertytype_name(get_type()) + " and cannot be converted into a boolean.";
     throw std::runtime_error(message);
 };
+
+std::vector<JSONProperty> JSONProperty::as_list() const {
+        std::vector<JSONProperty> copy;
+
+    if (type == PropertyType::List) {
+        for (JSONProperty value : value_list) {
+            copy.push_back(JSONProperty(value));
+        }
+        return copy;
+    }
+    else if (type != PropertyType::Object) {
+        copy.push_back(JSONProperty(*this));
+        return copy;
+    }
+
+    std::string message = key + " is a " + get_propertytype_name(get_type()) + " and cannot be converted into a list.";
+    throw std::runtime_error(message);
+}
+
+std::vector<long> JSONProperty::as_natural_vector() const {
+    std::vector<long> values;
+
+    for (JSONProperty value : this->as_list()) {
+        values.push_back(value.as_natural_number());
+    }
+
+    return values;
+}
+
+std::vector<double> JSONProperty::as_real_vector() const {
+    std::vector<double> values;
+
+    for (JSONProperty value : this->as_list()) {
+        values.push_back(value.as_real_number());
+    }
+
+    return values;
+}
+
+std::vector<std::string> JSONProperty::as_string_vector() const {
+    std::vector<std::string> values;
+
+    for (JSONProperty value : this->as_list()) {
+        values.push_back(value.as_string());
+    }
+
+    return values;
+}
+
+std::vector<bool> JSONProperty::as_boolean_vector() const {
+    std::vector<bool> values;
+
+    for (JSONProperty value : this->as_list()) {
+        values.push_back(value.as_boolean());
+    }
+
+    return values;
+}
 
 std::string JSONProperty::as_string() const {
     if (type == PropertyType::String) {
@@ -69,8 +127,22 @@ std::string JSONProperty::as_string() const {
     else if(type == PropertyType::Real) {
         return std::to_string(real_number);
     }
+    else if (type == PropertyType::List) {
+        std::string list_description = "[";
 
-    std::string message = key + " cannot be converted into a string.";
+        for (int list_index = 0; list_index < this->value_list.size(); list_index++) {
+            list_description += this->value_list[list_index].as_string();
+
+            if (list_index < this->value_list.size() - 1) {
+                list_description += ",";
+            }
+        }
+
+        list_description += "]";
+        return list_description;
+    }
+
+    std::string message = key + " is a " + get_propertytype_name(get_type()) + " and cannot be converted into a string.";
     throw std::runtime_error(message);
 };
 
@@ -79,7 +151,7 @@ JSONProperty JSONProperty::at(std::string key) const {
         return values.at(key);
     }
 
-    std::string message = key + " is not an object and cannot be referenced as one.";
+    std::string message = key + " is a " + get_propertytype_name(get_type()) + ", not an object and cannot be referenced as one.";
     throw std::runtime_error(message);
 }
 
@@ -94,7 +166,7 @@ std::vector<std::string> JSONProperty::keys() const {
         return key_names;
     }
 
-    std::string message = key + " is not an object and cannot be referenced as one.";
+    std::string message = key + " is a " + get_propertytype_name(get_type()) + ", not an object and cannot be referenced as one.";
     throw std::runtime_error(message);
 }
 
@@ -103,7 +175,7 @@ PropertyMap JSONProperty::get_values() const {
         return values;
     }
 
-    std::string message = key + " is not an object.";
+    std::string message = key + " is a " + get_propertytype_name(get_type()) + ", not an object and cannot be referenced as one.";
     throw std::runtime_error(message);
 }
 

@@ -72,6 +72,8 @@ Nonlinear_Reservoir::Nonlinear_Reservoir(double minimum_storage_meters, double m
     }
 }
 
+// TODO: expand docstring
+
 /**
  * @brief Function to update the nonlinear reservoir storage in meters and return a response in meters per second to
  * an influx and time step.
