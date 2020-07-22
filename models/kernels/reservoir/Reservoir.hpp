@@ -7,6 +7,7 @@
 #include <iostream>
 #include <memory>
 #include "Reservoir_Outlet.hpp"
+#include "Reservoir_Linear_Outlet.hpp"
 #include "Reservoir_Exponential_Outlet.hpp"
 #include "reservoir_parameters.h"
 #include "reservoir_state.h"
@@ -27,6 +28,7 @@ class Reservoir
     public:
 
     typedef std::vector <std::shared_ptr<Reservoir_Outlet>> outlet_vector_type;
+    typedef std::shared_ptr<Reservoir_Outlet> outlet_type;
 
     /**
      * @brief Default Constructor building a reservoir with no outlets.
@@ -47,6 +49,19 @@ class Reservoir
     Reservoir(double minimum_storage_meters, double maximum_storage_meters,
                         double current_storage_height_meters, double a,
                         double b, double activation_threshold_meters, double max_velocity_meters_per_second);
+
+    /**
+     * @brief Parameterized Constructor building a reservoir with only one linear outlet.
+     * @param minimum_storage_meters minimum storage in meters
+     * @param maximum_storage_meters maximum storage in meters
+     * @param current_storage_height_meters current storage height in meters
+     * @param a outlet velocity calculation coefficient
+     * @param activation_threshold_meters meters from the bottom of the reservoir to the bottom of the outlet
+     * @param max_velocity_meters_per_second max outlet velocity in meters per second
+     */
+    Reservoir(double minimum_storage_meters, double maximum_storage_meters,
+                        double current_storage_height_meters, double a,
+                        double activation_threshold_meters, double max_velocity_meters_per_second);
 
     /**
      * @brief Parameterized Constructor building a reservoir with one or multiple outlets of the base standard and/or
@@ -72,9 +87,37 @@ class Reservoir
                                       double &excess_water_meters);
 
     /**
+     * @brief Adds a preconstructed outlet of any type to the reservoir
+     * @param outlet single reservoir outlet
+     */
+    void add_outlet(outlet_type &outlet);
+
+    /**
+     * @brief Adds a parameterized standard nonlinear outlet to the reservoir
+     * @param a outlet velocity calculation coefficient
+     * @param b outlet velocity calculation exponent
+     * @param activation_threshold_meters meters from the bottom of the reservoir to the bottom of the outlet
+     * @param max_velocity_meters_per_second max outlet velocity in meters per second
+     */
+    void add_outlet(double a, double b, double activation_threshold_meters, double max_velocity_meters_per_second);
+
+    /**
+     * @brief Adds a parameterized linear outlet to the reservoir
+     * @param a outlet velocity calculation coefficient
+     * @param activation_threshold_meters meters from the bottom of the reservoir to the bottom of the outlet
+     * @param max_velocity_meters_per_second max outlet velocity in meters per second
+     */
+    void add_outlet(double a, double activation_threshold_meters, double max_velocity_meters_per_second);
+
+    /**
      * @brief Sorts the outlets from lowest to highest acitivation threshold height
      */
     void sort_outlets();
+
+    /**
+     * @brief Ensures that the activation threshold is less than the maximum storage by checking the highest outlet
+     */
+    void check_highest_outlet_against_max_storage();
 
     /**
      * @brief Accessor to return storage

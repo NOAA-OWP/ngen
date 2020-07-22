@@ -36,8 +36,32 @@ Reservoir::Reservoir(double minimum_storage_meters, double maximum_storage_meter
     //Ensure that the activation threshold is less than the maximum storage
     //if (activation_threshold_meters > maximum_storage_meters)
     /// \todo TODO: Return appropriate error
+    //Add outlet to end of outlet vector
     this->outlets.push_back(
             std::make_shared<Reservoir_Outlet>(a, b, activation_threshold_meters, max_velocity_meters_per_second));
+}
+
+/**
+ * @brief Parameterized Constructor building a reservoir with only one linear outlet.
+ *
+ * @param minimum_storage_meters minimum storage in meters
+ * @param maximum_storage_meters maximum storage in meters
+ * @param current_storage_height_meters current storage height in meters
+ * @param a outlet velocity calculation coefficient
+ * @param activation_threshold_meters meters from the bottom of the reservoir to the bottom of the outlet
+ * @param max_velocity_meters_per_second max outlet velocity in meters per second
+ */
+Reservoir::Reservoir(double minimum_storage_meters, double maximum_storage_meters,
+                                         double current_storage_height_meters, double a,
+                                         double activation_threshold_meters, double max_velocity_meters_per_second)
+        : Reservoir(minimum_storage_meters, maximum_storage_meters, current_storage_height_meters)
+{
+    //Ensure that the activation threshold is less than the maximum storage
+    //if (activation_threshold_meters > maximum_storage_meters)
+    /// \todo TODO: Return appropriate error
+    //Add outlet to end of outlet vector
+    this->outlets.push_back(
+            std::make_shared<Reservoir_Linear_Outlet>(a, activation_threshold_meters, max_velocity_meters_per_second));
 }
 
 /**
@@ -61,15 +85,8 @@ Reservoir::Reservoir(double minimum_storage_meters, double maximum_storage_meter
     //Call fuction to ensure that reservoir outlet activation thresholds are sorted from least to greatest height
     sort_outlets();
 
-    //Ensure that the activation threshold is less than the maximum storage by checking the highest outlet
-    if (outlets.back()->get_activation_threshold_meters() > maximum_storage_meters)
-    {
-        /// \todo TODO: Return appropriate error
-        cerr
-            << "ERROR: The activation_threshold_meters is greater than the maximum_storage_meters of a "
-            << "reservoir."
-            << endl;
-    }
+    //Call function to Ensure that the activation threshold is less than the max storage by checking the highest outlet
+    check_highest_outlet_against_max_storage();
 }
 
 // TODO: expand docstring
@@ -149,6 +166,61 @@ double Reservoir::response_meters_per_second(double in_flux_meters_per_second, i
 }
 
 /**
+ * @brief Adds a preconstructed outlet of any type to the reservoir
+ * @param outlet single reservoir outlet
+ */
+void Reservoir::add_outlet(outlet_type &outlet)
+{
+    //Add outlet to end of outlet vector
+    this->outlets.push_back(outlet);
+
+    //Call fuction to ensure that reservoir outlet activation thresholds are sorted from least to greatest height
+    sort_outlets();
+
+    //Call function to ensure that the activation threshold is less than the max storage by checking the highest outlet
+    check_highest_outlet_against_max_storage();
+}
+
+/**
+ * @brief Adds a parameterized standard nonlinear outlet to the reservoir
+ * @param a outlet velocity calculation coefficient
+ * @param b outlet velocity calculation exponent
+ * @param activation_threshold_meters meters from the bottom of the reservoir to the bottom of the outlet
+ * @param max_velocity_meters_per_second max outlet velocity in meters per second
+ */
+void Reservoir::add_outlet(double a, double b, double activation_threshold_meters, double max_velocity_meters_per_second)
+{
+    //Add outlet to end of outlet vector
+    this->outlets.push_back(
+            std::make_shared<Reservoir_Outlet>(a, b, activation_threshold_meters, max_velocity_meters_per_second));
+
+    //Call fuction to ensure that reservoir outlet activation thresholds are sorted from least to greatest height
+    sort_outlets();
+
+    //Call function to ensure that the activation threshold is less than the max storage by checking the highest outlet
+    check_highest_outlet_against_max_storage();
+}
+
+/**
+ * @brief Adds a parameterized linear outlet to the reservoir
+ * @param a outlet velocity calculation coefficient
+ * @param activation_threshold_meters meters from the bottom of the reservoir to the bottom of the outlet
+ * @param max_velocity_meters_per_second max outlet velocity in meters per second
+ */
+void Reservoir::add_outlet(double a, double activation_threshold_meters, double max_velocity_meters_per_second)
+{
+    //Add outlet to end of outlet vector
+    this->outlets.push_back(
+            std::make_shared<Reservoir_Linear_Outlet>(a, activation_threshold_meters, max_velocity_meters_per_second));
+
+    //Call fuction to ensure that reservoir outlet activation thresholds are sorted from least to greatest height
+    sort_outlets();
+
+    //Call function to ensure that the activation threshold is less than the max storage by checking the highest outlet
+    check_highest_outlet_against_max_storage();
+}
+
+/**
  * @brief Sorts the outlets from lowest to highest activation threshold height.
  */
 void Reservoir::sort_outlets()
@@ -159,7 +231,21 @@ void Reservoir::sort_outlets()
              return left->get_activation_threshold_meters() < right->get_activation_threshold_meters();
          }
     );
+}
 
+/**
+ * @brief Ensures that the activation threshold is less than the maximum storage by checking the highest outlet
+ */
+void Reservoir::check_highest_outlet_against_max_storage()
+{
+    if (this->outlets.back()->get_activation_threshold_meters() > parameters.maximum_storage_meters)
+    {
+        /// \todo TODO: Return appropriate error
+        cerr
+            << "ERROR: The activation_threshold_meters is greater than the maximum_storage_meters of a "
+            << "reservoir."
+            << endl;
+    }
 }
 
 /**
