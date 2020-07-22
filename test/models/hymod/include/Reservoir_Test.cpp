@@ -17,6 +17,8 @@ class ReservoirKernelTest : public ::testing::Test {
 
     void setupNoOutletReservoir();
 
+    void setupNoOutletReservoir2();
+
     void setupOneOutletReservoir();
 
     void setupOneOutletHighStorageReservoir();
@@ -28,6 +30,8 @@ class ReservoirKernelTest : public ::testing::Test {
     void setupExponentialOutletReservoir();
 
     std::shared_ptr<Reservoir> NoOutletReservoir; //smart pointer to a Reservoir with no outlets
+
+    std::shared_ptr<Reservoir> NoOutletReservoir2; //smart pointer to a Reservoir with no outlets
 
     std::shared_ptr<Reservoir> OneOutletReservoir; //smart pointer to a Reservoir with one outlet
 
@@ -45,7 +49,9 @@ class ReservoirKernelTest : public ::testing::Test {
 
     std::shared_ptr<Reservoir_Outlet> ReservoirOutlet3; //smart pointer to a Reservoir Outlet
 
-    std::shared_ptr<Reservoir_Outlet> ReservoirExponentialOutlet; //smart pointer to a Reservoir Outlet    
+    std::shared_ptr<Reservoir_Outlet> ReservoirExponentialOutlet; //smart pointer to a Reservoir Outlet
+
+    std::shared_ptr<Reservoir_Outlet> ReservoirLinearOutlet; //smart pointer to a Reservoir Outlet    
 
     std::vector <std::shared_ptr<Reservoir_Outlet>> ReservoirOutletsVector;
 
@@ -59,6 +65,8 @@ class ReservoirKernelTest : public ::testing::Test {
 void ReservoirKernelTest::SetUp() {
     
     setupNoOutletReservoir();
+
+    setupNoOutletReservoir2();
 
     setupOneOutletReservoir();
 
@@ -79,6 +87,18 @@ void ReservoirKernelTest::TearDown() {
 void ReservoirKernelTest::setupNoOutletReservoir()
 {
     NoOutletReservoir = std::make_shared<Reservoir>(0.0, 8.0, 2.0);
+}
+
+//Construct a reservoir with no outlets and then add a linear and a nonlinear outlet
+void ReservoirKernelTest::setupNoOutletReservoir2()
+{
+    NoOutletReservoir2 = std::make_shared<Reservoir>(0.0, 8.0, 2.0);
+
+    ReservoirLinearOutlet = std::make_shared<Reservoir_Linear_Outlet>(0.2, 6.0, 100.0);
+
+    NoOutletReservoir2->add_outlet(ReservoirLinearOutlet);
+
+    NoOutletReservoir2->add_outlet(0.3, 0.5, 0.0, 100.0);
 }
 
 //Construct a reservoir with one outlet
@@ -164,6 +184,26 @@ TEST_F(ReservoirKernelTest, TestRunNoOutletReservoir)
     final_storage = round( final_storage * 100.0 ) / 100.0;
 
     EXPECT_DOUBLE_EQ (2.5, final_storage);
+
+    ASSERT_TRUE(true);
+}
+
+//Test Reservoir with two outlets.
+TEST_F(ReservoirKernelTest, TestRunTwoOutletReservoir) 
+{
+    double in_flux_meters_per_second;
+    double excess;
+    double final_storage;
+
+    in_flux_meters_per_second = 0.2;
+
+    NoOutletReservoir2->response_meters_per_second(in_flux_meters_per_second, 10, excess);
+
+    final_storage = NoOutletReservoir2->get_storage_height_meters();
+
+    final_storage = round( final_storage * 100.0 ) / 100.0;
+
+    EXPECT_DOUBLE_EQ (1.88, final_storage);
 
     ASSERT_TRUE(true);
 }

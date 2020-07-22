@@ -49,9 +49,6 @@ void Reservoir_Outlet::adjust_velocity(double velocity_meters_per_second)
  *
  * @param parameters_struct reservoir parameters struct
  * @param storage_struct reservoir state storage struct
- * @param activation_threshold_meters meters from the bottom of the reservoir to the bottom of the outlet
- * @param max_velocity_meters_per_second max outlet velocity in meters per second
- * @return velocity_meters_per_second_local the velocity in meters per second of the discharge through the outlet
  */
 double Reservoir_Outlet::calc_velocity_meters_per_second_local(reservoir_parameters &parameters_struct,
                                                                reservoir_state &storage_struct)
@@ -97,8 +94,6 @@ double Reservoir_Outlet::get_previously_calculated_velocity_meters_per_second()
  *
  * @param parameters_struct reservoir parameters struct
  * @param storage_struct reservoir state storage struct
- * @param activation_threshold_meters meters from the bottom of the reservoir to the bottom of the outlet
- * @param max_velocity_meters_per_second max outlet velocity in meters per second
  * @return velocity_meters_per_second_local the velocity in meters per second of the discharge through the outlet
  * @see calc_velocity_meters_per_second_local
  */

@@ -10,3 +10,6 @@ target_include_directories(models_tshirt PUBLIC
         ${PROJECT_SOURCE_DIR}/models/kernels
         ${PROJECT_SOURCE_DIR}/models/tshirt/include
         )
+
+target_link_libraries(models_tshirt PUBLIC 
+        NGen::kernels_reservoir)

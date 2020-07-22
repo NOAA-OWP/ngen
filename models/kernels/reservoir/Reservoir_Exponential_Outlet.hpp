@@ -19,7 +19,7 @@ class Reservoir_Exponential_Outlet: public Reservoir_Outlet
     Reservoir_Exponential_Outlet();
 
     /**
-     * @brief Parameterized Constructor that builds a Reservoir Outlet object.
+     * @brief Parameterized Constructor that builds a Reservoir Exponential Outlet object.
      * @param c outlet velocity calculation coefficient
      * @param expon outlet velocity calculation exponential coefficient
      * @param activation_threshold_meters meters from the bottom of the reservoir to the bottom of the outlet
@@ -34,19 +34,16 @@ protected:
      * @brief Calculate outlet discharge velocity in meters per second.
      *
      * Perform appropriate calculations to return the velocity, in meters per second, of the discharge through this
-     * outlet.
+     * exponential outlet.
      *
      * Typically this is only used by the velocity_meters_per_second function.
      *
-     * This function should be overridden to adjust the behavior of subtypes with respect to how the discharge velocity
+     * This function overrides the base nonlinear outlet and adjusts the behavior of how the discharge velocity
      * is calculated, assuming the reservoir storage is above the activation threshold.  However, it is left to the
      * velocity_meters_per_second function to actually update the object's state.
      *
      * @param parameters_struct reservoir parameters struct
      * @param storage_struct reservoir state storage struct
-     * @param activation_threshold_meters meters from the bottom of the reservoir to the bottom of the outlet
-     * @param max_velocity_meters_per_second max outlet velocity in meters per second
-     * @return velocity_meters_per_second_local the velocity in meters per second of the discharge through the outlet
      */
     double calc_velocity_meters_per_second_local(reservoir_parameters &parameters_struct,
                                                  reservoir_state &storage_struct) override;

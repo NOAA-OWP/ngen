@@ -178,7 +178,7 @@ namespace tshirt {
         /**
          * Initialize the subsurface groundwater reservoir for the model, in the `groundwater_reservoir` member field.
          *
-         * Initialize the subsurface groundwater reservoir for the model as a Nonlinear_Reservoir object, creating the
+         * Initialize the subsurface groundwater reservoir for the model as a Reservoir object, creating the
          * reservoir with a single outlet.  In particular, this is a Reservoir_Exponential_Outlet object, since the outlet
          * requires the following be used to calculate discharge flow:
          *
@@ -186,7 +186,7 @@ namespace tshirt {
          *
          * Note that this function should only be used during object construction.
          *
-         * @see Nonlinear_Reservoir
+         * @see Reservoir
          * @see Reservoir_Exponential_Outlet
          */
         void initialize_groundwater_reservoir();
@@ -194,7 +194,7 @@ namespace tshirt {
         /**
          * Initialize the subsurface soil reservoir for the model, in the `soil_reservoir` member field.
          *
-         * Initialize the subsurface soil reservoir for the model as a Nonlinear_Reservoir object, creating the reservoir
+         * Initialize the subsurface soil reservoir for the model as a Reservoir object, creating the reservoir
          * with outlets for both the subsurface lateral flow and the percolation flow.  This should only be used during
          * object construction.
          *
@@ -203,14 +203,14 @@ namespace tshirt {
          * for the lateral flow and percolation flow outlets are maintained this class within the lf_outlet_index and
          * perc_outlet_index member variables respectively.
          *
-         * @see Nonlinear_Reservoir
+         * @see Reservoir
          */
         void initialize_soil_reservoir();
 
         /**
          * Initialize the Nash Cascade reservoirs applied to the subsurface soil reservoir's lateral flow outlet.
          *
-         * Initialize the soil_lf_nash_res member, containing the collection of Nonlinear_Reservoir objects used to create
+         * Initialize the soil_lf_nash_res member, containing the collection of Reservoir objects used to create
          * the Nash Cascade for soil_reservoir lateral flow outlet.  The analogous values for Nash Cascade storage from
          * previous_state are used for current storage of reservoirs at each given index.
          */

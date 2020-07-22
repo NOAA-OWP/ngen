@@ -82,7 +82,7 @@ namespace tshirt {
     /**
      * Initialize the subsurface groundwater reservoir for the model, in the `groundwater_reservoir` member field.
      *
-     * Initialize the subsurface groundwater reservoir for the model as a Nonlinear_Reservoir object, creating the
+     * Initialize the subsurface groundwater reservoir for the model as a Reservoir object, creating the
      * reservoir with a single outlet.  In particular, this is a Reservoir_Exponential_Outlet object, since the outlet
      * requires the following be used to calculate discharge flow:
      *
@@ -90,7 +90,7 @@ namespace tshirt {
      *
      * Note that this function should only be used during object construction.
      *
-     * @see Nonlinear_Reservoir
+     * @see Reservoir
      * @see Reservoir_Exponential_Outlet
      */
     void tshirt_model::initialize_groundwater_reservoir()
@@ -105,14 +105,14 @@ namespace tshirt {
         gw_outlets_vector[0] = make_shared<Reservoir_Exponential_Outlet>(
                 Reservoir_Exponential_Outlet(model_params.Cgw, model_params.expon, 0.0, max_gw_velocity));
         // Create the reservoir, passing the outlet via the vector argument
-        groundwater_reservoir = Nonlinear_Reservoir(0.0, model_params.max_groundwater_storage_meters,
+        groundwater_reservoir = Reservoir(0.0, model_params.max_groundwater_storage_meters,
                                                     previous_state->groundwater_storage_meters, gw_outlets_vector);
     }
 
     /**
      * Initialize the subsurface soil reservoir for the model, in the `soil_reservoir` member field.
      *
-     * Initialize the subsurface soil reservoir for the model as a Nonlinear_Reservoir object, creating the reservoir
+     * Initialize the subsurface soil reservoir for the model as a Reservoir object, creating the reservoir
      * with outlets for both the subsurface lateral flow and the percolation flow.  This should only be used during
      * object construction.
      *
@@ -121,31 +121,31 @@ namespace tshirt {
      * for the lateral flow and percolation flow outlets are maintained this class within the lf_outlet_index and
      * perc_outlet_index member variables respectively.
      *
-     * @see Nonlinear_Reservoir
+     * @see Reservoir
      */
     void tshirt_model::initialize_soil_reservoir()
     {
         // Build the vector of pointers to reservoir outlets
         vector<std::shared_ptr<Reservoir_Outlet>> soil_res_outlets(2);
 
-        // init subsurface later flow outlet
-        soil_res_outlets[lf_outlet_index] = std::make_shared<Reservoir_Outlet>(
-                Reservoir_Outlet(model_params.Klf, 1.0, soil_field_capacity_storage, model_params.max_lateral_flow));
+        // init subsurface lateral flow linear outlet
+        soil_res_outlets[lf_outlet_index] = std::make_shared<Reservoir_Linear_Outlet>(
+                Reservoir_Linear_Outlet(model_params.Klf, soil_field_capacity_storage, model_params.max_lateral_flow));
 
-        // init subsurface percolation flow outlet
+        // init subsurface percolation flow linear outlet
         // The max perc flow should be equal to the params.satdk value
-        soil_res_outlets[perc_outlet_index] = std::make_shared<Reservoir_Outlet>(
-                Reservoir_Outlet(model_params.satdk * model_params.slope, 1.0, soil_field_capacity_storage,
+        soil_res_outlets[perc_outlet_index] = std::make_shared<Reservoir_Linear_Outlet>(
+                Reservoir_Linear_Outlet(model_params.satdk * model_params.slope, soil_field_capacity_storage,
                                  std::numeric_limits<double>::max()));
         // Create the reservoir, included the created vector of outlet pointers
-        soil_reservoir = Nonlinear_Reservoir(0.0, model_params.max_soil_storage_meters,
+        soil_reservoir = Reservoir(0.0, model_params.max_soil_storage_meters,
                                              previous_state->soil_storage_meters, soil_res_outlets);
     }
 
     /**
      * Initialize the Nash Cascade reservoirs applied to the subsurface soil reservoir's lateral flow outlet.
      *
-     * Initialize the soil_lf_nash_res member, containing the collection of Nonlinear_Reservoir objects used to create
+     * Initialize the soil_lf_nash_res member, containing the collection of Reservoir objects used to create
      * the Nash Cascade for soil_reservoir lateral flow outlet.  The analogous values for Nash Cascade storage from
      * previous_state are used for current storage of reservoirs at each given index.
      */
@@ -154,10 +154,10 @@ namespace tshirt {
         soil_lf_nash_res.resize(model_params.nash_n);
         // TODO: verify correctness of activation_threshold (Sfc) and max_velocity (max_lateral_flow) arg values
         for (unsigned long i = 0; i < soil_lf_nash_res.size(); ++i) {
-            //construct a single outlet nonlinear reservoir
-            soil_lf_nash_res[i] = make_unique<Nonlinear_Reservoir>(
-                    Nonlinear_Reservoir(0.0, model_params.max_soil_storage_meters,
-                                        previous_state->nash_cascade_storeage_meters[i], model_params.Kn, 1.0,
+            //construct a single linear outlet reservoir
+            soil_lf_nash_res[i] = make_unique<Reservoir>(
+                    Reservoir(0.0, model_params.max_soil_storage_meters,
+                                        previous_state->nash_cascade_storeage_meters[i], model_params.Kn,
                                         0.0, model_params.max_lateral_flow));
         }
     }
