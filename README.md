@@ -2,6 +2,9 @@
 ![](https://github.com/noaa-owp/ngen/workflows/Documentation/badge.svg)
 
 # Next Gen Water Modeling Framework Prototype
+[![July 2020 webinar recording](https://img.youtube.com/vi/6XKPX4g9agY/0.jpg)](https://www.youtube.com/watch?v=6XKPX4g9agY)
+
+[July 2020 webinar slide deck](./doc/presentations/Next_Generation_Modeling_System_Seminar-15July2020.pdf)
 
 **Description**:  
 As we attempt to apply hydrological modeling at different scales, the traditional organizational structure and algorithms of model software begin to interfere with the ability of the model to represent complex and heterogeneous processes at appropriate scales.  While it is possible to do so, the code becomes highly specialized, and reasoning about the model and its states becomes more difficult.  Model implementations are often the result of taking for granted the availability of a particular form of data **and** solution -- attempting to map the solution to that data. This framework takes a data centric approach, organizing the data first and mapping appropriate solutions to the existing data.
