@@ -293,7 +293,8 @@ namespace tshirt {
                                     &surface_runoff, &subsurface_infiltration_flux);
 
         double subsurface_excess, nash_subsurface_excess;
-        soil_reservoir.response_meters_per_second(subsurface_infiltration_flux, dt, subsurface_excess);
+        double mean_timestep_infiltration_m_per_s = subsurface_infiltration_flux / dt;
+        soil_reservoir.response_meters_per_second(mean_timestep_infiltration_m_per_s, (int)dt, subsurface_excess);
 
         // lateral subsurface flow
         double Qlf = soil_reservoir.velocity_meters_per_second_for_outlet(lf_outlet_index);
