@@ -77,10 +77,16 @@ class Reservoir
 
     /**
      * @brief Function to update the reservoir storage in meters and return a response in meters per second to
-     * an influx and timestep.
+     * an influx and time step.
+     *
+     * Note that the function also takes a reference parameter for holding the amount of excess water for the reservoir
+     * beyond its maximum storage after accounting for the input amount.  All calls to this function will initialize this
+     * parameter, without accounting for any previous value, so any usage should ensure the passed reference does not
+     * contain a value that is still needed but not stored elsewhere.
+     *
      * @param in_flux_meters_per_second influx in meters per second
      * @param delta_time_seconds delta time in seconds
-     * @param excess_water_meters excess water in meters
+     * @param excess_water_meters Reference to an amount of excess water in meters, after considering input and max storage.
      * @return sum_of_outlet_velocities_meters_per_second sum of the outlet velocities in meters per second
      */
     double response_meters_per_second(double in_flux_meters_per_second, int delta_time_seconds,
