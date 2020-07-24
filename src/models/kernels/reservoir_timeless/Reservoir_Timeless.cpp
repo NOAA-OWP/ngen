@@ -146,9 +146,9 @@ double Reservoir::response_meters(double in_flux_meters, double &excess_water_me
         /// \todo TODO: Return appropriate warning
         cout << "WARNING: Reservoir calculated a storage above the maximum storage."  << endl;
 
-        state.current_storage_height_meters = parameters.maximum_storage_meters;
-
         excess_water_meters = (state.current_storage_height_meters - parameters.maximum_storage_meters);
+
+        state.current_storage_height_meters = parameters.maximum_storage_meters;
     }
 
     //Ensure that excess_water_meters is not negative
