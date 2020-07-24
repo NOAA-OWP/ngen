@@ -333,7 +333,7 @@ namespace tshirt {
         // Save "raw" runoff here and have realization class calculate GIUH surface runoff using that kernel
         // TODO: for now add this to runoff, but later adjust calculations to limit flow into reservoir to avoid excess
         fluxes->surface_runoff_meters_per_second = surface_runoff + (subsurface_excess / dt) + (excess_gw_water / dt);
-        //fluxes->surface_runoff_meters_per_second = surface_runoff;
+        //fluxes->surface_runoff_meters_per_second = surface_runoff_depth_m;
 
         return mass_check(input_storage_m, dt);
     }
