@@ -15,6 +15,7 @@ class Simple_Lumped_Model_Realization : public HY_CatchmentArea
 
         Simple_Lumped_Model_Realization(
             forcing_params forcing_config,
+            utils::StreamHandler output_stream,
             double storage,
             double max_storage,
             double a,

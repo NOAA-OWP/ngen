@@ -5,6 +5,7 @@ using namespace realization;
 
 Tshirt_Realization::Tshirt_Realization(
         forcing_params forcing_config,
+        utils::StreamHandler output_stream,
         double soil_storage_meters,
         double groundwater_storage_meters,
         std::string catchment_id,
@@ -12,7 +13,7 @@ Tshirt_Realization::Tshirt_Realization(
         tshirt::tshirt_params params,
         const vector<double> &nash_storage,
         time_step_t t)
-    : HY_CatchmentArea(forcing_config), catchment_id(catchment_id), params(params), dt(t)
+    : HY_CatchmentArea(forcing_config, output_stream), catchment_id(catchment_id), params(params), dt(t)
 {
     giuh_kernel = giuh_json_reader.get_giuh_kernel_for_id(this->catchment_id);
 
@@ -39,6 +40,7 @@ Tshirt_Realization::Tshirt_Realization(
 
 Tshirt_Realization::Tshirt_Realization(
         forcing_params forcing_config,
+        utils::StreamHandler output_stream,
         double soil_storage_meters,
         double groundwater_storage_meters,
         std::string catchment_id,
@@ -59,7 +61,7 @@ Tshirt_Realization::Tshirt_Realization(
         double max_gw_storage,
         const std::vector<double> &nash_storage,
         time_step_t t
-) : Tshirt_Realization::Tshirt_Realization(forcing_config, soil_storage_meters, groundwater_storage_meters,
+) : Tshirt_Realization::Tshirt_Realization(forcing_config, output_stream, soil_storage_meters, groundwater_storage_meters,
                                            catchment_id, giuh_json_reader,
                                            tshirt::tshirt_params(maxsmc, wltsmc, satdk, satpsi, slope, b, multiplier,
                                                                  alpha_fc, Klf, Kn, nash_n, Cgw, expon, max_gw_storage),

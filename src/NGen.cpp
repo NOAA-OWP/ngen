@@ -200,13 +200,19 @@ int main(int argc, char *argv[]) {
         if (feature->get_property("realization").as_string() == "hymod") {
             //Create the hymod instance
             std::vector<double> sr_tmp = {1.0, 1.0, 1.0};
-            catchment_realizations[feature->get_id()] = std::make_unique<_hymod>( _hymod(forcing_p, storage, max_storage, a, b, Ks, Kq, n, sr_tmp, t) );
+            std::ostream* raw_pointer = &catchment_outfiles[feat_id];
+            std::shared_ptr<std::ostream> s_ptr(raw_pointer);
+            utils::StreamHandler catchment_output(s_ptr);
+            catchment_realizations[feature->get_id()] = std::make_unique<_hymod>( _hymod(forcing_p, catchment_output, storage, max_storage, a, b, Ks, Kq, n, sr_tmp, t) );
         }
         else if(feature->get_property("realization").as_string() == "tshirt") {
-          //Create the tshirt instance
-          vector<double> nash_storage = {0.0, 0.0};//, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0};
+            //Create the tshirt instance
+            vector<double> nash_storage = {0.0, 0.0};//, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0};
 
-          catchment_realizations[feature->get_id()] = std::make_unique<_tshirt>(forcing_p,
+            std::ostream* raw_pointer = &catchment_outfiles[feat_id];
+            std::shared_ptr<std::ostream> s_ptr(raw_pointer);
+            utils::StreamHandler catchment_output(s_ptr);
+            catchment_realizations[feature->get_id()] = std::make_unique<_tshirt>(forcing_p, catchment_output,
                  tshirt_params.max_soil_storage_meters*0.667, //soil_storage_meters
                  tshirt_params.max_groundwater_storage_meters*0.5, //groundwater_storage_meters
                  example_catchment_id, //used to cross-reference the COMID, need to look up the catchments GIUH data

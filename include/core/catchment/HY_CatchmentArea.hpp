@@ -8,6 +8,8 @@
 #include <boost/geometry.hpp>
 #include <boost/geometry/geometries/geometries.hpp>
 
+#include "StreamHandler.hpp"
+
 namespace bg = boost::geometry;
 
 class HY_CatchmentArea : public HY_CatchmentRealization, public GM_Object
@@ -18,12 +20,14 @@ class HY_CatchmentArea : public HY_CatchmentRealization, public GM_Object
     typedef bg::model::polygon<point_t> polygon_t;
 
     HY_CatchmentArea();
-    HY_CatchmentArea(forcing_params forcing_config); //TODO not sure I like this pattern
+    HY_CatchmentArea(forcing_params forcing_config, utils::StreamHandler output_stream); //TODO not sure I like this pattern
     virtual ~HY_CatchmentArea();
 
     protected:
 
     polygon_t bounds;
+
+    utils::StreamHandler output;
 
     private:
 };

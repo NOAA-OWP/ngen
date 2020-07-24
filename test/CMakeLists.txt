@@ -86,6 +86,7 @@ add_automated_test(
         geojson/FeatureCollection_Test.cpp
         forcing/Forcing_Test.cpp
         core/catchment/giuh/GIUH_Test.cpp
+        utils/include/StreamOutputTest.cpp
 )
 
 # Add for integration tests once we have some

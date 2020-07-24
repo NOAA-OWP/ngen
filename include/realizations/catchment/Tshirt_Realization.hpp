@@ -18,6 +18,7 @@ namespace realization {
         typedef long time_step_t;
 
         Tshirt_Realization(forcing_params forcing_config,
+                           utils::StreamHandler output_stream,
                            double soil_storage_meters,
                            double groundwater_storage_meters,
                            std::string catchment_id,
@@ -28,6 +29,7 @@ namespace realization {
 
         Tshirt_Realization(
                 forcing_params forcing_config,
+                utils::StreamHandler output_stream,
                 double soil_storage_meters,
                 double groundwater_storage_meters,
                 std::string catchment_id,
