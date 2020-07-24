@@ -118,6 +118,22 @@ namespace Reservoir{
             //Update current storage from influx multiplied by delta time.
             state.current_storage_height_meters += in_flux_meters_per_second * delta_time_seconds;
 
+            //If storage is greater than maximum storage, set to maximum storage and return excess water.
+            if (state.current_storage_height_meters > parameters.maximum_storage_meters)
+            {
+                /// \todo TODO: Return appropriate warning
+                cout << "WARNING: Reservoir calculated a storage above the maximum storage."  << endl;
+
+                state.current_storage_height_meters = parameters.maximum_storage_meters;
+
+                excess_water_meters = (state.current_storage_height_meters - parameters.maximum_storage_meters);
+            }
+            // TODO: since we are now doing this first, does it make sense to add the excess back into the storage if there is
+            //  room after outlet flow loss is accounted for?
+
+            // TODO: should we break up the calculations into smaller amounts, if the timestep is relatively (hour, day, etc.)
+
+
             //Loop through reservoir outlets.
             for (auto& outlet : this->outlets) //pointer to outlets
             {
