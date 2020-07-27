@@ -1,26 +1,22 @@
-#include "Reservoir_Exponential_Outlet.hpp"
+#include "Reservoir_Linear_Outlet.hpp"
 
 /**
- * @brief Default Constructor building an empty Reservoir Exponential Outlet Object.
+ * @brief Default Constructor building an empty Reservoir Linear Outlet Object.
  */
-Reservoir_Exponential_Outlet::Reservoir_Exponential_Outlet() : Reservoir_Outlet(), c(0.0), expon(0.0)
+Reservoir_Linear_Outlet::Reservoir_Linear_Outlet() : Reservoir_Outlet()
 {
 
 }
 
 /**
- * @brief Parameterized Constructor that builds a Reservoir Outlet object.
- *
- * @param c outlet velocity calculation coefficient
- * @param expon outlet velocity calculation exponential coefficient
+ * @brief Parameterized Constructor that builds a Linear Reservoir Outlet object.
+ * @param a outlet velocity calculation coefficient
  * @param activation_threshold_meters meters from the bottom of the reservoir to the bottom of the outlet
  * @param max_velocity_meters_per_second max outlet velocity in meters per second
  */
-Reservoir_Exponential_Outlet::Reservoir_Exponential_Outlet(double c, double expon, double activation_threshold_meters,
+Reservoir_Linear_Outlet::Reservoir_Linear_Outlet(double a, double activation_threshold_meters,
                              double max_velocity_meters_per_second) :
-        Reservoir_Outlet(-999.0, -999.0, activation_threshold_meters, max_velocity_meters_per_second),
-        c(c),
-        expon(expon)
+        Reservoir_Outlet(a, 1.0, activation_threshold_meters, max_velocity_meters_per_second)
 {
 
 }
@@ -29,7 +25,7 @@ Reservoir_Exponential_Outlet::Reservoir_Exponential_Outlet(double c, double expo
  * @brief Calculate outlet discharge velocity in meters per second.
  *
  * Perform appropriate calculations to return the velocity, in meters per second, of the discharge through this
- * exponential outlet.
+ * linear outlet.
  *
  * Typically this is only used by the velocity_meters_per_second function.
  *
@@ -40,9 +36,10 @@ Reservoir_Exponential_Outlet::Reservoir_Exponential_Outlet(double c, double expo
  * @param parameters_struct reservoir parameters struct
  * @param storage_struct reservoir state storage struct
  */
-double Reservoir_Exponential_Outlet::calc_velocity_meters_per_second_local(reservoir_parameters &parameters_struct,
+double Reservoir_Linear_Outlet::calc_velocity_meters_per_second_local(reservoir_parameters &parameters_struct,
                                                                            reservoir_state &storage_struct)
 {
-    return c * (exp(expon * storage_struct.current_storage_height_meters /
-                    parameters_struct.maximum_storage_meters) - 1);
+    return a * (storage_struct.current_storage_height_meters - activation_threshold_meters) 
+           /
+           (parameters_struct.maximum_storage_meters - activation_threshold_meters);
 }
