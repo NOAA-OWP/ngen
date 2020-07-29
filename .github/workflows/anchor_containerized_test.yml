@@ -22,7 +22,7 @@ jobs:
       uses: anchore/scan-action@master
       with:
         image-reference: "localbuild/testimage:latest"
-        dockerfile-path: "/home/runner/work/ngen/ngen/Dockerfile"
+        dockerfile-path: "/home/runner/work/ngen/ngen/docker/CENTOS.Dockerfile"
         acs-report-enable: true
     - name: Upload Anchore Scan Report
       uses: github/codeql-action/upload-sarif@v1
