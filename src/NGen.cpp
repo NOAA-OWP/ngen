@@ -129,32 +129,6 @@ int main(int argc, char *argv[]) {
       if( feat_id.substr(0, 3) == "cat" ){
         catchment_outfiles[feat_id].open(feature->get_id()+"_output.csv", std::ios::trunc);
 
-        //Create catchment realization, add to map
-        forcing_params forcing_p(forcing_paths[feat_id], start_time, end_time);
-        if (feature->get_property("realization").as_string() == "hymod") {
-            //Create the hymod instance
-            std::vector<double> sr_tmp = {1.0, 1.0, 1.0};
-            std::ostream* raw_pointer = &catchment_outfiles[feat_id];
-            std::shared_ptr<std::ostream> s_ptr(raw_pointer);
-            utils::StreamHandler catchment_output(s_ptr);
-            catchment_realizations[feature->get_id()] = std::make_unique<_hymod>( _hymod(forcing_p, catchment_output, storage, max_storage, a, b, Ks, Kq, n, sr_tmp, t) );
-        }
-        else if(feature->get_property("realization").as_string() == "tshirt") {
-            //Create the tshirt instance
-            vector<double> nash_storage = {0.0, 0.0};//, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0};
-
-            std::ostream* raw_pointer = &catchment_outfiles[feat_id];
-            std::shared_ptr<std::ostream> s_ptr(raw_pointer);
-            utils::StreamHandler catchment_output(s_ptr);
-            catchment_realizations[feature->get_id()] = std::make_unique<_tshirt>(forcing_p, catchment_output,
-                 tshirt_params.max_soil_storage_meters*0.667, //soil_storage_meters
-                 tshirt_params.max_groundwater_storage_meters*0.5, //groundwater_storage_meters
-                 example_catchment_id, //used to cross-reference the COMID, need to look up the catchments GIUH data
-                 giuh_json_reader,     //used to actually lookup GIUH data and create a giuh_kernel obj for catchment
-                 tshirt_params, nash_storage, dt);
-
-        }
-
         if(feature->get_number_of_destination_features() == 1)
         {
           catchment_to_nexus[feat_id] = feature->destination_features()[0]->get_id();
