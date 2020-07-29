@@ -43,9 +43,15 @@ std::shared_ptr<Simple_Lumped_Model_Realization> Realization_Config_Base::get_si
     double t = this->get_option("t").as_real_number();
 
     std::vector<double> sr_tmp = {1.0, 1.0, 1.0};
+    
+    std::ostream* raw_pointer = &std::cout; 
+    std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
+    utils::StreamHandler catchment_output(s_ptr);
+    
     return std::make_shared<Simple_Lumped_Model_Realization>(
         Simple_Lumped_Model_Realization(
             this->get_forcing_parameters(),
+            catchment_output,
             storage,
             max_storage,
             a,
@@ -100,8 +106,14 @@ std::shared_ptr<Tshirt_Realization> Realization_Config_Base::get_tshirt() {
 
     double soil_storage_meters = tshirt_params.max_soil_storage_meters * this->get_option("soil_storage_percentage").as_real_number();
     double ground_water_storage = tshirt_params.max_groundwater_storage_meters * this->get_option("groundwater_storage_percentage").as_real_number();
+    
+    std::ostream* raw_pointer = &std::cout; 
+    std::shared_ptr<std::ostream> s_ptr(raw_pointer,[](void*) {});
+    utils::StreamHandler catchment_output(s_ptr);
+    
     return std::make_shared<Tshirt_Realization>(        
             this->get_forcing_parameters(),
+            catchment_output,
             soil_storage_meters, //soil_storage_meters
             ground_water_storage, //groundwater_storage_meters
             this->id, //used to cross-reference the COMID, need to look up the catchments GIUH data

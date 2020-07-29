@@ -92,6 +92,7 @@ add_automated_test(
         geojson/FeatureCollection_Test.cpp
         forcing/Forcing_Test.cpp
         core/catchment/giuh/GIUH_Test.cpp
+        utils/include/StreamOutputTest.cpp
         realizations/catchments/Realization_Config_Test.cpp
         realizations/catchments/Realization_Config_Reader_Test.cpp
 )
