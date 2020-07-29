@@ -4,8 +4,7 @@
 #include <cmath>
 #include <vector>
 #include "HymodErrorCodes.h"
-#include "reservoir/LinearReservoir.hpp"
-#include "reservoir/Nonlinear_Reservoir.hpp"
+#include "reservoir/Reservoir.hpp"
 #include "Pdm03.h"
 #include "hymod_params.h"
 #include "hymod_state.h"
@@ -40,18 +39,18 @@ class hymod_kernel
         void* et_params)            //!< parameters for the et function
     {
 
-        // initalize the Nash cascade of nonlinear reservoirs
-        std::vector<Nonlinear_Reservoir> nash_cascade;
+        // initalize the Nash cascade of reservoirs
+        std::vector<Reservoir> nash_cascade;
 
         nash_cascade.resize(params.n);
         for ( unsigned long i = 0; i < nash_cascade.size(); ++i )
         {
-            //construct a single outlet nonlinear reservoir
-            nash_cascade[i] = Nonlinear_Reservoir(params.min_storage_meters, params.max_storage_meters, state.Sr[i], params.Kq, params.b, params.activation_threshold_meters_nash_cascade_reservoir, params.reservoir_max_velocity_meters_per_second);
+            //construct a single linear outlet reservoir
+            nash_cascade[i] = Reservoir(params.min_storage_meters, params.max_storage_meters, state.Sr[i], params.Kq, params.activation_threshold_meters_nash_cascade_reservoir, params.reservoir_max_velocity_meters_per_second);
         }
 
-        // initalize groundwater reservoir
-        Nonlinear_Reservoir groundwater(params.min_storage_meters, params.max_storage_meters, state.groundwater_storage_meters, params.Ks, params.b, params.activation_threshold_meters_groundwater_reservoir, params.reservoir_max_velocity_meters_per_second);
+        // initalize groundwater linear outlet reservoir
+        Reservoir groundwater(params.min_storage_meters, params.max_storage_meters, state.groundwater_storage_meters, params.Ks, params.activation_threshold_meters_groundwater_reservoir, params.reservoir_max_velocity_meters_per_second);
 
         // add flux to the current state
         state.storage_meters += input_flux_meters;
@@ -75,10 +74,10 @@ class hymod_kernel
         //TODO: Review issues with dt and internal timestep
         runoff_meters_per_second += groundwater_excess_meters / dt;
 
-        // cycle through Quickflow Nash cascade of nonlinear reservoirs
+        // cycle through Quickflow Nash cascade of reservoirs
         for(unsigned long int i = 0; i < nash_cascade.size(); ++i)
         {
-            // get response water velocity of nonlinear reservoir
+            // get response water velocity of reservoir
             runoff_meters_per_second = nash_cascade[i].response_meters_per_second(runoff_meters_per_second, dt, excess_water_meters);
             
             //TODO: Review issues with dt and internal timestep

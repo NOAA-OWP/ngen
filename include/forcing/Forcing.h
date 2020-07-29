@@ -1,3 +1,6 @@
+#ifndef FORCING_H
+#define FORCING_H
+
 #include <vector>
 #include <cmath>
 #include <algorithm>
@@ -488,3 +491,5 @@ class Forcing
 /// \todo Make CSV forcing a subclass
 /// \todo Consider passing grid to class
 /// \todo Consider following GDAL API functionality
+
+#endif // FORCING_H

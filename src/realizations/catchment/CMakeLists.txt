@@ -11,13 +11,15 @@ target_include_directories(realizations_catchment PUBLIC
         ${PROJECT_SOURCE_DIR}/include/realizations/catchment
         ${PROJECT_SOURCE_DIR}/include/forcing
         ${PROJECT_SOURCE_DIR}/include/utilities
+        ${PROJECT_SOURCE_DIR}/include/geojson
         ${PROJECT_SOURCE_DIR}/models
         ${PROJECT_SOURCE_DIR}/models/kernels
+        ${PROJECT_SOURCE_DIR}/models/tshirt/include
         )
-
+        
 target_link_libraries(realizations_catchment PUBLIC
         NGen::core_catchment
         NGen::core_catchment_giuh
         NGen::models_tshirt
+        NGen::geojson
         )
-# TODO: confirm that don't need to link a library for "LinearReservoir.hpp"

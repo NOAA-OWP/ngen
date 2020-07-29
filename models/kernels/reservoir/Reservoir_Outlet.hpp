@@ -67,9 +67,6 @@ public:
      *
      * @param parameters_struct reservoir parameters struct
      * @param storage_struct reservoir state storage struct
-     * @param activation_threshold_meters meters from the bottom of the reservoir to the bottom of the outlet
-     * @param max_velocity_meters_per_second max outlet velocity in meters per second
-     * @return velocity_meters_per_second_local the velocity in meters per second of the discharge through the outlet
      * @see calc_velocity_meters_per_second_local
      */
     double velocity_meters_per_second(reservoir_parameters &parameters_struct, reservoir_state &storage_struct);
@@ -96,7 +93,7 @@ protected:
      * @param parameters_struct reservoir parameters struct
      * @param storage_struct reservoir state storage struct
      * @param activation_threshold_meters meters from the bottom of the reservoir to the bottom of the outlet
-     * @param max_velocity_meters_per_second max outlet velocity in meters per second
+
      * @return velocity_meters_per_second_local the velocity in meters per second of the discharge through the outlet
      */
     virtual double calc_velocity_meters_per_second_local(reservoir_parameters &parameters_struct,
