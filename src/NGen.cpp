@@ -11,8 +11,7 @@
 
 #include <HY_HydroNexus.hpp>
 #include <HY_Catchment.hpp>
-#include <Simple_Lumped_Model_Realization.hpp>
-#include <Tshirt_Realization.hpp>
+#include <Formulation.hpp>
 #include <HY_PointHydroNexus.hpp>
 
 #include "NGenConfig.h"
