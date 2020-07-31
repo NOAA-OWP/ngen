@@ -1,10 +1,4 @@
-# ngen HY\_Features-based data scheme
-
-The `hy_geom.R` script in this directory creates a number of sample outputs for development and testing purposes. All dependencies of this script are available on CRAN with:
-`install.packages(c("dplyr", "sf", "nhdplusTools", "jsonlite"))`
-- `nhdplus_subset.gpkg` contains a complete set of nhdplus data for the area around the smaller subset in other files.
-- `.csv` files contain edge lists for the data described below.
-- `.geojson` files contain basic parameters and geometry for the data described below.
+# NGEN HY\_Features-based data scheme
 
 ## Hydrologic and Hydrodynamic Graphs:
 
