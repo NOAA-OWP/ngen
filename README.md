@@ -74,6 +74,67 @@ Or, if the build system has not yet been properly generated:
 
 See the [Testing ReadMe](test/README.md) file for a more thorough discussion of testing.
 
+## How to debug the software
+
+This is all developed via **CMake**, so a specific setting must be active within the root `CMakeList.txt` file:
+
+    target_compile_options(ngen PUBLIC -g)
+    
+This will ensure that ngen and all of the code that is compiled with it has debugging flags enabled. From 
+there, the application may be run via `gdb`, `lldb`, or through your IDE.
+
+If you do not have administrative rights on your workstation, there's a chance you do _not_ have access to 
+`gdb` or `lldb`, meaning that you cannot step through your code and inspect variables. To get around this, you 
+can use GitPod to start an editor (based on VSCode) in your browser and edit and debug to your heart's content. 
+You can access an individualized GitPod environment through: https://gitpod.io/#https://github.com/<your github username>/ngen. 
+Entering it for the first time will generate a new git branch.
+
+There are a few things required, however. When you first enter, gitpod will ask you if you want to set up your 
+environment. Let it create a `.yml` configuration file. It will then ask if you want it to create a custom docker 
+image. Say yes, then choose the default image. At the end, you should have a `.gitpod.yml` and `.gitpod.dockerfile` 
+at the root of the project.
+
+Next, you will need to add the above `target_compile_options(ngen PUBLIC -g)` just about anywhere in the `CMakeLists.txt` 
+file within the root of your project.
+
+Next, you will need to make sure that **all** dependencies are installed within your environment. The image GitPod supplies 
+uses an application name HomeBrew to allow you to install dependencies. You will need to run:
+
+    brew install boost
+    
+to proceed further. Now clear all of your previously built binaries and build your application (`ngen` or any test routine 
+that you're interested in, such as `test_all`).
+
+A debugging extension should be installed into your workspace. Select the bottom icon on the left hand side of your screen; 
+it should look like a box with a square in it. CodeLLDB is a good extension to use.
+
+Lastly, a debugging configuration must be set up. There is an icon on the left hand side of your screen that should be a 
+bug with a slash through it, somewhat like a 'No Parking' sign. If you click it, it will open a debugging tab on the left 
+hand side of your screen. Within it, you should see a play button next to a drop down menu that says 'No Configurations'. 
+Click on that, then click on the option named "Add Configuration...". This will create a file named `launch.json`. Within it, 
+add a configuration so that it looks like:
+
+
+    {
+      // Use IntelliSense to learn about possible attributes.
+      // Hover to view descriptions of existing attributes.
+      "version": "0.2.0",
+      "configurations": [
+        {
+            "name": "ngen",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/<your build directory>/ngen",
+            "args": [],
+        }
+      ]
+    }
+
+You will now have the configuration named `ngen` after saving your `launch.json` file. You may now add a break point within 
+your code by clicking to the left of the line number within your code. This should make a red circle appear. Now, when you run 
+it by clicking the play button in the debugging window, your code will stop on the line where you put your break point, as long 
+as it executes code. It will **not** stop on whitespace or comments.
+
 ## Known issues
 
 Document any known significant shortcomings with the software.
