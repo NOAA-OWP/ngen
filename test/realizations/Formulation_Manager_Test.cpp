@@ -184,22 +184,22 @@ TEST_F(Formulation_Manager_Test, basic_run) {
 
     double dt = 3600.0;
 
-    for (std::pair<std::string, std::shared_ptr<realization::Formulation>> realization : manager) {
-        if (calculated_results.count(realization.first) == 0) {
-            calculated_results.emplace(realization.first, std::map<long, double>());
+    for (std::pair<std::string, std::shared_ptr<realization::Formulation>> formulation : manager) {
+        if (calculated_results.count(formulation.first) == 0) {
+            calculated_results.emplace(formulation.first, std::map<long, double>());
         }
 
         double calculation;
 
         for (long t = 0; t < 4; t++) {            
-            calculation = realization.second->get_response(
+            calculation = formulation.second->get_response(
                 0,
                 t,
                 dt,
                 &pdm_et_data
             );
 
-            calculated_results.at(realization.first).emplace(t, calculation);
+            calculated_results.at(formulation.first).emplace(t, calculation);
         }
     }
 }

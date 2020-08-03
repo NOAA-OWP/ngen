@@ -1,6 +1,7 @@
 #include "giuh_kernel.hpp"
 #include "Tshirt_Realization.hpp"
 #include "TshirtErrorCodes.h"
+#include "Catchment_Formulation.hpp"
 using namespace realization;
 
 Tshirt_Realization::Tshirt_Realization(

@@ -1,5 +1,5 @@
-#ifndef FORMULATION_MANAGER_H
-#define FORMULATION_MANAGER_H
+#ifndef NGEN_FORMULATION_MANAGER_H
+#define NGEN_FORMULATION_MANAGER_H
 
 #include <memory>
 #include <sstream>
@@ -183,4 +183,4 @@ namespace realization {
             std::map<std::string, std::shared_ptr<Formulation>> formulations;
     };
 }
-#endif // FORMULATION_MANAGER_H
+#endif // NGEN_FORMULATION_MANAGER_H
