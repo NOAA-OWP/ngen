@@ -1,5 +1,5 @@
-#ifndef RESERVOIR_HPP
-#define RESERVOIR_HPP
+#ifndef RESERVOIR_TIMELESS_HPP
+#define RESERVOIR_TIMELESS_HPP
 
 #include <vector>
 #include <cmath>
@@ -148,4 +148,4 @@ class Reservoir
     outlet_vector_type outlets;
 };
 
-#endif  // RESERVOIR_HPP
+#endif  // RESERVOIR_TIMELESS_HPP
