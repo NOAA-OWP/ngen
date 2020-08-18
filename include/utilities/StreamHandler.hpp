@@ -3,6 +3,7 @@
 
 #include <fstream>
 #include <ostream>
+#include <iostream>
 
 namespace utils
 {
@@ -87,6 +88,12 @@ namespace utils
 
 
     };
+
+    static StreamHandler getStdOut() {    
+        std::ostream* raw_pointer = &std::cout; 
+        std::shared_ptr<std::ostream> stream_pointer(raw_pointer, [](void*) {});
+        return utils::StreamHandler(stream_pointer);
+    }
 }
 
 

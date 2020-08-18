@@ -7,8 +7,7 @@
 #include <FeatureVisitor.hpp>
 #include "features/Features.hpp"
 
-#include "realizations/catchment/Realization_Config.hpp"
-#include "realizations/catchment/Realization_Config_Reader.hpp"
+#include "realizations/catchment/Formulation_Manager.hpp"
 
 #include <HY_HydroNexus.hpp>
 #include <HY_Catchment.hpp>
@@ -19,9 +18,9 @@
 #include "NGenConfig.h"
 #include "tshirt_params.h"
 
-std::string catchmentRealizationFile = "./data/sugar_creek/catchment_data_subset.geojson";
-std::string nexusRealizationFile = "./data/sugar_creek/nexus_data_subset.geojson";
-const std::string REALIZATION_CONFIG_PATH = "./data/example_realization_config.json";
+std::string catchmentRealizationFile = "./data/catchment_data.geojson";
+std::string nexusRealizationFile = "./data/nexus_data.geojson";
+const std::string REALIZATION_CONFIG_PATH = "./data/refactored_example_realization_config.json";
 
 //TODO this is possible, but ASSUMES realizations based on feature geom type, so not quite ready for prime time
 class RealizaitonVisitor : public geojson::FeatureVisitor {
@@ -113,14 +112,10 @@ int main(int argc, char *argv[]) {
 
     prepare_features(nexus_collection, catchment_collection, !true);
 
-    realization::Realization_Config_Reader reader = realization::load_reader(REALIZATION_CONFIG_PATH);
-    reader->read();
-
+    realization::Formulation_Manager manager = realization::Formulation_Manager(REALIZATION_CONFIG_PATH);
+    manager.read(utils::getStdOut());
     //TODO don't really need catchment_collection once catchments are added to nexus collection
     catchment_collection.reset();
-
-
-    std::map<std::string, realization::Realization_Config> catchment_configs;
 
     for(auto& feature : *nexus_collection)
     {
@@ -138,7 +133,6 @@ int main(int argc, char *argv[]) {
           //TODO
         }
 
-        catchment_configs[feat_id] = reader->get(feat_id);
         catchment_id[feat_id] = std::stoi(feat_id.substr(4));
       }else{
         //Create nexus realization, add to map
@@ -171,13 +165,14 @@ int main(int argc, char *argv[]) {
     for(int time_step = 0; time_step < 720; time_step++)
     {
       std::cout<<"Time step "<<time_step<<std::endl;
-      for (std::pair<std::string, realization::Realization_Config> realization_config_pair : catchment_configs) {
-        double response = realization_config_pair.second->get_response(0, time_step, 3600.0, &pdm_et_data);
-        std::cout<<"\tCatchment "<<realization_config_pair.first<<" contributing "<<response<<" m/s to "<<catchment_to_nexus[realization_config_pair.first]<<std::endl;
-        catchment_outfiles[realization_config_pair.first] << time_step <<", "<<response<<std::endl;
-        response = response * boost::geometry::area(nexus_collection->get_feature(realization_config_pair.first)->geometry<geojson::multipolygon_t>());
+
+      for (std::pair<std::string, std::shared_ptr<realization::Formulation>> formulation_pair : manager ) {
+        double response = formulation_pair.second->get_response(0, time_step, 3600.0, &pdm_et_data);
+        std::cout<<"\tCatchment "<<formulation_pair.first<<" contributing "<<response<<" m/s to "<<catchment_to_nexus[formulation_pair.first]<<std::endl;
+        catchment_outfiles[formulation_pair.first] << time_step <<", "<<response<<std::endl;
+        response = response * boost::geometry::area(nexus_collection->get_feature(formulation_pair.first)->geometry<geojson::multipolygon_t>());
         std::cout << "\t\tThe modified response is: " << response << std::endl;
-        nexus_realizations[ catchment_to_nexus[realization_config_pair.first] ]->add_upstream_flow(response, catchment_id[realization_config_pair.first], time_step);
+        nexus_realizations[ catchment_to_nexus[formulation_pair.first] ]->add_upstream_flow(response, catchment_id[formulation_pair.first], time_step);
       }
 
       for(auto &nexus: nexus_realizations)
