@@ -1,5 +1,5 @@
-#ifndef NGEN_RESERVOIR_OUTLET_H
-#define NGEN_RESERVOIR_OUTLET_H
+#ifndef NGEN_RESERVOIR_OUTLET_TIMELESS_H
+#define NGEN_RESERVOIR_OUTLET_TIMELESS_H
 
 #include <cmath>
 #include "reservoir_parameters_timeless.h"
@@ -101,4 +101,4 @@ protected:
 
 };
 
-#endif //NGEN_RESERVOIR_OUTLET_H
+#endif //NGEN_RESERVOIR_OUTLET_TIMELESS_H
