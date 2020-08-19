@@ -29,37 +29,37 @@ class ReservoirKernelTest : public ::testing::Test {
 
     void setupExponentialOutletReservoir();
 
-    std::shared_ptr<Reservoir> NoOutletReservoir; //smart pointer to a Reservoir with no outlets
+    std::shared_ptr<Reservoir::Explicit_Time::Reservoir> NoOutletReservoir; //smart pointer to a Reservoir with no outlets
 
-    std::shared_ptr<Reservoir> NoOutletReservoir2; //smart pointer to a Reservoir with no outlets
+    std::shared_ptr<Reservoir::Explicit_Time::Reservoir> NoOutletReservoir2; //smart pointer to a Reservoir with no outlets
 
-    std::shared_ptr<Reservoir> OneOutletReservoir; //smart pointer to a Reservoir with one outlet
+    std::shared_ptr<Reservoir::Explicit_Time::Reservoir> OneOutletReservoir; //smart pointer to a Reservoir with one outlet
 
-    std::shared_ptr<Reservoir> OneOutletHighStorageReservoir; //smart pointer to a Reservoir with one outlet and high storage
+    std::shared_ptr<Reservoir::Explicit_Time::Reservoir> OneOutletHighStorageReservoir; //smart pointer to a Reservoir with one outlet and high storage
 
-    std::shared_ptr<Reservoir> MultipleOutletReservoir; //smart pointer to a Reservoir with multiple outlets
+    std::shared_ptr<Reservoir::Explicit_Time::Reservoir> MultipleOutletReservoir; //smart pointer to a Reservoir with multiple outlets
 
-    std::shared_ptr<Reservoir> MultipleOutletOutOfOrderReservoir; //smart pointer to a Reservoir with multiple outlets out of order
+    std::shared_ptr<Reservoir::Explicit_Time::Reservoir> MultipleOutletOutOfOrderReservoir; //smart pointer to a Reservoir with multiple outlets out of order
 
-    std::shared_ptr<Reservoir> SingleExponentialOutletReservoir; //smart pointer to a Reservoir with one exponential outlet
+    std::shared_ptr<Reservoir::Explicit_Time::Reservoir> SingleExponentialOutletReservoir; //smart pointer to a Reservoir with one exponential outlet
 
-    std::shared_ptr<Reservoir_Outlet> ReservoirOutlet1; //smart pointer to a Reservoir Outlet
+    std::shared_ptr<Reservoir::Explicit_Time::Reservoir_Outlet> ReservoirOutlet1; //smart pointer to a Reservoir Outlet
 
-    std::shared_ptr<Reservoir_Outlet> ReservoirOutlet2; //smart pointer to a Reservoir Outlet
+    std::shared_ptr<Reservoir::Explicit_Time::Reservoir_Outlet> ReservoirOutlet2; //smart pointer to a Reservoir Outlet
 
-    std::shared_ptr<Reservoir_Outlet> ReservoirOutlet3; //smart pointer to a Reservoir Outlet
+    std::shared_ptr<Reservoir::Explicit_Time::Reservoir_Outlet> ReservoirOutlet3; //smart pointer to a Reservoir Outlet
 
-    std::shared_ptr<Reservoir_Outlet> ReservoirExponentialOutlet; //smart pointer to a Reservoir Outlet
+    std::shared_ptr<Reservoir::Explicit_Time::Reservoir_Outlet> ReservoirExponentialOutlet; //smart pointer to a Reservoir Outlet
 
-    std::shared_ptr<Reservoir_Outlet> ReservoirLinearOutlet; //smart pointer to a Reservoir Outlet    
+    std::shared_ptr<Reservoir::Explicit_Time::Reservoir_Outlet> ReservoirLinearOutlet; //smart pointer to a Reservoir Outlet    
 
-    std::vector <std::shared_ptr<Reservoir_Outlet>> ReservoirOutletsVector;
+    std::vector <std::shared_ptr<Reservoir::Explicit_Time::Reservoir_Outlet>> ReservoirOutletsVector;
 
-    std::vector <std::shared_ptr<Reservoir_Outlet>> ReservoirOutletsVectorOutOfOrder;
+    std::vector <std::shared_ptr<Reservoir::Explicit_Time::Reservoir_Outlet>> ReservoirOutletsVectorOutOfOrder;
 
-    std::vector <std::shared_ptr<Reservoir_Outlet>> ReservoirExponentialSingleOutletVector;
+    std::vector <std::shared_ptr<Reservoir::Explicit_Time::Reservoir_Outlet>> ReservoirExponentialSingleOutletVector;
 
-    std::vector <std::shared_ptr<Reservoir_Outlet>> ReservoirOutletsVectorMultipleTypes;    
+    std::vector <std::shared_ptr<Reservoir::Explicit_Time::Reservoir_Outlet>> ReservoirOutletsVectorMultipleTypes;    
 };
 
 void ReservoirKernelTest::SetUp() {
@@ -86,15 +86,15 @@ void ReservoirKernelTest::TearDown() {
 //Construct a reservoir with no outlets
 void ReservoirKernelTest::setupNoOutletReservoir()
 {
-    NoOutletReservoir = std::make_shared<Reservoir>(0.0, 8.0, 2.0);
+    NoOutletReservoir = std::make_shared<Reservoir::Explicit_Time::Reservoir>(0.0, 8.0, 2.0);
 }
 
 //Construct a reservoir with no outlets and then add a linear and a nonlinear outlet
 void ReservoirKernelTest::setupNoOutletReservoir2()
 {
-    NoOutletReservoir2 = std::make_shared<Reservoir>(0.0, 8.0, 2.0);
+    NoOutletReservoir2 = std::make_shared<Reservoir::Explicit_Time::Reservoir>(0.0, 8.0, 2.0);
 
-    ReservoirLinearOutlet = std::make_shared<Reservoir_Linear_Outlet>(0.2, 6.0, 100.0);
+    ReservoirLinearOutlet = std::make_shared<Reservoir::Explicit_Time::Reservoir_Linear_Outlet>(0.2, 6.0, 100.0);
 
     NoOutletReservoir2->add_outlet(ReservoirLinearOutlet);
 
@@ -104,13 +104,13 @@ void ReservoirKernelTest::setupNoOutletReservoir2()
 //Construct a reservoir with one outlet
 void ReservoirKernelTest::setupOneOutletReservoir()
 {
-    OneOutletReservoir = std::make_shared<Reservoir>(0.0, 8.0, 3.5, 0.5, 0.7, 4.0, 100.0);
+    OneOutletReservoir = std::make_shared<Reservoir::Explicit_Time::Reservoir>(0.0, 8.0, 3.5, 0.5, 0.7, 4.0, 100.0);
 }
 
 //Construct a reservoir with one outlet and high storage
 void ReservoirKernelTest::setupOneOutletHighStorageReservoir()
 {
-    OneOutletHighStorageReservoir = std::make_shared<Reservoir>(0.0, 8000.0, 3.5, 1.1, 1.2, 4.0, 0.005);
+    OneOutletHighStorageReservoir = std::make_shared<Reservoir::Explicit_Time::Reservoir>(0.0, 8000.0, 3.5, 1.1, 1.2, 4.0, 0.005);
 }
 
 //Construct a reservoir with multiple outlets
@@ -118,11 +118,11 @@ void ReservoirKernelTest::setupMultipleOutletReservoir()
 {
     //ReservoirOutlet1 = std::make_shared<Reservoir_Outlet>(0.2, 0.4, 4.0, 100.0);
 
-    ReservoirOutlet1 = std::make_shared<Reservoir_Linear_Outlet>(0.2, 4.0, 100.0);
+    ReservoirOutlet1 = std::make_shared<Reservoir::Explicit_Time::Reservoir_Linear_Outlet>(0.2, 4.0, 100.0);
 
-    ReservoirOutlet2 = std::make_shared<Reservoir_Outlet>(0.3, 0.5, 10.0, 100.0);
+    ReservoirOutlet2 = std::make_shared<Reservoir::Explicit_Time::Reservoir_Outlet>(0.3, 0.5, 10.0, 100.0);
 
-    ReservoirOutlet3 = std::make_shared<Reservoir_Outlet>(0.4, 0.6, 15.0, 100.0);
+    ReservoirOutlet3 = std::make_shared<Reservoir::Explicit_Time::Reservoir_Outlet>(0.4, 0.6, 15.0, 100.0);
 
     ReservoirOutletsVector.push_back(ReservoirOutlet1);
 
@@ -130,17 +130,17 @@ void ReservoirKernelTest::setupMultipleOutletReservoir()
 
     ReservoirOutletsVector.push_back(ReservoirOutlet3);
 
-    MultipleOutletReservoir = std::make_shared<Reservoir>(0.0, 20.0, 2.0, ReservoirOutletsVector);
+    MultipleOutletReservoir = std::make_shared<Reservoir::Explicit_Time::Reservoir>(0.0, 20.0, 2.0, ReservoirOutletsVector);
 }
 
 //Construct a reservoir with multiple outlets that are not ordered from lowest to highest activation threshold
 void ReservoirKernelTest::setupMultipleOutletOutOfOrderReservoir()
 {
-    ReservoirOutlet1 = std::make_shared<Reservoir_Outlet>(0.2, 0.4, 4.0, 100.0);
+    ReservoirOutlet1 = std::make_shared<Reservoir::Explicit_Time::Reservoir_Outlet>(0.2, 0.4, 4.0, 100.0);
 
-    ReservoirOutlet2 = std::make_shared<Reservoir_Outlet>(0.3, 0.5, 10.0, 100.0);
+    ReservoirOutlet2 = std::make_shared<Reservoir::Explicit_Time::Reservoir_Outlet>(0.3, 0.5, 10.0, 100.0);
 
-    ReservoirOutlet3 = std::make_shared<Reservoir_Outlet>(0.4, 0.6, 15.0, 100.0);
+    ReservoirOutlet3 = std::make_shared<Reservoir::Explicit_Time::Reservoir_Outlet>(0.4, 0.6, 15.0, 100.0);
 
     ReservoirOutletsVectorOutOfOrder.push_back(ReservoirOutlet3);
 
@@ -148,15 +148,15 @@ void ReservoirKernelTest::setupMultipleOutletOutOfOrderReservoir()
 
     ReservoirOutletsVectorOutOfOrder.push_back(ReservoirOutlet1);
 
-    MultipleOutletOutOfOrderReservoir = std::make_shared<Reservoir>(0.0, 20.0, 2.0, ReservoirOutletsVectorOutOfOrder);
+    MultipleOutletOutOfOrderReservoir = std::make_shared<Reservoir::Explicit_Time::Reservoir>(0.0, 20.0, 2.0, ReservoirOutletsVectorOutOfOrder);
 }
 
 //Construct a reservoir with one exponential outlet
 void ReservoirKernelTest:: setupExponentialOutletReservoir()
 {
-    ReservoirExponentialOutlet = std::make_shared<Reservoir_Exponential_Outlet>(0.2, 0.4, 4.0, 100.0);
+    ReservoirExponentialOutlet = std::make_shared<Reservoir::Explicit_Time::Reservoir_Exponential_Outlet>(0.2, 0.4, 4.0, 100.0);
 
-    ReservoirOutlet1 = std::make_shared<Reservoir_Outlet>(0.2, 0.4, 4.0, 100.0);
+    ReservoirOutlet1 = std::make_shared<Reservoir::Explicit_Time::Reservoir_Outlet>(0.2, 0.4, 4.0, 100.0);
 
     ReservoirExponentialSingleOutletVector.push_back(ReservoirExponentialOutlet);
 
@@ -165,7 +165,7 @@ void ReservoirKernelTest:: setupExponentialOutletReservoir()
 
     ReservoirOutletsVectorMultipleTypes.push_back(ReservoirExponentialOutlet);
 
-    SingleExponentialOutletReservoir = std::make_shared<Reservoir>(0.0, 20.0, 2.0, ReservoirExponentialSingleOutletVector);
+    SingleExponentialOutletReservoir = std::make_shared<Reservoir::Explicit_Time::Reservoir>(0.0, 20.0, 2.0, ReservoirExponentialSingleOutletVector);
 }
 
 //Test Reservoir with no outlets.

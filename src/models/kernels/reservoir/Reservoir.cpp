@@ -3,7 +3,7 @@
 using namespace std;
 
 namespace Reservoir{
-    namespace ExpicitTime{
+    namespace Explicit_Time{
         /**
          * @brief Default Constructor building a reservoir with no outlets.
          *
@@ -64,6 +64,7 @@ namespace Reservoir{
             //Add outlet to end of outlet vector
             this->outlets.push_back(
                     std::make_shared<Reservoir_Linear_Outlet>(a, activation_threshold_meters, max_velocity_meters_per_second));
+                    //std::make_shared<Reservoir::Explicit_Time::Reservoir_Linear_Outlet>(a, activation_threshold_meters, max_velocity_meters_per_second));
         }
 
         /**

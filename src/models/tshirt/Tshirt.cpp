@@ -100,12 +100,12 @@ namespace tshirt {
         double max_gw_velocity = std::numeric_limits<double>::max();
 
         // Build vector of pointers to outlets to pass the custom exponential outlet through
-        vector<std::shared_ptr<Reservoir_Outlet>> gw_outlets_vector(1);
+        vector<std::shared_ptr<Reservoir::Explicit_Time::Reservoir_Outlet>> gw_outlets_vector(1);
         // TODO: verify activation threshold
-        gw_outlets_vector[0] = make_shared<Reservoir_Exponential_Outlet>(
-                Reservoir_Exponential_Outlet(model_params.Cgw, model_params.expon, 0.0, max_gw_velocity));
+        gw_outlets_vector[0] = make_shared<Reservoir::Explicit_Time::Reservoir_Exponential_Outlet>(
+                Reservoir::Explicit_Time::Reservoir_Exponential_Outlet(model_params.Cgw, model_params.expon, 0.0, max_gw_velocity));
         // Create the reservoir, passing the outlet via the vector argument
-        groundwater_reservoir = Reservoir(0.0, model_params.max_groundwater_storage_meters,
+        groundwater_reservoir = Reservoir::Explicit_Time::Reservoir(0.0, model_params.max_groundwater_storage_meters,
                                                     previous_state->groundwater_storage_meters, gw_outlets_vector);
     }
 
@@ -126,19 +126,19 @@ namespace tshirt {
     void tshirt_model::initialize_soil_reservoir()
     {
         // Build the vector of pointers to reservoir outlets
-        vector<std::shared_ptr<Reservoir_Outlet>> soil_res_outlets(2);
+        vector<std::shared_ptr<Reservoir::Explicit_Time::Reservoir_Outlet>> soil_res_outlets(2);
 
         // init subsurface lateral flow linear outlet
-        soil_res_outlets[lf_outlet_index] = std::make_shared<Reservoir_Linear_Outlet>(
-                Reservoir_Linear_Outlet(model_params.Klf, soil_field_capacity_storage, model_params.max_lateral_flow));
+        soil_res_outlets[lf_outlet_index] = std::make_shared<Reservoir::Explicit_Time::Reservoir_Linear_Outlet>(
+                Reservoir::Explicit_Time::Reservoir_Linear_Outlet(model_params.Klf, soil_field_capacity_storage, model_params.max_lateral_flow));
 
         // init subsurface percolation flow linear outlet
         // The max perc flow should be equal to the params.satdk value
-        soil_res_outlets[perc_outlet_index] = std::make_shared<Reservoir_Linear_Outlet>(
-                Reservoir_Linear_Outlet(model_params.satdk * model_params.slope, soil_field_capacity_storage,
+        soil_res_outlets[perc_outlet_index] = std::make_shared<Reservoir::Explicit_Time::Reservoir_Linear_Outlet>(
+                Reservoir::Explicit_Time::Reservoir_Linear_Outlet(model_params.satdk * model_params.slope, soil_field_capacity_storage,
                                  std::numeric_limits<double>::max()));
         // Create the reservoir, included the created vector of outlet pointers
-        soil_reservoir = Reservoir(0.0, model_params.max_soil_storage_meters,
+        soil_reservoir = Reservoir::Explicit_Time::Reservoir(0.0, model_params.max_soil_storage_meters,
                                              previous_state->soil_storage_meters, soil_res_outlets);
     }
 
@@ -155,8 +155,8 @@ namespace tshirt {
         // TODO: verify correctness of activation_threshold (Sfc) and max_velocity (max_lateral_flow) arg values
         for (unsigned long i = 0; i < soil_lf_nash_res.size(); ++i) {
             //construct a single linear outlet reservoir
-            soil_lf_nash_res[i] = make_unique<Reservoir>(
-                    Reservoir(0.0, model_params.max_soil_storage_meters,
+            soil_lf_nash_res[i] = make_unique<Reservoir::Explicit_Time::Reservoir>(
+                    Reservoir::Explicit_Time::Reservoir(0.0, model_params.max_soil_storage_meters,
                                         previous_state->nash_cascade_storeage_meters[i], model_params.Kn,
                                         0.0, model_params.max_lateral_flow));
         }

@@ -15,7 +15,7 @@
 using namespace std;
 
 namespace Reservoir{
-    namespace ExpicitTime{
+    namespace Explicit_Time{
 
         /**
          * @brief Reservoir that has zero, one, or multiple outlets.
@@ -158,7 +158,7 @@ namespace Reservoir{
             reservoir_state state;
             outlet_vector_type outlets;
         };
-
-        #endif  // RESERVOIR_HPP
     }
 }
+
+#endif  // RESERVOIR_HPP
