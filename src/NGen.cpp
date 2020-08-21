@@ -19,8 +19,8 @@
 #include "NGenConfig.h"
 #include "tshirt_params.h"
 
-std::string catchmentRealizationFile = "./data/sugar_creek/catchment_data_subset.geojson";
-std::string nexusRealizationFile = "./data/sugar_creek/nexus_data_subset.geojson";
+std::string catchmentRealizationFile = "./data/catchment_data.geojson";
+std::string nexusRealizationFile = "./data/nexus_data.geojson";
 const std::string REALIZATION_CONFIG_PATH = "./data/example_realization_config.json";
 
 //TODO this is possible, but ASSUMES realizations based on feature geom type, so not quite ready for prime time
