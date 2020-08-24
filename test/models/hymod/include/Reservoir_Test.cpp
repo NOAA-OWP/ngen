@@ -25,6 +25,10 @@ class ReservoirKernelTest : public ::testing::Test {
 
     void setupMultipleOutletReservoir();
 
+    void setupMultipleOutletSameActivationHeightReservoir();
+
+    void setupMultipleOutletReservoirTooLargeActivationThreshold();
+
     void setupMultipleOutletOutOfOrderReservoir();
 
     void setupExponentialOutletReservoir();
@@ -33,13 +37,19 @@ class ReservoirKernelTest : public ::testing::Test {
 
     std::shared_ptr<Reservoir::Explicit_Time::Reservoir> NoOutletReservoir2; //smart pointer to a Reservoir with no outlets
 
+    std::shared_ptr<Reservoir::Explicit_Time::Reservoir> NoOutletReservoir3; //smart pointer to a Reservoir with no outlets
+
     std::shared_ptr<Reservoir::Explicit_Time::Reservoir> OneOutletReservoir; //smart pointer to a Reservoir with one outlet
 
     std::shared_ptr<Reservoir::Explicit_Time::Reservoir> OneOutletHighStorageReservoir; //smart pointer to a Reservoir with one outlet and high storage
 
     std::shared_ptr<Reservoir::Explicit_Time::Reservoir> MultipleOutletReservoir; //smart pointer to a Reservoir with multiple outlets
 
+    std::shared_ptr<Reservoir::Explicit_Time::Reservoir> MultipleOutletReservoirTooLargeActivationThreshold; //smart pointer to a Reservoir with multiple outlets
+
     std::shared_ptr<Reservoir::Explicit_Time::Reservoir> MultipleOutletOutOfOrderReservoir; //smart pointer to a Reservoir with multiple outlets out of order
+
+    std::shared_ptr<Reservoir::Explicit_Time::Reservoir> MultipleOutletSameActivationHeightReservoir; //smart pointer to a Reservoir with multiple outlets
 
     std::shared_ptr<Reservoir::Explicit_Time::Reservoir> SingleExponentialOutletReservoir; //smart pointer to a Reservoir with one exponential outlet
 
@@ -49,11 +59,23 @@ class ReservoirKernelTest : public ::testing::Test {
 
     std::shared_ptr<Reservoir::Explicit_Time::Reservoir_Outlet> ReservoirOutlet3; //smart pointer to a Reservoir Outlet
 
+    std::shared_ptr<Reservoir::Explicit_Time::Reservoir_Outlet> ReservoirOutlet4; //smart pointer to a Reservoir Outlet
+
+    std::shared_ptr<Reservoir::Explicit_Time::Reservoir_Outlet> ReservoirOutlet5; //smart pointer to a Reservoir Outlet
+
+    std::shared_ptr<Reservoir::Explicit_Time::Reservoir_Outlet> ReservoirOutlet6; //smart pointer to a Reservoir Outlet
+
+    std::shared_ptr<Reservoir::Explicit_Time::Reservoir_Outlet> ReservoirOutlet7; //smart pointer to a Reservoir Outlet
+
     std::shared_ptr<Reservoir::Explicit_Time::Reservoir_Outlet> ReservoirExponentialOutlet; //smart pointer to a Reservoir Outlet
 
     std::shared_ptr<Reservoir::Explicit_Time::Reservoir_Outlet> ReservoirLinearOutlet; //smart pointer to a Reservoir Outlet    
 
     std::vector <std::shared_ptr<Reservoir::Explicit_Time::Reservoir_Outlet>> ReservoirOutletsVector;
+
+    std::vector <std::shared_ptr<Reservoir::Explicit_Time::Reservoir_Outlet>> ReservoirOutletsVector2;
+
+    std::vector <std::shared_ptr<Reservoir::Explicit_Time::Reservoir_Outlet>> ReservoirOutletsVector3;
 
     std::vector <std::shared_ptr<Reservoir::Explicit_Time::Reservoir_Outlet>> ReservoirOutletsVectorOutOfOrder;
 
@@ -74,7 +96,11 @@ void ReservoirKernelTest::SetUp() {
 
     setupMultipleOutletReservoir();
 
+    setupMultipleOutletSameActivationHeightReservoir();
+
     setupMultipleOutletOutOfOrderReservoir();
+
+    setupMultipleOutletReservoirTooLargeActivationThreshold();
 
     setupExponentialOutletReservoir();
 }
@@ -113,7 +139,7 @@ void ReservoirKernelTest::setupOneOutletHighStorageReservoir()
     OneOutletHighStorageReservoir = std::make_shared<Reservoir::Explicit_Time::Reservoir>(0.0, 8000.0, 3.5, 1.1, 1.2, 4.0, 0.005);
 }
 
-//Construct a reservoir with multiple outlets
+//Construct a reservoir with multiple outlets in already sorted order
 void ReservoirKernelTest::setupMultipleOutletReservoir()
 {
     //ReservoirOutlet1 = std::make_shared<Reservoir_Outlet>(0.2, 0.4, 4.0, 100.0);
@@ -131,6 +157,35 @@ void ReservoirKernelTest::setupMultipleOutletReservoir()
     ReservoirOutletsVector.push_back(ReservoirOutlet3);
 
     MultipleOutletReservoir = std::make_shared<Reservoir::Explicit_Time::Reservoir>(0.0, 20.0, 2.0, ReservoirOutletsVector);
+}
+
+//Construct a reservoir with multiple outlets with one outlet having an activation threshold above the max reservoir storage
+void ReservoirKernelTest::setupMultipleOutletReservoirTooLargeActivationThreshold()
+{
+    ReservoirOutlet6 = std::make_shared<Reservoir::Explicit_Time::Reservoir_Linear_Outlet>(0.2, 15.0, 100.0);
+
+    ReservoirOutlet7 = std::make_shared<Reservoir::Explicit_Time::Reservoir_Outlet>(0.3, 0.5, 10.0, 100.0);
+
+    ReservoirOutletsVector3.push_back(ReservoirOutlet6);
+
+    ReservoirOutletsVector3.push_back(ReservoirOutlet7);
+
+    //MultipleOutletReservoirTooLargeActivationThreshold = std::make_shared<Reservoir::Explicit_Time::Reservoir>(0.0, 12.0, 2.0, ReservoirOutletsVector3);
+}
+
+
+//Construct a reservoir with multiple outlets of same activation height
+void ReservoirKernelTest::setupMultipleOutletSameActivationHeightReservoir()
+{
+    ReservoirOutlet4 = std::make_shared<Reservoir::Explicit_Time::Reservoir_Linear_Outlet>(0.2, 8.0, 100.0);
+
+    ReservoirOutlet5 = std::make_shared<Reservoir::Explicit_Time::Reservoir_Outlet>(0.3, 0.5, 8.0, 100.0);
+
+    ReservoirOutletsVector2.push_back(ReservoirOutlet4);
+
+    ReservoirOutletsVector2.push_back(ReservoirOutlet5);
+
+    MultipleOutletSameActivationHeightReservoir = std::make_shared<Reservoir::Explicit_Time::Reservoir>(0.0, 20.0, 2.0, ReservoirOutletsVector2);
 }
 
 //Construct a reservoir with multiple outlets that are not ordered from lowest to highest activation threshold
@@ -334,6 +389,7 @@ TEST_F(ReservoirKernelTest, TestRunMultipleOutletReservoir)
 
 
 //Test Reservoir with multiple outlets that are initialized not in order from lowest to highest activation threshold
+//and are then sorted from lowest to highest activation threshold
 TEST_F(ReservoirKernelTest, TestRunMultipleOutletOutOfOrderReservoir) 
 {    
     double in_flux_meters_per_second;
@@ -376,6 +432,50 @@ TEST_F(ReservoirKernelTest, TestRunMultipleOutletReservoirOutletVelocity)
 }
 
 
+//Test Reservoir with multiple outlets accessor to an outlet velocity from an outlet index not present
+TEST_F(ReservoirKernelTest, TestRunMultipleOutletReservoirOutletVelocityOutOfBounds) 
+{    
+    double in_flux_meters_per_second;
+    double excess;
+    double final_storage;
+    double first_outlet_velocity;
+
+    in_flux_meters_per_second = 8.6;
+
+    MultipleOutletReservoir->response_meters_per_second(in_flux_meters_per_second, 10, excess);
+
+    first_outlet_velocity = MultipleOutletReservoir->velocity_meters_per_second_for_outlet(6);
+
+    first_outlet_velocity = round( first_outlet_velocity * 100.0 ) / 100.0;
+
+    EXPECT_DOUBLE_EQ (1.05, first_outlet_velocity);
+    
+    ASSERT_TRUE(true);
+}
+
+
+//Test Reservoir with no outlets accessor to an outlet velocity
+TEST_F(ReservoirKernelTest, TestRunNoOutletReservoirOutletVelocityAccessor) 
+{    
+    double in_flux_meters;
+    double excess;
+    double final_storage;
+    double first_outlet_velocity;
+
+    in_flux_meters = 8.6;
+
+    NoOutletReservoir->response_meters_per_second(in_flux_meters, 10, excess);
+
+    first_outlet_velocity = NoOutletReservoir->velocity_meters_per_second_for_outlet(0);
+
+    first_outlet_velocity = round( first_outlet_velocity * 100.0 ) / 100.0;
+
+    EXPECT_DOUBLE_EQ (0.00, first_outlet_velocity);
+    
+    ASSERT_TRUE(true);
+}
+
+
 //Test Reservoir with one exponential outlet 
 TEST_F(ReservoirKernelTest, TestRunSingleExponentialOutletReservoir) 
 {    
@@ -396,3 +496,82 @@ TEST_F(ReservoirKernelTest, TestRunSingleExponentialOutletReservoir)
     
     ASSERT_TRUE(true);
 }
+
+
+TEST_F(ReservoirKernelTest, TestReservoirAddOutlet)
+{
+    NoOutletReservoir3 = std::make_shared<Reservoir::Explicit_Time::Reservoir>(0.0, 8.0, 2.0);
+
+    NoOutletReservoir3->add_outlet(ReservoirLinearOutlet);
+
+    NoOutletReservoir3->add_outlet(0.3, 0.5, 0.0, 100.0);
+
+    NoOutletReservoir3->add_outlet(0.3, 4.5, 100.0);
+
+    ASSERT_TRUE(true);
+}
+
+
+TEST_F(ReservoirKernelTest, TestReservoirSortOutlets)
+{
+    MultipleOutletOutOfOrderReservoir->sort_outlets();
+
+    ASSERT_TRUE(true);
+}
+
+
+TEST_F(ReservoirKernelTest, TestReservoirCheckHighestOutlet)
+{
+    MultipleOutletOutOfOrderReservoir->check_highest_outlet_against_max_storage();
+
+    ASSERT_TRUE(true);
+}
+
+
+TEST_F(ReservoirKernelTest, TestAdjustReservoirOutletVelocity)
+{
+    ReservoirOutlet1->adjust_velocity(5.5);
+
+    ASSERT_TRUE(true);
+}
+
+
+TEST_F(ReservoirKernelTest, TestReservoirOutletGetActivationThreshold)
+{
+    double activation_threshold_meters;
+
+    activation_threshold_meters= ReservoirOutlet1->get_activation_threshold_meters();
+
+    EXPECT_DOUBLE_EQ (4.0, activation_threshold_meters);
+
+    ASSERT_TRUE(true);
+}
+
+//Test Reservoir with multiple outlets of same activation threshold height
+TEST_F(ReservoirKernelTest, TestRunMultipleOutletSameActivationHeightReservoir) 
+{    
+    double in_flux_meters_per_second;
+    double excess;
+    double final_storage;
+
+    in_flux_meters_per_second = 1.6;
+
+    MultipleOutletSameActivationHeightReservoir->response_meters_per_second(in_flux_meters_per_second, 10, excess);
+
+    final_storage = MultipleOutletSameActivationHeightReservoir->get_storage_height_meters();
+
+    final_storage = round( final_storage * 100.0 ) / 100.0;
+
+    EXPECT_DOUBLE_EQ (13.83 , final_storage);
+
+    ASSERT_TRUE(true);
+}
+
+//Test to ensure that program exits with given error message whenever an outlet activation threshold is above the
+//max reservoir storage
+TEST_F(ReservoirKernelTest, TestMultipleOutletReservoirTooLargeActivationThreshold)
+{
+    ASSERT_DEATH(MultipleOutletReservoirTooLargeActivationThreshold = std::make_shared<Reservoir::Explicit_Time::Reservoir>(0.0, 12.0, 2.0, ReservoirOutletsVector3), "ERROR: The activation_threshold_meters is greater than the maximum_storage_meters of a reservoir.");
+}
+
+

@@ -161,6 +161,7 @@ namespace Reservoir{
                 cerr
                     << "ERROR: excess_water_meters from the reservoir is calculated to be less than zero."
                     << endl;
+                    exit(-1);
             }
          
             return sum_of_outlet_fluxes_meters;
@@ -246,6 +247,7 @@ namespace Reservoir{
                     << "ERROR: The activation_threshold_meters is greater than the maximum_storage_meters of a "
                     << "reservoir."
                     << endl;
+                    exit(-1);
             }
         }
 
