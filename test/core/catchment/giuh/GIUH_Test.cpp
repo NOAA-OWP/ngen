@@ -61,7 +61,8 @@ TEST_F(GIUH_Test, TestInit0)
 
     giuh::GiuhJsonReader reader = giuh::GiuhJsonReader(json_file, id_map_json_file);
 
-    std::string expected_comid_0 = "9731236";
+    //std::string expected_comid_0 = "9731236";
+    std::string expected_comid_0 = "cat-88";
     std::string catcment_id_0 = "wat-88";
     std::string comid_0 = reader.get_associated_comid(catcment_id_0);
     ASSERT_EQ(comid_0, expected_comid_0);
