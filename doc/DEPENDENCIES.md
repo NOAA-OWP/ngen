@@ -7,7 +7,7 @@
 | [Google Test](#google-test) | submodule  | `release-1.10.0` | |
 | [C/C++ Compiler](#c-and-c-compiler) | external | see below |  |
 | [CMake](#cmake) | external | \> `3.10` | |
-| [Boost.Geometry](#boostgeometry) | external | `1.72.0` suggested | headers only library |
+| [Boost (Headers Only)](#boost-headers-only) | external | `1.72.0` | headers only library |
 
 # Details
 
@@ -71,17 +71,19 @@ However, a [CMake build system](BUILDS_AND_CMAKE.md#generating-a-build-system) m
 
 Currently, a version of CMake >= `3.10.0` is required.
 
-## Boost.Geometry
+## Boost (Headers Only)
 
-The [Boost.Geometry](https://www.boost.org/doc/libs/1_72_0/libs/geometry/doc/html/geometry/compilation.html) library is used by the project and must be included.
+Boost libraries are used by this project.  In particular, [Boost.Geometry](https://www.boost.org/doc/libs/1_72_0/libs/geometry/doc/html/geometry/compilation.html) is used, but others are also.  
 
-Note that this library is header-only.
+Currently, only headers-only Boost libraries are utilized.  As such, they are not exhaustively listed here since getting one essentially gets them all.
 
 ### Setup
 
-Since the library is header only, no binaries or compilation are required.  The Boost headers only need to be available on the local machine. 
+Since only headers-only libraries are needed, the Boost headers simply need to be available on the local machine at a location the build process can find.
 
-There are a variety of different ways to get the Boost headers locally.  Various OS may have packages specifically to install them.  Alternatively, the Boost distribution itself can be manually downloaded and unpacked, as described for both [Unix-variants](https://www.boost.org/doc/libs/1_72_0/more/getting_started/unix-variants.html) and [Windows](https://www.boost.org/doc/libs/1_72_0/more/getting_started/windows.html) on the Boost website.
+There are a variety of different ways to get the Boost headers locally.  Various OS may have packages specifically to install them, though one should take note of whether such packages provide a version of Boost that meets this project's requirements.  
+
+Alternatively, the Boost distribution itself can be manually downloaded and unpacked, as described for both [Unix-variants](https://www.boost.org/doc/libs/1_72_0/more/getting_started/unix-variants.html) and [Windows](https://www.boost.org/doc/libs/1_72_0/more/getting_started/windows.html) on the Boost website.
 
 #### Setting **BOOST_ROOT**
 
@@ -93,4 +95,4 @@ The variable should be set to the value of the **boost root directory**, which i
 
 ### Version Requirements
 
-At present, there is only the *recommendation* to use version `1.72.0`.
+At present, a version >= `1.72.0` is required.
