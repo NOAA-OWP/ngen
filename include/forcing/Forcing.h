@@ -71,7 +71,7 @@ class Forcing
     /**
      * Default Constructor building an empty Forcing object
      */
-    Forcing(): air_temperature_fahrenheit(0.0), basin_id(0), forcing_file_name("")
+    Forcing(): air_temperature_fahrenheit(0.0), catchment_id(0), forcing_file_name("")
     {
 
     }
@@ -87,12 +87,14 @@ class Forcing
     /**
      * @brief Parameterized Constuctor that builds a Forcing object and reads an input forcing CSV into a vector.
      * @param air_temperature_fahrenheit Air temperatrure in Fahrenheit
-     * @param basin_latitude Basin Latitude
+     * @param catchment_id Catchment ID
      * @param forcing_file_name Forcing file name
      * @param start_date_time Start date-time of model to select start of forcing time window of data
      * @param end_date_time End date-time of model to select end of forcing time window of data
+     * /// \todo: when using catchment_id parameter, need to enforce their explicit inclusion when calling constructors
+     *            instead of allowing default ID of 0.
      */
-    Forcing(double air_temperature_fahrenheit, double basin_latitude, string forcing_file_name, std::shared_ptr<time_type>  start_date_time, std::shared_ptr<time_type> end_date_time): air_temperature_fahrenheit(air_temperature_fahrenheit), basin_id(basin_id), forcing_file_name(forcing_file_name), start_date_time(start_date_time), end_date_time(end_date_time)
+    Forcing(double air_temperature_fahrenheit, double catchment_id, string forcing_file_name, std::shared_ptr<time_type>  start_date_time, std::shared_ptr<time_type> end_date_time): air_temperature_fahrenheit(air_temperature_fahrenheit), catchment_id(0), forcing_file_name(forcing_file_name), start_date_time(start_date_time), end_date_time(end_date_time)
     {
 
         //Convert start and end time structs to epoch time
@@ -475,7 +477,7 @@ class Forcing
     double air_temperature_fahrenheit;
     double latitude; //latitude (degrees_north)
     double longitude; //longitude (degrees_east)
-    int basin_id;
+    int catchment_id;
     int day_of_year;
     string forcing_file_name;
 

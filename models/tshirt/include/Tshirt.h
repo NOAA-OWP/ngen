@@ -147,7 +147,7 @@ namespace tshirt {
          * A collection of reservoirs for a Nash Cascade at the end of the lateral flow output from the subsurface soil
          * reservoir.
          */
-        vector<unique_ptr<Reservoir>> soil_lf_nash_res;
+        vector<unique_ptr<Reservoir::Explicit_Time::Reservoir>> soil_lf_nash_res;
         //FIXME reservoir construction sorts outlets by activation_threshold
         //so the fixed index assumption is invalid.  However, in the current use case
         //they both have the save activation_threshold (Sfc), but we do want percolation fluxes to happen first
@@ -156,8 +156,8 @@ namespace tshirt {
         int lf_outlet_index = 1;
         /** The index of the percolation flow outlet in the soil reservoir. */
         int perc_outlet_index = 0;
-        Reservoir soil_reservoir;
-        Reservoir groundwater_reservoir;
+        Reservoir::Explicit_Time::Reservoir soil_reservoir;
+        Reservoir::Explicit_Time::Reservoir groundwater_reservoir;
         shared_ptr<tshirt_fluxes> fluxes;
         /** The size of the error bound that is acceptable when performing mass check calculations. */
         double mass_check_error_bound;
