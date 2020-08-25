@@ -51,6 +51,10 @@ namespace realization {
 
         virtual ~Tshirt_C_Realization();
 
+        double get_response(double input_flux);
+
+        double get_responses(std::vector<double> input_fluxes);
+
     private:
         std::string catchment_id;
         // TODO: note sure if these are needed
