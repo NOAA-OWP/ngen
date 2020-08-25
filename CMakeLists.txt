@@ -62,7 +62,7 @@ else()
     endif()
 endif()
 
-find_package(Boost 1.69.0 REQUIRED)
+find_package(Boost 1.72.0 REQUIRED)
 
 target_include_directories(ngen PUBLIC
         "${PROJECT_BINARY_DIR}/include" # For generated config header file in binary tree
