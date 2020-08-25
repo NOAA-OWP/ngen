@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 add_library(models_tshirt STATIC
         Tshirt.cpp
-        )
+        tshirt_c.cpp)
 add_library(NGen::models_tshirt ALIAS models_tshirt)
 target_include_directories(models_tshirt PUBLIC
         ${PROJECT_SOURCE_DIR}/include
