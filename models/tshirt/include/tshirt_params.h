@@ -25,6 +25,7 @@ namespace tshirt {
         double max_soil_storage_meters;  //!< Subsurface soil water flow max storage param ("Ssmax"), calculated from maxsmc and depth
         double max_groundwater_storage_meters;    //!< Ground water flow max storage param ("Sgwmax"; analogous to NWM 2.0 zmax param)
         double max_lateral_flow;    //!< Max rate for subsurface lateral flow (i.e., max transmissivity)
+        double refkdt = 3.0;        //!< Standard value taken from NOAH-MP, used for calculating Schaake magic constant
         const double depth = 2.0;         //!< Hard-coded, constant value for total soil column depth ('D') [m]
 
         /**
@@ -76,7 +77,7 @@ namespace tshirt {
                 expon(expon),
                 max_groundwater_storage_meters(max_gw_storage) {
             this->max_soil_storage_meters = this->depth * maxsmc;
-            this->Cschaake = 3.0 * satdk / (2.0e-6);
+            this->Cschaake = refkdt * satdk / (2.0e-6);
             this->max_lateral_flow = numeric_limits<double>::max();//satdk * multiplier * this->max_soil_storage_meters;
         }
 
