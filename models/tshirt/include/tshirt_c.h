@@ -1,5 +1,3 @@
-#include "tshirt_params.h"
-
 #ifndef NGEN_TSHIRT_2_HPP
 #define NGEN_TSHIRT_2_HPP
 
@@ -143,7 +141,5 @@ extern int run(NWM_soil_parameters& NWM_soil_params,
                double* rain_rate,
                int& num_added_fluxes,
                tshirt_c_result_fluxes* fluxes);
-
-extern NWM_soil_parameters convert_from_tshirt_params(tshirt::tshirt_params tshirtParams);
 
 #endif
