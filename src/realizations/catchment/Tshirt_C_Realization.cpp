@@ -55,7 +55,6 @@ Tshirt_C_Realization::Tshirt_C_Realization(forcing_params forcing_config,
     //-----------------------------------------------------------------------
     // one outlet, 0.0 threshold, nonliner and exponential as in NWM
     groundwater_conceptual_reservoir.is_exponential=TRUE;         // set this true TRUE to use the exponential form of the discharge equation
-    // TODO: does this need to be converted (if assumptions is mm)?
     groundwater_conceptual_reservoir.storage_max_m=16.0;            // calibrated Sugar Creek WRF-Hydro value 16.0, I assume mm.
     groundwater_conceptual_reservoir.coeff_primary=0.01;           // per h
     groundwater_conceptual_reservoir.exponent_primary=6.0;              // linear iff 1.0, non-linear iff > 1.0
@@ -70,11 +69,8 @@ Tshirt_C_Realization::Tshirt_C_Realization(forcing_params forcing_config,
     // following the method in the NWM/t-shirt parameter equivalence document, assuming field capacity soil
     // suction pressure = 1/3 atm= field_capacity_atm_press_fraction * atm_press_Pa.
 
-    double field_capacity_atm_press_fraction = 0.33;  //alpha in Eqn. 3.
-
     // equation 3 from NWM/t-shirt parameter equivalence document
-    double H_water_table_m =
-            field_capacity_atm_press_fraction * STANDARD_ATMOSPHERIC_PRESSURE_PASCALS / WATER_SPECIFIC_WEIGHT;
+    double H_water_table_m = params.alpha_fc * STANDARD_ATMOSPHERIC_PRESSURE_PASCALS / WATER_SPECIFIC_WEIGHT;
 
 
     // solve the integral given by Eqn. 5 in the parameter equivalence document.
@@ -89,7 +85,6 @@ Tshirt_C_Realization::Tshirt_C_Realization(forcing_params forcing_config,
     double field_capacity_storage_threshold_m =
             c_soil_params.smcmax * pow(1.0 / c_soil_params.satpsi, (-1.0 / c_soil_params.bb)) *
             (upper_lim - lower_lim);
-    double assumed_near_channel_water_table_slope = 0.01; // [L/L]
     double lateral_flow_threshold_storage_m = field_capacity_storage_threshold_m;  // making them the same, but they don't have 2B
 
 
@@ -180,9 +175,6 @@ int Tshirt_C_Realization::run_formulation_for_timesteps(std::vector<double> inpu
     // FIXME: also make sure it shouldn't be parameterized somewhere, rather than hard-coded
     double assumed_near_channel_water_table_slope = 0.01;
 
-    // FIXME: also verify whether this should be set somewhere else ... for now:
-    double K_nash = 0.03;
-
     double* giuh_ordinates = &giuh_cdf_ordinates[0];
 
     //aorc_forcing_data empty_forcing[num_timesteps];
@@ -201,10 +193,11 @@ int Tshirt_C_Realization::run_formulation_for_timesteps(std::vector<double> inpu
                      num_timesteps,
                      giuh_ordinates,
                      (int)giuh_cdf_ordinates.size(),
+                     params.alpha_fc,
                      assumed_near_channel_water_table_slope,
                      params.Cschaake,
                      params.Klf,
-                     K_nash,
+                     params.Kn,
                      params.nash_n,
                      FALSE,
                      &empty_forcing[0],
