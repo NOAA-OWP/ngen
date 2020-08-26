@@ -20,6 +20,7 @@ namespace realization {
         typedef long time_step_t;
 
         Tshirt_C_Realization(forcing_params forcing_config,
+                             utils::StreamHandler output_stream,
                              double soil_storage_meters,
                              double groundwater_storage_meters,
                              std::string catchment_id,
@@ -29,6 +30,7 @@ namespace realization {
 
         Tshirt_C_Realization(
                 forcing_params forcing_config,
+                utils::StreamHandler output_stream,
                 double soil_storage_meters,
                 double groundwater_storage_meters,
                 std::string catchment_id,
@@ -51,9 +53,11 @@ namespace realization {
 
         virtual ~Tshirt_C_Realization();
 
-        double get_response(double input_flux);
+        int get_response(double input_flux);
 
-        double get_responses(std::vector<double> input_fluxes);
+        int get_responses(std::vector<double> input_fluxes);
+
+        // TODO: add versions that handle forcing data directly
 
     private:
         std::string catchment_id;
@@ -70,8 +74,7 @@ namespace realization {
         // TODO: this needs to be something else
         //std::unique_ptr<tshirt::tshirt_model> model;
 
-        // Still need this for getting at the ordinates
-        std::shared_ptr<giuh::giuh_kernel> giuh_kernel;
+        std::vector<double> giuh_cdf_ordinates;
 
 
         // TODO: remember to do array conversion in function calls
@@ -81,7 +84,7 @@ namespace realization {
 
         // TODO: might want to consider having an initial time step value for reference (implied size is 1 hour)
         // TODO: this probably need to be converted to use a different fluxes type that can be dealt with externally
-        std::unordered_map<time_step_t, std::shared_ptr<tshirt_c_result_fluxes>> fluxes;
+        std::vector<std::shared_ptr<tshirt_c_result_fluxes>> fluxes;
 
         // TODO: rename once setup complete (easier to refactor then)
         conceptual_reservoir groundwater_conceptual_reservoir;
