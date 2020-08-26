@@ -6,6 +6,7 @@
 #define DEBUG 1
 #define MAX_NUM_GIUH_ORDINATES 10
 #define MAX_NUM_NASH_CASCADE    3
+#define TSHIRT_C_FIXED_TIMESTEP_SIZE_S 3600
 #define MAX_NUM_RAIN_DATA 720
 
 // define data structures
