@@ -19,20 +19,90 @@ namespace realization {
 
         typedef long time_step_t;
 
+        /**
+         * Constructor for initializing when a #tshirt::tshirt_params struct is passed for parameters and a
+         * #giuh::GiuhJsonReader is passed for obtaining GIUH ordinates.
+         *
+         * @param forcing_config
+         * @param output_stream
+         * @param soil_storage
+         * @param groundwater_storage
+         * @param storage_values_are_ratios Whether the storage values are given as proportional amounts of the max (or,
+         *                                  when `false`, express amounts with units of meters).
+         * @param catchment_id
+         * @param giuh_json_reader
+         * @param params
+         * @param nash_storage
+         */
         Tshirt_C_Realization(forcing_params forcing_config,
                              utils::StreamHandler output_stream,
-                             double soil_storage_meters,
-                             double groundwater_storage_meters,
+                             double soil_storage,
+                             double groundwater_storage,
+                             bool storage_values_are_ratios,
                              std::string catchment_id,
                              giuh::GiuhJsonReader &giuh_json_reader,
                              tshirt::tshirt_params params,
                              const std::vector<double> &nash_storage);
 
+        /**
+         * Constructor for initializing when a #tshirt::tshirt_params struct is passed for parameters and GIUH ordinates
+         * are available directly and passed within a vector.
+         *
+         * @param forcing_config
+         * @param output_stream
+         * @param soil_storage
+         * @param groundwater_storage
+         * @param storage_values_are_ratios Whether the storage values are given as proportional amounts of the max (or,
+         *                                  when `false`, express amounts with units of meters).
+         * @param catchment_id
+         * @param guih_ordinates
+         * @param params
+         * @param nash_storage
+         */
+        Tshirt_C_Realization(forcing_params forcing_config,
+                             utils::StreamHandler output_stream,
+                             double soil_storage,
+                             double groundwater_storage,
+                             bool storage_values_are_ratios,
+                             std::string catchment_id,
+                             std::vector<double> giuh_ordinates,
+                             tshirt::tshirt_params params,
+                             const std::vector<double> &nash_storage);
+
+        /**
+         * Constructor for when model parameters are provided individually instead of within encapsulating struct and a
+         * #giuh::GiuhJsonReader is passed for obtaining GIUH ordinates.
+         *
+         * @param forcing_config
+         * @param output_stream
+         * @param soil_storage
+         * @param groundwater_storage
+         * @param storage_values_are_ratios Whether the storage values are given as proportional amounts of the max (or,
+         *                                  when `false`, express amounts with units of meters).
+         * @param catchment_id
+         * @param giuh_json_reader
+         * @param maxsmc
+         * @param wltsmc
+         * @param satdk
+         * @param satpsi
+         * @param slope
+         * @param b
+         * @param multiplier
+         * @param alpha_fc
+         * @param Klf
+         * @param Kn
+         * @param nash_n
+         * @param Cgw
+         * @param expon
+         * @param max_gw_storage
+         * @param nash_storage
+         */
         Tshirt_C_Realization(
                 forcing_params forcing_config,
                 utils::StreamHandler output_stream,
-                double soil_storage_meters,
-                double groundwater_storage_meters,
+                double soil_storage,
+                double groundwater_storage,
+                bool storage_values_are_ratios,
                 std::string catchment_id,
                 giuh::GiuhJsonReader &giuh_json_reader,
                 double maxsmc,
@@ -53,11 +123,13 @@ namespace realization {
 
         virtual ~Tshirt_C_Realization();
 
-        int get_response(double input_flux);
+        int run_formulation_for_timestep(double input_flux);
 
-        int get_responses(std::vector<double> input_fluxes);
+        int run_formulation_for_timesteps(std::vector<double> input_fluxes);
 
         // TODO: add versions that handle forcing data directly
+
+        double get_response(double input_flux, time_step_t t, time_step_t dt, void* et_params) override;
 
     private:
         std::string catchment_id;
@@ -89,6 +161,8 @@ namespace realization {
         // TODO: rename once setup complete (easier to refactor then)
         conceptual_reservoir groundwater_conceptual_reservoir;
         conceptual_reservoir soil_conceptual_reservoir;
+
+        static double init_reservoir_storage(bool is_ratio, double amount, double max_amount);
 
     };
 }
