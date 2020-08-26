@@ -54,6 +54,22 @@ namespace giuh {
             }
         }
 
+        /**
+         * Extract the ordinate values from the deserialized JSON data.
+         *
+         * @param catchment_data_node
+         * @return
+         */
+        std::vector<double> extract_cumulative_frequency_ordinates(ptree catchment_data_node);
+
+        /**
+         * Extract the ordinate values, getting the appropriate JSON node via lookup
+         *
+         * @param catchment_id
+         * @return
+         */
+        std::vector<double> extract_cumulative_frequency_ordinates(std::string catchment_id);
+
         std::string get_associated_comid(std::string catchment_id);
 
         std::shared_ptr<giuh_kernel_impl> get_giuh_kernel_for_id(std::string catchment_id);

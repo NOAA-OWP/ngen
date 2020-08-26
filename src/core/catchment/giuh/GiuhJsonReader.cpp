@@ -5,12 +5,8 @@ using namespace giuh;
 std::shared_ptr<giuh_kernel_impl> GiuhJsonReader::build_giuh_kernel(std::string catchment_id, std::string comid,
                                                                     ptree catchment_data_node) {
     // Get times and freqs and convert to vectors
-    std::vector<double> cumulative_freqs, cdf_times;
-
-    // TODO: account for error condition of unmatching JSON structure for freqs
-    for (ptree::value_type freqs : catchment_data_node.get_child("CDF.CumulativeFreq")) {
-        cumulative_freqs.push_back(freqs.second.get_value<double>());
-    }
+    std::vector<double> cdf_times;
+    std::vector<double> cumulative_freqs = extract_cumulative_frequency_ordinates(catchment_data_node);
 
     // TODO: account for error condition of unmatching JSON structure for times
     for (ptree::value_type times : catchment_data_node.get_child("CDF.Time")) {
@@ -18,6 +14,22 @@ std::shared_ptr<giuh_kernel_impl> GiuhJsonReader::build_giuh_kernel(std::string 
     }
 
     return std::make_shared<giuh_kernel_impl>(giuh_kernel_impl(catchment_id, comid, cdf_times, cumulative_freqs));
+}
+
+std::vector<double> GiuhJsonReader::extract_cumulative_frequency_ordinates(std::string catchment_id) {
+    std::string associated_comid = get_associated_comid(std::move(catchment_id));
+    std::unique_ptr<ptree> data_node_ptr = find_data_node_for_comid(associated_comid);
+    return extract_cumulative_frequency_ordinates(*data_node_ptr);
+}
+
+std::vector<double> GiuhJsonReader::extract_cumulative_frequency_ordinates(ptree catchment_data_node) {
+    std::vector<double> cumulative_freqs;
+
+    // TODO: account for error condition of unmatching JSON structure for freqs
+    for (ptree::value_type freqs : catchment_data_node.get_child("CDF.CumulativeFreq")) {
+        cumulative_freqs.push_back(freqs.second.get_value<double>());
+    }
+    return cumulative_freqs;
 }
 
 std::unique_ptr<ptree> GiuhJsonReader::find_data_node_for_comid(std::string comid) {
