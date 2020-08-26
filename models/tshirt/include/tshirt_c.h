@@ -1,5 +1,5 @@
-#ifndef NGEN_TSHIRT_2_HPP
-#define NGEN_TSHIRT_2_HPP
+#ifndef NGEN_TSHIRT_C_HPP
+#define NGEN_TSHIRT_C_HPP
 
 #define TRUE 1
 #define FALSE 0
