@@ -90,7 +90,8 @@ void Tshirt_C_Realization_Test::SetUp() {
     is_standalone_data_ingest_stream = false;
 
     std::vector<std::string> path_options = {
-            "test/data/model/tshirt/"
+            "test/data/model/tshirt/",
+            "./test/data/model/tshirt/",
             "../test/data/model/tshirt/",
             "../../test/data/model/tshirt/",
     };
@@ -101,9 +102,10 @@ void Tshirt_C_Realization_Test::SetUp() {
     std::vector<std::string> data_file_names(path_options.size() * name_options.size());
 
     // Build so that all path names are tried for given basename before trying a different basename option
-    for (auto name_iter = name_options.begin(); name_iter != name_options.end(); ++name_iter) {
-        for (auto path_iter = path_options.begin(); path_iter != path_options.end(); ++ path_iter) {
-            data_file_names.push_back(*path_iter + *name_iter);
+    for (auto & name_option : name_options) {
+        for (auto & path_option : path_options) {
+            std::string string_combo = path_option + name_option;
+            data_file_names.push_back(string_combo);
         }
     }
 
