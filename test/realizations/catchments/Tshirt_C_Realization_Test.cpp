@@ -20,6 +20,9 @@ protected:
         error_upper_bound_min = 0.001;
         upper_bound_factor = 1.0;
         lower_bound_factor = 1.0;
+
+        is_giuh_ordinate_examples = false;
+        is_forcing_params_examples = false;
     }
 
     ~Tshirt_C_Realization_Test() override {
@@ -64,11 +67,14 @@ protected:
     double lower_bound_factor;
 
     std::vector<std::vector<double>> giuh_ordinate_examples;
+    bool is_giuh_ordinate_examples;
     std::vector<forcing_params> forcing_params_examples;
+    bool is_forcing_params_examples;
+
+    void init_forcing_params_examples();
 
     void init_giuh_ordinate_examples();
 
-    void init_forcing_params_examples();
 
 };
 
@@ -128,15 +134,10 @@ void Tshirt_C_Realization_Test::open_standalone_c_impl_data_stream() {
 
 void Tshirt_C_Realization_Test::setup_standalone_c_impl_example_case() {
 
-    // TODO: not sure this is needed any longer either
-    // The fluxes from Fred's code are all in units of meters per time step.   Multiply them by the "c_impl_ex_catchment_area_km2"
-    // variable to convert them into cubic meters per time step.
-    //c_impl_ex_catchment_area_km2 = 5.0;
-
     // Note using NGen value instead of Fred's value of 0.0 (which will cancel out things like Klf)
     //double mult = 1.0;
     // Valid range for this is 10-10000
-    // TODO: tinker with the value for this, and adjust in Fred's code and re-run
+    // TODO: considering tinkering with the value for this in multiple samples
     // Also called 'lksatfac'
     double mult = 1000.0;
 
@@ -146,7 +147,7 @@ void Tshirt_C_Realization_Test::setup_standalone_c_impl_example_case() {
     double satdk = 3.38e-06;
     double satpsi = 0.355;
     // High slop (0.0-1.0) will lead to almost no lateral flow (consider < 0.05)
-    // TODO: tinker with the value for this, and adjust in Fred's code and re-run
+    // TODO: considering tinkering with the value for this in multiple samples
     double slop = 1.0;
     double bb = 4.05;
     double alpha_fc = 0.33;
@@ -159,13 +160,10 @@ void Tshirt_C_Realization_Test::setup_standalone_c_impl_example_case() {
 
     // NGen has 0.0000672
     // see lines 326-329 in Fred's code
-    // TODO: see if this without the 3600 multiplied is right, since that accounts for things in m/h instead of m/s
     double Klf = 2.0 * assumed_near_channel_water_table_slope * mult * satdk * 2.0 * drainage_density_km_per_km2;
-    //Klf *= c_impl_ex_timestep_size_s;     // Use this to convert Klf from m/s to m/timestep
+    Klf *= TSHIRT_C_FIXED_TIMESTEP_SIZE_S;     // Use this to convert Klf from m/s to m/timestep (m/h)
 
     // NGen has 1.08
-    // TODO: think this is what Fred's code uses (line 353) but verify
-    // TODO: also, on line 351, Fred's code may need to be re-run with is_exponential = TRUE for valid test values
     double Cgw = 0.01;   // NGen has 1.08
 
     // Note that NGen uses 8
@@ -174,7 +172,6 @@ void Tshirt_C_Realization_Test::setup_standalone_c_impl_example_case() {
     // Note that NGen uses 0.1
     double Kn = 0.03;
 
-    // TODO: should this be 1.0 like Fred's, or 16.0 like Sugar Creek?
     double max_gw_storage = 16.0;
 
     //Define tshirt params
@@ -187,61 +184,43 @@ void Tshirt_C_Realization_Test::setup_standalone_c_impl_example_case() {
             slop,   //slope
             bb,      //b bexp? FWRFH
             mult,    //multipier  FIXMME what should this value be
-            alpha_fc,    //aplha_fc   FIXME what should this value be
+            alpha_fc,    //aplha_fc
             Klf,    //Klf F
             Kn,    //Kn Kn	0.001-0.03 F
-            nash_n,      //nash_n     FIXME is 8 a good number for the cascade?
+            nash_n,      //nash_n
             Cgw,    //Cgw C? FWRFH
             expon,    //expon FWRFH
             max_gw_storage  //max_gw_storage Sgwmax FWRFH
     });
-
-    // init gw res as half full for test
-    double gw_storage = c_impl_ex_tshirt_params->max_groundwater_storage_meters * 0.5;
-
-    // init soil reservoir as 2/3 full
-    double soil_storage = c_impl_ex_tshirt_params->max_soil_storage_meters * 0.667;
-
-    // init properly, with all having 0 storage at start
-    std::vector<double> nash_storages(c_impl_ex_tshirt_params->nash_n);
-    for (unsigned int i = 0; i < c_impl_ex_tshirt_params->nash_n; i++) {
-        nash_storages[i] = 0.0;
-    }
-
-    /*
-    c_impl_ex_initial_state = std::make_shared<tshirt::tshirt_state>(
-            tshirt::tshirt_state(soil_storage, gw_storage, nash_storages));
-
-    c_impl_ex_pdm_et_data = std::make_shared<pdm03_struct>(pdm03_struct());
-    // Not really important at this time, since test uses a custom no-ET subclass, but have here anyway
-    c_impl_ex_pdm_et_data->scaled_distribution_fn_shape_parameter = 1.3;
-    c_impl_ex_pdm_et_data->vegetation_adjustment = 0.99;
-    c_impl_ex_pdm_et_data->model_time_step = 0.0;
-    c_impl_ex_pdm_et_data->max_height_soil_moisture_storerage_tank = 400.0;
-    c_impl_ex_pdm_et_data->maximum_combined_contents = c_impl_ex_pdm_et_data->max_height_soil_moisture_storerage_tank /
-                                                       (1.0 + c_impl_ex_pdm_et_data->scaled_distribution_fn_shape_parameter);
-                                                       */
 }
 
 void Tshirt_C_Realization_Test::init_giuh_ordinate_examples() {
-    std::vector<double> giuh_ordinates_1(5);
-    giuh_ordinates_1[0]=0.06;  // note these sum to 1.0.  If we have N ordinates, we need a queue sized N+1 to perform
-    giuh_ordinates_1[1]=0.51;  // the convolution.
-    giuh_ordinates_1[2]=0.28;
-    giuh_ordinates_1[3]=0.12;
-    giuh_ordinates_1[4]=0.03;
-    giuh_ordinate_examples.push_back(giuh_ordinates_1);
+    if (!is_giuh_ordinate_examples) {
+        std::vector<double> giuh_ordinates_1(5);
+        giuh_ordinates_1[0] = 0.06;  // note these sum to 1.0.  If we have N ordinates, we need a queue sized N+1 to perform
+        giuh_ordinates_1[1] = 0.51;  // the convolution.
+        giuh_ordinates_1[2] = 0.28;
+        giuh_ordinates_1[3] = 0.12;
+        giuh_ordinates_1[4] = 0.03;
+        giuh_ordinate_examples.push_back(giuh_ordinates_1);
+
+        is_giuh_ordinate_examples = true;
+    }
 }
 
 void Tshirt_C_Realization_Test::init_forcing_params_examples() {
-    std::vector<std::string> forcing_path_opts = {
-            "/data/forcing/cat-89_2015-12-01 00_00_00_2015-12-30 23_00_00.csv",
-            "./data/forcing/cat-89_2015-12-01 00_00_00_2015-12-30 23_00_00.csv",
-            "../data/forcing/cat-89_2015-12-01 00_00_00_2015-12-30 23_00_00.csv",
-            "../../data/forcing/cat-89_2015-12-01 00_00_00_2015-12-30 23_00_00.csv"
-    };
-    std::string path = utils::FileChecker::find_first_readable(forcing_path_opts);
-    forcing_params_examples.push_back(forcing_params(path, "2015-12-01 00:00:00", "2015-12-01 23:00:00"));
+    if (!is_forcing_params_examples) {
+        std::vector<std::string> forcing_path_opts = {
+                "/data/forcing/cat-89_2015-12-01 00_00_00_2015-12-30 23_00_00.csv",
+                "./data/forcing/cat-89_2015-12-01 00_00_00_2015-12-30 23_00_00.csv",
+                "../data/forcing/cat-89_2015-12-01 00_00_00_2015-12-30 23_00_00.csv",
+                "../../data/forcing/cat-89_2015-12-01 00_00_00_2015-12-30 23_00_00.csv"
+        };
+        std::string path = utils::FileChecker::find_first_readable(forcing_path_opts);
+        forcing_params_examples.push_back(forcing_params(path, "2015-12-01 00:00:00", "2015-12-01 23:00:00"));
+
+        is_forcing_params_examples = true;
+    }
 }
 
 // Simple test to make sure the run function executes and that the inherent mass-balance check returned by run is good.
@@ -277,16 +256,37 @@ TEST_F(Tshirt_C_Realization_Test, TestRun0) {
 }
 
 
-/** Test direct surface runoff flux calculations. */
-/*
-TEST_F(Tshirt_C_Realization_Test, TestSurfaceRunoffCalc1) {
+/** Test direct surface runoff flux calculations for first example, within bounds. */
+TEST_F(Tshirt_C_Realization_Test, TestSurfaceRunoffCalc1a) {
+    int example_index = 0;
+
     open_standalone_c_impl_data_stream();
 
     setup_standalone_c_impl_example_case();
 
-    // Use an implementation that doesn't do any ET loss calculations
-    std::unique_ptr<tshirt::tshirt_model> model = std::make_unique<tshirt::no_et_tshirt_model>(
-            tshirt::no_et_tshirt_model(*c_impl_ex_tshirt_params, c_impl_ex_initial_state));
+    // init gw res as half full for test
+    double gw_storage_ratio = 0.5;
+
+    // init soil reservoir as 2/3 full
+    double soil_storage_ratio = 0.667;
+
+    std::vector<double> nash_storage(c_impl_ex_tshirt_params->nash_n);
+    for (int i = 0; i < c_impl_ex_tshirt_params->nash_n; i++) {
+        nash_storage[i] = 0.0;
+    }
+
+    std::vector<double> giuh_ordinates = giuh_ordinate_examples[example_index];
+
+    realization::Tshirt_C_Realization tshirt_c_real(
+            forcing_params_examples[example_index],
+            utils::StreamHandler(),
+            soil_storage_ratio,
+            gw_storage_ratio,
+            true,
+            "wat-88",
+            giuh_ordinates,
+            *c_impl_ex_tshirt_params,
+            nash_storage);
 
     std::vector<std::string> result_vector;
     string line;
@@ -300,14 +300,13 @@ TEST_F(Tshirt_C_Realization_Test, TestSurfaceRunoffCalc1) {
         // variable to convert them into cubic meters per time step.
         //input_storage *= c_impl_ex_catchment_area_km2;
 
-        // convert from mm to m
-        input_storage /= 1000;
+        // Remember, signature of tshirt_c run() expects in mm/h, which is how this comes through from source data
+        // So, for now at least, no conversion is needed for the input data
+        // TODO: this probably needs to be changed to work in meters per hour
+        //input_storage /= 1000;
 
         // runoff is index 2
         double expected = std::stod(result_vector[2]);
-        if (expected == 0.000536) {
-            string blah = "";
-        }
 
         // Convert from mm / h to m / s
         expected /= 1000;
@@ -316,10 +315,12 @@ TEST_F(Tshirt_C_Realization_Test, TestSurfaceRunoffCalc1) {
         copy(result_vector.begin(), result_vector.end(), ostream_iterator<string>(cout, "|"));
         cout << "\n";
 
-        int mass_check = model->run(c_impl_ex_timestep_size_s, input_storage, c_impl_ex_pdm_et_data);
-        double actual = model->get_fluxes()->surface_runoff_meters_per_second;
+        tshirt_c_real.run_formulation_for_timestep(input_storage);
 
-        //EXPECT_EQ(mass_check, 0);
+        double actual = tshirt_c_real.get_latest_flux_surface_runoff();
+
+        // Note that, for non-zero values, having to work within a reasonable upper and lower bounds to allow for
+        // precision and rounding errors both on the calculation and sample-data-recording side.
         if (expected == 0.0) {
             EXPECT_EQ(actual, expected);
         }
@@ -332,7 +333,6 @@ TEST_F(Tshirt_C_Realization_Test, TestSurfaceRunoffCalc1) {
 
     }
 }
- */
 
 /** Test soil lateral flow calculations. */
 /*
