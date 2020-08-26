@@ -131,6 +131,9 @@ namespace realization {
 
         double get_response(double input_flux, time_step_t t, time_step_t dt, void* et_params) override;
 
+        // TODO: probably need to do better than this for granting and protecting access
+        double get_latest_flux_surface_runoff();
+
     private:
         std::string catchment_id;
         // TODO: note sure if these are needed
