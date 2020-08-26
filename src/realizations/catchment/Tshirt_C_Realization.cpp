@@ -89,7 +89,7 @@ Tshirt_C_Realization::Tshirt_C_Realization(forcing_params forcing_config, utils:
     soil_conceptual_reservoir.exponent_secondary = 1.0;   // 1.0=linear
     soil_conceptual_reservoir.storage_threshold_secondary_m = lateral_flow_threshold_storage_m;
 
-    // TODO: are these starting values appropriate and appropriately hard-coded, or should they be parameterized?
+    // FIXME: are these starting values appropriate and appropriately hard-coded, or should they be parameterized?
     groundwater_conceptual_reservoir.storage_m = groundwater_conceptual_reservoir.storage_max_m * 0.5;  // INITIALIZE HALF FULL.
     soil_conceptual_reservoir.storage_m = soil_conceptual_reservoir.storage_max_m * 0.667;  // INITIALIZE SOIL STORAGE
 
@@ -116,7 +116,6 @@ Tshirt_C_Realization::Tshirt_C_Realization(forcing_params forcing_config, utils:
 Tshirt_C_Realization::~Tshirt_C_Realization()
 {
     //destructor
-    // TODO: probably going to be some things actually needed here
 }
 
 int Tshirt_C_Realization::get_response(double input_flux) {
@@ -127,10 +126,11 @@ int Tshirt_C_Realization::get_response(double input_flux) {
 int Tshirt_C_Realization::get_responses(std::vector<double> input_fluxes) {
     int num_timesteps = (int) input_fluxes.size();
 
-    // TODO: verify this is correct (worried it isn't)
-    double water_table_slope = params.slope;
+    // FIXME: verify this needs to be independent like this
+    // FIXME: also make sure it shouldn't be parameterized somewhere, rather than hard-coded
+    double assumed_near_channel_water_table_slope = 0.01;
 
-    // TODO: also verify whether this should be set somewhere else ... for now:
+    // FIXME: also verify whether this should be set somewhere else ... for now:
     double K_nash = 0.03;
 
     double* giuh_ordinates = &giuh_cdf_ordinates[0];
@@ -151,7 +151,7 @@ int Tshirt_C_Realization::get_responses(std::vector<double> input_fluxes) {
                      num_timesteps,
                      giuh_ordinates,
                      (int)giuh_cdf_ordinates.size(),
-                     water_table_slope,
+                     assumed_near_channel_water_table_slope,
                      params.Cschaake,
                      params.Klf,
                      K_nash,
