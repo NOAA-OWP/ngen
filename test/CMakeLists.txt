@@ -58,7 +58,7 @@ add_automated_test(test_hymod models/hymod/include/HymodTest.cpp)
 add_automated_test(
         test_tshirt
         models/tshirt/include/TshirtTest.cpp
-        models/tshirt/include/Tshirt_C_Realization_Test.cpp
+        realizations/catchments/Tshirt_C_Realization_Test.cpp
 )
 
 add_automated_test(
@@ -87,7 +87,7 @@ add_automated_test(
         models/hymod/include/Reservoir_Test.cpp
         models/hymod/include/Reservoir_Timeless_Test.cpp
         models/tshirt/include/TshirtTest.cpp
-        models/tshirt/include/Tshirt_C_Realization_Test.cpp
+        realizations/catchments/Tshirt_C_Realization_Test.cpp
         geojson/JSONProperty_Test.cpp
         geojson/JSONGeometry_Test.cpp
         geojson/Feature_Test.cpp
@@ -108,7 +108,7 @@ add_automated_test_w_mock(
         models/hymod/include/Reservoir_Test.cpp
         models/hymod/include/Reservoir_Timeless_Test.cpp
         models/tshirt/include/TshirtTest.cpp
-        models/tshirt/include/Tshirt_C_Realization_Test.cpp
+        realizations/catchments/Tshirt_C_Realization_Test.cpp
         geojson/JSONProperty_Test.cpp
         geojson/JSONGeometry_Test.cpp
         geojson/Feature_Test.cpp
