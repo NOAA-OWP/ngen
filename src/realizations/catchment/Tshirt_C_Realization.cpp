@@ -5,19 +5,38 @@
 
 using namespace realization;
 
-Tshirt_C_Realization::Tshirt_C_Realization(forcing_params forcing_config, utils::StreamHandler output_stream,
-                                           double soil_storage_meters, double groundwater_storage_meters,
-                                           std::string catchment_id, giuh::GiuhJsonReader &giuh_json_reader,
-                                           tshirt::tshirt_params params, const vector<double> &nash_storage)
+Tshirt_C_Realization::Tshirt_C_Realization(forcing_params forcing_config,
+                                           utils::StreamHandler output_stream,
+                                           double soil_storage,
+                                           double groundwater_storage,
+                                           bool storage_values_are_ratios,
+                                           std::string catchment_id,
+                                           giuh::GiuhJsonReader &giuh_json_reader,
+                                           tshirt::tshirt_params params,
+                                           const vector<double> &nash_storage)
+        : Tshirt_C_Realization::Tshirt_C_Realization(std::move(forcing_config), output_stream, soil_storage,
+                                                     groundwater_storage, storage_values_are_ratios,
+                                                     std::move(catchment_id),
+                                                     giuh_json_reader.extract_cumulative_frequency_ordinates(catchment_id),
+                                                     params, nash_storage)
+{
+
+}
+
+Tshirt_C_Realization::Tshirt_C_Realization(forcing_params forcing_config,
+                                           utils::StreamHandler output_stream,
+                                           double soil_storage,
+                                           double groundwater_storage,
+                                           bool storage_values_are_ratios,
+                                           std::string catchment_id,
+                                           std::vector<double> giuh_ordinates,
+                                           tshirt::tshirt_params params,
+                                           const vector<double> &nash_storage)
         : HY_CatchmentArea(std::move(forcing_config), output_stream), catchment_id(std::move(catchment_id)),
-          params(params), nash_storage(nash_storage), c_soil_params(NWM_soil_parameters()),
+          giuh_cdf_ordinates(std::move(giuh_ordinates)), params(params), nash_storage(nash_storage), c_soil_params(NWM_soil_parameters()),
           groundwater_conceptual_reservoir(conceptual_reservoir()), soil_conceptual_reservoir(conceptual_reservoir()),
           c_aorc_params(aorc_forcing_data())
 {
-    giuh_cdf_ordinates = giuh_json_reader.extract_cumulative_frequency_ordinates(catchment_id);
-
-    //state[0] = std::make_shared<tshirt::tshirt_state>(tshirt::tshirt_state(soil_storage_meters, groundwater_storage_meters, nash_storage));
-
     fluxes = std::vector<std::shared_ptr<tshirt_c_result_fluxes>>();
 
     // Convert params to struct for C-impl
@@ -89,22 +108,43 @@ Tshirt_C_Realization::Tshirt_C_Realization(forcing_params forcing_config, utils:
     soil_conceptual_reservoir.exponent_secondary = 1.0;   // 1.0=linear
     soil_conceptual_reservoir.storage_threshold_secondary_m = lateral_flow_threshold_storage_m;
 
-    // FIXME: are these starting values appropriate and appropriately hard-coded, or should they be parameterized?
-    groundwater_conceptual_reservoir.storage_m = groundwater_conceptual_reservoir.storage_max_m * 0.5;  // INITIALIZE HALF FULL.
-    soil_conceptual_reservoir.storage_m = soil_conceptual_reservoir.storage_max_m * 0.667;  // INITIALIZE SOIL STORAGE
+    // TODO: make sure these hard-coded values get into the tests
+    //groundwater_conceptual_reservoir.storage_m = groundwater_conceptual_reservoir.storage_max_m * 0.5;  // INITIALIZE HALF FULL.
+    //soil_conceptual_reservoir.storage_m = soil_conceptual_reservoir.storage_max_m * 0.667;  // INITIALIZE SOIL STORAGE
+    groundwater_conceptual_reservoir.storage_m = init_reservoir_storage(storage_values_are_ratios,
+                                                                        groundwater_storage,
+                                                                        groundwater_conceptual_reservoir.storage_max_m);
+    soil_conceptual_reservoir.storage_m = init_reservoir_storage(storage_values_are_ratios,
+                                                                 soil_storage,
+                                                                 soil_conceptual_reservoir.storage_max_m);
 
 }
 
-Tshirt_C_Realization::Tshirt_C_Realization(forcing_params forcing_config, utils::StreamHandler output_stream,
-                                           double soil_storage_meters, double groundwater_storage_meters,
-                                           std::string catchment_id, giuh::GiuhJsonReader &giuh_json_reader,
-                                           double maxsmc, double wltsmc, double satdk, double satpsi, double slope,
-                                           double b, double multiplier, double alpha_fc, double Klf, double Kn,
-                                           int nash_n, double Cgw, double expon, double max_gw_storage,
+Tshirt_C_Realization::Tshirt_C_Realization(forcing_params forcing_config,
+                                           utils::StreamHandler output_stream,
+                                           double soil_storage,
+                                           double groundwater_storage,
+                                           bool storage_values_are_ratios,
+                                           std::string catchment_id,
+                                           giuh::GiuhJsonReader &giuh_json_reader,
+                                           double maxsmc,
+                                           double wltsmc,
+                                           double satdk,
+                                           double satpsi,
+                                           double slope,
+                                           double b,
+                                           double multiplier,
+                                           double alpha_fc,
+                                           double Klf,
+                                           double Kn,
+                                           int nash_n,
+                                           double Cgw,
+                                           double expon,
+                                           double max_gw_storage,
                                            const vector<double> &nash_storage)
-           : Tshirt_C_Realization::Tshirt_C_Realization(std::move(forcing_config), output_stream, soil_storage_meters,
-                                                        groundwater_storage_meters, std::move(catchment_id),
-                                                        giuh_json_reader,
+           : Tshirt_C_Realization::Tshirt_C_Realization(std::move(forcing_config), output_stream, soil_storage,
+                                                        groundwater_storage, storage_values_are_ratios,
+                                                        std::move(catchment_id), giuh_json_reader,
                                                         tshirt::tshirt_params(maxsmc, wltsmc, satdk, satpsi, slope, b,
                                                                               multiplier, alpha_fc, Klf, Kn, nash_n,
                                                                               Cgw, expon, max_gw_storage),
@@ -118,12 +158,22 @@ Tshirt_C_Realization::~Tshirt_C_Realization()
     //destructor
 }
 
-int Tshirt_C_Realization::get_response(double input_flux) {
-    std::vector<double> input_flux_in_vector{input_flux};
-    return get_responses(input_flux_in_vector);
+double Tshirt_C_Realization::get_response(double input_flux, time_step_t t, time_step_t dt, void* et_params) {
+    // TODO: check that dt is of approprate size
+
+    int response_result = run_formulation_for_timestep(input_flux);
+
+    // TODO: check time_step_t is the next expected time step to be calculated
+
+    return fluxes.back()->Qout_m;
 }
 
-int Tshirt_C_Realization::get_responses(std::vector<double> input_fluxes) {
+int Tshirt_C_Realization::run_formulation_for_timestep(double input_flux) {
+    std::vector<double> input_flux_in_vector{input_flux};
+    return run_formulation_for_timesteps(input_flux_in_vector);
+}
+
+int Tshirt_C_Realization::run_formulation_for_timesteps(std::vector<double> input_fluxes) {
     int num_timesteps = (int) input_fluxes.size();
 
     // FIXME: verify this needs to be independent like this
@@ -168,4 +218,24 @@ int Tshirt_C_Realization::get_responses(std::vector<double> input_fluxes) {
     }
 
     return result;
+}
+
+double Tshirt_C_Realization::init_reservoir_storage(bool is_ratio, double amount, double max_amount) {
+    // Negative amounts are always ignored and just considered emtpy
+    if (amount < 0.0) {
+        return 0.0;
+    }
+    // When not a ratio (and positive), just return the literal amount
+    if (!is_ratio) {
+        return amount;
+    }
+    // When between 0 and 1, return the simple ratio computation
+    if (amount <= 1.0) {
+        return max_amount * amount;
+    }
+        // Otherwise, just return the literal amount, and assume the is_ratio value was invalid
+        // TODO: is this the best way to handle this?
+    else {
+        return amount;
+    }
 }
