@@ -2,6 +2,19 @@
 #include "Constants.h"
 #include <cmath>
 #include <cstdio>
+#include <cstdlib>
+#include <cstring>
+
+// TODO: remove this ASAP
+void d_alloc(double **var, int size) {
+    size++;  /* just for safety */
+
+    *var = (double *) malloc(size * sizeof(double));
+    if (*var == NULL) {
+        printf("Problem allocating memory for array in d_alloc.\n");
+        return;
+    } else memset(*var, 0, size * sizeof(double));
+}
 
 /**
  * Solve for the flow through a Nash Cascade to delay the arrival of some flow.
@@ -409,7 +422,10 @@ extern int run(NWM_soil_parameters& NWM_soil_params,
     #endif
 
     //d_alloc(&giuh_ordinates, MAX_NUM_GIUH_ORDINATES);  // allocate memory to store the GIUH ordinates
+    // TODO: come back and try to avoid using d_alloc (or, implicitly, malloc), so use array in stack to get a pointer
     d_alloc(&runoff_queue_m_per_timestep, MAX_NUM_GIUH_ORDINATES+1); // allocate memory to store convolution queue
+    //double runoff_queue_array[MAX_NUM_GIUH_ORDINATES+1];
+    //runoff_queue_m_per_timestep = &runoff_queue_array[0];
 
     // catchment properties
     //------------------------
@@ -719,6 +735,10 @@ extern int run(NWM_soil_parameters& NWM_soil_params,
         vol_in_nash_end += nash_storage[i];
 
     vol_soil_end = soil_reservoir.storage_m;
+
+    // Release the things we malloc-ed
+    free(runoff_queue_m_per_timestep);
+    free(nash_storage);
 
     // TODO: look at whether the rest of this logic needs to be removed or moved, since we don't need to output to file here.
 
