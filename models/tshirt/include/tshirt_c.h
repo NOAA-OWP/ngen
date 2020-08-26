@@ -114,6 +114,7 @@ extern void get_word(char *theString,int *start,int *end,char *theWord,int *word
  * @param num_timesteps The number of time steps, which PROBABLY should always be 1
  * @param giuh_ordinates A pointer to the head of an array of GIUH ordinate values
  * @param num_giuh_ordinates The number of elements in the array pointed to by ``giuh_ordinates``
+ * @param field_capacity_atm_press_fraction Fraction of atmospheric pressure for field capacity suction pressure (also alpha_fc)
  * @param water_table_slope Assumed near channel water table slope lateral flow parameter
  * @param Schaake_adjusted_magic_constant_by_soil_type Schaake magic constant for soil type
  * @param lateral_flow_linear_reservoir_constant Later flow reservoir constant (Klf)
@@ -132,6 +133,7 @@ extern int run(NWM_soil_parameters& NWM_soil_params,
                int num_timesteps,
                double* giuh_ordinates,
                int num_giuh_ordinates,
+               double field_capacity_atm_press_fraction,
                double water_table_slope,
                double Schaake_adjusted_magic_constant_by_soil_type,
                double lateral_flow_linear_reservoir_constant,

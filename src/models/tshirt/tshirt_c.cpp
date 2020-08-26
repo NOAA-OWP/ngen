@@ -257,6 +257,7 @@ extern int is_fabs_less_than_epsilon(double a, double epsilon) {
  * @param num_timesteps The number of time steps, which PROBABLY should always be 1
  * @param giuh_ordinates A pointer to the head of an array of GIUH ordinate values
  * @param num_giuh_ordinates The number of elements in the array pointed to by ``giuh_ordinates``
+ * @param field_capacity_atm_press_fraction Fraction of atmospheric pressure for field capacity suction pressure (also alpha_fc)
  * @param water_table_slope Assumed near channel water table slope lateral flow parameter
  * @param Schaake_adjusted_magic_constant_by_soil_type Schaake magic constant for soil type
  * @param lateral_flow_linear_reservoir_constant Later flow reservoir constant (Klf)
@@ -275,6 +276,7 @@ extern int run(NWM_soil_parameters& NWM_soil_params,
                int num_timesteps,
                double* giuh_ordinates,
                int num_giuh_ordinates,
+               double field_capacity_atm_press_fraction,
                double water_table_slope,
                double Schaake_adjusted_magic_constant_by_soil_type,
                double lateral_flow_linear_reservoir_constant,
@@ -353,7 +355,7 @@ extern int run(NWM_soil_parameters& NWM_soil_params,
     double gw_reservoir_storage_deficit_m; // the available space in the conceptual groundwater reservoir
     double primary_flux, secondary_flux;    // temporary vars.
 
-    double field_capacity_atm_press_fraction; // [-]
+    //double field_capacity_atm_press_fraction; // [-]
     double soil_water_content_at_field_capacity; // [V/V]
 
     double atm_press_Pa = STANDARD_ATMOSPHERIC_PRESSURE_PASCALS;
@@ -456,7 +458,7 @@ extern int run(NWM_soil_parameters& NWM_soil_params,
     // following the method in the NWM/t-shirt parameter equivalence document, assuming field capacity soil
     // suction pressure = 1/3 atm= field_capacity_atm_press_fraction * atm_press_Pa.
 
-    field_capacity_atm_press_fraction = 0.33;  //alpha in Eqn. 3.
+    //field_capacity_atm_press_fraction = 0.33;  //alpha in Eqn. 3.
 
     // equation 3 from NWM/t-shirt parameter equivalence document
     H_water_table_m = field_capacity_atm_press_fraction * atm_press_Pa / unit_weight_water_N_per_m3;
@@ -473,7 +475,7 @@ extern int run(NWM_soil_parameters& NWM_soil_params,
             * pow((1.0 / NWM_soil_params.satpsi), (-1.0 / NWM_soil_params.bb))
             * (upper_lim - lower_lim);
 
-    printf("field capacity storage threshold = %lf m\n", field_capacity_storage_threshold_m);
+    //printf("field capacity storage threshold = %lf m\n", field_capacity_storage_threshold_m);
 
     // initialize giuh parameters.  Can no longer hard code these though.
     //------------------------------------------------------------------
@@ -523,10 +525,6 @@ extern int run(NWM_soil_parameters& NWM_soil_params,
         fprintf(stdout, "Number of Nash Cascade linear reservoirs greater than MAX_NUM_NASH_CASCADE.\n");
         return -2;
     }
-
-    // TODO: this actually needs to be incorporated into the tshirt params
-    // TODO: also needs to be calibrated
-    K_nash = 0.03;
 
     // initialize the nash storage
     // TODO: this is somewhat wasteful ... look at cleaning up a little
