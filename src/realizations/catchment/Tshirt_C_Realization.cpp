@@ -153,6 +153,10 @@ Tshirt_C_Realization::~Tshirt_C_Realization()
     //destructor
 }
 
+double Tshirt_C_Realization::get_latest_flux_surface_runoff() {
+    return fluxes.empty() ? 0.0 : fluxes.back()->Schaake_output_runoff_m;
+}
+
 double Tshirt_C_Realization::get_response(double input_flux, time_step_t t, time_step_t dt, void* et_params) {
     // TODO: check that dt is of approprate size
 
