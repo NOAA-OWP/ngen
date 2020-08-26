@@ -96,7 +96,7 @@ void Tshirt_C_Realization_Test::SetUp() {
             "../../test/data/model/tshirt/",
     };
 
-    std::vector<std::string> name_options = {"expected_results.csv", "expected_results_fred_latest.csv" };
+    std::vector<std::string> name_options = {"expected_results.csv"};
 
     // Build vector of names by building combinations of the path and basename options
     std::vector<std::string> data_file_names(path_options.size() * name_options.size());
