@@ -252,6 +252,7 @@ extern int is_fabs_less_than_epsilon(double a, double epsilon) {
  * @param yes_aorc Whether
  * @param aorc_data Pointer to head of array of per-time-step AORC data structs, when yes_aorc is TRUE (array of size num_timesteps)
  * @param rain_rate Pointer to head of array of per-time-step simple rain rate data (in mm/h), when yes_aorc is FALSE (array of size num_timesteps)
+ * @param num_added_fluxes Reference for number of fluxes added to 'fluxes' parameter array; initialized to 0.
  * @param fluxes Pointer to head of array of array per-time-step resulting flux values (array of size num_timesteps)
  * @return
  */
@@ -269,8 +270,12 @@ extern int run(NWM_soil_parameters& NWM_soil_params,
                int yes_aorc,
                aorc_forcing_data* aorc_data,
                double* rain_rate,
+               int& num_added_fluxes,
                tshirt_c_result_fluxes* fluxes)
 {
+    // Do this to be safe ...
+    num_added_fluxes = 0;
+
     /* Commenting out, since this will need to return values rather than write results to a file.
     FILE *in_fptr;
     FILE *out_fptr;
@@ -690,6 +695,8 @@ extern int run(NWM_soil_parameters& NWM_soil_params,
         fluxes[tstep].nash_lateral_runoff_m = nash_lateral_runoff_m;
         fluxes[tstep].flux_from_deep_gw_to_chan_m = flux_from_deep_gw_to_chan_m;
         fluxes[tstep].Qout_m = Qout_m;
+
+        num_added_fluxes++;
 
     }
 
