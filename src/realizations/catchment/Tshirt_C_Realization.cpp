@@ -153,8 +153,24 @@ Tshirt_C_Realization::~Tshirt_C_Realization()
     //destructor
 }
 
+double Tshirt_C_Realization::get_latest_flux_base_flow() {
+    return fluxes.empty() ? 0.0 : fluxes.back()->flux_from_deep_gw_to_chan_m;
+}
+
+double Tshirt_C_Realization::get_latest_flux_giuh_runoff() {
+    return fluxes.empty() ? 0.0 : fluxes.back()->giuh_runoff_m;
+}
+
+double Tshirt_C_Realization::get_latest_flux_lateral_flow() {
+    return fluxes.empty() ? 0.0 : fluxes.back()->nash_lateral_runoff_m;
+}
+
 double Tshirt_C_Realization::get_latest_flux_surface_runoff() {
     return fluxes.empty() ? 0.0 : fluxes.back()->Schaake_output_runoff_m;
+}
+
+double Tshirt_C_Realization::get_latest_flux_total_discharge() {
+    return fluxes.empty() ? 0.0 : fluxes.back()->Qout_m;
 }
 
 double Tshirt_C_Realization::get_response(double input_flux, time_step_t t, time_step_t dt, void* et_params) {
