@@ -471,11 +471,25 @@ namespace geojson {
         return build_collection(tree);
     }
 
+    static GeoJSON read(const std::string &file_path, std::vector<std::string> &ids) {
+        boost::property_tree::ptree tree;
+        boost::property_tree::json_parser::read_json(file_path, tree);
+        return build_collection(tree, ids);
+    }
+
     static GeoJSON read(std::stringstream &data) {
         boost::property_tree::ptree tree;
         boost::property_tree::json_parser::read_json(data, tree);
         return build_collection(tree);
     }
+
+    static GeoJSON read(std::stringstream &data, std::vector<std::string> &ids) {
+        boost::property_tree::ptree tree;
+        boost::property_tree::json_parser::read_json(data, tree);
+        return build_collection(tree, ids);
+    }
+
+
 }
 
 #endif // GEOJSON_FEATURE_BUILDER_H
