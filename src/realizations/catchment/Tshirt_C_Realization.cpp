@@ -44,6 +44,12 @@ Tshirt_C_Realization::Tshirt_C_Realization(forcing_params forcing_config,
         }
     }
 
+    // Create this with 0 values initially
+    giuh_runoff_queue_per_timestep = std::vector<double>(giuh_cdf_ordinates.size() + 1);
+    for (int i = 0; i < giuh_cdf_ordinates.size() + 1; i++) {
+        giuh_runoff_queue_per_timestep.push_back(0.0);
+    }
+
     fluxes = std::vector<std::shared_ptr<tshirt_c_result_fluxes>>();
 
     // Convert params to struct for C-impl
@@ -204,6 +210,8 @@ int Tshirt_C_Realization::run_formulation_for_timesteps(std::vector<double> inpu
 
     double* giuh_ordinates = &giuh_cdf_ordinates[0];
 
+    double* giuh_runoff_queue = &giuh_runoff_queue_per_timestep[0];
+
     //aorc_forcing_data empty_forcing[num_timesteps];
     aorc_forcing_data empty_forcing[1];
 
@@ -220,6 +228,7 @@ int Tshirt_C_Realization::run_formulation_for_timesteps(std::vector<double> inpu
                      num_timesteps,
                      giuh_ordinates,
                      (int)giuh_cdf_ordinates.size(),
+                     giuh_runoff_queue,
                      params.alpha_fc,
                      assumed_near_channel_water_table_slope,
                      params.Cschaake,
