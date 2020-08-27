@@ -120,6 +120,7 @@ extern void get_word(char *theString,int *start,int *end,char *theWord,int *word
  * @param lateral_flow_linear_reservoir_constant Later flow reservoir constant (Klf)
  * @param K_nash Nash reservoir flow constant
  * @param num_lateral_flow_nash_reservoirs The number of reservoirs in the cascade for the lateral flow
+ * @param nash_storage Pointer to head of array of already-set Nash Cascade reservoir storage values
  * @param yes_aorc Whether
  * @param aorc_data Pointer to head of array of per-time-step AORC data structs, when yes_aorc is TRUE (array of size num_timesteps)
  * @param rain_rate Pointer to head of array of per-time-step simple rain rate data (in mm/h), when yes_aorc is FALSE (array of size num_timesteps)
@@ -139,6 +140,7 @@ extern int run(NWM_soil_parameters& NWM_soil_params,
                double lateral_flow_linear_reservoir_constant,
                double K_nash,
                int num_lateral_flow_nash_reservoirs,
+               double* nash_storage,
                int yes_aorc,
                aorc_forcing_data* aorc_data,
                double* rain_rate,
