@@ -554,7 +554,7 @@ TEST_F(Tshirt_C_Realization_Test, TestBaseFlowCalc1a) {
         cout << "\n";
 
         tshirt_c_real.run_formulation_for_timestep(input_storage);
-        double actual = tshirt_c_real.get_latest_flux_giuh_runoff();
+        double actual = tshirt_c_real.get_latest_flux_base_flow();
 
         // Note that, for non-zero values, having to work within a reasonable upper and lower bounds to allow for
         // precision and rounding errors both on the calculation and sample-data-recording side.
