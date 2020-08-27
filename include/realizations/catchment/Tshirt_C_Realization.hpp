@@ -158,6 +158,7 @@ namespace realization {
         //std::unique_ptr<tshirt::tshirt_model> model;
 
         std::vector<double> giuh_cdf_ordinates;
+        std::vector<double> giuh_runoff_queue_per_timestep;
 
 
         // TODO: remember to do array conversion in function calls
