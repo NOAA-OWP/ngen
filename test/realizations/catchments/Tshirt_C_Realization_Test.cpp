@@ -494,6 +494,85 @@ TEST_F(Tshirt_C_Realization_Test, TestLateralFlowCalc1a) {
     }
 }
 
+/** Test base flow calculations. */
+TEST_F(Tshirt_C_Realization_Test, TestBaseFlowCalc1a) {
+    int example_index = 0;
+
+    open_standalone_c_impl_data_stream();
+
+    setup_standalone_c_impl_example_case();
+
+    // init gw res as half full for test
+    double gw_storage_ratio = 0.5;
+
+    // init soil reservoir as 2/3 full
+    double soil_storage_ratio = 0.667;
+
+    std::vector<double> nash_storage(c_impl_ex_tshirt_params->nash_n);
+    for (int i = 0; i < c_impl_ex_tshirt_params->nash_n; i++) {
+        nash_storage[i] = 0.0;
+    }
+
+    std::vector<double> giuh_ordinates = giuh_ordinate_examples[example_index];
+
+    realization::Tshirt_C_Realization tshirt_c_real(
+            forcing_params_examples[example_index],
+            utils::StreamHandler(),
+            soil_storage_ratio,
+            gw_storage_ratio,
+            true,
+            "wat-88",
+            giuh_ordinates,
+            *c_impl_ex_tshirt_params,
+            nash_storage);
+
+    std::vector<std::string> result_vector;
+    string line;
+
+    while (getline(standalone_data_ingest_stream, line)) {
+        Tokenizer tokenizer(line);
+        result_vector.assign(tokenizer.begin(), tokenizer.end());
+
+        double input_storage = std::stod(result_vector[1]);
+        // The fluxes from Fred's code are all in units of meters per time step.   Multiply them by the "c_impl_ex_catchment_area_km2"
+        // variable to convert them into cubic meters per time step.
+        //input_storage *= c_impl_ex_catchment_area_km2;
+
+        // Remember, signature of tshirt_c run() expects in mm/h, which is how this comes through from source data
+        // So, for now at least, no conversion is needed for the input data
+        // TODO: this probably needs to be changed to work in meters per hour
+        //input_storage /= 1000;
+
+        // base flow is index 5
+        double expected = std::stod(result_vector[3]);
+
+        // Convert from mm / h to m / s
+        expected /= 1000;
+
+        // Output the line essentially
+        copy(result_vector.begin(), result_vector.end(), ostream_iterator<string>(cout, "|"));
+        cout << "\n";
+
+        tshirt_c_real.run_formulation_for_timestep(input_storage);
+        double actual = tshirt_c_real.get_latest_flux_giuh_runoff();
+
+        // Note that, for non-zero values, having to work within a reasonable upper and lower bounds to allow for
+        // precision and rounding errors both on the calculation and sample-data-recording side.
+        if (expected == 0.0) {
+            // Might be acceptable if actual value is less than 10^-9
+            //EXPECT_LT(actual - expected, 0.000000001);
+            // ... but for now, do this
+            EXPECT_EQ(actual, expected);
+        }
+        else {
+            double upper_bound = expected * upper_bound_factor;
+            double lower_bound = expected * lower_bound_factor;
+            EXPECT_LE(actual, upper_bound);
+            EXPECT_GE(actual, lower_bound);
+        }
+    }
+}
+
 /**
  * Test of actual Tshirt model execution, comparing against data generated with alternate, C-based implementation.
  */
