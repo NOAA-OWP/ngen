@@ -409,6 +409,17 @@ TEST_F(Tshirt_C_Realization_Test, TestGiuhRunoffCalc1a) {
         else {
             double upper_bound = expected * upper_bound_factor;
             double lower_bound = expected * lower_bound_factor;
+            // TODO: apply this logic to the other tests also.
+            // Keep in mind that the sample data only has so much precision (for brevity/formatting purposes).  As such,
+            // upper and lower bounds for this test also need to be limited by what is representable.
+            // This is the smallest value that can be written to test data with current formatting (then divided by
+            // 1000, since in millimeters)
+            double representable_bound_limit = 0.000001 / 1000;
+            double rep_upper_bound = expected + representable_bound_limit;
+            double rep_lower_bound = expected - representable_bound_limit;
+            upper_bound = max(upper_bound, rep_upper_bound);
+            lower_bound = min(lower_bound, rep_lower_bound);
+
             EXPECT_LE(actual, upper_bound);
             EXPECT_GE(actual, lower_bound);
         }
