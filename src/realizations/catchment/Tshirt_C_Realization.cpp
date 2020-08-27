@@ -37,6 +37,13 @@ Tshirt_C_Realization::Tshirt_C_Realization(forcing_params forcing_config,
           groundwater_conceptual_reservoir(conceptual_reservoir()), soil_conceptual_reservoir(conceptual_reservoir()),
           c_aorc_params(aorc_forcing_data())
 {
+    // initialize 0 values if necessary in Nash Cascade storage vector
+    if (this->nash_storage.empty()) {
+        for (int i = 0; i < params.nash_n; i++) {
+            this->nash_storage.push_back(0.0);
+        }
+    }
+
     fluxes = std::vector<std::shared_ptr<tshirt_c_result_fluxes>>();
 
     // Convert params to struct for C-impl
@@ -219,6 +226,7 @@ int Tshirt_C_Realization::run_formulation_for_timesteps(std::vector<double> inpu
                      params.Klf,
                      params.Kn,
                      params.nash_n,
+                     &nash_storage[0],
                      FALSE,
                      &empty_forcing[0],
                      &input_as_array[0],
