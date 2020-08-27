@@ -416,15 +416,36 @@ TEST_F(Tshirt_C_Realization_Test, TestGiuhRunoffCalc1a) {
 }
 
 /** Test soil lateral flow calculations. */
-/*
-TEST_F(Tshirt_C_Realization_Test, TestLateralFlowCalc1) {
+TEST_F(Tshirt_C_Realization_Test, TestLateralFlowCalc1a) {
+    int example_index = 0;
+
     open_standalone_c_impl_data_stream();
 
     setup_standalone_c_impl_example_case();
 
-    // Use an implementation that doesn't do any ET loss calculations
-    std::unique_ptr<tshirt::tshirt_model> model = std::make_unique<tshirt::no_et_tshirt_model>(
-            tshirt::no_et_tshirt_model(*c_impl_ex_tshirt_params, c_impl_ex_initial_state));
+    // init gw res as half full for test
+    double gw_storage_ratio = 0.5;
+
+    // init soil reservoir as 2/3 full
+    double soil_storage_ratio = 0.667;
+
+    std::vector<double> nash_storage(c_impl_ex_tshirt_params->nash_n);
+    for (int i = 0; i < c_impl_ex_tshirt_params->nash_n; i++) {
+        nash_storage[i] = 0.0;
+    }
+
+    std::vector<double> giuh_ordinates = giuh_ordinate_examples[example_index];
+
+    realization::Tshirt_C_Realization tshirt_c_real(
+            forcing_params_examples[example_index],
+            utils::StreamHandler(),
+            soil_storage_ratio,
+            gw_storage_ratio,
+            true,
+            "wat-88",
+            giuh_ordinates,
+            *c_impl_ex_tshirt_params,
+            nash_storage);
 
     std::vector<std::string> result_vector;
     string line;
@@ -438,42 +459,40 @@ TEST_F(Tshirt_C_Realization_Test, TestLateralFlowCalc1) {
         // variable to convert them into cubic meters per time step.
         //input_storage *= c_impl_ex_catchment_area_km2;
 
-        // convert from mm to m
-        input_storage /= 1000;
+        // Remember, signature of tshirt_c run() expects in mm/h, which is how this comes through from source data
+        // So, for now at least, no conversion is needed for the input data
+        // TODO: this probably needs to be changed to work in meters per hour
+        //input_storage /= 1000;
 
         // lateral flow is index 4
-        //double expected = std::stod(result_vector[4]) / c_impl_ex_timestep_size_s;
         double expected = std::stod(result_vector[4]);
 
-        // convert from m to mm
+        // Convert from mm / h to m / s
         expected /= 1000;
 
         // Output the line essentially
         copy(result_vector.begin(), result_vector.end(), ostream_iterator<string>(cout, "|"));
         cout << "\n";
 
-        int mass_check = model->run(c_impl_ex_timestep_size_s, input_storage, c_impl_ex_pdm_et_data);
-        double actual = model->get_fluxes()->soil_lateral_flow_meters_per_second;
+        tshirt_c_real.run_formulation_for_timestep(input_storage);
+        double actual = tshirt_c_real.get_latest_flux_lateral_flow();
 
-        //EXPECT_EQ(mass_check, 0);
-
+        // Note that, for non-zero values, having to work within a reasonable upper and lower bounds to allow for
+        // precision and rounding errors both on the calculation and sample-data-recording side.
         if (expected == 0.0) {
-            // Should be acceptable if actual value is less than 10^-9
-            EXPECT_LT(actual - expected, 0.000000001);
+            // Might be acceptable if actual value is less than 10^-9
+            //EXPECT_LT(actual - expected, 0.000000001);
+            // ... but for now, do this
+            EXPECT_EQ(actual, expected);
         }
         else {
-            // Again, if diff is less than 10^-9, we should be fine, but otherwise ...
-            if (abs(expected - actual) >= 0.000000001) {
-                double upper_bound = expected * upper_bound_factor;
-                double lower_bound = expected * lower_bound_factor;
-                EXPECT_LE(actual, upper_bound);
-                EXPECT_GE(actual, lower_bound);
-            }
+            double upper_bound = expected * upper_bound_factor;
+            double lower_bound = expected * lower_bound_factor;
+            EXPECT_LE(actual, upper_bound);
+            EXPECT_GE(actual, lower_bound);
         }
-
     }
 }
- */
 
 /**
  * Test of actual Tshirt model execution, comparing against data generated with alternate, C-based implementation.
