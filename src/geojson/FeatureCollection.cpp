@@ -4,7 +4,10 @@
 using namespace geojson;
 
 Feature FeatureCollection::get_feature(int index) const {
-    return features[index];
+    if( index >= 0 && index < features.size() )
+      return features[index];
+    else
+      return nullptr;
 }
 
 int FeatureCollection::find(Feature feature) {
