@@ -257,6 +257,7 @@ extern int is_fabs_less_than_epsilon(double a, double epsilon) {
  * @param num_timesteps The number of time steps, which PROBABLY should always be 1
  * @param giuh_ordinates A pointer to the head of an array of GIUH ordinate values
  * @param num_giuh_ordinates The number of elements in the array pointed to by ``giuh_ordinates``
+ * @param runoff_queue_m_per_timestep Pointer to head of array for GIUH convolution queue, of size ``num_giuh_ordinates`` + 1
  * @param field_capacity_atm_press_fraction Fraction of atmospheric pressure for field capacity suction pressure (also alpha_fc)
  * @param water_table_slope Assumed near channel water table slope lateral flow parameter
  * @param Schaake_adjusted_magic_constant_by_soil_type Schaake magic constant for soil type
@@ -277,6 +278,7 @@ extern int run(NWM_soil_parameters& NWM_soil_params,
                int num_timesteps,
                double* giuh_ordinates,
                int num_giuh_ordinates,
+               double *runoff_queue_m_per_timestep,
                double field_capacity_atm_press_fraction,
                double water_table_slope,
                double Schaake_adjusted_magic_constant_by_soil_type,
@@ -332,7 +334,7 @@ extern int run(NWM_soil_parameters& NWM_soil_params,
     // GIUH state & parameters
     // The GIUH ordinates (and ordinates count) now has to be passed in, rather than hard coded
     //double *giuh_ordinates = NULL;                  // assumed GIUH hydrograph ordinates
-    double *runoff_queue_m_per_timestep = NULL;
+    //double *runoff_queue_m_per_timestep = NULL;
     //int num_giuh_ordinates;
     double giuh_runoff_m;
     double soil_reservoir_storage_deficit_m;        // the available space in the soil conceptual reservoir
@@ -424,12 +426,6 @@ extern int run(NWM_soil_parameters& NWM_soil_params,
     }
      */
     #endif
-
-    //d_alloc(&giuh_ordinates, MAX_NUM_GIUH_ORDINATES);  // allocate memory to store the GIUH ordinates
-    // TODO: come back and try to avoid using d_alloc (or, implicitly, malloc), so use array in stack to get a pointer
-    d_alloc(&runoff_queue_m_per_timestep, MAX_NUM_GIUH_ORDINATES+1); // allocate memory to store convolution queue
-    //double runoff_queue_array[MAX_NUM_GIUH_ORDINATES+1];
-    //runoff_queue_m_per_timestep = &runoff_queue_array[0];
 
     // catchment properties
     //------------------------
@@ -727,9 +723,6 @@ extern int run(NWM_soil_parameters& NWM_soil_params,
         vol_in_nash_end += nash_storage[i];
 
     vol_soil_end = soil_reservoir.storage_m;
-
-    // Release the things we malloc-ed
-    free(runoff_queue_m_per_timestep);
 
     // TODO: look at whether the rest of this logic needs to be removed or moved, since we don't need to output to file here.
 
