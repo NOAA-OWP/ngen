@@ -544,7 +544,7 @@ TEST_F(Tshirt_C_Realization_Test, TestBaseFlowCalc1a) {
         //input_storage /= 1000;
 
         // base flow is index 5
-        double expected = std::stod(result_vector[3]);
+        double expected = std::stod(result_vector[5]);
 
         // Convert from mm / h to m / s
         expected /= 1000;
