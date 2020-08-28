@@ -143,25 +143,20 @@ namespace realization {
         double get_latest_flux_total_discharge();
 
     private:
+        /** Id of associated catchment. */
         std::string catchment_id;
-        // TODO: note sure if these are needed
-        /*
-        std::unordered_map<time_step_t, shared_ptr<tshirt::tshirt_state>> state;
-        std::unordered_map<time_step_t, shared_ptr<tshirt::tshirt_fluxes>> fluxes;
-        std::unordered_map<time_step_t, std::vector<double> > cascade_backing_storage;
-        */
-
+        /**
+         * Struct for containing model parameters for Tshirt model, using "internal" framework implementation for such a
+         * struct.
+         */
         tshirt::tshirt_params params;
+        /** Struct from C-style Tshirt formulation for holding soil parameter values. */
         NWM_soil_parameters c_soil_params;
 
-        // TODO: this needs to be something else
-        //std::unique_ptr<tshirt::tshirt_model> model;
-
+        /** Vector of GIUH CDF ordinates. */
         std::vector<double> giuh_cdf_ordinates;
+        /** Vector to serve as runoff queue for GIUH convolution calculations. */
         std::vector<double> giuh_runoff_queue_per_timestep;
-
-
-        // TODO: remember to do array conversion in function calls
         std::vector<double> nash_storage;
 
         aorc_forcing_data c_aorc_params;
@@ -175,6 +170,23 @@ namespace realization {
         conceptual_reservoir soil_conceptual_reservoir;
 
         static double init_reservoir_storage(bool is_ratio, double amount, double max_amount);
+
+        /**
+         * Get a "converted" representation of a provided vector so that it can be treated like an array.
+         *
+         * The formulation functions used by this realization are very C-style, in particular using only arrays to
+         * collect sequences of values.  The data collections need to be reused across multiple function calls, so the
+         * function params are by-reference, and therefore pointers.
+         *
+         * This function just serves as a slighly self-documenting wrapper for the necessary syntax for getting the
+         * "converted" array/pointer form of a vector.
+         *
+         * @tparam T The type within the vector, and thus the array type.
+         * @param vector_form The vector to be "converted" to an array.
+         * @return The backing buffer
+         */
+        template<class T>
+        inline T* as_array(std::vector<T> vector_form);
 
     };
 }
