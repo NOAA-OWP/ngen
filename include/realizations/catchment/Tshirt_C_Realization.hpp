@@ -171,23 +171,6 @@ namespace realization {
 
         static double init_reservoir_storage(bool is_ratio, double amount, double max_amount);
 
-        /**
-         * Get a "converted" representation of a provided vector so that it can be treated like an array.
-         *
-         * The formulation functions used by this realization are very C-style, in particular using only arrays to
-         * collect sequences of values.  The data collections need to be reused across multiple function calls, so the
-         * function params are by-reference, and therefore pointers.
-         *
-         * This function just serves as a slighly self-documenting wrapper for the necessary syntax for getting the
-         * "converted" array/pointer form of a vector.
-         *
-         * @tparam T The type within the vector, and thus the array type.
-         * @param vector_form The vector to be "converted" to an array.
-         * @return The backing buffer
-         */
-        template<class T>
-        inline T* as_array(std::vector<T> vector_form);
-
     };
 }
 
