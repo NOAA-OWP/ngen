@@ -1,6 +1,7 @@
 #ifndef NGEN_TSHIRT_C_REALIZATION_HPP
 #define NGEN_TSHIRT_C_REALIZATION_HPP
 
+#include "Catchment_Formulation.hpp"
 #include "core/catchment/HY_CatchmentArea.hpp"
 #include "tshirt_params.h"
 #include "forcing/Forcing.h"
@@ -13,7 +14,7 @@ using namespace tshirt;
 
 namespace realization {
 
-    class Tshirt_C_Realization : public HY_CatchmentArea {
+    class Tshirt_C_Realization : public Catchment_Formulation {
 
     public:
 
@@ -123,9 +124,13 @@ namespace realization {
 
         virtual ~Tshirt_C_Realization();
 
+        void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr) override;
+
         int run_formulation_for_timestep(double input_flux);
 
         int run_formulation_for_timesteps(std::vector<double> input_fluxes);
+
+        std::string get_formulation_type() override;
 
         // TODO: add versions that handle forcing data directly
 
@@ -168,6 +173,29 @@ namespace realization {
         // TODO: rename once setup complete (easier to refactor then)
         conceptual_reservoir groundwater_conceptual_reservoir;
         conceptual_reservoir soil_conceptual_reservoir;
+        std::string REQUIRED_PARAMETERS[19]{
+                "maxsmc",
+                "wltsmc",
+                "satdk",
+                "satpsi",
+                "slope",
+                "scaled_distribution_fn_shape_parameter",
+                "multiplier",
+                "alpha_fc",
+                "Klf",
+                "Kn",
+                "nash_n",
+                "Cgw",
+                "expon",
+                "max_groundwater_storage_meters",
+                "nash_storage",
+                "soil_storage_percentage",
+                "groundwater_storage_percentage",
+                "timestep",
+                "giuh"
+        };
+
+        std::string* get_required_parameters() override;
 
         static double init_reservoir_storage(bool is_ratio, double amount, double max_amount);
 
