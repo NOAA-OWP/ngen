@@ -208,8 +208,9 @@ int Tshirt_C_Realization::run_formulation_for_timesteps(std::vector<double> inpu
     // FIXME: also make sure it shouldn't be parameterized somewhere, rather than hard-coded
     double assumed_near_channel_water_table_slope = 0.01;
 
+    // TODO: need some kind of guarantee that the vectors won't be resized and current buffer arrays won't be changed or
+    //  removed (before the below "run" call finishes)
     double* giuh_ordinates = &giuh_cdf_ordinates[0];
-
     double* giuh_runoff_queue = &giuh_runoff_queue_per_timestep[0];
 
     //aorc_forcing_data empty_forcing[num_timesteps];
@@ -237,10 +238,10 @@ int Tshirt_C_Realization::run_formulation_for_timesteps(std::vector<double> inpu
                      params.nash_n,
                      &nash_storage[0],
                      FALSE,
-                     &empty_forcing[0],
-                     &input_as_array[0],
+                     empty_forcing,
+                     input_as_array,
                      num_added_fluxes,
-                     &output_fluxes_as_array[0]);
+                     output_fluxes_as_array);
 
     // Move fluxes over to member data structure
     for (int i = 0; i < num_added_fluxes && i < num_timesteps; i++) {
