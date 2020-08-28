@@ -32,7 +32,7 @@ Tshirt_C_Realization::Tshirt_C_Realization(forcing_params forcing_config,
                                            std::vector<double> giuh_ordinates,
                                            tshirt::tshirt_params params,
                                            const vector<double> &nash_storage)
-        : HY_CatchmentArea(std::move(forcing_config), output_stream), catchment_id(std::move(catchment_id)),
+        : Catchment_Formulation(catchment_id, std::move(forcing_config), output_stream), catchment_id(std::move(catchment_id)),
           giuh_cdf_ordinates(std::move(giuh_ordinates)), params(params), nash_storage(nash_storage), c_soil_params(NWM_soil_parameters()),
           groundwater_conceptual_reservoir(conceptual_reservoir()), soil_conceptual_reservoir(conceptual_reservoir()),
           c_aorc_params(aorc_forcing_data())
@@ -166,6 +166,18 @@ Tshirt_C_Realization::~Tshirt_C_Realization()
     //destructor
 }
 
+void Tshirt_C_Realization::create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global) {
+    // TODO: don't particularly like the idea of "creating" the formulation, parameter constructs, etc., inside this
+    //  type but outside the constructor.
+    // TODO: for now, leaving this empty (which is fine, since there is also no constructor currently for getting an
+    //  object that isn't already initialized with the things this would handle).
+    // TODO: look at creating a factor or something, rather than an instance, for doing this type of thing.
+}
+
+std::string Tshirt_C_Realization::get_formulation_type() {
+    return "tshirt_c";
+}
+
 double Tshirt_C_Realization::get_latest_flux_base_flow() {
     return fluxes.empty() ? 0.0 : fluxes.back()->flux_from_deep_gw_to_chan_m;
 }
@@ -184,6 +196,11 @@ double Tshirt_C_Realization::get_latest_flux_surface_runoff() {
 
 double Tshirt_C_Realization::get_latest_flux_total_discharge() {
     return fluxes.empty() ? 0.0 : fluxes.back()->Qout_m;
+}
+
+// TODO: don't care for this, as it could have the reference locations accidentally altered (also, raw pointer => bad)
+std::string *Tshirt_C_Realization::get_required_parameters() {
+    return REQUIRED_PARAMETERS;
 }
 
 double Tshirt_C_Realization::get_response(double input_flux, time_step_t t, time_step_t dt, void* et_params) {
