@@ -803,4 +803,7 @@ extern int run(NWM_soil_parameters& NWM_soil_params,
 
     //fclose(out_fptr);
 
+    // TODO: need ensure mass balance check is performed correctly and verifies
+
+    return 0;
 }
