@@ -198,5 +198,4 @@ TEST_F(FeatureCollection_Test, subset_test) {
 
     ASSERT_EQ(visitor.get(0), "PointFeature");
     ASSERT_EQ(visitor.get(1), "NULL");
-    std::cout<<"HERE\n";
 }
