@@ -66,19 +66,21 @@ Tshirt_C_Realization::Tshirt_C_Realization(forcing_params forcing_config,
 
     //  Populate the groundwater conceptual reservoir data structure
     //-----------------------------------------------------------------------
-    // one outlet, 0.0 threshold, nonliner and exponential as in NWM
+    // one outlet, 0.0 threshold, nonlinear and exponential as in NWM
     groundwater_conceptual_reservoir.is_exponential=TRUE;         // set this true TRUE to use the exponential form of the discharge equation
-    groundwater_conceptual_reservoir.storage_max_m=params.max_groundwater_storage_meters; // calibrated Sugar Creek WRF-Hydro value 16.0, I assume mm.
+    groundwater_conceptual_reservoir.storage_max_m=params.max_groundwater_storage_meters;
+
     groundwater_conceptual_reservoir.coeff_primary=params.Cgw;           // per h
     groundwater_conceptual_reservoir.exponent_primary=params.expon;       // linear iff 1.0, non-linear iff > 1.0
     groundwater_conceptual_reservoir.storage_threshold_primary_m=0.0;     // 0.0 means no threshold applied
+
     groundwater_conceptual_reservoir.storage_threshold_secondary_m=0.0;   // 0.0 means no threshold applied
     groundwater_conceptual_reservoir.coeff_secondary=0.0;                 // 0.0 means that secondary outlet is not applied
     groundwater_conceptual_reservoir.exponent_secondary=1.0;              // linear
 
-    double trigger_z_m = 0.5;   // distance from the bottom of the soil column to the center of the lowest discretization
+    double trigger_z_m = 0.5;   // distance from bottom of soil column to the center of the lowest discretization
 
-    // calculate the activation storage ffor the secondary lateral flow outlet in the soil nonlinear reservoir.
+    // calculate the activation storage for the secondary lateral flow outlet in the soil nonlinear reservoir.
     // following the method in the NWM/t-shirt parameter equivalence document, assuming field capacity soil
     // suction pressure = 1/3 atm= field_capacity_atm_press_fraction * atm_press_Pa.
 
@@ -117,9 +119,6 @@ Tshirt_C_Realization::Tshirt_C_Realization(forcing_params forcing_config,
     soil_conceptual_reservoir.exponent_secondary = 1.0;   // 1.0=linear
     soil_conceptual_reservoir.storage_threshold_secondary_m = lateral_flow_threshold_storage_m;
 
-    // TODO: make sure these hard-coded values get into the tests
-    //groundwater_conceptual_reservoir.storage_m = groundwater_conceptual_reservoir.storage_max_m * 0.5;  // INITIALIZE HALF FULL.
-    //soil_conceptual_reservoir.storage_m = soil_conceptual_reservoir.storage_max_m * 0.667;  // INITIALIZE SOIL STORAGE
     groundwater_conceptual_reservoir.storage_m = init_reservoir_storage(storage_values_are_ratios,
                                                                         groundwater_storage,
                                                                         groundwater_conceptual_reservoir.storage_max_m);
