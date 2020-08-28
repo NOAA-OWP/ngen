@@ -68,9 +68,9 @@ Tshirt_C_Realization::Tshirt_C_Realization(forcing_params forcing_config,
     //-----------------------------------------------------------------------
     // one outlet, 0.0 threshold, nonliner and exponential as in NWM
     groundwater_conceptual_reservoir.is_exponential=TRUE;         // set this true TRUE to use the exponential form of the discharge equation
-    groundwater_conceptual_reservoir.storage_max_m=16.0;            // calibrated Sugar Creek WRF-Hydro value 16.0, I assume mm.
-    groundwater_conceptual_reservoir.coeff_primary=0.01;           // per h
-    groundwater_conceptual_reservoir.exponent_primary=6.0;              // linear iff 1.0, non-linear iff > 1.0
+    groundwater_conceptual_reservoir.storage_max_m=params.max_groundwater_storage_meters; // calibrated Sugar Creek WRF-Hydro value 16.0, I assume mm.
+    groundwater_conceptual_reservoir.coeff_primary=params.Cgw;           // per h
+    groundwater_conceptual_reservoir.exponent_primary=params.expon;       // linear iff 1.0, non-linear iff > 1.0
     groundwater_conceptual_reservoir.storage_threshold_primary_m=0.0;     // 0.0 means no threshold applied
     groundwater_conceptual_reservoir.storage_threshold_secondary_m=0.0;   // 0.0 means no threshold applied
     groundwater_conceptual_reservoir.coeff_secondary=0.0;                 // 0.0 means that secondary outlet is not applied
@@ -108,11 +108,12 @@ Tshirt_C_Realization::Tshirt_C_Realization(forcing_params forcing_config,
     // this should NEVER be set to true in the soil reservoir.
     soil_conceptual_reservoir.storage_max_m = c_soil_params.smcmax * c_soil_params.D;
     //  vertical percolation parameters------------------------------------------------
+    // TODO: should this get parameterized somehow?
     soil_conceptual_reservoir.coeff_primary = c_soil_params.satdk * c_soil_params.slop * 3600.0; // m per h
     soil_conceptual_reservoir.exponent_primary = 1.0;      // 1.0=linear
     soil_conceptual_reservoir.storage_threshold_primary_m = field_capacity_storage_threshold_m;
     // lateral flow parameters --------------------------------------------------------
-    soil_conceptual_reservoir.coeff_secondary = 0.01;  // 0.0 to deactiv. else =lateral_flow_linear_reservoir_constant;   // m per h
+    soil_conceptual_reservoir.coeff_secondary = params.Klf;  // 0.0 to deactiv. else =lateral_flow_linear_reservoir_constant;   // m per h
     soil_conceptual_reservoir.exponent_secondary = 1.0;   // 1.0=linear
     soil_conceptual_reservoir.storage_threshold_secondary_m = lateral_flow_threshold_storage_m;
 
