@@ -98,14 +98,20 @@ namespace Reservoir{
          * @brief Function to update the reservoir storage in meters and return a response in meters to
          * an influx.
          *
+         * Note that the function also takes a reference parameter for holding the amount of excess water for the reservoir
+         * beyond its maximum storage after accounting for the input amount.  All calls to this function will initialize this
+         * parameter, without accounting for any previous value, so any usage should ensure the passed reference does not
+         * contain a value that is still needed but not stored elsewhere.
+         *
          * @param in_flux_meters influx in meters
-         * @param excess_water_meters excess water in meters
+         * @param excess_water_meters Reference to an amount of excess water in meters, after considering input and max storage.
          * @return sum_of_outlet_fluxes_meters sum of the outlet fluxes in meters
          */
         double Reservoir::response_meters(double in_flux_meters, double &excess_water_meters)
         {
             double outlet_flux_meters = 0;
             double sum_of_outlet_fluxes_meters = 0;
+            excess_water_meters = 0;
 
             //Update current storage from influx.
             state.current_storage_height_meters += in_flux_meters;
@@ -148,9 +154,7 @@ namespace Reservoir{
             {
                 /// \todo TODO: Return appropriate warning
                 cout << "WARNING: Reservoir calculated a storage above the maximum storage."  << endl;
-
                 excess_water_meters = (state.current_storage_height_meters - parameters.maximum_storage_meters);
-
                 state.current_storage_height_meters = parameters.maximum_storage_meters;
             }
 
