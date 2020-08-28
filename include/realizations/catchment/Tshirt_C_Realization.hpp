@@ -170,7 +170,6 @@ namespace realization {
         // TODO: this probably need to be converted to use a different fluxes type that can be dealt with externally
         std::vector<std::shared_ptr<tshirt_c_result_fluxes>> fluxes;
 
-        // TODO: rename once setup complete (easier to refactor then)
         conceptual_reservoir groundwater_conceptual_reservoir;
         conceptual_reservoir soil_conceptual_reservoir;
         std::string REQUIRED_PARAMETERS[19]{
