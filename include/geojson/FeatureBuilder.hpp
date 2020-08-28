@@ -369,8 +369,12 @@ namespace geojson {
         }
     }
 
-    //Build a collection subset from tree where feature->id is in ids
-    static GeoJSON build_collection(const boost::property_tree::ptree tree, std::vector<std::string> ids) {
+    /**
+     * @brief helper function to build a GeoJSON FeatureCollection from a property tree
+     * @param tree boost::property_tree::ptree holding the parsed GeoJSON
+     * @param ids optional subset of string feature ids, only features in tree with these ids will be in the collection
+     */
+    static GeoJSON build_collection(const boost::property_tree::ptree tree, const std::vector<std::string> ids={}) {
         std::vector<double> bbox_values;
         std::vector<Feature> features;
         PropertyMap foreign_members;
@@ -392,10 +396,12 @@ namespace geojson {
                 if (e) {
                     for(auto feature_tree : *e) {
                         Feature feature = build_feature(feature_tree.second);
-                        if( std::find(ids.begin(), ids.end(), feature->get_id()) != ids.end() ) {
-                            //feature id was found in the provided ids vector, hold the feature to add to collection
-                            //later
-                            features.push_back(feature);
+                        if( ids.empty() || std::find(ids.begin(), ids.end(), feature->get_id()) != ids.end() ) {
+                          //ids is empty, meaning we want all features,
+                          //or feature id was found in the provided ids vector
+                          //so hold the feature to add to collection later
+
+                          features.push_back(feature);
                         }
                     }
                 }
@@ -417,73 +423,15 @@ namespace geojson {
         }
 
         return collection;
-
     }
 
-    static GeoJSON build_collection(const boost::property_tree::ptree tree) {
-        std::vector<double> bbox_values;
-        std::vector<Feature> features;
-        PropertyMap foreign_members;
-
-        for (auto& child : tree) {
-            if (child.first == "bbox") {
-                std::vector<std::string> bounding_box;
-                for (auto &feature : tree.get_child("bbox")) {
-                    bounding_box.push_back(feature.second.data());
-                }
-
-                for (int point_index = 0; point_index < bounding_box.size(); point_index++) {
-                    bbox_values.push_back(std::stod(bounding_box[point_index]));
-                }
-            }
-            else if (child.first == "features") {
-                boost::optional<const boost::property_tree::ptree&> e = tree.get_child_optional("features");
-
-                if (e) {
-                    for(auto feature_tree : *e) {
-                        Feature feature = build_feature(feature_tree.second);
-                        features.push_back(feature);
-                    }
-                }
-                else {
-                    std::cout << "No features were found" << std::endl;
-                }
-            }
-            else {
-                foreign_members.emplace(child.first, JSONProperty(child.first, child.second));
-            }
-        }
-
-        GeoJSON collection = std::make_shared<FeatureCollection>(FeatureCollection(features, bbox_values));
-
-        for (Feature feature : features) {
-            if (feature->get_id() != "") {
-                collection->add_feature_id(feature->get_id(), feature);
-            }
-        }
-
-        return collection;
-    }
-
-    static GeoJSON read(const std::string &file_path) {
-        boost::property_tree::ptree tree;
-        boost::property_tree::json_parser::read_json(file_path, tree);
-        return build_collection(tree);
-    }
-
-    static GeoJSON read(const std::string &file_path, std::vector<std::string> &ids) {
+    static GeoJSON read(const std::string &file_path, const std::vector<std::string> &ids = {}) {
         boost::property_tree::ptree tree;
         boost::property_tree::json_parser::read_json(file_path, tree);
         return build_collection(tree, ids);
     }
 
-    static GeoJSON read(std::stringstream &data) {
-        boost::property_tree::ptree tree;
-        boost::property_tree::json_parser::read_json(data, tree);
-        return build_collection(tree);
-    }
-
-    static GeoJSON read(std::stringstream &data, std::vector<std::string> &ids) {
+    static GeoJSON read(std::stringstream &data, const std::vector<std::string> &ids = {}) {
         boost::property_tree::ptree tree;
         boost::property_tree::json_parser::read_json(data, tree);
         return build_collection(tree, ids);
