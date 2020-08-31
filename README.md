@@ -51,9 +51,20 @@ If the software is configurable, describe it in detail, either here or in other 
 
 ## Usage
 
-Show users how to use the software.
-Be specific.
-Use appropriate formatting when showing code snippets.
+To run the *ngen* engine, the following command line positional arguments are supported:
+- `catchment_data_path` -- path to catchment data geojson input file.
+- `catchment subset ids` -- list of comma separated ids (NO SPACES!!!) to subset the catchment data, i.e. 'cat-0,cat-1'
+- `nexus_data_path` -- path to nexus data geojson input file
+- `nexus subset ids` -- list of comma separated ids (NO SPACES!!!) to subset the nexus data, i.e. 'nex-0,nex-1'
+- `realization_config_path` -- path to json configuration file for realization/formulations associated with the hydrofabric inputs.
+
+An example of a complete invocation to run a subset of a hydrofabric.  
+Note if the `realization_config` config doesn't explicitly define only the subset catchments
+in the catchment subset ids, this will not work.  This is a known bug being addressed (see issue #166)
+`ngen ./data/catchment_data.geojson "cat-88,cat-89" ./data/nexus_data.geojson "nex-92" ./data/refactored_example_realization_config.json`
+
+To simulate every catchment in the input hydrofabric, leave the subset lists empty, i.e.:
+`ngen ./data/catchment_data.geojson "" ./data/nexus_data.geojson "" ./data/refactored_example_realization_config.json`
 
 ## How to test the software
 
