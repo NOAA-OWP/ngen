@@ -378,7 +378,8 @@ namespace geojson {
         std::vector<double> bbox_values;
         std::vector<Feature> features;
         PropertyMap foreign_members;
-
+        std::string tmp_id;  //a temporary string to hold feature identities
+        
         for (auto& child : tree) {
             if (child.first == "bbox") {
                 std::vector<std::string> bounding_box;
@@ -396,7 +397,22 @@ namespace geojson {
                 if (e) {
                     for(auto feature_tree : *e) {
                         Feature feature = build_feature(feature_tree.second);
-                        if( ids.empty() || std::find(ids.begin(), ids.end(), feature->get_id()) != ids.end() ) {
+                        tmp_id = feature->get_id();
+                        //TODO feature identity isn't 100% spec compliant.  GeoJSON allows for a feature to have an
+                        //optional id, but the input files set id under the 'property' key, so when a feature is constructed
+                        //feature->get_id() returns '' because the feature itself doesn't have an id, so we hae to read
+                        //from the associated properties to find the id.  If the inputs change, we will need to adjust
+                        //this line to read feature->get_id()
+                        if( tmp_id == "" ) {
+                          try {
+                            tmp_id = feature->get_property("ID").as_string();
+                          }
+                          catch (const std::out_of_range& error) {
+                            tmp_id = "";
+                          }
+                        }
+
+                        if( ids.empty() || std::find(ids.begin(), ids.end(), tmp_id) != ids.end() ) {
                           //ids is empty, meaning we want all features,
                           //or feature id was found in the provided ids vector
                           //so hold the feature to add to collection later
