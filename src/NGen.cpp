@@ -17,9 +17,12 @@
 #include "NGenConfig.h"
 #include "tshirt_params.h"
 
-std::string catchmentRealizationFile = "./data/catchment_data.geojson";
-std::string nexusRealizationFile = "./data/nexus_data.geojson";
-const std::string REALIZATION_CONFIG_PATH = "./data/refactored_example_realization_config.json";
+#include <FileChecker.h>
+#include <boost/algorithm/string.hpp>
+
+std::string catchmentDataFile = "";
+std::string nexusDataFile = "";
+std::string REALIZATION_CONFIG_PATH = "";
 
 //TODO this is possible, but ASSUMES realizations based on feature geom type, so not quite ready for prime time
 class RealizaitonVisitor : public geojson::FeatureVisitor {
@@ -100,14 +103,56 @@ int main(int argc, char *argv[]) {
     std::ios::sync_with_stdio(false);
 
 
+        //Pull a few "options" form the cli input, this is a temporary solution to CLI parsing!
+        //Use "positional args"
+        //arg 0 is program name
+        //arg 1 is catchment_data file path
+        //arg 2 is catchment subset ids, comma seperated string of ids (no spaces!), "" for all
+        //arg 3 is nexus_data file path
+        //arg 4 is nexus subset ids, comma seperated string of ids (no spaces!), "" for all
+        //arg 5 is realization config path
+
+        std::vector<string> catchment_subset_ids;
+        std::vector<string> nexus_subset_ids;
+
+        if( argc < 6) {
+
+          std::cout<<"Missing required args:"<<std::endl;
+          std::cout<<"ngen <catchment_data_path> <catchment subset ids> <nexus_data_path> <nexus subset ids> <realization_config_path>"<<std::endl;
+          exit(-1);
+        }
+        else {
+          bool error = false;
+
+          if( !utils::FileChecker::file_is_readable(argv[1]) ) {
+            std::cout<<"catchment data path not readable"<<std::endl;
+            error = true;
+          }
+          else{ catchmentDataFile = argv[1]; }
+
+          if( !utils::FileChecker::file_is_readable(argv[3]) ) {
+            std::cout<<"nexus data path not readable"<<std::endl;
+            error = true;
+          }
+          else { nexusDataFile = argv[3]; }
+
+          if( !utils::FileChecker::file_is_readable(argv[5]) ) {
+            std::cout<<"realization config path not readable"<<std::endl;
+            error = true;
+          }
+          else{ REALIZATION_CONFIG_PATH = argv[5]; }
+
+          if(error) exit(-1);
+          //split the subset strings into vectors
+          boost::split(catchment_subset_ids, argv[2], [](char c){return c == ','; } );
+          boost::split(nexus_subset_ids, argv[4], [](char c){return c == ','; } );
+        }
+
     //Read the collection of nexus
     std::cout << "Building Nexus collection" << std::endl;
-    geojson::GeoJSON nexus_collection = geojson::read(nexusRealizationFile);
-    std::cout << "Iterating Nexus Features" << std::endl;
-
-
+    geojson::GeoJSON nexus_collection = geojson::read(nexusDataFile, nexus_subset_ids);
     std::cout << "Building Catchment collection" << std::endl;
-    geojson::GeoJSON catchment_collection = geojson::read(catchmentRealizationFile);
+    geojson::GeoJSON catchment_collection = geojson::read(catchmentDataFile, catchment_subset_ids);
 
     prepare_features(nexus_collection, catchment_collection, !true);
 
@@ -115,10 +160,12 @@ int main(int argc, char *argv[]) {
     manager.read(utils::getStdOut());
     //TODO don't really need catchment_collection once catchments are added to nexus collection
     catchment_collection.reset();
-
     for(auto& feature : *nexus_collection)
     {
       std::string feat_id = feature->get_id();
+      //FIXME rework how we use IDs to NOT force parsing???
+      //Skipping IDs that aren't "real" i.e. have a  NA id
+      if (feat_id.substr(4) == "NA") continue;
 
       if( feat_id.substr(0, 3) == "cat" ){
         catchment_outfiles[feat_id].open(feature->get_id()+"_output.csv", std::ios::trunc);
@@ -131,7 +178,6 @@ int main(int argc, char *argv[]) {
         {
           //TODO
         }
-
         catchment_id[feat_id] = std::stoi(feat_id.substr(4));
       }else{
         //Create nexus realization, add to map
@@ -166,21 +212,24 @@ int main(int argc, char *argv[]) {
       std::cout<<"Time step "<<time_step<<std::endl;
 
       for (std::pair<std::string, std::shared_ptr<realization::Formulation>> formulation_pair : manager ) {
+        //get the catchment response
         double response = formulation_pair.second->get_response(0, time_step, 3600.0, &pdm_et_data);
+        //dump the output
         std::cout<<"\tCatchment "<<formulation_pair.first<<" contributing "<<response<<" m/s to "<<catchment_to_nexus[formulation_pair.first]<<std::endl;
         catchment_outfiles[formulation_pair.first] << time_step <<", "<<response<<std::endl;
         response = response * boost::geometry::area(nexus_collection->get_feature(formulation_pair.first)->geometry<geojson::multipolygon_t>());
         std::cout << "\t\tThe modified response is: " << response << std::endl;
+        //update the nexus with this flow
         nexus_realizations[ catchment_to_nexus[formulation_pair.first] ]->add_upstream_flow(response, catchment_id[formulation_pair.first], time_step);
       }
 
       for(auto &nexus: nexus_realizations)
       {
-        if(true || nexus.first == "nex-92"){
         //TODO this ID isn't all that important is it?  And really it should connect to
         //the downstream waterbody the way we are using it, so consider if this is needed
         //it works for now though, so keep it
         int id = catchment_id[nexus_from_catchment[nexus.first]];
+        std::cout<<"nexusID: "<<id<<std::endl;
         double contribution_at_t = nexus_realizations[nexus.first]->get_downstream_flow(id, time_step, 100.0);
         if(nexus_outfiles[nexus.first].is_open())
         {
@@ -188,7 +237,6 @@ int main(int argc, char *argv[]) {
         }
         std::cout<<"\tNexus "<<nexus.first<<" has "<<contribution_at_t<<" m^3/s"<<std::endl;
         output_map[nexus.first].push_back(contribution_at_t);
-      }
       }
     }
 
