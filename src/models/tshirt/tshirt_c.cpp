@@ -5,17 +5,6 @@
 #include <cstdlib>
 #include <cstring>
 
-// TODO: remove this ASAP
-void d_alloc(double **var, int size) {
-    size++;  /* just for safety */
-
-    *var = (double *) malloc(size * sizeof(double));
-    if (*var == NULL) {
-        printf("Problem allocating memory for array in d_alloc.\n");
-        return;
-    } else memset(*var, 0, size * sizeof(double));
-}
-
 /**
  * Solve for the flow through a Nash Cascade to delay the arrival of some flow.
  *
@@ -308,20 +297,13 @@ extern int run(NWM_soil_parameters& NWM_soil_params,
     double upper_lim;
     double lower_lim;
     double diff;
-    char theString[513];   // dangerously hard coded string size... TODO fixme.
-    long year, month, day, hour, minute;
-    double dsec;
-    double jdate_start = 0.0;
 
     double catchment_area_km2 = 5.0;            // in the range of our desired size
     double drainage_density_km_per_km2 = 3.5;   // this is approx. the average blue line drainage density for CONUS
 
-    //int num_timesteps;
-    int num_rain_dat;
     double timestep_h;
 
     // forcing
-    //double *rain_rate = NULL;
     double timestep_rainfall_input_m;
     //int yes_aorc = TRUE;                  // change to TRUE to read in entire AORC precip/met. forcing data set.
 
@@ -374,11 +356,6 @@ extern int run(NWM_soil_parameters& NWM_soil_params,
 
     double Qout_m;           // the sum of giuh, nash-cascade, and base flow outputs m per timestep
 
-    //struct conceptual_reservoir soil_reservoir;
-    //struct conceptual_reservoir gw_reservoir;
-    //struct NWM_soil_parameters NWM_soil_params;
-    //struct aorc_forcing_data aorc_data;
-
     // mass balance variables.  These all store cumulative discharges per unit catchment area [m3/m2] or [m]
     //-----------------------
 
@@ -427,36 +404,11 @@ extern int run(NWM_soil_parameters& NWM_soil_params,
      */
     #endif
 
-    // catchment properties
-    //------------------------
-    catchment_area_km2 = 5.0;
-
     //initialize simulation constants
     //---------------------------
-    //num_timesteps = 10000;
-    // setting to 1 for this, since this should only be concerned with a single time step
-    num_timesteps = 1;
     timestep_h = 1.0;
 
-    // This is now passed in directly
-    //initialize NWM soil parameters, using LOAM soils from SOILPARM.TBL.
-    //--------------------------------------------------------------------
-    /*NWM_soil_params.smcmax=0.439;   // [V/V]
-    NWM_soil_params.wltsmc=0.066;   // [V/V]
-    NWM_soil_params.satdk=3.38e-06; // [m per sec.]
-    NWM_soil_params.satpsi=0.355;   // [m]
-    NWM_soil_params.bb=4.05;        // [-]    -- called "bexp" in NWM
-    NWM_soil_params.slop=1.0;    // calibration factor that varies from 0 (no flow) to 1 (free drainage) at soil bottom
-    NWM_soil_params.D=2.0;       // [m] soil thickness assumed in the NWM not from SOILPARM.TBL
-    NWM_soil_params.mult=1000.0;    // not from SOILPARM.TBL, This is actually calibration parameter: LKSATFAC*/
-
     trigger_z_m = 0.5;   // distance from the bottom of the soil column to the center of the lowest discretization
-
-    // calculate the activation storage ffor the secondary lateral flow outlet in the soil nonlinear reservoir.
-    // following the method in the NWM/t-shirt parameter equivalence document, assuming field capacity soil
-    // suction pressure = 1/3 atm= field_capacity_atm_press_fraction * atm_press_Pa.
-
-    //field_capacity_atm_press_fraction = 0.33;  //alpha in Eqn. 3.
 
     // equation 3 from NWM/t-shirt parameter equivalence document
     H_water_table_m = field_capacity_atm_press_fraction * atm_press_Pa / unit_weight_water_N_per_m3;
@@ -473,35 +425,6 @@ extern int run(NWM_soil_parameters& NWM_soil_params,
             * pow((1.0 / NWM_soil_params.satpsi), (-1.0 / NWM_soil_params.bb))
             * (upper_lim - lower_lim);
 
-    //printf("field capacity storage threshold = %lf m\n", field_capacity_storage_threshold_m);
-
-    // initialize giuh parameters.  Can no longer hard code these though.
-    //------------------------------------------------------------------
-    /*
-    num_giuh_ordinates=5;
-    */
-    // We can still do this part though, but for now leaving it out also
-    /*
-    if(num_giuh_ordinates > MAX_NUM_GIUH_ORDINATES) {
-        fprintf(stderr, "Big problem, number of giuh ordinates greater than MAX_NUM_GIUH_ORDINATES.\n");
-        return -1;
-    }
-    */
-    /*
-    giuh_ordinates[0]=0.06;  // note these sum to 1.0.  If we have N ordinates, we need a queue sized N+1 to perform
-    giuh_ordinates[1]=0.51;  // the convolution.
-    giuh_ordinates[2]=0.28;
-    giuh_ordinates[3]=0.12;
-    giuh_ordinates[4]=0.03;
-    */
-
-    // initialize Schaake parameters
-    //--------------------------------
-    // in noah-mp refkdt=3.0.
-
-    // This also is now coming from Tshirt params, and so passed in directly
-    //Schaake_adjusted_magic_constant_by_soil_type=refkdt*NWM_soil_params.satdk/2.0e-06; // 2.0e-06 is used in noah-mp
-
     // initialize lateral flow function parameters
     //---------------------------------------------
     // TODO: think this is slope from params (and tshirt params), but verify
@@ -509,23 +432,10 @@ extern int run(NWM_soil_parameters& NWM_soil_params,
     assumed_near_channel_water_table_slope = water_table_slope;
     lateral_flow_threshold_storage_m = field_capacity_storage_threshold_m;  // making them the same, but they don't have 2B
 
-    // Equation 10 in parameter equivalence document.
-    // TODO: this should be Klf, which is in tshirt params, so now passed in (though again, verify and verify init
-    //  calculations)
-    //lateral_flow_linear_reservoir_constant=2.0*assumed_near_channel_water_table_slope*NWM_soil_params.mult*
-    //                                       NWM_soil_params.satdk*NWM_soil_params.D*drainage_density_km_per_km2;   // m/s
-    //lateral_flow_linear_reservoir_constant*=3600.0;  // convert to m/h
-
-    // Also now in tshirt params, so passed into function as param
-    //num_lateral_flow_nash_reservoirs=2;
-
     if (num_lateral_flow_nash_reservoirs > MAX_NUM_NASH_CASCADE) {
         fprintf(stdout, "Number of Nash Cascade linear reservoirs greater than MAX_NUM_NASH_CASCADE.\n");
         return -2;
     }
-
-    // TODO: initialize the ground water and soil conceptual reservoirs outside of function now (i.e., in realization
-    //  class) and pass into function as parameters
 
     volstart += gw_reservoir.storage_m;    // initial mass balance checks in g.w. reservoir
     vol_in_gw_start = gw_reservoir.storage_m;
@@ -533,18 +443,9 @@ extern int run(NWM_soil_parameters& NWM_soil_params,
     volstart += soil_reservoir.storage_m;    // initial mass balance checks in soil reservoir
     vol_soil_start = soil_reservoir.storage_m;
 
-    //d_alloc(&rain_rate, MAX_NUM_RAIN_DATA);
-
     // Rather than read in forcing or rainfall data from file (as in original) function receives directly as param
-    num_rain_dat = num_timesteps;
     if(yes_aorc == TRUE) {
-        for (i = 0; i < num_rain_dat; i++) {
-            //fgets(theString, 512, in_fptr);  // read in a line of AORC data.
-            //parse_aorc_line(theString, &year, &month, &day, &hour, &minute, &dsec, &aorc_data);
-            //if (i == 0)
-            //    jdate_start = greg_2_jul(year, month, day, hour, minute,
-            //                             dsec);      // calc & save the starting julian date of the rainfall data
-            // saving only the rainfall data ffor now.
+        for (i = 0; i < num_timesteps; i++) {
             rain_rate[i] = (double) aorc_data[i].precip_kg_per_m2;  // assumed 1000 kg/m3 density of water.  This result is mm/h;
         }
     }
@@ -563,7 +464,7 @@ extern int run(NWM_soil_parameters& NWM_soil_params,
     // For this, just do a single time step, though leaving coding structure in place for loop (for now) to minimize changes
     //num_timesteps=num_rain_dat+279;  // run a little bit beyond the rain data to see what happens.
     for(tstep = 0; tstep < num_timesteps; tstep++) {
-        if (tstep < num_rain_dat)
+        if (tstep < num_timesteps)
             timestep_rainfall_input_m = rain_rate[tstep] / 1000.0;  // convert from mm/h to m w/ 1h timestep
         else
             timestep_rainfall_input_m = 0.0;
@@ -588,19 +489,11 @@ extern int run(NWM_soil_parameters& NWM_soil_params,
             infiltration_depth_m = soil_reservoir_storage_deficit_m;
             soil_reservoir.storage_m = soil_reservoir.storage_max_m;
         }
-        //printf("After Schaake function: rain:%8.5lf mm  runoff:%8.5lf mm  infiltration:%8.5lf mm  residual:%e m\n",
-        //       rain_rate[tstep], Schaake_output_runoff_m * 1000.0, infiltration_depth_m * 1000.0,
-        //       timestep_rainfall_input_m - Schaake_output_runoff_m - infiltration_depth_m);
 
         flux_overland_m = Schaake_output_runoff_m;
 
         vol_sch_runoff += flux_overland_m;
         vol_sch_infilt += infiltration_depth_m;
-
-        // put infiltration flux into soil conceptual reservoir.  If not enough room
-        // limit amount transferred to deficit
-        //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-        //  REDUNDANT soil_reservoir_storage_deficit_m=soil_reservoir.storage_max_m-soil_reservoir.storage_m;  <- commented out by FLO based on comments from Bartel
 
         if (flux_perc_m > soil_reservoir_storage_deficit_m) {
             diff = flux_perc_m - soil_reservoir_storage_deficit_m;  // the amount that there is not capacity ffor
@@ -683,16 +576,6 @@ extern int run(NWM_soil_parameters& NWM_soil_params,
         // These fluxs are all in units of meters per time step.   Multiply them by the "catchment_area_km2" variable
         // to convert them into cubic meters per time step.
 
-        // Not doing this in this implementation
-        // WRITE OUTPUTS IN mm/h ffor aiding in interpretation
-        //fprintf(out_fptr,"%16.8lf %lf %lf %lf %lf %lf %lf\n",jdate_start+(double)tstep*1.0/24.0,
-        //        timestep_rainfall_input_m*1000.0,
-        //        Schaake_output_runoff_m*1000.0,
-        //        giuh_runoff_m*1000.0,
-        //        nash_lateral_runoff_m*1000.0,
-        //        flux_from_deep_gw_to_chan_m*1000.0,
-        //        Qout_m*1000.0 );
-
         fluxes[tstep].timestep_rainfall_input_m = timestep_rainfall_input_m;
         fluxes[tstep].Schaake_output_runoff_m = Schaake_output_runoff_m;
         fluxes[tstep].giuh_runoff_m = giuh_runoff_m;
@@ -700,8 +583,8 @@ extern int run(NWM_soil_parameters& NWM_soil_params,
         fluxes[tstep].flux_from_deep_gw_to_chan_m = flux_from_deep_gw_to_chan_m;
         fluxes[tstep].Qout_m = Qout_m;
 
+        // Increment reference variable tracking how many fluxes got appended to passed "fluxes" reference array.
         num_added_fluxes++;
-
     }
 
     //
@@ -723,86 +606,7 @@ extern int run(NWM_soil_parameters& NWM_soil_params,
         vol_in_nash_end += nash_storage[i];
 
     vol_soil_end = soil_reservoir.storage_m;
-
-    // TODO: look at whether the rest of this logic needs to be removed or moved, since we don't need to output to file here.
-
-    /*
-    double global_residual;
-    double schaake_residual;
-    double giuh_residual;
-    double soil_residual;
-    double nash_residual;
-    double gw_residual;
-
-    global_residual = volstart + volin - volout - volend;
-
-    fprintf(stderr,"GLOBAL MASS BALANCE\n");
-    fprintf(stderr,"  initial volume: %8.4lf m\n",volstart);
-    fprintf(stderr,"    volume input: %8.4lf m\n",volin);
-    fprintf(stderr,"   volume output: %8.4lf m\n",volout);
-    fprintf(stderr,"    final volume: %8.4lf m\n",volend);
-    fprintf(stderr,"        residual: %6.4e m\n",global_residual);
-    if(volin>0.0) fprintf(stderr,"global pct. err: %6.4e percent of inputs\n",global_residual/volin*100.0);
-    else          fprintf(stderr,"global pct. err: %6.4e percent of initial\n",global_residual/volstart*100.0);
-    if(!is_fabs_less_than_epsilon(global_residual,1.0e-12))
-        fprintf(stderr, "WARNING: GLOBAL MASS BALANCE CHECK FAILED\n");
-
-    schaake_residual = volin - vol_sch_runoff - vol_sch_infilt;
-
-    fprintf(stderr," SCHAAKE MASS BALANCE\n");
-    fprintf(stderr,"  surface runoff: %8.4lf m\n",vol_sch_runoff);
-    fprintf(stderr,"    infiltration: %8.4lf m\n",vol_sch_infilt);
-    fprintf(stderr,"schaake residual: %6.4e m\n",schaake_residual);  // should equal 0.0
-    if(!is_fabs_less_than_epsilon(schaake_residual,1.0e-12))
-        fprintf(stderr,"WARNING: SCHAAKE PARTITIONING MASS BALANCE CHECK FAILED\n");
-
-    giuh_residual = vol_out_giuh - vol_sch_runoff - vol_end_giuh;
-
-    fprintf(stderr," GIUH MASS BALANCE\n");
-    fprintf(stderr,"  vol. into giuh: %8.4lf m\n",vol_sch_runoff);
-    fprintf(stderr,"   vol. out giuh: %8.4lf m\n",vol_out_giuh);
-    fprintf(stderr," vol. end giuh q: %8.4lf m\n",vol_end_giuh);
-    fprintf(stderr,"   giuh residual: %6.4e m\n",giuh_residual);  // should equal zero
-    if(!is_fabs_less_than_epsilon(giuh_residual,1.0e-12))
-        fprintf(stderr,"WARNING: GIUH MASS BALANCE CHECK FAILED\n");
-
-    soil_residual = vol_soil_start + vol_sch_infilt - vol_soil_to_lat_flow - vol_soil_end - vol_to_gw;
-
-    fprintf(stderr," SOIL WATER CONCEPTUAL RESERVOIR MASS BALANCE\n");
-    fprintf(stderr,"   init soil vol: %8.4lf m\n",vol_soil_start);
-    fprintf(stderr,"  vol. into soil: %8.4lf m\n",vol_sch_infilt);
-    fprintf(stderr,"vol.soil2latflow: %8.4lf m\n",vol_soil_to_lat_flow);
-    fprintf(stderr," vol. soil to gw: %8.4lf m\n",vol_soil_to_gw);
-    fprintf(stderr," final vol. soil: %8.4lf m\n",vol_soil_end);
-    fprintf(stderr,"vol. soil resid.: %6.4e m\n",soil_residual);
-    if(!is_fabs_less_than_epsilon(soil_residual,1.0e-12))
-        fprintf(stderr,"WARNING: SOIL CONCEPTUAL RESERVOIR MASS BALANCE CHECK FAILED\n");
-
-    nash_residual = vol_in_nash - vol_out_nash - vol_in_nash_end;
-
-    fprintf(stderr," NASH CASCADE CONCEPTUAL RESERVOIR MASS BALANCE\n");
-    fprintf(stderr,"    vol. to nash: %8.4lf m\n",vol_in_nash);
-    fprintf(stderr,"  vol. from nash: %8.4lf m\n",vol_out_nash);
-    fprintf(stderr," final vol. nash: %8.4lf m\n",vol_in_nash_end);
-    fprintf(stderr,"nash casc resid.: %6.4e m\n",nash_residual);
-    if(!is_fabs_less_than_epsilon(nash_residual,1.0e-12))
-        fprintf(stderr,"WARNING: NASH CASCADE CONCEPTUAL RESERVOIR MASS BALANCE CHECK FAILED\n");
-
-    gw_residual = vol_in_gw_start + vol_to_gw - vol_from_gw - vol_in_gw_end;
-
-    fprintf(stderr," GROUNDWATER CONCEPTUAL RESERVOIR MASS BALANCE\n");
-    fprintf(stderr,"init gw. storage: %8.4lf m\n",vol_in_gw_start);
-    fprintf(stderr,"       vol to gw: %8.4lf m\n",vol_to_gw);
-    fprintf(stderr,"     vol from gw: %8.4lf m\n",vol_from_gw);
-    fprintf(stderr,"final gw.storage: %8.4lf m\n",vol_in_gw_end);
-    fprintf(stderr,"    gw. residual: %6.4e m\n",gw_residual);
-    if(!is_fabs_less_than_epsilon(gw_residual,1.0e-12))
-        fprintf(stderr,"WARNING: GROUNDWATER CONCEPTUAL RESERVOIR MASS BALANCE CHECK FAILED\n");
-
-    */
-
-    //fclose(out_fptr);
-
+    
     // TODO: need ensure mass balance check is performed correctly and verifies
 
     return 0;
