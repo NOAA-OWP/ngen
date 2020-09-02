@@ -90,20 +90,19 @@ extern double nash_cascade(double flux_lat_m, int num_lateral_flow_nash_reservoi
 
 extern int is_fabs_less_than_epsilon(double a,double epsilon);  // returns TRUE iff fabs(a)<epsilon
 
-extern double greg_2_jul(long year, long mon, long day, long h, long mi,
-                         double se);
-extern void calc_date(double jd, long *y, long *m, long *d, long *h, long *mi,
-                      double *sec);
+//extern double greg_2_jul(long year, long mon, long day, long h, long mi,
+//                         double se);
+//extern void calc_date(double jd, long *y, long *m, long *d, long *h, long *mi,
+//                      double *sec);
 
-extern void itwo_alloc( int ***ptr, int x, int y);
-extern void dtwo_alloc( double ***ptr, int x, int y);
-extern void d_alloc(double **var,int size);
-extern void i_alloc(int **var,int size);
+//extern void itwo_alloc( int ***ptr, int x, int y);
+//extern void dtwo_alloc( double ***ptr, int x, int y);
+//extern void i_alloc(int **var,int size);
 
-extern void parse_aorc_line(char *theString,long *year,long *month, long *day,long *hour,
-                            long *minute, double *dsec, struct aorc_forcing_data *aorc);
+//extern void parse_aorc_line(char *theString,long *year,long *month, long *day,long *hour,
+//                            long *minute, double *dsec, struct aorc_forcing_data *aorc);
 
-extern void get_word(char *theString,int *start,int *end,char *theWord,int *wordlen);
+//extern void get_word(char *theString,int *start,int *end,char *theWord,int *wordlen);
 
 /**
  * Run the model, recording fluxes in one or more flux structs at a specified location.
