@@ -116,10 +116,15 @@ int main(int argc, char *argv[]) {
         std::vector<string> nexus_subset_ids;
 
         if( argc < 6) {
-
-          std::cout<<"Missing required args:"<<std::endl;
-          std::cout<<"ngen <catchment_data_path> <catchment subset ids> <nexus_data_path> <nexus subset ids> <realization_config_path>"<<std::endl;
-          exit(-1);
+            std::cout << "Missing required args:" << std::endl;
+            std::cout << argv[0] << " <catchment_data_path> <catchment subset ids> <nexus_data_path> <nexus subset ids>"
+                      << " <realization_config_path>" << std::endl;
+            if(argc > 3) {
+                std::cout << std::endl << "Note:" << std::endl
+                          << "Arguments for <catchment subset ids> and <nexus subset ids> must be given." << std::endl
+                          << "Use empty string (\"\") as explicit argument when no subset is needed." << std::endl;
+            }
+            exit(-1);
         }
         else {
           bool error = false;
