@@ -103,9 +103,71 @@ Tshirt_C_Realization::~Tshirt_C_Realization()
 void Tshirt_C_Realization::create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global) {
     // TODO: don't particularly like the idea of "creating" the formulation, parameter constructs, etc., inside this
     //  type but outside the constructor.
-    // TODO: for now, leaving this empty (which is fine, since there is also no constructor currently for getting an
-    //  object that isn't already initialized with the things this would handle).
-    // TODO: look at creating a factor or something, rather than an instance, for doing this type of thing.
+    // TODO: look at creating a factory or something, rather than an instance, for doing this type of thing.
+
+    // TODO: (if this remains and doesn't get replaced with factory) protect against this being called after calls to
+    //  get_response have started being made, or else the reservoir values are going to be jacked up.
+
+    geojson::PropertyMap options = this->interpret_parameters(config, global);
+
+    catchment_id = this->get_id();
+
+    //dt = options.at("timestep").as_natural_number();
+
+    params = std::make_shared<tshirt_params>(tshirt_params{
+            options.at("maxsmc").as_real_number(),   //maxsmc FWRFH
+            options.at("wltsmc").as_real_number(),  //wltsmc  from fred_t-shirt.c FIXME NOT USED IN TSHIRT?!?!
+            options.at("satdk").as_real_number(),   //satdk FWRFH
+            options.at("satpsi").as_real_number(),    //satpsi    FIXME what is this and what should its value be?
+            options.at("slope").as_real_number(),   //slope
+            options.at("scaled_distribution_fn_shape_parameter").as_real_number(),      //b bexp? FWRFH
+            options.at("multiplier").as_real_number(),    //multipier  FIXMME (lksatfac)
+            options.at("alpha_fc").as_real_number(),    //aplha_fc   field_capacity_atm_press_fraction
+            options.at("Klf").as_real_number(),    //Klf lateral flow nash coefficient?
+            options.at("Kn").as_real_number(),    //Kn Kn	0.001-0.03 F Nash Cascade coeeficient
+            static_cast<int>(options.at("nash_n").as_natural_number()),      //number_lateral_flow_nash_reservoirs
+            options.at("Cgw").as_real_number(),    //fred_t-shirt gw res coeeficient (per h)
+            options.at("expon").as_real_number(),    //expon FWRFH
+            options.at("max_groundwater_storage_meters").as_real_number()   //max_gw_storage Sgwmax FWRFH
+    });
+    // Very important this also gets done
+    sync_c_storage_params();
+
+    init_ground_water_reservoir(options.at("groundwater_storage_percentage").as_real_number(), true);
+    init_soil_reservoir(options.at("soil_storage_percentage").as_real_number(), true);
+
+    nash_storage = options.at("nash_storage").as_real_vector();
+
+    geojson::JSONProperty giuh = options.at("giuh");
+    std::vector<std::string> missing_parameters;
+    if (!giuh.has_key("giuh_path")) {
+        missing_parameters.emplace_back("giuh_path");
+    }
+    if (!giuh.has_key("crosswalk_path")) {
+        missing_parameters.emplace_back("crosswalk_path");
+    }
+    if (!missing_parameters.empty()) {
+        std::string message = "A giuh configuration cannot be created for '" + catchment_id + "'; the following parameters are missing: ";
+
+        for (int missing_parameter_index = 0; missing_parameter_index < missing_parameters.size(); missing_parameter_index++) {
+            message += missing_parameters[missing_parameter_index];
+
+            if (missing_parameter_index < missing_parameters.size() - 1) {
+                message += ", ";
+            }
+        }
+
+        throw std::runtime_error(message);
+    }
+
+    std::unique_ptr<giuh::GiuhJsonReader> giuh_reader = std::make_unique<giuh::GiuhJsonReader>(
+            giuh.at("giuh_path").as_string(),
+            giuh.at("crosswalk_path").as_string()
+    );
+
+
+    giuh_cdf_ordinates = giuh_reader->extract_cumulative_frequency_ordinates(catchment_id);
+
 }
 
 std::string Tshirt_C_Realization::get_formulation_type() {
