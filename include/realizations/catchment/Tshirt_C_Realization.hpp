@@ -196,7 +196,16 @@ namespace realization {
 
         std::string* get_required_parameters() override;
 
+        void init_ground_water_reservoir(double storage, bool storage_values_are_ratios);
+
+        void init_soil_reservoir(double storage, bool storage_values_are_ratios);
+
         static double init_reservoir_storage(bool is_ratio, double amount, double max_amount);
+
+        geojson::PropertyMap interpret_parameters(boost::property_tree::ptree &config,
+                                                  geojson::PropertyMap *global = nullptr);
+
+        void sync_c_storage_params();
 
     };
 }
