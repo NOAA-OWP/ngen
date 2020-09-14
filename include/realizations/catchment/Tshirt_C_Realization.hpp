@@ -154,7 +154,7 @@ namespace realization {
          * Struct for containing model parameters for Tshirt model, using "internal" framework implementation for such a
          * struct.
          */
-        tshirt::tshirt_params params;
+        std::shared_ptr<tshirt::tshirt_params> params;
         /** Struct from C-style Tshirt formulation for holding soil parameter values. */
         NWM_soil_parameters c_soil_params;
 
