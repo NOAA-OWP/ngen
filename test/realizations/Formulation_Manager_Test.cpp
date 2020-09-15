@@ -35,7 +35,7 @@ class Formulation_Manager_Test : public ::testing::Test {
 
 const double EPSILON = 0.0000001;
 
-const std::string EXAMPLE = "{ "
+const std::string EXAMPLE_1 = "{ "
     "\"global\": { "
         "\"tshirt\": { "
             "\"maxsmc\": 0.81, "
@@ -143,11 +143,11 @@ const std::string EXAMPLE = "{ "
     "} "
 "}";
 
-TEST_F(Formulation_Manager_Test, basic_reading) {
+TEST_F(Formulation_Manager_Test, basic_reading_1) {
     std::stringstream stream;
-    stream << EXAMPLE;
-    
-    std::ostream* raw_pointer = &std::cout; 
+    stream << EXAMPLE_1;
+
+    std::ostream* raw_pointer = &std::cout;
     std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
     utils::StreamHandler catchment_output(s_ptr);
 
@@ -162,9 +162,9 @@ TEST_F(Formulation_Manager_Test, basic_reading) {
     ASSERT_TRUE(manager.contains("wat-89"));
 }
 
-TEST_F(Formulation_Manager_Test, basic_run) {
+TEST_F(Formulation_Manager_Test, basic_run_1) {
     std::stringstream stream;
-    stream << EXAMPLE;
+    stream << EXAMPLE_1;
     
     std::ostream* raw_pointer = &std::cout; 
     std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
