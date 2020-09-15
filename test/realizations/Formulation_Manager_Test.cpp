@@ -270,6 +270,25 @@ TEST_F(Formulation_Manager_Test, basic_reading_1) {
     ASSERT_TRUE(manager.contains("wat-89"));
 }
 
+TEST_F(Formulation_Manager_Test, basic_reading_2) {
+    std::stringstream stream;
+    stream << EXAMPLE_2;
+
+    std::ostream* raw_pointer = &std::cout;
+    std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
+    utils::StreamHandler catchment_output(s_ptr);
+
+    realization::Formulation_Manager manager = realization::Formulation_Manager(stream);
+
+    ASSERT_TRUE(manager.is_empty());
+    manager.read(catchment_output);
+
+    ASSERT_EQ(manager.get_size(), 2);
+
+    ASSERT_TRUE(manager.contains("wat-88"));
+    ASSERT_TRUE(manager.contains("wat-89"));
+}
+
 TEST_F(Formulation_Manager_Test, basic_run_1) {
     std::stringstream stream;
     stream << EXAMPLE_1;
