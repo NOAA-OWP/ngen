@@ -95,6 +95,14 @@ Tshirt_C_Realization::Tshirt_C_Realization(forcing_params forcing_config,
 
 }
 
+Tshirt_C_Realization::Tshirt_C_Realization(
+        std::string id,
+        forcing_params forcing_config,
+        utils::StreamHandler output_stream
+) : Catchment_Formulation(std::move(id), std::move(forcing_config), output_stream) {
+
+}
+
 Tshirt_C_Realization::~Tshirt_C_Realization()
 {
     //destructor
