@@ -100,7 +100,7 @@ Tshirt_C_Realization::Tshirt_C_Realization(
         forcing_params forcing_config,
         utils::StreamHandler output_stream
 ) : Catchment_Formulation(std::move(id), std::move(forcing_config), output_stream) {
-
+    fluxes = std::vector<std::shared_ptr<tshirt_c_result_fluxes>>();
 }
 
 Tshirt_C_Realization::~Tshirt_C_Realization()
@@ -182,6 +182,11 @@ void Tshirt_C_Realization::create_formulation(boost::property_tree::ptree &confi
 
 
         giuh_cdf_ordinates = giuh_reader->extract_cumulative_frequency_ordinates(catchment_id);
+    }
+    // Create this with 0 values initially
+    giuh_runoff_queue_per_timestep = std::vector<double>(giuh_cdf_ordinates.size() + 1);
+    for (int i = 0; i < giuh_cdf_ordinates.size() + 1; i++) {
+        giuh_runoff_queue_per_timestep.push_back(0.0);
     }
 
 }
