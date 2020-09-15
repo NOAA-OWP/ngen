@@ -147,34 +147,42 @@ void Tshirt_C_Realization::create_formulation(boost::property_tree::ptree &confi
     nash_storage = options.at("nash_storage").as_real_vector();
 
     geojson::JSONProperty giuh = options.at("giuh");
-    std::vector<std::string> missing_parameters;
-    if (!giuh.has_key("giuh_path")) {
-        missing_parameters.emplace_back("giuh_path");
-    }
-    if (!giuh.has_key("crosswalk_path")) {
-        missing_parameters.emplace_back("crosswalk_path");
-    }
-    if (!missing_parameters.empty()) {
-        std::string message = "A giuh configuration cannot be created for '" + catchment_id + "'; the following parameters are missing: ";
 
-        for (int missing_parameter_index = 0; missing_parameter_index < missing_parameters.size(); missing_parameter_index++) {
-            message += missing_parameters[missing_parameter_index];
+    // Since this implementation really just cares about the ordinates, allow them to be passed directly here, or read
+    // from a separate file
+    if (giuh.has_key("cdf_ordinates")) {
+        giuh_cdf_ordinates = giuh.at("cdf_ordinates").as_real_vector();
+    }
+    else {
+        std::vector<std::string> missing_parameters;
+        if (!giuh.has_key("giuh_path")) {
+            missing_parameters.emplace_back("giuh_path");
+        }
+        if (!giuh.has_key("crosswalk_path")) {
+            missing_parameters.emplace_back("crosswalk_path");
+        }
+        if (!missing_parameters.empty()) {
+            std::string message = "A giuh configuration cannot be created for '" + catchment_id + "'; the following parameters are missing: ";
 
-            if (missing_parameter_index < missing_parameters.size() - 1) {
-                message += ", ";
+            for (int missing_parameter_index = 0; missing_parameter_index < missing_parameters.size(); missing_parameter_index++) {
+                message += missing_parameters[missing_parameter_index];
+
+                if (missing_parameter_index < missing_parameters.size() - 1) {
+                    message += ", ";
+                }
             }
+
+            throw std::runtime_error(message);
         }
 
-        throw std::runtime_error(message);
+        std::unique_ptr<giuh::GiuhJsonReader> giuh_reader = std::make_unique<giuh::GiuhJsonReader>(
+                giuh.at("giuh_path").as_string(),
+                giuh.at("crosswalk_path").as_string()
+        );
+
+
+        giuh_cdf_ordinates = giuh_reader->extract_cumulative_frequency_ordinates(catchment_id);
     }
-
-    std::unique_ptr<giuh::GiuhJsonReader> giuh_reader = std::make_unique<giuh::GiuhJsonReader>(
-            giuh.at("giuh_path").as_string(),
-            giuh.at("crosswalk_path").as_string()
-    );
-
-
-    giuh_cdf_ordinates = giuh_reader->extract_cumulative_frequency_ordinates(catchment_id);
 
 }
 
