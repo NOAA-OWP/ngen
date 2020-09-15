@@ -12,7 +12,7 @@ NGEN intends to support systems of model instances that represent hydrology acro
 
 A. A model domain may implement a continuous or gridded discretization that can exchange information with the reference domain through hydrologic locations and spatial couplings but does not use a catchment-based discretization within the framework. A mapping configuration for hydrologic locations and spatial couplings is required in this case.
 
-B. A model domain may implement a catchment-based discretization that does not perfectly coincide with the reference domain catchments. Framework catchment functionality could be used with model-domain-specific catchment identifiers and hydrologic location and spatal couplings could also be used.
+B. A model domain may implement a catchment-based discretization that does not perfectly coincide with the reference domain catchments. Framework catchment functionality could be used with model-domain-specific catchment identifiers and hydrologic location and spatial couplings could also be used.
 
 C. A model domain may implement a catchment-based discretization that coincides with the reference domain catchments. In this case, no mappings are required for hydrologic locations or spatial couplings. Note that such a discretization may be courser than the reference domain catchment network such that all catchments are catchment aggregates made up of reference domain catchments.
 
