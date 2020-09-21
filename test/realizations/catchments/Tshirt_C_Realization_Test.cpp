@@ -127,7 +127,7 @@ void Tshirt_C_Realization_Test::TearDown() {
 void Tshirt_C_Realization_Test::open_standalone_c_impl_data_stream() {
     ASSERT_FALSE(standalone_output_data_file.empty());
 
-    standalone_data_ingest_stream = std::ifstream(standalone_output_data_file.c_str());
+    standalone_data_ingest_stream.open(standalone_output_data_file.c_str());
 
     ASSERT_TRUE(standalone_data_ingest_stream.is_open());
 
