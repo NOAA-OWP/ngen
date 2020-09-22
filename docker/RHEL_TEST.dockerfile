@@ -24,6 +24,6 @@ RUN cmake -B /ngen -S .
 
 RUN cmake --build /ngen --target test_unit
 
-WORKDIR /ngen/test/
+WORKDIR /ngen
 
 CMD ["/bin/bash", "-l", "-c", "./test_unit"]
