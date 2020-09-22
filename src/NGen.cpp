@@ -151,6 +151,10 @@ int main(int argc, char *argv[]) {
           //split the subset strings into vectors
           boost::split(catchment_subset_ids, argv[2], [](char c){return c == ','; } );
           boost::split(nexus_subset_ids, argv[4], [](char c){return c == ','; } );
+          //If a single id or no id is passed, the subset vector will have size 1 and be the id or the ""
+          //if we get an empy string, pop it from the subset list.
+          if(nexus_subset_ids.size() == 1 && nexus_subset_ids[0] == "") nexus_subset_ids.pop_back();
+          if(catchment_subset_ids.size() == 1 && catchment_subset_ids[0] == "") catchment_subset_ids.pop_back();
         }
 
     //Read the collection of nexus
