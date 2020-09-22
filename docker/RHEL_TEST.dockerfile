@@ -16,8 +16,6 @@ RUN tar -xjf boost_1_72_0.tar.bz2
 
 ENV BOOST_ROOT="boost_1_72_0"
 
-RUN mkdir cmake_build
-
 WORKDIR /ngen
 
 RUN cmake -B /ngen -S .
