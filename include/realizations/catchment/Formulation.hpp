@@ -65,7 +65,7 @@ namespace realization {
                 std::vector<std::string> required_parameters = get_required_parameters();
 
                 for (auto parameter : required_parameters) {
-                  if (options.count(parameter) != 0) {
+                  if (options.count(parameter) == 0) {
                         missing_parameters.push_back(parameter);
                     }
                 }
