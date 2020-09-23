@@ -374,29 +374,6 @@ void Tshirt_C_Realization::init_soil_reservoir(double storage, bool storage_valu
 
 }
 
-geojson::PropertyMap Tshirt_C_Realization::interpret_parameters(boost::property_tree::ptree &config,
-                                                                geojson::PropertyMap *global)
-{
-    geojson::PropertyMap options;
-
-    for (auto &formulation_parameter : config) {
-        options.emplace(formulation_parameter.first,
-                        geojson::JSONProperty(formulation_parameter.first, formulation_parameter.second));
-    }
-
-    if (global != nullptr) {
-        for (auto &global_option : *global) {
-            if (options.count(global_option.first) == 0) {
-                options.emplace(global_option.first, global_option.second);
-            }
-        }
-    }
-
-    validate_parameters(options);
-
-    return options;
-}
-
 void Tshirt_C_Realization::sync_c_storage_params() {
     // Convert params to struct for C-impl
     c_soil_params.D = params->depth;
