@@ -216,7 +216,8 @@ double Tshirt_C_Realization::get_latest_flux_total_discharge() {
 }
 
 // TODO: don't care for this, as it could have the reference locations accidentally altered (also, raw pointer => bad)
-std::string *Tshirt_C_Realization::get_required_parameters() {
+//@robertbartel is this TODO resolved with these changes?
+const std::vector<std::string>& Tshirt_C_Realization::get_required_parameters() {
     return REQUIRED_PARAMETERS;
 }
 

@@ -174,7 +174,7 @@ namespace realization {
 
         conceptual_reservoir groundwater_conceptual_reservoir;
         conceptual_reservoir soil_conceptual_reservoir;
-        std::string REQUIRED_PARAMETERS[19]{
+        std::vector<std::string> REQUIRED_PARAMETERS = {
                 "maxsmc",
                 "wltsmc",
                 "satdk",
@@ -195,7 +195,7 @@ namespace realization {
                 "giuh"
         };
 
-        std::string* get_required_parameters() override;
+        const std::vector<std::string>& get_required_parameters() override;
 
         void init_ground_water_reservoir(double storage, bool storage_values_are_ratios);
 
