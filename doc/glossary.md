@@ -27,7 +27,6 @@ Realization - Generally, a hydrologic feature type that reflects a distinct hydr
 
 Software Development Kit (SDK) - a collection of software development tools in one package including documentation, examples, tools and scripts, development environments, static code analysis, and automated testing.
 
-- 
 
 # References
 
