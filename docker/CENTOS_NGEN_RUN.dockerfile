@@ -1,8 +1,9 @@
-FROM registry.access.redhat.com/ubi8/ubi as builder
+FROM centos:8 as builder
 
+RUN yum update -y
 RUN yum install -y tar git gcc-c++ gcc make cmake python3 bzip2
 
-RUN git clone https://github.com/NOAA-OWP/ngen.git
+RUN git clone https://github.com/NOAA-OWP/ngen.git 
 
 WORKDIR ngen
 
@@ -16,14 +17,12 @@ RUN tar -xjf boost_1_72_0.tar.bz2
 
 ENV BOOST_ROOT="boost_1_72_0"
 
-RUN mkdir cmake_build
-
 WORKDIR /ngen
 
 RUN cmake -B /ngen -S .
 
-RUN cmake --build /ngen --target test_unit
+RUN cmake --build /ngen --target ngen
 
-WORKDIR /ngen/test/
+WORKDIR /ngen/
 
-CMD ["/bin/bash", "-l", "-c", "./test_unit"]
+CMD ./ngen data/catchment_data.geojson "" data/nexus_data.geojson "" data/refactored_example_realization_config.json
