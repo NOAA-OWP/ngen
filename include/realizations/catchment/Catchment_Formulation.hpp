@@ -16,8 +16,8 @@ namespace realization {
 
             virtual double get_response(double input_flux, time_step_t t, time_step_t dt, void* et_params) = 0;
 
-            virtual std::string* get_required_parameters() = 0;
-            
+            virtual const std::vector<std::string>& get_required_parameters() = 0;
+
             virtual void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr) = 0;
 
             virtual ~Catchment_Formulation(){};

@@ -5,6 +5,7 @@
 #include <string>
 #include <map>
 #include <exception>
+#include <vector>
 
 #include "JSONProperty.hpp"
 #include "Pdm03.h"
@@ -36,8 +37,8 @@ namespace realization {
             virtual void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr) = 0;
 
         protected:
-            
-            virtual std::string* get_required_parameters() = 0;
+
+            virtual const std::vector<std::string>& get_required_parameters() = 0;
 
             virtual geojson::PropertyMap interpret_parameters(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr) {
                 geojson::PropertyMap options;
@@ -61,13 +62,10 @@ namespace realization {
 
             virtual void validate_parameters(geojson::PropertyMap options) {
                 std::vector<std::string> missing_parameters;
-                std::string *required_parameters = get_required_parameters();
-                int required_parameter_count = sizeof(required_parameters) / sizeof(required_parameters[0]);
+                std::vector<std::string> required_parameters = get_required_parameters();
 
-                for (int parameter_index = 0; parameter_index < required_parameter_count; parameter_index++) {
-                    std::string parameter = required_parameters[parameter_index];
-                    
-                    if (options.count(parameter) != 0) {
+                for (auto parameter : required_parameters) {
+                  if (options.count(parameter) != 0) {
                         missing_parameters.push_back(parameter);
                     }
                 }

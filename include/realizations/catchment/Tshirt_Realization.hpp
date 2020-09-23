@@ -86,7 +86,7 @@ namespace realization {
             //The delta time (dt) this instance is configured to use
             time_step_t dt;
 
-            std::string REQUIRED_PARAMETERS[19]{
+            std::vector<std::string> REQUIRED_PARAMETERS = {
                 "maxsmc",
                 "wltsmc",
                 "satdk",
@@ -108,7 +108,7 @@ namespace realization {
                 "giuh"
             };
 
-            std::string* get_required_parameters() {
+            const std::vector<std::string>& get_required_parameters() {
                 return REQUIRED_PARAMETERS;
             }
 

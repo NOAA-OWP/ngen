@@ -59,7 +59,7 @@ class Simple_Lumped_Model_Realization : public realization::Catchment_Formulatio
         void add_time(time_t t, double n);
 
     protected:
-        std::string REQUIRED_PARAMETERS[9] = {
+        std::vector<std::string> REQUIRED_PARAMETERS = {
             "sr",
             "storage",
             "max_storage",
@@ -71,8 +71,8 @@ class Simple_Lumped_Model_Realization : public realization::Catchment_Formulatio
             "t"
         };
 
-        virtual std::string* get_required_parameters() {
-            return this->REQUIRED_PARAMETERS;
+        virtual const std::vector<std::string>& get_required_parameters() {
+            return REQUIRED_PARAMETERS;
         }
 
     private:
