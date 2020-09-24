@@ -10,7 +10,7 @@ jobs:
       - name: Checkout the code
         uses: actions/checkout@v2
       - name: Build the NGEN image
-        run: docker build . --file /docker/CENTOS_NGEN_RUN.dockerfile --tag localbuild/ngen:latest      
+        run: docker build . --file ./docker/CENTOS_NGEN_RUN.dockerfile --tag localbuild/ngen:latest      
       - name: Run the NGEN model on example data
         run: docker run --rm -it localbuild/ngen:latest
         #Internal command has hardcoded paths to repo-local data      
