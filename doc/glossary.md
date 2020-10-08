@@ -23,9 +23,9 @@ Flowpath Realization - One-dimensional (linear) feature that is a hydrology-spec
 Framework - An abstraction in which software providing generic functionality can be selectively changed by additional user-written code, thus
 providing application-specific software.
 
-Functional Abstraction - Details of the algorithms to accomplish the function are not visible to the consumer of the function.
+Functional Abstraction - Details of the algorithms to accomplish the function are not visible to the consumer of the function.[3]
 
-Geomorphologic Instantaneous Unit Hydrograph (GIUH) - A modeling method for simulating the runoff for ungauged basins.
+Geomorphologic Instantaneous Unit Hydrograph (GIUH) - A modeling method for simulating the runoff for ungauged basins.[4]
 
 Hydrologic Location or Hydrolocation - Any location of hydrologic significance located "on" a hydrologic network that is a hydrology-specific realization of a hydrologic nexus. [see HY\_Features](https://docs.opengeospatial.org/is/14-111r6/14-111r6.html#_hydro_logic_location)
 
