@@ -1,0 +1,18 @@
+name: Build and Run NGEN on example data
+
+on:
+  pull_request:
+    branches: [ master ]
+jobs:
+    Build_and_Run_Model:
+      runs-on: ubuntu-latest
+      steps:
+      - name: Checkout the code
+        uses: actions/checkout@v2
+      - name: Build the NGEN image
+        run: docker build . --file ./docker/CENTOS_NGEN_RUN.dockerfile --tag localbuild/ngen:latest      
+      - name: Run the NGEN model on example data
+        run: docker run --rm -i localbuild/ngen:latest
+        #Internal command has hardcoded paths to repo-local data      
+        #When running command manually from container use below:
+        #./ngen data/catchment_data.geojson "" data/nexus_data.geojson "" data/refactored_example_realization_config.json
