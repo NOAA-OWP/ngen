@@ -99,7 +99,7 @@ extern double penman_monteith_et_calculation
   double aerodynamic_resistance_s_per_m;
 
   // this method requires more calculations 
-  if(is_fabs_less_than_epsilon(et_params->vegetation_height_m,1.0e-06)==TRUE)
+  if(is_fabs_less_than_eps(et_params->vegetation_height_m,1.0e-06)==TRUE)
   {
     // the vegetation height was not specified.  TODO should warn??
     fprintf(stderr,"WARNING: Vegetation height not specified in the Penman-Monteith routine.  Using 0.5m.\n");
