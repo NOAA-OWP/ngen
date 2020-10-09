@@ -42,7 +42,7 @@ extern void calculate_intermediate_variables
   intermediate_vars *inter_vars
 );
 
-extern int is_fabs_less_than_epsilon(double a,double epsilon);  // returns TRUE iff fabs(a)<epsilon
+extern int is_fabs_less_than_eps(double a,double epsilon);  // returns TRUE iff fabs(a)<epsilon
 
 extern double calc_air_saturation_vapor_pressure_Pa(double air_temperature_C);
 
@@ -502,7 +502,7 @@ extern void calculate_intermediate_variables
   inter_vars->psychrometric_constant_Pa_per_C=psychrometric_constant_Pa_per_C;
 }
 
-extern int is_fabs_less_than_epsilon(double a,double epsilon)  // returns true if fabs(a)<epsilon
+extern int is_fabs_less_than_eps(double a,double epsilon)  // returns true if fabs(a)<epsilon
 {
   if(fabs(a)<epsilon) return(TRUE);
   else                return(FALSE);
