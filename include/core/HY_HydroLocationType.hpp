@@ -25,7 +25,8 @@ enum HY_HydroLocationType
     sinkhole,
     source,
     waterfall,
-    weir
+    weir,
+    undefined
 }
 
 
