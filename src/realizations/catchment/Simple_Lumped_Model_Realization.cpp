@@ -94,6 +94,39 @@ double Simple_Lumped_Model_Realization::get_response(double input_flux, time_ste
     return fluxes[t].slow_flow_meters_per_second + fluxes[t].runoff_meters_per_second;
 }
 
+void Simple_Lumped_Model_Realization::create_formulation(geojson::PropertyMap properties) {
+    this->validate_parameters(properties);   
+
+    double seconds_to_day = 3600.0/86400.0;
+
+    double storage = properties.at("storage").as_real_number();
+    double max_storage = properties.at("max_storage").as_real_number();
+    double a = properties.at("a").as_real_number();
+    double b = properties.at("b").as_real_number();
+    double Ks = properties.at("Ks").as_real_number() * seconds_to_day; //Implicitly connected to time used for DAILY dt need to account for hourly dt
+    double Kq = properties.at("Kq").as_real_number() * seconds_to_day; //Implicitly connected to time used for DAILY dt need to account for hourly dt
+    long n = properties.at("n").as_natural_number();
+    double t = properties.at("t").as_real_number();
+
+    params.max_storage_meters = max_storage;
+    params.min_storage_meters = 0;
+    params.activation_threshold_meters_groundwater_reservoir = 0;
+    params.activation_threshold_meters_nash_cascade_reservoir = 0;
+    params.reservoir_max_velocity_meters_per_second = 0;
+    params.a = a;
+    params.b = b;
+    params.Ks = Ks;
+    params.Kq = Kq;
+    params.n = n;
+
+    //Init the first time explicity using passed in data
+    fluxes[0] = hymod_fluxes();
+    
+    cascade_backing_storage.emplace(0, properties.at("sr").as_real_vector()); //Move ownership of init vector to container
+    state[0] = hymod_state(0.0, 0.0, cascade_backing_storage[0].data());
+    state[0].storage_meters = storage;
+}
+
 void Simple_Lumped_Model_Realization::create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global) {
     geojson::PropertyMap options = this->interpret_parameters(config, global);    
 

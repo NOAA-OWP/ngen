@@ -166,7 +166,8 @@ int main(int argc, char *argv[]) {
     prepare_features(nexus_collection, catchment_collection, !true);
 
     realization::Formulation_Manager manager = realization::Formulation_Manager(REALIZATION_CONFIG_PATH);
-    manager.read(utils::getStdOut());
+    manager.read(catchment_collection, utils::getStdOut());
+
     //TODO don't really need catchment_collection once catchments are added to nexus collection
     catchment_collection.reset();
     for(auto& feature : *nexus_collection)
@@ -176,6 +177,7 @@ int main(int argc, char *argv[]) {
       //Skipping IDs that aren't "real" i.e. have a  NA id
       if (feat_id.substr(4) == "NA") continue;
 
+      // We need a better way to identify catchments vs nexi
       if( feat_id.substr(0, 3) == "cat" ){
         catchment_outfiles[feat_id].open(feature->get_id()+"_output.csv", std::ios::trunc);
 

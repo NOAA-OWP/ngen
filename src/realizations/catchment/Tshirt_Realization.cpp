@@ -88,6 +88,89 @@ double Tshirt_Realization::get_response(double input_flux, time_step_t t, const 
            giuh;
 }
 
+void Tshirt_Realization::create_formulation(geojson::PropertyMap properties) {
+    this->validate_parameters(properties);
+
+    this->catchment_id = this->get_id();
+    this->dt = properties.at("timestep").as_natural_number();
+
+    tshirt::tshirt_params tshirt_params{
+        properties.at("maxsmc").as_real_number(),   //maxsmc FWRFH
+        properties.at("wltsmc").as_real_number(),  //wltsmc  from fred_t-shirt.c FIXME NOT USED IN TSHIRT?!?!
+        properties.at("satdk").as_real_number(),   //satdk FWRFH
+        properties.at("satpsi").as_real_number(),    //satpsi    FIXME what is this and what should its value be?
+        properties.at("slope").as_real_number(),   //slope
+        properties.at("scaled_distribution_fn_shape_parameter").as_real_number(),      //b bexp? FWRFH
+        properties.at("multiplier").as_real_number(),    //multipier  FIXMME (lksatfac)
+        properties.at("alpha_fc").as_real_number(),    //aplha_fc   field_capacity_atm_press_fraction
+        properties.at("Klf").as_real_number(),    //Klf lateral flow nash coefficient?
+        properties.at("Kn").as_real_number(),    //Kn Kn	0.001-0.03 F Nash Cascade coeeficient
+        static_cast<int>(properties.at("nash_n").as_natural_number()),      //number_lateral_flow_nash_reservoirs
+        properties.at("Cgw").as_real_number(),    //fred_t-shirt gw res coeeficient (per h)
+        properties.at("expon").as_real_number(),    //expon FWRFH
+        properties.at("max_groundwater_storage_meters").as_real_number()   //max_gw_storage Sgwmax FWRFH
+    };
+
+    this->params = &tshirt_params;
+
+    double soil_storage_meters = tshirt_params.max_soil_storage_meters * properties.at("soil_storage_percentage").as_real_number();
+    double ground_water_storage = tshirt_params.max_groundwater_storage_meters * properties.at("groundwater_storage_percentage").as_real_number();
+
+    std::vector<double> nash_storage = properties.at("nash_storage").as_real_vector();
+
+    this->state[0] = std::make_shared<tshirt::tshirt_state>(tshirt::tshirt_state(soil_storage_meters, ground_water_storage, nash_storage));
+
+    for (int i = 0; i < tshirt_params.nash_n; ++i) {
+
+        this->state[0]->nash_cascade_storeage_meters[i] = nash_storage[i];
+    }
+
+    this->model = make_unique<tshirt::tshirt_model>(tshirt::tshirt_model(tshirt_params, this->state[0]));
+
+    geojson::JSONProperty giuh = properties.at("giuh");
+
+    std::vector<std::string> missing_parameters;
+
+    if (!giuh.has_key("giuh_path")) {
+        missing_parameters.push_back("giuh_path");
+    }
+
+    if (!giuh.has_key("crosswalk_path")) {
+        missing_parameters.push_back("crosswalk_path");
+    }
+
+    if (missing_parameters.size() > 0) {
+        std::string message = "A giuh configuration cannot be created for '" + this->get_id() + "'; the following parameters are missing: ";
+
+        for (int missing_parameter_index = 0; missing_parameter_index < missing_parameters.size(); missing_parameter_index++) {
+            message += missing_parameters[missing_parameter_index];
+
+            if (missing_parameter_index < missing_parameters.size() - 1) {
+                message += ", ";
+            }
+        }
+        
+        throw std::runtime_error(message);
+    }
+
+    std::unique_ptr<giuh::GiuhJsonReader> giuh_reader = std::make_unique<giuh::GiuhJsonReader>(
+        giuh.at("giuh_path").as_string(),
+        giuh.at("crosswalk_path").as_string()
+    );
+
+    this->giuh_kernel = giuh_reader->get_giuh_kernel_for_id(this->catchment_id);
+
+    if (this->giuh_kernel == nullptr) {
+        // ... revert to a pass-through kernel
+        this->giuh_kernel = std::make_shared<giuh::giuh_kernel>(
+                giuh::giuh_kernel(
+                    this->catchment_id,
+                    giuh_reader->get_associated_comid(this->catchment_id)
+                )
+        );
+    }
+}
+
 void Tshirt_Realization::create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global) {
     geojson::PropertyMap options = this->interpret_parameters(config, global);
 

@@ -369,7 +369,8 @@ TEST_F(Formulation_Manager_Test, basic_reading_1) {
     realization::Formulation_Manager manager = realization::Formulation_Manager(stream);
 
     ASSERT_TRUE(manager.is_empty());
-    manager.read(catchment_output);
+    geojson::GeoJSON features = std::make_shared<geojson::FeatureCollection>();
+    manager.read(features, catchment_output);
 
     ASSERT_EQ(manager.get_size(), 2);
 
@@ -388,7 +389,10 @@ TEST_F(Formulation_Manager_Test, basic_reading_2) {
     realization::Formulation_Manager manager = realization::Formulation_Manager(stream);
 
     ASSERT_TRUE(manager.is_empty());
-    manager.read(catchment_output);
+    
+    geojson::GeoJSON features = std::make_shared<geojson::FeatureCollection>();
+
+    manager.read(features, catchment_output);
 
     ASSERT_EQ(manager.get_size(), 2);
 
@@ -405,7 +409,9 @@ TEST_F(Formulation_Manager_Test, basic_run_1) {
     utils::StreamHandler catchment_output(s_ptr);
 
     realization::Formulation_Manager manager = realization::Formulation_Manager(stream);
-    manager.read(catchment_output);
+    
+    geojson::GeoJSON features = std::make_shared<geojson::FeatureCollection>();
+    manager.read(features, catchment_output);
 
     std::map<std::string, std::map<long, double>> calculated_results;
 
@@ -447,7 +453,8 @@ TEST_F(Formulation_Manager_Test, basic_run_3) {
     utils::StreamHandler catchment_output(s_ptr);
 
     realization::Formulation_Manager manager = realization::Formulation_Manager(stream);
-    manager.read(catchment_output);
+    geojson::GeoJSON features = std::make_shared<geojson::FeatureCollection>();
+    manager.read(features, catchment_output);
 
     std::vector<double> inputs = {10.0 / 1000, 0.0, 0.0};
     std::vector<double> expected_results = {191.108626 / 1000, 177.181102 / 1000, 165.234198 / 1000};

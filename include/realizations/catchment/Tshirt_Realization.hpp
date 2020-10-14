@@ -73,6 +73,7 @@ namespace realization {
             }
 
             void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr);
+            void create_formulation(geojson::PropertyMap properties);
 
         private:
             std::string catchment_id;

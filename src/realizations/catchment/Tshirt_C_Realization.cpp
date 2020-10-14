@@ -108,6 +108,87 @@ Tshirt_C_Realization::~Tshirt_C_Realization()
     //destructor
 }
 
+void Tshirt_C_Realization::create_formulation(geojson::PropertyMap properties) {
+    // TODO: don't particularly like the idea of "creating" the formulation, parameter constructs, etc., inside this
+    //  type but outside the constructor.
+    // TODO: look at creating a factory or something, rather than an instance, for doing this type of thing.
+
+    // TODO: (if this remains and doesn't get replaced with factory) protect against this being called after calls to
+    //  get_response have started being made, or else the reservoir values are going to be jacked up.
+    this->validate_parameters(properties);
+
+    catchment_id = this->get_id();
+
+    //dt = options.at("timestep").as_natural_number();
+
+    params = std::make_shared<tshirt_params>(tshirt_params{
+            properties.at("maxsmc").as_real_number(),   //maxsmc FWRFH
+            properties.at("wltsmc").as_real_number(),  //wltsmc  from fred_t-shirt.c FIXME NOT USED IN TSHIRT?!?!
+            properties.at("satdk").as_real_number(),   //satdk FWRFH
+            properties.at("satpsi").as_real_number(),    //satpsi    FIXME what is this and what should its value be?
+            properties.at("slope").as_real_number(),   //slope
+            properties.at("scaled_distribution_fn_shape_parameter").as_real_number(),      //b bexp? FWRFH
+            properties.at("multiplier").as_real_number(),    //multipier  FIXMME (lksatfac)
+            properties.at("alpha_fc").as_real_number(),    //aplha_fc   field_capacity_atm_press_fraction
+            properties.at("Klf").as_real_number(),    //Klf lateral flow nash coefficient?
+            properties.at("Kn").as_real_number(),    //Kn Kn	0.001-0.03 F Nash Cascade coeeficient
+            static_cast<int>(properties.at("nash_n").as_natural_number()),      //number_lateral_flow_nash_reservoirs
+            properties.at("Cgw").as_real_number(),    //fred_t-shirt gw res coeeficient (per h)
+            properties.at("expon").as_real_number(),    //expon FWRFH
+            properties.at("max_groundwater_storage_meters").as_real_number()   //max_gw_storage Sgwmax FWRFH
+    });
+    // Very important this also gets done
+    sync_c_storage_params();
+
+    init_ground_water_reservoir(properties.at("groundwater_storage_percentage").as_real_number(), true);
+    init_soil_reservoir(properties.at("soil_storage_percentage").as_real_number(), true);
+
+    nash_storage = properties.at("nash_storage").as_real_vector();
+
+    geojson::JSONProperty giuh = properties.at("giuh");
+
+    // Since this implementation really just cares about the ordinates, allow them to be passed directly here, or read
+    // from a separate file
+    if (giuh.has_key("cdf_ordinates")) {
+        giuh_cdf_ordinates = giuh.at("cdf_ordinates").as_real_vector();
+    }
+    else {
+        std::vector<std::string> missing_parameters;
+        if (!giuh.has_key("giuh_path")) {
+            missing_parameters.emplace_back("giuh_path");
+        }
+        if (!giuh.has_key("crosswalk_path")) {
+            missing_parameters.emplace_back("crosswalk_path");
+        }
+        if (!missing_parameters.empty()) {
+            std::string message = "A giuh configuration cannot be created for '" + catchment_id + "'; the following parameters are missing: ";
+
+            for (int missing_parameter_index = 0; missing_parameter_index < missing_parameters.size(); missing_parameter_index++) {
+                message += missing_parameters[missing_parameter_index];
+
+                if (missing_parameter_index < missing_parameters.size() - 1) {
+                    message += ", ";
+                }
+            }
+
+            throw std::runtime_error(message);
+        }
+
+        std::unique_ptr<giuh::GiuhJsonReader> giuh_reader = std::make_unique<giuh::GiuhJsonReader>(
+                giuh.at("giuh_path").as_string(),
+                giuh.at("crosswalk_path").as_string()
+        );
+
+
+        giuh_cdf_ordinates = giuh_reader->extract_cumulative_frequency_ordinates(catchment_id);
+    }
+    // Create this with 0 values initially
+    giuh_runoff_queue_per_timestep = std::vector<double>(giuh_cdf_ordinates.size() + 1);
+    for (int i = 0; i < giuh_cdf_ordinates.size() + 1; i++) {
+        giuh_runoff_queue_per_timestep.push_back(0.0);
+    }
+}
+
 void Tshirt_C_Realization::create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global) {
     // TODO: don't particularly like the idea of "creating" the formulation, parameter constructs, etc., inside this
     //  type but outside the constructor.

@@ -30,6 +30,8 @@ namespace geojson {
                 }
             }
 
+            FeatureCollection() {}
+
             /**
              * Copy constructor
              * 
