@@ -127,6 +127,7 @@ namespace realization {
         virtual ~Tshirt_C_Realization();
 
         void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr) override;
+        void create_formulation(geojson::PropertyMap properties) override;
 
         int run_formulation_for_timestep(double input_flux);
 

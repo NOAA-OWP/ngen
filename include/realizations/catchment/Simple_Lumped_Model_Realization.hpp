@@ -51,6 +51,7 @@ class Simple_Lumped_Model_Realization : public realization::Catchment_Formulatio
         double calc_et(double soim_m, void* et_params);
 
         virtual void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr);
+        virtual void create_formulation(geojson::PropertyMap properties);
 
         virtual std::string get_formulation_type() {
             return "simple_lumped";
