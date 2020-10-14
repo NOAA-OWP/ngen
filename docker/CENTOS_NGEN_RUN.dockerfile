@@ -25,4 +25,4 @@ RUN cmake --build /ngen --target ngen
 
 WORKDIR /ngen/
 
-CMD ./ngen data/catchment_data.geojson "" data/nexus_data.geojson "" data/refactored_example_realization_config.json
+CMD ./ngen data/catchment_data.geojson "" data/nexus_data.geojson "" data/example_realization_config.json
