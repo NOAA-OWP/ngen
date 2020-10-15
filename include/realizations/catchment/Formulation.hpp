@@ -48,6 +48,26 @@ namespace realization {
             std::string get_id() const {
                 return this->id;
             }
+
+            /**
+             * Get a formatted line of output values for the given time step as a delimited string.
+             *
+             * This method is useful for preparing calculated data in a representation useful for output files, such as
+             * CSV files.
+             *
+             * The resulting string will contain calculated values for applicable output variables for the particular
+             * formulation, as determined for the given time step.  However, the string will not contain any
+             * representation of the time step itself.
+             *
+             * An empty string is returned if the time step value is not in the range of valid time steps for which there
+             * are calculated values for all variables.
+             *
+             * The default delimiter is a comma.
+             *
+             * @param timestep The time step for which data is desired.
+             * @return A delimited string with all the output variable values for the given time step.
+             */
+            virtual std::string get_output_line_for_timestep(int timestep, std::string delimiter=",") = 0;
             
             virtual void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr) = 0;
             virtual void create_formulation(geojson::PropertyMap properties) = 0;
