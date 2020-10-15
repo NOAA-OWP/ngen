@@ -106,8 +106,37 @@ double Simple_Lumped_Model_Realization::get_response(time_step_t t, time_step_t 
     return fluxes[t].slow_flow_meters_per_second + fluxes[t].runoff_meters_per_second;
 }
 
+/**
+ * Get a formatted line of output values for the given time step as a delimited string.
+ *
+ * For this type, the output consists of only the total discharge amount per time step; i.e., the same value that was
+ * returned by ``get_response``.
+ *
+ * This method is useful for preparing calculated data in a representation useful for output files, such as
+ * CSV files.
+ *
+ * The resulting string will contain calculated values for applicable output variables for the particular
+ * formulation, as determined for the given time step.  However, the string will not contain any
+ * representation of the time step itself.
+ *
+ * An empty string is returned if the time step value is not in the range of valid time steps for which there
+ * are calculated values for all variables.
+ *
+ * The default delimiter is a comma.
+ *
+ * @param timestep The time step for which data is desired.
+ * @return A delimited string with all the output variable values for the given time step.
+ */
+std::string Simple_Lumped_Model_Realization::get_output_line_for_timestep(int timestep, std::string delimiter) {
+    if (timestep >= fluxes.size()) {
+        return "";
+    }
+    double discharge = fluxes[timestep].slow_flow_meters_per_second + fluxes[timestep].runoff_meters_per_second;
+    return std::to_string(discharge);
+}
+
 void Simple_Lumped_Model_Realization::create_formulation(geojson::PropertyMap properties) {
-    this->validate_parameters(properties);   
+    this->validate_parameters(properties);
 
     double seconds_to_day = 3600.0/86400.0;
 
@@ -133,7 +162,7 @@ void Simple_Lumped_Model_Realization::create_formulation(geojson::PropertyMap pr
 
     //Init the first time explicity using passed in data
     fluxes[0] = hymod_fluxes();
-    
+
     cascade_backing_storage.emplace(0, properties.at("sr").as_real_vector()); //Move ownership of init vector to container
     state[0] = hymod_state(0.0, 0.0, cascade_backing_storage[0].data());
     state[0].storage_meters = storage;
