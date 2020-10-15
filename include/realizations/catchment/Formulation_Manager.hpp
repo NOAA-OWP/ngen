@@ -71,10 +71,13 @@ namespace realization {
                     }
                 }
 
+                /**
+                 * Read simulation time from configuration file
+                 */            
                 auto possible_simulation_time = tree.get_child_optional("time");
 
                 if (!possible_simulation_time) {
-                    throw std::runtime_error("ERROR: No simulation time period defined.";
+                    throw std::runtime_error("ERROR: No simulation time period defined.");
                 }
 
                 geojson::JSONProperty simulation_time_parameters("time", *possible_simulation_time);
@@ -92,10 +95,10 @@ namespace realization {
                 if (missing_simulation_time_parameters.size() > 0) {
                     std::string message = "ERROR: A simulation time parameter cannot be created; the following parameters are missing: ";
 
-                    for (int missing_parameter_index = 0; missing_parameter_index < missing_parameters.size(); missing_parameter_index++) {
-                        message += missing_parameters[missing_parameter_index];
+                    for (int missing_parameter_index = 0; missing_parameter_index < missing_simulation_time_parameters.size(); missing_parameter_index++) {
+                        message += missing_simulation_time_parameters[missing_parameter_index];
 
-                        if (missing_parameter_index < missing_parameters.size() - 1) {
+                        if (missing_parameter_index < missing_simulation_time_parameters.size() - 1) {
                             message += ", ";
                         }
                     }
@@ -103,17 +106,21 @@ namespace realization {
                     throw std::runtime_error(message);
                 }
 
-                simulation_time_params forcing_config(
+                simulation_time_params simulation_time_config(
                     simulation_time_parameters.at("start_time").as_string(),
                     simulation_time_parameters.at("end_time").as_string()
                 );
 
+                /**
+                 * Read catchment configurations from configuration file
+                 */      
                 auto possible_catchment_configs = tree.get_child_optional("catchments");
 
                 if (possible_catchment_configs) {
                     for (std::pair<std::string, boost::property_tree::ptree> catchment_config : *possible_catchment_configs) {
                         this->add_formulation(
                             this->construct_formulation_from_tree(
+                                simulation_time_config,
                                 catchment_config.first,
                                 catchment_config.second,
                                 output_stream
@@ -167,6 +174,7 @@ namespace realization {
 
         protected:
             std::shared_ptr<Formulation> construct_formulation_from_tree(
+                simulation_time_params &simulation_time_config,
                 std::string identifier,
                 boost::property_tree::ptree &tree,
                 utils::StreamHandler output_stream
@@ -189,13 +197,13 @@ namespace realization {
                     missing_parameters.push_back("path");
                 }
 
-                if (!forcing_parameters.has_key("start_time")) {
-                    missing_parameters.push_back("start_time");
-                }
+                //if (!forcing_parameters.has_key("start_time")) {
+                //    missing_parameters.push_back("start_time");
+                //}
 
-                if (!forcing_parameters.has_key("end_time")) {
-                    missing_parameters.push_back("end_time");
-                }
+                //if (!forcing_parameters.has_key("end_time")) {
+                //    missing_parameters.push_back("end_time");
+                //}
 
                 if (missing_parameters.size() > 0) {
                     std::string message = "A forcing configuration cannot be created for '" + identifier + "'; the following parameters are missing: ";
@@ -213,10 +221,15 @@ namespace realization {
 
                 forcing_params forcing_config(
                     forcing_parameters.at("path").as_string(),
-                    forcing_parameters.at("start_time").as_string(),
-                    forcing_parameters.at("end_time").as_string()
+                    //forcing_parameters.at("start_time").as_string(),
+                    //forcing_parameters.at("end_time").as_string()
+                    simulation_time_config.start_time,
+                    simulation_time_config.end_time
+                    //simulation_time_config.start_t,
+                    //simulation_time_config.end_t
                 );
 
+//add time config below too
                 std::shared_ptr<Formulation> constructed_formulation = construct_formulation(formulation_type_key, identifier, forcing_config, output_stream);
                 constructed_formulation->create_formulation(formulation_config, &global_formulation_parameters);
                 return constructed_formulation;
