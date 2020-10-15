@@ -220,7 +220,7 @@ namespace realization {
          * @param timestep The time step for which data is desired.
          * @return A delimited string with all the output variable values for the given time step.
          */
-        std::string get_output_line_for_timestep(int timestep, std::string delimiter=",");
+        std::string get_output_line_for_timestep(int timestep, std::string delimiter=",") override;
 
     private:
         /** Id of associated catchment. */
