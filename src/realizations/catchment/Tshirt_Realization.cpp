@@ -103,6 +103,37 @@ double Tshirt_Realization::get_response(time_step_t t_index, time_step_t t_delta
            giuh;
 }
 
+/**
+ * Get a formatted line of output values for the given time step as a delimited string.
+ *
+ * For this type, the output consists of only the total discharge amount per time step; i.e., the same value that was
+ * returned by ``get_response``.
+ *
+ * This method is useful for preparing calculated data in a representation useful for output files, such as
+ * CSV files.
+ *
+ * The resulting string will contain calculated values for applicable output variables for the particular
+ * formulation, as determined for the given time step.  However, the string will not contain any
+ * representation of the time step itself.
+ *
+ * An empty string is returned if the time step value is not in the range of valid time steps for which there
+ * are calculated values for all variables.
+ *
+ * The default delimiter is a comma.
+ *
+ * @param timestep The time step for which data is desired.
+ * @return A delimited string with all the output variable values for the given time step.
+ */
+std::string Tshirt_Realization::get_output_line_for_timestep(int timestep, std::string delimiter) {
+    if (timestep >= fluxes.size()) {
+        return "";
+    }
+    double discharge = fluxes[timestep]->soil_lateral_flow_meters_per_second +
+                       fluxes[timestep]->groundwater_flow_meters_per_second +
+                       giuh_kernel->calc_giuh_output(timestep, fluxes[timestep]->surface_runoff_meters_per_second);
+    return std::to_string(discharge);
+}
+
 void Tshirt_Realization::create_formulation(geojson::PropertyMap properties) {
     this->validate_parameters(properties);
 
@@ -164,7 +195,7 @@ void Tshirt_Realization::create_formulation(geojson::PropertyMap properties) {
                 message += ", ";
             }
         }
-        
+
         throw std::runtime_error(message);
     }
 
