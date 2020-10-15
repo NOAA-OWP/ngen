@@ -2,6 +2,9 @@
 #include "Constants.h"
 #include <utility>
 #include "tshirt_c.h"
+#include <exception>
+#include <functional>
+#include <string>
 
 using namespace realization;
 
@@ -308,6 +311,57 @@ double Tshirt_C_Realization::get_latest_flux_total_discharge() {
     return fluxes.empty() ? 0.0 : fluxes.back()->Qout_m;
 }
 
+/**
+ * Get the number of output data variables made available from the calculations for enumerated time steps.
+ *
+ * @return The number of output data variables made available from the calculations for enumerated time steps.
+ */
+int Tshirt_C_Realization::get_output_item_count() {
+    return get_output_var_names().size();
+}
+
+/**
+ * Get a delimited string with all the output variable values for the given time step.
+ *
+ * This method is useful for preparing calculated data in a representation useful for output files, such as
+ * CSV files.
+ *
+ * The resulting string contains only the calculated output values for the time step, and not the time step
+ * index itself.
+ *
+ * An empty string is returned if the time step value is not in the range of valid time steps for which there
+ * are calculated values for all variables.
+ *
+ * The default delimiter is a comma.
+ *
+ * @param timestep The time step for which data is desired.
+ * @return A delimited string with all the output variable values for the given time step.
+ */
+std::string Tshirt_C_Realization::get_output_line_for_timestep(int timestep, std::string delimiter) {
+    // Check if the timestep is in bounds for the fluxes vector, and handle case when it isn't
+    if (timestep >= fluxes.size() || fluxes[timestep] == nullptr) {
+        return "";
+    }
+    std::string output_str;
+    tshirt_c_result_fluxes flux_for_timestep = *fluxes[timestep];
+    for (const std::string& name : get_output_var_names()) {
+        // Get a lambda that takes a fluxes struct and returns the right (double) member value from it from the name
+        function<double(tshirt_c_result_fluxes)> get_val_func = get_output_var_flux_extraction_func(name);
+        double output_var_value = get_val_func(flux_for_timestep);
+        output_str += output_str.empty() ? std::to_string(output_var_value) : "," + std::to_string(output_var_value);
+    }
+    return output_str;
+}
+
+/**
+ * Get the names of the output data variables that are available from calculations for enumerated time steps.
+ *
+ * @return The names of the output data variables that are available from calculations for enumerated time steps.
+ */
+const std::vector<std::string> &Tshirt_C_Realization::get_output_var_names() {
+    return OUTPUT_VARIABLE_NAMES;
+}
+
 // TODO: don't care for this, as it could have the reference locations accidentally altered (also, raw pointer => bad)
 //@robertbartel is this TODO resolved with these changes?
 const std::vector<std::string>& Tshirt_C_Realization::get_required_parameters() {
@@ -336,6 +390,46 @@ double Tshirt_C_Realization::get_response(time_step_t t_index, time_step_t t_del
     // TODO: check t_index is the next expected time step to be calculated
 
     return fluxes.back()->Qout_m;
+}
+
+function<double(tshirt_c_result_fluxes)>
+Tshirt_C_Realization::get_output_var_flux_extraction_func(const std::string& var_name) {
+    // TODO: think about making this a lazily initialized member map
+    if (var_name == OUT_VAR_BASE_FLOW) {
+        return [](tshirt_c_result_fluxes flux) { return flux.flux_from_deep_gw_to_chan_m;};
+    }
+    else if (var_name == OUT_VAR_GIUH_RUNOFF) {
+        return [](tshirt_c_result_fluxes flux) { return flux.giuh_runoff_m;};
+    }
+    else if (var_name == OUT_VAR_LATERAL_FLOW) {
+        return [](tshirt_c_result_fluxes flux) { return flux.nash_lateral_runoff_m;};
+    }
+    else if (var_name == OUT_VAR_SURFACE_RUNOFF) {
+        return [](tshirt_c_result_fluxes flux) { return flux.Schaake_output_runoff_m;};
+    }
+    else if (var_name == OUT_VAR_TOTAL_DISCHARGE) {
+        return [](tshirt_c_result_fluxes flux) { return flux.Qout_m;};
+    }
+    else {
+        throw std::invalid_argument("Cannot get values for unrecognized variable name " + var_name);
+    }
+}
+
+/**
+ * Get a copy of the values for the given output variable at all available time steps.
+ *
+ * @param name
+ * @return A vector containing copies of the output value of the variable, indexed by time step.
+ */
+std::vector<double> Tshirt_C_Realization::get_value(const std::string& name) {
+    // Generate a lambda that takes a fluxes struct and returns the right (double) member value from it from the name
+    function<double(tshirt_c_result_fluxes)> get_val_func = get_output_var_flux_extraction_func(name);
+    // Then, assuming we don't bail, use the lambda to build the result array
+    std::vector<double> outputs = std::vector<double>(fluxes.size());
+    for (int i = 0; i < fluxes.size(); ++i) {
+        outputs[i] = get_val_func(*fluxes[i]);
+    }
+    return outputs;
 }
 
 int Tshirt_C_Realization::run_formulation_for_timestep(double input_flux) {

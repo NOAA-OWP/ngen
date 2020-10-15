@@ -8,7 +8,16 @@
 #include "GiuhJsonReader.h"
 #include "tshirt_c.h"
 #include <memory>
+#include <set>
+#include <string>
 #include <unordered_map>
+#include <vector>
+
+#define OUT_VAR_BASE_FLOW "base_flow"
+#define OUT_VAR_GIUH_RUNOFF "giuh_runoff"
+#define OUT_VAR_LATERAL_FLOW "lateral_flow"
+#define OUT_VAR_SURFACE_RUNOFF "surface_runoff"
+#define OUT_VAR_TOTAL_DISCHARGE "total_discharge"
 
 using namespace tshirt;
 
@@ -168,6 +177,51 @@ namespace realization {
 
         double get_latest_flux_total_discharge();
 
+        // TODO: look at moving these to the Formulation superclass
+        /**
+         * Get the number of output data variables made available from the calculations for enumerated time steps.
+         *
+         * @return The number of output data variables made available from the calculations for enumerated time steps.
+         */
+        int get_output_item_count();
+
+        /**
+         * Get the names of the output data variables that are available from calculations for enumerated time steps.
+         *
+         * The method must deterministically return output variable names in the same order each time.
+         *
+         * @return The names of the output data variables that are available from calculations for enumerated time steps.
+         */
+        const std::vector<std::string>& get_output_var_names();
+
+        /**
+         * Get a copy of the values for the given output variable at all available time steps.
+         *
+         * @param name
+         * @return A vector containing copies of the output value of the variable, indexed by time step.
+         */
+        // TODO: note that for this type, these are all doubles, but may need template function once moving to superclass
+        std::vector<double> get_value(const std::string& name);
+
+        /**
+         * Get a delimited string with all the output variable values for the given time step.
+         *
+         * This method is useful for preparing calculated data in a representation useful for output files, such as
+         * CSV files.
+         *
+         * The resulting string contains only the calculated output values for the time step, and not the time step
+         * index itself.
+         *
+         * An empty string is returned if the time step value is not in the range of valid time steps for which there
+         * are calculated values for all variables.
+         *
+         * The default delimiter is a comma.
+         *
+         * @param timestep The time step for which data is desired.
+         * @return A delimited string with all the output variable values for the given time step.
+         */
+        std::string get_output_line_for_timestep(int timestep, std::string delimiter=",");
+
     private:
         /** Id of associated catchment. */
         std::string catchment_id;
@@ -192,6 +246,15 @@ namespace realization {
         std::vector<std::shared_ptr<tshirt_c_result_fluxes>> fluxes;
 
         conceptual_reservoir groundwater_conceptual_reservoir;
+
+        std::vector<std::string> OUTPUT_VARIABLE_NAMES = {
+                OUT_VAR_BASE_FLOW,
+                OUT_VAR_GIUH_RUNOFF,
+                OUT_VAR_LATERAL_FLOW,
+                OUT_VAR_SURFACE_RUNOFF,
+                OUT_VAR_TOTAL_DISCHARGE
+        };
+
         conceptual_reservoir soil_conceptual_reservoir;
         std::vector<std::string> REQUIRED_PARAMETERS = {
                 "maxsmc",
@@ -213,6 +276,8 @@ namespace realization {
                 "groundwater_storage_percentage",
                 "giuh"
         };
+
+        function<double(tshirt_c_result_fluxes)> get_output_var_flux_extraction_func(const std::string& var_name);
 
         const std::vector<std::string>& get_required_parameters() override;
 
