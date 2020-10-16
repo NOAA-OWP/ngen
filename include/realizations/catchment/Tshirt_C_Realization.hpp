@@ -205,6 +205,23 @@ namespace realization {
         std::vector<double> get_value(const std::string& name);
 
         /**
+         * Get a header line appropriate for a file made up of entries from this type's implementation of
+         * ``get_output_line_for_timestep``.
+         *
+         * Note that like the output generating function, this line does not include anything for time step.
+         *
+         * @return An appropriate header line for this type.
+         */
+        std::string get_output_header_line(std::string delimiter=",") override;
+
+        /**
+         * Get the values making up the header line from get_output_header_line(), but organized as a vector of strings.
+         *
+         * @return The values making up the header line from get_output_header_line() organized as a vector.
+         */
+        const std::vector<std::string>& get_output_header_fields();
+
+        /**
          * Get a delimited string with all the output variable values for the given time step.
          *
          * This method is useful for preparing calculated data in a representation useful for output files, such as
@@ -255,6 +272,15 @@ namespace realization {
                 OUT_VAR_LATERAL_FLOW,
                 OUT_VAR_BASE_FLOW,
                 OUT_VAR_TOTAL_DISCHARGE
+        };
+
+        std::vector<std::string> OUTPUT_HEADER_FIELDS = {
+                "Rainfall",
+                "Direct Runoff",
+                "GIUH Runoff",
+                "Lateral Flow",
+                "Base Flow",
+                "Total Discharge"
         };
 
         conceptual_reservoir soil_conceptual_reservoir;
