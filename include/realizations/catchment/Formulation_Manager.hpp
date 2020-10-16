@@ -27,6 +27,12 @@ namespace realization {
         typedef std::tuple<std::string, std::string> dual_keys;
 
         public:
+//static const int test_int = 720;
+//static int test_int = 720;
+static std::shared_ptr<Simulation_Time> Simulation_Time_Object;
+//std::shared_ptr<Simulation_Time> Simulation_Time_Object;
+//static Simulation_Time Simulation_Time_Object;
+
             Formulation_Manager(std::stringstream &data) {
                 boost::property_tree::ptree loaded_tree;
                 boost::property_tree::json_parser::read_json(data, loaded_tree);
@@ -92,6 +98,10 @@ namespace realization {
                     missing_simulation_time_parameters.push_back("end_time");
                 }
 
+                if (!simulation_time_parameters.has_key("output_time_step")) {
+                    missing_simulation_time_parameters.push_back("output_time_step");
+                }
+
                 if (missing_simulation_time_parameters.size() > 0) {
                     std::string message = "ERROR: A simulation time parameter cannot be created; the following parameters are missing: ";
 
@@ -108,8 +118,16 @@ namespace realization {
 
                 simulation_time_params simulation_time_config(
                     simulation_time_parameters.at("start_time").as_string(),
-                    simulation_time_parameters.at("end_time").as_string()
+                    simulation_time_parameters.at("end_time").as_string(),
+                    simulation_time_parameters.at("output_time_step").as_natural_number()
                 );
+
+                //std::shared_ptr<Simulation_Time> Simulation_Time_Object;
+                //static std::shared_ptr<Simulation_Time> Simulation_Time_Object;
+                /**
+                 * Call constructor to construct a Simulation_Time object
+                 */ 
+                this->Simulation_Time_Object = std::make_shared<Simulation_Time>(simulation_time_config);
 
                 /**
                  * Read catchment configurations from configuration file
@@ -173,6 +191,8 @@ namespace realization {
             }
 
         protected:
+            //std::shared_ptr<Simulation_Time> Simulation_Time_Object;
+
             std::shared_ptr<Formulation> construct_formulation_from_tree(
                 simulation_time_params &simulation_time_config,
                 std::string identifier,
@@ -229,7 +249,7 @@ namespace realization {
                     //simulation_time_config.end_t
                 );
 
-//add time config below too
+//add time config below too???
                 std::shared_ptr<Formulation> constructed_formulation = construct_formulation(formulation_type_key, identifier, forcing_config, output_stream);
                 constructed_formulation->create_formulation(formulation_config, &global_formulation_parameters);
                 return constructed_formulation;

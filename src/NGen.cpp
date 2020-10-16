@@ -218,7 +218,13 @@ int main(int argc, char *argv[]) {
     std::shared_ptr<pdm03_struct> pdm_et_data = std::make_shared<pdm03_struct>(get_et_params());
 
     //Now loop some time, iterate catchments, do stuff for 720 hourly time steps
+
+    int total_time_steps = realization::Formulation_Manager::Simulation_Time_Object->total_time_steps;
+
     for(int time_step = 0; time_step < 720; time_step++)
+    //for(int time_step = 0; time_step < realization::Formulation_Manager::Simulation_Time_Object->get_total_time_steps(); time_step++)
+//for(int time_step = 0; time_step < realization::Formulation_Manager::Simulation_Time_Object->total_time_steps; time_step++)
+      //for(int time_step = 0; time_step < realization::Formulation_Manager::test_int; time_step++)
     {
       std::cout<<"Time step "<<time_step<<std::endl;
 
