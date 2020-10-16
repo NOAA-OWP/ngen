@@ -5,6 +5,7 @@
 #include <exception>
 #include <functional>
 #include <string>
+#include <boost/algorithm/string/join.hpp>
 
 using namespace realization;
 
@@ -318,6 +319,27 @@ double Tshirt_C_Realization::get_latest_flux_total_discharge() {
  */
 int Tshirt_C_Realization::get_output_item_count() {
     return get_output_var_names().size();
+}
+
+/**
+ * Get a header line appropriate for a file made up of entries from this type's implementation of
+ * ``get_output_line_for_timestep``.
+ *
+ * Note that like the output generating function, this line does not include anything for time step.
+ *
+ * @return An appropriate header line for this type.
+ */
+std::string Tshirt_C_Realization::get_output_header_line(std::string delimiter) {
+    return boost::algorithm::join(get_output_header_fields(), delimiter);
+}
+
+/**
+ * Get the values making up the header line from get_output_header_line(), but organized as a vector of strings.
+ *
+ * @return The values making up the header line from get_output_header_line() organized as a vector.
+ */
+const std::vector<std::string>& Tshirt_C_Realization::get_output_header_fields() {
+    return OUTPUT_HEADER_FIELDS;
 }
 
 /**
