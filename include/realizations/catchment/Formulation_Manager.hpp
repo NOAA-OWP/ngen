@@ -210,14 +210,6 @@ namespace realization {
                     missing_parameters.push_back("path");
                 }
 
-                //if (!forcing_parameters.has_key("start_time")) {
-                //    missing_parameters.push_back("start_time");
-                //}
-
-                //if (!forcing_parameters.has_key("end_time")) {
-                //    missing_parameters.push_back("end_time");
-                //}
-
                 if (missing_parameters.size() > 0) {
                     std::string message = "A forcing configuration cannot be created for '" + identifier + "'; the following parameters are missing: ";
 
@@ -234,15 +226,10 @@ namespace realization {
 
                 forcing_params forcing_config(
                     forcing_parameters.at("path").as_string(),
-                    //forcing_parameters.at("start_time").as_string(),
-                    //forcing_parameters.at("end_time").as_string()
                     simulation_time_config.start_time,
                     simulation_time_config.end_time
-                    //simulation_time_config.start_t,
-                    //simulation_time_config.end_t
                 );
 
-//add time config below too???
                 std::shared_ptr<Formulation> constructed_formulation = construct_formulation(formulation_type_key, identifier, forcing_config, output_stream);
                 constructed_formulation->create_formulation(formulation_config, &global_formulation_parameters);
                 return constructed_formulation;
