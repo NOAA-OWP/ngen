@@ -93,6 +93,7 @@ add_automated_test(
         geojson/Feature_Test.cpp
         geojson/FeatureCollection_Test.cpp
         forcing/Forcing_Test.cpp
+        simulation_time/Simulation_Time_Test.cpp
         core/catchment/giuh/GIUH_Test.cpp
         utils/include/StreamOutputTest.cpp
         realizations/Formulation_Manager_Test.cpp
@@ -114,6 +115,7 @@ add_automated_test_w_mock(
         geojson/Feature_Test.cpp
         geojson/FeatureCollection_Test.cpp
         forcing/Forcing_Test.cpp
+        simulation_time/Simulation_Time_Test.cpp
         core/catchment/giuh/GIUH_Test.cpp
         realizations/Formulation_Manager_Test.cpp
 )
