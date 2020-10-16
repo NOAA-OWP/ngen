@@ -16,6 +16,20 @@ namespace realization {
             Catchment_Formulation(std::string id) : Formulation(id){};
 
             /**
+             * Get a header line appropriate for a file made up of entries from this type's implementation of
+             * ``get_output_line_for_timestep``.
+             *
+             * Note that like the output generating function, this line does not include anything for time step.
+             *
+             * A default implementation is provided for inheritors of this type, which includes only "Total Discharge."
+             *
+             * @return An appropriate header line for this type.
+             */
+            std::string get_output_header_line(std::string delimiter) override {
+                return "Total Discharge";
+            }
+
+            /**
              * Execute the backing model formulation for the given time step, where it is of the specified size, and
              * return the response output.
              *
