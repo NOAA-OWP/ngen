@@ -228,7 +228,15 @@ int main(int argc, char *argv[]) {
         double response = formulation_pair.second->get_response(time_step, 3600.0);
         //dump the output
         std::cout<<"\tCatchment "<<formulation_pair.first<<" contributing "<<response<<" m/s to "<<catchment_to_nexus[formulation_pair.first]<<std::endl;
-        catchment_outfiles[formulation_pair.first] << time_step <<", "<<response<<std::endl;
+        // If the timestep is 0, also write the header line to the file
+        // TODO: add command line or config option to have this be omitted
+        if (time_step == 0) {
+            // Append "Time Step" to header string provided by formulation, since we'll also add time step to output
+            std::string header_str = formulation_pair.second->get_output_header_line();
+            catchment_outfiles[formulation_pair.first] << "Time Step," << header_str <<std::endl;
+        }
+        std::string output_str = formulation_pair.second->get_output_line_for_timestep(time_step);
+        catchment_outfiles[formulation_pair.first] << time_step <<","<<output_str<<std::endl;
         response = response * boost::geometry::area(nexus_collection->get_feature(formulation_pair.first)->geometry<geojson::multipolygon_t>());
         std::cout << "\t\tThe modified response is: " << response << std::endl;
         //update the nexus with this flow
