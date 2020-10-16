@@ -217,16 +217,12 @@ int main(int argc, char *argv[]) {
 
     std::shared_ptr<pdm03_struct> pdm_et_data = std::make_shared<pdm03_struct>(get_et_params());
 
-    //Now loop some time, iterate catchments, do stuff for 720 hourly time steps
-
-    int total_time_steps = realization::Formulation_Manager::Simulation_Time_Object->total_time_steps;
-
-    for(int time_step = 0; time_step < 720; time_step++)
-    //for(int time_step = 0; time_step < realization::Formulation_Manager::Simulation_Time_Object->get_total_time_steps(); time_step++)
-//for(int time_step = 0; time_step < realization::Formulation_Manager::Simulation_Time_Object->total_time_steps; time_step++)
-      //for(int time_step = 0; time_step < realization::Formulation_Manager::test_int; time_step++)
+    //Now loop some time, iterate catchments, do stuff for total number of time steps
+    for(int time_step = 0; time_step < manager.Simulation_Time_Object->get_total_time_steps(); time_step++)
     {
       std::cout<<"Time step "<<time_step<<std::endl;
+
+      std::string current_timestamp = manager.Simulation_Time_Object->get_timestamp(time_step);
 
       for (std::pair<std::string, std::shared_ptr<realization::Formulation>> formulation_pair : manager ) {
         formulation_pair.second->set_et_params(pdm_et_data);
@@ -259,7 +255,7 @@ int main(int argc, char *argv[]) {
         double contribution_at_t = nexus_realizations[nexus.first]->get_downstream_flow(id, time_step, 100.0);
         if(nexus_outfiles[nexus.first].is_open())
         {
-          nexus_outfiles[nexus.first] << time_step <<", "<<contribution_at_t<<std::endl;
+          nexus_outfiles[nexus.first] << time_step << ", " << current_timestamp << ", " << contribution_at_t << std::endl;
         }
         std::cout<<"\tNexus "<<nexus.first<<" has "<<contribution_at_t<<" m^3/s"<<std::endl;
         output_map[nexus.first].push_back(contribution_at_t);

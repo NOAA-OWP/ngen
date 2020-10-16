@@ -27,11 +27,8 @@ namespace realization {
         typedef std::tuple<std::string, std::string> dual_keys;
 
         public:
-//static const int test_int = 720;
-//static int test_int = 720;
-static std::shared_ptr<Simulation_Time> Simulation_Time_Object;
-//std::shared_ptr<Simulation_Time> Simulation_Time_Object;
-//static Simulation_Time Simulation_Time_Object;
+
+            std::shared_ptr<Simulation_Time> Simulation_Time_Object;
 
             Formulation_Manager(std::stringstream &data) {
                 boost::property_tree::ptree loaded_tree;
@@ -122,8 +119,6 @@ static std::shared_ptr<Simulation_Time> Simulation_Time_Object;
                     simulation_time_parameters.at("output_time_step").as_natural_number()
                 );
 
-                //std::shared_ptr<Simulation_Time> Simulation_Time_Object;
-                //static std::shared_ptr<Simulation_Time> Simulation_Time_Object;
                 /**
                  * Call constructor to construct a Simulation_Time object
                  */ 
@@ -191,8 +186,6 @@ static std::shared_ptr<Simulation_Time> Simulation_Time_Object;
             }
 
         protected:
-            //std::shared_ptr<Simulation_Time> Simulation_Time_Object;
-
             std::shared_ptr<Formulation> construct_formulation_from_tree(
                 simulation_time_params &simulation_time_config,
                 std::string identifier,

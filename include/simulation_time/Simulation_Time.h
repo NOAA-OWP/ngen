@@ -43,7 +43,6 @@ struct simulation_time_params
 class Simulation_Time
 {
     public:
-int total_time_steps;
     /**
      * Constructor building a Simulation Time object
      */
@@ -53,22 +52,41 @@ int total_time_steps;
                                            output_time_step_seconds(simulation_time_config.output_time_step),
                                            simulation_time_vector_index(-1)
     {
-        //read_forcing_aorc(forcing_config.path);
 
         simulation_total_time_seconds = end_date_time_epoch - start_date_time_epoch;
 
-        total_time_steps = simulation_total_time_seconds / output_time_step_seconds;
+        /**
+         * Calculate total time_steps. Adding 1 to account for the first time time_step.
+         */
+        total_time_steps = simulation_total_time_seconds / output_time_step_seconds + 1;
 
 
     }
 
-/*
+
     int get_total_time_steps()
     {
         return total_time_steps;
     }
-*/
-    //int total_time_steps;
+
+    std::string get_timestamp(int current_time_step)
+    {
+        current_date_time_epoch = start_date_time_epoch + current_time_step * output_time_step_seconds;
+            
+        struct tm *temp_gmtime_struct;
+
+        temp_gmtime_struct = gmtime(&current_date_time_epoch);
+
+        char current_timestamp[20];
+        const char* time_format = "%y-%m-%d %T";
+
+        if (strftime(current_timestamp, sizeof(current_timestamp), time_format, temp_gmtime_struct) == 0) { 
+            fprintf(stderr, "ERROR: strftime returned 0");
+            exit(EXIT_FAILURE); 
+        }
+
+        return current_timestamp;
+    }
 
 
     private:
@@ -78,11 +96,11 @@ int total_time_steps;
     
     int simulation_time_vector_index;
 
-    //int total_time_steps;
+    int total_time_steps;
     int simulation_total_time_seconds;
     
-   
-    int output_time_step_seconds; //INCLUDE THIS????
+
+    int output_time_step_seconds;
 
 
     time_t start_date_time_epoch;
