@@ -16,6 +16,7 @@
 #define OUT_VAR_BASE_FLOW "base_flow"
 #define OUT_VAR_GIUH_RUNOFF "giuh_runoff"
 #define OUT_VAR_LATERAL_FLOW "lateral_flow"
+#define OUT_VAR_RAINFALL "rainfall"
 #define OUT_VAR_SURFACE_RUNOFF "surface_runoff"
 #define OUT_VAR_TOTAL_DISCHARGE "total_discharge"
 
@@ -248,10 +249,11 @@ namespace realization {
         conceptual_reservoir groundwater_conceptual_reservoir;
 
         std::vector<std::string> OUTPUT_VARIABLE_NAMES = {
-                OUT_VAR_BASE_FLOW,
+                OUT_VAR_RAINFALL,
+                OUT_VAR_SURFACE_RUNOFF,
                 OUT_VAR_GIUH_RUNOFF,
                 OUT_VAR_LATERAL_FLOW,
-                OUT_VAR_SURFACE_RUNOFF,
+                OUT_VAR_BASE_FLOW,
                 OUT_VAR_TOTAL_DISCHARGE
         };
 
