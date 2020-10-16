@@ -312,8 +312,8 @@ TEST_F(Tshirt_C_Realization_Test, TestGetOutputLineForTimestep1a) {
     std::string actual_last = tshirt_c_real.get_output_line_for_timestep(timestep - 1);
     std::string outside_bounds = tshirt_c_real.get_output_line_for_timestep(timestep);
 
-    EXPECT_EQ(actual_first, "0.191106,0.000091,0.000000,0.001523,0.191197");
-    ASSERT_EQ(actual_last, "0.000233,0.000000,0.000003,0.000000,0.000236");
+    EXPECT_EQ(actual_first, "0.010000,0.001523,0.000091,0.000000,0.191106,0.191197");
+    ASSERT_EQ(actual_last, "0.000000,0.000000,0.000000,0.000003,0.000233,0.000236");
 }
 
 /** Test function for getting values for time step in formatted output string handles out-of-bounds case as expected. */
@@ -364,7 +364,7 @@ TEST_F(Tshirt_C_Realization_Test, TestGetOutputLineForTimestep1b) {
     std::string actual_last = tshirt_c_real.get_output_line_for_timestep(timestep - 1);
     std::string outside_bounds = tshirt_c_real.get_output_line_for_timestep(timestep);
 
-    EXPECT_EQ(actual_last, "0.000233,0.000000,0.000003,0.000000,0.000236");
+    EXPECT_EQ(actual_last, "0.000000,0.000000,0.000000,0.000003,0.000233,0.000236");
     ASSERT_EQ(outside_bounds, "");
 }
 
@@ -436,10 +436,11 @@ TEST_F(Tshirt_C_Realization_Test, TestGetOutputVariableNames1a) {
             nash_storage);
 
     std::vector<std::string> var_names = {
-            OUT_VAR_BASE_FLOW,
+            OUT_VAR_RAINFALL,
+            OUT_VAR_SURFACE_RUNOFF,
             OUT_VAR_GIUH_RUNOFF,
             OUT_VAR_LATERAL_FLOW,
-            OUT_VAR_SURFACE_RUNOFF,
+            OUT_VAR_BASE_FLOW,
             OUT_VAR_TOTAL_DISCHARGE
     };
 
