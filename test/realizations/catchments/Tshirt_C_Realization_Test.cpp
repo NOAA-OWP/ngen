@@ -403,6 +403,41 @@ TEST_F(Tshirt_C_Realization_Test, TestGetOutputItemCount1a) {
     ASSERT_EQ(tshirt_c_real.get_output_item_count(), tshirt_c_real.get_output_var_names().size());
 }
 
+/** Test header fields are reasonable (same size collection) for output variables. */
+TEST_F(Tshirt_C_Realization_Test, TestGetOutputHeaderFields1a) {
+    int example_index = 0;
+
+    open_standalone_c_impl_data_stream();
+
+    setup_standalone_c_impl_example_case();
+
+    // init gw res as half full for test
+    double gw_storage_ratio = 0.5;
+
+    // init soil reservoir as 2/3 full
+    double soil_storage_ratio = 0.667;
+
+    std::vector<double> nash_storage(c_impl_ex_tshirt_params->nash_n);
+    for (int i = 0; i < c_impl_ex_tshirt_params->nash_n; i++) {
+        nash_storage[i] = 0.0;
+    }
+
+    std::vector<double> giuh_ordinates = giuh_ordinate_examples[example_index];
+
+    realization::Tshirt_C_Realization tshirt_c_real(
+            forcing_params_examples[example_index],
+            utils::StreamHandler(),
+            soil_storage_ratio,
+            gw_storage_ratio,
+            true,
+            "wat-88",
+            giuh_ordinates,
+            *c_impl_ex_tshirt_params,
+            nash_storage);
+
+    ASSERT_EQ(tshirt_c_real.get_output_header_fields().size(), tshirt_c_real.get_output_var_names().size());
+}
+
 /** Test function for getting the output variable names for realization type. */
 TEST_F(Tshirt_C_Realization_Test, TestGetOutputVariableNames1a) {
     int example_index = 0;
