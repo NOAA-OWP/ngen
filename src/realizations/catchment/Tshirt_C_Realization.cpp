@@ -404,6 +404,9 @@ Tshirt_C_Realization::get_output_var_flux_extraction_func(const std::string& var
     else if (var_name == OUT_VAR_LATERAL_FLOW) {
         return [](tshirt_c_result_fluxes flux) { return flux.nash_lateral_runoff_m;};
     }
+    else if (var_name == OUT_VAR_RAINFALL) {
+        return [](tshirt_c_result_fluxes flux) { return flux.timestep_rainfall_input_m;};
+    }
     else if (var_name == OUT_VAR_SURFACE_RUNOFF) {
         return [](tshirt_c_result_fluxes flux) { return flux.Schaake_output_runoff_m;};
     }
