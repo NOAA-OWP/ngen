@@ -55,13 +55,9 @@ namespace realization {
              *
              * Note that like the output generating function, this line does not include anything for time step.
              *
-             * A default implementation is provided, which includes only "Total Discharge."
-             *
              * @return An appropriate header line for this type.
              */
-            virtual std::string get_output_header_line(std::string delimiter=",") {
-                return "Total Discharge";
-            }
+            virtual std::string get_output_header_line(std::string delimiter=",") =0;
 
             /**
              * Get a formatted line of output values for the given time step as a delimited string.
