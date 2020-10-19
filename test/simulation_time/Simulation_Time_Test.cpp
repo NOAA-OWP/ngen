@@ -52,11 +52,11 @@ void SimulationTimeTest::setupSimulationTime()
 ///Test simulation time Object
 TEST_F(SimulationTimeTest, TestSimulationTime)
 {
-    int total_time_steps;
+    int total_output_times;
 
-    total_time_steps = Simulation_Time_Object1->get_total_time_steps();
+    total_output_times = Simulation_Time_Object1->get_total_output_times();
 
-    EXPECT_EQ(387, total_time_steps);
+    EXPECT_EQ(387, total_output_times);
 
     std::string current_timestamp;
 
