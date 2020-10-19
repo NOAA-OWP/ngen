@@ -94,4 +94,7 @@ CMakeFiles
 CMakeCache.txt
 *.cmake
 
+# Static Headers
+include/bmi.hpp
+
 temp/
