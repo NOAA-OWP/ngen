@@ -114,7 +114,7 @@ namespace geojson {
                 else {
                     // This isn't a terminal node, therefore represents an object or array
                     for (auto &property : property_tree) {
-                        if (property.first.empty() || type == PropertyType::List) {
+                        if (property.first.empty()) {
                             type = PropertyType::List;
                             value_list.push_back(JSONProperty(value_key, property.second));
                         }
