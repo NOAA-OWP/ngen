@@ -16,16 +16,16 @@ struct simulation_time_params
   std::string date_format =  "%Y-%m-%d %H:%M:%S";
   time_t start_t;
   time_t end_t;
-  int output_time_step;
+  int output_interval;
 
   /*
    * @brief Constructor for simulation_time_params
    * @param start_time
    * @param end_time
-   * @param output_time_step
+   * @param output_interval
   */
-  simulation_time_params(std::string start_time, std::string end_time, int output_time_step):
-    start_time(start_time), end_time(end_time), output_time_step(output_time_step)
+  simulation_time_params(std::string start_time, std::string end_time, int output_interval):
+    start_time(start_time), end_time(end_time), output_interval(output_interval)
     {
       /// \todo converting to UTC can be tricky, especially if thread safety is a concern
       /* https://stackoverflow.com/questions/530519/stdmktime-and-timezone-info */
@@ -52,38 +52,38 @@ class Simulation_Time
      * @param start_date_time_epoch
      * @param end_date_time_epoch
      * @param current_date_time_epoch
-     * @param output_time_step_seconds
+     * @param output_interval_seconds
      */
     Simulation_Time(simulation_time_params simulation_time_config):start_date_time_epoch(simulation_time_config.start_t),
                                            end_date_time_epoch(simulation_time_config.end_t),
                                            current_date_time_epoch(simulation_time_config.start_t),
-                                           output_time_step_seconds(simulation_time_config.output_time_step)
+                                           output_interval_seconds(simulation_time_config.output_interval)
     {
 
         simulation_total_time_seconds = end_date_time_epoch - start_date_time_epoch;
 
         /**
-         * @brief Calculate total time_steps. Adding 1 to account for the first time time_step.
+         * @brief Calculate total output_timess. Adding 1 to account for the first time output_time.
          */
-        total_time_steps = simulation_total_time_seconds / output_time_step_seconds + 1;
+        total_output_times = simulation_total_time_seconds / output_interval_seconds + 1;
     }
 
     /**
      * @brief Accessor to the total number of time steps
-     * @return total_time_steps
+     * @return total_output_times
      */
-    int get_total_time_steps()
+    int get_total_output_times()
     {
-        return total_time_steps;
+        return total_output_times;
     }
 
     /**
      * @brief Accessor to the current timestamp string
      * @return current_timestamp
      */ 
-    std::string get_timestamp(int current_time_step)
+    std::string get_timestamp(int current_output_time_index)
     {
-        current_date_time_epoch = start_date_time_epoch + current_time_step * output_time_step_seconds;
+        current_date_time_epoch = start_date_time_epoch + current_output_time_index * output_interval_seconds;
             
         struct tm *temp_gmtime_struct;
 
@@ -102,9 +102,9 @@ class Simulation_Time
 
     private:
 
-    int total_time_steps;
+    int total_output_times;
     int simulation_total_time_seconds;
-    int output_time_step_seconds;
+    int output_interval_seconds;
 
     time_t start_date_time_epoch;
     time_t end_date_time_epoch;

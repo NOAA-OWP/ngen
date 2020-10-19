@@ -95,8 +95,8 @@ namespace realization {
                     missing_simulation_time_parameters.push_back("end_time");
                 }
 
-                if (!simulation_time_parameters.has_key("output_time_step")) {
-                    missing_simulation_time_parameters.push_back("output_time_step");
+                if (!simulation_time_parameters.has_key("output_interval")) {
+                    missing_simulation_time_parameters.push_back("output_interval");
                 }
 
                 if (missing_simulation_time_parameters.size() > 0) {
@@ -116,7 +116,7 @@ namespace realization {
                 simulation_time_params simulation_time_config(
                     simulation_time_parameters.at("start_time").as_string(),
                     simulation_time_parameters.at("end_time").as_string(),
-                    simulation_time_parameters.at("output_time_step").as_natural_number()
+                    simulation_time_parameters.at("output_interval").as_natural_number()
                 );
 
                 /**

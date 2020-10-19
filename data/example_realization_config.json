@@ -26,12 +26,18 @@
                 "giuh_path": "./test/data/giuh/GIUH.json",
                 "crosswalk_path": "./data/crosswalk.json"
             }
+        },
+        "forcing": {
+            "file_pattern": ".*{{ID}}.*.csv",
+            "path": "./data/forcing/",
+            "start_time": "2015-12-01 00:00:00",
+            "end_time": "2015-12-30 23:00:00"
         }
     },
     "time": {
         "start_time": "2015-12-01 00:00:00", 
         "end_time": "2015-12-30 23:00:00",
-        "output_time_step": 3600
+        "output_interval": 3600
     },
     "catchments": {
         "cat-87": {
