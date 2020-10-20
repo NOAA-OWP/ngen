@@ -2,13 +2,14 @@
 #define CATCHMENT_FORMULATION_H
 
 #include <memory>
-
+#include <vector>
 #include "Formulation.hpp"
+#include "Et_Accountable.hpp"
 #include <HY_CatchmentArea.hpp>
 
 namespace realization {
 
-    class Catchment_Formulation : public Formulation, public HY_CatchmentArea {
+    class Catchment_Formulation : public Formulation, public HY_CatchmentArea, public Et_Accountable {
         public:
             Catchment_Formulation(std::string id, forcing_params forcing_config, utils::StreamHandler output_stream) : Formulation(id), HY_CatchmentArea(forcing_config, output_stream) {};
 
