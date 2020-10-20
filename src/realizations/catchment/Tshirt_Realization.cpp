@@ -70,21 +70,36 @@ Tshirt_Realization::Tshirt_Realization(
                                            nash_storage, t) {
 
 }
+double Tshirt_Realization::calc_et(double soil_m) {
+    return 0;
+}
 
-double Tshirt_Realization::get_response(double input_flux, time_step_t t, const shared_ptr<pdm03_struct>& et_params) {
+/**
+ * Execute the backing model formulation for the given time step, where it is of the specified size, and
+ * return the total discharge.
+ *
+ * Function reads input precipitation from ``forcing`` member variable.  It also makes use of the params struct
+ * for ET params accessible via ``get_et_params``.
+ *
+ * @param t_index The index of the time step for which to run model calculations.
+ * @param d_delta_s The duration, in seconds, of the time step for which to run model calculations.
+ * @return The total discharge for this time step.
+ */
+double Tshirt_Realization::get_response(time_step_t t_index, time_step_t t_delta_s) {
     //FIXME doesn't do anything, don't call???
     //add_time(t+1, params.nash_n);
+    // TODO: this is problematic, because what happens if the wrong t_index is passed?
     double precip = this->forcing.get_next_hourly_precipitation_meters_per_second();
     //FIXME should this run "daily" or hourly (t) which should really be dt
     //Do we keep an "internal dt" i.e. this->dt and reconcile with t?
-    int error = model->run(t, precip*dt/1000, et_params);
+    int error = model->run(t_index, precip * t_delta_s / 1000, get_et_params_ptr());
     if(error == tshirt::TSHIRT_MASS_BALANCE_ERROR){
       std::cout<<"WARNING Tshirt_Realization::model mass balance error"<<std::endl;
     }
-    state[t+1] = model->get_current_state();
-    fluxes[t] = model->get_fluxes();
-    double giuh = giuh_kernel->calc_giuh_output(t, fluxes[t]->surface_runoff_meters_per_second);
-    return fluxes[t]->soil_lateral_flow_meters_per_second + fluxes[t]->groundwater_flow_meters_per_second +
+    state[t_index + 1] = model->get_current_state();
+    fluxes[t_index] = model->get_fluxes();
+    double giuh = giuh_kernel->calc_giuh_output(t_index, fluxes[t_index]->surface_runoff_meters_per_second);
+    return fluxes[t_index]->soil_lateral_flow_meters_per_second + fluxes[t_index]->groundwater_flow_meters_per_second +
            giuh;
 }
 
