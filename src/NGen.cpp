@@ -215,7 +215,7 @@ int main(int argc, char *argv[]) {
     }
     std::cout<<"Running Models"<<std::endl;
 
-    pdm03_struct pdm_et_data = get_et_params();
+    std::shared_ptr<pdm03_struct> pdm_et_data = std::make_shared<pdm03_struct>(get_et_params());
 
     //Now loop some time, iterate catchments, do stuff for 720 hourly time steps
     for(int time_step = 0; time_step < 720; time_step++)
@@ -223,8 +223,9 @@ int main(int argc, char *argv[]) {
       std::cout<<"Time step "<<time_step<<std::endl;
 
       for (std::pair<std::string, std::shared_ptr<realization::Formulation>> formulation_pair : manager ) {
+        formulation_pair.second->set_et_params(pdm_et_data);
         //get the catchment response
-        double response = formulation_pair.second->get_response(0, time_step, 3600.0, &pdm_et_data);
+        double response = formulation_pair.second->get_response(time_step, 3600.0);
         //dump the output
         std::cout<<"\tCatchment "<<formulation_pair.first<<" contributing "<<response<<" m/s to "<<catchment_to_nexus[formulation_pair.first]<<std::endl;
         catchment_outfiles[formulation_pair.first] << time_step <<", "<<response<<std::endl;
