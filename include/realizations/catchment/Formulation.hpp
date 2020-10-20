@@ -7,6 +7,7 @@
 #include <exception>
 #include <vector>
 
+#include "Et_Accountable.hpp"
 #include "JSONProperty.hpp"
 #include "Pdm03.h"
 
@@ -15,7 +16,7 @@
 
 namespace realization {
 
-    class Formulation {
+    class Formulation : public virtual Et_Aware {
         public:
             typedef long time_step_t;
 
