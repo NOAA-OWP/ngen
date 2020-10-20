@@ -76,13 +76,23 @@ void Simple_Lumped_Model_Realization::add_time(time_t t, double n)
     }
 }
 
-double Simple_Lumped_Model_Realization::calc_et(double soil_m, void* et_params)
+double Simple_Lumped_Model_Realization::calc_et(double soil_m)
 {
     return 0.0;
 }
 
-
-double Simple_Lumped_Model_Realization::get_response(double input_flux, time_step_t t, time_step_t dt, void* et_params)
+/**
+ * Execute the backing model formulation for the given time step, where it is of the specified size, and
+ * return the total discharge.
+ *
+ * Function reads input precipitation from ``forcing`` member variable.  It also makes use of the params struct
+ * for ET params accessible via ``get_et_params``.
+ *
+ * @param t_index The index of the time step for which to run model calculations.
+ * @param d_delta_s The duration, in seconds, of the time step for which to run model calculations.
+ * @return The total discharge for this time step.
+ */
+double Simple_Lumped_Model_Realization::get_response(time_step_t t, time_step_t dt)
 {
     //TODO input_et = this->forcing.get_et(t)
     double precip = this->forcing.get_next_hourly_precipitation_meters_per_second();
@@ -90,7 +100,9 @@ double Simple_Lumped_Model_Realization::get_response(double input_flux, time_ste
     //FIXME should this run "daily" or hourly (t) which should really be dt
     //Do we keep an "internal dt" i.e. this->dt and reconcile with t?
     //hymod_kernel::run(68400.0, params, state[t], state[t+1], fluxes[t], precip, et_params);
-    hymod_kernel::run(dt, params, state[t], state[t+1], fluxes[t], precip, et_params);
+
+    pdm03_struct params_copy = get_et_params();
+    hymod_kernel::run(dt, params, state[t], state[t+1], fluxes[t], precip, &params_copy);
     return fluxes[t].slow_flow_meters_per_second + fluxes[t].runoff_meters_per_second;
 }
 

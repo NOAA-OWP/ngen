@@ -7,8 +7,8 @@
 #include <unordered_map>
 
 
-class Simple_Lumped_Model_Realization : public realization::Catchment_Formulation
-{
+class Simple_Lumped_Model_Realization
+        : public realization::Catchment_Formulation {
     public:
 
         typedef long time_step_t;
@@ -47,8 +47,20 @@ class Simple_Lumped_Model_Realization : public realization::Catchment_Formulatio
         Simple_Lumped_Model_Realization(const Simple_Lumped_Model_Realization &);
         virtual ~Simple_Lumped_Model_Realization();
 
-        double get_response(double input_flux, time_step_t t, time_step_t dt, void* et_params);
-        double calc_et(double soim_m, void* et_params);
+        /**
+         * Execute the backing model formulation for the given time step, where it is of the specified size, and
+         * return the total discharge.
+         *
+         * Function reads input precipitation from ``forcing`` member variable.  It also makes use of the params struct
+         * for ET params accessible via ``get_et_params``.
+         *
+         * @param t_index The index of the time step for which to run model calculations.
+         * @param d_delta_s The duration, in seconds, of the time step for which to run model calculations.
+         * @return The total discharge for this time step.
+         */
+        double get_response(time_step_t t, time_step_t dt) override;
+
+        double calc_et(double soil_m) override;
 
         virtual void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr);
         virtual void create_formulation(geojson::PropertyMap properties);
