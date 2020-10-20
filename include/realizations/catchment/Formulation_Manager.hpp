@@ -13,11 +13,8 @@
 #include <FeatureBuilder.hpp>
 #include "features/Features.hpp"
 #include <FeatureCollection.hpp>
-
 #include "Formulation_Constructors.hpp"
-
 #include "Simulation_Time.h"
-
 #include "GIUH.hpp"
 #include "GiuhJsonReader.h"
 
@@ -144,7 +141,7 @@ namespace realization {
 
                 for (geojson::Feature location : *fabric) {
                     if (not this->contains(location->get_id())) {
-                        std::shared_ptr<Formulation> missing_formulation = this->construct_missing_formulation(location->get_id(), output_stream);
+                        std::shared_ptr<Formulation> missing_formulation = this->construct_missing_formulation(location->get_id(), output_stream, simulation_time_config);
                         this->add_formulation(missing_formulation);
                     }
                 }
@@ -235,24 +232,24 @@ namespace realization {
                 return constructed_formulation;
             }
 
-            std::shared_ptr<Formulation> construct_missing_formulation(std::string identifier, utils::StreamHandler output_stream) {
+            std::shared_ptr<Formulation> construct_missing_formulation(std::string identifier, utils::StreamHandler output_stream, simulation_time_params &simulation_time_config) {
                 std::string formulation_type_key = get_formulation_key(global_formulation_tree);
 
-                forcing_params forcing_config = this->get_global_forcing_params(identifier);
+                forcing_params forcing_config = this->get_global_forcing_params(identifier, simulation_time_config);
 
                 std::shared_ptr<Formulation> missing_formulation = construct_formulation(formulation_type_key, identifier, forcing_config, output_stream);
                 missing_formulation->create_formulation(this->global_formulation_parameters);
                 return missing_formulation;
             }
 
-            forcing_params get_global_forcing_params(std::string identifier) {
+            forcing_params get_global_forcing_params(std::string identifier, simulation_time_params &simulation_time_config) {
                 std::string path = this->global_forcing.at("path").as_string();
                 
                 if (this->global_forcing.count("file_pattern") == 0) {
                     return forcing_params(
                         path,
-                        this->global_forcing.at("start_time").as_string(),
-                        this->global_forcing.at("end_time").as_string()
+                        simulation_time_config.start_time,
+                        simulation_time_config.end_time
                     );
                 }
 
@@ -293,8 +290,8 @@ namespace realization {
                         if ((entry->d_type == DT_REG or entry->d_type == DT_LNK) and std::regex_match(entry->d_name, pattern)) {
                             return forcing_params(
                                 path + entry->d_name,
-                                this->global_forcing.at("start_time").as_string(),
-                                this->global_forcing.at("end_time").as_string()
+                                simulation_time_config.start_time,
+                                simulation_time_config.end_time
                             );
                         }
                     }
