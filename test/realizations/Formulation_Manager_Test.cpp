@@ -422,6 +422,8 @@ TEST_F(Formulation_Manager_Test, basic_run_1) {
     pdm_et_data.max_height_soil_moisture_storerage_tank = 400.0;
     pdm_et_data.maximum_combined_contents = pdm_et_data.max_height_soil_moisture_storerage_tank / (1.0+pdm_et_data.scaled_distribution_fn_shape_parameter);
 
+    std::shared_ptr<pdm03_struct> et_params_ptr = std::make_shared<pdm03_struct>(pdm_et_data);
+
     double dt = 3600.0;
 
     for (std::pair<std::string, std::shared_ptr<realization::Formulation>> formulation : manager) {
@@ -431,13 +433,12 @@ TEST_F(Formulation_Manager_Test, basic_run_1) {
 
         double calculation;
 
+        if (formulation.second )
+
+        formulation.second->set_et_params(et_params_ptr);
+
         for (long t = 0; t < 4; t++) {            
-            calculation = formulation.second->get_response(
-                0,
-                t,
-                dt,
-                &pdm_et_data
-            );
+            calculation = formulation.second->get_response(t, dt);
 
             calculated_results.at(formulation.first).emplace(t, calculation);
         }
@@ -456,14 +457,13 @@ TEST_F(Formulation_Manager_Test, basic_run_3) {
     geojson::GeoJSON features = std::make_shared<geojson::FeatureCollection>();
     manager.read(features, catchment_output);
 
-    std::vector<double> inputs = {10.0 / 1000, 0.0, 0.0};
     std::vector<double> expected_results = {191.108626 / 1000, 177.181102 / 1000, 165.234198 / 1000};
 
     std::vector<double> actual_results(expected_results.size());
 
-    for (int i = 0; i < inputs.size(); i++) {
+    for (int i = 0; i < expected_results.size(); i++) {
         // Remember that for the Tshirt_C_Realization, the timestep sizes are implicit
-        actual_results[i] = manager.get_formulation("wat-89")->get_response(inputs[i], 3600, 3600, nullptr);
+        actual_results[i] = manager.get_formulation("wat-89")->get_response(i, 3600);
     }
 
     for (int i = 0; i < actual_results.size(); i++) {
