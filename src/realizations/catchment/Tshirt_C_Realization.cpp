@@ -108,6 +108,16 @@ Tshirt_C_Realization::~Tshirt_C_Realization()
     //destructor
 }
 
+/**
+ * Return ``0``, as (for now) this type does not otherwise include ET within its calculations.
+ *
+ * @param soil_m
+ * @return ``0``
+ */
+double Tshirt_C_Realization::calc_et(double soil_m) {
+    return 0;
+}
+
 void Tshirt_C_Realization::create_formulation(geojson::PropertyMap properties) {
     // TODO: don't particularly like the idea of "creating" the formulation, parameter constructs, etc., inside this
     //  type but outside the constructor.
@@ -222,6 +232,8 @@ void Tshirt_C_Realization::create_formulation(boost::property_tree::ptree &confi
     // Very important this also gets done
     sync_c_storage_params();
 
+    // TODO: might need to have this handle the ET params also
+
     init_ground_water_reservoir(options.at("groundwater_storage_percentage").as_real_number(), true);
     init_soil_reservoir(options.at("soil_storage_percentage").as_real_number(), true);
 
@@ -302,12 +314,24 @@ const std::vector<std::string>& Tshirt_C_Realization::get_required_parameters() 
     return REQUIRED_PARAMETERS;
 }
 
-double Tshirt_C_Realization::get_response(double input_flux, time_step_t t, time_step_t dt, void* et_params) {
-    // TODO: check that dt is of approprate size
+/**
+ * Execute the backing model formulation for the given time step, where it is of the specified size, and
+ * return the total discharge.
+ *
+ * Any inputs and additional parameters must be made available as instance members.
+ *
+ * Types should clearly document the details of their particular response output.
+ *
+ * @param t_index The index of the time step for which to run model calculations.
+ * @param d_delta_s The duration, in seconds, of the time step for which to run model calculations.
+ * @return The total discharge of the model for this time step.
+ */
+double Tshirt_C_Realization::get_response(time_step_t t_index, time_step_t t_delta_s) {
+    // TODO: check that t_delta_s is of approprate size
 
     int response_result = run_formulation_for_timestep(input_flux);
 
-    // TODO: check time_step_t is the next expected time step to be calculated
+    // TODO: check t_index is the next expected time step to be calculated
 
     return fluxes.back()->Qout_m;
 }
