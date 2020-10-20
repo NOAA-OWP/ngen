@@ -126,6 +126,14 @@ namespace realization {
 
         virtual ~Tshirt_C_Realization();
 
+        /**
+         * Return ``0``, as (for now) this type does not otherwise include ET within its calculations.
+         *
+         * @param soil_m
+         * @return ``0``
+         */
+        double calc_et(double soil_m) override;
+
         void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr) override;
         void create_formulation(geojson::PropertyMap properties) override;
 
@@ -135,9 +143,19 @@ namespace realization {
 
         std::string get_formulation_type() override;
 
-        // TODO: add versions that handle forcing data directly
-
-        double get_response(double input_flux, time_step_t t, time_step_t dt, void* et_params) override;
+        /**
+         * Execute the backing model formulation for the given time step, where it is of the specified size, and
+         * return the total discharge.
+         *
+         * Any inputs and additional parameters must be made available as instance members.
+         *
+         * Types should clearly document the details of their particular response output.
+         *
+         * @param t_index The index of the time step for which to run model calculations.
+         * @param d_delta_s The duration, in seconds, of the time step for which to run model calculations.
+         * @return The total discharge of the model for this time step.
+         */
+        double get_response(time_step_t t_index, time_step_t t_delta) override;
 
         // TODO: probably need to do better than this for granting and protecting access
         double get_latest_flux_base_flow();
