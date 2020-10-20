@@ -26,7 +26,21 @@ namespace realization {
 
             virtual std::string get_formulation_type() = 0;
 
-            virtual double get_response(double input_flux, time_step_t t, time_step_t dt, void* et_params) = 0;
+            /**
+             * Execute the backing model formulation for the given time step, where it is of the specified size, and
+             * return the response output.
+             *
+             * Any inputs and additional parameters must be made available as instance members.
+             *
+             * Types should clearly document the details of their particular response output.
+             *
+             * @param t_index The index of the time step for which to run model calculations.
+             * @param d_delta_s The duration, in seconds, of the time step for which to run model calculations.
+             * @return The response output of the model for this time step.
+             */
+            virtual double get_response(time_step_t t_index, time_step_t d_delta_s) = 0;
+
+            // TODO: look at adding another overloaded function that uses instance members to get the index and delta
 
             // The neccessity of this function is in question
             virtual void add_time(time_t t, double n){};
