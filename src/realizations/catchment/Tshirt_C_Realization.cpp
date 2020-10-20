@@ -329,7 +329,9 @@ const std::vector<std::string>& Tshirt_C_Realization::get_required_parameters() 
 double Tshirt_C_Realization::get_response(time_step_t t_index, time_step_t t_delta_s) {
     // TODO: check that t_delta_s is of approprate size
 
-    int response_result = run_formulation_for_timestep(input_flux);
+    // TODO: this is problematic, because what happens if the wrong t_index is passed?
+    double precip = this->forcing.get_next_hourly_precipitation_meters_per_second();
+    int response_result = run_formulation_for_timestep(precip);
 
     // TODO: check t_index is the next expected time step to be calculated
 
