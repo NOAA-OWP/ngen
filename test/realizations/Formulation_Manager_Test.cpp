@@ -433,8 +433,6 @@ TEST_F(Formulation_Manager_Test, basic_run_1) {
 
         double calculation;
 
-        if (formulation.second )
-
         formulation.second->set_et_params(et_params_ptr);
 
         for (long t = 0; t < 4; t++) {
