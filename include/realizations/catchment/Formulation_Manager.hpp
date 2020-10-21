@@ -73,6 +73,7 @@ namespace realization {
 
                 /**
                  * Read simulation time from configuration file
+                 * /// \todo TODO: Separate input_interval from output_interval
                  */            
                 auto possible_simulation_time = tree.get_child_optional("time");
 
