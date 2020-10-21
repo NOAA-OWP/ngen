@@ -123,7 +123,7 @@ extern int is_fabs_less_than_epsilon(double a,double epsilon);  // returns TRUE 
  * @param nash_storage Pointer to head of array of already-set Nash Cascade reservoir storage values
  * @param yes_aorc Whether
  * @param aorc_data Pointer to head of array of per-time-step AORC data structs, when yes_aorc is TRUE (array of size num_timesteps)
- * @param rain_rate Pointer to head of array of per-time-step simple rain rate data (in mm/h), when yes_aorc is FALSE (array of size num_timesteps)
+ * @param rain_rate Pointer to head of array of per-time-step simple rain rate data (in m/h), when yes_aorc is FALSE (array of size num_timesteps)
  * @param num_added_fluxes Reference for number of fluxes added to 'fluxes' parameter array; initialized to 0.
  * @param fluxes Pointer to head of array of array per-time-step resulting flux values (array of size num_timesteps)
  * @return

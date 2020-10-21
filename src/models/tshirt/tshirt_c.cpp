@@ -256,7 +256,7 @@ extern int is_fabs_less_than_epsilon(double a, double epsilon) {
  * @param nash_storage Pointer to head of array of already-set Nash Cascade reservoir storage values
  * @param yes_aorc Whether
  * @param aorc_data Pointer to head of array of per-time-step AORC data structs, when yes_aorc is TRUE (array of size num_timesteps)
- * @param rain_rate Pointer to head of array of per-time-step simple rain rate data (in mm/h), when yes_aorc is FALSE (array of size num_timesteps)
+ * @param rain_rate Pointer to head of array of per-time-step simple rain rate data (in m/h), when yes_aorc is FALSE (array of size num_timesteps)
  * @param num_added_fluxes Reference for number of fluxes added to 'fluxes' parameter array; initialized to 0.
  * @param fluxes Pointer to head of array of array per-time-step resulting flux values (array of size num_timesteps)
  * @return
@@ -446,7 +446,10 @@ extern int run(NWM_soil_parameters& NWM_soil_params,
     // Rather than read in forcing or rainfall data from file (as in original) function receives directly as param
     if(yes_aorc == TRUE) {
         for (i = 0; i < num_timesteps; i++) {
-            rain_rate[i] = (double) aorc_data[i].precip_kg_per_m2;  // assumed 1000 kg/m3 density of water.  This result is mm/h;
+            // assumed 1000 kg/m3 density of water.  The AORC data result is mm/h, so also convert to m/h.
+            // TODO: test to confirm the conversion to meters works out correctly
+            rain_rate[i] = ((double) aorc_data[i].precip_kg_per_m2) / 1000;
+            // Since we need to deal in m/s, and just got mm/s, make adjustment
         }
     }
 
@@ -465,7 +468,7 @@ extern int run(NWM_soil_parameters& NWM_soil_params,
     //num_timesteps=num_rain_dat+279;  // run a little bit beyond the rain data to see what happens.
     for(tstep = 0; tstep < num_timesteps; tstep++) {
         if (tstep < num_timesteps)
-            timestep_rainfall_input_m = rain_rate[tstep] / 1000.0;  // convert from mm/h to m w/ 1h timestep
+            timestep_rainfall_input_m = rain_rate[tstep];
         else
             timestep_rainfall_input_m = 0.0;
 
