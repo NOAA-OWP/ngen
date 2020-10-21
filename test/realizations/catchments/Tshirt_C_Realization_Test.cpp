@@ -298,7 +298,7 @@ TEST_F(Tshirt_C_Realization_Test, TestGetOutputLineForTimestep1a) {
         Tokenizer tokenizer(line);
         result_vector.assign(tokenizer.begin(), tokenizer.end());
 
-        double input_storage = std::stod(result_vector[1]);
+        double input_storage = std::stod(result_vector[1]) / 1000;
 
         // Output the line essentially
         //copy(result_vector.begin(), result_vector.end(), ostream_iterator<string>(cout, "|"));
@@ -356,7 +356,7 @@ TEST_F(Tshirt_C_Realization_Test, TestGetOutputLineForTimestep1b) {
     while (getline(standalone_data_ingest_stream, line)) {
         Tokenizer tokenizer(line);
         result_vector.assign(tokenizer.begin(), tokenizer.end());
-        double input_storage = std::stod(result_vector[1]);
+        double input_storage = std::stod(result_vector[1]) / 1000;
         tshirt_c_real.run_formulation_for_timestep(input_storage);
         timestep++;
     }
@@ -620,15 +620,13 @@ TEST_F(Tshirt_C_Realization_Test, TestSurfaceRunoffCalc1a) {
         // variable to convert them into cubic meters per time step.
         //input_storage *= c_impl_ex_catchment_area_km2;
 
-        // Remember, signature of tshirt_c run() expects in mm/h, which is how this comes through from source data
-        // So, for now at least, no conversion is needed for the input data
-        // TODO: this probably needs to be changed to work in meters per hour
-        //input_storage /= 1000;
+        // The run function now expects inputs in meters per timestep
+        input_storage /= 1000;
 
         // runoff is index 2
         double expected = std::stod(result_vector[2]);
 
-        // Convert from mm / h to m / s
+        // Also convert expected from mm / h to m / h
         expected /= 1000;
 
         // Output the line essentially
@@ -698,15 +696,13 @@ TEST_F(Tshirt_C_Realization_Test, TestGiuhRunoffCalc1a) {
         // variable to convert them into cubic meters per time step.
         //input_storage *= c_impl_ex_catchment_area_km2;
 
-        // Remember, signature of tshirt_c run() expects in mm/h, which is how this comes through from source data
-        // So, for now at least, no conversion is needed for the input data
-        // TODO: this probably needs to be changed to work in meters per hour
-        //input_storage /= 1000;
+        // The run function now expects inputs in meters per timestep
+        input_storage /= 1000;
 
         // giuh runoff is index 3
         double expected = std::stod(result_vector[3]);
 
-        // Convert from mm / h to m / s
+        // Also convert expected from mm / h to m / h
         expected /= 1000;
 
         // Output the line essentially
@@ -788,15 +784,13 @@ TEST_F(Tshirt_C_Realization_Test, TestLateralFlowCalc1a) {
         // variable to convert them into cubic meters per time step.
         //input_storage *= c_impl_ex_catchment_area_km2;
 
-        // Remember, signature of tshirt_c run() expects in mm/h, which is how this comes through from source data
-        // So, for now at least, no conversion is needed for the input data
-        // TODO: this probably needs to be changed to work in meters per hour
-        //input_storage /= 1000;
+        // The run function now expects inputs in meters per timestep
+        input_storage /= 1000;
 
         // lateral flow is index 4
         double expected = std::stod(result_vector[4]);
 
-        // Convert from mm / h to m / s
+        // Also convert expected from mm / h to m / h
         expected /= 1000;
 
         // Output the line essentially
@@ -867,15 +861,13 @@ TEST_F(Tshirt_C_Realization_Test, TestBaseFlowCalc1a) {
         // variable to convert them into cubic meters per time step.
         //input_storage *= c_impl_ex_catchment_area_km2;
 
-        // Remember, signature of tshirt_c run() expects in mm/h, which is how this comes through from source data
-        // So, for now at least, no conversion is needed for the input data
-        // TODO: this probably needs to be changed to work in meters per hour
-        //input_storage /= 1000;
+        // The run function now expects inputs in meters per timestep
+        input_storage /= 1000;
 
         // base flow is index 5
         double expected = std::stod(result_vector[5]);
 
-        // Convert from mm / h to m / s
+        // Also convert expected from mm / h to m / h
         expected /= 1000;
 
         // Output the line essentially
@@ -946,15 +938,13 @@ TEST_F(Tshirt_C_Realization_Test, TestTotalDischargeOutputCalc1a) {
         // variable to convert them into cubic meters per time step.
         //input_storage *= c_impl_ex_catchment_area_km2;
 
-        // Remember, signature of tshirt_c run() expects in mm/h, which is how this comes through from source data
-        // So, for now at least, no conversion is needed for the input data
-        // TODO: this probably needs to be changed to work in meters per hour
-        //input_storage /= 1000;
+        // The run function now expects inputs in meters per timestep
+        input_storage /= 1000;
 
         // output is index 5
         double expected = std::stod(result_vector[6]);
 
-        // Convert from mm / h to m / s
+        // Also convert expected from mm / h to m / h
         expected /= 1000;
 
         // Output the line essentially
