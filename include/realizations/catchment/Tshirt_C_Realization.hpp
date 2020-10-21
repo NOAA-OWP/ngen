@@ -147,8 +147,27 @@ namespace realization {
         void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr) override;
         void create_formulation(geojson::PropertyMap properties) override;
 
+        /**
+         * Run model formulation calculations for the next time step using the given input flux value in meters per
+         * second.
+         *
+         * The backing model works on a collection of time steps by receiving an associated collection of input fluxes.
+         * This is implemented by putting this input flux in a single-value vector and using it as the
+         * arg to a nested call to ``run_formulation_for_timesteps``, returning that result code.
+         *
+         * @param input_flux Input flux (typically expected to be just precipitation) in meters per second.
+         * @return The result code from the execution of the model time step calculations.
+         */
         int run_formulation_for_timestep(double input_flux);
 
+        /**
+         * Run model formulation calculations for a series of time steps using the given collection of input flux values
+         * in meters per second.
+         *
+         * @param input_fluxes Ordered, per-time-step input flux (typically expected to be just precipitation) in meters
+         * per second.
+         * @return The result code from the execution of the model time step calculations.
+         */
         int run_formulation_for_timesteps(std::vector<double> input_fluxes);
 
         std::string get_formulation_type() override;
