@@ -457,7 +457,7 @@ TEST_F(Formulation_Manager_Test, basic_run_3) {
     geojson::GeoJSON features = std::make_shared<geojson::FeatureCollection>();
     manager.read(features, catchment_output);
 
-    std::vector<double> expected_results = {191.108626 / 1000, 177.181102 / 1000, 165.234198 / 1000};
+    std::vector<double> expected_results = {191.106140 / 1000.0, 177.198214 / 1000.0, 165.163302 / 1000.0};
 
     std::vector<double> actual_results(expected_results.size());
 
@@ -468,7 +468,9 @@ TEST_F(Formulation_Manager_Test, basic_run_3) {
 
     for (int i = 0; i < actual_results.size(); i++) {
         double actual = actual_results[i];
-        double error_margin = actual * 0.001;
+        // This is an error margin of the largest of 0.1% of actual value, or 1 mm
+        // TODO: this may not be precise enough long-term
+        double error_margin = std::max(actual * 0.001, 0.001);
         double expected = expected_results[i];
         double diff = actual > expected ? actual - expected : expected - actual;
         ASSERT_LE(diff, error_margin);
