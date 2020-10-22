@@ -59,7 +59,7 @@ namespace realization {
              *
              * @return An appropriate header line for this type.
              */
-            virtual std::string get_output_header_line(std::string delimiter=",") =0;
+            virtual std::string get_output_header_line(std::string delimiter=DEFAULT_FORMULATION_OUTPUT_DELIMITER) =0;
 
             /**
              * Get a formatted line of output values for the given time step as a delimited string.
@@ -78,7 +78,8 @@ namespace realization {
              * @param delimiter The value delimiter for the string.
              * @return A delimited string with all the output variable values for the given time step.
              */
-            virtual std::string get_output_line_for_timestep(int timestep, std::string delimiter=",") = 0;
+            virtual std::string get_output_line_for_timestep(int timestep,
+                                                             std::string delimiter = DEFAULT_FORMULATION_OUTPUT_DELIMITER) = 0;
             
             virtual void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr) = 0;
             virtual void create_formulation(geojson::PropertyMap properties) = 0;
