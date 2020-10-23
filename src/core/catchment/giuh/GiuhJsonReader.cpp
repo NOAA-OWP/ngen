@@ -26,7 +26,15 @@ std::vector<double> GiuhJsonReader::extract_cumulative_frequency_ordinates(ptree
     std::vector<double> cumulative_freqs;
 
     // TODO: account for error condition of unmatching JSON structure for freqs
-    for (ptree::value_type freqs : catchment_data_node.get_child("CDF.CumulativeFreq")) {
+    std::string freq_node_name;
+    if (catchment_data_node.get_child_optional("CDF.CumulativeFreq") != boost::none) {
+        freq_node_name = "CDF.CumulativeFreq";
+    }
+    else {
+        freq_node_name = "CDF.minHydro.Runoff";
+    }
+
+    for (ptree::value_type freqs : catchment_data_node.get_child(freq_node_name)) {
         cumulative_freqs.push_back(freqs.second.get_value<double>());
     }
     return cumulative_freqs;
