@@ -14,7 +14,7 @@ Cohesion - A measure of how well components of a software module fit together. C
 
 Complex Realization - A single catchment representation of a network of higher detail catchement realizations and their relationships. This allows the modeled area to be represented at multiple levels of detail and supports dynamic high resolution nesting.
 
-Encapsulation - Bundling of hydrologic data and methods into a model for a given catchment realization.
+Encapsulation - A fundamental concept of object-oriented programming that is the practice of bundling data and methods that operate on that data into one unit. This entails information hiding, which is hiding the details of the internal implementation of this unit that are not relevant to those who wish to use it. Various levels of access can be assigned to data held by an object that determine whether or not any external parts of a program can access or modify the data with an object's defined methods. Specifically for this framework, encapsulation is used for bundling of hydrologic data and methods into a model for a given catchment realization among other areas in the code. 
 
 Formulation - The actualization of a catchment realization into a computable object with set parameters.
 
