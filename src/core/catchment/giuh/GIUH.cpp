@@ -73,6 +73,18 @@ double giuh_kernel_impl::calc_giuh_output(double dt, double direct_runoff)
     return current_contribution + prior_inputs_contributions;
 }
 
+std::vector<double> giuh_kernel_impl::get_interpolated_incremental_ordinates() const {
+    return interpolated_incremental_runoff_values;
+}
+
+std::vector<int> giuh_kernel_impl::get_interpolated_ordinate_times() {
+    return interpolated_ordinate_times_seconds;
+}
+
+std::vector<double> giuh_kernel_impl::get_interpolated_regularized_ordinates() const {
+    return interpolated_regularized_ordinates;
+}
+
 void giuh_kernel_impl::set_interpolation_regularity_seconds(unsigned int regularity_seconds) {
     if (get_interpolation_regularity_seconds() != regularity_seconds) {
         giuh_kernel::set_interpolation_regularity_seconds(regularity_seconds);
