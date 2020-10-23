@@ -2,6 +2,7 @@
 #include "Constants.h"
 #include <utility>
 #include "tshirt_c.h"
+#include "GIUH.hpp"
 #include <exception>
 #include <functional>
 #include <string>
@@ -193,8 +194,13 @@ void Tshirt_C_Realization::create_formulation(geojson::PropertyMap properties) {
                 giuh.at("crosswalk_path").as_string()
         );
 
-
-        giuh_cdf_ordinates = giuh_reader->extract_cumulative_frequency_ordinates(catchment_id);
+        std::shared_ptr<giuh::giuh_kernel_impl> giuh_kernel = giuh_reader->get_giuh_kernel_for_id(catchment_id);
+        giuh_kernel->set_interpolation_regularity_seconds(3600);
+        // This needs to have all but the first interpolated incremental value (which is always 0 from the kernel), so
+        giuh_cdf_ordinates = std::vector<double>(giuh_kernel->get_interpolated_incremental_ordinates().size() - 1);
+        for (int i = 0; i < giuh_cdf_ordinates.size(); ++ i) {
+            giuh_cdf_ordinates[i] = giuh_kernel->get_interpolated_incremental_ordinates()[i+1];
+        }
     }
     // Create this with 0 values initially
     giuh_runoff_queue_per_timestep = std::vector<double>(giuh_cdf_ordinates.size() + 1);
@@ -278,7 +284,13 @@ void Tshirt_C_Realization::create_formulation(boost::property_tree::ptree &confi
         );
 
 
-        giuh_cdf_ordinates = giuh_reader->extract_cumulative_frequency_ordinates(catchment_id);
+        std::shared_ptr<giuh::giuh_kernel_impl> giuh_kernel = giuh_reader->get_giuh_kernel_for_id(catchment_id);
+        giuh_kernel->set_interpolation_regularity_seconds(3600);
+        // This needs to have all but the first interpolated incremental value (which is always 0 from the kernel), so
+        giuh_cdf_ordinates = std::vector<double>(giuh_kernel->get_interpolated_incremental_ordinates().size() - 1);
+        for (int i = 0; i < giuh_cdf_ordinates.size(); ++ i) {
+            giuh_cdf_ordinates[i] = giuh_kernel->get_interpolated_incremental_ordinates()[i+1];
+        }
     }
     // Create this with 0 values initially
     giuh_runoff_queue_per_timestep = std::vector<double>(giuh_cdf_ordinates.size() + 1);
