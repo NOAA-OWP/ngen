@@ -2,6 +2,7 @@
 #define NGEN_GIUH_KERNEL_HPP
 
 #include <iostream>
+#include <vector>
 #include <string>
 
 namespace giuh {
@@ -53,6 +54,10 @@ namespace giuh {
             return comid;
         }
 
+        virtual std::vector<int> get_interpolated_ordinate_times() {
+            return {((int) interpolation_regularity_seconds)};
+        }
+
         /**
          * Get the object's interpolation regularity value - the difference in seconds between each regularized CDF.
          *
@@ -61,6 +66,14 @@ namespace giuh {
         unsigned int get_interpolation_regularity_seconds() const {
             return interpolation_regularity_seconds;
         }
+
+        virtual std::vector<double> get_interpolated_incremental_ordinates() const {
+            return {1.0};
+        };
+
+        virtual std::vector<double> get_interpolated_regularized_ordinates() const {
+            return {1.0};
+        };
 
         /**
          * Set the object's interpolation regularity value.

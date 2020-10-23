@@ -109,6 +109,12 @@ namespace giuh {
          */
         double calc_giuh_output(double dt, double direct_runoff) override;
 
+        std::vector<double> get_interpolated_incremental_ordinates() const override;
+
+        std::vector<int> get_interpolated_ordinate_times() override;
+
+        std::vector<double> get_interpolated_regularized_ordinates() const override;
+
         /**
          * Set the object's interpolation regularity value, also triggering recalculation of the interpolated,
          * regularized CDF ordinates IFF the new regularity value is different from the previous.
