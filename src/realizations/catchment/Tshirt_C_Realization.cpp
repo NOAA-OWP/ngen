@@ -495,7 +495,13 @@ int Tshirt_C_Realization::run_formulation_for_timesteps(std::vector<double> inpu
     //aorc_forcing_data empty_forcing[num_timesteps];
     aorc_forcing_data empty_forcing[1];
 
-    double* input_as_array = &input_fluxes[0];
+    // Since the input_fluxes param values are in meters per second, this will need to do some conversions to what gets
+    // passed to Tshirt_C's run(), which expects meters per hour.
+    std::vector<double> input_meters_per_hour(input_fluxes.size());
+    for (int i = 0; i < input_fluxes.size(); ++i) {
+        input_meters_per_hour[i] = input_fluxes[i] * 3600;
+    }
+    double* input_as_array = &input_meters_per_hour[0];
 
     tshirt_c_result_fluxes output_fluxes_as_array[num_timesteps];
 
