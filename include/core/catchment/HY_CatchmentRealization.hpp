@@ -40,8 +40,11 @@ class HY_CatchmentRealization
 
     shared_ptr<HY_Catchment> realized_catchment;
 
+    virtual std::string get_catchment_id() = 0;
+
+    virtual void set_catchment_id(std::string cat_id) = 0;
+
     unsigned long id_number;
-    std::string id;
 
   protected:
     Forcing forcing;
