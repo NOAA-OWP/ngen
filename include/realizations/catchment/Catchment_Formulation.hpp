@@ -48,6 +48,15 @@ namespace realization {
             virtual void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr) = 0;
 
             virtual ~Catchment_Formulation(){};
+
+    protected:
+        std::string get_catchment_id() override {
+            return id;
+        }
+
+        void set_catchment_id(std::string cat_id) override {
+            id = cat_id;
+        }
     };
 }
 #endif // CATCHMENT_FORMULATION_H
