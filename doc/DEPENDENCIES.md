@@ -8,6 +8,7 @@
 | [C/C++ Compiler](#c-and-c-compiler) | external | see below |  |
 | [CMake](#cmake) | external | \>= `3.12` | |
 | [Boost (Headers Only)](#boost-headers-only) | external | `1.72.0` | headers only library |
+| [pybind11](#pybind11) | submodule | `v2.6.0` | |
 
 # Details
 
@@ -96,3 +97,30 @@ The variable should be set to the value of the **boost root directory**, which i
 ### Version Requirements
 
 At present, a version >= `1.72.0` is required.
+
+## pybind11
+
+The `pybind11` dependency is a header-only library that allows for exposing Python types, etc. within C++ code.  It is necessary to work with externally maintained, modular Python models.
+
+### Setup
+
+The dependency is handled as a Git Submodule, located at `extern/pybind11`.   To initialize the submodule after cloning the repo:
+
+    git submodule update --init extern/pybind11
+    
+Git _should_ take care of checking out the commit for the required version automatically (assuming latest upstream changes have been fetched), so it should be possible to also use the command above to sync future updates to the required version.
+ 
+However, to verify the checked out version, examine the output of:
+
+    git submodule status
+    
+If the above `update` command does not check out the expected version, this can be done manually.  Below is an example of how to do this for the version tagged `v2.6.0`:
+
+    cd extern/pybind11
+    git checkout v2.6.0
+    
+### Version Requirements
+
+The version used is automatically handled by submodule config.  This can be synced by re-running the initialization command above.
+
+As of project version `0.1.0`, the required version is tag `v2.6.0`.
