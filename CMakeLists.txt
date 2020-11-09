@@ -85,6 +85,51 @@ if(BMI_C_LIB_ACTIVE)
     add_compile_definitions(NGEN_BMI_C_LIB_ACTIVE)
 endif()
 
+#### Python stuff
+# First, define NGEN_ACTIVATE_PYTHON, if not already defined
+#   Use NGEN_ACTIVATE_PYTHON environment variable if available, or default to true
+if (NOT (DEFINED NGEN_ACTIVATE_PYTHON))
+    message(INFO " NGEN_ACTIVATE_PYTHON not defined")
+    if (DEFINED ENV{NGEN_ACTIVATE_PYTHON})
+        message(INFO " set as $ENV{NGEN_ACTIVATE_PYTHON}")
+        set(NGEN_ACTIVATE_PYTHON $ENV{NGEN_ACTIVATE_PYTHON})
+    else()
+        set(NGEN_ACTIVATE_PYTHON true)
+    endif()
+endif()
+
+# If Python set to be active, run steps to make sure it is included properly, and set compiler definition to true
+if (${NGEN_ACTIVATE_PYTHON})
+    add_compile_definitions(ACTIVATE_PYTHON=true)
+    # If there is a virtual environment directory at ./.venv, then look for numpy there
+    if(EXISTS ${PROJECT_SOURCE_DIR}/.venv)
+        file(GLOB_RECURSE NP_COMMON_HEADER ${PROJECT_SOURCE_DIR}/.venv/*npy_common.h)
+        get_filename_component(NP_HEADER_DIR ${NP_COMMON_HEADER} DIRECTORY)
+        get_filename_component(NP_INCLUDE_DIR ${NP_HEADER_DIR} DIRECTORY)
+        set(Python_NumPy_INCLUDE_DIR ${NP_INCLUDE_DIR})
+        message(INFO " Found numpy include path  ${Python_NumPy_INCLUDE_DIR}")
+        # Alternatively, if there is something in the ENV for the user, try that
+    elseif(DEFINED ENV{Python_NumPy_INCLUDE_DIR})
+        set(Python_NumPy_INCLUDE_DIR $ENV{Python_NumPy_INCLUDE_DIR})
+    endif()
+
+    if(DEFINED ENV{PYTHON_INCLUDE_DIR})
+        set(PYTHON_INCLUDE_DIR $ENV{PYTHON_INCLUDE_DIR})
+        message(INFO " Found 'PYTHON_INCLUDE_DIR' from ENV ($ENV{PYTHON_INCLUDE_DIR})")
+    else()
+        message(INFO " Did not find 'PYTHON_INCLUDE_DIR' in ENV")
+    endif()
+    if(DEFINED ENV{PYTHON_LIBRARIES})
+        set(PYTHON_LIBRARIES $ENV{PYTHON_LIBRARIES})
+        message(INFO " Found 'PYTHON_LIBRARIES' from ENV ($ENV{PYTHON_LIBRARIES})")
+    else()
+        message(INFO " Did not find 'PYTHON_LIBRARIES' in ENV")
+    endif()
+    include_directories(${PYTHON_INCLUDE_DIR})
+
+    find_package(Python 3.6.12 REQUIRED COMPONENTS Development NumPy)
+endif()
+
 target_include_directories(ngen PUBLIC
         "${PROJECT_BINARY_DIR}/include" # For generated config header file in binary tree
         )
