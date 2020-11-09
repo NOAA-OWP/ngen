@@ -17,6 +17,7 @@ target_include_directories(realizations_catchment PUBLIC
         ${PROJECT_SOURCE_DIR}/models/kernels
         ${PROJECT_SOURCE_DIR}/models/kernels/evapotranspiration
         ${PROJECT_SOURCE_DIR}/models/tshirt/include
+        ${PROJECT_SOURCE_DIR}/extern/pybind11/include
         )
         
 target_link_libraries(realizations_catchment PUBLIC
