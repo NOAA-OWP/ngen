@@ -241,12 +241,13 @@ int main(int argc, char *argv[]) {
         if (output_time_index == 0) {
             // Append "Time Step" to header string provided by formulation, since we'll also add time step to output
             std::string header_str = formulation_pair.second->get_output_header_line();
-            catchment_outfiles[formulation_pair.first] << "Time Step," << "Time," << header_str <<std::endl;
+            catchment_outfiles[formulation_pair.first] << "Time Step,Time," << header_str << ",Flow" << std::endl;
         }
-        std::string output_str = formulation_pair.second->get_output_line_for_timestep(output_time_index);
-        catchment_outfiles[formulation_pair.first] << output_time_index << "," << current_timestamp << "," << output_str << std::endl;
+
         response = response * boost::geometry::area(nexus_collection->get_feature(formulation_pair.first)->geometry<geojson::multipolygon_t>());
         std::cout << "\t\tThe modified response is: " << response << std::endl;
+        std::string output_str = formulation_pair.second->get_output_line_for_timestep(output_time_index);
+        catchment_outfiles[formulation_pair.first] << output_time_index << "," << current_timestamp << "," << output_str << "," << response << std::endl;
         //update the nexus with this flow
         nexus_realizations[ catchment_to_nexus[formulation_pair.first] ]->add_upstream_flow(response, catchment_id[formulation_pair.first], output_time_index);
       }
