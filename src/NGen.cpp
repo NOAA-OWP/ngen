@@ -233,6 +233,7 @@ int main(int argc, char *argv[]) {
       for (std::pair<std::string, std::shared_ptr<realization::Formulation>> formulation_pair : manager ) {
         formulation_pair.second->set_et_params(pdm_et_data);
         //get the catchment response
+        //TODO impose unit from formulation
         double response = formulation_pair.second->get_response(output_time_index, 3600.0);
         //dump the output
         std::cout<<"\tCatchment "<<formulation_pair.first<<" contributing "<<response<<" m/s to "<<catchment_to_nexus[formulation_pair.first]<<std::endl;
@@ -243,11 +244,13 @@ int main(int argc, char *argv[]) {
             std::string header_str = formulation_pair.second->get_output_header_line();
             catchment_outfiles[formulation_pair.first] << "Time Step,Time," << header_str << ",Flow" << std::endl;
         }
-
+        //convert m/s to m^3/s
+        //TODO pass area to formulation as paramter
         response = response * boost::geometry::area(nexus_collection->get_feature(formulation_pair.first)->geometry<geojson::multipolygon_t>());
-        std::cout << "\t\tThe modified response is: " << response << std::endl;
+
         std::string output_str = formulation_pair.second->get_output_line_for_timestep(output_time_index);
         catchment_outfiles[formulation_pair.first] << output_time_index << "," << current_timestamp << "," << output_str << "," << response << std::endl;
+
         //update the nexus with this flow
         nexus_realizations[ catchment_to_nexus[formulation_pair.first] ]->add_upstream_flow(response, catchment_id[formulation_pair.first], output_time_index);
       }
