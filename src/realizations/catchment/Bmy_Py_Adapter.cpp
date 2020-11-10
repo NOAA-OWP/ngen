@@ -1,5 +1,6 @@
 #ifdef ACTIVATE_PYTHON
 
+#include <exception>
 #include <utility>
 
 #include "Bmi_Py_Adapter.hpp"
@@ -7,9 +8,13 @@
 
 using namespace models::bmi;
 
-Bmi_Py_Adapter::Bmi_Py_Adapter(const std::string &type_name) : Bmi_Py_Adapter(type_name, "") { }
+Bmi_Py_Adapter::Bmi_Py_Adapter(const std::string &type_name, utils::StreamHandler output)
+    : Bmi_Py_Adapter(type_name, "", output) { }
 
-Bmi_Py_Adapter::Bmi_Py_Adapter(const std::string &type_name, const std::string& bmi_init_config) {
+Bmi_Py_Adapter::Bmi_Py_Adapter(const std::string &type_name, std::string bmi_init_config,
+                               utils::StreamHandler output)
+   : bmi_init_config(std::move(bmi_init_config)), output(std::move(output))
+{
     // Read the name of the model type and use it to get a reference for the BMI model type/class
     // TODO: document this needs to be a fully qualified name for the Python BMI model type
     init_py_bmi_type(type_name);
@@ -52,15 +57,15 @@ Bmi_Py_Adapter::Bmi_Py_Adapter(const std::string &type_name, const std::string& 
     *********************************** */
 
     // Then perform the BMI initialization for the model
-    py_bmi_model_obj->attr("Initialize")(bmi_init_config);
+    Initialize();
 }
 
-Bmi_Py_Adapter::Bmi_Py_Adapter(const std::string &type_name, const geojson::JSONProperty& other_input_vars)
-    : Bmi_Py_Adapter(type_name, "", other_input_vars) {}
+Bmi_Py_Adapter::Bmi_Py_Adapter(const std::string &type_name, const geojson::JSONProperty& other_input_vars,
+                               utils::StreamHandler output) : Bmi_Py_Adapter(type_name, "", other_input_vars, output) {}
 
 Bmi_Py_Adapter::Bmi_Py_Adapter(const std::string &type_name, const std::string& bmi_init_config,
-                               const geojson::JSONProperty& other_vars)
-    : Bmi_Py_Adapter(type_name, bmi_init_config)
+                               const geojson::JSONProperty& other_vars, utils::StreamHandler output)
+    : Bmi_Py_Adapter(type_name, bmi_init_config, output)
 {
     py::tuple in_var_names_tuple = py_bmi_model_obj->attr("get_input_var_names")();
     // TODO: consider adding error message if something in other vars other than input variables (output and/or unrecognized)
@@ -78,6 +83,77 @@ std::string Bmi_Py_Adapter::get_bmi_type_package() const {
 
 std::string Bmi_Py_Adapter::get_bmi_type_simple_name() const {
     return py_bmi_type_simple_name == nullptr ? "" : *py_bmi_type_simple_name;
+}
+
+/**
+  * Initialize the wrapped BMI model object using the value from the `bmi_init_config` member variable and
+  * the object's ``Initialize`` function.
+  *
+  * If no attempt to initialize the model has yet been made (i.e., ``model_initialized`` is ``false`` when
+  * this function is called), then ``model_initialized`` is set to ``true`` and initialization is attempted
+  * for the model object. If initialization fails, an exception will be raised, with it's type and message
+  * saved as part of this object's state.
+  *
+  * If an attempt to initialize the model has already been made (i.e., ``model_initialized`` is ``true``),
+  * this function will either simply return or will throw a runtime_error, with the message listing the
+  * type and message of the exception from the earlier attempt.
+  */
+void Bmi_Py_Adapter::Initialize() {
+    // If there was a previous init attempt but with failure exception, throw runtime error and include previous message
+    if (model_initialized && !init_exception_msg.empty()) {
+        throw std::runtime_error("Previous Python model init attempt had exception: \n\t" + init_exception_msg);
+    }
+    // If there was a previous init attempt with (implicitly) no exception on previous attempt, just return
+    else if (model_initialized) {
+        return;
+    }
+    else {
+        // Make sure this is set to 'true' after this function call finishes
+        model_initialized = true;
+        try {
+            py_bmi_model_obj->attr("Initialize")(bmi_init_config);
+        }
+        // Record the exception message before re-throwning to handle subsequent function calls properly
+        catch (std::exception& e) {
+            init_exception_msg = std::string(e.what());
+            // Make sure this is non-empty to be consistent with the above logic
+            if (init_exception_msg.empty()) {
+                init_exception_msg = "Unknown Python model initialization exception.";
+            }
+            throw e;
+        }
+    }
+}
+
+/**
+ * Initialize the wrapped BMI model object using the given config file and the object's ``Initialize``
+ * function.
+ *
+ * If the given file is not the same as what is in `bmi_init_config`` and the model object has not already
+ * been initialized, this function will produce a warning message about the difference, then subsequently
+ * update `bmi_init_config`` to the given file.  It will then proceed with initialization.
+ *
+ * However, if the given file is not the same as what is in `bmi_init_config``, but the model has already
+ * been initialized, a runtime_error exception is thrown.
+ *
+ * This otherwise operates using the logic of ``Initialize()``.
+ *
+ * @param config_file
+ * @see Initialize()
+ * @throws runtime_error If already initialized but using a different file than the passed argument.
+ */
+void Bmi_Py_Adapter::Initialize(const std::string& config_file) {
+    if (config_file != bmi_init_config && model_initialized) {
+        throw std::runtime_error(
+                "Model init previously attempted; cannot change config from " + bmi_init_config + " to " + config_file);
+    }
+
+    if (config_file != bmi_init_config && !model_initialized) {
+        output.put("Warning: initialization call changes model config from " + bmi_init_config + " to " + config_file);
+        bmi_init_config = config_file;
+    }
+
+    Initialize();
 }
 
 inline void Bmi_Py_Adapter::init_py_bmi_type(std::string type_name) {
