@@ -7,6 +7,7 @@
 #include <iostream>
 
 #include <boost/property_tree/ptree.hpp>
+#include <boost/lexical_cast.hpp>
 
 namespace geojson {
     class JSONProperty;
@@ -65,50 +66,25 @@ namespace geojson {
                             boolean = value == "true";
                         }
                         else {
-                            bool is_numeric = true;
-                            bool is_real = true;
-                            bool is_list = true;
-                            bool decimal_already_hit = false;
-
-                            for(int character_index = 0; character_index < value.length(); character_index++) {
-                                char character = value[character_index];
-
-                                // If the first character is a '0' or isn't a digit, the whole value cannot be a number
-                                if (character_index == 0 && character == '0') {
-                                    is_numeric = false;
-                                }
-                                else if (character != '.' && !std::isdigit(character)) {
-                                    // If this character isn't a decimal point and isn't a digit, the whole value cannot be a number
-                                    is_numeric = false;
-                                    is_real = false;
-                                    break;
-                                }
-                                else if (character == '.' && decimal_already_hit) {
-                                    // If this character is a decimal point, but we've already seen one, the whole value cannot be a number
-                                    is_real = false;
-                                    break;
-                                }
-                                else if (character == '.') {
-                                    // If a decimal point is seen, the whole value cannot be an integer
-                                    is_numeric = false;
-                                    decimal_already_hit = true;
-                                }
+                          //Try natural number first since double cant cast to int/long
+                          try{
+                            natural_number = boost::lexical_cast<long>(value);
+                            type = PropertyType::Natural;
+                          }
+                          catch (boost::bad_lexical_cast &e)
+                          {
+                            try {
+                              //Try to cast to double/real next
+                              real_number = boost::lexical_cast<double>(value);
+                              type = PropertyType::Real;
                             }
-
-                            // If the value can be represented as a whole number, we want to go with that
-                            if (is_numeric) {
-                                type = PropertyType::Natural;
-                                natural_number = std::stol(value);
+                            catch (boost::bad_lexical_cast & e)
+                            {
+                              //At this point, we are left with string option
+                              string = value;
+                              type = PropertyType::String;
                             }
-                            else if (is_real) {
-                                type = PropertyType::Real;
-                                real_number = std::stod(value);
-                            }
-                            else {
-                                // Otherwise we'll store everything as a raw string
-                                type = PropertyType::String;
-                                string = value;
-                            }
+                          }
                         }
                 }
                 else {
