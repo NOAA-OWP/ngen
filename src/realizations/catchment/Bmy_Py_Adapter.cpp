@@ -85,6 +85,25 @@ std::string Bmi_Py_Adapter::get_bmi_type_simple_name() const {
     return py_bmi_type_simple_name == nullptr ? "" : *py_bmi_type_simple_name;
 }
 
+int Bmi_Py_Adapter::get_input_item_count() {
+    return get_input_var_names().size();
+}
+
+std::vector<std::string> Bmi_Py_Adapter::get_input_var_names() {
+    if (input_var_names == nullptr) {
+        int count = py::int_(py_bmi_model_obj->attr("get_input_item_count")());
+        input_var_names = std::make_shared<std::vector<std::string>>(std::vector<std::string>(count));
+
+        py::tuple in_var_names_tuple = py_bmi_model_obj->attr("get_input_var_names")();
+        for (auto && tuple_item : in_var_names_tuple) {
+            std::string var_name = py::str(tuple_item);
+            input_var_names->emplace_back(var_name);
+        }
+    }
+
+    return *input_var_names;
+}
+
 /**
   * Initialize the wrapped BMI model object using the value from the `bmi_init_config` member variable and
   * the object's ``Initialize`` function.

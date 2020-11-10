@@ -54,6 +54,20 @@ namespace models {
             std::string get_bmi_type_simple_name() const;
 
             /**
+             * The number of input variables the model can use from other models implementing a BMI.
+             *
+             * @return The number of input variables the model can use from other models implementing a BMI.
+             */
+            int get_input_item_count();
+
+            /**
+             * Gets a collection of names for the variables the model can use from other models implementing a BMI.
+             *
+             * @return A vector of names for the variables the model can use from other models implementing a BMI.
+             */
+            std::vector<std::string> get_input_var_names();
+
+            /**
              * Initialize the wrapped BMI model object using the value from the `bmi_init_config` member variable and
              * the object's ``Initialize`` function.
              *
@@ -100,7 +114,10 @@ namespace models {
 
             /** Path (as a string) to the BMI config file for initializing the Python model object (empty if none). */
             std::string bmi_init_config;
+            /** Message from an exception (if encountered) on the first attempt to initialize ``py_bmi_model_obj``. */
             std::string init_exception_msg;
+            /** Pointer to collection of input variable names for BMI object, used by ``get_input_var_names()``. */
+            std::shared_ptr<std::vector<std::string>> input_var_names;
             /** A pointer to the Python BMI model object. */
             std::shared_ptr<py::object> py_bmi_model_obj;
             /** A pointer to a string with the parent package name of the Python type referenced by ``py_bmi_type_ref``. */
