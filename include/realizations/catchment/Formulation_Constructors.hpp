@@ -6,6 +6,7 @@
 #include <exception>
 
 #include <boost/property_tree/ptree.hpp>
+#include <boost/optional.hpp>
 
 // Formulations
 #include "Tshirt_Realization.hpp"
@@ -42,11 +43,15 @@ namespace realization {
         return formulation_constructor(identifier, forcing_config, output_stream);
     };
 
-    static std::string get_formulation_key(boost::property_tree::ptree &tree) {
-        for (auto &node : tree) {
+    static std::string get_formulation_key(const boost::property_tree::ptree &tree) {
+        /*for (auto &node : tree) {
             if (formulation_exists(node.first)) {
                 return node.first;
             }
+        }*/
+        boost::optional<std::string> key = tree.get_optional<std::string>("name");
+        if(key && formulation_exists(*key)){
+          return *key;
         }
 
         throw std::runtime_error("No valid formulation was described in the passed in tree.");
