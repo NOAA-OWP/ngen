@@ -27,6 +27,7 @@ std::vector<double> GiuhJsonReader::extract_cumulative_frequency_ordinates(ptree
 
     // TODO: account for error condition of unmatching JSON structure for freqs
     std::string freq_node_name;
+    double check = 0.0;
     if (catchment_data_node.get_child_optional("CDF.CumulativeFreq") != boost::none) {
         freq_node_name = "CDF.CumulativeFreq";
     }
@@ -36,6 +37,11 @@ std::vector<double> GiuhJsonReader::extract_cumulative_frequency_ordinates(ptree
 
     for (ptree::value_type freqs : catchment_data_node.get_child(freq_node_name)) {
         cumulative_freqs.push_back(freqs.second.get_value<double>());
+        check += cumulative_freqs.back();
+    }
+    double eps = 0.0001;
+    if (check > 1.0 + eps || check < 1.0 - eps) {
+      throw std::runtime_error("GIUH oridnates do no sum to 1: sum = "+std::to_string(check)+"\n");
     }
     return cumulative_freqs;
 }
