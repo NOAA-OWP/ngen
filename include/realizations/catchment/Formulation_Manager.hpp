@@ -50,24 +50,22 @@ namespace realization {
 
                 if (possible_global_config) {
                     this->global_formulation_tree = *possible_global_config;
-                    std::string formulation_key = get_formulation_key(*possible_global_config);
-                    for(std::pair<std::string, boost::property_tree::ptree> node : *possible_global_config) {
-                        if (node.first == "forcing") {
-                            for (auto &forcing_parameter : node.second) {
-                                this->global_forcing.emplace(
-                                    forcing_parameter.first,
-                                    geojson::JSONProperty(forcing_parameter.first, forcing_parameter.second)
-                                );
-                            }
-                        }
-                        else if (node.first == formulation_key) {
-                            for (std::pair<std::string, boost::property_tree::ptree> global_setting : node.second) {
-                                this->global_formulation_parameters.emplace(
-                                    global_setting.first,
-                                    geojson::JSONProperty(global_setting.first, global_setting.second)
-                                );
-                            }
-                        }
+
+                    //get forcing info
+                    for (auto &forcing_parameter : (*possible_global_config).get_child("forcing")) {
+                        this->global_forcing.emplace(
+                            forcing_parameter.first,
+                            geojson::JSONProperty(forcing_parameter.first, forcing_parameter.second)
+                        );
+                      }
+
+                    //get first empty key under formulations (corresponds to first json array element)
+                    auto formulation = (*possible_global_config).get_child("formulations..");
+                    for (std::pair<std::string, boost::property_tree::ptree> global_setting : formulation.get_child("params")) {
+                        this->global_formulation_parameters.emplace(
+                            global_setting.first,
+                            geojson::JSONProperty(global_setting.first, global_setting.second)
+                        );
                     }
                 }
 
@@ -129,16 +127,27 @@ namespace realization {
 
                 if (possible_catchment_configs) {
                     for (std::pair<std::string, boost::property_tree::ptree> catchment_config : *possible_catchment_configs) {
-                        this->add_formulation(
-                            this->construct_formulation_from_tree(
-                                simulation_time_config,
-                                catchment_config.first,
-                                catchment_config.second,
-                                output_stream
-                            )
-                        );
-                    }
-                }
+                      auto formulations = catchment_config.second.get_child_optional("formulations");
+                      if( !formulations ) {
+                        throw std::runtime_error("ERROR: No formulations defined for "+catchment_config.first+".");
+                      }
+
+                      for (const auto &formulation: *formulations) {
+                          this->add_formulation(
+                              this->construct_formulation_from_tree(
+                                  simulation_time_config,
+                                  catchment_config.first,
+                                  catchment_config.second,
+                                  formulation.second,
+                                  output_stream
+                              )
+                          );
+                          break; //only construct one for now FIXME
+                        } //end for formulaitons
+                      }//end for catchments
+
+
+                }//end if possible_catchment_configs
 
                 for (geojson::Feature location : *fabric) {
                     if (not this->contains(location->get_id())) {
@@ -188,11 +197,13 @@ namespace realization {
                 simulation_time_params &simulation_time_config,
                 std::string identifier,
                 boost::property_tree::ptree &tree,
+                const boost::property_tree::ptree &formulation,
                 utils::StreamHandler output_stream
             ) {
-                std::string formulation_type_key = get_formulation_key(tree);
+                auto params = formulation.get_child("params");
+                std::string formulation_type_key =  get_formulation_key(formulation);
 
-                boost::property_tree::ptree formulation_config = tree.get_child(formulation_type_key);
+                boost::property_tree::ptree formulation_config = formulation.get_child("params");
 
                 auto possible_forcing = tree.get_child_optional("forcing");
 
