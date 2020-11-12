@@ -197,9 +197,9 @@ void Tshirt_C_Realization::create_formulation(geojson::PropertyMap properties) {
         std::shared_ptr<giuh::giuh_kernel_impl> giuh_kernel = giuh_reader->get_giuh_kernel_for_id(catchment_id);
         giuh_kernel->set_interpolation_regularity_seconds(3600);
         // This needs to have all but the first interpolated incremental value (which is always 0 from the kernel), so
-        giuh_cdf_ordinates = std::vector<double>(giuh_kernel->get_interpolated_incremental_ordinates().size() - 1);
+        giuh_cdf_ordinates = std::vector<double>(giuh_kernel->get_interpolated_incremental_runoff().size() - 1);
         for (int i = 0; i < giuh_cdf_ordinates.size(); ++ i) {
-            giuh_cdf_ordinates[i] = giuh_kernel->get_interpolated_incremental_ordinates()[i+1];
+            giuh_cdf_ordinates[i] = giuh_kernel->get_interpolated_incremental_runoff()[i + 1];
         }
     }
     // Create this with 0 values initially
@@ -287,9 +287,9 @@ void Tshirt_C_Realization::create_formulation(boost::property_tree::ptree &confi
         std::shared_ptr<giuh::giuh_kernel_impl> giuh_kernel = giuh_reader->get_giuh_kernel_for_id(catchment_id);
         giuh_kernel->set_interpolation_regularity_seconds(3600);
         // This needs to have all but the first interpolated incremental value (which is always 0 from the kernel), so
-        giuh_cdf_ordinates = std::vector<double>(giuh_kernel->get_interpolated_incremental_ordinates().size() - 1);
+        giuh_cdf_ordinates = std::vector<double>(giuh_kernel->get_interpolated_incremental_runoff().size() - 1);
         for (int i = 0; i < giuh_cdf_ordinates.size(); ++ i) {
-            giuh_cdf_ordinates[i] = giuh_kernel->get_interpolated_incremental_ordinates()[i+1];
+            giuh_cdf_ordinates[i] = giuh_kernel->get_interpolated_incremental_runoff()[i + 1];
         }
     }
     // Create this with 0 values initially
