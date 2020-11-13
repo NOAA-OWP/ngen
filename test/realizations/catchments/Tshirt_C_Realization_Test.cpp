@@ -249,7 +249,7 @@ TEST_F(Tshirt_C_Realization_Test, TestRun0) {
             params,
             nash_storage);
 
-    int result = tshirt_c_real.run_formulation_for_timestep(0.0);
+    int result = tshirt_c_real.run_formulation_for_timestep(0.0, 3600);
 
     // TODO: figure out how to test for bogus/mismatched nash_n and state nash vector size (without silent error)
 
@@ -304,7 +304,7 @@ TEST_F(Tshirt_C_Realization_Test, TestGetOutputLineForTimestep1a) {
         //copy(result_vector.begin(), result_vector.end(), ostream_iterator<string>(cout, "|"));
         //cout << "\n";
 
-        tshirt_c_real.run_formulation_for_timestep(input_storage);
+        tshirt_c_real.run_formulation_for_timestep(input_storage, 3600);
         timestep++;
     }
 
@@ -357,7 +357,7 @@ TEST_F(Tshirt_C_Realization_Test, TestGetOutputLineForTimestep1b) {
         Tokenizer tokenizer(line);
         result_vector.assign(tokenizer.begin(), tokenizer.end());
         double input_storage = std::stod(result_vector[1]) / 1000;
-        tshirt_c_real.run_formulation_for_timestep(input_storage);
+        tshirt_c_real.run_formulation_for_timestep(input_storage, 3600);
         timestep++;
     }
 
@@ -620,7 +620,7 @@ TEST_F(Tshirt_C_Realization_Test, TestGetValue1a) {
         Tokenizer tokenizer(line);
         result_vector.assign(tokenizer.begin(), tokenizer.end());
         double input_storage = std::stod(result_vector[1]);
-        tshirt_c_real.run_formulation_for_timestep(input_storage);
+        tshirt_c_real.run_formulation_for_timestep(input_storage, 3600);
         values_vector.emplace_back(tshirt_c_real.get_latest_flux_surface_runoff());
     }
 
@@ -667,7 +667,7 @@ TEST_F(Tshirt_C_Realization_Test, TestGetValue1b) {
         Tokenizer tokenizer(line);
         result_vector.assign(tokenizer.begin(), tokenizer.end());
         double input_storage = std::stod(result_vector[1]);
-        tshirt_c_real.run_formulation_for_timestep(input_storage);
+        tshirt_c_real.run_formulation_for_timestep(input_storage, 3600);
         values_vector.emplace_back(tshirt_c_real.get_latest_flux_total_discharge());
     }
 
@@ -733,7 +733,7 @@ TEST_F(Tshirt_C_Realization_Test, TestSurfaceRunoffCalc1a) {
         copy(result_vector.begin(), result_vector.end(), ostream_iterator<string>(cout, "|"));
         cout << "\n";
 
-        tshirt_c_real.run_formulation_for_timestep(input_storage);
+        tshirt_c_real.run_formulation_for_timestep(input_storage, 3600);
 
         double actual = tshirt_c_real.get_latest_flux_surface_runoff();
 
@@ -811,7 +811,7 @@ TEST_F(Tshirt_C_Realization_Test, TestGiuhRunoffCalc1a) {
         copy(result_vector.begin(), result_vector.end(), ostream_iterator<string>(cout, "|"));
         cout << "\n";
 
-        tshirt_c_real.run_formulation_for_timestep(input_storage);
+        tshirt_c_real.run_formulation_for_timestep(input_storage, 3600);
         double actual = tshirt_c_real.get_latest_flux_giuh_runoff();
 
         // Note that, for non-zero values, having to work within a reasonable upper and lower bounds to allow for
@@ -901,7 +901,7 @@ TEST_F(Tshirt_C_Realization_Test, TestLateralFlowCalc1a) {
         copy(result_vector.begin(), result_vector.end(), ostream_iterator<string>(cout, "|"));
         cout << "\n";
 
-        tshirt_c_real.run_formulation_for_timestep(input_storage);
+        tshirt_c_real.run_formulation_for_timestep(input_storage, 3600);
         double actual = tshirt_c_real.get_latest_flux_lateral_flow();
 
         // Note that, for non-zero values, having to work within a reasonable upper and lower bounds to allow for
@@ -980,7 +980,7 @@ TEST_F(Tshirt_C_Realization_Test, TestBaseFlowCalc1a) {
         copy(result_vector.begin(), result_vector.end(), ostream_iterator<string>(cout, "|"));
         cout << "\n";
 
-        tshirt_c_real.run_formulation_for_timestep(input_storage);
+        tshirt_c_real.run_formulation_for_timestep(input_storage, 3600);
         double actual = tshirt_c_real.get_latest_flux_base_flow();
 
         // Note that, for non-zero values, having to work within a reasonable upper and lower bounds to allow for
@@ -1059,7 +1059,7 @@ TEST_F(Tshirt_C_Realization_Test, TestTotalDischargeOutputCalc1a) {
         copy(result_vector.begin(), result_vector.end(), ostream_iterator<string>(cout, "|"));
         cout << "\n";
 
-        tshirt_c_real.run_formulation_for_timestep(input_storage);
+        tshirt_c_real.run_formulation_for_timestep(input_storage, 3600);
         double actual = tshirt_c_real.get_latest_flux_total_discharge();
 
         // Note that, for non-zero values, having to work within a reasonable upper and lower bounds to allow for
