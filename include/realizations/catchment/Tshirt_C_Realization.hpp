@@ -155,9 +155,10 @@ namespace realization {
          * arg to a nested call to ``run_formulation_for_timesteps``, returning that result code.
          *
          * @param input_flux Input flux (typically expected to be just precipitation) in meters per second.
+         * @param t_delta_s The size of the time step in seconds
          * @return The result code from the execution of the model time step calculations.
          */
-        int run_formulation_for_timestep(double input_flux);
+        int run_formulation_for_timestep(double input_flux, time_step_t t_delta_s);
 
         /**
          * Run model formulation calculations for a series of time steps using the given collection of input flux values
@@ -165,9 +166,10 @@ namespace realization {
          *
          * @param input_fluxes Ordered, per-time-step input flux (typically expected to be just precipitation) in meters
          * per second.
+         * @param t_delta_s The sizes of each of the time steps in seconds
          * @return The result code from the execution of the model time step calculations.
          */
-        int run_formulation_for_timesteps(std::vector<double> input_fluxes);
+        int run_formulation_for_timesteps(std::vector<double> input_fluxes, std::vector<time_step_t> t_deltas_s);
 
         std::string get_formulation_type() override;
 
