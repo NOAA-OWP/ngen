@@ -405,10 +405,13 @@ const std::vector<std::string>& Tshirt_C_Realization::get_required_parameters() 
 double Tshirt_C_Realization::get_response(time_step_t t_index, time_step_t t_delta_s) {
     // TODO: check that t_delta_s is of approprate size
 
-    // TODO: this is problematic, because what happens if the wrong t_index is passed?
-    double precip = this->forcing.get_next_hourly_precipitation_meters_per_second();
-    int response_result = run_formulation_for_timestep(precip);
+    // TODO: add some logic for ensuring the right precip data is gathered.  This will need to include considerations
+    //  for the cases when the dt is larger, smaller and equal to a specific, discrete data point available in the
+    //  forcing.  It may actually belong within the forcing object.
 
+    // TODO: it also needs to account for getting the right precip data point (i.e., t_index may not be "next")
+    double precip = this->forcing.get_next_hourly_precipitation_meters_per_second();
+    int response_result = run_formulation_for_timestep(precip, t_delta_s);
     // TODO: check t_index is the next expected time step to be calculated
 
     return fluxes.back()->Qout_m;
@@ -465,11 +468,12 @@ std::vector<double> Tshirt_C_Realization::get_value(const std::string& name) {
  * ``run_formulation_for_timesteps``, returning that result code.
  *
  * @param input_flux Input flux (typically expected to be just precipitation) in meters per second.
+ * @param t_delta_s The size of the time step in seconds
  * @return The result code from the execution of the model time step calculations.
  */
-int Tshirt_C_Realization::run_formulation_for_timestep(double input_flux) {
+int Tshirt_C_Realization::run_formulation_for_timestep(double input_flux, time_step_t t_delta_s) {
     std::vector<double> input_flux_in_vector{input_flux};
-    return run_formulation_for_timesteps(input_flux_in_vector);
+    return run_formulation_for_timesteps({input_flux}, {t_delta_s});
 }
 
 /**
@@ -478,9 +482,11 @@ int Tshirt_C_Realization::run_formulation_for_timestep(double input_flux) {
  *
  * @param input_fluxes Ordered, per-time-step input flux (typically expected to be just precipitation) in meters
  * per second.
+ * @param t_delta_s The sizes of each of the time steps in seconds
  * @return The result code from the execution of the model time step calculations.
  */
-int Tshirt_C_Realization::run_formulation_for_timesteps(std::vector<double> input_fluxes) {
+int Tshirt_C_Realization::run_formulation_for_timesteps(std::vector<double> input_fluxes,
+                                                        std::vector<time_step_t> t_deltas_s) {
     int num_timesteps = (int) input_fluxes.size();
 
     // FIXME: verify this needs to be independent like this
@@ -496,12 +502,12 @@ int Tshirt_C_Realization::run_formulation_for_timesteps(std::vector<double> inpu
     aorc_forcing_data empty_forcing[1];
 
     // Since the input_fluxes param values are in meters per second, this will need to do some conversions to what gets
-    // passed to Tshirt_C's run(), which expects meters per hour.
-    std::vector<double> input_meters_per_hour(input_fluxes.size());
+    // passed to Tshirt_C's run(), which expects meters per time step.
+    std::vector<double> input_meters_per_time_step(input_fluxes.size());
     for (int i = 0; i < input_fluxes.size(); ++i) {
-        input_meters_per_hour[i] = input_fluxes[i] * 3600;
+        input_meters_per_time_step[i] = input_fluxes[i] * t_deltas_s[i];
     }
-    double* input_as_array = &input_meters_per_hour[0];
+    double* input_as_array = &input_meters_per_time_step[0];
 
     tshirt_c_result_fluxes output_fluxes_as_array[num_timesteps];
 
