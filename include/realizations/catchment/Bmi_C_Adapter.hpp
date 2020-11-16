@@ -114,6 +114,27 @@ namespace models {
              */
             void Initialize(const std::string& config_file);
 
+            void SetValue(std::string name, void *src);
+
+            template <class T>
+            void SetValue(std::string name, std::vector<T> src);
+
+            void SetValueAtIndices(std::string name, int *inds, int count, void *src);
+
+            /**
+             *
+             * @tparam T
+             * @param name
+             * @param inds Collection of indexes within the model for which this variable should have a value set.
+             * @param src Values that should be set for this variable at the corresponding index in `inds`.
+             */
+            template <class T>
+            void SetValueAtIndices(std::string name, std::vector<int> inds, std::vector<T> src);
+
+        protected:
+            // TODO: look at setting this in some other way
+            std::string model_name = "BMI C model";
+
         private:
 
             /** Path (as a string) to the BMI config file for initializing the backing model (empty if none). */
