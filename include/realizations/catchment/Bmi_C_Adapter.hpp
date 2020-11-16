@@ -1,6 +1,8 @@
 #ifndef NGEN_BMI_C_ADAPTER_H
 #define NGEN_BMI_C_ADAPTER_H
 
+#include <memory>
+#include "bmi.h"
 #include "JSONProperty.hpp"
 #include "StreamHandler.hpp"
 
@@ -81,6 +83,8 @@ namespace models {
 
             /** Path (as a string) to the BMI config file for initializing the backing model (empty if none). */
             std::string bmi_init_config;
+            /** Pointer to C BMI model struct object. */
+            std::shared_ptr<Bmi> bmi_model;
             /** Message from an exception (if encountered) on the first attempt to initialize the backing model. */
             std::string init_exception_msg;
             /** Pointer to collection of input variable names for backing model, used by ``get_input_var_names()``. */
