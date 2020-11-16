@@ -36,14 +36,49 @@ namespace models {
              *
              * @return The number of input variables the model can use from other models implementing a BMI.
              */
-            int get_input_item_count();
+            int GetInputItemCount();
 
             /**
              * Gets a collection of names for the variables the model can use from other models implementing a BMI.
              *
              * @return A vector of names for the variables the model can use from other models implementing a BMI.
              */
-            std::vector<std::string> get_input_var_names();
+            std::vector<std::string> GetInputVarNames();
+
+            /**
+             * Get the size (in bytes) of one item of a variable.
+             *
+             * @param name
+             * @return
+             */
+            int GetVarItemsize(std::string name);
+
+            /**
+             * Get the total size (in bytes) of a variable.
+             *
+             * This function provides the total amount of memory used to store a variable; i.e., the number of items
+             * multiplied by the size of each item.
+             *
+             * @param name
+             * @return
+             */
+            int GetVarNbytes(std::string name);
+
+            /**
+             * Get the data type of a variable.
+             *
+             * @param name
+             * @return
+             */
+            std::string GetVarType(std::string name);
+
+            /**
+             * Get the units for a variable.
+             *
+             * @param name
+             * @return
+             */
+            std::string GetVarUnits(std::string name);
 
             /**
              * Initialize the wrapped BMI model functionality using the value from the `bmi_init_config` member variable
@@ -87,7 +122,7 @@ namespace models {
             std::shared_ptr<Bmi> bmi_model;
             /** Message from an exception (if encountered) on the first attempt to initialize the backing model. */
             std::string init_exception_msg;
-            /** Pointer to collection of input variable names for backing model, used by ``get_input_var_names()``. */
+            /** Pointer to collection of input variable names for backing model, used by ``GetInputVarNames()``. */
             std::shared_ptr<std::vector<std::string>> input_var_names;
             /** Whether the backing model has been initialized yet, which is always initially ``false``. */
             bool model_initialized = false;
