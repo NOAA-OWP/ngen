@@ -31,6 +31,8 @@ namespace models {
             Bmi_C_Adapter(const std::string& bmi_init_config, const geojson::JSONProperty& other_input_vars,
                           utils::StreamHandler output);
 
+            void Finalize();
+
             /**
              * The number of input variables the model can use from other models implementing a BMI.
              *
