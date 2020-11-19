@@ -12,6 +12,104 @@ extern void free_cfe_model(cfe_model *model) {
     // TODO: ******************
 }
 
+extern double get_K_lf_for_time_step(cfe_model* cfe, int time_step_index)
+{
+    // TODO: make sure this should be the slope param, or set to something else
+    double assumed_near_channel_water_table_slope = 0.01; // [L/L]
+    double drainage_density_km_per_km2 = 3.5;   // this is approx. the average blue line drainage density for CONUS
+    // Equation 10 in parameter equivalence document.
+    double Klf = 2.0 * assumed_near_channel_water_table_slope * cfe->NWM_soil_params.mult * cfe->NWM_soil_params.satdk *
+                 cfe->NWM_soil_params.D * drainage_density_km_per_km2;   // m/s
+    Klf = Klf * cfe->time_step_sizes[time_step_index];  // convert to m/time-step
+    return Klf;
+}
+
+extern void init_ground_water_reservoir(cfe_model* cfe, double Cgw, double expon, double max_storage, double storage,
+                                        int is_storage_ratios)
+{
+    cfe->gw_reservoir.is_exponential = TRUE;
+    cfe->gw_reservoir.storage_max_m = max_storage;
+
+    cfe->gw_reservoir.coeff_primary = Cgw;                  // per h
+    cfe->gw_reservoir.exponent_primary = expon;             // linear iff 1.0, non-linear iff > 1.0
+    cfe->gw_reservoir.storage_threshold_primary_m = 0.0;    // 0.0 means no threshold applied
+
+    cfe->gw_reservoir.storage_threshold_secondary_m = 0.0;  // 0.0 means no threshold applied
+    cfe->gw_reservoir.coeff_secondary = 0.0;                // 0.0 means that secondary outlet is not applied
+    cfe->gw_reservoir.exponent_secondary = 1.0;             // linear
+    cfe->gw_reservoir.storage_m = init_reservoir_storage(is_storage_ratios, storage, max_storage);
+}
+
+extern void init_soil_reservoir(cfe_model* cfe, double alpha_fc, double max_storage, double storage,
+                                int is_storage_ratios)
+{
+    double Klf = get_K_lf_for_time_step(cfe, 0);
+    double water_specific_weight = 9810;
+    double atm_pressure = cfe->forcings[0].surface_pressure_Pa;
+
+    double trigger_z_m = 0.5;   // distance from bottom of soil column to the center of the lowest discretization
+
+    // calculate the activation storage for the secondary lateral flow outlet in the soil nonlinear reservoir.
+    // following the method in the NWM/t-shirt parameter equivalence document, assuming field capacity soil
+    // suction pressure = 1/3 atm= field_capacity_atm_press_fraction * atm_press_Pa.
+
+    // equation 3 from NWM/t-shirt parameter equivalence document
+    double H_water_table_m = alpha_fc * atm_pressure / water_specific_weight;
+
+
+    // solve the integral given by Eqn. 5 in the parameter equivalence document.
+    // this equation calculates the amount of water stored in the 2 m thick soil column when the water content
+    // at the center of the bottom discretization (trigger_z_m) is at field capacity
+    double Omega = H_water_table_m - trigger_z_m;
+    double lower_lim = pow(Omega, (1.0 - 1.0 / cfe->NWM_soil_params.bb)) / (1.0 - 1.0 / cfe->NWM_soil_params.bb);
+    double upper_lim = pow(Omega + cfe->NWM_soil_params.D, (1.0 - 1.0 / cfe->NWM_soil_params.bb)) /
+                       (1.0 - 1.0 / cfe->NWM_soil_params.bb);
+
+    // initialize lateral flow function parameters
+    //---------------------------------------------
+    double field_capacity_storage_threshold_m =
+            cfe->NWM_soil_params.smcmax * pow(1.0 / cfe->NWM_soil_params.satpsi, (-1.0 / cfe->NWM_soil_params.bb)) *
+            (upper_lim - lower_lim);
+    double lateral_flow_threshold_storage_m = field_capacity_storage_threshold_m;  // making them the same, but they don't have 2B
+
+    // Initialize the soil conceptual reservoir data structure.  Indented here to highlight different purposes
+    //-------------------------------------------------------------------------------------------------------------
+    // soil conceptual reservoir first, two outlets, two thresholds, linear (exponent=1.0).
+    cfe->soil_reservoir.is_exponential = FALSE;  // set this true TRUE to use the exponential form of the discharge equation
+    // this should NEVER be set to true in the soil reservoir.
+    cfe->soil_reservoir.storage_max_m = cfe->NWM_soil_params.smcmax * cfe->NWM_soil_params.D;
+    //  vertical percolation parameters------------------------------------------------
+    cfe->soil_reservoir.coeff_primary = cfe->NWM_soil_params.satdk * cfe->NWM_soil_params.slop * cfe->time_step_sizes[0]; // m per ts
+    cfe->soil_reservoir.exponent_primary = 1.0;      // 1.0=linear
+    cfe->soil_reservoir.storage_threshold_primary_m = field_capacity_storage_threshold_m;
+    // lateral flow parameters --------------------------------------------------------
+    cfe->soil_reservoir.coeff_secondary = Klf;  // 0.0 to deactiv. else =lateral_flow_linear_reservoir_constant;   // m per ts
+    cfe->soil_reservoir.exponent_secondary = 1.0;   // 1.0=linear
+    cfe->soil_reservoir.storage_threshold_secondary_m = lateral_flow_threshold_storage_m;
+
+    cfe->soil_reservoir.storage_m = init_reservoir_storage(is_storage_ratios, storage, max_storage);
+}
+
+extern double init_reservoir_storage(int is_ratio, double amount, double max_amount) {
+    // Negative amounts are always ignored and just considered emtpy
+    if (amount < 0.0) {
+        return 0.0;
+    }
+    // When not a ratio (and positive), just return the literal amount
+    if (is_ratio == FALSE) {
+        return amount;
+    }
+    // When between 0 and 1, return the simple ratio computation
+    if (amount <= 1.0) {
+        return max_amount * amount;
+    }
+    // Otherwise, just return the literal amount, and assume the is_ratio value was invalid
+    // TODO: is this the best way to handle this?
+    else {
+        return amount;
+    }
+}
+
 extern int run(cfe_model* model) {
     double vol_sch_runoff = 0;
     double vol_sch_infilt = 0;
@@ -29,7 +127,8 @@ extern int run(cfe_model* model) {
 
     double time_step_size_s = model->time_step_sizes[t_index];
 
-    double timestep_rainfall_input_m = model->rain_rates[t_index];
+    // TODO: this is probably not correct and needs some conversion
+    double timestep_rainfall_input_m = model->forcings[t_index].precip_kg_per_m2;
 
     //##################################################
     // partition rainfall using Schaake function
@@ -95,7 +194,7 @@ extern int run(cfe_model* model) {
     model->gw_reservoir.storage_m += model->fluxes[t_index].flux_perc_m;
     model->soil_reservoir.storage_m -= model->fluxes[t_index].flux_perc_m;
     model->soil_reservoir.storage_m -= model->fluxes[t_index].flux_lat_m;
-    vol_soil_to_lat_flow += model->fluxes[t_index].flux_lat_m;  //TODO add this to nash cascade as input
+    vol_soil_to_lat_flow += model->fluxes[t_index].flux_lat_m;
     volout = volout + model->fluxes[t_index].flux_lat_m;
 
     double secondary_flux; // Don't think this is actually used for GW reservoir
@@ -379,195 +478,173 @@ else                return(FALSE);
 /*####################################################################*/
 /*########################### PARSE LINE #############################*/
 /*####################################################################*/
-void parse_aorc_line(char *theString,long *year,long *month, long *day,long *hour,long *minute, double *second,
-                struct aorc_forcing_data *aorc)
-{
-char str[20];
-long yr,mo,da,hr,mi;
-double mm,julian,se;
-float val;
-int i,start,end,len;
-int yes_pm,wordlen;
-char theWord[150];
+void parse_aorc_line(char *theString, long *year, long *month, long *day, long *hour, long *minute, double *second,
+                     struct aorc_forcing_data *aorc) {
+    char str[20];
+    long yr, mo, da, hr, mi;
+    double mm, julian, se;
+    float val;
+    int i, start, end, len;
+    int yes_pm, wordlen;
+    char theWord[150];
 
-len=strlen(theString);
+    len = strlen(theString);
 
-start=0; /* begin at the beginning of theString */
-get_word(theString,&start,&end,theWord,&wordlen);
-*year=atol(theWord);
+    start = 0; /* begin at the beginning of theString */
+    get_word(theString, &start, &end, theWord, &wordlen);
+    *year = atol(theWord);
 
-get_word(theString,&start,&end,theWord,&wordlen);
-*month=atol(theWord);
+    get_word(theString, &start, &end, theWord, &wordlen);
+    *month = atol(theWord);
 
-get_word(theString,&start,&end,theWord,&wordlen);
-*day=atol(theWord);
+    get_word(theString, &start, &end, theWord, &wordlen);
+    *day = atol(theWord);
 
-get_word(theString,&start,&end,theWord,&wordlen);
-*hour=atol(theWord);
+    get_word(theString, &start, &end, theWord, &wordlen);
+    *hour = atol(theWord);
 
-get_word(theString,&start,&end,theWord,&wordlen);
-*minute=atol(theWord);
+    get_word(theString, &start, &end, theWord, &wordlen);
+    *minute = atol(theWord);
 
-get_word(theString,&start,&end,theWord,&wordlen);
-*second=(double)atof(theWord);
+    get_word(theString, &start, &end, theWord, &wordlen);
+    *second = (double) atof(theWord);
 
-get_word(theString,&start,&end,theWord,&wordlen);
-aorc->precip_kg_per_m2=atof(theWord);
-              
-get_word(theString,&start,&end,theWord,&wordlen);
-aorc->incoming_longwave_W_per_m2=atof(theWord);   
+    get_word(theString, &start, &end, theWord, &wordlen);
+    aorc->precip_kg_per_m2 = atof(theWord);
 
-get_word(theString,&start,&end,theWord,&wordlen);
-aorc->incoming_shortwave_W_per_m2=atof(theWord);   
+    get_word(theString, &start, &end, theWord, &wordlen);
+    aorc->incoming_longwave_W_per_m2 = atof(theWord);
 
-get_word(theString,&start,&end,theWord,&wordlen);
-aorc->surface_pressure_Pa=atof(theWord);           
+    get_word(theString, &start, &end, theWord, &wordlen);
+    aorc->incoming_shortwave_W_per_m2 = atof(theWord);
 
-get_word(theString,&start,&end,theWord,&wordlen);
-aorc->specific_humidity_2m_kg_per_kg=atof(theWord);
+    get_word(theString, &start, &end, theWord, &wordlen);
+    aorc->surface_pressure_Pa = atof(theWord);
 
-get_word(theString,&start,&end,theWord,&wordlen);
-aorc->air_temperature_2m_K=atof(theWord);          
+    get_word(theString, &start, &end, theWord, &wordlen);
+    aorc->specific_humidity_2m_kg_per_kg = atof(theWord);
 
-get_word(theString,&start,&end,theWord,&wordlen);
-aorc->u_wind_speed_10m_m_per_s=atof(theWord);      
+    get_word(theString, &start, &end, theWord, &wordlen);
+    aorc->air_temperature_2m_K = atof(theWord);
 
-get_word(theString,&start,&end,theWord,&wordlen);
-aorc->v_wind_speed_10m_m_per_s=atof(theWord);      
+    get_word(theString, &start, &end, theWord, &wordlen);
+    aorc->u_wind_speed_10m_m_per_s = atof(theWord);
 
-  
-return;
+    get_word(theString, &start, &end, theWord, &wordlen);
+    aorc->v_wind_speed_10m_m_per_s = atof(theWord);
+
+
+    return;
 }
 
 /*####################################################################*/
 /*############################## GET WORD ############################*/
 /*####################################################################*/
-void get_word(char *theString,int *start,int *end,char *theWord,int *wordlen)
-{
-int i,lenny,j;
-lenny=strlen(theString);
+void get_word(char *theString, int *start, int *end, char *theWord, int *wordlen) {
+    int i, lenny, j;
+    lenny = strlen(theString);
 
-while(theString[*start]==' ' || theString[*start]=='\t')
-  {
-  (*start)++;
-  };
-  
-j=0;
-for(i=(*start);i<lenny;i++)
-  {
-  if(theString[i]!=' ' && theString[i]!='\t' && theString[i]!=',' && theString[i]!=':' && theString[i]!='/')
-    {
-    theWord[j]=theString[i];
-    j++;
+    while (theString[*start] == ' ' || theString[*start] == '\t') {
+        (*start)++;
+    };
+
+    j = 0;
+    for (i = (*start); i < lenny; i++) {
+        if (theString[i] != ' ' && theString[i] != '\t' && theString[i] != ',' && theString[i] != ':' &&
+            theString[i] != '/') {
+            theWord[j] = theString[i];
+            j++;
+        } else {
+            break;
+        }
     }
-  else
-    {
-    break;
-    }
-  }
-theWord[j]='\0';
-*start=i+1;
-*wordlen=strlen(theWord);
-return;
+    theWord[j] = '\0';
+    *start = i + 1;
+    *wordlen = strlen(theWord);
+    return;
 }
 
 /****************************************/
-void itwo_alloc(int ***array,int rows, int cols)
-{
-int  i,frows,fcols, numgood=0;
-int error=0;
+void itwo_alloc(int ***array, int rows, int cols) {
+    int i, frows, fcols, numgood = 0;
+    int error = 0;
 
-if ((rows==0)||(cols==0))
-  {
-  printf("Error: Attempting to allocate array of size 0\n");
-  exit;
-  }
+    if ((rows == 0) || (cols == 0)) {
+        printf("Error: Attempting to allocate array of size 0\n");
+        exit;
+    }
 
-frows=rows+1;  /* added one for FORTRAN numbering */
-fcols=cols+1;  /* added one for FORTRAN numbering */
+    frows = rows + 1;  /* added one for FORTRAN numbering */
+    fcols = cols + 1;  /* added one for FORTRAN numbering */
 
-*array=(int **)malloc(frows*sizeof(int *));
-if (*array) 
-  {
-  memset((*array), 0, frows*sizeof(int*));
-  for (i=0; i<frows; i++)
-    {
-    (*array)[i] =(int *)malloc(fcols*sizeof(int ));
-    if ((*array)[i] == NULL)
-      {
-      error = 1;
-      numgood = i;
-      i = frows;
-      }
-     else memset((*array)[i], 0, fcols*sizeof(int )); 
-     }
-   }
-return;
+    *array = (int **) malloc(frows * sizeof(int *));
+    if (*array) {
+        memset((*array), 0, frows * sizeof(int *));
+        for (i = 0; i < frows; i++) {
+            (*array)[i] = (int *) malloc(fcols * sizeof(int));
+            if ((*array)[i] == NULL) {
+                error = 1;
+                numgood = i;
+                i = frows;
+            } else
+                memset((*array)[i], 0, fcols * sizeof(int));
+        }
+    }
+    return;
 }
 
 
+void dtwo_alloc(double ***array, int rows, int cols) {
+    int i, frows, fcols, numgood = 0;
+    int error = 0;
 
-void dtwo_alloc(double ***array,int rows, int cols)
-{
-int  i,frows,fcols, numgood=0;
-int error=0;
+    if ((rows == 0) || (cols == 0)) {
+        printf("Error: Attempting to allocate array of size 0\n");
+        exit;
+    }
 
-if ((rows==0)||(cols==0))
-  {
-  printf("Error: Attempting to allocate array of size 0\n");
-  exit;
-  }
+    frows = rows + 1;  /* added one for FORTRAN numbering */
+    fcols = cols + 1;  /* added one for FORTRAN numbering */
 
-frows=rows+1;  /* added one for FORTRAN numbering */
-fcols=cols+1;  /* added one for FORTRAN numbering */
-
-*array=(double **)malloc(frows*sizeof(double *));
-if (*array) 
-  {
-  memset((*array), 0, frows*sizeof(double *));
-  for (i=0; i<frows; i++)
-    {
-    (*array)[i] =(double *)malloc(fcols*sizeof(double ));
-    if ((*array)[i] == NULL)
-      {
-      error = 1;
-      numgood = i;
-      i = frows;
-      }
-     else memset((*array)[i], 0, fcols*sizeof(double )); 
-     }
-   }
-return;
+    *array = (double **) malloc(frows * sizeof(double *));
+    if (*array) {
+        memset((*array), 0, frows * sizeof(double *));
+        for (i = 0; i < frows; i++) {
+            (*array)[i] = (double *) malloc(fcols * sizeof(double));
+            if ((*array)[i] == NULL) {
+                error = 1;
+                numgood = i;
+                i = frows;
+            } else
+                memset((*array)[i], 0, fcols * sizeof(double));
+        }
+    }
+    return;
 }
 
 
+void d_alloc(double **var, int size) {
+    size++;  /* just for safety */
 
-void d_alloc(double **var,int size)
-{
-  size++;  /* just for safety */
-
-   *var = (double *)malloc(size * sizeof(double));
-   if (*var == NULL)
-      {
-      printf("Problem allocating memory for array in d_alloc.\n");
-      return;
-      }
-   else memset(*var,0,size*sizeof(double));
-   return;
+    *var = (double *) malloc(size * sizeof(double));
+    if (*var == NULL) {
+        printf("Problem allocating memory for array in d_alloc.\n");
+        return;
+    } else
+        memset(*var, 0, size * sizeof(double));
+    return;
 }
 
-void i_alloc(int **var,int size)
-{
-   size++;  /* just for safety */
+void i_alloc(int **var, int size) {
+    size++;  /* just for safety */
 
-   *var = (int *)malloc(size * sizeof(int));
-   if (*var == NULL)
-      {
-      printf("Problem allocating memory in i_alloc\n");
-      return; 
-      }
-   else memset(*var,0,size*sizeof(int));
-   return;
+    *var = (int *) malloc(size * sizeof(int));
+    if (*var == NULL) {
+        printf("Problem allocating memory in i_alloc\n");
+        return;
+    } else
+        memset(*var, 0, size * sizeof(int));
+    return;
 }
 
 /*
@@ -591,32 +668,30 @@ void i_alloc(int **var,int size)
 
 
 double greg_2_jul(
-long year, 
-long mon, 
-long day, 
-long h, 
-long mi, 
-double se)
-{
+        long year,
+        long mon,
+        long day,
+        long h,
+        long mi,
+        double se) {
     long m = mon, d = day, y = year;
     long c, ya, j;
     double seconds = h * 3600.0 + mi * 60 + se;
 
     if (m > 2)
-	m -= 3;
+        m -= 3;
     else {
-	m += 9;
-	--y;
+        m += 9;
+        --y;
     }
     c = y / 100L;
     ya = y - (100L * c);
     j = (146097L * c) / 4L + (1461L * ya) / 4L + (153L * m + 2L) / 5L + d + 1721119L;
     if (seconds < 12 * 3600.0) {
-	j--;
-	seconds += 12.0 * 3600.0;
-    }
-    else {
-	seconds = seconds - 12.0 * 3600.0;
+        j--;
+        seconds += 12.0 * 3600.0;
+    } else {
+        seconds = seconds - 12.0 * 3600.0;
     }
     return (j + (seconds / 3600.0) / 24.0);
 }
@@ -635,23 +710,21 @@ double se)
 **
 */
 void calc_date(double jd, long *y, long *m, long *d, long *h, long *mi,
-               double *sec)
-{
+               double *sec) {
     static int ret[4];
 
     long j;
-    double tmp; 
+    double tmp;
     double frac;
 
-    j=(long)jd;
+    j = (long) jd;
     frac = jd - j;
 
     if (frac >= 0.5) {
-	frac = frac - 0.5;
+        frac = frac - 0.5;
         j++;
-    }
-    else {
-	frac = frac + 0.5;
+    } else {
+        frac = frac + 0.5;
     }
 
     ret[3] = (j + 1L) % 7L;
@@ -667,10 +740,10 @@ void calc_date(double jd, long *y, long *m, long *d, long *h, long *mi,
     *d = (*d + 5L) / 5L;
     *y = 100L * *y + j;
     if (*m < 10)
-	*m += 3;
+        *m += 3;
     else {
-	*m -= 9;
-	*y=*y+1; /* Invalid use: *y++. Modified by Tony */
+        *m -= 9;
+        *y = *y + 1; /* Invalid use: *y++. Modified by Tony */
     }
 
     /* if (*m < 3) *y++; */
@@ -683,8 +756,7 @@ void calc_date(double jd, long *y, long *m, long *d, long *h, long *mi,
     *sec = tmp - *mi * 60.0;
 }
 
-int dayofweek(double j)
-{
+int dayofweek(double j) {
     j += 0.5;
     return (int) (j + 1) % 7;
 }

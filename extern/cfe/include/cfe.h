@@ -141,9 +141,11 @@ typedef struct {
     struct NWM_soil_parameters NWM_soil_params;
 
     // Epoch-based start time
-    double start_time;
+    long start_time;
     int num_timesteps;
     int current_time_step;
+
+    char* forcing_file;
 
     double Schaake_adjusted_magic_constant_by_soil_type;
 
@@ -155,15 +157,23 @@ typedef struct {
     // ***********************************************************
     // ***************** Dynamically allocations *****************
     // ***********************************************************
+    aorc_forcing_data* forcings;
     int* time_step_sizes;
-    // In meters per time step
-    double* rain_rates;
-    double* surface_pressure;
-    double* giuh_ordinates;
     result_fluxes* fluxes;
+    double* giuh_ordinates;
     double* nash_storage;
     double* runoff_queue_m_per_timestep;
 } cfe_model;
+
+extern double get_K_lf_for_time_step(cfe_model* cfe, int time_step_index);
+
+extern void init_ground_water_reservoir(cfe_model* cfe, double Cgw, double expon, double max_storage, double storage,
+                                        int is_storage_ratios);
+
+extern void init_soil_reservoir(cfe_model* cfe, double alpha_fc, double max_storage, double storage,
+                                int is_storage_ratios);
+
+extern double init_reservoir_storage(int is_ratio, double amount, double max_amount);
 
 extern void alloc_cfe_model(cfe_model *model);
 
