@@ -50,6 +50,13 @@ Bmi_C_Adapter::Bmi_C_Adapter(const std::string& bmi_init_config, const geojson::
     }
 }
 
+void Bmi_C_Adapter::Finalize() {
+    int result = bmi_model->finalize(bmi_model.get());
+    if (result != BMI_SUCCESS) {
+        throw std::runtime_error("Failed to finalize model successfully");
+    }
+}
+
 int Bmi_C_Adapter::GetInputItemCount() {
     return GetInputVarNames().size();
 }
