@@ -167,8 +167,10 @@ typedef struct {
 
 extern double get_K_lf_for_time_step(cfe_model* cfe, int time_step_index);
 
+/*
 extern void init_ground_water_reservoir(cfe_model* cfe, double Cgw, double expon, double max_storage, double storage,
                                         int is_storage_ratios);
+                                        */
 
 extern void init_soil_reservoir(cfe_model* cfe, double alpha_fc, double max_storage, double storage,
                                 int is_storage_ratios);
