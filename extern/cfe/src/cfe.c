@@ -24,6 +24,7 @@ extern double get_K_lf_for_time_step(cfe_model* cfe, int time_step_index)
     return Klf;
 }
 
+/*
 extern void init_ground_water_reservoir(cfe_model* cfe, double Cgw, double expon, double max_storage, double storage,
                                         int is_storage_ratios)
 {
@@ -39,6 +40,7 @@ extern void init_ground_water_reservoir(cfe_model* cfe, double Cgw, double expon
     cfe->gw_reservoir.exponent_secondary = 1.0;             // linear
     cfe->gw_reservoir.storage_m = init_reservoir_storage(is_storage_ratios, storage, max_storage);
 }
+ */
 
 extern void init_soil_reservoir(cfe_model* cfe, double alpha_fc, double max_storage, double storage,
                                 int is_storage_ratios)

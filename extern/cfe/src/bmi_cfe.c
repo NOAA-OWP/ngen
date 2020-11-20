@@ -108,8 +108,8 @@ static int count_delimited_values(char* string_val, char* delimiter)
     return count;
 }
 
-int read_init_config(const char* config_file, cfe_model* model, double* alpha_fc, double* max_soil_storage,
-                     double* soil_storage, int* is_soil_storage_ratio)
+int read_init_config(const char* config_file, cfe_model* model, double* alpha_fc, double* soil_storage,
+                     int* is_soil_storage_ratio)
 {
     int config_line_count, max_config_line_length;
     int count_result = read_file_line_counts(config_file, &config_line_count, &max_config_line_length);
@@ -127,7 +127,7 @@ int read_init_config(const char* config_file, cfe_model* model, double* alpha_fc
 
     // TODO: things needed in config file:
     //  - forcing file name
-    //  - Schaake magic constant
+    //  - refkdt (optional, defaults to 3.0)
     //  - soil params:
     //    // - D, or depth
     //    //  - bb, or b
@@ -144,7 +144,6 @@ int read_init_config(const char* config_file, cfe_model* model, double* alpha_fc
     //    //  - starting S_gw (may be literal or ratio, control by checking for "%")
     //    - additionally lateral flow res params
     //    //  - alpha_fc
-    //    //  - max_soil_storage
     //    //  - starting S_lf (may be literal or ratio, control by checking for "%")
     //    - number of Nash lf reservoirs (optional, defaults to 2, ignored if storage values present)
     //    - K_nash
@@ -158,7 +157,6 @@ int read_init_config(const char* config_file, cfe_model* model, double* alpha_fc
     // Keep track of whether required values were set in config
     // TODO: do something more efficient, maybe using bitwise operations
     int is_forcing_file_set = FALSE;
-    int is_Schaake_magic_set = FALSE;
     int is_soil_params__depth_set = FALSE;
     int is_soil_params__bb_set = FALSE;
     int is_soil_params__mult_set = FALSE;
@@ -170,7 +168,6 @@ int read_init_config(const char* config_file, cfe_model* model, double* alpha_fc
     int is_Cgw_set = FALSE;
     int is_expon_set = FALSE;
     int is_alpha_fc_set = FALSE;
-    int is_max_soil_storage_set = FALSE;
     int is_soil_storage_set = FALSE;
     int is_K_nash_set = FALSE;
 
@@ -179,6 +176,9 @@ int read_init_config(const char* config_file, cfe_model* model, double* alpha_fc
     int is_gw_storage_set = FALSE;
 
     int is_giuh_originates_string_val_set = FALSE;
+
+    // Default value
+    double refkdt = 3.0;
 
     int is_gw_storage_ratio = FALSE;
     double gw_storage_literal;
@@ -205,9 +205,8 @@ int read_init_config(const char* config_file, cfe_model* model, double* alpha_fc
             is_forcing_file_set = TRUE;
             continue;
         }
-        if (strcmp(param_key, "Schaake_magic_constant") == 0) {
-            model->Schaake_adjusted_magic_constant_by_soil_type = strtod(param_value, NULL);
-            is_Schaake_magic_set = TRUE;
+        if (strcmp(param_key, "refkdt") == 0) {
+            refkdt = strtod(param_value, NULL);
             continue;
         }
         if (strcmp(param_key, "soil_params.D") == 0 || strcmp(param_key, "soil_params.depth") == 0) {
@@ -255,7 +254,7 @@ int read_init_config(const char* config_file, cfe_model* model, double* alpha_fc
             is_gw_max_set = TRUE;
             // Also set the true storage if storage was already read and was a ratio, and so we were waiting for this
             if (is_gw_storage_set == TRUE && is_gw_storage_ratio == TRUE) {
-                model->gw_reservoir.storage_m = gw_storage_literal * model->gw_reservoir.storage_max_m;
+                model->gw_reservoir.storage_m = (gw_storage_literal / 100.0) * model->gw_reservoir.storage_max_m;
             }
             continue;
         }
@@ -281,7 +280,7 @@ int read_init_config(const char* config_file, cfe_model* model, double* alpha_fc
                 model->gw_reservoir.storage_m = gw_storage_literal;
             }
             if (is_gw_storage_ratio == TRUE && is_gw_max_set == TRUE) {
-                model->gw_reservoir.storage_m = gw_storage_literal * model->gw_reservoir.storage_max_m;
+                model->gw_reservoir.storage_m = (gw_storage_literal / 100.0) * model->gw_reservoir.storage_max_m;
             }
             continue;
         }
@@ -290,15 +289,11 @@ int read_init_config(const char* config_file, cfe_model* model, double* alpha_fc
             is_alpha_fc_set = TRUE;
             continue;
         }
-        if (strcmp(param_key, "max_soil_storage") == 0) {
-            *max_soil_storage = strtod(param_value, NULL);
-            is_max_soil_storage_set = TRUE;
-            continue;
-        }
         if (strcmp(param_key, "soil_storage") == 0) {
             char* trailing_chars;
-            *soil_storage = strtod(param_value, &trailing_chars);
+            double parsed_value = strtod(param_value, &trailing_chars);
             *is_soil_storage_ratio = strcmp(trailing_chars, "%") == 0 ? TRUE : FALSE;
+            *soil_storage = *is_soil_storage_ratio == TRUE ? (parsed_value / 100.0) : parsed_value;
             is_soil_storage_set = TRUE;
             continue;
         }
@@ -324,9 +319,6 @@ int read_init_config(const char* config_file, cfe_model* model, double* alpha_fc
     }
 
     if (is_forcing_file_set == FALSE) {
-        return BMI_FAILURE;
-    }
-    if (is_Schaake_magic_set == FALSE) {
         return BMI_FAILURE;
     }
     if (is_soil_params__depth_set == FALSE) {
@@ -362,9 +354,6 @@ int read_init_config(const char* config_file, cfe_model* model, double* alpha_fc
     if (is_alpha_fc_set == FALSE) {
         return BMI_FAILURE;
     }
-    if (is_max_soil_storage_set == FALSE) {
-        return BMI_FAILURE;
-    }
     if (is_soil_storage_set == FALSE) {
         return BMI_FAILURE;
     }
@@ -377,6 +366,8 @@ int read_init_config(const char* config_file, cfe_model* model, double* alpha_fc
     if (is_gw_storage_set == FALSE) {
         return BMI_FAILURE;
     }
+
+    model->Schaake_adjusted_magic_constant_by_soil_type = refkdt * model->NWM_soil_params.satdk / 0.000002;
     
     // Used for parsing strings representing arrays of values below
     char *copy, *value;
@@ -448,9 +439,11 @@ static int Initialize (Bmi *self, const char *file)
     double alpha_fc, max_soil_storage, S_soil;
     int is_S_soil_ratio;
 
-    int config_read_result = read_init_config(file, cfe, &alpha_fc, &max_soil_storage, &S_soil, &is_S_soil_ratio);
+    int config_read_result = read_init_config(file, cfe, &alpha_fc, &S_soil, &is_S_soil_ratio);
     if (config_read_result == BMI_FAILURE)
         return BMI_FAILURE;
+
+    max_soil_storage = cfe->NWM_soil_params.D * cfe->NWM_soil_params.smcmax;
 
     // Figure out the number of lines first (also char count)
     int forcing_line_count, max_forcing_line_length;
