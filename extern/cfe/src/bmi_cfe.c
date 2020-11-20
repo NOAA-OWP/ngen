@@ -993,6 +993,10 @@ cfe_model *new_bmi_cfe(void)
     return data;
 }
 
+Bmi* register_bmi(Bmi *model) {
+    return register_bmi(model);
+}
+
 
 Bmi* register_bmi_cfe(Bmi *model)
 {
