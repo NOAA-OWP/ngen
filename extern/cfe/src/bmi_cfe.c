@@ -120,6 +120,9 @@ int read_init_config(const char* config_file, cfe_model* model, double* alpha_fc
         printf("Invalid config file '%s'", config_file);
         return BMI_FAILURE;
     }
+#if CFE_DEGUG >= 1
+    printf("Config file details - Line Count: %d | Max Line Length %d\n", config_line_count, max_config_line_length);
+#endif
 
     FILE* fp = fopen(config_file, "r");
     if (fp == NULL)
@@ -206,6 +209,10 @@ int read_init_config(const char* config_file, cfe_model* model, double* alpha_fc
         config_line_ptr = strsep(&config_line_ptr, "\n");
         param_key = strsep(&config_line_ptr, "=");
         param_value = strsep(&config_line_ptr, "=");
+
+#if CFE_DEGUG >= 2
+        printf("Config Value - Param: '%s' | Value: '%s'\n", param_key, param_value);
+#endif
 
         if (strcmp(param_key, "forcing_file") == 0) {
             model->forcing_file = strdup(param_value);
@@ -319,6 +326,9 @@ int read_init_config(const char* config_file, cfe_model* model, double* alpha_fc
             continue;
         }
         if (strcmp(param_key, "giuh_ordinates") == 0) {
+#if CFE_DEGUG >= 1
+            printf("Found configured GIUH ordinate values ('%s')\n", param_value);
+#endif
             giuh_originates_string_val = strdup(param_value);
             is_giuh_originates_string_val_set = TRUE;
             continue;
@@ -326,65 +336,132 @@ int read_init_config(const char* config_file, cfe_model* model, double* alpha_fc
     }
 
     if (is_forcing_file_set == FALSE) {
+#if CFE_DEGUG >= 1
+        printf("Config param 'forcing_file' not found in config file\n");
+#endif
         return BMI_FAILURE;
     }
     if (is_soil_params__depth_set == FALSE) {
+#if CFE_DEGUG >= 1
+        printf("Config param 'soil_params.depth' not found in config file\n");
+#endif
         return BMI_FAILURE;
     }
     if (is_soil_params__bb_set == FALSE) {
+#if CFE_DEGUG >= 1
+        printf("Config param 'soil_params.bb' not found in config file\n");
+#endif
         return BMI_FAILURE;
     }
     if (is_soil_params__mult_set == FALSE) {
+#if CFE_DEGUG >= 1
+        printf("Config param 'soil_params.mult' not found in config file\n");
+#endif
         return BMI_FAILURE;
     }
     if (is_soil_params__satdk_set == FALSE) {
+#if CFE_DEGUG >= 1
+        printf("Config param 'soil_params.satdk' not found in config file\n");
+#endif
         return BMI_FAILURE;
     }
     if (is_soil_params__satpsi_set == FALSE) {
+#if CFE_DEGUG >= 1
+        printf("Config param 'soil_params.satpsi' not found in config file\n");
+#endif
         return BMI_FAILURE;
     }
     if (is_soil_params__slop_set == FALSE) {
+#if CFE_DEGUG >= 1
+        printf("Config param 'soil_params.slop' not found in config file\n");
+#endif
         return BMI_FAILURE;
     }
     if (is_soil_params__smcmax_set == FALSE) {
+#if CFE_DEGUG >= 1
+        printf("Config param 'soil_params.smcmax' not found in config file\n");
+#endif
         return BMI_FAILURE;
     }
     if (is_soil_params__wltsmc_set == FALSE) {
+#if CFE_DEGUG >= 1
+        printf("Config param 'soil_params.wltsmc' not found in config file\n");
+#endif
         return BMI_FAILURE;
     }
     if (is_Cgw_set == FALSE) {
+#if CFE_DEGUG >= 1
+        printf("Config param 'Cgw' not found in config file\n");
+#endif
         return BMI_FAILURE;
     }
     if (is_expon_set == FALSE) {
+#if CFE_DEGUG >= 1
+        printf("Config param 'expon' not found in config file\n");
+#endif
         return BMI_FAILURE;
     }
     if (is_alpha_fc_set == FALSE) {
+#if CFE_DEGUG >= 1
+        printf("Config param 'alpha_fc' not found in config file\n");
+#endif
         return BMI_FAILURE;
     }
     if (is_soil_storage_set == FALSE) {
+#if CFE_DEGUG >= 1
+        printf("Config param 'soil_storage' not found in config file\n");
+#endif
         return BMI_FAILURE;
     }
     if (is_K_nash_set == FALSE) {
+#if CFE_DEGUG >= 1
+        printf("Config param 'K_nash' not found in config file\n");
+#endif
         return BMI_FAILURE;
     }
     if (is_gw_max_set == FALSE) {
+#if CFE_DEGUG >= 1
+        printf("Config param 'max_gw_storage' not found in config file\n");
+#endif
         return BMI_FAILURE;
     }
     if (is_gw_storage_set == FALSE) {
+#if CFE_DEGUG >= 1
+        printf("Config param 'gw_storage' not found in config file\n");
+#endif
         return BMI_FAILURE;
     }
 
+#if CFE_DEGUG >= 1
+    printf("All CFE config params present\n");
+#endif
+
     model->Schaake_adjusted_magic_constant_by_soil_type = refkdt * model->NWM_soil_params.satdk / 0.000002;
-    
+
+#if CFE_DEGUG >= 1
+    printf("Schaake Magic Constant calculated\n");
+#endif
+
     // Used for parsing strings representing arrays of values below
     char *copy, *value;
 
     // Handle GIUH ordinates, bailing if they were not provided
-    if (is_giuh_originates_string_val_set == FALSE)
+    if (is_giuh_originates_string_val_set == FALSE) {
+#if CFE_DEGUG >= 1
+        printf("GIUH ordinate string not set!\n");
+#endif
         return BMI_FAILURE;
+    }
+#if CFE_DEGUG >= 1
+    printf("GIUH ordinates string value found in config ('%s')\n", giuh_originates_string_val);
+#endif
     model->num_giuh_ordinates = count_delimited_values(giuh_originates_string_val, ",");
+#if CFE_DEGUG >= 1
+    printf("Counted number of GIUH ordinates (%d)\n", model->num_giuh_ordinates);
+#endif
     if (model->num_giuh_ordinates < 1)
         return BMI_FAILURE;
+
     model->giuh_ordinates = malloc(sizeof(double) * model->num_giuh_ordinates);
     // Work with copy of the string pointer to make sure the original pointer remains unchanged, so mem can be freed at end
     copy = giuh_originates_string_val;
@@ -428,6 +505,10 @@ int read_init_config(const char* config_file, cfe_model* model, double* alpha_fc
             model->nash_storage[j] = 0.0;
     }
 
+#if CFE_DEGUG >= 1
+    printf("Finished function parsing CFE config\n");
+#endif
+
     return BMI_SUCCESS;
 }
 
@@ -456,11 +537,11 @@ static int Initialize (Bmi *self, const char *file)
     int forcing_line_count, max_forcing_line_length;
     int count_result = read_file_line_counts(cfe->forcing_file, &forcing_line_count, &max_forcing_line_length);
     if (count_result == -1) {
-        printf("Invalid forcing file '%s'", cfe->forcing_file);
+        printf("Configured forcing file '%s' could not be opened for reading\n", cfe->forcing_file);
         return BMI_FAILURE;
     }
     if (forcing_line_count == 1) {
-        printf("Invalid header-only forcing file '%s'", cfe->forcing_file);
+        printf("Invalid header-only forcing file '%s'\n", cfe->forcing_file);
         return BMI_FAILURE;
     }
     // Infer the number of time steps: assume a header, so equal to the number of lines minus 1
@@ -989,6 +1070,9 @@ int read_file_line_counts(const char* file_name, int* line_count, int* max_line_
         *line_count += 1;
     }
 
+    // Before returning, increment the max line length by 1, since the \n will be on the line also.
+    *max_line_length += 1;
+
     return 0;
 }
 
@@ -1001,7 +1085,7 @@ cfe_model *new_bmi_cfe(void)
 }
 
 Bmi* register_bmi(Bmi *model) {
-    return register_bmi(model);
+    return register_bmi_cfe(model);
 }
 
 
