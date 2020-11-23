@@ -7,7 +7,9 @@ Simple_Lumped_Model_Realization::Simple_Lumped_Model_Realization(
     forcing_params forcing_config,
     utils::StreamHandler output_stream,
     double storage_meters,
-    double max_storage_meters,
+    double gw_storage_meters,
+    double gw_max_storage_meters,
+    double nash_max_storage_meters,
     double a,
     double b,
     double Ks,
@@ -17,7 +19,8 @@ Simple_Lumped_Model_Realization::Simple_Lumped_Model_Realization(
     time_step_t t
   ): Catchment_Formulation(id, forcing_config, output_stream)
 {
-    params.max_storage_meters = max_storage_meters;
+    params.gw_max_storage_meters = gw_max_storage_meters;
+    params.nash_max_storage_meters = nash_max_storage_meters;
     params.min_storage_meters = 0;
     params.activation_threshold_meters_groundwater_reservoir = 0;
     params.activation_threshold_meters_nash_cascade_reservoir = 0;
@@ -33,6 +36,7 @@ Simple_Lumped_Model_Realization::Simple_Lumped_Model_Realization(
     cascade_backing_storage.emplace(0, Sr); //Move ownership of init vector to container
     state[0] = hymod_state(0.0, 0.0, cascade_backing_storage[0].data());
     state[0].storage_meters = storage_meters;
+    state[0].groundwater_storage_meters = gw_storage_meters;
 }
 
 Simple_Lumped_Model_Realization::Simple_Lumped_Model_Realization(Simple_Lumped_Model_Realization && other)
@@ -141,7 +145,9 @@ void Simple_Lumped_Model_Realization::create_formulation(geojson::PropertyMap pr
     double seconds_to_day = 3600.0/86400.0;
 
     double storage = properties.at("storage").as_real_number();
-    double max_storage = properties.at("max_storage").as_real_number();
+    double gw_storage = properties.at("gw_storage").as_real_number();
+    double gw_max_storage = properties.at("gw_max_storage").as_real_number();
+    double nash_max_storage = properties.at("nash_max_storage").as_real_number();
     double a = properties.at("a").as_real_number();
     double b = properties.at("b").as_real_number();
     double Ks = properties.at("Ks").as_real_number() * seconds_to_day; //Implicitly connected to time used for DAILY dt need to account for hourly dt
@@ -149,7 +155,8 @@ void Simple_Lumped_Model_Realization::create_formulation(geojson::PropertyMap pr
     long n = properties.at("n").as_natural_number();
     double t = properties.at("t").as_real_number();
 
-    params.max_storage_meters = max_storage;
+    params.gw_max_storage_meters = gw_max_storage;
+    params.nash_max_storage_meters = nash_max_storage;
     params.min_storage_meters = 0;
     params.activation_threshold_meters_groundwater_reservoir = 0;
     params.activation_threshold_meters_nash_cascade_reservoir = 0;
@@ -166,6 +173,7 @@ void Simple_Lumped_Model_Realization::create_formulation(geojson::PropertyMap pr
     cascade_backing_storage.emplace(0, properties.at("sr").as_real_vector()); //Move ownership of init vector to container
     state[0] = hymod_state(0.0, 0.0, cascade_backing_storage[0].data());
     state[0].storage_meters = storage;
+    state[0].groundwater_storage_meters = gw_storage;
 }
 
 void Simple_Lumped_Model_Realization::create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global) {
