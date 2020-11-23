@@ -113,14 +113,13 @@ class hymod_kernel
             inital_mass_meters += current_state.Sr[i];
             final_mass_meters += next_state.Sr[i];
         }
-
-        // increase the inital mass by input value
-        inital_mass_meters += input_flux_meters;
+        // increase the inital mass by input value, NJF run function above adds input_flux to state before it is passed here
+        //inital_mass_meters += input_flux_meters;
 
         // increase final mass by calculated fluxes
         final_mass_meters += (calculated_fluxes.et_loss_meters + calculated_fluxes.runoff_meters_per_second * timestep_seconds + calculated_fluxes.slow_flow_meters_per_second * timestep_seconds);
 
-        if ( inital_mass_meters - final_mass_meters > 0.000001 )
+        if ( fabs(inital_mass_meters - final_mass_meters) > 0.000001 )
         {
             return MASS_BALANCE_ERROR;
         }
