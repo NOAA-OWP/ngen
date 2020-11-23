@@ -1,3 +1,4 @@
+#include <cstring>
 #include <exception>
 #include <utility>
 
@@ -30,16 +31,25 @@ Bmi_C_Adapter::Bmi_C_Adapter(const std::string& bmi_init_config, const geojson::
             geojson::JSONProperty other_variable = other_vars.at(var_name);
             geojson::PropertyType var_type = other_variable.get_type();
             if (var_type == geojson::PropertyType::Boolean) {
-                SetValueAtIndices<bool>(var_name, {0}, {other_variable.as_boolean()});
+                int inds[1] = {0};
+                bool src[1] = {other_variable.as_boolean()};
+                SetValueAtIndices(var_name, inds, 1, (void*)(src));
             }
             else if (var_type == geojson::PropertyType::Natural) {
-                SetValueAtIndices<long>(var_name, {0}, {other_variable.as_natural_number()});
+                int inds[1] = {0};
+                long src[1] = {other_variable.as_natural_number()};
+                SetValueAtIndices(var_name, inds, 1, (void*)(src));
             }
             else if (var_type == geojson::PropertyType::Real) {
-                SetValueAtIndices<double>(var_name, {0}, {other_variable.as_real_number()});
+                int inds[1] = {0};
+                double src[1] = {other_variable.as_real_number()};
+                SetValueAtIndices(var_name, inds, 1, (void*)(src));
             }
             else if (var_type == geojson::PropertyType::String) {
-                SetValueAtIndices<std::string>(var_name, {0}, {other_variable.as_string()});
+                int inds[1] = {0};
+                std::string str_val = other_variable.as_string();
+                char* src[1] = {(char*)(str_val.c_str())};
+                SetValueAtIndices(var_name, inds, 1, (void*)(src));
             }
             // For now, don't support list or object JSON types
             else {
@@ -70,24 +80,132 @@ std::vector<std::string> Bmi_C_Adapter::GetInputVarNames() {
             throw std::runtime_error(model_name + " failed to count of input variable names array.");
         }
 
-        // TODO: test this
-        char *names_array[count];
+        char* names_array[count];
+        for (int i = 0; i < count; i++) {
+            names_array[i] = static_cast<char *>(malloc(sizeof(char) * BMI_MAX_VAR_NAME));
+        }
         int names_result = bmi_model->get_input_var_names(bmi_model.get(), names_array);
         if (names_result != BMI_SUCCESS) {
             throw std::runtime_error(model_name + " failed to get array of input variables names.");
         }
 
-        // TODO: we are forced to deal with raw pointers inside the array, because that's how BMI C works.  This could
-        //  lead to memory problems, though, depending on the model code.  Since it's external code, that becomes an
-        //  interesting problem to deal with (or even notice).  We are going to need to figure out some pattern or
-        //  process to have some safeguards here.
-
         for (int i = 0; i < count; ++i) {
             (*input_var_names)[i] = std::string(names_array[i]);
+            free(names_array[i]);
         }
     }
 
     return *input_var_names;
+}
+
+int Bmi_C_Adapter::GetOutputItemCount() {
+    return GetOutputVarNames().size();
+}
+
+std::vector<std::string> Bmi_C_Adapter::GetOutputVarNames() {
+    if (output_var_names == nullptr) {
+        int count;
+        int count_result = bmi_model->get_output_item_count(bmi_model.get(), &count);
+        output_var_names = std::make_shared<std::vector<std::string>>(std::vector<std::string>(count));
+        if (count_result != BMI_SUCCESS) {
+            throw std::runtime_error(model_name + " failed to count of output variable names array.");
+        }
+
+        char* names_array[count];
+        for (int i = 0; i < count; i++) {
+            names_array[i] = static_cast<char *>(malloc(sizeof(char) * BMI_MAX_VAR_NAME));
+        }
+        int names_result = bmi_model->get_output_var_names(bmi_model.get(), names_array);
+        if (names_result != BMI_SUCCESS) {
+            throw std::runtime_error(model_name + " failed to get array of output variables names.");
+        }
+
+        for (int i = 0; i < count; ++i) {
+            (*output_var_names)[i] = std::string(names_array[i]);
+            free(names_array[i]);
+        }
+    }
+
+    return *output_var_names;
+}
+
+template <typename T>
+std::vector<T> Bmi_C_Adapter::GetValue(std::string name) {
+    std::string type = GetVarType(name);
+    int total_mem = GetVarNbytes(name);
+    int item_size = GetVarItemsize(name);
+    int num_items = total_mem/item_size;
+
+    void* dest = malloc(total_mem);
+
+    int result = bmi_model->get_value(bmi_model.get(), name.c_str(), dest);
+    if (result != BMI_SUCCESS) {
+        free(dest);
+        throw std::runtime_error(model_name + " failed to get values for variable " + name + ".");
+    }
+
+    std::vector<T> retrieved_results(num_items);
+    T* d_results_ptr;
+    d_results_ptr = (T*) dest;
+
+    for (int i = 0; i < num_items; i++)
+        retrieved_results[i] = d_results_ptr[i];
+
+    /*
+    std::vector<T> retrieved_results;
+
+    if (type == "double") {
+        retrieved_results = std::vector<double>(num_items);
+        double d_results[num_items];
+        double* d_results_ptr = d_results;
+        d_results_ptr = (double*) dest;
+        for (int i = 0; i < num_items; i++)
+            retrieved_results[i] = d_results_ptr[i];
+    }
+    */
+
+    free(dest);
+    return retrieved_results;
+}
+
+template std::vector<double> Bmi_C_Adapter::GetValue<double>(std::string name);
+
+int Bmi_C_Adapter::GetVarItemsize(std::string name) {
+    int size;
+    int success = bmi_model->get_var_itemsize(bmi_model.get(), name.c_str(), &size);
+    if (success != BMI_SUCCESS) {
+        throw std::runtime_error(model_name + " failed to get variable item size for " + name + ".");
+    }
+    return size;
+}
+
+int Bmi_C_Adapter::GetVarNbytes(std::string name) {
+    int size;
+    int success = bmi_model->get_var_nbytes(bmi_model.get(), name.c_str(), &size);
+    if (success != BMI_SUCCESS) {
+        throw std::runtime_error(model_name + " failed to get variable array size (i.e., nbytes) for " + name + ".");
+    }
+    return size;
+}
+
+std::string Bmi_C_Adapter::GetVarType(std::string name) {
+    char type_c_str[BMI_MAX_TYPE_NAME];
+    int success = bmi_model->get_var_type(bmi_model.get(), name.c_str(), type_c_str);
+    if (success != BMI_SUCCESS) {
+        throw std::runtime_error(model_name + " failed to get variable type for " + name + ".");
+    }
+    std::string type_str(type_c_str);
+    return type_str;
+}
+
+std::string Bmi_C_Adapter::GetVarUnits(std::string name) {
+    char units_c_str[BMI_MAX_TYPE_NAME];
+    int success = bmi_model->get_var_units(bmi_model.get(), name.c_str(), units_c_str);
+    if (success != BMI_SUCCESS) {
+        throw std::runtime_error(model_name + " failed to get variable units for " + name + ".");
+    }
+    std::string units_str(units_c_str);
+    return units_str;
 }
 
 /**
@@ -115,6 +233,7 @@ void Bmi_C_Adapter::Initialize() {
     else {
         // Make sure this is set to 'true' after this function call finishes
         model_initialized = true;
+        register_bmi(bmi_model.get());
         int init_result = bmi_model->initialize(bmi_model.get(), bmi_init_config.c_str());
         if (init_result != BMI_SUCCESS) {
             init_exception_msg = "Failure when attempting to initialize " + model_name;
@@ -163,8 +282,8 @@ void Bmi_C_Adapter::SetValue(std::string name, void *src) {
     }
 }
 
-template<class T>
-void Bmi_C_Adapter::SetValue(std::string name, std::vector<T> src) {
+template<typename T>
+void Bmi_C_Adapter::SetValue(std::string name, std::vector<T> src, size_t src_item_size) {
     // TODO: for safety, check the type and size of src (or what it will be when cast to a void*), which must match the
     //  model’s internal array, and can be determined through get_var_type, get_var_nbytes
 
@@ -179,8 +298,22 @@ void Bmi_C_Adapter::SetValueAtIndices(std::string name, int *inds, int count, vo
     }
 }
 
+/*
 template<class T>
-void Bmi_C_Adapter::SetValueAtIndices(std::string name, std::vector<int> inds, std::vector<T> src) {
-    // TODO: may not be able to do this, and will need to resort to manually moving things around.
-    SetValueAtIndices(std::move(name), inds.data(), inds.size(), static_cast<void*>(src.data()));
+void Bmi_C_Adapter::SetValueAtIndices(const std::string& name, std::vector<int> inds, std::vector<T> src, size_t src_item_size) {
+    void* src_array = malloc(src_item_size * src.size());
+
+    int result = bmi_model->set_value_at_indices(bmi_model.get(), name.c_str(), inds.data(), inds.size(), src_array);
+    free(src_array);
+    if (result != BMI_SUCCESS) {
+        throw std::runtime_error("Failed to set specified indexes for " + name + " variable of " + model_name);
+    }
+}
+ */
+
+void Bmi_C_Adapter::Update() {
+    int result = bmi_model->update(bmi_model.get());
+    if (result != BMI_SUCCESS) {
+        throw std::runtime_error("Model execution update failed for " + model_name);
+    }
 }
