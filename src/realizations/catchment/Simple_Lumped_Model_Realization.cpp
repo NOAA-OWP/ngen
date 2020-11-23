@@ -10,6 +10,7 @@ Simple_Lumped_Model_Realization::Simple_Lumped_Model_Realization(
     double gw_storage_meters,
     double gw_max_storage_meters,
     double nash_max_storage_meters,
+    double smax,
     double a,
     double b,
     double Ks,
@@ -25,6 +26,7 @@ Simple_Lumped_Model_Realization::Simple_Lumped_Model_Realization(
     params.activation_threshold_meters_groundwater_reservoir = 0;
     params.activation_threshold_meters_nash_cascade_reservoir = 0;
     params.reservoir_max_velocity_meters_per_second = 0;
+    params.smax = smax;
     params.a = a;
     params.b = b;
     params.Ks = Ks;
@@ -145,6 +147,7 @@ void Simple_Lumped_Model_Realization::create_formulation(geojson::PropertyMap pr
     double seconds_to_day = 3600.0/86400.0;
 
     double storage = properties.at("storage").as_real_number();
+    double smax = properties.at("smax").as_real_number();
     double gw_storage = properties.at("gw_storage").as_real_number();
     double gw_max_storage = properties.at("gw_max_storage").as_real_number();
     double nash_max_storage = properties.at("nash_max_storage").as_real_number();
@@ -161,6 +164,7 @@ void Simple_Lumped_Model_Realization::create_formulation(geojson::PropertyMap pr
     params.activation_threshold_meters_groundwater_reservoir = 0;
     params.activation_threshold_meters_nash_cascade_reservoir = 0;
     params.reservoir_max_velocity_meters_per_second = 0;
+    params.smax = smax;
     params.a = a;
     params.b = b;
     params.Ks = Ks;
