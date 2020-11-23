@@ -114,6 +114,7 @@ int read_init_config(const char* config_file, cfe_model* model, double* alpha_fc
                      int* is_soil_storage_ratio)
 {
     int config_line_count, max_config_line_length;
+    // Note that this determines max line length including the ending return character, if present
     int count_result = read_file_line_counts(config_file, &config_line_count, &max_config_line_length);
     if (count_result == -1) {
         printf("Invalid config file '%s'", config_file);
@@ -197,8 +198,12 @@ int read_init_config(const char* config_file, cfe_model* model, double* alpha_fc
 
     for (int i = 0; i < config_line_count; i++) {
         char *param_key, *param_value;
-        fgets(config_line, max_config_line_length, fp);
+        fgets(config_line, max_config_line_length + 1, fp);
+#if CFE_DEGUG >= 3
+        printf("Line value: ['%s']\n", config_line);
+#endif
         char* config_line_ptr = config_line;
+        config_line_ptr = strsep(&config_line_ptr, "\n");
         param_key = strsep(&config_line_ptr, "=");
         param_value = strsep(&config_line_ptr, "=");
 
