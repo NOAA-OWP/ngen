@@ -1,11 +1,6 @@
 #ifndef NGEN_LSTM_PARAMS_H
 #define NGEN_LSTM_PARAMS_H
 
-#include <string>
-
-using namespace std;
-
-
 namespace lstm {
 
     /**

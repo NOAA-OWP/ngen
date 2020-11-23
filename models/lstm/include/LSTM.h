@@ -129,4 +129,3 @@ namespace lstm {
 
 
 #endif //LSTM_H
-
