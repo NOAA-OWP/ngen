@@ -56,8 +56,7 @@ class hymod_kernel
         state.storage_meters += input_flux_meters;
 
         // calculate fs, runoff and slow
-        double storage_function_value = (1.0 - pow((1.0 - state.storage_meters / params.max_storage_meters), params.b) );
-        double runoff_meters_per_second = storage_function_value * params.a;
+        double storage_function_value = state.storage_meters * (1.0 - pow((1.0 - state.storage_meters / params.smax), params.b) );
         //double slow_flow_meters_per_second = storage_function_value * (1.0 - params.a );
         double soil_m = state.storage_meters - storage_function_value;
 
