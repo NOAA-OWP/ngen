@@ -163,7 +163,7 @@ void Simple_Lumped_Model_Realization::create_formulation(geojson::PropertyMap pr
     params.min_storage_meters = 0;
     params.activation_threshold_meters_groundwater_reservoir = 0;
     params.activation_threshold_meters_nash_cascade_reservoir = 0;
-    params.reservoir_max_velocity_meters_per_second = 0;
+    params.reservoir_max_velocity_meters_per_second = 100;
     params.smax = smax;
     params.a = a;
     params.b = b;
