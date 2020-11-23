@@ -2,6 +2,8 @@
 #include "bmi_cfe.h"
 #include "cfe.h"
 
+#define CFE_DEGUG 0
+
 #define INPUT_VAR_NAME_COUNT 0
 #define OUTPUT_VAR_NAME_COUNT 5
 
