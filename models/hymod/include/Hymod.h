@@ -46,11 +46,11 @@ class hymod_kernel
         for ( unsigned long i = 0; i < nash_cascade.size(); ++i )
         {
             //construct a single linear outlet reservoir
-            nash_cascade[i] = Reservoir::Explicit_Time::Reservoir(params.min_storage_meters, params.max_storage_meters, state.Sr[i], params.Kq, params.activation_threshold_meters_nash_cascade_reservoir, params.reservoir_max_velocity_meters_per_second);
+            nash_cascade[i] = Reservoir::Explicit_Time::Reservoir(params.min_storage_meters, params.nash_max_storage_meters, state.Sr[i], params.Kq, params.activation_threshold_meters_nash_cascade_reservoir, params.reservoir_max_velocity_meters_per_second);
         }
 
         // initalize groundwater linear outlet reservoir
-        Reservoir::Explicit_Time::Reservoir groundwater(params.min_storage_meters, params.max_storage_meters, state.groundwater_storage_meters, params.Ks, params.activation_threshold_meters_groundwater_reservoir, params.reservoir_max_velocity_meters_per_second);
+        Reservoir::Explicit_Time::Reservoir groundwater(params.min_storage_meters, params.gw_max_storage_meters, state.groundwater_storage_meters, params.Ks, params.activation_threshold_meters_groundwater_reservoir, params.reservoir_max_velocity_meters_per_second);
 
         // add flux to the current state
         state.storage_meters += input_flux_meters;

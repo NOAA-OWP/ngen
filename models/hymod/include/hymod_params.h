@@ -8,7 +8,8 @@
 struct hymod_params
 {
     double min_storage_meters; //!< minimum amount of water stored
-    double max_storage_meters; //!< maximum amount of water stored
+    double gw_max_storage_meters; //!< maximum amount of water stored in groundwater
+    double nash_max_storage_meters; //!< maximum amount of water stored in each nash cascade reservoir
     double activation_threshold_meters_nash_cascade_reservoir; //!< meters from the bottom of the reservoir to the bottom of the outlet
     double activation_threshold_meters_groundwater_reservoir; //!< meters from the bottom of the reservoir to the bottom of the outlet
     double reservoir_max_velocity_meters_per_second; //!<max outlet velocity in meters per second
