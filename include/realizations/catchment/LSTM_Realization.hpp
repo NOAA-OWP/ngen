@@ -144,4 +144,3 @@ namespace realization {
 }
 
 #endif //NGEN_LSTM_REALIZATION_HPP
-

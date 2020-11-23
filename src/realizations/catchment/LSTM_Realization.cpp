@@ -85,11 +85,7 @@ double LSTM_Realization::get_response(time_step_t t_index, time_step_t t_delta_s
     double precip = this->forcing.get_next_hourly_precipitation_meters_per_second();
     //FIXME should this run "daily" or hourly (t) which should really be dt
     //Do we keep an "internal dt" i.e. this->dt and reconcile with t?
-    //int error = model->run(t_index, precip * t_delta_s / 1000, get_et_params_ptr());
-    //int error = model->run(t_index);
-
-
-    /*
+    int error = model->run(t_index, precip * t_delta_s / 1000, get_et_params_ptr());
     if(error == lstm::LSTM_MASS_BALANCE_ERROR){
       std::cout<<"WARNING LSTM_Realization::model mass balance error"<<std::endl;
     }
@@ -200,4 +196,3 @@ void LSTM_Realization::create_formulation(boost::property_tree::ptree &config, g
     this->model = make_unique<lstm::lstm_model>(lstm::lstm_model(lstm_params, this->state[0]));
 
 }
-
