@@ -57,6 +57,7 @@ class hymod_kernel
 
         // calculate fs, runoff and slow
         double storage_function_value = state.storage_meters * (1.0 - pow((1.0 - state.storage_meters / params.smax), params.b) );
+        double runoff_meters_per_second = (storage_function_value * params.a)/dt;
         //double slow_flow_meters_per_second = storage_function_value * (1.0 - params.a );
         double soil_m = state.storage_meters - storage_function_value;
 
@@ -68,8 +69,8 @@ class hymod_kernel
 
         // get the slow flow output for this time - ks
         double slow_flow_meters_per_second = groundwater.response_meters_per_second(
-                storage_function_value * (1.0 - params.a), dt, groundwater_excess_meters);
-        
+                (storage_function_value * (1.0 - params.a))/dt,
+                dt, groundwater_excess_meters);
         //TODO: Review issues with dt and internal timestep
         runoff_meters_per_second += groundwater_excess_meters / dt;
 
