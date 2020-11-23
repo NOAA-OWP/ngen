@@ -2,9 +2,15 @@
 #define NGEN_BMI_C_ADAPTER_H
 
 #include <memory>
+#include <string>
 #include "bmi.h"
 #include "JSONProperty.hpp"
 #include "StreamHandler.hpp"
+
+// Declaring registration method from BMI model library
+extern "C" {
+    Bmi* register_bmi(Bmi *model);
+};
 
 namespace models {
     namespace bmi {
@@ -46,6 +52,19 @@ namespace models {
              * @return A vector of names for the variables the model can use from other models implementing a BMI.
              */
             std::vector<std::string> GetInputVarNames();
+
+            int GetOutputItemCount();
+
+            std::vector<std::string> GetOutputVarNames();
+
+             /**
+              * Get a copy of values of a given variable.
+              * @tparam T
+              * @param name
+              * @param dest
+              */
+            template <typename T>
+            std::vector<T> GetValue(std::string name);
 
             /**
              * Get the size (in bytes) of one item of a variable.
@@ -118,8 +137,8 @@ namespace models {
 
             void SetValue(std::string name, void *src);
 
-            template <class T>
-            void SetValue(std::string name, std::vector<T> src);
+            template <typename T>
+            void SetValue(std::string name, std::vector<T> src, size_t src_item_size);
 
             void SetValueAtIndices(std::string name, int *inds, int count, void *src);
 
@@ -130,8 +149,12 @@ namespace models {
              * @param inds Collection of indexes within the model for which this variable should have a value set.
              * @param src Values that should be set for this variable at the corresponding index in `inds`.
              */
+             /*
             template <class T>
-            void SetValueAtIndices(std::string name, std::vector<int> inds, std::vector<T> src);
+            void SetValueAtIndices(const std::string& name, std::vector<int> inds, std::vector<T> src, size_t src_item_size);
+              */
+
+             void Update();
 
         protected:
             // TODO: look at setting this in some other way
@@ -150,6 +173,9 @@ namespace models {
             /** Whether the backing model has been initialized yet, which is always initially ``false``. */
             bool model_initialized = false;
             utils::StreamHandler output;
+            /** Pointer to collection of output variable names for backing model, used by ``GetOutputVarNames()``. */
+            std::shared_ptr<std::vector<std::string>> output_var_names;
+
         };
 
     }
