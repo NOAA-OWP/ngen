@@ -245,7 +245,7 @@ namespace realization {
             }
 
             std::shared_ptr<Formulation> construct_missing_formulation(std::string identifier, utils::StreamHandler output_stream, simulation_time_params &simulation_time_config) {
-                std::string formulation_type_key = get_formulation_key(global_formulation_tree);
+                std::string formulation_type_key = get_formulation_key(global_formulation_tree.get_child("formulations.."));
 
                 forcing_params forcing_config = this->get_global_forcing_params(identifier, simulation_time_config);
 
