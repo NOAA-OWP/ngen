@@ -3,6 +3,9 @@
 // This language specification is derived from the Scientific
 // Interface Definition Language (SIDL) file bmi.sidl located at
 // https://github.com/csdms/bmi.
+//
+// bmi-cxx repo: https://github.com/csdms/bmi-cxx
+// Version 2.0, commit: c3f4c11
 
 #ifndef BMI_HPP
 #define BMI_HPP
