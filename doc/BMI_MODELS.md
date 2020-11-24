@@ -19,6 +19,7 @@ The basic outline of steps needed to work with an external BMI model is:
 ## BMI Models Written in C
 
 * [Shared Library](#bmi-c-shared-library)
+* [Example](#bmi-c-cfe-example)
 * [Caveats](#bmi-c-caveats)
 
 ### BMI C Shared Library
@@ -44,6 +45,10 @@ When CMake is able to find the library for the given name, it will automatically
 If `BMI_C_LIB_ACTIVE` is set to `ON`, but either `BMI_C_LIB_NAME` is not set or no library of that name can be found, builds for most (if not all) targets will fail.
 
 See [caveat](#only-one-generic-bmi-c-at-a-time) about only using one **C** BMI model at a time with the built-in realization.
+
+### BMI C CFE Example
+
+An example implementation for an appropriate BMI model as a **C** shared library is provided in the project [here](../extern/cfe).
 
 ### BMI C Caveats
 
