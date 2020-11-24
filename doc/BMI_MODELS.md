@@ -10,6 +10,7 @@ The basic outline of steps needed to work with an external BMI model is:
   * Make sure all the necessary model-specific BMI initialization files are valid and in place
   * Take appropriate steps to make model source files accessible as needed (e.g., making sure shared library files are in a known location)
   * Be aware of any model-language-specific caveats 
+    * [Caveats for C language models](#bmi-c-caveats)
 
 [//]: # (TODO: what does the realization config need to look like?)
 
