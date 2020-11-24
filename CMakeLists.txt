@@ -68,6 +68,13 @@ target_include_directories(ngen PUBLIC
         "${PROJECT_BINARY_DIR}/include" # For generated config header file in binary tree
         )
 
+# In some IDEs (e.g., CLion), it is easier to work with the code in the included example of an "external" shared library
+# when that code appears to be part of the main project, which can be done by uncommenting the statement below.
+#
+# However, this should be commented out when running CMake builds and in the committed version of this file.
+#
+#add_subdirectory("extern/cfe")
+
 add_subdirectory("src/core")
 add_subdirectory("src/geojson")
 add_subdirectory("src/realizations/catchment")
