@@ -244,7 +244,7 @@ int main(int argc, char *argv[]) {
             catchment_outfiles[formulation_pair.first] << "Time Step," << "Time," << header_str <<std::endl;
         }
         std::string output_str = formulation_pair.second->get_output_line_for_timestep(output_time_index);
-        catchment_outfiles[formulation_pair.first] << time_step << "," << current_timestamp << "," << output_str << std::endl;
+        catchment_outfiles[formulation_pair.first] << output_time_index << "," << current_timestamp << "," << output_str << std::endl;
         response = response * boost::geometry::area(nexus_collection->get_feature(formulation_pair.first)->geometry<geojson::multipolygon_t>());
         std::cout << "\t\tThe modified response is: " << response << std::endl;
         //update the nexus with this flow
