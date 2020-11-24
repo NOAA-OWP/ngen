@@ -16,6 +16,7 @@ target_include_directories(realizations_catchment PUBLIC
         ${PROJECT_SOURCE_DIR}/models
         ${PROJECT_SOURCE_DIR}/models/kernels
         ${PROJECT_SOURCE_DIR}/models/tshirt/include
+        ${PROJECT_SOURCE_DIR}/models/lstm/include
         )
         
 target_link_libraries(realizations_catchment PUBLIC
@@ -23,5 +24,6 @@ target_link_libraries(realizations_catchment PUBLIC
         NGen::core_catchment
         NGen::core_catchment_giuh
         NGen::models_tshirt
+        NGen::models_lstm
         NGen::geojson
         )

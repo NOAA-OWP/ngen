@@ -96,6 +96,7 @@ add_subdirectory("src/geojson")
 add_subdirectory("src/realizations/catchment")
 
 add_subdirectory("src/models/tshirt")
+add_subdirectory("src/models/lstm")
 add_subdirectory("src/models/kernels/reservoir")
 #add_subdirectory("src/forcing")
 
@@ -106,6 +107,7 @@ target_link_libraries(ngen PUBLIC
         NGen::core_nexus
         NGen::geojson
         NGen::models_tshirt
+        NGen::models_lstm
         NGen::realizations_catchment
         NGen::kernels_reservoir
         #NGen::kernels_reservoir_timeless
