@@ -79,6 +79,11 @@ add_automated_test(
         core/catchment/giuh/GIUH_Test.cpp
 )
 
+add_automated_test(
+        test_bmi_c
+        realizations/catchments/Bmi_C_Adapter_Test.cpp
+)
+
 # Unit tests
 # TODO: Make sure the geojson tests don't need to be added here also
 add_automated_test(
