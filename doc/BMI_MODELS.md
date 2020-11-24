@@ -22,13 +22,25 @@ The basic outline of steps needed to work with an external BMI model is:
 
 ### BMI C Shared Library
 
-For **C** models, a pre-compiled shared library is expected.
+For **C** models, the model must be packaged as a pre-compiled shared library.  Several CMake cache variables must be configure for controlling whether to expect such a library and how to find it:
 
-The `BMI_C_LIB_NAME` and `BMI_C_LIB_HINT_DIR` CMake cache variables exist for supplying the name of the library and an optional [hint](https://cmake.org/cmake/help/latest/command/find_library.html) to its location respectively. `BMI_C_LIB_HINT_DIR` is useful if the desired library is not installed in a standard location.  Default values are set but are only applicable for test cases. 
+* `BMI_C_LIB_ACTIVE` 
+  * type: `BOOL` 
+  * must be set to `ON` (or equivalent in CMake) for BMI C shared library functionality to be compiled and active
+* `BMI_C_LIB_NAME`
+  * type: `STRING `
+  * must be set if `BMI_C_LIB_ACTIVE` is `ON` to supply the appropriate name for the shared library
+* `BMI_C_LIB_HINT_DIR`
+  * type: `STRING`
+  * may be set to provide a [hint](https://cmake.org/cmake/help/latest/command/find_library.html) to CMake when it tries to find the library
+  
+The CMake build system may need to be [regenerated](BUILDS_AND_CMAKE.md#regenerating) after changing these settings.
 
 See the CMake documentation on the *[set](https://cmake.org/cmake/help/latest/command/set.html)* function or [variables](https://cmake.org/cmake/help/latest/manual/cmake-language.7.html#cmake-language-variables) for more information on working with CMake variables. 
 
-As long as CMake is able to find the library for the given name, it will automatically set up [the dependent, internal, static library](../src/realizations/catchment/CMakeLists.txt) to dynamically link to the external shared library at runtime.
+When CMake is able to find the library for the given name, it will automatically set up [the dependent, internal, static library](../src/realizations/catchment/CMakeLists.txt) to dynamically link to the external shared library at runtime.  
+
+If `BMI_C_LIB_ACTIVE` is set to `ON`, but either `BMI_C_LIB_NAME` is not set or no library of that name can be found, builds for most (if not all) targets will fail.
 
 See [caveat](#only-one-generic-bmi-c-at-a-time) about only using one **C** BMI model at a time with the built-in realization.
 

@@ -25,8 +25,10 @@ target_link_libraries(realizations_catchment PUBLIC
         NGen::geojson
         )
 
-SET(BMI_C_LIB_NAME "cfemodel" CACHE STRING "User-specified name for external C BMI model library")
-SET(BMI_C_LIB_HINT_DIR "${PROJECT_SOURCE_DIR}/extern/cfe/cmake_cfe_lib" CACHE STRING "Hint directory to find external C BMI model library")
-
-find_library(EXTERN_C_BMI_LIB "${BMI_C_LIB_NAME}" HINTS "${BMI_C_LIB_HINT_DIR}")
-target_link_libraries(realizations_catchment PRIVATE "${EXTERN_C_BMI_LIB}")
+if(BMI_C_LIB_ACTIVE)
+    SET(BMI_C_LIB_NAME "cfemodel" CACHE STRING "User-specified name for external C BMI model library")
+    message(STATUS "BMI_C_LIB_NAME set to '${BMI_C_LIB_NAME}'")
+    SET(BMI_C_LIB_HINT_DIR "${PROJECT_SOURCE_DIR}/extern/cfe/cmake_cfe_lib" CACHE STRING "Hint directory to find external C BMI model library")
+    find_library(EXTERN_C_BMI_LIB "${BMI_C_LIB_NAME}" HINTS "${BMI_C_LIB_HINT_DIR}")
+    target_link_libraries(realizations_catchment PRIVATE "${EXTERN_C_BMI_LIB}")
+endif()
