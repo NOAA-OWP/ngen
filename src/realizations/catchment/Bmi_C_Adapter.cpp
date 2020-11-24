@@ -5,8 +5,6 @@
 #include "Bmi_C_Adapter.hpp"
 #include "boost/algorithm/string.hpp"
 
-// TODO: include the dynmaic library header
-
 using namespace models::bmi;
 
 Bmi_C_Adapter::Bmi_C_Adapter(utils::StreamHandler output) : Bmi_C_Adapter("", output) { }
