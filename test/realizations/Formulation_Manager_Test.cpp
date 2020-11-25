@@ -508,7 +508,7 @@ TEST_F(Formulation_Manager_Test, basic_run_3) {
 
     for (int i = 0; i < expected_results.size(); i++) {
         // Remember that for the Tshirt_C_Realization, the timestep sizes are implicit
-        actual_results[i] = manager.get_formulation("wat-89")->get_response(i, 3600);
+        actual_results[i] = manager.get_formulation("wat-89")->get_response(i, 3600)*3600;
     }
 
     for (int i = 0; i < actual_results.size(); i++) {
