@@ -1,6 +1,7 @@
 #ifndef NGEN_BMI_C_FORMULATION_H
 #define NGEN_BMI_C_FORMULATION_H
 
+#include <memory>
 #include "Bmi_Formulation.hpp"
 #include "Bmi_C_Adapter.hpp"
 
@@ -48,35 +49,40 @@ namespace realization {
         std::string get_output_line_for_timestep(int timestep, std::string delimiter) override;
 
         /**
-         * Execute the backing model formulation for the given time step, where it is of the specified size, and
-         * return the total discharge.
+         * Get the model response for this time step.
          *
-         * Any inputs and additional parameters must be made available as instance members.
+         * Get the model response for this time step, execute the backing model formulation one or more times if the
+         * time step of the given index has not already been processed.
          *
-         * Types should clearly document the details of their particular response output.
+         * Function assumes the backing model has been fully initialized an that any additional input values have been
+         * applied.
+         *
+         * The function will return the value of the primary output variable (see `get_bmi_main_output_var()`) for the
+         * given time step. The type returned will always be a `double`, with other numeric types being cast if
+         * necessary.
+         *
+         * Because of the nature of BMI, the `t_delta` parameter is ignored, as this cannot be passed meaningfully via
+         * the `update()` BMI function.
          *
          * @param t_index The index of the time step for which to run model calculations.
          * @param d_delta_s The duration, in seconds, of the time step for which to run model calculations.
-         * @return The total discharge of the model for this time step.
+         * @return The total discharge of the model for the given time step.
          */
         double get_response(time_step_t t_index, time_step_t t_delta) override;
 
-        // TODO: need some way of getting the right externally sourced model accessible here
+    protected:
 
-        // TODO: need way of controlling which model it is (and maybe to control what input/output variables are supported)
+        void inner_create_formulation(geojson::PropertyMap properties, bool needs_param_validation);
 
-        // TODO: need to initialize model
-
-        // TODO: need to pass any required subsequent variable values
-
-        // TODO: advance model with update (account for possibility of not supporting BMI `update`, but supporting `update_until`)
-
-        // TODO: get data out of model
-
-        // TODO: finalize if necessary
-
-        // TODO: consider functions for handling every call in the spec
-
+        /**
+         * Test whether the backing model object has been initialize using the BMI standard ``Initialize`` function.
+         *
+         * This overrides the super class implementation and checks the model directly.  As such, the associated setter
+         * does not serve any purpose.
+         *
+         * @return Whether backing model object has been initialize using the BMI standard ``Initialize`` function.
+         */
+        bool is_model_initialized() override;
 
     };
 
