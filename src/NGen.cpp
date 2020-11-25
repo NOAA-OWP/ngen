@@ -33,7 +33,7 @@ class RealizaitonVisitor : public geojson::FeatureVisitor {
 void prepare_features(geojson::GeoJSON& nexus, geojson::GeoJSON& catchments, bool validate=false)
 {
   for(auto& feature: *nexus){
-    feature->set_id(feature->get_property("ID").as_string());
+    feature->set_id(feature->get_id());
     //std::cout << "Got Nexus Feature " << feature->get_id() << std::endl;
   }
   nexus->update_ids();
@@ -41,11 +41,11 @@ void prepare_features(geojson::GeoJSON& nexus, geojson::GeoJSON& catchments, boo
   //also link them by to->id
   //std::cout << "Iterating Catchment Features" << std::endl;
   for(auto& feature: *catchments){
-    feature->set_id(feature->get_property("ID").as_string());
+    feature->set_id(feature->get_id());
     nexus->add_feature(feature);
     //std::cout<<"Catchment "<<feature->get_id()<<" -> Nexus "<<feature->get_property("toID").as_string()<<std::endl;
   }
-  std::string linkage = "toID";
+  std::string linkage = "toid";
   nexus->link_features_from_property(nullptr, &linkage);
 
   if(validate){
