@@ -272,19 +272,19 @@ namespace realization {
 
                 std::string filepattern = this->global_forcing.at("file_pattern").as_string();
 
-                int id_index = filepattern.find("{{ID}}");
+                int id_index = filepattern.find("{{id}}");
 
-                // If an index for '{{ID}}' was found, we can count on that being where the id for this realization can be found.
-                //     For instance, if we have a pattern of '.*{{ID}}_14_15.csv' and this is named 'cat-87',
+                // If an index for '{{id}}' was found, we can count on that being where the id for this realization can be found.
+                //     For instance, if we have a pattern of '.*{{id}}_14_15.csv' and this is named 'cat-87',
                 //     this will match on 'stuff_example_cat-87_14_15.csv'
                 if (id_index != std::string::npos) {
-                    filepattern = filepattern.replace(id_index, sizeof("{{ID}}") - 1, identifier);
+                    filepattern = filepattern.replace(id_index, sizeof("{{id}}") - 1, identifier);
                 }
 
                 // Create a regular expression used to identify proper file names
                 std::regex pattern(filepattern);
 
-                // A stream providing the functions necessary for evaluating a directory: 
+                // A stream providing the functions necessary for evaluating a directory:
                 //    https://www.gnu.org/software/libc/manual/html_node/Opening-a-Directory.html#Opening-a-Directory
                 DIR *directory = nullptr;
 
