@@ -2,7 +2,7 @@
     "global": {
       "formulations": [
         {
-            "name": "tshirt",
+            "name": "tshirt_c",
             "params": {
                 "maxsmc": 0.439,
                 "wltsmc": 0.066,
@@ -43,10 +43,10 @@
         "output_interval": 3600
     },
     "catchments": {
-        "cat-52": {
+        "cat-27": {
           "formulations": [
             {
-              "name":"tshirt",
+              "name":"tshirt_c",
                 "params": {
                   "maxsmc": 0.439,
                   "wltsmc": 0.066,
@@ -70,17 +70,26 @@
                   "groundwater_storage_percentage": 0.5,
                   "timestep": 3600,
                   "giuh": {
-                      "giuh_path": "./test/data/giuh/GIUH.json",
-                      "crosswalk_path": "./data/crosswalk.json"
+                    "giuh_path": "./test/data/giuh/GIUH.json",
+                    "crosswalk_path": "./data/crosswalk.json",
+                    "cdf_ordinates": [
+                              0.1,
+                              0.35,
+                              0.2,
+                              0.14,
+                              0.1,
+                              0.06,
+                              0.05
+                          ]
                   }
                 }
               }
             ],
             "forcing": {
-                "path": "./data/forcing/cat-52_2015-12-01 00_00_00_2015-12-30 23_00_00.csv"
+                "path": "./data/forcing/cat-27_2015-12-01 00_00_00_2015-12-30 23_00_00.csv"
             }
         },
-        "cat-67": {
+        "cat-52": {
           "formulations": [
             {
                 "name": "simple_lumped",
@@ -102,13 +111,13 @@
             }
           ],
           "forcing": {
-              "path": "./data/forcing/cat-67_2015-12-01 00_00_00_2015-12-30 23_00_00.csv"
+              "path": "./data/forcing/cat-52_2015-12-01 00_00_00_2015-12-30 23_00_00.csv"
           }
         },
-        "cat-27": {
+        "cat-67": {
           "formulations": [
             {
-              "name":"tshirt",
+              "name":"tshirt_c",
               "params": {
                 "maxsmc": 0.439,
                 "wltsmc": 0.066,
@@ -133,13 +142,22 @@
                 "timestep": 3600,
                 "giuh": {
                     "giuh_path": "./test/data/giuh/GIUH.json",
-                    "crosswalk_path": "./data/crosswalk.json"
+                    "crosswalk_path": "./data/crosswalk.json",
+                    "cdf_ordinates": [
+                                0.1,
+                                0.35,
+                                0.2,
+                                0.14,
+                                0.1,
+                                0.06,
+                                0.05
+                            ]
                 }
               }
             }
           ],
           "forcing": {
-              "path": "./data/forcing/cat-27_2015-12-01 00_00_00_2015-12-30 23_00_00.csv"
+              "path": "./data/forcing/cat-67_2015-12-01 00_00_00_2015-12-30 23_00_00.csv"
           }
         }
     }
