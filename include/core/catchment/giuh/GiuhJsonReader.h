@@ -45,7 +45,7 @@ namespace giuh {
 
                 for (ptree::iterator pos = id_map_tree.begin(); pos != id_map_tree.end(); ++pos) {
                     //std::string local_id = pos->second.get<std::string>("local_id");
-                    std::string comid = pos->second.get<std::string>("COMID");
+                    std::string comid = pos->second.get<std::string>("outlet_COMID");
                     id_map->emplace(pos->first, comid);
                 }
             } else {
