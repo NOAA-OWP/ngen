@@ -28,18 +28,45 @@ namespace models {
 
         public:
 
-            explicit Bmi_C_Adapter(utils::StreamHandler output);
+            explicit Bmi_C_Adapter(std::string forcing_file_path, bool model_uses_forcing_file,
+                                   utils::StreamHandler output);
 
-            Bmi_C_Adapter(std::string bmi_init_config, utils::StreamHandler output);
-
-            Bmi_C_Adapter(const geojson::JSONProperty& other_input_vars, utils::StreamHandler output);
-
-            Bmi_C_Adapter(const std::string& bmi_init_config, const geojson::JSONProperty& other_input_vars,
+            Bmi_C_Adapter(std::string bmi_init_config, std::string forcing_file_path, bool model_uses_forcing_file,
                           utils::StreamHandler output);
+
+            Bmi_C_Adapter(std::string forcing_file_path, bool model_uses_forcing_file,
+                          const geojson::JSONProperty& other_input_vars, utils::StreamHandler output);
+
+            Bmi_C_Adapter(const std::string& bmi_init_config, std::string forcing_file_path,
+                          bool model_uses_forcing_file, const geojson::JSONProperty& other_input_vars,
+                          utils::StreamHandler output);
+
+            /**
+             * Convert model time value to value in seconds.
+             *
+             * Performs necessary lookup and conversion of some given model time value - as from `GetCurrentTime()` or
+             * `GetStartTime()` - and returns the equivalent value when represented in seconds.
+             *
+             * @param model_time_val Arbitrary model time value in units provided by `GetTimeUnits()`
+             * @return Equivalent model time value to value in seconds.
+             */
+            double convert_model_time_to_seconds(const double& model_time_val);
 
             void Finalize();
 
             /**
+             * Get the backing model's current time.
+             *
+             * Get the backing model's current time, relative to the start time, in the units expressed by
+             * `GetTimeUnits()`.
+             *
+             * @return The backing model's current time.
+             */
+            double GetCurrentTime();
+
+            /**
+             * The number of input variables the model can use.
+             *
              * The number of input variables the model can use from other models implementing a BMI.
              *
              * @return The number of input variables the model can use from other models implementing a BMI.
@@ -47,6 +74,8 @@ namespace models {
             int GetInputItemCount();
 
             /**
+             * Get input variable names for the backing model.
+             *
              * Gets a collection of names for the variables the model can use from other models implementing a BMI.
              *
              * @return A vector of names for the variables the model can use from other models implementing a BMI.
@@ -57,8 +86,46 @@ namespace models {
 
             std::vector<std::string> GetOutputVarNames();
 
+            /**
+             * Get the backing model's starting time.
+             *
+             * Get the backing model's starting time, in the units expressed by `GetTimeUnits()`.
+             *
+             * The BMI standard start time is typically defined to be `0.0`.
+             *
+             * @return
+             */
+            double GetStartTime();
+
+            /**
+             * Get the backing model "next" time step size.
+             *
+             * Get the time step size used in the backing model for the "next", in the units expressed by
+             * `GetTimeUnits()`.
+             *
+             * This type does not make any assumptions about how the backing model handles time steps, including whether
+             * the time step size is fixed.  This creates some complexities.  In particular, this function makes a
+             * best-effort for determining the time step size.  It attempts to do this first by analyzing the data in
+             * the forcing file at `forcing_file_path`, for whatever the next time step is.  This may not be possible,
+             * in which case it falls back to the value returned from the analogous BMI method from the backing model.
+             *
+             * @return The time step size of the model.
+             */
+            double GetTimeStep();
+
+            /**
+             * Get the units of time for the backing model.
+             *
+             * Get the units of time for the backing model, as a standard convention string representing the unit
+             * obtained directly from the model.
+             *
+             * @return A conventional string representing the time units for the model.
+             */
+            std::string GetTimeUnits();
+
              /**
               * Get a copy of values of a given variable.
+              *
               * @tparam T
               * @param name
               * @param dest
@@ -102,6 +169,17 @@ namespace models {
             std::string GetVarUnits(std::string name);
 
             /**
+             * Get the last processed time step.
+             *
+             * Get the 0-based index of the last time step that the model processed via it's `Update()` function.
+             *
+             * The
+             *
+             * @return
+             */
+            int get_last_processed_time_step();
+
+            /**
              * Initialize the wrapped BMI model functionality using the value from the `bmi_init_config` member variable
              * and the API's ``Initialize`` function.
              *
@@ -135,6 +213,13 @@ namespace models {
              */
             void Initialize(const std::string& config_file);
 
+            /**
+             * Whether the backing model has been initialized yet.
+             *
+             * @return Whether the backing model has been initialized yet.
+             */
+            bool is_model_initialized();
+
             void SetValue(std::string name, void *src);
 
             template <typename T>
@@ -166,6 +251,9 @@ namespace models {
             std::string bmi_init_config;
             /** Pointer to C BMI model struct object. */
             std::shared_ptr<Bmi> bmi_model;
+            /** Whether this particular model implementation directly reads input data from the forcing file. */
+            bool bmi_model_uses_forcing_file;
+            std::string forcing_file_path;
             /** Message from an exception (if encountered) on the first attempt to initialize the backing model. */
             std::string init_exception_msg;
             /** Pointer to collection of input variable names for backing model, used by ``GetInputVarNames()``. */

@@ -7,20 +7,26 @@
 
 using namespace models::bmi;
 
-Bmi_C_Adapter::Bmi_C_Adapter(utils::StreamHandler output) : Bmi_C_Adapter("", output) { }
+Bmi_C_Adapter::Bmi_C_Adapter(std::string forcing_file_path, bool model_uses_forcing_file, utils::StreamHandler output)
+        : Bmi_C_Adapter("", std::move(forcing_file_path), model_uses_forcing_file, output) {}
 
-Bmi_C_Adapter::Bmi_C_Adapter(std::string bmi_init_config, utils::StreamHandler output)
-   : bmi_init_config(std::move(bmi_init_config)), output(std::move(output)), bmi_model(std::make_shared<Bmi>(Bmi()))
+Bmi_C_Adapter::Bmi_C_Adapter(std::string bmi_init_config, std::string forcing_file_path, bool model_uses_forcing_file,
+                             utils::StreamHandler output)
+        : bmi_init_config(std::move(bmi_init_config)), forcing_file_path(std::move(forcing_file_path)),
+          bmi_model_uses_forcing_file(model_uses_forcing_file), output(std::move(output)),
+          bmi_model(std::make_shared<Bmi>(Bmi()))
 {
     Initialize();
 }
 
-Bmi_C_Adapter::Bmi_C_Adapter(const geojson::JSONProperty& other_input_vars, utils::StreamHandler output)
-    : Bmi_C_Adapter("", other_input_vars, output) {}
+Bmi_C_Adapter::Bmi_C_Adapter(std::string forcing_file_path, bool model_uses_forcing_file,
+                             const geojson::JSONProperty& other_input_vars, utils::StreamHandler output)
+        : Bmi_C_Adapter("", std::move(forcing_file_path), model_uses_forcing_file, other_input_vars, output) {}
 
-Bmi_C_Adapter::Bmi_C_Adapter(const std::string& bmi_init_config, const geojson::JSONProperty& other_vars,
+Bmi_C_Adapter::Bmi_C_Adapter(const std::string& bmi_init_config, std::string forcing_file_path,
+                             bool model_uses_forcing_file, const geojson::JSONProperty& other_vars,
                              utils::StreamHandler output)
-    : Bmi_C_Adapter(bmi_init_config, output)
+        : Bmi_C_Adapter(bmi_init_config, std::move(forcing_file_path), model_uses_forcing_file, output)
 {
     // TODO: consider adding error message if something in other vars other than input variables (output and/or unrecognized)
     int set_result = 0;
@@ -63,6 +69,31 @@ void Bmi_C_Adapter::Finalize() {
     if (result != BMI_SUCCESS) {
         throw std::runtime_error("Failed to finalize model successfully");
     }
+}
+
+double Bmi_C_Adapter::convert_model_time_to_seconds(const double& model_time_val) {
+    std::string time_units = GetTimeUnits();
+    double convert_factor;
+    if (time_units == "s" || time_units == "sec" || time_units == "second" || time_units == "seconds")
+        convert_factor = 1.0;
+    else if (time_units == "m" || time_units == "min" || time_units == "minute" || time_units == "minutes")
+        convert_factor = 60.0;
+    else if (time_units == "h" || time_units == "hr" || time_units == "hour" || time_units == "hours")
+        convert_factor = 3600.0;
+    else if (time_units == "d" || time_units == "day" || time_units == "days")
+        convert_factor = 86400.0;
+    else
+        throw std::runtime_error("Invalid model time step units ('" + time_units + "') in BMI C formulation.");
+    return model_time_val * convert_factor;
+}
+
+double Bmi_C_Adapter::GetCurrentTime() {
+    double current_time;
+    int result = bmi_model->get_current_time(bmi_model.get(), &current_time);
+    if (result != BMI_SUCCESS) {
+        throw std::runtime_error(model_name + " failed to get current model time.");
+    }
+    return current_time;
 }
 
 int Bmi_C_Adapter::GetInputItemCount() {
@@ -127,6 +158,48 @@ std::vector<std::string> Bmi_C_Adapter::GetOutputVarNames() {
     return *output_var_names;
 }
 
+double Bmi_C_Adapter::GetStartTime() {
+    double start_time;
+    int result = bmi_model->get_start_time(bmi_model.get(), &start_time);
+    if (result != BMI_SUCCESS) {
+        throw std::runtime_error(model_name + " failed to get model start time.");
+    }
+    return start_time;
+}
+
+/**
+ * Get the backing model "next" time step size.
+ *
+ * Get the time step size used in the backing model for the "next", in the units expressed by
+ * `GetTimeUnits()`.
+ *
+ * This type does not make any assumptions about how the backing model handles time steps, including whether
+ * the time step size is fixed.  This creates some complexities.  In particular, this function makes a
+ * best-effort for determining the time step size.  It attempts to do this first by analyzing the data in
+ * the forcing file at `forcing_file_path`, for whatever the next time step is.  This may not be possible,
+ * in which case it falls back to the value returned from the analogous BMI method from the backing model.
+ *
+ * @return The time step size of the model.
+ */
+double Bmi_C_Adapter::GetTimeStep() {
+    // FIXME: finish implementing properly beyond just reading from model, as noted in docstring above
+    double ts_delta;
+    int result = bmi_model->get_time_step(bmi_model.get(), &ts_delta);
+    if (result != BMI_SUCCESS) {
+        throw std::runtime_error(model_name + " failed to read time step size from model.");
+    }
+    return ts_delta;
+}
+
+std::string Bmi_C_Adapter::GetTimeUnits() {
+    char time_units_cstr[BMI_MAX_UNITS_NAME];
+    int result = bmi_model->get_time_units(bmi_model.get(), time_units_cstr);
+    if (result != BMI_SUCCESS) {
+        throw std::runtime_error(model_name + " failed to read time units from model.");
+    }
+    return std::string(time_units_cstr);
+}
+
 template <typename T>
 std::vector<T> Bmi_C_Adapter::GetValue(std::string name) {
     std::string type = GetVarType(name);
@@ -168,6 +241,12 @@ std::vector<T> Bmi_C_Adapter::GetValue(std::string name) {
 
 template std::vector<double> Bmi_C_Adapter::GetValue<double>(std::string name);
 
+template std::vector<float> Bmi_C_Adapter::GetValue<float>(std::string name);
+
+template std::vector<int> Bmi_C_Adapter::GetValue<int>(std::string name);
+
+template std::vector<long> Bmi_C_Adapter::GetValue<long>(std::string name);
+
 int Bmi_C_Adapter::GetVarItemsize(std::string name) {
     int size;
     int success = bmi_model->get_var_itemsize(bmi_model.get(), name.c_str(), &size);
@@ -204,6 +283,24 @@ std::string Bmi_C_Adapter::GetVarUnits(std::string name) {
     }
     std::string units_str(units_c_str);
     return units_str;
+}
+
+int Bmi_C_Adapter::get_last_processed_time_step() {
+    // FIXME: this will work for now, since we can assume for the moment universal delta_t size, but an alternative is
+    //  going to be needed that can go by the data.
+    int last_processed_time_step = 0;
+    double time_s = convert_model_time_to_seconds(GetStartTime());
+    double current_time_s = convert_model_time_to_seconds(GetCurrentTime());
+    double ts_size_s = convert_model_time_to_seconds(GetTimeStep());
+
+    while (time_s < current_time_s) {
+        last_processed_time_step++;
+        time_s += ts_size_s;
+    }
+
+    // TODO: in theory 'time' and 'current_time' should eventually line up exactly, but do we need to handle case if
+    //  they don't?
+    return last_processed_time_step;
 }
 
 /**
@@ -278,6 +375,10 @@ void Bmi_C_Adapter::SetValue(std::string name, void *src) {
     if (result != BMI_SUCCESS) {
         throw std::runtime_error("Failed to set values of " + name + " variable for " + model_name);
     }
+}
+
+bool Bmi_C_Adapter::is_model_initialized() {
+    return model_initialized;
 }
 
 template<typename T>
