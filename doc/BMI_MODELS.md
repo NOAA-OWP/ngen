@@ -1,6 +1,7 @@
 # BMI External Models
 
 * [Summary](#summary)
+* [Realization Config](#realization-config)
 * [BMI Models Written in C](#bmi-models-written-in-c)
 
 ## Summary
@@ -15,6 +16,45 @@ The basic outline of steps needed to work with an external BMI model is:
 [//]: # (TODO: what does the realization config need to look like?)
 
 [//]: # (TODO: Python, C++, and Fortran )
+
+## Realization Config
+
+The catchment entry in the realization config must be set to used the appropriate type for the associated BMI realization.  E.g.:
+* `bmi_c`
+
+### Required Parameters
+The following must be present in the realization JSON config for all catchment entries using the BMI realization:
+
+* `model_type_name`
+  * string name for the particular backing model type
+  * may not be utilized in all cases, but still required
+* `forcing_file`
+  * string path to the forcing data file for the catchment
+  * the `init_config` file below will likely reference this file also, and the two should properly correspond
+  * this is needed in here so the realization can directly access things implicit in the file, like times, time step amounts, and time step sizes
+* `uses_forcing_file`
+  * boolean indicating whether the backing BMI model is written to read input data from the forcing file (as opposed to receiving it via getters)
+* `init_config` 
+  * the string path to the BMI initialization config file for the catchment
+* `main_output_variable` 
+  * the string value of the primary output variable
+  * this is the value that returned by the realization's `get_response()`
+  * the string must match an item return by the relevant variant of the BMI `get_output_var_names()` function
+  
+### Optional Parameters
+* `other_input_variables`
+  * this may be provided to set certain model variables more directly after its `initialize` function
+  * JSON structure should be one or more nested JSON nodes, keyed by the variable name, and with the variable values contained as a list
+  * e.g.,  `"other_input_variables": {"ex_var_1": [0, 1, 2]}`
+* `output_variables`
+  * can specify the particular set and order of output variables to include in the realization's `get_output_line_for_timestep()` (and similar) function
+  * JSON structure should be a list of strings
+  * if not present, defaults to whatever it returned by the model's BMI `get_output_var_names()` function *the first time* it is invoked
+* `output_header_fields`
+  * can specify the header strings to use for the realization's printed output (i.e., the value returned by `get_output_header_line()`)
+  * JSON structure should be a list of strings
+  * when not present, the literal variable names are used
+  * when present, does not do any checking for ordering/correspondence compared to the output ordering of the variable values, so users must take care that ordering is consistent
 
 ## BMI Models Written in C
 
