@@ -405,13 +405,13 @@ namespace geojson {
                         //this line to read feature->get_id()
                         if( tmp_id == "" ) {
                           try {
-                            tmp_id = feature->get_property("ID").as_string();
+                            tmp_id = feature->get_property("id").as_string();
                           }
                           catch (const std::out_of_range& error) {
                             tmp_id = "";
                           }
                         }
-
+                        
                         if( ids.empty() || std::find(ids.begin(), ids.end(), tmp_id) != ids.end() ) {
                           //ids is empty, meaning we want all features,
                           //or feature id was found in the provided ids vector

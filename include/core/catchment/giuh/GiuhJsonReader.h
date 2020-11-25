@@ -44,9 +44,9 @@ namespace giuh {
                 boost::property_tree::json_parser::read_json(id_map_json_file_path, id_map_tree);
 
                 for (ptree::iterator pos = id_map_tree.begin(); pos != id_map_tree.end(); ++pos) {
-                    std::string local_id = pos->second.get<std::string>("local_id");
+                    //std::string local_id = pos->second.get<std::string>("local_id");
                     std::string comid = pos->second.get<std::string>("COMID");
-                    id_map->emplace(local_id, comid);
+                    id_map->emplace(pos->first, comid);
                 }
             } else {
                 id_map_json_file_readable = false;
