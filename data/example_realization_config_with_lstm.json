@@ -67,7 +67,7 @@
                 }
             },
             "forcing": {
-                "path": "./data/forcing/cat-87_2015-12-01 00_00_00_2015-12-30 23_00_00.csv"
+                "path": "./data/forcing/aorc_forcing_lstm_ex1.csv"
             }
         },
         "cat-88": {
