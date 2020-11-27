@@ -32,6 +32,16 @@ namespace realization {
         LSTM_Realization(
                 forcing_params forcing_config,
                 utils::StreamHandler output_stream,
+
+                std::string input_biases_path,
+                std::string input_weights_path,
+                std::string hidden_biases_path,
+                std::string hidden_weights_path,
+                std::string head_biases_path,
+                std::string head_weights_path,
+                std::string normalization_path,
+
+
                 double soil_storage_meters,
                 double groundwater_storage_meters,
                 std::string catchment_id,
@@ -136,6 +146,14 @@ namespace realization {
             time_step_t dt;
 
             std::vector<std::string> REQUIRED_PARAMETERS = {
+                "input_biases_path",
+                "input_weights_path",
+                "hidden_biases_path",
+                "hidden_weights_path",
+                "head_biases_path",
+                "head_weights_path",
+                "normalization_path",
+
                 "maxsmc",
                 "wltsmc",
                 "satdk",

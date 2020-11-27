@@ -1,12 +1,25 @@
 #ifndef NGEN_LSTM_PARAMS_H
 #define NGEN_LSTM_PARAMS_H
 
+using namespace std;
+
+
 namespace lstm {
 
     /**
      * Structure for containing and organizing the parameters of the lstm hydrological model.
      */
     struct lstm_params {
+        std::string input_biases_path;
+        std::string input_weights_path;
+        std::string hidden_biases_path;
+        std::string hidden_weights_path;
+        std::string head_biases_path;
+        std::string head_weights_path;
+        std::string normalization_path;
+
+
+
         double maxsmc;              //!< saturated soil moisture content (sometimes theta_e or smcmax)
         double wltsmc;              //!< wilting point soil moisture content
         double satdk;               //!< vertical saturated hydraulic conductivity [m s^-1] (sometimes Kperc or Ks)
@@ -48,6 +61,16 @@ namespace lstm {
          * @param max_gw_storage Initialization param for max_groundwater_storage_meters member.
          */
         lstm_params(
+           std::string input_biases_path,
+           std::string input_weights_path,
+           std::string hidden_biases_path,
+           std::string hidden_weights_path,
+           std::string head_biases_path,
+           std::string head_weights_path,
+           std::string normalization_path,
+
+
+
             double maxsmc,
             double wltsmc,
             double satdk,
