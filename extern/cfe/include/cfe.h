@@ -121,7 +121,7 @@ struct aorc_forcing_data
 } ;
 typedef struct aorc_forcing_data aorc_forcing_data;
 
-typedef struct {
+struct result_fluxes {
     double Schaake_output_runoff_m;
     double giuh_runoff_m;
     double nash_lateral_runoff_m;
@@ -130,9 +130,10 @@ typedef struct {
     double flux_perc_m;
     double flux_lat_m;
     double Qout_m;
-} result_fluxes;
+};
+typedef struct result_fluxes result_fluxes;
 
-typedef struct {
+struct cfe_model {
     // ***********************************************************
     // *************** Non-dynamically allocations ***************
     // ***********************************************************
@@ -163,7 +164,8 @@ typedef struct {
     double* giuh_ordinates;
     double* nash_storage;
     double* runoff_queue_m_per_timestep;
-} cfe_model;
+};
+typedef struct cfe_model cfe_model;
 
 extern double get_K_lf_for_time_step(cfe_model* cfe, int time_step_index);
 

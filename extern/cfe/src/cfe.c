@@ -1,4 +1,5 @@
 #include "../include/cfe.h"
+#include <time.h>
 
 #ifndef WATER_SPECIFIC_WEIGHT
 #define WATER_SPECIFIC_WEIGHT 9810
@@ -492,49 +493,55 @@ void parse_aorc_line(char *theString, long *year, long *month, long *day, long *
 
     len = strlen(theString);
 
-    start = 0; /* begin at the beginning of theString */
-    get_word(theString, &start, &end, theWord, &wordlen);
-    *year = atol(theWord);
+    char *copy, *copy_to_free, *value;
+    copy_to_free = copy = strdup(theString);
 
-    get_word(theString, &start, &end, theWord, &wordlen);
-    *month = atol(theWord);
+    // time
+    value = strsep(&copy, ",");
+    // TODO: handle this
+    struct tm t;
+    time_t t_of_day;
 
-    get_word(theString, &start, &end, theWord, &wordlen);
-    *day = atol(theWord);
+    t.tm_year = (int)strtol(strsep(&value, "-"), NULL, 10) - 1900;
+    t.tm_mon = (int)strtol(strsep(&value, "-"), NULL, 10);
+    t.tm_mday = (int)strtol(strsep(&value, " "), NULL, 10);
+    t.tm_hour = (int)strtol(strsep(&value, ":"), NULL, 10);
+    t.tm_min = (int)strtol(strsep(&value, ":"), NULL, 10);
+    t.tm_sec = (int)strtol(value, NULL, 10);
+    t.tm_isdst = -1;        // Is DST on? 1 = yes, 0 = no, -1 = unknown
+    aorc->time = mktime(&t);
 
-    get_word(theString, &start, &end, theWord, &wordlen);
-    *hour = atol(theWord);
+    // APCP_surface
+    value = strsep(&copy, ",");
+    // Not sure what this is
 
-    get_word(theString, &start, &end, theWord, &wordlen);
-    *minute = atol(theWord);
+    // DLWRF_surface
+    value = strsep(&copy, ",");
+    aorc->incoming_longwave_W_per_m2 = strtof(value, NULL);
+    // DSWRF_surface
+    value = strsep(&copy, ",");
+    aorc->incoming_shortwave_W_per_m2 = strtof(value, NULL);
+    // PRES_surface
+    value = strsep(&copy, ",");
+    aorc->surface_pressure_Pa = strtof(value, NULL);
+    // SPFH_2maboveground
+    value = strsep(&copy, ",");
+    aorc->specific_humidity_2m_kg_per_kg = strtof(value, NULL);;
+    // TMP_2maboveground
+    value = strsep(&copy, ",");
+    aorc->air_temperature_2m_K = strtof(value, NULL);
+    // UGRD_10maboveground
+    value = strsep(&copy, ",");
+    aorc->u_wind_speed_10m_m_per_s = strtof(value, NULL);
+    // VGRD_10maboveground
+    value = strsep(&copy, ",");
+    aorc->v_wind_speed_10m_m_per_s = strtof(value, NULL);
+    // precip_rate
+    value = strsep(&copy, ",");
+    aorc->precip_kg_per_m2 = strtof(value, NULL);
 
-    get_word(theString, &start, &end, theWord, &wordlen);
-    *second = (double) atof(theWord);
-
-    get_word(theString, &start, &end, theWord, &wordlen);
-    aorc->precip_kg_per_m2 = atof(theWord);
-
-    get_word(theString, &start, &end, theWord, &wordlen);
-    aorc->incoming_longwave_W_per_m2 = atof(theWord);
-
-    get_word(theString, &start, &end, theWord, &wordlen);
-    aorc->incoming_shortwave_W_per_m2 = atof(theWord);
-
-    get_word(theString, &start, &end, theWord, &wordlen);
-    aorc->surface_pressure_Pa = atof(theWord);
-
-    get_word(theString, &start, &end, theWord, &wordlen);
-    aorc->specific_humidity_2m_kg_per_kg = atof(theWord);
-
-    get_word(theString, &start, &end, theWord, &wordlen);
-    aorc->air_temperature_2m_K = atof(theWord);
-
-    get_word(theString, &start, &end, theWord, &wordlen);
-    aorc->u_wind_speed_10m_m_per_s = atof(theWord);
-
-    get_word(theString, &start, &end, theWord, &wordlen);
-    aorc->v_wind_speed_10m_m_per_s = atof(theWord);
-
+    // Go ahead and free the duplicate copy now
+    free(copy_to_free);
 
     return;
 }

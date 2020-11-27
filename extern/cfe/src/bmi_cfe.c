@@ -57,16 +57,18 @@ static const char *input_var_units[INPUT_VAR_NAME_COUNT] = {
 
 static int Get_start_time (Bmi *self, double * time)
 {
-    *time = ((cfe_model *) self->data)->start_time;
+    //*time = (double) ((cfe_model *) self->data)->start_time;
+    *time = 0.0;
     return BMI_SUCCESS;
 }
 
 
 static int Get_end_time (Bmi *self, double * time)
 {
-    *time = ((cfe_model *) self->data)->start_time;
+    //*time = (double) ((cfe_model *) self->data)->start_time;
+    *time = 0.0;
     for (int i = 0; i < ((cfe_model *) self->data)->num_timesteps; ++i) {
-        *time += ((cfe_model *) self->data)->time_step_sizes[i];
+        *time = *time + ((cfe_model *) self->data)->time_step_sizes[i];
     }
     return BMI_SUCCESS;
 }
@@ -88,9 +90,17 @@ static int Get_time_units (Bmi *self, char * units)
 
 static int Get_current_time (Bmi *self, double * time)
 {
-    *time = ((cfe_model *) self->data)->start_time;
+    //*time = (double) ((cfe_model *) self->data)->start_time;
+    *time = 0.0;
+#if CFE_DEGUG > 1
+    printf("Current model time step: '%d'\n", ((cfe_model *) self->data)->current_time_step);
+#endif
     for (int i = 0; i < ((cfe_model *) self->data)->current_time_step; ++i) {
-        *time += ((cfe_model *) self->data)->time_step_sizes[i];
+        int time_step_size_i = (((cfe_model *) self->data)->time_step_sizes)[i];
+#if CFE_DEGUG > 1
+        printf("Time step size for step '%d' is: %d\n", i, time_step_size_i);
+#endif
+        *time += time_step_size_i;
     }
     return BMI_SUCCESS;
 }
@@ -547,11 +557,16 @@ static int Initialize (Bmi *self, const char *file)
     // Infer the number of time steps: assume a header, so equal to the number of lines minus 1
     cfe->num_timesteps = forcing_line_count - 1;
 
+#if CFE_DEGUG > 0
+    printf("Counts - Lines: %d | Max Line: %d | Num Time Steps: %d\n", forcing_line_count, max_forcing_line_length,
+           cfe->num_timesteps);
+#endif
+
     // Now initialize empty arrays that depend on number of time steps
-    cfe->time_step_sizes = malloc(sizeof(int) * cfe->num_timesteps);
+    cfe->time_step_sizes = malloc(sizeof(int) * (cfe->num_timesteps + 1));
     // TODO: double check these are correct (i.e., doesn't need to break down into sum of the struct member sizes)
-    cfe->forcings = malloc(sizeof(aorc_forcing_data) * cfe->num_timesteps);
-    cfe->fluxes = malloc(sizeof(result_fluxes) * cfe->num_timesteps);
+    cfe->forcings = malloc(sizeof(aorc_forcing_data) * (cfe->num_timesteps + 1));
+    cfe->fluxes = malloc(sizeof(result_fluxes) * (cfe->num_timesteps + 1));
 
     // Now open it again to read the forcings
     FILE* ffp = fopen(cfe->forcing_file, "r");
@@ -570,7 +585,11 @@ static int Initialize (Bmi *self, const char *file)
 
     for (int i = 0; i < cfe->num_timesteps; i++) {
         fgets(line_str, max_forcing_line_length + 1, ffp);  // read in a line of AORC data.
-        parse_aorc_line(line_str, &year, &month, &day, &hour, &minute, &dsec, &(cfe->forcings[i]));
+        parse_aorc_line(line_str, &year, &month, &day, &hour, &minute, &dsec, ((cfe->forcings) + i));
+#if CFE_DEGUG > 0
+        printf("Forcing data: [%s]\n", line_str);
+        printf("Forcing details - s_time: %ld | precip: %f\n", (cfe->forcings)[i].time, (cfe->forcings)[i].precip_kg_per_m2);
+#endif
         // TODO: make sure the date+time (in the forcing itself) doesn't need to be converted somehow
 
         // TODO: make sure some kind of conversion isn't needed for the rain rate data
@@ -582,8 +601,15 @@ static int Initialize (Bmi *self, const char *file)
 
     // This will set all but the last time step size
     for (int i = 0; i < cfe->num_timesteps - 1; i++) {
-        // TODO: do we need to worry about type shortening here?
-        cfe->time_step_sizes[i] = cfe->forcings[i+1].time - cfe->forcings[i].time;
+        long next_forcing_time = cfe->forcings[i+1].time;
+        long this_forcing_time = cfe->forcings[i].time;
+        long time_step_size = next_forcing_time - this_forcing_time;
+        int time_step_size_as_int = (int)time_step_size;
+#if CFE_DEGUG > 0
+        printf("Time step: next_time[%ld], this_time[%ld], delta[%ld], delta_int[%d]\n", next_forcing_time,
+               this_forcing_time, time_step_size, time_step_size_as_int);
+#endif
+        cfe->time_step_sizes[i] = time_step_size_as_int;
     }
     // For the last time step size, if there is only a single time step, default to an hour
     if (cfe->num_timesteps == 1) {
