@@ -5,6 +5,8 @@
 #include "Constants.h"
 #include <cmath>
 
+using namespace std;
+
 namespace lstm {
 
     /**
@@ -36,6 +38,11 @@ namespace lstm {
 
         // ********** Acceptable error range for mass balance calculations; hard-coded for now to this value
         mass_check_error_bound = 0.000001;
+
+
+        //cout << lstm_params.input_biases_path;
+
+
     }
 
     /**

@@ -19,6 +19,8 @@
 #include <vector>
 #include <memory>
 
+using namespace std;
+
 namespace lstm {
 
     class lstm_model {
