@@ -46,7 +46,7 @@
         "cat-87": {
             "formulations": [
                 {
-                    "name": "tshirt",
+                    "name": "bmi_c",
                     "params": {
                         "model_type_name": "bmi_c_cfe",
                         "forcing_file": "../../data/forcing/cat-87_2015-12-01 00_00_00_2015-12-30 23_00_00.csv",
