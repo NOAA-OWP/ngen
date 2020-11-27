@@ -288,7 +288,7 @@ std::string Bmi_C_Adapter::GetVarUnits(std::string name) {
 int Bmi_C_Adapter::get_last_processed_time_step() {
     // FIXME: this will work for now, since we can assume for the moment universal delta_t size, but an alternative is
     //  going to be needed that can go by the data.
-    int last_processed_time_step = 0;
+    int last_processed_time_step = -1;
     double time_s = convert_model_time_to_seconds(GetStartTime());
     double current_time_s = convert_model_time_to_seconds(GetCurrentTime());
     double ts_size_s = convert_model_time_to_seconds(GetTimeStep());
