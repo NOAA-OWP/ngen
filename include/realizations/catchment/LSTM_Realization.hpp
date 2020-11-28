@@ -32,6 +32,10 @@ namespace realization {
         LSTM_Realization(
                 forcing_params forcing_config,
                 utils::StreamHandler output_stream,
+                double soil_storage_meters,
+                double groundwater_storage_meters,
+                std::string catchment_id,
+                giuh::GiuhJsonReader &giuh_json_reader,
 
                 std::string input_biases_path,
                 std::string input_weights_path,
@@ -42,10 +46,6 @@ namespace realization {
                 std::string normalization_path,
 
 
-                double soil_storage_meters,
-                double groundwater_storage_meters,
-                std::string catchment_id,
-                giuh::GiuhJsonReader &giuh_json_reader,
                 double maxsmc,
                 double wltsmc,
                 double satdk,

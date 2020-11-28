@@ -43,6 +43,11 @@ LSTM_Realization::LSTM_Realization(
 LSTM_Realization::LSTM_Realization(
         forcing_params forcing_config,
         utils::StreamHandler output_stream,
+        double soil_storage_meters,
+        double groundwater_storage_meters,
+        std::string catchment_id,
+        giuh::GiuhJsonReader &giuh_json_reader,
+
 
         std::string input_biases_path,
         std::string input_weights_path,
@@ -52,11 +57,6 @@ LSTM_Realization::LSTM_Realization(
         std::string head_weights_path,
         std::string normalization_path,
 
-
-        double soil_storage_meters,
-        double groundwater_storage_meters,
-        std::string catchment_id,
-        giuh::GiuhJsonReader &giuh_json_reader,
         double maxsmc,
         double wltsmc,
         double satdk,
@@ -75,6 +75,10 @@ LSTM_Realization::LSTM_Realization(
         time_step_t t
 ) : LSTM_Realization::LSTM_Realization(forcing_config, output_stream, soil_storage_meters, groundwater_storage_meters,
                                            catchment_id, giuh_json_reader,
+                                           //lstm::lstm_params(maxsmc, wltsmc, satdk, satpsi, slope, b, multiplier,
+                                           //alpha_fc, Klf, Kn, nash_n, Cgw, expon, max_gw_storage),
+                                           //nash_storage, t) {
+
                                            lstm::lstm_params(input_biases_path, input_weights_path, hidden_biases_path, hidden_weights_path, head_biases_path, head_weights_path, normalization_path, maxsmc, wltsmc, satdk, satpsi, slope, b, multiplier,
                                                                  alpha_fc, Klf, Kn, nash_n, Cgw, expon, max_gw_storage),
                                            nash_storage, t) {
@@ -152,13 +156,13 @@ void LSTM_Realization::create_formulation(geojson::PropertyMap properties) {
     this->dt = properties.at("timestep").as_natural_number();
 
     lstm::lstm_params lstm_params{
-        properties.at("input_biases_path"),
-        properties.at("input_weights_path"),
-        properties.at("hidden_biases_path"),
-        properties.at("hidden_weights_path"),
-        properties.at("head_biases_path"),
-        properties.at("head_weights_path"),
-        properties.at("normalization_path"),
+        properties.at("input_biases_path").as_string(),
+        properties.at("input_weights_path").as_string(),
+        properties.at("hidden_biases_path").as_string(),
+        properties.at("hidden_weights_path").as_string(),
+        properties.at("head_biases_path").as_string(),
+        properties.at("head_weights_path").as_string(),
+        properties.at("normalization_path").as_string(),
 
         properties.at("maxsmc").as_real_number(),   //maxsmc FWRFH
         properties.at("wltsmc").as_real_number(),  //wltsmc  from fred_t-shirt.c FIXME NOT USED IN lstm?!?!
@@ -243,13 +247,13 @@ void LSTM_Realization::create_formulation(boost::property_tree::ptree &config, g
     this->dt = options.at("timestep").as_natural_number();
 
     lstm::lstm_params lstm_params{
-        options.at("input_biases_path"),
-        options.at("input_weights_path"),
-        options.at("hidden_biases_path"),
-        options.at("hidden_weights_path"),
-        options.at("head_biases_path"),
-        options.at("head_weights_path"),
-        options.at("normalization_path"),
+        options.at("input_biases_path").as_string(),
+        options.at("input_weights_path").as_string(),
+        options.at("hidden_biases_path").as_string(),
+        options.at("hidden_weights_path").as_string(),
+        options.at("head_biases_path").as_string(),
+        options.at("head_weights_path").as_string(),
+        options.at("normalization_path").as_string(),
 
 
 
