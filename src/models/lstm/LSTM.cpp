@@ -5,6 +5,9 @@
 #include "Constants.h"
 #include <cmath>
 
+#include <iostream>
+
+
 using namespace std;
 
 namespace lstm {
@@ -40,7 +43,7 @@ namespace lstm {
         mass_check_error_bound = 0.000001;
 
 
-        //cout << lstm_params.input_biases_path;
+        cout << model_params.input_biases_path;
 
 
     }

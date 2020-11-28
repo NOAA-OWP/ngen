@@ -85,6 +85,17 @@ namespace lstm {
             double Cgw,
             double expon,
             double max_gw_storage) :
+
+                input_biases_path(input_biases_path),
+                input_weights_path(input_weights_path),
+                hidden_biases_path(hidden_biases_path),
+                hidden_weights_path(hidden_weights_path),
+                head_biases_path(head_biases_path),
+                head_weights_path(head_weights_path),
+                normalization_path(normalization_path),
+
+
+
                 maxsmc(maxsmc),
                 wltsmc(wltsmc),
                 satdk(satdk),
