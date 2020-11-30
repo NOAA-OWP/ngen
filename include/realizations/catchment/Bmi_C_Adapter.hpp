@@ -41,6 +41,14 @@ namespace models {
                           bool model_uses_forcing_file, bool allow_exceed_end,
                           const geojson::JSONProperty& other_input_vars, utils::StreamHandler output);
 
+            // Copy constructor
+            Bmi_C_Adapter(Bmi_C_Adapter &adapter);
+
+            // Move constructor
+            Bmi_C_Adapter(Bmi_C_Adapter &&adapter) noexcept;
+
+            virtual ~Bmi_C_Adapter();
+
             /**
              * Convert model time value to value in seconds.
              *
