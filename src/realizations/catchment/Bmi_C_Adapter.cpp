@@ -196,53 +196,6 @@ std::string Bmi_C_Adapter::GetTimeUnits() {
     return std::string(time_units_cstr);
 }
 
-template <typename T>
-std::vector<T> Bmi_C_Adapter::GetValue(std::string name) {
-    std::string type = GetVarType(name);
-    int total_mem = GetVarNbytes(name);
-    int item_size = GetVarItemsize(name);
-    int num_items = total_mem/item_size;
-
-    void* dest = malloc(total_mem);
-
-    int result = bmi_model->get_value(bmi_model.get(), name.c_str(), dest);
-    if (result != BMI_SUCCESS) {
-        free(dest);
-        throw std::runtime_error(model_name + " failed to get values for variable " + name + ".");
-    }
-
-    std::vector<T> retrieved_results(num_items);
-    T* d_results_ptr;
-    d_results_ptr = (T*) dest;
-
-    for (int i = 0; i < num_items; i++)
-        retrieved_results[i] = d_results_ptr[i];
-
-    /*
-    std::vector<T> retrieved_results;
-
-    if (type == "double") {
-        retrieved_results = std::vector<double>(num_items);
-        double d_results[num_items];
-        double* d_results_ptr = d_results;
-        d_results_ptr = (double*) dest;
-        for (int i = 0; i < num_items; i++)
-            retrieved_results[i] = d_results_ptr[i];
-    }
-    */
-
-    free(dest);
-    return retrieved_results;
-}
-
-template std::vector<double> Bmi_C_Adapter::GetValue<double>(std::string name);
-
-template std::vector<float> Bmi_C_Adapter::GetValue<float>(std::string name);
-
-template std::vector<int> Bmi_C_Adapter::GetValue<int>(std::string name);
-
-template std::vector<long> Bmi_C_Adapter::GetValue<long>(std::string name);
-
 int Bmi_C_Adapter::GetVarItemsize(std::string name) {
     int size;
     int success = bmi_model->get_var_itemsize(bmi_model.get(), name.c_str(), &size);
