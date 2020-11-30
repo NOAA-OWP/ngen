@@ -1,6 +1,7 @@
 #include <cstring>
 #include <exception>
 #include <utility>
+#include "FileChecker.h"
 
 #include "Bmi_C_Adapter.hpp"
 #include "boost/algorithm/string.hpp"
@@ -273,6 +274,10 @@ void Bmi_C_Adapter::Initialize() {
     // If there was a previous init attempt with (implicitly) no exception on previous attempt, just return
     else if (model_initialized) {
         return;
+    }
+    else if (!utils::FileChecker::file_is_readable(bmi_init_config)) {
+        init_exception_msg = "Cannot initialize " + model_name + " using unreadable file '" + bmi_init_config + "'";
+        throw std::runtime_error(init_exception_msg);
     }
     else {
         // Make sure this is set to 'true' after this function call finishes
