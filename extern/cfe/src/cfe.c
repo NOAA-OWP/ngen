@@ -221,6 +221,8 @@ extern int run(cfe_model* model) {
                                            model->giuh_ordinates, model->runoff_queue_m_per_timestep);
     vol_out_giuh += model->fluxes[t_index].giuh_runoff_m;
 
+    model->fluxes[t_index].Schaake_output_runoff_m = Schaake_output_runoff_m;
+
     volout += model->fluxes[t_index].giuh_runoff_m;
     volout += model->fluxes[t_index].flux_from_deep_gw_to_chan_m;
 
