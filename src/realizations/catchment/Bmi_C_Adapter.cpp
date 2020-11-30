@@ -377,6 +377,14 @@ void Bmi_C_Adapter::SetValueAtIndices(const std::string& name, std::vector<int> 
  */
 
 void Bmi_C_Adapter::Update() {
+    if (!allow_model_exceed_end_time) {
+        double current_time = GetCurrentTime();
+        double end_time = GetEndTime();
+        if (current_time >= end_time) {
+            throw std::runtime_error("Model execution update failed due to exceeding end time for " + model_name);
+        }
+    }
+
     int result = bmi_model->update(bmi_model.get());
     if (result != BMI_SUCCESS) {
         throw std::runtime_error("Model execution update failed for " + model_name);
