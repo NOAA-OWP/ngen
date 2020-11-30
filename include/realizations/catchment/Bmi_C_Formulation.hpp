@@ -72,6 +72,26 @@ namespace realization {
 
     protected:
 
+        /**
+         * Get value for some output variable at some time step, cast as a double.
+         *
+         * Function gets the value for a provided output variable at a provided time step index, and returns the value
+         * cast as a double type.
+         *
+         * The function makes several assumptions:
+         *
+         *     1. `t_index` is a time step that has already been processed for the model
+         *     2. `var_name` is in the set of valid output variable names for the model
+         *     3. the type for output variable ``var_name`` is `double`, `float`, `int`, or `long`
+         *
+         * It falls to user (functions) of this function to ensure these assumptions hold before invoking.
+         *
+         * @param t_index
+         * @param var_name
+         * @return
+         */
+        double get_var_value_as_double(time_step_t t_index, const std::string& var_name);
+
         void inner_create_formulation(geojson::PropertyMap properties, bool needs_param_validation);
 
         /**
