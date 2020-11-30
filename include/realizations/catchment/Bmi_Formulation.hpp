@@ -16,6 +16,7 @@
 #define BMI_REALIZATION_CFG_PARAM_OPT__OTHER_IN_VARS "other_input_variables"
 #define BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS "output_variables"
 #define BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS "output_header_fields"
+#define BMI_REALIZATION_CFG_PARAM_OPT__ALLOW_EXCEED_END "allow_exceed_end_time"
 
 namespace realization {
 
@@ -57,6 +58,10 @@ namespace realization {
         }
 
     protected:
+
+        const bool &get_allow_model_exceed_end_time() const {
+            return allow_model_exceed_end_time;
+        }
 
         const string &get_bmi_init_config() const {
             return bmi_init_config;
@@ -122,6 +127,10 @@ namespace realization {
             return model_initialized;
         };
 
+        void set_allow_model_exceed_end_time(bool allow_exceed_end) {
+            allow_model_exceed_end_time = allow_exceed_end;
+        }
+
         void set_bmi_init_config(const string &init_config) {
             bmi_init_config = init_config;
         }
@@ -182,6 +191,8 @@ namespace realization {
         }
 
     private:
+        /** Whether model ``Update`` calls are allowed and handled in some way by the backing model. */
+        bool allow_model_exceed_end_time = false;
         std::string bmi_init_config;
         std::shared_ptr<M> bmi_model;
         std::string bmi_main_output_var;
@@ -204,7 +215,8 @@ namespace realization {
         std::vector<std::string> OPTIONAL_PARAMETERS = {
                 BMI_REALIZATION_CFG_PARAM_OPT__OTHER_IN_VARS,
                 BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS,
-                BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS
+                BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS,
+                BMI_REALIZATION_CFG_PARAM_OPT__ALLOW_EXCEED_END
         };
         std::vector<std::string> REQUIRED_PARAMETERS = {
                 BMI_REALIZATION_CFG_PARAM_REQ__FORCING_FILE,
