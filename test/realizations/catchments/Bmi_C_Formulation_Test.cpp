@@ -122,6 +122,20 @@ TEST_F(Bmi_C_Formulation_Test, GetResponse_0_a) {
     ASSERT_EQ(response, 0.19108473440217114);
 }
 
+/** Test of get response after several iterations. */
+TEST_F(Bmi_C_Formulation_Test, GetResponse_0_b) {
+    int ex_index = 0;
+
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], *forcing_params_examples[ex_index], utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+
+    double response;
+    for (int i = 0; i < 720; i++) {
+        response = formulation.get_response(i, 3600);
+    }
+    // TODO: val seems to be this for now ... do something but account for error bound
+    ASSERT_EQ(response, 0.00067750933548268489);
+}
 
 /** Simple test of output. */
 TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_0_a) {

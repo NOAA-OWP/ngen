@@ -156,6 +156,25 @@ TEST_F(Bmi_C_Adapter_Test, Update_0_g) {
     adapter.Finalize();
 }
 
+/** Test that the update function works fails after exceeding end time. */
+TEST_F(Bmi_C_Adapter_Test, Update_0_h) {
+    Bmi_C_Adapter adapter(config_file_name_0, forcing_file_name_0, true, false, utils::StreamHandler());
+    adapter.Initialize();
+    double start_time = adapter.GetStartTime();
+    double end_time = adapter.GetEndTime();
+    while (adapter.GetCurrentTime() < adapter.GetEndTime()) {
+        adapter.Update();
+    }
+    bool found_except = false;
+    try {
+        adapter.Update();
+    }
+    catch (std::runtime_error &e) {
+        found_except = true;
+    }
+    ASSERT_TRUE(found_except);
+}
+
 /** Test that Schaake Runoff output variable values can be retrieved. */
 TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_0) {
     int out_var_index = 0;
