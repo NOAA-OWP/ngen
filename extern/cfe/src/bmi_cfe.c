@@ -4,7 +4,7 @@
 
 #define CFE_DEGUG 0
 
-#define INPUT_VAR_NAME_COUNT 0
+#define INPUT_VAR_NAME_COUNT 3
 #define OUTPUT_VAR_NAME_COUNT 5
 
 
@@ -36,22 +36,22 @@ static const char *output_var_units[OUTPUT_VAR_NAME_COUNT] = {
 
 // Don't forget to update Get_value/Get_value_at_indices (and setter) implementation if these are adjusted
 static const char *input_var_names[INPUT_VAR_NAME_COUNT] = {
-        //"TIME_STEP_DELTA"
-        //"RAIN_RATE",
+        "TIME_STEP_DELTA",
+        "RAIN_RATE",
         // Pa
-        //"SURFACE_PRESSURE"
+        "SURFACE_PRESSURE"
 };
 
 static const char *input_var_types[INPUT_VAR_NAME_COUNT] = {
-        //"int",
-        //"double",
-        //"double"
+        "int",
+        "double",
+        "double"
 };
 
 static const char *input_var_units[INPUT_VAR_NAME_COUNT] = {
-        //"s",
-        //"m",
-        //"Pa"
+        "s",
+        "m",
+        "Pa"
 };
 
 
@@ -875,11 +875,10 @@ static int Get_value_at_indices (Bmi *self, const char *name, void *dest, int *i
         return BMI_SUCCESS;
     }
 
-    /*
     if (strcmp (name, "RAIN_RATE") == 0) {
         double results[len];
         for (int i = 0; i < len; i++) {
-            results[i] = ((cfe_model *)(self->data))->rain_rates[inds[i]];
+            results[i] = ((cfe_model *)(self->data))->forcings[inds[i]].precip_kg_per_m2;
         }
         memcpy(dest, results, nbytes);
         return BMI_SUCCESS;
@@ -888,12 +887,11 @@ static int Get_value_at_indices (Bmi *self, const char *name, void *dest, int *i
     if (strcmp (name, "SURFACE_PRESSURE") == 0) {
         double results[len];
         for (int i = 0; i < len; i++) {
-            results[i] = ((cfe_model *)(self->data))->surface_pressures[inds[i]];
+            results[i] = ((cfe_model *)(self->data))->forcings[inds[i]].surface_pressure_Pa;
         }
         memcpy(dest, results, nbytes);
         return BMI_SUCCESS;
     }
-     */
 
     return BMI_FAILURE;
 }
@@ -1034,8 +1032,7 @@ static int Get_input_item_count (Bmi *self, int * count)
 
 static int Get_input_var_names (Bmi *self, char ** names)
 {
-    int i;
-    for (i=0; i<INPUT_VAR_NAME_COUNT; i++) {
+    for (int i = 0; i < INPUT_VAR_NAME_COUNT; i++) {
         strncpy (names[i], input_var_names[i], BMI_MAX_VAR_NAME);
     }
     return BMI_SUCCESS;
@@ -1051,8 +1048,7 @@ static int Get_output_item_count (Bmi *self, int * count)
 
 static int Get_output_var_names (Bmi *self, char ** names)
 {
-    int i;
-    for (i=0; i<OUTPUT_VAR_NAME_COUNT; i++) {
+    for (int i = 0; i < OUTPUT_VAR_NAME_COUNT; i++) {
         strncpy (names[i], output_var_names[i], BMI_MAX_VAR_NAME);
     }
     return BMI_SUCCESS;
