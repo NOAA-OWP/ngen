@@ -55,7 +55,9 @@ The following must be present in the realization JSON config for all catchment e
   * JSON structure should be a list of strings
   * when not present, the literal variable names are used
   * when present, does not do any checking for ordering/correspondence compared to the output ordering of the variable values, so users must take care that ordering is consistent
-
+* `allow_exceed_end_time`
+  * boolean value to specify whether a model is allowed to execute `Update` calls that go beyond its end time (or the max forcing data entry)
+  * implied to be `false` by default
 ## BMI Models Written in C
 
 * [Shared Library](#bmi-c-shared-library)
