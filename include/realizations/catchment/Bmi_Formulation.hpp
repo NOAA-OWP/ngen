@@ -42,6 +42,20 @@ namespace realization {
 
         virtual ~Bmi_Formulation() {};
 
+        /**
+         * Return ``0``, as (for now) BMI types assume backing models handle ET internally.
+         *
+         * @param soil_m
+         * @return ``0``
+         */
+        double calc_et(double soil_m) override {
+            return 0;
+        }
+
+        const vector<std::string> &get_required_parameters() override {
+            return REQUIRED_PARAMETERS;
+        }
+
     protected:
 
         const string &get_bmi_init_config() const {
