@@ -645,6 +645,13 @@ static int Update (Bmi *self)
     //  this dictates that, if time step size is not fixed, an adjustment needs to be made to reservoir on each call
     //  here according to the size of the next time step.
 
+    double current_time, end_time;
+    self->get_current_time(self, &current_time);
+    self->get_end_time(self, &end_time);
+    if (current_time >= end_time) {
+        return BMI_FAILURE;
+    }
+
     run(((cfe_model *) self->data));
 
     return BMI_SUCCESS;
