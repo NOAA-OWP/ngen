@@ -68,10 +68,43 @@ Bmi_C_Adapter::Bmi_C_Adapter(const std::string& bmi_init_config, std::string for
     }
 }
 
+Bmi_C_Adapter::Bmi_C_Adapter(Bmi_C_Adapter &adapter) : model_name(adapter.model_name),
+                                                       allow_model_exceed_end_time(adapter.allow_model_exceed_end_time),
+                                                       bmi_init_config(adapter.bmi_init_config),
+                                                       bmi_model(adapter.bmi_model),
+                                                       bmi_model_uses_forcing_file(adapter.bmi_model_uses_forcing_file),
+                                                       forcing_file_path(adapter.forcing_file_path),
+                                                       init_exception_msg(adapter.init_exception_msg),
+                                                       input_var_names(adapter.input_var_names),
+                                                       model_initialized(adapter.model_initialized),
+                                                       output_var_names(adapter.output_var_names),
+                                                       output(std::move(adapter.output)) { }
+
+Bmi_C_Adapter::Bmi_C_Adapter(Bmi_C_Adapter &&adapter) noexcept: model_name(std::move(adapter.model_name)),
+                                                                allow_model_exceed_end_time(
+                                                                        adapter.allow_model_exceed_end_time),
+                                                                bmi_init_config(std::move(adapter.bmi_init_config)),
+                                                                bmi_model(std::move(adapter.bmi_model)),
+                                                                bmi_model_uses_forcing_file(
+                                                                        adapter.bmi_model_uses_forcing_file),
+                                                                forcing_file_path(std::move(adapter.forcing_file_path)),
+                                                                init_exception_msg(
+                                                                        std::move(adapter.init_exception_msg)),
+                                                                input_var_names(std::move(adapter.input_var_names)),
+                                                                model_initialized(adapter.model_initialized),
+                                                                output_var_names(std::move(adapter.output_var_names)),
+                                                                output(std::move(std::move(adapter.output))) {}
+
+Bmi_C_Adapter::~Bmi_C_Adapter() {
+    Finalize();
+}
+
 void Bmi_C_Adapter::Finalize() {
-    int result = bmi_model->finalize(bmi_model.get());
-    if (result != BMI_SUCCESS) {
-        throw std::runtime_error("Failed to finalize model successfully");
+    if (bmi_model != nullptr) {
+        int result = bmi_model->finalize(bmi_model.get());
+        if (result != BMI_SUCCESS) {
+            throw std::runtime_error("Failed to finalize model successfully");
+        }
     }
 }
 
