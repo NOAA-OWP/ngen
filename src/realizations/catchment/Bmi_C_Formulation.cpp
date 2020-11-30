@@ -25,6 +25,39 @@ std::string Bmi_C_Formulation::get_output_header_line(std::string delimiter) {
     return boost::algorithm::join(get_output_header_fields(), delimiter);
 }
 
+/**
+ * Get the model response for this time step.
+ *
+ * Get the model response for this time step, execute the backing model formulation one or more times if the time step
+ * of the given index has not already been processed.
+ *
+ * Function assumes the backing model has been fully initialized an that any additional input values have been applied.
+ *
+ * The function will return the value of the primary output variable (see `get_bmi_main_output_var()`) for the given
+ * time step. The type returned will always be a `double`, with other numeric types being cast if necessary.
+ *
+ * Because of the nature of BMI, the `t_delta` parameter is ignored, as this cannot be passed meaningfully via
+ * the `update()` BMI function.
+ *
+ * @param t_index The index of the time step for which to run model calculations.
+ * @param d_delta_s The duration, in seconds, of the time step for which to run model calculations.
+ * @return The total discharge of the model for the given time step.
+ */
+double Bmi_C_Formulation::get_response(time_step_t t_index, time_step_t t_delta) {
+    if (get_bmi_model() == nullptr) {
+        throw std::runtime_error("Trying to process response of improperly created BMI C formulation.");
+    }
+    if (t_index < 0) {
+        throw std::invalid_argument("Getting response of negative time step in BMI C formulation is not allowed.");
+    }
+
+    int last_processed_time_step = get_bmi_model()->get_last_processed_time_step();
+    while (last_processed_time_step++ < t_index) {
+        get_bmi_model()->Update();
+    }
+    return get_var_value_as_double(t_index, get_bmi_main_output_var());
+}
+
 double Bmi_C_Formulation::get_var_value_as_double(time_step_t t_index, const std::string& var_name) {
     // TODO: change to using "at index" option
     std::string type = get_bmi_model()->GetVarType(var_name);
