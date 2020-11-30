@@ -155,3 +155,105 @@ TEST_F(Bmi_C_Adapter_Test, Update_0_g) {
     // TODO: actually assert these values are correct
     adapter.Finalize();
 }
+
+/** Test that Schaake Runoff output variable values can be retrieved. */
+TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_0) {
+    int out_var_index = 0;
+
+    Bmi_C_Adapter adapter(config_file_name_0, forcing_file_name_0, true, utils::StreamHandler());
+
+    std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
+
+    adapter.Initialize();
+    // Do the first few time steps
+    for (int i = 0; i < 40; i++)
+        adapter.Update();
+    std::vector<double> values = adapter.GetValue<double>(variable_name);
+    ASSERT_GT(values.size(), 0);
+    adapter.Finalize();
+}
+
+/** Test that GIUH Runoff output variable values can be retrieved. */
+TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_1) {
+    int out_var_index = 1;
+
+    Bmi_C_Adapter adapter(config_file_name_0, forcing_file_name_0, true, utils::StreamHandler());
+
+    std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
+
+    adapter.Initialize();
+    // Do the first few time steps
+    for (int i = 0; i < 40; i++)
+        adapter.Update();
+    std::vector<double> values = adapter.GetValue<double>(variable_name);
+    ASSERT_GT(values.size(), 0);
+    adapter.Finalize();
+}
+
+/** Test that Nash Lateral Flow output variable values can be retrieved. */
+TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_2) {
+    int out_var_index = 2;
+
+    Bmi_C_Adapter adapter(config_file_name_0, forcing_file_name_0, true, utils::StreamHandler());
+
+    std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
+
+    adapter.Initialize();
+    // Do the first few time steps
+    for (int i = 0; i < 40; i++)
+        adapter.Update();
+    std::vector<double> values = adapter.GetValue<double>(variable_name);
+    ASSERT_GT(values.size(), 0);
+    adapter.Finalize();
+}
+
+/** Test that Deep Groundwater to Channel Flux output variable values can be retrieved. */
+TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_3) {
+    int out_var_index = 3;
+
+    Bmi_C_Adapter adapter(config_file_name_0, forcing_file_name_0, true, utils::StreamHandler());
+
+    std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
+
+    adapter.Initialize();
+    // Do the first few time steps
+    for (int i = 0; i < 40; i++)
+        adapter.Update();
+    std::vector<double> values = adapter.GetValue<double>(variable_name);
+    ASSERT_GT(values.size(), 0);
+    adapter.Finalize();
+}
+
+/** Test that Total Flux (Q_OUT) output variable values can be retrieved. */
+TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_4) {
+    int out_var_index = 4;
+
+    Bmi_C_Adapter adapter(config_file_name_0, forcing_file_name_0, true, utils::StreamHandler());
+
+    std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
+
+    adapter.Initialize();
+    // Do the first few time steps
+    for (int i = 0; i < 40; i++)
+        adapter.Update();
+    std::vector<double> values = adapter.GetValue<double>(variable_name);
+    ASSERT_GT(values.size(), 0);
+    adapter.Finalize();
+}
+
+/** Test that Rain Rate input variable values can be retrieved. */
+TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_5) {
+    int input_var_index = 1;
+
+    Bmi_C_Adapter adapter(config_file_name_0, forcing_file_name_0, true, utils::StreamHandler());
+
+    std::string variable_name = adapter.GetInputVarNames()[input_var_index];
+
+    adapter.Initialize();
+    // Do the first few time steps
+    for (int i = 0; i < 40; i++)
+        adapter.Update();
+    std::vector<double> values = adapter.GetValue<double>(variable_name);
+    ASSERT_GT(values.size(), 0);
+    adapter.Finalize();
+}
