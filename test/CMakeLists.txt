@@ -82,6 +82,7 @@ add_automated_test(
 add_automated_test(
         test_bmi_c
         realizations/catchments/Bmi_C_Adapter_Test.cpp
+        realizations/catchments/Bmi_C_Formulation_Test.cpp
 )
 
 # Unit tests
