@@ -264,6 +264,14 @@ namespace models {
             /** Pointer to collection of output variable names for backing model, used by ``GetOutputVarNames()``. */
             std::shared_ptr<std::vector<std::string>> output_var_names;
 
+            /**
+             * Helper method for getting either input or output variable names.
+             *
+             * @param is_input_variable Whether input variable names should be retrieved (as opposed to output).
+             * @return
+             */
+            std::shared_ptr<std::vector<std::string>> get_variable_names(bool is_input_variable);
+
         };
 
     }
