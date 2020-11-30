@@ -87,6 +87,40 @@ double Bmi_C_Adapter::convert_model_time_to_seconds(const double& model_time_val
     return model_time_val * convert_factor;
 }
 
+std::shared_ptr<std::vector<std::string>> Bmi_C_Adapter::get_variable_names(bool is_input_variable) {
+    int count;
+    int count_result;
+    if (is_input_variable)
+        count_result = bmi_model->get_input_item_count(bmi_model.get(), &count);
+    else
+        count_result = bmi_model->get_output_item_count(bmi_model.get(), &count);
+    if (count_result != BMI_SUCCESS) {
+        throw std::runtime_error(model_name + " failed to count of output variable names array.");
+    }
+    std::shared_ptr<std::vector<std::string>> var_names = std::make_shared<std::vector<std::string>>(std::vector<std::string>(count));
+
+    char* names_array[count];
+    for (int i = 0; i < count; i++) {
+        names_array[i] = static_cast<char *>(malloc(sizeof(char) * BMI_MAX_VAR_NAME));
+    }
+    int names_result;
+    if (is_input_variable) {
+        names_result = bmi_model->get_input_var_names(bmi_model.get(), names_array);
+    }
+    else {
+        names_result = bmi_model->get_output_var_names(bmi_model.get(), names_array);
+    }
+    if (names_result != BMI_SUCCESS) {
+        throw std::runtime_error(model_name + " failed to get array of output variables names.");
+    }
+
+    for (int i = 0; i < count; ++i) {
+        (*var_names)[i] = std::string(names_array[i]);
+        free(names_array[i]);
+    }
+    return var_names;
+}
+
 double Bmi_C_Adapter::GetCurrentTime() {
     double current_time;
     int result = bmi_model->get_current_time(bmi_model.get(), &current_time);
@@ -102,26 +136,7 @@ int Bmi_C_Adapter::GetInputItemCount() {
 
 std::vector<std::string> Bmi_C_Adapter::GetInputVarNames() {
     if (input_var_names == nullptr) {
-        int count;
-        int count_result = bmi_model->get_input_item_count(bmi_model.get(), &count);
-        input_var_names = std::make_shared<std::vector<std::string>>(std::vector<std::string>(count));
-        if (count_result != BMI_SUCCESS) {
-            throw std::runtime_error(model_name + " failed to count of input variable names array.");
-        }
-
-        char* names_array[count];
-        for (int i = 0; i < count; i++) {
-            names_array[i] = static_cast<char *>(malloc(sizeof(char) * BMI_MAX_VAR_NAME));
-        }
-        int names_result = bmi_model->get_input_var_names(bmi_model.get(), names_array);
-        if (names_result != BMI_SUCCESS) {
-            throw std::runtime_error(model_name + " failed to get array of input variables names.");
-        }
-
-        for (int i = 0; i < count; ++i) {
-            (*input_var_names)[i] = std::string(names_array[i]);
-            free(names_array[i]);
-        }
+        input_var_names = get_variable_names(true);
     }
 
     return *input_var_names;
@@ -133,26 +148,7 @@ int Bmi_C_Adapter::GetOutputItemCount() {
 
 std::vector<std::string> Bmi_C_Adapter::GetOutputVarNames() {
     if (output_var_names == nullptr) {
-        int count;
-        int count_result = bmi_model->get_output_item_count(bmi_model.get(), &count);
-        output_var_names = std::make_shared<std::vector<std::string>>(std::vector<std::string>(count));
-        if (count_result != BMI_SUCCESS) {
-            throw std::runtime_error(model_name + " failed to count of output variable names array.");
-        }
-
-        char* names_array[count];
-        for (int i = 0; i < count; i++) {
-            names_array[i] = static_cast<char *>(malloc(sizeof(char) * BMI_MAX_VAR_NAME));
-        }
-        int names_result = bmi_model->get_output_var_names(bmi_model.get(), names_array);
-        if (names_result != BMI_SUCCESS) {
-            throw std::runtime_error(model_name + " failed to get array of output variables names.");
-        }
-
-        for (int i = 0; i < count; ++i) {
-            (*output_var_names)[i] = std::string(names_array[i]);
-            free(names_array[i]);
-        }
+        output_var_names = get_variable_names(false);
     }
 
     return *output_var_names;
