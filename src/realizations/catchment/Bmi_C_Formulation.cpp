@@ -25,6 +25,19 @@ std::string Bmi_C_Formulation::get_output_header_line(std::string delimiter) {
     return boost::algorithm::join(get_output_header_fields(), delimiter);
 }
 
+std::string Bmi_C_Formulation::get_output_line_for_timestep(int timestep, std::string delimiter) {
+    // Check if the timestep is in bounds for the fluxes vector, and handle case when it isn't
+    if (timestep > get_bmi_model()->get_last_processed_time_step()) {
+        return "";
+    }
+    std::string output_str;
+
+    for (const std::string& name : get_output_variable_names()) {
+        output_str += (output_str.empty() ? "" : ",") + std::to_string(get_var_value_as_double(timestep, name));
+    }
+    return output_str;
+}
+
 /**
  * Get the model response for this time step.
  *
