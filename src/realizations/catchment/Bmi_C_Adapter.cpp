@@ -8,26 +8,29 @@
 
 using namespace models::bmi;
 
-Bmi_C_Adapter::Bmi_C_Adapter(std::string forcing_file_path, bool model_uses_forcing_file, utils::StreamHandler output)
-        : Bmi_C_Adapter("", std::move(forcing_file_path), model_uses_forcing_file, output) {}
+Bmi_C_Adapter::Bmi_C_Adapter(std::string forcing_file_path, bool model_uses_forcing_file, bool allow_exceed_end,
+                             utils::StreamHandler output)
+        : Bmi_C_Adapter("", std::move(forcing_file_path), model_uses_forcing_file, allow_exceed_end, output) {}
 
 Bmi_C_Adapter::Bmi_C_Adapter(std::string bmi_init_config, std::string forcing_file_path, bool model_uses_forcing_file,
-                             utils::StreamHandler output)
+                             bool allow_exceed_end, utils::StreamHandler output)
         : bmi_init_config(std::move(bmi_init_config)), forcing_file_path(std::move(forcing_file_path)),
-          bmi_model_uses_forcing_file(model_uses_forcing_file), output(std::move(output)),
-          bmi_model(std::make_shared<Bmi>(Bmi()))
+          bmi_model_uses_forcing_file(model_uses_forcing_file), allow_model_exceed_end_time(allow_exceed_end),
+          output(std::move(output)), bmi_model(std::make_shared<Bmi>(Bmi()))
 {
     Initialize();
 }
 
 Bmi_C_Adapter::Bmi_C_Adapter(std::string forcing_file_path, bool model_uses_forcing_file,
-                             const geojson::JSONProperty& other_input_vars, utils::StreamHandler output)
-        : Bmi_C_Adapter("", std::move(forcing_file_path), model_uses_forcing_file, other_input_vars, output) {}
+                             bool allow_exceed_end, const geojson::JSONProperty& other_input_vars,
+                             utils::StreamHandler output)
+        : Bmi_C_Adapter("", std::move(forcing_file_path), model_uses_forcing_file, allow_exceed_end, other_input_vars,
+                        output) {}
 
 Bmi_C_Adapter::Bmi_C_Adapter(const std::string& bmi_init_config, std::string forcing_file_path,
-                             bool model_uses_forcing_file, const geojson::JSONProperty& other_vars,
-                             utils::StreamHandler output)
-        : Bmi_C_Adapter(bmi_init_config, std::move(forcing_file_path), model_uses_forcing_file, output)
+                             bool model_uses_forcing_file, bool allow_exceed_end,
+                             const geojson::JSONProperty& other_vars, utils::StreamHandler output)
+        : Bmi_C_Adapter(bmi_init_config, std::move(forcing_file_path), model_uses_forcing_file, allow_exceed_end, output)
 {
     // TODO: consider adding error message if something in other vars other than input variables (output and/or unrecognized)
     int set_result = 0;
@@ -129,6 +132,15 @@ double Bmi_C_Adapter::GetCurrentTime() {
         throw std::runtime_error(model_name + " failed to get current model time.");
     }
     return current_time;
+}
+
+double Bmi_C_Adapter::GetEndTime() {
+    double end_time;
+    int result = bmi_model->get_end_time(bmi_model.get(), &end_time);
+    if (result != BMI_SUCCESS) {
+        throw std::runtime_error(model_name + " failed to get model end time.");
+    }
+    return end_time;
 }
 
 int Bmi_C_Adapter::GetInputItemCount() {

@@ -28,18 +28,18 @@ namespace models {
 
         public:
 
-            explicit Bmi_C_Adapter(std::string forcing_file_path, bool model_uses_forcing_file,
+            explicit Bmi_C_Adapter(std::string forcing_file_path, bool model_uses_forcing_file, bool allow_exceed_end,
                                    utils::StreamHandler output);
 
             Bmi_C_Adapter(std::string bmi_init_config, std::string forcing_file_path, bool model_uses_forcing_file,
-                          utils::StreamHandler output);
+                          bool allow_exceed_end, utils::StreamHandler output);
 
-            Bmi_C_Adapter(std::string forcing_file_path, bool model_uses_forcing_file,
+            Bmi_C_Adapter(std::string forcing_file_path, bool model_uses_forcing_file, bool allow_exceed_end,
                           const geojson::JSONProperty& other_input_vars, utils::StreamHandler output);
 
             Bmi_C_Adapter(const std::string& bmi_init_config, std::string forcing_file_path,
-                          bool model_uses_forcing_file, const geojson::JSONProperty& other_input_vars,
-                          utils::StreamHandler output);
+                          bool model_uses_forcing_file, bool allow_exceed_end,
+                          const geojson::JSONProperty& other_input_vars, utils::StreamHandler output);
 
             /**
              * Convert model time value to value in seconds.
@@ -63,6 +63,8 @@ namespace models {
              * @return The backing model's current time.
              */
             double GetCurrentTime();
+
+            double GetEndTime();
 
             /**
              * The number of input variables the model can use.
@@ -282,7 +284,8 @@ namespace models {
             std::string model_name = "BMI C model";
 
         private:
-
+            /** Whether model ``Update`` calls are allowed and handled in some way by the backing model. */
+            bool allow_model_exceed_end_time = false;
             /** Path (as a string) to the BMI config file for initializing the backing model (empty if none). */
             std::string bmi_init_config;
             /** Pointer to C BMI model struct object. */
