@@ -26,6 +26,8 @@ target_link_libraries(realizations_catchment PUBLIC
         )
 
 if(BMI_C_LIB_ACTIVE)
+    add_compile_definitions(NGEN_BMI_C_LIB_ACTIVE)
+
     SET(BMI_C_LIB_NAME "cfemodel" CACHE STRING "User-specified name for external C BMI model library")
     message(STATUS "BMI_C_LIB_NAME set to '${BMI_C_LIB_NAME}'")
     SET(BMI_C_LIB_HINT_DIR "${PROJECT_SOURCE_DIR}/extern/cfe/cmake_cfe_lib" CACHE STRING "Hint directory to find external C BMI model library")
