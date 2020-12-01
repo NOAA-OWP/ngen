@@ -25,7 +25,9 @@ namespace realization {
     };
 
     static std::map<std::string, constructor> formulations = {
+#ifdef NGEN_BMI_C_LIB_ACTIVE
         {"bmi_c", create_formulation_constructor<Bmi_C_Formulation>()},
+#endif
         {"tshirt", create_formulation_constructor<Tshirt_Realization>()},
         {"tshirt_c", create_formulation_constructor<Tshirt_C_Realization>()},
         {"simple_lumped", create_formulation_constructor<Simple_Lumped_Model_Realization>()}
