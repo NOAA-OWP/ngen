@@ -69,7 +69,10 @@ jobs:
         timeout-minutes: 15
 
       - name: run_bmi_c_tests
-        run: ./cmake_build/test/test_bmi_c
+        run: |
+          cd ./cmake_build/test/
+          ./test_bmi_c
+          cd ../../
         timeout-minutes: 15
 
       - name: clean_build
@@ -171,7 +174,10 @@ jobs:
         timeout-minutes: 15
 
       - name: run_bmi_c_tests
-        run: ./cmake_build/test/test_bmi_c
+        run: |
+          cd ./cmake_build/test/
+          ./test_bmi_c
+          cd ../../
         timeout-minutes: 15
 
       - name: clean_build
