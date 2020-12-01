@@ -25,16 +25,7 @@ jobs:
       run: git submodule update --init --recursive -- test/googletest
 
     - name: cmake_init_build
-      run: cmake -B cmake_build -S .
-
-    - name: Configure for no BMI C
-      run: |
-        if [ -e cmake_build/CMakeCache.txt ]; then
-            if grep BMI_C_LIB_ACTIVE cmake_build/CMakeCache.txt > /dev/null; then
-                cat cmake-build/CMakeCache.txt | sed 's/BMI_C_LIB_ACTIVE:BOOL=.*/BMI_C_LIB_ACTIVE:BOOL=OFF/' > temp_cach.txt
-                mv temp_cach.txt cmake_build/CMakeCache.txt
-            fi
-        fi
+      run: cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=OFF -S .
     
     - name: build_tests
       run: cmake --build cmake_build --target test_unit
@@ -71,20 +62,7 @@ jobs:
         run: cmake --build extern/cfe/cmake_cfe_lib --target cfemodel
 
       - name: cmake_init_build
-        run: cmake -B cmake_build -S .
-
-      - name: Configure for BMI C
-        run: |
-          if [ -e cmake_build/CMakeCache.txt ]; then
-              if grep BMI_C_LIB_ACTIVE cmake_build/CMakeCache.txt > /dev/null; then
-                  cat cmake-build/CMakeCache.txt | sed 's/BMI_C_LIB_ACTIVE:BOOL=.*/BMI_C_LIB_ACTIVE:BOOL=ON/' > temp_cach.txt
-                  mv temp_cach.txt cmake_build/CMakeCache.txt
-              else
-                  echo "BMI_C_LIB_ACTIVE:BOOL=ON" >> cmake-build/CMakeCache.txt
-              fi
-          else
-              echo "BMI_C_LIB_ACTIVE:BOOL=ON" >> cmake-build/CMakeCache.txt
-          fi
+        run: cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=ON -S .
 
       - name: build_bmi_c_tests
         run: cmake --build cmake_build --target test_bmi_c
@@ -135,16 +113,7 @@ jobs:
         run: |
           export BOOST_ROOT="$(pwd)/boost_1_72_0"
           [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
-          cmake -B cmake_build -S .
-
-      - name: Configure for no BMI C
-        run: |
-          if [ -e cmake_build/CMakeCache.txt ]; then
-              if grep BMI_C_LIB_ACTIVE cmake_build/CMakeCache.txt > /dev/null; then
-                  cat cmake-build/CMakeCache.txt | sed 's/BMI_C_LIB_ACTIVE:BOOL=.*/BMI_C_LIB_ACTIVE:BOOL=OFF/' > temp_cach.txt
-                  mv temp_cach.txt cmake_build/CMakeCache.txt
-              fi
-          fi
+          cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=OFF -S .
 
       - name: build_tests
         run: cmake --build cmake_build --target test_unit
@@ -195,20 +164,7 @@ jobs:
         run: |
           export BOOST_ROOT="$(pwd)/boost_1_72_0"
           [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
-          cmake -B cmake_build -S .
-
-      - name: Configure for BMI C
-        run: |
-          if [ -e cmake_build/CMakeCache.txt ]; then
-              if grep BMI_C_LIB_ACTIVE cmake_build/CMakeCache.txt > /dev/null; then
-                  cat cmake-build/CMakeCache.txt | sed 's/BMI_C_LIB_ACTIVE:BOOL=.*/BMI_C_LIB_ACTIVE:BOOL=ON/' > temp_cach.txt
-                  mv temp_cach.txt cmake_build/CMakeCache.txt
-              else
-                  echo "BMI_C_LIB_ACTIVE:BOOL=ON" >> cmake-build/CMakeCache.txt
-              fi
-          else
-              echo "BMI_C_LIB_ACTIVE:BOOL=ON" >> cmake-build/CMakeCache.txt
-          fi
+          cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=ON -S .
 
       - name: build_bmi_c_tests
         run: cmake --build cmake_build --target test_bmi_c
