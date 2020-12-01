@@ -15,6 +15,8 @@ protected:
 
     void TearDown() override;
 
+    std::string file_search(const std::vector<std::string> &parent_dir_options, const std::string& file_basename);
+
     std::string config_file_name_0;
     std::string forcing_file_name_0;
 
@@ -34,26 +36,27 @@ void Bmi_C_Adapter_Test::SetUp() {
             "../test/data/bmi/c/cfe/",
             "../../test/data/bmi/c/cfe/",
     };
-
     std::string config_basename_0 = "cat_87_bmi_config.txt";
+    config_file_name_0 = file_search(config_path_options, config_basename_0);
 
-    // Build vector of names by building combinations of the path and basename options
-    std::vector<std::string> config_file_names_0(config_path_options.size());
-
-    // Build so that all path names are tried for given basename before trying a different basename option
-    for (auto & path_option : config_path_options) {
-        std::string string_combo = path_option + config_basename_0;
-        config_file_names_0.push_back(string_combo);
-    }
-
-    // Then go through in order and find the fist existing combination
-    config_file_name_0 = utils::FileChecker::find_first_readable(config_file_names_0);
-    // Straight from the config file ...
-    forcing_file_name_0 = "../../data/forcing/cat-87_2015-12-01 00_00_00_2015-12-30 23_00_00.csv";
+    std::vector<std::string> forcing_dir_opts = {"./data/forcing", "../data/forcing", "../../data/forcing"};
+    forcing_file_name_0 = file_search(forcing_dir_opts, "cat-87_2015-12-01 00_00_00_2015-12-30 23_00_00.csv");
 }
 
 void Bmi_C_Adapter_Test::TearDown() {
 
+}
+
+std::string
+Bmi_C_Adapter_Test::file_search(const std::vector<std::string> &parent_dir_options, const std::string& file_basename) {
+    // Build vector of names by building combinations of the path and basename options
+    std::vector<std::string> name_combinations(parent_dir_options.size());
+
+    // Build so that all path names are tried for given basename before trying a different basename option
+    for (auto & path_option : parent_dir_options)
+        name_combinations.push_back(path_option + file_basename);
+
+    return utils::FileChecker::find_first_readable(name_combinations);
 }
 
 /** Simple test to make sure the model initializes. */
