@@ -1,3 +1,5 @@
+#ifdef NGEN_BMI_C_LIB_TESTS_ACTIVE
+
 #include "gtest/gtest.h"
 #include <vector>
 #include <boost/property_tree/ptree.hpp>
@@ -150,3 +152,5 @@ TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_0_a) {
     ASSERT_EQ(output, "0.000000,0.000000,0.000000,0.191085,0.191085");
 
 }
+
+#endif  // NGEN_BMI_C_LIB_TESTS_ACTIVE

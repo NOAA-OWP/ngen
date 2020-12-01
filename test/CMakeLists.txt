@@ -4,6 +4,10 @@ add_subdirectory(googletest)
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 include_directories(${PROJ_ROOT_INCLUDE_DIR})
 
+if(BMI_C_LIB_ACTIVE)
+    add_compile_definitions(NGEN_BMI_C_LIB_TESTS_ACTIVE)
+endif()
+
 # Add test source files (e.g., test1.cpp)
 #add_executable(test_hymod models/hymod/include/HymodTest.cpp)
 #target_link_libraries(test_hymod gtest gtest_main)
