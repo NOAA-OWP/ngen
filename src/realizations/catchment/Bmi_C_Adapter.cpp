@@ -95,19 +95,6 @@ Bmi_C_Adapter::Bmi_C_Adapter(Bmi_C_Adapter &&adapter) noexcept: model_name(std::
                                                                 output_var_names(std::move(adapter.output_var_names)),
                                                                 output(std::move(std::move(adapter.output))) {}
 
-Bmi_C_Adapter::~Bmi_C_Adapter() {
-    Finalize();
-}
-
-void Bmi_C_Adapter::Finalize() {
-    if (bmi_model != nullptr) {
-        int result = bmi_model->finalize(bmi_model.get());
-        if (result != BMI_SUCCESS) {
-            throw std::runtime_error("Failed to finalize model successfully");
-        }
-    }
-}
-
 double Bmi_C_Adapter::convert_model_time_to_seconds(const double& model_time_val) {
     std::string time_units = GetTimeUnits();
     double convert_factor;
@@ -122,6 +109,15 @@ double Bmi_C_Adapter::convert_model_time_to_seconds(const double& model_time_val
     else
         throw std::runtime_error("Invalid model time step units ('" + time_units + "') in BMI C formulation.");
     return model_time_val * convert_factor;
+}
+
+void Bmi_C_Adapter::Finalize() {
+    if (bmi_model != nullptr) {
+        int result = bmi_model->finalize(bmi_model.get());
+        if (result != BMI_SUCCESS) {
+            throw std::runtime_error("Failed to finalize model successfully");
+        }
+    }
 }
 
 std::shared_ptr<std::vector<std::string>> Bmi_C_Adapter::get_variable_names(bool is_input_variable) {

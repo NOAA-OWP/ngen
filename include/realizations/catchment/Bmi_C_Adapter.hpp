@@ -47,8 +47,6 @@ namespace models {
             // Move constructor
             Bmi_C_Adapter(Bmi_C_Adapter &&adapter) noexcept;
 
-            virtual ~Bmi_C_Adapter();
-
             /**
              * Convert model time value to value in seconds.
              *
