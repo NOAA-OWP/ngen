@@ -225,12 +225,13 @@ double Bmi_C_Adapter::GetStartTime() {
  */
 double Bmi_C_Adapter::GetTimeStep() {
     // FIXME: finish implementing properly beyond just reading from model, as noted in docstring above
-    double ts_delta;
-    int result = bmi_model->get_time_step(bmi_model.get(), &ts_delta);
-    if (result != BMI_SUCCESS) {
-        throw std::runtime_error(model_name + " failed to read time step size from model.");
-    }
-    return ts_delta;
+    double current_time = GetCurrentTime();
+    double start_time = GetStartTime();
+    std::vector<int> ts_sizes = GetValue<int>("TIME_STEP_DELTA");
+    int i = 0;
+    while (i < ts_sizes.size() && current_time > start_time)
+        current_time -= ts_sizes[i++];
+    return (i >= ts_sizes.size()) ? ts_sizes[i-1] : ts_sizes[i];
 }
 
 std::string Bmi_C_Adapter::GetTimeUnits() {
@@ -286,6 +287,7 @@ int Bmi_C_Adapter::get_last_processed_time_step() {
     int last_processed_time_step = -1;
     double time_s = convert_model_time_to_seconds(GetStartTime());
     double current_time_s = convert_model_time_to_seconds(GetCurrentTime());
+    int ts = GetTimeStep();
     double ts_size_s = convert_model_time_to_seconds(GetTimeStep());
 
     while (time_s < current_time_s) {
