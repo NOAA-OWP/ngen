@@ -98,3 +98,6 @@ CMakeCache.txt
 include/bmi.hpp
 
 temp/
+
+# Shared Library Example Build Directory
+extern/cfe/cmake_cfe_lib
