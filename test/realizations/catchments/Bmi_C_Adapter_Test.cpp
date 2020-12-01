@@ -1,3 +1,5 @@
+#ifdef NGEN_BMI_C_LIB_TESTS_ACTIVE
+
 #include "gtest/gtest.h"
 #include <vector>
 #include <exception>
@@ -276,3 +278,5 @@ TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_5) {
     ASSERT_GT(values.size(), 0);
     adapter.Finalize();
 }
+
+#endif  // NGEN_BMI_C_LIB_TESTS_ACTIVE
