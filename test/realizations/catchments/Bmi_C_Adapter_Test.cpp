@@ -39,7 +39,7 @@ void Bmi_C_Adapter_Test::SetUp() {
     std::string config_basename_0 = "cat_87_bmi_config.txt";
     config_file_name_0 = file_search(config_path_options, config_basename_0);
 
-    std::vector<std::string> forcing_dir_opts = {"./data/forcing", "../data/forcing", "../../data/forcing"};
+    std::vector<std::string> forcing_dir_opts = {"./data/forcing/", "../data/forcing/", "../../data/forcing/"};
     forcing_file_name_0 = file_search(forcing_dir_opts, "cat-87_2015-12-01 00_00_00_2015-12-30 23_00_00.csv");
 }
 
