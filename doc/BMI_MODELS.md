@@ -1,13 +1,18 @@
 # BMI External Models
 
 * [Summary](#summary)
-* [Realization Config](#realization-config)
+* [Formulation Config](#formulation-config)
+    * [Required Parameters](#required-parameters)
+    * [Optional Parameters](#optional-parameters)
 * [BMI Models Written in C](#bmi-models-written-in-c)
+    * [BMI C Model As Shared Library](#bmi-c-shared-library)
+    * [Example: CFE Shared Library](#bmi-c-cfe-example)
+    * [BMI C Caveats](#bmi-c-caveats)
 
 ## Summary
 
 The basic outline of steps needed to work with an external BMI model is:
-  * Configure the main realization config properly for the catchments that will use the generalized BMI realization(s) 
+  * Configure the main formulation/realization config properly for the catchments that will use the generalized BMI realization(s) 
   * Make sure all the necessary model-specific BMI initialization files are valid and in place
   * Take appropriate steps to make model source files accessible as needed (e.g., making sure shared library files are in a known location)
   * Be aware of any model-language-specific caveats 
@@ -17,13 +22,28 @@ The basic outline of steps needed to work with an external BMI model is:
 
 [//]: # (TODO: Python, C++, and Fortran )
 
-## Realization Config
+## Formulation Config
 
-The catchment entry in the realization config must be set to used the appropriate type for the associated BMI realization.  E.g.:
+The catchment entry in the formulation/realization config must be set to used the appropriate type for the associated BMI realization, via the formulation's `name` JSON element.  E.g.:
+
+      ...
+      "cat-87": {
+           "formulations": [
+               {
+                   "name": "bmi_c",
+                   "params": { ... }
+               }
+           }
+      ...
+  
+Valid name values for the currently implemented BMI formulation types are:
+
 * `bmi_c`
 
+Because of the generalization of the interface to the model, the required and optional parameters for all the BMI formulation types are the same.  
+
 ### Required Parameters
-The following must be present in the realization JSON config for all catchment entries using the BMI realization:
+The following must be present in the formulation/realization JSON config for all catchment entries using the BMI formulation type:
 
 * `model_type_name`
   * string name for the particular backing model type
@@ -58,13 +78,14 @@ The following must be present in the realization JSON config for all catchment e
 * `allow_exceed_end_time`
   * boolean value to specify whether a model is allowed to execute `Update` calls that go beyond its end time (or the max forcing data entry)
   * implied to be `false` by default
+  
 ## BMI Models Written in C
 
-* [Shared Library](#bmi-c-shared-library)
+* [Model As Shared Library](#bmi-c-model-as-shared-library)
 * [Example](#bmi-c-cfe-example)
 * [Caveats](#bmi-c-caveats)
 
-### BMI C Shared Library
+### BMI C Model As Shared Library
 
 For **C** models, the model must be packaged as a pre-compiled shared library.  Several CMake cache variables must be configure for controlling whether to expect such a library and how to find it:
 
