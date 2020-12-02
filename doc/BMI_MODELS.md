@@ -115,8 +115,15 @@ An example implementation for an appropriate BMI model as a **C** shared library
 
 ### BMI C Caveats
 
+* [Activation/Deactivation in CMake Required](#bmi-c-activatedeactivation-required-in-cmake-build)
 * [Only One Generic BMI C at a Time](#only-one-generic-bmi-c-at-a-time)
 * [Additional Bootstrapping Function Needed](#additional-bootstrapping-function-needed)
+
+#### BMI C Activate/Deactivation Required in CMake Build
+
+BMI C functionality will not work (i.e., will not be compiled or executable) unless set to be active in the CMake build.  This requires setting the `BMI_C_LIB_ACTIVE` CMake cache variable to `ON` or `TRUE` (or equivalent).  It will probably also be necessary to configure other settings, as [described here](#bmi-c-model-as-shared-library). 
+
+Conversely, built executables (and perhaps certain build targets) will not work if `BMI_C_LIB_ACTIVE` is `ON` but the configured shared library is not available.
 
 #### Only One Generic BMI C at a Time
 
