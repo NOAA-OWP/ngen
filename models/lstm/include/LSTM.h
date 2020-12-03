@@ -19,6 +19,13 @@
 #include <vector>
 #include <memory>
 
+
+
+//#include <torch/script.h>
+
+#include <torch/torch.h>
+
+
 using namespace std;
 
 namespace lstm {
