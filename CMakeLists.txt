@@ -113,6 +113,7 @@ target_link_libraries(ngen PUBLIC
         NGen::kernels_reservoir
         #NGen::kernels_reservoir_timeless
         #NGen::forcing
+        ${TORCH_LIBRARIES}
         )
 
 # For automated testing with Google Test

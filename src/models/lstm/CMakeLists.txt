@@ -11,9 +11,16 @@ target_include_directories(models_lstm PUBLIC
         ${TORCH_INCLUDE_DIRS}
         )
 
+#find_package(Torch REQUIRED)
+
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
 
 
+#target_link_libraries(models_lstm PUBLIC 
+#        NGen::kernels_reservoir
+#        NGen::geojson
+#        ${TORCH_LIBRARIES})
+
+
 target_link_libraries(models_lstm PUBLIC 
-        NGen::kernels_reservoir
-        ${TORCH_LIBRARIES})
+        NGen::kernels_reservoir)
