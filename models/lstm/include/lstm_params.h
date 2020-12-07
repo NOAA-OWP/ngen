@@ -19,7 +19,7 @@ namespace lstm {
         std::string normalization_path;
 
 
-
+        /*
         double maxsmc;              //!< saturated soil moisture content (sometimes theta_e or smcmax)
         double wltsmc;              //!< wilting point soil moisture content
         double satdk;               //!< vertical saturated hydraulic conductivity [m s^-1] (sometimes Kperc or Ks)
@@ -40,6 +40,7 @@ namespace lstm {
         double max_lateral_flow;    //!< Max rate for subsurface lateral flow (i.e., max transmissivity)
         double refkdt = 3.0;        //!< Standard value taken from NOAH-MP, used for calculating Schaake magic constant
         const double depth = 2.0;         //!< Hard-coded, constant value for total soil column depth ('D') [m]
+        */ 
 
         /**
          * Constructor for instances, initializing members that correspond one-to-one with a parameter and deriving
@@ -67,10 +68,10 @@ namespace lstm {
            std::string hidden_weights_path,
            std::string head_biases_path,
            std::string head_weights_path,
-           std::string normalization_path,
+           std::string normalization_path) :
 
 
-
+            /*
             double maxsmc,
             double wltsmc,
             double satdk,
@@ -85,6 +86,7 @@ namespace lstm {
             double Cgw,
             double expon,
             double max_gw_storage) :
+            */
 
                 input_biases_path(input_biases_path),
                 input_weights_path(input_weights_path),
@@ -92,10 +94,10 @@ namespace lstm {
                 hidden_weights_path(hidden_weights_path),
                 head_biases_path(head_biases_path),
                 head_weights_path(head_weights_path),
-                normalization_path(normalization_path),
+                normalization_path(normalization_path){
 
-
-
+         
+                /*
                 maxsmc(maxsmc),
                 wltsmc(wltsmc),
                 satdk(satdk),
@@ -113,6 +115,7 @@ namespace lstm {
             this->max_soil_storage_meters = this->depth * maxsmc;
             this->Cschaake = refkdt * satdk / (2.0e-6);
             this->max_lateral_flow = numeric_limits<double>::max();//satdk * multiplier * this->max_soil_storage_meters;
+            */
         }
 
     };

@@ -8,12 +8,12 @@ target_include_directories(models_lstm PUBLIC
         ${PROJECT_SOURCE_DIR}/include/utilities
         ${PROJECT_SOURCE_DIR}/models/kernels
         ${PROJECT_SOURCE_DIR}/models/lstm/include
-        ${TORCH_INCLUDE_DIRS}
+        #${TORCH_INCLUDE_DIRS}
         )
 
 #find_package(Torch REQUIRED)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
 
 
 #target_link_libraries(models_lstm PUBLIC 

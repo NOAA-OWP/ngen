@@ -7,12 +7,12 @@ using namespace realization;
 LSTM_Realization::LSTM_Realization(
         forcing_params forcing_config,
         utils::StreamHandler output_stream,
-        double soil_storage_meters,
-        double groundwater_storage_meters,
+        //double soil_storage_meters,
+        //double groundwater_storage_meters,
         std::string catchment_id,
         giuh::GiuhJsonReader &giuh_json_reader,
         lstm::lstm_params params,
-        const vector<double> &nash_storage,
+        //const vector<double> &nash_storage,
         time_step_t t)
     : Catchment_Formulation(catchment_id, forcing_config, output_stream), catchment_id(catchment_id), dt(t)
 {
@@ -26,16 +26,25 @@ LSTM_Realization::LSTM_Realization(
                 giuh::giuh_kernel(this->catchment_id, giuh_json_reader.get_associated_comid(this->catchment_id)));
     }
 
+    /////////Temp
+    double soil_storage_meters = 0.0;
+    ///////////////
+
     //FIXME not really used, don't call???
     //add_time(t, params.nash_n);
-    state[0] = std::make_shared<lstm::lstm_state>(lstm::lstm_state(soil_storage_meters, groundwater_storage_meters, nash_storage));
+    //state[0] = std::make_shared<lstm::lstm_state>(lstm::lstm_state(soil_storage_meters, groundwater_storage_meters, nash_storage));
+    state[0] = std::make_shared<lstm::lstm_state>(lstm::lstm_state(soil_storage_meters));
+ 
+
     //state[0]->soil_storage_meters = soil_storage_meters;
     //state[0]->groundwater_storage_meters = groundwater_storage_meters;
-
+/*
     for (int i = 0; i < params.nash_n; ++i) {
 
         state[0]->nash_cascade_storeage_meters[i] = nash_storage[i];
     }
+*/
+
 
     model = make_unique<lstm::lstm_model>(lstm::lstm_model(params, state[0]));
 }
@@ -43,8 +52,8 @@ LSTM_Realization::LSTM_Realization(
 LSTM_Realization::LSTM_Realization(
         forcing_params forcing_config,
         utils::StreamHandler output_stream,
-        double soil_storage_meters,
-        double groundwater_storage_meters,
+        //double soil_storage_meters,
+        //double groundwater_storage_meters,
         std::string catchment_id,
         giuh::GiuhJsonReader &giuh_json_reader,
 
@@ -57,6 +66,7 @@ LSTM_Realization::LSTM_Realization(
         std::string head_weights_path,
         std::string normalization_path,
 
+/*
         double maxsmc,
         double wltsmc,
         double satdk,
@@ -72,16 +82,25 @@ LSTM_Realization::LSTM_Realization(
         double expon,
         double max_gw_storage,
         const std::vector<double> &nash_storage,
-        time_step_t t
-) : LSTM_Realization::LSTM_Realization(forcing_config, output_stream, soil_storage_meters, groundwater_storage_meters,
+*/
+        
+       time_step_t t
+) : LSTM_Realization::LSTM_Realization(forcing_config, output_stream, //soil_storage_meters, groundwater_storage_meters,
                                            catchment_id, giuh_json_reader,
                                            //lstm::lstm_params(maxsmc, wltsmc, satdk, satpsi, slope, b, multiplier,
                                            //alpha_fc, Klf, Kn, nash_n, Cgw, expon, max_gw_storage),
                                            //nash_storage, t) {
 
+/*
                                            lstm::lstm_params(input_biases_path, input_weights_path, hidden_biases_path, hidden_weights_path, head_biases_path, head_weights_path, normalization_path, maxsmc, wltsmc, satdk, satpsi, slope, b, multiplier,
                                                                  alpha_fc, Klf, Kn, nash_n, Cgw, expon, max_gw_storage),
                                            nash_storage, t) {
+*/
+
+                                           lstm::lstm_params(input_biases_path, input_weights_path, hidden_biases_path, hidden_weights_path, head_biases_path, head_weights_path, normalization_path),
+                                           t) {
+
+
 
 
 }
@@ -107,15 +126,21 @@ double LSTM_Realization::get_response(time_step_t t_index, time_step_t t_delta_s
     double precip = this->forcing.get_next_hourly_precipitation_meters_per_second();
     //FIXME should this run "daily" or hourly (t) which should really be dt
     //Do we keep an "internal dt" i.e. this->dt and reconcile with t?
+   
+    /*
     int error = model->run(t_index, precip * t_delta_s / 1000, get_et_params_ptr());
     if(error == lstm::LSTM_MASS_BALANCE_ERROR){
       std::cout<<"WARNING LSTM_Realization::model mass balance error"<<std::endl;
     }
+    */
     state[t_index + 1] = model->get_current_state();
     fluxes[t_index] = model->get_fluxes();
-    double giuh = giuh_kernel->calc_giuh_output(t_index, fluxes[t_index]->surface_runoff_meters_per_second);
-    return fluxes[t_index]->soil_lateral_flow_meters_per_second + fluxes[t_index]->groundwater_flow_meters_per_second +
-           giuh;
+
+    //double giuh = giuh_kernel->calc_giuh_output(t_index, fluxes[t_index]->surface_runoff_meters_per_second);
+
+
+    //return fluxes[t_index]->soil_lateral_flow_meters_per_second + fluxes[t_index]->groundwater_flow_meters_per_second + giuh;
+    return 0.0;
 }
 
 /**
@@ -164,6 +189,8 @@ void LSTM_Realization::create_formulation(geojson::PropertyMap properties) {
         properties.at("head_weights_path").as_string(),
         properties.at("normalization_path").as_string(),
 
+
+/*
         properties.at("maxsmc").as_real_number(),   //maxsmc FWRFH
         properties.at("wltsmc").as_real_number(),  //wltsmc  from fred_t-shirt.c FIXME NOT USED IN lstm?!?!
         properties.at("satdk").as_real_number(),   //satdk FWRFH
@@ -178,23 +205,34 @@ void LSTM_Realization::create_formulation(geojson::PropertyMap properties) {
         properties.at("Cgw").as_real_number(),    //fred_t-shirt gw res coeeficient (per h)
         properties.at("expon").as_real_number(),    //expon FWRFH
         properties.at("max_groundwater_storage_meters").as_real_number()   //max_gw_storage Sgwmax FWRFH
+*/
+
     };
 
     this->params = &lstm_params;
 
-    double soil_storage_meters = lstm_params.max_soil_storage_meters * properties.at("soil_storage_percentage").as_real_number();
-    double ground_water_storage = lstm_params.max_groundwater_storage_meters * properties.at("groundwater_storage_percentage").as_real_number();
+    //double soil_storage_meters = lstm_params.max_soil_storage_meters * properties.at("soil_storage_percentage").as_real_number();
+    //double ground_water_storage = lstm_params.max_groundwater_storage_meters * properties.at("groundwater_storage_percentage").as_real_number();
 
-    std::vector<double> nash_storage = properties.at("nash_storage").as_real_vector();
+    //std::vector<double> nash_storage = properties.at("nash_storage").as_real_vector();
 
-    this->state[0] = std::make_shared<lstm::lstm_state>(lstm::lstm_state(soil_storage_meters, ground_water_storage, nash_storage));
+////////////////
+    //this->state[0] = std::make_shared<lstm::lstm_state>(lstm::lstm_state(soil_storage_meters, ground_water_storage, nash_storage));
+///////////////
 
+/*
     for (int i = 0; i < lstm_params.nash_n; ++i) {
 
         this->state[0]->nash_cascade_storeage_meters[i] = nash_storage[i];
     }
+*/
 
-    this->model = make_unique<lstm::lstm_model>(lstm::lstm_model(lstm_params, this->state[0]));
+///////
+//    this->model = make_unique<lstm::lstm_model>(lstm::lstm_model(lstm_params, this->state[0]));
+/////
+
+
+
 
     geojson::JSONProperty giuh = properties.at("giuh");
 
@@ -221,6 +259,7 @@ void LSTM_Realization::create_formulation(geojson::PropertyMap properties) {
 
         throw std::runtime_error(message);
     }
+
 
     std::unique_ptr<giuh::GiuhJsonReader> giuh_reader = std::make_unique<giuh::GiuhJsonReader>(
         giuh.at("giuh_path").as_string(),
@@ -256,7 +295,7 @@ void LSTM_Realization::create_formulation(boost::property_tree::ptree &config, g
         options.at("normalization_path").as_string(),
 
 
-
+/*
         options.at("maxsmc").as_real_number(),   //maxsmc FWRFH
         options.at("wltsmc").as_real_number(),  //wltsmc  from fred_t-shirt.c FIXME NOT USED IN lstm?!?!
         options.at("satdk").as_real_number(),   //satdk FWRFH
@@ -271,10 +310,14 @@ void LSTM_Realization::create_formulation(boost::property_tree::ptree &config, g
         options.at("Cgw").as_real_number(),    //fred_t-shirt gw res coeeficient (per h)
         options.at("expon").as_real_number(),    //expon FWRFH
         options.at("max_groundwater_storage_meters").as_real_number()   //max_gw_storage Sgwmax FWRFH
+*/
+
     };
 
     this->params = &lstm_params;
 
+
+/*
     double soil_storage_meters = lstm_params.max_soil_storage_meters * options.at("soil_storage_percentage").as_real_number();
     double ground_water_storage = lstm_params.max_groundwater_storage_meters * options.at("groundwater_storage_percentage").as_real_number();
 
@@ -286,6 +329,8 @@ void LSTM_Realization::create_formulation(boost::property_tree::ptree &config, g
 
         this->state[0]->nash_cascade_storeage_meters[i] = nash_storage[i];
     }
+*/
+
 
     this->model = make_unique<lstm::lstm_model>(lstm::lstm_model(lstm_params, this->state[0]));
 
