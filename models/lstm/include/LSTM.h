@@ -62,14 +62,14 @@ namespace lstm {
          * @param et_params
          * @return
          */
-        double calc_evapotranspiration(double soil_m, shared_ptr<pdm03_struct> et_params);
+        //double calc_evapotranspiration(double soil_m, shared_ptr<pdm03_struct> et_params);
 
         /**
          * Calculate soil field capacity storage, the level at which free drainage stops (i.e., "Sfc").
          *
          * @return The calculated soil field capacity storage.
          */
-        double calc_soil_field_capacity_storage();
+        //double calc_soil_field_capacity_storage();
 
         /**
          * Return the smart pointer to the lstm::lstm_model struct for holding this object's current state.
@@ -85,7 +85,7 @@ namespace lstm {
          */
         shared_ptr<lstm_fluxes> get_fluxes();
 
-        double get_mass_check_error_bound();
+        //double get_mass_check_error_bound();
 
         /**
          * Check that mass was conserved by the model's calculations of the current time step.
@@ -94,7 +94,7 @@ namespace lstm {
          * @param timestep_s The size of the time step, in seconds.
          * @return The appropriate code value indicating whether mass was conserved in the current time step's calculations.
          */
-        int mass_check(double input_storage_m, double timestep_s);
+        //int mass_check(double input_storage_m, double timestep_s);
 
         /**
          * Run the model to one time step, after performing initial housekeeping steps via a call to
@@ -105,7 +105,8 @@ namespace lstm {
          * @param et_params ET parameters struct
          * @return
          */
-        int run(double dt, double input_storage_m, shared_ptr<pdm03_struct> et_params);
+        //int run(double dt, double input_storage_m, shared_ptr<pdm03_struct> et_params);
+        int run(double dt);
 
     protected:
 
@@ -127,7 +128,7 @@ namespace lstm {
          *
          * @param error_bound The value used to set the mass_check_error_bound member.
          */
-        void set_mass_check_error_bound(double error_bound);
+        //void set_mass_check_error_bound(double error_bound);
 
 
 
@@ -146,22 +147,22 @@ namespace lstm {
          * A collection of reservoirs for a Nash Cascade at the end of the lateral flow output from the subsurface soil
          * reservoir.
          */
-        vector<unique_ptr<Reservoir::Explicit_Time::Reservoir>> soil_lf_nash_res;
+        //vector<unique_ptr<Reservoir::Explicit_Time::Reservoir>> soil_lf_nash_res;
         //FIXME reservoir construction sorts outlets by activation_threshold
         //so the fixed index assumption is invalid.  However, in the current use case
         //they both have the save activation_threshold (Sfc), but we do want percolation fluxes to happen first
         //so make it index 0
         /** The index of the subsurface lateral flow outlet in the soil reservoir. */
-        int lf_outlet_index = 1;
+        //int lf_outlet_index = 1;
         /** The index of the percolation flow outlet in the soil reservoir. */
-        int perc_outlet_index = 0;
-        Reservoir::Explicit_Time::Reservoir soil_reservoir;
-        Reservoir::Explicit_Time::Reservoir groundwater_reservoir;
+        //int perc_outlet_index = 0;
+        //Reservoir::Explicit_Time::Reservoir soil_reservoir;
+        //Reservoir::Explicit_Time::Reservoir groundwater_reservoir;
         shared_ptr<lstm_fluxes> fluxes;
         /** The size of the error bound that is acceptable when performing mass check calculations. */
-        double mass_check_error_bound;
+        //double mass_check_error_bound;
         /** Soil field capacity storage, or the level at which free drainage stops (i.e., "Sfc"). */
-        double soil_field_capacity_storage;
+        //double soil_field_capacity_storage;
 
         /**
          * Check that the current state of this model object (which could be its provided initial state) is valid, printing
@@ -172,7 +173,7 @@ namespace lstm {
          * reservoirs within the Nash Cascade.  Note that the function will interpret any `nash_n` greater than `0` as valid
          * if the vector itself is empty, and initialize such a vector to the correct size with all `0.0` values.
          */
-        void check_valid();
+        //void check_valid();
 
         /**
          * Initialize the subsurface groundwater reservoir for the model, in the `groundwater_reservoir` member field.
@@ -188,7 +189,7 @@ namespace lstm {
          * @see Reservoir
          * @see Reservoir_Exponential_Outlet
          */
-        void initialize_groundwater_reservoir();
+        //void initialize_groundwater_reservoir();
 
         /**
          * Initialize the subsurface soil reservoir for the model, in the `soil_reservoir` member field.
@@ -204,7 +205,7 @@ namespace lstm {
          *
          * @see Reservoir
          */
-        void initialize_soil_reservoir();
+        //void initialize_soil_reservoir();
 
         /**
          * Initialize the Nash Cascade reservoirs applied to the subsurface soil reservoir's lateral flow outlet.
@@ -213,7 +214,7 @@ namespace lstm {
          * the Nash Cascade for soil_reservoir lateral flow outlet.  The analogous values for Nash Cascade storage from
          * previous_state are used for current storage of reservoirs at each given index.
          */
-        void initialize_subsurface_lateral_flow_nash_cascade();
+        //void initialize_subsurface_lateral_flow_nash_cascade();
 
     };
 }

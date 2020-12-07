@@ -23,25 +23,25 @@ namespace lstm {
             : model_params(model_params), previous_state(initial_state), current_state(initial_state)
     {
         // ********** Start by calculating Sfc, as this will get by several other things
-        soil_field_capacity_storage = calc_soil_field_capacity_storage();
+        //soil_field_capacity_storage = calc_soil_field_capacity_storage();
 
         // ********** Sanity check init (in particular, size of Nash Cascade storage vector in the state parameter).
-        check_valid();
+        //check_valid();
 
         // ********** Create the vector of Nash Cascade reservoirs used at the end of the soil lateral flow outlet
-        initialize_subsurface_lateral_flow_nash_cascade();
+        //initialize_subsurface_lateral_flow_nash_cascade();
 
         // ********** Create the soil reservoir
-        initialize_soil_reservoir();
+        //initialize_soil_reservoir();
 
         // ********** Create the groundwater reservoir
-        initialize_groundwater_reservoir();
+        //initialize_groundwater_reservoir();
 
         // ********** Set fluxes to null for now: it is bogus until first call of run function, which initializes it
         fluxes = nullptr;
 
         // ********** Acceptable error range for mass balance calculations; hard-coded for now to this value
-        mass_check_error_bound = 0.000001;
+        //mass_check_error_bound = 0.000001;
 
 
         cout << model_params.input_biases_path;
@@ -58,7 +58,8 @@ namespace lstm {
      * @param model_params Model parameters lstm_params struct.
      */
     lstm_model::lstm_model(lstm_params model_params) :
-    lstm_model(model_params, make_shared<lstm_state>(lstm_state(0.0, 0.0))) {}
+    //lstm_model(model_params, make_shared<lstm_state>(lstm_state(0.0, 0.0))) {}
+    lstm_model(model_params, make_shared<lstm_state>(lstm_state())) {}
 
     /**
      * Check that the current state of this model object (which could be its provided initial state) is valid, printing
@@ -69,6 +70,7 @@ namespace lstm {
      * reservoirs within the Nash Cascade.  Note that the function will interpret any `nash_n` greater than `0` as valid
      * if the vector itself is empty, and initialize such a vector to the correct size with all `0.0` values.
      */
+/*
     void lstm_model::check_valid()
     {
         // We expect the Nash size model parameter 'nash_n' to be equal to the size of the
@@ -89,6 +91,7 @@ namespace lstm {
             }
         }
     }
+*/
 
     /**
      * Initialize the subsurface groundwater reservoir for the model, in the `groundwater_reservoir` member field.
@@ -104,6 +107,7 @@ namespace lstm {
      * @see Reservoir
      * @see Reservoir_Exponential_Outlet
      */
+/*  
     void lstm_model::initialize_groundwater_reservoir()
     {
         // TODO: confirm, based on the equation, that max gw velocity doesn't need to be Cgw * (exp(expon) - 1)
@@ -119,7 +123,7 @@ namespace lstm {
         groundwater_reservoir = Reservoir::Explicit_Time::Reservoir(0.0, model_params.max_groundwater_storage_meters,
                                                     previous_state->groundwater_storage_meters, gw_outlets_vector);
     }
-
+*/
     /**
      * Initialize the subsurface soil reservoir for the model, in the `soil_reservoir` member field.
      *
@@ -134,7 +138,8 @@ namespace lstm {
      *
      * @see Reservoir
      */
-    void lstm_model::initialize_soil_reservoir()
+ /* 
+   void lstm_model::initialize_soil_reservoir()
     {
         // Build the vector of pointers to reservoir outlets
         vector<std::shared_ptr<Reservoir::Explicit_Time::Reservoir_Outlet>> soil_res_outlets(2);
@@ -152,7 +157,7 @@ namespace lstm {
         soil_reservoir = Reservoir::Explicit_Time::Reservoir(0.0, model_params.max_soil_storage_meters,
                                              previous_state->soil_storage_meters, soil_res_outlets);
     }
-
+*/
     /**
      * Initialize the Nash Cascade reservoirs applied to the subsurface soil reservoir's lateral flow outlet.
      *
@@ -160,7 +165,9 @@ namespace lstm {
      * the Nash Cascade for soil_reservoir lateral flow outlet.  The analogous values for Nash Cascade storage from
      * previous_state are used for current storage of reservoirs at each given index.
      */
-    void lstm_model::initialize_subsurface_lateral_flow_nash_cascade()
+ 
+/*
+   void lstm_model::initialize_subsurface_lateral_flow_nash_cascade()
     {
         soil_lf_nash_res.resize(model_params.nash_n);
         // TODO: verify correctness of activation_threshold (Sfc) and max_velocity (max_lateral_flow) arg values
@@ -172,6 +179,7 @@ namespace lstm {
                                         0.0, model_params.max_lateral_flow));
         }
     }
+*/
 
     /**
      * Calculate losses due to evapotranspiration.
@@ -180,18 +188,22 @@ namespace lstm {
      * @param et_params A shared pointer to the struct holding the ET parameters.
      * @return The calculated loss value due to evapotranspiration.
      */
+/*
     double lstm_model::calc_evapotranspiration(double soil_m, shared_ptr<pdm03_struct> et_params) {
         et_params->final_height_reservoir = soil_m;
         pdm03_wrapper(et_params.get());
 
         return et_params->final_height_reservoir - soil_m;
     }
+*/
 
     /**
      * Calculate soil field capacity storage, the level at which free drainage stops (i.e., "Sfc").
      *
      * @return The calculated soil field capacity storage.
      */
+
+/*
     double lstm_model::calc_soil_field_capacity_storage()
     {
         // Calculate the suction head above water table (Hwt)
@@ -207,6 +219,7 @@ namespace lstm {
                ((model_params.b * pow(z2, ((model_params.b - 1) / model_params.b)) / (model_params.b - 1)) -
                 (model_params.b * pow(z1, ((model_params.b - 1) / model_params.b)) / (model_params.b - 1)));
     }
+*/
 
     /**
      * Return the smart pointer to the lstm::lstm_model struct for holding this object's current state.
@@ -232,10 +245,11 @@ namespace lstm {
      * @return The size of the error bound that is acceptable when performing mass check calculations.
      * @see lstm_model::mass_check
      */
-    double lstm_model::get_mass_check_error_bound() {
+ /*  
+  double lstm_model::get_mass_check_error_bound() {
         return mass_check_error_bound;
     }
-
+*/
     /**
      * Check that mass was conserved by the model's calculations of the current time step.
      *
@@ -243,7 +257,8 @@ namespace lstm {
      * @param timestep_s The size of the time step, in seconds.
      * @return The appropriate code value indicating whether mass was conserved in the current time step's calculations.
      */
-    int lstm_model::mass_check(double input_storage_m, double timestep_s) {
+/*  
+  int lstm_model::mass_check(double input_storage_m, double timestep_s) {
         // TODO: change this to have those be part of state somehow, either of object or struct, or just make private
         // Initialize both mass values from current and next states storage
         double previous_storage_m = previous_state->soil_storage_meters + previous_state->groundwater_storage_meters;
@@ -268,7 +283,7 @@ namespace lstm {
         return abs_mass_diff_meters > get_mass_check_error_bound() ? lstm::LSTM_MASS_BALANCE_ERROR
                                                                    : lstm::LSTM_NO_ERROR;
     }
-
+*/
     /**
      * Run the model to one time step, after performing initial housekeeping steps via a call to
      * `manage_state_before_next_time_step_run`.
@@ -277,19 +292,21 @@ namespace lstm {
      * @param input_storage_m the amount water entering the system this time step, in meters
      * @return
      */
-    int lstm_model::run(double dt, double input_storage_m, shared_ptr<pdm03_struct> et_params) {
+    //int lstm_model::run(double dt, double input_storage_m, shared_ptr<pdm03_struct> et_params) {
+    int lstm_model::run(double dt) {
         // Do resetting/housekeeping for new calculations and new state values
         manage_state_before_next_time_step_run();
 
         // In meters
-        double soil_column_moisture_deficit_m =
-                model_params.max_soil_storage_meters - previous_state->soil_storage_meters;
+        //double soil_column_moisture_deficit_m =
+        //        model_params.max_soil_storage_meters - previous_state->soil_storage_meters;
 
         // Perform Schaake partitioning, passing some declared references to hold the calculated values.
-        double surface_runoff, subsurface_infiltration_flux;
-        Schaake_partitioning_scheme(dt, model_params.Cschaake, soil_column_moisture_deficit_m, input_storage_m,
-                                    &surface_runoff, &subsurface_infiltration_flux);
+        //double surface_runoff, subsurface_infiltration_flux;
+        //Schaake_partitioning_scheme(dt, model_params.Cschaake, soil_column_moisture_deficit_m, input_storage_m,
+        //                            &surface_runoff, &subsurface_infiltration_flux);
 
+/*
         double subsurface_excess, nash_subsurface_excess;
         soil_reservoir.response_meters_per_second(subsurface_infiltration_flux, dt, subsurface_excess);
 
@@ -321,19 +338,25 @@ namespace lstm {
         double excess_gw_water;
         fluxes->groundwater_flow_meters_per_second = groundwater_reservoir.response_meters_per_second(Qperc, dt,
                                                                                                excess_gw_water);
+*/
+
+
+//////////////////////////////////////////////////////
         // update local copy of state
-        current_state->groundwater_storage_meters = groundwater_reservoir.get_storage_height_meters();
+        //current_state->groundwater_storage_meters = groundwater_reservoir.get_storage_height_meters();
+////////////////////////////////////////////
 
         // record other fluxes in internal copy
-        fluxes->soil_lateral_flow_meters_per_second = Qlf;
-        fluxes->soil_percolation_flow_meters_per_second = Qperc;
+        //fluxes->soil_lateral_flow_meters_per_second = Qlf;
+        //fluxes->soil_percolation_flow_meters_per_second = Qperc;
 
         // Save "raw" runoff here and have realization class calculate GIUH surface runoff using that kernel
         // TODO: for now add this to runoff, but later adjust calculations to limit flow into reservoir to avoid excess
-        fluxes->surface_runoff_meters_per_second = surface_runoff + (subsurface_excess / dt) + (excess_gw_water / dt);
+        //fluxes->surface_runoff_meters_per_second = surface_runoff + (subsurface_excess / dt) + (excess_gw_water / dt);
         //fluxes->surface_runoff_meters_per_second = surface_runoff;
 
-        return mass_check(input_storage_m, dt);
+        //return mass_check(input_storage_m, dt);
+        return 0;
     }
 
     /**
@@ -350,8 +373,8 @@ namespace lstm {
     void lstm_model::manage_state_before_next_time_step_run()
     {
         previous_state = current_state;
-        current_state = make_shared<lstm_state>(lstm_state(0.0, 0.0, vector<double>(model_params.nash_n)));
-        fluxes = make_shared<lstm_fluxes>(lstm_fluxes(0.0, 0.0, 0.0, 0.0, 0.0));
+        //current_state = make_shared<lstm_state>(lstm_state(0.0, 0.0, vector<double>(model_params.nash_n)));
+        //fluxes = make_shared<lstm_fluxes>(lstm_fluxes(0.0, 0.0, 0.0, 0.0, 0.0));
     }
 
     /**
@@ -359,8 +382,10 @@ namespace lstm {
      *
      * @param error_bound The value used to set the mass_check_error_bound member.
      */
+/*
     void lstm_model::set_mass_check_error_bound(double error_bound) {
         mass_check_error_bound = error_bound >= 0 ? error_bound : abs(error_bound);
     }
+*/
 
 }
