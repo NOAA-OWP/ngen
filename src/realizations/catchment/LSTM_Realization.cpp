@@ -126,7 +126,26 @@ double LSTM_Realization::get_response(time_step_t t_index, time_step_t t_delta_s
     double precip = this->forcing.get_next_hourly_precipitation_meters_per_second();
     //FIXME should this run "daily" or hourly (t) which should really be dt
     //Do we keep an "internal dt" i.e. this->dt and reconcile with t?
+    
    
+    double DLWRF_surface_W_per_meters_squared = this->forcing.get_AORC_DLWRF_surface_W_per_meters_squared();
+
+    double PRES_surface_Pa = this->forcing.get_AORC_PRES_surface_Pa();
+
+    double SPFH_2maboveground_kg_per_kg = this->forcing.get_AORC_SPFH_2maboveground_kg_per_kg();
+
+    double DSWRF_surface_W_per_meters_squared = this->forcing.get_AORC_DSWRF_surface_W_per_meters_squared();
+
+    double TMP_2maboveground_K = this->forcing.get_AORC_TMP_2maboveground_K();
+
+    double UGRD_10maboveground_meters_per_second = this->forcing.get_AORC_UGRD_10maboveground_meters_per_second();
+
+    double VGRD_10maboveground_meters_per_second = this->forcing.get_AORC_VGRD_10maboveground_meters_per_second();
+
+
+
+    int error = model->run(t_index, DLWRF_surface_W_per_meters_squared, PRES_surface_Pa, SPFH_2maboveground_kg_per_kg, precip, DSWRF_surface_W_per_meters_squared, TMP_2maboveground_K, UGRD_10maboveground_meters_per_second, VGRD_10maboveground_meters_per_second);
+
     /*
     int error = model->run(t_index, precip * t_delta_s / 1000, get_et_params_ptr());
     if(error == lstm::LSTM_MASS_BALANCE_ERROR){
