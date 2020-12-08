@@ -14,32 +14,24 @@ namespace lstm {
      * @param initial_state Shared smart pointer to lstm_state struct hold initial state values
      */
     lstm_model::lstm_model(lstm_params model_params, const shared_ptr<lstm_state> &initial_state)
-            : model_params(model_params), previous_state(initial_state), current_state(initial_state)
+            : model_params(model_params), previous_state(initial_state), current_state(initial_state),
+            device( torch::Device(torch::kCPU) )
     {
-        // ********** Start by calculating Sfc, as this will get by several other things
-        //soil_field_capacity_storage = calc_soil_field_capacity_storage();
-
-        // ********** Sanity check init (in particular, size of Nash Cascade storage vector in the state parameter).
-        //check_valid();
-
-        // ********** Create the vector of Nash Cascade reservoirs used at the end of the soil lateral flow outlet
-        //initialize_subsurface_lateral_flow_nash_cascade();
-
-        // ********** Create the soil reservoir
-        //initialize_soil_reservoir();
-
-        // ********** Create the groundwater reservoir
-        //initialize_groundwater_reservoir();
-
         // ********** Set fluxes to null for now: it is bogus until first call of run function, which initializes it
         fluxes = nullptr;
+        //manually set torch seed for reproducibility
+        torch::manual_seed(0);
+        useGPU = torch::cuda::is_available();
+        device = torch::Device( useGPU ? torch::kCUDA : torch::kCPU );
+        lstm::to_device(*current_state, device);
+        lstm::to_device(*previous_state, device);
 
-        // ********** Acceptable error range for mass balance calculations; hard-coded for now to this value
-        //mass_check_error_bound = 0.000001;
-
-
-        cout << model_params.input_biases_path;
-
+        model = torch::jit::load(model_params.pytorch_model_path);
+        model.to( device );
+        // Set to `eval` model (just like Python)
+        model.eval();
+        //FIXME what is the SUPPOSED to do?
+        torch::NoGradGuard no_grad_;
 
     }
 
