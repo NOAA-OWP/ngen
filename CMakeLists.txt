@@ -72,7 +72,6 @@ if(MPI_ACTIVE)
     add_compile_definitions(NGEN_MPI_ACTIVE)
 endif()
 find_package(Torch REQUIRED)
-#find_package(Torch REQUIRED)
 
 find_package(Boost 1.72.0 REQUIRED)
 
