@@ -8,9 +8,13 @@
 #include "lstm_state.h"
 
 #include <torch/torch.h>
-
+#include <unordered_map>
 
 using namespace std;
+
+
+typedef std::unordered_map< std::string, std::unordered_map< std::string, double> > ScaleParams;
+
 
 namespace lstm {
 
@@ -77,14 +81,6 @@ namespace lstm {
          */
         virtual void manage_state_before_next_time_step_run();
 
-        /**
-         * Set the mass_check_error_bound member to the absolute value of the given parameter.
-         *
-         * @param error_bound The value used to set the mass_check_error_bound member.
-         */
-        //void set_mass_check_error_bound(double error_bound);
-
-
 
 
     private:
@@ -102,6 +98,7 @@ namespace lstm {
 
         torch::jit::script::Module model;
 
+        ScaleParams scale;
     };
 }
 

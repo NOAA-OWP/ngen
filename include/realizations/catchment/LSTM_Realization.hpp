@@ -47,13 +47,11 @@ namespace realization {
                 std::string catchment_id,
                 giuh::GiuhJsonReader &giuh_json_reader,
 
-                std::string input_biases_path,
-                std::string input_weights_path,
-                std::string hidden_biases_path,
-                std::string hidden_weights_path,
-                std::string head_biases_path,
-                std::string head_weights_path,
-                std::string normalization_path,
+       std::string pytorch_model_path,
+       std::string normalization_path,
+       double latitude,
+       double longitude,
+       double area_square_km,
 
                 /*
                 double maxsmc,
@@ -158,13 +156,13 @@ namespace realization {
             time_step_t dt;
 
             std::vector<std::string> REQUIRED_PARAMETERS = {
-                "input_biases_path",
-                "input_weights_path",
-                "hidden_biases_path",
-                "hidden_weights_path",
-                "head_biases_path",
-                "head_weights_path",
-                "normalization_path",
+
+       "pytorch_model_path",
+       "normalization_path",
+       "latitude",
+       "longitude",
+       "area_square_km",
+
 
                 /*
                 "maxsmc",
@@ -195,4 +193,3 @@ namespace realization {
 }
 
 #endif //NGEN_LSTM_REALIZATION_HPP
-

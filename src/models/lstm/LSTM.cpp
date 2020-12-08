@@ -5,6 +5,36 @@
 
 using namespace std;
 
+typedef std::unordered_map< std::string, std::unordered_map< std::string, double> > ScaleParams;
+
+
+ScaleParams read_scale_params(std::string path)
+{
+    //Read the mean and standard deviation and put them into a map
+    ScaleParams params;
+    CSVReader reader(path);
+    auto data = reader.getData();
+    std::vector<std::string> header = data[0];
+    //Advance the iterator to the first data row (skip the header)
+    auto row = data.begin();
+    std::advance(row, 1);
+    //Loop form first row to end of data
+    for(; row != data.end(); ++row)
+    {
+	for(int i = 0; i < (*row).size(); i++)
+	{   //row has var, mean, std_dev
+ 	    //read into map keyed on var name, param name
+    	    params[ (*row)[0] ]["mean"] = strtof( (*row)[1].c_str(), NULL); 
+  	    params[ (*row)[0] ]["std_dev"] = strtof( (*row)[2].c_str(), NULL);
+	}
+    }
+
+    return params;
+}
+
+
+
+
 namespace lstm {
 
     /**
@@ -32,6 +62,9 @@ namespace lstm {
         model.eval();
         //FIXME what is the SUPPOSED to do?
         torch::NoGradGuard no_grad_;
+
+        this->scale = read_scale_params(scale_path);
+
 
     }
 
@@ -63,7 +96,7 @@ namespace lstm {
     shared_ptr<lstm_fluxes> lstm_model::get_fluxes() {
         return fluxes;
     }
-
+    
     /**
      * Run the model to one time step, after performing initial housekeeping steps via a call to
      * `manage_state_before_next_time_step_run`.
@@ -106,6 +139,7 @@ namespace lstm {
         current_state = std::make_shared<lstm_state>( lstm_state(output[1].toTensor(), output[2].toTensor()) );
 
         return fluxes->flow;
+
     }
 
     /**

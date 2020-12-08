@@ -40,19 +40,11 @@
     "catchments": {
         "cat-87": {
             "lstm": {
-                "input_biases_path": "./data/lstm/lstm.bias_ih_l0.csv",
-                "input_weights_path": "./data/lstm/lstm.weight_ih_l0.csv",
-                "hidden_biases_path": "./data/lstm/lstm.bias_hh_l0.csv",
-                "hidden_weights_path": "./data/lstm/lstm.weight_hh_l0.csv",
-                "head_biases_path": "./data/lstm/head.net.0.bias.csv",
-                "head_weights_path": "./data/lstm/head.net.0.weight.csv",
+                "pytorch_model_path": "./data/lstm/head.net.0.weight.csv",
                 "normalization_path": "./data/lstm/lstm_mean_std.csv",
-
-                "timestep": 3600,
-                "giuh": {
-                    "giuh_path": "./test/data/giuh/GIUH.json",
-                    "crosswalk_path": "./data/crosswalk.json"
-                }
+                "latitude": 40.636253,
+                "longitude": -87.71896,
+                "area_square_km": 1159.528499
             },
             "forcing": {
                 "path": "./data/forcing/aorc_forcing_lstm_ex1.csv"
