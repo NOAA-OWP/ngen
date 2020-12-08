@@ -73,80 +73,39 @@ namespace lstm {
      * @return
      */
     //int lstm_model::run(double dt, double input_storage_m, shared_ptr<pdm03_struct> et_params) {
-    int lstm_model::run(double dt, double AORC_DLWRF_surface_W_per_meters_squared, double PRES_surface_Pa, double SPFH_2maboveground_kg_per_kg, double precip, double DSWRF_surface_W_per_meters_squared, double TMP_2maboveground_K, double UGRD_10maboveground_meters_per_second, double VGRD_10maboveground_meters_per_second) {
+    int lstm_model::run(double dt, double AORC_DLWRF_surface_W_per_meters_squared,
+                        double PRES_surface_Pa, double SPFH_2maboveground_kg_per_kg,
+                        double precip, double DSWRF_surface_W_per_meters_squared,
+                        double TMP_2maboveground_K, double UGRD_10maboveground_meters_per_second,
+                        double VGRD_10maboveground_meters_per_second) {
         // Do resetting/housekeeping for new calculations and new state values
         manage_state_before_next_time_step_run();
 
+        std::vector<torch::jit::IValue> inputs;
+        torch::Tensor forcing = torch::zeros({1, 11});
+        forcing[0][0] = AORC_DLWRF_surface_W_per_meters_squared;
+        forcing[0][1] = PRES_surface_Pa;
+        forcing[0][2] = SPFH_2maboveground_kg_per_kg;
+        forcing[0][3] = precip;
+        forcing[0][4] = DSWRF_surface_W_per_meters_squared;
+        forcing[0][5] = TMP_2maboveground_K;
+        forcing[0][6] = UGRD_10maboveground_meters_per_second;
+        forcing[0][7] = VGRD_10maboveground_meters_per_second;
+        forcing[0][8] = model_params.latitude;
+        forcing[0][9] = model_params.longitude;
+        forcing[0][10] = model_params.area;
+        // Create the model input for one time step
+      	inputs.push_back(forcing.to(device));
+        inputs.push_back(previous_state->h_t);
+        inputs.push_back(previous_state->c_t);
+      	// Run the model
+        auto output = model.forward(inputs).toTuple()->elements();
+      	//Get the outputs
+        fluxes = std::make_shared<lstm_fluxes>( lstm_fluxes(output[0].toDouble() ) ) ;
+        //FIXME denormalize flow before returning
+        current_state = std::make_shared<lstm_state>( lstm_state(output[1].toTensor(), output[2].toTensor()) );
 
-
-
-
-
-
-
-
-
-
-        // In meters
-        //double soil_column_moisture_deficit_m =
-        //        model_params.max_soil_storage_meters - previous_state->soil_storage_meters;
-
-        // Perform Schaake partitioning, passing some declared references to hold the calculated values.
-        //double surface_runoff, subsurface_infiltration_flux;
-        //Schaake_partitioning_scheme(dt, model_params.Cschaake, soil_column_moisture_deficit_m, input_storage_m,
-        //                            &surface_runoff, &subsurface_infiltration_flux);
-
-/*
-        double subsurface_excess, nash_subsurface_excess;
-        soil_reservoir.response_meters_per_second(subsurface_infiltration_flux, dt, subsurface_excess);
-
-        // lateral subsurface flow
-        double Qlf = soil_reservoir.velocity_meters_per_second_for_outlet(lf_outlet_index);
-
-        // percolation flow
-        double Qperc = soil_reservoir.velocity_meters_per_second_for_outlet(perc_outlet_index);
-
-        // TODO: make sure ET doesn't need to be taken out sooner
-        // Get new soil storage amount calculated by reservoir
-        double new_soil_storage_m = soil_reservoir.get_storage_height_meters();
-        // Calculate and store ET
-        fluxes->et_loss_meters = calc_evapotranspiration(new_soil_storage_m, et_params);
-        // Update the current soil storage, accounting for ET
-        current_state->soil_storage_meters = new_soil_storage_m - fluxes->et_loss_meters;
-
-        // Cycle through lateral flow Nash cascade of reservoirs
-        // loop essentially copied from Hymod logic, but with different variable names
-        for (unsigned long int i = 0; i < soil_lf_nash_res.size(); ++i) {
-            // get response water velocity of reservoir
-            Qlf = soil_lf_nash_res[i]->response_meters_per_second(Qlf, dt, nash_subsurface_excess);
-            // TODO: confirm this is correct
-            Qlf += nash_subsurface_excess / dt;
-            current_state->nash_cascade_storeage_meters[i] = soil_lf_nash_res[i]->get_storage_height_meters();
-        }
-
-        // Get response and update gw res state
-        double excess_gw_water;
-        fluxes->groundwater_flow_meters_per_second = groundwater_reservoir.response_meters_per_second(Qperc, dt,
-                                                                                               excess_gw_water);
-*/
-
-
-//////////////////////////////////////////////////////
-        // update local copy of state
-        //current_state->groundwater_storage_meters = groundwater_reservoir.get_storage_height_meters();
-////////////////////////////////////////////
-
-        // record other fluxes in internal copy
-        //fluxes->soil_lateral_flow_meters_per_second = Qlf;
-        //fluxes->soil_percolation_flow_meters_per_second = Qperc;
-
-        // Save "raw" runoff here and have realization class calculate GIUH surface runoff using that kernel
-        // TODO: for now add this to runoff, but later adjust calculations to limit flow into reservoir to avoid excess
-        //fluxes->surface_runoff_meters_per_second = surface_runoff + (subsurface_excess / dt) + (excess_gw_water / dt);
-        //fluxes->surface_runoff_meters_per_second = surface_runoff;
-
-        //return mass_check(input_storage_m, dt);
-        return 0;
+        return fluxes->flow;
     }
 
     /**
