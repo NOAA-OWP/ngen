@@ -293,9 +293,19 @@ namespace lstm {
      * @return
      */
     //int lstm_model::run(double dt, double input_storage_m, shared_ptr<pdm03_struct> et_params) {
-    int lstm_model::run(double dt) {
+    int lstm_model::run(double dt, double AORC_DLWRF_surface_W_per_meters_squared, double PRES_surface_Pa, double SPFH_2maboveground_kg_per_kg, double precip, double DSWRF_surface_W_per_meters_squared, double TMP_2maboveground_K, double UGRD_10maboveground_meters_per_second, double VGRD_10maboveground_meters_per_second) {
         // Do resetting/housekeeping for new calculations and new state values
         manage_state_before_next_time_step_run();
+
+
+
+
+
+
+
+
+
+
 
         // In meters
         //double soil_column_moisture_deficit_m =
