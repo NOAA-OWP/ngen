@@ -76,19 +76,19 @@ namespace lstm {
          //CURRENTLY HAVING ERROR LOADING MODEL
          std::cout<<"model_params.pytorch_model_path: " << config.pytorch_model_path;
 
-      /*
-        model = torch::jit::load(model_config.pytorch_model_path);
+
+        model = torch::jit::load(config.pytorch_model_path);
         model.to( device );
         // Set to `eval` model (just like Python)
         model.eval();
-      */
+
 
 
         //FIXME what is the SUPPOSED to do?
         torch::NoGradGuard no_grad_;
 
         this->scale = read_scale_params(config.normalization_path);
-
+        this->fluxes = std::make_shared<lstm::lstm_fluxes>(lstm::lstm_fluxes());
 
     }
 
@@ -136,11 +136,12 @@ namespace lstm {
                         double TMP_2maboveground_K, double UGRD_10maboveground_meters_per_second,
                         double VGRD_10maboveground_meters_per_second) {
         // Do resetting/housekeeping for new calculations and new state values
-        manage_state_before_next_time_step_run();
 
+        manage_state_before_next_time_step_run();
 
         std::vector<torch::jit::IValue> inputs;
         torch::Tensor forcing = torch::zeros({1, 11});
+
         forcing[0][0] = lstm_model::normalize("DLWRF_surface_W_per_meters_squared", DLWRF_surface_W_per_meters_squared);
         forcing[0][1] = lstm_model::normalize("PRES_surface_Pa", PRES_surface_Pa);
         forcing[0][2] = lstm_model::normalize("SPFH_2maboveground_kg_per_kg", SPFH_2maboveground_kg_per_kg);
@@ -153,8 +154,6 @@ namespace lstm {
         forcing[0][9] = lstm_model::normalize("Latitude", model_params.latitude);
         forcing[0][10] = lstm_model::normalize("Longitude", model_params.longitude);
 
-
-/*
         // Create the model input for one time step
       	inputs.push_back(forcing.to(device));
         inputs.push_back(previous_state->h_t);
@@ -162,18 +161,22 @@ namespace lstm {
       	// Run the model
         auto output = model.forward(inputs).toTuple()->elements();
       	//Get the outputs
-        fluxes = std::make_shared<lstm_fluxes>( lstm_fluxes(output[0].toDouble() ) ) ;
-        //FIXME denormalize flow before returning
+        double out_flow = lstm_model::denormalize( "obs", output[0].toTensor().item<double>() );
+        out_flow = out_flow * 0.028316847; //convert cfs to cms
+        fluxes = std::make_shared<lstm_fluxes>( lstm_fluxes( out_flow ) ) ;
+
         current_state = std::make_shared<lstm_state>( lstm_state(output[1].toTensor(), output[2].toTensor()) );
 
-*/
-
-      //  return fluxes->flow;
-       return 0.0;
-
+        return 0;
     }
 
-
+    double lstm_model::denormalize(std::string forcing_variable_string, double normalized_output)
+        {
+          double mean, std_dev;
+          mean = this->scale[ forcing_variable_string ]["mean"];
+          std_dev = this->scale[ forcing_variable_string ]["std_dev"];
+          return (normalized_output * std_dev) + mean;
+        }
 
     double lstm_model::normalize(std::string forcing_variable_string, double forcing_variable)
     {
