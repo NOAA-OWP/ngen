@@ -14,6 +14,15 @@ namespace lstm {
 
         lstm_state(torch::Tensor h, torch::Tensor c)
                 :  h_t(h), c_t(c) {}
+        /*
+        * Construct state tensors from vector
+        */
+        lstm_state(std::vector<double> h, std::vector<double> c)
+        {
+          auto options = torch::TensorOptions().dtype(torch::kFloat64);
+          h_t = torch::from_blob(h.data(), {1, 1, int(h.size())}, options).clone();
+          c_t = torch::from_blob(c.data(), {1, 1, int(c.size())}, options).clone();
+        }
         lstm_state()
         {
           auto options = torch::TensorOptions().dtype(torch::kFloat64);
