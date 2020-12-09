@@ -12,13 +12,6 @@ namespace lstm {
      * Structure for containing and organizing the parameters of the lstm hydrological model.
      */
     struct lstm_params {
-        std::string input_biases_path;
-        std::string input_weights_path;
-        std::string hidden_biases_path;
-        std::string hidden_weights_path;
-        std::string head_biases_path;
-        std::string head_weights_path;
-
         std::string pytorch_model_path;
         std::string normalization_path;
         double latitude;
@@ -67,13 +60,6 @@ namespace lstm {
          * @param max_gw_storage Initialization param for max_groundwater_storage_meters member.
          */
         lstm_params(
-           std::string input_biases_path,
-           std::string input_weights_path,
-           std::string hidden_biases_path,
-           std::string hidden_weights_path,
-           std::string head_biases_path,
-           std::string head_weights_path,
-
 
            std::string pytorch_model_path,
            std::string normalization_path,
@@ -94,13 +80,6 @@ namespace lstm {
             double Cgw,
             double expon,
             double max_gw_storage) :
-
-                input_biases_path(input_biases_path),
-                input_weights_path(input_weights_path),
-                hidden_biases_path(hidden_biases_path),
-                hidden_weights_path(hidden_weights_path),
-                head_biases_path(head_biases_path),
-                head_weights_path(head_weights_path),
 
               pytorch_model_path(pytorch_model_path),
               normalization_path(normalization_path),

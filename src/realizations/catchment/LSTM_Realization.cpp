@@ -58,13 +58,6 @@ LSTM_Realization::LSTM_Realization(
         giuh::GiuhJsonReader &giuh_json_reader,
 
 
-        std::string input_biases_path,
-        std::string input_weights_path,
-        std::string hidden_biases_path,
-        std::string hidden_weights_path,
-        std::string head_biases_path,
-        std::string head_weights_path,
-
        std::string pytorch_model_path,
        std::string normalization_path,
        double latitude,
@@ -94,7 +87,7 @@ LSTM_Realization::LSTM_Realization(
                                            //alpha_fc, Klf, Kn, nash_n, Cgw, expon, max_gw_storage),
                                            //nash_storage, t) {
 
-                                           lstm::lstm_params(input_biases_path, input_weights_path, hidden_biases_path, hidden_weights_path, head_biases_path, head_weights_path, pytorch_model_path, normalization_path, latitude, longitude, area_square_km,  maxsmc, wltsmc, satdk, satpsi, slope, b, multiplier,
+                                           lstm::lstm_params(pytorch_model_path, normalization_path, latitude, longitude, area_square_km,  maxsmc, wltsmc, satdk, satpsi, slope, b, multiplier,
                                                                  alpha_fc, Klf, Kn, nash_n, Cgw, expon, max_gw_storage),
                                            nash_storage, t) {
 
@@ -172,13 +165,6 @@ void LSTM_Realization::create_formulation(geojson::PropertyMap properties) {
     this->dt = properties.at("timestep").as_natural_number();
 
     lstm::lstm_params lstm_params{
-        properties.at("input_biases_path").as_string(),
-        properties.at("input_weights_path").as_string(),
-        properties.at("hidden_biases_path").as_string(),
-        properties.at("hidden_weights_path").as_string(),
-        properties.at("head_biases_path").as_string(),
-        properties.at("head_weights_path").as_string(),
-
         properties.at("pytorch_model_path").as_string(),
         properties.at("normalization_path").as_string(),
         properties.at("latitude").as_real_number(),
@@ -270,20 +256,12 @@ void LSTM_Realization::create_formulation(boost::property_tree::ptree &config, g
     this->dt = options.at("timestep").as_natural_number();
 
     lstm::lstm_params lstm_params{
-        options.at("input_biases_path").as_string(),
-        options.at("input_weights_path").as_string(),
-        options.at("hidden_biases_path").as_string(),
-        options.at("hidden_weights_path").as_string(),
-        options.at("head_biases_path").as_string(),
-        options.at("head_weights_path").as_string(),
 
         options.at("pytorch_model_path").as_string(),
         options.at("normalization_path").as_string(),
         options.at("latitude").as_real_number(),
         options.at("longitude").as_real_number(),
         options.at("area_square_km").as_real_number(),
-
-
 
 
 

@@ -43,7 +43,7 @@ namespace lstm {
         mass_check_error_bound = 0.000001;
 
 
-        cout << model_params.input_biases_path;
+        //cout << model_params.input_biases_path;
 
 
     }
