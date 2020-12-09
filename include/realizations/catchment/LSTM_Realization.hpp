@@ -25,7 +25,7 @@ namespace realization {
                            std::string catchment_id,
                            giuh::GiuhJsonReader &giuh_json_reader,
                            lstm::lstm_params params,
-                           const std::vector<double>& nash_storage,
+                           //const std::vector<double>& nash_storage,
                            time_step_t t);
 
 
@@ -45,21 +45,6 @@ namespace realization {
                double area_square_km,
 
 
-                double maxsmc,
-                double wltsmc,
-                double satdk,
-                double satpsi,
-                double slope,
-                double b,
-                double multiplier,
-                double alpha_fc,
-                double Klf,
-                double Kn,
-                int nash_n,
-                double Cgw,
-                double expon,
-                double max_gw_storage,
-                const std::vector<double>& nash_storage,
                 time_step_t t
                 );
 
@@ -72,7 +57,7 @@ namespace realization {
 
 
 
-            void set_giuh_kernel(std::shared_ptr<giuh::GiuhJsonReader> reader);
+            //void set_giuh_kernel(std::shared_ptr<giuh::GiuhJsonReader> reader);
 
             virtual ~LSTM_Realization(){};
 
@@ -152,24 +137,6 @@ namespace realization {
        "longitude",
        "area_square_km",
 
-
-                "maxsmc",
-                "wltsmc",
-                "satdk",
-                "satpsi",
-                "slope",
-                "scaled_distribution_fn_shape_parameter",
-                "multiplier",
-                "alpha_fc",
-                "Klf",
-                "Kn",
-                "nash_n",
-                "Cgw",
-                "expon",
-                "max_groundwater_storage_meters",
-                "nash_storage",
-                "soil_storage_percentage",
-                "groundwater_storage_percentage",
                 "timestep",
                 "giuh"
             };
