@@ -3,30 +3,16 @@
 
 
 #include "all.h"
-#include "schaake_partitioning.hpp"
-#include "Constants.h"
-#include "reservoir/Reservoir.hpp"
-#include "Pdm03.h"
-#include "GIUH.hpp"
-#include "reservoir/Reservoir_Exponential_Outlet.hpp"
-#include "reservoir/Reservoir_Linear_Outlet.hpp"
-#include "reservoir/Reservoir_Outlet.hpp"
 #include "lstm_fluxes.h"
 #include "lstm_params.h"
+#include "lstm_config.h"
 #include "lstm_state.h"
-#include <cmath>
-#include <utility>
-#include <vector>
-#include <memory>
-
 
 #include <torch/torch.h>
 #include <unordered_map>
 
 
 typedef std::unordered_map< std::string, std::unordered_map< std::string, double> > ScaleParams;
-
-
 
 using namespace std;
 
@@ -43,7 +29,7 @@ namespace lstm {
          * @param model_params Model parameters lstm_params struct.
          * @param initial_state Shared smart pointer to lstm_state struct hold initial state values
          */
-        lstm_model(lstm_params model_params, const shared_ptr<lstm_state>& initial_state);
+        lstm_model(lstm_config config, lstm_params model_params, const shared_ptr<lstm_state>& initial_state);
 
         /**
          * Constructor for model object with parameters only.
@@ -53,8 +39,7 @@ namespace lstm {
          *
          * @param model_params Model parameters lstm_params struct.
          */
-        lstm_model(lstm_params model_params);
-
+        lstm_model(lstm_config config, lstm_params model_params);
 
         /**
          * Return the smart pointer to the lstm::lstm_model struct for holding this object's current state.
@@ -63,16 +48,12 @@ namespace lstm {
          */
         shared_ptr<lstm_state> get_current_state();
 
-
-
-
         /**
          * Return the shared pointer to the lstm::lstm_fluxes struct for holding this object's current fluxes.
          *
          * @return The shared pointer to the lstm_fluxes struct for holding this object's current fluxes.
          */
         shared_ptr<lstm_fluxes> get_fluxes();
-
 
         /**
          * Run the model to one time step, after performing initial housekeeping steps via a call to
@@ -114,6 +95,8 @@ namespace lstm {
         shared_ptr<lstm_state> current_state;
         /** Model execution parameters. */
         lstm_params model_params;
+        /** Model configuration parameters */
+        lstm_config config;
         /** Model state from that previous time step before the current. */
         shared_ptr<lstm_state> previous_state;
 
