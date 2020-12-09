@@ -5,6 +5,8 @@
 #include "CSV_Reader.h"
 #include <iostream>
 
+#include <fstream>
+
 
 using namespace std;
 
@@ -35,6 +37,15 @@ ScaleParams read_scale_params(std::string path)
     return params;
 }
 
+/*
+double Normalize(std::string forcing_variable_string, double forcing_variable)
+{
+   double temp, mean, std_dev;
+   mean = scale[ forcing_variable_string ]["mean"];
+   std_dev = scale[ forcing_variable_string ]["std_dev"];
+   return  (forcing_variable - mean) / std_dev;
+}
+*/
 
 
 namespace lstm {
@@ -58,16 +69,27 @@ namespace lstm {
         lstm::to_device(*current_state, device);
         lstm::to_device(*previous_state, device);
 
+////////////////////////////i
+/*
+  ofstream myfile;
+  myfile.open ("lstm_text.txt", ios::app);
 
-        //CURRENTLY HAVING ERROR LOADING MODEL
        std::cout<<"model_params.pytorch_model_path: " << model_params.pytorch_model_path;
 
-      /* 
+myfile<<"model_params.pytorch_model_path: " << model_params.pytorch_model_path << "\n";
+
+  myfile.close();
+*/
+////////////////////////////////
+
+
+        //CURRENTLY HAVING ERROR LOADING MODEL
+    /*   
         model = torch::jit::load(model_params.pytorch_model_path);
         model.to( device );
         // Set to `eval` model (just like Python)
         model.eval();
-      */ 
+   */   
 
 
         //FIXME what is the SUPPOSED to do?
@@ -116,7 +138,7 @@ namespace lstm {
      * @return
      */
     //int lstm_model::run(double dt, double input_storage_m, shared_ptr<pdm03_struct> et_params) {
-    int lstm_model::run(double dt, double AORC_DLWRF_surface_W_per_meters_squared,
+    int lstm_model::run(double dt, double DLWRF_surface_W_per_meters_squared,
                         double PRES_surface_Pa, double SPFH_2maboveground_kg_per_kg,
                         double precip, double DSWRF_surface_W_per_meters_squared,
                         double TMP_2maboveground_K, double UGRD_10maboveground_meters_per_second,
@@ -124,19 +146,23 @@ namespace lstm {
         // Do resetting/housekeeping for new calculations and new state values
         manage_state_before_next_time_step_run();
 
+
         std::vector<torch::jit::IValue> inputs;
         torch::Tensor forcing = torch::zeros({1, 11});
-        forcing[0][0] = AORC_DLWRF_surface_W_per_meters_squared;
-        forcing[0][1] = PRES_surface_Pa;
-        forcing[0][2] = SPFH_2maboveground_kg_per_kg;
-        forcing[0][3] = precip;
-        forcing[0][4] = DSWRF_surface_W_per_meters_squared;
-        forcing[0][5] = TMP_2maboveground_K;
-        forcing[0][6] = UGRD_10maboveground_meters_per_second;
-        forcing[0][7] = VGRD_10maboveground_meters_per_second;
-        forcing[0][8] = model_params.latitude;
-        forcing[0][9] = model_params.longitude;
-        forcing[0][10] = model_params.area;
+        forcing[0][0] = lstm_model::normalize("DLWRF_surface_W_per_meters_squared", DLWRF_surface_W_per_meters_squared);
+        forcing[0][1] = lstm_model::normalize("PRES_surface_Pa", PRES_surface_Pa);
+        forcing[0][2] = lstm_model::normalize("SPFH_2maboveground_kg_per_kg", SPFH_2maboveground_kg_per_kg);
+        forcing[0][3] = lstm_model::normalize("Precip_rate", precip);
+        forcing[0][4] = lstm_model::normalize("DSWRF_surface_W_per_meters_squared", DSWRF_surface_W_per_meters_squared);
+        forcing[0][5] = lstm_model::normalize("TMP_2maboveground_K", TMP_2maboveground_K);
+        forcing[0][6] = lstm_model::normalize("UGRD_10maboveground_meters_per_second", UGRD_10maboveground_meters_per_second);
+        forcing[0][7] = lstm_model::normalize("VGRD_10maboveground_meters_per_second", VGRD_10maboveground_meters_per_second);
+        forcing[0][8] = lstm_model::normalize("Area_Square_km", model_params.area);
+        forcing[0][9] = lstm_model::normalize("Latitude", model_params.latitude);
+        forcing[0][10] = lstm_model::normalize("Longitude", model_params.longitude);
+     
+
+/* 
         // Create the model input for one time step
       	inputs.push_back(forcing.to(device));
         inputs.push_back(previous_state->h_t);
@@ -148,9 +174,23 @@ namespace lstm {
         //FIXME denormalize flow before returning
         current_state = std::make_shared<lstm_state>( lstm_state(output[1].toTensor(), output[2].toTensor()) );
 
-        return fluxes->flow;
+*/
+
+      //  return fluxes->flow;
+       return 0.0;
 
     }
+
+
+
+    double lstm_model::normalize(std::string forcing_variable_string, double forcing_variable)
+    {
+      double mean, std_dev;
+      mean = this->scale[ forcing_variable_string ]["mean"];
+      std_dev = this->scale[ forcing_variable_string ]["std_dev"];
+      return  (forcing_variable - mean) / std_dev;
+    }
+
 
     /**
      * Perform necessary steps prior to the execution of model calculations for a new time step, for managing member
