@@ -1,3 +1,6 @@
+#ifndef CSV_Reader_H
+#define CSV_Reader_H
+
 #include <fstream>
 #include <vector>
 #include <iterator>
@@ -54,3 +57,5 @@ inline std::vector<std::vector<std::string> > CSVReader::getData()
 
 	return dataList;
 }
+
+#endif //CSV_Reader_H
