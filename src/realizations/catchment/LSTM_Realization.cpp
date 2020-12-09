@@ -31,19 +31,6 @@ LSTM_Realization::LSTM_Realization(
     /////////
     //state[0] = std::make_shared<lstm::lstm_state>(lstm::lstm_state(soil_storage_meters, groundwater_storage_meters, nash_storage));
     state[0] = std::make_shared<lstm::lstm_state>(lstm::lstm_state(0.0));
-    ///////// 
-    /////////////////////////////////////////////////////////////////////////
-
-
-
-   //state[0]->soil_storage_meters = soil_storage_meters;
-    //state[0]->groundwater_storage_meters = groundwater_storage_meters;
-/*
-    for (int i = 0; i < params.nash_n; ++i) {
-
-        state[0]->nash_cascade_storeage_meters[i] = nash_storage[i];
-    }
-*/
 
     model = make_unique<lstm::lstm_model>(lstm::lstm_model(params, state[0]));
 }
@@ -138,9 +125,6 @@ std::string LSTM_Realization::get_output_line_for_timestep(int timestep, std::st
     if (timestep >= fluxes.size()) {
         return "";
     }
-//    double discharge = fluxes[timestep]->soil_lateral_flow_meters_per_second +
-//                       fluxes[timestep]->groundwater_flow_meters_per_second +
-//                       giuh_kernel->calc_giuh_output(timestep, fluxes[timestep]->surface_runoff_meters_per_second);
 
     double discharge = 0.0;
     return std::to_string(discharge);
@@ -163,67 +147,11 @@ void LSTM_Realization::create_formulation(geojson::PropertyMap properties) {
 
     this->params = &lstm_params;
 
-
-    //double soil_storage_meters =   //lstm_params.max_soil_storage_meters * properties.at("soil_storage_percentage").as_real_number();
-    //double ground_water_storage = lstm_params.max_groundwater_storage_meters * properties.at("groundwater_storage_percentage").as_real_number();
-
-    //std::vector<double> nash_storage = properties.at("nash_storage").as_real_vector();
-
-    //this->state[0] = std::make_shared<lstm::lstm_state>(lstm::lstm_state(soil_storage_meters, ground_water_storage, nash_storage));
     this->state[0] = std::make_shared<lstm::lstm_state>(lstm::lstm_state(0.0));
 
-/*
-    for (int i = 0; i < lstm_params.nash_n; ++i) {
-
-        this->state[0]->nash_cascade_storeage_meters[i] = nash_storage[i];
-    }
-*/
 
     this->model = make_unique<lstm::lstm_model>(lstm::lstm_model(lstm_params, this->state[0]));
 
-  //  geojson::JSONProperty giuh = properties.at("giuh");
-
-  ///  std::vector<std::string> missing_parameters;
-/*
-    if (!giuh.has_key("giuh_path")) {
-        missing_parameters.push_back("giuh_path");
-    }
-
-    if (!giuh.has_key("crosswalk_path")) {
-        missing_parameters.push_back("crosswalk_path");
-    }
-
-    if (missing_parameters.size() > 0) {
-        std::string message = "A giuh configuration cannot be created for '" + this->get_id() + "'; the following parameters are missing: ";
-
-        for (int missing_parameter_index = 0; missing_parameter_index < missing_parameters.size(); missing_parameter_index++) {
-            message += missing_parameters[missing_parameter_index];
-
-            if (missing_parameter_index < missing_parameters.size() - 1) {
-                message += ", ";
-            }
-        }
-
-        throw std::runtime_error(message);
-    }
-
-    std::unique_ptr<giuh::GiuhJsonReader> giuh_reader = std::make_unique<giuh::GiuhJsonReader>(
-        giuh.at("giuh_path").as_string(),
-        giuh.at("crosswalk_path").as_string()
-    );
-
-    this->giuh_kernel = giuh_reader->get_giuh_kernel_for_id(this->catchment_id);
-
-    if (this->giuh_kernel == nullptr) {
-        // ... revert to a pass-through kernel
-        this->giuh_kernel = std::make_shared<giuh::giuh_kernel>(
-                giuh::giuh_kernel(
-                    this->catchment_id,
-                    giuh_reader->get_associated_comid(this->catchment_id)
-                )
-        );
-    }
-*/
 }
 
 void LSTM_Realization::create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global) {
@@ -240,86 +168,15 @@ void LSTM_Realization::create_formulation(boost::property_tree::ptree &config, g
         options.at("longitude").as_real_number(),
         options.at("area_square_km").as_real_number(),
 
-
     };
 
     this->params = &lstm_params;
 
     double soil_storage_meters =  0.0; // lstm_params.max_soil_storage_meters * options.at("soil_storage_percentage").as_real_number();
-    //double ground_water_storage = 0.0; //lstm_params.max_groundwater_storage_meters * options.at("groundwater_storage_percentage").as_real_number();
-
-    //std::vector<double> nash_storage = options.at("nash_storage").as_real_vector();
 
     this->state[0] = std::make_shared<lstm::lstm_state>(lstm::lstm_state(soil_storage_meters));
 
-/*
-    for (int i = 0; i < lstm_params.nash_n; ++i) {
-
-        this->state[0]->nash_cascade_storeage_meters[i] = nash_storage[i];
-    }
-*/
     this->model = make_unique<lstm::lstm_model>(lstm::lstm_model(lstm_params, this->state[0]));
 
-/*
-    geojson::JSONProperty giuh = options.at("giuh");
-
-    std::vector<std::string> missing_parameters;
-
-    if (!giuh.has_key("giuh_path")) {
-        missing_parameters.push_back("giuh_path");
-    }
-
-    if (!giuh.has_key("crosswalk_path")) {
-        missing_parameters.push_back("crosswalk_path");
-    }
-
-    if (missing_parameters.size() > 0) {
-        std::string message = "A giuh configuration cannot be created for '" + this->get_id() + "'; the following parameters are missing: ";
-
-        for (int missing_parameter_index = 0; missing_parameter_index < missing_parameters.size(); missing_parameter_index++) {
-            message += missing_parameters[missing_parameter_index];
-
-            if (missing_parameter_index < missing_parameters.size() - 1) {
-                message += ", ";
-            }
-        }
-        
-        throw std::runtime_error(message);
-    }
-
-    std::unique_ptr<giuh::GiuhJsonReader> giuh_reader = std::make_unique<giuh::GiuhJsonReader>(
-        giuh.at("giuh_path").as_string(),
-        giuh.at("crosswalk_path").as_string()
-    );
-
-    this->giuh_kernel = giuh_reader->get_giuh_kernel_for_id(this->catchment_id);
-
-    if (this->giuh_kernel == nullptr) {
-        // ... revert to a pass-through kernel
-        this->giuh_kernel = std::make_shared<giuh::giuh_kernel>(
-                giuh::giuh_kernel(
-                    this->catchment_id,
-                    giuh_reader->get_associated_comid(this->catchment_id)
-                )
-        );
-    }
-*/
-
 }
 
-/*
-void LSTM_Realization::set_giuh_kernel(std::shared_ptr<giuh::GiuhJsonReader> reader) {
-    this->giuh_kernel = reader->get_giuh_kernel_for_id(this->catchment_id);
-
-    // If the look-up failed in the reader for some reason, and we got back a null pointer ...
-    if (this->giuh_kernel == nullptr) {
-        // ... revert to a pass-through kernel
-        this->giuh_kernel = std::make_shared<giuh::giuh_kernel>(
-                giuh::giuh_kernel(
-                    this->catchment_id,
-                    reader->get_associated_comid(this->catchment_id)
-                )
-        );
-    }
-}
-*/
