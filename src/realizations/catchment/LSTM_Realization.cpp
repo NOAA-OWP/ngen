@@ -82,12 +82,13 @@ double LSTM_Realization::get_response(time_step_t t_index, time_step_t t_delta_s
     //FIXME doesn't do anything, don't call???
     //add_time(t+1, params.nash_n);
     // TODO: this is problematic, because what happens if the wrong t_index is passed?
-    //double precip = this->forcing.get_next_hourly_precipitation_meters_per_second();
+    double precip = this->forcing.get_next_hourly_precipitation_meters_per_second();
     //FIXME should this run "daily" or hourly (t) which should really be dt
     //Do we keep an "internal dt" i.e. this->dt and reconcile with t?
     //int error = model->run(t_index, precip * t_delta_s / 1000, get_et_params_ptr());
     //int error = model->run(t_index);
-  
+
+
     /*
     if(error == lstm::LSTM_MASS_BALANCE_ERROR){
       std::cout<<"WARNING LSTM_Realization::model mass balance error"<<std::endl;
@@ -98,6 +99,23 @@ double LSTM_Realization::get_response(time_step_t t_index, time_step_t t_delta_s
     return fluxes[t_index]->soil_lateral_flow_meters_per_second + fluxes[t_index]->groundwater_flow_meters_per_second +
            giuh;
     */
+
+
+    state[t_index + 1] = model->get_current_state();
+    fluxes[t_index] = model->get_fluxes();
+
+
+
+    AORC_data forcing_data = this->forcing.get_AORC_data();
+
+    int error = model->run(t_index, forcing_data.DLWRF_surface_W_per_meters_squared, forcing_data.PRES_surface_Pa, forcing_data.SPFH_2maboveground_kg_per_kg, precip, forcing_data.DSWRF_surface_W_per_meters_squared, forcing_data.TMP_2maboveground_K, forcing_data.UGRD_10maboveground_meters_per_second, forcing_data.VGRD_10maboveground_meters_per_second);
+
+
+     return 0.0;
+
+
+
+
     return 0.0;
 }
 

@@ -88,6 +88,9 @@ namespace lstm {
 
 
 
+       double normalize(std::string forcing_variable_string, double forcing_variable);
+
+
     protected:
 
         /**
@@ -120,6 +123,7 @@ namespace lstm {
 
         ScaleParams scale;
 
+        std::string forcing_header[11] = { "AORC_DLWRF_surface_W_per_meters_squared", "PRES_surface_Pa", "SPFH_2maboveground_kg_per_kg", "precip", "DSWRF_surface_W_per_meters_squared", "TMP_2maboveground_K", "UGRD_10maboveground_meters_per_second", "VGRD_10maboveground_meters_per_second", "Latitude", "Longitude", "Area_Square_km" };
     };
 }
 
