@@ -37,7 +37,8 @@ namespace lstm {
      */
     lstm_model::lstm_model(lstm_params model_params) :
     //lstm_model(model_params, make_shared<lstm_state>(lstm_state(0.0, 0.0))) {}
-    lstm_model(model_params, make_shared<lstm_state>(lstm_state(0.0))) {}
+    //lstm_model(model_params, make_shared<lstm_state>(lstm_state(0.0))) {}
+    lstm_model(model_params, make_shared<lstm_state>(lstm_state())) {}
 
 
     /**
