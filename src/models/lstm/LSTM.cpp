@@ -64,7 +64,7 @@ namespace lstm {
         fluxes = nullptr;
         //manually set torch seed for reproducibility
         torch::manual_seed(0);
-        useGPU = torch::cuda::is_available();
+        useGPU = config.useGPU && torch::cuda::is_available();
         device = torch::Device( useGPU ? torch::kCUDA : torch::kCPU );
         lstm::to_device(*current_state, device);
         lstm::to_device(*previous_state, device);

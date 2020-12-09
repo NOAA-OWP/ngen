@@ -54,7 +54,8 @@
                 "initial_state_path": "../data/lstm/initial_states.csv",
                 "latitude": 40.636253,
                 "longitude": -87.71896,
-                "area_square_km": 1159.528499
+                "area_square_km": 1159.528499,
+                "useGPU": true
             }
           }
         ],

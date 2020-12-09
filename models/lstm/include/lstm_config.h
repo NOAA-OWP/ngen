@@ -12,7 +12,7 @@ namespace lstm {
         std::string pytorch_model_path;
         std::string normalization_path;
         std::string initial_state_path;
-
+        bool useGPU;
         /**
          * Constructor for instances, initializing members that correspond one-to-one with a parameter and deriving
          * @param pytorch_model_path string path to the pytorch .pt or .ptc trace file
@@ -22,14 +22,16 @@ namespace lstm {
         lstm_config(
            std::string pytorch_model_path,
            std::string normalization_path,
-           std::string initial_state_path
+           std::string initial_state_path,
+           bool useGPU
           ) :
               pytorch_model_path(pytorch_model_path),
               normalization_path(normalization_path),
-              initial_state_path(initial_state_path)
+              initial_state_path(initial_state_path),
+              useGPU(useGPU)
               {}
         lstm_config()
-          : pytorch_model_path(""), normalization_path(""), initial_state_path("")
+          : pytorch_model_path(""), normalization_path(""), initial_state_path(""), useGPU(false)
         {}
     };
 }
