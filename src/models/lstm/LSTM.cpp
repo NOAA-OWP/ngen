@@ -3,6 +3,7 @@
 #include "lstm_fluxes.h"
 #include "lstm_state.h"
 #include "CSV_Reader.h"
+#include <iostream>
 
 
 using namespace std;
@@ -59,12 +60,14 @@ namespace lstm {
 
 
         //CURRENTLY HAVING ERROR LOADING MODEL
-        /*
+       std::cout<<"model_params.pytorch_model_path: " << model_params.pytorch_model_path;
+
+      /* 
         model = torch::jit::load(model_params.pytorch_model_path);
         model.to( device );
         // Set to `eval` model (just like Python)
         model.eval();
-        */
+      */ 
 
 
         //FIXME what is the SUPPOSED to do?

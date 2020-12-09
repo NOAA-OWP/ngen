@@ -40,8 +40,8 @@
     "catchments": {
         "cat-87": {
             "lstm": {
-                "pytorch_model_path": "./data/lstm/head.net.0.weight.csv",
-                "normalization_path": "./data/lstm/lstm_mean_std.csv",
+                "pytorch_model_path": "./data/lstm/sugar_creek_trained.pt",
+                "normalization_path": "./data/lstm/input_scaling.csv",
                 "latitude": 40.636253,
                 "longitude": 87.71896,
                 "area_square_km": 1159.528499,
