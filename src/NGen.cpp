@@ -116,7 +116,6 @@ int main(int argc, char *argv[]) {
 
         std::vector<string> catchment_subset_ids;
         std::vector<string> nexus_subset_ids;
-    std::cout<<"2.1 \n";
 
         if( argc < 6) {
             std::cout << "Missing required args:" << std::endl;
@@ -165,29 +164,21 @@ int main(int argc, char *argv[]) {
 
     // TODO: Instead of iterating through a collection of FeatureBase objects mapping to nexi, we instead want to iterate through HY_HydroLocation objects
     geojson::GeoJSON nexus_collection = geojson::read(nexusDataFile, nexus_subset_ids);
-    std::cout<<"2.15 \n";
     std::cout << "Building Catchment collection" << std::endl;
 
     // TODO: Instead of iterating through a collection of FeatureBase objects mapping to catchments, we instead want to iterate through HY_Catchment objects
-
-    std::cout<<"2.2 \n";
     geojson::GeoJSON catchment_collection = geojson::read(catchmentDataFile, catchment_subset_ids);
 
-    std::cout<<"2.2 \n";
     prepare_features(nexus_collection, catchment_collection, !true);
 
-    std::cout<<"2.3 \n";
     // TODO: Have these formulations attached to the prior HY_Catchment objects
     realization::Formulation_Manager manager = realization::Formulation_Manager(REALIZATION_CONFIG_PATH);
     manager.read(catchment_collection, utils::getStdOut());
 
-    std::cout<<"2.4 \n";
     //TODO don't really need catchment_collection once catchments are added to nexus collection
     catchment_collection.reset();
     for(auto& feature : *nexus_collection)
     {
-
-    std::cout<<"2.5 \n";
       std::string feat_id = feature->get_id();
       //FIXME rework how we use IDs to NOT force parsing???
       //Skipping IDs that aren't "real" i.e. have a  NA id
@@ -240,34 +231,28 @@ int main(int argc, char *argv[]) {
 
       std::string current_timestamp = manager.Simulation_Time_Object->get_timestamp(output_time_index);
 
-         std::cout << "0.1 \n";
       for (std::pair<std::string, std::shared_ptr<realization::Formulation>> formulation_pair : manager ) {
       //  formulation_pair.second->set_et_params(pdm_et_data);
         //get the catchment response
         double response = formulation_pair.second->get_response(output_time_index, 3600.0);
         //dump the output
 
-         std::cout << "1.0 \n";
         std::cout<<"\tCatchment "<<formulation_pair.first<<" contributing "<<response<<" m/s to "<<catchment_to_nexus[formulation_pair.first]<<std::endl;
         std::cout<<catchment_to_nexus[formulation_pair.first]<<std::endl;
 
-         std::cout << "1.05 \n";
       // If the timestep is 0, also write the header line to the file
         // TODO: add command line or config option to have this be omitted
         if (output_time_index == 0) {
-         std::cout << "1.1 \n";
             // Append "Time Step" to header string provided by formulation, since we'll also add time step to output
             std::string header_str = formulation_pair.second->get_output_header_line();
             catchment_outfiles[formulation_pair.first] << "Time Step," << "Time," << header_str <<std::endl;
         }
-         std::cout << "1.2 \n";
         std::string output_str = formulation_pair.second->get_output_line_for_timestep(output_time_index);
 
-         std::cout << "1.3 \n";
         catchment_outfiles[formulation_pair.first] << output_time_index << "," << current_timestamp << "," << output_str << std::endl;
-         std::cout << "1.4 \n";
+
         //response = response * boost::geometry::area(nexus_collection->get_feature(formulation_pair.first)->geometry<geojson::multipolygon_t>());
-         std::cout << "1.5 \n";
+
         std::cout << "\t\tThe modified response is: " << response << std::endl;
         //update the nexus with this flow
         nexus_realizations[ catchment_to_nexus[formulation_pair.first] ]->add_upstream_flow(response, catchment_id[formulation_pair.first], output_time_index);
