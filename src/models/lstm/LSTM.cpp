@@ -29,7 +29,7 @@ ScaleParams read_scale_params(std::string path)
 	for(int i = 0; i < (*row).size(); i++)
 	{   //row has var, mean, std_dev
  	    //read into map keyed on var name, param name
-    	    params[ (*row)[0] ]["mean"] = strtof( (*row)[1].c_str(), NULL); 
+    	    params[ (*row)[0] ]["mean"] = strtof( (*row)[1].c_str(), NULL);
   	    params[ (*row)[0] ]["std_dev"] = strtof( (*row)[2].c_str(), NULL);
 	}
     }
@@ -56,8 +56,8 @@ namespace lstm {
      * @param model_params Model parameters lstm_params struct.
      * @param initial_state Shared smart pointer to lstm_state struct hold initial state values
      */
-    lstm_model::lstm_model(lstm_params model_params, const shared_ptr<lstm_state> &initial_state)
-            : model_params(model_params), previous_state(initial_state), current_state(initial_state),
+    lstm_model::lstm_model(lstm_config config, lstm_params model_params, const shared_ptr<lstm_state> &initial_state)
+            : config(config), model_params(model_params), previous_state(initial_state), current_state(initial_state),
             device( torch::Device(torch::kCPU) )
     {
         // ********** Set fluxes to null for now: it is bogus until first call of run function, which initializes it
@@ -69,33 +69,25 @@ namespace lstm {
         lstm::to_device(*current_state, device);
         lstm::to_device(*previous_state, device);
 
-////////////////////////////i
-/*
-  ofstream myfile;
-  myfile.open ("lstm_text.txt", ios::app);
+        //FIXME need to initialize the model states by running a "warmup"
+        //so when the model is constructed, run it on N timesteps prior to prediction period
+        //OR read those states in and create the initial state tensors
 
-       std::cout<<"model_params.pytorch_model_path: " << model_params.pytorch_model_path;
+         //CURRENTLY HAVING ERROR LOADING MODEL
+         std::cout<<"model_params.pytorch_model_path: " << config.pytorch_model_path;
 
-myfile<<"model_params.pytorch_model_path: " << model_params.pytorch_model_path << "\n";
-
-  myfile.close();
-*/
-////////////////////////////////
-
-
-        //CURRENTLY HAVING ERROR LOADING MODEL
-    /*   
-        model = torch::jit::load(model_params.pytorch_model_path);
+      /*
+        model = torch::jit::load(model_config.pytorch_model_path);
         model.to( device );
         // Set to `eval` model (just like Python)
         model.eval();
-   */   
+      */
 
 
         //FIXME what is the SUPPOSED to do?
         torch::NoGradGuard no_grad_;
 
-        this->scale = read_scale_params(model_params.normalization_path);
+        this->scale = read_scale_params(config.normalization_path);
 
 
     }
@@ -108,8 +100,8 @@ myfile<<"model_params.pytorch_model_path: " << model_params.pytorch_model_path <
      *
      * @param model_params Model parameters lstm_params struct.
      */
-    lstm_model::lstm_model(lstm_params model_params) :
-    lstm_model(model_params, make_shared<lstm_state>(lstm_state())) {}
+    lstm_model::lstm_model(lstm_config config, lstm_params model_params) :
+    lstm_model(config, model_params, make_shared<lstm_state>(lstm_state())) {}
 
     /**
      * Return the smart pointer to the lstm::lstm_model struct for holding this object's current state.
@@ -128,7 +120,7 @@ myfile<<"model_params.pytorch_model_path: " << model_params.pytorch_model_path <
     shared_ptr<lstm_fluxes> lstm_model::get_fluxes() {
         return fluxes;
     }
-    
+
     /**
      * Run the model to one time step, after performing initial housekeeping steps via a call to
      * `manage_state_before_next_time_step_run`.
@@ -160,9 +152,9 @@ myfile<<"model_params.pytorch_model_path: " << model_params.pytorch_model_path <
         forcing[0][8] = lstm_model::normalize("Area_Square_km", model_params.area);
         forcing[0][9] = lstm_model::normalize("Latitude", model_params.latitude);
         forcing[0][10] = lstm_model::normalize("Longitude", model_params.longitude);
-     
 
-/* 
+
+/*
         // Create the model input for one time step
       	inputs.push_back(forcing.to(device));
         inputs.push_back(previous_state->h_t);
