@@ -19,6 +19,15 @@
 #include <vector>
 #include <memory>
 
+
+#include <torch/torch.h>
+#include <unordered_map>
+
+
+typedef std::unordered_map< std::string, std::unordered_map< std::string, double> > ScaleParams;
+
+
+
 using namespace std;
 
 namespace lstm {
@@ -47,6 +56,15 @@ namespace lstm {
         lstm_model(lstm_params model_params);
 
 
+        /**
+         * Return the smart pointer to the lstm::lstm_model struct for holding this object's current state.
+         *
+         * @return The smart pointer to the lstm_model struct for holding this object's current state.
+         */
+        shared_ptr<lstm_state> get_current_state();
+
+
+
 
         /**
          * Return the shared pointer to the lstm::lstm_fluxes struct for holding this object's current fluxes.
@@ -65,7 +83,10 @@ namespace lstm {
          * @param et_params ET parameters struct
          * @return
          */
-        int run(double dt, double input_storage_m, shared_ptr<pdm03_struct> et_params);
+       // int run(double dt, double input_storage_m, shared_ptr<pdm03_struct> et_params);
+        int run(double dt, double AORC_DLWRF_surface_W_per_meters_squared, double PRES_surface_Pa, double SPFH_2maboveground_kg_per_kg, double precip, double DSWRF_surface_W_per_meters_squared, double TMP_2maboveground_K, double UGRD_10maboveground_meters_per_second, double VGRD_10maboveground_meters_per_second);
+
+
 
     protected:
 
@@ -80,10 +101,12 @@ namespace lstm {
          *      * a new `current_state` is created
          *      * a new `fluxes` is created
          */
-        //virtual void manage_state_before_next_time_step_run();
+        virtual void manage_state_before_next_time_step_run();
 
     private:
-
+        /** torch confiruation variables */
+        bool useGPU;
+        torch::Device device;
         /** Model state for the "current" time step, which may not be calculated yet. */
         shared_ptr<lstm_state> current_state;
         /** Model execution parameters. */
@@ -91,8 +114,11 @@ namespace lstm {
         /** Model state from that previous time step before the current. */
         shared_ptr<lstm_state> previous_state;
 
-
         shared_ptr<lstm_fluxes> fluxes;
+
+        torch::jit::script::Module model;
+
+        ScaleParams scale;
 
     };
 }
