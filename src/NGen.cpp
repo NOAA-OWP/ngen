@@ -116,6 +116,7 @@ int main(int argc, char *argv[]) {
 
         std::vector<string> catchment_subset_ids;
         std::vector<string> nexus_subset_ids;
+    std::cout<<"2.1 \n";
 
         if( argc < 6) {
             std::cout << "Missing required args:" << std::endl;
@@ -164,21 +165,29 @@ int main(int argc, char *argv[]) {
 
     // TODO: Instead of iterating through a collection of FeatureBase objects mapping to nexi, we instead want to iterate through HY_HydroLocation objects
     geojson::GeoJSON nexus_collection = geojson::read(nexusDataFile, nexus_subset_ids);
+    std::cout<<"2.15 \n";
     std::cout << "Building Catchment collection" << std::endl;
 
     // TODO: Instead of iterating through a collection of FeatureBase objects mapping to catchments, we instead want to iterate through HY_Catchment objects
+
+    std::cout<<"2.2 \n";
     geojson::GeoJSON catchment_collection = geojson::read(catchmentDataFile, catchment_subset_ids);
 
+    std::cout<<"2.2 \n";
     prepare_features(nexus_collection, catchment_collection, !true);
 
+    std::cout<<"2.3 \n";
     // TODO: Have these formulations attached to the prior HY_Catchment objects
     realization::Formulation_Manager manager = realization::Formulation_Manager(REALIZATION_CONFIG_PATH);
     manager.read(catchment_collection, utils::getStdOut());
 
+    std::cout<<"2.4 \n";
     //TODO don't really need catchment_collection once catchments are added to nexus collection
     catchment_collection.reset();
     for(auto& feature : *nexus_collection)
     {
+      
+    std::cout<<"2.5 \n";
       std::string feat_id = feature->get_id();
       //FIXME rework how we use IDs to NOT force parsing???
       //Skipping IDs that aren't "real" i.e. have a  NA id

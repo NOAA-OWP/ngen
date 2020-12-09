@@ -18,7 +18,6 @@ namespace realization {
 
         typedef long time_step_t;
 
-/*
         LSTM_Realization(forcing_params forcing_config,
                            utils::StreamHandler output_stream,
                            double soil_storage_meters,
@@ -28,32 +27,30 @@ namespace realization {
                            lstm::lstm_params params,
                            const std::vector<double>& nash_storage,
                            time_step_t t);
-*/
-
-        LSTM_Realization(forcing_params forcing_config,
-                           utils::StreamHandler output_stream,
-                           std::string catchment_id,
-                           giuh::GiuhJsonReader &giuh_json_reader,
-                           lstm::lstm_params params,
-                           time_step_t t);
-
 
 
         LSTM_Realization(
                 forcing_params forcing_config,
                 utils::StreamHandler output_stream,
-                //double soil_storage_meters,
-                //double groundwater_storage_meters,
+                double soil_storage_meters,
+                double groundwater_storage_meters,
                 std::string catchment_id,
                 giuh::GiuhJsonReader &giuh_json_reader,
 
-       std::string pytorch_model_path,
-       std::string normalization_path,
-       double latitude,
-       double longitude,
-       double area_square_km,
+                std::string input_biases_path,
+                std::string input_weights_path,
+                std::string hidden_biases_path,
+                std::string hidden_weights_path,
+                std::string head_biases_path,
+                std::string head_weights_path,
 
-                /*
+               std::string pytorch_model_path,
+               std::string normalization_path,
+               double latitude,
+               double longitude,
+               double area_square_km,
+
+
                 double maxsmc,
                 double wltsmc,
                 double satdk,
@@ -69,8 +66,6 @@ namespace realization {
                 double expon,
                 double max_gw_storage,
                 const std::vector<double>& nash_storage,
-                */
-
                 time_step_t t
                 );
 
@@ -147,7 +142,7 @@ namespace realization {
             std::string catchment_id;
             std::unordered_map<time_step_t, shared_ptr<lstm::lstm_state>> state;
             std::unordered_map<time_step_t, shared_ptr<lstm::lstm_fluxes>> fluxes;
-            //std::unordered_map<time_step_t, std::vector<double> > cascade_backing_storage;
+            std::unordered_map<time_step_t, std::vector<double> > cascade_backing_storage;
             lstm::lstm_params *params;
             std::unique_ptr<lstm::lstm_model> model;
             std::shared_ptr<giuh::giuh_kernel> giuh_kernel;
@@ -156,6 +151,12 @@ namespace realization {
             time_step_t dt;
 
             std::vector<std::string> REQUIRED_PARAMETERS = {
+                "input_biases_path",
+                "input_weights_path",
+                "hidden_biases_path",
+                "hidden_weights_path",
+                "head_biases_path",
+                "head_weights_path",
 
        "pytorch_model_path",
        "normalization_path",
@@ -164,7 +165,6 @@ namespace realization {
        "area_square_km",
 
 
-                /*
                 "maxsmc",
                 "wltsmc",
                 "satdk",
@@ -182,8 +182,6 @@ namespace realization {
                 "nash_storage",
                 "soil_storage_percentage",
                 "groundwater_storage_percentage",
-                */
-
                 "timestep",
                 "giuh"
             };
@@ -193,3 +191,4 @@ namespace realization {
 }
 
 #endif //NGEN_LSTM_REALIZATION_HPP
+
