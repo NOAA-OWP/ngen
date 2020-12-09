@@ -1,13 +1,11 @@
 #ifndef NGEN_LSTM_REALIZATION_HPP
 #define NGEN_LSTM_REALIZATION_HPP
 
-
 #include "Catchment_Formulation.hpp"
 #include <unordered_map>
-#include "GIUH.hpp"
-#include "GiuhJsonReader.h"
 #include "lstm/include/LSTM.h"
 #include "lstm/include/lstm_params.h"
+#include "lstm/include/lstm_config.h"
 #include <memory>
 
 namespace realization {
@@ -20,32 +18,21 @@ namespace realization {
 
         LSTM_Realization(forcing_params forcing_config,
                            utils::StreamHandler output_stream,
-                           double soil_storage_meters,
-                           double groundwater_storage_meters,
                            std::string catchment_id,
-                           giuh::GiuhJsonReader &giuh_json_reader,
                            lstm::lstm_params params,
-                           //const std::vector<double>& nash_storage,
-                           time_step_t t);
+                           lstm::lstm_config config);
 
 
         LSTM_Realization(
                 forcing_params forcing_config,
                 utils::StreamHandler output_stream,
-                double soil_storage_meters,
-                double groundwater_storage_meters,
                 std::string catchment_id,
-                giuh::GiuhJsonReader &giuh_json_reader,
-
-
-               std::string pytorch_model_path,
-               std::string normalization_path,
-               double latitude,
-               double longitude,
-               double area_square_km,
-
-
-                time_step_t t
+                std::string pytorch_model_path,
+                std::string normalization_path,
+                std::string initial_state_path,
+                double latitude,
+                double longitude,
+                double area_square_km
                 );
 
             LSTM_Realization(
@@ -54,14 +41,7 @@ namespace realization {
                 utils::StreamHandler output_stream
             ) : Catchment_Formulation(id, forcing_config, output_stream) {}
 
-
-            //void set_giuh_kernel(std::shared_ptr<giuh::GiuhJsonReader> reader);
-
             virtual ~LSTM_Realization(){};
-
-            double calc_et(double soil_m) override;
-
-
 
             /**
              * Execute the backing model formulation for the given time step, where it is of the specified size, and
@@ -76,9 +56,10 @@ namespace realization {
              */
             double get_response(time_step_t t_index, time_step_t t_delta_s) override;
 
+            double calc_et(double soil_m) override {return 0.0;}
 
 
-            std::string get_formulation_type() {
+            std::string get_formulation_type() override {
                 return "lstm";
             }
 
@@ -106,9 +87,9 @@ namespace realization {
              */
             std::string get_output_line_for_timestep(int timestep, std::string delimiter=",") override;
 
-            void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr);
+            void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr) override;
 
-            void create_formulation(geojson::PropertyMap properties);
+            void create_formulation(geojson::PropertyMap properties) override;
 
             const std::vector<std::string>& get_required_parameters() override {
                 return REQUIRED_PARAMETERS;
@@ -117,26 +98,19 @@ namespace realization {
 
         private:
             std::string catchment_id;
-            std::unordered_map<time_step_t, shared_ptr<lstm::lstm_state>> state;
-            std::unordered_map<time_step_t, shared_ptr<lstm::lstm_fluxes>> fluxes;
-            std::unordered_map<time_step_t, std::vector<double> > cascade_backing_storage;
-            lstm::lstm_params *params;
+            shared_ptr<lstm::lstm_state> state;
+            shared_ptr<lstm::lstm_fluxes> fluxes;
+            lstm::lstm_params params;
+            lstm::lstm_config config;
             std::unique_ptr<lstm::lstm_model> model;
-            std::shared_ptr<giuh::giuh_kernel> giuh_kernel;
-
-            //The delta time (dt) this instance is configured to use
-            time_step_t dt;
 
             std::vector<std::string> REQUIRED_PARAMETERS = {
-
-       "pytorch_model_path",
-       "normalization_path",
-       "latitude",
-       "longitude",
-       "area_square_km",
-
-                "timestep",
-                "giuh"
+                 "pytorch_model_path",
+                 "normalization_path",
+                 "initial_state_path",
+                 "latitude",
+                 "longitude",
+                 "area_square_km",
             };
 
     };
