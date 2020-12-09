@@ -55,8 +55,6 @@ namespace realization {
             ) : Catchment_Formulation(id, forcing_config, output_stream) {}
 
 
-
-
             //void set_giuh_kernel(std::shared_ptr<giuh::GiuhJsonReader> reader);
 
             virtual ~LSTM_Realization(){};
