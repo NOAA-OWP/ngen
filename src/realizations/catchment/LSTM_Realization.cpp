@@ -33,7 +33,7 @@ LSTM_Realization::LSTM_Realization(
     : LSTM_Realization::LSTM_Realization(forcing_config, output_stream,
                                            catchment_id,
                                            lstm::lstm_params(latitude, longitude, area_square_km),
-                                           lstm::lstm_config(pytorch_model_path, normalization_path, initial_state_path)
+                                           lstm::lstm_config(pytorch_model_path, normalization_path, initial_state_path, false)
                                            ) {
 
 }
@@ -104,7 +104,8 @@ void LSTM_Realization::create_formulation(geojson::PropertyMap properties) {
     lstm::lstm_config config{
       properties.at("pytorch_model_path").as_string(),
       properties.at("normalization_path").as_string(),
-      properties.at("initial_state_path").as_string()
+      properties.at("initial_state_path").as_string(),
+      properties.at("useGPU").as_boolean()
     };
 
     this->params = lstm_params;
