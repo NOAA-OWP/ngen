@@ -30,7 +30,8 @@ LSTM_Realization::LSTM_Realization(
     //add_time(t, params.nash_n);
     /////////
     //state[0] = std::make_shared<lstm::lstm_state>(lstm::lstm_state(soil_storage_meters, groundwater_storage_meters, nash_storage));
-    state[0] = std::make_shared<lstm::lstm_state>(lstm::lstm_state(0.0));
+    //state[0] = std::make_shared<lstm::lstm_state>(lstm::lstm_state(0.0));
+    state[0] = std::make_shared<lstm::lstm_state>(lstm::lstm_state());
 
     model = make_unique<lstm::lstm_model>(lstm::lstm_model(params, state[0]));
 }
@@ -147,7 +148,8 @@ void LSTM_Realization::create_formulation(geojson::PropertyMap properties) {
 
     this->params = &lstm_params;
 
-    this->state[0] = std::make_shared<lstm::lstm_state>(lstm::lstm_state(0.0));
+    //this->state[0] = std::make_shared<lstm::lstm_state>(lstm::lstm_state(0.0));
+    this->state[0] = std::make_shared<lstm::lstm_state>(lstm::lstm_state());
 
 
     this->model = make_unique<lstm::lstm_model>(lstm::lstm_model(lstm_params, this->state[0]));
@@ -172,9 +174,10 @@ void LSTM_Realization::create_formulation(boost::property_tree::ptree &config, g
 
     this->params = &lstm_params;
 
-    double soil_storage_meters =  0.0; // lstm_params.max_soil_storage_meters * options.at("soil_storage_percentage").as_real_number();
+    //double soil_storage_meters =  0.0; // lstm_params.max_soil_storage_meters * options.at("soil_storage_percentage").as_real_number();
 
-    this->state[0] = std::make_shared<lstm::lstm_state>(lstm::lstm_state(soil_storage_meters));
+    //this->state[0] = std::make_shared<lstm::lstm_state>(lstm::lstm_state(soil_storage_meters));
+    this->state[0] = std::make_shared<lstm::lstm_state>(lstm::lstm_state());
 
     this->model = make_unique<lstm::lstm_model>(lstm::lstm_model(lstm_params, this->state[0]));
 
