@@ -87,7 +87,7 @@ The following must be present in the formulation/realization JSON config for all
 
 ### BMI C Model As Shared Library
 
-For **C** models, the model must be packaged as a pre-compiled shared library.  Several CMake cache variables must be configure for controlling whether to expect such a library and how to find it:
+For **C** models, the model must be packaged as a pre-compiled shared library.  Several CMake cache variables must be configured for controlling whether to expect such a library and how to find it:
 
 * `BMI_C_LIB_ACTIVE` 
   * type: `BOOL` 
