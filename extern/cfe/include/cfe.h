@@ -135,7 +135,7 @@ typedef struct result_fluxes result_fluxes;
 
 struct cfe_model {
     // ***********************************************************
-    // *************** Non-dynamically allocations ***************
+    // ***************** Non-dynamic allocations *****************
     // ***********************************************************
     struct conceptual_reservoir soil_reservoir;
     struct conceptual_reservoir gw_reservoir;
@@ -156,7 +156,7 @@ struct cfe_model {
     int num_giuh_ordinates;
 
     // ***********************************************************
-    // ***************** Dynamically allocations *****************
+    // ******************* Dynamic allocations *******************
     // ***********************************************************
     aorc_forcing_data* forcings;
     int* time_step_sizes;
