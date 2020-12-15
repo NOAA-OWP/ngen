@@ -105,7 +105,7 @@ void Bmi_C_Formulation::inner_create_formulation(geojson::PropertyMap properties
     set_bmi_main_output_var(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__MAIN_OUT_VAR).as_string());
     set_forcing_file_path(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__FORCING_FILE).as_string());
     set_model_type_name(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__MODEL_TYPE).as_string());
-    set_bmi_uses_forcing_file(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__USES_FORCINGS).as_boolean());
+    set_bmi_using_forcing_file(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__USES_FORCINGS).as_boolean());
 
     // TODO: parse header fields and output variable names
 
@@ -121,12 +121,12 @@ void Bmi_C_Formulation::inner_create_formulation(geojson::PropertyMap properties
     if (other_in_var_it != properties.end()) {
         // When "other_input_variables" was present, use the constructor that accepts those directly
         set_bmi_model(std::make_shared<Bmi_C_Adapter>(
-                Bmi_C_Adapter(get_bmi_init_config(), get_forcing_file_path(), is_bmi_uses_forcing_file(),
+                Bmi_C_Adapter(get_bmi_init_config(), get_forcing_file_path(), is_bmi_using_forcing_file(),
                               get_allow_model_exceed_end_time(), other_in_var_it->second, output)));
     }
     else {
         set_bmi_model(std::make_shared<Bmi_C_Adapter>(
-                Bmi_C_Adapter(get_bmi_init_config(), get_forcing_file_path(), is_bmi_uses_forcing_file(),
+                Bmi_C_Adapter(get_bmi_init_config(), get_forcing_file_path(), is_bmi_using_forcing_file(),
                               get_allow_model_exceed_end_time(), output)));
     }
 

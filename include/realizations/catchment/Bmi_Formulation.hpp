@@ -114,8 +114,13 @@ namespace realization {
             return output_variable_names;
         }
 
-        bool is_bmi_uses_forcing_file() const {
-            return bmi_uses_forcing_file;
+        /**
+         * Whether the backing model uses/reads the forcing file directly for getting input data.
+         *
+         * @return Whether the backing model uses/reads the forcing file directly for getting input data.
+         */
+        bool is_bmi_using_forcing_file() const {
+            return bmi_using_forcing_file;
         }
 
         /**
@@ -148,8 +153,13 @@ namespace realization {
             bmi_model = model;
         }
 
-        void set_bmi_uses_forcing_file(bool uses_forcing_file) {
-            bmi_uses_forcing_file = uses_forcing_file;
+        /**
+         * Set whether the backing model uses/reads the forcing file directly for getting input data.
+         *
+         * @param uses_forcing_file Whether the backing model uses/reads forcing file directly for getting input data.
+         */
+        void set_bmi_using_forcing_file(bool uses_forcing_file) {
+            bmi_using_forcing_file = uses_forcing_file;
         }
 
         void set_forcing_file_path(const string &forcing_path) {
@@ -197,7 +207,7 @@ namespace realization {
         std::shared_ptr<M> bmi_model;
         std::string bmi_main_output_var;
         /** Whether the backing model uses/reads the forcing file directly for getting input data. */
-        bool bmi_uses_forcing_file;
+        bool bmi_using_forcing_file;
         std::string forcing_file_path;
         /**
          * Output header field strings corresponding to the variables output by the realization, as defined in
