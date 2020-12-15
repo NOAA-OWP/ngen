@@ -201,7 +201,10 @@ namespace realization {
         }
 
     private:
-        /** Whether model ``Update`` calls are allowed and handled in some way by the backing model. */
+        /**
+         * Whether model ``Update`` calls are allowed and handled in some way by the backing model for time steps after
+         * the model's ``end_time``.
+         */
         bool allow_model_exceed_end_time = false;
         std::string bmi_init_config;
         std::shared_ptr<M> bmi_model;
