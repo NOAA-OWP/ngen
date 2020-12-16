@@ -32,38 +32,82 @@ Bmi_C_Adapter::Bmi_C_Adapter(const std::string& bmi_init_config, std::string for
                              const geojson::JSONProperty& other_vars, utils::StreamHandler output)
         : Bmi_C_Adapter(bmi_init_config, std::move(forcing_file_path), model_uses_forcing_file, allow_exceed_end, output)
 {
-    // TODO: consider adding error message if something in other vars other than input variables (output and/or unrecognized)
-    int set_result = 0;
     for (const std::string& var_name : GetInputVarNames()) {
         if (other_vars.has_key(var_name)) {
             geojson::JSONProperty other_variable = other_vars.at(var_name);
             geojson::PropertyType var_type = other_variable.get_type();
+
+            // First organize things in a vector of JSON properties, whether we have a list or a single value
+            std::vector<geojson::JSONProperty> json_values;
+            if (var_type == geojson::PropertyType::List) {
+                json_values = other_variable.as_list();
+                // Also adjust the var type in this case, to whatever the first element is (leaving if list is empty)
+                if (!json_values.empty()) {
+                    var_type = json_values[0].get_type();
+                }
+            }
+            else {
+                // In this case, we have a single value, so create a single value vector for it
+                json_values.emplace_back(other_variable);
+            }
+            // Store the number of individual values for this input variable for convenience
+            const int num_values_from_config = json_values.size();
+
+            // Next, make sure there aren't more values than the model can handle for this variable
+            int num_variable_items = GetVarNbytes(var_name) / GetVarItemsize(var_name);
+            if (num_values_from_config > num_variable_items) {
+                throw std::runtime_error(model_name + " expects variable '" + var_name + "' to be an array of " +
+                                         std::to_string(num_variable_items) +
+                                         " elements, but config attempted to provided " +
+                                         std::to_string(json_values.size()));
+            }
+            if (num_values_from_config < num_variable_items) {
+                output.put("Warning: configuration supplying subset of values for input variable " + var_name);
+            }
+
+            // Now create the indexes that will be used by C code to identify indexes of variable's array to set
+            int inds[num_values_from_config];
+            // In our case, everything aligns; i.e., the value of each inds element should be its index
+            for (int i = 0; i < num_values_from_config; i++)
+                inds[i] = i;
+
+            // Now, for supported (inner) types, extract the JSON values to a raw array, then use to set values
             if (var_type == geojson::PropertyType::Boolean) {
-                int inds[1] = {0};
-                bool src[1] = {other_variable.as_boolean()};
-                SetValueAtIndices(var_name, inds, 1, (void*)(src));
+                bool src[num_values_from_config];
+                for (int i = 0; i < num_values_from_config; i++)
+                    src[i] = json_values[i].as_boolean();
+                SetValueAtIndices(var_name, inds, num_values_from_config, (void*)(src));
             }
             else if (var_type == geojson::PropertyType::Natural) {
-                int inds[1] = {0};
-                long src[1] = {other_variable.as_natural_number()};
-                SetValueAtIndices(var_name, inds, 1, (void*)(src));
+                long src[num_values_from_config];
+                for (int i = 0; i < num_values_from_config; i++)
+                    src[i] = json_values[i].as_natural_number();
+                SetValueAtIndices(var_name, inds, num_values_from_config, (void*)(src));
             }
             else if (var_type == geojson::PropertyType::Real) {
-                int inds[1] = {0};
-                double src[1] = {other_variable.as_real_number()};
-                SetValueAtIndices(var_name, inds, 1, (void*)(src));
+                double src[num_values_from_config];
+                for (int i = 0; i < num_values_from_config; i++)
+                    src[i] = json_values[i].as_real_number();
+                SetValueAtIndices(var_name, inds, num_values_from_config, (void*)(src));
             }
             else if (var_type == geojson::PropertyType::String) {
-                int inds[1] = {0};
-                std::string str_val = other_variable.as_string();
-                char* src[1] = {(char*)(str_val.c_str())};
-                SetValueAtIndices(var_name, inds, 1, (void*)(src));
+                std::string str_val;
+                char* src[num_values_from_config];
+                for (int i = 0; i < num_values_from_config; i++) {
+                    str_val = json_values[i].as_string();
+                    src[i] = {(char*)(str_val.c_str())};
+                }
+                SetValueAtIndices(var_name, inds, num_values_from_config, (void*)(src));
             }
-            // For now, don't support list or object JSON types
+            // For now, don't support object JSON type
             else {
                 std::string type = var_type == geojson::PropertyType::List ? "list" : "object";
                 throw std::runtime_error("Unsupported type '" + type + "' for config variable '" + var_name + "'");
             }
+        }
+        else {
+            output.put("Warning: unrecognized 'other_input_variable' `" + var_name +
+                       "` presented in formulation config; ignoring");
         }
     }
 }
