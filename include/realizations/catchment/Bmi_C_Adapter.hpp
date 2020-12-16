@@ -136,7 +136,6 @@ namespace models {
               *
               * @tparam T
               * @param name
-              * @param dest
               */
              template <typename T>
              std::vector<T> GetValue(const std::string& name) {
