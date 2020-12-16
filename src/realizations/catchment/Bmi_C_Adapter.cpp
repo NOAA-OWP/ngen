@@ -422,34 +422,12 @@ bool Bmi_C_Adapter::is_model_initialized() {
     return model_initialized;
 }
 
-template<typename T>
-void Bmi_C_Adapter::SetValue(std::string name, std::vector<T> src, size_t src_item_size) {
-    // TODO: for safety, check the type and size of src (or what it will be when cast to a void*), which must match the
-    //  model’s internal array, and can be determined through get_var_type, get_var_nbytes
-
-    // TODO: may not be able to do this, and will need to resort to manually moving things around.
-    SetValue(std::move(name), static_cast<void*>(src.data()));
-}
-
 void Bmi_C_Adapter::SetValueAtIndices(std::string name, int *inds, int count, void *src) {
     int result = bmi_model->set_value_at_indices(bmi_model.get(), name.c_str(), inds, count, src);
     if (result != BMI_SUCCESS) {
         throw std::runtime_error("Failed to set specified indexes for " + name + " variable of " + model_name);
     }
 }
-
-/*
-template<class T>
-void Bmi_C_Adapter::SetValueAtIndices(const std::string& name, std::vector<int> inds, std::vector<T> src, size_t src_item_size) {
-    void* src_array = malloc(src_item_size * src.size());
-
-    int result = bmi_model->set_value_at_indices(bmi_model.get(), name.c_str(), inds.data(), inds.size(), src_array);
-    free(src_array);
-    if (result != BMI_SUCCESS) {
-        throw std::runtime_error("Failed to set specified indexes for " + name + " variable of " + model_name);
-    }
-}
- */
 
 void Bmi_C_Adapter::Update() {
     if (!allow_model_exceed_end_time) {
