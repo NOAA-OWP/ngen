@@ -265,8 +265,22 @@ namespace models {
 
             void SetValue(std::string name, void *src);
 
-            template <typename T>
-            void SetValue(std::string name, std::vector<T> src, size_t src_item_size);
+            template <class T>
+            void SetValue(std::string name, std::vector<T> src) {
+                size_t item_size;
+                try {
+                    item_size = (size_t) GetVarItemsize(name);
+                }
+                catch (std::runtime_error &e) {
+                    throw std::runtime_error("Cannot set " + name + " variable of " + model_name +
+                                             "; unable to test item sizes are equal (does variable exist for model?)");
+                }
+                if (item_size != sizeof(src[0])) {
+                    throw std::runtime_error("Cannot set " + name + " variable of " + model_name +
+                                             " with values of different item size");
+                }
+                SetValue(std::move(name), static_cast<void*>(src.data()));
+            }
 
             void SetValueAtIndices(std::string name, int *inds, int count, void *src);
 
@@ -277,12 +291,32 @@ namespace models {
              * @param inds Collection of indexes within the model for which this variable should have a value set.
              * @param src Values that should be set for this variable at the corresponding index in `inds`.
              */
-             /*
-            template <class T>
-            void SetValueAtIndices(const std::string& name, std::vector<int> inds, std::vector<T> src, size_t src_item_size);
-              */
 
-             void Update();
+            template <class T>
+            void SetValueAtIndices(const std::string &name, std::vector<int> inds, std::vector<T> src) {
+                if (inds.size() != src.size()) {
+                    throw std::runtime_error("Cannot set specified indexes for " + name + " variable of " + model_name +
+                                             " when index collection is different size than collection of values.");
+                }
+                if (inds.empty()) {
+                    return;
+                }
+                size_t item_size;
+                try {
+                    item_size = (size_t) GetVarItemsize(name);
+                }
+                catch (std::runtime_error &e) {
+                    throw std::runtime_error("Cannot set specified indexes for " + name + " variable of " + model_name +
+                                             "; unable to test item sizes are equal (does variable exist for model?)");
+                }
+                if (item_size != sizeof(src[0])) {
+                    throw std::runtime_error("Cannot set specified indexes for " + name + " variable of " + model_name +
+                                             " with values of different item size");
+                }
+                SetValueAtIndices(name, inds.data(), inds.size(), static_cast<void *>(src.data()));
+            }
+
+            void Update();
 
         protected:
             // TODO: look at setting this in some other way
