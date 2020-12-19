@@ -142,12 +142,27 @@ namespace lstm {
         std::vector<torch::jit::IValue> inputs;
         torch::Tensor forcing = torch::zeros({1, 11});
 
+        //Original Order
+        /*
         forcing[0][0] = lstm_model::normalize("DLWRF_surface_W_per_meters_squared", DLWRF_surface_W_per_meters_squared);
         forcing[0][1] = lstm_model::normalize("PRES_surface_Pa", PRES_surface_Pa);
         forcing[0][2] = lstm_model::normalize("SPFH_2maboveground_kg_per_kg", SPFH_2maboveground_kg_per_kg);
         forcing[0][3] = lstm_model::normalize("Precip_rate", precip);
         forcing[0][4] = lstm_model::normalize("DSWRF_surface_W_per_meters_squared", DSWRF_surface_W_per_meters_squared);
         forcing[0][5] = lstm_model::normalize("TMP_2maboveground_K", TMP_2maboveground_K);
+        forcing[0][6] = lstm_model::normalize("UGRD_10maboveground_meters_per_second", UGRD_10maboveground_meters_per_second);
+        forcing[0][7] = lstm_model::normalize("VGRD_10maboveground_meters_per_second", VGRD_10maboveground_meters_per_second);
+        forcing[0][8] = lstm_model::normalize("Area_Square_km", model_params.area);
+        forcing[0][9] = lstm_model::normalize("Latitude", model_params.latitude);
+        forcing[0][10] = lstm_model::normalize("Longitude", model_params.longitude);
+        */
+
+        forcing[0][3] = lstm_model::normalize("DLWRF_surface_W_per_meters_squared", DLWRF_surface_W_per_meters_squared);
+        forcing[0][5] = lstm_model::normalize("PRES_surface_Pa", PRES_surface_Pa);
+        forcing[0][1] = lstm_model::normalize("SPFH_2maboveground_kg_per_kg", SPFH_2maboveground_kg_per_kg);
+        forcing[0][0] = lstm_model::normalize("Precip_rate", precip);
+        forcing[0][4] = lstm_model::normalize("DSWRF_surface_W_per_meters_squared", DSWRF_surface_W_per_meters_squared);
+        forcing[0][2] = lstm_model::normalize("TMP_2maboveground_K", TMP_2maboveground_K);
         forcing[0][6] = lstm_model::normalize("UGRD_10maboveground_meters_per_second", UGRD_10maboveground_meters_per_second);
         forcing[0][7] = lstm_model::normalize("VGRD_10maboveground_meters_per_second", VGRD_10maboveground_meters_per_second);
         forcing[0][8] = lstm_model::normalize("Area_Square_km", model_params.area);

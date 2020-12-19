@@ -40,7 +40,7 @@
     },
     "time": {
         "start_time": "2015-12-01 00:00:00",
-        "end_time": "2015-12-30 23:00:00",
+        "end_time": "2015-12-31 23:00:00",
         "output_interval": 3600
     },
     "catchments": {
@@ -49,18 +49,18 @@
           "formulations": [
             { "name": "lstm",
               "params": {
-                "pytorch_model_path": "../data/lstm/sugar_creek_trained.pt",
-                "normalization_path": "../data/lstm/input_scaling.csv",
-                "initial_state_path": "../data/lstm/initial_states.csv",
+                "pytorch_model_path": "./data/lstm/sugar_creek_trained.pt",
+                "normalization_path": "./data/lstm/input_scaling.csv",
+                "initial_state_path": "./data/lstm/initial_states.csv",
                 "latitude": 40.636253,
                 "longitude": -87.71896,
                 "area_square_km": 1159.528499,
-                "useGPU": true
+                "useGPU": false
             }
           }
         ],
             "forcing": {
-                "path": "../data/forcing/aorc_forcing_lstm_ex1.csv"
+                "path": "./data/forcing/sugar_creek_input_Dec_2015_NGEN_Test.csv"
             }
         }
       }
