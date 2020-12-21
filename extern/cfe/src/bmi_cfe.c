@@ -657,13 +657,72 @@ static int Update (Bmi *self)
     return BMI_SUCCESS;
 }
 
-/*
+
 static int Update_until (Bmi *self, double t)
 {
+    // Since this model's time units are seconds, it is assumed that the param is either a valid time in seconds, a
+    // relative number of time steps into the future, or invalid
 
-    return BMI_SUCCESS;
+    // Don't support negative parameter values
+    if (t < 0.0)
+        return BMI_FAILURE;
+
+    // Don't continue if current time is at or beyond end time (or we can't determine this)
+    double current_time, end_time;
+    int current_time_result = self->get_current_time(self, &current_time);
+    if (current_time_result == BMI_FAILURE)
+        return BMI_FAILURE;
+    int end_time_result = self->get_end_time(self, &end_time);
+    if (end_time_result == BMI_FAILURE || current_time >= end_time)
+        return BMI_FAILURE;
+
+    // Handle easy case of t == current_time by just returning success
+    if (t == current_time)
+        return BMI_SUCCESS;
+
+    cfe_model* cfe = ((cfe_model *) self->data);
+
+    // First, determine if t is some future time that will be arrived at exactly after some number of future time steps
+    int is_exact_future_time = (t == end_time) ? TRUE : FALSE;
+    // Compare to time step endings unless obvious that t lines up (i.e., t == end_time) or doesn't (t <= current_time)
+    if (is_exact_future_time == FALSE && t > current_time) {
+        int future_time_step = cfe->current_time_step;
+        double future_time_step_time = current_time;
+        while (future_time_step < cfe->num_timesteps && future_time_step_time < end_time) {
+            future_time_step_time += cfe->time_step_sizes[future_time_step++];
+            if (future_time_step_time == t) {
+                is_exact_future_time = TRUE;
+                break;
+            }
+        }
+    }
+    // If it is an exact time, advance to that time step
+    if (is_exact_future_time == TRUE) {
+        while (current_time < t) {
+            run(cfe);
+            self->get_current_time(self, &current_time);
+        }
+        return BMI_SUCCESS;
+    }
+
+    // If t is not an exact time, it could be a number of time step forward to proceed
+
+    // The model doesn't support partial time step value args (i.e., fractions)
+    int t_int = (int) t;
+    if ((t - ((double)t_int)) != 0)
+        return BMI_FAILURE;
+
+    // Keep in mind the current_time_step hasn't been processed yet (hence, using <= for this test)
+    // E.g., if (unprocessed) current_time_step = 0, t = 2, num_timesteps = 2, this is valid a valid t (run 0, run 1)
+    if ((cfe->current_time_step + t_int) <= cfe->num_timesteps) {
+        for (int i = 0; i < t_int; i++)
+            run(cfe);
+        return BMI_SUCCESS;
+    }
+
+    // If we arrive here, t wasn't an exact time at end of a time step or a valid relative time step jump, so invalid.
+    return BMI_FAILURE;
 }
- */
 
 
 static int Finalize (Bmi *self)
@@ -1125,7 +1184,7 @@ Bmi* register_bmi_cfe(Bmi *model)
 
         model->initialize = Initialize;
         model->update = Update;
-        model->update_until = NULL;
+        model->update_until = Update_until;
         model->finalize = Finalize;
 
         model->get_component_name = Get_component_name;
