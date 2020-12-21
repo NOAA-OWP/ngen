@@ -745,6 +745,127 @@ static int Finalize (Bmi *self)
 }
 
 
+// TODO: complete implementation
+static int Get_grid_rank(Bmi *self, int grid, int *rank)
+{
+    return BMI_FAILURE;
+}
+
+
+// TODO: complete implementation
+static int Get_grid_size(Bmi *self, int grid, int *size)
+{
+    return BMI_FAILURE;
+}
+
+
+// TODO: complete implementation
+static int Get_grid_type(Bmi *self, int grid, char *type)
+{
+    return BMI_FAILURE;
+}
+
+
+// TODO: complete implementation
+/* Uniform rectilinear */
+static int Get_grid_shape(Bmi *self, int grid, int *shape)
+{
+    return BMI_FAILURE;
+}
+
+
+// TODO: complete implementation
+static int Get_grid_spacing(Bmi *self, int grid, double *spacing)
+{
+    return BMI_FAILURE;
+}
+
+
+// TODO: complete implementation
+static int Get_grid_origin(Bmi *self, int grid, double *origin)
+{
+    return BMI_FAILURE;
+}
+
+
+// TODO: complete implementation
+/* Non-uniform rectilinear, curvilinear */
+static int Get_grid_x(Bmi *self, int grid, double *x)
+{
+    return BMI_FAILURE;
+}
+
+
+// TODO: complete implementation
+static int Get_grid_y(Bmi *self, int grid, double *y)
+{
+    return BMI_FAILURE;
+}
+
+
+// TODO: complete implementation
+static int Get_grid_z(Bmi *self, int grid, double *z)
+{
+    return BMI_FAILURE;
+}
+
+
+// TODO: complete implementation
+static int Get_grid_node_count(Bmi *self, int grid, int *count)
+{
+    return BMI_FAILURE;
+}
+
+
+// TODO: complete implementation
+static int Get_grid_edge_count(Bmi *self, int grid, int *count)
+{
+    return BMI_FAILURE;
+}
+
+
+// TODO: complete implementation
+static int Get_grid_face_count(Bmi *self, int grid, int *count)
+{
+    return BMI_FAILURE;
+}
+
+
+// TODO: complete implementation
+static int Get_grid_edge_nodes(Bmi *self, int grid, int *edge_nodes)
+{
+    return BMI_FAILURE;
+}
+
+
+// TODO: complete implementation
+static int Get_grid_face_edges(Bmi *self, int grid, int *face_edges)
+{
+    return BMI_FAILURE;
+}
+
+
+// TODO: complete implementation
+static int Get_grid_face_nodes(Bmi *self, int grid, int *face_nodes)
+{
+    return BMI_FAILURE;
+}
+
+
+// TODO: complete implementation
+static int Get_grid_nodes_per_face(Bmi *self, int grid, int *nodes_per_face)
+{
+    return BMI_FAILURE;
+}
+
+
+// TODO: complete implementation
+static int Get_var_grid(Bmi *self, const char *name, int *grid)
+{
+    return BMI_FAILURE;
+}
+
+
 static int Get_var_type (Bmi *self, const char *name, char * type)
 {
     // Check to see if in output array first
@@ -802,6 +923,13 @@ static int Get_var_itemsize (Bmi *self, const char *name, int * size)
 }
 
 
+// TODO: complete implementation
+static int Get_var_location(Bmi *self, const char *name, char *location)
+{
+    return BMI_FAILURE;
+}
+
+
 static int Get_var_units (Bmi *self, const char *name, char * units)
 {
     // Check to see if in output array first
@@ -836,23 +964,11 @@ static int Get_var_nbytes (Bmi *self, const char *name, int * nbytes)
 }
 
 
-/*
-static int Get_var_location (Bmi *self, const char *name, char *location)
-{
-    if (strcmp (name, "plate_surface__temperature") == 0) {
-        strncpy (location, "node", BMI_MAX_UNITS_NAME);
-        return BMI_SUCCESS;
-    }
-    else {
-        location[0] = '\0';
-        return BMI_FAILURE;
-    }
-}
- */
-
-/*
+// TODO: complete implementation
 static int Get_value_ptr (Bmi *self, const char *name, void **dest)
 {
+    return BMI_FAILURE;
+/*
     int status = BMI_FAILURE;
 
     void *src = NULL;
@@ -872,8 +988,8 @@ static int Get_value_ptr (Bmi *self, const char *name, void **dest)
     }
 
     return status;
-}
  */
+}
 
 
 static int Get_value_at_indices (Bmi *self, const char *name, void *dest, int *inds, int len)
@@ -1193,12 +1309,12 @@ Bmi* register_bmi_cfe(Bmi *model)
         model->get_input_var_names = Get_input_var_names;
         model->get_output_var_names = Get_output_var_names;
 
-        model->get_var_grid = NULL;
+        model->get_var_grid = Get_var_grid; // TODO: needs finished implementation
         model->get_var_type = Get_var_type;
         model->get_var_itemsize = Get_var_itemsize;
         model->get_var_units = Get_var_units;
         model->get_var_nbytes = Get_var_nbytes;
-        model->get_var_location = NULL;
+        model->get_var_location = Get_var_location; // TODO: needs finished implementation
 
         model->get_current_time = Get_current_time;
         model->get_start_time = Get_start_time;
@@ -1207,31 +1323,31 @@ Bmi* register_bmi_cfe(Bmi *model)
         model->get_time_step = Get_time_step;
 
         model->get_value = Get_value;
-        model->get_value_ptr = NULL;
+        model->get_value_ptr = Get_value_ptr;   // TODO: needs finished implementation
         model->get_value_at_indices = Get_value_at_indices;
 
         model->set_value = Set_value;
         model->set_value_at_indices = Set_value_at_indices;
 
-        model->get_grid_size = NULL;
-        model->get_grid_rank = NULL;
-        model->get_grid_type = NULL;
+        model->get_grid_size = Get_grid_size;    // TODO: needs finished implementation
+        model->get_grid_rank = Get_grid_rank;    // TODO: needs finished implementation
+        model->get_grid_type = Get_grid_type;    // TODO: needs finished implementation
 
-        model->get_grid_shape = NULL;
-        model->get_grid_spacing = NULL;
-        model->get_grid_origin = NULL;
+        model->get_grid_shape = Get_grid_shape;    // TODO: needs finished implementation
+        model->get_grid_spacing = Get_grid_spacing;    // TODO: needs finished implementation
+        model->get_grid_origin = Get_grid_origin;    // TODO: needs finished implementation
 
-        model->get_grid_x = NULL;
-        model->get_grid_y = NULL;
-        model->get_grid_z = NULL;
+        model->get_grid_x = Get_grid_x;    // TODO: needs finished implementation
+        model->get_grid_y = Get_grid_y;    // TODO: needs finished implementation
+        model->get_grid_z = Get_grid_z;    // TODO: needs finished implementation
 
-        model->get_grid_node_count = NULL;
-        model->get_grid_edge_count = NULL;
-        model->get_grid_face_count = NULL;
-        model->get_grid_edge_nodes = NULL;
-        model->get_grid_face_edges = NULL;
-        model->get_grid_face_nodes = NULL;
-        model->get_grid_nodes_per_face = NULL;
+        model->get_grid_node_count = Get_grid_node_count;    // TODO: needs finished implementation
+        model->get_grid_edge_count = Get_grid_edge_count;    // TODO: needs finished implementation
+        model->get_grid_face_count = Get_grid_face_count;    // TODO: needs finished implementation
+        model->get_grid_edge_nodes = Get_grid_edge_nodes;    // TODO: needs finished implementation
+        model->get_grid_face_edges = Get_grid_face_edges;    // TODO: needs finished implementation
+        model->get_grid_face_nodes = Get_grid_face_nodes;    // TODO: needs finished implementation
+        model->get_grid_nodes_per_face = Get_grid_nodes_per_face;    // TODO: needs finished implementation
     }
 
     return model;
