@@ -99,6 +99,12 @@ namespace lstm {
         lstm_config config;
         /** Model state from that previous time step before the current. */
         shared_ptr<lstm_state> previous_state;
+        shared_ptr<lstm_state> state;
+
+            //shared_ptr<lstm::lstm_state> state;
+            //shared_ptr<lstm::lstm_fluxes> fluxes;
+            //lstm::lstm_params params;
+            //lstm::lstm_config config;
 
         shared_ptr<lstm_fluxes> fluxes;
 

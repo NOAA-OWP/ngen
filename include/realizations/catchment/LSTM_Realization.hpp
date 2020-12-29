@@ -22,7 +22,6 @@ namespace realization {
                            lstm::lstm_params params,
                            lstm::lstm_config config);
 
-
         LSTM_Realization(
                 forcing_params forcing_config,
                 utils::StreamHandler output_stream,
@@ -47,9 +46,8 @@ namespace realization {
              * Execute the backing model formulation for the given time step, where it is of the specified size, and
              * return the total discharge.
              *
-             * Function reads input precipitation from ``forcing`` member variable.  It also makes use of the params struct
-             * for ET params accessible via ``get_et_params``.
-             *
+             * Function reads multiple inputs from ``forcing`` member variable.
+             * 
              * @param t_index The index of the time step for which to run model calculations.
              * @param d_delta_s The duration, in seconds, of the time step for which to run model calculations.
              * @return The total discharge for this time step.
@@ -58,14 +56,16 @@ namespace realization {
 
             double calc_et(double soil_m) override {return 0.0;}
 
-
             std::string get_formulation_type() override {
                 return "lstm";
             }
-
-
+          
+            /** @TODO: Consider updating the below function to match the Tshirt realization and be able to return the 
+                flux for a given time step. */
             /**
-             * Get a formatted line of output values for the given time step as a delimited string.
+             * Get a formatted line of output values for the current time step only, regardless of the time step given,
+             * as a delimited string. This function for this LSTM realization can later be updated to match the Tshirt
+             * realization and be able to return the flux for the given time step.
              *
              * For this type, the output consists of only the total discharge amount per time step; i.e., the same value
              * that was returned by ``get_response``.
@@ -74,7 +74,7 @@ namespace realization {
              * CSV files.
              *
              * The resulting string will contain calculated values for applicable output variables for the particular
-             * formulation, as determined for the given time step.  However, the string will not contain any
+             * formulation, as determined for the current time step.  However, the string will not contain any
              * representation of the time step itself.
              *
              * An empty string is returned if the time step value is not in the range of valid time steps for which there
@@ -82,7 +82,7 @@ namespace realization {
              *
              * The default delimiter is a comma.
              *
-             * @param timestep The time step for which data is desired.
+             * @param timestep The time step for which data is desired. (Not currently applicable for this realization)
              * @return A delimited string with all the output variable values for the given time step.
              */
             std::string get_output_line_for_timestep(int timestep, std::string delimiter=",") override;
@@ -94,7 +94,6 @@ namespace realization {
             const std::vector<std::string>& get_required_parameters() override {
                 return REQUIRED_PARAMETERS;
             }
-
 
         private:
             std::string catchment_id;
