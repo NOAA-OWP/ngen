@@ -1,16 +1,13 @@
 #ifndef LSTM_H
 #define LSTM_H
 
-
 #include "all.h"
 #include "lstm_fluxes.h"
 #include "lstm_params.h"
 #include "lstm_config.h"
 #include "lstm_state.h"
-
 #include <torch/torch.h>
 #include <unordered_map>
-
 
 typedef std::unordered_map< std::string, std::unordered_map< std::string, double> > ScaleParams;
 
@@ -20,16 +17,7 @@ namespace lstm {
 
     class lstm_model {
 
-
     public:
-
-        /**
-         * Constructor for model object based on model parameters and initial state.
-         *
-         * @param model_params Model parameters lstm_params struct.
-         * @param initial_state Shared smart pointer to lstm_state struct hold initial state values
-         */
-        //lstm_model(lstm_config config, lstm_params model_params, const shared_ptr<lstm_state>& initial_state);
 
         /**
          * Constructor for model object with parameters only.
@@ -40,6 +28,14 @@ namespace lstm {
          * @param model_params Model parameters lstm_params struct.
          */
         lstm_model(lstm_config config, lstm_params model_params);
+
+        /**
+         * Initializes model state
+         *
+         * @param initial_state_path
+         * @return
+         */
+        void initialize_state(std::string initial_state_path);
 
         /**
          * Return the smart pointer to the lstm::lstm_model struct for holding this object's current state.
@@ -60,18 +56,35 @@ namespace lstm {
          * `manage_state_before_next_time_step_run`.
          *
          * @param dt the time step
-         * @param input_storage_m the amount water entering the system this time step, in meters
-         * @param et_params ET parameters struct
+         * @param DLWRF_surface_W_per_meters_squared
+         * @param PRES_surface_Pa
+         * @param SPFH_2maboveground_kg_per_kg
+         * @param precip_meters_per_second
+         * @param DSWRF_surface_W_per_meters_squared 
+         * @param TMP_2maboveground_K
+         * @param UGRD_10maboveground_meters_per_second
+         * @param VGRD_10maboveground_meters_per_second
          * @return
          */
-       // int run(double dt, double input_storage_m, shared_ptr<pdm03_struct> et_params);
-        int run(double dt, double AORC_DLWRF_surface_W_per_meters_squared, double PRES_surface_Pa, double SPFH_2maboveground_kg_per_kg, double precip, double DSWRF_surface_W_per_meters_squared, double TMP_2maboveground_K, double UGRD_10maboveground_meters_per_second, double VGRD_10maboveground_meters_per_second);
+        int run(double dt, double DLWRF_surface_W_per_meters_squared, double PRES_surface_Pa, double SPFH_2maboveground_kg_per_kg, double precip_meters_per_second, double DSWRF_surface_W_per_meters_squared, double TMP_2maboveground_K, double UGRD_10maboveground_meters_per_second, double VGRD_10maboveground_meters_per_second);
 
+        /**
+         * Denormalizes output from LSTM model.
+         *
+         * @param forcing_variable_string
+         * @param normalized_output
+         * @return denormalized_output
+         */ 
         double denormalize(std::string forcing_variable_string, double normalized_output);
 
-       double normalize(std::string forcing_variable_string, double forcing_variable);
-
-       void initialize_state(std::string path);
+        /**
+         * Normalizes inputs to LSTM model.
+         *
+         * @param forcing_variable_string
+         * @param forcing_variable
+         * @return normalized_input
+         */ 
+        double normalize(std::string forcing_variable_string, double forcing_variable);
 
     protected:
 
@@ -92,30 +105,28 @@ namespace lstm {
         /** torch confiruation variables */
         bool useGPU;
         torch::Device device;
+        
         /** Model state for the "current" time step, which may not be calculated yet. */
         shared_ptr<lstm_state> current_state;
+        
         /** Model execution parameters. */
         lstm_params model_params;
+        
         /** Model configuration parameters */
         lstm_config config;
+        
         /** Model state from that previous time step before the current. */
         shared_ptr<lstm_state> previous_state;
-        //shared_ptr<lstm_state> state;
 
-            //shared_ptr<lstm::lstm_state> state;
-            //shared_ptr<lstm::lstm_fluxes> fluxes;
-            //lstm::lstm_params params;
-            //lstm::lstm_config config;
-
+        /** Model fluxes */
         shared_ptr<lstm_fluxes> fluxes;
 
+        /** torch model */
         torch::jit::script::Module model;
 
+        /** Parameter scaling */
         ScaleParams scale;
-
-        std::string forcing_header[11] = { "AORC_DLWRF_surface_W_per_meters_squared", "PRES_surface_Pa", "SPFH_2maboveground_kg_per_kg", "precip", "DSWRF_surface_W_per_meters_squared", "TMP_2maboveground_K", "UGRD_10maboveground_meters_per_second", "VGRD_10maboveground_meters_per_second", "Latitude", "Longitude", "Area_Square_km" };
     };
 }
-
 
 #endif //LSTM_H
