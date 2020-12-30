@@ -98,8 +98,8 @@ namespace realization {
         private:
             std::string catchment_id;
             //FIXME remove these? hold in model?
-            shared_ptr<lstm::lstm_state> state;
-            shared_ptr<lstm::lstm_fluxes> fluxes;
+          //  shared_ptr<lstm::lstm_state> state;
+          //  shared_ptr<lstm::lstm_fluxes> fluxes;
             lstm::lstm_params params;
             lstm::lstm_config config;
             std::unique_ptr<lstm::lstm_model> model;
