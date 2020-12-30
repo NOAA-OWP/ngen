@@ -11,6 +11,12 @@
 using namespace std;
 
 typedef std::unordered_map< std::string, std::unordered_map< std::string, double> > ScaleParams;
+//typedef std::unordered_map< int, std::unordered_map< std::string, double> > Initial_State;
+
+//Need map of vectors
+//typedef std::unordered_map< int, std::unordered_map< std::string, double> > Initial_State;
+
+
 
 
 ScaleParams read_scale_params(std::string path)
@@ -23,7 +29,7 @@ ScaleParams read_scale_params(std::string path)
     //Advance the iterator to the first data row (skip the header)
     auto row = data.begin();
     std::advance(row, 1);
-    //Loop form first row to end of data
+    //Loop from first row to end of data
     for(; row != data.end(); ++row)
     {
 	for(int i = 0; i < (*row).size(); i++)
@@ -36,6 +42,103 @@ ScaleParams read_scale_params(std::string path)
 
     return params;
 }
+
+
+void read_initial_state(std::string path, vector<double> *h_vec, vector<double> *c_vec)
+{
+
+/*
+    //Read the mean and standard deviation and put them into a map
+    Initial_State state;
+    CSVReader reader(path);
+    auto data = reader.getData();
+    std::vector<std::string> header = data[0];
+    //Advance the iterator to the first data row (skip the header)
+    auto row = data.begin();
+    std::advance(row, 1);
+    //Loop form first row to end of data
+    for(; row != data.end(); ++row)
+    {
+	for(int i = 0; i < (*row).size(); i++)
+	{   //row has var, mean, std_dev
+ 	    //read into map keyed on var name, param name
+    	    //state[ i ]["h_t"] = strtof( (*row)[1].c_str(), NULL);
+  	    //state[ (*row)[0] ]["c_t"] = strtof( (*row)[2].c_str(), NULL);
+    	    state["h_t"] = strtof( (*row)[1].c_str(), NULL);
+  	    state["c_t"] = strtof( (*row)[2].c_str(), NULL);
+	}
+    }
+
+    return state;
+*/
+
+/*
+    //Read the mean and standard deviation and put them into a map
+    //Initial_State state;
+    CSVReader reader(path);
+    auto data = reader.getData();
+    std::vector<std::string> header = data[0];
+    //Advance the iterator to the first data row (skip the header)
+    auto row = data.begin();
+    std::advance(row, 1);
+    //Loop form first row to end of data
+    for(; row != data.end(); ++row)
+    {
+        for(int i = 0; i < (*row).size(); i++)
+        {   //row has var, mean, std_dev
+            //read into map keyed on var name, param name
+            //state[ i ]["h_t"] = strtof( (*row)[1].c_str(), NULL);
+            //state[ (*row)[0] ]["c_t"] = strtof( (*row)[2].c_str(), NULL);
+            //state["h_t"] = strtof( (*row)[1].c_str(), NULL);
+            //state["c_t"] = strtof( (*row)[2].c_str(), NULL);
+ 
+            &h_vec.push_back( std::strtof( (*row)[0].c_str(), NULL ) );
+            &c_vec.push_back( std::strtof( (*row)[1].c_str(), NULL ) );
+       
+
+        }
+    }
+
+for(int i=0; i < h_vec.size(); i++){
+   cout << &h_vec[i] << endl;
+}
+
+    //return state;
+    return;
+*/
+
+/*
+    //FIXME decide on best place to read this initial state
+    // Confirm data JSON file exists and is readable
+    //if (FILE *file = fopen(config.initial_state_path.c_str(), "r")) {
+    if (FILE *file = fopen(path, "r")) {
+        fclose(file);
+        //CVReader reader(config.initial_state_path);
+        CSVReader reader(path);
+        auto data = reader.getData();
+        std::vector<std::string> header = data[0];
+        //Advance the iterator to the first data row (skip the header)
+        auto row = data.begin();
+        std::advance(row, 1);
+        //Loop form first row to end of data
+        //FIXME better map header/name and row[index]
+        for(; row != data.end(); ++row)
+        {
+          h_vec.push_back( std::strtof( (*row)[0].c_str(), NULL ) );
+          c_vec.push_back( std::strtof( (*row)[1].c_str(), NULL ) );
+        }
+
+    } else {
+        throw std::runtime_error("LSTM initial state path: "+config.initial_state_path+" does not exist.");
+    }
+    return;
+*/
+
+
+}
+
+
+
 
 /*
 double Normalize(std::string forcing_variable_string, double forcing_variable)
@@ -56,9 +159,15 @@ namespace lstm {
      * @param model_params Model parameters lstm_params struct.
      * @param initial_state Shared smart pointer to lstm_state struct hold initial state values
      */
-    lstm_model::lstm_model(lstm_config config, lstm_params model_params, const shared_ptr<lstm_state> &initial_state)
-            : config(config), model_params(model_params), previous_state(initial_state), current_state(initial_state),
+    //lstm_model::lstm_model(lstm_config config, lstm_params model_params, const shared_ptr<lstm_state> &initial_state)
+    //        : config(config), model_params(model_params), previous_state(initial_state), current_state(initial_state),
+    //        device( torch::Device(torch::kCPU) )
+
+
+    lstm_model::lstm_model(lstm_config config, lstm_params model_params)
+            : config(config), model_params(model_params),
             device( torch::Device(torch::kCPU) )
+
     {
         // ********** Set fluxes to null for now: it is bogus until first call of run function, which initializes it
         fluxes = nullptr;
@@ -66,9 +175,58 @@ namespace lstm {
         torch::manual_seed(0);
         useGPU = config.useGPU && torch::cuda::is_available();
         device = torch::Device( useGPU ? torch::kCUDA : torch::kCPU );
+
+
+
+    //vector<double> h_vec;
+    //vector<double> c_vec;
+
+/*
+    //FIXME decide on best place to read this initial state
+    // Confirm data JSON file exists and is readable
+    if (FILE *file = fopen(config.initial_state_path.c_str(), "r")) {
+        fclose(file);
+        CSVReader reader(config.initial_state_path);
+        auto data = reader.getData();
+        std::vector<std::string> header = data[0];
+        //Advance the iterator to the first data row (skip the header)
+        auto row = data.begin();
+        std::advance(row, 1);
+        //Loop form first row to end of data
+        //FIXME better map header/name and row[index]
+        for(; row != data.end(); ++row)
+        {
+          h_vec.push_back( std::strtof( (*row)[0].c_str(), NULL ) );
+          c_vec.push_back( std::strtof( (*row)[1].c_str(), NULL ) );
+        }
+
+    } else {
+        throw std::runtime_error("LSTM initial state path: "+config.initial_state_path+" does not exist.");
+    }
+*/
+
+    //if (FILE *file = fopen(config.initial_state_path.c_str(), "r")) {
+    //read_initial_state(config.initial_state_path.c_str(), &h_vec, &c_vec);
+    lstm_model::initialize_state(config.initial_state_path.c_str());
+
+
+/*
+cout << "Size: " << h_vec.size() << endl;
+
+for(int i=0; i < h_vec.size(); i++){
+   cout << h_vec[i] << endl;
+}
+*/
+
+ 
+/*
+    current_state = std::make_shared<lstm_state>(lstm_state(h_vec, c_vec));
+
+    previous_state = std::make_shared<lstm_state>(lstm_state(h_vec, c_vec));
+
         lstm::to_device(*current_state, device);
         lstm::to_device(*previous_state, device);
-
+*/
         //FIXME need to initialize the model states by running a "warmup"
         //so when the model is constructed, run it on N timesteps prior to prediction period
         //OR read those states in and create the initial state tensors
@@ -100,8 +258,8 @@ namespace lstm {
      *
      * @param model_params Model parameters lstm_params struct.
      */
-    lstm_model::lstm_model(lstm_config config, lstm_params model_params) :
-    lstm_model(config, model_params, make_shared<lstm_state>(lstm_state())) {}
+    //lstm_model::lstm_model(lstm_config config, lstm_params model_params) :
+    //lstm_model(config, model_params, make_shared<lstm_state>(lstm_state())) {}
 
     /**
      * Return the smart pointer to the lstm::lstm_model struct for holding this object's current state.
@@ -184,6 +342,57 @@ namespace lstm {
 
         return 0;
     }
+
+    void lstm_model::initialize_state(std::string path)
+    {
+
+    vector<double> h_vec;
+    vector<double> c_vec;
+    //Initial_State state;
+    CSVReader reader(path);
+    auto data = reader.getData();
+    std::vector<std::string> header = data[0];
+    //Advance the iterator to the first data row (skip the header)
+    auto row = data.begin();
+    std::advance(row, 1);
+    //Loop form first row to end of data
+    for(; row != data.end(); ++row)
+    {
+ //       for(int i = 0; i < (*row).size(); i++)
+ //       {   //row has var, mean, std_dev
+            //read into map keyed on var name, param name
+            //state[ i ]["h_t"] = strtof( (*row)[1].c_str(), NULL);
+            //state[ (*row)[0] ]["c_t"] = strtof( (*row)[2].c_str(), NULL);
+            //state["h_t"] = strtof( (*row)[1].c_str(), NULL);
+            //state["c_t"] = strtof( (*row)[2].c_str(), NULL);
+ 
+            h_vec.push_back( std::strtof( (*row)[0].c_str(), NULL ) );
+            c_vec.push_back( std::strtof( (*row)[1].c_str(), NULL ) );  
+
+ //       }
+    }
+
+for(int i=0; i < h_vec.size(); i++){
+   cout << h_vec[i] << endl;
+}
+
+
+
+    current_state = std::make_shared<lstm_state>(lstm_state(h_vec, c_vec));
+
+    previous_state = std::make_shared<lstm_state>(lstm_state(h_vec, c_vec));
+
+        lstm::to_device(*current_state, device);
+        lstm::to_device(*previous_state, device);
+
+
+
+    return;
+
+
+    }
+
+
 
     double lstm_model::denormalize(std::string forcing_variable_string, double normalized_output)
         {

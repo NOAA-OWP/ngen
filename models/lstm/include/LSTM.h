@@ -29,7 +29,7 @@ namespace lstm {
          * @param model_params Model parameters lstm_params struct.
          * @param initial_state Shared smart pointer to lstm_state struct hold initial state values
          */
-        lstm_model(lstm_config config, lstm_params model_params, const shared_ptr<lstm_state>& initial_state);
+        //lstm_model(lstm_config config, lstm_params model_params, const shared_ptr<lstm_state>& initial_state);
 
         /**
          * Constructor for model object with parameters only.
@@ -71,6 +71,7 @@ namespace lstm {
 
        double normalize(std::string forcing_variable_string, double forcing_variable);
 
+       void initialize_state(std::string path);
 
     protected:
 
@@ -99,7 +100,7 @@ namespace lstm {
         lstm_config config;
         /** Model state from that previous time step before the current. */
         shared_ptr<lstm_state> previous_state;
-        shared_ptr<lstm_state> state;
+        //shared_ptr<lstm_state> state;
 
             //shared_ptr<lstm::lstm_state> state;
             //shared_ptr<lstm::lstm_fluxes> fluxes;

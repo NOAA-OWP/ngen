@@ -15,7 +15,8 @@ LSTM_Realization::LSTM_Realization(
 {
     state = std::make_shared<lstm::lstm_state>(lstm::lstm_state());
 
-    model = make_unique<lstm::lstm_model>(lstm::lstm_model(config, params, state));
+    //model = make_unique<lstm::lstm_model>(lstm::lstm_model(config, params, state));
+    model = make_unique<lstm::lstm_model>(lstm::lstm_model(config, params));
 
     fluxes = std::make_shared<lstm::lstm_fluxes>(lstm::lstm_fluxes());
 }
@@ -112,6 +113,10 @@ void LSTM_Realization::create_formulation(geojson::PropertyMap properties) {
     this->config = config;
     vector<double> h_vec;
     vector<double> c_vec;
+    //std::unordered_map< std::string, double> h_map;
+    //std::unordered_map< std::string, double> c_map;
+
+
     //FIXME decide on best place to read this initial state
     // Confirm data JSON file exists and is readable
     if (FILE *file = fopen(config.initial_state_path.c_str(), "r")) {
@@ -124,18 +129,27 @@ void LSTM_Realization::create_formulation(geojson::PropertyMap properties) {
         std::advance(row, 1);
         //Loop form first row to end of data
         //FIXME better map header/name and row[index]
+
+      
+
         for(; row != data.end(); ++row)
         {
           h_vec.push_back( std::strtof( (*row)[0].c_str(), NULL ) );
           c_vec.push_back( std::strtof( (*row)[1].c_str(), NULL ) );
+      
+          
+
         }
 
     } else {
         throw std::runtime_error("LSTM initial state path: "+config.initial_state_path+" does not exist.");
     }
     //FIXME what is going on with state/fluxes!!!!!!!!
-    this->state = std::make_shared<lstm::lstm_state>(lstm::lstm_state(h_vec, c_vec));
-    this->model = make_unique<lstm::lstm_model>(lstm::lstm_model(config, lstm_params, this->state));
+    this->state = std::make_shared<lstm::lstm_state>(lstm::lstm_state(h_vec, c_vec));    
+    //this->model = make_unique<lstm::lstm_model>(lstm::lstm_model(config, lstm_params, this->state));
+    this->model = make_unique<lstm::lstm_model>(lstm::lstm_model(config, lstm_params));
+
+
     this->fluxes = std::make_shared<lstm::lstm_fluxes>(lstm::lstm_fluxes());
 }
 
