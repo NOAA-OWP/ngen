@@ -4,20 +4,11 @@
 #include "lstm_state.h"
 #include "CSV_Reader.h"
 #include <iostream>
-
 #include <fstream>
-
 
 using namespace std;
 
 typedef std::unordered_map< std::string, std::unordered_map< std::string, double> > ScaleParams;
-//typedef std::unordered_map< int, std::unordered_map< std::string, double> > Initial_State;
-
-//Need map of vectors
-//typedef std::unordered_map< int, std::unordered_map< std::string, double> > Initial_State;
-
-
-
 
 ScaleParams read_scale_params(std::string path)
 {
@@ -43,114 +34,6 @@ ScaleParams read_scale_params(std::string path)
     return params;
 }
 
-
-void read_initial_state(std::string path, vector<double> *h_vec, vector<double> *c_vec)
-{
-
-/*
-    //Read the mean and standard deviation and put them into a map
-    Initial_State state;
-    CSVReader reader(path);
-    auto data = reader.getData();
-    std::vector<std::string> header = data[0];
-    //Advance the iterator to the first data row (skip the header)
-    auto row = data.begin();
-    std::advance(row, 1);
-    //Loop form first row to end of data
-    for(; row != data.end(); ++row)
-    {
-	for(int i = 0; i < (*row).size(); i++)
-	{   //row has var, mean, std_dev
- 	    //read into map keyed on var name, param name
-    	    //state[ i ]["h_t"] = strtof( (*row)[1].c_str(), NULL);
-  	    //state[ (*row)[0] ]["c_t"] = strtof( (*row)[2].c_str(), NULL);
-    	    state["h_t"] = strtof( (*row)[1].c_str(), NULL);
-  	    state["c_t"] = strtof( (*row)[2].c_str(), NULL);
-	}
-    }
-
-    return state;
-*/
-
-/*
-    //Read the mean and standard deviation and put them into a map
-    //Initial_State state;
-    CSVReader reader(path);
-    auto data = reader.getData();
-    std::vector<std::string> header = data[0];
-    //Advance the iterator to the first data row (skip the header)
-    auto row = data.begin();
-    std::advance(row, 1);
-    //Loop form first row to end of data
-    for(; row != data.end(); ++row)
-    {
-        for(int i = 0; i < (*row).size(); i++)
-        {   //row has var, mean, std_dev
-            //read into map keyed on var name, param name
-            //state[ i ]["h_t"] = strtof( (*row)[1].c_str(), NULL);
-            //state[ (*row)[0] ]["c_t"] = strtof( (*row)[2].c_str(), NULL);
-            //state["h_t"] = strtof( (*row)[1].c_str(), NULL);
-            //state["c_t"] = strtof( (*row)[2].c_str(), NULL);
- 
-            &h_vec.push_back( std::strtof( (*row)[0].c_str(), NULL ) );
-            &c_vec.push_back( std::strtof( (*row)[1].c_str(), NULL ) );
-       
-
-        }
-    }
-
-for(int i=0; i < h_vec.size(); i++){
-   cout << &h_vec[i] << endl;
-}
-
-    //return state;
-    return;
-*/
-
-/*
-    //FIXME decide on best place to read this initial state
-    // Confirm data JSON file exists and is readable
-    //if (FILE *file = fopen(config.initial_state_path.c_str(), "r")) {
-    if (FILE *file = fopen(path, "r")) {
-        fclose(file);
-        //CVReader reader(config.initial_state_path);
-        CSVReader reader(path);
-        auto data = reader.getData();
-        std::vector<std::string> header = data[0];
-        //Advance the iterator to the first data row (skip the header)
-        auto row = data.begin();
-        std::advance(row, 1);
-        //Loop form first row to end of data
-        //FIXME better map header/name and row[index]
-        for(; row != data.end(); ++row)
-        {
-          h_vec.push_back( std::strtof( (*row)[0].c_str(), NULL ) );
-          c_vec.push_back( std::strtof( (*row)[1].c_str(), NULL ) );
-        }
-
-    } else {
-        throw std::runtime_error("LSTM initial state path: "+config.initial_state_path+" does not exist.");
-    }
-    return;
-*/
-
-
-}
-
-
-
-
-/*
-double Normalize(std::string forcing_variable_string, double forcing_variable)
-{
-   double temp, mean, std_dev;
-   mean = scale[ forcing_variable_string ]["mean"];
-   std_dev = scale[ forcing_variable_string ]["std_dev"];
-   return  (forcing_variable - mean) / std_dev;
-}
-*/
-
-
 namespace lstm {
 
     /**
@@ -159,9 +42,6 @@ namespace lstm {
      * @param model_params Model parameters lstm_params struct.
      * @param initial_state Shared smart pointer to lstm_state struct hold initial state values
      */
-    //lstm_model::lstm_model(lstm_config config, lstm_params model_params, const shared_ptr<lstm_state> &initial_state)
-    //        : config(config), model_params(model_params), previous_state(initial_state), current_state(initial_state),
-    //        device( torch::Device(torch::kCPU) )
 
 
     lstm_model::lstm_model(lstm_config config, lstm_params model_params)
@@ -284,13 +164,19 @@ for(int i=0; i < h_vec.size(); i++){
      * `manage_state_before_next_time_step_run`.
      *
      * @param dt the time step size in seconds
-     * @param input_storage_m the amount water entering the system this time step, in meters
+     * @param DLWRF_surface_W_per_meters_squared
+     * @param PRES_surface_Pa
+     * @param SPFH_2maboveground_kg_per_kg
+     * @param precip_meters_per_second
+     * @param DSWRF_surface_W_per_meters_squared
+     * @param TMP_2maboveground_K
+     * @param UGRD_10maboveground_meters_per_second
+     * @param VGRD_10maboveground_meters_per_second  
      * @return
      */
-    //int lstm_model::run(double dt, double input_storage_m, shared_ptr<pdm03_struct> et_params) {
     int lstm_model::run(double dt, double DLWRF_surface_W_per_meters_squared,
                         double PRES_surface_Pa, double SPFH_2maboveground_kg_per_kg,
-                        double precip, double DSWRF_surface_W_per_meters_squared,
+                        double precip_meters_per_second, double DSWRF_surface_W_per_meters_squared,
                         double TMP_2maboveground_K, double UGRD_10maboveground_meters_per_second,
                         double VGRD_10maboveground_meters_per_second) {
         // Do resetting/housekeeping for new calculations and new state values
@@ -318,7 +204,7 @@ for(int i=0; i < h_vec.size(); i++){
         forcing[0][3] = lstm_model::normalize("DLWRF_surface_W_per_meters_squared", DLWRF_surface_W_per_meters_squared);
         forcing[0][5] = lstm_model::normalize("PRES_surface_Pa", PRES_surface_Pa);
         forcing[0][1] = lstm_model::normalize("SPFH_2maboveground_kg_per_kg", SPFH_2maboveground_kg_per_kg);
-        forcing[0][0] = lstm_model::normalize("Precip_rate", precip);
+        forcing[0][0] = lstm_model::normalize("Precip_rate", precip_meters_per_second);
         forcing[0][4] = lstm_model::normalize("DSWRF_surface_W_per_meters_squared", DSWRF_surface_W_per_meters_squared);
         forcing[0][2] = lstm_model::normalize("TMP_2maboveground_K", TMP_2maboveground_K);
         forcing[0][6] = lstm_model::normalize("UGRD_10maboveground_meters_per_second", UGRD_10maboveground_meters_per_second);
@@ -343,13 +229,13 @@ for(int i=0; i < h_vec.size(); i++){
         return 0;
     }
 
-    void lstm_model::initialize_state(std::string path)
+    void lstm_model::initialize_state(std::string initial_state_path)
     {
 
     vector<double> h_vec;
     vector<double> c_vec;
     //Initial_State state;
-    CSVReader reader(path);
+    CSVReader reader(initial_state_path);
     auto data = reader.getData();
     std::vector<std::string> header = data[0];
     //Advance the iterator to the first data row (skip the header)
@@ -377,14 +263,12 @@ for(int i=0; i < h_vec.size(); i++){
 }
 
 
-
     current_state = std::make_shared<lstm_state>(lstm_state(h_vec, c_vec));
 
     previous_state = std::make_shared<lstm_state>(lstm_state(h_vec, c_vec));
 
         lstm::to_device(*current_state, device);
         lstm::to_device(*previous_state, device);
-
 
 
     return;
