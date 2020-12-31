@@ -59,6 +59,18 @@ namespace realization {
 
     protected:
 
+        /**
+         * Construct model and its shared pointer, potentially supplying input variable values from config.
+         *
+         * Construct a model (and a shared pointer to it), checking whether additional input variable values are present
+         * in the configuration properties and need to be used during model construction.
+         *
+         * @param properties Configuration properties for the formulation, potentially containing values for input
+         *                   variables
+         * @return A shared pointer to a newly constructed model object
+         */
+        virtual std::shared_ptr<M> construct_model(const geojson::PropertyMap& properties) = 0;
+
         const bool &get_allow_model_exceed_end_time() const {
             return allow_model_exceed_end_time;
         }
