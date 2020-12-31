@@ -12,6 +12,39 @@ std::string Bmi_C_Formulation::get_formulation_type() {
     return "bmi_c";
 }
 
+/**
+ * Construct model and its shared pointer, potentially supplying input variable values from config.
+ *
+ * Construct a model (and a shared pointer to it), checking whether additional input variable values are present in the
+ * configuration properties and need to be used during model construction.
+ *
+ * @param properties Configuration properties for the formulation, potentially containing values for input variables
+ * @return A shared pointer to a newly constructed model adapter object
+ */
+std::shared_ptr<Bmi_C_Adapter> Bmi_C_Formulation::construct_model(const geojson::PropertyMap& properties) {
+    // First examine properties to see if other input variable values are provided
+    auto other_in_var_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OTHER_IN_VARS);
+    if (other_in_var_it != properties.end()) {
+        return std::make_shared<Bmi_C_Adapter>(
+                Bmi_C_Adapter(
+                        get_bmi_init_config(),
+                        get_forcing_file_path(),
+                        is_bmi_using_forcing_file(),
+                        get_allow_model_exceed_end_time(),
+                        other_in_var_it->second,
+                        output));
+    }
+    else {
+        return std::make_shared<Bmi_C_Adapter>(
+                Bmi_C_Adapter(
+                        get_bmi_init_config(),
+                        get_forcing_file_path(),
+                        is_bmi_using_forcing_file(),
+                        get_allow_model_exceed_end_time(),
+                        output));
+    }
+}
+
 void Bmi_C_Formulation::create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global) {
     geojson::PropertyMap options = this->interpret_parameters(config, global);
     inner_create_formulation(options, false);

@@ -73,6 +73,18 @@ namespace realization {
     protected:
 
         /**
+         * Construct model and its shared pointer, potentially supplying input variable values from config.
+         *
+         * Construct a model (and a shared pointer to it), checking whether additional input variable values are present
+         * in the configuration properties and need to be used during model construction.
+         *
+         * @param properties Configuration properties for the formulation, potentially containing values for input
+         *                   variables
+         * @return A shared pointer to a newly constructed model adapter object
+         */
+        std::shared_ptr<models::bmi::Bmi_C_Adapter> construct_model(const geojson::PropertyMap& properties) override;
+
+        /**
          * Get value for some output variable at some time step, cast as a double.
          *
          * Function gets the value for a provided output variable at a provided time step index, and returns the value
