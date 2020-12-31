@@ -13,10 +13,6 @@ namespace realization {
 
         Bmi_C_Formulation(std::string id, forcing_params forcing_config, utils::StreamHandler output_stream);
 
-        void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr) override;
-
-        void create_formulation(geojson::PropertyMap properties) override;
-
         std::string get_formulation_type() override;
 
         /**
@@ -103,8 +99,6 @@ namespace realization {
          * @return
          */
         double get_var_value_as_double(time_step_t t_index, const std::string& var_name);
-
-        void inner_create_formulation(geojson::PropertyMap properties, bool needs_param_validation);
 
         /**
          * Test whether the backing model object has been initialize using the BMI standard ``Initialize`` function.

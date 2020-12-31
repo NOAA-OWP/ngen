@@ -53,6 +53,15 @@ namespace realization {
             return 0;
         }
 
+        void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr) override {
+            geojson::PropertyMap options = this->interpret_parameters(config, global);
+            inner_create_formulation(options, false);
+        }
+
+        void create_formulation(geojson::PropertyMap properties) override {
+            inner_create_formulation(properties, true);
+        }
+
         const vector<std::string> &get_required_parameters() override {
             return REQUIRED_PARAMETERS;
         }
@@ -124,6 +133,69 @@ namespace realization {
          */
         const vector<std::string> &get_output_variable_names() const {
             return output_variable_names;
+        }
+
+        /**
+         * Universal logic applied when creating a BMI-backed formulation from NGen config.
+         *
+         * This performs all the necessary steps to initialize this formulation from provided configuration
+         * properties. It is written in such a way that it can be used in appropriately crafted nested calls from both
+         * public `create_formulation` implementations, thus allowing the primary formulation initialization logic to
+         * be centralized and not duplicated.
+         *
+         * @param properties
+         * @param needs_param_validation
+         */
+        void inner_create_formulation(geojson::PropertyMap properties, bool needs_param_validation) {
+            if (needs_param_validation) {
+                validate_parameters(properties);
+            }
+            // Required parameters first
+            set_bmi_init_config(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG).as_string());
+            set_bmi_main_output_var(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__MAIN_OUT_VAR).as_string());
+            set_forcing_file_path(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__FORCING_FILE).as_string());
+            set_model_type_name(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__MODEL_TYPE).as_string());
+            set_bmi_using_forcing_file(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__USES_FORCINGS).as_boolean());
+
+            // Then optional ...
+
+            if (properties.find(BMI_REALIZATION_CFG_PARAM_OPT__ALLOW_EXCEED_END) != properties.end()) {
+                set_allow_model_exceed_end_time(
+                        properties.at(BMI_REALIZATION_CFG_PARAM_OPT__ALLOW_EXCEED_END).as_boolean());
+            }
+
+            // Do this next, since after checking whether other input variables are present in the properties, we can
+            // now construct the adapter and init the model
+            set_bmi_model(construct_model(properties));
+
+            // Output variable subset and order, if present
+            auto out_var_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS);
+            if (out_var_it != properties.end()) {
+                std::vector<geojson::JSONProperty> out_vars_json_list = out_var_it->second.as_list();
+                std::vector<std::string> out_vars(out_vars_json_list.size());
+                for (int i = 0; i < out_vars_json_list.size(); ++i) {
+                    out_vars[i] = out_vars_json_list[i].as_string();
+                }
+                set_output_variable_names(out_vars);
+            }
+                // Otherwise, just take what literally is provided by the model
+            else {
+                set_output_variable_names(get_bmi_model()->GetOutputVarNames());
+            }
+
+            // Output header fields, if present
+            auto out_headers_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS);
+            if (out_headers_it != properties.end()) {
+                std::vector<geojson::JSONProperty> out_headers_json_list = out_var_it->second.as_list();
+                std::vector<std::string> out_headers(out_headers_json_list.size());
+                for (int i = 0; i < out_headers_json_list.size(); ++i) {
+                    out_headers[i] = out_headers_json_list[i].as_string();
+                }
+                set_output_header_fields(out_headers);
+            }
+            else {
+                set_output_header_fields(get_output_variable_names());
+            }
         }
 
         /**
@@ -252,6 +324,71 @@ namespace realization {
         };
 
     };
+/*
+    template<class M>
+    void Bmi_Formulation<M>::create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global) {
+        geojson::PropertyMap options = this->interpret_parameters(config, global);
+        inner_create_formulation(options, false);
+    }
+
+    template<class M>
+    void Bmi_Formulation<M>::create_formulation(geojson::PropertyMap properties) {
+        inner_create_formulation(properties, true);
+    }
+
+    template<class M>
+    void Bmi_Formulation<M>::inner_create_formulation(geojson::PropertyMap properties, bool needs_param_validation) {
+        if (needs_param_validation) {
+            validate_parameters(properties);
+        }
+        // Required parameters first
+        set_bmi_init_config(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG).as_string());
+        set_bmi_main_output_var(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__MAIN_OUT_VAR).as_string());
+        set_forcing_file_path(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__FORCING_FILE).as_string());
+        set_model_type_name(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__MODEL_TYPE).as_string());
+        set_bmi_using_forcing_file(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__USES_FORCINGS).as_boolean());
+
+        // Then optional ...
+
+        if (properties.find(BMI_REALIZATION_CFG_PARAM_OPT__ALLOW_EXCEED_END) != properties.end()) {
+            set_allow_model_exceed_end_time(
+                    properties.at(BMI_REALIZATION_CFG_PARAM_OPT__ALLOW_EXCEED_END).as_boolean());
+        }
+
+        // Do this next, since after checking whether other input variables are present in the properties, we can
+        // now construct the adapter and init the model
+        set_bmi_model(construct_model(properties));
+
+        // Output variable subset and order, if present
+        auto out_var_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS);
+        if (out_var_it != properties.end()) {
+            std::vector<geojson::JSONProperty> out_vars_json_list = out_var_it->second.as_list();
+            std::vector<std::string> out_vars(out_vars_json_list.size());
+            for (int i = 0; i < out_vars_json_list.size(); ++i) {
+                out_vars[i] = out_vars_json_list[i].as_string();
+            }
+            set_output_variable_names(out_vars);
+        }
+            // Otherwise, just take what literally is provided by the model
+        else {
+            set_output_variable_names(get_bmi_model()->GetOutputVarNames());
+        }
+
+        // Output header fields, if present
+        auto out_headers_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS);
+        if (out_headers_it != properties.end()) {
+            std::vector<geojson::JSONProperty> out_headers_json_list = out_var_it->second.as_list();
+            std::vector<std::string> out_headers(out_headers_json_list.size());
+            for (int i = 0; i < out_headers_json_list.size(); ++i) {
+                out_headers[i] = out_headers_json_list[i].as_string();
+            }
+            set_output_header_fields(out_headers);
+        }
+        else {
+            set_output_header_fields(get_output_variable_names());
+        }
+    }
+    */
 
 }
 
