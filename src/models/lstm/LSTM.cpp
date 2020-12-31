@@ -36,18 +36,19 @@ ScaleParams read_scale_params(std::string path)
 
 namespace lstm {
 
-    /**
-     * Constructor for model object based on model parameters and initial state.
-     *
-     * @param model_params Model parameters lstm_params struct.
-     * @param initial_state Shared smart pointer to lstm_state struct hold initial state values
+    /** @TODO: Make option to construct model without an initial state.
+     *  Consider initializing the empty state with: 
+     *  lstm_model(config, model_params, make_shared<lstm_state>(lstm_state())) {}     
      */
 
-
+    /**
+     * Constructor for model object based on model parameters only.
+     *
+     * @param model_params Model parameters lstm_params struct.
+     */
     lstm_model::lstm_model(lstm_config config, lstm_params model_params)
             : config(config), model_params(model_params),
             device( torch::Device(torch::kCPU) )
-
     {
         // ********** Set fluxes to null for now: it is bogus until first call of run function, which initializes it
         fluxes = nullptr;
@@ -56,71 +57,18 @@ namespace lstm {
         useGPU = config.useGPU && torch::cuda::is_available();
         device = torch::Device( useGPU ? torch::kCUDA : torch::kCPU );
 
-
-
-    //vector<double> h_vec;
-    //vector<double> c_vec;
-
-/*
-    //FIXME decide on best place to read this initial state
-    // Confirm data JSON file exists and is readable
-    if (FILE *file = fopen(config.initial_state_path.c_str(), "r")) {
-        fclose(file);
-        CSVReader reader(config.initial_state_path);
-        auto data = reader.getData();
-        std::vector<std::string> header = data[0];
-        //Advance the iterator to the first data row (skip the header)
-        auto row = data.begin();
-        std::advance(row, 1);
-        //Loop form first row to end of data
-        //FIXME better map header/name and row[index]
-        for(; row != data.end(); ++row)
-        {
-          h_vec.push_back( std::strtof( (*row)[0].c_str(), NULL ) );
-          c_vec.push_back( std::strtof( (*row)[1].c_str(), NULL ) );
-        }
-
-    } else {
-        throw std::runtime_error("LSTM initial state path: "+config.initial_state_path+" does not exist.");
-    }
-*/
-
-    //if (FILE *file = fopen(config.initial_state_path.c_str(), "r")) {
-    //read_initial_state(config.initial_state_path.c_str(), &h_vec, &c_vec);
-    lstm_model::initialize_state(config.initial_state_path.c_str());
-
-
-/*
-cout << "Size: " << h_vec.size() << endl;
-
-for(int i=0; i < h_vec.size(); i++){
-   cout << h_vec[i] << endl;
-}
-*/
-
+        lstm_model::initialize_state(config.initial_state_path.c_str());
  
-/*
-    current_state = std::make_shared<lstm_state>(lstm_state(h_vec, c_vec));
-
-    previous_state = std::make_shared<lstm_state>(lstm_state(h_vec, c_vec));
-
-        lstm::to_device(*current_state, device);
-        lstm::to_device(*previous_state, device);
-*/
         //FIXME need to initialize the model states by running a "warmup"
         //so when the model is constructed, run it on N timesteps prior to prediction period
         //OR read those states in and create the initial state tensors
 
-         //CURRENTLY HAVING ERROR LOADING MODEL
-         std::cout<<"model_params.pytorch_model_path: " << config.pytorch_model_path;
-
+        std::cout<<"model_params.pytorch_model_path: " << config.pytorch_model_path;
 
         model = torch::jit::load(config.pytorch_model_path);
         model.to( device );
         // Set to `eval` model (just like Python)
         model.eval();
-
-
 
         //FIXME what is the SUPPOSED to do?
         torch::NoGradGuard no_grad_;
@@ -131,15 +79,39 @@ for(int i=0; i < h_vec.size(); i++){
     }
 
     /**
-     * Constructor for model object with parameters only.
-     *
-     * Constructor creates a "default" initial state, with soil_storage_meters and groundwater_storage_meters set to
-     * 0.0, and then otherwise proceeds as the constructor accepting the second parameter for initial state.
-     *
-     * @param model_params Model parameters lstm_params struct.
+     * Initialize LSTM Model State.
+     * Reads the initial state from a specified CSV file. This function
+     * might need to change if there is an option to initialize a blank
+     * state.
+     * @param initial_state_path 
+     * @return
      */
-    //lstm_model::lstm_model(lstm_config config, lstm_params model_params) :
-    //lstm_model(config, model_params, make_shared<lstm_state>(lstm_state())) {}
+    void lstm_model::initialize_state(std::string initial_state_path)
+    {
+
+        vector<double> h_vec;
+        vector<double> c_vec;
+        CSVReader reader(initial_state_path);
+        auto data = reader.getData();
+        std::vector<std::string> header = data[0];
+        //Advance the iterator to the first data row (skip the header)
+        auto row = data.begin();
+        std::advance(row, 1);
+        //Loop form first row to end of data
+        for(; row != data.end(); ++row)
+        {
+            h_vec.push_back( std::strtof( (*row)[0].c_str(), NULL ) );
+            c_vec.push_back( std::strtof( (*row)[1].c_str(), NULL ) );  
+        }
+
+        current_state = std::make_shared<lstm_state>(lstm_state(h_vec, c_vec));
+        previous_state = std::make_shared<lstm_state>(lstm_state(h_vec, c_vec));
+
+        lstm::to_device(*current_state, device);
+        lstm::to_device(*previous_state, device);
+
+        return;
+    }
 
     /**
      * Return the smart pointer to the lstm::lstm_model struct for holding this object's current state.
@@ -186,27 +158,12 @@ for(int i=0; i < h_vec.size(); i++){
         std::vector<torch::jit::IValue> inputs;
         torch::Tensor forcing = torch::zeros({1, 11});
 
-        //Original Order
-        /*
-        forcing[0][0] = lstm_model::normalize("DLWRF_surface_W_per_meters_squared", DLWRF_surface_W_per_meters_squared);
-        forcing[0][1] = lstm_model::normalize("PRES_surface_Pa", PRES_surface_Pa);
-        forcing[0][2] = lstm_model::normalize("SPFH_2maboveground_kg_per_kg", SPFH_2maboveground_kg_per_kg);
-        forcing[0][3] = lstm_model::normalize("Precip_rate", precip);
-        forcing[0][4] = lstm_model::normalize("DSWRF_surface_W_per_meters_squared", DSWRF_surface_W_per_meters_squared);
-        forcing[0][5] = lstm_model::normalize("TMP_2maboveground_K", TMP_2maboveground_K);
-        forcing[0][6] = lstm_model::normalize("UGRD_10maboveground_meters_per_second", UGRD_10maboveground_meters_per_second);
-        forcing[0][7] = lstm_model::normalize("VGRD_10maboveground_meters_per_second", VGRD_10maboveground_meters_per_second);
-        forcing[0][8] = lstm_model::normalize("Area_Square_km", model_params.area);
-        forcing[0][9] = lstm_model::normalize("Latitude", model_params.latitude);
-        forcing[0][10] = lstm_model::normalize("Longitude", model_params.longitude);
-        */
-
-        forcing[0][3] = lstm_model::normalize("DLWRF_surface_W_per_meters_squared", DLWRF_surface_W_per_meters_squared);
-        forcing[0][5] = lstm_model::normalize("PRES_surface_Pa", PRES_surface_Pa);
-        forcing[0][1] = lstm_model::normalize("SPFH_2maboveground_kg_per_kg", SPFH_2maboveground_kg_per_kg);
         forcing[0][0] = lstm_model::normalize("Precip_rate", precip_meters_per_second);
-        forcing[0][4] = lstm_model::normalize("DSWRF_surface_W_per_meters_squared", DSWRF_surface_W_per_meters_squared);
+        forcing[0][1] = lstm_model::normalize("SPFH_2maboveground_kg_per_kg", SPFH_2maboveground_kg_per_kg);
         forcing[0][2] = lstm_model::normalize("TMP_2maboveground_K", TMP_2maboveground_K);
+        forcing[0][3] = lstm_model::normalize("DLWRF_surface_W_per_meters_squared", DLWRF_surface_W_per_meters_squared);
+        forcing[0][4] = lstm_model::normalize("DSWRF_surface_W_per_meters_squared", DSWRF_surface_W_per_meters_squared);
+        forcing[0][5] = lstm_model::normalize("PRES_surface_Pa", PRES_surface_Pa);
         forcing[0][6] = lstm_model::normalize("UGRD_10maboveground_meters_per_second", UGRD_10maboveground_meters_per_second);
         forcing[0][7] = lstm_model::normalize("VGRD_10maboveground_meters_per_second", VGRD_10maboveground_meters_per_second);
         forcing[0][8] = lstm_model::normalize("Area_Square_km", model_params.area);
@@ -229,71 +186,35 @@ for(int i=0; i < h_vec.size(); i++){
         return 0;
     }
 
-    void lstm_model::initialize_state(std::string initial_state_path)
-    {
-
-    vector<double> h_vec;
-    vector<double> c_vec;
-    //Initial_State state;
-    CSVReader reader(initial_state_path);
-    auto data = reader.getData();
-    std::vector<std::string> header = data[0];
-    //Advance the iterator to the first data row (skip the header)
-    auto row = data.begin();
-    std::advance(row, 1);
-    //Loop form first row to end of data
-    for(; row != data.end(); ++row)
-    {
- //       for(int i = 0; i < (*row).size(); i++)
- //       {   //row has var, mean, std_dev
-            //read into map keyed on var name, param name
-            //state[ i ]["h_t"] = strtof( (*row)[1].c_str(), NULL);
-            //state[ (*row)[0] ]["c_t"] = strtof( (*row)[2].c_str(), NULL);
-            //state["h_t"] = strtof( (*row)[1].c_str(), NULL);
-            //state["c_t"] = strtof( (*row)[2].c_str(), NULL);
- 
-            h_vec.push_back( std::strtof( (*row)[0].c_str(), NULL ) );
-            c_vec.push_back( std::strtof( (*row)[1].c_str(), NULL ) );  
-
- //       }
-    }
-
-for(int i=0; i < h_vec.size(); i++){
-   cout << h_vec[i] << endl;
-}
-
-
-    current_state = std::make_shared<lstm_state>(lstm_state(h_vec, c_vec));
-
-    previous_state = std::make_shared<lstm_state>(lstm_state(h_vec, c_vec));
-
-        lstm::to_device(*current_state, device);
-        lstm::to_device(*previous_state, device);
-
-
-    return;
-
-
-    }
-
-
-
+    /**
+     * Denormalizes output from LSTM model.
+     *
+     * @param forcing_variable_string
+     * @param normalized_output
+     * @return denormalized_output
+     */
     double lstm_model::denormalize(std::string forcing_variable_string, double normalized_output)
-        {
-          double mean, std_dev;
-          mean = this->scale[ forcing_variable_string ]["mean"];
-          std_dev = this->scale[ forcing_variable_string ]["std_dev"];
-          return (normalized_output * std_dev) + mean;
-        }
+    {
+        double mean, std_dev;
+        mean = this->scale[ forcing_variable_string ]["mean"];
+        std_dev = this->scale[ forcing_variable_string ]["std_dev"];
+        return (normalized_output * std_dev) + mean;
+    }
 
+    /**
+     * Normalizes inputs to LSTM model.
+     *
+     * @param forcing_variable_string
+     * @param forcing_variable
+     * @return normalized_input
+     */
     double lstm_model::normalize(std::string forcing_variable_string, double forcing_variable)
     {
-      double mean, std_dev;
-      mean = this->scale[ forcing_variable_string ]["mean"];
-      std_dev = this->scale[ forcing_variable_string ]["std_dev"];
-      return  (forcing_variable - mean) / std_dev;
+        double mean, std_dev;
+        mean = this->scale[ forcing_variable_string ]["mean"];
+        std_dev = this->scale[ forcing_variable_string ]["std_dev"];
+        return  (forcing_variable - mean) / std_dev;
     }
-
 
     /**
      * Perform necessary steps prior to the execution of model calculations for a new time step, for managing member
@@ -309,8 +230,6 @@ for(int i=0; i < h_vec.size(); i++){
     void lstm_model::manage_state_before_next_time_step_run()
     {
         previous_state = current_state;
-        //current_state = make_shared<lstm_state>(lstm_state(0.0, 0.0, vector<double>(model_params.nash_n)));
-        //fluxes = make_shared<lstm_fluxes>(lstm_fluxes(0.0, 0.0, 0.0, 0.0, 0.0));
     }
 
 }

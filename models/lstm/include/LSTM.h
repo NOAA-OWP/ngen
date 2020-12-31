@@ -19,6 +19,8 @@ namespace lstm {
 
     public:
 
+        /** @TODO: Make option to construct model without an initial state. */
+
         /**
          * Constructor for model object with parameters only.
          *
@@ -30,8 +32,10 @@ namespace lstm {
         lstm_model(lstm_config config, lstm_params model_params);
 
         /**
-         * Initializes model state
-         *
+         * Initialize LSTM Model State.
+         * Reads the initial state from a specified CSV file. This function
+         * might need to change if there is an option to initialize a blank
+         * state.
          * @param initial_state_path
          * @return
          */
