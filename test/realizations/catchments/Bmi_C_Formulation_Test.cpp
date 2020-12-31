@@ -4,6 +4,7 @@
 #include <vector>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
+#include "Bmi_Formulation.hpp"
 #include "Bmi_C_Formulation.hpp"
 #include "Formulation_Manager.hpp"
 #include "FileChecker.h"
@@ -11,14 +12,39 @@
 
 using namespace realization;
 
-class Bmi_C_Formulation_Test : public ::testing::Test {
+class Bmi_Formulation_Test : public ::testing::Test {
+
+protected:
+    static std::string find_file(std::vector<std::string> dir_opts, const std::string& basename);
+
+};
+
+class Bmi_C_Formulation_Test : public Bmi_Formulation_Test {
 protected:
 
     void SetUp() override;
 
     void TearDown() override;
 
-    static std::string find_file(std::vector<std::string> dir_opts, const std::string& basename);
+    static std::string get_friend_bmi_init_config(const Bmi_C_Formulation& formulation) {
+        return formulation.get_bmi_init_config();
+    }
+
+    static std::string get_friend_bmi_main_output_var(const Bmi_C_Formulation& formulation) {
+        return formulation.get_bmi_main_output_var();
+    }
+
+    static std::string get_friend_forcing_file_path(const Bmi_C_Formulation& formulation) {
+        return formulation.get_forcing_file_path();
+    }
+
+    static bool get_friend_is_bmi_using_forcing_file(const Bmi_C_Formulation& formulation) {
+        return formulation.is_bmi_using_forcing_file();
+    }
+
+    static std::string get_friend_model_type_name(Bmi_C_Formulation& formulation) {
+        return formulation.get_model_type_name();
+    }
 
     std::vector<std::string> forcing_dir_opts;
     std::vector<std::string> bmi_init_cfg_dir_opts;
@@ -93,7 +119,7 @@ void Bmi_C_Formulation_Test::SetUp() {
     }
 }
 
-std::string Bmi_C_Formulation_Test::find_file(std::vector<std::string> dir_opts, const std::string& basename) {
+std::string Bmi_Formulation_Test::find_file(std::vector<std::string> dir_opts, const std::string& basename) {
     std::vector<std::string> file_opts(dir_opts.size());
     for (int i = 0; i < dir_opts.size(); ++i)
         file_opts[i] = dir_opts[i] + basename;
@@ -110,6 +136,12 @@ TEST_F(Bmi_C_Formulation_Test, Initialize_0_a) {
 
     Bmi_C_Formulation formulation(catchment_ids[ex_index], *forcing_params_examples[ex_index], utils::StreamHandler());
     formulation.create_formulation(config_prop_ptree[ex_index]);
+
+    ASSERT_EQ(get_friend_model_type_name(formulation), model_type_name[ex_index]);
+    ASSERT_EQ(get_friend_forcing_file_path(formulation), forcing_file[ex_index]);
+    ASSERT_EQ(get_friend_bmi_init_config(formulation), init_config[ex_index]);
+    ASSERT_EQ(get_friend_bmi_main_output_var(formulation), main_output_variable[ex_index]);
+    ASSERT_EQ(get_friend_is_bmi_using_forcing_file(formulation), uses_forcing_file[ex_index]);
 }
 
 /** Simple test of get response. */

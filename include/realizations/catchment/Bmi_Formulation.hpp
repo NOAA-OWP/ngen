@@ -18,6 +18,10 @@
 #define BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS "output_header_fields"
 #define BMI_REALIZATION_CFG_PARAM_OPT__ALLOW_EXCEED_END "allow_exceed_end_time"
 
+// Forward declaration to provide access to protected items in testing
+class Bmi_Formulation_Test;
+class Bmi_C_Formulation_Test;
+
 namespace realization {
 
     /**
@@ -283,6 +287,10 @@ namespace realization {
         void set_output_variable_names(const vector<std::string> &out_var_names) {
             output_variable_names = out_var_names;
         }
+
+        // Unit test access
+        friend class ::Bmi_Formulation_Test;
+        friend class ::Bmi_C_Formulation_Test;
 
     private:
         /**
