@@ -148,20 +148,9 @@ void Bmi_C_Formulation::inner_create_formulation(geojson::PropertyMap properties
         set_allow_model_exceed_end_time(properties.at(BMI_REALIZATION_CFG_PARAM_OPT__ALLOW_EXCEED_END).as_boolean());
     }
 
-    // Do this next, since we can construct the adapter and init the model as soon as we know whether it's present
-    auto other_in_var_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OTHER_IN_VARS);
-    // Construct the adapter, which also will handle the model initialization
-    if (other_in_var_it != properties.end()) {
-        // When "other_input_variables" was present, use the constructor that accepts those directly
-        set_bmi_model(std::make_shared<Bmi_C_Adapter>(
-                Bmi_C_Adapter(get_bmi_init_config(), get_forcing_file_path(), is_bmi_using_forcing_file(),
-                              get_allow_model_exceed_end_time(), other_in_var_it->second, output)));
-    }
-    else {
-        set_bmi_model(std::make_shared<Bmi_C_Adapter>(
-                Bmi_C_Adapter(get_bmi_init_config(), get_forcing_file_path(), is_bmi_using_forcing_file(),
-                              get_allow_model_exceed_end_time(), output)));
-    }
+    // Do this next, since after checking whether other input variables are present in the properties, we can now
+    // construct the adapter and init the model
+    set_bmi_model(construct_model(properties));
 
     // Output variable subset and order, if present
     auto out_var_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS);
