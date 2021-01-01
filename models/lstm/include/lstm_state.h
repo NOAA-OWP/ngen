@@ -1,5 +1,8 @@
 #ifndef NGEN_LSTM_STATE_H
 #define NGEN_LSTM_STATE_H
+
+//#ifdef NGEN_LSTM_TORCH_LIB_ACTIVE
+
 #include <torch/script.h>
 
 namespace lstm {
@@ -37,5 +40,8 @@ namespace lstm {
       state.c_t.to(device);
     }
 } //namespace lstm
+
+
+//#endif
 
 #endif //NGEN_LSTM_STATE_H

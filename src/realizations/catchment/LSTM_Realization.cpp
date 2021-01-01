@@ -2,6 +2,9 @@
 #include "Catchment_Formulation.hpp"
 #include "CSV_Reader.h"
 
+#ifdef NGEN_LSTM_TORCH_LIB_ACTIVE
+
+
 using namespace realization;
 
 LSTM_Realization::LSTM_Realization(
@@ -110,3 +113,5 @@ void LSTM_Realization::create_formulation(boost::property_tree::ptree &config, g
     geojson::PropertyMap options = this->interpret_parameters(config, global);
     create_formulation(options);
 }
+
+#endif
