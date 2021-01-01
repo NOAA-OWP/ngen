@@ -35,11 +35,11 @@ namespace realization {
 #endif
         {"tshirt", create_formulation_constructor<Tshirt_Realization>()},
         {"tshirt_c", create_formulation_constructor<Tshirt_C_Realization>()},
-        {"simple_lumped", create_formulation_constructor<Simple_Lumped_Model_Realization>()}
-#ifdef NGEN_LSTM_TORCH_LIB_ACTIVE
-        ,
+        {"simple_lumped", create_formulation_constructor<Simple_Lumped_Model_Realization>()},
+//#ifdef NGEN_LSTM_TORCH_LIB_ACTIVE
+//        ,
         {"lstm", create_formulation_constructor<LSTM_Realization>()}
-#endif
+//#endif
     };
 
     static bool formulation_exists(std::string formulation_type) {
