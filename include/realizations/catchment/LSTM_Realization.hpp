@@ -8,6 +8,8 @@
 #include "lstm/include/lstm_config.h"
 #include <memory>
 
+#ifdef NGEN_LSTM_TORCH_LIB_ACTIVE
+
 namespace realization {
 
     class LSTM_Realization : public Catchment_Formulation {
@@ -99,7 +101,10 @@ namespace realization {
             std::string catchment_id;
             lstm::lstm_params params;
             lstm::lstm_config config;
-            std::unique_ptr<lstm::lstm_model> model;
+           
+//            #ifdef NGEN_LSTM_TORCH_LIB_ACTIVE 
+                std::unique_ptr<lstm::lstm_model> model;
+//            #endif
 
             std::vector<std::string> REQUIRED_PARAMETERS = {
                  "pytorch_model_path",
@@ -114,4 +119,5 @@ namespace realization {
 
 }
 
+#endif
 #endif //NGEN_LSTM_REALIZATION_HPP

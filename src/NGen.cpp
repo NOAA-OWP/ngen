@@ -96,7 +96,6 @@ pdm03_struct get_et_params() {
 
 typedef Simple_Lumped_Model_Realization _hymod;
 typedef realization::Tshirt_Realization _tshirt;
-//typedef realization::LSTM_Realization _lstm;
 
 int main(int argc, char *argv[]) {
     std::cout << "Hello there " << ngen_VERSION_MAJOR << "."

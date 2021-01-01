@@ -114,7 +114,6 @@ target_link_libraries(ngen PUBLIC
         NGen::kernels_reservoir
         #NGen::kernels_reservoir_timeless
         #NGen::forcing
-        #NGen::"${TORCH_LIBRARIES}"
         ${TORCH_LIBRARIES}
         )
 
@@ -135,3 +134,17 @@ endif()
 #target_compile_options(ngen PUBLIC -std=c++14 -Wall)
 #target_compile_features(ngen PUBLIC cxx_std_14)
 #add_subdirectory("src/geojson")
+
+
+
+#if(LSTM_TORCH_LIB_ACTIVE)
+#    add_compile_definitions(NGEN_LSTM_TORCH_LIB_ACTIVE)
+#    find_package(Torch REQUIRED)
+#    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
+#    add_subdirectory("src/models/lstm")
+#    target_link_libraries(ngen PUBLIC
+#            NGen::models_lstm
+#            ${TORCH_LIBRARIES}
+#           )
+
+#endif()
