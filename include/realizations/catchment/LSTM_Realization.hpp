@@ -8,7 +8,7 @@
 #include "lstm/include/lstm_config.h"
 #include <memory>
 
-#ifdef NGEN_LSTM_TORCH_LIB_ACTIVE
+//#ifdef NGEN_LSTM_TORCH_LIB_ACTIVE
 
 namespace realization {
 
@@ -119,5 +119,5 @@ namespace realization {
 
 }
 
-#endif
+//#endif
 #endif //NGEN_LSTM_REALIZATION_HPP
