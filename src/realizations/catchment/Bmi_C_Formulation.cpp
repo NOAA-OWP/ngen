@@ -95,8 +95,14 @@ double Bmi_C_Formulation::get_response(time_step_t t_index, time_step_t t_delta)
 
 double Bmi_C_Formulation::get_var_value_as_double(time_step_t t_index, const std::string& var_name) {
     // TODO: change to using "at index" option
+    // TODO: consider different way of handling (and how to document) cases like long double or unsigned long long that
+    //  don't fit or might convert inappropriately
     std::string type = get_bmi_model()->GetVarType(var_name);
-    if (type == "double") {
+    if (type == "long double") {
+        std::vector<long double> outputs = get_bmi_model()->GetValue<long double>(var_name);
+        return outputs[t_index];
+    }
+    else if (type == "double") {
         std::vector<double> outputs = get_bmi_model()->GetValue<double>(var_name);
         return outputs[t_index];
     }
@@ -104,13 +110,101 @@ double Bmi_C_Formulation::get_var_value_as_double(time_step_t t_index, const std
         std::vector<float> outputs = get_bmi_model()->GetValue<float>(var_name);
         return (double)(outputs[t_index]);
     }
+    else if (type == "short") {
+        std::vector<short> outputs = get_bmi_model()->GetValue<short>(var_name);
+        return (double) (outputs[t_index]);
+    }
+    else if (type == "short int") {
+        std::vector<short int> outputs = get_bmi_model()->GetValue<short int>(var_name);
+        return (double) (outputs[t_index]);
+    }
+    else if (type == "signed short") {
+        std::vector<signed short> outputs = get_bmi_model()->GetValue<signed short>(var_name);
+        return (double) (outputs[t_index]);
+    }
+    else if (type == "signed short int") {
+        std::vector<signed short int> outputs = get_bmi_model()->GetValue<signed short int>(var_name);
+        return (double) (outputs[t_index]);
+    }
+    else if (type == "unsigned short") {
+        std::vector<unsigned short> outputs = get_bmi_model()->GetValue<unsigned short>(var_name);
+        return (double) (outputs[t_index]);
+    }
+    else if (type == "unsigned short int") {
+        std::vector<unsigned short int> outputs = get_bmi_model()->GetValue<unsigned short int>(var_name);
+        return (double) (outputs[t_index]);
+    }
     else if (type == "int") {
         std::vector<int> outputs = get_bmi_model()->GetValue<int>(var_name);
-        return (double)(outputs[t_index]);
+        return (double) (outputs[t_index]);
+    }
+    else if (type == "signed ") {
+        std::vector<signed> outputs = get_bmi_model()->GetValue<signed>(var_name);
+        return (double) (outputs[t_index]);
+    }
+    else if (type == "signed int") {
+        std::vector<signed int> outputs = get_bmi_model()->GetValue<signed int>(var_name);
+        return (double) (outputs[t_index]);
+    }
+    else if (type == "unsigned") {
+        std::vector<unsigned> outputs = get_bmi_model()->GetValue<unsigned>(var_name);
+        return (double) (outputs[t_index]);
+    }
+    else if (type == "unsigned int") {
+        std::vector<unsigned int> outputs = get_bmi_model()->GetValue<unsigned int>(var_name);
+        return (double) (outputs[t_index]);
     }
     else if (type == "long") {
         std::vector<long> outputs = get_bmi_model()->GetValue<long>(var_name);
-        return (double)(outputs[t_index]);
+        return (double) (outputs[t_index]);
+    }
+    else if (type == "long int") {
+        std::vector<long int> outputs = get_bmi_model()->GetValue<long int>(var_name);
+        return (double) (outputs[t_index]);
+    }
+    else if (type == "signed long") {
+        std::vector<signed long> outputs = get_bmi_model()->GetValue<signed long>(var_name);
+        return (double) (outputs[t_index]);
+    }
+    else if (type == "signed long int") {
+        std::vector<signed long int> outputs = get_bmi_model()->GetValue<signed long int>(var_name);
+        return (double) (outputs[t_index]);
+    }
+    else if (type == "unsigned long") {
+        std::vector<unsigned long> outputs = get_bmi_model()->GetValue<unsigned long>(var_name);
+        return (double) (outputs[t_index]);
+    }
+    else if (type == "unsigned long int") {
+        std::vector<unsigned long int> outputs = get_bmi_model()->GetValue<unsigned long int>(var_name);
+        return (double) (outputs[t_index]);
+    }
+    else if (type == "long long") {
+        std::vector<long long> outputs = get_bmi_model()->GetValue<long long>(var_name);
+        return (double) (outputs[t_index]);
+    }
+    else if (type == "long long int") {
+        std::vector<long long int> outputs = get_bmi_model()->GetValue<long long int>(var_name);
+        return (double) (outputs[t_index]);
+    }
+    else if (type == "signed long long") {
+        std::vector<signed long long> outputs = get_bmi_model()->GetValue<signed long long>(var_name);
+        return (double) (outputs[t_index]);
+    }
+    else if (type == "signed long long int") {
+        std::vector<signed long long int> outputs = get_bmi_model()->GetValue<signed long long int>(var_name);
+        return (double) (outputs[t_index]);
+    }
+    else if (type == "unsigned long long") {
+        std::vector<unsigned long long> outputs = get_bmi_model()->GetValue<unsigned long long>(var_name);
+        return (double) (outputs[t_index]);
+    }
+    else if (type == "unsigned long long int") {
+        std::vector<unsigned long long int> outputs = get_bmi_model()->GetValue<unsigned long long int>(var_name);
+        return (double) (outputs[t_index]);
+    }
+    else {
+        throw std::runtime_error("Unable to get value of variable " + var_name + " from " + get_model_type_name() +
+                                 " as double: no logic for converting variable type " + type);
     }
 }
 
