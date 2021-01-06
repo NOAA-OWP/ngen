@@ -25,12 +25,7 @@ target_link_libraries(realizations_catchment PUBLIC
         NGen::geojson
         )
 
-# Also find and link the external BMI C model library if BMI C integration is configured to be active
+# Also link the external BMI C model library if BMI C integration is configured to be active
 if(BMI_C_LIB_ACTIVE)
-    if(BMI_C_LIB_DIR)
-        find_library(BMI_C_LIB_PATH "${BMI_C_LIB_NAME}" PATHS "${BMI_C_LIB_DIR}")
-    else()
-        find_library(BMI_C_LIB_PATH "${BMI_C_LIB_NAME}")
-    endif()
-    target_link_libraries(realizations_catchment PRIVATE "${BMI_C_LIB_PATH}")
+    target_link_libraries(realizations_catchment PRIVATE "${BMI_C_LIB}")
 endif()
