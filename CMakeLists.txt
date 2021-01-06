@@ -62,6 +62,16 @@ else()
     endif()
 endif()
 
+# Handle several steps for BMI C library logic and dependencies, at top level
+if(BMI_C_LIB_ACTIVE)
+    # Define associated preprocessor directive
+    add_compile_definitions(NGEN_BMI_C_LIB_ACTIVE)
+    if (NOT BMI_C_LIB_NAME)
+        message(FATAL_ERROR "Required CMake cache variable BMI_C_LIB_NAME' not set'")
+    endif()
+    message(STATUS "BMI_C_LIB_NAME set to '${BMI_C_LIB_NAME}'")
+endif()
+
 find_package(Boost 1.72.0 REQUIRED)
 
 target_include_directories(ngen PUBLIC

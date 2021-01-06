@@ -87,7 +87,7 @@ The following must be present in the formulation/realization JSON config for all
 
 ### BMI C Model As Shared Library
 
-For **C** models, the model must be packaged as a pre-compiled shared library.  Several CMake cache variables must be configured for controlling whether to expect such a library and how to find it:
+For **C** models, the model must be packaged as a pre-compiled shared library.  Several CMake cache variables must be configured for controlling whether to expect such a library and how to find it.  These are found in, or must be added to, the _CMakeCache.txt_ file in the build system directory:
 
 * `BMI_C_LIB_ACTIVE` 
   * type: `BOOL` 
@@ -95,9 +95,15 @@ For **C** models, the model must be packaged as a pre-compiled shared library.  
 * `BMI_C_LIB_NAME`
   * type: `STRING `
   * must be set if `BMI_C_LIB_ACTIVE` is `ON` to supply the appropriate name for the shared library
-* `BMI_C_LIB_HINT_DIR`
+* `BMI_C_LIB_DIR`
   * type: `STRING`
-  * may be set to provide a [hint](https://cmake.org/cmake/help/latest/command/find_library.html) to CMake when it tries to find the library
+  * may be set to provide an explicit path for CMake to use to find the library
+  * only searched after "default" paths (e.g., those in `CMAKE_PREFIX_PATH`)
+* `BMI_C_LIB_PATH`
+  * type: `STRING`
+  * path to the library artifact file 
+  * does not need to be set manually; automatically set by the build
+  * however, **_does need to be deleted manually_** when changes are necessary
   
 The CMake build system may need to be [regenerated](BUILDS_AND_CMAKE.md#regenerating) after changing these settings.
 
