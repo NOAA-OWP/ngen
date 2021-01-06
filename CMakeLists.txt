@@ -62,6 +62,8 @@ else()
     endif()
 endif()
 
+find_package(Boost 1.72.0 REQUIRED)
+
 # Handle several steps for BMI C library logic and dependencies, at top level
 if(BMI_C_LIB_ACTIVE)
     # Define associated preprocessor directive
@@ -71,8 +73,6 @@ if(BMI_C_LIB_ACTIVE)
     endif()
     message(STATUS "BMI_C_LIB_NAME set to '${BMI_C_LIB_NAME}'")
 endif()
-
-find_package(Boost 1.72.0 REQUIRED)
 
 target_include_directories(ngen PUBLIC
         "${PROJECT_BINARY_DIR}/include" # For generated config header file in binary tree
