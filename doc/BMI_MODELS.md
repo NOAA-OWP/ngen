@@ -92,18 +92,20 @@ For **C** models, the model must be packaged as a pre-compiled shared library.  
 * `BMI_C_LIB_ACTIVE` 
   * type: `BOOL` 
   * must be set to `ON` (or equivalent in CMake) for BMI C shared library functionality to be compiled and active
+* `BMI_C_LIB`
+  * type: `FILEPATH`
+  * library target value used for linking 
+  * typically the compiled library file
+  * when not set, can potentially be derived/found using `BMI_C_LIB_NAME` and `BMI_C_LIB_DIR`
 * `BMI_C_LIB_NAME`
-  * type: `STRING `
-  * must be set if `BMI_C_LIB_ACTIVE` is `ON` to supply the appropriate name for the shared library
+  * type: `STRING`
+  * must be set if `BMI_C_LIB_ACTIVE` is `ON` but `BMI_C_LIB` is not set
+  * supplies the name for the shared library for use when finding
 * `BMI_C_LIB_DIR`
   * type: `STRING`
-  * may be set to provide an explicit path for CMake to use to find the library
+  * may be set to provide an explicit path for CMake to use when attempting to find the library
   * only searched after "default" paths (e.g., those in `CMAKE_PREFIX_PATH`)
-* `BMI_C_LIB_PATH`
-  * type: `STRING`
-  * path to the library artifact file 
-  * does not need to be set manually; automatically set by the build
-  * however, **_does need to be deleted manually_** when changes are necessary
+
   
 The CMake build system may need to be [regenerated](BUILDS_AND_CMAKE.md#regenerating) after changing these settings.
 
