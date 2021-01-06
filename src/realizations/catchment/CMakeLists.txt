@@ -25,12 +25,12 @@ target_link_libraries(realizations_catchment PUBLIC
         NGen::geojson
         )
 
+# Also find and link the external BMI C model library if BMI C integration is configured to be active
 if(BMI_C_LIB_ACTIVE)
-    add_compile_definitions(NGEN_BMI_C_LIB_ACTIVE)
-
-    SET(BMI_C_LIB_NAME "cfemodel" CACHE STRING "User-specified name for external C BMI model library")
-    message(STATUS "BMI_C_LIB_NAME set to '${BMI_C_LIB_NAME}'")
-    SET(BMI_C_LIB_HINT_DIR "${PROJECT_SOURCE_DIR}/extern/cfe/cmake_cfe_lib" CACHE STRING "Hint directory to find external C BMI model library")
-    find_library(EXTERN_C_BMI_LIB "${BMI_C_LIB_NAME}" HINTS "${BMI_C_LIB_HINT_DIR}")
-    target_link_libraries(realizations_catchment PRIVATE "${EXTERN_C_BMI_LIB}")
+    if(BMI_C_LIB_DIR)
+        find_library(BMI_C_LIB_PATH "${BMI_C_LIB_NAME}" PATHS "${BMI_C_LIB_DIR}")
+    else()
+        find_library(BMI_C_LIB_PATH "${BMI_C_LIB_NAME}")
+    endif()
+    target_link_libraries(realizations_catchment PRIVATE "${BMI_C_LIB_PATH}")
 endif()
