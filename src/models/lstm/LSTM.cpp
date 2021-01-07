@@ -6,6 +6,9 @@
 #include <iostream>
 #include <fstream>
 
+#ifdef NGEN_LSTM_TORCH_LIB_ACTIVE
+
+
 using namespace std;
 
 typedef std::unordered_map< std::string, std::unordered_map< std::string, double> > ScaleParams;
@@ -233,3 +236,6 @@ namespace lstm {
     }
 
 }
+
+#endif
+
