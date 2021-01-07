@@ -106,16 +106,12 @@ namespace models {
             double GetStartTime();
 
             /**
-             * Get the backing model "next" time step size.
+             * Get the time step used in the model.
              *
-             * Get the time step size used in the backing model for the "next", in the units expressed by
-             * `GetTimeUnits()`.
+             * Get the time step size used in the backing model, expressed as a `double` type value.
              *
-             * This type does not make any assumptions about how the backing model handles time steps, including whether
-             * the time step size is fixed.  This creates some complexities.  In particular, this function makes a
-             * best-effort for determining the time step size.  It attempts to do this first by analyzing the data in
-             * the forcing file at `forcing_file_path`, for whatever the next time step is.  This may not be possible,
-             * in which case it falls back to the value returned from the analogous BMI method from the backing model.
+             * This function defers to the behavior of the analogous function `get_time_step` of the backing model.  As such, the
+             * the model-specific documentation for this function should be consulted for utilized models.
              *
              * @return The time step size of the model.
              */
