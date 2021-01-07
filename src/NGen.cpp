@@ -231,7 +231,8 @@ int main(int argc, char *argv[]) {
       std::string current_timestamp = manager.Simulation_Time_Object->get_timestamp(output_time_index);
 
       for (std::pair<std::string, std::shared_ptr<realization::Formulation>> formulation_pair : manager ) {
-      //  formulation_pair.second->set_et_params(pdm_et_data);
+        formulation_pair.second->set_et_params(pdm_et_data);
+       
         //get the catchment response
         double response = formulation_pair.second->get_response(output_time_index, 3600.0);
         //dump the output
@@ -250,7 +251,7 @@ int main(int argc, char *argv[]) {
 
         catchment_outfiles[formulation_pair.first] << output_time_index << "," << current_timestamp << "," << output_str << std::endl;
 
-        //response = response * boost::geometry::area(nexus_collection->get_feature(formulation_pair.first)->geometry<geojson::multipolygon_t>());
+        response = response * boost::geometry::area(nexus_collection->get_feature(formulation_pair.first)->geometry<geojson::multipolygon_t>());
 
         std::cout << "\t\tThe modified response is: " << response << std::endl;
         //update the nexus with this flow

@@ -3,7 +3,11 @@
 
 #include "Catchment_Formulation.hpp"
 #include <unordered_map>
-#include "lstm/include/LSTM.h"
+
+#ifdef NGEN_LSTM_TORCH_LIB_ACTIVE
+   #include "lstm/include/LSTM.h"
+#endif
+
 #include "lstm/include/lstm_params.h"
 #include "lstm/include/lstm_config.h"
 #include <memory>
@@ -102,9 +106,9 @@ namespace realization {
             lstm::lstm_params params;
             lstm::lstm_config config;
            
-//            #ifdef NGEN_LSTM_TORCH_LIB_ACTIVE 
+            #ifdef NGEN_LSTM_TORCH_LIB_ACTIVE 
                 std::unique_ptr<lstm::lstm_model> model;
-//            #endif
+            #endif
 
             std::vector<std::string> REQUIRED_PARAMETERS = {
                  "pytorch_model_path",

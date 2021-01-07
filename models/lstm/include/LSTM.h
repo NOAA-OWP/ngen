@@ -8,7 +8,7 @@
 #include "lstm_state.h"
 #include <unordered_map>
 
-//#ifdef NGEN_LSTM_TORCH_LIB_ACTIVE
+#ifdef NGEN_LSTM_TORCH_LIB_ACTIVE
   #include <torch/torch.h>
 
 typedef std::unordered_map< std::string, std::unordered_map< std::string, double> > ScaleParams;
@@ -135,5 +135,5 @@ namespace lstm {
     };
 }
 
-//#endif
+#endif
 #endif //LSTM_H
