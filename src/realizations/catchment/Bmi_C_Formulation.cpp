@@ -29,6 +29,7 @@ std::shared_ptr<Bmi_C_Adapter> Bmi_C_Formulation::construct_model(const geojson:
                         get_forcing_file_path(),
                         is_bmi_using_forcing_file(),
                         get_allow_model_exceed_end_time(),
+                        is_bmi_model_time_step_fixed(),
                         other_in_var_it->second,
                         output));
     }
@@ -39,6 +40,7 @@ std::shared_ptr<Bmi_C_Adapter> Bmi_C_Formulation::construct_model(const geojson:
                         get_forcing_file_path(),
                         is_bmi_using_forcing_file(),
                         get_allow_model_exceed_end_time(),
+                        is_bmi_model_time_step_fixed(),
                         output));
     }
 }
