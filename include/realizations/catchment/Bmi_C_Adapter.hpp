@@ -111,12 +111,14 @@ namespace models {
              *
              * Get the time step size used in the backing model, expressed as a `double` type value.
              *
-             * This function defers to the behavior of the analogous function `get_time_step` of the backing model.  As such, the
-             * the model-specific documentation for this function should be consulted for utilized models.
+             * This function defers to the behavior of the analogous function `get_time_step` of the backing model.  As
+             * such, the the model-specific documentation for this function should be consulted for utilized models.
              *
              * @return The time step size of the model.
              */
-            double GetTimeStep();
+            inline double GetTimeStep() {
+                return *get_bmi_model_time_step_size_ptr();
+            }
 
             /**
              * Get the units of time for the backing model.
