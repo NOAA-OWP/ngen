@@ -319,6 +319,43 @@ namespace models {
             // TODO: look at setting this in some other way
             std::string model_name = "BMI C model";
 
+            /**
+             * Get model time step size pointer, using lazy loading when fixed.
+             *
+             * Get a pointer to the value of the backing model's time step size.  If the model is configured to have
+             * fixed time step size, return the pointer from `bmi_model_time_step_size`, potentially after it is lazily
+             * loaded.  If the model's time step is not fixed, retrieve it directly from the model in real time, and do
+             * not set `bmi_model_time_step_size`.
+             *
+             * @return A pointer to the value of the backing model's time step size.
+             * @see retrieve_bmi_model_time_step_size
+             */
+            inline std::shared_ptr<double> get_bmi_model_time_step_size_ptr() {
+                if (bmi_model_time_step_size == nullptr) {
+                    if (!bmi_model_has_fixed_time_step)
+                        return retrieve_bmi_model_time_step_size();
+                    else
+                        bmi_model_time_step_size = retrieve_bmi_model_time_step_size();
+                }
+                return bmi_model_time_step_size;
+            }
+
+            /**
+             * Retrieve time step size directly from model.
+             *
+             * Retrieve the time step size from the backing model and return in a shared pointer.
+             *
+             * @return Shared pointer to just-retrieved time step size
+             */
+            inline std::shared_ptr<double> retrieve_bmi_model_time_step_size() {
+                double ts;
+                int result = bmi_model->get_time_step(bmi_model.get(), &ts);
+                if (result != BMI_SUCCESS) {
+                    throw std::runtime_error(model_name + " failed to read time step from model.");
+                }
+                return std::make_shared<double>(ts);
+            }
+
         private:
             /** Whether model ``Update`` calls are allowed and handled in some way by the backing model. */
             bool allow_model_exceed_end_time = false;
