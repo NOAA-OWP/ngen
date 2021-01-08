@@ -17,6 +17,7 @@
 #define BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS "output_variables"
 #define BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS "output_header_fields"
 #define BMI_REALIZATION_CFG_PARAM_OPT__ALLOW_EXCEED_END "allow_exceed_end_time"
+#define BMI_REALIZATION_CFG_PARAM_OPT__FIXED_TIME_STEP "fixed_time_step"
 
 // Forward declaration to provide access to protected items in testing
 class Bmi_Formulation_Test;
@@ -167,6 +168,10 @@ namespace realization {
                 set_allow_model_exceed_end_time(
                         properties.at(BMI_REALIZATION_CFG_PARAM_OPT__ALLOW_EXCEED_END).as_boolean());
             }
+            if (properties.find(BMI_REALIZATION_CFG_PARAM_OPT__FIXED_TIME_STEP) != properties.end()) {
+                set_bmi_model_time_step_fixed(
+                        properties.at(BMI_REALIZATION_CFG_PARAM_OPT__FIXED_TIME_STEP).as_boolean());
+            }
 
             // Do this next, since after checking whether other input variables are present in the properties, we can
             // now construct the adapter and init the model
@@ -200,6 +205,15 @@ namespace realization {
             else {
                 set_output_header_fields(get_output_variable_names());
             }
+        }
+
+        /**
+         * Test whether backing model has fixed time step size.
+         *
+         * @return Whether backing model has fixed time step size.
+         */
+        bool is_bmi_model_time_step_fixed() {
+            return bmi_model_time_step_fixed;
         }
 
         /**
@@ -239,6 +253,10 @@ namespace realization {
          */
         void set_bmi_model(std::shared_ptr<M> model) {
             bmi_model = model;
+        }
+
+        void set_bmi_model_time_step_fixed(bool is_fix_time_step) {
+            bmi_model_time_step_fixed = is_fix_time_step;
         }
 
         /**
@@ -300,6 +318,8 @@ namespace realization {
         bool allow_model_exceed_end_time = false;
         std::string bmi_init_config;
         std::shared_ptr<M> bmi_model;
+        /** Whether backing model has fixed time step size. */
+        bool bmi_model_time_step_fixed = true;
         std::string bmi_main_output_var;
         /** Whether the backing model uses/reads the forcing file directly for getting input data. */
         bool bmi_using_forcing_file;
@@ -321,7 +341,8 @@ namespace realization {
                 BMI_REALIZATION_CFG_PARAM_OPT__OTHER_IN_VARS,
                 BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS,
                 BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS,
-                BMI_REALIZATION_CFG_PARAM_OPT__ALLOW_EXCEED_END
+                BMI_REALIZATION_CFG_PARAM_OPT__ALLOW_EXCEED_END,
+                BMI_REALIZATION_CFG_PARAM_OPT__FIXED_TIME_STEP
         };
         std::vector<std::string> REQUIRED_PARAMETERS = {
                 BMI_REALIZATION_CFG_PARAM_REQ__FORCING_FILE,
