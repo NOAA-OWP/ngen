@@ -29,16 +29,17 @@ namespace models {
         public:
 
             explicit Bmi_C_Adapter(std::string forcing_file_path, bool model_uses_forcing_file, bool allow_exceed_end,
-                                   utils::StreamHandler output);
+                                   bool has_fixed_time_step, utils::StreamHandler output);
 
             Bmi_C_Adapter(std::string bmi_init_config, std::string forcing_file_path, bool model_uses_forcing_file,
-                          bool allow_exceed_end, utils::StreamHandler output);
+                          bool allow_exceed_end, bool has_fixed_time_step, utils::StreamHandler output);
 
             Bmi_C_Adapter(std::string forcing_file_path, bool model_uses_forcing_file, bool allow_exceed_end,
-                          const geojson::JSONProperty& other_input_vars, utils::StreamHandler output);
+                          bool has_fixed_time_step, const geojson::JSONProperty& other_input_vars,
+                          utils::StreamHandler output);
 
             Bmi_C_Adapter(const std::string& bmi_init_config, std::string forcing_file_path,
-                          bool model_uses_forcing_file, bool allow_exceed_end,
+                          bool model_uses_forcing_file, bool allow_exceed_end, bool has_fixed_time_step,
                           const geojson::JSONProperty& other_input_vars, utils::StreamHandler output);
 
             // Copy constructor
@@ -325,6 +326,10 @@ namespace models {
             std::string bmi_init_config;
             /** Pointer to C BMI model struct object. */
             std::shared_ptr<Bmi> bmi_model;
+            /** Whether this particular model has a time step size that cannot be changed internally or externally. */
+            bool bmi_model_has_fixed_time_step = true;
+            /** Pointer to stored time step size value of backing model, if it is fixed and has been retrieved. */
+            std::shared_ptr<double> bmi_model_time_step_size = nullptr;
             /** Whether this particular model implementation directly reads input data from the forcing file. */
             bool bmi_model_uses_forcing_file;
             std::string forcing_file_path;
