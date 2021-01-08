@@ -9,30 +9,31 @@
 using namespace models::bmi;
 
 Bmi_C_Adapter::Bmi_C_Adapter(std::string forcing_file_path, bool model_uses_forcing_file, bool allow_exceed_end,
-                             utils::StreamHandler output)
-        : Bmi_C_Adapter("", std::move(forcing_file_path), model_uses_forcing_file, allow_exceed_end, output) {}
+                             bool has_fixed_time_step, utils::StreamHandler output)
+        : Bmi_C_Adapter("", std::move(forcing_file_path), model_uses_forcing_file, allow_exceed_end,
+                        has_fixed_time_step, output) {}
 
 Bmi_C_Adapter::Bmi_C_Adapter(std::string bmi_init_config, std::string forcing_file_path, bool model_uses_forcing_file,
-                             bool allow_exceed_end, utils::StreamHandler output)
+                             bool allow_exceed_end, bool has_fixed_time_step, utils::StreamHandler output)
         : bmi_init_config(std::move(bmi_init_config)), forcing_file_path(std::move(forcing_file_path)),
           bmi_model_uses_forcing_file(model_uses_forcing_file), allow_model_exceed_end_time(allow_exceed_end),
-          output(std::move(output)), bmi_model(std::make_shared<Bmi>(Bmi()))
-{
+          bmi_model_has_fixed_time_step(has_fixed_time_step), output(std::move(output)),
+          bmi_model(std::make_shared<Bmi>(Bmi())), next_time_step_index(0) {
     Initialize();
 }
 
 Bmi_C_Adapter::Bmi_C_Adapter(std::string forcing_file_path, bool model_uses_forcing_file,
-                             bool allow_exceed_end, const geojson::JSONProperty& other_input_vars,
-                             utils::StreamHandler output)
-        : Bmi_C_Adapter("", std::move(forcing_file_path), model_uses_forcing_file, allow_exceed_end, other_input_vars,
-                        output) {}
+                             bool allow_exceed_end, bool has_fixed_time_step,
+                             const geojson::JSONProperty& other_input_vars, utils::StreamHandler output)
+        : Bmi_C_Adapter("", std::move(forcing_file_path), model_uses_forcing_file, allow_exceed_end,
+                        has_fixed_time_step, other_input_vars, output) {}
 
 Bmi_C_Adapter::Bmi_C_Adapter(const std::string& bmi_init_config, std::string forcing_file_path,
-                             bool model_uses_forcing_file, bool allow_exceed_end,
+                             bool model_uses_forcing_file, bool allow_exceed_end, bool has_fixed_time_step,
                              const geojson::JSONProperty& other_vars, utils::StreamHandler output)
-        : Bmi_C_Adapter(bmi_init_config, std::move(forcing_file_path), model_uses_forcing_file, allow_exceed_end, output)
-{
-    for (const std::string& var_name : GetInputVarNames()) {
+        : Bmi_C_Adapter(bmi_init_config, std::move(forcing_file_path), model_uses_forcing_file, allow_exceed_end,
+                        has_fixed_time_step, output) {
+    for (const std::string &var_name : GetInputVarNames()) {
         if (other_vars.has_key(var_name)) {
             geojson::JSONProperty other_variable = other_vars.at(var_name);
             geojson::PropertyType var_type = other_variable.get_type();
@@ -116,6 +117,8 @@ Bmi_C_Adapter::Bmi_C_Adapter(Bmi_C_Adapter &adapter) : model_name(adapter.model_
                                                        allow_model_exceed_end_time(adapter.allow_model_exceed_end_time),
                                                        bmi_init_config(adapter.bmi_init_config),
                                                        bmi_model(adapter.bmi_model),
+                                                       bmi_model_has_fixed_time_step(
+                                                               adapter.bmi_model_has_fixed_time_step),
                                                        bmi_model_uses_forcing_file(adapter.bmi_model_uses_forcing_file),
                                                        forcing_file_path(adapter.forcing_file_path),
                                                        init_exception_msg(adapter.init_exception_msg),
@@ -129,6 +132,8 @@ Bmi_C_Adapter::Bmi_C_Adapter(Bmi_C_Adapter &&adapter) noexcept: model_name(std::
                                                                         adapter.allow_model_exceed_end_time),
                                                                 bmi_init_config(std::move(adapter.bmi_init_config)),
                                                                 bmi_model(std::move(adapter.bmi_model)),
+                                                                bmi_model_has_fixed_time_step(
+                                                                        adapter.bmi_model_has_fixed_time_step),
                                                                 bmi_model_uses_forcing_file(
                                                                         adapter.bmi_model_uses_forcing_file),
                                                                 forcing_file_path(std::move(adapter.forcing_file_path)),
