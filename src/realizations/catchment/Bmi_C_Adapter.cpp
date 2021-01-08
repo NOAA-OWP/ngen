@@ -254,25 +254,6 @@ double Bmi_C_Adapter::GetStartTime() {
     return start_time;
 }
 
-/**
- * Get the time step used in the model.
- *
- * Get the time step size used in the backing model, expressed as a `double` type value.
- *
- * This function defers to the behavior of the analogous function `get_time_step` of the backing model.  As such, the
- * the model-specific documentation for this function should be consulted for utilized models.
- *
- * @return The time step size of the model.
- */
-double Bmi_C_Adapter::GetTimeStep() {
-    double ts;
-    int result = bmi_model->get_time_step(bmi_model.get(), &ts);
-    if (result != BMI_SUCCESS) {
-        throw std::runtime_error(model_name + " failed to read time step from model.");
-    }
-    return ts;
-}
-
 std::string Bmi_C_Adapter::GetTimeUnits() {
     char time_units_cstr[BMI_MAX_UNITS_NAME];
     int result = bmi_model->get_time_units(bmi_model.get(), time_units_cstr);
