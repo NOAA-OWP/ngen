@@ -78,6 +78,9 @@ The following must be present in the formulation/realization JSON config for all
 * `allow_exceed_end_time`
   * boolean value to specify whether a model is allowed to execute `Update` calls that go beyond its end time (or the max forcing data entry)
   * implied to be `false` by default
+* `fixed_time_step`
+  * boolean value to indicate whether this model has a fixed time step size
+  * implied to be `true` by default
   
 ## BMI Models Written in C
 
