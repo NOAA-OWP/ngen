@@ -52,7 +52,11 @@ double LSTM_Realization::get_response(time_step_t t_index, time_step_t t_delta_s
     double precip = this->forcing.get_next_hourly_precipitation_meters_per_second();
 
     AORC_data forcing_data = this->forcing.get_AORC_data();
-    int error = model->run(t_index, forcing_data.DLWRF_surface_W_per_meters_squared, forcing_data.PRES_surface_Pa, forcing_data.SPFH_2maboveground_kg_per_kg, precip, forcing_data.DSWRF_surface_W_per_meters_squared, forcing_data.TMP_2maboveground_K, forcing_data.UGRD_10maboveground_meters_per_second, forcing_data.VGRD_10maboveground_meters_per_second);
+    int error = model->run(t_delta_s, forcing_data.DLWRF_surface_W_per_meters_squared, 
+                           forcing_data.PRES_surface_Pa, forcing_data.SPFH_2maboveground_kg_per_kg, 
+                           precip, forcing_data.DSWRF_surface_W_per_meters_squared, 
+                           forcing_data.TMP_2maboveground_K, forcing_data.UGRD_10maboveground_meters_per_second, 
+                           forcing_data.VGRD_10maboveground_meters_per_second);
 
     return model->get_fluxes()->flow;
 }

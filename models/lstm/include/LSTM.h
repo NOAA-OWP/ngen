@@ -9,7 +9,7 @@
 #include <unordered_map>
 
 #ifdef NGEN_LSTM_TORCH_LIB_ACTIVE
-  #include <torch/torch.h>
+#include <torch/torch.h>
 
 typedef std::unordered_map< std::string, std::unordered_map< std::string, double> > ScaleParams;
 
@@ -72,7 +72,10 @@ namespace lstm {
          * @param VGRD_10maboveground_meters_per_second
          * @return
          */
-        int run(double dt, double DLWRF_surface_W_per_meters_squared, double PRES_surface_Pa, double SPFH_2maboveground_kg_per_kg, double precip_meters_per_second, double DSWRF_surface_W_per_meters_squared, double TMP_2maboveground_K, double UGRD_10maboveground_meters_per_second, double VGRD_10maboveground_meters_per_second);
+        int run(double dt, double DLWRF_surface_W_per_meters_squared, double PRES_surface_Pa, 
+                double SPFH_2maboveground_kg_per_kg, double precip_meters_per_second, 
+                double DSWRF_surface_W_per_meters_squared, double TMP_2maboveground_K, 
+                double UGRD_10maboveground_meters_per_second, double VGRD_10maboveground_meters_per_second);
 
         /**
          * Denormalizes output from LSTM model.
