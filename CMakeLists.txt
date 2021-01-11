@@ -121,6 +121,18 @@ target_link_libraries(ngen PUBLIC
         #${TORCH_LIBRARIES}
         )
 
+if(LSTM_TORCH_LIB_ACTIVE)
+    add_compile_definitions(NGEN_LSTM_TORCH_LIB_ACTIVE)
+#    find_package(Torch REQUIRED)
+#    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
+    add_subdirectory("src/models/lstm")
+    target_link_libraries(ngen PUBLIC
+            NGen::models_lstm
+            ${TORCH_LIBRARIES}
+           )
+
+endif()
+
 # For automated testing with Google Test
 if(PACKAGE_TESTS)
     enable_testing()
@@ -141,14 +153,14 @@ endif()
 
 
 
-if(LSTM_TORCH_LIB_ACTIVE)
-    add_compile_definitions(NGEN_LSTM_TORCH_LIB_ACTIVE)
+#if(LSTM_TORCH_LIB_ACTIVE)
+#    add_compile_definitions(NGEN_LSTM_TORCH_LIB_ACTIVE)
 #    find_package(Torch REQUIRED)
 #    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
-    add_subdirectory("src/models/lstm")
-    target_link_libraries(ngen PUBLIC
-            NGen::models_lstm
-            ${TORCH_LIBRARIES}
-           )
+#    add_subdirectory("src/models/lstm")
+#    target_link_libraries(ngen PUBLIC
+#            NGen::models_lstm
+#            ${TORCH_LIBRARIES}
+#           )
 
-endif()
+#endif()

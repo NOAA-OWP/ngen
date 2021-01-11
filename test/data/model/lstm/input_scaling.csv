@@ -1,0 +1,13 @@
+variable,mean,std
+Latitude,39.949427,4.182431
+Longitude,-96.920133,16.651526
+Area_Square_km,474.2365,510.592316
+DLWRF_surface_W_per_meters_squared,302.84995,65.58242
+PRES_surface_Pa,94364.266,8891.513
+SPFH_2maboveground_kg_per_kg,0.006817294,0.004297631
+Precip_rate,4.67E-05,0.00022482131
+DSWRF_surface_W_per_meters_squared,182.7724,253.21057
+TMP_2maboveground_K,283.25012,10.967861
+UGRD_10maboveground_meters_per_second,1.0540344,3.040779
+VGRD_10maboveground_meters_per_second,0.7839034,3.262279
+obs,9.174726,25.801239
