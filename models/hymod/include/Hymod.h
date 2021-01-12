@@ -97,11 +97,11 @@ class hymod_kernel
             new_state.Sr[i] = nash_cascade[i].get_storage_height_meters();
         }
 
-        return mass_check(params, state, input_flux_meters, new_state, fluxes, dt);
+        return mass_check(params, state, new_state, fluxes, dt);
 
     }
 
-    static int mass_check(const hymod_params& params, const hymod_state& current_state, double input_flux_meters, const hymod_state& next_state, const hymod_fluxes& calculated_fluxes, double timestep_seconds)
+    static int mass_check(const hymod_params& params, const hymod_state& current_state, const hymod_state& next_state, const hymod_fluxes& calculated_fluxes, double timestep_seconds)
     {
         // initalize both mass values from current and next states storage
         double inital_mass_meters = current_state.storage_meters + current_state.groundwater_storage_meters;
