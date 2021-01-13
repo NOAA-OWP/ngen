@@ -128,6 +128,7 @@ add_automated_test(
 add_automated_test(
         test_lstm
         models/lstm/include/LSTM_Test.cpp
+        realizations/catchments/LSTM_Realization_Test.cpp
 )
 #endif()
 
