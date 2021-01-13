@@ -24,12 +24,7 @@ protected:
 
     void setupLSTMModel();
 
-
-    //void setupArbitraryExampleCase();
-
     std::unique_ptr<lstm::lstm_model> model;
-
-
 };
 
 
@@ -43,7 +38,7 @@ void LSTMModelTest::TearDown() {
 
 }
 
-//Construct a LSTM Model
+/** Construct a LSTM Model. */
 void LSTMModelTest::setupLSTMModel()
 {
     lstm::lstm_params params{
@@ -61,10 +56,9 @@ void LSTMModelTest::setupLSTMModel()
  
     model = std::make_unique<lstm::lstm_model>(lstm::lstm_model(config, params));
 
-
 }
 
-
+/** Test running LSTM model for one timestep. */
 TEST_F(LSTMModelTest, TestLSTMModel)
 {
     int error = model->run(3600.0, 369.20001220703125, 99870.0, 0.009800000116229057, 
@@ -75,22 +69,7 @@ TEST_F(LSTMModelTest, TestLSTMModel)
     EXPECT_DOUBLE_EQ (0.17238743535773413, outflow);
 
     ASSERT_TRUE(true);
-
-
 }
 
-
-
-
 #endif  // LSTM_TORCH_LIB_TESTS_ACTIVE
-
-
-
-
-
-
-
-
-
-
 
