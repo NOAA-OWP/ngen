@@ -11,15 +11,19 @@ A long short-term memory (LSTM) model and corresponding realization is included 
 The basic outline of steps needed to run the LSTM model is:
   * [Install the LibTorch library version 1.8 or later.](https://pytorch.org/docs/stable/cpp_index.html)
   * Create the build directory including the option to activate the lstm:  
+
       `cmake -DCMAKE_BUILD_TYPE=Debug -B cmake-build-debug -DLSTM_TORCH_LIB_ACTIVE:BOOL=ON -S .`  
   * Unit tests for the LSTM model and realization can then be built and run from the main directory with the following two commands:
+
       `cmake --build cmake-build-debug --target test_lstm`  
+
       `./cmake-build-debug/test/test_lstm`  
   * The formulation config and required parameters to run the LSTM for a given catchment are below.
 
 ## Formulation Config
 An example realization is ngen/data/lstm/example_lstm_realization_config.json.
 The formulation needs to follow the below format:
+  
 `      ...  
           "formulations": [  
             { "name": "lstm",  
@@ -36,7 +40,9 @@ The formulation needs to follow the below format:
            ],  
      ...  
 `  
+
 This example realziation can be run with the following command from the main ngen directory:
+
 `cmake-build-debug/ngen ./data/catchment_data.geojson "cat-87" ./data/nexus_data.geojson "nex-94" ./data/lstm/example_lstm_realization_config.json`
 
 ### Required Parameters
