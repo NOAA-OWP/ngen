@@ -21,21 +21,21 @@ The basic outline of steps needed to run the LSTM model is:
 An example realization is ngen/data/lstm/example_lstm_realization_config.json.
 The formulation needs to follow the below format:
   
-`      ...  <br />
-       "formulations": [  <br />
-         { "name": "lstm",  <br />
-             "params": {  <br />
-                "pytorch_model_path": "./data/lstm/sugar_creek_trained.pt",  <br />
-                "normalization_path": "./data/lstm/input_scaling.csv",  <br />
-                "initial_state_path": "./data/lstm/initial_states.csv",  <br />
-                "latitude": 35.2607453,  <br />
-                "longitude": -80.84020072,  <br />
-                "area_square_km": 15.617167,  <br />
-                "useGPU": false  <br />
-                }  <br />
-         }  <br />
-       ],  <br />
-       ...  <br />
+`      ...  
+       "formulations": [\
+         { "name": "lstm",
+             "params": {  
+                "pytorch_model_path": "./data/lstm/sugar_creek_trained.pt",  
+                "normalization_path": "./data/lstm/input_scaling.csv", 
+                "initial_state_path": "./data/lstm/initial_states.csv",  
+                "latitude": 35.2607453,  
+                "longitude": -80.84020072,  
+                "area_square_km": 15.617167,  
+                "useGPU": false  
+                } 
+         }  
+       ],  
+       ...  
 `  
 
 This example realziation can be run with the following command from the main ngen directory:
