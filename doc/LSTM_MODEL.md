@@ -11,10 +11,15 @@ A long short-term memory (LSTM) model and corresponding realization is included 
 The basic outline of steps needed to run the LSTM model is:
   * [Install the LibTorch library version 1.8 or later.](https://pytorch.org/docs/stable/cpp_index.html)
   * Create the build directory including the option to activate the lstm: 
+  
       `cmake -DCMAKE_BUILD_TYPE=Debug -B cmake-build-debug -DLSTM_TORCH_LIB_ACTIVE:BOOL=ON -S .`  
+  
   * Unit tests for the LSTM model and realization can then be built and run from the main directory with the following two commands:
+  
       `cmake --build cmake-build-debug --target test_lstm`  <br />
+      
       `./cmake-build-debug/test/test_lstm`  
+  
   * The formulation config and required parameters to run the LSTM for a given catchment are below.
 
 ## Formulation Config
