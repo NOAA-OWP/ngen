@@ -10,10 +10,10 @@ A long short-term memory (LSTM) model and corresponding realization is included 
 
 The basic outline of steps needed to run the LSTM model is:
   * [Install the LibTorch library version 1.8 or later.](https://pytorch.org/docs/stable/cpp_index.html)
-  * Create the build directory including the option to activate the lstm:  
+  * Create the build directory including the option to activate the lstm:  <br />
       `cmake -DCMAKE_BUILD_TYPE=Debug -B cmake-build-debug -DLSTM_TORCH_LIB_ACTIVE:BOOL=ON -S .`  
   * Unit tests for the LSTM model and realization can then be built and run from the main directory with the following two commands:
-      `cmake --build cmake-build-debug --target test_lstm`  
+      `cmake --build cmake-build-debug --target test_lstm`  <br />
       `./cmake-build-debug/test/test_lstm`  
   * The formulation config and required parameters to run the LSTM for a given catchment are below.
 
@@ -21,21 +21,21 @@ The basic outline of steps needed to run the LSTM model is:
 An example realization is ngen/data/lstm/example_lstm_realization_config.json.
 The formulation needs to follow the below format:
   
-`      ...  \
-       "formulations": [  \
-         { "name": "lstm",  \
-             "params": {  \
-                "pytorch_model_path": "./data/lstm/sugar_creek_trained.pt",  
-                "normalization_path": "./data/lstm/input_scaling.csv",  
-                "initial_state_path": "./data/lstm/initial_states.csv",  
-                "latitude": 35.2607453,  
-                "longitude": -80.84020072,  
-                "area_square_km": 15.617167,  
-                "useGPU": false  
-                }  
-         }  
-       ],  
-       ...  
+`      ...  <br />
+       "formulations": [  <br />
+         { "name": "lstm",  <br />
+             "params": {  <br />
+                "pytorch_model_path": "./data/lstm/sugar_creek_trained.pt",  <br />
+                "normalization_path": "./data/lstm/input_scaling.csv",  <br />
+                "initial_state_path": "./data/lstm/initial_states.csv",  <br />
+                "latitude": 35.2607453,  <br />
+                "longitude": -80.84020072,  <br />
+                "area_square_km": 15.617167,  <br />
+                "useGPU": false  <br />
+                }  <br />
+         }  <br />
+       ],  <br />
+       ...  <br />
 `  
 
 This example realziation can be run with the following command from the main ngen directory:
