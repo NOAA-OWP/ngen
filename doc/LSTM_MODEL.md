@@ -21,10 +21,10 @@ The basic outline of steps needed to run the LSTM model is:
 An example realization is ngen/data/lstm/example_lstm_realization_config.json.
 The formulation needs to follow the below format:
   
-`      ...  
-       "formulations": [  
-         { "name": "lstm",  
-             "params": {  
+`      ...  \
+       "formulations": [  \
+         { "name": "lstm",  \
+             "params": {  \
                 "pytorch_model_path": "./data/lstm/sugar_creek_trained.pt",  
                 "normalization_path": "./data/lstm/input_scaling.csv",  
                 "initial_state_path": "./data/lstm/initial_states.csv",  
