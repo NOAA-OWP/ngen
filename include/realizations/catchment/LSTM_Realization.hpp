@@ -12,8 +12,6 @@
 #include "lstm/include/lstm_config.h"
 #include <memory>
 
-//#ifdef NGEN_LSTM_TORCH_LIB_ACTIVE
-
 namespace realization {
 
     class LSTM_Realization : public Catchment_Formulation {
@@ -22,12 +20,36 @@ namespace realization {
 
         typedef long time_step_t;
 
+        /**
+         * Parameterized constructor for LSTM Realization with lstm_params and lstm_config
+         * already constructed.
+         *
+         * @param forcing_config
+         * @param output_stream
+         * @param catchment_id
+         * @param params
+         * @param config
+         */
         LSTM_Realization(forcing_params forcing_config,
                            utils::StreamHandler output_stream,
                            std::string catchment_id,
                            lstm::lstm_params params,
                            lstm::lstm_config config);
 
+        /**
+         * Parameterized constructor for LSTM Realization with individual paths and parameters
+         * needed lstm_params and lstm_config passed.
+         *
+         * @param forcing_config
+         * @param output_stream
+         * @param catchment_id
+         * @param pytorch_model_path
+         * @param normalization_path
+         * @param initial_state_path
+         * @param latitude
+         * @param longitude
+         * @param area_square_km
+         */
         LSTM_Realization(
                 forcing_params forcing_config,
                 utils::StreamHandler output_stream,
@@ -40,7 +62,15 @@ namespace realization {
                 double area_square_km
                 );
 
-            LSTM_Realization(
+        /**
+         * Parameterized constructor for LSTM Realization with only
+         * catchment_id, forcing_config, and output_stream as parameters.
+         *
+         * @param catchment_id
+         * @param forcing_config
+         * @param output_stream
+         */
+        LSTM_Realization(
                 std::string id,
                 forcing_params forcing_config,
                 utils::StreamHandler output_stream
@@ -123,5 +153,4 @@ namespace realization {
 
 }
 
-//#endif
 #endif //NGEN_LSTM_REALIZATION_HPP
