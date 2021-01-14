@@ -5,7 +5,6 @@
 #include "lstm/include/lstm_params.h"
 #include "lstm/include/lstm_config.h"
 
-
 class LSTMModelTest : public ::testing::Test {
 
 protected:
@@ -27,15 +26,11 @@ protected:
     std::unique_ptr<lstm::lstm_model> model;
 };
 
-
 void LSTMModelTest::SetUp() {
-
     setupLSTMModel();    
-
 }
 
 void LSTMModelTest::TearDown() {
-
 }
 
 /** Construct a LSTM Model. */
@@ -72,4 +67,3 @@ TEST_F(LSTMModelTest, TestLSTMModel)
 }
 
 #endif  // LSTM_TORCH_LIB_TESTS_ACTIVE
-
