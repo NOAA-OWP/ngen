@@ -18,7 +18,6 @@ protected:
     }
 };
 
-
 /** Test create LSTM Realization and get_response function. */
 TEST_F(LSTMRealizationTest, TestLSTMRealization)
 {
@@ -54,4 +53,3 @@ TEST_F(LSTMRealizationTest, TestLSTMRealization)
 }
 
 #endif  // LSTM_TORCH_LIB_TESTS_ACTIVE
-

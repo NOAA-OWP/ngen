@@ -41,7 +41,5 @@ namespace lstm {
     }
 } //namespace lstm
 
-
 #endif
-
 #endif //NGEN_LSTM_STATE_H

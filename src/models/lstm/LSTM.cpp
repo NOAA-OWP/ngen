@@ -1,5 +1,4 @@
 #include "LSTM.h"
-#include "lstmErrorCodes.h"
 #include "lstm_fluxes.h"
 #include "lstm_state.h"
 #include "CSV_Reader.h"

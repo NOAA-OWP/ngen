@@ -18,7 +18,6 @@ namespace lstm {
         }
     };
 
-
 }
 
 #endif //NGEN_LSTM_FLUXES_H

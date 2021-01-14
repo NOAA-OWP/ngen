@@ -17,7 +17,7 @@ namespace lstm {
          *
          * @param lat Initialization param for latitude member.
          * @param lon Initialization param for longitude member.
-         * @param area Initialization param for basin area member (in FIXME units).
+         * @param area Initialization param for basin area member in km.
          */
         lstm_params(double lat, double lon, double area) :
               latitude(lat),
