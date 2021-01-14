@@ -4,9 +4,18 @@
 
 #ifdef NGEN_LSTM_TORCH_LIB_ACTIVE
 
-
 using namespace realization;
 
+/**
+ * Parameterized constructor for LSTM Realization with lstm_params and lstm_config
+ * already constructed.
+ *
+ * @param forcing_config
+ * @param output_stream
+ * @param catchment_id
+ * @param params
+ * @param config
+ */
 LSTM_Realization::LSTM_Realization(
         forcing_params forcing_config,
         utils::StreamHandler output_stream,
@@ -19,6 +28,20 @@ LSTM_Realization::LSTM_Realization(
     model = make_unique<lstm::lstm_model>(lstm::lstm_model(config, params));
 }
 
+/**
+ * Parameterized constructor for LSTM Realization with individual paths and parameters
+ * needed lstm_params and lstm_config passed.
+ *
+ * @param forcing_config
+ * @param output_stream
+ * @param catchment_id
+ * @param pytorch_model_path
+ * @param normalization_path
+ * @param initial_state_path
+ * @param latitude
+ * @param longitude
+ * @param area_square_km
+ */
 LSTM_Realization::LSTM_Realization(
         forcing_params forcing_config,
         utils::StreamHandler output_stream,
@@ -30,10 +53,10 @@ LSTM_Realization::LSTM_Realization(
         double longitude,
         double area_square_km)
     : LSTM_Realization::LSTM_Realization(forcing_config, output_stream,
-                                           catchment_id,
-                                           lstm::lstm_params(latitude, longitude, area_square_km),
-                                           lstm::lstm_config(pytorch_model_path, normalization_path, initial_state_path, false)
-                                           ) {
+                                         catchment_id,
+                                         lstm::lstm_params(latitude, longitude, area_square_km),
+                                         lstm::lstm_config(pytorch_model_path, normalization_path, initial_state_path, false)
+                                         ) {
 
 }
 

@@ -74,7 +74,6 @@ endif()
 
 if(LSTM_TORCH_LIB_ACTIVE)
    find_package(Torch REQUIRED)
-
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
 endif()
 
@@ -100,9 +99,7 @@ target_include_directories(ngen PUBLIC
 add_subdirectory("src/core")
 add_subdirectory("src/geojson")
 add_subdirectory("src/realizations/catchment")
-
 add_subdirectory("src/models/tshirt")
-#add_subdirectory("src/models/lstm")
 add_subdirectory("src/models/kernels/reservoir")
 #add_subdirectory("src/forcing")
 
@@ -113,24 +110,19 @@ target_link_libraries(ngen PUBLIC
         NGen::core_nexus
         NGen::geojson
         NGen::models_tshirt
-        #NGen::models_lstm
         NGen::realizations_catchment
         NGen::kernels_reservoir
         #NGen::kernels_reservoir_timeless
         #NGen::forcing
-        #${TORCH_LIBRARIES}
         )
 
 if(LSTM_TORCH_LIB_ACTIVE)
     add_compile_definitions(NGEN_LSTM_TORCH_LIB_ACTIVE)
-#    find_package(Torch REQUIRED)
-#    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
     add_subdirectory("src/models/lstm")
     target_link_libraries(ngen PUBLIC
             NGen::models_lstm
             ${TORCH_LIBRARIES}
            )
-
 endif()
 
 # For automated testing with Google Test
@@ -151,16 +143,3 @@ endif()
 #target_compile_features(ngen PUBLIC cxx_std_14)
 #add_subdirectory("src/geojson")
 
-
-
-#if(LSTM_TORCH_LIB_ACTIVE)
-#    add_compile_definitions(NGEN_LSTM_TORCH_LIB_ACTIVE)
-#    find_package(Torch REQUIRED)
-#    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
-#    add_subdirectory("src/models/lstm")
-#    target_link_libraries(ngen PUBLIC
-#            NGen::models_lstm
-#            ${TORCH_LIBRARIES}
-#           )
-
-#endif()

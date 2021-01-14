@@ -14,12 +14,6 @@ endif()
 
 if(LSTM_TORCH_LIB_ACTIVE)
     add_compile_definitions(LSTM_TORCH_LIB_TESTS_ACTIVE)
-    #add_compile_definitions(LSTM_TORCH_LIB_ACTIVE)
-
-    #find_package(Torch REQUIRED)
-
-    #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
-
 endif()
 
 # Add test source files (e.g., test1.cpp)
@@ -38,7 +32,6 @@ macro(add_automated_test TESTNAME)
             NGen::core_nexus
             NGen::geojson
             NGen::models_tshirt
-            #NGen::models_lstm
             NGen::kernels_reservoir
             NGen::realizations_catchment)
     gtest_discover_tests(${TESTNAME}
@@ -61,7 +54,6 @@ macro(add_automated_test_w_mock TESTNAME)
             NGen::core_nexus
             NGen::geojson
             NGen::models_tshirt
-            #NGen::models_lstm
             NGen::realizations_catchment
             NGen::kernels_reservoir
             )
@@ -99,7 +91,6 @@ add_automated_test(
         core/catchment/giuh/GIUH_Test.cpp
 )
 
-
 if(MPI_ACTIVE)
    add_automated_test(
            test_remote_nexus
@@ -119,10 +110,6 @@ add_automated_test(
         # TODO: this probably needs to be added to integration testing also
         realizations/catchments/Bmi_C_Cfe_IT.cpp
 )
-#if(LSTM_TORCH_LIB_ACTIVE)
-
-#add_compile_definitions(NGEN_LSTM_TORCH_LIB_ACTIVE)
-
 
 #target_link_libraries
 add_automated_test(
@@ -130,7 +117,6 @@ add_automated_test(
         models/lstm/include/LSTM_Test.cpp
         realizations/catchments/LSTM_Realization_Test.cpp
 )
-#endif()
 
 # Unit tests
 # TODO: Make sure the geojson tests don't need to be added here also
@@ -140,7 +126,6 @@ add_automated_test(
         models/hymod/include/Reservoir_Test.cpp
         models/hymod/include/Reservoir_Timeless_Test.cpp
         models/tshirt/include/TshirtTest.cpp
-        #models/lstm/include/LSTM_Test.cpp
         realizations/catchments/Tshirt_C_Realization_Test.cpp
         geojson/JSONProperty_Test.cpp
         geojson/JSONGeometry_Test.cpp
@@ -163,7 +148,6 @@ add_automated_test_w_mock(
         models/hymod/include/Reservoir_Test.cpp
         models/hymod/include/Reservoir_Timeless_Test.cpp
         models/tshirt/include/TshirtTest.cpp
-        #models/lstm/include/LSTM_Test.cpp
         realizations/catchments/Tshirt_C_Realization_Test.cpp
         geojson/JSONProperty_Test.cpp
         geojson/JSONGeometry_Test.cpp
