@@ -236,8 +236,7 @@ int main(int argc, char *argv[]) {
         //get the catchment response
         double response = formulation_pair.second->get_response(output_time_index, 3600.0);
         //dump the output
-
-        std::cout<<catchment_to_nexus[formulation_pair.first]<<std::endl;
+        std::cout<<"\tCatchment "<<formulation_pair.first<<" contributing "<<response<<" m/s to "<<catchment_to_nexus[formulation_pair.first]<<std::endl;
 
       // If the timestep is 0, also write the header line to the file
         // TODO: add command line or config option to have this be omitted
