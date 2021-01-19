@@ -13,16 +13,16 @@ extern void free_cfe_model(cfe_model *model) {
     // TODO: ******************
 }
 
-extern double get_K_lf_for_time_step(cfe_model* cfe, int time_step_index)
+extern inline double get_K_lf_for_time_step(cfe_model* cfe)
 {
-    // TODO: make sure this should be the slope param, or set to something else
-    double assumed_near_channel_water_table_slope = 0.01; // [L/L]
-    double drainage_density_km_per_km2 = 3.5;   // this is approx. the average blue line drainage density for CONUS
-    // Equation 10 in parameter equivalence document.
-    double Klf = 2.0 * assumed_near_channel_water_table_slope * cfe->NWM_soil_params.mult * cfe->NWM_soil_params.satdk *
-                 cfe->NWM_soil_params.D * drainage_density_km_per_km2;   // m/s
-    Klf = Klf * cfe->time_step_sizes[time_step_index];  // convert to m/time-step
-    return Klf;
+    // TODO: make sure correct value used below for slope param, or set to something else
+    return
+        // This first part is Equation 10 in parameter equivalence document.
+        // the 0.01 value is assumed_near_channel_water_table_slope
+        // the 3.5 value is drainage_density_km_per_km2; this is approx. average blue line drainage density for CONUS
+        (2.0 * 0.01 * cfe->NWM_soil_params.mult * cfe->NWM_soil_params.satdk * cfe->NWM_soil_params.D * 3.5)   // m/s
+        *
+        cfe->time_step_size;  // convert to m/time-step
 }
 
 /*
@@ -46,50 +46,39 @@ extern void init_ground_water_reservoir(cfe_model* cfe, double Cgw, double expon
 extern void init_soil_reservoir(cfe_model* cfe, double alpha_fc, double max_storage, double storage,
                                 int is_storage_ratios)
 {
-    double Klf = get_K_lf_for_time_step(cfe, 0);
-    double water_specific_weight = 9810;
-    double atm_pressure = cfe->forcings[0].surface_pressure_Pa;
-
-    double trigger_z_m = 0.5;   // distance from bottom of soil column to the center of the lowest discretization
-
     // calculate the activation storage for the secondary lateral flow outlet in the soil nonlinear reservoir.
     // following the method in the NWM/t-shirt parameter equivalence document, assuming field capacity soil
     // suction pressure = 1/3 atm= field_capacity_atm_press_fraction * atm_press_Pa.
 
-    // equation 3 from NWM/t-shirt parameter equivalence document
-    double H_water_table_m = alpha_fc * atm_pressure / water_specific_weight;
-
-
     // solve the integral given by Eqn. 5 in the parameter equivalence document.
     // this equation calculates the amount of water stored in the 2 m thick soil column when the water content
-    // at the center of the bottom discretization (trigger_z_m) is at field capacity
-    double Omega = H_water_table_m - trigger_z_m;
+    // at the center of the bottom discretization (trigger_z_m, below 0.5) is at field capacity
+    // Initial parentheses calc equation 3 from param equiv. doc
+    double Omega = (alpha_fc * cfe->forcing_data_surface_pressure_Pa[0] / WATER_SPECIFIC_WEIGHT) - 0.5;
     double lower_lim = pow(Omega, (1.0 - 1.0 / cfe->NWM_soil_params.bb)) / (1.0 - 1.0 / cfe->NWM_soil_params.bb);
     double upper_lim = pow(Omega + cfe->NWM_soil_params.D, (1.0 - 1.0 / cfe->NWM_soil_params.bb)) /
                        (1.0 - 1.0 / cfe->NWM_soil_params.bb);
 
-    // initialize lateral flow function parameters
-    //---------------------------------------------
-    double field_capacity_storage_threshold_m =
-            cfe->NWM_soil_params.smcmax * pow(1.0 / cfe->NWM_soil_params.satpsi, (-1.0 / cfe->NWM_soil_params.bb)) *
-            (upper_lim - lower_lim);
-    double lateral_flow_threshold_storage_m = field_capacity_storage_threshold_m;  // making them the same, but they don't have 2B
-
-    // Initialize the soil conceptual reservoir data structure.  Indented here to highlight different purposes
-    //-------------------------------------------------------------------------------------------------------------
     // soil conceptual reservoir first, two outlets, two thresholds, linear (exponent=1.0).
-    cfe->soil_reservoir.is_exponential = FALSE;  // set this true TRUE to use the exponential form of the discharge equation
+    cfe->soil_reservoir.is_exponential = FALSE;  // set this TRUE to use the exponential form of the discharge equation
     // this should NEVER be set to true in the soil reservoir.
     cfe->soil_reservoir.storage_max_m = cfe->NWM_soil_params.smcmax * cfe->NWM_soil_params.D;
-    //  vertical percolation parameters------------------------------------------------
-    cfe->soil_reservoir.coeff_primary = cfe->NWM_soil_params.satdk * cfe->NWM_soil_params.slop * cfe->time_step_sizes[0]; // m per ts
-    cfe->soil_reservoir.exponent_primary = 1.0;      // 1.0=linear
-    cfe->soil_reservoir.storage_threshold_primary_m = field_capacity_storage_threshold_m;
+    //  vertical percolation parameters ------------------------------------------------
+    // Units of primary coefficient are m per time step
+    cfe->soil_reservoir.coeff_primary = cfe->NWM_soil_params.satdk * cfe->NWM_soil_params.slop * cfe->time_step_size;
+    // 1.0=linear
+    cfe->soil_reservoir.exponent_primary = 1.0;
+    // i.e., field_capacity_storage_threshold_m
+    cfe->soil_reservoir.storage_threshold_primary_m =
+            cfe->NWM_soil_params.smcmax * pow(1.0 / cfe->NWM_soil_params.satpsi, (-1.0 / cfe->NWM_soil_params.bb)) *
+            (upper_lim - lower_lim);
     // lateral flow parameters --------------------------------------------------------
-    cfe->soil_reservoir.coeff_secondary = Klf;  // 0.0 to deactiv. else =lateral_flow_linear_reservoir_constant;   // m per ts
-    cfe->soil_reservoir.exponent_secondary = 1.0;   // 1.0=linear
-    cfe->soil_reservoir.storage_threshold_secondary_m = lateral_flow_threshold_storage_m;
-
+    // 0.0 to deactiv. else =lateral_flow_linear_reservoir_constant;   // m per ts
+    cfe->soil_reservoir.coeff_secondary = get_K_lf_for_time_step(cfe);
+    // 1.0=linear
+    cfe->soil_reservoir.exponent_secondary = 1.0;
+    // making them the same, but they don't have 2B
+    cfe->soil_reservoir.storage_threshold_secondary_m = cfe->soil_reservoir.storage_threshold_primary_m;
     cfe->soil_reservoir.storage_m = init_reservoir_storage(is_storage_ratios, storage, max_storage);
 }
 
@@ -126,48 +115,44 @@ extern int run(cfe_model* model) {
     double vol_in_nash = 0;
     double vol_out_nash = 0;
 
-    int t_index = model->current_time_step;
-
-    double time_step_size_s = model->time_step_sizes[t_index];
-
-    // TODO: this is probably not correct and needs some conversion
-    double timestep_rainfall_input_m = model->forcings[t_index].precip_kg_per_m2;
+    // TODO: how is this going to be updated each time?
+    double timestep_rainfall_input_m = model->forcing_data_precip_kg_per_m2[model->current_time_step];
 
     //##################################################
     // partition rainfall using Schaake function
     //##################################################
     double soil_reservoir_storage_deficit_m = (model->NWM_soil_params.smcmax * model->NWM_soil_params.D -
                                                model->soil_reservoir.storage_m);
-    double timestep_h = time_step_size_s / 3600;
-    double Schaake_output_runoff_m, infiltration_depth_m;
+    double timestep_h = model->time_step_size / 3600.0;
+    double infiltration_depth_m;
     Schaake_partitioning_scheme(timestep_h, model->Schaake_adjusted_magic_constant_by_soil_type,
                                 soil_reservoir_storage_deficit_m, timestep_rainfall_input_m,
-                                &Schaake_output_runoff_m, &infiltration_depth_m);
+                                model->flux_Schaake_output_runoff_m, &infiltration_depth_m);
 
     // check to make sure that there is storage available in soil to hold the water that does not runoff
     //--------------------------------------------------------------------------------------------------
     if (soil_reservoir_storage_deficit_m < infiltration_depth_m) {
-        Schaake_output_runoff_m += (infiltration_depth_m -
-                                    soil_reservoir_storage_deficit_m);  // put won't fit back into runoff
+        // put won't fit back into runoff
+        *model->flux_Schaake_output_runoff_m += (infiltration_depth_m - soil_reservoir_storage_deficit_m);
         infiltration_depth_m = soil_reservoir_storage_deficit_m;
         model->soil_reservoir.storage_m = model->soil_reservoir.storage_max_m;
     }
 
-    double flux_overland_m = Schaake_output_runoff_m;
+    //double flux_overland_m = *model->flux_Schaake_output_runoff_m ;
 
-    vol_sch_runoff += flux_overland_m;
+    vol_sch_runoff += *model->flux_Schaake_output_runoff_m;
     vol_sch_infilt += infiltration_depth_m;
 
     // Doing things this way because the first time, for first time step, this will be 0.0, and subsequent times it will
     // be whatever was set in previous time step flux calculation.
-    double previous_flux_perc_m = t_index == 0 ? 0.0 : model->fluxes[t_index].flux_perc_m;
+    double previous_flux_perc_m = model->current_time_step == 0 ? 0.0 : *model->flux_perc_m;
 
     if (previous_flux_perc_m > soil_reservoir_storage_deficit_m) {
         double diff = previous_flux_perc_m - soil_reservoir_storage_deficit_m;  // the amount that there is not capacity for
         infiltration_depth_m = soil_reservoir_storage_deficit_m;
         vol_sch_runoff += diff;  // send excess water back to GIUH runoff
         vol_sch_infilt -= diff;  // correct overprediction of infilt.
-        flux_overland_m += diff; // bug found by Nels.  This was missing and fixes it.
+        *model->flux_Schaake_output_runoff_m += diff; // bug found by Nels.  This was missing and fixes it.
     }
 
     vol_to_soil += infiltration_depth_m;
@@ -175,8 +160,7 @@ extern int run(cfe_model* model) {
 
     // calculate fluxes from the soil storage into the deep groundwater (percolation) and to lateral subsurface flow
     //--------------------------------------------------------------------------------------------------------------
-    conceptual_reservoir_flux_calc(&(model->soil_reservoir), &(model->fluxes[t_index].flux_perc_m),
-                                   &(model->fluxes[t_index].flux_lat_m));
+    conceptual_reservoir_flux_calc(&(model->soil_reservoir), model->flux_perc_m, model->flux_lat_m);
 
     // calculate flux of base flow from deep groundwater reservoir to channel
     //--------------------------------------------------------------------------
@@ -184,27 +168,26 @@ extern int run(cfe_model* model) {
     double gw_reservoir_storage_deficit_m = model->gw_reservoir.storage_max_m - model->gw_reservoir.storage_m;
 
     // limit amount transferred to deficit iff there is insufficient avail. storage
-    if (model->fluxes[t_index].flux_perc_m > gw_reservoir_storage_deficit_m) {
-        double diff = model->fluxes[t_index].flux_perc_m - gw_reservoir_storage_deficit_m;
-        model->fluxes[t_index].flux_perc_m = gw_reservoir_storage_deficit_m;
+    if (*model->flux_perc_m > gw_reservoir_storage_deficit_m) {
+        double diff = *model->flux_perc_m - gw_reservoir_storage_deficit_m;
+        *model->flux_perc_m = gw_reservoir_storage_deficit_m;
         vol_sch_runoff += diff;  // send excess water back to GIUH runoff
         vol_sch_infilt -= diff;  // correct overprediction of infilt.
     }
 
-    vol_to_gw += model->fluxes[t_index].flux_perc_m;
-    vol_soil_to_gw += model->fluxes[t_index].flux_perc_m;
+    vol_to_gw += *model->flux_perc_m;
+    vol_soil_to_gw += *model->flux_perc_m;
 
-    model->gw_reservoir.storage_m += model->fluxes[t_index].flux_perc_m;
-    model->soil_reservoir.storage_m -= model->fluxes[t_index].flux_perc_m;
-    model->soil_reservoir.storage_m -= model->fluxes[t_index].flux_lat_m;
-    vol_soil_to_lat_flow += model->fluxes[t_index].flux_lat_m;
-    volout = volout + model->fluxes[t_index].flux_lat_m;
+    model->gw_reservoir.storage_m += *model->flux_perc_m;
+    model->soil_reservoir.storage_m -= *model->flux_perc_m;
+    model->soil_reservoir.storage_m -= *model->flux_lat_m;
+    vol_soil_to_lat_flow += *model->flux_lat_m;
+    volout = volout + *model->flux_lat_m;
 
     double secondary_flux; // Don't think this is actually used for GW reservoir
-    conceptual_reservoir_flux_calc(&(model->gw_reservoir), &(model->fluxes[t_index].flux_from_deep_gw_to_chan_m),
-                                   &secondary_flux);
+    conceptual_reservoir_flux_calc(&(model->gw_reservoir), model->flux_from_deep_gw_to_chan_m, &secondary_flux);
 
-    vol_from_gw += model->fluxes[t_index].flux_from_deep_gw_to_chan_m;
+    vol_from_gw += *model->flux_from_deep_gw_to_chan_m;
 
     // in the instance of calling the gw reservoir the secondary flux should be zero- verify
     if (is_fabs_less_than_epsilon(secondary_flux, 1.0e-09) == FALSE)
@@ -213,33 +196,28 @@ extern int run(cfe_model* model) {
 
     // adjust state of deep groundwater conceptual nonlinear reservoir
     //-----------------------------------------------------------------
-    model->gw_reservoir.storage_m -= model->fluxes[t_index].flux_from_deep_gw_to_chan_m;
+    model->gw_reservoir.storage_m -= *model->flux_from_deep_gw_to_chan_m;
 
 
     // Solve the convolution integral for this time step
-    model->fluxes[t_index].giuh_runoff_m = convolution_integral(Schaake_output_runoff_m, model->num_giuh_ordinates,
-                                           model->giuh_ordinates, model->runoff_queue_m_per_timestep);
-    vol_out_giuh += model->fluxes[t_index].giuh_runoff_m;
-
-    model->fluxes[t_index].Schaake_output_runoff_m = Schaake_output_runoff_m;
-
-    volout += model->fluxes[t_index].giuh_runoff_m;
-    volout += model->fluxes[t_index].flux_from_deep_gw_to_chan_m;
+    *model->flux_giuh_runoff_m = convolution_integral(*model->flux_Schaake_output_runoff_m, model->num_giuh_ordinates,
+                                                      model->giuh_ordinates, model->runoff_queue_m_per_timestep);
+    vol_out_giuh += *model->flux_giuh_runoff_m;
+    volout += *model->flux_giuh_runoff_m;
+    volout += *model->flux_from_deep_gw_to_chan_m;
 
     // Route lateral flow through the Nash cascade.
-    model->fluxes[t_index].nash_lateral_runoff_m = nash_cascade(model->fluxes[t_index].flux_lat_m,
-                                                                model->num_lateral_flow_nash_reservoirs,
-                                                                model->K_nash, model->nash_storage);
-    vol_in_nash += model->fluxes[t_index].flux_lat_m;
-    vol_out_nash += model->fluxes[t_index].nash_lateral_runoff_m;
+    *model->flux_nash_lateral_runoff_m = nash_cascade(*model->flux_lat_m, model->num_lateral_flow_nash_reservoirs,
+                                                      model->K_nash, model->nash_storage);
+    vol_in_nash += *model->flux_lat_m;
+    vol_out_nash += *model->flux_nash_lateral_runoff_m;
 
     #ifdef DEBUG
     //fprintf(out_debug_fptr,"%d %lf %lf\n",tstep,flux_lat_m,nash_lateral_runoff_m);
     #endif
 
-    model->fluxes[t_index].Qout_m =
-            model->fluxes[t_index].giuh_runoff_m + model->fluxes[t_index].nash_lateral_runoff_m +
-            model->fluxes[t_index].flux_from_deep_gw_to_chan_m;
+    *model->flux_Qout_m =
+            *model->flux_giuh_runoff_m + *model->flux_nash_lateral_runoff_m + *model->flux_from_deep_gw_to_chan_m;
 
     // Increment time step count
     model->current_time_step++;

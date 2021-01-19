@@ -4,7 +4,7 @@
 
 #define CFE_DEGUG 0
 
-#define INPUT_VAR_NAME_COUNT 3
+#define INPUT_VAR_NAME_COUNT 2
 #define OUTPUT_VAR_NAME_COUNT 5
 
 
@@ -25,6 +25,14 @@ static const char *output_var_types[OUTPUT_VAR_NAME_COUNT] = {
         "double"
 };
 
+static const int output_var_item_count[OUTPUT_VAR_NAME_COUNT] = {
+        1,
+        1,
+        1,
+        1,
+        1
+};
+
 static const char *output_var_units[OUTPUT_VAR_NAME_COUNT] = {
         "m",
         "m",
@@ -36,28 +44,29 @@ static const char *output_var_units[OUTPUT_VAR_NAME_COUNT] = {
 
 // Don't forget to update Get_value/Get_value_at_indices (and setter) implementation if these are adjusted
 static const char *input_var_names[INPUT_VAR_NAME_COUNT] = {
-        "TIME_STEP_DELTA",
         "RAIN_RATE",
         // Pa
         "SURFACE_PRESSURE"
 };
 
 static const char *input_var_types[INPUT_VAR_NAME_COUNT] = {
-        "int",
         "double",
         "double"
 };
 
 static const char *input_var_units[INPUT_VAR_NAME_COUNT] = {
-        "s",
         "m",
         "Pa"
+};
+
+static const int input_var_item_count[INPUT_VAR_NAME_COUNT] = {
+        1,
+        1
 };
 
 
 static int Get_start_time (Bmi *self, double * time)
 {
-    //*time = (double) ((cfe_model *) self->data)->start_time;
     *time = 0.0;
     return BMI_SUCCESS;
 }
@@ -65,18 +74,15 @@ static int Get_start_time (Bmi *self, double * time)
 
 static int Get_end_time (Bmi *self, double * time)
 {
-    //*time = (double) ((cfe_model *) self->data)->start_time;
-    *time = 0.0;
-    for (int i = 0; i < ((cfe_model *) self->data)->num_timesteps; ++i) {
-        *time = *time + ((cfe_model *) self->data)->time_step_sizes[i];
-    }
+    Get_start_time(self, time);
+    *time += (((cfe_model *) self->data)->num_timesteps * ((cfe_model *) self->data)->time_step_size);
     return BMI_SUCCESS;
 }
 
 // TODO: document that this will get the size of the current time step (the getter can access the full array)
 static int Get_time_step (Bmi *self, double * dt)
 {
-    *dt = ((cfe_model *) self->data)->time_step_sizes[((cfe_model *) self->data)->current_time_step];
+    *dt = ((cfe_model *) self->data)->time_step_size;
     return BMI_SUCCESS;
 }
 
@@ -90,18 +96,11 @@ static int Get_time_units (Bmi *self, char * units)
 
 static int Get_current_time (Bmi *self, double * time)
 {
-    //*time = (double) ((cfe_model *) self->data)->start_time;
-    *time = 0.0;
+    Get_start_time(self, time);
 #if CFE_DEGUG > 1
     printf("Current model time step: '%d'\n", ((cfe_model *) self->data)->current_time_step);
 #endif
-    for (int i = 0; i < ((cfe_model *) self->data)->current_time_step; ++i) {
-        int time_step_size_i = (((cfe_model *) self->data)->time_step_sizes)[i];
-#if CFE_DEGUG > 1
-        printf("Time step size for step '%d' is: %d\n", i, time_step_size_i);
-#endif
-        *time += time_step_size_i;
-    }
+    *time += (((cfe_model *) self->data)->current_time_step * ((cfe_model *) self->data)->time_step_size);
     return BMI_SUCCESS;
 }
 
@@ -563,10 +562,17 @@ static int Initialize (Bmi *self, const char *file)
 #endif
 
     // Now initialize empty arrays that depend on number of time steps
-    cfe->time_step_sizes = malloc(sizeof(int) * (cfe->num_timesteps + 1));
-    // TODO: double check these are correct (i.e., doesn't need to break down into sum of the struct member sizes)
-    cfe->forcings = malloc(sizeof(aorc_forcing_data) * (cfe->num_timesteps + 1));
-    cfe->fluxes = malloc(sizeof(result_fluxes) * (cfe->num_timesteps + 1));
+    cfe->forcing_data_precip_kg_per_m2 = malloc(sizeof(double) * (cfe->num_timesteps + 1));
+    cfe->forcing_data_surface_pressure_Pa = malloc(sizeof(double) * (cfe->num_timesteps + 1));
+    cfe->forcing_data_time = malloc(sizeof(long) * (cfe->num_timesteps + 1));
+
+    cfe->flux_Qout_m = malloc(sizeof(double));
+    cfe->flux_Schaake_output_runoff_m = malloc(sizeof(double));
+    cfe->flux_from_deep_gw_to_chan_m = malloc(sizeof(double));
+    cfe->flux_giuh_runoff_m = malloc(sizeof(double));
+    cfe->flux_lat_m = malloc(sizeof(double));
+    cfe->flux_nash_lateral_runoff_m = malloc(sizeof(double));
+    cfe->flux_perc_m = malloc(sizeof(double));
 
     // Now open it again to read the forcings
     FILE* ffp = fopen(cfe->forcing_file, "r");
@@ -582,14 +588,20 @@ static int Initialize (Bmi *self, const char *file)
     double dsec;
     // First read the header line
     fgets(line_str, max_forcing_line_length + 1, ffp);
-
+    
+    aorc_forcing_data forcings;
     for (int i = 0; i < cfe->num_timesteps; i++) {
         fgets(line_str, max_forcing_line_length + 1, ffp);  // read in a line of AORC data.
-        parse_aorc_line(line_str, &year, &month, &day, &hour, &minute, &dsec, ((cfe->forcings) + i));
+        parse_aorc_line(line_str, &year, &month, &day, &hour, &minute, &dsec, &forcings);
 #if CFE_DEGUG > 0
         printf("Forcing data: [%s]\n", line_str);
-        printf("Forcing details - s_time: %ld | precip: %f\n", (cfe->forcings)[i].time, (cfe->forcings)[i].precip_kg_per_m2);
+        printf("Forcing details - s_time: %ld | precip: %f\n", (forcings)[i].time, (forcings)[i].precip_kg_per_m2);
 #endif
+        cfe->forcing_data_precip_kg_per_m2[i] = forcings.precip_kg_per_m2;
+        cfe->forcing_data_surface_pressure_Pa[i] = forcings.surface_pressure_Pa;
+        //*((cfe->forcing_data_time) + i) = forcings.time;
+        cfe->forcing_data_time[i] = forcings.time;
+        
         // TODO: make sure the date+time (in the forcing itself) doesn't need to be converted somehow
 
         // TODO: make sure some kind of conversion isn't needed for the rain rate data
@@ -597,28 +609,7 @@ static int Initialize (Bmi *self, const char *file)
         //rain_rate[i] = (double) aorc_data.precip_kg_per_m2;
     }
 
-    cfe->start_time = cfe->forcings[0].time;
-
-    // This will set all but the last time step size
-    for (int i = 0; i < cfe->num_timesteps - 1; i++) {
-        long next_forcing_time = cfe->forcings[i+1].time;
-        long this_forcing_time = cfe->forcings[i].time;
-        long time_step_size = next_forcing_time - this_forcing_time;
-        int time_step_size_as_int = (int)time_step_size;
-#if CFE_DEGUG > 0
-        printf("Time step: next_time[%ld], this_time[%ld], delta[%ld], delta_int[%d]\n", next_forcing_time,
-               this_forcing_time, time_step_size, time_step_size_as_int);
-#endif
-        cfe->time_step_sizes[i] = time_step_size_as_int;
-    }
-    // For the last time step size, if there is only a single time step, default to an hour
-    if (cfe->num_timesteps == 1) {
-        cfe->time_step_sizes[0] = 3600;
-    }
-    // Otherwise, use the same size as the previous
-    else {
-        cfe->time_step_sizes[cfe->num_timesteps - 1] = cfe->time_step_sizes[cfe->num_timesteps - 2];
-    }
+    cfe->epoch_start_time = cfe->forcing_data_time[0];
 
     // Initialize the rest of the groundwater conceptual reservoir (some was done when reading in the config)
     cfe->gw_reservoir.is_exponential = TRUE;
@@ -689,7 +680,7 @@ static int Update_until (Bmi *self, double t)
         int future_time_step = cfe->current_time_step;
         double future_time_step_time = current_time;
         while (future_time_step < cfe->num_timesteps && future_time_step_time < end_time) {
-            future_time_step_time += cfe->time_step_sizes[future_time_step++];
+            future_time_step_time += cfe->time_step_size;
             if (future_time_step_time == t) {
                 is_exact_future_time = TRUE;
                 break;
@@ -731,17 +722,44 @@ static int Finalize (Bmi *self)
     if (self) {
         cfe_model* model = (cfe_model *)(self->data);
 
-        free(model->forcings);
-        free(model->time_step_sizes);
+        free(model->forcing_data_precip_kg_per_m2);
+        free(model->forcing_data_surface_pressure_Pa);
+        free(model->forcing_data_time);
+
         free(model->giuh_ordinates);
         free(model->nash_storage);
         free(model->runoff_queue_m_per_timestep);
-        free(model->fluxes);
+
+        free(model->flux_Qout_m);
+        free(model->flux_Schaake_output_runoff_m);
+        free(model->flux_from_deep_gw_to_chan_m);
+        free(model->flux_giuh_runoff_m);
+        free(model->flux_lat_m);
+        free(model->flux_nash_lateral_runoff_m);
+        free(model->flux_perc_m);
 
         self->data = (void*)new_bmi_cfe();
     }
 
     return BMI_SUCCESS;
+}
+
+
+static int Get_adjusted_index_for_variable(const char *name)
+{
+    // Get an "adjusted index" value for the associated variable, where this is its index within the
+    // associated names array, plus either:
+    //      0 if it is in the output variable array or
+    //      OUTPUT_VAR_NAME_COUNT if it is in the input variable array
+    for (int i = 0; i < OUTPUT_VAR_NAME_COUNT; i++)
+        if (strcmp(name, output_var_names[i]) == 0)
+            return i;
+
+    for (int i = 0; i < INPUT_VAR_NAME_COUNT; i++)
+        if (strcmp(name, input_var_names[i]) == 0)
+            return i + OUTPUT_VAR_NAME_COUNT;
+
+    return -1;
 }
 
 
@@ -959,242 +977,156 @@ static int Get_var_nbytes (Bmi *self, const char *name, int * nbytes)
     if (item_size_result != BMI_SUCCESS) {
         return BMI_FAILURE;
     }
-    *nbytes = item_size * ((cfe_model *) self->data)->num_timesteps;
+    int item_count = -1;
+    for (int i = 0; i < INPUT_VAR_NAME_COUNT; i++) {
+        if (strcmp(name, input_var_names[i]) == 0) {
+            item_count = input_var_item_count[i];
+            break;
+        }
+    }
+    if (item_count < 1) {
+        for (int i = 0; i < OUTPUT_VAR_NAME_COUNT; i++) {
+            if (strcmp(name, output_var_names[i]) == 0) {
+                item_count = input_var_item_count[i];
+                break;
+            }
+        }
+    }
+    if (item_count < 1)
+        item_count = ((cfe_model *) self->data)->num_timesteps;
+
+    *nbytes = item_size * item_count;
     return BMI_SUCCESS;
 }
 
 
-// TODO: complete implementation
 static int Get_value_ptr (Bmi *self, const char *name, void **dest)
 {
-    return BMI_FAILURE;
-/*
-    int status = BMI_FAILURE;
-
-    void *src = NULL;
-
     if (strcmp (name, "SCHAAKE_OUTPUT_RUNOFF") == 0) {
-        src = ((cfe_model *) self->data)->z[0];
+        *dest = (void*) ((cfe_model *)(self->data))->flux_Schaake_output_runoff_m;
+        return BMI_SUCCESS;
     }
 
-
-    {
-
-
-        *dest = src;
-
-        if (src)
-            status = BMI_SUCCESS;
+    if (strcmp (name, "GIUH_RUNOFF") == 0) {
+        *dest = (void *) ((cfe_model *)(self->data))->flux_giuh_runoff_m;
+        return BMI_SUCCESS;
     }
 
-    return status;
- */
+    if (strcmp (name, "NASH_LATERAL_RUNOFF") == 0) {
+        *dest = (void *) ((cfe_model *)(self->data))->flux_nash_lateral_runoff_m;
+        return BMI_SUCCESS;
+    }
+
+    if (strcmp (name, "DEEP_GW_TO_CHANNEL_FLUX") == 0) {
+        *dest = (void *) ((cfe_model *)(self->data))->flux_from_deep_gw_to_chan_m;
+        return BMI_SUCCESS;
+    }
+
+    if (strcmp (name, "Q_OUT") == 0) {
+        *dest = ((cfe_model *)(self->data))->flux_Qout_m;
+        return BMI_SUCCESS;
+    }
+
+    if (strcmp (name, "RAIN_RATE") == 0) {
+        cfe_model* model = (cfe_model *)(self->data);
+        *dest = (void*)(model->forcing_data_precip_kg_per_m2 + model->current_time_step);
+        return BMI_SUCCESS;
+    }
+
+    if (strcmp (name, "SURFACE_PRESSURE") == 0) {
+        cfe_model* model = (cfe_model *)(self->data);
+        *dest = (void*)(model->forcing_data_surface_pressure_Pa + model->current_time_step);
+        return BMI_SUCCESS;
+    }
+
+    return BMI_FAILURE;
 }
 
 
 static int Get_value_at_indices (Bmi *self, const char *name, void *dest, int *inds, int len)
 {
-    if (len < 0)
+    if (len < 1)
         return BMI_FAILURE;
 
-    int var_size;
-    int status = Get_var_itemsize(self, name, &var_size);
+    // Start by getting an "adjusted index" value for the associated variable, where this is its index within the
+    // associated names array, plus either:
+    //      0 if it is in the output variable array or
+    //      OUTPUT_VAR_NAME_COUNT if it is in the input variable array
+    int adjusted_index = Get_adjusted_index_for_variable(name);
+    if (adjusted_index < 0)
+        return BMI_FAILURE;
+
+    int var_item_size;
+    int status = Get_var_itemsize(self, name, &var_item_size);
     if (status == BMI_FAILURE)
         return BMI_FAILURE;
-    int nbytes = var_size * len;
 
-    if (strcmp (name, "SCHAAKE_OUTPUT_RUNOFF") == 0) {
-        double results[len];
-        for (int i = 0; i < len; i++) {
-            results[i] = ((cfe_model *)(self->data))->fluxes[inds[i]].Schaake_output_runoff_m;
-        }
-        memcpy(dest, results, nbytes);
-        return BMI_SUCCESS;
-    }
+    // For now, all variables are non-array scalar values, with only 1 item of type double
+    
+    // Thus, there is only ever one value to return (len must be 1) and it must always be from index 0
+    if (len > 1 || inds[0] != 0) 
+        return BMI_FAILURE;
 
-    if (strcmp (name, "GIUH_RUNOFF") == 0) {
-        double results[len];
-        for (int i = 0; i < len; i++) {
-            results[i] = ((cfe_model *)(self->data))->fluxes[inds[i]].giuh_runoff_m;
-        }
-        memcpy(dest, results, nbytes);
-        return BMI_SUCCESS;
-    }
-
-    if (strcmp (name, "NASH_LATERAL_RUNOFF") == 0) {
-        double results[len];
-        for (int i = 0; i < len; i++) {
-            results[i] = ((cfe_model *)(self->data))->fluxes[inds[i]].nash_lateral_runoff_m;
-        }
-        memcpy(dest, results, nbytes);
-        return BMI_SUCCESS;
-    }
-
-    if (strcmp (name, "DEEP_GW_TO_CHANNEL_FLUX") == 0) {
-        double results[len];
-        for (int i = 0; i < len; i++) {
-            results[i] = ((cfe_model *)(self->data))->fluxes[inds[i]].flux_from_deep_gw_to_chan_m;
-        }
-        memcpy(dest, results, nbytes);
-        return BMI_SUCCESS;
-    }
-
-    if (strcmp (name, "Q_OUT") == 0) {
-        double results[len];
-        for (int i = 0; i < len; i++) {
-            results[i] = ((cfe_model *)(self->data))->fluxes[inds[i]].Qout_m;
-        }
-        memcpy(dest, results, nbytes);
-        return BMI_SUCCESS;
-    }
-
-    if (strcmp (name, "TIME_STEP_DELTA") == 0) {
-        int results[len];
-        for (int i = 0; i < len; i++) {
-            results[i] = ((cfe_model *)(self->data))->time_step_sizes[inds[i]];
-        }
-        memcpy(dest, results, nbytes);
-        return BMI_SUCCESS;
-    }
-
-    if (strcmp (name, "RAIN_RATE") == 0) {
-        double results[len];
-        for (int i = 0; i < len; i++) {
-            results[i] = ((cfe_model *)(self->data))->forcings[inds[i]].precip_kg_per_m2;
-        }
-        memcpy(dest, results, nbytes);
-        return BMI_SUCCESS;
-    }
-
-    if (strcmp (name, "SURFACE_PRESSURE") == 0) {
-        double results[len];
-        for (int i = 0; i < len; i++) {
-            results[i] = ((cfe_model *)(self->data))->forcings[inds[i]].surface_pressure_Pa;
-        }
-        memcpy(dest, results, nbytes);
-        return BMI_SUCCESS;
-    }
-
-    return BMI_FAILURE;
+    void* ptr;
+    status = Get_value_ptr(self, name, &ptr);
+    if (status == BMI_FAILURE)
+        return BMI_FAILURE;
+    memcpy(dest, ptr, var_item_size * len);
+    return BMI_SUCCESS;
 }
 
 
 static int Get_value (Bmi *self, const char *name, void *dest)
 {
     // Use nested call to "by index" version
-    // Create array of indexes, have it be as big as the variable arrays, and have each index value be itself
-    if (((cfe_model *)(self->data))->num_timesteps < 0)
-        return BMI_FAILURE;
-    int inds[((cfe_model *)(self->data))->num_timesteps];
-    for (int i = 0; i < ((cfe_model *)(self->data))->num_timesteps; i++)
-        inds[i] = i;
+
+    // Here, for now at least, we know all the variables are scalar, so
+    int inds[] = {0};
 
     // Then we can just ...
-    return Get_value_at_indices(self, name, dest, inds, ((cfe_model *)(self->data))->num_timesteps);
+    return Get_value_at_indices(self, name, dest, inds, 1);
 }
 
 
 static int Set_value_at_indices (Bmi *self, const char *name, int * inds, int len, void *src)
 {
-    if (len < 0)
+    if (len < 1)
         return BMI_FAILURE;
 
-    int var_size;
-    int status = Get_var_itemsize(self, name, &var_size);
+    // Get "adjusted_index" for variable
+    int adjusted_index = Get_adjusted_index_for_variable(name);
+    if (adjusted_index < 0)
+        return BMI_FAILURE;
+
+    int var_item_size;
+    int status = Get_var_itemsize(self, name, &var_item_size);
     if (status == BMI_FAILURE)
         return BMI_FAILURE;
-    int nbytes = var_size * len;
 
-    if (strcmp (name, "SCHAAKE_OUTPUT_RUNOFF") == 0) {
-        double results[len];
-        memcpy(results, src, nbytes);
-        for (int i = 0; i < len; i++) {
-            ((cfe_model *)(self->data))->fluxes[inds[i]].Schaake_output_runoff_m = results[i];
-        }
-        return BMI_SUCCESS;
-    }
+    // For now, all variables are non-array scalar values, with only 1 item of type double
 
-    if (strcmp (name, "GIUH_RUNOFF") == 0) {
-        double results[len];
-        memcpy(results, src, nbytes);
-        for (int i = 0; i < len; i++) {
-            ((cfe_model *)(self->data))->fluxes[inds[i]].giuh_runoff_m = results[i];
-        }
-        return BMI_SUCCESS;
-    }
+    // Thus, there is only ever one value to return (len must be 1) and it must always be from index 0
+    if (len > 1 || inds[0] != 0)
+        return BMI_FAILURE;
 
-    if (strcmp (name, "NASH_LATERAL_RUNOFF") == 0) {
-        double results[len];
-        memcpy(results, src, nbytes);
-        for (int i = 0; i < len; i++) {
-            ((cfe_model *)(self->data))->fluxes[inds[i]].nash_lateral_runoff_m = results[i];
-        }
-        return BMI_SUCCESS;
-    }
-
-    if (strcmp (name, "DEEP_GW_TO_CHANNEL_FLUX") == 0) {
-        double results[len];
-        memcpy(results, src, nbytes);
-        for (int i = 0; i < len; i++) {
-            ((cfe_model *)(self->data))->fluxes[inds[i]].flux_from_deep_gw_to_chan_m = results[i];
-        }
-        return BMI_SUCCESS;
-    }
-
-    if (strcmp (name, "Q_OUT") == 0) {
-        double results[len];
-        memcpy(results, src, nbytes);
-        for (int i = 0; i < len; i++) {
-            ((cfe_model *)(self->data))->fluxes[inds[i]].Qout_m = results[i];
-        }
-        return BMI_SUCCESS;
-    }
-
-    if (strcmp (name, "TIME_STEP_DELTA") == 0) {
-        int results[len];
-        memcpy(results, src, nbytes);
-        for (int i = 0; i < len; i++) {
-            ((cfe_model *)(self->data))->time_step_sizes[inds[i]] = results[i];
-        }
-        return BMI_SUCCESS;
-    }
-
-    /*
-    if (strcmp (name, "RAIN_RATE") == 0) {
-        double results[len];
-        memcpy(results, src, nbytes);
-        for (int i = 0; i < len; i++) {
-            ((cfe_model *)(self->data))->rain_rates[inds[i]] = results[i];
-        }
-        return BMI_SUCCESS;
-    }
-
-    if (strcmp (name, "SURFACE_PRESSURE") == 0) {
-        double results[len];
-        memcpy(results, src, nbytes);
-        for (int i = 0; i < len; i++) {
-            ((cfe_model *)(self->data))->surface_pressures[inds[i]] = results[i];
-        }
-        return BMI_SUCCESS;
-    }
-     */
-
-    return BMI_FAILURE;
+    void* ptr;
+    status = Get_value_ptr(self, name, &ptr);
+    if (status == BMI_FAILURE)
+        return BMI_FAILURE;
+    memcpy(ptr, src, var_item_size * len);
+    return BMI_SUCCESS;
 }
 
 
 static int Set_value (Bmi *self, const char *name, void *array)
 {
     // Use nested call to "by index" version
-    // Create array of indexes, have it be as big as the variable arrays, and have each index value be itself
-    if (((cfe_model *)(self->data))->num_timesteps < 0)
-        return BMI_FAILURE;
-    int inds[((cfe_model *)(self->data))->num_timesteps];
-    for (int i = 0; i < ((cfe_model *)(self->data))->num_timesteps; i++)
-        inds[i] = i;
+
+    // Here, for now at least, we know all the variables are scalar, so
+    int inds[] = {0};
 
     // Then we can just ...
-    return Set_value_at_indices(self, name, inds, ((cfe_model *)(self->data))->num_timesteps, array);
+    return Set_value_at_indices(self, name, inds, 1, array);
 }
 
 
@@ -1285,6 +1217,7 @@ cfe_model *new_bmi_cfe(void)
 {
     cfe_model *data;
     data = (cfe_model *) malloc(sizeof(cfe_model));
+    data->time_step_size = 3600;
     return data;
 }
 
