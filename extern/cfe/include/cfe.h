@@ -141,16 +141,17 @@ struct cfe_model {
     struct conceptual_reservoir gw_reservoir;
     struct NWM_soil_parameters NWM_soil_params;
 
-    // Epoch-based start time
-    long start_time;
+    // Epoch-based start time (BMI start time is considered 0.0)
+    long epoch_start_time;
     int num_timesteps;
     int current_time_step;
+    int time_step_size;
 
     char* forcing_file;
 
     double Schaake_adjusted_magic_constant_by_soil_type;
-
     int num_lateral_flow_nash_reservoirs;
+
     double K_nash;
 
     int num_giuh_ordinates;
@@ -158,16 +159,30 @@ struct cfe_model {
     // ***********************************************************
     // ******************* Dynamic allocations *******************
     // ***********************************************************
-    aorc_forcing_data* forcings;
-    int* time_step_sizes;
-    result_fluxes* fluxes;
+    //aorc_forcing_data* forcings;
+    double* forcing_data_precip_kg_per_m2;
+    double* forcing_data_surface_pressure_Pa;
+    long* forcing_data_time;
+
+    //result_fluxes* fluxes;
+
     double* giuh_ordinates;
     double* nash_storage;
     double* runoff_queue_m_per_timestep;
+
+    // These are likely only single values, but should be allocated as pointers so the pointer can be returned
+    double* flux_Schaake_output_runoff_m;
+    double* flux_giuh_runoff_m;
+    double* flux_nash_lateral_runoff_m;
+    double* flux_from_deep_gw_to_chan_m;
+    // flux from soil to deeper groundwater reservoir
+    double* flux_perc_m;
+    double* flux_lat_m;
+    double* flux_Qout_m;
 };
 typedef struct cfe_model cfe_model;
 
-extern double get_K_lf_for_time_step(cfe_model* cfe, int time_step_index);
+extern inline double get_K_lf_for_time_step(cfe_model* cfe);
 
 /*
 extern void init_ground_water_reservoir(cfe_model* cfe, double Cgw, double expon, double max_storage, double storage,
