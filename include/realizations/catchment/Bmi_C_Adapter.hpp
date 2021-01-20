@@ -211,17 +211,6 @@ namespace models {
             std::string GetVarUnits(std::string name);
 
             /**
-             * Get the last processed time step.
-             *
-             * Get the 0-based index of the last time step that the model processed via it's `Update()` function.
-             *
-             * The
-             *
-             * @return
-             */
-            int get_last_processed_time_step();
-
-            /**
              * Initialize the wrapped BMI model functionality using the value from the `bmi_init_config` member variable
              * and the API's ``Initialize`` function.
              *
