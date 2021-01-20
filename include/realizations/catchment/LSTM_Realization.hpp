@@ -1,13 +1,11 @@
 #ifndef NGEN_LSTM_REALIZATION_HPP
 #define NGEN_LSTM_REALIZATION_HPP
 
+#ifdef NGEN_LSTM_TORCH_LIB_ACTIVE
+
 #include "Catchment_Formulation.hpp"
 #include <unordered_map>
-
-#ifdef NGEN_LSTM_TORCH_LIB_ACTIVE
-   #include "lstm/include/LSTM.h"
-#endif
-
+#include "lstm/include/LSTM.h"
 #include "lstm/include/lstm_params.h"
 #include "lstm/include/lstm_config.h"
 #include <memory>
@@ -153,4 +151,5 @@ namespace realization {
 
 }
 
+#endif //NGEN_LSTM_TORCH_LIB_ACTIVE
 #endif //NGEN_LSTM_REALIZATION_HPP
