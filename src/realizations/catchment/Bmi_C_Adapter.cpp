@@ -20,6 +20,17 @@ Bmi_C_Adapter::Bmi_C_Adapter(std::string bmi_init_config, std::string forcing_fi
           bmi_model_has_fixed_time_step(has_fixed_time_step), output(std::move(output)),
           bmi_model(std::make_shared<Bmi>(Bmi())) {
     Initialize();
+    std::string time_units = GetTimeUnits();
+    if (time_units == "s" || time_units == "sec" || time_units == "second" || time_units == "seconds")
+        bmi_model_time_convert_factor = 1.0;
+    else if (time_units == "m" || time_units == "min" || time_units == "minute" || time_units == "minutes")
+        bmi_model_time_convert_factor = 60.0;
+    else if (time_units == "h" || time_units == "hr" || time_units == "hour" || time_units == "hours")
+        bmi_model_time_convert_factor = 3600.0;
+    else if (time_units == "d" || time_units == "day" || time_units == "days")
+        bmi_model_time_convert_factor = 86400.0;
+    else
+        throw std::runtime_error("Invalid model time step units ('" + time_units + "') in BMI C formulation.");
 }
 
 Bmi_C_Adapter::Bmi_C_Adapter(std::string forcing_file_path, bool model_uses_forcing_file,
@@ -119,6 +130,8 @@ Bmi_C_Adapter::Bmi_C_Adapter(Bmi_C_Adapter &adapter) : model_name(adapter.model_
                                                        bmi_model(adapter.bmi_model),
                                                        bmi_model_has_fixed_time_step(
                                                                adapter.bmi_model_has_fixed_time_step),
+                                                       bmi_model_time_convert_factor(
+                                                               adapter.bmi_model_time_convert_factor),
                                                        bmi_model_uses_forcing_file(adapter.bmi_model_uses_forcing_file),
                                                        forcing_file_path(adapter.forcing_file_path),
                                                        init_exception_msg(adapter.init_exception_msg),
@@ -134,6 +147,8 @@ Bmi_C_Adapter::Bmi_C_Adapter(Bmi_C_Adapter &&adapter) noexcept: model_name(std::
                                                                 bmi_model(std::move(adapter.bmi_model)),
                                                                 bmi_model_has_fixed_time_step(
                                                                         adapter.bmi_model_has_fixed_time_step),
+                                                                bmi_model_time_convert_factor(
+                                                                        adapter.bmi_model_time_convert_factor),
                                                                 bmi_model_uses_forcing_file(
                                                                         adapter.bmi_model_uses_forcing_file),
                                                                 forcing_file_path(std::move(adapter.forcing_file_path)),
@@ -145,19 +160,11 @@ Bmi_C_Adapter::Bmi_C_Adapter(Bmi_C_Adapter &&adapter) noexcept: model_name(std::
                                                                 output(std::move(std::move(adapter.output))) {}
 
 double Bmi_C_Adapter::convert_model_time_to_seconds(const double& model_time_val) {
-    std::string time_units = GetTimeUnits();
-    double convert_factor;
-    if (time_units == "s" || time_units == "sec" || time_units == "second" || time_units == "seconds")
-        convert_factor = 1.0;
-    else if (time_units == "m" || time_units == "min" || time_units == "minute" || time_units == "minutes")
-        convert_factor = 60.0;
-    else if (time_units == "h" || time_units == "hr" || time_units == "hour" || time_units == "hours")
-        convert_factor = 3600.0;
-    else if (time_units == "d" || time_units == "day" || time_units == "days")
-        convert_factor = 86400.0;
-    else
-        throw std::runtime_error("Invalid model time step units ('" + time_units + "') in BMI C formulation.");
-    return model_time_val * convert_factor;
+    return model_time_val * bmi_model_time_convert_factor;
+}
+
+double Bmi_C_Adapter::convert_seconds_to_model_time(const double& seconds_val) {
+    return seconds_val / bmi_model_time_convert_factor;
 }
 
 void Bmi_C_Adapter::Finalize() {

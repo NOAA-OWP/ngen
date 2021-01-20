@@ -59,6 +59,14 @@ namespace models {
              */
             double convert_model_time_to_seconds(const double& model_time_val);
 
+            /**
+             * Convert a given number of seconds to equivalent in model time units.
+             *
+             * @param seconds_val
+             * @return
+             */
+            double convert_seconds_to_model_time(const double& seconds_val);
+
             void Finalize();
 
             /**
@@ -356,6 +364,8 @@ namespace models {
             std::shared_ptr<Bmi> bmi_model;
             /** Whether this particular model has a time step size that cannot be changed internally or externally. */
             bool bmi_model_has_fixed_time_step = true;
+            /** Conversion factor for converting values for model time in model's unit type to equivalent in seconds. */
+            double bmi_model_time_convert_factor;
             /** Pointer to stored time step size value of backing model, if it is fixed and has been retrieved. */
             std::shared_ptr<double> bmi_model_time_step_size = nullptr;
             /** Whether this particular model implementation directly reads input data from the forcing file. */
