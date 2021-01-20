@@ -432,3 +432,22 @@ void Bmi_C_Adapter::Update() {
         throw models::external::State_Exception("BMI C model execution update failed for " + model_name);
     }
 }
+
+/**
+ * Have the backing BMI model update to the specified time.
+ *
+ * Update the backing BMI model to some desired model time, specified either explicitly or implicitly as a
+ * non-integral multiple of time steps.  Note that the former is supported, but not required, by the BMI
+ * specification.  The same is true for negative argument values.
+ *
+ * This function does not attempt to determine whether the particular backing model will consider the
+ * provided parameter valid.
+ *
+ * @param time Time to update model to, either as literal model time or non-integral multiple of time steps.
+ */
+void Bmi_C_Adapter::UpdateUntil(double time) {
+    int result = bmi_model->update_until(bmi_model.get(), time);
+    if (result != BMI_SUCCESS) {
+        throw std::runtime_error("Model execution update to specified time failed for " + model_name);
+    }
+}

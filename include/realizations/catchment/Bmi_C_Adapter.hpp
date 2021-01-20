@@ -342,6 +342,20 @@ namespace models {
              */
             void Update();
 
+            /**
+             * Have the backing BMI model update to the specified time.
+             *
+             * Update the backing BMI model to some desired model time, specified either explicitly or implicitly as a
+             * non-integral multiple of time steps.  Note that the former is supported, but not required, by the BMI
+             * specification.  The same is true for negative argument values.
+             *
+             * This function does not attempt to determine whether the particular backing model will consider the
+             * provided parameter valid.
+             *
+             * @param time Time to update model to, either as literal model time or non-integral multiple of time steps.
+             */
+            void UpdateUntil(double time);
+
         protected:
             // TODO: look at setting this in some other way
             std::string model_name = "BMI C model";
