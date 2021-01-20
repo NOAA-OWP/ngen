@@ -282,6 +282,10 @@ namespace models {
              * If an attempt to initialize the model has already been made (i.e., ``model_initialized`` is ``true``),
              * this function will either simply return or will throw a runtime_error, with its message including the
              * message of the exception from the earlier attempt.
+             *
+             * @throws std::runtime_error  If called again after earlier call that resulted in an exception, or if BMI
+             *                             config file could not be read.
+             * @throws models::external::State_Exception   If `initialize()` in nested model does not return successful.
              */
             void Initialize();
 
@@ -300,7 +304,10 @@ namespace models {
              *
              * @param config_file
              * @see Initialize()
-             * @throws runtime_error If already initialized but using a different file than the passed argument.
+             * @throws std::runtime_error  If called again after earlier call that resulted in an exception, or if
+             *                             called again after a previously successful call with a different
+             *                             `config_file`, or if BMI config file could not be read.
+             * @throws models::external::State_Exception   If `initialize()` in nested model does not return successful.
              */
             void Initialize(const std::string& config_file);
 

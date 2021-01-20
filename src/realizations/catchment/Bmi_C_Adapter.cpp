@@ -333,22 +333,28 @@ std::string Bmi_C_Adapter::GetVarUnits(std::string name) {
 }
 
 /**
-  * Initialize the wrapped BMI model object using the value from the `bmi_init_config` member variable and
-  * the object's ``Initialize`` function.
-  *
-  * If no attempt to initialize the model has yet been made (i.e., ``model_initialized`` is ``false`` when
-  * this function is called), then ``model_initialized`` is set to ``true`` and initialization is attempted
-  * for the model object. If initialization fails, an exception will be raised, with it's type and message
-  * saved as part of this object's state.
-  *
-  * If an attempt to initialize the model has already been made (i.e., ``model_initialized`` is ``true``),
-  * this function will either simply return or will throw a runtime_error, with the message listing the
-  * type and message of the exception from the earlier attempt.
-  */
+ * Initialize the wrapped BMI model object using the value from the `bmi_init_config` member variable and
+ * the object's ``Initialize`` function.
+ *
+ * If no attempt to initialize the model has yet been made (i.e., ``model_initialized`` is ``false`` when
+ * this function is called), then ``model_initialized`` is set to ``true`` and initialization is attempted
+ * for the model object. If initialization fails, an exception will be raised, with it's type and message
+ * saved as part of this object's state.
+ *
+ * If an attempt to initialize the model has already been made (i.e., ``model_initialized`` is ``true``),
+ * this function will either simply return or will throw a runtime_error, with the message listing the
+ * type and message of the exception from the earlier attempt.
+ * 
+ * @throws std::runtime_error  If called again after earlier call that resulted in an exception, or if BMI config file
+ *                             could not be read.
+ * @throws models::external::State_Exception   If `initialize()` in nested model does not return successful.                            
+ */
 void Bmi_C_Adapter::Initialize() {
     // If there was a previous init attempt but with failure exception, throw runtime error and include previous message
     if (model_initialized && !init_exception_msg.empty()) {
-        throw std::runtime_error(init_exception_msg + " (from previous attempt)");
+        throw std::runtime_error(
+                "Cannot initialize BMI C model after previous failed attempt; previous message: " + init_exception_msg +
+                ")");
     }
     // If there was a previous init attempt with (implicitly) no exception on previous attempt, just return
     else if (model_initialized) {
@@ -365,7 +371,7 @@ void Bmi_C_Adapter::Initialize() {
         int init_result = bmi_model->initialize(bmi_model.get(), bmi_init_config.c_str());
         if (init_result != BMI_SUCCESS) {
             init_exception_msg = "Failure when attempting to initialize " + model_name;
-            throw std::runtime_error(init_exception_msg);
+            throw models::external::State_Exception(init_exception_msg);
         }
     }
 }
@@ -385,7 +391,10 @@ void Bmi_C_Adapter::Initialize() {
  *
  * @param config_file
  * @see Initialize()
- * @throws runtime_error If already initialized but using a different file than the passed argument.
+ * @throws std::runtime_error  If called again after earlier call that resulted in an exception, or if called again
+ *                             after a previously successful call with a different `config_file`, or if BMI config file
+ *                             could not be read.
+ * @throws models::external::State_Exception   If `initialize()` in nested model does not return successful.
  */
 void Bmi_C_Adapter::Initialize(const std::string& config_file) {
     if (config_file != bmi_init_config && model_initialized) {
@@ -406,7 +415,7 @@ void Bmi_C_Adapter::Initialize(const std::string& config_file) {
 void Bmi_C_Adapter::SetValue(std::string name, void *src) {
     int result = bmi_model->set_value(bmi_model.get(), name.c_str(), src);
     if (result != BMI_SUCCESS) {
-        throw std::runtime_error("Failed to set values of " + name + " variable for " + model_name);
+        throw models::external::State_Exception("Failed to set values of " + name + " variable for " + model_name);
     }
 }
 
@@ -417,7 +426,8 @@ bool Bmi_C_Adapter::is_model_initialized() {
 void Bmi_C_Adapter::SetValueAtIndices(std::string name, int *inds, int count, void *src) {
     int result = bmi_model->set_value_at_indices(bmi_model.get(), name.c_str(), inds, count, src);
     if (result != BMI_SUCCESS) {
-        throw std::runtime_error("Failed to set specified indexes for " + name + " variable of " + model_name);
+        throw models::external::State_Exception(
+                "Failed to set specified indexes for " + name + " variable of " + model_name);
     }
 }
 
@@ -448,6 +458,6 @@ void Bmi_C_Adapter::Update() {
 void Bmi_C_Adapter::UpdateUntil(double time) {
     int result = bmi_model->update_until(bmi_model.get(), time);
     if (result != BMI_SUCCESS) {
-        throw std::runtime_error("Model execution update to specified time failed for " + model_name);
+        throw models::external::State_Exception("Model execution update to specified time failed for " + model_name);
     }
 }
