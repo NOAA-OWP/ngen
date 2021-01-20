@@ -133,10 +133,7 @@ namespace realization {
             std::string catchment_id;
             lstm::lstm_params params;
             lstm::lstm_config config;
-           
-            #ifdef NGEN_LSTM_TORCH_LIB_ACTIVE 
-                std::unique_ptr<lstm::lstm_model> model;
-            #endif
+            std::unique_ptr<lstm::lstm_model> model;
 
             std::vector<std::string> REQUIRED_PARAMETERS = {
                  "pytorch_model_path",
