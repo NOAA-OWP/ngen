@@ -39,26 +39,43 @@ namespace realization {
          *
          * The default delimiter is a comma.
          *
+         * Implementations will throw `invalid_argument` exceptions if data for the provided time step parameter is not
+         * accessible.
+         *
          * @param timestep The time step for which data is desired.
          * @return A delimited string with all the output variable values for the given time step.
          */
         std::string get_output_line_for_timestep(int timestep, std::string delimiter) override;
 
         /**
-         * Get the model response for this time step.
+         * Get the model response for a time step.
          *
-         * Get the model response for this time step, execute the backing model formulation one or more times if the
-         * time step of the given index has not already been processed.
+         * Get the model response for the provided time step, executing the backing model formulation one or more times
+         * as needed.
          *
          * Function assumes the backing model has been fully initialized an that any additional input values have been
          * applied.
          *
-         * The function will return the value of the primary output variable (see `get_bmi_main_output_var()`) for the
-         * given time step. The type returned will always be a `double`, with other numeric types being cast if
-         * necessary.
+         * The function throws an error if the index of a previously processed time step is supplied, except if it is
+         * the last processed time step.  In that case, the appropriate value is returned as described below, but
+         * without executing any model update.
          *
-         * Because of the nature of BMI, the `t_delta` parameter is ignored, as this cannot be passed meaningfully via
-         * the `update()` BMI function.
+         * Assuming updating to the implied time is valid for the model, the function executes one or more model updates
+         * to process future time steps for the necessary indexes.  Multiple time steps updates occur when the given
+         * future time step index is not the next time step index to be processed.  Regardless, all processed time steps
+         * have the size supplied in `t_delta`.
+         *
+         * However, it is possible to provide `t_index` and `t_delta` values that would result in the aggregate updates
+         * taking the model's time beyond its `end_time` value.  In such cases, if the formulation config indicates this
+         * model is not allow to exceed its set `end_time`, the function does not update the model and throws an error.
+         *
+         * The function will return the value of the primary output variable (see `get_bmi_main_output_var()`) for the
+         * given time step after the model has been updated to that point. The type returned will always be a `double`,
+         * with other numeric types being cast if necessary.
+         *
+         * The BMI spec requires for variable values to be passed to/from models via as arrays.  This function
+         * essentially  treats the variable array reference as if it were just a raw pointer and returns the `0`-th
+         * array value.
          *
          * @param t_index The index of the time step for which to run model calculations.
          * @param d_delta_s The duration, in seconds, of the time step for which to run model calculations.
@@ -81,26 +98,68 @@ namespace realization {
         std::shared_ptr<models::bmi::Bmi_C_Adapter> construct_model(const geojson::PropertyMap& properties) override;
 
         /**
-         * Get value for some output variable at some time step, cast as a double.
+         * Get a value, converted to specified type, for an output variable at a time step.
          *
          * Function gets the value for a provided output variable at a provided time step index, and returns the value
-         * cast as a double type.
+         * converted to some particular type specified by the template param.
          *
          * The function makes several assumptions:
          *
          *     1. `t_index` is a time step that has already been processed for the model
          *     2. `var_name` is in the set of valid output variable names for the model
-         *     3. the type for output variable ``var_name`` is `double`, `float`, `int`, or `long`
+         *     3. it is possible to either implicitly or explicitly convert (i.e., cast) the output value to the
+         *        template parameter type (or it is already of that type)
+         *     4. conversions do not lead to invalid (e.g., runtime errors) or unexpected (e.g., loss of precision)
+         *        behavior
          *
-         * It falls to user (functions) of this function to ensure these assumptions hold before invoking.
+         * It falls to users (functions) of this function to ensure these assumptions hold before invoking.
          *
-         * @param t_index
+         * @tparam T The type that should be returned, and to which the BMI variable value should be cast.
+         * @param t_index The index of some already-processed time step for which a variable value is being requested
+         * @param var_name The name of the variable for which a value is being requested
+         * @return
+         */
+        template<class T, class O>
+        T get_var_value_as(time_step_t t_index, const std::string& var_name) {
+            std::vector<O> outputs = get_bmi_model()->GetValue<O>(var_name);
+            return (T) outputs[t_index];
+        }
+
+        /**
+         * Get value for some BMI model variable.
+         *
+         * This function assumes that the given variable, while returned by the model within an array per the BMI spec,
+         * is actual a single, scalar value.  Thus, it returns what is at index 0 of the array reference.
+         *
+         * @param index
          * @param var_name
          * @return
          */
-        double get_var_value_as_double(time_step_t t_index, const std::string& var_name);
+        double get_var_value_as_double(const std::string& var_name);
 
         /**
+         * Get value for some BMI model variable at a specific index.
+         *
+         * Function gets the value for a provided variable, returned from the backing model as an array, and returns the
+         * specific value at the desired index cast as a double type.
+         *
+         * The function makes several assumptions:
+         *
+         *     1. `index` is within array bounds
+         *     2. `var_name` is in the set of valid variable names for the model
+         *     3. the type for output variable allows the value to be cast to a `double` appropriately
+         *
+         * It falls to user (functions) of this function to ensure these assumptions hold before invoking.
+         *
+         * @param index
+         * @param var_name
+         * @return
+         */
+        double get_var_value_as_double(const int& index, const std::string& var_name);
+
+        /**
+         * Test whether backing model has run BMI ``Initialize``.
+         *
          * Test whether the backing model object has been initialize using the BMI standard ``Initialize`` function.
          *
          * This overrides the super class implementation and checks the model directly.  As such, the associated setter
@@ -109,6 +168,11 @@ namespace realization {
          * @return Whether backing model object has been initialize using the BMI standard ``Initialize`` function.
          */
         bool is_model_initialized() override;
+
+    private:
+
+        /** Index value (0-based) of the time step that will be processed by the next update of the model. */
+        int next_time_step_index = 0;
 
     };
 
