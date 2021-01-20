@@ -23,7 +23,7 @@ The basic outline of steps needed to run the LSTM model is:
   * The formulation config and required parameters to run the LSTM for a given catchment are below.
 
 ## Formulation Config
-An example realization is ngen/data/lstm/example_lstm_realization_config.json.
+An example realization is https://github.com/NOAA-OWP/ngen/data/lstm/example_lstm_realization_config.json.
 This example realziation can be run with the following command from the main ngen directory:  
 
 `cmake-build-debug/ngen ./data/catchment_data.geojson "cat-87" ./data/nexus_data.geojson "nex-94" ./data/lstm/example_lstm_realization_config.json`
