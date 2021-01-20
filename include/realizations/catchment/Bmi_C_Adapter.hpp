@@ -205,6 +205,36 @@ namespace models {
                  return retrieved_results;
              }
 
+             /**
+              * Get a reference to the value(s) of a given variable.
+              *
+              * This function gets and returns the reference (i.e., pointer) to the backing model's variable with the
+              * given name.  Unlike what is returned by `GetValue()`, this will point to the current value(s) of the
+              * variable, even if the model's state has changed.
+              *
+              * Because of how C-based BMI models are implemented, raw pointers are returned.  The pointers are "owned"
+              * by the model implementation, though, so there should be no risk of memory leaks (i.e., strictly as a
+              * result of obtaining a reference via this function.)
+              *
+              * @tparam T   The type of the variable to which a reference will be returned.
+              * @param name The name of the variable to which a reference will be returned.
+              * @return A reference to the value(s) of a given variable
+              */
+             template <class T>
+             T* GetValuePtr(const std::string& name) {
+                 int nbytes;
+                 int result = bmi_model->get_var_nbytes(bmi_model.get(), name.c_str(), &nbytes);
+                 if (result != BMI_SUCCESS)
+                     throw std::runtime_error(model_name + " failed to get pointer for BMI variable " + name + ".");
+                 void* dest;
+                 result = bmi_model->get_value_ptr(bmi_model.get(), name.c_str(), &dest);
+                 if (result != BMI_SUCCESS) {
+                     throw std::runtime_error(model_name + " failed to get pointer for BMI variable " + name + ".");
+                 }
+                 T* ptr = (T*) dest;
+                 return ptr;
+             }
+
             /**
              * Get the size (in bytes) of one item of a variable.
              *
