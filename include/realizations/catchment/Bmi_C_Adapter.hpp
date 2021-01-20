@@ -4,6 +4,7 @@
 #include <memory>
 #include <string>
 #include "bmi.h"
+#include "State_Exception.hpp"
 #include "JSONProperty.hpp"
 #include "StreamHandler.hpp"
 
@@ -49,6 +50,13 @@ namespace models {
             Bmi_C_Adapter(Bmi_C_Adapter &&adapter) noexcept;
 
             /**
+             * Class destructor.
+             *
+             * Note that this calls the `Finalize()` function for cleaning up this object and its backing BMI model.
+             */
+            virtual ~Bmi_C_Adapter();
+
+            /**
              * Convert model time value to value in seconds.
              *
              * Performs necessary lookup and conversion of some given model time value - as from `GetCurrentTime()` or
@@ -67,6 +75,20 @@ namespace models {
              */
             double convert_seconds_to_model_time(const double& seconds_val);
 
+            /**
+             * Perform tear-down task for this object and its backing model.
+             *
+             * The function will simply return if either the pointer to the backing model is `nullptr` (e.g., after use
+             * in a move constructor) or if the model has not been initialized.  Otherwise, it will execute its internal
+             * tear-down logic, including a nested call to `finalize()` for the backing model.
+             *
+             * Note that because of how model initialization state is determined, regardless of whether the call to the
+             * model's `finalize()` function is successful (i.e., according to the function's return code value), the
+             * model will subsequently be consider not initialized.  This essentially means that if backing model
+             * tear-down fails, it cannot be retried.
+             *
+             * @throws models::external::State_Exception Thrown if nested model `finalize()` call is not successful.
+             */
             void Finalize();
 
             /**

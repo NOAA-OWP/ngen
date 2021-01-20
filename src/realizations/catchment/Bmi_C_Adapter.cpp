@@ -159,6 +159,15 @@ Bmi_C_Adapter::Bmi_C_Adapter(Bmi_C_Adapter &&adapter) noexcept: model_name(std::
                                                                 output_var_names(std::move(adapter.output_var_names)),
                                                                 output(std::move(std::move(adapter.output))) {}
 
+/**
+ * Class destructor.
+ *
+ * Note that this calls the `Finalize()` function for cleaning up this object and its backing BMI model.
+ */
+Bmi_C_Adapter::~Bmi_C_Adapter() {
+    Finalize();
+}
+
 double Bmi_C_Adapter::convert_model_time_to_seconds(const double& model_time_val) {
     return model_time_val * bmi_model_time_convert_factor;
 }
@@ -167,11 +176,26 @@ double Bmi_C_Adapter::convert_seconds_to_model_time(const double& seconds_val) {
     return seconds_val / bmi_model_time_convert_factor;
 }
 
+/**
+ * Perform tear-down task for this object and its backing model.
+ *
+ * The function will simply return if either the pointer to the backing model is `nullptr` (e.g., after use
+ * in a move constructor) or if the model has not been initialized.  Otherwise, it will execute its internal
+ * tear-down logic, including a nested call to `finalize()` for the backing model.
+ *
+ * Note that because of how model initialization state is determined, regardless of whether the call to the
+ * model's `finalize()` function is successful (i.e., according to the function's return code value), the
+ * model will subsequently be consider not initialized.  This essentially means that if backing model
+ * tear-down fails, it cannot be retried.
+ *
+ * @throws models::external::State_Exception Thrown if nested model `finalize()` call is not successful.
+ */
 void Bmi_C_Adapter::Finalize() {
-    if (bmi_model != nullptr) {
+    if (bmi_model != nullptr && model_initialized) {
+        model_initialized = false;
         int result = bmi_model->finalize(bmi_model.get());
         if (result != BMI_SUCCESS) {
-            throw std::runtime_error("Failed to finalize model successfully");
+            throw models::external::State_Exception("Failure attempting to finalize BMI C model " + model_name);
         }
     }
 }
