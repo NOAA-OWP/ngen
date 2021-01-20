@@ -18,7 +18,7 @@ Bmi_C_Adapter::Bmi_C_Adapter(std::string bmi_init_config, std::string forcing_fi
         : bmi_init_config(std::move(bmi_init_config)), forcing_file_path(std::move(forcing_file_path)),
           bmi_model_uses_forcing_file(model_uses_forcing_file), allow_model_exceed_end_time(allow_exceed_end),
           bmi_model_has_fixed_time_step(has_fixed_time_step), output(std::move(output)),
-          bmi_model(std::make_shared<Bmi>(Bmi())), next_time_step_index(0) {
+          bmi_model(std::make_shared<Bmi>(Bmi())) {
     Initialize();
 }
 
@@ -299,25 +299,6 @@ std::string Bmi_C_Adapter::GetVarUnits(std::string name) {
     }
     std::string units_str(units_c_str);
     return units_str;
-}
-
-int Bmi_C_Adapter::get_last_processed_time_step() {
-    // FIXME: this will work for now, since we can assume for the moment universal delta_t size, but an alternative is
-    //  going to be needed that can go by the data.
-    int last_processed_time_step = -1;
-    double time_s = convert_model_time_to_seconds(GetStartTime());
-    double current_time_s = convert_model_time_to_seconds(GetCurrentTime());
-    int ts = GetTimeStep();
-    double ts_size_s = convert_model_time_to_seconds(GetTimeStep());
-
-    while (time_s < current_time_s) {
-        last_processed_time_step++;
-        time_s += ts_size_s;
-    }
-
-    // TODO: in theory 'time' and 'current_time' should eventually line up exactly, but do we need to handle case if
-    //  they don't?
-    return last_processed_time_step;
 }
 
 /**
