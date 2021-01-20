@@ -334,6 +334,12 @@ namespace models {
                 SetValueAtIndices(name, inds.data(), inds.size(), static_cast<void *>(src.data()));
             }
 
+            /**
+             * Have the backing model update to next time step.
+             *
+             * Have the backing BMI model perform an update to the next time step according to its own internal time
+             * keeping.
+             */
             void Update();
 
         protected:
