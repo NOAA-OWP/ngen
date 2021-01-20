@@ -5,6 +5,7 @@
 #include <exception>
 #include "FileChecker.h"
 #include "Bmi_C_Adapter.hpp"
+#include "State_Exception.hpp"
 
 using namespace models::bmi;
 
@@ -174,7 +175,7 @@ TEST_F(Bmi_C_Adapter_Test, Update_0_h) {
     try {
         adapter.Update();
     }
-    catch (std::runtime_error &e) {
+    catch (models::external::State_Exception &e) {
         found_except = true;
     }
     ASSERT_TRUE(found_except);
