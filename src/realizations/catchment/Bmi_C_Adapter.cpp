@@ -421,17 +421,14 @@ void Bmi_C_Adapter::SetValueAtIndices(std::string name, int *inds, int count, vo
     }
 }
 
+/**
+ * Have the backing model update to next time step.
+ *
+ * Have the backing BMI model perform an update to the next time step according to its own internal time keeping.
+ */
 void Bmi_C_Adapter::Update() {
-    if (!allow_model_exceed_end_time) {
-        double current_time = GetCurrentTime();
-        double end_time = GetEndTime();
-        if (current_time >= end_time) {
-            throw std::runtime_error("Model execution update failed due to exceeding end time for " + model_name);
-        }
-    }
-
     int result = bmi_model->update(bmi_model.get());
     if (result != BMI_SUCCESS) {
-        throw std::runtime_error("Model execution update failed for " + model_name);
+        throw models::external::State_Exception("BMI C model execution update failed for " + model_name);
     }
 }
