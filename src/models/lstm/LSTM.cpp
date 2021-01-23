@@ -54,8 +54,6 @@ namespace lstm {
     {
         // ********** Set fluxes to null for now: it is bogus until first call of run function, which initializes it
         fluxes = nullptr;
-        //manually set torch seed for reproducibility
-        torch::manual_seed(0);
         useGPU = config.useGPU && torch::cuda::is_available();
         device = torch::Device( useGPU ? torch::kCUDA : torch::kCPU );
 
@@ -65,7 +63,7 @@ namespace lstm {
         //so when the model is constructed, run it on N timesteps prior to prediction period
         //OR read those states in and create the initial state tensors
 
-        std::cout<<"model_params.pytorch_model_path: " << config.pytorch_model_path;
+        //std::cout<<"model_params.pytorch_model_path: " << config.pytorch_model_path;
 
         model = torch::jit::load(config.pytorch_model_path);
         model.to( device );
@@ -100,6 +98,13 @@ namespace lstm {
         auto row = data.begin();
         std::advance(row, 1);
         //Loop form first row to end of data
+       
+        //Check to ensure that there are 2 columns 
+        if(row[0].size() != 2)
+        { 
+            throw std::runtime_error("ERROR: LSTM Model requires two columns for the initial states input.");
+        }
+
         for(; row != data.end(); ++row)
         {
             h_vec.push_back( std::strtof( (*row)[0].c_str(), NULL ) );
@@ -185,6 +190,7 @@ namespace lstm {
 
         current_state = std::make_shared<lstm_state>( lstm_state(output[1].toTensor(), output[2].toTensor()) );
 
+        // Returns 0 if the function successfully completes. Any other value returned means an error occurred. 
         return 0;
     }
 
