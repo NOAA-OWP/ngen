@@ -41,5 +41,5 @@ namespace lstm {
     }
 } //namespace lstm
 
-#endif
+#endif //NGEN_LSTM_TORCH_LIB_ACTIVE
 #endif //NGEN_LSTM_STATE_H

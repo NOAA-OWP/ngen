@@ -138,5 +138,5 @@ namespace lstm {
     };
 }
 
-#endif
+#endif //NGEN_LSTM_TORCH_LIB_ACTIVE
 #endif //LSTM_H
