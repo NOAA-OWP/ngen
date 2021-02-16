@@ -1,6 +1,8 @@
 #ifdef NGEN_BMI_C_LIB_TESTS_ACTIVE
 
 #include "gtest/gtest.h"
+#include <functional>
+#include <iostream>
 #include <vector>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
@@ -45,6 +47,41 @@ protected:
     static std::string get_friend_model_type_name(Bmi_C_Formulation& formulation) {
         return formulation.get_model_type_name();
     }
+
+    /**
+     * Helper function to compare formulation using the external, C-based, CFE model implementing BMI, to the internal
+     * CFE implementation.
+     *
+     * @param example_index Index of the example configs to use during creation of the model and formulation objects.
+     * @param value_name A string name/description of the particular value being compared, for use in output message.
+     * @param num_time_steps The number of time steps for which models should be executed and have a value compared.
+     * @param error_percentage An allowed margin of error between compared results, or ``0.0`` if strict equality required.
+     * @param bmi_getter A function object taking the BMI formulation and a time step, returning the value to be compared.
+     * @param internal_getter A function object taking the internal Tshirt formulation and time step, returning the value to be compared.
+     */
+    void compare_cfe_model_values(int example_index, const std::string &value_name, int num_time_steps,
+                                  double error_percentage,
+                                  const std::function<double(std::shared_ptr<Bmi_C_Formulation>, int)> &bmi_getter,
+                                  const std::function<double(std::shared_ptr<Tshirt_C_Realization>,
+                                                           int)> &internal_getter);
+
+    double parse_from_delimited_string(const std::string& str_val, const std::string& delimiter, unsigned int index) {
+        std::stringstream str_stream(str_val);
+
+        unsigned int i = 0;
+        while (str_stream.good()) {
+            std::string substring;
+            std::getline(str_stream, substring, delimiter.c_str()[0]);
+            if (i++ == index)
+                return std::stod(substring);
+        }
+
+        throw std::runtime_error("Cannot parse " + std::to_string(index) +
+                                 "-th substring that exceeds number of substrings in string [" + str_val + "] (" +
+                                 std::to_string(i) + ").");
+    }
+
+    std::shared_ptr<realization::Tshirt_C_Realization> init_internal_cfe(const std::string& catchment_id);
 
     std::vector<std::string> forcing_dir_opts;
     std::vector<std::string> bmi_init_cfg_dir_opts;
@@ -119,6 +156,62 @@ void Bmi_C_Formulation_Test::SetUp() {
     }
 }
 
+/**
+ * Helper function to compare formulation using the external, C-based, CFE model implementing BMI, to the internal
+ * CFE implementation.
+ *
+ * @param example_index Index of the example configs to use during creation of the model and formulation objects.
+ * @param value_name A string name/description of the particular value being compared, for use in output message.
+ * @param num_time_steps The number of time steps for which models should be executed and have a value compared.
+ * @param error_percentage An allowed margin of error between compared results, or ``0.0`` if strict equality required.
+ * @param bmi_getter A function object taking the BMI formulation and a time step, returning the value to be compared.
+ * @param internal_getter A function object taking the internal Tshirt formulation and time step, returning the value to be compared.
+ */
+void Bmi_C_Formulation_Test::compare_cfe_model_values(int example_index, const std::string& value_name,
+                                                      int num_time_steps, double error_percentage,
+                                                      const std::function<double(std::shared_ptr<Bmi_C_Formulation>,
+                                                                                     int)> &bmi_getter,
+                                                      const std::function<double(
+                                                                  std::shared_ptr<Tshirt_C_Realization>,
+                                                                  int)> &internal_getter) {
+#ifdef NGEN_BMI_C_COMPARE_CFE_TESTS
+    Bmi_C_Formulation bmi_obj(catchment_ids[example_index], *forcing_params_examples[example_index], utils::StreamHandler());
+    std::shared_ptr<Bmi_C_Formulation> bmi_cfe = std::make_shared<Bmi_C_Formulation>(bmi_obj);
+    bmi_cfe->create_formulation(config_prop_ptree[example_index]);
+
+    std::shared_ptr<realization::Tshirt_C_Realization> internal_cfe = init_internal_cfe(catchment_ids[example_index]);
+
+    std::string print_str = "Time Step %d: %s values for BMI (%f) and internal (%f) CFE models differ";
+    if (error_percentage == 0.0) {
+        print_str += ".\n";
+    }
+    else {
+        print_str += " by more than %2.1f%% (%f).\n";
+    }
+
+    double allowed_error, diff, result_bmi, result_internal;
+
+    for (int i = 0; i < num_time_steps; ++i) {
+        result_bmi = bmi_getter(bmi_cfe, i);
+        result_internal = internal_getter(internal_cfe, i);
+
+        if (error_percentage == 0.0) {
+            EXPECT_EQ(result_bmi, result_internal)
+                                << printf(print_str.c_str(), i, value_name.c_str(), result_bmi, result_internal);
+        }
+        else {
+            diff = abs(result_bmi - result_internal);
+            allowed_error = max(result_bmi, result_internal) * error_percentage;
+            EXPECT_LE(diff, allowed_error)
+                                << printf(print_str.c_str(), i, value_name.c_str(), result_bmi, result_internal,
+                                          error_percentage * 100, diff);
+        }
+    }
+#else
+    ASSERT_TRUE(false) << printf("Need to configure build properly for executing BMI CFE comparison tests before calling.")
+#endif // NGEN_BMI_C_COMPARE_CFE_TESTS
+}
+
 std::string Bmi_Formulation_Test::find_file(std::vector<std::string> dir_opts, const std::string& basename) {
     std::vector<std::string> file_opts(dir_opts.size());
     for (int i = 0; i < dir_opts.size(); ++i)
@@ -128,6 +221,49 @@ std::string Bmi_Formulation_Test::find_file(std::vector<std::string> dir_opts, c
 
 void Bmi_C_Formulation_Test::TearDown() {
     Test::TearDown();
+}
+
+std::shared_ptr<realization::Tshirt_C_Realization>
+Bmi_C_Formulation_Test::init_internal_cfe(const std::string &catchment_id)
+{
+    std::shared_ptr<realization::Tshirt_C_Realization> cfe_ptr = nullptr;
+
+#ifdef NGEN_BMI_C_COMPARE_CFE_TESTS
+    // TODO: consider converting to reading values from the initialization file, or otherwise keeping params in sync
+    if (catchment_id != "cat-87") {
+        throw std::invalid_argument("Cannot init internal CFE for catchment " + catchment_id);
+    }
+    // Values copied from BMI C version's init file.
+    // Logic taken from internal C-based version.
+    double multiplier = 1000.0;
+    double satdk = 0.00000338;
+    // This first part is Equation 10 in parameter equivalence document.
+    // the 0.01 value is assumed_near_channel_water_table_slope
+    // the 3.5 value is drainage_density_km_per_km2; this is approx. average blue line drainage density for CONUS
+    double K_lf = (2.0 * 0.01 * multiplier * satdk * 2.0 * 3.5);   // m/s
+
+    tshirt::tshirt_params params{0.439, 0.066, satdk, 0.355, 1.0, 4.05, multiplier, 0.33, K_lf, 0.03, 2, 0.01, 6.0,
+                                 16.0};
+    std::vector<double> giuh_ordinates{0.06, 0.51, 0.28, 0.12, 0.03};
+    std::vector<double> nash_storage(params.nash_n);
+    for (int i = 0; i < params.nash_n; i++) {
+        nash_storage[i] = 0.0;
+    }
+
+    realization::Tshirt_C_Realization internal_cfe(
+            *forcing_params_examples[0],
+            utils::StreamHandler(),
+            0.667,
+            0.5,
+            true,
+            "wat-87",
+            giuh_ordinates,
+            params,
+            nash_storage);
+    cfe_ptr = std::make_shared<realization::Tshirt_C_Realization>(internal_cfe);
+#endif // NGEN_BMI_C_COMPARE_CFE_TESTS
+
+    return cfe_ptr;
 }
 
 /** Simple test to make sure the model initializes. */
@@ -184,5 +320,182 @@ TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_0_a) {
     ASSERT_EQ(output, "0.000000,0.000000,0.000000,0.191085,0.191085");
 
 }
+
+#ifdef NGEN_BMI_C_COMPARE_CFE_TESTS
+/** Compare results of BMI CFE and internal C-based version. */
+TEST_F(Bmi_C_Formulation_Test, Compare_CFEs_0_a) {
+    // Used to select the example config from what the testing Setup() function sets up.
+    int ex_index = 0;
+    // Can either compare within a margin of error, or set to 0 to require strict equivalence.
+    //double error_margin = 0.01;
+    double error_margin = 0.0;
+
+    std::function<double(std::shared_ptr<Bmi_C_Formulation>, int)> bmi_getter = [] (
+            const std::shared_ptr<Bmi_C_Formulation>& bmi_cfe, int time_step)
+    {
+        return bmi_cfe->get_response(time_step, 3600);
+    };
+
+    std::function<double(std::shared_ptr<Tshirt_C_Realization>, int)> internal_getter = [] (
+            const std::shared_ptr<Tshirt_C_Realization>& internal_cfe, int time_step)
+    {
+        return internal_cfe->get_response(time_step, 3600);
+    };
+
+    compare_cfe_model_values(ex_index, "Response Output", 700, error_margin, bmi_getter, internal_getter);
+
+}
+
+/** Compare Schaake Runoff of BMI CFE and internal C-based version. */
+TEST_F(Bmi_C_Formulation_Test, Compare_CFEs_0_b) {
+    // Used to select the example config from what the testing Setup() function sets up.
+    int ex_index = 0;
+    // Can either compare within a margin of error, or set to 0 to require strict equivalence.
+    //double error_margin = 0.01;
+    double error_margin = 0.0;
+    // Need this for parsing, since BMI only can (easily) access other values by printing them.
+    std::string delim = ",";
+
+    /* Output variables for BMI cfe are:
+     *
+     * (0) "SCHAAKE_OUTPUT_RUNOFF",
+     * (1) "GIUH_RUNOFF",
+     * (2) "NASH_LATERAL_RUNOFF",
+     * (3) "DEEP_GW_TO_CHANNEL_FLUX",
+     * (4) "Q_OUT"
+     */
+    int csv_output_index = 0;
+
+    std::function<double(std::shared_ptr<Bmi_C_Formulation>, int)> bmi_getter = [this, delim, csv_output_index](
+            const std::shared_ptr<Bmi_C_Formulation> &bmi_cfe, int time_step)
+    {
+        bmi_cfe->get_response(time_step, 3600);
+        return this->parse_from_delimited_string(bmi_cfe->get_output_line_for_timestep(time_step, delim), delim,
+                                                 csv_output_index);
+    };
+
+    std::function<double(std::shared_ptr<Tshirt_C_Realization>, int)> internal_getter = [](
+            const std::shared_ptr<Tshirt_C_Realization> &internal_cfe, int time_step)
+    {
+        internal_cfe->get_response(time_step, 3600);
+        return internal_cfe->get_latest_flux_surface_runoff();
+    };
+
+    compare_cfe_model_values(ex_index, "Schaake Runoff", 700, error_margin, bmi_getter, internal_getter);
+}
+
+/** Compare GIUH of BMI CFE and internal C-based version. */
+TEST_F(Bmi_C_Formulation_Test, Compare_CFEs_0_c) {
+    // Used to select the example config from what the testing Setup() function sets up.
+    int ex_index = 0;
+    // Can either compare within a margin of error, or set to 0 to require strict equivalence.
+    //double error_margin = 0.01;
+    double error_margin = 0.0;
+    // Need this for parsing, since BMI only can (easily) access other values by printing them.
+    std::string delim = ",";
+
+    /* Output variables for BMI cfe are:
+     *
+     * (0) "SCHAAKE_OUTPUT_RUNOFF",
+     * (1) "GIUH_RUNOFF",
+     * (2) "NASH_LATERAL_RUNOFF",
+     * (3) "DEEP_GW_TO_CHANNEL_FLUX",
+     * (4) "Q_OUT"
+     */
+    int csv_output_index = 1;
+
+    std::function<double(std::shared_ptr<Bmi_C_Formulation>, int)> bmi_getter = [this, delim, csv_output_index](
+            const std::shared_ptr<Bmi_C_Formulation> &bmi_cfe, int time_step)
+    {
+        bmi_cfe->get_response(time_step, 3600);
+        return this->parse_from_delimited_string(bmi_cfe->get_output_line_for_timestep(time_step, delim), delim,
+                                                 csv_output_index);
+    };
+
+    std::function<double(std::shared_ptr<Tshirt_C_Realization>, int)> internal_getter = [](
+            const std::shared_ptr<Tshirt_C_Realization> &internal_cfe, int time_step)
+    {
+        internal_cfe->get_response(time_step, 3600);
+        return internal_cfe->get_latest_flux_giuh_runoff();
+    };
+
+    compare_cfe_model_values(ex_index, "GIUH Runoff", 700, error_margin, bmi_getter, internal_getter);
+}
+
+/** Compare Nash Lateral Flow Runoff of BMI CFE and internal C-based version. */
+TEST_F(Bmi_C_Formulation_Test, Compare_CFEs_0_d) {
+    // Used to select the example config from what the testing Setup() function sets up.
+    int ex_index = 0;
+    // Can either compare within a margin of error, or set to 0 to require strict equivalence.
+    //double error_margin = 0.01;
+    double error_margin = 0.0;
+    // Need this for parsing, since BMI only can (easily) access other values by printing them.
+    std::string delim = ",";
+
+    /* Output variables for BMI cfe are:
+     *
+     * "SCHAAKE_OUTPUT_RUNOFF",
+     * "GIUH_RUNOFF",
+     * "NASH_LATERAL_RUNOFF",
+     * "DEEP_GW_TO_CHANNEL_FLUX",
+     * "Q_OUT"
+     */
+    int csv_output_index = 2;
+
+    std::function<double(std::shared_ptr<Bmi_C_Formulation>, int)> bmi_getter = [this, delim, csv_output_index] (
+            const std::shared_ptr<Bmi_C_Formulation>& bmi_cfe, int time_step)
+    {
+        bmi_cfe->get_response(time_step, 3600);
+        return this->parse_from_delimited_string(bmi_cfe->get_output_line_for_timestep(time_step, delim), delim, csv_output_index);
+    };
+
+    std::function<double(std::shared_ptr<Tshirt_C_Realization>, int)> internal_getter = [](
+            const std::shared_ptr<Tshirt_C_Realization> &internal_cfe, int time_step)
+    {
+        internal_cfe->get_response(time_step, 3600);
+        return internal_cfe->get_latest_flux_lateral_flow();
+    };
+
+    compare_cfe_model_values(ex_index, "Lateral Flow Runoff", 700, error_margin, bmi_getter, internal_getter);
+}
+
+/** Compare Deep GW to Channel Flux of BMI CFE and internal C-based version. */
+TEST_F(Bmi_C_Formulation_Test, Compare_CFEs_0_e) {
+    // Used to select the example config from what the testing Setup() function sets up.
+    int ex_index = 0;
+    // Can either compare within a margin of error, or set to 0 to require strict equivalence.
+    //double error_margin = 0.01;
+    double error_margin = 0.0;
+    // Need this for parsing, since BMI only can (easily) access other values by printing them.
+    std::string delim = ",";
+
+    /* Output variables for BMI cfe are:
+     *
+     * "SCHAAKE_OUTPUT_RUNOFF",
+     * "GIUH_RUNOFF",
+     * "NASH_LATERAL_RUNOFF",
+     * "DEEP_GW_TO_CHANNEL_FLUX",
+     * "Q_OUT"
+     */
+    int csv_output_index = 3;
+
+    std::function<double(std::shared_ptr<Bmi_C_Formulation>, int)> bmi_getter = [this, delim, csv_output_index] (
+            const std::shared_ptr<Bmi_C_Formulation>& bmi_cfe, int time_step)
+    {
+        bmi_cfe->get_response(time_step, 3600);
+        return this->parse_from_delimited_string(bmi_cfe->get_output_line_for_timestep(time_step, delim), delim, csv_output_index);
+    };
+
+    std::function<double(std::shared_ptr<Tshirt_C_Realization>, int)> internal_getter = [](
+            const std::shared_ptr<Tshirt_C_Realization> &internal_cfe, int time_step)
+    {
+        internal_cfe->get_response(time_step, 3600);
+        return internal_cfe->get_latest_flux_base_flow();
+    };
+
+    compare_cfe_model_values(ex_index, "Deep GW to Channel Flux", 700, error_margin, bmi_getter, internal_getter);
+}
+
+#endif  // NGEN_BMI_C_COMPARE_CFE_TESTS
 
 #endif  // NGEN_BMI_C_LIB_TESTS_ACTIVE
