@@ -321,30 +321,29 @@ extern void conceptual_reservoir_flux_calc(struct conceptual_reservoir *reservoi
 //local variables
 double storage_above_threshold_m;
 
-if(reservoir->is_exponential==TRUE)  // single outlet reservoir like the NWM V1.2 exponential conceptual gw reservoir
-  {
+if(reservoir->is_exponential==TRUE) { // single outlet reservoir like the NWM V1.2 exponential conceptual gw reservoir
   // calculate the one flux and return.
-  *primary_flux_m=reservoir->coeff_primary*
-                    (exp(reservoir->exponent_primary*reservoir->storage_m/reservoir->storage_max_m)-1.0);
-  *secondary_flux_m=0.0;
+      *primary_flux_m = reservoir->coeff_primary *
+                        (exp(reservoir->exponent_primary * reservoir->storage_m / reservoir->storage_max_m) - 1.0);
+  *secondary_flux_m = 0.0;
   return;
-  }
+}
 // code goes past here iff it is not a single outlet exponential deep groundwater reservoir of the NWM variety
 // The vertical outlet is assumed to be primary and satisfied first.
 
 *primary_flux_m=0.0;
-storage_above_threshold_m=reservoir->storage_m-reservoir->storage_threshold_primary_m;
-if(storage_above_threshold_m>0.0)
-  {
-  // flow is possible from the primary outlet
-  *primary_flux_m=reservoir->coeff_primary*
-                pow(storage_above_threshold_m/(reservoir->storage_max_m-reservoir->storage_threshold_primary_m),
-                    reservoir->exponent_primary);
-  if(*primary_flux_m > storage_above_threshold_m) 
-                    *primary_flux_m=storage_above_threshold_m;  // limit to max. available
-  }
+storage_above_threshold_m = reservoir->storage_m - reservoir->storage_threshold_primary_m;
+if (storage_above_threshold_m > 0.0) { // flow is possible from the primary outlet
+    *primary_flux_m = reservoir->coeff_primary *
+                      pow((storage_above_threshold_m /
+                           (reservoir->storage_max_m - reservoir->storage_threshold_primary_m)),
+                          reservoir->exponent_primary
+                      );
+    if (*primary_flux_m > storage_above_threshold_m)
+        *primary_flux_m = storage_above_threshold_m;  // limit to max. available
+}
 *secondary_flux_m=0.0;
-storage_above_threshold_m=reservoir->storage_m-reservoir->storage_threshold_secondary_m;
+storage_above_threshold_m = reservoir->storage_m - reservoir->storage_threshold_secondary_m;
 if(storage_above_threshold_m>0.0)
   {
   // flow is possible from the secondary outlet
