@@ -169,6 +169,10 @@ namespace realization {
          */
         bool is_model_initialized() override;
 
+        // Unit test access
+        friend class ::Bmi_Formulation_Test;
+        friend class ::Bmi_C_Formulation_Test;
+
     private:
 
         /** Index value (0-based) of the time step that will be processed by the next update of the model. */
