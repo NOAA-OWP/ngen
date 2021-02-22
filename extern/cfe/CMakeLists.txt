@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 # Uncomment this and rebuild artifacts to enable debugging
-#set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_BUILD_TYPE Debug)
 
 project(cfemodel VERSION 1.0.0 DESCRIPTION "External CFE Model Shared Library")
 
