@@ -185,13 +185,14 @@ void Bmi_C_Formulation_Test::compare_cfe_model_values(int example_index, const s
 
     std::shared_ptr<realization::Tshirt_C_Realization> internal_cfe = init_internal_cfe(catchment_ids[example_index]);
 
+    int negative_e_pow = -6;
+    double absolute_smallest_max_error = 1.0 * pow(10.0, negative_e_pow);
+
     std::string print_str = "Time Step %d: %s values for BMI (%f) and internal (%f) CFE models differ";
-    if (error_percentage == 0.0) {
-        print_str += ".\n";
+    if (error_percentage != 0.0) {
+        print_str += "\n    by more than than the larger of %2.1f%% or 1.0e" + std::to_string(negative_e_pow);
     }
-    else {
-        print_str += " by more than %2.1f%% (%f).\n";
-    }
+    print_str += " (diff: %.*e).\n";
 
     double allowed_error, diff, result_bmi, result_internal;
 
@@ -201,11 +202,13 @@ void Bmi_C_Formulation_Test::compare_cfe_model_values(int example_index, const s
 
         if (error_percentage == 0.0) {
             EXPECT_EQ(result_bmi, result_internal)
-                                << printf(print_str.c_str(), i, value_name.c_str(), result_bmi, result_internal);
+                                << printf(print_str.c_str(), i, value_name.c_str(), result_bmi, result_internal, diff);
         }
         else {
             diff = abs(result_bmi - result_internal);
             allowed_error = max(result_bmi, result_internal) * error_percentage;
+            // Set a hard threshold also, as when values are very small we won't care about large percentages either
+            allowed_error = max(allowed_error, absolute_smallest_max_error);
             EXPECT_LE(diff, allowed_error)
                                 << printf(print_str.c_str(), i, value_name.c_str(), result_bmi, result_internal,
                                           error_percentage * 100, diff);
@@ -331,8 +334,11 @@ TEST_F(Bmi_C_Formulation_Test, Compare_CFEs_0_a) {
     // Used to select the example config from what the testing Setup() function sets up.
     int ex_index = 0;
     // Can either compare within a margin of error, or set to 0 to require strict equivalence.
-    //double error_margin = 0.01;
+#ifdef NGEN_BMI_C_CFE_COMPARE_STRICT
     double error_margin = 0.0;
+#else
+    double error_margin = 0.001;
+#endif  // NGEN_BMI_C_CFE_COMPARE_STRICT
 
     std::function<double(std::shared_ptr<Bmi_C_Formulation>, int)> bmi_getter = [] (
             const std::shared_ptr<Bmi_C_Formulation>& bmi_cfe, int time_step)
@@ -355,8 +361,11 @@ TEST_F(Bmi_C_Formulation_Test, Compare_CFEs_0_b) {
     // Used to select the example config from what the testing Setup() function sets up.
     int ex_index = 0;
     // Can either compare within a margin of error, or set to 0 to require strict equivalence.
-    //double error_margin = 0.01;
+#ifdef NGEN_BMI_C_CFE_COMPARE_STRICT
     double error_margin = 0.0;
+#else
+    double error_margin = 0.001;
+#endif  // NGEN_BMI_C_CFE_COMPARE_STRICT
     // Need this for parsing, since BMI only can (easily) access other values by printing them.
     std::string delim = ",";
 
@@ -393,8 +402,11 @@ TEST_F(Bmi_C_Formulation_Test, Compare_CFEs_0_c) {
     // Used to select the example config from what the testing Setup() function sets up.
     int ex_index = 0;
     // Can either compare within a margin of error, or set to 0 to require strict equivalence.
-    //double error_margin = 0.01;
+#ifdef NGEN_BMI_C_CFE_COMPARE_STRICT
     double error_margin = 0.0;
+#else
+    double error_margin = 0.001;
+#endif  // NGEN_BMI_C_CFE_COMPARE_STRICT
     // Need this for parsing, since BMI only can (easily) access other values by printing them.
     std::string delim = ",";
 
@@ -431,8 +443,11 @@ TEST_F(Bmi_C_Formulation_Test, Compare_CFEs_0_d) {
     // Used to select the example config from what the testing Setup() function sets up.
     int ex_index = 0;
     // Can either compare within a margin of error, or set to 0 to require strict equivalence.
-    //double error_margin = 0.01;
+#ifdef NGEN_BMI_C_CFE_COMPARE_STRICT
     double error_margin = 0.0;
+#else
+    double error_margin = 0.001;
+#endif  // NGEN_BMI_C_CFE_COMPARE_STRICT
     // Need this for parsing, since BMI only can (easily) access other values by printing them.
     std::string delim = ",";
 
@@ -468,8 +483,11 @@ TEST_F(Bmi_C_Formulation_Test, Compare_CFEs_0_e) {
     // Used to select the example config from what the testing Setup() function sets up.
     int ex_index = 0;
     // Can either compare within a margin of error, or set to 0 to require strict equivalence.
-    //double error_margin = 0.01;
+#ifdef NGEN_BMI_C_CFE_COMPARE_STRICT
     double error_margin = 0.0;
+#else
+    double error_margin = 0.001;
+#endif  // NGEN_BMI_C_CFE_COMPARE_STRICT
     // Need this for parsing, since BMI only can (easily) access other values by printing them.
     std::string delim = ",";
 
