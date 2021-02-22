@@ -48,6 +48,10 @@ protected:
         return formulation.get_model_type_name();
     }
 
+    static double get_friend_var_value_as_double(Bmi_C_Formulation& formulation, const string& var_name) {
+        return formulation.get_var_value_as_double(var_name);
+    }
+
     /**
      * Helper function to compare formulation using the external, C-based, CFE model implementing BMI, to the internal
      * CFE implementation.
@@ -446,7 +450,7 @@ TEST_F(Bmi_C_Formulation_Test, Compare_CFEs_0_d) {
             const std::shared_ptr<Bmi_C_Formulation>& bmi_cfe, int time_step)
     {
         bmi_cfe->get_response(time_step, 3600);
-        return this->parse_from_delimited_string(bmi_cfe->get_output_line_for_timestep(time_step, delim), delim, csv_output_index);
+        return get_friend_var_value_as_double(*bmi_cfe, "NASH_LATERAL_RUNOFF");
     };
 
     std::function<double(std::shared_ptr<Tshirt_C_Realization>, int)> internal_getter = [](
@@ -483,8 +487,7 @@ TEST_F(Bmi_C_Formulation_Test, Compare_CFEs_0_e) {
             const std::shared_ptr<Bmi_C_Formulation>& bmi_cfe, int time_step)
     {
         bmi_cfe->get_response(time_step, 3600);
-        return this->parse_from_delimited_string(bmi_cfe->get_output_line_for_timestep(time_step, delim), delim, csv_output_index);
-    };
+        return get_friend_var_value_as_double(*bmi_cfe, "DEEP_GW_TO_CHANNEL_FLUX");    };
 
     std::function<double(std::shared_ptr<Tshirt_C_Realization>, int)> internal_getter = [](
             const std::shared_ptr<Tshirt_C_Realization> &internal_cfe, int time_step)
