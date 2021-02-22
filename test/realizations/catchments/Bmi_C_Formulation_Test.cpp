@@ -240,7 +240,7 @@ Bmi_C_Formulation_Test::init_internal_cfe(const std::string &catchment_id)
     // This first part is Equation 10 in parameter equivalence document.
     // the 0.01 value is assumed_near_channel_water_table_slope
     // the 3.5 value is drainage_density_km_per_km2; this is approx. average blue line drainage density for CONUS
-    double K_lf = (2.0 * 0.01 * multiplier * satdk * 2.0 * 3.5);   // m/s
+    double K_lf = (2.0 * 0.01 * multiplier * satdk * 2.0 * 3.5) * 3600.0;
 
     tshirt::tshirt_params params{0.439, 0.066, satdk, 0.355, 1.0, 4.05, multiplier, 0.33, K_lf, 0.03, 2, 0.01, 6.0,
                                  16.0};
