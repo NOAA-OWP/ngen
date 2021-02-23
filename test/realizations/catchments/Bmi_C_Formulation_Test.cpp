@@ -90,8 +90,6 @@ protected:
     std::vector<std::string> forcing_dir_opts;
     std::vector<std::string> bmi_init_cfg_dir_opts;
 
-#define EX_COUNT 1
-
     std::vector<std::string> config_json;
     std::vector<std::string> catchment_ids;
     std::vector<std::string> model_type_name;
@@ -107,6 +105,8 @@ protected:
 
 void Bmi_C_Formulation_Test::SetUp() {
     Test::SetUp();
+
+#define EX_COUNT 2
 
     forcing_dir_opts = {"./data/forcing/", "../data/forcing/", "../../data/forcing/"};
     bmi_init_cfg_dir_opts = {"./test/data/bmi/c/cfe/", "../test/data/bmi/c/cfe/", "../../test/data/bmi/c/cfe/"};
@@ -130,10 +130,25 @@ void Bmi_C_Formulation_Test::SetUp() {
     main_output_variable[0] = "Q_OUT";
     uses_forcing_file[0] = true;
 
+    catchment_ids[1] = "cat-87";
+    model_type_name[1] = "bmi_c_cfe";
+    forcing_file[1] = find_file(forcing_dir_opts, "cat-87_2015-12-01 00_00_00_2015-12-30 23_00_00.csv");
+    init_config[1] = find_file(bmi_init_cfg_dir_opts, "cat_87_bmi_config.txt");
+    main_output_variable[1] = "Q_OUT";
+    uses_forcing_file[1] = true;
+
+    std::string variables_with_rain_rate = "                \"output_variables\": [\"RAIN_RATE\",\n"
+                                           "                    \"SCHAAKE_OUTPUT_RUNOFF\",\n"
+                                           "                    \"GIUH_RUNOFF\",\n"
+                                           "                    \"NASH_LATERAL_RUNOFF\",\n"
+                                           "                    \"DEEP_GW_TO_CHANNEL_FLUX\",\n"
+                                           "                    \"Q_OUT\"],\n";
+
     /* Set up the derived example details */
     for (int i = 0; i < EX_COUNT; i++) {
         std::shared_ptr<forcing_params> params = std::make_shared<forcing_params>(
                 forcing_params(forcing_file[i], "2015-12-01 00:00:00", "2015-12-01 23:00:00"));
+        std::string variables_line = (i == 1) ? variables_with_rain_rate : "";
         forcing_params_examples[i] = params;
         config_json[i] = "{"
                          "    \"global\": {},"
@@ -144,6 +159,7 @@ void Bmi_C_Formulation_Test::SetUp() {
                          "                \"forcing_file\": \"" + forcing_file[i] + "\","
                          "                \"init_config\": \"" + init_config[i] + "\","
                          "                \"main_output_variable\": \"" + main_output_variable[i] + "\","
+                         + variables_line +
                          "                \"uses_forcing_file\": " + (uses_forcing_file[i] ? "true" : "false") + ""
                          "            },"
                          "            \"forcing\": { \"path\": \"" + forcing_file[i] + "\"}"
@@ -323,9 +339,34 @@ TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_0_a) {
 
     double response = formulation.get_response(0, 3600);
     std::string output = formulation.get_output_line_for_timestep(0, ",");
-    // TODO: verify the results are correct
     ASSERT_EQ(output, "0.000000,0.000000,0.000000,0.191085,0.191085");
+}
 
+/** Simple test of output with modified variables. */
+TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_1_a) {
+    int ex_index = 1;
+
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], *forcing_params_examples[ex_index], utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+
+    double response = formulation.get_response(0, 3600);
+    std::string output = formulation.get_output_line_for_timestep(0, ",");
+    ASSERT_EQ(output, "0.000000,0.000000,0.000000,0.000000,0.191085,0.191085");
+}
+
+/** Simple test of output with modified variables, picking time step when there was non-zero rain rate. */
+TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_1_b) {
+    int ex_index = 1;
+
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], *forcing_params_examples[ex_index], utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+
+    int i = 0;
+    while (i < 542)
+        formulation.get_response(i++, 3600);
+    double response = formulation.get_response(i, 3600);
+    std::string output = formulation.get_output_line_for_timestep(i, ",");
+    ASSERT_EQ(output, "0.000001,0.000000,0.000000,0.000000,0.001407,0.001407");
 }
 
 #ifdef NGEN_BMI_C_COMPARE_CFE_TESTS
