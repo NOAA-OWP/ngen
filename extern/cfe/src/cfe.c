@@ -54,7 +54,10 @@ extern void init_soil_reservoir(cfe_model* cfe, double alpha_fc, double max_stor
     // this equation calculates the amount of water stored in the 2 m thick soil column when the water content
     // at the center of the bottom discretization (trigger_z_m, below 0.5) is at field capacity
     // Initial parentheses calc equation 3 from param equiv. doc
-    double Omega = (alpha_fc * cfe->forcing_data_surface_pressure_Pa[0] / WATER_SPECIFIC_WEIGHT) - 0.5;
+#define STANDARD_ATMOSPHERIC_PRESSURE_PASCALS 101325
+    // This may need to be changed as follows later, but for now, use the constant value
+    //double Omega = (alpha_fc * cfe->forcing_data_surface_pressure_Pa[0] / WATER_SPECIFIC_WEIGHT) - 0.5;
+    double Omega = (alpha_fc * STANDARD_ATMOSPHERIC_PRESSURE_PASCALS / WATER_SPECIFIC_WEIGHT) - 0.5;
     double lower_lim = pow(Omega, (1.0 - 1.0 / cfe->NWM_soil_params.bb)) / (1.0 - 1.0 / cfe->NWM_soil_params.bb);
     double upper_lim = pow(Omega + cfe->NWM_soil_params.D, (1.0 - 1.0 / cfe->NWM_soil_params.bb)) /
                        (1.0 - 1.0 / cfe->NWM_soil_params.bb);
