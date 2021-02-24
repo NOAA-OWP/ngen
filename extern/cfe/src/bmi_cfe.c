@@ -595,7 +595,7 @@ static int Initialize (Bmi *self, const char *file)
         parse_aorc_line(line_str, &year, &month, &day, &hour, &minute, &dsec, &forcings);
 #if CFE_DEGUG > 0
         printf("Forcing data: [%s]\n", line_str);
-        printf("Forcing details - s_time: %ld | precip: %f\n", (forcings)[i].time, (forcings)[i].precip_kg_per_m2);
+        printf("Forcing details - s_time: %ld | precip: %f\n", forcings.time, forcings.precip_kg_per_m2);
 #endif
         cfe->forcing_data_precip_kg_per_m2[i] = forcings.precip_kg_per_m2;
         cfe->forcing_data_surface_pressure_Pa[i] = forcings.surface_pressure_Pa;
