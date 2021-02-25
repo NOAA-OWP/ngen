@@ -597,7 +597,7 @@ static int Initialize (Bmi *self, const char *file)
         printf("Forcing data: [%s]\n", line_str);
         printf("Forcing details - s_time: %ld | precip: %f\n", forcings.time, forcings.precip_kg_per_m2);
 #endif
-        cfe->forcing_data_precip_kg_per_m2[i] = forcings.precip_kg_per_m2;
+        cfe->forcing_data_precip_kg_per_m2[i] = forcings.precip_kg_per_m2 * ((float)cfe->time_step_size);
         cfe->forcing_data_surface_pressure_Pa[i] = forcings.surface_pressure_Pa;
         //*((cfe->forcing_data_time) + i) = forcings.time;
         cfe->forcing_data_time[i] = forcings.time;
