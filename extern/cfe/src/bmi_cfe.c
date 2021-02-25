@@ -4,12 +4,13 @@
 
 #define CFE_DEGUG 0
 
-#define INPUT_VAR_NAME_COUNT 2
-#define OUTPUT_VAR_NAME_COUNT 5
+#define INPUT_VAR_NAME_COUNT 0
+#define OUTPUT_VAR_NAME_COUNT 6
 
 
 // Don't forget to update Get_value/Get_value_at_indices (and setter) implementation if these are adjusted
 static const char *output_var_names[OUTPUT_VAR_NAME_COUNT] = {
+        "RAIN_RATE",
         "SCHAAKE_OUTPUT_RUNOFF",
         "GIUH_RUNOFF",
         "NASH_LATERAL_RUNOFF",
@@ -22,10 +23,12 @@ static const char *output_var_types[OUTPUT_VAR_NAME_COUNT] = {
         "double",
         "double",
         "double",
+        "double",
         "double"
 };
 
 static const int output_var_item_count[OUTPUT_VAR_NAME_COUNT] = {
+        1,
         1,
         1,
         1,
@@ -38,30 +41,30 @@ static const char *output_var_units[OUTPUT_VAR_NAME_COUNT] = {
         "m",
         "m",
         "m",
+        "m",
         "m"
 };
 
 
 // Don't forget to update Get_value/Get_value_at_indices (and setter) implementation if these are adjusted
 static const char *input_var_names[INPUT_VAR_NAME_COUNT] = {
-        "RAIN_RATE",
         // Pa
-        "SURFACE_PRESSURE"
+        //"SURFACE_PRESSURE"
 };
 
 static const char *input_var_types[INPUT_VAR_NAME_COUNT] = {
-        "double",
-        "double"
+        //"double",
+        //"double"
 };
 
 static const char *input_var_units[INPUT_VAR_NAME_COUNT] = {
-        "m",
-        "Pa"
+        //"m",
+        //"Pa"
 };
 
 static const int input_var_item_count[INPUT_VAR_NAME_COUNT] = {
-        1,
-        1
+        //1,
+        //1
 };
 
 
