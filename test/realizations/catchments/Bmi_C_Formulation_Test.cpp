@@ -12,6 +12,8 @@
 #include "FileChecker.h"
 #include "Forcing.h"
 
+#define NGEN_BMI_C_CFE_COMPARE_STRICT 0
+
 using namespace realization;
 
 class Bmi_Formulation_Test : public ::testing::Test {
@@ -215,13 +217,13 @@ void Bmi_C_Formulation_Test::compare_cfe_model_values(int example_index, const s
     for (int i = 0; i < num_time_steps; ++i) {
         result_bmi = bmi_getter(bmi_cfe, i);
         result_internal = internal_getter(internal_cfe, i);
+        diff = abs(result_bmi - result_internal);
 
         if (error_percentage == 0.0) {
             EXPECT_EQ(result_bmi, result_internal)
                                 << printf(print_str.c_str(), i, value_name.c_str(), result_bmi, result_internal, diff);
         }
         else {
-            diff = abs(result_bmi - result_internal);
             allowed_error = max(result_bmi, result_internal) * error_percentage;
             // Set a hard threshold also, as when values are very small we won't care about large percentages either
             allowed_error = max(allowed_error, absolute_smallest_max_error);
