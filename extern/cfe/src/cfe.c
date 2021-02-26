@@ -545,7 +545,20 @@ void get_word(char *theString, int *start, int *end, char *theWord, int *wordlen
             theString[i] != '/') {
             theWord[j] = theString[i];
             j++;
-        } else {
+        }
+        else if (theString[i]!=' ' && theString[i]!='\t' && theString[i]!=',' && theString[i]!=':' && theString[i]!='/' \
+             && (theString[i]=='-' && theString[i-1]==',') )
+        {
+            theWord[j]=theString[i];
+            j++;
+        }
+        else if (theString[i]!=' ' && theString[i]!='\t' && theString[i]!=',' && theString[i]!=':' && theString[i]!='/' \
+             && (theString[i]=='-' && theString[i-1]=='e') )
+        {
+            theWord[j]=theString[i];
+            j++;
+        }
+        else {
             break;
         }
     }
