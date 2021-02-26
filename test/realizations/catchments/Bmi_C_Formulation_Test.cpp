@@ -231,7 +231,7 @@ void Bmi_C_Formulation_Test::compare_cfe_model_values(int example_index, const s
         }
     }
 #else
-    ASSERT_TRUE(false) << printf("Need to configure build properly for executing BMI CFE comparison tests before calling.")
+    ASSERT_TRUE(false) << printf("Need to configure build properly for executing BMI CFE comparison tests before calling.");
 #endif // NGEN_BMI_C_COMPARE_CFE_TESTS
 }
 
@@ -351,7 +351,7 @@ TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_1_a) {
 
     double response = formulation.get_response(0, 3600);
     std::string output = formulation.get_output_line_for_timestep(0, ",");
-    ASSERT_EQ(output, "0.000000,0.000000,0.000000,0.000000,0.000000,0.194581,0.194581");
+    ASSERT_EQ(output, "0.000000,0.000000,0.000000,0.000000,0.194581,0.194581");
 }
 
 /** Simple test of output with modified variables, picking time step when there was non-zero rain rate. */
