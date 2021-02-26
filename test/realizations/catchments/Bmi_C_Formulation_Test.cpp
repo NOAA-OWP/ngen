@@ -314,7 +314,7 @@ TEST_F(Bmi_C_Formulation_Test, GetResponse_0_a) {
 
     double response = formulation.get_response(0, 3600);
     // TODO: val seems to be this for now ... do something but account for error bound
-    ASSERT_EQ(response, 0.19458118700224783);
+    ASSERT_EQ(response, 0.19108623197892585);
 }
 
 /** Test of get response after several iterations. */
@@ -329,7 +329,7 @@ TEST_F(Bmi_C_Formulation_Test, GetResponse_0_b) {
         response = formulation.get_response(i, 3600);
     }
     // TODO: val seems to be this for now ... do something but account for error bound
-    ASSERT_EQ(response, 0.0019809221085605004);
+    ASSERT_EQ(response, 0.0025434016922131421);
 }
 
 /** Simple test of output. */
@@ -341,7 +341,7 @@ TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_0_a) {
 
     double response = formulation.get_response(0, 3600);
     std::string output = formulation.get_output_line_for_timestep(0, ",");
-    ASSERT_EQ(output, "0.000000,0.000000,0.000000,0.000000,0.194581,0.194581");
+    ASSERT_EQ(output, "0.000000,0.000000,0.000000,0.000000,0.191086,0.191086");
 }
 
 /** Simple test of output with modified variables. */
@@ -353,7 +353,7 @@ TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_1_a) {
 
     double response = formulation.get_response(0, 3600);
     std::string output = formulation.get_output_line_for_timestep(0, ",");
-    ASSERT_EQ(output, "0.000000,0.000000,0.000000,0.000000,0.194581,0.194581");
+    ASSERT_EQ(output, "0.000000,0.000000,0.000000,0.000000,0.191086,0.191086");
 }
 
 /** Simple test of output with modified variables, picking time step when there was non-zero rain rate. */
@@ -368,7 +368,7 @@ TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_1_b) {
         formulation.get_response(i++, 3600);
     double response = formulation.get_response(i, 3600);
     std::string output = formulation.get_output_line_for_timestep(i, ",");
-    ASSERT_EQ(output, "0.003153,0.004346,0.000449,0.001001,0.000070,0.001520");
+    ASSERT_EQ(output, "0.003153,0.004346,0.000449,0.001001,0.001424,0.002874");
 }
 
 #ifdef NGEN_BMI_C_COMPARE_CFE_TESTS
