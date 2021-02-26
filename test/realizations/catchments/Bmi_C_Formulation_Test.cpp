@@ -426,8 +426,7 @@ TEST_F(Bmi_C_Formulation_Test, Compare_CFEs_0_b) {
             const std::shared_ptr<Bmi_C_Formulation> &bmi_cfe, int time_step)
     {
         bmi_cfe->get_response(time_step, 3600);
-        return this->parse_from_delimited_string(bmi_cfe->get_output_line_for_timestep(time_step, delim), delim,
-                                                 csv_output_index);
+        return get_friend_var_value_as_double(*bmi_cfe, "SCHAAKE_OUTPUT_RUNOFF");
     };
 
     std::function<double(std::shared_ptr<Tshirt_C_Realization>, int)> internal_getter = [](
@@ -467,8 +466,7 @@ TEST_F(Bmi_C_Formulation_Test, Compare_CFEs_0_c) {
             const std::shared_ptr<Bmi_C_Formulation> &bmi_cfe, int time_step)
     {
         bmi_cfe->get_response(time_step, 3600);
-        return this->parse_from_delimited_string(bmi_cfe->get_output_line_for_timestep(time_step, delim), delim,
-                                                 csv_output_index);
+        return get_friend_var_value_as_double(*bmi_cfe, "GIUH_RUNOFF");
     };
 
     std::function<double(std::shared_ptr<Tshirt_C_Realization>, int)> internal_getter = [](
