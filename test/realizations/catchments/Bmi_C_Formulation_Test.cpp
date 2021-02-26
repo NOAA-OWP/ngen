@@ -393,7 +393,7 @@ TEST_F(Bmi_C_Formulation_Test, Compare_CFEs_0_a) {
         return internal_cfe->get_response(time_step, 3600);
     };
 
-    compare_cfe_model_values(ex_index, "Response Output", 700, error_margin, bmi_getter, internal_getter);
+    compare_cfe_model_values(ex_index, "Response Output", 720, error_margin, bmi_getter, internal_getter);
 
 }
 
@@ -435,7 +435,7 @@ TEST_F(Bmi_C_Formulation_Test, Compare_CFEs_0_b) {
         return internal_cfe->get_latest_flux_surface_runoff();
     };
 
-    compare_cfe_model_values(ex_index, "Schaake Runoff", 700, error_margin, bmi_getter, internal_getter);
+    compare_cfe_model_values(ex_index, "Schaake Runoff", 720, error_margin, bmi_getter, internal_getter);
 }
 
 /** Compare GIUH of BMI CFE and internal C-based version. */
@@ -476,7 +476,7 @@ TEST_F(Bmi_C_Formulation_Test, Compare_CFEs_0_c) {
         return internal_cfe->get_latest_flux_giuh_runoff();
     };
 
-    compare_cfe_model_values(ex_index, "GIUH Runoff", 700, error_margin, bmi_getter, internal_getter);
+    compare_cfe_model_values(ex_index, "GIUH Runoff", 720, error_margin, bmi_getter, internal_getter);
 }
 
 /** Compare Nash Lateral Flow Runoff of BMI CFE and internal C-based version. */
@@ -516,7 +516,7 @@ TEST_F(Bmi_C_Formulation_Test, Compare_CFEs_0_d) {
         return internal_cfe->get_latest_flux_lateral_flow();
     };
 
-    compare_cfe_model_values(ex_index, "Lateral Flow Runoff", 700, error_margin, bmi_getter, internal_getter);
+    compare_cfe_model_values(ex_index, "Lateral Flow Runoff", 720, error_margin, bmi_getter, internal_getter);
 }
 
 /** Compare Deep GW to Channel Flux of BMI CFE and internal C-based version. */
@@ -555,7 +555,7 @@ TEST_F(Bmi_C_Formulation_Test, Compare_CFEs_0_e) {
         return internal_cfe->get_latest_flux_base_flow();
     };
 
-    compare_cfe_model_values(ex_index, "Deep GW to Channel Flux", 700, error_margin, bmi_getter, internal_getter);
+    compare_cfe_model_values(ex_index, "Deep GW to Channel Flux", 720, error_margin, bmi_getter, internal_getter);
 }
 
 #endif  // NGEN_BMI_C_COMPARE_CFE_TESTS
