@@ -1,0 +1,20 @@
+forcing_file=./data/forcing/cat-87_2015-12-01 00_00_00_2015-12-30 23_00_00.csv
+yes_aorc=TRUE
+yes_wrf=FALSE
+et_options=FALSE,FALSE,FALSE,FALSE,TRUE
+#et_parms
+wind_speed_measurement_height_m=10.0
+humidity_measurement_height_m=2.0
+vegetation_height_m=0.12
+zero_plane_displacement_height_m=0.0003
+momentum_transfer_roughness_length=0.0
+heat_transfer_roughness_length_m0.0
+#surf_rad_params
+surface_longwave_emissivity=1.0
+surface_shortwave_albedo=0.22
+#solar_options
+cloud_base_height_known=FALSE
+#solar_parms
+latitude_degrees=37.25
+longitude_degrees=-97.5554
+site_elevation_m=303.33

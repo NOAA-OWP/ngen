@@ -92,7 +92,7 @@ static int Get_time_units (Bmi *self, char * units)
 static int Get_current_time (Bmi *self, double * time)
 {
     Get_start_time(self, time);
-#if CFE_DEGUG > 1
+#if ET_DEGUG > 1
     printf("Current model time step: '%d'\n", ((Et_Calc_Function *) self->data)->current_time_step);
 #endif
     *time += (((Et_Calc_Function *) self->data)->current_time_step * ((Et_Calc_Function *) self->data)->time_step_size);
@@ -202,7 +202,7 @@ static int Initialize (Bmi *self, const char *file)
     else
         et = (et_model *) self->data;
 
-    cfe->current_time_step = 0;
+    et->current_time_step = 0;
 
     double instantaneous_et_rate_m_per_s,
            psychrometric_constant_Pa_per_C,
@@ -250,7 +250,7 @@ static int Initialize (Bmi *self, const char *file)
     // Infer the number of time steps: assume a header, so equal to the number of lines minus 1
     et->num_timesteps = forcing_line_count - 1;
 
-#if CFE_DEGUG > 0
+#if ET_DEGUG > 0
     printf("Counts - Lines: %d | Max Line: %d | Num Time Steps: %d\n", forcing_line_count, max_forcing_line_length,
            et->num_timesteps);
 #endif
@@ -645,7 +645,7 @@ static int Get_var_nbytes (Bmi *self, const char *name, int * nbytes)
         }
     }
     if (item_count < 1)
-        item_count = ((cfe_model *) self->data)->num_timesteps;
+        item_count = ((et_model *) self->data)->num_timesteps;
 
     *nbytes = item_size * item_count;
     return BMI_SUCCESS;
@@ -868,11 +868,11 @@ et_model *new_bmi_et(void)
 }
 
 Bmi* register_bmi(Bmi *model) {
-    return register_bmi_cfe(model);
+    return register_bmi_et(model);
 }
 
 
-Bmi* register_bmi_cfe(Bmi *model)
+Bmi* register_bmi_et(Bmi *model)
 {
     if (model) {
         model->data = (void*)new_bmi_et();
