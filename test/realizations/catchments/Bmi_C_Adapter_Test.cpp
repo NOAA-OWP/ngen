@@ -22,6 +22,7 @@ protected:
     std::string forcing_file_name_0;
 
     std::vector<std::string> expected_output_var_names = {
+            "RAIN_RATE",
             "SCHAAKE_OUTPUT_RUNOFF",
             "GIUH_RUNOFF",
             "NASH_LATERAL_RUNOFF",
@@ -266,7 +267,8 @@ TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_4) {
     adapter.Finalize();
 }
 
-/** Test that Rain Rate input variable values can be retrieved. */
+/* Commenting out, since RAIN_RATE is not longer input variable; leaving in place to use as future template. */
+/*
 TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_5) {
     int input_var_index = 1;
 
@@ -282,5 +284,6 @@ TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_5) {
     ASSERT_GT(values.size(), 0);
     adapter.Finalize();
 }
+ */
 
 #endif  // NGEN_BMI_C_LIB_TESTS_ACTIVE
