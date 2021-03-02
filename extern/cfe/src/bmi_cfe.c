@@ -990,7 +990,7 @@ static int Get_var_nbytes (Bmi *self, const char *name, int * nbytes)
     if (item_count < 1) {
         for (int i = 0; i < OUTPUT_VAR_NAME_COUNT; i++) {
             if (strcmp(name, output_var_names[i]) == 0) {
-                item_count = input_var_item_count[i];
+                item_count = output_var_item_count[i];
                 break;
             }
         }
