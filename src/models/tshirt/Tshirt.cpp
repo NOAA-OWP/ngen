@@ -276,7 +276,7 @@ namespace tshirt {
 
         // Perform Schaake partitioning, passing some declared references to hold the calculated values.
         double surface_runoff, subsurface_infiltration_flux;
-        Schaake_partitioning_scheme(dt, model_params.Cschaake, soil_column_moisture_deficit_m, input_storage_m,
+        Schaake_partitioning_scheme_cpp(dt, model_params.Cschaake, soil_column_moisture_deficit_m, input_storage_m,
                                     &surface_runoff, &subsurface_infiltration_flux);
 
         double subsurface_excess, nash_subsurface_excess;
