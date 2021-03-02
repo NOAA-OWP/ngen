@@ -7,10 +7,10 @@ include_directories(${PROJ_ROOT_INCLUDE_DIR})
 if(BMI_C_LIB_ACTIVE)
     add_compile_definitions(NGEN_BMI_C_LIB_TESTS_ACTIVE)
     # When appropriate, make tests available to compare BMI C versus internal C-based versions of CFE model
-#    if (BMI_C_LIB_NAME STREQUAL "cfemodel")
-#        message(STATUS "BMI C using cfemodel library: activating additional comparison tests.")
-#        add_compile_definitions(NGEN_BMI_C_COMPARE_CFE_TESTS)
-#    endif()
+    if (BMI_C_LIB_NAME STREQUAL "cfemodel")
+        message(STATUS "BMI C using cfemodel library: activating additional comparison tests.")
+        add_compile_definitions(NGEN_BMI_C_COMPARE_CFE_TESTS)
+    endif()
 endif()
 
 # Add test source files (e.g., test1.cpp)
@@ -92,6 +92,12 @@ add_automated_test(
         test_bmi_c
         realizations/catchments/Bmi_C_Adapter_Test.cpp
         realizations/catchments/Bmi_C_Formulation_Test.cpp
+)
+
+add_automated_test(
+        compare_cfe
+        # TODO: this probably needs to be added to integration testing also
+        realizations/catchments/Bmi_C_Cfe_IT.cpp
 )
 
 # Unit tests
