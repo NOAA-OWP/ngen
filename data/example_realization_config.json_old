@@ -46,13 +46,13 @@
       "cat-87": {
         "formulations": [
           {
-            "name": "tshirt_c",
+            "name": "tshirt",
             "params": {
               "maxsmc": 0.439,
               "wltsmc": 0.066,
               "satdk": 0.00000338,
               "satpsi": 0.355,
-              "slope": 0.01,
+              "slope": 1.0,
               "scaled_distribution_fn_shape_parameter": 4.05,
               "multiplier": 0.0,
               "alpha_fc": 0.33,
@@ -67,20 +67,11 @@
                 0.0
               ],
               "soil_storage_percentage": 0.667,
-              "groundwater_storage_percentage": 0.01,
+              "groundwater_storage_percentage": 0.5,
               "timestep": 3600,
               "giuh": {
-                "giuh_path": "./giuh/GIUH.json",
-                "crosswalk_path": "./crosswalk.json",
-                "cdf_ordinates": [
-                    0.1,
-                    0.35,
-                    0.2,
-                    0.14,
-                    0.1,
-                    0.06,
-                    0.05
-                ]
+                "giuh_path": "./test/data/giuh/GIUH.json",
+                "crosswalk_path": "./data/crosswalk.json"
               }
             }
           }

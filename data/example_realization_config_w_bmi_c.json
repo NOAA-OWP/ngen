@@ -8,7 +8,7 @@
               "wltsmc": 0.066,
               "satdk": 0.00000338,
               "satpsi": 0.355,
-              "slope": 1.0,
+              "slope": 0.01,
               "scaled_distribution_fn_shape_parameter": 4.05,
               "multiplier": 0.0,
               "alpha_fc": 0.33,
@@ -23,7 +23,7 @@
                   0.0
               ],
               "soil_storage_percentage": 0.667,
-              "groundwater_storage_percentage": 0.5,
+              "groundwater_storage_percentage": 0.01,
               "timestep": 3600,
               "giuh": {
                   "giuh_path": "./test/data/giuh/GIUH.json",
@@ -49,6 +49,12 @@
                     "name": "bmi_c",
                     "params": {
                         "model_type_name": "bmi_c_cfe",
+                        "output_variables": ["RAIN_RATE",
+                                         "SCHAAKE_OUTPUT_RUNOFF",
+                                         "GIUH_RUNOFF",
+                                         "NASH_LATERAL_RUNOFF",
+                                         "DEEP_GW_TO_CHANNEL_FLUX",
+                                         "Q_OUT"],
                         "forcing_file": "./data/forcing/cat-87_2015-12-01 00_00_00_2015-12-30 23_00_00.csv",
                         "init_config": "./data/bmi/c/cfe/cat_87_bmi_config.txt",
                         "main_output_variable": "Q_OUT",

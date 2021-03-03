@@ -1032,7 +1032,7 @@ static int Get_value_ptr (Bmi *self, const char *name, void **dest)
 
     if (strcmp (name, "RAIN_RATE") == 0) {
         cfe_model* model = (cfe_model *)(self->data);
-        *dest = (void*)(model->forcing_data_precip_kg_per_m2 + model->current_time_step);
+        *dest = (void*)(model->forcing_data_precip_kg_per_m2 + model->current_time_step - 1);
         return BMI_SUCCESS;
     }
 
