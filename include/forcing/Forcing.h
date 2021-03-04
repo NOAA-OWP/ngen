@@ -145,6 +145,45 @@ class Forcing
     }
 
     /**
+     * Get the current value of a forcing param identified by its name.
+     *
+     * @param name The name of the forcing param for which the current value is desired.
+     * @return The particular param's current value.
+     */
+    inline double get_value_for_param_name(const std::string& name) {
+        if (name == AORC_FIELD_NAME_PRECIP_RATE) {
+            return get_current_hourly_precipitation_meters_per_second();
+        }
+        if (name == AORC_FIELD_NAME_SOLAR_SHORTWAVE) {
+            return get_AORC_DSWRF_surface_W_per_meters_squared();
+        }
+        if (name == AORC_FIELD_NAME_SOLAR_LONGWAVE) {
+            return get_AORC_DLWRF_surface_W_per_meters_squared();
+        }
+        if (name == AORC_FIELD_NAME_PRESSURE_SURFACE) {
+            return get_AORC_PRES_surface_Pa();
+        }
+        if (name == AORC_FIELD_NAME_TEMP_2M_AG) {
+            return get_AORC_TMP_2maboveground_K();
+        }
+        if (name == AORC_FIELD_NAME_APCP_SURFACE) {
+            return get_AORC_APCP_surface_kg_per_meters_squared();
+        }
+        if (name == AORC_FIELD_NAME_WIND_U_10M_AG) {
+            return get_AORC_UGRD_10maboveground_meters_per_second();
+        }
+        if (name == AORC_FIELD_NAME_WIND_V_10M_AG) {
+            return get_AORC_VGRD_10maboveground_meters_per_second();
+        }
+        if (name == AORC_FIELD_NAME_SPEC_HUMID_2M_AG) {
+            return get_AORC_SPFH_2maboveground_kg_per_kg();
+        }
+        else {
+            throw std::runtime_error("Cannot get forcing value for unrecognized parameter name '" + name + "'.");
+        }
+    }
+
+    /**
      * @brief Checks forcing vector index bounds and adjusts index if out of vector bounds
      * /// \todo: Bounds checking is based on precipitation vector. Consider potential for vectors of different sizes and indices.
      */
