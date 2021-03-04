@@ -13,6 +13,18 @@
 #include <time.h>
 #include <memory>
 
+// Recognized Forcing Value Names (in particular for use when configuring BMI input variables)
+// TODO: perhaps create way to configure a mapping of these to something different
+#define AORC_FIELD_NAME_PRECIP_RATE "precip_rate"
+#define AORC_FIELD_NAME_SOLAR_SHORTWAVE "DSWRF_surface"
+#define AORC_FIELD_NAME_SOLAR_LONGWAVE "DLWRF_surface"
+#define AORC_FIELD_NAME_PRESSURE_SURFACE "PRES_surface"
+#define AORC_FIELD_NAME_TEMP_2M_AG "TMP_2maboveground"
+#define AORC_FIELD_NAME_APCP_SURFACE "APCP_surface"
+#define AORC_FIELD_NAME_WIND_U_10M_AG "UGRD_10maboveground"
+#define AORC_FIELD_NAME_WIND_V_10M_AG "VGRD_10maboveground"
+#define AORC_FIELD_NAME_SPEC_HUMID_2M_AG "SPFH_2maboveground"
+
 using namespace std;
 
 /**
@@ -67,6 +79,26 @@ class Forcing
     public:
 
     typedef struct tm time_type;
+    
+    /**
+     * Get supported standard names for forcing fields.
+     *
+     * @return
+     */
+    static std::shared_ptr<set<std::string>> get_forcing_field_names() {
+        std::shared_ptr<set<std::string>> field_names = std::make_shared<set<std::string>>();
+        field_names->insert(AORC_FIELD_NAME_PRECIP_RATE);
+        field_names->insert(AORC_FIELD_NAME_SOLAR_SHORTWAVE);
+        field_names->insert(AORC_FIELD_NAME_SOLAR_LONGWAVE);
+        field_names->insert(AORC_FIELD_NAME_PRESSURE_SURFACE);
+        field_names->insert(AORC_FIELD_NAME_TEMP_2M_AG);
+        field_names->insert(AORC_FIELD_NAME_APCP_SURFACE);
+        field_names->insert(AORC_FIELD_NAME_WIND_U_10M_AG);
+        field_names->insert(AORC_FIELD_NAME_WIND_V_10M_AG);
+        field_names->insert(AORC_FIELD_NAME_SPEC_HUMID_2M_AG);
+        return field_names;
+    }
+
 
     /**
      * Default Constructor building an empty Forcing object
