@@ -145,6 +145,20 @@ class Forcing
     }
 
     /**
+     * Placeholder implementation for function to return the given param adjusted to be in the supplied units.
+     *
+     * At present this just returns the param's internal value.
+     *
+     * @param name The name of the desired parameter.
+     * @param units_str A string represented the units for conversion, using standard abbreviations.
+     * @return For now, just the param value, but in the future, the value converted.
+     */
+    inline double get_converted_value_for_param_in_units(const std::string& name, const std::string& units_str) {
+        // TODO: this is just a placeholder implementation that needs to be replaced with real convertion logic
+        return get_value_for_param_name(name);
+    }
+
+    /**
      * Get the current value of a forcing param identified by its name.
      *
      * @param name The name of the forcing param for which the current value is desired.
