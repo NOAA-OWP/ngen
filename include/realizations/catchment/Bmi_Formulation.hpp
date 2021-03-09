@@ -18,6 +18,7 @@
 #define BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS "output_header_fields"
 #define BMI_REALIZATION_CFG_PARAM_OPT__ALLOW_EXCEED_END "allow_exceed_end_time"
 #define BMI_REALIZATION_CFG_PARAM_OPT__FIXED_TIME_STEP "fixed_time_step"
+#define BMI_REALIZATION_CFG_PARAM_OPT__LIB_FILE "library_file"
 
 // Forward declaration to provide access to protected items in testing
 class Bmi_Formulation_Test;
@@ -342,7 +343,8 @@ namespace realization {
                 BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS,
                 BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS,
                 BMI_REALIZATION_CFG_PARAM_OPT__ALLOW_EXCEED_END,
-                BMI_REALIZATION_CFG_PARAM_OPT__FIXED_TIME_STEP
+                BMI_REALIZATION_CFG_PARAM_OPT__FIXED_TIME_STEP,
+                BMI_REALIZATION_CFG_PARAM_OPT__LIB_FILE
         };
         std::vector<std::string> REQUIRED_PARAMETERS = {
                 BMI_REALIZATION_CFG_PARAM_REQ__FORCING_FILE,
