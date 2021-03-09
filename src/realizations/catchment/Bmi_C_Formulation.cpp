@@ -53,6 +53,68 @@ std::shared_ptr<Bmi_C_Adapter> Bmi_C_Formulation::construct_model(const geojson:
     }
 }
 
+/**
+ * Get model input values from forcing data, accounting for model and forcing time steps not aligning.
+ *
+ * Get values to use to set model input variables, sourced from forcing data.  Account for if model time step
+ * (MTS) does not align with forcing time step (FTS), either due to MTS starting after the start of FTS, MTS
+ * extending beyond the end of FTS, or both.
+ *
+ * @param t_delta The size of the model's time step in seconds.
+ * @param model_initial_time The model's current time in its internal units and representation.
+ * @param params An ordered collection of desired forcing param names from which data for inputs is needed.
+ * @param param_units An ordered collection units of strings representing the BMI model's expected units for the
+ *                    corresponding input, so that value conversions of the proportional contributions are done.
+ * @param summed_contributions A referenced ordered collection that will contain the returned summed contributions.
+ */
+inline void Bmi_C_Formulation::get_forcing_data_ts_contributions(time_step_t t_delta, const double &model_initial_time,
+                                                                 const std::vector<std::string> &params,
+                                                                 const std::vector<std::string> &param_units,
+                                                                 std::vector<double> &summed_contributions)
+{
+    time_t model_ts_start_offset, model_ts_seconds_contained_in_forcing_ts;
+    bool increment_to_next_forcing_ts;
+
+    // The sum of these first two is essentially the model time step's epoch start time in seconds
+    model_ts_start_offset = (time_t) (get_bmi_model()->convert_model_time_to_seconds(model_initial_time)) +
+                            get_bmi_model_start_time_forcing_offset_s() -
+                            forcing.get_time_epoch();
+
+    while (t_delta > 0) {
+        // If model ts, after having start time shifted forward within forcing step (if needed), goes beyond forcing ts
+        if ((time_t)t_delta + model_ts_start_offset >= forcing.get_time_step_size()) {
+            increment_to_next_forcing_ts = true;
+            model_ts_seconds_contained_in_forcing_ts = forcing.get_time_step_size() - model_ts_start_offset;
+        }
+        else {
+            increment_to_next_forcing_ts = false;
+            model_ts_seconds_contained_in_forcing_ts = (time_t)t_delta;
+        }
+
+        // Get the contributions from this forcing ts for all the forcing params needed.
+        for (size_t i = 0; i < params.size(); ++i) {
+            if (forcing.is_param_sum_over_time_step(params[i])) {
+                summed_contributions[i] += forcing.get_converted_value_for_param_in_units(params[i], param_units[i]) *
+                                           (double) model_ts_seconds_contained_in_forcing_ts /
+                                           (double) forcing.get_time_step_size();
+            }
+            else {
+                summed_contributions[i] += forcing.get_converted_value_for_param_in_units(params[i], param_units[i]);
+            }
+        }
+
+        // Account for the processed model time compared to the entire delta
+        t_delta -= (time_step_t)model_ts_seconds_contained_in_forcing_ts;
+        // The offset should only possibly be non-zero the first time (after, if the model ts extends beyond the first
+        // forcing ts, it always picks up at the beginning of the subsequent forcing ts), so set to 0 now.
+        model_ts_start_offset = 0;
+        // Also, when appropriate ...
+        if (increment_to_next_forcing_ts) {
+            forcing.get_next_hourly_precipitation_meters_per_second();
+        }
+    }
+}
+
 std::string Bmi_C_Formulation::get_output_header_line(std::string delimiter) {
     return boost::algorithm::join(get_output_header_fields(), delimiter);
 }
