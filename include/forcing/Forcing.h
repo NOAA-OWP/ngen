@@ -293,6 +293,20 @@ class Forcing
     };
 
     /**
+     * Get the time step size, based on epoch vector, assuming the last ts is equal to the next to last.
+     *
+     * @return
+     */
+    time_t get_time_step_size() {
+        check_forcing_vector_index_bounds();
+        // When at the last index, make an assumption the length is the same as the next-to-last
+        if (time_epoch_vector.size() - 1 == forcing_vector_index)
+            return time_epoch_vector.at(forcing_vector_index) - time_epoch_vector.at(forcing_vector_index - 1);
+        else
+            return time_epoch_vector.at(forcing_vector_index + 1) - time_epoch_vector.at(forcing_vector_index);
+    }
+
+    /**
      * @brief Accessor to AORC data struct
      * @return AORC_data
      */
