@@ -251,3 +251,55 @@ double Bmi_C_Formulation::get_var_value_as_double(const int& index, const std::s
 bool Bmi_C_Formulation::is_model_initialized() {
     return get_bmi_model()->is_model_initialized();
 }
+
+/**
+ * Set BMI input variable values for the model appropriately prior to calling its `BMI `update()``.
+ *
+ * @param model_initial_time The model's time prior to the update, in its internal units and representation.
+ * @param t_delta The size of the time step over which the formulation is going to update the model, which might be
+ *                different than the model's internal time step.
+ */
+void Bmi_C_Formulation::set_model_inputs_prior_to_update(const double &model_initial_time, time_step_t t_delta) {
+    std::string std_name;
+
+    std::vector<std::string> in_var_names = get_bmi_model()->GetInputVarNames();
+    // Get the BMI variables' units and associated internal standard names, keeping them in these
+    std::vector<std::string> standard_names(in_var_names.size());
+    std::vector<std::string> bmi_var_units(in_var_names.size());
+    // We may need to sum contributions from multiple time steps before setting, so do that with this (indexes align)
+    std::vector<double> variable_values(in_var_names.size(), 0.0);
+    // Right now, the only known field names are the standard names for forcings.
+    std::shared_ptr<std::set<std::string>> known_field_names = Forcing::get_forcing_field_names();
+
+    // First get field name mappings and associated model-side units
+    for (auto & in_var_name : in_var_names) {
+        std_name = get_config_mapped_variable_name(in_var_name);
+        // Also, recognize some external CSDMS standard names, whether from model or configured mapping ...
+        // TODO: right now handle just rainfall, but in the future, support more possibly
+        if (std_name == CSDMS_STD_NAME_RAIN_RATE) {
+            std_name = AORC_FIELD_NAME_PRECIP_RATE;
+        }
+        // With any mapping translation done, if std_name is not in set of standard internal names, that is a problem
+        if (known_field_names->find(std_name) == known_field_names->end()) {
+            throw std::runtime_error(
+                    "Unrecognized BMI input variable '" + std_name + "' cannot be set in '" + get_model_type_name()
+                    + "' as it is not a preset standard and not mapped to such a field name via configuration.");
+        }
+        // FIXME: later perhaps handle input variables that are themselves arrays, but for now do not support
+        if (get_bmi_model()->GetVarItemsize(in_var_name) != get_bmi_model()->GetVarNbytes(in_var_name)) {
+            throw std::runtime_error(
+                    "BMI input variable '" + in_var_name + "' is an array, which is not currently supported");
+        }
+        // Assign associated standard name and model-side unit string to those collections at corresponding index
+        standard_names.push_back(std_name);
+        bmi_var_units.push_back(get_bmi_model()->GetVarUnits(in_var_name));
+    }
+    // Run separate (hopefully inline) function for getting input values for each variable, potentially by summing
+    // proportionaly contributions from multiple forcing time steps if model time step doesn't align
+    get_forcing_data_ts_contributions(t_delta, model_initial_time, standard_names, bmi_var_units, variable_values);
+
+    // Finally, set the model input values
+    for (int i = 0; i < in_var_names.size(); ++i) {
+        get_bmi_model()->SetValue(in_var_names[i], (void*)&(variable_values[i]));
+    }
+}
