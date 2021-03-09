@@ -178,6 +178,7 @@ double Bmi_C_Formulation::get_response(time_step_t t_index, time_step_t t_delta)
         throw std::invalid_argument("Getting response of previous time step in BMI C formulation is not allowed.");
     }
 
+    // The time step delta size, expressed in the units internally used by the model
     double t_delta_model_units;
     if (next_time_step_index <= t_index) {
         t_delta_model_units = get_bmi_model()->convert_seconds_to_model_time(t_delta);
@@ -193,10 +194,12 @@ double Bmi_C_Formulation::get_response(time_step_t t_index, time_step_t t_delta)
     }
 
     while (next_time_step_index <= t_index) {
+        double model_initial_time = get_bmi_model()->GetCurrentTime();
+        set_model_inputs_prior_to_update(model_initial_time, t_delta);
         if (t_delta_model_units == get_bmi_model()->GetTimeStep())
             get_bmi_model()->Update();
         else
-            get_bmi_model()->UpdateUntil(get_bmi_model()->GetCurrentTime() + t_delta_model_units);
+            get_bmi_model()->UpdateUntil(model_initial_time + t_delta_model_units);
         // TODO: again, consider whether we should store any historic response, ts_delta, or other var values
         next_time_step_index++;
     }
