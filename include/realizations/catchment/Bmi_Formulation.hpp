@@ -322,6 +322,15 @@ namespace realization {
         }
 
         /**
+         * Set BMI input variable values for the model appropriately prior to calling its `BMI `update()``.
+         *
+         * @param model_initial_time The model's time prior to the update, in its internal units and representation.
+         * @param t_delta The size of the time step over which the formulation is going to update the model, which might
+         *                be different than the model's internal time step.
+         */
+        virtual void set_model_inputs_prior_to_update(const double &model_initial_time, time_step_t t_delta) = 0;
+
+        /**
          * Set the name of the specific type of the backing model object.
          *
          * @param type_name The name of the backing model object's type.
