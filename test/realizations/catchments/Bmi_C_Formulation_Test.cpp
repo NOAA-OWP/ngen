@@ -291,6 +291,15 @@ TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_1_b) {
     ASSERT_EQ(output, "0.003153,0.004346,0.000449,0.001001,0.001424,0.002874");
 }
 
+TEST_F(Bmi_C_Formulation_Test, determine_model_time_offset_1_a) {
+    // TODO: implement tests
+    ASSERT_TRUE(false);
+}
+
+TEST_F(Bmi_C_Formulation_Test, get_forcing_data_ts_contributions_1_a) {
+    // TODO: implement tests
+    ASSERT_TRUE(false);
+}
 
 
 #endif  // NGEN_BMI_C_LIB_TESTS_ACTIVE
