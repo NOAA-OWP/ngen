@@ -140,6 +140,10 @@ namespace realization {
             return forcing_file_path;
         }
 
+        const time_t &get_bmi_model_start_time_forcing_offset_s() const {
+            return bmi_model_start_time_forcing_offset_s;
+        }
+
         /**
          * Get the name of the specific type of the backing model object.
          *
@@ -295,6 +299,10 @@ namespace realization {
             bmi_model = model;
         }
 
+        void set_bmi_model_start_time_forcing_offset_s(const time_t &offset_s) {
+            bmi_model_start_time_forcing_offset_s = offset_s;
+        }
+
         void set_bmi_model_time_step_fixed(bool is_fix_time_step) {
             bmi_model_time_step_fixed = is_fix_time_step;
         }
@@ -369,6 +377,11 @@ namespace realization {
         std::shared_ptr<M> bmi_model;
         /** Whether backing model has fixed time step size. */
         bool bmi_model_time_step_fixed = true;
+        /**
+         * The offset, converted to seconds, from the model's start time to the start time of the initial forcing time
+         * step.
+         */
+        time_t bmi_model_start_time_forcing_offset_s;
         std::string bmi_main_output_var;
         /** A configured mapping of BMI model variable names to standard names for use inside the framework. */
         std::map<std::string, std::string> bmi_var_names_map;
