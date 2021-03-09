@@ -13,7 +13,7 @@
 #define BMI_REALIZATION_CFG_PARAM_REQ__USES_FORCINGS "uses_forcing_file"
 
 // Then the optional
-#define BMI_REALIZATION_CFG_PARAM_OPT__OTHER_IN_VARS "other_input_variables"
+#define BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES "variables_names_map"
 #define BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS "output_variables"
 #define BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS "output_header_fields"
 #define BMI_REALIZATION_CFG_PARAM_OPT__ALLOW_EXCEED_END "allow_exceed_end_time"
@@ -71,6 +71,28 @@ namespace realization {
 
         const vector<std::string> &get_required_parameters() override {
             return REQUIRED_PARAMETERS;
+        }
+
+        /**
+         * When possible, translate a variable name for a BMI model to an internally recognized name.
+         *
+         * Translate some BMI variable name to something recognized in some internal context for use within NGen.  Do
+         * this according to the map of variable names supplied in the external formulation config.  If no mapping for
+         * the given variable name was configured, return the variable name itself.
+         *
+         * For example, perhaps a BMI model has the input variable "RAIN_RATE."  Configuring this variable name to map
+         * to "precip_rate" will allow the formulation to understand that this particular forcing field should be used
+         * to set the model's "RAIN_RATE" variable.
+         *
+         * @param model_var_name The BMI variable name to translate so its purpose is recognized internally.
+         * @return Either the internal equivalent variable name, or the provided name if there is not a mapping entry.
+         */
+        const std::string &get_config_mapped_variable_name(const std::string &model_var_name) {
+            // TODO: need to introduce validation elsewhere that all mapped names are valid AORC field constants.
+            if (bmi_var_names_map.find(model_var_name) != bmi_var_names_map.end())
+                return bmi_var_names_map[model_var_name];
+            else
+                return model_var_name;
         }
 
     protected:
@@ -173,6 +195,16 @@ namespace realization {
             if (properties.find(BMI_REALIZATION_CFG_PARAM_OPT__FIXED_TIME_STEP) != properties.end()) {
                 set_bmi_model_time_step_fixed(
                         properties.at(BMI_REALIZATION_CFG_PARAM_OPT__FIXED_TIME_STEP).as_boolean());
+            }
+
+            auto std_names_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES);
+            if (std_names_it != properties.end()) {
+                geojson::PropertyMap names_map = std_names_it->second.get_values();
+                auto names_it = names_map.begin();
+                while (names_it != names_map.end()) {
+                    bmi_var_names_map.insert(
+                            std::pair<std::string, std::string>(names_it->first, names_it->second.as_string()));
+                }
             }
 
             // Do this next, since after checking whether other input variables are present in the properties, we can
@@ -323,6 +355,8 @@ namespace realization {
         /** Whether backing model has fixed time step size. */
         bool bmi_model_time_step_fixed = true;
         std::string bmi_main_output_var;
+        /** A configured mapping of BMI model variable names to standard names for use inside the framework. */
+        std::map<std::string, std::string> bmi_var_names_map;
         /** Whether the backing model uses/reads the forcing file directly for getting input data. */
         bool bmi_using_forcing_file;
         std::string forcing_file_path;
@@ -340,7 +374,7 @@ namespace realization {
         std::string model_type_name;
 
         std::vector<std::string> OPTIONAL_PARAMETERS = {
-                BMI_REALIZATION_CFG_PARAM_OPT__OTHER_IN_VARS,
+                BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES,
                 BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS,
                 BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS,
                 BMI_REALIZATION_CFG_PARAM_OPT__ALLOW_EXCEED_END,
