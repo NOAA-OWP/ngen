@@ -406,6 +406,34 @@ class Forcing
         return AORC_vector.at(forcing_vector_index).VGRD_10maboveground_meters_per_second;
     };
 
+    /**
+     * Get whether a param's value is an aggregate sum over the entire time step.
+     *
+     * Certain params, like rain fall, are aggregated sums over an entire time step.  Others, such as pressure, are not
+     * such sums and instead something else like an instantaneous reading or an average value over the time step.
+     *
+     * It may be the case that forcing data is needed for some discretization different than the forcing time step.
+     * These values can be calculated (or at least approximated), but doing so requires knowing which values are summed
+     * versus not.
+     *
+     * @param name The name of the forcing param for which the current value is desired.
+     * @return Whether the param's value is an aggregate sum.
+     */
+    inline bool is_param_sum_over_time_step(const std::string& name) {
+        if (name == AORC_FIELD_NAME_PRECIP_RATE) {
+            return true;
+        }
+        if (name == AORC_FIELD_NAME_SOLAR_SHORTWAVE) {
+            return true;
+        }
+        if (name == AORC_FIELD_NAME_SOLAR_LONGWAVE) {
+            return true;
+        }
+        if (name == AORC_FIELD_NAME_APCP_SURFACE) {
+            return true;
+        }
+        return false;
+    }
 
     private:
 
