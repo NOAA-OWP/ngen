@@ -115,6 +115,16 @@ namespace realization {
          */
         virtual std::shared_ptr<M> construct_model(const geojson::PropertyMap& properties) = 0;
 
+        /**
+         * Determine and set the offset time of the model in seconds, compared to forcing data.
+         *
+         * BMI models frequently have their model start time be set to 0.  As such, to know what the forcing time is
+         * compared to the model time, an offset value is needed.  This becomes important in situations when the size of
+         * the time steps for forcing data versus model execution are not equal.  This method will determine and set
+         * this value.
+         */
+        virtual void determine_model_time_offset() = 0;
+
         const bool &get_allow_model_exceed_end_time() const {
             return allow_model_exceed_end_time;
         }
@@ -220,6 +230,10 @@ namespace realization {
             // Do this next, since after checking whether other input variables are present in the properties, we can
             // now construct the adapter and init the model
             set_bmi_model(construct_model(properties));
+
+            // Make sure that this is able to interpret model time and convert to real time, since BMI model time is
+            // usually starting at 0 and just counting up
+            determine_model_time_offset();
 
             // Output variable subset and order, if present
             auto out_var_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS);
