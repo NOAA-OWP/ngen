@@ -192,6 +192,20 @@ TEST_F(Bmi_C_Formulation_Test, Initialize_0_a) {
     ASSERT_EQ(get_friend_is_bmi_using_forcing_file(formulation), uses_forcing_file[ex_index]);
 }
 
+/** Test to make sure we can initialize multiple model instances with dynamic loading. */
+TEST_F(Bmi_C_Formulation_Test, Initialize_1_a) {
+    Bmi_C_Formulation form_1(catchment_ids[0], *forcing_params_examples[0], utils::StreamHandler());
+    form_1.create_formulation(config_prop_ptree[0]);
+
+    Bmi_C_Formulation form_2(catchment_ids[1], *forcing_params_examples[1], utils::StreamHandler());
+    form_2.create_formulation(config_prop_ptree[1]);
+
+    std::string header_1 = form_1.get_output_header_line(",");
+    std::string header_2 = form_2.get_output_header_line(",");
+
+    ASSERT_EQ(header_1, header_2);
+}
+
 /** Simple test of get response. */
 TEST_F(Bmi_C_Formulation_Test, GetResponse_0_a) {
     int ex_index = 0;
@@ -202,6 +216,23 @@ TEST_F(Bmi_C_Formulation_Test, GetResponse_0_a) {
     double response = formulation.get_response(0, 3600);
     // TODO: val seems to be this for now ... do something but account for error bound
     ASSERT_EQ(response, 0.19108623197892585);
+}
+
+/** Test to make sure we can execute multiple model instances with dynamic loading. */
+TEST_F(Bmi_C_Formulation_Test, GetResponse_1_a) {
+    Bmi_C_Formulation form_1(catchment_ids[0], *forcing_params_examples[0], utils::StreamHandler());
+    form_1.create_formulation(config_prop_ptree[0]);
+
+    Bmi_C_Formulation form_2(catchment_ids[1], *forcing_params_examples[1], utils::StreamHandler());
+    form_2.create_formulation(config_prop_ptree[1]);
+
+    // Do these out of order
+    double response_1_step_0 = form_1.get_response(0, 3600);
+    double response_2_step_0 = form_2.get_response(0, 3600);
+    double response_2_step_1 = form_2.get_response(0, 3600);
+    ASSERT_EQ(response_1_step_0, response_2_step_0);
+    double response_1_step_1 = form_1.get_response(0, 3600);
+    ASSERT_EQ(response_1_step_1, response_2_step_1);
 }
 
 /** Test of get response after several iterations. */
