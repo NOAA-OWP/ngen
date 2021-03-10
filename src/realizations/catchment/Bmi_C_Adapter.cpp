@@ -247,6 +247,10 @@ void Bmi_C_Adapter::Finalize() {
             throw models::external::State_Exception("Failure attempting to finalize BMI C model " + model_name);
         }
     }
+    // Then close the dynamically loaded library
+    if (dyn_lib_handle != nullptr) {
+        dlclose(dyn_lib_handle);
+    }
 }
 
 std::shared_ptr<std::vector<std::string>> Bmi_C_Adapter::get_variable_names(bool is_input_variable) {
@@ -416,7 +420,7 @@ void Bmi_C_Adapter::Initialize() {
     else {
         // Make sure this is set to 'true' after this function call finishes
         model_initialized = true;
-        register_bmi(bmi_model.get());
+        dynamic_library_load();
         int init_result = bmi_model->initialize(bmi_model.get(), bmi_init_config.c_str());
         if (init_result != BMI_SUCCESS) {
             init_exception_msg = "Failure when attempting to initialize " + model_name;
