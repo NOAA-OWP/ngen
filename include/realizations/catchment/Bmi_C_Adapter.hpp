@@ -29,19 +29,23 @@ namespace models {
 
         public:
 
-            explicit Bmi_C_Adapter(std::string forcing_file_path, bool model_uses_forcing_file, bool allow_exceed_end,
+            explicit Bmi_C_Adapter(std::string library_file_path, std::string forcing_file_path,
+                                   bool model_uses_forcing_file, bool allow_exceed_end,
                                    bool has_fixed_time_step, utils::StreamHandler output);
 
-            Bmi_C_Adapter(std::string bmi_init_config, std::string forcing_file_path, bool model_uses_forcing_file,
+            Bmi_C_Adapter(std::string library_file_path, std::string bmi_init_config,
+                          std::string forcing_file_path, bool model_uses_forcing_file,
                           bool allow_exceed_end, bool has_fixed_time_step, utils::StreamHandler output);
 
-            Bmi_C_Adapter(std::string forcing_file_path, bool model_uses_forcing_file, bool allow_exceed_end,
-                          bool has_fixed_time_step, const geojson::JSONProperty& other_input_vars,
+            Bmi_C_Adapter(std::string library_file_path, std::string forcing_file_path,
+                          bool model_uses_forcing_file, bool allow_exceed_end,
+                          bool has_fixed_time_step, const geojson::JSONProperty &other_input_vars,
                           utils::StreamHandler output);
 
-            Bmi_C_Adapter(const std::string& bmi_init_config, std::string forcing_file_path,
+            Bmi_C_Adapter(std::string library_file_path, const std::string &bmi_init_config,
+                          std::string forcing_file_path,
                           bool model_uses_forcing_file, bool allow_exceed_end, bool has_fixed_time_step,
-                          const geojson::JSONProperty& other_input_vars, utils::StreamHandler output);
+                          const geojson::JSONProperty &other_input_vars, utils::StreamHandler output);
 
             // Copy constructor
             Bmi_C_Adapter(Bmi_C_Adapter &adapter);
@@ -439,6 +443,8 @@ namespace models {
             bool allow_model_exceed_end_time = false;
             /** Path (as a string) to the BMI config file for initializing the backing model (empty if none). */
             std::string bmi_init_config;
+            /** Path to the BMI shared library file, for dynamic linking. */
+            std::string bmi_lib_file;
             /** Pointer to C BMI model struct object. */
             std::shared_ptr<Bmi> bmi_model;
             /** Whether this particular model has a time step size that cannot be changed internally or externally. */
