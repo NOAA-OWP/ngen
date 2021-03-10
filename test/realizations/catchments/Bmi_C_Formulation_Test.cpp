@@ -3,6 +3,7 @@
 
 #ifdef NGEN_BMI_C_LIB_TESTS_ACTIVE
 
+#ifndef BMI_CFE_LOCAL_LIB_NAME
 #ifdef __APPLE__
     #define BMI_CFE_LOCAL_LIB_NAME "libcfemodel.dylib"
 #else
@@ -10,6 +11,7 @@
     #define BMI_CFE_LOCAL_LIB_NAME "libcfemodel.so"
     #endif // __GNUC__
 #endif // __APPLE__
+#endif // BMI_CFE_LOCAL_LIB_NAME
 
 #include "Bmi_Formulation.hpp"
 #include "Bmi_C_Formulation.hpp"
