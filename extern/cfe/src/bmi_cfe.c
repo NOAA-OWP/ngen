@@ -1225,12 +1225,6 @@ cfe_model *new_bmi_cfe(void)
 }
 
 Bmi* register_bmi(Bmi *model) {
-    return register_bmi_cfe(model);
-}
-
-
-Bmi* register_bmi_cfe(Bmi *model)
-{
     if (model) {
         model->data = (void*)new_bmi_cfe();
 
