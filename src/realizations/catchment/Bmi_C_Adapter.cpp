@@ -158,13 +158,18 @@ Bmi_C_Adapter::Bmi_C_Adapter(Bmi_C_Adapter &&adapter) noexcept: model_name(std::
                                                                         adapter.bmi_model_time_convert_factor),
                                                                 bmi_model_uses_forcing_file(
                                                                         adapter.bmi_model_uses_forcing_file),
+                                                                dyn_lib_handle(adapter.dyn_lib_handle),
                                                                 forcing_file_path(std::move(adapter.forcing_file_path)),
                                                                 init_exception_msg(
                                                                         std::move(adapter.init_exception_msg)),
                                                                 input_var_names(std::move(adapter.input_var_names)),
                                                                 model_initialized(adapter.model_initialized),
                                                                 output_var_names(std::move(adapter.output_var_names)),
-                                                                output(std::move(std::move(adapter.output))) {}
+                                                                output(std::move(std::move(adapter.output)))
+{
+    // Have to make sure to do this after "moving" so the original does not close the dynamically loaded library handle
+    adapter.dyn_lib_handle = nullptr;
+}
 
 /**
  * Class destructor.
