@@ -23,6 +23,7 @@
 #include "FileChecker.h"
 #include "Formulation_Manager.hpp"
 #include "Forcing.h"
+#include <boost/date_time.hpp>
 
 using namespace realization;
 
@@ -36,16 +37,31 @@ protected:
         return utils::FileChecker::find_first_readable(file_opts);
     }
 
+    static void call_friend_determine_model_time_offset(Bmi_C_Formulation& formulation) {
+        formulation.determine_model_time_offset();
+    }
+
     static std::string get_friend_bmi_init_config(const Bmi_C_Formulation& formulation) {
         return formulation.get_bmi_init_config();
     }
-
     static std::string get_friend_bmi_main_output_var(const Bmi_C_Formulation& formulation) {
         return formulation.get_bmi_main_output_var();
     }
 
+    static std::shared_ptr<models::bmi::Bmi_C_Adapter> get_friend_bmi_model(Bmi_C_Formulation& formulation) {
+        return formulation.get_bmi_model();
+    }
+
+    static time_t get_friend_bmi_model_start_time_forcing_offset_s(const Bmi_C_Formulation& formulation) {
+        return formulation.get_bmi_model_start_time_forcing_offset_s();
+    }
+
     static std::string get_friend_forcing_file_path(const Bmi_C_Formulation& formulation) {
         return formulation.get_forcing_file_path();
+    }
+
+    static time_t get_friend_forcing_start_time(Bmi_C_Formulation& formulation) {
+        return formulation.forcing.get_time_epoch();
     }
 
     static bool get_friend_is_bmi_using_forcing_file(const Bmi_C_Formulation& formulation) {
@@ -58,6 +74,20 @@ protected:
 
     static double get_friend_var_value_as_double(Bmi_C_Formulation& formulation, const string& var_name) {
         return formulation.get_var_value_as_double(var_name);
+    }
+
+    static time_t parse_forcing_time(const std::string& date_time_str) {
+
+        std::locale format = std::locale(std::locale::classic(), new boost::posix_time::time_input_facet("%Y-%m-%d %H:%M:%S"));
+
+        boost::posix_time::ptime pt;
+        std::istringstream is(date_time_str);
+        is.imbue(format);
+        is >> pt;
+
+        boost::posix_time::ptime timet_start(boost::gregorian::date(1970,1,1));
+        boost::posix_time::time_duration diff = pt - timet_start;
+        return diff.ticks() / boost::posix_time::time_duration::rep_type::ticks_per_second;
     }
 
     void SetUp() override;
@@ -291,9 +321,42 @@ TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_1_b) {
     ASSERT_EQ(output, "0.003153,0.004346,0.000449,0.001001,0.001424,0.002874");
 }
 
-TEST_F(Bmi_C_Formulation_Test, determine_model_time_offset_1_a) {
-    // TODO: implement tests
-    ASSERT_TRUE(false);
+TEST_F(Bmi_C_Formulation_Test, determine_model_time_offset_0_a) {
+    int ex_index = 0;
+
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], *forcing_params_examples[ex_index], utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+    std::shared_ptr<models::bmi::Bmi_C_Adapter> model_adapter = get_friend_bmi_model(formulation);
+
+    double model_start = model_adapter->GetStartTime();
+    ASSERT_EQ(model_start, 0.0);
+}
+
+TEST_F(Bmi_C_Formulation_Test, determine_model_time_offset_0_b) {
+    int ex_index = 0;
+
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], *forcing_params_examples[ex_index], utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+    std::shared_ptr<models::bmi::Bmi_C_Adapter> model_adapter = get_friend_bmi_model(formulation);
+    time_t forcing_start = get_friend_forcing_start_time(formulation);
+
+    ASSERT_EQ(forcing_start,  parse_forcing_time("2015-12-01 00:00:00"));
+}
+
+TEST_F(Bmi_C_Formulation_Test, determine_model_time_offset_0_c) {
+    int ex_index = 0;
+
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], *forcing_params_examples[ex_index], utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+    std::shared_ptr<models::bmi::Bmi_C_Adapter> model_adapter = get_friend_bmi_model(formulation);
+
+    call_friend_determine_model_time_offset(formulation);
+
+    // Note that this depends on the particular value for forcing time implied by determine_model_time_offset_0_b above
+    // it also assumes the model time starts at 0
+    auto expected_offset = (time_t) 1448928000;
+
+    ASSERT_EQ(get_friend_bmi_model_start_time_forcing_offset_s(formulation), expected_offset);
 }
 
 TEST_F(Bmi_C_Formulation_Test, get_forcing_data_ts_contributions_1_a) {
