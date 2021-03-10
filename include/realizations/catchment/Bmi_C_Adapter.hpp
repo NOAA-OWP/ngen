@@ -402,6 +402,24 @@ namespace models {
             std::string model_name = "BMI C model";
 
             /**
+             * Dynamically load the required C library and the backing BMI model itself.
+             *
+             * Dynamically load the external C library for this object's backing model.  Then load this object's "instance" of the
+             * model itself.  For C BMI models, this is actually a struct with function pointer (rather than a class with member
+             * functions).
+             *
+             * Libraries should provide an additional ``register_bmi`` function that essentially works as a constructor (or factory)
+             * for the model struct, accepts a pointer to a BMI struct and then setting the appropriate function pointer values.
+             *
+             * A handle to the dynamically loaded library (as a ``void*``) is maintained in within a private member variable.  A
+             * warning will output if this function is called with the handle already set (i.e., with the library already loaded),
+             * and then the function will returns without taking any other action.
+             *
+             * @throws ``std::runtime_error`` Thrown if the configured BMI C library file is not readable.
+             */
+            inline void dynamic_library_load();
+
+            /**
              * Get model time step size pointer, using lazy loading when fixed.
              *
              * Get a pointer to the value of the backing model's time step size.  If the model is configured to have
@@ -455,6 +473,8 @@ namespace models {
             std::shared_ptr<double> bmi_model_time_step_size = nullptr;
             /** Whether this particular model implementation directly reads input data from the forcing file. */
             bool bmi_model_uses_forcing_file;
+            /** Handle for dynamically loaded library file. */
+            void* dyn_lib_handle = nullptr;
             std::string forcing_file_path;
             /** Message from an exception (if encountered) on the first attempt to initialize the backing model. */
             std::string init_exception_msg;
