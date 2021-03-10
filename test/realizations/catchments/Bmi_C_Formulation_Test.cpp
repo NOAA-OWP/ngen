@@ -193,7 +193,7 @@ void Bmi_C_Formulation_Test::SetUp() {
     /* Set up the derived example details */
     for (int i = 0; i < EX_COUNT; i++) {
         std::shared_ptr<forcing_params> params = std::make_shared<forcing_params>(
-                forcing_params(forcing_file[i], "2015-12-01 00:00:00", "2015-12-01 23:00:00"));
+                forcing_params(forcing_file[i], "2015-12-01 00:00:00", "2015-12-30 23:00:00"));
         std::string variables_line = (i == 1) ? variables_with_rain_rate : "";
         forcing_params_examples[i] = params;
         config_json[i] = "{"
