@@ -130,9 +130,14 @@ Bmi_C_Adapter::Bmi_C_Adapter(std::string library_file_path, const std::string &b
     }
 }
 
+// TODO: since the dynamically loaded lib and model struct can't easily be copied (without risking breaking once
+//  original object closes the handle for its dynamically loaded lib) it make more sense to remove the copy constructor.
+// TODO: However, it may make sense to bring it back once it is possible to serialize and deserialize the model.
+/*
 Bmi_C_Adapter::Bmi_C_Adapter(Bmi_C_Adapter &adapter) : model_name(adapter.model_name),
                                                        allow_model_exceed_end_time(adapter.allow_model_exceed_end_time),
                                                        bmi_init_config(adapter.bmi_init_config),
+                                                       bmi_lib_file(adapter.bmi_lib_file),
                                                        bmi_model(adapter.bmi_model),
                                                        bmi_model_has_fixed_time_step(
                                                                adapter.bmi_model_has_fixed_time_step),
@@ -144,7 +149,14 @@ Bmi_C_Adapter::Bmi_C_Adapter(Bmi_C_Adapter &adapter) : model_name(adapter.model_
                                                        input_var_names(adapter.input_var_names),
                                                        model_initialized(adapter.model_initialized),
                                                        output_var_names(adapter.output_var_names),
-                                                       output(std::move(adapter.output)) { }
+                                                       output(std::move(adapter.output))
+{
+    // TODO: simple copying of the open dynamic library handle may lead to unexpected behavior, so perhaps open new?
+
+    // TODO: for that matter, copying the model struct as was done before probably is not valid and should really
+         involve serialization/deserialization.
+}
+*/
 
 Bmi_C_Adapter::Bmi_C_Adapter(Bmi_C_Adapter &&adapter) noexcept: model_name(std::move(adapter.model_name)),
                                                                 allow_model_exceed_end_time(
