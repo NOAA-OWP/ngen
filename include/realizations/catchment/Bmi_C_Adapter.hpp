@@ -43,7 +43,11 @@ namespace models {
                           const geojson::JSONProperty &other_input_vars, utils::StreamHandler output);
 
             // Copy constructor
-            Bmi_C_Adapter(Bmi_C_Adapter &adapter);
+            // TODO: since the dynamically loaded lib and model struct can't easily be copied (without risking breaking
+            //  once original object closes the handle for its dynamically loaded lib) it make more sense to remove the
+            //  copy constructor.
+            // TODO: However, it may make sense to bring it back once it's possible to serialize/deserialize the model.
+            //Bmi_C_Adapter(Bmi_C_Adapter &adapter);
 
             // Move constructor
             Bmi_C_Adapter(Bmi_C_Adapter &&adapter) noexcept;
