@@ -41,6 +41,15 @@ protected:
         formulation.determine_model_time_offset();
     }
 
+    static void call_friend_get_forcing_data_ts_contributions(Bmi_C_Formulation& formulation,
+                                                              time_step_t t_delta, const double &model_initial_time,
+                                                              const std::vector<std::string> &params,
+                                                              const std::vector<std::string> &param_units,
+                                                              std::vector<double> &contributions)
+    {
+        formulation.get_forcing_data_ts_contributions(t_delta, model_initial_time, params, param_units, contributions);
+    }
+
     static std::string get_friend_bmi_init_config(const Bmi_C_Formulation& formulation) {
         return formulation.get_bmi_init_config();
     }
@@ -56,12 +65,20 @@ protected:
         return formulation.get_bmi_model_start_time_forcing_offset_s();
     }
 
+    static double get_friend_forcing_param_value(Bmi_C_Formulation& formulation, const std::string& param_name) {
+        return formulation.forcing.get_value_for_param_name(param_name);
+    }
+
     static std::string get_friend_forcing_file_path(const Bmi_C_Formulation& formulation) {
         return formulation.get_forcing_file_path();
     }
 
     static time_t get_friend_forcing_start_time(Bmi_C_Formulation& formulation) {
         return formulation.forcing.get_time_epoch();
+    }
+
+    static time_t get_friend_forcing_time_step_size(Bmi_C_Formulation& formulation) {
+        return formulation.forcing.get_time_step_size();
     }
 
     static bool get_friend_is_bmi_using_forcing_file(const Bmi_C_Formulation& formulation) {
