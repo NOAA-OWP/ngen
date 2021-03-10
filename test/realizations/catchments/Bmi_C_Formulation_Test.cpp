@@ -80,11 +80,13 @@ protected:
 
     std::vector<std::string> forcing_dir_opts;
     std::vector<std::string> bmi_init_cfg_dir_opts;
+    std::vector<std::string> lib_dir_opts;
 
     std::vector<std::string> config_json;
     std::vector<std::string> catchment_ids;
     std::vector<std::string> model_type_name;
     std::vector<std::string> forcing_file;
+    std::vector<std::string> lib_file;
     std::vector<std::string> init_config;
     std::vector<std::string> main_output_variable;
     std::vector<bool> uses_forcing_file;
@@ -101,11 +103,13 @@ void Bmi_C_Formulation_Test::SetUp() {
 
     forcing_dir_opts = {"./data/forcing/", "../data/forcing/", "../../data/forcing/"};
     bmi_init_cfg_dir_opts = {"./test/data/bmi/c/cfe/", "../test/data/bmi/c/cfe/", "../../test/data/bmi/c/cfe/"};
+    lib_dir_opts = {"./extern/cfe/cmake_cfe_lib/", "../extern/cfe/cmake_cfe_lib/", "../../extern/cfe/cmake_cfe_lib/"};
 
     config_json = std::vector<std::string>(EX_COUNT);
     catchment_ids = std::vector<std::string>(EX_COUNT);
     model_type_name = std::vector<std::string>(EX_COUNT);
     forcing_file = std::vector<std::string>(EX_COUNT);
+    lib_file = std::vector<std::string>(EX_COUNT);
     init_config = std::vector<std::string>(EX_COUNT);
     main_output_variable  = std::vector<std::string>(EX_COUNT);
     uses_forcing_file = std::vector<bool>(EX_COUNT);
@@ -117,6 +121,7 @@ void Bmi_C_Formulation_Test::SetUp() {
     catchment_ids[0] = "cat-87";
     model_type_name[0] = "bmi_c_cfe";
     forcing_file[0] = find_file(forcing_dir_opts, "cat-87_2015-12-01 00_00_00_2015-12-30 23_00_00.csv");
+    lib_file[0] = find_file(lib_dir_opts, BMI_CFE_LOCAL_LIB_NAME);
     init_config[0] = find_file(bmi_init_cfg_dir_opts, "cat_87_bmi_config.txt");
     main_output_variable[0] = "Q_OUT";
     uses_forcing_file[0] = true;
@@ -124,6 +129,7 @@ void Bmi_C_Formulation_Test::SetUp() {
     catchment_ids[1] = "cat-87";
     model_type_name[1] = "bmi_c_cfe";
     forcing_file[1] = find_file(forcing_dir_opts, "cat-87_2015-12-01 00_00_00_2015-12-30 23_00_00.csv");
+    lib_file[1] = find_file(lib_dir_opts, BMI_CFE_LOCAL_LIB_NAME);
     init_config[1] = find_file(bmi_init_cfg_dir_opts, "cat_87_bmi_config.txt");
     main_output_variable[1] = "Q_OUT";
     uses_forcing_file[1] = true;
@@ -147,6 +153,7 @@ void Bmi_C_Formulation_Test::SetUp() {
                          "        \"" + catchment_ids[i] + "\": {"
                          "            \"bmi_c\": {"
                          "                \"model_type_name\": \"" + model_type_name[i] + "\","
+                         "                \"library_file\": \"" + lib_file[i] + "\","
                          "                \"forcing_file\": \"" + forcing_file[i] + "\","
                          "                \"init_config\": \"" + init_config[i] + "\","
                          "                \"main_output_variable\": \"" + main_output_variable[i] + "\","
