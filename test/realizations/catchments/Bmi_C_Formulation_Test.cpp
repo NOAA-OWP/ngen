@@ -376,9 +376,161 @@ TEST_F(Bmi_C_Formulation_Test, determine_model_time_offset_0_c) {
     ASSERT_EQ(get_friend_bmi_model_start_time_forcing_offset_s(formulation), expected_offset);
 }
 
+/** Simple test for contribution when forcing and model time steps align. */
+TEST_F(Bmi_C_Formulation_Test, get_forcing_data_ts_contributions_0_a) {
+    int ex_index = 0;
+
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], *forcing_params_examples[ex_index], utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+    std::shared_ptr<models::bmi::Bmi_C_Adapter> model_adapter = get_friend_bmi_model(formulation);
+
+    std::string param_name = "precip_rate";
+
+    double forcing_ts_param_value = get_friend_forcing_param_value(formulation, param_name);
+
+    double model_time = model_adapter->GetCurrentTime();
+    ASSERT_EQ(model_time, 0.0);
+
+    std::vector<std::string> param_names = {param_name};
+    std::vector<std::string> param_units = {"m"};
+    std::vector<double> summed_contributions = {0.0};
+
+    ASSERT_EQ(get_friend_forcing_time_step_size(formulation), (time_t)3600);
+    time_step_t t_delta = 3600;
+
+    call_friend_get_forcing_data_ts_contributions(formulation, t_delta, model_time, param_names, param_units,
+                                                  summed_contributions);
+    ASSERT_EQ(summed_contributions[0], forcing_ts_param_value);
+}
+
+/** Simple test for contribution when forcing and model time steps align, skipping to time step with non-zero value. */
+TEST_F(Bmi_C_Formulation_Test, get_forcing_data_ts_contributions_0_b) {
+    int ex_index = 0;
+
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], *forcing_params_examples[ex_index], utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+    std::shared_ptr<models::bmi::Bmi_C_Adapter> model_adapter = get_friend_bmi_model(formulation);
+
+    std::string output_line;
+    int progressed_seconds = 0;
+
+    // Skip ahead in time.
+    for (int i = 0; i <= 37; ++i) {
+        formulation.get_response(i, 3600);
+        progressed_seconds += 3600;
+    }
+
+    std::string param_name = "precip_rate";
+
+    double forcing_ts_param_value = get_friend_forcing_param_value(formulation, param_name);
+    ASSERT_GT(forcing_ts_param_value, 0.0);
+
+    double model_time = model_adapter->GetCurrentTime();
+    ASSERT_GT(model_time, 0.0);
+    ASSERT_EQ(progressed_seconds, model_adapter->convert_model_time_to_seconds(model_time));
+
+    std::vector<std::string> param_names = {param_name};
+    std::vector<std::string> param_units = {"m"};
+    std::vector<double> summed_contributions = {0.0};
+
+    ASSERT_EQ(get_friend_forcing_time_step_size(formulation), (time_t)3600);
+    time_step_t t_delta = 3600;
+
+    call_friend_get_forcing_data_ts_contributions(formulation, t_delta, model_time, param_names, param_units,
+                                                  summed_contributions);
+    ASSERT_EQ(summed_contributions[0], forcing_ts_param_value);
+}
+
+/**
+ * Simple test for contribution when forcing and model time steps do not align, skipping to time step with non-zero
+ * value.
+ */
 TEST_F(Bmi_C_Formulation_Test, get_forcing_data_ts_contributions_1_a) {
-    // TODO: implement tests
-    ASSERT_TRUE(false);
+    int ex_index = 0;
+
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], *forcing_params_examples[ex_index], utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+    std::shared_ptr<models::bmi::Bmi_C_Adapter> model_adapter = get_friend_bmi_model(formulation);
+
+    std::string output_line;
+    int progressed_seconds = 0;
+
+    // Skip ahead in time.
+    int i;
+    for (i = 0; i <= 37; ++i) {
+        formulation.get_response(i, 3600);
+        progressed_seconds += 3600;
+    }
+
+    std::string param_name = "precip_rate";
+
+    double forcing_ts_param_value= get_friend_forcing_param_value(formulation, param_name);
+    ASSERT_GT(forcing_ts_param_value, 0.0);
+
+    double model_time = model_adapter->GetCurrentTime();
+    ASSERT_GT(model_time, 0.0);
+    ASSERT_EQ(progressed_seconds, model_adapter->convert_model_time_to_seconds(model_time));
+
+    std::vector<std::string> param_names = {param_name};
+    std::vector<std::string> param_units = {"m"};
+    std::vector<double> summed_contributions = {0.0};
+
+    ASSERT_EQ(get_friend_forcing_time_step_size(formulation), (time_t)3600);
+    time_step_t t_delta = 1800;
+
+    call_friend_get_forcing_data_ts_contributions(formulation, t_delta, model_time, param_names, param_units,
+                                                  summed_contributions);
+    double forcing_ts_param_value_2 = get_friend_forcing_param_value(formulation, param_name);
+
+    ASSERT_EQ(summed_contributions[0], forcing_ts_param_value / 2.0);
+}
+
+/**
+ * Simple test for contribution when forcing and model time steps do not align, skipping to time step with non-zero
+ * value, and spanning data from multiple forcing time steps.
+ */
+TEST_F(Bmi_C_Formulation_Test, get_forcing_data_ts_contributions_1_b) {
+    int ex_index = 0;
+
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], *forcing_params_examples[ex_index], utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+    std::shared_ptr<models::bmi::Bmi_C_Adapter> model_adapter = get_friend_bmi_model(formulation);
+
+    std::string output_line;
+    int progressed_seconds = 0;
+
+    // Skip ahead in time.
+    int i;
+    for (i = 0; i <= 37; ++i) {
+        formulation.get_response(i, 3600);
+        progressed_seconds += 3600;
+    }
+
+    std::string param_name = "precip_rate";
+
+    double forcing_ts_param_value= get_friend_forcing_param_value(formulation, param_name);
+    ASSERT_GT(forcing_ts_param_value, 0.0);
+
+    double model_time = model_adapter->GetCurrentTime();
+    ASSERT_GT(model_time, 0.0);
+    ASSERT_EQ(progressed_seconds, model_adapter->convert_model_time_to_seconds(model_time));
+
+    std::vector<std::string> param_names = {param_name};
+    std::vector<std::string> param_units = {"m"};
+    std::vector<double> summed_contributions = {0.0};
+
+    ASSERT_EQ(get_friend_forcing_time_step_size(formulation), (time_t)3600);
+    time_step_t t_delta = 3600 + 1800;
+
+    call_friend_get_forcing_data_ts_contributions(formulation, t_delta, model_time, param_names, param_units,
+                                                  summed_contributions);
+    double forcing_ts_param_value_2 = get_friend_forcing_param_value(formulation, param_name);
+
+    // Assert that these are actually values from two different forcing time steps.
+    ASSERT_NE(forcing_ts_param_value, forcing_ts_param_value_2);
+    // Assert that the tested function is actually getting contributions in the appropriate proportions from two
+    // forcing time steps
+    ASSERT_EQ(summed_contributions[0], forcing_ts_param_value + forcing_ts_param_value_2 / 2.0);
 }
 
 
