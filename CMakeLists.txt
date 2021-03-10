@@ -68,21 +68,6 @@ find_package(Boost 1.72.0 REQUIRED)
 if(BMI_C_LIB_ACTIVE)
     # Define associated preprocessor directive
     add_compile_definitions(NGEN_BMI_C_LIB_ACTIVE)
-    # If the library value is not explicitly set, attempt to derive it from other settings
-    if (NOT BMI_C_LIB)
-        # In this situation, the library name is required
-        if (NOT BMI_C_LIB_NAME)
-            message(FATAL_ERROR "One of CMake cache variables 'BMI_C_LIB' or 'BMI_C_LIB_NAME' must set")
-        else()
-            message(STATUS "BMI_C_LIB_NAME set to '${BMI_C_LIB_NAME}'")
-        endif()
-        # Then attempt to find the library, using the set path directory if it is provided
-        if(BMI_C_LIB_DIR)
-            find_library(BMI_C_LIB "${BMI_C_LIB_NAME}" PATHS "${BMI_C_LIB_DIR}")
-        else()
-            find_library(BMI_C_LIB "${BMI_C_LIB_NAME}")
-        endif()
-    endif()
 endif()
 
 target_include_directories(ngen PUBLIC

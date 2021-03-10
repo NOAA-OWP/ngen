@@ -24,8 +24,3 @@ target_link_libraries(realizations_catchment PUBLIC
         NGen::models_tshirt
         NGen::geojson
         )
-
-# Also link the external BMI C model library if BMI C integration is configured to be active
-if(BMI_C_LIB_ACTIVE)
-    target_link_libraries(realizations_catchment PRIVATE "${BMI_C_LIB}")
-endif()
