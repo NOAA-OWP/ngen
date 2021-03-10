@@ -94,7 +94,7 @@ jobs:
         run: |
           export BOOST_ROOT="$(pwd)/boost_1_72_0"
           [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
-          cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=ON -DBMI_C_LIB_NAME:STRING=cfemodel -DBMI_C_LIB_DIR:STRING=./extern/cfe/cmake_cfe_lib -S .
+          cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=ON -S .
 
       - name: build_bmi_c_tests
         run: cmake --build cmake_build --target test_bmi_c
@@ -199,7 +199,7 @@ jobs:
         run: |
           export BOOST_ROOT="$(pwd)/boost_1_72_0"
           [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
-          cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=ON -DBMI_C_LIB_NAME:STRING=cfemodel -DBMI_C_LIB_DIR:STRING=./extern/cfe/cmake_cfe_lib -S .
+          cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=ON -S .
 
       - name: build_bmi_c_tests
         run: cmake --build cmake_build --target test_bmi_c
