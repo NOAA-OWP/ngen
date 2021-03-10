@@ -8,11 +8,6 @@
 #include "JSONProperty.hpp"
 #include "StreamHandler.hpp"
 
-// Declaring registration method from BMI model library
-extern "C" {
-    Bmi* register_bmi(Bmi *model);
-};
-
 namespace models {
     namespace bmi {
 
