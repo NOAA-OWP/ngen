@@ -295,4 +295,4 @@ TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_1_b) {
 
 #endif  // NGEN_BMI_C_LIB_TESTS_ACTIVE
 
-#endif NGEN_BMI_C_FORMULATION_TEST_CPP
+#endif // NGEN_BMI_C_FORMULATION_TEST_CPP
