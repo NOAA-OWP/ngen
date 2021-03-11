@@ -69,37 +69,43 @@ inline void Bmi_C_Formulation::get_forcing_data_ts_contributions(time_step_t t_d
 {
     time_t model_ts_start_offset, model_ts_seconds_contained_in_forcing_ts;
     bool increment_to_next_forcing_ts;
+    // Keep track of how much of the model ts delta has not yet had its contribution pulled from some forcing ts
+    time_step_t contribution_seconds_remaining = t_delta;
 
     // The sum of these first two is essentially the model time step's epoch start time in seconds
     model_ts_start_offset = (time_t) (get_bmi_model()->convert_model_time_to_seconds(model_initial_time)) +
                             get_bmi_model_start_time_forcing_offset_s() -
                             forcing.get_time_epoch();
 
-    while (t_delta > 0) {
+    while (contribution_seconds_remaining > 0) {
         // If model ts, after having start time shifted forward within forcing step (if needed), goes beyond forcing ts
-        if ((time_t)t_delta + model_ts_start_offset >= forcing.get_time_step_size()) {
+        if ((time_t)contribution_seconds_remaining + model_ts_start_offset >= forcing.get_time_step_size()) {
             increment_to_next_forcing_ts = true;
             model_ts_seconds_contained_in_forcing_ts = forcing.get_time_step_size() - model_ts_start_offset;
         }
         else {
             increment_to_next_forcing_ts = false;
-            model_ts_seconds_contained_in_forcing_ts = (time_t)t_delta;
+            model_ts_seconds_contained_in_forcing_ts = (time_t)contribution_seconds_remaining;
         }
 
         // Get the contributions from this forcing ts for all the forcing params needed.
         for (size_t i = 0; i < params.size(); ++i) {
+            // This is proportional to the ratio of (model ts seconds in this forcing ts) to (forcing ts total seconds)
             if (forcing.is_param_sum_over_time_step(params[i])) {
                 summed_contributions[i] += forcing.get_converted_value_for_param_in_units(params[i], param_units[i]) *
                                            (double) model_ts_seconds_contained_in_forcing_ts /
                                            (double) forcing.get_time_step_size();
             }
+            // This is proportional to the ratio of (model ts seconds in this forcing ts) to (model ts total seconds)
             else {
-                summed_contributions[i] += forcing.get_converted_value_for_param_in_units(params[i], param_units[i]);
+                summed_contributions[i] += forcing.get_converted_value_for_param_in_units(params[i], param_units[i]) *
+                                           (double) model_ts_seconds_contained_in_forcing_ts /
+                                           (double) t_delta;
             }
         }
 
         // Account for the processed model time compared to the entire delta
-        t_delta -= (time_step_t)model_ts_seconds_contained_in_forcing_ts;
+        contribution_seconds_remaining -= (time_step_t)model_ts_seconds_contained_in_forcing_ts;
         // The offset should only possibly be non-zero the first time (after, if the model ts extends beyond the first
         // forcing ts, it always picks up at the beginning of the subsequent forcing ts), so set to 0 now.
         model_ts_start_offset = 0;
