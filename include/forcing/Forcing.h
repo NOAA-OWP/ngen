@@ -2,6 +2,7 @@
 #define FORCING_H
 
 #include <vector>
+#include <set>
 #include <cmath>
 #include <algorithm>
 #include <string>
