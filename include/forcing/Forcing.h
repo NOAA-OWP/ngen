@@ -85,8 +85,8 @@ class Forcing
      *
      * @return
      */
-    static std::shared_ptr<set<std::string>> get_forcing_field_names() {
-        std::shared_ptr<set<std::string>> field_names = std::make_shared<set<std::string>>();
+    static std::shared_ptr<std::set<std::string>> get_forcing_field_names() {
+        std::shared_ptr<std::set<std::string>> field_names = std::make_shared<std::set<std::string>>();
         field_names->insert(AORC_FIELD_NAME_PRECIP_RATE);
         field_names->insert(AORC_FIELD_NAME_SOLAR_SHORTWAVE);
         field_names->insert(AORC_FIELD_NAME_SOLAR_LONGWAVE);
