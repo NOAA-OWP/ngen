@@ -77,9 +77,8 @@ extern void init_soil_reservoir(cfe_model* cfe, double alpha_fc, double max_stor
             (upper_lim - lower_lim);
     // lateral flow parameters --------------------------------------------------------
     // 0.0 to deactiv. else =lateral_flow_linear_reservoir_constant;   // m per ts
-    //cfe->soil_reservoir.coeff_secondary = get_K_lf_for_time_step(cfe);
-    //Klf is a calibration parameter in the ngen code
-    cfe->soil_reservoir.coeff_secondary = 0.01;
+    // TODO: look at whether K_lf needs to be a derived (i.e., via get_K_lf_for_time_step()) or explicit parameter
+    cfe->soil_reservoir.coeff_secondary = cfe->K_lf;
     // 1.0=linear
     cfe->soil_reservoir.exponent_secondary = 1.0;
     // making them the same, but they don't have 2B
