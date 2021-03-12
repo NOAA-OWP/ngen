@@ -188,6 +188,7 @@ int read_init_config(const char* config_file, cfe_model* model, double* alpha_fc
     int is_alpha_fc_set = FALSE;
     int is_soil_storage_set = FALSE;
     int is_K_nash_set = FALSE;
+    int is_K_lf_set = FALSE;
 
     // Keep track these in particular, because the "true" storage value may be a ratio and need both storage and max
     int is_gw_max_set = FALSE;
@@ -332,6 +333,11 @@ int read_init_config(const char* config_file, cfe_model* model, double* alpha_fc
             is_K_nash_set = TRUE;
             continue;
         }
+        if (strcmp(param_key, "K_lf") == 0) {
+            model->K_lf = strtod(param_value, NULL);
+            is_K_lf_set = TRUE;
+            continue;
+        }
         if (strcmp(param_key, "nash_storage") == 0) {
             nash_storage_string_val = strdup(param_value);
             is_nash_storage_string_val_set = TRUE;
@@ -426,6 +432,12 @@ int read_init_config(const char* config_file, cfe_model* model, double* alpha_fc
         return BMI_FAILURE;
     }
     if (is_K_nash_set == FALSE) {
+#if CFE_DEGUG >= 1
+        printf("Config param 'K_nash' not found in config file\n");
+#endif
+        return BMI_FAILURE;
+    }
+    if (is_K_lf_set == FALSE) {
 #if CFE_DEGUG >= 1
         printf("Config param 'K_nash' not found in config file\n");
 #endif
