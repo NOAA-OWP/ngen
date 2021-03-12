@@ -14,5 +14,6 @@ gw_storage=50%
 alpha_fc=0.33
 soil_storage=66.7%
 K_nash=0.03
+K_lf=0.01
 nash_storage=0.0,0.0
 giuh_ordinates=0.06,0.51,0.28,0.12,0.03
