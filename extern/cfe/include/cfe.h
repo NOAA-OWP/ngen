@@ -152,6 +152,7 @@ struct cfe_model {
     double Schaake_adjusted_magic_constant_by_soil_type;
     int num_lateral_flow_nash_reservoirs;
 
+    double K_lf;
     double K_nash;
 
     int num_giuh_ordinates;
