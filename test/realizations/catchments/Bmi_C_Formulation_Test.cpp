@@ -295,8 +295,7 @@ TEST_F(Bmi_C_Formulation_Test, GetResponse_0_b) {
     for (int i = 0; i < 720; i++) {
         response = formulation.get_response(i, 3600);
     }
-    // TODO: val seems to be this for now ... do something but account for error bound
-    ASSERT_EQ(response, 0.0025434016922131421);
+    ASSERT_EQ(response, 0.0024634066658413981);
 }
 
 /** Simple test of output. */
@@ -335,7 +334,7 @@ TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_1_b) {
         formulation.get_response(i++, 3600);
     double response = formulation.get_response(i, 3600);
     std::string output = formulation.get_output_line_for_timestep(i, ",");
-    ASSERT_EQ(output, "0.003153,0.004346,0.000449,0.001001,0.001424,0.002874");
+    ASSERT_EQ(output, "0.020288,0.004554,0.000470,0.000329,0.001636,0.002435");
 }
 
 TEST_F(Bmi_C_Formulation_Test, determine_model_time_offset_0_a) {
