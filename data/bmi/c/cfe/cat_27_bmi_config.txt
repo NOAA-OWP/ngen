@@ -1,4 +1,4 @@
-forcing_file=../../data/forcing/cat-87_2015-12-01 00_00_00_2015-12-30 23_00_00.csv
+forcing_file=./data/forcing/cat-27_2015-12-01 00_00_00_2015-12-30 23_00_00.csv
 soil_params.depth=2.0
 soil_params.b=4.05
 soil_params.mult=1000.0
@@ -13,7 +13,7 @@ expon=6.0
 gw_storage=50%
 alpha_fc=0.33
 soil_storage=66.7%
-K_nash=0.03
 K_lf=0.01
+K_nash=0.03
 nash_storage=0.0,0.0
 giuh_ordinates=0.06,0.51,0.28,0.12,0.03
