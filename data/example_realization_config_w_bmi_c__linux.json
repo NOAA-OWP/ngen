@@ -43,25 +43,25 @@
         "output_interval": 3600
     },
     "catchments": {
-        "cat-87": {
+        "cat-27": {
             "formulations": [
                 {
                     "name": "bmi_c",
                     "params": {
                         "model_type_name": "bmi_c_cfe",
                         "library_file": "./extern/cfe/cmake_cfe_lib/libcfemodel.so",
-                        "forcing_file": "./data/forcing/cat-87_2015-12-01 00_00_00_2015-12-30 23_00_00.csv",
-                        "init_config": "./data/bmi/c/cfe/cat_87_bmi_config.txt",
+                        "forcing_file": "./data/forcing/cat-27_2015-12-01 00_00_00_2015-12-30 23_00_00.csv",
+                        "init_config": "./data/bmi/c/cfe/cat_27_bmi_config.txt",
                         "main_output_variable": "Q_OUT",
                         "uses_forcing_file": true
                     }
                 }
             ],
             "forcing": {
-                "path": "./data/forcing/cat-87_2015-12-01 00_00_00_2015-12-30 23_00_00.csv"
+                "path": "./data/forcing/cat-27_2015-12-01 00_00_00_2015-12-30 23_00_00.csv"
             }
         },
-        "cat-88": {
+        "cat-52": {
           "formulations": [
             {
               "name": "simple_lumped",
@@ -83,10 +83,10 @@
           }
         ],
         "forcing": {
-            "path": "./data/forcing/cat-88_2015-12-01 00_00_00_2015-12-30 23_00_00.csv"
+            "path": "./data/forcing/cat-52_2015-12-01 00_00_00_2015-12-30 23_00_00.csv"
           }
         },
-        "cat-89": {
+        "cat-67": {
           "formulations": [
             {
               "name":"tshirt",
@@ -120,7 +120,7 @@
             }
           ],
           "forcing": {
-              "path": "./data/forcing/cat-89_2015-12-01 00_00_00_2015-12-30 23_00_00.csv"
+              "path": "./data/forcing/cat-67_2015-12-01 00_00_00_2015-12-30 23_00_00.csv"
           }
         },
         "cat-92": {
