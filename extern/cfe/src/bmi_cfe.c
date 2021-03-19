@@ -45,6 +45,23 @@ static const char *output_var_units[OUTPUT_VAR_NAME_COUNT] = {
         "m"
 };
 
+static const int output_var_grids[OUTPUT_VAR_NAME_COUNT] = {
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+};
+
+static const char *output_var_locations[OUTPUT_VAR_NAME_COUNT] = {
+        "node",
+        "node",
+        "node",
+        "node",
+        "node",
+        "node"
+};
 
 // Don't forget to update Get_value/Get_value_at_indices (and setter) implementation if these are adjusted
 static const char *input_var_names[INPUT_VAR_NAME_COUNT] = {
@@ -67,6 +84,15 @@ static const int input_var_item_count[INPUT_VAR_NAME_COUNT] = {
         //1
 };
 
+static const char *input_var_grids[INPUT_VAR_NAME_COUNT] = {
+        //0,
+        //0
+};
+
+static const char *input_var_locations[INPUT_VAR_NAME_COUNT] = {
+        //"node",
+        //"node"
+};
 
 static int Get_start_time (Bmi *self, double * time)
 {
@@ -778,123 +804,67 @@ static int Get_adjusted_index_for_variable(const char *name)
 }
 
 
-// TODO: complete implementation
-static int Get_grid_rank(Bmi *self, int grid, int *rank)
+static int Get_grid_rank (Bmi *self, int grid, int * rank)
 {
-    return BMI_FAILURE;
+    if (grid == 0) {
+        *rank = 1;
+        return BMI_SUCCESS;
+    }
+    else {
+        *rank = -1;
+        return BMI_FAILURE;
+    }
 }
 
 
-// TODO: complete implementation
-static int Get_grid_size(Bmi *self, int grid, int *size)
+static int Get_grid_size(Bmi *self, int grid, int * size)
 {
-    return BMI_FAILURE;
+    if (grid == 0) {
+        *size = 1;
+        return BMI_SUCCESS;
+    }
+    else {
+        *size = -1;
+        return BMI_FAILURE;
+    }
 }
 
 
-// TODO: complete implementation
-static int Get_grid_type(Bmi *self, int grid, char *type)
+static int Get_grid_type (Bmi *self, int grid, char * type)
 {
-    return BMI_FAILURE;
+    int status = BMI_FAILURE;
+
+    if (grid == 0) {
+        strncpy(type, "scalar", BMI_MAX_TYPE_NAME);
+        status = BMI_SUCCESS;
+    }
+    else {
+        type[0] = '\0';
+        status = BMI_FAILURE;
+    }
+    return status;
 }
 
 
-// TODO: complete implementation
-/* Uniform rectilinear */
-static int Get_grid_shape(Bmi *self, int grid, int *shape)
-{
-    return BMI_FAILURE;
-}
-
-
-// TODO: complete implementation
-static int Get_grid_spacing(Bmi *self, int grid, double *spacing)
-{
-    return BMI_FAILURE;
-}
-
-
-// TODO: complete implementation
-static int Get_grid_origin(Bmi *self, int grid, double *origin)
-{
-    return BMI_FAILURE;
-}
-
-
-// TODO: complete implementation
-/* Non-uniform rectilinear, curvilinear */
-static int Get_grid_x(Bmi *self, int grid, double *x)
-{
-    return BMI_FAILURE;
-}
-
-
-// TODO: complete implementation
-static int Get_grid_y(Bmi *self, int grid, double *y)
-{
-    return BMI_FAILURE;
-}
-
-
-// TODO: complete implementation
-static int Get_grid_z(Bmi *self, int grid, double *z)
-{
-    return BMI_FAILURE;
-}
-
-
-// TODO: complete implementation
-static int Get_grid_node_count(Bmi *self, int grid, int *count)
-{
-    return BMI_FAILURE;
-}
-
-
-// TODO: complete implementation
-static int Get_grid_edge_count(Bmi *self, int grid, int *count)
-{
-    return BMI_FAILURE;
-}
-
-
-// TODO: complete implementation
-static int Get_grid_face_count(Bmi *self, int grid, int *count)
-{
-    return BMI_FAILURE;
-}
-
-
-// TODO: complete implementation
-static int Get_grid_edge_nodes(Bmi *self, int grid, int *edge_nodes)
-{
-    return BMI_FAILURE;
-}
-
-
-// TODO: complete implementation
-static int Get_grid_face_edges(Bmi *self, int grid, int *face_edges)
-{
-    return BMI_FAILURE;
-}
-
-
-// TODO: complete implementation
-static int Get_grid_face_nodes(Bmi *self, int grid, int *face_nodes)
-{
-    return BMI_FAILURE;
-}
-
-
-// TODO: complete implementation
-static int Get_grid_nodes_per_face(Bmi *self, int grid, int *nodes_per_face)
-{
-    return BMI_FAILURE;
-}
-
-
-// TODO: complete implementation
 static int Get_var_grid(Bmi *self, const char *name, int *grid)
 {
+
+    // Check to see if in output array first
+    for (int i = 0; i < OUTPUT_VAR_NAME_COUNT; i++) {
+        if (strcmp(name, output_var_names[i]) == 0) {
+            *grid = output_var_grids[i];
+            return BMI_SUCCESS;
+        }
+    }
+    // Then check to see if in input array
+    for (int i = 0; i < INPUT_VAR_NAME_COUNT; i++) {
+        if (strcmp(name, input_var_names[i]) == 0) {
+            *grid = input_var_grids[i];
+            return BMI_SUCCESS;
+        }
+    }
+    // If we get here, it means the variable name wasn't recognized
+    grid[0] = '\0';
     return BMI_FAILURE;
 }
 
@@ -956,11 +926,27 @@ static int Get_var_itemsize (Bmi *self, const char *name, int * size)
 }
 
 
-// TODO: complete implementation
-static int Get_var_location(Bmi *self, const char *name, char *location)
+static int Get_var_location (Bmi *self, const char *name, char * location)
 {
+    // Check to see if in output array first
+    for (int i = 0; i < OUTPUT_VAR_NAME_COUNT; i++) {
+        if (strcmp(name, output_var_names[i]) == 0) {
+            strncpy(location, output_var_locations[i], BMI_MAX_UNITS_NAME);
+            return BMI_SUCCESS;
+        }
+    }
+    // Then check to see if in input array
+    for (int i = 0; i < INPUT_VAR_NAME_COUNT; i++) {
+        if (strcmp(name, input_var_names[i]) == 0) {
+            strncpy(location, input_var_locations[i], BMI_MAX_UNITS_NAME);
+            return BMI_SUCCESS;
+        }
+    }
+    // If we get here, it means the variable name wasn't recognized
+    location[0] = '\0';
     return BMI_FAILURE;
 }
+
 
 
 static int Get_var_units (Bmi *self, const char *name, char * units)
@@ -968,14 +954,14 @@ static int Get_var_units (Bmi *self, const char *name, char * units)
     // Check to see if in output array first
     for (int i = 0; i < OUTPUT_VAR_NAME_COUNT; i++) {
         if (strcmp(name, output_var_names[i]) == 0) {
-            strncpy(units, output_var_units[i], BMI_MAX_TYPE_NAME);
+            strncpy(units, output_var_units[i], BMI_MAX_TYPE_NAME); //JG: should be BMI_MAX_UNITS_NAME
             return BMI_SUCCESS;
         }
     }
     // Then check to see if in input array
     for (int i = 0; i < INPUT_VAR_NAME_COUNT; i++) {
         if (strcmp(name, input_var_names[i]) == 0) {
-            strncpy(units, input_var_units[i], BMI_MAX_TYPE_NAME);
+            strncpy(units, input_var_units[i], BMI_MAX_TYPE_NAME); //JG: should be BMI_MAX_UNITS_NAME
             return BMI_SUCCESS;
         }
     }
@@ -1251,12 +1237,12 @@ Bmi* register_bmi(Bmi *model) {
         model->get_input_var_names = Get_input_var_names;
         model->get_output_var_names = Get_output_var_names;
 
-        model->get_var_grid = Get_var_grid; // TODO: needs finished implementation
+        model->get_var_grid = Get_var_grid;
         model->get_var_type = Get_var_type;
         model->get_var_itemsize = Get_var_itemsize;
         model->get_var_units = Get_var_units;
         model->get_var_nbytes = Get_var_nbytes;
-        model->get_var_location = Get_var_location; // TODO: needs finished implementation
+        model->get_var_location = Get_var_location;
 
         model->get_current_time = Get_current_time;
         model->get_start_time = Get_start_time;
@@ -1271,25 +1257,26 @@ Bmi* register_bmi(Bmi *model) {
         model->set_value = Set_value;
         model->set_value_at_indices = Set_value_at_indices;
 
-        model->get_grid_size = Get_grid_size;    // TODO: needs finished implementation
-        model->get_grid_rank = Get_grid_rank;    // TODO: needs finished implementation
-        model->get_grid_type = Get_grid_type;    // TODO: needs finished implementation
+        model->get_grid_size = Get_grid_size;    
+        model->get_grid_rank = Get_grid_rank;    
+        model->get_grid_type = Get_grid_type;    
 
-        model->get_grid_shape = Get_grid_shape;    // TODO: needs finished implementation
-        model->get_grid_spacing = Get_grid_spacing;    // TODO: needs finished implementation
-        model->get_grid_origin = Get_grid_origin;    // TODO: needs finished implementation
+        model->get_grid_shape = NULL;
+        model->get_grid_spacing = NULL;
+        model->get_grid_origin = NULL;
 
-        model->get_grid_x = Get_grid_x;    // TODO: needs finished implementation
-        model->get_grid_y = Get_grid_y;    // TODO: needs finished implementation
-        model->get_grid_z = Get_grid_z;    // TODO: needs finished implementation
+        model->get_grid_x = NULL;
+        model->get_grid_y = NULL;
+        model->get_grid_z = NULL;
 
-        model->get_grid_node_count = Get_grid_node_count;    // TODO: needs finished implementation
-        model->get_grid_edge_count = Get_grid_edge_count;    // TODO: needs finished implementation
-        model->get_grid_face_count = Get_grid_face_count;    // TODO: needs finished implementation
-        model->get_grid_edge_nodes = Get_grid_edge_nodes;    // TODO: needs finished implementation
-        model->get_grid_face_edges = Get_grid_face_edges;    // TODO: needs finished implementation
-        model->get_grid_face_nodes = Get_grid_face_nodes;    // TODO: needs finished implementation
-        model->get_grid_nodes_per_face = Get_grid_nodes_per_face;    // TODO: needs finished implementation
+        model->get_grid_node_count = NULL;
+        model->get_grid_edge_count = NULL;
+        model->get_grid_face_count = NULL;
+        model->get_grid_edge_nodes = NULL;
+        model->get_grid_face_edges = NULL;
+        model->get_grid_face_nodes = NULL;
+        model->get_grid_nodes_per_face = NULL;
+
     }
 
     return model;
