@@ -263,6 +263,14 @@ namespace models {
              * @param name
              * @return
              */
+            int GetVarGrid(std::string name);
+
+            /**
+             * Get the grid (id) of a variable.
+             *
+             * @param name
+             * @return
+             */
             std::string GetVarType(std::string name);
 
             /**
@@ -272,7 +280,38 @@ namespace models {
              * @return
              */
             std::string GetVarUnits(std::string name);
+            
+            /**
+             * Get location for a variable.
+             *
+             * @param name
+             * @return
+             */
+            std::string GetVarLocation(std::string name);
 
+            /**
+             * Get grid type for a grid-id.
+             *
+             * @param name
+             * @return
+             */
+            std::string GetGridType(int grid_id);
+
+            /**
+             * Get grid rank for a grid-id.
+             *
+             * @param name
+             * @return
+             */
+            int GetGridRank(int grid_id);
+
+            /**
+             * Get grid size for a grid-id.
+             *
+             * @param name
+             * @return
+             */
+            int GetGridSize(int grid_id);
             /**
              * Initialize the wrapped BMI model functionality using the value from the `bmi_init_config` member variable
              * and the API's ``Initialize`` function.

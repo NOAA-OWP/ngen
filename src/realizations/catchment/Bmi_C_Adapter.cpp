@@ -402,6 +402,54 @@ std::string Bmi_C_Adapter::GetVarUnits(std::string name) {
     return units_str;
 }
 
+std::string Bmi_C_Adapter::GetVarLocation(std::string name) {
+    char location_c_str[BMI_MAX_UNITS_NAME];
+    int success = bmi_model->get_var_location(bmi_model.get(), name.c_str(), location_c_str);
+    if (success != BMI_SUCCESS) {
+        throw std::runtime_error(model_name + " failed to get variable location for " + name + ".");
+    }
+    std::string location_str(location_c_str);
+    return location_str;
+}
+
+int Bmi_C_Adapter::GetVarGrid(std::string name) {
+    int grid;
+    int success = bmi_model->get_var_grid(bmi_model.get(), name.c_str(), &grid);
+    if (success != BMI_SUCCESS) {
+        throw std::runtime_error(model_name + " failed to get variable grid for " + name + ".");
+    }
+    return grid;
+}
+
+std::string Bmi_C_Adapter::GetGridType(int grid_id) {
+    char gridtype_c_str[BMI_MAX_TYPE_NAME];
+    int success = bmi_model->get_grid_type(bmi_model.get(), grid_id, gridtype_c_str);
+    if (success != BMI_SUCCESS) {
+        throw std::runtime_error(model_name + " failed to get grid type for grid ID " + to_string(grid_id) + ".");
+    }
+    std::string gridtype_str(gridtype_c_str);
+    return gridtype_str;
+}
+
+int Bmi_C_Adapter::GetGridRank(int grid_id) {
+    int gridrank;
+    int success = bmi_model->get_grid_rank(bmi_model.get(), grid_id, &gridrank);
+    if (success != BMI_SUCCESS) {
+        throw std::runtime_error(model_name + " failed to get grid rank for grid ID " + to_string(grid_id) + ".");
+    }
+    return gridrank;
+}
+
+int Bmi_C_Adapter::GetGridSize(int grid_id) {
+    int gridsize;
+    int success = bmi_model->get_grid_size(bmi_model.get(), grid_id, &gridsize);
+    if (success != BMI_SUCCESS) {
+        throw std::runtime_error(model_name + " failed to get grid size for grid ID " + to_string(grid_id) + ".");
+    }
+    return gridsize;
+}
+
+
 /**
  * Initialize the wrapped BMI model object using the value from the `bmi_init_config` member variable and
  * the object's ``Initialize`` function.
