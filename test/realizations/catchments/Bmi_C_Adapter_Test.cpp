@@ -40,6 +40,51 @@ protected:
             "DEEP_GW_TO_CHANNEL_FLUX",
             "Q_OUT"
     };
+    
+    std::vector<std::string> expected_output_var_locations = {
+            "node",
+            "node",
+            "node",
+            "node",
+            "node",
+            "node"
+    };
+
+    std::vector<int> expected_output_var_grids = {
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+    };
+
+    std::vector<std::string> expected_output_var_units = {
+            "m",
+            "m",
+            "m",
+            "m",
+            "m",
+            "m"
+    };
+
+    std::vector<std::string> expected_output_var_types = {
+            "double",
+            "double",
+            "double",
+            "double",
+            "double",
+            "double"
+    };
+
+    int expected_grid_rank = 1;
+    
+    int expected_grid_size = 1;
+    
+    std::string expected_grid_type = "scalar";
+
+    int expected_var_nbytes = 8; //type double
+
 };
 
 void Bmi_C_Adapter_Test::SetUp() {
@@ -202,7 +247,7 @@ TEST_F(Bmi_C_Adapter_Test, Update_0_h) {
 
 /** Test that Schaake Runoff output variable values can be retrieved. */
 TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_0) {
-    int out_var_index = 0;
+    int out_var_index = 0;  //JG: out_var_index = 1; 0->RAIN_RATE
 
     Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
 
@@ -219,7 +264,7 @@ TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_0) {
 
 /** Test that GIUH Runoff output variable values can be retrieved. */
 TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_1) {
-    int out_var_index = 1;
+    int out_var_index = 1;  //JG: out_var_index = 2
 
     Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
 
@@ -236,7 +281,7 @@ TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_1) {
 
 /** Test that Nash Lateral Flow output variable values can be retrieved. */
 TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_2) {
-    int out_var_index = 2;
+    int out_var_index = 2;  //JG: out_var_index = 3
 
     Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
 
@@ -253,7 +298,7 @@ TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_2) {
 
 /** Test that Deep Groundwater to Channel Flux output variable values can be retrieved. */
 TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_3) {
-    int out_var_index = 3;
+    int out_var_index = 3;  //JG: out_var_index = 4
 
     Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
 
@@ -270,7 +315,7 @@ TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_3) {
 
 /** Test that Total Flux (Q_OUT) output variable values can be retrieved. */
 TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_4) {
-    int out_var_index = 4;
+    int out_var_index = 4;  //JG: out_var_index = 5
 
     Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
 
@@ -283,6 +328,174 @@ TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_4) {
     std::vector<double> values = adapter.GetValue<double>(variable_name);
     ASSERT_GT(values.size(), 0);
     adapter.Finalize();
+}
+
+TEST_F(Bmi_C_Adapter_Test, GetVarGrid_0_a) {
+    int out_var_index =2;
+
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
+
+    std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
+    int expected_grid = expected_output_var_grids[out_var_index];
+    
+    try {
+        ASSERT_EQ(adapter.GetVarGrid(variable_name), expected_grid);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting var grid id: %s", e.what());
+    }
+}
+
+/** Test DEEP_GW_TO_CHANNEL_FLUX variable grid (id) can be retrieved. */
+TEST_F(Bmi_C_Adapter_Test, GetVarGrid_0_b) {
+    int out_var_index = 4;
+
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
+
+    std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
+    int expected_grid = expected_output_var_grids[out_var_index];
+    
+    try {
+        ASSERT_EQ(adapter.GetVarGrid(variable_name), expected_grid);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting var grid id: %s", e.what());
+    }
+}
+
+/** Test SCHAKKE_OUTPUT_RUNOFF variable location can be retrieved. */
+TEST_F(Bmi_C_Adapter_Test, GetVarLocation_0_a) {
+    int out_var_index = 1;
+
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
+
+    std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
+    std::string expected_location = expected_output_var_locations[out_var_index];
+    
+    try {
+        ASSERT_EQ(adapter.GetVarLocation(variable_name), expected_location);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting var location: %s", e.what());
+    }
+}
+
+/** Test Q_OUT variable location can be retrieved. */
+TEST_F(Bmi_C_Adapter_Test, GetVarLocation_0_b) {
+    int out_var_index = 5;
+
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
+
+    std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
+    std::string expected_location = expected_output_var_locations[out_var_index];
+    
+    try {
+        ASSERT_EQ(adapter.GetVarLocation(variable_name), expected_location);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting var location: %s", e.what());
+    }
+}
+
+/** Test NASH_LATERAL_RUNOFF variable units can be retrieved. */
+TEST_F(Bmi_C_Adapter_Test, GetVarUnits_0_a) {
+    int out_var_index =3;
+
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
+
+    std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
+    std::string expected_units = expected_output_var_units[out_var_index];
+    
+    try {
+        ASSERT_EQ(adapter.GetVarUnits(variable_name), expected_units);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting var units: %s", e.what());
+    }
+}
+
+/** Test RAIN_RATE variable type can be retrieved. */
+TEST_F(Bmi_C_Adapter_Test, GetVarType_0_a) {
+    int out_var_index =0;
+
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
+
+    std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
+    std::string expected_type = expected_output_var_types[out_var_index];
+    
+    try {
+        ASSERT_EQ(adapter.GetVarType(variable_name), expected_type);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting var type: %s", e.what());
+    }
+}
+
+
+/** Test SCHAKKE_OUTPUT_RUNOFF variable nbytes can be retrieved. */
+TEST_F(Bmi_C_Adapter_Test, GetVarNbytes_0_a) {
+    int out_var_index =1;
+
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
+    
+    std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
+
+    try {
+        ASSERT_EQ(adapter.GetVarNbytes(variable_name), expected_var_nbytes);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting var nbytes: %s", e.what());
+    }
+}
+/** Test grid type can be retrieved. Based off NASH_LATERAL_RUNOFF grid id */
+TEST_F(Bmi_C_Adapter_Test, GetGridType_0_a) {
+    int out_var_index =3;
+
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
+
+    std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
+    int grd = adapter.GetVarGrid(variable_name);
+    
+    try {
+        ASSERT_EQ(adapter.GetGridType(grd), expected_grid_type);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting grid type: %s", e.what());
+    }
+}
+
+/** Test grid rank can be retrieved. Based off GUIH_RUNOFF grid id */
+TEST_F(Bmi_C_Adapter_Test, GetGridRank_0_a) {
+    int out_var_index =2;
+
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
+
+    std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
+    int grd = adapter.GetVarGrid(variable_name);
+    
+    try {
+        ASSERT_EQ(adapter.GetGridRank(grd), expected_grid_rank);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting grid rank: %s", e.what());
+    }
+}
+
+/** Test grid size can be retrieved. Based off Q_OUT grid id */
+TEST_F(Bmi_C_Adapter_Test, GetGridSize_0_a) {
+    int out_var_index =5;
+
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
+
+    std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
+    int grd = adapter.GetVarGrid(variable_name);
+    
+    try {
+        ASSERT_EQ(adapter.GetGridSize(grd), expected_grid_size);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting grid size: %s", e.what());
+    }
 }
 
 /* Commenting out, since RAIN_RATE is not longer input variable; leaving in place to use as future template. */
