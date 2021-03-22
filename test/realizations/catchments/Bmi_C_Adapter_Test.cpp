@@ -330,6 +330,7 @@ TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_4) {
     adapter.Finalize();
 }
 
+/** Test GIUH_RUNOFF variable grid (id) can be retrieved. */
 TEST_F(Bmi_C_Adapter_Test, GetVarGrid_0_a) {
     int out_var_index =2;
 
