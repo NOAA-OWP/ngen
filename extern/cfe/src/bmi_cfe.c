@@ -931,14 +931,14 @@ static int Get_var_location (Bmi *self, const char *name, char * location)
     // Check to see if in output array first
     for (int i = 0; i < OUTPUT_VAR_NAME_COUNT; i++) {
         if (strcmp(name, output_var_names[i]) == 0) {
-            strncpy(location, output_var_locations[i], BMI_MAX_UNITS_NAME);
+            strncpy(location, output_var_locations[i], BMI_MAX_LOCATION_NAME);
             return BMI_SUCCESS;
         }
     }
     // Then check to see if in input array
     for (int i = 0; i < INPUT_VAR_NAME_COUNT; i++) {
         if (strcmp(name, input_var_names[i]) == 0) {
-            strncpy(location, input_var_locations[i], BMI_MAX_UNITS_NAME);
+            strncpy(location, input_var_locations[i], BMI_MAX_LOCATION_NAME);
             return BMI_SUCCESS;
         }
     }
@@ -954,14 +954,14 @@ static int Get_var_units (Bmi *self, const char *name, char * units)
     // Check to see if in output array first
     for (int i = 0; i < OUTPUT_VAR_NAME_COUNT; i++) {
         if (strcmp(name, output_var_names[i]) == 0) {
-            strncpy(units, output_var_units[i], BMI_MAX_TYPE_NAME); //JG: should be BMI_MAX_UNITS_NAME
+            strncpy(units, output_var_units[i], BMI_MAX_UNITS_NAME);
             return BMI_SUCCESS;
         }
     }
     // Then check to see if in input array
     for (int i = 0; i < INPUT_VAR_NAME_COUNT; i++) {
         if (strcmp(name, input_var_names[i]) == 0) {
-            strncpy(units, input_var_units[i], BMI_MAX_TYPE_NAME); //JG: should be BMI_MAX_UNITS_NAME
+            strncpy(units, input_var_units[i], BMI_MAX_UNITS_NAME);
             return BMI_SUCCESS;
         }
     }

@@ -388,28 +388,25 @@ std::string Bmi_C_Adapter::GetVarType(std::string name) {
     if (success != BMI_SUCCESS) {
         throw std::runtime_error(model_name + " failed to get variable type for " + name + ".");
     }
-    std::string type_str(type_c_str);
-    return type_str;
+    return std::string(type_c_str);
 }
 
 std::string Bmi_C_Adapter::GetVarUnits(std::string name) {
-    char units_c_str[BMI_MAX_TYPE_NAME];
+    char units_c_str[BMI_MAX_UNITS_NAME];
     int success = bmi_model->get_var_units(bmi_model.get(), name.c_str(), units_c_str);
     if (success != BMI_SUCCESS) {
         throw std::runtime_error(model_name + " failed to get variable units for " + name + ".");
     }
-    std::string units_str(units_c_str);
-    return units_str;
+    return std::string(units_c_str);
 }
 
 std::string Bmi_C_Adapter::GetVarLocation(std::string name) {
-    char location_c_str[BMI_MAX_UNITS_NAME];
+    char location_c_str[BMI_MAX_LOCATION_NAME];
     int success = bmi_model->get_var_location(bmi_model.get(), name.c_str(), location_c_str);
     if (success != BMI_SUCCESS) {
         throw std::runtime_error(model_name + " failed to get variable location for " + name + ".");
     }
-    std::string location_str(location_c_str);
-    return location_str;
+    return std::string(location_c_str);
 }
 
 int Bmi_C_Adapter::GetVarGrid(std::string name) {
@@ -427,8 +424,7 @@ std::string Bmi_C_Adapter::GetGridType(int grid_id) {
     if (success != BMI_SUCCESS) {
         throw std::runtime_error(model_name + " failed to get grid type for grid ID " + to_string(grid_id) + ".");
     }
-    std::string gridtype_str(gridtype_c_str);
-    return gridtype_str;
+    return std::string(gridtype_c_str);
 }
 
 int Bmi_C_Adapter::GetGridRank(int grid_id) {

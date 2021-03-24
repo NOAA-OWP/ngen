@@ -247,7 +247,7 @@ TEST_F(Bmi_C_Adapter_Test, Update_0_h) {
 
 /** Test that Schaake Runoff output variable values can be retrieved. */
 TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_0) {
-    int out_var_index = 0;  //JG: out_var_index = 1; 0->RAIN_RATE
+    int out_var_index = 1;
 
     Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
 
@@ -264,7 +264,7 @@ TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_0) {
 
 /** Test that GIUH Runoff output variable values can be retrieved. */
 TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_1) {
-    int out_var_index = 1;  //JG: out_var_index = 2
+    int out_var_index = 2;
 
     Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
 
@@ -281,7 +281,7 @@ TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_1) {
 
 /** Test that Nash Lateral Flow output variable values can be retrieved. */
 TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_2) {
-    int out_var_index = 2;  //JG: out_var_index = 3
+    int out_var_index = 3;
 
     Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
 
@@ -298,7 +298,7 @@ TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_2) {
 
 /** Test that Deep Groundwater to Channel Flux output variable values can be retrieved. */
 TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_3) {
-    int out_var_index = 3;  //JG: out_var_index = 4
+    int out_var_index = 4;
 
     Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
 
@@ -315,7 +315,7 @@ TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_3) {
 
 /** Test that Total Flux (Q_OUT) output variable values can be retrieved. */
 TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_4) {
-    int out_var_index = 4;  //JG: out_var_index = 5
+    int out_var_index = 5;
 
     Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
 
