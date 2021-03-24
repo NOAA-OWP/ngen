@@ -42,7 +42,7 @@ extern "C" {
 #define BMI_MAX_TYPE_NAME (2048)
 #define BMI_MAX_COMPONENT_NAME (2048)
 #define BMI_MAX_VAR_NAME (2048)
-
+#define BMI_MAX_LOCATION_NAME (2048) //OWP Custom
 
 typedef struct Bmi {
     void *data;

@@ -22,6 +22,7 @@ namespace bmi {
   const int MAX_VAR_NAME = 2048;
   const int MAX_UNITS_NAME = 2048;
   const int MAX_TYPE_NAME = 2048;
+  const int MAX_LOCATION_NAME = 2048;
 
   class Bmi {
     public:
