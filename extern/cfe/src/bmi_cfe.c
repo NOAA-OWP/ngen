@@ -804,48 +804,6 @@ static int Get_adjusted_index_for_variable(const char *name)
 }
 
 
-static int Get_grid_rank (Bmi *self, int grid, int * rank)
-{
-    if (grid == 0) {
-        *rank = 1;
-        return BMI_SUCCESS;
-    }
-    else {
-        *rank = -1;
-        return BMI_FAILURE;
-    }
-}
-
-
-static int Get_grid_size(Bmi *self, int grid, int * size)
-{
-    if (grid == 0) {
-        *size = 1;
-        return BMI_SUCCESS;
-    }
-    else {
-        *size = -1;
-        return BMI_FAILURE;
-    }
-}
-
-
-static int Get_grid_type (Bmi *self, int grid, char * type)
-{
-    int status = BMI_FAILURE;
-
-    if (grid == 0) {
-        strncpy(type, "scalar", BMI_MAX_TYPE_NAME);
-        status = BMI_SUCCESS;
-    }
-    else {
-        type[0] = '\0';
-        status = BMI_FAILURE;
-    }
-    return status;
-}
-
-
 static int Get_var_grid(Bmi *self, const char *name, int *grid)
 {
 
@@ -1169,6 +1127,129 @@ static int Get_output_var_names (Bmi *self, char ** names)
     return BMI_SUCCESS;
 }
 
+/* Grid information */
+static int Get_grid_rank (Bmi *self, int grid, int * rank)
+{
+    if (grid == 0) {
+        *rank = 1;
+        return BMI_SUCCESS;
+    }
+    else {
+        *rank = -1;
+        return BMI_FAILURE;
+    }
+}
+
+
+static int Get_grid_size(Bmi *self, int grid, int * size)
+{
+    if (grid == 0) {
+        *size = 1;
+        return BMI_SUCCESS;
+    }
+    else {
+        *size = -1;
+        return BMI_FAILURE;
+    }
+}
+
+
+static int Get_grid_type (Bmi *self, int grid, char * type)
+{
+    int status = BMI_FAILURE;
+
+    if (grid == 0) {
+        strncpy(type, "scalar", BMI_MAX_TYPE_NAME);
+        status = BMI_SUCCESS;
+    }
+    else {
+        type[0] = '\0';
+        status = BMI_FAILURE;
+    }
+    return status;
+}
+
+
+/* Uniform rectilinear (grid type) */
+static int Get_grid_shape(Bmi *self, int grid, int *shape)
+{
+    return BMI_FAILURE;
+}
+
+
+static int Get_grid_spacing(Bmi *self, int grid, double *spacing)
+{
+    return BMI_FAILURE;
+}
+
+
+static int Get_grid_origin(Bmi *self, int grid, double *origin)
+{
+    return BMI_FAILURE;
+}
+
+
+/* Non-uniform rectilinear, curvilinear (grid type)*/
+static int Get_grid_x(Bmi *self, int grid, double *x)
+{
+    return BMI_FAILURE;
+}
+
+
+static int Get_grid_y(Bmi *self, int grid, double *y)
+{
+    return BMI_FAILURE;
+}
+
+
+static int Get_grid_z(Bmi *self, int grid, double *z)
+{
+    return BMI_FAILURE;
+}
+
+
+/*Unstructured (grid type)*/
+static int Get_grid_node_count(Bmi *self, int grid, int *count)
+{
+    return BMI_FAILURE;
+}
+
+
+static int Get_grid_edge_count(Bmi *self, int grid, int *count)
+{
+    return BMI_FAILURE;
+}
+
+
+static int Get_grid_face_count(Bmi *self, int grid, int *count)
+{
+    return BMI_FAILURE;
+}
+
+
+static int Get_grid_edge_nodes(Bmi *self, int grid, int *edge_nodes)
+{
+    return BMI_FAILURE;
+}
+
+
+static int Get_grid_face_edges(Bmi *self, int grid, int *face_edges)
+{
+    return BMI_FAILURE;
+}
+
+
+static int Get_grid_face_nodes(Bmi *self, int grid, int *face_nodes)
+{
+    return BMI_FAILURE;
+}
+
+
+static int Get_grid_nodes_per_face(Bmi *self, int grid, int *nodes_per_face)
+{
+    return BMI_FAILURE;
+}
+
 
 int read_file_line_counts(const char* file_name, int* line_count, int* max_line_length)
 {
@@ -1261,21 +1342,21 @@ Bmi* register_bmi(Bmi *model) {
         model->get_grid_rank = Get_grid_rank;    
         model->get_grid_type = Get_grid_type;    
 
-        model->get_grid_shape = NULL;
-        model->get_grid_spacing = NULL;
-        model->get_grid_origin = NULL;
+        model->get_grid_shape = Get_grid_shape;    // N/a for grid type scalar
+        model->get_grid_spacing = Get_grid_spacing;    // N/a for grid type scalar
+        model->get_grid_origin = Get_grid_origin;    // N/a for grid type scalar
 
-        model->get_grid_x = NULL;
-        model->get_grid_y = NULL;
-        model->get_grid_z = NULL;
+        model->get_grid_x = Get_grid_x;    // N/a for grid type scalar
+        model->get_grid_y = Get_grid_y;    // N/a for grid type scalar
+        model->get_grid_z = Get_grid_z;    // N/a for grid type scalar
 
-        model->get_grid_node_count = NULL;
-        model->get_grid_edge_count = NULL;
-        model->get_grid_face_count = NULL;
-        model->get_grid_edge_nodes = NULL;
-        model->get_grid_face_edges = NULL;
-        model->get_grid_face_nodes = NULL;
-        model->get_grid_nodes_per_face = NULL;
+        model->get_grid_node_count = Get_grid_node_count;    // N/a for grid type scalar
+        model->get_grid_edge_count = Get_grid_edge_count;    // N/a for grid type scalar
+        model->get_grid_face_count = Get_grid_face_count;    // N/a for grid type scalar
+        model->get_grid_edge_nodes = Get_grid_edge_nodes;    // N/a for grid type scalar
+        model->get_grid_face_edges = Get_grid_face_edges;    // N/a for grid type scalar
+        model->get_grid_face_nodes = Get_grid_face_nodes;    // N/a for grid type scalar
+        model->get_grid_nodes_per_face = Get_grid_nodes_per_face;    // N/a for grid type scalar
 
     }
 
