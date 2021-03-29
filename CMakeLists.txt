@@ -62,6 +62,10 @@ else()
     endif()
 endif()
 
+if(MPI_ACTIVE)
+    find_package(MPI)
+endif()
+
 find_package(Boost 1.72.0 REQUIRED)
 
 # Handle several steps for BMI C library logic and dependencies, at top level, if functionality is turned on
