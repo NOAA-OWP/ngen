@@ -13,9 +13,6 @@ class HY_PointHydroNexusRemoteUpstream : public HY_PointHydroNexus
         HY_PointHydroNexusRemoteUpstream(int nexus_id_number, std::string nexus_id, int num_downstream);
         virtual ~HY_PointHydroNexusRemoteUpstream();
 
-        /** get the request percentage of downstream flow through this nexus at timestep t. */
-        double get_downstream_flow(long catchment_id, time_step_t t, double percent_flow);
-
         /** add flow to this nexus for timestep t. */
         void add_upstream_flow(double val, long catchment_id, time_step_t t);
 
@@ -23,6 +20,20 @@ class HY_PointHydroNexusRemoteUpstream : public HY_PointHydroNexus
 
     private:
         int world_rank;
+
+        //Determine this with a broadcast of the ranks at init?
+        int downstream_remote_nexus_rank = 1;
+
+        // Create the MPI datatype
+        MPI_Datatype time_step_and_flow_type;
+
+        struct time_step_and_flow_t
+        {
+           long time_step;
+           double flow;
+        };
+
+        struct time_step_and_flow_t buffer;
 
 
 };
