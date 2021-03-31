@@ -1,6 +1,8 @@
 #ifndef HY_POINTHYDRONEXUSREMOTEUPSTREAM_H
 #define HY_POINTHYDRONEXUSREMOTEUPSTREAM_H
 
+#ifdef NGEN_MPI_ACTIVE
+
 #include <HY_PointHydroNexus.hpp>
 #include <mpi.h>
 
@@ -25,4 +27,5 @@ class HY_PointHydroNexusRemoteUpstream : public HY_PointHydroNexus
 
 };
 
+#endif // NGEN_MPI_ACTIVE
 #endif // HY_POINTHYDRONEXUSREMOTEUPSTREAM_H

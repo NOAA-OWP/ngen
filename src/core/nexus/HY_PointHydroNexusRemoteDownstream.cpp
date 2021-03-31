@@ -1,5 +1,6 @@
 #include "HY_PointHydroNexusRemoteDownstream.hpp"
 
+#ifdef NGEN_MPI_ACTIVE
 
 HY_PointHydroNexusRemoteDownstream::HY_PointHydroNexusRemoteDownstream(int nexus_id_number, std::string nexus_id, int num_downstream) : HY_PointHydroNexus(nexus_id_number, nexus_id, num_downstream)
 {
@@ -108,3 +109,4 @@ int HY_PointHydroNexusRemoteDownstream::get_world_rank()
    return world_rank;
 }
 
+#endif // NGEN_MPI_ACTIVE

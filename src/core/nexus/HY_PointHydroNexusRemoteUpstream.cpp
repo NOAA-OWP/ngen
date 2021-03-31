@@ -1,5 +1,7 @@
 #include "HY_PointHydroNexusRemoteUpstream.hpp"
 
+#ifdef NGEN_MPI_ACTIVE
+
 //Can allow multiple upstreams to be on different ranks / multiple processors.
 //Downstream is always local
 //Everything that extracts water from a nexus needs to be colocal / on the same processor.
@@ -102,3 +104,5 @@ int HY_PointHydroNexusRemoteUpstream::get_world_rank()
 {
    return world_rank;
 }
+
+#endif // NGEN_MPI_ACTIVE

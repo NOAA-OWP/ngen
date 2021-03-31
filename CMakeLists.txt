@@ -64,6 +64,7 @@ endif()
 
 if(MPI_ACTIVE)
     find_package(MPI)
+    add_compile_definitions(NGEN_MPI_ACTIVE)
 endif()
 
 find_package(Boost 1.72.0 REQUIRED)
