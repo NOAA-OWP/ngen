@@ -44,7 +44,60 @@ double HY_PointHydroNexusRemoteDownstream::get_downstream_flow(long catchment_id
 
 void HY_PointHydroNexusRemoteDownstream::add_upstream_flow(double val, long catchment_id, time_step_t t)
 {
-  HY_PointHydroNexus::add_upstream_flow(val, catchment_id, t);
+
+   double upstream_flow;
+
+   int upstream_remote_nexus_rank = 0;
+
+   struct time_step_and_flow_t
+   {
+       long time_step;
+       double flow;
+   };
+
+   struct time_step_and_flow_t received;
+
+   // Create the datatype
+   MPI_Datatype time_step_and_flow_type;
+
+
+   int count = 2;
+   const int array_of_blocklengths[2] = { 1, 1 };
+   const MPI_Aint array_of_displacements[2] = { 0, sizeof(long) };
+   const MPI_Datatype array_of_types[2] = { MPI_LONG, MPI_DOUBLE };
+
+   MPI_Type_create_struct(count, array_of_blocklengths, array_of_displacements, array_of_types, &time_step_and_flow_type);
+
+   MPI_Type_commit(&time_step_and_flow_type);
+
+
+
+
+   //Need to update code for the possibility of multiple downstreams. Need to send this message to all downstreams.
+
+   //Send timestep(key to a dict to extract the info) and flow value as bytes with a custom type that packs these together
+   //Custom mpi type that is a pass structure
+
+   //Receive downstream_flow from Upstream Remote Nexus to this Downstream Remote Nexus
+   MPI_Recv(
+     /* data         = */ &received, 
+     /* count        = */ 1, 
+     /* datatype     = */ time_step_and_flow_type, 
+     /* source       = */ upstream_remote_nexus_rank, 
+     /* tag          = */ 0, 
+     /* communicator = */ MPI_COMM_WORLD, 
+     /* status       = */ MPI_STATUS_IGNORE);
+
+     long time_step = received.time_step;
+
+     upstream_flow = received.flow;
+
+
+   std::cout << "NexusRemoteDownstream upstream_flow: " << upstream_flow << std::endl; 
+
+
+
+  HY_PointHydroNexus::add_upstream_flow(upstream_flow, catchment_id, time_step);
 
   return;
 
