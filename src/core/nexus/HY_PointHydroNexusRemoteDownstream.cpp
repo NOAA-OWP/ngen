@@ -4,19 +4,15 @@
 
 HY_PointHydroNexusRemoteDownstream::HY_PointHydroNexusRemoteDownstream(int nexus_id_number, std::string nexus_id, int num_downstream) : HY_PointHydroNexus(nexus_id_number, nexus_id, num_downstream)
 {
-   MPI_Init(NULL, NULL);
 
-   MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
-
-   int count = 2;
-   const int array_of_blocklengths[2] = { 1, 1 };
-   const MPI_Aint array_of_displacements[2] = { 0, sizeof(long) };
-   const MPI_Datatype array_of_types[2] = { MPI_LONG, MPI_DOUBLE };
+   int count = 3;
+   const int array_of_blocklengths[3] = { 1, 1, 1};
+   const MPI_Aint array_of_displacements[3] = { 0, sizeof(long), sizeof(long) + sizeof(long) };
+   const MPI_Datatype array_of_types[3] = { MPI_LONG, MPI_LONG, MPI_DOUBLE };
 
    MPI_Type_create_struct(count, array_of_blocklengths, array_of_displacements, array_of_types, &time_step_and_flow_type);
 
    MPI_Type_commit(&time_step_and_flow_type);
-
 }
 
 HY_PointHydroNexusRemoteDownstream::~HY_PointHydroNexusRemoteDownstream()
@@ -24,11 +20,10 @@ HY_PointHydroNexusRemoteDownstream::~HY_PointHydroNexusRemoteDownstream()
     //dtor
 }
 
-
 void HY_PointHydroNexusRemoteDownstream::add_upstream_flow(double val, long catchment_id, time_step_t t)
 {
+   //TODO:
    //Need to update code for the possibility of multiple downstreams. Need to send this message to all downstreams.
-
    //Send timestep(key to a dict to extract the info) and flow value as bytes with a custom type that packs these together
    //Custom mpi type that is a pass structure
 
@@ -42,15 +37,30 @@ void HY_PointHydroNexusRemoteDownstream::add_upstream_flow(double val, long catc
      /* communicator = */ MPI_COMM_WORLD, 
      /* status       = */ MPI_STATUS_IGNORE);
 
-     time_step = received.time_step;
+     upstream_catchment_id = received.catchment_id;
 
      upstream_flow = received.flow;
 
-     std::cout << "NexusRemoteDownstream upstream_flow: " << upstream_flow << std::endl; 
+     time_step = received.time_step;
 
-     HY_PointHydroNexus::add_upstream_flow(upstream_flow, catchment_id, time_step);
+     HY_PointHydroNexus::add_upstream_flow(upstream_flow, upstream_catchment_id, time_step);
 
      return;
+}
+
+double HY_PointHydroNexusRemoteDownstream::get_upstream_flow_value()
+{
+   return upstream_flow;
+}
+
+long HY_PointHydroNexusRemoteDownstream::get_catchment_id()
+{
+   return upstream_catchment_id;
+}
+
+long HY_PointHydroNexusRemoteDownstream::get_time_step()
+{
+   return time_step;
 }
 
 int HY_PointHydroNexusRemoteDownstream::get_world_rank()

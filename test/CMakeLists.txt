@@ -5,7 +5,7 @@ include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 include_directories(${PROJ_ROOT_INCLUDE_DIR})
 
 if(MPI_ACTIVE)
-    find_package(MPI)
+    #find_package(MPI)
     add_compile_definitions(NGEN_MPI_TESTS_ACTIVE)
 endif()
 

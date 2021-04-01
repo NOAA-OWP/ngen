@@ -30,11 +30,11 @@ class HY_PointHydroNexusRemoteUpstream : public HY_PointHydroNexus
         struct time_step_and_flow_t
         {
            long time_step;
+           long catchment_id;
            double flow;
         };
 
         struct time_step_and_flow_t buffer;
-
 
 };
 

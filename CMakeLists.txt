@@ -4,7 +4,6 @@ if(MPI_ACTIVE)
    set (CMAKE_CXX_COMPILER "mpicxx")
 endif()
 
-
 ########### Define project version and use via generated config header
 project(ngen VERSION 0.1.0)
 configure_file(include/NGenConfig.h.in include/NGenConfig.h)
@@ -70,7 +69,7 @@ endif()
 
 if(MPI_ACTIVE)
     find_package(MPI)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${MPI_CXX_FLAGS}")
+    #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${MPI_CXX_FLAGS}")
     add_compile_definitions(NGEN_MPI_ACTIVE)
 endif()
 

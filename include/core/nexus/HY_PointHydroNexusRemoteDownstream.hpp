@@ -18,6 +18,13 @@ class HY_PointHydroNexusRemoteDownstream : public HY_PointHydroNexus
 
         int get_world_rank();
 
+        double get_upstream_flow_value();
+
+        long get_catchment_id();
+
+        long get_time_step();
+
+
     private:
         int world_rank;
 
@@ -26,6 +33,7 @@ class HY_PointHydroNexusRemoteDownstream : public HY_PointHydroNexus
 
         double upstream_flow;
         long time_step; 
+        long upstream_catchment_id;
 
         // Create the datatype
         MPI_Datatype time_step_and_flow_type;
@@ -33,13 +41,11 @@ class HY_PointHydroNexusRemoteDownstream : public HY_PointHydroNexus
         struct time_step_and_flow_t
         {
             long time_step;
+            long catchment_id;
             double flow;
         };
 
         struct time_step_and_flow_t received;
-
-
-
 
 };
 

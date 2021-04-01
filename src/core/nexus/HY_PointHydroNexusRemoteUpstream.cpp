@@ -2,6 +2,7 @@
 
 #ifdef NGEN_MPI_ACTIVE
 
+//TODO:
 //Can allow multiple upstreams to be on different ranks / multiple processors.
 //Downstream is always local
 //Everything that extracts water from a nexus needs to be colocal / on the same processor.
@@ -9,19 +10,14 @@
 
 HY_PointHydroNexusRemoteUpstream::HY_PointHydroNexusRemoteUpstream(int nexus_id_number, std::string nexus_id, int num_downstream) : HY_PointHydroNexus(nexus_id_number, nexus_id, num_downstream)
 {
-   MPI_Init(NULL, NULL);
-
-   MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
-
-   int count = 2;
-   const int array_of_blocklengths[2] = { 1, 1 };
-   const MPI_Aint array_of_displacements[2] = { 0, sizeof(long) };
-   const MPI_Datatype array_of_types[2] = { MPI_LONG, MPI_DOUBLE };
+   int count = 3;
+   const int array_of_blocklengths[3] = { 1, 1, 1 };
+   const MPI_Aint array_of_displacements[3] = { 0, sizeof(long), sizeof(long) + sizeof(long)};
+   const MPI_Datatype array_of_types[3] = { MPI_LONG, MPI_LONG, MPI_DOUBLE };
 
    MPI_Type_create_struct(count, array_of_blocklengths, array_of_displacements, array_of_types, &time_step_and_flow_type);
 
    MPI_Type_commit(&time_step_and_flow_type);
-
 }
 
 HY_PointHydroNexusRemoteUpstream::~HY_PointHydroNexusRemoteUpstream()
@@ -38,6 +34,7 @@ void HY_PointHydroNexusRemoteUpstream::add_upstream_flow(double val, long catchm
    //HY_PointHydroNexus::add_upstream_flow(val, catchment_id, t);
 
    buffer.time_step = t;
+   buffer.catchment_id = catchment_id;
    buffer.flow = val;
 
    //Send downstream_flow from this Upstream Remote Nexus to the Downstream Remote Nexus
