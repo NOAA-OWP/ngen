@@ -69,7 +69,6 @@ endif()
 
 if(MPI_ACTIVE)
     find_package(MPI)
-    #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${MPI_CXX_FLAGS}")
     add_compile_definitions(NGEN_MPI_ACTIVE)
 endif()
 
