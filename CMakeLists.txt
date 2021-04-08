@@ -1,4 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
+
+if(MPI_ACTIVE)
+   set (CMAKE_CXX_COMPILER "mpicxx")
+endif()
+
 ########### Define project version and use via generated config header
 project(ngen VERSION 0.1.0)
 configure_file(include/NGenConfig.h.in include/NGenConfig.h)
@@ -60,6 +65,11 @@ else()
     else()
         message(STATUS "No Boost root: $ENV{BOOST_ROOT}")
     endif()
+endif()
+
+if(MPI_ACTIVE)
+    find_package(MPI)
+    add_compile_definitions(NGEN_MPI_ACTIVE)
 endif()
 
 find_package(Boost 1.72.0 REQUIRED)

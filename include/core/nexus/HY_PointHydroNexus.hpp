@@ -31,8 +31,6 @@ class HY_PointHydroNexus : public HY_HydroNexus
 
     protected:
 
-    private:
-
     typedef std::vector< std::pair<long,double> > id_flow_vector;
     typedef std::vector< std::pair<long,double> > id_request_vector;
 
