@@ -1,3 +1,7 @@
+#ifdef NGEN_MPI_ACTIVE
+  #include <mpi.h>
+#endif
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -19,6 +23,13 @@
 
 #include <FileChecker.h>
 #include <boost/algorithm/string.hpp>
+
+//new headers
+#include "realizations/catchment/Catchment_Formulation.hpp"
+//#include "hymod/include/Hymod.h"
+
+#include "HY_PointHydroNexusRemoteUpstream.hpp"
+#include "HY_PointHydroNexusRemoteDownstream.hpp"
 
 std::string catchmentDataFile = "";
 std::string nexusDataFile = "";
@@ -98,6 +109,20 @@ typedef Simple_Lumped_Model_Realization _hymod;
 typedef realization::Tshirt_Realization _tshirt;
 
 int main(int argc, char *argv[]) {
+#ifdef NGEN_MPI_ACTIVE
+    // Initialize the MPI environment
+    MPI_Init(NULL, NULL);
+    // Find out rank
+    int world_rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
+    // Find out size
+    int world_size;
+    MPI_Comm_size(MPI_COMM_WORLD, &world_size);
+
+    utils::StreamHandler output_stream = utils::StreamHandler();
+#endif
+
+
     std::cout << "Hello there " << ngen_VERSION_MAJOR << "."
               << ngen_VERSION_MINOR << "."
               << ngen_VERSION_PATCH << std::endl;
@@ -168,7 +193,11 @@ int main(int argc, char *argv[]) {
     // TODO: Instead of iterating through a collection of FeatureBase objects mapping to catchments, we instead want to iterate through HY_Catchment objects
     geojson::GeoJSON catchment_collection = geojson::read(catchmentDataFile, catchment_subset_ids);
 
+#ifndef NGEN_MPI_ACTIVE
+    //The prepare_features() currently does not work in MPI environment
     prepare_features(nexus_collection, catchment_collection, !true);
+    std::cout << "Finish prepare_features()" << std::endl;
+#endif
 
     // TODO: Have these formulations attached to the prior HY_Catchment objects
     realization::Formulation_Manager manager = realization::Formulation_Manager(REALIZATION_CONFIG_PATH);
@@ -219,6 +248,64 @@ int main(int argc, char *argv[]) {
       }
 
     }
+
+#ifdef NGEN_MPI_ACTIVE
+    // TODO For 2 catchments, need 2 focing files. For the moment, using the same forcing file
+    forcing_params forcing_config(
+                    "./data/forcing/cat-52_2015-12-01 00_00_00_2015-12-30 23_00_00.csv",
+                    "2015-12-01 00:00:00",
+                    "2015-12-30 23:00:00"
+                );
+
+    double storage = 1.0;
+    double max_storage = 1000.0;
+    double a = 1.0;
+    double b = 10.0;
+    double Ks = 0.1;
+    double Kq = 0.01;
+    long n = 3;
+    std::vector<double> Sr = {1.0, 1.0, 1.0};
+    time_step_t t = 0;
+
+    //MPI version
+    //if (world_rank == 0) {
+      realization::Catchment_Formulation* A = new Simple_Lumped_Model_Realization(
+            "Cat-52",
+            forcing_config,
+            output_stream,
+            storage,
+            max_storage,
+            a,
+            b,
+            Ks,
+            Kq,
+            n,
+            Sr,
+            t);
+    //} else if (world_rank == 1) {
+      realization::Catchment_Formulation* B = new Simple_Lumped_Model_Realization(
+            "Cat-52",
+            forcing_config,
+            output_stream,
+            storage,
+            max_storage,
+            a,
+            b,
+            Ks,
+            Kq,
+            n,
+            Sr,
+            t);
+    //}
+
+    //Instantiate remote nexus class objects to use MPI
+    //if (world_rank == 0) {
+      HY_PointHydroNexusRemoteUpstream nexus_upstream = HY_PointHydroNexusRemoteUpstream(34, "nex-34", 1);
+    //} else if (world_rank == 1) {
+      HY_PointHydroNexusRemoteDownstream nexus_downstream = HY_PointHydroNexusRemoteDownstream(34, "nex-34", 1);
+    //}
+#endif
+
     std::cout<<"Running Models"<<std::endl;
 
     std::shared_ptr<pdm03_struct> pdm_et_data = std::make_shared<pdm03_struct>(get_et_params());
@@ -230,6 +317,7 @@ int main(int argc, char *argv[]) {
 
       std::string current_timestamp = manager.Simulation_Time_Object->get_timestamp(output_time_index);
 
+#ifndef NGEN_MPI_ACTIVE
       for (std::pair<std::string, std::shared_ptr<realization::Formulation>> formulation_pair : manager ) {
         formulation_pair.second->set_et_params(pdm_et_data);
         //get the catchment response
@@ -238,6 +326,7 @@ int main(int argc, char *argv[]) {
         std::cout<<"\tCatchment "<<formulation_pair.first<<" contributing "<<response<<" m/s to "<<catchment_to_nexus[formulation_pair.first]<<std::endl;
         // If the timestep is 0, also write the header line to the file
         // TODO: add command line or config option to have this be omitted
+
         if (output_time_index == 0) {
             // Append "Time Step" to header string provided by formulation, since we'll also add time step to output
             std::string header_str = formulation_pair.second->get_output_header_line();
@@ -250,7 +339,53 @@ int main(int argc, char *argv[]) {
         //update the nexus with this flow
         nexus_realizations[ catchment_to_nexus[formulation_pair.first] ]->add_upstream_flow(response, catchment_id[formulation_pair.first], output_time_index);
       }
+#endif
 
+#ifdef NGEN_MPI_ACTIVE
+      // MPI version
+      //if (world_rank == 0)
+        A->set_et_params(pdm_et_data);
+      //else if (world_rank == 1)
+        B->set_et_params(pdm_et_data);
+
+      //MPI version
+      long time_step = (long) output_time_index;
+      long cat_A = 52;
+      long cat_B = 52;
+      long delta_t = 3600;
+
+      ofstream cat_outfile;
+      if (world_rank == 0) {
+        double response = A->get_response(time_step, delta_t);
+        nexus_upstream.add_upstream_flow(response, cat_A, time_step);
+        std::cout << time_step << ", The response for Cat-A  is: " << response << std::endl;
+
+        cat_outfile.open ("cat-A_output.csv", ios::out | ios::app);
+        if (output_time_index == 0) {
+          cat_outfile << "Time Step," << "Time," << "flow" <<std::endl;
+        }
+          cat_outfile << output_time_index << "," << current_timestamp << "," << response << std::endl;
+        
+      } else if (world_rank == 1) {
+        nexus_downstream.add_upstream_flow(0.0, cat_B, time_step);
+        double upstream_flow = nexus_downstream.get_upstream_flow_value();
+        long upstream_catchment_id = nexus_downstream.get_catchment_id();
+        time_step = nexus_downstream.get_time_step();
+        std::cout << "received: " << time_step << " " << upstream_catchment_id << " " << upstream_flow << std::endl;
+
+        //Make cat_B do some work
+        double response = B->get_response(time_step, 3600.0);
+        std::cout << time_step << ", The response for Cat-B  is: " << response << std::endl;
+
+        cat_outfile.open ("cat-B_output.csv", ios::out | ios::app);
+        if (output_time_index == 0) {
+          cat_outfile << "Time Step," << "Time," << "flow," << "upstream_flow" <<std::endl;
+        }
+          cat_outfile << output_time_index << "," << current_timestamp << "," << response << "," << upstream_flow << std::endl;
+      }
+#endif
+
+#ifndef NGEN_MPI_ACTIVE
       for(auto &nexus: nexus_realizations)
       {
         //TODO this ID isn't all that important is it?  And really it should connect to
@@ -266,6 +401,13 @@ int main(int argc, char *argv[]) {
         std::cout<<"\tNexus "<<nexus.first<<" has "<<contribution_at_t<<" m^3/s"<<std::endl;
         output_map[nexus.first].push_back(contribution_at_t);
       }
+#endif
+
+#ifdef NGEN_MPI_ACTIVE
+      MPI_Barrier(MPI_COMM_WORLD);
+      if (output_time_index == manager.Simulation_Time_Object->get_total_output_times())
+        cat_outfile.close();
+#endif
     }
 
     /*
@@ -286,4 +428,13 @@ int main(int argc, char *argv[]) {
         Iteration 2: Read waterbodies, build linkage between nexus/waterbody, apply routing, multiple timesteps
 
     */
+
+#ifdef NGEN_MPI_ACTIVE
+    if (world_rank == 0)
+      delete A;
+    else if (world_rank == 1)
+      delete B;
+
+    MPI_Finalize();
+#endif
 }
