@@ -444,11 +444,11 @@ TEST_F(ReservoirKernelTest, TestRunMultipleOutletReservoirOutletVelocityOutOfBou
 
     MultipleOutletReservoir->response_meters_per_second(in_flux_meters_per_second, 10, excess);
 
-    first_outlet_velocity = MultipleOutletReservoir->velocity_meters_per_second_for_outlet(6);
+    first_outlet_velocity = MultipleOutletReservoir->velocity_meters_per_second_for_outlet(2);
 
     first_outlet_velocity = round( first_outlet_velocity * 100.0 ) / 100.0;
 
-    EXPECT_DOUBLE_EQ (1.05, first_outlet_velocity);
+    EXPECT_DOUBLE_EQ (0.40, first_outlet_velocity);
     
     ASSERT_TRUE(true);
 }
