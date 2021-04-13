@@ -123,10 +123,8 @@ namespace Reservoir{
             {
                 /// \todo TODO: Return appropriate warning
                 cout << "WARNING: Reservoir calculated a storage above the maximum storage."  << endl;
-
+                excess_water_meters = state.current_storage_height_meters - parameters.maximum_storage_meters;
                 state.current_storage_height_meters = parameters.maximum_storage_meters;
-
-                excess_water_meters = (state.current_storage_height_meters - parameters.maximum_storage_meters);
             }
             // TODO: since we are now doing this first, does it make sense to add the excess back into the storage if there is
             //  room after outlet flow loss is accounted for?
