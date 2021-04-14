@@ -100,7 +100,10 @@
                       1.0
                   ],
                   "storage": 1.0,
-                  "max_storage": 1000.0,
+                  "gw_storage": 1.0,
+                  "gw_max_storage": 10.0,
+                  "nash_max_storage": 2.0,
+                  "smax": 5,
                   "a": 1.0,
                   "b": 10.0,
                   "Ks": 0.1,
