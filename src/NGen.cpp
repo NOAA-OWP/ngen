@@ -193,11 +193,9 @@ int main(int argc, char *argv[]) {
     // TODO: Instead of iterating through a collection of FeatureBase objects mapping to catchments, we instead want to iterate through HY_Catchment objects
     geojson::GeoJSON catchment_collection = geojson::read(catchmentDataFile, catchment_subset_ids);
 
-#ifndef NGEN_MPI_ACTIVE
-    //The prepare_features() currently does not work in MPI environment
+    //The modified prepare_features() seems to work in MPI environment
     prepare_features(nexus_collection, catchment_collection, !true);
     std::cout << "Finish prepare_features()" << std::endl;
-#endif
 
     // TODO: Have these formulations attached to the prior HY_Catchment objects
     realization::Formulation_Manager manager = realization::Formulation_Manager(REALIZATION_CONFIG_PATH);
@@ -268,6 +266,7 @@ int main(int argc, char *argv[]) {
     time_step_t t = 0;
 
     //MPI version
+    //Using the if block causes variable undeclared error
     //if (world_rank == 0) {
       realization::Catchment_Formulation* A = new Simple_Lumped_Model_Realization(
             "Cat-52",
@@ -299,6 +298,7 @@ int main(int argc, char *argv[]) {
     //}
 
     //Instantiate remote nexus class objects to use MPI
+    //Using the if block causes variable undeclared error
     //if (world_rank == 0) {
       HY_PointHydroNexusRemoteUpstream nexus_upstream = HY_PointHydroNexusRemoteUpstream(34, "nex-34", 1);
     //} else if (world_rank == 1) {
@@ -343,9 +343,9 @@ int main(int argc, char *argv[]) {
 
 #ifdef NGEN_MPI_ACTIVE
       // MPI version
-      //if (world_rank == 0)
+      if (world_rank == 0)
         A->set_et_params(pdm_et_data);
-      //else if (world_rank == 1)
+      else if (world_rank == 1)
         B->set_et_params(pdm_et_data);
 
       //MPI version
