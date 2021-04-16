@@ -111,12 +111,13 @@ add_automated_test(
         realizations/catchments/Bmi_C_Cfe_IT.cpp
 )
 
-#target_link_libraries
-add_automated_test(
-        test_lstm
-        models/lstm/include/LSTM_Test.cpp
-        realizations/catchments/LSTM_Realization_Test.cpp
-)
+if(LSTM_TORCH_LIB_ACTIVE)
+   add_automated_test(
+           test_lstm
+           models/lstm/include/LSTM_Test.cpp
+           realizations/catchments/LSTM_Realization_Test.cpp
+   )
+endif()
 
 # Unit tests
 # TODO: Make sure the geojson tests don't need to be added here also

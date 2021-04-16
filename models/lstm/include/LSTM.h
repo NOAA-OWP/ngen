@@ -1,6 +1,8 @@
 #ifndef LSTM_H
 #define LSTM_H
 
+#ifdef NGEN_LSTM_TORCH_LIB_ACTIVE
+
 #include "all.h"
 #include "lstm_fluxes.h"
 #include "lstm_params.h"
@@ -8,7 +10,6 @@
 #include "lstm_state.h"
 #include <unordered_map>
 
-#ifdef NGEN_LSTM_TORCH_LIB_ACTIVE
 #include <torch/torch.h>
 
 typedef std::unordered_map< std::string, std::unordered_map< std::string, double> > ScaleParams;
@@ -70,7 +71,8 @@ namespace lstm {
          * @param TMP_2maboveground_K
          * @param UGRD_10maboveground_meters_per_second
          * @param VGRD_10maboveground_meters_per_second
-         * @return
+         * @return Returns 0 if the function successfully completes.
+         *         Any other value returned means an error occurred.
          */
         int run(double dt, double DLWRF_surface_W_per_meters_squared, double PRES_surface_Pa, 
                 double SPFH_2maboveground_kg_per_kg, double precip_meters_per_second, 

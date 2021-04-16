@@ -70,7 +70,9 @@ namespace lstm {
         // Set to `eval` model (just like Python)
         model.eval();
 
-        //FIXME what is the SUPPOSED to do?
+        //no_grad disables gradient calculations on the tensors.
+        //Since gradient calculations are not needed on the forward pass,
+        //no_grad reduces memory consumption.
         torch::NoGradGuard no_grad_;
 
         this->scale = read_scale_params(config.normalization_path);
@@ -151,7 +153,8 @@ namespace lstm {
      * @param TMP_2maboveground_K
      * @param UGRD_10maboveground_meters_per_second
      * @param VGRD_10maboveground_meters_per_second  
-     * @return
+     * @return Returns 0 if the function successfully completes. 
+     *         Any other value returned means an error occurred. 
      */
     int lstm_model::run(double dt, double DLWRF_surface_W_per_meters_squared,
                         double PRES_surface_Pa, double SPFH_2maboveground_kg_per_kg,
@@ -190,7 +193,6 @@ namespace lstm {
 
         current_state = std::make_shared<lstm_state>( lstm_state(output[1].toTensor(), output[2].toTensor()) );
 
-        // Returns 0 if the function successfully completes. Any other value returned means an error occurred. 
         return 0;
     }
 

@@ -1,6 +1,8 @@
 #ifndef NGEN_LSTM_FLUXES_H
 #define NGEN_LSTM_FLUXES_H
 
+#ifdef NGEN_LSTM_TORCH_LIB_ACTIVE
+
 namespace lstm {
 
      /**
@@ -20,4 +22,5 @@ namespace lstm {
 
 }
 
+#endif //NGEN_LSTM_TORCH_LIB_ACTIVE
 #endif //NGEN_LSTM_FLUXES_H
