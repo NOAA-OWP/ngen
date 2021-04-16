@@ -44,7 +44,7 @@
         "output_interval": 3600
     },
     "catchments": {
-        "cat-87":
+        "cat-67":
         {
           "formulations": [
             { "name": "lstm",
@@ -60,7 +60,7 @@
           }
         ],
             "forcing": {
-                "path": "./data/forcing/cat-87_2015-12-01 00_00_00_2015-12-30 23_00_00.csv"
+                "path": "./data/forcing/cat-67_2015-12-01 00_00_00_2015-12-30 23_00_00.csv"
             }
         }
       }

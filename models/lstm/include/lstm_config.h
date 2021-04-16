@@ -1,6 +1,8 @@
 #ifndef NGEN_LSTM_CONFIGURATION_H
 #define NGEN_LSTM_CONFIGURATION_H
 
+#ifdef NGEN_LSTM_TORCH_LIB_ACTIVE
+
 #include <string>
 
 namespace lstm {
@@ -36,4 +38,5 @@ namespace lstm {
     };
 }
 
+#endif //NGEN_LSTM_TORCH_LIB_ACTIVE
 #endif //NGEN_LSTM_CONIGURATION_H
