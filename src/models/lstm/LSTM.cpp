@@ -1,12 +1,11 @@
+#ifdef NGEN_LSTM_TORCH_LIB_ACTIVE
+
 #include "LSTM.h"
 #include "lstm_fluxes.h"
 #include "lstm_state.h"
 #include "CSV_Reader.h"
 #include <iostream>
 #include <fstream>
-
-#ifdef NGEN_LSTM_TORCH_LIB_ACTIVE
-
 
 using namespace std;
 
@@ -244,5 +243,4 @@ namespace lstm {
 
 }
 
-#endif
-
+#endif //NGEN_LSTM_TORCH_LIB_ACTIVE
