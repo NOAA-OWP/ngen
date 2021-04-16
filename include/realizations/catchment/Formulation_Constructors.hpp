@@ -13,7 +13,6 @@
 #include "Tshirt_C_Realization.hpp"
 #include "Simple_Lumped_Model_Realization.hpp"
 #include "Bmi_C_Formulation.hpp"
-#include "LSTM_Realization.hpp"
 
 #ifdef NGEN_LSTM_TORCH_LIB_ACTIVE
     #include "LSTM_Realization.hpp"
