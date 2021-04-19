@@ -25,7 +25,6 @@ HY_PointHydroNexusRemoteUpstream::~HY_PointHydroNexusRemoteUpstream()
     //dtor
 }
 
-
 void HY_PointHydroNexusRemoteUpstream::add_upstream_flow(double val, long catchment_id, time_step_t t)
 {
    //Don't call below on the updstream nexus because don't want to add to the total here.
@@ -39,11 +38,11 @@ void HY_PointHydroNexusRemoteUpstream::add_upstream_flow(double val, long catchm
 
    //Send downstream_flow from this Upstream Remote Nexus to the Downstream Remote Nexus
    MPI_Send(
-     /* data         = */ &buffer, 
-     /* count        = */ 1, 
-     /* datatype     = */ time_step_and_flow_type, 
-     /* destination  = */ downstream_remote_nexus_rank, 
-     /* tag          = */ 0, 
+     /* data         = */ &buffer,
+     /* count        = */ 1,
+     /* datatype     = */ time_step_and_flow_type,
+     /* destination  = */ downstream_remote_nexus_rank,
+     /* tag          = */ 0,
      /* communicator = */ MPI_COMM_WORLD);
 
    return;

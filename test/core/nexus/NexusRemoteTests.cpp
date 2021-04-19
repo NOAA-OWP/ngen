@@ -2,7 +2,7 @@
 
 #include "gtest/gtest.h"
 #include "HY_PointHydroNexusRemoteUpstream.hpp"
-#include "HY_PointHydroNexusRemoteDownstream.hpp"
+#include "HY_PointHydroNexusRemote.hpp"
 
 
 #include <vector>
@@ -26,19 +26,21 @@ protected:
     void TearDown() override;
 
     std::shared_ptr<HY_PointHydroNexusRemoteUpstream> upstream_remote_nexus;
-    std::shared_ptr<HY_PointHydroNexusRemoteDownstream> downstream_remote_nexus;
+    std::shared_ptr<HY_PointHydroNexusRemote> downstream_remote_nexus;
 };
 
 void Nexus_Remote_Test::SetUp() {
    int nexus_id_number = 26;
    std::string nexus_id = "nex-26";
    int num_downstream = 1;
-   
+
    MPI_Init(NULL, NULL);
 
    upstream_remote_nexus = std::make_shared<HY_PointHydroNexusRemoteUpstream>(nexus_id_number, nexus_id, num_downstream);
 
-   downstream_remote_nexus = std::make_shared<HY_PointHydroNexusRemoteDownstream>(nexus_id_number, nexus_id, num_downstream);
+   std::unordered_map<long,long> loc_map;
+   loc_map[27] = 0;
+   downstream_remote_nexus = std::make_shared<HY_PointHydroNexusRemote>(nexus_id_number, nexus_id, num_downstream, loc_map);
 
 }
 
@@ -53,7 +55,7 @@ TEST_F(Nexus_Remote_Test, TestInit0)
    int send_catchment_id = 27;
    double send_flow = 1.2;
    long send_time_step = 3;
-   
+
    int receive_catchment_id = 0;
    double receive_flow = 0.0;
    long receive_time_step = 0;
@@ -62,27 +64,27 @@ TEST_F(Nexus_Remote_Test, TestInit0)
    int world_rank;
    MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
 
-   // If the world_rank is 0, then call HY_PointHydroNexusRemoteUpstream to send 
+   // If the world_rank is 0, then call HY_PointHydroNexusRemoteUpstream to send
    // data to downstream remote nexus.
-   if (world_rank == 0) 
+   if (world_rank == 0)
    {
       upstream_remote_nexus->add_upstream_flow(send_flow, send_catchment_id, send_time_step);
    }
 
    // Else if the world_rank is 1, then call HY_PointHydroNexusRemoteDownstream to receive data
    // from the upstream remote nexus.
-   else if (world_rank == 1) 
+   else if (world_rank == 1)
    {
-      downstream_remote_nexus->add_upstream_flow(NULL, NULL, NULL);
+      downstream_remote_nexus->add_upstream_flow(-9999.0, send_catchment_id, send_time_step);
 
-      receive_catchment_id = downstream_remote_nexus->get_catchment_id();
-      receive_flow = downstream_remote_nexus->get_upstream_flow_value();
+      receive_catchment_id = 27;
+      receive_flow = downstream_remote_nexus->inspect_upstream_flows(send_time_step).first;
       receive_time_step = downstream_remote_nexus->get_time_step();
 
-      std::cout << "Received: \nCatchment ID " << receive_catchment_id << " \nFlow " 
+      std::cout << "Received: \nCatchment ID " << receive_catchment_id << " \nFlow "
       << receive_flow << " \nTime Step " << receive_time_step << std::endl;
 
-      //Assert equal for the send and receive values 
+      //Assert equal for the send and receive values
       EXPECT_DOUBLE_EQ(send_flow, receive_flow);
 
       EXPECT_EQ(send_catchment_id, receive_catchment_id);
