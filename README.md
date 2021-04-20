@@ -58,7 +58,7 @@ To run the *ngen* engine, the following command line positional arguments are su
 - `nexus subset ids` -- list of comma separated ids (NO SPACES!!!) to subset the nexus data, i.e. 'nex-0,nex-1'
 - `realization_config_path` -- path to json configuration file for realization/formulations associated with the hydrofabric inputs.
 
-An example of a complete invocation to run a subset of a hydrofabric.  If the realization configuration doesn't contain catchment definitions for the subset keys provided, the defauilt `global` configuration is used.  Alternatively, if he realization configuration contains definitions that are not in the subset (or hydrofabric) keys, then a warning is produced and the formulation isn't created.
+An example of a complete invocation to run a subset of a hydrofabric.  If the realization configuration doesn't contain catchment definitions for the subset keys provided, the default `global` configuration is used.  Alternatively, if the realization configuration contains definitions that are not in the subset (or hydrofabric) keys, then a warning is produced and the formulation isn't created.
 `./cmake-build-debug/ngen ./data/catchment_data.geojson "cat-27,cat-52" ./data/nexus_data.geojson "nex-26,nex-34" ./data/example_realization_config.json`
 
 To simulate every catchment in the input hydrofabric, leave the subset lists empty, i.e.:
