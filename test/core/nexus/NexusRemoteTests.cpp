@@ -58,7 +58,6 @@ void Nexus_Remote_Test::SetUp()
 void Nexus_Remote_Test::TearDown()
 {
 
-}
 
 
 
@@ -244,4 +243,3 @@ TEST_F(Nexus_Remote_Test, TestTree1)
 }
 
 //#endif  // NGEN_MPI_TESTS_ACTIVE
-
