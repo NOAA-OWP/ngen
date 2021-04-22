@@ -1,14 +1,14 @@
-#ifdef NGEN_MPI_TESTS_ACTIVE
+//#ifdef NGEN_MPI_TESTS_ACTIVE
 
 #include "gtest/gtest.h"
-#include "HY_PointHydroNexusRemoteUpstream.hpp"
 #include "HY_PointHydroNexusRemote.hpp"
 
 
 #include <vector>
 #include <memory>
 
-class Nexus_Remote_Test : public ::testing::Test {
+class Nexus_Remote_Test : public ::testing::Test
+{
 
 protected:
 
@@ -25,79 +25,78 @@ protected:
 
     void TearDown() override;
 
-    std::shared_ptr<HY_PointHydroNexusRemoteUpstream> upstream_remote_nexus;
-    std::shared_ptr<HY_PointHydroNexusRemote> downstream_remote_nexus;
+    std::vector<double> stored_discharge;
+    int mpi_rank;
 };
 
-void Nexus_Remote_Test::SetUp() {
-   int nexus_id_number = 26;
-   std::string nexus_id = "nex-26";
-   int num_downstream = 1;
+void Nexus_Remote_Test::SetUp()
+{
+    MPI_Init(NULL, NULL);
+    MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
 
-   MPI_Init(NULL, NULL);
-
-   upstream_remote_nexus = std::make_shared<HY_PointHydroNexusRemoteUpstream>(nexus_id_number, nexus_id, num_downstream);
-
-   std::unordered_map<long,long> loc_map;
-   loc_map[27] = 0;
-   downstream_remote_nexus = std::make_shared<HY_PointHydroNexusRemote>(nexus_id_number, nexus_id, num_downstream, loc_map);
-
+    stored_discharge.push_back(1.2);
+    stored_discharge.push_back(1.8);
+    stored_discharge.push_back(2.3);
 }
 
-void Nexus_Remote_Test::TearDown() {
-
+void Nexus_Remote_Test::TearDown()
+{
+    MPI_Finalize();
 }
+
+
 
 //Test sending data with MPI from an upstream remote nexus
 //to a downstream remote nexus.
 TEST_F(Nexus_Remote_Test, TestInit0)
 {
-   int send_catchment_id = 27;
-   double send_flow = 1.2;
-   long send_time_step = 3;
+    HY_PointHydroNexusRemote::catcment_location_map_t loc_map;
 
-   int receive_catchment_id = 0;
-   double receive_flow = 0.0;
-   long receive_time_step = 0;
+    HY_PointHydroNexusRemote* nexus;
 
-   // Find out rank, size
-   int world_rank;
-   MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
+    // create a nexus at both ranks
+    if ( mpi_rank == 0)
+    {
+        loc_map[26] = 1;
+        nexus = new HY_PointHydroNexusRemote(27, "nexus-27", 1, loc_map);
+    }
+    else if ( mpi_rank == 1)
+    {
+        loc_map[27] == 0;
+        nexus = new HY_PointHydroNexusRemote(26, "nexus-26", 1, loc_map);
+    }
 
-   // If the world_rank is 0, then call HY_PointHydroNexusRemoteUpstream to send
-   // data to downstream remote nexus.
-   if (world_rank == 0)
-   {
-      upstream_remote_nexus->add_upstream_flow(send_flow, send_catchment_id, send_time_step);
-   }
+    double dummy_flow = -9999.0;
+    long ts = 0;
 
-   // Else if the world_rank is 1, then call HY_PointHydroNexusRemoteDownstream to receive data
-   // from the upstream remote nexus.
-   else if (world_rank == 1)
-   {
-      downstream_remote_nexus->add_upstream_flow(-9999.0, send_catchment_id, send_time_step);
+    for ( auto discharge : stored_discharge)
+    {
+        switch(mpi_rank)
+        {
+            case 0:
+                std::cerr << "Rank 0: Sending flow of " << discharge << " to catchment 26\n";
+                nexus->add_upstream_flow(discharge,1,ts);
+                nexus->get_downstream_flow(26,ts,100);
+            break;
 
-      receive_catchment_id = 27;
-      receive_flow = downstream_remote_nexus->inspect_upstream_flows(send_time_step).first;
-      receive_time_step = downstream_remote_nexus->get_time_step();
+            case 1:
+                nexus->add_upstream_flow(dummy_flow,27,ts);
+                double recieved_flow = nexus->get_downstream_flow(2,ts,100);
+                ASSERT_EQ(discharge,recieved_flow);
+                std::cerr << "Rank 1: Recieving flow of " << recieved_flow << " from catchment Nexus connected to catchment 27\n";
+            break;
+        }
 
-      std::cout << "Received: \nCatchment ID " << receive_catchment_id << " \nFlow "
-      << receive_flow << " \nTime Step " << receive_time_step << std::endl;
+        ++ts;
+    }
 
-      //Assert equal for the send and receive values
-      EXPECT_DOUBLE_EQ(send_flow, receive_flow);
+    MPI_Barrier(MPI_COMM_WORLD);
 
-      EXPECT_EQ(send_catchment_id, receive_catchment_id);
+    delete nexus;
 
-      EXPECT_EQ(send_time_step, receive_time_step);
-
-   }
-
-   MPI_Finalize();
-
-   ASSERT_TRUE(true);
+    ASSERT_TRUE(true);
 
 }
 
-#endif  // NGEN_MPI_TESTS_ACTIVE
+//#endif  // NGEN_MPI_TESTS_ACTIVE
 
