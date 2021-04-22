@@ -67,8 +67,8 @@ class HY_PointHydroNexusRemote : public HY_PointHydroNexus
             MPI_Request mpi_request;
         };
 
-        std::vector<async_request> stored_recieves;
-        std::vector<async_request> stored_sends;
+        std::list<async_request> stored_recieves;
+        std::list<async_request> stored_sends;
 
 };
 

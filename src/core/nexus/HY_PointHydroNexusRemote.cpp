@@ -40,7 +40,41 @@ HY_PointHydroNexusRemote::HY_PointHydroNexusRemote(int nexus_id_number, std::str
 
 HY_PointHydroNexusRemote::~HY_PointHydroNexusRemote()
 {
-    //dtor
+    long wait_time = 0;
+
+    // This destructore might be called after MPI_Finalize so do not attempt communication if
+    // this has occured
+    int mpi_finalized;
+    MPI_Finalized(&mpi_finalized);
+
+    while ( (stored_recieves.size() > 0 || stored_sends.size() > 0) && !mpi_finalized )
+    {
+        process_communications();
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
+        wait_time += 500;
+
+        if ( wait_time > 120000 )
+        {
+            // TODO log warning message that some comunications could not complete
+
+        }
+    }
+
+    // if finalize was called we may need to clean bufers
+    for ( auto i = stored_recieves.begin(); i != stored_recieves.end(); ++i)
+    {
+        // remove the dynamically allocated object
+        delete i->buffer;
+    }
+
+    // Check for a remove any stored sends requests that have completed
+    for ( auto i = stored_sends.begin(); i != stored_sends.end(); ++i)
+    {
+        // remove the dynamically allocated object
+        delete i->buffer;
+    }
 }
 
 double HY_PointHydroNexusRemote::get_downstream_flow(long catchment_id, time_step_t t, double percent_flow)
@@ -126,7 +160,7 @@ void HY_PointHydroNexusRemote::process_communications()
     int flag;                                      // boolean value for if a request has completed
     MPI_Status status;                              // status of the completed request
 
-    for ( auto i = stored_recieves.begin(); i != stored_recieves.end(); ++i)
+    for ( auto i = stored_recieves.begin(); i != stored_recieves.end(); )
     {
         MPI_Handle_Error( MPI_Test(&i->mpi_request, &flag, &status) );
 
@@ -141,15 +175,19 @@ void HY_PointHydroNexusRemote::process_communications()
             delete i->buffer;
 
             // remove this object from the vector
-            stored_recieves.erase(i);
+            i = stored_recieves.erase(i);
 
             // add the recieved flow
             HY_PointHydroNexus::add_upstream_flow(flow, catchment_id, time_step);
         }
+        else
+        {
+            ++i;
+        }
     }
 
     // Check for a remove any stored sends requests that have completed
-    for ( auto i = stored_sends.begin(); i != stored_sends.end(); ++i)
+    for ( auto i = stored_sends.begin(); i != stored_sends.end(); )
     {
         MPI_Handle_Error( MPI_Test(&i->mpi_request, &flag, &status) );
 
@@ -159,7 +197,11 @@ void HY_PointHydroNexusRemote::process_communications()
             delete i->buffer;
 
             // remove this object from the vector
-            stored_sends.erase(i);
+            i = stored_sends.erase(i);
+        }
+        else
+        {
+            ++i;
         }
     }
 }
