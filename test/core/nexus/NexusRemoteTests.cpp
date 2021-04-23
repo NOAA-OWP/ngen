@@ -52,18 +52,18 @@ TEST_F(Nexus_Remote_Test, TestInit0)
 {
     HY_PointHydroNexusRemote::catcment_location_map_t loc_map;
 
-    HY_PointHydroNexusRemote* nexus;
+    std::shared_ptr<HY_PointHydroNexusRemote> nexus;
 
     // create a nexus at both ranks
     if ( mpi_rank == 0)
     {
         loc_map[26] = 1;
-        nexus = new HY_PointHydroNexusRemote(27, "nexus-27", 1, loc_map);
+        nexus = std::make_shared<HY_PointHydroNexusRemote>(27, "nexus-27", 1, loc_map);
     }
     else if ( mpi_rank == 1)
     {
         loc_map[27] == 0;
-        nexus = new HY_PointHydroNexusRemote(26, "nexus-26", 1, loc_map);
+        nexus = std::make_shared<HY_PointHydroNexusRemote>(26, "nexus-26", 1, loc_map);
     }
 
     double dummy_flow = -9999.0;
@@ -92,7 +92,7 @@ TEST_F(Nexus_Remote_Test, TestInit0)
 
     MPI_Barrier(MPI_COMM_WORLD);
 
-    delete nexus;
+    //delete nexus;
 
     ASSERT_TRUE(true);
 
