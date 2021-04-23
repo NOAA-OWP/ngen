@@ -2,6 +2,10 @@
 #include <Formulation_Manager.hpp>
 #include <Catchment_Formulation.hpp>
 
+#include <features/Features.hpp>
+#include <JSONGeometry.hpp>
+#include <JSONProperty.hpp>
+
 #include <iostream>
 #include <memory>
 
@@ -31,77 +35,128 @@ class Formulation_Manager_Test : public ::testing::Test {
 
     }
 
+    void add_feature(std::string id)
+    {
+      geojson::three_dimensional_coordinates three_dimensions {
+          {
+              {1.0, 2.0},
+              {3.0, 4.0},
+              {5.0, 6.0}
+          },
+          {
+              {7.0, 8.0},
+              {9.0, 10.0},
+              {11.0, 12.0}
+          }
+      };
+      std::vector<double> bounding_box{1.0, 2.0};
+      geojson::PropertyMap properties{
+          //{"prop_0", geojson::JSONProperty("prop_0", 0)},
+          //{"prop_1", geojson::JSONProperty("prop_1", "1")},
+          //{"prop_2", geojson::JSONProperty("prop_2", false)},
+          //{"prop_3", geojson::JSONProperty("prop_3", 2.0)}
+      };
+
+      geojson::Feature feature = std::make_shared<geojson::PolygonFeature>(geojson::PolygonFeature(
+        geojson::polygon(three_dimensions),
+        id,
+        properties
+        //bounding_box
+      ));
+
+      fabric->add_feature(feature);
+    }
+
+    geojson::GeoJSON fabric = std::make_shared<geojson::FeatureCollection>();
+
 };
 
 const double EPSILON = 0.0000001;
 
 const std::string EXAMPLE_1 = "{ "
     "\"global\": { "
-        "\"tshirt\": { "
-            "\"maxsmc\": 0.81, "
-            "\"wltsmc\": 1.0, "
-            "\"satdk\": 0.48, "
-            "\"satpsi\": 0.1, "
-            "\"slope\": 0.58, "
-            "\"scaled_distribution_fn_shape_parameter\": 1.3, "
-            "\"multiplier\": 1.0, "
-            "\"alpha_fc\": 1.0, "
-            "\"Klf\": 0.0000672, "
-            "\"Kn\": 0.1, "
-            "\"nash_n\": 8, "
-            "\"Cgw\": 1.08, "
-            "\"expon\": 6.0, "
-            "\"max_groundwater_storage_meters\": 16.0, "
-            "\"nash_storage\": [ "
-                "1.0, "
-                "1.0, "
-                "1.0, "
-                "1.0, "
-                "1.0, "
-                "1.0, "
-                "1.0, "
-                "1.0 "
-            "], "
-            "\"soil_storage_percentage\": 1.0, "
-            "\"groundwater_storage_percentage\": 1.0, "
-            "\"timestep\": 3600, "
-            "\"giuh\": { "
-                "\"giuh_path\": \"./test/data/giuh/GIUH.json\", "
-                "\"crosswalk_path\": \"./data/crosswalk.json\" "
+      "\"formulations\": [ "
+            "{"
+              "\"name\": \"tshirt\", "
+              "\"params\": {"
+                  "\"maxsmc\": 0.81, "
+                  "\"wltsmc\": 1.0, "
+                  "\"satdk\": 0.48, "
+                  "\"satpsi\": 0.1, "
+                  "\"slope\": 0.58, "
+                  "\"scaled_distribution_fn_shape_parameter\": 1.3, "
+                  "\"multiplier\": 1.0, "
+                  "\"alpha_fc\": 1.0, "
+                  "\"Klf\": 0.0000672, "
+                  "\"Kn\": 0.1, "
+                  "\"nash_n\": 8, "
+                  "\"Cgw\": 1.08, "
+                  "\"expon\": 6.0, "
+                  "\"max_groundwater_storage_meters\": 16.0, "
+                  "\"nash_storage\": [ "
+                      "1.0, "
+                      "1.0, "
+                      "1.0, "
+                      "1.0, "
+                      "1.0, "
+                      "1.0, "
+                      "1.0, "
+                      "1.0 "
+                  "], "
+                  "\"soil_storage_percentage\": 1.0, "
+                  "\"groundwater_storage_percentage\": 1.0, "
+                  "\"timestep\": 3600, "
+                  "\"giuh\": { "
+                      "\"giuh_path\": \"./test/data/giuh/GIUH.json\", "
+                      "\"crosswalk_path\": \"./data/crosswalk.json\" "
+                  "} "
+              "} "
             "} "
-        "}, "
-        "\"forcing\": { "
-            "\"file_pattern\": \".*{{ID}}.*.csv\", "
-            "\"path\": \"./data/forcing/\", "
-            "\"start_time\": \"2015-12-01 00:00:00\", "
-            "\"end_time\": \"2015-12-30 23:00:00\" "
-        "} "
+      "], "
+      "\"forcing\": { "
+          "\"file_pattern\": \".*{{id}}.*.csv\", "
+          "\"path\": \"./data/forcing/\" "
+      "} "
+    "}, "
+    "\"time\": { "
+        "\"start_time\": \"2015-12-01 00:00:00\", "
+        "\"end_time\": \"2015-12-30 23:00:00\", "
+        "\"output_interval\": 3600 "
     "}, "
     "\"catchments\": { "
-        "\"wat-88\": { "
-            "\"simple_lumped\": { "
-                "\"sr\": [ "
-                    "1.0, "
-                    "1.0, "
-                    "1.0 "
-                "], "
-                "\"storage\": 1.0, "
-                "\"max_storage\": 1000.0, "
-                "\"a\": 1.0, "
-                "\"b\": 10.0, "
-                "\"Ks\": 0.1, "
-                "\"Kq\": 0.01, "
-                "\"n\": 3, "
-                "\"t\": 0 "
-            "}, "
-            "\"forcing\": { "
-                "\"path\": \"./data/forcing/cat-88_2015-12-01 00_00_00_2015-12-30 23_00_00.csv\", "
-                "\"start_time\": \"2015-12-01 00:00:00\", "
-                "\"end_time\": \"2015-12-30 23:00:00\" "
+        "\"cat-52\": { "
+          "\"formulations\": [ "
+            "{"
+                "\"name\": \"simple_lumped\", "
+                "\"params\": {"
+                  "\"sr\": [ "
+                      "1.0, "
+                      "1.0, "
+                      "1.0 "
+                  "], "
+                  "\"storage\": 1.0, "
+                  "\"nash_max_storage\": 10.0, "
+                  "\"gw_storage\": 1.0, "
+                  "\"gw_max_storage\": 1.0, "
+                  "\"smax\": 1000.0, "
+                  "\"a\": 1.0, "
+                  "\"b\": 10.0, "
+                  "\"Ks\": 0.1, "
+                  "\"Kq\": 0.01, "
+                  "\"n\": 3, "
+                  "\"t\": 0 "
+                "} "
             "} "
+          "], "
+          "\"forcing\": { "
+              "\"path\": \"./data/forcing/cat-52_2015-12-01 00_00_00_2015-12-30 23_00_00.csv\" "
+          "} "
         "}, "
-        "\"wat-89\": { "
-            "\"tshirt\": { "
+        "\"cat-67\": { "
+        "\"formulations\": [ "
+            "{"
+              "\"name\": \"tshirt\", "
+              "\"params\": {"
                 "\"maxsmc\": 0.81, "
                 "\"wltsmc\": 1.0, "
                 "\"satdk\": 0.48, "
@@ -133,19 +188,22 @@ const std::string EXAMPLE_1 = "{ "
                     "\"giuh_path\": \"./test/data/giuh/GIUH.json\", "
                     "\"crosswalk_path\": \"./data/crosswalk.json\" "
                 "} "
-            "}, "
-            "\"forcing\": { "
-                "\"path\": \"./data/forcing/cat-89_2015-12-01 00_00_00_2015-12-30 23_00_00.csv\", "
-                "\"start_time\": \"2015-12-01 00:00:00\", "
-                "\"end_time\": \"2015-12-30 23:00:00\" "
+              "} "
             "} "
+          "], "
+          "\"forcing\": { "
+              "\"path\": \"./data/forcing/cat-67_2015-12-01 00_00_00_2015-12-30 23_00_00.csv\" "
+          "} "
         "} "
     "} "
 "}";
 
 const std::string EXAMPLE_2 = "{ "
     "\"global\": { "
-        "\"tshirt_c\": { "
+      "\"formulations\": [ "
+        "{"
+          "\"name\": \"tshirt\", "
+          "\"params\": {"
             "\"maxsmc\": 0.81, "
             "\"wltsmc\": 1.0, "
             "\"satdk\": 0.48, "
@@ -177,39 +235,54 @@ const std::string EXAMPLE_2 = "{ "
                 "\"giuh_path\": \"./test/data/giuh/GIUH.json\", "
                 "\"crosswalk_path\": \"./data/crosswalk.json\" "
             "} "
-        "}, "
-        "\"forcing\": { "
-            "\"file_pattern\": \".*{{ID}}.*.csv\", "
-            "\"path\": \"./data/forcing/\", "
-            "\"start_time\": \"2015-12-01 00:00:00\", "
-            "\"end_time\": \"2015-12-30 23:00:00\" "
+          "} "
         "} "
+      "], "
+      "\"forcing\": { "
+          "\"file_pattern\": \".*{{ID}}.*.csv\", "
+          "\"path\": \"./data/forcing/\" "
+      "} "
+    "}, "
+    "\"time\": { "
+        "\"start_time\": \"2015-12-01 00:00:00\", "
+        "\"end_time\": \"2015-12-30 23:00:00\", "
+        "\"output_interval\": 3600 "
     "}, "
     "\"catchments\": { "
-        "\"wat-88\": { "
-            "\"simple_lumped\": { "
+        "\"cat-52\": { "
+        "\"formulations\": [ "
+          "{"
+            "\"name\": \"simple_lumped\", "
+            "\"params\": {"
                 "\"sr\": [ "
                     "1.0, "
                     "1.0, "
                     "1.0 "
                 "], "
                 "\"storage\": 1.0, "
-                "\"max_storage\": 1000.0, "
+                "\"nash_max_storage\": 10.0, "
+                "\"gw_storage\": 1.0, "
+                "\"gw_max_storage\": 1.0, "
+                "\"smax\": 1000.0, "
                 "\"a\": 1.0, "
                 "\"b\": 10.0, "
                 "\"Ks\": 0.1, "
                 "\"Kq\": 0.01, "
                 "\"n\": 3, "
                 "\"t\": 0 "
-            "}, "
-            "\"forcing\": { "
-                "\"path\": \"./data/forcing/cat-88_2015-12-01 00_00_00_2015-12-30 23_00_00.csv\", "
-                "\"start_time\": \"2015-12-01 00:00:00\", "
-                "\"end_time\": \"2015-12-30 23:00:00\" "
             "} "
+          "} "
+        "], "
+          "\"forcing\": { "
+              "\"path\": \"./data/forcing/cat-52_2015-12-01 00_00_00_2015-12-30 23_00_00.csv\" "
+          "} "
         "}, "
-        "\"wat-89\": { "
-            "\"tshirt_c\": { "
+        "\"cat-67\": { "
+          "\"formulations\": [ "
+            "{"
+              "\"name\": \"tshirt\", "
+              "\"params\": {"
+
                 "\"maxsmc\": 0.81, "
                 "\"wltsmc\": 1.0, "
                 "\"satdk\": 0.48, "
@@ -241,19 +314,23 @@ const std::string EXAMPLE_2 = "{ "
                     "\"giuh_path\": \"./test/data/giuh/GIUH.json\", "
                     "\"crosswalk_path\": \"./data/crosswalk.json\" "
                 "} "
-            "}, "
-            "\"forcing\": { "
-                "\"path\": \"./data/forcing/cat-89_2015-12-01 00_00_00_2015-12-30 23_00_00.csv\", "
-                "\"start_time\": \"2015-12-01 00:00:00\", "
-                "\"end_time\": \"2015-12-30 23:00:00\" "
             "} "
+          "}"
+        "],"
+          "\"forcing\": { "
+              "\"path\": \"./data/forcing/cat-67_2015-12-01 00_00_00_2015-12-30 23_00_00.csv\" "
+          "} "
         "} "
     "} "
 "}";
 
 const std::string EXAMPLE_3 = "{ "
     "\"global\": { "
-        "\"tshirt_c\": { "
+      "\"formulations\": [ "
+        "{"
+          "\"name\": \"tshirt\", "
+          "\"params\": {"
+
             "\"maxsmc\": 0.81, "
             "\"wltsmc\": 1.0, "
             "\"satdk\": 0.48, "
@@ -285,39 +362,54 @@ const std::string EXAMPLE_3 = "{ "
                 "\"giuh_path\": \"./test/data/giuh/GIUH.json\", "
                 "\"crosswalk_path\": \"./data/crosswalk.json\" "
             "} "
-        "}, "
-        "\"forcing\": { "
-            "\"file_pattern\": \".*{{ID}}.*.csv\", "
-            "\"path\": \"./data/forcing/\", "
-            "\"start_time\": \"2015-12-01 00:00:00\", "
-            "\"end_time\": \"2015-12-30 23:00:00\" "
         "} "
+      "} "
+    "], "
+      "\"forcing\": { "
+          "\"file_pattern\": \".*{{ID}}.*.csv\", "
+          "\"path\": \"./data/forcing/\" "
+      "} "
+    "}, "
+    "\"time\": { "
+        "\"start_time\": \"2015-12-01 00:00:00\", "
+        "\"end_time\": \"2015-12-30 23:00:00\", "
+        "\"output_interval\": 3600 "
     "}, "
     "\"catchments\": { "
-        "\"wat-88\": { "
-            "\"simple_lumped\": { "
-                "\"sr\": [ "
-                    "1.0, "
-                    "1.0, "
-                    "1.0 "
-                "], "
-                "\"storage\": 1.0, "
-                "\"max_storage\": 1000.0, "
-                "\"a\": 1.0, "
-                "\"b\": 10.0, "
-                "\"Ks\": 0.1, "
-                "\"Kq\": 0.01, "
-                "\"n\": 3, "
-                "\"t\": 0 "
-            "}, "
-            "\"forcing\": { "
-                "\"path\": \"./data/forcing/cat-88_2015-12-01 00_00_00_2015-12-30 23_00_00.csv\", "
-                "\"start_time\": \"2015-12-01 00:00:00\", "
-                "\"end_time\": \"2015-12-30 23:00:00\" "
-            "} "
+        "\"cat-52\": { "
+          "\"formulations\": [ "
+            "{"
+              "\"name\": \"simple_lumped\", "
+              "\"params\": {"
+                  "\"sr\": [ "
+                      "1.0, "
+                      "1.0, "
+                      "1.0 "
+                  "], "
+                  "\"storage\": 1.0, "
+                  "\"nash_max_storage\": 10.0, "
+                  "\"gw_storage\": 1.0, "
+                  "\"gw_max_storage\": 1.0, "
+                  "\"smax\": 1000.0, "
+                  "\"a\": 1.0, "
+                  "\"b\": 10.0, "
+                  "\"Ks\": 0.1, "
+                  "\"Kq\": 0.01, "
+                  "\"n\": 3, "
+                  "\"t\": 0 "
+              "} "
+            "}"
+          "], "
+          "\"forcing\": { "
+              "\"path\": \"./data/forcing/cat-52_2015-12-01 00_00_00_2015-12-30 23_00_00.csv\" "
+          "} "
         "}, "
-        "\"wat-89\": { "
-            "\"tshirt_c\": { "
+        "\"cat-67\": { "
+          "\"formulations\": [ "
+            "{"
+              "\"name\": \"tshirt_c\", "
+              "\"params\": {"
+
                 "\"maxsmc\": 0.439, "
                 "\"wltsmc\": 0.066, "
                 "\"satdk\": 0.00000338, "
@@ -348,12 +440,12 @@ const std::string EXAMPLE_3 = "{ "
                     "    0.03"
                     "]"
                 "} "
-            "}, "
-            "\"forcing\": { "
-                "\"path\": \"./data/forcing/cat-89_2015-12-01 00_00_00_2015-12-30 23_00_00.csv\", "
-                "\"start_time\": \"2015-12-01 00:00:00\", "
-                "\"end_time\": \"2015-12-30 23:00:00\" "
             "} "
+          "} "
+        "], "
+          "\"forcing\": { "
+              "\"path\": \"./data/forcing/cat-67_2015-12-01 00_00_00_2015-12-30 23_00_00.csv\" "
+          "} "
         "} "
     "} "
 "}";
@@ -369,12 +461,15 @@ TEST_F(Formulation_Manager_Test, basic_reading_1) {
     realization::Formulation_Manager manager = realization::Formulation_Manager(stream);
 
     ASSERT_TRUE(manager.is_empty());
-    manager.read(catchment_output);
+
+    this->add_feature("cat-52");
+    this->add_feature("cat-67");
+    manager.read(this->fabric, catchment_output);
 
     ASSERT_EQ(manager.get_size(), 2);
 
-    ASSERT_TRUE(manager.contains("wat-88"));
-    ASSERT_TRUE(manager.contains("wat-89"));
+    ASSERT_TRUE(manager.contains("cat-52"));
+    ASSERT_TRUE(manager.contains("cat-67"));
 }
 
 TEST_F(Formulation_Manager_Test, basic_reading_2) {
@@ -388,24 +483,32 @@ TEST_F(Formulation_Manager_Test, basic_reading_2) {
     realization::Formulation_Manager manager = realization::Formulation_Manager(stream);
 
     ASSERT_TRUE(manager.is_empty());
-    manager.read(catchment_output);
+
+    this->add_feature("cat-52");
+    this->add_feature("cat-67");
+    manager.read(this->fabric, catchment_output);
 
     ASSERT_EQ(manager.get_size(), 2);
 
-    ASSERT_TRUE(manager.contains("wat-88"));
-    ASSERT_TRUE(manager.contains("wat-89"));
+    ASSERT_TRUE(manager.contains("cat-52"));
+    ASSERT_TRUE(manager.contains("cat-67"));
 }
 
 TEST_F(Formulation_Manager_Test, basic_run_1) {
     std::stringstream stream;
     stream << EXAMPLE_1;
-    
-    std::ostream* raw_pointer = &std::cout; 
+
+    std::ostream* raw_pointer = &std::cout;
     std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
     utils::StreamHandler catchment_output(s_ptr);
 
     realization::Formulation_Manager manager = realization::Formulation_Manager(stream);
-    manager.read(catchment_output);
+
+    this->add_feature("cat-52");
+    this->add_feature("cat-67");
+    manager.read(this->fabric, catchment_output);
+
+    ASSERT_EQ(manager.get_size(), 2);
 
     std::map<std::string, std::map<long, double>> calculated_results;
 
@@ -416,6 +519,8 @@ TEST_F(Formulation_Manager_Test, basic_run_1) {
     pdm_et_data.max_height_soil_moisture_storerage_tank = 400.0;
     pdm_et_data.maximum_combined_contents = pdm_et_data.max_height_soil_moisture_storerage_tank / (1.0+pdm_et_data.scaled_distribution_fn_shape_parameter);
 
+    std::shared_ptr<pdm03_struct> et_params_ptr = std::make_shared<pdm03_struct>(pdm_et_data);
+
     double dt = 3600.0;
 
     for (std::pair<std::string, std::shared_ptr<realization::Formulation>> formulation : manager) {
@@ -425,13 +530,10 @@ TEST_F(Formulation_Manager_Test, basic_run_1) {
 
         double calculation;
 
-        for (long t = 0; t < 4; t++) {            
-            calculation = formulation.second->get_response(
-                0,
-                t,
-                dt,
-                &pdm_et_data
-            );
+        formulation.second->set_et_params(et_params_ptr);
+
+        for (long t = 0; t < 4; t++) {
+            calculation = formulation.second->get_response(t, dt);
 
             calculated_results.at(formulation.first).emplace(t, calculation);
         }
@@ -447,23 +549,48 @@ TEST_F(Formulation_Manager_Test, basic_run_3) {
     utils::StreamHandler catchment_output(s_ptr);
 
     realization::Formulation_Manager manager = realization::Formulation_Manager(stream);
-    manager.read(catchment_output);
 
-    std::vector<double> inputs = {10.0 / 1000, 0.0, 0.0};
-    std::vector<double> expected_results = {191.108626 / 1000, 177.181102 / 1000, 165.234198 / 1000};
+    this->add_feature("cat-67");
+    manager.read(this->fabric, catchment_output);
+
+    ASSERT_EQ(manager.get_size(), 1);
+    ASSERT_TRUE(manager.contains("cat-67"));
+
+    std::vector<double> expected_results = {191.106140 / 1000.0, 177.198214 / 1000.0, 165.163302 / 1000.0};
 
     std::vector<double> actual_results(expected_results.size());
 
-    for (int i = 0; i < inputs.size(); i++) {
+    for (int i = 0; i < expected_results.size(); i++) {
         // Remember that for the Tshirt_C_Realization, the timestep sizes are implicit
-        actual_results[i] = manager.get_formulation("wat-89")->get_response(inputs[i], 3600, 3600, nullptr);
+        actual_results[i] = manager.get_formulation("cat-67")->get_response(i, 3600);
     }
 
     for (int i = 0; i < actual_results.size(); i++) {
         double actual = actual_results[i];
-        double error_margin = actual * 0.001;
+        // This is an error margin of the largest of 0.1% of actual value, or 1 mm
+        // TODO: this may not be precise enough long-term
+        double error_margin = std::max(actual * 0.001, 0.001);
         double expected = expected_results[i];
         double diff = actual > expected ? actual - expected : expected - actual;
         ASSERT_LE(diff, error_margin);
     }
+}
+
+TEST_F(Formulation_Manager_Test, read_extra) {
+    std::stringstream stream;
+    stream << EXAMPLE_1;
+
+    std::ostream* raw_pointer = &std::cout;
+    std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
+    utils::StreamHandler catchment_output(s_ptr);
+
+    realization::Formulation_Manager manager = realization::Formulation_Manager(stream);
+
+    ASSERT_TRUE(manager.is_empty());
+    
+    this->add_feature("cat-67");
+    manager.read(this->fabric, catchment_output);
+
+    ASSERT_EQ(manager.get_size(), 1);
+    ASSERT_TRUE(manager.contains("cat-67"));
 }

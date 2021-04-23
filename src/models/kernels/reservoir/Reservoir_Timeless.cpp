@@ -116,6 +116,15 @@ namespace Reservoir{
             //Update current storage from influx.
             state.current_storage_height_meters += in_flux_meters;
 
+            //If storage is greater than maximum storage, set to maximum storage and return excess water.
+            if (state.current_storage_height_meters > parameters.maximum_storage_meters)
+            {
+                /// \todo TODO: Return appropriate warning
+                cout << "WARNING: Reservoir calculated a storage above the maximum storage."  << endl;
+                excess_water_meters = state.current_storage_height_meters - parameters.maximum_storage_meters;
+                state.current_storage_height_meters = parameters.maximum_storage_meters;
+            }
+
             //Loop through reservoir outlets.
             for (auto& outlet : this->outlets) //pointer to outlets
             {
@@ -125,6 +134,21 @@ namespace Reservoir{
 
                 //Update storage from outlet flux.
                 state.current_storage_height_meters -= outlet_flux_meters;
+
+                // TODO: review whether this is the best way to handle this (e.g., should we break up the calculations
+                //  into smaller amounts?)
+                // If there was excess water from the influx that exceeded the max earlier (as calculated above) but
+                // will now fit, then add it in
+                if (excess_water_meters > 0) {
+                    if (excess_water_meters > parameters.maximum_storage_meters - state.current_storage_height_meters) {
+                        excess_water_meters -= parameters.maximum_storage_meters - state.current_storage_height_meters;
+                        state.current_storage_height_meters = parameters.maximum_storage_meters;
+                    }
+                    else {
+                        state.current_storage_height_meters += excess_water_meters;
+                        excess_water_meters = 0;
+                    }
+                }
 
                 //If storage is less than minimum storage.
                 if (state.current_storage_height_meters < parameters.minimum_storage_meters)
@@ -147,15 +171,6 @@ namespace Reservoir{
 
                 //Add outlet flux to the sum of fluxes.
                 sum_of_outlet_fluxes_meters += outlet_flux_meters;
-            }
-
-            //If storage is greater than maximum storage, set to maximum storage and return excess water.
-            if (state.current_storage_height_meters > parameters.maximum_storage_meters)
-            {
-                /// \todo TODO: Return appropriate warning
-                cout << "WARNING: Reservoir calculated a storage above the maximum storage."  << endl;
-                excess_water_meters = (state.current_storage_height_meters - parameters.maximum_storage_meters);
-                state.current_storage_height_meters = parameters.maximum_storage_meters;
             }
 
             //Ensure that excess_water_meters is not negative

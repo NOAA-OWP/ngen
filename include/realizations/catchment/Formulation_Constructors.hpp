@@ -6,11 +6,17 @@
 #include <exception>
 
 #include <boost/property_tree/ptree.hpp>
+#include <boost/optional.hpp>
 
 // Formulations
 #include "Tshirt_Realization.hpp"
 #include "Tshirt_C_Realization.hpp"
 #include "Simple_Lumped_Model_Realization.hpp"
+#include "Bmi_C_Formulation.hpp"
+
+#ifdef NGEN_LSTM_TORCH_LIB_ACTIVE
+    #include "LSTM_Realization.hpp"
+#endif
 
 namespace realization {
     typedef std::shared_ptr<Formulation> (*constructor)(std::string, forcing_params, utils::StreamHandler);
@@ -23,9 +29,16 @@ namespace realization {
     };
 
     static std::map<std::string, constructor> formulations = {
+#ifdef NGEN_BMI_C_LIB_ACTIVE
+        {"bmi_c", create_formulation_constructor<Bmi_C_Formulation>()},
+#endif
         {"tshirt", create_formulation_constructor<Tshirt_Realization>()},
         {"tshirt_c", create_formulation_constructor<Tshirt_C_Realization>()},
         {"simple_lumped", create_formulation_constructor<Simple_Lumped_Model_Realization>()}
+#ifdef NGEN_LSTM_TORCH_LIB_ACTIVE
+        ,
+        {"lstm", create_formulation_constructor<LSTM_Realization>()}
+#endif
     };
 
     static bool formulation_exists(std::string formulation_type) {
@@ -42,11 +55,15 @@ namespace realization {
         return formulation_constructor(identifier, forcing_config, output_stream);
     };
 
-    static std::string get_formulation_key(boost::property_tree::ptree &tree) {
-        for (auto &node : tree) {
+    static std::string get_formulation_key(const boost::property_tree::ptree &tree) {
+        /*for (auto &node : tree) {
             if (formulation_exists(node.first)) {
                 return node.first;
             }
+        }*/
+        boost::optional<std::string> key = tree.get_optional<std::string>("name");
+        if(key && formulation_exists(*key)){
+          return *key;
         }
 
         throw std::runtime_error("No valid formulation was described in the passed in tree.");

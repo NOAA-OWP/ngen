@@ -10,6 +10,7 @@ target_include_directories(realizations_catchment PUBLIC
         ${PROJECT_SOURCE_DIR}/include/core/catchment
         ${PROJECT_SOURCE_DIR}/include/realizations/catchment
         ${PROJECT_SOURCE_DIR}/include/forcing
+        ${PROJECT_SOURCE_DIR}/include/simulation_time
         ${PROJECT_SOURCE_DIR}/include/utilities
         ${PROJECT_SOURCE_DIR}/include/geojson
         ${PROJECT_SOURCE_DIR}/models
@@ -18,8 +19,20 @@ target_include_directories(realizations_catchment PUBLIC
         )
         
 target_link_libraries(realizations_catchment PUBLIC
+        ${CMAKE_DL_LIBS}
         NGen::core_catchment
         NGen::core_catchment_giuh
         NGen::models_tshirt
         NGen::geojson
         )
+
+if(LSTM_TORCH_LIB_ACTIVE)
+   add_compile_definitions(NGEN_LSTM_TORCH_LIB_ACTIVE)
+
+   target_include_directories(realizations_catchment PUBLIC
+        ${PROJECT_SOURCE_DIR}/models/lstm/include
+        )
+   target_link_libraries(realizations_catchment PUBLIC
+        NGen::models_lstm
+        )
+endif()

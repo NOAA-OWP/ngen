@@ -62,8 +62,8 @@ TEST_F(GIUH_Test, TestInit0)
 
     giuh::GiuhJsonReader reader = giuh::GiuhJsonReader(json_file, id_map_json_file);
 
-    std::string expected_comid_0 = "9731236";
-    std::string catcment_id_0 = "wat-88";
+    std::string expected_comid_0 = "9731286";
+    std::string catcment_id_0 = "cat-67";
     std::string comid_0 = reader.get_associated_comid(catcment_id_0);
     ASSERT_EQ(comid_0, expected_comid_0);
 
@@ -80,7 +80,7 @@ TEST_F(GIUH_Test, TestOutput0)
 
     giuh::GiuhJsonReader reader = giuh::GiuhJsonReader(json_file, id_map_json_file);
 
-    std::string catchment_id_0 = "wat-88";
+    std::string catchment_id_0 = "cat-67";
 
     std::shared_ptr<giuh::giuh_kernel> kernel_obj = reader.get_giuh_kernel_for_id(catchment_id_0);
 
@@ -117,7 +117,7 @@ TEST_F(GIUH_Test, TestManualOrdinates0)
         real_cdf_freq[i] = sum;
     }
 
-    giuh::giuh_kernel_impl kernel = giuh::giuh_kernel_impl("cat-88","none", cdf_times, real_cdf_freq);
+    giuh::giuh_kernel_impl kernel = giuh::giuh_kernel_impl("cat-67","none", cdf_times, real_cdf_freq);
     kernel.set_interpolation_regularity_seconds(3600);
 
     ASSERT_TRUE(true);

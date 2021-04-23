@@ -62,17 +62,55 @@ namespace realization {
 
             virtual ~Tshirt_Realization(){};
 
-            double get_response(double input_flux, time_step_t t, const std::shared_ptr<pdm03_struct>& et_params);
+            double calc_et(double soil_m) override;
 
-            double get_response(double input_flux, time_step_t t, time_step_t dt, void* et_params)  {
-                return get_response(input_flux, dt, std::make_shared<pdm03_struct>( *(pdm03_struct*) et_params ));
-            }
+            /**
+             * Execute the backing model formulation for the given time step, where it is of the specified size, and
+             * return the total discharge.
+             *
+             * Function reads input precipitation from ``forcing`` member variable.  It also makes use of the params struct
+             * for ET params accessible via ``get_et_params``.
+             *
+             * @param t_index The index of the time step for which to run model calculations.
+             * @param d_delta_s The duration, in seconds, of the time step for which to run model calculations.
+             * @return The total discharge for this time step.
+             */
+            double get_response(time_step_t t_index, time_step_t t_delta_s) override;
 
             std::string get_formulation_type() {
                 return "tshirt";
             }
 
+            /**
+             * Get a formatted line of output values for the given time step as a delimited string.
+             *
+             * For this type, the output consists of only the total discharge amount per time step; i.e., the same value
+             * that was returned by ``get_response``.
+             *
+             * This method is useful for preparing calculated data in a representation useful for output files, such as
+             * CSV files.
+             *
+             * The resulting string will contain calculated values for applicable output variables for the particular
+             * formulation, as determined for the given time step.  However, the string will not contain any
+             * representation of the time step itself.
+             *
+             * An empty string is returned if the time step value is not in the range of valid time steps for which there
+             * are calculated values for all variables.
+             *
+             * The default delimiter is a comma.
+             *
+             * @param timestep The time step for which data is desired.
+             * @return A delimited string with all the output variable values for the given time step.
+             */
+            std::string get_output_line_for_timestep(int timestep, std::string delimiter=",") override;
+
             void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr);
+
+            void create_formulation(geojson::PropertyMap properties);
+
+            const std::vector<std::string>& get_required_parameters() override {
+                return REQUIRED_PARAMETERS;
+            }
 
         private:
             std::string catchment_id;
@@ -107,10 +145,6 @@ namespace realization {
                 "timestep",
                 "giuh"
             };
-
-            const std::vector<std::string>& get_required_parameters() {
-                return REQUIRED_PARAMETERS;
-            }
 
     };
 

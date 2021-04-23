@@ -8,7 +8,16 @@
 #include "GiuhJsonReader.h"
 #include "tshirt_c.h"
 #include <memory>
+#include <string>
 #include <unordered_map>
+#include <vector>
+
+#define OUT_VAR_BASE_FLOW "base_flow"
+#define OUT_VAR_GIUH_RUNOFF "giuh_runoff"
+#define OUT_VAR_LATERAL_FLOW "lateral_flow"
+#define OUT_VAR_RAINFALL "rainfall"
+#define OUT_VAR_SURFACE_RUNOFF "surface_runoff"
+#define OUT_VAR_TOTAL_DISCHARGE "total_discharge"
 
 using namespace tshirt;
 
@@ -126,17 +135,57 @@ namespace realization {
 
         virtual ~Tshirt_C_Realization();
 
+        /**
+         * Return ``0``, as (for now) this type does not otherwise include ET within its calculations.
+         *
+         * @param soil_m
+         * @return ``0``
+         */
+        double calc_et(double soil_m) override;
+
         void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr) override;
+        void create_formulation(geojson::PropertyMap properties) override;
 
-        int run_formulation_for_timestep(double input_flux);
+        /**
+         * Run model formulation calculations for the next time step using the given input flux value in meters per
+         * second.
+         *
+         * The backing model works on a collection of time steps by receiving an associated collection of input fluxes.
+         * This is implemented by putting this input flux in a single-value vector and using it as the
+         * arg to a nested call to ``run_formulation_for_timesteps``, returning that result code.
+         *
+         * @param input_flux Input flux (typically expected to be just precipitation) in meters per second.
+         * @param t_delta_s The size of the time step in seconds
+         * @return The result code from the execution of the model time step calculations.
+         */
+        int run_formulation_for_timestep(double input_flux, time_step_t t_delta_s);
 
-        int run_formulation_for_timesteps(std::vector<double> input_fluxes);
+        /**
+         * Run model formulation calculations for a series of time steps using the given collection of input flux values
+         * in meters per second.
+         *
+         * @param input_fluxes Ordered, per-time-step input flux (typically expected to be just precipitation) in meters
+         * per second.
+         * @param t_delta_s The sizes of each of the time steps in seconds
+         * @return The result code from the execution of the model time step calculations.
+         */
+        int run_formulation_for_timesteps(std::vector<double> input_fluxes, std::vector<time_step_t> t_deltas_s);
 
         std::string get_formulation_type() override;
 
-        // TODO: add versions that handle forcing data directly
-
-        double get_response(double input_flux, time_step_t t, time_step_t dt, void* et_params) override;
+        /**
+         * Execute the backing model formulation for the given time step, where it is of the specified size, and
+         * return the total discharge.
+         *
+         * Any inputs and additional parameters must be made available as instance members.
+         *
+         * Types should clearly document the details of their particular response output.
+         *
+         * @param t_index The index of the time step for which to run model calculations.
+         * @param d_delta_s The duration, in seconds, of the time step for which to run model calculations.
+         * @return The total discharge of the model for this time step.
+         */
+        double get_response(time_step_t t_index, time_step_t t_delta) override;
 
         // TODO: probably need to do better than this for granting and protecting access
         double get_latest_flux_base_flow();
@@ -148,6 +197,68 @@ namespace realization {
         double get_latest_flux_surface_runoff();
 
         double get_latest_flux_total_discharge();
+
+        // TODO: look at moving these to the Formulation superclass
+        /**
+         * Get the number of output data variables made available from the calculations for enumerated time steps.
+         *
+         * @return The number of output data variables made available from the calculations for enumerated time steps.
+         */
+        int get_output_item_count();
+
+        /**
+         * Get the names of the output data variables that are available from calculations for enumerated time steps.
+         *
+         * The method must deterministically return output variable names in the same order each time.
+         *
+         * @return The names of the output data variables that are available from calculations for enumerated time steps.
+         */
+        const std::vector<std::string>& get_output_var_names();
+
+        /**
+         * Get a copy of the values for the given output variable at all available time steps.
+         *
+         * @param name
+         * @return A vector containing copies of the output value of the variable, indexed by time step.
+         */
+        // TODO: note that for this type, these are all doubles, but may need template function once moving to superclass
+        std::vector<double> get_value(const std::string& name);
+
+        /**
+         * Get a header line appropriate for a file made up of entries from this type's implementation of
+         * ``get_output_line_for_timestep``.
+         *
+         * Note that like the output generating function, this line does not include anything for time step.
+         *
+         * @return An appropriate header line for this type.
+         */
+        std::string get_output_header_line(std::string delimiter=",") override;
+
+        /**
+         * Get the values making up the header line from get_output_header_line(), but organized as a vector of strings.
+         *
+         * @return The values making up the header line from get_output_header_line() organized as a vector.
+         */
+        const std::vector<std::string>& get_output_header_fields();
+
+        /**
+         * Get a delimited string with all the output variable values for the given time step.
+         *
+         * This method is useful for preparing calculated data in a representation useful for output files, such as
+         * CSV files.
+         *
+         * The resulting string contains only the calculated output values for the time step, and not the time step
+         * index itself.
+         *
+         * An empty string is returned if the time step value is not in the range of valid time steps for which there
+         * are calculated values for all variables.
+         *
+         * The default delimiter is a comma.
+         *
+         * @param timestep The time step for which data is desired.
+         * @return A delimited string with all the output variable values for the given time step.
+         */
+        std::string get_output_line_for_timestep(int timestep, std::string delimiter=",") override;
 
     private:
         /** Id of associated catchment. */
@@ -173,6 +284,25 @@ namespace realization {
         std::vector<std::shared_ptr<tshirt_c_result_fluxes>> fluxes;
 
         conceptual_reservoir groundwater_conceptual_reservoir;
+
+        std::vector<std::string> OUTPUT_VARIABLE_NAMES = {
+                OUT_VAR_RAINFALL,
+                OUT_VAR_SURFACE_RUNOFF,
+                OUT_VAR_GIUH_RUNOFF,
+                OUT_VAR_LATERAL_FLOW,
+                OUT_VAR_BASE_FLOW,
+                OUT_VAR_TOTAL_DISCHARGE
+        };
+
+        std::vector<std::string> OUTPUT_HEADER_FIELDS = {
+                "Rainfall",
+                "Direct Runoff",
+                "GIUH Runoff",
+                "Lateral Flow",
+                "Base Flow",
+                "Total Discharge"
+        };
+
         conceptual_reservoir soil_conceptual_reservoir;
         std::vector<std::string> REQUIRED_PARAMETERS = {
                 "maxsmc",
@@ -194,6 +324,8 @@ namespace realization {
                 "groundwater_storage_percentage",
                 "giuh"
         };
+
+        function<double(tshirt_c_result_fluxes)> get_output_var_flux_extraction_func(const std::string& var_name);
 
         const std::vector<std::string>& get_required_parameters() override;
 

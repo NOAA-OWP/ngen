@@ -7,8 +7,8 @@
 #include <unordered_map>
 
 
-class Simple_Lumped_Model_Realization : public realization::Catchment_Formulation
-{
+class Simple_Lumped_Model_Realization
+        : public realization::Catchment_Formulation {
     public:
 
         typedef long time_step_t;
@@ -18,7 +18,10 @@ class Simple_Lumped_Model_Realization : public realization::Catchment_Formulatio
             forcing_params forcing_config,
             utils::StreamHandler output_stream,
             double storage,
-            double max_storage,
+            double gw_storage,
+            double gw_max_storage,
+            double nash_max_storage,
+            double smax,
             double a,
             double b,
             double Ks,
@@ -47,10 +50,46 @@ class Simple_Lumped_Model_Realization : public realization::Catchment_Formulatio
         Simple_Lumped_Model_Realization(const Simple_Lumped_Model_Realization &);
         virtual ~Simple_Lumped_Model_Realization();
 
-        double get_response(double input_flux, time_step_t t, time_step_t dt, void* et_params);
-        double calc_et(double soim_m, void* et_params);
+        /**
+         * Get a formatted line of output values for the given time step as a delimited string.
+         *
+         * For this type, the output consists of only the total discharge amount per time step; i.e., the same value
+         * that was returned by ``get_response``.
+         *
+         * This method is useful for preparing calculated data in a representation useful for output files, such as
+         * CSV files.
+         *
+         * The resulting string will contain calculated values for applicable output variables for the particular
+         * formulation, as determined for the given time step.  However, the string will not contain any
+         * representation of the time step itself.
+         *
+         * An empty string is returned if the time step value is not in the range of valid time steps for which there
+         * are calculated values for all variables.
+         *
+         * The default delimiter is a comma.
+         *
+         * @param timestep The time step for which data is desired.
+         * @return A delimited string with all the output variable values for the given time step.
+         */
+        std::string get_output_line_for_timestep(int timestep, std::string delimiter=",") override;
+
+    /**
+         * Execute the backing model formulation for the given time step, where it is of the specified size, and
+         * return the total discharge.
+         *
+         * Function reads input precipitation from ``forcing`` member variable.  It also makes use of the params struct
+         * for ET params accessible via ``get_et_params``.
+         *
+         * @param t_index The index of the time step for which to run model calculations.
+         * @param d_delta_s The duration, in seconds, of the time step for which to run model calculations.
+         * @return The total discharge for this time step.
+         */
+        double get_response(time_step_t t, time_step_t dt) override;
+
+        double calc_et(double soil_m) override;
 
         virtual void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr);
+        virtual void create_formulation(geojson::PropertyMap properties);
 
         virtual std::string get_formulation_type() {
             return "simple_lumped";
@@ -62,7 +101,10 @@ class Simple_Lumped_Model_Realization : public realization::Catchment_Formulatio
         std::vector<std::string> REQUIRED_PARAMETERS = {
             "sr",
             "storage",
-            "max_storage",
+            "gw_storage",
+            "gw_max_storage",
+            "nash_max_storage",
+            "smax",
             "a",
             "b",
             "Ks",

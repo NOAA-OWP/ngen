@@ -29,10 +29,11 @@ class RealizaitonVisitor : public geojson::FeatureVisitor {
 
 };
 
+// TODO: Avoid having to call this in favor of having this being a core part of the creation of both the initial collections
 void prepare_features(geojson::GeoJSON& nexus, geojson::GeoJSON& catchments, bool validate=false)
 {
   for(auto& feature: *nexus){
-    feature->set_id(feature->get_property("ID").as_string());
+    feature->set_id(feature->get_id());
     //std::cout << "Got Nexus Feature " << feature->get_id() << std::endl;
   }
   nexus->update_ids();
@@ -40,11 +41,11 @@ void prepare_features(geojson::GeoJSON& nexus, geojson::GeoJSON& catchments, boo
   //also link them by to->id
   //std::cout << "Iterating Catchment Features" << std::endl;
   for(auto& feature: *catchments){
-    feature->set_id(feature->get_property("ID").as_string());
+    feature->set_id(feature->get_id());
     nexus->add_feature(feature);
     //std::cout<<"Catchment "<<feature->get_id()<<" -> Nexus "<<feature->get_property("toID").as_string()<<std::endl;
   }
-  std::string linkage = "toID";
+  std::string linkage = "toid";
   nexus->link_features_from_property(nullptr, &linkage);
 
   if(validate){
@@ -130,19 +131,19 @@ int main(int argc, char *argv[]) {
           bool error = false;
 
           if( !utils::FileChecker::file_is_readable(argv[1]) ) {
-            std::cout<<"catchment data path not readable"<<std::endl;
+            std::cout<<"catchment data path "<<argv[1]<<" not readable"<<std::endl;
             error = true;
           }
           else{ catchmentDataFile = argv[1]; }
 
           if( !utils::FileChecker::file_is_readable(argv[3]) ) {
-            std::cout<<"nexus data path not readable"<<std::endl;
+            std::cout<<"nexus data path "<<argv[3]<<" not readable"<<std::endl;
             error = true;
           }
           else { nexusDataFile = argv[3]; }
 
           if( !utils::FileChecker::file_is_readable(argv[5]) ) {
-            std::cout<<"realization config path not readable"<<std::endl;
+            std::cout<<"realization config path "<<argv[5]<<" not readable"<<std::endl;
             error = true;
           }
           else{ REALIZATION_CONFIG_PATH = argv[5]; }
@@ -159,14 +160,20 @@ int main(int argc, char *argv[]) {
 
     //Read the collection of nexus
     std::cout << "Building Nexus collection" << std::endl;
+
+    // TODO: Instead of iterating through a collection of FeatureBase objects mapping to nexi, we instead want to iterate through HY_HydroLocation objects
     geojson::GeoJSON nexus_collection = geojson::read(nexusDataFile, nexus_subset_ids);
     std::cout << "Building Catchment collection" << std::endl;
+
+    // TODO: Instead of iterating through a collection of FeatureBase objects mapping to catchments, we instead want to iterate through HY_Catchment objects
     geojson::GeoJSON catchment_collection = geojson::read(catchmentDataFile, catchment_subset_ids);
 
     prepare_features(nexus_collection, catchment_collection, !true);
 
+    // TODO: Have these formulations attached to the prior HY_Catchment objects
     realization::Formulation_Manager manager = realization::Formulation_Manager(REALIZATION_CONFIG_PATH);
-    manager.read(utils::getStdOut());
+    manager.read(catchment_collection, utils::getStdOut());
+
     //TODO don't really need catchment_collection once catchments are added to nexus collection
     catchment_collection.reset();
     for(auto& feature : *nexus_collection)
@@ -176,6 +183,7 @@ int main(int argc, char *argv[]) {
       //Skipping IDs that aren't "real" i.e. have a  NA id
       if (feat_id.substr(4) == "NA") continue;
 
+      // We need a better way to identify catchments vs nexi
       if( feat_id.substr(0, 3) == "cat" ){
         catchment_outfiles[feat_id].open(feature->get_id()+"_output.csv", std::ios::trunc);
 
@@ -213,23 +221,39 @@ int main(int argc, char *argv[]) {
     }
     std::cout<<"Running Models"<<std::endl;
 
-    pdm03_struct pdm_et_data = get_et_params();
+    std::shared_ptr<pdm03_struct> pdm_et_data = std::make_shared<pdm03_struct>(get_et_params());
 
-    //Now loop some time, iterate catchments, do stuff for 720 hourly time steps
-    for(int time_step = 0; time_step < 720; time_step++)
+    //Now loop some time, iterate catchments, do stuff for total number of output times
+    for(int output_time_index = 0; output_time_index < manager.Simulation_Time_Object->get_total_output_times(); output_time_index++)
     {
-      std::cout<<"Time step "<<time_step<<std::endl;
+      std::cout<<"Output Time Index: "<<output_time_index<<std::endl;
+
+      std::string current_timestamp = manager.Simulation_Time_Object->get_timestamp(output_time_index);
 
       for (std::pair<std::string, std::shared_ptr<realization::Formulation>> formulation_pair : manager ) {
+        formulation_pair.second->set_et_params(pdm_et_data);
+       
         //get the catchment response
-        double response = formulation_pair.second->get_response(0, time_step, 3600.0, &pdm_et_data);
+        double response = formulation_pair.second->get_response(output_time_index, 3600.0);
         //dump the output
         std::cout<<"\tCatchment "<<formulation_pair.first<<" contributing "<<response<<" m/s to "<<catchment_to_nexus[formulation_pair.first]<<std::endl;
-        catchment_outfiles[formulation_pair.first] << time_step <<", "<<response<<std::endl;
+
+      // If the timestep is 0, also write the header line to the file
+        // TODO: add command line or config option to have this be omitted
+        if (output_time_index == 0) {
+            // Append "Time Step" to header string provided by formulation, since we'll also add time step to output
+            std::string header_str = formulation_pair.second->get_output_header_line();
+            catchment_outfiles[formulation_pair.first] << "Time Step," << "Time," << header_str <<std::endl;
+        }
+        std::string output_str = formulation_pair.second->get_output_line_for_timestep(output_time_index);
+
+        catchment_outfiles[formulation_pair.first] << output_time_index << "," << current_timestamp << "," << output_str << std::endl;
+
         response = response * boost::geometry::area(nexus_collection->get_feature(formulation_pair.first)->geometry<geojson::multipolygon_t>());
+
         std::cout << "\t\tThe modified response is: " << response << std::endl;
         //update the nexus with this flow
-        nexus_realizations[ catchment_to_nexus[formulation_pair.first] ]->add_upstream_flow(response, catchment_id[formulation_pair.first], time_step);
+        nexus_realizations[ catchment_to_nexus[formulation_pair.first] ]->add_upstream_flow(response, catchment_id[formulation_pair.first], output_time_index);
       }
 
       for(auto &nexus: nexus_realizations)
@@ -239,10 +263,10 @@ int main(int argc, char *argv[]) {
         //it works for now though, so keep it
         int id = catchment_id[nexus_from_catchment[nexus.first]];
         std::cout<<"nexusID: "<<id<<std::endl;
-        double contribution_at_t = nexus_realizations[nexus.first]->get_downstream_flow(id, time_step, 100.0);
+        double contribution_at_t = nexus_realizations[nexus.first]->get_downstream_flow(id, output_time_index, 100.0);
         if(nexus_outfiles[nexus.first].is_open())
         {
-          nexus_outfiles[nexus.first] << time_step <<", "<<contribution_at_t<<std::endl;
+          nexus_outfiles[nexus.first] << output_time_index << ", " << current_timestamp << ", " << contribution_at_t << std::endl;
         }
         std::cout<<"\tNexus "<<nexus.first<<" has "<<contribution_at_t<<" m^3/s"<<std::endl;
         output_map[nexus.first].push_back(contribution_at_t);

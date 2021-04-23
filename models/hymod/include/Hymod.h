@@ -46,18 +46,18 @@ class hymod_kernel
         for ( unsigned long i = 0; i < nash_cascade.size(); ++i )
         {
             //construct a single linear outlet reservoir
-            nash_cascade[i] = Reservoir::Explicit_Time::Reservoir(params.min_storage_meters, params.max_storage_meters, state.Sr[i], params.Kq, params.activation_threshold_meters_nash_cascade_reservoir, params.reservoir_max_velocity_meters_per_second);
+            nash_cascade[i] = Reservoir::Explicit_Time::Reservoir(params.min_storage_meters, params.nash_max_storage_meters, state.Sr[i], params.Kq, params.activation_threshold_meters_nash_cascade_reservoir, params.reservoir_max_velocity_meters_per_second);
         }
 
         // initalize groundwater linear outlet reservoir
-        Reservoir::Explicit_Time::Reservoir groundwater(params.min_storage_meters, params.max_storage_meters, state.groundwater_storage_meters, params.Ks, params.activation_threshold_meters_groundwater_reservoir, params.reservoir_max_velocity_meters_per_second);
+        Reservoir::Explicit_Time::Reservoir groundwater(params.min_storage_meters, params.gw_max_storage_meters, state.groundwater_storage_meters, params.Ks, params.activation_threshold_meters_groundwater_reservoir, params.reservoir_max_velocity_meters_per_second);
 
         // add flux to the current state
         state.storage_meters += input_flux_meters;
 
         // calculate fs, runoff and slow
-        double storage_function_value = (1.0 - pow((1.0 - state.storage_meters / params.max_storage_meters), params.b) );
-        double runoff_meters_per_second = storage_function_value * params.a;
+        double storage_function_value = state.storage_meters * (1.0 - pow((1.0 - state.storage_meters / params.smax), params.b) );
+        double runoff_meters_per_second = (storage_function_value * params.a)/dt;
         //double slow_flow_meters_per_second = storage_function_value * (1.0 - params.a );
         double soil_m = state.storage_meters - storage_function_value;
 
@@ -69,8 +69,8 @@ class hymod_kernel
 
         // get the slow flow output for this time - ks
         double slow_flow_meters_per_second = groundwater.response_meters_per_second(
-                storage_function_value * (1.0 - params.a), dt, groundwater_excess_meters);
-        
+                (storage_function_value * (1.0 - params.a))/dt,
+                dt, groundwater_excess_meters);
         //TODO: Review issues with dt and internal timestep
         runoff_meters_per_second += groundwater_excess_meters / dt;
 
@@ -97,11 +97,11 @@ class hymod_kernel
             new_state.Sr[i] = nash_cascade[i].get_storage_height_meters();
         }
 
-        return mass_check(params, state, input_flux_meters, new_state, fluxes, dt);
+        return mass_check(params, state, new_state, fluxes, dt);
 
     }
 
-    static int mass_check(const hymod_params& params, const hymod_state& current_state, double input_flux_meters, const hymod_state& next_state, const hymod_fluxes& calculated_fluxes, double timestep_seconds)
+    static int mass_check(const hymod_params& params, const hymod_state& current_state, const hymod_state& next_state, const hymod_fluxes& calculated_fluxes, double timestep_seconds)
     {
         // initalize both mass values from current and next states storage
         double inital_mass_meters = current_state.storage_meters + current_state.groundwater_storage_meters;
@@ -113,14 +113,13 @@ class hymod_kernel
             inital_mass_meters += current_state.Sr[i];
             final_mass_meters += next_state.Sr[i];
         }
-
-        // increase the inital mass by input value
-        inital_mass_meters += input_flux_meters;
+        // increase the inital mass by input value, NJF run function above adds input_flux to state before it is passed here
+        //inital_mass_meters += input_flux_meters;
 
         // increase final mass by calculated fluxes
         final_mass_meters += (calculated_fluxes.et_loss_meters + calculated_fluxes.runoff_meters_per_second * timestep_seconds + calculated_fluxes.slow_flow_meters_per_second * timestep_seconds);
 
-        if ( inital_mass_meters - final_mass_meters > 0.000001 )
+        if ( fabs(inital_mass_meters - final_mass_meters) > 0.000001 )
         {
             return MASS_BALANCE_ERROR;
         }

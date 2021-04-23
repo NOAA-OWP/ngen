@@ -17,7 +17,7 @@ namespace tshirt {
             : model_params(model_params), previous_state(initial_state), current_state(initial_state)
     {
         // ********** Start by calculating Sfc, as this will get by several other things
-        soil_field_capacity_storage = calc_soil_field_capacity_storage();
+        soil_field_capacity_storage_threshold = calc_soil_field_capacity_storage_threshold();
 
         // ********** Sanity check init (in particular, size of Nash Cascade storage vector in the state parameter).
         check_valid();
@@ -130,12 +130,12 @@ namespace tshirt {
 
         // init subsurface lateral flow linear outlet
         soil_res_outlets[lf_outlet_index] = std::make_shared<Reservoir::Explicit_Time::Reservoir_Linear_Outlet>(
-                Reservoir::Explicit_Time::Reservoir_Linear_Outlet(model_params.Klf, soil_field_capacity_storage, model_params.max_lateral_flow));
+                Reservoir::Explicit_Time::Reservoir_Linear_Outlet(model_params.Klf, soil_field_capacity_storage_threshold, model_params.max_lateral_flow));
 
         // init subsurface percolation flow linear outlet
         // The max perc flow should be equal to the params.satdk value
         soil_res_outlets[perc_outlet_index] = std::make_shared<Reservoir::Explicit_Time::Reservoir_Linear_Outlet>(
-                Reservoir::Explicit_Time::Reservoir_Linear_Outlet(model_params.satdk * model_params.slope, soil_field_capacity_storage,
+                Reservoir::Explicit_Time::Reservoir_Linear_Outlet(model_params.satdk * model_params.slope, soil_field_capacity_storage_threshold,
                                  std::numeric_limits<double>::max()));
         // Create the reservoir, included the created vector of outlet pointers
         soil_reservoir = Reservoir::Explicit_Time::Reservoir(0.0, model_params.max_soil_storage_meters,
@@ -177,24 +177,37 @@ namespace tshirt {
     }
 
     /**
-     * Calculate soil field capacity storage, the level at which free drainage stops (i.e., "Sfc").
+     * Calculate soil field capacity storage threshold, the level at which free drainage stops (i.e., "Sfc").
      *
      * @return The calculated soil field capacity storage.
      */
-    double tshirt_model::calc_soil_field_capacity_storage()
+    double tshirt_model::calc_soil_field_capacity_storage_threshold()
     {
         // Calculate the suction head above water table (Hwt)
         double head_above_water_table =
                 model_params.alpha_fc * ((double) STANDARD_ATMOSPHERIC_PRESSURE_PASCALS / WATER_SPECIFIC_WEIGHT);
         // TODO: account for possibility of Hwt being less than 0.5 (though initially, it looks like this will never be the case)
 
-        double z1 = head_above_water_table - 0.5;
-        double z2 = z1 + 2;
+        // distance from the bottom of the soil column to the center of the lowest discretization
+        double trigger_z_m = 0.5;
+
+        // Previous way this was calculated, but which seems to disagree with Fred's implementation ...
+        //double z1 = head_above_water_table - trigger_z_m;
+        //double z2 = z1 + 2;
+        //double lower_lim = model_params.b * pow(z1, ((model_params.b - 1) / model_params.b)) / (model_params.b - 1);
+        //double upper_lim = model_params.b * pow(z2, ((model_params.b - 1) / model_params.b)) / (model_params.b - 1);
+
+        // ... so changing to this to reflect Fred's code
+        double omega = head_above_water_table - trigger_z_m;
+        // Use this several times
+        double one_minus_one_over_b = (1.0 - (1.0 / model_params.b));
+        double lower_lim = pow(omega, one_minus_one_over_b) / one_minus_one_over_b;
+        double upper_lim = pow(omega + model_params.depth, one_minus_one_over_b) / one_minus_one_over_b;
+
+        double lim_diff = upper_lim - lower_lim;
 
         // Note that z^( 1 - (1/b) ) / (1 - (1/b)) == b * (z^( (b - 1) / b ) / (b - 1)
-        return model_params.maxsmc * pow((1.0 / model_params.satpsi), (-1.0 / model_params.b)) *
-               ((model_params.b * pow(z2, ((model_params.b - 1) / model_params.b)) / (model_params.b - 1)) -
-                (model_params.b * pow(z1, ((model_params.b - 1) / model_params.b)) / (model_params.b - 1)));
+        return model_params.maxsmc * pow((1.0 / model_params.satpsi), (-1.0 / model_params.b)) * lim_diff;
     }
 
     /**
@@ -276,11 +289,12 @@ namespace tshirt {
 
         // Perform Schaake partitioning, passing some declared references to hold the calculated values.
         double surface_runoff, subsurface_infiltration_flux;
-        Schaake_partitioning_scheme(dt, model_params.Cschaake, soil_column_moisture_deficit_m, input_storage_m,
+        Schaake_partitioning_scheme_cpp(dt, model_params.Cschaake, soil_column_moisture_deficit_m, input_storage_m,
                                     &surface_runoff, &subsurface_infiltration_flux);
 
         double subsurface_excess, nash_subsurface_excess;
-        soil_reservoir.response_meters_per_second(subsurface_infiltration_flux, dt, subsurface_excess);
+        double mean_timestep_infiltration_m_per_s = subsurface_infiltration_flux / dt;
+        soil_reservoir.response_meters_per_second(mean_timestep_infiltration_m_per_s, (int)dt, subsurface_excess);
 
         // lateral subsurface flow
         double Qlf = soil_reservoir.velocity_meters_per_second_for_outlet(lf_outlet_index);
@@ -320,7 +334,7 @@ namespace tshirt {
         // Save "raw" runoff here and have realization class calculate GIUH surface runoff using that kernel
         // TODO: for now add this to runoff, but later adjust calculations to limit flow into reservoir to avoid excess
         fluxes->surface_runoff_meters_per_second = surface_runoff + (subsurface_excess / dt) + (excess_gw_water / dt);
-        //fluxes->surface_runoff_meters_per_second = surface_runoff;
+        //fluxes->surface_runoff_meters_per_second = surface_runoff_depth_m;
 
         return mass_check(input_storage_m, dt);
     }

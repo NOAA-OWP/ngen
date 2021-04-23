@@ -1,3 +1,6 @@
+#ifndef CSV_Reader_H
+#define CSV_Reader_H
+
 #include <fstream>
 #include <vector>
 #include <iterator>
@@ -32,7 +35,7 @@ inline std::vector<std::vector<std::string> > CSVReader::getData()
 
         if(file.fail()){
             /// \todo TODO: Return appropriate error
-            throw std::runtime_error("Error: Forcing file " + fileName + " does not exist.");
+            throw std::runtime_error("Error: Input file " + fileName + " does not exist.");
 
             /// \todo Potentially only output warning and fill array with sentinel values.
         }
@@ -54,3 +57,5 @@ inline std::vector<std::vector<std::string> > CSVReader::getData()
 
 	return dataList;
 }
+
+#endif //CSV_Reader_H

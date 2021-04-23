@@ -2,6 +2,7 @@
 #define FORCING_H
 
 #include <vector>
+#include <set>
 #include <cmath>
 #include <algorithm>
 #include <string>
@@ -12,6 +13,18 @@
 #include <ctime>
 #include <time.h>
 #include <memory>
+
+// Recognized Forcing Value Names (in particular for use when configuring BMI input variables)
+// TODO: perhaps create way to configure a mapping of these to something different
+#define AORC_FIELD_NAME_PRECIP_RATE "precip_rate"
+#define AORC_FIELD_NAME_SOLAR_SHORTWAVE "DSWRF_surface"
+#define AORC_FIELD_NAME_SOLAR_LONGWAVE "DLWRF_surface"
+#define AORC_FIELD_NAME_PRESSURE_SURFACE "PRES_surface"
+#define AORC_FIELD_NAME_TEMP_2M_AG "TMP_2maboveground"
+#define AORC_FIELD_NAME_APCP_SURFACE "APCP_surface"
+#define AORC_FIELD_NAME_WIND_U_10M_AG "UGRD_10maboveground"
+#define AORC_FIELD_NAME_WIND_V_10M_AG "VGRD_10maboveground"
+#define AORC_FIELD_NAME_SPEC_HUMID_2M_AG "SPFH_2maboveground"
 
 using namespace std;
 
@@ -67,6 +80,26 @@ class Forcing
     public:
 
     typedef struct tm time_type;
+    
+    /**
+     * Get supported standard names for forcing fields.
+     *
+     * @return
+     */
+    static std::shared_ptr<std::set<std::string>> get_forcing_field_names() {
+        std::shared_ptr<std::set<std::string>> field_names = std::make_shared<std::set<std::string>>();
+        field_names->insert(AORC_FIELD_NAME_PRECIP_RATE);
+        field_names->insert(AORC_FIELD_NAME_SOLAR_SHORTWAVE);
+        field_names->insert(AORC_FIELD_NAME_SOLAR_LONGWAVE);
+        field_names->insert(AORC_FIELD_NAME_PRESSURE_SURFACE);
+        field_names->insert(AORC_FIELD_NAME_TEMP_2M_AG);
+        field_names->insert(AORC_FIELD_NAME_APCP_SURFACE);
+        field_names->insert(AORC_FIELD_NAME_WIND_U_10M_AG);
+        field_names->insert(AORC_FIELD_NAME_WIND_V_10M_AG);
+        field_names->insert(AORC_FIELD_NAME_SPEC_HUMID_2M_AG);
+        return field_names;
+    }
+
 
     /**
      * Default Constructor building an empty Forcing object
@@ -110,6 +143,59 @@ class Forcing
 
         //Initialize forcing vector index to 0;
         forcing_vector_index = 0;
+    }
+
+    /**
+     * Placeholder implementation for function to return the given param adjusted to be in the supplied units.
+     *
+     * At present this just returns the param's internal value.
+     *
+     * @param name The name of the desired parameter.
+     * @param units_str A string represented the units for conversion, using standard abbreviations.
+     * @return For now, just the param value, but in the future, the value converted.
+     */
+    inline double get_converted_value_for_param_in_units(const std::string& name, const std::string& units_str) {
+        // TODO: this is just a placeholder implementation that needs to be replaced with real convertion logic
+        return get_value_for_param_name(name);
+    }
+
+    /**
+     * Get the current value of a forcing param identified by its name.
+     *
+     * @param name The name of the forcing param for which the current value is desired.
+     * @return The particular param's current value.
+     */
+    inline double get_value_for_param_name(const std::string& name) {
+        if (name == AORC_FIELD_NAME_PRECIP_RATE) {
+            return get_current_hourly_precipitation_meters_per_second();
+        }
+        if (name == AORC_FIELD_NAME_SOLAR_SHORTWAVE) {
+            return get_AORC_DSWRF_surface_W_per_meters_squared();
+        }
+        if (name == AORC_FIELD_NAME_SOLAR_LONGWAVE) {
+            return get_AORC_DLWRF_surface_W_per_meters_squared();
+        }
+        if (name == AORC_FIELD_NAME_PRESSURE_SURFACE) {
+            return get_AORC_PRES_surface_Pa();
+        }
+        if (name == AORC_FIELD_NAME_TEMP_2M_AG) {
+            return get_AORC_TMP_2maboveground_K();
+        }
+        if (name == AORC_FIELD_NAME_APCP_SURFACE) {
+            return get_AORC_APCP_surface_kg_per_meters_squared();
+        }
+        if (name == AORC_FIELD_NAME_WIND_U_10M_AG) {
+            return get_AORC_UGRD_10maboveground_meters_per_second();
+        }
+        if (name == AORC_FIELD_NAME_WIND_V_10M_AG) {
+            return get_AORC_VGRD_10maboveground_meters_per_second();
+        }
+        if (name == AORC_FIELD_NAME_SPEC_HUMID_2M_AG) {
+            return get_AORC_SPFH_2maboveground_kg_per_kg();
+        }
+        else {
+            throw std::runtime_error("Cannot get forcing value for unrecognized parameter name '" + name + "'.");
+        }
     }
 
     /**
@@ -206,6 +292,20 @@ class Forcing
 
         return current_date_time_epoch = time_epoch_vector.at(forcing_vector_index);
     };
+
+    /**
+     * Get the time step size, based on epoch vector, assuming the last ts is equal to the next to last.
+     *
+     * @return
+     */
+    time_t get_time_step_size() {
+        check_forcing_vector_index_bounds();
+        // When at the last index, make an assumption the length is the same as the next-to-last
+        if (time_epoch_vector.size() - 1 == forcing_vector_index)
+            return time_epoch_vector.at(forcing_vector_index) - time_epoch_vector.at(forcing_vector_index - 1);
+        else
+            return time_epoch_vector.at(forcing_vector_index + 1) - time_epoch_vector.at(forcing_vector_index);
+    }
 
     /**
      * @brief Accessor to AORC data struct
@@ -307,6 +407,34 @@ class Forcing
         return AORC_vector.at(forcing_vector_index).VGRD_10maboveground_meters_per_second;
     };
 
+    /**
+     * Get whether a param's value is an aggregate sum over the entire time step.
+     *
+     * Certain params, like rain fall, are aggregated sums over an entire time step.  Others, such as pressure, are not
+     * such sums and instead something else like an instantaneous reading or an average value over the time step.
+     *
+     * It may be the case that forcing data is needed for some discretization different than the forcing time step.
+     * These values can be calculated (or at least approximated), but doing so requires knowing which values are summed
+     * versus not.
+     *
+     * @param name The name of the forcing param for which the current value is desired.
+     * @return Whether the param's value is an aggregate sum.
+     */
+    inline bool is_param_sum_over_time_step(const std::string& name) {
+        if (name == AORC_FIELD_NAME_PRECIP_RATE) {
+            return true;
+        }
+        if (name == AORC_FIELD_NAME_SOLAR_SHORTWAVE) {
+            return true;
+        }
+        if (name == AORC_FIELD_NAME_SOLAR_LONGWAVE) {
+            return true;
+        }
+        if (name == AORC_FIELD_NAME_APCP_SURFACE) {
+            return true;
+        }
+        return false;
+    }
 
     private:
 
