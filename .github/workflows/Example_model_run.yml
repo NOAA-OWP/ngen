@@ -1,6 +1,11 @@
 name: Build and Run NGEN on example data
 
 on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Bump Test Version
+        required: false
   pull_request:
     branches: [ master ]
 jobs:
@@ -9,6 +14,8 @@ jobs:
       steps:
       - name: Checkout the code
         uses: actions/checkout@v2
+      - name: Checkout the code
+        run: git status && rm -rf .dockerignore
       - name: Build the NGEN image
         run: docker build . --file ./docker/CENTOS_NGEN_RUN.dockerfile --tag localbuild/ngen:latest      
       - name: Run the NGEN model on example data
