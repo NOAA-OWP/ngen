@@ -1,8 +1,5 @@
 #include "HY_PointHydroNexusRemote.hpp"
 
-#ifndef NGEN_MPI_ACTIVE
-#define NGEN_MPI_ACTIVE
-#endif
 
 #ifdef NGEN_MPI_ACTIVE
 
