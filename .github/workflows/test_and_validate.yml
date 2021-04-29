@@ -86,8 +86,8 @@ jobs:
       - name: Install MPI
         id: install-mpi
         run: |
-          apt-get update
-          apt-get install -y libopenmpi-dev openmpi-bin openmpi-common
+          sudo apt-get update
+          sudo apt-get install -y libopenmpi-dev openmpi-bin openmpi-common
 
       - name: cmake_init_build
         run: |
