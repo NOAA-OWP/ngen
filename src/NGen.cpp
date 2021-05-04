@@ -14,6 +14,8 @@
 #include <Formulation.hpp>
 #include <HY_PointHydroNexus.hpp>
 
+#include <network.hpp>
+
 #include "NGenConfig.h"
 #include "tshirt_params.h"
 
@@ -23,11 +25,6 @@
 std::string catchmentDataFile = "";
 std::string nexusDataFile = "";
 std::string REALIZATION_CONFIG_PATH = "";
-
-//TODO this is possible, but ASSUMES realizations based on feature geom type, so not quite ready for prime time
-class RealizaitonVisitor : public geojson::FeatureVisitor {
-
-};
 
 // TODO: Avoid having to call this in favor of having this being a core part of the creation of both the initial collections
 void prepare_features(geojson::GeoJSON& nexus, geojson::GeoJSON& catchments, bool validate=false)
@@ -174,6 +171,7 @@ int main(int argc, char *argv[]) {
     realization::Formulation_Manager manager = realization::Formulation_Manager(REALIZATION_CONFIG_PATH);
     manager.read(catchment_collection, utils::getStdOut());
 
+    network::Network network(nexus_collection);
     //TODO don't really need catchment_collection once catchments are added to nexus collection
     catchment_collection.reset();
     for(auto& feature : *nexus_collection)
@@ -231,7 +229,11 @@ int main(int argc, char *argv[]) {
       std::cout<<"Output Time Index: "<<output_time_index<<std::endl;
 
       std::string current_timestamp = manager.Simulation_Time_Object->get_timestamp(output_time_index);
+      for(auto&  feature: network)
+      {
 
+      }
+      /*
       for (std::pair<std::string, std::shared_ptr<realization::Formulation>> formulation_pair : manager ) {
         formulation_pair.second->set_et_params(pdm_et_data);
 
@@ -275,6 +277,7 @@ int main(int argc, char *argv[]) {
         std::cout<<"\tNexus "<<nexus.first<<" has "<<contribution_at_t<<" m^3/s"<<std::endl;
         output_map[nexus.first].push_back(contribution_at_t);
       }
+      */
     }
 
     /*
