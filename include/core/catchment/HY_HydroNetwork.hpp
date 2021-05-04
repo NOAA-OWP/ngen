@@ -34,5 +34,13 @@ class HY_HydroNetwork : public GM_Object, public HY_CatchmentRealization
 
 
 };
+/*
+Hydrographic Nework  and Channel Network are both specializations of the generic Hydro Network.
+A Hydro Network is itself a possible Catchment Realization.
+In the context of moving water through the network as opposed to over land to the network,
+we really want to use the Hydrographic Network (an aggregation of networked waterbodies)
+and only connect the network to catchment outflows via Hydro Nexuses which are the outflow of a
+Catchment AND realized by some location along a waterbody in the Hydrographic Network.
+*/
 
 #endif // HY_HYDRONETWORK_H
