@@ -51,13 +51,13 @@ protected:
       catchments->add_feature(feature);
     }
 
-    void add_nexus(std::string id, std::string* to_id = nullptr)
+    void add_nexus(std::string id, std::string to_id = {})
     {
       double x = 102.0;
       double y = 0.5;
 
       geojson::PropertyMap properties{};
-      if (to_id != nullptr)
+      if (! to_id.empty())
       {
         properties.emplace(this->link_key, geojson::JSONProperty(this->link_key, to_id));
       }
