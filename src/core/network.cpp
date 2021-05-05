@@ -17,24 +17,27 @@ Network::Network( geojson::GeoJSON fabric ){
       //get feature id and add vertex to graph
       v1 = add_vertex( feature_id, this->graph );
       this->descriptor_map.emplace( feature_id, v1);
-      //Add the downstream features/edges
-      for( auto& downstream: feature->destination_features() )
+    }
+    else{
+      v1 = this->descriptor_map[ feature_id];
+    }
+    //Add the downstream features/edges
+    for( auto& downstream: feature->destination_features() )
+    {
+      downstream_id = downstream->get_id();
+      if( this->descriptor_map.find(downstream_id) != this->descriptor_map.end() )
       {
-        downstream_id = downstream->get_id();
-        if( this->descriptor_map.find(downstream_id) != this->descriptor_map.end() )
-        {
-          //Use existing vertex
-          v2 = this->descriptor_map[ downstream_id ];
-        }
-        else {
-          //Create new vertex
-          v2 = add_vertex( downstream_id, this->graph );
-          this->descriptor_map.emplace( downstream_id, v2 );
-        }
-        //Add the edge
-        add_edge(v1, v2, this->graph);
-        //std::cout<<"Added edge: "<<feature_id<<" -> "<<downstream_id<<std::endl;
+        //Use existing vertex
+        v2 = this->descriptor_map[ downstream_id ];
       }
+      else {
+        //Create new vertex
+        v2 = add_vertex( downstream_id, this->graph );
+        this->descriptor_map.emplace( downstream_id, v2 );
+      }
+      //Add the edge
+      add_edge(v1, v2, this->graph);
+      //std::cout<<"Added edge: "<<feature_id<<" -> "<<downstream_id<<std::endl;
     }
   }
   init_indicies();
@@ -75,6 +78,10 @@ Network::Network( geojson::GeoJSON features, std::string* link_key = nullptr ){
       //add vertex to graph
       v1 = add_vertex( feature_id, this->graph );
       this->descriptor_map.emplace( feature_id, v1 );
+    }
+    else{
+      v1 = this->descriptor_map[ feature_id ];
+    }
 
       if (link_key != nullptr and feature->has_property(*link_key)) {
 
@@ -89,7 +96,6 @@ Network::Network( geojson::GeoJSON features, std::string* link_key = nullptr ){
           }
             add_edge(v1, v2, this->graph);
       }
-    }
   }
 
   init_indicies();
