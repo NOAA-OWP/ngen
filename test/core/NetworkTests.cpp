@@ -130,6 +130,21 @@ public:
   ~Network_Test1(){}
 };
 
+class Network_Test2 : public Network_Test, public ::testing::Test{
+public:
+  Network_Test2(){}
+  void SetUp(){
+    this->add_catchment("cat-0", "nex-0");
+    this->add_catchment("cat-1", "nex-0");
+    this->add_nexus("nex-0", "cat-2");
+    this->add_catchment("cat-2", "nex-1");
+    this->add_catchment("cat-3", "nex-1");
+    this->add_catchment("cat-4", "nex-1");
+    this->add_nexus("nex-1");
+    n =  Network(this->get_fabric());
+  }
+};
+
 //! Test that a network can be created.
 TEST_P(Network_Test1, TestNetworkConstructionNumberOfNodes)
 {
@@ -190,3 +205,47 @@ TEST_P(Network_Test1, DISABLED_TestInit1)
 
 INSTANTIATE_TEST_SUITE_P(NetworkConstructionTests, Network_Test1, ::testing::Values(TestContext::CASE_1, TestContext::CASE_2)
 );
+
+
+TEST_F(Network_Test2, test_construction)
+{
+  //Test basic construction, network should have three nodes when done
+  /*
+  for(auto it = n.begin(); it != n.end(); it++)
+  {
+    std::cout<< n.get_id(*it)<<std::endl;
+  }
+  */
+  ASSERT_TRUE( n.size() == 7 );
+
+}
+TEST_F(Network_Test2, test_get_origination_ids)
+{
+  std::vector<std::string> ids = n.get_origination_ids("nex-1");
+  ASSERT_TRUE( ids.size() == 3);
+  ASSERT_FALSE( std::find(ids.begin(), ids.end(), "cat-2") == ids.end() );
+  ASSERT_FALSE( std::find(ids.begin(), ids.end(), "cat-3") == ids.end() );
+  ASSERT_FALSE( std::find(ids.begin(), ids.end(), "cat-4") == ids.end() );
+}
+
+TEST_F(Network_Test2, test_get_destination_ids)
+{
+  std::vector<std::string> ids = n.get_destination_ids("nex-1");
+  ASSERT_TRUE( ids.size() == 0);
+}
+
+TEST_F(Network_Test2, test_get_destination_ids1)
+{
+  std::vector<std::string> ids = n.get_destination_ids("nex-0");
+  //n.print_network();
+  ASSERT_TRUE( ids.size() == 1);
+  ASSERT_FALSE( std::find(ids.begin(), ids.end(), "cat-2") == ids.end() );
+}
+
+TEST_F(Network_Test2, test_get_destination_ids2)
+{
+  std::vector<std::string> ids = n.get_destination_ids("cat-2");
+
+  ASSERT_TRUE( ids.size() == 1);
+  ASSERT_FALSE( std::find(ids.begin(), ids.end(), "nex-1") == ids.end() );
+}
