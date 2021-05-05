@@ -54,8 +54,8 @@ namespace network {
 
         //Boost Graph
         Graph graph;
-        //Keep a mapping of identity to graph vertex descritpor
-        std::unordered_map<std::string, Graph::vertex_descriptor> descritpor_map;
+        //Keep a mapping of identity to graph vertex descriptor
+        std::unordered_map<std::string, Graph::vertex_descriptor> descriptor_map;
 
     };
 }
