@@ -33,6 +33,8 @@ namespace network {
         NetworkIndexT::const_reverse_iterator begin();
         NetworkIndexT::const_reverse_iterator end();
         std::string get_id( Graph::vertex_descriptor idx);
+        std::vector<std::string> get_origination_ids(std::string id);
+        std::vector<std::string> get_destination_ids(std::string id);
         std::size_t size();
 
         IndexPair headwaters();
