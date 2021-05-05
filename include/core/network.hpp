@@ -5,6 +5,7 @@
 
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/graph_traits.hpp>
+#include <boost/graph/graphviz.hpp>
 
 #include <features/Features.hpp>
 #include <FeatureBuilder.hpp>
@@ -37,6 +38,11 @@ namespace network {
         IndexPair headwaters();
         IndexPair tailwaters();
 
+        void print_network(){
+          boost::dynamic_properties dp;
+          dp.property("node_id", get(boost::vertex_name, this->graph));
+          boost::write_graphviz_dp(std::cout, graph, dp);
+        }
       protected:
 
       private:
