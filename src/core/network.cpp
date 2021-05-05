@@ -127,3 +127,26 @@ std::string Network::get_id( Graph::vertex_descriptor idx){
 std::size_t Network::size(){
   return num_vertices(this->graph);
 }
+
+std::vector<std::string> Network::get_origination_ids(std::string id){
+  Graph::in_edge_iterator begin, end;
+  boost::tie(begin, end) = boost::in_edges (this->descriptor_map[id], this->graph);
+  std::vector<std::string> ids;
+  for(auto it = begin; it != end; ++it)
+  {
+    ids.push_back( get_id(boost::source(*it, this->graph)) );
+  }
+  return ids;
+}
+
+std::vector<std::string> Network::get_destination_ids(std::string id){
+  Graph::out_edge_iterator begin, end;
+  boost::tie(begin, end) = boost::out_edges (this->descriptor_map[id], this->graph);
+  std::vector<std::string> ids;
+  for(auto it = begin; it != end; ++it)
+  {
+    ids.push_back( get_id(boost::target(*it, this->graph)) );
+  }
+
+  return ids;
+}
