@@ -11,25 +11,25 @@ Network::Network( geojson::GeoJSON fabric ){
   for(auto& feature: *fabric)
   {
     feature_id = feature->get_id();
-    if( this->descritpor_map.find( feature_id ) == this->descritpor_map.end() )
+    if( this->descriptor_map.find( feature_id ) == this->descriptor_map.end() )
     {
       //Haven't visited this feature yet, add it to graph
       //get feature id and add vertex to graph
       v1 = add_vertex( feature_id, this->graph );
-      this->descritpor_map.emplace( feature_id, v1);
+      this->descriptor_map.emplace( feature_id, v1);
       //Add the downstream features/edges
       for( auto& downstream: feature->destination_features() )
       {
         downstream_id = downstream->get_id();
-        if( this->descritpor_map.find(downstream_id) != this->descritpor_map.end() )
+        if( this->descriptor_map.find(downstream_id) != this->descriptor_map.end() )
         {
           //Use existing vertex
-          v2 = this->descritpor_map[ downstream_id ];
+          v2 = this->descriptor_map[ downstream_id ];
         }
         else {
           //Create new vertex
           v2 = add_vertex( downstream_id, this->graph );
-          this->descritpor_map.emplace( downstream_id, v2 );
+          this->descriptor_map.emplace( downstream_id, v2 );
         }
         //Add the edge
         add_edge(v1, v2, this->graph);
@@ -69,23 +69,23 @@ Network::Network( geojson::GeoJSON features, std::string* link_key = nullptr ){
   for(auto& feature: *features)
   {
     feature_id = feature->get_id();
-    if( this->descritpor_map.find( feature_id ) == this->descritpor_map.end() )
+    if( this->descriptor_map.find( feature_id ) == this->descriptor_map.end() )
     {
       //Haven't visited this feature yet, add it to graph
       //add vertex to graph
       v1 = add_vertex( feature_id, this->graph );
-      this->descritpor_map.emplace( feature_id, v1 );
+      this->descriptor_map.emplace( feature_id, v1 );
 
       if (link_key != nullptr and feature->has_property(*link_key)) {
 
           downstream_id = feature->get_property(*link_key).as_string();
-          if( this->descritpor_map.find(downstream_id) != this->descritpor_map.end() )
+          if( this->descriptor_map.find(downstream_id) != this->descriptor_map.end() )
           {
-            v2 = this->descritpor_map[ downstream_id ];
+            v2 = this->descriptor_map[ downstream_id ];
           }
           else {
             v2 = add_vertex( downstream_id, this->graph );
-            this->descritpor_map.emplace( downstream_id, v2 );
+            this->descriptor_map.emplace( downstream_id, v2 );
           }
             add_edge(v1, v2, this->graph);
       }
