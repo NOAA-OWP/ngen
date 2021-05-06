@@ -10,7 +10,7 @@ The Configuration must contain these three first level objects:
 * `catchments` 
   * defines the formulation and input parameters for each individual catchment
 
-The `"global"` object must contain the following two objects:
+The `global` object must contain the following two objects:
 * `formulations` 
   * defines the default required formulation name and also potentially includes subobjects/lists for `parameters`, `options`, and `initial_conditions` depending on the required and optional inputs for a given formulation
 * `forcing`
