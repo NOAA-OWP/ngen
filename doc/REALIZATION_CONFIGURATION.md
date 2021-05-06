@@ -10,7 +10,7 @@ The Configuration must contain these three first level objects:
 * `"catchments"` - defines the formulation and input parameters for each individual catchment
 
 The `"global"` object must contain the following two objects:
-* `"formulations"` - defines the default required formulation name and also includes subobjects/lists for `parameters`, `options`, `initial_conditions` depending on the required and optional inputs for a given formulation
+* `"formulations"` - defines the default required formulation name and also includes subobjects/lists for `"parameters"`, `"options"`, `"initial_conditions"` depending on the required and optional inputs for a given formulation
 * `"forcing"` - defines the default file pattern and path relative to the main ngen directory where the driver is executed for the input forcings 
 
 The `"time"` object must contain the following three objects:
@@ -22,7 +22,7 @@ The `"catchments"` object must contain a list of all of the catchment objects th
 * `"cat-"` followed by the unique integer identifier for the catchment
 
 Each catchment object will have the following two objects:
-* `"formulations"` - defines the required formulation name and also includes subobjects/lists for `parameters`, `options`, `initial_conditions` depending on the required and optional inputs for a given formulation     
+* `"formulations"` - defines the required formulation name and also includes subobjects/lists for `"parameters"`, `"options"`, `"initial_conditions"` depending on the required and optional inputs for a given formulation     
 * `"forcing"` - defines the file name and path relative to the main ngen directory where the driver is executed for the input forcings 
 
 An [example realization configuration](https://github.com/NOAA-OWP/ngen/blob/master/data/example_realization_config.json)
