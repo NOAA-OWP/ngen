@@ -14,8 +14,8 @@ The `"global"` object must contain the following two objects:
 * `"forcing"` - defines the default file pattern and path relative to the main ngen directory where the driver is executed for the input forcings 
 
 The `"time"` object must contain the following three objects:
-* `"start_time" - The UTC start time of the simulation and must be in the form `"yyyy-mm-dd hh:mm:ss"`
-* `"end_time" -  The UTC end time of the simulation and must be in the form `"yyyy-mm-dd hh:mm:ss"`
+* `"start_time"` - The UTC start time of the simulation and must be in the form `"yyyy-mm-dd hh:mm:ss"`
+* `"end_time"` -  The UTC end time of the simulation and must be in the form `"yyyy-mm-dd hh:mm:ss"`
 * `"output_interval"` - The time interval that model outputs are generated in seconds
 
 The `"catchments"` object must contain a list of all of the catchment objects that will have defined formulations, and each catchment name will have the following format:
