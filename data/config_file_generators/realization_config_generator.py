@@ -54,6 +54,14 @@ def randomly_select_formulations_for_catchments(catchment_id_series):
 
   return catchment_df
 
+#TEMP
+def pretty(d, indent=0):
+   for key, value in d.items():
+      print('\t' * indent + str(key))
+      if isinstance(value, dict):
+         pretty(value, indent+1)
+      else:
+         print('\t' * (indent+1) + str(value))
 
 
 def set_up_config_dict(catchment_df):
@@ -94,11 +102,28 @@ def set_up_config_dict(catchment_df):
     print (catchment_id)
     print (catchment_formulation) 
 
-    formulation_element = {
+    #TODO: assign corresponding params 
+    formulation_dict = {"name": catchment_formulation, "params": {}}
 
     formulations_list = []
 
-    catchment_dict = {catchment_id: 5} 
+    formulations_list.append(formulation_dict)
+
+    formulations_dict = {"formulations": formulations_list}
+
+    forcing_dict = {"forcing": "forcing_file_path_and_name"}
+
+    #catchment_values = {formulations_dict, forcing_dict}
+
+    #catchment_dict = {catchment_id: {formulations_list, forcing_dict}} 
+    #catchment_dict = {catchment_id: {formulations_dict, forcing_dict}} 
+    #catchment_dict = {catchment_id: catchment_values} 
+
+    catchment_dict = {catchment_id: {"formulations": formulations_list, "forcing": "forcing_file_path_and_name"}}
+
+    #catchment_dict = {catchment_id: forcing_dict} 
+    #catchment_dict = {catchment_id: formulations_list} 
+
 
     #config_dict["catchments"].update(catchment_id: {})
     #config_dict.update(catchment_id: {})
@@ -108,7 +133,8 @@ def set_up_config_dict(catchment_df):
 
 
   print ("====================")
-  print (config_dict)
+  #print (config_dict)
+  pretty(config_dict)
 
 
 def main(argv):
