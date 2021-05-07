@@ -29,10 +29,10 @@ class HY_HydroNexus
     //NJF Why protect these intrfaces??? protected:
 
     /** Increase the downstream flow for timestep_t by input amount*/
-    virtual void add_upstream_flow(double val, long catchement_id, time_step_t t)=0;
+    virtual void add_upstream_flow(double val, std::string catchement_id, time_step_t t)=0;
 
     /** get a precentage of the downstream flow at requested time_step. Record the requesting percentage*/
-    virtual double get_downstream_flow(long catchment_id, time_step_t t, double percent_flow)=0;
+    virtual double get_downstream_flow(std::string catchment_id, time_step_t t, double percent_flow)=0;
 
     virtual std::pair<double, int> inspect_upstream_flows(time_step_t t)=0;
     virtual std::pair<double, int> inspect_downstream_requests(time_step_t t)=0;
@@ -41,7 +41,9 @@ class HY_HydroNexus
     virtual std::string get_flow_units()=0;
 
     private:
-    long id_number;
+      
+    //Identity is a string.  If implementations NEED a numeric id for indexing,
+    //they are responsible for prodcing it.
     std::string id;
     /*
     * identifies a hydrologic feature which realizes the hydro nexus.

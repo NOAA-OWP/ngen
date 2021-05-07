@@ -3,7 +3,6 @@
 HY_HydroNexus::HY_HydroNexus(std::string nexus_id, Catchments receiving_catchments):
 id(nexus_id), realization(), receiving_catchments(std::move(receiving_catchments)), contributing_catchments()
 {
-   this->id_number = std::stoi(nexus_id.substr(4)); //FIXME brittle
    this->id = nexus_id;
    this->number_of_downstream_catchments = receiving_catchments.size();
 }
