@@ -1,0 +1,6 @@
+{
+    "partitions":[
+        {"id":0, "cat-ids":["cat-1","cat-2"], "nex-ids":["nex-1", "nex-2"], "remote-up":[], "remote-down":[ {"id":"nex-2", "partition":1 }]},
+        {"id":1, "cat-ids":["cat-3","cat-4"], "nex-ids":["nex-2", "nex-3"], "remote-up":[ {"id":"nex-2", "partition":0}], "remote-down":[]}
+    ]
+}
