@@ -19,3 +19,4 @@ target_link_libraries(core PUBLIC
 
 add_subdirectory("catchment")
 add_subdirectory("nexus")
+add_subdirectory("hydrolocation")
