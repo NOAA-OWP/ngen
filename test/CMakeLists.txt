@@ -91,6 +91,11 @@ add_automated_test(
         core/catchment/giuh/GIUH_Test.cpp
 )
 
+add_automated_test(
+  test_nexus
+  core/nexus/NexusTests.cpp
+)
+
 if(MPI_ACTIVE)
    add_automated_test(
            test_remote_nexus
