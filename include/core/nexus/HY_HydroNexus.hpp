@@ -7,18 +7,23 @@
 
 #include <boost/geometry.hpp>
 #include <boost/geometry/geometries/geometries.hpp>
+#include <HY_Catchment.hpp>
+#include <HY_HydroLocation.hpp>
 
-
-namespace bg = boost::geometry;
-
+using namespace hy_features::hydrolocation;
 class HY_HydroNexus
 {
     public:
 
-    typedef bg::model::point<double, 2, bg::cs::cartesian> point_t;
     typedef long time_step_t;
 
-    HY_HydroNexus(int nexus_id_num, std::string nexus_id, int num_dowstream);
+    //using Catchments = std::vector<std::shared_ptr<HY_Catchment>>;
+    using Catchments = std::vector<std::string>;
+    using HydroLocation = std::shared_ptr<HY_HydroLocation>;
+
+    HY_HydroNexus(std::string nexus_id, Catchments contributing_catchments);
+    HY_HydroNexus(std::string nexus_id, HydroLocation location, Catchments receiving_catchments, Catchments contributing_catchments);
+
     virtual ~HY_HydroNexus();
 
     //NJF Why protect these intrfaces??? protected:
@@ -36,11 +41,12 @@ class HY_HydroNexus
     virtual std::string get_flow_units()=0;
 
     private:
-
-    std::shared_ptr<point_t> location;
-
-    unsigned long id_number;
+    long id_number;
     std::string id;
+    HydroLocation realization;
+    Catchments receiving_catchments;
+    Catchments contributing_catchments;
+
 
     int number_of_downstream_catchments;
 };
