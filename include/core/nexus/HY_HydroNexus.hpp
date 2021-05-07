@@ -21,7 +21,7 @@ class HY_HydroNexus
     using Catchments = std::vector<std::string>;
     using HydroLocation = std::shared_ptr<HY_HydroLocation>;
 
-    HY_HydroNexus(std::string nexus_id, Catchments contributing_catchments);
+    HY_HydroNexus(std::string nexus_id, Catchments receiving_catchments);
     HY_HydroNexus(std::string nexus_id, HydroLocation location, Catchments receiving_catchments, Catchments contributing_catchments);
 
     virtual ~HY_HydroNexus();
@@ -43,11 +43,30 @@ class HY_HydroNexus
     private:
     long id_number;
     std::string id;
+    /*
+    * identifies a hydrologic feature which realizes the hydro nexus.
+    * A topological nexus realization is of lower dimension than the realization
+    * of the corresponding catchment.
+    * Example: an outflow node realizing the nexus would be of lower dimension
+    * than the flowpath edge realizing the contributing catchment.
+    */
     HydroLocation realization;
+
+    /*
+    * identifies the catchment that receives flow from this hydro nexus.
+    * This allows connection of a catchment's inflow to an identified outflow
+    * and to determine its position through referencing the outflow.
+    */
     Catchments receiving_catchments;
+
+    /*
+    * identifies the catchment that contributes flow to this hydro nexus.
+    * This allows connection of a catchment's outflow to an identified inflow
+    * and to determine its position through referencing the inflow.
+    */
     Catchments contributing_catchments;
 
-
+    //TODO remove this?
     int number_of_downstream_catchments;
 };
 

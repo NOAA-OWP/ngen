@@ -9,7 +9,7 @@
 class HY_PointHydroNexus : public HY_HydroNexus
 {
     public:
-        HY_PointHydroNexus(std::string nexus_id, Catchments contibuting_catchments);
+        HY_PointHydroNexus(std::string nexus_id, Catchments receiving_catchments);
         virtual ~HY_PointHydroNexus();
 
         /** get the request percentage of downstream flow through this nexus at timestep t. */
