@@ -200,10 +200,12 @@ int main(int argc, char *argv[]) {
         //Create nexus realization, add to map
         int num = std::stoi( feat_id.substr(4) );
         nexus_outfiles[feat_id].open("./"+feature->get_id()+"_output.csv", std::ios::trunc);
-
+        std::vector<std::string> downstreams;
+        for(const auto& f : feature->destination_features()){
+          downstreams.push_back(f->get_id());
+        }
         nexus_realizations[feat_id] = std::make_unique<HY_PointHydroNexus>(
-                                      HY_PointHydroNexus(num, feat_id,
-                                                         feature->get_number_of_destination_features()));
+                                      HY_PointHydroNexus(feat_id, downstreams) );
        if(feature->get_number_of_destination_features() == 1)
        {
          nexus_to_catchment[feat_id] = feature->destination_features()[0]->get_id();
@@ -232,7 +234,7 @@ int main(int argc, char *argv[]) {
 
       for (std::pair<std::string, std::shared_ptr<realization::Formulation>> formulation_pair : manager ) {
         formulation_pair.second->set_et_params(pdm_et_data);
-       
+
         //get the catchment response
         double response = formulation_pair.second->get_response(output_time_index, 3600.0);
         //dump the output
