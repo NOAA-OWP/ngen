@@ -29,7 +29,7 @@ struct invalid_time_step : public boost::exception, public std::exception
   const char *what() const noexcept { return "Time step before minimum time step requested"; }
 };
 
-HY_PointHydroNexus::HY_PointHydroNexus(int nexus_id_number, std::string nexus_id, int num_downstream) : HY_HydroNexus(nexus_id_number, nexus_id, num_downstream), upstream_flows()
+HY_PointHydroNexus::HY_PointHydroNexus(std::string nexus_id, Catchments contributing_catchments) : HY_HydroNexus( nexus_id, contributing_catchments), upstream_flows()
 {
 
 }
