@@ -255,7 +255,8 @@ int main(int argc, char *argv[]) {
 
         std::cout << "\t\tThe modified response is: " << response << std::endl;
         //update the nexus with this flow
-        nexus_realizations[ catchment_to_nexus[formulation_pair.first] ]->add_upstream_flow(response, catchment_id[formulation_pair.first], output_time_index);
+        //nexus_realizations[ catchment_to_nexus[formulation_pair.first] ]->add_upstream_flow(response, catchment_id[formulation_pair.first], output_time_index);
+        nexus_realizations[ catchment_to_nexus[formulation_pair.first] ]->add_upstream_flow(response, formulation_pair.first, output_time_index);
       }
 
       for(auto &nexus: nexus_realizations)
@@ -263,7 +264,8 @@ int main(int argc, char *argv[]) {
         //TODO this ID isn't all that important is it?  And really it should connect to
         //the downstream waterbody the way we are using it, so consider if this is needed
         //it works for now though, so keep it
-        int id = catchment_id[nexus_from_catchment[nexus.first]];
+        //int id = catchment_id[nexus_from_catchment[nexus.first]];
+        std::string id = nexus_from_catchment[nexus.first];
         std::cout<<"nexusID: "<<id<<std::endl;
         double contribution_at_t = nexus_realizations[nexus.first]->get_downstream_flow(id, output_time_index, 100.0);
         if(nexus_outfiles[nexus.first].is_open())

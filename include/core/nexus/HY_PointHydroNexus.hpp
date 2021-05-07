@@ -13,10 +13,10 @@ class HY_PointHydroNexus : public HY_HydroNexus
         virtual ~HY_PointHydroNexus();
 
         /** get the request percentage of downstream flow through this nexus at timestep t. */
-        double get_downstream_flow(long catchment_id, time_step_t t, double percent_flow);
+        double get_downstream_flow(std::string catchment_id, time_step_t t, double percent_flow);
 
         /** add flow to this nexus for timestep t. */
-        void add_upstream_flow(double val, long catchment_id, time_step_t t);
+        void add_upstream_flow(double val, std::string catchment_id, time_step_t t);
 
         /** inspect a nexus to see what flows are recorded at a time step. */
         std::pair<double, int> inspect_upstream_flows(time_step_t t);
@@ -30,13 +30,12 @@ class HY_PointHydroNexus : public HY_HydroNexus
         void set_mintime(time_step_t);
 
     protected:
-
-    typedef std::vector< std::pair<long,double> > id_flow_vector;
-    typedef std::vector< std::pair<long,double> > id_request_vector;
+    using flows = std::pair<std::string, double>;
+    using flow_vector = std::vector< flows >;
 
     /** The current downstream flow through this Point Nexus.*/
-    std::unordered_map<time_step_t, id_flow_vector > upstream_flows;
-    std::unordered_map<time_step_t, id_request_vector > downstream_requests;
+    std::unordered_map<time_step_t, flow_vector > upstream_flows;
+    std::unordered_map<time_step_t, flow_vector > downstream_requests;
     std::unordered_map<time_step_t, double> summed_flows;
     std::unordered_map<time_step_t, double> total_requests;
 
