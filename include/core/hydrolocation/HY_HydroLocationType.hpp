@@ -1,7 +1,7 @@
 #ifndef HY_HYDROLOCATIONTYPE_H
 #define HY_HYDROLOCATIONTYPE_H
-
-enum HY_HydroLocationType
+namespace hy_features{ namespace hydrolocation {
+enum class HY_HydroLocationType
 {
     barrage,
     bifurcation,
@@ -27,8 +27,9 @@ enum HY_HydroLocationType
     waterfall,
     weir,
     undefined
+};
+
 }
-
-
+}
 
 #endif // HY_HYDROLOCATIONTYPE_H
