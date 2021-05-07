@@ -1,7 +1,7 @@
 #ifndef HY_INDIRECT_POSITION_HPP
 #define HY_INDIRECT_POSITION_HPP
 
-#include <HY_Flowpath.hpp>
+#include <HY_FlowPath.hpp>
 
 namespace hy_features{ namespace hydrolocation{
 
