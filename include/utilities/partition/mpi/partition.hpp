@@ -20,6 +20,7 @@
 #include <FeatureCollection.hpp>
 #include "JSONProperty.hpp"
 
+//TODO To be geralized, perhaps as a read in parameter
 #define PARTITION_LINES 2
 
 class Partitions_Parser {
@@ -35,8 +36,7 @@ class Partitions_Parser {
 
         virtual ~Partitions_Parser(){};
 
-        //The function that parses the json file and build a unordered map of struct for each line in the json list
-        //void read_partition_file(boost::property_tree::ptree &config);
+        //The function that parses the json file and build a unordered map of structs for each line in the json list
         void read_partition_file(boost::property_tree::ptree &config) {
             tree = config;
             std::cout << "\nroot_tree: " << tree.size() << std::endl;
@@ -131,8 +131,7 @@ class Partitions_Parser {
         };
 
         typedef partition_data part_strt;
-        //The function retrieve any arbitrary struct based on the part_id handed to it
-        //part_strt get_part_strt(std::string part_id);
+        //The function retrieve an arbitrary struct based on the part_id passed to it
         part_strt get_part_strt(std::string part_id)
         {
             //TODO The output codes are for test only. They can be removed for application code.
@@ -168,8 +167,7 @@ class Partitions_Parser {
             return part_data;
         };
 
-        //This example function shows how to a specific element of the struct
-        //int get_mpi_rank(std::string part_id);
+        //This example function shows how to get a specific member of the struct
         int get_mpi_rank(std::string part_id)
         {
             //An example code for getting individual member of the struct identified by part_id
