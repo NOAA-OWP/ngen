@@ -23,8 +23,8 @@ void MPI_Handle_Error(int status)
     }
 }
 
-HY_PointHydroNexusRemote::HY_PointHydroNexusRemote(int nexus_id_number, std::string nexus_id, int num_downstream, catcment_location_map_t loc_map)
-    : HY_PointHydroNexus(nexus_id_number, nexus_id, num_downstream),
+HY_PointHydroNexusRemote::HY_PointHydroNexusRemote(std::string nexus_id, Catchments receiving_catchments, catcment_location_map_t loc_map)
+    : HY_PointHydroNexus(nexus_id, receiving_catchments),
       catchment_id_to_mpi_rank(loc_map)
 {
 
@@ -77,7 +77,7 @@ HY_PointHydroNexusRemote::~HY_PointHydroNexusRemote()
     }
 }
 
-double HY_PointHydroNexusRemote::get_downstream_flow(long catchment_id, time_step_t t, double percent_flow)
+double HY_PointHydroNexusRemote::get_downstream_flow(std::string catchment_id, time_step_t t, double percent_flow)
 {
     while ( stored_recieves.size() > 0)
     {
@@ -95,7 +95,7 @@ double HY_PointHydroNexusRemote::get_downstream_flow(long catchment_id, time_ste
 
         // fill the message buffer
         stored_sends.back().buffer->time_step = t;
-        stored_sends.back().buffer->catchment_id = catchment_id;
+        stored_sends.back().buffer->catchment_id = std::stoi( catchment_id.substr(4) );
 
         // get the correct amount of flow using the inherted function this means are local bookkeeping is accurate
         stored_sends.back().buffer->flow = HY_PointHydroNexus::get_downstream_flow(catchment_id, t, percent_flow);;
@@ -117,7 +117,7 @@ double HY_PointHydroNexusRemote::get_downstream_flow(long catchment_id, time_ste
     }
 }
 
-void HY_PointHydroNexusRemote::add_upstream_flow(double val, long catchment_id, time_step_t t)
+void HY_PointHydroNexusRemote::add_upstream_flow(double val, std::string catchment_id, time_step_t t)
 {
 
    auto iter = catchment_id_to_mpi_rank.find(catchment_id);
@@ -168,7 +168,7 @@ void HY_PointHydroNexusRemote::process_communications()
         {
             // get the data from the communication buffer
             long time_step = i->buffer->time_step;
-            long catchment_id = i->buffer->catchment_id;
+            std::string catchment_id = std::string(nexus_prefix + std::to_string(i->buffer->catchment_id));
             double flow = i->buffer->flow;
 
             // remove the dynamically allocated object

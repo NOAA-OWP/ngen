@@ -8,6 +8,7 @@
 #include <vector>
 
 #include <unordered_map>
+#include <string>
 
 
 /** This class representa a point nexus that can have both upstream and downstream connections to catments that are
@@ -23,17 +24,17 @@ class HY_PointHydroNexusRemote : public HY_PointHydroNexus
         /** This is map of catchment ids to MPI ranks it does not have to include any catchment that is local or any catchment that will not be
         * communicated with */
 
-        typedef std::unordered_map <long, long> catcment_location_map_t;
+        typedef std::unordered_map <std::string, long> catcment_location_map_t;
 
-        HY_PointHydroNexusRemote(int nexus_id_number, std::string nexus_id, int num_downstream, catcment_location_map_t loc_map);
+        HY_PointHydroNexusRemote(std::string nexus_id, Catchments receiving_catchments, catcment_location_map_t loc_map);
         virtual ~HY_PointHydroNexusRemote();
 
         /** get the request percentage of downstream flow through this nexus at timestep t. If the indicated catchment is not local a async send will be
             created. Will attempt to process all async recieves currently queued before processing flows*/
-        double get_downstream_flow(long catchment_id, time_step_t t, double percent_flow);
+        double get_downstream_flow(std::string catchment_id, time_step_t t, double percent_flow);
 
         /** add flow to this nexus for timestep t. If the indicated catchment is not local an async receive will be started*/
-        void add_upstream_flow(double val, long catchment_id, time_step_t t);
+        void add_upstream_flow(double val, std::string catchment_id, time_step_t t);
 
 
         int get_world_rank();
@@ -69,6 +70,8 @@ class HY_PointHydroNexusRemote : public HY_PointHydroNexus
 
         std::list<async_request> stored_recieves;
         std::list<async_request> stored_sends;
+
+        std::string nexus_prefix = "Nex-";
 
 };
 
