@@ -71,7 +71,7 @@ class HY_PointHydroNexusRemote : public HY_PointHydroNexus
         std::list<async_request> stored_recieves;
         std::list<async_request> stored_sends;
 
-        std::string nexus_prefix = "Nex-";
+        std::string nexus_prefix = "nex-";
 
 };
 
