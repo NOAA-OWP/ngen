@@ -49,15 +49,11 @@ The following must be present in the formulation/realization JSON config for all
 * `model_type_name`
   * string name for the particular backing model type
   * may not be utilized in all cases, but still required
-* `forcing_file`
-  * string path to the forcing data file for the catchment
-  * the `init_config` file below will likely reference this file also, and the two should properly correspond
-  * this is needed in here so the realization can directly access things implicit in the file, like times, time step amounts, and time step sizes
-* `uses_forcing_file`
-  * boolean indicating whether the backing BMI model is written to read input data from the forcing file (as opposed to receiving it via getters)
-* `init_config` 
+* `init_config`
   * the string path to the BMI initialization config file for the catchment
-* `main_output_variable` 
+* `uses_forcing_file`
+  * boolean indicating whether the backing BMI model is written to read input forcing data from a forcing file (as opposed to receiving it via getters calls made by the framework)
+* `main_output_variable`
   * the string value of the primary output variable
   * this is the value that returned by the realization's `get_response()`
   * the string must match an item return by the relevant variant of the BMI `get_output_var_names()` function
@@ -65,6 +61,11 @@ The following must be present in the formulation/realization JSON config for all
 ### Semi-Optional Parameters
 There are some special config parameters which are not *always* required in BMI formulation configs, but are in some circumstances.  Thus, they do not strictly behave exactly as *Required* params do in the configuration, but they should be thought of as required (and will trigger errors when missing) in certain situations.
 
+* `forcing_file`
+  * string path to the forcing data file for the catchment
+  * required whenever a model needs to read its own forcings directly
+    * this is set/indicated using `uses_forcing_file` as described above
+  * the BMI model's initialization config (i.e., `init_config` above) may define an analogous property, and the two should properly correspond in such cases
 * `library_file`
   * Path to the library file for the BMI library
   * Required for C-based BMI model formulations
