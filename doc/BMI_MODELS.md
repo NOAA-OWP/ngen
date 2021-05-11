@@ -2,22 +2,22 @@
 
 * [Summary](#summary)
 * [Formulation Config](#formulation-config)
-    * [Required Parameters](#required-parameters)
-    * [Semi-Optional Parameters](#semi-optional-parameters)
-    * [Optional Parameters](#optional-parameters)
+  * [Required Parameters](#required-parameters)
+  * [Semi-Optional Parameters](#semi-optional-parameters)
+  * [Optional Parameters](#optional-parameters)
 * [BMI Models Written in C](#bmi-models-written-in-c)
-    * [BMI C Model As Shared Library](#bmi-c-shared-library)
-    * [Example: CFE Shared Library](#bmi-c-cfe-example)
-    * [BMI C Caveats](#bmi-c-caveats)
+  * [BMI C Model As Shared Library](#bmi-c-shared-library)
+  * [Example: CFE Shared Library](#bmi-c-cfe-example)
+  * [BMI C Caveats](#bmi-c-caveats)
 
 ## Summary
 
 The basic outline of steps needed to work with an external BMI model is:
-  * Configure the main formulation/realization config properly for the catchments that will use the generalized BMI realization(s) 
-  * Make sure all the necessary model-specific BMI initialization files are valid and in place
-  * Take appropriate steps to make model source files accessible as needed (e.g., making sure shared library files are in a known location)
-  * Be aware of any model-language-specific caveats 
-    * [Caveats for C language models](#bmi-c-caveats)
+* Configure the main formulation/realization config properly for the catchments that will use the generalized BMI realization(s)
+* Make sure all the necessary model-specific BMI initialization files are valid and in place
+* Take appropriate steps to make model source files accessible as needed (e.g., making sure shared library files are in a known location)
+* Be aware of any model-language-specific caveats
+  * [Caveats for C language models](#bmi-c-caveats)
 
 [//]: # (TODO: what does the realization config need to look like?)
 
@@ -36,12 +36,12 @@ The catchment entry in the formulation/realization config must be set to used th
                }
            }
       ...
-  
+
 Valid name values for the currently implemented BMI formulation types are:
 
 * `bmi_c`
 
-Because of the generalization of the interface to the model, the required and optional parameters for all the BMI formulation types are the same.  
+Because of the generalization of the interface to the model, the required and optional parameters for all the BMI formulation types are the same.
 
 ### Required Parameters
 The following must be present in the formulation/realization JSON config for all catchment entries using the BMI formulation type:
@@ -102,15 +102,15 @@ There are some special config parameters which are not *always* required in BMI 
 
 For **C** models, the model must be packaged as a pre-compiled shared library.  A CMake cache variables can be configured for controlling whether the framework functionality for working with BMI C libraries is activated.  This is found in, or must be added to, the _CMakeCache.txt_ file in the build system directory:
 
-* `BMI_C_LIB_ACTIVE` 
-  * type: `BOOL` 
+* `BMI_C_LIB_ACTIVE`
+  * type: `BOOL`
   * must be set to `ON` (or equivalent in CMake) for BMI C shared library functionality to be compiled and active
-  
+
 The CMake build system may need to be [regenerated](BUILDS_AND_CMAKE.md#regenerating) after changing these settings.
 
-See the CMake documentation on the *[set](https://cmake.org/cmake/help/latest/command/set.html)* function or [variables](https://cmake.org/cmake/help/latest/manual/cmake-language.7.html#cmake-language-variables) for more information on working with CMake variables. 
+See the CMake documentation on the *[set](https://cmake.org/cmake/help/latest/command/set.html)* function or [variables](https://cmake.org/cmake/help/latest/manual/cmake-language.7.html#cmake-language-variables) for more information on working with CMake variables.
 
-When CMake is able to find the library for the given name, it will automatically set up [the dependent, internal, static library](../src/realizations/catchment/CMakeLists.txt) to dynamically link to the external shared library at runtime.  
+When CMake is able to find the library for the given name, it will automatically set up [the dependent, internal, static library](../src/realizations/catchment/CMakeLists.txt) to dynamically link to the external shared library at runtime.
 
 #### Dynamic Loading
 
@@ -127,27 +127,27 @@ An example implementation for an appropriate BMI model as a **C** shared library
 
 #### BMI C Activate/Deactivation Required in CMake Build
 
-BMI C functionality will not work (i.e., will not be compiled or executable) unless set to be active in the CMake build.  This requires setting the `BMI_C_LIB_ACTIVE` CMake cache variable to `ON` or `TRUE` (or equivalent).  
+BMI C functionality will not work (i.e., will not be compiled or executable) unless set to be active in the CMake build.  This requires setting the `BMI_C_LIB_ACTIVE` CMake cache variable to `ON` or `TRUE` (or equivalent).
 
 Conversely, built executables (and perhaps certain build targets) may not function as expected if `BMI_C_LIB_ACTIVE` is `ON` but the configured shared library is not available.
 
 #### Additional Bootstrapping Function Needed
 
-BMI models written in **C** should provide one extra function in order to be compatible with NextGen: 
-    
+BMI models written in **C** should provide one extra function in order to be compatible with NextGen:
+
     Bmi* register_bmi(Bmi *model);
 
 This function must set the member pointers of the passed `Bmi` struct param to the appropriate analogous functions.  E.g., the `initialize` member of the the model, defined fully as:
- 
+
     int (*initialize)(struct Bmi *self, const char *config_file)
- 
- needs to be set to the function for initializing models.  This will probably be something like:
- 
+
+needs to be set to the function for initializing models.  This will probably be something like:
+
     static int Initialize (Bmi *self, const char *file)
 
 Examples for how to write this registration function can be found in the local CFE BMI implementation, specifically in [extern/cfe/src/bmi_cfe.c](../extern/cfe/src/bmi_cfe.c), or in the official CSDMS *bmi-example-c* repo near the bottom of the [bmi-heat.c](https://github.com/csdms/bmi-example-c/blob/master/heat/bmi_heat.c) file.
 
 ##### Why?
-This is needed both due to the design of the **C** language variant of BMI, and the limitations of C regarding duplication of function names.  The latter becomes significant when more than one BMI C library is used at once.  Even if that is actively the case, NextGen is designed to accomodate that case, so this requirement is in place.  
+This is needed both due to the design of the **C** language variant of BMI, and the limitations of C regarding duplication of function names.  The latter becomes significant when more than one BMI C library is used at once.  Even if that is actively the case, NextGen is designed to accomodate that case, so this requirement is in place.
 
 Future versions of NextGen will provide alternative ways to declaratively configure function names from a BMI C library so they can individually be dynamically loaded.
