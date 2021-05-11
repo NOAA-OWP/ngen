@@ -6,13 +6,13 @@
 
 // Define the configuration parameter names used in the realization/formulation config JSON file
 // First the required:
-#define BMI_REALIZATION_CFG_PARAM_REQ__FORCING_FILE "forcing_file"
 #define BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG "init_config"
 #define BMI_REALIZATION_CFG_PARAM_REQ__MAIN_OUT_VAR "main_output_variable"
 #define BMI_REALIZATION_CFG_PARAM_REQ__MODEL_TYPE "model_type_name"
 #define BMI_REALIZATION_CFG_PARAM_REQ__USES_FORCINGS "uses_forcing_file"
 
 // Then the optional
+#define BMI_REALIZATION_CFG_PARAM_OPT__FORCING_FILE "forcing_file"
 #define BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES "variables_names_map"
 #define BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS "output_variables"
 #define BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS "output_header_fields"
@@ -202,11 +202,16 @@ namespace realization {
             // Required parameters first
             set_bmi_init_config(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG).as_string());
             set_bmi_main_output_var(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__MAIN_OUT_VAR).as_string());
-            set_forcing_file_path(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__FORCING_FILE).as_string());
             set_model_type_name(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__MODEL_TYPE).as_string());
             set_bmi_using_forcing_file(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__USES_FORCINGS).as_boolean());
 
             // Then optional ...
+
+            // Note that this must be present if bmi_using_forcing_file is true
+            if (properties.find(BMI_REALIZATION_CFG_PARAM_OPT__FORCING_FILE) != properties.end())
+                set_forcing_file_path(properties.at(BMI_REALIZATION_CFG_PARAM_OPT__FORCING_FILE).as_string());
+            else if (!is_bmi_using_forcing_file())
+                throw std::runtime_error("Can't create BMI formulation: using_forcing_file true but no file path set");
 
             if (properties.find(BMI_REALIZATION_CFG_PARAM_OPT__ALLOW_EXCEED_END) != properties.end()) {
                 set_allow_model_exceed_end_time(
@@ -416,6 +421,7 @@ namespace realization {
         std::string model_type_name;
 
         std::vector<std::string> OPTIONAL_PARAMETERS = {
+                BMI_REALIZATION_CFG_PARAM_OPT__FORCING_FILE,
                 BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES,
                 BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS,
                 BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS,
@@ -424,7 +430,6 @@ namespace realization {
                 BMI_REALIZATION_CFG_PARAM_OPT__LIB_FILE
         };
         std::vector<std::string> REQUIRED_PARAMETERS = {
-                BMI_REALIZATION_CFG_PARAM_REQ__FORCING_FILE,
                 BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG,
                 BMI_REALIZATION_CFG_PARAM_REQ__MAIN_OUT_VAR,
                 BMI_REALIZATION_CFG_PARAM_REQ__MODEL_TYPE,
