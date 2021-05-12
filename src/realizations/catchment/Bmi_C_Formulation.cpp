@@ -290,36 +290,61 @@ void Bmi_C_Formulation::set_model_inputs_prior_to_update(const double &model_ini
     std::vector<std::string> bmi_var_units(in_var_names.size());
     // We may need to sum contributions from multiple time steps before setting, so do that with this (indexes align)
     std::vector<double> variable_values(in_var_names.size(), 0.0);
-    // Right now, the only known field names are the standard names for forcings.
-    std::shared_ptr<std::set<std::string>> known_field_names = Forcing::get_forcing_field_names();
+    // Also keep track of which variables are forcings for later
+    std::vector<bool> is_variable_forcing(in_var_names.size());
+    std::shared_ptr<std::set<std::string>> known_forcing_fields = Forcing::get_forcing_field_names();
+
+    // Right now, the only known field names are:
+    //  1. the standard names for forcings, and
+    //  2. the standard ET variable
 
     // First get field name mappings and associated model-side units
-    for (auto & in_var_name : in_var_names) {
+    for (int i = 0; i < in_var_names.size(); ++i) {
+        std::string in_var_name = in_var_names[i];
         std_name = get_config_mapped_variable_name(in_var_name);
         // Also, recognize some external CSDMS standard names, whether from model or configured mapping ...
         // TODO: right now handle just rainfall, but in the future, support more possibly
         if (std_name == CSDMS_STD_NAME_RAIN_RATE) {
             std_name = AORC_FIELD_NAME_PRECIP_RATE;
         }
-        // With any mapping translation done, if std_name is not in set of standard internal names, that is a problem
-        if (known_field_names->find(std_name) == known_field_names->end()) {
+
+        // With any mapping translation done, check that std_name is some standard internal name
+        // Right now this must be either the ET input variable ...
+        if (std_name == NGEN_STD_NAME_ET_FOR_TIME_STEP) {
+            is_variable_forcing[i] = false;
+            standard_names[i] = std_name;
+            bmi_var_units[i] = get_bmi_model()->GetVarUnits(in_var_name);
+            double et_val_m = calc_et();
+            // TODO: improve how this is handled, and actually support conversions
+            if (et_val_m != 0.0 && bmi_var_units[i] != "m" && bmi_var_units[i] != "meters") {
+                throw std::runtime_error("Unsupported ET unit type for BMI model requiring provided ET value");
+            }
+            variable_values[i] = et_val_m;
+        }
+        // ... or a known forcing field (which we
+        else if (known_forcing_fields->find(std_name) != known_forcing_fields->end()) {
+            is_variable_forcing[i] = true;
+            standard_names[i] = std_name;
+            bmi_var_units[i] = get_bmi_model()->GetVarUnits(in_var_name);
+            // Wait to calculate all the forcing values at once below with specialized function
+        }
+        // ... and if it is none of those, that is a problem ...
+        else {
             throw std::runtime_error(
                     "Unrecognized BMI input variable '" + std_name + "' cannot be set in '" + get_model_type_name()
                     + "' as it is not a preset standard and not mapped to such a field name via configuration.");
         }
+
         // FIXME: later perhaps handle input variables that are themselves arrays, but for now do not support
         if (get_bmi_model()->GetVarItemsize(in_var_name) != get_bmi_model()->GetVarNbytes(in_var_name)) {
             throw std::runtime_error(
                     "BMI input variable '" + in_var_name + "' is an array, which is not currently supported");
         }
-        // Assign associated standard name and model-side unit string to those collections at corresponding index
-        standard_names.push_back(std_name);
-        bmi_var_units.push_back(get_bmi_model()->GetVarUnits(in_var_name));
     }
     // Run separate (hopefully inline) function for getting input values for each variable, potentially by summing
-    // proportionaly contributions from multiple forcing time steps if model time step doesn't align
-    get_forcing_data_ts_contributions(t_delta, model_initial_time, standard_names, bmi_var_units, variable_values);
-
+    // proportionally contributions from multiple forcing time steps if model time step doesn't align
+    get_forcing_data_ts_contributions(t_delta, model_initial_time, standard_names, is_variable_forcing, bmi_var_units,
+                                      variable_values);
     // Finally, set the model input values
     for (int i = 0; i < in_var_names.size(); ++i) {
         get_bmi_model()->SetValue(in_var_names[i], (void*)&(variable_values[i]));
