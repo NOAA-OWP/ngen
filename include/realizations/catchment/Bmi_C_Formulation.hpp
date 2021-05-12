@@ -168,7 +168,7 @@ namespace realization {
          * @param var_name
          * @return
          */
-        double get_var_value_as_double(const std::string& var_name);
+        double get_var_value_as_double(const std::string& var_name) override;
 
         /**
          * Get value for some BMI model variable at a specific index.
@@ -188,7 +188,7 @@ namespace realization {
          * @param var_name
          * @return
          */
-        double get_var_value_as_double(const int& index, const std::string& var_name);
+        double get_var_value_as_double(const int& index, const std::string& var_name) override;
 
         /**
          * Test whether backing model has run BMI ``Initialize``.
