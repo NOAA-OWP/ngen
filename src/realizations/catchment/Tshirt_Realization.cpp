@@ -70,7 +70,7 @@ Tshirt_Realization::Tshirt_Realization(
                                            nash_storage, t) {
 
 }
-double Tshirt_Realization::calc_et(double soil_m) {
+double Tshirt_Realization::calc_et() {
     return 0;
 }
 
