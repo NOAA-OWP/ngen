@@ -62,7 +62,7 @@ namespace realization {
 
             virtual ~Tshirt_Realization(){};
 
-            double calc_et(double soil_m) override;
+            double calc_et() override;
 
             /**
              * Execute the backing model formulation for the given time step, where it is of the specified size, and
