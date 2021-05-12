@@ -62,7 +62,7 @@ namespace realization {
          * @param soil_m
          * @return ``0``
          */
-        double calc_et(double soil_m) override {
+        double calc_et() override {
             return 0;
         }
 
