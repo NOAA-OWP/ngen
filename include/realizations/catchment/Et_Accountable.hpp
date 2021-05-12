@@ -16,7 +16,7 @@ namespace realization {
 
         ~Et_Accountable() {}
 
-        virtual double calc_et(double soil_m) = 0;
+        virtual double calc_et() = 0;
 
         /**
          * Get a reference to the appropriate object holding ET parameters for use when executing the model
