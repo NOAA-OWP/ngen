@@ -86,7 +86,7 @@ class Simple_Lumped_Model_Realization
          */
         double get_response(time_step_t t, time_step_t dt) override;
 
-        double calc_et(double soil_m) override;
+        double calc_et() override;
 
         virtual void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr);
         virtual void create_formulation(geojson::PropertyMap properties);

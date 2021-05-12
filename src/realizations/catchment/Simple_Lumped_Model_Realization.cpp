@@ -82,7 +82,7 @@ void Simple_Lumped_Model_Realization::add_time(time_t t, double n)
     }
 }
 
-double Simple_Lumped_Model_Realization::calc_et(double soil_m)
+double Simple_Lumped_Model_Realization::calc_et()
 {
     return 0.0;
 }
