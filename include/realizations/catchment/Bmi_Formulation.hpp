@@ -60,13 +60,46 @@ namespace realization {
         virtual ~Bmi_Formulation() {};
 
         /**
-         * Return ``0``, as (for now) BMI types assume backing models handle ET internally.
+         * Perform ET calculation, getting input params from instance's backing model as needed.
          *
-         * @param soil_m
-         * @return ``0``
+         * @return Calculated ET value, or ``0.0`` if required parameters for calculation could not be obtained.
          */
         double calc_et() override {
-            return 0;
+            if (!is_et_params_set()) {
+                throw std::runtime_error("Can't calculate ET for BMI model without ET params being set");
+            }
+            std::string et_storage_var;
+            if (is_bmi_output_variable(NGEN_STD_NAME_ET_SOIL_STORAGE)) {
+                et_storage_var = NGEN_STD_NAME_ET_SOIL_STORAGE;
+            }
+            else {
+                for (std::string &s : get_bmi_model()->GetOutputVarNames()) {
+                    if (get_config_mapped_variable_name(s) == NGEN_STD_NAME_ET_SOIL_STORAGE) {
+                        et_storage_var = s;
+                    }
+                }
+            }
+            // Without the parameter for storage, we can't call the ET calculation function, so just return 0
+            if (et_storage_var.empty()) {
+                return 0.0;
+            }
+            double soil_storage = get_var_value_as_double(et_storage_var);
+            // For 0.0 values, we don't really care about units
+            if (soil_storage == 0.0) {
+                return soil_storage;
+            }
+            std::string storage_units = get_bmi_model()->GetVarUnits(et_storage_var);
+            // TODO: add something that can convert units instead of this exception
+            if (storage_units != "m" && storage_units != "meters") {
+                throw std::runtime_error("Unsupported ET input storage unit type for BMI model requiring provided ET value");
+            }
+
+            std::shared_ptr<pdm03_struct> pdm = get_et_params_ptr();
+            // TODO: confirm that this is correct, given final return value substracts same thing (example from Hymod.h)
+            pdm->final_height_reservoir = soil_storage;
+            pdm03_wrapper(pdm.get());
+
+            return pdm->final_height_reservoir - soil_storage;
         }
 
         void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr) override {
