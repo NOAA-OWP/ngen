@@ -44,10 +44,12 @@ protected:
     static void call_friend_get_forcing_data_ts_contributions(Bmi_C_Formulation& formulation,
                                                               time_step_t t_delta, const double &model_initial_time,
                                                               const std::vector<std::string> &params,
+                                                              const std::vector<bool> &is_forcing_param,
                                                               const std::vector<std::string> &param_units,
                                                               std::vector<double> &contributions)
     {
-        formulation.get_forcing_data_ts_contributions(t_delta, model_initial_time, params, param_units, contributions);
+        formulation.get_forcing_data_ts_contributions(t_delta, model_initial_time, params, is_forcing_param,
+                                                      param_units, contributions);
     }
 
     static std::string get_friend_bmi_init_config(const Bmi_C_Formulation& formulation) {
@@ -391,14 +393,15 @@ TEST_F(Bmi_C_Formulation_Test, get_forcing_data_ts_contributions_0_a) {
     ASSERT_EQ(model_time, 0.0);
 
     std::vector<std::string> param_names = {param_name};
+    std::vector<bool> is_forcing_param = {true};
     std::vector<std::string> param_units = {"m"};
     std::vector<double> summed_contributions = {0.0};
 
     ASSERT_EQ(get_friend_forcing_time_step_size(formulation), (time_t)3600);
     time_step_t t_delta = 3600;
 
-    call_friend_get_forcing_data_ts_contributions(formulation, t_delta, model_time, param_names, param_units,
-                                                  summed_contributions);
+    call_friend_get_forcing_data_ts_contributions(formulation, t_delta, model_time, param_names, is_forcing_param,
+                                                  param_units, summed_contributions);
     ASSERT_EQ(summed_contributions[0], forcing_ts_param_value);
 }
 
@@ -429,14 +432,15 @@ TEST_F(Bmi_C_Formulation_Test, get_forcing_data_ts_contributions_0_b) {
     ASSERT_EQ(progressed_seconds, model_adapter->convert_model_time_to_seconds(model_time));
 
     std::vector<std::string> param_names = {param_name};
+    std::vector<bool> is_forcing_param = {true};
     std::vector<std::string> param_units = {"m"};
     std::vector<double> summed_contributions = {0.0};
 
     ASSERT_EQ(get_friend_forcing_time_step_size(formulation), (time_t)3600);
     time_step_t t_delta = 3600;
 
-    call_friend_get_forcing_data_ts_contributions(formulation, t_delta, model_time, param_names, param_units,
-                                                  summed_contributions);
+    call_friend_get_forcing_data_ts_contributions(formulation, t_delta, model_time, param_names, is_forcing_param,
+                                                  param_units, summed_contributions);
     ASSERT_EQ(summed_contributions[0], forcing_ts_param_value);
 }
 
@@ -471,14 +475,15 @@ TEST_F(Bmi_C_Formulation_Test, get_forcing_data_ts_contributions_1_a) {
     ASSERT_EQ(progressed_seconds, model_adapter->convert_model_time_to_seconds(model_time));
 
     std::vector<std::string> param_names = {param_name};
+    std::vector<bool> is_forcing_param = {true};
     std::vector<std::string> param_units = {"m"};
     std::vector<double> summed_contributions = {0.0};
 
     ASSERT_EQ(get_friend_forcing_time_step_size(formulation), (time_t)3600);
     time_step_t t_delta = 1800;
 
-    call_friend_get_forcing_data_ts_contributions(formulation, t_delta, model_time, param_names, param_units,
-                                                  summed_contributions);
+    call_friend_get_forcing_data_ts_contributions(formulation, t_delta, model_time, param_names, is_forcing_param,
+                                                  param_units, summed_contributions);
     double forcing_ts_param_value_2 = get_friend_forcing_param_value(formulation, param_name);
 
     ASSERT_EQ(summed_contributions[0], forcing_ts_param_value / 2.0);
@@ -515,14 +520,15 @@ TEST_F(Bmi_C_Formulation_Test, get_forcing_data_ts_contributions_1_b) {
     ASSERT_EQ(progressed_seconds, model_adapter->convert_model_time_to_seconds(model_time));
 
     std::vector<std::string> param_names = {param_name};
+    std::vector<bool> is_forcing_param = {true};
     std::vector<std::string> param_units = {"m"};
     std::vector<double> summed_contributions = {0.0};
 
     ASSERT_EQ(get_friend_forcing_time_step_size(formulation), (time_t)3600);
     time_step_t t_delta = 3600 + 1800;
 
-    call_friend_get_forcing_data_ts_contributions(formulation, t_delta, model_time, param_names, param_units,
-                                                  summed_contributions);
+    call_friend_get_forcing_data_ts_contributions(formulation, t_delta, model_time, param_names, is_forcing_param,
+                                                  param_units, summed_contributions);
     double forcing_ts_param_value_2 = get_friend_forcing_param_value(formulation, param_name);
 
     // Assert that these are actually values from two different forcing time steps.
