@@ -116,10 +116,9 @@ Tshirt_C_Realization::~Tshirt_C_Realization()
 /**
  * Return ``0``, as (for now) this type does not otherwise include ET within its calculations.
  *
- * @param soil_m
  * @return ``0``
  */
-double Tshirt_C_Realization::calc_et(double soil_m) {
+double Tshirt_C_Realization::calc_et() {
     return 0;
 }
 

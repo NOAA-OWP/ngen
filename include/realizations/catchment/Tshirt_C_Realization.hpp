@@ -138,10 +138,9 @@ namespace realization {
         /**
          * Return ``0``, as (for now) this type does not otherwise include ET within its calculations.
          *
-         * @param soil_m
          * @return ``0``
          */
-        double calc_et(double soil_m) override;
+        double calc_et() override;
 
         void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr) override;
         void create_formulation(geojson::PropertyMap properties) override;
