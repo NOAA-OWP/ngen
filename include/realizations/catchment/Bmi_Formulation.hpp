@@ -101,6 +101,10 @@ namespace realization {
                 return model_var_name;
         }
 
+        virtual inline bool is_bmi_input_variable(const std::string &var_name) = 0;
+
+        virtual inline bool is_bmi_output_variable(const std::string &var_name) = 0;
+
     protected:
 
         /**
