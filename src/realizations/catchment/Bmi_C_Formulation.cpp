@@ -252,6 +252,16 @@ double Bmi_C_Formulation::get_var_value_as_double(const int& index, const std::s
                              " as double: no logic for converting variable type " + type);
 }
 
+bool Bmi_C_Formulation::is_bmi_input_variable(const std::string &var_name) {
+    const std::vector<std::string> names = get_bmi_model()->GetInputVarNames();
+    return std::any_of(names.cbegin(), names.cend(), [var_name](const std::string &s){ return var_name == s; });
+}
+
+bool Bmi_C_Formulation::is_bmi_output_variable(const string &var_name) {
+    const std::vector<std::string> names = get_bmi_model()->GetOutputVarNames();
+    return std::any_of(names.cbegin(), names.cend(), [var_name](const std::string &s){ return var_name == s; });
+}
+
 bool Bmi_C_Formulation::is_model_initialized() {
     return get_bmi_model()->is_model_initialized();
 }
