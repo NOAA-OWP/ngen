@@ -21,7 +21,10 @@
 #define BMI_REALIZATION_CFG_PARAM_OPT__LIB_FILE "library_file"
 
 // Supported Standard Names for BMI variables
-//
+// This is needed from a BMI model as an input for the calculation of ET
+#define NGEN_STD_NAME_ET_SOIL_STORAGE "et_soil_storage_m"
+// This is needed to provide a calculated ET value back to a BMI model
+#define NGEN_STD_NAME_ET_FOR_TIME_STEP "et_m"
 // Taken from the CSDMS Standard Names list
 // TODO: need to add these in for anything BMI model input or output variables we need to know how to recognize
 #define CSDMS_STD_NAME_RAIN_RATE "atmosphere_water__rainfall_volume_flux"
