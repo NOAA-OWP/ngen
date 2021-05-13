@@ -196,6 +196,7 @@ TEST_P(Network_Test1, TestNetworkTopologicalIndex)
     ++network_it;
   }
 }
+
 /*  A nice example of how to disable a test
 TEST_P(Network_Test1, DISABLED_TestInit1)
 {
@@ -248,4 +249,46 @@ TEST_F(Network_Test2, test_get_destination_ids2)
 
   ASSERT_TRUE( ids.size() == 1);
   ASSERT_FALSE( std::find(ids.begin(), ids.end(), "nex-1") == ids.end() );
+}
+
+TEST_F(Network_Test2, test_catchments_filter)
+{
+  //This order IS IMPORTANT, it should be the topological order of catchments.  Note that the order isn't
+  //guaranteed on the leafs, the only guarantee for this test is that cat-2 comes after all the other catchments...
+  std::vector<std::string> expected_topo_order = {"cat-4",  "cat-3",  "cat-1", "cat-0", "cat-2"};
+  auto expected_it = expected_topo_order.begin();
+  auto catchments = n.filter("cat");
+  auto catchments_it = catchments.begin();
+  for(const auto& id : n) std::cout<<"topo_id: "<<n.get_id(id)<<std::endl;
+  for(const auto& id : n.filter("cat")) std::cout<<"id: "<<id<<std::endl;
+  while( expected_it != expected_topo_order.end() && catchments_it != catchments.end() )
+  {
+    std::cout<<*expected_it<<" == "<<*catchments_it<<std::endl;
+    ASSERT_TRUE( *expected_it == *catchments_it );
+    ++expected_it;
+    ++catchments_it;
+  }
+}
+
+TEST_F(Network_Test2, test_nexus_filter)
+{
+  //This order IS IMPORTANT, it should be the topological order of nexus.  Note that the order isn't
+  //guaranteed on the leafs...
+  std::vector<std::string> expected_topo_order = {"nex-0", "nex-1"};
+  auto expected_it = expected_topo_order.begin();
+  auto nexuses = n.filter("nex");
+  auto nexus_it = nexuses.begin();
+    while( expected_it != expected_topo_order.end() && nexus_it != nexuses.end() )
+  {
+      ASSERT_TRUE( *expected_it == *nexus_it );
+    ++expected_it;
+    ++nexus_it;
+  }
+}
+
+TEST_F(Network_Test2, test_bad_filter)
+{
+  //Test a bad prefix gives no results
+  auto results = n.filter("fs");
+  ASSERT_TRUE( results.begin() == results.end() );
 }
