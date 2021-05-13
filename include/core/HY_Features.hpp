@@ -28,6 +28,18 @@ namespace hy_features {
         }
         inline auto catchments(){return network.filter("cat");}
         inline auto nexuses(){return network.filter("nex");}
+        inline std::vector<std::shared_ptr<HY_HydroNexus>> destination_nexuses(std::string  id)
+        {
+          std::vector<std::shared_ptr<HY_HydroNexus>> downstream;
+          if( _catchments.find(id) != _catchments.end())
+          {
+            for(const auto& nex_id : _catchments[id]->get_outflow_nexuses())
+            {
+              downstream.push_back(_nexuses[nex_id]);
+            }
+          }
+          return downstream;
+        }
 
         virtual ~HY_Features(){}
 
