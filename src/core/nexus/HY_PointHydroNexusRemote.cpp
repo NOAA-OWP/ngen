@@ -48,11 +48,13 @@ HY_PointHydroNexusRemote::~HY_PointHydroNexusRemote()
 
     while ( (stored_recieves.size() > 0 || stored_sends.size() > 0) && !mpi_finalized )
     {
+        //std::cerr << "Neuxs with rank " << id << " has pending communications\n";
+
         process_communications();
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
 
-        wait_time += 500;
+        wait_time += 1;
 
         if ( wait_time > 120000 )
         {
