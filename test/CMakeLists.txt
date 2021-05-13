@@ -29,6 +29,7 @@ macro(add_automated_test TESTNAME)
             NGen::core
             NGen::core_catchment
             NGen::core_catchment_giuh
+            NGen::core_nexus
             NGen::geojson
             NGen::models_tshirt
             NGen::kernels_reservoir
