@@ -19,11 +19,11 @@
 #endif
 
 namespace realization {
-    typedef std::shared_ptr<Formulation> (*constructor)(std::string, forcing_params, utils::StreamHandler);
+    typedef std::shared_ptr<Catchment_Formulation> (*constructor)(std::string, forcing_params, utils::StreamHandler);
 
     template<class T>
     static constructor create_formulation_constructor() {
-        return [](std::string id, forcing_params forcing_config, utils::StreamHandler output_stream) -> std::shared_ptr<Formulation>{
+        return [](std::string id, forcing_params forcing_config, utils::StreamHandler output_stream) -> std::shared_ptr<Catchment_Formulation>{
             return std::make_shared<T>(id, forcing_config, output_stream);
         };
     };
@@ -45,7 +45,7 @@ namespace realization {
         return formulations.count(formulation_type) > 0;
     }
 
-    static std::shared_ptr<Formulation> construct_formulation(
+    static std::shared_ptr<Catchment_Formulation> construct_formulation(
         std::string formulation_type,
         std::string identifier,
         forcing_params &forcing_config,
