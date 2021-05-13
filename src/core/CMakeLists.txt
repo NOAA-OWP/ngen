@@ -6,8 +6,17 @@ dynamic_sourced_cxx_library(core "${CMAKE_CURRENT_SOURCE_DIR}")
 add_library(NGen::core ALIAS core)
 
 target_include_directories(core PUBLIC
+        ${PROJECT_SOURCE_DIR}/include
+        ${PROJECT_SOURCE_DIR}/include/simulation_time
         ${PROJECT_SOURCE_DIR}/include/core
         ${PROJECT_SOURCE_DIR}/include/core/catchment
+        ${PROJECT_SOURCE_DIR}/include/core/catchment/giuh
+        ${PROJECT_SOURCE_DIR}/include/core/nexus
+        ${PROJECT_SOURCE_DIR}/include/core/hydrolocation
+        ${PROJECT_SOURCE_DIR}/include/realizations/catchment
+        ${PROJECT_SOURCE_DIR}/models/kernels
+        ${PROJECT_SOURCE_DIR}/models/
+        ${PROJECT_SOURCE_DIR}/models/tshirt/include
         ${PROJECT_SOURCE_DIR}/include/geojson
         ${PROJECT_SOURCE_DIR}/include/forcing
         ${PROJECT_SOURCE_DIR}/include/utilities
