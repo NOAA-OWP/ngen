@@ -36,6 +36,9 @@ class HY_PointHydroNexusRemote : public HY_PointHydroNexus
         /** add flow to this nexus for timestep t. If the indicated catchment is not local an async receive will be started*/
         void add_upstream_flow(double val, std::string catchment_id, time_step_t t);
 
+        /** extract a numeric id from the catchment id for use as a mpi tag */
+        static long extract(std::string s) {  return std::stoi(s.substr(4)); }
+
 
         int get_world_rank();
 
