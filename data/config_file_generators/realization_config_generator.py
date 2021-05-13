@@ -19,36 +19,17 @@ import random
 import json
 
 #Set the names of the formulations
-global_formulation = "tshirt_c"
+global_formulation = "bmi_c"
 formulation_1 = "top_model"
 
 #Set params
 global_params = {
-  "maxsmc": 0.439,
-  "wltsmc": 0.066,
-  "satdk": 0.00000338,
-  "satpsi": 0.355,
-  "slope": 1.0,
-  "scaled_distribution_fn_shape_parameter": 4.05,
-  "multiplier": 0.0,
-  "alpha_fc": 0.33,
-  "Klf": 0.01,
-  "Kn": 0.03,
-  "nash_n": 2,
-  "Cgw": 0.01,
-  "expon": 6.0,
-  "max_groundwater_storage_meters": 1.0,
-  "nash_storage": [
-    0.0,
-    0.0
-  ],
-  "soil_storage_percentage": 0.667,
-  "groundwater_storage_percentage": 0.5,
-  "timestep": 3600,
-  "giuh": {
-    "giuh_path": "./test/data/giuh/GIUH.json",
-    "crosswalk_path": "./data/crosswalk.json"
-  }
+  "model_type_name": "bmi_c_cfe",
+  "library_file": "./extern/cfe/cmake_cfe_lib/libcfemodel.so",
+  "forcing_file": "./data/forcing/cat-27_2015-12-01 00_00_00_2015-12-30 23_00_00.csv",
+  "init_config": "./data/bmi/c/cfe/cat_27_bmi_config.txt",
+  "main_output_variable": "Q_OUT",
+  "uses_forcing_file": True
 }
 
 formulation_1_params = {}
