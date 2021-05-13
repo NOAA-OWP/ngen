@@ -40,6 +40,29 @@ namespace hy_features {
           }
           return downstream;
         }
+        void validate_dendridic()
+        {
+          for(const auto& id : catchments())
+          {
+              auto downstream = network.get_destination_ids(id);
+              if(downstream.size() > 1)
+              {
+                std::cerr << "Catchment " << id << " has more than one downstream connection." << std::endl;
+                std::cerr << "Downstreams are: ";
+                for(const auto& id : downstream){
+                  std::cerr <<id<<" ";
+                }
+                std::cerr << std::endl;
+                assert( false );
+              }
+              else if (downstream.size() == 0)
+              {
+                std::cerr << "Catchment " << id << " has 0 downstream connections, must have 1." << std::endl;
+                assert( false );
+              }
+          }
+          std::cout<<"Catchment topology is dendridic."<<std::endl;
+        }
 
         virtual ~HY_Features(){}
 
