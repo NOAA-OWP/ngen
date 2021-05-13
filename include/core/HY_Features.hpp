@@ -4,16 +4,21 @@
 #include <unordered_map>
 
 #include <HY_Catchment.hpp>
+#include <HY_HydroNexus.hpp>
 #include <network.hpp>
+#include <Formulation_Manager.hpp>
 
 namespace hy_features {
 
+
+
     class HY_Features {
+      using Formulation_Manager = realization::Formulation_Manager;
       public:
         HY_Features() {}
-        HY_Features( geojson::GeoJSON fabric );
-        HY_Features( network::Network network);
-        HY_Features( geojson::GeoJSON catchments, geojson::GeoJSON nexuses, std::string* link_key);
+        HY_Features( geojson::GeoJSON fabric, std::shared_ptr<Formulation_Manager> formulations );
+        HY_Features( network::Network network, std::shared_ptr<Formulation_Manager> formulations);
+        HY_Features( geojson::GeoJSON catchments, std::string* link_key, std::shared_ptr<Formulation_Manager> formulations);
         std::shared_ptr<HY_CatchmentRealization> catchment_at(std::string id)
         {
           if( _catchments.find(id) != _catchments.end() )
@@ -69,9 +74,10 @@ namespace hy_features {
       protected:
 
       private:
-        std::unordered_map<std::string, std::shared_ptr<HY_Catchment>> catchments;
+        std::unordered_map<std::string, std::shared_ptr<HY_Catchment>> _catchments;
+        std::unordered_map<std::string, std::shared_ptr<HY_HydroNexus>> _nexuses;
         network::Network network;
-
+        std::shared_ptr<Formulation_Manager> formulations;
 
     };
 }
