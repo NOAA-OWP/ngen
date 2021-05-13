@@ -85,10 +85,10 @@ namespace utils
 
             /** stream write operator that allows a StreamHandler to be used as a stream object */
 
-            template<class DataType> DataType& operator<<(const DataType& val)
+            template<class DataType> std::ostream& operator<<(const DataType& val)
             {
                 put(val);
-                return *this;
+                return *output_stream;
             }
 
         protected:
