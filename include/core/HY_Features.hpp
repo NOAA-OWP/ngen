@@ -26,6 +26,8 @@ namespace hy_features {
             return _nexuses[id];
           return nullptr;
         }
+        inline auto catchments(){return network.filter("cat");}
+        inline auto nexuses(){return network.filter("nex");}
 
         virtual ~HY_Features(){}
 
