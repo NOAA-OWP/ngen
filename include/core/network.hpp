@@ -6,6 +6,9 @@
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/graphviz.hpp>
+#include <boost/range/adaptor/filtered.hpp>
+#include <boost/range/adaptor/transformed.hpp>
+#include <boost/range/adaptor/reversed.hpp>
 
 #include <features/Features.hpp>
 #include <FeatureBuilder.hpp>
@@ -32,6 +35,15 @@ namespace network {
 
         NetworkIndexT::const_reverse_iterator begin();
         NetworkIndexT::const_reverse_iterator end();
+        auto filter(std::string type)
+        {
+          //todo need to worry about validating input???
+          //if type isn't found as a prefix, this iterator range should be empty,
+          //which is a reasonable semantic
+          return topo_order | boost::adaptors::reversed
+                            | boost::adaptors::transformed([this](int const& i) { return get_id(i); })
+                            | boost::adaptors::filtered([type](std::string const& s) { return s.substr(0,3) == type; });
+        }
         std::string get_id( Graph::vertex_descriptor idx);
         std::vector<std::string> get_origination_ids(std::string id);
         std::vector<std::string> get_destination_ids(std::string id);
