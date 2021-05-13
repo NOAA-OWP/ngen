@@ -43,6 +43,16 @@ namespace utils
 
             }
 
+            /** Move Assignment operator for a StreamHandler */
+            StreamHandler& operator=(StreamHandler&& other) noexcept
+            {
+              if( this != &other)
+              {
+                output_stream = std::move(other.output_stream);
+                sep = std::move(other.sep);
+              }
+              return  *this;
+            }
             /** Serialize data onto the stored stream. This function does not preform any formating. */
 
             template<class DataType> void put(const DataType& val)
