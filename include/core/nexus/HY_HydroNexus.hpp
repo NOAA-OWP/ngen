@@ -40,11 +40,13 @@ class HY_HydroNexus
     /** get the units that the flows are described in */
     virtual std::string get_flow_units()=0;
 
-    private:
-      
+    protected:
+
     //Identity is a string.  If implementations NEED a numeric id for indexing,
     //they are responsible for prodcing it.
     std::string id;
+
+    private:
     /*
     * identifies a hydrologic feature which realizes the hydro nexus.
     * A topological nexus realization is of lower dimension than the realization
