@@ -14,6 +14,18 @@ namespace hy_features {
         HY_Features( geojson::GeoJSON fabric );
         HY_Features( network::Network network);
         HY_Features( geojson::GeoJSON catchments, geojson::GeoJSON nexuses, std::string* link_key);
+        std::shared_ptr<HY_CatchmentRealization> catchment_at(std::string id)
+        {
+          if( _catchments.find(id) != _catchments.end() )
+            return _catchments[id]->realization;
+          return nullptr;
+        }
+        std::shared_ptr<HY_HydroNexus> nexus_at(std::string id)
+        {
+          if( _nexuses.find(id) != _nexuses.end() )
+            return _nexuses[id];
+          return nullptr;
+        }
 
         virtual ~HY_Features(){}
 
