@@ -1,6 +1,8 @@
 #ifndef ET_COMBINATION_METHOD_H
 #define ET_COMBINATION_METHOD_H
 
+#include "EtCalcProperty.hpp"
+
 // FUNCTION AND SUBROUTINE PROTOTYPES
 
 extern double evapotranspiration_combination_method
