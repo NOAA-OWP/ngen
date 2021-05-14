@@ -1,0 +1,4 @@
+<map id="utils::StreamHandler" name="utils::StreamHandler">
+<area shape="rect" id="node1" title="This class provides a copyable interface to a std::ostream or std::ostream like object that may not s..." alt="" coords="16,5,155,229"/>
+<area shape="rect" id="node2" href="$classutils_1_1_file_stream_handler.html" title=" " alt="" coords="5,277,165,369"/>
+</map>
