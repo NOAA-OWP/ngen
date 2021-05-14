@@ -59,15 +59,15 @@ void Bmi_C_Formulation::determine_model_time_offset() {
  * @param t_delta The size of the model's time step in seconds.
  * @param model_initial_time The model's current time in its internal units and representation.
  * @param params An ordered collection of desired forcing param names from which data for inputs is needed.
- * @param is_forcing_param Whether the param at each index is a forcing param, or a different model param (which thus
- *                         does not need to be processed here).
+ * @param is_aorc_param Whether the param at each index is an AORC forcing param, or a different model param (which thus
+ *                      does not need to be processed here).
  * @param param_units An ordered collection units of strings representing the BMI model's expected units for the
  *                    corresponding input, so that value conversions of the proportional contributions are done.
  * @param summed_contributions A referenced ordered collection that will contain the returned summed contributions.
  */
 inline void Bmi_C_Formulation::get_forcing_data_ts_contributions(time_step_t t_delta, const double &model_initial_time,
                                                                  const std::vector<std::string> &params,
-                                                                 const std::vector<bool> &is_forcing_param,
+                                                                 const std::vector<bool> &is_aorc_param,
                                                                  const std::vector<std::string> &param_units,
                                                                  std::vector<double> &summed_contributions)
 {
@@ -95,7 +95,7 @@ inline void Bmi_C_Formulation::get_forcing_data_ts_contributions(time_step_t t_d
         // Get the contributions from this forcing ts for all the forcing params needed.
         for (size_t i = 0; i < params.size(); ++i) {
             // Skip indices for parameters that are not forcings
-            if (!is_forcing_param[i]) {
+            if (!is_aorc_param[i]) {
                 continue;
             }
             // This is proportional to the ratio of (model ts seconds in this forcing ts) to (forcing ts total seconds)
