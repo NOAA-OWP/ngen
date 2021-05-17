@@ -25,21 +25,20 @@ namespace models {
         public:
 
             explicit Bmi_C_Adapter(std::string library_file_path, std::string forcing_file_path,
-                                   bool model_uses_forcing_file, bool allow_exceed_end,
-                                   bool has_fixed_time_step, utils::StreamHandler output);
+                                   bool model_uses_forcing_file, bool allow_exceed_end, bool has_fixed_time_step,
+                                   const std::string& registration_func, utils::StreamHandler output);
 
             Bmi_C_Adapter(std::string library_file_path, std::string bmi_init_config,
-                          std::string forcing_file_path, bool model_uses_forcing_file,
-                          bool allow_exceed_end, bool has_fixed_time_step, utils::StreamHandler output);
+                          std::string forcing_file_path, bool model_uses_forcing_file, bool allow_exceed_end,
+                          bool has_fixed_time_step, std::string  registration_func, utils::StreamHandler output);
 
-            Bmi_C_Adapter(std::string library_file_path, std::string forcing_file_path,
-                          bool model_uses_forcing_file, bool allow_exceed_end,
-                          bool has_fixed_time_step, const geojson::JSONProperty &other_input_vars,
-                          utils::StreamHandler output);
+            Bmi_C_Adapter(std::string library_file_path, std::string forcing_file_path, bool model_uses_forcing_file,
+                          bool allow_exceed_end, bool has_fixed_time_step, const std::string& registration_func,
+                          const geojson::JSONProperty &other_input_vars, utils::StreamHandler output);
 
             Bmi_C_Adapter(std::string library_file_path, const std::string &bmi_init_config,
-                          std::string forcing_file_path,
-                          bool model_uses_forcing_file, bool allow_exceed_end, bool has_fixed_time_step,
+                          std::string forcing_file_path, bool model_uses_forcing_file, bool allow_exceed_end,
+                          bool has_fixed_time_step, const std::string& registration_func,
                           const geojson::JSONProperty &other_input_vars, utils::StreamHandler output);
 
             // Copy constructor
@@ -511,6 +510,8 @@ namespace models {
             std::shared_ptr<double> bmi_model_time_step_size = nullptr;
             /** Whether this particular model implementation directly reads input data from the forcing file. */
             bool bmi_model_uses_forcing_file;
+            /** Name of the function that registers BMI struct's function pointers to the right module functions. */
+            const std::string bmi_registration_function;
             /** Handle for dynamically loaded library file. */
             void* dyn_lib_handle = nullptr;
             std::string forcing_file_path;
