@@ -286,7 +286,7 @@ TEST_F(Bmi_C_Formulation_Test, GetResponse_0_a) {
 
     double response = formulation.get_response(0, 3600);
     // TODO: val seems to be this for now ... do something but account for error bound
-    ASSERT_EQ(response, 0.19108623197892585);
+    ASSERT_EQ(response, 0.19085536923187668);
 }
 
 /** Test to make sure we can execute multiple model instances with dynamic loading. */
@@ -317,7 +317,7 @@ TEST_F(Bmi_C_Formulation_Test, GetResponse_0_b) {
     for (int i = 0; i < 720; i++) {
         response = formulation.get_response(i, 3600);
     }
-    ASSERT_EQ(response, 0.0016562122305483094);
+    ASSERT_EQ(response, 0.00094952616396825284);
 }
 
 /** Simple test of output. */
@@ -329,7 +329,7 @@ TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_0_a) {
 
     double response = formulation.get_response(0, 3600);
     std::string output = formulation.get_output_line_for_timestep(0, ",");
-    ASSERT_EQ(output, "0.000000,0.000000,0.000000,0.000000,0.191086,0.191086");
+    ASSERT_EQ(output, "0.000000,0.000000,0.000000,0.000000,0.190855,0.190855");
 }
 
 /** Simple test of output with modified variables. */
@@ -341,7 +341,7 @@ TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_1_a) {
 
     double response = formulation.get_response(0, 3600);
     std::string output = formulation.get_output_line_for_timestep(0, ",");
-    ASSERT_EQ(output, "0.000000,0.000000,0.000000,0.000000,0.191086,0.191086");
+    ASSERT_EQ(output, "0.000000,0.000000,0.000000,0.000000,0.190855,0.190855");
 }
 
 /** Simple test of output with modified variables, picking time step when there was non-zero rain rate. */
@@ -356,7 +356,7 @@ TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_1_b) {
         formulation.get_response(i++, 3600);
     double response = formulation.get_response(i, 3600);
     std::string output = formulation.get_output_line_for_timestep(i, ",");
-    ASSERT_EQ(output, "0.007032,0.000634,0.000103,0.000294,0.001612,0.002009");
+    ASSERT_EQ(output, "0.007032,0.000339,0.000054,0.000000,0.001407,0.001461");
 }
 
 TEST_F(Bmi_C_Formulation_Test, determine_model_time_offset_0_a) {
