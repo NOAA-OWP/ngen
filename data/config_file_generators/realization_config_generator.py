@@ -13,14 +13,20 @@ python realization_config_generator.py -i ../catchment_data.geojson -o realizati
 TODO: Determine method to pass each catchment's forcing file to catchment JSON object
 """
 
+import os
 import sys, getopt
 import geopandas as gpd
 import random
 import json
+from shutil import copy
+
+
+#Set directory path for catchment specific BMI configuration files
+bmi_config_dir = "./catchment_bmi_configs"
 
 #Set the names of the formulations
 global_formulation = "bmi_c"
-formulation_1 = "top_model"
+formulation_1 =  "top_model"
 
 #Set params
 global_params = {
@@ -34,6 +40,36 @@ global_params = {
 
 formulation_1_params = {}
 
+#Set BMI config file params
+global_bmi_params = {
+  "forcing_file": "./forcings/cat58_01Dec2015.csv",
+  "soil_params.depth": "2.0",
+  "soil_params.b": "4.05",
+  "soil_params.mult": "1000.0",
+  "soil_params.satdk": "0.00000338",
+  "soil_params.satpsi": "0.355",
+  "soil_params.slop": "1.0",
+  "soil_params.smcmax": "0.439",
+  "soil_params.wltsmc": "0.066",
+  "max_gw_storage": "16.0",
+  "Cgw": "0.01",
+  "expon": "6.0",
+  "gw_storage": "50%",
+  "alpha_fc": "0.33",
+  "soil_storage": "66.7%",
+  "K_nash": "0.03",
+  "K_lf": "0.01",
+  "nash_storage": "0.0,0.0",
+  "giuh_ordinates": "0.06,0.51,0.28,0.12,0.03"
+}
+
+formulation_1_bmi_params = {
+  "model_type": "top_model"
+}
+
+#Set path from where to retrieve catchment specific files
+catchment_specific_file_from_path = "../../../catchment_specific_files"
+
 #Set global forcing
 global_forcing = {
   "file_pattern": ".*{{id}}.*.csv",
@@ -46,6 +82,36 @@ global_forcing = {
 start_time = "2015-12-01 00:00:00"
 end_time = "2015-12-30 23:00:00"
 output_interval = 3600
+
+
+def create_catchment_bmi_directory_and_config_file(catchment_id, bmi_params, formulation_type):
+  """
+  Creates unique directory for a given catchment_id and within that directory,
+  also creates the BMI configuration file.
+  """
+
+  catchment_dir = os.path.join(bmi_config_dir, catchment_id)
+
+  os.makedirs(catchment_dir, exist_ok=True)
+
+  bmi_config_file = os.path.join(catchment_dir, "config.ini")
+
+  #Use if config is JSON file
+  #dump_dictionary_to_json(bmi_params, bmi_config_file)
+  
+  #Use if config is INI file
+  dump_dictionary_to_ini(bmi_params, bmi_config_file)
+
+  #Copy formulation_1 input files to catchment directory
+  #Currently only copies one input file per catchment
+  if formulation_type == "formulation_1":
+    for input_file in os.listdir(catchment_specific_file_from_path):
+      if catchment_id in input_file:
+        input_file_with_path = os.path.join(catchment_specific_file_from_path, input_file)
+
+        copy(input_file_with_path, catchment_dir)
+
+  return bmi_config_file
 
 
 def read_catchment_data_geojson(catchment_data_file):
@@ -120,10 +186,19 @@ def set_up_config_dict(catchment_df):
 
     #Add catchment name/id and params
     if catchment_formulation == global_formulation:
-      formulation_dict = {"name": catchment_formulation, "params": global_params}
-    else:
-      formulation_dict = {"name": catchment_formulation, "params": formulation_1_params}
+      print (catchment_id + " global")
+      #Call to create unique directory to hold BMI configuraton file for the given catchment
+      bmi_config_file = create_catchment_bmi_directory_and_config_file(catchment_id, global_bmi_params, "global_formulation")
 
+      formulation_dict = {"name": catchment_formulation, "params": global_params, "bmi_config_file": bmi_config_file}
+
+    else:
+      
+      #Call to create unique directory to hold BMI configuraton file for the given catchment
+      bmi_config_file = create_catchment_bmi_directory_and_config_file(catchment_id, formulation_1_bmi_params, "formulation_1")
+
+      formulation_dict = {"name": catchment_formulation, "params": formulation_1_params, "bmi_config_file": bmi_config_file}
+      
     #Formulations is a list with currently only one formulation.
     #The ability to add multiple formulations for each catchment will
     #be added in the future.
@@ -131,7 +206,7 @@ def set_up_config_dict(catchment_df):
 
     formulations_list.append(formulation_dict)
 
-    formulations_dict = {"formulations": formulations_list}
+    #formulations_dict = {"formulations": formulations_list, "bmi_confi_file": bmi_config_file}
 
     forcing_dict = {"forcing": "forcing_file_path_and_name"}
 
@@ -150,6 +225,17 @@ def dump_dictionary_to_json(config_dict, output_file):
 
   with open(output_file, "w") as open_output_file: 
     json.dump(config_dict, open_output_file, indent=4)
+
+
+def dump_dictionary_to_ini(config_dict, output_file):
+  """
+  Dump config dictionary to INI file
+  """
+    
+  with open(output_file, "w") as open_output_file: 
+    for key, value in config_dict.items():
+      open_output_file.write(key + "=" +  value + "\n")                 
+
 
 
 def main(argv):
@@ -171,6 +257,9 @@ def main(argv):
         input_file = arg
      elif opt in ("-o", "--ofile"):
         output_file = arg
+
+  #Create BMI directory for catchment specific BMI configuration files 
+  os.makedirs(bmi_config_dir, exist_ok=True)
 
   catchment_id_series = read_catchment_data_geojson(input_file)
 
