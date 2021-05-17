@@ -285,7 +285,7 @@ bool Bmi_C_Formulation::is_model_initialized() {
  *                different than the model's internal time step.
  */
 void Bmi_C_Formulation::set_model_inputs_prior_to_update(const double &model_initial_time, time_step_t t_delta) {
-    std::string bmi_in_var_name, ngen_side_var_name;
+    std::string ngen_side_var_name;
 
     std::vector<std::string> in_var_names = get_bmi_model()->GetInputVarNames();
     // Get the BMI variables' units and associated internal standard names, keeping them in these
@@ -322,7 +322,7 @@ void Bmi_C_Formulation::set_model_inputs_prior_to_update(const double &model_ini
         if (ngen_side_var_name == NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP) {
             standard_names[i] = NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP;
             is_variable_aorc[i] = false;
-            bmi_var_units[i] = get_bmi_model()->GetVarUnits(bmi_in_var_name);
+            bmi_var_units[i] = get_bmi_model()->GetVarUnits(in_var_names[i]);
             double potential_et_val_m_per_s = calc_et();
             // TODO: improve how this is handled, and actually support conversions
             if (potential_et_val_m_per_s != 0.0 && bmi_var_units[i] != "m/s" && bmi_var_units[i] != "meters/second") {
@@ -335,7 +335,7 @@ void Bmi_C_Formulation::set_model_inputs_prior_to_update(const double &model_ini
         else if (known_aorc_fields->find(ngen_side_var_name) != known_aorc_fields->end()) {
             standard_names[i] = ngen_side_var_name;
             is_variable_aorc[i] = true;
-            bmi_var_units[i] = get_bmi_model()->GetVarUnits(bmi_in_var_name);
+            bmi_var_units[i] = get_bmi_model()->GetVarUnits(in_var_names[i]);
             // ****** Wait to calculate all the forcing values at once below with specialized function
         }
         // ********************************************************************
@@ -355,9 +355,9 @@ void Bmi_C_Formulation::set_model_inputs_prior_to_update(const double &model_ini
         }
         // ************************************************************************************************************
         // FIXME: later perhaps handle input variables that are themselves arrays, but for now do not support
-        if (get_bmi_model()->GetVarItemsize(bmi_in_var_name) != get_bmi_model()->GetVarNbytes(bmi_in_var_name)) {
+        if (get_bmi_model()->GetVarItemsize(in_var_names[i]) != get_bmi_model()->GetVarNbytes(in_var_names[i])) {
             throw std::runtime_error(
-                    "BMI input variable '" + bmi_in_var_name + "' is an array, which is not currently supported");
+                    "BMI input variable '" + in_var_names[i] + "' is an array, which is not currently supported");
         }
     }
     // Run separate (hopefully inline) function for getting input values for each variable, potentially by summing
