@@ -69,6 +69,10 @@ There are some special config parameters which are not *always* required in BMI 
 * `library_file`
   * Path to the library file for the BMI library
   * Required for C-based BMI model formulations
+* `registration_function`
+  * Name of the [bootstrapping pointer registration function](#additional-bootstrapping-function-needed) in the external module 
+  * required for C-based BMI modules if the module's implemented function is not named `register_bmi` as discussed [here](#additional-bootstrapping-function-needed)
+  * only needed for C-based BMI modules
 
 ### Optional Parameters
 * `variables_names_map`
@@ -133,19 +137,29 @@ Conversely, built executables (and perhaps certain build targets) may not functi
 
 #### Additional Bootstrapping Function Needed
 
-BMI models written in **C** should provide one extra function in order to be compatible with NextGen:
+BMI models written in **C** should implement an extra "registration" function in order to be compatible with NextGen.  By default, this registration function is expected to be:
 
     Bmi* register_bmi(Bmi *model);
 
-This function must set the member pointers of the passed `Bmi` struct param to the appropriate analogous functions.  E.g., the `initialize` member of the the model, defined fully as:
+It is possible to configure a different name for the function within the NGen realization config, but the return type and parameter list must be as noted here.
+
+The implemented function must set the member pointers of the passed `Bmi` struct to the appropriate analogous functions inside the model.  E.g., the `initialize` member of the struct: 
 
     int (*initialize)(struct Bmi *self, const char *config_file)
 
-needs to be set to the function for initializing models.  This will probably be something like:
+needs to be set to the module's function the performs the BMI initialization.  This will probably be something like:
 
     static int Initialize (Bmi *self, const char *file)
 
-Examples for how to write this registration function can be found in the local CFE BMI implementation, specifically in [extern/cfe/src/bmi_cfe.c](../extern/cfe/src/bmi_cfe.c), or in the official CSDMS *bmi-example-c* repo near the bottom of the [bmi-heat.c](https://github.com/csdms/bmi-example-c/blob/master/heat/bmi_heat.c) file.
+So the registration function may look something like:
+
+    Bmi* register_bmi_cfe(Bmi *model) {
+        if (model) {
+            ...
+            model->initialize = Initialize;
+            ...
+
+Full examples for how to write this registration function can be found in the local CFE BMI implementation, specifically in [extern/cfe/src/bmi_cfe.c](../extern/cfe/src/bmi_cfe.c), or in the official CSDMS *bmi-example-c* repo near the bottom of the [bmi-heat.c](https://github.com/csdms/bmi-example-c/blob/master/heat/bmi_heat.c) file.
 
 ##### Why?
 This is needed both due to the design of the **C** language variant of BMI, and the limitations of C regarding duplication of function names.  The latter becomes significant when more than one BMI C library is used at once.  Even if that is actively the case, NextGen is designed to accomodate that case, so this requirement is in place.
