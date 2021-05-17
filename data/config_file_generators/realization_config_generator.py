@@ -33,7 +33,7 @@ global_params = {
   "model_type_name": "bmi_c_cfe",
   "library_file": "./extern/cfe/cmake_cfe_lib/libcfemodel.so",
   "forcing_file": "./data/forcing/cat-27_2015-12-01 00_00_00_2015-12-30 23_00_00.csv",
-  "init_config": "./data/bmi/c/cfe/cat_27_bmi_config.txt",
+  "init_config": "",
   "main_output_variable": "Q_OUT",
   "uses_forcing_file": True
 }
@@ -186,18 +186,26 @@ def set_up_config_dict(catchment_df):
 
     #Add catchment name/id and params
     if catchment_formulation == global_formulation:
-      print (catchment_id + " global")
+      
       #Call to create unique directory to hold BMI configuraton file for the given catchment
       bmi_config_file = create_catchment_bmi_directory_and_config_file(catchment_id, global_bmi_params, "global_formulation")
 
-      formulation_dict = {"name": catchment_formulation, "params": global_params, "bmi_config_file": bmi_config_file}
+      global_params_for_catchment = global_params.copy()
+
+      global_params_for_catchment["init_config"] = bmi_config_file
+
+      formulation_dict = {"name": catchment_formulation, "params": global_params_for_catchment}
 
     else:
       
       #Call to create unique directory to hold BMI configuraton file for the given catchment
       bmi_config_file = create_catchment_bmi_directory_and_config_file(catchment_id, formulation_1_bmi_params, "formulation_1")
 
-      formulation_dict = {"name": catchment_formulation, "params": formulation_1_params, "bmi_config_file": bmi_config_file}
+      formulation_1_params_for_catchment = formulation_1_params.copy()
+
+      formulation_1_params_for_catchment["init_config"] = bmi_config_file
+      
+      formulation_dict = {"name": catchment_formulation, "params": formulation_1_params_for_catchment}
       
     #Formulations is a list with currently only one formulation.
     #The ability to add multiple formulations for each catchment will
@@ -205,8 +213,6 @@ def set_up_config_dict(catchment_df):
     formulations_list = []
 
     formulations_list.append(formulation_dict)
-
-    #formulations_dict = {"formulations": formulations_list, "bmi_confi_file": bmi_config_file}
 
     forcing_dict = {"forcing": "forcing_file_path_and_name"}
 
@@ -235,7 +241,6 @@ def dump_dictionary_to_ini(config_dict, output_file):
   with open(output_file, "w") as open_output_file: 
     for key, value in config_dict.items():
       open_output_file.write(key + "=" +  value + "\n")                 
-
 
 
 def main(argv):
