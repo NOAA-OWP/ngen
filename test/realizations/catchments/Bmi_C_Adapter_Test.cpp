@@ -17,6 +17,8 @@
 #endif // __APPLE__
 #endif // BMI_CFE_LOCAL_LIB_NAME
 
+#define REGISTRATION_FUNC "register_bmi_cfe"
+
 using namespace models::bmi;
 
 class Bmi_C_Adapter_Test : public ::testing::Test {
@@ -126,14 +128,16 @@ Bmi_C_Adapter_Test::file_search(const std::vector<std::string> &parent_dir_optio
 
 /** Simple test to make sure the model initializes. */
 TEST_F(Bmi_C_Adapter_Test, Initialize_0_a) {
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
     adapter.Initialize();
     adapter.Finalize();
 }
 
 /** Test output variables can be retrieved. */
 TEST_F(Bmi_C_Adapter_Test, GetOutputVarNames_0_a) {
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
     try {
         ASSERT_EQ(adapter.GetOutputVarNames(), expected_output_var_names);
     }
@@ -144,7 +148,8 @@ TEST_F(Bmi_C_Adapter_Test, GetOutputVarNames_0_a) {
 
 /** Test output variables item count can be retrieved. */
 TEST_F(Bmi_C_Adapter_Test, GetOutputItemCount_0_a) {
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
     try {
         ASSERT_EQ(adapter.GetOutputItemCount(), expected_output_var_names.size());
     }
@@ -155,7 +160,8 @@ TEST_F(Bmi_C_Adapter_Test, GetOutputItemCount_0_a) {
 
 /** Test that the update function works. */
 TEST_F(Bmi_C_Adapter_Test, Update_0_a) {
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
     adapter.Initialize();
     adapter.Update();
     adapter.Finalize();
@@ -163,7 +169,8 @@ TEST_F(Bmi_C_Adapter_Test, Update_0_a) {
 
 /** Test that the update function works for the 720 time steps. */
 TEST_F(Bmi_C_Adapter_Test, Update_0_b) {
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
     adapter.Initialize();
     for (int i = 0; i < 720; ++i)
         adapter.Update();
@@ -173,7 +180,8 @@ TEST_F(Bmi_C_Adapter_Test, Update_0_b) {
 
 /** Test that the update function works for the 720 time steps and gets the expected outputs. */
 TEST_F(Bmi_C_Adapter_Test, Update_0_c) {
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
     adapter.Initialize();
     for (int i = 0; i < 720; ++i)
         adapter.Update();
@@ -184,7 +192,8 @@ TEST_F(Bmi_C_Adapter_Test, Update_0_c) {
 
 /** Test that the update function works for the 720 time steps and gets the expected Schaake runoff. */
 TEST_F(Bmi_C_Adapter_Test, Update_0_d) {
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
     adapter.Initialize();
     for (int i = 0; i < 720; ++i)
         adapter.Update();
@@ -195,7 +204,8 @@ TEST_F(Bmi_C_Adapter_Test, Update_0_d) {
 
 /** Test that the update function works for the 720 time steps and gets the expected GIUH runoff. */
 TEST_F(Bmi_C_Adapter_Test, Update_0_e) {
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
     adapter.Initialize();
     for (int i = 0; i < 720; ++i)
         adapter.Update();
@@ -206,7 +216,8 @@ TEST_F(Bmi_C_Adapter_Test, Update_0_e) {
 
 /** Test that the update function works for the 720 time steps and gets the expected Nash lateral flow runoff. */
 TEST_F(Bmi_C_Adapter_Test, Update_0_f) {
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
     adapter.Initialize();
     for (int i = 0; i < 720; ++i)
         adapter.Update();
@@ -217,7 +228,8 @@ TEST_F(Bmi_C_Adapter_Test, Update_0_f) {
 
 /** Test that the update function works for the 720 time steps and gets the expected deep groundwater to channel flux. */
 TEST_F(Bmi_C_Adapter_Test, Update_0_g) {
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
     adapter.Initialize();
     for (int i = 0; i < 720; ++i)
         adapter.Update();
@@ -226,9 +238,12 @@ TEST_F(Bmi_C_Adapter_Test, Update_0_g) {
     adapter.Finalize();
 }
 
-/** Test that the update function works fails after exceeding end time. */
+/** Test that the update function fails after exceeding end time. */
+/* This actually doesn't work currently, but this is due to a change in the way the example model is implemented.
+ * Re-add this test if/once we have a model that doesn't work beyond its time step.
 TEST_F(Bmi_C_Adapter_Test, Update_0_h) {
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
     adapter.Initialize();
     double start_time = adapter.GetStartTime();
     double end_time = adapter.GetEndTime();
@@ -244,12 +259,14 @@ TEST_F(Bmi_C_Adapter_Test, Update_0_h) {
     }
     ASSERT_TRUE(found_except);
 }
+*/
 
 /** Test that Schaake Runoff output variable values can be retrieved. */
 TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_0) {
     int out_var_index = 1;
 
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
 
     std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
 
@@ -266,7 +283,8 @@ TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_0) {
 TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_1) {
     int out_var_index = 2;
 
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
 
     std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
 
@@ -283,7 +301,8 @@ TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_1) {
 TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_2) {
     int out_var_index = 3;
 
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
 
     std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
 
@@ -300,7 +319,8 @@ TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_2) {
 TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_3) {
     int out_var_index = 4;
 
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
 
     std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
 
@@ -317,7 +337,8 @@ TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_3) {
 TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_4) {
     int out_var_index = 5;
 
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
 
     std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
 
@@ -334,7 +355,8 @@ TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_4) {
 TEST_F(Bmi_C_Adapter_Test, GetVarGrid_0_a) {
     int out_var_index =2;
 
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
 
     std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
     int expected_grid = expected_output_var_grids[out_var_index];
@@ -351,7 +373,8 @@ TEST_F(Bmi_C_Adapter_Test, GetVarGrid_0_a) {
 TEST_F(Bmi_C_Adapter_Test, GetVarGrid_0_b) {
     int out_var_index = 4;
 
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
 
     std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
     int expected_grid = expected_output_var_grids[out_var_index];
@@ -368,7 +391,8 @@ TEST_F(Bmi_C_Adapter_Test, GetVarGrid_0_b) {
 TEST_F(Bmi_C_Adapter_Test, GetVarLocation_0_a) {
     int out_var_index = 1;
 
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
 
     std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
     std::string expected_location = expected_output_var_locations[out_var_index];
@@ -385,7 +409,8 @@ TEST_F(Bmi_C_Adapter_Test, GetVarLocation_0_a) {
 TEST_F(Bmi_C_Adapter_Test, GetVarLocation_0_b) {
     int out_var_index = 5;
 
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
 
     std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
     std::string expected_location = expected_output_var_locations[out_var_index];
@@ -402,7 +427,8 @@ TEST_F(Bmi_C_Adapter_Test, GetVarLocation_0_b) {
 TEST_F(Bmi_C_Adapter_Test, GetVarUnits_0_a) {
     int out_var_index =3;
 
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
 
     std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
     std::string expected_units = expected_output_var_units[out_var_index];
@@ -419,7 +445,8 @@ TEST_F(Bmi_C_Adapter_Test, GetVarUnits_0_a) {
 TEST_F(Bmi_C_Adapter_Test, GetVarType_0_a) {
     int out_var_index =0;
 
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
 
     std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
     std::string expected_type = expected_output_var_types[out_var_index];
@@ -437,7 +464,8 @@ TEST_F(Bmi_C_Adapter_Test, GetVarType_0_a) {
 TEST_F(Bmi_C_Adapter_Test, GetVarNbytes_0_a) {
     int out_var_index =1;
 
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
     
     std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
 
@@ -452,7 +480,8 @@ TEST_F(Bmi_C_Adapter_Test, GetVarNbytes_0_a) {
 TEST_F(Bmi_C_Adapter_Test, GetGridType_0_a) {
     int out_var_index =3;
 
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
 
     std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
     int grd = adapter.GetVarGrid(variable_name);
@@ -469,7 +498,8 @@ TEST_F(Bmi_C_Adapter_Test, GetGridType_0_a) {
 TEST_F(Bmi_C_Adapter_Test, GetGridRank_0_a) {
     int out_var_index =2;
 
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
 
     std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
     int grd = adapter.GetVarGrid(variable_name);
@@ -486,7 +516,8 @@ TEST_F(Bmi_C_Adapter_Test, GetGridRank_0_a) {
 TEST_F(Bmi_C_Adapter_Test, GetGridSize_0_a) {
     int out_var_index =5;
 
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
 
     std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
     int grd = adapter.GetVarGrid(variable_name);
@@ -504,7 +535,8 @@ TEST_F(Bmi_C_Adapter_Test, GetGridSize_0_a) {
 TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_5) {
     int input_var_index = 1;
 
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true, utils::StreamHandler());
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
 
     std::string variable_name = adapter.GetInputVarNames()[input_var_index];
 
