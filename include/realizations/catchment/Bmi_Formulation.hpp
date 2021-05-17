@@ -67,9 +67,10 @@ namespace realization {
          * @return Calculated ET or potential ET, or ``0.0`` if required parameters could not be obtained.
          */
         double calc_et() override {
-            if (!is_et_params_set()) {
-                throw std::runtime_error("Can't calculate ET for BMI model without ET params being set");
-            }
+            // TODO: fix both not checking this, and how the way it's set currently doesn't fit with these kernels
+            //if (!is_et_params_set()) {
+            //    throw std::runtime_error("Can't calculate ET for BMI model without ET params being set");
+            //}
             // TODO: the Et_Accountable and Et_Aware interfaces need to be overhauled, and these things need to all be
             //  moved under whatever type is used for "et_parameters"
 
