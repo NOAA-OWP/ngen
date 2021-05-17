@@ -5,10 +5,10 @@
 
 #ifndef BMI_CFE_LOCAL_LIB_NAME
 #ifdef __APPLE__
-    #define BMI_CFE_LOCAL_LIB_NAME "libcfemodel.dylib"
+    #define BMI_CFE_LOCAL_LIB_NAME "libcfebmi.dylib"
 #else
 #ifdef __GNUC__
-    #define BMI_CFE_LOCAL_LIB_NAME "libcfemodel.so"
+    #define BMI_CFE_LOCAL_LIB_NAME "libcfebmi.so"
     #endif // __GNUC__
 #endif // __APPLE__
 #endif // BMI_CFE_LOCAL_LIB_NAME
@@ -154,7 +154,11 @@ void Bmi_C_Formulation_Test::SetUp() {
 
     forcing_dir_opts = {"./data/forcing/", "../data/forcing/", "../../data/forcing/"};
     bmi_init_cfg_dir_opts = {"./test/data/bmi/c/cfe/", "../test/data/bmi/c/cfe/", "../../test/data/bmi/c/cfe/"};
-    lib_dir_opts = {"./extern/cfe/cmake_cfe_lib/", "../extern/cfe/cmake_cfe_lib/", "../../extern/cfe/cmake_cfe_lib/"};
+    lib_dir_opts = {
+            "./extern/alt-modular/cmake_am_libs/",
+            "../extern/alt-modular/cmake_am_libs/",
+            "../../extern/alt-modular/cmake_am_libs/"
+    };
 
     config_json = std::vector<std::string>(EX_COUNT);
     catchment_ids = std::vector<std::string>(EX_COUNT);

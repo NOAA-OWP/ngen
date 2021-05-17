@@ -9,10 +9,10 @@
 
 #ifndef BMI_CFE_LOCAL_LIB_NAME
 #ifdef __APPLE__
-#define BMI_CFE_LOCAL_LIB_NAME "libcfemodel.dylib"
+#define BMI_CFE_LOCAL_LIB_NAME "libcfebmi.dylib"
 #else
 #ifdef __GNUC__
-    #define BMI_CFE_LOCAL_LIB_NAME "libcfemodel.so"
+    #define BMI_CFE_LOCAL_LIB_NAME "libcfebmi.so"
     #endif // __GNUC__
 #endif // __APPLE__
 #endif // BMI_CFE_LOCAL_LIB_NAME
@@ -101,9 +101,9 @@ void Bmi_C_Adapter_Test::SetUp() {
     forcing_file_name_0 = file_search(forcing_dir_opts, "cat-27_2015-12-01 00_00_00_2015-12-30 23_00_00.csv");
 
     std::vector<std::string> lib_dir_opts = {
-            "./extern/cfe/cmake_cfe_lib/",
-            "../extern/cfe/cmake_cfe_lib/",
-            "../../extern/cfe/cmake_cfe_lib/"
+            "./extern/alt-modular/cmake_am_libs/",
+            "../extern/alt-modular/cmake_am_libs/",
+            "../../extern/alt-modular/cmake_am_libs/"
     };
     lib_file_name_0 = file_search(lib_dir_opts, BMI_CFE_LOCAL_LIB_NAME);
 }
@@ -115,7 +115,7 @@ void Bmi_C_Adapter_Test::TearDown() {
 std::string
 Bmi_C_Adapter_Test::file_search(const std::vector<std::string> &parent_dir_options, const std::string& file_basename) {
     // Build vector of names by building combinations of the path and basename options
-    std::vector<std::string> name_combinations(parent_dir_options.size());
+    std::vector<std::string> name_combinations;
 
     // Build so that all path names are tried for given basename before trying a different basename option
     for (auto & path_option : parent_dir_options)
