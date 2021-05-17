@@ -53,6 +53,7 @@
                         "forcing_file": "./data/forcing/cat-27_2015-12-01 00_00_00_2015-12-30 23_00_00.csv",
                         "init_config": "./data/bmi/c/cfe/cat_27_bmi_config.txt",
                         "main_output_variable": "Q_OUT",
+                        "registration_function": "register_bmi_cfe",
                         "uses_forcing_file": true
                     }
                 }
