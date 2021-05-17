@@ -198,7 +198,7 @@ void HY_PointHydroNexusRemote::process_communications()
         }
     }
 
-    // Check for a remove any stored sends requests that have completed
+    // Check for and remove any stored sends requests that have completed
     for ( auto i = stored_sends.begin(); i != stored_sends.end(); )
     {
         MPI_Handle_Error( MPI_Test(&i->mpi_request, &flag, &status) );
