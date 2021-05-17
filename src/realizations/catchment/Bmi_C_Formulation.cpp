@@ -325,7 +325,7 @@ void Bmi_C_Formulation::set_model_inputs_prior_to_update(const double &model_ini
             bmi_var_units[i] = get_bmi_model()->GetVarUnits(in_var_names[i]);
             double potential_et_val_m_per_s = calc_et();
             // TODO: improve how this is handled, and actually support conversions
-            if (potential_et_val_m_per_s != 0.0 && bmi_var_units[i] != "m/s" && bmi_var_units[i] != "meters/second") {
+            if (potential_et_val_m_per_s != 0.0 && bmi_var_units[i] != "m/s" && bmi_var_units[i] != "meters/second" && bmi_var_units[i] != "m s-1") {
                 throw std::runtime_error("Unsupported ET unit type for BMI model requiring provided ET value");
             }
             variable_values[i] = potential_et_val_m_per_s;
