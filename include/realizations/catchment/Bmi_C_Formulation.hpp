@@ -5,6 +5,8 @@
 #include "Bmi_Formulation.hpp"
 #include "Bmi_C_Adapter.hpp"
 
+#define BMI_C_DEFAULT_REGISTRATION_FUNC "register_bmi"
+
 namespace realization {
 
     class Bmi_C_Formulation : public Bmi_Formulation<models::bmi::Bmi_C_Adapter> {
