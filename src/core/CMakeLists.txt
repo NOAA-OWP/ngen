@@ -15,6 +15,7 @@ target_include_directories(core PUBLIC
         ${PROJECT_SOURCE_DIR}/include/core/hydrolocation
         ${PROJECT_SOURCE_DIR}/include/realizations/catchment
         ${PROJECT_SOURCE_DIR}/models/kernels
+        ${PROJECT_SOURCE_DIR}/models/kernels/evapotranspiration
         ${PROJECT_SOURCE_DIR}/models/
         ${PROJECT_SOURCE_DIR}/models/tshirt/include
         ${PROJECT_SOURCE_DIR}/include/geojson
