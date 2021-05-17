@@ -409,10 +409,9 @@ namespace realization {
             auto std_names_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES);
             if (std_names_it != properties.end()) {
                 geojson::PropertyMap names_map = std_names_it->second.get_values();
-                auto names_it = names_map.begin();
-                while (names_it != names_map.end()) {
+                for (auto& names_it : names_map) {
                     bmi_var_names_map.insert(
-                            std::pair<std::string, std::string>(names_it->first, names_it->second.as_string()));
+                            std::pair<std::string, std::string>(names_it.first, names_it.second.as_string()));
                 }
             }
 
