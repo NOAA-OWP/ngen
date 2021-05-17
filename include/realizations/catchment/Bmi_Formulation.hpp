@@ -3,8 +3,8 @@
 
 #include <utility>
 #include "Catchment_Formulation.hpp"
-#include "evapotranspiration/EtStruct.h"
-#include "evapotranspiration/EtCombinationMethod.hpp"
+#include "EtCalcProperty.hpp"
+#include "EtCombinationMethod.hpp"
 
 // Define the configuration parameter names used in the realization/formulation config JSON file
 // First the required:
