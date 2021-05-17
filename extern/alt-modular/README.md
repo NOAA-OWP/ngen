@@ -47,5 +47,18 @@ To change the branch for everyone, run the following:
 
 ## Building Libraries
 
+First, cd into the outer directory containing the submodule:
 
-## Adding New Library Configuration
+    cd extern/alt-modular
+
+Before library files can be build, a CMake build system must be generated.  E.g.:
+
+    cmake -B cmake_am_libs -S .
+
+Note that when there is an existing directory, it may sometimes be necessary to clear it and regenerate, especially if any changes were made to the [CMakeLists.txt](CMakeLists.txt) file.
+
+After there is build system directory, the shared libraries can be built.  This is done with individual targets for each. For example, the CFE shared library file (i.e., the build config's `cfebmi` target) can be build using:
+
+    cmake --build cmake_am_libs --target cfebmi -- -j 2
+
+This will build a `cmake_am_libs/libcfebmi.<version>.<ext>` file, where the version is configured within the CMake config, and the extension depends on the local machine's operating system.    
