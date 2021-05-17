@@ -4,3 +4,4 @@
 [submodule "extern/alt-modular/alt-modular"]
 	path = extern/alt-modular/alt-modular
 	url = git@github.com:NOAA-OWP/alt-modular.git
+	branch = main
