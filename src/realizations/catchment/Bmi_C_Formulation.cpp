@@ -22,7 +22,9 @@ std::shared_ptr<Bmi_C_Adapter> Bmi_C_Formulation::construct_model(const geojson:
         throw std::runtime_error("BMI C formulation requires path to library file, but none provided in config");
     }
     std::string lib_file = library_file_iter->second.as_string();
-
+    auto reg_func_itr = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__REGISTRATION_FUNC);
+    std::string reg_func =
+            reg_func_itr == properties.end() ? BMI_C_DEFAULT_REGISTRATION_FUNC : reg_func_itr->second.as_string();
     return std::make_shared<Bmi_C_Adapter>(
             Bmi_C_Adapter(
                     lib_file,
@@ -31,6 +33,7 @@ std::shared_ptr<Bmi_C_Adapter> Bmi_C_Formulation::construct_model(const geojson:
                     is_bmi_using_forcing_file(),
                     get_allow_model_exceed_end_time(),
                     is_bmi_model_time_step_fixed(),
+                    reg_func,
                     output));
 }
 
