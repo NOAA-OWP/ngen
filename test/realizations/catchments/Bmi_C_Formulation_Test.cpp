@@ -140,6 +140,7 @@ protected:
     std::vector<std::string> lib_file;
     std::vector<std::string> init_config;
     std::vector<std::string> main_output_variable;
+    std::vector<std::string> registration_functions;
     std::vector<bool> uses_forcing_file;
     std::vector<std::shared_ptr<forcing_params>> forcing_params_examples;
     std::vector<geojson::GeoJSON> config_properties;
@@ -167,6 +168,7 @@ void Bmi_C_Formulation_Test::SetUp() {
     lib_file = std::vector<std::string>(EX_COUNT);
     init_config = std::vector<std::string>(EX_COUNT);
     main_output_variable  = std::vector<std::string>(EX_COUNT);
+    registration_functions  = std::vector<std::string>(EX_COUNT);
     uses_forcing_file = std::vector<bool>(EX_COUNT);
     forcing_params_examples = std::vector<std::shared_ptr<forcing_params>>(EX_COUNT);
     config_properties = std::vector<geojson::GeoJSON>(EX_COUNT);
@@ -179,6 +181,7 @@ void Bmi_C_Formulation_Test::SetUp() {
     lib_file[0] = find_file(lib_dir_opts, BMI_CFE_LOCAL_LIB_NAME);
     init_config[0] = find_file(bmi_init_cfg_dir_opts, "cat_27_bmi_config.txt");
     main_output_variable[0] = "Q_OUT";
+    registration_functions[0] = "register_bmi_cfe";
     uses_forcing_file[0] = true;
 
     catchment_ids[1] = "cat-27";
@@ -187,6 +190,7 @@ void Bmi_C_Formulation_Test::SetUp() {
     lib_file[1] = find_file(lib_dir_opts, BMI_CFE_LOCAL_LIB_NAME);
     init_config[1] = find_file(bmi_init_cfg_dir_opts, "cat_27_bmi_config.txt");
     main_output_variable[1] = "Q_OUT";
+    registration_functions[1] = "register_bmi_cfe";
     uses_forcing_file[1] = true;
 
     std::string variables_with_rain_rate = "                \"output_variables\": [\"RAIN_RATE\",\n"
@@ -212,6 +216,7 @@ void Bmi_C_Formulation_Test::SetUp() {
                          "                \"forcing_file\": \"" + forcing_file[i] + "\","
                          "                \"init_config\": \"" + init_config[i] + "\","
                          "                \"main_output_variable\": \"" + main_output_variable[i] + "\","
+                         "                \"registration_function\": \"" + registration_functions[i] + "\","
                          + variables_line +
                          "                \"uses_forcing_file\": " + (uses_forcing_file[i] ? "true" : "false") + ""
                          "            },"
