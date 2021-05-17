@@ -8,19 +8,22 @@
 using namespace models::bmi;
 
 Bmi_C_Adapter::Bmi_C_Adapter(std::string library_file_path, std::string forcing_file_path,
-                             bool model_uses_forcing_file, bool allow_exceed_end,
-                             bool has_fixed_time_step, utils::StreamHandler output)
+                             bool model_uses_forcing_file, bool allow_exceed_end, bool has_fixed_time_step,
+                             const std::string& registration_func, utils::StreamHandler output)
         : Bmi_C_Adapter(std::move(library_file_path), "", std::move(forcing_file_path), model_uses_forcing_file,
-                        allow_exceed_end,
-                        has_fixed_time_step, output) {}
+                        allow_exceed_end, has_fixed_time_step, registration_func, output) {}
 
 Bmi_C_Adapter::Bmi_C_Adapter(std::string library_file_path, std::string bmi_init_config,
-                             std::string forcing_file_path, bool model_uses_forcing_file,
-                             bool allow_exceed_end, bool has_fixed_time_step, utils::StreamHandler output)
-        : bmi_init_config(std::move(bmi_init_config)), bmi_lib_file(std::move(library_file_path)),
+                             std::string forcing_file_path, bool model_uses_forcing_file, bool allow_exceed_end,
+                             bool has_fixed_time_step, std::string registration_func, utils::StreamHandler output)
+        : bmi_init_config(std::move(bmi_init_config)),
+          bmi_lib_file(std::move(library_file_path)),
           forcing_file_path(std::move(forcing_file_path)),
-          bmi_model_uses_forcing_file(model_uses_forcing_file), allow_model_exceed_end_time(allow_exceed_end),
-          bmi_model_has_fixed_time_step(has_fixed_time_step), output(std::move(output)),
+          bmi_model_uses_forcing_file(model_uses_forcing_file),
+          allow_model_exceed_end_time(allow_exceed_end),
+          bmi_model_has_fixed_time_step(has_fixed_time_step),
+          bmi_registration_function(std::move(registration_func)),
+          output(std::move(output)),
           bmi_model(std::make_shared<Bmi>(Bmi())) {
     Initialize();
     std::string time_units = GetTimeUnits();
@@ -36,20 +39,20 @@ Bmi_C_Adapter::Bmi_C_Adapter(std::string library_file_path, std::string bmi_init
         throw std::runtime_error("Invalid model time step units ('" + time_units + "') in BMI C formulation.");
 }
 
-Bmi_C_Adapter::Bmi_C_Adapter(std::string library_file_path, std::string forcing_file_path, bool model_uses_forcing_file,
-                             bool allow_exceed_end, bool has_fixed_time_step,
-                             const geojson::JSONProperty &other_input_vars, utils::StreamHandler output)
+Bmi_C_Adapter::Bmi_C_Adapter(std::string library_file_path, std::string forcing_file_path,
+                             bool model_uses_forcing_file, bool allow_exceed_end, bool has_fixed_time_step,
+                             const std::string& registration_func, const geojson::JSONProperty &other_input_vars,
+                             utils::StreamHandler output)
         : Bmi_C_Adapter(std::move(library_file_path), "", std::move(forcing_file_path), model_uses_forcing_file,
                         allow_exceed_end,
-                        has_fixed_time_step, other_input_vars, output) {}
+                        has_fixed_time_step, registration_func, other_input_vars, output) {}
 
 Bmi_C_Adapter::Bmi_C_Adapter(std::string library_file_path, const std::string &bmi_init_config,
-                             std::string forcing_file_path,
-                             bool model_uses_forcing_file, bool allow_exceed_end, bool has_fixed_time_step,
+                             std::string forcing_file_path, bool model_uses_forcing_file, bool allow_exceed_end,
+                             bool has_fixed_time_step, const std::string& registration_func,
                              const geojson::JSONProperty &other_vars, utils::StreamHandler output)
         : Bmi_C_Adapter(std::move(library_file_path), bmi_init_config, std::move(forcing_file_path),
-                        model_uses_forcing_file, allow_exceed_end,
-                        has_fixed_time_step, output) {
+                        model_uses_forcing_file, allow_exceed_end, has_fixed_time_step, registration_func, output) {
     for (const std::string &var_name : GetInputVarNames()) {
         if (other_vars.has_key(var_name)) {
             geojson::JSONProperty other_variable = other_vars.at(var_name);
@@ -144,6 +147,7 @@ Bmi_C_Adapter::Bmi_C_Adapter(Bmi_C_Adapter &adapter) : model_name(adapter.model_
                                                        bmi_model_time_convert_factor(
                                                                adapter.bmi_model_time_convert_factor),
                                                        bmi_model_uses_forcing_file(adapter.bmi_model_uses_forcing_file),
+                                                       bmi_registration_function(adapter.bmi_registration_function),
                                                        forcing_file_path(adapter.forcing_file_path),
                                                        init_exception_msg(adapter.init_exception_msg),
                                                        input_var_names(adapter.input_var_names),
@@ -170,6 +174,8 @@ Bmi_C_Adapter::Bmi_C_Adapter(Bmi_C_Adapter &&adapter) noexcept: model_name(std::
                                                                         adapter.bmi_model_time_convert_factor),
                                                                 bmi_model_uses_forcing_file(
                                                                         adapter.bmi_model_uses_forcing_file),
+                                                                bmi_registration_function(
+                                                                        adapter.bmi_registration_function),
                                                                 dyn_lib_handle(adapter.dyn_lib_handle),
                                                                 forcing_file_path(std::move(adapter.forcing_file_path)),
                                                                 init_exception_msg(
@@ -225,6 +231,10 @@ inline void Bmi_C_Adapter::dynamic_library_load() {
         init_exception_msg = "Cannot init " + model_name + "; unreadable C library file '" + bmi_lib_file + "'";
         throw std::runtime_error(init_exception_msg);
     }
+    if (bmi_registration_function.empty()) {
+        init_exception_msg = "Cannot init " + model_name + "; empty pointer registration function name given.";
+        throw std::runtime_error(init_exception_msg);
+    }
 
     // TODO: add support for either the configured-by-name mapping or just using the standard names
     void* sym;
@@ -232,10 +242,15 @@ inline void Bmi_C_Adapter::dynamic_library_load() {
 
     // Load up the necessary library dynamically
     dyn_lib_handle = dlopen(bmi_lib_file.c_str(), RTLD_NOW | RTLD_LOCAL);
-    // TODO: make name of registration function configurable too
 
     // Acquire the BMI struct func pointer registration function
-    sym = dlsym(dyn_lib_handle, "register_bmi");
+    sym = dlsym(dyn_lib_handle, bmi_registration_function.c_str());
+    if (sym == nullptr) {
+        init_exception_msg = "Cannot init " + model_name + "; expected pointer registration function '"
+                + bmi_registration_function
+                + "' is not implemented.";
+        throw std::runtime_error(init_exception_msg);
+    }
     dynamic_register_bmi = (Bmi* (*)(Bmi*))sym;
 
     // Call registration function, which handles setting up this object's pointed-to member BMI struct
