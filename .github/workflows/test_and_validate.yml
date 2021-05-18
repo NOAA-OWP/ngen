@@ -67,15 +67,15 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      # TODO: make sure this step is still necessary
-      - name: git submodule
-        run: git submodule update --init --recursive -- test/googletest
+      - name: git submodules
+        run: git submodule update --init --recursive
 
       - name: cmake_init_shared_lib_build
-        run: cmake -B extern/cfe/cmake_cfe_lib -S extern/cfe
+        run: cmake -B extern/alt-modular/cmake_am_libs -S extern/alt-modular
 
+      # For now at least, only worry about the CFE model
       - name: build_cfe_build_shared_lib
-        run: cmake --build extern/cfe/cmake_cfe_lib --target cfemodel
+        run: cmake --build extern/alt-modular/cmake_am_libs --target cfebmi
 
       - name: Cache Boost Dependency
         id: cache-boost-dep
@@ -111,13 +111,13 @@ jobs:
         run: cmake --build cmake_build --target clean
 
       - name: clean_shared_lib_build
-        run: cmake --build extern/cfe/cmake_cfe_lib --target clean
+        run: cmake --build extern/alt-modular/cmake_am_libs --target clean
 
       - name: cleanup_dir
         run: rm -rf cmake_build
 
       - name: cleanup_dir
-        run: rm -rf extern/cfe/cmake_cfe_lib
+        run: rm -rf extern/alt-modular/cmake_am_libs
 
   test_unit_macos_latest:
     # The type of runner that the job will run on
@@ -173,14 +173,14 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: git submodule
-        run: git submodule update --init --recursive -- test/googletest
+      - name: git submodules
+        run: git submodule update --init --recursive
 
       - name: cmake_init_shared_lib_build
-        run: cmake -B extern/cfe/cmake_cfe_lib -S extern/cfe
+        run: cmake -B extern/alt-modular/cmake_am_libs -S extern/alt-modular
 
       - name: build_cfe_build_shared_lib
-        run: cmake --build extern/cfe/cmake_cfe_lib --target cfemodel
+        run: cmake --build extern/alt-modular/cmake_am_libs --target cfebmi
 
       - name: Cache Boost Dependency
         id: cache-boost-dep
@@ -216,13 +216,13 @@ jobs:
         run: cmake --build cmake_build --target clean
 
       - name: clean_shared_lib_build
-        run: cmake --build extern/cfe/cmake_cfe_lib --target clean
+        run: cmake --build extern/alt-modular/cmake_am_libs --target clean
 
       - name: cleanup_dir
         run: rm -rf cmake_build
 
       - name: cleanup_shared_lib_dir
-        run: rm -rf extern/cfe/cmake_cfe_lib
+        run: rm -rf extern/alt-modular/cmake_am_libs
 
   # TODO: fails due to compilation error, at least in large part due to use of POSIX functions not supported on Windows.
   # TODO: Need to determine whether Windows support (in particular, development environment support) is necessary.
