@@ -31,14 +31,38 @@ formulation_1 =  "top_model"
 #Set params
 global_params = {
   "model_type_name": "bmi_c_cfe",
-  "library_file": "./extern/cfe/cmake_cfe_lib/libcfemodel.so",
+  "library_file": "./extern/alt-modular/cmake_am_libs/libcfebmi.so",
   "forcing_file": "./data/forcing/cat-27_2015-12-01 00_00_00_2015-12-30 23_00_00.csv",
-  "init_config": "",
+  "init_config": "./data/bmi/c/cfe/cat_27_bmi_config.txt",
   "main_output_variable": "Q_OUT",
+  "registration_function": "register_bmi_cfe",
+  "variable_names_map" : {
+    "water_potential_evaporation_flux" : "potential_evapotranspiration",
+    "atmosphere_water__liquid_equivalent_precipitation_rate" : "precip_rate",
+    "atmosphere_air_water~vapor__relative_saturation" : "SPFH_2maboveground",
+    "land_surface_air__temperature" : "TMP_2maboveground",
+    "land_surface_wind__x_component_of_velocity" : "UGRD_10maboveground",
+    "land_surface_wind__y_component_of_velocity" : "VGRD_10maboveground",
+    "land_surface_radiation~incoming~longwave__energy_flux" : "DLWRF_surface",
+    "land_surface_radiation~incoming~shortwave__energy_flux" : "DSWRF_surface",
+    "land_surface_air__pressure" : "PRES_surface"
+     },
   "uses_forcing_file": True
 }
 
-formulation_1_params = {}
+formulation_1_params = {
+  "model_type_name": "bmi_topmodel",
+  "library_file": "./extern/alt-modular/cmake_am_libs/libcfebmi.so",
+  "forcing_file": "./data/forcing/cat-27_2015-12-01 00_00_00_2015-12-30 23_00_00.csv",
+  "init_config": "",
+  "main_output_variable": "Q_OUT",
+  "registration_function": "register_bmi_topmodel",
+  "variable_names_map" : {
+    "water_potential_evaporation_flux" : "potential_evapotranspiration",
+    "atmosphere_water__liquid_equivalent_precipitation_rate" : "precip_rate"
+     },
+  "uses_forcing_file": True
+}
 
 #Set BMI config file params
 global_bmi_params = {
