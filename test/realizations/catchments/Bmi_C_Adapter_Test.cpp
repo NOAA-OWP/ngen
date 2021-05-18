@@ -476,7 +476,8 @@ TEST_F(Bmi_C_Adapter_Test, GetVarNbytes_0_a) {
         printf("Exception getting var nbytes: %s", e.what());
     }
 }
-/** Test grid type can be retrieved. Based off NASH_LATERAL_RUNOFF grid id */
+/* Test grid type can be retrieved. Based off NASH_LATERAL_RUNOFF grid id */
+/* CFE GetVarGrid() function is disabled currently.  Suggest disabling test until pure testing BMI module is developed.
 TEST_F(Bmi_C_Adapter_Test, GetGridType_0_a) {
     int out_var_index =3;
 
@@ -493,8 +494,10 @@ TEST_F(Bmi_C_Adapter_Test, GetGridType_0_a) {
         printf("Exception getting grid type: %s", e.what());
     }
 }
+ */
 
-/** Test grid rank can be retrieved. Based off GUIH_RUNOFF grid id */
+/* Test grid rank can be retrieved. Based off GUIH_RUNOFF grid id */
+/* CFE GetVarGrid() function is disabled currently.  Suggest disabling test until pure testing BMI module is developed.
 TEST_F(Bmi_C_Adapter_Test, GetGridRank_0_a) {
     int out_var_index =2;
 
@@ -511,8 +514,10 @@ TEST_F(Bmi_C_Adapter_Test, GetGridRank_0_a) {
         printf("Exception getting grid rank: %s", e.what());
     }
 }
+ */
 
-/** Test grid size can be retrieved. Based off Q_OUT grid id */
+/* Test grid size can be retrieved. Based off Q_OUT grid id */
+/* CFE GetVarGrid() function is disabled currently.  Suggest disabling test until pure testing BMI module is developed.
 TEST_F(Bmi_C_Adapter_Test, GetGridSize_0_a) {
     int out_var_index =5;
 
@@ -529,6 +534,7 @@ TEST_F(Bmi_C_Adapter_Test, GetGridSize_0_a) {
         printf("Exception getting grid size: %s", e.what());
     }
 }
+ */
 
 /* Commenting out, since RAIN_RATE is not longer input variable; leaving in place to use as future template. */
 /*
