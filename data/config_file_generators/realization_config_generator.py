@@ -24,6 +24,18 @@ from shutil import copy
 #Set directory path for catchment specific BMI configuration files
 bmi_config_dir = "./catchment_bmi_configs"
 
+#Set path from where to retrieve catchment specific files
+catchment_specific_file_from_path = "../../../catchment_specific_files"
+
+#Set forcing file path
+forcing_file_path = "./data/forcing/"
+
+#Set forcing file date time
+forcing_file_date_time = "2012-05-01_00_00_00_2012-06-29_23_00_00"
+
+#Set forcing file extenstion
+forcing_file_extension = ".csv"
+
 #Set the names of the formulations
 global_formulation = "bmi_c"
 formulation_1 =  "top_model"
@@ -32,7 +44,7 @@ formulation_1 =  "top_model"
 global_params = {
   "model_type_name": "bmi_c_cfe",
   "library_file": "./extern/alt-modular/cmake_am_libs/libcfebmi.so",
-  "forcing_file": "./data/forcing/cat-27_2015-12-01 00_00_00_2015-12-30 23_00_00.csv",
+  "forcing_file": "",
   "init_config": "./data/bmi/c/cfe/cat_27_bmi_config.txt",
   "main_output_variable": "Q_OUT",
   "registration_function": "register_bmi_cfe",
@@ -53,7 +65,7 @@ global_params = {
 formulation_1_params = {
   "model_type_name": "bmi_topmodel",
   "library_file": "./extern/alt-modular/cmake_am_libs/libcfebmi.so",
-  "forcing_file": "./data/forcing/cat-27_2015-12-01 00_00_00_2015-12-30 23_00_00.csv",
+  "forcing_file": "",
   "init_config": "",
   "main_output_variable": "Q_OUT",
   "registration_function": "register_bmi_topmodel",
@@ -66,7 +78,7 @@ formulation_1_params = {
 
 #Set BMI config file params
 global_bmi_params = {
-  "forcing_file": "./forcings/cat58_01Dec2015.csv",
+  "forcing_file": "BMI",
   "soil_params.depth": "2.0",
   "soil_params.b": "4.05",
   "soil_params.mult": "1000.0",
@@ -91,13 +103,19 @@ formulation_1_bmi_params = {
   "model_type": "top_model"
 }
 
-#Set path from where to retrieve catchment specific files
-catchment_specific_file_from_path = "../../../catchment_specific_files"
+#Set forcing file path
+forcing_file_path = "./data/forcing/"
+
+#Set forcing file date time
+forcing_file_date_time = "2012-05-01_00_00_00_2012-06-29_23_00_00"
+
+#Set forcing file extenstion
+forcing_file_extension = ".csv"
 
 #Set global forcing
 global_forcing = {
-  "file_pattern": ".*{{id}}.*.csv",
-  "path": "./data/forcing/"
+  "file_pattern": ".*{{id}}.*." + forcing_file_extension,
+  "path": forcing_file_path
 }
 
 #TODO: Find method to pass each catchment's forcing to dictionary
@@ -124,16 +142,36 @@ def create_catchment_bmi_directory_and_config_file(catchment_id, bmi_params, for
   #dump_dictionary_to_json(bmi_params, bmi_config_file)
   
   #Use if config is INI file
-  dump_dictionary_to_ini(bmi_params, bmi_config_file)
+  #dump_dictionary_to_ini(bmi_params, bmi_config_file)
 
   #Copy formulation_1 input files to catchment directory
   #Currently only copies one input file per catchment
   if formulation_type == "formulation_1":
+    input_file_found_flag = False
+
+    #Temporarily hard coded for DAT files
+    input_file_to_search_for = catchment_id + ".dat"
+
     for input_file in os.listdir(catchment_specific_file_from_path):
-      if catchment_id in input_file:
+      if input_file == input_file_to_search_for:
         input_file_with_path = os.path.join(catchment_specific_file_from_path, input_file)
 
         copy(input_file_with_path, catchment_dir)
+
+        input_file_found_flag = True
+
+        bmi_config_file = os.path.join(catchment_dir, input_file)
+
+    if not input_file_found_flag:
+      print("WARNING: Forumulation_1 input file missing for catchment: " + catchment_id)
+
+      bmi_config_file = "---------MISSING----------"
+
+  #For now, only create INI file for CFE models
+  else:
+    bmi_config_file = os.path.join(catchment_dir, "config.ini")
+
+    dump_dictionary_to_ini(bmi_params, bmi_config_file)
 
   return bmi_config_file
 
@@ -207,6 +245,12 @@ def set_up_config_dict(catchment_df):
   for index, row in catchment_df.iterrows():
     catchment_id = catchment_df.at[index, "id"]
     catchment_formulation = catchment_df.at[index, "Formulation"]
+    
+    forcing_file_name = catchment_id + "_" + forcing_file_date_time + forcing_file_extension
+
+    forcing_file_name_and_path = os.path.join(forcing_file_path, forcing_file_name) 
+
+    forcing_dict = {"path": forcing_file_name_and_path}
 
     #Add catchment name/id and params
     if catchment_formulation == global_formulation:
@@ -217,6 +261,8 @@ def set_up_config_dict(catchment_df):
       global_params_for_catchment = global_params.copy()
 
       global_params_for_catchment["init_config"] = bmi_config_file
+      
+      global_params_for_catchment["forcing_file"] = forcing_file_name_and_path
 
       formulation_dict = {"name": catchment_formulation, "params": global_params_for_catchment}
 
@@ -229,6 +275,8 @@ def set_up_config_dict(catchment_df):
 
       formulation_1_params_for_catchment["init_config"] = bmi_config_file
       
+      formulation_1_params_for_catchment["forcing_file"] = forcing_file_name_and_path
+      
       formulation_dict = {"name": catchment_formulation, "params": formulation_1_params_for_catchment}
       
     #Formulations is a list with currently only one formulation.
@@ -238,13 +286,10 @@ def set_up_config_dict(catchment_df):
 
     formulations_list.append(formulation_dict)
 
-    forcing_dict = {"forcing": "forcing_file_path_and_name"}
-
-    #TODO: Update how a catchment's forcing is passed here
-    catchment_dict = {catchment_id: {"formulations": formulations_list, "forcing": "forcing_file_path_and_name"}}
+    catchment_dict = {catchment_id: {"formulations": formulations_list, "forcing": forcing_dict}}
 
     config_dict["catchments"].update(catchment_dict)
-
+    
   return config_dict
 
 
