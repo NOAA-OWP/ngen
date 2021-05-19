@@ -62,27 +62,13 @@ HY_PointHydroNexusRemote::~HY_PointHydroNexusRemote()
 
         }
     }
-
-    // if finalize was called we may need to clean bufers
-    //for ( auto i = stored_recieves.begin(); i != stored_recieves.end(); ++i)
-    //{
-        // remove the dynamically allocated object
-        //delete i->buffer;
-    //}
-
-    // Check for a remove any stored sends requests that have completed
-    //for ( auto i = stored_sends.begin(); i != stored_sends.end(); ++i)
-    //{
-        // remove the dynamically allocated object
-        //delete i->buffer;
-    //}
 }
 
 double HY_PointHydroNexusRemote::get_downstream_flow(std::string catchment_id, time_step_t t, double percent_flow)
 {
     while ( stored_recieves.size() > 0)
     {
-        std::cerr << "Waiting on " << stored_recieves.size() << " recieves\n";
+        //std::cerr << "Waiting on " << stored_recieves.size() << " recieves\n";
 
         process_communications();
 
@@ -115,7 +101,7 @@ double HY_PointHydroNexusRemote::get_downstream_flow(std::string catchment_id, t
             /* communicator = */ MPI_COMM_WORLD,
             /* request      = */ &stored_sends.back().mpi_request);
 
-        std::cerr << "Remote send from rank " << world_rank << " to rank " << iter->second << " on tag " << tag << std::endl;
+        //std::cerr << "Remote send from rank " << world_rank << " to rank " << iter->second << " on tag " << tag << std::endl;
 
     }
     else
@@ -156,7 +142,7 @@ void HY_PointHydroNexusRemote::add_upstream_flow(double val, std::string catchme
 
        MPI_Handle_Error(status);
 
-       std::cerr << "Remote recieve on rank " << world_rank << " from rank " << iter->second << " on tag " << tag << std::endl;
+       //std::cerr << "Remote recieve on rank " << world_rank << " from rank " << iter->second << " on tag " << tag << std::endl;
 
      }
      else // if this catchment is not remote call base function
@@ -183,9 +169,6 @@ void HY_PointHydroNexusRemote::process_communications()
             std::string catchment_id = std::string(nexus_prefix + std::to_string(i->buffer->catchment_id));
             double flow = i->buffer->flow;
 
-            // remove the dynamically allocated object
-            //delete i->buffer;
-
             // remove this object from the vector
             i = stored_recieves.erase(i);
 
@@ -205,9 +188,6 @@ void HY_PointHydroNexusRemote::process_communications()
 
         if (flag)
         {
-            // remove the dynamically allocated object
-            //delete i->buffer;
-
             // remove this object from the vector
             i = stored_sends.erase(i);
         }
