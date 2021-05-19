@@ -67,7 +67,7 @@ class HY_PointHydroNexusRemote : public HY_PointHydroNexus
 
         struct async_request
         {
-            time_step_and_flow_t* buffer;
+            std::shared_ptr<time_step_and_flow_t> buffer;
             MPI_Request mpi_request;
         };
 

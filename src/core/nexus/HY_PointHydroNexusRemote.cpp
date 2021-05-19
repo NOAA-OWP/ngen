@@ -64,18 +64,18 @@ HY_PointHydroNexusRemote::~HY_PointHydroNexusRemote()
     }
 
     // if finalize was called we may need to clean bufers
-    for ( auto i = stored_recieves.begin(); i != stored_recieves.end(); ++i)
-    {
+    //for ( auto i = stored_recieves.begin(); i != stored_recieves.end(); ++i)
+    //{
         // remove the dynamically allocated object
-        delete i->buffer;
-    }
+        //delete i->buffer;
+    //}
 
     // Check for a remove any stored sends requests that have completed
-    for ( auto i = stored_sends.begin(); i != stored_sends.end(); ++i)
-    {
+    //for ( auto i = stored_sends.begin(); i != stored_sends.end(); ++i)
+    //{
         // remove the dynamically allocated object
-        delete i->buffer;
-    }
+        //delete i->buffer;
+    //}
 }
 
 double HY_PointHydroNexusRemote::get_downstream_flow(std::string catchment_id, time_step_t t, double percent_flow)
@@ -94,7 +94,7 @@ double HY_PointHydroNexusRemote::get_downstream_flow(std::string catchment_id, t
     {
         // allocate the message buffer
         stored_sends.resize(stored_sends.size() + 1);
-        stored_sends.back().buffer = new time_step_and_flow_t;
+        stored_sends.back().buffer = std::make_shared<time_step_and_flow_t>();
 
         // fill the message buffer
         stored_sends.back().buffer->time_step = t;
@@ -107,7 +107,7 @@ double HY_PointHydroNexusRemote::get_downstream_flow(std::string catchment_id, t
 
         //Send downstream_flow from this Upstream Remote Nexus to the Downstream Remote Nexus
         MPI_Isend(
-            /* data         = */ stored_sends.back().buffer,
+            /* data         = */ stored_sends.back().buffer.get(),
             /* count        = */ 1,
             /* datatype     = */ time_step_and_flow_type,
             /* destination  = */ iter->second,
@@ -140,13 +140,13 @@ void HY_PointHydroNexusRemote::add_upstream_flow(double val, std::string catchme
        int status;
 
        stored_recieves.resize(stored_recieves.size() + 1);
-       stored_recieves.back().buffer = new time_step_and_flow_t;
+       stored_recieves.back().buffer = std::make_shared<time_step_and_flow_t>();
 
        int tag = extract(catchment_id);
 
        //Receive downstream_flow from Upstream Remote Nexus to this Downstream Remote Nexus
        status = MPI_Irecv(
-         /* data         = */ stored_recieves.back().buffer,
+         /* data         = */ stored_recieves.back().buffer.get(),
          /* count        = */ 1,
          /* datatype     = */ time_step_and_flow_type,
          /* source       = */ iter->second,
@@ -184,7 +184,7 @@ void HY_PointHydroNexusRemote::process_communications()
             double flow = i->buffer->flow;
 
             // remove the dynamically allocated object
-            delete i->buffer;
+            //delete i->buffer;
 
             // remove this object from the vector
             i = stored_recieves.erase(i);
@@ -206,7 +206,7 @@ void HY_PointHydroNexusRemote::process_communications()
         if (flag)
         {
             // remove the dynamically allocated object
-            delete i->buffer;
+            //delete i->buffer;
 
             // remove this object from the vector
             i = stored_sends.erase(i);
