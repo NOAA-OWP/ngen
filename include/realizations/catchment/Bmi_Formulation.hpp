@@ -395,7 +395,7 @@ namespace realization {
             // Note that this must be present if bmi_using_forcing_file is true
             if (properties.find(BMI_REALIZATION_CFG_PARAM_OPT__FORCING_FILE) != properties.end())
                 set_forcing_file_path(properties.at(BMI_REALIZATION_CFG_PARAM_OPT__FORCING_FILE).as_string());
-            else if (!is_bmi_using_forcing_file())
+            else if (is_bmi_using_forcing_file())
                 throw std::runtime_error("Can't create BMI formulation: using_forcing_file true but no file path set");
 
             if (properties.find(BMI_REALIZATION_CFG_PARAM_OPT__ALLOW_EXCEED_END) != properties.end()) {
