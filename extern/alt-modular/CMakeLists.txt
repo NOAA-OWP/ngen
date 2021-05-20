@@ -13,6 +13,9 @@ set(CFE_LIB_DESC_CMAKE "External CFE Shared Library")
 set(TOPMODEL_LIB_NAME_CMAKE topmodelbmi)
 set(TOPMODEL_LIB_DESC_CMAKE "External TOPMODEL Shared Library")
 
+# Make sure these are compiled with this directive
+add_compile_definitions(BMI_ACTIVE)
+
 if(WIN32)
     #add_library(cfemodel src/bmi_cfe.c src/cfe.c)
     add_library(cfebmi alt-modular/Modules/CFE/src/bmi_cfe.c alt-modular/Modules/CFE/src/cfe.c)
