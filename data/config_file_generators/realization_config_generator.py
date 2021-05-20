@@ -24,8 +24,9 @@ from shutil import copy
 #Set directory path for catchment specific BMI configuration files
 bmi_config_dir = "./catchment_bmi_configs"
 
-#Set path from where to retrieve catchment specific files
-catchment_specific_file_from_path = "../../../catchment_specific_files"
+#Set paths from where to retrieve catchment specific files
+global_catchment_specific_file_from_path = "../../../global_catchment_specific_files"
+formulation_1_catchment_specific_file_from_path = "../../../catchment_specific_files"
 
 #Set forcing file path
 forcing_file_path = "./data/forcing/"
@@ -44,8 +45,7 @@ formulation_1 =  "top_model"
 global_params = {
   "model_type_name": "bmi_c_cfe",
   "library_file": "./extern/alt-modular/cmake_am_libs/libcfebmi.so",
-  "forcing_file": "",
-  "init_config": "./data/bmi/c/cfe/cat_27_bmi_config.txt",
+  "init_config": "",
   "main_output_variable": "Q_OUT",
   "registration_function": "register_bmi_cfe",
   "variable_names_map" : {
@@ -59,13 +59,12 @@ global_params = {
     "land_surface_radiation~incoming~shortwave__energy_flux" : "DSWRF_surface",
     "land_surface_air__pressure" : "PRES_surface"
      },
-  "uses_forcing_file": True
+  "uses_forcing_file": False
 }
 
 formulation_1_params = {
   "model_type_name": "bmi_topmodel",
-  "library_file": "./extern/alt-modular/cmake_am_libs/libcfebmi.so",
-  "forcing_file": "",
+  "library_file": "./extern/alt-modular/cmake_am_libs/libtopmodelbmi.so",
   "init_config": "",
   "main_output_variable": "Q_OUT",
   "registration_function": "register_bmi_topmodel",
@@ -73,7 +72,7 @@ formulation_1_params = {
     "water_potential_evaporation_flux" : "potential_evapotranspiration",
     "atmosphere_water__liquid_equivalent_precipitation_rate" : "precip_rate"
      },
-  "uses_forcing_file": True
+  "uses_forcing_file": False
 }
 
 #Set BMI config file params
@@ -100,7 +99,12 @@ global_bmi_params = {
 }
 
 formulation_1_bmi_params = {
-  "model_type": "top_model"
+   "name": "Catchment Calibration Data",
+   "inputs_file": "inputs.dat", #currently unused file
+   "subcat_file": "", #given unique name per catchment
+   "params_file": "params.dat", #enter path to single file shared by all catchments
+   "topmod_output_file": "topmod.out", #leave as is for now
+   "hydro_output_file": "hyd.out" #leave as is for now
 }
 
 #Set forcing file path
@@ -118,8 +122,6 @@ global_forcing = {
   "path": forcing_file_path
 }
 
-#TODO: Find method to pass each catchment's forcing to dictionary
-
 #Set time values
 start_time = "2015-12-01 00:00:00"
 end_time = "2015-12-30 23:00:00"
@@ -136,7 +138,7 @@ def create_catchment_bmi_directory_and_config_file(catchment_id, bmi_params, for
 
   os.makedirs(catchment_dir, exist_ok=True)
 
-  bmi_config_file = os.path.join(catchment_dir, "config.ini")
+  #bmi_config_file = os.path.join(catchment_dir, "config.ini")
 
   #Use if config is JSON file
   #dump_dictionary_to_json(bmi_params, bmi_config_file)
@@ -147,14 +149,53 @@ def create_catchment_bmi_directory_and_config_file(catchment_id, bmi_params, for
   #Copy formulation_1 input files to catchment directory
   #Currently only copies one input file per catchment
   if formulation_type == "formulation_1":
+    #bmi_config_file = os.path.join(catchment_dir, "topmod.run")
+
+    #dump_dictionary_values_to_text_file(bmi_params, bmi_config_file)
+
     input_file_found_flag = False
 
     #Temporarily hard coded for DAT files
     input_file_to_search_for = catchment_id + ".dat"
 
-    for input_file in os.listdir(catchment_specific_file_from_path):
+    #Search for input files to copy to specific catchment directories
+    for input_file in os.listdir(formulation_1_catchment_specific_file_from_path):
       if input_file == input_file_to_search_for:
-        input_file_with_path = os.path.join(catchment_specific_file_from_path, input_file)
+        input_file_with_path = os.path.join(formulation_1_catchment_specific_file_from_path, input_file)
+
+        copy(input_file_with_path, catchment_dir)
+
+        input_file_found_flag = True
+
+        data_file = os.path.join(catchment_dir, input_file)
+
+    if not input_file_found_flag:
+      print("WARNING: Forumulation_1 input file missing for catchment: " + catchment_id)
+
+      data_file = "---------MISSING----------"
+    
+    #bmi_params_for_catchment = global_params.copy()
+    bmi_params["subcat_file"] = data_file
+
+    bmi_config_file = os.path.join(catchment_dir, "topmod.run")
+
+    dump_dictionary_values_to_text_file(bmi_params, bmi_config_file)
+
+  #For now, only create INI file for CFE models
+  else:
+    #bmi_config_file = os.path.join(catchment_dir, "config.ini")
+
+    #dump_dictionary_to_ini(bmi_params, bmi_config_file)
+
+    input_file_found_flag = False
+
+    #Temporarily hard coded for INI files
+    input_file_to_search_for = catchment_id + ".ini"
+
+    #Search for input files to copy to specific catchment directories
+    for input_file in os.listdir(global_catchment_specific_file_from_path):
+      if input_file == input_file_to_search_for:
+        input_file_with_path = os.path.join(global_catchment_specific_file_from_path, input_file)
 
         copy(input_file_with_path, catchment_dir)
 
@@ -163,15 +204,9 @@ def create_catchment_bmi_directory_and_config_file(catchment_id, bmi_params, for
         bmi_config_file = os.path.join(catchment_dir, input_file)
 
     if not input_file_found_flag:
-      print("WARNING: Forumulation_1 input file missing for catchment: " + catchment_id)
+      print("WARNING: Global input file missing for catchment: " + catchment_id)
 
       bmi_config_file = "---------MISSING----------"
-
-  #For now, only create INI file for CFE models
-  else:
-    bmi_config_file = os.path.join(catchment_dir, "config.ini")
-
-    dump_dictionary_to_ini(bmi_params, bmi_config_file)
 
   return bmi_config_file
 
@@ -262,7 +297,8 @@ def set_up_config_dict(catchment_df):
 
       global_params_for_catchment["init_config"] = bmi_config_file
       
-      global_params_for_catchment["forcing_file"] = forcing_file_name_and_path
+      #Use below if forcing file is passed through BMI
+      #global_params_for_catchment["forcing_file"] = forcing_file_name_and_path
 
       formulation_dict = {"name": catchment_formulation, "params": global_params_for_catchment}
 
@@ -275,7 +311,8 @@ def set_up_config_dict(catchment_df):
 
       formulation_1_params_for_catchment["init_config"] = bmi_config_file
       
-      formulation_1_params_for_catchment["forcing_file"] = forcing_file_name_and_path
+      #Use below if forcing file is passed through BMI
+      #formulation_1_params_for_catchment["forcing_file"] = forcing_file_name_and_path
       
       formulation_dict = {"name": catchment_formulation, "params": formulation_1_params_for_catchment}
       
@@ -310,6 +347,16 @@ def dump_dictionary_to_ini(config_dict, output_file):
   with open(output_file, "w") as open_output_file: 
     for key, value in config_dict.items():
       open_output_file.write(key + "=" +  value + "\n")                 
+
+
+def dump_dictionary_values_to_text_file(config_dict, output_file):
+  """
+  Dump config dictionary values to text file
+  """
+    
+  with open(output_file, "w") as open_output_file: 
+    for key, value in config_dict.items():
+      open_output_file.write(value + "\n")                 
 
 
 def main(argv):
