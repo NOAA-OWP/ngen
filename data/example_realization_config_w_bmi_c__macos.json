@@ -49,12 +49,11 @@
                     "name": "bmi_c",
                     "params": {
                         "model_type_name": "bmi_c_cfe",
-                        "library_file": "../extern/alt-modular/cmake_am_libs/libcfebmi.dylib",
-                        "forcing_file": "./data/forcing/cat-27_2015-12-01 00_00_00_2015-12-30 23_00_00.csv",
+                        "library_file": "./extern/alt-modular/cmake_am_libs/libcfebmi.dylib",
                         "init_config": "./data/bmi/c/cfe/cat_27_bmi_config.txt",
                         "main_output_variable": "Q_OUT",
                         "registration_function": "register_bmi_cfe",
-                        "variable_names_map" : {
+                        "variables_names_map" : {
                             "water_potential_evaporation_flux" : "potential_evapotranspiration",
                             "atmosphere_water__liquid_equivalent_precipitation_rate" : "precip_rate",
                             "atmosphere_air_water~vapor__relative_saturation" : "SPFH_2maboveground",
@@ -65,7 +64,7 @@
                             "land_surface_radiation~incoming~shortwave__energy_flux" : "DSWRF_surface",
                             "land_surface_air__pressure" : "PRES_surface"
                         },
-                        "uses_forcing_file": true
+                        "uses_forcing_file": false
                     }
                 }
             ],
@@ -84,7 +83,10 @@
                       1.0
                   ],
                   "storage": 1.0,
-                  "max_storage": 1000.0,
+                  "gw_storage": 1.0,
+                  "gw_max_storage": 1000.0,
+                  "nash_max_storage": 1000.0,
+                  "smax": 1000.0,
                   "a": 1.0,
                   "b": 10.0,
                   "Ks": 0.1,
@@ -146,7 +148,10 @@
                     1.0
                 ],
                 "storage": 1.0,
-                "max_storage": 1000.0,
+                "gw_storage": 1.0,
+                "gw_max_storage": 1000.0,
+                "nash_max_storage": 1000.0,
+                "smax": 1000.0,
                 "a": 1.0,
                 "b": 10.0,
                 "Ks": 0.1,
