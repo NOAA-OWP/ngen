@@ -86,13 +86,17 @@ inline void Bmi_C_Formulation::get_forcing_data_ts_contributions(time_step_t t_d
 
     while (contribution_seconds_remaining > 0) {
         // If model ts, after having start time shifted forward within forcing step (if needed), goes beyond forcing ts
-        if ((time_t)contribution_seconds_remaining + model_ts_start_offset >= forcing.get_time_step_size()) {
-            increment_to_next_forcing_ts = true;
-            model_ts_seconds_contained_in_forcing_ts = forcing.get_time_step_size() - model_ts_start_offset;
+        if ((time_t) contribution_seconds_remaining + model_ts_start_offset < forcing.get_time_step_size()) {
+            increment_to_next_forcing_ts = false;
+            model_ts_seconds_contained_in_forcing_ts = (time_t) contribution_seconds_remaining;
+        }
+        else if (get_bmi_model()->GetEndTime() <= (get_bmi_model()->GetCurrentTime() + (double)(2 * forcing.get_time_step_size()))) {
+            increment_to_next_forcing_ts = false;
+            model_ts_seconds_contained_in_forcing_ts = (time_t) contribution_seconds_remaining;
         }
         else {
-            increment_to_next_forcing_ts = false;
-            model_ts_seconds_contained_in_forcing_ts = (time_t)contribution_seconds_remaining;
+            increment_to_next_forcing_ts = true;
+            model_ts_seconds_contained_in_forcing_ts = forcing.get_time_step_size() - model_ts_start_offset;
         }
 
         // Get the contributions from this forcing ts for all the forcing params needed.
