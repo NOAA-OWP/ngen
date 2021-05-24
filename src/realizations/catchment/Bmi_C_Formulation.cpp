@@ -74,28 +74,31 @@ inline void Bmi_C_Formulation::get_forcing_data_ts_contributions(time_step_t t_d
                                                                  const std::vector<std::string> &param_units,
                                                                  std::vector<double> &summed_contributions)
 {
-    time_t model_ts_start_offset, model_ts_seconds_contained_in_forcing_ts;
-    bool increment_to_next_forcing_ts;
+    time_t model_ts_start_offset, model_ts_seconds_contained_in_forcing_ts, model_epoch_time_s;
     // Keep track of how much of the model ts delta has not yet had its contribution pulled from some forcing ts
     time_step_t contribution_seconds_remaining = t_delta;
 
-    // The sum of these first two is essentially the model time step's epoch start time in seconds
-    model_ts_start_offset = (time_t) (get_bmi_model()->convert_model_time_to_seconds(model_initial_time)) +
-                            get_bmi_model_start_time_forcing_offset_s() -
-                            forcing.get_time_epoch();
+    model_epoch_time_s = (time_t) (get_bmi_model()->convert_model_time_to_seconds(model_initial_time)) +
+                         get_bmi_model_start_time_forcing_offset_s();
+    // Make sure the forcings are properly primed to have the correct corresponding forcing ts data available
+    while (model_epoch_time_s > forcing.get_time_epoch() + forcing.get_time_step_size()) {
+        forcing.get_next_hourly_precipitation_meters_per_second();
+    }
+    // Though this is a problem at the moment, because we can't go through forcings in reverse order
+    if (model_epoch_time_s < forcing.get_time_epoch()) {
+        // TODO: think if there is a better way to address this
+        throw std::runtime_error("Cannot get contributions for model time step before current forcing time step");
+    }
+
+    model_ts_start_offset = model_epoch_time_s - forcing.get_time_epoch();
 
     while (contribution_seconds_remaining > 0) {
-        // If model ts, after having start time shifted forward within forcing step (if needed), goes beyond forcing ts
+        // Note that the model_ts_start_offset shift is cleared (set to 0) at end of this loop, so only has effect once.
+        // If remainder of model ts (after shift in first iteration) ends before forcing ts ...
         if ((time_t) contribution_seconds_remaining + model_ts_start_offset < forcing.get_time_step_size()) {
-            increment_to_next_forcing_ts = false;
-            model_ts_seconds_contained_in_forcing_ts = (time_t) contribution_seconds_remaining;
-        }
-        else if (get_bmi_model()->GetEndTime() <= (get_bmi_model()->GetCurrentTime() + (double)(2 * forcing.get_time_step_size()))) {
-            increment_to_next_forcing_ts = false;
             model_ts_seconds_contained_in_forcing_ts = (time_t) contribution_seconds_remaining;
         }
         else {
-            increment_to_next_forcing_ts = true;
             model_ts_seconds_contained_in_forcing_ts = forcing.get_time_step_size() - model_ts_start_offset;
         }
 
@@ -124,8 +127,8 @@ inline void Bmi_C_Formulation::get_forcing_data_ts_contributions(time_step_t t_d
         // The offset should only possibly be non-zero the first time (after, if the model ts extends beyond the first
         // forcing ts, it always picks up at the beginning of the subsequent forcing ts), so set to 0 now.
         model_ts_start_offset = 0;
-        // Also, when appropriate ...
-        if (increment_to_next_forcing_ts) {
+        // Also, when appropriate incrementing the forcing ts
+        if (contribution_seconds_remaining > 0) {
             forcing.get_next_hourly_precipitation_meters_per_second();
         }
     }
