@@ -1,0 +1,114 @@
+{
+    "global": {
+        "formulations": [
+            {
+                "name": "bmi_c",
+                "params": {
+                    "model_type_name": "bmi_c_cfe",
+                    "library_file": "../ngen_test_setup/ngen/extern/alt-modular/cmake_am_libs/libcfebmi.so",
+                    "init_config": "",
+                    "main_output_variable": "Q_OUT",
+                    "registration_function": "register_bmi_cfe",
+                    "variables_names_map": {
+                        "water_potential_evaporation_flux": "potential_evapotranspiration",
+                        "atmosphere_water__liquid_equivalent_precipitation_rate": "precip_rate",
+                        "atmosphere_air_water~vapor__relative_saturation": "SPFH_2maboveground",
+                        "land_surface_air__temperature": "TMP_2maboveground",
+                        "land_surface_wind__x_component_of_velocity": "UGRD_10maboveground",
+                        "land_surface_wind__y_component_of_velocity": "VGRD_10maboveground",
+                        "land_surface_radiation~incoming~longwave__energy_flux": "DLWRF_surface",
+                        "land_surface_radiation~incoming~shortwave__energy_flux": "DSWRF_surface",
+                        "land_surface_air__pressure": "PRES_surface"
+                    },
+                    "uses_forcing_file": false,
+                    "allow_exceed_end_time": true
+                }
+            }
+        ],
+        "forcing": {
+            "file_pattern": ".*{{id}}.*..csv",
+            "path": "./data/forcing/"
+        }
+    },
+    "time": {
+        "start_time": "2012-05-01 00:00:00",
+        "end_time": "2012-05-02 23:00:00",
+        "output_interval": 3600
+    },
+    "catchments": {
+        "cat-67": {
+            "formulations": [
+                {
+                    "name": "bmi_c",
+                    "params": {
+                        "model_type_name": "bmi_topmodel",
+                        "library_file": "../ngen_test_setup/ngen/extern/alt-modular/cmake_am_libs/libtopmodelbmi.so",
+                        "init_config": "./catchment_bmi_configs/cat-67/topmod.run",
+                        "main_output_variable": "Qout",
+                        "registration_function": "register_bmi_topmodel",
+                        "variables_names_map": {
+                            "water_potential_evaporation_flux": "potential_evapotranspiration",
+                            "atmosphere_water__liquid_equivalent_precipitation_rate": "precip_rate"
+                        },
+                        "uses_forcing_file": false
+                    }
+                }
+            ],
+            "forcing": {
+                "path": "./data/forcing/cat-67_2012-05-01_00_00_00_2012-06-29_23_00_00.csv"
+            }
+        },
+        "cat-27": {
+            "formulations": [
+                {
+                    "name": "bmi_c",
+                    "params": {
+                        "model_type_name": "bmi_topmodel",
+                        "library_file": "../ngen_test_setup/ngen/extern/alt-modular/cmake_am_libs/libtopmodelbmi.so",
+                        "init_config": "./catchment_bmi_configs/cat-27/topmod.run",
+                        "main_output_variable": "Qout",
+                        "registration_function": "register_bmi_topmodel",
+                        "variables_names_map": {
+                            "water_potential_evaporation_flux": "potential_evapotranspiration",
+                            "atmosphere_water__liquid_equivalent_precipitation_rate": "precip_rate"
+                        },
+                        "uses_forcing_file": false
+                    }
+                }
+            ],
+            "forcing": {
+                "path": "./data/forcing/cat-27_2012-05-01_00_00_00_2012-06-29_23_00_00.csv"
+            }
+        },
+        "cat-52": {
+            "formulations": [
+                {
+                    "name": "bmi_c",
+                    "params": {
+                        "model_type_name": "bmi_c_cfe",
+                        "library_file": "../ngen_test_setup/ngen/extern/alt-modular/cmake_am_libs/libcfebmi.so",
+                        "init_config": "---------MISSING----------",
+                        "main_output_variable": "Q_OUT",
+                        "registration_function": "register_bmi_cfe",
+                        "variables_names_map": {
+                            "water_potential_evaporation_flux": "potential_evapotranspiration",
+                            "atmosphere_water__liquid_equivalent_precipitation_rate": "precip_rate",
+                            "atmosphere_air_water~vapor__relative_saturation": "SPFH_2maboveground",
+                            "land_surface_air__temperature": "TMP_2maboveground",
+                            "land_surface_wind__x_component_of_velocity": "UGRD_10maboveground",
+                            "land_surface_wind__y_component_of_velocity": "VGRD_10maboveground",
+                            "land_surface_radiation~incoming~longwave__energy_flux": "DLWRF_surface",
+                            "land_surface_radiation~incoming~shortwave__energy_flux": "DSWRF_surface",
+                            "land_surface_air__pressure": "PRES_surface"
+                        },
+                        "uses_forcing_file": false,
+                        "allow_exceed_end_time": true
+                    }
+                }
+            ],
+            "forcing": {
+                "path": "./data/forcing/cat-52_2012-05-01_00_00_00_2012-06-29_23_00_00.csv"
+            }
+        }
+    }
+}
