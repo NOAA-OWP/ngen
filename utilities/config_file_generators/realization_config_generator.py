@@ -9,8 +9,6 @@ realization_config_generator.py -i <path and file name to catchment data geojson
 
 Example:
 python realization_config_generator.py -i ../catchment_data.geojson -o realization_config.json
-
-TODO: Determine method to pass each catchment's forcing file to catchment JSON object
 """
 
 import os
@@ -19,6 +17,8 @@ import geopandas as gpd
 import random
 import json
 from shutil import copy
+import fileinput
+import subprocess
 
 
 #Set directory path for catchment specific BMI configuration files
@@ -37,18 +37,29 @@ forcing_file_date_time = "2012-05-01_00_00_00_2012-06-29_23_00_00"
 #Set forcing file extenstion
 forcing_file_extension = ".csv"
 
+#Set the descriptor names of the formulations.
+#Note: this is used just two distinguish the different
+#formulation types and is not written to the config file
+global_formulation = "bmi_cfe"
+formulation_1 =  "bmi_topmodel"
+
 #Set the names of the formulations
-global_formulation = "bmi_c"
-formulation_1 =  "top_model"
+#Note: multiple formulations can have the same formulation
+#name but have different parameters. All model formulations
+#that use the BMI C interface will have their formulation
+#name set to "bmi_c"
+global_formulation_name = "bmi_c"
+formulation_1_name =  "bmi_c"
+
 
 #Set params
 global_params = {
   "model_type_name": "bmi_c_cfe",
-  "library_file": "./extern/alt-modular/cmake_am_libs/libcfebmi.so",
+  "library_file": "../ngen_test_setup/ngen/extern/alt-modular/cmake_am_libs/libcfebmi.so",
   "init_config": "",
   "main_output_variable": "Q_OUT",
   "registration_function": "register_bmi_cfe",
-  "variable_names_map" : {
+  "variables_names_map" : {
     "water_potential_evaporation_flux" : "potential_evapotranspiration",
     "atmosphere_water__liquid_equivalent_precipitation_rate" : "precip_rate",
     "atmosphere_air_water~vapor__relative_saturation" : "SPFH_2maboveground",
@@ -59,16 +70,17 @@ global_params = {
     "land_surface_radiation~incoming~shortwave__energy_flux" : "DSWRF_surface",
     "land_surface_air__pressure" : "PRES_surface"
      },
-  "uses_forcing_file": False
+  "uses_forcing_file": False,
+  "allow_exceed_end_time": True
 }
 
 formulation_1_params = {
   "model_type_name": "bmi_topmodel",
-  "library_file": "./extern/alt-modular/cmake_am_libs/libtopmodelbmi.so",
+  "library_file": "../ngen_test_setup/ngen/extern/alt-modular/cmake_am_libs/libtopmodelbmi.so",
   "init_config": "",
-  "main_output_variable": "Q_OUT",
+  "main_output_variable": "Qout",
   "registration_function": "register_bmi_topmodel",
-  "variable_names_map" : {
+  "variables_names_map" : {
     "water_potential_evaporation_flux" : "potential_evapotranspiration",
     "atmosphere_water__liquid_equivalent_precipitation_rate" : "precip_rate"
      },
@@ -102,19 +114,10 @@ formulation_1_bmi_params = {
    "name": "Catchment Calibration Data",
    "inputs_file": "inputs.dat", #currently unused file
    "subcat_file": "", #given unique name per catchment
-   "params_file": "params.dat", #enter path to single file shared by all catchments
+   "params_file": "../param_files/params.dat", #enter path to single file shared by all catchments
    "topmod_output_file": "topmod.out", #leave as is for now
    "hydro_output_file": "hyd.out" #leave as is for now
 }
-
-#Set forcing file path
-forcing_file_path = "./data/forcing/"
-
-#Set forcing file date time
-forcing_file_date_time = "2012-05-01_00_00_00_2012-06-29_23_00_00"
-
-#Set forcing file extenstion
-forcing_file_extension = ".csv"
 
 #Set global forcing
 global_forcing = {
@@ -123,8 +126,8 @@ global_forcing = {
 }
 
 #Set time values
-start_time = "2015-12-01 00:00:00"
-end_time = "2015-12-30 23:00:00"
+start_time = "2012-05-01 00:00:00"
+end_time = "2012-05-02 23:00:00"
 output_interval = 3600
 
 
@@ -169,6 +172,15 @@ def create_catchment_bmi_directory_and_config_file(catchment_id, bmi_params, for
 
         data_file = os.path.join(catchment_dir, input_file)
 
+        #for line in fileinput.input(data_file, inplace=True):
+
+        #subprocess.call(["sed 's/\r$//' " data_file " > " data_file])
+        subprocess.call(["sed", "-i", 's/\r$//', f"{data_file}"])
+
+
+        subprocess.call(["sed", "-i", '1 s/^.*$/1  1  0/', f"{data_file}"])
+
+
     if not input_file_found_flag:
       print("WARNING: Forumulation_1 input file missing for catchment: " + catchment_id)
 
@@ -190,7 +202,7 @@ def create_catchment_bmi_directory_and_config_file(catchment_id, bmi_params, for
     input_file_found_flag = False
 
     #Temporarily hard coded for INI files
-    input_file_to_search_for = catchment_id + ".ini"
+    input_file_to_search_for = catchment_id + "_bmi_config_cfe_pass.txt"
 
     #Search for input files to copy to specific catchment directories
     for input_file in os.listdir(global_catchment_specific_file_from_path):
@@ -202,6 +214,9 @@ def create_catchment_bmi_directory_and_config_file(catchment_id, bmi_params, for
         input_file_found_flag = True
 
         bmi_config_file = os.path.join(catchment_dir, input_file)
+
+        #subprocess.call(["sed 's/\r$//' " bmi_config_file " > " bmi_config_file])
+        subprocess.call(["sed", "-i", 's/\r$//', f"{bmi_config_file}"])
 
     if not input_file_found_flag:
       print("WARNING: Global input file missing for catchment: " + catchment_id)
@@ -233,6 +248,8 @@ def randomly_select_formulations_for_catchments(catchment_id_series):
 
   catchment_df["Formulation"] = ""
 
+  catchment_df["Formulation_Name"] = ""
+
   for index, row in catchment_df.iterrows():
 
     #Random integer, 0 or 1
@@ -240,9 +257,11 @@ def randomly_select_formulations_for_catchments(catchment_id_series):
 
     if (random_int == 0):
       catchment_df.at[index, "Formulation"] = global_formulation 
+      catchment_df.at[index, "Formulation_Name"] = global_formulation_name
 
     else:
       catchment_df.at[index, "Formulation"] = formulation_1
+      catchment_df.at[index, "Formulation_Name"] = formulation_1_name
 
   return catchment_df
 
@@ -260,7 +279,7 @@ def set_up_config_dict(catchment_df):
       "formulations": 
       [
         {
-          "name": global_formulation,
+          "name": global_formulation_name,
           "params": global_params
         }
       ],
@@ -280,6 +299,7 @@ def set_up_config_dict(catchment_df):
   for index, row in catchment_df.iterrows():
     catchment_id = catchment_df.at[index, "id"]
     catchment_formulation = catchment_df.at[index, "Formulation"]
+    catchment_formulation_name = catchment_df.at[index, "Formulation_Name"]
     
     forcing_file_name = catchment_id + "_" + forcing_file_date_time + forcing_file_extension
 
@@ -300,7 +320,7 @@ def set_up_config_dict(catchment_df):
       #Use below if forcing file is passed through BMI
       #global_params_for_catchment["forcing_file"] = forcing_file_name_and_path
 
-      formulation_dict = {"name": catchment_formulation, "params": global_params_for_catchment}
+      formulation_dict = {"name": catchment_formulation_name, "params": global_params_for_catchment}
 
     else:
       
@@ -314,7 +334,7 @@ def set_up_config_dict(catchment_df):
       #Use below if forcing file is passed through BMI
       #formulation_1_params_for_catchment["forcing_file"] = forcing_file_name_and_path
       
-      formulation_dict = {"name": catchment_formulation, "params": formulation_1_params_for_catchment}
+      formulation_dict = {"name": catchment_formulation_name, "params": formulation_1_params_for_catchment}
       
     #Formulations is a list with currently only one formulation.
     #The ability to add multiple formulations for each catchment will
@@ -383,6 +403,8 @@ def main(argv):
   os.makedirs(bmi_config_dir, exist_ok=True)
 
   catchment_id_series = read_catchment_data_geojson(input_file)
+
+  random.seed(0)
 
   catchment_df = randomly_select_formulations_for_catchments(catchment_id_series)
 
