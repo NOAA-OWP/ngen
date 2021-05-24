@@ -172,14 +172,11 @@ def create_catchment_bmi_directory_and_config_file(catchment_id, bmi_params, for
 
         data_file = os.path.join(catchment_dir, input_file)
 
-        #for line in fileinput.input(data_file, inplace=True):
-
-        #subprocess.call(["sed 's/\r$//' " data_file " > " data_file])
+        #Remove windows carriage return
         subprocess.call(["sed", "-i", 's/\r$//', f"{data_file}"])
 
-
+        #Set flags on first line to "1 1 0"
         subprocess.call(["sed", "-i", '1 s/^.*$/1  1  0/', f"{data_file}"])
-
 
     if not input_file_found_flag:
       print("WARNING: Forumulation_1 input file missing for catchment: " + catchment_id)
@@ -215,7 +212,7 @@ def create_catchment_bmi_directory_and_config_file(catchment_id, bmi_params, for
 
         bmi_config_file = os.path.join(catchment_dir, input_file)
 
-        #subprocess.call(["sed 's/\r$//' " bmi_config_file " > " bmi_config_file])
+        #Remove windows carriage return
         subprocess.call(["sed", "-i", 's/\r$//', f"{bmi_config_file}"])
 
     if not input_file_found_flag:
