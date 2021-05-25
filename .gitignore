@@ -99,5 +99,13 @@ include/bmi.hpp
 
 temp/
 
-# Shared Library Example Build Directory
+# Certain items under extern/ #
+######################
+# pybind11 (for now)
+extern/pybind11/
+# libtorch source artifact
+extern/libtorch-*.zip
+# Prototype Shared Library Example Build Directory
 extern/cfe/cmake_cfe_lib
+# Alt-modular build dir
+extern/alt-modular/cmake_am_libs

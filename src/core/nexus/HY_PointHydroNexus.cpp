@@ -29,7 +29,7 @@ struct invalid_time_step : public boost::exception, public std::exception
   const char *what() const noexcept { return "Time step before minimum time step requested"; }
 };
 
-HY_PointHydroNexus::HY_PointHydroNexus(int nexus_id_number, std::string nexus_id, int num_downstream) : HY_HydroNexus(nexus_id_number, nexus_id, num_downstream), upstream_flows()
+HY_PointHydroNexus::HY_PointHydroNexus(std::string nexus_id, Catchments receiving_catchments) : HY_HydroNexus( nexus_id, receiving_catchments), upstream_flows()
 {
 
 }
@@ -39,7 +39,7 @@ HY_PointHydroNexus::~HY_PointHydroNexus()
     //dtor
 }
 
-double HY_PointHydroNexus::get_downstream_flow(long catchment_id, time_step_t t, double percent_flow)
+double HY_PointHydroNexus::get_downstream_flow(std::string catchment_id, time_step_t t, double percent_flow)
 {
 
     if ( t < min_timestep ) BOOST_THROW_EXCEPTION(invalid_time_step());
@@ -79,8 +79,8 @@ double HY_PointHydroNexus::get_downstream_flow(long catchment_id, time_step_t t,
             // mark downstream request with the amount of flow requested
             // and the catchment making the request
 
-            id_request_vector v;
-            v.push_back(std::pair<long,double>(catchment_id,percent_flow));
+            flow_vector v;
+            v.push_back(flows(catchment_id,percent_flow));
             downstream_requests[t] = v;
 
             // record the total requests for this time
@@ -105,7 +105,7 @@ double HY_PointHydroNexus::get_downstream_flow(long catchment_id, time_step_t t,
                 total_requests[t] += percent_flow;
 
                 // add this request to recorded downstream requests
-                downstream_requests[t].push_back(std::pair<long,double>(catchment_id,percent_flow));
+                downstream_requests[t].push_back(flows(catchment_id,percent_flow));
 
                 double released_flux = summed_flows[t] * (percent_flow / 100.0);
 
@@ -127,7 +127,7 @@ double HY_PointHydroNexus::get_downstream_flow(long catchment_id, time_step_t t,
     }
 }
 
-void HY_PointHydroNexus::add_upstream_flow(double val, long catchment_id, time_step_t t)
+void HY_PointHydroNexus::add_upstream_flow(double val, std::string catchment_id, time_step_t t)
 {
      if ( t < min_timestep ) BOOST_THROW_EXCEPTION(invalid_time_step());
     if ( completed.find(t) != completed.end() ) BOOST_THROW_EXCEPTION(completed_time_step());
@@ -139,8 +139,8 @@ void HY_PointHydroNexus::add_upstream_flow(double val, long catchment_id, time_s
         // create a new vector of flow id pairs and add the current flow
         // and catchment id to the vector then insert the vector
 
-        id_flow_vector v;
-        v.push_back(std::pair<long,double>(catchment_id,val));
+        flow_vector v;
+        v.push_back(flows(catchment_id,val));
          upstream_flows[t] = v;
     }
     else
@@ -152,7 +152,7 @@ void HY_PointHydroNexus::add_upstream_flow(double val, long catchment_id, time_s
             // case 2 there are no summed flow for the time
             // this means there have been no downstream request and we can add water
 
-             s1->second.push_back(std::pair<long,double>(catchment_id,val));
+             s1->second.push_back(flows(catchment_id,val));
         }
         else
         {
@@ -225,7 +225,7 @@ void HY_PointHydroNexus::set_mintime(time_step_t t)
     }
 
     // C++ 2014 would allow this do be done with a single lambda
-    auto l1 = [](int min_v, std::unordered_map<long,id_flow_vector>& v)
+    auto l1 = [](int min_v, std::unordered_map<long,flow_vector>& v)
     {
         for( auto& t: v)
         {

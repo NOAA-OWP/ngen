@@ -5,6 +5,8 @@
 #include "Bmi_Formulation.hpp"
 #include "Bmi_C_Adapter.hpp"
 
+#define BMI_C_DEFAULT_REGISTRATION_FUNC "register_bmi"
+
 namespace realization {
 
     class Bmi_C_Formulation : public Bmi_Formulation<models::bmi::Bmi_C_Adapter> {
@@ -83,6 +85,10 @@ namespace realization {
          */
         double get_response(time_step_t t_index, time_step_t t_delta) override;
 
+        inline bool is_bmi_input_variable(const std::string &var_name) override;
+
+        inline bool is_bmi_output_variable(const std::string &var_name) override;
+
     protected:
 
         /**
@@ -110,19 +116,23 @@ namespace realization {
         /**
          * Get model input values from forcing data, accounting for model and forcing time steps not aligning.
          *
-         * Get values to use to set model input variables, sourced from forcing data.  Account for if model time step
-         * (MTS) does not align with forcing time step (FTS), either due to MTS starting after the start of FTS, MTS
-         * extending beyond the end of FTS, or both.
+         * Get values to use to set model input variables for forcings, sourced from this instance's forcing data.  Skip
+         * any params in the collection that are not forcing params, as indicated by the given collection.  Account for
+         * if model time step (MTS) does not align with forcing time step (FTS), either due to MTS starting after the
+         * start of FTS, MTS extending beyond the end of FTS, or both.
          *
          * @param t_delta The size of the model's time step in seconds.
          * @param model_initial_time The model's current time in its internal units and representation.
          * @param params An ordered collection of desired forcing param names from which data for inputs is needed.
+         * @param is_aorc_param Whether the param at each index is a forcing param, or a different model param (which
+         *                         thus does not need to be processed here).
          * @param param_units An ordered collection units of strings representing the BMI model's expected units for the
          *                    corresponding input, so that value conversions of the proportional contributions are done.
-         * @param summed_contributions A referenced ordered collection that will contain the returned summed contributions.
+         * @param summed_contributions A referenced ordered collection that will contain returned summed contributions.
          */
         inline void get_forcing_data_ts_contributions(time_step_t t_delta, const double &model_initial_time,
                                                       const std::vector<std::string> &params,
+                                                      const std::vector<bool> &is_aorc_param,
                                                       const std::vector<std::string> &param_units,
                                                       std::vector<double> &summed_contributions);
 
@@ -164,7 +174,7 @@ namespace realization {
          * @param var_name
          * @return
          */
-        double get_var_value_as_double(const std::string& var_name);
+        double get_var_value_as_double(const std::string& var_name) override;
 
         /**
          * Get value for some BMI model variable at a specific index.
@@ -184,7 +194,7 @@ namespace realization {
          * @param var_name
          * @return
          */
-        double get_var_value_as_double(const int& index, const std::string& var_name);
+        double get_var_value_as_double(const int& index, const std::string& var_name) override;
 
         /**
          * Test whether backing model has run BMI ``Initialize``.

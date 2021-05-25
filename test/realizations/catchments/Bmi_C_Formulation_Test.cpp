@@ -5,10 +5,10 @@
 
 #ifndef BMI_CFE_LOCAL_LIB_NAME
 #ifdef __APPLE__
-    #define BMI_CFE_LOCAL_LIB_NAME "libcfemodel.dylib"
+    #define BMI_CFE_LOCAL_LIB_NAME "libcfebmi.dylib"
 #else
 #ifdef __GNUC__
-    #define BMI_CFE_LOCAL_LIB_NAME "libcfemodel.so"
+    #define BMI_CFE_LOCAL_LIB_NAME "libcfebmi.so"
     #endif // __GNUC__
 #endif // __APPLE__
 #endif // BMI_CFE_LOCAL_LIB_NAME
@@ -44,10 +44,12 @@ protected:
     static void call_friend_get_forcing_data_ts_contributions(Bmi_C_Formulation& formulation,
                                                               time_step_t t_delta, const double &model_initial_time,
                                                               const std::vector<std::string> &params,
+                                                              const std::vector<bool> &is_forcing_param,
                                                               const std::vector<std::string> &param_units,
                                                               std::vector<double> &contributions)
     {
-        formulation.get_forcing_data_ts_contributions(t_delta, model_initial_time, params, param_units, contributions);
+        formulation.get_forcing_data_ts_contributions(t_delta, model_initial_time, params, is_forcing_param,
+                                                      param_units, contributions);
     }
 
     static std::string get_friend_bmi_init_config(const Bmi_C_Formulation& formulation) {
@@ -138,6 +140,7 @@ protected:
     std::vector<std::string> lib_file;
     std::vector<std::string> init_config;
     std::vector<std::string> main_output_variable;
+    std::vector<std::string> registration_functions;
     std::vector<bool> uses_forcing_file;
     std::vector<std::shared_ptr<forcing_params>> forcing_params_examples;
     std::vector<geojson::GeoJSON> config_properties;
@@ -152,7 +155,11 @@ void Bmi_C_Formulation_Test::SetUp() {
 
     forcing_dir_opts = {"./data/forcing/", "../data/forcing/", "../../data/forcing/"};
     bmi_init_cfg_dir_opts = {"./test/data/bmi/c/cfe/", "../test/data/bmi/c/cfe/", "../../test/data/bmi/c/cfe/"};
-    lib_dir_opts = {"./extern/cfe/cmake_cfe_lib/", "../extern/cfe/cmake_cfe_lib/", "../../extern/cfe/cmake_cfe_lib/"};
+    lib_dir_opts = {
+            "./extern/alt-modular/cmake_am_libs/",
+            "../extern/alt-modular/cmake_am_libs/",
+            "../../extern/alt-modular/cmake_am_libs/"
+    };
 
     config_json = std::vector<std::string>(EX_COUNT);
     catchment_ids = std::vector<std::string>(EX_COUNT);
@@ -161,6 +168,7 @@ void Bmi_C_Formulation_Test::SetUp() {
     lib_file = std::vector<std::string>(EX_COUNT);
     init_config = std::vector<std::string>(EX_COUNT);
     main_output_variable  = std::vector<std::string>(EX_COUNT);
+    registration_functions  = std::vector<std::string>(EX_COUNT);
     uses_forcing_file = std::vector<bool>(EX_COUNT);
     forcing_params_examples = std::vector<std::shared_ptr<forcing_params>>(EX_COUNT);
     config_properties = std::vector<geojson::GeoJSON>(EX_COUNT);
@@ -173,6 +181,7 @@ void Bmi_C_Formulation_Test::SetUp() {
     lib_file[0] = find_file(lib_dir_opts, BMI_CFE_LOCAL_LIB_NAME);
     init_config[0] = find_file(bmi_init_cfg_dir_opts, "cat_27_bmi_config.txt");
     main_output_variable[0] = "Q_OUT";
+    registration_functions[0] = "register_bmi_cfe";
     uses_forcing_file[0] = true;
 
     catchment_ids[1] = "cat-27";
@@ -181,6 +190,7 @@ void Bmi_C_Formulation_Test::SetUp() {
     lib_file[1] = find_file(lib_dir_opts, BMI_CFE_LOCAL_LIB_NAME);
     init_config[1] = find_file(bmi_init_cfg_dir_opts, "cat_27_bmi_config.txt");
     main_output_variable[1] = "Q_OUT";
+    registration_functions[1] = "register_bmi_cfe";
     uses_forcing_file[1] = true;
 
     std::string variables_with_rain_rate = "                \"output_variables\": [\"RAIN_RATE\",\n"
@@ -206,6 +216,18 @@ void Bmi_C_Formulation_Test::SetUp() {
                          "                \"forcing_file\": \"" + forcing_file[i] + "\","
                          "                \"init_config\": \"" + init_config[i] + "\","
                          "                \"main_output_variable\": \"" + main_output_variable[i] + "\","
+                         "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES + "\": { "
+                         "                      \"water_potential_evaporation_flux\": \"" + NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP + "\","
+                         "                      \"atmosphere_water__liquid_equivalent_precipitation_rate\": \"" + AORC_FIELD_NAME_PRECIP_RATE + "\","
+                         "                      \"atmosphere_air_water~vapor__relative_saturation\": \"" + AORC_FIELD_NAME_SPEC_HUMID_2M_AG + "\","
+                         "                      \"land_surface_air__temperature\": \"" + AORC_FIELD_NAME_TEMP_2M_AG + "\","
+                         "                      \"land_surface_wind__x_component_of_velocity\": \"" + AORC_FIELD_NAME_WIND_U_10M_AG + "\","
+                         "                      \"land_surface_wind__y_component_of_velocity\": \"" + AORC_FIELD_NAME_WIND_V_10M_AG + "\","
+                         "                      \"land_surface_radiation~incoming~longwave__energy_flux\": \"" + AORC_FIELD_NAME_SOLAR_LONGWAVE + "\","
+                         "                      \"land_surface_radiation~incoming~shortwave__energy_flux\": \"" + AORC_FIELD_NAME_SOLAR_SHORTWAVE + "\","
+                         "                      \"land_surface_air__pressure\": \"" + AORC_FIELD_NAME_PRESSURE_SURFACE + "\""
+                         "                },"
+                         "                \"registration_function\": \"" + registration_functions[i] + "\","
                          + variables_line +
                          "                \"uses_forcing_file\": " + (uses_forcing_file[i] ? "true" : "false") + ""
                          "            },"
@@ -264,7 +286,7 @@ TEST_F(Bmi_C_Formulation_Test, GetResponse_0_a) {
 
     double response = formulation.get_response(0, 3600);
     // TODO: val seems to be this for now ... do something but account for error bound
-    ASSERT_EQ(response, 0.19108623197892585);
+    ASSERT_EQ(response, 0.19085536923187668);
 }
 
 /** Test to make sure we can execute multiple model instances with dynamic loading. */
@@ -295,7 +317,7 @@ TEST_F(Bmi_C_Formulation_Test, GetResponse_0_b) {
     for (int i = 0; i < 720; i++) {
         response = formulation.get_response(i, 3600);
     }
-    ASSERT_EQ(response, 0.0016562122305483094);
+    ASSERT_EQ(response, 0.00094952616396825284);
 }
 
 /** Simple test of output. */
@@ -307,7 +329,7 @@ TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_0_a) {
 
     double response = formulation.get_response(0, 3600);
     std::string output = formulation.get_output_line_for_timestep(0, ",");
-    ASSERT_EQ(output, "0.000000,0.000000,0.000000,0.000000,0.191086,0.191086");
+    ASSERT_EQ(output, "0.000000,0.000000,0.000000,0.000000,0.190855,0.190855");
 }
 
 /** Simple test of output with modified variables. */
@@ -319,7 +341,7 @@ TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_1_a) {
 
     double response = formulation.get_response(0, 3600);
     std::string output = formulation.get_output_line_for_timestep(0, ",");
-    ASSERT_EQ(output, "0.000000,0.000000,0.000000,0.000000,0.191086,0.191086");
+    ASSERT_EQ(output, "0.000000,0.000000,0.000000,0.000000,0.190855,0.190855");
 }
 
 /** Simple test of output with modified variables, picking time step when there was non-zero rain rate. */
@@ -334,7 +356,7 @@ TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_1_b) {
         formulation.get_response(i++, 3600);
     double response = formulation.get_response(i, 3600);
     std::string output = formulation.get_output_line_for_timestep(i, ",");
-    ASSERT_EQ(output, "0.007032,0.000634,0.000103,0.000294,0.001612,0.002009");
+    ASSERT_EQ(output, "0.007032,0.000339,0.000054,0.000000,0.001407,0.001461");
 }
 
 TEST_F(Bmi_C_Formulation_Test, determine_model_time_offset_0_a) {
@@ -391,14 +413,15 @@ TEST_F(Bmi_C_Formulation_Test, get_forcing_data_ts_contributions_0_a) {
     ASSERT_EQ(model_time, 0.0);
 
     std::vector<std::string> param_names = {param_name};
+    std::vector<bool> is_forcing_param = {true};
     std::vector<std::string> param_units = {"m"};
     std::vector<double> summed_contributions = {0.0};
 
     ASSERT_EQ(get_friend_forcing_time_step_size(formulation), (time_t)3600);
     time_step_t t_delta = 3600;
 
-    call_friend_get_forcing_data_ts_contributions(formulation, t_delta, model_time, param_names, param_units,
-                                                  summed_contributions);
+    call_friend_get_forcing_data_ts_contributions(formulation, t_delta, model_time, param_names, is_forcing_param,
+                                                  param_units, summed_contributions);
     ASSERT_EQ(summed_contributions[0], forcing_ts_param_value);
 }
 
@@ -429,14 +452,15 @@ TEST_F(Bmi_C_Formulation_Test, get_forcing_data_ts_contributions_0_b) {
     ASSERT_EQ(progressed_seconds, model_adapter->convert_model_time_to_seconds(model_time));
 
     std::vector<std::string> param_names = {param_name};
+    std::vector<bool> is_forcing_param = {true};
     std::vector<std::string> param_units = {"m"};
     std::vector<double> summed_contributions = {0.0};
 
     ASSERT_EQ(get_friend_forcing_time_step_size(formulation), (time_t)3600);
     time_step_t t_delta = 3600;
 
-    call_friend_get_forcing_data_ts_contributions(formulation, t_delta, model_time, param_names, param_units,
-                                                  summed_contributions);
+    call_friend_get_forcing_data_ts_contributions(formulation, t_delta, model_time, param_names, is_forcing_param,
+                                                  param_units, summed_contributions);
     ASSERT_EQ(summed_contributions[0], forcing_ts_param_value);
 }
 
@@ -471,14 +495,15 @@ TEST_F(Bmi_C_Formulation_Test, get_forcing_data_ts_contributions_1_a) {
     ASSERT_EQ(progressed_seconds, model_adapter->convert_model_time_to_seconds(model_time));
 
     std::vector<std::string> param_names = {param_name};
+    std::vector<bool> is_forcing_param = {true};
     std::vector<std::string> param_units = {"m"};
     std::vector<double> summed_contributions = {0.0};
 
     ASSERT_EQ(get_friend_forcing_time_step_size(formulation), (time_t)3600);
     time_step_t t_delta = 1800;
 
-    call_friend_get_forcing_data_ts_contributions(formulation, t_delta, model_time, param_names, param_units,
-                                                  summed_contributions);
+    call_friend_get_forcing_data_ts_contributions(formulation, t_delta, model_time, param_names, is_forcing_param,
+                                                  param_units, summed_contributions);
     double forcing_ts_param_value_2 = get_friend_forcing_param_value(formulation, param_name);
 
     ASSERT_EQ(summed_contributions[0], forcing_ts_param_value / 2.0);
@@ -515,14 +540,15 @@ TEST_F(Bmi_C_Formulation_Test, get_forcing_data_ts_contributions_1_b) {
     ASSERT_EQ(progressed_seconds, model_adapter->convert_model_time_to_seconds(model_time));
 
     std::vector<std::string> param_names = {param_name};
+    std::vector<bool> is_forcing_param = {true};
     std::vector<std::string> param_units = {"m"};
     std::vector<double> summed_contributions = {0.0};
 
     ASSERT_EQ(get_friend_forcing_time_step_size(formulation), (time_t)3600);
     time_step_t t_delta = 3600 + 1800;
 
-    call_friend_get_forcing_data_ts_contributions(formulation, t_delta, model_time, param_names, param_units,
-                                                  summed_contributions);
+    call_friend_get_forcing_data_ts_contributions(formulation, t_delta, model_time, param_names, is_forcing_param,
+                                                  param_units, summed_contributions);
     double forcing_ts_param_value_2 = get_friend_forcing_param_value(formulation, param_name);
 
     // Assert that these are actually values from two different forcing time steps.

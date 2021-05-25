@@ -91,6 +91,11 @@ add_automated_test(
         core/catchment/giuh/GIUH_Test.cpp
 )
 
+add_automated_test(
+  test_nexus
+  core/nexus/NexusTests.cpp
+)
+
 if(MPI_ACTIVE)
    add_automated_test(
            test_remote_nexus
@@ -119,6 +124,11 @@ if(LSTM_TORCH_LIB_ACTIVE)
    )
 endif()
 
+add_automated_test(
+        test_network
+        core/NetworkTests.cpp
+)
+
 # Unit tests
 # TODO: Make sure the geojson tests don't need to be added here also
 add_automated_test(
@@ -135,6 +145,7 @@ add_automated_test(
         forcing/Forcing_Test.cpp
         simulation_time/Simulation_Time_Test.cpp
         core/catchment/giuh/GIUH_Test.cpp
+        core/NetworkTests.cpp
         utils/include/StreamOutputTest.cpp
         realizations/Formulation_Manager_Test.cpp
 )
@@ -157,5 +168,6 @@ add_automated_test_w_mock(
         forcing/Forcing_Test.cpp
         simulation_time/Simulation_Time_Test.cpp
         core/catchment/giuh/GIUH_Test.cpp
+        core/NetworkTests.cpp
         realizations/Formulation_Manager_Test.cpp
 )

@@ -22,7 +22,9 @@ std::shared_ptr<Bmi_C_Adapter> Bmi_C_Formulation::construct_model(const geojson:
         throw std::runtime_error("BMI C formulation requires path to library file, but none provided in config");
     }
     std::string lib_file = library_file_iter->second.as_string();
-
+    auto reg_func_itr = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__REGISTRATION_FUNC);
+    std::string reg_func =
+            reg_func_itr == properties.end() ? BMI_C_DEFAULT_REGISTRATION_FUNC : reg_func_itr->second.as_string();
     return std::make_shared<Bmi_C_Adapter>(
             Bmi_C_Adapter(
                     lib_file,
@@ -31,6 +33,7 @@ std::shared_ptr<Bmi_C_Adapter> Bmi_C_Formulation::construct_model(const geojson:
                     is_bmi_using_forcing_file(),
                     get_allow_model_exceed_end_time(),
                     is_bmi_model_time_step_fixed(),
+                    reg_func,
                     output));
 }
 
@@ -51,19 +54,23 @@ void Bmi_C_Formulation::determine_model_time_offset() {
 /**
  * Get model input values from forcing data, accounting for model and forcing time steps not aligning.
  *
- * Get values to use to set model input variables, sourced from forcing data.  Account for if model time step
- * (MTS) does not align with forcing time step (FTS), either due to MTS starting after the start of FTS, MTS
+ * Get values to use to set model input variables for forcings, sourced from this instance's forcing data.  Skip any
+ * params in the collection that are not forcing params, as indicated by the given collection.  Account for if model
+ * time step (MTS) does not align with forcing time step (FTS), either due to MTS starting after the start of FTS, MTS
  * extending beyond the end of FTS, or both.
  *
  * @param t_delta The size of the model's time step in seconds.
  * @param model_initial_time The model's current time in its internal units and representation.
  * @param params An ordered collection of desired forcing param names from which data for inputs is needed.
+ * @param is_aorc_param Whether the param at each index is an AORC forcing param, or a different model param (which thus
+ *                      does not need to be processed here).
  * @param param_units An ordered collection units of strings representing the BMI model's expected units for the
  *                    corresponding input, so that value conversions of the proportional contributions are done.
  * @param summed_contributions A referenced ordered collection that will contain the returned summed contributions.
  */
 inline void Bmi_C_Formulation::get_forcing_data_ts_contributions(time_step_t t_delta, const double &model_initial_time,
                                                                  const std::vector<std::string> &params,
+                                                                 const std::vector<bool> &is_aorc_param,
                                                                  const std::vector<std::string> &param_units,
                                                                  std::vector<double> &summed_contributions)
 {
@@ -90,6 +97,10 @@ inline void Bmi_C_Formulation::get_forcing_data_ts_contributions(time_step_t t_d
 
         // Get the contributions from this forcing ts for all the forcing params needed.
         for (size_t i = 0; i < params.size(); ++i) {
+            // Skip indices for parameters that are not forcings
+            if (!is_aorc_param[i]) {
+                continue;
+            }
             // This is proportional to the ratio of (model ts seconds in this forcing ts) to (forcing ts total seconds)
             if (forcing.is_param_sum_over_time_step(params[i])) {
                 summed_contributions[i] += forcing.get_converted_value_for_param_in_units(params[i], param_units[i]) *
@@ -252,6 +263,16 @@ double Bmi_C_Formulation::get_var_value_as_double(const int& index, const std::s
                              " as double: no logic for converting variable type " + type);
 }
 
+bool Bmi_C_Formulation::is_bmi_input_variable(const std::string &var_name) {
+    const std::vector<std::string> names = get_bmi_model()->GetInputVarNames();
+    return std::any_of(names.cbegin(), names.cend(), [var_name](const std::string &s){ return var_name == s; });
+}
+
+bool Bmi_C_Formulation::is_bmi_output_variable(const string &var_name) {
+    const std::vector<std::string> names = get_bmi_model()->GetOutputVarNames();
+    return std::any_of(names.cbegin(), names.cend(), [var_name](const std::string &s){ return var_name == s; });
+}
+
 bool Bmi_C_Formulation::is_model_initialized() {
     return get_bmi_model()->is_model_initialized();
 }
@@ -264,7 +285,7 @@ bool Bmi_C_Formulation::is_model_initialized() {
  *                different than the model's internal time step.
  */
 void Bmi_C_Formulation::set_model_inputs_prior_to_update(const double &model_initial_time, time_step_t t_delta) {
-    std::string std_name;
+    std::string ngen_side_var_name;
 
     std::vector<std::string> in_var_names = get_bmi_model()->GetInputVarNames();
     // Get the BMI variables' units and associated internal standard names, keeping them in these
@@ -272,36 +293,77 @@ void Bmi_C_Formulation::set_model_inputs_prior_to_update(const double &model_ini
     std::vector<std::string> bmi_var_units(in_var_names.size());
     // We may need to sum contributions from multiple time steps before setting, so do that with this (indexes align)
     std::vector<double> variable_values(in_var_names.size(), 0.0);
-    // Right now, the only known field names are the standard names for forcings.
-    std::shared_ptr<std::set<std::string>> known_field_names = Forcing::get_forcing_field_names();
+    // Also keep track of which variables are forcings for later
+    std::vector<bool> is_variable_aorc(in_var_names.size());
+    std::shared_ptr<std::set<std::string>> known_aorc_fields = Forcing::get_forcing_field_names();
+
+    // Right now, the only known field names are:
+    //  1. the standard names for forcings, and
+    //  2. the standard ET variable
 
     // First get field name mappings and associated model-side units
-    for (auto & in_var_name : in_var_names) {
-        std_name = get_config_mapped_variable_name(in_var_name);
-        // Also, recognize some external CSDMS standard names, whether from model or configured mapping ...
+    for (int i = 0; i < in_var_names.size(); ++i) {
+        // First get mapped name if mapping is present in the realization config (arguement value is returned otherwise)
+        ngen_side_var_name = get_config_mapped_variable_name(in_var_names[i]);
+        // ************************************************************************************************************
+        // Account for internally known (i.e., hard-coded) mappings also
+        // ********************************************************************
+        // Note that after this point, can't assume mapped_name is what's returned by get_config_mapped_variable_name()
+        // ********************************************************************
+        // Map some external CSDMS standard names to expected forcing fields
         // TODO: right now handle just rainfall, but in the future, support more possibly
-        if (std_name == CSDMS_STD_NAME_RAIN_RATE) {
-            std_name = AORC_FIELD_NAME_PRECIP_RATE;
+        if (ngen_side_var_name == CSDMS_STD_NAME_RAIN_RATE) {
+            ngen_side_var_name = AORC_FIELD_NAME_PRECIP_RATE;
         }
-        // With any mapping translation done, if std_name is not in set of standard internal names, that is a problem
-        if (known_field_names->find(std_name) == known_field_names->end()) {
+        // ************************************************************************************************************
+        // Var name for framework side is now established, so check that this ngen-side name is recognized
+        // ********************************************************************
+        // Right now this must be either the potential ET input variable ...
+        if (ngen_side_var_name == NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP) {
+            standard_names[i] = NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP;
+            is_variable_aorc[i] = false;
+            bmi_var_units[i] = get_bmi_model()->GetVarUnits(in_var_names[i]);
+            double potential_et_val_m_per_s = calc_et();
+            // TODO: improve how this is handled, and actually support conversions
+            if (potential_et_val_m_per_s != 0.0 && bmi_var_units[i] != "m/s" && bmi_var_units[i] != "meters/second" && bmi_var_units[i] != "m s-1") {
+                throw std::runtime_error("Unsupported ET unit type for BMI model requiring provided ET value");
+            }
+            variable_values[i] = potential_et_val_m_per_s;
+        }
+        // ********************************************************************
+        // ... or a known forcing field
+        else if (known_aorc_fields->find(ngen_side_var_name) != known_aorc_fields->end()) {
+            standard_names[i] = ngen_side_var_name;
+            is_variable_aorc[i] = true;
+            bmi_var_units[i] = get_bmi_model()->GetVarUnits(in_var_names[i]);
+            // ****** Wait to calculate all the forcing values at once below with specialized function
+        }
+        // ********************************************************************
+        // ... or if it is none of those, we have a problem because we don't know how to properly set it
+        // TODO: add some kind of config setting to toggle allowing (but warn) this for certain situations; e.g., still
+        // TODO:    throw exception for variable with explicitly configured mapping (clearly user wants it to be
+        // TODO:    utilized), but allow setting to only warn if there's just a variable we don't know how to set that
+        // TODO:    potentially could just be ignored.
+        else {
             throw std::runtime_error(
-                    "Unrecognized BMI input variable '" + std_name + "' cannot be set in '" + get_model_type_name()
+                    "Unrecognized BMI input variable '"
+                    + in_var_names[i]
+                    + ngen_side_var_name == in_var_names[i] ? "'" : "'('" + ngen_side_var_name + "')"
+                    + " cannot be set in '"
+                    + get_model_type_name()
                     + "' as it is not a preset standard and not mapped to such a field name via configuration.");
         }
+        // ************************************************************************************************************
         // FIXME: later perhaps handle input variables that are themselves arrays, but for now do not support
-        if (get_bmi_model()->GetVarItemsize(in_var_name) != get_bmi_model()->GetVarNbytes(in_var_name)) {
+        if (get_bmi_model()->GetVarItemsize(in_var_names[i]) != get_bmi_model()->GetVarNbytes(in_var_names[i])) {
             throw std::runtime_error(
-                    "BMI input variable '" + in_var_name + "' is an array, which is not currently supported");
+                    "BMI input variable '" + in_var_names[i] + "' is an array, which is not currently supported");
         }
-        // Assign associated standard name and model-side unit string to those collections at corresponding index
-        standard_names.push_back(std_name);
-        bmi_var_units.push_back(get_bmi_model()->GetVarUnits(in_var_name));
     }
     // Run separate (hopefully inline) function for getting input values for each variable, potentially by summing
-    // proportionaly contributions from multiple forcing time steps if model time step doesn't align
-    get_forcing_data_ts_contributions(t_delta, model_initial_time, standard_names, bmi_var_units, variable_values);
-
+    // proportionally contributions from multiple forcing time steps if model time step doesn't align
+    get_forcing_data_ts_contributions(t_delta, model_initial_time, standard_names, is_variable_aorc, bmi_var_units,
+                                      variable_values);
     // Finally, set the model input values
     for (int i = 0; i < in_var_names.size(); ++i) {
         get_bmi_model()->SetValue(in_var_names[i], (void*)&(variable_values[i]));

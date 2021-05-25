@@ -5,22 +5,18 @@
 
 #include "GM_Object.hpp"
 
-#include <boost/geometry.hpp>
-#include <boost/geometry/geometries/geometries.hpp>
-
 #include "StreamHandler.hpp"
+#include "FileStreamHandler.hpp"
 
-namespace bg = boost::geometry;
 
 class HY_CatchmentArea : public HY_CatchmentRealization, public GM_Object
 {
     public:
 
-    typedef bg::model::d2::point_xy<double> point_t;
-    typedef bg::model::polygon<point_t> polygon_t;
-
     HY_CatchmentArea();
     HY_CatchmentArea(forcing_params forcing_config, utils::StreamHandler output_stream); //TODO not sure I like this pattern
+    void set_output_stream(std::string file_path){output = utils::FileStreamHandler(file_path.c_str());}
+    void write_output(std::string out){ output<<out; }
     virtual ~HY_CatchmentArea();
 
     protected:

@@ -15,6 +15,7 @@ target_include_directories(realizations_catchment PUBLIC
         ${PROJECT_SOURCE_DIR}/include/geojson
         ${PROJECT_SOURCE_DIR}/models
         ${PROJECT_SOURCE_DIR}/models/kernels
+        ${PROJECT_SOURCE_DIR}/models/kernels/evapotranspiration
         ${PROJECT_SOURCE_DIR}/models/tshirt/include
         )
         
@@ -24,7 +25,10 @@ target_link_libraries(realizations_catchment PUBLIC
         NGen::core_catchment_giuh
         NGen::models_tshirt
         NGen::geojson
+        NGen::kernels_evapotranspiration
         )
+
+add_dependencies(realizations_catchment NGen::kernels_evapotranspiration)
 
 if(LSTM_TORCH_LIB_ACTIVE)
    add_compile_definitions(NGEN_LSTM_TORCH_LIB_ACTIVE)

@@ -158,17 +158,18 @@ namespace realization {
 
                 for (geojson::Feature location : *fabric) {
                     if (not this->contains(location->get_id())) {
-                        std::shared_ptr<Formulation> missing_formulation = this->construct_missing_formulation(location->get_id(), output_stream, simulation_time_config);
+                        std::shared_ptr<Catchment_Formulation> missing_formulation = this->construct_missing_formulation(
+                          location->get_id(), output_stream, simulation_time_config);
                         this->add_formulation(missing_formulation);
                     }
                 }
             }
 
-            virtual void add_formulation(std::shared_ptr<Formulation> formulation) {
+            virtual void add_formulation(std::shared_ptr<Catchment_Formulation> formulation) {
                 this->formulations.emplace(formulation->get_id(), formulation);
             }
 
-            virtual std::shared_ptr<Formulation> get_formulation(std::string id) const {
+            virtual std::shared_ptr<Catchment_Formulation> get_formulation(std::string id) const {
                 // TODO: Implement on-the-fly formulation creation using global parameters
                 return this->formulations.at(id);
             }
@@ -191,16 +192,16 @@ namespace realization {
                 return this->formulations.empty();
             }
 
-            virtual typename std::map<std::string, std::shared_ptr<Formulation>>::const_iterator begin() const {
+            virtual typename std::map<std::string, std::shared_ptr<Catchment_Formulation>>::const_iterator begin() const {
                 return this->formulations.cbegin();
             }
 
-            virtual typename std::map<std::string, std::shared_ptr<Formulation>>::const_iterator end() const {
+            virtual typename std::map<std::string, std::shared_ptr<Catchment_Formulation>>::const_iterator end() const {
                 return this->formulations.cend();
             }
 
         protected:
-            std::shared_ptr<Formulation> construct_formulation_from_tree(
+            std::shared_ptr<Catchment_Formulation> construct_formulation_from_tree(
                 simulation_time_params &simulation_time_config,
                 std::string identifier,
                 boost::property_tree::ptree &tree,
@@ -246,17 +247,18 @@ namespace realization {
                     simulation_time_config.end_time
                 );
 
-                std::shared_ptr<Formulation> constructed_formulation = construct_formulation(formulation_type_key, identifier, forcing_config, output_stream);
+                std::shared_ptr<Catchment_Formulation> constructed_formulation = construct_formulation(formulation_type_key, identifier, forcing_config, output_stream);
+                //, geometry);
                 constructed_formulation->create_formulation(formulation_config, &global_formulation_parameters);
                 return constructed_formulation;
             }
 
-            std::shared_ptr<Formulation> construct_missing_formulation(std::string identifier, utils::StreamHandler output_stream, simulation_time_params &simulation_time_config) {
+            std::shared_ptr<Catchment_Formulation> construct_missing_formulation(std::string identifier, utils::StreamHandler output_stream, simulation_time_params &simulation_time_config){
                 std::string formulation_type_key = get_formulation_key(global_formulation_tree.get_child("formulations.."));
 
                 forcing_params forcing_config = this->get_global_forcing_params(identifier, simulation_time_config);
 
-                std::shared_ptr<Formulation> missing_formulation = construct_formulation(formulation_type_key, identifier, forcing_config, output_stream);
+                std::shared_ptr<Catchment_Formulation> missing_formulation = construct_formulation(formulation_type_key, identifier, forcing_config, output_stream);
                 missing_formulation->create_formulation(this->global_formulation_parameters);
                 return missing_formulation;
             }
@@ -333,7 +335,7 @@ namespace realization {
 
             geojson::PropertyMap global_forcing;
 
-            std::map<std::string, std::shared_ptr<Formulation>> formulations;
+            std::map<std::string, std::shared_ptr<Catchment_Formulation>> formulations;
     };
 }
 #endif // NGEN_FORMULATION_MANAGER_H

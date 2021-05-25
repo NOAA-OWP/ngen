@@ -46,7 +46,7 @@ namespace realization {
             virtual const std::vector<std::string>& get_required_parameters() = 0;
 
             virtual void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr) = 0;
-
+            virtual void create_formulation(geojson::PropertyMap properties) = 0;
             virtual ~Catchment_Formulation(){};
 
     protected:
