@@ -128,6 +128,7 @@ if (${NGEN_ACTIVATE_PYTHON})
     include_directories(${PYTHON_INCLUDE_DIR})
 
     find_package(Python 3.6.12 REQUIRED COMPONENTS Development NumPy)
+    add_subdirectory(extern/pybind11)
 endif()
 
 target_include_directories(ngen PUBLIC
