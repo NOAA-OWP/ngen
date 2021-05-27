@@ -27,6 +27,7 @@ target_link_libraries(realizations_catchment PUBLIC
         NGen::models_tshirt
         NGen::geojson
         NGen::kernels_evapotranspiration
+        pybind11::embed
         )
 
 add_dependencies(realizations_catchment NGen::kernels_evapotranspiration)
