@@ -14,6 +14,29 @@
 //#include "StreamHandler.hpp"
 
 
+namespace py = pybind11;
+
+
+class Routing_Py_Adapter {
+
+public:
+
+  Routing_Py_Adapter();
+
+
+
+private:
+
+  int empty_var;
+
+
+
+
+
+
+
+};
+
 
 
 

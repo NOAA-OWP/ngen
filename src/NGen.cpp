@@ -7,6 +7,9 @@
 #include <Catchment_Formulation.hpp>
 #include <HY_Features.hpp>
 
+#include <pybind11/embed.h>
+namespace py = pybind11;
+
 #include "NGenConfig.h"
 #include "tshirt_params.h"
 
@@ -21,6 +24,12 @@ namespace py = pybind11;
 std::string catchmentDataFile = "";
 std::string nexusDataFile = "";
 std::string REALIZATION_CONFIG_PATH = "";
+
+//#ifdef ACTIVATE_PYTHON
+    // Start Python interpreter and keep it alive
+//    py::scoped_interpreter guard{};
+//#endif // ACTIVATE_PYTHON
+
 
 std::unordered_map<std::string, std::ofstream> nexus_outfiles;
 
