@@ -16,6 +16,11 @@ if(LSTM_TORCH_LIB_ACTIVE)
     add_compile_definitions(LSTM_TORCH_LIB_TESTS_ACTIVE)
 endif()
 
+if(NGEN_ACTIVATE_PYTHON)
+    add_compile_definitions(ROUTING_PYBIND_TESTS_ACTIVE)
+    #find_package(pybind11 REQUIRED)  # or `add_subdirectory(pybind11)`
+endif()
+
 # Add test source files (e.g., test1.cpp)
 #add_executable(test_hymod models/hymod/include/HymodTest.cpp)
 #target_link_libraries(test_hymod gtest gtest_main)
@@ -122,6 +127,18 @@ if(LSTM_TORCH_LIB_ACTIVE)
            models/lstm/include/LSTM_Test.cpp
            realizations/catchments/LSTM_Realization_Test.cpp
    )
+endif()
+
+if(NGEN_ACTIVATE_PYTHON)
+   #find_package(pybind11 REQUIRED)  # or `add_subdirectory(pybind11)`
+
+   add_automated_test(
+           test_routing_pybind
+           routing/Routing_Py_Bind_Test.cpp
+   )
+
+   #target_link_libraries(test_routing_pybind PRIVATE pybind11::embed)
+   #target_link_libraries(test_routing_pybind pybind11::embed)
 endif()
 
 add_automated_test(
