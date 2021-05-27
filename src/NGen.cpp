@@ -13,6 +13,11 @@
 #include <FileChecker.h>
 #include <boost/algorithm/string.hpp>
 
+#ifdef ACTIVATE_PYTHON
+#include <pybind11/embed.h>
+namespace py = pybind11;
+#endif // ACTIVATE_PYTHON
+
 std::string catchmentDataFile = "";
 std::string nexusDataFile = "";
 std::string REALIZATION_CONFIG_PATH = "";
@@ -91,6 +96,11 @@ int main(int argc, char *argv[]) {
           if(nexus_subset_ids.size() == 1 && nexus_subset_ids[0] == "") nexus_subset_ids.pop_back();
           if(catchment_subset_ids.size() == 1 && catchment_subset_ids[0] == "") catchment_subset_ids.pop_back();
         }
+
+#ifdef ACTIVATE_PYTHON
+    // Start Python interpreter and keep it alive
+    py::scoped_interpreter guard{};
+#endif // ACTIVATE_PYTHON
 
     //Read the collection of nexus
     std::cout << "Building Nexus collection" << std::endl;
