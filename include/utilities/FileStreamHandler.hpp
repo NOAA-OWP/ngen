@@ -10,7 +10,7 @@ namespace utils
       public:
             FileStreamHandler(const char* path) : StreamHandler()
             {
-                auto stream = std::make_shared<std::ofstream>(std::ofstream());
+                auto stream = std::make_shared<std::ofstream>();
                 stream->open(path, std::ios::trunc);
                 output_stream = stream;
             }

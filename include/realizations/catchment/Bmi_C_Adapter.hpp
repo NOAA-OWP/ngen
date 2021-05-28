@@ -279,7 +279,7 @@ namespace models {
              * @return
              */
             std::string GetVarUnits(std::string name);
-            
+
             /**
              * Get location for a variable.
              *
