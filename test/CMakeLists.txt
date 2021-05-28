@@ -18,7 +18,6 @@ endif()
 
 if(NGEN_ACTIVATE_PYTHON)
     add_compile_definitions(ROUTING_PYBIND_TESTS_ACTIVE)
-    #find_package(pybind11 REQUIRED)  # or `add_subdirectory(pybind11)`
 endif()
 
 # Add test source files (e.g., test1.cpp)
@@ -130,15 +129,11 @@ if(LSTM_TORCH_LIB_ACTIVE)
 endif()
 
 if(NGEN_ACTIVATE_PYTHON)
-   #find_package(pybind11 REQUIRED)  # or `add_subdirectory(pybind11)`
-
    add_automated_test(
            test_routing_pybind
            routing/Routing_Py_Bind_Test.cpp
    )
 
-   #target_link_libraries(test_routing_pybind PRIVATE pybind11::embed)
-   #target_link_libraries(test_routing_pybind pybind11::embed)
 endif()
 
 add_automated_test(
