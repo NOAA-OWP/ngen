@@ -3,6 +3,9 @@
 #include "gtest/gtest.h"
 #include <vector>
 #include <exception>
+#include <chrono>
+#include <unordered_map>
+
 #include "FileChecker.h"
 #include "Bmi_C_Adapter.hpp"
 #include "State_Exception.hpp"
@@ -42,7 +45,7 @@ protected:
             "DEEP_GW_TO_CHANNEL_FLUX",
             "Q_OUT"
     };
-    
+
     std::vector<std::string> expected_output_var_locations = {
             "node",
             "node",
@@ -80,9 +83,9 @@ protected:
     };
 
     int expected_grid_rank = 1;
-    
+
     int expected_grid_size = 1;
-    
+
     std::string expected_grid_type = "scalar";
 
     int expected_var_nbytes = 8; //type double
@@ -187,6 +190,71 @@ TEST_F(Bmi_C_Adapter_Test, Update_0_c) {
         adapter.Update();
     std::vector<double> q_out_vals = adapter.GetValue<double>("Q_OUT");
     // TODO: actually assert these values are correct
+    adapter.Finalize();
+}
+
+/** Profile the update function and GetValues functions */
+TEST_F(Bmi_C_Adapter_Test, Profile)
+{
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
+
+    int num_ouput_items = adapter.GetOutputItemCount();
+    int num_input_items = adapter.GetInputItemCount();
+
+    std::vector<std::string> output_names = adapter.GetOutputVarNames();
+    std::vector<std::string> input_names = adapter.GetInputVarNames();
+
+    std::unordered_map<std::string, std::vector<long> > saved_times;
+
+
+    using time_point = std::chrono::time_point<std::chrono::steady_clock>;
+    auto to_micros = [](const time_point& s, const time_point& e){ return std::chrono::duration_cast<std::chrono::microseconds>(e - s).count();};
+
+    adapter.Initialize();
+    // Do the first few time steps
+    for (int i = 0; i < 720; i++)
+    {
+        // record time for Update
+        auto s1 = std::chrono::steady_clock::now();
+        adapter.Update();
+        auto e1 = std::chrono::steady_clock::now();
+        saved_times["Update"].push_back(to_micros(s1,e1));
+
+        // record time to get each output variable
+        for(std::string name : output_names)
+        {
+            auto s2 = std::chrono::steady_clock::now();
+            std::vector<double> values = adapter.GetValue<double>(name);
+            auto e2 = std::chrono::steady_clock::now();
+            saved_times["Get " + name].push_back(to_micros(s2,e2));
+        }
+
+        // record time to get each input variable
+        for(std::string name : input_names)
+        {
+            auto s3 = std::chrono::steady_clock::now();
+            std::vector<double> values = adapter.GetValue<double>(name);
+            auto e3 = std::chrono::steady_clock::now();
+            saved_times["Get " + name].push_back(to_micros(s3,e3));
+        }
+
+    }
+
+    // calcuate average time for each record
+
+    for ( auto& kv : saved_times )
+    {
+        auto key = kv.first;
+        auto& v = kv.second;
+        long sum = 0;
+
+        sum = std::accumulate(v.begin(), v.end(), sum );
+        double average = double(sum) / v.size();
+
+        std::cout << "Average time for " << key << " = " << average << "µs\n";
+    }
+
     adapter.Finalize();
 }
 
@@ -360,7 +428,7 @@ TEST_F(Bmi_C_Adapter_Test, GetVarGrid_0_a) {
 
     std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
     int expected_grid = expected_output_var_grids[out_var_index];
-    
+
     try {
         ASSERT_EQ(adapter.GetVarGrid(variable_name), expected_grid);
     }
@@ -378,7 +446,7 @@ TEST_F(Bmi_C_Adapter_Test, GetVarGrid_0_b) {
 
     std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
     int expected_grid = expected_output_var_grids[out_var_index];
-    
+
     try {
         ASSERT_EQ(adapter.GetVarGrid(variable_name), expected_grid);
     }
@@ -396,7 +464,7 @@ TEST_F(Bmi_C_Adapter_Test, GetVarLocation_0_a) {
 
     std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
     std::string expected_location = expected_output_var_locations[out_var_index];
-    
+
     try {
         ASSERT_EQ(adapter.GetVarLocation(variable_name), expected_location);
     }
@@ -414,7 +482,7 @@ TEST_F(Bmi_C_Adapter_Test, GetVarLocation_0_b) {
 
     std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
     std::string expected_location = expected_output_var_locations[out_var_index];
-    
+
     try {
         ASSERT_EQ(adapter.GetVarLocation(variable_name), expected_location);
     }
@@ -432,7 +500,7 @@ TEST_F(Bmi_C_Adapter_Test, GetVarUnits_0_a) {
 
     std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
     std::string expected_units = expected_output_var_units[out_var_index];
-    
+
     try {
         ASSERT_EQ(adapter.GetVarUnits(variable_name), expected_units);
     }
@@ -450,7 +518,7 @@ TEST_F(Bmi_C_Adapter_Test, GetVarType_0_a) {
 
     std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
     std::string expected_type = expected_output_var_types[out_var_index];
-    
+
     try {
         ASSERT_EQ(adapter.GetVarType(variable_name), expected_type);
     }
@@ -466,7 +534,7 @@ TEST_F(Bmi_C_Adapter_Test, GetVarNbytes_0_a) {
 
     Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
                           REGISTRATION_FUNC, utils::StreamHandler());
-    
+
     std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
 
     try {
@@ -486,7 +554,7 @@ TEST_F(Bmi_C_Adapter_Test, DISABLED_GetGridType_0_a) {
 
     std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
     int grd = adapter.GetVarGrid(variable_name);
-    
+
     try {
         ASSERT_EQ(adapter.GetGridType(grd), expected_grid_type);
     }
@@ -505,7 +573,7 @@ TEST_F(Bmi_C_Adapter_Test, DISABLED_GetGridRank_0_a) {
 
     std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
     int grd = adapter.GetVarGrid(variable_name);
-    
+
     try {
         ASSERT_EQ(adapter.GetGridRank(grd), expected_grid_rank);
     }
@@ -524,7 +592,7 @@ TEST_F(Bmi_C_Adapter_Test, DISABLED_GetGridSize_0_a) {
 
     std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
     int grd = adapter.GetVarGrid(variable_name);
-    
+
     try {
         ASSERT_EQ(adapter.GetGridSize(grd), expected_grid_size);
     }
