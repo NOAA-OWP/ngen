@@ -6,14 +6,17 @@
 #include <exception>
 #include <memory>
 #include <string>
-#include "bmi.hxx"
 #include "pybind11/pybind11.h"
 #include "pybind11/pytypes.h"
 #include "pybind11/numpy.h"
 #include "JSONProperty.hpp"
 #include "StreamHandler.hpp"
+#include "boost/algorithm/string.hpp"
+#include "Bmi_Adapter.hpp"
 
 namespace py = pybind11;
+
+using namespace std;
 
 namespace models {
     namespace bmi {
@@ -23,20 +26,28 @@ namespace models {
          * An adapter class to serve as a C++ interface to the aspects of external models written in the Python
          * language that implement the BMI.
          */
-        class Bmi_Py_Adapter {
+        class Bmi_Py_Adapter : public Bmi_Adapter<py::object> {
 
             // TODO: implement needed the BMI methods and translate to Python calls
 
         public:
 
+            /*
             explicit Bmi_Py_Adapter(const string& type_name, utils::StreamHandler output);
 
-            Bmi_Py_Adapter(const string &type_name, std::string bmi_init_config, utils::StreamHandler output);
+            Bmi_Py_Adapter(const string &type_name, std::string bmi_init_config, bool allow_exceed_end,
+                           bool has_fixed_time_step, utils::StreamHandler output);
 
-            Bmi_Py_Adapter(const string &type_name, const geojson::JSONProperty& other_input_vars,
+            Bmi_Py_Adapter(const string &type_name, bool allow_exceed_end, bool has_fixed_time_step,
+                           const geojson::JSONProperty& other_input_vars, utils::StreamHandler output);
+            */
+
+            Bmi_Py_Adapter(const string &type_name, std::string bmi_init_config, bool allow_exceed_end,
+                           bool has_fixed_time_step, const geojson::JSONProperty& other_input_vars,
                            utils::StreamHandler output);
 
-            Bmi_Py_Adapter(const string &type_name, const std::string& bmi_init_config,
+            Bmi_Py_Adapter(const string &type_name, std::string  bmi_init_config, std::string forcing_file_path,
+                           bool allow_exceed_end, bool has_fixed_time_step,
                            const geojson::JSONProperty& other_input_vars, utils::StreamHandler output);
 
             /**
@@ -68,40 +79,6 @@ namespace models {
             std::vector<std::string> get_input_var_names();
 
             /**
-             * Initialize the wrapped BMI model object using the value from the `bmi_init_config` member variable and
-             * the object's ``Initialize`` function.
-             *
-             * If no attempt to initialize the model has yet been made (i.e., ``model_initialized`` is ``false`` when
-             * this function is called), then ``model_initialized`` is set to ``true`` and initialization is attempted
-             * for the model object. If initialization fails, an exception will be raised, with it's type and message
-             * saved as part of this object's state.
-             *
-             * If an attempt to initialize the model has already been made (i.e., ``model_initialized`` is ``true``),
-             * this function will either simply return or will throw a runtime_error, with the message listing the
-             * type and message of the exception from the earlier attempt.
-             */
-            void Initialize();
-
-            /**
-             * Initialize the wrapped BMI model object using the given config file and the object's ``Initialize``
-             * function.
-             *
-             * If the given file is not the same as what is in `bmi_init_config`` and the model object has not already
-             * been initialized, this function will produce a warning message about the difference, then subsequently
-             * update `bmi_init_config`` to the given file.  It will then proceed with initialization.
-             *
-             * However, if the given file is not the same as what is in `bmi_init_config``, but the model has already
-             * been initialized, a runtime_error exception is thrown.
-             *
-             * This otherwise operates using the logic of ``Initialize()``.
-             *
-             * @param config_file
-             * @see Initialize()
-             * @throws runtime_error If already initialized but using a different file than the passed argument.
-             */
-            void Initialize(const std::string& config_file);
-
-            /**
              * Parse variable value(s) from within "other_vars" property of formulation config, to a numpy array suitable for
              * passing to the BMI model via the ``set_value`` function.
              *
@@ -110,33 +87,110 @@ namespace models {
              */
             static py::array parse_other_var_val_for_setter(const geojson::JSONProperty& other_value_json);
 
-        private:
+            int GetInputItemCount() override;
 
-            /** Path (as a string) to the BMI config file for initializing the Python model object (empty if none). */
-            std::string bmi_init_config;
-            /** Message from an exception (if encountered) on the first attempt to initialize ``py_bmi_model_obj``. */
-            std::string init_exception_msg;
-            /** Pointer to collection of input variable names for BMI object, used by ``get_input_var_names()``. */
-            std::shared_ptr<std::vector<std::string>> input_var_names;
-            /** A pointer to the Python BMI model object. */
-            std::shared_ptr<py::object> py_bmi_model_obj;
-            /** A pointer to a string with the parent package name of the Python type referenced by ``py_bmi_type_ref``. */
-            std::shared_ptr<std::string> py_bmi_type_package_name;
-            /** A pointer to a reference to the Python type that provides the BMI interface. */
-            std::shared_ptr<py::object> py_bmi_type_ref;
-            /** A pointer to a string with the simple name of the Python type referenced by ``py_bmi_type_ref``. */
-            std::shared_ptr<std::string> py_bmi_type_simple_name;
-            /** Whether the model object has been initialized yet, which is always initially ``false``. */
-            bool model_initialized = false;
-            utils::StreamHandler output;
+            vector<std::string> GetInputVarNames() override;
+
+            int GetOutputItemCount() override;
+
+            vector<std::string> GetOutputVarNames() override;
+
+            void Update() override;
+
+            void UpdateUntil(double time) override;
+
+            double GetCurrentTime() override;
+
+            double GetEndTime() override;
+
+            double GetStartTime() override;
+
+            string GetVarType(std::string name) override;
+
+            string GetVarUnits(std::string name) override;
+
+            int GetVarGrid(std::string name) override;
+
+            int GetVarItemsize(std::string name) override;
+
+            int GetVarNbytes(std::string name) override;
+
+            string GetVarLocation(std::string name) override;
+
+            void GetValue(std::string name, void *dest) override;
+
+            template<typename T>
+            void copy_from_numpy_array(const py::array_t<float, py::array::c_style>& np_array, T* dest) {
+                auto direct_array_access = np_array.unchecked<1>();
+                for (int i = 0; i < np_array.size(); i++) {
+                    dest[i] = (T)(direct_array_access[i]);
+                }
+            }
+
+        protected:
+            std::string model_name = "BMI Python model";
 
             /**
-             * Initialize the reference to the Python BMI type, as stored in ``py_bmi_type_ref``, and set the member
-             * storing the name of this type and its parent package as well.
+             * Construct the backing BMI model object, then call its BMI-native ``Initialize()`` function.
              *
-             * @param type_name The fully-qualified name of the reference to the Python BMI-implementing type.
+             * Implementations should return immediately without taking any further action if ``model_initialized`` is
+             * already ``true``.
+             *
+             * The call to the BMI native ``Initialize(string)`` should pass the value stored in ``bmi_init_config``.
              */
-            inline void init_py_bmi_type(std::string type_name);
+            void construct_and_init_backing_model() override {
+                if (model_initialized)
+                    return;
+                try {
+                    separate_package_and_simple_name();
+                    // This is a class object for the BMI module Python class
+                    py::object bmi_py_class = py::module_::import(py_bmi_type_package_name->c_str()).attr(
+                            py_bmi_type_simple_name->c_str());
+                    // This is the actual backing model object
+                    bmi_model = make_shared<py::object>(bmi_py_class());
+                    bmi_model->attr("Initialize")(bmi_init_config);
+                }
+                    // Record the exception message before re-throwing to handle subsequent function calls properly
+                catch (exception& e) {
+                    init_exception_msg = string(e.what());
+                    // Make sure this is non-empty to be consistent with the above logic
+                    if (init_exception_msg.empty()) {
+                        init_exception_msg = "Unknown Python model initialization exception.";
+                    }
+                    throw e;
+                }
+            }
+
+
+        private:
+
+            /** Fully qualified Python type name for backing module. */
+            string bmi_py_type_name;
+            /** A binding to the Python numpy package/module. */
+            py::module_ np;
+            /** A pointer to a string with the parent package name of the Python type referenced by ``py_bmi_type_ref``. */
+            shared_ptr<string> py_bmi_type_package_name;
+            /** A pointer to a string with the simple name of the Python type referenced by ``py_bmi_type_ref``. */
+            shared_ptr<string> py_bmi_type_simple_name;
+
+            inline void separate_package_and_simple_name() {
+                if (!model_initialized) {
+                    vector<string> split_name;
+                    string delimiter = ".";
+
+                    size_t pos = 0;
+                    string token;
+                    while ((pos = bmi_py_type_name.find(delimiter)) != string::npos) {
+                        token = bmi_py_type_name.substr(0, pos);
+                        split_name.emplace_back(token);
+                        bmi_py_type_name.erase(0, pos + delimiter.length());
+                    }
+
+                    py_bmi_type_simple_name = make_shared<string>(split_name.back());
+                    split_name.pop_back();
+                    py_bmi_type_package_name = make_shared<string>(boost::algorithm::join(split_name, delimiter));
+                }
+            }
         };
 
     }
