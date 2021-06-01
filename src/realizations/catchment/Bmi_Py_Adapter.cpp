@@ -2,15 +2,17 @@
 
 #include <exception>
 #include <utility>
-
+#include "pybind11/numpy.h"
 #include "Bmi_Py_Adapter.hpp"
-#include "boost/algorithm/string.hpp"
 
 using namespace models::bmi;
+using namespace std;
+using namespace pybind11::literals; // to bring in the `_a` literal for pybind11 keyword args functionality
 
-Bmi_Py_Adapter::Bmi_Py_Adapter(const std::string &type_name, utils::StreamHandler output)
-    : Bmi_Py_Adapter(type_name, "", output) { }
+//Bmi_Py_Adapter::Bmi_Py_Adapter(const std::string &type_name, utils::StreamHandler output)
+//    : Bmi_Py_Adapter(type_name, "", output) { }
 
+/*
 Bmi_Py_Adapter::Bmi_Py_Adapter(const std::string &type_name, std::string bmi_init_config,
                                utils::StreamHandler output)
    : bmi_init_config(std::move(bmi_init_config)), output(std::move(output))
@@ -22,7 +24,7 @@ Bmi_Py_Adapter::Bmi_Py_Adapter(const std::string &type_name, std::string bmi_ini
     // TODO: later, support reading __init__ args (as done below commented out), but for now, just assume no arg.
     py_bmi_model_obj = std::make_shared<py::object>((*py_bmi_type_ref)());
 
-    /* ***********************************
+    / * ***********************************
     // Create the BMI model object of the appropriate type using the type reference
     auto it_py_init_args = properties.find(CFG_PROP_KEY_MODEL_PYTHON_INIT_ARGS);
     if (it_py_init_args != properties.end() && !it_py_init_args->second.get_values().empty()) {
@@ -54,27 +56,134 @@ Bmi_Py_Adapter::Bmi_Py_Adapter(const std::string &type_name, std::string bmi_ini
         // If no __init__ args are present, just go with no-arg __init__
         set_bmi_model(std::make_shared<pybind11::object>((*py_bmi_type_ref)()));
     }
-    *********************************** */
+    *********************************** * /
 
     // Then perform the BMI initialization for the model
     Initialize();
 }
+*/
 
-Bmi_Py_Adapter::Bmi_Py_Adapter(const std::string &type_name, const geojson::JSONProperty& other_input_vars,
-                               utils::StreamHandler output) : Bmi_Py_Adapter(type_name, "", other_input_vars, output) {}
+Bmi_Py_Adapter::Bmi_Py_Adapter(const string &type_name, string bmi_init_config, bool allow_exceed_end,
+                               bool has_fixed_time_step, const geojson::JSONProperty& other_input_vars,
+                               utils::StreamHandler output)
+    : Bmi_Py_Adapter(type_name, move(bmi_init_config), "", allow_exceed_end, has_fixed_time_step, other_input_vars,
+                     move(output)) {}
 
-Bmi_Py_Adapter::Bmi_Py_Adapter(const std::string &type_name, const std::string& bmi_init_config,
-                               const geojson::JSONProperty& other_vars, utils::StreamHandler output)
-    : Bmi_Py_Adapter(type_name, bmi_init_config, output)
-{
-    py::tuple in_var_names_tuple = py_bmi_model_obj->attr("get_input_var_names")();
-    // TODO: consider adding error message if something in other vars other than input variables (output and/or unrecognized)
+Bmi_Py_Adapter::Bmi_Py_Adapter(const string &type_name, string bmi_init_config, string forcing_file_path,
+                               bool allow_exceed_end, bool has_fixed_time_step,
+                               const geojson::JSONProperty& other_input_vars, utils::StreamHandler output)
+                               : Bmi_Adapter<py::object>(type_name +" (BMI Py)", move(bmi_init_config),
+                                                         move(forcing_file_path), allow_exceed_end, has_fixed_time_step,
+                                                         other_input_vars, output),
+                                 np(py::module_::import("numpy")) /* like 'import numpy as np' */ { }
+
+double Bmi_Py_Adapter::GetCurrentTime() {
+    // TODO: will need to verify the implicit casting for this works as expected
+    return py::float_(bmi_model->attr("get_current_time")());
+}
+
+double Bmi_Py_Adapter::GetEndTime() {
+    // TODO: will need to verify the implicit casting for this works as expected
+    return py::float_(bmi_model->attr("get_end_time")());
+}
+
+int Bmi_Py_Adapter::GetInputItemCount() {
+    return py::int_(bmi_model->attr("get_input_item_count")());
+}
+
+vector<string> Bmi_Py_Adapter::GetInputVarNames() {
+    vector<string> in_var_names(GetInputItemCount());
+    py::tuple in_var_names_tuple = bmi_model->attr("get_input_var_names")();
+    int i = 0;
     for (auto && tuple_item : in_var_names_tuple) {
-        std::string var_name = pybind11::str(tuple_item);
-        if (other_vars.has_key(var_name)) {
-            py_bmi_model_obj->attr("set_value")(var_name, parse_other_var_val_for_setter(other_vars.at(var_name)));
-        }
+        string var_name = py::str(tuple_item);
+        in_var_names[i++] = var_name;
     }
+    return in_var_names;
+}
+
+int Bmi_Py_Adapter::GetOutputItemCount() {
+    return py::int_(bmi_model->attr("get_output_item_count")());
+}
+
+vector<string> Bmi_Py_Adapter::GetOutputVarNames() {
+    vector<string> out_var_names(GetOutputItemCount());
+    py::tuple out_var_names_tuple = bmi_model->attr("get_output_var_names")();
+    int i = 0;
+    for (auto && tuple_item : out_var_names_tuple) {
+        string var_name = py::str(tuple_item);
+        out_var_names[i++] = var_name;
+    }
+    return out_var_names;
+}
+
+double Bmi_Py_Adapter::GetStartTime() {
+    // TODO: will need to verify the implicit casting for this works as expected
+    return py::float_(bmi_model->attr("get_start_time")());
+}
+
+void Bmi_Py_Adapter::GetValue(std::string name, void *dest) {
+    string val_type = GetVarType(name);
+    int val_item_size = GetVarItemsize(name);
+    vector<string> in_v = GetInputVarNames();
+    int num_items = find(in_v.begin(), in_v.end(), name) != in_v.end() ? GetInputItemCount() : GetOutputItemCount();
+    py::array_t<float, py::array::c_style> dest_array = np.attr("zeros")(num_items, "dtype"_a=val_type, "order"_a="C");
+    bmi_model->attr("get_value")(name, dest_array);
+    // TODO: now, how to get things from the buffer of this array to the pointer?
+    // These get a little tricky because they might be implementation specific, so some might be repeated
+    // Probably handles 8 bytes
+    if (val_item_size == sizeof(double)) {
+        copy_from_numpy_array<double>(dest_array, (double*)dest);
+    }
+    // Probably handles 4 bytes
+    else if (val_item_size == sizeof(int)) {
+        copy_from_numpy_array<int>(dest_array, (int*)dest);
+    }
+    // Probably handles 2 bytes
+    else if (val_item_size == sizeof(short)) {
+        copy_from_numpy_array<short>(dest_array, (short*)dest);
+    }
+    // Probably handles 1 byte
+    else if (val_item_size == sizeof(char)) {
+        copy_from_numpy_array<char>(dest_array, (char*)dest);
+    }
+    // Run a few more to try to catch things we've missed
+    else if (val_item_size == sizeof(long)) {
+        copy_from_numpy_array<long>(dest_array, (long*)dest);
+    }
+    else if (val_item_size == sizeof(long long)) {
+        copy_from_numpy_array<long long>(dest_array, (long long*)dest);
+    }
+    else if (val_item_size == sizeof(long double)) {
+        copy_from_numpy_array<long double>(dest_array, (long double*)dest);
+    }
+    else {
+        thrown runtime_exception("Unable to determine an appropriate type for destination array.");
+    }
+}
+
+int Bmi_Py_Adapter::GetVarGrid(std::string name) {
+    return py::int_(bmi_model->attr("get_var_grid")(name));
+}
+
+int Bmi_Py_Adapter::GetVarItemsize(std::string name) {
+    return py::int_(bmi_model->attr("get_var_grid")(name));
+}
+
+string Bmi_Py_Adapter::GetVarLocation(std::string name) {
+    return py::str(bmi_model->attr("get_var_location")(name));
+}
+
+int Bmi_Py_Adapter::GetVarNbytes(std::string name) {
+    return py::int_(bmi_model->attr("get_var_nbytes")(name));
+}
+
+string Bmi_Py_Adapter::GetVarType(std::string name) {
+    return py::str(bmi_model->attr("get_var_type")(name));
+}
+
+string Bmi_Py_Adapter::GetVarUnits(std::string name) {
+    return py::str(bmi_model->attr("get_var_units")(name));
 }
 
 std::string Bmi_Py_Adapter::get_bmi_type_package() const {
@@ -85,119 +194,12 @@ std::string Bmi_Py_Adapter::get_bmi_type_simple_name() const {
     return py_bmi_type_simple_name == nullptr ? "" : *py_bmi_type_simple_name;
 }
 
-int Bmi_Py_Adapter::get_input_item_count() {
-    return get_input_var_names().size();
+void Bmi_Py_Adapter::Update() {
+    bmi_model->attr("update")();
 }
 
-std::vector<std::string> Bmi_Py_Adapter::get_input_var_names() {
-    if (input_var_names == nullptr) {
-        int count = py::int_(py_bmi_model_obj->attr("get_input_item_count")());
-        input_var_names = std::make_shared<std::vector<std::string>>(std::vector<std::string>(count));
-
-        py::tuple in_var_names_tuple = py_bmi_model_obj->attr("get_input_var_names")();
-        for (auto && tuple_item : in_var_names_tuple) {
-            std::string var_name = py::str(tuple_item);
-            input_var_names->emplace_back(var_name);
-        }
-    }
-
-    return *input_var_names;
-}
-
-/**
-  * Initialize the wrapped BMI model object using the value from the `bmi_init_config` member variable and
-  * the object's ``Initialize`` function.
-  *
-  * If no attempt to initialize the model has yet been made (i.e., ``model_initialized`` is ``false`` when
-  * this function is called), then ``model_initialized`` is set to ``true`` and initialization is attempted
-  * for the model object. If initialization fails, an exception will be raised, with it's type and message
-  * saved as part of this object's state.
-  *
-  * If an attempt to initialize the model has already been made (i.e., ``model_initialized`` is ``true``),
-  * this function will either simply return or will throw a runtime_error, with the message listing the
-  * type and message of the exception from the earlier attempt.
-  */
-void Bmi_Py_Adapter::Initialize() {
-    // If there was a previous init attempt but with failure exception, throw runtime error and include previous message
-    if (model_initialized && !init_exception_msg.empty()) {
-        throw std::runtime_error("Previous Python model init attempt had exception: \n\t" + init_exception_msg);
-    }
-    // If there was a previous init attempt with (implicitly) no exception on previous attempt, just return
-    else if (model_initialized) {
-        return;
-    }
-    else {
-        // Make sure this is set to 'true' after this function call finishes
-        model_initialized = true;
-        try {
-            py_bmi_model_obj->attr("Initialize")(bmi_init_config);
-        }
-        // Record the exception message before re-throwning to handle subsequent function calls properly
-        catch (std::exception& e) {
-            init_exception_msg = std::string(e.what());
-            // Make sure this is non-empty to be consistent with the above logic
-            if (init_exception_msg.empty()) {
-                init_exception_msg = "Unknown Python model initialization exception.";
-            }
-            throw e;
-        }
-    }
-}
-
-/**
- * Initialize the wrapped BMI model object using the given config file and the object's ``Initialize``
- * function.
- *
- * If the given file is not the same as what is in `bmi_init_config`` and the model object has not already
- * been initialized, this function will produce a warning message about the difference, then subsequently
- * update `bmi_init_config`` to the given file.  It will then proceed with initialization.
- *
- * However, if the given file is not the same as what is in `bmi_init_config``, but the model has already
- * been initialized, a runtime_error exception is thrown.
- *
- * This otherwise operates using the logic of ``Initialize()``.
- *
- * @param config_file
- * @see Initialize()
- * @throws runtime_error If already initialized but using a different file than the passed argument.
- */
-void Bmi_Py_Adapter::Initialize(const std::string& config_file) {
-    if (config_file != bmi_init_config && model_initialized) {
-        throw std::runtime_error(
-                "Model init previously attempted; cannot change config from " + bmi_init_config + " to " + config_file);
-    }
-
-    if (config_file != bmi_init_config && !model_initialized) {
-        output.put("Warning: initialization call changes model config from " + bmi_init_config + " to " + config_file);
-        bmi_init_config = config_file;
-    }
-
-    Initialize();
-}
-
-inline void Bmi_Py_Adapter::init_py_bmi_type(std::string type_name) {
-    // TODO: consider how to handle if this gets called when this is not null
-    if (py_bmi_type_ref == nullptr) {
-        std::vector<std::string> split_name;
-        std::string delimiter = ".";
-
-        size_t pos = 0;
-        std::string token;
-        while ((pos = type_name.find(delimiter)) != std::string::npos) {
-            token = type_name.substr(0, pos);
-            split_name.emplace_back(token);
-            type_name.erase(0, pos + delimiter.length());
-        }
-
-        py_bmi_type_simple_name = std::make_shared<std::string>(split_name.back());
-        split_name.pop_back();
-        py_bmi_type_package_name = std::make_shared<std::string>(boost::algorithm::join(split_name, delimiter));
-
-        // Equivalent to "from package_name import TypeName"
-        const char* type_name_c_string = py_bmi_type_simple_name->c_str();
-        py_bmi_type_ref = std::make_shared<pybind11::object>(
-                pybind11::module_::import(py_bmi_type_package_name->c_str()).attr(type_name_c_string));
-    }
+void Bmi_Py_Adapter::UpdateUntil(double time) {
+    bmi_model->attr("update_until")(time);
 }
 
 /**
@@ -209,7 +211,6 @@ inline void Bmi_Py_Adapter::init_py_bmi_type(std::string type_name) {
  */
 // TODO: unit test
 py::array Bmi_Py_Adapter::parse_other_var_val_for_setter(const geojson::JSONProperty& other_value_json) {
-    pybind11::module_ np = py::module_::import("numpy");
 
     if (other_value_json.get_type() == geojson::PropertyType::Boolean) {
         return pybind11::array(py::dtype::of<bool>(), {1, 1}, {other_value_json.as_boolean()});
@@ -223,7 +224,7 @@ py::array Bmi_Py_Adapter::parse_other_var_val_for_setter(const geojson::JSONProp
         // TODO: think about handling list explicitly, and handling object type; for now, document restrictions
         //else if (other_value_json.get_type() == geojson::PropertyType::String) {
     else {
-        return pybind11::array(py::dtype::of<std::string>(), {1, 1}, {other_value_json.as_string()});
+        return pybind11::array(py::dtype::of<string>(), {1, 1}, {other_value_json.as_string()});
     }
 }
 
