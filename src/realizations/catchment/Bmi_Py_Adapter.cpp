@@ -158,7 +158,7 @@ void Bmi_Py_Adapter::GetValue(std::string name, void *dest) {
         copy_from_numpy_array<long double>(dest_array, (long double*)dest);
     }
     else {
-        thrown runtime_exception("Unable to determine an appropriate type for destination array.");
+        throw runtime_error("Unable to determine an appropriate type for destination array.");
     }
 }
 
