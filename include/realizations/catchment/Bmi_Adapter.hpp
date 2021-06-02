@@ -21,28 +21,44 @@ namespace models {
         public:
             Bmi_Adapter(string model_name, string bmi_init_config, string forcing_file_path, bool allow_exceed_end,
                         bool has_fixed_time_step, const geojson::JSONProperty &other_input_vars,
-                        utils::StreamHandler output)
+                        utils::StreamHandler output, bool call_bmi_initialize = true)
                 : model_name(move(model_name)),
                   bmi_init_config(move(bmi_init_config)),
                   bmi_model_uses_forcing_file(!forcing_file_path.empty()),
                   forcing_file_path(std::move(forcing_file_path)),
                   bmi_model_has_fixed_time_step(has_fixed_time_step),
                   allow_model_exceed_end_time(allow_exceed_end),
-                  output(std::move(output))
+                  output(std::move(output)),
+                  bmi_model_time_convert_factor(1.0)
             {
-                Initialize();
+                if (call_bmi_initialize)
+                    Initialize();
+            }
 
+            /**
+             * Determine backing model's time units and set the reference parameter to an appropriate conversion factor.
+             *
+             * A backing BMI model may use arbitrary units for time, but it will expose what those units are via the
+             * BMI ``GetTimeUnits`` function.  This function retrieves (and interprets) its model's units and
+             * sets the given reference parameter to an appropriate factor for converting its internal time values to
+             * equivalent representations within the model, and vice versa.
+             *
+             * @param time_convert_factor A reference to set to the determined conversion factor.
+             */
+            virtual void acquire_time_conversion_factor(double &time_convert_factor) {
                 std::string time_units = GetTimeUnits();
                 if (time_units == "s" || time_units == "sec" || time_units == "second" || time_units == "seconds")
-                    bmi_model_time_convert_factor = 1.0;
-                else if (time_units == "m" || time_units == "min" || time_units == "minute" || time_units == "minutes")
-                    bmi_model_time_convert_factor = 60.0;
+                    time_convert_factor = 1.0;
+                else if (time_units == "m" || time_units == "min" || time_units == "minute" ||
+                         time_units == "minutes")
+                    time_convert_factor = 60.0;
                 else if (time_units == "h" || time_units == "hr" || time_units == "hour" || time_units == "hours")
-                    bmi_model_time_convert_factor = 3600.0;
+                    time_convert_factor = 3600.0;
                 else if (time_units == "d" || time_units == "day" || time_units == "days")
-                    bmi_model_time_convert_factor = 86400.0;
+                    time_convert_factor = 86400.0;
                 else
-                    throw runtime_error("Invalid model time step units ('" + time_units + "') in " + model_name + ".");
+                    throw runtime_error(
+                            "Invalid model time step units ('" + time_units + "') in " + model_name + ".");
             }
 
             /**
@@ -50,9 +66,13 @@ namespace models {
              * and the API's ``Initialize`` function.
              *
              * If no attempt to initialize the model has yet been made (i.e., ``model_initialized`` is ``false`` when
-             * this function is called), then ``model_initialized`` is set to ``true`` and initialization is attempted
-             * for the model. If initialization fails, an exception will be raised, with it's message saved as part of
-             * this object's state.
+             * this function is called), then and initialization is attempted for the model. This is handled by a nested
+             * call to the ``construct_and_init_backing_model`` function. If initialization fails, an exception will be
+             * raised, with it's message saved as part of this object's state.  However, regardless of the success of
+             * initialization, ``model_initialized`` is set to ``true`` after the attempt.
+             *
+             * Additionally, if a successful model initialization is performed, ``bmi_model_time_convert_factor``
+             * is immediately thereafter set by passing it by reference in a call to ``acquire_time_conversion_factor``.
              *
              * If an attempt to initialize the model has already been made (i.e., ``model_initialized`` is ``true``),
              * this function will either simply return or will throw a runtime_error, with its message including the
@@ -79,9 +99,11 @@ namespace models {
                 }
                 else {
                     try {
+                        // TODO: make this same name as used with other testing (adjust name in docstring above also)
                         construct_and_init_backing_model();
                         // Make sure this is set to 'true' after this function call finishes
                         model_initialized = true;
+                        acquire_time_conversion_factor(bmi_model_time_convert_factor);
                     }
                         // Record the exception message before re-throwing to handle subsequent function calls properly
                     catch (exception& e) {
