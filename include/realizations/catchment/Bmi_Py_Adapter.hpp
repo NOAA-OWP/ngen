@@ -129,6 +129,8 @@ namespace models {
 
             void GetValueAtIndices(std::string name, void *dest, int *inds, int count) override;
 
+            void *GetValuePtr(std::string name) override;
+
             /**
              * Get the value for a variable at specified indices, potentially optimizing for all-indices case.
              *
@@ -187,6 +189,8 @@ namespace models {
             py::array_t<T> get_via_numpy_array(const string& name, void *dest, const int *indices, int item_count,
                                                size_t item_size, bool is_all_indices)
             {
+                // TODO: there is likely room for more optimization with this; see
+                //  https://pybind11.readthedocs.io/en/stable/advanced/pycpp/numpy.html#arrays
                 string val_type = GetVarType(name);
                 py::array_t<T, py::array::c_style> dest_array
                     = np.attr("zeros")(item_count, "dtype"_a = val_type, "order"_a = "C");
