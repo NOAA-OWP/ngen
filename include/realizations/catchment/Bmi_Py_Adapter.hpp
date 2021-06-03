@@ -52,54 +52,11 @@ namespace models {
                            bool allow_exceed_end, bool has_fixed_time_step,
                            const geojson::JSONProperty& other_input_vars, utils::StreamHandler output);
 
-            template <typename T>
-            void get_and_copy_grid_array(const char* grid_func_name, const int grid, T* dest, int dest_length,
-                                         const char* np_dtype)
-            {
-                py::array_t<T> np_array = np.attr("zeros")(dest_length, "dtype"_a = np_dtype);
-                bmi_model->attr(grid_func_name)(grid, np_array);
-                for (int i = 0; i < dest_length; ++i)
-                    dest[i] = np_array.data()[i];
-            }
-
-            /**
-             * Get the name of the parent package for the Python BMI model type.
-             *
-             * @return The name of the parent package for the Python BMI model type.
-             */
-            std::string get_bmi_type_package() const;
-
-            /**
-             * Get the simple name of the Python BMI model type.
-             *
-             * @return The simple name of the Python BMI model type.
-             */
-            std::string get_bmi_type_simple_name() const;
-
-            /**
-             * The number of input variables the model can use from other models implementing a BMI.
-             *
-             * @return The number of input variables the model can use from other models implementing a BMI.
-             */
-            int get_input_item_count();
-
-            /**
-             * Gets a collection of names for the variables the model can use from other models implementing a BMI.
-             *
-             * @return A vector of names for the variables the model can use from other models implementing a BMI.
-             */
-            std::vector<std::string> get_input_var_names();
-
-            /**
-             * Parse variable value(s) from within "other_vars" property of formulation config, to a numpy array suitable for
-             * passing to the BMI model via the ``set_value`` function.
-             *
-             * @param other_value_json JSON node containing variable/parameter value(s) needing to be passed to a BMI model.
-             * @return A bound Python numpy array to containing values to pass to a BMI model object via ``set_value``.
-             */
-            static py::array parse_other_var_val_for_setter(const geojson::JSONProperty& other_value_json);
-
             string GetComponentName() override;
+
+            double GetCurrentTime() override;
+
+            double GetEndTime() override;
 
             int GetInputItemCount() override;
 
@@ -108,14 +65,6 @@ namespace models {
             int GetOutputItemCount() override;
 
             vector<std::string> GetOutputVarNames() override;
-
-            void Update() override;
-
-            void UpdateUntil(double time) override;
-
-            double GetCurrentTime() override;
-
-            double GetEndTime() override;
 
             int GetGridEdgeCount(const int grid) override {
                 return py::int_(bmi_model->attr("get_grid_edge_count")(grid));
@@ -228,6 +177,44 @@ namespace models {
 
             void *GetValuePtr(std::string name) override;
 
+            template <typename T>
+            void get_and_copy_grid_array(const char* grid_func_name, const int grid, T* dest, int dest_length,
+                                         const char* np_dtype)
+            {
+                py::array_t<T> np_array = np.attr("zeros")(dest_length, "dtype"_a = np_dtype);
+                bmi_model->attr(grid_func_name)(grid, np_array);
+                for (int i = 0; i < dest_length; ++i)
+                    dest[i] = np_array.data()[i];
+            }
+
+            /**
+             * Get the name of the parent package for the Python BMI model type.
+             *
+             * @return The name of the parent package for the Python BMI model type.
+             */
+            std::string get_bmi_type_package() const;
+
+            /**
+             * Get the simple name of the Python BMI model type.
+             *
+             * @return The simple name of the Python BMI model type.
+             */
+            std::string get_bmi_type_simple_name() const;
+
+            /**
+             * The number of input variables the model can use from other models implementing a BMI.
+             *
+             * @return The number of input variables the model can use from other models implementing a BMI.
+             */
+            int get_input_item_count();
+
+            /**
+             * Gets a collection of names for the variables the model can use from other models implementing a BMI.
+             *
+             * @return A vector of names for the variables the model can use from other models implementing a BMI.
+             */
+            std::vector<std::string> get_input_var_names();
+
             /**
              * Convenience function to get sum of values of ``GetGridNodesPerFace``.
              *
@@ -326,6 +313,19 @@ namespace models {
                 memcpy(dest, dest_array.data(), item_size * (size_t) item_count);
                 return dest_array;
             }
+
+            /**
+             * Parse variable value(s) from within "other_vars" property of formulation config, to a numpy array suitable for
+             * passing to the BMI model via the ``set_value`` function.
+             *
+             * @param other_value_json JSON node containing variable/parameter value(s) needing to be passed to a BMI model.
+             * @return A bound Python numpy array to containing values to pass to a BMI model object via ``set_value``.
+             */
+            static py::array parse_other_var_val_for_setter(const geojson::JSONProperty& other_value_json);
+
+            void Update() override;
+
+            void UpdateUntil(double time) override;
 
         protected:
             std::string model_name = "BMI Python model";
