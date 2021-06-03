@@ -143,11 +143,15 @@ void Bmi_Py_Adapter::GetValue(string name, void *dest) {
 
 void Bmi_Py_Adapter::GetValueAtIndices(std::string name, void *dest, int *inds, int count) {
     string val_type = GetVarType(name);
-    size_t val_item_size = (size_t)GetVarItemsize(name);
     vector<string> in_v = GetInputVarNames();
     int var_total_items
         = find(in_v.begin(), in_v.end(), name) != in_v.end() ? GetInputItemCount() : GetOutputItemCount();
     get_value_at_indices(name, dest, inds, count, count == var_total_items);
+}
+
+void *Bmi_Py_Adapter::GetValuePtr(std::string name) {
+    auto ptr_array = bmi_model->attr("get_value_ptr")(name);
+    return ((py::array)ptr_array).request().ptr;
 }
 
 int Bmi_Py_Adapter::GetVarGrid(std::string name) {
