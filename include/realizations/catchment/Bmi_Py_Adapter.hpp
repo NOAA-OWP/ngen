@@ -52,6 +52,16 @@ namespace models {
                            bool allow_exceed_end, bool has_fixed_time_step,
                            const geojson::JSONProperty& other_input_vars, utils::StreamHandler output);
 
+            template <typename T>
+            void get_and_copy_grid_array(const char* grid_func_name, const int grid, T* dest, int dest_length,
+                                         const char* np_dtype)
+            {
+                py::array_t<T> np_array = np.attr("zeros")(dest_length, "dtype"_a = np_dtype);
+                bmi_model->attr(grid_func_name)(grid, np_array);
+                for (int i = 0; i < dest_length; ++i)
+                    dest[i] = np_array.data()[i];
+            }
+
             /**
              * Get the name of the parent package for the Python BMI model type.
              *
@@ -107,6 +117,93 @@ namespace models {
 
             double GetEndTime() override;
 
+            int GetGridEdgeCount(const int grid) override {
+                return py::int_(bmi_model->attr("get_grid_edge_count")(grid));
+            }
+
+            void GetGridEdgeNodes(const int grid, int *edge_nodes) override {
+                // As per BMI docs:
+                //  "For each edge, connectivity is given as node at edge tail, followed by node at edge head."
+                //  "The total length of the array is 2 * get_grid_edge_count."
+                get_and_copy_grid_array<int>("get_grid_edge_nodes", grid, edge_nodes, 2*GetGridEdgeCount(grid), "int");
+            }
+
+            int GetGridFaceCount(const int grid) override {
+                return py::int_(bmi_model->attr("get_grid_face_count")(grid));
+            }
+
+            void GetGridFaceEdges(const int grid, int *face_edges) override {
+                // As per BMI docs:
+                //  "The length of the array returned is the sum of the values of get_grid_nodes_per_face."
+                int nodes_per_face_sum = get_sum_of_grid_nodes_per_face(grid);
+                get_and_copy_grid_array<int>("get_grid_face_edges", grid, face_edges, nodes_per_face_sum, "int");
+            }
+
+            void GetGridFaceNodes(const int grid, int *face_nodes) override {
+                int nodes_per_face_sum = get_sum_of_grid_nodes_per_face(grid);
+                get_and_copy_grid_array<int>("get_grid_face_nodes", grid, face_nodes, nodes_per_face_sum, "int");
+            }
+
+            int GetGridNodeCount(const int grid) override {
+                return py::int_(bmi_model->attr("get_grid_node_count")(grid));
+            }
+
+            void GetGridNodesPerFace(const int grid, int *nodes_per_face) override {
+                get_and_copy_grid_array<int>(
+                        "get_grid_nodes_per_face", grid, nodes_per_face, GetGridFaceCount(grid), "int");
+            }
+
+            void GetGridOrigin(const int grid, double *origin) override {
+                get_and_copy_grid_array<double>("get_grid_origin", grid, origin, GetGridRank(grid), "double");
+            }
+
+            int GetGridRank(const int grid) override {
+                return py::int_(bmi_model->attr("get_grid_rank")(grid));
+            }
+
+            void GetGridShape(const int grid, int *shape) override {
+                get_and_copy_grid_array<int>("get_grid_shape", grid, shape, GetGridRank(grid), "int");
+            }
+
+            int GetGridSize(const int grid) override {
+                return py::int_(bmi_model->attr("get_grid_size")(grid));
+            }
+
+            void GetGridSpacing(const int grid, double *spacing) override {
+                get_and_copy_grid_array<double>("get_grid_spacing", grid, spacing, GetGridRank(grid), "float");
+            }
+
+            string GetGridType(const int grid) override {
+                return py::str(bmi_model->attr("get_grid_type")(grid));
+            }
+
+            void GetGridX(const int grid, double *x) override {
+                // From the BMI docs:
+                //   "The length of the resulting one-dimensional array depends on the grid type. (It will have either
+                //   get_grid_rank or get_grid_size elements.) See Model grids for more information."
+                // Leaving this not implemented for now, since it is probably not yet needed, to make sure a proper
+                // solution to determining the array length is used.
+                throw runtime_error("GetGridX not yet implemented for Python BMI adapter");
+            }
+
+            void GetGridY(const int grid, double *y) override {
+                // From the BMI docs:
+                //   "The length of the resulting one-dimensional array depends on the grid type. (It will have either
+                //   get_grid_rank or get_grid_size elements.) See Model grids for more information."
+                // Leaving this not implemented for now, since it is probably not yet needed, to make sure a proper
+                // solution to determining the array length is used.
+                throw runtime_error("GetGridY not yet implemented for Python BMI adapter");
+            }
+
+            void GetGridZ(const int grid, double *z) override {
+                // From the BMI docs:
+                //   "The length of the resulting one-dimensional array depends on the grid type. (It will have either
+                //   get_grid_rank or get_grid_size elements.) See Model grids for more information."
+                // Leaving this not implemented for now, since it is probably not yet needed, to make sure a proper
+                // solution to determining the array length is used.
+                throw runtime_error("GetGridZ not yet implemented for Python BMI adapter");
+            }
+
             double GetStartTime() override;
 
             string GetTimeUnits() override;
@@ -130,6 +227,26 @@ namespace models {
             void GetValueAtIndices(std::string name, void *dest, int *inds, int count) override;
 
             void *GetValuePtr(std::string name) override;
+
+            /**
+             * Convenience function to get sum of values of ``GetGridNodesPerFace``.
+             *
+             * The sum of the values returned by the BMI ``GetGridNodesPerFace`` is used to determine the length of the
+             * required array for several other BMI grid functions.  As such, this function simplifies the process for
+             * obtaining said sum.
+             *
+             * @param grid The model grid identifier.
+             * @return
+             */
+            int get_sum_of_grid_nodes_per_face(const int grid) {
+                int grid_node_face_count = GetGridFaceCount(grid);
+                int grid_nodes_per_face[grid_node_face_count];
+                GetGridNodesPerFace(grid, grid_nodes_per_face);
+                int nodes_per_face_sum = 0;
+                for (int i = 0; i < grid_node_face_count; ++i)
+                    nodes_per_face_sum += grid_nodes_per_face[i];
+                return nodes_per_face_sum;
+            }
 
             /**
              * Get the value for a variable at specified indices, potentially optimizing for all-indices case.
