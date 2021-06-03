@@ -28,13 +28,13 @@ TEST_F(RoutingPyBindTest, TestRoutingPyBind)
 
   py::print("Hello, World!"); // use the Python API
 
-  py::module_ sys = py::module_::import("sys");
+  //py::module_ sys = py::module_::import("sys");
 
-  py::print(sys.attr("path"));
+  //py::print(sys.attr("path"));
 
-  py::object sys_path = sys.attr("path"); 
+  //py::object sys_path = sys.attr("path"); 
 
-  py::object sys_path_append = sys_path.attr("append");
+  //py::object sys_path_append = sys_path.attr("append");
 
 
   ////////////////
@@ -42,17 +42,26 @@ TEST_F(RoutingPyBindTest, TestRoutingPyBind)
   string t_route_connection_path = "../../t-route/src/external_connections";
   string input_path = "../../t-route/test/input/next_gen";
 
+  int aaa = 1;
+
+  //routing_py_adapter::Routing_Py_Adapter routing_py_adapter1(t_route_connection_path, input_path);
+  //routing_py_adapter::Routing_Py_Adapter routing_py_adapter1();
+  routing_py_adapter::Routing_Py_Adapter routing_py_adapter1(aaa);
+  //Routing_Py_Adapter routing_py_adapter1(t_route_connection_path, input_path);
+
+
 
   //USE THIS
-  sys_path_append(t_route_connection_path);
-  sys_path_append(input_path);
+  //sys_path_append(t_route_connection_path);
+  //sys_path_append(input_path);
   ////////////////////
 
   //Use this
-  py::module_ t_route_module = py::module_::import("next_gen_network_module");
+  //py::module_ t_route_module = py::module_::import("next_gen_network_module");
  
-  py::print(sys.attr("path"));
+  //py::print(sys.attr("path"));
 
+  /*
   py::object test_add = t_route_module.attr("test_add"); 
 
   ////////////////////
@@ -64,10 +73,11 @@ TEST_F(RoutingPyBindTest, TestRoutingPyBind)
   //py::print(e);
   py::print(test_add(c,d)); //WORKS
   ////////////////
+  */
 
-  py::object set_paths = t_route_module.attr("set_paths"); 
+  //py::object set_paths = t_route_module.attr("set_paths"); 
 
-  set_paths(t_route_connection_path);
+  //set_paths(t_route_connection_path);
 
 
 
