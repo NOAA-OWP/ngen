@@ -6,39 +6,39 @@
 #include <exception>
 #include <memory>
 #include <string>
-//#include "bmi.hxx"
 #include "pybind11/pybind11.h"
 #include "pybind11/pytypes.h"
 #include "pybind11/numpy.h"
 //#include "JSONProperty.hpp"
 //#include "StreamHandler.hpp"
 
-
 namespace py = pybind11;
 
+using namespace std;
 
-class Routing_Py_Adapter {
+namespace routing_py_adapter {
 
-public:
+  class Routing_Py_Adapter {
 
-  Routing_Py_Adapter();
+  public:
 
-
-
-private:
-
-  int empty_var;
-
+    //Routing_Py_Adapter(string t_route_connection_path, string input_path);
+    //Routing_Py_Adapter();
+    Routing_Py_Adapter(int aa = 0);
 
 
 
+  private:
+
+    int empty_var;
 
 
 
-};
+
+  };
 
 
-
+}
 
 
 
