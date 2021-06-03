@@ -137,39 +137,17 @@ double Bmi_Py_Adapter::GetTimeStep() {
 void Bmi_Py_Adapter::GetValue(string name, void *dest) {
     vector<string> in_v = GetInputVarNames();
     int num_items = find(in_v.begin(), in_v.end(), name) != in_v.end() ? GetInputItemCount() : GetOutputItemCount();
-    py::array_t<float, py::array::c_style> dest_array = np.attr("zeros")(num_items, "dtype"_a=val_type, "order"_a="C");
-    bmi_model->attr("get_value")(name, dest_array);
-    // TODO: now, how to get things from the buffer of this array to the pointer?
-    // These get a little tricky because they might be implementation specific, so some might be repeated
-    // Probably handles 8 bytes
-    if (val_item_size == sizeof(double)) {
-        copy_from_numpy_array<double>(dest_array, (double*)dest);
-    }
-    // Probably handles 4 bytes
-    else if (val_item_size == sizeof(int)) {
-        copy_from_numpy_array<int>(dest_array, (int*)dest);
-    }
-    // Probably handles 2 bytes
-    else if (val_item_size == sizeof(short)) {
-        copy_from_numpy_array<short>(dest_array, (short*)dest);
-    }
-    // Probably handles 1 byte
-    else if (val_item_size == sizeof(char)) {
-        copy_from_numpy_array<char>(dest_array, (char*)dest);
-    }
-    // Run a few more to try to catch things we've missed
-    else if (val_item_size == sizeof(long)) {
-        copy_from_numpy_array<long>(dest_array, (long*)dest);
-    }
-    else if (val_item_size == sizeof(long long)) {
-        copy_from_numpy_array<long long>(dest_array, (long long*)dest);
-    }
-    else if (val_item_size == sizeof(long double)) {
-        copy_from_numpy_array<long double>(dest_array, (long double*)dest);
-    }
-    else {
-        throw runtime_error("Unable to determine an appropriate type for destination array.");
-    }
+    int indices[num_items];
+    get_value_at_indices(name, dest, indices, num_items, true);
+}
+
+void Bmi_Py_Adapter::GetValueAtIndices(std::string name, void *dest, int *inds, int count) {
+    string val_type = GetVarType(name);
+    size_t val_item_size = (size_t)GetVarItemsize(name);
+    vector<string> in_v = GetInputVarNames();
+    int var_total_items
+        = find(in_v.begin(), in_v.end(), name) != in_v.end() ? GetInputItemCount() : GetOutputItemCount();
+    get_value_at_indices(name, dest, inds, count, count == var_total_items);
 }
 
 int Bmi_Py_Adapter::GetVarGrid(std::string name) {
