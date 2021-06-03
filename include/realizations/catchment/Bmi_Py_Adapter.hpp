@@ -87,6 +87,8 @@ namespace models {
              */
             static py::array parse_other_var_val_for_setter(const geojson::JSONProperty& other_value_json);
 
+            string GetComponentName() override;
+
             int GetInputItemCount() override;
 
             vector<std::string> GetInputVarNames() override;
@@ -104,6 +106,10 @@ namespace models {
             double GetEndTime() override;
 
             double GetStartTime() override;
+
+            string GetTimeUnits() override;
+
+            double GetTimeStep() override;
 
             string GetVarType(std::string name) override;
 
@@ -125,6 +131,17 @@ namespace models {
                 for (int i = 0; i < np_array.size(); i++) {
                     dest[i] = (T)(direct_array_access[i]);
                 }
+                else {
+                    py::array_t<int, py::array::c_style> indices_np_array
+                            = np.attr("zeros")(item_count, "dtype"_a = "int", "order"_a = "C");
+                    py::buffer_info buffer_info = indices_np_array.request();
+                    int *indices_np_arr_ptr = (int*)buffer_info.ptr;
+                    for (int i = 0; i < item_count; ++i)
+                        indices_np_arr_ptr[i] = indices[i];
+                    bmi_model->attr("get_value_at_indices")(name, dest_array, indices_np_array);
+                }
+                memcpy(dest, dest_array.data(), item_size * (size_t) item_count);
+                return dest_array;
             }
 
         protected:
