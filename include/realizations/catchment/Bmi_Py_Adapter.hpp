@@ -3,6 +3,7 @@
 
 #ifdef ACTIVATE_PYTHON
 
+#include <cstring>
 #include <exception>
 #include <memory>
 #include <string>
@@ -16,6 +17,7 @@
 
 namespace py = pybind11;
 
+using namespace pybind11::literals; // to bring in the `_a` literal for pybind11 keyword args functionality
 using namespace std;
 
 namespace models {
@@ -125,11 +127,71 @@ namespace models {
 
             void GetValue(std::string name, void *dest) override;
 
-            template<typename T>
-            void copy_from_numpy_array(const py::array_t<float, py::array::c_style>& np_array, T* dest) {
-                auto direct_array_access = np_array.unchecked<1>();
-                for (int i = 0; i < np_array.size(); i++) {
-                    dest[i] = (T)(direct_array_access[i]);
+            void GetValueAtIndices(std::string name, void *dest, int *inds, int count) override;
+
+            /**
+             * Get the value for a variable at specified indices, potentially optimizing for all-indices case.
+             *
+             * This function primarily exists to consolidate the logic for template function selection when calling
+             * ``get_via_numpy_array``, in particular between ``GetValue`` and ``GetValueAtIndices``.  This allows for
+             * centralization of that while maintaining the ability to optimize for the case when all indices are to be
+             * retrieved, and thus a call to the Python ``get_value`` can be used instead of ``get_value_at_indices``.
+             *
+             * @param name The name of the desired variable.
+             * @param dest Destination array pointer to which to copy item values.
+             * @param inds Pointer to array holding desired indices of items to obtain.
+             * @param count The number of item values to be copied.
+             * @param is_all_indices Whether all items for variable are to be copied, which would permit optimization.
+             */
+            void get_value_at_indices(const std::string& name, void *dest, int *inds, int count, bool is_all_indices) {
+                string val_type = GetVarType(name);
+                size_t val_item_size = (size_t)GetVarItemsize(name);
+                vector<string> in_v = GetInputVarNames();
+
+                if (val_type == "int" && val_item_size == sizeof(short))
+                    get_via_numpy_array<short>(name, dest, inds, count, val_item_size, is_all_indices);
+                else if (val_type == "int" && val_item_size == sizeof(int))
+                    get_via_numpy_array<int>(name, dest, inds, count, val_item_size, is_all_indices);
+                else if (val_type == "int" && val_item_size == sizeof(long))
+                    get_via_numpy_array<long>(name, dest, inds, count, val_item_size, is_all_indices);
+                else if (val_type == "int" && val_item_size == sizeof(long long))
+                    get_via_numpy_array<long long>(name, dest, inds, count, val_item_size, is_all_indices);
+                else if (val_type == "float" && val_item_size == sizeof(float))
+                    get_via_numpy_array<float>(name, dest, inds, count, val_item_size, is_all_indices);
+                else if (val_type == "float" && val_item_size == sizeof(double))
+                    get_via_numpy_array<double>(name, dest, inds, count, val_item_size, is_all_indices);
+                else if (val_type == "float" && val_item_size == sizeof(long double))
+                    get_via_numpy_array<long double>(name, dest, inds, count, val_item_size, is_all_indices);
+                else
+                    throw runtime_error("Unsupported Python BMI model type and size (" + val_type + ", " +
+                                        std::to_string(val_item_size) + ")");
+            }
+
+            /**
+             * Get the values at some set of indices for the given variable, using intermediate wrapped numpy array.
+             *
+             * The acquired wrapped numpy arrays will be set to use ``py::array::c_style`` ordering.
+             *
+             * The ``indices`` parameter is ignored in cases when ``is_all_indices`` is ``true``.
+             *
+             * @tparam T The C++ type for the obtained values.
+             * @param name The name of the variable for which to obtain values.
+             * @param dest A pre-allocated destination pointer in which to copy retrieved values.
+             * @param indices The specific indices of on the model side for which variable values are to be retrieved.
+             * @param item_count The number of individual values to retrieve.
+             * @param item_size The size in bytes for a single item of the type in question.
+             * @param is_all_indices Whether all indices for the variable are being requested.
+             * @return
+             */
+            template <typename T>
+            py::array_t<T> get_via_numpy_array(const string& name, void *dest, const int *indices, int item_count,
+                                               size_t item_size, bool is_all_indices)
+            {
+                string val_type = GetVarType(name);
+                py::array_t<T, py::array::c_style> dest_array
+                    = np.attr("zeros")(item_count, "dtype"_a = val_type, "order"_a = "C");
+                if (is_all_indices) {
+                    bmi_model->attr("get_value")(name, dest_array);
                 }
                 else {
                     py::array_t<int, py::array::c_style> indices_np_array
