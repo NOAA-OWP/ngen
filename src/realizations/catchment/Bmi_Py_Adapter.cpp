@@ -77,6 +77,10 @@ Bmi_Py_Adapter::Bmi_Py_Adapter(const string &type_name, string bmi_init_config, 
                                                          other_input_vars, output),
                                  np(py::module_::import("numpy")) /* like 'import numpy as np' */ { }
 
+string Bmi_Py_Adapter::GetComponentName() {
+    return py::str(bmi_model->attr("get_component_name")());
+}
+
 double Bmi_Py_Adapter::GetCurrentTime() {
     // TODO: will need to verify the implicit casting for this works as expected
     return py::float_(bmi_model->attr("get_current_time")());
@@ -122,9 +126,15 @@ double Bmi_Py_Adapter::GetStartTime() {
     return py::float_(bmi_model->attr("get_start_time")());
 }
 
-void Bmi_Py_Adapter::GetValue(std::string name, void *dest) {
-    string val_type = GetVarType(name);
-    int val_item_size = GetVarItemsize(name);
+string Bmi_Py_Adapter::GetTimeUnits() {
+    return py::str(bmi_model->attr("get_time_units")());
+}
+
+double Bmi_Py_Adapter::GetTimeStep() {
+    return py::float_(bmi_model->attr("get_time_step")());
+}
+
+void Bmi_Py_Adapter::GetValue(string name, void *dest) {
     vector<string> in_v = GetInputVarNames();
     int num_items = find(in_v.begin(), in_v.end(), name) != in_v.end() ? GetInputItemCount() : GetOutputItemCount();
     py::array_t<float, py::array::c_style> dest_array = np.attr("zeros")(num_items, "dtype"_a=val_type, "order"_a="C");
