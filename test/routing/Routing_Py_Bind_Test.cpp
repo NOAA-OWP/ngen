@@ -3,9 +3,10 @@
 #include "routing/Routing_Py_Adapter.hpp"
 #include <string>
 #include <pybind11/embed.h>
+//#include <pybind11/stl.h>
 namespace py = pybind11;
 
-using namespace std;
+//using namespace std;
 
 
 class RoutingPyBindTest : public ::testing::Test {
@@ -28,38 +29,28 @@ TEST_F(RoutingPyBindTest, TestRoutingPyBind)
 
   py::print("Hello, World!"); // use the Python API
 
-  //py::module_ sys = py::module_::import("sys");
-
-  //py::print(sys.attr("path"));
-
-  //py::object sys_path = sys.attr("path"); 
-
-  //py::object sys_path_append = sys_path.attr("append");
-
-
-  ////////////////
   //SET THESE AS INPUTS
-  string t_route_connection_path = "../../t-route/src/external_connections";
-  string input_path = "../../t-route/test/input/next_gen";
+  std::string t_route_connection_path = "../../t-route/src/external_connections";
+  std::string input_path = "../../t-route/test/input/next_gen";
+  std::string supernetwork = "../../t-route/test/input/next_gen/flowpath_data.geojson";
 
-  int aaa = 1;
+  std::vector<std::string> catchment_subset_ids;
+  //vector<string> catchment_subset_ids;
 
-  //routing_py_adapter::Routing_Py_Adapter routing_py_adapter1(t_route_connection_path, input_path);
-  //routing_py_adapter::Routing_Py_Adapter routing_py_adapter1();
-  routing_py_adapter::Routing_Py_Adapter routing_py_adapter1(aaa);
-  //Routing_Py_Adapter routing_py_adapter1(t_route_connection_path, input_path);
+  catchment_subset_ids.push_back("cat-71");
+  catchment_subset_ids.push_back("cat-42");
+  catchment_subset_ids.push_back("cat-34");
+
+  routing_py_adapter::Routing_Py_Adapter routing_py_adapter1(t_route_connection_path, input_path, catchment_subset_ids);
+
+  std::vector<double> test_vec{1, 2, 3, 4, 5};
 
 
+  py::list test_list3 = py::cast(catchment_subset_ids);
+  
+  //py::list test_list3 = py::cast(test_vec);
 
-  //USE THIS
-  //sys_path_append(t_route_connection_path);
-  //sys_path_append(input_path);
-  ////////////////////
-
-  //Use this
-  //py::module_ t_route_module = py::module_::import("next_gen_network_module");
- 
-  //py::print(sys.attr("path"));
+  py::print(test_list3);  
 
   /*
   py::object test_add = t_route_module.attr("test_add"); 
@@ -74,14 +65,6 @@ TEST_F(RoutingPyBindTest, TestRoutingPyBind)
   py::print(test_add(c,d)); //WORKS
   ////////////////
   */
-
-  //py::object set_paths = t_route_module.attr("set_paths"); 
-
-  //set_paths(t_route_connection_path);
-
-
-
-
 
  
   ASSERT_TRUE(true);
