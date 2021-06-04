@@ -9,14 +9,10 @@
 using namespace routing_py_adapter;
 
 
-//Routing_Py_Adapter::Routing_Py_Adapter()
-Routing_Py_Adapter::Routing_Py_Adapter(int aa)
-//Routing_Py_Adapter::Routing_Py_Adapter() : Routing_Py_Adapter()
-//Routing_Py_Adapter::Routing_Py_Adapter(string t_route_connection_path, string input_path)
-  //: Routing_Py_Adapter::Routing_Py_Adapter(t_route_connection_path, input_path) 
-  {
+Routing_Py_Adapter::Routing_Py_Adapter(std::string t_route_connection_path, std::string input_path,
+                                       const std::vector<std::string> &ids)
+{
     int a = 1;
-/*
   py::module_ sys = py::module_::import("sys");
 
   py::object sys_path = sys.attr("path");
@@ -32,9 +28,8 @@ Routing_Py_Adapter::Routing_Py_Adapter(int aa)
   py::object set_paths = t_route_module.attr("set_paths");
 
   set_paths(t_route_connection_path);
-*/
 
-  }
+}
 
 
 
