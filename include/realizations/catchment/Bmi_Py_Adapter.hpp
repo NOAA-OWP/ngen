@@ -23,14 +23,11 @@ using namespace std;
 namespace models {
     namespace bmi {
 
-        // TODO: look at making this inherit from the BMI C++ interface to ensure all methods are implemented
         /**
          * An adapter class to serve as a C++ interface to the aspects of external models written in the Python
          * language that implement the BMI.
          */
         class Bmi_Py_Adapter : public Bmi_Adapter<py::object> {
-
-            // TODO: implement needed the BMI methods and translate to Python calls
 
         public:
 
@@ -200,20 +197,6 @@ namespace models {
              * @return The simple name of the Python BMI model type.
              */
             std::string get_bmi_type_simple_name() const;
-
-            /**
-             * The number of input variables the model can use from other models implementing a BMI.
-             *
-             * @return The number of input variables the model can use from other models implementing a BMI.
-             */
-            int get_input_item_count();
-
-            /**
-             * Gets a collection of names for the variables the model can use from other models implementing a BMI.
-             *
-             * @return A vector of names for the variables the model can use from other models implementing a BMI.
-             */
-            std::vector<std::string> get_input_var_names();
 
             /**
              * Convenience function to get sum of values of ``GetGridNodesPerFace``.
