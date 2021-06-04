@@ -237,6 +237,7 @@ namespace models {
                 size_t val_item_size = (size_t)GetVarItemsize(name);
                 vector<string> in_v = GetInputVarNames();
 
+                // The available types and how they are handled here should match what is in SetValueAtIndices
                 if (val_type == "int" && val_item_size == sizeof(short))
                     get_via_numpy_array<short>(name, dest, inds, count, val_item_size, is_all_indices);
                 else if (val_type == "int" && val_item_size == sizeof(int))
@@ -314,6 +315,54 @@ namespace models {
                 void* dest = GetValuePtr(name);
                 vector<string> in_v = GetInputVarNames();
                 memcpy(dest, src, GetVarNbytes(name));
+            }
+
+            void SetValueAtIndices(std::string name, int *inds, int count, void *src) override;
+
+            /**
+             * Set values for a model's BMI variable at specified indices using the Python ``set_value_at_indices``.
+             *
+             * Perform a call to the Python model's ``set_value_at_indices`` function to set the given variable's values
+             * at the appropriate indexes.  Since this Python function requires Numpy arrays as arguments, create
+             * wrapped Numpy arrays analogous to ``inds`` and ``cxx_array``, copying into each analog the values of the
+             * C++ arrays.
+             *
+             * The parameters serve very much the same purpose as the standard BMI ``SetValueAtIndices``.  The
+             * additional ``np_type`` parameter allows the required wrapped Numpy array to be created using the correct
+             * dtype for the variable in question.
+             *
+             * @tparam T The C++ type to use for the wrapper template holding the Numpy array of values to be set.
+             * @param name The name of the involved BMI variable.
+             * @param inds A C++ integer array of indices to update, corresponding to each value in ``cxx_array``.
+             * @param count Number of elements in the ``inds`` and ``cxx_array`` arrays.
+             * @param cxx_array A C++ array of unknown type containing the new values to be set in the BMI variable.
+             * @param np_type The name of the Python dtype to use for the wrapped Numpy array of update values.
+             */
+            template <typename T>
+            void set_value_at_indices(const string &name, const int *inds, int count, void* cxx_array,
+                                      const char* np_type)
+            {
+                py::array_t<int> index_np_array = np.attr("zeros")(count, "dtype"_a = "int");
+                py::array_t<T> src_np_array = np.attr("zeros")(count, "dtype"_a = np_type);
+                // These get direct access (mutable) to the arrays, since we don't need to worry about dimension checks
+                // as we just created the arrays
+                auto index_mut_direct = index_np_array.mutable_unchecked<1>();
+                auto src_mut_direct = index_np_array.mutable_unchecked<1>();
+                for (py::size_t i = 0; i < (py::size_t) count; ++i) {
+                    index_mut_direct(i) = inds[i];
+                    src_mut_direct(i) = ((T *)cxx_array)[i];
+                }
+
+                /* The other method should work better, but leaving this for now in case.
+                py::buffer_info indx_buffer_info = index_np_array.request();
+                py::buffer_info src_buffer_info = src_np_array.request();
+                for (int i = 0; i < count; ++i) {
+                    ((int *) indx_buffer_info.ptr)[i] = inds[i];
+                    ((T *) src_buffer_info.ptr)[i] = ((T *) cxx_array)[i];
+                }
+                */
+
+                bmi_model->attr("set_value_at_indices")(name, index_np_array, src_np_array);
             }
 
         protected:

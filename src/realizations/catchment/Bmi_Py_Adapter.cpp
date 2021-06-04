@@ -184,6 +184,31 @@ std::string Bmi_Py_Adapter::get_bmi_type_simple_name() const {
     return py_bmi_type_simple_name == nullptr ? "" : *py_bmi_type_simple_name;
 }
 
+void Bmi_Py_Adapter::SetValueAtIndices(std::string name, int *inds, int count, void *src) {
+    string val_type = GetVarType(name);
+    size_t val_item_size = (size_t)GetVarItemsize(name);
+
+    // The available types and how they are handled here should match what is in get_value_at_indices
+    if (val_type == "int" && val_item_size == sizeof(short)) {
+        set_value_at_indices<short>(name, inds, count, src, val_type.c_str());
+    } else if (val_type == "int" && val_item_size == sizeof(int)) {
+        set_value_at_indices<int>(name, inds, count, src, val_type.c_str());
+    } else if (val_type == "int" && val_item_size == sizeof(long)) {
+        set_value_at_indices<long>(name, inds, count, src, val_type.c_str());
+    } else if (val_type == "int" && val_item_size == sizeof(long long)) {
+        set_value_at_indices<long long>(name, inds, count, src, val_type.c_str());
+    } else if (val_type == "float" && val_item_size == sizeof(float)) {
+        set_value_at_indices<float>(name, inds, count, src, val_type.c_str());
+    } else if (val_type == "float" && val_item_size == sizeof(double)) {
+        set_value_at_indices<double>(name, inds, count, src, val_type.c_str());
+    } else if (val_type == "float" && val_item_size == sizeof(long double)) {
+        set_value_at_indices<long double>(name, inds, count, src, val_type.c_str());
+    } else {
+        throw runtime_error("Unsupported Python BMI model type and size (" + val_type + ", " +
+                            std::to_string(val_item_size) + ")");
+    }
+}
+
 void Bmi_Py_Adapter::Update() {
     bmi_model->attr("update")();
 }
