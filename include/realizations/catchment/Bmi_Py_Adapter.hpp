@@ -49,6 +49,10 @@ namespace models {
                            bool allow_exceed_end, bool has_fixed_time_step,
                            const geojson::JSONProperty& other_input_vars, utils::StreamHandler output);
 
+            void Finalize() override {
+                bmi_model->attr("finalize")();
+            }
+
             string GetComponentName() override;
 
             double GetCurrentTime() override;
