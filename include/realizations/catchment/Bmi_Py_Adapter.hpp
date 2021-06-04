@@ -313,8 +313,7 @@ namespace models {
             void SetValue(std::string name, void *src) override {
                 void* dest = GetValuePtr(name);
                 vector<string> in_v = GetInputVarNames();
-                int num_items = find(in_v.begin(), in_v.end(), name) != in_v.end() ? GetInputItemCount() : GetOutputItemCount();
-                memcpy(dest, src, (size_t) GetVarItemsize(name) * (size_t) num_items);
+                memcpy(dest, src, GetVarNbytes(name));
             }
 
         protected:

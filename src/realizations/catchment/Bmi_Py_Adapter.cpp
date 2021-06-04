@@ -135,8 +135,7 @@ double Bmi_Py_Adapter::GetTimeStep() {
 }
 
 void Bmi_Py_Adapter::GetValue(string name, void *dest) {
-    vector<string> in_v = GetInputVarNames();
-    int num_items = find(in_v.begin(), in_v.end(), name) != in_v.end() ? GetInputItemCount() : GetOutputItemCount();
+    int num_items = GetVarNbytes(name) / GetVarItemsize(name);
     int indices[num_items];
     get_value_at_indices(name, dest, indices, num_items, true);
 }
@@ -144,8 +143,7 @@ void Bmi_Py_Adapter::GetValue(string name, void *dest) {
 void Bmi_Py_Adapter::GetValueAtIndices(std::string name, void *dest, int *inds, int count) {
     string val_type = GetVarType(name);
     vector<string> in_v = GetInputVarNames();
-    int var_total_items
-        = find(in_v.begin(), in_v.end(), name) != in_v.end() ? GetInputItemCount() : GetOutputItemCount();
+    int var_total_items = GetVarNbytes(name) / GetVarItemsize(name);
     get_value_at_indices(name, dest, inds, count, count == var_total_items);
 }
 
