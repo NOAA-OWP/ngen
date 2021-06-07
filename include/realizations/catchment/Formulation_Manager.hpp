@@ -209,7 +209,13 @@ namespace realization {
                 utils::StreamHandler output_stream
             ) {
                 auto params = formulation.get_child("params");
-                std::string formulation_type_key =  get_formulation_key(formulation);
+                std::string formulation_type_key;
+                try {
+                    formulation_type_key = get_formulation_key(formulation);
+                }
+                catch(std::exception& e) {
+                    throw std::runtime_error("Catchment " + identifier + " failed initialization: " + e.what());
+                }
 
                 boost::property_tree::ptree formulation_config = formulation.get_child("params");
 
