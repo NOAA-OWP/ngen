@@ -66,7 +66,7 @@ namespace realization {
           return *key;
         }
 
-        throw std::runtime_error("No valid formulation was described in the passed in tree.");
+        throw std::runtime_error("No valid formulation for " + *key + " was described in the passed in tree.");
     }
 }
 
