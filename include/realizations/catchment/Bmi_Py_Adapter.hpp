@@ -184,8 +184,9 @@ namespace models {
             {
                 py::array_t<T> np_array = np.attr("zeros")(dest_length, "dtype"_a = np_dtype);
                 bmi_model->attr(grid_func_name)(grid, np_array);
+                auto np_array_direct = np_array.template unchecked<1>();
                 for (int i = 0; i < dest_length; ++i)
-                    dest[i] = np_array.data()[i];
+                    dest[i] = np_array_direct(i);
             }
 
             /**
@@ -281,8 +282,6 @@ namespace models {
             py::array_t<T> get_via_numpy_array(const string& name, void *dest, const int *indices, int item_count,
                                                size_t item_size, bool is_all_indices)
             {
-                // TODO: there is likely room for more optimization with this; see
-                //  https://pybind11.readthedocs.io/en/stable/advanced/pycpp/numpy.html#arrays
                 string val_type = GetVarType(name);
                 py::array_t<T, py::array::c_style> dest_array
                     = np.attr("zeros")(item_count, "dtype"_a = val_type, "order"_a = "C");
@@ -292,13 +291,22 @@ namespace models {
                 else {
                     py::array_t<int, py::array::c_style> indices_np_array
                             = np.attr("zeros")(item_count, "dtype"_a = "int", "order"_a = "C");
+                    auto indices_mut_direct = indices_np_array.mutable_unchecked<1>();
+                    for (py::size_t i = 0; i < (py::size_t) item_count; ++i)
+                        indices_mut_direct(i) = indices[i];
+                    /* Leaving this here for now in case mutable_unchecked method doesn't behave as expected in testing
                     py::buffer_info buffer_info = indices_np_array.request();
                     int *indices_np_arr_ptr = (int*)buffer_info.ptr;
                     for (int i = 0; i < item_count; ++i)
                         indices_np_arr_ptr[i] = indices[i];
+                    */
                     bmi_model->attr("get_value_at_indices")(name, dest_array, indices_np_array);
                 }
-                memcpy(dest, dest_array.data(), item_size * (size_t) item_count);
+
+                auto direct_access = dest_array.template unchecked<1>();
+                for (py::size_t i = 0; i < (py::size_t) item_count; ++i)
+                    ((T *) dest)[i] = direct_access(i);
+
                 return dest_array;
             }
 
