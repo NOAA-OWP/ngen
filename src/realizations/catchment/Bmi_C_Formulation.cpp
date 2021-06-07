@@ -90,7 +90,9 @@ inline void Bmi_C_Formulation::get_forcing_data_ts_contributions(time_step_t t_d
         // TODO: should we include <typeinfo> and use typeid(this).name() to print class?
         //  (Also, should there be a directive-controlled option for that?)
         throw std::runtime_error("Bmi_C_Formulation for model '" + get_model_type_name() +
-                                 "' cannot get contributions for model time step before current forcing time step");
+                                 "' can't get contributions for model time step " + to_string(t_delta) + " starting at "
+                                 + to_string(model_epoch_time_s) + ", as current forcing time step doesn't start until "
+                                 + to_string(forcing.get_time_epoch()));
     }
 
     model_ts_start_offset = model_epoch_time_s - forcing.get_time_epoch();
