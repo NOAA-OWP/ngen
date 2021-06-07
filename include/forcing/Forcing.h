@@ -9,6 +9,7 @@
 #include <fstream>
 #include <iostream>
 #include <boost/algorithm/string.hpp>
+#include <boost/lexical_cast.hpp>
 #include "CSV_Reader.h"
 #include <ctime>
 #include <time.h>
@@ -493,7 +494,7 @@ class Forcing
                     string precip_str = vec[5];
 
                     //Convert from string to double and from mm/hr to m/s
-                    double precip = atof(precip_str.c_str()) / (1000 * 3600);
+                    double precip = boost::lexical_cast<double>(precip_str) / (1000 * 3600);
 
                     //Add precip to vector
                     precipitation_rate_meters_per_second_vector.push_back(precip);
@@ -568,20 +569,21 @@ class Forcing
                     AORC_data AORC;
 
                     //Convert from strings to doubles and add to AORC struct
-                    AORC.APCP_surface_kg_per_meters_squared = atof(APCP_surface_str.c_str());
-                    AORC.DLWRF_surface_W_per_meters_squared = atof(DLWRF_surface_str.c_str());
-                    AORC.DSWRF_surface_W_per_meters_squared = atof(DSWRF_surface_str.c_str());
-                    AORC.PRES_surface_Pa = atof(PRES_surface_str.c_str());
-                    AORC.SPFH_2maboveground_kg_per_kg = atof(SPFH_2maboveground_str.c_str());
-                    AORC.TMP_2maboveground_K = atof(TMP_2maboveground_str.c_str());
-                    AORC.UGRD_10maboveground_meters_per_second = atof(UGRD_10maboveground_str.c_str());
-                    AORC.VGRD_10maboveground_meters_per_second = atof(VGRD_10maboveground_str.c_str());
-                  
+                    AORC.APCP_surface_kg_per_meters_squared = boost::lexical_cast<double>(APCP_surface_str);
+                    AORC.DLWRF_surface_W_per_meters_squared = boost::lexical_cast<double>(DLWRF_surface_str);
+                    AORC.DSWRF_surface_W_per_meters_squared = boost::lexical_cast<double>(DSWRF_surface_str);
+                    AORC.PRES_surface_Pa = boost::lexical_cast<double>(PRES_surface_str);
+                    AORC.SPFH_2maboveground_kg_per_kg = boost::lexical_cast<double>(SPFH_2maboveground_str);
+                    AORC.TMP_2maboveground_K = boost::lexical_cast<double>(TMP_2maboveground_str);
+                    AORC.UGRD_10maboveground_meters_per_second = boost::lexical_cast<double>(UGRD_10maboveground_str);
+                    AORC.VGRD_10maboveground_meters_per_second = boost::lexical_cast<double>(VGRD_10maboveground_str);
+
+
                     //Add AORC struct to AORC vector
                     AORC_vector.push_back(AORC);
             
                     //Convert precip_rate from string to double
-                    double precip_rate = atof(precip_rate_str.c_str());
+                    double precip_rate = boost::lexical_cast<double>(precip_rate_str);
 
                     //Add data to vectors
                     precipitation_rate_meters_per_second_vector.push_back(precip_rate);
