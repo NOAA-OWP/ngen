@@ -87,7 +87,10 @@ inline void Bmi_C_Formulation::get_forcing_data_ts_contributions(time_step_t t_d
     // Though this is a problem at the moment, because we can't go through forcings in reverse order
     if (model_epoch_time_s < forcing.get_time_epoch()) {
         // TODO: think if there is a better way to address this
-        throw std::runtime_error("Cannot get contributions for model time step before current forcing time step");
+        // TODO: should we include <typeinfo> and use typeid(this).name() to print class?
+        //  (Also, should there be a directive-controlled option for that?)
+        throw std::runtime_error("Bmi_C_Formulation for model '" + get_model_type_name() +
+                                 "' cannot get contributions for model time step before current forcing time step");
     }
 
     model_ts_start_offset = model_epoch_time_s - forcing.get_time_epoch();
