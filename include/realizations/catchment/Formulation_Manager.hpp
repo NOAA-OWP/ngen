@@ -17,6 +17,7 @@
 #include "Simulation_Time.h"
 #include "GIUH.hpp"
 #include "GiuhJsonReader.h"
+#include "routing/Routing_Params.h"
 
 namespace realization {
 
@@ -121,6 +122,21 @@ namespace realization {
                 this->Simulation_Time_Object = std::make_shared<Simulation_Time>(simulation_time_config);
 
                 /**
+                 * Read routing configurations from configuration file
+                 */      
+                auto possible_routing_configs = tree.get_child_optional("routing");
+                
+                if (possible_routing_configs) {
+                    geojson::JSONProperty routing_parameters("routing", *possible_routing_configs);
+                    
+                    this->routing_config = std::make_shared<routing_params>(
+                        routing_parameters.at("t_route_connection_path").as_string(),
+                        routing_parameters.at("input_path").as_string()
+                    );
+                    using_routing = true;
+                 }
+
+                /**
                  * Read catchment configurations from configuration file
                  */      
                 auto possible_catchment_configs = tree.get_child_optional("catchments");
@@ -199,6 +215,28 @@ namespace realization {
             virtual typename std::map<std::string, std::shared_ptr<Catchment_Formulation>>::const_iterator end() const {
                 return this->formulations.cend();
             }
+
+            /**
+             * @return Whether or not using routing
+             */
+            bool get_using_routing() {
+                return this->using_routing;
+            }
+
+            /**
+             * @return routing t_route_connection_path
+             */
+            std::string get_t_route_connection_path() {
+                return this->routing_config->t_route_connection_path;
+            }
+
+            /**
+             * @return routing input_path
+             */
+            std::string get_input_path() {
+                return this->routing_config->input_path;
+            }
+
 
         protected:
             std::shared_ptr<Catchment_Formulation> construct_formulation_from_tree(
@@ -342,6 +380,10 @@ namespace realization {
             geojson::PropertyMap global_forcing;
 
             std::map<std::string, std::shared_ptr<Catchment_Formulation>> formulations;
+
+            std::shared_ptr<routing_params> routing_config;
+
+            bool using_routing = false;
     };
 }
 #endif // NGEN_FORMULATION_MANAGER_H

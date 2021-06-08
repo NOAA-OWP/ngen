@@ -17,24 +17,35 @@ namespace py = pybind11;
 
 //using namespace std;
 
+/**
+ * @brief routing_params providing configuration information for routing.
+ */
+/*
+struct routing_params
+{
+    std::string t_route_connection_path;
+    std::string input_path;
+};
+*/
+
 namespace routing_py_adapter {
 
-  class Routing_Py_Adapter {
+    class Routing_Py_Adapter {
 
-  public:
+    public:
 
-    Routing_Py_Adapter(std::string t_route_connection_path, std::string input_path, 
-                       const std::vector<std::string> &ids);
-
-
-  private:
-
-    int empty_var;
+        Routing_Py_Adapter(std::string t_route_connection_path, std::string input_path, 
+                           const std::vector<std::string> &ids);
 
 
+    private:
+
+        int empty_var;
 
 
-  };
+
+
+    };
 
 
 }

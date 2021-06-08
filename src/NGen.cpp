@@ -182,13 +182,22 @@ int main(int argc, char *argv[]) {
     std::cout<<"Finished "<<manager->Simulation_Time_Object->get_total_output_times()<<" timesteps."<<std::endl;
 
 #ifdef NGEN_ROUTING_ACTIVE
-    std::string t_route_connection_path = "../../t-route/src/external_connections";
-    std::string input_path = "../../t-route/test/input/next_gen";
     std::string supernetwork = "../../t-route/test/input/next_gen/flowpath_data.geojson";
 
-    routing_py_adapter::Routing_Py_Adapter routing_py_adapter1(t_route_connection_path, input_path, catchment_subset_ids);
+    if(manager->get_using_routing())
+    {
+      std::cout<<"Using Routing"<<std::endl;
 
-   std::cout<<"ran routing"<<std::endl;
+      std::string t_route_connection_path = manager->get_t_route_connection_path();
+      
+      std::string input_path = manager->get_input_path();
+    
+      routing_py_adapter::Routing_Py_Adapter routing_py_adapter1(t_route_connection_path, input_path, catchment_subset_ids);
+    }
+    else
+    {
+      std::cout<<"Not Using Routing"<<std::endl;
+    }
 
 #endif // NGEN_ROUTING_ACTIVE
 }
