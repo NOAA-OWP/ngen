@@ -78,6 +78,15 @@ class Simulation_Time
     }
 
     /**
+     * @brief Accessor to the output_interval_seconds
+     * @return output_interval_seconds
+     */
+    int get_output_interval_seconds()
+    {
+        return output_interval_seconds;
+    }
+
+    /**
      * @brief Accessor to the current timestamp string
      * @return current_timestamp
      */ 
