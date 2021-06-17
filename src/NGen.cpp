@@ -28,6 +28,9 @@ std::string REALIZATION_CONFIG_PATH = "";
 
 std::unordered_map<std::string, std::ofstream> nexus_outfiles;
 
+//Note: Use below if developing in-memory transfer of nexus flows to routing
+//std::unordered_map<std::string, std::vector<double>> nexus_flows;
+
 pdm03_struct get_et_params() {
   // create the struct used for ET
     pdm03_struct pdm_et_data;
@@ -177,11 +180,18 @@ int main(int argc, char *argv[]) {
           nexus_outfiles[id] << output_time_index << ", " << current_timestamp << ", " << contribution_at_t << std::endl;
         }
         //std::cout<<"\tNexus "<<id<<" has "<<contribution_at_t<<" m^3/s"<<std::endl;
+
+        //Note: Use below if developing in-memory transfer of nexus flows to routing
+        //If using below, then another single time vector would be needed to hold the timestamp
+        //nexus_flows[id].push_back(contribution_at_t); 
       } //done nexuses
     } //done time
     std::cout<<"Finished "<<manager->Simulation_Time_Object->get_total_output_times()<<" timesteps."<<std::endl;
 
+
 #ifdef NGEN_ROUTING_ACTIVE
+    
+    //Syncronization here. MPI barrier. If rank == 0, do routing
     std::string supernetwork = "../../t-route/test/input/next_gen/flowpath_data.geojson";
 
     if(manager->get_using_routing())
@@ -191,8 +201,12 @@ int main(int argc, char *argv[]) {
       std::string t_route_connection_path = manager->get_t_route_connection_path();
       
       std::string input_path = manager->get_input_path();
-    
-      routing_py_adapter::Routing_Py_Adapter routing_py_adapter1(t_route_connection_path, input_path, catchment_subset_ids);
+   
+      int number_of_timesteps = manager->Simulation_Time_Object->get_total_output_times();
+
+      int delta_time = manager->Simulation_Time_Object->get_output_interval_seconds();
+ 
+      routing_py_adapter::Routing_Py_Adapter routing_py_adapter1(t_route_connection_path, input_path, catchment_subset_ids, number_of_timesteps, delta_time);
     }
     else
     {
