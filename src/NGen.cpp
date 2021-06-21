@@ -192,7 +192,6 @@ int main(int argc, char *argv[]) {
 #ifdef NGEN_ROUTING_ACTIVE
     
     //Syncronization here. MPI barrier. If rank == 0, do routing
-    std::string supernetwork = "../../t-route/test/input/next_gen/flowpath_data.geojson";
 
     if(manager->get_using_routing())
     {

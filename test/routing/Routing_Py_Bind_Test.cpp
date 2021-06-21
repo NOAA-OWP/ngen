@@ -27,12 +27,9 @@ TEST_F(RoutingPyBindTest, TestRoutingPyBind)
   // Start Python interpreter and keep it alive
   py::scoped_interpreter guard{};
 
-  py::print("Hello, World!"); // use the Python API
-
   std::vector<double> nexus_values_vec{1.1, 2.2, 3.3, 4.4, 5.5};
 
   //SET THESE AS INPUTS
-  //std::string t_route_connection_path = "../../t-route/src/external_connections";
   std::string t_route_connection_path = "../../t-route/src/ngen_routing/src";
   std::string input_path = "../../t-route/test/input/next_gen";
   std::string supernetwork = "../../t-route/test/input/next_gen/flowpath_data.geojson";
@@ -50,12 +47,6 @@ TEST_F(RoutingPyBindTest, TestRoutingPyBind)
   
   //routing_py_adapter::Routing_Py_Adapter routing_py_adapter1(t_route_connection_path, input_path, catchment_subset_ids, nexus_values_vec);
 
-
-  std::vector<double> test_vec{1, 2, 3, 4, 5};
-
-  py::list test_list3 = py::cast(catchment_subset_ids);
-
-  py::print(test_list3);  
  
   ASSERT_TRUE(true);
 
