@@ -239,7 +239,8 @@ py::array Bmi_Py_Adapter::parse_other_var_val_for_setter(const geojson::JSONProp
         // TODO: think about handling list explicitly, and handling object type; for now, document restrictions
         //else if (other_value_json.get_type() == geojson::PropertyType::String) {
     else {
-        return pybind11::array(py::dtype::of<string>(), {1, 1}, {other_value_json.as_string()});
+        //return pybind11::array(py::dtype::of<string>(), {1, 1}, {other_value_json.as_string()});
+        int a = 1;
     }
 }
 
