@@ -8,3 +8,7 @@
 [submodule "extern/pybind11"]
 	path = extern/pybind11
 	url = https://github.com/pybind/pybind11
+[submodule "extern/t-route"]
+	path = extern/t-route
+	url = https://github.com/jdmattern-noaa/t-route.git
+        branch = ngen-routing
