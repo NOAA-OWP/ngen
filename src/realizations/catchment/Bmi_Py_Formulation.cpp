@@ -43,10 +43,12 @@ void Bmi_Py_Formulation::protected_create_formulation(geojson::PropertyMap prope
     auto it_other_vars = properties.find(CFG_PROP_KEY_OTHER_INPUT_VARS);
     if (it_other_vars != properties.end()) {
         // TODO: consider adding error message if something in list other than input variables (output and/or unrecognized)
-        set_bmi_model(std::make_shared<Bmi_Py_Adapter>(Bmi_Py_Adapter(py_class, config_file, it_other_vars->second)));
+        int a = 1;
+        //set_bmi_model(std::make_shared<Bmi_Py_Adapter>(Bmi_Py_Adapter(py_class, config_file, it_other_vars->second)));
     }
     else {
-        set_bmi_model(std::make_shared<Bmi_Py_Adapter>(Bmi_Py_Adapter(py_class, config_file)));
+        int a = 1;
+        //set_bmi_model(std::make_shared<Bmi_Py_Adapter>(Bmi_Py_Adapter(py_class, config_file)));
     }
 }
 
