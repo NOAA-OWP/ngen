@@ -15,7 +15,6 @@
 #include "boost/algorithm/string.hpp"
 #include "Bmi_Adapter.hpp"
 
-using namespace std;
 namespace py = pybind11;
 
 using namespace pybind11::literals; // to bring in the `_a` literal for pybind11 keyword args functionality

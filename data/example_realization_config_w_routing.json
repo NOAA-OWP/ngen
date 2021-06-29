@@ -43,7 +43,7 @@
         "output_interval": 3600
     },
     "routing": {
-        "t_route_connection_path": "../../t-route/src/ngen_routing/src",
+        "t_route_connection_path": "extern/t-route/src/ngen_routing/src",
         "input_path": "."
     },
     "catchments": {
