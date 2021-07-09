@@ -25,10 +25,10 @@ namespace models {
                 : model_name(move(model_name)),
                   bmi_init_config(move(bmi_init_config)),
                   bmi_model_uses_forcing_file(!forcing_file_path.empty()),
-                  forcing_file_path(std::move(forcing_file_path)),
+                  forcing_file_path(move(forcing_file_path)),
                   bmi_model_has_fixed_time_step(has_fixed_time_step),
                   allow_model_exceed_end_time(allow_exceed_end),
-                  output(std::move(output)),
+                  output(move(output)),
                   bmi_model_time_convert_factor(1.0)
             {
                 if (call_bmi_initialize)
@@ -46,7 +46,7 @@ namespace models {
              * @param time_convert_factor A reference to set to the determined conversion factor.
              */
             virtual void acquire_time_conversion_factor(double &time_convert_factor) {
-                std::string time_units = GetTimeUnits();
+                string time_units = GetTimeUnits();
                 if (time_units == "s" || time_units == "sec" || time_units == "second" || time_units == "seconds")
                     time_convert_factor = 1.0;
                 else if (time_units == "m" || time_units == "min" || time_units == "minute" ||
@@ -78,7 +78,7 @@ namespace models {
              * this function will either simply return or will throw a runtime_error, with its message including the
              * message of the exception from the earlier attempt.
              *
-             * @throws std::runtime_error  If called again after earlier call that resulted in an exception, or if BMI
+             * @throws runtime_error  If called again after earlier call that resulted in an exception, or if BMI
              *                             config file could not be read.
              * @throws models::external::State_Exception   If `initialize()` in nested model does not return successful.
              */
@@ -133,7 +133,7 @@ namespace models {
              */
             void Initialize(string config_file) override {
                 if (config_file != bmi_init_config && model_initialized) {
-                    throw std::runtime_error(
+                    throw runtime_error(
                             "Model init previously attempted; cannot change config from " + bmi_init_config + " to "
                             + config_file);
                 }
@@ -151,28 +151,28 @@ namespace models {
             /** Whether model ``Update`` calls are allowed and handled in some way by the backing model. */
             bool allow_model_exceed_end_time = false;
             /** Path (as a string) to the BMI config file for initializing the backing model (empty if none). */
-            std::string bmi_init_config;
+            string bmi_init_config;
             /** Pointer to backing BMI model instance. */
-            std::shared_ptr<T> bmi_model = nullptr;
+            shared_ptr<T> bmi_model = nullptr;
             /** Whether this particular model has a time step size that cannot be changed internally or externally. */
             bool bmi_model_has_fixed_time_step = true;
             /** Conversion factor for converting values for model time in model's unit type to equivalent in seconds. */
             double bmi_model_time_convert_factor;
             /** Pointer to stored time step size value of backing model, if it is fixed and has been retrieved. */
-            std::shared_ptr<double> bmi_model_time_step_size = nullptr;
+            shared_ptr<double> bmi_model_time_step_size = nullptr;
             /** Whether this particular model implementation directly reads input data from the forcing file. */
             bool bmi_model_uses_forcing_file;
-            std::string forcing_file_path;
+            string forcing_file_path;
             /** Message from an exception (if encountered) on the first attempt to initialize the backing model. */
-            std::string init_exception_msg;
+            string init_exception_msg;
             /** Pointer to collection of input variable names for backing model, used by ``GetInputVarNames()``. */
-            std::shared_ptr<std::vector<std::string>> input_var_names;
+            shared_ptr<vector<string>> input_var_names;
             /** Whether the backing model has been initialized yet, which is always initially ``false``. */
             bool model_initialized = false;
             string model_name;
             utils::StreamHandler output;
             /** Pointer to collection of output variable names for backing model, used by ``GetOutputVarNames()``. */
-            std::shared_ptr<std::vector<std::string>> output_var_names;
+            shared_ptr<vector<string>> output_var_names;
 
             /**
              * Construct the backing BMI model object, then call its BMI-native ``Initialize()`` function.
