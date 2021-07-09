@@ -66,7 +66,7 @@ namespace models {
              * and the API's ``Initialize`` function.
              *
              * If no attempt to initialize the model has yet been made (i.e., ``model_initialized`` is ``false`` when
-             * this function is called), then and initialization is attempted for the model. This is handled by a nested
+             * this function is called), then an initialization is attempted for the model. This is handled by a nested
              * call to the ``construct_and_init_backing_model`` function. If initialization fails, an exception will be
              * raised, with it's message saved as part of this object's state.  However, regardless of the success of
              * initialization, ``model_initialized`` is set to ``true`` after the attempt.
