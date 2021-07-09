@@ -8,7 +8,7 @@ This describes how to use the Python-based t-route routing module with ngen.
 
 [t-route](https://github.com/NOAA-OWP/t-route) is the routing framework developed by NOAA-OWP.
 
-The basic outline of steps needed to run the Remote Nexus Class with MPI is:
+The basic outline of steps needed to run Python Routing is:
   * [Set up pybind11](DEPENDENCIES.md#pybind11)
 
   * The t-route module is handled as a Git Submodule, located at extern/t-route. To initialize the submodule:
@@ -24,12 +24,16 @@ The basic outline of steps needed to run the Remote Nexus Class with MPI is:
 
       * An example create build directory command with the above two options activated:
 
-      `cmake -DCMAKE_BUILD_TYPE=Debug -B cmake-build-debug -DNGEN_ACTIVATE_PYTHON:BOOL=ON -DNGEN_ACTIVATE_ROUTING:BOOL=ON.`  
+      ```
+      cmake -DCMAKE_BUILD_TYPE=Debug -B cmake-build-debug -DNGEN_ACTIVATE_PYTHON:BOOL=ON -DNGEN_ACTIVATE_ROUTING:BOOL=ON .
+    ```  
   
   * Unit tests for the Routing_Py_Adapter class can then be built and run from the main directory with the following two commands:
   
-      `cmake --build cmake-build-debug --target test_routing_pybind`  <br />
-      
-      `./cmake-build-debug/test/test_routing_pybind`
+    ```
+    cmake --build cmake-build-debug --target test_routing_pybind
+    
+    ./cmake-build-debug/test/test_routing_pybind
+    ```
   
 An [example realization](example_realization_config_w_routing.json) with routing inputs.
