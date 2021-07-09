@@ -8,7 +8,7 @@ using namespace models::bmi;
 using namespace pybind11::literals;
 
 void Bmi_Py_Formulation::create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global) {
-    // In this case, we know interpret_parameters() will call call validate parameters, so they don't need re-validating
+    // In this case, we know interpret_parameters() will call validate parameters, so they don't need re-validating
     protected_create_formulation(this->interpret_parameters(config, global), false);
 }
 
