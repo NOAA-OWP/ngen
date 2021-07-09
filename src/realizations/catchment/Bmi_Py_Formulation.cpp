@@ -7,49 +7,18 @@ using namespace models::bmi;
 
 using namespace pybind11::literals;
 
-void Bmi_Py_Formulation::create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global) {
-    // In this case, we know interpret_parameters() will call validate parameters, so they don't need re-validating
-    protected_create_formulation(this->interpret_parameters(config, global), false);
-}
-
-void Bmi_Py_Formulation::create_formulation(geojson::PropertyMap properties) {
-    protected_create_formulation(properties, true);
-}
-
 std::string Bmi_Py_Formulation::get_formulation_type() {
     return "bmi_py";
 }
 
-void Bmi_Py_Formulation::protected_create_formulation(geojson::PropertyMap properties, bool params_need_validation) {
-    // TODO: see comment in Tshirt_C_Realization about how a factory might be better.
-    if (params_need_validation) {
-        this->validate_parameters(properties);
-    }
+bool Bmi_Py_Formulation::is_bmi_input_variable(const string &var_name) {
+    const std::vector<std::string> names = get_bmi_model()->GetInputVarNames();
+    return std::any_of(names.cbegin(), names.cend(), [var_name](const std::string &s){ return var_name == s; });
+}
 
-    // Read the configured name of the model type and use it to get a reference for the Python BMI model type/class
-    // TODO: document this needs to be a fully qualified name for the Python BMI model type
-    std::string py_class = properties.at(CFG_REQ_PROP_KEY_MODEL_TYPE).as_string();
-
-    // Get configured BMI config file path, if available, to provide to BMI initialize function
-    // TODO: document requirements around this,
-    auto config_file_property = properties.find(CFG_PROP_KEY_CONFIG_FILE);
-    std::string config_file;
-    if (config_file_property != properties.end()) {
-        config_file = config_file_property->second.as_string();
-    }
-
-    // Get the child map of any other variables that will be manually/individually set after BMI initialize function
-    // TODO: document that any listed input variable is allowed to do this
-    auto it_other_vars = properties.find(CFG_PROP_KEY_OTHER_INPUT_VARS);
-    if (it_other_vars != properties.end()) {
-        // TODO: consider adding error message if something in list other than input variables (output and/or unrecognized)
-        int a = 1;
-        //set_bmi_model(std::make_shared<Bmi_Py_Adapter>(Bmi_Py_Adapter(py_class, config_file, it_other_vars->second)));
-    }
-    else {
-        int a = 1;
-        //set_bmi_model(std::make_shared<Bmi_Py_Adapter>(Bmi_Py_Adapter(py_class, config_file)));
-    }
+bool Bmi_Py_Formulation::is_bmi_output_variable(const string &var_name) {
+    const std::vector<std::string> names = get_bmi_model()->GetOutputVarNames();
+    return std::any_of(names.cbegin(), names.cend(), [var_name](const std::string &s){ return var_name == s; });
 }
 
 #endif //ACTIVATE_PYTHON
