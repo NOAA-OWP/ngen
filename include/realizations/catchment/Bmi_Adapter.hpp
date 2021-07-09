@@ -86,7 +86,8 @@ namespace models {
                 // If there was previous init attempt but w/ failure exception, throw runtime error and include previous
                 // message
                 if (model_initialized && !init_exception_msg.empty()) {
-                    throw runtime_error("Previous Python model init attempt had exception: \n\t" + init_exception_msg);
+                    throw runtime_error(
+                            "Previous " + model_name + " init attempt had exception: \n\t" + init_exception_msg);
                 }
                     // If there was previous init attempt w/ (implicitly) no exception on previous attempt, just return
                 else if (model_initialized) {
