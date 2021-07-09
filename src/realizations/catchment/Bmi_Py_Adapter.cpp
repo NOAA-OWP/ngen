@@ -130,6 +130,23 @@ std::string Bmi_Py_Adapter::get_bmi_type_simple_name() const {
     return py_bmi_type_simple_name == nullptr ? "" : *py_bmi_type_simple_name;
 }
 
+/**
+ * Set values for a model's BMI variable at specified indices.
+ *
+ * This function is required to fulfill the @ref ::bmi::Bmi interface.  It essentially gets the advertised
+ * type and size of the variable in question via @ref GetVarType and @ref GetVarItemsize to infer the native
+ * type for this variable (i.e., the actual type for the values pointed to by ``src``).  It then uses this
+ * as the type param in a nested called to the template-based @ref set_value_at_indices.  If such a type
+ * param cannot be determined, a ``runtime_error`` is thrown.
+ *
+ * @param name The name of the involved BMI variable.
+ * @param inds A C++ integer array of indices to update, corresponding to each value in ``src``.
+ * @param count Number of elements in the ``inds`` and ``src`` arrays.
+ * @param src A C++ array containing the new values to be set in the BMI variable.
+ * @throws runtime_error Thrown if @ref GetVarType and @ref GetVarItemsize functions return a combination for
+ *                       which there is not support for mapping to a native type in the framework.
+ * @see set_value_at_indices
+ */
 void Bmi_Py_Adapter::SetValueAtIndices(std::string name, int *inds, int count, void *src) {
     string val_type = GetVarType(name);
     size_t val_item_size = (size_t)GetVarItemsize(name);
@@ -150,8 +167,10 @@ void Bmi_Py_Adapter::SetValueAtIndices(std::string name, int *inds, int count, v
     } else if (val_type == "float" && val_item_size == sizeof(long double)) {
         set_value_at_indices<long double>(name, inds, count, src, val_type.c_str());
     } else {
-        throw runtime_error("Unsupported Python BMI model type and size (" + val_type + ", " +
-                            std::to_string(val_item_size) + ")");
+        throw runtime_error(
+                "(Bmi_Py_Adapter) Failed attempt to SET values of BMI variable '" + name + "' from '" +
+                model_name + "' model:  model advertises unsupported combination of type (" + val_type +
+                ") and size (" + std::to_string(val_item_size) + ").");
     }
 }
 
