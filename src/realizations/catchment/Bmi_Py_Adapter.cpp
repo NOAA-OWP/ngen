@@ -9,60 +9,6 @@ using namespace models::bmi;
 using namespace std;
 using namespace pybind11::literals; // to bring in the `_a` literal for pybind11 keyword args functionality
 
-//Bmi_Py_Adapter::Bmi_Py_Adapter(const std::string &type_name, utils::StreamHandler output)
-//    : Bmi_Py_Adapter(type_name, "", output) { }
-
-/*
-Bmi_Py_Adapter::Bmi_Py_Adapter(const std::string &type_name, std::string bmi_init_config,
-                               utils::StreamHandler output)
-   : bmi_init_config(std::move(bmi_init_config)), output(std::move(output))
-{
-    // Read the name of the model type and use it to get a reference for the BMI model type/class
-    // TODO: document this needs to be a fully qualified name for the Python BMI model type
-    init_py_bmi_type(type_name);
-
-    // TODO: later, support reading __init__ args (as done below commented out), but for now, just assume no arg.
-    py_bmi_model_obj = std::make_shared<py::object>((*py_bmi_type_ref)());
-
-    / * ***********************************
-    // Create the BMI model object of the appropriate type using the type reference
-    auto it_py_init_args = properties.find(CFG_PROP_KEY_MODEL_PYTHON_INIT_ARGS);
-    if (it_py_init_args != properties.end() && !it_py_init_args->second.get_values().empty()) {
-        // If any are present, use __init__ args from formulation config when creating the model
-        // TODO: document how __init__args for model object should be put into formulation configuration.
-        pybind11::dict kwargs = pybind11::dict();
-        for (auto& child : it_py_init_args->second.get_values()) {
-            const char* name = child.first.c_str();
-            pybind11::arg kw_arg(child.first.c_str());
-
-            if (child.second.get_type() == geojson::PropertyType::Boolean) {
-                kw_arg = child.second.as_boolean();
-            }
-            else if (child.second.get_type() == geojson::PropertyType::Natural) {
-                kw_arg = child.second.as_natural_number();
-            }
-            else if (child.second.get_type() == geojson::PropertyType::Real) {
-                kw_arg = child.second.as_real_number();
-            }
-            // TODO: think about handling string explicitly, and handling other types; for now, document restrictions
-            else {
-                kw_arg = child.second.as_string();
-            }
-            kwargs = pybind11::dict(**kwargs, kw_arg);
-        }
-
-    }
-    else {
-        // If no __init__ args are present, just go with no-arg __init__
-        set_bmi_model(std::make_shared<pybind11::object>((*py_bmi_type_ref)()));
-    }
-    *********************************** * /
-
-    // Then perform the BMI initialization for the model
-    Initialize();
-}
-*/
-
 Bmi_Py_Adapter::Bmi_Py_Adapter(const string &type_name, string bmi_init_config, bool allow_exceed_end,
                                bool has_fixed_time_step, const geojson::JSONProperty& other_input_vars,
                                utils::StreamHandler output)

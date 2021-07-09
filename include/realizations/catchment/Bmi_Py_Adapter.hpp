@@ -31,16 +31,6 @@ namespace models {
 
         public:
 
-            /*
-            explicit Bmi_Py_Adapter(const string& type_name, utils::StreamHandler output);
-
-            Bmi_Py_Adapter(const string &type_name, std::string bmi_init_config, bool allow_exceed_end,
-                           bool has_fixed_time_step, utils::StreamHandler output);
-
-            Bmi_Py_Adapter(const string &type_name, bool allow_exceed_end, bool has_fixed_time_step,
-                           const geojson::JSONProperty& other_input_vars, utils::StreamHandler output);
-            */
-
             Bmi_Py_Adapter(const string &type_name, std::string bmi_init_config, bool allow_exceed_end,
                            bool has_fixed_time_step, const geojson::JSONProperty& other_input_vars,
                            utils::StreamHandler output);
