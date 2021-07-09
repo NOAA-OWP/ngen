@@ -216,18 +216,24 @@ namespace models {
             /**
              * Get the value for a variable at specified indices, potentially optimizing for all-indices case.
              *
-             * This function primarily exists to consolidate the logic for template function selection when calling
-             * ``get_via_numpy_array``, in particular between ``GetValue`` and ``GetValueAtIndices``.  This allows for
-             * centralization of that while maintaining the ability to optimize for the case when all indices are to be
-             * retrieved, and thus a call to the Python ``get_value`` can be used instead of ``get_value_at_indices``.
+             * This function consolidates logic needed to efficiently implement @ref GetValue and @ref GetValueAtIndices
+             * using a single execution path.  It first directly implements the logic for determining the correct native
+             * type for the BMI variable of the given name.  This type is then used as a template parameter for a nested
+             * call to @ref get_via_numpy_array, and this function then optimizes getting the value from the Python
+             * model using the most appropriate BMI getter function for the situation (i.e., all or specific indices).
+             *
+             * If a supported native type for use with @ref get_via_numpy_array cannot be inferred from the values
+             * returned by @ref GetVarType and @ref GetVarItemsize, then a ``runtime_error`` is thrown.
              *
              * @param name The name of the desired variable.
              * @param dest Destination array pointer to which to copy item values.
              * @param inds Pointer to array holding desired indices of items to obtain.
              * @param count The number of item values to be copied.
              * @param is_all_indices Whether all items for variable are to be copied, which would permit optimization.
+             * @throws runtime_error Thrown if @ref GetVarType and @ref GetVarItemsize functions return a combination for
+             *                       which there is not support for mapping to a native type in the framework.
              */
-            void get_value_at_indices(const std::string& name, void *dest, int *inds, int count, bool is_all_indices) {
+            void get_value_at_indices(const string& name, void *dest, int *inds, int count, bool is_all_indices) {
                 string val_type = GetVarType(name);
                 size_t val_item_size = (size_t)GetVarItemsize(name);
                 vector<string> in_v = GetInputVarNames();
@@ -248,12 +254,19 @@ namespace models {
                 else if (val_type == "float" && val_item_size == sizeof(long double))
                     get_via_numpy_array<long double>(name, dest, inds, count, val_item_size, is_all_indices);
                 else
-                    throw runtime_error("Unsupported Python BMI model type and size (" + val_type + ", " +
-                                        std::to_string(val_item_size) + ")");
+                    throw runtime_error(
+                            "(Bmi_Py_Adapter) Failed attempt to GET values of BMI variable '" + name + "' from '" +
+                            model_name + "' model:  model advertises unsupported combination of type (" + val_type +
+                            ") and size (" + std::to_string(val_item_size) + ").");
             }
 
             /**
              * Get the values at some set of indices for the given variable, using intermediate wrapped numpy array.
+             *
+             * The function performs checking to optimize whether a nested call to ``get_value`` or
+             * ``get_value_at_indices`` is required.  @ref GetValue and @ref GetValueAtIndices.  This enables
+             * centralization of that while maintaining the ability to optimize for the case when all indices are to
+             * be retrieved, and thus permitting calling the Python ``get_value`` instead of ``get_value_at_indices``.
              *
              * The acquired wrapped numpy arrays will be set to use ``py::array::c_style`` ordering.
              *
