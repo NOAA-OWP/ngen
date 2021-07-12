@@ -2,34 +2,9 @@
 #define NGEN_BMI_SINGULAR_FORMULATION_H
 
 #include <utility>
-#include "Catchment_Formulation.hpp"
+#include "Bmi_Formulation.hpp"
 #include "EtCalcProperty.hpp"
 #include "EtCombinationMethod.hpp"
-
-// Define the configuration parameter names used in the realization/formulation config JSON file
-// First the required:
-#define BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG "init_config"
-#define BMI_REALIZATION_CFG_PARAM_REQ__MAIN_OUT_VAR "main_output_variable"
-#define BMI_REALIZATION_CFG_PARAM_REQ__MODEL_TYPE "model_type_name"
-#define BMI_REALIZATION_CFG_PARAM_REQ__USES_FORCINGS "uses_forcing_file"
-
-// Then the optional
-#define BMI_REALIZATION_CFG_PARAM_OPT__FORCING_FILE "forcing_file"
-#define BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES "variables_names_map"
-#define BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS "output_variables"
-#define BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS "output_header_fields"
-#define BMI_REALIZATION_CFG_PARAM_OPT__ALLOW_EXCEED_END "allow_exceed_end_time"
-#define BMI_REALIZATION_CFG_PARAM_OPT__FIXED_TIME_STEP "fixed_time_step"
-#define BMI_REALIZATION_CFG_PARAM_OPT__LIB_FILE "library_file"
-#define BMI_REALIZATION_CFG_PARAM_OPT__REGISTRATION_FUNC "registration_function"
-
-// Supported Standard Names for BMI variables
-// This is needed to provide a calculated potential ET value back to a BMI model
-#define NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP "potential_evapotranspiration"
-
-// Taken from the CSDMS Standard Names list
-// TODO: need to add these in for anything BMI model input or output variables we need to know how to recognize
-#define CSDMS_STD_NAME_RAIN_RATE "atmosphere_water__rainfall_volume_flux"
 
 // Forward declaration to provide access to protected items in testing
 class Bmi_Formulation_Test;
@@ -44,7 +19,7 @@ namespace realization {
      * @tparam M The type for the backing BMI model object.
      */
     template <class M>
-    class Bmi_Formulation : public Catchment_Formulation {
+    class Bmi_Singular_Formulation : public Bmi_Formulation {
 
     public:
 
@@ -56,10 +31,10 @@ namespace realization {
          * @param forcing_config
          * @param output_stream
          */
-        Bmi_Formulation(std::string id, forcing_params forcing_config, utils::StreamHandler output_stream)
-                : Catchment_Formulation(std::move(id), std::move(forcing_config), output_stream) { };
+        Bmi_Singular_Formulation(std::string id, forcing_params forcing_config, utils::StreamHandler output_stream)
+                : Bmi_Formulation(std::move(id), std::move(forcing_config), output_stream) { };
 
-        virtual ~Bmi_Formulation() {};
+        virtual ~Bmi_Singular_Formulation() {};
 
         /**
          * Perform (potential) ET calculation, getting input params from instance's backing model as needed.
@@ -242,7 +217,7 @@ namespace realization {
          * @param model_var_name The BMI variable name to translate so its purpose is recognized internally.
          * @return Either the internal equivalent variable name, or the provided name if there is not a mapping entry.
          */
-        const std::string &get_config_mapped_variable_name(const std::string &model_var_name) {
+        const std::string &get_config_mapped_variable_name(const std::string &model_var_name) override {
             // TODO: need to introduce validation elsewhere that all mapped names are valid AORC field constants.
             if (bmi_var_names_map.find(model_var_name) != bmi_var_names_map.end())
                 return bmi_var_names_map[model_var_name];
@@ -306,15 +281,6 @@ namespace realization {
         const time_t &get_bmi_model_start_time_forcing_offset_s() const {
             return bmi_model_start_time_forcing_offset_s;
         }
-
-        /**
-         * Get the name of the specific type of the backing model object.
-         *
-         * @return The name of the backing model object's type.
-         */
-        std::string get_model_type_name() {
-            return model_type_name;
-        };
 
         /**
          * Get the values making up the header line from get_output_header_line(), but organized as a vector of strings.
@@ -541,15 +507,6 @@ namespace realization {
          */
         virtual void set_model_inputs_prior_to_update(const double &model_initial_time, time_step_t t_delta) = 0;
 
-        /**
-         * Set the name of the specific type of the backing model object.
-         *
-         * @param type_name The name of the backing model object's type.
-         */
-        void set_model_type_name(std::string type_name) {
-            model_type_name = std::move(type_name);
-        }
-
         void set_output_header_fields(const vector<std::string> &output_headers) {
             output_header_fields = output_headers;
         }
@@ -602,7 +559,6 @@ namespace realization {
          */
         std::vector<std::string> output_variable_names;
         bool model_initialized = false;
-        std::string model_type_name;
 
         std::vector<std::string> OPTIONAL_PARAMETERS = {
                 BMI_REALIZATION_CFG_PARAM_OPT__FORCING_FILE,
