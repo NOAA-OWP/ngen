@@ -2,14 +2,14 @@
 #define NGEN_BMI_C_FORMULATION_H
 
 #include <memory>
-#include "Bmi_Formulation.hpp"
+#include "Bmi_Singular_Formulation.hpp"
 #include "Bmi_C_Adapter.hpp"
 
 #define BMI_C_DEFAULT_REGISTRATION_FUNC "register_bmi"
 
 namespace realization {
 
-    class Bmi_C_Formulation : public Bmi_Formulation<models::bmi::Bmi_C_Adapter> {
+    class Bmi_C_Formulation : public Bmi_Singular_Formulation<models::bmi::Bmi_C_Adapter> {
 
     public:
 

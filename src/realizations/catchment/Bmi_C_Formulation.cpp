@@ -4,7 +4,7 @@ using namespace realization;
 using namespace models::bmi;
 
 Bmi_C_Formulation::Bmi_C_Formulation(std::string id, forcing_params forcing_config, utils::StreamHandler output_stream)
-    : Bmi_Formulation<models::bmi::Bmi_C_Adapter>(id, forcing_config, output_stream) { }
+    : Bmi_Singular_Formulation<models::bmi::Bmi_C_Adapter>(id, forcing_config, output_stream) { }
 
 std::string Bmi_C_Formulation::get_formulation_type() {
     return "bmi_c";
@@ -298,6 +298,9 @@ bool Bmi_C_Formulation::is_model_initialized() {
  */
 void Bmi_C_Formulation::set_model_inputs_prior_to_update(const double &model_initial_time, time_step_t t_delta) {
     std::string ngen_side_var_name;
+
+    // TODO: this may need to be moved out (or just duplicated) and put into a separate formulation object, with another
+    //  container layer hold it and this one
 
     std::vector<std::string> in_var_names = get_bmi_model()->GetInputVarNames();
     // Get the BMI variables' units and associated internal standard names, keeping them in these
