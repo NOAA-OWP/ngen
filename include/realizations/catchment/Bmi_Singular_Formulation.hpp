@@ -1,5 +1,5 @@
-#ifndef NGEN_BMI_FORMULATION_H
-#define NGEN_BMI_FORMULATION_H
+#ifndef NGEN_BMI_SINGULAR_FORMULATION_H
+#define NGEN_BMI_SINGULAR_FORMULATION_H
 
 #include <utility>
 #include "Catchment_Formulation.hpp"
@@ -689,4 +689,4 @@ namespace realization {
 
 }
 
-#endif //NGEN_BMI_FORMULATION_H
+#endif //NGEN_BMI_SINGULAR_FORMULATION_H
