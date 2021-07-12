@@ -13,7 +13,7 @@
 #endif // __APPLE__
 #endif // BMI_TEST_C_LOCAL_LIB_NAME
 
-#include "Bmi_Formulation.hpp"
+#include "Bmi_Singular_Formulation.hpp"
 #include "Bmi_C_Formulation.hpp"
 #include "gtest/gtest.h"
 #include <iostream>
