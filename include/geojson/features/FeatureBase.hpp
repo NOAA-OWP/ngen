@@ -4,6 +4,7 @@
 #include "JSONGeometry.hpp"
 #include "JSONProperty.hpp"
 #include "FeatureVisitor.hpp"
+#include "features/Features.hpp"
 
 #include <memory>
 #include <ostream>
@@ -210,6 +211,11 @@ namespace geojson {
              * @return The property identified by the key
              */
             virtual JSONProperty get_property(std::string key) const {
+                if (properties.find(key) == properties.end()) {
+                    //return Feature();
+                    return PropertyMap();
+                }
+
                 return properties.at(key);
             }
 
