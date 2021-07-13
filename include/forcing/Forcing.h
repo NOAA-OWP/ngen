@@ -408,6 +408,10 @@ class Forcing
         return AORC_vector.at(forcing_vector_index).VGRD_10maboveground_meters_per_second;
     };
 
+    bool is_aorc_forcing() {
+        return is_aorc_data;
+    }
+
     /**
      * Get whether a param's value is an aggregate sum over the entire time step.
      *
@@ -512,6 +516,7 @@ class Forcing
      */
     void read_forcing_aorc(string file_name)
     {
+        is_aorc_data = true;
         //Call CSVReader constuctor
         CSVReader reader(file_name);
 
@@ -596,6 +601,10 @@ class Forcing
     }
 
     vector<AORC_data> AORC_vector;
+    /**
+     * Whether this forcing instance has read in full AORC data or just ``precipitation_rate_meters_per_second_vector``.
+     */
+    bool is_aorc_data = false;
 
     /// \todo: Look into aggregation of data, relevant libraries, and storing frequency information
     vector<double> precipitation_rate_meters_per_second_vector;
