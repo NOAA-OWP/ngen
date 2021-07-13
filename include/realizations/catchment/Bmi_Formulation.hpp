@@ -64,7 +64,9 @@ namespace realization {
 
         virtual const vector<string> &get_bmi_input_variables() const = 0;
 
-        virtual const string &get_bmi_main_output_var() const = 0;
+        const string &get_bmi_main_output_var() const {
+            return bmi_main_output_var;
+        }
 
         virtual const time_t &get_bmi_model_start_time_forcing_offset_s() = 0;
 
@@ -137,6 +139,10 @@ namespace realization {
             return model_type_name;
         };
 
+        void set_bmi_main_output_var(const string &main_output_var) {
+            bmi_main_output_var = main_output_var;
+        }
+
         /**
          * Set the name of the specific type of the backing model object.
          *
@@ -148,6 +154,7 @@ namespace realization {
 
     private:
 
+        std::string bmi_main_output_var;
         std::string model_type_name;
 
         std::vector<std::string> OPTIONAL_PARAMETERS = {
