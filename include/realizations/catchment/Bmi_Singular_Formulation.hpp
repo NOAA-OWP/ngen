@@ -582,10 +582,32 @@ namespace realization {
          * @param t_delta The size of the time step over which the formulation is going to update the model, which might
          *                be different than the model's internal time step.
          */
-        virtual void set_model_inputs_prior_to_update(const double &model_initial_time, time_step_t t_delta) = 0;
-
-        void set_output_header_fields(const vector<std::string> &output_headers) {
-            output_header_fields = output_headers;
+        void set_model_inputs_prior_to_update(const double &model_initial_time, time_step_t t_delta) {
+            std::vector<std::string> in_var_names = get_bmi_model()->GetInputVarNames();
+            for (std::string & var_name : in_var_names) {
+                forcing::ForcingProvider *provider;
+                std::string var_map_alias = get_config_mapped_variable_name(var_name);
+                if (input_forcing_providers.find(var_map_alias) != input_forcing_providers.end()) {
+                    provider = input_forcing_providers[var_map_alias].get();
+                }
+                else if (var_map_alias != var_name && input_forcing_providers.find(var_name) != input_forcing_providers.end()) {
+                    provider = input_forcing_providers[var_name].get();
+                }
+                else {
+                    provider = &forcing;
+                }
+                // TODO: probably need to actually allow this by default and warn, but have config option to activate
+                //  this type of behavior
+                // TODO: account for arrays later
+                if (get_bmi_model()->GetVarItemsize(var_name) != get_bmi_model()->GetVarNbytes(var_name)) {
+                    throw std::runtime_error(
+                            "BMI input variable '" + var_name + "' is an array - not currently supported");
+                }
+                double value = provider->get_value(var_name, model_initial_time, t_delta,
+                                                   get_bmi_model()->GetVarUnits(var_name));
+                // Finally, use the value obtained to set the model input
+                get_bmi_model()->SetValue(var_name, (void*)&value);
+            }
         }
 
         /**
@@ -599,6 +621,8 @@ namespace realization {
         void set_output_variable_names(const vector<std::string> &out_var_names) {
             output_variable_names = out_var_names;
         }
+
+        std::map<std::string, std::shared_ptr<forcing::ForcingProvider>> input_forcing_providers;
 
         // Unit test access
         friend class ::Bmi_Formulation_Test;
