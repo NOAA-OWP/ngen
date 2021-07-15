@@ -17,6 +17,10 @@ namespace realization {
 
         Bmi_C_Formulation(std::string id, forcing_params forcing_config, utils::StreamHandler output_stream);
 
+        const vector<string> get_bmi_input_variables() override;
+
+        const vector<string> get_bmi_output_variables() override;
+
         std::string get_formulation_type() override;
 
         /**
