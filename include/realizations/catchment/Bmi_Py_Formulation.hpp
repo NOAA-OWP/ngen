@@ -5,7 +5,7 @@
 
 #include <memory>
 #include <string>
-#include "Bmi_Formulation.hpp"
+#include "Bmi_Singular_Formulation.hpp"
 #include "Bmi_Py_Adapter.hpp"
 #include "pybind11/pybind11.h"
 #include "pybind11/pytypes.h"
@@ -13,7 +13,7 @@
 
 namespace realization {
 
-    class Bmi_Py_Formulation : public Bmi_Formulation<models::bmi::Bmi_Py_Adapter> {
+    class Bmi_Py_Formulation : public Bmi_Singular_Formulation<models::bmi::Bmi_Py_Adapter> {
 
     // TODO: Type is not fully implemented.  Complete before using.
 
