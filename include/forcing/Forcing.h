@@ -14,6 +14,8 @@
 #include <ctime>
 #include <time.h>
 #include <memory>
+#include "ForcingProvider.hpp"
+#include <exception>
 
 // Recognized Forcing Value Names (in particular for use when configuring BMI input variables)
 // TODO: perhaps create way to configure a mapping of these to something different
@@ -76,7 +78,7 @@ struct AORC_data
 /**
  * @brief Forcing class providing time-series precipiation forcing data to the model.
  */
-class Forcing
+class Forcing : public forcing::ForcingProvider
 {
     public:
 
@@ -146,6 +148,15 @@ class Forcing
         forcing_vector_index = 0;
     }
 
+    const std::vector<std::string> &get_available_forcing_outputs() override {
+        if (available_forcings.empty()) {
+            for (std::string forcing_name : *(Forcing::get_forcing_field_names())) {
+                available_forcings.push_back(forcing_name);
+            }
+        }
+        return available_forcings;
+    }
+
     /**
      * Placeholder implementation for function to return the given param adjusted to be in the supplied units.
      *
@@ -174,6 +185,108 @@ class Forcing
     inline double get_converted_value_for_param_in_units(const std::string& name, const std::string& units_str) {
         check_forcing_vector_index_bounds();
         return get_converted_value_for_param_in_units(name, units_str, forcing_vector_index);
+    }
+
+    /**
+     * Get the inclusive beginning of the period of time over which this instance can provide data for this forcing.
+     *
+     * @return The inclusive beginning of the period of time over which this instance can provide this data.
+     */
+    time_t get_forcing_output_time_begin(const std::string &output_name) override {
+        return start_date_time_epoch;
+    }
+
+    /**
+     * Get the exclusive ending of the period of time over which this instance can provide data for this forcing.
+     *
+     * @return The exclusive ending of the period of time over which this instance can provide this data.
+     */
+    time_t get_forcing_output_time_end(const std::string &output_name) override {
+        return end_date_time_epoch;
+    }
+
+    /**
+     * Get the index of the forcing time step that contains the given point in time.
+     *
+     * An @ref std::out_of_range exception should be thrown if the time is not in any time step.
+     *
+     * @param epoch_time The point in time, as a seconds-based epoch time.
+     * @return The index of the forcing time step that contains the given point in time.
+     * @throws std::out_of_range If the given point is not in any time step.
+     */
+    size_t get_ts_index_for_time(const time_t &epoch_time) override {
+        if (epoch_time < start_date_time_epoch) {
+            throw std::out_of_range("Forcing had bad time for index query: " + std::to_string(epoch_time));
+        }
+        size_t i = 0;
+        // 1 hour
+        size_t seconds_in_time_step = 3600;
+        time_t time = start_date_time_epoch;
+        while (epoch_time >= time + seconds_in_time_step && time < end_date_time_epoch) {
+           i++;
+           time += seconds_in_time_step;
+        }
+        if (time >= end_date_time_epoch) {
+            throw std::out_of_range("Forcing had bad time for index query: " + std::to_string(epoch_time));
+        }
+        else {
+            return i;
+        }
+    }
+
+    /**
+     * Get the value of a forcing property for an arbitrary time period, converting units if needed.
+     *
+     * An @ref std::out_of_range exception should be thrown if the data for the time period is not available.
+     *
+     * @param output_name The name of the forcing property of interest.
+     * @param init_time_epoch The epoch time (in seconds) of the start of the time period.
+     * @param duration_seconds The length of the time period, in seconds.
+     * @param output_units The expected units of the desired output value.
+     * @return The value of the forcing property for the described time period, with units converted if needed.
+     * @throws std::out_of_range If data for the time period is not available.
+     */
+    double get_value(const std::string &output_name, const time_t &init_time, const long &duration_s,
+                     const std::string &output_units) override
+    {
+        size_t current_index;
+        long time_remaining = duration_s;
+        try {
+            current_index = get_ts_index_for_time(init_time);
+        }
+        catch (std::out_of_range e) {
+            throw std::out_of_range("Forcing had bad init_time " + std::to_string(init_time) + " for value request");
+        }
+
+        std::vector<double> involved_time_step_values;
+        std::vector<long> involved_time_step_seconds;
+        long ts_involved_s;
+
+        time_t first_time_step_start_epoch = start_date_time_epoch + (current_index * 3600);
+        // Handle the first time step differently, since we need to do more to figure out how many seconds came from it
+        // Total time step size minus the offset of the beginning, before the init time
+        ts_involved_s = 3600 - (init_time - first_time_step_start_epoch);
+
+        involved_time_step_seconds.push_back(ts_involved_s);
+        involved_time_step_values.push_back(get_value_for_param_name(output_name, current_index));
+        time_remaining -= ts_involved_s;
+        current_index++;
+
+        while (time_remaining > 0) {
+            ts_involved_s = time_remaining > 3600 ? 3600 : time_remaining;
+            involved_time_step_seconds.push_back(ts_involved_s);
+            involved_time_step_values.push_back(get_value_for_param_name(output_name, current_index));
+            time_remaining -= ts_involved_s;
+            current_index++;
+        }
+        double value;
+        for (size_t i = 0; i < involved_time_step_values.size(); ++i) {
+            if (is_param_sum_over_time_step(output_name))
+                value += involved_time_step_values[i] * ((double)involved_time_step_seconds[i] / 3600.0);
+            else
+                value += involved_time_step_values[i] * ((double)involved_time_step_seconds[i] / (double)duration_s);
+        }
+        return value;
     }
 
     /**
@@ -473,6 +586,22 @@ class Forcing
         return false;
     }
 
+    /**
+     * Get whether a property's per-time-step values are each an aggregate sum over the entire time step.
+     *
+     * Certain properties, like rain fall, are aggregated sums over an entire time step.  Others, such as pressure,
+     * are not such sums and instead something else like an instantaneous reading or an average value.
+     *
+     * It may be the case that forcing data is needed for some discretization different than the forcing time step.
+     * This aspect must be known in such cases to perform the appropriate value interpolation.
+     *
+     * @param name The name of the forcing property for which the current value is desired.
+     * @return Whether the property's value is an aggregate sum.
+     */
+    inline bool is_property_sum_over_time_step(const std::string& name) override {
+        return is_param_sum_over_time_step(name);
+    }
+
     private:
 
     /**
@@ -632,6 +761,7 @@ class Forcing
         }
     }
 
+    std::vector<std::string> available_forcings;
     vector<AORC_data> AORC_vector;
     /**
      * Whether this forcing instance has read in full AORC data or just ``precipitation_rate_meters_per_second_vector``.
