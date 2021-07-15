@@ -87,6 +87,15 @@ namespace realization {
         virtual const string &get_forcing_file_path() const = 0;
 
         /**
+         * Get the name of the specific type of the backing model object.
+         *
+         * @return The name of the backing model object's type.
+         */
+        std::string get_model_type_name() {
+            return model_type_name;
+        }
+
+        /**
          * Get the values making up the header line from get_output_header_line(), but organized as a vector of strings.
          *
          * @return The values making up the header line from get_output_header_line() organized as a vector.
@@ -156,10 +165,19 @@ namespace realization {
             model_type_name = std::move(type_name);
         }
 
+        void set_output_header_fields(const vector<std::string> &output_headers) {
+            output_header_fields = output_headers;
+        }
+
     private:
 
         std::string bmi_main_output_var;
         std::string model_type_name;
+        /**
+         * Output header field strings corresponding to the variables output by the realization, as defined in
+         * `output_variable_names`.
+         */
+        std::vector<std::string> output_header_fields;
 
         std::vector<std::string> OPTIONAL_PARAMETERS = {
                 BMI_REALIZATION_CFG_PARAM_OPT__FORCING_FILE,
