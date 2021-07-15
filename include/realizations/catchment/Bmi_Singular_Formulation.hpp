@@ -772,6 +772,9 @@ namespace realization {
         time_t last_model_response_start_time = 0;
         std::map<std::string, std::shared_ptr<forcing::ForcingProvider>> input_forcing_providers;
 
+        // Access for multi-BMI
+        friend class Bmi_Multi_Formulation;
+
         // Unit test access
         friend class ::Bmi_Formulation_Test;
         friend class ::Bmi_C_Formulation_Test;
