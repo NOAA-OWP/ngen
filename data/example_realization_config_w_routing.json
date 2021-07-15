@@ -44,6 +44,7 @@
     },
     "routing": {
         "t_route_connection_path": "extern/t-route/src/ngen_routing/src",
+        "t_route_config_file_with_path": "extern/t-route/test/input/yaml/ngen.yaml",
         "input_path": "."
     },
     "catchments": {

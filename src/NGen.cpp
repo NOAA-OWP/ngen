@@ -325,13 +325,16 @@ int main(int argc, char *argv[]) {
 
       std::string t_route_connection_path = manager->get_t_route_connection_path();
       
+      std::string t_route_config_file_with_path = manager->get_t_route_config_file_with_path();
+      
       std::string input_path = manager->get_input_path();
    
       int number_of_timesteps = manager->Simulation_Time_Object->get_total_output_times();
 
       int delta_time = manager->Simulation_Time_Object->get_output_interval_seconds();
  
-      routing_py_adapter::Routing_Py_Adapter routing_py_adapter1(t_route_connection_path, input_path, catchment_subset_ids, number_of_timesteps, delta_time);
+      routing_py_adapter::Routing_Py_Adapter routing_py_adapter1(t_route_connection_path, 
+      t_route_config_file_with_path, input_path, catchment_subset_ids, number_of_timesteps, delta_time);
     }
     else {
       std::cout<<"Not Using Routing"<<std::endl;
