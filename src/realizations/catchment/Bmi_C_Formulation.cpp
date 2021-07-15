@@ -40,18 +40,8 @@ std::shared_ptr<Bmi_C_Adapter> Bmi_C_Formulation::construct_model(const geojson:
                     output));
 }
 
-/**
- * Determine and set the offset time of the model in seconds, compared to forcing data.
- *
- * BMI models frequently have their model start time be set to 0.  As such, to know what the forcing time is
- * compared to the model time, an offset value is needed.  This becomes important in situations when the size of
- * the time steps for forcing data versus model execution are not equal.  This method will determine and set
- * this value.
- */
-void Bmi_C_Formulation::determine_model_time_offset() {
-    set_bmi_model_start_time_forcing_offset_s(forcing.get_time_epoch() -
-                                              (time_t) get_bmi_model()->convert_model_time_to_seconds(
-                                                      get_bmi_model()->GetStartTime()));
+time_t Bmi_C_Formulation::convert_model_time(const double &model_time) {
+    return (time_t) (get_bmi_model()->convert_model_time_to_seconds(model_time));
 }
 
 const vector<string> Bmi_C_Formulation::get_bmi_input_variables() {
