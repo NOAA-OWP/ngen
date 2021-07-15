@@ -34,6 +34,9 @@ namespace realization {
         Bmi_Singular_Formulation(std::string id, forcing_params forcing_config, utils::StreamHandler output_stream)
                 : Bmi_Formulation(std::move(id), std::move(forcing_config), output_stream) { };
 
+        Bmi_Singular_Formulation(std::string id, Forcing forcing, utils::StreamHandler output_stream)
+                : Bmi_Formulation(std::move(id), forcing, output_stream) { };
+
         virtual ~Bmi_Singular_Formulation() {};
 
         /**
