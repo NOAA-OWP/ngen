@@ -63,7 +63,7 @@ protected:
         return formulation.get_bmi_model();
     }
 
-    static time_t get_friend_bmi_model_start_time_forcing_offset_s(const Bmi_C_Formulation& formulation) {
+    static time_t get_friend_bmi_model_start_time_forcing_offset_s(Bmi_C_Formulation& formulation) {
         return formulation.get_bmi_model_start_time_forcing_offset_s();
     }
 
