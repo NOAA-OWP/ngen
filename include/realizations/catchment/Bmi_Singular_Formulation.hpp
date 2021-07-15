@@ -264,10 +264,6 @@ namespace realization {
             return bmi_init_config;
         }
 
-        const string &get_bmi_main_output_var() const {
-            return bmi_main_output_var;
-        }
-
         /**
          * Get the backing model object implementing the BMI.
          *
@@ -281,17 +277,99 @@ namespace realization {
             return forcing_file_path;
         }
 
-        const time_t &get_bmi_model_start_time_forcing_offset_s() const {
+        const time_t &get_bmi_model_start_time_forcing_offset_s() override {
             return bmi_model_start_time_forcing_offset_s;
         }
 
         /**
-         * Get the values making up the header line from get_output_header_line(), but organized as a vector of strings.
+         * Get model input values from forcing data, accounting for model and forcing time steps not aligning.
          *
-         * @return The values making up the header line from get_output_header_line() organized as a vector.
+         * Get values to use to set model input variables for forcings, sourced from this instance's forcing data.  Skip
+         * any params in the collection that are not forcing params, as indicated by the given collection.  Account for
+         * if model time step (MTS) does not align with forcing time step (FTS), either due to MTS starting after the
+         * start of FTS, MTS extending beyond the end of FTS, or both.
+         *
+         * @param t_delta The size of the model's time step in seconds.
+         * @param model_initial_time The model's current time in its internal units and representation.
+         * @param params An ordered collection of desired forcing param names from which data for inputs is needed.
+         * @param is_aorc_param Whether the param at each index is an AORC forcing param, or a different model param
+         *                      (which thus does not need to be processed here).
+         * @param param_units An ordered collection units of strings representing the BMI model's expected units for the
+         *                    corresponding input, so that value conversions of the proportional contributions are done.
+         * @param summed_contributions A referenced, ordered collection containing the returned summed contributions.
          */
-        const vector<std::string> &get_output_header_fields() const {
-            return output_header_fields;
+        inline void get_forcing_data_ts_contributions(time_step_t t_delta, const double &model_initial_time,
+                                                      const std::vector<std::string> &params,
+                                                      const std::vector<bool> &is_aorc_param,
+                                                      const std::vector<std::string> &param_units,
+                                                      std::vector<double> &summed_contributions)
+        {
+            // TODO: probably deprecated and needs to be removed
+            time_t model_ts_start_offset, model_ts_seconds_contained_in_forcing_ts, model_epoch_time_s;
+            // Keep track of how much of the model ts delta has not yet had its contribution pulled from some forcing ts
+            time_step_t contribution_seconds_remaining = t_delta;
+
+            model_epoch_time_s = (time_t) (get_bmi_model()->convert_model_time_to_seconds(model_initial_time)) +
+                                 get_bmi_model_start_time_forcing_offset_s();
+            // Make sure the forcings are properly primed to have the correct corresponding forcing ts data available
+            while (model_epoch_time_s > forcing.get_time_epoch() + forcing.get_time_step_size()) {
+                forcing.get_next_hourly_precipitation_meters_per_second();
+            }
+            // Though this is a problem at the moment, because we can't go through forcings in reverse order
+            if (model_epoch_time_s < forcing.get_time_epoch()) {
+                // TODO: think if there is a better way to address this
+                // TODO: should we include <typeinfo> and use typeid(this).name() to print class?
+                //  (Also, should there be a directive-controlled option for that?)
+                throw std::runtime_error(get_formulation_type() + " formulation for model '" + get_model_type_name() +
+                                         "' can't get contributions for model time step " + to_string(t_delta) + " starting at "
+                                         + to_string(model_epoch_time_s) + ", as current forcing time step doesn't start until "
+                                         + to_string(forcing.get_time_epoch()));
+            }
+
+            model_ts_start_offset = model_epoch_time_s - forcing.get_time_epoch();
+
+            while (contribution_seconds_remaining > 0) {
+                // Note that model_ts_start_offset shift is cleared (set to 0) at end of loop, so only has effect once.
+                // If remainder of model ts (after shift in first iteration) ends before forcing ts ...
+                if ((time_t) contribution_seconds_remaining + model_ts_start_offset < forcing.get_time_step_size()) {
+                    model_ts_seconds_contained_in_forcing_ts = (time_t) contribution_seconds_remaining;
+                }
+                else {
+                    model_ts_seconds_contained_in_forcing_ts = forcing.get_time_step_size() - model_ts_start_offset;
+                }
+
+                // Get the contributions from this forcing ts for all the forcing params needed.
+                for (size_t i = 0; i < params.size(); ++i) {
+                    // Skip indices for parameters that are not forcings
+                    if (!is_aorc_param[i]) {
+                        continue;
+                    }
+                    // This is proportional to ratio of (model ts secs in this forcing ts) to (FORCING ts total secs)
+                    if (forcing.is_param_sum_over_time_step(params[i])) {
+                        summed_contributions[i] +=
+                                forcing.get_converted_value_for_param_in_units(params[i], param_units[i]) *
+                                (double) model_ts_seconds_contained_in_forcing_ts /
+                                (double) forcing.get_time_step_size();
+                    }
+                    // This is proportional to the ratio of (model ts secs in this forcing ts) to (MODEL ts total secs)
+                    else {
+                        summed_contributions[i] +=
+                                forcing.get_converted_value_for_param_in_units(params[i], param_units[i]) *
+                                (double) model_ts_seconds_contained_in_forcing_ts /
+                                (double) t_delta;
+                    }
+                }
+
+                // Account for the processed model time compared to the entire delta
+                contribution_seconds_remaining -= (time_step_t)model_ts_seconds_contained_in_forcing_ts;
+                // The offset should only possibly be non-zero the first time (after, if the model ts extends beyond the first
+                // forcing ts, it always picks up at the beginning of the subsequent forcing ts), so set to 0 now.
+                model_ts_start_offset = 0;
+                // Also, when appropriate incrementing the forcing ts
+                if (contribution_seconds_remaining > 0) {
+                    forcing.get_next_hourly_precipitation_meters_per_second();
+                }
+            }
         }
 
         /**
@@ -458,10 +536,6 @@ namespace realization {
             bmi_init_config = init_config;
         }
 
-        void set_bmi_main_output_var(const string &main_output_var) {
-            bmi_main_output_var = main_output_var;
-        }
-
         /**
          * Set the backing model object implementing the BMI.
          *
@@ -545,17 +619,11 @@ namespace realization {
          * step.
          */
         time_t bmi_model_start_time_forcing_offset_s;
-        std::string bmi_main_output_var;
         /** A configured mapping of BMI model variable names to standard names for use inside the framework. */
         std::map<std::string, std::string> bmi_var_names_map;
         /** Whether the backing model uses/reads the forcing file directly for getting input data. */
         bool bmi_using_forcing_file;
         std::string forcing_file_path;
-        /**
-         * Output header field strings corresponding to the variables output by the realization, as defined in
-         * `output_variable_names`.
-         */
-        std::vector<std::string> output_header_fields;
         /**
          * Names of the variables to include in the output from this realization, which should be some ordered subset of
          * the output variables from the model.
