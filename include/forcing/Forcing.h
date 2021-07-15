@@ -29,6 +29,17 @@
 #define AORC_FIELD_NAME_WIND_V_10M_AG "VGRD_10maboveground"
 #define AORC_FIELD_NAME_SPEC_HUMID_2M_AG "SPFH_2maboveground"
 
+// CSDMS Standard Names for several forcings
+#define CSDMS_STD_NAME_RAIN_RATE "atmosphere_water__rainfall_volume_flux"
+#define CSDMS_STD_NAME_SOLAR_LONGWAVE "land_surface_radiation~incoming~longwave__energy_flux"
+#define CSDMS_STD_NAME_SOLAR_SHORTWAVE "land_surface_radiation~incoming~shortwave__energy_flux"
+#define CSDMS_STD_NAME_SURFACE_AIR_PRESSURE "land_surface_air__pressure"
+#define CSDMS_STD_NAME_HUMIDITY "atmosphere_air_water~vapor__relative_saturation"
+#define CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE "atmosphere_water__liquid_equivalent_precipitation_rate"
+#define CSDMS_STD_NAME_SURFACE_TEMP "land_surface_air__temperature"
+#define CSDMS_STD_NAME_WIND_U_X "land_surface_wind__x_component_of_velocity"
+#define CSDMS_STD_NAME_WIND_V_Y "land_surface_wind__y_component_of_velocity"
+
 using namespace std;
 
 /**
@@ -153,6 +164,14 @@ class Forcing : public forcing::ForcingProvider
             for (std::string forcing_name : *(Forcing::get_forcing_field_names())) {
                 available_forcings.push_back(forcing_name);
             }
+            available_forcings.push_back(CSDMS_STD_NAME_SOLAR_LONGWAVE);
+            available_forcings.push_back(CSDMS_STD_NAME_SOLAR_SHORTWAVE);
+            available_forcings.push_back(CSDMS_STD_NAME_SURFACE_AIR_PRESSURE);
+            available_forcings.push_back(CSDMS_STD_NAME_HUMIDITY);
+            available_forcings.push_back(CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE);
+            available_forcings.push_back(CSDMS_STD_NAME_SURFACE_TEMP);
+            available_forcings.push_back(CSDMS_STD_NAME_WIND_U_X);
+            available_forcings.push_back(CSDMS_STD_NAME_WIND_V_Y);
         }
         return available_forcings;
     }
@@ -315,28 +334,28 @@ class Forcing : public forcing::ForcingProvider
         if (name == AORC_FIELD_NAME_PRECIP_RATE) {
             return precipitation_rate_meters_per_second_vector.at(index);
         }
-        if (name == AORC_FIELD_NAME_SOLAR_SHORTWAVE) {
+        if (name == AORC_FIELD_NAME_SOLAR_SHORTWAVE || name == CSDMS_STD_NAME_SOLAR_SHORTWAVE) {
             return AORC_vector.at(index).DSWRF_surface_W_per_meters_squared;
         }
-        if (name == AORC_FIELD_NAME_SOLAR_LONGWAVE) {
+        if (name == AORC_FIELD_NAME_SOLAR_LONGWAVE || name == CSDMS_STD_NAME_SOLAR_LONGWAVE) {
             return AORC_vector.at(index).DLWRF_surface_W_per_meters_squared;
         }
-        if (name == AORC_FIELD_NAME_PRESSURE_SURFACE) {
+        if (name == AORC_FIELD_NAME_PRESSURE_SURFACE || name == CSDMS_STD_NAME_SURFACE_AIR_PRESSURE) {
             return AORC_vector.at(index).PRES_surface_Pa;
         }
-        if (name == AORC_FIELD_NAME_TEMP_2M_AG) {
+        if (name == AORC_FIELD_NAME_TEMP_2M_AG || name == CSDMS_STD_NAME_SURFACE_TEMP) {
             return AORC_vector.at(index).TMP_2maboveground_K;
         }
-        if (name == AORC_FIELD_NAME_APCP_SURFACE) {
+        if (name == AORC_FIELD_NAME_APCP_SURFACE || name == CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE) {
             return AORC_vector.at(index).APCP_surface_kg_per_meters_squared;
         }
-        if (name == AORC_FIELD_NAME_WIND_U_10M_AG) {
+        if (name == AORC_FIELD_NAME_WIND_U_10M_AG || name == CSDMS_STD_NAME_WIND_U_X) {
             return AORC_vector.at(index).UGRD_10maboveground_meters_per_second;
         }
-        if (name == AORC_FIELD_NAME_WIND_V_10M_AG) {
+        if (name == AORC_FIELD_NAME_WIND_V_10M_AG || name == CSDMS_STD_NAME_WIND_V_Y) {
             return AORC_vector.at(index).VGRD_10maboveground_meters_per_second;
         }
-        if (name == AORC_FIELD_NAME_SPEC_HUMID_2M_AG) {
+        if (name == AORC_FIELD_NAME_SPEC_HUMID_2M_AG || name == CSDMS_STD_NAME_HUMIDITY) {
             return AORC_vector.at(index).SPFH_2maboveground_kg_per_kg;
         }
         else {
