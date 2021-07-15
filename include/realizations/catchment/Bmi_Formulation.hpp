@@ -66,7 +66,7 @@ namespace realization {
 
         virtual const bool &get_allow_model_exceed_end_time() const = 0;
 
-        virtual const vector<string> &get_bmi_input_variables() const = 0;
+        virtual const vector<string> get_bmi_input_variables() = 0;
 
         const string &get_bmi_main_output_var() const {
             return bmi_main_output_var;
@@ -74,7 +74,7 @@ namespace realization {
 
         virtual const time_t &get_bmi_model_start_time_forcing_offset_s() = 0;
 
-        virtual const vector<string> &get_bmi_output_variables() const = 0;
+        virtual const vector<string> get_bmi_output_variables() = 0;
 
         /**
          * When possible, translate a variable name for a BMI model to an internally recognized name.
@@ -100,7 +100,9 @@ namespace realization {
          *
          * @return The values making up the header line from get_output_header_line() organized as a vector.
          */
-        virtual const vector<std::string> &get_output_header_fields() const = 0;
+        const vector<std::string> &get_output_header_fields() const {
+            return output_header_fields;
+        }
 
         /**
          * Get the names of variables in formulation output.
@@ -142,15 +144,6 @@ namespace realization {
         virtual bool is_model_initialized() = 0;
 
     protected:
-
-        /**
-         * Get the name of the specific type of the backing model object.
-         *
-         * @return The name of the backing model object's type.
-         */
-        std::string get_model_type_name() {
-            return model_type_name;
-        };
 
         void set_bmi_main_output_var(const string &main_output_var) {
             bmi_main_output_var = main_output_var;
