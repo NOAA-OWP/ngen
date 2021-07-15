@@ -19,6 +19,7 @@ class HY_CatchmentRealization
     public:
     //TODO remove the default constructor? leaving temporarily to satisfy non-used realizations
     HY_CatchmentRealization();
+    HY_CatchmentRealization(Forcing forcing);
     HY_CatchmentRealization(forcing_params forcing_config);
     virtual ~HY_CatchmentRealization();
 

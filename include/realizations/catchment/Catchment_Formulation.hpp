@@ -11,6 +11,9 @@ namespace realization {
 
     class Catchment_Formulation : public Formulation, public HY_CatchmentArea, public Et_Accountable {
         public:
+            Catchment_Formulation(std::string id, Forcing forcing, utils::StreamHandler output_stream)
+                : Formulation(id), HY_CatchmentArea(forcing, output_stream) { };
+
             Catchment_Formulation(std::string id, forcing_params forcing_config, utils::StreamHandler output_stream) : Formulation(id), HY_CatchmentArea(forcing_config, output_stream) {};
 
             Catchment_Formulation(std::string id) : Formulation(id){};

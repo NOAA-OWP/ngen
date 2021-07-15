@@ -47,6 +47,10 @@ namespace realization {
 
     public:
 
+        // TODO: probably need to adjust this to let the forcing param (and backing member) be a shared pointer
+        Bmi_Formulation(std::string id, Forcing forcing, utils::StreamHandler output_stream)
+                : Catchment_Formulation(std::move(id), forcing, output_stream) { };
+
         /**
          * Minimal constructor for objects initialize using the Formulation_Manager and subsequent calls to
          * ``create_formulation``.
