@@ -15,8 +15,12 @@
 
 namespace bmi {
 
+#ifndef BMI_SUCCESS
   const int BMI_SUCCESS = 0;
+#endif
+#ifndef BMI_FAILURE
   const int BMI_FAILURE = 1;
+#endif
 
   const int MAX_COMPONENT_NAME = 2048;
   const int MAX_VAR_NAME = 2048;
