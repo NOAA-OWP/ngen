@@ -54,6 +54,14 @@ void Bmi_C_Formulation::determine_model_time_offset() {
                                                       get_bmi_model()->GetStartTime()));
 }
 
+const vector<string> Bmi_C_Formulation::get_bmi_input_variables() {
+    return get_bmi_model()->GetInputVarNames();
+}
+
+const vector<string> Bmi_C_Formulation::get_bmi_output_variables() {
+    return get_bmi_model()->GetOutputVarNames();
+}
+
 std::string Bmi_C_Formulation::get_output_header_line(std::string delimiter) {
     return boost::algorithm::join(get_output_header_fields(), delimiter);
 }
