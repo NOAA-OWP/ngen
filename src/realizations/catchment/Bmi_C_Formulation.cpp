@@ -4,10 +4,10 @@ using namespace realization;
 using namespace models::bmi;
 
 Bmi_C_Formulation::Bmi_C_Formulation(std::string id, Forcing forcing, utils::StreamHandler output_stream)
-        : Bmi_Singular_Formulation<models::bmi::Bmi_C_Adapter>(id, forcing, output_stream) { }
+        : Bmi_Module_Formulation<models::bmi::Bmi_C_Adapter>(id, forcing, output_stream) { }
 
 Bmi_C_Formulation::Bmi_C_Formulation(std::string id, forcing_params forcing_config, utils::StreamHandler output_stream)
-    : Bmi_Singular_Formulation<models::bmi::Bmi_C_Adapter>(id, forcing_config, output_stream) { }
+    : Bmi_Module_Formulation<models::bmi::Bmi_C_Adapter>(id, forcing_config, output_stream) { }
 
 std::string Bmi_C_Formulation::get_formulation_type() {
     return "bmi_c";

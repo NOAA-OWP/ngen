@@ -4,7 +4,7 @@
 #include <map>
 #include <vector>
 #include "Bmi_Formulation.hpp"
-#include "Bmi_Singular_Formulation.hpp"
+#include "Bmi_Module_Formulation.hpp"
 #include "Bmi_C_Formulation.hpp"
 #include "bmi.hpp"
 #include "ForcingProvider.hpp"
@@ -285,7 +285,7 @@ namespace realization {
 
     private:
 
-        std::vector<std::shared_ptr<Bmi_Singular_Formulation<bmi::Bmi>>> modules;
+        std::vector<std::shared_ptr<Bmi_Module_Formulation<bmi::Bmi>>> modules;
         /**
          * Per-module maps (order as in @ref modules) of configuration-mapped names to BMI variable names.
          */
