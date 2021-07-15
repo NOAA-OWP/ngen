@@ -1,5 +1,5 @@
-#ifndef NGEN_BMI_SINGULAR_FORMULATION_H
-#define NGEN_BMI_SINGULAR_FORMULATION_H
+#ifndef NGEN_BMI_MODULE_FORMULATION_H
+#define NGEN_BMI_MODULE_FORMULATION_H
 
 #include <utility>
 #include "Bmi_Formulation.hpp"
@@ -14,12 +14,12 @@ class Bmi_C_Cfe_IT;
 namespace realization {
 
     /**
-     * Abstraction of a formulation with a backing model object that implements the BMI.
+     * Abstraction of a formulation with a single backing model object that implements the BMI.
      *
      * @tparam M The type for the backing BMI model object.
      */
     template <class M>
-    class Bmi_Singular_Formulation : public Bmi_Formulation {
+    class Bmi_Module_Formulation : public Bmi_Formulation {
 
     public:
 
@@ -31,13 +31,13 @@ namespace realization {
          * @param forcing_config
          * @param output_stream
          */
-        Bmi_Singular_Formulation(std::string id, forcing_params forcing_config, utils::StreamHandler output_stream)
+        Bmi_Module_Formulation(std::string id, forcing_params forcing_config, utils::StreamHandler output_stream)
                 : Bmi_Formulation(std::move(id), std::move(forcing_config), output_stream) { };
 
-        Bmi_Singular_Formulation(std::string id, Forcing forcing, utils::StreamHandler output_stream)
+        Bmi_Module_Formulation(std::string id, Forcing forcing, utils::StreamHandler output_stream)
                 : Bmi_Formulation(std::move(id), forcing, output_stream) { };
 
-        virtual ~Bmi_Singular_Formulation() {};
+        virtual ~Bmi_Module_Formulation() {};
 
         /**
          * Perform (potential) ET calculation, getting input params from instance's backing model as needed.
@@ -893,4 +893,4 @@ namespace realization {
 
 }
 
-#endif //NGEN_BMI_SINGULAR_FORMULATION_H
+#endif //NGEN_BMI_MODULE_FORMULATION_H

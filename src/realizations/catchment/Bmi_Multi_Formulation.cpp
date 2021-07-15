@@ -14,16 +14,16 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
     // TODO: go back and set this up properly in required params collection
     auto sub_formulation_it = properties.find(BMI_REALIZATION_CFG_PARAM_REQ__MODULES);
     std::vector<geojson::JSONProperty> sub_formulations_list = sub_formulation_it->second.as_list();
-    modules = std::vector<std::shared_ptr<Bmi_Singular_Formulation<bmi::Bmi>>>(sub_formulations_list.size());
+    modules = std::vector<std::shared_ptr<Bmi_Module_Formulation<bmi::Bmi>>>(sub_formulations_list.size());
     module_variable_maps = std::vector<std::shared_ptr<std::map<std::string, std::string>>>(modules.size());
 
     for (size_t i = 0; i < sub_formulations_list.size(); ++i) {
         geojson::JSONProperty formulation_config = sub_formulations_list[i];
         std::string type_name = formulation_config.at("name").as_string();
         std::string identifier = get_catchment_id() + "." + std::to_string(i);
-        std::shared_ptr<Bmi_Singular_Formulation<bmi::Bmi>> module;
+        std::shared_ptr<Bmi_Module_Formulation<bmi::Bmi>> module;
         if (type_name == "bmi_c") {
-            module = std::dynamic_pointer_cast<Bmi_Singular_Formulation<bmi::Bmi>>(std::make_shared<Bmi_C_Formulation>(identifier, forcing, output));
+            module = std::dynamic_pointer_cast<Bmi_Module_Formulation<bmi::Bmi>>(std::make_shared<Bmi_C_Formulation>(identifier, forcing, output));
         }
         else {
             throw runtime_error(get_formulation_type() + " received unexpected subtype formulation " + type_name);
@@ -226,7 +226,7 @@ double Bmi_Multi_Formulation::get_response(time_step_t t_index, time_step_t t_de
         next_time_step_index++;
     }
     // We know this safely ...
-    std::shared_ptr<Bmi_Singular_Formulation<bmi::Bmi>> source = std::dynamic_pointer_cast<Bmi_Singular_Formulation<bmi::Bmi>>(availableData[get_bmi_main_output_var()]);
+    std::shared_ptr<Bmi_Module_Formulation<bmi::Bmi>> source = std::dynamic_pointer_cast<Bmi_Module_Formulation<bmi::Bmi>>(availableData[get_bmi_main_output_var()]);
     // TODO: but we may need to add a convert step here in the case of mapping
     return source->get_var_value_as_double(get_bmi_main_output_var());
 }
