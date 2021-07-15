@@ -155,9 +155,25 @@ class Forcing
      * @param units_str A string represented the units for conversion, using standard abbreviations.
      * @return For now, just the param value, but in the future, the value converted.
      */
-    inline double get_converted_value_for_param_in_units(const std::string& name, const std::string& units_str) {
+    inline double get_converted_value_for_param_in_units(const std::string& name, const std::string& units_str,
+                                                         int index)
+    {
         // TODO: this is just a placeholder implementation that needs to be replaced with real convertion logic
-        return get_value_for_param_name(name);
+        return get_value_for_param_name(name, index);
+    }
+
+    /**
+     * Placeholder implementation for function to return the given param adjusted to be in the supplied units.
+     *
+     * At present this just returns the param's internal value.
+     *
+     * @param name The name of the desired parameter.
+     * @param units_str A string represented the units for conversion, using standard abbreviations.
+     * @return For now, just the param value, but in the future, the value converted.
+     */
+    inline double get_converted_value_for_param_in_units(const std::string& name, const std::string& units_str) {
+        check_forcing_vector_index_bounds();
+        return get_converted_value_for_param_in_units(name, units_str, forcing_vector_index);
     }
 
     /**
@@ -167,32 +183,48 @@ class Forcing
      * @return The particular param's current value.
      */
     inline double get_value_for_param_name(const std::string& name) {
+        check_forcing_vector_index_bounds();
+        return get_value_for_param_name(name, forcing_vector_index);
+    }
+
+    /**
+     * Get the current value of a forcing param identified by its name.
+     *
+     * @param name The name of the forcing param for which the current value is desired.
+     * @param name The applicable forcing time step index for which the value is desired.
+     * @return The particular param's value at the given forcing time step.
+     */
+    inline double get_value_for_param_name(const std::string& name, int index) {
+        if (index >= precipitation_rate_meters_per_second_vector.size() || index >= AORC_vector.size()) {
+            throw std::out_of_range("Forcing had bad index " + std::to_string(index) + " for value lookup of " + name);
+        }
+
         if (name == AORC_FIELD_NAME_PRECIP_RATE) {
-            return get_current_hourly_precipitation_meters_per_second();
+            return precipitation_rate_meters_per_second_vector.at(index);
         }
         if (name == AORC_FIELD_NAME_SOLAR_SHORTWAVE) {
-            return get_AORC_DSWRF_surface_W_per_meters_squared();
+            return AORC_vector.at(index).DSWRF_surface_W_per_meters_squared;
         }
         if (name == AORC_FIELD_NAME_SOLAR_LONGWAVE) {
-            return get_AORC_DLWRF_surface_W_per_meters_squared();
+            return AORC_vector.at(index).DLWRF_surface_W_per_meters_squared;
         }
         if (name == AORC_FIELD_NAME_PRESSURE_SURFACE) {
-            return get_AORC_PRES_surface_Pa();
+            return AORC_vector.at(index).PRES_surface_Pa;
         }
         if (name == AORC_FIELD_NAME_TEMP_2M_AG) {
-            return get_AORC_TMP_2maboveground_K();
+            return AORC_vector.at(index).TMP_2maboveground_K;
         }
         if (name == AORC_FIELD_NAME_APCP_SURFACE) {
-            return get_AORC_APCP_surface_kg_per_meters_squared();
+            return AORC_vector.at(index).APCP_surface_kg_per_meters_squared;
         }
         if (name == AORC_FIELD_NAME_WIND_U_10M_AG) {
-            return get_AORC_UGRD_10maboveground_meters_per_second();
+            return AORC_vector.at(index).UGRD_10maboveground_meters_per_second;
         }
         if (name == AORC_FIELD_NAME_WIND_V_10M_AG) {
-            return get_AORC_VGRD_10maboveground_meters_per_second();
+            return AORC_vector.at(index).VGRD_10maboveground_meters_per_second;
         }
         if (name == AORC_FIELD_NAME_SPEC_HUMID_2M_AG) {
-            return get_AORC_SPFH_2maboveground_kg_per_kg();
+            return AORC_vector.at(index).SPFH_2maboveground_kg_per_kg;
         }
         else {
             throw std::runtime_error("Cannot get forcing value for unrecognized parameter name '" + name + "'.");
