@@ -13,6 +13,8 @@ namespace realization {
 
     public:
 
+        Bmi_C_Formulation(std::string id, Forcing forcing, utils::StreamHandler output_stream);
+
         Bmi_C_Formulation(std::string id, forcing_params forcing_config, utils::StreamHandler output_stream);
 
         std::string get_formulation_type() override;
