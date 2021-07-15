@@ -202,6 +202,57 @@ namespace realization {
             inner_create_formulation(properties, true);
         }
 
+        /**
+         * Get the collection of forcing output property names this instance can provide.
+         *
+         * This is part of the @ref ForcingProvider interface.  This interface must be implemented for items of this
+         * type to be usable as "forcing" providers for situations when some other object needs to receive as an input
+         * (i.e., one of its forcings) a data property output from this object.
+         *
+         * For this type, this is the collection of BMI output variables, plus any aliases included in the formulation
+         * config's output variable mapping.
+         *
+         * @return The collection of forcing output property names this instance can provide.
+         */
+        const vector<std::string> &get_available_forcing_outputs() override {
+            if (is_model_initialized() && available_forcings.empty()) {
+                for (const std::string &output_var_name : get_bmi_model()->GetOutputVarNames()) {
+                    available_forcings.push_back(output_var_name);
+                    if (bmi_var_names_map.find(output_var_name) != bmi_var_names_map.end())
+                        available_forcings.push_back(bmi_var_names_map[output_var_name]);
+                }
+            }
+            return available_forcings;
+        }
+
+        /**
+         * Get the inclusive beginning of the period of time over which this instance can provide data for this forcing.
+         *
+         * This is part of the @ref ForcingProvider interface.  This interface must be implemented for items of this
+         * type to be usable as "forcing" providers for situations when some other object needs to receive as an input
+         * (i.e., one of its forcings) a data property output from this object.
+         *
+         * @return The inclusive beginning of the period of time over which this instance can provide this data.
+         */
+        time_t get_forcing_output_time_begin(const std::string &forcing_name) override {
+            // TODO: come back and implement if actually necessary for this type; for now don't use
+            throw runtime_error("Bmi_Singular_Formulation does not yet implement get_forcing_output_time_begin");
+        }
+
+        /**
+         * Get the exclusive ending of the period of time over which this instance can provide data for this forcing.
+         *
+         * This is part of the @ref ForcingProvider interface.  This interface must be implemented for items of this
+         * type to be usable as "forcing" providers for situations when some other object needs to receive as an input
+         * (i.e., one of its forcings) a data property output from this object.
+         *
+         * @return The exclusive ending of the period of time over which this instance can provide this data.
+         */
+        time_t get_forcing_output_time_end(const std::string &output_name) override {
+            // TODO: come back and implement if actually necessary for this type; for now don't use
+            throw runtime_error("Bmi_Singular_Formulation does not yet implement get_forcing_output_time_end");
+        }
+
         const vector<std::string> &get_required_parameters() override {
             return REQUIRED_PARAMETERS;
         }
@@ -228,9 +279,102 @@ namespace realization {
                 return model_var_name;
         }
 
+        /**
+         * Get the index of the forcing time step that contains the given point in time.
+         *
+         * This is part of the @ref ForcingProvider interface.  This interface must be implemented for items of this
+         * type to be usable as "forcing" providers for situations when some other object needs to receive as an input
+         * (i.e., one of its forcings) a data property output from this object.
+         *
+         * An @ref std::out_of_range exception should be thrown if the time is not in any time step.
+         *
+         * @param epoch_time The point in time, as a seconds-based epoch time.
+         * @return The index of the forcing time step that contains the given point in time.
+         * @throws std::out_of_range If the given point is not in any time step.
+         */
+        size_t get_ts_index_for_time(const time_t &epoch_time) {
+            // TODO: come back and implement if actually necessary for this type; for now don't use
+            throw runtime_error("Bmi_Singular_Formulation does not yet implement get_ts_index_for_time");
+        }
+
+        /**
+         * Get the value of a forcing property for an arbitrary time period, converting units if needed.
+         *
+         * This is part of the @ref ForcingProvider interface.  This interface must be implemented for items of this
+         * type to be usable as "forcing" providers for situations when some other object needs to receive as an input
+         * (i.e., one of its forcings) a data property output from this object.
+         *
+         * An @ref std::out_of_range exception should be thrown if the data for the time period is not available.
+         *
+         * @param output_name The name of the forcing property of interest.
+         * @param init_time_epoch The epoch time (in seconds) of the start of the time period.
+         * @param duration_seconds The length of the time period, in seconds.
+         * @param output_units The expected units of the desired output value.
+         * @return The value of the forcing property for the described time period, with units converted if needed.
+         * @throws std::out_of_range If data for the time period is not available.
+         */
+        double get_value(const std::string &output_name, const time_t &init_time, const long &duration_s,
+                         const std::string &output_units)
+        {
+            // First make sure this is an available output
+            const std::vector<std::string> forcing_outputs = get_available_forcing_outputs();
+            if (std::find(forcing_outputs.begin(), forcing_outputs.end(), output_name) != forcing_outputs.end()) {
+                throw runtime_error(get_formulation_type() + " received invalid output forcing name " + output_name);
+            }
+            // TODO: do this, or something better, later; right now, just assume anything using this as a provider is
+            //  consistent with times
+            /*
+            if (last_model_response_delta == 0 && last_model_response_start_time == 0) {
+                throw runtime_error(get_formulation_type() + " does not properly set output time validity ranges "
+                                                             "needed to provide outputs as forcings");
+            }
+            */
+
+            // Then get the correct BMI variable name, which may be the output or something mapped to this output.
+            // TODO: move this to a dedicated function
+            std::string bmi_var_name;
+            std::vector<std::string> output_names = get_bmi_model()->GetOutputVarNames();
+            if (std::find(output_names.begin(), output_names.end(), output_name) != output_names.end()) {
+                bmi_var_name = output_name;
+            }
+            else {
+                for (auto & iter : bmi_var_names_map) {
+                    if (iter.second == output_name) {
+                        bmi_var_name = iter.first;
+                        break;
+                    }
+                }
+            }
+            // Then return the value
+            // TODO: also just assume units are the same, but need to implement this correctly later
+            return get_var_value_as_double(bmi_var_name);
+        }
+
         virtual inline bool is_bmi_input_variable(const std::string &var_name) = 0;
 
         virtual inline bool is_bmi_output_variable(const std::string &var_name) = 0;
+
+        /**
+         * Get whether a property's per-time-step values are each an aggregate sum over the entire time step.
+         *
+         * This is part of the @ref ForcingProvider interface.  This interface must be implemented for items of this
+         * type to be usable as "forcing" providers for situations when some other object needs to receive as an input
+         * (i.e., one of its forcings) a data property output from this object.
+         *
+         * Certain properties, like rain fall, are aggregated sums over an entire time step.  Others, such as pressure,
+         * are not such sums and instead something else like an instantaneous reading or an average value.
+         *
+         * It may be the case that forcing data is needed for some discretization different than the forcing time step.
+         * This aspect must be known in such cases to perform the appropriate value interpolation.
+         *
+         * For this type, all outputs are of this type.
+         *
+         * @param name The name of the forcing property for which the current value is desired.
+         * @return Whether the property's value is an aggregate sum, which is always ``true`` for this type.
+         */
+        bool is_property_sum_over_time_step(const std::string& name) override {
+            return true;
+        }
 
     protected:
 
@@ -622,6 +766,10 @@ namespace realization {
             output_variable_names = out_var_names;
         }
 
+        /** The delta of the last model update execution (typically, this is time step size). */
+        time_step_t last_model_response_delta = 0;
+        /** The epoch time of the model at the beginning of its last update. */
+        time_t last_model_response_start_time = 0;
         std::map<std::string, std::shared_ptr<forcing::ForcingProvider>> input_forcing_providers;
 
         // Unit test access
@@ -634,6 +782,8 @@ namespace realization {
          * the model's ``end_time``.
          */
         bool allow_model_exceed_end_time = false;
+        /** The set of available "forcings" (output variables, plus their mapped aliases) that the model can provide. */
+        std::vector<std::string> available_forcings;
         std::string bmi_init_config;
         std::shared_ptr<M> bmi_model;
         /** Whether backing model has fixed time step size. */
