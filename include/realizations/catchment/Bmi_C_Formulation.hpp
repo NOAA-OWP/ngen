@@ -116,29 +116,6 @@ namespace realization {
         void determine_model_time_offset() override;
 
         /**
-         * Get model input values from forcing data, accounting for model and forcing time steps not aligning.
-         *
-         * Get values to use to set model input variables for forcings, sourced from this instance's forcing data.  Skip
-         * any params in the collection that are not forcing params, as indicated by the given collection.  Account for
-         * if model time step (MTS) does not align with forcing time step (FTS), either due to MTS starting after the
-         * start of FTS, MTS extending beyond the end of FTS, or both.
-         *
-         * @param t_delta The size of the model's time step in seconds.
-         * @param model_initial_time The model's current time in its internal units and representation.
-         * @param params An ordered collection of desired forcing param names from which data for inputs is needed.
-         * @param is_aorc_param Whether the param at each index is a forcing param, or a different model param (which
-         *                         thus does not need to be processed here).
-         * @param param_units An ordered collection units of strings representing the BMI model's expected units for the
-         *                    corresponding input, so that value conversions of the proportional contributions are done.
-         * @param summed_contributions A referenced ordered collection that will contain returned summed contributions.
-         */
-        inline void get_forcing_data_ts_contributions(time_step_t t_delta, const double &model_initial_time,
-                                                      const std::vector<std::string> &params,
-                                                      const std::vector<bool> &is_aorc_param,
-                                                      const std::vector<std::string> &param_units,
-                                                      std::vector<double> &summed_contributions);
-
-        /**
          * Get a value, converted to specified type, for an output variable at a time step.
          *
          * Function gets the value for a provided output variable at a provided time step index, and returns the value
@@ -209,15 +186,6 @@ namespace realization {
          * @return Whether backing model object has been initialize using the BMI standard ``Initialize`` function.
          */
         bool is_model_initialized() override;
-
-        /**
-         * Set BMI input variable values for the model appropriately prior to calling its `BMI `update()``.
-         *
-         * @param model_initial_time The model's time prior to the update, in its internal units and representation.
-         * @param t_delta The size of the time step over which the formulation is going to update the model, which might
-         *                be different than the model's internal time step.
-         */
-        void set_model_inputs_prior_to_update(const double &model_initial_time, time_step_t t_delta) override;
 
         // Unit test access
         friend class ::Bmi_Formulation_Test;
