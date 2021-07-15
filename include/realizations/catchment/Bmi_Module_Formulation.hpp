@@ -391,6 +391,18 @@ namespace realization {
         virtual std::shared_ptr<M> construct_model(const geojson::PropertyMap& properties) = 0;
 
         /**
+         * Convert a time value from the model to an epoch time in seconds.
+         *
+         * Model time values are typically (though not always) 0-based totals count upward as time progresses.  The
+         * units are not necessarily seconds.  This performs the necessary lookup and conversion for such units, and
+         * then shifts the value appropriately for epoch time representation.
+         *
+         * @param model_time
+         * @return
+         */
+        virtual time_t convert_model_time(const double &model_time) = 0;
+
+        /**
          * Determine and set the offset time of the model in seconds, compared to forcing data.
          *
          * BMI models frequently have their model start time be set to 0.  As such, to know what the forcing time is
@@ -398,7 +410,11 @@ namespace realization {
          * the time steps for forcing data versus model execution are not equal.  This method will determine and set
          * this value.
          */
-        virtual void determine_model_time_offset() = 0;
+        void determine_model_time_offset() {
+            set_bmi_model_start_time_forcing_offset_s(
+                    // TODO: Look at making this epoch start configurable instead of from forcing
+                    forcing.get_time_epoch() - convert_model_time(get_bmi_model()->GetStartTime()));
+        }
 
         const bool &get_allow_model_exceed_end_time() const {
             return allow_model_exceed_end_time;
@@ -726,8 +742,10 @@ namespace realization {
          * @param t_delta The size of the time step over which the formulation is going to update the model, which might
          *                be different than the model's internal time step.
          */
-        void set_model_inputs_prior_to_update(const double &model_initial_time, time_step_t t_delta) {
+        void set_model_inputs_prior_to_update(const double &model_init_time, time_step_t t_delta) {
             std::vector<std::string> in_var_names = get_bmi_model()->GetInputVarNames();
+            time_t model_epoch_time = convert_model_time(model_init_time) + get_bmi_model_start_time_forcing_offset_s();
+
             for (std::string & var_name : in_var_names) {
                 forcing::ForcingProvider *provider;
                 std::string var_map_alias = get_config_mapped_variable_name(var_name);
@@ -747,7 +765,7 @@ namespace realization {
                     throw std::runtime_error(
                             "BMI input variable '" + var_name + "' is an array - not currently supported");
                 }
-                double value = provider->get_value(var_name, model_initial_time, t_delta,
+                double value = provider->get_value(var_name, model_epoch_time, t_delta,
                                                    get_bmi_model()->GetVarUnits(var_name));
                 // Finally, use the value obtained to set the model input
                 get_bmi_model()->SetValue(var_name, (void*)&value);

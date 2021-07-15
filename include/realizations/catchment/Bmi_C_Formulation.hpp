@@ -109,15 +109,7 @@ namespace realization {
          */
         std::shared_ptr<models::bmi::Bmi_C_Adapter> construct_model(const geojson::PropertyMap& properties) override;
 
-        /**
-         * Determine and set the offset time of the model in seconds, compared to forcing data.
-         *
-         * BMI models frequently have their model start time be set to 0.  As such, to know what the forcing time is
-         * compared to the model time, an offset value is needed.  This becomes important in situations when the size of
-         * the time steps for forcing data versus model execution are not equal.  This method will determine and set
-         * this value.
-         */
-        void determine_model_time_offset() override;
+        time_t convert_model_time(const double &model_time) override;
 
         /**
          * Get a value, converted to specified type, for an output variable at a time step.
