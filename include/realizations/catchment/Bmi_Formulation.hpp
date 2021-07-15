@@ -5,6 +5,7 @@
 #include <utility>
 #include <vector>
 #include "Catchment_Formulation.hpp"
+#include "ForcingProvider.hpp"
 
 // Define the configuration parameter names used in the realization/formulation config JSON file
 // First the required:
@@ -43,7 +44,7 @@ namespace realization {
     /**
      * Abstraction of formulation with backing model object(s) that implements the BMI.
      */
-    class Bmi_Formulation : public Catchment_Formulation {
+    class Bmi_Formulation : public Catchment_Formulation, public forcing::ForcingProvider {
 
     public:
 
