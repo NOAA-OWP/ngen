@@ -5,6 +5,7 @@
 #include "Bmi_Formulation.hpp"
 #include "EtCalcProperty.hpp"
 #include "EtCombinationMethod.hpp"
+#include "WrappedForcingProvider.hpp"
 
 // Forward declaration to provide access to protected items in testing
 class Bmi_Formulation_Test;
@@ -228,6 +229,8 @@ namespace realization {
                     if (bmi_var_names_map.find(output_var_name) != bmi_var_names_map.end())
                         available_forcings.push_back(bmi_var_names_map[output_var_name]);
                 }
+                available_forcings.emplace_back(NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP);
+                available_forcings.emplace_back(CSDMS_STD_NAME_POTENTIAL_ET);
             }
             return available_forcings;
         }
@@ -337,7 +340,12 @@ namespace realization {
             }
             */
 
-            // Then get the correct BMI variable name, which may be the output or something mapped to this output.
+            // Handle ET requests slightly differently
+            if (output_name == NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP || output_name == CSDMS_STD_NAME_POTENTIAL_ET) {
+                return calc_et(forcing.get_ts_index_for_time(init_time));
+            }
+
+            // If not ET, now get correct BMI variable name, which may be the output or something mapped to this output.
             // TODO: move this to a dedicated function
             std::string bmi_var_name;
             std::vector<std::string> output_names = get_bmi_model()->GetOutputVarNames();
@@ -670,6 +678,10 @@ namespace realization {
             else {
                 set_output_header_fields(get_output_variable_names());
             }
+            // Create a reference to this for ET by using a WrappedForcingProvider
+            std::shared_ptr<forcing::ForcingProvider> self = std::make_shared<forcing::WrappedForcingProvider>(this);
+            input_forcing_providers[NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP] = self;
+            input_forcing_providers[CSDMS_STD_NAME_POTENTIAL_ET] = self;
         }
 
         /**
