@@ -240,7 +240,7 @@ class Forcing : public forcing::ForcingProvider
      */
     size_t get_ts_index_for_time(const time_t &epoch_time) override {
         if (epoch_time < start_date_time_epoch) {
-            throw std::out_of_range("Forcing had bad time for index query: " + std::to_string(epoch_time));
+            throw std::out_of_range("Forcing had bad pre-start time for index query: " + std::to_string(epoch_time));
         }
         size_t i = 0;
         // 1 hour
@@ -251,7 +251,7 @@ class Forcing : public forcing::ForcingProvider
            time += seconds_in_time_step;
         }
         if (time >= end_date_time_epoch) {
-            throw std::out_of_range("Forcing had bad time for index query: " + std::to_string(epoch_time));
+            throw std::out_of_range("Forcing had bad beyond-end time for index query: " + std::to_string(epoch_time));
         }
         else {
             return i;
