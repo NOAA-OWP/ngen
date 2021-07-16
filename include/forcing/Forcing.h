@@ -250,7 +250,9 @@ class Forcing : public forcing::ForcingProvider
            i++;
            time += seconds_in_time_step;
         }
-        if (time >= end_date_time_epoch) {
+        // The end_date_time_epoch is the epoch value of the BEGINNING of the last time step, not its end.
+        // I.e., to make sure we cover it, we have to go another time step beyond.
+        if (time >= end_date_time_epoch + 3600) {
             throw std::out_of_range("Forcing had bad beyond-end time for index query: " + std::to_string(epoch_time));
         }
         else {
