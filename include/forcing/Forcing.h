@@ -244,7 +244,7 @@ class Forcing : public forcing::ForcingProvider
         }
         size_t i = 0;
         // 1 hour
-        size_t seconds_in_time_step = 3600;
+        time_t seconds_in_time_step = 3600;
         time_t time = start_date_time_epoch;
         while (epoch_time >= time + seconds_in_time_step && time < end_date_time_epoch) {
            i++;
