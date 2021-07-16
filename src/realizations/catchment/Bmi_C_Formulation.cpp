@@ -3,8 +3,11 @@
 using namespace realization;
 using namespace models::bmi;
 
+Bmi_C_Formulation::Bmi_C_Formulation(std::string id, Forcing forcing, utils::StreamHandler output_stream)
+        : Bmi_Module_Formulation<models::bmi::Bmi_C_Adapter>(id, forcing, output_stream) { }
+
 Bmi_C_Formulation::Bmi_C_Formulation(std::string id, forcing_params forcing_config, utils::StreamHandler output_stream)
-    : Bmi_Formulation<models::bmi::Bmi_C_Adapter>(id, forcing_config, output_stream) { }
+    : Bmi_Module_Formulation<models::bmi::Bmi_C_Adapter>(id, forcing_config, output_stream) { }
 
 std::string Bmi_C_Formulation::get_formulation_type() {
     return "bmi_c";
@@ -37,106 +40,16 @@ std::shared_ptr<Bmi_C_Adapter> Bmi_C_Formulation::construct_model(const geojson:
                     output));
 }
 
-/**
- * Determine and set the offset time of the model in seconds, compared to forcing data.
- *
- * BMI models frequently have their model start time be set to 0.  As such, to know what the forcing time is
- * compared to the model time, an offset value is needed.  This becomes important in situations when the size of
- * the time steps for forcing data versus model execution are not equal.  This method will determine and set
- * this value.
- */
-void Bmi_C_Formulation::determine_model_time_offset() {
-    set_bmi_model_start_time_forcing_offset_s(forcing.get_time_epoch() -
-                                              (time_t) get_bmi_model()->convert_model_time_to_seconds(
-                                                      get_bmi_model()->GetStartTime()));
+time_t Bmi_C_Formulation::convert_model_time(const double &model_time) {
+    return (time_t) (get_bmi_model()->convert_model_time_to_seconds(model_time));
 }
 
-/**
- * Get model input values from forcing data, accounting for model and forcing time steps not aligning.
- *
- * Get values to use to set model input variables for forcings, sourced from this instance's forcing data.  Skip any
- * params in the collection that are not forcing params, as indicated by the given collection.  Account for if model
- * time step (MTS) does not align with forcing time step (FTS), either due to MTS starting after the start of FTS, MTS
- * extending beyond the end of FTS, or both.
- *
- * @param t_delta The size of the model's time step in seconds.
- * @param model_initial_time The model's current time in its internal units and representation.
- * @param params An ordered collection of desired forcing param names from which data for inputs is needed.
- * @param is_aorc_param Whether the param at each index is an AORC forcing param, or a different model param (which thus
- *                      does not need to be processed here).
- * @param param_units An ordered collection units of strings representing the BMI model's expected units for the
- *                    corresponding input, so that value conversions of the proportional contributions are done.
- * @param summed_contributions A referenced ordered collection that will contain the returned summed contributions.
- */
-inline void Bmi_C_Formulation::get_forcing_data_ts_contributions(time_step_t t_delta, const double &model_initial_time,
-                                                                 const std::vector<std::string> &params,
-                                                                 const std::vector<bool> &is_aorc_param,
-                                                                 const std::vector<std::string> &param_units,
-                                                                 std::vector<double> &summed_contributions)
-{
-    time_t model_ts_start_offset, model_ts_seconds_contained_in_forcing_ts, model_epoch_time_s;
-    // Keep track of how much of the model ts delta has not yet had its contribution pulled from some forcing ts
-    time_step_t contribution_seconds_remaining = t_delta;
+const vector<string> Bmi_C_Formulation::get_bmi_input_variables() {
+    return get_bmi_model()->GetInputVarNames();
+}
 
-    model_epoch_time_s = (time_t) (get_bmi_model()->convert_model_time_to_seconds(model_initial_time)) +
-                         get_bmi_model_start_time_forcing_offset_s();
-    // Make sure the forcings are properly primed to have the correct corresponding forcing ts data available
-    while (model_epoch_time_s > forcing.get_time_epoch() + forcing.get_time_step_size()) {
-        forcing.get_next_hourly_precipitation_meters_per_second();
-    }
-    // Though this is a problem at the moment, because we can't go through forcings in reverse order
-    if (model_epoch_time_s < forcing.get_time_epoch()) {
-        // TODO: think if there is a better way to address this
-        // TODO: should we include <typeinfo> and use typeid(this).name() to print class?
-        //  (Also, should there be a directive-controlled option for that?)
-        throw std::runtime_error("Bmi_C_Formulation for model '" + get_model_type_name() +
-                                 "' can't get contributions for model time step " + to_string(t_delta) + " starting at "
-                                 + to_string(model_epoch_time_s) + ", as current forcing time step doesn't start until "
-                                 + to_string(forcing.get_time_epoch()));
-    }
-
-    model_ts_start_offset = model_epoch_time_s - forcing.get_time_epoch();
-
-    while (contribution_seconds_remaining > 0) {
-        // Note that the model_ts_start_offset shift is cleared (set to 0) at end of this loop, so only has effect once.
-        // If remainder of model ts (after shift in first iteration) ends before forcing ts ...
-        if ((time_t) contribution_seconds_remaining + model_ts_start_offset < forcing.get_time_step_size()) {
-            model_ts_seconds_contained_in_forcing_ts = (time_t) contribution_seconds_remaining;
-        }
-        else {
-            model_ts_seconds_contained_in_forcing_ts = forcing.get_time_step_size() - model_ts_start_offset;
-        }
-
-        // Get the contributions from this forcing ts for all the forcing params needed.
-        for (size_t i = 0; i < params.size(); ++i) {
-            // Skip indices for parameters that are not forcings
-            if (!is_aorc_param[i]) {
-                continue;
-            }
-            // This is proportional to the ratio of (model ts seconds in this forcing ts) to (forcing ts total seconds)
-            if (forcing.is_param_sum_over_time_step(params[i])) {
-                summed_contributions[i] += forcing.get_converted_value_for_param_in_units(params[i], param_units[i]) *
-                                           (double) model_ts_seconds_contained_in_forcing_ts /
-                                           (double) forcing.get_time_step_size();
-            }
-            // This is proportional to the ratio of (model ts seconds in this forcing ts) to (model ts total seconds)
-            else {
-                summed_contributions[i] += forcing.get_converted_value_for_param_in_units(params[i], param_units[i]) *
-                                           (double) model_ts_seconds_contained_in_forcing_ts /
-                                           (double) t_delta;
-            }
-        }
-
-        // Account for the processed model time compared to the entire delta
-        contribution_seconds_remaining -= (time_step_t)model_ts_seconds_contained_in_forcing_ts;
-        // The offset should only possibly be non-zero the first time (after, if the model ts extends beyond the first
-        // forcing ts, it always picks up at the beginning of the subsequent forcing ts), so set to 0 now.
-        model_ts_start_offset = 0;
-        // Also, when appropriate incrementing the forcing ts
-        if (contribution_seconds_remaining > 0) {
-            forcing.get_next_hourly_precipitation_meters_per_second();
-        }
-    }
+const vector<string> Bmi_C_Formulation::get_bmi_output_variables() {
+    return get_bmi_model()->GetOutputVarNames();
 }
 
 std::string Bmi_C_Formulation::get_output_header_line(std::string delimiter) {
@@ -205,7 +118,7 @@ double Bmi_C_Formulation::get_response(time_step_t t_index, time_step_t t_delta)
     // The time step delta size, expressed in the units internally used by the model
     double t_delta_model_units;
     if (next_time_step_index <= t_index) {
-        t_delta_model_units = get_bmi_model()->convert_seconds_to_model_time(t_delta);
+        t_delta_model_units = get_bmi_model()->convert_seconds_to_model_time((double)t_delta);
         double model_time = get_bmi_model()->GetCurrentTime();
         // Also, before running, make sure this doesn't cause a problem with model end_time
         if (!get_allow_model_exceed_end_time()) {
@@ -287,97 +200,4 @@ bool Bmi_C_Formulation::is_bmi_output_variable(const string &var_name) {
 
 bool Bmi_C_Formulation::is_model_initialized() {
     return get_bmi_model()->is_model_initialized();
-}
-
-/**
- * Set BMI input variable values for the model appropriately prior to calling its `BMI `update()``.
- *
- * @param model_initial_time The model's time prior to the update, in its internal units and representation.
- * @param t_delta The size of the time step over which the formulation is going to update the model, which might be
- *                different than the model's internal time step.
- */
-void Bmi_C_Formulation::set_model_inputs_prior_to_update(const double &model_initial_time, time_step_t t_delta) {
-    std::string ngen_side_var_name;
-
-    std::vector<std::string> in_var_names = get_bmi_model()->GetInputVarNames();
-    // Get the BMI variables' units and associated internal standard names, keeping them in these
-    std::vector<std::string> standard_names(in_var_names.size());
-    std::vector<std::string> bmi_var_units(in_var_names.size());
-    // We may need to sum contributions from multiple time steps before setting, so do that with this (indexes align)
-    std::vector<double> variable_values(in_var_names.size(), 0.0);
-    // Also keep track of which variables are forcings for later
-    std::vector<bool> is_variable_aorc(in_var_names.size());
-    std::shared_ptr<std::set<std::string>> known_aorc_fields = Forcing::get_forcing_field_names();
-
-    // Right now, the only known field names are:
-    //  1. the standard names for forcings, and
-    //  2. the standard ET variable
-
-    // First get field name mappings and associated model-side units
-    for (int i = 0; i < in_var_names.size(); ++i) {
-        // First get mapped name if mapping is present in the realization config (arguement value is returned otherwise)
-        ngen_side_var_name = get_config_mapped_variable_name(in_var_names[i]);
-        // ************************************************************************************************************
-        // Account for internally known (i.e., hard-coded) mappings also
-        // ********************************************************************
-        // Note that after this point, can't assume mapped_name is what's returned by get_config_mapped_variable_name()
-        // ********************************************************************
-        // Map some external CSDMS standard names to expected forcing fields
-        // TODO: right now handle just rainfall, but in the future, support more possibly
-        if (ngen_side_var_name == CSDMS_STD_NAME_RAIN_RATE) {
-            ngen_side_var_name = AORC_FIELD_NAME_PRECIP_RATE;
-        }
-        // ************************************************************************************************************
-        // Var name for framework side is now established, so check that this ngen-side name is recognized
-        // ********************************************************************
-        // Right now this must be either the potential ET input variable ...
-        if (ngen_side_var_name == NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP) {
-            standard_names[i] = NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP;
-            is_variable_aorc[i] = false;
-            bmi_var_units[i] = get_bmi_model()->GetVarUnits(in_var_names[i]);
-            double potential_et_val_m_per_s = calc_et();
-            // TODO: improve how this is handled, and actually support conversions
-            if (potential_et_val_m_per_s != 0.0 && bmi_var_units[i] != "m/s" && bmi_var_units[i] != "meters/second" && bmi_var_units[i] != "m s-1") {
-                throw std::runtime_error("Unsupported ET unit type for BMI model requiring provided ET value");
-            }
-            variable_values[i] = potential_et_val_m_per_s;
-        }
-        // ********************************************************************
-        // ... or a known forcing field
-        else if (known_aorc_fields->find(ngen_side_var_name) != known_aorc_fields->end()) {
-            standard_names[i] = ngen_side_var_name;
-            is_variable_aorc[i] = true;
-            bmi_var_units[i] = get_bmi_model()->GetVarUnits(in_var_names[i]);
-            // ****** Wait to calculate all the forcing values at once below with specialized function
-        }
-        // ********************************************************************
-        // ... or if it is none of those, we have a problem because we don't know how to properly set it
-        // TODO: add some kind of config setting to toggle allowing (but warn) this for certain situations; e.g., still
-        // TODO:    throw exception for variable with explicitly configured mapping (clearly user wants it to be
-        // TODO:    utilized), but allow setting to only warn if there's just a variable we don't know how to set that
-        // TODO:    potentially could just be ignored.
-        else {
-            throw std::runtime_error(
-                    "Unrecognized BMI input variable '"
-                    + in_var_names[i]
-                    + ngen_side_var_name == in_var_names[i] ? "'" : "'('" + ngen_side_var_name + "')"
-                    + " cannot be set in '"
-                    + get_model_type_name()
-                    + "' as it is not a preset standard and not mapped to such a field name via configuration.");
-        }
-        // ************************************************************************************************************
-        // FIXME: later perhaps handle input variables that are themselves arrays, but for now do not support
-        if (get_bmi_model()->GetVarItemsize(in_var_names[i]) != get_bmi_model()->GetVarNbytes(in_var_names[i])) {
-            throw std::runtime_error(
-                    "BMI input variable '" + in_var_names[i] + "' is an array, which is not currently supported");
-        }
-    }
-    // Run separate (hopefully inline) function for getting input values for each variable, potentially by summing
-    // proportionally contributions from multiple forcing time steps if model time step doesn't align
-    get_forcing_data_ts_contributions(t_delta, model_initial_time, standard_names, is_variable_aorc, bmi_var_units,
-                                      variable_values);
-    // Finally, set the model input values
-    for (int i = 0; i < in_var_names.size(); ++i) {
-        get_bmi_model()->SetValue(in_var_names[i], (void*)&(variable_values[i]));
-    }
 }

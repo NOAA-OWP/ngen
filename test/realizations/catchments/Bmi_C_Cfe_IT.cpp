@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 #include "gtest/gtest.h"
-#include "Bmi_Formulation.hpp"
+#include "Bmi_Module_Formulation.hpp"
 #include "Bmi_C_Formulation.hpp"
 #include "Tshirt_C_Realization.hpp"
 #include <boost/property_tree/ptree.hpp>
