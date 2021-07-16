@@ -42,9 +42,17 @@ namespace realization {
         /**
          * Perform (potential) ET calculation, getting input params from instance's backing model as needed.
          *
+         * Function uses AORC forcings from the "current" time step.
+         *
          * @return Calculated ET or potential ET, or ``0.0`` if required parameters could not be obtained.
          */
         double calc_et() override {
+            return calc_et(
+                    get_ts_index_for_time(convert_model_time(get_bmi_model()->GetCurrentTime()) +
+                                          get_bmi_model_start_time_forcing_offset_s()));
+        }
+
+        double calc_et(struct AORC_data raw_aorc) {
             // TODO: fix both not checking this, and how the way it's set currently doesn't fit with these kernels
             //if (!is_et_params_set()) {
             //    throw std::runtime_error("Can't calculate ET for BMI model without ET params being set");
@@ -81,7 +89,6 @@ namespace realization {
             et_options.use_priestley_taylor_method = FALSE;
             et_options.use_penman_monteith_method  = TRUE;
 
-            struct AORC_data raw_aorc = forcing.get_AORC_data();
             // TODO: do we really actually need this, if we are converting to another forcing struct?
             // TODO: WHY ARE THERE SO MANY FORCING STRUCTS!?!
             struct et::aorc_forcing_data aorc = convert_aorc_structs(raw_aorc);
@@ -377,6 +384,10 @@ namespace realization {
         }
 
     protected:
+
+        double calc_et(size_t forcing_ts_index) {
+            return calc_et(forcing.get_aorc_for_index(forcing_ts_index));
+        }
 
         /**
          * Construct model and its shared pointer, potentially supplying input variable values from config.
