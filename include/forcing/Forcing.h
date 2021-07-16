@@ -278,7 +278,7 @@ class Forcing : public forcing::ForcingProvider
         try {
             current_index = get_ts_index_for_time(init_time);
         }
-        catch (std::out_of_range e) {
+        catch (const std::out_of_range &e) {
             throw std::out_of_range("Forcing had bad init_time " + std::to_string(init_time) + " for value request");
         }
 
