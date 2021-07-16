@@ -118,7 +118,7 @@ double Bmi_C_Formulation::get_response(time_step_t t_index, time_step_t t_delta)
     // The time step delta size, expressed in the units internally used by the model
     double t_delta_model_units;
     if (next_time_step_index <= t_index) {
-        t_delta_model_units = get_bmi_model()->convert_seconds_to_model_time(t_delta);
+        t_delta_model_units = get_bmi_model()->convert_seconds_to_model_time((double)t_delta);
         double model_time = get_bmi_model()->GetCurrentTime();
         // Also, before running, make sure this doesn't cause a problem with model end_time
         if (!get_allow_model_exceed_end_time()) {
