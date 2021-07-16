@@ -328,7 +328,7 @@ namespace realization {
         {
             // First make sure this is an available output
             const std::vector<std::string> forcing_outputs = get_available_forcing_outputs();
-            if (std::find(forcing_outputs.begin(), forcing_outputs.end(), output_name) != forcing_outputs.end()) {
+            if (std::find(forcing_outputs.begin(), forcing_outputs.end(), output_name) == forcing_outputs.end()) {
                 throw runtime_error(get_formulation_type() + " received invalid output forcing name " + output_name);
             }
             // TODO: do this, or something better, later; right now, just assume anything using this as a provider is
