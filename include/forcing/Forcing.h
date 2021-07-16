@@ -159,6 +159,11 @@ class Forcing : public forcing::ForcingProvider
         forcing_vector_index = 0;
     }
 
+    // TODO: consider using friend for this instead
+    struct AORC_data get_aorc_for_index(size_t index) {
+        return AORC_vector.at(index);
+    }
+
     const std::vector<std::string> &get_available_forcing_outputs() override {
         if (available_forcings.empty()) {
             for (std::string forcing_name : *(Forcing::get_forcing_field_names())) {
