@@ -1,4 +1,4 @@
-FROM centos:latest as builder
+FROM centos:8.3.2011 as builder
 
 RUN yum update -y
 RUN yum install -y tar git gcc-c++ gcc make cmake python38 python38-devel bzip2
