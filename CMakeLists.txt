@@ -136,11 +136,12 @@ target_include_directories(ngen PUBLIC
         )
 
 # In some IDEs (e.g., CLion), it is easier to work with the code in the included example of an "external" shared library
-# when that code appears to be part of the main project, which can be done by uncommenting the statement below.
+# when that code appears to be part of the main project, which can be done by add a statement like the ones below.
 #
-# However, this should be commented out when running CMake builds and in the committed version of this file.
+# However, these should be removed or commented out when running CMake builds and in the committed version of this file.
 #
 #add_subdirectory("extern/cfe")
+#add_subdirectory("extern/test_bmi_c")
 
 add_subdirectory("src/core")
 add_subdirectory("src/geojson")
