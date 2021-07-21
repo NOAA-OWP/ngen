@@ -164,6 +164,11 @@ add_automated_test(
         core/NetworkTests.cpp
 )
 
+add_automated_test(
+        test_partition
+        utils/Partition_Test.cpp
+)
+
 # Unit tests
 # TODO: Make sure the geojson tests don't need to be added here also
 add_automated_test(
