@@ -377,7 +377,7 @@ int main(int argc, char* argv[])
         };
 
     
-    const std::string file_path = file_search(data_paths,"partition_huc01_100.json");
+    const std::string file_path = file_search(data_paths,"partition_huc01.json");
     //const std::string global_catchment_data_path = file_search(hydro_fabric_paths,"catchment_data.geojson");
     
     //std::string link_key = "toid";  //declared on line 105
