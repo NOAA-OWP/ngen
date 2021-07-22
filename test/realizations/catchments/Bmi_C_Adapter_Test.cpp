@@ -15,7 +15,7 @@
 #define BMI_TEST_C_LOCAL_LIB_NAME "libtestbmicmodel.dylib"
 #else
 #ifdef __GNUC__
-    #define BMI_CFE_LOCAL_LIB_NAME "libtestbmicmodel.so"
+    #define BMI_TEST_C_LOCAL_LIB_NAME "libtestbmicmodel.so"
     #endif // __GNUC__
 #endif // __APPLE__
 #endif // BMI_TEST_C_LOCAL_LIB_NAME
