@@ -398,7 +398,7 @@ TEST_F(Bmi_C_Formulation_Test, determine_model_time_offset_0_c) {
 }
 
 /** Simple test for contribution when forcing and model time steps align. */
-TEST_F(Bmi_C_Formulation_Test, get_forcing_data_ts_contributions_0_a) {
+TEST_F(Bmi_C_Formulation_Test, DISABLED_get_forcing_data_ts_contributions_0_a) {
     int ex_index = 0;
 
     Bmi_C_Formulation formulation(catchment_ids[ex_index], *forcing_params_examples[ex_index], utils::StreamHandler());
@@ -426,7 +426,7 @@ TEST_F(Bmi_C_Formulation_Test, get_forcing_data_ts_contributions_0_a) {
 }
 
 /** Simple test for contribution when forcing and model time steps align, skipping to time step with non-zero value. */
-TEST_F(Bmi_C_Formulation_Test, get_forcing_data_ts_contributions_0_b) {
+TEST_F(Bmi_C_Formulation_Test, DISABLED_get_forcing_data_ts_contributions_0_b) {
     int ex_index = 0;
 
     Bmi_C_Formulation formulation(catchment_ids[ex_index], *forcing_params_examples[ex_index], utils::StreamHandler());
@@ -468,7 +468,7 @@ TEST_F(Bmi_C_Formulation_Test, get_forcing_data_ts_contributions_0_b) {
  * Simple test for contribution when forcing and model time steps do not align, skipping to time step with non-zero
  * value.
  */
-TEST_F(Bmi_C_Formulation_Test, get_forcing_data_ts_contributions_1_a) {
+TEST_F(Bmi_C_Formulation_Test, DISABLED_get_forcing_data_ts_contributions_1_a) {
     int ex_index = 0;
 
     Bmi_C_Formulation formulation(catchment_ids[ex_index], *forcing_params_examples[ex_index], utils::StreamHandler());
@@ -513,7 +513,7 @@ TEST_F(Bmi_C_Formulation_Test, get_forcing_data_ts_contributions_1_a) {
  * Simple test for contribution when forcing and model time steps do not align, skipping to time step with non-zero
  * value, and spanning data from multiple forcing time steps.
  */
-TEST_F(Bmi_C_Formulation_Test, get_forcing_data_ts_contributions_1_b) {
+TEST_F(Bmi_C_Formulation_Test, DISABLED_get_forcing_data_ts_contributions_1_b) {
     int ex_index = 0;
 
     Bmi_C_Formulation formulation(catchment_ids[ex_index], *forcing_params_examples[ex_index], utils::StreamHandler());
