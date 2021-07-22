@@ -256,7 +256,7 @@ jobs:
       - name: Get Numpy Python Dependency
         if: steps.cache-numpy-dep.outputs.cache-hit != 'true'
         run: |
-          python -m venv .venv
+          python3 -m venv .venv
           . .venv/bin/activate
           pip install pip
           pip install numpy
