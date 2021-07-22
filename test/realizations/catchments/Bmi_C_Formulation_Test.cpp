@@ -3,15 +3,15 @@
 
 #ifdef NGEN_BMI_C_LIB_TESTS_ACTIVE
 
-#ifndef BMI_CFE_LOCAL_LIB_NAME
+#ifndef BMI_TEST_C_LOCAL_LIB_NAME
 #ifdef __APPLE__
-    #define BMI_CFE_LOCAL_LIB_NAME "libcfebmi.dylib"
+    #define BMI_TEST_C_LOCAL_LIB_NAME "libtestbmicmodel.dylib"
 #else
 #ifdef __GNUC__
-    #define BMI_CFE_LOCAL_LIB_NAME "libcfebmi.so"
+    #define BMI_CFE_LOCAL_LIB_NAME "libtestbmicmodel.so"
     #endif // __GNUC__
 #endif // __APPLE__
-#endif // BMI_CFE_LOCAL_LIB_NAME
+#endif // BMI_TEST_C_LOCAL_LIB_NAME
 
 #include "Bmi_Formulation.hpp"
 #include "Bmi_C_Formulation.hpp"
@@ -154,11 +154,15 @@ void Bmi_C_Formulation_Test::SetUp() {
 #define EX_COUNT 2
 
     forcing_dir_opts = {"./data/forcing/", "../data/forcing/", "../../data/forcing/"};
-    bmi_init_cfg_dir_opts = {"./test/data/bmi/c/cfe/", "../test/data/bmi/c/cfe/", "../../test/data/bmi/c/cfe/"};
+    bmi_init_cfg_dir_opts = {
+            "./test/data/bmi/test_bmi_c/",
+            "../test/data/bmi/test_bmi_c/",
+            "../../test/data/bmi/test_bmi_c/"
+    };
     lib_dir_opts = {
-            "./extern/alt-modular/cmake_am_libs/",
-            "../extern/alt-modular/cmake_am_libs/",
-            "../../extern/alt-modular/cmake_am_libs/"
+            "./extern/test_bmi_c/cmake_build/",
+            "../extern/test_bmi_c/cmake_build/",
+            "../../extern/test_bmi_c/cmake_build/"
     };
 
     config_json = std::vector<std::string>(EX_COUNT);
@@ -176,29 +180,25 @@ void Bmi_C_Formulation_Test::SetUp() {
 
     /* Set up the basic/explicit example index details in the arrays */
     catchment_ids[0] = "cat-27";
-    model_type_name[0] = "bmi_c_cfe";
+    model_type_name[0] = "test_bmi_c";
     forcing_file[0] = find_file(forcing_dir_opts, "cat-27_2015-12-01 00_00_00_2015-12-30 23_00_00.csv");
-    lib_file[0] = find_file(lib_dir_opts, BMI_CFE_LOCAL_LIB_NAME);
-    init_config[0] = find_file(bmi_init_cfg_dir_opts, "cat_27_bmi_config.txt");
-    main_output_variable[0] = "Q_OUT";
-    registration_functions[0] = "register_bmi_cfe";
-    uses_forcing_file[0] = true;
+    lib_file[0] = find_file(lib_dir_opts, BMI_TEST_C_LOCAL_LIB_NAME);
+    init_config[0] = find_file(bmi_init_cfg_dir_opts, "test_bmi_c_config_0.txt");
+    main_output_variable[0] = "OUTPUT_VAR_1";
+    registration_functions[0] = "register_bmi";
+    uses_forcing_file[0] = false;
 
     catchment_ids[1] = "cat-27";
-    model_type_name[1] = "bmi_c_cfe";
+    model_type_name[1] = "test_bmi_c";
     forcing_file[1] = find_file(forcing_dir_opts, "cat-27_2015-12-01 00_00_00_2015-12-30 23_00_00.csv");
-    lib_file[1] = find_file(lib_dir_opts, BMI_CFE_LOCAL_LIB_NAME);
-    init_config[1] = find_file(bmi_init_cfg_dir_opts, "cat_27_bmi_config.txt");
-    main_output_variable[1] = "Q_OUT";
-    registration_functions[1] = "register_bmi_cfe";
-    uses_forcing_file[1] = true;
+    lib_file[1] = find_file(lib_dir_opts, BMI_TEST_C_LOCAL_LIB_NAME);
+    init_config[1] = find_file(bmi_init_cfg_dir_opts, "test_bmi_c_config_1.txt");
+    main_output_variable[1] = "OUTPUT_VAR_1";
+    registration_functions[1] = "register_bmi";
+    uses_forcing_file[1] = false;
 
-    std::string variables_with_rain_rate = "                \"output_variables\": [\"RAIN_RATE\",\n"
-                                           "                    \"SCHAAKE_OUTPUT_RUNOFF\",\n"
-                                           "                    \"GIUH_RUNOFF\",\n"
-                                           "                    \"NASH_LATERAL_RUNOFF\",\n"
-                                           "                    \"DEEP_GW_TO_CHANNEL_FLUX\",\n"
-                                           "                    \"Q_OUT\"],\n";
+    std::string variables_with_rain_rate = "                \"output_variables\": [\"OUTPUT_VAR_2\",\n"
+                                           "                    \"OUTPUT_VAR_1\"],\n";
 
     /* Set up the derived example details */
     for (int i = 0; i < EX_COUNT; i++) {
@@ -217,15 +217,8 @@ void Bmi_C_Formulation_Test::SetUp() {
                          "                \"init_config\": \"" + init_config[i] + "\","
                          "                \"main_output_variable\": \"" + main_output_variable[i] + "\","
                          "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES + "\": { "
-                         "                      \"water_potential_evaporation_flux\": \"" + NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP + "\","
-                         "                      \"atmosphere_water__liquid_equivalent_precipitation_rate\": \"" + AORC_FIELD_NAME_PRECIP_RATE + "\","
-                         "                      \"atmosphere_air_water~vapor__relative_saturation\": \"" + AORC_FIELD_NAME_SPEC_HUMID_2M_AG + "\","
-                         "                      \"land_surface_air__temperature\": \"" + AORC_FIELD_NAME_TEMP_2M_AG + "\","
-                         "                      \"land_surface_wind__x_component_of_velocity\": \"" + AORC_FIELD_NAME_WIND_U_10M_AG + "\","
-                         "                      \"land_surface_wind__y_component_of_velocity\": \"" + AORC_FIELD_NAME_WIND_V_10M_AG + "\","
-                         "                      \"land_surface_radiation~incoming~longwave__energy_flux\": \"" + AORC_FIELD_NAME_SOLAR_LONGWAVE + "\","
-                         "                      \"land_surface_radiation~incoming~shortwave__energy_flux\": \"" + AORC_FIELD_NAME_SOLAR_SHORTWAVE + "\","
-                         "                      \"land_surface_air__pressure\": \"" + AORC_FIELD_NAME_PRESSURE_SURFACE + "\""
+                         "                      \"INPUT_VAR_2\": \"" + NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP + "\","
+                         "                      \"INPUT_VAR_1\": \"" + AORC_FIELD_NAME_PRECIP_RATE + "\""
                          "                },"
                          "                \"registration_function\": \"" + registration_functions[i] + "\","
                          + variables_line +
@@ -274,7 +267,8 @@ TEST_F(Bmi_C_Formulation_Test, Initialize_1_a) {
     std::string header_1 = form_1.get_output_header_line(",");
     std::string header_2 = form_2.get_output_header_line(",");
 
-    ASSERT_EQ(header_1, header_2);
+    ASSERT_EQ(header_1, "OUTPUT_VAR_1,OUTPUT_VAR_2");
+    ASSERT_EQ(header_2, "OUTPUT_VAR_2,OUTPUT_VAR_1");
 }
 
 /** Simple test of get response. */
@@ -285,25 +279,7 @@ TEST_F(Bmi_C_Formulation_Test, GetResponse_0_a) {
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
     double response = formulation.get_response(0, 3600);
-    // TODO: val seems to be this for now ... do something but account for error bound
-    ASSERT_EQ(response, 0.19085536923187668);
-}
-
-/** Test to make sure we can execute multiple model instances with dynamic loading. */
-TEST_F(Bmi_C_Formulation_Test, GetResponse_1_a) {
-    Bmi_C_Formulation form_1(catchment_ids[0], *forcing_params_examples[0], utils::StreamHandler());
-    form_1.create_formulation(config_prop_ptree[0]);
-
-    Bmi_C_Formulation form_2(catchment_ids[1], *forcing_params_examples[1], utils::StreamHandler());
-    form_2.create_formulation(config_prop_ptree[1]);
-
-    // Do these out of order
-    double response_1_step_0 = form_1.get_response(0, 3600);
-    double response_2_step_0 = form_2.get_response(0, 3600);
-    double response_2_step_1 = form_2.get_response(0, 3600);
-    ASSERT_EQ(response_1_step_0, response_2_step_0);
-    double response_1_step_1 = form_1.get_response(0, 3600);
-    ASSERT_EQ(response_1_step_1, response_2_step_1);
+    ASSERT_EQ(response, 00);
 }
 
 /** Test of get response after several iterations. */
@@ -314,10 +290,28 @@ TEST_F(Bmi_C_Formulation_Test, GetResponse_0_b) {
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
     double response;
-    for (int i = 0; i < 720; i++) {
+    for (int i = 0; i < 39; i++) {
         response = formulation.get_response(i, 3600);
     }
-    ASSERT_EQ(response, 0.00094952616396825284);
+    double expected = 4.866464273262429e-08;
+    ASSERT_EQ(expected, response);
+}
+
+/** Test to make sure we can execute multiple model instances with dynamic loading. */
+TEST_F(Bmi_C_Formulation_Test, GetResponse_1_a) {
+    Bmi_C_Formulation form_1(catchment_ids[0], *forcing_params_examples[0], utils::StreamHandler());
+    form_1.create_formulation(config_prop_ptree[0]);
+
+    Bmi_C_Formulation form_2(catchment_ids[1], *forcing_params_examples[1], utils::StreamHandler());
+    form_2.create_formulation(config_prop_ptree[1]);
+
+    double response_1, response_2;
+    ASSERT_NE(&response_1, &response_2);
+    for (size_t i = 0; i < 720; ++i) {
+        response_1 = form_1.get_response(0, 3600);
+        response_2 = form_2.get_response(0, 3600);
+        ASSERT_EQ(response_1, response_2);
+    }
 }
 
 /** Simple test of output. */
@@ -329,7 +323,7 @@ TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_0_a) {
 
     double response = formulation.get_response(0, 3600);
     std::string output = formulation.get_output_line_for_timestep(0, ",");
-    ASSERT_EQ(output, "0.000000,0.000000,0.000000,0.000000,0.190855,0.190855");
+    ASSERT_EQ(output, "0.000000,0.000000");
 }
 
 /** Simple test of output with modified variables. */
@@ -341,7 +335,7 @@ TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_1_a) {
 
     double response = formulation.get_response(0, 3600);
     std::string output = formulation.get_output_line_for_timestep(0, ",");
-    ASSERT_EQ(output, "0.000000,0.000000,0.000000,0.000000,0.190855,0.190855");
+    ASSERT_EQ(output, "0.000000,0.000000");
 }
 
 /** Simple test of output with modified variables, picking time step when there was non-zero rain rate. */
@@ -356,7 +350,7 @@ TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_1_b) {
         formulation.get_response(i++, 3600);
     double response = formulation.get_response(i, 3600);
     std::string output = formulation.get_output_line_for_timestep(i, ",");
-    ASSERT_EQ(output, "0.007032,0.000339,0.000054,0.000000,0.001407,0.001461");
+    ASSERT_EQ(output, "0.000000,0.000002");
 }
 
 TEST_F(Bmi_C_Formulation_Test, determine_model_time_offset_0_a) {
@@ -480,7 +474,7 @@ TEST_F(Bmi_C_Formulation_Test, DISABLED_get_forcing_data_ts_contributions_1_a) {
 
     // Skip ahead in time.
     int i;
-    for (i = 0; i <= 37; ++i) {
+    for (i = 0; i <= 38; ++i) {
         formulation.get_response(i, 3600);
         progressed_seconds += 3600;
     }
