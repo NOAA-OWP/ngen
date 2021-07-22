@@ -134,7 +134,7 @@ jobs:
         run: |
           python -m venv .venv
           . .venv/bin/activate
-          pip update
+          pip install --update pip
           pip install numpy
           deactivate
 
@@ -258,7 +258,7 @@ jobs:
         run: |
           python -m venv .venv
           . .venv/bin/activate
-          pip update
+          pip install --update pip
           pip install numpy
           deactivate
 
