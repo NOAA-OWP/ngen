@@ -119,6 +119,9 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
+      - name: git submodule
+        run: git submodule update --init --recursive -- test/googletest
+
       - name: cmake_init_shared_lib_build
         run: cmake -B extern/test_bmi_c/cmake_build -S extern/test_bmi_c
 
@@ -220,6 +223,9 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+
+      - name: git submodule
+        run: git submodule update --init --recursive -- test/googletest
 
       - name: cmake_init_shared_lib_build
         run: cmake -B extern/test_bmi_c/cmake_build -S extern/test_bmi_c
