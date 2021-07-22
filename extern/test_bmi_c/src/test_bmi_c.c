@@ -18,4 +18,6 @@ extern int run(test_bmi_c_model* model, long dt)
         *model->output_var_2 = 2.0 * *model->input_var_2 * (double) dt / model->time_step_size;
     }
     model->current_model_time += (double)dt;
+
+    return 0;
 }
