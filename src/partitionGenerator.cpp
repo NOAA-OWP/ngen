@@ -6,62 +6,10 @@
 #include <fstream>
 
 #include <boost/algorithm/string.hpp>
-//#include <boost/lexical_cast.hpp>
 #include <vector>
 
 #include "core/Partition_Parser.hpp"
-//#include "FileChecker.h"
-//#include "network.hpp"
 
-/*
-std::vector<std::string> list_item;
-//void write_part( int id,
-void write_part( std::string id,
-                 std::unordered_map<std::string, std::vector<std::string>>& catchment_parts,
-                 std::unordered_map<std::string, std::vector<std::string>>& nexus_parts,
-                 std::vector<std::pair<std::string, std::string>>& remote_up,
-                 std::vector<std::pair<std::string, std::string>>& remote_down, int num_part, std::ofstream& outFile)
-{
-    // Write out catchment list
-    outFile<<"        {\"id\":" << "\"" << id << "\"" <<", \"cat-ids\":[";
-    for(auto const cat_id : catchment_parts)
-        list_item = cat_id.second;
-        for (std::vector<std::string>::const_iterator i = list_item.begin(); i != list_item.end(); ++i)   
-            {
-                if (i != (list_item.end()-1))
-                    outFile <<"\"" << *i <<"\"" << ", ";
-                else
-                    outFile <<"\"" << *i <<"\"";
-            }
-    outFile<<"], ";
-
-    // Write out nexus list
-    outFile<<"\"nex-ids\":[";
-    for(auto const nex_id : nexus_parts)
-        list_item = nex_id.second;
-        for (std::vector<std::string>::const_iterator i = list_item.begin(); i != list_item.end(); ++i)
-            {
-                if (i != (list_item.end()-1))
-                    //outFile<< *i << ", ";
-                    outFile<< "\"" << *i << "\"" << ", ";
-                else
-                    //outFile<< *i;
-                    outFile<< "\"" << *i << "\"";
-            }
-    outFile<<"], ";
-
-    // Write out remote up 
-    outFile<<"\"remote-up\":[], ";
-
-    // Write out remote down
-    outFile<<"\"remote-down\":[]";
-
-    if (id != std::to_string(num_part-1))
-       outFile<<"},";
-    else
-        outFile<<"}";
-}
-*/
 
 void write_remote_connections(std::vector<std::unordered_map<std::string, std::vector<std::string> > > catchment_part,
                  std::vector<std::unordered_map<std::string, std::vector<std::pair<std::string, int> > > > remote_connections_vec,
@@ -71,14 +19,12 @@ void write_remote_connections(std::vector<std::unordered_map<std::string, std::v
     //for (std::vector<std::unordered_map<std::string, std::vector<std::string> > >::const_iterator i = catchment_part.begin();
     //     i != catchment_part.end(); ++i)
     for (int i =0; i < catchment_part.size(); ++i)
-    //for (int i =0; i < 2; ++i)
+    //for (int i =0; i < 2; ++i)  // for a quick test
     {
         // write catchments
         std::unordered_map<std::string, std::vector<std::string> > catchment_map;
         catchment_map = catchment_part[i];
-        //catchment_map = *i;
         
-        //outFile<<"        {\"id\":" << "\"" << id << "\"" <<", \"cat-ids\":[";
         outFile<<"        {\"id\":" << id <<", \"cat-ids\":[";
         for(auto const cat_id : catchment_map)
         {
@@ -115,9 +61,7 @@ void write_remote_connections(std::vector<std::unordered_map<std::string, std::v
                 outFile << "{" << "\"nex-id\":" << "\""<< nexus_id <<"\"" << ", ";
                 std::string catchment_id = (*j).first;
                 int part_id = (*j).second;
-                //std::string partition_id = std::to_string(part_id);
                 outFile << "\"cat-id\":" << "\""<< catchment_id <<"\"" << ", ";
-                //outFile << "mpi-rank: " << "\""<< partition_id <<"\"" << "}";
                 outFile << "\"mpi-rank\":" << part_id  << "}";
                 if (map_counter == (map_size-1))
                 {
@@ -138,23 +82,13 @@ void write_remote_connections(std::vector<std::unordered_map<std::string, std::v
         outFile<<"]";
 
         if (id != (num_part-1))
-        //if (id != 1)
+        //if (id != 1)  // for a quick test
             outFile<<"}," << std::endl;
         else
             outFile<<"}" << std::endl;
 
         id++;
     }
-
-    /*
-    outFile<<"]";
-    //if (id != std::to_string(num_part-1))
-    if (id != (num_part-1))
-       outFile<<"},";
-    else
-        outFile<<"}";
-    */
-
 }
 
     std::string file_search(const std::vector<std::string> &parent_dir_options, const std::string& file_basename)
@@ -361,10 +295,7 @@ int main(int argc, char* argv[])
     std::cout << "Catchment validation completed" << std::endl;
 
 
-    //following code from Partition_Test.cpp with modification
-
-//TEST_F(PartitionsParserTest, ReferenceHydrofabric)
-//{
+// read in the partition file and build the remote connections from network
     using network::Network;
 
     std::vector<std::string> data_paths;
@@ -376,14 +307,9 @@ int main(int argc, char* argv[])
                 "../../test/data/partitions/",
         };
 
-    
+    // partition_huc01.json file format need to be consistent with that used by partition class
     const std::string file_path = file_search(data_paths,"partition_huc01.json");
-    //const std::string global_catchment_data_path = file_search(hydro_fabric_paths,"catchment_data.geojson");
-    
-    //std::string link_key = "toid";  //declared on line 105
-    
     //std::unordered_map<std::string, std::pair<std::string, int> > remote_connections;
-   
     
     Partitions_Parser partition_parser = Partitions_Parser(file_path);
 
@@ -418,25 +344,21 @@ int main(int argc, char* argv[])
 
     // loop over all partitions by partition id
     for (int ipart; ipart < num_partitions; ++ipart)
-    //for (int ipart; ipart < 2; ++ipart)
+    //for (int ipart; ipart < 2; ++ipart)  // for a quick test of the code
     {
     // loop over all partitions by the order in the unordered_map
-    int part_counter = 0;
     for (const auto& partition : partitions) {
-        // declare and initialize remote_connections
-        //std::unordered_map<std::string, std::pair<std::string, int> > remote_connections;
-        //std::unordered_map<std::string, std::vector<std::pair<std::string, int> > > remote_connections;
-
         //auto& local_data = partitions["1"];        // for some reason rank 0 has the string "root tree: 1" instead of 1
         int part_idn;
-        std::cout << "partition.first = " << partition.first << std::endl;
-        std::cout << "type of partition.first is: " << typeid(partition.first).name() << std::endl;
+        //std::cout << "partition.first = " << partition.first << std::endl;
+        //std::cout << "type of partition.first is: " << typeid(partition.first).name() << std::endl;
         part_idn = std::stoi(partition.first);
-        std::cout << "new type of part_idn is: " << typeid(part_idn).name() << " value = " << part_idn << std::endl;
+        //std::cout << "new type of part_idn is: " << typeid(part_idn).name() << " value = " << part_idn << std::endl;
 
       // choose the one that match the "ipart", this should reorder the remote_connections by ipart
       if (part_idn == ipart)
       {
+        // declare and initialize remote_connections
         std::unordered_map<std::string, std::vector<std::pair<std::string, int> > > remote_connections;
         auto& local_data = partition.second;
         
@@ -574,11 +496,9 @@ int main(int argc, char* argv[])
         std::cout << "local network size: " << local_network.size() << "\n";
         std::cout << "global network size " << global_network.size() << "\n";
         std::cout << "remote catchments found " << remote_catchments << "\n";
-        std::cout << "---part_counter---" << part_counter << std::endl;
 
-        part_counter++;
-        }
-        }
+      }
+    }
     }
         write_remote_connections(catchment_part, remote_connections_vec, num_partitions, outFile);
 
@@ -586,11 +506,7 @@ int main(int argc, char* argv[])
     outFile<<"}"<<std::endl;
 
     outFile.close();
-
         
-    //ASSERT_TRUE(test_value);
-      
-//}
     return 0;
 }
 
