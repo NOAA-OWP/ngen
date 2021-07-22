@@ -119,15 +119,11 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: git submodules
-        run: git submodule update --init --recursive
-
       - name: cmake_init_shared_lib_build
-        run: cmake -B extern/alt-modular/cmake_am_libs -S extern/alt-modular
+        run: cmake -B extern/test_bmi_c/cmake_build -S extern/test_bmi_c
 
-      # For now at least, only worry about the CFE model
-      - name: build_cfe_build_shared_lib
-        run: cmake --build extern/alt-modular/cmake_am_libs --target cfebmi
+      - name: build_test_bmi_c_shared_lib
+        run: cmake --build extern/test_bmi_c/cmake_build --target testbmicmodel
 
       - name: Cache Boost Dependency
         id: cache-boost-dep
@@ -163,13 +159,13 @@ jobs:
         run: cmake --build cmake_build --target clean
 
       - name: clean_shared_lib_build
-        run: cmake --build extern/alt-modular/cmake_am_libs --target clean
+        run: cmake --build extern/test_bmi_c/cmake_build --target clean
 
       - name: cleanup_dir
         run: rm -rf cmake_build
 
       - name: cleanup_dir
-        run: rm -rf extern/alt-modular/cmake_am_libs
+        run: rm -rf extern/test_bmi_c/cmake_build
 
   test_unit_macos_latest:
     # The type of runner that the job will run on
@@ -225,14 +221,11 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: git submodules
-        run: git submodule update --init --recursive
-
       - name: cmake_init_shared_lib_build
-        run: cmake -B extern/alt-modular/cmake_am_libs -S extern/alt-modular
+        run: cmake -B extern/test_bmi_c/cmake_build -S extern/test_bmi_c
 
-      - name: build_cfe_build_shared_lib
-        run: cmake --build extern/alt-modular/cmake_am_libs --target cfebmi
+      - name: build_test_bmi_c_shared_lib
+        run: cmake --build extern/test_bmi_c/cmake_build --target testbmicmodel
 
       - name: Cache Boost Dependency
         id: cache-boost-dep
@@ -268,13 +261,13 @@ jobs:
         run: cmake --build cmake_build --target clean
 
       - name: clean_shared_lib_build
-        run: cmake --build extern/alt-modular/cmake_am_libs --target clean
+        run: cmake --build extern/test_bmi_c/cmake_build --target clean
 
       - name: cleanup_dir
         run: rm -rf cmake_build
 
       - name: cleanup_shared_lib_dir
-        run: rm -rf extern/alt-modular/cmake_am_libs
+        run: rm -rf extern/test_bmi_c/cmake_build
 
   # TODO: fails due to compilation error, at least in large part due to use of POSIX functions not supported on Windows.
   # TODO: Need to determine whether Windows support (in particular, development environment support) is necessary.
