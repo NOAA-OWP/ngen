@@ -133,7 +133,7 @@ jobs:
         if: steps.cache-linux-numpy-dep.outputs.cache-hit != 'true'
         run: |
           python -m venv .venv
-          .venv/bin/activate
+          . .venv/bin/activate
           pip update
           pip install numpy
           deactivate
@@ -257,7 +257,7 @@ jobs:
         if: steps.cache-numpy-dep.outputs.cache-hit != 'true'
         run: |
           python -m venv .venv
-          .venv/bin/activate
+          . .venv/bin/activate
           pip update
           pip install numpy
           deactivate
