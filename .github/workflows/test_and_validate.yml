@@ -122,6 +122,22 @@ jobs:
       - name: git submodule
         run: git submodule update --init --recursive -- test/googletest
 
+      - name: Cache Numpy Python Dependency
+        id: cache-linux-numpy-dep
+        uses: actions/cache@v1
+        with:
+          path: .venv
+          key: linux-numpy-dep
+
+      - name: Get Numpy Python Dependency
+        if: steps.cache-linux-numpy-dep.outputs.cache-hit != 'true'
+        run: |
+          python -m venv .venv
+          .venv/bin/activate
+          pip update
+          pip install numpy
+          deactivate
+
       - name: cmake_init_shared_lib_build
         run: cmake -B extern/test_bmi_c/cmake_build -S extern/test_bmi_c
 
@@ -226,6 +242,22 @@ jobs:
 
       - name: git submodule
         run: git submodule update --init --recursive -- test/googletest
+
+      - name: Cache Numpy Python Dependency
+        id: cache-numpy-dep
+        uses: actions/cache@v1
+        with:
+          path: .venv
+          key: unix-numpy-dep
+
+      - name: Get Numpy Python Dependency
+        if: steps.cache-numpy-dep.outputs.cache-hit != 'true'
+        run: |
+          python -m venv .venv
+          .venv/bin/activate
+          pip update
+          pip install numpy
+          deactivate
 
       - name: cmake_init_shared_lib_build
         run: cmake -B extern/test_bmi_c/cmake_build -S extern/test_bmi_c
