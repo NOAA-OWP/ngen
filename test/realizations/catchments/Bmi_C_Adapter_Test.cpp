@@ -10,19 +10,33 @@
 #include "Bmi_C_Adapter.hpp"
 #include "State_Exception.hpp"
 
-#ifndef BMI_CFE_LOCAL_LIB_NAME
+#ifndef BMI_TEST_C_LOCAL_LIB_NAME
 #ifdef __APPLE__
-#define BMI_CFE_LOCAL_LIB_NAME "libcfebmi.dylib"
+#define BMI_TEST_C_LOCAL_LIB_NAME "libtestbmicmodel.dylib"
 #else
 #ifdef __GNUC__
-    #define BMI_CFE_LOCAL_LIB_NAME "libcfebmi.so"
+    #define BMI_CFE_LOCAL_LIB_NAME "libtestbmicmodel.so"
     #endif // __GNUC__
 #endif // __APPLE__
-#endif // BMI_CFE_LOCAL_LIB_NAME
+#endif // BMI_TEST_C_LOCAL_LIB_NAME
 
-#define REGISTRATION_FUNC "register_bmi_cfe"
+#define REGISTRATION_FUNC "register_bmi"
 
 using namespace models::bmi;
+
+// Copy of the struct def used within the test_bmi_c test library
+struct test_bmi_c_model {
+    long epoch_start_time;
+    int num_time_steps;
+    double current_model_time;
+    double model_end_time;
+    int time_step_size;
+    double* input_var_1;
+    double* input_var_2;
+    double* output_var_1;
+    double* output_var_2;
+};
+typedef struct test_bmi_c_model model_data;
 
 class Bmi_C_Adapter_Test : public ::testing::Test {
 protected:
@@ -33,84 +47,45 @@ protected:
 
     std::string file_search(const std::vector<std::string> &parent_dir_options, const std::string& file_basename);
 
+    static model_data* friend_get_model_data_struct(Bmi_C_Adapter *adapter) {
+        return (model_data*) adapter->bmi_model->data;
+    }
+
     std::string config_file_name_0;
     std::string lib_file_name_0;
     std::string forcing_file_name_0;
 
-    std::vector<std::string> expected_output_var_names = {
-            "RAIN_RATE",
-            "SCHAAKE_OUTPUT_RUNOFF",
-            "GIUH_RUNOFF",
-            "NASH_LATERAL_RUNOFF",
-            "DEEP_GW_TO_CHANNEL_FLUX",
-            "Q_OUT"
-    };
-
-    std::vector<std::string> expected_output_var_locations = {
-            "node",
-            "node",
-            "node",
-            "node",
-            "node",
-            "node"
-    };
-
-    std::vector<int> expected_output_var_grids = {
-            0,
-            0,
-            0,
-            0,
-            0,
-            0
-    };
-
-    std::vector<std::string> expected_output_var_units = {
-            "m",
-            "m",
-            "m",
-            "m",
-            "m",
-            "m"
-    };
-
-    std::vector<std::string> expected_output_var_types = {
-            "double",
-            "double",
-            "double",
-            "double",
-            "double",
-            "double"
-    };
-
+    std::vector<std::string> expected_output_var_names = { "OUTPUT_VAR_1", "OUTPUT_VAR_2" };
+    std::vector<std::string> expected_output_var_locations = { "node", "node" };
+    std::vector<int> expected_output_var_grids = { 0, 0 };
+    std::vector<std::string> expected_output_var_units = { "m", "m" };
+    std::vector<std::string> expected_output_var_types = { "double", "double" };
     int expected_grid_rank = 1;
-
     int expected_grid_size = 1;
-
     std::string expected_grid_type = "scalar";
-
     int expected_var_nbytes = 8; //type double
 
 };
 
 void Bmi_C_Adapter_Test::SetUp() {
     std::vector<std::string> config_path_options = {
-            "test/data/bmi/c/cfe/",
-            "./test/data/bmi/c/cfe/",
-            "../test/data/bmi/c/cfe/",
-            "../../test/data/bmi/c/cfe/",
+            "test/data/bmi/test_bmi_c/",
+            "./test/data/bmi/test_bmi_c/",
+            "../test/data/bmi/test_bmi_c/",
+            "../../test/data/bmi/test_bmi_c/",
     };
-    std::string config_basename_0 = "cat_27_bmi_config.txt";
+    std::string config_basename_0 = "test_bmi_c_config_0.txt";
     config_file_name_0 = file_search(config_path_options, config_basename_0);
 
     std::vector<std::string> forcing_dir_opts = {"./data/forcing/", "../data/forcing/", "../../data/forcing/"};
     forcing_file_name_0 = file_search(forcing_dir_opts, "cat-27_2015-12-01 00_00_00_2015-12-30 23_00_00.csv");
 
     std::vector<std::string> lib_dir_opts = {
-            "./extern/alt-modular/cmake_am_libs/",
-            "../extern/alt-modular/cmake_am_libs/",
-            "../../extern/alt-modular/cmake_am_libs/"
+            "./extern/test_bmi_c/cmake_build/",
+            "../extern/test_bmi_c/cmake_build/",
+            "../../extern/test_bmi_c/cmake_build/"
     };
-    lib_file_name_0 = file_search(lib_dir_opts, BMI_CFE_LOCAL_LIB_NAME);
+    lib_file_name_0 = file_search(lib_dir_opts, BMI_TEST_C_LOCAL_LIB_NAME);
 }
 
 void Bmi_C_Adapter_Test::TearDown() {
@@ -161,36 +136,44 @@ TEST_F(Bmi_C_Adapter_Test, GetOutputItemCount_0_a) {
     }
 }
 
-/** Test that the update function works. */
-TEST_F(Bmi_C_Adapter_Test, Update_0_a) {
+/** Test that both the get value function works for input 1. */
+TEST_F(Bmi_C_Adapter_Test, GetValue_0_a) {
     Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
                           REGISTRATION_FUNC, utils::StreamHandler());
     adapter.Initialize();
-    adapter.Update();
+    double value = 5.0;
+    model_data* model = friend_get_model_data_struct(&adapter);
+    *model->input_var_1 = value;
+    adapter.SetValue("INPUT_VAR_1", &value);
+    double retrieved = adapter.GetValue<double>("INPUT_VAR_1")[0];
     adapter.Finalize();
+    ASSERT_EQ(value, retrieved);
 }
 
-/** Test that the update function works for the 720 time steps. */
-TEST_F(Bmi_C_Adapter_Test, Update_0_b) {
+/** Test that both the get value function works for input 2. */
+TEST_F(Bmi_C_Adapter_Test, GetValue_0_b) {
     Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
                           REGISTRATION_FUNC, utils::StreamHandler());
     adapter.Initialize();
-    for (int i = 0; i < 720; ++i)
-        adapter.Update();
-
+    double value = 6.0;
+    model_data* model = friend_get_model_data_struct(&adapter);
+    *model->input_var_2 = value;
+    double retrieved = adapter.GetValue<double>("INPUT_VAR_2")[0];
     adapter.Finalize();
+    ASSERT_EQ(value, retrieved);
 }
 
-/** Test that the update function works for the 720 time steps and gets the expected outputs. */
-TEST_F(Bmi_C_Adapter_Test, Update_0_c) {
+/** Test that both the get value function works for output 1. */
+TEST_F(Bmi_C_Adapter_Test, GetValue_0_c) {
     Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
                           REGISTRATION_FUNC, utils::StreamHandler());
     adapter.Initialize();
-    for (int i = 0; i < 720; ++i)
-        adapter.Update();
-    std::vector<double> q_out_vals = adapter.GetValue<double>("Q_OUT");
-    // TODO: actually assert these values are correct
+    double value = 7.0;
+    model_data* model = friend_get_model_data_struct(&adapter);
+    *model->output_var_1 = value;
+    double retrieved = adapter.GetValue<double>("OUTPUT_VAR_1")[0];
     adapter.Finalize();
+    ASSERT_EQ(value, retrieved);
 }
 
 /** Profile the update function and GetValues functions */
@@ -258,170 +241,308 @@ TEST_F(Bmi_C_Adapter_Test, Profile)
     adapter.Finalize();
 }
 
-/** Test that the update function works for the 720 time steps and gets the expected Schaake runoff. */
-TEST_F(Bmi_C_Adapter_Test, Update_0_d) {
+/** Test that both the get value function works for output 2. */
+TEST_F(Bmi_C_Adapter_Test, GetValue_0_d) {
     Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
                           REGISTRATION_FUNC, utils::StreamHandler());
     adapter.Initialize();
-    for (int i = 0; i < 720; ++i)
-        adapter.Update();
-    std::vector<double> q_out_vals = adapter.GetValue<double>("SCHAAKE_OUTPUT_RUNOFF");
-    // TODO: actually assert these values are correct
+    double value = 8.0;
+    model_data* model = friend_get_model_data_struct(&adapter);
+    *model->output_var_2 = value;
+    double retrieved = adapter.GetValue<double>("OUTPUT_VAR_2")[0];
+    adapter.Finalize();
+    ASSERT_EQ(value, retrieved);
+}
+
+/** Test that both the get value pointer function works for input 1. */
+TEST_F(Bmi_C_Adapter_Test, GetValuePtr_0_a) {
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
+    adapter.Initialize();
+    double* in_1_ptr = adapter.GetValuePtr<double>("INPUT_VAR_1");
+    model_data* model = friend_get_model_data_struct(&adapter);
+    ASSERT_EQ(model->input_var_1, in_1_ptr);
     adapter.Finalize();
 }
 
-/** Test that the update function works for the 720 time steps and gets the expected GIUH runoff. */
-TEST_F(Bmi_C_Adapter_Test, Update_0_e) {
+/** Test that both the get value pointer function works for input 2 and gets the right pointer. */
+TEST_F(Bmi_C_Adapter_Test, GetValuePtr_0_b) {
     Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
                           REGISTRATION_FUNC, utils::StreamHandler());
     adapter.Initialize();
-    for (int i = 0; i < 720; ++i)
-        adapter.Update();
-    std::vector<double> q_out_vals = adapter.GetValue<double>("GIUH_RUNOFF");
-    // TODO: actually assert these values are correct
+    double value = 6.0;
+    double* in_2_ptr = adapter.GetValuePtr<double>("INPUT_VAR_2");
+    *in_2_ptr = value;
+    ASSERT_EQ(value, adapter.GetValue<double>("INPUT_VAR_2")[0]);
     adapter.Finalize();
 }
 
-/** Test that the update function works for the 720 time steps and gets the expected Nash lateral flow runoff. */
-TEST_F(Bmi_C_Adapter_Test, Update_0_f) {
+/** Test that both the get value pointer function works for output 1 and gets the right pointer. */
+TEST_F(Bmi_C_Adapter_Test, GetValuePtr_0_c) {
     Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
                           REGISTRATION_FUNC, utils::StreamHandler());
     adapter.Initialize();
-    for (int i = 0; i < 720; ++i)
-        adapter.Update();
-    std::vector<double> q_out_vals = adapter.GetValue<double>("NASH_LATERAL_RUNOFF");
-    // TODO: actually assert these values are correct
+    double* out_1_ptr = adapter.GetValuePtr<double>("OUTPUT_VAR_1");
+    double value_1 = 6.0;
+    adapter.SetValue("INPUT_VAR_1", &value_1);
+    adapter.SetValue("INPUT_VAR_2", &value_1);
+    adapter.Update();
+
+    ASSERT_EQ(value_1, *out_1_ptr);
+
+    double value_2 = 10.0;
+    adapter.SetValue("INPUT_VAR_1", &value_2);
+    adapter.SetValue("INPUT_VAR_2", &value_2);
+    adapter.Update();
+
+    ASSERT_EQ(value_2, *out_1_ptr);
+
     adapter.Finalize();
 }
 
-/** Test that the update function works for the 720 time steps and gets the expected deep groundwater to channel flux. */
-TEST_F(Bmi_C_Adapter_Test, Update_0_g) {
+/** Test that both the get value pointer function works for output 2 and gets the right pointer. */
+TEST_F(Bmi_C_Adapter_Test, GetValuePtr_0_d) {
     Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
                           REGISTRATION_FUNC, utils::StreamHandler());
     adapter.Initialize();
-    for (int i = 0; i < 720; ++i)
-        adapter.Update();
-    std::vector<double> q_out_vals = adapter.GetValue<double>("DEEP_GW_TO_CHANNEL_FLUX");
-    // TODO: actually assert these values are correct
+    double* out_2_ptr = adapter.GetValuePtr<double>("OUTPUT_VAR_2");
+    double value_1 = 6.0;
+    adapter.SetValue("INPUT_VAR_1", &value_1);
+    adapter.SetValue("INPUT_VAR_2", &value_1);
+    adapter.Update();
+
+    ASSERT_EQ(value_1 * 2.0, *out_2_ptr);
+
+    double value_2 = 10.0;
+    adapter.SetValue("INPUT_VAR_1", &value_2);
+    adapter.SetValue("INPUT_VAR_2", &value_2);
+    adapter.Update();
+
+    ASSERT_EQ(value_2 * 2.0, *out_2_ptr);
+
     adapter.Finalize();
 }
 
-/** Test that the update function fails after exceeding end time. */
-/* This actually doesn't work currently, but this is due to a change in the way the example model is implemented.
- * Re-add this test if/once we have a model that doesn't work beyond its time step.
- */
-TEST_F(Bmi_C_Adapter_Test, DISABLED_Update_0_h) {
+/** Test the function for getting start time. */
+TEST_F(Bmi_C_Adapter_Test, GetStartTime_0_a) {
     Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
                           REGISTRATION_FUNC, utils::StreamHandler());
     adapter.Initialize();
-    double start_time = adapter.GetStartTime();
-    double end_time = adapter.GetEndTime();
-    while (adapter.GetCurrentTime() < adapter.GetEndTime()) {
+    ASSERT_EQ(0, adapter.GetStartTime());
+    adapter.Finalize();
+}
+
+/** Test the function for getting time step size. */
+TEST_F(Bmi_C_Adapter_Test, GetTimeStep_0_a) {
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
+    adapter.Initialize();
+    ASSERT_EQ(3600, adapter.GetTimeStep());
+    adapter.Finalize();
+}
+
+/** Test the function for getting model time units. */
+TEST_F(Bmi_C_Adapter_Test, GetTimeUnits_0_a) {
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
+    adapter.Initialize();
+    ASSERT_EQ("s", adapter.GetTimeUnits());
+    adapter.Finalize();
+}
+
+/** Test the function for getting model end time, assuming (as in used config) 720 time steps. */
+TEST_F(Bmi_C_Adapter_Test, GetEndTime_0_a) {
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
+    adapter.Initialize();
+    double expected = adapter.GetStartTime() + (720.0 * adapter.GetTimeStep());
+    ASSERT_EQ(expected, adapter.GetEndTime());
+    adapter.Finalize();
+}
+
+/** Test that getting the current model time works after initialization. */
+TEST_F(Bmi_C_Adapter_Test, GetCurrentTime_0_a) {
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
+    adapter.Initialize();
+    ASSERT_EQ(adapter.GetStartTime(), adapter.GetCurrentTime());
+    adapter.Finalize();
+}
+
+/** Test that getting the current model time works after an update. */
+TEST_F(Bmi_C_Adapter_Test, GetCurrentTime_0_b) {
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
+    adapter.Initialize();
+    double expected_time = adapter.GetStartTime() + adapter.GetTimeStep();
+    double value = 10.0;
+    adapter.SetValue("INPUT_VAR_1", &value);
+    adapter.SetValue("INPUT_VAR_2", &value);
+    adapter.Update();
+    ASSERT_EQ(expected_time, adapter.GetCurrentTime());
+    adapter.Finalize();
+}
+
+/** Test that both the set value function works for input 1. */
+TEST_F(Bmi_C_Adapter_Test, SetValue_0_a) {
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
+    adapter.Initialize();
+    double value = 5.0;
+    adapter.SetValue("INPUT_VAR_1", &value);
+    model_data* model = friend_get_model_data_struct(&adapter);
+    double retrieved = *model->input_var_1;
+    adapter.Finalize();
+    ASSERT_EQ(value, retrieved);
+}
+
+/** Test that both the set value function works for input 2. */
+TEST_F(Bmi_C_Adapter_Test, SetValue_0_b) {
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
+    adapter.Initialize();
+    double value = 6.0;
+    adapter.SetValue("INPUT_VAR_2", &value);
+    model_data* model = friend_get_model_data_struct(&adapter);
+    double retrieved = *model->input_var_2;
+    adapter.Finalize();
+    ASSERT_EQ(value, retrieved);
+}
+
+/** Test that the set value function works for input 1 for multiple calls. */
+TEST_F(Bmi_C_Adapter_Test, SetValue_0_c) {
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
+    adapter.Initialize();
+    double value_1 = 7.0;
+    adapter.SetValue("INPUT_VAR_1", &value_1);
+    double value_2 = 10.0;
+    adapter.SetValue("INPUT_VAR_1", &value_2);
+    model_data* model = friend_get_model_data_struct(&adapter);
+    double retrieved = *model->input_var_1;
+    adapter.Finalize();
+    ASSERT_EQ(value_2, retrieved);
+}
+
+/** Test that the update function works for a single update. */
+TEST_F(Bmi_C_Adapter_Test, Update_0_a) {
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
+    adapter.Initialize();
+    double value_1 = 7.0;
+    double value_2 = 10.0;
+    adapter.SetValue("INPUT_VAR_1", &value_1);
+    adapter.SetValue("INPUT_VAR_2", &value_2);
+    adapter.Update();
+    adapter.Finalize();
+}
+
+/** Test that the update function works for a single update and produces the expected value for output 1. */
+TEST_F(Bmi_C_Adapter_Test, Update_0_b) {
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
+    adapter.Initialize();
+    double value_1 = 7.0;
+    double value_2 = 10.0;
+    adapter.SetValue("INPUT_VAR_1", &value_1);
+    adapter.SetValue("INPUT_VAR_2", &value_2);
+    adapter.Update();
+    ASSERT_EQ(value_1, adapter.GetValue<double>("OUTPUT_VAR_1")[0]);
+    adapter.Finalize();
+}
+
+/** Test that the update function works for a single update and produces the expected value for output 2. */
+TEST_F(Bmi_C_Adapter_Test, Update_0_c) {
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
+    adapter.Initialize();
+    double value_1 = 7.0;
+    double value_2 = 10.0;
+    adapter.SetValue("INPUT_VAR_1", &value_1);
+    adapter.SetValue("INPUT_VAR_2", &value_2);
+    adapter.Update();
+    ASSERT_EQ(value_2 * 2, adapter.GetValue<double>("OUTPUT_VAR_2")[0]);
+    adapter.Finalize();
+}
+
+/** Test that the update function works for the 720 time steps and gets the expected output 1 values. */
+TEST_F(Bmi_C_Adapter_Test, Update_1_a) {
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
+    size_t num_steps = 720;
+    std::vector<double> expected(num_steps);
+    std::vector<double> out_1_vals(num_steps);
+    adapter.Initialize();
+    double value;
+    for (size_t i = 0; i < num_steps; ++i) {
+        value = 2.0 * i;
+        expected[i] = value;
+        adapter.SetValue("INPUT_VAR_1", &value);
+        adapter.SetValue("INPUT_VAR_2", &value);
         adapter.Update();
+        out_1_vals[i] = adapter.GetValue<double>("OUTPUT_VAR_1")[0];
     }
-    bool found_except = false;
-    try {
+    adapter.Finalize();
+    ASSERT_EQ(expected, out_1_vals);
+}
+
+/** Test that the update function works for the 720 time steps and gets the expected output 2 values. */
+TEST_F(Bmi_C_Adapter_Test, Update_1_b) {
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
+    size_t num_steps = 720;
+    std::vector<double> expected(num_steps);
+    std::vector<double> out_2_vals(num_steps);
+    adapter.Initialize();
+    double value;
+    for (size_t i = 0; i < num_steps; ++i) {
+        value = 2.0 * i;
+        expected[i] = value * 2;
+        adapter.SetValue("INPUT_VAR_1", &value);
+        adapter.SetValue("INPUT_VAR_2", &value);
         adapter.Update();
+        out_2_vals[i] = adapter.GetValue<double>("OUTPUT_VAR_2")[0];
     }
-    catch (models::external::State_Exception &e) {
-        found_except = true;
-    }
-    ASSERT_TRUE(found_except);
+    adapter.Finalize();
+    ASSERT_EQ(expected, out_2_vals);
 }
 
-/** Test that Schaake Runoff output variable values can be retrieved. */
-TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_0) {
-    int out_var_index = 1;
-
+/** Test that the update_until function works for a single update and produces the expected value for output 2. */
+TEST_F(Bmi_C_Adapter_Test, Update_until_0_a) {
     Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
                           REGISTRATION_FUNC, utils::StreamHandler());
-
-    std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
-
     adapter.Initialize();
-    // Do the first few time steps
-    for (int i = 0; i < 40; i++)
-        adapter.Update();
-    std::vector<double> values = adapter.GetValue<double>(variable_name);
-    ASSERT_GT(values.size(), 0);
+    double value_1 = 7.0;
+    double value_2 = 10.0;
+    adapter.SetValue("INPUT_VAR_1", &value_1);
+    adapter.SetValue("INPUT_VAR_2", &value_2);
+    // This basically is a step of 1.5 times the normal length
+    double time = 5400 + adapter.GetCurrentTime();
+    adapter.UpdateUntil(time);
+    // Normally and update would produce out_2 as 2 * input_2, but here must further multiply by 1.5 for the longer time
+    ASSERT_EQ(value_2 * 2.0 * 1.5, adapter.GetValue<double>("OUTPUT_VAR_2")[0]);
     adapter.Finalize();
 }
 
-/** Test that GIUH Runoff output variable values can be retrieved. */
-TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_1) {
-    int out_var_index = 2;
-
+/** Test that the update_until function works and advances the model time. */
+TEST_F(Bmi_C_Adapter_Test, Update_until_0_b) {
     Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
                           REGISTRATION_FUNC, utils::StreamHandler());
-
-    std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
-
     adapter.Initialize();
-    // Do the first few time steps
-    for (int i = 0; i < 40; i++)
-        adapter.Update();
-    std::vector<double> values = adapter.GetValue<double>(variable_name);
-    ASSERT_GT(values.size(), 0);
+    double value_1 = 7.0;
+    double value_2 = 10.0;
+    adapter.SetValue("INPUT_VAR_1", &value_1);
+    adapter.SetValue("INPUT_VAR_2", &value_2);
+    // This basically is a step of 1.5 times the normal length
+    double time = 5400 + adapter.GetCurrentTime();
+    adapter.UpdateUntil(time);
+    ASSERT_EQ(time, adapter.GetCurrentTime());
     adapter.Finalize();
 }
 
-/** Test that Nash Lateral Flow output variable values can be retrieved. */
-TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_2) {
-    int out_var_index = 3;
-
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
-
-    std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
-
-    adapter.Initialize();
-    // Do the first few time steps
-    for (int i = 0; i < 40; i++)
-        adapter.Update();
-    std::vector<double> values = adapter.GetValue<double>(variable_name);
-    ASSERT_GT(values.size(), 0);
-    adapter.Finalize();
-}
-
-/** Test that Deep Groundwater to Channel Flux output variable values can be retrieved. */
-TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_3) {
-    int out_var_index = 4;
-
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
-
-    std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
-
-    adapter.Initialize();
-    // Do the first few time steps
-    for (int i = 0; i < 40; i++)
-        adapter.Update();
-    std::vector<double> values = adapter.GetValue<double>(variable_name);
-    ASSERT_GT(values.size(), 0);
-    adapter.Finalize();
-}
-
-/** Test that Total Flux (Q_OUT) output variable values can be retrieved. */
-TEST_F(Bmi_C_Adapter_Test, GetValue_0_a_4) {
-    int out_var_index = 5;
-
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
-
-    std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
-
-    adapter.Initialize();
-    // Do the first few time steps
-    for (int i = 0; i < 40; i++)
-        adapter.Update();
-    std::vector<double> values = adapter.GetValue<double>(variable_name);
-    ASSERT_GT(values.size(), 0);
-    adapter.Finalize();
-}
-
-/** Test GIUH_RUNOFF variable grid (id) can be retrieved. */
+/** Test output 1 variable grid (id) can be retrieved. */
 TEST_F(Bmi_C_Adapter_Test, GetVarGrid_0_a) {
-    int out_var_index =2;
+    int out_var_index = 0;
 
     Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
                           REGISTRATION_FUNC, utils::StreamHandler());
@@ -437,9 +558,9 @@ TEST_F(Bmi_C_Adapter_Test, GetVarGrid_0_a) {
     }
 }
 
-/** Test DEEP_GW_TO_CHANNEL_FLUX variable grid (id) can be retrieved. */
+/** Test output 2 variable grid (id) can be retrieved. */
 TEST_F(Bmi_C_Adapter_Test, GetVarGrid_0_b) {
-    int out_var_index = 4;
+    int out_var_index = 1;
 
     Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
                           REGISTRATION_FUNC, utils::StreamHandler());
@@ -455,8 +576,26 @@ TEST_F(Bmi_C_Adapter_Test, GetVarGrid_0_b) {
     }
 }
 
-/** Test SCHAKKE_OUTPUT_RUNOFF variable location can be retrieved. */
+/** Test output 1 variable location can be retrieved. */
 TEST_F(Bmi_C_Adapter_Test, GetVarLocation_0_a) {
+    int out_var_index = 0;
+
+    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
+                          REGISTRATION_FUNC, utils::StreamHandler());
+
+    std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
+    std::string expected_location = expected_output_var_locations[out_var_index];
+
+    try {
+        ASSERT_EQ(adapter.GetVarLocation(variable_name), expected_location);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting var location: %s", e.what());
+    }
+}
+
+/** Test output 2 variable location can be retrieved. */
+TEST_F(Bmi_C_Adapter_Test, GetVarLocation_0_b) {
     int out_var_index = 1;
 
     Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
@@ -473,27 +612,9 @@ TEST_F(Bmi_C_Adapter_Test, GetVarLocation_0_a) {
     }
 }
 
-/** Test Q_OUT variable location can be retrieved. */
-TEST_F(Bmi_C_Adapter_Test, GetVarLocation_0_b) {
-    int out_var_index = 5;
-
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
-
-    std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
-    std::string expected_location = expected_output_var_locations[out_var_index];
-
-    try {
-        ASSERT_EQ(adapter.GetVarLocation(variable_name), expected_location);
-    }
-    catch (std::exception& e) {
-        printf("Exception getting var location: %s", e.what());
-    }
-}
-
-/** Test NASH_LATERAL_RUNOFF variable units can be retrieved. */
+/** Test output 1 variable units can be retrieved. */
 TEST_F(Bmi_C_Adapter_Test, GetVarUnits_0_a) {
-    int out_var_index =3;
+    int out_var_index = 0;
 
     Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
                           REGISTRATION_FUNC, utils::StreamHandler());
@@ -509,9 +630,9 @@ TEST_F(Bmi_C_Adapter_Test, GetVarUnits_0_a) {
     }
 }
 
-/** Test RAIN_RATE variable type can be retrieved. */
+/** Test output 1 variable type can be retrieved. */
 TEST_F(Bmi_C_Adapter_Test, GetVarType_0_a) {
-    int out_var_index =0;
+    int out_var_index = 0;
 
     Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
                           REGISTRATION_FUNC, utils::StreamHandler());
@@ -528,9 +649,9 @@ TEST_F(Bmi_C_Adapter_Test, GetVarType_0_a) {
 }
 
 
-/** Test SCHAKKE_OUTPUT_RUNOFF variable nbytes can be retrieved. */
+/** Test output 1 variable nbytes can be retrieved. */
 TEST_F(Bmi_C_Adapter_Test, GetVarNbytes_0_a) {
-    int out_var_index =1;
+    int out_var_index = 0;
 
     Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
                           REGISTRATION_FUNC, utils::StreamHandler());
@@ -544,10 +665,10 @@ TEST_F(Bmi_C_Adapter_Test, GetVarNbytes_0_a) {
         printf("Exception getting var nbytes: %s", e.what());
     }
 }
-// CFE GetVarGrid() function is disabled currently.  Suggest disabling test until pure testing BMI module is developed.
-/** Test grid type can be retrieved. Based off NASH_LATERAL_RUNOFF grid id */
+// Test model GetVarGrid() function is disabled currently.  Suggest disabling test until fully implemented.
+/** Test grid type can be retrieved for output 1 */
 TEST_F(Bmi_C_Adapter_Test, DISABLED_GetGridType_0_a) {
-    int out_var_index =3;
+    int out_var_index = 0;
 
     Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
                           REGISTRATION_FUNC, utils::StreamHandler());
@@ -564,9 +685,9 @@ TEST_F(Bmi_C_Adapter_Test, DISABLED_GetGridType_0_a) {
 }
 
 // CFE GetVarGrid() function is disabled currently.  Suggest disabling test until pure testing BMI module is developed.
-/** Test grid rank can be retrieved. Based off GUIH_RUNOFF grid id */
+/** Test grid rank can be retrieved for output 1. */
 TEST_F(Bmi_C_Adapter_Test, DISABLED_GetGridRank_0_a) {
-    int out_var_index =2;
+    int out_var_index = 0;
 
     Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
                           REGISTRATION_FUNC, utils::StreamHandler());
@@ -583,9 +704,9 @@ TEST_F(Bmi_C_Adapter_Test, DISABLED_GetGridRank_0_a) {
 }
 
 // CFE GetVarGrid() function is disabled currently.  Suggest disabling test until pure testing BMI module is developed.
-/** Test grid size can be retrieved. Based off Q_OUT grid id */
+/** Test grid size can be retrieved for output 2. */
 TEST_F(Bmi_C_Adapter_Test, DISABLED_GetGridSize_0_a) {
-    int out_var_index =5;
+    int out_var_index = 1;
 
     Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
                           REGISTRATION_FUNC, utils::StreamHandler());
