@@ -247,14 +247,14 @@ jobs:
         run: git submodule update --init --recursive -- test/googletest
 
       - name: Cache Numpy Python Dependency
-        id: cache-numpy-dep
+        id: cache-numpy-py3-dep
         uses: actions/cache@v1
         with:
           path: .venv
-          key: unix-numpy-dep
+          key: unix-numpy-py3-dep
 
       - name: Get Numpy Python Dependency
-        if: steps.cache-numpy-dep.outputs.cache-hit != 'true'
+        if: steps.cache-numpy-py3-dep.outputs.cache-hit != 'true'
         run: |
           python3 -m venv .venv
           . .venv/bin/activate
