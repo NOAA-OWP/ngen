@@ -41,7 +41,7 @@ jobs:
       run: |
         export BOOST_ROOT="$(pwd)/boost_1_72_0"
         [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
-        cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=OFF -S .
+        cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=OFF -DNGEN_ACTIVATE_PYTHON:BOOL=OFF -S .
     
     - name: build_tests
       run: cmake --build cmake_build --target test_unit
@@ -93,7 +93,7 @@ jobs:
         run: |
           export BOOST_ROOT="$(pwd)/boost_1_72_0"
           [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
-          cmake -B cmake_build -DMPI_ACTIVE:BOOL=ON -DBMI_C_LIB_ACTIVE:BOOL=OFF -S .
+          cmake -B cmake_build -DMPI_ACTIVE:BOOL=ON -DBMI_C_LIB_ACTIVE:BOOL=OFF -DNGEN_ACTIVATE_PYTHON:BOOL=OFF -S .
 
       - name: build_tests
         run: cmake --build cmake_build --target test_remote_nexus
@@ -119,7 +119,7 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: git submodule
+      - name: git submodule googletest
         run: git submodule update --init --recursive -- test/googletest
 
       - name: Cache Numpy Python Dependency
@@ -137,6 +137,9 @@ jobs:
           pip update
           pip install numpy
           deactivate
+
+      - name: git submodule pybind11
+        run: git submodule update --init --recursive -- extern/pybind11
 
       - name: cmake_init_shared_lib_build
         run: cmake -B extern/test_bmi_c/cmake_build -S extern/test_bmi_c
@@ -161,7 +164,7 @@ jobs:
         run: |
           export BOOST_ROOT="$(pwd)/boost_1_72_0"
           [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
-          cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=ON -S .
+          cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=ON -DNGEN_ACTIVATE_PYTHON:BOOL=ON -S .
 
       - name: build_bmi_c_tests
         run: cmake --build cmake_build --target test_bmi_c
@@ -215,7 +218,7 @@ jobs:
         run: |
           export BOOST_ROOT="$(pwd)/boost_1_72_0"
           [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
-          cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=OFF -S .
+          cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=OFF -DNGEN_ACTIVATE_PYTHON:BOOL=OFF -S .
 
       - name: build_tests
         run: cmake --build cmake_build --target test_unit
@@ -240,7 +243,7 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: git submodule
+      - name: git submodule googletest
         run: git submodule update --init --recursive -- test/googletest
 
       - name: Cache Numpy Python Dependency
@@ -258,6 +261,9 @@ jobs:
           pip update
           pip install numpy
           deactivate
+
+      - name: git submodule pybind11
+        run: git submodule update --init --recursive -- extern/pybind11
 
       - name: cmake_init_shared_lib_build
         run: cmake -B extern/test_bmi_c/cmake_build -S extern/test_bmi_c
@@ -282,7 +288,7 @@ jobs:
         run: |
           export BOOST_ROOT="$(pwd)/boost_1_72_0"
           [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
-          cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=ON -S .
+          cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=ON -DNGEN_ACTIVATE_PYTHON:BOOL=ON -S .
 
       - name: build_bmi_c_tests
         run: cmake --build cmake_build --target test_bmi_c
