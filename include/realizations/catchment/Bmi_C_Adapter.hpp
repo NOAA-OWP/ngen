@@ -8,6 +8,9 @@
 #include "JSONProperty.hpp"
 #include "StreamHandler.hpp"
 
+// Forward declaration to provide access to protected items in testing
+class Bmi_C_Adapter_Test;
+
 namespace models {
     namespace bmi {
 
@@ -532,6 +535,9 @@ namespace models {
              * @return
              */
             std::shared_ptr<std::vector<std::string>> get_variable_names(bool is_input_variable);
+
+            // For unit testing
+            friend class ::Bmi_C_Adapter_Test;
 
         };
 
