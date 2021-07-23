@@ -5,6 +5,7 @@
 #include <exception>
 #include <chrono>
 #include <unordered_map>
+#include <numeric>
 
 #include "FileChecker.h"
 #include "Bmi_C_Adapter.hpp"
