@@ -1,5 +1,6 @@
 #include "network.hpp"
 #include <boost/graph/topological_sort.hpp>
+#include <stdexcept>
 
 using namespace network;
 
@@ -121,6 +122,10 @@ IndexPair Network::tailwaters(){
 }
 
 std::string Network::get_id( Graph::vertex_descriptor idx){
+  if( idx < 0 || idx >= num_vertices(this->graph) )
+  {
+    throw std::invalid_argument( std::string("Network::get_id: No vertex descriptor "+std::to_string(idx)+" in network."));
+  }
   return get(boost::vertex_name, this->graph)[idx];
 }
 

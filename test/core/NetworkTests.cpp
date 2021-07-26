@@ -197,6 +197,44 @@ TEST_P(Network_Test1, TestNetworkTopologicalIndex)
   }
 }
 
+TEST_P(Network_Test1, TestNetwork_get_id)
+{
+  //Test valid vertex descriptors
+  ASSERT_TRUE( n.get_id(0) == "cat-0" );
+  ASSERT_TRUE( n.get_id(1) == "nex-0" );
+  ASSERT_TRUE( n.get_id(2) == "cat-1" );
+}
+
+TEST_P(Network_Test1, TestNetwork_get_id_1)
+{
+  //Test an invalid vertex descriptor
+  int idx = 100;
+  try {
+    n.get_id(idx);
+    FAIL();
+  } catch( std::invalid_argument const & ex ){
+    EXPECT_EQ(ex.what(), std::string("Network::get_id: No vertex descriptor "+std::to_string(idx)+" in network."));
+  }
+  catch(...){
+    FAIL() << "Expected std::invalid_argument";
+  }
+}
+
+TEST_P(Network_Test1, TestNetwork_get_id_2)
+{
+  //Test an invalid vertex descriptor on the edge of the valid range
+  int idx = 3;
+  try {
+    n.get_id(idx);
+    FAIL();
+  } catch( std::invalid_argument const & ex ){
+    EXPECT_EQ(ex.what(), std::string("Network::get_id: No vertex descriptor "+std::to_string(idx)+" in network."));
+  }
+  catch(...){
+    FAIL() << "Expected std::invalid_argument";
+  }
+}
+
 /*  A nice example of how to disable a test
 TEST_P(Network_Test1, DISABLED_TestInit1)
 {
