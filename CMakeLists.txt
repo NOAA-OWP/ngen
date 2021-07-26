@@ -195,21 +195,6 @@ if(LSTM_TORCH_LIB_ACTIVE)
            )
 endif()
 
-add_executable(partitionGenerator
-        src/partitionGenerator.cpp
-        )
-
-target_include_directories(partitionGenerator PUBLIC
-        "${PROJECT_BINARY_DIR}/include" # For generated config header file in binary tree
-
-        )
-
-
-target_link_libraries(partitionGenerator PUBLIC
-        core
-        geojson
-        )
-
 # For automated testing with Google Test
 if(PACKAGE_TESTS)
     enable_testing()
