@@ -788,7 +788,7 @@ namespace realization {
                     throw std::runtime_error(
                             "BMI input variable '" + var_name + "' is an array - not currently supported");
                 }
-                double value = provider->get_value(var_name, model_epoch_time, t_delta,
+                double value = provider->get_value(var_map_alias, model_epoch_time, t_delta,
                                                    get_bmi_model()->GetVarUnits(var_name));
                 // Finally, use the value obtained to set the model input
                 get_bmi_model()->SetValue(var_name, (void*)&value);
