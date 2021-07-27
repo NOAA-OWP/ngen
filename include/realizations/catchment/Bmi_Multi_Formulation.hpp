@@ -201,7 +201,7 @@ namespace realization {
          */
         size_t get_ts_index_for_time(const time_t &epoch_time) {
             // TODO: come back and implement if actually necessary for this type; for now don't use
-            throw runtime_error("Bmi_Singular_Formulation does not yet implement get_ts_index_for_time");
+            throw runtime_error("Bmi_Multi_Formulation does not yet implement get_ts_index_for_time");
         }
 
         /**
