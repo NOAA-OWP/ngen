@@ -84,8 +84,24 @@ TEST_F(PartitionsParserTest, TestFileReader)
 
 TEST_F(PartitionsParserTest, DisplayPartitionData)
 {
-  const std::string file_path = file_search(data_paths,"partition_huc01.json");
-  Partitions_Parser partitions_parser = Partitions_Parser(file_path);
+    const std::string file_path = file_search(data_paths,"partition_huc01_100.json");
+    Partitions_Parser partitions_parser = Partitions_Parser(file_path);
+
+    partitions_parser.parse_partition_file();
+
+    for( const auto& n : partitions_parser.partition_ranks )
+    {
+        std::cout << n.first << ": (";  
+        
+        const PartitionData& part_data = n.second;
+        
+        for ( const auto& s : part_data.cat_ids )
+        {
+            std::cout << s << " ";
+        }
+        
+        std::cout << ") \n";
+    }
 
 
     ASSERT_TRUE(true);
@@ -107,7 +123,7 @@ TEST_F(PartitionsParserTest, ReferenceHydrofabric)
     Partitions_Parser partition_parser = Partitions_Parser(file_path);
 
     // get the catchement lists from the partition files
-    partition_parser.read_partition_file();
+    partition_parser.parse_partition_file();
 
     // read the global hydrofabric
     geojson::GeoJSON global_catchment_collection = geojson::read("/apd_common/test/hydrofabric/catchment_data.geojson");
