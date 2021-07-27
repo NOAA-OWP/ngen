@@ -4,17 +4,31 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <stdexcept>
 
 #include <boost/algorithm/string.hpp>
 #include <vector>
 
 #include "core/Partition_Parser.hpp"
 
+using PartitionMap = std::unordered_map<std::string, std::vector<std::string> >;
+using RemoteConnectionMap = std::unordered_map<std::string, std::vector<std::pair<std::string, int> > >;
 
-void write_remote_connections(std::vector<std::unordered_map<std::string, std::vector<std::string> > > catchment_part,
-                 std::vector<std::unordered_map<std::string, std::vector<std::pair<std::string, int> > > > remote_connections_vec,
+/**
+ * @brief Write the partition details to the @p outFile
+ * 
+ * @param catchment_part 
+ * @param remote_connections_vec 
+ * @param num_part 
+ * @param outFile 
+ */
+void write_remote_connections(std::vector<PartitionMap > catchment_part,
+                 std::vector<RemoteConnectionMap > remote_connections_vec,
                  int num_part, std::ofstream& outFile)
 {
+    outFile<<"{"<<std::endl;
+    outFile<<"    \"partitions\":["<<std::endl;
+
     int id = 0;
     //for (std::vector<std::unordered_map<std::string, std::vector<std::string> > >::const_iterator i = catchment_part.begin();
     //     i != catchment_part.end(); ++i)
@@ -24,7 +38,7 @@ void write_remote_connections(std::vector<std::unordered_map<std::string, std::v
         // write catchments
         std::unordered_map<std::string, std::vector<std::string> > catchment_map;
         catchment_map = catchment_part[i];
-        
+
         outFile<<"        {\"id\":" << id <<", \"cat-ids\":[";
         for(auto const cat_id : catchment_map)
         {
@@ -89,79 +103,22 @@ void write_remote_connections(std::vector<std::unordered_map<std::string, std::v
 
         id++;
     }
+    outFile<<"    ]"<<std::endl;
+    outFile<<"}"<<std::endl;
 }
 
-    std::string file_search(const std::vector<std::string> &parent_dir_options, const std::string& file_basename)
-    {
-        // Build vector of names by building combinations of the path and basename options
-        std::vector<std::string> name_combinations;
-
-        // Build so that all path names are tried for given basename before trying a different basename option
-        for (auto & path_option : parent_dir_options)
-            name_combinations.push_back(path_option + file_basename);
-
-        return utils::FileChecker::find_first_readable(name_combinations);
-    }
-
-
-int main(int argc, char* argv[])
+/**
+ * @brief Generate a vector of PartitionMaps by iterating the network and assigning catchments to partitions.
+ * 
+ * @param network 
+ * @param num_partitions 
+ * @param num_catchments
+ * @param catchment_part 
+ */
+void generate_partitions(network::Network& network, const int& num_partitions, const int& num_catchments, std::vector<PartitionMap>& catchment_part)
 {
-    std::string catchmentDataFile;
-    std::string partitionOutFile;
-    int num_partitions = 0;
-    int num_catchments = 0;
-
-    if( argc < 5 ){
-        std::cout << "Missing required args:" << std::endl;
-        std::cout << argv[0] << " <catchment_data_path> <number of partitions>" << std::endl;
-    }
-    else {
-        bool error = false;
-        if( !utils::FileChecker::file_is_readable(argv[1]) ) {
-            std::cout<<"catchment data path "<<argv[1]<<" not readable"<<std::endl;
-            error = true;
-        }
-        else{ catchmentDataFile = argv[1]; }
-
-        partitionOutFile = argv[2];
-        if (partitionOutFile == "") {
-            std::cout << "Missing output file name " << std::endl;
-            error = true;
-        }
-    
-        try {
-            num_partitions = boost::lexical_cast<int>(argv[3]);
-            if(num_partitions < 0) throw boost::bad_lexical_cast();
-        }
-        catch(boost::bad_lexical_cast &e) {
-            std::cout<<"number of partitions must be a postive integer."<<std::endl;
-            error = true;
-        }
-
-        try {
-            num_catchments = boost::lexical_cast<int>(argv[4]);
-            if(num_catchments < 0) throw boost::bad_lexical_cast();
-        }
-        catch(boost::bad_lexical_cast &e) {
-            std::cout<<"number of catchments must be a postive integer."<<std::endl;
-            error = true;
-        }
-
-        if(error) exit(-1);
-    }
-
-    std::ofstream outFile;
-    outFile.open(partitionOutFile, std::ios::trunc);
-
-    //Get the feature collecion for the given hydrofabric
-    geojson::GeoJSON catchment_collection = geojson::read(catchmentDataFile);
-    std::string link_key = "toid";
-  
-    network::Network network(catchment_collection, &link_key);
-    //Assumes dendridic, can add check in network if needed.
     int partition = 0;
     int counter = 0;
-    //int total = network.size()/2; //Note network.size is the number of catchments + nexuses.  This should be a rough count.
     int total = num_catchments;
     int partition_size = total/num_partitions;
     int partition_size_norm = partition_size;
@@ -182,14 +139,11 @@ int main(int argc, char* argv[])
     std::unordered_map<std::string, std::string> this_part_id;
     std::unordered_map<std::string, std::vector<std::string> > this_catchment_part, this_nexus_part;
     std::vector<std::unordered_map<std::string, std::string> > part_ids;
-    std::vector<std::unordered_map<std::string, std::vector<std::string> > > catchment_part, nexus_part;
+    std::vector<PartitionMap> nexus_part;
 
     std::pair<std::string, std::string> remote_up_id, remote_down_id, remote_up_part, remote_down_part;
     std::vector<std::pair<std::string, std::string> > remote_up, remote_down;
 
-    outFile<<"{"<<std::endl;
-    outFile<<"    \"partitions\":["<<std::endl;
-    std::cout<<"in partition 0:"<<std::endl;
     std::string up_nexus;
     std::string down_nexus;
     for(const auto& catchment : network.filter("cat")){
@@ -244,8 +198,6 @@ int main(int argc, char* argv[])
                 remote_down.push_back(remote_down_part);
 
                 partition_str = std::to_string(partition);
-                //write_part(partition_str, this_catchment_part, this_nexus_part, remote_up, remote_down, num_partitions, outFile);
-                //outFile << std::endl;
 
                 // Clear unordered_map before next round of emplace
                 this_part_id.clear();
@@ -269,9 +221,8 @@ int main(int argc, char* argv[])
                 //std::cout<<"\nin partition "<<partition<<":"<<std::endl;
             }
     }
-        //write_remote_connections(catchment_part, num_partitions, outFile);
 
-    std::cout << "Validating catchments:" << std::endl;
+    std::cout << "Validating catchments..." << std::endl;
     //converting vector to 1-d
     for(int i = 0; i < vec_cat_list.size(); ++i)
     {
@@ -293,220 +244,198 @@ int main(int argc, char* argv[])
             }
     }
     std::cout << "Catchment validation completed" << std::endl;
+}
 
+/**
+ * @brief Find the remote connections for a given @p nexus
+ * 
+ * This function searches the local catchments in @p catchments to determine if the given @p nexus can communicate with it on the local partition.
+ * If the connected feature is NOT found locally, it is located in the @p catchment_partitions and marked as remote by adding it to the remote_connections map.
+ * 
+ * @param nexus The nexus to identify remote connections for
+ * @param catchment_partitions The global set of partitions
+ * @param partition_number The partition to consider local
+ * @param ids_to_find The ids connected to @p nexus to search  on
+ * @param remote_connections The output map containing pairs of remote (id, partition) keyed by the @p nexus
+ * @return int Number of identified remote catchments
+ * 
+ * @throws invalid_argument if the partition_number is not in the range of valid partition numbers (size of catchment_partitions)
+ */
+int find_partition_connections(std::string nexus, std::vector<PartitionMap> catchment_partitions, int partition_number,  std::vector<std::string>& ids_to_find, RemoteConnectionMap& remote_connections )
+{
+    if( partition_number < 0 || partition_number >= catchment_partitions.size() ){
+        throw std::invalid_argument("find_partition_connections: partition_number not valid for catchment_partitions of size "+
+                                     std::to_string( catchment_partitions.size()) + ".");
+    }
+    std::vector<std::string> catchments = catchment_partitions[partition_number]["cat-ids"];
+    int remote_catchments = 0;
+    for( auto id : ids_to_find )
+            {
+                // try to get each origin id
+                auto iter = std::find(catchments.begin(), catchments.end(), id);
+                
+                if ( iter == catchments.end() )
+                {
+                    // catchemnt is remote find the partition that contains it
+                    //std::cout << id << ": is not in local catchment set searching remote partitions.\n";
+                    
+                    int pos = -1;
+                    for ( int i = 0; i < catchment_partitions.size(); ++i )
+                    {
+                        auto iter2 = std::find(catchment_partitions[i]["cat_ids"].begin(), catchment_partitions[i]["cat_ids"].end(), id);
+                        
+                        // if we find a match then we have found the target partition containing this id
+                        if ( iter2 != catchment_partitions[i]["cat_ids"].end() )
+                        {
+                            pos = i;
+                            break;
+                        }
+                    }
+                    
+                    if ( pos >= 0 )
+                    {
+                        //std::cout << "Found id: " << id << " in partition: " << pos << "\n";
+                        //remote_connections[n] = std::make_pair(id,pos);
+                        remote_connections[nexus].push_back(std::make_pair(id,pos));
+                        ++remote_catchments;
+                    }
+                    else
+                    {
+                        std::cout << "Could not find id: " << id << " in any partition\n";
+                        ++remote_catchments;
+                    }   
+                }
+                else
+                {
+                    //std::cout << "Catchment with id: " << id << " is local\n";
+                }
+            }
+    return remote_catchments;
 
-// read in the partition file and build the remote connections from network
+}
+
+int main(int argc, char* argv[])
+{
     using network::Network;
+    std::string catchmentDataFile, nexusDataFile;
+    std::string partitionOutFile;
+    int num_partitions = 0;
+    bool  error;
+    if( argc < 5 ){
+        std::cout << "Missing required args:" << std::endl;
+        std::cout << argv[0] << " <catchment_data_path> <nexus_data_path> <partition_output_name> <number of partitions> " << std::endl;
+        error = true;
+    }
+    else {
+        error = false;
+        if( !utils::FileChecker::file_is_readable(argv[1]) ) {
+            std::cout<<"catchment data path "<<argv[1]<<" not readable"<<std::endl;
+            error = true;
+        }
+        else{ catchmentDataFile = argv[1]; }
 
-    std::vector<std::string> data_paths;
+        if( !utils::FileChecker::file_is_readable(argv[2]) ) {
+            std::cout<<"nexus data path "<<argv[2]<<" not readable"<<std::endl;
+            error = true;
+        }
+        else{ nexusDataFile = argv[2]; }
 
-    data_paths = {
-                "test/data/partitions/",
-                "./test/data/partitions/",
-                "../test/data/partitions/",
-                "../../test/data/partitions/",
-        };
-
-    // partition_huc01.json file format need to be consistent with that used by partition class
-    const std::string file_path = file_search(data_paths,"partition_huc01.json");
-    //std::unordered_map<std::string, std::pair<std::string, int> > remote_connections;
+        partitionOutFile = argv[3];
+        if (partitionOutFile == "") {
+            std::cout << "Missing output file name " << std::endl;
+            error = true;
+        }
     
-    Partitions_Parser partition_parser = Partitions_Parser(file_path);
+        try {
+            num_partitions = boost::lexical_cast<int>(argv[4]);
+            if(num_partitions < 0) throw boost::bad_lexical_cast();
+        }
+        catch(boost::bad_lexical_cast &e) {
+            std::cout<<"number of partitions must be a postive integer."<<std::endl;
+            error = true;
+        }
+        
+    }
+    if(error) exit(-1);
 
-    // get the catchement lists from the partition files
-    partition_parser.parse_partition_file();
+    std::ofstream outFile;
+    outFile.open(partitionOutFile, std::ios::trunc);
 
-    // read the global hydrofabric
-    geojson::GeoJSON global_catchment_collection = geojson::read("/apd_common/test/hydrofabric/catchment_data.geojson");
-    geojson::GeoJSON global_nexus_collection = geojson::read("/apd_common/test/hydrofabric/nexus_data.geojson");
+    //Get the feature collecion for the given hydrofabric
+    geojson::GeoJSON catchment_collection = geojson::read(catchmentDataFile);
+    int num_catchments = catchment_collection->get_size();
+    std::string link_key = "toid";
+  
+    Network catchment_network(catchment_collection, &link_key);
+    //Assumes dendridic, can add check in network if needed.
+    std::vector<PartitionMap>  catchment_part;
     
+    //Generate the partitioning
+    generate_partitions(catchment_network, num_partitions, num_catchments, catchment_part);
+
+    //build the remote connections from network
+    // read the nexus hydrofabric, reuse the catchments
+    geojson::GeoJSON global_nexus_collection = geojson::read(nexusDataFile);
+
     //Now read the collection of catchments, iterate it and add them to the nexus collection
     //also link them by to->id
     //std::cout << "Iterating Catchment Features" << std::endl;
-    for(auto& feature: *global_catchment_collection)
+    for(auto& feature: *catchment_collection)
     {
         //feature->set_id(feature->get_property("ID").as_string());
         global_nexus_collection->add_feature(feature);
         //std::cout<<"Catchment "<<feature->get_id()<<" -> Nexus "<<feature->get_property("toID").as_string()<<std::endl;
     }
-    
-    std::string linkage = "toid";
-    global_nexus_collection->link_features_from_property(nullptr, &linkage);
 
-
+    global_nexus_collection->link_features_from_property(nullptr, &link_key);
     // make a global network
     Network global_network(global_nexus_collection);
-  
-    // get he local hydro fabric
-    auto& partitions = partition_parser.partition_ranks;  // get the map of all partitions
 
+    //The container holding all remote_connections
     std::vector<std::unordered_map<std::string, std::vector<std::pair<std::string, int> > > > remote_connections_vec;
-
     // loop over all partitions by partition id
-    for (int ipart; ipart < num_partitions; ++ipart)
-    //for (int ipart; ipart < 2; ++ipart)  // for a quick test of the code
+    for (int ipart=0; ipart < catchment_part.size(); ++ipart)
     {
-    // loop over all partitions by the order in the unordered_map
-    for (const auto& partition : partitions) {
-        //auto& local_data = partitions["1"];        // for some reason rank 0 has the string "root tree: 1" instead of 1
-        int part_idn;
-        //std::cout << "partition.first = " << partition.first << std::endl;
-        //std::cout << "type of partition.first is: " << typeid(partition.first).name() << std::endl;
-        part_idn = std::stoi(partition.first);
-        //std::cout << "new type of part_idn is: " << typeid(part_idn).name() << " value = " << part_idn << std::endl;
-
-      // choose the one that match the "ipart", this should reorder the remote_connections by ipart
-      if (part_idn == ipart)
-      {
         // declare and initialize remote_connections
-        std::unordered_map<std::string, std::vector<std::pair<std::string, int> > > remote_connections;
-        auto& local_data = partition.second;
-        
+        RemoteConnectionMap remote_connections;
+
+        std::vector<std::string> local_cat_ids = catchment_part[ipart]["cat-ids"];
         //TODO need more efficient method for doing this
         // read the local catchment collection (if possible change this to not re read the json file)
-        geojson::GeoJSON local_catchment_collection = geojson::read("/apd_common/test/hydrofabric/catchment_data.geojson", local_data.cat_ids);
-        
-        // test each nexus in the local network to make sure its upstream and downstream exist in the local network
-        /*
-        std::cout << "Printing local catchment ids.\n";
-        for ( const auto& n : local_data.cat_ids )
-        {
-            std::cout << n << "\n";
-        }
-        */
+        geojson::GeoJSON local_catchment_collection = geojson::read(catchmentDataFile, local_cat_ids);
         
         // make a local network
         Network local_network(local_catchment_collection, &link_key);
         
         // test each nexus in the local network to make sure its upstream and downstream exist in the local network
-        std::cout << "Printing local nexus ids.\n";
         auto local_cats = local_network.filter("cat");
         auto local_nexuses = local_network.filter("nex");
-        
-        bool test_value = true;
+
         int remote_catchments = 0;
         
         for ( const auto& n : local_nexuses )
         {
-            std::cout << "Searching for catchements connected to " << n << "\n";
-            
+            //std::cout << "Searching for catchements connected to " << n << "\n"; 
+            //Find upstream connections
             auto orgin_ids = global_network.get_origination_ids(n);
-            
-            std::cout << "Found " << orgin_ids.size() << " upstream catchments for nexus with id: " << n << "\n";
-            
-            for( auto id : orgin_ids )
-            {
-                // try to get each origin id
-                auto iter = std::find(local_cats.begin(), local_cats.end(), id);
-                
-                if ( iter == local_cats.end() )
-                {
-                    // catchemnt is remote find the partition that contains it
-                    std::cout << id << ": is not in local catchment set searching remote partitions.\n";
-                    
-                    int pos = -1;
-                    for ( int i = 0; i < partitions.size(); ++i )
-                    {
-                        std::string k = std::to_string(i);
-                        auto iter2 = std::find(partitions[k].cat_ids.begin(), partitions[k].cat_ids.end(), id);
-                        
-                        // if we find a match then we have found the target partition containing this id
-                        if ( iter2 != partitions[k].cat_ids.end() )
-                        {
-                            pos = i;
-                            break;
-                        }
-                    }
-                    
-                    if ( pos >= 0 )
-                    {
-                        std::cout << "Found id: " << id << " in partition: " << pos << "\n";
-                        //remote_connections[n] = std::make_pair(id,pos);
-                        remote_connections[n].push_back(std::make_pair(id,pos));
-                        ++remote_catchments;
-                    }
-                    else
-                    {
-                        std::cout << "Could not find id: " << id << " in any partition\n";
-                        test_value = false;
-                        ++remote_catchments;
-                    }
-                    
-                    
-                }
-                else
-                {
-                    std::cout << "Catchment with id: " << id << " is local\n";
-                }
-            }
-            
+            //std::cout << "Found " << orgin_ids.size() << " upstream catchments for nexus with id: " << n << "\n";
+            remote_catchments += find_partition_connections(n, catchment_part, ipart, orgin_ids, remote_connections );
+            //Find downstream connections
             auto dest_ids = global_network.get_destination_ids(n);
-            
-            std::cout << "Found " << dest_ids.size() << " downstream catchments for nexus with id: " << n << "\n";
-            
-            for( auto id : dest_ids )
-            {
-                // try to get each origin id
-                auto iter = std::find(local_cats.begin(), local_cats.end(), id);
-                
-                if ( iter == local_cats.end() )
-                {
-                    // catchemnt is remote find the partition that contains it
-                    std::cout << id << ": is not in local catchment set searching remote partitions.\n";
-                    
-                    int pos = -1;
-                    for ( int i = 0; i < partitions.size(); ++i )
-                    {
-                        std::string k = std::to_string(i);
-                        auto iter2 = std::find(partitions[k].cat_ids.begin(), partitions[k].cat_ids.end(), id);
-                        
-                        // if we find a match then we have found the target partition containing this id
-                        if ( iter2 != partitions[k].cat_ids.end() )
-                        {
-                            pos = i;
-                            break;
-                        }
-                    }
-                    
-                    if ( pos >= 0 )
-                    {
-                        std::cout << "Found id: " << id << " in partition: " << pos << "\n";
-                        //remote_connections[n] = std::make_pair(id,pos);
-                        remote_connections[n].push_back(std::make_pair(id,pos));
-                        ++remote_catchments;
-                    }
-                    else
-                    {
-                        std::cout << "Could not find id: " << id << " in any partition\n";
-                        test_value = false;
-                        ++remote_catchments;
-                    }
-                    
-                    
-                }
-                else
-                {
-                    std::cout << "Catchment with id: " << id << " is local\n";
-                }
-            }
+            //std::cout << "Found " << dest_ids.size() << " downstream catchments for nexus with id: " << n << "\n";
+            remote_catchments += find_partition_connections(n, catchment_part, ipart, dest_ids, remote_connections );
         }
 
         remote_connections_vec.push_back(remote_connections);
         
-        std::cout << "local network size: " << local_network.size() << "\n";
-        std::cout << "global network size " << global_network.size() << "\n";
-        std::cout << "remote catchments found " << remote_catchments << "\n";
+        //std::cout << "local network size: " << local_network.size() << "\n";
+        //std::cout << "global network size " << global_network.size() << "\n";
+        std::cout << "Found " << remote_catchments << " remotes in partition "<<ipart<<"\n";
 
-      }
     }
-    }
-        write_remote_connections(catchment_part, remote_connections_vec, num_partitions, outFile);
-
-    outFile<<"    ]"<<std::endl;
-    outFile<<"}"<<std::endl;
+    write_remote_connections(catchment_part, remote_connections_vec, num_partitions, outFile);
 
     outFile.close();
         
     return 0;
 }
-
