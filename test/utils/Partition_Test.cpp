@@ -10,12 +10,15 @@
 #include "network.hpp"
 
 
+// This class provides tests of the partition data type used to represent a segment of the complete hydrofabric that is to be run on one MPI rank
+
 class PartitionsParserTest: public ::testing::Test {
 
     protected:
 
     std::vector<std::string> data_paths;
     std::vector<std::string> hydro_fabric_paths;
+    std::vector<std::string> ref_hydro_fabric_paths;
 
     PartitionsParserTest() {
 
@@ -66,8 +69,12 @@ void PartitionsParserTest::setupArbitraryExampleCase() {
         "./data/",
         "../data/",
         "../../data/",
-
-    };
+    
+    };   
+    
+    ref_hydro_fabric_paths = {
+        "/apd_common/test/hydrofabric/",   
+    };  
 }
 
 TEST_F(PartitionsParserTest, TestFileReader)
@@ -81,6 +88,8 @@ TEST_F(PartitionsParserTest, TestFileReader)
 
   ASSERT_TRUE(true);
 }
+
+// This test verifys that the data in a partition file can be read
 
 TEST_F(PartitionsParserTest, DisplayPartitionData)
 {
@@ -108,6 +117,10 @@ TEST_F(PartitionsParserTest, DisplayPartitionData)
       
 }
 
+// This test shows how the global catchments and nexus hydrofabric files can be used to determine which nexus members of a 
+// catchment have remote communications pairs, and to determine what MPI id those paris should reference.
+// Currently disabled because the test requires data file that will not be added to the repository and is very slow
+
 TEST_F(PartitionsParserTest, ReferenceHydrofabric)
 {
     using network::Network;
@@ -117,17 +130,14 @@ TEST_F(PartitionsParserTest, ReferenceHydrofabric)
     
     std::string link_key = "toid";
     
-  
-   
-    
     Partitions_Parser partition_parser = Partitions_Parser(file_path);
 
     // get the catchement lists from the partition files
     partition_parser.parse_partition_file();
 
     // read the global hydrofabric
-    geojson::GeoJSON global_catchment_collection = geojson::read("/apd_common/test/hydrofabric/catchment_data.geojson");
-    geojson::GeoJSON global_nexus_collection = geojson::read("/apd_common/test/hydrofabric/nexus_data.geojson");
+    geojson::GeoJSON global_catchment_collection = geojson::read(file_search(ref_hydro_fabric_paths,"catchment_data.geojson"));
+    geojson::GeoJSON global_nexus_collection = geojson::read(file_search(ref_hydro_fabric_paths,"nexus_data.geojson"));
     
     //Now read the collection of catchments, iterate it and add them to the nexus collection
     //also link them by to->id
