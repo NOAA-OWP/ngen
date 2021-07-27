@@ -17,6 +17,8 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
     modules = std::vector<std::shared_ptr<Bmi_Module_Formulation<bmi::Bmi>>>(sub_formulations_list.size());
     module_variable_maps = std::vector<std::shared_ptr<std::map<std::string, std::string>>>(modules.size());
 
+    // TODO: move inner for loops to separate functions
+    /* ************************ Begin outer loop: "for sub_formulations_list" ************************ */
     for (size_t i = 0; i < sub_formulations_list.size(); ++i) {
         geojson::JSONProperty formulation_config = sub_formulations_list[i];
         std::string type_name = formulation_config.at("name").as_string();
@@ -67,7 +69,7 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
             availableData[framework_alias] = module;
         }
         module_variable_maps[i] = var_aliases;
-    }
+    } /* ************************ End outer loop: "for sub_formulations_list" ************************ */
 
     // TODO: get synced start_time values for all models
     // TODO: get synced end_time values for all models
@@ -91,6 +93,21 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
     }
 }
 
+/**
+ * Get whether a model may perform updates beyond its ``end_time``.
+ *
+ * Get whether model ``Update`` calls are allowed and handled in some way by the backing model for time steps
+ * after the model's ``end_time``.   Implementations of this type should use this function to safeguard against
+ * entering either an invalid or otherwise undesired state as a result of attempting to process a model beyond
+ * its available data.
+ *
+ * As mentioned, even for models that are capable of validly handling processing beyond end time, it may be
+ * desired that they do not for some reason (e.g., the way they account for the lack of input data leads to
+ * valid but incorrect results for a specific application).  Because of this, whether models are allowed to
+ * process beyond their end time is configuration-based.
+ *
+ * @return Whether a model may perform updates beyond its ``end_time``.
+ */
 const bool &Bmi_Multi_Formulation::get_allow_model_exceed_end_time() const {
     for (const std::shared_ptr<Bmi_Formulation>& m : modules) {
         if (!m->get_allow_model_exceed_end_time())
