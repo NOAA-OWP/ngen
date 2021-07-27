@@ -26,6 +26,16 @@ std::string catchmentDataFile = "";
 std::string nexusDataFile = "";
 std::string REALIZATION_CONFIG_PATH = "";
 
+#ifdef NGEN_MPI_ACTIVE
+#include <mpi.h>
+#include "core/Partition_Parser.hpp"
+#include <HY_Features_MPI.hpp>
+
+std::string PARTITION_PATH = "";
+int mpi_rank;
+int mpi_num_procs;
+#endif
+
 std::unordered_map<std::string, std::ofstream> nexus_outfiles;
 
 //Note: Use below if developing in-memory transfer of nexus flows to routing
@@ -58,6 +68,7 @@ int main(int argc, char *argv[]) {
         //arg 3 is nexus_data file path
         //arg 4 is nexus subset ids, comma seperated string of ids (no spaces!), "" for all
         //arg 5 is realization config path
+        //arg 7 is the partion file path
 
         std::vector<string> catchment_subset_ids;
         std::vector<string> nexus_subset_ids;
@@ -94,7 +105,29 @@ int main(int argc, char *argv[]) {
           }
           else{ REALIZATION_CONFIG_PATH = argv[5]; }
 
+
+	  #ifdef NGEN_MPI_ACTIVE
+          if ( argc >= 7 ) {
+	    if ( !utils::FileChecker::file_is_readable(argv[6]) ) {
+            std::cout<<"partion path "<<argv[6]<<" not readable"<<std::endl;
+            error = true;
+            }
+            else{ PARTITION_PATH = argv[6]; }
+          }
+          else {
+	    std::cout << "Missing required arguement partion file path.";
+          }
+          #endif
+
           if(error) exit(-1);
+
+	  #ifdef NGEN_MPI_ACTIVE
+          //initalize mpi
+          MPI_Init(NULL, NULL);
+          MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
+          MPI_Comm_size(MPI_COMM_WORLD, &mpi_num_procs);
+          #endif
+
           //split the subset strings into vectors
           boost::split(catchment_subset_ids, argv[2], [](char c){return c == ','; } );
           boost::split(nexus_subset_ids, argv[4], [](char c){return c == ','; } );
@@ -111,6 +144,16 @@ int main(int argc, char *argv[]) {
 
     //Read the collection of nexus
     std::cout << "Building Nexus collection" << std::endl;
+    
+    #ifdef NGEN_MPI_ACTIVE
+    Partitions_Parser partition_parser(PARTITION_PATH);
+    partition_parser.parse_partition_file();
+    
+    auto& partitions = partition_parser.partition_ranks;  
+    auto& local_data = partitions[std::to_string(mpi_rank)];   
+    nexus_subset_ids = local_data.nex_ids;
+    catchment_subset_ids = local_data.cat_ids; 
+    #endif
 
     // TODO: Instead of iterating through a collection of FeatureBase objects mapping to nexi, we instead want to iterate through HY_HydroLocation objects
     geojson::GeoJSON nexus_collection = geojson::read(nexusDataFile, nexus_subset_ids);
@@ -118,11 +161,24 @@ int main(int argc, char *argv[]) {
 
     // TODO: Instead of iterating through a collection of FeatureBase objects mapping to catchments, we instead want to iterate through HY_Catchment objects
     geojson::GeoJSON catchment_collection = geojson::read(catchmentDataFile, catchment_subset_ids);
+    
+    for(auto& feature: *catchment_collection)
+    {
+        //feature->set_id(feature->get_property("ID").as_string());
+        nexus_collection->add_feature(feature);
+        //std::cout<<"Catchment "<<feature->get_id()<<" -> Nexus "<<feature->get_property("toID").as_string()<<std::endl;
+    }
 
     std::shared_ptr<realization::Formulation_Manager> manager = std::make_shared<realization::Formulation_Manager>(REALIZATION_CONFIG_PATH);
     manager->read(catchment_collection, utils::getStdOut());
     std::string link_key = "toid";
+    #ifdef NGEN_MPI_ACTIVE
+    
+    hy_features::HY_Features_MPI features = hy_features::HY_Features_MPI(local_data, nexus_collection, manager, mpi_rank, mpi_num_procs);
+    #else
     hy_features::HY_Features features = hy_features::HY_Features(catchment_collection, &link_key, manager);
+    #endif
+
     //validate dendridic connections
     features.validate_dendridic();
     //TODO don't really need catchment_collection once catchments are added to nexus collection
