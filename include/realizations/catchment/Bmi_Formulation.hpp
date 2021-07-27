@@ -66,6 +66,21 @@ namespace realization {
 
         virtual ~Bmi_Formulation() {};
 
+        /**
+         * Get whether a model may perform updates beyond its ``end_time``.
+         *
+         * Get whether model ``Update`` calls are allowed and handled in some way by the backing model for time steps
+         * after the model's ``end_time``.   Implementations of this type should use this function to safeguard against
+         * entering either an invalid or otherwise undesired state as a result of attempting to process a model beyond
+         * its available data.
+         *
+         * As mentioned, even for models that are capable of validly handling processing beyond end time, it may be
+         * desired that they do not for some reason (e.g., the way they account for the lack of input data leads to
+         * valid but incorrect results for a specific application).  Because of this, whether models are allowed to
+         * process beyond their end time is configuration-based.
+         *
+         * @return Whether a model may perform updates beyond its ``end_time``.
+         */
         virtual const bool &get_allow_model_exceed_end_time() const = 0;
 
         virtual const vector<string> get_bmi_input_variables() = 0;
