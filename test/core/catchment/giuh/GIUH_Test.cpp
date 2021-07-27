@@ -3,6 +3,7 @@
 #include "GIUH.hpp"
 #include "GiuhJsonReader.h"
 #include <vector>
+#include <cmath>
 
 class GIUH_Test : public ::testing::Test {
 
@@ -180,7 +181,7 @@ TEST_F(GIUH_Test, TestOutput1)
 
     for (unsigned int i = 0; i < times.size(); ++i) {
         double kernel_output = kernel.calc_giuh_output(3600, runoff_inputs[i]);
-        double diff_abs = std::abs(kernel_output - giuh_outputs[i]);
+        double diff_abs = std::fabs(kernel_output - giuh_outputs[i]);
         EXPECT_LE(diff_abs, leaway);
     }
 }
@@ -227,7 +228,7 @@ TEST_F(GIUH_Test, TestOutput2) {
 
     for (unsigned int i = 0; i < times.size(); ++i) {
         double kernel_output = kernel.calc_giuh_output(3600, runoff_inputs[i]);
-        double diff_abs = std::abs(kernel_output - giuh_outputs[i]);
+        double diff_abs = std::fabs(kernel_output - giuh_outputs[i]);
         EXPECT_LE(diff_abs, leaway);
     }
 }
