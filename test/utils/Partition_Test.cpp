@@ -121,7 +121,7 @@ TEST_F(PartitionsParserTest, DisplayPartitionData)
 // catchment have remote communications pairs, and to determine what MPI id those paris should reference.
 // Currently disabled because the test requires data file that will not be added to the repository and is very slow
 
-TEST_F(PartitionsParserTest, ReferenceHydrofabric)
+TEST_F(PartitionsParserTest, DISABLED_ReferenceHydrofabric)
 {
     using network::Network;
     
