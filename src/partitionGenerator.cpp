@@ -321,9 +321,10 @@ int main(int argc, char* argv[])
     std::string partitionOutFile;
     int num_partitions = 0;
     bool  error;
-    if( argc < 5 ){
+    if( argc < 7 ){
         std::cout << "Missing required args:" << std::endl;
-        std::cout << argv[0] << " <catchment_data_path> <nexus_data_path> <partition_output_name> <number of partitions> " << std::endl;
+        std::cout << argv[0] << " <catchment_data_path> <nexus_data_path> <partition_output_name> <number of partitions> <catchment_subset_ids> <nexus_subset_ids> " << std::endl;
+        std::cout << "Use empty strings for subset_ids for no subsetting\nUse \"cat-X,cat-Y\", \"nex-X,nex-Y\" to partition only the defined catchment and nexus\n";
         error = true;
     }
     else {
@@ -358,11 +359,23 @@ int main(int argc, char* argv[])
     }
     if(error) exit(-1);
 
+    std::vector<std::string> catchment_subset_ids;
+    std::vector<std::string> nexus_subset_ids;
+    //split the subset strings into vectors
+    boost::split(catchment_subset_ids, argv[5], [](char c){return c == ','; } );
+    boost::split(nexus_subset_ids, argv[6], [](char c){return c == ','; } );
+
+    //If a single id or no id is passed, the subset vector will have size 1 and be the id or the ""
+    //if we get an empy string, pop it from the subset list.
+    if(nexus_subset_ids.size() == 1 && nexus_subset_ids[0] == "") nexus_subset_ids.pop_back();
+    if(catchment_subset_ids.size() == 1 && catchment_subset_ids[0] == "") catchment_subset_ids.pop_back();
+
     std::ofstream outFile;
     outFile.open(partitionOutFile, std::ios::trunc);
 
     //Get the feature collecion for the given hydrofabric
-    geojson::GeoJSON catchment_collection = geojson::read(catchmentDataFile);
+    geojson::GeoJSON catchment_collection = geojson::read(catchmentDataFile, catchment_subset_ids);
+    std::cout<<"HERE "<<catchment_collection->get_size()<<std::endl;
     int num_catchments = catchment_collection->get_size();
     std::string link_key = "toid";
   
@@ -375,7 +388,7 @@ int main(int argc, char* argv[])
 
     //build the remote connections from network
     // read the nexus hydrofabric, reuse the catchments
-    geojson::GeoJSON global_nexus_collection = geojson::read(nexusDataFile);
+    geojson::GeoJSON global_nexus_collection = geojson::read(nexusDataFile, nexus_subset_ids);
 
     //Now read the collection of catchments, iterate it and add them to the nexus collection
     //also link them by to->id
