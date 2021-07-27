@@ -109,3 +109,8 @@ extern/libtorch-*.zip
 extern/cfe/cmake_cfe_lib
 # Alt-modular build dir
 extern/alt-modular/cmake_am_libs
+
+# NGen build-related items
+.venv
+boost_*
+include/NGenConfig.h
