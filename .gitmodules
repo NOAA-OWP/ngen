@@ -1,6 +1,7 @@
 [submodule "test/googletest"]
 	path = test/googletest
 	url = https://github.com/google/googletest
+	ignore = dirty # So the generated folder doesn't show up in git status
 [submodule "extern/alt-modular/alt-modular"]
 	path = extern/alt-modular/alt-modular
 	url = git@github.com:NOAA-OWP/alt-modular.git
