@@ -71,9 +71,8 @@ namespace hy_features {
 
         virtual ~HY_Features(){}
 
-      protected:
-
       private:
+
         std::unordered_map<std::string, std::shared_ptr<HY_Catchment>> _catchments;
         std::unordered_map<std::string, std::shared_ptr<HY_HydroNexus>> _nexuses;
         network::Network network;
