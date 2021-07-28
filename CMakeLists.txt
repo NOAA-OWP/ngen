@@ -127,7 +127,7 @@ if (${NGEN_ACTIVATE_PYTHON})
     endif()
     include_directories(${PYTHON_INCLUDE_DIR})
 
-    find_package(Python 3.6.12 REQUIRED COMPONENTS Development NumPy)
+    find_package(Python 3.6.8 REQUIRED COMPONENTS Development NumPy)
     add_subdirectory(extern/pybind11)
 endif()
 

@@ -189,7 +189,14 @@ int main(int argc, char *argv[]) {
     //Still hacking nexus output  for the moment
     for(const auto& id : features.nexuses())
     {
+      #ifdef NGEN_MPI_ACTIVE
+      if (local_data.nexus_at(id).is_remote_sender() == false )
+      {
+        nexus_outfiles[id].open("./"+id+"_output.csv", std::ios::trunc);
+      }
+      #else 
       nexus_outfiles[id].open("./"+id+"_output.csv", std::ios::trunc);
+      #endif
     }
 
     std::cout<<"Running Models"<<std::endl;
