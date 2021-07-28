@@ -39,6 +39,8 @@ class HY_HydroNexus
 
     /** get the units that the flows are described in */
     virtual std::string get_flow_units()=0;
+    
+    const Catchments& get_recieving_catchments();
 
     protected:
 
