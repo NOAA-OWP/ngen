@@ -282,10 +282,10 @@ int find_partition_connections(std::string nexus, std::vector<PartitionMap> catc
                     int pos = -1;
                     for ( int i = 0; i < catchment_partitions.size(); ++i )
                     {
-                        auto iter2 = std::find(catchment_partitions[i]["cat_ids"].begin(), catchment_partitions[i]["cat_ids"].end(), id);
+                        auto iter2 = std::find(catchment_partitions[i]["cat-ids"].begin(), catchment_partitions[i]["cat-ids"].end(), id);
                         
                         // if we find a match then we have found the target partition containing this id
-                        if ( iter2 != catchment_partitions[i]["cat_ids"].end() )
+                        if ( iter2 != catchment_partitions[i]["cat-ids"].end() )
                         {
                             pos = i;
                             break;
@@ -324,7 +324,8 @@ int main(int argc, char* argv[])
     if( argc < 7 ){
         std::cout << "Missing required args:" << std::endl;
         std::cout << argv[0] << " <catchment_data_path> <nexus_data_path> <partition_output_name> <number of partitions> <catchment_subset_ids> <nexus_subset_ids> " << std::endl;
-        std::cout << "Use empty strings for subset_ids for no subsetting\nUse \"cat-X,cat-Y\", \"nex-X,nex-Y\" to partition only the defined catchment and nexus\n";
+        std::cout << "Use empty strings for subset_ids for no subsetting, e.g ''\nUse \'cat-X,cat-Y\', \'nex-X,nex-Y\' to partition only the defined catchment and nexus"<<std::endl;
+        std::cout << "Note the use of single quotes, and no spaces between the ids.  (no quotes will also work, but  \"\" will not."<<std::endl;
         error = true;
     }
     else {
