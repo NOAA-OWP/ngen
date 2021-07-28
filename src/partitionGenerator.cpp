@@ -126,10 +126,12 @@ void generate_partitions(network::Network& network, const int& num_partitions, c
     remainder = total - partition_size*num_partitions;
     //int partition_size_plus1 = partition_size + 1;
     int partition_size_plus1 = ++partition_size;
+    /**
     std::cout << "num_partition:" << num_partitions << std::endl;
     std::cout << "partition_size_norm:" << partition_size_norm << std::endl;
     std::cout << "partition_size_plus1:" << partition_size_plus1 << std::endl;
     std::cout << "remainder:" << remainder << std::endl;
+    **/
     std::vector<std::string> catchment_list, nexus_list;
     std::vector<std::string> cat_vec_1d;
     std::vector<std::vector<std::string> > vec_cat_list;
@@ -376,8 +378,8 @@ int main(int argc, char* argv[])
 
     //Get the feature collecion for the given hydrofabric
     geojson::GeoJSON catchment_collection = geojson::read(catchmentDataFile, catchment_subset_ids);
-    std::cout<<"HERE "<<catchment_collection->get_size()<<std::endl;
     int num_catchments = catchment_collection->get_size();
+    std::cout<<"Partitioning "<<num_catchments<<" catchments into "<<num_partitions<<" partitions."<<std::endl;
     std::string link_key = "toid";
   
     Network catchment_network(catchment_collection, &link_key);
