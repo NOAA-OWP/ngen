@@ -190,7 +190,8 @@ int main(int argc, char *argv[]) {
     for(const auto& id : features.nexuses())
     {
       #ifdef NGEN_MPI_ACTIVE
-      if (local_data.nexus_at(id).is_remote_sender() == false )
+      //if (local_data.nexus_at(id).is_remote_sender() == false )
+      if (!features.is_remote_sender_nexus(id))
       {
         nexus_outfiles[id].open("./"+id+"_output.csv", std::ios::trunc);
       }
