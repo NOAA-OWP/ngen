@@ -57,8 +57,8 @@ Routing_Py_Adapter::Routing_Py_Adapter(std::string t_route_connection_path,
   //Leave this call here for now for calling previous version of module
   //this->t_route_module = py::module_::import("next_gen_network_module");
 
-  //Import next_gen_route_main
-  this->t_route_module = py::module_::import("next_gen_route_main");
+  //Import ngen_nwm_main
+  this->t_route_module = py::module_::import("ngen_nwm_main");
 
   //Create object for the set_paths subroutine
   py::object set_paths = t_route_module.attr("set_paths");
@@ -66,6 +66,24 @@ Routing_Py_Adapter::Routing_Py_Adapter(std::string t_route_connection_path,
   //Call set_paths subroutine
   set_paths(t_route_connection_path);
 
+  std::vector<std::string> arg_vector;
+
+  arg_vector.push_back("-f");
+
+  arg_vector.push_back(t_route_config_file_with_path);
+
+  //Cast vector of args to Python list 
+  py::list arg_list = py::cast(arg_vector);
+
+  //Create object for the main_v02 subroutine
+  py::object main_v02 = t_route_module.attr("main_v02");
+
+  //Call main_v02 subroutine
+  main_v02(arg_list);
+
+  //Commented out for now because not using these methods in t-route.
+  //Might refactor to use them though.
+  /*
   //Create object for ngen_routing subroutine
   py::object ngen_routing = t_route_module.attr("ngen_routing");
 
@@ -77,6 +95,9 @@ Routing_Py_Adapter::Routing_Py_Adapter(std::string t_route_connection_path,
 
   //Call call_read_catchment_lateral_flows subroutine
   call_read_catchment_lateral_flows(input_path);
+  */
+
+  std::cout << "Finished routing" << std::endl;
 
 }
 
