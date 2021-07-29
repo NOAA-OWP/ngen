@@ -10,6 +10,9 @@ target_include_directories(routing PUBLIC
         ${PROJECT_SOURCE_DIR}/extern/pybind11/include
         )
         
+target_link_libraries(routing PUBLIC pybind11::embed)
+
+
 #target_link_libraries(realizations_catchment PUBLIC
 #        ${CMAKE_DL_LIBS}
 #        NGen::core_catchment
