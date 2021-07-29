@@ -14,6 +14,8 @@
 #include <ctime>
 #include <time.h>
 #include <memory>
+#include "ForcingProvider.hpp"
+#include <exception>
 
 // Recognized Forcing Value Names (in particular for use when configuring BMI input variables)
 // TODO: perhaps create way to configure a mapping of these to something different
@@ -26,6 +28,17 @@
 #define AORC_FIELD_NAME_WIND_U_10M_AG "UGRD_10maboveground"
 #define AORC_FIELD_NAME_WIND_V_10M_AG "VGRD_10maboveground"
 #define AORC_FIELD_NAME_SPEC_HUMID_2M_AG "SPFH_2maboveground"
+
+// CSDMS Standard Names for several forcings
+#define CSDMS_STD_NAME_RAIN_RATE "atmosphere_water__rainfall_volume_flux"
+#define CSDMS_STD_NAME_SOLAR_LONGWAVE "land_surface_radiation~incoming~longwave__energy_flux"
+#define CSDMS_STD_NAME_SOLAR_SHORTWAVE "land_surface_radiation~incoming~shortwave__energy_flux"
+#define CSDMS_STD_NAME_SURFACE_AIR_PRESSURE "land_surface_air__pressure"
+#define CSDMS_STD_NAME_HUMIDITY "atmosphere_air_water~vapor__relative_saturation"
+#define CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE "atmosphere_water__liquid_equivalent_precipitation_rate"
+#define CSDMS_STD_NAME_SURFACE_TEMP "land_surface_air__temperature"
+#define CSDMS_STD_NAME_WIND_U_X "land_surface_wind__x_component_of_velocity"
+#define CSDMS_STD_NAME_WIND_V_Y "land_surface_wind__y_component_of_velocity"
 
 using namespace std;
 
@@ -76,7 +89,7 @@ struct AORC_data
 /**
  * @brief Forcing class providing time-series precipiation forcing data to the model.
  */
-class Forcing
+class Forcing : public forcing::ForcingProvider
 {
     public:
 
@@ -146,6 +159,44 @@ class Forcing
         forcing_vector_index = 0;
     }
 
+    // TODO: consider using friend for this instead
+    struct AORC_data get_aorc_for_index(size_t index) {
+        return AORC_vector.at(index);
+    }
+
+    const std::vector<std::string> &get_available_forcing_outputs() override {
+        if (available_forcings.empty()) {
+            for (std::string forcing_name : *(Forcing::get_forcing_field_names())) {
+                available_forcings.push_back(forcing_name);
+            }
+            available_forcings.push_back(CSDMS_STD_NAME_SOLAR_LONGWAVE);
+            available_forcings.push_back(CSDMS_STD_NAME_SOLAR_SHORTWAVE);
+            available_forcings.push_back(CSDMS_STD_NAME_SURFACE_AIR_PRESSURE);
+            available_forcings.push_back(CSDMS_STD_NAME_HUMIDITY);
+            available_forcings.push_back(CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE);
+            available_forcings.push_back(CSDMS_STD_NAME_SURFACE_TEMP);
+            available_forcings.push_back(CSDMS_STD_NAME_WIND_U_X);
+            available_forcings.push_back(CSDMS_STD_NAME_WIND_V_Y);
+        }
+        return available_forcings;
+    }
+
+    /**
+     * Placeholder implementation for function to return the given param adjusted to be in the supplied units.
+     *
+     * At present this just returns the param's internal value.
+     *
+     * @param name The name of the desired parameter.
+     * @param units_str A string represented the units for conversion, using standard abbreviations.
+     * @return For now, just the param value, but in the future, the value converted.
+     */
+    inline double get_converted_value_for_param_in_units(const std::string& name, const std::string& units_str,
+                                                         int index)
+    {
+        // TODO: this is just a placeholder implementation that needs to be replaced with real convertion logic
+        return get_value_for_param_name(name, index);
+    }
+
     /**
      * Placeholder implementation for function to return the given param adjusted to be in the supplied units.
      *
@@ -156,8 +207,112 @@ class Forcing
      * @return For now, just the param value, but in the future, the value converted.
      */
     inline double get_converted_value_for_param_in_units(const std::string& name, const std::string& units_str) {
-        // TODO: this is just a placeholder implementation that needs to be replaced with real convertion logic
-        return get_value_for_param_name(name);
+        check_forcing_vector_index_bounds();
+        return get_converted_value_for_param_in_units(name, units_str, forcing_vector_index);
+    }
+
+    /**
+     * Get the inclusive beginning of the period of time over which this instance can provide data for this forcing.
+     *
+     * @return The inclusive beginning of the period of time over which this instance can provide this data.
+     */
+    time_t get_forcing_output_time_begin(const std::string &output_name) override {
+        return start_date_time_epoch;
+    }
+
+    /**
+     * Get the exclusive ending of the period of time over which this instance can provide data for this forcing.
+     *
+     * @return The exclusive ending of the period of time over which this instance can provide this data.
+     */
+    time_t get_forcing_output_time_end(const std::string &output_name) override {
+        return end_date_time_epoch;
+    }
+
+    /**
+     * Get the index of the forcing time step that contains the given point in time.
+     *
+     * An @ref std::out_of_range exception should be thrown if the time is not in any time step.
+     *
+     * @param epoch_time The point in time, as a seconds-based epoch time.
+     * @return The index of the forcing time step that contains the given point in time.
+     * @throws std::out_of_range If the given point is not in any time step.
+     */
+    size_t get_ts_index_for_time(const time_t &epoch_time) override {
+        if (epoch_time < start_date_time_epoch) {
+            throw std::out_of_range("Forcing had bad pre-start time for index query: " + std::to_string(epoch_time));
+        }
+        size_t i = 0;
+        // 1 hour
+        time_t seconds_in_time_step = 3600;
+        time_t time = start_date_time_epoch;
+        while (epoch_time >= time + seconds_in_time_step && time < end_date_time_epoch) {
+           i++;
+           time += seconds_in_time_step;
+        }
+        // The end_date_time_epoch is the epoch value of the BEGINNING of the last time step, not its end.
+        // I.e., to make sure we cover it, we have to go another time step beyond.
+        if (time >= end_date_time_epoch + 3600) {
+            throw std::out_of_range("Forcing had bad beyond-end time for index query: " + std::to_string(epoch_time));
+        }
+        else {
+            return i;
+        }
+    }
+
+    /**
+     * Get the value of a forcing property for an arbitrary time period, converting units if needed.
+     *
+     * An @ref std::out_of_range exception should be thrown if the data for the time period is not available.
+     *
+     * @param output_name The name of the forcing property of interest.
+     * @param init_time_epoch The epoch time (in seconds) of the start of the time period.
+     * @param duration_seconds The length of the time period, in seconds.
+     * @param output_units The expected units of the desired output value.
+     * @return The value of the forcing property for the described time period, with units converted if needed.
+     * @throws std::out_of_range If data for the time period is not available.
+     */
+    double get_value(const std::string &output_name, const time_t &init_time, const long &duration_s,
+                     const std::string &output_units) override
+    {
+        size_t current_index;
+        long time_remaining = duration_s;
+        try {
+            current_index = get_ts_index_for_time(init_time);
+        }
+        catch (const std::out_of_range &e) {
+            throw std::out_of_range("Forcing had bad init_time " + std::to_string(init_time) + " for value request");
+        }
+
+        std::vector<double> involved_time_step_values;
+        std::vector<long> involved_time_step_seconds;
+        long ts_involved_s;
+
+        time_t first_time_step_start_epoch = start_date_time_epoch + (current_index * 3600);
+        // Handle the first time step differently, since we need to do more to figure out how many seconds came from it
+        // Total time step size minus the offset of the beginning, before the init time
+        ts_involved_s = 3600 - (init_time - first_time_step_start_epoch);
+
+        involved_time_step_seconds.push_back(ts_involved_s);
+        involved_time_step_values.push_back(get_value_for_param_name(output_name, current_index));
+        time_remaining -= ts_involved_s;
+        current_index++;
+
+        while (time_remaining > 0) {
+            ts_involved_s = time_remaining > 3600 ? 3600 : time_remaining;
+            involved_time_step_seconds.push_back(ts_involved_s);
+            involved_time_step_values.push_back(get_value_for_param_name(output_name, current_index));
+            time_remaining -= ts_involved_s;
+            current_index++;
+        }
+        double value;
+        for (size_t i = 0; i < involved_time_step_values.size(); ++i) {
+            if (is_param_sum_over_time_step(output_name))
+                value += involved_time_step_values[i] * ((double)involved_time_step_seconds[i] / 3600.0);
+            else
+                value += involved_time_step_values[i] * ((double)involved_time_step_seconds[i] / (double)duration_s);
+        }
+        return value;
     }
 
     /**
@@ -167,32 +322,48 @@ class Forcing
      * @return The particular param's current value.
      */
     inline double get_value_for_param_name(const std::string& name) {
+        check_forcing_vector_index_bounds();
+        return get_value_for_param_name(name, forcing_vector_index);
+    }
+
+    /**
+     * Get the current value of a forcing param identified by its name.
+     *
+     * @param name The name of the forcing param for which the current value is desired.
+     * @param name The applicable forcing time step index for which the value is desired.
+     * @return The particular param's value at the given forcing time step.
+     */
+    inline double get_value_for_param_name(const std::string& name, int index) {
+        if (index >= precipitation_rate_meters_per_second_vector.size() || index >= AORC_vector.size()) {
+            throw std::out_of_range("Forcing had bad index " + std::to_string(index) + " for value lookup of " + name);
+        }
+
         if (name == AORC_FIELD_NAME_PRECIP_RATE) {
-            return get_current_hourly_precipitation_meters_per_second();
+            return precipitation_rate_meters_per_second_vector.at(index);
         }
-        if (name == AORC_FIELD_NAME_SOLAR_SHORTWAVE) {
-            return get_AORC_DSWRF_surface_W_per_meters_squared();
+        if (name == AORC_FIELD_NAME_SOLAR_SHORTWAVE || name == CSDMS_STD_NAME_SOLAR_SHORTWAVE) {
+            return AORC_vector.at(index).DSWRF_surface_W_per_meters_squared;
         }
-        if (name == AORC_FIELD_NAME_SOLAR_LONGWAVE) {
-            return get_AORC_DLWRF_surface_W_per_meters_squared();
+        if (name == AORC_FIELD_NAME_SOLAR_LONGWAVE || name == CSDMS_STD_NAME_SOLAR_LONGWAVE) {
+            return AORC_vector.at(index).DLWRF_surface_W_per_meters_squared;
         }
-        if (name == AORC_FIELD_NAME_PRESSURE_SURFACE) {
-            return get_AORC_PRES_surface_Pa();
+        if (name == AORC_FIELD_NAME_PRESSURE_SURFACE || name == CSDMS_STD_NAME_SURFACE_AIR_PRESSURE) {
+            return AORC_vector.at(index).PRES_surface_Pa;
         }
-        if (name == AORC_FIELD_NAME_TEMP_2M_AG) {
-            return get_AORC_TMP_2maboveground_K();
+        if (name == AORC_FIELD_NAME_TEMP_2M_AG || name == CSDMS_STD_NAME_SURFACE_TEMP) {
+            return AORC_vector.at(index).TMP_2maboveground_K;
         }
-        if (name == AORC_FIELD_NAME_APCP_SURFACE) {
-            return get_AORC_APCP_surface_kg_per_meters_squared();
+        if (name == AORC_FIELD_NAME_APCP_SURFACE || name == CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE) {
+            return AORC_vector.at(index).APCP_surface_kg_per_meters_squared;
         }
-        if (name == AORC_FIELD_NAME_WIND_U_10M_AG) {
-            return get_AORC_UGRD_10maboveground_meters_per_second();
+        if (name == AORC_FIELD_NAME_WIND_U_10M_AG || name == CSDMS_STD_NAME_WIND_U_X) {
+            return AORC_vector.at(index).UGRD_10maboveground_meters_per_second;
         }
-        if (name == AORC_FIELD_NAME_WIND_V_10M_AG) {
-            return get_AORC_VGRD_10maboveground_meters_per_second();
+        if (name == AORC_FIELD_NAME_WIND_V_10M_AG || name == CSDMS_STD_NAME_WIND_V_Y) {
+            return AORC_vector.at(index).VGRD_10maboveground_meters_per_second;
         }
-        if (name == AORC_FIELD_NAME_SPEC_HUMID_2M_AG) {
-            return get_AORC_SPFH_2maboveground_kg_per_kg();
+        if (name == AORC_FIELD_NAME_SPEC_HUMID_2M_AG || name == CSDMS_STD_NAME_HUMIDITY) {
+            return AORC_vector.at(index).SPFH_2maboveground_kg_per_kg;
         }
         else {
             throw std::runtime_error("Cannot get forcing value for unrecognized parameter name '" + name + "'.");
@@ -408,6 +579,10 @@ class Forcing
         return AORC_vector.at(forcing_vector_index).VGRD_10maboveground_meters_per_second;
     };
 
+    bool is_aorc_forcing() {
+        return is_aorc_data;
+    }
+
     /**
      * Get whether a param's value is an aggregate sum over the entire time step.
      *
@@ -435,6 +610,22 @@ class Forcing
             return true;
         }
         return false;
+    }
+
+    /**
+     * Get whether a property's per-time-step values are each an aggregate sum over the entire time step.
+     *
+     * Certain properties, like rain fall, are aggregated sums over an entire time step.  Others, such as pressure,
+     * are not such sums and instead something else like an instantaneous reading or an average value.
+     *
+     * It may be the case that forcing data is needed for some discretization different than the forcing time step.
+     * This aspect must be known in such cases to perform the appropriate value interpolation.
+     *
+     * @param name The name of the forcing property for which the current value is desired.
+     * @return Whether the property's value is an aggregate sum.
+     */
+    inline bool is_property_sum_over_time_step(const std::string& name) override {
+        return is_param_sum_over_time_step(name);
     }
 
     private:
@@ -512,6 +703,7 @@ class Forcing
      */
     void read_forcing_aorc(string file_name)
     {
+        is_aorc_data = true;
         //Call CSVReader constuctor
         CSVReader reader(file_name);
 
@@ -595,7 +787,12 @@ class Forcing
         }
     }
 
+    std::vector<std::string> available_forcings;
     vector<AORC_data> AORC_vector;
+    /**
+     * Whether this forcing instance has read in full AORC data or just ``precipitation_rate_meters_per_second_vector``.
+     */
+    bool is_aorc_data = false;
 
     /// \todo: Look into aggregation of data, relevant libraries, and storing frequency information
     vector<double> precipitation_rate_meters_per_second_vector;
