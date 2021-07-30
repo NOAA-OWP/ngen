@@ -406,6 +406,7 @@ namespace geojson {
                         if( tmp_id == "" ) {
                           try {
                             tmp_id = feature->get_property("id").as_string();
+                            feature->set_id(tmp_id);
                           }
                           catch (const std::out_of_range& error) {
                             tmp_id = "";
