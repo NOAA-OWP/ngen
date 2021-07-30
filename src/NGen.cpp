@@ -298,4 +298,8 @@ int main(int argc, char *argv[]) {
     }
 
 #endif // NGEN_ROUTING_ACTIVE
+
+#ifdef NGEN_MPI_ACTIVE
+  MPI_Finalize();
+#endif
 }
