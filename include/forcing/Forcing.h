@@ -733,9 +733,16 @@ class Forcing : public forcing::ForcingProvider
 
                 //Ensure that forcing data covers the entire model period. Otherwise, throw an error.
                 if (i == 1 && start_date_time_epoch < current_row_date_time_epoch)
+                {
                     /// \todo TODO: Return appropriate error
                     //cout << "WARNING: Forcing data begins after the model start time." << endl;
-                    throw std::runtime_error("Error: Forcing data begins after the model start time.");
+                    struct tm start_date_tm;
+                    gmtime_r(&start_date_time_epoch, &start_date_tm);
+                    
+                    char tm_buff[128];
+                    strftime(tm_buff, 128, "%Y-%m-%d %H:%M:%S", &start_date_tm);
+                    throw std::runtime_error("Error: Forcing data " + file_name + " begins after the model start time:" + std::string(tm_buff) + " < " + time_str);
+                }
 
 
                 else if (i == data_list.size() - 1 && current_row_date_time_epoch < end_date_time_epoch)
