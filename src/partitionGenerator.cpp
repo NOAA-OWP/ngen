@@ -32,32 +32,33 @@ void write_remote_connections(std::vector<PartitionMap > catchment_part,
     int id = 0;
     //for (std::vector<std::unordered_map<std::string, std::vector<std::string> > >::const_iterator i = catchment_part.begin();
     //     i != catchment_part.end(); ++i)
+    std::streamoff backspace(2);
     for (int i =0; i < catchment_part.size(); ++i)
     //for (int i =0; i < 2; ++i)  // for a quick test
     {
         // write catchments
-        std::unordered_map<std::string, std::vector<std::string> > catchment_map;
-        catchment_map = catchment_part[i];
-
-        outFile<<"        {\"id\":" << id <<", \"cat-ids\":[";
-        for(auto const cat_id : catchment_map)
+        outFile<<"        {\"id\":" << id <<",\n        \"cat-ids\":[";
+        for(auto const cat_id : catchment_part[i]["cat-ids"])
         {
-            std::vector<std::string> list_item = cat_id.second;
-            for (std::vector<std::string>::const_iterator j = list_item.begin(); j != list_item.end(); ++j)
-                {
-                    if (j != (list_item.end()-1))
-                        outFile <<"\"" << *j <<"\"" << ", ";
-                    else
-                        outFile <<"\"" << *j <<"\"";
-                }
+            outFile <<"\"" << cat_id <<"\"" << ", ";
         }
-        outFile<<"], ";
+        outFile.seekp( outFile.tellp() - backspace );
+        outFile<<"],\n";
+
+        // write nexuses
+        outFile<<"        \"nex-ids\":[";
+        for(auto const nex_id : catchment_part[i]["nex-ids"])
+        {
+            outFile <<"\"" << nex_id <<"\"" << ", ";
+        }
+        outFile.seekp( outFile.tellp() - backspace );
+        outFile<<"],\n";
 
         // wrtie remote_connections
         std::unordered_map<std::string, std::vector<std::pair<std::string, int> > > remote_conn_map;
         remote_conn_map = remote_connections_vec[i];
 
-        outFile<<"\"remote-connections\":[";
+        outFile<<"        \"remote-connections\":[";
         // loop through elements in map
         int map_size = remote_conn_map.size();
         int map_counter = 0;
@@ -154,23 +155,33 @@ void generate_partitions(network::Network& network, const int& num_partitions, c
             else
                 partition_size = partition_size_norm;
 
-            std::string nexus = network.get_destination_ids(catchment)[0];
+            //Find all associated nexuses and add to nexus list
+            //Some of these will end up being "remote" but still must be present in the
+            //list of all required nexus the partition needs to worry about
+            for( auto downstream : network.get_destination_ids(catchment) ){
+                nexus_list.push_back(downstream);
+            }
+            for( auto upstream : network.get_origination_ids(catchment) ){
+                nexus_list.push_back(upstream);
+            }
             //std::cout<<catchment<<" -> "<<nexus<<std::endl;
 
             //keep track of all the features in this partition
             catchment_list.push_back(catchment);
-            nexus_list.push_back(nexus);
             counter++;
             if(counter == partition_size)
             {
                 //std::cout<<"nexus "<<nexus<<" is remote DOWN on partition "<<partition<<std::endl;
+                //FIXME partitioning shouldn't have to assume dendridic network
+                std::string nexus = network.get_destination_ids(catchment)[0];
                 down_nexus = nexus;
 
                 id = std::to_string(partition);
                 partition_str = std::to_string(partition);
                 this_part_id.emplace("id", partition_str);
                 this_catchment_part.emplace("cat-ids", catchment_list);
-                this_nexus_part.emplace("nex-ids", nexus_list);
+                this_catchment_part.emplace("nex-ids", nexus_list);
+                //this_nexus_part.emplace("nex-ids", nexus_list);
                 part_ids.push_back(this_part_id);
                 catchment_part.push_back(this_catchment_part);
                 nexus_part.push_back(this_nexus_part);
@@ -218,7 +229,8 @@ void generate_partitions(network::Network& network, const int& num_partitions, c
                 nexus_list.clear();
 
                 //this nexus overlaps partitions
-                nexus_list.push_back(nexus);
+                //Handeled above by ensure all up/down stream nexuses are recorded 
+                //nexus_list.push_back(nexus);
                 up_nexus = nexus;
                 //std::cout<<"\nin partition "<<partition<<":"<<std::endl;
             }
