@@ -44,6 +44,8 @@ class HY_HydroNexus
         return receiving_catchments;
     }
 
+    std::string& get_id() { return id; }
+
     protected:
 
     //Identity is a string.  If implementations NEED a numeric id for indexing,
