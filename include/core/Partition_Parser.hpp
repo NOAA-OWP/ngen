@@ -76,6 +76,14 @@ class Partitions_Parser {
                 part_data.cat_ids = cat_ids;
                 cat_ids.clear();
 
+                //Get nex_ids list and set the corresponding part_data struct member
+                for (auto &remote : part.at("nex-ids").as_list())
+                {
+                    nex_ids.push_back(remote.as_string());
+                }
+                part_data.nex_ids = nex_ids;
+                nex_ids.clear();
+
                 //Get remote-connections and set the corresponding part_data struct member
                 for (auto &remote_map : part.at("remote-connections").as_list())
                 {
