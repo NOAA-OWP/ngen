@@ -87,17 +87,27 @@ int main(int argc, char *argv[]) {
         else {
           bool error = false;
 
-          if( !utils::FileChecker::file_is_readable(argv[1]) ) {
-            std::cout<<"catchment data path "<<argv[1]<<" not readable"<<std::endl;
-            error = true;
-          }
-          else{ catchmentDataFile = argv[1]; }
+          catchmentDataFile = argv[1];
+          nexusDataFile = argv[3];
 
-          if( !utils::FileChecker::file_is_readable(argv[3]) ) {
-            std::cout<<"nexus data path "<<argv[3]<<" not readable"<<std::endl;
+	  #ifdef NGEN_MPI_ACTIVE
+          //initalize mpi
+          MPI_Init(NULL, NULL);
+          MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
+          MPI_Comm_size(MPI_COMM_WORLD, &mpi_num_procs);
+          catchmentDataFile += "." + std::to_string(mpi_rank);
+          nexusDataFile += "." + std::to_string(mpi_rank);
+          #endif
+
+          if( !utils::FileChecker::file_is_readable(catchmentDataFile) ) {
+            std::cout<<"catchment data path "<<catchmentDataFile<<" not readable"<<std::endl;
             error = true;
           }
-          else { nexusDataFile = argv[3]; }
+
+          if( !utils::FileChecker::file_is_readable(nexusDataFile) ) {
+            std::cout<<"nexus data path "<<nexusDataFile<<" not readable"<<std::endl;
+            error = true;
+          }
 
           if( !utils::FileChecker::file_is_readable(argv[5]) ) {
             std::cout<<"realization config path "<<argv[5]<<" not readable"<<std::endl;
@@ -115,18 +125,11 @@ int main(int argc, char *argv[]) {
             else{ PARTITION_PATH = argv[6]; }
           }
           else {
-	    std::cout << "Missing required arguement partion file path.";
+	          std::cout << "Missing required arguement partition file path.";
           }
           #endif
 
           if(error) exit(-1);
-
-	  #ifdef NGEN_MPI_ACTIVE
-          //initalize mpi
-          MPI_Init(NULL, NULL);
-          MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
-          MPI_Comm_size(MPI_COMM_WORLD, &mpi_num_procs);
-          #endif
 
           //split the subset strings into vectors
           boost::split(catchment_subset_ids, argv[2], [](char c){return c == ','; } );
