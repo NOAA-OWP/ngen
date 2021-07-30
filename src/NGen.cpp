@@ -241,11 +241,29 @@ int main(int argc, char *argv[]) {
       //Once everything is updated for this timestep, dump the nexus output
       for(const auto& id : features.nexuses())
       {
-        double contribution_at_t = features.nexus_at(id)->get_downstream_flow("id-consuming-flow", output_time_index, 100.0);
-        if(nexus_outfiles[id].is_open())
-        {
-          nexus_outfiles[id] << output_time_index << ", " << current_timestamp << ", " << contribution_at_t << std::endl;
+        #ifdef NGEN_MPI_ACTIVE
+        if (!features.is_remote_sender_nexus(id)){ //Ensures only one side of the dual sided remote nexus actually doing this...
+        #endif
+          //Get the correct "requesting" id for downstream_flow
+	        const auto& nexus = features.nexus_at(id);
+          const auto& cat_ids = nexus->get_receiving_catchments();
+          std::string cat_id;
+          if( cat_ids.size() > 0 ){
+            //Assumes dendridic, e.g. only a single downstream...it will consume 100%  of the available flow
+            cat_id = cat_ids[0];
+          }
+          else{
+            //This is a terminal node, SHOULDN'T be remote, so ID shouldn't matter too much
+            cat_id = "terminal";
+          }
+          double contribution_at_t = features.nexus_at(id)->get_downstream_flow(cat_id, output_time_index, 100.0);
+          if(nexus_outfiles[id].is_open())
+          {
+            nexus_outfiles[id] << output_time_index << ", " << current_timestamp << ", " << contribution_at_t << std::endl;
+          }
+        #ifdef NGEN_MPI_ACTIVE
         }
+        #endif
         //std::cout<<"\tNexus "<<id<<" has "<<contribution_at_t<<" m^3/s"<<std::endl;
 
         //Note: Use below if developing in-memory transfer of nexus flows to routing
