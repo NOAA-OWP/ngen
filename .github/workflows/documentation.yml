@@ -40,8 +40,8 @@ jobs:
         ref: gh-pages
         clean: false
         
-    - name: Move generated files where git can see them
-      run: cp -rp docs/html/* .
+    - name: Prevent generated docs dir from being committed and overwriting on the next run.
+      run: rm -Rf docs/html
 
     - name: Prevent generated docs dir from being committed and overwriting on the next run.
       run: rm -Rf docs/html
