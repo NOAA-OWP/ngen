@@ -176,7 +176,7 @@ int main(int argc, char *argv[]) {
     manager->read(catchment_collection, utils::getStdOut());
     std::string link_key = "toid";
     #ifdef NGEN_MPI_ACTIVE
-    
+    nexus_collection->link_features_from_property(nullptr, &link_key);
     hy_features::HY_Features_MPI features = hy_features::HY_Features_MPI(local_data, nexus_collection, manager, mpi_rank, mpi_num_procs);
     #else
     hy_features::HY_Features features = hy_features::HY_Features(catchment_collection, &link_key, manager);
