@@ -1,6 +1,8 @@
 #include <HY_Features_MPI.hpp>
 #include <HY_PointHydroNexusRemote.hpp>
 
+#ifdef NGEN_MPI_ACTIVE
+
 using namespace hy_features;
 
 HY_Features_MPI::HY_Features_MPI( PartitionData partition_data, geojson::GeoJSON linked_hydro_fabric, std::shared_ptr<Formulation_Manager> formulations, int mpi_rank, int mpi_num_procs) :
@@ -53,3 +55,4 @@ HY_Features_MPI::HY_Features_MPI( PartitionData partition_data, geojson::GeoJSON
         }
       }	
 }
+#endif //NGEN_MPI_ACTIVE
