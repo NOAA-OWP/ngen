@@ -129,6 +129,12 @@ if(MPI_ACTIVE)
            test_remote_nexus
            core/nexus/NexusRemoteTests.cpp
    )
+   #TODO this test depends on a "reference hydrofabric" that is rather large
+   #and the path to that reference is absolute in the test code.  Need to rethink this.
+   add_automated_test(
+        test_partition
+        utils/Partition_Test.cpp
+)
 endif()
 
 
@@ -162,11 +168,6 @@ endif()
 add_automated_test(
         test_network
         core/NetworkTests.cpp
-)
-
-add_automated_test(
-        test_partition
-        utils/Partition_Test.cpp
 )
 
 # Unit tests
