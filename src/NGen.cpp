@@ -53,6 +53,22 @@ pdm03_struct get_et_params() {
     return pdm_et_data;
 }
 
+/**
+ * Check whether a given file passed as a runtime exec parameter exists, printing a message when it does not.
+ *
+ * @param fileName The name of the file to check.
+ * @param description A description of why file was passed as a parameter, used in error messages when a file doesn't
+ *                    exist.
+ * @return Whether the given file exists.
+ */
+bool check_param_file_exists(const std::string &fileName, const std::string &description) {
+    if( !utils::FileChecker::file_is_readable(fileName) ) {
+        std::cout << description << " path " << fileName << " not readable" << std::endl;
+        return false;
+    }
+    return true;
+}
+
 int main(int argc, char *argv[]) {
     std::cout << "Hello there " << ngen_VERSION_MAJOR << "."
               << ngen_VERSION_MINOR << "."
@@ -89,10 +105,9 @@ int main(int argc, char *argv[]) {
         exit(-1);
     }
     else {
-      bool error = false;
-
-      catchmentDataFile = argv[1];
-      nexusDataFile = argv[3];
+        catchmentDataFile = argv[1];
+        nexusDataFile = argv[3];
+        REALIZATION_CONFIG_PATH = argv[5];
 
   #ifdef NGEN_MPI_ACTIVE
       //initalize mpi
@@ -103,34 +118,20 @@ int main(int argc, char *argv[]) {
       nexusDataFile += "." + std::to_string(mpi_rank);
   #endif
 
-      if( !utils::FileChecker::file_is_readable(catchmentDataFile) ) {
-        std::cout<<"catchment data path "<<catchmentDataFile<<" not readable"<<std::endl;
-        error = true;
-      }
+        bool error = !check_param_file_exists(catchmentDataFile, "Catchment data") ||
+                     !check_param_file_exists(nexusDataFile, "Nexus data") ||
+                     !check_param_file_exists(REALIZATION_CONFIG_PATH, "Realization config");
 
-      if( !utils::FileChecker::file_is_readable(nexusDataFile) ) {
-        std::cout<<"nexus data path "<<nexusDataFile<<" not readable"<<std::endl;
-        error = true;
-      }
-
-      if( !utils::FileChecker::file_is_readable(argv[5]) ) {
-        std::cout<<"realization config path "<<argv[5]<<" not readable"<<std::endl;
-        error = true;
-      }
-      else { REALIZATION_CONFIG_PATH = argv[5]; }
-
-  #ifdef NGEN_MPI_ACTIVE
-      if ( argc >= 7 ) {
-        if ( !utils::FileChecker::file_is_readable(argv[6]) ) {
-          std::cout<<"partion path "<<argv[6]<<" not readable"<<std::endl;
-          error = true;
+        #ifdef NGEN_MPI_ACTIVE
+        if ( argc >= 7 ) {
+            PARTITION_PATH = argv[6];
+            error = error || !check_param_file_exists(PARTITION_PATH, "Partition");
         }
-        else { PARTITION_PATH = argv[6]; }
-      }
-      else {
-        std::cout << "Missing required arguement partition file path.";
-      }
-  #endif
+          else {
+              std::cout << "Missing required argument for partition file path.";
+              error = true;
+          }
+      #endif
 
       if(error) exit(-1);
 
