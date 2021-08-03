@@ -59,6 +59,10 @@ int main(int argc, char *argv[]) {
               << ngen_VERSION_PATCH << std::endl;
     std::ios::sync_with_stdio(false);
 
+    #ifdef ACTIVATE_PYTHON
+    // Start Python interpreter and keep it alive
+    py::scoped_interpreter guard{};
+    #endif // ACTIVATE_PYTHON
 
     //Pull a few "options" form the cli input, this is a temporary solution to CLI parsing!
     //Use "positional args"
@@ -138,11 +142,6 @@ int main(int argc, char *argv[]) {
       if(nexus_subset_ids.size() == 1 && nexus_subset_ids[0] == "") nexus_subset_ids.pop_back();
       if(catchment_subset_ids.size() == 1 && catchment_subset_ids[0] == "") catchment_subset_ids.pop_back();
     } // end else if (argc < 6)
-
-  #ifdef ACTIVATE_PYTHON
-    // Start Python interpreter and keep it alive
-    py::scoped_interpreter guard{};
-  #endif // ACTIVATE_PYTHON
 
     //Read the collection of nexus
     std::cout << "Building Nexus collection" << std::endl;
