@@ -1,9 +1,0 @@
-<map id="Visitor" name="Visitor">
-<area shape="rect" id="node1" title=" " alt="" coords="71,528,137,708"/>
-<area shape="rect" id="node2" href="$classgeojson_1_1_feature_visitor.html" title="An abstract class used to operate on the children of FeatureBase." alt="" coords="5,300,160,465"/>
-<area shape="rect" id="node3" title=" " alt="" coords="184,344,344,421"/>
-<area shape="rect" id="node4" title="STL class." alt="" coords="162,160,241,237"/>
-<area shape="rect" id="node5" title="STL class." alt="" coords="139,5,263,97"/>
-<area shape="rect" id="node6" title="STL class." alt="" coords="265,160,377,237"/>
-<area shape="rect" id="node7" title=" " alt="" coords="302,13,341,90"/>
-</map>

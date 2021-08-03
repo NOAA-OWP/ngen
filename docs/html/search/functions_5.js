@@ -1,7 +1,0 @@
-var searchData=
-[
-  ['feature_5ftest_301',['Feature_Test',['../class_feature___test.html#a26e229c6772edba3b07f4cbd150ce2ed',1,'Feature_Test']]],
-  ['featurebase_302',['FeatureBase',['../classgeojson_1_1_feature_base.html#a5cda184e3e4fbb45402e3c5d8509c366',1,'geojson::FeatureBase::FeatureBase(std::string new_id=&quot;&quot;, PropertyMap new_properties=PropertyMap(), std::vector&lt; double &gt; new_bounding_box=std::vector&lt; double &gt;(), std::vector&lt; FeatureBase * &gt; upstream_features=std::vector&lt; FeatureBase * &gt;(), std::vector&lt; FeatureBase * &gt; downstream_features=std::vector&lt; FeatureBase * &gt;(), PropertyMap members=PropertyMap())'],['../classgeojson_1_1_feature_base.html#ace69fa341400cd2ad96f07c155f486e4',1,'geojson::FeatureBase::FeatureBase(const FeatureBase &amp;feature)']]],
-  ['featurecollection_303',['FeatureCollection',['../classgeojson_1_1_feature_collection.html#a17faef997ef12990c512aa418b8f3f92',1,'geojson::FeatureCollection::FeatureCollection(FeatureList &amp;new_features, std::vector&lt; double &gt; bounding_box)'],['../classgeojson_1_1_feature_collection.html#a5ab3c315b661b44e1fc52c3274f89b2f',1,'geojson::FeatureCollection::FeatureCollection(const FeatureCollection &amp;feature_collection)']]],
-  ['featurecollection_5ftest_304',['FeatureCollection_Test',['../class_feature_collection___test.html#a3a3d69e0fdfcb98dccd2ff8b5a5ee4c5',1,'FeatureCollection_Test']]]
-];

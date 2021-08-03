@@ -1,5 +1,0 @@
-<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$class_reservoir___outlet.html" title="Base Single Reservior Outlet Class." alt="" coords="5,42,124,69"/>
-<area shape="rect" id="node2" href="$class_reservoir___exponential___outlet.html" title="Single Exponential Reservoir Outlet Class This class is for a single exponential reservoir outlet tha..." alt="" coords="178,5,329,47"/>
-<area shape="rect" id="node3" href="$class_reservoir___linear___outlet.html" title="Single Linear Reservior Outlet Class This class is for a single linear reservoir outlet that is deriv..." alt="" coords="172,71,335,98"/>
-</map>

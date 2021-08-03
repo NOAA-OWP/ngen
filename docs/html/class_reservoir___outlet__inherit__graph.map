@@ -1,5 +1,0 @@
-<map id="Reservoir_Outlet" name="Reservoir_Outlet">
-<area shape="rect" id="node1" title="Base Single Reservior Outlet Class." alt="" coords="82,5,285,332"/>
-<area shape="rect" id="node2" href="$class_reservoir___exponential___outlet.html" title="Single Exponential Reservoir Outlet Class This class is for a single exponential reservoir outlet tha..." alt="" coords="5,380,167,560"/>
-<area shape="rect" id="node3" href="$class_reservoir___linear___outlet.html" title="Single Linear Reservior Outlet Class This class is for a single linear reservoir outlet that is deriv..." alt="" coords="191,409,373,531"/>
-</map>

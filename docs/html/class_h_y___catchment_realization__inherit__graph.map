@@ -1,9 +1,0 @@
-<map id="HY_CatchmentRealization" name="HY_CatchmentRealization">
-<area shape="rect" id="node1" title=" " alt="" coords="416,5,616,127"/>
-<area shape="rect" id="node2" href="$class_h_y___cartographic_realization.html" title=" " alt="" coords="5,197,216,289"/>
-<area shape="rect" id="node3" href="$class_h_y___catchment_area.html" title=" " alt="" coords="241,197,405,289"/>
-<area shape="rect" id="node5" href="$class_h_y___catchment_divide.html" title=" " alt="" coords="429,182,603,303"/>
-<area shape="rect" id="node6" href="$class_h_y___flow_path.html" title=" " alt="" coords="627,197,757,289"/>
-<area shape="rect" id="node7" href="$class_h_y___hydro_network.html" title=" " alt="" coords="781,175,939,311"/>
-<area shape="rect" id="node4" href="$class_simple___lumped___model___realization.html" title=" " alt="" coords="233,359,413,583"/>
-</map>

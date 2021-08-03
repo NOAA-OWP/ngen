@@ -1,7 +1,0 @@
-<map id="HY_Catchment" name="HY_Catchment">
-<area shape="rect" id="node1" title=" " alt="" coords="239,145,399,340"/>
-<area shape="rect" id="node3" href="$class_h_y___catchment_aggregate.html" title=" " alt="" coords="5,388,201,480"/>
-<area shape="rect" id="node4" href="$class_h_y___dendritic_catchment.html" title=" " alt="" coords="225,388,413,480"/>
-<area shape="rect" id="node5" href="$class_h_y___interior_catchment.html" title=" " alt="" coords="437,388,615,480"/>
-<area shape="rect" id="node2" href="$class_h_y___hydro_feature.html" title=" " alt="" coords="243,5,395,97"/>
-</map>

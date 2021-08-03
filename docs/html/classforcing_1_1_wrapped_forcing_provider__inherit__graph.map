@@ -1,4 +1,0 @@
-<map id="forcing::WrappedForcingProvider" name="forcing::WrappedForcingProvider">
-<area shape="rect" id="node1" title="Simple implementation that basically wraps another instance." alt="" coords="5,263,215,516"/>
-<area shape="rect" id="node2" href="$classforcing_1_1_forcing_provider.html" title="An abstraction interface for types that provides forcing data." alt="" coords="26,5,194,215"/>
-</map>

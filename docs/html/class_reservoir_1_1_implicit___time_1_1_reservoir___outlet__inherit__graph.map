@@ -1,5 +1,0 @@
-<map id="Reservoir::Implicit_Time::Reservoir_Outlet" name="Reservoir::Implicit_Time::Reservoir_Outlet">
-<area shape="rect" id="node1" title="Base Single Reservior Outlet Class." alt="" coords="115,5,298,288"/>
-<area shape="rect" id="node2" href="$class_reservoir_1_1_implicit___time_1_1_reservoir___exponential___outlet.html" title="Single Exponential Reservoir Outlet Class This class is for a single exponential reservoir outlet tha..." alt="" coords="5,336,197,516"/>
-<area shape="rect" id="node3" href="$class_reservoir_1_1_implicit___time_1_1_reservoir___linear___outlet.html" title="Single Linear Reservior Outlet Class This class is for a single linear reservoir outlet that is deriv..." alt="" coords="221,358,403,494"/>
-</map>

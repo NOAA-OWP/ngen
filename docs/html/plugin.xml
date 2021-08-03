@@ -1,6 +1,0 @@
-<plugin name="gov.noaa.nwc.nws.owp.Ngen" id="gov.noaa.nwc.nws.owp.Ngen"
-        version="1.0.0" provider-name="Doxygen">
-  <extension point="org.eclipse.help.toc">
-    <toc file="toc.xml" primary="true" />
-  </extension>
-</plugin>

@@ -1,8 +1,0 @@
-<map id="realization::Et_Accountable" name="realization::Et_Accountable">
-<area shape="rect" id="node1" title="Interface for type that is able to account for evapotranspiration in certain calculations,..." alt="" coords="233,175,411,340"/>
-<area shape="rect" id="node3" href="$classrealization_1_1_catchment___formulation.html" title=" " alt="" coords="229,388,415,553"/>
-<area shape="rect" id="node2" href="$classrealization_1_1_et___aware.html" title="Interface for type that is aware of parameters for evapotranspiration in certain calculations,..." alt="" coords="250,5,394,127"/>
-<area shape="rect" id="node4" href="$classrealization_1_1_tshirt___c___realization.html" title=" " alt="" coords="5,601,201,1251"/>
-<area shape="rect" id="node5" href="$classrealization_1_1_tshirt___realization.html" title=" " alt="" coords="226,748,418,1104"/>
-<area shape="rect" id="node6" href="$class_simple___lumped___model___realization.html" title=" " alt="" coords="442,719,637,1133"/>
-</map>

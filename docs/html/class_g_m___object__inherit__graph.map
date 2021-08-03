@@ -1,8 +1,0 @@
-<map id="GM_Object" name="GM_Object">
-<area shape="rect" id="node1" title=" " alt="" coords="319,5,434,97"/>
-<area shape="rect" id="node2" href="$class_h_y___catchment_area.html" title=" " alt="" coords="13,167,177,259"/>
-<area shape="rect" id="node4" href="$class_h_y___catchment_divide.html" title=" " alt="" coords="202,153,375,274"/>
-<area shape="rect" id="node5" href="$class_h_y___flow_path.html" title=" " alt="" coords="400,167,529,259"/>
-<area shape="rect" id="node6" href="$class_h_y___hydro_network.html" title=" " alt="" coords="554,145,711,281"/>
-<area shape="rect" id="node3" href="$class_simple___lumped___model___realization.html" title=" " alt="" coords="5,329,185,553"/>
-</map>
