@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['installation_20instructions_507',['Installation instructions',['../md__i_n_s_t_a_l_l.html',1,'']]]
+  ['definitions_2258',['Definitions',['../md_doc_glossary.html',1,'']]],
+  ['disclaimer_2259',['Disclaimer',['../md__t_e_r_m_s.html',1,'']]]
 ];

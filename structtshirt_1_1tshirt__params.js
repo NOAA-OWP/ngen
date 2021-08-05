@@ -15,6 +15,7 @@ var structtshirt_1_1tshirt__params =
     [ "maxsmc", "structtshirt_1_1tshirt__params.html#a15f51e86b2f33fccdc107869d0f6ec05", null ],
     [ "multiplier", "structtshirt_1_1tshirt__params.html#a963ed75ab16dbe46c9b79c82dc623440", null ],
     [ "nash_n", "structtshirt_1_1tshirt__params.html#a8cd40bac266affd0b910372ba08618c8", null ],
+    [ "refkdt", "structtshirt_1_1tshirt__params.html#a3ac79c8845b9b8c9cfc029b8e806355f", null ],
     [ "satdk", "structtshirt_1_1tshirt__params.html#a7a6affc5aa9eafed547aa2b5591bdcb1", null ],
     [ "satpsi", "structtshirt_1_1tshirt__params.html#a92bd22e94175a5f0b83470a4f908e9e2", null ],
     [ "slope", "structtshirt_1_1tshirt__params.html#a493195405e4e464abba37f1cd00e2199", null ],

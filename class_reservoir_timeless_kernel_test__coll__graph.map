@@ -1,16 +1,10 @@
 <map id="ReservoirTimelessKernelTest" name="ReservoirTimelessKernelTest">
-<area shape="rect" id="node1" title=" " alt="" coords="133,1667,369,1949"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,1329,53,1406"/>
-<area shape="rect" id="node3" title=" " alt="" coords="321,1321,500,1413"/>
-<area shape="rect" id="node4" href="$class_reservoir_1_1_implicit___time_1_1_reservoir.html" title="Reservoir that has zero, one, or multiple outlets and no time dimension." alt="" coords="327,873,495,1156"/>
-<area shape="rect" id="node5" href="$structreservoir__state.html" title=" " alt="" coords="128,711,293,803"/>
-<area shape="rect" id="node6" title=" " alt="" coords="529,711,703,803"/>
-<area shape="rect" id="node7" title=" " alt="" coords="227,513,400,605"/>
-<area shape="rect" id="node8" href="$class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html" title="Base Single Reservior Outlet Class." alt="" coords="251,145,434,428"/>
-<area shape="rect" id="node13" title=" " alt="" coords="460,505,633,612"/>
-<area shape="rect" id="node9" title="STL class." alt="" coords="565,248,702,325"/>
-<area shape="rect" id="node10" title=" " alt="" coords="690,5,729,83"/>
-<area shape="rect" id="node11" title="STL class." alt="" coords="836,520,948,597"/>
-<area shape="rect" id="node14" title=" " alt="" coords="894,704,1077,811"/>
-<area shape="rect" id="node12" href="$structreservoir__parameters.html" title=" " alt="" coords="317,711,504,803"/>
+<area shape="rect" id="node1" title=" " alt="" coords="161,965,397,1248"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,659,99,736"/>
+<area shape="rect" id="node3" title=" " alt="" coords="116,479,295,571"/>
+<area shape="rect" id="node4" title=" " alt="" coords="378,145,515,223"/>
+<area shape="rect" id="node6" title=" " alt="" coords="360,348,533,455"/>
+<area shape="rect" id="node5" title=" " alt="" coords="542,5,581,83"/>
+<area shape="rect" id="node8" title=" " alt="" coords="621,247,733,324"/>
+<area shape="rect" id="node7" title=" " alt="" coords="603,644,786,751"/>
 </map>

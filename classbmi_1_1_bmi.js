@@ -1,10 +1,5 @@
 var classbmi_1_1_bmi =
 [
-    [ "Test Work Before Push or PR", "md_test__r_e_a_d_m_e.html#autotoc_md105", null ],
-    [ "Separate Test Types in Separate Files", "md_test__r_e_a_d_m_e.html#autotoc_md106", null ],
-    [ "Use Analogous Names", "md_test__r_e_a_d_m_e.html#autotoc_md107", null ],
-    [ "Use Analogous Paths", "md_test__r_e_a_d_m_e.html#autotoc_md108", null ],
-    [ "Keep Unit Test Assertions to a Minimum", "md_test__r_e_a_d_m_e.html#autotoc_md109", null ],
     [ "Finalize", "classbmi_1_1_bmi.html#a50ba4a7a721969d53c269298a1e607a7", null ],
     [ "GetComponentName", "classbmi_1_1_bmi.html#a260433746fad7ef67ace7daf4927ccf8", null ],
     [ "GetCurrentTime", "classbmi_1_1_bmi.html#acbbbbfa690e6adb9eb348aa0ecd03e69", null ],

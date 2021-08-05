@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['realization_5ftype_880',['Realization_Type',['../namespacerealization.html#a03f8daf968368fcdb0699327623239bc',1,'realization']]]
+  ['propertytype_2199',['PropertyType',['../namespacegeojson.html#a972cd4a487858a36473c775ac360f361',1,'geojson']]]
 ];

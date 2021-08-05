@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['geojson_471',['GeoJSON',['../namespacegeojson.html#a0575056bcdcce0ccba81e6875591b702',1,'geojson']]],
-  ['geometry_472',['geometry',['../namespacegeojson.html#a68bb7aef6c1605a4c3662f936fc4164f',1,'geojson']]]
+  ['dual_5fkeys_2164',['dual_keys',['../classrealization_1_1_formulation___manager.html#a9dda2c8475cf8e4ade81b0a34f6c889f',1,'realization::Formulation_Manager']]]
 ];

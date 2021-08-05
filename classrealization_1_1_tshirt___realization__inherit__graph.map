@@ -1,6 +1,10 @@
 <map id="realization::Tshirt_Realization" name="realization::Tshirt_Realization">
-<area shape="rect" id="node1" title=" " alt="" coords="106,315,286,539"/>
-<area shape="rect" id="node2" href="$class_h_y___catchment_area.html" title=" " alt="" coords="114,175,278,267"/>
-<area shape="rect" id="node3" href="$class_h_y___catchment_realization.html" title=" " alt="" coords="5,5,205,127"/>
-<area shape="rect" id="node4" href="$class_g_m___object.html" title=" " alt="" coords="229,20,344,112"/>
+<area shape="rect" id="node1" title=" " alt="" coords="205,851,397,1236"/>
+<area shape="rect" id="node2" href="$classrealization_1_1_catchment___formulation.html" title=" " alt="" coords="207,564,394,803"/>
+<area shape="rect" id="node3" href="$classrealization_1_1_formulation.html" title=" " alt="" coords="5,248,188,516"/>
+<area shape="rect" id="node4" href="$classrealization_1_1_et___aware.html" title="Interface for type that is aware of parameters for evapotranspiration in certain calculations,..." alt="" coords="81,42,225,163"/>
+<area shape="rect" id="node8" href="$classrealization_1_1_et___accountable.html" title="Interface for type that is able to account for evapotranspiration in certain calculations,..." alt="" coords="212,299,389,465"/>
+<area shape="rect" id="node5" href="$class_h_y___catchment_area.html" title=" " alt="" coords="413,299,577,465"/>
+<area shape="rect" id="node6" href="$class_h_y___catchment_realization.html" title=" " alt="" coords="305,5,505,200"/>
+<area shape="rect" id="node7" href="$class_g_m___object.html" title=" " alt="" coords="529,57,643,149"/>
 </map>

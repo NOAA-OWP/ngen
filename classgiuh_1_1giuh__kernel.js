@@ -1,15 +1,16 @@
 var classgiuh_1_1giuh__kernel =
 [
-    [ "giuh_kernel", "classgiuh_1_1giuh__kernel.html#ac3047e1e5ea434ae3c32d3c8d0c55100", null ],
-    [ "~giuh_kernel", "classgiuh_1_1giuh__kernel.html#a1da0e8020a94c8cf79cc6467de722560", null ],
-    [ "calc_giuh_output", "classgiuh_1_1giuh__kernel.html#ade4b797092cab13f45c8efa800e65bfb", null ],
-    [ "get_catchment_id", "classgiuh_1_1giuh__kernel.html#ade5a60b0567c23cfb75f15f52c2f7283", null ],
-    [ "carry_overs_list_head", "classgiuh_1_1giuh__kernel.html#a3f1219640d2a9504d41a928378b69b1d", null ],
+    [ "giuh_kernel", "classgiuh_1_1giuh__kernel.html#a270e89fa44de1aae523e2a52341aef8c", null ],
+    [ "giuh_kernel", "classgiuh_1_1giuh__kernel.html#a5368a14df53c06836c09b6977d0d6744", null ],
+    [ "calc_giuh_output", "classgiuh_1_1giuh__kernel.html#aadec4f29e3f98a2cd50f38a7d20efda9", null ],
+    [ "get_catchment_id", "classgiuh_1_1giuh__kernel.html#a5df8658fbf52a5ddd602be29158240dd", null ],
+    [ "get_comid", "classgiuh_1_1giuh__kernel.html#a939098ab8b08b18e07e2cd232f5fa9e2", null ],
+    [ "get_interpolated_incremental_runoff", "classgiuh_1_1giuh__kernel.html#ae722d568a19a941369811df39bb7541c", null ],
+    [ "get_interpolated_regularized_cdf", "classgiuh_1_1giuh__kernel.html#a63fad7d04bd4fdf726db75e2bf6cd495", null ],
+    [ "get_interpolation_regularity_seconds", "classgiuh_1_1giuh__kernel.html#a4ae93bb56a9c00f8ceb4a32ccf072a92", null ],
+    [ "get_regularized_times_s", "classgiuh_1_1giuh__kernel.html#a82ea7530b17572766416ef7d5b58cc6c", null ],
+    [ "set_interpolation_regularity_seconds", "classgiuh_1_1giuh__kernel.html#a978415891a4d3ae43cd4b178756ed90c", null ],
     [ "catchment_id", "classgiuh_1_1giuh__kernel.html#a22be4ec0c44f810d04965aef8f6c5b2c", null ],
-    [ "cdf_cumulative_freqs", "classgiuh_1_1giuh__kernel.html#ac80de57beec4940f936f986b5174a140", null ],
-    [ "cdf_ordinate_times_seconds", "classgiuh_1_1giuh__kernel.html#aee23cdbf793d5d345c1391d2df8602bc", null ],
-    [ "cdf_regularity_seconds", "classgiuh_1_1giuh__kernel.html#a0f44027b5567ae5540fae09bd736a37e", null ],
-    [ "cdf_times", "classgiuh_1_1giuh__kernel.html#aeeda7397388010f95df1d88c7db0bad3", null ],
-    [ "incremental_runoff_values", "classgiuh_1_1giuh__kernel.html#a066f3469d741c0e2420a365049d926c3", null ],
-    [ "regularized_cdf_ordinates", "classgiuh_1_1giuh__kernel.html#a36d2940d8aad1cebf9bd4fa01c10b5c3", null ]
+    [ "comid", "classgiuh_1_1giuh__kernel.html#ab0700f5fc0fcc590994fb5654796f9ea", null ],
+    [ "interpolation_regularity_seconds", "classgiuh_1_1giuh__kernel.html#ac8d8754faae060963ca33671f5a22bae", null ]
 ];

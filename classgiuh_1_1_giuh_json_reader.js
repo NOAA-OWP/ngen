@@ -2,6 +2,8 @@ var classgiuh_1_1_giuh_json_reader =
 [
     [ "GiuhJsonReader", "classgiuh_1_1_giuh_json_reader.html#adc94992f19fd2f8a315bfbbad17a4126", null ],
     [ "build_giuh_kernel", "classgiuh_1_1_giuh_json_reader.html#a2a5e47652fd88cd1b2f6c028a01e21cb", null ],
+    [ "extract_cumulative_frequency_ordinates", "classgiuh_1_1_giuh_json_reader.html#adc40f6292a6071bef90a16c69a15bf6a", null ],
+    [ "extract_cumulative_frequency_ordinates", "classgiuh_1_1_giuh_json_reader.html#a6f3c048943f74b1c81240444d929edfe", null ],
     [ "find_data_node_for_comid", "classgiuh_1_1_giuh_json_reader.html#a0b50c538a048ffa2ff3f807ef5a65a2a", null ],
     [ "get_associated_comid", "classgiuh_1_1_giuh_json_reader.html#aa992d78c802a16c93d02475412aabebd", null ],
     [ "get_giuh_kernel_for_id", "classgiuh_1_1_giuh_json_reader.html#a511a10ed7ce53125da3abab5742530a8", null ],

@@ -1,6 +1,7 @@
 var class_simulation___time =
 [
     [ "Simulation_Time", "class_simulation___time.html#a1b29c199f0fd9e0995f369c40fd7aaa0", null ],
+    [ "get_output_interval_seconds", "class_simulation___time.html#a25ec4421aac064d6173070f552471669", null ],
     [ "get_timestamp", "class_simulation___time.html#ac31cb33120a3f3c69d5ac73d6f95a949", null ],
     [ "get_total_output_times", "class_simulation___time.html#a52e16cffa6ca3281f06e1c216ec39414", null ],
     [ "current_date_time_epoch", "class_simulation___time.html#a05ca6222ff0dc9174a2bbfa5e7908541", null ],

@@ -1,13 +1,20 @@
 var class_h_y___catchment =
 [
+    [ "Catchment", "class_h_y___catchment.html#ad38c4b9fb588c021744094c1e565e84a", null ],
+    [ "Catchments", "class_h_y___catchment.html#a24f652a2504fc6699031b9a573016091", null ],
+    [ "Nexus", "class_h_y___catchment.html#aac73f82bb962d6234ee2f4d34a0ca279", null ],
+    [ "Nexuses", "class_h_y___catchment.html#a287e2db7317f88a8ba389ebb12dd3c7f", null ],
     [ "HY_Catchment", "class_h_y___catchment.html#ae07739618a32c15b30a16c773827e200", null ],
+    [ "HY_Catchment", "class_h_y___catchment.html#add4a0af41919fe60648cfd17d5ed42ee", null ],
     [ "~HY_Catchment", "class_h_y___catchment.html#a63003e4b1530d83abb38c788c195b935", null ],
-    [ "contained_catchments", "class_h_y___catchment.html#a86a7072837b43843cb20d3288be856be", null ],
-    [ "containing_catchment", "class_h_y___catchment.html#a691a89a8283caf67b2f33e0d9007109c", null ],
+    [ "get_outflow_nexuses", "class_h_y___catchment.html#a5298052fe162eaa3cb932de19dd40b27", null ],
+    [ "conjoint_catchment", "class_h_y___catchment.html#a079a0321d5069bb15c26c689b5e7ac8c", null ],
+    [ "contained_catchments", "class_h_y___catchment.html#a4dd4f1031bac54385a3755f60d5b6f87", null ],
+    [ "containing_catchment", "class_h_y___catchment.html#ab468ea39a19ade8d47b2eb7ca42f3a1e", null ],
     [ "id", "class_h_y___catchment.html#a1beb02e996ce5716c30183ab8974fde0", null ],
-    [ "id_number", "class_h_y___catchment.html#a8a8e73bfdf6df0606dc76d266c48f5ad", null ],
-    [ "inflows", "class_h_y___catchment.html#a66640896623ceffbc63b8a87b49a7e89", null ],
-    [ "outflows", "class_h_y___catchment.html#aab72b33924e28eec6b28b0369d760570", null ],
+    [ "inflows", "class_h_y___catchment.html#a3a03fa4da4dd40512e8893f945809e0b", null ],
+    [ "lower_catchment", "class_h_y___catchment.html#ac6c37362d4f55aed074b02a0ae6d8a3d", null ],
+    [ "outflows", "class_h_y___catchment.html#a3b336576b1ce5f7257ea308095feec6b", null ],
     [ "realization", "class_h_y___catchment.html#afda183ae0332e0e5085df269a9970474", null ],
-    [ "recieving_catchments", "class_h_y___catchment.html#aa2a1bd2d309438d61259c81e6b0dae33", null ]
+    [ "upper_catchment", "class_h_y___catchment.html#a8420468ac27e8ac940b80ff330683df3", null ]
 ];

@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['three_5fdimensional_5fcoordinates_1275',['three_dimensional_coordinates',['../namespacegeojson.html#a24198ccd74c3e63a59b0ec353e126352',1,'geojson']]],
-  ['time_5fstep_5ft_1276',['time_step_t',['../class_h_y___hydro_nexus.html#aeaab4f70efb4f3bba130414296374c9b',1,'HY_HydroNexus::time_step_t()'],['../class_simple___lumped___model___realization.html#a50b8afc93d941e658e9a62538e5a3f47',1,'Simple_Lumped_Model_Realization::time_step_t()'],['../classrealization_1_1_tshirt___realization.html#a4068e3ccc1d3d07ddbfd507df773449f',1,'realization::Tshirt_Realization::time_step_t()']]],
-  ['time_5ftype_1277',['time_type',['../class_forcing.html#a984322cad9b57a6f37249d5c4f87426c',1,'Forcing']]],
-  ['two_5fdimensional_5fcoordinates_1278',['two_dimensional_coordinates',['../namespacegeojson.html#a1c9774b2c97ea8d59d6d7255ef005c81',1,'geojson']]]
+  ['outlet_5ftype_2185',['outlet_type',['../class_reservoir_1_1_explicit___time_1_1_reservoir.html#a18de56ff5f7ab8133fbe846e4ab9090d',1,'Reservoir::Explicit_Time::Reservoir::outlet_type()'],['../class_reservoir_1_1_implicit___time_1_1_reservoir.html#a478cc310fd19a56e45b7bbcd91f4a89e',1,'Reservoir::Implicit_Time::Reservoir::outlet_type()']]],
+  ['outlet_5fvector_5ftype_2186',['outlet_vector_type',['../class_reservoir_1_1_explicit___time_1_1_reservoir.html#a835e8204f95de619e23e322863ec4c74',1,'Reservoir::Explicit_Time::Reservoir::outlet_vector_type()'],['../class_reservoir_1_1_implicit___time_1_1_reservoir.html#ad565fd3109c9c838c957c09a8498eb78',1,'Reservoir::Implicit_Time::Reservoir::outlet_vector_type()']]]
 ];
