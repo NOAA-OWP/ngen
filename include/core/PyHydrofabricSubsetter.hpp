@@ -6,14 +6,6 @@
 namespace py = pybind11;
 #endif // ACTIVATE_PYTHON
 
-#ifndef MPI_HF_UTIL_CODE_GOOD
-#define MPI_HF_UTIL_CODE_GOOD 0
-#endif
-
-#ifndef MPI_HF_UTIL_CODE_BAD
-#define MPI_HF_UTIL_CODE_BAD 1
-#endif
-
 #include "FileChecker.h"
 
 namespace utils {
