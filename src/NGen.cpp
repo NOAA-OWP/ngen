@@ -331,6 +331,24 @@ int main(int argc, char *argv[]) {
         REALIZATION_CONFIG_PATH = argv[5];
 
         #ifdef NGEN_MPI_ACTIVE
+        if (argc >= 7) {
+            PARTITION_PATH = argv[6];
+        }
+        else {
+            std::cout << "Missing required argument for partition file path." << std::endl;
+            exit(-1);
+        }
+
+        if (argc >= 8) {
+            if (strcmp(argv[7], MPI_HF_SUB_CLI_FLAG) == 0) {
+                is_subdivided_hydrofabric_wanted = true;
+            }
+            else {
+                std::cout << "Unexpected arg '" << argv[7] << "'; try " << MPI_HF_SUB_CLI_FLAG << std::endl;
+                exit(-1);
+            }
+        }
+
         // Initalize MPI
         MPI_Init(NULL, NULL);
         MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
@@ -341,25 +359,9 @@ int main(int argc, char *argv[]) {
                 !utils::FileChecker::file_is_readable(nexusDataFile, "Nexus data") ||
                 !utils::FileChecker::file_is_readable(REALIZATION_CONFIG_PATH, "Realization config");
 
-        if ( argc >= 7 ) {
-            PARTITION_PATH = argv[6];
-            error = error || !utils::FileChecker::file_is_readable(PARTITION_PATH, "Partition config");
-        }
-        else {
-            std::cout << "Missing required argument for partition file path." << std::endl;
-            error = true;
-        }
-
         #ifdef NGEN_MPI_ACTIVE
-        if (argc >= 8) {
-            std::string divideHfFlag = argv[7];
-            if (divideHfFlag == MPI_HF_SUB_CLI_FLAG) {
-                is_subdivided_hydrofabric_wanted = true;
-            }
-            else {
-                std::cout << "Unexpected arg '" << divideHfFlag << "'; try " << MPI_HF_SUB_CLI_FLAG << std::endl;
-                error = true;
-            }
+        if (!PARTITION_PATH.empty()) {
+            error = error || !utils::FileChecker::file_is_readable(PARTITION_PATH, "Partition config");
         }
 
         // Do some extra steps if we expect to load a subdivided hydrofabric
