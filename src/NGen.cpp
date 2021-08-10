@@ -25,8 +25,13 @@ namespace py = pybind11;
 std::string catchmentDataFile = "";
 std::string nexusDataFile = "";
 std::string REALIZATION_CONFIG_PATH = "";
+bool is_subdivided_hydrofabric_wanted = false;
 
 #ifdef NGEN_MPI_ACTIVE
+
+#ifndef MPI_HF_SUB_CLI_FLAG
+#define MPI_HF_SUB_CLI_FLAG "--subdivided-hydrofabric"
+#endif
 
 #ifndef MPI_HF_SUB_CODE_GOOD
 #define MPI_HF_SUB_CODE_GOOD 0
@@ -191,7 +196,96 @@ bool subdivide_hydrofabric() {
     return mpiSyncStatusAnd(isGood, "executing hydrofabric subdivision");
 }
 
+// TODO: implement this way if it makes more sense
+// This is like the function above, but distributes generated hydrofabric file data via MPI
+bool subdivide_hydrofabric_broadcast() {
+    #ifdef ACTIVATE_PYTHON
+    // Expect 0 is good and 1 is no good
+    unsigned short goodCode;
+    bool isGoodToProceed = true;
+    std::string subdividedCatFile, subdividedNexFile;
+    if (mpi_rank == 0) {
+        // Check that the base data files to be subdivided are present
+        if (!utils::FileChecker::file_is_readable(catchmentDataFile)) {
+            std::cout << "Cannot subdivide hydrofabric: catchment data file '" << catchmentDataFile << "' doesn't exist" << std::endl;
+            isGoodToProceed = false;
+        }
+        if (!utils::FileChecker::file_is_readable(nexusDataFile)) {
+            std::cout << "Cannot subdivide hydrofabric: nexus data file '" << catchmentDataFile << "' doesn't exist" << std::endl;
+            isGoodToProceed = false;
+        }
+        // Check whether all subdivided files can be written on the rank 0 host
+        for (int i = 0; i < mpi_num_procs; ++i) {
+            subdividedCatFile = catchmentDataFile + "." + std::to_string(i);
+            subdividedNexFile = nexusDataFile + "." + std::to_string(i);
+            if (!utils::FileChecker::file_can_be_written(subdividedCatFile) || !utils::FileChecker::file_can_be_written(subdividedNexFile)) {
+                std::cout << "Cannot subdivide hydrofabric: at least one subdivided output file (rank " << i << ") cannot be written" << std::endl;
+                isGoodToProceed = false;
+                break;
+            }
+        }
+        // Receive good/no-good codes back from each other rank on whether they are good to write their file
+        for (int i = 1; i < mpi_num_procs; ++i) {
+            MPI_Recv(&goodCode, 1, MPI_UNSIGNED_SHORT, i, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            if (goodCode != MPI_HF_SUB_CODE_GOOD) {
+                std::cout << "Rank " << i << " cannot proceed with subdividing hydrofabric" << std::endl;
+                isGoodToProceed = false;
+            }
+        }
+        // Now have set this to reflect the overall state assessed from all ranks, and distribute to the rest of them
+        goodCode = isGoodToProceed ? 0 : 1;
+    }
+    else {
+        // TODO: check whether rank-specific file can be written (permissions and directory exists)
+        subdividedCatFile = catchmentDataFile + "." + std::to_string(mpi_rank);
+        subdividedNexFile = nexusDataFile + "." + std::to_string(mpi_rank);
+        // TODO: send good/no-good to rank 0
 
+    }
+    // Receive global go/no-go code from rank 0
+    MPI_Bcast(&goodCode, mpi_num_procs - 1, MPI_UNSIGNED_SHORT, 0, MPI_COMM_WORLD);
+    if (goodCode != MPI_HF_SUB_CODE_GOOD) {
+        return false;
+    }
+
+    // TODO: create temp directory for creating subdivided files
+    // TODO: if rank == 0
+    //  perform subdividing logic that also creates files in temp directory
+    //  store locally success or failure indication for subdividing
+    //  broodcast success or failure indication for subdividing
+
+    // TODO: start by removing (everywhere) any existing files with similar names, but don't proceed until this is done
+    //  for everyone
+    //  We do this serially everywhere to make sure it is done once on all physical hosts
+    //  We go ahead an remove them to avoid needing to do re-writes for ranks on the same host as rank 0
+    //      TODO: obtain a lock
+    //      TODO: if existing files, remove
+    //      TODO: release lock
+    //      TODO: barrier
+
+    // TODO: next, actually try to create the files, then distribute them as required to all hosts
+    //      TODO: if rank == 0,
+    //       do the actual subdividing
+    //       create the files locally
+    //       store locally success or failure indication for subdividing
+    //       broodcast success or failure indication for subdividing
+    //      TODO: if rank != 0
+    //       receive subdividing result code
+    //      TODO: if subdividing return code indicated failure, return false
+    //      TODO: if rank == 0
+    //       for each file, send contents to associated rank so it can be written (unless it can be read directly)
+    //      TODO: if rank != 0:
+    //       receive the results for associated file for rank
+    //       if file does not already exist (i.e., same host as rank 0), then write it
+    //      TODO: barrier here (wait for any file creation on non-rank-0 hosts)
+
+
+    // TODO: make sure Python (and dependencies used) is available, or error out (with message)
+    #else
+    // TODO: print message about Python not being available and return false
+    #endif
+
+}
 
 #endif // NGEN_MPI_ACTIVE
 
@@ -214,7 +308,8 @@ int main(int argc, char *argv[]) {
     //arg 3 is nexus_data file path
     //arg 4 is nexus subset ids, comma seperated string of ids (no spaces!), "" for all
     //arg 5 is realization config path
-    //arg 7 is the partion file path
+    //arg 7 is the partition file path
+    //arg 8 is an optional flag that driver should, if not already preprocessed this way, subdivided the hydrofabric
 
     std::vector<string> catchment_subset_ids;
     std::vector<string> nexus_subset_ids;
@@ -235,53 +330,77 @@ int main(int argc, char *argv[]) {
         nexusDataFile = argv[3];
         REALIZATION_CONFIG_PATH = argv[5];
 
-  #ifdef NGEN_MPI_ACTIVE
-      //initalize mpi
-      MPI_Init(NULL, NULL);
-      MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
-      MPI_Comm_size(MPI_COMM_WORLD, &mpi_num_procs);
-      catchmentDataFile += "." + std::to_string(mpi_rank);
-      nexusDataFile += "." + std::to_string(mpi_rank);
-  #endif
-
-        bool error = !check_param_file_exists(catchmentDataFile, "Catchment data") ||
-                     !check_param_file_exists(nexusDataFile, "Nexus data") ||
-                     !check_param_file_exists(REALIZATION_CONFIG_PATH, "Realization config");
-
         #ifdef NGEN_MPI_ACTIVE
+        // Initalize MPI
+        MPI_Init(NULL, NULL);
+        MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
+        MPI_Comm_size(MPI_COMM_WORLD, &mpi_num_procs);
+        #endif // NGEN_MPI_ACTIVE
+
+        bool error = !utils::FileChecker::file_is_readable(catchmentDataFile, "Catchment data") ||
+                !utils::FileChecker::file_is_readable(nexusDataFile, "Nexus data") ||
+                !utils::FileChecker::file_is_readable(REALIZATION_CONFIG_PATH, "Realization config");
+
         if ( argc >= 7 ) {
             PARTITION_PATH = argv[6];
-            error = error || !check_param_file_exists(PARTITION_PATH, "Partition");
+            error = error || !utils::FileChecker::file_is_readable(PARTITION_PATH, "Partition config");
         }
-          else {
-              std::cout << "Missing required argument for partition file path.";
-              error = true;
-          }
-      #endif
+        else {
+            std::cout << "Missing required argument for partition file path." << std::endl;
+            error = true;
+        }
 
-      if(error) exit(-1);
+        #ifdef NGEN_MPI_ACTIVE
+        if (argc >= 8) {
+            std::string divideHfFlag = argv[7];
+            if (divideHfFlag == MPI_HF_SUB_CLI_FLAG) {
+                is_subdivided_hydrofabric_wanted = true;
+            }
+            else {
+                std::cout << "Unexpected arg '" << divideHfFlag << "'; try " << MPI_HF_SUB_CLI_FLAG << std::endl;
+                error = true;
+            }
+        }
 
-      //split the subset strings into vectors
-      boost::split(catchment_subset_ids, argv[2], [](char c){return c == ','; } );
-      boost::split(nexus_subset_ids, argv[4], [](char c){return c == ','; } );
-      //If a single id or no id is passed, the subset vector will have size 1 and be the id or the ""
-      //if we get an empy string, pop it from the subset list.
-      if(nexus_subset_ids.size() == 1 && nexus_subset_ids[0] == "") nexus_subset_ids.pop_back();
-      if(catchment_subset_ids.size() == 1 && catchment_subset_ids[0] == "") catchment_subset_ids.pop_back();
+        // Do some extra steps if we expect to load a subdivided hydrofabric
+        if (is_subdivided_hydrofabric_wanted) {
+            // Ensure the hydrofabric is subdivided (either already or by doing it now), and then adjust these paths
+            if (is_hydrofabric_subdivided() || subdivide_hydrofabric()) {
+                catchmentDataFile += "." + std::to_string(mpi_rank);
+                nexusDataFile += "." + std::to_string(mpi_rank);
+            }
+            // If subdivided was needed, subdividing was not already done, and we could not subdivide just now ...
+            else {
+                std::cout << "Unable to successfully preprocess hydrofabric files into subdivided files per partition.";
+                error = true;
+            }
+        }
+        #endif // NGEN_MPI_ACTIVE
+
+        if(error) exit(-1);
+
+        //split the subset strings into vectors
+        boost::split(catchment_subset_ids, argv[2], [](char c){return c == ','; } );
+        boost::split(nexus_subset_ids, argv[4], [](char c){return c == ','; } );
+        //If a single id or no id is passed, the subset vector will have size 1 and be the id or the ""
+        //if we get an empy string, pop it from the subset list.
+        if(nexus_subset_ids.size() == 1 && nexus_subset_ids[0] == "") nexus_subset_ids.pop_back();
+        if(catchment_subset_ids.size() == 1 && catchment_subset_ids[0] == "") catchment_subset_ids.pop_back();
     } // end else if (argc < 6)
 
     //Read the collection of nexus
     std::cout << "Building Nexus collection" << std::endl;
     
-  #ifdef NGEN_MPI_ACTIVE
+    #ifdef NGEN_MPI_ACTIVE
     Partitions_Parser partition_parser(PARTITION_PATH);
+    // TODO: add something here to make sure this step worked for every rank, and maybe to checksum the file
     partition_parser.parse_partition_file();
     
     auto& partitions = partition_parser.partition_ranks;  
     auto& local_data = partitions[std::to_string(mpi_rank)];   
     nexus_subset_ids = local_data.nex_ids;
     catchment_subset_ids = local_data.cat_ids; 
-  #endif
+    #endif // NGEN_MPI_ACTIVE
 
     // TODO: Instead of iterating through a collection of FeatureBase objects mapping to nexi, we instead want to iterate through HY_HydroLocation objects
     geojson::GeoJSON nexus_collection = geojson::read(nexusDataFile, nexus_subset_ids);
@@ -300,12 +419,12 @@ int main(int argc, char *argv[]) {
     std::shared_ptr<realization::Formulation_Manager> manager = std::make_shared<realization::Formulation_Manager>(REALIZATION_CONFIG_PATH);
     manager->read(catchment_collection, utils::getStdOut());
     std::string link_key = "toid";
-  #ifdef NGEN_MPI_ACTIVE
+    #ifdef NGEN_MPI_ACTIVE
     nexus_collection->link_features_from_property(nullptr, &link_key);
     hy_features::HY_Features_MPI features = hy_features::HY_Features_MPI(local_data, nexus_collection, manager, mpi_rank, mpi_num_procs);
-  #else
+    #else
     hy_features::HY_Features features = hy_features::HY_Features(catchment_collection, &link_key, manager);
-  #endif
+    #endif
 
     //validate dendridic connections
     features.validate_dendridic();
@@ -314,16 +433,15 @@ int main(int argc, char *argv[]) {
     //catchment_collection.reset();
     nexus_collection.reset();
 
-    //Still hacking nexus output  for the moment
+    //Still hacking nexus output for the moment
     for(const auto& id : features.nexuses()) {
-  #ifdef NGEN_MPI_ACTIVE
-      //if (local_data.nexus_at(id).is_remote_sender() == false )
-      if (!features.is_remote_sender_nexus(id)) {
+        #ifdef NGEN_MPI_ACTIVE
+        if (!features.is_remote_sender_nexus(id)) {
+          nexus_outfiles[id].open("./"+id+"_output.csv", std::ios::trunc);
+        }
+        #else
         nexus_outfiles[id].open("./"+id+"_output.csv", std::ios::trunc);
-      }
-  #else 
-      nexus_outfiles[id].open("./"+id+"_output.csv", std::ios::trunc);
-  #endif
+        #endif
     }
 
     std::cout<<"Running Models"<<std::endl;
