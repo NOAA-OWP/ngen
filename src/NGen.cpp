@@ -139,15 +139,35 @@ bool mpiSyncStatusAnd(bool status) {
  * ``catchmentDataFile`` and ``nexusDataFile`` variables respectively.  The number of MPI processes is obtained from the
  * global ``mpi_rank`` variable.
  *
+ * @param printMessage Whether a supplemental message should be printed to standard out indicating status.
+ *
  * @return Whether proprocessing has already been performed to divide the main hydrofabric into existing, individual
  *         sub-hydrofabric files for each partition/process.
  */
-bool is_hydrofabric_subdivided() {
+bool is_hydrofabric_subdivided(bool printMsg) {
     std::string name = catchmentDataFile + "." + std::to_string(mpi_rank);
     // Initialize isGood based on local state.  Here, local file is "good" when it already exists.
     // TODO: this isn't actually checking whether the files are right (just that they are present) so do we need to?
     bool isGood = utils::FileChecker::file_is_readable(name);
-    return mpiSyncStatusAnd(isGood);
+    if (mpiSyncStatusAnd(isGood)) {
+        if (printMsg) { std::cout << "Hydrofabric already subdivided in " << mpi_num_procs << " files." << std::endl; }
+        return true;
+    }
+    else {
+        if (printMsg) { std::cout << "Hydrofabric has not yet been subdivided." << std::endl; }
+        return false;
+    }
+}
+
+/**
+ * Convenience overloaded method for when no supplemental output message is required.
+ *
+ * @return Whether proprocessing has already been performed to divide the main hydrofabric into existing, individual
+ *         sub-hydrofabric files for each partition/process.
+ * @see is_hydrofabric_subdivided(bool)
+ */
+bool is_hydrofabric_subdivided() {
+    return is_hydrofabric_subdivided(false);
 }
 
 /**
@@ -276,7 +296,7 @@ int main(int argc, char *argv[]) {
         // Do some extra steps if we expect to load a subdivided hydrofabric
         if (is_subdivided_hydrofabric_wanted) {
             // Ensure the hydrofabric is subdivided (either already or by doing it now), and then adjust these paths
-            if (is_hydrofabric_subdivided() || subdivide_hydrofabric()) {
+            if (is_hydrofabric_subdivided(true) || subdivide_hydrofabric()) {
                 catchmentDataFile += "." + std::to_string(mpi_rank);
                 nexusDataFile += "." + std::to_string(mpi_rank);
             }
