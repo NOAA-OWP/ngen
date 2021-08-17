@@ -1,5 +1,9 @@
 var NAVTREEINDEX5 =
 {
+"classgeojson_1_1_polygon_feature.html#ae084da5ad3b56346b7c3e942e0e10e8e":[20,0,3,8,39],
+"classgeojson_1_1_polygon_feature.html#ae1da9784ab4cf7b0f9a31082866aff78":[20,0,3,8,40],
+"classgeojson_1_1_polygon_feature.html#ae3da4d699f37811a450985f094b45bf8":[20,0,3,8,48],
+"classgeojson_1_1_polygon_feature.html#af289e5db1d2039bddd84bef755f0bab6":[20,0,3,8,35],
 "classgeojson_1_1_polygon_feature.html#af92534c1068a597dd1fb10dc13d2e7a0":[20,0,3,8,13],
 "classgiuh_1_1_giuh_json_reader.html":[20,0,4,3],
 "classgiuh_1_1_giuh_json_reader.html#a0b50c538a048ffa2ff3f807ef5a65a2a":[20,0,4,3,4],
@@ -245,9 +249,5 @@ var NAVTREEINDEX5 =
 "classnetwork_1_1_network.html#ad342876420b17b59c22dcd4081305648":[20,0,7,1,15],
 "classnetwork_1_1_network.html#ad81217c6e3e7e1d64d6067a29ea1c3e3":[20,0,7,1,1],
 "classnetwork_1_1_network.html#ae62bcf26a0b422a6e7d73fc8ff2102a1":[20,0,7,1,18],
-"classnetwork_1_1_network.html#af83ce2ba6cd82d318ec433c82d16f328":[20,0,7,1,7],
-"classnexus_1_1_nexus___manager.html":[20,0,8,0],
-"classnexus_1_1_nexus___manager.html#a165670c123cac65b85b8fa9cf33292dc":[20,0,8,0,5],
-"classnexus_1_1_nexus___manager.html#a1a4c6caeb232db5742533f8b7c93a2d9":[20,0,8,0,1],
-"classnexus_1_1_nexus___manager.html#a2719ec4cb2f1a4e0db48831ca8f219dd":[20,0,8,0,0]
+"classnetwork_1_1_network.html#af83ce2ba6cd82d318ec433c82d16f328":[20,0,7,1,7]
 };

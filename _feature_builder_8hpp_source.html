@@ -466,57 +466,58 @@ $(document).ready(function(){initNavTree('_feature_builder_8hpp_source.html','')
 <div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;                        <span class="keywordflow">if</span>( tmp_id == <span class="stringliteral">&quot;&quot;</span> ) {</div>
 <div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;                          <span class="keywordflow">try</span> {</div>
 <div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;                            tmp_id = feature-&gt;get_property(<span class="stringliteral">&quot;id&quot;</span>).as_string();</div>
-<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;                          }</div>
-<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;                          <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::out_of_range&amp; error) {</div>
-<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;                            tmp_id = <span class="stringliteral">&quot;&quot;</span>;</div>
-<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;                          }</div>
-<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;                        }</div>
-<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;                        </div>
-<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;                        <span class="keywordflow">if</span>( ids.empty() || std::find(ids.begin(), ids.end(), tmp_id) != ids.end() ) {</div>
-<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;                          <span class="comment">//ids is empty, meaning we want all features,</span></div>
-<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;                          <span class="comment">//or feature id was found in the provided ids vector</span></div>
-<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;                          <span class="comment">//so hold the feature to add to collection later</span></div>
-<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160; </div>
-<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;                          features.push_back(feature);</div>
-<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;                        }</div>
-<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;                    }</div>
-<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;                }</div>
-<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;                <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;                    std::cout &lt;&lt; <span class="stringliteral">&quot;No features were found&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;                }</div>
-<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;            }</div>
-<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;            <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;                foreign_members.emplace(child.first, JSONProperty(child.first, child.second));</div>
-<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;            }</div>
-<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;        }</div>
-<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160; </div>
-<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;        <a class="code" href="namespacegeojson.html#a0575056bcdcce0ccba81e6875591b702">GeoJSON</a> collection = std::make_shared&lt;FeatureCollection&gt;(FeatureCollection(features, bbox_values));</div>
-<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160; </div>
-<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;        <span class="keywordflow">for</span> (<a class="code" href="namespacegeojson.html#ab724970a20dff6100b94e25491292748">Feature</a> feature : features) {</div>
-<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;            <span class="keywordflow">if</span> (feature-&gt;get_id() != <span class="stringliteral">&quot;&quot;</span>) {</div>
-<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;                collection-&gt;add_feature_id(feature-&gt;get_id(), feature);</div>
-<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;            }</div>
-<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;        }</div>
-<div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160; </div>
-<div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;        <span class="keywordflow">return</span> collection;</div>
-<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;    }</div>
-<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160; </div>
-<div class="line"><a name="l00444"></a><span class="lineno"><a class="line" href="namespacegeojson.html#aa9d243ef2a01cd361aa02917e4151d1d">  444</a></span>&#160;    <span class="keyword">static</span> <a class="code" href="namespacegeojson.html#a0575056bcdcce0ccba81e6875591b702">GeoJSON</a> <a class="code" href="namespacegeojson.html#aa9d243ef2a01cd361aa02917e4151d1d">read</a>(<span class="keyword">const</span> std::string &amp;file_path, <span class="keyword">const</span> std::vector&lt;std::string&gt; &amp;ids = {}) {</div>
-<div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;        boost::property_tree::ptree tree;</div>
-<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;        boost::property_tree::json_parser::read_json(file_path, tree);</div>
-<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespacegeojson.html#a451eeb84b57ff5d1d2123312ea8b2374">build_collection</a>(tree, ids);</div>
-<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;    }</div>
-<div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160; </div>
-<div class="line"><a name="l00450"></a><span class="lineno"><a class="line" href="namespacegeojson.html#a5c02053ab14ac924a8e8ce067149e084">  450</a></span>&#160;    <span class="keyword">static</span> <a class="code" href="namespacegeojson.html#a0575056bcdcce0ccba81e6875591b702">GeoJSON</a> <a class="code" href="namespacegeojson.html#aa9d243ef2a01cd361aa02917e4151d1d">read</a>(std::stringstream &amp;data, <span class="keyword">const</span> std::vector&lt;std::string&gt; &amp;ids = {}) {</div>
-<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;        boost::property_tree::ptree tree;</div>
-<div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;        boost::property_tree::json_parser::read_json(data, tree);</div>
-<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespacegeojson.html#a451eeb84b57ff5d1d2123312ea8b2374">build_collection</a>(tree, ids);</div>
-<div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160;    }</div>
-<div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160; </div>
+<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;                            feature-&gt;set_id(tmp_id);</div>
+<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;                          }</div>
+<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;                          <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::out_of_range&amp; error) {</div>
+<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;                            tmp_id = <span class="stringliteral">&quot;&quot;</span>;</div>
+<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;                          }</div>
+<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;                        }</div>
+<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;                        </div>
+<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;                        <span class="keywordflow">if</span>( ids.empty() || std::find(ids.begin(), ids.end(), tmp_id) != ids.end() ) {</div>
+<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;                          <span class="comment">//ids is empty, meaning we want all features,</span></div>
+<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;                          <span class="comment">//or feature id was found in the provided ids vector</span></div>
+<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;                          <span class="comment">//so hold the feature to add to collection later</span></div>
+<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160; </div>
+<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;                          features.push_back(feature);</div>
+<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;                        }</div>
+<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;                    }</div>
+<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;                }</div>
+<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;                <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;                    std::cout &lt;&lt; <span class="stringliteral">&quot;No features were found&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;                }</div>
+<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;            }</div>
+<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;            <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;                foreign_members.emplace(child.first, JSONProperty(child.first, child.second));</div>
+<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;            }</div>
+<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;        }</div>
+<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160; </div>
+<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;        <a class="code" href="namespacegeojson.html#a0575056bcdcce0ccba81e6875591b702">GeoJSON</a> collection = std::make_shared&lt;FeatureCollection&gt;(FeatureCollection(features, bbox_values));</div>
+<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160; </div>
+<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;        <span class="keywordflow">for</span> (<a class="code" href="namespacegeojson.html#ab724970a20dff6100b94e25491292748">Feature</a> feature : features) {</div>
+<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;            <span class="keywordflow">if</span> (feature-&gt;get_id() != <span class="stringliteral">&quot;&quot;</span>) {</div>
+<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;                collection-&gt;add_feature_id(feature-&gt;get_id(), feature);</div>
+<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;            }</div>
+<div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;        }</div>
+<div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160; </div>
+<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;        <span class="keywordflow">return</span> collection;</div>
+<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;    }</div>
+<div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160; </div>
+<div class="line"><a name="l00445"></a><span class="lineno"><a class="line" href="namespacegeojson.html#aa9d243ef2a01cd361aa02917e4151d1d">  445</a></span>&#160;    <span class="keyword">static</span> <a class="code" href="namespacegeojson.html#a0575056bcdcce0ccba81e6875591b702">GeoJSON</a> <a class="code" href="namespacegeojson.html#aa9d243ef2a01cd361aa02917e4151d1d">read</a>(<span class="keyword">const</span> std::string &amp;file_path, <span class="keyword">const</span> std::vector&lt;std::string&gt; &amp;ids = {}) {</div>
+<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;        boost::property_tree::ptree tree;</div>
+<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;        boost::property_tree::json_parser::read_json(file_path, tree);</div>
+<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespacegeojson.html#a451eeb84b57ff5d1d2123312ea8b2374">build_collection</a>(tree, ids);</div>
+<div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;    }</div>
+<div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160; </div>
+<div class="line"><a name="l00451"></a><span class="lineno"><a class="line" href="namespacegeojson.html#a5c02053ab14ac924a8e8ce067149e084">  451</a></span>&#160;    <span class="keyword">static</span> <a class="code" href="namespacegeojson.html#a0575056bcdcce0ccba81e6875591b702">GeoJSON</a> <a class="code" href="namespacegeojson.html#aa9d243ef2a01cd361aa02917e4151d1d">read</a>(std::stringstream &amp;data, <span class="keyword">const</span> std::vector&lt;std::string&gt; &amp;ids = {}) {</div>
+<div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;        boost::property_tree::ptree tree;</div>
+<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;        boost::property_tree::json_parser::read_json(data, tree);</div>
+<div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespacegeojson.html#a451eeb84b57ff5d1d2123312ea8b2374">build_collection</a>(tree, ids);</div>
+<div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160;    }</div>
 <div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160; </div>
-<div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160;}</div>
-<div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160; </div>
-<div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// GEOJSON_FEATURE_BUILDER_H</span></div>
+<div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160; </div>
+<div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;}</div>
+<div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160; </div>
+<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// GEOJSON_FEATURE_BUILDER_H</span></div>
 <div class="ttc" id="aclassgeojson_1_1_collection_feature_html"><div class="ttname"><a href="classgeojson_1_1_collection_feature.html">geojson::CollectionFeature</a></div><div class="ttdef"><b>Definition:</b> CollectionFeature.hpp:14</div></div>
 <div class="ttc" id="aclassgeojson_1_1_j_s_o_n_property_html"><div class="ttname"><a href="classgeojson_1_1_j_s_o_n_property.html">geojson::JSONProperty</a></div><div class="ttdoc">@TODO: Convert JSONProperty into a variant of the supported types</div><div class="ttdef"><b>Definition:</b> JSONProperty.hpp:53</div></div>
 <div class="ttc" id="aclassgeojson_1_1_line_string_feature_html"><div class="ttname"><a href="classgeojson_1_1_line_string_feature.html">geojson::LineStringFeature</a></div><div class="ttdef"><b>Definition:</b> LineStringFeature.hpp:14</div></div>
@@ -546,7 +547,7 @@ $(document).ready(function(){initNavTree('_feature_builder_8hpp_source.html','')
 <div class="ttc" id="anamespacegeojson_html_a89dc78a6264929ea729d0911730835b6"><div class="ttname"><a href="namespacegeojson.html#a89dc78a6264929ea729d0911730835b6">geojson::multilinestring_t</a></div><div class="ttdeci">bg::model::multi_linestring&lt; linestring_t &gt; multilinestring_t</div><div class="ttdef"><b>Definition:</b> JSONGeometry.hpp:34</div></div>
 <div class="ttc" id="anamespacegeojson_html_a99613edf8c2f0543dcc2330e275e8f82"><div class="ttname"><a href="namespacegeojson.html#a99613edf8c2f0543dcc2330e275e8f82">geojson::build_point</a></div><div class="ttdeci">static coordinate_t build_point(boost::property_tree::ptree &amp;tree)</div><div class="ttdoc">Creates a single boost geometry point from the values in a boost property tree.</div><div class="ttdef"><b>Definition:</b> FeatureBuilder.hpp:30</div></div>
 <div class="ttc" id="anamespacegeojson_html_a9c216b34a0daddc5c999f512e06125ed"><div class="ttname"><a href="namespacegeojson.html#a9c216b34a0daddc5c999f512e06125ed">geojson::build_feature</a></div><div class="ttdeci">static Feature build_feature(boost::property_tree::ptree &amp;tree)</div><div class="ttdef"><b>Definition:</b> FeatureBuilder.hpp:230</div></div>
-<div class="ttc" id="anamespacegeojson_html_aa9d243ef2a01cd361aa02917e4151d1d"><div class="ttname"><a href="namespacegeojson.html#aa9d243ef2a01cd361aa02917e4151d1d">geojson::read</a></div><div class="ttdeci">static GeoJSON read(const std::string &amp;file_path, const std::vector&lt; std::string &gt; &amp;ids={})</div><div class="ttdef"><b>Definition:</b> FeatureBuilder.hpp:444</div></div>
+<div class="ttc" id="anamespacegeojson_html_aa9d243ef2a01cd361aa02917e4151d1d"><div class="ttname"><a href="namespacegeojson.html#aa9d243ef2a01cd361aa02917e4151d1d">geojson::read</a></div><div class="ttdeci">static GeoJSON read(const std::string &amp;file_path, const std::vector&lt; std::string &gt; &amp;ids={})</div><div class="ttdef"><b>Definition:</b> FeatureBuilder.hpp:445</div></div>
 <div class="ttc" id="anamespacegeojson_html_aadf8e60a78277620cb882e64d6a03284"><div class="ttname"><a href="namespacegeojson.html#aadf8e60a78277620cb882e64d6a03284">geojson::build_polygon</a></div><div class="ttdeci">static polygon_t build_polygon(boost::property_tree::ptree &amp;tree)</div><div class="ttdef"><b>Definition:</b> FeatureBuilder.hpp:73</div></div>
 <div class="ttc" id="anamespacegeojson_html_ab724970a20dff6100b94e25491292748"><div class="ttname"><a href="namespacegeojson.html#ab724970a20dff6100b94e25491292748">geojson::Feature</a></div><div class="ttdeci">std::shared_ptr&lt; FeatureBase &gt; Feature</div><div class="ttdoc">An easy name for a smart pointer for FeatureBase and its children.</div><div class="ttdef"><b>Definition:</b> FeatureBase.hpp:29</div></div>
 <div class="ttc" id="anamespacegeojson_html_ad5d0756236bbc62039740c0b6258cee0"><div class="ttname"><a href="namespacegeojson.html#ad5d0756236bbc62039740c0b6258cee0">geojson::FeatureType</a></div><div class="ttdeci">FeatureType</div><div class="ttdoc">Describes a type of features.</div><div class="ttdef"><b>Definition:</b> FeatureBase.hpp:44</div></div>
@@ -567,7 +568,7 @@ $(document).ready(function(){initNavTree('_feature_builder_8hpp_source.html','')
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_23df12f7bc050f2b7f4a461242b2c584.html">geojson</a></li><li class="navelem"><b>FeatureBuilder.hpp</b></li>
-    <li class="footer">Generated on Thu Aug 5 2021 14:55:24 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Tue Aug 17 2021 14:49:59 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

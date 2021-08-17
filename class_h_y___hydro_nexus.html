@@ -98,7 +98,7 @@ $(document).ready(function(){initNavTree('class_h_y___hydro_nexus.html',''); ini
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="class_h_y___hydro_nexus__inherit__graph.svg" width="192" height="595"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="class_h_y___hydro_nexus__inherit__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 <div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
@@ -140,6 +140,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af515ce59ff427551b6e61cbdba65dd7f"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___hydro_nexus.html#af515ce59ff427551b6e61cbdba65dd7f">get_flow_units</a> ()=0</td></tr>
 <tr class="memdesc:af515ce59ff427551b6e61cbdba65dd7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">get the units that the flows are described in  <a href="class_h_y___hydro_nexus.html#af515ce59ff427551b6e61cbdba65dd7f">More...</a><br /></td></tr>
 <tr class="separator:af515ce59ff427551b6e61cbdba65dd7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae715c140fa72a5fa99e02411aae639f0"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_h_y___hydro_nexus.html#a6efba8fb752f9b96fa2f9464dbcb1a22">Catchments</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___hydro_nexus.html#ae715c140fa72a5fa99e02411aae639f0">get_receiving_catchments</a> ()</td></tr>
+<tr class="separator:ae715c140fa72a5fa99e02411aae639f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8fba3c168f653e7f94b52dd1399c40a"><td class="memItemLeft" align="right" valign="top">std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___hydro_nexus.html#ac8fba3c168f653e7f94b52dd1399c40a">get_id</a> ()</td></tr>
+<tr class="separator:ac8fba3c168f653e7f94b52dd1399c40a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -419,6 +423,56 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="ac8fba3c168f653e7f94b52dd1399c40a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac8fba3c168f653e7f94b52dd1399c40a">&#9670;&nbsp;</a></span>get_id()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string&amp; HY_HydroNexus::get_id </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae715c140fa72a5fa99e02411aae639f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae715c140fa72a5fa99e02411aae639f0">&#9670;&nbsp;</a></span>get_receiving_catchments()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="class_h_y___hydro_nexus.html#a6efba8fb752f9b96fa2f9464dbcb1a22">Catchments</a>&amp; HY_HydroNexus::get_receiving_catchments </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="abdd08e8c8a361e80e41d42a1939af71f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abdd08e8c8a361e80e41d42a1939af71f">&#9670;&nbsp;</a></span>inspect_downstream_requests()</h2>
 
@@ -598,7 +652,7 @@ Private Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_h_y___hydro_nexus.html">HY_HydroNexus</a></li>
-    <li class="footer">Generated on Thu Aug 5 2021 14:55:24 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Tue Aug 17 2021 14:50:00 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['linestringfeature_1162',['LineStringFeature',['../classgeojson_1_1_line_string_feature.html',1,'geojson']]]
+  ['linestringfeature_1164',['LineStringFeature',['../classgeojson_1_1_line_string_feature.html',1,'geojson']]]
 ];
