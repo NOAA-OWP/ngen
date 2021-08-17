@@ -37,9 +37,7 @@ See the [Dependencies](doc/DEPENDENCIES.md).
 
 ## Installation
 
-Detailed instructions on how to install, configure, and get the project running.
-This should be frequently tested to ensure reliability. Alternatively, link to
-a separate [INSTALL](INSTALL.md) document.
+See [INSTALL](INSTALL.md).
 
 ## Configuration
 
