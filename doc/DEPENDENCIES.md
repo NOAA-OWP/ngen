@@ -8,7 +8,7 @@
 | [C/C++ Compiler](#c-and-c-compiler) | external | see below |  |
 | [CMake](#cmake) | external | \>= `3.12` | |
 | [Boost (Headers Only)](#boost-headers-only) | external | `1.72.0` | headers only library |
-| [Python 3 Libraries](#python-3-libraries) | external | \> `3.6.12` | Can be [excluded](#overriding-python-dependency). Requires ``numpy`` package |
+| [Python 3 Libraries](#python-3-libraries) | external | \> `3.6.8` | Can be [excluded](#overriding-python-dependency). Requires ``numpy`` package |
 | [pybind11](#pybind11) | submodule | `v2.6.0` | Can be [excluded](#overriding-pybind11-dependency). |
 
 # Details
@@ -132,7 +132,7 @@ The variable `Python_NumPy_INCLUDE_DIR` (either as a CMake variable or a user en
     
 ### Version Requirements
 
-A version of Python 3 >= `3.6.12` (the oldest currently supported at the time of this writing) is required.  There are no specific version requirements for `numpy` currently. 
+A version of Python 3 >= `3.6.8` is required.  There are no specific version requirements for `numpy` currently. 
 
 ## pybind11
 
