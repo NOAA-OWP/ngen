@@ -121,3 +121,10 @@ data/hydrofabric/huc01_demo/
 .venv
 boost_*
 include/NGenConfig.h
+
+# Large Example Datasets for certain tests #
+############################################
+# HUC01 Demo Testing Forcing Data
+data/forcing/huc01_demo/
+# HUC01 Demo Testing Hydrofabric
+data/hydrofabric/huc01_demo/
