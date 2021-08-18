@@ -25,6 +25,11 @@ namespace models {
             State_Exception(std::string message) noexcept
                     : std::exception(), what_message(std::move(message)) {}
 
+            State_Exception(State_Exception &exception) noexcept: State_Exception(exception.what_message) {}
+
+            State_Exception(State_Exception &&exception) noexcept
+                    : State_Exception(std::move(exception.what_message)) {}
+
             virtual char const *what() const noexcept {
                 return what_message.c_str();
             }
