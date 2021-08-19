@@ -302,7 +302,7 @@ namespace realization {
          * @return The index of the forcing time step that contains the given point in time.
          * @throws std::out_of_range If the given point is not in any time step.
          */
-        size_t get_ts_index_for_time(const time_t &epoch_time) {
+        size_t get_ts_index_for_time(const time_t &epoch_time) override {
             // TODO: come back and implement if actually necessary for this type; for now don't use
             throw runtime_error("Bmi_Singular_Formulation does not yet implement get_ts_index_for_time");
         }
@@ -324,7 +324,7 @@ namespace realization {
          * @throws std::out_of_range If data for the time period is not available.
          */
         double get_value(const std::string &output_name, const time_t &init_time, const long &duration_s,
-                         const std::string &output_units)
+                         const std::string &output_units) override
         {
             // First make sure this is an available output
             const std::vector<std::string> forcing_outputs = get_available_forcing_outputs();
@@ -365,9 +365,9 @@ namespace realization {
             return get_var_value_as_double(bmi_var_name);
         }
 
-        virtual inline bool is_bmi_input_variable(const std::string &var_name) = 0;
+        bool is_bmi_input_variable(const std::string &var_name) override = 0;
 
-        virtual inline bool is_bmi_output_variable(const std::string &var_name) = 0;
+        bool is_bmi_output_variable(const std::string &var_name) override = 0;
 
         /**
          * Get whether a property's per-time-step values are each an aggregate sum over the entire time step.
@@ -467,7 +467,7 @@ namespace realization {
             return bmi_model;
         }
 
-        const string &get_forcing_file_path() const {
+        const string &get_forcing_file_path() const override {
             return forcing_file_path;
         }
 
@@ -574,7 +574,7 @@ namespace realization {
          *
          * @return
          */
-        const vector<std::string> &get_output_variable_names() const {
+        const vector<std::string> &get_output_variable_names() const override {
             return output_variable_names;
         }
 
@@ -704,7 +704,7 @@ namespace realization {
          *
          * @return Whether backing model has fixed time step size.
          */
-        bool is_bmi_model_time_step_fixed() {
+        bool is_bmi_model_time_step_fixed() override {
             return bmi_model_time_step_fixed;
         }
 
@@ -713,7 +713,7 @@ namespace realization {
          *
          * @return Whether the backing model uses/reads the forcing file directly for getting input data.
          */
-        bool is_bmi_using_forcing_file() const {
+        bool is_bmi_using_forcing_file() const override {
             return bmi_using_forcing_file;
         }
 
@@ -722,7 +722,7 @@ namespace realization {
          *
          * @return Whether backing model object has been initialize using the BMI standard ``Initialize`` function.
          */
-        virtual bool is_model_initialized() {
+        bool is_model_initialized() override {
             return model_initialized;
         };
 
