@@ -103,6 +103,29 @@ namespace models {
             }
 
             /**
+             * Convert model time value to value in seconds.
+             *
+             * Performs necessary lookup and conversion of some given model time value - as from `GetCurrentTime()` or
+             * `GetStartTime()` - and returns the equivalent value when represented in seconds.
+             *
+             * @param model_time_val Arbitrary model time value in units provided by `GetTimeUnits()`
+             * @return Equivalent model time value to value in seconds.
+             */
+            double convert_model_time_to_seconds(const double& model_time_val) {
+                return model_time_val * bmi_model_time_convert_factor;
+            }
+
+            /**
+             * Convert a given number of seconds to equivalent in model time units.
+             *
+             * @param seconds_val
+             * @return
+             */
+            double convert_seconds_to_model_time(const double& seconds_val) {
+                return seconds_val / bmi_model_time_convert_factor;
+            }
+
+            /**
              * Initialize the wrapped BMI model functionality using the value from the `bmi_init_config` member variable
              * and the API's ``Initialize`` function.
              *
@@ -187,6 +210,15 @@ namespace models {
                 }
 
                 Initialize();
+            }
+
+            /**
+             * Get whether this instance has been initialized properly.
+             *
+             * @return Whether this instance has been initialized properly.
+             */
+            inline bool isInitialized() {
+                return model_initialized;
             }
 
         protected:
