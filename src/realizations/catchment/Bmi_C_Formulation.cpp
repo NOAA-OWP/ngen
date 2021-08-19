@@ -30,10 +30,10 @@ std::shared_ptr<Bmi_C_Adapter> Bmi_C_Formulation::construct_model(const geojson:
             reg_func_itr == properties.end() ? BMI_C_DEFAULT_REGISTRATION_FUNC : reg_func_itr->second.as_string();
     return std::make_shared<Bmi_C_Adapter>(
             Bmi_C_Adapter(
+                    get_model_type_name(),
                     lib_file,
                     get_bmi_init_config(),
-                    get_forcing_file_path(),
-                    is_bmi_using_forcing_file(),
+                    (is_bmi_using_forcing_file() ? get_forcing_file_path() : ""),
                     get_allow_model_exceed_end_time(),
                     is_bmi_model_time_step_fixed(),
                     reg_func,
