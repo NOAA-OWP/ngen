@@ -6,6 +6,7 @@
 #include "bmi.hpp"
 #include "FileChecker.h"
 #include "JSONProperty.hpp"
+#include "State_Exception.hpp"
 #include "StreamHandler.hpp"
 
 using namespace std;
@@ -19,9 +20,9 @@ namespace models {
         template <class T>
         class Bmi_Adapter : public ::bmi::Bmi {
         public:
+
             Bmi_Adapter(string model_name, string bmi_init_config, string forcing_file_path, bool allow_exceed_end,
-                        bool has_fixed_time_step, const geojson::JSONProperty &other_input_vars,
-                        utils::StreamHandler output, bool call_bmi_initialize = true)
+                        bool has_fixed_time_step, utils::StreamHandler output)
                 : model_name(move(model_name)),
                   bmi_init_config(move(bmi_init_config)),
                   bmi_model_uses_forcing_file(!forcing_file_path.empty()),
@@ -31,8 +32,13 @@ namespace models {
                   output(move(output)),
                   bmi_model_time_convert_factor(1.0)
             {
-                if (call_bmi_initialize)
-                    Initialize();
+                // This replicates a lot of Initialize, but it's necessary to be able to do it separately to support
+                // "initializing" on construction, given using Initialize requires use of virtual functions
+                if (!utils::FileChecker::file_is_readable(this->bmi_init_config)) {
+                    init_exception_msg = "Cannot create and initialize " + this->model_name + " using unreadable file '"
+                            + this->bmi_init_config + "'";
+                    throw runtime_error(init_exception_msg);
+                }
             }
 
             /**
@@ -86,7 +92,7 @@ namespace models {
              *
              * @param time_convert_factor A reference to set to the determined conversion factor.
              */
-            virtual void acquire_time_conversion_factor(double &time_convert_factor) {
+            void acquire_time_conversion_factor(double &time_convert_factor) {
                 string time_units = GetTimeUnits();
                 if (time_units == "s" || time_units == "sec" || time_units == "second" || time_units == "seconds")
                     time_convert_factor = 1.0;
@@ -194,6 +200,7 @@ namespace models {
              *
              * @param config_file
              * @see Initialize()
+             * @throws models::external::State_Exception   If `initialize()` in nested model is not successful.
              * @throws runtime_error If already initialized but using a different file than the passed argument.
              */
             void Initialize(string config_file) override {
@@ -208,8 +215,15 @@ namespace models {
                                 + config_file);
                     bmi_init_config = config_file;
                 }
-
-                Initialize();
+                try {
+                    Initialize();
+                }
+                catch (models::external::State_Exception &e) {
+                    throw e;
+                }
+                catch (std::exception &e) {
+                    throw runtime_error(e.what());
+                }
             }
 
             /**
