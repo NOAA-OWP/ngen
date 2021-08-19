@@ -214,7 +214,7 @@ namespace realization {
          * @return The index of the forcing time step that contains the given point in time.
          * @throws std::out_of_range If the given point is not in any time step.
          */
-        size_t get_ts_index_for_time(const time_t &epoch_time) {
+        size_t get_ts_index_for_time(const time_t &epoch_time) override {
             // TODO: come back and implement if actually necessary for this type; for now don't use
             throw runtime_error("Bmi_Multi_Formulation does not yet implement get_ts_index_for_time");
         }
@@ -241,7 +241,7 @@ namespace realization {
          * @throws std::out_of_range If data for the time period is not available.
          */
         double get_value(const std::string &output_name, const time_t &init_time, const long &duration_s,
-                         const std::string &output_units)
+                         const std::string &output_units) override
         {
             // If not found ...
             if (availableData.empty() || availableData.find(output_name) == availableData.end()) {
