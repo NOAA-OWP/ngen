@@ -77,7 +77,7 @@ namespace realization {
              */
             double get_response(time_step_t t_index, time_step_t t_delta_s) override;
 
-            std::string get_formulation_type() {
+            std::string get_formulation_type() override {
                 return "tshirt";
             }
 
@@ -104,9 +104,9 @@ namespace realization {
              */
             std::string get_output_line_for_timestep(int timestep, std::string delimiter=",") override;
 
-            void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr);
+            void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr) override;
 
-            void create_formulation(geojson::PropertyMap properties);
+            void create_formulation(geojson::PropertyMap properties) override;
 
             const std::vector<std::string>& get_required_parameters() override {
                 return REQUIRED_PARAMETERS;
