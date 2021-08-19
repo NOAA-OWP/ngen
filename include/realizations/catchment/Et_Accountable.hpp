@@ -33,7 +33,7 @@ namespace realization {
          *
          * @return Whether ET params have been set.
          */
-        virtual bool is_et_params_set() {
+        bool is_et_params_set() override {
             return et_params != nullptr;
         }
 
