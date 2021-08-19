@@ -55,6 +55,8 @@ protected:
     std::string config_file_name_0;
     std::string lib_file_name_0;
     std::string forcing_file_name_0;
+    std::string bmi_module_type_name_0;
+    std::unique_ptr<Bmi_C_Adapter> adapter;
 
     std::vector<std::string> expected_output_var_names = { "OUTPUT_VAR_1", "OUTPUT_VAR_2" };
     std::vector<std::string> expected_output_var_locations = { "node", "node" };
@@ -87,6 +89,10 @@ void Bmi_C_Adapter_Test::SetUp() {
             "../../extern/test_bmi_c/cmake_build/"
     };
     lib_file_name_0 = file_search(lib_dir_opts, BMI_TEST_C_LOCAL_LIB_NAME);
+    bmi_module_type_name_0 = "test_bmi_c";
+    adapter = std::make_unique<Bmi_C_Adapter>(bmi_module_type_name_0, lib_file_name_0, config_file_name_0, 
+                                              forcing_file_name_0, false, true, REGISTRATION_FUNC,
+                                              utils::StreamHandler());
 }
 
 void Bmi_C_Adapter_Test::TearDown() {
@@ -107,18 +113,14 @@ Bmi_C_Adapter_Test::file_search(const std::vector<std::string> &parent_dir_optio
 
 /** Simple test to make sure the model initializes. */
 TEST_F(Bmi_C_Adapter_Test, Initialize_0_a) {
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
-    adapter.Initialize();
-    adapter.Finalize();
+    adapter->Initialize();
+    adapter->Finalize();
 }
 
 /** Test output variables can be retrieved. */
 TEST_F(Bmi_C_Adapter_Test, GetOutputVarNames_0_a) {
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
     try {
-        ASSERT_EQ(adapter.GetOutputVarNames(), expected_output_var_names);
+        ASSERT_EQ(adapter->GetOutputVarNames(), expected_output_var_names);
     }
     catch (std::exception& e) {
         printf("Exception getting output var names: %s", e.what());
@@ -127,10 +129,8 @@ TEST_F(Bmi_C_Adapter_Test, GetOutputVarNames_0_a) {
 
 /** Test output variables item count can be retrieved. */
 TEST_F(Bmi_C_Adapter_Test, GetOutputItemCount_0_a) {
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
     try {
-        ASSERT_EQ(adapter.GetOutputItemCount(), expected_output_var_names.size());
+        ASSERT_EQ(adapter->GetOutputItemCount(), expected_output_var_names.size());
     }
     catch (std::exception& e) {
         printf("Exception getting output var count: %s", e.what());
@@ -139,55 +139,46 @@ TEST_F(Bmi_C_Adapter_Test, GetOutputItemCount_0_a) {
 
 /** Test that both the get value function works for input 1. */
 TEST_F(Bmi_C_Adapter_Test, GetValue_0_a) {
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
-    adapter.Initialize();
+    adapter->Initialize();
     double value = 5.0;
-    model_data* model = friend_get_model_data_struct(&adapter);
+    model_data* model = friend_get_model_data_struct(adapter.get());
     *model->input_var_1 = value;
-    adapter.SetValue("INPUT_VAR_1", &value);
-    double retrieved = adapter.GetValue<double>("INPUT_VAR_1")[0];
-    adapter.Finalize();
+    adapter->SetValue("INPUT_VAR_1", &value);
+    double retrieved = adapter->GetValue<double>("INPUT_VAR_1")[0];
+    adapter->Finalize();
     ASSERT_EQ(value, retrieved);
 }
 
 /** Test that both the get value function works for input 2. */
 TEST_F(Bmi_C_Adapter_Test, GetValue_0_b) {
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
-    adapter.Initialize();
+    adapter->Initialize();
     double value = 6.0;
-    model_data* model = friend_get_model_data_struct(&adapter);
+    model_data* model = friend_get_model_data_struct(adapter.get());
     *model->input_var_2 = value;
-    double retrieved = adapter.GetValue<double>("INPUT_VAR_2")[0];
-    adapter.Finalize();
+    double retrieved = adapter->GetValue<double>("INPUT_VAR_2")[0];
+    adapter->Finalize();
     ASSERT_EQ(value, retrieved);
 }
 
 /** Test that both the get value function works for output 1. */
 TEST_F(Bmi_C_Adapter_Test, GetValue_0_c) {
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
-    adapter.Initialize();
+    adapter->Initialize();
     double value = 7.0;
-    model_data* model = friend_get_model_data_struct(&adapter);
+    model_data* model = friend_get_model_data_struct(adapter.get());
     *model->output_var_1 = value;
-    double retrieved = adapter.GetValue<double>("OUTPUT_VAR_1")[0];
-    adapter.Finalize();
+    double retrieved = adapter->GetValue<double>("OUTPUT_VAR_1")[0];
+    adapter->Finalize();
     ASSERT_EQ(value, retrieved);
 }
 
 /** Profile the update function and GetValues functions */
 TEST_F(Bmi_C_Adapter_Test, Profile)
 {
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
+    int num_ouput_items = adapter->GetOutputItemCount();
+    int num_input_items = adapter->GetInputItemCount();
 
-    int num_ouput_items = adapter.GetOutputItemCount();
-    int num_input_items = adapter.GetInputItemCount();
-
-    std::vector<std::string> output_names = adapter.GetOutputVarNames();
-    std::vector<std::string> input_names = adapter.GetInputVarNames();
+    std::vector<std::string> output_names = adapter->GetOutputVarNames();
+    std::vector<std::string> input_names = adapter->GetInputVarNames();
 
     std::unordered_map<std::string, std::vector<long> > saved_times;
 
@@ -195,13 +186,13 @@ TEST_F(Bmi_C_Adapter_Test, Profile)
     using time_point = std::chrono::time_point<std::chrono::steady_clock>;
     auto to_micros = [](const time_point& s, const time_point& e){ return std::chrono::duration_cast<std::chrono::microseconds>(e - s).count();};
 
-    adapter.Initialize();
+    adapter->Initialize();
     // Do the first few time steps
     for (int i = 0; i < 720; i++)
     {
         // record time for Update
         auto s1 = std::chrono::steady_clock::now();
-        adapter.Update();
+        adapter->Update();
         auto e1 = std::chrono::steady_clock::now();
         saved_times["Update"].push_back(to_micros(s1,e1));
 
@@ -209,7 +200,7 @@ TEST_F(Bmi_C_Adapter_Test, Profile)
         for(std::string name : output_names)
         {
             auto s2 = std::chrono::steady_clock::now();
-            std::vector<double> values = adapter.GetValue<double>(name);
+            std::vector<double> values = adapter->GetValue<double>(name);
             auto e2 = std::chrono::steady_clock::now();
             saved_times["Get " + name].push_back(to_micros(s2,e2));
         }
@@ -218,7 +209,7 @@ TEST_F(Bmi_C_Adapter_Test, Profile)
         for(std::string name : input_names)
         {
             auto s3 = std::chrono::steady_clock::now();
-            std::vector<double> values = adapter.GetValue<double>(name);
+            std::vector<double> values = adapter->GetValue<double>(name);
             auto e3 = std::chrono::steady_clock::now();
             saved_times["Get " + name].push_back(to_micros(s3,e3));
         }
@@ -239,320 +230,275 @@ TEST_F(Bmi_C_Adapter_Test, Profile)
         std::cout << "Average time for " << key << " = " << average << "µs\n";
     }
 
-    adapter.Finalize();
+    adapter->Finalize();
 }
 
 /** Test that both the get value function works for output 2. */
 TEST_F(Bmi_C_Adapter_Test, GetValue_0_d) {
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
-    adapter.Initialize();
+    adapter->Initialize();
     double value = 8.0;
-    model_data* model = friend_get_model_data_struct(&adapter);
+    model_data* model = friend_get_model_data_struct(adapter.get());
     *model->output_var_2 = value;
-    double retrieved = adapter.GetValue<double>("OUTPUT_VAR_2")[0];
-    adapter.Finalize();
+    double retrieved = adapter->GetValue<double>("OUTPUT_VAR_2")[0];
+    adapter->Finalize();
     ASSERT_EQ(value, retrieved);
 }
 
 /** Test that both the get value pointer function works for input 1. */
 TEST_F(Bmi_C_Adapter_Test, GetValuePtr_0_a) {
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
-    adapter.Initialize();
-    double* in_1_ptr = adapter.GetValuePtr<double>("INPUT_VAR_1");
-    model_data* model = friend_get_model_data_struct(&adapter);
+    adapter->Initialize();
+    double* in_1_ptr = adapter->GetValuePtr<double>("INPUT_VAR_1");
+    model_data* model = friend_get_model_data_struct(adapter.get());
     ASSERT_EQ(model->input_var_1, in_1_ptr);
-    adapter.Finalize();
+    adapter->Finalize();
 }
 
 /** Test that both the get value pointer function works for input 2 and gets the right pointer. */
 TEST_F(Bmi_C_Adapter_Test, GetValuePtr_0_b) {
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
-    adapter.Initialize();
+    adapter->Initialize();
     double value = 6.0;
-    double* in_2_ptr = adapter.GetValuePtr<double>("INPUT_VAR_2");
+    double* in_2_ptr = adapter->GetValuePtr<double>("INPUT_VAR_2");
     *in_2_ptr = value;
-    ASSERT_EQ(value, adapter.GetValue<double>("INPUT_VAR_2")[0]);
-    adapter.Finalize();
+    ASSERT_EQ(value, adapter->GetValue<double>("INPUT_VAR_2")[0]);
+    adapter->Finalize();
 }
 
 /** Test that both the get value pointer function works for output 1 and gets the right pointer. */
 TEST_F(Bmi_C_Adapter_Test, GetValuePtr_0_c) {
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
-    adapter.Initialize();
-    double* out_1_ptr = adapter.GetValuePtr<double>("OUTPUT_VAR_1");
+    adapter->Initialize();
+    double* out_1_ptr = adapter->GetValuePtr<double>("OUTPUT_VAR_1");
     double value_1 = 6.0;
-    adapter.SetValue("INPUT_VAR_1", &value_1);
-    adapter.SetValue("INPUT_VAR_2", &value_1);
-    adapter.Update();
+    adapter->SetValue("INPUT_VAR_1", &value_1);
+    adapter->SetValue("INPUT_VAR_2", &value_1);
+    adapter->Update();
 
     ASSERT_EQ(value_1, *out_1_ptr);
 
     double value_2 = 10.0;
-    adapter.SetValue("INPUT_VAR_1", &value_2);
-    adapter.SetValue("INPUT_VAR_2", &value_2);
-    adapter.Update();
+    adapter->SetValue("INPUT_VAR_1", &value_2);
+    adapter->SetValue("INPUT_VAR_2", &value_2);
+    adapter->Update();
 
     ASSERT_EQ(value_2, *out_1_ptr);
 
-    adapter.Finalize();
+    adapter->Finalize();
 }
 
 /** Test that both the get value pointer function works for output 2 and gets the right pointer. */
 TEST_F(Bmi_C_Adapter_Test, GetValuePtr_0_d) {
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
-    adapter.Initialize();
-    double* out_2_ptr = adapter.GetValuePtr<double>("OUTPUT_VAR_2");
+    adapter->Initialize();
+    double* out_2_ptr = adapter->GetValuePtr<double>("OUTPUT_VAR_2");
     double value_1 = 6.0;
-    adapter.SetValue("INPUT_VAR_1", &value_1);
-    adapter.SetValue("INPUT_VAR_2", &value_1);
-    adapter.Update();
+    adapter->SetValue("INPUT_VAR_1", &value_1);
+    adapter->SetValue("INPUT_VAR_2", &value_1);
+    adapter->Update();
 
     ASSERT_EQ(value_1 * 2.0, *out_2_ptr);
 
     double value_2 = 10.0;
-    adapter.SetValue("INPUT_VAR_1", &value_2);
-    adapter.SetValue("INPUT_VAR_2", &value_2);
-    adapter.Update();
+    adapter->SetValue("INPUT_VAR_1", &value_2);
+    adapter->SetValue("INPUT_VAR_2", &value_2);
+    adapter->Update();
 
     ASSERT_EQ(value_2 * 2.0, *out_2_ptr);
 
-    adapter.Finalize();
+    adapter->Finalize();
 }
 
 /** Test the function for getting start time. */
 TEST_F(Bmi_C_Adapter_Test, GetStartTime_0_a) {
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
-    adapter.Initialize();
-    ASSERT_EQ(0, adapter.GetStartTime());
-    adapter.Finalize();
+    adapter->Initialize();
+    ASSERT_EQ(0, adapter->GetStartTime());
+    adapter->Finalize();
 }
 
 /** Test the function for getting time step size. */
 TEST_F(Bmi_C_Adapter_Test, GetTimeStep_0_a) {
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
-    adapter.Initialize();
-    ASSERT_EQ(3600, adapter.GetTimeStep());
-    adapter.Finalize();
+    adapter->Initialize();
+    ASSERT_EQ(3600, adapter->GetTimeStep());
+    adapter->Finalize();
 }
 
 /** Test the function for getting model time units. */
 TEST_F(Bmi_C_Adapter_Test, GetTimeUnits_0_a) {
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
-    adapter.Initialize();
-    ASSERT_EQ("s", adapter.GetTimeUnits());
-    adapter.Finalize();
+    adapter->Initialize();
+    ASSERT_EQ("s", adapter->GetTimeUnits());
+    adapter->Finalize();
 }
 
 /** Test the function for getting model end time, assuming (as in used config) 720 time steps. */
 TEST_F(Bmi_C_Adapter_Test, GetEndTime_0_a) {
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
-    adapter.Initialize();
-    double expected = adapter.GetStartTime() + (720.0 * adapter.GetTimeStep());
-    ASSERT_EQ(expected, adapter.GetEndTime());
-    adapter.Finalize();
+    adapter->Initialize();
+    double expected = adapter->GetStartTime() + (720.0 * adapter->GetTimeStep());
+    ASSERT_EQ(expected, adapter->GetEndTime());
+    adapter->Finalize();
 }
 
 /** Test that getting the current model time works after initialization. */
 TEST_F(Bmi_C_Adapter_Test, GetCurrentTime_0_a) {
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
-    adapter.Initialize();
-    ASSERT_EQ(adapter.GetStartTime(), adapter.GetCurrentTime());
-    adapter.Finalize();
+    adapter->Initialize();
+    ASSERT_EQ(adapter->GetStartTime(), adapter->GetCurrentTime());
+    adapter->Finalize();
 }
 
 /** Test that getting the current model time works after an update. */
 TEST_F(Bmi_C_Adapter_Test, GetCurrentTime_0_b) {
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
-    adapter.Initialize();
-    double expected_time = adapter.GetStartTime() + adapter.GetTimeStep();
+    adapter->Initialize();
+    double expected_time = adapter->GetStartTime() + adapter->GetTimeStep();
     double value = 10.0;
-    adapter.SetValue("INPUT_VAR_1", &value);
-    adapter.SetValue("INPUT_VAR_2", &value);
-    adapter.Update();
-    ASSERT_EQ(expected_time, adapter.GetCurrentTime());
-    adapter.Finalize();
+    adapter->SetValue("INPUT_VAR_1", &value);
+    adapter->SetValue("INPUT_VAR_2", &value);
+    adapter->Update();
+    ASSERT_EQ(expected_time, adapter->GetCurrentTime());
+    adapter->Finalize();
 }
 
 /** Test that both the set value function works for input 1. */
 TEST_F(Bmi_C_Adapter_Test, SetValue_0_a) {
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
-    adapter.Initialize();
+    adapter->Initialize();
     double value = 5.0;
-    adapter.SetValue("INPUT_VAR_1", &value);
-    model_data* model = friend_get_model_data_struct(&adapter);
+    adapter->SetValue("INPUT_VAR_1", &value);
+    model_data* model = friend_get_model_data_struct(adapter.get());
     double retrieved = *model->input_var_1;
-    adapter.Finalize();
+    adapter->Finalize();
     ASSERT_EQ(value, retrieved);
 }
 
 /** Test that both the set value function works for input 2. */
 TEST_F(Bmi_C_Adapter_Test, SetValue_0_b) {
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
-    adapter.Initialize();
+    adapter->Initialize();
     double value = 6.0;
-    adapter.SetValue("INPUT_VAR_2", &value);
-    model_data* model = friend_get_model_data_struct(&adapter);
+    adapter->SetValue("INPUT_VAR_2", &value);
+    model_data* model = friend_get_model_data_struct(adapter.get());
     double retrieved = *model->input_var_2;
-    adapter.Finalize();
+    adapter->Finalize();
     ASSERT_EQ(value, retrieved);
 }
 
 /** Test that the set value function works for input 1 for multiple calls. */
 TEST_F(Bmi_C_Adapter_Test, SetValue_0_c) {
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
-    adapter.Initialize();
+    adapter->Initialize();
     double value_1 = 7.0;
-    adapter.SetValue("INPUT_VAR_1", &value_1);
+    adapter->SetValue("INPUT_VAR_1", &value_1);
     double value_2 = 10.0;
-    adapter.SetValue("INPUT_VAR_1", &value_2);
-    model_data* model = friend_get_model_data_struct(&adapter);
+    adapter->SetValue("INPUT_VAR_1", &value_2);
+    model_data* model = friend_get_model_data_struct(adapter.get());
     double retrieved = *model->input_var_1;
-    adapter.Finalize();
+    adapter->Finalize();
     ASSERT_EQ(value_2, retrieved);
 }
 
 /** Test that the update function works for a single update. */
 TEST_F(Bmi_C_Adapter_Test, Update_0_a) {
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
-    adapter.Initialize();
+    adapter->Initialize();
     double value_1 = 7.0;
     double value_2 = 10.0;
-    adapter.SetValue("INPUT_VAR_1", &value_1);
-    adapter.SetValue("INPUT_VAR_2", &value_2);
-    adapter.Update();
-    adapter.Finalize();
+    adapter->SetValue("INPUT_VAR_1", &value_1);
+    adapter->SetValue("INPUT_VAR_2", &value_2);
+    adapter->Update();
+    adapter->Finalize();
 }
 
 /** Test that the update function works for a single update and produces the expected value for output 1. */
 TEST_F(Bmi_C_Adapter_Test, Update_0_b) {
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
-    adapter.Initialize();
+    adapter->Initialize();
     double value_1 = 7.0;
     double value_2 = 10.0;
-    adapter.SetValue("INPUT_VAR_1", &value_1);
-    adapter.SetValue("INPUT_VAR_2", &value_2);
-    adapter.Update();
-    ASSERT_EQ(value_1, adapter.GetValue<double>("OUTPUT_VAR_1")[0]);
-    adapter.Finalize();
+    adapter->SetValue("INPUT_VAR_1", &value_1);
+    adapter->SetValue("INPUT_VAR_2", &value_2);
+    adapter->Update();
+    ASSERT_EQ(value_1, adapter->GetValue<double>("OUTPUT_VAR_1")[0]);
+    adapter->Finalize();
 }
 
 /** Test that the update function works for a single update and produces the expected value for output 2. */
 TEST_F(Bmi_C_Adapter_Test, Update_0_c) {
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
-    adapter.Initialize();
+    adapter->Initialize();
     double value_1 = 7.0;
     double value_2 = 10.0;
-    adapter.SetValue("INPUT_VAR_1", &value_1);
-    adapter.SetValue("INPUT_VAR_2", &value_2);
-    adapter.Update();
-    ASSERT_EQ(value_2 * 2, adapter.GetValue<double>("OUTPUT_VAR_2")[0]);
-    adapter.Finalize();
+    adapter->SetValue("INPUT_VAR_1", &value_1);
+    adapter->SetValue("INPUT_VAR_2", &value_2);
+    adapter->Update();
+    ASSERT_EQ(value_2 * 2, adapter->GetValue<double>("OUTPUT_VAR_2")[0]);
+    adapter->Finalize();
 }
 
 /** Test that the update function works for the 720 time steps and gets the expected output 1 values. */
 TEST_F(Bmi_C_Adapter_Test, Update_1_a) {
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
     size_t num_steps = 720;
     std::vector<double> expected(num_steps);
     std::vector<double> out_1_vals(num_steps);
-    adapter.Initialize();
+    adapter->Initialize();
     double value;
     for (size_t i = 0; i < num_steps; ++i) {
         value = 2.0 * i;
         expected[i] = value;
-        adapter.SetValue("INPUT_VAR_1", &value);
-        adapter.SetValue("INPUT_VAR_2", &value);
-        adapter.Update();
-        out_1_vals[i] = adapter.GetValue<double>("OUTPUT_VAR_1")[0];
+        adapter->SetValue("INPUT_VAR_1", &value);
+        adapter->SetValue("INPUT_VAR_2", &value);
+        adapter->Update();
+        out_1_vals[i] = adapter->GetValue<double>("OUTPUT_VAR_1")[0];
     }
-    adapter.Finalize();
+    adapter->Finalize();
     ASSERT_EQ(expected, out_1_vals);
 }
 
 /** Test that the update function works for the 720 time steps and gets the expected output 2 values. */
 TEST_F(Bmi_C_Adapter_Test, Update_1_b) {
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
     size_t num_steps = 720;
     std::vector<double> expected(num_steps);
     std::vector<double> out_2_vals(num_steps);
-    adapter.Initialize();
+    adapter->Initialize();
     double value;
     for (size_t i = 0; i < num_steps; ++i) {
         value = 2.0 * i;
         expected[i] = value * 2;
-        adapter.SetValue("INPUT_VAR_1", &value);
-        adapter.SetValue("INPUT_VAR_2", &value);
-        adapter.Update();
-        out_2_vals[i] = adapter.GetValue<double>("OUTPUT_VAR_2")[0];
+        adapter->SetValue("INPUT_VAR_1", &value);
+        adapter->SetValue("INPUT_VAR_2", &value);
+        adapter->Update();
+        out_2_vals[i] = adapter->GetValue<double>("OUTPUT_VAR_2")[0];
     }
-    adapter.Finalize();
+    adapter->Finalize();
     ASSERT_EQ(expected, out_2_vals);
 }
 
 /** Test that the update_until function works for a single update and produces the expected value for output 2. */
 TEST_F(Bmi_C_Adapter_Test, Update_until_0_a) {
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
-    adapter.Initialize();
+    adapter->Initialize();
     double value_1 = 7.0;
     double value_2 = 10.0;
-    adapter.SetValue("INPUT_VAR_1", &value_1);
-    adapter.SetValue("INPUT_VAR_2", &value_2);
+    adapter->SetValue("INPUT_VAR_1", &value_1);
+    adapter->SetValue("INPUT_VAR_2", &value_2);
     // This basically is a step of 1.5 times the normal length
-    double time = 5400 + adapter.GetCurrentTime();
-    adapter.UpdateUntil(time);
+    double time = 5400 + adapter->GetCurrentTime();
+    adapter->UpdateUntil(time);
     // Normally and update would produce out_2 as 2 * input_2, but here must further multiply by 1.5 for the longer time
-    ASSERT_EQ(value_2 * 2.0 * 1.5, adapter.GetValue<double>("OUTPUT_VAR_2")[0]);
-    adapter.Finalize();
+    ASSERT_EQ(value_2 * 2.0 * 1.5, adapter->GetValue<double>("OUTPUT_VAR_2")[0]);
+    adapter->Finalize();
 }
 
 /** Test that the update_until function works and advances the model time. */
 TEST_F(Bmi_C_Adapter_Test, Update_until_0_b) {
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
-    adapter.Initialize();
+    adapter->Initialize();
     double value_1 = 7.0;
     double value_2 = 10.0;
-    adapter.SetValue("INPUT_VAR_1", &value_1);
-    adapter.SetValue("INPUT_VAR_2", &value_2);
+    adapter->SetValue("INPUT_VAR_1", &value_1);
+    adapter->SetValue("INPUT_VAR_2", &value_2);
     // This basically is a step of 1.5 times the normal length
-    double time = 5400 + adapter.GetCurrentTime();
-    adapter.UpdateUntil(time);
-    ASSERT_EQ(time, adapter.GetCurrentTime());
-    adapter.Finalize();
+    double time = 5400 + adapter->GetCurrentTime();
+    adapter->UpdateUntil(time);
+    ASSERT_EQ(time, adapter->GetCurrentTime());
+    adapter->Finalize();
 }
 
 /** Test output 1 variable grid (id) can be retrieved. */
 TEST_F(Bmi_C_Adapter_Test, GetVarGrid_0_a) {
     int out_var_index = 0;
 
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
-
-    std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
     int expected_grid = expected_output_var_grids[out_var_index];
 
     try {
-        ASSERT_EQ(adapter.GetVarGrid(variable_name), expected_grid);
+        ASSERT_EQ(adapter->GetVarGrid(variable_name), expected_grid);
     }
     catch (std::exception& e) {
         printf("Exception getting var grid id: %s", e.what());
@@ -563,14 +509,11 @@ TEST_F(Bmi_C_Adapter_Test, GetVarGrid_0_a) {
 TEST_F(Bmi_C_Adapter_Test, GetVarGrid_0_b) {
     int out_var_index = 1;
 
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
-
-    std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
     int expected_grid = expected_output_var_grids[out_var_index];
 
     try {
-        ASSERT_EQ(adapter.GetVarGrid(variable_name), expected_grid);
+        ASSERT_EQ(adapter->GetVarGrid(variable_name), expected_grid);
     }
     catch (std::exception& e) {
         printf("Exception getting var grid id: %s", e.what());
@@ -581,14 +524,11 @@ TEST_F(Bmi_C_Adapter_Test, GetVarGrid_0_b) {
 TEST_F(Bmi_C_Adapter_Test, GetVarLocation_0_a) {
     int out_var_index = 0;
 
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
-
-    std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
     std::string expected_location = expected_output_var_locations[out_var_index];
 
     try {
-        ASSERT_EQ(adapter.GetVarLocation(variable_name), expected_location);
+        ASSERT_EQ(adapter->GetVarLocation(variable_name), expected_location);
     }
     catch (std::exception& e) {
         printf("Exception getting var location: %s", e.what());
@@ -599,14 +539,11 @@ TEST_F(Bmi_C_Adapter_Test, GetVarLocation_0_a) {
 TEST_F(Bmi_C_Adapter_Test, GetVarLocation_0_b) {
     int out_var_index = 1;
 
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
-
-    std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
     std::string expected_location = expected_output_var_locations[out_var_index];
 
     try {
-        ASSERT_EQ(adapter.GetVarLocation(variable_name), expected_location);
+        ASSERT_EQ(adapter->GetVarLocation(variable_name), expected_location);
     }
     catch (std::exception& e) {
         printf("Exception getting var location: %s", e.what());
@@ -617,14 +554,11 @@ TEST_F(Bmi_C_Adapter_Test, GetVarLocation_0_b) {
 TEST_F(Bmi_C_Adapter_Test, GetVarUnits_0_a) {
     int out_var_index = 0;
 
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
-
-    std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
     std::string expected_units = expected_output_var_units[out_var_index];
 
     try {
-        ASSERT_EQ(adapter.GetVarUnits(variable_name), expected_units);
+        ASSERT_EQ(adapter->GetVarUnits(variable_name), expected_units);
     }
     catch (std::exception& e) {
         printf("Exception getting var units: %s", e.what());
@@ -635,14 +569,11 @@ TEST_F(Bmi_C_Adapter_Test, GetVarUnits_0_a) {
 TEST_F(Bmi_C_Adapter_Test, GetVarType_0_a) {
     int out_var_index = 0;
 
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
-
-    std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
     std::string expected_type = expected_output_var_types[out_var_index];
 
     try {
-        ASSERT_EQ(adapter.GetVarType(variable_name), expected_type);
+        ASSERT_EQ(adapter->GetVarType(variable_name), expected_type);
     }
     catch (std::exception& e) {
         printf("Exception getting var type: %s", e.what());
@@ -654,13 +585,10 @@ TEST_F(Bmi_C_Adapter_Test, GetVarType_0_a) {
 TEST_F(Bmi_C_Adapter_Test, GetVarNbytes_0_a) {
     int out_var_index = 0;
 
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
-
-    std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
 
     try {
-        ASSERT_EQ(adapter.GetVarNbytes(variable_name), expected_var_nbytes);
+        ASSERT_EQ(adapter->GetVarNbytes(variable_name), expected_var_nbytes);
     }
     catch (std::exception& e) {
         printf("Exception getting var nbytes: %s", e.what());
@@ -671,14 +599,11 @@ TEST_F(Bmi_C_Adapter_Test, GetVarNbytes_0_a) {
 TEST_F(Bmi_C_Adapter_Test, DISABLED_GetGridType_0_a) {
     int out_var_index = 0;
 
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
-
-    std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
-    int grd = adapter.GetVarGrid(variable_name);
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    int grd = adapter->GetVarGrid(variable_name);
 
     try {
-        ASSERT_EQ(adapter.GetGridType(grd), expected_grid_type);
+        ASSERT_EQ(adapter->GetGridType(grd), expected_grid_type);
     }
     catch (std::exception& e) {
         printf("Exception getting grid type: %s", e.what());
@@ -690,14 +615,11 @@ TEST_F(Bmi_C_Adapter_Test, DISABLED_GetGridType_0_a) {
 TEST_F(Bmi_C_Adapter_Test, DISABLED_GetGridRank_0_a) {
     int out_var_index = 0;
 
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
-
-    std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
-    int grd = adapter.GetVarGrid(variable_name);
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    int grd = adapter->GetVarGrid(variable_name);
 
     try {
-        ASSERT_EQ(adapter.GetGridRank(grd), expected_grid_rank);
+        ASSERT_EQ(adapter->GetGridRank(grd), expected_grid_rank);
     }
     catch (std::exception& e) {
         printf("Exception getting grid rank: %s", e.what());
@@ -709,14 +631,11 @@ TEST_F(Bmi_C_Adapter_Test, DISABLED_GetGridRank_0_a) {
 TEST_F(Bmi_C_Adapter_Test, DISABLED_GetGridSize_0_a) {
     int out_var_index = 1;
 
-    Bmi_C_Adapter adapter(lib_file_name_0, config_file_name_0, forcing_file_name_0, true, false, true,
-                          REGISTRATION_FUNC, utils::StreamHandler());
-
-    std::string variable_name = adapter.GetOutputVarNames()[out_var_index];
-    int grd = adapter.GetVarGrid(variable_name);
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    int grd = adapter->GetVarGrid(variable_name);
 
     try {
-        ASSERT_EQ(adapter.GetGridSize(grd), expected_grid_size);
+        ASSERT_EQ(adapter->GetGridSize(grd), expected_grid_size);
     }
     catch (std::exception& e) {
         printf("Exception getting grid size: %s", e.what());
