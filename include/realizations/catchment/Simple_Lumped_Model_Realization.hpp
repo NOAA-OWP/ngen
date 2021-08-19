@@ -88,14 +88,14 @@ class Simple_Lumped_Model_Realization
 
         double calc_et() override;
 
-        virtual void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr);
-        virtual void create_formulation(geojson::PropertyMap properties);
+        void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr) override;
+        void create_formulation(geojson::PropertyMap properties) override;
 
-        virtual std::string get_formulation_type() {
+        std::string get_formulation_type() override {
             return "simple_lumped";
         }
 
-        void add_time(time_t t, double n);
+        void add_time(time_t t, double n) override;
 
     protected:
         std::vector<std::string> REQUIRED_PARAMETERS = {
@@ -113,7 +113,7 @@ class Simple_Lumped_Model_Realization
             "t"
         };
 
-        virtual const std::vector<std::string>& get_required_parameters() {
+        const std::vector<std::string>& get_required_parameters() override {
             return REQUIRED_PARAMETERS;
         }
 
