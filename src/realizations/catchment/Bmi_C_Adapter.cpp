@@ -1,135 +1,36 @@
 #include <exception>
 #include <utility>
-#include <dlfcn.h>
+
 #include "FileChecker.h"
 #include "Bmi_C_Adapter.hpp"
 #include "boost/algorithm/string.hpp"
 
 using namespace models::bmi;
 
-Bmi_C_Adapter::Bmi_C_Adapter(std::string library_file_path, std::string forcing_file_path,
-                             bool model_uses_forcing_file, bool allow_exceed_end, bool has_fixed_time_step,
+Bmi_C_Adapter::Bmi_C_Adapter(const string &type_name, std::string library_file_path, std::string forcing_file_path,
+                             bool allow_exceed_end, bool has_fixed_time_step,
                              const std::string& registration_func, utils::StreamHandler output)
-        : Bmi_C_Adapter(std::move(library_file_path), "", std::move(forcing_file_path), model_uses_forcing_file,
+        : Bmi_C_Adapter(type_name, std::move(library_file_path), "", std::move(forcing_file_path),
                         allow_exceed_end, has_fixed_time_step, registration_func, output) {}
 
-Bmi_C_Adapter::Bmi_C_Adapter(std::string library_file_path, std::string bmi_init_config,
-                             std::string forcing_file_path, bool model_uses_forcing_file, bool allow_exceed_end,
-                             bool has_fixed_time_step, std::string registration_func, utils::StreamHandler output)
-        : bmi_init_config(std::move(bmi_init_config)),
+Bmi_C_Adapter::Bmi_C_Adapter(const string &type_name, std::string library_file_path, std::string bmi_init_config,
+                             std::string forcing_file_path, bool allow_exceed_end, bool has_fixed_time_step,
+                             std::string registration_func, utils::StreamHandler output)
+        : Bmi_Adapter<C_Bmi>(type_name, bmi_init_config, forcing_file_path, allow_exceed_end, has_fixed_time_step, output),
           bmi_lib_file(std::move(library_file_path)),
-          forcing_file_path(std::move(forcing_file_path)),
-          bmi_model_uses_forcing_file(model_uses_forcing_file),
-          allow_model_exceed_end_time(allow_exceed_end),
-          bmi_model_has_fixed_time_step(has_fixed_time_step),
-          bmi_registration_function(std::move(registration_func)),
-          output(std::move(output)),
-          bmi_model(std::make_shared<Bmi>(Bmi())) {
-    Initialize();
-    std::string time_units = GetTimeUnits();
-    if (time_units == "s" || time_units == "sec" || time_units == "second" || time_units == "seconds")
-        bmi_model_time_convert_factor = 1.0;
-    else if (time_units == "m" || time_units == "min" || time_units == "minute" || time_units == "minutes")
-        bmi_model_time_convert_factor = 60.0;
-    else if (time_units == "h" || time_units == "hr" || time_units == "hour" || time_units == "hours")
-        bmi_model_time_convert_factor = 3600.0;
-    else if (time_units == "d" || time_units == "day" || time_units == "days")
-        bmi_model_time_convert_factor = 86400.0;
-    else
-        throw std::runtime_error("Invalid model time step units ('" + time_units + "') in BMI C formulation.");
-}
-
-Bmi_C_Adapter::Bmi_C_Adapter(std::string library_file_path, std::string forcing_file_path,
-                             bool model_uses_forcing_file, bool allow_exceed_end, bool has_fixed_time_step,
-                             const std::string& registration_func, const geojson::JSONProperty &other_input_vars,
-                             utils::StreamHandler output)
-        : Bmi_C_Adapter(std::move(library_file_path), "", std::move(forcing_file_path), model_uses_forcing_file,
-                        allow_exceed_end,
-                        has_fixed_time_step, registration_func, other_input_vars, output) {}
-
-Bmi_C_Adapter::Bmi_C_Adapter(std::string library_file_path, const std::string &bmi_init_config,
-                             std::string forcing_file_path, bool model_uses_forcing_file, bool allow_exceed_end,
-                             bool has_fixed_time_step, const std::string& registration_func,
-                             const geojson::JSONProperty &other_vars, utils::StreamHandler output)
-        : Bmi_C_Adapter(std::move(library_file_path), bmi_init_config, std::move(forcing_file_path),
-                        model_uses_forcing_file, allow_exceed_end, has_fixed_time_step, registration_func, output) {
-    for (const std::string &var_name : GetInputVarNames()) {
-        if (other_vars.has_key(var_name)) {
-            geojson::JSONProperty other_variable = other_vars.at(var_name);
-            geojson::PropertyType var_type = other_variable.get_type();
-
-            // First organize things in a vector of JSON properties, whether we have a list or a single value
-            std::vector<geojson::JSONProperty> json_values;
-            if (var_type == geojson::PropertyType::List) {
-                json_values = other_variable.as_list();
-                // Also adjust the var type in this case, to whatever the first element is (leaving if list is empty)
-                if (!json_values.empty()) {
-                    var_type = json_values[0].get_type();
-                }
-            }
-            else {
-                // In this case, we have a single value, so create a single value vector for it
-                json_values.emplace_back(other_variable);
-            }
-            // Store the number of individual values for this input variable for convenience
-            const int num_values_from_config = json_values.size();
-
-            // Next, make sure there aren't more values than the model can handle for this variable
-            int num_variable_items = GetVarNbytes(var_name) / GetVarItemsize(var_name);
-            if (num_values_from_config > num_variable_items) {
-                throw std::runtime_error(model_name + " expects variable '" + var_name + "' to be an array of " +
-                                         std::to_string(num_variable_items) +
-                                         " elements, but config attempted to provided " +
-                                         std::to_string(json_values.size()));
-            }
-            if (num_values_from_config < num_variable_items) {
-                output.put("Warning: configuration supplying subset of values for input variable " + var_name);
-            }
-
-            // Now create the indexes that will be used by C code to identify indexes of variable's array to set
-            int inds[num_values_from_config];
-            // In our case, everything aligns; i.e., the value of each inds element should be its index
-            for (int i = 0; i < num_values_from_config; i++)
-                inds[i] = i;
-
-            // Now, for supported (inner) types, extract the JSON values to a raw array, then use to set values
-            if (var_type == geojson::PropertyType::Boolean) {
-                bool src[num_values_from_config];
-                for (int i = 0; i < num_values_from_config; i++)
-                    src[i] = json_values[i].as_boolean();
-                SetValueAtIndices(var_name, inds, num_values_from_config, (void*)(src));
-            }
-            else if (var_type == geojson::PropertyType::Natural) {
-                long src[num_values_from_config];
-                for (int i = 0; i < num_values_from_config; i++)
-                    src[i] = json_values[i].as_natural_number();
-                SetValueAtIndices(var_name, inds, num_values_from_config, (void*)(src));
-            }
-            else if (var_type == geojson::PropertyType::Real) {
-                double src[num_values_from_config];
-                for (int i = 0; i < num_values_from_config; i++)
-                    src[i] = json_values[i].as_real_number();
-                SetValueAtIndices(var_name, inds, num_values_from_config, (void*)(src));
-            }
-            else if (var_type == geojson::PropertyType::String) {
-                std::string str_val;
-                char* src[num_values_from_config];
-                for (int i = 0; i < num_values_from_config; i++) {
-                    str_val = json_values[i].as_string();
-                    src[i] = {(char*)(str_val.c_str())};
-                }
-                SetValueAtIndices(var_name, inds, num_values_from_config, (void*)(src));
-            }
-            // For now, don't support object JSON type
-            else {
-                std::string type = var_type == geojson::PropertyType::List ? "list" : "object";
-                throw std::runtime_error("Unsupported type '" + type + "' for config variable '" + var_name + "'");
-            }
-        }
-        else {
-            output.put("Warning: unrecognized 'other_input_variable' `" + var_name +
-                       "` presented in formulation config; ignoring");
-        }
+          bmi_registration_function(std::move(registration_func))
+{
+    try {
+        construct_and_init_backing_model_for_type();
+        // Make sure this is set to 'true' after this function call finishes
+        model_initialized = true;
+        acquire_time_conversion_factor(bmi_model_time_convert_factor);
+    }
+    // Record the exception message before re-throwing to handle subsequent function calls properly
+    catch (exception& e) {
+        // Make sure this is set to 'true' after this function call finishes
+        model_initialized = true;
+        throw e;
     }
 }
 
@@ -162,28 +63,11 @@ Bmi_C_Adapter::Bmi_C_Adapter(Bmi_C_Adapter &adapter) : model_name(adapter.model_
 }
 */
 
-Bmi_C_Adapter::Bmi_C_Adapter(Bmi_C_Adapter &&adapter) noexcept: model_name(std::move(adapter.model_name)),
-                                                                allow_model_exceed_end_time(
-                                                                        adapter.allow_model_exceed_end_time),
-                                                                bmi_init_config(std::move(adapter.bmi_init_config)),
-                                                                bmi_lib_file(std::move(adapter.bmi_lib_file)),
-                                                                bmi_model(std::move(adapter.bmi_model)),
-                                                                bmi_model_has_fixed_time_step(
-                                                                        adapter.bmi_model_has_fixed_time_step),
-                                                                bmi_model_time_convert_factor(
-                                                                        adapter.bmi_model_time_convert_factor),
-                                                                bmi_model_uses_forcing_file(
-                                                                        adapter.bmi_model_uses_forcing_file),
-                                                                bmi_registration_function(
-                                                                        adapter.bmi_registration_function),
-                                                                dyn_lib_handle(adapter.dyn_lib_handle),
-                                                                forcing_file_path(std::move(adapter.forcing_file_path)),
-                                                                init_exception_msg(
-                                                                        std::move(adapter.init_exception_msg)),
-                                                                input_var_names(std::move(adapter.input_var_names)),
-                                                                model_initialized(adapter.model_initialized),
-                                                                output_var_names(std::move(adapter.output_var_names)),
-                                                                output(std::move(std::move(adapter.output)))
+Bmi_C_Adapter::Bmi_C_Adapter(Bmi_C_Adapter &&adapter) noexcept:
+        Bmi_Adapter<C_Bmi>(std::move(adapter)),
+        bmi_lib_file(std::move(adapter.bmi_lib_file)),
+        bmi_registration_function(adapter.bmi_registration_function),
+        dyn_lib_handle(adapter.dyn_lib_handle)
 {
     // Have to make sure to do this after "moving" so the original does not close the dynamically loaded library handle
     adapter.dyn_lib_handle = nullptr;
@@ -195,66 +79,7 @@ Bmi_C_Adapter::Bmi_C_Adapter(Bmi_C_Adapter &&adapter) noexcept: model_name(std::
  * Note that this calls the `Finalize()` function for cleaning up this object and its backing BMI model.
  */
 Bmi_C_Adapter::~Bmi_C_Adapter() {
-    Finalize();
-}
-
-double Bmi_C_Adapter::convert_model_time_to_seconds(const double& model_time_val) {
-    return model_time_val * bmi_model_time_convert_factor;
-}
-
-double Bmi_C_Adapter::convert_seconds_to_model_time(const double& seconds_val) {
-    return seconds_val / bmi_model_time_convert_factor;
-}
-
-/**
- * Dynamically load the required C library and the backing BMI model itself.
- *
- * Dynamically load the external C library for this object's backing model.  Then load this object's "instance" of the
- * model itself.  For C BMI models, this is actually a struct with function pointer (rather than a class with member
- * functions).
- *
- * Libraries should provide an additional ``register_bmi`` function that essentially works as a constructor (or factory)
- * for the model struct, accepts a pointer to a BMI struct and then setting the appropriate function pointer values.
- *
- * A handle to the dynamically loaded library (as a ``void*``) is maintained in within a private member variable.  A
- * warning will output if this function is called with the handle already set (i.e., with the library already loaded),
- * and then the function will returns without taking any other action.
- *
- * @throws ``std::runtime_error`` Thrown if the configured BMI C library file is not readable.
- */
-inline void Bmi_C_Adapter::dynamic_library_load() {
-    if (dyn_lib_handle != nullptr) {
-        output.put("WARNING: ignoring attempt to reload C library '" + bmi_lib_file + "' for BMI model " + model_name);
-        return;
-    }
-    if (!utils::FileChecker::file_is_readable(bmi_lib_file)) {
-        init_exception_msg = "Cannot init " + model_name + "; unreadable C library file '" + bmi_lib_file + "'";
-        throw std::runtime_error(init_exception_msg);
-    }
-    if (bmi_registration_function.empty()) {
-        init_exception_msg = "Cannot init " + model_name + "; empty pointer registration function name given.";
-        throw std::runtime_error(init_exception_msg);
-    }
-
-    // TODO: add support for either the configured-by-name mapping or just using the standard names
-    void* sym;
-    Bmi* (*dynamic_register_bmi)(Bmi *model);
-
-    // Load up the necessary library dynamically
-    dyn_lib_handle = dlopen(bmi_lib_file.c_str(), RTLD_NOW | RTLD_LOCAL);
-
-    // Acquire the BMI struct func pointer registration function
-    sym = dlsym(dyn_lib_handle, bmi_registration_function.c_str());
-    if (sym == nullptr) {
-        init_exception_msg = "Cannot init " + model_name + "; expected pointer registration function '"
-                + bmi_registration_function
-                + "' is not implemented.";
-        throw std::runtime_error(init_exception_msg);
-    }
-    dynamic_register_bmi = (Bmi* (*)(Bmi*))sym;
-
-    // Call registration function, which handles setting up this object's pointed-to member BMI struct
-    dynamic_register_bmi(bmi_model.get());
+    finalizeForSubtype();
 }
 
 /**
@@ -272,6 +97,16 @@ inline void Bmi_C_Adapter::dynamic_library_load() {
  * @throws models::external::State_Exception Thrown if nested model `finalize()` call is not successful.
  */
 void Bmi_C_Adapter::Finalize() {
+    finalizeForSubtype();
+}
+
+/**
+ * A non-virtual equivalent for the virtual @see Finalize.
+ *
+ * Primarily, this exists to contain the functionality appropriate for @see Finalize in a function that is
+ * non-virtual, and can therefore be called by a destructor.
+ */
+void Bmi_C_Adapter::finalizeForSubtype() {
     if (bmi_model != nullptr && model_initialized) {
         model_initialized = false;
         int result = bmi_model->finalize(bmi_model.get());
@@ -317,6 +152,14 @@ std::shared_ptr<std::vector<std::string>> Bmi_C_Adapter::get_variable_names(bool
         free(names_array[i]);
     }
     return var_names;
+}
+
+string Bmi_C_Adapter::GetComponentName() {
+    char component_name[BMI_MAX_COMPONENT_NAME];
+    if (bmi_model->get_component_name(bmi_model.get(), component_name) != BMI_SUCCESS) {
+        throw std::runtime_error(model_name + " failed to get model component name.");
+    }
+    return {component_name};
 }
 
 double Bmi_C_Adapter::GetCurrentTime() {
@@ -377,6 +220,12 @@ std::string Bmi_C_Adapter::GetTimeUnits() {
         throw std::runtime_error(model_name + " failed to read time units from model.");
     }
     return std::string(time_units_cstr);
+}
+
+void Bmi_C_Adapter::GetValueAtIndices(std::string name, void *dest, int *inds, int count) {
+    if (bmi_model->get_value_at_indices(bmi_model.get(), name.c_str(), dest, inds, count) != BMI_SUCCESS) {
+        throw models::external::State_Exception(model_name + " failed to get variable " + name + " from model.");
+    }
 }
 
 int Bmi_C_Adapter::GetVarItemsize(std::string name) {
@@ -460,87 +309,6 @@ int Bmi_C_Adapter::GetGridSize(int grid_id) {
     return gridsize;
 }
 
-
-/**
- * Initialize the wrapped BMI model object using the value from the `bmi_init_config` member variable and
- * the object's ``Initialize`` function.
- *
- * If no attempt to initialize the model has yet been made (i.e., ``model_initialized`` is ``false`` when
- * this function is called), then ``model_initialized`` is set to ``true`` and initialization is attempted
- * for the model object. If initialization fails, an exception will be raised, with it's type and message
- * saved as part of this object's state.
- *
- * If an attempt to initialize the model has already been made (i.e., ``model_initialized`` is ``true``),
- * this function will either simply return or will throw a runtime_error, with the message listing the
- * type and message of the exception from the earlier attempt.
- * 
- * @throws std::runtime_error  If called again after earlier call that resulted in an exception, or if BMI config file
- *                             could not be read.
- * @throws models::external::State_Exception   If `initialize()` in nested model does not return successful.                            
- */
-void Bmi_C_Adapter::Initialize() {
-    // If there was a previous init attempt but with failure exception, throw runtime error and include previous message
-    if (model_initialized && !init_exception_msg.empty()) {
-        throw std::runtime_error(
-                "Cannot initialize BMI C model after previous failed attempt; previous message: " + init_exception_msg +
-                ")");
-    }
-    // If there was a previous init attempt with (implicitly) no exception on previous attempt, just return
-    else if (model_initialized) {
-        return;
-    }
-    else if (!utils::FileChecker::file_is_readable(bmi_init_config)) {
-        init_exception_msg = "Cannot initialize " + model_name + " using unreadable file '" + bmi_init_config + "'";
-        throw std::runtime_error(init_exception_msg);
-    }
-    else {
-        // Make sure this is set to 'true' after this function call finishes
-        model_initialized = true;
-        dynamic_library_load();
-        int init_result = bmi_model->initialize(bmi_model.get(), bmi_init_config.c_str());
-        if (init_result != BMI_SUCCESS) {
-            init_exception_msg = "Failure when attempting to initialize " + model_name;
-            throw models::external::State_Exception(init_exception_msg);
-        }
-    }
-}
-
-/**
- * Initialize the wrapped BMI model object using the given config file and the object's ``Initialize``
- * function.
- *
- * If the given file is not the same as what is in `bmi_init_config`` and the model object has not already
- * been initialized, this function will produce a warning message about the difference, then subsequently
- * update `bmi_init_config`` to the given file.  It will then proceed with initialization.
- *
- * However, if the given file is not the same as what is in `bmi_init_config``, but the model has already
- * been initialized, a runtime_error exception is thrown.
- *
- * This otherwise operates using the logic of ``Initialize()``.
- *
- * @param config_file
- * @see Initialize()
- * @throws std::runtime_error  If called again after earlier call that resulted in an exception, or if called again
- *                             after a previously successful call with a different `config_file`, or if BMI config file
- *                             could not be read.
- * @throws models::external::State_Exception   If `initialize()` in nested model does not return successful.
- */
-void Bmi_C_Adapter::Initialize(const std::string& config_file) {
-    if (config_file != bmi_init_config && model_initialized) {
-        throw std::runtime_error(
-                model_name + " init previously attempted; cannot change config from " + bmi_init_config + " to " +
-                config_file);
-    }
-
-    if (config_file != bmi_init_config && !model_initialized) {
-        output.put("Warning: initialization call changes " + model_name + " config from " + bmi_init_config + " to " +
-                   config_file);
-        bmi_init_config = config_file;
-    }
-
-    Initialize();
-}
-
 void Bmi_C_Adapter::SetValue(std::string name, void *src) {
     int result = bmi_model->set_value(bmi_model.get(), name.c_str(), src);
     if (result != BMI_SUCCESS) {
@@ -588,5 +356,89 @@ void Bmi_C_Adapter::UpdateUntil(double time) {
     int result = bmi_model->update_until(bmi_model.get(), time);
     if (result != BMI_SUCCESS) {
         throw models::external::State_Exception("Model execution update to specified time failed for " + model_name);
+    }
+}
+
+void Bmi_C_Adapter::GetGridShape(const int grid, int *shape) {
+    if (bmi_model->get_grid_shape(bmi_model.get(), grid, shape) != BMI_SUCCESS) {
+        throw std::runtime_error(model_name + " failed to get grid " + std::to_string(grid) + " shape.");
+    }
+}
+
+void Bmi_C_Adapter::GetGridSpacing(const int grid, double *spacing) {
+    if (bmi_model->get_grid_spacing(bmi_model.get(), grid, spacing) != BMI_SUCCESS) {
+        throw std::runtime_error(model_name + " failed to get grid " + std::to_string(grid) + " spacing.");
+    }
+}
+
+void Bmi_C_Adapter::GetGridOrigin(const int grid, double *origin) {
+    if (bmi_model->get_grid_origin(bmi_model.get(), grid, origin) != BMI_SUCCESS) {
+        throw std::runtime_error(model_name + " failed to get grid " + std::to_string(grid) + " origin.");
+    }
+}
+
+void Bmi_C_Adapter::GetGridX(const int grid, double *x) {
+    if (bmi_model->get_grid_x(bmi_model.get(), grid, x) != BMI_SUCCESS) {
+        throw std::runtime_error(model_name + " failed to get grid " + std::to_string(grid) + " x.");
+    }
+}
+
+void Bmi_C_Adapter::GetGridY(const int grid, double *y) {
+    if (bmi_model->get_grid_y(bmi_model.get(), grid, y) != BMI_SUCCESS) {
+        throw std::runtime_error(model_name + " failed to get grid " + std::to_string(grid) + " y.");
+    }
+}
+
+void Bmi_C_Adapter::GetGridZ(const int grid, double *z) {
+    if (bmi_model->get_grid_z(bmi_model.get(), grid, z) != BMI_SUCCESS) {
+        throw std::runtime_error(model_name + " failed to get grid " + std::to_string(grid) + " z.");
+    }
+}
+
+int Bmi_C_Adapter::GetGridNodeCount(const int grid) {
+    int count;
+    if (bmi_model->get_grid_node_count(bmi_model.get(), grid, &count) != BMI_SUCCESS) {
+        throw std::runtime_error(model_name + " failed to get grid " + std::to_string(grid) + " node count.");
+    }
+    return count;
+}
+
+int Bmi_C_Adapter::GetGridEdgeCount(const int grid) {
+    int count;
+    if (bmi_model->get_grid_edge_count(bmi_model.get(), grid, &count) != BMI_SUCCESS) {
+        throw std::runtime_error(model_name + " failed to get grid " + std::to_string(grid) + " edge count.");
+    }
+    return count;
+}
+
+int Bmi_C_Adapter::GetGridFaceCount(const int grid) {
+    int count;
+    if (bmi_model->get_grid_face_count(bmi_model.get(), grid, &count) != BMI_SUCCESS) {
+        throw std::runtime_error(model_name + " failed to get grid " + std::to_string(grid) + " face count.");
+    }
+    return count;
+}
+
+void Bmi_C_Adapter::GetGridEdgeNodes(const int grid, int *edge_nodes) {
+    if (bmi_model->get_grid_edge_nodes(bmi_model.get(), grid, edge_nodes) != BMI_SUCCESS) {
+        throw std::runtime_error(model_name + " failed to get grid " + std::to_string(grid) + " edge nodes.");
+    }
+}
+
+void Bmi_C_Adapter::GetGridFaceEdges(const int grid, int *face_edges) {
+    if (bmi_model->get_grid_face_edges(bmi_model.get(), grid, face_edges) != BMI_SUCCESS) {
+        throw std::runtime_error(model_name + " failed to get grid " + std::to_string(grid) + " face edges.");
+    }
+}
+
+void Bmi_C_Adapter::GetGridFaceNodes(const int grid, int *face_nodes) {
+    if (bmi_model->get_grid_face_nodes(bmi_model.get(), grid, face_nodes) != BMI_SUCCESS) {
+        throw std::runtime_error(model_name + " failed to get grid " + std::to_string(grid) + " face nodes.");
+    }
+}
+
+void Bmi_C_Adapter::GetGridNodesPerFace(const int grid, int *nodes_per_face) {
+    if (bmi_model->get_grid_nodes_per_face(bmi_model.get(), grid, nodes_per_face) != BMI_SUCCESS) {
+        throw std::runtime_error(model_name + " failed to get grid " + std::to_string(grid) + " nodes per face.");
     }
 }
