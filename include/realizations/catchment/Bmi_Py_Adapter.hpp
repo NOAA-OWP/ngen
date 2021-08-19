@@ -32,12 +32,10 @@ namespace models {
         public:
 
             Bmi_Py_Adapter(const string &type_name, std::string bmi_init_config, bool allow_exceed_end,
-                           bool has_fixed_time_step, const geojson::JSONProperty& other_input_vars,
-                           utils::StreamHandler output);
+                           bool has_fixed_time_step, utils::StreamHandler output);
 
             Bmi_Py_Adapter(const string &type_name, std::string  bmi_init_config, std::string forcing_file_path,
-                           bool allow_exceed_end, bool has_fixed_time_step,
-                           const geojson::JSONProperty& other_input_vars, utils::StreamHandler output);
+                           bool allow_exceed_end, bool has_fixed_time_step, utils::StreamHandler output);
 
             void Finalize() override {
                 bmi_model->attr("finalize")();

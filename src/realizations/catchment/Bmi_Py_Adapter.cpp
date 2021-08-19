@@ -10,17 +10,14 @@ using namespace std;
 using namespace pybind11::literals; // to bring in the `_a` literal for pybind11 keyword args functionality
 
 Bmi_Py_Adapter::Bmi_Py_Adapter(const string &type_name, string bmi_init_config, bool allow_exceed_end,
-                               bool has_fixed_time_step, const geojson::JSONProperty& other_input_vars,
-                               utils::StreamHandler output)
-    : Bmi_Py_Adapter(type_name, move(bmi_init_config), "", allow_exceed_end, has_fixed_time_step, other_input_vars,
-                     move(output)) {}
+                               bool has_fixed_time_step, utils::StreamHandler output)
+    : Bmi_Py_Adapter(type_name, move(bmi_init_config), "", allow_exceed_end, has_fixed_time_step, move(output)) {}
 
 Bmi_Py_Adapter::Bmi_Py_Adapter(const string &type_name, string bmi_init_config, string forcing_file_path,
-                               bool allow_exceed_end, bool has_fixed_time_step,
-                               const geojson::JSONProperty& other_input_vars, utils::StreamHandler output)
+                               bool allow_exceed_end, bool has_fixed_time_step, utils::StreamHandler output)
                                : Bmi_Adapter<py::object>(type_name +" (BMI Py)", move(bmi_init_config),
                                                          move(forcing_file_path), allow_exceed_end, has_fixed_time_step,
-                                                         other_input_vars, output),
+                                                         output),
                                  np(py::module_::import("numpy")) /* like 'import numpy as np' */ { }
 
 string Bmi_Py_Adapter::GetComponentName() {
