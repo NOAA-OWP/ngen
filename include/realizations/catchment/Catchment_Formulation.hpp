@@ -44,12 +44,12 @@ namespace realization {
              * @param d_delta_s The duration, in seconds, of the time step for which to run model calculations.
              * @return The response output of the model for this time step.
              */
-            virtual double get_response(time_step_t t_index, time_step_t t_delta) = 0;
+            double get_response(time_step_t t_index, time_step_t t_delta) override = 0;
 
-            virtual const std::vector<std::string>& get_required_parameters() = 0;
+            const std::vector<std::string>& get_required_parameters() override = 0;
 
-            virtual void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr) = 0;
-            virtual void create_formulation(geojson::PropertyMap properties) = 0;
+            void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr) override = 0;
+            void create_formulation(geojson::PropertyMap properties) override = 0;
             virtual ~Catchment_Formulation(){};
 
     protected:
