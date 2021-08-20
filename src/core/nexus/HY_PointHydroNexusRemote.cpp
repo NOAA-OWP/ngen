@@ -1,4 +1,5 @@
 #include "HY_PointHydroNexusRemote.hpp"
+#include "Constants.h"
 
 
 #ifdef NGEN_MPI_ACTIVE
@@ -102,7 +103,7 @@ double HY_PointHydroNexusRemote::get_downstream_flow(std::string catchment_id, t
             /* request      = */ &stored_sends.back().mpi_request);
 
         //std::cerr << "Remote send from rank " << world_rank << " to rank " << iter->second << " on tag " << tag << std::endl;
-
+        return (double)SENTINEL_IS_REMOTELY_HANDLED;
     }
     else
     {
