@@ -138,10 +138,17 @@ namespace models {
              */
             std::string GetTimeUnits() override;
 
+            /**
+             * Get value(s) for a variable.
+             *
+             * Implementation of virtual function in BMI interface.
+             *
+             * @param name
+             * @param dest
+             * @see get_value
+             */
             void GetValue(std::string name, void *dest) override {
-                if (bmi_model->get_value(bmi_model.get(), name.c_str(), dest) != BMI_SUCCESS) {
-                    throw std::runtime_error(model_name + " failed to get values for variable " + name + ".");
-                }
+                get_value(name, dest);
             }
 
             /**
@@ -149,6 +156,7 @@ namespace models {
              *
              * @tparam T
              * @param name
+             * @see get_value
              */
             template <typename T>
             std::vector<T> GetValue(const std::string& name) {
@@ -159,7 +167,7 @@ namespace models {
 
                 void* dest = malloc(total_mem);
 
-                GetValue(name, dest);
+                get_value(name, dest);
 
                 std::vector<T> retrieved_results(num_items);
                 T* d_results_ptr;
@@ -501,6 +509,14 @@ namespace models {
             }
 
             /**
+             * A non-virtual equivalent for the virtual @see Finalize.
+             *
+             * Primarily, this exists to contain the functionality appropriate for @see Finalize in a function that is
+             * non-virtual, and can therefore be called by a destructor.
+             */
+            void finalizeForSubtype();
+
+            /**
              * Get model time step size pointer, using lazy loading when fixed.
              *
              * Get a pointer to the value of the backing model's time step size.  If the model is configured to have
@@ -522,12 +538,19 @@ namespace models {
             }
 
             /**
-             * A non-virtual equivalent for the virtual @see Finalize.
+             * Internal implementation of logic used for @see GetValue.
              *
-             * Primarily, this exists to contain the functionality appropriate for @see Finalize in a function that is
-             * non-virtual, and can therefore be called by a destructor.
+             * Essentially, function exists as inner implementation.  This allows it to be inlined, which may lead to
+             * optimization in certain situations.
+             *
+             * @param name The name of the variable for which to get values.
+             * @param dest A function pointer in which to return the values.
              */
-            void finalizeForSubtype();
+            inline void get_value(const std::string& name, void *dest) {
+                if (bmi_model->get_value(bmi_model.get(), name.c_str(), dest) != BMI_SUCCESS) {
+                    throw std::runtime_error(model_name + " failed to get values for variable " + name + ".");
+                }
+            }
 
             /**
              * Retrieve time step size directly from model.
