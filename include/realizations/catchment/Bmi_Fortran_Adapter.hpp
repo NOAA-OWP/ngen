@@ -37,7 +37,6 @@ namespace models {
                                                                              output) {}
 
             void *GetValuePtr(std::string name) override {
-                //return get_value_ptr(name);
                 throw std::runtime_error(model_name + " cannot currently get pointers for Fortran-based BMI modules.");
             }
 

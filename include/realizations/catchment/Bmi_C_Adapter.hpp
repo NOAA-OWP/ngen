@@ -221,16 +221,12 @@ namespace models {
 
             void GetGridNodesPerFace(const int grid, int *nodes_per_face) override;
 
-            inline void *get_value_ptr(const std::string &name) {
+            void *GetValuePtr(std::string name) override {
                 void *dest;
                 if (bmi_model->get_value_ptr(bmi_model.get(), name.c_str(), &dest) != BMI_SUCCESS) {
                     throw std::runtime_error(model_name + " failed to get pointer for BMI variable " + name + ".");
                 }
                 return dest;
-            }
-
-            void *GetValuePtr(std::string name) override {
-                return get_value_ptr(name);
             }
 
             /**
@@ -251,10 +247,9 @@ namespace models {
             template<class T>
             T *GetValuePtr(const std::string &name) {
                 int nbytes;
-                int result = bmi_model->get_var_nbytes(bmi_model.get(), name.c_str(), &nbytes);
-                if (result != BMI_SUCCESS)
+                if (bmi_model->get_var_nbytes(bmi_model.get(), name.c_str(), &nbytes) != BMI_SUCCESS)
                     throw std::runtime_error(model_name + " failed to get pointer for BMI variable " + name + ".");
-                void *dest = get_value_ptr(name);
+                void *dest = GetValuePtr(name);
                 T *ptr = (T *) dest;
                 return ptr;
             }
