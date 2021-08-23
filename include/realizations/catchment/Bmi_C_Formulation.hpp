@@ -91,9 +91,9 @@ namespace realization {
          */
         double get_response(time_step_t t_index, time_step_t t_delta) override;
 
-        inline bool is_bmi_input_variable(const std::string &var_name) override;
+        bool is_bmi_input_variable(const std::string &var_name) override;
 
-        inline bool is_bmi_output_variable(const std::string &var_name) override;
+        bool is_bmi_output_variable(const std::string &var_name) override;
 
     protected:
 
