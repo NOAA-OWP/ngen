@@ -485,27 +485,6 @@ namespace models {
             }
 
             /**
-             * Construct the backing BMI model object, then call its BMI-native ``Initialize()`` function.
-             *
-             * The essentially provides the functionality for @see construct_and_init_backing_model without being a
-             * virtual function.
-             *
-             * Implementations should return immediately without taking any further action if ``model_initialized`` is
-             * already ``true``.
-             *
-             * The call to the BMI native ``Initialize(string)`` should pass the value stored in ``bmi_init_config``.
-             */
-            void construct_and_init_backing_model_for_type() {
-                bmi_model = std::make_shared<C_Bmi>(C_Bmi());
-                dynamic_library_load();
-                int init_result = bmi_model->initialize(bmi_model.get(), bmi_init_config.c_str());
-                if (init_result != BMI_SUCCESS) {
-                    init_exception_msg = "Failure when attempting to initialize " + model_name;
-                    throw models::external::State_Exception(init_exception_msg);
-                }
-            }
-
-            /**
              * Dynamically load the required C library and the backing BMI model itself.
              *
              * Dynamically load the external C library for this object's backing model.  Then load this object's "instance" of the
@@ -626,6 +605,29 @@ namespace models {
             const std::string bmi_registration_function;
             /** Handle for dynamically loaded library file. */
             void *dyn_lib_handle = nullptr;
+
+            /**
+             * Construct the backing BMI model object, then call its BMI-native ``Initialize()`` function.
+             *
+             * The essentially provides the functionality for @see construct_and_init_backing_model without being a
+             * virtual function.
+             *
+             * Implementations should return immediately without taking any further action if ``model_initialized`` is
+             * already ``true``.
+             *
+             * The call to the BMI native ``Initialize(string)`` should pass the value stored in ``bmi_init_config``.
+             */
+            inline void construct_and_init_backing_model_for_type() {
+                if (model_initialized)
+                    return;
+                bmi_model = std::make_shared<C_Bmi>(C_Bmi());
+                dynamic_library_load();
+                int init_result = bmi_model->initialize(bmi_model.get(), bmi_init_config.c_str());
+                if (init_result != BMI_SUCCESS) {
+                    init_exception_msg = "Failure when attempting to initialize " + model_name;
+                    throw models::external::State_Exception(init_exception_msg);
+                }
+            }
 
             /**
              * Helper method for getting either input or output variable names.
