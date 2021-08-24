@@ -292,20 +292,20 @@ TEST_F(Network_Test2, test_get_destination_ids2)
 TEST_F(Network_Test2, test_catchments_filter)
 {
   //This order IS IMPORTANT, it should be the topological order of catchments.  Note that the order isn't
-  //guaranteed on the leafs, the only guarantee for this test is that cat-2 comes after all the other catchments...
-  std::vector<std::string> expected_topo_order = {"cat-4",  "cat-3",  "cat-1", "cat-0", "cat-2"};
-  auto expected_it = expected_topo_order.begin();
+  //guaranteed on the leafs, the only guarantees for this test is that cat-2 comes after both cat-0 and cat-1.
+  //Technically, this is a valid topological order: cat-0, cat-3, cat-1, cat-4, cat-2 ...though unlikely.
   auto catchments = n.filter("cat");
-  auto catchments_it = catchments.begin();
+  //auto catchments_it = catchments.begin();
   for(const auto& id : n) std::cout<<"topo_id: "<<n.get_id(id)<<std::endl;
   for(const auto& id : n.filter("cat")) std::cout<<"id: "<<id<<std::endl;
-  while( expected_it != expected_topo_order.end() && catchments_it != catchments.end() )
-  {
-    std::cout<<*expected_it<<" == "<<*catchments_it<<std::endl;
-    ASSERT_TRUE( *expected_it == *catchments_it );
-    ++expected_it;
-    ++catchments_it;
-  }
+  auto cat0_it = std::find(catchments.begin(), catchments.end(), "cat-0");
+  auto cat1_it = std::find(catchments.begin(), catchments.end(), "cat-1");
+  auto cat2_it = std::find(catchments.begin(), catchments.end(), "cat-2");
+  std::cout << "cat-0 to cat-2 distance: " << std::distance(cat0_it, cat2_it) << std::endl;
+  std::cout << "cat-1 to cat-2 distance: " << std::distance(cat1_it, cat2_it) << std::endl;
+  ASSERT_TRUE( std::distance(cat0_it, cat2_it) > 0);
+  ASSERT_TRUE( std::distance(cat1_it, cat2_it) > 0);
+  ASSERT_TRUE( cat2_it != catchments.end() );
 }
 
 TEST_F(Network_Test2, test_nexus_filter)
