@@ -7,30 +7,87 @@
 
 using namespace models::bmi;
 
+/**
+ * Public constructor without path to BMI initialization config file.
+ *
+ * @param type_name The name of the backing BMI module/model type.
+ * @param library_file_path The string path to the shared library file for external module.
+ * @param forcing_file_path The string path for the forcing file the module should use, empty if it does not
+ *                          use one directly.
+ * @param allow_exceed_end Whether the backing model is allowed to execute beyond its advertised end_time.
+ * @param has_fixed_time_step Whether the model has a fixed time step size.
+ * @param registration_func The name for the @see bmi_registration_function.
+ * @param output The output stream handler.
+ */
 Bmi_C_Adapter::Bmi_C_Adapter(const string &type_name, std::string library_file_path, std::string forcing_file_path,
                              bool allow_exceed_end, bool has_fixed_time_step,
                              const std::string& registration_func, utils::StreamHandler output)
         : Bmi_C_Adapter(type_name, std::move(library_file_path), "", std::move(forcing_file_path),
-                        allow_exceed_end, has_fixed_time_step, registration_func, output) {}
+                        allow_exceed_end, has_fixed_time_step, registration_func, output) { }
 
+/**
+ * Main public constructor.
+ *
+ * @param type_name The name of the backing BMI module/model type.
+ * @param library_file_path The string path to the shared library file for external module.
+ * @param bmi_init_config The string path to the BMI initialization config file for the module.
+ * @param forcing_file_path The string path for the forcing file the module should use, empty if it does not
+ *                          use one directly.
+ * @param allow_exceed_end Whether the backing model is allowed to execute beyond its advertised end_time.
+ * @param has_fixed_time_step Whether the model has a fixed time step size.
+ * @param registration_func The name for the @see bmi_registration_function.
+ * @param output The output stream handler.
+ */
 Bmi_C_Adapter::Bmi_C_Adapter(const string &type_name, std::string library_file_path, std::string bmi_init_config,
                              std::string forcing_file_path, bool allow_exceed_end, bool has_fixed_time_step,
                              std::string registration_func, utils::StreamHandler output)
-        : Bmi_Adapter<C_Bmi>(type_name, bmi_init_config, forcing_file_path, allow_exceed_end, has_fixed_time_step, output),
+        : Bmi_C_Adapter(type_name, std::move(library_file_path), std::move(bmi_init_config),
+                        std::move(forcing_file_path), allow_exceed_end, has_fixed_time_step,
+                        std::move(registration_func), output, true) { }
+
+/**
+ * Protected constructor that allows control over whether initialization steps are done during construction.
+ *
+ * Constructor that has parameter to control whether initialization steps - i.e., steps that would be
+ * performed in the BMI @see Initialize(std::string) function if not already done - are done when
+ * constructing the object.
+ *
+ * In general, it is assumed that an object of this type will be initialized on construction.  However, a
+ * subtype may wish to utilize the constructor while deferring initialization (usually so it can perform
+ * that internally as a later step).
+ *
+ * @param type_name The name of the backing BMI module/model type.
+ * @param library_file_path The string path to the shared library file for external module.
+ * @param bmi_init_config The string path to the BMI initialization config file for the module.
+ * @param forcing_file_path The string path for the forcing file the module should use, empty if it does not
+ *                          use one directly.
+ * @param allow_exceed_end Whether the backing model is allowed to execute beyond its advertised end_time.
+ * @param has_fixed_time_step Whether the model has a fixed time step size.
+ * @param registration_func The name for the @see bmi_registration_function.
+ * @param output The output stream handler.
+ * @param do_initialization Whether initialization should be performed during construction or deferred.
+ */
+Bmi_C_Adapter::Bmi_C_Adapter(const string &type_name, std::string library_file_path, std::string bmi_init_config,
+                             std::string forcing_file_path, bool allow_exceed_end, bool has_fixed_time_step,
+                             std::string registration_func, utils::StreamHandler output, bool do_initialization)
+        : Bmi_Adapter<C_Bmi>(type_name, std::move(bmi_init_config), std::move(forcing_file_path), allow_exceed_end,
+                             has_fixed_time_step, output),
           bmi_lib_file(std::move(library_file_path)),
           bmi_registration_function(std::move(registration_func))
 {
-    try {
-        construct_and_init_backing_model_for_type();
-        // Make sure this is set to 'true' after this function call finishes
-        model_initialized = true;
-        acquire_time_conversion_factor(bmi_model_time_convert_factor);
-    }
-    // Record the exception message before re-throwing to handle subsequent function calls properly
-    catch (exception& e) {
-        // Make sure this is set to 'true' after this function call finishes
-        model_initialized = true;
-        throw e;
+    if (do_initialization) {
+        try {
+            construct_and_init_backing_model_for_type();
+            // Make sure this is set to 'true' after this function call finishes
+            model_initialized = true;
+            acquire_time_conversion_factor(bmi_model_time_convert_factor);
+        }
+        // Record the exception message before re-throwing to handle subsequent function calls properly
+        catch (exception& e) {
+            // Make sure this is set to 'true' after this function call finishes
+            model_initialized = true;
+            throw e;
+        }
     }
 }
 
