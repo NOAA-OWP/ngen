@@ -485,57 +485,121 @@ namespace models {
             }
 
             /**
-             * Dynamically load the required C library and the backing BMI model itself.
+             * Dynamically load the required shared library and the backing BMI model itself.
              *
-             * Dynamically load the external C library for this object's backing model.  Then load this object's "instance" of the
-             * model itself.  For C BMI models, this is actually a struct with function pointer (rather than a class with member
-             * functions).
+             * Dynamically load the external shared library for this object's backing model.  Then load this object's
+             * "instance" of the model itself.  For C BMI models (as well as other for which the adapter is derived from
+             * this type), this is actually a struct with function pointer, rather than a class with member functions.
              *
-             * Libraries should provide an additional ``register_bmi`` function that essentially works as a constructor (or factory)
-             * for the model struct, accepts a pointer to a BMI struct and then setting the appropriate function pointer values.
+             * Libraries should provide an additional ``register_bmi`` function.  For C modules, this essentially works
+             * as a constructor (or factory) for the model struct, accepting a pointer to a BMI struct and then setting
+             * the appropriate function pointer values.
              *
-             * A handle to the dynamically loaded library (as a ``void*``) is maintained in within a private member variable.  A
-             * warning will output if this function is called with the handle already set (i.e., with the library already loaded),
-             * and then the function will returns without taking any other action.
+             * A handle to the dynamically loaded library (as a ``void*``) is maintained in within a private member
+             * variable.  A warning will output if this function is called with the handle already set (i.e., with the
+             * library already loaded), and then the function will returns without taking any other action.
              *
-             * @throws ``std::runtime_error`` Thrown if the configured BMI C library file is not readable.
+             * @throws ``std::runtime_error`` If configured BMI library file is not readable.
+             * @throws ``::external::ExternalIntegrationException`` If symbol for registration function could not be
+             *                                                      found for the shared library handle.
              */
             inline void dynamic_library_load() {
                 if (dyn_lib_handle != nullptr) {
-                    output.put("WARNING: ignoring attempt to reload C library '" + bmi_lib_file + "' for BMI model " +
-                               model_name);
+                    output.put("WARNING: ignoring attempt to reload dynamic shared library '" + bmi_lib_file +
+                               "' for BMI model " + model_name);
                     return;
                 }
                 if (!utils::FileChecker::file_is_readable(bmi_lib_file)) {
                     init_exception_msg =
-                            "Cannot init " + model_name + "; unreadable C library file '" + bmi_lib_file + "'";
+                            "Cannot init " + model_name + "; unreadable dynamic shared lib file '" + bmi_lib_file + "'";
                     throw std::runtime_error(init_exception_msg);
                 }
                 if (bmi_registration_function.empty()) {
                     init_exception_msg =
-                            "Cannot init " + model_name + "; empty pointer registration function name given.";
+                            "Cannot init " + model_name + "; empty name given for library's registration function.";
                     throw std::runtime_error(init_exception_msg);
                 }
 
                 // TODO: add support for either the configured-by-name mapping or just using the standard names
-                void *sym;
+                void *symbol;
                 C_Bmi *(*dynamic_register_bmi)(C_Bmi *model);
 
                 // Load up the necessary library dynamically
                 dyn_lib_handle = dlopen(bmi_lib_file.c_str(), RTLD_NOW | RTLD_LOCAL);
 
-                // Acquire the BMI struct func pointer registration function
-                sym = dlsym(dyn_lib_handle, bmi_registration_function.c_str());
-                if (sym == nullptr) {
-                    init_exception_msg = "Cannot init " + model_name + "; expected pointer registration function '"
-                                         + bmi_registration_function
-                                         + "' is not implemented.";
-                    throw std::runtime_error(init_exception_msg);
+                try {
+                    // Acquire the BMI struct func pointer registration function
+                    symbol = dynamic_load_symbol(bmi_registration_function);
+                    dynamic_register_bmi = (C_Bmi *(*)(C_Bmi *)) symbol;
+                    // Call registration function, which (for C libs) sets up object's pointed-to member BMI struct
+                    // (Note that this probably is not the case for the Fortran subclass, though the registration
+                    // function is still expected and utilized).
+                    dynamic_register_bmi(bmi_model.get());
                 }
-                dynamic_register_bmi = (C_Bmi *(*)(C_Bmi *)) sym;
+                catch (const ::external::ExternalIntegrationException &e) {
+                    // "Override" the default message in this case
+                    init_exception_msg =
+                            "Cannot init " + model_name + " without valid library registration function: " +
+                            init_exception_msg;
+                    throw ::external::ExternalIntegrationException(init_exception_msg);
+                }
+            }
 
-                // Call registration function, which handles setting up this object's pointed-to member BMI struct
-                dynamic_register_bmi(bmi_model.get());
+            /**
+             * Load and return the address of the given symbol from the loaded dynamic model shared library.
+             *
+             * The initial primary purpose for this is to obtain a function pointer for accessing the registration
+             * function for a dynamically loaded library, as done in @see dynamic_library_load.  Other function pointers
+             * (or pointers to other valid symbols) can also be returned.
+             *
+             * It is possible for a symbol pointer to actually be null in some cases.  However, this may not be
+             * valid in the context in which a call to this function was made.  To control whether this is treated as
+             * a valid case, and thus whether null should be returned (instead of an exception thrown), there is the
+             * ``is_null_valid`` parameter.  When ``true``, a null symbol will be returned by the function.
+             *
+             * Typically, a call to @see dynamic_library_load must happen (though not necessarily have completed) before
+             * a call to this function to ensure @see dyn_lib_handle is set.  If it is not set, an exception is thrown.
+             *
+             * @param symbol_name The name of the symbol to load.
+             * @param is_null_valid Whether a null address for the symbol is valid, as opposed to implying there was
+             *                      simply a failure finding it.
+             * @return A void pointer to the address of the desired symbol in memory.
+             * @throws ``std::runtime_error`` If there is not a valid handle already to the shared library.
+             * @throws ``::external::ExternalIntegrationException`` If symbol could not be found for the shared library.
+             */
+            inline void *dynamic_load_symbol(const std::string &symbol_name, bool is_null_valid) {
+                if (dyn_lib_handle == nullptr) {
+                    throw std::runtime_error("Cannot load symbol " + symbol_name + "without handle to shared library");
+                }
+                // Call first to ensure any previous error is cleared before trying to load the symbol
+                dlerror();
+                void *symbol = dlsym(dyn_lib_handle, symbol_name.c_str());
+                // Now call again to see if there was an error (if there was, this will not be null)
+                char *err_message = dlerror();
+                if (symbol == nullptr && (err_message != nullptr || !is_null_valid)) {
+                    init_exception_msg = "Cannot load shared lib symbol '" + symbol_name + "' for model " + model_name;
+                    if (err_message != nullptr) {
+                        init_exception_msg += " (" + std::string(err_message) + ")";
+                    }
+                    throw ::external::ExternalIntegrationException(init_exception_msg);
+                }
+                return symbol;
+            }
+
+            /**
+             * Convenience for @see dynamic_load_symbol(std::string, bool) where the symbol address must be found.
+             *
+             * This serves as a convenience overload for the function of the same name, in cases when a sought symbol
+             * must be found and the return of a null address is not valid.
+             *
+             * @param symbol_name The name of the symbol to load.
+             * @return A void pointer to the address of the desired symbol in memory.
+             * @throws ``std::runtime_error`` If there is not a valid handle already to the shared library.
+             * @throws ``::external::ExternalIntegrationException`` If symbol could not be found for the shared library.
+             * @see dynamic_load_symbol(std::string, bool)
+             */
+            inline void *dynamic_load_symbol(const std::string &symbol_name) {
+                return dynamic_load_symbol(symbol_name, false);
             }
 
             /**
