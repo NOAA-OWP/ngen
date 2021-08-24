@@ -297,7 +297,7 @@ TEST_F(Network_Test2, test_catchments_filter)
   auto catchments = n.filter("cat");
   //auto catchments_it = catchments.begin();
   for(const auto& id : n) std::cout<<"topo_id: "<<n.get_id(id)<<std::endl;
-  for(const auto& id : catchments) std::cout<<"id: "<<id<<std::endl;
+  for(const auto& id : n.filter("cat")) std::cout<<"id: "<<id<<std::endl;
   auto cat0_it = std::find(catchments.begin(), catchments.end(), "cat-0");
   auto cat1_it = std::find(catchments.begin(), catchments.end(), "cat-1");
   auto cat2_it = std::find(catchments.begin(), catchments.end(), "cat-2");
