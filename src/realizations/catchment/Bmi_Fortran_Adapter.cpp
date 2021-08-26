@@ -1,3 +1,4 @@
+#ifdef ACTIVATE_FORTRAN
 #include "Bmi_Fortran_Adapter.hpp"
 
 using namespace models::bmi;
@@ -287,5 +288,4 @@ void Bmi_Fortran_Adapter::GetGridNodesPerFace(const int grid, int *nodes_per_fac
     }
 }
 
-
-
+#endif // ACTIVATE_FORTRAN

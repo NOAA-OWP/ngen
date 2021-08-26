@@ -1,3 +1,5 @@
+#ifdef ACTIVATE_FORTRAN
+
 #include "Bmi_Fortran_Formulation.hpp"
 #include "Constants.h"
 
@@ -177,3 +179,5 @@ double Bmi_Fortran_Formulation::get_response(time_step_t t_index, time_step_t t_
     }
     return get_var_value_as_double( get_bmi_main_output_var());
 }
+
+#endif // ACTIVATE_FORTRAN
