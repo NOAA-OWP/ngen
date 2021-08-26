@@ -85,6 +85,11 @@ if(BMI_C_LIB_ACTIVE)
     add_compile_definitions(NGEN_BMI_C_LIB_ACTIVE)
 endif()
 
+# Configure whether Fortran BMI functionality is active
+if (${NGEN_ACTIVATE_FORTRAN})
+    add_compile_definitions(ACTIVATE_FORTRAN=true)
+endif()
+
 #### Python stuff
 # First, define NGEN_ACTIVATE_PYTHON, if not already defined
 #   Use NGEN_ACTIVATE_PYTHON environment variable if available, or default to true
@@ -96,10 +101,6 @@ if (NOT (DEFINED NGEN_ACTIVATE_PYTHON))
     else()
         set(NGEN_ACTIVATE_PYTHON true)
     endif()
-endif()
-
-if (${NGEN_ACTIVATE_FORTRAN})
-    add_compile_definitions(ACTIVATE_FORTRAN=true)
 endif()
 
 # If Python set to be active, run steps to make sure it is included properly, and set compiler definition to true
