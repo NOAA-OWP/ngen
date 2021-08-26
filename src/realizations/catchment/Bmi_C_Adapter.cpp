@@ -70,10 +70,8 @@ Bmi_C_Adapter::Bmi_C_Adapter(const string &type_name, std::string library_file_p
 Bmi_C_Adapter::Bmi_C_Adapter(const string &type_name, std::string library_file_path, std::string bmi_init_config,
                              std::string forcing_file_path, bool allow_exceed_end, bool has_fixed_time_step,
                              std::string registration_func, utils::StreamHandler output, bool do_initialization)
-        : Bmi_Adapter<C_Bmi>(type_name, std::move(bmi_init_config), std::move(forcing_file_path), allow_exceed_end,
-                             has_fixed_time_step, output),
-          bmi_lib_file(std::move(library_file_path)),
-          bmi_registration_function(std::move(registration_func))
+                             : AbstractCLibBmiAdapter<C_Bmi>(type_name, library_file_path, std::move(bmi_init_config), std::move(forcing_file_path), allow_exceed_end,
+                             has_fixed_time_step, registration_func, output)
 {
     if (do_initialization) {
         try {
@@ -120,96 +118,7 @@ Bmi_C_Adapter::Bmi_C_Adapter(Bmi_C_Adapter &adapter) : model_name(adapter.model_
 }
 */
 
-Bmi_C_Adapter::Bmi_C_Adapter(Bmi_C_Adapter &&adapter) noexcept:
-        Bmi_Adapter<C_Bmi>(std::move(adapter)),
-        bmi_lib_file(std::move(adapter.bmi_lib_file)),
-        bmi_registration_function(adapter.bmi_registration_function),
-        dyn_lib_handle(adapter.dyn_lib_handle)
-{
-    // Have to make sure to do this after "moving" so the original does not close the dynamically loaded library handle
-    adapter.dyn_lib_handle = nullptr;
-}
-
-/**
- * Class destructor.
- *
- * Note that this calls the `Finalize()` function for cleaning up this object and its backing BMI model.
- */
-Bmi_C_Adapter::~Bmi_C_Adapter() {
-    finalizeForSubtype();
-}
-
-/**
- * Perform tear-down task for this object and its backing model.
- *
- * The function will simply return if either the pointer to the backing model is `nullptr` (e.g., after use
- * in a move constructor) or if the model has not been initialized.  Otherwise, it will execute its internal
- * tear-down logic, including a nested call to `finalize()` for the backing model.
- *
- * Note that because of how model initialization state is determined, regardless of whether the call to the
- * model's `finalize()` function is successful (i.e., according to the function's return code value), the
- * model will subsequently be consider not initialized.  This essentially means that if backing model
- * tear-down fails, it cannot be retried.
- *
- * @throws models::external::State_Exception Thrown if nested model `finalize()` call is not successful.
- */
-void Bmi_C_Adapter::Finalize() {
-    finalizeForSubtype();
-}
-
-/**
- * A non-virtual equivalent for the virtual @see Finalize.
- *
- * Primarily, this exists to contain the functionality appropriate for @see Finalize in a function that is
- * non-virtual, and can therefore be called by a destructor.
- */
-void Bmi_C_Adapter::finalizeForSubtype() {
-    if (bmi_model != nullptr && model_initialized) {
-        model_initialized = false;
-        int result = bmi_model->finalize(bmi_model.get());
-        if (result != BMI_SUCCESS) {
-            throw models::external::State_Exception("Failure attempting to finalize BMI C model " + model_name);
-        }
-    }
-    // Then close the dynamically loaded library
-    if (dyn_lib_handle != nullptr) {
-        dlclose(dyn_lib_handle);
-    }
-}
-
-std::shared_ptr<std::vector<std::string>> Bmi_C_Adapter::get_variable_names(bool is_input_variable) {
-    int count;
-    int count_result;
-    if (is_input_variable)
-        count_result = bmi_model->get_input_item_count(bmi_model.get(), &count);
-    else
-        count_result = bmi_model->get_output_item_count(bmi_model.get(), &count);
-    if (count_result != BMI_SUCCESS) {
-        throw std::runtime_error(model_name + " failed to count of output variable names array.");
-    }
-    std::shared_ptr<std::vector<std::string>> var_names = std::make_shared<std::vector<std::string>>(std::vector<std::string>(count));
-
-    char* names_array[count];
-    for (int i = 0; i < count; i++) {
-        names_array[i] = static_cast<char *>(malloc(sizeof(char) * BMI_MAX_VAR_NAME));
-    }
-    int names_result;
-    if (is_input_variable) {
-        names_result = bmi_model->get_input_var_names(bmi_model.get(), names_array);
-    }
-    else {
-        names_result = bmi_model->get_output_var_names(bmi_model.get(), names_array);
-    }
-    if (names_result != BMI_SUCCESS) {
-        throw std::runtime_error(model_name + " failed to get array of output variables names.");
-    }
-
-    for (int i = 0; i < count; ++i) {
-        (*var_names)[i] = std::string(names_array[i]);
-        free(names_array[i]);
-    }
-    return var_names;
-}
+Bmi_C_Adapter::Bmi_C_Adapter(Bmi_C_Adapter &&adapter) noexcept : AbstractCLibBmiAdapter<C_Bmi>(std::move(adapter)) { }
 
 string Bmi_C_Adapter::GetComponentName() {
     char component_name[BMI_MAX_COMPONENT_NAME];
@@ -243,7 +152,7 @@ int Bmi_C_Adapter::GetInputItemCount() {
 
 std::vector<std::string> Bmi_C_Adapter::GetInputVarNames() {
     if (input_var_names == nullptr) {
-        input_var_names = get_variable_names(true);
+        input_var_names = inner_get_variable_names(true);
     }
 
     return *input_var_names;
@@ -255,7 +164,7 @@ int Bmi_C_Adapter::GetOutputItemCount() {
 
 std::vector<std::string> Bmi_C_Adapter::GetOutputVarNames() {
     if (output_var_names == nullptr) {
-        output_var_names = get_variable_names(false);
+        output_var_names = inner_get_variable_names(false);
     }
 
     return *output_var_names;
@@ -364,6 +273,52 @@ int Bmi_C_Adapter::GetGridSize(int grid_id) {
         throw std::runtime_error(model_name + " failed to get grid size for grid ID " + to_string(grid_id) + ".");
     }
     return gridsize;
+}
+
+std::shared_ptr<std::vector<std::string>> Bmi_C_Adapter::inner_get_variable_names(bool is_input_variables) {
+    // Writing this def once here at beginning: fewer lines, but this may or may not be used.
+    std::string varType = (is_input_variables) ? "input" : "output";
+
+    // Obtain this via inner functions, which should use the model directly and not other member functions
+    int variableCount;
+    try {
+        variableCount = (is_input_variables) ? inner_get_input_item_count() : inner_get_output_item_count();
+    }
+    catch (const std::exception &e) {
+        throw std::runtime_error(model_name + " failed to count of " + varType + " variable names array.");
+    }
+
+    // With variable count now obtained, create the vector
+    std::shared_ptr<std::vector<std::string>> var_names = std::make_shared<std::vector<std::string>>(
+            std::vector<std::string>(variableCount));
+
+    // Must get the names from the model as an array of C strings
+    // The array can be on the stack ...
+    char* names_array[variableCount];
+    // ... but allocate the space for the individual C strings (i.e., the char * elements)
+    for (int i = 0; i < variableCount; i++) {
+        names_array[i] = static_cast<char *>(malloc(sizeof(char) * BMI_MAX_VAR_NAME));
+    }
+
+    // With the necessary char** in hand, get the names from the model
+    int names_result;
+    if (is_input_variables) {
+        names_result = bmi_model->get_input_var_names(bmi_model.get(), names_array);
+    }
+    else {
+        names_result = bmi_model->get_output_var_names(bmi_model.get(), names_array);
+    }
+    if (names_result != BMI_SUCCESS) {
+        throw std::runtime_error(model_name + " failed to get array of output variables names.");
+    }
+
+    // Then convert from array of C strings to vector of strings, freeing the allocated space as we go
+    for (int i = 0; i < variableCount; ++i) {
+        (*var_names)[i] = std::string(names_array[i]);
+        free(names_array[i]);
+    }
+
+    return var_names;
 }
 
 void Bmi_C_Adapter::SetValue(std::string name, void *src) {
