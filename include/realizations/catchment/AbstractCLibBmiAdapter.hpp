@@ -75,47 +75,6 @@ namespace models {
         protected:
 
             /**
-             * Load and execute the "registration" function for the backing BMI module.
-             *
-             * Integrated BMI module libraries are expected to provide an additional ``register_bmi`` function.  Exactly
-             * what is initialized is somewhat language dependent.
-             *
-             *  * For C modules, this essentially works like a constructor (or factory) for the model struct, accepting
-             *    a pointer to a BMI struct and then setting the appropriate function pointer values.
-             *  * For Fortran, this initializes the Fortran BMI object and returns an opaque pointer to it, which is
-             *    then used in the free functions from the internal/common ngen Fortran integration library.
-             *
-             * Regardless of the specifics, an instance should be ready to begin using its backing model (i.e., call
-             * ``Initialize``, begin setting variables, etc.) after this function has been called and returns.
-             *
-             * @return An opaque handle to whatever item in memory is returned by the library's registration function.
-             */
-            inline void *execModuleRegistration() {
-                if (dyn_lib_handle == nullptr) {
-                    dynamic_library_load();
-                }
-                void *symbol;
-                C *(*dynamic_register_bmi)(C *model);
-
-                try {
-                    // Acquire the BMI struct func pointer registration function
-                    symbol = dynamic_load_symbol(this->bmi_registration_function);
-                    dynamic_register_bmi = (C *(*)(C *)) symbol;
-                    // Call registration function, which (for C libs) sets up object's pointed-to member BMI struct
-                    // (Note that this probably is not the case for the Fortran subclass, though the registration
-                    // function is still expected and utilized).
-                    return dynamic_register_bmi(this->bmi_model.get());
-                }
-                catch (const ::external::ExternalIntegrationException &e) {
-                    // "Override" the default message in this case
-                    this->init_exception_msg =
-                            "Cannot init " + this->model_name + " without valid library registration function: " +
-                            this->init_exception_msg;
-                    throw ::external::ExternalIntegrationException(this->init_exception_msg);
-                }
-            }
-
-            /**
              * Dynamically load and obtain this instance's handle to the shared library.
              */
             inline void dynamic_library_load() {
