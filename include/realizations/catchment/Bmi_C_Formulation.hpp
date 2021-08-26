@@ -17,10 +17,6 @@ namespace realization {
 
         Bmi_C_Formulation(std::string id, forcing_params forcing_config, utils::StreamHandler output_stream);
 
-        const vector<string> get_bmi_input_variables() override;
-
-        const vector<string> get_bmi_output_variables() override;
-
         std::string get_formulation_type() override;
 
         /**
@@ -109,7 +105,9 @@ namespace realization {
          */
         std::shared_ptr<models::bmi::Bmi_C_Adapter> construct_model(const geojson::PropertyMap& properties) override;
 
-        time_t convert_model_time(const double &model_time) override;
+        time_t convert_model_time(const double &model_time) override {
+            return (time_t) (get_bmi_model()->convert_model_time_to_seconds(model_time));
+        }
 
         /**
          * Get a value, converted to specified type, for an output variable at a time step.
