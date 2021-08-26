@@ -418,6 +418,40 @@ namespace models {
                 construct_and_init_backing_model_for_fortran();
             }
 
+            /**
+             * Load and execute the "registration" function for the backing BMI module.
+             *
+             * Integrated BMI module libraries are expected to provide an additional ``register_bmi`` function. This
+             * initializes the Fortran BMI object and passes the opaque @see Bmi_Fortran_Handle_Wrapper::handle from
+             * this instance's @see bmi_model struct. The handle is then set to point to the Fortran BMI object, and it
+             * can then be passed to the free proxy functions from the internal/common ngen Fortran integration library.
+             */
+            inline void execModuleRegistration() {
+                if (get_dyn_lib_handle() == nullptr) {
+                    dynamic_library_load();
+                }
+                void *symbol;
+                // TODO: verify this doesn't need to just return void, rather than void*
+                void *(*dynamic_register_bmi)(void *model);
+
+                try {
+                    // Acquire the BMI struct func pointer registration function
+                    symbol = dynamic_load_symbol(get_bmi_registration_function());
+                    // TODO: as with the TODO above, verify this doesn't need to just return void, rather than void*
+                    dynamic_register_bmi = (void *(*)(void *)) symbol;
+                    // Call registration function, which for Fortran sets up the Fortran BMI object and sets the passed
+                    // opaque handle param to point to the Fortran BMI object.
+                    dynamic_register_bmi(bmi_model->handle);
+                }
+                catch (const ::external::ExternalIntegrationException &e) {
+                    // "Override" the default message in this case
+                    this->init_exception_msg =
+                            "Cannot init " + this->model_name + " without valid library registration function: " +
+                            this->init_exception_msg;
+                    throw ::external::ExternalIntegrationException(this->init_exception_msg);
+                }
+            }
+
         private:
 
             /**
@@ -435,8 +469,7 @@ namespace models {
                 if (model_initialized)
                     return;
                 dynamic_library_load();
-                void *handle = execModuleRegistration();
-                bmi_model->handle = handle;
+                execModuleRegistration();
                 int init_result = initialize(bmi_model->handle, bmi_init_config.c_str());
                 if (init_result != BMI_SUCCESS) {
                     init_exception_msg = "Failure when attempting to initialize " + model_name;

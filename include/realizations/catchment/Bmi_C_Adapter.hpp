@@ -486,6 +486,36 @@ namespace models {
             }
 
             /**
+             * Load and execute the "registration" function for the backing BMI module.
+             *
+             * Integrated BMI module libraries are expected to provide an additional ``register_bmi`` function. This
+             * essentially works like a constructor (or factory) for the model struct.  It accepts a pointer to a BMI C
+             * struct and then sets the appropriate function pointer member values of the struct.
+             */
+            inline void execModuleRegistration() {
+                if (get_dyn_lib_handle() == nullptr) {
+                    dynamic_library_load();
+                }
+                void *symbol;
+                C_Bmi *(*dynamic_register_bmi)(C_Bmi *model);
+
+                try {
+                    // Acquire the BMI struct func pointer registration function
+                    symbol = dynamic_load_symbol(get_bmi_registration_function());
+                    dynamic_register_bmi = (C_Bmi *(*)(C_Bmi *)) symbol;
+                    // Call registration function, which (for C libs) sets up object's pointed-to member BMI struct
+                    dynamic_register_bmi(bmi_model.get());
+                }
+                catch (const ::external::ExternalIntegrationException &e) {
+                    // "Override" the default message in this case
+                    this->init_exception_msg =
+                            "Cannot init " + this->model_name + " without valid library registration function: " +
+                            this->init_exception_msg;
+                    throw ::external::ExternalIntegrationException(this->init_exception_msg);
+                }
+            }
+
+            /**
              * Get model time step size pointer, using lazy loading when fixed.
              *
              * Get a pointer to the value of the backing model's time step size.  If the model is configured to have
