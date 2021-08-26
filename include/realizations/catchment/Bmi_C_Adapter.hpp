@@ -3,11 +3,8 @@
 
 #include <memory>
 #include <string>
-#include <dlfcn.h>
+#include "AbstractCLibBmiAdapter.hpp"
 #include "bmi.h"
-#include "Bmi_Adapter.hpp"
-#include "State_Exception.hpp"
-#include "ExternalIntegrationException.hpp"
 #include "JSONProperty.hpp"
 #include "StreamHandler.hpp"
 
@@ -23,7 +20,7 @@ namespace models {
          * An adapter class to serve as a C++ interface to the essential aspects of external models written in the C
          * language that implement the BMI.
          */
-        class Bmi_C_Adapter : public Bmi_Adapter<C_Bmi> {
+        class Bmi_C_Adapter : public AbstractCLibBmiAdapter<C_Bmi> {
 
         public:
 
@@ -105,7 +102,9 @@ namespace models {
              *
              * Note that this calls the `Finalize()` function for cleaning up this object and its backing BMI model.
              */
-            virtual ~Bmi_C_Adapter();
+            virtual ~Bmi_C_Adapter() {
+                finalizeForCAdapter();
+            }
 
             /**
              * Perform tear-down task for this object and its backing model.
@@ -121,7 +120,9 @@ namespace models {
              *
              * @throws models::external::State_Exception Thrown if nested model `finalize()` call is not successful.
              */
-            void Finalize() override;
+            void Finalize() override {
+                finalizeForCAdapter();
+            }
 
             string GetComponentName() override;
 
@@ -485,132 +486,6 @@ namespace models {
             }
 
             /**
-             * Dynamically load the required shared library and the backing BMI model itself.
-             *
-             * Dynamically load the external shared library for this object's backing model.  Then load this object's
-             * "instance" of the model itself.  For C BMI models (as well as other for which the adapter is derived from
-             * this type), this is actually a struct with function pointer, rather than a class with member functions.
-             *
-             * Libraries should provide an additional ``register_bmi`` function.  For C modules, this essentially works
-             * as a constructor (or factory) for the model struct, accepting a pointer to a BMI struct and then setting
-             * the appropriate function pointer values.
-             *
-             * A handle to the dynamically loaded library (as a ``void*``) is maintained in within a private member
-             * variable.  A warning will output if this function is called with the handle already set (i.e., with the
-             * library already loaded), and then the function will returns without taking any other action.
-             *
-             * @throws ``std::runtime_error`` If configured BMI library file is not readable.
-             * @throws ``::external::ExternalIntegrationException`` If symbol for registration function could not be
-             *                                                      found for the shared library handle.
-             */
-            inline void dynamic_library_load() {
-                if (dyn_lib_handle != nullptr) {
-                    output.put("WARNING: ignoring attempt to reload dynamic shared library '" + bmi_lib_file +
-                               "' for BMI model " + model_name);
-                    return;
-                }
-                if (!utils::FileChecker::file_is_readable(bmi_lib_file)) {
-                    init_exception_msg =
-                            "Cannot init " + model_name + "; unreadable dynamic shared lib file '" + bmi_lib_file + "'";
-                    throw std::runtime_error(init_exception_msg);
-                }
-                if (bmi_registration_function.empty()) {
-                    init_exception_msg =
-                            "Cannot init " + model_name + "; empty name given for library's registration function.";
-                    throw std::runtime_error(init_exception_msg);
-                }
-
-                // TODO: add support for either the configured-by-name mapping or just using the standard names
-                void *symbol;
-                C_Bmi *(*dynamic_register_bmi)(C_Bmi *model);
-
-                // Load up the necessary library dynamically
-                dyn_lib_handle = dlopen(bmi_lib_file.c_str(), RTLD_NOW | RTLD_LOCAL);
-
-                try {
-                    // Acquire the BMI struct func pointer registration function
-                    symbol = dynamic_load_symbol(bmi_registration_function);
-                    dynamic_register_bmi = (C_Bmi *(*)(C_Bmi *)) symbol;
-                    // Call registration function, which (for C libs) sets up object's pointed-to member BMI struct
-                    // (Note that this probably is not the case for the Fortran subclass, though the registration
-                    // function is still expected and utilized).
-                    dynamic_register_bmi(bmi_model.get());
-                }
-                catch (const ::external::ExternalIntegrationException &e) {
-                    // "Override" the default message in this case
-                    init_exception_msg =
-                            "Cannot init " + model_name + " without valid library registration function: " +
-                            init_exception_msg;
-                    throw ::external::ExternalIntegrationException(init_exception_msg);
-                }
-            }
-
-            /**
-             * Load and return the address of the given symbol from the loaded dynamic model shared library.
-             *
-             * The initial primary purpose for this is to obtain a function pointer for accessing the registration
-             * function for a dynamically loaded library, as done in @see dynamic_library_load.  Other function pointers
-             * (or pointers to other valid symbols) can also be returned.
-             *
-             * It is possible for a symbol pointer to actually be null in some cases.  However, this may not be
-             * valid in the context in which a call to this function was made.  To control whether this is treated as
-             * a valid case, and thus whether null should be returned (instead of an exception thrown), there is the
-             * ``is_null_valid`` parameter.  When ``true``, a null symbol will be returned by the function.
-             *
-             * Typically, a call to @see dynamic_library_load must happen (though not necessarily have completed) before
-             * a call to this function to ensure @see dyn_lib_handle is set.  If it is not set, an exception is thrown.
-             *
-             * @param symbol_name The name of the symbol to load.
-             * @param is_null_valid Whether a null address for the symbol is valid, as opposed to implying there was
-             *                      simply a failure finding it.
-             * @return A void pointer to the address of the desired symbol in memory.
-             * @throws ``std::runtime_error`` If there is not a valid handle already to the shared library.
-             * @throws ``::external::ExternalIntegrationException`` If symbol could not be found for the shared library.
-             */
-            inline void *dynamic_load_symbol(const std::string &symbol_name, bool is_null_valid) {
-                if (dyn_lib_handle == nullptr) {
-                    throw std::runtime_error("Cannot load symbol " + symbol_name + "without handle to shared library");
-                }
-                // Call first to ensure any previous error is cleared before trying to load the symbol
-                dlerror();
-                void *symbol = dlsym(dyn_lib_handle, symbol_name.c_str());
-                // Now call again to see if there was an error (if there was, this will not be null)
-                char *err_message = dlerror();
-                if (symbol == nullptr && (err_message != nullptr || !is_null_valid)) {
-                    init_exception_msg = "Cannot load shared lib symbol '" + symbol_name + "' for model " + model_name;
-                    if (err_message != nullptr) {
-                        init_exception_msg += " (" + std::string(err_message) + ")";
-                    }
-                    throw ::external::ExternalIntegrationException(init_exception_msg);
-                }
-                return symbol;
-            }
-
-            /**
-             * Convenience for @see dynamic_load_symbol(std::string, bool) where the symbol address must be found.
-             *
-             * This serves as a convenience overload for the function of the same name, in cases when a sought symbol
-             * must be found and the return of a null address is not valid.
-             *
-             * @param symbol_name The name of the symbol to load.
-             * @return A void pointer to the address of the desired symbol in memory.
-             * @throws ``std::runtime_error`` If there is not a valid handle already to the shared library.
-             * @throws ``::external::ExternalIntegrationException`` If symbol could not be found for the shared library.
-             * @see dynamic_load_symbol(std::string, bool)
-             */
-            inline void *dynamic_load_symbol(const std::string &symbol_name) {
-                return dynamic_load_symbol(symbol_name, false);
-            }
-
-            /**
-             * A non-virtual equivalent for the virtual @see Finalize.
-             *
-             * Primarily, this exists to contain the functionality appropriate for @see Finalize in a function that is
-             * non-virtual, and can therefore be called by a destructor.
-             */
-            void finalizeForSubtype();
-
-            /**
              * Get model time step size pointer, using lazy loading when fixed.
              *
              * Get a pointer to the value of the backing model's time step size.  If the model is configured to have
@@ -663,12 +538,6 @@ namespace models {
             }
 
         private:
-            /** Path to the BMI shared library file, for dynamic linking. */
-            std::string bmi_lib_file;
-            /** Name of the function that registers BMI struct's function pointers to the right module functions. */
-            const std::string bmi_registration_function;
-            /** Handle for dynamically loaded library file. */
-            void *dyn_lib_handle = nullptr;
 
             /**
              * Construct the backing BMI model object, then call its BMI-native ``Initialize()`` function.
@@ -685,7 +554,7 @@ namespace models {
                 if (model_initialized)
                     return;
                 bmi_model = std::make_shared<C_Bmi>(C_Bmi());
-                dynamic_library_load();
+                execModuleRegistration();
                 int init_result = bmi_model->initialize(bmi_model.get(), bmi_init_config.c_str());
                 if (init_result != BMI_SUCCESS) {
                     init_exception_msg = "Failure when attempting to initialize " + model_name;
@@ -694,12 +563,72 @@ namespace models {
             }
 
             /**
+             * A non-virtual equivalent for the virtual @see Finalize.
+             *
+             * This function should be kept private.  If its logic needs to be invoked externally, that should be done
+             * via the destructor or via the public interface @see Finalize function.
+             *
+             * Primarily, this exists to contain the functionality appropriate for @see Finalize in a function that is
+             * non-virtual, and can therefore be called by a destructor.
+             */
+            void finalizeForCAdapter() {
+                if (bmi_model != nullptr && model_initialized) {
+                    model_initialized = false;
+                    int result = bmi_model->finalize(bmi_model.get());
+                    if (result != BMI_SUCCESS) {
+                        throw models::external::State_Exception("Failure attempting to finalize BMI C model " + model_name);
+                    }
+                }
+            }
+
+            /**
+             * Internal implementation of logic used for @see GetInputItemCount.
+             *
+             * "Inner" functions such as this should not contain nested function calls to any other member functions for
+             * the type.
+             *
+             * @return The count of input BMI variables.
+             * @see GetInputItemCount
+             */
+            inline int inner_get_input_item_count() {
+                int item_count;
+                if (bmi_model->get_input_item_count(bmi_model.get(), &item_count) != BMI_SUCCESS) {
+                    throw std::runtime_error(model_name + " failed to get model input item count.");
+                }
+                return item_count;
+            }
+
+            /**
+             * Internal implementation of logic used for @see GetOutputItemCount.
+             *
+             * "Inner" functions such as this should not contain nested function calls to any other member functions for
+             * the type.
+             *
+             * @return The count of output BMI variables.
+             * @see GetOutputItemCount
+             */
+            inline int inner_get_output_item_count() {
+                int item_count;
+                if (bmi_model->get_output_item_count(bmi_model.get(), &item_count) != BMI_SUCCESS) {
+                    throw std::runtime_error(model_name + " failed to get model output item count.");
+                }
+                return item_count;
+            }
+
+            /**
              * Helper method for getting either input or output variable names.
              *
+             * "Inner" functions such as this should not contain nested function calls to any other member functions for
+             * the type.
+             *
+             * This should be used for @see GetInputVarNames and @see GetOutputVarNames.
+             *
              * @param is_input_variable Whether input variable names should be retrieved (as opposed to output).
-             * @return
+             * @return A shared pointer to a vector of input or output variable name strings.
+             * @see GetInputVarNames
+             * @see GetOutputVarNames
              */
-            std::shared_ptr<std::vector<std::string>> get_variable_names(bool is_input_variable);
+            std::shared_ptr<std::vector<std::string>> inner_get_variable_names(bool is_input_variables);
 
             // For unit testing
             friend class ::Bmi_C_Adapter_Test;
