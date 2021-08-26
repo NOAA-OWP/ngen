@@ -196,6 +196,14 @@ namespace models {
                 return dynamic_load_symbol(symbol_name, false);
             }
 
+            inline const std::string &get_bmi_registration_function() {
+                return bmi_registration_function;
+            }
+
+            inline const void *get_dyn_lib_handle() {
+                return dyn_lib_handle;
+            }
+
         private:
 
             /** Path to the BMI shared library file, for dynamic linking. */
