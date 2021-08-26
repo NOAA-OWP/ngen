@@ -2,10 +2,12 @@
 #define NGEN_BMI_MODULE_FORMULATION_H
 
 #include <utility>
+#include <memory>
 #include "Bmi_Formulation.hpp"
 #include "EtCalcProperty.hpp"
 #include "EtCombinationMethod.hpp"
 #include "WrappedForcingProvider.hpp"
+#include "Bmi_C_Adapter.hpp"
 
 // Forward declaration to provide access to protected items in testing
 class Bmi_Formulation_Test;
@@ -365,9 +367,17 @@ namespace realization {
             return get_var_value_as_double(bmi_var_name);
         }
 
-        bool is_bmi_input_variable(const std::string &var_name) override = 0;
+        bool is_bmi_input_variable(const std::string &var_name) override {
+           return is_var_name_in_collection(get_bmi_input_variables(), var_name);
+        }
 
-        bool is_bmi_output_variable(const std::string &var_name) override = 0;
+        bool is_bmi_output_variable(const std::string &var_name) override {
+            return is_var_name_in_collection(get_bmi_output_variables(), var_name);
+        }
+
+        inline bool is_var_name_in_collection(const std::vector<std::string> &all_names, const std::string &var_name) {
+            return std::count(all_names.begin(), all_names.end(), var_name) > 0;
+        }
 
         /**
          * Get whether a property's per-time-step values are each an aggregate sum over the entire time step.
@@ -389,6 +399,14 @@ namespace realization {
          */
         bool is_property_sum_over_time_step(const std::string& name) override {
             return true;
+        }
+
+        const vector<string> get_bmi_input_variables() override {
+            return get_bmi_model()->GetInputVarNames();
+        }
+
+        const vector<string> get_bmi_output_variables() override {
+            return get_bmi_model()->GetOutputVarNames();
         }
 
     protected:
@@ -564,6 +582,18 @@ namespace realization {
                     forcing.get_next_hourly_precipitation_meters_per_second();
                 }
             }
+        }
+
+        /**
+         * Get a header line appropriate for a file made up of entries from this type's implementation of
+         * ``get_output_line_for_timestep``.
+         *
+         * Note that like the output generating function, this line does not include anything for time step.
+         *
+         * @return An appropriate header line for this type.
+         */
+        std::string get_output_header_line(std::string delimiter) override {
+            return boost::algorithm::join(get_output_header_fields(), delimiter);
         }
 
         /**
