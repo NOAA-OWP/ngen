@@ -98,6 +98,10 @@ if (NOT (DEFINED NGEN_ACTIVATE_PYTHON))
     endif()
 endif()
 
+if (${NGEN_ACTIVATE_FORTRAN})
+    add_compile_definitions(ACTIVATE_FORTRAN=true)
+endif()
+
 # If Python set to be active, run steps to make sure it is included properly, and set compiler definition to true
 if (${NGEN_ACTIVATE_PYTHON})
     add_compile_definitions(ACTIVATE_PYTHON=true)
