@@ -1,18 +1,25 @@
 #ifndef NGEN_BMI_FORTRAN_ADAPTER_HPP
 #define NGEN_BMI_FORTRAN_ADAPTER_HPP
 
-#include "Bmi_C_Adapter.hpp"
+#include "AbstractCLibBmiAdapter.hpp"
+#include "Bmi_Fortran_Common.h"
+#include "bmi.h"
 
 // Forward declaration to provide access to protected items in testing
 class Bmi_Fortran_Adapter_Test;
 
 namespace models {
     namespace bmi {
+        
+        typedef struct Bmi_Fortran_Handle_Wrapper {
+            void *handle;
+        } Bmi_Fortran_Handle_Wrapper;
+
         /**
          * An adapter class to serve as a C++ interface to the essential aspects of external models written in the
          * Fortran language that implement the BMI.
          */
-        class Bmi_Fortran_Adapter : public Bmi_C_Adapter {
+        class Bmi_Fortran_Adapter : public AbstractCLibBmiAdapter<Bmi_Fortran_Handle_Wrapper> {
 
         public:
 
@@ -27,24 +34,22 @@ namespace models {
             Bmi_Fortran_Adapter(const string &type_name, std::string library_file_path, std::string bmi_init_config,
                                 std::string forcing_file_path, bool allow_exceed_end, bool has_fixed_time_step,
                                 std::string registration_func,
-                                utils::StreamHandler output) : Bmi_C_Adapter(type_name,
-                                                                             library_file_path,
-                                                                             bmi_init_config,
-                                                                             forcing_file_path,
-                                                                             allow_exceed_end,
-                                                                             has_fixed_time_step,
-                                                                             registration_func,
-                                                                             output,
-                                                                             false)
-            {
+                                utils::StreamHandler output) : AbstractCLibBmiAdapter(type_name,
+                                                                                      library_file_path,
+                                                                                      bmi_init_config,
+                                                                                      forcing_file_path,
+                                                                                      allow_exceed_end,
+                                                                                      has_fixed_time_step,
+                                                                                      registration_func,
+                                                                                      output) {
                 try {
                     construct_and_init_backing_model_for_fortran();
                     // Make sure this is set to 'true' after this function call finishes
                     model_initialized = true;
                     acquire_time_conversion_factor(bmi_model_time_convert_factor);
                 }
-                // Record the exception message before re-throwing to handle subsequent function calls properly
-                catch (exception& e) {
+                    // Record the exception message before re-throwing to handle subsequent function calls properly
+                catch (exception &e) {
                     // Make sure this is set to 'true' after this function call finishes
                     model_initialized = true;
                     throw e;
@@ -86,12 +91,10 @@ namespace models {
             inline void construct_and_init_backing_model_for_fortran() {
                 if (model_initialized)
                     return;
-                bmi_model = std::make_shared<C_Bmi>(C_Bmi());
-                // TODO: make sure there are tests in place to make sure it is caught if this usage isn't safe, now or in future
                 dynamic_library_load();
-                // Set the individual struct function pointers to the Fortran C-binding proxy functions
-                load_proxy_function_pointers();
-                int init_result = bmi_model->initialize(bmi_model.get(), bmi_init_config.c_str());
+                void *handle = execModuleRegistration();
+                bmi_model->handle = handle;
+                int init_result = initialize(bmi_model->handle, bmi_init_config.c_str());
                 if (init_result != BMI_SUCCESS) {
                     init_exception_msg = "Failure when attempting to initialize " + model_name;
                     throw models::external::State_Exception(init_exception_msg);
@@ -99,96 +102,116 @@ namespace models {
             }
 
             /**
-             * Load function pointers for ISO C binding proxy function via the dynamic symbol lookups.
+             * Internal implementation of logic used for @see GetInputItemCount.
              *
-             * Function assumes symbol for function is equivalent to the "standard" BMI function name.
+             * "Inner" functions such as this should not contain nested function calls to any other member functions for
+             * the type.
+             *
+             * @return The count of input BMI variables.
+             * @see GetInputItemCount
              */
-            inline void load_proxy_function_pointers() {
-                if (model_initialized)
-                    return;
-                if (bmi_model == nullptr) {
-                    init_exception_msg = "Can't load Fortran proxy function symbols before init of BMI struct pointer.";
-                    throw ::external::ExternalIntegrationException(init_exception_msg);
+            inline int inner_get_input_item_count() {
+                int item_count;
+                if (get_input_item_count(bmi_model->handle, &item_count) != BMI_SUCCESS) {
+                    throw std::runtime_error(model_name + " failed to get model input item count.");
                 }
-
-                bmi_model->initialize = (int (*)(struct ::Bmi *, const char *)) dynamic_load_symbol("initialize");
-                bmi_model->update = (int (*)(struct ::Bmi *)) dynamic_load_symbol("update");
-                bmi_model->update_until = (int (*)(struct ::Bmi *, double)) dynamic_load_symbol("update_until");
-                bmi_model->finalize = (int (*)(struct ::Bmi *)) dynamic_load_symbol("finalize");
-
-                bmi_model->get_component_name = (int (*)(struct ::Bmi *, char *)) dynamic_load_symbol(
-                        "get_component_name");
-                bmi_model->get_input_item_count = (int (*)(struct ::Bmi *, int *)) dynamic_load_symbol(
-                        "get_input_item_count");
-                bmi_model->get_output_item_count = (int (*)(struct ::Bmi *, int *)) dynamic_load_symbol(
-                        "get_output_item_count");
-                bmi_model->get_input_var_names = (int (*)(struct ::Bmi *, char **)) dynamic_load_symbol(
-                        "get_input_var_names");
-                bmi_model->get_output_var_names = (int (*)(struct ::Bmi *, char **)) dynamic_load_symbol(
-                        "get_output_var_names");
-
-                bmi_model->get_var_grid = (int (*)(struct ::Bmi *, const char *, int *)) dynamic_load_symbol(
-                        "get_var_grid");
-                bmi_model->get_var_type = (int (*)(struct ::Bmi *, const char *, char *)) dynamic_load_symbol(
-                        "get_var_type");
-                bmi_model->get_var_units = (int (*)(struct ::Bmi *, const char *, char *)) dynamic_load_symbol(
-                        "get_var_units");
-                bmi_model->get_var_itemsize = (int (*)(struct ::Bmi *, const char *, int *)) dynamic_load_symbol(
-                        "get_var_itemsize");
-                bmi_model->get_var_nbytes = (int (*)(struct ::Bmi *, const char *, int *)) dynamic_load_symbol(
-                        "get_var_nbytes");
-                bmi_model->get_var_location = (int (*)(struct ::Bmi *, const char *, char *)) dynamic_load_symbol(
-                        "get_var_location");
-
-                bmi_model->get_current_time = (int (*)(struct ::Bmi *, double *)) dynamic_load_symbol(
-                        "get_current_time");
-                bmi_model->get_start_time = (int (*)(struct ::Bmi *, double *)) dynamic_load_symbol("get_start_time");
-                bmi_model->get_end_time = (int (*)(struct ::Bmi *, double *)) dynamic_load_symbol("get_end_time");
-                bmi_model->get_time_units = (int (*)(struct ::Bmi *, char *)) dynamic_load_symbol("get_time_units");
-                bmi_model->get_time_step = (int (*)(struct ::Bmi *, double *)) dynamic_load_symbol("get_time_step");
-
-                bmi_model->get_value = (int (*)(struct ::Bmi *, const char *, void *)) dynamic_load_symbol("get_value");
-                bmi_model->get_value_ptr = (int (*)(struct ::Bmi *, const char *, void **)) dynamic_load_symbol(
-                        "get_value_ptr");
-                bmi_model->get_value_at_indices = (int (*)(struct ::Bmi *, const char *, void *, int *,
-                                                           int)) dynamic_load_symbol("get_value_at_indices");
-
-                bmi_model->set_value = (int (*)(struct ::Bmi *, const char *, void *)) dynamic_load_symbol("set_value");
-                bmi_model->set_value_at_indices = (int (*)(struct ::Bmi *, const char *, int *, int,
-                                                           void *)) dynamic_load_symbol("set_value_at_indices");
-
-                bmi_model->get_grid_size = (int (*)(struct ::Bmi *, int, int *)) dynamic_load_symbol("get_grid_size");
-                bmi_model->get_grid_rank = (int (*)(struct ::Bmi *, int, int *)) dynamic_load_symbol("get_grid_rank");
-                bmi_model->get_grid_type = (int (*)(struct ::Bmi *, int, char *)) dynamic_load_symbol("get_grid_type");
-
-                bmi_model->get_grid_shape = (int (*)(struct ::Bmi *, int, int *)) dynamic_load_symbol("get_grid_shape");
-                bmi_model->get_grid_spacing = (int (*)(struct ::Bmi *, int, double *)) dynamic_load_symbol(
-                        "get_grid_spacing");
-                bmi_model->get_grid_origin = (int (*)(struct ::Bmi *, int, double *)) dynamic_load_symbol(
-                        "get_grid_origin");
-
-                bmi_model->get_grid_x = (int (*)(struct ::Bmi *, int, double *)) dynamic_load_symbol("get_grid_x");
-                bmi_model->get_grid_y = (int (*)(struct ::Bmi *, int, double *)) dynamic_load_symbol("get_grid_y");
-                bmi_model->get_grid_z = (int (*)(struct ::Bmi *, int, double *)) dynamic_load_symbol("get_grid_z");
-
-                bmi_model->get_grid_node_count = (int (*)(struct ::Bmi *, int, int *)) dynamic_load_symbol(
-                        "get_grid_node_count");
-                bmi_model->get_grid_edge_count = (int (*)(struct ::Bmi *, int, int *)) dynamic_load_symbol(
-                        "get_grid_edge_count");
-                bmi_model->get_grid_face_count = (int (*)(struct ::Bmi *, int, int *)) dynamic_load_symbol(
-                        "get_grid_face_count");
-                bmi_model->get_grid_edge_nodes = (int (*)(struct ::Bmi *, int, int *)) dynamic_load_symbol(
-                        "get_grid_edge_nodes");
-                bmi_model->get_grid_face_edges = (int (*)(struct ::Bmi *, int, int *)) dynamic_load_symbol(
-                        "get_grid_face_edges");
-                bmi_model->get_grid_face_nodes = (int (*)(struct ::Bmi *, int, int *)) dynamic_load_symbol(
-                        "get_grid_face_nodes");
-                bmi_model->get_grid_nodes_per_face = (int (*)(struct ::Bmi *, int, int *)) dynamic_load_symbol(
-                        "get_grid_nodes_per_face");
+                return item_count;
             }
 
-        };
+            /**
+             * Internal implementation of logic used for @see GetOutputItemCount.
+             *
+             * "Inner" functions such as this should not contain nested function calls to any other member functions for
+             * the type.
+             *
+             * @return The count of output BMI variables.
+             * @see GetOutputItemCount
+             */
+            inline int inner_get_output_item_count() {
+                int item_count;
+                if (get_output_item_count(bmi_model->handle, &item_count) != BMI_SUCCESS) {
+                    throw std::runtime_error(model_name + " failed to get model output item count.");
+                }
+                return item_count;
+            }
 
+            /**
+             * Internal implementation of logic used for @see GetValue.
+             *
+             * "Inner" functions such as this should not contain nested function calls to any other member functions for
+             * the type.
+             *
+             * Essentially, function exists as inner implementation.  This allows it to be inlined, which may lead to
+             * optimization in certain situations.
+             *
+             * @param name The name of the variable for which to get values.
+             * @param dest A function pointer in which to return the values.
+             */
+            inline void inner_get_value(const std::string& name, void *dest) {
+                if (get_value(bmi_model->handle, name.c_str(), dest) != BMI_SUCCESS) {
+                    throw std::runtime_error(model_name + " failed to get values for variable " + name + ".");
+                }
+            }
+
+            /**
+             * Build a vector of the input or output variable names string, and return a pointer to it.
+             *
+             * "Inner" functions such as this should not contain nested function calls to any other member functions for
+             * the type.
+             *
+             * This should be used for @see GetInputVarNames and @see GetOutputVarNames.
+             *
+             * @param is_input_variables Whether input variable names should be retrieved.
+             * @return A shared pointer to a vector of input or output variable name strings.
+             * @see GetInputVarNames
+             * @see GetOutputVarNames
+             */
+            std::shared_ptr<std::vector<std::string>> inner_get_variable_names(bool is_input_variables) {
+                // Writing this def once here at beginning: fewer lines, but this may or may not be used.
+                std::string varType = (is_input_variables) ? "input" : "output";
+
+                // Obtain this via inner functions, which should use the model directly and not other member functions
+                int variableCount;
+                try {
+                    variableCount = (is_input_variables) ? inner_get_input_item_count() : inner_get_output_item_count();
+                }
+                catch (const std::exception &e) {
+                    throw std::runtime_error(model_name + " failed to count of " + varType + " variable names array.");
+                }
+
+                // With variable count now obtained, create the vector
+                std::shared_ptr<std::vector<std::string>> var_names = std::make_shared<std::vector<std::string>>(
+                        std::vector<std::string>(variableCount));
+
+                // Must get the names from the model as an array of C strings
+                // The array can be on the stack ...
+                char* names_array[variableCount];
+                // ... but allocate the space for the individual C strings (i.e., the char * elements)
+                for (int i = 0; i < variableCount; i++) {
+                    names_array[i] = static_cast<char *>(malloc(sizeof(char) * BMI_MAX_VAR_NAME));
+                }
+
+                // With the necessary char** in hand, get the names from the model
+                int names_result;
+                if (is_input_variables) {
+                    names_result = get_input_var_names(bmi_model.get(), names_array);
+                }
+                else {
+                    names_result = get_output_var_names(bmi_model.get(), names_array);
+                }
+                if (names_result != BMI_SUCCESS) {
+                    throw std::runtime_error(model_name + " failed to get array of " + varType + " variables names.");
+                }
+
+                // Then convert from array of C strings to vector of strings, freeing the allocated space as we go
+                for (int i = 0; i < variableCount; ++i) {
+                    (*var_names)[i] = std::string(names_array[i]);
+                    free(names_array[i]);
+                }
+
+                return var_names;
+            }
+        };
     }
 }
 
