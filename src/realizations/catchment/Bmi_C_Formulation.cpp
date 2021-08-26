@@ -40,18 +40,6 @@ std::shared_ptr<Bmi_C_Adapter> Bmi_C_Formulation::construct_model(const geojson:
                     output));
 }
 
-time_t Bmi_C_Formulation::convert_model_time(const double &model_time) {
-    return (time_t) (get_bmi_model()->convert_model_time_to_seconds(model_time));
-}
-
-const vector<string> Bmi_C_Formulation::get_bmi_input_variables() {
-    return get_bmi_model()->GetInputVarNames();
-}
-
-const vector<string> Bmi_C_Formulation::get_bmi_output_variables() {
-    return get_bmi_model()->GetOutputVarNames();
-}
-
 std::string Bmi_C_Formulation::get_output_header_line(std::string delimiter) {
     return boost::algorithm::join(get_output_header_fields(), delimiter);
 }
