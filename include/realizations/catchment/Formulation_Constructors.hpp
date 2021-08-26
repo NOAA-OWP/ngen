@@ -33,9 +33,9 @@ namespace realization {
 #ifdef NGEN_BMI_C_LIB_ACTIVE
         {"bmi_c", create_formulation_constructor<Bmi_C_Formulation>()},
 #endif // NGEN_BMI_C_LIB_ACTIVE
-#ifdef ACTIVATE_FORTRAN
+#ifdef NGEN_BMI_FORTRAN_ACTIVE
         {"bmi_fortran", create_formulation_constructor<Bmi_Fortran_Formulation>()},
-#endif // ACTIVATE_FORTRAN
+#endif // NGEN_BMI_FORTRAN_ACTIVE
         {"tshirt", create_formulation_constructor<Tshirt_Realization>()},
         {"tshirt_c", create_formulation_constructor<Tshirt_C_Realization>()},
         {"simple_lumped", create_formulation_constructor<Simple_Lumped_Model_Realization>()}

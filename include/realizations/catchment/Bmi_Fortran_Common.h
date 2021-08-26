@@ -1,7 +1,7 @@
 #ifndef NGEN_BMI_FORTRAN_COMMON_H
 #define NGEN_BMI_FORTRAN_COMMON_H
 
-#ifdef ACTIVATE_FORTRAN
+#ifdef NGEN_BMI_FORTRAN_ACTIVE
 
 /**
  * The extern free functions from the Nextgen common Fortran static library for integrating with Fortran BMI modules.
@@ -105,6 +105,6 @@ extern int get_grid_face_nodes(void *fortran_bmi_handle, int grid, int *face_nod
 
 extern int get_grid_nodes_per_face(void *fortran_bmi_handle, int grid, int *nodes_per_face);
 
-#endif // ACTIVATE_FORTRAN
+#endif // NGEN_BMI_FORTRAN_ACTIVE
 
 #endif //NGEN_BMI_FORTRAN_COMMON_H
