@@ -86,7 +86,7 @@ if(BMI_C_LIB_ACTIVE)
 endif()
 
 # Configure whether Fortran BMI functionality is active
-if (${NGEN_ACTIVATE_FORTRAN})
+if (${BMI_FORTRAN_ACTIVE})
     add_compile_definitions(ACTIVATE_FORTRAN)
 endif()
 
