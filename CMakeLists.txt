@@ -87,7 +87,7 @@ endif()
 
 # Configure whether Fortran BMI functionality is active
 if (${BMI_FORTRAN_ACTIVE})
-    add_compile_definitions(ACTIVATE_FORTRAN)
+    add_compile_definitions(NGEN_BMI_FORTRAN_ACTIVE)
 endif()
 
 #### Python stuff
