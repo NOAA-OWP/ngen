@@ -1,8 +1,29 @@
 #include "network.hpp"
 #include <boost/graph/topological_sort.hpp>
 #include <stdexcept>
+#include <boost/graph/reverse_graph.hpp>
+#include <boost/graph/graph_utility.hpp>
 
 using namespace network;
+
+/*
+template < typename OutputIterator >
+struct preorder_visitor : public boost::dfs_visitor<>
+{
+    template < typename Edge, typename Graph >
+    void back_edge(const Edge&, Graph&)
+    {
+        BOOST_THROW_EXCEPTION(boost::not_a_dag());
+    }
+
+    template < typename Vertex, typename Graph >
+    void discover_vertex(const Vertex& u, Graph&)
+    {
+        this->m_iter++ = u;
+        std::cerr << "discover_vertex " << u << std::endl;
+    }
+};
+*/
 
 Network::Network( geojson::GeoJSON fabric ){
 
@@ -155,3 +176,25 @@ std::vector<std::string> Network::get_destination_ids(std::string id){
 
   return ids;
 }
+
+NetworkIndexT Network::get_dfr_from_headwaters(){
+  if (!this->dfr_order.empty()){
+    return this->dfr_order;
+  }
+  
+  auto r = make_reverse_graph(this->graph);
+  df_preorder_sort(r , std::back_inserter(this->dfr_order),
+                   boost::vertex_index_map(get(boost::vertex_index, this->graph)));
+
+  
+  std::cout << "original graph:" << std::endl;
+  boost::print_graph(this->graph, boost::get(boost::vertex_index, this->graph));
+
+  std::cout << std::endl << "reversed graph:" << std::endl;
+  boost::print_graph(r,
+                     boost::get(boost::vertex_index, this->graph));
+  
+                     
+  return this->dfr_order;
+}
+

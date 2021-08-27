@@ -297,7 +297,7 @@ TEST_F(Network_Test2, test_catchments_filter)
   auto catchments = n.filter("cat");
   //auto catchments_it = catchments.begin();
   for(const auto& id : n) std::cout<<"topo_id: "<<n.get_id(id)<<std::endl;
-  for(const auto& id : n.filter("cat")) std::cout<<"id: "<<id<<std::endl;
+  for(const auto& id : catchments) std::cout<<"id: "<<id<<std::endl;
   auto cat0_it = std::find(catchments.begin(), catchments.end(), "cat-0");
   auto cat1_it = std::find(catchments.begin(), catchments.end(), "cat-1");
   auto cat2_it = std::find(catchments.begin(), catchments.end(), "cat-2");
@@ -330,3 +330,28 @@ TEST_F(Network_Test2, test_bad_filter)
   auto results = n.filter("fs");
   ASSERT_TRUE( results.begin() == results.end() );
 }
+
+TEST_F(Network_Test2, test_dfr_filter)
+{
+  for(const auto& id : n) std::cout<<"topo_id: "<<n.get_id(id)<<std::endl;
+
+  //This order IS IMPORTANT, it should be a pre-order depth-first traversal. So, cat-0 and cat-1
+  // should appear *immediately* after cat-2, though the order of cat-0 and cat-1 is undefined.
+  // Likewise the order of cat-2 vis-a-vis cat-3 and cat-4 are undefined because they are the same
+  // tree level.
+  auto catchments = n.filter_dfr("cat");
+  //for(const auto& id : catchments) std::cout<<"id: "<<id<<std::endl;
+
+  auto cat0_it = std::find(catchments.begin(), catchments.end(), "cat-0");
+  auto cat1_it = std::find(catchments.begin(), catchments.end(), "cat-1");
+  auto cat2_it = std::find(catchments.begin(), catchments.end(), "cat-2");
+  int c2c0dist = std::distance(cat2_it, cat0_it);
+  int c2c1dist = std::distance(cat2_it, cat1_it);
+  std::cout << "cat-2 to cat-0 distance: " << c2c0dist << std::endl;
+  std::cout << "cat-2 to cat-1 distance: " << c2c1dist << std::endl;
+  ASSERT_TRUE( c2c0dist > 0 && c2c0dist <= 2);
+  ASSERT_TRUE( c2c1dist > 0 && c2c1dist <= 2);
+  // Not necessary, but interesting that this somehow causes get_id to be called with an invalid index. ??!?
+  //ASSERT_FALSE( std::distance(cat0_it, cat2_it) > 0 );
+}
+
