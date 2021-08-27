@@ -156,7 +156,7 @@ namespace models {
              */
             template <typename T>
             std::vector<T> GetValue(const std::string& name) {
-                std::string type = GetVarType(name);
+                std::string type = inner_get_var_type(name);
                 int total_mem = GetVarNbytes(name);
                 int item_size = GetVarItemsize(name);
                 int num_items = total_mem/item_size;
@@ -171,19 +171,6 @@ namespace models {
 
                 for (int i = 0; i < num_items; i++)
                     retrieved_results[i] = d_results_ptr[i];
-
-                /*
-                std::vector<T> retrieved_results;
-
-                if (type == "double") {
-                    retrieved_results = std::vector<double>(num_items);
-                    double d_results[num_items];
-                    double* d_results_ptr = d_results;
-                    d_results_ptr = (double*) dest;
-                    for (int i = 0; i < num_items; i++)
-                        retrieved_results[i] = d_results_ptr[i];
-                }
-                */
 
                 free(dest);
                 return retrieved_results;
@@ -511,8 +498,19 @@ namespace models {
                 return item_count;
             }
 
+            inline std::string inner_get_var_type(const std::string &name) {
+                char type_c_str[BMI_MAX_TYPE_NAME];
+                if (get_var_type(bmi_model->handle, name.c_str(), type_c_str) != BMI_SUCCESS) {
+                    throw std::runtime_error(model_name + " failed to get variable type for " + name + ".");
+                }
+                return {type_c_str};
+            }
+
             /**
              * Internal implementation of logic used for @see GetValue.
+             *
+             * The Fortran implementation has separate getters/setters for different variable types, which is mirrored
+             * in the corresponding inner implementations here.
              *
              * "Inner" functions such as this should not contain nested function calls to any other member functions for
              * the type.
@@ -521,10 +519,84 @@ namespace models {
              * optimization in certain situations.
              *
              * @param name The name of the variable for which to get values.
-             * @param dest A function pointer in which to return the values.
+             * @param dest A float pointer in which to return the values.
              */
             inline void inner_get_value(const std::string& name, void *dest) {
-                if (get_value(bmi_model->handle, name.c_str(), dest) != BMI_SUCCESS) {
+                std::string varType = inner_get_var_type(name);
+                if (varType == "int") {
+                    inner_get_value_int(name, (int *)dest);
+                }
+                else if (varType == "float") {
+                    inner_get_value_float(name, (float *)dest);
+                }
+                else if (varType == "double") {
+                    inner_get_value_double(name, (double *)dest);
+                }
+                else {
+                    throw ::external::ExternalIntegrationException(
+                            "Can't get model " + model_name + " variable " + name + " of type '" + varType + ".");
+                }
+            }
+
+            /**
+             * Internal implementation of logic used for @see GetValue for ints.
+             *
+             * The Fortran implementation has separate getters/setters for different variable types, which is mirrored
+             * in the corresponding inner implementations here.
+             *
+             * "Inner" functions such as this should not contain nested function calls to any other member functions for
+             * the type.
+             *
+             * Essentially, function exists as inner implementation.  This allows it to be inlined, which may lead to
+             * optimization in certain situations.
+             *
+             * @param name The name of the variable for which to get values.
+             * @param dest An int pointer in which to return the values.
+             */
+            inline void inner_get_value_int(const std::string& name, int *dest) {
+                if (get_value_int(bmi_model->handle, name.c_str(), dest) != BMI_SUCCESS) {
+                    throw std::runtime_error(model_name + " failed to get values for variable " + name + ".");
+                }
+            }
+
+            /**
+             * Internal implementation of logic used for @see GetValue for floats.
+             *
+             * The Fortran implementation has separate getters/setters for different variable types, which is mirrored
+             * in the corresponding inner implementations here.
+             *
+             * "Inner" functions such as this should not contain nested function calls to any other member functions for
+             * the type.
+             *
+             * Essentially, function exists as inner implementation.  This allows it to be inlined, which may lead to
+             * optimization in certain situations.
+             *
+             * @param name The name of the variable for which to get values.
+             * @param dest A float pointer in which to return the values.
+             */
+            inline void inner_get_value_float(const std::string& name, float *dest) {
+                if (get_value_float(bmi_model->handle, name.c_str(), dest) != BMI_SUCCESS) {
+                    throw std::runtime_error(model_name + " failed to get values for variable " + name + ".");
+                }
+            }
+
+            /**
+             * Internal implementation of logic used for @see GetValue for doubles.
+             *
+             * The Fortran implementation has separate getters/setters for different variable types, which is mirrored
+             * in the corresponding inner implementations here.
+             *
+             * "Inner" functions such as this should not contain nested function calls to any other member functions for
+             * the type.
+             *
+             * Essentially, function exists as inner implementation.  This allows it to be inlined, which may lead to
+             * optimization in certain situations.
+             *
+             * @param name The name of the variable for which to get values.
+             * @param dest A double pointer in which to return the values.
+             */
+            inline void inner_get_value_double(const std::string& name, double *dest) {
+                if (get_value_double(bmi_model->handle, name.c_str(), dest) != BMI_SUCCESS) {
                     throw std::runtime_error(model_name + " failed to get values for variable " + name + ".");
                 }
             }
@@ -586,6 +658,101 @@ namespace models {
                 }
 
                 return var_names;
+            }
+
+            /**
+             * Internal implementation of logic used for @see SetValue.
+             *
+             * The Fortran implementation has separate getters/setters for different variable types, which is mirrored
+             * in the corresponding inner implementations here.
+             *
+             * "Inner" functions such as this should not contain nested function calls to any other member functions for
+             * the type.
+             *
+             * Essentially, function exists as inner implementation.  This allows it to be inlined, which may lead to
+             * optimization in certain situations.
+             *
+             * @param name The name of the variable for which to get values.
+             * @param dest A pointer that should be passed to the analogous BMI setter of the Fortran module.
+             */
+            inline void inner_set_value(const std::string& name, void *src) {
+                std::string varType = inner_get_var_type(name);
+                if (varType == "int") {
+                    inner_set_value_int(name, (int *)src);
+                }
+                else if (varType == "float") {
+                    inner_set_value_float(name, (float *)src);
+                }
+                else if (varType == "double") {
+                    inner_set_value_double(name, (double *)src);
+                }
+                else {
+                    throw ::external::ExternalIntegrationException(
+                            "Can't get model " + model_name + " variable " + name + " of type '" + varType + ".");
+                }
+            }
+
+            /**
+             * Internal implementation of logic used for @see SetValue for ints.
+             *
+             * The Fortran implementation has separate getters/setters for different variable types, which is mirrored
+             * in the corresponding inner implementations here.
+             *
+             * "Inner" functions such as this should not contain nested function calls to any other member functions for
+             * the type.
+             *
+             * Essentially, function exists as inner implementation.  This allows it to be inlined, which may lead to
+             * optimization in certain situations.
+             *
+             * @param name The name of the variable for which to get values.
+             * @param dest An int pointer that should be passed to the analogous BMI setter of the Fortran module.
+             */
+            inline void inner_set_value_int(const std::string& name, int *src) {
+                if (set_value_int(bmi_model->handle, name.c_str(), src) != BMI_SUCCESS) {
+                    throw models::external::State_Exception("Failed to set values of " + name + " int variable for " + model_name);
+                }
+            }
+
+            /**
+             * Internal implementation of logic used for @see SetValue for floats.
+             *
+             * The Fortran implementation has separate getters/setters for different variable types, which is mirrored
+             * in the corresponding inner implementations here.
+             *
+             * "Inner" functions such as this should not contain nested function calls to any other member functions for
+             * the type.
+             *
+             * Essentially, function exists as inner implementation.  This allows it to be inlined, which may lead to
+             * optimization in certain situations.
+             *
+             * @param name The name of the variable for which to get values.
+             * @param dest A float pointer that should be passed to the analogous BMI setter of the Fortran module.
+             */
+            inline void inner_set_value_float(const std::string& name, float *src) {
+                if (set_value_float(bmi_model->handle, name.c_str(), src) != BMI_SUCCESS) {
+                    throw models::external::State_Exception("Failed to set values of " + name + " float variable for " + model_name);
+                }
+            }
+
+            /**
+             * Internal implementation of logic used for @see SetValue for doubles.
+             *
+             * The Fortran implementation has separate getters/setters for different variable types, which is mirrored
+             * in the corresponding inner implementations here.
+             *
+             * "Inner" functions such as this should not contain nested function calls to any other member functions for
+             * the type.
+             *
+             * Essentially, function exists as inner implementation.  This allows it to be inlined, which may lead to
+             * optimization in certain situations.
+             *
+             * @param name The name of the variable for which to get values.
+             * @param dest A double pointer that should be passed to the analogous BMI setter of the Fortran module.
+             */
+            inline void inner_set_value_double(const std::string& name, double *src) {
+                if (set_value_double(bmi_model->handle, name.c_str(), src) != BMI_SUCCESS) {
+                    throw models::external::State_Exception("Failed to set values of " + name + " double variable for " + model_name);
+                }
             }
         };
     }
