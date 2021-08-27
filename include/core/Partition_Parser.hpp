@@ -107,7 +107,7 @@ class Partitions_Parser {
         };
 
         //The function retrieve an arbitrary struct based on the part_id passed to it
-        PartitionData get_part_strt(int part_id)
+        PartitionData get_partition_struct(int part_id)
         {
             //TODO The output codes are for test only. They can be removed for application code.
             /*
@@ -120,14 +120,14 @@ class Partitions_Parser {
 
             // the following blocks of codes write out the data for validation
             /*
-            std::cout << "\nget_part_strt, part_id: " << part_data.mpi_world_rank << std::endl;
+            std::cout << "\nget_partition_struct, part_id: " << part_data.mpi_world_rank << std::endl;
 
             for (auto i = (part_data.catchment_ids).cbegin(); i != (part_data.catchment_ids).cend(); ++i)
-                std::cout << "\nget_part_strt, catchment_ids: " << *i << " ";
+                std::cout << "\nget_partition_struct, catchment_ids: " << *i << " ";
             std::cout << std::endl;
 
             for (auto i = (part_data.nexus_ids).cbegin(); i != (part_data.nexus_ids).cend(); ++i)
-                std::cout << "\nget_part_strt, nexus_ids: " << *i << " ";
+                std::cout << "\nget_partition_struct, nexus_ids: " << *i << " ";
             std::cout << std::endl;
 
             for (auto i = part_data.remote_connections.cbegin(); i != part_data.remote_connections.cend(); ++i)
@@ -137,9 +137,9 @@ class Partitions_Parser {
                 std::string nex_id = std::get<1>(remote_conn);
                 std::string cat_id = std::get<2>(remote_conn);
 
-                std::cout << "\nget_part_strt, remote_mpi_ranks: " << mpi_rank; 
-                std::cout << "\nget_part_strt, remote_nexus: " << nex_id;
-                std::cout << "\nget_part_strt, remote_catchment: " << cat_id;
+                std::cout << "\nget_partition_struct, remote_mpi_ranks: " << mpi_rank; 
+                std::cout << "\nget_partition_struct, remote_nexus: " << nex_id;
+                std::cout << "\nget_partition_struct, remote_catchment: " << cat_id;
             }
             std::cout << "\n--------------------" << std::endl;
             */
