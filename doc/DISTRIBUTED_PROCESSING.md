@@ -73,7 +73,7 @@ mpirun -n 4 cmake-build/ngen catchment_data.geojson "" nexus_data.geojson "" rea
 * the CMake build directory is named `cmake-build/`
 * eight MPI processes are started
 * the catchment and nexus hydrofabric files, realization config, and partition config have intuitive names and are located in the current working directory
-* all processes completely load the full hydrofabric
+* each process only load files for a subdivided portion of the hydrofabric that corresponds to a given process's partition
 ```
 mpirun -n 8 cmake-build/ngen catchment_data.geojson "" nexus_data.geojson "" realization_config.json partition_config.json --subdivided-hydrofabric
 ```
