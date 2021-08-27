@@ -62,14 +62,18 @@ extern "C" {
     extern int get_time_step(void *fortran_bmi_handle, double *time_step);
 
     /* Getters */
+    extern int get_value_int(void *fortran_bmi_handle, const char *name, int *dest);
 
-    extern int get_value_ptr(void *fortran_bmi_handle, const char *name, void **dest_ptr);
+    extern int get_value_float(void *fortran_bmi_handle, const char *name, float *dest);
 
-    extern int get_value_at_indices(void *fortran_bmi_handle, const char *name, void *dest, int *inds, int count);
+    extern int get_value_double(void *fortran_bmi_handle, const char *name, double *dest);
 
     /* Setters */
+    extern int set_value_int(void *fortran_bmi_handle, const char *name, int *src);
 
-    extern int set_value_at_indices(void *fortran_bmi_handle, const char *name, int *inds, int count, void *src);
+    extern int set_value_float(void *fortran_bmi_handle, const char *name, float *src);
+
+    extern int set_value_double(void *fortran_bmi_handle, const char *name, double *src);
 
     /* Grid information */
     extern int get_grid_rank(void *fortran_bmi_handle, int grid, int *rank);
