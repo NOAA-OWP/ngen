@@ -181,4 +181,4 @@ If installing to a virtual env as suggested above, the installation steps are si
 
 ### Version Requirements
 
-Version `0.3.0` or greater must be installed, which is available after approval of DMOD PR #92.
+Version `0.3.0` or greater must be installed.
