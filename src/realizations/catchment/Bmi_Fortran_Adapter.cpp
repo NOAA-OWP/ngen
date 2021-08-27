@@ -67,11 +67,15 @@ std::string Bmi_Fortran_Adapter::GetTimeUnits() {
 }
 
 void Bmi_Fortran_Adapter::GetValueAtIndices(std::string name, void *dest, int *inds, int count) {
+    // TODO: implement later by manually handling index convertion on this level.
+    /*
     if (get_value_at_indices(bmi_model->handle, name.c_str(), dest, inds, count) != BMI_SUCCESS) {
         throw models::external::State_Exception(
                 model_name + " failed to get variable " + name + " for " + std::to_string(count) +
                 " indices.");
     }
+     */
+    throw std::runtime_error("Fortran BMI module integration does not currently support getting values by index");
 }
 
 int Bmi_Fortran_Adapter::GetVarItemsize(std::string name) {
@@ -92,12 +96,7 @@ int Bmi_Fortran_Adapter::GetVarNbytes(std::string name) {
 }
 
 std::string Bmi_Fortran_Adapter::GetVarType(std::string name) {
-    char type_c_str[BMI_MAX_TYPE_NAME];
-    int success = get_var_type(bmi_model->handle, name.c_str(), type_c_str);
-    if (success != BMI_SUCCESS) {
-        throw std::runtime_error(model_name + " failed to get variable type for " + name + ".");
-    }
-    return std::string(type_c_str);
+    return inner_get_var_type(name);
 }
 
 std::string Bmi_Fortran_Adapter::GetVarUnits(std::string name) {
@@ -155,10 +154,7 @@ int Bmi_Fortran_Adapter::GetGridSize(int grid_id) {
 }
 
 void Bmi_Fortran_Adapter::SetValue(std::string name, void *src) {
-    int result = set_value(bmi_model->handle, name.c_str(), src);
-    if (result != BMI_SUCCESS) {
-        throw models::external::State_Exception("Failed to set values of " + name + " variable for " + model_name);
-    }
+    inner_set_value(name, src);
 }
 
 bool Bmi_Fortran_Adapter::is_model_initialized() {
@@ -166,11 +162,15 @@ bool Bmi_Fortran_Adapter::is_model_initialized() {
 }
 
 void Bmi_Fortran_Adapter::SetValueAtIndices(std::string name, int *inds, int count, void *src) {
+    // TODO: implement later by manually handling index convertion on this level.
+    /*
     int result = set_value_at_indices(bmi_model->handle, name.c_str(), inds, count, src);
     if (result != BMI_SUCCESS) {
         throw models::external::State_Exception(
                 "Failed to set specified indexes for " + name + " variable of " + model_name);
     }
+    */
+    throw std::runtime_error("Fortran BMI module integration does not currently support setting values by index");
 }
 
 /**
