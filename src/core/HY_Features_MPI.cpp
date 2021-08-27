@@ -17,10 +17,10 @@ HY_Features_MPI::HY_Features_MPI( PartitionData partition_data, geojson::GeoJSON
       // loop through the partiton data remote arrays and make a map of catchment location maps
       for( int i = 0; i < partition_data.remote_connections.size(); ++i )
       {
-        std::tuple<int, std::string, std::string> remote_tuple[i] = (partition_data.remote_connections)[i];
-        int remote_mpi_ranks = std::get<0>(remote_tuple[i]);
-        std::string remote_nexi = std::get<1>(remote_tuple[i]);
-        std::string remote_catchments = std::get<2>(remote_tuple[i]);
+        std::tuple<int, std::string, std::string> remote_tuple = (partition_data.remote_connections)[i];
+        int remote_mpi_ranks = std::get<0>(remote_tuple);
+        std::string remote_nexi = std::get<1>(remote_tuple);
+        std::string remote_catchments = std::get<2>(remote_tuple);
         remote_connections[remote_nexi][remote_catchments] = remote_mpi_ranks;
 
         //remote_connections[partition_data.remote_nexi[i]][partition_data.remote_catchments[i]] = partition_data.remote_mpi_ranks[i];
