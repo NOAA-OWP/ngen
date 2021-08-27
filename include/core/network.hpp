@@ -6,6 +6,10 @@
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/graphviz.hpp>
+#include <boost/graph/visitors.hpp>
+#include <boost/graph/depth_first_search.hpp>
+#include <boost/graph/exception.hpp>
+#include <boost/graph/named_function_params.hpp>
 #include <boost/range/adaptor/filtered.hpp>
 #include <boost/range/adaptor/transformed.hpp>
 #include <boost/range/adaptor/reversed.hpp>
@@ -23,6 +27,45 @@ namespace network {
   struct VertexProperty{
     std::string id;
   };
+
+  // lightly modified from https://www.boost.org/doc/libs/1_72_0/boost/graph/topological_sort.hpp
+  template < typename OutputIterator >
+  struct preorder_visitor : public boost::dfs_visitor<>
+  {
+      preorder_visitor(OutputIterator _iter) : m_iter(_iter) {}
+
+      template < typename Edge, typename Graph >
+      void back_edge(const Edge&, Graph&)
+      {
+          BOOST_THROW_EXCEPTION(boost::not_a_dag());
+      }
+
+      template < typename Vertex, typename Graph >
+      void discover_vertex(const Vertex& u, Graph&)
+      {
+          *m_iter++ = u;
+          //std::cerr << "vdiscover_vertex " << u << std::endl;
+      }
+
+      OutputIterator m_iter;
+  };
+
+  template < typename VertexListGraph, typename OutputIterator, typename P,
+    typename T, typename R >
+  void df_preorder_sort(VertexListGraph& g, OutputIterator result,
+      const boost::bgl_named_params< P, T, R >& params)
+  {
+      typedef preorder_visitor< OutputIterator > PreOrderVisitor;
+      depth_first_search(g, params.visitor(PreOrderVisitor(result)));
+  }
+
+  template < typename VertexListGraph, typename OutputIterator >
+  void df_preorder_sort(VertexListGraph& g, OutputIterator result)
+  {
+      df_preorder_sort(
+          g, result, boost::bgl_named_params< int, boost::buffer_param_t >(0)); // bogus
+  }
+
   /**
    * @brief Type used to index network::NodeT types
    * 
@@ -102,6 +145,27 @@ namespace network {
          */
         NetworkIndexT::const_reverse_iterator end();
 
+        auto filter_topo(std::string type){
+          //todo need to worry about validating input???
+          //if type isn't found as a prefix, this iterator range should be empty,
+          //which is a reasonable semantic
+          return topo_order | boost::adaptors::reversed
+                            | boost::adaptors::transformed([this](int const& i) { return get_id(i); })
+                            | boost::adaptors::filtered([type](std::string const& s) { return s.substr(0,3) == type; });
+        }
+
+        auto filter_dfr(std::string type){
+          // This would be more semantically expected to me:
+          //   return get_dfr_from_headwaters() | boost::adaptors::reversed ...
+          // ...but it messes up the NetworkIndexT vector somehow.
+          // Try it and run the test, we get indexes that don't exist when iterating. 
+          // Should this be redone to return a shared_ptr<NetworkIndexT> or something?
+          get_dfr_from_headwaters();
+          return dfr_order  | boost::adaptors::reversed // This reverses the return order, not the graph--that's elsewhere!
+                            | boost::adaptors::transformed([this](int const& i) { return get_id(i); })
+                            | boost::adaptors::filtered([type](std::string const& s) { return s.substr(0,3) == type; });
+        }
+        
         /**
          * @brief Provides a boost transform_iterator, filtered by @p type , to the topologically ordered graph vertex string id's
          * 
@@ -119,14 +183,8 @@ namespace network {
          */
         auto filter(std::string type)
         {
-          //todo need to worry about validating input???
-          //if type isn't found as a prefix, this iterator range should be empty,
-          //which is a reasonable semantic
-          return topo_order | boost::adaptors::reversed
-                            | boost::adaptors::transformed([this](int const& i) { return get_id(i); })
-                            | boost::adaptors::filtered([type](std::string const& s) { return s.substr(0,3) == type; });
+          return filter_topo(type);
         }
-
         /**
          * @brief Get the string id of a given graph vertex_descriptor @p idx
          * 
@@ -200,6 +258,8 @@ namespace network {
          */
         NetworkIndexT topo_order;
 
+        NetworkIndexT dfr_order;
+
         /**
          * @brief Vector of headwater features
          * 
@@ -229,7 +289,8 @@ namespace network {
          * 
          */
         std::unordered_map<std::string, Graph::vertex_descriptor> descriptor_map;
-
+        
+        NetworkIndexT get_dfr_from_headwaters();
     };
 }
 
