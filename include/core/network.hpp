@@ -144,7 +144,7 @@ namespace network {
          * @return NetworkIndexT::const_reverse_iterator 
          */
         NetworkIndexT::const_reverse_iterator end();
-
+        
         auto filter_topo(std::string type){
           //todo need to worry about validating input???
           //if type isn't found as a prefix, this iterator range should be empty,
