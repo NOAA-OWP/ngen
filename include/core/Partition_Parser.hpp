@@ -12,6 +12,7 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <unordered_set>
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
@@ -21,15 +22,13 @@
 #include "JSONProperty.hpp"
 
 //This struct is moved from private section to here so that the unit test function can access it
- struct PartitionData
- {
+struct PartitionData
+{
     int mpi_world_rank;
-    std::vector<std::string> cat_ids;
-    std::vector<std::string> nex_ids;
-    std::vector<std::string> remote_nexi;
-    std::vector<std::string> remote_catchments;
-    std::vector<int> remote_mpi_ranks;
- };
+    std::unordered_set<std::string> catchment_ids;
+    std::unordered_set<std::string> nexus_ids;
+    std::vector<std::tuple<int, std::string, std::string> > remote_connections;
+};
 
 
 class Partitions_Parser {
@@ -39,27 +38,29 @@ class Partitions_Parser {
         Partitions_Parser(const std::string &file_path) {
             boost::property_tree::ptree loaded_tree;
             boost::property_tree::json_parser::read_json(file_path, loaded_tree);
+            std::cout << "file read success" << std::endl;
             this->tree = loaded_tree;
             std::cout << "file_path: " << file_path << std::endl;
         };
 
         virtual ~Partitions_Parser(){};
 
-        //The function that parses the json file and build a unordered map of structs for each line in the json list
+        //The function that parses the json file and build a unordered set and vector of structs for each line in the json list
         void parse_partition_file() {
             std::cout << "\nroot_tree: " << tree.size() << std::endl;
 
             //Declare two partition_data type structs
             PartitionData part_data;
 
-            //Declare temporary variables
-            std::vector<std::string> remote_nexi_tmp;
-            std::vector<std::string> remote_catchments_tmp;
-            std::vector<int> remote_mpi_ranks_tmp;
-
             //The outter loop iterating through the list of partitions
+            int remote_mpi_rank;
+            std::string remote_nex_id;
+            std::string remote_cat_id;
+            std::tuple<int, std::string, std::string> tmp_tuple;
+            std::vector<std::tuple<int, std::string, std::string> > remote_conn_vec;
             int part_counter = 0;
             for(auto &partition: tree.get_child("partitions"))  {
+                //Get partition id
                 std::string part_id = (partition.second).get<std::string>("id");
 
                 //Get mpi_world_rank and set the corresponding part_data struct member
@@ -68,106 +69,105 @@ class Partitions_Parser {
 
                 geojson::JSONProperty part = geojson::JSONProperty(part_id, partition.second);
 
-                //Get cat_ids list and set the corresponding part_data struct member
-                for (auto &remote : part.at("cat-ids").as_list())
+                //Get cat_ids list and insert the elements into the unordered_set catchment_ids in part_data struct
+                for (auto &cat_id : part.at("cat-ids").as_list())
                 {
-                    cat_ids.push_back(remote.as_string());
+                    //cat_ids.push_back(remote.as_string());
+                    catchment_ids.emplace(cat_id.as_string());
                 }
-                part_data.cat_ids = cat_ids;
-                cat_ids.clear();
+                part_data.catchment_ids = catchment_ids;
+                catchment_ids.clear();
 
-                //Get nex_ids list and set the corresponding part_data struct member
-                for (auto &remote : part.at("nex-ids").as_list())
+                //Get nex_ids list and insert the elements into the unordered_set nexus_ids in part_data struct
+                for (auto &nex_id: part.at("nex-ids").as_list())
                 {
-                    nex_ids.push_back(remote.as_string());
+                    //nex_ids.push_back(nex_id.as_string());
+                    nexus_ids.emplace(nex_id.as_string());
                 }
-                part_data.nex_ids = nex_ids;
-                nex_ids.clear();
+                part_data.nexus_ids = nexus_ids;
+                nexus_ids.clear();
 
                 //Get remote-connections and set the corresponding part_data struct member
-                for (auto &remote_map : part.at("remote-connections").as_list())
+                for (auto &remote_conn : part.at("remote-connections").as_list())
                 {
-                    std::string remote_nex_id = remote_map.at("nex-id").as_string();
-                    std::string remote_cat_id = remote_map.at("cat-id").as_string();
-                    int remote_mpi_rank = remote_map.at("mpi-rank").as_natural_number();
-                    remote_nexi_tmp.push_back(remote_nex_id);
-                    remote_catchments_tmp.push_back(remote_cat_id);
-                    remote_mpi_ranks_tmp.push_back(remote_mpi_rank);
+                    remote_mpi_rank = remote_conn.at("mpi-rank").as_natural_number();
+                    remote_nex_id = remote_conn.at("nex-id").as_string();
+                    remote_cat_id = remote_conn.at("cat-id").as_string();
+                    tmp_tuple = std::make_tuple(remote_mpi_rank, remote_nex_id, remote_cat_id);
+                    remote_conn_vec.push_back(tmp_tuple);
                 }
-                part_data.remote_nexi = remote_nexi_tmp;
-                part_data.remote_catchments = remote_catchments_tmp;
-                part_data.remote_mpi_ranks = remote_mpi_ranks_tmp;
-                remote_nexi_tmp.clear();
-                remote_catchments_tmp.clear();
-                remote_mpi_ranks_tmp.clear();
+                part_data.remote_connections = remote_conn_vec;
+                remote_conn_vec.clear();
 
-                //Insert part_data struct into unordered map based on part_id
-                partition_ranks.emplace(part_id, part_data);
+                //Push part_data struct the vector
+                partition_ranks.push_back(part_data);
 
                 part_counter++;       
             }
-            
-            //return;
         };
 
-        typedef PartitionData part_strt;
         //The function retrieve an arbitrary struct based on the part_id passed to it
-        part_strt get_part_strt(std::string part_id)
+        PartitionData get_part_strt(int part_id)
         {
             //TODO The output codes are for test only. They can be removed for application code.
             /*
-             * The function takes a partition id and return the corresponding struct from the map.
+             * The function takes a partition id and return the corresponding struct from the set and remote_connections.
              * @param part_id The input parameter identify a specific partition struct
              * @return part_data The whole struct identified by part_id
             */
             PartitionData part_data;
-            part_data = partition_ranks.at(part_id);
+            part_data = partition_ranks[part_id];
 
+            // the following blocks of codes write out the data for validation
+            /*
             std::cout << "\nget_part_strt, part_id: " << part_data.mpi_world_rank << std::endl;
 
-            for (auto i = (part_data.cat_ids).begin(); i != (part_data.cat_ids).end(); ++i)
-                std::cout << "\nget_part_strt, cat_ids: " << *i << " ";
+            for (auto i = (part_data.catchment_ids).cbegin(); i != (part_data.catchment_ids).cend(); ++i)
+                std::cout << "\nget_part_strt, catchment_ids: " << *i << " ";
             std::cout << std::endl;
 
-            for (auto i = part_data.remote_nexi.begin(); i != part_data.remote_nexi.end(); ++i)
-                std::cout << "\nget_part_strt, remote_nexi: " << *i << " ";
+            for (auto i = (part_data.nexus_ids).cbegin(); i != (part_data.nexus_ids).cend(); ++i)
+                std::cout << "\nget_part_strt, nexus_ids: " << *i << " ";
             std::cout << std::endl;
 
-            for (auto i = part_data.remote_catchments.begin(); i != part_data.remote_catchments.end(); ++i)
-                std::cout << "\nget_part_strt, remote_catchments: " << *i << " ";
-            std::cout << std::endl;
+            for (auto i = part_data.remote_connections.cbegin(); i != part_data.remote_connections.cend(); ++i)
+            {
+                std::tuple<int, std::string, std::string> remote_conn = *i;
+                int mpi_rank = std::get<0>(remote_conn);
+                std::string nex_id = std::get<1>(remote_conn);
+                std::string cat_id = std::get<2>(remote_conn);
 
-            for (auto i = part_data.remote_mpi_ranks.begin(); i != part_data.remote_mpi_ranks.end(); ++i)
-                std::cout << "\nget_part_strt, remote_mpi_ranks: " << *i << " ";
-            std::cout << std::endl;
-
-            std::cout << "--------------------" << std::endl;
+                std::cout << "\nget_part_strt, remote_mpi_ranks: " << mpi_rank; 
+                std::cout << "\nget_part_strt, remote_nexus: " << nex_id;
+                std::cout << "\nget_part_strt, remote_catchment: " << cat_id;
+            }
+            std::cout << "\n--------------------" << std::endl;
+            */
 
             return part_data;
         };
 
         //This example function shows how to get a specific member of the struct
-        int get_mpi_rank(std::string part_id)
+        int get_mpi_rank(int part_id)
         {
             //An example code for getting individual member of the struct identified by part_id
             PartitionData part_data;
-            part_data = partition_ranks.at(part_id);
+            part_data = partition_ranks[part_id];
             int mpi_world_rank = part_data.mpi_world_rank;
 
-            std::cout << "\nmpi_world_rank: " << mpi_world_rank << std::endl;
+            std::cout << "mpi_world_rank: " << mpi_world_rank << std::endl;
             return mpi_world_rank;
         };
 
-        std::unordered_map<std::string, PartitionData> partition_ranks;
-
+        // partition_ranks is a vector of struct: PartitionData
+        std::vector<PartitionData> partition_ranks;
 
     private:
         int mpi_world_rank;
-        std::vector<std::string> cat_ids;
-        std::vector<std::string> nex_ids;
-        std::vector<std::string> remote_nexi;
-        std::vector<std::string> remote_catchments;
-        std::vector<int> remote_mpi_ranks;
+        std::unordered_set<std::string> catchment_ids;
+        std::unordered_set<std::string> nexus_ids;
+        std::vector<std::tuple<int, std::string, std::string> > remote_connections;
+        std::tuple<int, std::string, std::string> remote_tuple;
 
         boost::property_tree::ptree tree;
 };
