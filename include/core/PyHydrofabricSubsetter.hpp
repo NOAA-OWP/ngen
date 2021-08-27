@@ -2,9 +2,9 @@
 #define NGEN_PYHYDROFABRICSUBSETTER_HPP
 
 #ifdef ACTIVATE_PYTHON
+
 #include <pybind11/embed.h>
 namespace py = pybind11;
-#endif // ACTIVATE_PYTHON
 
 #include "FileChecker.h"
 
@@ -125,5 +125,7 @@ namespace utils {
     };
 
 }
+
+#endif // ACTIVATE_PYTHON
 
 #endif //NGEN_MPIHYDROFABRICUTIL_HPP
