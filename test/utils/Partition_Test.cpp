@@ -96,7 +96,7 @@ TEST_F(PartitionsParserTest, DisplayPartitionData)
   for (i = 0; i < num_partitions; ++i)
   //for (i = 0; i < 2; i++)
   {
-    partitions_parser.get_part_strt(i);
+    partitions_parser.get_partition_struct(i);
   }
 
   for (i = 0; i < num_partitions; ++i)
