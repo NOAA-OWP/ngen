@@ -212,7 +212,7 @@ Because of the use of `iso_c_bindings`, integrating with a Fortran BMI module wo
 
 This function should receive an opaque pointer and set it to point to a created BMI object of the appropriate type for the module.  Note that while `save` is being used in a way that persists only the initial object, since this will be used within the scope of a dynamic library loaded specifically for working with a particular catchment formulation, it should not cause issues.
 
-```
+```fortran
 function register_bmi(this) result(bmi_status) bind(C, name="register_bmi")
       use, intrinsic:: iso_c_binding, only: c_ptr, c_loc, c_int
       use bminoahmp
