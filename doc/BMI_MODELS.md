@@ -205,7 +205,7 @@ The proxy functions require an opaque handle to a created BMI Fortran object to 
 [`register_bmi` function](#required-additional-fortran-registration-function).
 
 ### A Compiled Shared Library
-Because of the use of `iso_c_bindings`, integrating with a Fortran BMI module works very similarly to integrating with C BMI module, where a [shared library](#bmi-c-model-as-shared-library) is [dynamically loaded](#dynamic-loading).  An extra [bootstrapping registration function](#required-additional-fortran-registration-function) is also, again, required.
+Because of the use of `iso_c_bindings`, integrating with a Fortran BMI module works very similarly to integrating with a C BMI module, where a [shared library](#bmi-c-model-as-shared-library) is [dynamically loaded](#dynamic-loading).  An extra [bootstrapping registration function](#required-additional-fortran-registration-function) is also, again, required.
 
 #### Required Additional Fortran Registration Function
 [As with C](#additional-bootstrapping-function-needed), a registration function must be provided by the module, beyond what is implemented for BMI.  It should look very similar to the example below.  In fact, it is likely sufficient to simply modify the `use bminoahmp` and `type(bmi_noahmp), target, save :: bmi_model` lines to suit the module in question.
