@@ -317,19 +317,37 @@ namespace models {
 
             void SetValue(std::string name, void *src) override;
 
+            /**
+             * Set the given BMI input variable, sourcing values from the given vector.
+             *
+             * Note that because of how BMI works, only the size of the individual items must agree, not necessarily
+             * their types.  However, non-matching types will likely produce strange results.
+             *
+             * @tparam T The type for the vector, which must be of the same size as the type for the variable.
+             * @param name The name of the BMI variable for which to set values.
+             * @param src The vector of source values, whose length must match the backing BMI variable array.
+             */
             template<class T>
             void SetValue(std::string name, std::vector<T> src) {
-                size_t item_size;
+                int item_size, total_bytes;
                 try {
-                    item_size = (size_t) GetVarItemsize(name);
+                    item_size = GetVarItemsize(name);
+                    total_bytes = GetVarNbytes(name);
                 }
                 catch (std::runtime_error &e) {
                     throw std::runtime_error("Cannot set " + name + " variable of " + model_name +
-                                             "; unable to test item sizes are equal (does variable exist for model?)");
+                                             "; unable to test item and array sizes are equal (does variable " + name +
+                                             " exist for model " + model_name + "?)");
                 }
                 if (item_size != sizeof(src[0])) {
                     throw std::runtime_error("Cannot set " + name + " variable of " + model_name +
                                              " with values of different item size");
+                }
+                if (src.size() != total_bytes / item_size) {
+                    throw std::runtime_error(
+                            "Cannot set " + name + " variable of " + model_name + " from vector of size " +
+                            std::to_string(src.size) + " (expected size " + std::to_string(total_bytes / item_size) +
+                            ")");
                 }
                 SetValue(std::move(name), static_cast<void *>(src.data()));
             }
