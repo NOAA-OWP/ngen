@@ -194,7 +194,7 @@ Future versions of NextGen will provide alternative ways to declaratively config
 
 ### Enabling Fortran Integration
 
-To enable Fortran integration functionality, the CMake build system has to be [generated](BUILDS_AND_CMAKE.md#generating-a-build-system) with the `NGEN_NGEN_BMI_FORTRAN_ACTIVE` CMake variable set to `ON`.
+To enable Fortran integration functionality, the CMake build system has to be [generated](BUILDS_AND_CMAKE.md#generating-a-build-system) with the `NGEN_BMI_FORTRAN_ACTIVE` CMake variable set to `ON`.
 
 ### ISO C Binding Middleware
 Nextgen takes advantage of the Fortran `iso_c_binding` module to achieve interoperability with Fortran modules.  In short, this works through use of an intermediate middleware module maintained within Nextgen.  This module handles the ([majority of the](#required-additional-fortran-registration-function)) binding through proxy functions that make use of the actual external BMI Fortran module.  
