@@ -13,3 +13,6 @@
 	path = extern/t-route
 	url = https://github.com/jdmattern-noaa/t-route.git
         branch = ngen-routing
+[submodule "extern/cfe/cfe"]
+	path = extern/cfe/cfe
+	url = https://github.com/noaa-owp/cfe.git
