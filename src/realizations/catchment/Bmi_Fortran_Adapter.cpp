@@ -88,8 +88,7 @@ int Bmi_Fortran_Adapter::GetVarItemsize(std::string name) {
 
 int Bmi_Fortran_Adapter::GetVarNbytes(std::string name) {
     int size;
-    int success = get_var_nbytes(bmi_model->handle, name.c_str(), &size);
-    if (success != BMI_SUCCESS) {
+    if (get_var_nbytes(bmi_model->handle, name.c_str(), &size) != BMI_SUCCESS) {
         throw std::runtime_error(model_name + " failed to get variable array size (i.e., nbytes) for " + name + ".");
     }
     return size;
@@ -101,8 +100,7 @@ std::string Bmi_Fortran_Adapter::GetVarType(std::string name) {
 
 std::string Bmi_Fortran_Adapter::GetVarUnits(std::string name) {
     char units_c_str[BMI_MAX_UNITS_NAME];
-    int success = get_var_units(bmi_model->handle, name.c_str(), units_c_str);
-    if (success != BMI_SUCCESS) {
+    if (get_var_units(bmi_model->handle, name.c_str(), units_c_str) != BMI_SUCCESS) {
         throw std::runtime_error(model_name + " failed to get variable units for " + name + ".");
     }
     return std::string(units_c_str);
@@ -110,8 +108,7 @@ std::string Bmi_Fortran_Adapter::GetVarUnits(std::string name) {
 
 std::string Bmi_Fortran_Adapter::GetVarLocation(std::string name) {
     char location_c_str[BMI_MAX_LOCATION_NAME];
-    int success = get_var_location(bmi_model->handle, name.c_str(), location_c_str);
-    if (success != BMI_SUCCESS) {
+    if (get_var_location(bmi_model->handle, name.c_str(), location_c_str) != BMI_SUCCESS) {
         throw std::runtime_error(model_name + " failed to get variable location for " + name + ".");
     }
     return std::string(location_c_str);
@@ -119,8 +116,7 @@ std::string Bmi_Fortran_Adapter::GetVarLocation(std::string name) {
 
 int Bmi_Fortran_Adapter::GetVarGrid(std::string name) {
     int grid;
-    int success = get_var_grid(bmi_model->handle, name.c_str(), &grid);
-    if (success != BMI_SUCCESS) {
+    if (get_var_grid(bmi_model->handle, name.c_str(), &grid) != BMI_SUCCESS) {
         throw std::runtime_error(model_name + " failed to get variable grid for " + name + ".");
     }
     return grid;
@@ -128,8 +124,7 @@ int Bmi_Fortran_Adapter::GetVarGrid(std::string name) {
 
 std::string Bmi_Fortran_Adapter::GetGridType(int grid_id) {
     char gridtype_c_str[BMI_MAX_TYPE_NAME];
-    int success = get_grid_type(bmi_model->handle, grid_id, gridtype_c_str);
-    if (success != BMI_SUCCESS) {
+    if (get_grid_type(bmi_model->handle, grid_id, gridtype_c_str) != BMI_SUCCESS) {
         throw std::runtime_error(model_name + " failed to get grid type for grid ID " + to_string(grid_id) + ".");
     }
     return std::string(gridtype_c_str);
@@ -137,8 +132,7 @@ std::string Bmi_Fortran_Adapter::GetGridType(int grid_id) {
 
 int Bmi_Fortran_Adapter::GetGridRank(int grid_id) {
     int gridrank;
-    int success = get_grid_rank(bmi_model->handle, grid_id, &gridrank);
-    if (success != BMI_SUCCESS) {
+    if (get_grid_rank(bmi_model->handle, grid_id, &gridrank) != BMI_SUCCESS) {
         throw std::runtime_error(model_name + " failed to get grid rank for grid ID " + to_string(grid_id) + ".");
     }
     return gridrank;
@@ -146,8 +140,7 @@ int Bmi_Fortran_Adapter::GetGridRank(int grid_id) {
 
 int Bmi_Fortran_Adapter::GetGridSize(int grid_id) {
     int gridsize;
-    int success = get_grid_size(bmi_model->handle, grid_id, &gridsize);
-    if (success != BMI_SUCCESS) {
+    if (get_grid_size(bmi_model->handle, grid_id, &gridsize) != BMI_SUCCESS) {
         throw std::runtime_error(model_name + " failed to get grid size for grid ID " + to_string(grid_id) + ".");
     }
     return gridsize;
@@ -179,8 +172,7 @@ void Bmi_Fortran_Adapter::SetValueAtIndices(std::string name, int *inds, int cou
  * Have the backing BMI model perform an update to the next time step according to its own internal time keeping.
  */
 void Bmi_Fortran_Adapter::Update() {
-    int result = update(bmi_model->handle);
-    if (result != BMI_SUCCESS) {
+    if (update(bmi_model->handle) != BMI_SUCCESS) {
         throw models::external::State_Exception("BMI C model execution update failed for " + model_name);
     }
 }
@@ -198,8 +190,7 @@ void Bmi_Fortran_Adapter::Update() {
  * @param time Time to update model to, either as literal model time or non-integral multiple of time steps.
  */
 void Bmi_Fortran_Adapter::UpdateUntil(double time) {
-    int result = update_until(bmi_model->handle, time);
-    if (result != BMI_SUCCESS) {
+    if (update_until(bmi_model->handle, time) != BMI_SUCCESS) {
         throw models::external::State_Exception("Model execution update to specified time failed for " + model_name);
     }
 }
