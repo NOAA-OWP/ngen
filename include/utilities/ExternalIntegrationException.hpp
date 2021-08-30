@@ -10,7 +10,7 @@ namespace external {
     /**
          * Custom exception indicating a problem when integrating with some external component.
          *
-         * Custom exception for indicating that the frame encountered a problem interoperating with some type of
+         * Custom exception for indicating that the framework encountered a problem interoperating with some type of
          * external component with which it should be integrated.
          */
     class ExternalIntegrationException : public exception {
