@@ -155,13 +155,7 @@ namespace network {
         }
 
         auto filter_dfr(std::string type){
-          // This would be more semantically expected to me:
-          //   return get_dfr_from_headwaters() | boost::adaptors::reversed ...
-          // ...but it messes up the NetworkIndexT vector somehow.
-          // Try it and run the test, we get indexes that don't exist when iterating. 
-          // Should this be redone to return a shared_ptr<NetworkIndexT> or something?
-          get_dfr_from_headwaters();
-          return dfr_order  | boost::adaptors::reversed // This reverses the return order, not the graph--that's elsewhere!
+          return get_dfr_from_headwaters() | boost::adaptors::reversed // This reverses the return order, not the graph--that's elsewhere!
                             | boost::adaptors::transformed([this](int const& i) { return get_id(i); })
                             | boost::adaptors::filtered([type](std::string const& s) { return s.substr(0,3) == type; });
         }
@@ -290,7 +284,7 @@ namespace network {
          */
         std::unordered_map<std::string, Graph::vertex_descriptor> descriptor_map;
         
-        NetworkIndexT get_dfr_from_headwaters();
+        const NetworkIndexT& get_dfr_from_headwaters();
     };
 }
 
