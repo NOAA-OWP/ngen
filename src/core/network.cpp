@@ -177,7 +177,7 @@ std::vector<std::string> Network::get_destination_ids(std::string id){
   return ids;
 }
 
-NetworkIndexT Network::get_dfr_from_headwaters(){
+const NetworkIndexT& Network::get_dfr_from_headwaters(){
   if (!this->dfr_order.empty()){
     return this->dfr_order;
   }
