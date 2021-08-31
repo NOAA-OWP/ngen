@@ -6,16 +6,16 @@ set(CMAKE_BUILD_TYPE Debug)
 project(cfemodel VERSION 1.0.0 DESCRIPTION "External CFE Model Shared Library")
 
 if(WIN32)
-    add_library(cfemodel src/bmi_cfe.c src/cfe.c)
+    add_library(cfemodel cfe/src/bmi_cfe.c cfe/src/cfe.c)
 else()
-    add_library(cfemodel SHARED src/bmi_cfe.c src/cfe.c)
+    add_library(cfemodel SHARED cfe/src/bmi_cfe.c cfe/src/cfe.c)
 endif()
 
-target_include_directories(cfemodel PRIVATE include)
+target_include_directories(cfemodel PRIVATE cfe/include)
 
 set_target_properties(cfemodel PROPERTIES VERSION ${PROJECT_VERSION})
 
-set_target_properties(cfemodel PROPERTIES PUBLIC_HEADER include/bmi_cfe.h)
+set_target_properties(cfemodel PROPERTIES PUBLIC_HEADER cfe/include/bmi_cfe.h)
 
 include(GNUInstallDirs)
 
