@@ -8,8 +8,10 @@
 | [C/C++ Compiler](#c-and-c-compiler) | external | see below |  |
 | [CMake](#cmake) | external | \>= `3.12` | |
 | [Boost (Headers Only)](#boost-headers-only) | external | `1.72.0` | headers only library |
-| [Python 3 Libraries](#python-3-libraries) | external | \> `3.6.12` | Can be [excluded](#overriding-python-dependency). Requires ``numpy`` package |
+| [MPI](https://www.mpi-forum.org) | external | No current implementation or version requirements | Required for [multi-process distributed execution](DISTRIBUTED_PROCESSING.md) |
+| [Python 3 Libraries](#python-3-libraries) | external | \> `3.6.8` | Can be [excluded](#overriding-python-dependency). Requires ``numpy`` package |
 | [pybind11](#pybind11) | submodule | `v2.6.0` | Can be [excluded](#overriding-pybind11-dependency). |
+| [dmod.subsetservice](#the-dmodsubsetservice-package) | external | `>= 0.3.0` | Only required to perform integrated [hydrofabric file subdividing](DISTRIBUTED_PROCESSING.md#subdivided-hydrofabric) for distributed processing . |
 
 # Details
 
@@ -132,7 +134,7 @@ The variable `Python_NumPy_INCLUDE_DIR` (either as a CMake variable or a user en
     
 ### Version Requirements
 
-A version of Python 3 >= `3.6.12` (the oldest currently supported at the time of this writing) is required.  There are no specific version requirements for `numpy` currently. 
+A version of Python 3 >= `3.6.8` is required.  There are no specific version requirements for `numpy` currently. 
 
 ## pybind11
 
@@ -164,3 +166,19 @@ If the above `update` command does not check out the expected version, this can 
 The version used is automatically handled by submodule config.  This can be synced by re-running the initialization command above.
 
 As of project version `0.1.0`, the required version is tag `v2.6.0`.
+
+## The `dmod.subsetservice` Package
+
+This is an optional package available via the [OWP DMOD tool](https://github.com/NOAA-OWP/DMOD).  It only is required to enable the driver to generate partition-specific subdivided hydrofabric files from the complete hydrofabric file, as is conditionally required for [distributed processing](DISTRIBUTED_PROCESSING.md).  Further, its use is only attempted when such files are needed for distributed processing _and_ are not already created.
+
+As such, this dependency is ignored unless both Python support and MPI support are enabled and built into the _ngen_ driver.
+
+### Setup
+
+This must be installed in the active Python environment at the time the `ngen` executable is called.  This is usually best done via a virtual environment, especially if one is already set up as described for the [Numpy](#numpy) dependency.  However, all that matters is that the Python environment available to the ngen driver has this package installed.
+
+If installing to a virtual env as suggested above, the installation steps are similar to what is described in the [DMOD project document for the subsetting CLI tool]( https://github.com/NOAA-OWP/DMOD/tree/master/doc/SUBSETTING_CLI_TOOL.md).  The difference is just to create and/or source a virtual environment locate here first, and then change to the DMOD project directory.  All the example commands after the step of sourcing the virtual environment can then be followed as described on that page.
+
+### Version Requirements
+
+Version `0.3.0` or greater must be installed.

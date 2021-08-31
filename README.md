@@ -32,18 +32,12 @@ This framework includes an encapsulation strategy which focuses on the hydrologi
 **Complex Realizations**: An important type of catchment realization is the complex catchment realization. This allows a single catchment to be represented by a network of higher detail catchment realizations and their relationships. This allows the modeled area to be represented at multiple levels of detail and supports dynamic high resolution nesting.
 
 ## Dependencies
-- [gcc](https://gcc.gnu.org/) or [Clang](https://clang.llvm.org/)
-- [CMake](https://gitlab.kitware.com/cmake/cmake)
-- [Google Test](https://github.com/google/googletest) only for testing
-- [Boost.Geometry](https://www.boost.org/doc/libs/1_72_0/libs/geometry/doc/html/geometry/compilation.html)
 
-See the [Dependencies](doc/DEPENDENCIES.md) document for more information.
+See the [Dependencies](doc/DEPENDENCIES.md).
 
 ## Installation
 
-Detailed instructions on how to install, configure, and get the project running.
-This should be frequently tested to ensure reliability. Alternatively, link to
-a separate [INSTALL](INSTALL.md) document.
+See [INSTALL](INSTALL.md).
 
 ## Configuration
 
@@ -52,17 +46,21 @@ If the software is configurable, describe it in detail, either here or in other 
 ## Usage
 
 To run the *ngen* engine, the following command line positional arguments are supported:
-- `catchment_data_path` -- path to catchment data geojson input file.
-- `catchment subset ids` -- list of comma separated ids (NO SPACES!!!) to subset the catchment data, i.e. 'cat-0,cat-1'
-- `nexus_data_path` -- path to nexus data geojson input file
-- `nexus subset ids` -- list of comma separated ids (NO SPACES!!!) to subset the nexus data, i.e. 'nex-0,nex-1'
-- `realization_config_path` -- path to json configuration file for realization/formulations associated with the hydrofabric inputs.
+- _catchment_data_path_ -- path to catchment data geojson input file.
+- _catchment subset ids_ -- list of comma separated ids (NO SPACES!!!) to subset the catchment data, i.e. 'cat-0,cat-1'
+- _nexus_data_path_ -- path to nexus data geojson input file
+- _nexus subset ids_ -- list of comma separated ids (NO SPACES!!!) to subset the nexus data, i.e. 'nex-0,nex-1'
+- _realization_config_path_ -- path to json configuration file for realization/formulations associated with the hydrofabric inputs
+- _partition_config_path_ -- path to the partition json config file, when using the driver with [distributed processing](doc/DISTRIBUTED_PROCESSING.md).
+- `--subdivided-hydrofabric` -- an explicit, optional flag, when using the driver with [distributed processing](doc/DISTRIBUTED_PROCESSING.md), to indicate to the driver processes that they should operate on process-specific subdivided hydrofabric files.
 
 An example of a complete invocation to run a subset of a hydrofabric.  If the realization configuration doesn't contain catchment definitions for the subset keys provided, the default `global` configuration is used.  Alternatively, if the realization configuration contains definitions that are not in the subset (or hydrofabric) keys, then a warning is produced and the formulation isn't created.
 `./cmake-build-debug/ngen ./data/catchment_data.geojson "cat-27,cat-52" ./data/nexus_data.geojson "nex-26,nex-34" ./data/example_realization_config.json`
 
 To simulate every catchment in the input hydrofabric, leave the subset lists empty, i.e.:
 `ngen ./data/catchment_data.geojson "" ./data/nexus_data.geojson "" ./data/refactored_example_realization_config.json`
+
+Examples specific to running with with distributed processing can be found [here](doc/DISTRIBUTED_PROCESSING.md#examples).
 
 ## How to test the software
 

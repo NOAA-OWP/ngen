@@ -99,9 +99,13 @@ Summary</h1>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><a href="#boost-headers-only">Boost (Headers Only)</a>   </td><td class="markdownTableBodyLeft">external   </td><td class="markdownTableBodyCenter"><code>1.72.0</code>   </td><td class="markdownTableBodyCenter">headers only library    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><a href="#python-3-libraries">Python 3 Libraries</a>   </td><td class="markdownTableBodyLeft">external   </td><td class="markdownTableBodyCenter">&gt; <code>3.6.12</code>   </td><td class="markdownTableBodyCenter">Can be <a href="#overriding-python-dependency">excluded</a>. Requires <code>numpy</code> package    </td></tr>
+<td class="markdownTableBodyNone"><a href="https://www.mpi-forum.org">MPI</a>   </td><td class="markdownTableBodyLeft">external   </td><td class="markdownTableBodyCenter">No current implementation or version requirements   </td><td class="markdownTableBodyCenter">Required for <a class="el" href="md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html">multi-process distributed execution</a>    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><a href="#pybind11">pybind11</a>   </td><td class="markdownTableBodyLeft">submodule   </td><td class="markdownTableBodyCenter"><code>v2.6.0</code>   </td><td class="markdownTableBodyCenter">Can be <a href="#overriding-pybind11-dependency">excluded</a>.   </td></tr>
+<td class="markdownTableBodyNone"><a href="#python-3-libraries">Python 3 Libraries</a>   </td><td class="markdownTableBodyLeft">external   </td><td class="markdownTableBodyCenter">&gt; <code>3.6.8</code>   </td><td class="markdownTableBodyCenter">Can be <a href="#overriding-python-dependency">excluded</a>. Requires <code>numpy</code> package    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a href="#pybind11">pybind11</a>   </td><td class="markdownTableBodyLeft">submodule   </td><td class="markdownTableBodyCenter"><code>v2.6.0</code>   </td><td class="markdownTableBodyCenter">Can be <a href="#overriding-pybind11-dependency">excluded</a>.    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a href="#the-dmodsubsetservice-package">dmod.subsetservice</a>   </td><td class="markdownTableBodyLeft">external   </td><td class="markdownTableBodyCenter"><code>&gt;= 0.3.0</code>   </td><td class="markdownTableBodyCenter">Only required to perform integrated <a href="DISTRIBUTED_PROCESSING.md#subdivided-hydrofabric">hydrofabric file subdividing</a> for distributed processing .   </td></tr>
 </table>
 <h1><a class="anchor" id="autotoc_md58"></a>
 Details</h1>
@@ -195,7 +199,7 @@ NumPy</h4>
 <p>The variable <code>Python_NumPy_INCLUDE_DIR</code> (either as a CMake variable or a user environment variable) can also be used to set the NumPy include directory path searched by CMake. However, this will be ignored if there is a <code>.venv</code> directory found, as described above.</p>
 <h3><a class="anchor" id="autotoc_md78"></a>
 Version Requirements</h3>
-<p>A version of Python 3 &gt;= <code>3.6.12</code> (the oldest currently supported at the time of this writing) is required. There are no specific version requirements for <code>numpy</code> currently.</p>
+<p>A version of Python 3 &gt;= <code>3.6.8</code> is required. There are no specific version requirements for <code>numpy</code> currently.</p>
 <h2><a class="anchor" id="autotoc_md79"></a>
 pybind11</h2>
 <p>The <code>pybind11</code> dependency is a header-only library that allows for exposing Python types, etc. within C++ code. It is necessary to work with externally maintained, modular Python models.</p>
@@ -212,14 +216,25 @@ git checkout v2.6.0
 </pre> <h3><a class="anchor" id="autotoc_md82"></a>
 Version Requirements</h3>
 <p>The version used is automatically handled by submodule config. This can be synced by re-running the initialization command above.</p>
-<p>As of project version <code>0.1.0</code>, the required version is tag <code>v2.6.0</code>. </p>
+<p>As of project version <code>0.1.0</code>, the required version is tag <code>v2.6.0</code>.</p>
+<h2><a class="anchor" id="autotoc_md83"></a>
+The &lt;tt&gt;dmod.subsetservice&lt;/tt&gt; Package</h2>
+<p>This is an optional package available via the <a href="https://github.com/NOAA-OWP/DMOD">OWP DMOD tool</a>. It only is required to enable the driver to generate partition-specific subdivided hydrofabric files from the complete hydrofabric file, as is conditionally required for <a class="el" href="md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html">distributed processing</a>. Further, its use is only attempted when such files are needed for distributed processing <em>and</em> are not already created.</p>
+<p>As such, this dependency is ignored unless both Python support and MPI support are enabled and built into the <em>ngen</em> driver.</p>
+<h3><a class="anchor" id="autotoc_md84"></a>
+Setup</h3>
+<p>This must be installed in the active Python environment at the time the <code>ngen</code> executable is called. This is usually best done via a virtual environment, especially if one is already set up as described for the <a href="#numpy">Numpy</a> dependency. However, all that matters is that the Python environment available to the ngen driver has this package installed.</p>
+<p>If installing to a virtual env as suggested above, the installation steps are similar to what is described in the <a href="https://github.com/NOAA-OWP/DMOD/tree/master/doc/SUBSETTING_CLI_TOOL.md">DMOD project document for the subsetting CLI tool</a>. The difference is just to create and/or source a virtual environment locate here first, and then change to the DMOD project directory. All the example commands after the step of sourcing the virtual environment can then be followed as described on that page.</p>
+<h3><a class="anchor" id="autotoc_md85"></a>
+Version Requirements</h3>
+<p>Version <code>0.3.0</code> or greater must be installed. </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Aug 26 2021 15:51:09 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Tue Aug 31 2021 15:30:02 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

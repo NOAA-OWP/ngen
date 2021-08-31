@@ -108,30 +108,27 @@ Structural Diagrams</h2>
 <p><b>Complex Realizations</b>: An important type of catchment realization is the complex catchment realization. This allows a single catchment to be represented by a network of higher detail catchment realizations and their relationships. This allows the modeled area to be represented at multiple levels of detail and supports dynamic high resolution nesting.</p>
 <h2><a class="anchor" id="autotoc_md2"></a>
 Dependencies</h2>
-<ul>
-<li><a href="https://gcc.gnu.org/">gcc</a> or <a href="https://clang.llvm.org/">Clang</a></li>
-<li><a href="https://gitlab.kitware.com/cmake/cmake">CMake</a></li>
-<li><a href="https://github.com/google/googletest">Google Test</a> only for testing</li>
-<li><a href="https://www.boost.org/doc/libs/1_72_0/libs/geometry/doc/html/geometry/compilation.html">Boost.Geometry</a></li>
-</ul>
-<p>See the <a class="el" href="md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html">Dependencies</a> document for more information.</p>
+<p>See the <a class="el" href="md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html">Dependencies</a>.</p>
 <h2><a class="anchor" id="autotoc_md3"></a>
 Installation</h2>
-<p>Detailed instructions on how to install, configure, and get the project running. This should be frequently tested to ensure reliability. Alternatively, link to a separate <a class="el" href="md__i_n_s_t_a_l_l.html">INSTALL</a> document.</p>
+<p>See <a class="el" href="md__i_n_s_t_a_l_l.html">INSTALL</a>.</p>
 <h2><a class="anchor" id="autotoc_md4"></a>
 Configuration</h2>
 <p>If the software is configurable, describe it in detail, either here or in other documentation to which you link.</p>
 <h2><a class="anchor" id="autotoc_md5"></a>
 Usage</h2>
 <p>To run the <em>ngen</em> engine, the following command line positional arguments are supported:</p><ul>
-<li><code>catchment_data_path</code> &ndash; path to catchment data geojson input file.</li>
-<li><code>catchment subset ids</code> &ndash; list of comma separated ids (NO SPACES!!!) to subset the catchment data, i.e. 'cat-0,cat-1'</li>
-<li><code>nexus_data_path</code> &ndash; path to nexus data geojson input file</li>
-<li><code>nexus subset ids</code> &ndash; list of comma separated ids (NO SPACES!!!) to subset the nexus data, i.e. 'nex-0,nex-1'</li>
-<li><code>realization_config_path</code> &ndash; path to json configuration file for realization/formulations associated with the hydrofabric inputs.</li>
+<li><em>catchment_data_path</em> &ndash; path to catchment data geojson input file.</li>
+<li><em>catchment subset ids</em> &ndash; list of comma separated ids (NO SPACES!!!) to subset the catchment data, i.e. 'cat-0,cat-1'</li>
+<li><em>nexus_data_path</em> &ndash; path to nexus data geojson input file</li>
+<li><em>nexus subset ids</em> &ndash; list of comma separated ids (NO SPACES!!!) to subset the nexus data, i.e. 'nex-0,nex-1'</li>
+<li><em>realization_config_path</em> &ndash; path to json configuration file for realization/formulations associated with the hydrofabric inputs</li>
+<li><em>partition_config_path</em> &ndash; path to the partition json config file, when using the driver with <a class="el" href="md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html">distributed processing</a>.</li>
+<li><code>--subdivided-hydrofabric</code> &ndash; an explicit, optional flag, when using the driver with <a class="el" href="md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html">distributed processing</a>, to indicate to the driver processes that they should operate on process-specific subdivided hydrofabric files.</li>
 </ul>
 <p>An example of a complete invocation to run a subset of a hydrofabric. If the realization configuration doesn't contain catchment definitions for the subset keys provided, the default <code>global</code> configuration is used. Alternatively, if the realization configuration contains definitions that are not in the subset (or hydrofabric) keys, then a warning is produced and the formulation isn't created. <code>./cmake-build-debug/ngen ./data/catchment_data.geojson "cat-27,cat-52" ./data/nexus_data.geojson "nex-26,nex-34" ./data/example_realization_config.json</code></p>
 <p>To simulate every catchment in the input hydrofabric, leave the subset lists empty, i.e.: <code>ngen ./data/catchment_data.geojson "" ./data/nexus_data.geojson "" ./data/refactored_example_realization_config.json</code></p>
+<p>Examples specific to running with with distributed processing can be found <a href="doc/DISTRIBUTED_PROCESSING.md#examples">here</a>.</p>
 <h2><a class="anchor" id="autotoc_md6"></a>
 How to test the software</h2>
 <p>The project uses the <b>Google Test</b> framework for creating automated tests for C++ code.</p>
@@ -201,7 +198,7 @@ Credits and references</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Aug 26 2021 15:51:10 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Tue Aug 31 2021 15:30:03 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
