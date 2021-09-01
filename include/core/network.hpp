@@ -52,9 +52,12 @@ namespace network {
    * 
    */
   using IndexPair = std::pair< NetworkIndexT::const_iterator, NetworkIndexT::const_iterator>;
+
     /**
-     * @brief 
+     * @brief A lightweight, graph based index of hydrologic features.
      * 
+     * This class provides various iterators and access to hydrologic feature identities based on their topological relationships.
+     * It uses a boost::graph to model the relationship of features, and various iterators of the features based on traversal of this graph.
      */
     class Network {
       public:
