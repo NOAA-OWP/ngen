@@ -138,7 +138,7 @@ namespace network {
         std::string get_id( Graph::vertex_descriptor idx);
 
         /**
-         * @brief Get the origination (upstream) ids of all vertices connecting to @p id
+         * @brief Get the origination (upstream) ids (immediate neighbors) of all vertices with an edge connecting to @p id
          * 
          * @param id 
          * @return std::vector<std::string> 
@@ -146,7 +146,7 @@ namespace network {
         std::vector<std::string> get_origination_ids(std::string id);
 
         /**
-         * @brief Get the destination (downstream) ids of all vertices @p id connects to
+         * @brief Get the destination (downstream) ids (immediate neighbors) of all vertices with an edge from @p id
          * 
          * @param id 
          * @return std::vector<std::string> 
