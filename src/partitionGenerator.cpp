@@ -138,7 +138,7 @@ void generate_partitions(network::Network& network, const int& num_partitions, c
 
     std::string up_nexus;
     std::string down_nexus;
-    for(const auto& catchment : network.filter("cat")){
+    for(const auto& catchment : network.filter_dfr("cat")){
             if (partition < remainder)
                 partition_size = partition_size_plus1;
             else
@@ -382,8 +382,7 @@ int main(int argc, char* argv[])
     //Assumes dendridic, can add check in network if needed.
     PartitionVSet catchment_part, nexus_part;
     
-    //Generate the partitioning
-    generate_partitions(catchment_network, num_partitions, num_catchments, catchment_part, nexus_part);
+    //catchment_network.print_network();
 
     //build the remote connections from network
     // read the nexus hydrofabric, reuse the catchments
@@ -402,6 +401,11 @@ int main(int argc, char* argv[])
     global_nexus_collection->link_features_from_property(nullptr, &link_key);
     // make a global network
     Network global_network(global_nexus_collection);
+
+    //Generate the partitioning
+    generate_partitions(global_network, num_partitions, num_catchments, catchment_part, nexus_part);
+
+    //global_network.print_network();
 
     //The container holding all remote_connections
     std::vector<RemoteConnectionVec> remote_connections_vec;
