@@ -175,10 +175,10 @@ if(NGEN_ACTIVATE_ROUTING)
    )
 endif()
 
-add_automated_test(
-        test_network
-        core/NetworkTests.cpp
-)
+#add_automated_test(
+#        test_network
+#        core/NetworkTests.cpp
+#)
 
 # Unit tests
 # TODO: Make sure the geojson tests don't need to be added here also
