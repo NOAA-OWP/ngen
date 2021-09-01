@@ -640,7 +640,22 @@ namespace realization {
             // Do this next, since after checking whether other input variables are present in the properties, we can
             // now construct the adapter and init the model
             set_bmi_model(construct_model(properties));
-
+            
+            //NJF FIXME
+            //Now that the model is ready, we can set some intial parameters passed in the config
+            auto model_params = properties.find("model_params");
+            
+            if (model_params != properties.end() ){
+                
+                geojson::PropertyMap params = model_params->second.get_values();
+                for (auto& param : params) {
+                    //FIXME type???
+                    auto data = param.second.as_real_vector().data();
+                        get_bmi_model()->SetValue(param.first, &data);
+                }
+                
+            }
+            
             // Make sure that this is able to interpret model time and convert to real time, since BMI model time is
             // usually starting at 0 and just counting up
             determine_model_time_offset();
