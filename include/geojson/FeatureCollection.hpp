@@ -10,6 +10,7 @@
 #include <exception>
 #include <memory>
 #include <algorithm>
+#include <unordered_set>
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
@@ -20,7 +21,7 @@ namespace geojson {
             /**
              * Constructor
              * 
-             * @param features An overall list of features
+             * @param new_features An overall list of features
              * @param bounding_box A set of bounds for all features
              */
             FeatureCollection(FeatureList &new_features, std::vector<double> bounding_box) : bounding_box(bounding_box)
@@ -42,6 +43,7 @@ namespace geojson {
                 for (Feature feature : feature_collection) {
                     features.push_back(feature);
                 }
+                this->update_ids();
             }
 
             /**
