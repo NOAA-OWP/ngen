@@ -772,6 +772,8 @@ namespace models {
                     throw models::external::State_Exception("Failed to set values of " + name + " double variable for " + model_name);
                 }
             }
+
+            friend class ::Bmi_Fortran_Adapter_Test;
         };
     }
 }
