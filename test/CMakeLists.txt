@@ -12,6 +12,10 @@ if(BMI_C_LIB_ACTIVE)
     add_compile_definitions(NGEN_BMI_C_LIB_TESTS_ACTIVE)
 endif()
 
+if(BMI_FORTRAN_ACTIVE)
+    add_compile_definitions(NGEN_BMI_FORTRAN_LIB_TESTS_ACTIVE)
+endif()
+
 if(LSTM_TORCH_LIB_ACTIVE)
     add_compile_definitions(LSTM_TORCH_LIB_TESTS_ACTIVE)
 endif()
@@ -142,6 +146,12 @@ add_automated_test(
         test_bmi_c
         realizations/catchments/Bmi_C_Adapter_Test.cpp
         realizations/catchments/Bmi_C_Formulation_Test.cpp
+)
+
+add_automated_test(
+        test_bmi_fortran
+        realizations/catchments/Bmi_Fortran_Adapter_Test.cpp
+        realizations/catchments/Bmi_Fortran_Formulation_Test.cpp
 )
 
 add_automated_test(
