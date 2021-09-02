@@ -100,4 +100,25 @@ contains
     bmi_status = BMI_SUCCESS
   end function test_component_name
 
+  function register_bmi(this) result(bmi_status) bind(C, name="register_bmi")
+   use, intrinsic:: iso_c_binding, only: c_ptr, c_loc, c_int
+   use iso_c_bmif_2_0
+   implicit none
+   type(c_ptr) :: this ! If not value, then from the C perspective `this` is a void**
+   integer(kind=c_int) :: bmi_status
+   !Create the momdel instance to use
+   !Definitely need to carefully undertand and document the semantics of the save attribute here
+   type(bmi_test_bmi), target, save :: bmi_model !need to ensure scope/lifetime, use save attribute
+   !Create a simple pointer wrapper
+   type(box), pointer :: bmi_box
+
+   !allocate the pointer box
+   allocate(bmi_box)
+   !allocate(bmi_box%ptr, source=bmi_model)
+   !associate the wrapper pointer the created model instance
+   bmi_box%ptr => bmi_model
+   !Return the pointer to box
+   this = c_loc(bmi_box)
+   bmi_status = BMI_SUCCESS
+ end function register_bmi
 end module bmitestbmi
