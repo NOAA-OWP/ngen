@@ -65,7 +65,7 @@ void Bmi_Fortran_Adapter_Test::SetUp() {
             "../test/data/bmi/test_bmi_fortran/",
             "../../test/data/bmi/test_bmi_fortran/",
     };
-    std::string config_basename_0 = "test_bmi_c_config_0.txt";
+    std::string config_basename_0 = "test_bmi_fortran_config_0.txt";
     config_file_name_0 = file_search(config_path_options, config_basename_0);
 
     std::vector<std::string> forcing_dir_opts = {"./data/forcing/", "../data/forcing/", "../../data/forcing/"};
