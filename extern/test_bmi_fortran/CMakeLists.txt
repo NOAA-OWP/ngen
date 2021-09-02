@@ -4,7 +4,7 @@ enable_language( Fortran )
 project(testbmifortranmodel VERSION 1.0.0 DESCRIPTION "BMI Fortran Testing Model Shared Library")
 
 #Get the iso_c_fortran binding module to build as part of this build
-add_subdirectory(../iso_c_fortran_bmi ${CMAKE_BINARY_DIR}/iso_c_bmi)
+#add_subdirectory(../iso_c_fortran_bmi ${CMAKE_BINARY_DIR}/iso_c_bmi)
 
 # Uncomment this and rebuild artifacts to enable debugging
 set(CMAKE_BUILD_TYPE Debug)
