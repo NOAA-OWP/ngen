@@ -5,6 +5,11 @@ module bmitestbmi
   implicit none
   integer :: DEFAULT_TIME_STEP_SIZE = 3600
   integer :: DEFAULT_TIME_STEP_COUNT = 24
+
+  type box
+    class(bmi), pointer :: ptr => null()
+  end type
+
   type, extends (bmi) :: bmi_test_bmi
      private
      type (test_bmi_model) :: model
@@ -222,7 +227,7 @@ end function test_finalize
 
   function register_bmi(this) result(bmi_status) bind(C, name="register_bmi")
    use, intrinsic:: iso_c_binding, only: c_ptr, c_loc, c_int
-   use iso_c_bmif_2_0
+   !use iso_c_bmif_2_0
    implicit none
    type(c_ptr) :: this ! If not value, then from the C perspective `this` is a void**
    integer(kind=c_int) :: bmi_status
