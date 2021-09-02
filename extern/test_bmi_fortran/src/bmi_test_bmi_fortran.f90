@@ -3,7 +3,8 @@ module bmitestbmi
   use bmif_2_0
   use, intrinsic :: iso_c_binding, only: c_ptr, c_loc, c_f_pointer
   implicit none
-
+  integer :: DEFAULT_TIME_STEP_SIZE = 3600
+  integer :: DEFAULT_TIME_STEP_COUNT = 24
   type, extends (bmi) :: bmi_test_bmi
      private
      type (test_bmi_model) :: model
@@ -13,8 +14,8 @@ module bmitestbmi
 !      procedure :: get_output_item_count => test_output_item_count
 !      procedure :: get_input_var_names => test_input_var_names
 !      procedure :: get_output_var_names => test_output_var_names
-!      procedure :: initialize => test_initialize
-!      procedure :: finalize => test_finalize
+     procedure :: initialize => test_initialize
+     procedure :: finalize => test_finalize
 !      procedure :: get_start_time => test_start_time
 !      procedure :: get_end_time => test_end_time
 !      procedure :: get_current_time => test_current_time
@@ -89,6 +90,125 @@ module bmitestbmi
        component_name = "Testing BMI Fortran Model"
 
 contains
+
+subroutine assert(condition, msg)
+  ! If condition == .false., it aborts the program.
+  !
+  ! Arguments
+  ! ---------
+  !
+  logical, intent(in) :: condition
+  character(len=*), intent(in), optional :: msg
+  !
+  ! Example
+  ! -------
+  !
+  ! call assert(a == 5)
+  
+  if (.not. condition) then
+    print *, "Assertion Failed.", msg
+    stop 1
+  end if
+  end subroutine
+
+function read_init_config(model, config_file) result(bmi_status)
+  use, intrinsic :: iso_fortran_env, only: stderr => error_unit
+  implicit none
+  class(test_bmi_model), intent(out) :: model
+  character (len=*), intent(in) :: config_file
+  integer :: bmi_status
+  !namelist inputs
+  integer(kind=4) :: epoch_start_time
+  integer :: num_time_steps, time_step_size
+  double precision :: model_end_time
+  !locals
+  integer :: rc, fu
+  !namelists
+  namelist /test/ epoch_start_time, num_time_steps, time_step_size, model_end_time
+
+  !init values
+  epoch_start_time = -1
+  num_time_steps = 0
+  time_step_size = DEFAULT_TIME_STEP_SIZE
+  model_end_time = 0
+
+  ! Check whether file exists.
+  inquire (file=config_file, iostat=rc)
+
+  if (rc /= 0) then
+      write (stderr, '(3a)') 'Error: input file "', trim(config_file), '" does not exist.'
+      bmi_status = BMI_FAILURE
+      return
+  end if
+
+  ! Open and read Namelist file.
+  open (action='read', file=config_file, iostat=rc, newunit=fu)
+  read (nml=test, iostat=rc, unit=fu)
+
+  if (rc /= 0) then
+      write (stderr, '(a)') 'Error: invalid Namelist format.'
+      bmi_status = BMI_FAILURE
+  else
+    if (epoch_start_time == -1 ) then
+      !epoch_start_time wasn't found in the name list, log the error and return
+      write (stderr, *) "Config param 'epoch_start_time' not found in config file"
+      bmi_status = BMI_FAILURE
+      return
+    end if
+    !Update the model with all values found in the namelist
+    model%epoch_start_time = epoch_start_time
+    model%num_time_steps = num_time_steps
+    model%time_step_size = time_step_size
+    model%model_end_time = model_end_time
+    bmi_status = BMI_SUCCESS
+  end if
+
+  close (fu)
+
+end function read_init_config
+
+! BMI initializer.
+function test_initialize(this, config_file) result (bmi_status)
+  class (bmi_test_bmi), intent(out) :: this
+  character (len=*), intent(in) :: config_file
+  integer :: bmi_status
+
+  if (len(config_file) > 0) then
+     bmi_status = read_init_config(this%model, config_file)
+     this%model%current_model_time = 0.0
+     if ( this%model%num_time_steps == 0 .and. this%model%model_end_time == 0) then
+        this%model%num_time_steps = DEFAULT_TIME_STEP_COUNT
+     end if
+     
+     call assert ( this%model%model_end_time /= 0 .or. this%model%num_time_steps /= 0, &
+                   "Both model_end_time and num_time_steps are 0" )
+
+     if ( this%model%model_end_time == 0) then
+        call assert( this%model%num_time_steps /= 0 )
+        this%model%model_end_time = this%model%current_model_time + (this%model%num_time_steps * this%model%time_step_size)
+     end if
+
+     call assert( this%model%model_end_time /= 0, &
+                  "model_end_time 0 after attempting to compute from num_time_steps" )
+  
+     if ( this%model%model_end_time /= 0 ) then
+        this%model%num_time_steps = (this%model%model_end_time - this%model%current_model_time) / this%model%time_step_size
+     end if
+
+     bmi_status = BMI_SUCCESS
+  else
+     bmi_status = BMI_FAILURE
+  end if
+
+end function test_initialize
+
+! BMI finalizer.
+function test_finalize(this) result (bmi_status)
+  class (bmi_test_bmi), intent(inout) :: this
+  integer :: bmi_status
+
+  bmi_status = BMI_SUCCESS
+end function test_finalize
 
   ! Get the name of the model.
   function test_component_name(this, name) result (bmi_status)
