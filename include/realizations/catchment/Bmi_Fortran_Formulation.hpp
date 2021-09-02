@@ -9,6 +9,8 @@
 // TODO: consider merging this somewhere with the C value in that formulation header
 #define BMI_FORTRAN_DEFAULT_REGISTRATION_FUNC "register_bmi"
 
+class Bmi_Fortran_Formulation_Test;
+
 using namespace models::bmi;
 
 namespace realization {
@@ -82,6 +84,10 @@ namespace realization {
         double get_var_value_as_double(const string &var_name) override;
 
         double get_var_value_as_double(const int &index, const string &var_name) override;
+
+        // Unit test access
+        friend class ::Bmi_Formulation_Test;
+        friend class ::Bmi_Fortran_Formulation_Test;
 
     private:
         /** Index value (0-based) of the time step that will be processed by the next update of the model. */
