@@ -9,6 +9,7 @@ module bmif_2_0
   implicit none
 
   integer, parameter :: BMI_MAX_COMPONENT_NAME = 2048
+  integer, parameter :: BMI_MAX_FILE_NAME = 2048
   integer, parameter :: BMI_MAX_VAR_NAME = 2048
   integer, parameter :: BMI_MAX_TYPE_NAME = 2048
   integer, parameter :: BMI_MAX_UNITS_NAME = 2048
@@ -20,10 +21,10 @@ module bmif_2_0
     contains
 
 !       ! Initialize, run, finalize (IRF)
-!       procedure(bmif_initialize), deferred :: initialize
+      procedure(bmif_initialize), deferred :: initialize
 !       procedure(bmif_update), deferred :: update
 !       procedure(bmif_update_until), deferred :: update_until
-!       procedure(bmif_finalize), deferred :: finalize
+      procedure(bmif_finalize), deferred :: finalize
 
 !       ! Exchange items
        procedure(bmif_get_component_name), deferred :: get_component_name
@@ -100,13 +101,13 @@ module bmif_2_0
 
    abstract interface
 
-!     ! Perform startup tasks for the model.
-!     function bmif_initialize(this, config_file) result(bmi_status)
-!       import :: bmi
-!       class(bmi), intent(out) :: this
-!       character(len=*), intent(in) :: config_file
-!       integer :: bmi_status
-!     end function bmif_initialize
+    ! Perform startup tasks for the model.
+    function bmif_initialize(this, config_file) result(bmi_status)
+      import :: bmi
+      class(bmi), intent(out) :: this
+      character(len=*), intent(in) :: config_file
+      integer :: bmi_status
+    end function bmif_initialize
 
 !     ! Advance the model one time step.
 !     function bmif_update(this) result(bmi_status)
@@ -123,12 +124,12 @@ module bmif_2_0
 !       integer :: bmi_status
 !     end function bmif_update_until
 
-!     ! Perform teardown tasks for the model.
-!     function bmif_finalize(this) result(bmi_status)
-!       import :: bmi
-!       class(bmi), intent(inout) :: this
-!       integer :: bmi_status
-!     end function bmif_finalize
+    ! Perform teardown tasks for the model.
+    function bmif_finalize(this) result(bmi_status)
+      import :: bmi
+      class(bmi), intent(inout) :: this
+      integer :: bmi_status
+    end function bmif_finalize
 
     ! Get the name of the model.
     function bmif_get_component_name(this, name) result(bmi_status)

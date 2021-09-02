@@ -1,6 +1,5 @@
 module test_model
     type :: test_bmi_model
-        private
         integer(kind=4) :: epoch_start_time
         integer :: num_time_steps
         double precision :: current_model_time
