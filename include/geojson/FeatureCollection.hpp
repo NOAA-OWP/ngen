@@ -154,6 +154,28 @@ namespace geojson {
             int link_features_from_property(std::string* from_property = nullptr, std::string* to_property = nullptr);
 
             int link_features_from_attribute(std::string* from_attribute = nullptr, std::string* to_attribute = nullptr);
+
+            template<typename C>
+            void filter(C& ids)
+            {
+                std::unordered_set<std::string> idset;
+                for (auto it = std::begin(ids); it != std::end(ids); ++it )
+                {
+                    idset.insert(*it);
+                }
+                std::unordered_set<std::string> ids_to_remove;
+                for (Feature feature : features) 
+                {
+                    auto id = feature->get_id();
+                    if(!idset.count(id)) ids_to_remove.insert(id);
+                }
+                // Finally, actually delete them...
+                for (auto id : ids_to_remove)
+                {
+                    remove_feature_by_id(id);
+                }
+            }
+            
         private:
             FeatureList features;
             std::vector<double> bounding_box;
