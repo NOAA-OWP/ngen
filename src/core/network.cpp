@@ -186,15 +186,6 @@ const NetworkIndexT& Network::get_dfr_from_headwaters(){
   df_preorder_sort(r , std::back_inserter(this->dfr_order),
                    boost::vertex_index_map(get(boost::vertex_index, this->graph)));
 
-  
-  std::cout << "original graph:" << std::endl;
-  boost::print_graph(this->graph, boost::get(boost::vertex_index, this->graph));
-
-  std::cout << std::endl << "reversed graph:" << std::endl;
-  boost::print_graph(r,
-                     boost::get(boost::vertex_index, this->graph));
-  
-                     
   return this->dfr_order;
 }
 
