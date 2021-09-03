@@ -446,7 +446,10 @@ namespace models {
                     dynamic_register_bmi = (void *(*)(void *)) symbol;
                     // Call registration function, which for Fortran sets up the Fortran BMI object and sets the passed
                     // opaque handle param to point to the Fortran BMI object.
-                    dynamic_register_bmi(bmi_model->handle);
+                    //dynamic_register_bmi(bmi_model->handle);
+                    void *handle;
+                    dynamic_register_bmi(handle);
+                    bmi_model->handle = handle;
                 }
                 catch (const ::external::ExternalIntegrationException &e) {
                     // "Override" the default message in this case
@@ -473,6 +476,7 @@ namespace models {
             inline void construct_and_init_backing_model_for_fortran() {
                 if (model_initialized)
                     return;
+                bmi_model = std::make_shared<Bmi_Fortran_Handle_Wrapper>(Bmi_Fortran_Handle_Wrapper());
                 dynamic_library_load();
                 execModuleRegistration();
                 int init_result = initialize(bmi_model->handle, bmi_init_config.c_str());
