@@ -56,6 +56,7 @@ double Bmi_Fortran_Adapter::GetTimeStep() {
     if (get_time_step(bmi_model->handle, &ts) != BMI_SUCCESS) {
         throw std::runtime_error(model_name + " failed to get model time step size.");
     }
+    return ts;
 }
 
 std::string Bmi_Fortran_Adapter::GetTimeUnits() {
