@@ -173,7 +173,7 @@ int main(int argc, char *argv[]) {
     partition_parser.parse_partition_file();
     
     std::vector<PartitionData> &partitions = partition_parser.partition_ranks;
-    PartitionData &local_data = partitions[std::to_string(mpi_rank)];
+    PartitionData &local_data = partitions[mpi_rank];
     nexus_subset_ids = local_data.nex_ids;
     catchment_subset_ids = local_data.cat_ids; 
     #endif // NGEN_MPI_ACTIVE
