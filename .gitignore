@@ -105,10 +105,8 @@ temp/
 extern/pybind11/
 # libtorch source artifact
 extern/libtorch-*.zip
-# Prototype Shared Library Example Build Directory
-extern/cfe/cmake_cfe_lib
-# Alt-modular build dir
-extern/alt-modular/cmake_am_libs
+# "Standard" build directories for external BMI module shared libraries
+extern/**/cmake_build
 
 # NGen build-related items
 .venv
