@@ -172,8 +172,8 @@ int main(int argc, char *argv[]) {
     // TODO: add something here to make sure this step worked for every rank, and maybe to checksum the file
     partition_parser.parse_partition_file();
     
-    auto& partitions = partition_parser.partition_ranks;  
-    auto& local_data = partitions[std::to_string(mpi_rank)];   
+    std::vector<PartitionData> &partitions = partition_parser.partition_ranks;
+    PartitionData &local_data = partitions[std::to_string(mpi_rank)];
     nexus_subset_ids = local_data.nex_ids;
     catchment_subset_ids = local_data.cat_ids; 
     #endif // NGEN_MPI_ACTIVE
