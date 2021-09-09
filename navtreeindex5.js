@@ -1,6 +1,5 @@
 var NAVTREEINDEX5 =
 {
-"classgeojson_1_1_polygon_feature.html#ae084da5ad3b56346b7c3e942e0e10e8e":[21,0,3,8,39],
 "classgeojson_1_1_polygon_feature.html#ae1da9784ab4cf7b0f9a31082866aff78":[21,0,3,8,40],
 "classgeojson_1_1_polygon_feature.html#ae3da4d699f37811a450985f094b45bf8":[21,0,3,8,48],
 "classgeojson_1_1_polygon_feature.html#af289e5db1d2039bddd84bef755f0bab6":[21,0,3,8,35],
@@ -249,5 +248,6 @@ var NAVTREEINDEX5 =
 "classnetwork_1_1_network.html#ad342876420b17b59c22dcd4081305648":[21,0,7,1,15],
 "classnetwork_1_1_network.html#ad81217c6e3e7e1d64d6067a29ea1c3e3":[21,0,7,1,1],
 "classnetwork_1_1_network.html#ae62bcf26a0b422a6e7d73fc8ff2102a1":[21,0,7,1,18],
-"classnetwork_1_1_network.html#af83ce2ba6cd82d318ec433c82d16f328":[21,0,7,1,7]
+"classnetwork_1_1_network.html#af83ce2ba6cd82d318ec433c82d16f328":[21,0,7,1,7],
+"classnexus_1_1_nexus___manager.html":[21,0,8,0]
 };

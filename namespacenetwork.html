@@ -94,19 +94,25 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structnetwork_1_1_vertex_property.html">VertexProperty</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1_network.html">Network</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A lightweight, graph based index of hydrologic features.  <a href="classnetwork_1_1_network.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:ac5d401482ea9247a9aaf6e4087e0ece4"><td class="memItemLeft" align="right" valign="top">typedef boost::property&lt; boost::vertex_index_t, std::size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacenetwork.html#ac5d401482ea9247a9aaf6e4087e0ece4">IndexT</a></td></tr>
+<tr class="memdesc:ac5d401482ea9247a9aaf6e4087e0ece4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type used to index <a class="el" href="namespacenetwork.html#ad95437deae1621540951bc60bd635034" title="Type used to label node properties in a network::Graph.">network::NodeT</a> types.  <a href="namespacenetwork.html#ac5d401482ea9247a9aaf6e4087e0ece4">More...</a><br /></td></tr>
 <tr class="separator:ac5d401482ea9247a9aaf6e4087e0ece4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad95437deae1621540951bc60bd635034"><td class="memItemLeft" align="right" valign="top">typedef boost::property&lt; boost::vertex_name_t, std::string, <a class="el" href="namespacenetwork.html#ac5d401482ea9247a9aaf6e4087e0ece4">IndexT</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacenetwork.html#ad95437deae1621540951bc60bd635034">NodeT</a></td></tr>
+<tr class="memdesc:ad95437deae1621540951bc60bd635034"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type used to label node properties in a <a class="el" href="namespacenetwork.html#a8903690478e87e5f1e1ca59765c1887f" title="Parameterized graph storing network::NodeT vertices.">network::Graph</a>.  <a href="namespacenetwork.html#ad95437deae1621540951bc60bd635034">More...</a><br /></td></tr>
 <tr class="separator:ad95437deae1621540951bc60bd635034"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8903690478e87e5f1e1ca59765c1887f"><td class="memItemLeft" align="right" valign="top">typedef boost::adjacency_list&lt; boost::setS, boost::vecS, boost::bidirectionalS, <a class="el" href="namespacenetwork.html#ad95437deae1621540951bc60bd635034">NodeT</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacenetwork.html#a8903690478e87e5f1e1ca59765c1887f">Graph</a></td></tr>
+<tr class="memdesc:a8903690478e87e5f1e1ca59765c1887f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameterized graph storing <a class="el" href="namespacenetwork.html#ad95437deae1621540951bc60bd635034" title="Type used to label node properties in a network::Graph.">network::NodeT</a> vertices.  <a href="namespacenetwork.html#a8903690478e87e5f1e1ca59765c1887f">More...</a><br /></td></tr>
 <tr class="separator:a8903690478e87e5f1e1ca59765c1887f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af1aad95222480433c10e1d5814ea28ca"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; Graph::vertex_descriptor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacenetwork.html#af1aad95222480433c10e1d5814ea28ca">NetworkIndexT</a></td></tr>
+<tr class="memdesc:af1aad95222480433c10e1d5814ea28ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">A vector of <a class="el" href="namespacenetwork.html#a8903690478e87e5f1e1ca59765c1887f" title="Parameterized graph storing network::NodeT vertices.">network::Graph</a> vertex_descriptors.  <a href="namespacenetwork.html#af1aad95222480433c10e1d5814ea28ca">More...</a><br /></td></tr>
 <tr class="separator:af1aad95222480433c10e1d5814ea28ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a05d497ef7e9d33654f544abf3a63461a"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacenetwork.html#a05d497ef7e9d33654f544abf3a63461a">IndexPair</a> = std::pair&lt; NetworkIndexT::const_iterator, NetworkIndexT::const_iterator &gt;</td></tr>
+<tr class="memdesc:a05d497ef7e9d33654f544abf3a63461a"><td class="mdescLeft">&#160;</td><td class="mdescRight">A type for holding a pair of <a class="el" href="namespacenetwork.html#af1aad95222480433c10e1d5814ea28ca" title="A vector of network::Graph vertex_descriptors.">network::NetworkIndexT</a> iterators, pair.first=begin, pair.second=end.  <a href="namespacenetwork.html#a05d497ef7e9d33654f544abf3a63461a">More...</a><br /></td></tr>
 <tr class="separator:a05d497ef7e9d33654f544abf3a63461a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
@@ -122,6 +128,9 @@ Typedefs</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Parameterized graph storing <a class="el" href="namespacenetwork.html#ad95437deae1621540951bc60bd635034" title="Type used to label node properties in a network::Graph.">network::NodeT</a> vertices. </p>
+<p>Nodes are stored as boost::setS, edges as boost::vecS, with bidirectional edges </p>
+
 </div>
 </div>
 <a id="a05d497ef7e9d33654f544abf3a63461a"></a>
@@ -135,6 +144,9 @@ Typedefs</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>A type for holding a pair of <a class="el" href="namespacenetwork.html#af1aad95222480433c10e1d5814ea28ca" title="A vector of network::Graph vertex_descriptors.">network::NetworkIndexT</a> iterators, pair.first=begin, pair.second=end. </p>
+<p>these indicies should be const to the caller </p>
 
 </div>
 </div>
@@ -150,6 +162,8 @@ Typedefs</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Type used to index <a class="el" href="namespacenetwork.html#ad95437deae1621540951bc60bd635034" title="Type used to label node properties in a network::Graph.">network::NodeT</a> types. </p>
+
 </div>
 </div>
 <a id="af1aad95222480433c10e1d5814ea28ca"></a>
@@ -163,6 +177,8 @@ Typedefs</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>A vector of <a class="el" href="namespacenetwork.html#a8903690478e87e5f1e1ca59765c1887f" title="Parameterized graph storing network::NodeT vertices.">network::Graph</a> vertex_descriptors. </p>
 
 </div>
 </div>
@@ -178,6 +194,8 @@ Typedefs</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Type used to label node properties in a <a class="el" href="namespacenetwork.html#a8903690478e87e5f1e1ca59765c1887f" title="Parameterized graph storing network::NodeT vertices.">network::Graph</a>. </p>
+
 </div>
 </div>
 </div><!-- contents -->
@@ -186,7 +204,7 @@ Typedefs</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacenetwork.html">network</a></li>
-    <li class="footer">Generated on Tue Aug 31 2021 20:37:14 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Thu Sep 9 2021 19:54:50 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

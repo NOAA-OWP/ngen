@@ -50,7 +50,7 @@
 <!-- Node3 -->
 <g id="node3" class="node">
 <title>Node3</title>
-<g id="a_node3"><a xlink:href="classnetwork_1_1_network.html" target="_top" xlink:title=" ">
+<g id="a_node3"><a xlink:href="classnetwork_1_1_network.html" target="_top" xlink:title="A lightweight, graph based index of hydrologic features.">
 <polygon fill="white" stroke="black" points="228,-266.5 228,-477.5 343,-477.5 343,-266.5 228,-266.5"/>
 <text text-anchor="middle" x="285.5" y="-465.5" font-family="Helvetica,sans-Serif" font-size="10.00">network::Network</text>
 <polyline fill="none" stroke="black" points="228,-458.5 343,-458.5 "/>

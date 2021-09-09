@@ -75,7 +75,7 @@ var sectionId = 'dynsection-1';
 <!-- Node2 -->
 <g id="node2" class="node">
 <title>Node2</title>
-<g id="a_node2"><a xlink:href="classnetwork_1_1_network.html" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="classnetwork_1_1_network.html" target="_top" xlink:title="A lightweight, graph based index of hydrologic features.">
 <polygon fill="white" stroke="black" points="228,-149.5 228,-360.5 343,-360.5 343,-149.5 228,-149.5"/>
 <text text-anchor="middle" x="285.5" y="-348.5" font-family="Helvetica,sans-Serif" font-size="10.00">network::Network</text>
 <polyline fill="none" stroke="black" points="228,-341.5 343,-341.5 "/>
