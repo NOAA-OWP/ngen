@@ -17,3 +17,7 @@
 	path = extern/cfe/cfe
 	url = https://github.com/NOAA-OWP/cfe.git
 	branch = master
+[submodule "extern/topmodel/topmodel"]
+	path = extern/topmodel/topmodel
+	url = git@github.com:NOAA-OWP/topmodel.git
+	branch = master
