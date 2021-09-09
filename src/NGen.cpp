@@ -174,8 +174,14 @@ int main(int argc, char *argv[]) {
     
     std::vector<PartitionData> &partitions = partition_parser.partition_ranks;
     PartitionData &local_data = partitions[mpi_rank];
-    nexus_subset_ids = local_data.nex_ids;
-    catchment_subset_ids = local_data.cat_ids; 
+    if (!nexus_subset_ids.empty()) {
+        std::cerr << "Warning: CLI provided nexus subset will be ignored when using partition config";
+    }
+    if (!catchment_subset_ids.empty()) {
+        std::cerr << "Warning: CLI provided catchment subset will be ignored when using partition config";
+    }
+    nexus_subset_ids = std::vector<std::string>(local_data.nexus_ids.begin(), local_data.nexus_ids.end());
+    catchment_subset_ids = std::vector<std::string>(local_data.catchment_ids.begin(), local_data.catchment_ids.end());
     #endif // NGEN_MPI_ACTIVE
 
     // TODO: Instead of iterating through a collection of FeatureBase objects mapping to nexi, we instead want to iterate through HY_HydroLocation objects
