@@ -11,15 +11,14 @@ Example:
 python realization_config_generator.py -i ../catchment_data.geojson -o realization_config.json
 """
 
-import os
-import sys, getopt
 import geopandas as gpd
-import random
+import getopt
 import json
-from shutil import copy
-import fileinput
+import os
+import random
 import subprocess
-
+import sys
+from shutil import copy
 
 #Set directory path for catchment specific BMI configuration files
 bmi_config_dir = "./catchment_bmi_configs"
@@ -55,7 +54,7 @@ formulation_1_name =  "bmi_c"
 #Set params
 global_params = {
   "model_type_name": "bmi_c_cfe",
-  "library_file": "../ngen_test_setup/ngen/extern/alt-modular/cmake_am_libs/libcfebmi.so",
+  "library_file": "../ngen_test_setup/ngen/extern/cfe/cmake_build/libcfebmi.so",
   "init_config": "",
   "main_output_variable": "Q_OUT",
   "registration_function": "register_bmi_cfe",
@@ -76,7 +75,7 @@ global_params = {
 
 formulation_1_params = {
   "model_type_name": "bmi_topmodel",
-  "library_file": "../ngen_test_setup/ngen/extern/alt-modular/cmake_am_libs/libtopmodelbmi.so",
+  "library_file": "../ngen_test_setup/ngen/extern/topmodelbmi/cmake_build/libtopmodelbmi.so",
   "init_config": "",
   "main_output_variable": "Qout",
   "registration_function": "register_bmi_topmodel",
