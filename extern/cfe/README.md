@@ -1,130 +1,64 @@
-# CFE BMI Shared C Library Example
+# CFE Submodule
 
-* [About](#about)
-* [Building](#building)
-  * [Generating a Build System Directory](#generating-a-build-system-directory)
-  * [Building the Shared Library](#building-the-shared-library)
-* [Initialization File Structure](#initialization-file-structure)
-  * [General Form](#general-form)
-  * [Value Formats](#value-formats)
-  * [Params](#params)
-    * [Required](#required)
-    * [Optional](#optional)
-* [Implementation Details](#implementation-details)
-  * [Empty Functions](#empty-functions)
-  * [Model Time Units](#model-time-units)
-  * [The `update_until` Function](#the-update_until-function)
+## About
 
-# About
+This directory wraps the *cfe* Git submodule repo, which contains a clone of the repo for the OWP CFE module library that implements BMI.  From here, the shared library file for the CFE module can be built for use in NGen.  This is configured with the [CMakeLists.txt](CMakeLists.txt) and other files in this outer directory.
 
-This directory holds sources and build files for a C-language implementation of the CFE (or T-shirt) model that also fulfills the BMI specification.  The BMI fulfillment is strictly valid, though only an essential subset of functions are currently fully implemented.  
+#### Extra Outer Directory
 
-The build configuration is also set up to generate a shared library artifact that can be used in the main NextGen framework.  
+Currently there are two directory layers beneath the top-level *extern/* directory.  This was done so that certain things used by NGen (i.e., a *CMakeLists.txt* file for building shared library files) can be placed alongside, but not within, the submodule.
 
-# Building
+## Working with the Submodule
 
-To generate the shared library files, build the `cfemodel` target in the generated build system.  This needs to be separate from the main NextGen build system.
+Some simple explanations of several command actions are included below.  To better understand what these things are doing, consult the [Git Submodule documentation](https://git-scm.com/book/en/v2/Git-Tools-Submodules). 
 
-#### Generating a Build System Directory
+### Getting the Latest Changes
 
-Run from the project root directory:
+There are two steps to getting upstream submodule changes fully 
+  1. fetching and locally checking out the changes from the remote
+  2. committing the new checkout revision for the submodule
 
-    cmake -B extern/cfe/cmake_cfe_lib -S extern/cfe
-    
-To regenerate, simply remove the `extern/cfe/cmake_cfe_lib` directory and run the command again.
- 
-#### Building the Shared Library
+To fetch and check out the latest revision (for the [currently used branch](#viewing-the-current-branch)):
 
-Again, from the project root directory:
+    git submodule update --init -- extern/cfe/cfe
 
-    cmake --build cmake_cfe_lib --target cfemodel
+To commit the current submodule checkout revision to the NGen repo:
 
-This should generate the appropriate library files for your system.
+    git add extern/cfe/cfe
+    git commit
 
-# Initialization File Structure
+### Viewing the Commit Hash
 
-### General Form
+Git submodule configurations include the specific commit to be checked out (or an implicit default).  The current commit can be view with `git submodule status`:
 
-* it is a text file of key-value pairs separated by `=`
-* it *does not* (necessarily) support spaces between the key/value and the `=`
-  * i.e., do not include spaces except as part of a value if appropriate
-* it *does not* support comments
-  * i.e., don't include a line unless it is intended to configure something
-* there are some keys that have two possible forms that may be used
-* there is no intelligence built in to handle cases when a param is supplied more than once
-  * i.e., the last appearance will be used, but please don't do this
-  
-### Value Formats
-    * `forcing_file` expects a string path to a file
-    * `gw_storage` and `soil_storage` expect either a numeric literal or a percentage of the maximum storage as a special string
-        * a percentage string will be something like `66.7%`, where the last character is `%`
-    * `nash_storage` and `giuh_ordinates` expect a comma-separated series of numeric literals
-    * all other values expect numeric literals (e.g. 1.0, 4.678)
+    git submodule status -- extern/cfe/cfe/
 
-### Params
+This will show the **commit**, **submodule local path**, and the git description for the **commit**.  The specific configuration, including the configured branch, is set in the _.gitmodules_ file in the NGen project root.
 
-#### Required
+### Changing the Commit Branch
 
-* `forcing_file`
-* `soil_params.depth` or `soil_params.D`
-* `soil_params.b` or `soil_params.bb`
-* `soil_params.multiplier` or `soil_params.mult`
-* `soil_params.satdk`
-* `soil_params.satpsi`
-* `soil_params.slope` or `soil_params.slop`
-* `soil_params.smcmax` or `soil_params.maxsmc`
-* `soil_params.wltsmc`
-* `max_gw_storage`
-* `Cgw`
-* `expon`
-* `gw_storage`
-* `alpha_fc`
-* `soil_storage`
-* `K_nash`
-* `giuh_ordinates`
+The latest commit in the configured branch can be brought in as described here.  If it is ever necessary to change to a different branch, the following will do so:
 
-#### Optional
+    git config -f .gitmodules "submodule.extern/cfe/cfe.branch" <branchName>
 
-* `refkdt`
-    * defaults to `3.0`
-* `nash_storage` 
-    * defaults to `0.0` in all reservoirs
-* `number_nash_reservoirs` or `N_nash`
-    * if `nash_storage` is present, it implies this value
-    * otherwise, a default of `2` is used
-    
-# Implementation Details
+Note that this will be done in the NGen repo configuration, so it can then be committed and push to remotes.  It is also possible to do something similar in just the local clone of a repo, by configuring `.git/config` instead of `.gitmodules`.  See the Git documentation for more on how that works if needed.
 
-As a reminder, the BMI spec for C is implemented as a C struct declaration.  The struct has a `void*` member for holding a pointer to some data structure for the model (here, a `cfe_model` struct, declared in [include/cfe.h](include/cfe.h)), and a series of function pointers to the functions necessary to fulfill BMI.  A separate function in the implementing model library - here `register_bmi_cfe()` in [src/bmi_cfe.c](src/bmi_cfe.c) - must then sets those function pointers to backing function definitions.
+# Usage
 
-For this CFE model, the implemented functions in general follow the BMI documented spec, so in most cases that [documentation](https://bmi.readthedocs.io/en/latest/) is sufficient for understanding this model's operation.  There are a few things worth of more detailed explanation however, which are covered here.
+## Building Libraries
 
-#### Empty Functions
+First, cd into the outer directory containing the submodule:
 
-Several BMI functions currently have incomplete implementations.  In such cases, the `BMI_FAILURE` code will always be immediately returned.  
+    cd extern/cfe
 
-These can be identified by examining the setting of the function pointers for the BMI API C struct, handled by the `register_bmi_cfe()` function in [src/bmi_cfe.c](src/bmi_cfe.c).  The functions in question have comments noting their incomplete implementations.
+Before library files can be built, a CMake build system must be generated.  E.g.:
 
-#### Model Time Units
+    cmake -B cmake_build -S .
 
-The time unit used by the model is seconds.
+Note that when there is an existing directory, it may sometimes be necessary to clear it and regenerate, especially if any changes were made to the [CMakeLists.txt](CMakeLists.txt) file.
 
+After there is build system directory, the shared library can be built using the `cfebmi` CMake target. For example, the CFE shared library file (i.e., the build config's `cfebmi` target) can be built using:
 
-#### The `update_until()` Function
+    cmake --build cmake_build --target cfebmi -- -j 2
 
-The `update_until()` function can update the model to a semi-arbitrary (but valid) future time, instead of just to the point in time after the next time step.  This future time can be passed explicitly as a model time or implicitly as a valid number of time steps into the future.  
-
-Such a time must be valid for this particular CFE model instance, however.  To be valid, it must be possible to arrive at this same time by making some number of calls to `update()`.
-
-The model tests to determine if the param is a valid explicit value first, before considering whether it is a valid implicit value.
-
-##### Behavioral Notes
-
-* No changes to model state will occur until the function has determined the parameter is a valid future time
-* While valid and resulting in successful return, the model does not change state if the time param is equal to the current model time
-* A parameter value less than the current model time can not be a valid explicit time, but it can be a valid implicit time
-    * Corollary 1: the function will either return error or behave unexpectedly if an explicit model time in the past is supplied
-    * Corollary 2: if the model's `current_time` is at or beyond its `end_time`, this function will always return error
-* Negative parameter values are not valid for either explicit or implicit representations
-* To be valid, an implicit time must be an integral values
-* To be valid, an implicit time must not take the model beyond its expected total number of time steps
+This will build a `cmake_build/libcfebmi.<version>.<ext>` file, where the version is configured within the CMake config, and the extension depends on the local machine's operating system.    
