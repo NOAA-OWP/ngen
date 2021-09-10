@@ -136,7 +136,7 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      ! bmi_status = bmi_box%ptr%get_input_item_count(count)
+      bmi_status = bmi_box%ptr%get_input_item_count(count)
     end function get_input_item_count
 
     ! Count the output variables.

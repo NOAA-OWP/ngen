@@ -48,6 +48,7 @@ protected:
 
     std::string expected_component_name = "Testing BMI Fortran Model";
     std::vector<std::string> expected_output_var_names = { "OUTPUT_VAR_1", "OUTPUT_VAR_2", "OUTPUT_VAR_3" };
+    std::vector<std::string> expected_input_var_names = { "INPUT_VAR_1", "INPUT_VAR_2", "INPUT_VAR_3" };
     std::vector<std::string> expected_output_var_locations = { "node", "node", "node" };
     std::vector<int> expected_output_var_grids = { 0, 0, 0 };
     std::vector<std::string> expected_output_var_units = { "m", "m", "s" };
@@ -132,6 +133,17 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetOutputVarNames_0_a) {
     }
     catch (std::exception& e) {
         printf("Exception getting output var names: %s", e.what());
+        FAIL();
+    }
+}
+
+/** Test input variables item count can be retrieved. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetInputItemCount_0_a) {
+    try {
+        ASSERT_EQ(adapter->GetInputItemCount(), expected_input_var_names.size());
+    }
+    catch (std::exception& e) {
+        printf("Exception getting input var count: %s", e.what());
         FAIL();
     }
 }
