@@ -18,7 +18,7 @@ module bmitestbmi
    contains
      procedure :: get_component_name => test_component_name
 !      procedure :: get_input_item_count => test_input_item_count
-!      procedure :: get_output_item_count => test_output_item_count
+     procedure :: get_output_item_count => test_output_item_count
 !      procedure :: get_input_var_names => test_input_var_names
 !      procedure :: get_output_var_names => test_output_var_names
      procedure :: initialize => test_initialize
@@ -95,6 +95,12 @@ module bmitestbmi
 
   character (len=BMI_MAX_COMPONENT_NAME), target :: &
        component_name = "Testing BMI Fortran Model"
+
+  ! Exchange items
+  integer, parameter :: output_item_count = 3
+
+  character (len=BMI_MAX_VAR_NAME), target, &
+    dimension(output_item_count) :: output_items
 
 contains
 
@@ -236,6 +242,16 @@ end function test_finalize
     units = "s"
     bmi_status = BMI_SUCCESS
   end function test_time_units
+
+  ! Count the output variables.
+  function test_output_item_count(this, count) result (bmi_status)
+    class (bmi_test_bmi), intent(in) :: this
+    integer, intent(out) :: count
+    integer :: bmi_status
+
+    count = output_item_count
+    bmi_status = BMI_SUCCESS
+  end function test_output_item_count
   
 #ifdef NGEN_ACTIVE
   function register_bmi(this) result(bmi_status) bind(C, name="register_bmi")

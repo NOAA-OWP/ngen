@@ -149,7 +149,7 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      ! bmi_status = bmi_box%ptr%get_output_item_count(count)
+      bmi_status = bmi_box%ptr%get_output_item_count(count)
     end function get_output_item_count
 
     ! List a model's input variables.

@@ -30,7 +30,7 @@ module bmif_2_0_iso
       ! Exchange items
       procedure(bmif_get_component_name), deferred :: get_component_name
 !       procedure(bmif_get_input_item_count), deferred :: get_input_item_count
-!       procedure(bmif_get_output_item_count), deferred :: get_output_item_count
+      procedure(bmif_get_output_item_count), deferred :: get_output_item_count
 !       procedure(bmif_get_input_var_names), deferred :: get_input_var_names
 !       procedure(bmif_get_output_var_names), deferred :: get_output_var_names
 
@@ -151,13 +151,13 @@ module bmif_2_0_iso
 !       integer :: bmi_status
 !     end function bmif_get_input_item_count
 
-!     ! Count a model's output variables.
-!     function bmif_get_output_item_count(this, count) result(bmi_status)
-!       import :: bmi
-!       class(bmi), intent(in) :: this
-!       integer, intent(out) :: count
-!       integer :: bmi_status
-!     end function bmif_get_output_item_count
+    ! Count a model's output variables.
+    function bmif_get_output_item_count(this, count) result(bmi_status)
+      import :: bmi
+      class(bmi), intent(in) :: this
+      integer, intent(out) :: count
+      integer :: bmi_status
+    end function bmif_get_output_item_count
 
 !     ! List a model's input variables.
 !     function bmif_get_input_var_names(this, names) result(bmi_status)
