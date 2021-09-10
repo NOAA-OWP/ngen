@@ -121,7 +121,7 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(handle, bmi_box)
-      !bmi_status = bmi_box%ptr%get_component_name(f_name)
+      bmi_status = bmi_box%ptr%get_component_name(f_name)
       !Set the c_string input (name), make sure to inlcude the null_terminator
       name(:len_trim(f_name)+1) = f_to_c_string(f_name)
     end function get_component_name

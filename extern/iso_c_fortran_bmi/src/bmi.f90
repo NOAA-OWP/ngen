@@ -28,7 +28,7 @@ module bmif_2_0_iso
       procedure(bmif_finalize), deferred :: finalize
 
       ! Exchange items
-!      procedure(bmif_get_component_name), deferred :: get_component_name
+      procedure(bmif_get_component_name), deferred :: get_component_name
 !       procedure(bmif_get_input_item_count), deferred :: get_input_item_count
 !       procedure(bmif_get_output_item_count), deferred :: get_output_item_count
 !       procedure(bmif_get_input_var_names), deferred :: get_input_var_names
@@ -135,13 +135,13 @@ module bmif_2_0_iso
       integer :: bmi_status
     end function bmif_finalize
 
-    ! Get the name of the model.
-!    function bmif_get_component_name(this, name) result(bmi_status)
-!      import :: bmi
-!      class(bmi), intent(in) :: this
-!      character(len=*), pointer, intent(out) :: name
-!      integer :: bmi_status
-!    end function bmif_get_component_name
+   ! Get the name of the model.
+   function bmif_get_component_name(this, name) result(bmi_status)
+     import :: bmi
+     class(bmi), intent(in) :: this
+     character(len=*), pointer, intent(out) :: name
+     integer :: bmi_status
+   end function bmif_get_component_name
 
 !     ! Count a model's input variables.
 !     function bmif_get_input_item_count(this, count) result(bmi_status)

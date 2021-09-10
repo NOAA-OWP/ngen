@@ -46,6 +46,7 @@ protected:
     std::string bmi_module_type_name_0;
     std::unique_ptr<Bmi_Fortran_Adapter> adapter;
 
+    std::string expected_component_name = "Testing BMI Fortran Model";
     std::vector<std::string> expected_output_var_names = { "OUTPUT_VAR_1", "OUTPUT_VAR_2" };
     std::vector<std::string> expected_output_var_locations = { "node", "node" };
     std::vector<int> expected_output_var_grids = { 0, 0 };
@@ -105,6 +106,10 @@ TEST_F(Bmi_Fortran_Adapter_Test, Initialize_0_a) {
     adapter->Finalize();
 }
 
+/** Simple test to make sure the model initializes. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetComponentName) {
+    ASSERT_EQ( expected_component_name, adapter->GetComponentName() );
+}
 
 // /** Test output variables can be retrieved. */
 // TEST_F(Bmi_Fortran_Adapter_Test, GetOutputVarNames_0_a) {

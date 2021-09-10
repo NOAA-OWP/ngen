@@ -16,7 +16,7 @@ module bmitestbmi
      private
      type (test_bmi_model) :: model
    contains
-!     procedure :: get_component_name => test_component_name
+     procedure :: get_component_name => test_component_name
 !      procedure :: get_input_item_count => test_input_item_count
 !      procedure :: get_output_item_count => test_output_item_count
 !      procedure :: get_input_var_names => test_input_var_names
