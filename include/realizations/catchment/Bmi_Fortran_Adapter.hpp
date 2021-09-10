@@ -51,8 +51,16 @@ namespace models {
                     acquire_time_conversion_factor(bmi_model_time_convert_factor);
                 }
                     // Record the exception message before re-throwing to handle subsequent function calls properly
-                catch (exception &e) {
+                catch (std::runtime_error &e) {
+                    //Catch `runtime_error`s that may possible be thrown from acquire_time_conversion_factor
                     // Make sure this is set to 'true' after this function call finishes
+                    model_initialized = true;
+                    throw e;
+                }
+                catch (exception &e) {
+                    //This will catch any other exception, but the it will be cast to this base type.
+                    //This means it looses it any specific type/message information.  So if construct_and_init_backing_model_for_fortran
+                    //throws an exception besides runtime_error, catch that type explicitly.
                     model_initialized = true;
                     throw e;
                 }
