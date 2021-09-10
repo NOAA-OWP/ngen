@@ -47,11 +47,11 @@ protected:
     std::unique_ptr<Bmi_Fortran_Adapter> adapter;
 
     std::string expected_component_name = "Testing BMI Fortran Model";
-    std::vector<std::string> expected_output_var_names = { "OUTPUT_VAR_1", "OUTPUT_VAR_2" };
-    std::vector<std::string> expected_output_var_locations = { "node", "node" };
-    std::vector<int> expected_output_var_grids = { 0, 0 };
-    std::vector<std::string> expected_output_var_units = { "m", "m" };
-    std::vector<std::string> expected_output_var_types = { "double", "double" };
+    std::vector<std::string> expected_output_var_names = { "OUTPUT_VAR_1", "OUTPUT_VAR_2", "OUTPUT_VAR_3" };
+    std::vector<std::string> expected_output_var_locations = { "node", "node", "node" };
+    std::vector<int> expected_output_var_grids = { 0, 0, 0 };
+    std::vector<std::string> expected_output_var_units = { "m", "m", "s" };
+    std::vector<std::string> expected_output_var_types = { "double", "real", "integer" };
     int expected_grid_rank = 1;
     int expected_grid_size = 1;
     std::string expected_grid_type = "scalar";
@@ -121,15 +121,15 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetComponentName) {
 //     }
 // }
 
-// /** Test output variables item count can be retrieved. */
-// TEST_F(Bmi_Fortran_Adapter_Test, GetOutputItemCount_0_a) {
-//     try {
-//         ASSERT_EQ(adapter->GetOutputItemCount(), expected_output_var_names.size());
-//     }
-//     catch (std::exception& e) {
-//         printf("Exception getting output var count: %s", e.what());
-//     }
-// }
+/** Test output variables item count can be retrieved. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetOutputItemCount_0_a) {
+    try {
+        ASSERT_EQ(adapter->GetOutputItemCount(), expected_output_var_names.size());
+    }
+    catch (std::exception& e) {
+        printf("Exception getting output var count: %s", e.what());
+    }
+}
 
 // /** Test that both the get value function works for input 1. */
 // TEST_F(Bmi_Fortran_Adapter_Test, GetValue_0_a) {
