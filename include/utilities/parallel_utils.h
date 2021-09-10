@@ -13,7 +13,9 @@
 
 #include <mpi.h>
 #include <string>
+#ifdef ACTIVATE_PYTHON
 #include "PyHydrofabricSubsetter.hpp"
+#endif // ACTIVATE_PYTHON
 
 using namespace std;
 
@@ -148,6 +150,8 @@ namespace parallel {
         // Start with a value of true
         bool isGood = true;
 
+        #ifdef ACTIVATE_PYTHON
+
         // For now just have this be responsible for its own rank file
         // Later consider whether it makes more sense for one rank (per host) to write all files
         std::unique_ptr<utils::PyHydrofabricSubsetter> subdivider;
@@ -174,6 +178,14 @@ namespace parallel {
             // Set not good if the subdivider object couldn't be instantiated
             isGood = false;
         }
+
+        #else // i.e., ifndef ACTIVATE_PYTHON
+        // Without Python available, there is no way external subdivide package can be used (i.e., not good)
+        isGood = false;
+        std::cerr
+                << "Driver is unable to perform required hydrofabric subdividing when Python integration is not active."
+                << std::endl;
+        #endif // ACTIVATE_PYTHON
 
         // Now sync ranks on whether the subdividing function was executed successfully, and return
         return mpiSyncStatusAnd(isGood, mpi_rank, mpi_num_procs, "executing hydrofabric subdivision");
