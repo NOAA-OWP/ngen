@@ -79,7 +79,7 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      bmi_status = bmi_box%ptr%update()
+      ! bmi_status = bmi_box%ptr%update()
     end function update
 
     ! Advance the model until the given time.
@@ -92,7 +92,7 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      bmi_status = bmi_box%ptr%update_until(time)
+      !bmi_status = bmi_box%ptr%update_until(time)
     end function update_until
 
     ! Perform teardown tasks for the model.
@@ -121,7 +121,7 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(handle, bmi_box)
-      bmi_status = bmi_box%ptr%get_component_name(f_name)
+      !bmi_status = bmi_box%ptr%get_component_name(f_name)
       !Set the c_string input (name), make sure to inlcude the null_terminator
       name(:len_trim(f_name)+1) = f_to_c_string(f_name)
     end function get_component_name
@@ -136,7 +136,7 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      bmi_status = bmi_box%ptr%get_input_item_count(count)
+      ! bmi_status = bmi_box%ptr%get_input_item_count(count)
     end function get_input_item_count
 
     ! Count the output variables.
@@ -149,7 +149,7 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      bmi_status = bmi_box%ptr%get_output_item_count(count)
+      ! bmi_status = bmi_box%ptr%get_output_item_count(count)
     end function get_output_item_count
 
     ! List a model's input variables.
@@ -166,15 +166,15 @@ module iso_c_bmif_2_0
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
 
-      bmi_status = bmi_box%ptr%get_input_var_names(f_names)
-      !print *, size(f_names)
-      do i = 1, size(f_names)
-        !For each pointer (one for each name), associate c_buff_ptr with the string names points to
-        call c_f_pointer(names(i), c_buff_ptr, [ BMI_MAX_COMPONENT_NAME ] )
-        !print *, c_to_f_string(c_buff_ptr)
-        !assign the c_string to buffer
-        c_buff_ptr = f_to_c_string(f_names(i))
-      end do
+      ! bmi_status = bmi_box%ptr%get_input_var_names(f_names)
+      ! !print *, size(f_names)
+      ! do i = 1, size(f_names)
+      !   !For each pointer (one for each name), associate c_buff_ptr with the string names points to
+      !   call c_f_pointer(names(i), c_buff_ptr, [ BMI_MAX_COMPONENT_NAME ] )
+      !   !print *, c_to_f_string(c_buff_ptr)
+      !   !assign the c_string to buffer
+      !   c_buff_ptr = f_to_c_string(f_names(i))
+      ! end do
 
     end function get_input_var_names
 
@@ -192,15 +192,15 @@ module iso_c_bmif_2_0
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
 
-      bmi_status = bmi_box%ptr%get_output_var_names(f_names)
-      !print *, size(f_names)
-      do i = 1, size(f_names)
-        !For each pointer (one for each name), associate c_buff_ptr with the string names points to
-        call c_f_pointer(names(i), c_buff_ptr, [ BMI_MAX_COMPONENT_NAME ] )
-        !print *, c_to_f_string(c_buff_ptr)
-        !assign the c_string to buffer
-        c_buff_ptr = f_to_c_string(f_names(i))
-      end do
+      ! bmi_status = bmi_box%ptr%get_output_var_names(f_names)
+      ! !print *, size(f_names)
+      ! do i = 1, size(f_names)
+      !   !For each pointer (one for each name), associate c_buff_ptr with the string names points to
+      !   call c_f_pointer(names(i), c_buff_ptr, [ BMI_MAX_COMPONENT_NAME ] )
+      !   !print *, c_to_f_string(c_buff_ptr)
+      !   !assign the c_string to buffer
+      !   c_buff_ptr = f_to_c_string(f_names(i))
+      ! end do
     end function get_output_var_names
 
     ! Get the grid identifier for the given variable.
@@ -214,7 +214,7 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      bmi_status = bmi_box%ptr%get_var_grid(c_to_f_string(name), grid)
+      ! bmi_status = bmi_box%ptr%get_var_grid(c_to_f_string(name), grid)
     end function get_var_grid
 
     ! Get the data type of the given variable as a string.
@@ -229,8 +229,8 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      bmi_status = bmi_box%ptr%get_var_type(c_to_f_string(name), f_type)
-      type(1:len_trim(f_type)+1) = f_to_c_string(f_type)
+      ! bmi_status = bmi_box%ptr%get_var_type(c_to_f_string(name), f_type)
+      ! type(1:len_trim(f_type)+1) = f_to_c_string(f_type)
     end function get_var_type
 
     ! Get the units of the given variable.
@@ -245,8 +245,8 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      bmi_status = bmi_box%ptr%get_var_units(c_to_f_string(name), f_units)
-      units(1:len_trim(f_units)+1) = f_to_c_string(f_units)
+      ! bmi_status = bmi_box%ptr%get_var_units(c_to_f_string(name), f_units)
+      ! units(1:len_trim(f_units)+1) = f_to_c_string(f_units)
     end function get_var_units
 
     ! Get memory use per array element, in bytes.
@@ -260,7 +260,7 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      bmi_status = bmi_box%ptr%get_var_itemsize(c_to_f_string(name), size)
+      ! bmi_status = bmi_box%ptr%get_var_itemsize(c_to_f_string(name), size)
     end function get_var_itemsize
 
     ! Get size of the given variable, in bytes.
@@ -274,7 +274,7 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      bmi_status = bmi_box%ptr%get_var_nbytes(c_to_f_string(name), nbytes)
+      ! bmi_status = bmi_box%ptr%get_var_nbytes(c_to_f_string(name), nbytes)
     end function get_var_nbytes
 
     ! Describe where a variable is located: node, edge, or face.
@@ -289,8 +289,8 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      bmi_status = bmi_box%ptr%get_var_location(c_to_f_string(name), f_location)
-      location(1:len_trim(f_location)+1) = f_to_c_string(f_location)
+      ! bmi_status = bmi_box%ptr%get_var_location(c_to_f_string(name), f_location)
+      ! location(1:len_trim(f_location)+1) = f_to_c_string(f_location)
     end function get_var_location
 
     ! Current time of the model.
@@ -303,7 +303,7 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      bmi_status = bmi_box%ptr%get_current_time(time)
+      ! bmi_status = bmi_box%ptr%get_current_time(time)
     end function get_current_time
 
     ! Start time of the model.
@@ -316,7 +316,7 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      bmi_status = bmi_box%ptr%get_start_time(time)
+      ! bmi_status = bmi_box%ptr%get_start_time(time)
     end function get_start_time
 
     ! End time of the model.
@@ -329,7 +329,7 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      bmi_status = bmi_box%ptr%get_end_time(time)
+      ! bmi_status = bmi_box%ptr%get_end_time(time)
     end function get_end_time
 
     ! Time units of the model.
@@ -357,7 +357,7 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      bmi_status = bmi_box%ptr%get_time_step(time_step)
+      ! bmi_status = bmi_box%ptr%get_time_step(time_step)
     end function get_time_step
 
     ! Get a copy of values (flattened!) of the given integer variable.
@@ -373,9 +373,9 @@ module iso_c_bmif_2_0
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
   
-      bmi_status = bmi_box%ptr%get_var_grid(c_to_f_string(name), grid)
-      bmi_status = bmi_box%ptr%get_grid_size(grid, num_items)
-      bmi_status = bmi_box%ptr%get_value_int(c_to_f_string(name), dest(:num_items))
+      ! bmi_status = bmi_box%ptr%get_var_grid(c_to_f_string(name), grid)
+      ! bmi_status = bmi_box%ptr%get_grid_size(grid, num_items)
+      ! bmi_status = bmi_box%ptr%get_value_int(c_to_f_string(name), dest(:num_items))
     end function get_value_int
 
     ! Get a copy of values (flattened!) of the given real variable.
@@ -391,9 +391,9 @@ module iso_c_bmif_2_0
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
   
-      bmi_status = bmi_box%ptr%get_var_grid(c_to_f_string(name), grid)
-      bmi_status = bmi_box%ptr%get_grid_size(grid, num_items)
-      bmi_status = bmi_box%ptr%get_value_float(c_to_f_string(name), dest(:num_items))
+      ! bmi_status = bmi_box%ptr%get_var_grid(c_to_f_string(name), grid)
+      ! bmi_status = bmi_box%ptr%get_grid_size(grid, num_items)
+      ! bmi_status = bmi_box%ptr%get_value_float(c_to_f_string(name), dest(:num_items))
     end function get_value_float
 
     ! Get a copy of values (flattened!) of the given double variable.
@@ -409,9 +409,9 @@ module iso_c_bmif_2_0
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
   
-      bmi_status = bmi_box%ptr%get_var_grid(c_to_f_string(name), grid)
-      bmi_status = bmi_box%ptr%get_grid_size(grid, num_items)
-      bmi_status = bmi_box%ptr%get_value_double(c_to_f_string(name), dest(:num_items))
+      ! bmi_status = bmi_box%ptr%get_var_grid(c_to_f_string(name), grid)
+      ! bmi_status = bmi_box%ptr%get_grid_size(grid, num_items)
+      ! bmi_status = bmi_box%ptr%get_value_double(c_to_f_string(name), dest(:num_items))
     end function get_value_double
 
     ! Set new values for an integer model variable.
@@ -427,9 +427,9 @@ module iso_c_bmif_2_0
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
   
-      bmi_status = bmi_box%ptr%get_var_grid(c_to_f_string(name), grid)
-      bmi_status = bmi_box%ptr%get_grid_size(grid, num_items)
-      bmi_status = bmi_box%ptr%set_value_int(c_to_f_string(name), src(:num_items))
+      ! bmi_status = bmi_box%ptr%get_var_grid(c_to_f_string(name), grid)
+      ! bmi_status = bmi_box%ptr%get_grid_size(grid, num_items)
+      ! bmi_status = bmi_box%ptr%set_value_int(c_to_f_string(name), src(:num_items))
     end function set_value_int
 
     ! Set new values for a real model variable.
@@ -446,9 +446,9 @@ module iso_c_bmif_2_0
       call c_f_pointer(this, bmi_box)
       !FIXME try both paths, nbytes/itemsize and grid info in cause some model doesn't implement
       !one one or the other????
-      bmi_status = bmi_box%ptr%get_var_grid(c_to_f_string(name), grid)
-      bmi_status = bmi_box%ptr%get_grid_size(grid, num_items)
-      bmi_status = bmi_box%ptr%set_value_float(c_to_f_string(name), src(:num_items))
+      ! bmi_status = bmi_box%ptr%get_var_grid(c_to_f_string(name), grid)
+      ! bmi_status = bmi_box%ptr%get_grid_size(grid, num_items)
+      ! bmi_status = bmi_box%ptr%set_value_float(c_to_f_string(name), src(:num_items))
     end function set_value_float
 
     ! Set new values for a double model variable.
@@ -464,9 +464,9 @@ module iso_c_bmif_2_0
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
   
-      bmi_status = bmi_box%ptr%get_var_grid(c_to_f_string(name), grid)
-      bmi_status = bmi_box%ptr%get_grid_size(grid, num_items)
-      bmi_status = bmi_box%ptr%set_value_double(c_to_f_string(name), src(:num_items))
+      ! bmi_status = bmi_box%ptr%get_var_grid(c_to_f_string(name), grid)
+      ! bmi_status = bmi_box%ptr%get_grid_size(grid, num_items)
+      ! bmi_status = bmi_box%ptr%set_value_double(c_to_f_string(name), src(:num_items))
     end function set_value_double
 
     ! Get number of dimensions of the computational grid.
@@ -480,7 +480,7 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      bmi_status = bmi_box%ptr%get_grid_rank(grid, rank)
+      ! bmi_status = bmi_box%ptr%get_grid_rank(grid, rank)
     end function get_grid_rank
 
     ! Get the total number of elements in the computational grid.
@@ -494,7 +494,7 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      bmi_status = bmi_box%ptr%get_grid_size(grid, size)
+      ! bmi_status = bmi_box%ptr%get_grid_size(grid, size)
     end function get_grid_size
 
     ! Get the grid type as a string.
@@ -509,8 +509,8 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      bmi_status = bmi_box%ptr%get_grid_type(grid, f_type)
-      type(1:len_trim(f_type)+1) = f_to_c_string(f_type)
+      ! bmi_status = bmi_box%ptr%get_grid_type(grid, f_type)
+      ! type(1:len_trim(f_type)+1) = f_to_c_string(f_type)
     end function get_grid_type
 
     ! Get the dimensions of the computational grid.
@@ -527,11 +527,11 @@ module iso_c_bmif_2_0
       call c_f_pointer(this, bmi_box)
       !Check the  grid rank to decide how many dimsions shape should have
       !it needs at least one to hold the sentinel (no shape) value
-      bmi_status = bmi_box%ptr%get_grid_rank(grid, rank)
-      if (rank == 0) then
-        rank = 1
-      end if 
-      bmi_status = bmi_box%ptr%get_grid_shape(grid, shape(:rank))
+      ! bmi_status = bmi_box%ptr%get_grid_rank(grid, rank)
+      ! if (rank == 0) then
+      !   rank = 1
+      ! end if 
+      ! bmi_status = bmi_box%ptr%get_grid_shape(grid, shape(:rank))
     end function get_grid_shape
 
     ! Get distance between nodes of the computational grid.
@@ -548,11 +548,11 @@ module iso_c_bmif_2_0
       call c_f_pointer(this, bmi_box)
       !Check the  grid rank to decide how many dimsions shape should have
       !it needs at least one to hold the sentinel (no shape) value
-      bmi_status = bmi_box%ptr%get_grid_rank(grid, rank)
-      if (rank == 0) then
-        rank = 1
-      end if 
-      bmi_status = bmi_box%ptr%get_grid_spacing(grid, spacing(:rank))
+      ! bmi_status = bmi_box%ptr%get_grid_rank(grid, rank)
+      ! if (rank == 0) then
+      !   rank = 1
+      ! end if 
+      ! bmi_status = bmi_box%ptr%get_grid_spacing(grid, spacing(:rank))
     end function get_grid_spacing
 
     ! Get coordinates of the origin of the computational grid.
@@ -569,11 +569,11 @@ module iso_c_bmif_2_0
       call c_f_pointer(this, bmi_box)
       !Check the  grid rank to decide how many dimsions shape should have
       !it needs at least one to hold the sentinel (no shape) value
-      bmi_status = bmi_box%ptr%get_grid_rank(grid, rank)
-      if (rank == 0) then
-        rank = 1
-      end if
-      bmi_status = bmi_box%ptr%get_grid_origin(grid, origin(:rank))
+      ! bmi_status = bmi_box%ptr%get_grid_rank(grid, rank)
+      ! if (rank == 0) then
+      !   rank = 1
+      ! end if
+      ! bmi_status = bmi_box%ptr%get_grid_origin(grid, origin(:rank))
     end function get_grid_origin
 
     ! Get the x-coordinates of the nodes of a computational grid.
@@ -587,8 +587,8 @@ module iso_c_bmif_2_0
       integer :: num_nodes
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      bmi_status = bmi_box%ptr%get_grid_node_count(grid, num_nodes)
-      bmi_status = bmi_box%ptr%get_grid_x(grid, x(:num_nodes))
+      ! bmi_status = bmi_box%ptr%get_grid_node_count(grid, num_nodes)
+      ! bmi_status = bmi_box%ptr%get_grid_x(grid, x(:num_nodes))
     end function get_grid_x
 
     ! Get the y-coordinates of the nodes of a computational grid.
@@ -602,8 +602,8 @@ module iso_c_bmif_2_0
       integer :: num_nodes
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      bmi_status = bmi_box%ptr%get_grid_node_count(grid, num_nodes)
-      bmi_status = bmi_box%ptr%get_grid_y(grid, y(:num_nodes))
+      ! bmi_status = bmi_box%ptr%get_grid_node_count(grid, num_nodes)
+      ! bmi_status = bmi_box%ptr%get_grid_y(grid, y(:num_nodes))
     end function get_grid_y
 
     ! Get the z-coordinates of the nodes of a computational grid.
@@ -617,8 +617,8 @@ module iso_c_bmif_2_0
       integer :: num_nodes
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      bmi_status = bmi_box%ptr%get_grid_node_count(grid, num_nodes)
-      bmi_status = bmi_box%ptr%get_grid_z(grid, z(:num_nodes))
+      ! bmi_status = bmi_box%ptr%get_grid_node_count(grid, num_nodes)
+      ! bmi_status = bmi_box%ptr%get_grid_z(grid, z(:num_nodes))
     end function get_grid_z
 
     ! Get the number of nodes in an unstructured grid.
@@ -632,7 +632,7 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      bmi_status = bmi_box%ptr%get_grid_node_count(grid, count)
+      ! bmi_status = bmi_box%ptr%get_grid_node_count(grid, count)
     end function get_grid_node_count
 
     ! Get the number of edges in an unstructured grid.
@@ -646,7 +646,7 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      bmi_status = bmi_box%ptr%get_grid_edge_count(grid, count)
+      ! bmi_status = bmi_box%ptr%get_grid_edge_count(grid, count)
     end function get_grid_edge_count
 
     ! Get the number of faces in an unstructured grid.
@@ -660,7 +660,7 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      bmi_status = bmi_box%ptr%get_grid_face_count(grid, count)
+      ! bmi_status = bmi_box%ptr%get_grid_face_count(grid, count)
     end function get_grid_face_count
 
     ! Get the edge-node connectivity.
@@ -674,8 +674,8 @@ module iso_c_bmif_2_0
       integer :: num_nodes
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      bmi_status = bmi_box%ptr%get_grid_node_count(grid, num_nodes)
-      bmi_status = bmi_box%ptr%get_grid_edge_nodes(grid, edge_nodes(:num_nodes))
+      ! bmi_status = bmi_box%ptr%get_grid_node_count(grid, num_nodes)
+      ! bmi_status = bmi_box%ptr%get_grid_edge_nodes(grid, edge_nodes(:num_nodes))
     end function get_grid_edge_nodes
 
     ! Get the face-edge connectivity.
@@ -689,8 +689,8 @@ module iso_c_bmif_2_0
       integer :: num_faces
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      bmi_status = bmi_box%ptr%get_grid_face_count(grid, num_faces)
-      bmi_status = bmi_box%ptr%get_grid_face_edges(grid, face_edges(:num_faces))
+      ! bmi_status = bmi_box%ptr%get_grid_face_count(grid, num_faces)
+      ! bmi_status = bmi_box%ptr%get_grid_face_edges(grid, face_edges(:num_faces))
     end function get_grid_face_edges
 
     ! Get the face-node connectivity.
@@ -704,8 +704,8 @@ module iso_c_bmif_2_0
       integer :: num_faces
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      bmi_status = bmi_box%ptr%get_grid_face_count(grid, num_faces)
-      bmi_status = bmi_box%ptr%get_grid_face_nodes(grid, face_nodes(:num_faces))
+      ! bmi_status = bmi_box%ptr%get_grid_face_count(grid, num_faces)
+      ! bmi_status = bmi_box%ptr%get_grid_face_nodes(grid, face_nodes(:num_faces))
     end function get_grid_face_nodes
 
     ! Get the number of nodes for each face.
@@ -719,8 +719,8 @@ module iso_c_bmif_2_0
       integer :: num_faces
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      bmi_status = bmi_box%ptr%get_grid_face_count(grid, num_faces)
-      bmi_status = bmi_box%ptr%get_grid_nodes_per_face(grid, nodes_per_face(:num_faces))
+      ! bmi_status = bmi_box%ptr%get_grid_face_count(grid, num_faces)
+      ! bmi_status = bmi_box%ptr%get_grid_nodes_per_face(grid, nodes_per_face(:num_faces))
     end function get_grid_nodes_per_face
 
 end module iso_c_bmif_2_0

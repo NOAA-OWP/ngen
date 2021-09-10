@@ -16,7 +16,7 @@ module bmitestbmi
      private
      type (test_bmi_model) :: model
    contains
-     procedure :: get_component_name => test_component_name
+!     procedure :: get_component_name => test_component_name
 !      procedure :: get_input_item_count => test_input_item_count
 !      procedure :: get_output_item_count => test_output_item_count
 !      procedure :: get_input_var_names => test_input_var_names
@@ -27,7 +27,7 @@ module bmitestbmi
 !      procedure :: get_end_time => test_end_time
 !      procedure :: get_current_time => test_current_time
 !      procedure :: get_time_step => test_time_step
-!      procedure :: get_time_units => test_time_units
+     procedure :: get_time_units => test_time_units
 !      procedure :: update => test_update
 !      procedure :: update_until => test_update_until
 !      procedure :: get_var_grid => test_var_grid
@@ -227,6 +227,16 @@ end function test_finalize
     bmi_status = BMI_SUCCESS
   end function test_component_name
 
+    ! Model time units.
+  function test_time_units(this, units) result (bmi_status)
+    class (bmi_test_bmi), intent(in) :: this
+    character (len=*), intent(out) :: units
+    integer :: bmi_status
+
+    units = "s"
+    bmi_status = BMI_SUCCESS
+  end function test_time_units
+  
 #ifdef NGEN_ACTIVE
   function register_bmi(this) result(bmi_status) bind(C, name="register_bmi")
    use, intrinsic:: iso_c_binding, only: c_ptr, c_loc, c_int
