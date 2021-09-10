@@ -410,6 +410,7 @@ int main(int argc, char* argv[])
     //The container holding all remote_connections
     std::vector<RemoteConnectionVec> remote_connections_vec;
 
+    int total_remotes = 0;
     // loop over all partitions by partition id
     for (int ipart=0; ipart < catchment_part.size(); ++ipart)
     //for (int ipart=0; ipart < 2; ++ipart) // for a quick test
@@ -455,8 +456,10 @@ int main(int argc, char* argv[])
         //std::cout << "local network size: " << local_network.size() << "\n";
         //std::cout << "global network size " << global_network.size() << "\n";
         std::cout << "Found " << remote_catchments << " remotes in partition "<<ipart<<"\n";
-
+        total_remotes += remote_catchments;
     }
+    std::cout << "Found " << total_remotes << " total remotes (average of approximately " << (total_remotes/num_partitions) << " remotes per partition)";
+
     write_remote_connections(catchment_part, nexus_part, remote_connections_vec, num_partitions, outFile);
 
     outFile.close();
