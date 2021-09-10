@@ -192,15 +192,13 @@ module iso_c_bmif_2_0
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
 
-      ! bmi_status = bmi_box%ptr%get_output_var_names(f_names)
-      ! !print *, size(f_names)
-      ! do i = 1, size(f_names)
-      !   !For each pointer (one for each name), associate c_buff_ptr with the string names points to
-      !   call c_f_pointer(names(i), c_buff_ptr, [ BMI_MAX_COMPONENT_NAME ] )
-      !   !print *, c_to_f_string(c_buff_ptr)
-      !   !assign the c_string to buffer
-      !   c_buff_ptr = f_to_c_string(f_names(i))
-      ! end do
+      bmi_status = bmi_box%ptr%get_output_var_names(f_names)
+      do i = 1, size(f_names)
+        !For each pointer (one for each name), associate c_buff_ptr with the string names points to
+        call c_f_pointer(names(i), c_buff_ptr, [ BMI_MAX_COMPONENT_NAME ] )
+        !assign the c_string to buffer
+        c_buff_ptr = f_to_c_string(f_names(i))
+      end do
     end function get_output_var_names
 
     ! Get the grid identifier for the given variable.

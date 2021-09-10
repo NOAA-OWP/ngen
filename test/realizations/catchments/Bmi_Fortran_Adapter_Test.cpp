@@ -111,16 +111,6 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetComponentName) {
     ASSERT_EQ( expected_component_name, adapter->GetComponentName() );
 }
 
-// /** Test output variables can be retrieved. */
-// TEST_F(Bmi_Fortran_Adapter_Test, GetOutputVarNames_0_a) {
-//     try {
-//         ASSERT_EQ(adapter->GetOutputVarNames(), expected_output_var_names);
-//     }
-//     catch (std::exception& e) {
-//         printf("Exception getting output var names: %s", e.what());
-//     }
-// }
-
 /** Test output variables item count can be retrieved. */
 TEST_F(Bmi_Fortran_Adapter_Test, GetOutputItemCount_0_a) {
     try {
@@ -128,6 +118,21 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetOutputItemCount_0_a) {
     }
     catch (std::exception& e) {
         printf("Exception getting output var count: %s", e.what());
+    }
+}
+
+/** Test output variables can be retrieved. 
+ * 
+ * Note  GetOutputItemCount() must be implemented for GetOutputVarNames to work.
+ * 
+*/
+TEST_F(Bmi_Fortran_Adapter_Test, GetOutputVarNames_0_a) {
+    try {
+        ASSERT_EQ(adapter->GetOutputVarNames(), expected_output_var_names);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting output var names: %s", e.what());
+        FAIL();
     }
 }
 

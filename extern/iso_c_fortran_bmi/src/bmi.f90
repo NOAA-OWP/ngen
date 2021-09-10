@@ -32,7 +32,7 @@ module bmif_2_0_iso
 !       procedure(bmif_get_input_item_count), deferred :: get_input_item_count
       procedure(bmif_get_output_item_count), deferred :: get_output_item_count
 !       procedure(bmif_get_input_var_names), deferred :: get_input_var_names
-!       procedure(bmif_get_output_var_names), deferred :: get_output_var_names
+       procedure(bmif_get_output_var_names), deferred :: get_output_var_names
 
 !       ! Variable information
 !       procedure(bmif_get_var_grid), deferred :: get_var_grid
@@ -167,13 +167,13 @@ module bmif_2_0_iso
 !       integer :: bmi_status
 !     end function bmif_get_input_var_names
 
-!     ! List a model's output variables.
-!     function bmif_get_output_var_names(this, names) result(bmi_status)
-!       import :: bmi
-!       class(bmi), intent(in) :: this
-!       character(len=*), pointer, intent(out) :: names(:)
-!       integer :: bmi_status
-!     end function bmif_get_output_var_names
+    ! List a model's output variables.
+    function bmif_get_output_var_names(this, names) result(bmi_status)
+      import :: bmi
+      class(bmi), intent(in) :: this
+      character(len=*), pointer, intent(out) :: names(:)
+      integer :: bmi_status
+    end function bmif_get_output_var_names
 
 !     ! Get the grid identifier for the given variable.
 !     function bmif_get_var_grid(this, name, grid) result(bmi_status)
