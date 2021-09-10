@@ -234,7 +234,7 @@ TEST_F(FeatureCollection_Test, copy_test) {
 
     geojson::GeoJSON orig_collection = geojson::read(stream);
     geojson::GeoJSON collection = std::make_shared<geojson::FeatureCollection>(*orig_collection);
-    
+
     std::vector<double> bbox = collection->get_bounding_box();
     ASSERT_EQ(bbox.size(), 5);
     ASSERT_EQ(bbox[0], 1.0);
@@ -267,4 +267,68 @@ TEST_F(FeatureCollection_Test, copy_test) {
 
     ASSERT_EQ(visitor.get(0), "PointFeature");
     ASSERT_EQ(visitor.get(1), "LineStringFeature");
+}
+
+TEST_F(FeatureCollection_Test, copy_filter_test) {
+    std::string data = "{ "
+        "\"type\": \"FeatureCollection\", "
+        "\"bbox\": [1, 2, 3, 4, 5 ], "
+        "\"features\": [ "
+            "{ "
+                "\"type\": \"Feature\", "
+                "\"id\": \"First\", "
+                "\"geometry\": { "
+                "    \"type\": \"Point\", "
+                "    \"coordinates\": [102.0, 0.5] "
+                "} "
+            "}, "
+            "{ "
+                "\"type\": \"Feature\", "
+                "\"id\": \"Second\", "
+                "\"geometry\": { "
+                    "\"type\": \"LineString\", "
+                    "\"coordinates\": [ "
+                        "[102.0, 0.0], "
+                        "[103.0, 1.0], "
+                        "[104.0, 0.0], "
+                        "[105.0, 1.0] "
+                    "] "
+                "} "
+            "} "
+        "] "
+        "}";
+        
+    std::vector<std::string> filter = { "Second" };
+
+    std::stringstream stream;
+    stream << data;
+
+    geojson::GeoJSON orig_collection = geojson::read(stream);
+    geojson::GeoJSON collection = std::make_shared<geojson::FeatureCollection>(*orig_collection, filter);
+    
+    std::vector<double> bbox = collection->get_bounding_box();
+    ASSERT_EQ(bbox.size(), 5);
+    ASSERT_EQ(bbox[0], 1.0);
+    ASSERT_EQ(bbox[1], 2.0);
+    ASSERT_EQ(bbox[2], 3.0);
+    ASSERT_EQ(bbox[3], 4.0);
+    ASSERT_EQ(bbox[4], 5.0);
+    ASSERT_EQ(1, collection->get_size());
+
+    geojson::Feature second = collection->get_feature(0);
+    
+    ASSERT_EQ(second->get_id(), "Second");
+    
+    ASSERT_EQ(second->get_type(), geojson::FeatureType::LineString);
+
+    ASSERT_TRUE(second->is_leaf());
+    ASSERT_TRUE(second->is_root());
+
+    ASSERT_EQ(collection->get_feature("Second"), second);
+
+    Visitor visitor;
+
+    collection->visit_features(visitor);
+
+    ASSERT_EQ(visitor.get(0), "LineStringFeature");
 }

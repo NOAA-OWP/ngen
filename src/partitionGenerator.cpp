@@ -420,8 +420,8 @@ int main(int argc, char* argv[])
         //std::vector<std::string> local_cat_ids = catchment_part[ipart]["cat-ids"];
         std::unordered_set<std::string> local_cat_set = catchment_part[ipart];
 
-        geojson::GeoJSON local_catchment_collection = std::make_shared<geojson::FeatureCollection>(*global_nexus_collection);
-        local_catchment_collection->filter(local_cat_set);
+        geojson::GeoJSON local_catchment_collection = std::make_shared<geojson::FeatureCollection>(*global_nexus_collection, local_cat_set);
+        //local_catchment_collection->filter(local_cat_set);
         //local_catchment_collection->filter(local_set);
 
         // make a local network

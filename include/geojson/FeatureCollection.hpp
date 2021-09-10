@@ -47,6 +47,29 @@ namespace geojson {
             }
 
             /**
+             * Copy constructor with filter
+             * 
+             * @param feature_collection The FeatureCollection to copy
+             * @param filter A container 
+             */
+            template<typename C>
+            FeatureCollection(const FeatureCollection &feature_collection, C& filter) {
+                bounding_box = feature_collection.get_bounding_box();
+                std::unordered_set<std::string> idset;
+                for (auto it = std::begin(filter); it != std::end(filter); ++it )
+                {
+                    idset.insert(*it);
+                }
+                for (Feature feature : feature_collection) {
+                    auto id = feature->get_id();
+                    if (idset.count(id)) {
+                        features.push_back(feature);
+                    }
+                }
+                this->update_ids();
+            }
+
+            /**
              * Destructor
              */
             virtual ~FeatureCollection(){};
@@ -155,6 +178,7 @@ namespace geojson {
 
             int link_features_from_attribute(std::string* from_attribute = nullptr, std::string* to_attribute = nullptr);
 
+            /* Untested, excluded for now in favor of filter constructor above.
             template<typename C>
             void filter(C& ids)
             {
@@ -175,7 +199,8 @@ namespace geojson {
                     remove_feature_by_id(id);
                 }
             }
-            
+            */
+
         private:
             FeatureList features;
             std::vector<double> bounding_box;
