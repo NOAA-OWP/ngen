@@ -17,7 +17,7 @@ module bmitestbmi
      type (test_bmi_model) :: model
    contains
      procedure :: get_component_name => test_component_name
-!      procedure :: get_input_item_count => test_input_item_count
+     procedure :: get_input_item_count => test_input_item_count
      procedure :: get_output_item_count => test_output_item_count
 !      procedure :: get_input_var_names => test_input_var_names
      procedure :: get_output_var_names => test_output_var_names
@@ -100,6 +100,9 @@ module bmitestbmi
 
   character (len=BMI_MAX_VAR_NAME), target :: &
     output_items(3) = ['OUTPUT_VAR_1', 'OUTPUT_VAR_2', 'OUTPUT_VAR_3']
+
+  character (len=BMI_MAX_VAR_NAME), target :: &
+  input_items(3) = ['INPUT_VAR_1', 'INPUT_VAR_2', 'INPUT_VAR_3']
 
 contains
 
@@ -262,6 +265,15 @@ end function test_finalize
     bmi_status = BMI_SUCCESS
   end function test_output_var_names
 
+  ! Count the input variables.
+  function test_input_item_count(this, count) result (bmi_status)
+    class (bmi_test_bmi), intent(in) :: this
+    integer, intent(out) :: count
+    integer :: bmi_status
+
+    count = size(input_items)
+    bmi_status = BMI_SUCCESS
+  end function test_input_item_count
 #ifdef NGEN_ACTIVE
   function register_bmi(this) result(bmi_status) bind(C, name="register_bmi")
    use, intrinsic:: iso_c_binding, only: c_ptr, c_loc, c_int
