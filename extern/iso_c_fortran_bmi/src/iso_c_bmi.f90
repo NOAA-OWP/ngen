@@ -10,7 +10,7 @@
 ! to the C caller.
 
 module iso_c_bmif_2_0
-  use bmif_2_0
+  use bmif_2_0_iso
   use, intrinsic :: iso_c_binding, only: c_ptr, c_loc, c_f_pointer, c_char, c_null_char, c_int, c_double, c_float
   implicit none
 
