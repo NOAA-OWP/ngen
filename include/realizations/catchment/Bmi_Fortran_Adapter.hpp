@@ -14,7 +14,7 @@ namespace models {
     namespace bmi {
         
         typedef struct Bmi_Fortran_Handle_Wrapper {
-            void *handle;
+            void ** handle;
         } Bmi_Fortran_Handle_Wrapper;
 
         /**
@@ -226,7 +226,7 @@ namespace models {
             template<class T>
             T *GetValuePtr(const std::string &name) {
                 int nbytes;
-                if (get_var_nbytes(bmi_model->handle, name.c_str(), &nbytes) != BMI_SUCCESS)
+                if (get_var_nbytes(&bmi_model->handle, name.c_str(), &nbytes) != BMI_SUCCESS)
                     throw std::runtime_error(model_name + " failed to get pointer for BMI variable " + name + ".");
                 void *dest = GetValuePtr(name);
                 T *ptr = (T *) dest;
@@ -446,10 +446,7 @@ namespace models {
                     dynamic_register_bmi = (void *(*)(void *)) symbol;
                     // Call registration function, which for Fortran sets up the Fortran BMI object and sets the passed
                     // opaque handle param to point to the Fortran BMI object.
-                    //dynamic_register_bmi(bmi_model->handle);
-                    void *handle;
-                    dynamic_register_bmi(handle);
-                    bmi_model->handle = handle;
+                    dynamic_register_bmi(&bmi_model->handle);
                 }
                 catch (const ::external::ExternalIntegrationException &e) {
                     // "Override" the default message in this case
@@ -479,7 +476,7 @@ namespace models {
                 bmi_model = std::make_shared<Bmi_Fortran_Handle_Wrapper>(Bmi_Fortran_Handle_Wrapper());
                 dynamic_library_load();
                 execModuleRegistration();
-                int init_result = initialize(bmi_model->handle, bmi_init_config.c_str());
+                int init_result = initialize(&bmi_model->handle, bmi_init_config.c_str());
                 if (init_result != BMI_SUCCESS) {
                     init_exception_msg = "Failure when attempting to initialize " + model_name;
                     throw models::external::State_Exception(init_exception_msg);
@@ -497,7 +494,7 @@ namespace models {
              */
             inline int inner_get_input_item_count() {
                 int item_count;
-                if (get_input_item_count(bmi_model->handle, &item_count) != BMI_SUCCESS) {
+                if (get_input_item_count(&bmi_model->handle, &item_count) != BMI_SUCCESS) {
                     throw std::runtime_error(model_name + " failed to get model input item count.");
                 }
                 return item_count;
@@ -514,7 +511,7 @@ namespace models {
              */
             inline int inner_get_output_item_count() {
                 int item_count;
-                if (get_output_item_count(bmi_model->handle, &item_count) != BMI_SUCCESS) {
+                if (get_output_item_count(&bmi_model->handle, &item_count) != BMI_SUCCESS) {
                     throw std::runtime_error(model_name + " failed to get model output item count.");
                 }
                 return item_count;
@@ -522,7 +519,7 @@ namespace models {
 
             inline std::string inner_get_var_type(const std::string &name) {
                 char type_c_str[BMI_MAX_TYPE_NAME];
-                if (get_var_type(bmi_model->handle, name.c_str(), type_c_str) != BMI_SUCCESS) {
+                if (get_var_type(&bmi_model->handle, name.c_str(), type_c_str) != BMI_SUCCESS) {
                     throw std::runtime_error(model_name + " failed to get variable type for " + name + ".");
                 }
                 return {type_c_str};
@@ -576,7 +573,7 @@ namespace models {
              * @param dest An int pointer in which to return the values.
              */
             inline void inner_get_value_int(const std::string& name, int *dest) {
-                if (get_value_int(bmi_model->handle, name.c_str(), dest) != BMI_SUCCESS) {
+                if (get_value_int(&bmi_model->handle, name.c_str(), dest) != BMI_SUCCESS) {
                     throw std::runtime_error(model_name + " failed to get values for variable " + name + ".");
                 }
             }
@@ -597,7 +594,7 @@ namespace models {
              * @param dest A float pointer in which to return the values.
              */
             inline void inner_get_value_float(const std::string& name, float *dest) {
-                if (get_value_float(bmi_model->handle, name.c_str(), dest) != BMI_SUCCESS) {
+                if (get_value_float(&bmi_model->handle, name.c_str(), dest) != BMI_SUCCESS) {
                     throw std::runtime_error(model_name + " failed to get values for variable " + name + ".");
                 }
             }
@@ -618,7 +615,7 @@ namespace models {
              * @param dest A double pointer in which to return the values.
              */
             inline void inner_get_value_double(const std::string& name, double *dest) {
-                if (get_value_double(bmi_model->handle, name.c_str(), dest) != BMI_SUCCESS) {
+                if (get_value_double(&bmi_model->handle, name.c_str(), dest) != BMI_SUCCESS) {
                     throw std::runtime_error(model_name + " failed to get values for variable " + name + ".");
                 }
             }
@@ -730,7 +727,7 @@ namespace models {
              * @param dest An int pointer that should be passed to the analogous BMI setter of the Fortran module.
              */
             inline void inner_set_value_int(const std::string& name, int *src) {
-                if (set_value_int(bmi_model->handle, name.c_str(), src) != BMI_SUCCESS) {
+                if (set_value_int(&bmi_model->handle, name.c_str(), src) != BMI_SUCCESS) {
                     throw models::external::State_Exception("Failed to set values of " + name + " int variable for " + model_name);
                 }
             }
@@ -751,7 +748,7 @@ namespace models {
              * @param dest A float pointer that should be passed to the analogous BMI setter of the Fortran module.
              */
             inline void inner_set_value_float(const std::string& name, float *src) {
-                if (set_value_float(bmi_model->handle, name.c_str(), src) != BMI_SUCCESS) {
+                if (set_value_float(&bmi_model->handle, name.c_str(), src) != BMI_SUCCESS) {
                     throw models::external::State_Exception("Failed to set values of " + name + " float variable for " + model_name);
                 }
             }
@@ -772,7 +769,7 @@ namespace models {
              * @param dest A double pointer that should be passed to the analogous BMI setter of the Fortran module.
              */
             inline void inner_set_value_double(const std::string& name, double *src) {
-                if (set_value_double(bmi_model->handle, name.c_str(), src) != BMI_SUCCESS) {
+                if (set_value_double(&bmi_model->handle, name.c_str(), src) != BMI_SUCCESS) {
                     throw models::external::State_Exception("Failed to set values of " + name + " double variable for " + model_name);
                 }
             }
