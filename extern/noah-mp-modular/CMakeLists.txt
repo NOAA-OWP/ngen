@@ -45,6 +45,9 @@ else()
     #add_library(surfacebmi_a STATIC ${BMI_SOURCE})
 endif()
 
+#We know we are building this for NGEN support, so define the NGEN_ACTIVE preprocessor directive in the compile options
+target_compile_options(surfacebmi PUBLIC -DNGEN_ACTIVE -cpp -ffree-line-length-none)
+
 #TODO is this needed for fortran?
 target_include_directories(surfacebmi PRIVATE ${MODEL_SOURCE_DIR})
 target_link_libraries( surfacebmi surfacebmi_obj )

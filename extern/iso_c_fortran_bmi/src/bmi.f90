@@ -4,7 +4,7 @@
 ! Interface Definition Language (SIDL) file bmi.sidl located at
 ! https://github.com/csdms/bmi.
 
-module bmif_2_0
+module bmif_2_0_iso
   use, intrinsic :: iso_c_binding, only: c_int
   implicit none
 
@@ -564,5 +564,10 @@ module bmif_2_0
     end function bmif_get_grid_nodes_per_face
 
   end interface
-
-end module bmif_2_0
+  ! contains 
+  !   function my_test(this) result(bmi_status)
+  !     class(bmi), intent(in) :: this
+  !     integer :: bmi_status
+  !     bmi_status = 0
+  !   end function my_test
+end module bmif_2_0_iso
