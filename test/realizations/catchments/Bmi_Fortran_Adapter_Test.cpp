@@ -58,7 +58,12 @@ protected:
     int expected_grid_rank = 1;
     int expected_grid_size = 1;
     std::string expected_grid_type = "scalar";
-    int expected_var_nbytes = 8; //type double
+    int expected_var_itemsize_0 = 8; //type double
+    int expected_var_itemsize_1 = 4; //type float/real
+    int expected_var_itemsize_2 = 4; //type int/integer
+    int expected_var_nbytes_0 = 8; //type double
+    int expected_var_nbytes_1 = 4; //type float/real
+    int expected_var_nbytes_2 = 4; //type int/integer
 
 };
 
@@ -341,6 +346,51 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetGridSize_0_a) {
 //     adapter->Finalize();
 //     ASSERT_EQ(value, retrieved);
 // }
+/** Test output 1 variable itemsize can be retrieved. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetVarItemsize_0_a) {
+    int out_var_index = 0;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+
+    try {
+        ASSERT_EQ(adapter->GetVarItemsize(variable_name), expected_var_itemsize_0);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting var nbytes: %s", e.what());
+        FAIL();
+    }
+}
+
+/** Test output 2 variable itemsize can be retrieved. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetVarItemsize_0_b) {
+    int out_var_index = 1;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+
+    try {
+        ASSERT_EQ(adapter->GetVarItemsize(variable_name), expected_var_itemsize_1);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting var itemsize: %s", e.what());
+        FAIL();
+    }
+}
+
+/** Test output 3 variable itemsize can be retrieved. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetVarItemsize_0_c) {
+    int out_var_index = 2;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+
+    try {
+        ASSERT_EQ(adapter->GetVarItemsize(variable_name), expected_var_itemsize_2);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting var nbytes: %s", e.what());
+        FAIL();
+    }
+}
+
 
 // /** Test that both the get value function works for input 2. */
 // TEST_F(Bmi_Fortran_Adapter_Test, GetValue_0_b) {

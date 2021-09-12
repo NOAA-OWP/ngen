@@ -49,7 +49,7 @@ module bmitestbmi
 !      procedure :: get_grid_nodes_per_face => test_grid_nodes_per_face
      procedure :: get_var_type => test_var_type
 !      procedure :: get_var_units => test_var_units
-!      procedure :: get_var_itemsize => test_var_itemsize
+     procedure :: get_var_itemsize => test_var_itemsize
 !      procedure :: get_var_nbytes => test_var_nbytes
 !      procedure :: get_var_location => test_var_location
 !      procedure :: get_value_int => test_get_int
@@ -378,6 +378,38 @@ end function test_finalize
     end select
   end function test_grid_size
 
+! Memory use per array element.
+  function test_var_itemsize(this, name, size) result (bmi_status)
+    class (bmi_test_bmi), intent(in) :: this
+    character (len=*), intent(in) :: name
+    integer, intent(out) :: size
+    integer :: bmi_status
+
+    !TODO think of a better way to do this
+    !Use 'sizeof' in gcc & ifort
+    select case(name)
+    case("INPUT_VAR_1")
+       size = sizeof(this%model%input_var_1)
+       bmi_status = BMI_SUCCESS
+    case("INPUT_VAR_2")
+       size = sizeof(this%model%input_var_2)
+       bmi_status = BMI_SUCCESS
+    case("INPUT_VAR_3")
+       size = sizeof(this%model%input_var_3)
+    case("OUTPUT_VAR_1")
+       size = sizeof(this%model%output_var_1)
+    case("OUTPUT_VAR_2")
+       size = sizeof(this%model%output_var_2)
+       bmi_status = BMI_SUCCESS
+    case("OUTPUT_VAR_3")
+       size = sizeof(this%model%output_var_3)
+       bmi_status = BMI_SUCCESS
+    case default
+       size = -1
+       bmi_status = BMI_FAILURE
+    end select
+  end function test_var_itemsize
+  
 #ifdef NGEN_ACTIVE
   function register_bmi(this) result(bmi_status) bind(C, name="register_bmi")
    use, intrinsic:: iso_c_binding, only: c_ptr, c_loc, c_int
