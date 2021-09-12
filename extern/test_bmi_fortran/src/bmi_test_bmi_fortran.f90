@@ -52,9 +52,9 @@ module bmitestbmi
      procedure :: get_var_itemsize => test_var_itemsize
      procedure :: get_var_nbytes => test_var_nbytes
 !      procedure :: get_var_location => test_var_location
-!      procedure :: get_value_int => test_get_int
-!      procedure :: get_value_float => test_get_float
-!      procedure :: get_value_double => test_get_double
+     procedure :: get_value_int => test_get_int
+     procedure :: get_value_float => test_get_float
+     procedure :: get_value_double => test_get_double
 !      generic :: get_value => &
 !           get_value_int, &
 !           get_value_float, &
@@ -73,9 +73,9 @@ module bmitestbmi
 ! !           get_value_at_indices_int, &
 ! !           get_value_at_indices_float, &
 ! !           get_value_at_indices_double
-!      procedure :: set_value_int => test_set_int
-!      procedure :: set_value_float => test_set_float
-!      procedure :: set_value_double => test_set_double
+     procedure :: set_value_int => test_set_int
+     procedure :: set_value_float => test_set_float
+     procedure :: set_value_double => test_set_double
 !      generic :: set_value => &
 !           set_value_int, &
 !           set_value_float, &
@@ -430,6 +430,117 @@ end function test_finalize
        bmi_status = BMI_FAILURE
     end if
   end function test_var_nbytes
+! Set new integer values.
+  function test_set_int(this, name, src) result (bmi_status)
+    class (bmi_test_bmi), intent(inout) :: this
+    character (len=*), intent(in) :: name
+    integer, intent(in) :: src(:)
+    integer :: bmi_status
+  
+    select case(name)
+    case("INPUT_VAR_3")
+       this%model%input_var_3 = src(1)
+       bmi_status = BMI_SUCCESS
+    case default
+       bmi_status = BMI_FAILURE
+    end select
+    ! NOTE, if vars are gridded, then use:
+    ! this%model%var= reshape(src, [this%model%n_y, this%model%n_x])
+  end function test_set_int
+
+  ! Set new real values.
+  function test_set_float(this, name, src) result (bmi_status)
+    class (bmi_test_bmi), intent(inout) :: this
+    character (len=*), intent(in) :: name
+    real, intent(in) :: src(:)
+    integer :: bmi_status
+
+    select case(name)
+    case("INPUT_VAR_2")
+       this%model%input_var_2 = src(1)
+       bmi_status = BMI_SUCCESS
+    case default
+       bmi_status = BMI_FAILURE
+    end select
+    ! NOTE, if vars are gridded, then use:
+    ! this%model%temperature = reshape(src, [this%model%n_y, this%model%n_x])
+  end function test_set_float
+
+  ! Set new double values.
+  function test_set_double(this, name, src) result (bmi_status)
+    class (bmi_test_bmi), intent(inout) :: this
+    character (len=*), intent(in) :: name
+    double precision, intent(in) :: src(:)
+    integer :: bmi_status
+
+    select case(name)
+    case("INPUT_VAR_1")
+      this%model%input_var_1 = src(1)
+      bmi_status=BMI_SUCCESS
+    case default
+       bmi_status = BMI_FAILURE
+    end select
+    ! NOTE, if vars are gridded, then use:
+    ! this%model%var = reshape(src, [this%model%n_y, this%model%n_x])
+  end function test_set_double
+
+  ! Get a copy of a integer variable's values, flattened.
+  function test_get_int(this, name, dest) result (bmi_status)
+    class (bmi_test_bmi), intent(in) :: this
+    character (len=*), intent(in) :: name
+    integer, intent(inout) :: dest(:)
+    integer :: bmi_status
+
+    select case(name)
+    case("INPUT_VAR_3")
+       dest = [this%model%input_var_3]
+       bmi_status = BMI_SUCCESS
+    case default
+       dest(:) = -1
+       bmi_status = BMI_FAILURE
+    end select
+    ! NOTE, if vars are gridded, then use:
+    ! dest = reshape(this%model%var, [this%model%n_x*this%model%n_y])
+  end function test_get_int
+
+  ! Get a copy of a real variable's values, flattened.
+  function test_get_float(this, name, dest) result (bmi_status)
+    class (bmi_test_bmi), intent(in) :: this
+    character (len=*), intent(in) :: name
+    real, intent(inout) :: dest(:)
+    integer :: bmi_status
+
+    select case(name)
+    case("INPUT_VAR_2")
+       dest = [this%model%input_var_2]
+       bmi_status = BMI_SUCCESS
+    case default
+       dest(:) = -1.0
+       bmi_status = BMI_FAILURE
+    end select
+    ! NOTE, if vars are gridded, then use:
+    ! dest = reshape(this%model%temperature, [this%model%n_x*this%model%n_y]) 
+  end function test_get_float
+
+  ! Get a copy of a double variable's values, flattened.
+  function test_get_double(this, name, dest) result (bmi_status)
+    class (bmi_test_bmi), intent(in) :: this
+    character (len=*), intent(in) :: name
+    double precision, intent(inout) :: dest(:)
+    integer :: bmi_status
+
+    !==================== UPDATE IMPLEMENTATION IF NECESSARY FOR DOUBLE VARS =================
+
+    select case(name)
+    case("INPUT_VAR_1")
+      dest = [this%model%input_var_1]
+    case default
+       dest(:) = -1.d0
+       bmi_status = BMI_FAILURE
+    end select
+    ! NOTE, if vars are gridded, then use:
+    ! dest = reshape(this%model%var, [this%model%n_x*this%model%n_y])
+  end function test_get_double
   
 #ifdef NGEN_ACTIVE
   function register_bmi(this) result(bmi_status) bind(C, name="register_bmi")
