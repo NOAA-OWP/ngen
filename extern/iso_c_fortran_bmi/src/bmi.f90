@@ -39,7 +39,7 @@ module bmif_2_0_iso
       procedure(bmif_get_var_type), deferred :: get_var_type
 !       procedure(bmif_get_var_units), deferred :: get_var_units
       procedure(bmif_get_var_itemsize), deferred :: get_var_itemsize
-!       procedure(bmif_get_var_nbytes), deferred :: get_var_nbytes
+      procedure(bmif_get_var_nbytes), deferred :: get_var_nbytes
 !       procedure(bmif_get_var_location), deferred :: get_var_location
 
 !       ! Time information
@@ -211,14 +211,14 @@ module bmif_2_0_iso
       integer :: bmi_status
     end function bmif_get_var_itemsize
 
-!     ! Get size of the given variable, in bytes.
-!     function bmif_get_var_nbytes(this, name, nbytes) result(bmi_status)
-!       import :: bmi
-!       class(bmi), intent(in) :: this
-!       character(len=*), intent(in) :: name
-!       integer, intent(out) :: nbytes
-!       integer :: bmi_status
-!     end function bmif_get_var_nbytes
+    ! Get size of the given variable, in bytes.
+    function bmif_get_var_nbytes(this, name, nbytes) result(bmi_status)
+      import :: bmi
+      class(bmi), intent(in) :: this
+      character(len=*), intent(in) :: name
+      integer, intent(out) :: nbytes
+      integer :: bmi_status
+    end function bmif_get_var_nbytes
 
 !     ! Describe where a variable is located: node, edge, or face.
 !     function bmif_get_var_location(this, name, location) result(bmi_status)
