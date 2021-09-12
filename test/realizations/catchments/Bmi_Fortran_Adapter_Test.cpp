@@ -51,6 +51,7 @@ protected:
     std::vector<std::string> expected_input_var_names = { "INPUT_VAR_1", "INPUT_VAR_2", "INPUT_VAR_3" };
     std::vector<std::string> expected_output_var_locations = { "node", "node", "node" };
     std::vector<int> expected_output_var_grids = { 0, 0, 0 };
+    std::vector<int> expected_input_var_grids = { 0, 0, 0 };
     std::vector<std::string> expected_output_var_units = { "m", "m", "s" };
     std::vector<std::string> expected_output_var_types = { "double precision", "real", "integer" };
     std::vector<std::string> expected_input_var_types = { "double precision", "real", "integer" };
@@ -252,6 +253,66 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarType_1_c) {
     }
     catch (std::exception& e) {
         printf("Exception getting var type: %s", e.what());
+    }
+}
+
+/** Test output 1 variable grid (id) can be retrieved. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetVarGrid_0_a) {
+    int out_var_index = 0;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    int expected_grid = expected_output_var_grids[out_var_index];
+
+    try {
+        ASSERT_EQ(adapter->GetVarGrid(variable_name), expected_grid);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting var grid id: %s", e.what());
+    }
+}
+
+/** Test output 2 variable grid (id) can be retrieved. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetVarGrid_0_b) {
+    int out_var_index = 1;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    int expected_grid = expected_output_var_grids[out_var_index];
+
+    try {
+        ASSERT_EQ(adapter->GetVarGrid(variable_name), expected_grid);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting var grid id: %s", e.what());
+    }
+}
+
+/** Test input 1 variable grid (id) can be retrieved. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetVarGrid_1_a) {
+    int out_var_index = 0;
+
+    std::string variable_name = adapter->GetInputVarNames()[out_var_index];
+    int expected_grid = expected_input_var_grids[out_var_index];
+
+    try {
+        ASSERT_EQ(adapter->GetVarGrid(variable_name), expected_grid);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting var grid id: %s", e.what());
+    }
+}
+
+/** Test input 2 variable grid (id) can be retrieved. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetVarGrid_1_b) {
+    int out_var_index = 1;
+
+    std::string variable_name = adapter->GetInputVarNames()[out_var_index];
+    int expected_grid = expected_input_var_grids[out_var_index];
+
+    try {
+        ASSERT_EQ(adapter->GetVarGrid(variable_name), expected_grid);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting var grid id: %s", e.what());
     }
 }
 

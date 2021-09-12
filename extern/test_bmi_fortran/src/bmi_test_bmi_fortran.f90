@@ -30,7 +30,7 @@ module bmitestbmi
      procedure :: get_time_units => test_time_units
 !      procedure :: update => test_update
 !      procedure :: update_until => test_update_until
-!      procedure :: get_var_grid => test_var_grid
+     procedure :: get_var_grid => test_var_grid
 !      procedure :: get_grid_type => test_grid_type
 !      procedure :: get_grid_rank => test_grid_rank
 !      procedure :: get_grid_shape => test_grid_shape
@@ -109,6 +109,9 @@ module bmitestbmi
 
   character (len=BMI_MAX_TYPE_NAME) :: &
     input_type(3) = [character(BMI_MAX_TYPE_NAME):: 'double precision', 'real', 'integer']
+
+  integer :: output_grid(3) = [0, 0, 0]
+  integer :: input_grid(3) = [0, 0, 0]
 
 contains
 
@@ -322,6 +325,38 @@ end function test_finalize
     type = "-"
     bmi_status = BMI_FAILURE
   end function test_var_type
+
+  ! Get the grid id for a particular variable.
+  function test_var_grid(this, name, grid) result (bmi_status)
+    class (bmi_test_bmi), intent(in) :: this
+    character (len=*), intent(in) :: name
+    integer, intent(out) :: grid
+    integer :: bmi_status, i
+
+    !checkout output vars
+    do  i = 1, size(output_items)
+      if(output_items(i) .eq. trim(name) ) then
+        grid = output_grid(i)
+        bmi_status = BMI_SUCCESS
+        return
+      endif
+    end do
+
+    !checkout input vars
+    do  i = 1, size(input_items)
+      if(input_items(i) .eq. trim(name) ) then
+        grid = input_grid(i)
+        bmi_status = BMI_SUCCESS
+        return
+      endif
+    end do
+  
+    !check any other vars???
+
+    !no matches
+    grid = -1
+    bmi_status = BMI_FAILURE
+  end function test_var_grid
 
 #ifdef NGEN_ACTIVE
   function register_bmi(this) result(bmi_status) bind(C, name="register_bmi")
