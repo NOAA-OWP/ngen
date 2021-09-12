@@ -119,6 +119,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetOutputItemCount_0_a) {
     }
     catch (std::exception& e) {
         printf("Exception getting output var count: %s", e.what());
+        FAIL();
     }
 }
 
@@ -144,6 +145,21 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetInputItemCount_0_a) {
     }
     catch (std::exception& e) {
         printf("Exception getting input var count: %s", e.what());
+        FAIL();
+    }
+}
+
+/** Test input variables can be retrieved. 
+ * 
+ * Note  GetInputItemCount() must be implemented for GetInputtVarNames to work.
+ * 
+*/
+TEST_F(Bmi_Fortran_Adapter_Test, GetInputVarNames_0_a) {
+    try {
+        ASSERT_EQ(adapter->GetInputVarNames(), expected_input_var_names);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting input var names: %s", e.what());
         FAIL();
     }
 }

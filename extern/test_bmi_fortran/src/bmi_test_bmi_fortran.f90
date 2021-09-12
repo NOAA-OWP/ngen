@@ -19,7 +19,7 @@ module bmitestbmi
      procedure :: get_component_name => test_component_name
      procedure :: get_input_item_count => test_input_item_count
      procedure :: get_output_item_count => test_output_item_count
-!      procedure :: get_input_var_names => test_input_var_names
+      procedure :: get_input_var_names => test_input_var_names
      procedure :: get_output_var_names => test_output_var_names
      procedure :: initialize => test_initialize
      procedure :: finalize => test_finalize
@@ -274,6 +274,17 @@ end function test_finalize
     count = size(input_items)
     bmi_status = BMI_SUCCESS
   end function test_input_item_count
+
+  ! List input variables.
+  function test_input_var_names(this, names) result (bmi_status)
+    class (bmi_test_bmi), intent(in) :: this
+    character (*), pointer, intent(out) :: names(:)
+    integer :: bmi_status
+
+    names => input_items
+    bmi_status = BMI_SUCCESS
+  end function test_input_var_names
+
 #ifdef NGEN_ACTIVE
   function register_bmi(this) result(bmi_status) bind(C, name="register_bmi")
    use, intrinsic:: iso_c_binding, only: c_ptr, c_loc, c_int
