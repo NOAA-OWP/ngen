@@ -550,13 +550,14 @@ namespace models {
              */
             inline void inner_get_value(const std::string& name, void *dest) {
                 std::string varType = inner_get_var_type(name);
-                if (varType == "int") {
+                //Can use the C type or the fortran type, e.g. int or integer
+                if (varType == "int" || varType == "integer") {
                     inner_get_value_int(name, (int *)dest);
                 }
-                else if (varType == "float") {
+                else if (varType == "float" || varType == "real") {
                     inner_get_value_float(name, (float *)dest);
                 }
-                else if (varType == "double") {
+                else if (varType == "double" || varType == "double precision") {
                     inner_get_value_double(name, (double *)dest);
                 }
                 else {
@@ -704,13 +705,14 @@ namespace models {
              */
             inline void inner_set_value(const std::string& name, void *src) {
                 std::string varType = inner_get_var_type(name);
-                if (varType == "int") {
+                //Can use the C type or the fortran type, e.g. int or integer
+                if (varType == "int" || varType == "integer") {
                     inner_set_value_int(name, (int *)src);
                 }
-                else if (varType == "float") {
+                else if (varType == "float" || varType == "real") {
                     inner_set_value_float(name, (float *)src);
                 }
-                else if (varType == "double") {
+                else if (varType == "double" || varType == "double precision") {
                     inner_set_value_double(name, (double *)src);
                 }
                 else {

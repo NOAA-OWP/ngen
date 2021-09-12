@@ -371,9 +371,9 @@ module iso_c_bmif_2_0
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
   
-      ! bmi_status = bmi_box%ptr%get_var_grid(c_to_f_string(name), grid)
-      ! bmi_status = bmi_box%ptr%get_grid_size(grid, num_items)
-      ! bmi_status = bmi_box%ptr%get_value_int(c_to_f_string(name), dest(:num_items))
+      bmi_status = bmi_box%ptr%get_var_grid(c_to_f_string(name), grid)
+      bmi_status = bmi_box%ptr%get_grid_size(grid, num_items)
+      bmi_status = bmi_box%ptr%get_value_int(c_to_f_string(name), dest(:num_items))
     end function get_value_int
 
     ! Get a copy of values (flattened!) of the given real variable.
@@ -389,9 +389,9 @@ module iso_c_bmif_2_0
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
   
-      ! bmi_status = bmi_box%ptr%get_var_grid(c_to_f_string(name), grid)
-      ! bmi_status = bmi_box%ptr%get_grid_size(grid, num_items)
-      ! bmi_status = bmi_box%ptr%get_value_float(c_to_f_string(name), dest(:num_items))
+      bmi_status = bmi_box%ptr%get_var_grid(c_to_f_string(name), grid)
+      bmi_status = bmi_box%ptr%get_grid_size(grid, num_items)
+      bmi_status = bmi_box%ptr%get_value_float(c_to_f_string(name), dest(:num_items))
     end function get_value_float
 
     ! Get a copy of values (flattened!) of the given double variable.
@@ -407,9 +407,9 @@ module iso_c_bmif_2_0
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
   
-      ! bmi_status = bmi_box%ptr%get_var_grid(c_to_f_string(name), grid)
-      ! bmi_status = bmi_box%ptr%get_grid_size(grid, num_items)
-      ! bmi_status = bmi_box%ptr%get_value_double(c_to_f_string(name), dest(:num_items))
+      bmi_status = bmi_box%ptr%get_var_grid(c_to_f_string(name), grid)
+      bmi_status = bmi_box%ptr%get_grid_size(grid, num_items)
+      bmi_status = bmi_box%ptr%get_value_double(c_to_f_string(name), dest(:num_items))
     end function get_value_double
 
     ! Set new values for an integer model variable.
@@ -425,9 +425,9 @@ module iso_c_bmif_2_0
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
   
-      ! bmi_status = bmi_box%ptr%get_var_grid(c_to_f_string(name), grid)
-      ! bmi_status = bmi_box%ptr%get_grid_size(grid, num_items)
-      ! bmi_status = bmi_box%ptr%set_value_int(c_to_f_string(name), src(:num_items))
+      bmi_status = bmi_box%ptr%get_var_grid(c_to_f_string(name), grid)
+      bmi_status = bmi_box%ptr%get_grid_size(grid, num_items)
+      bmi_status = bmi_box%ptr%set_value_int(c_to_f_string(name), src(:num_items))
     end function set_value_int
 
     ! Set new values for a real model variable.
@@ -444,9 +444,9 @@ module iso_c_bmif_2_0
       call c_f_pointer(this, bmi_box)
       !FIXME try both paths, nbytes/itemsize and grid info in cause some model doesn't implement
       !one one or the other????
-      ! bmi_status = bmi_box%ptr%get_var_grid(c_to_f_string(name), grid)
-      ! bmi_status = bmi_box%ptr%get_grid_size(grid, num_items)
-      ! bmi_status = bmi_box%ptr%set_value_float(c_to_f_string(name), src(:num_items))
+      bmi_status = bmi_box%ptr%get_var_grid(c_to_f_string(name), grid)
+      bmi_status = bmi_box%ptr%get_grid_size(grid, num_items)
+      bmi_status = bmi_box%ptr%set_value_float(c_to_f_string(name), src(:num_items))
     end function set_value_float
 
     ! Set new values for a double model variable.
@@ -462,9 +462,9 @@ module iso_c_bmif_2_0
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
   
-      ! bmi_status = bmi_box%ptr%get_var_grid(c_to_f_string(name), grid)
-      ! bmi_status = bmi_box%ptr%get_grid_size(grid, num_items)
-      ! bmi_status = bmi_box%ptr%set_value_double(c_to_f_string(name), src(:num_items))
+      bmi_status = bmi_box%ptr%get_var_grid(c_to_f_string(name), grid)
+      bmi_status = bmi_box%ptr%get_grid_size(grid, num_items)
+      bmi_status = bmi_box%ptr%set_value_double(c_to_f_string(name), src(:num_items))
     end function set_value_double
 
     ! Get number of dimensions of the computational grid.

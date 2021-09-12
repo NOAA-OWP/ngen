@@ -337,16 +337,6 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetGridSize_0_a) {
     }
 }
 
-// /** Test that both the get value function works for input 1. */
-// TEST_F(Bmi_Fortran_Adapter_Test, GetValue_0_a) {
-//     adapter->Initialize();
-//     double value = 5.0;
-//     adapter->SetValue("INPUT_VAR_1", &value);
-//     double retrieved = adapter->GetValue<double>("INPUT_VAR_1")[0];
-//     adapter->Finalize();
-//     ASSERT_EQ(value, retrieved);
-// }
-/** Test output 1 variable itemsize can be retrieved. */
 TEST_F(Bmi_Fortran_Adapter_Test, GetVarItemsize_0_a) {
     int out_var_index = 0;
 
@@ -436,15 +426,66 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarNbytes_0_c) {
     }
 }
 
-// /** Test that both the get value function works for input 2. */
-// TEST_F(Bmi_Fortran_Adapter_Test, GetValue_0_b) {
-//     adapter->Initialize();
-//     double value = 6.0;
-//     adapter->SetValue("INPUT_VAR_2", &value);
-//     double retrieved = adapter->GetValue<double>("INPUT_VAR_2")[0];
-//     adapter->Finalize();
-//     ASSERT_EQ(value, retrieved);
-// }
+/** Test that both the get value function works for input 1. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetValue_0_a) {
+    adapter->Initialize();
+    double value = 5.0;
+    adapter->SetValue("INPUT_VAR_1", &value);
+    double retrieved = adapter->GetValue<double>("INPUT_VAR_1")[0];
+    adapter->Finalize();
+    ASSERT_EQ(value, retrieved);
+}
+
+/** Test that both the get value function works for input 2. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetValue_0_b) {
+    adapter->Initialize();
+    float value = 6.0;
+    adapter->SetValue("INPUT_VAR_2", &value);
+    double retrieved = adapter->GetValue<float>("INPUT_VAR_2")[0];
+    adapter->Finalize();
+    ASSERT_EQ(value, retrieved);
+}
+/** Test that both the get value function works for input 3. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetValue_0_c) {
+    adapter->Initialize();
+    int value = 7;
+    adapter->SetValue("INPUT_VAR_3", &value);
+    double retrieved = adapter->GetValue<int>("INPUT_VAR_3")[0];
+    adapter->Finalize();
+    ASSERT_EQ(value, retrieved);
+}
+
+/** Test that both the set value function works for input 1. */
+TEST_F(Bmi_Fortran_Adapter_Test, SetValue_0_a) {
+    adapter->Initialize();
+    double value = 5.0;
+    adapter->SetValue("INPUT_VAR_1", &value);
+    double retrieved = adapter->GetValue<double>("INPUT_VAR_1")[0];
+    adapter->Finalize();
+    ASSERT_EQ(value, retrieved);
+}
+
+/** Test that both the set value function works for input 2. */
+TEST_F(Bmi_Fortran_Adapter_Test, SetValue_0_b) {
+    adapter->Initialize();
+    float value = 6.0;
+    adapter->SetValue("INPUT_VAR_2", &value);
+    double retrieved = adapter->GetValue<float>("INPUT_VAR_2")[0];
+    adapter->Finalize();
+    ASSERT_EQ(value, retrieved);
+}
+
+/** Test that the set value function works for input 1 for multiple calls. */
+TEST_F(Bmi_Fortran_Adapter_Test, SetValue_0_c) {
+    adapter->Initialize();
+    double value_1 = 7.0;
+    adapter->SetValue("INPUT_VAR_1", &value_1);
+    double value_2 = 10.0;
+    adapter->SetValue("INPUT_VAR_1", &value_2);
+    double retrieved = adapter->GetValue<double>("INPUT_VAR_1")[0];
+    adapter->Finalize();
+    ASSERT_EQ(value_2, retrieved);
+}
 
 // /** Test that both the get value function works for output 1. */
 // TEST_F(Bmi_Fortran_Adapter_Test, GetValue_0_c) {
@@ -582,38 +623,6 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarNbytes_0_c) {
 //     adapter->Update();
 //     ASSERT_EQ(expected_time, adapter->GetCurrentTime());
 //     adapter->Finalize();
-// }
-
-// /** Test that both the set value function works for input 1. */
-// TEST_F(Bmi_Fortran_Adapter_Test, SetValue_0_a) {
-//     adapter->Initialize();
-//     double value = 5.0;
-//     adapter->SetValue("INPUT_VAR_1", &value);
-//     double retrieved = adapter->GetValue<double>("INPUT_VAR_1")[0];
-//     adapter->Finalize();
-//     ASSERT_EQ(value, retrieved);
-// }
-
-// /** Test that both the set value function works for input 2. */
-// TEST_F(Bmi_Fortran_Adapter_Test, SetValue_0_b) {
-//     adapter->Initialize();
-//     double value = 6.0;
-//     adapter->SetValue("INPUT_VAR_2", &value);
-//     double retrieved = adapter->GetValue<double>("INPUT_VAR_2")[0];
-//     adapter->Finalize();
-//     ASSERT_EQ(value, retrieved);
-// }
-
-// /** Test that the set value function works for input 1 for multiple calls. */
-// TEST_F(Bmi_Fortran_Adapter_Test, SetValue_0_c) {
-//     adapter->Initialize();
-//     double value_1 = 7.0;
-//     adapter->SetValue("INPUT_VAR_1", &value_1);
-//     double value_2 = 10.0;
-//     adapter->SetValue("INPUT_VAR_1", &value_2);
-//     double retrieved = adapter->GetValue<double>("INPUT_VAR_1")[0];
-//     adapter->Finalize();
-//     ASSERT_EQ(value_2, retrieved);
 // }
 
 // /** Test that the update function works for a single update. */
