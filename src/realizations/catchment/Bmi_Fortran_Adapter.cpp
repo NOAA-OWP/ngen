@@ -141,7 +141,7 @@ int Bmi_Fortran_Adapter::GetGridRank(int grid_id) {
 
 int Bmi_Fortran_Adapter::GetGridSize(int grid_id) {
     int gridsize;
-    if (get_grid_size(&bmi_model->handle, grid_id, &gridsize) != BMI_SUCCESS) {
+    if (get_grid_size(&bmi_model->handle, &grid_id, &gridsize) != BMI_SUCCESS) {
         throw std::runtime_error(model_name + " failed to get grid size for grid ID " + to_string(grid_id) + ".");
     }
     return gridsize;

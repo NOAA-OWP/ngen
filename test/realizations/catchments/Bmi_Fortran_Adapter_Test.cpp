@@ -316,6 +316,22 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarGrid_1_b) {
     }
 }
 
+/** Test grid size can be retrieved for output 2. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetGridSize_0_a) {
+    int out_var_index = 1;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    int grd = adapter->GetVarGrid(variable_name);
+
+    try {
+        ASSERT_EQ(adapter->GetGridSize(grd), expected_grid_size);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting grid size: %s", e.what());
+        FAIL();
+    }
+}
+
 // /** Test that both the get value function works for input 1. */
 // TEST_F(Bmi_Fortran_Adapter_Test, GetValue_0_a) {
 //     adapter->Initialize();
@@ -608,36 +624,6 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarGrid_1_b) {
 //     adapter->Finalize();
 // }
 
-// /** Test output 1 variable grid (id) can be retrieved. */
-// TEST_F(Bmi_Fortran_Adapter_Test, GetVarGrid_0_a) {
-//     int out_var_index = 0;
-
-//     std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
-//     int expected_grid = expected_output_var_grids[out_var_index];
-
-//     try {
-//         ASSERT_EQ(adapter->GetVarGrid(variable_name), expected_grid);
-//     }
-//     catch (std::exception& e) {
-//         printf("Exception getting var grid id: %s", e.what());
-//     }
-// }
-
-// /** Test output 2 variable grid (id) can be retrieved. */
-// TEST_F(Bmi_Fortran_Adapter_Test, GetVarGrid_0_b) {
-//     int out_var_index = 1;
-
-//     std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
-//     int expected_grid = expected_output_var_grids[out_var_index];
-
-//     try {
-//         ASSERT_EQ(adapter->GetVarGrid(variable_name), expected_grid);
-//     }
-//     catch (std::exception& e) {
-//         printf("Exception getting var grid id: %s", e.what());
-//     }
-// }
-
 // /** Test output 1 variable location can be retrieved. */
 // TEST_F(Bmi_Fortran_Adapter_Test, GetVarLocation_0_a) {
 //     int out_var_index = 0;
@@ -725,22 +711,6 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarGrid_1_b) {
 //     }
 //     catch (std::exception& e) {
 //         printf("Exception getting grid rank: %s", e.what());
-//     }
-// }
-
-// // CFE GetVarGrid() function is disabled currently.  Suggest disabling test until pure testing BMI module is developed.
-// /** Test grid size can be retrieved for output 2. */
-// TEST_F(Bmi_Fortran_Adapter_Test, DISABLED_GetGridSize_0_a) {
-//     int out_var_index = 1;
-
-//     std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
-//     int grd = adapter->GetVarGrid(variable_name);
-
-//     try {
-//         ASSERT_EQ(adapter->GetGridSize(grd), expected_grid_size);
-//     }
-//     catch (std::exception& e) {
-//         printf("Exception getting grid size: %s", e.what());
 //     }
 // }
 

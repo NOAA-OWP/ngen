@@ -76,7 +76,7 @@ module bmif_2_0_iso
 
 !       ! Grid information
 !       procedure(bmif_get_grid_rank), deferred :: get_grid_rank
-!       procedure(bmif_get_grid_size), deferred :: get_grid_size
+      procedure(bmif_get_grid_size), deferred :: get_grid_size
 !       procedure(bmif_get_grid_type), deferred :: get_grid_type
 
 !       ! Uniform rectilinear
@@ -425,14 +425,14 @@ module bmif_2_0_iso
 !       integer :: bmi_status
 !     end function bmif_get_grid_rank
 
-! ! Get the total number of elements in the computational grid.
-!     function bmif_get_grid_size(this, grid, size) result(bmi_status)
-!       import :: bmi
-!       class(bmi), intent(in) :: this
-!       integer, intent(in) :: grid
-!       integer, intent(out) :: size
-!       integer :: bmi_status
-!     end function bmif_get_grid_size
+! Get the total number of elements in the computational grid.
+    function bmif_get_grid_size(this, grid, size) result(bmi_status)
+      import :: bmi
+      class(bmi), intent(in) :: this
+      integer, intent(in) :: grid
+      integer, intent(out) :: size
+      integer :: bmi_status
+    end function bmif_get_grid_size
 
 !     ! Get the grid type as a string.
 !     function bmif_get_grid_type(this, grid, type) result(bmi_status)
