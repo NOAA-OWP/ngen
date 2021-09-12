@@ -35,7 +35,7 @@ module bmif_2_0_iso
       procedure(bmif_get_output_var_names), deferred :: get_output_var_names
 
 !       ! Variable information
-!       procedure(bmif_get_var_grid), deferred :: get_var_grid
+      procedure(bmif_get_var_grid), deferred :: get_var_grid
       procedure(bmif_get_var_type), deferred :: get_var_type
 !       procedure(bmif_get_var_units), deferred :: get_var_units
 !       procedure(bmif_get_var_itemsize), deferred :: get_var_itemsize
@@ -175,14 +175,14 @@ module bmif_2_0_iso
       integer :: bmi_status
     end function bmif_get_output_var_names
 
-!     ! Get the grid identifier for the given variable.
-!     function bmif_get_var_grid(this, name, grid) result(bmi_status)
-!       import :: bmi
-!       class(bmi), intent(in) :: this
-!       character(len=*), intent(in) :: name
-!       integer, intent(out) :: grid
-!       integer :: bmi_status
-!     end function bmif_get_var_grid
+    ! Get the grid identifier for the given variable.
+    function bmif_get_var_grid(this, name, grid) result(bmi_status)
+      import :: bmi
+      class(bmi), intent(in) :: this
+      character(len=*), intent(in) :: name
+      integer, intent(out) :: grid
+      integer :: bmi_status
+    end function bmif_get_var_grid
 
     ! Get the data type of the given variable as a string.
     function bmif_get_var_type(this, name, type) result(bmi_status)

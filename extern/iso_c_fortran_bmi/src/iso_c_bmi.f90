@@ -212,7 +212,7 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      ! bmi_status = bmi_box%ptr%get_var_grid(c_to_f_string(name), grid)
+      bmi_status = bmi_box%ptr%get_var_grid(c_to_f_string(name), grid)
     end function get_var_grid
 
     ! Get the data type of the given variable as a string.
