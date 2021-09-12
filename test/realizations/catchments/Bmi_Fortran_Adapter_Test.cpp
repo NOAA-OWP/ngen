@@ -52,7 +52,8 @@ protected:
     std::vector<std::string> expected_output_var_locations = { "node", "node", "node" };
     std::vector<int> expected_output_var_grids = { 0, 0, 0 };
     std::vector<std::string> expected_output_var_units = { "m", "m", "s" };
-    std::vector<std::string> expected_output_var_types = { "double", "real", "integer" };
+    std::vector<std::string> expected_output_var_types = { "double precision", "real", "integer" };
+    std::vector<std::string> expected_input_var_types = { "double precision", "real", "integer" };
     int expected_grid_rank = 1;
     int expected_grid_size = 1;
     std::string expected_grid_type = "scalar";
@@ -161,6 +162,96 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetInputVarNames_0_a) {
     catch (std::exception& e) {
         printf("Exception getting input var names: %s", e.what());
         FAIL();
+    }
+}
+
+/** Test output 1 variable type can be retrieved. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetVarType_0_a) {
+    int out_var_index = 0;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    std::string expected_type = expected_output_var_types[out_var_index];
+
+    try {
+        ASSERT_EQ(adapter->GetVarType(variable_name), expected_type);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting var type: %s", e.what());
+    }
+}
+
+/** Test output 1 variable type can be retrieved. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetVarType_0_b) {
+    int out_var_index = 1;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    std::string expected_type = expected_output_var_types[out_var_index];
+
+    try {
+        ASSERT_EQ(adapter->GetVarType(variable_name), expected_type);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting var type: %s", e.what());
+    }
+}
+
+/** Test output 1 variable type can be retrieved. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetVarType_0_c) {
+    int out_var_index = 2;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    std::string expected_type = expected_output_var_types[out_var_index];
+
+    try {
+        ASSERT_EQ(adapter->GetVarType(variable_name), expected_type);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting var type: %s", e.what());
+    }
+}
+
+/** Test input 1 variable type can be retrieved. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetVarType_1_a) {
+    int out_var_index = 0;
+
+    std::string variable_name = adapter->GetInputVarNames()[out_var_index];
+    std::string expected_type = expected_input_var_types[out_var_index];
+
+    try {
+        ASSERT_EQ(adapter->GetVarType(variable_name), expected_type);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting var type: %s", e.what());
+    }
+}
+
+/** Test input 1 variable type can be retrieved. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetVarType_1_b) {
+    int out_var_index = 1;
+
+    std::string variable_name = adapter->GetInputVarNames()[out_var_index];
+    std::string expected_type = expected_input_var_types[out_var_index];
+
+    try {
+        ASSERT_EQ(adapter->GetVarType(variable_name), expected_type);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting var type: %s", e.what());
+    }
+}
+
+/** Test input 1 variable type can be retrieved. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetVarType_1_c) {
+    int out_var_index = 2;
+
+    std::string variable_name = adapter->GetInputVarNames()[out_var_index];
+    std::string expected_type = expected_input_var_types[out_var_index];
+
+    try {
+        ASSERT_EQ(adapter->GetVarType(variable_name), expected_type);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting var type: %s", e.what());
     }
 }
 
@@ -530,22 +621,6 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetInputVarNames_0_a) {
 //         printf("Exception getting var units: %s", e.what());
 //     }
 // }
-
-// /** Test output 1 variable type can be retrieved. */
-// TEST_F(Bmi_Fortran_Adapter_Test, GetVarType_0_a) {
-//     int out_var_index = 0;
-
-//     std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
-//     std::string expected_type = expected_output_var_types[out_var_index];
-
-//     try {
-//         ASSERT_EQ(adapter->GetVarType(variable_name), expected_type);
-//     }
-//     catch (std::exception& e) {
-//         printf("Exception getting var type: %s", e.what());
-//     }
-// }
-
 
 // /** Test output 1 variable nbytes can be retrieved. */
 // TEST_F(Bmi_Fortran_Adapter_Test, GetVarNbytes_0_a) {

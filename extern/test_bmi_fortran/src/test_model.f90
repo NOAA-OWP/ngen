@@ -7,10 +7,12 @@ module test_model
         integer :: time_step_size
 
         double precision :: input_var_1
-        double precision :: input_var_2
+        real :: input_var_2
+        integer :: input_var_3
 
         double precision :: output_var_1
-        double precision :: output_var_2
+        real :: output_var_2
+        integer :: output_var_3
     end type test_bmi_model
 
     contains

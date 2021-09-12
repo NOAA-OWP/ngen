@@ -47,7 +47,7 @@ module bmitestbmi
 !      procedure :: get_grid_face_edges => test_grid_face_edges
 !      procedure :: get_grid_face_nodes => test_grid_face_nodes
 !      procedure :: get_grid_nodes_per_face => test_grid_nodes_per_face
-!      procedure :: get_var_type => test_var_type
+     procedure :: get_var_type => test_var_type
 !      procedure :: get_var_units => test_var_units
 !      procedure :: get_var_itemsize => test_var_itemsize
 !      procedure :: get_var_nbytes => test_var_nbytes
@@ -102,7 +102,13 @@ module bmitestbmi
     output_items(3) = ['OUTPUT_VAR_1', 'OUTPUT_VAR_2', 'OUTPUT_VAR_3']
 
   character (len=BMI_MAX_VAR_NAME), target :: &
-  input_items(3) = ['INPUT_VAR_1', 'INPUT_VAR_2', 'INPUT_VAR_3']
+    input_items(3) = ['INPUT_VAR_1', 'INPUT_VAR_2', 'INPUT_VAR_3']
+
+  character (len=BMI_MAX_TYPE_NAME) :: &
+    output_type(3) = [character(BMI_MAX_TYPE_NAME):: 'double precision', 'real', 'integer']
+
+  character (len=BMI_MAX_TYPE_NAME) :: &
+    input_type(3) = [character(BMI_MAX_TYPE_NAME):: 'double precision', 'real', 'integer']
 
 contains
 
@@ -284,6 +290,38 @@ end function test_finalize
     names => input_items
     bmi_status = BMI_SUCCESS
   end function test_input_var_names
+
+  ! The data type of the variable, as a string.
+  function test_var_type(this, name, type) result (bmi_status)
+    class (bmi_test_bmi), intent(in) :: this
+    character (len=*), intent(in) :: name
+    character (len=*), intent(out) :: type
+    integer :: bmi_status, i
+
+    !checkout output vars
+    do  i = 1, size(output_items)
+      if(output_items(i) .eq. trim(name) ) then
+        type = output_type(i)
+        bmi_status = BMI_SUCCESS
+        return
+      endif
+    end do
+
+    !checkout input vars
+    do  i = 1, size(input_items)
+      if(input_items(i) .eq. trim(name) ) then
+        type = input_type(i)
+        bmi_status = BMI_SUCCESS
+        return
+      endif
+    end do
+  
+    !check any other vars???
+
+    !no matches
+    type = "-"
+    bmi_status = BMI_FAILURE
+  end function test_var_type
 
 #ifdef NGEN_ACTIVE
   function register_bmi(this) result(bmi_status) bind(C, name="register_bmi")

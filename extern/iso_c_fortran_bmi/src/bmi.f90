@@ -36,7 +36,7 @@ module bmif_2_0_iso
 
 !       ! Variable information
 !       procedure(bmif_get_var_grid), deferred :: get_var_grid
-!       procedure(bmif_get_var_type), deferred :: get_var_type
+      procedure(bmif_get_var_type), deferred :: get_var_type
 !       procedure(bmif_get_var_units), deferred :: get_var_units
 !       procedure(bmif_get_var_itemsize), deferred :: get_var_itemsize
 !       procedure(bmif_get_var_nbytes), deferred :: get_var_nbytes
@@ -184,14 +184,14 @@ module bmif_2_0_iso
 !       integer :: bmi_status
 !     end function bmif_get_var_grid
 
-!     ! Get the data type of the given variable as a string.
-!     function bmif_get_var_type(this, name, type) result(bmi_status)
-!       import :: bmi
-!       class(bmi), intent(in) :: this
-!       character(len=*), intent(in) :: name
-!       character(len=*), intent(out) :: type
-!       integer :: bmi_status
-!     end function bmif_get_var_type
+    ! Get the data type of the given variable as a string.
+    function bmif_get_var_type(this, name, type) result(bmi_status)
+      import :: bmi
+      class(bmi), intent(in) :: this
+      character(len=*), intent(in) :: name
+      character(len=*), intent(out) :: type
+      integer :: bmi_status
+    end function bmif_get_var_type
 
 !     ! Get the units of the given variable.
 !     function bmif_get_var_units(this, name, units) result(bmi_status)
