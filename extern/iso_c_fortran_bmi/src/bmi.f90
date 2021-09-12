@@ -38,7 +38,7 @@ module bmif_2_0_iso
       procedure(bmif_get_var_grid), deferred :: get_var_grid
       procedure(bmif_get_var_type), deferred :: get_var_type
 !       procedure(bmif_get_var_units), deferred :: get_var_units
-!       procedure(bmif_get_var_itemsize), deferred :: get_var_itemsize
+      procedure(bmif_get_var_itemsize), deferred :: get_var_itemsize
 !       procedure(bmif_get_var_nbytes), deferred :: get_var_nbytes
 !       procedure(bmif_get_var_location), deferred :: get_var_location
 
@@ -202,14 +202,14 @@ module bmif_2_0_iso
 !       integer :: bmi_status
 !     end function bmif_get_var_units
 
-!     ! Get memory use per array element, in bytes.
-!     function bmif_get_var_itemsize(this, name, size) result(bmi_status)
-!       import :: bmi
-!       class(bmi), intent(in) :: this
-!       character(len=*), intent(in) :: name
-!       integer, intent(out) :: size
-!       integer :: bmi_status
-!     end function bmif_get_var_itemsize
+    ! Get memory use per array element, in bytes.
+    function bmif_get_var_itemsize(this, name, size) result(bmi_status)
+      import :: bmi
+      class(bmi), intent(in) :: this
+      character(len=*), intent(in) :: name
+      integer, intent(out) :: size
+      integer :: bmi_status
+    end function bmif_get_var_itemsize
 
 !     ! Get size of the given variable, in bytes.
 !     function bmif_get_var_nbytes(this, name, nbytes) result(bmi_status)
