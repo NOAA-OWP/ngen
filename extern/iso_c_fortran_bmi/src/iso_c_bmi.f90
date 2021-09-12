@@ -227,8 +227,8 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      ! bmi_status = bmi_box%ptr%get_var_type(c_to_f_string(name), f_type)
-      ! type(1:len_trim(f_type)+1) = f_to_c_string(f_type)
+      bmi_status = bmi_box%ptr%get_var_type(c_to_f_string(name), f_type)
+      type(1:len_trim(f_type)+1) = f_to_c_string(f_type)
     end function get_var_type
 
     ! Get the units of the given variable.
