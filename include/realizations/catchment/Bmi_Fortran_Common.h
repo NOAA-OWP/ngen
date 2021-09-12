@@ -96,7 +96,7 @@ extern "C" {
     /* Grid information */
     extern int get_grid_rank(void *fortran_bmi_handle, int grid, int *rank);
 
-    extern int get_grid_size(void *fortran_bmi_handle, int grid, int *size);
+    extern int get_grid_size(void *fortran_bmi_handle, int *grid, int *size);
 
     extern int get_grid_type(void *fortran_bmi_handle, int grid, char *type);
 

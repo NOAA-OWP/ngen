@@ -492,7 +492,7 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      ! bmi_status = bmi_box%ptr%get_grid_size(grid, size)
+      bmi_status = bmi_box%ptr%get_grid_size(grid, size)
     end function get_grid_size
 
     ! Get the grid type as a string.

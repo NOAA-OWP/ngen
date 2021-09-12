@@ -34,7 +34,7 @@ module bmitestbmi
 !      procedure :: get_grid_type => test_grid_type
 !      procedure :: get_grid_rank => test_grid_rank
 !      procedure :: get_grid_shape => test_grid_shape
-!      procedure :: get_grid_size => test_grid_size
+     procedure :: get_grid_size => test_grid_size
 !      procedure :: get_grid_spacing => test_grid_spacing
 !      procedure :: get_grid_origin => test_grid_origin
 !      procedure :: get_grid_x => test_grid_x
@@ -357,6 +357,26 @@ end function test_finalize
     grid = -1
     bmi_status = BMI_FAILURE
   end function test_var_grid
+
+  ! The total number of elements in a grid.
+  function test_grid_size(this, grid, size) result (bmi_status)
+    class (bmi_test_bmi), intent(in) :: this
+    integer, intent(in) :: grid
+    integer, intent(out) :: size
+    integer :: bmi_status
+
+    select case(grid)
+    case(0)
+       size = 1
+       bmi_status = BMI_SUCCESS
+!     case(1)
+!        size = this%model%n_y * this%model%n_x
+!        bmi_status = BMI_SUCCESS
+    case default
+       size = -1
+       bmi_status = BMI_FAILURE
+    end select
+  end function test_grid_size
 
 #ifdef NGEN_ACTIVE
   function register_bmi(this) result(bmi_status) bind(C, name="register_bmi")
