@@ -386,11 +386,55 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarItemsize_0_c) {
         ASSERT_EQ(adapter->GetVarItemsize(variable_name), expected_var_itemsize_2);
     }
     catch (std::exception& e) {
+        printf("Exception getting var itemsize: %s", e.what());
+        FAIL();
+    }
+}
+
+/** Test output 1 variable nbytes can be retrieved. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetVarNbytes_0_a) {
+    int out_var_index = 0;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+
+    try {
+        ASSERT_EQ(adapter->GetVarNbytes(variable_name), expected_var_nbytes_0);
+    }
+    catch (std::exception& e) {
         printf("Exception getting var nbytes: %s", e.what());
         FAIL();
     }
 }
 
+/** Test output 2 variable nbytes can be retrieved. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetVarNbytes_0_b) {
+    int out_var_index = 1;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+
+    try {
+        ASSERT_EQ(adapter->GetVarNbytes(variable_name), expected_var_nbytes_1);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting var nbytes: %s", e.what());
+        FAIL();
+    }
+}
+
+/** Test output 3 variable nbytes can be retrieved. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetVarNbytes_0_c) {
+    int out_var_index = 2;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+
+    try {
+        ASSERT_EQ(adapter->GetVarNbytes(variable_name), expected_var_nbytes_2);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting var nbytes: %s", e.what());
+        FAIL();
+    }
+}
 
 // /** Test that both the get value function works for input 2. */
 // TEST_F(Bmi_Fortran_Adapter_Test, GetValue_0_b) {
@@ -719,19 +763,6 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarItemsize_0_c) {
 //     }
 // }
 
-// /** Test output 1 variable nbytes can be retrieved. */
-// TEST_F(Bmi_Fortran_Adapter_Test, GetVarNbytes_0_a) {
-//     int out_var_index = 0;
-
-//     std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
-
-//     try {
-//         ASSERT_EQ(adapter->GetVarNbytes(variable_name), expected_var_nbytes);
-//     }
-//     catch (std::exception& e) {
-//         printf("Exception getting var nbytes: %s", e.what());
-//     }
-// }
 // // Test model GetVarGrid() function is disabled currently.  Suggest disabling test until fully implemented.
 // /** Test grid type can be retrieved for output 1 */
 // TEST_F(Bmi_Fortran_Adapter_Test, DISABLED_GetGridType_0_a) {

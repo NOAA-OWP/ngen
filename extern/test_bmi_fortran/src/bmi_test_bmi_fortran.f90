@@ -50,7 +50,7 @@ module bmitestbmi
      procedure :: get_var_type => test_var_type
 !      procedure :: get_var_units => test_var_units
      procedure :: get_var_itemsize => test_var_itemsize
-!      procedure :: get_var_nbytes => test_var_nbytes
+     procedure :: get_var_nbytes => test_var_nbytes
 !      procedure :: get_var_location => test_var_location
 !      procedure :: get_value_int => test_get_int
 !      procedure :: get_value_float => test_get_float
@@ -409,6 +409,27 @@ end function test_finalize
        bmi_status = BMI_FAILURE
     end select
   end function test_var_itemsize
+
+  ! The size of the given variable.
+  function test_var_nbytes(this, name, nbytes) result (bmi_status)
+    class (bmi_test_bmi), intent(in) :: this
+    character (len=*), intent(in) :: name
+    integer, intent(out) :: nbytes
+    integer :: bmi_status
+    integer :: s1, s2, s3, grid, grid_size, item_size
+
+    s1 = this%get_var_grid(name, grid)
+    s2 = this%get_grid_size(grid, grid_size)
+    s3 = this%get_var_itemsize(name, item_size)
+
+    if ((s1 == BMI_SUCCESS).and.(s2 == BMI_SUCCESS).and.(s3 == BMI_SUCCESS)) then
+       nbytes = item_size * grid_size
+       bmi_status = BMI_SUCCESS
+    else
+       nbytes = -1
+       bmi_status = BMI_FAILURE
+    end if
+  end function test_var_nbytes
   
 #ifdef NGEN_ACTIVE
   function register_bmi(this) result(bmi_status) bind(C, name="register_bmi")
