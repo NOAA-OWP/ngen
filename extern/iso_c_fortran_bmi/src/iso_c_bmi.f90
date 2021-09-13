@@ -79,7 +79,7 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      ! bmi_status = bmi_box%ptr%update()
+      bmi_status = bmi_box%ptr%update()
     end function update
 
     ! Advance the model until the given time.
@@ -92,7 +92,7 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      !bmi_status = bmi_box%ptr%update_until(time)
+      bmi_status = bmi_box%ptr%update_until(time)
     end function update_until
 
     ! Perform teardown tasks for the model.

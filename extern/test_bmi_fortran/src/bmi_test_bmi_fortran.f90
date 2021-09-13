@@ -28,8 +28,8 @@ module bmitestbmi
      procedure :: get_current_time => test_current_time
      procedure :: get_time_step => test_time_step
      procedure :: get_time_units => test_time_units
-!      procedure :: update => test_update
-!      procedure :: update_until => test_update_until
+     procedure :: update => test_update
+     procedure :: update_until => test_update_until
      procedure :: get_var_grid => test_var_grid
 !      procedure :: get_grid_type => test_grid_type
 !      procedure :: get_grid_rank => test_grid_rank
@@ -492,9 +492,12 @@ end function test_finalize
     integer :: bmi_status
 
     select case(name)
-    case("INPUT_VAR_3", "OUTPUT_VAR_3")
+    case("INPUT_VAR_3")
        dest = [this%model%input_var_3]
        bmi_status = BMI_SUCCESS
+    case("OUTPUT_VAR_3")
+      dest = [this%model%output_var_3]
+      bmi_status = BMI_SUCCESS
     case default
        dest(:) = -1
        bmi_status = BMI_FAILURE
@@ -511,9 +514,12 @@ end function test_finalize
     integer :: bmi_status
 
     select case(name)
-    case("INPUT_VAR_2", "OUTPUT_VAR_2")
+    case("INPUT_VAR_2")
        dest = [this%model%input_var_2]
        bmi_status = BMI_SUCCESS
+    case("OUTPUT_VAR_2")
+      dest = [this%model%output_var_2]
+      bmi_status = BMI_SUCCESS
     case default
        dest(:) = -1.0
        bmi_status = BMI_FAILURE
@@ -532,8 +538,12 @@ end function test_finalize
     !==================== UPDATE IMPLEMENTATION IF NECESSARY FOR DOUBLE VARS =================
 
     select case(name)
-    case("INPUT_VAR_1", "OUTPUT_VAR_1")
+    case("INPUT_VAR_1")
       dest = [this%model%input_var_1]
+      bmi_status = BMI_SUCCESS
+    case("OUTPUT_VAR_1")
+      dest = [this%model%output_var_1]
+      bmi_status = BMI_SUCCESS
     case default
        dest(:) = -1.d0
        bmi_status = BMI_FAILURE
@@ -581,6 +591,30 @@ end function test_finalize
     time_step = this%model%time_step_size
     bmi_status = BMI_SUCCESS
   end function test_time_step
+
+  ! Advance the model until the given time.
+  function test_update_until(this, time) result (bmi_status)
+    use test_model, only: run
+    class (bmi_test_bmi), intent(inout) :: this
+    double precision, intent(in) :: time
+    integer :: bmi_status, run_status
+
+    call run(this%model, time - this%model%current_model_time )
+    !really this if isn't required...
+    if(this%model%current_model_time /= time ) then
+      this%model%current_model_time = time
+    endif
+
+    bmi_status = BMI_SUCCESS
+  end function test_update_until
+  
+  ! Advance model by one time step.
+  function test_update(this) result (bmi_status)
+    class (bmi_test_bmi), intent(inout) :: this
+    integer :: bmi_status
+
+    bmi_status = this%update_until(this%model%current_model_time + this%model%time_step_size)
+  end function test_update
 
 #ifdef NGEN_ACTIVE
   function register_bmi(this) result(bmi_status) bind(C, name="register_bmi")
