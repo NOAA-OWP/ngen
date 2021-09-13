@@ -12,6 +12,7 @@ module bmif_2_0_iso
   integer, parameter :: BMI_MAX_VAR_NAME = 2048
   integer, parameter :: BMI_MAX_TYPE_NAME = 2048
   integer, parameter :: BMI_MAX_UNITS_NAME = 2048
+  integer, parameter :: BMI_MAX_LOCATION_NAME = 2048
   !Add a bound to max allowable file name length
   integer, parameter :: BMI_MAX_FILE_NAME = 2048
 
@@ -40,7 +41,7 @@ module bmif_2_0_iso
       procedure(bmif_get_var_units), deferred :: get_var_units
       procedure(bmif_get_var_itemsize), deferred :: get_var_itemsize
       procedure(bmif_get_var_nbytes), deferred :: get_var_nbytes
-!       procedure(bmif_get_var_location), deferred :: get_var_location
+      procedure(bmif_get_var_location), deferred :: get_var_location
 
 !       ! Time information
       procedure(bmif_get_current_time), deferred :: get_current_time
@@ -220,14 +221,14 @@ module bmif_2_0_iso
       integer :: bmi_status
     end function bmif_get_var_nbytes
 
-!     ! Describe where a variable is located: node, edge, or face.
-!     function bmif_get_var_location(this, name, location) result(bmi_status)
-!       import :: bmi
-!       class(bmi), intent(in) :: this
-!       character(len=*), intent(in) :: name
-!       character(len=*), intent(out) :: location
-!       integer :: bmi_status
-!     end function bmif_get_var_location
+    ! Describe where a variable is located: node, edge, or face.
+    function bmif_get_var_location(this, name, location) result(bmi_status)
+      import :: bmi
+      class(bmi), intent(in) :: this
+      character(len=*), intent(in) :: name
+      character(len=*), intent(out) :: location
+      integer :: bmi_status
+    end function bmif_get_var_location
 
     ! Current time of the model.
     function bmif_get_current_time(this, time) result(bmi_status)

@@ -287,8 +287,8 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      ! bmi_status = bmi_box%ptr%get_var_location(c_to_f_string(name), f_location)
-      ! location(1:len_trim(f_location)+1) = f_to_c_string(f_location)
+      bmi_status = bmi_box%ptr%get_var_location(c_to_f_string(name), f_location)
+      location(1:len_trim(f_location)+1) = f_to_c_string(f_location)
     end function get_var_location
 
     ! Current time of the model.
