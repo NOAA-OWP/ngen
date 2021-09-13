@@ -40,9 +40,9 @@ module bmitestbmi
      procedure :: get_grid_x => test_grid_x
      procedure :: get_grid_y => test_grid_y
      procedure :: get_grid_z => test_grid_z
-!      procedure :: get_grid_node_count => test_grid_node_count
-!      procedure :: get_grid_edge_count => test_grid_edge_count
-!      procedure :: get_grid_face_count => test_grid_face_count
+     procedure :: get_grid_node_count => test_grid_node_count
+     procedure :: get_grid_edge_count => test_grid_edge_count
+     procedure :: get_grid_face_count => test_grid_face_count
 !      procedure :: get_grid_edge_nodes => test_grid_edge_nodes
 !      procedure :: get_grid_face_edges => test_grid_face_edges
 !      procedure :: get_grid_face_nodes => test_grid_face_nodes
@@ -575,6 +575,44 @@ end function test_finalize
        bmi_status = BMI_FAILURE
     end select
   end function test_grid_z
+
+  ! Get the number of nodes in an unstructured grid.
+  function test_grid_node_count(this, grid, count) result(bmi_status)
+    class(bmi_test_bmi), intent(in) :: this
+    integer, intent(in) :: grid
+    integer, intent(out) :: count
+    integer :: bmi_status
+
+    select case(grid)
+    case(0:1)
+       bmi_status = this%get_grid_size(grid, count)
+    case default
+       count = -1
+       bmi_status = BMI_FAILURE
+    end select
+  end function test_grid_node_count
+
+  ! Get the number of edges in an unstructured grid.
+  function test_grid_edge_count(this, grid, count) result(bmi_status)
+    class(bmi_test_bmi), intent(in) :: this
+    integer, intent(in) :: grid
+    integer, intent(out) :: count
+    integer :: bmi_status
+
+    count = -1
+    bmi_status = BMI_FAILURE
+  end function test_grid_edge_count
+
+  ! Get the number of faces in an unstructured grid.
+  function test_grid_face_count(this, grid, count) result(bmi_status)
+    class(bmi_test_bmi), intent(in) :: this
+    integer, intent(in) :: grid
+    integer, intent(out) :: count
+    integer :: bmi_status
+
+    count = -1
+    bmi_status = BMI_FAILURE
+  end function test_grid_face_count
 
   ! The type of a variable's grid.
   function test_grid_type(this, grid, type) result (bmi_status)

@@ -63,6 +63,9 @@ protected:
     double expected_grid_z = 0;
     double expected_grid_spacing = -1.0;
     double expected_grid_origin = -1.0;
+    int expected_grid_node_count = 1;
+    int expected_grid_edge_count = -1;
+    int expected_grid_face_count = -1;
     std::string expected_grid_type = "scalar";
     int expected_var_itemsize_0 = 8; //type double
     int expected_var_itemsize_1 = 4; //type float/real
@@ -511,6 +514,50 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetGridZ_0_a) {
         printf("Exception getting grid Z: %s", e.what());
     }
     delete [] grid;
+}
+
+/** Test grid node count can be retrieved for output 1. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetGridNodeCount_0_a) {
+    int out_var_index = 0;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    int grd = adapter->GetVarGrid(variable_name);
+    try {
+        ASSERT_EQ(adapter->GetGridNodeCount(grd), expected_grid_node_count);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting grid node count: %s", e.what());
+    }
+}
+
+/** Test grid edge count can be retrieved for output 1. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetGridEdgeCount_0_a) {
+    int out_var_index = 0;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    int grd = adapter->GetVarGrid(variable_name);
+    EXPECT_THROW(adapter->GetGridEdgeCount(grd), std::runtime_error);
+    // try {
+    //     ASSERT_EQ(adapter->GetGridEdgeCount(grd), expected_grid_edge_count);
+    // }
+    // catch (std::exception& e) {
+    //     printf("Exception getting grid edge count: %s", e.what());
+    // }
+}
+
+/** Test grid face count can be retrieved for output 1. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetGridFaceCount_0_a) {
+    int out_var_index = 0;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    int grd = adapter->GetVarGrid(variable_name);
+    EXPECT_THROW(adapter->GetGridFaceCount(grd), std::runtime_error);
+    // try {
+    //     ASSERT_EQ(adapter->GetGridFaceCount(grd), expected_grid_face_count);
+    // }
+    // catch (std::exception& e) {
+    //     printf("Exception getting grid face count: %s", e.what());
+    // }
 }
 
 /** Test grid type can be retrieved for output 1 */
