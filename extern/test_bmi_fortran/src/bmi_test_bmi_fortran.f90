@@ -48,7 +48,7 @@ module bmitestbmi
 !      procedure :: get_grid_face_nodes => test_grid_face_nodes
 !      procedure :: get_grid_nodes_per_face => test_grid_nodes_per_face
      procedure :: get_var_type => test_var_type
-!      procedure :: get_var_units => test_var_units
+     procedure :: get_var_units => test_var_units
      procedure :: get_var_itemsize => test_var_itemsize
      procedure :: get_var_nbytes => test_var_nbytes
 !      procedure :: get_var_location => test_var_location
@@ -112,6 +112,12 @@ module bmitestbmi
 
   integer :: output_grid(3) = [0, 0, 0]
   integer :: input_grid(3) = [0, 0, 0]
+
+  character (len=BMI_MAX_UNITS_NAME) :: &
+    output_units(3) = [character(BMI_MAX_UNITS_NAME):: 'm', 'm', 's']
+
+  character (len=BMI_MAX_UNITS_NAME) :: &
+    input_units(3) = [character(BMI_MAX_UNITS_NAME):: 'm', 'm', 's']
 
 contains
 
@@ -326,6 +332,38 @@ end function test_finalize
     bmi_status = BMI_FAILURE
   end function test_var_type
 
+  ! The units of the variable, as a string.
+  function test_var_units(this, name, units) result (bmi_status)
+    class (bmi_test_bmi), intent(in) :: this
+    character (len=*), intent(in) :: name
+    character (len=*), intent(out) :: units
+    integer :: bmi_status, i
+
+    !checkout output vars
+    do  i = 1, size(output_items)
+      if(output_items(i) .eq. trim(name) ) then
+        units = output_units(i)
+        bmi_status = BMI_SUCCESS
+        return
+      endif
+    end do
+
+    !checkout input vars
+    do  i = 1, size(input_items)
+      if(input_items(i) .eq. trim(name) ) then
+        units = input_units(i)
+        bmi_status = BMI_SUCCESS
+        return
+      endif
+    end do
+  
+    !check any other vars???
+
+    !no matches
+    units = "-"
+    bmi_status = BMI_FAILURE
+  end function test_var_units
+
   ! Get the grid id for a particular variable.
   function test_var_grid(this, name, grid) result (bmi_status)
     class (bmi_test_bmi), intent(in) :: this
@@ -430,6 +468,7 @@ end function test_finalize
        bmi_status = BMI_FAILURE
     end if
   end function test_var_nbytes
+
 ! Set new integer values.
   function test_set_int(this, name, src) result (bmi_status)
     class (bmi_test_bmi), intent(inout) :: this

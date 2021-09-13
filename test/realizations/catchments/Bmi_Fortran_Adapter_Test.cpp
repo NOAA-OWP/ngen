@@ -321,6 +321,21 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarGrid_1_b) {
     }
 }
 
+/** Test output 1 variable units can be retrieved. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetVarUnits_0_a) {
+    int out_var_index = 0;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    std::string expected_units = expected_output_var_units[out_var_index];
+
+    try {
+        ASSERT_EQ(adapter->GetVarUnits(variable_name), expected_units);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting var units: %s", e.what());
+    }
+}
+
 /** Test grid size can be retrieved for output 2. */
 TEST_F(Bmi_Fortran_Adapter_Test, GetGridSize_0_a) {
     int out_var_index = 1;

@@ -243,8 +243,8 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      ! bmi_status = bmi_box%ptr%get_var_units(c_to_f_string(name), f_units)
-      ! units(1:len_trim(f_units)+1) = f_to_c_string(f_units)
+      bmi_status = bmi_box%ptr%get_var_units(c_to_f_string(name), f_units)
+      units(1:len_trim(f_units)+1) = f_to_c_string(f_units)
     end function get_var_units
 
     ! Get memory use per array element, in bytes.
