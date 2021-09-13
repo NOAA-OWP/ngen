@@ -121,13 +121,13 @@ extern "C" {
 
     extern int get_grid_face_count(void *fortran_bmi_handle, int *grid, int *count);
 
-    extern int get_grid_edge_nodes(void *fortran_bmi_handle, int grid, int *edge_nodes);
+    extern int get_grid_edge_nodes(void *fortran_bmi_handle, int *grid, int *edge_nodes);
 
-    extern int get_grid_face_edges(void *fortran_bmi_handle, int grid, int *face_edges);
+    extern int get_grid_face_edges(void *fortran_bmi_handle, int *grid, int *face_edges);
 
-    extern int get_grid_face_nodes(void *fortran_bmi_handle, int grid, int *face_nodes);
+    extern int get_grid_face_nodes(void *fortran_bmi_handle, int *grid, int *face_nodes);
 
-    extern int get_grid_nodes_per_face(void *fortran_bmi_handle, int grid, int *nodes_per_face);
+    extern int get_grid_nodes_per_face(void *fortran_bmi_handle, int *grid, int *nodes_per_face);
 }
 
 #endif // NGEN_BMI_FORTRAN_ACTIVE

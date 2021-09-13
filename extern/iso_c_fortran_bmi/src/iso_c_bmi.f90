@@ -672,8 +672,8 @@ module iso_c_bmif_2_0
       integer :: num_nodes
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      ! bmi_status = bmi_box%ptr%get_grid_node_count(grid, num_nodes)
-      ! bmi_status = bmi_box%ptr%get_grid_edge_nodes(grid, edge_nodes(:num_nodes))
+      bmi_status = 2 * bmi_box%ptr%get_grid_edge_count(grid, num_nodes)
+      bmi_status = bmi_box%ptr%get_grid_edge_nodes(grid, edge_nodes(:num_nodes))
     end function get_grid_edge_nodes
 
     ! Get the face-edge connectivity.
@@ -685,10 +685,13 @@ module iso_c_bmif_2_0
       !use a wrapper for c interop
       type(box), pointer :: bmi_box
       integer :: num_faces
+      integer, allocatable :: nodes_per_face(:)
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      ! bmi_status = bmi_box%ptr%get_grid_face_count(grid, num_faces)
-      ! bmi_status = bmi_box%ptr%get_grid_face_edges(grid, face_edges(:num_faces))
+      bmi_status = bmi_box%ptr%get_grid_face_count(grid, num_faces)
+      allocate(nodes_per_face(num_faces))
+      bmi_status = bmi_box%ptr%get_grid_nodes_per_face(grid, nodes_per_face)
+      bmi_status = bmi_box%ptr%get_grid_face_edges(grid, face_edges(:SUM(nodes_per_face)))
     end function get_grid_face_edges
 
     ! Get the face-node connectivity.
@@ -700,10 +703,13 @@ module iso_c_bmif_2_0
       !use a wrapper for c interop
       type(box), pointer :: bmi_box
       integer :: num_faces
+      integer, allocatable :: nodes_per_face(:)
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      ! bmi_status = bmi_box%ptr%get_grid_face_count(grid, num_faces)
-      ! bmi_status = bmi_box%ptr%get_grid_face_nodes(grid, face_nodes(:num_faces))
+      bmi_status = bmi_box%ptr%get_grid_face_count(grid, num_faces)
+      allocate(nodes_per_face(num_faces))
+      bmi_status = bmi_box%ptr%get_grid_nodes_per_face(grid, nodes_per_face)
+      bmi_status = bmi_box%ptr%get_grid_face_nodes(grid, face_nodes(:SUM(nodes_per_face)))
     end function get_grid_face_nodes
 
     ! Get the number of nodes for each face.
@@ -717,8 +723,8 @@ module iso_c_bmif_2_0
       integer :: num_faces
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      ! bmi_status = bmi_box%ptr%get_grid_face_count(grid, num_faces)
-      ! bmi_status = bmi_box%ptr%get_grid_nodes_per_face(grid, nodes_per_face(:num_faces))
+      bmi_status = bmi_box%ptr%get_grid_face_count(grid, num_faces)
+      bmi_status = bmi_box%ptr%get_grid_nodes_per_face(grid, nodes_per_face(:num_faces))
     end function get_grid_nodes_per_face
 
 end module iso_c_bmif_2_0

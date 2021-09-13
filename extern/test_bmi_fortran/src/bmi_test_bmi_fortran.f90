@@ -43,10 +43,10 @@ module bmitestbmi
      procedure :: get_grid_node_count => test_grid_node_count
      procedure :: get_grid_edge_count => test_grid_edge_count
      procedure :: get_grid_face_count => test_grid_face_count
-!      procedure :: get_grid_edge_nodes => test_grid_edge_nodes
-!      procedure :: get_grid_face_edges => test_grid_face_edges
-!      procedure :: get_grid_face_nodes => test_grid_face_nodes
-!      procedure :: get_grid_nodes_per_face => test_grid_nodes_per_face
+     procedure :: get_grid_edge_nodes => test_grid_edge_nodes
+     procedure :: get_grid_face_edges => test_grid_face_edges
+     procedure :: get_grid_face_nodes => test_grid_face_nodes
+     procedure :: get_grid_nodes_per_face => test_grid_nodes_per_face
      procedure :: get_var_type => test_var_type
      procedure :: get_var_units => test_var_units
      procedure :: get_var_itemsize => test_var_itemsize
@@ -613,6 +613,50 @@ end function test_finalize
     count = -1
     bmi_status = BMI_FAILURE
   end function test_grid_face_count
+
+    ! Get the edge-node connectivity.
+  function test_grid_edge_nodes(this, grid, edge_nodes) result(bmi_status)
+    class(bmi_test_bmi), intent(in) :: this
+    integer, intent(in) :: grid
+    integer, dimension(:), intent(out) :: edge_nodes
+    integer :: bmi_status
+
+    edge_nodes(:) = -1
+    bmi_status = BMI_FAILURE
+  end function test_grid_edge_nodes
+
+  ! Get the face-edge connectivity.
+  function test_grid_face_edges(this, grid, face_edges) result(bmi_status)
+    class(bmi_test_bmi), intent(in) :: this
+    integer, intent(in) :: grid
+    integer, dimension(:), intent(out) :: face_edges
+    integer :: bmi_status
+
+    face_edges(:) = -1
+    bmi_status = BMI_FAILURE
+  end function test_grid_face_edges
+
+  ! Get the face-node connectivity.
+  function test_grid_face_nodes(this, grid, face_nodes) result(bmi_status)
+    class(bmi_test_bmi), intent(in) :: this
+    integer, intent(in) :: grid
+    integer, dimension(:), intent(out) :: face_nodes
+    integer :: bmi_status
+
+    face_nodes(:) = -1
+    bmi_status = BMI_FAILURE
+  end function test_grid_face_nodes
+
+  ! Get the number of nodes for each face.
+  function test_grid_nodes_per_face(this, grid, nodes_per_face) result(bmi_status)
+    class(bmi_test_bmi), intent(in) :: this
+    integer, intent(in) :: grid
+    integer, dimension(:), intent(out) :: nodes_per_face
+    integer :: bmi_status
+
+    nodes_per_face(:) = -1
+    bmi_status = BMI_FAILURE
+  end function test_grid_nodes_per_face
 
   ! The type of a variable's grid.
   function test_grid_type(this, grid, type) result (bmi_status)

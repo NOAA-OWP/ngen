@@ -94,12 +94,11 @@ module bmif_2_0_iso
       procedure(bmif_get_grid_node_count), deferred :: get_grid_node_count
       procedure(bmif_get_grid_edge_count), deferred :: get_grid_edge_count
       procedure(bmif_get_grid_face_count), deferred :: get_grid_face_count
-!       procedure(bmif_get_grid_edge_nodes), deferred :: get_grid_edge_nodes
-!       procedure(bmif_get_grid_face_edges), deferred :: get_grid_face_edges
-!       procedure(bmif_get_grid_face_nodes), deferred :: get_grid_face_nodes
-!       procedure(bmif_get_grid_nodes_per_face), deferred :: &
-!            get_grid_nodes_per_face
-      ! procedure :: test => my_test
+      procedure(bmif_get_grid_edge_nodes), deferred :: get_grid_edge_nodes
+      procedure(bmif_get_grid_face_edges), deferred :: get_grid_face_edges
+      procedure(bmif_get_grid_face_nodes), deferred :: get_grid_face_nodes
+      procedure(bmif_get_grid_nodes_per_face), deferred :: &
+           get_grid_nodes_per_face
   end type bmi
 
   abstract interface
@@ -525,45 +524,45 @@ module bmif_2_0_iso
       integer :: bmi_status
     end function bmif_get_grid_face_count
 
-!     ! Get the edge-node connectivity.
-!     function bmif_get_grid_edge_nodes(this, grid, edge_nodes) &
-!       result(bmi_status)
-!       import :: bmi
-!       class(bmi), intent(in) :: this
-!       integer, intent(in) :: grid
-!       integer, dimension(:), intent(out) :: edge_nodes
-!       integer :: bmi_status
-!     end function bmif_get_grid_edge_nodes
+    ! Get the edge-node connectivity.
+    function bmif_get_grid_edge_nodes(this, grid, edge_nodes) &
+      result(bmi_status)
+      import :: bmi
+      class(bmi), intent(in) :: this
+      integer, intent(in) :: grid
+      integer, dimension(:), intent(out) :: edge_nodes
+      integer :: bmi_status
+    end function bmif_get_grid_edge_nodes
 
-!     ! Get the face-edge connectivity.
-!     function bmif_get_grid_face_edges(this, grid, face_edges) &
-!       result(bmi_status)
-!       import :: bmi
-!       class(bmi), intent(in) :: this
-!       integer, intent(in) :: grid
-!       integer, dimension(:), intent(out) :: face_edges
-!       integer :: bmi_status
-!     end function bmif_get_grid_face_edges
+    ! Get the face-edge connectivity.
+    function bmif_get_grid_face_edges(this, grid, face_edges) &
+      result(bmi_status)
+      import :: bmi
+      class(bmi), intent(in) :: this
+      integer, intent(in) :: grid
+      integer, dimension(:), intent(out) :: face_edges
+      integer :: bmi_status
+    end function bmif_get_grid_face_edges
 
-!     ! Get the face-node connectivity.
-!     function bmif_get_grid_face_nodes(this, grid, face_nodes) &
-!       result(bmi_status)
-!       import :: bmi
-!       class(bmi), intent(in) :: this
-!       integer, intent(in) :: grid
-!       integer, dimension(:), intent(out) :: face_nodes
-!       integer :: bmi_status
-!     end function bmif_get_grid_face_nodes
+    ! Get the face-node connectivity.
+    function bmif_get_grid_face_nodes(this, grid, face_nodes) &
+      result(bmi_status)
+      import :: bmi
+      class(bmi), intent(in) :: this
+      integer, intent(in) :: grid
+      integer, dimension(:), intent(out) :: face_nodes
+      integer :: bmi_status
+    end function bmif_get_grid_face_nodes
 
-!     ! Get the number of nodes for each face.
-!     function bmif_get_grid_nodes_per_face(this, grid, nodes_per_face) &
-!       result(bmi_status)
-!       import :: bmi
-!       class(bmi), intent(in) :: this
-!       integer, intent(in) :: grid
-!       integer, dimension(:), intent(out) :: nodes_per_face
-!       integer :: bmi_status
-!     end function bmif_get_grid_nodes_per_face
+    ! Get the number of nodes for each face.
+    function bmif_get_grid_nodes_per_face(this, grid, nodes_per_face) &
+      result(bmi_status)
+      import :: bmi
+      class(bmi), intent(in) :: this
+      integer, intent(in) :: grid
+      integer, dimension(:), intent(out) :: nodes_per_face
+      integer :: bmi_status
+    end function bmif_get_grid_nodes_per_face
 
   end interface
 

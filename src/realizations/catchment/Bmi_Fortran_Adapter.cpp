@@ -256,26 +256,26 @@ int Bmi_Fortran_Adapter::GetGridFaceCount(int grid) {
     return count;
 }
 
-void Bmi_Fortran_Adapter::GetGridEdgeNodes(const int grid, int *edge_nodes) {
-    if (get_grid_edge_nodes(&bmi_model->handle, grid, edge_nodes) != BMI_SUCCESS) {
+void Bmi_Fortran_Adapter::GetGridEdgeNodes(int grid, int *edge_nodes) {
+    if (get_grid_edge_nodes(&bmi_model->handle, &grid, edge_nodes) != BMI_SUCCESS) {
         throw std::runtime_error(model_name + " failed to get grid " + std::to_string(grid) + " edge nodes.");
     }
 }
 
-void Bmi_Fortran_Adapter::GetGridFaceEdges(const int grid, int *face_edges) {
-    if (get_grid_face_edges(&bmi_model->handle, grid, face_edges) != BMI_SUCCESS) {
+void Bmi_Fortran_Adapter::GetGridFaceEdges(int grid, int *face_edges) {
+    if (get_grid_face_edges(&bmi_model->handle, &grid, face_edges) != BMI_SUCCESS) {
         throw std::runtime_error(model_name + " failed to get grid " + std::to_string(grid) + " face edges.");
     }
 }
 
-void Bmi_Fortran_Adapter::GetGridFaceNodes(const int grid, int *face_nodes) {
-    if (get_grid_face_nodes(&bmi_model->handle, grid, face_nodes) != BMI_SUCCESS) {
+void Bmi_Fortran_Adapter::GetGridFaceNodes(int grid, int *face_nodes) {
+    if (get_grid_face_nodes(&bmi_model->handle, &grid, face_nodes) != BMI_SUCCESS) {
         throw std::runtime_error(model_name + " failed to get grid " + std::to_string(grid) + " face nodes.");
     }
 }
 
-void Bmi_Fortran_Adapter::GetGridNodesPerFace(const int grid, int *nodes_per_face) {
-    if (get_grid_nodes_per_face(&bmi_model->handle, grid, nodes_per_face) != BMI_SUCCESS) {
+void Bmi_Fortran_Adapter::GetGridNodesPerFace(int grid, int *nodes_per_face) {
+    if (get_grid_nodes_per_face(&bmi_model->handle, &grid, nodes_per_face) != BMI_SUCCESS) {
         throw std::runtime_error(model_name + " failed to get grid " + std::to_string(grid) + " nodes per face.");
     }
 }
