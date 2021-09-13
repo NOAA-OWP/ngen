@@ -214,20 +214,20 @@ void Bmi_Fortran_Adapter::GetGridOrigin(int grid, double *origin) {
     }
 }
 
-void Bmi_Fortran_Adapter::GetGridX(const int grid, double *x) {
-    if (get_grid_x(&bmi_model->handle, grid, x) != BMI_SUCCESS) {
+void Bmi_Fortran_Adapter::GetGridX(int grid, double *x) {
+    if (get_grid_x(&bmi_model->handle, &grid, x) != BMI_SUCCESS) {
         throw std::runtime_error(model_name + " failed to get grid " + std::to_string(grid) + " x.");
     }
 }
 
-void Bmi_Fortran_Adapter::GetGridY(const int grid, double *y) {
-    if (get_grid_y(&bmi_model->handle, grid, y) != BMI_SUCCESS) {
+void Bmi_Fortran_Adapter::GetGridY(int grid, double *y) {
+    if (get_grid_y(&bmi_model->handle, &grid, y) != BMI_SUCCESS) {
         throw std::runtime_error(model_name + " failed to get grid " + std::to_string(grid) + " y.");
     }
 }
 
-void Bmi_Fortran_Adapter::GetGridZ(const int grid, double *z) {
-    if (get_grid_z(&bmi_model->handle, grid, z) != BMI_SUCCESS) {
+void Bmi_Fortran_Adapter::GetGridZ(int grid, double *z) {
+    if (get_grid_z(&bmi_model->handle, &grid, z) != BMI_SUCCESS) {
         throw std::runtime_error(model_name + " failed to get grid " + std::to_string(grid) + " z.");
     }
 }

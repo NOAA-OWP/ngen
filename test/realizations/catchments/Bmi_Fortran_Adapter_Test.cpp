@@ -58,6 +58,9 @@ protected:
     int expected_grid_rank = 1;
     int expected_grid_size = 1;
     int expected_grid_shape = -1;
+    double expected_grid_x = 0;
+    double expected_grid_y = 0;
+    double expected_grid_z = 0;
     double expected_grid_spacing = -1.0;
     double expected_grid_origin = -1.0;
     std::string expected_grid_type = "scalar";
@@ -454,6 +457,60 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetGridOrigin_0_a) {
     // catch (std::exception& e) {
     //     printf("Exception getting grid origin: %s", e.what());
     // }
+}
+
+/** Test grid X can be retrieved for output 1. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetGridX_0_a) {
+    int out_var_index = 0;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    int grd = adapter->GetVarGrid(variable_name);
+    int size = adapter->GetGridSize(grd);
+    double* grid = new double [size];
+    try {
+        adapter->GetGridX(grd, grid);
+        ASSERT_EQ(grid[0], expected_grid_x);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting grid X: %s", e.what());
+    }
+    delete [] grid;
+}
+
+/** Test grid Y can be retrieved for output 1. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetGridY_0_a) {
+    int out_var_index = 0;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    int grd = adapter->GetVarGrid(variable_name);
+    int size = adapter->GetGridSize(grd);
+    double* grid = new double [size];
+    try {
+        adapter->GetGridY(grd, grid);
+        ASSERT_EQ(grid[0], expected_grid_y);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting grid Y: %s", e.what());
+    }
+    delete [] grid;
+}
+
+/** Test grid Z can be retrieved for output 1. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetGridZ_0_a) {
+    int out_var_index = 0;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    int grd = adapter->GetVarGrid(variable_name);
+    int size = adapter->GetGridSize(grd);
+    double* grid = new double [size];
+    try {
+        adapter->GetGridZ(grd, grid);
+        ASSERT_EQ(grid[0], expected_grid_z);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting grid Z: %s", e.what());
+    }
+    delete [] grid;
 }
 
 /** Test grid type can be retrieved for output 1 */

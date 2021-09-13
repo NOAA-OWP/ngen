@@ -585,8 +585,8 @@ module iso_c_bmif_2_0
       integer :: num_nodes
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      ! bmi_status = bmi_box%ptr%get_grid_node_count(grid, num_nodes)
-      ! bmi_status = bmi_box%ptr%get_grid_x(grid, x(:num_nodes))
+      bmi_status = bmi_box%ptr%get_grid_size(grid, num_nodes)
+      bmi_status = bmi_box%ptr%get_grid_x(grid, x(:num_nodes))
     end function get_grid_x
 
     ! Get the y-coordinates of the nodes of a computational grid.
@@ -600,8 +600,8 @@ module iso_c_bmif_2_0
       integer :: num_nodes
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      ! bmi_status = bmi_box%ptr%get_grid_node_count(grid, num_nodes)
-      ! bmi_status = bmi_box%ptr%get_grid_y(grid, y(:num_nodes))
+      bmi_status = bmi_box%ptr%get_grid_size(grid, num_nodes)
+      bmi_status = bmi_box%ptr%get_grid_y(grid, y(:num_nodes))
     end function get_grid_y
 
     ! Get the z-coordinates of the nodes of a computational grid.
@@ -615,8 +615,8 @@ module iso_c_bmif_2_0
       integer :: num_nodes
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      ! bmi_status = bmi_box%ptr%get_grid_node_count(grid, num_nodes)
-      ! bmi_status = bmi_box%ptr%get_grid_z(grid, z(:num_nodes))
+      bmi_status = bmi_box%ptr%get_grid_size(grid, num_nodes)
+      bmi_status = bmi_box%ptr%get_grid_z(grid, z(:num_nodes))
     end function get_grid_z
 
     ! Get the number of nodes in an unstructured grid.
