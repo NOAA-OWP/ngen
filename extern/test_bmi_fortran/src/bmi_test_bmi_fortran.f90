@@ -32,7 +32,7 @@ module bmitestbmi
      procedure :: update_until => test_update_until
      procedure :: get_var_grid => test_var_grid
 !      procedure :: get_grid_type => test_grid_type
-!      procedure :: get_grid_rank => test_grid_rank
+     procedure :: get_grid_rank => test_grid_rank
 !      procedure :: get_grid_shape => test_grid_shape
      procedure :: get_grid_size => test_grid_size
 !      procedure :: get_grid_spacing => test_grid_spacing
@@ -433,6 +433,23 @@ end function test_finalize
     grid = -1
     bmi_status = BMI_FAILURE
   end function test_var_grid
+
+  ! The number of dimensions of a grid.
+  function test_grid_rank(this, grid, rank) result (bmi_status)
+    class (bmi_test_bmi), intent(in) :: this
+    integer, intent(in) :: grid
+    integer, intent(out) :: rank
+    integer :: bmi_status
+
+    select case(grid)
+    case(0)
+       rank = 1
+       bmi_status = BMI_SUCCESS
+    case default
+       rank = -1
+       bmi_status = BMI_FAILURE
+    end select
+  end function test_grid_rank
 
   ! The total number of elements in a grid.
   function test_grid_size(this, grid, size) result (bmi_status)

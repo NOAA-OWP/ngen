@@ -76,7 +76,7 @@ module bmif_2_0_iso
 ! !            set_value_at_indices_double
 
 !       ! Grid information
-!       procedure(bmif_get_grid_rank), deferred :: get_grid_rank
+      procedure(bmif_get_grid_rank), deferred :: get_grid_rank
       procedure(bmif_get_grid_size), deferred :: get_grid_size
 !       procedure(bmif_get_grid_type), deferred :: get_grid_type
 
@@ -417,14 +417,14 @@ module bmif_2_0_iso
 ! !       integer :: bmi_status
 ! !     end function bmif_set_value_at_indices_double
 ! !
-!     ! Get number of dimensions of the computational grid.
-!     function bmif_get_grid_rank(this, grid, rank) result(bmi_status)
-!       import :: bmi
-!       class(bmi), intent(in) :: this
-!       integer, intent(in) :: grid
-!       integer, intent(out) :: rank
-!       integer :: bmi_status
-!     end function bmif_get_grid_rank
+    ! Get number of dimensions of the computational grid.
+    function bmif_get_grid_rank(this, grid, rank) result(bmi_status)
+      import :: bmi
+      class(bmi), intent(in) :: this
+      integer, intent(in) :: grid
+      integer, intent(out) :: rank
+      integer :: bmi_status
+    end function bmif_get_grid_rank
 
 ! Get the total number of elements in the computational grid.
     function bmif_get_grid_size(this, grid, size) result(bmi_status)

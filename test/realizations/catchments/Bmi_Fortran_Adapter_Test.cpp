@@ -382,6 +382,21 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetGridSize_0_a) {
     }
 }
 
+/** Test grid rank can be retrieved for output 1. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetGridRank_0_a) {
+    int out_var_index = 0;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    int grd = adapter->GetVarGrid(variable_name);
+
+    try {
+        ASSERT_EQ(adapter->GetGridRank(grd), expected_grid_rank);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting grid rank: %s", e.what());
+    }
+}
+
 TEST_F(Bmi_Fortran_Adapter_Test, GetVarItemsize_0_a) {
     int out_var_index = 0;
 
@@ -790,22 +805,6 @@ TEST_F(Bmi_Fortran_Adapter_Test, Update_until_0_b) {
 //     }
 //     catch (std::exception& e) {
 //         printf("Exception getting grid type: %s", e.what());
-//     }
-// }
-
-// // CFE GetVarGrid() function is disabled currently.  Suggest disabling test until pure testing BMI module is developed.
-// /** Test grid rank can be retrieved for output 1. */
-// TEST_F(Bmi_Fortran_Adapter_Test, DISABLED_GetGridRank_0_a) {
-//     int out_var_index = 0;
-
-//     std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
-//     int grd = adapter->GetVarGrid(variable_name);
-
-//     try {
-//         ASSERT_EQ(adapter->GetGridRank(grd), expected_grid_rank);
-//     }
-//     catch (std::exception& e) {
-//         printf("Exception getting grid rank: %s", e.what());
 //     }
 // }
 

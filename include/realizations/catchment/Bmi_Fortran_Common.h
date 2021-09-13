@@ -94,7 +94,7 @@ extern "C" {
     extern int set_value_double(void *fortran_bmi_handle, const char *name, double *src);
 
     /* Grid information */
-    extern int get_grid_rank(void *fortran_bmi_handle, int grid, int *rank);
+    extern int get_grid_rank(void *fortran_bmi_handle, int *grid, int *rank);
 
     extern int get_grid_size(void *fortran_bmi_handle, int *grid, int *size);
 
