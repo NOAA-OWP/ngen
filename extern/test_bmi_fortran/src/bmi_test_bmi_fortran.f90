@@ -23,10 +23,10 @@ module bmitestbmi
      procedure :: get_output_var_names => test_output_var_names
      procedure :: initialize => test_initialize
      procedure :: finalize => test_finalize
-!      procedure :: get_start_time => test_start_time
-!      procedure :: get_end_time => test_end_time
-!      procedure :: get_current_time => test_current_time
-!      procedure :: get_time_step => test_time_step
+     procedure :: get_start_time => test_start_time
+     procedure :: get_end_time => test_end_time
+     procedure :: get_current_time => test_current_time
+     procedure :: get_time_step => test_time_step
      procedure :: get_time_units => test_time_units
 !      procedure :: update => test_update
 !      procedure :: update_until => test_update_until
@@ -541,7 +541,47 @@ end function test_finalize
     ! NOTE, if vars are gridded, then use:
     ! dest = reshape(this%model%var, [this%model%n_x*this%model%n_y])
   end function test_get_double
+
+    ! Model start time.
+  function test_start_time(this, time) result (bmi_status)
+    class (bmi_test_bmi), intent(in) :: this
+    double precision, intent(out) :: time
+    integer :: bmi_status
+
+    time = 0.0
+    bmi_status = BMI_SUCCESS
+  end function test_start_time
   
+  ! Model end time.
+  function test_end_time(this, time) result (bmi_status)
+    class (bmi_test_bmi), intent(in) :: this
+    double precision, intent(out) :: time
+    integer :: bmi_status
+
+    time = this%model%num_time_steps * this%model%time_step_size
+    bmi_status = BMI_SUCCESS
+  end function test_end_time
+
+  ! Model current time.
+  function test_current_time(this, time) result (bmi_status)
+    class (bmi_test_bmi), intent(in) :: this
+    double precision, intent(out) :: time
+    integer :: bmi_status
+
+    time = this%model%current_model_time
+    bmi_status = BMI_SUCCESS
+  end function test_current_time
+
+  ! Model current time.
+  function test_time_step(this, time_step) result (bmi_status)
+    class (bmi_test_bmi), intent(in) :: this
+    double precision, intent(out) :: time_step
+    integer :: bmi_status
+
+    time_step = this%model%time_step_size
+    bmi_status = BMI_SUCCESS
+  end function test_time_step
+
 #ifdef NGEN_ACTIVE
   function register_bmi(this) result(bmi_status) bind(C, name="register_bmi")
    use, intrinsic:: iso_c_binding, only: c_ptr, c_loc, c_int

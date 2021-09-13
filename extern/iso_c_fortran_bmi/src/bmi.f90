@@ -43,11 +43,11 @@ module bmif_2_0_iso
 !       procedure(bmif_get_var_location), deferred :: get_var_location
 
 !       ! Time information
-!       procedure(bmif_get_current_time), deferred :: get_current_time
-!       procedure(bmif_get_start_time), deferred :: get_start_time
-!       procedure(bmif_get_end_time), deferred :: get_end_time
+      procedure(bmif_get_current_time), deferred :: get_current_time
+      procedure(bmif_get_start_time), deferred :: get_start_time
+      procedure(bmif_get_end_time), deferred :: get_end_time
        procedure(bmif_get_time_units), deferred :: get_time_units
-!       procedure(bmif_get_time_step), deferred :: get_time_step
+      procedure(bmif_get_time_step), deferred :: get_time_step
 ! !
 !       ! Getters, by type
       procedure(bmif_get_value_int), deferred :: get_value_int
@@ -229,29 +229,29 @@ module bmif_2_0_iso
 !       integer :: bmi_status
 !     end function bmif_get_var_location
 
-!     ! Current time of the model.
-!     function bmif_get_current_time(this, time) result(bmi_status)
-!       import :: bmi
-!       class(bmi), intent(in) :: this
-!       double precision, intent(out) :: time
-!       integer :: bmi_status
-!     end function bmif_get_current_time
+    ! Current time of the model.
+    function bmif_get_current_time(this, time) result(bmi_status)
+      import :: bmi
+      class(bmi), intent(in) :: this
+      double precision, intent(out) :: time
+      integer :: bmi_status
+    end function bmif_get_current_time
 
-!     ! Start time of the model.
-!     function bmif_get_start_time(this, time) result(bmi_status)
-!       import :: bmi
-!       class(bmi), intent(in) :: this
-!       double precision, intent(out) :: time
-!       integer :: bmi_status
-!     end function bmif_get_start_time
+    ! Start time of the model.
+    function bmif_get_start_time(this, time) result(bmi_status)
+      import :: bmi
+      class(bmi), intent(in) :: this
+      double precision, intent(out) :: time
+      integer :: bmi_status
+    end function bmif_get_start_time
 
-!     ! End time of the model.
-!     function bmif_get_end_time(this, time) result(bmi_status)
-!       import :: bmi
-!       class(bmi), intent(in) :: this
-!       double precision, intent(out) :: time
-!       integer :: bmi_status
-!     end function bmif_get_end_time
+    ! End time of the model.
+    function bmif_get_end_time(this, time) result(bmi_status)
+      import :: bmi
+      class(bmi), intent(in) :: this
+      double precision, intent(out) :: time
+      integer :: bmi_status
+    end function bmif_get_end_time
 
     ! Time units of the model.
     function bmif_get_time_units(this, units) result(bmi_status)
@@ -261,13 +261,13 @@ module bmif_2_0_iso
       integer :: bmi_status
     end function bmif_get_time_units
 
-!     ! Time step of the model.
-!     function bmif_get_time_step(this, time_step) result(bmi_status)
-!       import :: bmi
-!       class(bmi), intent(in) :: this
-!       double precision, intent(out) :: time_step
-!       integer :: bmi_status
-!     end function bmif_get_time_step
+    ! Time step of the model.
+    function bmif_get_time_step(this, time_step) result(bmi_status)
+      import :: bmi
+      class(bmi), intent(in) :: this
+      double precision, intent(out) :: time_step
+      integer :: bmi_status
+    end function bmif_get_time_step
 
     ! Get a copy of values (flattened!) of the given integer variable.
     function bmif_get_value_int(this, name, dest) result(bmi_status)

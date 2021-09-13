@@ -487,6 +487,43 @@ TEST_F(Bmi_Fortran_Adapter_Test, SetValue_0_c) {
     ASSERT_EQ(value_2, retrieved);
 }
 
+/** Test that getting the current model time works after initialization. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetCurrentTime_0_a) {
+    adapter->Initialize();
+    ASSERT_EQ(adapter->GetStartTime(), adapter->GetCurrentTime());
+    adapter->Finalize();
+}
+
+/** Test the function for getting start time. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetStartTime_0_a) {
+    adapter->Initialize();
+    ASSERT_EQ(0, adapter->GetStartTime());
+    adapter->Finalize();
+}
+
+/** Test the function for getting model end time, assuming (as in used config) 720 time steps. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetEndTime_0_a) {
+    adapter->Initialize();
+    double expected = adapter->GetStartTime() + (720.0 * adapter->GetTimeStep());
+    ASSERT_EQ(expected, adapter->GetEndTime());
+    adapter->Finalize();
+}
+
+/** Test the function for getting model time units. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetTimeUnits_0_a) {
+    adapter->Initialize();
+    ASSERT_EQ("s", adapter->GetTimeUnits());
+    adapter->Finalize();
+}
+
+/** Test the function for getting time step size. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetTimeStep_0_a) {
+    adapter->Initialize();
+    ASSERT_EQ(3600, adapter->GetTimeStep());
+    adapter->Finalize();
+}
+
+/* Tests  dependent on Update() */
 // /** Test that both the get value function works for output 1. */
 // TEST_F(Bmi_Fortran_Adapter_Test, GetValue_0_c) {
 //     adapter->Initialize();
@@ -499,6 +536,18 @@ TEST_F(Bmi_Fortran_Adapter_Test, SetValue_0_c) {
 //     double retrieved = adapter->GetValue<double>("OUTPUT_VAR_1")[0];
 //     adapter->Finalize();
 //     ASSERT_EQ(expectedOutput1, retrieved);
+// }
+
+// /** Test that getting the current model time works after an update. */
+// TEST_F(Bmi_Fortran_Adapter_Test, GetCurrentTime_0_b) {
+//     adapter->Initialize();
+//     double expected_time = adapter->GetStartTime() + adapter->GetTimeStep();
+//     double value = 10.0;
+//     adapter->SetValue("INPUT_VAR_1", &value);
+//     adapter->SetValue("INPUT_VAR_2", &value);
+//     adapter->Update();
+//     ASSERT_EQ(expected_time, adapter->GetCurrentTime());
+//     adapter->Finalize();
 // }
 
 // /** Profile the update function and GetValues functions */
@@ -575,54 +624,6 @@ TEST_F(Bmi_Fortran_Adapter_Test, SetValue_0_c) {
 //     double retrieved = adapter->GetValue<double>("OUTPUT_VAR_2")[0];
 //     adapter->Finalize();
 //     ASSERT_EQ(expectedOutput2, retrieved);
-// }
-
-// /** Test the function for getting start time. */
-// TEST_F(Bmi_Fortran_Adapter_Test, GetStartTime_0_a) {
-//     adapter->Initialize();
-//     ASSERT_EQ(0, adapter->GetStartTime());
-//     adapter->Finalize();
-// }
-
-// /** Test the function for getting time step size. */
-// TEST_F(Bmi_Fortran_Adapter_Test, GetTimeStep_0_a) {
-//     adapter->Initialize();
-//     ASSERT_EQ(3600, adapter->GetTimeStep());
-//     adapter->Finalize();
-// }
-
-// /** Test the function for getting model time units. */
-// TEST_F(Bmi_Fortran_Adapter_Test, GetTimeUnits_0_a) {
-//     adapter->Initialize();
-//     ASSERT_EQ("s", adapter->GetTimeUnits());
-//     adapter->Finalize();
-// }
-
-// /** Test the function for getting model end time, assuming (as in used config) 720 time steps. */
-// TEST_F(Bmi_Fortran_Adapter_Test, GetEndTime_0_a) {
-//     adapter->Initialize();
-//     double expected = adapter->GetStartTime() + (720.0 * adapter->GetTimeStep());
-//     ASSERT_EQ(expected, adapter->GetEndTime());
-//     adapter->Finalize();
-// }
-
-// /** Test that getting the current model time works after initialization. */
-// TEST_F(Bmi_Fortran_Adapter_Test, GetCurrentTime_0_a) {
-//     adapter->Initialize();
-//     ASSERT_EQ(adapter->GetStartTime(), adapter->GetCurrentTime());
-//     adapter->Finalize();
-// }
-
-// /** Test that getting the current model time works after an update. */
-// TEST_F(Bmi_Fortran_Adapter_Test, GetCurrentTime_0_b) {
-//     adapter->Initialize();
-//     double expected_time = adapter->GetStartTime() + adapter->GetTimeStep();
-//     double value = 10.0;
-//     adapter->SetValue("INPUT_VAR_1", &value);
-//     adapter->SetValue("INPUT_VAR_2", &value);
-//     adapter->Update();
-//     ASSERT_EQ(expected_time, adapter->GetCurrentTime());
-//     adapter->Finalize();
 // }
 
 // /** Test that the update function works for a single update. */
