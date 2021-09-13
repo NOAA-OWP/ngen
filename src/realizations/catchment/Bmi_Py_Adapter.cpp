@@ -9,16 +9,33 @@ using namespace models::bmi;
 using namespace std;
 using namespace pybind11::literals; // to bring in the `_a` literal for pybind11 keyword args functionality
 
-Bmi_Py_Adapter::Bmi_Py_Adapter(const string &type_name, string bmi_init_config, bool allow_exceed_end,
-                               bool has_fixed_time_step, utils::StreamHandler output)
-    : Bmi_Py_Adapter(type_name, move(bmi_init_config), "", allow_exceed_end, has_fixed_time_step, move(output)) {}
-
-Bmi_Py_Adapter::Bmi_Py_Adapter(const string &type_name, string bmi_init_config, string forcing_file_path,
+Bmi_Py_Adapter::Bmi_Py_Adapter(const string &type_name, string bmi_init_config, const string &bmi_python_type,
                                bool allow_exceed_end, bool has_fixed_time_step, utils::StreamHandler output)
-                               : Bmi_Adapter<py::object>(type_name +" (BMI Py)", move(bmi_init_config),
-                                                         move(forcing_file_path), allow_exceed_end, has_fixed_time_step,
-                                                         output),
-                                 np(py::module_::import("numpy")) /* like 'import numpy as np' */ { }
+        : Bmi_Py_Adapter(type_name, move(bmi_init_config), bmi_python_type, "", allow_exceed_end, has_fixed_time_step,
+                         move(output)) {}
+
+Bmi_Py_Adapter::Bmi_Py_Adapter(const string &type_name, string bmi_init_config, const string &bmi_python_type,
+                               string forcing_file_path, bool allow_exceed_end, bool has_fixed_time_step,
+                               utils::StreamHandler output)
+        : Bmi_Adapter<py::object>(type_name + " (BMI Py)", move(bmi_init_config),
+                                  move(forcing_file_path), allow_exceed_end, has_fixed_time_step,
+                                  output),
+          bmi_py_type_name(bmi_python_type),
+          np(py::module_::import("numpy")) /* like 'import numpy as np' */
+{
+    try {
+        construct_and_init_backing_model_for_py_adapter();
+        // Make sure this is set to 'true' after this function call finishes
+        model_initialized = true;
+        acquire_time_conversion_factor(bmi_model_time_convert_factor);
+    }
+        // Record the exception message before re-throwing to handle subsequent function calls properly
+    catch (exception &e) {
+        // Make sure this is set to 'true' after this function call finishes
+        model_initialized = true;
+        throw e;
+    }
+}
 
 string Bmi_Py_Adapter::GetComponentName() {
     return py::str(bmi_model->attr("get_component_name")());

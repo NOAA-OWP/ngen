@@ -31,11 +31,12 @@ namespace models {
 
         public:
 
-            Bmi_Py_Adapter(const string &type_name, std::string bmi_init_config, bool allow_exceed_end,
-                           bool has_fixed_time_step, utils::StreamHandler output);
-
-            Bmi_Py_Adapter(const string &type_name, std::string  bmi_init_config, std::string forcing_file_path,
+            Bmi_Py_Adapter(const string &type_name, std::string bmi_init_config, const string &bmi_python_type,
                            bool allow_exceed_end, bool has_fixed_time_step, utils::StreamHandler output);
+
+            Bmi_Py_Adapter(const string &type_name, std::string bmi_init_config, const string &bmi_python_type,
+                           std::string forcing_file_path, bool allow_exceed_end, bool has_fixed_time_step,
+                           utils::StreamHandler output);
 
             void Finalize() override {
                 bmi_model->attr("finalize")();
@@ -312,6 +313,15 @@ namespace models {
             }
 
             /**
+             * Whether the backing model has been initialized yet.
+             *
+             * @return Whether the backing model has been initialized yet.
+             */
+            inline bool is_model_initialized() {
+                return model_initialized;
+            }
+
+            /**
              * Parse variable value(s) from within "other_vars" property of formulation config, to a numpy array suitable for
              * passing to the BMI model via the ``set_value`` function.
              *
@@ -401,34 +411,14 @@ namespace models {
             /**
              * Construct the backing BMI model object, then call its BMI-native ``Initialize()`` function.
              *
-             * Implementations should return immediately without taking any further action if ``model_initialized`` is
-             * already ``true``.
+             * Returns immediately without taking any further action if ``model_initialized`` is already ``true``.
              *
-             * The call to the BMI native ``Initialize(string)`` should pass the value stored in ``bmi_init_config``.
+             * Performs a call to the BMI native ``Initialize(string)`` and passes the value stored in
+             * ``bmi_init_config``.
              */
             void construct_and_init_backing_model() override {
-                if (model_initialized)
-                    return;
-                try {
-                    separate_package_and_simple_name();
-                    // This is a class object for the BMI module Python class
-                    py::object bmi_py_class = py::module_::import(py_bmi_type_package_name->c_str()).attr(
-                            py_bmi_type_simple_name->c_str());
-                    // This is the actual backing model object
-                    bmi_model = make_shared<py::object>(bmi_py_class());
-                    bmi_model->attr("Initialize")(bmi_init_config);
-                }
-                    // Record the exception message before re-throwing to handle subsequent function calls properly
-                catch (exception& e) {
-                    init_exception_msg = string(e.what());
-                    // Make sure this is non-empty to be consistent with the above logic
-                    if (init_exception_msg.empty()) {
-                        init_exception_msg = "Unknown Python model initialization exception.";
-                    }
-                    throw e;
-                }
+                construct_and_init_backing_model_for_py_adapter();
             }
-
 
         private:
 
@@ -440,6 +430,40 @@ namespace models {
             shared_ptr<string> py_bmi_type_package_name;
             /** A pointer to a string with the simple name of the Python type referenced by ``py_bmi_type_ref``. */
             shared_ptr<string> py_bmi_type_simple_name;
+
+            /**
+             * Construct the backing BMI model object, then call its BMI-native ``Initialize()`` function.
+             *
+             * Private wrapper function, to allow use from constructors.
+             *
+             * Returns immediately without taking any further action if ``model_initialized`` is already ``true``.
+             *
+             * Performs a call to the BMI native ``Initialize(string)`` and passes the value stored in
+             * ``bmi_init_config``.
+             */
+            inline void construct_and_init_backing_model_for_py_adapter() {
+                if (model_initialized)
+                    return;
+                try {
+                    separate_package_and_simple_name();
+                    // This is a class object for the BMI module Python class
+                    py::object bmi_py_class = py::module_::import(py_bmi_type_package_name->c_str()).attr(
+                            py_bmi_type_simple_name->c_str());
+                    // This is the actual backing model object
+                    bmi_model = make_shared<py::object>(bmi_py_class());
+                    bmi_model->attr("Initialize")(bmi_init_config);
+                }
+                // Record the exception message before re-throwing to handle subsequent function calls properly
+                // TODO: handle exceptions in better detail, without losing type information
+                catch (exception& e) {
+                    init_exception_msg = string(e.what());
+                    // Make sure this is non-empty to be consistent with the above logic
+                    if (init_exception_msg.empty()) {
+                        init_exception_msg = "Unknown Python model initialization exception.";
+                    }
+                    throw e;
+                }
+            }
 
             inline void separate_package_and_simple_name() {
                 if (!model_initialized) {
