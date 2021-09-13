@@ -115,11 +115,11 @@ extern "C" {
     extern int get_grid_z(void *fortran_bmi_handle, int *grid, double *z);
 
     /* Unstructured */
-    extern int get_grid_node_count(void *fortran_bmi_handle, int grid, int *count);
+    extern int get_grid_node_count(void *fortran_bmi_handle, int *grid, int *count);
 
-    extern int get_grid_edge_count(void *fortran_bmi_handle, int grid, int *count);
+    extern int get_grid_edge_count(void *fortran_bmi_handle, int *grid, int *count);
 
-    extern int get_grid_face_count(void *fortran_bmi_handle, int grid, int *count);
+    extern int get_grid_face_count(void *fortran_bmi_handle, int *grid, int *count);
 
     extern int get_grid_edge_nodes(void *fortran_bmi_handle, int grid, int *edge_nodes);
 

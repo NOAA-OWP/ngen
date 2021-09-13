@@ -91,9 +91,9 @@ module bmif_2_0_iso
       procedure(bmif_get_grid_z), deferred :: get_grid_z
 
 !       ! Unstructured
-!       procedure(bmif_get_grid_node_count), deferred :: get_grid_node_count
-!       procedure(bmif_get_grid_edge_count), deferred :: get_grid_edge_count
-!       procedure(bmif_get_grid_face_count), deferred :: get_grid_face_count
+      procedure(bmif_get_grid_node_count), deferred :: get_grid_node_count
+      procedure(bmif_get_grid_edge_count), deferred :: get_grid_edge_count
+      procedure(bmif_get_grid_face_count), deferred :: get_grid_face_count
 !       procedure(bmif_get_grid_edge_nodes), deferred :: get_grid_edge_nodes
 !       procedure(bmif_get_grid_face_edges), deferred :: get_grid_face_edges
 !       procedure(bmif_get_grid_face_nodes), deferred :: get_grid_face_nodes
@@ -498,32 +498,32 @@ module bmif_2_0_iso
       integer :: bmi_status
     end function bmif_get_grid_z
 
-!     ! Get the number of nodes in an unstructured grid.
-!     function bmif_get_grid_node_count(this, grid, count) result(bmi_status)
-!       import :: bmi
-!       class(bmi), intent(in) :: this
-!       integer, intent(in) :: grid
-!       integer, intent(out) :: count
-!       integer :: bmi_status
-!     end function bmif_get_grid_node_count
+    ! Get the number of nodes in an unstructured grid.
+    function bmif_get_grid_node_count(this, grid, count) result(bmi_status)
+      import :: bmi
+      class(bmi), intent(in) :: this
+      integer, intent(in) :: grid
+      integer, intent(out) :: count
+      integer :: bmi_status
+    end function bmif_get_grid_node_count
 
-!     ! Get the number of edges in an unstructured grid.
-!     function bmif_get_grid_edge_count(this, grid, count) result(bmi_status)
-!       import :: bmi
-!       class(bmi), intent(in) :: this
-!       integer, intent(in) :: grid
-!       integer, intent(out) :: count
-!       integer :: bmi_status
-!     end function bmif_get_grid_edge_count
+    ! Get the number of edges in an unstructured grid.
+    function bmif_get_grid_edge_count(this, grid, count) result(bmi_status)
+      import :: bmi
+      class(bmi), intent(in) :: this
+      integer, intent(in) :: grid
+      integer, intent(out) :: count
+      integer :: bmi_status
+    end function bmif_get_grid_edge_count
 
-!     ! Get the number of faces in an unstructured grid.
-!     function bmif_get_grid_face_count(this, grid, count) result(bmi_status)
-!       import :: bmi
-!       class(bmi), intent(in) :: this
-!       integer, intent(in) :: grid
-!       integer, intent(out) :: count
-!       integer :: bmi_status
-!     end function bmif_get_grid_face_count
+    ! Get the number of faces in an unstructured grid.
+    function bmif_get_grid_face_count(this, grid, count) result(bmi_status)
+      import :: bmi
+      class(bmi), intent(in) :: this
+      integer, intent(in) :: grid
+      integer, intent(out) :: count
+      integer :: bmi_status
+    end function bmif_get_grid_face_count
 
 !     ! Get the edge-node connectivity.
 !     function bmif_get_grid_edge_nodes(this, grid, edge_nodes) &

@@ -630,7 +630,7 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      ! bmi_status = bmi_box%ptr%get_grid_node_count(grid, count)
+      bmi_status = bmi_box%ptr%get_grid_node_count(grid, count)
     end function get_grid_node_count
 
     ! Get the number of edges in an unstructured grid.
@@ -644,7 +644,7 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      ! bmi_status = bmi_box%ptr%get_grid_edge_count(grid, count)
+      bmi_status = bmi_box%ptr%get_grid_edge_count(grid, count)
     end function get_grid_edge_count
 
     ! Get the number of faces in an unstructured grid.
@@ -658,7 +658,7 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      ! bmi_status = bmi_box%ptr%get_grid_face_count(grid, count)
+      bmi_status = bmi_box%ptr%get_grid_face_count(grid, count)
     end function get_grid_face_count
 
     ! Get the edge-node connectivity.
