@@ -492,7 +492,7 @@ end function test_finalize
     integer :: bmi_status
 
     select case(name)
-    case("INPUT_VAR_3")
+    case("INPUT_VAR_3", "OUTPUT_VAR_3")
        dest = [this%model%input_var_3]
        bmi_status = BMI_SUCCESS
     case default
@@ -511,7 +511,7 @@ end function test_finalize
     integer :: bmi_status
 
     select case(name)
-    case("INPUT_VAR_2")
+    case("INPUT_VAR_2", "OUTPUT_VAR_2")
        dest = [this%model%input_var_2]
        bmi_status = BMI_SUCCESS
     case default
@@ -532,7 +532,7 @@ end function test_finalize
     !==================== UPDATE IMPLEMENTATION IF NECESSARY FOR DOUBLE VARS =================
 
     select case(name)
-    case("INPUT_VAR_1")
+    case("INPUT_VAR_1", "OUTPUT_VAR_1")
       dest = [this%model%input_var_1]
     case default
        dest(:) = -1.d0
