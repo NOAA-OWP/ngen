@@ -86,9 +86,9 @@ module bmif_2_0_iso
       procedure(bmif_get_grid_origin), deferred :: get_grid_origin
 
 !       ! Non-uniform rectilinear, curvilinear
-!       procedure(bmif_get_grid_x), deferred :: get_grid_x
-!       procedure(bmif_get_grid_y), deferred :: get_grid_y
-!       procedure(bmif_get_grid_z), deferred :: get_grid_z
+      procedure(bmif_get_grid_x), deferred :: get_grid_x
+      procedure(bmif_get_grid_y), deferred :: get_grid_y
+      procedure(bmif_get_grid_z), deferred :: get_grid_z
 
 !       ! Unstructured
 !       procedure(bmif_get_grid_node_count), deferred :: get_grid_node_count
@@ -471,32 +471,32 @@ module bmif_2_0_iso
       integer :: bmi_status
     end function bmif_get_grid_origin
 
-!     ! Get the x-coordinates of the nodes of a computational grid.
-!     function bmif_get_grid_x(this, grid, x) result(bmi_status)
-!       import :: bmi
-!       class(bmi), intent(in) :: this
-!       integer, intent(in) :: grid
-!       double precision, dimension(:), intent(out) :: x
-!       integer :: bmi_status
-!     end function bmif_get_grid_x
+    ! Get the x-coordinates of the nodes of a computational grid.
+    function bmif_get_grid_x(this, grid, x) result(bmi_status)
+      import :: bmi
+      class(bmi), intent(in) :: this
+      integer, intent(in) :: grid
+      double precision, dimension(:), intent(out) :: x
+      integer :: bmi_status
+    end function bmif_get_grid_x
 
-!     ! Get the y-coordinates of the nodes of a computational grid.
-!     function bmif_get_grid_y(this, grid, y) result(bmi_status)
-!       import :: bmi
-!       class(bmi), intent(in) :: this
-!       integer, intent(in) :: grid
-!       double precision, dimension(:), intent(out) :: y
-!       integer :: bmi_status
-!     end function bmif_get_grid_y
+    ! Get the y-coordinates of the nodes of a computational grid.
+    function bmif_get_grid_y(this, grid, y) result(bmi_status)
+      import :: bmi
+      class(bmi), intent(in) :: this
+      integer, intent(in) :: grid
+      double precision, dimension(:), intent(out) :: y
+      integer :: bmi_status
+    end function bmif_get_grid_y
 
-!     ! Get the z-coordinates of the nodes of a computational grid.
-!     function bmif_get_grid_z(this, grid, z) result(bmi_status)
-!       import :: bmi
-!       class(bmi), intent(in) :: this
-!       integer, intent(in) :: grid
-!       double precision, dimension(:), intent(out) :: z
-!       integer :: bmi_status
-!     end function bmif_get_grid_z
+    ! Get the z-coordinates of the nodes of a computational grid.
+    function bmif_get_grid_z(this, grid, z) result(bmi_status)
+      import :: bmi
+      class(bmi), intent(in) :: this
+      integer, intent(in) :: grid
+      double precision, dimension(:), intent(out) :: z
+      integer :: bmi_status
+    end function bmif_get_grid_z
 
 !     ! Get the number of nodes in an unstructured grid.
 !     function bmif_get_grid_node_count(this, grid, count) result(bmi_status)

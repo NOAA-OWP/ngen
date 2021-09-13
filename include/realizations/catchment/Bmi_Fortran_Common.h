@@ -108,11 +108,11 @@ extern "C" {
     extern int get_grid_origin(void *fortran_bmi_handle, int *grid, double *origin);
 
     /* Non-uniform rectilinear, curvilinear */
-    extern int get_grid_x(void *fortran_bmi_handle, int grid, double *x);
+    extern int get_grid_x(void *fortran_bmi_handle, int *grid, double *x);
 
-    extern int get_grid_y(void *fortran_bmi_handle, int grid, double *y);
+    extern int get_grid_y(void *fortran_bmi_handle, int *grid, double *y);
 
-    extern int get_grid_z(void *fortran_bmi_handle, int grid, double *z);
+    extern int get_grid_z(void *fortran_bmi_handle, int *grid, double *z);
 
     /* Unstructured */
     extern int get_grid_node_count(void *fortran_bmi_handle, int grid, int *count);

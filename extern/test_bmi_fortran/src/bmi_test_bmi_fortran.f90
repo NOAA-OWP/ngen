@@ -37,9 +37,9 @@ module bmitestbmi
      procedure :: get_grid_size => test_grid_size
      procedure :: get_grid_spacing => test_grid_spacing
      procedure :: get_grid_origin => test_grid_origin
-!      procedure :: get_grid_x => test_grid_x
-!      procedure :: get_grid_y => test_grid_y
-!      procedure :: get_grid_z => test_grid_z
+     procedure :: get_grid_x => test_grid_x
+     procedure :: get_grid_y => test_grid_y
+     procedure :: get_grid_z => test_grid_z
 !      procedure :: get_grid_node_count => test_grid_node_count
 !      procedure :: get_grid_edge_count => test_grid_edge_count
 !      procedure :: get_grid_face_count => test_grid_face_count
@@ -524,6 +524,57 @@ end function test_finalize
        bmi_status = BMI_FAILURE
     end select
   end function test_grid_origin
+
+  ! X-coordinates of grid nodes.
+  function test_grid_x(this, grid, x) result (bmi_status)
+    class (bmi_test_bmi), intent(in) :: this
+    integer, intent(in) :: grid
+    double precision, dimension(:), intent(out) :: x
+    integer :: bmi_status
+
+    select case(grid)
+    case(0)
+       x(:) = [0.d0]
+       bmi_status = BMI_SUCCESS
+    case default
+       x(:) = -1.d0
+       bmi_status = BMI_FAILURE
+    end select
+  end function test_grid_x
+
+  ! Y-coordinates of grid nodes.
+  function test_grid_y(this, grid, y) result (bmi_status)
+    class (bmi_test_bmi), intent(in) :: this
+    integer, intent(in) :: grid
+    double precision, dimension(:), intent(out) :: y
+    integer :: bmi_status
+
+    select case(grid)
+    case(0)
+       y(:) = [0.d0]
+       bmi_status = BMI_SUCCESS
+    case default
+       y(:) = -1.d0
+       bmi_status = BMI_FAILURE
+    end select
+  end function test_grid_y
+
+  ! Z-coordinates of grid nodes.
+  function test_grid_z(this, grid, z) result (bmi_status)
+    class (bmi_test_bmi), intent(in) :: this
+    integer, intent(in) :: grid
+    double precision, dimension(:), intent(out) :: z
+    integer :: bmi_status
+
+    select case(grid)
+    case(0)
+       z(:) = [0.d0]
+       bmi_status = BMI_SUCCESS
+    case default
+       z(:) = -1.d0
+       bmi_status = BMI_FAILURE
+    end select
+  end function test_grid_z
 
   ! The type of a variable's grid.
   function test_grid_type(this, grid, type) result (bmi_status)
