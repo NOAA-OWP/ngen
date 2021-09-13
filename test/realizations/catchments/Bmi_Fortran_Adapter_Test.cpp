@@ -57,6 +57,9 @@ protected:
     std::vector<std::string> expected_input_var_types = { "double precision", "real", "integer" };
     int expected_grid_rank = 1;
     int expected_grid_size = 1;
+    int expected_grid_shape = -1;
+    double expected_grid_spacing = -1.0;
+    double expected_grid_origin = -1.0;
     std::string expected_grid_type = "scalar";
     int expected_var_itemsize_0 = 8; //type double
     int expected_var_itemsize_1 = 4; //type float/real
@@ -395,6 +398,62 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetGridRank_0_a) {
     catch (std::exception& e) {
         printf("Exception getting grid rank: %s", e.what());
     }
+}
+
+/** Test grid shape can be retrieved for output 1. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetGridShape_0_a) {
+    int out_var_index = 0;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    int grd = adapter->GetVarGrid(variable_name);
+    int rank = adapter->GetGridRank(grd);
+    int* shape = new int [rank];
+    EXPECT_THROW(adapter->GetGridShape(grd, shape), std::runtime_error);
+    ASSERT_EQ(shape[0], expected_grid_shape);
+    // try {
+    //     adapter->GetGridShape(grd, shape);
+    //     ASSERT_EQ(*shape, expected_grid_shape)
+    // }
+    // catch (std::exception& e) {
+    //     printf("Exception getting grid shape: %s", e.what());
+    // }
+    delete [] shape;
+}
+
+/** Test grid spacing can be retrieved for output 1. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetGridSpacing_0_a) {
+    int out_var_index = 0;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    int grd = adapter->GetVarGrid(variable_name);
+    double spacing;
+    EXPECT_THROW(adapter->GetGridSpacing(grd, &spacing), std::runtime_error);
+    ASSERT_EQ(spacing, expected_grid_spacing);
+    // try {
+    //     adapter->GetGridSpacing(grd, &spacing);
+    //     ASSERT_EQ(spacing, expected_grid_spacing);
+    // }
+    // catch (std::exception& e) {
+    //     printf("Exception getting grid spacing: %s", e.what());
+    // }
+}
+
+/** Test grid origin can be retrieved for output 1. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetGridOrigin_0_a) {
+    int out_var_index = 0;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    int grd = adapter->GetVarGrid(variable_name);
+    double origin;
+    EXPECT_THROW(adapter->GetGridOrigin(grd, &origin), std::runtime_error);
+    ASSERT_EQ(origin, expected_grid_origin);
+    // try {
+    //     adapter->GetGridOrigin(grd, &origin);
+    //     ASSERT_EQ(origin, expected_grid_origin);
+    // }
+    // catch (std::exception& e) {
+    //     printf("Exception getting grid origin: %s", e.what());
+    // }
 }
 
 /** Test grid type can be retrieved for output 1 */

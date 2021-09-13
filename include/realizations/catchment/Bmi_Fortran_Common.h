@@ -101,11 +101,11 @@ extern "C" {
     extern int get_grid_type(void *fortran_bmi_handle, int *grid, char *type);
 
     /* Uniform rectilinear */
-    extern int get_grid_shape(void *fortran_bmi_handle, int grid, int *shape);
+    extern int get_grid_shape(void *fortran_bmi_handle, int *grid, int *shape);
 
-    extern int get_grid_spacing(void *fortran_bmi_handle, int grid, double *spacing);
+    extern int get_grid_spacing(void *fortran_bmi_handle, int *grid, double *spacing);
 
-    extern int get_grid_origin(void *fortran_bmi_handle, int grid, double *origin);
+    extern int get_grid_origin(void *fortran_bmi_handle, int *grid, double *origin);
 
     /* Non-uniform rectilinear, curvilinear */
     extern int get_grid_x(void *fortran_bmi_handle, int grid, double *x);
