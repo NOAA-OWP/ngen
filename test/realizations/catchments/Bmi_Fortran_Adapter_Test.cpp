@@ -523,6 +523,112 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetTimeStep_0_a) {
     adapter->Finalize();
 }
 
+/** Test that the update function works for a single update. */
+TEST_F(Bmi_Fortran_Adapter_Test, Update_0_a) {
+    adapter->Initialize();
+    double value_1 = 7.0;
+    double value_2 = 10.0;
+    adapter->SetValue("INPUT_VAR_1", &value_1);
+    adapter->SetValue("INPUT_VAR_2", &value_2);
+    adapter->Update();
+    adapter->Finalize();
+}
+
+/** Test that the update function works for a single update and produces the expected value for output 1. */
+TEST_F(Bmi_Fortran_Adapter_Test, Update_0_b) {
+    adapter->Initialize();
+    double value_1 = 7.0;
+    double value_2 = 10.0;
+    adapter->SetValue("INPUT_VAR_1", &value_1);
+    adapter->SetValue("INPUT_VAR_2", &value_2);
+    adapter->Update();
+    ASSERT_EQ(value_1, adapter->GetValue<double>("OUTPUT_VAR_1")[0]);
+    adapter->Finalize();
+}
+
+/** Test that the update function works for a single update and produces the expected value for output 2. */
+TEST_F(Bmi_Fortran_Adapter_Test, Update_0_c) {
+    adapter->Initialize();
+    double value_1 = 7.0;
+    float value_2 = 10.0;
+    adapter->SetValue("INPUT_VAR_1", &value_1);
+    adapter->SetValue("INPUT_VAR_2", &value_2);
+    adapter->Update();
+    ASSERT_EQ(value_2 * 2, adapter->GetValue<float>("OUTPUT_VAR_2")[0]);
+    adapter->Finalize();
+}
+
+/** Test that the update function works for the 720 time steps and gets the expected output 1 values. */
+TEST_F(Bmi_Fortran_Adapter_Test, Update_1_a) {
+    size_t num_steps = 1;//720;
+    std::vector<double> expected(num_steps);
+    std::vector<double> out_1_vals(num_steps);
+    adapter->Initialize();
+    double value;
+    float value2;
+    for (size_t i = 0; i < num_steps; ++i) {
+        value = 2.0 * i;
+        value2 = 2.0 * i;
+        expected[i] = value;
+        adapter->SetValue("INPUT_VAR_1", &value);
+        adapter->SetValue("INPUT_VAR_2", &value2);
+        adapter->Update();
+        out_1_vals[i] = adapter->GetValue<double>("OUTPUT_VAR_1")[0];
+    }
+    adapter->Finalize();
+    ASSERT_EQ(expected, out_1_vals);
+}
+
+/** Test that the update function works for the 720 time steps and gets the expected output 2 values. */
+TEST_F(Bmi_Fortran_Adapter_Test, Update_1_b) {
+    size_t num_steps = 1;//720;
+    std::vector<float> expected(num_steps);
+    std::vector<float> out_2_vals(num_steps);
+    adapter->Initialize();
+    double value;
+    float value2;
+    for (size_t i = 0; i < num_steps; ++i) {
+        value = 2.0 * i;
+        value2 = 2.0 * i;
+        expected[i] = value * 2;
+        adapter->SetValue("INPUT_VAR_1", &value);
+        adapter->SetValue("INPUT_VAR_2", &value2);
+        adapter->Update();
+        out_2_vals[i] = adapter->GetValue<float>("OUTPUT_VAR_2")[0];
+    }
+    adapter->Finalize();
+    ASSERT_EQ(expected, out_2_vals);
+}
+
+/** Test that the update_until function works for a single update and produces the expected value for output 2. */
+TEST_F(Bmi_Fortran_Adapter_Test, Update_until_0_a) {
+    adapter->Initialize();
+    double value_1 = 7.0;
+    float value_2 = 10.0;
+    adapter->SetValue("INPUT_VAR_1", &value_1);
+    adapter->SetValue("INPUT_VAR_2", &value_2);
+    // This basically is a step of 1.5 times the normal length
+    double time = 5400 + adapter->GetCurrentTime();
+    adapter->UpdateUntil(time);
+    // Normally and update would produce out_2 as 2 * input_2, but here must further multiply by 1.5 for the longer time
+    ASSERT_EQ(value_2 * 2.0 * 1.5, adapter->GetValue<float>("OUTPUT_VAR_2")[0]);
+    adapter->Finalize();
+}
+
+/** Test that the update_until function works and advances the model time. */
+TEST_F(Bmi_Fortran_Adapter_Test, Update_until_0_b) {
+    adapter->Initialize();
+    double value_1 = 7.0;
+    float value_2 = 10.0;
+    adapter->SetValue("INPUT_VAR_1", &value_1);
+    adapter->SetValue("INPUT_VAR_2", &value_2);
+    // This basically is a step of 1.5 times the normal length
+    double time = 5400 + adapter->GetCurrentTime();
+    adapter->UpdateUntil(time);
+    ASSERT_EQ(time, adapter->GetCurrentTime());
+    adapter->Finalize();
+}
+
 /* Tests  dependent on Update() */
 // /** Test that both the get value function works for output 1. */
 // TEST_F(Bmi_Fortran_Adapter_Test, GetValue_0_c) {
@@ -624,108 +730,6 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetTimeStep_0_a) {
 //     double retrieved = adapter->GetValue<double>("OUTPUT_VAR_2")[0];
 //     adapter->Finalize();
 //     ASSERT_EQ(expectedOutput2, retrieved);
-// }
-
-// /** Test that the update function works for a single update. */
-// TEST_F(Bmi_Fortran_Adapter_Test, Update_0_a) {
-//     adapter->Initialize();
-//     double value_1 = 7.0;
-//     double value_2 = 10.0;
-//     adapter->SetValue("INPUT_VAR_1", &value_1);
-//     adapter->SetValue("INPUT_VAR_2", &value_2);
-//     adapter->Update();
-//     adapter->Finalize();
-// }
-
-// /** Test that the update function works for a single update and produces the expected value for output 1. */
-// TEST_F(Bmi_Fortran_Adapter_Test, Update_0_b) {
-//     adapter->Initialize();
-//     double value_1 = 7.0;
-//     double value_2 = 10.0;
-//     adapter->SetValue("INPUT_VAR_1", &value_1);
-//     adapter->SetValue("INPUT_VAR_2", &value_2);
-//     adapter->Update();
-//     ASSERT_EQ(value_1, adapter->GetValue<double>("OUTPUT_VAR_1")[0]);
-//     adapter->Finalize();
-// }
-
-// /** Test that the update function works for a single update and produces the expected value for output 2. */
-// TEST_F(Bmi_Fortran_Adapter_Test, Update_0_c) {
-//     adapter->Initialize();
-//     double value_1 = 7.0;
-//     double value_2 = 10.0;
-//     adapter->SetValue("INPUT_VAR_1", &value_1);
-//     adapter->SetValue("INPUT_VAR_2", &value_2);
-//     adapter->Update();
-//     ASSERT_EQ(value_2 * 2, adapter->GetValue<double>("OUTPUT_VAR_2")[0]);
-//     adapter->Finalize();
-// }
-
-// /** Test that the update function works for the 720 time steps and gets the expected output 1 values. */
-// TEST_F(Bmi_Fortran_Adapter_Test, Update_1_a) {
-//     size_t num_steps = 720;
-//     std::vector<double> expected(num_steps);
-//     std::vector<double> out_1_vals(num_steps);
-//     adapter->Initialize();
-//     double value;
-//     for (size_t i = 0; i < num_steps; ++i) {
-//         value = 2.0 * i;
-//         expected[i] = value;
-//         adapter->SetValue("INPUT_VAR_1", &value);
-//         adapter->SetValue("INPUT_VAR_2", &value);
-//         adapter->Update();
-//         out_1_vals[i] = adapter->GetValue<double>("OUTPUT_VAR_1")[0];
-//     }
-//     adapter->Finalize();
-//     ASSERT_EQ(expected, out_1_vals);
-// }
-
-// /** Test that the update function works for the 720 time steps and gets the expected output 2 values. */
-// TEST_F(Bmi_Fortran_Adapter_Test, Update_1_b) {
-//     size_t num_steps = 720;
-//     std::vector<double> expected(num_steps);
-//     std::vector<double> out_2_vals(num_steps);
-//     adapter->Initialize();
-//     double value;
-//     for (size_t i = 0; i < num_steps; ++i) {
-//         value = 2.0 * i;
-//         expected[i] = value * 2;
-//         adapter->SetValue("INPUT_VAR_1", &value);
-//         adapter->SetValue("INPUT_VAR_2", &value);
-//         adapter->Update();
-//         out_2_vals[i] = adapter->GetValue<double>("OUTPUT_VAR_2")[0];
-//     }
-//     adapter->Finalize();
-//     ASSERT_EQ(expected, out_2_vals);
-// }
-
-// /** Test that the update_until function works for a single update and produces the expected value for output 2. */
-// TEST_F(Bmi_Fortran_Adapter_Test, Update_until_0_a) {
-//     adapter->Initialize();
-//     double value_1 = 7.0;
-//     double value_2 = 10.0;
-//     adapter->SetValue("INPUT_VAR_1", &value_1);
-//     adapter->SetValue("INPUT_VAR_2", &value_2);
-//     // This basically is a step of 1.5 times the normal length
-//     double time = 5400 + adapter->GetCurrentTime();
-//     adapter->UpdateUntil(time);
-//     // Normally and update would produce out_2 as 2 * input_2, but here must further multiply by 1.5 for the longer time
-//     ASSERT_EQ(value_2 * 2.0 * 1.5, adapter->GetValue<double>("OUTPUT_VAR_2")[0]);
-//     adapter->Finalize();
-// }
-
-// /** Test that the update_until function works and advances the model time. */
-// TEST_F(Bmi_Fortran_Adapter_Test, Update_until_0_b) {
-//     adapter->Initialize();
-//     double value_1 = 7.0;
-//     double value_2 = 10.0;
-//     adapter->SetValue("INPUT_VAR_1", &value_1);
-//     adapter->SetValue("INPUT_VAR_2", &value_2);
-//     // This basically is a step of 1.5 times the normal length
-//     double time = 5400 + adapter->GetCurrentTime();
-//     adapter->UpdateUntil(time);
-//     ASSERT_EQ(time, adapter->GetCurrentTime());
-//     adapter->Finalize();
 // }
 
 // /** Test output 1 variable location can be retrieved. */

@@ -23,8 +23,8 @@ module bmif_2_0_iso
 
       ! Initialize, run, finalize (IRF)
       procedure(bmif_initialize), deferred :: initialize
-      ! procedure(bmif_update), deferred :: update
-      ! procedure(bmif_update_until), deferred :: update_until
+      procedure(bmif_update), deferred :: update
+      procedure(bmif_update_until), deferred :: update_until
       procedure(bmif_finalize), deferred :: finalize
 
       ! Exchange items
@@ -112,21 +112,21 @@ module bmif_2_0_iso
       integer(kind=c_int) :: bmi_status
     end function bmif_initialize
 
-    ! ! Advance the model one time step.
-    ! function bmif_update(this) result(bmi_status)
+    ! Advance the model one time step.
+    function bmif_update(this) result(bmi_status)
 
-    !   import :: bmi
-    !   class(bmi), intent(inout) :: this
-    !   integer :: bmi_status
-    ! end function bmif_update
+      import :: bmi
+      class(bmi), intent(inout) :: this
+      integer :: bmi_status
+    end function bmif_update
 
-    ! ! Advance the model until the given time.
-    ! function bmif_update_until(this, time) result(bmi_status)
-    !   import :: bmi
-    !   class(bmi), intent(inout) :: this
-    !   double precision, intent(in) :: time
-    !   integer :: bmi_status
-    ! end function bmif_update_until
+    ! Advance the model until the given time.
+    function bmif_update_until(this, time) result(bmi_status)
+      import :: bmi
+      class(bmi), intent(inout) :: this
+      double precision, intent(in) :: time
+      integer :: bmi_status
+    end function bmif_update_until
 
     ! Perform teardown tasks for the model.
     function bmif_finalize(this) result(bmi_status)
