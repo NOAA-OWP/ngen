@@ -525,11 +525,11 @@ module iso_c_bmif_2_0
       call c_f_pointer(this, bmi_box)
       !Check the  grid rank to decide how many dimsions shape should have
       !it needs at least one to hold the sentinel (no shape) value
-      ! bmi_status = bmi_box%ptr%get_grid_rank(grid, rank)
-      ! if (rank == 0) then
-      !   rank = 1
-      ! end if 
-      ! bmi_status = bmi_box%ptr%get_grid_shape(grid, shape(:rank))
+      bmi_status = bmi_box%ptr%get_grid_rank(grid, rank)
+      if (rank == 0) then
+        rank = 1
+      end if 
+      bmi_status = bmi_box%ptr%get_grid_shape(grid, shape(:rank))
     end function get_grid_shape
 
     ! Get distance between nodes of the computational grid.
@@ -546,11 +546,11 @@ module iso_c_bmif_2_0
       call c_f_pointer(this, bmi_box)
       !Check the  grid rank to decide how many dimsions shape should have
       !it needs at least one to hold the sentinel (no shape) value
-      ! bmi_status = bmi_box%ptr%get_grid_rank(grid, rank)
-      ! if (rank == 0) then
-      !   rank = 1
-      ! end if 
-      ! bmi_status = bmi_box%ptr%get_grid_spacing(grid, spacing(:rank))
+      bmi_status = bmi_box%ptr%get_grid_rank(grid, rank)
+      if (rank == 0) then
+        rank = 1
+      end if 
+      bmi_status = bmi_box%ptr%get_grid_spacing(grid, spacing(:rank))
     end function get_grid_spacing
 
     ! Get coordinates of the origin of the computational grid.
@@ -567,11 +567,11 @@ module iso_c_bmif_2_0
       call c_f_pointer(this, bmi_box)
       !Check the  grid rank to decide how many dimsions shape should have
       !it needs at least one to hold the sentinel (no shape) value
-      ! bmi_status = bmi_box%ptr%get_grid_rank(grid, rank)
-      ! if (rank == 0) then
-      !   rank = 1
-      ! end if
-      ! bmi_status = bmi_box%ptr%get_grid_origin(grid, origin(:rank))
+      bmi_status = bmi_box%ptr%get_grid_rank(grid, rank)
+      if (rank == 0) then
+        rank = 1
+      end if
+      bmi_status = bmi_box%ptr%get_grid_origin(grid, origin(:rank))
     end function get_grid_origin
 
     ! Get the x-coordinates of the nodes of a computational grid.

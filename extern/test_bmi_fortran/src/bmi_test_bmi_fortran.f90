@@ -33,10 +33,10 @@ module bmitestbmi
      procedure :: get_var_grid => test_var_grid
      procedure :: get_grid_type => test_grid_type
      procedure :: get_grid_rank => test_grid_rank
-!      procedure :: get_grid_shape => test_grid_shape
+     procedure :: get_grid_shape => test_grid_shape
      procedure :: get_grid_size => test_grid_size
-!      procedure :: get_grid_spacing => test_grid_spacing
-!      procedure :: get_grid_origin => test_grid_origin
+     procedure :: get_grid_spacing => test_grid_spacing
+     procedure :: get_grid_origin => test_grid_origin
 !      procedure :: get_grid_x => test_grid_x
 !      procedure :: get_grid_y => test_grid_y
 !      procedure :: get_grid_z => test_grid_z
@@ -470,6 +470,60 @@ end function test_finalize
        bmi_status = BMI_FAILURE
     end select
   end function test_grid_size
+
+  ! The dimensions of a grid.
+  function test_grid_shape(this, grid, shape) result (bmi_status)
+    class (bmi_test_bmi), intent(in) :: this
+    integer, intent(in) :: grid
+    integer, dimension(:), intent(out) :: shape
+    integer :: bmi_status
+
+    select case(grid)
+! NOTE: Scalar "grids" do not have dimensions, ie. there is no case(0)
+!     case(1)
+!        shape(:) = [this%model%n_y, this%model%n_x]
+!        bmi_status = BMI_SUCCESS
+    case default
+       shape(:) = -1
+       bmi_status = BMI_FAILURE
+    end select
+  end function test_grid_shape
+
+  ! The distance between nodes of a grid.
+  function test_grid_spacing(this, grid, spacing) result (bmi_status)
+    class (bmi_test_bmi), intent(in) :: this
+    integer, intent(in) :: grid
+    double precision, dimension(:), intent(out) :: spacing
+    integer :: bmi_status
+
+    select case(grid)
+!! NOTE: Scalar "grids" do not have spacing, ie. there is no case(0)
+!     case(1)
+!        spacing(:) = [this%model%dy, this%model%dx]
+!        bmi_status = BMI_SUCCESS
+    case default
+       spacing(:) = -1.d0
+       bmi_status = BMI_FAILURE
+    end select
+  end function test_grid_spacing
+!
+  ! Coordinates of grid origin.
+  function test_grid_origin(this, grid, origin) result (bmi_status)
+    class (bmi_test_bmi), intent(in) :: this
+    integer, intent(in) :: grid
+    double precision, dimension(:), intent(out) :: origin
+    integer :: bmi_status
+
+    select case(grid)
+! NOTE: Scalar "grids" do not have coordinates, ie. there is no case(0)
+!     case(1)
+!        origin(:) = [0.d0, 0.d0]
+!        bmi_status = BMI_SUCCESS
+    case default
+       origin(:) = -1.d0
+       bmi_status = BMI_FAILURE
+    end select
+  end function test_grid_origin
 
   ! The type of a variable's grid.
   function test_grid_type(this, grid, type) result (bmi_status)

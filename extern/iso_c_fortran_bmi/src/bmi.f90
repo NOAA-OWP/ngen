@@ -81,9 +81,9 @@ module bmif_2_0_iso
       procedure(bmif_get_grid_type), deferred :: get_grid_type
 
 !       ! Uniform rectilinear
-!       procedure(bmif_get_grid_shape), deferred :: get_grid_shape
-!       procedure(bmif_get_grid_spacing), deferred :: get_grid_spacing
-!       procedure(bmif_get_grid_origin), deferred :: get_grid_origin
+      procedure(bmif_get_grid_shape), deferred :: get_grid_shape
+      procedure(bmif_get_grid_spacing), deferred :: get_grid_spacing
+      procedure(bmif_get_grid_origin), deferred :: get_grid_origin
 
 !       ! Non-uniform rectilinear, curvilinear
 !       procedure(bmif_get_grid_x), deferred :: get_grid_x
@@ -444,32 +444,32 @@ module bmif_2_0_iso
       integer :: bmi_status
     end function bmif_get_grid_type
 
-!     ! Get the dimensions of the computational grid.
-!     function bmif_get_grid_shape(this, grid, shape) result(bmi_status)
-!       import :: bmi
-!       class(bmi), intent(in) :: this
-!       integer, intent(in) :: grid
-!       integer, dimension(:), intent(out) :: shape
-!       integer :: bmi_status
-!     end function bmif_get_grid_shape
+    ! Get the dimensions of the computational grid.
+    function bmif_get_grid_shape(this, grid, shape) result(bmi_status)
+      import :: bmi
+      class(bmi), intent(in) :: this
+      integer, intent(in) :: grid
+      integer, dimension(:), intent(out) :: shape
+      integer :: bmi_status
+    end function bmif_get_grid_shape
 
-!     ! Get distance between nodes of the computational grid.
-!     function bmif_get_grid_spacing(this, grid, spacing) result(bmi_status)
-!       import :: bmi
-!       class(bmi), intent(in) :: this
-!       integer, intent(in) :: grid
-!       double precision, dimension(:), intent(out) :: spacing
-!       integer :: bmi_status
-!     end function bmif_get_grid_spacing
+    ! Get distance between nodes of the computational grid.
+    function bmif_get_grid_spacing(this, grid, spacing) result(bmi_status)
+      import :: bmi
+      class(bmi), intent(in) :: this
+      integer, intent(in) :: grid
+      double precision, dimension(:), intent(out) :: spacing
+      integer :: bmi_status
+    end function bmif_get_grid_spacing
 
-!     ! Get coordinates of the origin of the computational grid.
-!     function bmif_get_grid_origin(this, grid, origin) result(bmi_status)
-!       import :: bmi
-!       class(bmi), intent(in) :: this
-!       integer, intent(in) :: grid
-!       double precision, dimension(:), intent(out) :: origin
-!       integer :: bmi_status
-!     end function bmif_get_grid_origin
+    ! Get coordinates of the origin of the computational grid.
+    function bmif_get_grid_origin(this, grid, origin) result(bmi_status)
+      import :: bmi
+      class(bmi), intent(in) :: this
+      integer, intent(in) :: grid
+      double precision, dimension(:), intent(out) :: origin
+      integer :: bmi_status
+    end function bmif_get_grid_origin
 
 !     ! Get the x-coordinates of the nodes of a computational grid.
 !     function bmif_get_grid_x(this, grid, x) result(bmi_status)

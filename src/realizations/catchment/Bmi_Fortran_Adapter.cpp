@@ -196,20 +196,20 @@ void Bmi_Fortran_Adapter::UpdateUntil(double time) {
     }
 }
 
-void Bmi_Fortran_Adapter::GetGridShape(const int grid, int *shape) {
-    if (get_grid_shape(&bmi_model->handle, grid, shape) != BMI_SUCCESS) {
+void Bmi_Fortran_Adapter::GetGridShape(int grid, int *shape) {
+    if (get_grid_shape(&bmi_model->handle, &grid, shape) != BMI_SUCCESS) {
         throw std::runtime_error(model_name + " failed to get grid " + std::to_string(grid) + " shape.");
     }
 }
 
-void Bmi_Fortran_Adapter::GetGridSpacing(const int grid, double *spacing) {
-    if (get_grid_spacing(&bmi_model->handle, grid, spacing) != BMI_SUCCESS) {
+void Bmi_Fortran_Adapter::GetGridSpacing(int grid, double *spacing) {
+    if (get_grid_spacing(&bmi_model->handle, &grid, spacing) != BMI_SUCCESS) {
         throw std::runtime_error(model_name + " failed to get grid " + std::to_string(grid) + " spacing.");
     }
 }
 
-void Bmi_Fortran_Adapter::GetGridOrigin(const int grid, double *origin) {
-    if (get_grid_origin(&bmi_model->handle, grid, origin) != BMI_SUCCESS) {
+void Bmi_Fortran_Adapter::GetGridOrigin(int grid, double *origin) {
+    if (get_grid_origin(&bmi_model->handle, &grid, origin) != BMI_SUCCESS) {
         throw std::runtime_error(model_name + " failed to get grid " + std::to_string(grid) + " origin.");
     }
 }
