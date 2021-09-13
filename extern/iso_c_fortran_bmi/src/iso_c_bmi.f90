@@ -301,7 +301,7 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      ! bmi_status = bmi_box%ptr%get_current_time(time)
+      bmi_status = bmi_box%ptr%get_current_time(time)
     end function get_current_time
 
     ! Start time of the model.
@@ -314,7 +314,7 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      ! bmi_status = bmi_box%ptr%get_start_time(time)
+      bmi_status = bmi_box%ptr%get_start_time(time)
     end function get_start_time
 
     ! End time of the model.
@@ -327,7 +327,7 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      ! bmi_status = bmi_box%ptr%get_end_time(time)
+      bmi_status = bmi_box%ptr%get_end_time(time)
     end function get_end_time
 
     ! Time units of the model.
@@ -355,7 +355,7 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      ! bmi_status = bmi_box%ptr%get_time_step(time_step)
+      bmi_status = bmi_box%ptr%get_time_step(time_step)
     end function get_time_step
 
     ! Get a copy of values (flattened!) of the given integer variable.

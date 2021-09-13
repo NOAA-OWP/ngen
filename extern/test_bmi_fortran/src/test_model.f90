@@ -4,7 +4,7 @@ module test_model
         integer :: num_time_steps
         double precision :: current_model_time
         double precision :: model_end_time
-        integer :: time_step_size
+        double precision :: time_step_size
 
         double precision :: input_var_1
         real :: input_var_2
