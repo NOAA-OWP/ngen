@@ -336,6 +336,36 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarUnits_0_a) {
     }
 }
 
+/** Test output 1 variable location can be retrieved. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetVarLocation_0_a) {
+    int out_var_index = 0;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    std::string expected_location = expected_output_var_locations[out_var_index];
+
+    try {
+        ASSERT_EQ(adapter->GetVarLocation(variable_name), expected_location);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting var location: %s", e.what());
+    }
+}
+
+/** Test output 2 variable location can be retrieved. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetVarLocation_0_b) {
+    int out_var_index = 1;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    std::string expected_location = expected_output_var_locations[out_var_index];
+
+    try {
+        ASSERT_EQ(adapter->GetVarLocation(variable_name), expected_location);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting var location: %s", e.what());
+    }
+}
+
 /** Test grid size can be retrieved for output 2. */
 TEST_F(Bmi_Fortran_Adapter_Test, GetGridSize_0_a) {
     int out_var_index = 1;
@@ -745,51 +775,6 @@ TEST_F(Bmi_Fortran_Adapter_Test, Update_until_0_b) {
 //     double retrieved = adapter->GetValue<double>("OUTPUT_VAR_2")[0];
 //     adapter->Finalize();
 //     ASSERT_EQ(expectedOutput2, retrieved);
-// }
-
-// /** Test output 1 variable location can be retrieved. */
-// TEST_F(Bmi_Fortran_Adapter_Test, GetVarLocation_0_a) {
-//     int out_var_index = 0;
-
-//     std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
-//     std::string expected_location = expected_output_var_locations[out_var_index];
-
-//     try {
-//         ASSERT_EQ(adapter->GetVarLocation(variable_name), expected_location);
-//     }
-//     catch (std::exception& e) {
-//         printf("Exception getting var location: %s", e.what());
-//     }
-// }
-
-// /** Test output 2 variable location can be retrieved. */
-// TEST_F(Bmi_Fortran_Adapter_Test, GetVarLocation_0_b) {
-//     int out_var_index = 1;
-
-//     std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
-//     std::string expected_location = expected_output_var_locations[out_var_index];
-
-//     try {
-//         ASSERT_EQ(adapter->GetVarLocation(variable_name), expected_location);
-//     }
-//     catch (std::exception& e) {
-//         printf("Exception getting var location: %s", e.what());
-//     }
-// }
-
-// /** Test output 1 variable units can be retrieved. */
-// TEST_F(Bmi_Fortran_Adapter_Test, GetVarUnits_0_a) {
-//     int out_var_index = 0;
-
-//     std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
-//     std::string expected_units = expected_output_var_units[out_var_index];
-
-//     try {
-//         ASSERT_EQ(adapter->GetVarUnits(variable_name), expected_units);
-//     }
-//     catch (std::exception& e) {
-//         printf("Exception getting var units: %s", e.what());
-//     }
 // }
 
 // // Test model GetVarGrid() function is disabled currently.  Suggest disabling test until fully implemented.
