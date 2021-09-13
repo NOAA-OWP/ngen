@@ -964,106 +964,106 @@ TEST_F(Bmi_Fortran_Adapter_Test, Update_until_0_b) {
 }
 
 /* Tests  dependent on Update() */
-// /** Test that both the get value function works for output 1. */
-// TEST_F(Bmi_Fortran_Adapter_Test, GetValue_0_c) {
-//     adapter->Initialize();
-//     double value1 = 7.0;
-//     double value2 = 8.0;
-//     double expectedOutput1 = 0; // TODO: fix this
-//     adapter->SetValue("INPUT_VAR_1", &value1);
-//     adapter->SetValue("INPUT_VAR_2", &value2);
-//     adapter->Update();
-//     double retrieved = adapter->GetValue<double>("OUTPUT_VAR_1")[0];
-//     adapter->Finalize();
-//     ASSERT_EQ(expectedOutput1, retrieved);
-// }
+/** Test that both the get value function works for output 1. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetValue_0_d) {
+    adapter->Initialize();
+    double value1 = 7.0;
+    float value2 = 8.0;
+    double expectedOutput1 = 7.0;
+    adapter->SetValue("INPUT_VAR_1", &value1);
+    adapter->SetValue("INPUT_VAR_2", &value2);
+    adapter->Update();
+    double retrieved = adapter->GetValue<double>("OUTPUT_VAR_1")[0];
+    adapter->Finalize();
+    ASSERT_EQ(expectedOutput1, retrieved);
+}
 
-// /** Test that getting the current model time works after an update. */
-// TEST_F(Bmi_Fortran_Adapter_Test, GetCurrentTime_0_b) {
-//     adapter->Initialize();
-//     double expected_time = adapter->GetStartTime() + adapter->GetTimeStep();
-//     double value = 10.0;
-//     adapter->SetValue("INPUT_VAR_1", &value);
-//     adapter->SetValue("INPUT_VAR_2", &value);
-//     adapter->Update();
-//     ASSERT_EQ(expected_time, adapter->GetCurrentTime());
-//     adapter->Finalize();
-// }
+/** Test that both the get value function works for output 2. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetValue_0_e) {
+    adapter->Initialize();
+    double value1 = 7.0;
+    float value2 = 8.0;
+    double expectedOutput2 = 16.0; // TODO: fix this
+    adapter->SetValue("INPUT_VAR_1", &value1);
+    adapter->SetValue("INPUT_VAR_2", &value2);
+    adapter->Update();
+    double retrieved = adapter->GetValue<float>("OUTPUT_VAR_2")[0];
+    adapter->Finalize();
+    ASSERT_EQ(expectedOutput2, retrieved);
+}
 
-// /** Profile the update function and GetValues functions */
-// TEST_F(Bmi_Fortran_Adapter_Test, Profile)
-// {
-//     int num_ouput_items = adapter->GetOutputItemCount();
-//     int num_input_items = adapter->GetInputItemCount();
+/** Test that getting the current model time works after an update. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetCurrentTime_0_b) {
+    adapter->Initialize();
+    double expected_time = adapter->GetStartTime() + adapter->GetTimeStep();
+    double value = 10.0;
+    adapter->SetValue("INPUT_VAR_1", &value);
+    adapter->SetValue("INPUT_VAR_2", &value);
+    adapter->Update();
+    ASSERT_EQ(expected_time, adapter->GetCurrentTime());
+    adapter->Finalize();
+}
 
-//     std::vector<std::string> output_names = adapter->GetOutputVarNames();
-//     std::vector<std::string> input_names = adapter->GetInputVarNames();
+/** Profile the update function and GetValues functions */
+TEST_F(Bmi_Fortran_Adapter_Test, Profile)
+{
+    int num_ouput_items = adapter->GetOutputItemCount();
+    int num_input_items = adapter->GetInputItemCount();
 
-//     std::unordered_map<std::string, std::vector<long> > saved_times;
+    std::vector<std::string> output_names = adapter->GetOutputVarNames();
+    std::vector<std::string> input_names = adapter->GetInputVarNames();
+
+    std::unordered_map<std::string, std::vector<long> > saved_times;
 
 
-//     using time_point = std::chrono::time_point<std::chrono::steady_clock>;
-//     auto to_micros = [](const time_point& s, const time_point& e){ return std::chrono::duration_cast<std::chrono::microseconds>(e - s).count();};
+    using time_point = std::chrono::time_point<std::chrono::steady_clock>;
+    auto to_micros = [](const time_point& s, const time_point& e){ return std::chrono::duration_cast<std::chrono::microseconds>(e - s).count();};
 
-//     adapter->Initialize();
-//     // Do the first few time steps
-//     for (int i = 0; i < 720; i++)
-//     {
-//         // record time for Update
-//         auto s1 = std::chrono::steady_clock::now();
-//         adapter->Update();
-//         auto e1 = std::chrono::steady_clock::now();
-//         saved_times["Update"].push_back(to_micros(s1,e1));
+    adapter->Initialize();
+    // Do the first few time steps
+    for (int i = 0; i < 720; i++)
+    {
+        // record time for Update
+        auto s1 = std::chrono::steady_clock::now();
+        adapter->Update();
+        auto e1 = std::chrono::steady_clock::now();
+        saved_times["Update"].push_back(to_micros(s1,e1));
 
-//         // record time to get each output variable
-//         for(std::string name : output_names)
-//         {
-//             auto s2 = std::chrono::steady_clock::now();
-//             std::vector<double> values = adapter->GetValue<double>(name);
-//             auto e2 = std::chrono::steady_clock::now();
-//             saved_times["Get " + name].push_back(to_micros(s2,e2));
-//         }
+        // record time to get each output variable
+        for(std::string name : output_names)
+        {
+            auto s2 = std::chrono::steady_clock::now();
+            std::vector<double> values = adapter->GetValue<double>(name);
+            auto e2 = std::chrono::steady_clock::now();
+            saved_times["Get " + name].push_back(to_micros(s2,e2));
+        }
 
-//         // record time to get each input variable
-//         for(std::string name : input_names)
-//         {
-//             auto s3 = std::chrono::steady_clock::now();
-//             std::vector<double> values = adapter->GetValue<double>(name);
-//             auto e3 = std::chrono::steady_clock::now();
-//             saved_times["Get " + name].push_back(to_micros(s3,e3));
-//         }
+        // record time to get each input variable
+        for(std::string name : input_names)
+        {
+            auto s3 = std::chrono::steady_clock::now();
+            std::vector<double> values = adapter->GetValue<double>(name);
+            auto e3 = std::chrono::steady_clock::now();
+            saved_times["Get " + name].push_back(to_micros(s3,e3));
+        }
 
-//     }
+    }
 
-//     // calcuate average time for each record
+    // calcuate average time for each record
 
-//     for ( auto& kv : saved_times )
-//     {
-//         auto key = kv.first;
-//         auto& v = kv.second;
-//         long sum = 0;
+    for ( auto& kv : saved_times )
+    {
+        auto key = kv.first;
+        auto& v = kv.second;
+        long sum = 0;
 
-//         sum = std::accumulate(v.begin(), v.end(), sum );
-//         double average = double(sum) / v.size();
+        sum = std::accumulate(v.begin(), v.end(), sum );
+        double average = double(sum) / v.size();
 
-//         std::cout << "Average time for " << key << " = " << average << "µs\n";
-//     }
+        std::cout << "Average time for " << key << " = " << average << "µs\n";
+    }
 
-//     adapter->Finalize();
-// }
-
-// /** Test that both the get value function works for output 2. */
-// TEST_F(Bmi_Fortran_Adapter_Test, GetValue_0_d) {
-//     adapter->Initialize();
-//     double value1 = 7.0;
-//     double value2 = 8.0;
-//     double expectedOutput2 = 0; // TODO: fix this
-//     adapter->SetValue("INPUT_VAR_1", &value1);
-//     adapter->SetValue("INPUT_VAR_2", &value2);
-//     adapter->Update();
-//     double retrieved = adapter->GetValue<double>("OUTPUT_VAR_2")[0];
-//     adapter->Finalize();
-//     ASSERT_EQ(expectedOutput2, retrieved);
-// }
+    adapter->Finalize();
+}
 
 #endif  // NGEN_BMI_FORTRAN_LIB_TESTS_ACTIVE
