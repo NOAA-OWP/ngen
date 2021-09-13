@@ -478,7 +478,7 @@ module iso_c_bmif_2_0
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      ! bmi_status = bmi_box%ptr%get_grid_rank(grid, rank)
+      bmi_status = bmi_box%ptr%get_grid_rank(grid, rank)
     end function get_grid_rank
 
     ! Get the total number of elements in the computational grid.

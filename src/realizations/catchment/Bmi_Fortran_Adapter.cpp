@@ -133,7 +133,7 @@ std::string Bmi_Fortran_Adapter::GetGridType(int grid_id) {
 
 int Bmi_Fortran_Adapter::GetGridRank(int grid_id) {
     int gridrank;
-    if (get_grid_rank(&bmi_model->handle, grid_id, &gridrank) != BMI_SUCCESS) {
+    if (get_grid_rank(&bmi_model->handle, &grid_id, &gridrank) != BMI_SUCCESS) {
         throw std::runtime_error(model_name + " failed to get grid rank for grid ID " + to_string(grid_id) + ".");
     }
     return gridrank;
