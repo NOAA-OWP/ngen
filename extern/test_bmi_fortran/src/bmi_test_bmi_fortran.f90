@@ -31,7 +31,7 @@ module bmitestbmi
      procedure :: update => test_update
      procedure :: update_until => test_update_until
      procedure :: get_var_grid => test_var_grid
-!      procedure :: get_grid_type => test_grid_type
+     procedure :: get_grid_type => test_grid_type
      procedure :: get_grid_rank => test_grid_rank
 !      procedure :: get_grid_shape => test_grid_shape
      procedure :: get_grid_size => test_grid_size
@@ -470,6 +470,23 @@ end function test_finalize
        bmi_status = BMI_FAILURE
     end select
   end function test_grid_size
+
+  ! The type of a variable's grid.
+  function test_grid_type(this, grid, type) result (bmi_status)
+    class (bmi_test_bmi), intent(in) :: this
+    integer, intent(in) :: grid
+    character (len=*), intent(out) :: type
+    integer :: bmi_status
+
+    select case(grid)
+    case(0)
+       type = "scalar"
+       bmi_status = BMI_SUCCESS
+    case default
+       type = "-"
+       bmi_status = BMI_FAILURE
+    end select
+  end function test_grid_type
 
 ! Memory use per array element.
   function test_var_itemsize(this, name, size) result (bmi_status)

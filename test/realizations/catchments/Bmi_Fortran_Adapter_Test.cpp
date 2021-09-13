@@ -397,6 +397,21 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetGridRank_0_a) {
     }
 }
 
+/** Test grid type can be retrieved for output 1 */
+TEST_F(Bmi_Fortran_Adapter_Test, GetGridType_0_a) {
+    int out_var_index = 0;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    int grd = adapter->GetVarGrid(variable_name);
+
+    try {
+        ASSERT_EQ(adapter->GetGridType(grd), expected_grid_type);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting grid type: %s", e.what());
+    }
+}
+
 TEST_F(Bmi_Fortran_Adapter_Test, GetVarItemsize_0_a) {
     int out_var_index = 0;
 
@@ -790,22 +805,6 @@ TEST_F(Bmi_Fortran_Adapter_Test, Update_until_0_b) {
 //     double retrieved = adapter->GetValue<double>("OUTPUT_VAR_2")[0];
 //     adapter->Finalize();
 //     ASSERT_EQ(expectedOutput2, retrieved);
-// }
-
-// // Test model GetVarGrid() function is disabled currently.  Suggest disabling test until fully implemented.
-// /** Test grid type can be retrieved for output 1 */
-// TEST_F(Bmi_Fortran_Adapter_Test, DISABLED_GetGridType_0_a) {
-//     int out_var_index = 0;
-
-//     std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
-//     int grd = adapter->GetVarGrid(variable_name);
-
-//     try {
-//         ASSERT_EQ(adapter->GetGridType(grd), expected_grid_type);
-//     }
-//     catch (std::exception& e) {
-//         printf("Exception getting grid type: %s", e.what());
-//     }
 // }
 
 #endif  // NGEN_BMI_FORTRAN_LIB_TESTS_ACTIVE

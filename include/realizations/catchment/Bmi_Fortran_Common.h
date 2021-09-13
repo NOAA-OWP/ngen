@@ -98,7 +98,7 @@ extern "C" {
 
     extern int get_grid_size(void *fortran_bmi_handle, int *grid, int *size);
 
-    extern int get_grid_type(void *fortran_bmi_handle, int grid, char *type);
+    extern int get_grid_type(void *fortran_bmi_handle, int *grid, char *type);
 
     /* Uniform rectilinear */
     extern int get_grid_shape(void *fortran_bmi_handle, int grid, int *shape);

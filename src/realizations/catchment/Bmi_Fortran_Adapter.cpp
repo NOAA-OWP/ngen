@@ -125,7 +125,7 @@ int Bmi_Fortran_Adapter::GetVarGrid(std::string name) {
 
 std::string Bmi_Fortran_Adapter::GetGridType(int grid_id) {
     char gridtype_c_str[BMI_MAX_TYPE_NAME];
-    if (get_grid_type(&bmi_model->handle, grid_id, gridtype_c_str) != BMI_SUCCESS) {
+    if (get_grid_type(&bmi_model->handle, &grid_id, gridtype_c_str) != BMI_SUCCESS) {
         throw std::runtime_error(model_name + " failed to get grid type for grid ID " + to_string(grid_id) + ".");
     }
     return std::string(gridtype_c_str);
