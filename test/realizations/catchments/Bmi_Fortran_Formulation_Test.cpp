@@ -71,6 +71,10 @@ protected:
         return formulation.forcing.get_value_for_param_name(param_name);
     }
 
+    static double get_friend_forcing_param_value(Bmi_Fortran_Formulation& formulation, const std::string& param_name, int index) {
+        return formulation.forcing.get_value_for_param_name(param_name, index);
+    }
+
     static std::string get_friend_forcing_file_path(const Bmi_Fortran_Formulation& formulation) {
         return formulation.get_forcing_file_path();
     }
@@ -193,7 +197,7 @@ void Bmi_Fortran_Formulation_Test::SetUp() {
     uses_forcing_file[0] = false;
 
     catchment_ids[1] = "cat-27";
-    model_type_name[1] = "test_bmi_c";
+    model_type_name[1] = "test_bmi_fortran";
     forcing_file[1] = find_file(forcing_dir_opts, "cat-27_2015-12-01 00_00_00_2015-12-30 23_00_00.csv");
     lib_file[1] = find_file(lib_dir_opts, BMI_TEST_FORTRAN_LOCAL_LIB_NAME);
     init_config[1] = find_file(bmi_init_cfg_dir_opts, "test_bmi_fortran_config_1.txt");
@@ -202,7 +206,8 @@ void Bmi_Fortran_Formulation_Test::SetUp() {
     uses_forcing_file[1] = false;
 
     std::string variables_with_rain_rate = "                \"output_variables\": [\"OUTPUT_VAR_2\",\n"
-                                           "                    \"OUTPUT_VAR_1\"],\n";
+                                           "                    \"OUTPUT_VAR_1\",\n"
+                                           "                    \"OUTPUT_VAR_3\"],\n";
 
     /* Set up the derived example details */
     for (int i = 0; i < EX_COUNT; i++) {
@@ -221,7 +226,8 @@ void Bmi_Fortran_Formulation_Test::SetUp() {
                          "                \"init_config\": \"" + init_config[i] + "\","
                          "                \"main_output_variable\": \"" + main_output_variable[i] + "\","
                          "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES + "\": { "
-                         "                      \"INPUT_VAR_2\": \"" + NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP + "\","
+                         "                      \"INPUT_VAR_3\": \"" + AORC_FIELD_NAME_PRESSURE_SURFACE + "\","
+                         "                      \"INPUT_VAR_2\": \"" + AORC_FIELD_NAME_SPEC_HUMID_2M_AG + "\","
                          "                      \"INPUT_VAR_1\": \"" + AORC_FIELD_NAME_PRECIP_RATE + "\""
                          "                },"
                          "                \"registration_function\": \"" + registration_functions[i] + "\","
@@ -271,8 +277,8 @@ TEST_F(Bmi_Fortran_Formulation_Test, Initialize_1_a) {
     std::string header_1 = get_friend_output_header_line(form_1,",");
     std::string header_2 = get_friend_output_header_line(form_2,",");
 
-    ASSERT_EQ(header_1, "OUTPUT_VAR_1,OUTPUT_VAR_2");
-    ASSERT_EQ(header_2, "OUTPUT_VAR_2,OUTPUT_VAR_1");
+    ASSERT_EQ(header_1, "OUTPUT_VAR_1,OUTPUT_VAR_2,OUTPUT_VAR_3");
+    ASSERT_EQ(header_2, "OUTPUT_VAR_2,OUTPUT_VAR_1,OUTPUT_VAR_3");
 }
 
 /** Simple test of get response. */
@@ -283,7 +289,7 @@ TEST_F(Bmi_Fortran_Formulation_Test, GetResponse_0_a) {
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
     double response = formulation.get_response(0, 3600);
-    ASSERT_EQ(response, 00);
+    ASSERT_EQ(response, 0.0);
 }
 
 /** Test of get response after several iterations. */
@@ -327,7 +333,8 @@ TEST_F(Bmi_Fortran_Formulation_Test, GetOutputLineForTimestep_0_a) {
 
     double response = formulation.get_response(0, 3600);
     std::string output = formulation.get_output_line_for_timestep(0, ",");
-    ASSERT_EQ(output, "0.000000,0.000000");
+    //NOTE these answers are dependent on the INPUT vars selected and the data in the forcing file
+    ASSERT_EQ(output, "0.000000,0.018600,0.000000");
 }
 
 /** Simple test of output with modified variables. */
@@ -339,7 +346,8 @@ TEST_F(Bmi_Fortran_Formulation_Test, GetOutputLineForTimestep_1_a) {
 
     double response = formulation.get_response(0, 3600);
     std::string output = formulation.get_output_line_for_timestep(0, ",");
-    ASSERT_EQ(output, "0.000000,0.000000");
+    //NOTE these answers are dependent on the INPUT vars selected and the data in the forcing file
+    ASSERT_EQ(output, "0.018600,0.000000,0.000000");
 }
 
 /** Simple test of output with modified variables, picking time step when there was non-zero rain rate. */
@@ -354,7 +362,8 @@ TEST_F(Bmi_Fortran_Formulation_Test, GetOutputLineForTimestep_1_b) {
         formulation.get_response(i++, 3600);
     double response = formulation.get_response(i, 3600);
     std::string output = formulation.get_output_line_for_timestep(i, ",");
-    ASSERT_EQ(output, "0.000000,0.000002");
+    //NOTE these answers are dependent on the INPUT vars selected and the data in the forcing file
+    ASSERT_EQ(output, "0.025400,0.000002,0.000000");
 }
 
 TEST_F(Bmi_Fortran_Formulation_Test, determine_model_time_offset_0_a) {
@@ -396,7 +405,7 @@ TEST_F(Bmi_Fortran_Formulation_Test, determine_model_time_offset_0_c) {
 }
 
 /** Simple test for contribution when forcing and model time steps align. */
-TEST_F(Bmi_Fortran_Formulation_Test, DISABLED_get_forcing_data_ts_contributions_0_a) {
+TEST_F(Bmi_Fortran_Formulation_Test, get_forcing_data_ts_contributions_0_a) {
     int ex_index = 0;
 
     Bmi_Fortran_Formulation formulation(catchment_ids[ex_index], *forcing_params_examples[ex_index], utils::StreamHandler());
@@ -433,16 +442,17 @@ TEST_F(Bmi_Fortran_Formulation_Test, DISABLED_get_forcing_data_ts_contributions_
 
     std::string output_line;
     int progressed_seconds = 0;
-
+    int iterations = 38;
     // Skip ahead in time.
-    for (int i = 0; i <= 37; ++i) {
+    for (int i = 0; i <= iterations; ++i) {//should be 38
         formulation.get_response(i, 3600);
+        //std::cout<<"PRECIP "<<i<<": "<<get_friend_forcing_param_value(formulation, "precip_rate", i)<<"\n";
         progressed_seconds += 3600;
     }
 
     std::string param_name = "precip_rate";
 
-    double forcing_ts_param_value = get_friend_forcing_param_value(formulation, param_name);
+    double forcing_ts_param_value = get_friend_forcing_param_value(formulation, param_name, iterations);
     ASSERT_GT(forcing_ts_param_value, 0.0);
 
     double model_time = model_adapter->GetCurrentTime();
@@ -475,17 +485,17 @@ TEST_F(Bmi_Fortran_Formulation_Test, DISABLED_get_forcing_data_ts_contributions_
 
     std::string output_line;
     int progressed_seconds = 0;
-
+    int iterations = 38;
     // Skip ahead in time.
     int i;
-    for (i = 0; i <= 38; ++i) {
+    for (i = 0; i <= iterations; ++i) {
         formulation.get_response(i, 3600);
         progressed_seconds += 3600;
     }
 
     std::string param_name = "precip_rate";
 
-    double forcing_ts_param_value= get_friend_forcing_param_value(formulation, param_name);
+    double forcing_ts_param_value= get_friend_forcing_param_value(formulation, param_name, iterations);
     ASSERT_GT(forcing_ts_param_value, 0.0);
 
     double model_time = model_adapter->GetCurrentTime();
@@ -520,17 +530,17 @@ TEST_F(Bmi_Fortran_Formulation_Test, DISABLED_get_forcing_data_ts_contributions_
 
     std::string output_line;
     int progressed_seconds = 0;
-
+    int iterations = 38;
     // Skip ahead in time.
     int i;
-    for (i = 0; i <= 37; ++i) {
+    for (i = 0; i <= iterations; ++i) {
         formulation.get_response(i, 3600);
         progressed_seconds += 3600;
     }
 
     std::string param_name = "precip_rate";
 
-    double forcing_ts_param_value= get_friend_forcing_param_value(formulation, param_name);
+    double forcing_ts_param_value= get_friend_forcing_param_value(formulation, param_name, iterations);
     ASSERT_GT(forcing_ts_param_value, 0.0);
 
     double model_time = model_adapter->GetCurrentTime();
