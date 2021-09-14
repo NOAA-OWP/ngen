@@ -21,6 +21,7 @@ target_include_directories(core PUBLIC
         ${PROJECT_SOURCE_DIR}/include/geojson
         ${PROJECT_SOURCE_DIR}/include/forcing
         ${PROJECT_SOURCE_DIR}/include/utilities
+        ${PROJECT_SOURCE_DIR}/extern/pybind11/include
         )
 
 target_link_libraries(core PUBLIC
