@@ -803,6 +803,43 @@ namespace realization {
             model_initialized = is_initialized;
         }
 
+        template<typename T>
+        std::shared_ptr<void> get_value_as_type(std::string type, T value)
+        {
+            if (type == "double" || type == "double precision")
+                return std::make_shared<double>( static_cast<double>(value) );
+
+            if (type == "float" || type == "real")
+                return std::make_shared<float>( static_cast<float>(value) );
+
+            if (type == "short" || type == "short int" || type == "signed short" || type == "signed short int")
+                return std::make_shared<short>( static_cast<short>(value) );
+
+            if (type == "unsigned short" || type == "unsigned short int")
+                return std::make_shared<unsigned short>( static_cast<unsigned short>(value) );
+
+            if (type == "int" || type == "signed" || type == "signed int" || type == "integer")
+                return std::make_shared<int>( static_cast<int>(value) );
+
+            if (type == "unsigned" || type == "unsigned int")
+                return std::make_shared<unsigned int>( static_cast<unsigned int>(value) );
+
+            if (type == "long" || type == "long int" || type == "signed long" || type == "signed long int")
+                return std::make_shared<long>( static_cast<long>(value) );
+
+            if (type == "unsigned long" || type == "unsigned long int")
+                return std::make_shared<unsigned long>( static_cast<unsigned long>(value) );
+
+            if (type == "long long" || type == "long long int" || type == "signed long long" || type == "signed long long int")
+                return std::make_shared<long long>( static_cast<long long>(value) );
+
+            if (type == "unsigned long long" || type == "unsigned long long int")
+                return std::make_shared<unsigned long long>( static_cast<unsigned long long>(value) );
+
+            throw std::runtime_error("Unable to get value of variable as type" + type + " from " + get_model_type_name() +
+                " : no logic for converting value to variable's type.");
+        }
+
         /**
          * Set BMI input variable values for the model appropriately prior to calling its `BMI `update()``.
          *
@@ -836,7 +873,9 @@ namespace realization {
                 double value = provider->get_value(var_map_alias, model_epoch_time, t_delta,
                                                    get_bmi_model()->GetVarUnits(var_name));
                 // Finally, use the value obtained to set the model input
-                get_bmi_model()->SetValue(var_name, (void*)&value);
+                std::string type = get_bmi_model()->GetVarType(var_name);
+                std::shared_ptr<void> value_ptr = get_value_as_type(type, value);
+                get_bmi_model()->SetValue(var_name, value_ptr.get());
             }
         }
 
