@@ -305,7 +305,7 @@ class Forcing : public forcing::ForcingProvider
             time_remaining -= ts_involved_s;
             current_index++;
         }
-        double value;
+        double value = 0;
         for (size_t i = 0; i < involved_time_step_values.size(); ++i) {
             if (is_param_sum_over_time_step(output_name))
                 value += involved_time_step_values[i] * ((double)involved_time_step_seconds[i] / 3600.0);
