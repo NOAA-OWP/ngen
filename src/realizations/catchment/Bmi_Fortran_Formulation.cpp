@@ -59,10 +59,10 @@ double Bmi_Fortran_Formulation::get_var_value_as_double(const int &index, const 
     if (type == "long double")
         return (double) (get_bmi_model()->GetValue<long double>(var_name))[index];
 
-    if (type == "double")
+    if (type == "double" || type == "double precision")
         return (double) (get_bmi_model()->GetValue<double>(var_name))[index];
 
-    if (type == "float")
+    if (type == "float" || type == "real")
         return (double) (get_bmi_model()->GetValue<float>(var_name))[index];
 
     if (type == "short" || type == "short int" || type == "signed short" || type == "signed short int")
@@ -71,7 +71,7 @@ double Bmi_Fortran_Formulation::get_var_value_as_double(const int &index, const 
     if (type == "unsigned short" || type == "unsigned short int")
         return (double) (get_bmi_model()->GetValue<unsigned short>(var_name))[index];
 
-    if (type == "int" || type == "signed" || type == "signed int")
+    if (type == "int" || type == "signed" || type == "signed int" || type == "integer")
         return (double) (get_bmi_model()->GetValue<int>(var_name))[index];
 
     if (type == "unsigned" || type == "unsigned int")
