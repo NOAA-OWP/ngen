@@ -196,31 +196,4 @@ void Bmi_Py_Adapter::UpdateUntil(double time) {
     bmi_model->attr("update_until")(time);
 }
 
-/**
- * Parse variable value(s) from within "other_vars" property of formulation config, to a numpy array suitable for
- * passing to the BMI model via the ``set_value`` function.
- *
- * @param other_value_json JSON node containing variable/parameter value(s) needing to be passed to a BMI model.
- * @return A bound Python numpy array to containing values to pass to a BMI model object via ``set_value``.
- */
-// TODO: unit test
-py::array Bmi_Py_Adapter::parse_other_var_val_for_setter(const geojson::JSONProperty& other_value_json) {
-
-    if (other_value_json.get_type() == geojson::PropertyType::Boolean) {
-        return pybind11::array(py::dtype::of<bool>(), {1, 1}, {other_value_json.as_boolean()});
-    }
-    else if (other_value_json.get_type() == geojson::PropertyType::Natural) {
-        return pybind11::array(py::dtype::of<long>(), {1, 1}, {other_value_json.as_natural_number()});
-    }
-    else if (other_value_json.get_type() == geojson::PropertyType::Real) {
-        return pybind11::array(py::dtype::of<double>(), {1, 1}, {other_value_json.as_real_number()});
-    }
-        // TODO: think about handling list explicitly, and handling object type; for now, document restrictions
-        //else if (other_value_json.get_type() == geojson::PropertyType::String) {
-    else {
-        //return pybind11::array(py::dtype::of<string>(), {1, 1}, {other_value_json.as_string()});
-        int a = 1;
-    }
-}
-
 #endif //ACTIVATE_PYTHON

@@ -321,15 +321,6 @@ namespace models {
                 return model_initialized;
             }
 
-            /**
-             * Parse variable value(s) from within "other_vars" property of formulation config, to a numpy array suitable for
-             * passing to the BMI model via the ``set_value`` function.
-             *
-             * @param other_value_json JSON node containing variable/parameter value(s) needing to be passed to a BMI model.
-             * @return A bound Python numpy array to containing values to pass to a BMI model object via ``set_value``.
-             */
-            static py::array parse_other_var_val_for_setter(const geojson::JSONProperty& other_value_json);
-
             void Update() override;
 
             void UpdateUntil(double time) override;
