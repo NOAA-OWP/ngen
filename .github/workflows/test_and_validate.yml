@@ -441,7 +441,7 @@ jobs:
           cd ../../../
 
       - name: cmake_init_fortran_iso_c_lib_build
-        run: cmake -B extern/iso_c_fortran_bmi/cmake_build -S extern/iso_c_fortran_bmi
+        run: cmake -B extern/iso_c_fortran_bmi/cmake_build -DCMAKE_Fortran_COMPILER=gfortran-11 -S extern/iso_c_fortran_bmi
 
       - name: build_test_fortran_iso_c_shared_lib
         run: |
