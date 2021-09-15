@@ -73,10 +73,8 @@ int main(int argc, char** argv)
 
     status = register_bmi(&bmi_handle);
     check_status(&status, "register");
-    //register_bmi(&bmi_handle2);
 
-    //Note, the name MUST be namelist.input or the reader breaks
-    char init_file[2048] = "namelist.input";
+    char init_file[2048] = "test_bmi_fortran_config_0.txt";
     //char init_file[2048] = "test.ini";
     status = initialize(&bmi_handle, init_file);
     check_status(&status, "initialize");
@@ -140,30 +138,30 @@ int main(int argc, char** argv)
     free(names);
 
     int grid = -1;
-    status = get_var_grid(&bmi_handle, "QINSUR", &grid);
-    printf("get_var_grid for QINSUR: %ld\n", grid);
+    status = get_var_grid(&bmi_handle, "INPUT_VAR_1", &grid);
+    printf("get_var_grid for INPUT_VAR_1: %ld\n", grid);
     check_status(&status, "get_var_grid");
 
-    status = get_var_type(&bmi_handle, "QINSUR", type);
-    printf("get_var_type for QINSUR: %s\n", type);
+    status = get_var_type(&bmi_handle, "INPUT_VAR_1", type);
+    printf("get_var_type for INPUT_VAR_1: %s\n", type);
     check_status(&status, "get_var_type");
 
-    status = get_var_units(&bmi_handle, "QINSUR", type);
-    printf("get_var_units for QINSUR: %s\n", type);
+    status = get_var_units(&bmi_handle, "INPUT_VAR_1", type);
+    printf("get_var_units for INPUT_VAR_1: %s\n", type);
     check_status(&status, "get_var_units");
 
     int size = -1;
-    status = get_var_itemsize(&bmi_handle, "QINSUR", &size);
-    printf("get_var_itemsize for QINSUR: %d\n", size);
+    status = get_var_itemsize(&bmi_handle, "INPUT_VAR_1", &size);
+    printf("get_var_itemsize for INPUT_VAR_1: %d\n", size);
     check_status(&status, "get_var_itemsize");
 
     size = -1;
-    status = get_var_nbytes(&bmi_handle, "QINSUR", &size);
-    printf("get_var_nbytes for QINSUR: %d\n", size);
+    status = get_var_nbytes(&bmi_handle, "INPUT_VAR_1", &size);
+    printf("get_var_nbytes for INPUT_VAR_1: %d\n", size);
     check_status(&status, "get_var_nbytes");
 
-    status = get_var_location(&bmi_handle, "QINSUR", location);
-    printf("get_var_location for QINSUR: %s\n", location);
+    status = get_var_location(&bmi_handle, "INPUT_VAR_1", location);
+    printf("get_var_location for INPUT_VAR_1: %s\n", location);
     check_status(&status, "get_var_location");
 
     double time = -1.0;
@@ -192,38 +190,38 @@ int main(int argc, char** argv)
     check_status(&status, "get_time_step");
 
     int value = -2;
-    status = get_value_int(&bmi_handle, "none", &value);
+    status = get_value_int(&bmi_handle, "INPUT_VAR_3", &value);
     printf("get_value_int: %d\n", value);
-    // check_status(&status, "get_value_int");
+    check_status(&status, "get_value_int");
 
     float value_f = -2.0;
-    status = get_value_float(&bmi_handle, "QINSUR", &value_f);
-    printf("get_value_float QINSUR: %f\n", value_f);
+    status = get_value_float(&bmi_handle, "INPUT_VAR_2", &value_f);
+    printf("get_value_float INPUT_VAR_1: %f\n", value_f);
     check_status(&status, "get_value_float");
 
     double value_d = -2.0;
-    status = get_value_double(&bmi_handle, "QINSUR", &value_d);
-    printf("get_value_double QINSUR: %f\n", value_d);
-    // check_status(&status, "get_value_double");
+    status = get_value_double(&bmi_handle, "INPUT_VAR_1", &value_d);
+    printf("get_value_double INPUT_VAR_1: %f\n", value_d);
+    check_status(&status, "get_value_double");
 
     value = 2;
-    status = set_value_int(&bmi_handle, "none", &value);
+    status = set_value_int(&bmi_handle, "INPUT_VAR_3", &value);
     printf("set_value_int: %d\n", value);
-    // check_status(&status, "set_value_int");
+    check_status(&status, "set_value_int");
 
     value_f = 2.0;
-    status = set_value_float(&bmi_handle, "QINSUR", &value_f);
-    printf("set_value_float QINSUR: %f\n", value_f);
+    status = set_value_float(&bmi_handle, "INPUT_VAR_2", &value_f);
+    printf("set_value_float INPUT_VAR_1: %f\n", value_f);
     check_status(&status, "set_value_float");
     value_f = -2.0;
-    status = get_value_float(&bmi_handle, "QINSUR", &value_f);
-    printf("get_value_float QINSUR: %f\n", value_f);
+    status = get_value_float(&bmi_handle, "INPUT_VAR_2", &value_f);
+    printf("get_value_float INPUT_VAR_1: %f\n", value_f);
     check_status(&status, "get_value_float");
 
     value_d = -2.0;
-    status = set_value_double(&bmi_handle, "QINSUR", &value_d);
-    printf("set_value_double QINSUR: %f\n", value_d);
-    // check_status(&status, "set_value_double");
+    status = set_value_double(&bmi_handle, "INPUT_VAR_1", &value_d);
+    printf("set_value_double INPUT_VAR_1: %f\n", value_d);
+    check_status(&status, "set_value_double");
 
     int rank = -2;
     grid = 0;
