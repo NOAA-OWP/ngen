@@ -67,8 +67,10 @@ protected:
         return formulation.get_bmi_model_start_time_forcing_offset_s();
     }
 
-    static double get_friend_forcing_param_value(Bmi_C_Formulation& formulation, const std::string& param_name) {
-        return formulation.forcing.get_value_for_param_name(param_name);
+    static double get_friend_forcing_param_value(Bmi_C_Formulation& formulation, const std::string& param_name,
+                                                 int ts_index)
+    {
+        return formulation.forcing.get_value_for_param_name(param_name, ts_index);
     }
 
     static std::string get_friend_forcing_file_path(const Bmi_C_Formulation& formulation) {
@@ -392,7 +394,7 @@ TEST_F(Bmi_C_Formulation_Test, determine_model_time_offset_0_c) {
 }
 
 /** Simple test for contribution when forcing and model time steps align. */
-TEST_F(Bmi_C_Formulation_Test, DISABLED_get_forcing_data_ts_contributions_0_a) {
+TEST_F(Bmi_C_Formulation_Test, get_forcing_data_ts_contributions_0_a) {
     int ex_index = 0;
 
     Bmi_C_Formulation formulation(catchment_ids[ex_index], *forcing_params_examples[ex_index], utils::StreamHandler());
@@ -401,7 +403,7 @@ TEST_F(Bmi_C_Formulation_Test, DISABLED_get_forcing_data_ts_contributions_0_a) {
 
     std::string param_name = "precip_rate";
 
-    double forcing_ts_param_value = get_friend_forcing_param_value(formulation, param_name);
+    double forcing_ts_param_value = get_friend_forcing_param_value(formulation, param_name, 0);
 
     double model_time = model_adapter->GetCurrentTime();
     ASSERT_EQ(model_time, 0.0);
@@ -420,7 +422,7 @@ TEST_F(Bmi_C_Formulation_Test, DISABLED_get_forcing_data_ts_contributions_0_a) {
 }
 
 /** Simple test for contribution when forcing and model time steps align, skipping to time step with non-zero value. */
-TEST_F(Bmi_C_Formulation_Test, DISABLED_get_forcing_data_ts_contributions_0_b) {
+TEST_F(Bmi_C_Formulation_Test, get_forcing_data_ts_contributions_0_b) {
     int ex_index = 0;
 
     Bmi_C_Formulation formulation(catchment_ids[ex_index], *forcing_params_examples[ex_index], utils::StreamHandler());
@@ -429,16 +431,18 @@ TEST_F(Bmi_C_Formulation_Test, DISABLED_get_forcing_data_ts_contributions_0_b) {
 
     std::string output_line;
     int progressed_seconds = 0;
+    int ts_index = 0;
 
     // Skip ahead in time.
-    for (int i = 0; i <= 37; ++i) {
-        formulation.get_response(i, 3600);
+    while (ts_index <= 40) {
+        formulation.get_response(ts_index, 3600);
+        ts_index++;
         progressed_seconds += 3600;
     }
 
     std::string param_name = "precip_rate";
 
-    double forcing_ts_param_value = get_friend_forcing_param_value(formulation, param_name);
+    double forcing_ts_param_value = get_friend_forcing_param_value(formulation, param_name, ts_index);
     ASSERT_GT(forcing_ts_param_value, 0.0);
 
     double model_time = model_adapter->GetCurrentTime();
@@ -462,7 +466,7 @@ TEST_F(Bmi_C_Formulation_Test, DISABLED_get_forcing_data_ts_contributions_0_b) {
  * Simple test for contribution when forcing and model time steps do not align, skipping to time step with non-zero
  * value.
  */
-TEST_F(Bmi_C_Formulation_Test, DISABLED_get_forcing_data_ts_contributions_1_a) {
+TEST_F(Bmi_C_Formulation_Test, get_forcing_data_ts_contributions_1_a) {
     int ex_index = 0;
 
     Bmi_C_Formulation formulation(catchment_ids[ex_index], *forcing_params_examples[ex_index], utils::StreamHandler());
@@ -471,17 +475,18 @@ TEST_F(Bmi_C_Formulation_Test, DISABLED_get_forcing_data_ts_contributions_1_a) {
 
     std::string output_line;
     int progressed_seconds = 0;
+    int ts_index = 0;
 
     // Skip ahead in time.
-    int i;
-    for (i = 0; i <= 38; ++i) {
-        formulation.get_response(i, 3600);
+    while (ts_index <= 38) {
+        formulation.get_response(ts_index, 3600);
+        ts_index++;
         progressed_seconds += 3600;
     }
 
     std::string param_name = "precip_rate";
 
-    double forcing_ts_param_value= get_friend_forcing_param_value(formulation, param_name);
+    double forcing_ts_param_value= get_friend_forcing_param_value(formulation, param_name, ts_index);
     ASSERT_GT(forcing_ts_param_value, 0.0);
 
     double model_time = model_adapter->GetCurrentTime();
@@ -498,7 +503,7 @@ TEST_F(Bmi_C_Formulation_Test, DISABLED_get_forcing_data_ts_contributions_1_a) {
 
     call_friend_get_forcing_data_ts_contributions(formulation, t_delta, model_time, param_names, is_forcing_param,
                                                   param_units, summed_contributions);
-    double forcing_ts_param_value_2 = get_friend_forcing_param_value(formulation, param_name);
+    double forcing_ts_param_value_2 = get_friend_forcing_param_value(formulation, param_name, ts_index);
 
     ASSERT_EQ(summed_contributions[0], forcing_ts_param_value / 2.0);
 }
@@ -507,7 +512,7 @@ TEST_F(Bmi_C_Formulation_Test, DISABLED_get_forcing_data_ts_contributions_1_a) {
  * Simple test for contribution when forcing and model time steps do not align, skipping to time step with non-zero
  * value, and spanning data from multiple forcing time steps.
  */
-TEST_F(Bmi_C_Formulation_Test, DISABLED_get_forcing_data_ts_contributions_1_b) {
+TEST_F(Bmi_C_Formulation_Test, get_forcing_data_ts_contributions_1_b) {
     int ex_index = 0;
 
     Bmi_C_Formulation formulation(catchment_ids[ex_index], *forcing_params_examples[ex_index], utils::StreamHandler());
@@ -516,17 +521,17 @@ TEST_F(Bmi_C_Formulation_Test, DISABLED_get_forcing_data_ts_contributions_1_b) {
 
     std::string output_line;
     int progressed_seconds = 0;
+    int ts_index = 0;
 
     // Skip ahead in time.
-    int i;
-    for (i = 0; i <= 37; ++i) {
-        formulation.get_response(i, 3600);
+    while (ts_index <= 39) {
+        formulation.get_response(ts_index, 3600);
+        ts_index++;
         progressed_seconds += 3600;
     }
-
     std::string param_name = "precip_rate";
 
-    double forcing_ts_param_value= get_friend_forcing_param_value(formulation, param_name);
+    double forcing_ts_param_value= get_friend_forcing_param_value(formulation, param_name, ts_index);
     ASSERT_GT(forcing_ts_param_value, 0.0);
 
     double model_time = model_adapter->GetCurrentTime();
@@ -543,7 +548,7 @@ TEST_F(Bmi_C_Formulation_Test, DISABLED_get_forcing_data_ts_contributions_1_b) {
 
     call_friend_get_forcing_data_ts_contributions(formulation, t_delta, model_time, param_names, is_forcing_param,
                                                   param_units, summed_contributions);
-    double forcing_ts_param_value_2 = get_friend_forcing_param_value(formulation, param_name);
+    double forcing_ts_param_value_2 = get_friend_forcing_param_value(formulation, param_name, ts_index + 1);
 
     // Assert that these are actually values from two different forcing time steps.
     ASSERT_NE(forcing_ts_param_value, forcing_ts_param_value_2);
