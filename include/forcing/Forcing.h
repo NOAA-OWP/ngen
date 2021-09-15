@@ -319,17 +319,6 @@ class Forcing : public forcing::ForcingProvider
      * Get the current value of a forcing param identified by its name.
      *
      * @param name The name of the forcing param for which the current value is desired.
-     * @return The particular param's current value.
-     */
-    inline double get_value_for_param_name(const std::string& name) {
-        check_forcing_vector_index_bounds();
-        return get_value_for_param_name(name, forcing_vector_index);
-    }
-
-    /**
-     * Get the current value of a forcing param identified by its name.
-     *
-     * @param name The name of the forcing param for which the current value is desired.
      * @param index The index of the desired forcing time step from which to obtain the value.
      * @return The particular param's value at the given forcing time step.
      */
