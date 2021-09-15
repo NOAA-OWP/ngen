@@ -13,6 +13,10 @@
 #include <FileChecker.h>
 #include <boost/algorithm/string.hpp>
 
+#ifdef WRITE_PID_FILE_FOR_GDB_SERVER
+#include <unistd.h>
+#endif // WRITE_PID_FILE_FOR_GDB_SERVER
+
 #ifdef ACTIVATE_PYTHON
 #include <pybind11/embed.h>
 namespace py = pybind11;
@@ -125,6 +129,22 @@ int main(int argc, char *argv[]) {
         MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
         MPI_Comm_size(MPI_COMM_WORLD, &mpi_num_procs);
         #endif // NGEN_MPI_ACTIVE
+
+        #ifdef WRITE_PID_FILE_FOR_GDB_SERVER
+        std::string pid_file_name = "./.ngen_pid";
+        #ifdef NGEN_MPI_ACTIVE
+        pid_file_name += "." + std::to_string(mpi_rank);
+        #endif // NGEN_MPI_ACTIVE
+        ofstream outfile;
+        outfile.open(pid_file_name, ios::out | ios::trunc );
+        outfile << getpid();
+        outfile.close();
+        int total_time = 0;
+        while (utils::FileChecker::file_is_readable(pid_file_name) && total_time < 180) {
+            total_time += 30;
+            sleep(30);
+        }
+        #endif // WRITE_PID_FILE_FOR_GDB_SERVER
 
         bool error = !utils::FileChecker::file_is_readable(catchmentDataFile, "Catchment data") ||
                 !utils::FileChecker::file_is_readable(nexusDataFile, "Nexus data") ||
