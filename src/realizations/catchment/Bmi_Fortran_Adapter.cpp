@@ -191,7 +191,7 @@ void Bmi_Fortran_Adapter::Update() {
  * @param time Time to update model to, either as literal model time or non-integral multiple of time steps.
  */
 void Bmi_Fortran_Adapter::UpdateUntil(double time) {
-    if (update_until(&bmi_model->handle, time) != BMI_SUCCESS) {
+    if (update_until(&bmi_model->handle, &time) != BMI_SUCCESS) {
         throw models::external::State_Exception("Model execution update to specified time failed for " + model_name);
     }
 }
