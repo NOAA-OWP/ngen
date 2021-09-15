@@ -428,7 +428,7 @@ jobs:
         run: git submodule update --init --recursive -- extern/pybind11
 
       - name: cmake_init_test_lib_build
-        run: cmake -B extern/test_bmi_fortran/cmake_build -DCMAKE_Fortran_COMPILER:FILEPATH=$(alias gfortran-11 | awk -F= '{print $2}' | awk -F\' '{print $2}' | awk -F\  '{print $1}') -S extern/test_bmi_fortran
+        run: cmake -B extern/test_bmi_fortran/cmake_build -DCMAKE_Fortran_COMPILER:FILEPATH=$(which gfortran-11) -S extern/test_bmi_fortran
 
       - name: build_test_bmi_fortran_shared_lib
         run: |
@@ -437,7 +437,7 @@ jobs:
           cd ../../../
 
       - name: cmake_init_fortran_iso_c_lib_build
-        run: cmake -B extern/iso_c_fortran_bmi/cmake_build -DCMAKE_Fortran_COMPILER:FILEPATH=$(alias gfortran-11 | awk -F= '{print $2}' | awk -F\' '{print $2}' | awk -F\  '{print $1}') -S extern/iso_c_fortran_bmi
+        run: cmake -B extern/iso_c_fortran_bmi/cmake_build -DCMAKE_Fortran_COMPILER:FILEPATH=$(which gfortran-11) -S extern/iso_c_fortran_bmi
 
       - name: build_test_fortran_iso_c_shared_lib
         run: |
