@@ -4,7 +4,10 @@ enable_language( Fortran )
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/../../cmake/")
 # Uncomment this and rebuild artifacts to enable debugging
 #set(CMAKE_BUILD_TYPE Debug)
-set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -g -fbacktrace -fbounds-check -Wall")
+add_compile_options(
+  "-Wall"
+  "$<$<CONFIG:DEBUG>:-g;-fbacktrace;-fbounds-check>"
+)
 
 set( CMAKE_Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR}/fortran)
 #### Add variables for individual libraries that are used withing the *.pc.in files
