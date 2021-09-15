@@ -22,7 +22,7 @@ extern "C" {
 
     extern int update(void *fortran_bmi_handle);
 
-    extern int update_until(void *fortran_bmi_handle, double then);
+    extern int update_until(void *fortran_bmi_handle, double *then);
 
     extern int finalize(void *fortran_bmi_handle);
 
