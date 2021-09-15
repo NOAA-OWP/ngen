@@ -221,8 +221,6 @@ jobs:
       - name: git submodule pybind11
         run: git submodule update --init --recursive -- extern/pybind11
 
-      # TODO: do any steps need to be done here to install Fortran?
-
       - name: cmake_init_test_lib_build
         run: cmake -B extern/test_bmi_fortran/cmake_build -S extern/test_bmi_fortran
 
@@ -429,10 +427,8 @@ jobs:
       - name: git submodule pybind11
         run: git submodule update --init --recursive -- extern/pybind11
 
-      # TODO: do any steps need to be done here to install Fortran?
-
       - name: cmake_init_test_lib_build
-        run: cmake -B extern/test_bmi_fortran/cmake_build -S extern/test_bmi_fortran
+        run: cmake -B extern/test_bmi_fortran/cmake_build -DCMAKE_Fortran_COMPILER:FILEPATH=$(alias gfortran-11 | awk -F= '{print $2}' | awk -F\' '{print $2}' | awk -F\  '{print $1}') -S extern/test_bmi_fortran
 
       - name: build_test_bmi_fortran_shared_lib
         run: |
