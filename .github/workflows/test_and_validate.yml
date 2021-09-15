@@ -270,7 +270,7 @@ jobs:
         timeout-minutes: 15
 
       - name: cleanup_builds
-        run: find . -name cmake_build -type d -exec rm -rf {} \;
+        run: find . -name cmake_build -type d -prune -exec rm -rf {} \;
 
   test_unit_macos_latest:
     # The type of runner that the job will run on
