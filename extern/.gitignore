@@ -1,0 +1,5 @@
+# Ignore build artifacts from extern sources, particuarly fortran module files
+*.mod
+# Ignore build/library directores
+cmake_*_lib
+*build*
