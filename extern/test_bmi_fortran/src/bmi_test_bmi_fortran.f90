@@ -159,6 +159,7 @@ function read_init_config(model, config_file) result(bmi_status)
   double precision :: model_end_time
   !locals
   integer :: rc, fu
+  character(len=1000) :: line
   !namelists
   namelist /test/ epoch_start_time, num_time_steps, time_step_size, model_end_time
 
@@ -176,12 +177,14 @@ function read_init_config(model, config_file) result(bmi_status)
       bmi_status = BMI_FAILURE
       return
   end if
-
   ! Open and read Namelist file.
-  open (action='read', file=config_file, iostat=rc, newunit=fu)
+  open (action='read', file=trim(config_file), iostat=rc, newunit=fu)
   read (nml=test, iostat=rc, unit=fu)
-
   if (rc /= 0) then
+      backspace(fu)
+      read(fu,fmt='(A)') line
+      write(stderr,'(A)') &
+       'Invalid line in namelist: '//trim(line)
       write (stderr, '(a)') 'Error: invalid Namelist format.'
       bmi_status = BMI_FAILURE
   else
@@ -198,9 +201,7 @@ function read_init_config(model, config_file) result(bmi_status)
     model%model_end_time = model_end_time
     bmi_status = BMI_SUCCESS
   end if
-
   close (fu)
-
 end function read_init_config
 
 ! BMI initializer.
