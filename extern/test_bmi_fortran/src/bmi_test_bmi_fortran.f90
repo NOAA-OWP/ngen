@@ -922,20 +922,26 @@ end function test_finalize
    implicit none
    type(c_ptr) :: this ! If not value, then from the C perspective `this` is a void**
    integer(kind=c_int) :: bmi_status
-   !Create the momdel instance to use
-   !Definitely need to carefully undertand and document the semantics of the save attribute here
-   type(bmi_test_bmi), target, save :: bmi_model !need to ensure scope/lifetime, use save attribute
+   !Create the model instance to use
+   type(bmi_test_bmi), pointer :: bmi_model
    !Create a simple pointer wrapper
    type(box), pointer :: bmi_box
 
+   !allocate model
+   allocate(bmi_test_bmi::bmi_model)
    !allocate the pointer box
    allocate(bmi_box)
-   !allocate(bmi_box%ptr, source=bmi_model)
+
    !associate the wrapper pointer the created model instance
    bmi_box%ptr => bmi_model
-   !Return the pointer to box
-   this = c_loc(bmi_box)
-   bmi_status = BMI_SUCCESS
+
+   if( .not. associated( bmi_box ) .or. .not. associated( bmi_box%ptr ) ) then
+    bmi_status = BMI_FAILURE
+   else
+    !Return the pointer to box
+    this = c_loc(bmi_box)
+    bmi_status = BMI_SUCCESS
+   endif
  end function register_bmi
 #endif
 end module bmitestbmi
