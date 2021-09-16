@@ -169,18 +169,16 @@ namespace models {
                 int item_size = GetVarItemsize(name);
                 int num_items = total_mem/item_size;
 
-                void* dest = malloc(total_mem);
+                T * dest = new T [num_items];
 
                 inner_get_value(name, dest);
 
                 std::vector<T> retrieved_results(num_items);
-                T* d_results_ptr;
-                d_results_ptr = (T*) dest;
 
                 for (int i = 0; i < num_items; i++)
-                    retrieved_results[i] = d_results_ptr[i];
+                    retrieved_results[i] = dest[i];
 
-                free(dest);
+                delete [] dest;
                 return retrieved_results;
             }
 
