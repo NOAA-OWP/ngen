@@ -5,24 +5,32 @@
 This is a small library that exposes a C/Fortran interoperability layer for BMI functions.  The library presents the BMI functions as a set of free functions that operate on a properly initialized and boxed Fortran BMI object.  This requires Fortran BMI models to implement a `register_bmi` function which, when called by a C/C++ executable, provides an opaque handle to the underlying BMI type `BMI_TYPE`:
 
 ```fortran
-function register_bmi(this) result(bmi_status) bind(C, name="register_bmi")
+  function register_bmi(this) result(bmi_status) bind(C, name="register_bmi")
    use, intrinsic:: iso_c_binding, only: c_ptr, c_loc, c_int
    use iso_c_bmif_2_0
    implicit none
    type(c_ptr) :: this
    integer(kind=c_int) :: bmi_status
    !Create the model instance to use
-   type(BMI_TYPE), target, save :: bmi_model !need to ensure scope/lifetime, use save attribute
+   type(BMI_TYPE), pointer :: bmi_model
    !Create a simple pointer wrapper
    type(box), pointer :: bmi_box
 
+   !allocate model
+   allocate(bmi_test_bmi::bmi_model)
    !allocate the pointer box
    allocate(bmi_box)
+
    !associate the wrapper pointer the created model instance
    bmi_box%ptr => bmi_model
-   !Return the pointer to box
-   this = c_loc(bmi_box)
-   bmi_status = BMI_SUCCESS
+
+   if( .not. associated( bmi_box ) .or. .not. associated( bmi_box%ptr ) ) then
+    bmi_status = BMI_FAILURE
+   else
+    !Return the pointer to box
+    this = c_loc(bmi_box)
+    bmi_status = BMI_SUCCESS
+   endif
  end function register_bmi
 ```
 
@@ -66,15 +74,15 @@ cd extern/iso_c_fortran_bmi
 ```
 Before library files can be built, a CMake build system must be generated.  E.g.:
 ```sh
-cmake -B cmake_am_libs -S .
+cmake -B cmake_build -S .
 ```
 Note that when there is an existing directory, it may sometimes be necessary to clear it and regenerate, especially if any changes were made to the [CMakeLists.txt](CMakeLists.txt) file.
 
 After there is build system directory, the shared library can be built using:
 ```sh
-cmake --build cmake_am_libs --target iso_c_bmi -- -j 2
+cmake --build cmake_build --target iso_c_bmi -- -j 2
 ```
-This will build a `cmake_am_libs/libiso_c_bmi.so.<version>.<ext>` file, where the version is configured within the CMake config, and the extension depends on the local machine's operating system.    
+This will build a `cmake_build/libiso_c_bmi.so.<version>.<ext>` file, where the version is configured within the CMake config, and the extension depends on the local machine's operating system.    
 
 ## Building the test C binary
 
