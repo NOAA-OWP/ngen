@@ -106,8 +106,8 @@ module iso_c_bmif_2_0
       call c_f_pointer(this, bmi_box)
       bmi_status = bmi_box%ptr%finalize()
       !clean up the wrapper
-      !deallocate(bmi_box%ptr)
-      deallocate(bmi_box)
+      if( associated( bmi_box%ptr ) ) deallocate(bmi_box%ptr)
+      if( associated( bmi_box ) ) deallocate(bmi_box)
     end function finalize
 
     ! Get the name of the model.
