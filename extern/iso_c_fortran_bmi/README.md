@@ -17,7 +17,7 @@ This is a small library that exposes a C/Fortran interoperability layer for BMI 
    type(box), pointer :: bmi_box
 
    !allocate model
-   allocate(bmi_test_bmi::bmi_model)
+   allocate(BMI_TYPE::bmi_model)
    !allocate the pointer box
    allocate(bmi_box)
 
