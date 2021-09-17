@@ -20,10 +20,11 @@ set(SURFACE_LIB_DESC_CMAKE "External Noah-MP Surface Shared Library")
 
 # Make sure these are compiled with this directive
 add_compile_definitions(BMI_ACTIVE)
-find_package (NetCDF REQUIRED COMPONENTS F90)
-if(NOT netCDF_LIBRARIES)
-message( SEND_ERROR "No netcdf library targets found")
-else()
+find_package (netCDF REQUIRED COMPONENTS F90 CONFIG)
+# For some reason the netcdf config.cmake doesn't set the netcdff lib correctly in
+# ${netCDF_Libararies}, so it only links the C lib (netcdf) and not the fortran lib (netcdff)
+# So find that library explicitly and make sure we link with it.
+find_library(netCDF_FORTRAN netcdff REQUIRED)
 
 set(MODEL_SOURCE_DIR noah-mp-modular/modules/surface_bmi/src/)
 set(BMI_SOURCE_DIR noah-mp-modular/modules/surface_bmi/bmi/)
@@ -38,9 +39,8 @@ list(APPEND MODEL_SOURCES noah-mp-modular/modules/surface_bmi/driver/noahmp_asci
 #target_compile_options(surfacebmi_obj PUBLIC -cpp -ffree-line-length-none)
 #target_include_directories(surfacebmi_obj PUBLIC noah-mp-modular/modules/surface_bmi/driver)
 
-#target_include_directories(surfacebmi_obj PUBLIC ${NETCDF_F90_INCLUDE_DIRS} ${netCDF_INCLUDE_DIR})
-#ensure relocatable object, make a different obj lib for a static lib and turn this off?
-
+#target_include_directories(surfacebmi_obj PUBLIC ${netCDF_INCLUDE_DIR})
+#ensure relocatable object, make a different obj lib for a static lib and turn this off
 #set_property(TARGET surfacebmi_obj PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 if(WIN32)
@@ -54,16 +54,13 @@ target_include_directories(surfacebmi PUBLIC ${NETCDF_F90_INCLUDE_DIRS} ${netCDF
 #We know we are building this for NGEN support, so define the NGEN_ACTIVE preprocessor directive in the compile options
 target_compile_options(surfacebmi PUBLIC -DNGEN_ACTIVE -cpp -ffree-line-length-none)
 
-#TODO is this needed for fortran?
-target_include_directories(surfacebmi PRIVATE ${MODEL_SOURCE_DIR})
-target_link_libraries( surfacebmi iso_c_bmi ${NETCDF_LIBRARIES})
+target_link_libraries( surfacebmi iso_c_bmi ${netCDF_LIBRARIES} ${netCDF_FORTRAN})
 set_target_properties(surfacebmi PROPERTIES VERSION ${PROJECT_VERSION})
 
 #TODO is this needed for fortran?
 #set_target_properties(surfacebmi PROPERTIES PUBLIC_HEADER ${BMI_SOURCE})
 
 include(GNUInstallDirs)
-
 
 install(TARGETS surfacebmi
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
