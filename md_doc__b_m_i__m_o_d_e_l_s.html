@@ -99,6 +99,15 @@ $(document).ready(function(){initNavTree('md_doc__b_m_i__m_o_d_e_l_s.html',''); 
 <li><a href="#bmi-c-caveats">BMI C Caveats</a></li>
 </ul>
 </li>
+<li><a href="#bmi-models-written-in-fortran">BMI Models Written in Fortran</a><ul>
+<li><a href="#enabling-fortran-integration">Enabling Fortran Integration</a></li>
+<li><a href="#iso-c-binding-middleware">ISO_C_BINDING Middleware</a></li>
+<li><a href="#a-compiled-shared-library">A Compiled Shared Library</a><ul>
+<li><a href="#required-additional-fortran-registration-function">Required Additional Fortran Registration Function</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a href="#multi-module-bmi-formulations">Multi-Module BMI Formulations</a></li>
 </ul>
 <h1><a class="anchor" id="autotoc_md21"></a>
@@ -285,6 +294,53 @@ Why?</h4>
 <p>This is needed both due to the design of the <b>C</b> language variant of BMI, and the limitations of C regarding duplication of function names. The latter becomes significant when more than one BMI C library is used at once. Even if that is actively the case, NextGen is designed to accomodate that case, so this requirement is in place.</p>
 <p>Future versions of NextGen will provide alternative ways to declaratively configure function names from a BMI C library so they can individually be dynamically loaded.</p>
 <h1><a class="anchor" id="autotoc_md35"></a>
+BMI Models Written in Fortran</h1>
+<ul>
+<li><a href="#enabling-fortran-integration">Enabling Fortran Integration</a></li>
+<li><a href="#iso-c-binding-middleware">ISO_C_BINDING Middleware</a></li>
+<li><a href="#a-compiled-shared-library">A Compiled Shared Library</a><ul>
+<li><a href="#required-additional-fortran-registration-function">Required Additional Fortran Registration Function</a></li>
+</ul>
+</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md36"></a>
+Enabling Fortran Integration</h2>
+<p>To enable Fortran integration functionality, the CMake build system has to be <a href="BUILDS_AND_CMAKE.md#generating-a-build-system">generated</a> with the <code>NGEN_BMI_FORTRAN_ACTIVE</code> CMake variable set to <code>ON</code>.</p>
+<h2><a class="anchor" id="autotoc_md37"></a>
+ISO C Binding Middleware</h2>
+<p>Nextgen takes advantage of the Fortran <code>iso_c_binding</code> module to achieve interoperability with Fortran modules. In short, this works through use of an intermediate middleware module maintained within Nextgen. This module handles the (<a href="#required-additional-fortran-registration-function">majority of the</a>) binding through proxy functions that make use of the actual external BMI Fortran module. <br  />
+</p>
+<p>The middleware module source is located in <em>extern/iso_c_fortran_bmi/</em>.</p>
+<p>The proxy functions require an opaque handle to a created BMI Fortran object to be provided as an argument, so such an object and its opaque handle must be setup and returned via a <a href="#required-additional-fortran-registration-function"><code>register_bmi</code> function</a>.</p>
+<h2><a class="anchor" id="autotoc_md38"></a>
+A Compiled Shared Library</h2>
+<p>Because of the use of <code>iso_c_bindings</code>, integrating with a Fortran BMI module works very similarly to integrating with a C BMI module, where a <a href="#bmi-c-model-as-shared-library">shared library</a> is <a href="#dynamic-loading">dynamically loaded</a>. An extra <a href="#required-additional-fortran-registration-function">bootstrapping registration function</a> is also, again, required.</p>
+<h3><a class="anchor" id="autotoc_md39"></a>
+Required Additional Fortran Registration Function</h3>
+<p><a href="#additional-bootstrapping-function-needed">As with C</a>, a registration function must be provided by the module, beyond what is implemented for BMI. It should look very similar to the example below. In fact, it is likely sufficient to simply modify the <code>use bminoahmp</code> and <code>type(bmi_noahmp), target, save :: bmi_model</code> lines to suit the module in question.</p>
+<p>This function should receive an opaque pointer and set it to point to a created BMI object of the appropriate type for the module. Note that while <code>save</code> is being used in a way that persists only the initial object, since this will be used within the scope of a dynamic library loaded specifically for working with a particular catchment formulation, it should not cause issues.</p>
+<div class="fragment"><div class="line"><span class="keyword">function </span>register_bmi(this) <span class="keyword">result</span>(bmi_status) <span class="keyword">bind(C, name=&quot;register_bmi&quot;)</span></div>
+<div class="line">      use, <span class="keywordtype">intrinsic</span>:: iso_c_binding, only: c_ptr, c_loc, c_int</div>
+<div class="line">      <span class="keywordtype">use </span>bminoahmp</div>
+<div class="line">      <span class="keywordtype">implicit none</span></div>
+<div class="line">      <span class="keywordtype">type</span>(c_ptr) :: this <span class="comment">! If not value, then from the C perspective `this` is a void**</span></div>
+<div class="line">      <span class="keywordtype">integer(kind=c_int)</span> :: bmi_status</div>
+<div class="line">      <span class="comment">!Create the momdel instance to use</span></div>
+<div class="line">      <span class="keywordtype">type</span>(bmi_noahmp), <span class="keywordtype">target</span>, <span class="keywordtype">save</span> :: bmi_model <span class="comment">!should be safe, since this will only be used once within scope of dynamically loaded library</span></div>
+<div class="line">      <span class="comment">!Create a simple pointer wrapper</span></div>
+<div class="line">      <span class="keywordtype">type</span>(box), <span class="keywordtype">pointer</span> :: bmi_box</div>
+<div class="line"> </div>
+<div class="line">      <span class="comment">!allocate the pointer box</span></div>
+<div class="line">      <span class="keyword">allocate</span>(bmi_box)</div>
+<div class="line">      <span class="comment">!allocate(bmi_box%ptr, source=bmi_model)</span></div>
+<div class="line">      bmi_box%foobar = 42 </div>
+<div class="line">      <span class="comment">!associate the wrapper pointer the created model instance</span></div>
+<div class="line">      bmi_box%ptr =&gt; bmi_model</div>
+<div class="line">      <span class="comment">!Return the pointer to box</span></div>
+<div class="line">      this = c_loc(bmi_box)</div>
+<div class="line">      bmi_status = bmi_success</div>
+<div class="line">    <span class="keyword">end function </span>register_bmi</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md40"></a>
 Multi-Module BMI Formulations</h1>
 <p>It is possible to configure a formulation to be a combination of several different individual BMI module components. This is the <code>bmi_multi</code> formulation type.</p>
 <p>As described in <a href="#required-parameters">Required Parameters</a>, a BMI <code>init_config</code> does not need to be specified for this formulation type, but a nested list of sub-formulation configs (in <code>modules</code>) does. Execution of a formulation time step update proceeds through each module in list order.</p>
@@ -318,7 +374,7 @@ Multi-Module BMI Formulations</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Sep 9 2021 20:05:36 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Fri Sep 17 2021 13:05:25 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

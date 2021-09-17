@@ -123,9 +123,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa76f5a7b1287c92f4e785e1a206ae452"><td class="memItemLeft" align="right" valign="top">virtual const <a class="el" href="structpdm03__struct.html">pdm03_struct</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_et___accountable.html#aa76f5a7b1287c92f4e785e1a206ae452">get_et_params</a> ()</td></tr>
 <tr class="memdesc:aa76f5a7b1287c92f4e785e1a206ae452"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a reference to the appropriate object holding ET parameters for use when executing the model calculations.  <a href="classrealization_1_1_et___accountable.html#aa76f5a7b1287c92f4e785e1a206ae452">More...</a><br /></td></tr>
 <tr class="separator:aa76f5a7b1287c92f4e785e1a206ae452"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab3b62cde94729a7273b20dd63b23c105"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_et___accountable.html#ab3b62cde94729a7273b20dd63b23c105">is_et_params_set</a> ()</td></tr>
-<tr class="memdesc:ab3b62cde94729a7273b20dd63b23c105"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test whether ET params have been set.  <a href="classrealization_1_1_et___accountable.html#ab3b62cde94729a7273b20dd63b23c105">More...</a><br /></td></tr>
-<tr class="separator:ab3b62cde94729a7273b20dd63b23c105"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a490261c3439f205913ac2e77efbd5b6f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_et___accountable.html#a490261c3439f205913ac2e77efbd5b6f">is_et_params_set</a> () override</td></tr>
+<tr class="memdesc:a490261c3439f205913ac2e77efbd5b6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test whether ET params have been set.  <a href="classrealization_1_1_et___accountable.html#a490261c3439f205913ac2e77efbd5b6f">More...</a><br /></td></tr>
+<tr class="separator:a490261c3439f205913ac2e77efbd5b6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad4e23441f5a4ceb63262f796c5bb411f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_et___accountable.html#ad4e23441f5a4ceb63262f796c5bb411f">set_et_params</a> (std::shared_ptr&lt; <a class="el" href="structpdm03__struct.html">pdm03_struct</a> &gt; params) override</td></tr>
 <tr class="memdesc:ad4e23441f5a4ceb63262f796c5bb411f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a reference for an appropriate object for holding ET parameters for use when executing the model calculations.  <a href="classrealization_1_1_et___accountable.html#ad4e23441f5a4ceb63262f796c5bb411f">More...</a><br /></td></tr>
 <tr class="separator:ad4e23441f5a4ceb63262f796c5bb411f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -282,8 +282,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ab3b62cde94729a7273b20dd63b23c105"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab3b62cde94729a7273b20dd63b23c105">&#9670;&nbsp;</a></span>is_et_params_set()</h2>
+<a id="a490261c3439f205913ac2e77efbd5b6f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a490261c3439f205913ac2e77efbd5b6f">&#9670;&nbsp;</a></span>is_et_params_set()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -292,7 +292,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual bool realization::Et_Accountable::is_et_params_set </td>
+          <td class="memname">bool realization::Et_Accountable::is_et_params_set </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -300,7 +300,7 @@ Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -367,7 +367,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a49aa9cfff0958d7e509de7dd5187a0c6">realization::Bmi_Module_Formulation&lt; M &gt;::calc_et()</a>, <a class="el" href="classrealization_1_1_et___accountable.html#aa76f5a7b1287c92f4e785e1a206ae452">get_et_params()</a>, <a class="el" href="classrealization_1_1_et___accountable.html#ad7ef74d9535d1c9efab43a40dd807dac">get_et_params_ptr()</a>, <a class="el" href="classrealization_1_1_et___accountable.html#ab3b62cde94729a7273b20dd63b23c105">is_et_params_set()</a>, and <a class="el" href="classrealization_1_1_et___accountable.html#ad4e23441f5a4ceb63262f796c5bb411f">set_et_params()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a49aa9cfff0958d7e509de7dd5187a0c6">realization::Bmi_Module_Formulation&lt; M &gt;::calc_et()</a>, <a class="el" href="classrealization_1_1_et___accountable.html#aa76f5a7b1287c92f4e785e1a206ae452">get_et_params()</a>, <a class="el" href="classrealization_1_1_et___accountable.html#ad7ef74d9535d1c9efab43a40dd807dac">get_et_params_ptr()</a>, <a class="el" href="classrealization_1_1_et___accountable.html#a490261c3439f205913ac2e77efbd5b6f">is_et_params_set()</a>, and <a class="el" href="classrealization_1_1_et___accountable.html#ad4e23441f5a4ceb63262f796c5bb411f">set_et_params()</a>.</p>
 
 </div>
 </div>
@@ -380,7 +380,7 @@ Private Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li><li class="navelem"><a class="el" href="classrealization_1_1_et___accountable.html">Et_Accountable</a></li>
-    <li class="footer">Generated on Thu Sep 9 2021 20:05:37 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Fri Sep 17 2021 13:05:27 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

@@ -140,14 +140,14 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a65e1e6ce403d39e655c68a5cd321ac63"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afe77f2e5e89fd90ce73a84303429309f"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_simple___lumped___model___realization.html#afe77f2e5e89fd90ce73a84303429309f">calc_et</a> () override</td></tr>
 <tr class="separator:afe77f2e5e89fd90ce73a84303429309f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afd543b1356159e90c0bc2c3f7f9d35d9"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_simple___lumped___model___realization.html#afd543b1356159e90c0bc2c3f7f9d35d9">create_formulation</a> (boost::property_tree::ptree &amp;config, <a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> *global=nullptr)</td></tr>
-<tr class="separator:afd543b1356159e90c0bc2c3f7f9d35d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9bdf086d2a5d1a41ca55455d0b13e784"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_simple___lumped___model___realization.html#a9bdf086d2a5d1a41ca55455d0b13e784">create_formulation</a> (<a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> properties)</td></tr>
-<tr class="separator:a9bdf086d2a5d1a41ca55455d0b13e784"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a82c11a7d519bbf4146ea8e10947e17f5"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_simple___lumped___model___realization.html#a82c11a7d519bbf4146ea8e10947e17f5">get_formulation_type</a> ()</td></tr>
-<tr class="separator:a82c11a7d519bbf4146ea8e10947e17f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0f5a80b589d4c29ab458c0ee43a3afce"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_simple___lumped___model___realization.html#a0f5a80b589d4c29ab458c0ee43a3afce">add_time</a> (time_t t, double n)</td></tr>
-<tr class="separator:a0f5a80b589d4c29ab458c0ee43a3afce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa14160e9f8563df42947278c8e91cc78"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_simple___lumped___model___realization.html#aa14160e9f8563df42947278c8e91cc78">create_formulation</a> (boost::property_tree::ptree &amp;config, <a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> *global=nullptr) override</td></tr>
+<tr class="separator:aa14160e9f8563df42947278c8e91cc78"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9f9fda457f7564bf53bc9a9785eba7c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_simple___lumped___model___realization.html#ae9f9fda457f7564bf53bc9a9785eba7c">create_formulation</a> (<a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> properties) override</td></tr>
+<tr class="separator:ae9f9fda457f7564bf53bc9a9785eba7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44ec42a333e39a22e3f1056ffdf95773"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_simple___lumped___model___realization.html#a44ec42a333e39a22e3f1056ffdf95773">get_formulation_type</a> () override</td></tr>
+<tr class="separator:a44ec42a333e39a22e3f1056ffdf95773"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea254a605d59c1489dfe0a8af0d5f291"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_simple___lumped___model___realization.html#aea254a605d59c1489dfe0a8af0d5f291">add_time</a> (time_t t, double n) override</td></tr>
+<tr class="separator:aea254a605d59c1489dfe0a8af0d5f291"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a12fad75c2e47f5da298e022429243199"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#a12fad75c2e47f5da298e022429243199">get_output_header_line</a> (std::string delimiter) override</td></tr>
 <tr class="memdesc:a12fad75c2e47f5da298e022429243199"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a header line appropriate for a file made up of entries from this type's implementation of <code>get_output_line_for_timestep</code>.  <a href="classrealization_1_1_catchment___formulation.html#a12fad75c2e47f5da298e022429243199">More...</a><br /></td></tr>
 <tr class="separator:a12fad75c2e47f5da298e022429243199"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -156,9 +156,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7117db623dafde1f5dfbf286e46aa99e"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_et___aware.html#a7117db623dafde1f5dfbf286e46aa99e">is_et_params_set</a> ()=0</td></tr>
 <tr class="memdesc:a7117db623dafde1f5dfbf286e46aa99e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test whether ET params have been set.  <a href="classrealization_1_1_et___aware.html#a7117db623dafde1f5dfbf286e46aa99e">More...</a><br /></td></tr>
 <tr class="separator:a7117db623dafde1f5dfbf286e46aa99e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab3b62cde94729a7273b20dd63b23c105"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_et___accountable.html#ab3b62cde94729a7273b20dd63b23c105">is_et_params_set</a> ()</td></tr>
-<tr class="memdesc:ab3b62cde94729a7273b20dd63b23c105"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test whether ET params have been set.  <a href="classrealization_1_1_et___accountable.html#ab3b62cde94729a7273b20dd63b23c105">More...</a><br /></td></tr>
-<tr class="separator:ab3b62cde94729a7273b20dd63b23c105"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a490261c3439f205913ac2e77efbd5b6f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_et___accountable.html#a490261c3439f205913ac2e77efbd5b6f">is_et_params_set</a> () override</td></tr>
+<tr class="memdesc:a490261c3439f205913ac2e77efbd5b6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test whether ET params have been set.  <a href="classrealization_1_1_et___accountable.html#a490261c3439f205913ac2e77efbd5b6f">More...</a><br /></td></tr>
+<tr class="separator:a490261c3439f205913ac2e77efbd5b6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8f1338c37773df88268e34e46a1d957e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_et___aware.html#a8f1338c37773df88268e34e46a1d957e">set_et_params</a> (std::shared_ptr&lt; <a class="el" href="structpdm03__struct.html">pdm03_struct</a> &gt; <a class="el" href="class_simple___lumped___model___realization.html#a799f47e36352e7773f64015613257346">params</a>)=0</td></tr>
 <tr class="memdesc:a8f1338c37773df88268e34e46a1d957e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accept a reference for an appropriate object for holding ET parameters for use when executing the model calculations, if maintained by the type.  <a href="classrealization_1_1_et___aware.html#a8f1338c37773df88268e34e46a1d957e">More...</a><br /></td></tr>
 <tr class="separator:a8f1338c37773df88268e34e46a1d957e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -175,8 +175,8 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:a6e5459f23c4f45e0de04f77edc5a79b2"><td class="memItemLeft" align="right" valign="top">virtual const std::vector&lt; std::string &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_simple___lumped___model___realization.html#a6e5459f23c4f45e0de04f77edc5a79b2">get_required_parameters</a> ()</td></tr>
-<tr class="separator:a6e5459f23c4f45e0de04f77edc5a79b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19e332a839981ba54c4035266293d731"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; std::string &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_simple___lumped___model___realization.html#a19e332a839981ba54c4035266293d731">get_required_parameters</a> () override</td></tr>
+<tr class="separator:a19e332a839981ba54c4035266293d731"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a633b7407d447f77910476c0315c8beb6"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#a633b7407d447f77910476c0315c8beb6">get_catchment_id</a> () override</td></tr>
 <tr class="separator:a633b7407d447f77910476c0315c8beb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2cce2b5b18eaa0ed7e0df10db57da144"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#a2cce2b5b18eaa0ed7e0df10db57da144">set_catchment_id</a> (std::string cat_id) override</td></tr>
@@ -478,8 +478,8 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a0f5a80b589d4c29ab458c0ee43a3afce"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0f5a80b589d4c29ab458c0ee43a3afce">&#9670;&nbsp;</a></span>add_time()</h2>
+<a id="aea254a605d59c1489dfe0a8af0d5f291"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea254a605d59c1489dfe0a8af0d5f291">&#9670;&nbsp;</a></span>add_time()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -507,7 +507,7 @@ Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -547,8 +547,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="afd543b1356159e90c0bc2c3f7f9d35d9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afd543b1356159e90c0bc2c3f7f9d35d9">&#9670;&nbsp;</a></span>create_formulation() <span class="overload">[1/2]</span></h2>
+<a id="aa14160e9f8563df42947278c8e91cc78"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa14160e9f8563df42947278c8e91cc78">&#9670;&nbsp;</a></span>create_formulation() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -576,19 +576,19 @@ Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classrealization_1_1_catchment___formulation.html#a30d59c62b7f697d766d71b333b02d894">realization::Catchment_Formulation</a>.</p>
+<p>Implements <a class="el" href="classrealization_1_1_catchment___formulation.html#a4fb8ec9b08820c29d88627ee9781d579">realization::Catchment_Formulation</a>.</p>
 
 <p class="reference">References <a class="el" href="classrealization_1_1_formulation.html#a65f97b5efe05e786f59d9f5fd1b10209">realization::Formulation::interpret_parameters()</a>.</p>
 
 </div>
 </div>
-<a id="a9bdf086d2a5d1a41ca55455d0b13e784"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9bdf086d2a5d1a41ca55455d0b13e784">&#9670;&nbsp;</a></span>create_formulation() <span class="overload">[2/2]</span></h2>
+<a id="ae9f9fda457f7564bf53bc9a9785eba7c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae9f9fda457f7564bf53bc9a9785eba7c">&#9670;&nbsp;</a></span>create_formulation() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -606,12 +606,12 @@ Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classrealization_1_1_catchment___formulation.html#a8230fc7b582efa0d5d967fd3ccdff1f3">realization::Catchment_Formulation</a>.</p>
+<p>Implements <a class="el" href="classrealization_1_1_catchment___formulation.html#a2a2ac83503092d24da0ee4e4c6eeaa25">realization::Catchment_Formulation</a>.</p>
 
 <p class="reference">References <a class="el" href="structhymod__params.html#a62b25df619b349718333fbf9389802f2">hymod_params::a</a>, <a class="el" href="structhymod__params.html#a52bba8095fd09b64cb96d019eb0a6165">hymod_params::activation_threshold_meters_groundwater_reservoir</a>, <a class="el" href="structhymod__params.html#a2d06652af718269df3e038f1f487bbce">hymod_params::activation_threshold_meters_nash_cascade_reservoir</a>, <a class="el" href="structhymod__params.html#a40fa36752c2df9195a76310e5b9e5396">hymod_params::b</a>, <a class="el" href="class_simple___lumped___model___realization.html#aa362564a0409107f5f2342140b55b332">cascade_backing_storage</a>, <a class="el" href="class_simple___lumped___model___realization.html#ac98db05180754f1db41262a205cfbfa2">fluxes</a>, <a class="el" href="structhymod__params.html#af361be9463004567a0008e5420fb3957">hymod_params::gw_max_storage_meters</a>, <a class="el" href="structhymod__params.html#a71ee942876366a3ccdb060dd1cfde4c1">hymod_params::Kq</a>, <a class="el" href="structhymod__params.html#a03965bac9fc6b3104a14aed59690d3cf">hymod_params::Ks</a>, <a class="el" href="structhymod__params.html#a77b123144cc1db49782b4af9229da0e1">hymod_params::min_storage_meters</a>, <a class="el" href="structhymod__params.html#a7fe5a1405feac74038def8d57749b66e">hymod_params::n</a>, <a class="el" href="structhymod__params.html#aa26a6c0ae23ce7c12e9f3bd7e4071d46">hymod_params::nash_max_storage_meters</a>, <a class="el" href="class_simple___lumped___model___realization.html#a799f47e36352e7773f64015613257346">params</a>, <a class="el" href="structhymod__params.html#a0d1613252fc6ca89a65ef68a229d4d5f">hymod_params::reservoir_max_velocity_meters_per_second</a>, <a class="el" href="structhymod__params.html#a098c0564af1ea08a68f321654c3c1bc3">hymod_params::smax</a>, <a class="el" href="class_simple___lumped___model___realization.html#ad6f43918a1a6b73d0fb748c14ce78bad">state</a>, and <a class="el" href="classrealization_1_1_formulation.html#aceabe9927b36dce61f338919f2af4c1f">realization::Formulation::validate_parameters()</a>.</p>
 
@@ -709,8 +709,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a82c11a7d519bbf4146ea8e10947e17f5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a82c11a7d519bbf4146ea8e10947e17f5">&#9670;&nbsp;</a></span>get_formulation_type()</h2>
+<a id="a44ec42a333e39a22e3f1056ffdf95773"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a44ec42a333e39a22e3f1056ffdf95773">&#9670;&nbsp;</a></span>get_formulation_type()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -719,7 +719,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual std::string Simple_Lumped_Model_Realization::get_formulation_type </td>
+          <td class="memname">std::string Simple_Lumped_Model_Realization::get_formulation_type </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -727,7 +727,7 @@ Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -761,7 +761,7 @@ Private Attributes</h2></td></tr>
 
 <p class="reference">References <a class="el" href="classrealization_1_1_formulation.html#a8bfec24b0d57240e7ada2493a781db6d">realization::Formulation::id</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_tshirt___realization.html#a05e441c55a6c42542ee8c1dbf48d5fd2">realization::Tshirt_Realization::create_formulation()</a>, and <a class="el" href="classrealization_1_1_tshirt___c___realization.html#a6a47b0f7e4b5ef28a054d5258b1eabe2">realization::Tshirt_C_Realization::create_formulation()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_tshirt___c___realization.html#a6a47b0f7e4b5ef28a054d5258b1eabe2">realization::Tshirt_C_Realization::create_formulation()</a>, and <a class="el" href="classrealization_1_1_tshirt___realization.html#a40e6a3298f4f8c2724ddda7736925909">realization::Tshirt_Realization::create_formulation()</a>.</p>
 
 </div>
 </div>
@@ -796,7 +796,7 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classrealization_1_1_formulation.html#a17b9945a1362e204c78f0126c6354327">realization::Formulation</a>.</p>
 
-<p>Reimplemented in <a class="el" href="classrealization_1_1_tshirt___c___realization.html#a003ae4e7ad85247695914b3921a64870">realization::Tshirt_C_Realization</a>.</p>
+<p>Reimplemented in <a class="el" href="classrealization_1_1_tshirt___c___realization.html#a003ae4e7ad85247695914b3921a64870">realization::Tshirt_C_Realization</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a67e55972f1a61353b683c1ae3cebdd2c">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>.</p>
 
 </div>
 </div>
@@ -854,8 +854,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a6e5459f23c4f45e0de04f77edc5a79b2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6e5459f23c4f45e0de04f77edc5a79b2">&#9670;&nbsp;</a></span>get_required_parameters()</h2>
+<a id="a19e332a839981ba54c4035266293d731"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a19e332a839981ba54c4035266293d731">&#9670;&nbsp;</a></span>get_required_parameters()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -864,7 +864,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual const std::vector&lt;std::string&gt;&amp; Simple_Lumped_Model_Realization::get_required_parameters </td>
+          <td class="memname">const std::vector&lt;std::string&gt;&amp; Simple_Lumped_Model_Realization::get_required_parameters </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -872,12 +872,12 @@ Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classrealization_1_1_catchment___formulation.html#adbf7ab4b1e63a9ef6562e88b34e5efb1">realization::Catchment_Formulation</a>.</p>
+<p>Implements <a class="el" href="classrealization_1_1_catchment___formulation.html#a6a61cceee099918ca4f5e2719413106a">realization::Catchment_Formulation</a>.</p>
 
 <p class="reference">References <a class="el" href="class_simple___lumped___model___realization.html#a7f7265139f0ad8485198efb2c5880402">REQUIRED_PARAMETERS</a>.</p>
 
@@ -928,9 +928,9 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The total discharge for this time step. </dd></dl>
 
-<p>Implements <a class="el" href="classrealization_1_1_catchment___formulation.html#a31aaf5912120b1d400bfa47c2b811ee4">realization::Catchment_Formulation</a>.</p>
+<p>Implements <a class="el" href="classrealization_1_1_catchment___formulation.html#adf21a61a7da1e87a200d8391cb3e33ce">realization::Catchment_Formulation</a>.</p>
 
-<p class="reference">References <a class="el" href="class_simple___lumped___model___realization.html#a0f5a80b589d4c29ab458c0ee43a3afce">add_time()</a>, <a class="el" href="class_simple___lumped___model___realization.html#ac98db05180754f1db41262a205cfbfa2">fluxes</a>, <a class="el" href="classrealization_1_1_et___accountable.html#aa76f5a7b1287c92f4e785e1a206ae452">realization::Et_Accountable::get_et_params()</a>, <a class="el" href="structhymod__params.html#a7fe5a1405feac74038def8d57749b66e">hymod_params::n</a>, <a class="el" href="class_simple___lumped___model___realization.html#a799f47e36352e7773f64015613257346">params</a>, <a class="el" href="classhymod__kernel.html#abd63b727cebb05446b6b2cd8452066f5">hymod_kernel::run()</a>, and <a class="el" href="class_simple___lumped___model___realization.html#ad6f43918a1a6b73d0fb748c14ce78bad">state</a>.</p>
+<p class="reference">References <a class="el" href="class_simple___lumped___model___realization.html#aea254a605d59c1489dfe0a8af0d5f291">add_time()</a>, <a class="el" href="class_simple___lumped___model___realization.html#ac98db05180754f1db41262a205cfbfa2">fluxes</a>, <a class="el" href="classrealization_1_1_et___accountable.html#aa76f5a7b1287c92f4e785e1a206ae452">realization::Et_Accountable::get_et_params()</a>, <a class="el" href="structhymod__params.html#a7fe5a1405feac74038def8d57749b66e">hymod_params::n</a>, <a class="el" href="class_simple___lumped___model___realization.html#a799f47e36352e7773f64015613257346">params</a>, <a class="el" href="classhymod__kernel.html#abd63b727cebb05446b6b2cd8452066f5">hymod_kernel::run()</a>, and <a class="el" href="class_simple___lumped___model___realization.html#ad6f43918a1a6b73d0fb748c14ce78bad">state</a>.</p>
 
 </div>
 </div>
@@ -970,12 +970,12 @@ Private Attributes</h2></td></tr>
 
 <p class="reference">References <a class="el" href="classrealization_1_1_formulation.html#aceabe9927b36dce61f338919f2af4c1f">realization::Formulation::validate_parameters()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="class_simple___lumped___model___realization.html#afd543b1356159e90c0bc2c3f7f9d35d9">create_formulation()</a>, <a class="el" href="classrealization_1_1_tshirt___realization.html#a8251e6420b1306e4acfceda77c592110">realization::Tshirt_Realization::create_formulation()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#adc0e525bd28e3b2f72f31680617358d1">realization::Bmi_Module_Formulation&lt; M &gt;::create_formulation()</a>, and <a class="el" href="classrealization_1_1_tshirt___c___realization.html#a0aec4abbb0c8f724ec23c6047d712c20">realization::Tshirt_C_Realization::create_formulation()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#adc0e525bd28e3b2f72f31680617358d1">realization::Bmi_Module_Formulation&lt; M &gt;::create_formulation()</a>, <a class="el" href="class_simple___lumped___model___realization.html#aa14160e9f8563df42947278c8e91cc78">create_formulation()</a>, <a class="el" href="classrealization_1_1_tshirt___c___realization.html#a0aec4abbb0c8f724ec23c6047d712c20">realization::Tshirt_C_Realization::create_formulation()</a>, and <a class="el" href="classrealization_1_1_tshirt___realization.html#a2303335bc613d277d4e16b9fd7619063">realization::Tshirt_Realization::create_formulation()</a>.</p>
 
 </div>
 </div>
-<a id="ab3b62cde94729a7273b20dd63b23c105"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab3b62cde94729a7273b20dd63b23c105">&#9670;&nbsp;</a></span>is_et_params_set() <span class="overload">[1/2]</span></h2>
+<a id="a490261c3439f205913ac2e77efbd5b6f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a490261c3439f205913ac2e77efbd5b6f">&#9670;&nbsp;</a></span>is_et_params_set() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -984,7 +984,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual bool realization::Et_Accountable::is_et_params_set </td>
+          <td class="memname">bool realization::Et_Accountable::is_et_params_set </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -992,7 +992,7 @@ Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span><span class="mlabel">inherited</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span><span class="mlabel">inherited</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -1032,7 +1032,7 @@ Private Attributes</h2></td></tr>
 <p>Test whether ET params have been set. </p>
 <dl class="section return"><dt>Returns</dt><dd>Whether ET params have been set. </dd></dl>
 
-<p>Implemented in <a class="el" href="classrealization_1_1_et___accountable.html#ab3b62cde94729a7273b20dd63b23c105">realization::Et_Accountable</a>.</p>
+<p>Implemented in <a class="el" href="classrealization_1_1_et___accountable.html#a490261c3439f205913ac2e77efbd5b6f">realization::Et_Accountable</a>.</p>
 
 </div>
 </div>
@@ -1180,7 +1180,7 @@ Private Attributes</h2></td></tr>
 
 <p class="reference">References <a class="el" href="classrealization_1_1_formulation.html#a2e9d4749500d3f5ea434d77861b03990">realization::Formulation::get_formulation_type()</a>, and <a class="el" href="classrealization_1_1_formulation.html#a9959ffc79d52fda68ecc11c5698f4e86">realization::Formulation::get_required_parameters()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="class_simple___lumped___model___realization.html#a9bdf086d2a5d1a41ca55455d0b13e784">create_formulation()</a>, <a class="el" href="classrealization_1_1_tshirt___realization.html#a05e441c55a6c42542ee8c1dbf48d5fd2">realization::Tshirt_Realization::create_formulation()</a>, <a class="el" href="classrealization_1_1_tshirt___c___realization.html#a6a47b0f7e4b5ef28a054d5258b1eabe2">realization::Tshirt_C_Realization::create_formulation()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a8694f5e94f40224efca11a73892da8ff">realization::Bmi_Multi_Formulation::create_multi_formulation()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a1456df2666b8e7e33da01a5a14f6591e">realization::Bmi_Module_Formulation&lt; M &gt;::inner_create_formulation()</a>, and <a class="el" href="classrealization_1_1_formulation.html#a65f97b5efe05e786f59d9f5fd1b10209">realization::Formulation::interpret_parameters()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="class_simple___lumped___model___realization.html#ae9f9fda457f7564bf53bc9a9785eba7c">create_formulation()</a>, <a class="el" href="classrealization_1_1_tshirt___c___realization.html#a6a47b0f7e4b5ef28a054d5258b1eabe2">realization::Tshirt_C_Realization::create_formulation()</a>, <a class="el" href="classrealization_1_1_tshirt___realization.html#a40e6a3298f4f8c2724ddda7736925909">realization::Tshirt_Realization::create_formulation()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a8694f5e94f40224efca11a73892da8ff">realization::Bmi_Multi_Formulation::create_multi_formulation()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a1456df2666b8e7e33da01a5a14f6591e">realization::Bmi_Module_Formulation&lt; M &gt;::inner_create_formulation()</a>, and <a class="el" href="classrealization_1_1_formulation.html#a65f97b5efe05e786f59d9f5fd1b10209">realization::Formulation::interpret_parameters()</a>.</p>
 
 </div>
 </div>
@@ -1255,7 +1255,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="class_simple___lumped___model___realization.html#a0a0c83b6ecf5b3f88fa101d35335888f">Simple_Lumped_Model_Realization()</a>, <a class="el" href="class_simple___lumped___model___realization.html#a0f5a80b589d4c29ab458c0ee43a3afce">add_time()</a>, and <a class="el" href="class_simple___lumped___model___realization.html#a9bdf086d2a5d1a41ca55455d0b13e784">create_formulation()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="class_simple___lumped___model___realization.html#a0a0c83b6ecf5b3f88fa101d35335888f">Simple_Lumped_Model_Realization()</a>, <a class="el" href="class_simple___lumped___model___realization.html#aea254a605d59c1489dfe0a8af0d5f291">add_time()</a>, and <a class="el" href="class_simple___lumped___model___realization.html#ae9f9fda457f7564bf53bc9a9785eba7c">create_formulation()</a>.</p>
 
 </div>
 </div>
@@ -1279,7 +1279,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a49aa9cfff0958d7e509de7dd5187a0c6">realization::Bmi_Module_Formulation&lt; M &gt;::calc_et()</a>, <a class="el" href="classrealization_1_1_et___accountable.html#aa76f5a7b1287c92f4e785e1a206ae452">realization::Et_Accountable::get_et_params()</a>, <a class="el" href="classrealization_1_1_et___accountable.html#ad7ef74d9535d1c9efab43a40dd807dac">realization::Et_Accountable::get_et_params_ptr()</a>, <a class="el" href="classrealization_1_1_et___accountable.html#ab3b62cde94729a7273b20dd63b23c105">realization::Et_Accountable::is_et_params_set()</a>, and <a class="el" href="classrealization_1_1_et___accountable.html#ad4e23441f5a4ceb63262f796c5bb411f">realization::Et_Accountable::set_et_params()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a49aa9cfff0958d7e509de7dd5187a0c6">realization::Bmi_Module_Formulation&lt; M &gt;::calc_et()</a>, <a class="el" href="classrealization_1_1_et___accountable.html#aa76f5a7b1287c92f4e785e1a206ae452">realization::Et_Accountable::get_et_params()</a>, <a class="el" href="classrealization_1_1_et___accountable.html#ad7ef74d9535d1c9efab43a40dd807dac">realization::Et_Accountable::get_et_params_ptr()</a>, <a class="el" href="classrealization_1_1_et___accountable.html#a490261c3439f205913ac2e77efbd5b6f">realization::Et_Accountable::is_et_params_set()</a>, and <a class="el" href="classrealization_1_1_et___accountable.html#ad4e23441f5a4ceb63262f796c5bb411f">realization::Et_Accountable::set_et_params()</a>.</p>
 
 </div>
 </div>
@@ -1303,7 +1303,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="class_simple___lumped___model___realization.html#a0a0c83b6ecf5b3f88fa101d35335888f">Simple_Lumped_Model_Realization()</a>, <a class="el" href="class_simple___lumped___model___realization.html#a0f5a80b589d4c29ab458c0ee43a3afce">add_time()</a>, <a class="el" href="class_simple___lumped___model___realization.html#a9bdf086d2a5d1a41ca55455d0b13e784">create_formulation()</a>, <a class="el" href="class_simple___lumped___model___realization.html#a653d3057d73191c45f0f3749def92486">get_output_line_for_timestep()</a>, and <a class="el" href="class_simple___lumped___model___realization.html#a65e1e6ce403d39e655c68a5cd321ac63">get_response()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="class_simple___lumped___model___realization.html#a0a0c83b6ecf5b3f88fa101d35335888f">Simple_Lumped_Model_Realization()</a>, <a class="el" href="class_simple___lumped___model___realization.html#aea254a605d59c1489dfe0a8af0d5f291">add_time()</a>, <a class="el" href="class_simple___lumped___model___realization.html#ae9f9fda457f7564bf53bc9a9785eba7c">create_formulation()</a>, <a class="el" href="class_simple___lumped___model___realization.html#a653d3057d73191c45f0f3749def92486">get_output_line_for_timestep()</a>, and <a class="el" href="class_simple___lumped___model___realization.html#a65e1e6ce403d39e655c68a5cd321ac63">get_response()</a>.</p>
 
 </div>
 </div>
@@ -1421,7 +1421,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="class_simple___lumped___model___realization.html#a0a0c83b6ecf5b3f88fa101d35335888f">Simple_Lumped_Model_Realization()</a>, <a class="el" href="class_simple___lumped___model___realization.html#a0f5a80b589d4c29ab458c0ee43a3afce">add_time()</a>, <a class="el" href="class_simple___lumped___model___realization.html#a9bdf086d2a5d1a41ca55455d0b13e784">create_formulation()</a>, and <a class="el" href="class_simple___lumped___model___realization.html#a65e1e6ce403d39e655c68a5cd321ac63">get_response()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="class_simple___lumped___model___realization.html#a0a0c83b6ecf5b3f88fa101d35335888f">Simple_Lumped_Model_Realization()</a>, <a class="el" href="class_simple___lumped___model___realization.html#aea254a605d59c1489dfe0a8af0d5f291">add_time()</a>, <a class="el" href="class_simple___lumped___model___realization.html#ae9f9fda457f7564bf53bc9a9785eba7c">create_formulation()</a>, and <a class="el" href="class_simple___lumped___model___realization.html#a65e1e6ce403d39e655c68a5cd321ac63">get_response()</a>.</p>
 
 </div>
 </div>
@@ -1481,7 +1481,7 @@ Private Attributes</h2></td></tr>
 <div class="line">            <span class="stringliteral">&quot;t&quot;</span></div>
 <div class="line">        }</div>
 </div><!-- fragment -->
-<p class="reference">Referenced by <a class="el" href="class_simple___lumped___model___realization.html#a6e5459f23c4f45e0de04f77edc5a79b2">get_required_parameters()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="class_simple___lumped___model___realization.html#a19e332a839981ba54c4035266293d731">get_required_parameters()</a>.</p>
 
 </div>
 </div>
@@ -1505,7 +1505,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="class_simple___lumped___model___realization.html#a0a0c83b6ecf5b3f88fa101d35335888f">Simple_Lumped_Model_Realization()</a>, <a class="el" href="class_simple___lumped___model___realization.html#a0f5a80b589d4c29ab458c0ee43a3afce">add_time()</a>, <a class="el" href="class_simple___lumped___model___realization.html#a9bdf086d2a5d1a41ca55455d0b13e784">create_formulation()</a>, and <a class="el" href="class_simple___lumped___model___realization.html#a65e1e6ce403d39e655c68a5cd321ac63">get_response()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="class_simple___lumped___model___realization.html#a0a0c83b6ecf5b3f88fa101d35335888f">Simple_Lumped_Model_Realization()</a>, <a class="el" href="class_simple___lumped___model___realization.html#aea254a605d59c1489dfe0a8af0d5f291">add_time()</a>, <a class="el" href="class_simple___lumped___model___realization.html#ae9f9fda457f7564bf53bc9a9785eba7c">create_formulation()</a>, and <a class="el" href="class_simple___lumped___model___realization.html#a65e1e6ce403d39e655c68a5cd321ac63">get_response()</a>.</p>
 
 </div>
 </div>
@@ -1519,7 +1519,7 @@ Private Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_simple___lumped___model___realization.html">Simple_Lumped_Model_Realization</a></li>
-    <li class="footer">Generated on Thu Sep 9 2021 20:05:36 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Fri Sep 17 2021 13:05:26 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

@@ -172,13 +172,13 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a12fad75c2e47f5da298e022429243199"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#a12fad75c2e47f5da298e022429243199">get_output_header_line</a> (std::string delimiter) override</td></tr>
 <tr class="memdesc:a12fad75c2e47f5da298e022429243199"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a header line appropriate for a file made up of entries from this type's implementation of <code>get_output_line_for_timestep</code>.  <a href="classrealization_1_1_catchment___formulation.html#a12fad75c2e47f5da298e022429243199">More...</a><br /></td></tr>
 <tr class="separator:a12fad75c2e47f5da298e022429243199"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a31aaf5912120b1d400bfa47c2b811ee4"><td class="memItemLeft" align="right" valign="top">virtual double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#a31aaf5912120b1d400bfa47c2b811ee4">get_response</a> (<a class="el" href="classrealization_1_1_formulation.html#aee10dc672e5a9e106f49dcbe0080cf7c">time_step_t</a> t_index, <a class="el" href="classrealization_1_1_formulation.html#aee10dc672e5a9e106f49dcbe0080cf7c">time_step_t</a> t_delta)=0</td></tr>
-<tr class="memdesc:a31aaf5912120b1d400bfa47c2b811ee4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute the backing model formulation for the given time step, where it is of the specified size, and return the response output.  <a href="classrealization_1_1_catchment___formulation.html#a31aaf5912120b1d400bfa47c2b811ee4">More...</a><br /></td></tr>
-<tr class="separator:a31aaf5912120b1d400bfa47c2b811ee4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a30d59c62b7f697d766d71b333b02d894"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#a30d59c62b7f697d766d71b333b02d894">create_formulation</a> (boost::property_tree::ptree &amp;config, <a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> *global=nullptr)=0</td></tr>
-<tr class="separator:a30d59c62b7f697d766d71b333b02d894"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8230fc7b582efa0d5d967fd3ccdff1f3"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#a8230fc7b582efa0d5d967fd3ccdff1f3">create_formulation</a> (<a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> properties)=0</td></tr>
-<tr class="separator:a8230fc7b582efa0d5d967fd3ccdff1f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf21a61a7da1e87a200d8391cb3e33ce"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#adf21a61a7da1e87a200d8391cb3e33ce">get_response</a> (<a class="el" href="classrealization_1_1_formulation.html#aee10dc672e5a9e106f49dcbe0080cf7c">time_step_t</a> t_index, <a class="el" href="classrealization_1_1_formulation.html#aee10dc672e5a9e106f49dcbe0080cf7c">time_step_t</a> t_delta) override=0</td></tr>
+<tr class="memdesc:adf21a61a7da1e87a200d8391cb3e33ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute the backing model formulation for the given time step, where it is of the specified size, and return the response output.  <a href="classrealization_1_1_catchment___formulation.html#adf21a61a7da1e87a200d8391cb3e33ce">More...</a><br /></td></tr>
+<tr class="separator:adf21a61a7da1e87a200d8391cb3e33ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4fb8ec9b08820c29d88627ee9781d579"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#a4fb8ec9b08820c29d88627ee9781d579">create_formulation</a> (boost::property_tree::ptree &amp;config, <a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> *global=nullptr) override=0</td></tr>
+<tr class="separator:a4fb8ec9b08820c29d88627ee9781d579"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a2ac83503092d24da0ee4e4c6eeaa25"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#a2a2ac83503092d24da0ee4e4c6eeaa25">create_formulation</a> (<a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> properties) override=0</td></tr>
+<tr class="separator:a2a2ac83503092d24da0ee4e4c6eeaa25"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2e9d4749500d3f5ea434d77861b03990"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation.html#a2e9d4749500d3f5ea434d77861b03990">get_formulation_type</a> ()=0</td></tr>
 <tr class="separator:a2e9d4749500d3f5ea434d77861b03990"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a248b562be5dc9a21e7afbc014de15114"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation.html#a248b562be5dc9a21e7afbc014de15114">add_time</a> (time_t t, double n)</td></tr>
@@ -191,9 +191,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7117db623dafde1f5dfbf286e46aa99e"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_et___aware.html#a7117db623dafde1f5dfbf286e46aa99e">is_et_params_set</a> ()=0</td></tr>
 <tr class="memdesc:a7117db623dafde1f5dfbf286e46aa99e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test whether ET params have been set.  <a href="classrealization_1_1_et___aware.html#a7117db623dafde1f5dfbf286e46aa99e">More...</a><br /></td></tr>
 <tr class="separator:a7117db623dafde1f5dfbf286e46aa99e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab3b62cde94729a7273b20dd63b23c105"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_et___accountable.html#ab3b62cde94729a7273b20dd63b23c105">is_et_params_set</a> ()</td></tr>
-<tr class="memdesc:ab3b62cde94729a7273b20dd63b23c105"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test whether ET params have been set.  <a href="classrealization_1_1_et___accountable.html#ab3b62cde94729a7273b20dd63b23c105">More...</a><br /></td></tr>
-<tr class="separator:ab3b62cde94729a7273b20dd63b23c105"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a490261c3439f205913ac2e77efbd5b6f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_et___accountable.html#a490261c3439f205913ac2e77efbd5b6f">is_et_params_set</a> () override</td></tr>
+<tr class="memdesc:a490261c3439f205913ac2e77efbd5b6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test whether ET params have been set.  <a href="classrealization_1_1_et___accountable.html#a490261c3439f205913ac2e77efbd5b6f">More...</a><br /></td></tr>
+<tr class="separator:a490261c3439f205913ac2e77efbd5b6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8f1338c37773df88268e34e46a1d957e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_et___aware.html#a8f1338c37773df88268e34e46a1d957e">set_et_params</a> (std::shared_ptr&lt; <a class="el" href="structpdm03__struct.html">pdm03_struct</a> &gt; params)=0</td></tr>
 <tr class="memdesc:a8f1338c37773df88268e34e46a1d957e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accept a reference for an appropriate object for holding ET parameters for use when executing the model calculations, if maintained by the type.  <a href="classrealization_1_1_et___aware.html#a8f1338c37773df88268e34e46a1d957e">More...</a><br /></td></tr>
 <tr class="separator:a8f1338c37773df88268e34e46a1d957e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -465,7 +465,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="class_simple___lumped___model___realization.html#a0f5a80b589d4c29ab458c0ee43a3afce">Simple_Lumped_Model_Realization</a>.</p>
+<p>Reimplemented in <a class="el" href="class_simple___lumped___model___realization.html#aea254a605d59c1489dfe0a8af0d5f291">Simple_Lumped_Model_Realization</a>.</p>
 
 </div>
 </div>
@@ -496,8 +496,8 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a id="a30d59c62b7f697d766d71b333b02d894"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a30d59c62b7f697d766d71b333b02d894">&#9670;&nbsp;</a></span>create_formulation() <span class="overload">[1/2]</span></h2>
+<a id="a4fb8ec9b08820c29d88627ee9781d579"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4fb8ec9b08820c29d88627ee9781d579">&#9670;&nbsp;</a></span>create_formulation() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -506,7 +506,7 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void realization::Catchment_Formulation::create_formulation </td>
+          <td class="memname">void realization::Catchment_Formulation::create_formulation </td>
           <td>(</td>
           <td class="paramtype">boost::property_tree::ptree &amp;&#160;</td>
           <td class="paramname"><em>config</em>, </td>
@@ -525,19 +525,19 @@ Friends</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span><span class="mlabel">inherited</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">pure virtual</span><span class="mlabel">inherited</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Implements <a class="el" href="classrealization_1_1_formulation.html#a6b495fa685dcea07f2b5ca9c41aa76fc">realization::Formulation</a>.</p>
 
-<p>Implemented in <a class="el" href="classrealization_1_1_tshirt___c___realization.html#a0aec4abbb0c8f724ec23c6047d712c20">realization::Tshirt_C_Realization</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#acb4534a0030f794320625be0313fe825">realization::Bmi_Multi_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#adc0e525bd28e3b2f72f31680617358d1">realization::Bmi_Module_Formulation&lt; M &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#adc0e525bd28e3b2f72f31680617358d1">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>, <a class="el" href="classrealization_1_1_tshirt___realization.html#a8251e6420b1306e4acfceda77c592110">realization::Tshirt_Realization</a>, and <a class="el" href="class_simple___lumped___model___realization.html#afd543b1356159e90c0bc2c3f7f9d35d9">Simple_Lumped_Model_Realization</a>.</p>
+<p>Implemented in <a class="el" href="classrealization_1_1_tshirt___realization.html#a2303335bc613d277d4e16b9fd7619063">realization::Tshirt_Realization</a>, <a class="el" href="classrealization_1_1_tshirt___c___realization.html#a0aec4abbb0c8f724ec23c6047d712c20">realization::Tshirt_C_Realization</a>, <a class="el" href="class_simple___lumped___model___realization.html#aa14160e9f8563df42947278c8e91cc78">Simple_Lumped_Model_Realization</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#acb4534a0030f794320625be0313fe825">realization::Bmi_Multi_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#adc0e525bd28e3b2f72f31680617358d1">realization::Bmi_Module_Formulation&lt; M &gt;</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#adc0e525bd28e3b2f72f31680617358d1">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>.</p>
 
 </div>
 </div>
-<a id="a8230fc7b582efa0d5d967fd3ccdff1f3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8230fc7b582efa0d5d967fd3ccdff1f3">&#9670;&nbsp;</a></span>create_formulation() <span class="overload">[2/2]</span></h2>
+<a id="a2a2ac83503092d24da0ee4e4c6eeaa25"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2a2ac83503092d24da0ee4e4c6eeaa25">&#9670;&nbsp;</a></span>create_formulation() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -546,7 +546,7 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void realization::Catchment_Formulation::create_formulation </td>
+          <td class="memname">void realization::Catchment_Formulation::create_formulation </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a>&#160;</td>
           <td class="paramname"><em>properties</em></td><td>)</td>
@@ -555,14 +555,14 @@ Friends</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span><span class="mlabel">inherited</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">pure virtual</span><span class="mlabel">inherited</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Implements <a class="el" href="classrealization_1_1_formulation.html#a2cec813cc10759bfb854d0ab0367ebd1">realization::Formulation</a>.</p>
 
-<p>Implemented in <a class="el" href="classrealization_1_1_tshirt___c___realization.html#a6a47b0f7e4b5ef28a054d5258b1eabe2">realization::Tshirt_C_Realization</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a87607c1c2b438943c8be0a566e1c59d5">realization::Bmi_Multi_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ac24b58505cb49f6594fd79fec5005014">realization::Bmi_Module_Formulation&lt; M &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ac24b58505cb49f6594fd79fec5005014">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>, <a class="el" href="classrealization_1_1_tshirt___realization.html#a05e441c55a6c42542ee8c1dbf48d5fd2">realization::Tshirt_Realization</a>, and <a class="el" href="class_simple___lumped___model___realization.html#a9bdf086d2a5d1a41ca55455d0b13e784">Simple_Lumped_Model_Realization</a>.</p>
+<p>Implemented in <a class="el" href="classrealization_1_1_tshirt___realization.html#a40e6a3298f4f8c2724ddda7736925909">realization::Tshirt_Realization</a>, <a class="el" href="classrealization_1_1_tshirt___c___realization.html#a6a47b0f7e4b5ef28a054d5258b1eabe2">realization::Tshirt_C_Realization</a>, <a class="el" href="class_simple___lumped___model___realization.html#ae9f9fda457f7564bf53bc9a9785eba7c">Simple_Lumped_Model_Realization</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a87607c1c2b438943c8be0a566e1c59d5">realization::Bmi_Multi_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ac24b58505cb49f6594fd79fec5005014">realization::Bmi_Module_Formulation&lt; M &gt;</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ac24b58505cb49f6594fd79fec5005014">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>.</p>
 
 </div>
 </div>
@@ -650,7 +650,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a5849b2dc41ae43821ccdb0b6487bbcf0">realization::Bmi_Multi_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___c___formulation.html#aedf1e7aaa4f842a897a882df1b353d07">realization::Bmi_C_Formulation</a>.</p>
+<p>Implemented in <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a5849b2dc41ae43821ccdb0b6487bbcf0">realization::Bmi_Multi_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#af41838c628fd9e71064e1443071666a1">realization::Bmi_Module_Formulation&lt; M &gt;</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#af41838c628fd9e71064e1443071666a1">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>.</p>
 
 </div>
 </div>
@@ -731,7 +731,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#ab922dd037879f52857767677da4637f4">realization::Bmi_Multi_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a12bbe454a5bb0039730c93d9e0dfb681">realization::Bmi_C_Formulation</a>.</p>
+<p>Implemented in <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#ab922dd037879f52857767677da4637f4">realization::Bmi_Multi_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a02b3fedbd37fb3c306d416a09b772df7">realization::Bmi_Module_Formulation&lt; M &gt;</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a02b3fedbd37fb3c306d416a09b772df7">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>.</p>
 
 </div>
 </div>
@@ -887,7 +887,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#ad20b1ed9691e3c7db3d2de14a38ad0f3">realization::Bmi_Multi_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aa23a04fa993a84c57d064a5a14906605">realization::Bmi_Module_Formulation&lt; M &gt;</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aa23a04fa993a84c57d064a5a14906605">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#ad20b1ed9691e3c7db3d2de14a38ad0f3">realization::Bmi_Multi_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aa91102a492a147d079ec9eb71a99d72a">realization::Bmi_Module_Formulation&lt; M &gt;</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aa91102a492a147d079ec9eb71a99d72a">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>.</p>
 
 </div>
 </div>
@@ -980,9 +980,9 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classrealization_1_1_tshirt___c___realization.html#a62467e5e08120836b6f8f04117ec9de5">realization::Tshirt_C_Realization</a>, <a class="el" href="classrealization_1_1_bmi___c___formulation.html#adf1873c11226bdff7098f16b717b9183">realization::Bmi_C_Formulation</a>, <a class="el" href="classrealization_1_1_tshirt___realization.html#a8619c4deef0d781138ac5240fb172ceb">realization::Tshirt_Realization</a>, and <a class="el" href="class_simple___lumped___model___realization.html#a82c11a7d519bbf4146ea8e10947e17f5">Simple_Lumped_Model_Realization</a>.</p>
+<p>Implemented in <a class="el" href="classrealization_1_1_tshirt___realization.html#ab8138d9a7d6c8934fd0a99ff642bb83d">realization::Tshirt_Realization</a>, <a class="el" href="classrealization_1_1_tshirt___c___realization.html#a62467e5e08120836b6f8f04117ec9de5">realization::Tshirt_C_Realization</a>, <a class="el" href="class_simple___lumped___model___realization.html#a44ec42a333e39a22e3f1056ffdf95773">Simple_Lumped_Model_Realization</a>, and <a class="el" href="classrealization_1_1_bmi___c___formulation.html#adf1873c11226bdff7098f16b717b9183">realization::Bmi_C_Formulation</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a8694f5e94f40224efca11a73892da8ff">realization::Bmi_Multi_Formulation::create_multi_formulation()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a49124dc00e3fddae4ce597dfe2910942">realization::Bmi_Module_Formulation&lt; M &gt;::get_forcing_data_ts_contributions()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#af8a539eeebab66497f13da2f97d283dd">realization::Bmi_Module_Formulation&lt; M &gt;::get_value()</a>, and <a class="el" href="classrealization_1_1_formulation.html#aceabe9927b36dce61f338919f2af4c1f">realization::Formulation::validate_parameters()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a8694f5e94f40224efca11a73892da8ff">realization::Bmi_Multi_Formulation::create_multi_formulation()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a7f11d9a147cbba2f191988995e171f75">realization::Bmi_Module_Formulation&lt; M &gt;::get_value()</a>, and <a class="el" href="classrealization_1_1_formulation.html#aceabe9927b36dce61f338919f2af4c1f">realization::Formulation::validate_parameters()</a>.</p>
 
 </div>
 </div>
@@ -1011,7 +1011,7 @@ Friends</h2></td></tr>
 
 <p class="reference">References <a class="el" href="classrealization_1_1_formulation.html#a8bfec24b0d57240e7ada2493a781db6d">realization::Formulation::id</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_tshirt___realization.html#a05e441c55a6c42542ee8c1dbf48d5fd2">realization::Tshirt_Realization::create_formulation()</a>, and <a class="el" href="classrealization_1_1_tshirt___c___realization.html#a6a47b0f7e4b5ef28a054d5258b1eabe2">realization::Tshirt_C_Realization::create_formulation()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_tshirt___c___realization.html#a6a47b0f7e4b5ef28a054d5258b1eabe2">realization::Tshirt_C_Realization::create_formulation()</a>, and <a class="el" href="classrealization_1_1_tshirt___realization.html#a40e6a3298f4f8c2724ddda7736925909">realization::Tshirt_Realization::create_formulation()</a>.</p>
 
 </div>
 </div>
@@ -1041,7 +1041,7 @@ Friends</h2></td></tr>
 <p>Get the name of the specific type of the backing model object. </p>
 <dl class="section return"><dt>Returns</dt><dd>The name of the backing model object's type. </dd></dl>
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a49124dc00e3fddae4ce597dfe2910942">realization::Bmi_Module_Formulation&lt; M &gt;::get_forcing_data_ts_contributions()</a>, and <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a08e3342f5efce58c578b780cc95c0b5b">realization::Bmi_C_Formulation::get_var_value_as_double()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a974d1eac6a95751c4e4570a61bad8541">realization::Bmi_C_Formulation::construct_model()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a388d1b0e70d2fa6a1a33e278e5f38d4f">realization::Bmi_Module_Formulation&lt; M &gt;::get_value_as_type()</a>, and <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a08e3342f5efce58c578b780cc95c0b5b">realization::Bmi_C_Formulation::get_var_value_as_double()</a>.</p>
 
 </div>
 </div>
@@ -1071,7 +1071,7 @@ Friends</h2></td></tr>
 <p>Get the values making up the header line from <a class="el" href="classrealization_1_1_catchment___formulation.html#a12fad75c2e47f5da298e022429243199" title="Get a header line appropriate for a file made up of entries from this type&#39;s implementation of get_ou...">get_output_header_line()</a>, but organized as a vector of strings. </p>
 <dl class="section return"><dt>Returns</dt><dd>The values making up the header line from <a class="el" href="classrealization_1_1_catchment___formulation.html#a12fad75c2e47f5da298e022429243199" title="Get a header line appropriate for a file made up of entries from this type&#39;s implementation of get_ou...">get_output_header_line()</a> organized as a vector. </dd></dl>
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a67093e4c97bb92c5de5f959c7e2d98de">realization::Bmi_C_Formulation::get_output_header_line()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a67093e4c97bb92c5de5f959c7e2d98de">realization::Bmi_C_Formulation::get_output_header_line()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a67e55972f1a61353b683c1ae3cebdd2c">realization::Bmi_Module_Formulation&lt; M &gt;::get_output_header_line()</a>.</p>
 
 </div>
 </div>
@@ -1106,7 +1106,7 @@ Friends</h2></td></tr>
 
 <p>Implements <a class="el" href="classrealization_1_1_formulation.html#a17b9945a1362e204c78f0126c6354327">realization::Formulation</a>.</p>
 
-<p>Reimplemented in <a class="el" href="classrealization_1_1_tshirt___c___realization.html#a003ae4e7ad85247695914b3921a64870">realization::Tshirt_C_Realization</a>.</p>
+<p>Reimplemented in <a class="el" href="classrealization_1_1_tshirt___c___realization.html#a003ae4e7ad85247695914b3921a64870">realization::Tshirt_C_Realization</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a67e55972f1a61353b683c1ae3cebdd2c">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>.</p>
 
 </div>
 </div>
@@ -1188,7 +1188,7 @@ Friends</h2></td></tr>
 <p>Get the names of the variables to include in the output from this formulation, which should be some ordered subset of the output variables from the model.</p>
 <dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
-<p>Implemented in <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#ac760f4df5a8e1d6dca5c13f2422bca85">realization::Bmi_Multi_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a732e4ae709d17ce56ac2d519d48d57c0">realization::Bmi_Module_Formulation&lt; M &gt;</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a732e4ae709d17ce56ac2d519d48d57c0">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#ac760f4df5a8e1d6dca5c13f2422bca85">realization::Bmi_Multi_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a02f42322fd533caa571095f9acfd9c98">realization::Bmi_Module_Formulation&lt; M &gt;</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a02f42322fd533caa571095f9acfd9c98">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>.</p>
 
 </div>
 </div>
@@ -1215,14 +1215,14 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classrealization_1_1_catchment___formulation.html#adbf7ab4b1e63a9ef6562e88b34e5efb1">realization::Catchment_Formulation</a>.</p>
+<p>Implements <a class="el" href="classrealization_1_1_catchment___formulation.html#a6a61cceee099918ca4f5e2719413106a">realization::Catchment_Formulation</a>.</p>
 
 <p>Reimplemented in <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ac614801078ade31467823584232f5a4a">realization::Bmi_Module_Formulation&lt; M &gt;</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ac614801078ade31467823584232f5a4a">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>.</p>
 
 </div>
 </div>
-<a id="a31aaf5912120b1d400bfa47c2b811ee4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a31aaf5912120b1d400bfa47c2b811ee4">&#9670;&nbsp;</a></span>get_response()</h2>
+<a id="adf21a61a7da1e87a200d8391cb3e33ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adf21a61a7da1e87a200d8391cb3e33ce">&#9670;&nbsp;</a></span>get_response()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1231,7 +1231,7 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual double realization::Catchment_Formulation::get_response </td>
+          <td class="memname">double realization::Catchment_Formulation::get_response </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classrealization_1_1_formulation.html#aee10dc672e5a9e106f49dcbe0080cf7c">time_step_t</a>&#160;</td>
           <td class="paramname"><em>t_index</em>, </td>
@@ -1250,7 +1250,7 @@ Friends</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span><span class="mlabel">inherited</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">pure virtual</span><span class="mlabel">inherited</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -1313,7 +1313,7 @@ Friends</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="classforcing_1_1_wrapped_forcing_provider.html#a30598c6cca50550602d954937faaca3a">forcing::WrappedForcingProvider</a>, <a class="el" href="class_forcing.html#a5a6e6d24f60ea8e99311cf3301148287">Forcing</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a661f54667415942a2a9a795d11cdc6ee">realization::Bmi_Multi_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9e7afdf74b2338f32b1a8a02d894fd1f">realization::Bmi_Module_Formulation&lt; M &gt;</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9e7afdf74b2338f32b1a8a02d894fd1f">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#ad07b6aa1c71e7e3f1381adf1ec65d835">realization::Bmi_Multi_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aca477749b4e3f41aeea7e724e2351219">realization::Bmi_Module_Formulation&lt; M &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aca477749b4e3f41aeea7e724e2351219">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>, <a class="el" href="classforcing_1_1_wrapped_forcing_provider.html#a30598c6cca50550602d954937faaca3a">forcing::WrappedForcingProvider</a>, and <a class="el" href="class_forcing.html#a5a6e6d24f60ea8e99311cf3301148287">Forcing</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classforcing_1_1_wrapped_forcing_provider.html#a30598c6cca50550602d954937faaca3a">forcing::WrappedForcingProvider::get_ts_index_for_time()</a>.</p>
 
@@ -1384,7 +1384,7 @@ Friends</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="classforcing_1_1_wrapped_forcing_provider.html#a8a440465d475f5a77949bc95c17d950e">forcing::WrappedForcingProvider</a>, <a class="el" href="class_forcing.html#a45e538add006e81f797fcd8ce2f44bd3">Forcing</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#aeec6d02c26fcba23372e3d0d37babf18">realization::Bmi_Multi_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#af8a539eeebab66497f13da2f97d283dd">realization::Bmi_Module_Formulation&lt; M &gt;</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#af8a539eeebab66497f13da2f97d283dd">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a7e38afaf61b4ee7aa2caa43d2ac5e693">realization::Bmi_Multi_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a7f11d9a147cbba2f191988995e171f75">realization::Bmi_Module_Formulation&lt; M &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a7f11d9a147cbba2f191988995e171f75">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>, <a class="el" href="classforcing_1_1_wrapped_forcing_provider.html#a8a440465d475f5a77949bc95c17d950e">forcing::WrappedForcingProvider</a>, and <a class="el" href="class_forcing.html#a45e538add006e81f797fcd8ce2f44bd3">Forcing</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classforcing_1_1_wrapped_forcing_provider.html#a8a440465d475f5a77949bc95c17d950e">forcing::WrappedForcingProvider::get_value()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aa04167ad9a3f4c384673ef1157fb3cb8">realization::Bmi_Module_Formulation&lt; M &gt;::set_model_inputs_prior_to_update()</a>.</p>
 
@@ -1426,7 +1426,7 @@ Friends</h2></td></tr>
 
 <p class="reference">References <a class="el" href="classrealization_1_1_formulation.html#aceabe9927b36dce61f338919f2af4c1f">realization::Formulation::validate_parameters()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="class_simple___lumped___model___realization.html#afd543b1356159e90c0bc2c3f7f9d35d9">Simple_Lumped_Model_Realization::create_formulation()</a>, <a class="el" href="classrealization_1_1_tshirt___realization.html#a8251e6420b1306e4acfceda77c592110">realization::Tshirt_Realization::create_formulation()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#adc0e525bd28e3b2f72f31680617358d1">realization::Bmi_Module_Formulation&lt; M &gt;::create_formulation()</a>, and <a class="el" href="classrealization_1_1_tshirt___c___realization.html#a0aec4abbb0c8f724ec23c6047d712c20">realization::Tshirt_C_Realization::create_formulation()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#adc0e525bd28e3b2f72f31680617358d1">realization::Bmi_Module_Formulation&lt; M &gt;::create_formulation()</a>, <a class="el" href="class_simple___lumped___model___realization.html#aa14160e9f8563df42947278c8e91cc78">Simple_Lumped_Model_Realization::create_formulation()</a>, <a class="el" href="classrealization_1_1_tshirt___c___realization.html#a0aec4abbb0c8f724ec23c6047d712c20">realization::Tshirt_C_Realization::create_formulation()</a>, and <a class="el" href="classrealization_1_1_tshirt___realization.html#a2303335bc613d277d4e16b9fd7619063">realization::Tshirt_Realization::create_formulation()</a>.</p>
 
 </div>
 </div>
@@ -1454,7 +1454,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a8926014f06277306f79b2a5bec398644">realization::Bmi_Multi_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a926aae8f4c65825dbbd99334ec90fba9">realization::Bmi_Module_Formulation&lt; M &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a926aae8f4c65825dbbd99334ec90fba9">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>, and <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a4fb6082c7e0582543a1f42892569a858">realization::Bmi_C_Formulation</a>.</p>
+<p>Implemented in <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a8926014f06277306f79b2a5bec398644">realization::Bmi_Multi_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a72ec53892e3d1597a8d31f50e670a48e">realization::Bmi_Module_Formulation&lt; M &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a72ec53892e3d1597a8d31f50e670a48e">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>, and <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a4fb6082c7e0582543a1f42892569a858">realization::Bmi_C_Formulation</a>.</p>
 
 </div>
 </div>
@@ -1484,7 +1484,7 @@ Friends</h2></td></tr>
 <p>Test whether backing model has fixed time step size. </p>
 <dl class="section return"><dt>Returns</dt><dd>Whether backing model has fixed time step size. </dd></dl>
 
-<p>Implemented in <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a8ff40396fbb1443543d9ead367e61617">realization::Bmi_Multi_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a56ce445c0eb8316b6bc4985ada2be7a0">realization::Bmi_Module_Formulation&lt; M &gt;</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a56ce445c0eb8316b6bc4985ada2be7a0">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a8ff40396fbb1443543d9ead367e61617">realization::Bmi_Multi_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a5af40dac52c8e3cbcfe0059fcb0e15c7">realization::Bmi_Module_Formulation&lt; M &gt;</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a5af40dac52c8e3cbcfe0059fcb0e15c7">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>.</p>
 
 </div>
 </div>
@@ -1512,7 +1512,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a65c8d3825669dffc9c5d68d45fd4bff5">realization::Bmi_Multi_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a658413996299449ddc5641ad9322715f">realization::Bmi_Module_Formulation&lt; M &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a658413996299449ddc5641ad9322715f">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>, and <a class="el" href="classrealization_1_1_bmi___c___formulation.html#afb5627a4faf940e0f25f58e0226145d4">realization::Bmi_C_Formulation</a>.</p>
+<p>Implemented in <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a65c8d3825669dffc9c5d68d45fd4bff5">realization::Bmi_Multi_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a8d72af0f3a7f4057d69ec975246061fa">realization::Bmi_Module_Formulation&lt; M &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a8d72af0f3a7f4057d69ec975246061fa">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>, and <a class="el" href="classrealization_1_1_bmi___c___formulation.html#afb5627a4faf940e0f25f58e0226145d4">realization::Bmi_C_Formulation</a>.</p>
 
 </div>
 </div>
@@ -1542,12 +1542,12 @@ Friends</h2></td></tr>
 <p>Whether the backing model uses/reads the forcing file directly for getting input data. </p>
 <dl class="section return"><dt>Returns</dt><dd>Whether the backing model uses/reads the forcing file directly for getting input data. </dd></dl>
 
-<p>Implemented in <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a4cdad4c937f0f546da35c69815c95abe">realization::Bmi_Multi_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a0c6474867455d66170c17f240d7bb4aa">realization::Bmi_Module_Formulation&lt; M &gt;</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a0c6474867455d66170c17f240d7bb4aa">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a4cdad4c937f0f546da35c69815c95abe">realization::Bmi_Multi_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ad0c8c26e3216cfc05afcb4e15d1335c6">realization::Bmi_Module_Formulation&lt; M &gt;</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ad0c8c26e3216cfc05afcb4e15d1335c6">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>.</p>
 
 </div>
 </div>
-<a id="ab3b62cde94729a7273b20dd63b23c105"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab3b62cde94729a7273b20dd63b23c105">&#9670;&nbsp;</a></span>is_et_params_set() <span class="overload">[1/2]</span></h2>
+<a id="a490261c3439f205913ac2e77efbd5b6f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a490261c3439f205913ac2e77efbd5b6f">&#9670;&nbsp;</a></span>is_et_params_set() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1556,7 +1556,7 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual bool realization::Et_Accountable::is_et_params_set </td>
+          <td class="memname">bool realization::Et_Accountable::is_et_params_set </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -1564,7 +1564,7 @@ Friends</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span><span class="mlabel">inherited</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span><span class="mlabel">inherited</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -1604,7 +1604,7 @@ Friends</h2></td></tr>
 <p>Test whether ET params have been set. </p>
 <dl class="section return"><dt>Returns</dt><dd>Whether ET params have been set. </dd></dl>
 
-<p>Implemented in <a class="el" href="classrealization_1_1_et___accountable.html#ab3b62cde94729a7273b20dd63b23c105">realization::Et_Accountable</a>.</p>
+<p>Implemented in <a class="el" href="classrealization_1_1_et___accountable.html#a490261c3439f205913ac2e77efbd5b6f">realization::Et_Accountable</a>.</p>
 
 </div>
 </div>
@@ -1634,7 +1634,7 @@ Friends</h2></td></tr>
 <p>Test whether the backing model has been initialize using the BMI standard <code>Initialize</code> function. </p>
 <dl class="section return"><dt>Returns</dt><dd>Whether backing model has been initialize using the BMI standard <code>Initialize</code> function. </dd></dl>
 
-<p>Implemented in <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#aa563a521c8e3e05c8503f5849729de5b">realization::Bmi_Multi_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___c___formulation.html#aee9b4fec8bd57a88b56e9e78691fa35d">realization::Bmi_C_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9afc72cb5818a89326c04776a00edf56">realization::Bmi_Module_Formulation&lt; M &gt;</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9afc72cb5818a89326c04776a00edf56">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#aa563a521c8e3e05c8503f5849729de5b">realization::Bmi_Multi_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a64efe3f64579f72317d04b3504d293dc">realization::Bmi_Module_Formulation&lt; M &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a64efe3f64579f72317d04b3504d293dc">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>, and <a class="el" href="classrealization_1_1_bmi___c___formulation.html#aee9b4fec8bd57a88b56e9e78691fa35d">realization::Bmi_C_Formulation</a>.</p>
 
 </div>
 </div>
@@ -1915,7 +1915,7 @@ Friends</h2></td></tr>
 
 <p class="reference">References <a class="el" href="classrealization_1_1_formulation.html#a2e9d4749500d3f5ea434d77861b03990">realization::Formulation::get_formulation_type()</a>, and <a class="el" href="classrealization_1_1_formulation.html#a9959ffc79d52fda68ecc11c5698f4e86">realization::Formulation::get_required_parameters()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="class_simple___lumped___model___realization.html#a9bdf086d2a5d1a41ca55455d0b13e784">Simple_Lumped_Model_Realization::create_formulation()</a>, <a class="el" href="classrealization_1_1_tshirt___realization.html#a05e441c55a6c42542ee8c1dbf48d5fd2">realization::Tshirt_Realization::create_formulation()</a>, <a class="el" href="classrealization_1_1_tshirt___c___realization.html#a6a47b0f7e4b5ef28a054d5258b1eabe2">realization::Tshirt_C_Realization::create_formulation()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a8694f5e94f40224efca11a73892da8ff">realization::Bmi_Multi_Formulation::create_multi_formulation()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a1456df2666b8e7e33da01a5a14f6591e">realization::Bmi_Module_Formulation&lt; M &gt;::inner_create_formulation()</a>, and <a class="el" href="classrealization_1_1_formulation.html#a65f97b5efe05e786f59d9f5fd1b10209">realization::Formulation::interpret_parameters()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="class_simple___lumped___model___realization.html#ae9f9fda457f7564bf53bc9a9785eba7c">Simple_Lumped_Model_Realization::create_formulation()</a>, <a class="el" href="classrealization_1_1_tshirt___c___realization.html#a6a47b0f7e4b5ef28a054d5258b1eabe2">realization::Tshirt_C_Realization::create_formulation()</a>, <a class="el" href="classrealization_1_1_tshirt___realization.html#a40e6a3298f4f8c2724ddda7736925909">realization::Tshirt_Realization::create_formulation()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a8694f5e94f40224efca11a73892da8ff">realization::Bmi_Multi_Formulation::create_multi_formulation()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a1456df2666b8e7e33da01a5a14f6591e">realization::Bmi_Module_Formulation&lt; M &gt;::inner_create_formulation()</a>, and <a class="el" href="classrealization_1_1_formulation.html#a65f97b5efe05e786f59d9f5fd1b10209">realization::Formulation::interpret_parameters()</a>.</p>
 
 </div>
 </div>
@@ -2057,7 +2057,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a49aa9cfff0958d7e509de7dd5187a0c6">realization::Bmi_Module_Formulation&lt; M &gt;::calc_et()</a>, <a class="el" href="classrealization_1_1_et___accountable.html#aa76f5a7b1287c92f4e785e1a206ae452">realization::Et_Accountable::get_et_params()</a>, <a class="el" href="classrealization_1_1_et___accountable.html#ad7ef74d9535d1c9efab43a40dd807dac">realization::Et_Accountable::get_et_params_ptr()</a>, <a class="el" href="classrealization_1_1_et___accountable.html#ab3b62cde94729a7273b20dd63b23c105">realization::Et_Accountable::is_et_params_set()</a>, and <a class="el" href="classrealization_1_1_et___accountable.html#ad4e23441f5a4ceb63262f796c5bb411f">realization::Et_Accountable::set_et_params()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a49aa9cfff0958d7e509de7dd5187a0c6">realization::Bmi_Module_Formulation&lt; M &gt;::calc_et()</a>, <a class="el" href="classrealization_1_1_et___accountable.html#aa76f5a7b1287c92f4e785e1a206ae452">realization::Et_Accountable::get_et_params()</a>, <a class="el" href="classrealization_1_1_et___accountable.html#ad7ef74d9535d1c9efab43a40dd807dac">realization::Et_Accountable::get_et_params_ptr()</a>, <a class="el" href="classrealization_1_1_et___accountable.html#a490261c3439f205913ac2e77efbd5b6f">realization::Et_Accountable::is_et_params_set()</a>, and <a class="el" href="classrealization_1_1_et___accountable.html#ad4e23441f5a4ceb63262f796c5bb411f">realization::Et_Accountable::set_et_params()</a>.</p>
 
 </div>
 </div>
@@ -2291,7 +2291,7 @@ Friends</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li><li class="navelem"><a class="el" href="classrealization_1_1_bmi___formulation.html">Bmi_Formulation</a></li>
-    <li class="footer">Generated on Thu Sep 9 2021 20:05:37 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Fri Sep 17 2021 13:05:26 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

@@ -16,6 +16,9 @@ var annotated_dup =
       [ "solar_radiation_results", "structet_1_1solar__radiation__results.html", "structet_1_1solar__radiation__results" ],
       [ "intermediate_vars", "structet_1_1intermediate__vars.html", "structet_1_1intermediate__vars" ]
     ] ],
+    [ "external", "namespaceexternal.html", [
+      [ "ExternalIntegrationException", "classexternal_1_1_external_integration_exception.html", "classexternal_1_1_external_integration_exception" ]
+    ] ],
     [ "forcing", "namespaceforcing.html", [
       [ "ForcingProvider", "classforcing_1_1_forcing_provider.html", "classforcing_1_1_forcing_provider" ],
       [ "WrappedForcingProvider", "classforcing_1_1_wrapped_forcing_provider.html", "classforcing_1_1_wrapped_forcing_provider" ]
@@ -49,6 +52,7 @@ var annotated_dup =
     ] ],
     [ "models", "namespacemodels.html", [
       [ "bmi", "namespacemodels_1_1bmi.html", [
+        [ "AbstractCLibBmiAdapter", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter" ],
         [ "Bmi_Adapter", "classmodels_1_1bmi_1_1_bmi___adapter.html", "classmodels_1_1bmi_1_1_bmi___adapter" ],
         [ "Bmi_C_Adapter", "classmodels_1_1bmi_1_1_bmi___c___adapter.html", "classmodels_1_1bmi_1_1_bmi___c___adapter" ]
       ] ],

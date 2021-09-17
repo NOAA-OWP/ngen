@@ -9,6 +9,11 @@
   * [BMI C Model As Shared Library](#bmi-c-shared-library)
   * [Example: CFE Shared Library](#bmi-c-cfe-example)
   * [BMI C Caveats](#bmi-c-caveats)
+* [BMI Models Written in Fortran](#bmi-models-written-in-fortran)
+  * [Enabling Fortran Integration](#enabling-fortran-integration)
+  * [ISO_C_BINDING Middleware](#iso-c-binding-middleware)
+  * [A Compiled Shared Library](#a-compiled-shared-library)
+    * [Required Additional Fortran Registration Function](#required-additional-fortran-registration-function)
 * [Multi-Module BMI Formulations](#multi-module-bmi-formulations)
 
 ## Summary
@@ -180,6 +185,56 @@ This is needed both due to the design of the **C** language variant of BMI, and 
 
 Future versions of NextGen will provide alternative ways to declaratively configure function names from a BMI C library so they can individually be dynamically loaded.
 
+## BMI Models Written in Fortran
+
+* [Enabling Fortran Integration](#enabling-fortran-integration)
+* [ISO_C_BINDING Middleware](#iso-c-binding-middleware)
+* [A Compiled Shared Library](#a-compiled-shared-library)
+  * [Required Additional Fortran Registration Function](#required-additional-fortran-registration-function)
+
+### Enabling Fortran Integration
+
+To enable Fortran integration functionality, the CMake build system has to be [generated](BUILDS_AND_CMAKE.md#generating-a-build-system) with the `NGEN_BMI_FORTRAN_ACTIVE` CMake variable set to `ON`.
+
+### ISO C Binding Middleware
+Nextgen takes advantage of the Fortran `iso_c_binding` module to achieve interoperability with Fortran modules.  In short, this works through use of an intermediate middleware module maintained within Nextgen.  This module handles the ([majority of the](#required-additional-fortran-registration-function)) binding through proxy functions that make use of the actual external BMI Fortran module.  
+
+The middleware module source is located in _extern/iso_c_fortran_bmi/_.
+
+The proxy functions require an opaque handle to a created BMI Fortran object to be provided as an argument, so such an object and its opaque handle must be setup and returned via a
+[`register_bmi` function](#required-additional-fortran-registration-function).
+
+### A Compiled Shared Library
+Because of the use of `iso_c_bindings`, integrating with a Fortran BMI module works very similarly to integrating with a C BMI module, where a [shared library](#bmi-c-model-as-shared-library) is [dynamically loaded](#dynamic-loading).  An extra [bootstrapping registration function](#required-additional-fortran-registration-function) is also, again, required.
+
+#### Required Additional Fortran Registration Function
+[As with C](#additional-bootstrapping-function-needed), a registration function must be provided by the module, beyond what is implemented for BMI.  It should look very similar to the example below.  In fact, it is likely sufficient to simply modify the `use bminoahmp` and `type(bmi_noahmp), target, save :: bmi_model` lines to suit the module in question.
+
+This function should receive an opaque pointer and set it to point to a created BMI object of the appropriate type for the module.  Note that while `save` is being used in a way that persists only the initial object, since this will be used within the scope of a dynamic library loaded specifically for working with a particular catchment formulation, it should not cause issues.
+
+```fortran
+function register_bmi(this) result(bmi_status) bind(C, name="register_bmi")
+      use, intrinsic:: iso_c_binding, only: c_ptr, c_loc, c_int
+      use bminoahmp
+      implicit none
+      type(c_ptr) :: this ! If not value, then from the C perspective `this` is a void**
+      integer(kind=c_int) :: bmi_status
+      !Create the momdel instance to use
+      type(bmi_noahmp), target, save :: bmi_model !should be safe, since this will only be used once within scope of dynamically loaded library
+      !Create a simple pointer wrapper
+      type(box), pointer :: bmi_box
+
+      !allocate the pointer box
+      allocate(bmi_box)
+      !allocate(bmi_box%ptr, source=bmi_model)
+      bmi_box%foobar = 42 
+      !associate the wrapper pointer the created model instance
+      bmi_box%ptr => bmi_model
+      !Return the pointer to box
+      this = c_loc(bmi_box)
+      bmi_status = BMI_SUCCESS
+    end function register_bmi
+```
 
 ## Multi-Module BMI Formulations
 It is possible to configure a formulation to be a combination of several different individual BMI module components.  This is the `bmi_multi` formulation type.

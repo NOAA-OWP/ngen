@@ -1,8 +1,12 @@
 var classmodels_1_1bmi_1_1_bmi___adapter =
 [
-    [ "Bmi_Adapter", "classmodels_1_1bmi_1_1_bmi___adapter.html#a2c7b674256fa1d4591e0496b57e25f14", null ],
-    [ "acquire_time_conversion_factor", "classmodels_1_1bmi_1_1_bmi___adapter.html#a4276fc82f9221a1f844a08756b23252e", null ],
+    [ "Bmi_Adapter", "classmodels_1_1bmi_1_1_bmi___adapter.html#a09d239dd66ebb2a91bf6c69180aec7a9", null ],
+    [ "Bmi_Adapter", "classmodels_1_1bmi_1_1_bmi___adapter.html#a749dab2cf7fbd0d4687c447db5429f9e", null ],
+    [ "Bmi_Adapter", "classmodels_1_1bmi_1_1_bmi___adapter.html#a638ebfd9ad3620aa259653ecd6e23ebf", null ],
+    [ "acquire_time_conversion_factor", "classmodels_1_1bmi_1_1_bmi___adapter.html#a98996c5710743fa82ef709e78d586d3a", null ],
     [ "construct_and_init_backing_model", "classmodels_1_1bmi_1_1_bmi___adapter.html#a290bc05cd237b678486294e188995aaa", null ],
+    [ "convert_model_time_to_seconds", "classmodels_1_1bmi_1_1_bmi___adapter.html#a3dc0b3c5060687be87f2c2916a2aa1ce", null ],
+    [ "convert_seconds_to_model_time", "classmodels_1_1bmi_1_1_bmi___adapter.html#ab59c92e91f3ebe1cf5eaceac16100043", null ],
     [ "Finalize", "classmodels_1_1bmi_1_1_bmi___adapter.html#a50ba4a7a721969d53c269298a1e607a7", null ],
     [ "GetComponentName", "classmodels_1_1bmi_1_1_bmi___adapter.html#a260433746fad7ef67ace7daf4927ccf8", null ],
     [ "GetCurrentTime", "classmodels_1_1bmi_1_1_bmi___adapter.html#acbbbbfa690e6adb9eb348aa0ecd03e69", null ],
@@ -41,6 +45,7 @@ var classmodels_1_1bmi_1_1_bmi___adapter =
     [ "GetVarUnits", "classmodels_1_1bmi_1_1_bmi___adapter.html#a75725d44cf7432a7f09f1ac403727d64", null ],
     [ "Initialize", "classmodels_1_1bmi_1_1_bmi___adapter.html#a43ba9007b2536787eb95a330167068ff", null ],
     [ "Initialize", "classmodels_1_1bmi_1_1_bmi___adapter.html#a48f6705c514c7332edd8d59756ff7ca6", null ],
+    [ "isInitialized", "classmodels_1_1bmi_1_1_bmi___adapter.html#ad2f092a3ad436e555199eba325333b0b", null ],
     [ "SetValue", "classmodels_1_1bmi_1_1_bmi___adapter.html#ae0e047f16b967e6b6cab77d3285add30", null ],
     [ "SetValueAtIndices", "classmodels_1_1bmi_1_1_bmi___adapter.html#a3cecd50be90621a3d47cc811258c5f75", null ],
     [ "Update", "classmodels_1_1bmi_1_1_bmi___adapter.html#a0ecdb1dd0c0545908d7debb56e2c10aa", null ],

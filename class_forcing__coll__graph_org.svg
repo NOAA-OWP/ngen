@@ -13,51 +13,51 @@
 <g id="node1" class="node">
 <title>Node1</title>
 <g id="a_node1"><a xlink:title="Forcing class providing time&#45;series precipiation forcing data to the model.">
-<polygon fill="#bfbfbf" stroke="black" points="421.5,-0.5 421.5,-486.5 558.5,-486.5 558.5,-0.5 421.5,-0.5"/>
+<polygon fill="#bfbfbf" stroke="black" points="415,-0.5 415,-486.5 565,-486.5 565,-0.5 415,-0.5"/>
 <text text-anchor="middle" x="490" y="-474.5" font-family="Helvetica,sans-Serif" font-size="10.00">Forcing</text>
-<polyline fill="none" stroke="black" points="421.5,-467.5 558.5,-467.5 "/>
-<text text-anchor="start" x="429.5" y="-455.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; is_aorc_data</text>
-<text text-anchor="start" x="429.5" y="-444.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; forcing_vector_index</text>
-<text text-anchor="start" x="429.5" y="-433.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; precipitation_rate</text>
-<text text-anchor="start" x="429.5" y="-422.5" font-family="Helvetica,sans-Serif" font-size="10.00">_meters_per_second</text>
-<text text-anchor="start" x="429.5" y="-411.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; air_temperature_fahrenheit</text>
-<text text-anchor="start" x="429.5" y="-400.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; latitude</text>
-<text text-anchor="start" x="429.5" y="-389.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; longitude</text>
-<text text-anchor="start" x="429.5" y="-378.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; catchment_id</text>
-<text text-anchor="start" x="429.5" y="-367.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; day_of_year</text>
-<text text-anchor="start" x="429.5" y="-356.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; start_date_time_epoch</text>
-<text text-anchor="start" x="429.5" y="-345.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; end_date_time_epoch</text>
-<text text-anchor="start" x="429.5" y="-334.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; current_date_time_epoch</text>
-<polyline fill="none" stroke="black" points="421.5,-327.5 558.5,-327.5 "/>
-<text text-anchor="start" x="429.5" y="-315.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Forcing()</text>
-<text text-anchor="start" x="429.5" y="-304.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Forcing()</text>
-<text text-anchor="start" x="429.5" y="-293.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Forcing()</text>
-<text text-anchor="start" x="429.5" y="-282.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_aorc_for_index()</text>
-<text text-anchor="start" x="429.5" y="-271.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_forcing</text>
-<text text-anchor="start" x="429.5" y="-260.5" font-family="Helvetica,sans-Serif" font-size="10.00">_outputs()</text>
-<text text-anchor="start" x="429.5" y="-249.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_converted_value</text>
-<text text-anchor="start" x="429.5" y="-238.5" font-family="Helvetica,sans-Serif" font-size="10.00">_for_param_in_units()</text>
-<text text-anchor="start" x="429.5" y="-227.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_converted_value</text>
-<text text-anchor="start" x="429.5" y="-216.5" font-family="Helvetica,sans-Serif" font-size="10.00">_for_param_in_units()</text>
-<text text-anchor="start" x="429.5" y="-205.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_forcing_output</text>
-<text text-anchor="start" x="429.5" y="-194.5" font-family="Helvetica,sans-Serif" font-size="10.00">_time_begin()</text>
-<text text-anchor="start" x="429.5" y="-183.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_forcing_output</text>
-<text text-anchor="start" x="429.5" y="-172.5" font-family="Helvetica,sans-Serif" font-size="10.00">_time_end()</text>
-<text text-anchor="start" x="429.5" y="-161.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_ts_index_for_time()</text>
-<text text-anchor="start" x="429.5" y="-150.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_value()</text>
-<text text-anchor="start" x="429.5" y="-139.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_value_for_param</text>
-<text text-anchor="start" x="429.5" y="-128.5" font-family="Helvetica,sans-Serif" font-size="10.00">_name()</text>
-<text text-anchor="start" x="429.5" y="-117.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_value_for_param</text>
-<text text-anchor="start" x="429.5" y="-106.5" font-family="Helvetica,sans-Serif" font-size="10.00">_name()</text>
-<text text-anchor="start" x="429.5" y="-95.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ check_forcing_vector</text>
-<text text-anchor="start" x="429.5" y="-84.5" font-family="Helvetica,sans-Serif" font-size="10.00">_index_bounds()</text>
-<text text-anchor="start" x="429.5" y="-73.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_current_hourly</text>
-<text text-anchor="start" x="429.5" y="-62.5" font-family="Helvetica,sans-Serif" font-size="10.00">_precipitation_meters</text>
-<text text-anchor="start" x="429.5" y="-51.5" font-family="Helvetica,sans-Serif" font-size="10.00">_per_second()</text>
-<text text-anchor="start" x="429.5" y="-40.5" font-family="Helvetica,sans-Serif" font-size="10.00">and 16 more...</text>
-<text text-anchor="start" x="429.5" y="-29.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_forcing_field_names()</text>
-<text text-anchor="start" x="429.5" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; read_forcing()</text>
-<text text-anchor="start" x="429.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; read_forcing_aorc()</text>
+<polyline fill="none" stroke="black" points="415,-467.5 565,-467.5 "/>
+<text text-anchor="start" x="423" y="-455.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; is_aorc_data</text>
+<text text-anchor="start" x="423" y="-444.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; forcing_vector_index</text>
+<text text-anchor="start" x="423" y="-433.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; precipitation_rate</text>
+<text text-anchor="start" x="423" y="-422.5" font-family="Helvetica,sans-Serif" font-size="10.00">_meters_per_second</text>
+<text text-anchor="start" x="423" y="-411.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; air_temperature_fahrenheit</text>
+<text text-anchor="start" x="423" y="-400.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; latitude</text>
+<text text-anchor="start" x="423" y="-389.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; longitude</text>
+<text text-anchor="start" x="423" y="-378.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; catchment_id</text>
+<text text-anchor="start" x="423" y="-367.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; day_of_year</text>
+<text text-anchor="start" x="423" y="-356.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; start_date_time_epoch</text>
+<text text-anchor="start" x="423" y="-345.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; end_date_time_epoch</text>
+<text text-anchor="start" x="423" y="-334.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; current_date_time_epoch</text>
+<polyline fill="none" stroke="black" points="415,-327.5 565,-327.5 "/>
+<text text-anchor="start" x="423" y="-315.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Forcing()</text>
+<text text-anchor="start" x="423" y="-304.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Forcing()</text>
+<text text-anchor="start" x="423" y="-293.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Forcing()</text>
+<text text-anchor="start" x="423" y="-282.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_aorc_for_index()</text>
+<text text-anchor="start" x="423" y="-271.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_forcing</text>
+<text text-anchor="start" x="423" y="-260.5" font-family="Helvetica,sans-Serif" font-size="10.00">_outputs()</text>
+<text text-anchor="start" x="423" y="-249.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_converted_value</text>
+<text text-anchor="start" x="423" y="-238.5" font-family="Helvetica,sans-Serif" font-size="10.00">_for_param_in_units()</text>
+<text text-anchor="start" x="423" y="-227.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_converted_value</text>
+<text text-anchor="start" x="423" y="-216.5" font-family="Helvetica,sans-Serif" font-size="10.00">_for_param_in_units()</text>
+<text text-anchor="start" x="423" y="-205.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_forcing_output</text>
+<text text-anchor="start" x="423" y="-194.5" font-family="Helvetica,sans-Serif" font-size="10.00">_time_begin()</text>
+<text text-anchor="start" x="423" y="-183.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_forcing_output</text>
+<text text-anchor="start" x="423" y="-172.5" font-family="Helvetica,sans-Serif" font-size="10.00">_time_end()</text>
+<text text-anchor="start" x="423" y="-161.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_ts_index_for_time()</text>
+<text text-anchor="start" x="423" y="-150.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_value()</text>
+<text text-anchor="start" x="423" y="-139.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_value_for_param</text>
+<text text-anchor="start" x="423" y="-128.5" font-family="Helvetica,sans-Serif" font-size="10.00">_name()</text>
+<text text-anchor="start" x="423" y="-117.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ check_forcing_vector</text>
+<text text-anchor="start" x="423" y="-106.5" font-family="Helvetica,sans-Serif" font-size="10.00">_index_bounds()</text>
+<text text-anchor="start" x="423" y="-95.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_current_hourly</text>
+<text text-anchor="start" x="423" y="-84.5" font-family="Helvetica,sans-Serif" font-size="10.00">_precipitation_meters</text>
+<text text-anchor="start" x="423" y="-73.5" font-family="Helvetica,sans-Serif" font-size="10.00">_per_second()</text>
+<text text-anchor="start" x="423" y="-62.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_next_hourly_precipitation</text>
+<text text-anchor="start" x="423" y="-51.5" font-family="Helvetica,sans-Serif" font-size="10.00">_meters_per_second()</text>
+<text text-anchor="start" x="423" y="-40.5" font-family="Helvetica,sans-Serif" font-size="10.00">and 15 more...</text>
+<text text-anchor="start" x="423" y="-29.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_forcing_field_names()</text>
+<text text-anchor="start" x="423" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; read_forcing()</text>
+<text text-anchor="start" x="423" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; read_forcing_aorc()</text>
 </a>
 </g>
 </g>
@@ -86,7 +86,7 @@
 <!-- Node2&#45;&gt;Node1 -->
 <g id="edge1" class="edge">
 <title>Node2&#45;&gt;Node1</title>
-<path fill="none" stroke="midnightblue" d="M133.35,-546.58C133.9,-546.05 134.45,-545.52 135,-545 230.19,-454.1 348.08,-357.13 421.18,-298.67"/>
+<path fill="none" stroke="midnightblue" d="M133.35,-546.58C133.9,-546.05 134.45,-545.52 135,-545 227.42,-456.75 341.23,-362.78 414.67,-303.88"/>
 <polygon fill="none" stroke="midnightblue" points="130.87,-544.11 126.17,-553.61 135.77,-549.12 130.87,-544.11"/>
 </g>
 <!-- Node3 -->
@@ -105,8 +105,8 @@
 <!-- Node3&#45;&gt;Node1 -->
 <g id="edge2" class="edge">
 <title>Node3&#45;&gt;Node1</title>
-<path fill="none" stroke="#404040" d="M222.58,-594.57C234.86,-570.21 254.03,-534.27 274,-505 316.24,-443.1 370.02,-378.2 413.34,-328.67"/>
-<polygon fill="none" stroke="#404040" points="413.39,-328.62 414.34,-321.48 421.31,-319.61 420.35,-326.76 413.39,-328.62"/>
+<path fill="none" stroke="#404040" d="M222.58,-594.57C234.86,-570.21 254.03,-534.27 274,-505 314.13,-446.19 364.67,-384.68 406.77,-336.21"/>
+<polygon fill="none" stroke="#404040" points="406.92,-336.05 407.85,-328.89 414.8,-327 413.87,-334.15 406.92,-336.05"/>
 <text text-anchor="middle" x="307" y="-513.5" font-family="Helvetica,sans-Serif" font-size="10.00"> &#45;AORC_vector</text>
 </g>
 <!-- Node4 -->
@@ -285,8 +285,8 @@
 <!-- Node8&#45;&gt;Node1 -->
 <g id="edge8" class="edge">
 <title>Node8&#45;&gt;Node1</title>
-<path fill="none" stroke="#404040" d="M771.99,-820.84C793.93,-765.92 834.83,-640.16 795,-545 749.43,-436.12 643.05,-346.7 568.83,-294.49"/>
-<polygon fill="none" stroke="#404040" points="568.44,-294.22 561.23,-294.08 558.58,-287.37 565.79,-287.51 568.44,-294.22"/>
+<path fill="none" stroke="#404040" d="M771.99,-820.84C793.93,-765.92 834.83,-640.16 795,-545 750.73,-439.23 649.08,-351.83 575.27,-299.06"/>
+<polygon fill="none" stroke="#404040" points="574.85,-298.76 567.65,-298.57 565.05,-291.84 572.26,-292.03 574.85,-298.76"/>
 <text text-anchor="middle" x="853" y="-621" font-family="Helvetica,sans-Serif" font-size="10.00"> &#45;forcing_file_name</text>
 </g>
 <!-- Node8&#45;&gt;Node12 -->
@@ -333,8 +333,8 @@
 <!-- Node10&#45;&gt;Node1 -->
 <g id="edge10" class="edge">
 <title>Node10&#45;&gt;Node1</title>
-<path fill="none" stroke="#404040" d="M713.46,-589.36C699.39,-565.7 679.82,-533.21 662,-505 630.98,-455.91 595.8,-402.28 565.37,-356.51"/>
-<polygon fill="none" stroke="#404040" points="565.2,-356.25 558.54,-353.48 558.55,-346.26 565.2,-349.04 565.2,-356.25"/>
+<path fill="none" stroke="#404040" d="M713.46,-589.36C699.39,-565.7 679.82,-533.21 662,-505 633.13,-459.31 600.65,-409.68 571.75,-366.12"/>
+<polygon fill="none" stroke="#404040" points="571.71,-366.05 565.05,-363.27 565.07,-356.06 571.72,-358.84 571.71,-366.05"/>
 <text text-anchor="middle" x="709.5" y="-519" font-family="Helvetica,sans-Serif" font-size="10.00"> &#45;end_date_time</text>
 <text text-anchor="middle" x="709.5" y="-508" font-family="Helvetica,sans-Serif" font-size="10.00">&#45;start_date_time</text>
 </g>
@@ -348,15 +348,15 @@
 <!-- Node12&#45;&gt;Node1 -->
 <g id="edge13" class="edge">
 <title>Node12&#45;&gt;Node1</title>
-<path fill="none" stroke="#404040" d="M593.4,-594.92C586.79,-571.09 576.91,-535.73 568,-505 566.04,-498.25 564.05,-491.4 562.03,-484.49"/>
-<polygon fill="none" stroke="#404040" points="561.98,-484.32 556.45,-479.69 558.6,-472.8 564.13,-477.44 561.98,-484.32"/>
+<path fill="none" stroke="#404040" d="M593.4,-594.92C586.79,-571.09 576.91,-535.73 568,-505 567.37,-502.84 566.74,-500.67 566.11,-498.49"/>
+<polygon fill="none" stroke="#404040" points="566.05,-498.29 560.53,-493.65 562.69,-486.77 568.21,-491.41 566.05,-498.29"/>
 <text text-anchor="middle" x="616" y="-513.5" font-family="Helvetica,sans-Serif" font-size="10.00"> &#45;available_forcings</text>
 </g>
 <!-- Node13&#45;&gt;Node1 -->
 <g id="edge16" class="edge">
 <title>Node13&#45;&gt;Node1</title>
-<path fill="none" stroke="#404040" d="M342.8,-594.93C340.86,-570.79 340.09,-534.98 348,-505 361.93,-452.21 388.67,-398.48 415.22,-353.63"/>
-<polygon fill="none" stroke="#404040" points="415.24,-353.61 414.9,-346.4 421.42,-343.32 421.76,-350.52 415.24,-353.61"/>
+<path fill="none" stroke="#404040" d="M342.8,-594.93C340.86,-570.79 340.09,-534.98 348,-505 360.78,-456.56 384.35,-407.33 408.66,-364.9"/>
+<polygon fill="none" stroke="#404040" points="408.81,-364.63 408.38,-357.44 414.85,-354.26 415.29,-361.46 408.81,-364.63"/>
 <text text-anchor="start" x="348" y="-519" font-family="Helvetica,sans-Serif" font-size="10.00"> &#45;precipitation_rate</text>
 <text text-anchor="middle" x="410" y="-508" font-family="Helvetica,sans-Serif" font-size="10.00">_meters_per_second_vector</text>
 </g>

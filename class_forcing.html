@@ -151,9 +151,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a45e538add006e81f797fcd8ce2f44bd3"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_forcing.html#a45e538add006e81f797fcd8ce2f44bd3">get_value</a> (const std::string &amp;output_name, const time_t &amp;init_time, const long &amp;duration_s, const std::string &amp;output_units) override</td></tr>
 <tr class="memdesc:a45e538add006e81f797fcd8ce2f44bd3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the value of a forcing property for an arbitrary time period, converting units if needed.  <a href="class_forcing.html#a45e538add006e81f797fcd8ce2f44bd3">More...</a><br /></td></tr>
 <tr class="separator:a45e538add006e81f797fcd8ce2f44bd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a86b20b4487c0ec99f157de25a0cfe8d6"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_forcing.html#a86b20b4487c0ec99f157de25a0cfe8d6">get_value_for_param_name</a> (const std::string &amp;name)</td></tr>
-<tr class="memdesc:a86b20b4487c0ec99f157de25a0cfe8d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current value of a forcing param identified by its name.  <a href="class_forcing.html#a86b20b4487c0ec99f157de25a0cfe8d6">More...</a><br /></td></tr>
-<tr class="separator:a86b20b4487c0ec99f157de25a0cfe8d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa8013150906cd10090c62c59c5e8c730"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_forcing.html#aa8013150906cd10090c62c59c5e8c730">get_value_for_param_name</a> (const std::string &amp;name, int index)</td></tr>
 <tr class="memdesc:aa8013150906cd10090c62c59c5e8c730"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current value of a forcing param identified by its name.  <a href="class_forcing.html#aa8013150906cd10090c62c59c5e8c730">More...</a><br /></td></tr>
 <tr class="separator:aa8013150906cd10090c62c59c5e8c730"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1196,43 +1193,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a86b20b4487c0ec99f157de25a0cfe8d6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a86b20b4487c0ec99f157de25a0cfe8d6">&#9670;&nbsp;</a></span>get_value_for_param_name() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">double Forcing::get_value_for_param_name </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>name</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Get the current value of a forcing param identified by its name. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">name</td><td>The name of the forcing param for which the current value is desired. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The particular param's current value. </dd></dl>
-
-</div>
-</div>
 <a id="aa8013150906cd10090c62c59c5e8c730"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa8013150906cd10090c62c59c5e8c730">&#9670;&nbsp;</a></span>get_value_for_param_name() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aa8013150906cd10090c62c59c5e8c730">&#9670;&nbsp;</a></span>get_value_for_param_name()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1269,7 +1231,7 @@ Private Attributes</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">name</td><td>The name of the forcing param for which the current value is desired. </td></tr>
-    <tr><td class="paramname">name</td><td>The applicable forcing time step index for which the value is desired. </td></tr>
+    <tr><td class="paramname">index</td><td>The index of the desired forcing time step from which to obtain the value. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1862,7 +1824,7 @@ Private Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_forcing.html">Forcing</a></li>
-    <li class="footer">Generated on Thu Sep 9 2021 20:05:36 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Fri Sep 17 2021 13:05:26 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

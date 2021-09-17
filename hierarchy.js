@@ -4,7 +4,14 @@ var hierarchy =
     [ "aorc_forcing_data", "structaorc__forcing__data.html", null ],
     [ "Bmi", "struct_bmi.html", null ],
     [ "bmi::Bmi", "classbmi_1_1_bmi.html", [
-      [ "models::bmi::Bmi_Adapter< T >", "classmodels_1_1bmi_1_1_bmi___adapter.html", null ]
+      [ "models::bmi::Bmi_Adapter< C >", "classmodels_1_1bmi_1_1_bmi___adapter.html", [
+        [ "models::bmi::AbstractCLibBmiAdapter< C >", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html", null ]
+      ] ],
+      [ "models::bmi::Bmi_Adapter< T >", "classmodels_1_1bmi_1_1_bmi___adapter.html", [
+        [ "models::bmi::AbstractCLibBmiAdapter< C_Bmi >", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html", [
+          [ "models::bmi::Bmi_C_Adapter", "classmodels_1_1bmi_1_1_bmi___c___adapter.html", null ]
+        ] ]
+      ] ]
     ] ],
     [ "boost::exception", null, [
       [ "add_to_summed_nexus", "structadd__to__summed__nexus.html", null ],
@@ -99,7 +106,6 @@ var hierarchy =
     [ "hymod_params", "structhymod__params.html", null ],
     [ "hymod_state", "structhymod__state.html", null ],
     [ "intermediate_vars", "structintermediate__vars.html", null ],
-    [ "models::bmi::Bmi_C_Adapter", "classmodels_1_1bmi_1_1_bmi___c___adapter.html", null ],
     [ "network::Network", "classnetwork_1_1_network.html", null ],
     [ "network::VertexProperty", "structnetwork_1_1_vertex_property.html", null ],
     [ "Network_Test", "class_network___test.html", [
@@ -143,6 +149,7 @@ var hierarchy =
     [ "std::exception", null, [
       [ "add_to_summed_nexus", "structadd__to__summed__nexus.html", null ],
       [ "completed_time_step", "structcompleted__time__step.html", null ],
+      [ "external::ExternalIntegrationException", "classexternal_1_1_external_integration_exception.html", null ],
       [ "invalid_downstream_request", "structinvalid__downstream__request.html", null ],
       [ "invalid_time_step", "structinvalid__time__step.html", null ],
       [ "models::external::State_Exception", "classmodels_1_1external_1_1_state___exception.html", null ],
