@@ -21,22 +21,21 @@ set(SURFACE_LIB_DESC_CMAKE "External Noah-MP Surface Shared Library")
 # Make sure these are compiled with this directive
 add_compile_definitions(BMI_ACTIVE)
 
-find_package (netCDF COMPONENTS F90 CONFIG)
-if(netCDF_FOUND)
-  message("Found netCDF config package")
+#Use ../../../FindNetCDF.cmake, which looks for config package, pkgconfig, and standard file locations
+#in that order
+find_package (NetCDF COMPONENTS F90)
+set(netCDF_INCLUDE_DIR ${NetCDF_INCLUDE_DIRS} CACHE PATH "NetCDF Include Directory" )
+set(netCDF_C_LIB ${NetCDF_LIBRARIES} CACHE PATH 
+"The path to the C shared object library file, libnetcdf.so or the library name if it can be found by the linker, i.e. netcdf" )
+if(NetCDF_FOUND)
+  #This provides a little diagnostic output, but most importantly, gives cache varabiles
+  #for each piece of the netcdf puzzle that a user might need to directly override
+  #if netcdf isn't configured correctly or cannot be found using the known methods.
+  message("Found netCDF package")
+  message("NetCDF inc: " ${NetCDF_INCLUDE_DIR})
+  message("NetCDF lib: " ${NetCDF_LIBRARIES})
 else()
-  # Try the VTK like FindNetCDF.cmake
-  find_package(NetCDF COMPONENTS F90 MODULE)
-  if(NetCDF_FOUND)
-    message("Found netCDF package")
-    set(netCDF_INCLUDE_DIR ${NetCDF_INCLUDE_DIRS} CACHE PATH "NetCDF Include Directory" )
-    message("NetCDF inc: " ${NetCDF_INCLUDE_DIR})
-    set(netCDF_C_LIB ${NetCDF_LIBRARIES} CACHE PATH 
-    "The path to the C shared object library file, libnetcdf.so or the library name if it can be found by the linker, i.e. netcdf" )
-    message("NetCDF lib: " ${NetCDF_LIBRARIES})
-  else()
-      message(SEND_ERROR "Cound not find NetCDF package")
-  endif()
+  message(SEND_ERROR "Could not find NetCDF, install the depdency or\n 1) Set the NetCDF_DIR to a source build\n 2) set the netCDF* cache variables as appropriate")
 endif()
 # Ensure we can find the netcdf.mod file, leave a cache var that can be set if we can't
 find_path(_netCDF_MOD_PATH "netcdf.mod" ${netCDF_INCLUDE_DIR} REQUIRED NO_CACHE)
