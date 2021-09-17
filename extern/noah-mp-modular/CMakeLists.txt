@@ -29,25 +29,26 @@ else()
   find_package(NetCDF COMPONENTS F90 MODULE)
   if(NetCDF_FOUND)
     message("Found netCDF package")
-    set(netCDF_INCLUDE_DIR ${NetCDF_INCLUDE_DIRS} CACHE PATH "NetCDF Include Directories" )
+    set(netCDF_INCLUDE_DIR ${NetCDF_INCLUDE_DIRS} CACHE PATH "NetCDF Include Directory" )
     message("NetCDF inc: " ${NetCDF_INCLUDE_DIR})
-    set(netCDF_C_LIB ${NetCDF_LIBRARIES} CACHE PATH "NetCDF Libraries to link" )
+    set(netCDF_C_LIB ${NetCDF_LIBRARIES} CACHE PATH 
+    "The path to the C shared object library file, libnetcdf.so or the library name if it can be found by the linker, i.e. netcdf" )
     message("NetCDF lib: " ${NetCDF_LIBRARIES})
   else()
       message(SEND_ERROR "Cound not find NetCDF package")
   endif()
 endif()
 # Ensure we can find the netcdf.mod file, leave a cache var that can be set if we can't
-find_path(netCDF_MOD_PATH "netcdf.mod" ${netCDF_INCLUDE_DIR})
-if(NOT netCDF_MOD_PATH)
-  message(SEND_ERROR "no netcdf fortran module found")
-endif()
+find_path(_netCDF_MOD_PATH "netcdf.mod" ${netCDF_INCLUDE_DIR} REQUIRED NO_CACHE)
+set(netCDF_MOD_PATH ${_netCDF_MOD_PATH} CACHE PATH "Directory containing the netcdf.mod fortran module")
 
 # For some reason the netcdf config.cmake doesn't set the netcdff lib correctly in
 # ${netCDF_Libararies}, so it only links the C lib (netcdf) and not the fortran lib (netcdff)
 # So find that library explicitly and make sure we link with it.
 # also, the FindNetCDF.cmake doesn't seem to do it correctly either.
-find_library(netCDF_FORTRAN_LIB netcdff REQUIRED)
+find_library(_netCDF_FORTRAN_LIB netcdff REQUIRED  NO_CACHE)
+set(netCDF_FORTRAN_LIB ${_netCDF_FORTRAN_LIB} CACHE PATH 
+"The path to the C shared object library file, libnetcdff.so or the library name if it can be found by the linker, i.e. netcdff")
 
 set(MODEL_SOURCE_DIR noah-mp-modular/modules/surface_bmi/src/)
 set(BMI_SOURCE_DIR noah-mp-modular/modules/surface_bmi/bmi/)
