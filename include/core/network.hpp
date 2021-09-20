@@ -28,7 +28,11 @@ namespace network {
     std::string id;
   };
 
-  // lightly modified from https://www.boost.org/doc/libs/1_72_0/boost/graph/topological_sort.hpp
+  /**
+   * @brief Pre-order recording dfs_visitor. Lightly modified from <a href="https://www.boost.org/doc/libs/1_72_0/boost/graph/topological_sort.hpp">boost::topo_sort_visitor</a>.
+   * @tparam OutputIterator Any std::output_iterator . Note that if for instance a std::back_insert_iterator is used, the recorded order will be reversed.
+   * @see <a href="https://www.boost.org/doc/libs/1_72_0/boost/graph/topological_sort.hpp">boost::topo_sort_visitor</a>
+   */
   template < typename OutputIterator >
   struct preorder_visitor : public boost::dfs_visitor<>
   {
