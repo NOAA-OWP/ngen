@@ -57,6 +57,20 @@ Before library files can be built, a CMake build system must be generated.  E.g.
 
 Note that when there is an existing directory, it may sometimes be necessary to clear it and regenerate, especially if any changes were made to the [CMakeLists.txt](CMakeLists.txt) file.
 
+> 🚧 Warning
+> 
+> This module depends on the netCDF libraries for C and Fortran. If your libraries or include files are in a non-standard location, the build system may not be able to find them and it may be necessary to provide one or more of the following variables to `cmake`:
+> 
+> * `netCDF_C_LIB` The path to the C shared object library file, `libnetcdf.so`
+> * `netCDF_FORTRAN_LIB` The path to the Fortran shared object library file, `libnetcdff.so`
+> * `netCDF_INCLUDE_DIR` netCDF Include Directory.
+> * `netCDF_MOD_PATH` Directory containing the `netcdf.mod` Fortran module
+>
+> These can be specified with the `-D` flag like so:
+> ```
+> cmake -DnetCDF_MOD_PATH=/usr/include/openmpi-x86_64/ -B cmake_am_libs -S .
+> ```
+
 After there is build system directory, the shared libraries can be built. For example, the Noah-MP surface bmi shared library file (i.e., the build config's `surfacebmi` target) can be built using:
 
     cmake --build cmake_am_libs --target surfacebmi -- -j 2
