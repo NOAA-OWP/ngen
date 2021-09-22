@@ -202,13 +202,7 @@ namespace network {
           //todo need to worry about validating input???
           //if type isn't found as a prefix, this iterator range should be empty,
           //which is a reasonable semantic
-          NetworkIndexT nindex;
-          if(order == SortOrder::TransposedDepthFirstPreorder){
-            nindex = get_sorted_index(order);
-          } else { // Topological--the default. No "else if" here to avoid compiler warnings about path without return statement.
-            nindex = topo_order;
-          }
-          return nindex | boost::adaptors::reversed // This reverses the return order, not the graph--that's elsewhere!
+          return get_sorted_index(order) | boost::adaptors::reversed
                         | boost::adaptors::transformed([this](int const& i) { return get_id(i); })
                         | boost::adaptors::filtered([type](std::string const& s) { return s.substr(0,3) == type; });
 
