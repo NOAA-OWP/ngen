@@ -280,7 +280,7 @@ namespace network {
          */
         NetworkIndexT topo_order;
 
-        NetworkIndexT dfr_order;
+        NetworkIndexT tdfp_order;
 
         /**
          * @brief Vector of headwater features
@@ -312,8 +312,6 @@ namespace network {
          */
         std::unordered_map<std::string, Graph::vertex_descriptor> descriptor_map;
         
-        const NetworkIndexT& get_dfr_from_headwaters();
-
         const NetworkIndexT& get_sorted_index(SortOrder order = SortOrder::Topological, bool cache = true);
 
     };
