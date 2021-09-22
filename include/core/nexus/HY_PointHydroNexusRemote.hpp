@@ -27,6 +27,8 @@ class HY_PointHydroNexusRemote : public HY_PointHydroNexus
         typedef std::unordered_map <std::string, long> catcment_location_map_t;
 
         HY_PointHydroNexusRemote(std::string nexus_id, Catchments receiving_catchments, catcment_location_map_t loc_map);
+        HY_PointHydroNexusRemote(std::string nexus_id, Catchments receiving_catchments, Catchments contributing_catchments, catcment_location_map_t loc_map);
+
         virtual ~HY_PointHydroNexusRemote();
 
         /** get the request percentage of downstream flow through this nexus at timestep t. If the indicated catchment is not local a async send will be

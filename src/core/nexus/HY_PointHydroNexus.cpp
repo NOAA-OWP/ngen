@@ -34,6 +34,11 @@ HY_PointHydroNexus::HY_PointHydroNexus(std::string nexus_id, Catchments receivin
 
 }
 
+HY_PointHydroNexus::HY_PointHydroNexus(std::string nexus_id, Catchments receiving_catchments, Catchments contributing_catchments) : HY_HydroNexus( nexus_id, receiving_catchments, contributing_catchments), upstream_flows()
+{
+
+}
+
 HY_PointHydroNexus::~HY_PointHydroNexus()
 {
     //dtor
