@@ -121,3 +121,8 @@ data/hydrofabric/huc01_demo/
 .venv
 boost_*
 include/NGenConfig.h
+
+# Items that may be created for Docker-container-based debugging by current helper scripts
+docker/debug_sync_sentinel.txt
+docker/log_debug_sync.txt
+docker/debug_cmake_flags.env
