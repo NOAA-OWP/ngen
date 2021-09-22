@@ -54,6 +54,18 @@ namespace network {
       OutputIterator m_iter;
   };
 
+  /**
+   * @brief Pre-order depth first sort function.
+   * @param g A <a href="https://www.boost.org/doc/libs/1_72_0/libs/graph/doc/VertexListGraph.html">boost::VertexListGraph</a>
+   * @param result Any std::output_iterator . Note that if for instance a std::back_insert_iterator is used, the recorded order will be reversed.
+   * @param params Named params passed to <a href="https://www.boost.org/doc/libs/1_72_0/libs/graph/doc/depth_first_search.html">boost::depth_first_search(G, params)</a>
+   * @tparam VertexListGraph A <a href="https://www.boost.org/doc/libs/1_72_0/libs/graph/doc/VertexListGraph.html">boost::VertexListGraph</a>
+   * @tparam OutputIterator Any std::output_iterator . Note that if for instance a std::back_insert_iterator is used, the recorded order will be reversed.
+   * @tparam P Param type, see <a href="https://www.boost.org/doc/libs/1_72_0/libs/graph/doc/bgl_named_params.html">boost::bgl_named_params</a>
+   * @tparam T Type type, see <a href="https://www.boost.org/doc/libs/1_72_0/libs/graph/doc/bgl_named_params.html">boost::bgl_named_params</a>
+   * @tparam R Rest type, see <a href="https://www.boost.org/doc/libs/1_72_0/libs/graph/doc/bgl_named_params.html">boost::bgl_named_params</a>
+   * @see <a href="https://www.boost.org/doc/libs/1_72_0/boost/graph/topological_sort.hpp">boost::topological_sort(g, result, params)</a>
+   */
   template < typename VertexListGraph, typename OutputIterator, typename P,
     typename T, typename R >
   void df_preorder_sort(VertexListGraph& g, OutputIterator result,
@@ -63,11 +75,16 @@ namespace network {
       depth_first_search(g, params.visitor(PreOrderVisitor(result)));
   }
 
+  /**
+   * @brief Default named params wrapper (passes no named params) for df_preorder_sort(VertexListGraph &g, OutputIterator result, const boost::bgl_named_params< P, T, R > &params)
+   * @tparam VertexListGraph A <a href="https://www.boost.org/doc/libs/1_72_0/libs/graph/doc/VertexListGraph.html">boost::VertexListGraph</a>
+   * @tparam OutputIterator Any std::output_iterator . Note that if for instance a std::back_insert_iterator is used, the recorded order will be reversed.
+   */ 
   template < typename VertexListGraph, typename OutputIterator >
   void df_preorder_sort(VertexListGraph& g, OutputIterator result)
   {
       df_preorder_sort(
-          g, result, boost::bgl_named_params< int, boost::buffer_param_t >(0)); // bogus
+          g, result, boost::bgl_named_params< int, boost::buffer_param_t >(0)); // no additional named params
   }
 
   /**
