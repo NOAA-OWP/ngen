@@ -21,11 +21,10 @@ void MPI_Handle_Error(int status)
     }
 }
 
-HY_PointHydroNexusRemote::HY_PointHydroNexusRemote(std::string nexus_id, Catchments receiving_catchments, catcment_location_map_t loc_map)
-    : HY_PointHydroNexus(nexus_id, receiving_catchments),
-      catchment_id_to_mpi_rank(loc_map)
+HY_PointHydroNexusRemote::HY_PointHydroNexusRemote(std::string nexus_id, Catchments receiving_catchments, Catchments contributing_catchments, catcment_location_map_t loc_map)
+    : HY_PointHydroNexus(nexus_id, receiving_catchments, contributing_catchments),
+        catchment_id_to_mpi_rank(loc_map)
 {
-
    int count = 3;
    const int array_of_blocklengths[3] = { 1, 1, 1};
    const MPI_Aint array_of_displacements[3] = { 0, sizeof(long), sizeof(long) + sizeof(long) };
@@ -36,6 +35,12 @@ HY_PointHydroNexusRemote::HY_PointHydroNexusRemote(std::string nexus_id, Catchme
    MPI_Type_commit(&time_step_and_flow_type);
 
    MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
+}
+
+HY_PointHydroNexusRemote::HY_PointHydroNexusRemote(std::string nexus_id, Catchments receiving_catchments, catcment_location_map_t loc_map)
+    : HY_PointHydroNexusRemote(nexus_id, receiving_catchments, Catchments(), loc_map)
+{
+   
 }
 
 HY_PointHydroNexusRemote::~HY_PointHydroNexusRemote()
