@@ -189,3 +189,21 @@ const NetworkIndexT& Network::get_dfr_from_headwaters(){
   return this->dfr_order;
 }
 
+const NetworkIndexT& Network::get_sorted_index(SortOrder order, bool cache){
+  if (order == SortOrder::TransposedDepthFirstPreorder) {
+    if (!this->dfr_order.empty()){
+      return this->dfr_order;
+    }
+    
+    //TODO: change behavior for cache == false... don't mutate.
+    auto r = make_reverse_graph(this->graph);
+    df_preorder_sort(r , std::back_inserter(this->dfr_order),
+                    boost::vertex_index_map(get(boost::vertex_index, this->graph)));
+
+    return this->dfr_order;
+  } else {
+    // we know this has already been cached by the constructor
+    return this->topo_order;
+  }
+}
+

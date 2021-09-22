@@ -19,6 +19,21 @@
 
 namespace network {
   /**
+   * @brief Selector for using different traversal orders for linear return
+   */
+  enum class SortOrder {
+    /**
+     * @brief Topological order. Usually the default. Good for dependency ordering. This is provided directly by <a href="">boost::topological_sort</a>.
+     */
+    Topological,
+    /**
+     * @brief A depth-first, pre-order recorded traversal on a transposed graph. Good for extracting sets of highly contiguous nodes. 
+     * Transposed because the hydrograph "tree" is actually most like an inverted tree structure, with headwaters as the "root" nodes
+     * and coastal drainage as the "leaves". This transposed traversal lets us traverse upstream instead of downstream.
+     */
+    TransposedDepthFirstPreorder
+  };
+  /**
    * @brief The structure defining graph vertex properties.
    * 
    * @var VertexProperty::id
@@ -166,21 +181,6 @@ namespace network {
          */
         NetworkIndexT::const_reverse_iterator end();
         
-        auto filter_topo(std::string type){
-          //todo need to worry about validating input???
-          //if type isn't found as a prefix, this iterator range should be empty,
-          //which is a reasonable semantic
-          return topo_order | boost::adaptors::reversed
-                            | boost::adaptors::transformed([this](int const& i) { return get_id(i); })
-                            | boost::adaptors::filtered([type](std::string const& s) { return s.substr(0,3) == type; });
-        }
-
-        auto filter_dfr(std::string type){
-          return get_dfr_from_headwaters() | boost::adaptors::reversed // This reverses the return order, not the graph--that's elsewhere!
-                            | boost::adaptors::transformed([this](int const& i) { return get_id(i); })
-                            | boost::adaptors::filtered([type](std::string const& s) { return s.substr(0,3) == type; });
-        }
-        
         /**
          * @brief Provides a boost transform_iterator, filtered by @p type , to the topologically ordered graph vertex string id's
          * 
@@ -193,12 +193,25 @@ namespace network {
          * }
          * @endcode
          * 
-         * @param type the type of feature to filter for, i.e. 'cat', 'nex'
+         * @param type The type of feature to filter for, i.e. 'cat', 'nex'
+         * @param order What order to return results in
          * @return auto 
          */
-        auto filter(std::string type)
+        auto filter(std::string type, SortOrder order = SortOrder::Topological)
         {
-          return filter_topo(type);
+          //todo need to worry about validating input???
+          //if type isn't found as a prefix, this iterator range should be empty,
+          //which is a reasonable semantic
+          NetworkIndexT nindex;
+          if(order == SortOrder::TransposedDepthFirstPreorder){
+            nindex = get_sorted_index(order);
+          } else { // Topological--the default. No "else if" here to avoid compiler warnings about path without return statement.
+            nindex = topo_order;
+          }
+          return nindex | boost::adaptors::reversed // This reverses the return order, not the graph--that's elsewhere!
+                        | boost::adaptors::transformed([this](int const& i) { return get_id(i); })
+                        | boost::adaptors::filtered([type](std::string const& s) { return s.substr(0,3) == type; });
+
         }
         /**
          * @brief Get the string id of a given graph vertex_descriptor @p idx
@@ -306,6 +319,9 @@ namespace network {
         std::unordered_map<std::string, Graph::vertex_descriptor> descriptor_map;
         
         const NetworkIndexT& get_dfr_from_headwaters();
+
+        const NetworkIndexT& get_sorted_index(SortOrder order = SortOrder::Topological, bool cache = true);
+
     };
 }
 
