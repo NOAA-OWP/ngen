@@ -177,30 +177,18 @@ std::vector<std::string> Network::get_destination_ids(std::string id){
   return ids;
 }
 
-const NetworkIndexT& Network::get_dfr_from_headwaters(){
-  if (!this->dfr_order.empty()){
-    return this->dfr_order;
-  }
-  
-  auto r = make_reverse_graph(this->graph);
-  df_preorder_sort(r , std::back_inserter(this->dfr_order),
-                   boost::vertex_index_map(get(boost::vertex_index, this->graph)));
-
-  return this->dfr_order;
-}
-
 const NetworkIndexT& Network::get_sorted_index(SortOrder order, bool cache){
   if (order == SortOrder::TransposedDepthFirstPreorder) {
-    if (!this->dfr_order.empty()){
-      return this->dfr_order;
+    if (!this->tdfp_order.empty()){
+      return this->tdfp_order;
     }
     
     //TODO: change behavior for cache == false... don't mutate.
     auto r = make_reverse_graph(this->graph);
-    df_preorder_sort(r , std::back_inserter(this->dfr_order),
+    df_preorder_sort(r , std::back_inserter(this->tdfp_order),
                     boost::vertex_index_map(get(boost::vertex_index, this->graph)));
 
-    return this->dfr_order;
+    return this->tdfp_order;
   } else {
     // we know this has already been cached by the constructor
     return this->topo_order;
