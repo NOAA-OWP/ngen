@@ -138,7 +138,7 @@ void generate_partitions(network::Network& network, const int& num_partitions, c
 
     std::string up_nexus;
     std::string down_nexus;
-    for(const auto& catchment : network.filter_dfr("cat")){
+    for(const auto& catchment : network.filter("cat", network::SortOrder::TransposedDepthFirstPreorder)){
             if (partition < remainder)
                 partition_size = partition_size_plus1;
             else
