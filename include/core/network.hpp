@@ -312,6 +312,11 @@ namespace network {
          */
         std::unordered_map<std::string, Graph::vertex_descriptor> descriptor_map;
         
+        /**
+         * @brief Get an index of the graph in a particular order.
+         * @param order The desired order
+         * @param cache NOT YET IMPLEMENTED. Whether to cache the generated index. Default is true.
+         */
         const NetworkIndexT& get_sorted_index(SortOrder order = SortOrder::Topological, bool cache = true);
 
     };
