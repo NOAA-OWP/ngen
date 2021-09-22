@@ -339,7 +339,7 @@ TEST_F(Network_Test2, test_dfr_filter)
   // should appear *immediately* after cat-2, though the order of cat-0 and cat-1 is undefined.
   // Likewise the order of cat-2 vis-a-vis cat-3 and cat-4 are undefined because they are the same
   // tree level.
-  auto catchments = n.filter_dfr("cat");
+  auto catchments = n.filter("cat", network::SortOrder::TransposedDepthFirstPreorder);
   //for(const auto& id : catchments) std::cout<<"id: "<<id<<std::endl;
 
   auto cat0_it = std::find(catchments.begin(), catchments.end(), "cat-0");
