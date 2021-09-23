@@ -92,14 +92,14 @@ endif()
 
 #### Python stuff
 # First, define NGEN_ACTIVATE_PYTHON, if not already defined
-#   Use NGEN_ACTIVATE_PYTHON environment variable if available, or default to true
+#   Use NGEN_ACTIVATE_PYTHON environment variable if available, or default to false
 if (NOT (DEFINED NGEN_ACTIVATE_PYTHON))
     message(INFO " NGEN_ACTIVATE_PYTHON not defined")
     if (DEFINED ENV{NGEN_ACTIVATE_PYTHON})
         message(INFO " set as $ENV{NGEN_ACTIVATE_PYTHON}")
         set(NGEN_ACTIVATE_PYTHON $ENV{NGEN_ACTIVATE_PYTHON})
     else()
-        set(NGEN_ACTIVATE_PYTHON true)
+        set(NGEN_ACTIVATE_PYTHON false)
     endif()
 endif()
 
