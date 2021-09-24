@@ -23,15 +23,11 @@ for x in range(10):
     # Create test case inputs from random values ###########
     model.set_value('input_var_1',random.uniform(2, 10))  ##
     model.set_value('input_var_2',random.uniform(1, 4))   ##
-    if random.random() < 0.5:                             ##
-        dt = 3600                                         ##
-    else:                                                 ##
-        dt = 3600*(random.uniform(0.5,1.5))               ##
     ########################################################
 
     #########################################
     # UPDATE THE MODEL WITH THE NEW INPUTS ##
-    model.update(dt)   ######################
+    model.update()     ######################
     #########################################
 
     # PRINT THE MODEL RESULTS FOR THIS TIME STEP#################################################

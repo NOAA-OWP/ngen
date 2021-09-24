@@ -106,15 +106,15 @@ class bmi_model(Bmi):
         self.model = model.ngen_model(self._values.keys())
 
     #------------------------------------------------------------ 
-    def update(self, dt):
-
+    def update(self):
+        dt = self._values['current_model_time'] + self._values['time_step_size']
         self.model.run(self._values, dt)
     
     #------------------------------------------------------------ 
-    def update_until(self, dt, last_update):
+    def update_until(self, last_update):
         first_update=self._values['current_model_time']
         for t in range(first_update, last_update, self._values['time_step_size']):
-            self.update(dt)
+            self.update()
     #------------------------------------------------------------    
     def finalize( self ):
         """Finalize model."""

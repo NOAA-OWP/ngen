@@ -360,8 +360,7 @@ print ("\nCONTROL FUNCTIONS\n*****************")
 #-------------------------------------------------------------------
 # update()
 try:
-    dt=3600
-    bmi.update(dt)
+    bmi.update()
     # go ahead and print time to show iteration
     # TODO: this will fail if get_current_time() does
     print (" updating...        time " + str(bmi.get_current_time()))
@@ -371,10 +370,8 @@ except:
 
 #-------------------------------------------------------------------
 # update_until()
-bmi.update_until(dt=dt, last_update=36000)
 try:
-    dt=3600
-    bmi.update_until(dt=dt, last_update=36000)
+    bmi.update_until(last_update=36000)
     # go ahead and print time to show iteration
     # TODO: this will fail if get_current_time() does
     print (" updating until...  time ", bmi.get_current_time())
