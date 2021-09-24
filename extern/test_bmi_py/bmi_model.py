@@ -111,10 +111,10 @@ class bmi_model(Bmi):
         self.model.run(self._values, dt)
     
     #------------------------------------------------------------ 
-    def update_until(self, last_update):
+    def update_until(self, dt, last_update):
         first_update=self._values['current_model_time']
         for t in range(first_update, last_update, self._values['time_step_size']):
-            self.update()
+            self.update(dt)
     #------------------------------------------------------------    
     def finalize( self ):
         """Finalize model."""
