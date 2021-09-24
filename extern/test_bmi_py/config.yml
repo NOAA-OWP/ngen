@@ -1,6 +1,3 @@
-time_step: '1 hour'
+time_step_seconds: 3600
 initial_time: 0
-final_time: 100
 verbose: 1
-m: 0.5
-b: 1
