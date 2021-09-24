@@ -115,7 +115,7 @@ class bmi_model(Bmi):
             self.update()
             if self.t > self.cfg_bmi['final_time']:
                 print('Ended update until because the final time has been reached.')
-
+                break
     #------------------------------------------------------------    
     def finalize( self ):
         """Finalize model."""
