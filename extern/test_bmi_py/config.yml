@@ -1,6 +1,6 @@
 time_step: '1 hour'
 initial_time: 0
-final_tile: 100
+final_time: 100
 verbose: 1
 m: 0.5
 b: 1
