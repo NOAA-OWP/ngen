@@ -20,11 +20,21 @@ print('\n')
 print('model time', 'input 1', 'input 2', 'output 1', 'output 2', 'output 3')
 for x in range(10):
 
-    model.set_value('input_var_1',random.uniform(2, 10))
-    model.set_value('input_var_1',random.uniform(1, 4))
+    # Create test case inputs from random values ###########
+    model.set_value('input_var_1',random.uniform(2, 10))  ##
+    model.set_value('input_var_2',random.uniform(1, 4))   ##
+    if random.random() < 0.5:                             ##
+        dt = 3600                                         ##
+    else:                                                 ##
+        dt = 3600*(random.uniform(0.5,1.5))               ##
+    ########################################################
 
-    model.update()
+    #########################################
+    # UPDATE THE MODEL WITH THE NEW INPUTS ##
+    model.update(dt)   ######################
+    #########################################
 
+    # PRINT THE MODEL RESULTS FOR THIS TIME STEP#################################################
     print('{:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}'.format(model.get_current_time(), 
                                                              model.get_value('input_var_1'), 
                                                              model.get_value('input_var_2'),

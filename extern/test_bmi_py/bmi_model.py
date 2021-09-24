@@ -106,9 +106,9 @@ class bmi_model(Bmi):
         self.model = model.ngen_model(self._values.keys())
 
     #------------------------------------------------------------ 
-    def update(self):
+    def update(self, dt):
 
-        self.model.run(self._values, self._values['time_step_size'])
+        self.model.run(self._values, dt)
     
     #------------------------------------------------------------ 
     def update_until(self, last_update):
