@@ -39,12 +39,12 @@ class bmi_model(Bmi):
     #---------------------------------------------
     # Input variable names (CSDMS standard names)
     #---------------------------------------------
-    _input_var_names = ['model_input']
+    _input_var_names = ['input_var_1', 'input_var_2']
 
     #---------------------------------------------
     # Output variable names (CSDMS standard names)
     #---------------------------------------------
-    _output_var_names = ['model_output']
+    _output_var_names = ['output_var_1', 'output_var_2', 'output_var_3']
 
     #------------------------------------------------------
     # Create a Python dictionary that maps CSDMS Standard
@@ -53,16 +53,17 @@ class bmi_model(Bmi):
     #     since the input variable names could come from any forcing...
     #------------------------------------------------------
     #_var_name_map_long_first = {
-    _var_name_units_map = {'model_input':['x','-'],
-                           'model_output':['y','-'],
-                           'linear_slope':['m','-'],
-                           'linear_intercept':['b','-']
+    _var_name_units_map = {'input_var_1':['input_var_1','-'],
+                           'input_var_2':['input_var_2','-'],
+                           'output_var_1':['output_var_1','-'],
+                           'output_var_2':['output_var_2','-'],
+                           'output_var_3':['output_var_3','-'],
                             }
 
     #------------------------------------------------------
-    # A list of static attributes. Not all these need to be used.
+    # A list of static attributes/parameters.
     #------------------------------------------------------
-    _model_parameters_list = ['m','b']
+    _model_parameters_list = []
 
     #------------------------------------------------------------
     #------------------------------------------------------------
@@ -95,27 +96,25 @@ class bmi_model(Bmi):
             self._values[model_output] = 0.0
         print(self._values)
 
-        # ------------- Initialize a model ------------------------------#
-        self.model = model.ngen_model(m=self._values['linear_slope'], 
-                                      b=self._values['linear_intercept'])
-
         # ------------- Set time to initial value -----------------------#
-        self.t = self.cfg_bmi['initial_time']
+        self._values['current_model_time'] = self.cfg_bmi['initial_time']
+        
+        # ------------- Set time step size -----------------------#
+        self._values['time_step_size'] = self.cfg_bmi['time_step_seconds']
+
+        # ------------- Initialize a model ------------------------------#
+        self.model = model.ngen_model(self._values.keys())
 
     #------------------------------------------------------------ 
     def update(self):
 
-        self._values['model_output'] = self.model.run_model(self._values['model_input'])
-        self.t += 1
+        self.model.run(self._values, self._values['time_step_size'])
     
     #------------------------------------------------------------ 
     def update_until(self, last_update):
-        first_update=self.t
-        for t in range(first_update, last_update):
+        first_update=self._values['current_model_time']
+        for t in range(first_update, last_update, self._values['time_step_size']):
             self.update()
-            if self.t > self.cfg_bmi['final_time']:
-                print('Ended update until because the final time has been reached.')
-                break
     #------------------------------------------------------------    
     def finalize( self ):
         """Finalize model."""
@@ -258,7 +257,7 @@ class bmi_model(Bmi):
     #-------------------------------------------------------------------
     def get_current_time( self ):
 
-        return self.t
+        return self._values['current_model_time']
 
     #-------------------------------------------------------------------
     def get_time_step( self ):
