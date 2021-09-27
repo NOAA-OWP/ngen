@@ -4,6 +4,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <memory>
 #include "Catchment_Formulation.hpp"
 #include "ForcingProvider.hpp"
 
@@ -17,6 +18,7 @@
 // Then the optional
 #define BMI_REALIZATION_CFG_PARAM_OPT__FORCING_FILE "forcing_file"
 #define BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES "variables_names_map"
+// TODO: change this (and output_header_fields) to something like output_file_variables to distinguish from BMI output variables
 #define BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS "output_variables"
 #define BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS "output_header_fields"
 #define BMI_REALIZATION_CFG_PARAM_OPT__ALLOW_EXCEED_END "allow_exceed_end_time"
@@ -122,14 +124,29 @@ namespace realization {
         }
 
         /**
+         * Get a header line appropriate for a file made up of entries from this type's implementation of
+         * ``get_output_line_for_timestep``.
+         *
+         * Note that like the output generating function, this line does not include anything for time step.
+         *
+         * @return An appropriate header line for this type.
+         */
+        string get_output_header_line(string delimiter) override {
+            return boost::algorithm::join(get_output_header_fields(), delimiter);
+        }
+
+        /**
          * Get the names of variables in formulation output.
          *
          * Get the names of the variables to include in the output from this formulation, which should be some ordered
-         * subset of the output variables from the model.
+         * subset of the BMI module output variables accessible to this instance.
          *
          * @return
          */
-        virtual const vector<std::string> &get_output_variable_names() const = 0;
+        // TODO: rename this function to make it more clear it is FORMULATION output contents, not simply BMI variables
+        const vector<string> &get_output_variable_names() const {
+            return output_variable_names;
+        }
 
         const vector<std::string> &get_required_parameters() override {
             return REQUIRED_PARAMETERS;
@@ -179,6 +196,18 @@ namespace realization {
             output_header_fields = output_headers;
         }
 
+        /**
+         * Set the names of variables in formulation output.
+         *
+         * Set the names of the variables to include in the output from this formulation, which should be some ordered
+         * subset of the output variables from the model.
+         *
+         * @param out_var_names the names of variables in formulation output, in the order they should appear.
+         */
+        void set_output_variable_names(const vector<string> &out_var_names) {
+            output_variable_names = out_var_names;
+        }
+
     private:
 
         std::string bmi_main_output_var;
@@ -188,6 +217,11 @@ namespace realization {
          * `output_variable_names`.
          */
         std::vector<std::string> output_header_fields;
+        /**
+         * Names of the variables to include in the output from this formulation, which will be some ordered subset of
+         * the BMI module output variables accessible to the instance.
+         */
+        std::vector<std::string> output_variable_names;
 
         std::vector<std::string> OPTIONAL_PARAMETERS = {
                 BMI_REALIZATION_CFG_PARAM_OPT__FORCING_FILE,
