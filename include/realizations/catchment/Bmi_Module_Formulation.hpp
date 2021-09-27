@@ -223,6 +223,7 @@ namespace realization {
          * config's output variable mapping.
          *
          * @return The collection of forcing output property names this instance can provide.
+         * @see ForcingProvider
          */
         const vector<std::string> &get_available_forcing_outputs() override {
             if (is_model_initialized() && available_forcings.empty()) {
@@ -248,7 +249,7 @@ namespace realization {
          */
         time_t get_forcing_output_time_begin(const std::string &forcing_name) override {
             // TODO: come back and implement if actually necessary for this type; for now don't use
-            throw runtime_error("Bmi_Singular_Formulation does not yet implement get_forcing_output_time_begin");
+            throw runtime_error("Bmi_Modular_Formulation does not yet implement get_forcing_output_time_begin");
         }
 
         /**
@@ -262,7 +263,7 @@ namespace realization {
          */
         time_t get_forcing_output_time_end(const std::string &output_name) override {
             // TODO: come back and implement if actually necessary for this type; for now don't use
-            throw runtime_error("Bmi_Singular_Formulation does not yet implement get_forcing_output_time_end");
+            throw runtime_error("Bmi_Modular_Formulation does not yet implement get_forcing_output_time_end");
         }
 
         const vector<std::string> &get_required_parameters() override {
@@ -324,6 +325,7 @@ namespace realization {
          * @param output_units The expected units of the desired output value.
          * @return The value of the forcing property for the described time period, with units converted if needed.
          * @throws std::out_of_range If data for the time period is not available.
+         * @see ForcingProvider::get_value
          */
         double get_value(const std::string &output_name, const time_t &init_time, const long &duration_s,
                          const std::string &output_units) override
@@ -392,12 +394,13 @@ namespace realization {
          * It may be the case that forcing data is needed for some discretization different than the forcing time step.
          * This aspect must be known in such cases to perform the appropriate value interpolation.
          *
-         * For this type, all outputs are of this type.
+         * For instances of this type, all output forcings fall under this category.
          *
          * @param name The name of the forcing property for which the current value is desired.
          * @return Whether the property's value is an aggregate sum, which is always ``true`` for this type.
          */
         bool is_property_sum_over_time_step(const std::string& name) override {
+            // TODO: verify with some kind of proof that "always true" is appropriate
             return true;
         }
 
