@@ -96,7 +96,7 @@ There are some special BMI formulation config parameters which are required in c
 ### Optional Parameters
 * `variables_names_map`
   * can specify a mapping of model variable names (input or output) to supported standard names
-  * supported standard names are listed in the [Bmi_Formulation.hpp](..include/realizations/catchment/Bmi_Formulation.hpp) file
+  the [Bmi_Formulation.hpp](..include/realizations/catchment/Bmi_Formulation.hpp) file has a section where several supported standard names are defined and notes  
   * this can be useful in particular for informing the framework how to provide the input a model needs for execution
   * e.g.,  `"variables_names_map": {"model_variable_name": "standard_variable_name"}`
 * `output_variables`
