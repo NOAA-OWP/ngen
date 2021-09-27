@@ -494,30 +494,6 @@ namespace realization {
         }
 
         /**
-         * Get a header line appropriate for a file made up of entries from this type's implementation of
-         * ``get_output_line_for_timestep``.
-         *
-         * Note that like the output generating function, this line does not include anything for time step.
-         *
-         * @return An appropriate header line for this type.
-         */
-        std::string get_output_header_line(std::string delimiter) override {
-            return boost::algorithm::join(get_output_header_fields(), delimiter);
-        }
-
-        /**
-         * Get the names of variables in formulation output.
-         *
-         * Get the names of the variables to include in the output from this formulation, which should be some ordered
-         * subset of the output variables from the model.
-         *
-         * @return
-         */
-        const vector<std::string> &get_output_variable_names() const override {
-            return output_variable_names;
-        }
-
-        /**
          * Get value for some BMI model variable.
          *
          * This function assumes that the given variable, while returned by the model within an array per the BMI spec,
@@ -788,18 +764,6 @@ namespace realization {
             }
         }
 
-        /**
-         * Set the names of variables in formulation output.
-         *
-         * Set the names of the variables to include in the output from this formulation, which should be some ordered
-         * subset of the output variables from the model.
-         *
-         * @param out_var_names the names of variables in formulation output, in the order they should appear.
-         */
-        void set_output_variable_names(const vector<std::string> &out_var_names) {
-            output_variable_names = out_var_names;
-        }
-
         /** The delta of the last model update execution (typically, this is time step size). */
         time_step_t last_model_response_delta = 0;
         /** The epoch time of the model at the beginning of its last update. */
@@ -835,11 +799,6 @@ namespace realization {
         /** Whether the backing model uses/reads the forcing file directly for getting input data. */
         bool bmi_using_forcing_file;
         std::string forcing_file_path;
-        /**
-         * Names of the variables to include in the output from this realization, which should be some ordered subset of
-         * the output variables from the model.
-         */
-        std::vector<std::string> output_variable_names;
         bool model_initialized = false;
 
         std::vector<std::string> OPTIONAL_PARAMETERS = {
