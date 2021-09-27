@@ -32,8 +32,8 @@
 
 // Taken from the CSDMS Standard Names list
 // TODO: need to add these in for anything BMI model input or output variables we need to know how to recognize
-#define CSDMS_STD_NAME_RAIN_RATE "atmosphere_water__rainfall_volume_flux"
 #define CSDMS_STD_NAME_POTENTIAL_ET "water_potential_evaporation_flux"
+/* *************** See also the Forcing.h file for several CSDMS Standard Names definitions *************** */
 
 // Forward declaration to provide access to protected items in testing
 class Bmi_Formulation_Test;
