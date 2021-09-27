@@ -5,7 +5,6 @@
 #include <vector>
 #include "Bmi_Formulation.hpp"
 #include "Bmi_Module_Formulation.hpp"
-#include "Bmi_C_Formulation.hpp"
 #include "bmi.hpp"
 #include "ForcingProvider.hpp"
 
@@ -17,12 +16,12 @@ namespace realization {
 
     /**
      * Abstraction of a formulation with multiple backing model object that implements the BMI.
-     *
-     * @tparam M The type for the backing BMI model object.
      */
     class Bmi_Multi_Formulation : public Bmi_Formulation {
 
     public:
+
+        typedef std::shared_ptr<Bmi_Module_Formulation<bmi::Bmi>> nested_module_ptr;
 
         /**
          * Minimal constructor for objects initialize using the Formulation_Manager and subsequent calls to
@@ -36,6 +35,18 @@ namespace realization {
                 : Bmi_Formulation(move(id), move(forcing_config), output_stream) { };
 
         virtual ~Bmi_Multi_Formulation() {};
+
+        /**
+         * Perform ET (or PET) calculations.
+         *
+         * This function simply defers to the analogous function of the first of this instance's nested modules.
+         *
+         * @return The ET calculation from the first of this instance's BMI nested modules.
+         */
+        double calc_et() override {
+            // TODO: add better way of determining which module to use for this
+            return modules[0]->calc_et();
+        }
 
         void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr) override {
             geojson::PropertyMap options = this->interpret_parameters(config, global);
@@ -62,6 +73,22 @@ namespace realization {
          * @return Whether a model may perform updates beyond its ``end_time``.
          */
         const bool &get_allow_model_exceed_end_time() const override;
+
+        /**
+         * Get the collection of forcing output property names this instance can provide.
+         *
+         * For this type, this is the collection of the names/aliases of the BMI output variables for nested modules;
+         * i.e., the config-mapped alias for the variable when set in the realization config, or just the name when no
+         * alias was included in the configuration.
+         *
+         * This is part of the @ref ForcingProvider interface.  This interface must be implemented for items of this
+         * type to be usable as "forcing" providers for situations when some other object needs to receive as an input
+         * (i.e., one of its forcings) a data property output from this object.
+         *
+         * @return The collection of forcing output property names this instance can provide.
+         * @see ForcingProvider
+         */
+        const vector<std::string> &get_available_forcing_outputs() override;
 
         /**
         * Get the input variables of the first nested BMI model.
@@ -187,17 +214,11 @@ namespace realization {
             return availableData[forcing_name]->get_forcing_output_time_begin(forcing_name);
         }
 
-        /**
-         * Get the names of variables in formulation output.
-         *
-         * Get the names of the variables to include in the output from this formulation, which should be some ordered
-         * subset of the output variables from the model.
-         *
-         * For this type, these will be the analogous values for the last of the contained modules.
-         *
-         * @return
-         */
-        const vector<string> &get_output_variable_names() const override;
+        string get_formulation_type() override {
+            return "bmi_multi";
+        }
+
+        string get_output_line_for_timestep(int timestep, std::string delimiter) override;
 
         double get_response(time_step_t t_index, time_step_t t_delta) override;
 
@@ -271,6 +292,29 @@ namespace realization {
         bool is_model_initialized() override;
 
         /**
+         * Get whether a property's per-time-step values are each an aggregate sum over the entire time step.
+         *
+         * Certain properties, like rain fall, are aggregated sums over an entire time step.  Others, such as pressure,
+         * are not such sums and instead something else like an instantaneous reading or an average value.
+         *
+         * It may be the case that forcing data is needed for some discretization different than the forcing time step.
+         * This aspect must be known in such cases to perform the appropriate value interpolation.
+         *
+         * For instances of this type, all output forcings fall under this category.
+         *
+         * This is part of the @ref ForcingProvider interface.  This interface must be implemented for items of this
+         * type to be usable as "forcing" providers for situations when some other object needs to receive as an input
+         * (i.e., one of its forcings) a data property output from this object.
+         *
+         * @param name The name of the forcing property for which the current value is desired.
+         * @return Whether the property's value is an aggregate sum.
+         */
+        bool is_property_sum_over_time_step(const string &name) override {
+            // TODO: verify with some kind of proof that "always true" is appropriate
+            return true;
+        }
+
+        /**
          * Get whether this time step goes beyond this formulations (i.e., any of it's modules') end time.
          *
          * @param t_index The time step index in question.
@@ -300,10 +344,19 @@ namespace realization {
 
     private:
 
-        std::vector<std::shared_ptr<Bmi_Module_Formulation<bmi::Bmi>>> modules;
+        /** The set of available "forcings" (output variables, plus their mapped aliases) this instance can provide. */
+        std::vector<std::string> available_forcings;
         /**
-         * Per-module maps (order as in @ref modules) of configuration-mapped names to BMI variable names.
+         * Whether the @ref Bmi_Formulation::output_variable_names value is just the analogous value from this
+         * instance's final nested module.
          */
+        bool is_out_vars_from_last_mod = false;
+        /** The nested BMI modules composing this multi-module formulation, in their order of execution. */
+        std::vector<nested_module_ptr> modules;
+        /**
+         * Per-module maps (ordered as in @ref modules) of configuration-mapped names to BMI variable names.
+         */
+        // TODO: confirm that we actually need this for something
         std::vector<std::shared_ptr<std::map<std::string, std::string>>> module_variable_maps;
         /** Index value (0-based) of the time step that will be processed by the next update of the model. */
         int next_time_step_index = 0;
