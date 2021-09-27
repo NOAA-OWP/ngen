@@ -14,6 +14,7 @@
 #include "Simple_Lumped_Model_Realization.hpp"
 #include "Bmi_C_Formulation.hpp"
 #include "Bmi_Fortran_Formulation.hpp"
+#include "Bmi_Multi_Formulation.hpp"
 
 #ifdef NGEN_LSTM_TORCH_LIB_ACTIVE
     #include "LSTM_Realization.hpp"
@@ -36,6 +37,7 @@ namespace realization {
 #ifdef NGEN_BMI_FORTRAN_ACTIVE
         {"bmi_fortran", create_formulation_constructor<Bmi_Fortran_Formulation>()},
 #endif // NGEN_BMI_FORTRAN_ACTIVE
+        {"bmi_multi", create_formulation_constructor<Bmi_Multi_Formulation>()},
         {"tshirt", create_formulation_constructor<Tshirt_Realization>()},
         {"tshirt_c", create_formulation_constructor<Tshirt_C_Realization>()},
         {"simple_lumped", create_formulation_constructor<Simple_Lumped_Model_Realization>()}
