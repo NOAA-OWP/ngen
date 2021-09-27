@@ -21,3 +21,8 @@
 	path = extern/noah-mp-modular/noah-mp-modular
 	url = https://github.com/noaa-owp/noah-mp-modular
 	branch = main
+[submodule "extern/UDUNITS-2"]
+	path = extern/UDUNITS-2
+	url = https://github.com/Unidata/UDUNITS-2.git
+	ignore = dirty
+
