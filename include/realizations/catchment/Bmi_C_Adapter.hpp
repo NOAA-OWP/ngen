@@ -565,7 +565,7 @@ namespace models {
              * optimization in certain situations.
              *
              * @param name The name of the variable for which to get values.
-             * @param dest A function pointer in which to return the values.
+             * @param dest An array pointer into which the values will be written.
              */
             inline void get_value(const std::string& name, void *dest) {
                 if (bmi_model->get_value(bmi_model.get(), name.c_str(), dest) != BMI_SUCCESS) {
