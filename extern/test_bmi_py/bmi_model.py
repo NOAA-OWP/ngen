@@ -5,7 +5,6 @@ import time
 # Basic utilities
 import numpy as np
 import pandas as pd
-import pickle
 from pathlib import Path
 # Here is the model we want to run
 import model
@@ -33,8 +32,7 @@ class bmi_model(Bmi):
         'version':            '1.0',
         'author_name':        'Jonathan Martin Frame',
         'grid_type':          'scalar',
-        'time_step_size':      1,
-        'time_units':         '1 hour' }
+               }
 
     #---------------------------------------------
     # Input variable names (CSDMS standard names)

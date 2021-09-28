@@ -1,0 +1,11 @@
+name: bmi_test
+channels:
+  - defaults
+  - anaconda
+  - conda-forge
+dependencies:
+  - bmipy
+  - bokeh
+  - pandas
+  - python=3.7
+  - ruamel.yaml

@@ -1,7 +1,6 @@
 
 import numpy as np
 from pathlib import Path
-from netCDF4 import Dataset
 # This is the BMI LSTM that we will be running
 import bmi_model
 import random
