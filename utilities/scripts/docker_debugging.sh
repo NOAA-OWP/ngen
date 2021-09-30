@@ -8,8 +8,8 @@ CONTAINER_REPO_DIR="/ngen"
 CONTAINER_HOST_MOUNT_REPO_DIR="/host_ngen"
 CONTAINER_HOST_MOUNT_DATA_DIR="/test_data"
 
-DEFAULT_DOCKER_IMAGE="dev_debug_ubuntu:latest"
-CONTAINER_NAME="ngen_dev_debug"
+DEFAULT_DOCKER_IMAGE="$(whoami)_dev_debug_ubuntu:latest"
+CONTAINER_NAME="$(whoami)_ngen_dev_debug"
 
 CONTAINER_DEBUG_UTIL="${CONTAINER_HOST_MOUNT_REPO_DIR}/utilities/scripts/debug_container_ops.sh"
 
@@ -91,6 +91,13 @@ host_code_sync()
         exit 1
     fi
 
+    docker exec ${CONTAINER_NAME} test -e ${CONTAINER_DEBUG_UTIL:?ERROR: container debug util not configured}
+    if [ $? -ne 0 ]; then
+        >&2 echo -n "ERROR: container debug util '${CONTAINER_DEBUG_UTIL}' not found; "
+        >&2 echo "container likely was not set up with host repo bind mount."
+        exit 1
+    fi
+
     docker exec ${CONTAINER_NAME} ${CONTAINER_DEBUG_UTIL} one_time_sync
 }
 
@@ -132,6 +139,13 @@ ngen_mpi_run()
     if [ $(docker ps -q -f "name=${CONTAINER_NAME}" | wc -l) -eq 0 ]; then
         >&2 echo "ERROR: no container '${CONTAINER_NAME}' is currently running."
         exit 1
+    fi
+
+    # Build things if they haven't been built yet
+    docker exec ${CONTAINER_NAME} test -d ${CONTAINER_REPO_DIR}/${NGEN_BUILD_DIR_NAME}
+    if [ $? -ne 0 ]; then
+        refresh_cmake
+        build_ngen
     fi
 
     set_dev_ptrace_for_gdbserver
@@ -188,7 +202,7 @@ build_docker_image()
     docker build \
         --tag ${DEFAULT_DOCKER_IMAGE} \
         -f ${HOST_NGEN_DIR:?}/docker/dev_debug_ubuntu.Dockerfile \
-        --build-arg BUILD_ENV_SYNC=${SYNC_IMAGE_NGEN_REPO_BUILD_ARG:-sync} \
+        --build-arg "BUILD_ENV_SYNC=${SYNC_IMAGE_NGEN_REPO_BUILD_ARG:-sync} NUM_PROCS=${NUM_PROCS:-1}" \
         ${HOST_NGEN_DIR:?}
 
     _R=$?
@@ -227,26 +241,43 @@ create_debug_container()
         fi
     fi
 
+    # Dynamically build the ports arguments string
     local _PORT_COUNT=0
     local _PORT_ARG_STRING=""
     local _CURRENT_PORT=${START_PORT}
-
     while [ ${_PORT_COUNT} -lt ${NUM_PROCS:-8} ]; do
         _CURRENT_PORT=$((START_PORT+_PORT_COUNT))
         _PORT_ARG_STRING="${_PORT_ARG_STRING} -p ${_CURRENT_PORT}:${_CURRENT_PORT}"
         _PORT_COUNT=$((_PORT_COUNT+1))
     done
 
-    docker run \
-        --privileged \
-        -v ${HOST_NGEN_DIR}:${CONTAINER_HOST_MOUNT_REPO_DIR} \
-        -v ${HOST_DATA_DIR}:${CONTAINER_HOST_MOUNT_DATA_DIR} \
-        ${_PORT_ARG_STRING} \
-        -t \
-        -i \
-        --name ${CONTAINER_NAME} \
-        ${_IMAGE} \
-        /bin/bash
+    # Dynamically build the host bind-mount volumes arguments string
+    local _VOLS_ARG_STRING=""
+    # Add the host ngen repo directory, unless explicitly set for no_code_sync
+    if [ -z "${NO_CODE_SYNC:-}" ]; then
+        #_VOLS_ARG_STRING=" -v ${HOST_NGEN_DIR}:${CONTAINER_HOST_MOUNT_REPO_DIR}"
+        _VOLS_ARG_STRING=" --mount type=bind,source=${HOST_NGEN_DIR},target=${CONTAINER_HOST_MOUNT_REPO_DIR}"
+    fi
+
+    if [ -z "${HOST_DATA_DIR:-}" ] && [ -d "${HOST_DATA_DIR}" ]; then
+        #_VOLS_ARG_STRING="${_VOLS_ARG_STRING} -v ${HOST_DATA_DIR}:${CONTAINER_HOST_MOUNT_DATA_DIR}"
+        _VOLS_ARG_STRING="${_VOLS_ARG_STRING} --mount type=bind,source=${HOST_DATA_DIR},target=${CONTAINER_HOST_MOUNT_DATA_DIR},readonly"
+    fi
+    # Assume 'else' case is handled manually somehow; i.e., something else is getting data/configs in the base image
+
+    # TODO: add support later for individually configured directories
+        # TODO: Add the hydrofabric directory
+        # TODO: Add the realization config directory
+        # TODO: Add the partition config directory, if not in the same directory as realization config
+        # TODO: Add (root) dir for BMI init configs and any transitively required files (if not realization config dir)
+        # TODO: Add the forcing data files directory
+
+    #${CONTAINER_HOST_MOUNT_DATA_DIR}/hydrofabric/sugar_creek/catchment_data.geojson \
+    #        ${CONTAINER_HOST_MOUNT_DATA_DIR}/hydrofabric/sugar_creek/nexus_data.geojson \
+    #        ${CONTAINER_HOST_MOUNT_DATA_DIR}/config/realization_config/sugar_creek_simple/simple_conf.json \
+    #        ${CONTAINER_HOST_MOUNT_DATA_DIR}/partitions/sugar_creek/sugar_creek_partitions_2.json
+
+    docker run --privileged ${_VOLS_ARG_STRING} ${_PORT_ARG_STRING} -t -i --name ${CONTAINER_NAME} ${_IMAGE} /bin/bash
 }
 
 start_debug_container()
@@ -328,7 +359,7 @@ Options:
     --cmake-target|-t <target>      Set target for CMake build actions.
     --lib-dir <dir>                 Specify single shared lib dir for building.
     --ngen-dir|-d <path>            Set host ngen dir when creating container.
-    --no-sync-image-build           Skip host code sync during image build.
+    --no-code-sync                  Skip host code sync (image or container).
     --data-dir|-D <path>            Set host data dir when creating container.
 
 Actions:
@@ -407,9 +438,11 @@ Options:
         Note that while the value set here will affect the 'sync' action, it
         can only be set when creating a new container.
 
-    --no-sync-image-build
-        Skip the sync of host ngen repo with image ngen repo when performing a
-        build of a new debug Docker image.
+    --no-code-sync
+        Skip the steps needed to sync with the host ngen repo when creating
+        either a new container or new image.  For images, this adjusts steps
+        during the Docker build.  For creating containers, this omits the args
+        required to set up host directory volume mounts inside the container.
 
     --data-dir|-D <path>
         Specify the data directory on this host, which is volume mounted inside
@@ -545,7 +578,8 @@ while [ ${#} -gt 1 ]; do
             SHARED_LIB_DIR=${2}
             shift
             ;;
-        --no-sync-image-build)
+        --no-code-sync)
+            NO_CODE_SYNC="true"
             SYNC_IMAGE_NGEN_REPO_BUILD_ARG="no_sync"
             ;;
         --ngen-dir|-d)

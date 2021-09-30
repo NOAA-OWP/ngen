@@ -4,7 +4,7 @@ ARG CORE_BASE_IMAGE=ubuntu:20.10
 ################################################################################################################
 FROM ${CORE_BASE_IMAGE} as get_boost
 
-RUN apt-get update && apt-get install -y wget \
+RUN apt-get update && apt-get install -y wget bzip2 \
     && wget https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2 \
     && mkdir /boost \
     && mv boost_1_72_0.tar.bz2 /boost/. \
@@ -60,6 +60,11 @@ COPY --from=sync_prep /ngen /ngen
 
 WORKDIR /ngen
 
+ARG NUM_PROCS=1
+
 # Use util script for CMake build init to have single places where defaults are setup for CMake flags
 # Prep and build the shared libs first, then do a build of the main ngen target
-RUN cd /ngen && ${UTIL_SCRIPT} shared_libs && ${UTIL_SCRIPT} image-cmake && cmake --build /ngen/cmake_build --target ngen -- -j 2
+#RUN cd /ngen && ${UTIL_SCRIPT} shared_libs && ${UTIL_SCRIPT} image-cmake && cmake --build /ngen/cmake_build --target ngen -- -j $NUM_PROCS
+
+# Actually, skip main build for now; leave this to inside container to not clog up image build
+RUN cd /ngen && ${UTIL_SCRIPT} shared_libs
