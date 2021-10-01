@@ -250,6 +250,7 @@ add_test(
         simulation_time/Simulation_Time_Test.cpp
         core/catchment/giuh/GIUH_Test.cpp
         core/NetworkTests.cpp
+        core/ResponseValueTests.cpp
         realizations/Formulation_Manager_Test.cpp
         core/nexus/NexusTests.cpp
         # TODO: this probably should be added, but at the moment it's broken (update number-of-files arg above also)
