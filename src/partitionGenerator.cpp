@@ -420,10 +420,14 @@ int main(int argc, char* argv[])
 
         //std::vector<std::string> local_cat_ids = catchment_part[ipart]["cat-ids"];
         std::unordered_set<std::string> local_cat_set = catchment_part[ipart];
+        std::unordered_set<std::string> local_nex_set = nexus_part[ipart];
+        std::unordered_set<std::string> local_node_set;
+        
+        std::merge(local_cat_set.begin(), local_cat_set.end(),
+                local_nex_set.begin(), local_nex_set.end(),
+                std::inserter(local_node_set, local_node_set.begin()));
 
-        geojson::GeoJSON local_catchment_collection = std::make_shared<geojson::FeatureCollection>(*global_nexus_collection, local_cat_set);
-        //local_catchment_collection->filter(local_cat_set);
-        //local_catchment_collection->filter(local_set);
+        geojson::GeoJSON local_catchment_collection = std::make_shared<geojson::FeatureCollection>(*global_nexus_collection, local_node_set);
 
         // make a local network
         Network local_network(local_catchment_collection, &link_key);
@@ -448,7 +452,7 @@ int main(int argc, char* argv[])
             //Find downstream connections
             auto dest_ids = global_network.get_destination_ids(n);
             //std::cout << "Found " << dest_ids.size() << " downstream catchments for nexus with id: " << n << "\n";
-            remote_catchments += find_partition_connections(n, catchment_part, ipart, dest_ids, remote_connections );    
+            remote_catchments += find_partition_connections(n, catchment_part, ipart, dest_ids, remote_connections );
         }
 
         remote_connections_vec.push_back(remote_connections);
