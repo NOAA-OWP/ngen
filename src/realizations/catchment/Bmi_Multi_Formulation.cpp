@@ -26,17 +26,24 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
         geojson::JSONProperty formulation_config = sub_formulations_list[i];
         std::string type_name = formulation_config.at("name").as_string();
         std::string identifier = get_catchment_id() + "." + std::to_string(i);
-        std::shared_ptr<Bmi_Module_Formulation<bmi::Bmi>> module;
+        std::shared_ptr<Bmi_Module_Formulation<bmi::Bmi>> module = nullptr;
+        #ifdef NGEN_BMI_C_LIB_ACTIVE
         if (type_name == "bmi_c") {
             module = std::dynamic_pointer_cast<Bmi_Module_Formulation<bmi::Bmi>>(std::make_shared<Bmi_C_Formulation>(identifier, forcing, output));
         }
-        else if (type_name == "bmi_fortran") {
+        #endif // NGEN_BMI_C_LIB_ACTIVE
+        #ifdef NGEN_BMI_FORTRAN_ACTIVE
+        if (type_name == "bmi_fortran") {
             module = std::dynamic_pointer_cast<Bmi_Module_Formulation<bmi::Bmi>>(std::make_shared<Bmi_Fortran_Formulation>(identifier, forcing, output));
         }
-        //else if (type_name == "bmi_python") {
-        //    module = std::dynamic_pointer_cast<Bmi_Module_Formulation<bmi::Bmi>>(std::make_shared<Bmi_Py_Formulation>(identifier, forcing, output));
+        #endif // NGEN_BMI_FORTRAN_ACTIVE
+        #ifdef ACTIVATE_PYTHON
+        //if (type_name == "bmi_python") {
+        //    module = std::dynamic_pointer_cast<Bmi_Module_Formulation<bmi::Bmi>>(
+        //            std::make_shared<Bmi_Py_Formulation>(identifier, forcing, output));
         //}
-        else {
+        #endif // ACTIVATE_PYTHON
+        if (module == nullptr) {
             throw runtime_error(get_formulation_type() + " received unexpected subtype formulation " + type_name);
         }
         modules[i] = module;
