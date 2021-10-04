@@ -3,6 +3,7 @@ var classgeojson_1_1_feature_collection =
     [ "FeatureCollection", "classgeojson_1_1_feature_collection.html#a17faef997ef12990c512aa418b8f3f92", null ],
     [ "FeatureCollection", "classgeojson_1_1_feature_collection.html#a9ac4ee68e42574202f43662d04b0ffd8", null ],
     [ "FeatureCollection", "classgeojson_1_1_feature_collection.html#a5ab3c315b661b44e1fc52c3274f89b2f", null ],
+    [ "FeatureCollection", "classgeojson_1_1_feature_collection.html#a83e8f797646c87ca9e0b7a4d2147da9d", null ],
     [ "~FeatureCollection", "classgeojson_1_1_feature_collection.html#ab08feda5653286c7637a081176c31dbf", null ],
     [ "add_feature", "classgeojson_1_1_feature_collection.html#a94257e07bb9115a6231d13672c92eb06", null ],
     [ "add_feature_id", "classgeojson_1_1_feature_collection.html#a98ede51deee27930b59c64af3a1e731b", null ],

@@ -13,6 +13,9 @@ var hierarchy =
         ] ]
       ] ]
     ] ],
+    [ "boost::dfs_visitor", null, [
+      [ "network::preorder_visitor< OutputIterator >", "structnetwork_1_1preorder__visitor.html", null ]
+    ] ],
     [ "boost::exception", null, [
       [ "add_to_summed_nexus", "structadd__to__summed__nexus.html", null ],
       [ "completed_time_step", "structcompleted__time__step.html", null ],

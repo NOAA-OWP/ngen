@@ -110,6 +110,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a5ab3c315b661b44e1fc52c3274f89b2f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgeojson_1_1_feature_collection.html#a5ab3c315b661b44e1fc52c3274f89b2f">FeatureCollection</a> (const <a class="el" href="classgeojson_1_1_feature_collection.html">FeatureCollection</a> &amp;feature_collection)</td></tr>
 <tr class="memdesc:a5ab3c315b661b44e1fc52c3274f89b2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy constructor.  <a href="classgeojson_1_1_feature_collection.html#a5ab3c315b661b44e1fc52c3274f89b2f">More...</a><br /></td></tr>
 <tr class="separator:a5ab3c315b661b44e1fc52c3274f89b2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83e8f797646c87ca9e0b7a4d2147da9d"><td class="memTemplParams" colspan="2">template&lt;typename C &gt; </td></tr>
+<tr class="memitem:a83e8f797646c87ca9e0b7a4d2147da9d"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classgeojson_1_1_feature_collection.html#a83e8f797646c87ca9e0b7a4d2147da9d">FeatureCollection</a> (const <a class="el" href="classgeojson_1_1_feature_collection.html">FeatureCollection</a> &amp;feature_collection, C &amp;filter)</td></tr>
+<tr class="memdesc:a83e8f797646c87ca9e0b7a4d2147da9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy constructor with filter.  <a href="classgeojson_1_1_feature_collection.html#a83e8f797646c87ca9e0b7a4d2147da9d">More...</a><br /></td></tr>
+<tr class="separator:a83e8f797646c87ca9e0b7a4d2147da9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab08feda5653286c7637a081176c31dbf"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgeojson_1_1_feature_collection.html#ab08feda5653286c7637a081176c31dbf">~FeatureCollection</a> ()</td></tr>
 <tr class="memdesc:ab08feda5653286c7637a081176c31dbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor.  <a href="classgeojson_1_1_feature_collection.html#ab08feda5653286c7637a081176c31dbf">More...</a><br /></td></tr>
 <tr class="separator:ab08feda5653286c7637a081176c31dbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -190,7 +194,7 @@ Private Attributes</h2></td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a17faef997ef12990c512aa418b8f3f92"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a17faef997ef12990c512aa418b8f3f92">&#9670;&nbsp;</a></span>FeatureCollection() <span class="overload">[1/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a17faef997ef12990c512aa418b8f3f92">&#9670;&nbsp;</a></span>FeatureCollection() <span class="overload">[1/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -226,7 +230,7 @@ Private Attributes</h2></td></tr>
 <p>Constructor. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">features</td><td>An overall list of features </td></tr>
+    <tr><td class="paramname">new_features</td><td>An overall list of features </td></tr>
     <tr><td class="paramname">bounding_box</td><td>A set of bounds for all features </td></tr>
   </table>
   </dd>
@@ -237,7 +241,7 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a9ac4ee68e42574202f43662d04b0ffd8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9ac4ee68e42574202f43662d04b0ffd8">&#9670;&nbsp;</a></span>FeatureCollection() <span class="overload">[2/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a9ac4ee68e42574202f43662d04b0ffd8">&#9670;&nbsp;</a></span>FeatureCollection() <span class="overload">[2/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -262,7 +266,7 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a5ab3c315b661b44e1fc52c3274f89b2f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5ab3c315b661b44e1fc52c3274f89b2f">&#9670;&nbsp;</a></span>FeatureCollection() <span class="overload">[3/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ab3c315b661b44e1fc52c3274f89b2f">&#9670;&nbsp;</a></span>FeatureCollection() <span class="overload">[3/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -293,7 +297,56 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="reference">References <a class="el" href="classgeojson_1_1_feature_collection.html#a1670256b5f383cbb26306bd96e7d1bd2">bounding_box</a>, <a class="el" href="classgeojson_1_1_feature_collection.html#ac21acb826a2c6943192936ff54412511">features</a>, and <a class="el" href="classgeojson_1_1_feature_collection.html#aafaec741d19d6c9e30e952275451a4f4">get_bounding_box()</a>.</p>
+<p class="reference">References <a class="el" href="classgeojson_1_1_feature_collection.html#a1670256b5f383cbb26306bd96e7d1bd2">bounding_box</a>, <a class="el" href="classgeojson_1_1_feature_collection.html#ac21acb826a2c6943192936ff54412511">features</a>, <a class="el" href="classgeojson_1_1_feature_collection.html#aafaec741d19d6c9e30e952275451a4f4">get_bounding_box()</a>, and <a class="el" href="classgeojson_1_1_feature_collection.html#abc77a4928e81df6a6cce4e19b6449327">update_ids()</a>.</p>
+
+</div>
+</div>
+<a id="a83e8f797646c87ca9e0b7a4d2147da9d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a83e8f797646c87ca9e0b7a4d2147da9d">&#9670;&nbsp;</a></span>FeatureCollection() <span class="overload">[4/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename C &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">geojson::FeatureCollection::FeatureCollection </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classgeojson_1_1_feature_collection.html">FeatureCollection</a> &amp;&#160;</td>
+          <td class="paramname"><em>feature_collection</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">C &amp;&#160;</td>
+          <td class="paramname"><em>filter</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Copy constructor with filter. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">feature_collection</td><td>The <a class="el" href="classgeojson_1_1_feature_collection.html">FeatureCollection</a> to copy </td></tr>
+    <tr><td class="paramname">filter</td><td>A container </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="classgeojson_1_1_feature_collection.html#a1670256b5f383cbb26306bd96e7d1bd2">bounding_box</a>, <a class="el" href="classgeojson_1_1_feature_collection.html#ac21acb826a2c6943192936ff54412511">features</a>, <a class="el" href="classgeojson_1_1_feature_collection.html#aafaec741d19d6c9e30e952275451a4f4">get_bounding_box()</a>, and <a class="el" href="classgeojson_1_1_feature_collection.html#abc77a4928e81df6a6cce4e19b6449327">update_ids()</a>.</p>
 
 </div>
 </div>
@@ -1042,7 +1095,7 @@ Private Attributes</h2></td></tr>
 
 <p class="reference">References <a class="el" href="classgeojson_1_1_feature_collection.html#abe473f53db4363c64bbda607822e6552">feature_by_id</a>, and <a class="el" href="classgeojson_1_1_feature_collection.html#ac21acb826a2c6943192936ff54412511">features</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classgeojson_1_1_feature_collection.html#aae2518b178f140353027556d5604464f">set_ids()</a>, <a class="el" href="classgeojson_1_1_feature_collection.html#ab8c6c8fddb075a6d2e21406c1e63f6be">set_ids_from_member()</a>, and <a class="el" href="classgeojson_1_1_feature_collection.html#a50d6e5d2b5c8454ba51657d7ba44adf7">set_ids_from_property()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classgeojson_1_1_feature_collection.html#a5ab3c315b661b44e1fc52c3274f89b2f">FeatureCollection()</a>, <a class="el" href="classgeojson_1_1_feature_collection.html#aae2518b178f140353027556d5604464f">set_ids()</a>, <a class="el" href="classgeojson_1_1_feature_collection.html#ab8c6c8fddb075a6d2e21406c1e63f6be">set_ids_from_member()</a>, and <a class="el" href="classgeojson_1_1_feature_collection.html#a50d6e5d2b5c8454ba51657d7ba44adf7">set_ids_from_property()</a>.</p>
 
 </div>
 </div>
@@ -1173,7 +1226,7 @@ Private Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacegeojson.html">geojson</a></li><li class="navelem"><a class="el" href="classgeojson_1_1_feature_collection.html">FeatureCollection</a></li>
-    <li class="footer">Generated on Mon Oct 4 2021 14:30:54 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Mon Oct 4 2021 16:33:36 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

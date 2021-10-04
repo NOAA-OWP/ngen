@@ -421,6 +421,7 @@
           <topic label="FeatureCollection" href="classgeojson_1_1_feature_collection.html#a17faef997ef12990c512aa418b8f3f92"/>
           <topic label="FeatureCollection" href="classgeojson_1_1_feature_collection.html#a9ac4ee68e42574202f43662d04b0ffd8"/>
           <topic label="FeatureCollection" href="classgeojson_1_1_feature_collection.html#a5ab3c315b661b44e1fc52c3274f89b2f"/>
+          <topic label="FeatureCollection" href="classgeojson_1_1_feature_collection.html#a83e8f797646c87ca9e0b7a4d2147da9d"/>
           <topic label="~FeatureCollection" href="classgeojson_1_1_feature_collection.html#ab08feda5653286c7637a081176c31dbf"/>
           <topic label="add_feature" href="classgeojson_1_1_feature_collection.html#a94257e07bb9115a6231d13672c92eb06"/>
           <topic label="add_feature_id" href="classgeojson_1_1_feature_collection.html#a98ede51deee27930b59c64af3a1e731b"/>
@@ -1473,6 +1474,12 @@
         <topic label="VertexProperty" href="structnetwork_1_1_vertex_property.html">
           <topic label="id" href="structnetwork_1_1_vertex_property.html#a29db5c114a1ec984ae6d908823eb08f0"/>
         </topic>
+        <topic label="preorder_visitor" href="structnetwork_1_1preorder__visitor.html">
+          <topic label="preorder_visitor" href="structnetwork_1_1preorder__visitor.html#a47ca6df72bbd19eb6af537c0844ae3cf"/>
+          <topic label="back_edge" href="structnetwork_1_1preorder__visitor.html#aafa30c5f3851cc919b9609401e238eed"/>
+          <topic label="discover_vertex" href="structnetwork_1_1preorder__visitor.html#a86ea1b3077ec3a0689a5a9a5852d32bc"/>
+          <topic label="m_iter" href="structnetwork_1_1preorder__visitor.html#aba261774f75ea486a5602cfff798cf63"/>
+        </topic>
         <topic label="Network" href="classnetwork_1_1_network.html">
           <topic label="Network" href="classnetwork_1_1_network.html#ac60dfffd85f613c714ca674730ee2a7a"/>
           <topic label="Network" href="classnetwork_1_1_network.html#ad81217c6e3e7e1d64d6067a29ea1c3e3"/>
@@ -1480,10 +1487,11 @@
           <topic label="~Network" href="classnetwork_1_1_network.html#ab967c379911182281978a165cc9d6ef5"/>
           <topic label="begin" href="classnetwork_1_1_network.html#a0e945e0b5426233adef95c520957b74c"/>
           <topic label="end" href="classnetwork_1_1_network.html#a1cc30eb92debc1a6ca752df2a33793b4"/>
-          <topic label="filter" href="classnetwork_1_1_network.html#a4fce43e5e43580efc786b60e209a0bbe"/>
+          <topic label="filter" href="classnetwork_1_1_network.html#a36b9c9b32d814a8b4f1eb689f92af0f3"/>
           <topic label="get_destination_ids" href="classnetwork_1_1_network.html#af83ce2ba6cd82d318ec433c82d16f328"/>
           <topic label="get_id" href="classnetwork_1_1_network.html#a1c14c00f48e05b57e9b0d4161acbc660"/>
           <topic label="get_origination_ids" href="classnetwork_1_1_network.html#a3f1e27cb4c48ab736fca2d6fd58472c0"/>
+          <topic label="get_sorted_index" href="classnetwork_1_1_network.html#a964911e2c0bea1579b9b5bd3e197d248"/>
           <topic label="headwaters" href="classnetwork_1_1_network.html#a50aef2e0376d82417494136db27b9c8e"/>
           <topic label="init_indicies" href="classnetwork_1_1_network.html#a63da3bc2620f058457ff7b23d956e20a"/>
           <topic label="print_network" href="classnetwork_1_1_network.html#a3c4ff515a92a465e551dde546c5dd6ca"/>
@@ -1493,6 +1501,7 @@
           <topic label="graph" href="classnetwork_1_1_network.html#a81433a0d0c450c400051ac4b894d8eb5"/>
           <topic label="headwaters_idx" href="classnetwork_1_1_network.html#a74d2c60846e092e42ec035e11afe527c"/>
           <topic label="tailwaters_idx" href="classnetwork_1_1_network.html#ae62bcf26a0b422a6e7d73fc8ff2102a1"/>
+          <topic label="tdfp_order" href="classnetwork_1_1_network.html#a04dbb9e0615fbb4db09d8c9fb4f68102"/>
           <topic label="topo_order" href="classnetwork_1_1_network.html#a17193c5c4eeebbcbe2eeda9879e22e83"/>
         </topic>
         <topic label="Graph" href="namespacenetwork.html#a8903690478e87e5f1e1ca59765c1887f"/>
@@ -1500,6 +1509,12 @@
         <topic label="IndexT" href="namespacenetwork.html#ac5d401482ea9247a9aaf6e4087e0ece4"/>
         <topic label="NetworkIndexT" href="namespacenetwork.html#af1aad95222480433c10e1d5814ea28ca"/>
         <topic label="NodeT" href="namespacenetwork.html#ad95437deae1621540951bc60bd635034"/>
+        <topic label="SortOrder" href="namespacenetwork.html#adc2fe9c9362585aa39e89e4b76468f5a">
+          <topic label="Topological" href="namespacenetwork.html#adc2fe9c9362585aa39e89e4b76468f5aa475b62099bbf816e5a92df29364b210e"/>
+          <topic label="TransposedDepthFirstPreorder" href="namespacenetwork.html#adc2fe9c9362585aa39e89e4b76468f5aa30276136432af3e6fb237f23d309b4a7"/>
+        </topic>
+        <topic label="df_preorder_sort" href="namespacenetwork.html#aa65dee12e1de6f9b22afade4c9eb15a6"/>
+        <topic label="df_preorder_sort" href="namespacenetwork.html#ac985173c755f102cf1fb27d98c0144cd"/>
       </topic>
       <topic label="nexus" href="namespacenexus.html">
         <topic label="Nexus_Manager" href="classnexus_1_1_nexus___manager.html">
@@ -2526,6 +2541,7 @@
           <topic label="FeatureCollection" href="classgeojson_1_1_feature_collection.html#a17faef997ef12990c512aa418b8f3f92"/>
           <topic label="FeatureCollection" href="classgeojson_1_1_feature_collection.html#a9ac4ee68e42574202f43662d04b0ffd8"/>
           <topic label="FeatureCollection" href="classgeojson_1_1_feature_collection.html#a5ab3c315b661b44e1fc52c3274f89b2f"/>
+          <topic label="FeatureCollection" href="classgeojson_1_1_feature_collection.html#a83e8f797646c87ca9e0b7a4d2147da9d"/>
           <topic label="~FeatureCollection" href="classgeojson_1_1_feature_collection.html#ab08feda5653286c7637a081176c31dbf"/>
           <topic label="add_feature" href="classgeojson_1_1_feature_collection.html#a94257e07bb9115a6231d13672c92eb06"/>
           <topic label="add_feature_id" href="classgeojson_1_1_feature_collection.html#a98ede51deee27930b59c64af3a1e731b"/>
@@ -3477,6 +3493,12 @@
         <topic label="VertexProperty" href="structnetwork_1_1_vertex_property.html">
           <topic label="id" href="structnetwork_1_1_vertex_property.html#a29db5c114a1ec984ae6d908823eb08f0"/>
         </topic>
+        <topic label="preorder_visitor" href="structnetwork_1_1preorder__visitor.html">
+          <topic label="preorder_visitor" href="structnetwork_1_1preorder__visitor.html#a47ca6df72bbd19eb6af537c0844ae3cf"/>
+          <topic label="back_edge" href="structnetwork_1_1preorder__visitor.html#aafa30c5f3851cc919b9609401e238eed"/>
+          <topic label="discover_vertex" href="structnetwork_1_1preorder__visitor.html#a86ea1b3077ec3a0689a5a9a5852d32bc"/>
+          <topic label="m_iter" href="structnetwork_1_1preorder__visitor.html#aba261774f75ea486a5602cfff798cf63"/>
+        </topic>
         <topic label="Network" href="classnetwork_1_1_network.html">
           <topic label="Network" href="classnetwork_1_1_network.html#ac60dfffd85f613c714ca674730ee2a7a"/>
           <topic label="Network" href="classnetwork_1_1_network.html#ad81217c6e3e7e1d64d6067a29ea1c3e3"/>
@@ -3484,10 +3506,11 @@
           <topic label="~Network" href="classnetwork_1_1_network.html#ab967c379911182281978a165cc9d6ef5"/>
           <topic label="begin" href="classnetwork_1_1_network.html#a0e945e0b5426233adef95c520957b74c"/>
           <topic label="end" href="classnetwork_1_1_network.html#a1cc30eb92debc1a6ca752df2a33793b4"/>
-          <topic label="filter" href="classnetwork_1_1_network.html#a4fce43e5e43580efc786b60e209a0bbe"/>
+          <topic label="filter" href="classnetwork_1_1_network.html#a36b9c9b32d814a8b4f1eb689f92af0f3"/>
           <topic label="get_destination_ids" href="classnetwork_1_1_network.html#af83ce2ba6cd82d318ec433c82d16f328"/>
           <topic label="get_id" href="classnetwork_1_1_network.html#a1c14c00f48e05b57e9b0d4161acbc660"/>
           <topic label="get_origination_ids" href="classnetwork_1_1_network.html#a3f1e27cb4c48ab736fca2d6fd58472c0"/>
+          <topic label="get_sorted_index" href="classnetwork_1_1_network.html#a964911e2c0bea1579b9b5bd3e197d248"/>
           <topic label="headwaters" href="classnetwork_1_1_network.html#a50aef2e0376d82417494136db27b9c8e"/>
           <topic label="init_indicies" href="classnetwork_1_1_network.html#a63da3bc2620f058457ff7b23d956e20a"/>
           <topic label="print_network" href="classnetwork_1_1_network.html#a3c4ff515a92a465e551dde546c5dd6ca"/>
@@ -3497,6 +3520,7 @@
           <topic label="graph" href="classnetwork_1_1_network.html#a81433a0d0c450c400051ac4b894d8eb5"/>
           <topic label="headwaters_idx" href="classnetwork_1_1_network.html#a74d2c60846e092e42ec035e11afe527c"/>
           <topic label="tailwaters_idx" href="classnetwork_1_1_network.html#ae62bcf26a0b422a6e7d73fc8ff2102a1"/>
+          <topic label="tdfp_order" href="classnetwork_1_1_network.html#a04dbb9e0615fbb4db09d8c9fb4f68102"/>
           <topic label="topo_order" href="classnetwork_1_1_network.html#a17193c5c4eeebbcbe2eeda9879e22e83"/>
         </topic>
       </topic>
@@ -5140,6 +5164,9 @@
             <topic label="models::bmi::Bmi_C_Adapter" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html"/>
           </topic>
         </topic>
+      </topic>
+      <topic label="boost::dfs_visitor">
+        <topic label="network::preorder_visitor&lt; OutputIterator &gt;" href="structnetwork_1_1preorder__visitor.html"/>
       </topic>
       <topic label="boost::exception">
         <topic label="add_to_summed_nexus" href="structadd__to__summed__nexus.html"/>

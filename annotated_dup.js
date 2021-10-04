@@ -62,6 +62,7 @@ var annotated_dup =
     ] ],
     [ "network", "namespacenetwork.html", [
       [ "VertexProperty", "structnetwork_1_1_vertex_property.html", "structnetwork_1_1_vertex_property" ],
+      [ "preorder_visitor", "structnetwork_1_1preorder__visitor.html", "structnetwork_1_1preorder__visitor" ],
       [ "Network", "classnetwork_1_1_network.html", "classnetwork_1_1_network" ]
     ] ],
     [ "nexus", "namespacenexus.html", [
