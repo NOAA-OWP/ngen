@@ -8,7 +8,7 @@
 [submodule "extern/t-route"]
 	path = extern/t-route
 	url = https://github.com/jdmattern-noaa/t-route.git
-    branch = ngen-routing
+  branch = ngen-routing2
 [submodule "extern/cfe/cfe"]
 	path = extern/cfe/cfe
 	url = https://github.com/NOAA-OWP/cfe.git
