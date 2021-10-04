@@ -80,7 +80,7 @@ jobs:
       - name: Get Boost Dependency
         if: steps.cache-boost-dep.outputs.cache-hit != 'true'
         run: |
-          curl -L -O https://dl.bintray.com/boostorg/release/1.72.0/source/boost_1_72_0.tar.bz2
+          curl -L -O https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2
           tar xjf boost_1_72_0.tar.bz2
 
       - name: Install MPI
@@ -157,7 +157,7 @@ jobs:
       - name: Get Boost Dependency
         if: steps.cache-boost-dep.outputs.cache-hit != 'true'
         run: |
-          curl -L -O https://dl.bintray.com/boostorg/release/1.72.0/source/boost_1_72_0.tar.bz2
+          curl -L -O https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2
           tar xjf boost_1_72_0.tar.bz2
 
       - name: cmake_init_build
@@ -249,7 +249,7 @@ jobs:
       - name: Get Boost Dependency
         if: steps.cache-boost-dep.outputs.cache-hit != 'true'
         run: |
-          curl -L -O https://dl.bintray.com/boostorg/release/1.72.0/source/boost_1_72_0.tar.bz2
+          curl -L -O https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2
           tar xjf boost_1_72_0.tar.bz2
 
       - name: cmake_init_build
@@ -294,7 +294,7 @@ jobs:
       - name: Get Boost Dependency
         if: steps.cache-boost-dep.outputs.cache-hit != 'true'
         run: |
-          curl -L -O https://dl.bintray.com/boostorg/release/1.72.0/source/boost_1_72_0.tar.bz2
+          curl -L -O https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2
           tar xjf boost_1_72_0.tar.bz2
 
       - name: cmake_init_build
@@ -364,7 +364,7 @@ jobs:
       - name: Get Boost Dependency
         if: steps.cache-boost-dep.outputs.cache-hit != 'true'
         run: |
-          curl -L -O https://dl.bintray.com/boostorg/release/1.72.0/source/boost_1_72_0.tar.bz2
+          curl -L -O https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2
           tar xjf boost_1_72_0.tar.bz2
 
       - name: cmake_init_build
@@ -455,7 +455,7 @@ jobs:
       - name: Get Boost Dependency
         if: steps.cache-boost-dep.outputs.cache-hit != 'true'
         run: |
-          curl -L -O https://dl.bintray.com/boostorg/release/1.72.0/source/boost_1_72_0.tar.bz2
+          curl -L -O https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2
           tar xjf boost_1_72_0.tar.bz2
 
       - name: cmake_init_build
