@@ -110,13 +110,38 @@ class HY_PointHydroNexusRemote : public HY_PointHydroNexus
         {
         	local,
         	sender,
-        	reciever
+        	receiver
         };
         
-        communication_type type;  			// the type of communication at his nexus
-        int downstream_rank;	  			// if this nexus sender data to a down stream rank what id is that rank
-        std::vector<int> upstream_ranks;	// if this nexus recieves data from upstream ranks what id are expected to send data
-
+        /** The type of communication at this nexus
+         *
+         */
+        communication_type type;
+        /** List of ranks we expect to send data to (downstream).
+         *
+         *  Note that in a dendridic network, downstream_ranks.size() == 1 (only one downstream receiver on a single rank)
+         */
+        std::vector<int> downstream_ranks;
+        /** List of ranks we expect to receive data from
+         * 
+         */
+        std::vector<int> upstream_ranks;
+        /** Catchments local to the same MPI rank which contribute (call add_upstream_flow) to this nexus
+         * 
+         */
+        Catchments local_contributers;
+        /** Catchments NOT local to this rank which contribute (call add_upstream_flow) to this nexus
+         * 
+         */
+        Catchments remote_contributers;
+        /** Catchments local to the same MPI rank which receive (call get_downstream_flow) from this nexus
+         * 
+         */
+        Catchments local_receivers;
+        /** Catchments NOT local to this rank which receive (call get_downstream_flow) from this nexus
+         * 
+         */
+        Catchments remote_receivers;
 };
 
 #endif // NGEN_MPI_ACTIVE
