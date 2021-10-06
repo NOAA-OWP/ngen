@@ -20,7 +20,7 @@ Bmi_Py_Adapter::Bmi_Py_Adapter(const string &type_name, string bmi_init_config, 
         : Bmi_Adapter<py::object>(type_name + " (BMI Py)", move(bmi_init_config),
                                   move(forcing_file_path), allow_exceed_end, has_fixed_time_step,
                                   output),
-          bmi_py_type_name(bmi_python_type),
+          bmi_type_py_full_name(bmi_python_type),
           np(py::module_::import("numpy")) /* like 'import numpy as np' */
 {
     try {
@@ -137,11 +137,11 @@ string Bmi_Py_Adapter::GetVarUnits(std::string name) {
 }
 
 std::string Bmi_Py_Adapter::get_bmi_type_package() const {
-    return py_bmi_type_package_name == nullptr ? "" : *py_bmi_type_package_name;
+    return bmi_type_py_module_name == nullptr ? "" : *bmi_type_py_module_name;
 }
 
 std::string Bmi_Py_Adapter::get_bmi_type_simple_name() const {
-    return py_bmi_type_simple_name == nullptr ? "" : *py_bmi_type_simple_name;
+    return bmi_type_py_class_name == nullptr ? "" : *bmi_type_py_class_name;
 }
 
 /**

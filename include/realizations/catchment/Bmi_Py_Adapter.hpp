@@ -414,13 +414,13 @@ namespace models {
         private:
 
             /** Fully qualified Python type name for backing module. */
-            string bmi_py_type_name;
+            string bmi_type_py_full_name;
             /** A binding to the Python numpy package/module. */
             py::module_ np;
             /** A pointer to a string with the parent package name of the Python type referenced by ``py_bmi_type_ref``. */
-            shared_ptr<string> py_bmi_type_package_name;
+            shared_ptr<string> bmi_type_py_module_name;
             /** A pointer to a string with the simple name of the Python type referenced by ``py_bmi_type_ref``. */
-            shared_ptr<string> py_bmi_type_simple_name;
+            shared_ptr<string> bmi_type_py_class_name;
 
             /**
              * Construct the backing BMI model object, then call its BMI-native ``Initialize()`` function.
@@ -438,8 +438,8 @@ namespace models {
                 try {
                     separate_package_and_simple_name();
                     // This is a class object for the BMI module Python class
-                    py::object bmi_py_class = py::module_::import(py_bmi_type_package_name->c_str()).attr(
-                            py_bmi_type_simple_name->c_str());
+                    py::object bmi_py_class = py::module_::import(bmi_type_py_module_name->c_str()).attr(
+                            bmi_type_py_class_name->c_str());
                     // This is the actual backing model object
                     bmi_model = make_shared<py::object>(bmi_py_class());
                     bmi_model->attr("initialize")(bmi_init_config);
@@ -456,22 +456,36 @@ namespace models {
                 }
             }
 
+            /**
+             * Parse the full name of the BMI model type to its module/package name and (simple) class name.
+             *
+             * Parse the full name into separate components, expecting ``.`` as the delimiter.  Expect the last
+             * substring to be the class name.  Rejoin the earlier substrings to construct the module or package name.
+             *
+             * @throw std::runtime_error Thrown if initial type name not in the format ``<module_name>.<class_name>``.
+             */
             inline void separate_package_and_simple_name() {
                 if (!model_initialized) {
                     vector<string> split_name;
                     string delimiter = ".";
+                    string name_string = bmi_type_py_full_name;
 
                     size_t pos = 0;
                     string token;
-                    while ((pos = bmi_py_type_name.find(delimiter)) != string::npos) {
-                        token = bmi_py_type_name.substr(0, pos);
+                    while ((pos = name_string.find(delimiter)) != string::npos) {
+                        token = name_string.substr(0, pos);
                         split_name.emplace_back(token);
-                        bmi_py_type_name.erase(0, pos + delimiter.length());
+                        name_string.erase(0, pos + delimiter.length());
                     }
-
-                    py_bmi_type_simple_name = make_shared<string>(split_name.back());
-                    split_name.pop_back();
-                    py_bmi_type_package_name = make_shared<string>(boost::algorithm::join(split_name, delimiter));
+                    if (split_name.empty()) {
+                        throw std::runtime_error("Cannot interpret BMI Python model type '" + bmi_type_py_full_name
+                                                 + "'; expected format is <python_module>.<python_class>");
+                    }
+                    // What's left should be the class name
+                    bmi_type_py_class_name = make_shared<string>(name_string);
+                    //split_name.pop_back();
+                    // And then the split name should container the module
+                    bmi_type_py_module_name = make_shared<string>(boost::algorithm::join(split_name, delimiter));
                 }
             }
         };
