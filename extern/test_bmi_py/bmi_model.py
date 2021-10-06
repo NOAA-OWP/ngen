@@ -25,6 +25,7 @@ class bmi_model(Bmi):
         self._var_grid_id = 0       # JG Edit
         self._start_time = 0.0
         self._end_time = np.finfo("d").max
+        self._model = None
 
     #----------------------------------------------
     # Required, static attributes of the model
@@ -84,7 +85,7 @@ class bmi_model(Bmi):
         if not isinstance(bmi_cfg_file_name, str) or len(bmi_cfg_file_name) == 0:
             raise RuntimeError("No BMI initialize configuration provided, nothing to do...")
 
-        bmi_cfg_file = Path(bmi_cfg_file_name)
+        bmi_cfg_file = Path(bmi_cfg_file_name).resolve()
         if not bmi_cfg_file.is_file():
             raise RuntimeError("No configuration provided, nothing to do...")
 
@@ -108,12 +109,13 @@ class bmi_model(Bmi):
         self._values['time_step_size'] = self.cfg_bmi['time_step_seconds']
 
         # ------------- Initialize a model ------------------------------#
-        self.model = ngen_model(self._values.keys())
+        #self._model = ngen_model(self._values.keys())
+        self._model = ngen_model()
 
     #------------------------------------------------------------ 
     def update(self):
         dt = self._values['current_model_time'] + self._values['time_step_size']
-        self.model.run(self._values, dt)
+        self._model.run(self._values, dt)
     
     #------------------------------------------------------------ 
     def update_until(self, last_update):
@@ -124,7 +126,7 @@ class bmi_model(Bmi):
     def finalize( self ):
         """Finalize model."""
         self._model = None
-    
+
     #-------------------------------------------------------------------
     #-------------------------------------------------------------------
     # BMI: Model Information Functions
