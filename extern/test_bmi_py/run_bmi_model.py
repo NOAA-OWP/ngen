@@ -12,7 +12,8 @@ def execute():
 
     # Initializing the BMI
     print('Initializing the BMI')
-    model.initialize(bmi_cfg_file=Path('./config.yml'))
+    current_dir = Path(__file__).parent.resolve()
+    model.initialize(bmi_cfg_file_name=str(current_dir.joinpath('config.yml')))
 
     # Now loop through the inputs, set the forcing values, and update the model
     print('Now loop through the inputs, set the values, and update the model')
