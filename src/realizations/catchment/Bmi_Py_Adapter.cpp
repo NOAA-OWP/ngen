@@ -117,7 +117,7 @@ int Bmi_Py_Adapter::GetVarGrid(std::string name) {
 }
 
 int Bmi_Py_Adapter::GetVarItemsize(std::string name) {
-    return py::int_(bmi_model->attr("get_var_grid")(name));
+    return py::int_(bmi_model->attr("get_var_itemsize")(name));
 }
 
 string Bmi_Py_Adapter::GetVarLocation(std::string name) {
