@@ -1,17 +1,19 @@
 # Need these for BMI
-from bmipy import Bmi
-import time
-#import data_tools
+# This is needed for get_var_bytes
+import sys
+from pathlib import Path
+
+# import data_tools
 # Basic utilities
 import numpy as np
 import pandas as pd
-from pathlib import Path
-# Here is the model we want to run
-import model
 # Configuration file functionality
 import yaml
-# This is needed for get_var_bytes
-import sys
+from bmipy import Bmi
+
+# Here is the model we want to run
+from .model import ngen_model
+
 
 class bmi_model(Bmi):
 
@@ -101,7 +103,7 @@ class bmi_model(Bmi):
         self._values['time_step_size'] = self.cfg_bmi['time_step_seconds']
 
         # ------------- Initialize a model ------------------------------#
-        self.model = model.ngen_model(self._values.keys())
+        self.model = ngen_model(self._values.keys())
 
     #------------------------------------------------------------ 
     def update(self):
