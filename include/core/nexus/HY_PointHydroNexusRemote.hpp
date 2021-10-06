@@ -103,6 +103,17 @@ class HY_PointHydroNexusRemote : public HY_PointHydroNexus
         std::list<async_request> stored_sends;
 
         std::string nexus_prefix = "cat-";
+        
+        enum communication_type 
+        {
+        	local,
+        	sender,
+        	reciever
+        };
+        
+        communication_type type;  			// the type of communication at his nexus
+        int downstream_rank;	  			// if this nexus sender data to a down stream rank what id is that rank
+        std::vector<int> upstream_ranks;	// if this nexus recieves data from upstream ranks what id are expected to send data
 
 };
 
