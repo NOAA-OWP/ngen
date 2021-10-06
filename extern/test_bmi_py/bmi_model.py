@@ -34,6 +34,7 @@ class bmi_model(Bmi):
         'version':            '1.0',
         'author_name':        'Jonathan Martin Frame',
         'grid_type':          'scalar',
+        'time_units':         'seconds',
                }
 
     #---------------------------------------------
