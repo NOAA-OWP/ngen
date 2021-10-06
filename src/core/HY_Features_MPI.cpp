@@ -31,6 +31,8 @@ HY_Features_MPI::HY_Features_MPI( PartitionData partition_data, geojson::GeoJSON
         feat_type = feat_id.substr(0, 3);
 
         destinations  = network.get_destination_ids(feat_id);
+        //Find upstream ids
+        origins = network.get_origination_ids(feat_id);
         if(feat_type == "cat")
         {
           //Find and prepare formulation
@@ -39,8 +41,6 @@ HY_Features_MPI::HY_Features_MPI( PartitionData partition_data, geojson::GeoJSON
           // TODO: add command line or config option to have this be omitted
           //FIXME why isn't default param working here??? get_output_header_line() fails.
           formulation->write_output("Time Step,""Time,"+formulation->get_output_header_line(",")+"\n");
-          //Find upstream nexus ids
-          origins = network.get_origination_ids(feat_id);
           //Create the HY_Catchment with the formulation realization
           std::shared_ptr<HY_Catchment> c = std::make_shared<HY_Catchment>(
               HY_Catchment(feat_id, origins, destinations, formulation)
@@ -49,10 +49,8 @@ HY_Features_MPI::HY_Features_MPI( PartitionData partition_data, geojson::GeoJSON
           _catchments.emplace(feat_id, c);
         }
         else if(feat_type == "nex")
-        {
-            
-            
-            _nexuses.emplace(feat_id, std::make_unique<HY_PointHydroNexusRemote>(feat_id, destinations, remote_connections[feat_id]) );
+        {   
+            _nexuses.emplace(feat_id, std::make_unique<HY_PointHydroNexusRemote>(feat_id, destinations, origins, remote_connections[feat_id]) );
         }
         else
         {
