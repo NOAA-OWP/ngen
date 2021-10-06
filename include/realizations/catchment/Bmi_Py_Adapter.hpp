@@ -442,7 +442,7 @@ namespace models {
                             py_bmi_type_simple_name->c_str());
                     // This is the actual backing model object
                     bmi_model = make_shared<py::object>(bmi_py_class());
-                    bmi_model->attr("Initialize")(bmi_init_config);
+                    bmi_model->attr("initialize")(bmi_init_config);
                 }
                 // Record the exception message before re-throwing to handle subsequent function calls properly
                 // TODO: handle exceptions in better detail, without losing type information
