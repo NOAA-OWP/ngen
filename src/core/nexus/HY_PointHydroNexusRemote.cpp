@@ -35,6 +35,43 @@ HY_PointHydroNexusRemote::HY_PointHydroNexusRemote(std::string nexus_id, Catchme
    MPI_Type_commit(&time_step_and_flow_type);
 
    MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
+
+   bool is_sender = false;
+   bool is_receiver = false;
+   //Establish the communication pattern required for this nexus
+   //Sender
+   for(auto receiver : get_receiving_catchments()){
+       //Loop through all downstream catchments, see if they are in the remote map
+       try{
+            auto& remote_rank = catchment_id_to_mpi_rank.at(receiver);
+            downstream_ranks.push_back(remote_rank);
+            remote_receivers.push_back(receiver);
+            is_sender = true;
+       }
+       catch( std::out_of_range &e ){
+           local_receivers.push_back(receiver);
+           continue; //receiver not found, go to next
+       }
+    }
+
+    for(auto contributer : get_contributing_catchments()){
+        //Loop through all upstream catchments, see if they are in the remote map
+        try{
+            auto& remote_rank = catchment_id_to_mpi_rank.at(contributer);
+            upstream_ranks.push_back(remote_rank);
+            remote_contributers.push_back(contributer);
+            is_receiver = true;
+        }
+        catch( std::out_of_range &e ){
+            local_contributers.push_back(contributer);
+            continue; //contributer not found, go to next
+        }
+    }
+
+    if( is_sender && !is_receiver ) type = sender;
+    else if( is_receiver && !is_sender ) type = receiver;
+    else type = local;
+
 }
 
 HY_PointHydroNexusRemote::HY_PointHydroNexusRemote(std::string nexus_id, Catchments receiving_catchments, catcment_location_map_t loc_map)
@@ -124,7 +161,7 @@ double HY_PointHydroNexusRemote::get_downstream_flow(std::string catchment_id, t
     {
     	return -9999.9;
     }
-    else if ( type == reciever )
+    else if ( type == receiver )
     {
     	for ( int rank : upstream_ranks )
     	{
@@ -244,7 +281,7 @@ void HY_PointHydroNexusRemote::add_upstream_flow(double val, std::string catchme
 		        stored_sends.back().buffer.get(),
 		        1,
 		        time_step_and_flow_type,
-		        downstream_rank,
+		        downstream_ranks.at(0), //TODO currently only support a SINGLE downstream message pairing
 		        tag,
 		        MPI_COMM_WORLD,
 		        &stored_sends.back().mpi_request);	
