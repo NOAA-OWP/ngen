@@ -65,7 +65,7 @@ HY_PointHydroNexusRemote::~HY_PointHydroNexusRemote()
     }
 }
 
-double HY_PointHydroNexusRemote::get_downstream_flow(std::string catchment_id, time_step_t t, double percent_flow)
+/*double HY_PointHydroNexusRemote::get_downstream_flow(std::string catchment_id, time_step_t t, double percent_flow)
 {
     while ( stored_recieves.size() > 0)
     {
@@ -94,13 +94,13 @@ double HY_PointHydroNexusRemote::get_downstream_flow(std::string catchment_id, t
 
         //Send downstream_flow from this Upstream Remote Nexus to the Downstream Remote Nexus
         MPI_Isend(
-            /* data         = */ stored_sends.back().buffer.get(),
-            /* count        = */ 1,
-            /* datatype     = */ time_step_and_flow_type,
-            /* destination  = */ iter->second,
-            /* tag          = */ tag,
-            /* communicator = */ MPI_COMM_WORLD,
-            /* request      = */ &stored_sends.back().mpi_request);
+            stored_sends.back().buffer.get(),
+            1,
+            time_step_and_flow_type,
+            iter->second,
+            tag,
+            MPI_COMM_WORLD,
+            &stored_sends.back().mpi_request);
 
         //std::cerr << "Remote send from rank " << world_rank << " to rank " << iter->second << " on tag " << tag << std::endl;
         return (double)SENTINEL_IS_REMOTELY_HANDLED;
@@ -110,6 +110,40 @@ double HY_PointHydroNexusRemote::get_downstream_flow(std::string catchment_id, t
         return HY_PointHydroNexus::get_downstream_flow(catchment_id, t, percent_flow);
     }
 
+}*/
+
+double HY_PointHydroNexusRemote::get_downstream_flow(std::string catchment_id, time_step_t t, double percent_flow)
+{
+    double remote_flow = 0.0;
+    
+    if ( type == reciever )
+    {
+    	for ( int rank : upstream_ranks )
+    	{
+       		int status;
+
+       		stored_recieves.resize(stored_recieves.size() + 1);
+       		stored_recieves.back().buffer = std::make_shared<time_step_and_flow_t>();
+
+       		int tag = extract(id);
+
+       		//Receive downstream_flow from Upstream Remote Nexus to this Downstream Remote Nexus
+       		status = MPI_Irecv(
+          		stored_recieves.back().buffer.get(),
+          		1,
+          		time_step_and_flow_type,
+          		rank,
+          		tag,
+          		MPI_COMM_WORLD,
+          		&stored_recieves.back().mpi_request);
+
+       		MPI_Handle_Error(status);   	
+    	}
+    	
+    	process_communications();
+    }
+    
+    return HY_PointHydroNexus::get_downstream_flow(catchment_id, t, percent_flow);
 }
 
 /* void HY_PointHydroNexusRemote::add_upstream_flow(double val, std::string catchment_id, time_step_t t)
