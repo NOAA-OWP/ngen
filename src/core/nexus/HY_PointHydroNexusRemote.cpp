@@ -115,8 +115,11 @@ HY_PointHydroNexusRemote::~HY_PointHydroNexusRemote()
 double HY_PointHydroNexusRemote::get_downstream_flow(std::string catchment_id, time_step_t t, double percent_flow)
 {
     double remote_flow = 0.0;
-    
-    if ( type == reciever )
+    if ( type == sender )
+    {
+    	return -9999.9;
+    }
+    else if ( type == reciever )
     {
     	for ( int rank : upstream_ranks )
     	{
@@ -204,7 +207,7 @@ void HY_PointHydroNexusRemote::add_upstream_flow(double val, std::string catchme
 		bool all_found = true;
 		
 		// check for stored data for each contributer
-		for ( auto& id : get_contributing_catchments() )
+		for ( auto& id : get_local_contributing_catchments() )
 		{
 			auto pos = std::find_if(flows_for_timestep.begin(), flows_for_timestep.end(), [&id] (flows& v) { return v.first == id; } );
 			
@@ -264,14 +267,14 @@ void HY_PointHydroNexusRemote::process_communications()
         {
             // get the data from the communication buffer
             long time_step = i->buffer->time_step;
-            std::string catchment_id = std::string(nexus_prefix + std::to_string(i->buffer->catchment_id));
+            std::string contributing_id = id;
             double flow = i->buffer->flow;
 
             // remove this object from the vector
             i = stored_recieves.erase(i);
 
             // add the recieved flow
-            HY_PointHydroNexus::add_upstream_flow(flow, catchment_id, time_step);
+            HY_PointHydroNexus::add_upstream_flow(flow, contributing_id, time_step);
         }
         else
         {
