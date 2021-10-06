@@ -72,7 +72,7 @@ class bmi_model(Bmi):
     #------------------------------------------------------------
 
     #-------------------------------------------------------------------
-    def initialize( self, bmi_cfg_file=None ):
+    def initialize( self, bmi_cfg_file_name: str ):
 
         # ----- Create some lookup tabels from the long variable names --------#
         self._var_name_map_long_first = {long_name:self._var_name_units_map[long_name][0] for long_name in self._var_name_units_map.keys()}
@@ -80,13 +80,17 @@ class bmi_model(Bmi):
         self._var_units_map = {long_name:self._var_name_units_map[long_name][1] for long_name in self._var_name_units_map.keys()}
         
         # -------------- Read in the BMI configuration -------------------------#
-        if bmi_cfg_file is not None:
-            with bmi_cfg_file.open('r') as fp:
-                cfg = yaml.safe_load(fp)
-            self.cfg_bmi = self._parse_config(cfg)
-        else:
-            print("Error: No configuration provided, nothing to do...")
-            
+        if not isinstance(bmi_cfg_file_name, str) or len(bmi_cfg_file_name) == 0:
+            raise RuntimeError("No BMI initialize configuration provided, nothing to do...")
+
+        bmi_cfg_file = Path(bmi_cfg_file_name)
+        if not bmi_cfg_file.is_file():
+            raise RuntimeError("No configuration provided, nothing to do...")
+
+        with bmi_cfg_file.open('r') as fp:
+            cfg = yaml.safe_load(fp)
+        self.cfg_bmi = self._parse_config(cfg)
+
         # ------------- Initialize the parameters, inputs and outputs ----------#
         for parm in self._model_parameters_list:
             self._values[self._var_name_map_short_first[parm]] = self.cfg_bmi[parm]
