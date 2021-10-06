@@ -41,6 +41,10 @@ class HY_PointHydroNexusRemote : public HY_PointHydroNexus
         /** extract a numeric id from the catchment id for use as a mpi tag */
         static long extract(std::string s) {  return std::stoi(s.substr(4)); }
         
+        const Catchments& get_local_contributing_catchments(){
+            return local_contributers;
+        };
+
         bool is_remote_sender()
         {
             //if ( loc_map.size() > 0 )
