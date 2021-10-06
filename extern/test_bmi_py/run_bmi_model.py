@@ -2,13 +2,13 @@ import random
 from pathlib import Path
 
 # This is the BMI LSTM that we will be running
-import bmi_model
+from . import bmi_model
 
 
 def execute():
     # creating an instance of a model
     print('creating an instance of an BMI_MODEL model object')
-    model = bmi_model.bmi_model()
+    model = bmi_model()
 
     # Initializing the BMI
     print('Initializing the BMI')
