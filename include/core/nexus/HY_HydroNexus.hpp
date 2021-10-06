@@ -45,6 +45,8 @@ class HY_HydroNexus
     }
 
     std::string& get_id() { return id; }
+    
+    Catchments& get_contributing_catchments() { return contributing_catchments; }
 
     protected:
 
