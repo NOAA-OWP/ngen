@@ -140,7 +140,11 @@ double HY_PointHydroNexusRemote::get_downstream_flow(std::string catchment_id, t
        		MPI_Handle_Error(status);   	
     	}
     	
-    	process_communications();
+    	while ( stored_recieves.size() > 0 )
+    	{
+    		process_communications();
+    		std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    	}
     }
     
     return HY_PointHydroNexus::get_downstream_flow(catchment_id, t, percent_flow);
@@ -237,7 +241,12 @@ void HY_PointHydroNexusRemote::add_upstream_flow(double val, std::string catchme
 		        MPI_COMM_WORLD,
 		        &stored_sends.back().mpi_request);	
 		        
-		    process_communications();   		
+		    
+		    while ( stored_sends.size() > 0 )
+		    {
+		    	process_communications();  
+		    	std::this_thread::sleep_for(std::chrono::milliseconds(1));
+		    }		
 		}
 	}
 }
