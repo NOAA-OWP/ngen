@@ -95,9 +95,34 @@ double Bmi_Py_Adapter::GetTimeStep() {
 }
 
 void Bmi_Py_Adapter::GetValue(string name, void *dest) {
-    int num_items = GetVarNbytes(name) / GetVarItemsize(name);
-    int indices[num_items];
-    get_value_at_indices(name, dest, indices, num_items, true);
+    string cxx_type;
+    try {
+        cxx_type = get_analogous_cxx_type(GetVarType(name), GetVarItemsize(name));
+    }
+    catch (runtime_error &e) {
+        string msg = "Encountered error getting C++ type during call to GetValue: \n";
+        msg += e.what();
+        throw runtime_error(msg);
+    }
+
+    if (cxx_type == "short") {
+        copy_to_array<short>(name, (short *) dest);
+    } else if (cxx_type == "int") {
+        copy_to_array<int>(name, (int *) dest);
+    } else if (cxx_type == "long") {
+        copy_to_array<long>(name, (long *) dest);
+    } else if (cxx_type == "long long") {
+        copy_to_array<long long>(name, (long long *) dest);
+    } else if (cxx_type == "float") {
+        copy_to_array<float>(name, (float *) dest);
+    } else if (cxx_type == "double") {
+        copy_to_array<double>(name, (double *) dest);
+    } else if (cxx_type == "long double") {
+        copy_to_array<long double>(name, (long double *) dest);
+    } else {
+        throw runtime_error("Bmi_Py_Adapter can't get value of unsupported type: " + cxx_type);
+    }
+
 }
 
 void Bmi_Py_Adapter::GetValueAtIndices(std::string name, void *dest, int *inds, int count) {

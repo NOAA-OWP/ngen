@@ -41,6 +41,43 @@ namespace models {
                            std::string forcing_file_path, bool allow_exceed_end, bool has_fixed_time_step,
                            utils::StreamHandler output);
 
+            /**
+             * Copy the given BMI variable's values from the backing numpy array to a C++ array.
+             *
+             * @tparam T The appropriate C++ type for the values.
+             * @param name The name of the BMI variable in question.
+             * @param dest A pointer to an already-allocated array in which to copy the values of the desired BMI
+             *             variable, which is assume to be of the necessary size.
+             */
+            template <typename T>
+            void copy_to_array(const string& name, T *dest)
+            {
+                py::array_t<T> backing_array = bmi_model->attr("get_value_ptr")(name);
+                auto uncheck_proxy = backing_array.template unchecked<1>();
+                for (ssize_t i = 0; i < backing_array.size(); ++i) {
+                    dest[i] = uncheck_proxy(i);
+                }
+            }
+
+            /**
+             * Copy the given BMI variable's values from the backing numpy array to a C++ vector.
+             *
+             * @tparam T The appropriate C++ type for the values.
+             * @param name The name of the BMI variable in question.
+             * @return A vector containing the values of the desired BMI variable.
+             */
+            template <typename T>
+            std::vector<T> copy_to_vector(const string& name)
+            {
+                py::array_t<T> backing_array = bmi_model->attr("get_value_ptr")(name);
+                std::vector<T> dest(backing_array.size());
+                auto uncheck_proxy = backing_array.template unchecked<1>();
+                for (ssize_t i = 0; i < backing_array.size(); ++i) {
+                    dest[i] = uncheck_proxy(i);
+                }
+                return dest;
+            }
+
             void Finalize() override {
                 bmi_model->attr("finalize")();
             }
