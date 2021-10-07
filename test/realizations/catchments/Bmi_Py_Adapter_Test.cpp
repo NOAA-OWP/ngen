@@ -26,6 +26,10 @@ class Bmi_Py_Adapter_Test : public ::testing::Test {
 
 protected:
 
+    static std::shared_ptr<py::object> friend_get_raw_model(Bmi_Py_Adapter *adapter) {
+        return adapter->bmi_model;
+    }
+
     // This is required for the Python interpreter and must be kept alive
     static std::shared_ptr<py::scoped_interpreter> guard_ptr;
 
