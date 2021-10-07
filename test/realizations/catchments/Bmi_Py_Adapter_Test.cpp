@@ -481,6 +481,22 @@ TEST_F(Bmi_Py_Adapter_Test, GetValuePtr_0_a) {
 }
 
 /**
+ * Test the function for getting values for a particular set of indices.
+ * */
+TEST_F(Bmi_Py_Adapter_Test, DISABLED_GetValueAtIndices_0_a) {
+    // TODO: need model support finished
+    ASSERT_EQ(1, 2);
+}
+
+/**
+ * Test the function for setting values for a particular set of indices.
+ * */
+TEST_F(Bmi_Py_Adapter_Test, DISABLED_SetValueAtIndices_0_a) {
+    // TODO: need model support finished
+    ASSERT_EQ(1, 2);
+}
+
+/**
  * Test the function for getting start time.
  */
 TEST_F(Bmi_Py_Adapter_Test, GetStartTime_0_a) {
