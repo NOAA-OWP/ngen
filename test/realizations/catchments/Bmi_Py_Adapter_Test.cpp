@@ -5,6 +5,7 @@
 #include "gtest/gtest.h"
 #include <vector>
 #include <exception>
+#include <cmath>
 
 #include <pybind11/embed.h>
 namespace py = pybind11;
@@ -12,6 +13,7 @@ namespace py = pybind11;
 #include "Bmi_Py_Adapter.hpp"
 
 using namespace models::bmi;
+using namespace pybind11::literals; // to bring in the `_a` literal for pybind11 keyword args functionality
 
 typedef struct example_scenario {
     std::string bmi_init_config;
@@ -105,11 +107,12 @@ protected:
 
     py::object Path;
 
-    std::vector<std::string> expected_output_var_names = { "OUTPUT_VAR_1", "OUTPUT_VAR_2" };
+    std::vector<std::string> expected_output_var_names = { "output_var_1", "output_var_2", "output_var_3" };
     std::vector<std::string> expected_output_var_locations = { "node", "node" };
     std::vector<int> expected_output_var_grids = { 0, 0 };
     std::vector<std::string> expected_output_var_units = { "m", "m" };
-    std::vector<std::string> expected_output_var_types = { "double", "double" };
+    std::vector<std::string> expected_input_var_types = { "float64", "float64" };
+    std::vector<std::string> expected_output_var_types = { "float64", "float64" };
     int expected_grid_rank = 1;
     int expected_grid_size = 1;
     std::string expected_grid_type = "scalar";
@@ -128,7 +131,6 @@ void Bmi_Py_Adapter_Test::SetUp() {
     example_scenario template_ex_struct;
     // These should be safe for all examples
     template_ex_struct.module_name = "test_bmi_py.bmi_model";
-    //template_ex_struct.module_name = "test_bmi_py";
     template_ex_struct.module_directory = repo_root + "/extern/";
 
     // Now generate the examples vector based on the above template example
@@ -271,6 +273,351 @@ TEST_F(Bmi_Py_Adapter_Test, Initialize_0_a) {
 
     examples[ex_index].adapter->Initialize();
     examples[ex_index].adapter->Finalize();
+}
+
+/**
+ * Test output variables can be retrieved.
+ */
+TEST_F(Bmi_Py_Adapter_Test, GetOutputVarNames_0_a) {
+    size_t ex_index = 0;
+    
+    try {
+        ASSERT_EQ(examples[ex_index].adapter->GetOutputVarNames(), expected_output_var_names);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting output var names: %s", e.what());
+    }
+}
+
+/**
+ * Test output variables item count can be retrieved.
+ */
+TEST_F(Bmi_Py_Adapter_Test, GetOutputItemCount_0_a) {
+    size_t ex_index = 0;
+
+    try {
+        ASSERT_EQ(examples[ex_index].adapter->GetOutputItemCount(), expected_output_var_names.size());
+    }
+    catch (std::exception& e) {
+        printf("Exception getting output var count: %s", e.what());
+    }
+}
+
+/**
+ * Test output 1 variable type can be retrieved.
+ */
+TEST_F(Bmi_Py_Adapter_Test, GetVarType_0_a) {
+    size_t ex_index = 0;
+    size_t out_var_index = 0;
+
+    examples[ex_index].adapter->Initialize();
+    std::string variable_name = examples[ex_index].adapter->GetOutputVarNames()[out_var_index];
+    std::string expected_type = expected_output_var_types[out_var_index];
+
+    try {
+        ASSERT_EQ(examples[ex_index].adapter->GetVarType(variable_name), expected_type);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting var type: %s", e.what());
+        throw e;
+    }
+}
+
+/**
+ * Test input 1 variable type can be retrieved.
+ */
+TEST_F(Bmi_Py_Adapter_Test, GetVarType_0_b) {
+    size_t ex_index = 0;
+    size_t var_index = 0;
+
+    examples[ex_index].adapter->Initialize();
+    std::string variable_name = examples[ex_index].adapter->GetOutputVarNames()[var_index];
+    std::string expected_type = expected_input_var_types[var_index];
+
+    try {
+        ASSERT_EQ(examples[ex_index].adapter->GetVarType(variable_name), expected_type);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting var type: %s", e.what());
+        throw e;
+    }
+}
+
+/**
+ * Test that getting the number of bytes works for input variable 1.
+ */
+TEST_F(Bmi_Py_Adapter_Test, GetVarNbytes_0_a) {
+    size_t ex_index = 0;
+
+    examples[ex_index].adapter->Initialize();
+    std::shared_ptr<py::object> raw_model = friend_get_raw_model(examples[ex_index].adapter.get());
+    py::array value_array = raw_model->attr("get_value_ptr")("input_var_1");
+
+    int expected = (int)py::int_(value_array.nbytes());
+
+    double observed = examples[ex_index].adapter->GetVarNbytes("input_var_1");
+    examples[ex_index].adapter->Finalize();
+    ASSERT_EQ(observed, expected);
+}
+
+/**
+ * Test that both the get value function works for input 1.
+ */
+TEST_F(Bmi_Py_Adapter_Test, GetValue_0_a) {
+    size_t ex_index = 0;
+
+    std::string var_name = "input_var_1";
+
+    examples[ex_index].adapter->Initialize();
+
+    std::shared_ptr<py::object> raw_model = friend_get_raw_model(examples[ex_index].adapter.get());
+    py::array_t<double> raw_var_values = raw_model->attr("get_value_ptr")(var_name.c_str());
+    auto unchecked = raw_var_values.mutable_unchecked<1>();
+
+    double initial_var_value = unchecked(0);
+
+    double retrieved;
+    examples[ex_index].adapter->GetValue(var_name, &retrieved);
+    examples[ex_index].adapter->Finalize();
+    ASSERT_EQ(initial_var_value, retrieved);
+}
+
+/**
+ * Test that both the get value function works for input 1 after it is explicitly set.
+ */
+TEST_F(Bmi_Py_Adapter_Test, GetValue_0_b) {
+    size_t ex_index = 0;
+
+    std::string var_name = "input_var_1";
+    double value = 5.0;
+
+    examples[ex_index].adapter->Initialize();
+
+    std::shared_ptr<py::object> raw_model = friend_get_raw_model(examples[ex_index].adapter.get());
+    py::array_t<double> raw_var_values = raw_model->attr("get_value_ptr")(var_name.c_str());
+    auto unchecked = raw_var_values.mutable_unchecked<1>();
+
+    double initial_var_value = unchecked(0);
+    ASSERT_NE(initial_var_value, value);
+
+    examples[ex_index].adapter->SetValue(var_name, &value);
+
+    double retrieved;
+    examples[ex_index].adapter->GetValue(var_name, &retrieved);
+    examples[ex_index].adapter->Finalize();
+    ASSERT_EQ(value, retrieved);
+}
+
+/**
+ * Test that both the get value function works for input 2 after it is explicitly set.
+ */
+TEST_F(Bmi_Py_Adapter_Test, GetValue_0_c) {
+    size_t ex_index = 0;
+
+    std::string var_name = "input_var_2";
+    double value = 10.0;
+
+    examples[ex_index].adapter->Initialize();
+
+    std::shared_ptr<py::object> raw_model = friend_get_raw_model(examples[ex_index].adapter.get());
+    py::array_t<double> raw_var_values = raw_model->attr("get_value_ptr")(var_name.c_str());
+    auto unchecked = raw_var_values.mutable_unchecked<1>();
+
+    double initial_var_value = unchecked(0);
+    ASSERT_NE(initial_var_value, value);
+
+    examples[ex_index].adapter->SetValue(var_name, &value);
+
+    double retrieved;
+    examples[ex_index].adapter->GetValue(var_name, &retrieved);
+    examples[ex_index].adapter->Finalize();
+    ASSERT_EQ(value, retrieved);
+}
+
+/**
+ * Test that both the get value function works for output 2.
+ */
+TEST_F(Bmi_Py_Adapter_Test, GetValue_0_d) {
+    size_t ex_index = 0;
+
+    std::string var_name = "output_var_2";
+    double value = 10.0;
+
+    examples[ex_index].adapter->Initialize();
+
+    std::shared_ptr<py::object> raw_model = friend_get_raw_model(examples[ex_index].adapter.get());
+    py::array_t<double> raw_var_values = raw_model->attr("get_value_ptr")(var_name.c_str());
+    auto unchecked = raw_var_values.mutable_unchecked<1>();
+
+    double initial_var_value = unchecked(0);
+    ASSERT_NE(initial_var_value, value);
+
+    unchecked(0) = value;
+
+    double retrieved;
+    examples[ex_index].adapter->GetValue(var_name, &retrieved);
+    examples[ex_index].adapter->Finalize();
+    ASSERT_EQ(value, retrieved);
+}
+
+/**
+ * Test that both the get value pointer function works for input 1.
+ */
+TEST_F(Bmi_Py_Adapter_Test, GetValuePtr_0_a) {
+    size_t ex_index = 0;
+
+    std::string var_name = "input_var_1";
+    double value = 5.0;
+
+    examples[ex_index].adapter->Initialize();
+    double* ptr = (double*) examples[ex_index].adapter->GetValuePtr(var_name);
+    ASSERT_NE(value, *ptr);
+
+    examples[ex_index].adapter->SetValue(var_name, &value);
+    double retrieved = *ptr;
+    examples[ex_index].adapter->Finalize();
+
+    ASSERT_EQ(value, retrieved);
+}
+
+/**
+ * Test the function for getting start time.
+ */
+TEST_F(Bmi_Py_Adapter_Test, GetStartTime_0_a) {
+    size_t ex_index = 0;
+
+    examples[ex_index].adapter->Initialize();
+    int time = examples[ex_index].adapter->GetStartTime();
+    examples[ex_index].adapter->Finalize();
+    ASSERT_EQ(0, time);
+}
+
+/**
+ * Test the function for getting time step size.
+ */
+TEST_F(Bmi_Py_Adapter_Test, GetTimeStep_0_a) {
+    size_t ex_index = 0;
+
+    examples[ex_index].adapter->Initialize();
+    int time_step = examples[ex_index].adapter->GetTimeStep();
+    examples[ex_index].adapter->Finalize();
+    ASSERT_EQ(3600, time_step);
+}
+
+/**
+ * Test the function for getting model time units.
+ */
+TEST_F(Bmi_Py_Adapter_Test, GetTimeUnits_0_a) {
+    size_t ex_index = 0;
+
+    examples[ex_index].adapter->Initialize();
+    std::string time_units = examples[ex_index].adapter->GetTimeUnits();
+    examples[ex_index].adapter->Finalize();
+    ASSERT_EQ("seconds", time_units);
+}
+
+/**
+ * Test the function for getting model end time, assuming (as in used config) 720 time steps.
+ * */
+TEST_F(Bmi_Py_Adapter_Test, GetEndTime_0_a) {
+    size_t ex_index = 0;
+
+    examples[ex_index].adapter->Initialize();
+    py::module_ np = py::module_::import("numpy");
+
+
+    double max_float = py::float_(np.attr("finfo")(py::float_(0.0)).attr("max"));
+
+    //double expected = examples[ex_index].adapter->GetStartTime() + (720 * examples[ex_index].adapter->GetTimeStep());
+    double end_time = examples[ex_index].adapter->GetEndTime();
+    examples[ex_index].adapter->Finalize();
+    ASSERT_EQ(max_float, end_time);
+}
+
+/**
+ * Test that getting the current model time works after initialization.
+ */
+TEST_F(Bmi_Py_Adapter_Test, GetCurrentTime_0_a) {
+    size_t ex_index = 0;
+
+    examples[ex_index].adapter->Initialize();
+    int start_time = examples[ex_index].adapter->GetStartTime();
+    int current_time = examples[ex_index].adapter->GetCurrentTime();
+    examples[ex_index].adapter->Finalize();
+    ASSERT_EQ(start_time, current_time);
+}
+
+/**
+ * Test that getting the current model time works after an update.
+ */
+TEST_F(Bmi_Py_Adapter_Test, GetCurrentTime_0_b) {
+    size_t ex_index = 0;
+
+    examples[ex_index].adapter->Initialize();
+    int expected_time = examples[ex_index].adapter->GetStartTime() + examples[ex_index].adapter->GetTimeStep();
+    double value = 10.0;
+    examples[ex_index].adapter->SetValue("input_var_1", &value);
+    examples[ex_index].adapter->SetValue("input_var_2", &value);
+    examples[ex_index].adapter->Update();
+    int current_time = examples[ex_index].adapter->GetCurrentTime();
+    examples[ex_index].adapter->Finalize();
+    ASSERT_EQ(expected_time, current_time);
+}
+
+/**
+ * Test that the set value function works for input 1.
+ */
+TEST_F(Bmi_Py_Adapter_Test, SetValue_0_a) {
+    size_t ex_index = 0;
+
+    std::string var_name = "input_var_1";
+    double value = 5.0;
+
+
+    examples[ex_index].adapter->Initialize();
+
+    std::shared_ptr<py::object> raw_model = friend_get_raw_model(examples[ex_index].adapter.get());
+    py::array_t<double> raw_var_values = raw_model->attr("get_value_ptr")(var_name.c_str());
+    auto unchecked = raw_var_values.mutable_unchecked<1>();
+
+    double initial_var_value = unchecked(0);
+
+    ASSERT_NE(value, initial_var_value);
+
+    examples[ex_index].adapter->SetValue(var_name, &value);
+
+    //double actual_stored_value = *((double*) raw_var_values.request(false).ptr);
+    double actual_stored_value = unchecked(0);
+
+    ASSERT_EQ(value, actual_stored_value);
+}
+
+/**
+ * Test that the set value function works for input 2.
+ */
+TEST_F(Bmi_Py_Adapter_Test, SetValue_0_b) {
+    size_t ex_index = 0;
+
+    std::string var_name = "input_var_2";
+    double value = 7.0;
+
+
+    examples[ex_index].adapter->Initialize();
+
+    std::shared_ptr<py::object> raw_model = friend_get_raw_model(examples[ex_index].adapter.get());
+    py::array_t<double> raw_var_values = raw_model->attr("get_value_ptr")(var_name.c_str());
+    auto unchecked = raw_var_values.mutable_unchecked<1>();
+
+    double initial_var_value = unchecked(0);
+
+    ASSERT_NE(value, initial_var_value);
+
+    examples[ex_index].adapter->SetValue(var_name, &value);
+
+    //double actual_stored_value = *((double*) raw_var_values.request(false).ptr);
+    double actual_stored_value = unchecked(0);
+
+    ASSERT_EQ(value, actual_stored_value);
 }
 
 #endif // ACTIVATE_PYTHON
