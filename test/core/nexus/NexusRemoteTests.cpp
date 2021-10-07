@@ -71,21 +71,20 @@ TEST_F(Nexus_Remote_Test, TestInit0)
     HY_PointHydroNexusRemote::catcment_location_map_t loc_map;
 
     std::shared_ptr<HY_PointHydroNexusRemote> nexus;
+    std::vector<string> upstream_catchments = {"cat-26"};
+    std::vector<string> downstream_catchments = {"cat-27"};
 
     // create a nexus at both ranks
     if ( mpi_rank == 0)
     {
-        std::vector<string> catchments;
-        catchments.push_back("cat-26");
-        loc_map["cat-26"] = 1;
-        nexus = std::make_shared<HY_PointHydroNexusRemote>("nex-26", catchments, loc_map);
+        loc_map["cat-27"] = 1;
+        nexus = std::make_shared<HY_PointHydroNexusRemote>("nex-26", downstream_catchments, upstream_catchments, loc_map);
     }
     else if ( mpi_rank == 1)
     {
-        std::vector<string> catchments;
-        catchments.push_back("cat-26");
         loc_map["cat-26"] = 0;
-        nexus = std::make_shared<HY_PointHydroNexusRemote>("nex-26", catchments, loc_map);
+        //loc_map["cat-27"] = 1;
+        nexus = std::make_shared<HY_PointHydroNexusRemote>("nex-26", downstream_catchments, upstream_catchments, loc_map);
     }
 
     double dummy_flow = -9999.0;
@@ -97,13 +96,13 @@ TEST_F(Nexus_Remote_Test, TestInit0)
         {
             case 0:
                 std::cerr << "Rank 0: Sending flow of " << discharge << " to catchment 26\n";
-                nexus->add_upstream_flow(discharge,"cat-1",ts);
-                nexus->get_downstream_flow("cat-26",ts,100);
+                nexus->add_upstream_flow(discharge,"cat-26",ts);
+                //nexus->get_downstream_flow("cat-27",ts,100);
             break;
 
             case 1:
-                nexus->add_upstream_flow(dummy_flow,"cat-26",ts);
-                double recieved_flow = nexus->get_downstream_flow("cat-2",ts,100);
+                //nexus->add_upstream_flow(dummy_flow,"cat-26",ts);
+                double recieved_flow = nexus->get_downstream_flow("cat-27",ts,100);
                 ASSERT_EQ(discharge,recieved_flow);
                 std::cerr << "Rank 1: Recieving flow of " << recieved_flow << " from catchment Nexus connected to catchment 26\n";
             break;
