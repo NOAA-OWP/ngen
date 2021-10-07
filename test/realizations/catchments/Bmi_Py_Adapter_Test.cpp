@@ -713,6 +713,164 @@ TEST_F(Bmi_Py_Adapter_Test, DISABLED_GetGridSpacing_0_a) {
     ASSERT_TRUE(false);
 }
 
+/**
+ * Test the function for getting the grid origin for the grid of output variable 1.
+ */
+TEST_F(Bmi_Py_Adapter_Test, DISABLED_GetGridOrigin_0_a) {
+    // TODO: requires model support
+    ASSERT_TRUE(false);
+}
+
+/**
+ * Test the function for getting the location of grid nodes in the first dimension for the grid of output variable 1.
+ */
+TEST_F(Bmi_Py_Adapter_Test, DISABLED_GetGridX_0_a) {
+    // TODO: requires model support
+    ASSERT_TRUE(false);
+}
+
+/**
+ * Test the function for getting the location of grid nodes in the second dimension for the grid of output variable 1.
+ */
+TEST_F(Bmi_Py_Adapter_Test, DISABLED_GetGridY_0_a) {
+    // TODO: requires model support
+    ASSERT_TRUE(false);
+}
+
+/**
+ * Test the function for getting the location of grid nodes in the third dimension for the grid of output variable 1.
+ */
+TEST_F(Bmi_Py_Adapter_Test, DISABLED_GetGridZ_0_a) {
+    // TODO: requires model support
+    ASSERT_TRUE(false);
+}
+
+/**
+ * Test the function for getting the grid node count for the grid of output variable 1.
+ */
+TEST_F(Bmi_Py_Adapter_Test, DISABLED_GetGridNodeCount_0_a) {
+    // TODO: requires model support
+    /*
+    size_t ex_index = 0;
+
+    std::string var_name = "output_var_1";
+    examples[ex_index].adapter->Initialize();
+    int grid_id = examples[ex_index].adapter->GetVarGrid(var_name);
+    int *grid_spacing = examples[ex_index].adapter->GetGridSpacing(grid_id);
+
+    ASSERT_EQ(grid_size, expected_grid_size);
+    */
+    ASSERT_TRUE(false);
+}
+
+/**
+ * Test the function for getting the grid edge count for the grid of output variable 1.
+ */
+TEST_F(Bmi_Py_Adapter_Test, DISABLED_GetGridEdgeCount_0_a) {
+    // TODO: requires model support
+    /*
+    size_t ex_index = 0;
+
+    std::string var_name = "output_var_1";
+    examples[ex_index].adapter->Initialize();
+    int grid_id = examples[ex_index].adapter->GetVarGrid(var_name);
+    int *grid_spacing = examples[ex_index].adapter->GetGridSpacing(grid_id);
+
+    ASSERT_EQ(grid_size, expected_grid_size);
+    */
+    ASSERT_TRUE(false);
+}
+
+/**
+ * Test the function for getting the grid face count for the grid of output variable 1.
+ */
+TEST_F(Bmi_Py_Adapter_Test, DISABLED_GetGridFaceCount_0_a) {
+    // TODO: requires model support
+    /*
+    size_t ex_index = 0;
+
+    std::string var_name = "output_var_1";
+    examples[ex_index].adapter->Initialize();
+    int grid_id = examples[ex_index].adapter->GetVarGrid(var_name);
+    int *grid_spacing = examples[ex_index].adapter->GetGridSpacing(grid_id);
+
+    ASSERT_EQ(grid_size, expected_grid_size);
+    */
+    ASSERT_TRUE(false);
+}
+
+/**
+ * Test the function for getting the grid edge nodes for the grid of output variable 1.
+ */
+TEST_F(Bmi_Py_Adapter_Test, DISABLED_GetGridEdgeNodes_0_a) {
+    // TODO: requires model support
+    /*
+    size_t ex_index = 0;
+
+    std::string var_name = "output_var_1";
+    examples[ex_index].adapter->Initialize();
+    int grid_id = examples[ex_index].adapter->GetVarGrid(var_name);
+    int *grid_spacing = examples[ex_index].adapter->GetGridSpacing(grid_id);
+
+    ASSERT_EQ(grid_size, expected_grid_size);
+    */
+    ASSERT_TRUE(false);
+}
+
+/**
+ * Test the function for getting the grid face edges for the grid of output variable 1.
+ */
+TEST_F(Bmi_Py_Adapter_Test, DISABLED_GetGridFaceEdges_0_a) {
+    // TODO: requires model support
+    /*
+    size_t ex_index = 0;
+
+    std::string var_name = "output_var_1";
+    examples[ex_index].adapter->Initialize();
+    int grid_id = examples[ex_index].adapter->GetVarGrid(var_name);
+    int *grid_spacing = examples[ex_index].adapter->GetGridSpacing(grid_id);
+
+    ASSERT_EQ(grid_size, expected_grid_size);
+    */
+    ASSERT_TRUE(false);
+}
+
+/**
+ * Test the function for getting the grid face nodes for the grid of output variable 1.
+ */
+TEST_F(Bmi_Py_Adapter_Test, DISABLED_GetGridFaceNodes_0_a) {
+    // TODO: requires model support
+    /*
+    size_t ex_index = 0;
+
+    std::string var_name = "output_var_1";
+    examples[ex_index].adapter->Initialize();
+    int grid_id = examples[ex_index].adapter->GetVarGrid(var_name);
+    int *grid_spacing = examples[ex_index].adapter->GetGridSpacing(grid_id);
+
+    ASSERT_EQ(grid_size, expected_grid_size);
+    */
+    ASSERT_TRUE(false);
+}
+
+/**
+ * Test the function for getting the grid nodes per face for the grid of output variable 1.
+ */
+TEST_F(Bmi_Py_Adapter_Test, DISABLED_GetGridNodesPerFace_0_a) {
+    // TODO: requires model support
+    /*
+    size_t ex_index = 0;
+
+    std::string var_name = "output_var_1";
+    examples[ex_index].adapter->Initialize();
+    int grid_id = examples[ex_index].adapter->GetVarGrid(var_name);
+    int *grid_spacing = examples[ex_index].adapter->GetGridSpacing(grid_id);
+
+    ASSERT_EQ(grid_size, expected_grid_size);
+    */
+    ASSERT_TRUE(false);
+}
+
 #endif // ACTIVATE_PYTHON
 
 #endif // NGEN_BMI_PY_TESTS_ACTIVE
