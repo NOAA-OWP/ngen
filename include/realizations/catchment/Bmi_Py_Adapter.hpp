@@ -462,6 +462,33 @@ namespace models {
             }
 
             /**
+             * Set the values of the given BMI variable for the model, sourcing new data from the provided vector.
+             *
+             * @tparam T The type of the variable source values.
+             * @param name The name of the involved BMI model variable.
+             * @param src The source vector of new values to use to set the values in the backing BMI model, which must
+             *            be of the same length as the model's variable array.
+             */
+            template <typename T>
+            void set_value(const std::string &name, std::vector<T> src) {
+                int nbytes = GetVarNbytes(name);
+                int itemSize = GetVarItemsize(name);
+                int length = nbytes / itemSize;
+
+                if (length != src.size()) {
+                    throw std::runtime_error(
+                            "Bmi_Py_Adapter mismatch of lengths setting variable array (" + std::to_string(length) +
+                            " expected but " + std::to_string(src.size()) + " received)");
+                }
+
+                py::array_t<T> model_var_array = bmi_model->attr("get_value_ptr")(name);
+                auto mutable_unchecked_proxy = model_var_array.template mutable_unchecked<1>();
+                for (size_t i = 0; i < length; ++i) {
+                    mutable_unchecked_proxy(i) = src[i];
+                }
+            }
+
+            /**
              * Set values for a model's BMI variable at specified indices.
              *
              * This function is required to fulfill the @ref ::bmi::Bmi interface.  It essentially gets the advertised
@@ -624,6 +651,27 @@ namespace models {
                     //split_name.pop_back();
                     // And then the split name should container the module
                     bmi_type_py_module_name = make_shared<string>(boost::algorithm::join(split_name, delimiter));
+                }
+            }
+
+            /**
+             * Set the values of the given BMI variable based on a provided C++ array of values.
+             *
+             * @tparam T The type of source values, assumed to be appropriate for the involved variable.
+             * @param name The name of the involved BMI model variable.
+             * @param src An array of source values to apply to the BMI variable, assumed to be of the same size as the
+             *            BMI model's current array for the involved variable.
+             */
+            template <typename T>
+            void set_value(const std::string &name, T *src) {
+                int nbytes = GetVarNbytes(name);
+                int itemSize = GetVarItemsize(name);
+                int length = nbytes / itemSize;
+
+                py::array_t<T> model_var_array = bmi_model->attr("get_value_ptr")(name);
+                auto mutable_unchecked_proxy = model_var_array.template mutable_unchecked<1>();
+                for (size_t i = 0; i < length; ++i) {
+                    mutable_unchecked_proxy(i) = src[i];
                 }
             }
 
