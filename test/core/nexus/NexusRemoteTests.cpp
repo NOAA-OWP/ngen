@@ -119,7 +119,7 @@ TEST_F(Nexus_Remote_Test, TestInit0)
 
 }
 
-TEST_F(Nexus_Remote_Test, TestDeadlock1)
+TEST_F(Nexus_Remote_Test, DISABLED_TestDeadlock1)
 {
     HY_PointHydroNexusRemote::catcment_location_map_t loc_map;
 
