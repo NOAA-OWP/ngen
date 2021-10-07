@@ -114,7 +114,8 @@ class HY_PointHydroNexusRemote : public HY_PointHydroNexus
         {
         	local,
         	sender,
-        	receiver
+        	receiver,
+            sender_receiver
         };
         
         /** The type of communication at this nexus
