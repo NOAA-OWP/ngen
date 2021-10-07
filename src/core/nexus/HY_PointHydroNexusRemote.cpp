@@ -68,18 +68,9 @@ HY_PointHydroNexusRemote::HY_PointHydroNexusRemote(std::string nexus_id, Catchme
         }
     }
 
-    if( is_sender && !is_receiver ){
-        type = sender;
-    }
-    else if( is_receiver && !is_sender ){
-        type = receiver;
-    }
-    else if( is_receiver && is_sender ){
-        type = sender_receiver;
-    }
-    else{ 
-        type = local;
-    }
+    if( is_sender && !is_receiver ) type = sender;
+    else if( is_receiver && !is_sender ) type = receiver;
+    else type = local;
 
 }
 
@@ -170,7 +161,7 @@ double HY_PointHydroNexusRemote::get_downstream_flow(std::string catchment_id, t
     {
     	return -9999.9;
     }
-    else if ( type == receiver )
+    else if ( type == receiver || sender_receiver )
     {
     	for ( int rank : upstream_ranks )
     	{
@@ -252,7 +243,7 @@ void HY_PointHydroNexusRemote::add_upstream_flow(double val, std::string catchme
 	HY_PointHydroNexus::add_upstream_flow(val, catchment_id, t);
 	
 	// if we are a sender check to see if all of our upstreams have been added for the indicated time step
-	if ( type == sender )
+	if ( type == sender || sender_receiver )
 	{
 		auto& flows_for_timestep = upstream_flows[t];
 		bool all_found = true;
