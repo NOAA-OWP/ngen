@@ -695,6 +695,24 @@ TEST_F(Bmi_Py_Adapter_Test, DISABLED_GetGridShape_0_a) {
     ASSERT_TRUE(false);
 }
 
+/**
+ * Test the function for getting the grid spacing for the grid of output variable 1.
+ * */
+TEST_F(Bmi_Py_Adapter_Test, DISABLED_GetGridSpacing_0_a) {
+    // TODO: requires model support
+    /*
+    size_t ex_index = 0;
+
+    std::string var_name = "output_var_1";
+    examples[ex_index].adapter->Initialize();
+    int grid_id = examples[ex_index].adapter->GetVarGrid(var_name);
+    int *grid_spacing = examples[ex_index].adapter->GetGridSpacing(grid_id);
+
+    ASSERT_EQ(grid_size, expected_grid_size);
+    */
+    ASSERT_TRUE(false);
+}
+
 #endif // ACTIVATE_PYTHON
 
 #endif // NGEN_BMI_PY_TESTS_ACTIVE
