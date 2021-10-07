@@ -170,6 +170,133 @@ namespace models {
 
             void *GetValuePtr(std::string name) override;
 
+            /**
+             * Get the name string for the C++ type analogous to the described type in the Python backing model.
+             *
+             * Note that the size of an individual item is also required, as this can vary in certain situations in
+             * Python.
+             *
+             * @param py_type_name The string name of the analog type in Python.
+             * @param item_size The particular size in bytes for items of the involved analogous types.
+             * @return
+             */
+            std::string get_analogous_cxx_type(const std::string &py_type_name, const size_t item_size) {
+                /*
+                 * Note that an implementation using a "switch" statement would be problematic.  It could be done by
+                 * rewriting to separate the integer and non-integer type, then having cases based on size.  However,
+                 * this might cause trouble on certain systems, since (depending on the particular sizes of types) that
+                 * could produce duplicate "case" values.
+                 */
+                if (py_type_name == "int" && item_size == sizeof(short)) {
+                    return "short";
+                } else if (py_type_name == "int" && item_size == sizeof(int)) {
+                    return "int";
+                } else if (py_type_name == "int" && item_size == sizeof(long)) {
+                    return "long";
+                } else if (py_type_name == "int" && item_size == sizeof(long long)) {
+                    return "long long";
+                } else if (py_type_name == "float" && item_size == sizeof(float)) {
+                    return "float";
+                } else if ((py_type_name == "float" || py_type_name == "float64" || py_type_name == "np.float64" ||
+                            py_type_name == "numpy.float64") && item_size == sizeof(double)) {
+                    return "double";
+                } else if (py_type_name == "float" && item_size == sizeof(long double)) {
+                    return "long double";
+                } else {
+                    throw runtime_error(
+                            "(Bmi_Py_Adapter) Failed determining analogous C++ type for Python model '" + py_type_name +
+                            "' type with size " + std::to_string(item_size) + " bytes.");
+                }
+            }
+
+
+            /**
+             * Get the analogous built-in Python type for the C++ type with the provided name.
+             *
+             * @param cxx_type_name The string name of the analog type in C++.
+             * @return The name of the appropriate built-in Python type.
+             */
+            inline std::string get_analog_python_builtin(const std::string &cxx_type_name) {
+                if (cxx_type_name == "short" || cxx_type_name == "int" || cxx_type_name == "long" ||
+                    cxx_type_name == "long long") {
+                    return "int";
+                } else if (cxx_type_name == "float" || cxx_type_name == "double" || cxx_type_name == "long double") {
+                    return "double";
+                } else {
+                    throw runtime_error("(Bmi_Py_Adapter) Failed determining analogous built-in Python type for C++ '" +
+                                        cxx_type_name + "' type");
+                }
+            }
+
+            /**
+             * Get the analogous Python type appropriate for use in numpy arrays for the described  C++ type.
+             *
+             * @param cxx_type_name The string name of the analog type in C++.
+             * @param item_size The particular size in bytes for items of the involved analogous types.
+             * @return The name of the appropriate Python type.
+             */
+            inline std::string get_analog_python_dtype(const std::string &cxx_type_name, const size_t item_size) {
+                // TODO: figure out how to correctly get this
+                std::string numpy_module_name = "numpy";
+
+                if (cxx_type_name == "short" || cxx_type_name == "int" || cxx_type_name == "long" ||
+                    cxx_type_name == "long long")
+                {
+                    switch (item_size) {
+                        case 1: return numpy_module_name + ".int8";
+                        case 2: return numpy_module_name + ".int16";
+                        case 4: return numpy_module_name + ".int32";
+                        case 8: return numpy_module_name + ".int64";
+                        default: break;
+                    }
+                }
+
+                if (cxx_type_name == "float" || cxx_type_name == "double" || cxx_type_name == "long double") {
+                    switch (item_size) {
+                        case 2: return numpy_module_name + ".float16";
+                        case 4: return numpy_module_name + ".float32";
+                        case 8: return numpy_module_name + ".float64";
+                        default: break;
+                    }
+                }
+
+                throw runtime_error("(Bmi_Py_Adapter) Failed determining analogous Python dtype for C++ '" +
+                                    cxx_type_name + "' type with size " + std::to_string(item_size) + " bytes.");
+            }
+
+            /**
+             * Get the analogous Python type (or ``dtype``) for the described C++ type.
+             *
+             * Get the appropriate name of the analogous Python type for the described C++ type.  If set to do so, use
+             * numpy-specific types appropriate for an array ``dtype`` over standard, built-in Python types.
+             *
+             * @param cxx_type_name The string name of the analog type in C++.
+             * @param item_size The particular size in bytes for items of the involved analogous types.
+             * @param is_dtype Whether to prioritize numpy-specific types
+             * @return The name of the appropriate Python type.
+             */
+            inline std::string get_analog_python_type(const std::string &cxx_type_name, const size_t item_size,
+                                                      const bool is_dtype)
+            {
+                return is_dtype ? get_analog_python_dtype(cxx_type_name, item_size) : get_analog_python_builtin(
+                        cxx_type_name);
+            }
+
+            /**
+             * Get the analogous Python type for the described C++ type.
+             *
+             * Get the appropriate name of the analogous Python type for the described C++ type.  This variant assumes
+             * that a standard built-in type is sufficient, and numpy-specific types are not needed (as they might be
+             * for certain situations, like when dealing with BMI variable numpy array type).
+             *
+             * @param cxx_type_name The string name of the analog type in C++.
+             * @param item_size The particular size in bytes for items of the involved analogous types.
+             * @return The name of the appropriate Python type.
+             */
+            inline std::string get_analog_python_type(const std::string &cxx_type_name, const size_t item_size) {
+                return get_analog_python_type(cxx_type_name, item_size, false);
+            }
+
             template <typename T>
             void get_and_copy_grid_array(const char* grid_func_name, const int grid, T* dest, int dest_length,
                                          const char* np_dtype)
