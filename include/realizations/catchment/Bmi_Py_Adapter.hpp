@@ -374,10 +374,18 @@ namespace models {
              */
             template <typename T>
             void set_value_at_indices(const string &name, const int *inds, int count, void* cxx_array,
-                                      const char* np_type)
+                                      const string &np_type)
             {
+                // A few type string values may need minor adjustments
+                const char* actual_np_type;
+                if (np_type == "float64") {
+                    actual_np_type = "float";
+                }
+                else {
+                    actual_np_type = np_type.c_str();
+                }
                 py::array_t<int> index_np_array = np.attr("zeros")(count, "dtype"_a = "int");
-                py::array_t<T> src_np_array = np.attr("zeros")(count, "dtype"_a = np_type);
+                py::array_t<T> src_np_array = np.attr("zeros")(count, "dtype"_a = actual_np_type);
                 // These get direct access (mutable) to the arrays, since we don't need to worry about dimension checks
                 // as we just created the arrays
                 auto index_mut_direct = index_np_array.mutable_unchecked<1>();

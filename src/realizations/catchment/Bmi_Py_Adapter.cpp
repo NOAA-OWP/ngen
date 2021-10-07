@@ -167,19 +167,21 @@ void Bmi_Py_Adapter::SetValueAtIndices(std::string name, int *inds, int count, v
 
     // The available types and how they are handled here should match what is in get_value_at_indices
     if (val_type == "int" && val_item_size == sizeof(short)) {
-        set_value_at_indices<short>(name, inds, count, src, val_type.c_str());
+        set_value_at_indices<short>(name, inds, count, src, val_type);
     } else if (val_type == "int" && val_item_size == sizeof(int)) {
-        set_value_at_indices<int>(name, inds, count, src, val_type.c_str());
+        set_value_at_indices<int>(name, inds, count, src, val_type);
     } else if (val_type == "int" && val_item_size == sizeof(long)) {
-        set_value_at_indices<long>(name, inds, count, src, val_type.c_str());
+        set_value_at_indices<long>(name, inds, count, src, val_type);
     } else if (val_type == "int" && val_item_size == sizeof(long long)) {
-        set_value_at_indices<long long>(name, inds, count, src, val_type.c_str());
+        set_value_at_indices<long long>(name, inds, count, src, val_type);
     } else if (val_type == "float" && val_item_size == sizeof(float)) {
-        set_value_at_indices<float>(name, inds, count, src, val_type.c_str());
+        set_value_at_indices<float>(name, inds, count, src, val_type);
     } else if (val_type == "float" && val_item_size == sizeof(double)) {
-        set_value_at_indices<double>(name, inds, count, src, val_type.c_str());
+        set_value_at_indices<double>(name, inds, count, src, val_type);
+    } else if (val_type == "float64" && val_item_size == sizeof(double)) {
+        set_value_at_indices<double>(name, inds, count, src, val_type);
     } else if (val_type == "float" && val_item_size == sizeof(long double)) {
-        set_value_at_indices<long double>(name, inds, count, src, val_type.c_str());
+        set_value_at_indices<long double>(name, inds, count, src, val_type);
     } else {
         throw runtime_error(
                 "(Bmi_Py_Adapter) Failed attempt to SET values of BMI variable '" + name + "' from '" +
