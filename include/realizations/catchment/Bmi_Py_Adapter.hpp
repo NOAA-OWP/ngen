@@ -456,9 +456,35 @@ namespace models {
             void UpdateUntil(double time) override;
 
             void SetValue(std::string name, void *src) override {
-                void* dest = GetValuePtr(name);
-                vector<string> in_v = GetInputVarNames();
-                memcpy(dest, src, GetVarNbytes(name));
+                int nbytes = GetVarNbytes(name);
+                int itemSize = GetVarItemsize(name);
+                int length = nbytes / itemSize;
+                int inds[length];
+                for (size_t i = 0; i < length; ++i)
+                    inds[i] = i;
+                SetValueAtIndices(name, inds, length, src);
+
+                std::string py_type = GetVarType(name);
+                std::string cxx_type = get_analogous_cxx_type(py_type, (size_t) itemSize);
+
+                if (cxx_type == "short") {
+                    set_value<short>(name, (short *) src);
+                } else if (cxx_type == "int") {
+                    set_value<int>(name, (int *) src);
+                } else if (cxx_type == "long") {
+                    set_value<long>(name, (long *) src);
+                } else if (cxx_type == "long long") {
+                    set_value<long long>(name, (long long *) src);
+                } else if (cxx_type == "float") {
+                    set_value<float>(name, (float *) src);
+                } else if (cxx_type == "double") {
+                    set_value<double>(name, (double *) src);
+                } else if (cxx_type == "long double") {
+                    set_value<long double>(name, (long double *) src);
+                } else {
+                    throw std::runtime_error("Bmi_Py_Adapter cannot set values for variable '" + name +
+                                             "' that has unrecognized C++ type '" + cxx_type + "'");
+                }
             }
 
             /**
@@ -548,15 +574,6 @@ namespace models {
                     index_mut_direct(i) = inds[i];
                     src_mut_direct(i) = ((T *)cxx_array)[i];
                 }
-
-                /* The other method should work better, but leaving this for now in case.
-                py::buffer_info indx_buffer_info = index_np_array.request();
-                py::buffer_info src_buffer_info = src_np_array.request();
-                for (int i = 0; i < count; ++i) {
-                    ((int *) indx_buffer_info.ptr)[i] = inds[i];
-                    ((T *) src_buffer_info.ptr)[i] = ((T *) cxx_array)[i];
-                }
-                */
 
                 bmi_model->attr("set_value_at_indices")(name, index_np_array, src_np_array);
             }
