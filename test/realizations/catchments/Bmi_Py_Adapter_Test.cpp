@@ -649,6 +649,20 @@ TEST_F(Bmi_Py_Adapter_Test, GetVarGrid_0_a) {
     ASSERT_EQ(grid, expected_output_var_grids[0]);
 }
 
+/**
+ * Test the function for getting the grid rank for the grid of output variable 1.
+ * */
+TEST_F(Bmi_Py_Adapter_Test, GetGridRank_0_a) {
+    size_t ex_index = 0;
+
+    std::string var_name = "output_var_1";
+    examples[ex_index].adapter->Initialize();
+    int grid_id = examples[ex_index].adapter->GetVarGrid(var_name);
+    int grid_rank = examples[ex_index].adapter->GetGridRank(grid_id);
+
+    ASSERT_EQ(grid_rank, expected_grid_rank);
+}
+
 #endif // ACTIVATE_PYTHON
 
 #endif // NGEN_BMI_PY_TESTS_ACTIVE
