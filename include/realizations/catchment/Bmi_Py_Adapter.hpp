@@ -15,6 +15,9 @@
 #include "boost/algorithm/string.hpp"
 #include "Bmi_Adapter.hpp"
 
+// Forward declaration to provide access to protected items in testing
+class Bmi_Py_Adapter_Test;
+
 namespace py = pybind11;
 
 using namespace pybind11::literals; // to bring in the `_a` literal for pybind11 keyword args functionality
@@ -488,6 +491,9 @@ namespace models {
                     bmi_type_py_module_name = make_shared<string>(boost::algorithm::join(split_name, delimiter));
                 }
             }
+
+            // For unit testing
+            friend class ::Bmi_Py_Adapter_Test;
         };
 
     }
