@@ -636,6 +636,19 @@ TEST_F(Bmi_Py_Adapter_Test, SetValue_0_b) {
     ASSERT_EQ(value, actual_stored_value);
 }
 
+/**
+ * Test the function for getting the grid for output variable 1.
+ * */
+TEST_F(Bmi_Py_Adapter_Test, GetVarGrid_0_a) {
+    size_t ex_index = 0;
+
+    std::string var_name = "output_var_1";
+    examples[ex_index].adapter->Initialize();
+    int grid = examples[ex_index].adapter->GetVarGrid(var_name);
+
+    ASSERT_EQ(grid, expected_output_var_grids[0]);
+}
+
 #endif // ACTIVATE_PYTHON
 
 #endif // NGEN_BMI_PY_TESTS_ACTIVE
