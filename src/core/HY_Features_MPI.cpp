@@ -13,17 +13,18 @@ HY_Features_MPI::HY_Features_MPI( PartitionData partition_data, geojson::GeoJSON
       std::vector<std::string> origins, destinations;
       
       std::unordered_map<std::string, HY_PointHydroNexusRemote::catcment_location_map_t> remote_connections;
+      using DirectionMap = std::unordered_map<std::string, std::map<std::string, std::string> >;
+      DirectionMap remote_connection_direction;
 
       // loop through the partiton data remote arrays and make a map of catchment location maps
       for( int i = 0; i < partition_data.remote_connections.size(); ++i )
       {
-        std::tuple<int, std::string, std::string> remote_tuple = (partition_data.remote_connections)[i];
+        std::tuple<int, std::string, std::string, std::string> remote_tuple = (partition_data.remote_connections)[i];
         int remote_mpi_ranks = std::get<0>(remote_tuple);
         std::string remote_nexi = std::get<1>(remote_tuple);
         std::string remote_catchments = std::get<2>(remote_tuple);
         remote_connections[remote_nexi][remote_catchments] = remote_mpi_ranks;
-
-        //remote_connections[partition_data.remote_nexi[i]][partition_data.remote_catchments[i]] = partition_data.remote_mpi_ranks[i];
+        remote_connection_direction[remote_nexi][remote_catchments] = std::get<3>(remote_tuple);
       }
 
       for(const auto& feat_idx : network){
@@ -49,7 +50,21 @@ HY_Features_MPI::HY_Features_MPI( PartitionData partition_data, geojson::GeoJSON
           _catchments.emplace(feat_id, c);
         }
         else if(feat_type == "nex")
-        {   
+        {   //origins only contains LOCAL origin features (catchments) as read from
+            //the geojson/partition subset.  We need to make sure `origins` passed to remote nexus
+            //contain IDS of ALL upstream features, including those in remote partitions
+            //The same applies to destinations as well.
+            //Find all remote catchments related to this feature
+            for(auto& catchment_direction : remote_connection_direction[feat_id])
+            { //Determine how it is related to the nexus.  This helps determine which side is a "sender"
+              //and which side is "receiver"
+              if(catchment_direction.second == "nex-to-dest_cat"){
+                destinations.push_back(catchment_direction.first);
+              }else if( catchment_direction.second == "orig_cat-to-nex" )
+              {
+                origins.push_back(catchment_direction.first);
+              }
+            }
             _nexuses.emplace(feat_id, std::make_unique<HY_PointHydroNexusRemote>(feat_id, destinations, origins, remote_connections[feat_id]) );
         }
         else
