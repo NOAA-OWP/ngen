@@ -170,7 +170,7 @@ double HY_PointHydroNexusRemote::get_downstream_flow(std::string catchment_id, t
     {
     	return -9999.9;
     }
-    else if ( type == receiver || sender_receiver )
+    else if ( type == receiver || type == sender_receiver )
     {
     	for ( int rank : upstream_ranks )
     	{
