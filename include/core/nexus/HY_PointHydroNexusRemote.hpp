@@ -103,11 +103,11 @@ class HY_PointHydroNexusRemote : public HY_PointHydroNexus
          *
          *  Note that in a dendridic network, downstream_ranks.size() == 1 (only one downstream receiver on a single rank)
          */
-        std::vector<int> downstream_ranks;
+        std::unordered_set<int> downstream_ranks; //Set
         /** List of ranks we expect to receive data from
          * 
          */
-        std::vector<int> upstream_ranks;
+        std::unordered_set<int> upstream_ranks; //Set
         /** Catchments local to the same MPI rank which contribute (call add_upstream_flow) to this nexus
          * 
          */

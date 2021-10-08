@@ -44,7 +44,7 @@ HY_PointHydroNexusRemote::HY_PointHydroNexusRemote(std::string nexus_id, Catchme
        //Loop through all downstream catchments, see if they are in the remote map
        try{
             auto& remote_rank = catchment_id_to_mpi_rank.at(receiver);
-            downstream_ranks.push_back(remote_rank);
+            downstream_ranks.insert(remote_rank);
             remote_receivers.push_back(receiver);
             is_sender = true;
        }
@@ -58,7 +58,7 @@ HY_PointHydroNexusRemote::HY_PointHydroNexusRemote(std::string nexus_id, Catchme
         //Loop through all upstream catchments, see if they are in the remote map
         try{
             auto& remote_rank = catchment_id_to_mpi_rank.at(contributer);
-            upstream_ranks.push_back(remote_rank);
+            upstream_ranks.insert(remote_rank);
             remote_contributers.push_back(contributer);
             is_receiver = true;
         }
@@ -281,7 +281,7 @@ void HY_PointHydroNexusRemote::add_upstream_flow(double val, std::string catchme
 		        stored_sends.back().buffer.get(),
 		        1,
 		        time_step_and_flow_type,
-		        downstream_ranks.at(0), //TODO currently only support a SINGLE downstream message pairing
+		        *downstream_ranks.begin(), //TODO currently only support a SINGLE downstream message pairing
 		        tag,
 		        MPI_COMM_WORLD,
 		        &stored_sends.back().mpi_request);	
