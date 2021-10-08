@@ -21,13 +21,15 @@
 #include <FeatureCollection.hpp>
 #include "JSONProperty.hpp"
 
+using Tuple = std::tuple<int, std::string, std::string, std::string>;
+
 //This struct is moved from private section to here so that the unit test function can access it
 struct PartitionData
 {
     int mpi_world_rank;
     std::unordered_set<std::string> catchment_ids;
     std::unordered_set<std::string> nexus_ids;
-    std::vector<std::tuple<int, std::string, std::string> > remote_connections;
+    std::vector<Tuple> remote_connections;
 };
 
 
@@ -56,8 +58,9 @@ class Partitions_Parser {
             int remote_mpi_rank;
             std::string remote_nex_id;
             std::string remote_cat_id;
-            std::tuple<int, std::string, std::string> tmp_tuple;
-            std::vector<std::tuple<int, std::string, std::string> > remote_conn_vec;
+            std::string direction;
+            Tuple tmp_tuple;
+            std::vector<Tuple> remote_conn_vec;
             int part_counter = 0;
             for(auto &partition: tree.get_child("partitions"))  {
                 //Get partition id
@@ -93,7 +96,8 @@ class Partitions_Parser {
                     remote_mpi_rank = remote_conn.at("mpi-rank").as_natural_number();
                     remote_nex_id = remote_conn.at("nex-id").as_string();
                     remote_cat_id = remote_conn.at("cat-id").as_string();
-                    tmp_tuple = std::make_tuple(remote_mpi_rank, remote_nex_id, remote_cat_id);
+                    direction = remote_conn.at("cat-direction").as_string();
+                    tmp_tuple = std::make_tuple(remote_mpi_rank, remote_nex_id, remote_cat_id, direction);
                     remote_conn_vec.push_back(tmp_tuple);
                 }
                 part_data.remote_connections = remote_conn_vec;
