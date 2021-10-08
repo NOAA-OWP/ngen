@@ -68,9 +68,18 @@ HY_PointHydroNexusRemote::HY_PointHydroNexusRemote(std::string nexus_id, Catchme
         }
     }
 
-    if( is_sender && !is_receiver ) type = sender;
-    else if( is_receiver && !is_sender ) type = receiver;
-    else type = local;
+    if( is_sender && !is_receiver ){
+        type = sender;
+    }
+    else if( is_receiver && !is_sender ){
+        type = receiver;
+    }
+    else if( is_receiver && is_sender ){
+        type = sender_receiver;
+    }
+    else{ 
+        type = local;
+    }
 
 }
 
