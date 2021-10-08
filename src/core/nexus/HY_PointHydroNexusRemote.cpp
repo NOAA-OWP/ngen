@@ -252,7 +252,7 @@ void HY_PointHydroNexusRemote::add_upstream_flow(double val, std::string catchme
 	HY_PointHydroNexus::add_upstream_flow(val, catchment_id, t);
 	
 	// if we are a sender check to see if all of our upstreams have been added for the indicated time step
-	if ( type == sender || sender_receiver )
+	if ( type == sender || type  == sender_receiver )
 	{
 		auto& flows_for_timestep = upstream_flows[t];
 		bool all_found = true;
