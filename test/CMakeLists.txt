@@ -217,6 +217,7 @@ add_test(
         geojson/Feature_Test.cpp
         geojson/FeatureCollection_Test.cpp
         forcing/Forcing_Test.cpp
+        forcing/CsvPerFeatureForcingProvider_Test.cpp
         simulation_time/Simulation_Time_Test.cpp
         core/catchment/giuh/GIUH_Test.cpp
         core/NetworkTests.cpp
@@ -245,6 +246,7 @@ add_test(
         geojson/Feature_Test.cpp
         geojson/FeatureCollection_Test.cpp
         forcing/Forcing_Test.cpp
+        forcing/CsvPerFeatureForcingProvider_Test.cpp
         simulation_time/Simulation_Time_Test.cpp
         core/catchment/giuh/GIUH_Test.cpp
         core/NetworkTests.cpp
