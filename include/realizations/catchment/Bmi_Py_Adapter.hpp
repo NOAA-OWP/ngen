@@ -414,12 +414,14 @@ namespace models {
                     get_via_numpy_array<long>(name, dest, inds, count, val_item_size, is_all_indices);
                 else if (val_type == "int" && val_item_size == sizeof(long long))
                     get_via_numpy_array<long long>(name, dest, inds, count, val_item_size, is_all_indices);
-                else if (val_type == "float" && val_item_size == sizeof(float))
-                    get_via_numpy_array<float>(name, dest, inds, count, val_item_size, is_all_indices);
-                else if (val_type == "float" && val_item_size == sizeof(double))
-                    get_via_numpy_array<double>(name, dest, inds, count, val_item_size, is_all_indices);
-                else if (val_type == "float" && val_item_size == sizeof(long double))
-                    get_via_numpy_array<long double>(name, dest, inds, count, val_item_size, is_all_indices);
+                else if (val_type == "float" || val_type == "float16" || val_type == "float32" || val_type == "float64") {
+                    if (val_item_size == sizeof(float))
+                        get_via_numpy_array<float>(name, dest, inds, count, val_item_size, is_all_indices);
+                    else if (val_type == "float" && val_item_size == sizeof(double))
+                        get_via_numpy_array<double>(name, dest, inds, count, val_item_size, is_all_indices);
+                    else if (val_type == "float" && val_item_size == sizeof(long double))
+                        get_via_numpy_array<long double>(name, dest, inds, count, val_item_size, is_all_indices);
+                }
                 else
                     throw runtime_error(
                             "(Bmi_Py_Adapter) Failed attempt to GET values of BMI variable '" + name + "' from '" +
