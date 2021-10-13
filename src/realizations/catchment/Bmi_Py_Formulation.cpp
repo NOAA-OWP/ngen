@@ -74,9 +74,8 @@ double Bmi_Py_Formulation::get_response(time_step_t t_index, time_step_t t_delta
     }
 
     // The time step delta size, expressed in the units internally used by the model
-    double t_delta_model_units;
+    double t_delta_model_units = get_bmi_model()->convert_seconds_to_model_time((double)t_delta);
     if (next_time_step_index <= t_index) {
-        t_delta_model_units = get_bmi_model()->convert_seconds_to_model_time((double)t_delta);
         double model_time = get_bmi_model()->GetCurrentTime();
         // Also, before running, make sure this doesn't cause a problem with model end_time
         if (!get_allow_model_exceed_end_time()) {
@@ -134,20 +133,22 @@ double Bmi_Py_Formulation::get_var_value_as_double(const int &index, const strin
         get_bmi_model()->get_value_at_indices(var_name, &dest, indices, 1, false);
         return (double)dest;
     }
-    if (val_type == "float" && val_item_size == sizeof(float)) {
-        float dest;
-        get_bmi_model()->get_value_at_indices(var_name, &dest, indices, 1, false);
-        return (double)dest;
-    }
-    if (val_type == "float" && val_item_size == sizeof(double)) {
-        double dest;
-        get_bmi_model()->get_value_at_indices(var_name, &dest, indices, 1, false);
-        return dest;
-    }
-    if (val_type == "float" && val_item_size == sizeof(long double)) {
-        long double dest;
-        get_bmi_model()->get_value_at_indices(var_name, &dest, indices, 1, false);
-        return (double)dest;
+    if (val_type == "float" || val_type == "float16" || val_type == "float32" || val_type == "float64") {
+        if (val_item_size == sizeof(float)) {
+            float dest;
+            get_bmi_model()->get_value_at_indices(var_name, &dest, indices, 1, false);
+            return (double) dest;
+        }
+        if (val_item_size == sizeof(double)) {
+            double dest;
+            get_bmi_model()->get_value_at_indices(var_name, &dest, indices, 1, false);
+            return dest;
+        }
+        if (val_item_size == sizeof(long double)) {
+            long double dest;
+            get_bmi_model()->get_value_at_indices(var_name, &dest, indices, 1, false);
+            return (double) dest;
+        }
     }
 
     throw std::runtime_error("Unable to get value of variable " + var_name + " from " + get_model_type_name() +
