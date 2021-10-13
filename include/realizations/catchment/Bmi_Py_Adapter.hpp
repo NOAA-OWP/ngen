@@ -14,6 +14,7 @@
 #include "StreamHandler.hpp"
 #include "boost/algorithm/string.hpp"
 #include "Bmi_Adapter.hpp"
+#include "python/InterpreterUtil.hpp"
 
 // Forward declaration to provide access to protected items in testing
 class Bmi_Py_Adapter_Test;
@@ -657,8 +658,7 @@ namespace models {
                 try {
                     separate_package_and_simple_name();
                     // This is a class object for the BMI module Python class
-                    py::object bmi_py_class = py::module_::import(bmi_type_py_module_name->c_str()).attr(
-                            bmi_type_py_class_name->c_str());
+                    py::module_ bmi_py_class = utils::ngenPy::InterpreterUtil::getPyModule(bmi_type_py_full_name);
                     // This is the actual backing model object
                     bmi_model = make_shared<py::object>(bmi_py_class());
                     bmi_model->attr("initialize")(bmi_init_config);
