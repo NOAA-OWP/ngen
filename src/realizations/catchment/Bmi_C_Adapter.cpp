@@ -81,6 +81,21 @@ Bmi_C_Adapter::Bmi_C_Adapter(const string &type_name, std::string library_file_p
             acquire_time_conversion_factor(bmi_model_time_convert_factor);
         }
         // Record the exception message before re-throwing to handle subsequent function calls properly
+        catch( models::external::State_Exception& e)
+        {
+            model_initialized = true;
+            throw e;
+        }
+        catch( ::external::ExternalIntegrationException& e)
+        {
+            model_initialized = true;
+            throw e;
+        }
+        catch( std::runtime_error& e)
+        {
+            model_initialized = true;
+            throw e;
+        }
         catch (exception& e) {
             // Make sure this is set to 'true' after this function call finishes
             model_initialized = true;
