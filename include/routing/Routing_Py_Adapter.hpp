@@ -10,6 +10,7 @@
 #include "pybind11/pytypes.h"
 #include "pybind11/numpy.h"
 #include <pybind11/stl.h>
+#include "python/InterpreterUtil.hpp"
 //#include "JSONProperty.hpp"
 //#include "StreamHandler.hpp"
 

@@ -42,20 +42,11 @@ Routing_Py_Adapter::Routing_Py_Adapter(std::string t_route_connection_path, std:
   //Cast vector of catchment_subset_ids to Python list 
   py::list catchment_subset_ids_list = py::cast(catchment_subset_ids);
 
-  //Bind python sys module
-  py::module_ sys = py::module_::import("sys");
-
-  //Create object sys_path for the Python system path
-  py::object sys_path = sys.attr("path");
-
-  //Create object to append to the sys_path
-  py::object sys_path_append = sys_path.attr("append");
-
   //Append the t_route_connection_path
-  sys_path_append(t_route_connection_path);
+  utils::ngenPy::InterpreterUtil::addToPyPath(t_route_connection_path);
 
   //Append the input_path
-  sys_path_append(input_path);
+  utils::ngenPy::InterpreterUtil::addToPyPath(input_path);
 
   //Leave this call here for now for calling previous version of module
   //this->t_route_module = py::module_::import("next_gen_network_module");
