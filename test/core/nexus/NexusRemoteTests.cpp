@@ -281,45 +281,178 @@ TEST_F(Nexus_Remote_Test, Test2RemoteSenders1LocalSender)
     ASSERT_TRUE(true);
 }
 
-
-TEST_F(Nexus_Remote_Test, DISABLED_TestDeadlock1)
+//Test sending data with MPI from an four upstream remote nexi
+//to two differnt downstream remote nexus each of which has a one upstream local catchment.
+TEST_F(Nexus_Remote_Test, Test4R2S2LS)
 {
+    if ( mpi_num_procs < 6 )
+    {
+    	GTEST_SKIP();
+    }
+    
     HY_PointHydroNexusRemote::catcment_location_map_t loc_map;
 
     std::shared_ptr<HY_PointHydroNexusRemote> nexus;
+    std::vector<string> upstream_catchments;
+    std::vector<string> downstream_catchments = {"cat-27"};
+    // create a nexus at both ranks
+    if ( mpi_rank == 0)
+    {
+        upstream_catchments.push_back("cat-24");
+        upstream_catchments.push_back("cat-25");
+        upstream_catchments.push_back("cat-26");
+        downstream_catchments.push_back("cat-27");
+        
+        loc_map["cat-25"] = 1;
+        loc_map["cat-26"] = 2;
+        nexus = std::make_shared<HY_PointHydroNexusRemote>("nex-27", downstream_catchments, upstream_catchments, loc_map);
+    }
+    else if ( mpi_rank == 1)
+    {
+        upstream_catchments.push_back("cat-25");
+        downstream_catchments.push_back("cat-27");
+        
+        loc_map["cat-27"] = 0;
+        nexus = std::make_shared<HY_PointHydroNexusRemote>("nex-27", downstream_catchments, upstream_catchments, loc_map);
+    }
+    else if ( mpi_rank == 2)
+    {
+        upstream_catchments.push_back("cat-26");
+        downstream_catchments.push_back("cat-27");
+        
+        loc_map["cat-27"] = 0;
+        nexus = std::make_shared<HY_PointHydroNexusRemote>("nex-27", downstream_catchments, upstream_catchments, loc_map);
+    }
+    if ( mpi_rank == 3)
+    {
+        upstream_catchments.push_back("cat-14");
+        upstream_catchments.push_back("cat-15");
+        upstream_catchments.push_back("cat-16");
+        downstream_catchments.push_back("cat-17");
+        
+        loc_map["cat-15"] = 4;
+        loc_map["cat-16"] = 5;
+        nexus = std::make_shared<HY_PointHydroNexusRemote>("nex-17", downstream_catchments, upstream_catchments, loc_map);
+    }
+    else if ( mpi_rank == 4)
+    {
+        upstream_catchments.push_back("cat-15");
+        downstream_catchments.push_back("cat-17");
+        
+        loc_map["cat-17"] = 3;
+        nexus = std::make_shared<HY_PointHydroNexusRemote>("nex-17", downstream_catchments, upstream_catchments, loc_map);
+    }
+    else if ( mpi_rank == 5)
+    {
+        upstream_catchments.push_back("cat-16");
+        downstream_catchments.push_back("cat-17");
+        
+        loc_map["cat-17"] = 3;
+        nexus = std::make_shared<HY_PointHydroNexusRemote>("nex-17", downstream_catchments, upstream_catchments, loc_map);
+    }         
+
+    double dummy_flow = -9999.0;
+    long ts = 0;
+    double recieved_flow = -9999.0;
+
+    for ( auto discharge : stored_discharge)
+    {
+        switch(mpi_rank)
+        {
+            
+            case 0:
+                nexus->add_upstream_flow(discharge,"cat-24",ts);
+                recieved_flow = nexus->get_downstream_flow("cat-27",ts,100);
+                ASSERT_EQ(discharge*3,recieved_flow);
+                std::cerr << "Rank 0: Recieving flow of " << recieved_flow << " from catchment Nexus connected to catchment 27\n";
+            break;
+            
+            case 1:
+                std::cerr << "Rank 1: Sending flow of " << discharge << " to catchment 27\n";
+                nexus->add_upstream_flow(discharge,"cat-25",ts);
+            break;
+
+            case 2:
+                std::cerr << "Rank 2: Sending flow of " << discharge << " to catchment 27\n";
+                nexus->add_upstream_flow(discharge,"cat-26",ts);
+            break;
+            
+            case 3:
+                nexus->add_upstream_flow(discharge,"cat-14",ts);
+                recieved_flow = nexus->get_downstream_flow("cat-17",ts,100);
+                ASSERT_EQ(discharge*3,recieved_flow);
+                std::cerr << "Rank 3: Recieving flow of " << recieved_flow << " from catchment Nexus connected to catchment 27\n";
+            break;
+            
+            case 4:
+                std::cerr << "Rank 4: Sending flow of " << discharge << " to catchment 17\n";
+                nexus->add_upstream_flow(discharge,"cat-15",ts);
+            break;
+
+            case 5:
+                std::cerr << "Rank 5: Sending flow of " << discharge << " to catchment 27\n";
+                nexus->add_upstream_flow(discharge,"cat-16",ts);
+            break;
+            
+            
+        }
+
+        ++ts;
+    }
+
+    MPI_Barrier(MPI_COMM_WORLD);
+
+    //delete nexus;
+
+    ASSERT_TRUE(true);
+}
+
+TEST_F(Nexus_Remote_Test, TestDeadlock1)
+{
+    HY_PointHydroNexusRemote::catcment_location_map_t loc_map;
+
+    std::shared_ptr<HY_PointHydroNexusRemote> nexus1;
+    std::shared_ptr<HY_PointHydroNexusRemote> nexus2;
 
     double dummy_flow = -9999.0;
     double recieved_flow;
     long ts = 0;
 
-    std::vector<string> catchments;
+    std::vector<string> downstream_catchments;
+    std::vector<string> upstream_catchments;
 
     // In this test both processes send before recieving. If communciation are synchronus this will dead lock
 
     // create a nexus at both ranks
     if ( mpi_rank == 0)
     {
-        catchments.push_back("cat-26");
+        downstream_catchments.push_back("cat-26");
+        upstream_catchments.push_back("cat-25");
+        
         loc_map["cat-26"] = 1;
-        nexus = std::make_shared<HY_PointHydroNexusRemote>("nex-26", catchments, loc_map);
+        nexus1 = std::make_shared<HY_PointHydroNexusRemote>("nex-26", downstream_catchments, upstream_catchments, loc_map);
+        nexus2 = std::make_shared<HY_PointHydroNexusRemote>("nex-26", upstream_catchments, downstream_catchments, loc_map);
 
         // We use two differnt time steps becuase a nexus does not allow water to be added after a send
-        nexus->add_upstream_flow(200.0,"cat-1",ts);
-        nexus->get_downstream_flow("cat-26",ts,100);                      // sending to 26
-        nexus->add_upstream_flow(dummy_flow,"cat-26",ts+1);                 // recieving from 26
-        recieved_flow = nexus->get_downstream_flow("cat-2",ts+1,100);       // get the recieved flow
+        nexus1->add_upstream_flow(200.0,"cat-25",ts);						// sending to rank 1
+                              
+        recieved_flow = nexus2->get_downstream_flow("cat-26",ts,100);       // get the recieved flow
+        cout << "rank 0 recieved a flow of " << recieved_flow << "\n";
     }
     else if ( mpi_rank == 1)
     {
-        catchments.push_back("cat-26");
-        loc_map["cat-26"] = 0;
-        nexus = std::make_shared<HY_PointHydroNexusRemote>("nex-26", catchments, loc_map);
+        downstream_catchments.push_back("cat-25");
+        upstream_catchments.push_back("cat-26");
+        
+        loc_map["cat-25"] = 0;
+        nexus1 = std::make_shared<HY_PointHydroNexusRemote>("nex-26", downstream_catchments, upstream_catchments, loc_map);
+        nexus2 = std::make_shared<HY_PointHydroNexusRemote>("nex-26", upstream_catchments, downstream_catchments, loc_map);
 
         // We use two differnt time steps becuase a nexus does not allow water to be added after a send
-        nexus->add_upstream_flow(200.0,"cat-1",ts+1);
-        nexus->get_downstream_flow("cat-26",ts+1,100);                    // sending to 26
-        nexus->add_upstream_flow(dummy_flow,"cat-26",ts);                 // recieving grom 26
-        recieved_flow = nexus->get_downstream_flow("cat-2",ts,100);       // get the recieved flow
+        nexus1->add_upstream_flow(200.0,"cat-26",ts);						// sending to rank 0
+                              
+        recieved_flow = nexus2->get_downstream_flow("cat-25",ts,100);       // get the recieved flow
+        cout << "rank 1 recieved a flow of " << recieved_flow << "\n";
     }
 
     MPI_Barrier(MPI_COMM_WORLD);
