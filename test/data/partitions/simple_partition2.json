@@ -1,0 +1,13 @@
+{
+    "partitions":[
+        {"id":0,
+        "cat-ids":["cat-0", "cat-1", "cat-2", "cat-3"],
+        "nex-ids":["nex-0", "nex-1"],
+        "remote-connections":[{"mpi-rank":1, "nex-id":"nex-1", "cat-id":"cat-4", "cat-direction":"nex-to-dest_cat"}]},
+        {"id":1,
+        "cat-ids":["cat-4", "cat-5", "cat-6", "cat-7"],
+        "nex-ids":["nex-1", "nex-2", "nex-3", "nex-4"],
+        "remote-connections":[{"mpi-rank":0, "nex-id":"nex-1", "cat-id":"cat-2", "cat-direction":"orig_cat-to-nex"},
+                              {"mpi-rank":0, "nex-id":"nex-1", "cat-id":"cat-3", "cat-direction":"orig_cat-to-nex"}]}
+    ]
+}
