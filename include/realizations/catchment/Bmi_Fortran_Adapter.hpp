@@ -51,6 +51,16 @@ namespace models {
                     acquire_time_conversion_factor(bmi_model_time_convert_factor);
                 }
                     // Record the exception message before re-throwing to handle subsequent function calls properly
+                catch( models::external::State_Exception& e)
+                {
+                    model_initialized = true;
+                    throw e;
+                }
+                catch( ::external::ExternalIntegrationException& e)
+                {
+                    model_initialized = true;
+                    throw e;
+                }
                 catch (std::runtime_error &e) {
                     //Catch `runtime_error`s that may possible be thrown from acquire_time_conversion_factor
                     // Make sure this is set to 'true' after this function call finishes
