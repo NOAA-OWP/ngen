@@ -18,8 +18,7 @@
 #endif // WRITE_PID_FILE_FOR_GDB_SERVER
 
 #ifdef ACTIVATE_PYTHON
-#include <pybind11/embed.h>
-namespace py = pybind11;
+#include "python/InterpreterUtil.hpp"
 #endif // ACTIVATE_PYTHON
     
 #ifdef NGEN_ROUTING_ACTIVE
@@ -71,8 +70,8 @@ int main(int argc, char *argv[]) {
     std::ios::sync_with_stdio(false);
 
     #ifdef ACTIVATE_PYTHON
-    // Start Python interpreter and keep it alive
-    py::scoped_interpreter guard{};
+    // Start Python interpreter via the manager singleton
+    utils::ngenPy::InterpreterUtil::getInstance();
     #endif // ACTIVATE_PYTHON
 
     //Pull a few "options" form the cli input, this is a temporary solution to CLI parsing!
