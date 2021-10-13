@@ -417,9 +417,9 @@ namespace models {
                 else if (val_type == "float" || val_type == "float16" || val_type == "float32" || val_type == "float64") {
                     if (val_item_size == sizeof(float))
                         get_via_numpy_array<float>(name, dest, inds, count, val_item_size, is_all_indices);
-                    else if (val_type == "float" && val_item_size == sizeof(double))
+                    else if (val_item_size == sizeof(double))
                         get_via_numpy_array<double>(name, dest, inds, count, val_item_size, is_all_indices);
-                    else if (val_type == "float" && val_item_size == sizeof(long double))
+                    else if (val_item_size == sizeof(long double))
                         get_via_numpy_array<long double>(name, dest, inds, count, val_item_size, is_all_indices);
                 }
                 else
@@ -462,7 +462,7 @@ namespace models {
                 }
                 else {
                     py::array_t<int, py::array::c_style> indices_np_array
-                            = np.attr("zeros")(item_count, "dtype"_a = "int", "order"_a = "C");
+                            = np.attr("zeros")(item_count, "dtype"_a = "int32", "order"_a = "C");
                     auto indices_mut_direct = indices_np_array.mutable_unchecked<1>();
                     for (py::size_t i = 0; i < (py::size_t) item_count; ++i)
                         indices_mut_direct(i) = indices[i];
