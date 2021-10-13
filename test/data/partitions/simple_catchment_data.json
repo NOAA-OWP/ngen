@@ -1,0 +1,16 @@
+{
+    "type": "FeatureCollection",
+    "name": "catchment_data",
+    "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+    "features": [
+    { "type": "Feature", "properties": { "id": "cat-0", "areasqkm": 1, "toid": "nex-0" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ ] ] } },
+    { "type": "Feature", "properties": { "id": "cat-1", "areasqkm": 1, "toid": "nex-0" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ ] ] } },
+    { "type": "Feature", "properties": { "id": "cat-2", "areasqkm": 1, "toid": "nex-1" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ ] ] } },
+    { "type": "Feature", "properties": { "id": "cat-3", "areasqkm": 1, "toid": "nex-1" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ ] ] } },
+    { "type": "Feature", "properties": { "id": "cat-4", "areasqkm": 1, "toid": "nex-2" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ ] ] } },
+    { "type": "Feature", "properties": { "id": "cat-5", "areasqkm": 1, "toid": "nex-3" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ ] ] } },
+    { "type": "Feature", "properties": { "id": "cat-6", "areasqkm": 1, "toid": "nex-3" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ ] ] } },
+    { "type": "Feature", "properties": { "id": "cat-7", "areasqkm": 1, "toid": "nex-4" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ ] ] } }
+    ]
+    }
+    
