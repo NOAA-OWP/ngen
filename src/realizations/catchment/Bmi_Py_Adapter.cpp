@@ -21,7 +21,7 @@ Bmi_Py_Adapter::Bmi_Py_Adapter(const string &type_name, string bmi_init_config, 
                                   move(forcing_file_path), allow_exceed_end, has_fixed_time_step,
                                   output),
           bmi_type_py_full_name(bmi_python_type),
-          np(py::module_::import("numpy")) /* like 'import numpy as np' */
+          np(utils::ngenPy::InterpreterUtil::getPyModule("numpy")) /* like 'import numpy as np' */
 {
     try {
         construct_and_init_backing_model_for_py_adapter();
