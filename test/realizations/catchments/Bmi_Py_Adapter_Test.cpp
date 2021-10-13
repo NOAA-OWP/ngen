@@ -13,6 +13,7 @@ namespace py = pybind11;
 #include "Bmi_Py_Adapter.hpp"
 
 using namespace models::bmi;
+using namespace utils::ngenPy;
 using namespace pybind11::literals; // to bring in the `_a` literal for pybind11 keyword args functionality
 
 typedef struct example_scenario {
@@ -31,9 +32,6 @@ protected:
     static std::shared_ptr<py::object> friend_get_raw_model(Bmi_Py_Adapter *adapter) {
         return adapter->bmi_model;
     }
-
-    // This is required for the Python interpreter and must be kept alive
-    static std::shared_ptr<py::scoped_interpreter> guard_ptr;
 
     void SetUp() override;
 
@@ -86,14 +84,14 @@ protected:
      * @param dir_options The options for the directories to check for existence, in the order to try them.
      * @return The path of the first found option which is an existing directory.
      */
-    std::string py_dir_search(const std::vector<std::string> &dir_options);
+    static std::string py_dir_search(const std::vector<std::string> &dir_options);
 
     /**
      * Find the repo root directory, starting from the current directory and working upward.
      *
      * @return The absolute path of the repo root, as a string.
      */
-    std::string py_find_repo_root();
+    static std::string py_find_repo_root();
 
     /**
      * Find the virtual environment site packages directory, starting from an assumed valid venv directory.
@@ -101,11 +99,11 @@ protected:
      * @param venv_dir The virtual environment directory.
      * @return The absolute path of the site packages directory, as a string.
      */
-    std::string py_find_venv_site_packages_dir(const std::string &venv_dir);
+    static std::string py_find_venv_site_packages_dir(const std::string &venv_dir);
 
     std::vector<example_scenario> examples;
 
-    py::object Path;
+    static py::object Path;
 
     std::vector<std::string> expected_output_var_names = { "output_var_1", "output_var_2", "output_var_3" };
     std::vector<std::string> expected_output_var_locations = { "node", "node" };
@@ -120,11 +118,9 @@ protected:
 
 };
 
-std::shared_ptr<py::scoped_interpreter> Bmi_Py_Adapter_Test::guard_ptr = nullptr;
+py::object Bmi_Py_Adapter_Test::Path = InterpreterUtil::getPyModule("pathlib.Path");
 
 void Bmi_Py_Adapter_Test::SetUp() {
-
-    Path = py::module_::import("pathlib").attr("Path");
 
     std::string repo_root = py_find_repo_root();
 
@@ -142,15 +138,6 @@ void Bmi_Py_Adapter_Test::SetUp() {
 
     examples[0].forcing_file = repo_root + "/data/forcing/cat-27_2015-12-01 00_00_00_2015-12-30 23_00_00.csv";
 
-    py::module_ sys = py::module_::import("sys");
-    sys.attr("path").attr("insert")(0, template_ex_struct.module_directory);
-
-    std::string venv_dir = py_dir_search({repo_root + "/.venv", repo_root + "/venv"});
-    if (!venv_dir.empty()) {
-        std::string venv_site_packages_dir = py_find_venv_site_packages_dir(venv_dir);
-        sys.attr("path").attr("insert")(1, venv_site_packages_dir);
-    }
-
     // We can handle setting the right init config and initializing the adapter in a loop
     for (int i = 0; i < examples.size(); ++i) {
         examples[i].bmi_init_config = repo_root + "/test/data/bmi/test_bmi_python/test_bmi_python_config_"
@@ -163,16 +150,23 @@ void Bmi_Py_Adapter_Test::SetUp() {
 }
 
 void Bmi_Py_Adapter_Test::TearDown() {
-    std::string teardown = "got_here";
 }
 
 void Bmi_Py_Adapter_Test::SetUpTestSuite() {
-    // Start Python interpreter and keep it alive
-    guard_ptr = std::make_shared<py::scoped_interpreter>();
+    std::string repo_root = py_find_repo_root();
+    std::string module_directory = repo_root + "/extern/";
+
+    // Add the package dir from a local virtual environment directory also, if there is one
+    std::string venv_dir = py_dir_search({repo_root + "/.venv", repo_root + "/venv"});
+    if (!venv_dir.empty()) {
+        InterpreterUtil::addToPyPath(py_find_venv_site_packages_dir(venv_dir));
+    }
+    // Also add the extern dir with our test lib to Python system path
+    InterpreterUtil::addToPyPath(module_directory);
 }
 
 void Bmi_Py_Adapter_Test::TearDownTestSuite() {
-    guard_ptr.reset();
+
 }
 
 /**
@@ -680,19 +674,31 @@ TEST_F(Bmi_Py_Adapter_Test, GetGridSize_0_a) {
 /**
  * Test the function for getting the grid shape for the grid of output variable 1.
  * */
-TEST_F(Bmi_Py_Adapter_Test, DISABLED_GetGridShape_0_a) {
+TEST_F(Bmi_Py_Adapter_Test, GetGridShape_0_a) {
     // TODO: requires model support
-    /*
+
     size_t ex_index = 0;
 
     std::string var_name = "output_var_1";
     examples[ex_index].adapter->Initialize();
     int grid_id = examples[ex_index].adapter->GetVarGrid(var_name);
-    int *grid_shape = examples[ex_index].adapter->GetGridShape(grid_id);
+    int grid_shape[10];
+    // For now, expect an exception
+    ASSERT_THROW(
+        {
+            try {
+                examples[ex_index].adapter->GetGridShape(grid_id, grid_shape);
+            }
+            catch (const py::error_already_set &e) {
+                std::string msg = e.what();
+                std::string expected_msg_start = "NotImplementedError";
+                ASSERT_TRUE(msg.rfind(expected_msg_start, 0) == 0);
+                throw e;
+            }
+        },
+        py::error_already_set);
 
-    ASSERT_EQ(grid_size, expected_grid_size);
-    */
-    ASSERT_TRUE(false);
+    //ASSERT_EQ(grid_shape, expected_grid_size);
 }
 
 /**
