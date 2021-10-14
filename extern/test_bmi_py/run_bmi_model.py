@@ -1,5 +1,6 @@
-import random
 from pathlib import Path
+
+import numpy as np
 
 # This is the BMI LSTM that we will be running
 from . import bmi_model
@@ -22,8 +23,8 @@ def execute():
     for x in range(10):
 
         # Create test case inputs from random values ###########
-        model.set_value('input_var_1',random.uniform(2, 10))  ##
-        model.set_value('input_var_2',random.uniform(1, 4))   ##
+        model.set_value('input_var_1', np.random.uniform(2, 10, model.var_array_lengths))  ##
+        model.set_value('input_var_2', np.random.uniform(1, 4, model.var_array_lengths))   ##
         ########################################################
 
         #########################################
