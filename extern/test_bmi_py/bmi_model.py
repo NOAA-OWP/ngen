@@ -44,6 +44,8 @@ class bmi_model(Bmi):
     #---------------------------------------------
     _input_var_names = ['input_var_1', 'input_var_2']
 
+    _input_var_types = {'input_var_1': float, 'input_var_2': np.int32}
+
     #---------------------------------------------
     # Output variable names (CSDMS standard names)
     #---------------------------------------------
@@ -229,7 +231,7 @@ class bmi_model(Bmi):
         return self._var_units_map[ long_var_name ]
                                                              
     #-------------------------------------------------------------------
-    def get_var_type(self, long_var_name):
+    def get_var_type(self, var_name):
         """Data type of variable.
 
         Parameters
@@ -242,7 +244,7 @@ class bmi_model(Bmi):
         str
             Data type.
         """
-        return self.get_value_ptr(long_var_name)  #.dtype
+        return self.get_value_ptr(var_name).dtype
     
     #------------------------------------------------------------ 
     def get_var_grid(self, name):
