@@ -496,14 +496,7 @@ namespace models {
             void UpdateUntil(double time) override;
 
             void SetValue(std::string name, void *src) override {
-                int nbytes = GetVarNbytes(name);
                 int itemSize = GetVarItemsize(name);
-                int length = nbytes / itemSize;
-                int inds[length];
-                for (size_t i = 0; i < length; ++i)
-                    inds[i] = i;
-                SetValueAtIndices(name, inds, length, src);
-
                 std::string py_type = GetVarType(name);
                 std::string cxx_type = get_analogous_cxx_type(py_type, (size_t) itemSize);
 
@@ -596,26 +589,9 @@ namespace models {
             void set_value_at_indices(const string &name, const int *inds, int count, void* cxx_array,
                                       const string &np_type)
             {
-                // A few type string values may need minor adjustments
-                const char* actual_np_type;
-                if (np_type == "float64") {
-                    actual_np_type = "float";
-                }
-                else {
-                    actual_np_type = np_type.c_str();
-                }
-                py::array_t<int> index_np_array = np.attr("zeros")(count, "dtype"_a = "int");
-                py::array_t<T> src_np_array = np.attr("zeros")(count, "dtype"_a = actual_np_type);
-                // These get direct access (mutable) to the arrays, since we don't need to worry about dimension checks
-                // as we just created the arrays
-                auto index_mut_direct = index_np_array.mutable_unchecked<1>();
-                auto src_mut_direct = index_np_array.mutable_unchecked<1>();
-                for (py::size_t i = 0; i < (py::size_t) count; ++i) {
-                    index_mut_direct(i) = inds[i];
-                    src_mut_direct(i) = ((T *)cxx_array)[i];
-                }
-
-                bmi_model->attr("set_value_at_indices")(name, index_np_array, src_np_array);
+                py::array_t<int> index_array(py::buffer_info(inds, count));
+                py::array_t<T> src_array(py::buffer_info((T*)cxx_array, count));
+                bmi_model->attr("set_value_at_indices")(name, index_array, src_array);
             }
 
         protected:
@@ -720,15 +696,10 @@ namespace models {
              */
             template <typename T>
             void set_value(const std::string &name, T *src) {
-                int nbytes = GetVarNbytes(name);
-                int itemSize = GetVarItemsize(name);
-                int length = nbytes / itemSize;
-
-                py::array_t<T> model_var_array = bmi_model->attr("get_value_ptr")(name);
-                auto mutable_unchecked_proxy = model_var_array.template mutable_unchecked<1>();
-                for (size_t i = 0; i < length; ++i) {
-                    mutable_unchecked_proxy(i) = src[i];
-                }
+                // Because all BMI arrays are flattened, we can just use the size/length in the buffer info
+                int length = GetVarNbytes(name) / GetVarItemsize(name);
+                py::array_t<T> src_array(py::buffer_info(src, length));
+                bmi_model->attr("set_value")(name, src_array);
             }
 
             // For unit testing
