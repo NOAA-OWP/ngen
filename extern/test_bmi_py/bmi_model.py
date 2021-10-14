@@ -1,6 +1,5 @@
 # Need these for BMI
 # This is needed for get_var_bytes
-import sys
 from pathlib import Path
 
 # import data_tools
@@ -328,19 +327,19 @@ class bmi_model(Bmi):
             self.get_value_ptr(var_name)[bmi_var_value_index] = src[i]
 
     #------------------------------------------------------------ 
-    def get_var_nbytes(self, var_name):
-        """Get units of variable.
+    def get_var_nbytes(self, var_name) -> int:
+        """
+        Get the number of bytes required for a variable.
         Parameters
         ----------
         var_name : str
-            Name of variable as CSDMS Standard Name.
+            Name of variable.
         Returns
         -------
         int
             Size of data array in bytes.
         """
-        # JMFrame NOTE: Had to import sys for this function
-        return sys.getsizeof(self.get_value_ptr(var_name))
+        return self.get_value_ptr(var_name).nbytes
 
     #------------------------------------------------------------ 
     def get_value_at_indices(self, var_name, dest, indices):
