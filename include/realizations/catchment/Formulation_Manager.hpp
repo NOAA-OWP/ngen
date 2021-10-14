@@ -131,8 +131,7 @@ namespace realization {
                     
                     this->routing_config = std::make_shared<routing_params>(
                         routing_parameters.at("t_route_connection_path").as_string(),
-                        routing_parameters.at("t_route_config_file_with_path").as_string(),
-                        routing_parameters.at("input_path").as_string()
+                        routing_parameters.at("t_route_config_file_with_path").as_string()
                     );
                     using_routing = true;
                  }
@@ -236,13 +235,6 @@ namespace realization {
              */
             std::string get_t_route_config_file_with_path() {
                 return this->routing_config->t_route_config_file_with_path;
-            }
-
-            /**
-             * @return routing input_path
-             */
-            std::string get_input_path() {
-                return this->routing_config->input_path;
             }
 
 

@@ -11,12 +11,8 @@
 #include "pybind11/numpy.h"
 #include <pybind11/stl.h>
 #include "python/InterpreterUtil.hpp"
-//#include "JSONProperty.hpp"
-//#include "StreamHandler.hpp"
 
 namespace py = pybind11;
-
-//using namespace std;
 
 namespace routing_py_adapter {
 
@@ -47,16 +43,15 @@ namespace routing_py_adapter {
          *
          * @param t_route_connection_path
          * @param t_route_config_file_with_path
-         * @param input_path
          * @param catchment_subset_ids
          * @param number_of_timesteps
          * @param delta_time
          */
         Routing_Py_Adapter(std::string t_route_connection_path, 
                            std::string t_route_config_file_with_path,
-                           std::string input_path, 
                            const std::vector<std::string> &catchment_subset_ids, 
                            int number_of_timesteps, int delta_time);
+
 
         template <typename T>
         void convert_vector_to_numpy_array(const std::vector<T> &flow_vector)
