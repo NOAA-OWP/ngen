@@ -119,14 +119,24 @@ class bmi_model(Bmi):
 
     #------------------------------------------------------------ 
     def update(self):
-        dt = self._values['current_model_time'] + self._values['time_step_size']
-        self._model.run(self._values, dt)
+        """
+        Update/advance the model by one time step.
+        """
+        model_time_after_next_time_step = self._values['current_model_time'] + self._values['time_step_size']
+        self.update_until(model_time_after_next_time_step)
     
     #------------------------------------------------------------ 
-    def update_until(self, last_update):
-        first_update=self._values['current_model_time']
-        for t in range(first_update, last_update, self._values['time_step_size']):
-            self.update()
+    def update_until(self, future_time: float):
+        """
+        Update the model to a particular time
+
+        Parameters
+        ----------
+        future_time : float
+            The future time to when the model should be advanced.
+        """
+        update_delta_t = future_time - self._values['current_model_time']
+        self._model.run(self._values, update_delta_t)
     #------------------------------------------------------------    
     def finalize( self ):
         """Finalize model."""
