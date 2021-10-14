@@ -4,14 +4,28 @@ class ngen_model():
     #    super(ngen_model, self).__init__()
     #    #self._model = model
 
-    def run(self, model, dt):
-        if dt == model['time_step_size']:
-            model['output_var_1'] = model['input_var_1']
-            model['output_var_2'] = 2.0 * model['input_var_2']
-            model['output_var_3'] = 0
-        else:
-            model['output_var_1'] = model['input_var_1'] * dt / model['time_step_size']
-            model['output_var_2'] = 2.0 * model['input_var_2'] * dt / model['time_step_size']
-            model['output_var_3'] = 0
+    def run(self, model: dict, dt: int):
+        """
+        Run this model into the future.
+
+        Run this model into the future, updating the state stored in the provided model dict appropriately.
+
+        Note that the model assumes the current values set for input variables are appropriately for the time
+        duration of this update (i.e., ``dt``) and do not need to be interpolated any here.
+
+        Parameters
+        ----------
+        model: dict
+            The model state data structure.
+        dt: int
+            The number of seconds into the future to advance the model.
+
+        Returns
+        -------
+
+        """
+        model['output_var_1'] = model['input_var_1']
+        model['output_var_2'] = 2.0 * model['input_var_2']
+        model['output_var_3'] = 0
 
         model['current_model_time'] = model['current_model_time'] + dt
