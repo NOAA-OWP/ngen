@@ -4,6 +4,11 @@ add_subdirectory(googletest)
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 include_directories(${PROJ_ROOT_INCLUDE_DIR})
 
+if (NGEN_ACTIVATE_PYTHON)
+    include_directories(${PROJECT_SOURCE_DIR}/extern/pybind11/include)
+    add_compile_definitions(NGEN_BMI_PY_TESTS_ACTIVE)
+endif()
+
 if(MPI_ACTIVE)
     add_compile_definitions(NGEN_MPI_TESTS_ACTIVE)
 endif()
@@ -65,6 +70,7 @@ macro(add_automated_test_w_routing TESTNAME)
             NGen::kernels_reservoir
             NGen::realizations_catchment
             NGen::routing
+            pybind11::embed
             )
     gtest_discover_tests(${TESTNAME}
             WORKING_DIRECTORY ${PROJECT_DIR}
@@ -96,15 +102,17 @@ macro(add_automated_test_w_mock TESTNAME)
     set_target_properties(${TESTNAME} PROPERTIES FOLDER test)
 endmacro()
 
-# Individual tests
-add_automated_test(test_hymod models/hymod/include/HymodTest.cpp)
+########################## Individual tests ##########################
 
-add_automated_test(
-        test_tshirt
-        models/tshirt/include/TshirtTest.cpp
-        realizations/catchments/Tshirt_C_Realization_Test.cpp
-)
+#add_automated_test(test_hymod models/hymod/include/HymodTest.cpp)
+#
+#add_automated_test(
+#        test_tshirt
+#        models/tshirt/include/TshirtTest.cpp
+#        realizations/catchments/Tshirt_C_Realization_Test.cpp
+#)
 
+########################## GeoJSON Unit Tests
 add_automated_test(
     test_geojson
     geojson/JSONProperty_Test.cpp
@@ -113,11 +121,13 @@ add_automated_test(
     geojson/FeatureCollection_Test.cpp
 )
 
+########################## Realization Config Unit Tests
 add_automated_test(
     test_realization_config
     realizations/Formulation_Manager_Test.cpp
 )
 
+########################## GIUH Unit Tests
 add_automated_test(
         test_giuh
         core/catchment/giuh/GIUH_Test.cpp
@@ -155,6 +165,12 @@ add_automated_test(
 )
 
 add_automated_test(
+        test_bmi_python
+        realizations/catchments/Bmi_Py_Adapter_Test.cpp
+        realizations/catchments/Bmi_Py_Formulation_Test.cpp
+)
+
+add_automated_test(
         compare_cfe
         # TODO: this probably needs to be added to integration testing also
         realizations/catchments/Bmi_C_Cfe_IT.cpp
@@ -175,10 +191,10 @@ if(NGEN_ACTIVATE_ROUTING)
    )
 endif()
 
-#add_automated_test(
-#        test_network
-#        core/NetworkTests.cpp
-#)
+add_automated_test(
+        test_network
+        core/NetworkTests.cpp
+)
 
 # Unit tests
 # TODO: Make sure the geojson tests don't need to be added here also
