@@ -24,7 +24,7 @@ class bmi_model(Bmi):
         self._var_loc = "node"      # JG Edit
         self._var_grid_id = 0       # JG Edit
         self._start_time = 0.0
-        self._end_time = np.finfo("d").max
+        self._end_time = np.finfo(float).max
         self._model = None
 
     #----------------------------------------------
@@ -256,7 +256,7 @@ class bmi_model(Bmi):
         return self._start_time 
 
     #-------------------------------------------------------------------
-    def get_end_time( self ):
+    def get_end_time( self ) -> float:
 
         return self._end_time 
 
