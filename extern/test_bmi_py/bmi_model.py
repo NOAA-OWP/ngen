@@ -295,17 +295,18 @@ class bmi_model(Bmi):
         return self.get_attribute( 'time_units' ) 
        
     #-------------------------------------------------------------------
-    def set_value(self, var_name, value):
-        """Set model values.
+    def set_value(self, var_name, values: np.ndarray):
+        """
+        Set model values for the provided BMI variable.
 
         Parameters
         ----------
         var_name : str
-            Name of variable as CSDMS Standard Name.
-        src : array_like
+            Name of model variable for which to set values.
+        values : np.ndarray
               Array of new values.
         """ 
-        self._values[var_name] = value
+        self._values[var_name][:] = values
 
     #------------------------------------------------------------ 
     def set_value_at_indices(self, name, inds, src):
