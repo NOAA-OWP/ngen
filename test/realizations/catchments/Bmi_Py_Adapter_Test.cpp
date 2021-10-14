@@ -106,11 +106,14 @@ protected:
     static py::object Path;
 
     std::vector<std::string> expected_output_var_names = { "output_var_1", "output_var_2", "output_var_3" };
+    std::vector<std::string> expected_input_var_names = { "input_var_1", "input_var_2"};
     std::vector<std::string> expected_output_var_locations = { "node", "node", "node" };
     std::vector<int> expected_output_var_grids = { 0, 0, 0 };
     std::vector<std::string> expected_output_var_units = { "m", "m", "m" };
     std::vector<std::string> expected_input_var_types = { "float64", "float64" };
+    std::vector<int> expected_input_var_item_sizes = { 8, 8 };
     std::vector<std::string> expected_output_var_types = { "float64", "float64", "float64" };
+    std::vector<int> expected_output_var_item_sizes = { 8, 8, 8 };
     int expected_grid_rank = 1;
     int expected_grid_size = 1;
     std::string expected_grid_type = "scalar";
@@ -342,14 +345,17 @@ TEST_F(Bmi_Py_Adapter_Test, GetVarType_0_b) {
  */
 TEST_F(Bmi_Py_Adapter_Test, GetVarItemSize_0_a) {
     size_t ex_index = 0;
-    size_t out_var_index = 0;
+    size_t var_index = 0;
 
     examples[ex_index].adapter->Initialize();
-    std::string variable_name = examples[ex_index].adapter->GetOutputVarNames()[out_var_index];
-    std::string expected_type = expected_output_var_types[out_var_index];
+    std::string variable_name = expected_output_var_names[var_index];
+    int expected_size = expected_output_var_item_sizes[var_index];
+    int actual_size = 0;
 
     try {
-        ASSERT_EQ(examples[ex_index].adapter->GetVarType(variable_name), expected_type);
+        actual_size = examples[ex_index].adapter->GetVarItemsize(variable_name);
+        ASSERT_NE(0, actual_size);
+        ASSERT_EQ(expected_size, actual_size);
     }
     catch (std::exception& e) {
         printf("Exception getting var type: %s", e.what());
@@ -365,11 +371,14 @@ TEST_F(Bmi_Py_Adapter_Test, GetVarItemSize_0_b) {
     size_t var_index = 0;
 
     examples[ex_index].adapter->Initialize();
-    std::string variable_name = examples[ex_index].adapter->GetOutputVarNames()[var_index];
-    int expected_size = expected_va[var_index];
+    std::string variable_name = expected_input_var_names[var_index];
+    int expected_size = expected_input_var_item_sizes[var_index];
+    int actual_size = 0;
 
     try {
-        ASSERT_EQ(examples[ex_index].adapter->GetVarItemSize(variable_name), expected_size);
+        actual_size = examples[ex_index].adapter->GetVarItemsize(variable_name);
+        ASSERT_NE(0, actual_size);
+        ASSERT_EQ(expected_size, actual_size);
     }
     catch (std::exception& e) {
         printf("Exception getting var type: %s", e.what());
