@@ -230,7 +230,7 @@ class bmi_model(Bmi):
         return self._var_units_map[ long_var_name ]
                                                              
     #-------------------------------------------------------------------
-    def get_var_type(self, var_name):
+    def get_var_type(self, var_name: str) -> str:
         """Data type of variable.
 
         Parameters
@@ -243,7 +243,7 @@ class bmi_model(Bmi):
         str
             Data type.
         """
-        return self.get_value_ptr(var_name).dtype
+        return str(self.get_value_ptr(var_name).dtype)
     
     #------------------------------------------------------------ 
     def get_var_grid(self, name):
