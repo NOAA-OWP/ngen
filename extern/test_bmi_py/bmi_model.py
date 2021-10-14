@@ -287,7 +287,7 @@ class bmi_model(Bmi):
     #-------------------------------------------------------------------
     def get_time_step( self ):
 
-        return self.get_attribute( 'time_step_size' ) 
+        return self._values['time_step_size']
 
     #-------------------------------------------------------------------
     def get_time_units( self ):
