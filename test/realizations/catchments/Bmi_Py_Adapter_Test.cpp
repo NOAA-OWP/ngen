@@ -524,19 +524,85 @@ TEST_F(Bmi_Py_Adapter_Test, GetValuePtr_0_a) {
 }
 
 /**
- * Test the function for getting values for a particular set of indices.
+ * Test the function for getting values for a particular set of indices of output variable 3.
  * */
-TEST_F(Bmi_Py_Adapter_Test, DISABLED_GetValueAtIndices_0_a) {
-    // TODO: need model support finished
-    ASSERT_EQ(1, 2);
+TEST_F(Bmi_Py_Adapter_Test, GetValueAtIndices_0_a) {
+    size_t ex_index = 0;
+
+    std::string var_name = "output_var_3";
+    double retrieved[2];
+    double expected[2] = {0, 2};
+    int indexes[] = {0, 2};
+
+    examples[ex_index].adapter->Initialize();
+
+    examples[ex_index].adapter->GetValueAtIndices(var_name, retrieved, indexes, 2);
+
+    for (int i = 0; i < 2; ++i)
+        ASSERT_EQ(retrieved[i], expected[i]);
+}
+
+/**
+ * Test the function for getting values for a particular set of indices of output variable 3 after an update.
+ * */
+TEST_F(Bmi_Py_Adapter_Test, GetValueAtIndices_0_b) {
+    size_t ex_index = 0;
+
+    std::string var_name = "output_var_3";
+    double retrieved[2];
+    double expected[2] = {1, 3};
+    int indexes[] = {0, 2};
+
+    examples[ex_index].adapter->Initialize();
+
+    // Shouldn't need to bother with other vars for this, since this var is time-step-dependent only
+    examples[ex_index].adapter->Update();
+
+    examples[ex_index].adapter->GetValueAtIndices(var_name, retrieved, indexes, 2);
+
+    for (int i = 0; i < 2; ++i)
+        ASSERT_EQ(retrieved[i], expected[i]);
 }
 
 /**
  * Test the function for setting values for a particular set of indices.
  * */
-TEST_F(Bmi_Py_Adapter_Test, DISABLED_SetValueAtIndices_0_a) {
-    // TODO: need model support finished
-    ASSERT_EQ(1, 2);
+TEST_F(Bmi_Py_Adapter_Test, SetValueAtIndices_0_a) {
+    size_t ex_index = 0;
+
+    std::string var_name = "output_var_3";
+    double retrieved[2];
+    double expected[2] = {1, 3};
+    int indexes[] = {0, 2};
+
+    examples[ex_index].adapter->Initialize();
+
+    // Shouldn't need to bother with other vars for this, since this var is time-step-dependent only
+    examples[ex_index].adapter->Update();
+
+    examples[ex_index].adapter->GetValueAtIndices(var_name, retrieved, indexes, 2);
+
+    for (int i = 0; i < 2; ++i)
+        ASSERT_EQ(retrieved[i], expected[i]);
+
+    double newVals[] = {7, 12};
+
+    examples[ex_index].adapter->SetValueAtIndices(var_name, indexes, 2, newVals);
+
+    examples[ex_index].adapter->GetValueAtIndices(var_name, retrieved, indexes, 2);
+    for (int i = 0; i < 2; ++i)
+        ASSERT_EQ(retrieved[i], newVals[i]);
+
+    // Still shouldn't need to bother with other vars for this, since this var is time-step-dependent only
+    examples[ex_index].adapter->Update();
+    examples[ex_index].adapter->GetValueAtIndices(var_name, retrieved, indexes, 2);
+    for (int i = 0; i < 2; ++i)
+        ASSERT_EQ(retrieved[i], newVals[i]+1);
+
+    double skipped;
+    int singleItem = 1;
+    examples[ex_index].adapter->GetValueAtIndices(var_name, &skipped, &singleItem, 1);
+    ASSERT_EQ(skipped, 3);
 }
 
 /**

@@ -105,7 +105,10 @@ class bmi_model(Bmi):
         #for model_input in self._input_var_types:
         #    self._values[model_input] = np.zeros(self.var_array_lengths, dtype=self._input_var_types[model_input])
         for model_output in self.get_output_var_names():
-            self._values[model_output] = np.zeros(self.var_array_lengths, dtype=float)
+            if model_output == "output_var_3":
+                self._values[model_output] = np.arange(3, dtype=float)
+            else:
+                self._values[model_output] = np.zeros(self.var_array_lengths, dtype=float)
         #print(self._values)
 
         # ------------- Set time to initial value -----------------------#
