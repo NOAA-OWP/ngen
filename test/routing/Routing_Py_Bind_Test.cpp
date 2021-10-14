@@ -30,9 +30,8 @@ TEST_F(RoutingPyBindTest, TestRoutingPyBind)
   std::vector<double> nexus_values_vec{1.1, 2.2, 3.3, 4.4, 5.5};
 
   //SET THESE AS INPUTS
-  std::string t_route_connection_path = "../../t-route/src/ngen_routing/src";
-  std::string t_route_config_file_with_path = "../../t-route/test/input/yaml/ngen.yaml";
-  std::string input_path = "../../t-route/test/input/next_gen";
+  std::string t_route_connection_path = "./extern/t-route/src/ngen_routing/src";
+  std::string t_route_config_file_with_path = "./extern/t-route/test/input/yaml/ngen_unit_test.yaml";
   std::string supernetwork = "../../t-route/test/input/next_gen/flowpath_data.geojson";
 
   std::vector<std::string> catchment_subset_ids;
@@ -45,11 +44,10 @@ TEST_F(RoutingPyBindTest, TestRoutingPyBind)
   int delta_time = 3600; 
 
   routing_py_adapter::Routing_Py_Adapter routing_py_adapter1(t_route_connection_path, 
-                      t_route_config_file_with_path, input_path, catchment_subset_ids, 
+                      t_route_config_file_with_path, catchment_subset_ids, 
                       number_of_timesteps, delta_time);
   
   //routing_py_adapter::Routing_Py_Adapter routing_py_adapter1(t_route_connection_path, input_path, catchment_subset_ids, nexus_values_vec);
-
  
   ASSERT_TRUE(true);
 
