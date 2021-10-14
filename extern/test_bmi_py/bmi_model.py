@@ -255,7 +255,7 @@ class bmi_model(Bmi):
 
     #------------------------------------------------------------ 
     def get_var_itemsize(self, name):
-        return np.array(self.get_value(name)).itemsize
+        return self.get_value_ptr(name).itemsize
 
     #------------------------------------------------------------ 
     def get_var_location(self, name):
