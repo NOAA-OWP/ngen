@@ -342,27 +342,26 @@ class bmi_model(Bmi):
         return self.get_value_ptr(var_name).nbytes
 
     #------------------------------------------------------------ 
-    def get_value_at_indices(self, var_name, dest, indices):
+    def get_value_at_indices(self, var_name: str, dest: np.ndarray, indices: np.ndarray) -> np.ndarray:
         """Get values at particular indices.
         Parameters
         ----------
         var_name : str
             Name of variable as CSDMS Standard Name.
-        dest : ndarray
+        dest : np.ndarray
             A numpy array into which to place the values.
-        indices : array_like
+        indices : np.ndarray
             Array of indices.
         Returns
         -------
-        array_like
+        np.ndarray
             Values at indices.
         """
-        #JMFrame: chances are that the index will be zero, so let's include that logic
-        if np.array(self.get_value(var_name)).flatten().shape[0] == 1:
-            return self.get_value(var_name)
-        else:
-            val_array = self.get_value(var_name).flatten()
-            return np.array([val_array[i] for i in indices])
+        original: np.ndarray = self.get_value_ptr(var_name)
+        for i in range(indices.shape[0]):
+            value_index = indices[i]
+            dest[i] = original[value_index]
+        return dest
 
     # JG Note: remaining grid funcs do not apply for type 'scalar'
     #   Yet all functions in the BMI must be implemented 
