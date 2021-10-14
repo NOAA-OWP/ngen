@@ -309,27 +309,23 @@ class bmi_model(Bmi):
         self._values[var_name][:] = values
 
     #------------------------------------------------------------ 
-    def set_value_at_indices(self, name, inds, src):
-        """Set model values at particular indices.
+    def set_value_at_indices(self, var_name: str, indices: np.ndarray, src: np.ndarray):
+        """
+        Set model values for the provided BMI variable at particular indices.
+
         Parameters
         ----------
         var_name : str
-            Name of variable as CSDMS Standard Name.
+            Name of model variable for which to set values.
+        indices : array_like
+            Array of indices of the variable into which analogous provided values should be set.
         src : array_like
             Array of new values.
-        indices : array_like
-            Array of indices.
         """
-
-        #JMFrame: chances are that the index will be zero, so let's include that logic
-        if np.array(self.get_value(name)).flatten().shape[0] == 1:
-            self.set_value(name, src)
-        else:
-            # JMFrame: Need to set the value with the updated array with new index value
-            val = self.get_value_ptr(name)
-            for i in inds.shape:
-                val.flatten()[inds[i]] = src[i]
-            self.set_value(name, val)
+        # This is not particularly efficient, but it is functionally correct.
+        for i in range(indices.shape[0]):
+            bmi_var_value_index = indices[i]
+            self.get_value_ptr(var_name)[bmi_var_value_index] = src[i]
 
     #------------------------------------------------------------ 
     def get_var_nbytes(self, var_name):
