@@ -200,7 +200,7 @@ class bmi_model(Bmi):
         return dest
 
     #-------------------------------------------------------------------
-    def get_value_ptr(self, var_name):
+    def get_value_ptr(self, var_name: str) -> np.ndarray:
         """Reference to values.
         Parameters
         ----------
@@ -212,7 +212,7 @@ class bmi_model(Bmi):
             Value array.
         """
         
-        return self._values[var_name] 
+        return self._values[var_name]
 
     #-------------------------------------------------------------------
     #-------------------------------------------------------------------
