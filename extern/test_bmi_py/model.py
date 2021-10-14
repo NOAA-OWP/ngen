@@ -1,7 +1,8 @@
 class ngen_model():
-    def __init__(self, model):
-        super(ngen_model, self).__init__()
-        self.model = model
+    # TODO: refactor the bmi_model.py file and this to have this type maintain its own state.
+    #def __init__(self):
+    #    super(ngen_model, self).__init__()
+    #    #self._model = model
 
     def run(self, model, dt):
         if dt == model['time_step_size']:
