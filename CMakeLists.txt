@@ -167,6 +167,12 @@ if (${NGEN_ACTIVATE_PYTHON})
 #    include_directories(${PYTHON_INCLUDE_DIR})
 
     find_package(Python 3.6.8 REQUIRED COMPONENTS Interpreter Development NumPy)
+    #message(INFO " the final Py lib is ${Python_LIBRARY}")
+    #message(INFO " the final Py libraries are ${Python_LIBRARIES}")
+    #message(INFO " the final Py library dirs are ${Python_LIBRARY_DIRS}")
+    #message(INFO " the final Py runtime library dirs are ${Python_RUNTIME_LIBRARY_DIRS}")
+    #message(INFO " the final Py std lib is ${Python_STDLIB}")
+    #message(INFO " the rpath is ${CMAKE_INSTALL_RPATH}")
     add_subdirectory(extern/pybind11)
 endif()
 
