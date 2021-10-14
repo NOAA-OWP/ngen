@@ -26,6 +26,7 @@ class bmi_model(Bmi):
         self._start_time = 0.0
         self._end_time = np.finfo(float).max
         self._model = None
+        self.var_array_lengths = 1
 
     #----------------------------------------------
     # Required, static attributes of the model
@@ -75,6 +76,8 @@ class bmi_model(Bmi):
 
     #-------------------------------------------------------------------
     def initialize( self, bmi_cfg_file_name: str ):
+        # TODO: should this be set in some way via config?
+        self.var_array_lengths = 1
 
         # ----- Create some lookup tabels from the long variable names --------#
         self._var_name_map_long_first = {long_name:self._var_name_units_map[long_name][0] for long_name in self._var_name_units_map.keys()}
@@ -97,10 +100,12 @@ class bmi_model(Bmi):
         for parm in self._model_parameters_list:
             self._values[self._var_name_map_short_first[parm]] = self.cfg_bmi[parm]
         for model_input in self.get_input_var_names():
-            self._values[model_input] = 0.0
+            self._values[model_input] = np.zeros(self.var_array_lengths, dtype=float)
+        #for model_input in self._input_var_types:
+        #    self._values[model_input] = np.zeros(self.var_array_lengths, dtype=self._input_var_types[model_input])
         for model_output in self.get_output_var_names():
-            self._values[model_output] = 0.0
-        print(self._values)
+            self._values[model_output] = np.zeros(self.var_array_lengths, dtype=float)
+        #print(self._values)
 
         # ------------- Set time to initial value -----------------------#
         self._values['current_model_time'] = self.cfg_bmi['initial_time']
