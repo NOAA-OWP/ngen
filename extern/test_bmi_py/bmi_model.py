@@ -183,7 +183,7 @@ class bmi_model(Bmi):
         return len(self._output_var_names)
 
     #------------------------------------------------------------ 
-    def get_value(self, var_name):
+    def get_value(self, var_name: str, dest: np.ndarray) -> np.ndarray:
         """Copy of values.
         Parameters
         ----------
@@ -196,7 +196,8 @@ class bmi_model(Bmi):
         array_like
             Copy of values.
         """
-        return self.get_value_ptr(var_name)
+        dest[:] = self.get_value_ptr(var_name)
+        return dest
 
     #-------------------------------------------------------------------
     def get_value_ptr(self, var_name):
