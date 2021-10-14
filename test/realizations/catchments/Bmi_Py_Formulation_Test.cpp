@@ -188,7 +188,7 @@ void Bmi_Py_Formulation_Test::SetUp() {
     // These should be safe for all examples
     template_ex_struct.module_name = "test_bmi_py.bmi_model";
     template_ex_struct.module_directory = repo_root + "/extern/";
-    template_ex_struct.main_output_variable = "OUTPUT_VAR_1";
+    template_ex_struct.main_output_variable = "output_var_1";
     template_ex_struct.uses_forcing_file = false;
 
 #define BMI_PY_FORM_TEST_EX_COUNT 1
@@ -266,8 +266,8 @@ void Bmi_Py_Formulation_Test::generate_realization_config(int ex_idx) {
               "                \"init_config\": \"" + examples[ex_idx].bmi_init_config + "\","
               "                \"main_output_variable\": \"" + examples[ex_idx].main_output_variable + "\","
               "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES + "\": { "
-              "                      \"INPUT_VAR_2\": \"" + NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP + "\","
-              "                      \"INPUT_VAR_1\": \"" + AORC_FIELD_NAME_PRECIP_RATE + "\""
+              "                      \"input_var_2\": \"" + NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP + "\","
+              "                      \"input_var_1\": \"" + AORC_FIELD_NAME_PRECIP_RATE + "\""
               "                },"
               + variables_line +
               "                \"uses_forcing_file\": " + (examples[ex_idx].uses_forcing_file ? "true" : "false") + ""
@@ -390,6 +390,97 @@ TEST_F(Bmi_Py_Formulation_Test, Initialize_0_a) {
     ASSERT_EQ(get_friend_bmi_init_config(*examples[ex_index].formulation), examples[ex_index].bmi_init_config);
     ASSERT_EQ(get_friend_bmi_main_output_var(*examples[ex_index].formulation), examples[ex_index].main_output_variable);
     ASSERT_EQ(get_friend_is_bmi_using_forcing_file(*examples[ex_index].formulation), examples[ex_index].uses_forcing_file);
+}
+
+/**
+ * Simple test of get response.
+ */
+TEST_F(Bmi_Py_Formulation_Test, get_response_0_a) {
+    int ex_index = 0;
+
+    double response = examples[ex_index].formulation->get_response(0, 3600);
+    ASSERT_EQ(response, 00);
+}
+
+/**
+ * Test of get_response after several iterations.
+ */
+TEST_F(Bmi_Py_Formulation_Test, get_response_0_b) {
+    int ex_index = 0;
+
+    double response;
+    for (int i = 0; i < 39; i++) {
+        response = examples[ex_index].formulation->get_response(i, 3600);
+    }
+    double expected = 4.866464273262429e-08;
+    ASSERT_EQ(expected, response);
+}
+
+/**
+ * Test to make sure we can execute multiple model instances.
+ */
+TEST_F(Bmi_Py_Formulation_Test, DISABLED_GetResponse_1_a) {
+    // TODO: implement
+    ASSERT_TRUE(false);
+}
+
+/**
+ * Simple test of output.
+ */
+TEST_F(Bmi_Py_Formulation_Test, GetOutputLineForTimestep_0_a) {
+    int ex_index = 0;
+
+    double response = examples[ex_index].formulation->get_response(0, 3600);
+    std::string output = examples[ex_index].formulation->get_output_line_for_timestep(0, ",");
+    ASSERT_EQ(output, "0.000000,0.000000,1.000000");
+}
+
+/**
+ * Simple test of output, picking time step when there was non-zero rain rate.
+ */
+TEST_F(Bmi_Py_Formulation_Test, GetOutputLineForTimestep_0_b) {
+    int ex_index = 0;
+
+    int i = 0;
+    while (i < 542)
+        examples[ex_index].formulation->get_response(i++, 3600);
+
+    double response = examples[ex_index].formulation->get_response(543, 3600);
+    std::string output = examples[ex_index].formulation->get_output_line_for_timestep(543, ",");
+    ASSERT_EQ(output, "0.000002,0.000000,544.000000");
+}
+
+/**
+ * Simple test of determine_model_time_offset.
+ */
+TEST_F(Bmi_Py_Formulation_Test, determine_model_time_offset_0_a) {
+    int ex_index = 0;
+
+    std::shared_ptr<models::bmi::Bmi_Py_Adapter> model_adapter = get_friend_bmi_model(*examples[ex_index].formulation);
+
+    double model_start = model_adapter->GetStartTime();
+    ASSERT_EQ(model_start, 0.0);
+
+    time_t forcing_start = get_friend_forcing_start_time(*examples[ex_index].formulation);
+
+    ASSERT_EQ(forcing_start, parse_forcing_time("2015-12-01 00:00:00"));
+}
+
+/**
+ * Test of get_var_value_as_double.
+ */
+TEST_F(Bmi_Py_Formulation_Test, get_var_value_as_double_0_a) {
+    int ex_index = 0;
+
+    std::shared_ptr<models::bmi::Bmi_Py_Adapter> model_adapter = get_friend_bmi_model(*examples[ex_index].formulation);
+
+    double value = 4;
+
+    model_adapter->SetValue("input_var_2", &value);
+
+    double retrieved = get_friend_var_value_as_double(*examples[ex_index].formulation, "input_var_2");
+
+    ASSERT_EQ(value, retrieved);
 }
 
 #endif // ACTIVATE_PYTHON
