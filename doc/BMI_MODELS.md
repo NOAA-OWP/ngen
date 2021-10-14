@@ -164,7 +164,7 @@ It is possible to configure a different name for the function within the NGen re
 
 The implemented function must set the member pointers of the passed `Bmi` struct to the appropriate analogous functions inside the model.  E.g., the `initialize` member of the struct: 
 
-    int (*initialize)(struct Bmi *self, const char *config_file)
+    int (*initialize)(struct Bmi *self, const char *bmi_init_config)
 
 needs to be set to the module's function the performs the BMI initialization.  This will probably be something like:
 
