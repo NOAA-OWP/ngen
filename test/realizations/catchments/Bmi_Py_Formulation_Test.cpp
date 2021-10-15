@@ -56,9 +56,9 @@ protected:
         return formulation.get_bmi_model_start_time_forcing_offset_s();
     }
 
-    static double get_friend_forcing_param_value(Bmi_Py_Formulation& formulation, const std::string& param_name) {
-        return formulation.forcing.get_value_for_param_name(param_name);
-    }
+    //static double get_friend_forcing_param_value(Bmi_Py_Formulation& formulation, const std::string& param_name) {
+    //    return formulation.forcing.get_value_for_param_name(param_name);
+    //}
 
     static std::string get_friend_forcing_file_path(const Bmi_Py_Formulation& formulation) {
         return formulation.get_forcing_file_path();
