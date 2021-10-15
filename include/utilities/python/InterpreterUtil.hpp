@@ -86,15 +86,17 @@ namespace utils {
             }
 
             /**
-             * Return bound Python module handle from the singleton instance, importing a top-level module if necessary.
+             * Return bound Python top level module handle from the singleton instance, importing the module if needed.
              *
-             * E.g., ``Path`` from the ``pathlib`` module should be in a vector ``pathlib.Path``.
+             * Return a handle to the given top level Python module or package, importing if necessary and adding the
+             * handle to the singleton's maintained collection of import handles for its embedded interpreter.  Standard
+             * modules/packages and namespace package names are supported.
              *
-             * @param name Full name of the desired module, as a ``.`` delimited string.
-             * @return Handle to the desired Python module or type.
+             * @param name Name of the desired top level module or package.
+             * @return Handle to the desired top level Python module.
              */
             static py::module_ getPyModule(const std::string &name) {
-                return getInstance().getModule(splitFullModuleName(name));
+                return getInstance().getModule(name);
             }
 
             /**
@@ -116,39 +118,35 @@ namespace utils {
             }
 
             /**
-             * Return a bound handle to a Python module, importing the top-level module if necessary.
+             * Return a bound handle to a top-level Python module, importing the module if necessary.
              *
-             * E.g., ``Path`` from the ``pathlib`` module should be in a vector ``pathlib.Path``.
+             * Return a handle to the given top level Python module or package, importing if necessary and adding the
+             * handle to the internally maintained collection of import handles for the embedded interpreter.  Standard
+             * modules/packages and namespace package names are supported.
              *
-             * @param name Full name of the desired module, as a ``.`` delimited string.
-             * @return Handle to the desired Python module or type.
+             * @param name Name of the desired top level module or namespace package.
+             * @return Handle to the desired top level Python module.
              */
             py::module_ getModule(const std::string &name) {
-                return getModule(splitFullModuleName(name));
+                if (!isImported(name)) {
+                    importTopLevelModule(name);
+                }
+                return importedTopLevelModules.find(name)->second;
             }
 
             /**
-             * Return a bound handle to a Python module, importing the top-level module if necessary.
+             * Return a bound handle to a Python module or type, importing the top-level module if necessary.
              *
              * E.g., a request for a handle to the ``Path`` class from the ``pathlib`` package module should be made
              * using a vector ``{"pathlib", "Path"}``.
-             *
-             * Note that anything that has had its top level module already imported is itself considered to be imported
-             * already by this class.  This is because of how the type has been designed to work with the pybind11
-             * embedded interpreter.
              *
              * @param moduleLevelNames Full name of the desired module, as a vector of the names of the top-level module
              *                         and (when applicable) submodules.
              * @return Handle to the desired Python module or type.
              */
             py::module_ getModule(const std::vector<std::string> &moduleLevelNames) {
-                if (!isImported(moduleLevelNames)) {
-                    importTopLevelModule(moduleLevelNames[0]);
-                }
-                // Start with top-level component name
-                py::module_ module = importedTopLevelModules.find(moduleLevelNames[0])->second;
-                // Recurse as needed through sub-components via calls to "attr"
-                // (make sure to start at the second level; i.e., index 1)
+                // Start with top-level module name, then descend through attributes as needed
+                py::module_ module = getModule(moduleLevelNames[0]);
                 for (size_t i = 1; i < moduleLevelNames.size(); ++i) {
                     module = module.attr(moduleLevelNames[i].c_str());
                 }
@@ -197,32 +195,28 @@ namespace utils {
             }
 
             /**
-             * Get whether an Python module is imported.
+             * Get whether a Python module is imported.
              *
-             * Note that anything that has had its root module already imported will be considered imported already, because
-             * of the way pybind11 handles importing modules.  E.g., if ``Path`` from ``pathlib`` was imported, ``PurePath``
-             * will be treated as imported as well, in the context of this function.
+             * Note that anything that has had its top level module imported already will itself be considered imported,
+             * because of the way workings of importing modules in this type using pybind11.  E.g., if ``Path`` from
+             * ``pathlib`` was imported, ``PurePath`` would return as imported as well.
              *
              * @param moduleLevelNames Full name of the desired module, as a vector of the names of the top-level module
              *                         and (when applicable) submodules.
              * @return Whether an Python module is imported.
              */
             inline bool isImported(const std::vector<std::string> &moduleLevelNames) {
-                return importedTopLevelModules.find(moduleLevelNames[0]) != importedTopLevelModules.end();
+                return isImported(moduleLevelNames[0]);
             }
 
             /**
-             * Get whether an Python module is imported.
+             * Get whether a top level Python module is imported.
              *
-             * Note that anything that has had its top-level module already imported will be considered imported already, because
-             * of the way pybind11 handles importing modules.  E.g., if ``Path`` from ``pathlib`` was imported, ``PurePath``
-             * will be treated as imported as well, in the context of this function.
-             *
-             * @param name The (possibly ``.`` delimited) name of the module.
+             * @param name The name of the module/package.
              * @return Whether an Python module is imported.
              */
             inline bool isImported(const std::string &name) {
-                return importedTopLevelModules.find(splitFullModuleName(name)[0]) != importedTopLevelModules.end();
+                return importedTopLevelModules.find(name) != importedTopLevelModules.end();
             }
 
         private:
@@ -242,24 +236,6 @@ namespace utils {
              */
             inline void importTopLevelModule(const std::string &topLevelName) {
                 importedTopLevelModules[topLevelName] = py::module_::import(topLevelName.c_str());
-            }
-
-            /**
-             * Split a ``.`` delimited fully qualified module name into a vector of the individual components.
-             *
-             * @param fullName Fully qualified module name.
-             * @return A vector of the individual components.
-             */
-            static inline std::vector<std::string> splitFullModuleName(std::string fullName) {
-                size_t pos = 0;
-                std::string delimiter = ".";
-                std::vector<std::string> splitName;
-                while ((pos = fullName.find(delimiter)) != std::string::npos) {
-                    splitName.push_back(fullName.substr(0, pos));
-                    fullName.erase(0, pos + delimiter.length());
-                }
-                splitName.push_back(fullName);
-                return splitName;
             }
 
         };
