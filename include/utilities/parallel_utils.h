@@ -24,7 +24,7 @@
 #include <string>
 #include <set>
 #ifdef ACTIVATE_PYTHON
-#include "python/PyHydrofabricSubsetter.hpp"
+#include "python/HydrofabricSubsetter.hpp"
 #endif // ACTIVATE_PYTHON
 
 using namespace std;
@@ -474,12 +474,12 @@ namespace parallel {
         bool isGood = true;
 
         #ifdef ACTIVATE_PYTHON
-        std::unique_ptr<utils::PyHydrofabricSubsetter> subdivider;
+        std::unique_ptr<utils::HydrofabricSubsetter> subdivider;
         // Have rank 0 handle the generation task for all files/partitions
         if (mpi_rank == 0) {
             try {
-                subdivider = std::make_unique<utils::PyHydrofabricSubsetter>(catchmentDataFile, nexusDataFile,
-                                                                             partitionConfigFile);
+                subdivider = std::make_unique<utils::HydrofabricSubsetter>(catchmentDataFile, nexusDataFile,
+                                                                           partitionConfigFile);
             }
             catch (const std::exception &e) {
                 std::cerr << e.what() << std::endl;
