@@ -9,6 +9,12 @@ on:
   pull_request:
     branches: [ master, dev, notreal ]
 
+env:
+  # Obtained from https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
+  # TODO: add something later that can check the runners for hyperthreading
+  LINUX_NUM_PROC_CORES: 2
+  MACOS_NUM_PROC_CORES: 3
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   test_unit_ubuntu_latest:
@@ -272,6 +278,68 @@ jobs:
       - name: cleanup_builds
         run: find . -name cmake_build -type d -prune -exec rm -rf {} \;
 
+  # As with the BMI C ubuntu job, separate to keep testing setups clean and cause of failures clear.
+  test_bmi_python_ubuntu_latest:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out repository under $GITHUB_WORKSPACE, so job can access it
+      - uses: actions/checkout@v2
+
+      - name: Init Submodules
+        run: git submodule update --init --recursive
+
+      - name: Cache Numpy Python Dependency
+        id: cache-linux-numpy-dep
+        uses: actions/cache@v1
+        with:
+          path: .venv
+          key: linux-numpy-dep
+
+      - name: Get Numpy Python Dependency
+        if: steps.cache-linux-numpy-dep.outputs.cache-hit != 'true'
+        run: |
+          python -m venv .venv
+          . .venv/bin/activate
+          pip install pip
+          pip install numpy
+          deactivate
+
+      - name: Cache Boost Dependency
+        id: cache-boost-dep
+        uses: actions/cache@v1
+        with:
+          path: boost_1_72_0
+          key: unix-boost-dep
+
+      - name: Get Boost Dependency
+        if: steps.cache-boost-dep.outputs.cache-hit != 'true'
+        run: |
+          curl -L -O https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2
+          tar xjf boost_1_72_0.tar.bz2
+
+      - name: cmake_init_build
+        run: |
+          export BOOST_ROOT="$(pwd)/boost_1_72_0"
+          [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
+          cmake -B cmake_build -DCMAKE_BUILD_TYPE=Debug -DBMI_C_LIB_ACTIVE:BOOL=ON -DBMI_FORTRAN_ACTIVE:BOOL=ON -DNGEN_ACTIVATE_PYTHON:BOOL=ON -S .
+
+      - name: build_bmi_python_tests
+        run: cmake --build cmake_build --target test_bmi_python -- -j ${{ env.LINUX_NUM_PROC_CORES }}
+        timeout-minutes: 15
+
+      - name: run_bmi_python_tests
+        run: |
+          cd ./cmake_build/test/
+          ./test_bmi_fortran
+          cd ../../
+        timeout-minutes: 15
+
+      - name: cleanup
+        run: find . -name cmake_build -type d -delete
+
   test_unit_macos_latest:
     # The type of runner that the job will run on
     runs-on: macos-latest
@@ -476,6 +544,67 @@ jobs:
         timeout-minutes: 15
 
       - name: cleanup_builds
+        run: find . -name cmake_build -type d -delete
+
+  test_bmi_python_macos_latest:
+    # The type of runner that the job will run on
+    runs-on: macos-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Init Submodules
+        run: git submodule update --init --recursive
+
+      - name: Cache Numpy Python Dependency
+        id: cache-numpy-py3-dep
+        uses: actions/cache@v1
+        with:
+          path: .venv
+          key: unix-numpy-py3-dep
+
+      - name: Get Numpy Python Dependency
+        if: steps.cache-numpy-py3-dep.outputs.cache-hit != 'true'
+        run: |
+          python3 -m venv .venv
+          . .venv/bin/activate
+          pip install pip
+          pip install numpy
+          deactivate
+
+      - name: Cache Boost Dependency
+        id: cache-boost-dep
+        uses: actions/cache@v1
+        with:
+          path: boost_1_72_0
+          key: unix-boost-dep
+
+      - name: Get Boost Dependency
+        if: steps.cache-boost-dep.outputs.cache-hit != 'true'
+        run: |
+          curl -L -O https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2
+          tar xjf boost_1_72_0.tar.bz2
+
+      - name: cmake_init_build
+        run: |
+          export BOOST_ROOT="$(pwd)/boost_1_72_0"
+          [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
+          cmake -B cmake_build -DCMAKE_BUILD_TYPE=Debug -DBMI_C_LIB_ACTIVE:BOOL=ON -DBMI_FORTRAN_ACTIVE:BOOL=ON -DNGEN_ACTIVATE_PYTHON:BOOL=ON -S .
+
+      - name: build_bmi_python_tests
+        run: cmake --build cmake_build --target test_bmi_python -- -j ${{ env.MACOS_NUM_PROC_CORES }}
+        timeout-minutes: 15
+
+      - name: run_bmi_python_tests
+        run: |
+          cd ./cmake_build/test/
+          ./test_bmi_python
+          cd ../../
+        timeout-minutes: 15
+
+      - name: cleanup
         run: find . -name cmake_build -type d -delete
 
   # TODO: fails due to compilation error, at least in large part due to use of POSIX functions not supported on Windows.
