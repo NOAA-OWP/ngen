@@ -45,6 +45,7 @@ class HY_PointHydroNexusRemote : public HY_PointHydroNexus
             return local_contributers;
         };
 
+		/** Test if this nexus is a sending nexus in a remote nexus pair */
         bool is_remote_sender()
         {
             return type == sender || type == sender_receiver;
@@ -54,7 +55,17 @@ class HY_PointHydroNexusRemote : public HY_PointHydroNexus
         int get_world_rank();
 
         long get_time_step();
-
+        
+        enum communication_type 
+        {
+        	local,
+        	sender,
+        	receiver,
+            sender_receiver
+        };
+        
+        /** return the communicator type for this nexus */
+		communication_type get_communicator_type() { return type; }
 
     private:
         void process_communications();
@@ -87,14 +98,6 @@ class HY_PointHydroNexusRemote : public HY_PointHydroNexus
 
         std::string nexus_prefix = "cat-";
         
-        enum communication_type 
-        {
-        	local,
-        	sender,
-        	receiver,
-            sender_receiver
-        };
-        
         /** The type of communication at this nexus
          *
          */
@@ -125,6 +128,35 @@ class HY_PointHydroNexusRemote : public HY_PointHydroNexus
          */
         Catchments remote_receivers;
 };
+
+namespace std
+{
+	inline std::string to_string(HY_PointHydroNexusRemote::communication_type t)
+	{
+		switch(t)
+		{
+			case HY_PointHydroNexusRemote::communication_type::local:
+			
+			return std::string("local");
+			break;
+			
+			case HY_PointHydroNexusRemote::communication_type::sender:
+
+			return std::string("sender");
+			break;
+			
+			case HY_PointHydroNexusRemote::communication_type::receiver:
+			
+			return std::string("receiver");
+			break;
+			
+			case HY_PointHydroNexusRemote::communication_type::sender_receiver:
+			
+			return std::string("sender_receiver");
+			break;
+		}
+	}
+}
 
 #endif // NGEN_MPI_ACTIVE
 #endif // HY_POINTHYDRONEXUSREMOTEDOWNSTREAM_H

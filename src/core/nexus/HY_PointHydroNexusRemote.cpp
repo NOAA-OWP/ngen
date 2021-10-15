@@ -116,53 +116,6 @@ HY_PointHydroNexusRemote::~HY_PointHydroNexusRemote()
     }
 }
 
-/*double HY_PointHydroNexusRemote::get_downstream_flow(std::string catchment_id, time_step_t t, double percent_flow)
-{
-    while ( stored_recieves.size() > 0)
-    {
-        //std::cerr << "Waiting on " << stored_recieves.size() << " recieves\n";
-
-        process_communications();
-
-        if (stored_recieves.size()) std::this_thread::sleep_for(std::chrono::milliseconds(500));
-    }
-
-    auto iter = catchment_id_to_mpi_rank.find(catchment_id);
-    if ( iter != catchment_id_to_mpi_rank.end() )
-    {
-        // allocate the message buffer
-        stored_sends.resize(stored_sends.size() + 1);
-        stored_sends.back().buffer = std::make_shared<time_step_and_flow_t>();
-
-        // fill the message buffer
-        stored_sends.back().buffer->time_step = t;
-        stored_sends.back().buffer->catchment_id = std::stoi( catchment_id.substr(4) );
-
-        // get the correct amount of flow using the inherted function this means are local bookkeeping is accurate
-        stored_sends.back().buffer->flow = HY_PointHydroNexus::get_downstream_flow(catchment_id, t, percent_flow);;
-
-        int tag = extract(id);
-
-        //Send downstream_flow from this Upstream Remote Nexus to the Downstream Remote Nexus
-        MPI_Isend(
-            stored_sends.back().buffer.get(),
-            1,
-            time_step_and_flow_type,
-            iter->second,
-            tag,
-            MPI_COMM_WORLD,
-            &stored_sends.back().mpi_request);
-
-        //std::cerr << "Remote send from rank " << world_rank << " to rank " << iter->second << " on tag " << tag << std::endl;
-        return (double)SENTINEL_IS_REMOTELY_HANDLED;
-    }
-    else
-    {
-        return HY_PointHydroNexus::get_downstream_flow(catchment_id, t, percent_flow);
-    }
-
-}*/
-
 double HY_PointHydroNexusRemote::get_downstream_flow(std::string catchment_id, time_step_t t, double percent_flow)
 {
     double remote_flow = 0.0;
@@ -195,9 +148,12 @@ double HY_PointHydroNexusRemote::get_downstream_flow(std::string catchment_id, t
           		MPI_COMM_WORLD,
           		&stored_recieves.back().mpi_request);
 
-       		MPI_Handle_Error(status);   	
+       		MPI_Handle_Error(status); 
+       		
+       		//std::cerr << "Creating recieve with target_rank=" << rank << " on tag=" << tag << "\n";  	
     	}
     	
+    	//std::cerr << "Waiting on recieves\n";
     	while ( stored_recieves.size() > 0 )
     	{
     		process_communications();
@@ -207,48 +163,6 @@ double HY_PointHydroNexusRemote::get_downstream_flow(std::string catchment_id, t
     
     return HY_PointHydroNexus::get_downstream_flow(catchment_id, t, percent_flow);
 }
-
-/* void HY_PointHydroNexusRemote::add_upstream_flow(double val, std::string catchment_id, time_step_t t)
-{
-
-   auto iter = catchment_id_to_mpi_rank.find(catchment_id);
-   if ( iter != catchment_id_to_mpi_rank.end() )
-   {
-       //TODO:
-       //Need to update code for the possibility of multiple downstreams. Need to send this message to all downstreams.
-       //Send timestep(key to a dict to extract the info) and flow value as bytes with a custom type that packs these together
-       //Custom mpi type that is a pass structure
-
-       MPI_Request request;
-       int status;
-
-       stored_recieves.resize(stored_recieves.size() + 1);
-       stored_recieves.back().buffer = std::make_shared<time_step_and_flow_t>();
-
-       int tag = extract(catchment_id);
-
-       //Receive downstream_flow from Upstream Remote Nexus to this Downstream Remote Nexus
-       status = MPI_Irecv(
-          stored_recieves.back().buffer.get(),
-          1,
-          time_step_and_flow_type,
-          iter->second,
-          tag,
-          MPI_COMM_WORLD,
-          &stored_recieves.back().mpi_request);
-
-       MPI_Handle_Error(status);
-
-       //std::cerr << "Remote recieve on rank " << world_rank << " from rank " << iter->second << " on tag " << tag << std::endl;
-
-     }
-     else // if this catchment is not remote call base function
-     {
-        HY_PointHydroNexus::add_upstream_flow(val, catchment_id, t);
-     }
-
-     return;
-} */
 
 void HY_PointHydroNexusRemote::add_upstream_flow(double val, std::string catchment_id, time_step_t t)
 {
@@ -297,7 +211,9 @@ void HY_PointHydroNexusRemote::add_upstream_flow(double val, std::string catchme
 		        *downstream_ranks.begin(), //TODO currently only support a SINGLE downstream message pairing
 		        tag,
 		        MPI_COMM_WORLD,
-		        &stored_sends.back().mpi_request);	
+		        &stored_sends.back().mpi_request);
+		        
+		    //std::cerr << "Creating send with target_rank=" << *downstream_ranks.begin() << " on tag=" << tag << "\n";	
 		        
 		    
 		    while ( stored_sends.size() > 0 )
