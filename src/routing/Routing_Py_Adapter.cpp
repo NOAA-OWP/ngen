@@ -14,7 +14,6 @@ using namespace routing_py_adapter;
  * @param t_route_connection_path
  * @param t_route_config_file_with_path
  * @param input_path
- * @param catchment_subset_ids
  * @param number_of_timesteps
  * @param delta_time
  * @param flow_vector
@@ -22,7 +21,6 @@ using namespace routing_py_adapter;
 Routing_Py_Adapter::Routing_Py_Adapter(std::string t_route_connection_path, 
                                        std::string t_route_config_file_with_path,
                                        std::string input_path,
-                                       const std::vector<std::string> &catchment_subset_ids,
                                        int number_of_timesteps, int delta_time,
                                        const std::vector<double> &flow_vector)
 {}
@@ -32,18 +30,22 @@ Routing_Py_Adapter::Routing_Py_Adapter(std::string t_route_connection_path,
  *
  * @param t_route_connection_path
  * @param t_route_config_file_with_path
- * @param catchment_subset_ids
  * @param number_of_timesteps
  * @param delta_time
  */
 Routing_Py_Adapter::Routing_Py_Adapter(std::string t_route_connection_path,
                                        std::string t_route_config_file_with_path,
-                                       const std::vector<std::string> &catchment_subset_ids,
                                        int number_of_timesteps, int delta_time)
 {
 
-  //Cast vector of catchment_subset_ids to Python list 
-  py::list catchment_subset_ids_list = py::cast(catchment_subset_ids);
+  //Bind python sys module
+  py::module_ sys = py::module_::import("sys");
+
+  //Create object sys_path for the Python system path
+  py::object sys_path = sys.attr("path");
+
+  //Create object to append to the sys_path
+  py::object sys_path_append = sys_path.attr("append");
 
   //Append the t_route_connection_path
   utils::ngenPy::InterpreterUtil::addToPyPath(t_route_connection_path);

@@ -25,7 +25,6 @@ namespace routing_py_adapter {
          * @param t_route_connection_path
          * @param t_route_config_file_with_path
          * @param input_path
-         * @param catchment_subset_ids
          * @param number_of_timesteps
          * @param delta_time
          * @param flow_vector
@@ -33,7 +32,6 @@ namespace routing_py_adapter {
         Routing_Py_Adapter(std::string t_route_connection_path, 
                            std::string t_route_config_file_with_path,
                            std::string input_path, 
-                           const std::vector<std::string> &catchment_subset_ids,
                            int number_of_timesteps, int delta_time,
                            const std::vector<double> &flow_vector);
 
@@ -43,13 +41,11 @@ namespace routing_py_adapter {
          *
          * @param t_route_connection_path
          * @param t_route_config_file_with_path
-         * @param catchment_subset_ids
          * @param number_of_timesteps
          * @param delta_time
          */
         Routing_Py_Adapter(std::string t_route_connection_path, 
                            std::string t_route_config_file_with_path,
-                           const std::vector<std::string> &catchment_subset_ids, 
                            int number_of_timesteps, int delta_time);
 
 

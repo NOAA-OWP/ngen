@@ -1,0 +1,166 @@
+---
+#initial input parameters
+run_parameters:
+    parallel_compute_method: by-network # OPTIONS: <omit flag for serial execution>, "by-network", "by-subnetwork-jit", "by-subnetwork-jit-clustered"
+    subnetwork_target_size: 20  # by-subnetwork* requires a value here to identify the target subnetwork size.
+    verbose: true  # verbose output (leave blank for quiet output.)
+    showtiming: true  # set the showtiming (omit flag for no timing information.)
+    debuglevel: 1  # set the debuglevel for additional console output.
+
+    #FOR NGEN: SET TO FALSE FOR NOW
+    break_network_at_waterbodies: false # replace waterbodies in the route-link dataset with segments representing the reservoir and calculate to divide the computation (leave blank for no splitting.)
+                          # WARNING: `break_network_at_waterbodies: true` will only work if compute_kernel is set to "V02-structured-obj" and parallel_compute_method is unset (serial execution) or set to "by-network".
+    compute_kernel: V02-structured  # OPTIONS: "V02-caching", "V02-structured-obj", "V02-structured"
+    assume_short_ts: true  # use the previous timestep value for both current and previous flow.
+    qts_subdivisions: 12  # number of timesteps per forcing (qlateral) timestep.
+    dt: 300  # default timestep length, seconds
+    #nts: 288  # number of timesteps to simulate. If used with ql_file or ql_folder, nts must be less than the number of ql inputs x qts_subdivisions.
+    nts: 40  # number of timesteps to simulate. If used with ql_file or ql_folder, nts must be less than the number of ql inputs x qts_subdivisions.
+    return_courant: false  # WARNING: true will only work with compute_kernel "V02-caching", therefore not currently compatible with simulation for waterbodies.
+#output file parameters
+output_parameters:
+    #output location for csv file
+    csv_output:
+        #csv_output_folder: "../../test/output/text"
+        #csv_output_folder: "./test/data/routing"
+        #csv_output_segments: []
+    #out location for nc file
+    #nc_output_folder: "../../test/output/text"
+    #nc_output_folder: "./test/data/routing"
+#data column assignment inside supernetwork_parameters
+supernetwork_parameters:
+    title_string: "Ngen1"
+    #Below will change with new catchment route link
+    #geo_file_path: "../../test/input/geo/NWM_2.1_Sample_Datasets/Croton_NY_TEST1/primary_domain/DOMAIN/Route_Link.nc"
+    #PUT NEW SUBSET HYDRO FABRIC FILE HERE
+    #geo_file_path: "../../test/input/next_gen/waterbody-params.json"
+    geo_file_path: "./test/data/routing/waterbody-params.json"
+    #mask_file_path: ""
+    #mask_layer_string: ""
+    #mask_driver_string: "csv"
+    #mask_key: 0
+    #ngen_nexus_id_to_downstream_comid_mapping_json: "extern/t-route/test/input/next_gen/nexus_id_to_downstream_comid_mapping_subset1.json"
+
+    #CHANGE BELOW WITH NEW NGEN HYDRO FABRIC DATA
+    #ngen_nexus_file: "/glade/work/dmattern/hydro_fabrics/9_5_huc01_medium_subset/flowpath_edge_list.json" 
+    ngen_nexus_file: "./test/data/routing/flowpath_edge_list.json" 
+    #columns:
+    #    key: "link"
+    #    downstream: "to"
+    #    dx: "Length"
+    #    n: "n"  # TODO: rename to `manningn`
+    #    ncc: "nCC"  # TODO: rename to `mannningncc`
+    #    s0: "So"  # TODO: rename to `bedslope`
+    #    bw: "BtmWdth"  # TODO: rename to `bottomwidth`
+    #    waterbody: "NHDWaterbodyComID"
+    #    tw: "TopWdth"  # TODO: rename to `topwidth`
+    #    twcc: "TopWdthCC"  # TODO: rename to `topwidthcc`
+    #    alt: "alt"
+    #    musk: "MusK"
+    #    musx: "MusX"
+    #    cs: "ChSlp"  # TODO: rename to `sideslope`
+    columns:
+        #link????
+        key: "ID"
+        downstream: "toID"
+        dx: "length_m"
+        n: "n"  # TODO: rename to `manningn`
+        ncc: "nCC"  # TODO: rename to `mannningncc`
+        s0: "So"  # TODO: rename to `bedslope`
+        bw: "BtmWdth"  # TODO: rename to `bottomwidth`
+        #waterbody: "NHDWaterbodyComID"
+        tw: "TopWdth"  # TODO: rename to `topwidth`
+        twcc: "TopWdthCC"  # TODO: rename to `topwidthcc`
+        #alt: "alt"
+        musk: "MusK"
+        musx: "MusX"
+        cs: "ChSlp"  # TODO: rename to `sideslope`
+    waterbody_null_code: -9999
+    terminal_code: 0
+    waterbody_null_code: -9999
+    terminal_code: 0
+    driver_string: NetCDF
+    layer_string: 0
+
+#waterbody parameters and assignments from lake parm file
+waterbody_parameters:
+    level_pool:
+        #WRF-Hydro lake parm file
+        level_pool_waterbody_parameter_file_path: "../../test/input/geo/NWM_2.1_Sample_Datasets/Croton_NY_TEST1/primary_domain/DOMAIN/LAKEPARM.nc"
+        level_pool_waterbody_id: lake_id
+        level_pool_waterbody_area: LkArea
+        level_pool_weir_elevation: WeirE
+        level_pool_waterbody_max_elevation: LkMxE
+        level_pool_outfall_weir_coefficient: WeirC
+        level_pool_outfall_weir_length: WeirL
+        level_pool_overall_dam_length: DamL
+        level_pool_orifice_elevation: OrificeE
+        level_pool_orifice_coefficient: OrificeC
+        level_pool_orifice_area: OrificeA
+
+    hybrid_and_rfc:
+        # Specify the reservoir parameter file
+        reservoir_parameter_file: ""
+
+        # If using USGS persistence reservoirs, set to True. (default=.FALSE.)
+        reservoir_persistence_usgs: False
+
+        # Specify the path to the timeslice files to be used by USGS reservoirs
+        reservoir_usgs_timeslice_path: "../../test/input/geo/NWM_2.1_Sample_Datasets/Croton_NY_TEST1/observations/"
+
+        # If using USACE persistence reservoirs, set to True. (default=.FALSE.)
+        reservoir_persistence_usace: False
+
+        # Specify the path to the timeslice files to be used by USACE reservoirs
+        reservoir_usace_timeslice_path: ""
+
+        # Specify lookback hours to read reservoir observation data
+        reservoir_observation_lookback_hours: 48
+
+        # Specify update time interval in seconds to read new reservoir observation data
+        # The default is 86400 (seconds per day). Set to 3600 for standard and extended AnA simulations.
+        # Set to 1000000000 for short range and medium range forecasts.
+        reservoir_observation_update_time_interval_seconds: 1000000000
+        
+        # If using RFC forecast reservoirs, set to True. (default=.FALSE.)
+        reservoir_rfc_forecasts: False
+
+        # Specify the path to the RFC time series files to be used by reservoirs
+        reservoir_rfc_forecasts_time_series_path: "../../test/input/geo/NWM_2.1_Sample_Datasets/Croton_NY_TEST1/observations/"
+
+        # Specify lookback hours to read reservoir RFC forecasts
+        reservoir_rfc_forecasts_lookback_hours: 48
+
+#WRF-Hydro output file
+forcing_parameters:
+    #qlat_input_file: "../../test/input/geo/NWM_2.1_Sample_Datasets/Croton_NY_TEST1/example_CHRTOUT/qlats_croton.csv"
+    #NEXT GEN: CHANGE BELOW 
+    #nexus_input_folder: "../../test/input/next_gen/"
+    #nexus_input_folder: "/glade/scratch/dmattern/ngen_routing_test/"
+    nexus_input_folder: "./test/data/routing/"
+    nexus_file_pattern_filter: "nex-*"
+#WRF-Hydro restart files
+#restart_parameters:
+#    #WRF-Hydro channels restart file
+#    wrf_hydro_channel_restart_file: "../../test/input/geo/NWM_2.1_Sample_Datasets/Croton_NY_TEST1/example_RESTART/HYDRO_RST.2011-08-26_00-00_DOMAIN1"
+#    #WRF-Hydro channels ID crosswalk file
+#    wrf_hydro_channel_ID_crosswalk_file: "../../test/input/geo/NWM_2.1_Sample_Datasets/Croton_NY_TEST1/primary_domain/DOMAIN/Route_Link.nc"
+#    wrf_hydro_channel_ID_crosswalk_file_field_name: link
+#    wrf_hydro_channel_restart_upstream_flow_field_name: qlink1
+#    wrf_hydro_channel_restart_downstream_flow_field_name: qlink2
+#    wrf_hydro_channel_restart_depth_flow_field_name: hlink
+#    #WRF-Hydro waterbodies restart file
+#    wrf_hydro_waterbody_restart_file: "../../test/input/geo/NWM_2.1_Sample_Datasets/Croton_NY_TEST1/example_RESTART/HYDRO_RST.2011-08-26_00-00_DOMAIN1"
+#    #WRF-Hydro waterbody ID crosswalk file
+#    wrf_hydro_waterbody_ID_crosswalk_file: "../../test/input/geo/NWM_2.1_Sample_Datasets/Croton_NY_TEST1/primary_domain/DOMAIN/LAKEPARM.nc"
+#    wrf_hydro_waterbody_ID_crosswalk_file_field_name: lake_id
+#    #WRF-Hydro waterbody crosswalk filter file
+#    wrf_hydro_waterbody_crosswalk_filter_file: "../../test/input/geo/NWM_2.1_Sample_Datasets/Croton_NY_TEST1/primary_domain/DOMAIN/Route_Link.nc"
+#    wrf_hydro_waterbody_crosswalk_filter_file_field_name: NHDWaterbodyComID
+#parity_parameters:
+#    #Use two lines below for parity check on streamflow and leave the following two lines commented out
+#    parity_check_file: "../../test/input/geo/NWM_2.1_Sample_Datasets/Croton_NY_TEST1/example_CHRTOUT/streamflow_croton_levelpool.csv"
+#    parity_check_compare_node: 6227150 #Stream
+#    #Use two lines below for parity check on reservoir/waterbody and comment out two lines above
+#    #parity_check_waterbody_file: "../../test/input/geo/NWM_2.1_Sample_Datasets/Croton_NY_TEST1/waterbodies/reservoir_outflow_croton_levelpool_warm_nudge_off.csv"
+#    #parity_check_compare_node: 6228110 #Reservoir - only reservoir in domain
