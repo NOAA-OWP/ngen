@@ -474,11 +474,11 @@ namespace parallel {
         bool isGood = true;
 
         #ifdef ACTIVATE_PYTHON
-        std::unique_ptr<utils::HydrofabricSubsetter> subdivider;
+        std::unique_ptr<utils::ngenPy::HydrofabricSubsetter> subdivider;
         // Have rank 0 handle the generation task for all files/partitions
         if (mpi_rank == 0) {
             try {
-                subdivider = std::make_unique<utils::HydrofabricSubsetter>(catchmentDataFile, nexusDataFile,
+                subdivider = std::make_unique<utils::ngenPy::HydrofabricSubsetter>(catchmentDataFile, nexusDataFile,
                                                                            partitionConfigFile);
             }
             catch (const std::exception &e) {
