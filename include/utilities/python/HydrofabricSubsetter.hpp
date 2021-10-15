@@ -1,5 +1,5 @@
-#ifndef NGEN_PYHYDROFABRICSUBSETTER_HPP
-#define NGEN_PYHYDROFABRICSUBSETTER_HPP
+#ifndef NGEN_HYDROFABRICSUBSETTER_HPP
+#define NGEN_HYDROFABRICSUBSETTER_HPP
 
 #ifdef ACTIVATE_PYTHON
 
@@ -15,12 +15,12 @@ namespace utils {
     /**
      * Class for performing splitting hydrofabric files using external Python tools.
      */
-    class PyHydrofabricSubsetter {
+    class HydrofabricSubsetter {
 
     public:
 
-        PyHydrofabricSubsetter(const std::string &catchmentDataFile, const std::string &nexusDataFile,
-                               const std::string &crosswalkDataFile, const std::string &partitionsConfigFile)
+        HydrofabricSubsetter(const std::string &catchmentDataFile, const std::string &nexusDataFile,
+                             const std::string &crosswalkDataFile, const std::string &partitionsConfigFile)
                 : catchmentDataFile(catchmentDataFile), nexusDataFile(nexusDataFile),
                   crosswalkDataFile(crosswalkDataFile), partitionsConfigFile(partitionsConfigFile)
         {
@@ -58,9 +58,9 @@ namespace utils {
 
         }
 
-        PyHydrofabricSubsetter(const std::string &catchmentDataFile, const std::string &nexusDataFile,
-                               const std::string &partitionsConfigFile)
-               : PyHydrofabricSubsetter(catchmentDataFile, nexusDataFile, "", partitionsConfigFile) { }
+        HydrofabricSubsetter(const std::string &catchmentDataFile, const std::string &nexusDataFile,
+                             const std::string &partitionsConfigFile)
+               : HydrofabricSubsetter(catchmentDataFile, nexusDataFile, "", partitionsConfigFile) { }
 
         #ifdef ACTIVATE_PYTHON
         /**
@@ -68,22 +68,22 @@ namespace utils {
          *
          * @param pyHySub
          */
-        PyHydrofabricSubsetter(PyHydrofabricSubsetter &p) : catchmentDataFile(p.catchmentDataFile),
-                                                            nexusDataFile(p.nexusDataFile),
-                                                            crosswalkDataFile(p.crosswalkDataFile),
-                                                            py_cli(p.py_cli),
-                                                            partitionsConfigFile(p.partitionsConfigFile) { }
+        HydrofabricSubsetter(HydrofabricSubsetter &p) : catchmentDataFile(p.catchmentDataFile),
+                                                        nexusDataFile(p.nexusDataFile),
+                                                        crosswalkDataFile(p.crosswalkDataFile),
+                                                        py_cli(p.py_cli),
+                                                        partitionsConfigFile(p.partitionsConfigFile) { }
 
         /**
          * Move constructor.
          *
          * @param p
          */
-        PyHydrofabricSubsetter(PyHydrofabricSubsetter &&p) : catchmentDataFile(std::move(p.catchmentDataFile)),
-                                                             nexusDataFile(std::move(p.nexusDataFile)),
-                                                             crosswalkDataFile(std::move(p.crosswalkDataFile)),
-                                                             py_cli(std::move(p.py_cli)),
-                                                             partitionsConfigFile(std::move(p.partitionsConfigFile)) { }
+        HydrofabricSubsetter(HydrofabricSubsetter &&p) : catchmentDataFile(std::move(p.catchmentDataFile)),
+                                                         nexusDataFile(std::move(p.nexusDataFile)),
+                                                         crosswalkDataFile(std::move(p.crosswalkDataFile)),
+                                                         py_cli(std::move(p.py_cli)),
+                                                         partitionsConfigFile(std::move(p.partitionsConfigFile)) { }
 
         virtual bool execSubdivision() {
             bool result;
@@ -128,4 +128,4 @@ namespace utils {
 
 #endif // ACTIVATE_PYTHON
 
-#endif //NGEN_MPIHYDROFABRICUTIL_HPP
+#endif //NGEN_HYDROFABRICSUBSETTER_HPP
