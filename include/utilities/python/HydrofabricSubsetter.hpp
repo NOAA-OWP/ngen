@@ -4,6 +4,8 @@
 #ifdef ACTIVATE_PYTHON
 
 #include <pybind11/embed.h>
+#include "InterpreterUtil.hpp"
+
 namespace py = pybind11;
 
 #include "FileChecker.h"
@@ -35,7 +37,7 @@ namespace utils {
                             "Cannot subdivided hydrofabric files: base nexus file " + nexusDataFile + " does not exist");
                 }
                 #ifdef ACTIVATE_PYTHON
-                py::object Cli_Class = py::module_::import("dmod.subsetservice").attr("Cli");
+                py::object Cli_Class = InterpreterUtil::getPyModule("dmod.subsetservice").attr("Cli");
                 py::object crosswalk_arg;
                 if (crosswalkDataFile.empty()) {
                     crosswalk_arg = py::none();
