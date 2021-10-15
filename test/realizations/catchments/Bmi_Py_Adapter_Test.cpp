@@ -121,7 +121,7 @@ protected:
 
 };
 
-py::object Bmi_Py_Adapter_Test::Path = InterpreterUtil::getPyModule("pathlib.Path");
+py::object Bmi_Py_Adapter_Test::Path = InterpreterUtil::getPyModule(std::vector<std::string> {"pathlib", "Path"});
 
 void Bmi_Py_Adapter_Test::SetUp() {
 
