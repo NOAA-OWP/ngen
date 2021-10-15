@@ -26,9 +26,8 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
       
-    # TODO: make sure this step is still necessary
-    - name: git submodule
-      run: git submodule update --init --recursive -- test/googletest
+    - name: Init Submodules
+      run: git submodule update --init --recursive
 
     - name: Cache Boost Dependency
       id: cache-boost-dep
@@ -72,9 +71,8 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      # TODO: make sure this step is still necessary
-      - name: git submodule
-        run: git submodule update --init --recursive -- test/googletest
+      - name: Init Submodules
+        run: git submodule update --init --recursive
 
       - name: Cache Boost Dependency
         id: cache-boost-dep
@@ -125,8 +123,8 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: git submodule googletest
-        run: git submodule update --init --recursive -- test/googletest
+      - name: Init Submodules
+        run: git submodule update --init --recursive
 
       - name: Cache Numpy Python Dependency
         id: cache-linux-numpy-dep
@@ -143,9 +141,6 @@ jobs:
           pip install pip
           pip install numpy
           deactivate
-
-      - name: git submodule pybind11
-        run: git submodule update --init --recursive -- extern/pybind11
 
       - name: cmake_init_shared_lib_build
         run: cmake -B extern/test_bmi_c/cmake_build -S extern/test_bmi_c
@@ -205,8 +200,8 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: git submodule googletest
-        run: git submodule update --init --recursive -- test/googletest
+      - name: Init Submodules
+        run: git submodule update --init --recursive
 
       - name: Cache Numpy Python Dependency
         id: cache-linux-numpy-dep
@@ -223,9 +218,6 @@ jobs:
           pip install pip
           pip install numpy
           deactivate
-
-      - name: git submodule pybind11
-        run: git submodule update --init --recursive -- extern/pybind11
 
       - name: cmake_init_test_lib_build
         run: cmake -B extern/test_bmi_fortran/cmake_build -S extern/test_bmi_fortran
@@ -394,8 +386,8 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: git submodule googletest
-        run: git submodule update --init --recursive -- test/googletest
+      - name: Init Submodules
+        run: git submodule update --init --recursive
 
       - name: Cache Numpy Python Dependency
         id: cache-numpy-py3-dep
@@ -412,9 +404,6 @@ jobs:
           pip install pip
           pip install numpy
           deactivate
-
-      - name: git submodule pybind11
-        run: git submodule update --init --recursive -- extern/pybind11
 
       - name: cmake_init_shared_lib_build
         run: cmake -B extern/test_bmi_c/cmake_build -S extern/test_bmi_c
@@ -473,8 +462,8 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: git submodule googletest
-        run: git submodule update --init --recursive -- test/googletest
+      - name: Init Submodules
+        run: git submodule update --init --recursive
 
       - name: Cache Numpy Python Dependency
         id: cache-numpy-py3-dep
