@@ -49,7 +49,7 @@ jobs:
         cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=OFF -DNGEN_ACTIVATE_PYTHON:BOOL=OFF -S .
     
     - name: build_tests
-      run: cmake --build cmake_build --target test_unit
+      run: cmake --build cmake_build --target test_unit -- -j ${{ env.LINUX_NUM_PROC_CORES }}
       timeout-minutes: 15
       
     - name: run_tests
@@ -100,7 +100,7 @@ jobs:
           cmake -B cmake_build -DMPI_ACTIVE:BOOL=ON -DBMI_C_LIB_ACTIVE:BOOL=OFF -DNGEN_ACTIVATE_PYTHON:BOOL=OFF -S .
 
       - name: build_tests
-        run: cmake --build cmake_build --target test_remote_nexus
+        run: cmake --build cmake_build --target test_remote_nexus -- -j ${{ env.LINUX_NUM_PROC_CORES }}
         timeout-minutes: 15
 
       - name: run_tests
@@ -168,7 +168,7 @@ jobs:
           cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=ON -DNGEN_ACTIVATE_PYTHON:BOOL=ON -S .
 
       - name: build_bmi_c_tests
-        run: cmake --build cmake_build --target test_bmi_c
+        run: cmake --build cmake_build --target test_bmi_c -- -j ${{ env.LINUX_NUM_PROC_CORES }}
         timeout-minutes: 15
 
       - name: run_bmi_c_tests
@@ -257,7 +257,7 @@ jobs:
           cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=ON -DBMI_FORTRAN_ACTIVE:BOOL=ON -DNGEN_ACTIVATE_PYTHON:BOOL=ON -S .
 
       - name: build_bmi_fortran_tests
-        run: cmake --build cmake_build --target test_bmi_fortran
+        run: cmake --build cmake_build --target test_bmi_fortran -- -j ${{ env.LINUX_NUM_PROC_CORES }}
         timeout-minutes: 15
 
       - name: run_bmi_fortran_tests
@@ -341,8 +341,8 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: git submodule
-        run: git submodule update --init --recursive -- test/googletest
+      - name: Init Submodules
+        run: git submodule update --init --recursive
 
       - name: Cache Boost Dependency
         id: cache-boost-dep
@@ -364,7 +364,7 @@ jobs:
           cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=OFF -DNGEN_ACTIVATE_PYTHON:BOOL=OFF -S .
 
       - name: build_tests
-        run: cmake --build cmake_build --target test_unit
+        run: cmake --build cmake_build --target test_unit -- -j ${{ env.MACOS_NUM_PROC_CORES }}
         timeout-minutes: 15
 
       - name: run_tests
@@ -431,7 +431,7 @@ jobs:
           cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=ON -DNGEN_ACTIVATE_PYTHON:BOOL=ON -S .
 
       - name: build_bmi_c_tests
-        run: cmake --build cmake_build --target test_bmi_c
+        run: cmake --build cmake_build --target test_bmi_c -- -j ${{ env.MACOS_NUM_PROC_CORES }}
         timeout-minutes: 15
 
       - name: run_bmi_c_tests
@@ -522,7 +522,7 @@ jobs:
           cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=ON -DBMI_FORTRAN_ACTIVE:BOOL=ON -DNGEN_ACTIVATE_PYTHON:BOOL=ON -S .
 
       - name: build_bmi_fortran_tests
-        run: cmake --build cmake_build --target test_bmi_fortran
+        run: cmake --build cmake_build --target test_bmi_fortran -- -j ${{ env.MACOS_NUM_PROC_CORES }}
         timeout-minutes: 15
 
       - name: run_bmi_fortran_tests
