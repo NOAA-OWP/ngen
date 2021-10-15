@@ -24,7 +24,7 @@
 #include <string>
 #include <set>
 #ifdef ACTIVATE_PYTHON
-#include "PyHydrofabricSubsetter.hpp"
+#include "python/PyHydrofabricSubsetter.hpp"
 #endif // ACTIVATE_PYTHON
 
 using namespace std;
