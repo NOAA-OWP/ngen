@@ -460,7 +460,7 @@ TEST_F(Nexus_Remote_Test, TestDeadlock1)
 
 TEST_F(Nexus_Remote_Test, DISABLED_TestTree1)
 {
-    int tree_height = 10;
+    int tree_height = 2;
     int num_nodes = std::pow(2,tree_height) - 1;  // the number of nodes in a complete binary tree of height h
     int num_non_leaf_nodes = std::pow(2,tree_height-1) - 1;
     int start_id = num_nodes;
@@ -513,12 +513,75 @@ TEST_F(Nexus_Remote_Test, DISABLED_TestTree1)
 
     for( int i = start_id; i <= stop_id; ++i)
     {
-        std::vector<std::string> catchments;
-        catchments.push_back(std::string("cat-"+std::to_string(i)));
-        nexus_map[i] = std::make_shared<HY_PointHydroNexusRemote>("nex-"+std::to_string(i), catchments, loc_map);
+        std::vector<std::string> downstream_catchments;
+        std::vector<std::string> upstream_catchments;
+        HY_PointHydroNexusRemote::catcment_location_map_t local_map;
+        std::string nex_id = "nex-"+std::to_string(i);
+        std::string downstream_id;
+
+        //catchments.push_back(std::string("cat-"+std::to_string(i)));
+        if ( leaf(i) )
+        {
+        	upstream_catchments.push_back("forcing");
+        	downstream_id = "cat-"+std::to_string(parent(i));
+        	downstream_catchments.push_back(downstream_id);
+        	
+        	std::string parent_id = "cat-"+std::to_string(parent(i));
+        	
+        	if ( loc_map[parent_id] != mpi_rank )
+            {
+            	local_map[parent_id] = loc_map[parent_id];
+            }	
+        }
+        else
+        {
+        	std::string left_id = "cat-"+std::to_string(left(i));
+        	std::string right_id = "cat-"+std::to_string(right(i));
+        	
+            upstream_catchments.push_back(left_id);
+            upstream_catchments.push_back(right_id);
+            
+            if ( loc_map[left_id] != mpi_rank )
+            {
+            	local_map[left_id] = loc_map[left_id];
+            }
+            
+            if ( loc_map[right_id] != mpi_rank )
+            {
+            	local_map[right_id] = loc_map[right_id];
+            }
+            
+            downstream_id = "cat-"+std::to_string(parent(i));
+            std::string parent_id = "cat-"+std::to_string(left(i));
+        	
+        	if ( loc_map[parent_id] != mpi_rank )
+            {
+            	local_map[parent_id] = loc_map[parent_id];
+            }
+        }
+        
+        nexus_map[i] = std::make_shared<HY_PointHydroNexusRemote>(nex_id, downstream_catchments, upstream_catchments, local_map);
+        
+                
+        std::cerr << "mpi rank: " << mpi_rank << " constucted nexus with type = " 
+        	      << std::to_string(nexus_map[i]->get_communicator_type()) << " at tree position " << i << "\n";
+        std::cerr << "upstream catchments = [ " ;
+        for ( std::size_t i = 0; i < upstream_catchments.size(); ++i )
+        	std::cerr << upstream_catchments[i] << ",";
+        std::cerr << "\b] for node=" << i << "\n";
+        
+        std::cerr << "downstream catchments = [ " ;
+        for ( std::size_t i = 0; i < downstream_catchments.size(); ++i )
+        	std::cerr << downstream_catchments[i] << ",";
+        std::cerr << "\b] for node=" << i << "\n";
+        
+        std::cerr << "local map = [ " ;
+        for ( auto p : local_map )
+        	std::cerr << p.first << ":" << p.second << ",";
+        std::cerr << "\b] for node=" << i << "\n";
     }
 
-    //std::cerr << "-----Rank " << mpi_rank << " Finshed creating nexus objects\n";
+    std::cerr << "-----Rank " << mpi_rank << " Finshed creating nexus objects\n";
 
 
     long ts = 0;
@@ -526,65 +589,72 @@ TEST_F(Nexus_Remote_Test, DISABLED_TestTree1)
     // for each nexus accept upstream flow
     for( int i = stop_id; i >= start_id; --i )
     {
-        //std::cerr << "-----Rank " << mpi_rank << " Processing nexus object at position " << i << std::endl;
+        std::cerr << "-----Rank " << mpi_rank << " Processing nexus object at position " << i << std::endl;
 
         if ( leaf(i) )
         {
+            std::cerr << "mpi rank: " << mpi_rank << " adding forcing at node " << i << "\n";
             // if this is a leaf we need a synthetic flow
-            nexus_map[i]->add_upstream_flow(1.0,"cat-"+std::to_string(num_nodes+10), ts);
+            nexus_map[i]->add_upstream_flow(1.0,"forcing", ts);
 
-            int p = parent(i);
-            if ( nexus_map.find(p) == nexus_map.end() )
-            {
-                nexus_map[i]->get_downstream_flow("cat-"+std::to_string(p), ts, 100.0);
-                //std::cerr << "-----Rank " << mpi_rank << " remote send of leaf data from catchment- " << i << " to catchment-" << p << std::endl;
-            }
         }
         else
         {
+            std::cerr << "mpi rank: " << mpi_rank << " processing node " << i << "\n";
             // if this is not a leaf try to get flow from its upstreams
 
             int l = left(i);
             int r = right(i);
+            int p = parent(i);
 
             std::string current_id = std::string("cat-"+std::to_string(i));
             std::string left_id = std::string("cat-"+std::to_string(l));
             std::string right_id = std::string("cat-"+std::to_string(r));
+            std::string p_id = std::string("cat-"+std::to_string(p));
             float dummy_value;
-            float flow;
+            float flow = 0.0;
 
-            if ( loc_map.find(left_id) != loc_map.end() )
+            try
             {
-                // l is a remote node
-                //std::cerr << "-----Rank " << mpi_rank << " remote recieve of data from catchment- " << l << std::endl;
-                nexus_map[i]->add_upstream_flow(dummy_value,left_id,ts);
+            	std::cerr << "mpi rank: " << mpi_rank << " processing node " << i << " left \n";
+            	float f = nexus_map.at(l)->get_downstream_flow(current_id, ts, 100.0);
+            	flow += f;
+            	nexus_map[i]->add_upstream_flow(f, left_id, ts );
             }
-            else
+            catch (const std::out_of_range& oor) 
             {
-                //std::cerr << "-----Rank " << mpi_rank << " local recieve of data from catchment- " << l << std::endl;
-                flow = nexus_map[l]->get_downstream_flow(current_id,ts,100.0);
-                nexus_map[i]->add_upstream_flow(flow,left_id,ts);
-            }
-
-            if ( loc_map.find(right_id) != loc_map.end() )
+				// l is not this partition
+  			}
+  			
+  			try
             {
-                // r is a remote node
-                //std::cerr << "-----Rank " << mpi_rank << " remote recieve of data from catchment- " << r << std::endl;
-                nexus_map[i]->add_upstream_flow(dummy_value,right_id,ts);
+            	std::cerr << "mpi rank: " << mpi_rank << " processing node " << i << " right \n";
+            	float f = nexus_map.at(r)->get_downstream_flow(current_id, ts, 100.0);
+            	flow += f;
+            	nexus_map[i]->add_upstream_flow(flow, right_id, ts );
             }
-            else
+            catch (const std::out_of_range& oor) 
             {
-                //std::cerr << "-----Rank " << mpi_rank << " local recieve of data from catchment- " << r << std::endl;
-                flow = nexus_map[r]->get_downstream_flow(current_id,ts,100.0);
-                nexus_map[i]->add_upstream_flow(flow,right_id,ts);
-            }
-
-            int p = parent(i);
-            if ( nexus_map.find(p) == nexus_map.end() )
+		
+  			}
+  			
+  			try
             {
-                //std::cerr << "-----Rank " << mpi_rank << " remote send of data from catchment- " << i << std::endl;
-                nexus_map[i]->get_downstream_flow("cat-"+std::to_string(p), ts, 100.0);
+            	if ( p != i )
+            	{
+            		std::cerr << "mpi rank: " << mpi_rank << " processing node " << i << "parent \n";
+            		//flow = nexus_map[i]->get_downstream_flow(p_id,ts,100.0);
+            		std::cerr << "p = " << p << "\n";
+            		std::cerr << "i = " << i << "\n";
+            		nexus_map.at(p)->add_upstream_flow(flow, current_id, ts );
+            	}
             }
+            catch (const std::out_of_range& oor) 
+            {
+		
+  			}
+  			
+  			
         }
 
         //std::cerr << "-----Rank " << mpi_rank << " Finished processing nexus object at position " << i << std::endl;
@@ -594,7 +664,8 @@ TEST_F(Nexus_Remote_Test, DISABLED_TestTree1)
 
     if ( nexus_map.find(0) != nexus_map.end() )
     {
-        double flow = nexus_map[0]->get_downstream_flow("cat-0", ts, 100.0);
+        double flow = 0.0;
+        flow = nexus_map[0]->get_downstream_flow("cat-0", ts, 100.0);
         std::cerr << "Rank " << mpi_rank<< " final Flow = " << flow << std::endl;
 
         ASSERT_TRUE(flow == 512);
