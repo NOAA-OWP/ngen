@@ -315,6 +315,39 @@ namespace models {
             int GetGridSize(int grid_id) override;
 
             /**
+             * Get the name string for the C++ type analogous to the described type in the Fortran backing model.
+             *
+             * The supported languages for BMI modules support different types than C++ in general, but it is necessary
+             * to map "external" types to the appropriate C++ type for certain interactions; e.g., setting a variable
+             * value.  This function encapsulates the translation specific to Fortran.
+             *
+             * Note that the size of an individual item is also required, as this can vary in certain situations
+             * depending on the implementation language of a backing model.
+             *
+             * @param external_type_name The string name of the analog type in Python.
+             * @param item_size The particular size in bytes for items of the involved analogous types.
+             * @return The name string for the C++ type analogous to the described type in the Fortran backing model.
+             * @throw std::runtime_error If an unrecognized external type name parameter is provided.
+             */
+            const std::string
+            get_analogous_cxx_type(const std::string &external_type_name, const size_t item_size) override {
+                if (external_type_name == "int" || external_type_name == "integer") {
+                    return "int";
+                }
+                else if (external_type_name == "float" || external_type_name == "real") {
+                    return "float";
+                }
+                else if (external_type_name == "double" || external_type_name == "double precision") {
+                    return "double";
+                }
+                else {
+                    throw std::runtime_error(
+                            "Bmi_Fortran_Adapter received unrecognized Fortran type name '" + external_type_name +
+                            "' for which the analogous C++ type could not be determined");
+                }
+            }
+
+            /**
              * Whether the backing model has been initialized yet.
              *
              * @return Whether the backing model has been initialized yet.
