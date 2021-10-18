@@ -216,9 +216,9 @@ namespace models {
              *
              * @param py_type_name The string name of the analog type in Python.
              * @param item_size The particular size in bytes for items of the involved analogous types.
-             * @return
+             * @return The name string for the C++ type analogous to the described type in the Python backing model.
              */
-            std::string get_analogous_cxx_type(const std::string &py_type_name, const size_t item_size) {
+            const std::string get_analogous_cxx_type(const std::string &py_type_name, const size_t item_size) override {
                 /*
                  * Note that an implementation using a "switch" statement would be problematic.  It could be done by
                  * rewriting to separate the integer and non-integer type, then having cases based on size.  However,
