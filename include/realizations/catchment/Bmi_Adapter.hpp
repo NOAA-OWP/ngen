@@ -132,6 +132,27 @@ namespace models {
             }
 
             /**
+             * Get the name string for the C++ type analogous to the described type in the backing model.
+             *
+             * The supported languages for BMI modules support different types than C++ in general, but it is necessary
+             * to map "external" types to the appropriate C++ type for certain interactions; e.g., setting a variable
+             * value.  This function encapsulates the translation specific to the particular language.
+             *
+             * Note that the size of an individual item is also required, as this can vary in certain situations
+             * depending on the implementation language of a backing model.
+             *
+             * Implementations should all throw the same type of exception (currently, @ref std::runtime_error) if/when
+             * an unrecognized external type name parameter is provided.
+             *
+             * @param external_type_name The string name of the analog type in Python.
+             * @param item_size The particular size in bytes for items of the involved analogous types.
+             * @return The name string for the C++ type analogous to the described type in the backing model.
+             * @throw std::runtime_error If an unrecognized external type name parameter is provided.
+             */
+            virtual const std::string get_analogous_cxx_type(const std::string &external_type_name,
+                                                             const size_t item_size) = 0;
+
+            /**
              * Initialize the wrapped BMI model functionality using the value from the `bmi_init_config` member variable
              * and the API's ``Initialize`` function.
              *
