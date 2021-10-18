@@ -11,6 +11,14 @@
 #define MPI_HF_SUB_CODE_BAD 1
 #endif
 
+#ifndef NGEN_MPI_DATA_TAG
+#define NGEN_MPI_DATA_TAG 100
+#endif
+
+#ifndef NGEN_MPI_PROTOCOL_TAG
+#define NGEN_MPI_PROTOCOL_TAG 101
+#endif
+
 #include <cstring>
 #include <mpi.h>
 #include <string>
@@ -242,35 +250,40 @@ namespace parallel {
         if (file == NULL) {
             // TODO: output error message
             code = -1;
-            MPI_Send(&code, 1, MPI_INT, destRank, 0, MPI_COMM_WORLD);
+            MPI_Send(&code, 1, MPI_INT, destRank, NGEN_MPI_PROTOCOL_TAG, MPI_COMM_WORLD);
             return false;
         }
 
         // Send expected size to start
-        MPI_Send(&bufSize, 1, MPI_INT, destRank, 0, MPI_COMM_WORLD);
+        MPI_Send(&bufSize, 1, MPI_INT, destRank, NGEN_MPI_PROTOCOL_TAG, MPI_COMM_WORLD);
 
         // Then get back expected size to infer other side is good to go
-        MPI_Recv(&code, 1, MPI_INT, destRank, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        MPI_Recv(&code, 1, MPI_INT, destRank, NGEN_MPI_PROTOCOL_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
         if (code != bufSize) {
             // TODO: output error message
             fclose(file);
             return false;
         }
-
+        int continueCode = 1;
         // Then while there is more of the file to read and send, read the next batch and ...
         while (fgets(buf, bufSize, file) != NULL) {
-            // First send this batch
-            MPI_Send(buf, bufSize, MPI_CHAR, destRank, 0, MPI_COMM_WORLD);
+            // Indicate we are ready to continue sending data
+            MPI_Send(&continueCode, 1, MPI_INT, destRank, NGEN_MPI_PROTOCOL_TAG, MPI_COMM_WORLD);
+
+            // Send this batch
+            MPI_Send(buf, bufSize, MPI_CHAR, destRank, NGEN_MPI_DATA_TAG, MPI_COMM_WORLD);
+
             // Then get back a code, which will be -1 if bad and need to exit and otherwise good
-            MPI_Recv(&code, 1, MPI_INT, destRank, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-            if (code == -1) {
+            MPI_Recv(&code, 1, MPI_INT, destRank, NGEN_MPI_PROTOCOL_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            if (code < 0) {
                 // TODO: output error message
                 fclose(file);
                 return false;
             }
         }
-        // Once there is no more file to read and send, send an empty string
-        MPI_Send("", bufSize, MPI_CHAR, destRank, 0, MPI_COMM_WORLD);
+        // Once there is no more file to read and send, we should stop continuing
+        continueCode = 0;
+        MPI_Send(&continueCode, 1, MPI_INT, destRank, NGEN_MPI_PROTOCOL_TAG, MPI_COMM_WORLD);
         // Expect to get back a code of 0
         MPI_Recv(&code, 1, MPI_INT, destRank, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
         fclose(file);
@@ -290,9 +303,9 @@ namespace parallel {
      * @return Whether sending was successful.
      */
     bool mpi_recv_text_file(const char *fileName, const int mpi_rank, const int srcRank) {
-        int bufSize, strLength, writeCode;
+        int bufSize, writeCode;
         // Receive expected buffer size to start
-        MPI_Recv(&bufSize, 1, MPI_INT, srcRank, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        MPI_Recv(&bufSize, 1, MPI_INT, srcRank, NGEN_MPI_PROTOCOL_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
         // If the sending side couldn't open the file, then immediately return false
         if (bufSize == -1) {
@@ -306,44 +319,38 @@ namespace parallel {
         if (file == NULL) {
             // TODO: output error message
             bufSize = -1;
-            MPI_Send(&bufSize, 1, MPI_INT, srcRank, 0, MPI_COMM_WORLD);
+            MPI_Send(&bufSize, 1, MPI_INT, srcRank, NGEN_MPI_PROTOCOL_TAG, MPI_COMM_WORLD);
             return false;
         }
 
         // Send back the received buffer it if file opened, confirming things are good to go for transfer
-        MPI_Send(&bufSize, 1, MPI_INT, srcRank, 0, MPI_COMM_WORLD);
+        MPI_Send(&bufSize, 1, MPI_INT, srcRank, NGEN_MPI_PROTOCOL_TAG, MPI_COMM_WORLD);
 
         // How much has been transferred so far
         int totalNumTransferred = 0;
         char buf[bufSize];
 
-        // While the last received string batch contained something
-        while (true) {
-            MPI_Recv(buf, bufSize, MPI_CHAR, srcRank, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-            strLength = std::strlen(buf);
-            // As long as the
-            if (strLength > 0) {
+        int continueCode;
 
-                // Write to file
-                writeCode = fputs(buf, file);
-                if (writeCode >= 0) {
-                    MPI_Send(&strLength, 1, MPI_INT, srcRank, 0, MPI_COMM_WORLD);
-                }
-                else {
-                    MPI_Send(&writeCode, 1, MPI_INT, srcRank, 0, MPI_COMM_WORLD);
-                    fclose(file);
-                    return false;
-                }
-            }
-            else {
-                // When finished ...
-                fclose(file);
-                // Also send back understood finished code of 0
-                MPI_Send(&strLength, 1, MPI_INT, srcRank, 0, MPI_COMM_WORLD);
+        while (true) {
+            // Make sure the other side wants to continue sending data
+            MPI_Recv(&continueCode, 1, MPI_INT, srcRank, NGEN_MPI_PROTOCOL_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            if (continueCode <= 0)
                 break;
+
+            MPI_Recv(buf, bufSize, MPI_CHAR, srcRank, NGEN_MPI_DATA_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+
+            writeCode = fputs(buf, file);
+            MPI_Send(&writeCode, 1, MPI_INT, srcRank, NGEN_MPI_PROTOCOL_TAG, MPI_COMM_WORLD);
+
+            if (writeCode < 0) {
+                fclose(file);
+                return false;
             }
         }
 
+        fclose(file);
+        MPI_Send(&continueCode, 1, MPI_INT, srcRank, NGEN_MPI_PROTOCOL_TAG, MPI_COMM_WORLD);
         return true;
     }
 
