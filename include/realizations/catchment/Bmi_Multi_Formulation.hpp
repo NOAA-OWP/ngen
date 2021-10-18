@@ -310,8 +310,11 @@ namespace realization {
          * @return Whether the property's value is an aggregate sum.
          */
         bool is_property_sum_over_time_step(const string &name) override {
-            // TODO: verify with some kind of proof that "always true" is appropriate
-            return true;
+            if (availableData.empty() || availableData.find(name) == availableData.end()) {
+                throw runtime_error(
+                        get_formulation_type() + " cannot get whether unknown property " + name + " is summation");
+            }
+            return availableData[name]->is_property_sum_over_time_step(name);
         }
 
         /**
