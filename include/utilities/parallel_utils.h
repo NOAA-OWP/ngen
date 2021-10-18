@@ -474,9 +474,9 @@ namespace parallel {
         bool isGood = true;
 
         #ifdef ACTIVATE_PYTHON
+        std::unique_ptr<utils::PyHydrofabricSubsetter> subdivider;
         // Have rank 0 handle the generation task for all files/partitions
         if (mpi_rank == 0) {
-            std::unique_ptr<utils::PyHydrofabricSubsetter> subdivider;
             try {
                 subdivider = std::make_unique<utils::PyHydrofabricSubsetter>(catchmentDataFile, nexusDataFile,
                                                                              partitionConfigFile);
@@ -486,11 +486,14 @@ namespace parallel {
                 // Set not good if the subdivider object couldn't be instantiated
                 isGood = false;
             }
-            // Sync with the rest of the ranks and bail if any aren't ready to proceed for any reason
-            if (!mpiSyncStatusAnd(isGood, mpi_rank, mpi_num_procs, "initializing hydrofabric subdivider")) {
-                return false;
-            }
+        }
 
+        // Sync ranks and bail if any aren't ready to proceed for any reason
+        if (!mpiSyncStatusAnd(isGood, mpi_rank, mpi_num_procs, "initializing hydrofabric subdivider")) {
+            return false;
+        }
+
+        if (mpi_rank == 0) {
             // Try to perform the subdividing
             try {
                 isGood = subdivider->execSubdivision();
