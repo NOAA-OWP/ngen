@@ -693,6 +693,7 @@ namespace realization {
             model_initialized = is_initialized;
         }
 
+        // TODO: need to modify this to support arrays properly, since in general that's what BMI modules deal with
         template<typename T>
         std::shared_ptr<void> get_value_as_type(std::string type, T value)
         {
@@ -756,14 +757,16 @@ namespace realization {
                 // TODO: probably need to actually allow this by default and warn, but have config option to activate
                 //  this type of behavior
                 // TODO: account for arrays later
-                if (get_bmi_model()->GetVarItemsize(var_name) != get_bmi_model()->GetVarNbytes(var_name)) {
+                int varItemSize = get_bmi_model()->GetVarItemsize(var_name);
+                if (varItemSize != get_bmi_model()->GetVarNbytes(var_name)) {
                     throw std::runtime_error(
                             "BMI input variable '" + var_name + "' is an array - not currently supported");
                 }
                 double value = provider->get_value(var_map_alias, model_epoch_time, t_delta,
                                                    get_bmi_model()->GetVarUnits(var_name));
                 // Finally, use the value obtained to set the model input
-                std::string type = get_bmi_model()->GetVarType(var_name);
+                std::string type = get_bmi_model()->get_analogous_cxx_type(get_bmi_model()->GetVarType(var_name),
+                                                                           varItemSize);
                 std::shared_ptr<void> value_ptr = get_value_as_type(type, value);
                 get_bmi_model()->SetValue(var_name, value_ptr.get());
             }
