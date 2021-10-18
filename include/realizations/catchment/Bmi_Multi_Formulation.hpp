@@ -9,6 +9,7 @@
 #include "ForcingProvider.hpp"
 
 #define BMI_REALIZATION_CFG_PARAM_REQ__MODULES "modules"
+#define DEFAULT_ET_FORMULATION_INDEX 0
 
 using namespace std;
 
@@ -39,13 +40,13 @@ namespace realization {
         /**
          * Perform ET (or PET) calculations.
          *
-         * This function simply defers to the analogous function of the first of this instance's nested modules.
+         * This function defers to the analogous function of the appropriate nested submodule, using
+         * @ref determine_et_formulation_index to determine which one that is.
          *
-         * @return The ET calculation from the first of this instance's BMI nested modules.
+         * @return The ET calculation from the appropriate module from this instance's collection of BMI nested modules.
          */
         double calc_et() override {
-            // TODO: add better way of determining which module to use for this
-            return modules[0]->calc_et();
+            return modules[determine_et_formulation_index()]->calc_et();
         }
 
         void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr) override {
@@ -55,6 +56,54 @@ namespace realization {
 
         void create_formulation(geojson::PropertyMap properties) override {
             create_multi_formulation(properties, true);
+        }
+
+        /**
+         * Determine the index of the correct sub-module formulation from which ET values should be obtain.
+         *
+         * This is primarily used to determine the correct module in the multi-module collection for getting the ET
+         * value when calls to @ref calc_et are made on this "outer" multi-module formulation.
+         *
+         * The function first attempts to find the nested module that makes available either
+         * ``NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP`` or ``CSDMS_STD_NAME_POTENTIAL_ET`` available, if any does.  It
+         * then provides the index of this module.
+         *
+         * Otherwise, the function iterates through the nested modules in order performing a search for one that
+         * provides a value with either the name defined in ``NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP`` or defined in
+         * ``CSDMS_STD_NAME_POTENTIAL_ET``.  It return the index of the first having either.
+         *
+         * If neither means finds the appropriate module, at default value ``DEFAULT_ET_FORMULATION_INDEX`` is returned.
+         *
+         * @return The index of correct sub-module formulation from which ET values should be obtain.
+         */
+        size_t determine_et_formulation_index() {
+            std::shared_ptr<forcing::ForcingProvider> et_provider = nullptr;
+            if (availableData.find(NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP) != availableData.end()) {
+                et_provider = availableData[NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP];
+            }
+            else if (availableData.find(CSDMS_STD_NAME_POTENTIAL_ET) != availableData.end()) {
+                et_provider = availableData[CSDMS_STD_NAME_POTENTIAL_ET];
+            }
+            // The pointers in availableData and modules should be the same, based on create_multi_formulation()
+            // So, if an et_provider was found from availableData, we can compare to determine the right index.
+            if (et_provider != nullptr) {
+                for (size_t i = 0; i < modules.size(); ++i) {
+                    if (et_provider == modules[i]) {
+                        return i;
+                    }
+                }
+            }
+            // Otherwise, check the modules directly for the standard ET output variable names.
+            for (size_t i = 0; i < modules.size(); ++i) {
+                std::vector<std::string> values = modules[i]->get_available_forcing_outputs();
+                if (std::find(values.begin(), values.end(), NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP) != values.end()) {
+                    return i;
+                }
+                if (std::find(values.begin(), values.end(), CSDMS_STD_NAME_POTENTIAL_ET) != values.end()) {
+                    return i;
+                }
+            }
+            return DEFAULT_ET_FORMULATION_INDEX;
         }
 
         /**
