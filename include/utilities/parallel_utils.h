@@ -147,9 +147,7 @@ namespace parallel {
      * @param host_array A pointer to an allocated array of size ``mpi_num_procs``.
      */
     void get_hosts_array(int mpi_rank, int mpi_num_procs, int *host_array) {
-        // Things should never be longer than this
-        int hostnameBufferSize = 256;
-        char hostnames[mpi_num_procs][hostnameBufferSize];
+        const int ROOT_RANK = 0;
         // These are the lengths of the (trimmed) C-string representations of the hostname for each rank
         int actualHostnameCStrLength[mpi_num_procs];
         // Initialize to -1 to represent unknown
@@ -157,38 +155,63 @@ namespace parallel {
             actualHostnameCStrLength[i] = -1;
         }
 
-        // Get this rank's hostname
-        gethostname(hostnames[mpi_rank], hostnameBufferSize);
-        // Set the one for this rank
-        actualHostnameCStrLength[mpi_rank] = std::strlen(hostnames[mpi_rank]);
+        // Get this rank's hostname (things should never be longer than 256)
+        char myhostname[256];
+        gethostname(myhostname, 256);
 
-        if (mpi_rank != 0) {
-            // First, send how long the string is
-            MPI_Send(&actualHostnameCStrLength[mpi_rank], 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
-            MPI_Send(hostnames[mpi_rank], actualHostnameCStrLength[mpi_rank], MPI_CHAR, 0, 0, MPI_COMM_WORLD);
+        // Set the one for this rank
+        actualHostnameCStrLength[mpi_rank] = std::strlen(myhostname);
+
+        // First, gather the hostname string lengths
+        MPI_Gather(&actualHostnameCStrLength[mpi_rank], 1, MPI_INT, actualHostnameCStrLength, 1, MPI_INT, ROOT_RANK,
+                   MPI_COMM_WORLD);
+        // Per-rank start offsets/displacements in our hostname strings gather buffer.
+        int recvDisplacements[mpi_num_procs];
+        int totalLength = 0;
+        for (int i = 0; i < mpi_num_procs; ++i) {
+            // Displace each rank's string by the sum of the length of the previous rank strings
+            recvDisplacements[i] = totalLength;
+            // Adding the extra to make space for the \0
+            actualHostnameCStrLength[i] += 1;
+            // Then update the total length
+            totalLength += actualHostnameCStrLength[i];
+
         }
-        // In rank 0, get the other hostnames
-        else {
+        // Now we can create our buffer array and gather the hostname strings into it
+        char hostnames[totalLength];
+        MPI_Gatherv(myhostname, actualHostnameCStrLength[mpi_rank], MPI_CHAR, hostnames, actualHostnameCStrLength,
+                    recvDisplacements, MPI_CHAR, ROOT_RANK, MPI_COMM_WORLD);
+
+        if (mpi_rank == ROOT_RANK) {
             host_array[0] = 0;
             int next_host_id = 1;
 
-            for (int recv_rank = 1; recv_rank < mpi_num_procs; ++recv_rank) {
-                MPI_Recv(&actualHostnameCStrLength[recv_rank], 1, MPI_INT, recv_rank, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-                MPI_Recv(hostnames[recv_rank], actualHostnameCStrLength[recv_rank], MPI_CHAR, recv_rank, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-                int matches_host_at = -1;
+            int rank_with_matching_hostname;
+            char *checked_rank_hostname, *known_rank_hostname;
 
-                for (int known_rank = 0; known_rank < recv_rank; ++known_rank) {
-                    if (std::strcmp(hostnames[known_rank], hostnames[recv_rank]) == 0) {
-                        matches_host_at = known_rank;
+            for (int rank_being_check = 0; rank_being_check < mpi_num_procs; ++rank_being_check) {
+                // Set this as negative initially for each rank check to indicate no match found (at least yet)
+                rank_with_matching_hostname = -1;
+                // Get a C-string pointer for this rank's hostname, offset by the appropriate displacement
+                checked_rank_hostname = &hostnames[recvDisplacements[rank_being_check]];
+
+                // Assume that hostnames for any ranks less than the current rank being check are already known
+                for (int known_rank = 0; known_rank < rank_being_check; ++known_rank) {
+                    // Get the right C-string pointer for the current known rank's hostname also
+                    known_rank_hostname = &hostnames[recvDisplacements[known_rank]];
+                    // Compare the hostnames, setting and breaking if a match is found
+                    if (std::strcmp(known_rank_hostname, checked_rank_hostname) == 0) {
+                        rank_with_matching_hostname = known_rank;
                         break;
                     }
                 }
-                if (matches_host_at == -1) {
+                // This indicates this rank had no earlier rank with a matching hostname.
+                if (rank_with_matching_hostname < 0) {
                     // Assign new host id, then increment what the next id will be
-                    host_array[recv_rank] = next_host_id++;
+                    host_array[rank_being_check] = next_host_id++;
                 }
                 else {
-                    host_array[recv_rank] = host_array[matches_host_at];
+                    host_array[rank_being_check] = host_array[rank_with_matching_hostname];
                 }
             }
         }
