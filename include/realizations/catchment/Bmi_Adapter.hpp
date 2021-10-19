@@ -144,7 +144,7 @@ namespace models {
              * Implementations should all throw the same type of exception (currently, @ref std::runtime_error) if/when
              * an unrecognized external type name parameter is provided.
              *
-             * @param external_type_name The string name of the analog type in Python.
+             * @param external_type_name The string name of some type in backing model's implementation language.
              * @param item_size The particular size in bytes for items of the involved analogous types.
              * @return The name string for the C++ type analogous to the described type in the backing model.
              * @throw std::runtime_error If an unrecognized external type name parameter is provided.
