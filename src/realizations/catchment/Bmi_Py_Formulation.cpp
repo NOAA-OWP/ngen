@@ -62,15 +62,15 @@ string Bmi_Py_Formulation::get_output_line_for_timestep(int timestep, std::strin
 
 double Bmi_Py_Formulation::get_response(time_step_t t_index, time_step_t t_delta) {
     if (get_bmi_model() == nullptr) {
-        throw std::runtime_error("Trying to process response of improperly created BMI C formulation.");
+        throw std::runtime_error("Trying to process response of improperly created BMI Python formulation.");
     }
     if (t_index < 0) {
-        throw std::invalid_argument("Getting response of negative time step in BMI C formulation is not allowed.");
+        throw std::invalid_argument("Getting response of negative time step in BMI Python formulation is not allowed.");
     }
     // Use (next_time_step_index - 1) so that second call with current time step index still works
     if (t_index < (next_time_step_index - 1)) {
         // TODO: consider whether we should (optionally) store and return historic values
-        throw std::invalid_argument("Getting response of previous time step in BMI C formulation is not allowed.");
+        throw std::invalid_argument("Getting response of previous time step in BMI Python formulation is not allowed.");
     }
 
     // The time step delta size, expressed in the units internally used by the model
@@ -81,7 +81,7 @@ double Bmi_Py_Formulation::get_response(time_step_t t_index, time_step_t t_delta
         if (!get_allow_model_exceed_end_time()) {
             int total_time_steps_to_process = abs((int)t_index - next_time_step_index) + 1;
             if (get_bmi_model()->GetEndTime() < (model_time + (t_delta_model_units * total_time_steps_to_process))) {
-                throw std::invalid_argument("Cannot process BMI C formulation to get response of future time step "
+                throw std::invalid_argument("Cannot process BMI Python formulation to get response of future time step "
                                             "that exceeds model end time.");
             }
         }
