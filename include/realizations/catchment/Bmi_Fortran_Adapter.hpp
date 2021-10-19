@@ -324,7 +324,7 @@ namespace models {
              * Note that the size of an individual item is also required, as this can vary in certain situations
              * depending on the implementation language of a backing model.
              *
-             * @param external_type_name The string name of the analog type in Python.
+             * @param external_type_name The string name of some Fortran type.
              * @param item_size The particular size in bytes for items of the involved analogous types.
              * @return The name string for the C++ type analogous to the described type in the Fortran backing model.
              * @throw std::runtime_error If an unrecognized external type name parameter is provided.
