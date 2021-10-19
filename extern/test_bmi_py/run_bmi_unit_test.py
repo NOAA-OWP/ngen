@@ -2,16 +2,17 @@
 Author: jgarrett, modified by jmframe for general/simple nextgen python BMI model
 Date: 08/31/2021"""
 
+# TODO: formalize unit tests via typical "unittest" or "pytest" setup
+
 import os
 import sys
+# import torch
+# from torch import nn
+from pathlib import Path
+
 import numpy as np
 
-#import torch
-#from torch import nn
-from pathlib import Path
-from netCDF4 import Dataset
-import bmi_model # This is the BMI that we will be running
-
+import bmi_model  # This is the BMI that we will be running
 
 # setup a "success counter" for number of passing and failing bmi functions
 # keep track of function def fails (vs function call)
