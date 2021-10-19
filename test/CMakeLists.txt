@@ -151,24 +151,29 @@ if(MPI_ACTIVE)
 )
 endif()
 
+if(BMI_C_LIB_ACTIVE)
+    add_automated_test(
+            test_bmi_c
+            realizations/catchments/Bmi_C_Adapter_Test.cpp
+            realizations/catchments/Bmi_C_Formulation_Test.cpp
+    )
+endif()
 
-add_automated_test(
-        test_bmi_c
-        realizations/catchments/Bmi_C_Adapter_Test.cpp
-        realizations/catchments/Bmi_C_Formulation_Test.cpp
-)
+if (${BMI_FORTRAN_ACTIVE})
+    add_automated_test(
+            test_bmi_fortran
+            realizations/catchments/Bmi_Fortran_Adapter_Test.cpp
+            realizations/catchments/Bmi_Fortran_Formulation_Test.cpp
+    )
+endif()
 
-add_automated_test(
-        test_bmi_fortran
-        realizations/catchments/Bmi_Fortran_Adapter_Test.cpp
-        realizations/catchments/Bmi_Fortran_Formulation_Test.cpp
-)
-
-add_automated_test(
-        test_bmi_python
-        realizations/catchments/Bmi_Py_Adapter_Test.cpp
-        realizations/catchments/Bmi_Py_Formulation_Test.cpp
-)
+if (${NGEN_ACTIVATE_PYTHON})
+    add_automated_test(
+            test_bmi_python
+            realizations/catchments/Bmi_Py_Adapter_Test.cpp
+            realizations/catchments/Bmi_Py_Formulation_Test.cpp
+    )
+endif()
 
 add_automated_test(
         compare_cfe
