@@ -682,7 +682,12 @@ namespace models {
                     // What's left should be the class name
                     bmi_type_py_class_name = make_shared<string>(name_string);
                     //split_name.pop_back();
-                    // And then the split name should container the module
+                    // And then the split name should contain the module
+                    // TODO: going to need to look at this again in the future; right now, assuming the format
+                    //  <python_module>.<python_class> works fine as long as a model class is always in a top-level
+                    //  module, but the current logic is going to interpret any complex parent module name as a single
+                    //  top-level namespace package; e.g., ngen.namespacepackage.model works if ngen.namespacepackage is
+                    //  a namespace package, but there would be problems with something like ngenpkg.innermodule1.model.
                     bmi_type_py_module_name = make_shared<string>(boost::algorithm::join(split_name, delimiter));
                 }
             }
