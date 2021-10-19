@@ -9,3 +9,4 @@ dependencies:
   - pandas
   - python=3.7
   - ruamel.yaml
+  - netCDF4
