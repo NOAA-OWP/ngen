@@ -131,6 +131,9 @@ namespace realization {
                 double max_gw_storage,
                 const std::vector<double> &nash_storage);
 
+        Tshirt_C_Realization(std::string id, unique_ptr<forcing::ForcingProvider> forcing_provider, utils::StreamHandler output_stream);
+
+        //[[deprecated]]
         Tshirt_C_Realization(std::string id, forcing_params forcing_config, utils::StreamHandler output_stream);
 
         virtual ~Tshirt_C_Realization();

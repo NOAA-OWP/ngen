@@ -8,6 +8,8 @@
 #include "EtCombinationMethod.hpp"
 #include "WrappedForcingProvider.hpp"
 #include "Bmi_C_Adapter.hpp"
+#include <AorcForcing.hpp>
+#include <ForcingProvider.hpp>
 
 // Forward declaration to provide access to protected items in testing
 class Bmi_Formulation_Test;
@@ -31,28 +33,36 @@ namespace realization {
          * ``create_formulation``.
          *
          * @param id
-         * @param forcing_config
+         * @param forcing_provider
          * @param output_stream
          */
-        Bmi_Module_Formulation(std::string id, forcing_params forcing_config, utils::StreamHandler output_stream)
-                : Bmi_Formulation(std::move(id), std::move(forcing_config), output_stream) { };
-
-        Bmi_Module_Formulation(std::string id, Forcing forcing, utils::StreamHandler output_stream)
-                : Bmi_Formulation(std::move(id), forcing, output_stream) { };
+        Bmi_Module_Formulation(std::string id, std::unique_ptr<forcing::ForcingProvider> forcing_provider, utils::StreamHandler output_stream)
+                : Bmi_Formulation(std::move(id), std::move(forcing_provider), output_stream) { };
 
         virtual ~Bmi_Module_Formulation() {};
 
         /**
          * Perform (potential) ET calculation, getting input params from instance's backing model as needed.
          *
-         * Function uses AORC forcings from the "current" time step.
+         * Function uses forcings from the "current" time step.
          *
          * @return Calculated ET or potential ET, or ``0.0`` if required parameters could not be obtained.
          */
         double calc_et() override {
-            return calc_et(
-                    get_ts_index_for_time(convert_model_time(get_bmi_model()->GetCurrentTime()) +
-                                          get_bmi_model_start_time_forcing_offset_s()));
+            long timestep = 3600;
+            time_t model_time = convert_model_time(get_bmi_model()->GetCurrentTime()) + get_bmi_model_start_time_forcing_offset_s();
+
+            struct AORC_data raw_aorc;
+            raw_aorc.TMP_2maboveground_K = forcing->get_value(CSDMS_STD_NAME_SURFACE_TEMP, model_time, timestep, "K");
+            raw_aorc.SPFH_2maboveground_kg_per_kg = forcing->get_value(CSDMS_STD_NAME_HUMIDITY, model_time, timestep, "kg/kg"); // WRONG!!? Right?
+            raw_aorc.PRES_surface_Pa = forcing->get_value(CSDMS_STD_NAME_SURFACE_AIR_PRESSURE, model_time, timestep, "K");
+            raw_aorc.UGRD_10maboveground_meters_per_second = forcing->get_value(CSDMS_STD_NAME_WIND_U_X, model_time, timestep, "K");
+            raw_aorc.VGRD_10maboveground_meters_per_second = forcing->get_value(CSDMS_STD_NAME_WIND_V_Y, model_time, timestep, "K");
+            raw_aorc.DSWRF_surface_W_per_meters_squared = forcing->get_value(CSDMS_STD_NAME_SOLAR_SHORTWAVE, model_time, timestep, "K");
+            raw_aorc.DLWRF_surface_W_per_meters_squared = forcing->get_value(CSDMS_STD_NAME_SOLAR_LONGWAVE, model_time, timestep, "K");
+            raw_aorc.APCP_surface_kg_per_meters_squared = forcing->get_value(CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, model_time, timestep, "K");
+
+            return calc_et(raw_aorc);
         }
 
         double calc_et(struct AORC_data raw_aorc) {
@@ -91,10 +101,6 @@ namespace realization {
             et_options.use_combination_method      = TRUE;
             et_options.use_priestley_taylor_method = FALSE;
             et_options.use_penman_monteith_method  = FALSE;
-
-            // TODO: do we really actually need this, if we are converting to another forcing struct?
-            // TODO: WHY ARE THERE SO MANY FORCING STRUCTS!?!
-            struct et::aorc_forcing_data aorc = convert_aorc_structs(raw_aorc);
 
             struct et::evapotranspiration_forcing et_forcing;
             et_forcing.air_temperature_C = raw_aorc.TMP_2maboveground_K - TK;  // gotta convert it to C
@@ -347,8 +353,10 @@ namespace realization {
             */
 
             // Handle ET requests slightly differently
+            //TODO: This should really only happen if neither of these output_names are provided by the module...
+            // But this code should also probably be removed in the near future (see GH #297 second comment).
             if (output_name == NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP || output_name == CSDMS_STD_NAME_POTENTIAL_ET) {
-                return calc_et(forcing.get_ts_index_for_time(init_time));
+                return calc_et();
             }
 
             // If not ET, now get correct BMI variable name, which may be the output or something mapped to this output.
@@ -416,10 +424,6 @@ namespace realization {
 
     protected:
 
-        double calc_et(size_t forcing_ts_index) {
-            return calc_et(forcing.get_aorc_for_index(forcing_ts_index));
-        }
-
         /**
          * Construct model and its shared pointer, potentially supplying input variable values from config.
          *
@@ -455,7 +459,8 @@ namespace realization {
         void determine_model_time_offset() {
             set_bmi_model_start_time_forcing_offset_s(
                     // TODO: Look at making this epoch start configurable instead of from forcing
-                    forcing.get_time_epoch() - convert_model_time(get_bmi_model()->GetStartTime()));
+                    //WARN: This change potentially changes the behavior, though the previous behavior was incorrect.
+                    forcing->get_forcing_output_time_begin("") - convert_model_time(get_bmi_model()->GetStartTime()));
         }
 
         /**
@@ -752,7 +757,7 @@ namespace realization {
                     provider = input_forcing_providers[var_name].get();
                 }
                 else {
-                    provider = &forcing;
+                    provider = forcing.get();
                 }
                 // TODO: probably need to actually allow this by default and warn, but have config option to activate
                 //  this type of behavior

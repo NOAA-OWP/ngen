@@ -5,7 +5,8 @@
 #include "reservoir/Reservoir.hpp"
 #include "hymod/include/Hymod.h"
 #include <unordered_map>
-
+#include <ForcingProvider.hpp>
+#include <Forcing.h>
 
 class Simple_Lumped_Model_Realization
         : public realization::Catchment_Formulation {
@@ -31,7 +32,9 @@ class Simple_Lumped_Model_Realization
             time_step_t t
         );
 
-        Simple_Lumped_Model_Realization(std::string id, forcing_params forcing_config, utils::StreamHandler output_stream) : Catchment_Formulation(id, forcing_config, output_stream) {};
+        Simple_Lumped_Model_Realization(std::string id, unique_ptr<forcing::ForcingProvider> forcing_provider, utils::StreamHandler output_stream) : Catchment_Formulation(id, std::move(forcing_provider), output_stream) {
+            _link_legacy_forcing();
+        };
 
         Simple_Lumped_Model_Realization(std::string id) : Catchment_Formulation(id){};
 

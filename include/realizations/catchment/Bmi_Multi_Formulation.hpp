@@ -32,8 +32,8 @@ namespace realization {
          * @param forcing_config
          * @param output_stream
          */
-        Bmi_Multi_Formulation(string id, forcing_params forcing_config, utils::StreamHandler output_stream)
-                : Bmi_Formulation(move(id), move(forcing_config), output_stream) { };
+        Bmi_Multi_Formulation(string id, std::unique_ptr<forcing::ForcingProvider> forcing_provider, utils::StreamHandler output_stream)
+                : Bmi_Formulation(move(id), move(forcing_provider), output_stream) { };
 
         virtual ~Bmi_Multi_Formulation() {};
 

@@ -11,6 +11,7 @@
 #define CSDMS_STD_NAME_SURFACE_TEMP "land_surface_air__temperature"
 #define CSDMS_STD_NAME_WIND_U_X "land_surface_wind__x_component_of_velocity"
 #define CSDMS_STD_NAME_WIND_V_Y "land_surface_wind__y_component_of_velocity"
+#define CSDMS_STD_NAME_SPECIFIC_HUMIDITY "atmosphere_air_water~vapor__mixing_ratio" // I think this is wrong--slightly
 
 using namespace std;
 
@@ -23,6 +24,7 @@ struct forcing_params
   std::string start_time;
   std::string end_time;
   std::string date_format =  "%Y-%m-%d %H:%M:%S";
+  std::string provider;
   time_t start_t;
   time_t end_t;
   /*

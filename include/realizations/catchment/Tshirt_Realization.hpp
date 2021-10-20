@@ -8,6 +8,8 @@
 #include "tshirt/include/Tshirt.h"
 #include "tshirt/include/tshirt_params.h"
 #include <memory>
+#include <Forcing.h>
+#include <ForcingProvider.hpp>
 
 namespace realization {
 
@@ -16,7 +18,8 @@ namespace realization {
     public:
 
         typedef long time_step_t;
-
+        
+        /*
         Tshirt_Realization(forcing_params forcing_config,
                            utils::StreamHandler output_stream,
                            double soil_storage_meters,
@@ -51,12 +54,15 @@ namespace realization {
                 const std::vector<double>& nash_storage,
                 time_step_t t
                 );
+            */
 
             Tshirt_Realization(
                 std::string id,
-                forcing_params forcing_config,
+                unique_ptr<forcing::ForcingProvider> forcing_provider,
                 utils::StreamHandler output_stream
-            ) : Catchment_Formulation(id, forcing_config, output_stream) {}
+            ) : Catchment_Formulation(id, std::move(forcing_provider), output_stream) {
+                _link_legacy_forcing();
+            }
 
             void set_giuh_kernel(std::shared_ptr<giuh::GiuhJsonReader> reader);
 
