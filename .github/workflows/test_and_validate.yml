@@ -283,20 +283,21 @@ jobs:
       - name: Init Submodules
         run: git submodule update --init --recursive
 
-      - name: Cache Numpy Python Dependency
-        id: cache-linux-numpy-dep
+      - name: Cache Python Dependencies
+        id: cache-linux-py3-dependencies
         uses: actions/cache@v1
         with:
           path: .venv
-          key: linux-numpy-dep
+          key: linux-py3-dependencies
 
-      - name: Get Numpy Python Dependency
-        if: steps.cache-linux-numpy-dep.outputs.cache-hit != 'true'
+      - name: Init Python Dependencies
+        if: steps.cache-linux-py3-dependencies.outputs.cache-hit != 'true'
         run: |
           python -m venv .venv
           . .venv/bin/activate
           pip install pip
           pip install numpy
+          pip install -r extern/test_bmi_py_requirements.txt
           deactivate
 
       - name: Cache Boost Dependency
@@ -547,20 +548,21 @@ jobs:
       - name: Init Submodules
         run: git submodule update --init --recursive
 
-      - name: Cache Numpy Python Dependency
-        id: cache-numpy-py3-dep
+      - name: Cache Python Dependencies
+        id: cache-unix-py3-dependencies
         uses: actions/cache@v1
         with:
           path: .venv
-          key: unix-numpy-py3-dep
+          key: unix-py3-dependencies
 
-      - name: Get Numpy Python Dependency
-        if: steps.cache-numpy-py3-dep.outputs.cache-hit != 'true'
+      - name: Init Python Dependencies
+        if: steps.cache-unix-py3-dependencies.outputs.cache-hit != 'true'
         run: |
           python3 -m venv .venv
           . .venv/bin/activate
           pip install pip
           pip install numpy
+          pip install -r extern/test_bmi_py_requirements.txt
           deactivate
 
       - name: Cache Boost Dependency
