@@ -260,6 +260,37 @@ void generate_partitions(network::Network& network, const int& num_partitions, c
 }
 
 /**
+ * @brief Find the remote rank of a given feature in the partitions
+ * 
+ * @param id feature id to find in the partitions
+ * @param catchment_partitions The global set of partitions
+ * @return int partition number containing the id
+ * 
+ * @throws runtime_error if no partition contains the requested id
+ */
+int find_remote_rank(std::string id, PartitionVSet catchment_partitions)
+{
+    int pos = -1;
+    for ( int i = 0; i < catchment_partitions.size(); ++i )
+    {
+        // this iterate through the unordered_set
+        auto iter = std::find(catchment_partitions[i].begin(), catchment_partitions[i].end(), id);
+        
+        // if we find a match then we have found the target partition containing this id
+        if ( iter != catchment_partitions[i].end() )
+        {
+            pos = i;
+            break;
+        }
+    }
+    if(pos < 0){
+        std::string msg = "find_remote_rank: Could not find feature id "+id+" in any partition";
+        throw std::runtime_error(msg);
+    }
+    return pos;
+}
+
+/**
  * @brief Find the remote connections for a given @p nexus
  * 
  * This function searches the local catchments in @p catchments to determine if the given @p nexus can communicate with it on the local partition.
