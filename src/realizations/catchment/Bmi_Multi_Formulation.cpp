@@ -38,10 +38,10 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
         }
         #endif // NGEN_BMI_FORTRAN_ACTIVE
         #ifdef ACTIVATE_PYTHON
-        //if (type_name == "bmi_python") {
-        //    module = std::dynamic_pointer_cast<Bmi_Module_Formulation<bmi::Bmi>>(
-        //            std::make_shared<Bmi_Py_Formulation>(identifier, forcing, output));
-        //}
+        if (type_name == "bmi_python") {
+            module = std::dynamic_pointer_cast<Bmi_Module_Formulation<bmi::Bmi>>(
+                    std::make_shared<Bmi_Py_Formulation>(identifier, forcing, output));
+        }
         #endif // ACTIVATE_PYTHON
         if (module == nullptr) {
             throw runtime_error(get_formulation_type() + " received unexpected subtype formulation " + type_name);
