@@ -25,9 +25,9 @@ var classrealization_1_1_bmi___formulation =
     [ "get_id", "classrealization_1_1_bmi___formulation.html#a02267e0cc9fec2e1d883f55c2c12b39d", null ],
     [ "get_model_type_name", "classrealization_1_1_bmi___formulation.html#a4c1b8eb13fa7fba0e3d8fd00370ddcc2", null ],
     [ "get_output_header_fields", "classrealization_1_1_bmi___formulation.html#a137dec6de2b466cc15557b524c10f540", null ],
-    [ "get_output_header_line", "classrealization_1_1_bmi___formulation.html#a12fad75c2e47f5da298e022429243199", null ],
+    [ "get_output_header_line", "classrealization_1_1_bmi___formulation.html#a2e373e9de26a19e44ae425a4c602afc5", null ],
     [ "get_output_line_for_timestep", "classrealization_1_1_bmi___formulation.html#adea6ed82d2fa734d87415d34b9c599bd", null ],
-    [ "get_output_variable_names", "classrealization_1_1_bmi___formulation.html#aab6d734e290d02c87b5c4c26e6d3d022", null ],
+    [ "get_output_variable_names", "classrealization_1_1_bmi___formulation.html#a8e21d6720cb7fa4ffa41c2f2ce83e087", null ],
     [ "get_required_parameters", "classrealization_1_1_bmi___formulation.html#a264b4acfb8ce571919d06ad39ad440bc", null ],
     [ "get_response", "classrealization_1_1_bmi___formulation.html#adf21a61a7da1e87a200d8391cb3e33ce", null ],
     [ "get_ts_index_for_time", "classrealization_1_1_bmi___formulation.html#a542531c62f0fa91cf4e877aa69ff2479", null ],
@@ -48,6 +48,7 @@ var classrealization_1_1_bmi___formulation =
     [ "set_model_type_name", "classrealization_1_1_bmi___formulation.html#a3a59e65e398af534a189f5de2bda67f2", null ],
     [ "set_output_header_fields", "classrealization_1_1_bmi___formulation.html#a45dbdc9794b5c97f229150293695f2cc", null ],
     [ "set_output_stream", "classrealization_1_1_bmi___formulation.html#a9d02de255937deb8f6169ef20f5a07d6", null ],
+    [ "set_output_variable_names", "classrealization_1_1_bmi___formulation.html#a26ea820cd09a0723381db6f381f5d7e1", null ],
     [ "validate_parameters", "classrealization_1_1_bmi___formulation.html#aceabe9927b36dce61f338919f2af4c1f", null ],
     [ "write_output", "classrealization_1_1_bmi___formulation.html#aa989be0629ecaa29a2410f7588404ff9", null ],
     [ "::Bmi_C_Formulation_Test", "classrealization_1_1_bmi___formulation.html#ab629620cdc1831773640b662bc1615b5", null ],
@@ -62,6 +63,7 @@ var classrealization_1_1_bmi___formulation =
     [ "OPTIONAL_PARAMETERS", "classrealization_1_1_bmi___formulation.html#a64a1aede44084c581c07a48e86ab2c17", null ],
     [ "output", "classrealization_1_1_bmi___formulation.html#a55857dc16551760ff59487991fc525fe", null ],
     [ "output_header_fields", "classrealization_1_1_bmi___formulation.html#abfae59b61178df50d71b4d505a31488a", null ],
+    [ "output_variable_names", "classrealization_1_1_bmi___formulation.html#a566505f80702c117ef23688ce6892a51", null ],
     [ "realized_catchment", "classrealization_1_1_bmi___formulation.html#a7c6de72bd8ebf427d71aacca7baa23c1", null ],
     [ "REQUIRED_PARAMETERS", "classrealization_1_1_bmi___formulation.html#aed28897a6715168f5e173e3b29debf8f", null ]
 ];

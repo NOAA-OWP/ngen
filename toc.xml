@@ -1568,7 +1568,7 @@
           <topic label="get_output_header_fields" href="classrealization_1_1_bmi___c___formulation.html#a137dec6de2b466cc15557b524c10f540"/>
           <topic label="get_output_header_line" href="classrealization_1_1_bmi___c___formulation.html#a67093e4c97bb92c5de5f959c7e2d98de"/>
           <topic label="get_output_line_for_timestep" href="classrealization_1_1_bmi___c___formulation.html#aafe6012e3cc560517e2dd66a58c04d90"/>
-          <topic label="get_output_variable_names" href="classrealization_1_1_bmi___c___formulation.html#a02f42322fd533caa571095f9acfd9c98"/>
+          <topic label="get_output_variable_names" href="classrealization_1_1_bmi___c___formulation.html#a8e21d6720cb7fa4ffa41c2f2ce83e087"/>
           <topic label="get_required_parameters" href="classrealization_1_1_bmi___c___formulation.html#ac614801078ade31467823584232f5a4a"/>
           <topic label="get_response" href="classrealization_1_1_bmi___c___formulation.html#ad21457d65986b77870b896e541264286"/>
           <topic label="get_ts_index_for_time" href="classrealization_1_1_bmi___c___formulation.html#aca477749b4e3f41aeea7e724e2351219"/>
@@ -1604,7 +1604,7 @@
           <topic label="set_model_type_name" href="classrealization_1_1_bmi___c___formulation.html#a3a59e65e398af534a189f5de2bda67f2"/>
           <topic label="set_output_header_fields" href="classrealization_1_1_bmi___c___formulation.html#a45dbdc9794b5c97f229150293695f2cc"/>
           <topic label="set_output_stream" href="classrealization_1_1_bmi___c___formulation.html#a9d02de255937deb8f6169ef20f5a07d6"/>
-          <topic label="set_output_variable_names" href="classrealization_1_1_bmi___c___formulation.html#a40e9c63dfed0bc6c7e8be1bfa97aaee9"/>
+          <topic label="set_output_variable_names" href="classrealization_1_1_bmi___c___formulation.html#a26ea820cd09a0723381db6f381f5d7e1"/>
           <topic label="validate_parameters" href="classrealization_1_1_bmi___c___formulation.html#aceabe9927b36dce61f338919f2af4c1f"/>
           <topic label="write_output" href="classrealization_1_1_bmi___c___formulation.html#aa989be0629ecaa29a2410f7588404ff9"/>
           <topic label="::Bmi_C_Cfe_IT" href="classrealization_1_1_bmi___c___formulation.html#a61c175da89028ff89f2b446b3e97d3f0"/>
@@ -1634,7 +1634,7 @@
           <topic label="OPTIONAL_PARAMETERS" href="classrealization_1_1_bmi___c___formulation.html#a2cf44552ae1229dcfedf93c5e07d4698"/>
           <topic label="output" href="classrealization_1_1_bmi___c___formulation.html#a55857dc16551760ff59487991fc525fe"/>
           <topic label="output_header_fields" href="classrealization_1_1_bmi___c___formulation.html#abfae59b61178df50d71b4d505a31488a"/>
-          <topic label="output_variable_names" href="classrealization_1_1_bmi___c___formulation.html#a1a4c5d323a5bcfb65edcb3372d886752"/>
+          <topic label="output_variable_names" href="classrealization_1_1_bmi___c___formulation.html#a566505f80702c117ef23688ce6892a51"/>
           <topic label="realized_catchment" href="classrealization_1_1_bmi___c___formulation.html#a7c6de72bd8ebf427d71aacca7baa23c1"/>
           <topic label="REQUIRED_PARAMETERS" href="classrealization_1_1_bmi___c___formulation.html#a306ef7802e8b4ff85f641dffc49cd373"/>
         </topic>
@@ -1664,9 +1664,9 @@
           <topic label="get_id" href="classrealization_1_1_bmi___formulation.html#a02267e0cc9fec2e1d883f55c2c12b39d"/>
           <topic label="get_model_type_name" href="classrealization_1_1_bmi___formulation.html#a4c1b8eb13fa7fba0e3d8fd00370ddcc2"/>
           <topic label="get_output_header_fields" href="classrealization_1_1_bmi___formulation.html#a137dec6de2b466cc15557b524c10f540"/>
-          <topic label="get_output_header_line" href="classrealization_1_1_bmi___formulation.html#a12fad75c2e47f5da298e022429243199"/>
+          <topic label="get_output_header_line" href="classrealization_1_1_bmi___formulation.html#a2e373e9de26a19e44ae425a4c602afc5"/>
           <topic label="get_output_line_for_timestep" href="classrealization_1_1_bmi___formulation.html#adea6ed82d2fa734d87415d34b9c599bd"/>
-          <topic label="get_output_variable_names" href="classrealization_1_1_bmi___formulation.html#aab6d734e290d02c87b5c4c26e6d3d022"/>
+          <topic label="get_output_variable_names" href="classrealization_1_1_bmi___formulation.html#a8e21d6720cb7fa4ffa41c2f2ce83e087"/>
           <topic label="get_required_parameters" href="classrealization_1_1_bmi___formulation.html#a264b4acfb8ce571919d06ad39ad440bc"/>
           <topic label="get_response" href="classrealization_1_1_bmi___formulation.html#adf21a61a7da1e87a200d8391cb3e33ce"/>
           <topic label="get_ts_index_for_time" href="classrealization_1_1_bmi___formulation.html#a542531c62f0fa91cf4e877aa69ff2479"/>
@@ -1687,6 +1687,7 @@
           <topic label="set_model_type_name" href="classrealization_1_1_bmi___formulation.html#a3a59e65e398af534a189f5de2bda67f2"/>
           <topic label="set_output_header_fields" href="classrealization_1_1_bmi___formulation.html#a45dbdc9794b5c97f229150293695f2cc"/>
           <topic label="set_output_stream" href="classrealization_1_1_bmi___formulation.html#a9d02de255937deb8f6169ef20f5a07d6"/>
+          <topic label="set_output_variable_names" href="classrealization_1_1_bmi___formulation.html#a26ea820cd09a0723381db6f381f5d7e1"/>
           <topic label="validate_parameters" href="classrealization_1_1_bmi___formulation.html#aceabe9927b36dce61f338919f2af4c1f"/>
           <topic label="write_output" href="classrealization_1_1_bmi___formulation.html#aa989be0629ecaa29a2410f7588404ff9"/>
           <topic label="::Bmi_C_Formulation_Test" href="classrealization_1_1_bmi___formulation.html#ab629620cdc1831773640b662bc1615b5"/>
@@ -1701,6 +1702,7 @@
           <topic label="OPTIONAL_PARAMETERS" href="classrealization_1_1_bmi___formulation.html#a64a1aede44084c581c07a48e86ab2c17"/>
           <topic label="output" href="classrealization_1_1_bmi___formulation.html#a55857dc16551760ff59487991fc525fe"/>
           <topic label="output_header_fields" href="classrealization_1_1_bmi___formulation.html#abfae59b61178df50d71b4d505a31488a"/>
+          <topic label="output_variable_names" href="classrealization_1_1_bmi___formulation.html#a566505f80702c117ef23688ce6892a51"/>
           <topic label="realized_catchment" href="classrealization_1_1_bmi___formulation.html#a7c6de72bd8ebf427d71aacca7baa23c1"/>
           <topic label="REQUIRED_PARAMETERS" href="classrealization_1_1_bmi___formulation.html#aed28897a6715168f5e173e3b29debf8f"/>
         </topic>
@@ -1738,9 +1740,9 @@
           <topic label="get_id" href="classrealization_1_1_bmi___module___formulation.html#a02267e0cc9fec2e1d883f55c2c12b39d"/>
           <topic label="get_model_type_name" href="classrealization_1_1_bmi___module___formulation.html#a4c1b8eb13fa7fba0e3d8fd00370ddcc2"/>
           <topic label="get_output_header_fields" href="classrealization_1_1_bmi___module___formulation.html#a137dec6de2b466cc15557b524c10f540"/>
-          <topic label="get_output_header_line" href="classrealization_1_1_bmi___module___formulation.html#a67e55972f1a61353b683c1ae3cebdd2c"/>
+          <topic label="get_output_header_line" href="classrealization_1_1_bmi___module___formulation.html#a2e373e9de26a19e44ae425a4c602afc5"/>
           <topic label="get_output_line_for_timestep" href="classrealization_1_1_bmi___module___formulation.html#adea6ed82d2fa734d87415d34b9c599bd"/>
-          <topic label="get_output_variable_names" href="classrealization_1_1_bmi___module___formulation.html#a02f42322fd533caa571095f9acfd9c98"/>
+          <topic label="get_output_variable_names" href="classrealization_1_1_bmi___module___formulation.html#a8e21d6720cb7fa4ffa41c2f2ce83e087"/>
           <topic label="get_required_parameters" href="classrealization_1_1_bmi___module___formulation.html#ac614801078ade31467823584232f5a4a"/>
           <topic label="get_response" href="classrealization_1_1_bmi___module___formulation.html#adf21a61a7da1e87a200d8391cb3e33ce"/>
           <topic label="get_ts_index_for_time" href="classrealization_1_1_bmi___module___formulation.html#aca477749b4e3f41aeea7e724e2351219"/>
@@ -1775,7 +1777,7 @@
           <topic label="set_model_type_name" href="classrealization_1_1_bmi___module___formulation.html#a3a59e65e398af534a189f5de2bda67f2"/>
           <topic label="set_output_header_fields" href="classrealization_1_1_bmi___module___formulation.html#a45dbdc9794b5c97f229150293695f2cc"/>
           <topic label="set_output_stream" href="classrealization_1_1_bmi___module___formulation.html#a9d02de255937deb8f6169ef20f5a07d6"/>
-          <topic label="set_output_variable_names" href="classrealization_1_1_bmi___module___formulation.html#a40e9c63dfed0bc6c7e8be1bfa97aaee9"/>
+          <topic label="set_output_variable_names" href="classrealization_1_1_bmi___module___formulation.html#a26ea820cd09a0723381db6f381f5d7e1"/>
           <topic label="validate_parameters" href="classrealization_1_1_bmi___module___formulation.html#aceabe9927b36dce61f338919f2af4c1f"/>
           <topic label="write_output" href="classrealization_1_1_bmi___module___formulation.html#aa989be0629ecaa29a2410f7588404ff9"/>
           <topic label="::Bmi_C_Formulation_Test" href="classrealization_1_1_bmi___module___formulation.html#ab629620cdc1831773640b662bc1615b5"/>
@@ -1804,21 +1806,23 @@
           <topic label="OPTIONAL_PARAMETERS" href="classrealization_1_1_bmi___module___formulation.html#a2cf44552ae1229dcfedf93c5e07d4698"/>
           <topic label="output" href="classrealization_1_1_bmi___module___formulation.html#a55857dc16551760ff59487991fc525fe"/>
           <topic label="output_header_fields" href="classrealization_1_1_bmi___module___formulation.html#abfae59b61178df50d71b4d505a31488a"/>
-          <topic label="output_variable_names" href="classrealization_1_1_bmi___module___formulation.html#a1a4c5d323a5bcfb65edcb3372d886752"/>
+          <topic label="output_variable_names" href="classrealization_1_1_bmi___module___formulation.html#a566505f80702c117ef23688ce6892a51"/>
           <topic label="realized_catchment" href="classrealization_1_1_bmi___module___formulation.html#a7c6de72bd8ebf427d71aacca7baa23c1"/>
           <topic label="REQUIRED_PARAMETERS" href="classrealization_1_1_bmi___module___formulation.html#a306ef7802e8b4ff85f641dffc49cd373"/>
         </topic>
         <topic label="Bmi_Multi_Formulation" href="classrealization_1_1_bmi___multi___formulation.html">
+          <topic label="nested_module_ptr" href="classrealization_1_1_bmi___multi___formulation.html#a8c9a181b73a01fdb2f29a376592d78de"/>
           <topic label="time_step_t" href="classrealization_1_1_bmi___multi___formulation.html#aee10dc672e5a9e106f49dcbe0080cf7c"/>
           <topic label="Bmi_Multi_Formulation" href="classrealization_1_1_bmi___multi___formulation.html#a4c02557ff3e6f04cbd275e1bb6e09cbe"/>
           <topic label="~Bmi_Multi_Formulation" href="classrealization_1_1_bmi___multi___formulation.html#a6ef8f446a1fcece399fb72532e854363"/>
           <topic label="add_time" href="classrealization_1_1_bmi___multi___formulation.html#a248b562be5dc9a21e7afbc014de15114"/>
-          <topic label="calc_et" href="classrealization_1_1_bmi___multi___formulation.html#a1af6f5c88bda174c8ba855e796a55439"/>
+          <topic label="calc_et" href="classrealization_1_1_bmi___multi___formulation.html#a5044c4cf0c139b0c6b5b5a3ce679555b"/>
           <topic label="create_formulation" href="classrealization_1_1_bmi___multi___formulation.html#acb4534a0030f794320625be0313fe825"/>
           <topic label="create_formulation" href="classrealization_1_1_bmi___multi___formulation.html#a87607c1c2b438943c8be0a566e1c59d5"/>
           <topic label="create_multi_formulation" href="classrealization_1_1_bmi___multi___formulation.html#a8694f5e94f40224efca11a73892da8ff"/>
+          <topic label="determine_et_formulation_index" href="classrealization_1_1_bmi___multi___formulation.html#a29c47ff4addf5a687b9cf431c9c33a87"/>
           <topic label="get_allow_model_exceed_end_time" href="classrealization_1_1_bmi___multi___formulation.html#aca4c20aff9b42fa0d184cfe49f3dabde"/>
-          <topic label="get_available_forcing_outputs" href="classrealization_1_1_bmi___multi___formulation.html#aada025e246ca68db37c7fc705e8a8abd"/>
+          <topic label="get_available_forcing_outputs" href="classrealization_1_1_bmi___multi___formulation.html#ab70240fd6f268c23db0d59f23ab99e34"/>
           <topic label="get_bmi_input_variables" href="classrealization_1_1_bmi___multi___formulation.html#a5849b2dc41ae43821ccdb0b6487bbcf0"/>
           <topic label="get_bmi_main_output_var" href="classrealization_1_1_bmi___multi___formulation.html#a3dc0ffec6c3108e53b0a10ec16c63794"/>
           <topic label="get_bmi_model_start_time_forcing_offset_s" href="classrealization_1_1_bmi___multi___formulation.html#a28f2d6c42a794b1849026a338828be32"/>
@@ -1832,13 +1836,13 @@
           <topic label="get_forcing_file_path" href="classrealization_1_1_bmi___multi___formulation.html#ad20b1ed9691e3c7db3d2de14a38ad0f3"/>
           <topic label="get_forcing_output_time_begin" href="classrealization_1_1_bmi___multi___formulation.html#a2e9cb03a445ea5651b95c0c4f743b139"/>
           <topic label="get_forcing_output_time_end" href="classrealization_1_1_bmi___multi___formulation.html#ad36d479bda215889bf5538e95d187b26"/>
-          <topic label="get_formulation_type" href="classrealization_1_1_bmi___multi___formulation.html#a2e9d4749500d3f5ea434d77861b03990"/>
+          <topic label="get_formulation_type" href="classrealization_1_1_bmi___multi___formulation.html#a91122c62b8c3b0d4283b04bf0d18ef9e"/>
           <topic label="get_id" href="classrealization_1_1_bmi___multi___formulation.html#a02267e0cc9fec2e1d883f55c2c12b39d"/>
           <topic label="get_model_type_name" href="classrealization_1_1_bmi___multi___formulation.html#a4c1b8eb13fa7fba0e3d8fd00370ddcc2"/>
           <topic label="get_output_header_fields" href="classrealization_1_1_bmi___multi___formulation.html#a137dec6de2b466cc15557b524c10f540"/>
-          <topic label="get_output_header_line" href="classrealization_1_1_bmi___multi___formulation.html#a12fad75c2e47f5da298e022429243199"/>
-          <topic label="get_output_line_for_timestep" href="classrealization_1_1_bmi___multi___formulation.html#adea6ed82d2fa734d87415d34b9c599bd"/>
-          <topic label="get_output_variable_names" href="classrealization_1_1_bmi___multi___formulation.html#ac760f4df5a8e1d6dca5c13f2422bca85"/>
+          <topic label="get_output_header_line" href="classrealization_1_1_bmi___multi___formulation.html#a2e373e9de26a19e44ae425a4c602afc5"/>
+          <topic label="get_output_line_for_timestep" href="classrealization_1_1_bmi___multi___formulation.html#a40f0e76f69dd08908f70340cfed3b533"/>
+          <topic label="get_output_variable_names" href="classrealization_1_1_bmi___multi___formulation.html#a8e21d6720cb7fa4ffa41c2f2ce83e087"/>
           <topic label="get_required_parameters" href="classrealization_1_1_bmi___multi___formulation.html#a264b4acfb8ce571919d06ad39ad440bc"/>
           <topic label="get_response" href="classrealization_1_1_bmi___multi___formulation.html#a0b66d3f5f51b4b414e08965e15d7bff7"/>
           <topic label="get_ts_index_for_time" href="classrealization_1_1_bmi___multi___formulation.html#ad07b6aa1c71e7e3f1381adf1ec65d835"/>
@@ -1851,7 +1855,7 @@
           <topic label="is_et_params_set" href="classrealization_1_1_bmi___multi___formulation.html#a490261c3439f205913ac2e77efbd5b6f"/>
           <topic label="is_et_params_set" href="classrealization_1_1_bmi___multi___formulation.html#a7117db623dafde1f5dfbf286e46aa99e"/>
           <topic label="is_model_initialized" href="classrealization_1_1_bmi___multi___formulation.html#aa563a521c8e3e05c8503f5849729de5b"/>
-          <topic label="is_property_sum_over_time_step" href="classrealization_1_1_bmi___multi___formulation.html#acb93550e1f3cca96cbb644a5f2247986"/>
+          <topic label="is_property_sum_over_time_step" href="classrealization_1_1_bmi___multi___formulation.html#ac6cf3c9c80cad9d426ebf062ec6629f2"/>
           <topic label="is_time_step_beyond_end_time" href="classrealization_1_1_bmi___multi___formulation.html#a03c5db7806dd83245edcaae1859a687a"/>
           <topic label="set_bmi_main_output_var" href="classrealization_1_1_bmi___multi___formulation.html#ae137604ca81006a617221733d8d36f62"/>
           <topic label="set_catchment_id" href="classrealization_1_1_bmi___multi___formulation.html#a2cce2b5b18eaa0ed7e0df10db57da144"/>
@@ -1860,8 +1864,10 @@
           <topic label="set_model_type_name" href="classrealization_1_1_bmi___multi___formulation.html#a3a59e65e398af534a189f5de2bda67f2"/>
           <topic label="set_output_header_fields" href="classrealization_1_1_bmi___multi___formulation.html#a45dbdc9794b5c97f229150293695f2cc"/>
           <topic label="set_output_stream" href="classrealization_1_1_bmi___multi___formulation.html#a9d02de255937deb8f6169ef20f5a07d6"/>
+          <topic label="set_output_variable_names" href="classrealization_1_1_bmi___multi___formulation.html#a26ea820cd09a0723381db6f381f5d7e1"/>
           <topic label="validate_parameters" href="classrealization_1_1_bmi___multi___formulation.html#aceabe9927b36dce61f338919f2af4c1f"/>
           <topic label="write_output" href="classrealization_1_1_bmi___multi___formulation.html#aa989be0629ecaa29a2410f7588404ff9"/>
+          <topic label="available_forcings" href="classrealization_1_1_bmi___multi___formulation.html#aa4a7afd0056334dde2a3ad6185a8b26c"/>
           <topic label="availableData" href="classrealization_1_1_bmi___multi___formulation.html#ae7c621893c7d58f090a762b5de9db159"/>
           <topic label="bmi_main_output_var" href="classrealization_1_1_bmi___multi___formulation.html#a494171a1888c373c2a1e03008e00e5d5"/>
           <topic label="bounds" href="classrealization_1_1_bmi___multi___formulation.html#aaebc4992c38cb5db68e859e0487ad929"/>
@@ -1869,13 +1875,15 @@
           <topic label="forcing" href="classrealization_1_1_bmi___multi___formulation.html#ae531b310e5bc1b004b92f2008f863cfa"/>
           <topic label="id" href="classrealization_1_1_bmi___multi___formulation.html#a8bfec24b0d57240e7ada2493a781db6d"/>
           <topic label="id_number" href="classrealization_1_1_bmi___multi___formulation.html#af996a3e50eaf51c63865f1fdbe4f8661"/>
+          <topic label="is_out_vars_from_last_mod" href="classrealization_1_1_bmi___multi___formulation.html#a2b3b0cb7670a2ab18107ec428ac06fa2"/>
           <topic label="model_type_name" href="classrealization_1_1_bmi___multi___formulation.html#a3e6136d3fde105fd835c8be24db7d1b7"/>
           <topic label="module_variable_maps" href="classrealization_1_1_bmi___multi___formulation.html#a9f72d1b2887273f405171535928ebf29"/>
-          <topic label="modules" href="classrealization_1_1_bmi___multi___formulation.html#ad42b2a870b8132ad9774e72bc955963f"/>
+          <topic label="modules" href="classrealization_1_1_bmi___multi___formulation.html#a125ff769345d1bc4f004bde256c86686"/>
           <topic label="next_time_step_index" href="classrealization_1_1_bmi___multi___formulation.html#a196e75e8ddd4a4a4dcde69ef6afe76b4"/>
           <topic label="OPTIONAL_PARAMETERS" href="classrealization_1_1_bmi___multi___formulation.html#a64a1aede44084c581c07a48e86ab2c17"/>
           <topic label="output" href="classrealization_1_1_bmi___multi___formulation.html#a55857dc16551760ff59487991fc525fe"/>
           <topic label="output_header_fields" href="classrealization_1_1_bmi___multi___formulation.html#abfae59b61178df50d71b4d505a31488a"/>
+          <topic label="output_variable_names" href="classrealization_1_1_bmi___multi___formulation.html#a566505f80702c117ef23688ce6892a51"/>
           <topic label="realized_catchment" href="classrealization_1_1_bmi___multi___formulation.html#a7c6de72bd8ebf427d71aacca7baa23c1"/>
           <topic label="REQUIRED_PARAMETERS" href="classrealization_1_1_bmi___multi___formulation.html#aed28897a6715168f5e173e3b29debf8f"/>
         </topic>
@@ -3576,7 +3584,7 @@
           <topic label="get_output_header_fields" href="classrealization_1_1_bmi___c___formulation.html#a137dec6de2b466cc15557b524c10f540"/>
           <topic label="get_output_header_line" href="classrealization_1_1_bmi___c___formulation.html#a67093e4c97bb92c5de5f959c7e2d98de"/>
           <topic label="get_output_line_for_timestep" href="classrealization_1_1_bmi___c___formulation.html#aafe6012e3cc560517e2dd66a58c04d90"/>
-          <topic label="get_output_variable_names" href="classrealization_1_1_bmi___c___formulation.html#a02f42322fd533caa571095f9acfd9c98"/>
+          <topic label="get_output_variable_names" href="classrealization_1_1_bmi___c___formulation.html#a8e21d6720cb7fa4ffa41c2f2ce83e087"/>
           <topic label="get_required_parameters" href="classrealization_1_1_bmi___c___formulation.html#ac614801078ade31467823584232f5a4a"/>
           <topic label="get_response" href="classrealization_1_1_bmi___c___formulation.html#ad21457d65986b77870b896e541264286"/>
           <topic label="get_ts_index_for_time" href="classrealization_1_1_bmi___c___formulation.html#aca477749b4e3f41aeea7e724e2351219"/>
@@ -3612,7 +3620,7 @@
           <topic label="set_model_type_name" href="classrealization_1_1_bmi___c___formulation.html#a3a59e65e398af534a189f5de2bda67f2"/>
           <topic label="set_output_header_fields" href="classrealization_1_1_bmi___c___formulation.html#a45dbdc9794b5c97f229150293695f2cc"/>
           <topic label="set_output_stream" href="classrealization_1_1_bmi___c___formulation.html#a9d02de255937deb8f6169ef20f5a07d6"/>
-          <topic label="set_output_variable_names" href="classrealization_1_1_bmi___c___formulation.html#a40e9c63dfed0bc6c7e8be1bfa97aaee9"/>
+          <topic label="set_output_variable_names" href="classrealization_1_1_bmi___c___formulation.html#a26ea820cd09a0723381db6f381f5d7e1"/>
           <topic label="validate_parameters" href="classrealization_1_1_bmi___c___formulation.html#aceabe9927b36dce61f338919f2af4c1f"/>
           <topic label="write_output" href="classrealization_1_1_bmi___c___formulation.html#aa989be0629ecaa29a2410f7588404ff9"/>
           <topic label="::Bmi_C_Cfe_IT" href="classrealization_1_1_bmi___c___formulation.html#a61c175da89028ff89f2b446b3e97d3f0"/>
@@ -3642,7 +3650,7 @@
           <topic label="OPTIONAL_PARAMETERS" href="classrealization_1_1_bmi___c___formulation.html#a2cf44552ae1229dcfedf93c5e07d4698"/>
           <topic label="output" href="classrealization_1_1_bmi___c___formulation.html#a55857dc16551760ff59487991fc525fe"/>
           <topic label="output_header_fields" href="classrealization_1_1_bmi___c___formulation.html#abfae59b61178df50d71b4d505a31488a"/>
-          <topic label="output_variable_names" href="classrealization_1_1_bmi___c___formulation.html#a1a4c5d323a5bcfb65edcb3372d886752"/>
+          <topic label="output_variable_names" href="classrealization_1_1_bmi___c___formulation.html#a566505f80702c117ef23688ce6892a51"/>
           <topic label="realized_catchment" href="classrealization_1_1_bmi___c___formulation.html#a7c6de72bd8ebf427d71aacca7baa23c1"/>
           <topic label="REQUIRED_PARAMETERS" href="classrealization_1_1_bmi___c___formulation.html#a306ef7802e8b4ff85f641dffc49cd373"/>
         </topic>
@@ -3672,9 +3680,9 @@
           <topic label="get_id" href="classrealization_1_1_bmi___formulation.html#a02267e0cc9fec2e1d883f55c2c12b39d"/>
           <topic label="get_model_type_name" href="classrealization_1_1_bmi___formulation.html#a4c1b8eb13fa7fba0e3d8fd00370ddcc2"/>
           <topic label="get_output_header_fields" href="classrealization_1_1_bmi___formulation.html#a137dec6de2b466cc15557b524c10f540"/>
-          <topic label="get_output_header_line" href="classrealization_1_1_bmi___formulation.html#a12fad75c2e47f5da298e022429243199"/>
+          <topic label="get_output_header_line" href="classrealization_1_1_bmi___formulation.html#a2e373e9de26a19e44ae425a4c602afc5"/>
           <topic label="get_output_line_for_timestep" href="classrealization_1_1_bmi___formulation.html#adea6ed82d2fa734d87415d34b9c599bd"/>
-          <topic label="get_output_variable_names" href="classrealization_1_1_bmi___formulation.html#aab6d734e290d02c87b5c4c26e6d3d022"/>
+          <topic label="get_output_variable_names" href="classrealization_1_1_bmi___formulation.html#a8e21d6720cb7fa4ffa41c2f2ce83e087"/>
           <topic label="get_required_parameters" href="classrealization_1_1_bmi___formulation.html#a264b4acfb8ce571919d06ad39ad440bc"/>
           <topic label="get_response" href="classrealization_1_1_bmi___formulation.html#adf21a61a7da1e87a200d8391cb3e33ce"/>
           <topic label="get_ts_index_for_time" href="classrealization_1_1_bmi___formulation.html#a542531c62f0fa91cf4e877aa69ff2479"/>
@@ -3695,6 +3703,7 @@
           <topic label="set_model_type_name" href="classrealization_1_1_bmi___formulation.html#a3a59e65e398af534a189f5de2bda67f2"/>
           <topic label="set_output_header_fields" href="classrealization_1_1_bmi___formulation.html#a45dbdc9794b5c97f229150293695f2cc"/>
           <topic label="set_output_stream" href="classrealization_1_1_bmi___formulation.html#a9d02de255937deb8f6169ef20f5a07d6"/>
+          <topic label="set_output_variable_names" href="classrealization_1_1_bmi___formulation.html#a26ea820cd09a0723381db6f381f5d7e1"/>
           <topic label="validate_parameters" href="classrealization_1_1_bmi___formulation.html#aceabe9927b36dce61f338919f2af4c1f"/>
           <topic label="write_output" href="classrealization_1_1_bmi___formulation.html#aa989be0629ecaa29a2410f7588404ff9"/>
           <topic label="::Bmi_C_Formulation_Test" href="classrealization_1_1_bmi___formulation.html#ab629620cdc1831773640b662bc1615b5"/>
@@ -3709,6 +3718,7 @@
           <topic label="OPTIONAL_PARAMETERS" href="classrealization_1_1_bmi___formulation.html#a64a1aede44084c581c07a48e86ab2c17"/>
           <topic label="output" href="classrealization_1_1_bmi___formulation.html#a55857dc16551760ff59487991fc525fe"/>
           <topic label="output_header_fields" href="classrealization_1_1_bmi___formulation.html#abfae59b61178df50d71b4d505a31488a"/>
+          <topic label="output_variable_names" href="classrealization_1_1_bmi___formulation.html#a566505f80702c117ef23688ce6892a51"/>
           <topic label="realized_catchment" href="classrealization_1_1_bmi___formulation.html#a7c6de72bd8ebf427d71aacca7baa23c1"/>
           <topic label="REQUIRED_PARAMETERS" href="classrealization_1_1_bmi___formulation.html#aed28897a6715168f5e173e3b29debf8f"/>
         </topic>
@@ -3746,9 +3756,9 @@
           <topic label="get_id" href="classrealization_1_1_bmi___module___formulation.html#a02267e0cc9fec2e1d883f55c2c12b39d"/>
           <topic label="get_model_type_name" href="classrealization_1_1_bmi___module___formulation.html#a4c1b8eb13fa7fba0e3d8fd00370ddcc2"/>
           <topic label="get_output_header_fields" href="classrealization_1_1_bmi___module___formulation.html#a137dec6de2b466cc15557b524c10f540"/>
-          <topic label="get_output_header_line" href="classrealization_1_1_bmi___module___formulation.html#a67e55972f1a61353b683c1ae3cebdd2c"/>
+          <topic label="get_output_header_line" href="classrealization_1_1_bmi___module___formulation.html#a2e373e9de26a19e44ae425a4c602afc5"/>
           <topic label="get_output_line_for_timestep" href="classrealization_1_1_bmi___module___formulation.html#adea6ed82d2fa734d87415d34b9c599bd"/>
-          <topic label="get_output_variable_names" href="classrealization_1_1_bmi___module___formulation.html#a02f42322fd533caa571095f9acfd9c98"/>
+          <topic label="get_output_variable_names" href="classrealization_1_1_bmi___module___formulation.html#a8e21d6720cb7fa4ffa41c2f2ce83e087"/>
           <topic label="get_required_parameters" href="classrealization_1_1_bmi___module___formulation.html#ac614801078ade31467823584232f5a4a"/>
           <topic label="get_response" href="classrealization_1_1_bmi___module___formulation.html#adf21a61a7da1e87a200d8391cb3e33ce"/>
           <topic label="get_ts_index_for_time" href="classrealization_1_1_bmi___module___formulation.html#aca477749b4e3f41aeea7e724e2351219"/>
@@ -3783,7 +3793,7 @@
           <topic label="set_model_type_name" href="classrealization_1_1_bmi___module___formulation.html#a3a59e65e398af534a189f5de2bda67f2"/>
           <topic label="set_output_header_fields" href="classrealization_1_1_bmi___module___formulation.html#a45dbdc9794b5c97f229150293695f2cc"/>
           <topic label="set_output_stream" href="classrealization_1_1_bmi___module___formulation.html#a9d02de255937deb8f6169ef20f5a07d6"/>
-          <topic label="set_output_variable_names" href="classrealization_1_1_bmi___module___formulation.html#a40e9c63dfed0bc6c7e8be1bfa97aaee9"/>
+          <topic label="set_output_variable_names" href="classrealization_1_1_bmi___module___formulation.html#a26ea820cd09a0723381db6f381f5d7e1"/>
           <topic label="validate_parameters" href="classrealization_1_1_bmi___module___formulation.html#aceabe9927b36dce61f338919f2af4c1f"/>
           <topic label="write_output" href="classrealization_1_1_bmi___module___formulation.html#aa989be0629ecaa29a2410f7588404ff9"/>
           <topic label="::Bmi_C_Formulation_Test" href="classrealization_1_1_bmi___module___formulation.html#ab629620cdc1831773640b662bc1615b5"/>
@@ -3812,21 +3822,23 @@
           <topic label="OPTIONAL_PARAMETERS" href="classrealization_1_1_bmi___module___formulation.html#a2cf44552ae1229dcfedf93c5e07d4698"/>
           <topic label="output" href="classrealization_1_1_bmi___module___formulation.html#a55857dc16551760ff59487991fc525fe"/>
           <topic label="output_header_fields" href="classrealization_1_1_bmi___module___formulation.html#abfae59b61178df50d71b4d505a31488a"/>
-          <topic label="output_variable_names" href="classrealization_1_1_bmi___module___formulation.html#a1a4c5d323a5bcfb65edcb3372d886752"/>
+          <topic label="output_variable_names" href="classrealization_1_1_bmi___module___formulation.html#a566505f80702c117ef23688ce6892a51"/>
           <topic label="realized_catchment" href="classrealization_1_1_bmi___module___formulation.html#a7c6de72bd8ebf427d71aacca7baa23c1"/>
           <topic label="REQUIRED_PARAMETERS" href="classrealization_1_1_bmi___module___formulation.html#a306ef7802e8b4ff85f641dffc49cd373"/>
         </topic>
         <topic label="Bmi_Multi_Formulation" href="classrealization_1_1_bmi___multi___formulation.html">
+          <topic label="nested_module_ptr" href="classrealization_1_1_bmi___multi___formulation.html#a8c9a181b73a01fdb2f29a376592d78de"/>
           <topic label="time_step_t" href="classrealization_1_1_bmi___multi___formulation.html#aee10dc672e5a9e106f49dcbe0080cf7c"/>
           <topic label="Bmi_Multi_Formulation" href="classrealization_1_1_bmi___multi___formulation.html#a4c02557ff3e6f04cbd275e1bb6e09cbe"/>
           <topic label="~Bmi_Multi_Formulation" href="classrealization_1_1_bmi___multi___formulation.html#a6ef8f446a1fcece399fb72532e854363"/>
           <topic label="add_time" href="classrealization_1_1_bmi___multi___formulation.html#a248b562be5dc9a21e7afbc014de15114"/>
-          <topic label="calc_et" href="classrealization_1_1_bmi___multi___formulation.html#a1af6f5c88bda174c8ba855e796a55439"/>
+          <topic label="calc_et" href="classrealization_1_1_bmi___multi___formulation.html#a5044c4cf0c139b0c6b5b5a3ce679555b"/>
           <topic label="create_formulation" href="classrealization_1_1_bmi___multi___formulation.html#acb4534a0030f794320625be0313fe825"/>
           <topic label="create_formulation" href="classrealization_1_1_bmi___multi___formulation.html#a87607c1c2b438943c8be0a566e1c59d5"/>
           <topic label="create_multi_formulation" href="classrealization_1_1_bmi___multi___formulation.html#a8694f5e94f40224efca11a73892da8ff"/>
+          <topic label="determine_et_formulation_index" href="classrealization_1_1_bmi___multi___formulation.html#a29c47ff4addf5a687b9cf431c9c33a87"/>
           <topic label="get_allow_model_exceed_end_time" href="classrealization_1_1_bmi___multi___formulation.html#aca4c20aff9b42fa0d184cfe49f3dabde"/>
-          <topic label="get_available_forcing_outputs" href="classrealization_1_1_bmi___multi___formulation.html#aada025e246ca68db37c7fc705e8a8abd"/>
+          <topic label="get_available_forcing_outputs" href="classrealization_1_1_bmi___multi___formulation.html#ab70240fd6f268c23db0d59f23ab99e34"/>
           <topic label="get_bmi_input_variables" href="classrealization_1_1_bmi___multi___formulation.html#a5849b2dc41ae43821ccdb0b6487bbcf0"/>
           <topic label="get_bmi_main_output_var" href="classrealization_1_1_bmi___multi___formulation.html#a3dc0ffec6c3108e53b0a10ec16c63794"/>
           <topic label="get_bmi_model_start_time_forcing_offset_s" href="classrealization_1_1_bmi___multi___formulation.html#a28f2d6c42a794b1849026a338828be32"/>
@@ -3840,13 +3852,13 @@
           <topic label="get_forcing_file_path" href="classrealization_1_1_bmi___multi___formulation.html#ad20b1ed9691e3c7db3d2de14a38ad0f3"/>
           <topic label="get_forcing_output_time_begin" href="classrealization_1_1_bmi___multi___formulation.html#a2e9cb03a445ea5651b95c0c4f743b139"/>
           <topic label="get_forcing_output_time_end" href="classrealization_1_1_bmi___multi___formulation.html#ad36d479bda215889bf5538e95d187b26"/>
-          <topic label="get_formulation_type" href="classrealization_1_1_bmi___multi___formulation.html#a2e9d4749500d3f5ea434d77861b03990"/>
+          <topic label="get_formulation_type" href="classrealization_1_1_bmi___multi___formulation.html#a91122c62b8c3b0d4283b04bf0d18ef9e"/>
           <topic label="get_id" href="classrealization_1_1_bmi___multi___formulation.html#a02267e0cc9fec2e1d883f55c2c12b39d"/>
           <topic label="get_model_type_name" href="classrealization_1_1_bmi___multi___formulation.html#a4c1b8eb13fa7fba0e3d8fd00370ddcc2"/>
           <topic label="get_output_header_fields" href="classrealization_1_1_bmi___multi___formulation.html#a137dec6de2b466cc15557b524c10f540"/>
-          <topic label="get_output_header_line" href="classrealization_1_1_bmi___multi___formulation.html#a12fad75c2e47f5da298e022429243199"/>
-          <topic label="get_output_line_for_timestep" href="classrealization_1_1_bmi___multi___formulation.html#adea6ed82d2fa734d87415d34b9c599bd"/>
-          <topic label="get_output_variable_names" href="classrealization_1_1_bmi___multi___formulation.html#ac760f4df5a8e1d6dca5c13f2422bca85"/>
+          <topic label="get_output_header_line" href="classrealization_1_1_bmi___multi___formulation.html#a2e373e9de26a19e44ae425a4c602afc5"/>
+          <topic label="get_output_line_for_timestep" href="classrealization_1_1_bmi___multi___formulation.html#a40f0e76f69dd08908f70340cfed3b533"/>
+          <topic label="get_output_variable_names" href="classrealization_1_1_bmi___multi___formulation.html#a8e21d6720cb7fa4ffa41c2f2ce83e087"/>
           <topic label="get_required_parameters" href="classrealization_1_1_bmi___multi___formulation.html#a264b4acfb8ce571919d06ad39ad440bc"/>
           <topic label="get_response" href="classrealization_1_1_bmi___multi___formulation.html#a0b66d3f5f51b4b414e08965e15d7bff7"/>
           <topic label="get_ts_index_for_time" href="classrealization_1_1_bmi___multi___formulation.html#ad07b6aa1c71e7e3f1381adf1ec65d835"/>
@@ -3859,7 +3871,7 @@
           <topic label="is_et_params_set" href="classrealization_1_1_bmi___multi___formulation.html#a490261c3439f205913ac2e77efbd5b6f"/>
           <topic label="is_et_params_set" href="classrealization_1_1_bmi___multi___formulation.html#a7117db623dafde1f5dfbf286e46aa99e"/>
           <topic label="is_model_initialized" href="classrealization_1_1_bmi___multi___formulation.html#aa563a521c8e3e05c8503f5849729de5b"/>
-          <topic label="is_property_sum_over_time_step" href="classrealization_1_1_bmi___multi___formulation.html#acb93550e1f3cca96cbb644a5f2247986"/>
+          <topic label="is_property_sum_over_time_step" href="classrealization_1_1_bmi___multi___formulation.html#ac6cf3c9c80cad9d426ebf062ec6629f2"/>
           <topic label="is_time_step_beyond_end_time" href="classrealization_1_1_bmi___multi___formulation.html#a03c5db7806dd83245edcaae1859a687a"/>
           <topic label="set_bmi_main_output_var" href="classrealization_1_1_bmi___multi___formulation.html#ae137604ca81006a617221733d8d36f62"/>
           <topic label="set_catchment_id" href="classrealization_1_1_bmi___multi___formulation.html#a2cce2b5b18eaa0ed7e0df10db57da144"/>
@@ -3868,8 +3880,10 @@
           <topic label="set_model_type_name" href="classrealization_1_1_bmi___multi___formulation.html#a3a59e65e398af534a189f5de2bda67f2"/>
           <topic label="set_output_header_fields" href="classrealization_1_1_bmi___multi___formulation.html#a45dbdc9794b5c97f229150293695f2cc"/>
           <topic label="set_output_stream" href="classrealization_1_1_bmi___multi___formulation.html#a9d02de255937deb8f6169ef20f5a07d6"/>
+          <topic label="set_output_variable_names" href="classrealization_1_1_bmi___multi___formulation.html#a26ea820cd09a0723381db6f381f5d7e1"/>
           <topic label="validate_parameters" href="classrealization_1_1_bmi___multi___formulation.html#aceabe9927b36dce61f338919f2af4c1f"/>
           <topic label="write_output" href="classrealization_1_1_bmi___multi___formulation.html#aa989be0629ecaa29a2410f7588404ff9"/>
+          <topic label="available_forcings" href="classrealization_1_1_bmi___multi___formulation.html#aa4a7afd0056334dde2a3ad6185a8b26c"/>
           <topic label="availableData" href="classrealization_1_1_bmi___multi___formulation.html#ae7c621893c7d58f090a762b5de9db159"/>
           <topic label="bmi_main_output_var" href="classrealization_1_1_bmi___multi___formulation.html#a494171a1888c373c2a1e03008e00e5d5"/>
           <topic label="bounds" href="classrealization_1_1_bmi___multi___formulation.html#aaebc4992c38cb5db68e859e0487ad929"/>
@@ -3877,13 +3891,15 @@
           <topic label="forcing" href="classrealization_1_1_bmi___multi___formulation.html#ae531b310e5bc1b004b92f2008f863cfa"/>
           <topic label="id" href="classrealization_1_1_bmi___multi___formulation.html#a8bfec24b0d57240e7ada2493a781db6d"/>
           <topic label="id_number" href="classrealization_1_1_bmi___multi___formulation.html#af996a3e50eaf51c63865f1fdbe4f8661"/>
+          <topic label="is_out_vars_from_last_mod" href="classrealization_1_1_bmi___multi___formulation.html#a2b3b0cb7670a2ab18107ec428ac06fa2"/>
           <topic label="model_type_name" href="classrealization_1_1_bmi___multi___formulation.html#a3e6136d3fde105fd835c8be24db7d1b7"/>
           <topic label="module_variable_maps" href="classrealization_1_1_bmi___multi___formulation.html#a9f72d1b2887273f405171535928ebf29"/>
-          <topic label="modules" href="classrealization_1_1_bmi___multi___formulation.html#ad42b2a870b8132ad9774e72bc955963f"/>
+          <topic label="modules" href="classrealization_1_1_bmi___multi___formulation.html#a125ff769345d1bc4f004bde256c86686"/>
           <topic label="next_time_step_index" href="classrealization_1_1_bmi___multi___formulation.html#a196e75e8ddd4a4a4dcde69ef6afe76b4"/>
           <topic label="OPTIONAL_PARAMETERS" href="classrealization_1_1_bmi___multi___formulation.html#a64a1aede44084c581c07a48e86ab2c17"/>
           <topic label="output" href="classrealization_1_1_bmi___multi___formulation.html#a55857dc16551760ff59487991fc525fe"/>
           <topic label="output_header_fields" href="classrealization_1_1_bmi___multi___formulation.html#abfae59b61178df50d71b4d505a31488a"/>
+          <topic label="output_variable_names" href="classrealization_1_1_bmi___multi___formulation.html#a566505f80702c117ef23688ce6892a51"/>
           <topic label="realized_catchment" href="classrealization_1_1_bmi___multi___formulation.html#a7c6de72bd8ebf427d71aacca7baa23c1"/>
           <topic label="REQUIRED_PARAMETERS" href="classrealization_1_1_bmi___multi___formulation.html#aed28897a6715168f5e173e3b29debf8f"/>
         </topic>
