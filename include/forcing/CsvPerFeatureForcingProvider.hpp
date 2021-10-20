@@ -40,7 +40,7 @@ class CsvPerFeatureForcingProvider : public forcing::ForcingProvider
         {"TMP_2maboveground", { CSDMS_STD_NAME_SURFACE_TEMP, "K" } }, 
         {"UGRD_10maboveground", { CSDMS_STD_NAME_WIND_U_X, "m s-1" } }, 
         {"VGRD_10maboveground", { CSDMS_STD_NAME_WIND_V_Y, "m s-1" } }, 
-        {"RAINRATE ", { CSDMS_STD_NAME_RAIN_RATE , "mm s^-1" } }, 
+        {"RAINRATE", { CSDMS_STD_NAME_RAIN_RATE , "mm s^-1" } }, 
         {"T2D", { CSDMS_STD_NAME_SURFACE_TEMP, "K" } }, 
         {"Q2D", { CSDMS_STD_NAME_SPECIFIC_HUMIDITY, "kg kg-1" } }, 
         {"U2D", { CSDMS_STD_NAME_WIND_U_X, "m s-1" } }, 
@@ -374,10 +374,11 @@ class CsvPerFeatureForcingProvider : public forcing::ForcingProvider
                 time_epoch_vector.push_back(current_row_date_time_epoch);
 
                 int c = -1;
-                for (const auto& s : vec){
+                for (auto& s : vec){
                     c++;
                     if(c == time_col_index)
                         continue;
+                    boost::algorithm::trim(s);
                     local_valvec_index[c]->push_back(boost::lexical_cast<double>(s)); // This is supposed to update the vector in the map...
                 }
 
