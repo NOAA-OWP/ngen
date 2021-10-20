@@ -325,7 +325,7 @@ jobs:
       - name: run_bmi_python_tests
         run: |
           cd ./cmake_build/test/
-          ./test_bmi_fortran
+          ./test_bmi_python
           cd ../../
         timeout-minutes: 15
 
