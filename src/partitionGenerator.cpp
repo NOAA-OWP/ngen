@@ -87,10 +87,12 @@ void write_remote_connections(PartitionVSet catchment_part, PartitionVSet nexus_
             int part_id = std::get<0>(remote_conn);
             std::string nexus_id = std::get<1>(remote_conn);
             std::string catchment_id = std::get<2>(remote_conn);
+            const std::string catchment_direction = std::get<3>(remote_conn);
             {
                 outFile << "{" << "\"mpi-rank\":" << part_id << ", ";
                 outFile << "\"nex-id\":" << "\""<< nexus_id <<"\"" << ", ";
-                outFile << "\"cat-id\":" << "\""<< catchment_id << "\"" << "}";
+                outFile << "\"cat-id\":" << "\""<< catchment_id << "\"" << ", ";
+                outFile << "\"cat-direction\":" << "\""<< catchment_direction << "\"" << "}";
                 if (set_counter == (vec_size-1))
                 {
                     outFile << "";
