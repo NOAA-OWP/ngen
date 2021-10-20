@@ -67,6 +67,36 @@ class Formulation_Manager_Test : public ::testing::Test {
       fabric->add_feature(feature);
     }
 
+    std::vector<std::string> path_options = {
+            "",
+            "../",
+            "../../"
+    };
+
+    std::string fix_paths(std::string json)
+    {
+        std::vector<std::string> forcing_paths = {
+                "./data/forcing/cat-52_2015-12-01 00_00_00_2015-12-30 23_00_00.csv",
+                "./data/forcing/cat-67_2015-12-01 00_00_00_2015-12-30 23_00_00.csv",
+                "./data/forcing/cat-27_2015-12-01 00_00_00_2015-12-30 23_00_00.csv"
+        };
+        for (unsigned int i = 0; i < forcing_paths.size(); i++) {
+          if(json.find(forcing_paths[i]) == std::string::npos){
+            continue;
+          }
+          std::vector<std::string> v = {};
+          for (unsigned int j = 0; j < path_options.size(); j++) {
+            v.push_back(path_options[j] + forcing_paths[i]);
+          }
+          std::string right_path = utils::FileChecker::find_first_readable(v);
+          if(right_path != forcing_paths[i]){
+            std::cerr<<"Replacing "<<forcing_paths[i]<<" with "<<right_path<<std::endl;
+            json = json.replace(json.find(forcing_paths[i]), forcing_paths[i].length(), right_path);
+          }
+        }
+        return json;
+    }
+
     geojson::GeoJSON fabric = std::make_shared<geojson::FeatureCollection>();
 
 };
@@ -452,7 +482,8 @@ const std::string EXAMPLE_3 = "{ "
 
 TEST_F(Formulation_Manager_Test, basic_reading_1) {
     std::stringstream stream;
-    stream << EXAMPLE_1;
+
+    stream << fix_paths(EXAMPLE_1);
 
     std::ostream* raw_pointer = &std::cout;
     std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
@@ -474,7 +505,7 @@ TEST_F(Formulation_Manager_Test, basic_reading_1) {
 
 TEST_F(Formulation_Manager_Test, basic_reading_2) {
     std::stringstream stream;
-    stream << EXAMPLE_2;
+    stream << fix_paths(EXAMPLE_2);
 
     std::ostream* raw_pointer = &std::cout;
     std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
@@ -496,7 +527,7 @@ TEST_F(Formulation_Manager_Test, basic_reading_2) {
 
 TEST_F(Formulation_Manager_Test, basic_run_1) {
     std::stringstream stream;
-    stream << EXAMPLE_1;
+    stream << fix_paths(EXAMPLE_1);
 
     std::ostream* raw_pointer = &std::cout;
     std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
@@ -542,7 +573,7 @@ TEST_F(Formulation_Manager_Test, basic_run_1) {
 
 TEST_F(Formulation_Manager_Test, basic_run_3) {
     std::stringstream stream;
-    stream << EXAMPLE_3;
+    stream << fix_paths(EXAMPLE_3);
 
     std::ostream* raw_pointer = &std::cout;
     std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
@@ -578,7 +609,7 @@ TEST_F(Formulation_Manager_Test, basic_run_3) {
 
 TEST_F(Formulation_Manager_Test, read_extra) {
     std::stringstream stream;
-    stream << EXAMPLE_1;
+    stream << fix_paths(EXAMPLE_3);
 
     std::ostream* raw_pointer = &std::cout;
     std::shared_ptr<std::ostream> s_ptr(raw_pointer, [](void*) {});
