@@ -17,6 +17,7 @@ env:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+  # Run general unit tests in linux environment
   test_unit_ubuntu_latest:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -62,6 +63,7 @@ jobs:
     - name: cleanup_dir
       run: rm -rf cmake_build
 
+  # Test MPI remote nexus behavior in linux
   test_mpi_remote_nexus_ubuntu_latest:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -113,7 +115,7 @@ jobs:
       - name: cleanup_dir
         run: rm -rf cmake_build
 
-  # Really do want this separate, as we want to test above that the shared lib isn't necessary to make things work.
+  # Run BMI C tests in linux environment, and separating to isolate
   test_bmi_c_ubuntu_latest:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -190,7 +192,7 @@ jobs:
       - name: cleanup_dir
         run: rm -rf extern/test_bmi_c/cmake_build
 
-  # As with the BMI C ubuntu job, separate to keep testing setups clean and cause of failures clear.
+  # As with the BMI C ubuntu job, separate Fortran in linux tests to keep setups clean and cause of failures clear.
   test_bmi_fortran_ubuntu_latest:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -270,7 +272,7 @@ jobs:
       - name: cleanup_builds
         run: find . -name cmake_build -type d -prune -exec rm -rf {} \;
 
-  # As with the BMI C ubuntu job, separate to keep testing setups clean and cause of failures clear.
+  # As with the BMI C ubuntu job, separate Python in linux tests to keep setups clean and cause of failures clear.
   test_bmi_python_ubuntu_latest:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -333,6 +335,7 @@ jobs:
       - name: cleanup
         run: find . -name cmake_build -type d -delete
 
+  # Run general unit tests in MacOS environment
   test_unit_macos_latest:
     # The type of runner that the job will run on
     runs-on: macos-latest
@@ -378,6 +381,7 @@ jobs:
       - name: cleanup_dir
         run: rm -rf cmake_build
 
+  # Run BMI C tests in MacOS environment, and separating to isolate
   test_bmi_c_macos_latest:
     # The type of runner that the job will run on
     runs-on: macos-latest
@@ -454,6 +458,7 @@ jobs:
       - name: cleanup_shared_lib_dir
         run: rm -rf extern/test_bmi_c/cmake_build
 
+  # As with the BMI C MacOS job, separate Fortran in MacOS tests to keep setups clean and cause of failures clear.
   test_bmi_fortran_macos_latest:
     # The type of runner that the job will run on
     runs-on: macos-latest
@@ -536,6 +541,7 @@ jobs:
       - name: cleanup_builds
         run: find . -name cmake_build -type d -delete
 
+  # As with the BMI C MacOS job, separate Python in MacOS tests to keep setups clean and cause of failures clear.
   test_bmi_python_macos_latest:
     # The type of runner that the job will run on
     runs-on: macos-latest
