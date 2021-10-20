@@ -37,11 +37,13 @@ Tshirt_C_Realization::Tshirt_C_Realization(forcing_params forcing_config,
                                            std::vector<double> giuh_ordinates,
                                            tshirt::tshirt_params params,
                                            const vector<double> &nash_storage)
-        : Catchment_Formulation(catchment_id, std::move(forcing_config), output_stream), catchment_id(std::move(catchment_id)),
+        : Catchment_Formulation(catchment_id, std::move(std::make_unique<Forcing>(forcing_config)), output_stream), catchment_id(std::move(catchment_id)),
           giuh_cdf_ordinates(std::move(giuh_ordinates)), params(std::make_shared<tshirt_params>(params)), nash_storage(nash_storage), c_soil_params(NWM_soil_parameters()),
           groundwater_conceptual_reservoir(conceptual_reservoir()), soil_conceptual_reservoir(conceptual_reservoir()),
           c_aorc_params(aorc_forcing_data())
 {
+    _link_legacy_forcing();
+
     // initialize 0 values if necessary in Nash Cascade storage vector
     if (this->nash_storage.empty()) {
         for (int i = 0; i < params.nash_n; i++) {
@@ -97,14 +99,25 @@ Tshirt_C_Realization::Tshirt_C_Realization(forcing_params forcing_config,
                                                                               Cgw, expon, max_gw_storage),
                                                         nash_storage)
 {
-
+    _link_legacy_forcing();
 }
 
 Tshirt_C_Realization::Tshirt_C_Realization(
         std::string id,
         forcing_params forcing_config,
         utils::StreamHandler output_stream
-) : Catchment_Formulation(std::move(id), std::move(forcing_config), output_stream) {
+) : Catchment_Formulation(std::move(id), std::move(std::make_unique<Forcing>(forcing_config)), output_stream) {
+    _link_legacy_forcing();
+    fluxes = std::vector<std::shared_ptr<tshirt_c_result_fluxes>>();
+}
+
+Tshirt_C_Realization::Tshirt_C_Realization(
+        std::string id,
+        unique_ptr<forcing::ForcingProvider> forcing_provider,
+        utils::StreamHandler output_stream
+) : Catchment_Formulation(std::move(id), std::move(forcing_provider), output_stream) {
+    _link_legacy_forcing();
+
     fluxes = std::vector<std::shared_ptr<tshirt_c_result_fluxes>>();
 }
 
@@ -421,7 +434,7 @@ double Tshirt_C_Realization::get_response(time_step_t t_index, time_step_t t_del
     //  forcing.  It may actually belong within the forcing object.
 
     // TODO: it also needs to account for getting the right precip data point (i.e., t_index may not be "next")
-    double precip = this->forcing.get_next_hourly_precipitation_meters_per_second();
+    double precip = this->legacy_forcing.get_next_hourly_precipitation_meters_per_second();
     int response_result = run_formulation_for_timestep(precip, t_delta_s);
     // TODO: check t_index is the next expected time step to be calculated
 

@@ -2,6 +2,7 @@
 #define NGEN_FORCINGPROVIDER_HPP
 
 #include <map>
+#include <vector>
 
 namespace forcing {
 

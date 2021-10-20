@@ -3,6 +3,7 @@
 #include "Bmi_Formulation.hpp"
 #include <iostream>
 #include "Bmi_Py_Formulation.hpp"
+#include <WrappedForcingProvider.hpp>
 
 using namespace realization;
 
@@ -29,7 +30,8 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
         std::shared_ptr<Bmi_Module_Formulation<bmi::Bmi>> module = nullptr;
         #ifdef NGEN_BMI_C_LIB_ACTIVE
         if (type_name == "bmi_c") {
-            module = std::dynamic_pointer_cast<Bmi_Module_Formulation<bmi::Bmi>>(std::make_shared<Bmi_C_Formulation>(identifier, forcing, output));
+            std::unique_ptr<forcing::ForcingProvider> wfp = std::make_unique<forcing::WrappedForcingProvider>(this);
+            module = std::dynamic_pointer_cast<Bmi_Module_Formulation<bmi::Bmi>>(std::make_shared<Bmi_C_Formulation>(identifier, std::move(wfp), output));
         }
         #endif // NGEN_BMI_C_LIB_ACTIVE
         #ifdef NGEN_BMI_FORTRAN_ACTIVE

@@ -16,18 +16,20 @@
 #include "Bmi_Fortran_Formulation.hpp"
 #include "Bmi_Multi_Formulation.hpp"
 #include "Bmi_Py_Formulation.hpp"
+#include <ForcingProvider.hpp>
+#include "CsvPerFeatureForcingProvider.hpp"
 
 #ifdef NGEN_LSTM_TORCH_LIB_ACTIVE
     #include "LSTM_Realization.hpp"
 #endif
 
 namespace realization {
-    typedef std::shared_ptr<Catchment_Formulation> (*constructor)(std::string, forcing_params, utils::StreamHandler);
+    typedef std::shared_ptr<Catchment_Formulation> (*constructor)(std::string, unique_ptr<forcing::ForcingProvider>, utils::StreamHandler);
 
     template<class T>
     static constructor create_formulation_constructor() {
-        return [](std::string id, forcing_params forcing_config, utils::StreamHandler output_stream) -> std::shared_ptr<Catchment_Formulation>{
-            return std::make_shared<T>(id, forcing_config, output_stream);
+        return [](std::string id, std::unique_ptr<forcing::ForcingProvider> forcing_provider, utils::StreamHandler output_stream) -> std::shared_ptr<Catchment_Formulation>{
+            return std::make_shared<T>(id, std::move(forcing_provider), output_stream);
         };
     };
 
@@ -62,7 +64,21 @@ namespace realization {
         utils::StreamHandler output_stream
     ) {
         constructor formulation_constructor = formulations.at(formulation_type);
-        return formulation_constructor(identifier, forcing_config, output_stream);
+        std::unique_ptr<forcing::ForcingProvider> fp;
+        if (formulation_type == "tshirt" || formulation_type == "tshirt_c" || formulation_type == "simple_lumped" || formulation_type == "lstm"){
+            // These formulations are still using the legacy interface!
+            fp = std::make_unique<Forcing>(forcing_config);
+        }
+        else if (forcing_config.provider == "CsvPerFeature"){
+            fp = std::make_unique<CsvPerFeatureForcingProvider>(forcing_config);
+        }
+        else {
+            throw std::runtime_error(
+                    "Invalid formulation forcing provider configuration! identifier: \"" + identifier +
+                    "\", formulation_type: \"" + formulation_type +
+                    "\", provider: \"" + forcing_config.provider + "\"");
+        }
+        return formulation_constructor(identifier, std::move(fp), output_stream);
     };
 
     static std::string get_formulation_key(const boost::property_tree::ptree &tree) {

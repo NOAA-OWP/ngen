@@ -2,6 +2,7 @@
 
 #include <cmath>
 
+/*
 Simple_Lumped_Model_Realization::Simple_Lumped_Model_Realization(
     std::string id,
     forcing_params forcing_config,
@@ -46,15 +47,16 @@ Simple_Lumped_Model_Realization::Simple_Lumped_Model_Realization(Simple_Lumped_M
 cascade_backing_storage( std::move(other.cascade_backing_storage) ),
 state( std::move(other.state) ), realization::Catchment_Formulation(other.get_id())
 {
-  this->forcing = std::move(other.forcing);
+  this->legacy_forcing = std::move(other.legacy_forcing);
 }
+*/
 
 Simple_Lumped_Model_Realization::Simple_Lumped_Model_Realization(const Simple_Lumped_Model_Realization & other)
 :fluxes( other.fluxes ), params( other.params),
 cascade_backing_storage( other.cascade_backing_storage ),
 state( other.state ), realization::Catchment_Formulation(other.get_id())
 {
-  this->forcing = other.forcing;
+  this->legacy_forcing = other.legacy_forcing;
   //rehook state.Sr* -> cascade_backing_storage
   for(auto &s : state)
   {
@@ -101,7 +103,7 @@ double Simple_Lumped_Model_Realization::calc_et()
 double Simple_Lumped_Model_Realization::get_response(time_step_t t, time_step_t dt)
 {
     //TODO input_et = this->forcing.get_et(t)
-    double precip = this->forcing.get_next_hourly_precipitation_meters_per_second();
+    double precip = this->legacy_forcing.get_next_hourly_precipitation_meters_per_second();
     add_time(t+1, params.n);
     //FIXME should this run "daily" or hourly (t) which should really be dt
     //Do we keep an "internal dt" i.e. this->dt and reconcile with t?

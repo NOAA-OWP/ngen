@@ -3,7 +3,8 @@
 
 #include <memory>
 #include <string>
-#include <Forcing.h>
+#include <ForcingProvider.hpp>
+#include <AorcForcing.hpp>
 
 using std::shared_ptr;
 
@@ -19,8 +20,10 @@ class HY_CatchmentRealization
     public:
     //TODO remove the default constructor? leaving temporarily to satisfy non-used realizations
     HY_CatchmentRealization();
-    HY_CatchmentRealization(Forcing forcing);
-    HY_CatchmentRealization(forcing_params forcing_config);
+    HY_CatchmentRealization(std::unique_ptr<forcing::ForcingProvider> forcing);
+    
+    //HY_CatchmentRealization(forcing_params forcing_config);
+
     virtual ~HY_CatchmentRealization();
 
     /**
@@ -48,7 +51,7 @@ class HY_CatchmentRealization
     unsigned long id_number;
 
   protected:
-    Forcing forcing;
+    std::unique_ptr<forcing::ForcingProvider> forcing;
 
   private:
 

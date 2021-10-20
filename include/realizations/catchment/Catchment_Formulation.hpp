@@ -7,14 +7,14 @@
 #include "Et_Accountable.hpp"
 #include <HY_CatchmentArea.hpp>
 
+#include <Forcing.h> // Remove when _link_legacy_forcing() is removed!
+
 namespace realization {
 
     class Catchment_Formulation : public Formulation, public HY_CatchmentArea, public Et_Accountable {
         public:
-            Catchment_Formulation(std::string id, Forcing forcing, utils::StreamHandler output_stream)
-                : Formulation(id), HY_CatchmentArea(forcing, output_stream) { };
-
-            Catchment_Formulation(std::string id, forcing_params forcing_config, utils::StreamHandler output_stream) : Formulation(id), HY_CatchmentArea(forcing_config, output_stream) {};
+            Catchment_Formulation(std::string id, std::unique_ptr<forcing::ForcingProvider> forcing, utils::StreamHandler output_stream)
+                : Formulation(id), HY_CatchmentArea(std::move(forcing), output_stream) { };
 
             Catchment_Formulation(std::string id) : Formulation(id){};
 
@@ -59,6 +59,15 @@ namespace realization {
 
         void set_catchment_id(std::string cat_id) override {
             id = cat_id;
+        }
+
+        //TODO: VERY BAD JUJU...the following two members are an ugly hack to avoid having to gut the legacy C/C++ realizations for now.
+        Forcing legacy_forcing;
+        // Use this a a deprecation chokepoint to get rid of Forcing when ready.
+        void _link_legacy_forcing()
+        {
+            void* f { this->forcing.get() };
+            legacy_forcing = *((Forcing *)f);
         }
     };
 }
