@@ -205,22 +205,6 @@ jobs:
       - name: Init Submodules
         run: git submodule update --init --recursive
 
-      - name: Cache Numpy Python Dependency
-        id: cache-linux-numpy-dep
-        uses: actions/cache@v1
-        with:
-          path: .venv
-          key: linux-numpy-dep
-
-      - name: Get Numpy Python Dependency
-        if: steps.cache-linux-numpy-dep.outputs.cache-hit != 'true'
-        run: |
-          python -m venv .venv
-          . .venv/bin/activate
-          pip install pip
-          pip install numpy
-          deactivate
-
       - name: cmake_init_test_lib_build
         run: cmake -B extern/test_bmi_fortran/cmake_build -S extern/test_bmi_fortran
 
@@ -256,7 +240,7 @@ jobs:
         run: |
           export BOOST_ROOT="$(pwd)/boost_1_72_0"
           [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
-          cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=ON -DBMI_FORTRAN_ACTIVE:BOOL=ON -DNGEN_ACTIVATE_PYTHON:BOOL=ON -S .
+          cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=ON -DBMI_FORTRAN_ACTIVE:BOOL=ON -DNGEN_ACTIVATE_PYTHON:BOOL=OFF -S .
 
       - name: build_bmi_fortran_tests
         run: cmake --build cmake_build --target test_bmi_fortran -- -j ${{ env.LINUX_NUM_PROC_CORES }}
@@ -471,25 +455,6 @@ jobs:
       - name: Init Submodules
         run: git submodule update --init --recursive
 
-      - name: Cache Numpy Python Dependency
-        id: cache-numpy-py3-dep
-        uses: actions/cache@v1
-        with:
-          path: .venv
-          key: unix-numpy-py3-dep
-
-      - name: Get Numpy Python Dependency
-        if: steps.cache-numpy-py3-dep.outputs.cache-hit != 'true'
-        run: |
-          python3 -m venv .venv
-          . .venv/bin/activate
-          pip install pip
-          pip install numpy
-          deactivate
-
-      - name: git submodule pybind11
-        run: git submodule update --init --recursive -- extern/pybind11
-
       - name: cmake_init_test_lib_build
         run: cmake -B extern/test_bmi_fortran/cmake_build -DCMAKE_Fortran_COMPILER:FILEPATH=$(which gfortran-11) -S extern/test_bmi_fortran
 
@@ -525,7 +490,7 @@ jobs:
         run: |
           export BOOST_ROOT="$(pwd)/boost_1_72_0"
           [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
-          cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=ON -DBMI_FORTRAN_ACTIVE:BOOL=ON -DNGEN_ACTIVATE_PYTHON:BOOL=ON -S .
+          cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=ON -DBMI_FORTRAN_ACTIVE:BOOL=ON -DNGEN_ACTIVATE_PYTHON:BOOL=OFF -S .
 
       - name: build_bmi_fortran_tests
         run: cmake --build cmake_build --target test_bmi_fortran -- -j ${{ env.MACOS_NUM_PROC_CORES }}
