@@ -14,7 +14,20 @@
 #include "core/Partition_Parser.hpp"
 
 using PartitionVSet = std::vector<std::unordered_set<std::string> >;
-using RemoteConnectionVec = std::vector<std::tuple<int, std::string, std::string> >;
+/**
+ * @brief A tuple representing a remote connection
+ * 
+ * These tuples contain (partition-id, nexus-id, catchment-id, topology-string)
+ * 
+ * Where
+ * partition-id = partition containing the `nexus-id` and its related `catchment-id`
+ * nexus-id = which nexus is participating in the remote connection
+ * catchment-id = which catchment is topologically connected to the `nexus-id` involved in the communication
+ * topoloy-string = "orig_cat-to-nex" iff `catchment-id` is an origin feature of `nexus-id`
+ *                  "nex-to-dest_cat" iff `catchment-id` is a destination feature of `nexus-id`
+ */
+using RemoteConnection = std::tuple<int, std::string, std::string, std::string>;
+using RemoteConnectionVec = std::vector< RemoteConnection >;
 
 /**
  * @brief Write the partition details to the @p outFile
