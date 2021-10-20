@@ -9,6 +9,7 @@
 #include <exception>
 #include <pybind11/embed.h>
 #include <vector>
+#include "Forcing.h"
 #include "Bmi_Py_Formulation.hpp"
 #include "python/InterpreterUtil.hpp"
 
@@ -21,7 +22,7 @@ using namespace utils::ngenPy;
 typedef struct py_formulation_example_scenario {
     std::string catchment_id;
     std::string realization_config_json;
-    std::shared_ptr<forcing_params> forcing_params;
+    std::shared_ptr<struct forcing_params> forcing_params;
     std::string bmi_init_config;
     boost::property_tree::ptree realization_config_properties_tree;
     std::string module_directory;
