@@ -293,67 +293,105 @@ int find_remote_rank(std::string id, PartitionVSet catchment_partitions)
 /**
  * @brief Find the remote connections for a given @p nexus
  * 
- * This function searches the local catchments in @p catchments to determine if the given @p nexus can communicate with it on the local partition.
- * If the connected feature is NOT found locally, it is located in the @p catchment_partitions and marked as remote by adding it to the remote_connections set.
+ * This function searches the local catchments in @p catchments to determine if the given
+ * @p nexus can communicate with it on the local partition.
  * 
+ * If the connected feature is NOT found locally, it is located in the @p catchment_partitions
+ * and marked as remote by adding it to the remote_connections set.
+ * 
+ * The determination of the need to communicate is influenced by the topology.
+ * 
+ * Any @p nexus which is connected to a @p destination_ids_to_find id is mapped
+ * as a remote connection where the @p nexus is considered to be a `nex-to-dest_cat`
+ * which indicates that the nexus must send to the partition containing the destination catchment.
+ * 
+ * Any @p nexus which is connected to a @p origin_ids_to_find id is mapped
+ * as a remote connection if and only if the @p partition_number contains a destination feature in @p destination_ids_to_find
+ * which indicates that the nexus must receive from the partition containing the origin catchment
+ *
  * @param nexus The nexus to identify remote connections for
  * @param catchment_partitions The global set of partitions
  * @param partition_number The partition to consider local
- * @param ids_to_find The ids connected to @p nexus to search on
+ * @param origin_ids_to_find The origin (upstream) ids connected to @p nexus to search on
+ * @param destination_ids_to_find The destination (downstream) ids connected to @p nexus to search on
  * @param remote_connections The output unordered_set containing tuples of remote (partition, nexus, id)
  * @return int Number of identified remote catchments
  * 
  * @throws invalid_argument if the partition_number is not in the range of valid partition numbers (size of catchment_partitions)
  */
-int find_partition_connections(std::string nexus, PartitionVSet catchment_partitions, int partition_number,  std::vector<std::string>& ids_to_find, RemoteConnectionVec& remote_connections )
+int find_partition_connections(std::string nexus, PartitionVSet catchment_partitions, int partition_number,  std::vector<std::string>& origin_ids_to_find, std::vector<std::string>& destination_ids_to_find, RemoteConnectionVec& remote_connections )
 {
+
+    const std::string origination_cat_to_nex = "orig_cat-to-nex";
+    const std::string nex_to_destination_cat = "nex-to-dest_cat";
+
     if( partition_number < 0 || partition_number >= catchment_partitions.size() ){
         throw std::invalid_argument("find_partition_connections: partition_number not valid for catchment_partitions of size "+
                                      std::to_string( catchment_partitions.size()) + ".");
     }
     std::unordered_set<std::string> catchments = catchment_partitions[partition_number];
     int remote_catchments = 0;
-    for( auto id : ids_to_find )
-            {
-                // try to get each origin id
-                auto iter = std::find(catchments.begin(), catchments.end(), id);
-                
-                if ( iter == catchments.end() )
-                {
-                    // catchemnt is remote find the partition that contains it
-                    //std::cout << id << ": is not in local catchment set searching remote partitions.\n";
-                    
-                    int pos = -1;
-                    for ( int i = 0; i < catchment_partitions.size(); ++i )
-                    {
-                        // this iterate through the unordered_set
-                        auto iter2 = std::find(catchment_partitions[i].begin(), catchment_partitions[i].end(), id);
-                        
-                        // if we find a match then we have found the target partition containing this id
-                        if ( iter2 != catchment_partitions[i].end() )
-                        {
-                            pos = i;
-                            break;
-                        }
-                    }
-                    
-                    if ( pos >= 0 )
-                    {
-                        //std::cout << "Found id: " << id << " in partition: " << pos << "\n";
-                        remote_connections.push_back(std::make_tuple(pos, nexus, id));
-                        ++remote_catchments;
-                    }
-                    else
-                    {
-                        std::cout << "Could not find id: " << id << " in any partition\n";
-                        ++remote_catchments;
-                    }   
+
+    //Find senders
+    for( auto id : destination_ids_to_find )
+    {
+        auto iter = std::find(catchments.begin(), catchments.end(), id);
+        if ( iter == catchments.end() )
+        {
+            //we do not operate the receiving end of this nexus, it must be remote
+            //so we need to indicate the need to send
+            int pos = find_remote_rank(id, catchment_partitions);
+                if(nexus == "nex-22"){
+                    std::cout<<"PID: "<<partition_number<<", " << "mpi_rank: " << pos << ", nexus_id: " << nexus << ", cat_id: " << id << ", cat_dir: " << nex_to_destination_cat << std::endl;
                 }
-                else
+            remote_connections.push_back(std::make_tuple(pos, nexus, id, nex_to_destination_cat));
+            ++remote_catchments;
+        }
+        else
+        {
+            //we operate the receiving end of this nexus
+            //it can either be a local nexus
+            //or a remote nexus where this partition operates the catchment downstream
+            //in the latter case, the remote connection is handled by the origin_ids (find receivers) loop below
+        }
+    }
+
+    //Find receivers
+    for( auto id : origin_ids_to_find )
+    {
+        auto iter = std::find(catchments.begin(), catchments.end(), id);
+        if ( iter == catchments.end() )
+        {
+            //These are remotes I need establish connection with only if I operate the receiving end of the remote pairs
+            //I am considered the receiver iff I contain the destination feature
+            //we do not operate the sending end of this nexus, it must be remote
+            //the appropriate sending tag should have been set in the previous destination_ids loop on appropriate partition
+            for(auto did : destination_ids_to_find )
+            {
+                auto dest_iter = std::find(catchments.begin(), catchments.end(), did);
+                if( dest_iter != catchments.end() )
                 {
-                    //std::cout << "Catchment with id: " << id << " is local\n";
+                    //We operate the receving end of this remote nexus for the communiction pair
+                    // (id -> N) (N -> did)
+                    //map that relationship
+                    int pos = find_remote_rank(id, catchment_partitions);
+                    if(nexus == "nex-22"){
+                        std::cout<<"PID: "<<partition_number<<", " << "mpi_rank: " << pos << ", nexus_id: " << nexus << ", cat_id: " << id << ", cat_dir: " << origination_cat_to_nex << std::endl;
+                    }
+                    remote_connections.push_back(std::make_tuple(pos, nexus, id, origination_cat_to_nex));
+                    ++remote_catchments;
                 }
             }
+        }
+        else
+        {
+            //we operate the sending end of this nexus,
+            //it can either be a local nexus
+            //or a remote nexus where this partition operates the catchment upstream,
+            //in the latter case, the remote connection is handled by the destination_ids (find senders) loop above
+        }
+    }
+
     return remote_catchments;
 
 }
@@ -487,18 +525,14 @@ int main(int argc, char* argv[])
 
 
         int remote_catchments = 0;
-        
+
         for ( const auto& n : local_nexuses )
         {
-            //std::cout << "Searching for catchements connected to " << n << "\n"; 
             //Find upstream connections
             auto orgin_ids = global_network.get_origination_ids(n);
-            //std::cout << "Found " << orgin_ids.size() << " upstream catchments for nexus with id: " << n << "\n";
-            remote_catchments += find_partition_connections(n, catchment_part, ipart, orgin_ids, remote_connections );
             //Find downstream connections
             auto dest_ids = global_network.get_destination_ids(n);
-            //std::cout << "Found " << dest_ids.size() << " downstream catchments for nexus with id: " << n << "\n";
-            remote_catchments += find_partition_connections(n, catchment_part, ipart, dest_ids, remote_connections );
+            remote_catchments += find_partition_connections(n, catchment_part, ipart, orgin_ids, dest_ids, remote_connections );
         }
 
         remote_connections_vec.push_back(remote_connections);
@@ -508,7 +542,7 @@ int main(int argc, char* argv[])
         std::cout << "Found " << remote_catchments << " remotes in partition "<<ipart<<"\n";
         total_remotes += remote_catchments;
     }
-    std::cout << "Found " << total_remotes << " total remotes (average of approximately " << (total_remotes/num_partitions) << " remotes per partition)";
+    std::cout << "Found " << total_remotes << " total remotes (average of approximately " << (total_remotes/num_partitions) << " remotes per partition)" << std::endl;
 
     write_remote_connections(catchment_part, nexus_part, remote_connections_vec, num_partitions, outFile);
 
