@@ -283,7 +283,7 @@ jobs:
           . .venv/bin/activate
           pip install pip
           pip install numpy
-          pip install -r extern/test_bmi_py_requirements.txt
+          pip install -r extern/test_bmi_py/requirements.txt
           deactivate
 
       - name: Cache Boost Dependency
