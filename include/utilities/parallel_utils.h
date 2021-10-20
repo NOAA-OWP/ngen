@@ -473,13 +473,24 @@ namespace parallel {
         // Start with a value of true
         bool isGood = true;
 
-        #ifdef ACTIVATE_PYTHON
+        #ifndef ACTIVATE_PYTHON
+        // We can't be good to proceed with this, because Python is not active
+        isGood = false;
+        std::cerr << "Driver is unable to perform required hydrofabric subdividing when Python integration is not active." << std::endl;
+
+
+        // Sync with the rest of the ranks and bail if any aren't ready to proceed for any reason
+        if (!mpiSyncStatusAnd(isGood, mpi_rank, mpi_num_procs, "initializing hydrofabric subdivider")) {
+            return false;
+        }
+        #else // i.e., #ifdef ACTIVATE_PYTHON
+        // Have rank 0 handle the generation task for all files/partitions
         std::unique_ptr<utils::ngenPy::HydrofabricSubsetter> subdivider;
         // Have rank 0 handle the generation task for all files/partitions
         if (mpi_rank == 0) {
             try {
                 subdivider = std::make_unique<utils::ngenPy::HydrofabricSubsetter>(catchmentDataFile, nexusDataFile,
-                                                                           partitionConfigFile);
+                                                                                   partitionConfigFile);
             }
             catch (const std::exception &e) {
                 std::cerr << e.what() << std::endl;
@@ -487,7 +498,6 @@ namespace parallel {
                 isGood = false;
             }
         }
-
         // Sync ranks and bail if any aren't ready to proceed for any reason
         if (!mpiSyncStatusAnd(isGood, mpi_rank, mpi_num_procs, "initializing hydrofabric subdivider")) {
             return false;
@@ -504,13 +514,6 @@ namespace parallel {
                 isGood = false;
             }
         }
-
-        #else // i.e., ifndef ACTIVATE_PYTHON
-        // Without Python available, there is no way external subdivide package can be used (i.e., not good)
-        isGood = false;
-        std::cerr << "Driver is unable to perform required hydrofabric subdividing when Python integration is not active." << std::endl;
-        #endif // ACTIVATE_PYTHON
-
         // Sync ranks again here on whether subdividing was successful, having them all exit at this point if not
         if (!mpiSyncStatusAnd(isGood, mpi_rank, mpi_num_procs, "executing hydrofabric subdivision")) {
             return false;
@@ -526,6 +529,7 @@ namespace parallel {
                                                            mpi_num_procs, hostIdForRank, true, true);
 
         }
+        #endif // ACTIVATE_PYTHON
     }
 }
 
