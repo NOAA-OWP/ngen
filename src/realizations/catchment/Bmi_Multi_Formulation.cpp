@@ -28,15 +28,15 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
         std::string type_name = formulation_config.at("name").as_string();
         std::string identifier = get_catchment_id() + "." + std::to_string(i);
         std::shared_ptr<Bmi_Module_Formulation<bmi::Bmi>> module = nullptr;
+        std::unique_ptr<forcing::ForcingProvider> wfp = std::make_unique<forcing::WrappedForcingProvider>(this);
         #ifdef NGEN_BMI_C_LIB_ACTIVE
         if (type_name == "bmi_c") {
-            std::unique_ptr<forcing::ForcingProvider> wfp = std::make_unique<forcing::WrappedForcingProvider>(this);
             module = std::dynamic_pointer_cast<Bmi_Module_Formulation<bmi::Bmi>>(std::make_shared<Bmi_C_Formulation>(identifier, std::move(wfp), output));
         }
         #endif // NGEN_BMI_C_LIB_ACTIVE
         #ifdef NGEN_BMI_FORTRAN_ACTIVE
         if (type_name == "bmi_fortran") {
-            module = std::dynamic_pointer_cast<Bmi_Module_Formulation<bmi::Bmi>>(std::make_shared<Bmi_Fortran_Formulation>(identifier, forcing, output));
+            module = std::dynamic_pointer_cast<Bmi_Module_Formulation<bmi::Bmi>>(std::make_shared<Bmi_Fortran_Formulation>(identifier, std::move(wfp), output));
         }
         #endif // NGEN_BMI_FORTRAN_ACTIVE
         #ifdef ACTIVATE_PYTHON
