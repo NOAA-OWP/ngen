@@ -320,7 +320,7 @@ class CsvPerFeatureForcingProvider : public forcing::ForcingProvider
         // Process the header (first) row..
         int c = 0;
         for (const auto& s : data_list[0]){
-            std::cerr << s << std::endl;
+            //std::cerr << s << std::endl;
             if(s == "Time" || s == "time"){
                 time_col_index = c;
                 local_valvec_index.push_back(nullptr); // make sure the column indices line up!
