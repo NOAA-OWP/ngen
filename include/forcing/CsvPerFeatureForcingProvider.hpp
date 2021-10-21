@@ -286,8 +286,14 @@ class CsvPerFeatureForcingProvider : public forcing::ForcingProvider
             throw std::out_of_range("Forcing had bad index " + std::to_string(index) + " for value lookup of " + name);
         }
 
-        if (forcing_vectors.count(name) > 0) {
-            return forcing_vectors[name].at(index);
+        std::string can_name = name;
+        if(well_known_fields.count(can_name) > 0){
+            auto t = well_known_fields[can_name];
+            can_name = std::get<0>(t);
+        }
+
+        if (forcing_vectors.count(can_name) > 0) {
+            return forcing_vectors[can_name].at(index);
         }
         else {
             throw std::runtime_error("Cannot get forcing value for unrecognized parameter name '" + name + "'.");
