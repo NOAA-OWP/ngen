@@ -88,9 +88,9 @@ namespace realization {
             et_options.yes_aorc = TRUE;
             et_options.use_energy_balance_method   = FALSE;
             et_options.use_aerodynamic_method      = FALSE;
-            et_options.use_combination_method      = FALSE;
+            et_options.use_combination_method      = TRUE;
             et_options.use_priestley_taylor_method = FALSE;
-            et_options.use_penman_monteith_method  = TRUE;
+            et_options.use_penman_monteith_method  = FALSE;
 
             // TODO: do we really actually need this, if we are converting to another forcing struct?
             // TODO: WHY ARE THERE SO MANY FORCING STRUCTS!?!
