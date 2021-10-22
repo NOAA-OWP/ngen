@@ -8,6 +8,7 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <exception>
 #include <pybind11/embed.h>
+#include <regex>
 #include <vector>
 #include "Forcing.h"
 #include "Bmi_Py_Formulation.hpp"
@@ -448,7 +449,8 @@ TEST_F(Bmi_Py_Formulation_Test, GetOutputLineForTimestep_0_b) {
 
     double response = examples[ex_index].formulation->get_response(543, 3600);
     std::string output = examples[ex_index].formulation->get_output_line_for_timestep(543, ",");
-    ASSERT_EQ(output, "0.000002,0.000000,544.000000");
+    std::regex expected ("0.000002,(-?)0.000000,544.000000");
+    ASSERT_TRUE(std::regex_match(output, expected));
 }
 
 /**
