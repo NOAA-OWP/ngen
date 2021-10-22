@@ -317,7 +317,7 @@ jobs:
         timeout-minutes: 15
 
       - name: cleanup
-        run: find . -name cmake_build -type d -delete
+        run: rm -rf cmake_build
 
   # Run general unit tests in MacOS environment
   test_unit_macos_latest:
