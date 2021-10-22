@@ -694,8 +694,10 @@ end function test_finalize
        bmi_status = BMI_SUCCESS
     case("INPUT_VAR_3")
        size = sizeof(this%model%input_var_3)
+       bmi_status = BMI_SUCCESS
     case("OUTPUT_VAR_1")
        size = sizeof(this%model%output_var_1)
+       bmi_status = BMI_SUCCESS
     case("OUTPUT_VAR_2")
        size = sizeof(this%model%output_var_2)
        bmi_status = BMI_SUCCESS
