@@ -176,7 +176,9 @@ namespace realization {
             // Surface radiation forcing parameter values that must come from other models
             //--------------------------------------------------------------------------------------------------------
             surf_rad_forcing.surface_skin_temperature_C = made_up_surface_skin_temperature_C;
-
+            //Compute net_radiation et forcing value
+            et_forcing.net_radiation_W_per_sq_m=et::calculate_net_radiation_W_per_sq_m(&et_options,&surf_rad_params, 
+                                                                         &surf_rad_forcing);
             // TODO: and this just needs to be created with nothing set?
             struct et::intermediate_vars inter_vars;
 
