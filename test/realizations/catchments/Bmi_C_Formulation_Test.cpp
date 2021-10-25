@@ -302,8 +302,6 @@ TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_0_a) {
     Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
-    double response = formulation.get_response(0, 3600);
-    ASSERT_EQ(response, 0);
     std::string output = formulation.get_output_line_for_timestep(0, ",");
     ASSERT_EQ(output, "0.000000,0.000000");
 }
@@ -315,8 +313,6 @@ TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_1_a) {
     Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
-    double response = formulation.get_response(0, 3600);
-    ASSERT_EQ(response, 0);
     // Notably--this test could fail if both output vars were not the same. get_output_line_for_timestep assumes
     // the return order of get_output_variable_names() is consistent but it apparently is not. In tracing this
     // test, it was actually outputing OUTPUT_VAR_2 first, while the other two comparable tests are outputting
@@ -335,8 +331,6 @@ TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_1_b) {
     int i = 0;
     while (i < 542)
         formulation.get_response(i++, 3600);
-    double response = formulation.get_response(i, 3600);
-    ASSERT_EQ(response, 0.000002);
     std::string output = formulation.get_output_line_for_timestep(i, ",");
     ASSERT_EQ(output, "0.000000,0.000002");
 }
