@@ -29,26 +29,6 @@ class CsvPerFeatureForcingProvider : public forcing::ForcingProvider
 
     typedef struct tm time_type;
 
-    // This map may be applicable to well-known netCDF formats as well?
-    map<std::string, std::tuple<std::string, std::string>> well_known_fields = {
-        {"precip_rate", { CSDMS_STD_NAME_RAIN_RATE, "mm s^-1" } }, 
-        {"APCP_surface", { CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, "kg m^-2" } }, // Especially this one, is it correct? 
-        {"DLWRF_surface", { CSDMS_STD_NAME_SOLAR_LONGWAVE, "W m-2" } }, 
-        {"DSWRF_surface", { CSDMS_STD_NAME_SOLAR_SHORTWAVE, "W m-2" } }, 
-        {"PRES_surface", { CSDMS_STD_NAME_SURFACE_AIR_PRESSURE, "Pa" } }, 
-        {"SPFH_2maboveground", { CSDMS_STD_NAME_SPECIFIC_HUMIDITY, "kg kg-1" } }, 
-        {"TMP_2maboveground", { CSDMS_STD_NAME_SURFACE_TEMP, "K" } }, 
-        {"UGRD_10maboveground", { CSDMS_STD_NAME_WIND_U_X, "m s-1" } }, 
-        {"VGRD_10maboveground", { CSDMS_STD_NAME_WIND_V_Y, "m s-1" } }, 
-        {"RAINRATE", { CSDMS_STD_NAME_RAIN_RATE , "mm s^-1" } }, 
-        {"T2D", { CSDMS_STD_NAME_SURFACE_TEMP, "K" } }, 
-        {"Q2D", { CSDMS_STD_NAME_SPECIFIC_HUMIDITY, "kg kg-1" } }, 
-        {"U2D", { CSDMS_STD_NAME_WIND_U_X, "m s-1" } }, 
-        {"V2D", { CSDMS_STD_NAME_WIND_V_Y, "m s-1" } }, 
-        {"PSFC", { CSDMS_STD_NAME_SURFACE_AIR_PRESSURE, "Pa" } }, 
-        {"SWDOWN", { CSDMS_STD_NAME_SOLAR_SHORTWAVE, "W m-2" } }, 
-        {"LWDOWN", { CSDMS_STD_NAME_SOLAR_LONGWAVE, "W m-2" } }
-    };
 
     CsvPerFeatureForcingProvider(forcing_params forcing_config):start_date_time_epoch(forcing_config.start_t),
                                            end_date_time_epoch(forcing_config.end_t),
@@ -59,42 +39,6 @@ class CsvPerFeatureForcingProvider : public forcing::ForcingProvider
     }
 
     // BEGIN ForcingProvider interface methods
-
-    const std::vector<std::string> &get_available_forcing_outputs() override {
-        return available_forcings;
-    }
-
-    /**
-     * Placeholder implementation for function to return the given param adjusted to be in the supplied units.
-     *
-     * At present this just returns the param's internal value.
-     *
-     * @param name The name of the desired parameter.
-     * @param units_str A string represented the units for conversion, using standard abbreviations.
-     * @return For now, just the param value, but in the future, the value converted.
-     */
-    //[[deprecated]]
-    inline double get_converted_value_for_param_in_units(const std::string& name, const std::string& units_str,
-                                                         int index)
-    {
-        // TODO: this is just a placeholder implementation that needs to be replaced with real convertion logic
-        return get_value_for_param_name(name, index);
-    }
-
-    /**
-     * Placeholder implementation for function to return the given param adjusted to be in the supplied units.
-     *
-     * At present this just returns the param's internal value.
-     *
-     * @param name The name of the desired parameter.
-     * @param units_str A string represented the units for conversion, using standard abbreviations.
-     * @return For now, just the param value, but in the future, the value converted.
-     */
-    //[[deprecated]]
-    inline double get_converted_value_for_param_in_units(const std::string& name, const std::string& units_str) {
-        check_forcing_vector_index_bounds();
-        return get_converted_value_for_param_in_units(name, units_str, forcing_vector_index);
-    }
 
     /**
      * Get the inclusive beginning of the period of time over which this instance can provide data for this forcing.
@@ -248,6 +192,31 @@ class CsvPerFeatureForcingProvider : public forcing::ForcingProvider
     }
 
     private:
+
+    // This map may be applicable to well-known netCDF formats as well?
+    map<std::string, std::tuple<std::string, std::string>> well_known_fields = {
+        {"precip_rate", { CSDMS_STD_NAME_RAIN_RATE, "mm s^-1" } }, 
+        {"APCP_surface", { CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, "kg m^-2" } }, // Especially this one, is it correct? 
+        {"DLWRF_surface", { CSDMS_STD_NAME_SOLAR_LONGWAVE, "W m-2" } }, 
+        {"DSWRF_surface", { CSDMS_STD_NAME_SOLAR_SHORTWAVE, "W m-2" } }, 
+        {"PRES_surface", { CSDMS_STD_NAME_SURFACE_AIR_PRESSURE, "Pa" } }, 
+        {"SPFH_2maboveground", { CSDMS_STD_NAME_SPECIFIC_HUMIDITY, "kg kg-1" } }, 
+        {"TMP_2maboveground", { CSDMS_STD_NAME_SURFACE_TEMP, "K" } }, 
+        {"UGRD_10maboveground", { CSDMS_STD_NAME_WIND_U_X, "m s-1" } }, 
+        {"VGRD_10maboveground", { CSDMS_STD_NAME_WIND_V_Y, "m s-1" } }, 
+        {"RAINRATE", { CSDMS_STD_NAME_RAIN_RATE , "mm s^-1" } }, 
+        {"T2D", { CSDMS_STD_NAME_SURFACE_TEMP, "K" } }, 
+        {"Q2D", { CSDMS_STD_NAME_SPECIFIC_HUMIDITY, "kg kg-1" } }, 
+        {"U2D", { CSDMS_STD_NAME_WIND_U_X, "m s-1" } }, 
+        {"V2D", { CSDMS_STD_NAME_WIND_V_Y, "m s-1" } }, 
+        {"PSFC", { CSDMS_STD_NAME_SURFACE_AIR_PRESSURE, "Pa" } }, 
+        {"SWDOWN", { CSDMS_STD_NAME_SOLAR_SHORTWAVE, "W m-2" } }, 
+        {"LWDOWN", { CSDMS_STD_NAME_SOLAR_LONGWAVE, "W m-2" } }
+    };
+
+    const std::vector<std::string> &get_available_forcing_outputs() override {
+        return available_forcings;
+    }
 
     /**
      * @brief Checks forcing vector index bounds and adjusts index if out of vector bounds
