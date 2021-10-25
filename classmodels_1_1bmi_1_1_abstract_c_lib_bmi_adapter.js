@@ -12,6 +12,7 @@ var classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter =
     [ "dynamic_load_symbol", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a54e81984934696cf2bc990768df932f1", null ],
     [ "Finalize", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a2de8c486290e20a28e876ee62414311e", null ],
     [ "finalizeForLibAbstraction", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#aeeaf49b3bd45d89b2a88086d25f328b8", null ],
+    [ "get_analogous_cxx_type", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a68f635fcef67684ba60e21796b53711e", null ],
     [ "get_bmi_registration_function", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a0aec36270f1ceba9c1c18600518e7a02", null ],
     [ "get_dyn_lib_handle", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#af227bc17f5d43d08b9c11bc24a6f6063", null ],
     [ "GetComponentName", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a260433746fad7ef67ace7daf4927ccf8", null ],

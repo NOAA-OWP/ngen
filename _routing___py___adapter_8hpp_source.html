@@ -97,68 +97,69 @@ $(document).ready(function(){initNavTree('_routing___py___adapter_8hpp_source.ht
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;pybind11/pytypes.h&quot;</span></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;pybind11/numpy.h&quot;</span></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &lt;pybind11/stl.h&gt;</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">//#include &quot;JSONProperty.hpp&quot;</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment">//#include &quot;StreamHandler.hpp&quot;</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">namespace </span>py = pybind11;</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment">//using namespace std;</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">namespace </span>routing_py_adapter {</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keyword">class </span>Routing_Py_Adapter {</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        Routing_Py_Adapter(std::string t_route_connection_path, std::string input_path, </div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;                           <span class="keyword">const</span> std::vector&lt;std::string&gt; &amp;catchment_subset_ids,</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;                           <span class="keywordtype">int</span> number_of_timesteps, <span class="keywordtype">int</span> delta_time,</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;                           <span class="keyword">const</span> std::vector&lt;double&gt; &amp;flow_vector);</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &quot;python/InterpreterUtil.hpp&quot;</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment">//#include &quot;JSONProperty.hpp&quot;</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment">//#include &quot;StreamHandler.hpp&quot;</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">namespace </span>py = pybind11;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">//using namespace std;</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keyword">namespace </span>routing_py_adapter {</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keyword">class </span>Routing_Py_Adapter {</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        Routing_Py_Adapter(std::string t_route_connection_path, std::string input_path, </div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;                           <span class="keyword">const</span> std::vector&lt;std::string&gt; &amp;catchment_subset_ids,</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;                           <span class="keywordtype">int</span> number_of_timesteps, <span class="keywordtype">int</span> delta_time,</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;                           <span class="keyword">const</span> std::vector&lt;double&gt; &amp;flow_vector);</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        Routing_Py_Adapter(std::string t_route_connection_path, std::string input_path, </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;                           <span class="keyword">const</span> std::vector&lt;std::string&gt; &amp;catchment_subset_ids, </div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;                           <span class="keywordtype">int</span> number_of_timesteps, <span class="keywordtype">int</span> delta_time);</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <span class="keywordtype">void</span> convert_vector_to_numpy_array(<span class="keyword">const</span> std::vector&lt;T&gt; &amp;flow_vector)</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        {</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;            <span class="comment">//Allocate py::array (to pass the result of the C++ function to Python)</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;            <span class="keyword">auto</span> result = py::array_t&lt;T&gt;(flow_vector.size());</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            <span class="keyword">auto</span> result_buffer = result.request();</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;            T *result_ptr = (T *) result_buffer.ptr;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;            <span class="comment">//Copy std::vector -&gt; py::array</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            std::memcpy(result_ptr, flow_vector.data(), flow_vector.size()*<span class="keyword">sizeof</span>(T));</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;            <span class="comment">//Create object for receive_flow_values subroutine</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;            py::object receive_flow_values = t_route_module.attr(<span class="stringliteral">&quot;receive_flow_values&quot;</span>);</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            <span class="comment">//Call receive_flow_values subroutine</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            receive_flow_values(result);</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        }</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        Routing_Py_Adapter(std::string t_route_connection_path, std::string input_path, </div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;                           <span class="keyword">const</span> std::vector&lt;std::string&gt; &amp;catchment_subset_ids, </div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;                           <span class="keywordtype">int</span> number_of_timesteps, <span class="keywordtype">int</span> delta_time);</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="keywordtype">void</span> convert_vector_to_numpy_array(<span class="keyword">const</span> std::vector&lt;T&gt; &amp;flow_vector)</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        {</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;            <span class="comment">//Allocate py::array (to pass the result of the C++ function to Python)</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            <span class="keyword">auto</span> result = py::array_t&lt;T&gt;(flow_vector.size());</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;            <span class="keyword">auto</span> result_buffer = result.request();</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;            T *result_ptr = (T *) result_buffer.ptr;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            <span class="comment">//Copy std::vector -&gt; py::array</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;            std::memcpy(result_ptr, flow_vector.data(), flow_vector.size()*<span class="keyword">sizeof</span>(T));</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;            <span class="comment">//Create object for receive_flow_values subroutine</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            py::object receive_flow_values = t_route_module.attr(<span class="stringliteral">&quot;receive_flow_values&quot;</span>);</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            <span class="comment">//Call receive_flow_values subroutine</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            receive_flow_values(result);</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        }</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        py::module_ np;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        py::module_ t_route_module;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    };</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;}</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        py::module_ np;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        py::module_ t_route_module;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    };</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;}</div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="preprocessor">#endif </span><span class="comment">//ACTIVATE_PYTHON</span></div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="preprocessor">#endif </span><span class="comment">//NGEN_ROUTING_PY_ADAPTER_H</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="preprocessor">#endif </span><span class="comment">//ACTIVATE_PYTHON</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="preprocessor">#endif </span><span class="comment">//NGEN_ROUTING_PY_ADAPTER_H</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_653ed63d62fa3b5c4f20bdbe070dc427.html">routing</a></li><li class="navelem"><b>Routing_Py_Adapter.hpp</b></li>
-    <li class="footer">Generated on Fri Oct 22 2021 18:23:10 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Mon Oct 25 2021 14:25:15 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

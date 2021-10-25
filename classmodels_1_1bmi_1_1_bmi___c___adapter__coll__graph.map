@@ -1,8 +1,8 @@
 <map id="models::bmi::Bmi_C_Adapter" name="models::bmi::Bmi_C_Adapter">
-<area shape="rect" id="node1" title="An adapter class to serve as a C++ interface to the essential aspects of external models written in t..." alt="" coords="5,2511,184,3087"/>
-<area shape="rect" id="node2" href="$classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html" title=" " alt="" coords="180,2193,372,2461"/>
-<area shape="rect" id="node3" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title="Abstract adapter interface for C++ classes to interact with the essential aspects of external models ..." alt="" coords="377,892,580,1277"/>
-<area shape="rect" id="node14" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title=" " alt="" coords="239,1340,441,1843"/>
+<area shape="rect" id="node1" title="An adapter class to serve as a C++ interface to the essential aspects of external models written in t..." alt="" coords="5,2540,184,3116"/>
+<area shape="rect" id="node2" href="$classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html" title=" " alt="" coords="180,2223,372,2491"/>
+<area shape="rect" id="node3" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title="Abstract adapter interface for C++ classes to interact with the essential aspects of external models ..." alt="" coords="377,892,580,1292"/>
+<area shape="rect" id="node14" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title=" " alt="" coords="239,1355,441,1872"/>
 <area shape="rect" id="node4" href="$classbmi_1_1_bmi.html" title=" " alt="" coords="239,532,401,829"/>
 <area shape="rect" id="node5" href="$classutils_1_1_stream_handler.html" title="This class provides a copyable interface to a std::ostream or std::ostream like object that may not s..." alt="" coords="592,576,731,785"/>
 <area shape="rect" id="node6" title=" " alt="" coords="604,300,740,392"/>
@@ -11,6 +11,6 @@
 <area shape="rect" id="node12" title=" " alt="" coords="917,416,1072,508"/>
 <area shape="rect" id="node8" title=" " alt="" coords="809,5,847,83"/>
 <area shape="rect" id="node9" title=" " alt="" coords="286,307,365,385"/>
-<area shape="rect" id="node13" href="$classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html" title=" " alt="" coords="180,1892,372,2131"/>
+<area shape="rect" id="node13" href="$classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html" title=" " alt="" coords="180,1921,372,2160"/>
 <area shape="rect" id="node10" title=" " alt="" coords="263,145,387,237"/>
 </map>

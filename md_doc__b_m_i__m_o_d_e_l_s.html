@@ -281,7 +281,7 @@ BMI C Activate/Deactivation Required in CMake Build</h3>
 Additional Bootstrapping Function Needed</h3>
 <p>BMI models written in <b>C</b> should implement an extra "registration" function in order to be compatible with NextGen. By default, this registration function is expected to be: </p><pre class="fragment">Bmi* register_bmi(Bmi *model);
 </pre><p> It is possible to configure a different name for the function within the NGen realization config, but the return type and parameter list must be as noted here.</p>
-<p>The implemented function must set the member pointers of the passed <code><a class="el" href="struct_bmi.html">Bmi</a></code> struct to the appropriate analogous functions inside the model. E.g., the <code>initialize</code> member of the struct: </p><pre class="fragment">int (*initialize)(struct Bmi *self, const char *config_file)
+<p>The implemented function must set the member pointers of the passed <code><a class="el" href="struct_bmi.html">Bmi</a></code> struct to the appropriate analogous functions inside the model. E.g., the <code>initialize</code> member of the struct: </p><pre class="fragment">int (*initialize)(struct Bmi *self, const char *bmi_init_config)
 </pre><p> needs to be set to the module's function the performs the BMI initialization. This will probably be something like: </p><pre class="fragment">static int Initialize (Bmi *self, const char *file)
 </pre><p> So the registration function may look something like: </p><pre class="fragment">Bmi* register_bmi_cfe(Bmi *model) {
     if (model) {
@@ -374,7 +374,7 @@ Multi-Module BMI Formulations</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri Oct 22 2021 18:23:11 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Mon Oct 25 2021 14:25:15 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

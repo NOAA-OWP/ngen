@@ -17,6 +17,7 @@ var classmodels_1_1bmi_1_1_bmi___c___adapter =
     [ "Finalize", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#ab96ac3291b659ad70476720eaba62568", null ],
     [ "finalizeForCAdapter", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#a11f9107c47aa791a77799bd08b1e2b93", null ],
     [ "finalizeForLibAbstraction", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#aeeaf49b3bd45d89b2a88086d25f328b8", null ],
+    [ "get_analogous_cxx_type", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#afe1d151a20915c4155640219c21d73b1", null ],
     [ "get_bmi_model_time_step_size_ptr", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#a124a426dd5747ad4aea6b01cb2ddcda1", null ],
     [ "get_bmi_registration_function", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#a0aec36270f1ceba9c1c18600518e7a02", null ],
     [ "get_dyn_lib_handle", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#af227bc17f5d43d08b9c11bc24a6f6063", null ],

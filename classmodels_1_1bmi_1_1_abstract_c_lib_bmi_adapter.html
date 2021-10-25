@@ -133,6 +133,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ab59c92e91f3ebe1cf5eaceac16100043"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html#ab59c92e91f3ebe1cf5eaceac16100043">convert_seconds_to_model_time</a> (const double &amp;seconds_val)</td></tr>
 <tr class="memdesc:ab59c92e91f3ebe1cf5eaceac16100043"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a given number of seconds to equivalent in model time units.  <a href="classmodels_1_1bmi_1_1_bmi___adapter.html#ab59c92e91f3ebe1cf5eaceac16100043">More...</a><br /></td></tr>
 <tr class="separator:ab59c92e91f3ebe1cf5eaceac16100043"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a68f635fcef67684ba60e21796b53711e"><td class="memItemLeft" align="right" valign="top">virtual const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a68f635fcef67684ba60e21796b53711e">get_analogous_cxx_type</a> (const std::string &amp;external_type_name, const size_t item_size)=0</td></tr>
+<tr class="memdesc:a68f635fcef67684ba60e21796b53711e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the name string for the C++ type analogous to the described type in the backing model.  <a href="classmodels_1_1bmi_1_1_bmi___adapter.html#a68f635fcef67684ba60e21796b53711e">More...</a><br /></td></tr>
+<tr class="separator:a68f635fcef67684ba60e21796b53711e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a43ba9007b2536787eb95a330167068ff"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a43ba9007b2536787eb95a330167068ff">Initialize</a> ()</td></tr>
 <tr class="memdesc:a43ba9007b2536787eb95a330167068ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the wrapped BMI model functionality using the value from the <code>bmi_init_config</code> member variable and the API's <code>Initialize</code> function.  <a href="classmodels_1_1bmi_1_1_bmi___adapter.html#a43ba9007b2536787eb95a330167068ff">More...</a><br /></td></tr>
 <tr class="separator:a43ba9007b2536787eb95a330167068ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -812,6 +815,61 @@ template&lt;class C &gt; </div>
 <p class="reference">References <a class="el" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a8a7a5596d34a9858dfc6754acade23e8">models::bmi::AbstractCLibBmiAdapter&lt; C &gt;::dyn_lib_handle</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a27734fb939aea8464c757f9a3372eab4">models::bmi::AbstractCLibBmiAdapter&lt; C &gt;::~AbstractCLibBmiAdapter()</a>, and <a class="el" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a2de8c486290e20a28e876ee62414311e">models::bmi::AbstractCLibBmiAdapter&lt; C &gt;::Finalize()</a>.</p>
+
+</div>
+</div>
+<a id="a68f635fcef67684ba60e21796b53711e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a68f635fcef67684ba60e21796b53711e">&#9670;&nbsp;</a></span>get_analogous_cxx_type()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual const std::string <a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html">models::bmi::Bmi_Adapter</a>&lt; C  &gt;::get_analogous_cxx_type </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>external_type_name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const size_t&#160;</td>
+          <td class="paramname"><em>item_size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the name string for the C++ type analogous to the described type in the backing model. </p>
+<p>The supported languages for BMI modules support different types than C++ in general, but it is necessary to map "external" types to the appropriate C++ type for certain interactions; e.g., setting a variable value. This function encapsulates the translation specific to the particular language.</p>
+<p>Note that the size of an individual item is also required, as this can vary in certain situations depending on the implementation language of a backing model.</p>
+<p>Implementations should all throw the same type of exception (currently, std::runtime_error) if/when an unrecognized external type name parameter is provided.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">external_type_name</td><td>The string name of some type in backing model's implementation language. </td></tr>
+    <tr><td class="paramname">item_size</td><td>The particular size in bytes for items of the involved analogous types. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The name string for the C++ type analogous to the described type in the backing model. </dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">std::runtime_error</td><td>If an unrecognized external type name parameter is provided. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -2680,7 +2738,7 @@ template&lt;class C &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacemodels.html">models</a></li><li class="navelem"><a class="el" href="namespacemodels_1_1bmi.html">bmi</a></li><li class="navelem"><a class="el" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html">AbstractCLibBmiAdapter</a></li>
-    <li class="footer">Generated on Fri Oct 22 2021 18:23:12 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Mon Oct 25 2021 14:25:16 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

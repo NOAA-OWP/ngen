@@ -1237,6 +1237,7 @@
             <topic label="dynamic_load_symbol" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a54e81984934696cf2bc990768df932f1"/>
             <topic label="Finalize" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a2de8c486290e20a28e876ee62414311e"/>
             <topic label="finalizeForLibAbstraction" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#aeeaf49b3bd45d89b2a88086d25f328b8"/>
+            <topic label="get_analogous_cxx_type" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a68f635fcef67684ba60e21796b53711e"/>
             <topic label="get_bmi_registration_function" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a0aec36270f1ceba9c1c18600518e7a02"/>
             <topic label="get_dyn_lib_handle" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#af227bc17f5d43d08b9c11bc24a6f6063"/>
             <topic label="GetComponentName" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a260433746fad7ef67ace7daf4927ccf8"/>
@@ -1309,6 +1310,7 @@
             <topic label="convert_model_time_to_seconds" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a3dc0b3c5060687be87f2c2916a2aa1ce"/>
             <topic label="convert_seconds_to_model_time" href="classmodels_1_1bmi_1_1_bmi___adapter.html#ab59c92e91f3ebe1cf5eaceac16100043"/>
             <topic label="Finalize" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a50ba4a7a721969d53c269298a1e607a7"/>
+            <topic label="get_analogous_cxx_type" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a68f635fcef67684ba60e21796b53711e"/>
             <topic label="GetComponentName" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a260433746fad7ef67ace7daf4927ccf8"/>
             <topic label="GetCurrentTime" href="classmodels_1_1bmi_1_1_bmi___adapter.html#acbbbbfa690e6adb9eb348aa0ecd03e69"/>
             <topic label="GetEndTime" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a05446119c83ed2be8bbf92644d9b5bce"/>
@@ -1384,6 +1386,7 @@
             <topic label="Finalize" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#ab96ac3291b659ad70476720eaba62568"/>
             <topic label="finalizeForCAdapter" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a11f9107c47aa791a77799bd08b1e2b93"/>
             <topic label="finalizeForLibAbstraction" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#aeeaf49b3bd45d89b2a88086d25f328b8"/>
+            <topic label="get_analogous_cxx_type" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#afe1d151a20915c4155640219c21d73b1"/>
             <topic label="get_bmi_model_time_step_size_ptr" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a124a426dd5747ad4aea6b01cb2ddcda1"/>
             <topic label="get_bmi_registration_function" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a0aec36270f1ceba9c1c18600518e7a02"/>
             <topic label="get_dyn_lib_handle" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#af227bc17f5d43d08b9c11bc24a6f6063"/>
@@ -3264,6 +3267,7 @@
             <topic label="dynamic_load_symbol" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a54e81984934696cf2bc990768df932f1"/>
             <topic label="Finalize" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a2de8c486290e20a28e876ee62414311e"/>
             <topic label="finalizeForLibAbstraction" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#aeeaf49b3bd45d89b2a88086d25f328b8"/>
+            <topic label="get_analogous_cxx_type" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a68f635fcef67684ba60e21796b53711e"/>
             <topic label="get_bmi_registration_function" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a0aec36270f1ceba9c1c18600518e7a02"/>
             <topic label="get_dyn_lib_handle" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#af227bc17f5d43d08b9c11bc24a6f6063"/>
             <topic label="GetComponentName" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a260433746fad7ef67ace7daf4927ccf8"/>
@@ -3336,6 +3340,7 @@
             <topic label="convert_model_time_to_seconds" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a3dc0b3c5060687be87f2c2916a2aa1ce"/>
             <topic label="convert_seconds_to_model_time" href="classmodels_1_1bmi_1_1_bmi___adapter.html#ab59c92e91f3ebe1cf5eaceac16100043"/>
             <topic label="Finalize" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a50ba4a7a721969d53c269298a1e607a7"/>
+            <topic label="get_analogous_cxx_type" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a68f635fcef67684ba60e21796b53711e"/>
             <topic label="GetComponentName" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a260433746fad7ef67ace7daf4927ccf8"/>
             <topic label="GetCurrentTime" href="classmodels_1_1bmi_1_1_bmi___adapter.html#acbbbbfa690e6adb9eb348aa0ecd03e69"/>
             <topic label="GetEndTime" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a05446119c83ed2be8bbf92644d9b5bce"/>
@@ -3411,6 +3416,7 @@
             <topic label="Finalize" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#ab96ac3291b659ad70476720eaba62568"/>
             <topic label="finalizeForCAdapter" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a11f9107c47aa791a77799bd08b1e2b93"/>
             <topic label="finalizeForLibAbstraction" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#aeeaf49b3bd45d89b2a88086d25f328b8"/>
+            <topic label="get_analogous_cxx_type" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#afe1d151a20915c4155640219c21d73b1"/>
             <topic label="get_bmi_model_time_step_size_ptr" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a124a426dd5747ad4aea6b01cb2ddcda1"/>
             <topic label="get_bmi_registration_function" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a0aec36270f1ceba9c1c18600518e7a02"/>
             <topic label="get_dyn_lib_handle" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#af227bc17f5d43d08b9c11bc24a6f6063"/>

@@ -111,7 +111,7 @@ $(document).ready(function(){initNavTree('parallel__utils_8h_source.html',''); i
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &lt;set&gt;</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#ifdef ACTIVATE_PYTHON</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;PyHydrofabricSubsetter.hpp&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;python/HydrofabricSubsetter.hpp&quot;</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// ACTIVATE_PYTHON</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">using namespace </span>std;</div>
@@ -405,65 +405,69 @@ $(document).ready(function(){initNavTree('parallel__utils_8h_source.html',''); i
 <div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160;        <span class="comment">// Start with a value of true</span></div>
 <div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160;        <span class="keywordtype">bool</span> isGood = <span class="keyword">true</span>;</div>
 <div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160; </div>
-<div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160;<span class="preprocessor">        #ifdef ACTIVATE_PYTHON</span></div>
-<div class="line"><a name="l00477"></a><span class="lineno">  477</span>&#160;        std::unique_ptr&lt;utils::PyHydrofabricSubsetter&gt; subdivider;</div>
-<div class="line"><a name="l00478"></a><span class="lineno">  478</span>&#160;        <span class="comment">// Have rank 0 handle the generation task for all files/partitions</span></div>
-<div class="line"><a name="l00479"></a><span class="lineno">  479</span>&#160;        <span class="keywordflow">if</span> (mpi_rank == 0) {</div>
-<div class="line"><a name="l00480"></a><span class="lineno">  480</span>&#160;            <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00481"></a><span class="lineno">  481</span>&#160;                subdivider = std::make_unique&lt;utils::PyHydrofabricSubsetter&gt;(catchmentDataFile, nexusDataFile,</div>
-<div class="line"><a name="l00482"></a><span class="lineno">  482</span>&#160;                                                                             partitionConfigFile);</div>
-<div class="line"><a name="l00483"></a><span class="lineno">  483</span>&#160;            }</div>
-<div class="line"><a name="l00484"></a><span class="lineno">  484</span>&#160;            <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception &amp;e) {</div>
-<div class="line"><a name="l00485"></a><span class="lineno">  485</span>&#160;                std::cerr &lt;&lt; e.what() &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00486"></a><span class="lineno">  486</span>&#160;                <span class="comment">// Set not good if the subdivider object couldn&#39;t be instantiated</span></div>
-<div class="line"><a name="l00487"></a><span class="lineno">  487</span>&#160;                isGood = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00488"></a><span class="lineno">  488</span>&#160;            }</div>
-<div class="line"><a name="l00489"></a><span class="lineno">  489</span>&#160;        }</div>
-<div class="line"><a name="l00490"></a><span class="lineno">  490</span>&#160; </div>
-<div class="line"><a name="l00491"></a><span class="lineno">  491</span>&#160;        <span class="comment">// Sync ranks and bail if any aren&#39;t ready to proceed for any reason</span></div>
-<div class="line"><a name="l00492"></a><span class="lineno">  492</span>&#160;        <span class="keywordflow">if</span> (!mpiSyncStatusAnd(isGood, mpi_rank, mpi_num_procs, <span class="stringliteral">&quot;initializing hydrofabric subdivider&quot;</span>)) {</div>
-<div class="line"><a name="l00493"></a><span class="lineno">  493</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00494"></a><span class="lineno">  494</span>&#160;        }</div>
-<div class="line"><a name="l00495"></a><span class="lineno">  495</span>&#160; </div>
-<div class="line"><a name="l00496"></a><span class="lineno">  496</span>&#160;        <span class="keywordflow">if</span> (mpi_rank == 0) {</div>
-<div class="line"><a name="l00497"></a><span class="lineno">  497</span>&#160;            <span class="comment">// Try to perform the subdividing</span></div>
-<div class="line"><a name="l00498"></a><span class="lineno">  498</span>&#160;            <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00499"></a><span class="lineno">  499</span>&#160;                isGood = subdivider-&gt;execSubdivision();</div>
-<div class="line"><a name="l00500"></a><span class="lineno">  500</span>&#160;            }</div>
-<div class="line"><a name="l00501"></a><span class="lineno">  501</span>&#160;            <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception &amp;e) {</div>
-<div class="line"><a name="l00502"></a><span class="lineno">  502</span>&#160;                std::cerr &lt;&lt; e.what() &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00503"></a><span class="lineno">  503</span>&#160;                <span class="comment">// Set not good if the subdivider object couldn&#39;t be instantiated</span></div>
-<div class="line"><a name="l00504"></a><span class="lineno">  504</span>&#160;                isGood = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00505"></a><span class="lineno">  505</span>&#160;            }</div>
-<div class="line"><a name="l00506"></a><span class="lineno">  506</span>&#160;        }</div>
-<div class="line"><a name="l00507"></a><span class="lineno">  507</span>&#160; </div>
-<div class="line"><a name="l00508"></a><span class="lineno">  508</span>&#160;<span class="preprocessor">        #else </span><span class="comment">// i.e., ifndef ACTIVATE_PYTHON</span></div>
-<div class="line"><a name="l00509"></a><span class="lineno">  509</span>&#160;        <span class="comment">// Without Python available, there is no way external subdivide package can be used (i.e., not good)</span></div>
-<div class="line"><a name="l00510"></a><span class="lineno">  510</span>&#160;        isGood = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00511"></a><span class="lineno">  511</span>&#160;        std::cerr &lt;&lt; <span class="stringliteral">&quot;Driver is unable to perform required hydrofabric subdividing when Python integration is not active.&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00512"></a><span class="lineno">  512</span>&#160;<span class="preprocessor">        #endif </span><span class="comment">// ACTIVATE_PYTHON</span></div>
-<div class="line"><a name="l00513"></a><span class="lineno">  513</span>&#160; </div>
-<div class="line"><a name="l00514"></a><span class="lineno">  514</span>&#160;        <span class="comment">// Sync ranks again here on whether subdividing was successful, having them all exit at this point if not</span></div>
-<div class="line"><a name="l00515"></a><span class="lineno">  515</span>&#160;        <span class="keywordflow">if</span> (!mpiSyncStatusAnd(isGood, mpi_rank, mpi_num_procs, <span class="stringliteral">&quot;executing hydrofabric subdivision&quot;</span>)) {</div>
-<div class="line"><a name="l00516"></a><span class="lineno">  516</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00517"></a><span class="lineno">  517</span>&#160;        }</div>
-<div class="line"><a name="l00518"></a><span class="lineno">  518</span>&#160;        <span class="comment">// But if the subdividing went fine ...</span></div>
-<div class="line"><a name="l00519"></a><span class="lineno">  519</span>&#160;        <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00520"></a><span class="lineno">  520</span>&#160;            <span class="comment">// ... figure out what ranks are on hosts with each other by getting an id for host of each rank</span></div>
-<div class="line"><a name="l00521"></a><span class="lineno">  521</span>&#160;            <span class="keywordtype">int</span> hostIdForRank[mpi_num_procs];</div>
-<div class="line"><a name="l00522"></a><span class="lineno">  522</span>&#160;            get_hosts_array(mpi_rank, mpi_num_procs, hostIdForRank);</div>
-<div class="line"><a name="l00523"></a><span class="lineno">  523</span>&#160; </div>
-<div class="line"><a name="l00524"></a><span class="lineno">  524</span>&#160;            <span class="comment">// ... then (when necessary) transferring files around</span></div>
-<div class="line"><a name="l00525"></a><span class="lineno">  525</span>&#160;            <span class="keywordflow">return</span> distribute_subdivided_hydrofabric_files(catchmentDataFile, nexusDataFile, 0, mpi_rank,</div>
-<div class="line"><a name="l00526"></a><span class="lineno">  526</span>&#160;                                                           mpi_num_procs, hostIdForRank, <span class="keyword">true</span>, <span class="keyword">true</span>);</div>
-<div class="line"><a name="l00527"></a><span class="lineno">  527</span>&#160; </div>
-<div class="line"><a name="l00528"></a><span class="lineno">  528</span>&#160;        }</div>
-<div class="line"><a name="l00529"></a><span class="lineno">  529</span>&#160;    }</div>
-<div class="line"><a name="l00530"></a><span class="lineno">  530</span>&#160;}</div>
-<div class="line"><a name="l00531"></a><span class="lineno">  531</span>&#160; </div>
-<div class="line"><a name="l00532"></a><span class="lineno">  532</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// NGEN_MPI_ACTIVE</span></div>
-<div class="line"><a name="l00533"></a><span class="lineno">  533</span>&#160; </div>
-<div class="line"><a name="l00534"></a><span class="lineno">  534</span>&#160;<span class="preprocessor">#endif </span><span class="comment">//NGEN_PARALLEL_UTILS_H</span></div>
+<div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160;<span class="preprocessor">        #ifndef ACTIVATE_PYTHON</span></div>
+<div class="line"><a name="l00477"></a><span class="lineno">  477</span>&#160;        <span class="comment">// We can&#39;t be good to proceed with this, because Python is not active</span></div>
+<div class="line"><a name="l00478"></a><span class="lineno">  478</span>&#160;        isGood = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00479"></a><span class="lineno">  479</span>&#160;        std::cerr &lt;&lt; <span class="stringliteral">&quot;Driver is unable to perform required hydrofabric subdividing when Python integration is not active.&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00480"></a><span class="lineno">  480</span>&#160; </div>
+<div class="line"><a name="l00481"></a><span class="lineno">  481</span>&#160; </div>
+<div class="line"><a name="l00482"></a><span class="lineno">  482</span>&#160;        <span class="comment">// Sync with the rest of the ranks and bail if any aren&#39;t ready to proceed for any reason</span></div>
+<div class="line"><a name="l00483"></a><span class="lineno">  483</span>&#160;        <span class="keywordflow">if</span> (!mpiSyncStatusAnd(isGood, mpi_rank, mpi_num_procs, <span class="stringliteral">&quot;initializing hydrofabric subdivider&quot;</span>)) {</div>
+<div class="line"><a name="l00484"></a><span class="lineno">  484</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00485"></a><span class="lineno">  485</span>&#160;        }</div>
+<div class="line"><a name="l00486"></a><span class="lineno">  486</span>&#160;<span class="preprocessor">        #else </span><span class="comment">// i.e., #ifdef ACTIVATE_PYTHON</span></div>
+<div class="line"><a name="l00487"></a><span class="lineno">  487</span>&#160;        <span class="comment">// Have rank 0 handle the generation task for all files/partitions</span></div>
+<div class="line"><a name="l00488"></a><span class="lineno">  488</span>&#160;        std::unique_ptr&lt;utils::ngenPy::HydrofabricSubsetter&gt; subdivider;</div>
+<div class="line"><a name="l00489"></a><span class="lineno">  489</span>&#160;        <span class="comment">// Have rank 0 handle the generation task for all files/partitions</span></div>
+<div class="line"><a name="l00490"></a><span class="lineno">  490</span>&#160;        <span class="keywordflow">if</span> (mpi_rank == 0) {</div>
+<div class="line"><a name="l00491"></a><span class="lineno">  491</span>&#160;            <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00492"></a><span class="lineno">  492</span>&#160;                subdivider = std::make_unique&lt;utils::ngenPy::HydrofabricSubsetter&gt;(catchmentDataFile, nexusDataFile,</div>
+<div class="line"><a name="l00493"></a><span class="lineno">  493</span>&#160;                                                                                   partitionConfigFile);</div>
+<div class="line"><a name="l00494"></a><span class="lineno">  494</span>&#160;            }</div>
+<div class="line"><a name="l00495"></a><span class="lineno">  495</span>&#160;            <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception &amp;e) {</div>
+<div class="line"><a name="l00496"></a><span class="lineno">  496</span>&#160;                std::cerr &lt;&lt; e.what() &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00497"></a><span class="lineno">  497</span>&#160;                <span class="comment">// Set not good if the subdivider object couldn&#39;t be instantiated</span></div>
+<div class="line"><a name="l00498"></a><span class="lineno">  498</span>&#160;                isGood = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00499"></a><span class="lineno">  499</span>&#160;            }</div>
+<div class="line"><a name="l00500"></a><span class="lineno">  500</span>&#160;        }</div>
+<div class="line"><a name="l00501"></a><span class="lineno">  501</span>&#160;        <span class="comment">// Sync ranks and bail if any aren&#39;t ready to proceed for any reason</span></div>
+<div class="line"><a name="l00502"></a><span class="lineno">  502</span>&#160;        <span class="keywordflow">if</span> (!mpiSyncStatusAnd(isGood, mpi_rank, mpi_num_procs, <span class="stringliteral">&quot;initializing hydrofabric subdivider&quot;</span>)) {</div>
+<div class="line"><a name="l00503"></a><span class="lineno">  503</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00504"></a><span class="lineno">  504</span>&#160;        }</div>
+<div class="line"><a name="l00505"></a><span class="lineno">  505</span>&#160; </div>
+<div class="line"><a name="l00506"></a><span class="lineno">  506</span>&#160;        <span class="keywordflow">if</span> (mpi_rank == 0) {</div>
+<div class="line"><a name="l00507"></a><span class="lineno">  507</span>&#160;            <span class="comment">// Try to perform the subdividing</span></div>
+<div class="line"><a name="l00508"></a><span class="lineno">  508</span>&#160;            <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00509"></a><span class="lineno">  509</span>&#160;                isGood = subdivider-&gt;execSubdivision();</div>
+<div class="line"><a name="l00510"></a><span class="lineno">  510</span>&#160;            }</div>
+<div class="line"><a name="l00511"></a><span class="lineno">  511</span>&#160;            <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception &amp;e) {</div>
+<div class="line"><a name="l00512"></a><span class="lineno">  512</span>&#160;                std::cerr &lt;&lt; e.what() &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00513"></a><span class="lineno">  513</span>&#160;                <span class="comment">// Set not good if the subdivider object couldn&#39;t be instantiated</span></div>
+<div class="line"><a name="l00514"></a><span class="lineno">  514</span>&#160;                isGood = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00515"></a><span class="lineno">  515</span>&#160;            }</div>
+<div class="line"><a name="l00516"></a><span class="lineno">  516</span>&#160;        }</div>
+<div class="line"><a name="l00517"></a><span class="lineno">  517</span>&#160;        <span class="comment">// Sync ranks again here on whether subdividing was successful, having them all exit at this point if not</span></div>
+<div class="line"><a name="l00518"></a><span class="lineno">  518</span>&#160;        <span class="keywordflow">if</span> (!mpiSyncStatusAnd(isGood, mpi_rank, mpi_num_procs, <span class="stringliteral">&quot;executing hydrofabric subdivision&quot;</span>)) {</div>
+<div class="line"><a name="l00519"></a><span class="lineno">  519</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00520"></a><span class="lineno">  520</span>&#160;        }</div>
+<div class="line"><a name="l00521"></a><span class="lineno">  521</span>&#160;        <span class="comment">// But if the subdividing went fine ...</span></div>
+<div class="line"><a name="l00522"></a><span class="lineno">  522</span>&#160;        <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00523"></a><span class="lineno">  523</span>&#160;            <span class="comment">// ... figure out what ranks are on hosts with each other by getting an id for host of each rank</span></div>
+<div class="line"><a name="l00524"></a><span class="lineno">  524</span>&#160;            <span class="keywordtype">int</span> hostIdForRank[mpi_num_procs];</div>
+<div class="line"><a name="l00525"></a><span class="lineno">  525</span>&#160;            get_hosts_array(mpi_rank, mpi_num_procs, hostIdForRank);</div>
+<div class="line"><a name="l00526"></a><span class="lineno">  526</span>&#160; </div>
+<div class="line"><a name="l00527"></a><span class="lineno">  527</span>&#160;            <span class="comment">// ... then (when necessary) transferring files around</span></div>
+<div class="line"><a name="l00528"></a><span class="lineno">  528</span>&#160;            <span class="keywordflow">return</span> distribute_subdivided_hydrofabric_files(catchmentDataFile, nexusDataFile, 0, mpi_rank,</div>
+<div class="line"><a name="l00529"></a><span class="lineno">  529</span>&#160;                                                           mpi_num_procs, hostIdForRank, <span class="keyword">true</span>, <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00530"></a><span class="lineno">  530</span>&#160; </div>
+<div class="line"><a name="l00531"></a><span class="lineno">  531</span>&#160;        }</div>
+<div class="line"><a name="l00532"></a><span class="lineno">  532</span>&#160;<span class="preprocessor">        #endif </span><span class="comment">// ACTIVATE_PYTHON</span></div>
+<div class="line"><a name="l00533"></a><span class="lineno">  533</span>&#160;    }</div>
+<div class="line"><a name="l00534"></a><span class="lineno">  534</span>&#160;}</div>
+<div class="line"><a name="l00535"></a><span class="lineno">  535</span>&#160; </div>
+<div class="line"><a name="l00536"></a><span class="lineno">  536</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// NGEN_MPI_ACTIVE</span></div>
+<div class="line"><a name="l00537"></a><span class="lineno">  537</span>&#160; </div>
+<div class="line"><a name="l00538"></a><span class="lineno">  538</span>&#160;<span class="preprocessor">#endif </span><span class="comment">//NGEN_PARALLEL_UTILS_H</span></div>
 <div class="ttc" id="aclassutils_1_1_file_checker_html_a574d8d1e1a399c0a7afea3212c2f88fb"><div class="ttname"><a href="classutils_1_1_file_checker.html#a574d8d1e1a399c0a7afea3212c2f88fb">utils::FileChecker::file_is_readable</a></div><div class="ttdeci">static bool file_is_readable(std::string path)</div><div class="ttdoc">Check whether the path provided points to an existing, readable file.</div><div class="ttdef"><b>Definition:</b> FileChecker.h:90</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
@@ -471,7 +475,7 @@ $(document).ready(function(){initNavTree('parallel__utils_8h_source.html',''); i
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_52b4106b6168f13dcdf82e33b1d195ee.html">utilities</a></li><li class="navelem"><b>parallel_utils.h</b></li>
-    <li class="footer">Generated on Fri Oct 22 2021 18:23:10 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Mon Oct 25 2021 14:25:15 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

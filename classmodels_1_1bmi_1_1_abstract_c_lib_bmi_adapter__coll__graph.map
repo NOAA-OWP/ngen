@@ -1,8 +1,8 @@
 <map id="models::bmi::AbstractCLibBmiAdapter&lt; C &gt;" name="models::bmi::AbstractCLibBmiAdapter&lt; C &gt;">
-<area shape="rect" id="node1" title=" " alt="" coords="782,1892,974,2131"/>
-<area shape="rect" id="node2" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title=" " alt="" coords="707,1340,910,1843"/>
+<area shape="rect" id="node1" title=" " alt="" coords="782,1921,974,2160"/>
+<area shape="rect" id="node2" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title=" " alt="" coords="707,1355,910,1872"/>
 <area shape="rect" id="node3" href="$classbmi_1_1_bmi.html" title=" " alt="" coords="747,532,910,829"/>
-<area shape="rect" id="node4" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title="Abstract adapter interface for C++ classes to interact with the essential aspects of external models ..." alt="" coords="445,892,647,1277"/>
+<area shape="rect" id="node4" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title="Abstract adapter interface for C++ classes to interact with the essential aspects of external models ..." alt="" coords="445,892,647,1292"/>
 <area shape="rect" id="node5" href="$classutils_1_1_stream_handler.html" title="This class provides a copyable interface to a std::ostream or std::ostream like object that may not s..." alt="" coords="418,576,557,785"/>
 <area shape="rect" id="node6" title=" " alt="" coords="359,300,495,392"/>
 <area shape="rect" id="node7" title=" " alt="" coords="211,153,348,230"/>

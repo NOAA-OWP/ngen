@@ -1,5 +1,5 @@
 <map id="models::bmi::Bmi_Adapter&lt; T &gt;" name="models::bmi::Bmi_Adapter&lt; T &gt;">
-<area shape="rect" id="node1" title="Abstract adapter interface for C++ classes to interact with the essential aspects of external models ..." alt="" coords="327,892,529,1277"/>
+<area shape="rect" id="node1" title="Abstract adapter interface for C++ classes to interact with the essential aspects of external models ..." alt="" coords="327,892,529,1292"/>
 <area shape="rect" id="node2" href="$classbmi_1_1_bmi.html" title=" " alt="" coords="5,532,168,829"/>
 <area shape="rect" id="node3" href="$classutils_1_1_stream_handler.html" title="This class provides a copyable interface to a std::ostream or std::ostream like object that may not s..." alt="" coords="359,576,497,785"/>
 <area shape="rect" id="node4" title=" " alt="" coords="324,300,460,392"/>
