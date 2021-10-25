@@ -134,7 +134,6 @@ class Forcing : public forcing::ForcingProvider
      * @param units_str A string represented the units for conversion, using standard abbreviations.
      * @return For now, just the param value, but in the future, the value converted.
      */
-    //[[deprecated]]
     inline double get_converted_value_for_param_in_units(const std::string& name, const std::string& units_str,
                                                          int index)
     {
@@ -151,7 +150,6 @@ class Forcing : public forcing::ForcingProvider
      * @param units_str A string represented the units for conversion, using standard abbreviations.
      * @return For now, just the param value, but in the future, the value converted.
      */
-    //[[deprecated]]
     inline double get_converted_value_for_param_in_units(const std::string& name, const std::string& units_str) {
         check_forcing_vector_index_bounds();
         return get_converted_value_for_param_in_units(name, units_str, forcing_vector_index);
