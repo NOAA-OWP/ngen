@@ -252,7 +252,6 @@ add_test(
         core/NetworkTests.cpp
         realizations/Formulation_Manager_Test.cpp
         core/nexus/NexusTests.cpp
-        core/NetworkTests.cpp
         # TODO: this probably should be added, but at the moment it's broken (update number-of-files arg above also)
         #utils/Partition_Test.cpp
         NGen::core

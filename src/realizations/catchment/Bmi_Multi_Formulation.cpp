@@ -42,7 +42,7 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
         #ifdef ACTIVATE_PYTHON
         if (type_name == "bmi_python") {
             module = std::dynamic_pointer_cast<Bmi_Module_Formulation<bmi::Bmi>>(
-                    std::make_shared<Bmi_Py_Formulation>(identifier, forcing, output));
+                    std::make_shared<Bmi_Py_Formulation>(identifier, std::move(wfp), output));
         }
         #endif // ACTIVATE_PYTHON
         if (module == nullptr) {
