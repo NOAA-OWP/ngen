@@ -7,11 +7,8 @@ using namespace models::bmi;
 
 using namespace pybind11::literals;
 
-Bmi_Py_Formulation::Bmi_Py_Formulation(std::string id, Forcing forcing, utils::StreamHandler output_stream)
-: Bmi_Module_Formulation<models::bmi::Bmi_Py_Adapter>(id, forcing, output_stream) { }
-
-Bmi_Py_Formulation::Bmi_Py_Formulation(std::string id, forcing_params forcing_config, utils::StreamHandler output_stream)
-: Bmi_Module_Formulation<models::bmi::Bmi_Py_Adapter>(id, forcing_config, output_stream) { }
+Bmi_Py_Formulation::Bmi_Py_Formulation(std::string id, std::unique_ptr<ForcingProvider> forcing, utils::StreamHandler output_stream)
+: Bmi_Module_Formulation<models::bmi::Bmi_Py_Adapter>(id, std::move(forcing), output_stream) { }
 
 shared_ptr<Bmi_Py_Adapter> Bmi_Py_Formulation::construct_model(const geojson::PropertyMap &properties) {
     auto python_type_name_iter = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__PYTHON_TYPE_NAME);

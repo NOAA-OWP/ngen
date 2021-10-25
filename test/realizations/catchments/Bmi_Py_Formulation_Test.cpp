@@ -13,6 +13,7 @@
 #include "Forcing.h"
 #include "Bmi_Py_Formulation.hpp"
 #include "python/InterpreterUtil.hpp"
+#include <CsvPerFeatureForcingProvider.hpp>
 
 namespace py = pybind11;
 using namespace pybind11::literals; // to bring in the `_a` literal for pybind11 keyword args functionality
@@ -67,11 +68,7 @@ protected:
     }
 
     static time_t get_friend_forcing_start_time(Bmi_Py_Formulation& formulation) {
-        return formulation.forcing.get_time_epoch();
-    }
-
-    static time_t get_friend_forcing_time_step_size(Bmi_Py_Formulation& formulation) {
-        return formulation.forcing.get_time_step_size();
+        return formulation.forcing->get_forcing_output_time_begin("");
     }
 
     static bool get_friend_is_bmi_using_forcing_file(const Bmi_Py_Formulation& formulation) {
@@ -214,7 +211,7 @@ void Bmi_Py_Formulation_Test::SetUp() {
         generate_realization_config((int)i);
 
         examples[i].formulation = std::make_shared<Bmi_Py_Formulation>(examples[i].catchment_id,
-                                                                       *examples[i].forcing_params,
+                                                                       std::make_unique<CsvPerFeatureForcingProvider>(*examples[i].forcing_params),
                                                                        utils::StreamHandler());
         examples[i].formulation->create_formulation(examples[i].realization_config_properties_tree);
     }

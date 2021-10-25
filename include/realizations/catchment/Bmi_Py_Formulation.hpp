@@ -18,12 +18,9 @@ namespace realization {
 
     class Bmi_Py_Formulation : public Bmi_Module_Formulation<models::bmi::Bmi_Py_Adapter> {
 
-
     public:
 
-        Bmi_Py_Formulation(std::string id, Forcing forcing, utils::StreamHandler output_stream);
-
-        Bmi_Py_Formulation(std::string id, forcing_params forcing_config, utils::StreamHandler output_stream);
+        Bmi_Py_Formulation(std::string id, std::unique_ptr<ForcingProvider> forcing, utils::StreamHandler output_stream);
 
         const vector<string> get_bmi_input_variables() override;
 
