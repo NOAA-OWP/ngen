@@ -11,7 +11,7 @@
 #define CSDMS_STD_NAME_SURFACE_TEMP "land_surface_air__temperature"
 #define CSDMS_STD_NAME_WIND_U_X "land_surface_wind__x_component_of_velocity"
 #define CSDMS_STD_NAME_WIND_V_Y "land_surface_wind__y_component_of_velocity"
-#define CSDMS_STD_NAME_SPECIFIC_HUMIDITY "atmosphere_air_water~vapor__mixing_ratio" // I think this is wrong--slightly
+#define NGEN_STD_NAME_SPECIFIC_HUMIDITY "atmosphere_air_water~vapor__relative_saturation" // This is not present in standard names, use this for now... may change!
 
 using namespace std;
 
