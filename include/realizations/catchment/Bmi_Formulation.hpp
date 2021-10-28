@@ -67,6 +67,18 @@ namespace realization {
         virtual ~Bmi_Formulation() {};
 
         /**
+         * Convert a time value from the model to an epoch time in seconds.
+         *
+         * Model time values are typically (though not always) 0-based totals count upward as time progresses.  The
+         * units are not necessarily seconds.  This performs the necessary lookup and conversion for such units, and
+         * then shifts the value appropriately for epoch time representation.
+         *
+         * @param model_time
+         * @return
+         */
+        virtual time_t convert_model_time(const double &model_time) = 0;
+
+        /**
          * Get whether a model may perform updates beyond its ``end_time``.
          *
          * Get whether model ``Update`` calls are allowed and handled in some way by the backing model for time steps
@@ -100,6 +112,20 @@ namespace realization {
          * @return Either the translated equivalent variable name, or the provided name if there is not a mapping entry.
          */
         virtual const std::string &get_config_mapped_variable_name(const std::string &model_var_name) = 0;
+
+        /**
+         * Get the current time for the backing BMI model in its native format and units.
+         *
+         * @return The current time for the backing BMI model in its native format and units.
+         */
+        virtual const double get_model_current_time() = 0;
+
+        /**
+         * Get the end time for the backing BMI model in its native format and units.
+         *
+         * @return The end time for the backing BMI model in its native format and units.
+         */
+        virtual const double get_model_end_time() = 0;
 
         virtual const string &get_forcing_file_path() const = 0;
 
