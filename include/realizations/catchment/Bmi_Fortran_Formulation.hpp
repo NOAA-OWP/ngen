@@ -106,6 +106,8 @@ namespace realization {
 
         double get_var_value_as_double(const int &index, const string &var_name) override;
 
+        friend class Bmi_Multi_Formulation;
+
         // Unit test access
         friend class ::Bmi_Formulation_Test;
         friend class ::Bmi_Fortran_Formulation_Test;
