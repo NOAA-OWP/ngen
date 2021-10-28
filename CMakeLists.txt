@@ -80,6 +80,12 @@ endif()
 
 find_package(Boost 1.72.0 REQUIRED)
 
+# UDUNITS
+if(UDUNITS_ACTIVE)
+    add_library(libudunits2 SHARED IMPORTED)
+    set_property(TARGET libudunits2 PROPERTY IMPORTED_LOCATION "${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/lib/.libs/libudunits2.so")
+endif()
+
 # Handle several steps for BMI C library logic and dependencies, at top level, if functionality is turned on
 if(BMI_C_LIB_ACTIVE)
     # Define associated preprocessor directive
@@ -181,6 +187,10 @@ target_include_directories(ngen PUBLIC
         "${PROJECT_BINARY_DIR}/include" # For generated config header file in binary tree
         )
 
+if(UDUNITS_ACTIVE)
+    include_directories("${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/lib")
+endif()
+    
 # In some IDEs (e.g., CLion), it is easier to work with the code in the included example of an "external" shared library
 # when that code appears to be part of the main project, which can be done by add a statement like the ones below.
 #
