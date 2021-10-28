@@ -341,9 +341,6 @@ int find_partition_connections(std::string nexus, PartitionVSet catchment_partit
             //we do not operate the receiving end of this nexus, it must be remote
             //so we need to indicate the need to send
             int pos = find_remote_rank(id, catchment_partitions);
-                if(nexus == "nex-22"){
-                    std::cout<<"PID: "<<partition_number<<", " << "mpi_rank: " << pos << ", nexus_id: " << nexus << ", cat_id: " << id << ", cat_dir: " << nex_to_destination_cat << std::endl;
-                }
             remote_connections.push_back(std::make_tuple(pos, nexus, id, nex_to_destination_cat));
             ++remote_catchments;
         }
@@ -375,9 +372,6 @@ int find_partition_connections(std::string nexus, PartitionVSet catchment_partit
                     // (id -> N) (N -> did)
                     //map that relationship
                     int pos = find_remote_rank(id, catchment_partitions);
-                    if(nexus == "nex-22"){
-                        std::cout<<"PID: "<<partition_number<<", " << "mpi_rank: " << pos << ", nexus_id: " << nexus << ", cat_id: " << id << ", cat_dir: " << origination_cat_to_nex << std::endl;
-                    }
                     remote_connections.push_back(std::make_tuple(pos, nexus, id, origination_cat_to_nex));
                     ++remote_catchments;
                 }
