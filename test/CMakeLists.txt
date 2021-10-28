@@ -206,7 +206,7 @@ add_test(
 ########################## Primary Combined Unit Test Target
 add_test(
         test_unit
-        16
+        17
         models/hymod/include/HymodTest.cpp
         models/hymod/include/Reservoir_Test.cpp
         models/hymod/include/Reservoir_Timeless_Test.cpp
@@ -218,7 +218,7 @@ add_test(
         geojson/FeatureCollection_Test.cpp
         forcing/Forcing_Test.cpp
         forcing/CsvPerFeatureForcingProvider_Test.cpp
-        core/mediator/Units_Helper_Tests.cpp
+        core/mediator/UnitsHelper_Tests.cpp
         simulation_time/Simulation_Time_Test.cpp
         core/catchment/giuh/GIUH_Test.cpp
         core/NetworkTests.cpp
@@ -228,6 +228,7 @@ add_test(
         NGen::core_nexus
         NGen::geojson
         NGen::realizations_catchment
+        libudunits2
 )
 
 # Add for integration tests once we have some
@@ -250,7 +251,7 @@ add_test(
         forcing/CsvPerFeatureForcingProvider_Test.cpp
         simulation_time/Simulation_Time_Test.cpp
         core/catchment/giuh/GIUH_Test.cpp
-        core/mediator/Units_Helper_Tests.cpp
+        core/mediator/UnitsHelper_Tests.cpp
         realizations/Formulation_Manager_Test.cpp
         core/nexus/NexusTests.cpp
         # TODO: this probably should be added, but at the moment it's broken (update number-of-files arg above also)
@@ -260,4 +261,5 @@ add_test(
         NGen::core_nexus
         NGen::geojson
         NGen::realizations_catchment
+        libudunits2
 )

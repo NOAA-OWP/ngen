@@ -1,12 +1,12 @@
 #include <udunits2.h>
 
-class Units_Helper {
+class UnitsHelper {
 
     public:
 
     static double get_converted_value(const std::string &in_units, double value, const std::string &out_units)
     {
-        ut_system* unit_system = ut_read_xml(NULL);
+        ut_system* unit_system = ut_read_xml(NGEN_UDUNITS2_XML_PATH);
         if (unit_system == NULL) 
         {
             throw std::runtime_error("Unable to create UDUNITS2 Unit System.");
@@ -37,6 +37,6 @@ class Units_Helper {
         ut_free(from);
         ut_free(to);
         cv_free(conv);
-
+        return r;
     }
 };
