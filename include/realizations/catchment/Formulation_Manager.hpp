@@ -346,8 +346,45 @@ namespace realization {
 
                 // Attempt to open the directory for evaluation
                 directory = opendir(path.c_str());
+                // Allow for a few retries in certain failure situations
+                size_t attemptCount = 0;
+                std::string errMsg;
+                while (directory == nullptr && attemptCount++ < 5) {
+                    // For several error codes, we should break immediately and not retry
+                    if (errno == ENOENT) {
+                        errMsg = "No such file or directory.";
+                        break;
+                    }
+                    if (errno == ENXIO) {
+                        errMsg = "No such device or address.";
+                        break;
+                    }
+                    if (errno == EACCES) {
+                        errMsg = "Permission denied.";
+                        break;
+                    }
+                    if (errno == EPERM) {
+                        errMsg = "Operation not permitted.";
+                        break;
+                    }
+                    if (errno == ENOTDIR) {
+                        errMsg = "File at provided path is not a directory.";
+                        break;
+                    }
+                    if (errno == EMFILE) {
+                        errMsg = "The current process has too many open files.";
+                        break;
+                    }
+                    if (errno == ENFILE) {
+                        errMsg = "The system has too many open files.";
+                        break;
+                    }
+                    sleep(2);
+                    directory = opendir(path.c_str());
+                    errMsg = "Received system error number " + std::to_string(errno);
+                }
 
-                // If the directory could be found, we can go ahead and iterate
+                // If the directory could be found and opened, we can go ahead and iterate
                 if (directory != nullptr) {
                     while ((entry = readdir(directory))) {
                         // If the entry is a regular file or symlink AND the name matches the pattern, 
@@ -362,8 +399,8 @@ namespace realization {
                     }
                 }
                 else {
-                    // The directory wasn't found; forcing data cannot be retrieved
-                    throw std::runtime_error("No directory for forcing data was found at: " + path);
+                    // The directory wasn't found or otherwise couldn't be opened; forcing data cannot be retrieved
+                    throw std::runtime_error("Error opening forcing data dir '" + path + "' after " + std::to_string(attemptCount) + " attempts: " + errMsg);
                 }
 
                 closedir(directory);
