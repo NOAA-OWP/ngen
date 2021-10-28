@@ -274,6 +274,24 @@ namespace realization {
             throw runtime_error("Bmi_Modular_Formulation does not yet implement get_forcing_output_time_end");
         }
 
+        /**
+         * Get the current time for the backing BMI model in its native format and units.
+         *
+         * @return The current time for the backing BMI model in its native format and units.
+         */
+        const double get_model_current_time() override {
+            return get_bmi_model()->GetCurrentTime();
+        }
+
+        /**
+         * Get the end time for the backing BMI model in its native format and units.
+         *
+         * @return The end time for the backing BMI model in its native format and units.
+         */
+        const double get_model_end_time() override {
+            return get_bmi_model()->GetEndTime();
+        }
+
         const vector<std::string> &get_required_parameters() override {
             return REQUIRED_PARAMETERS;
         }
