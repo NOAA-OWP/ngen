@@ -90,66 +90,67 @@ $(document).ready(function(){initNavTree('_h_y___catchment_realization_8hpp_sour
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;memory&gt;</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;Forcing.h&gt;</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">using</span> std::shared_ptr;</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment">//Forward Declarations</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">class </span><a class="code" href="class_h_y___catchment.html">HY_Catchment</a>;</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">//This is the base base for CatchmentRealizations</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">typedef</span> <span class="keywordtype">long</span> time_step_t;</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment">//TODO template&lt;forcing&gt;</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment">//TODO template&lt;et_datatype&gt;</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="class_h_y___catchment_realization.html">   17</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_h_y___catchment_realization.html">HY_CatchmentRealization</a></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;{</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="comment">//TODO remove the default constructor? leaving temporarily to satisfy non-used realizations</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <a class="code" href="class_h_y___catchment_realization.html#ac2d1d736823ecf80c1b2599c241ab501">HY_CatchmentRealization</a>();</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <a class="code" href="class_h_y___catchment_realization.html#ac2d1d736823ecf80c1b2599c241ab501">HY_CatchmentRealization</a>(<a class="code" href="class_forcing.html">Forcing</a> <a class="code" href="namespaceforcing.html">forcing</a>);</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <a class="code" href="class_h_y___catchment_realization.html#ac2d1d736823ecf80c1b2599c241ab501">HY_CatchmentRealization</a>(<a class="code" href="structforcing__params.html">forcing_params</a> forcing_config);</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="class_h_y___catchment_realization.html#acc0ef9fc124cd73d76b407ab8fbf98ef">~HY_CatchmentRealization</a>();</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="class_h_y___catchment_realization.html#a49bea88ba02bc8dc4e9ebbc6fb12c67b">   38</a></span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">double</span> <a class="code" href="class_h_y___catchment_realization.html#a49bea88ba02bc8dc4e9ebbc6fb12c67b">get_response</a>(time_step_t t_index, time_step_t t_delta) = 0;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="class_h_y___catchment_realization.html#a7c6de72bd8ebf427d71aacca7baa23c1">   42</a></span>&#160;    shared_ptr&lt;HY_Catchment&gt; <a class="code" href="class_h_y___catchment_realization.html#a7c6de72bd8ebf427d71aacca7baa23c1">realized_catchment</a>;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
-<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="class_h_y___catchment_realization.html#afffc8690df116d936a4d8c1026a9f491">   44</a></span>&#160;    <span class="keyword">virtual</span> std::string <a class="code" href="class_h_y___catchment_realization.html#afffc8690df116d936a4d8c1026a9f491">get_catchment_id</a>() = 0;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="class_h_y___catchment_realization.html#a86a05a47bfa53a6feb4ef14e117b1928">   46</a></span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_h_y___catchment_realization.html#a86a05a47bfa53a6feb4ef14e117b1928">set_catchment_id</a>(std::string cat_id) = 0;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
-<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="class_h_y___catchment_realization.html#af996a3e50eaf51c63865f1fdbe4f8661">   48</a></span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> <a class="code" href="class_h_y___catchment_realization.html#af996a3e50eaf51c63865f1fdbe4f8661">id_number</a>;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;  <span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="class_h_y___catchment_realization.html#ae531b310e5bc1b004b92f2008f863cfa">   51</a></span>&#160;    <a class="code" href="class_forcing.html">Forcing</a> <a class="code" href="class_h_y___catchment_realization.html#ae531b310e5bc1b004b92f2008f863cfa">forcing</a>;</div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;ForcingProvider.hpp&gt;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;AorcForcing.hpp&gt;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="keyword">using</span> std::shared_ptr;</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment">//Forward Declarations</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">class </span><a class="code" href="class_h_y___catchment.html">HY_Catchment</a>;</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment">//This is the base base for CatchmentRealizations</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">typedef</span> <span class="keywordtype">long</span> time_step_t;</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment">//TODO template&lt;forcing&gt;</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment">//TODO template&lt;et_datatype&gt;</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="class_h_y___catchment_realization.html">   18</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_h_y___catchment_realization.html">HY_CatchmentRealization</a></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;{</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="comment">//TODO remove the default constructor? leaving temporarily to satisfy non-used realizations</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <a class="code" href="class_h_y___catchment_realization.html#ac2d1d736823ecf80c1b2599c241ab501">HY_CatchmentRealization</a>();</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <a class="code" href="class_h_y___catchment_realization.html#ac2d1d736823ecf80c1b2599c241ab501">HY_CatchmentRealization</a>(std::unique_ptr&lt;forcing::ForcingProvider&gt; <a class="code" href="namespaceforcing.html">forcing</a>);</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    </div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="comment">//HY_CatchmentRealization(forcing_params forcing_config);</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="class_h_y___catchment_realization.html#acc0ef9fc124cd73d76b407ab8fbf98ef">~HY_CatchmentRealization</a>();</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
+<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="class_h_y___catchment_realization.html#a49bea88ba02bc8dc4e9ebbc6fb12c67b">   41</a></span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">double</span> <a class="code" href="class_h_y___catchment_realization.html#a49bea88ba02bc8dc4e9ebbc6fb12c67b">get_response</a>(time_step_t t_index, time_step_t t_delta) = 0;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="class_h_y___catchment_realization.html#a7c6de72bd8ebf427d71aacca7baa23c1">   45</a></span>&#160;    shared_ptr&lt;HY_Catchment&gt; <a class="code" href="class_h_y___catchment_realization.html#a7c6de72bd8ebf427d71aacca7baa23c1">realized_catchment</a>;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="class_h_y___catchment_realization.html#afffc8690df116d936a4d8c1026a9f491">   47</a></span>&#160;    <span class="keyword">virtual</span> std::string <a class="code" href="class_h_y___catchment_realization.html#afffc8690df116d936a4d8c1026a9f491">get_catchment_id</a>() = 0;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="class_h_y___catchment_realization.html#a86a05a47bfa53a6feb4ef14e117b1928">   49</a></span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_h_y___catchment_realization.html#a86a05a47bfa53a6feb4ef14e117b1928">set_catchment_id</a>(std::string cat_id) = 0;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="class_h_y___catchment_realization.html#af996a3e50eaf51c63865f1fdbe4f8661">   51</a></span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> <a class="code" href="class_h_y___catchment_realization.html#af996a3e50eaf51c63865f1fdbe4f8661">id_number</a>;</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;  <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;};</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// HY_CATCHMENTREALIZATION_H</span></div>
-<div class="ttc" id="aclass_forcing_html"><div class="ttname"><a href="class_forcing.html">Forcing</a></div><div class="ttdoc">Forcing class providing time-series precipiation forcing data to the model.</div><div class="ttdef"><b>Definition:</b> Forcing.h:93</div></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;  <span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="class_h_y___catchment_realization.html#a83d2e09cd1264be6cc41dce294ad702d">   54</a></span>&#160;    std::unique_ptr&lt;forcing::ForcingProvider&gt; <a class="code" href="class_h_y___catchment_realization.html#a83d2e09cd1264be6cc41dce294ad702d">forcing</a>;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;};</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// HY_CATCHMENTREALIZATION_H</span></div>
 <div class="ttc" id="aclass_h_y___catchment_html"><div class="ttname"><a href="class_h_y___catchment.html">HY_Catchment</a></div><div class="ttdef"><b>Definition:</b> HY_Catchment.hpp:14</div></div>
-<div class="ttc" id="aclass_h_y___catchment_realization_html"><div class="ttname"><a href="class_h_y___catchment_realization.html">HY_CatchmentRealization</a></div><div class="ttdef"><b>Definition:</b> HY_CatchmentRealization.hpp:18</div></div>
+<div class="ttc" id="aclass_h_y___catchment_realization_html"><div class="ttname"><a href="class_h_y___catchment_realization.html">HY_CatchmentRealization</a></div><div class="ttdef"><b>Definition:</b> HY_CatchmentRealization.hpp:19</div></div>
 <div class="ttc" id="aclass_h_y___catchment_realization_html_a49bea88ba02bc8dc4e9ebbc6fb12c67b"><div class="ttname"><a href="class_h_y___catchment_realization.html#a49bea88ba02bc8dc4e9ebbc6fb12c67b">HY_CatchmentRealization::get_response</a></div><div class="ttdeci">virtual double get_response(time_step_t t_index, time_step_t t_delta)=0</div><div class="ttdoc">Execute the backing model formulation for the given time step, where it is of the specified size,...</div></div>
-<div class="ttc" id="aclass_h_y___catchment_realization_html_a7c6de72bd8ebf427d71aacca7baa23c1"><div class="ttname"><a href="class_h_y___catchment_realization.html#a7c6de72bd8ebf427d71aacca7baa23c1">HY_CatchmentRealization::realized_catchment</a></div><div class="ttdeci">shared_ptr&lt; HY_Catchment &gt; realized_catchment</div><div class="ttdef"><b>Definition:</b> HY_CatchmentRealization.hpp:42</div></div>
+<div class="ttc" id="aclass_h_y___catchment_realization_html_a7c6de72bd8ebf427d71aacca7baa23c1"><div class="ttname"><a href="class_h_y___catchment_realization.html#a7c6de72bd8ebf427d71aacca7baa23c1">HY_CatchmentRealization::realized_catchment</a></div><div class="ttdeci">shared_ptr&lt; HY_Catchment &gt; realized_catchment</div><div class="ttdef"><b>Definition:</b> HY_CatchmentRealization.hpp:45</div></div>
+<div class="ttc" id="aclass_h_y___catchment_realization_html_a83d2e09cd1264be6cc41dce294ad702d"><div class="ttname"><a href="class_h_y___catchment_realization.html#a83d2e09cd1264be6cc41dce294ad702d">HY_CatchmentRealization::forcing</a></div><div class="ttdeci">std::unique_ptr&lt; forcing::ForcingProvider &gt; forcing</div><div class="ttdef"><b>Definition:</b> HY_CatchmentRealization.hpp:54</div></div>
 <div class="ttc" id="aclass_h_y___catchment_realization_html_a86a05a47bfa53a6feb4ef14e117b1928"><div class="ttname"><a href="class_h_y___catchment_realization.html#a86a05a47bfa53a6feb4ef14e117b1928">HY_CatchmentRealization::set_catchment_id</a></div><div class="ttdeci">virtual void set_catchment_id(std::string cat_id)=0</div></div>
 <div class="ttc" id="aclass_h_y___catchment_realization_html_ac2d1d736823ecf80c1b2599c241ab501"><div class="ttname"><a href="class_h_y___catchment_realization.html#ac2d1d736823ecf80c1b2599c241ab501">HY_CatchmentRealization::HY_CatchmentRealization</a></div><div class="ttdeci">HY_CatchmentRealization()</div><div class="ttdef"><b>Definition:</b> HY_CatchmentRealization.cpp:3</div></div>
-<div class="ttc" id="aclass_h_y___catchment_realization_html_acc0ef9fc124cd73d76b407ab8fbf98ef"><div class="ttname"><a href="class_h_y___catchment_realization.html#acc0ef9fc124cd73d76b407ab8fbf98ef">HY_CatchmentRealization::~HY_CatchmentRealization</a></div><div class="ttdeci">virtual ~HY_CatchmentRealization()</div><div class="ttdef"><b>Definition:</b> HY_CatchmentRealization.cpp:16</div></div>
-<div class="ttc" id="aclass_h_y___catchment_realization_html_ae531b310e5bc1b004b92f2008f863cfa"><div class="ttname"><a href="class_h_y___catchment_realization.html#ae531b310e5bc1b004b92f2008f863cfa">HY_CatchmentRealization::forcing</a></div><div class="ttdeci">Forcing forcing</div><div class="ttdef"><b>Definition:</b> HY_CatchmentRealization.hpp:51</div></div>
-<div class="ttc" id="aclass_h_y___catchment_realization_html_af996a3e50eaf51c63865f1fdbe4f8661"><div class="ttname"><a href="class_h_y___catchment_realization.html#af996a3e50eaf51c63865f1fdbe4f8661">HY_CatchmentRealization::id_number</a></div><div class="ttdeci">unsigned long id_number</div><div class="ttdef"><b>Definition:</b> HY_CatchmentRealization.hpp:48</div></div>
+<div class="ttc" id="aclass_h_y___catchment_realization_html_acc0ef9fc124cd73d76b407ab8fbf98ef"><div class="ttname"><a href="class_h_y___catchment_realization.html#acc0ef9fc124cd73d76b407ab8fbf98ef">HY_CatchmentRealization::~HY_CatchmentRealization</a></div><div class="ttdeci">virtual ~HY_CatchmentRealization()</div><div class="ttdef"><b>Definition:</b> HY_CatchmentRealization.cpp:10</div></div>
+<div class="ttc" id="aclass_h_y___catchment_realization_html_af996a3e50eaf51c63865f1fdbe4f8661"><div class="ttname"><a href="class_h_y___catchment_realization.html#af996a3e50eaf51c63865f1fdbe4f8661">HY_CatchmentRealization::id_number</a></div><div class="ttdeci">unsigned long id_number</div><div class="ttdef"><b>Definition:</b> HY_CatchmentRealization.hpp:51</div></div>
 <div class="ttc" id="aclass_h_y___catchment_realization_html_afffc8690df116d936a4d8c1026a9f491"><div class="ttname"><a href="class_h_y___catchment_realization.html#afffc8690df116d936a4d8c1026a9f491">HY_CatchmentRealization::get_catchment_id</a></div><div class="ttdeci">virtual std::string get_catchment_id()=0</div></div>
-<div class="ttc" id="anamespaceforcing_html"><div class="ttname"><a href="namespaceforcing.html">forcing</a></div><div class="ttdef"><b>Definition:</b> ForcingProvider.hpp:6</div></div>
-<div class="ttc" id="astructforcing__params_html"><div class="ttname"><a href="structforcing__params.html">forcing_params</a></div><div class="ttdoc">forcing_params providing configuration information for forcing time period and source.</div><div class="ttdef"><b>Definition:</b> Forcing.h:49</div></div>
+<div class="ttc" id="anamespaceforcing_html"><div class="ttname"><a href="namespaceforcing.html">forcing</a></div><div class="ttdef"><b>Definition:</b> ForcingProvider.hpp:7</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_3d69f64eaf81436fe2b22361382717e5.html">core</a></li><li class="navelem"><a class="el" href="dir_5bea9f390e7a432a1b79aa466fef89f5.html">catchment</a></li><li class="navelem"><b>HY_CatchmentRealization.hpp</b></li>
-    <li class="footer">Generated on Wed Oct 27 2021 19:47:54 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Thu Oct 28 2021 19:09:00 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

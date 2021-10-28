@@ -120,8 +120,8 @@ Public Types</h2></td></tr>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a0a0c83b6ecf5b3f88fa101d35335888f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_simple___lumped___model___realization.html#a0a0c83b6ecf5b3f88fa101d35335888f">Simple_Lumped_Model_Realization</a> (std::string <a class="el" href="classrealization_1_1_formulation.html#a8bfec24b0d57240e7ada2493a781db6d">id</a>, <a class="el" href="structforcing__params.html">forcing_params</a> forcing_config, <a class="el" href="classutils_1_1_stream_handler.html">utils::StreamHandler</a> output_stream, double storage, double gw_storage, double gw_max_storage, double nash_max_storage, double smax, double a, double b, double Ks, double Kq, long n, const std::vector&lt; double &gt; &amp;Sr, <a class="el" href="classrealization_1_1_formulation.html#aee10dc672e5a9e106f49dcbe0080cf7c">time_step_t</a> t)</td></tr>
 <tr class="separator:a0a0c83b6ecf5b3f88fa101d35335888f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0f53e727a75a31b8f293ff319bb9cbc8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_simple___lumped___model___realization.html#a0f53e727a75a31b8f293ff319bb9cbc8">Simple_Lumped_Model_Realization</a> (std::string <a class="el" href="classrealization_1_1_formulation.html#a8bfec24b0d57240e7ada2493a781db6d">id</a>, <a class="el" href="structforcing__params.html">forcing_params</a> forcing_config, <a class="el" href="classutils_1_1_stream_handler.html">utils::StreamHandler</a> output_stream)</td></tr>
-<tr class="separator:a0f53e727a75a31b8f293ff319bb9cbc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2870d7a5af6255bc4d9dbed7307d0514"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_simple___lumped___model___realization.html#a2870d7a5af6255bc4d9dbed7307d0514">Simple_Lumped_Model_Realization</a> (std::string <a class="el" href="classrealization_1_1_formulation.html#a8bfec24b0d57240e7ada2493a781db6d">id</a>, unique_ptr&lt; <a class="el" href="classforcing_1_1_forcing_provider.html">forcing::ForcingProvider</a> &gt; forcing_provider, <a class="el" href="classutils_1_1_stream_handler.html">utils::StreamHandler</a> output_stream)</td></tr>
+<tr class="separator:a2870d7a5af6255bc4d9dbed7307d0514"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c6b5f31c1ec0c8ada9fc54a80882118"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_simple___lumped___model___realization.html#a4c6b5f31c1ec0c8ada9fc54a80882118">Simple_Lumped_Model_Realization</a> (std::string <a class="el" href="classrealization_1_1_formulation.html#a8bfec24b0d57240e7ada2493a781db6d">id</a>)</td></tr>
 <tr class="separator:a4c6b5f31c1ec0c8ada9fc54a80882118"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1fa3e14189d3fb8b1402005fb15eac2d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_simple___lumped___model___realization.html#a1fa3e14189d3fb8b1402005fb15eac2d">Simple_Lumped_Model_Realization</a> (<a class="el" href="class_simple___lumped___model___realization.html">Simple_Lumped_Model_Realization</a> &amp;&amp;)</td></tr>
@@ -181,6 +181,8 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:a633b7407d447f77910476c0315c8beb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2cce2b5b18eaa0ed7e0df10db57da144"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#a2cce2b5b18eaa0ed7e0df10db57da144">set_catchment_id</a> (std::string cat_id) override</td></tr>
 <tr class="separator:a2cce2b5b18eaa0ed7e0df10db57da144"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20117323c1944ffc7850838842769ca1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#a20117323c1944ffc7850838842769ca1">_link_legacy_forcing</a> ()</td></tr>
+<tr class="separator:a20117323c1944ffc7850838842769ca1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a65f97b5efe05e786f59d9f5fd1b10209"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation.html#a65f97b5efe05e786f59d9f5fd1b10209">interpret_parameters</a> (boost::property_tree::ptree &amp;config, <a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> *global=nullptr)</td></tr>
 <tr class="separator:a65f97b5efe05e786f59d9f5fd1b10209"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aceabe9927b36dce61f338919f2af4c1f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation.html#aceabe9927b36dce61f338919f2af4c1f">validate_parameters</a> (<a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> options)</td></tr>
@@ -192,6 +194,8 @@ Protected Member Functions</h2></td></tr>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:a7f7265139f0ad8485198efb2c5880402"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_simple___lumped___model___realization.html#a7f7265139f0ad8485198efb2c5880402">REQUIRED_PARAMETERS</a></td></tr>
 <tr class="separator:a7f7265139f0ad8485198efb2c5880402"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5838e9abbc63804c4502bbc1c6f6bd18"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_forcing.html">Forcing</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#a5838e9abbc63804c4502bbc1c6f6bd18">legacy_forcing</a></td></tr>
+<tr class="separator:a5838e9abbc63804c4502bbc1c6f6bd18"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8bfec24b0d57240e7ada2493a781db6d"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation.html#a8bfec24b0d57240e7ada2493a781db6d">id</a></td></tr>
 <tr class="separator:a8bfec24b0d57240e7ada2493a781db6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaebc4992c38cb5db68e859e0487ad929"><td class="memItemLeft" align="right" valign="top">polygon_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_area.html#aaebc4992c38cb5db68e859e0487ad929">bounds</a></td></tr>
@@ -202,8 +206,8 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a7c6de72bd8ebf427d71aacca7baa23c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af996a3e50eaf51c63865f1fdbe4f8661"><td class="memItemLeft" align="right" valign="top">unsigned long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_realization.html#af996a3e50eaf51c63865f1fdbe4f8661">id_number</a></td></tr>
 <tr class="separator:af996a3e50eaf51c63865f1fdbe4f8661"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae531b310e5bc1b004b92f2008f863cfa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_forcing.html">Forcing</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_realization.html#ae531b310e5bc1b004b92f2008f863cfa">forcing</a></td></tr>
-<tr class="separator:ae531b310e5bc1b004b92f2008f863cfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83d2e09cd1264be6cc41dce294ad702d"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classforcing_1_1_forcing_provider.html">forcing::ForcingProvider</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_realization.html#a83d2e09cd1264be6cc41dce294ad702d">forcing</a></td></tr>
+<tr class="separator:a83d2e09cd1264be6cc41dce294ad702d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -338,12 +342,10 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="structhymod__params.html#a62b25df619b349718333fbf9389802f2">hymod_params::a</a>, <a class="el" href="structhymod__params.html#a52bba8095fd09b64cb96d019eb0a6165">hymod_params::activation_threshold_meters_groundwater_reservoir</a>, <a class="el" href="structhymod__params.html#a2d06652af718269df3e038f1f487bbce">hymod_params::activation_threshold_meters_nash_cascade_reservoir</a>, <a class="el" href="structhymod__params.html#a40fa36752c2df9195a76310e5b9e5396">hymod_params::b</a>, <a class="el" href="class_simple___lumped___model___realization.html#aa362564a0409107f5f2342140b55b332">cascade_backing_storage</a>, <a class="el" href="class_simple___lumped___model___realization.html#ac98db05180754f1db41262a205cfbfa2">fluxes</a>, <a class="el" href="structhymod__params.html#af361be9463004567a0008e5420fb3957">hymod_params::gw_max_storage_meters</a>, <a class="el" href="structhymod__params.html#a71ee942876366a3ccdb060dd1cfde4c1">hymod_params::Kq</a>, <a class="el" href="structhymod__params.html#a03965bac9fc6b3104a14aed59690d3cf">hymod_params::Ks</a>, <a class="el" href="structhymod__params.html#a77b123144cc1db49782b4af9229da0e1">hymod_params::min_storage_meters</a>, <a class="el" href="structhymod__params.html#a7fe5a1405feac74038def8d57749b66e">hymod_params::n</a>, <a class="el" href="structhymod__params.html#aa26a6c0ae23ce7c12e9f3bd7e4071d46">hymod_params::nash_max_storage_meters</a>, <a class="el" href="class_simple___lumped___model___realization.html#a799f47e36352e7773f64015613257346">params</a>, <a class="el" href="structhymod__params.html#a0d1613252fc6ca89a65ef68a229d4d5f">hymod_params::reservoir_max_velocity_meters_per_second</a>, <a class="el" href="structhymod__params.html#a098c0564af1ea08a68f321654c3c1bc3">hymod_params::smax</a>, and <a class="el" href="class_simple___lumped___model___realization.html#ad6f43918a1a6b73d0fb748c14ce78bad">state</a>.</p>
-
 </div>
 </div>
-<a id="a0f53e727a75a31b8f293ff319bb9cbc8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0f53e727a75a31b8f293ff319bb9cbc8">&#9670;&nbsp;</a></span>Simple_Lumped_Model_Realization() <span class="overload">[2/5]</span></h2>
+<a id="a2870d7a5af6255bc4d9dbed7307d0514"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2870d7a5af6255bc4d9dbed7307d0514">&#9670;&nbsp;</a></span>Simple_Lumped_Model_Realization() <span class="overload">[2/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -360,8 +362,8 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structforcing__params.html">forcing_params</a>&#160;</td>
-          <td class="paramname"><em>forcing_config</em>, </td>
+          <td class="paramtype">unique_ptr&lt; <a class="el" href="classforcing_1_1_forcing_provider.html">forcing::ForcingProvider</a> &gt;&#160;</td>
+          <td class="paramname"><em>forcing_provider</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -381,6 +383,8 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classrealization_1_1_catchment___formulation.html#a20117323c1944ffc7850838842769ca1">realization::Catchment_Formulation::_link_legacy_forcing()</a>.</p>
 
 </div>
 </div>
@@ -420,7 +424,7 @@ Private Attributes</h2></td></tr>
           <td class="memname">Simple_Lumped_Model_Realization::Simple_Lumped_Model_Realization </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="class_simple___lumped___model___realization.html">Simple_Lumped_Model_Realization</a> &amp;&amp;&#160;</td>
-          <td class="paramname"><em>other</em></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -448,7 +452,7 @@ Private Attributes</h2></td></tr>
 
 <p>Explicit copy constructor This constuctor explicitly copies <a class="el" href="class_simple___lumped___model___realization.html">Simple_Lumped_Model_Realization</a> and is required to properly copy the <a class="el" href="class_h_y___catchment_realization.html">HY_CatchmentRealization</a> forcing object as well connectet the <a class="el" href="structhymod__state.html#a820e80017a337b20ce054a136036533a" title="amount of water in each reservoir unsafe for binding suport check latter">hymod_state.Sr</a>* to the copied cascade_backing_storage vector. </p>
 
-<p class="reference">References <a class="el" href="class_simple___lumped___model___realization.html#aa362564a0409107f5f2342140b55b332">cascade_backing_storage</a>, <a class="el" href="class_h_y___catchment_realization.html#ae531b310e5bc1b004b92f2008f863cfa">HY_CatchmentRealization::forcing</a>, and <a class="el" href="class_simple___lumped___model___realization.html#ad6f43918a1a6b73d0fb748c14ce78bad">state</a>.</p>
+<p class="reference">References <a class="el" href="class_simple___lumped___model___realization.html#aa362564a0409107f5f2342140b55b332">cascade_backing_storage</a>, <a class="el" href="classrealization_1_1_catchment___formulation.html#a5838e9abbc63804c4502bbc1c6f6bd18">realization::Catchment_Formulation::legacy_forcing</a>, and <a class="el" href="class_simple___lumped___model___realization.html#ad6f43918a1a6b73d0fb748c14ce78bad">state</a>.</p>
 
 </div>
 </div>
@@ -478,6 +482,33 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a20117323c1944ffc7850838842769ca1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a20117323c1944ffc7850838842769ca1">&#9670;&nbsp;</a></span>_link_legacy_forcing()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void realization::Catchment_Formulation::_link_legacy_forcing </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="class_simple___lumped___model___realization.html#a2870d7a5af6255bc4d9dbed7307d0514">Simple_Lumped_Model_Realization()</a>, <a class="el" href="classrealization_1_1_tshirt___c___realization.html#ae8ac906d01ebad2ad980b11fdd13666e">realization::Tshirt_C_Realization::Tshirt_C_Realization()</a>, and <a class="el" href="classrealization_1_1_tshirt___realization.html#a95ef014f906bfcd122f085094579c63d">realization::Tshirt_Realization::Tshirt_Realization()</a>.</p>
+
+</div>
+</div>
 <a id="aea254a605d59c1489dfe0a8af0d5f291"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aea254a605d59c1489dfe0a8af0d5f291">&#9670;&nbsp;</a></span>add_time()</h2>
 
@@ -930,7 +961,7 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classrealization_1_1_catchment___formulation.html#adf21a61a7da1e87a200d8391cb3e33ce">realization::Catchment_Formulation</a>.</p>
 
-<p class="reference">References <a class="el" href="class_simple___lumped___model___realization.html#aea254a605d59c1489dfe0a8af0d5f291">add_time()</a>, <a class="el" href="class_simple___lumped___model___realization.html#ac98db05180754f1db41262a205cfbfa2">fluxes</a>, <a class="el" href="classrealization_1_1_et___accountable.html#aa76f5a7b1287c92f4e785e1a206ae452">realization::Et_Accountable::get_et_params()</a>, <a class="el" href="structhymod__params.html#a7fe5a1405feac74038def8d57749b66e">hymod_params::n</a>, <a class="el" href="class_simple___lumped___model___realization.html#a799f47e36352e7773f64015613257346">params</a>, <a class="el" href="classhymod__kernel.html#abd63b727cebb05446b6b2cd8452066f5">hymod_kernel::run()</a>, and <a class="el" href="class_simple___lumped___model___realization.html#ad6f43918a1a6b73d0fb748c14ce78bad">state</a>.</p>
+<p class="reference">References <a class="el" href="class_simple___lumped___model___realization.html#aea254a605d59c1489dfe0a8af0d5f291">add_time()</a>, <a class="el" href="class_simple___lumped___model___realization.html#ac98db05180754f1db41262a205cfbfa2">fluxes</a>, <a class="el" href="classrealization_1_1_et___accountable.html#aa76f5a7b1287c92f4e785e1a206ae452">realization::Et_Accountable::get_et_params()</a>, <a class="el" href="class_forcing.html#aa4114463ad31b1847576ee73535ea90d">Forcing::get_next_hourly_precipitation_meters_per_second()</a>, <a class="el" href="classrealization_1_1_catchment___formulation.html#a5838e9abbc63804c4502bbc1c6f6bd18">realization::Catchment_Formulation::legacy_forcing</a>, <a class="el" href="structhymod__params.html#a7fe5a1405feac74038def8d57749b66e">hymod_params::n</a>, <a class="el" href="class_simple___lumped___model___realization.html#a799f47e36352e7773f64015613257346">params</a>, <a class="el" href="classhymod__kernel.html#abd63b727cebb05446b6b2cd8452066f5">hymod_kernel::run()</a>, and <a class="el" href="class_simple___lumped___model___realization.html#ad6f43918a1a6b73d0fb748c14ce78bad">state</a>.</p>
 
 </div>
 </div>
@@ -1255,7 +1286,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="class_simple___lumped___model___realization.html#a0a0c83b6ecf5b3f88fa101d35335888f">Simple_Lumped_Model_Realization()</a>, <a class="el" href="class_simple___lumped___model___realization.html#aea254a605d59c1489dfe0a8af0d5f291">add_time()</a>, and <a class="el" href="class_simple___lumped___model___realization.html#ae9f9fda457f7564bf53bc9a9785eba7c">create_formulation()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="class_simple___lumped___model___realization.html#afe66f3b2527c02cca375f71f0e520e23">Simple_Lumped_Model_Realization()</a>, <a class="el" href="class_simple___lumped___model___realization.html#aea254a605d59c1489dfe0a8af0d5f291">add_time()</a>, and <a class="el" href="class_simple___lumped___model___realization.html#ae9f9fda457f7564bf53bc9a9785eba7c">create_formulation()</a>.</p>
 
 </div>
 </div>
@@ -1303,12 +1334,12 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="class_simple___lumped___model___realization.html#a0a0c83b6ecf5b3f88fa101d35335888f">Simple_Lumped_Model_Realization()</a>, <a class="el" href="class_simple___lumped___model___realization.html#aea254a605d59c1489dfe0a8af0d5f291">add_time()</a>, <a class="el" href="class_simple___lumped___model___realization.html#ae9f9fda457f7564bf53bc9a9785eba7c">create_formulation()</a>, <a class="el" href="class_simple___lumped___model___realization.html#a653d3057d73191c45f0f3749def92486">get_output_line_for_timestep()</a>, and <a class="el" href="class_simple___lumped___model___realization.html#a65e1e6ce403d39e655c68a5cd321ac63">get_response()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="class_simple___lumped___model___realization.html#aea254a605d59c1489dfe0a8af0d5f291">add_time()</a>, <a class="el" href="class_simple___lumped___model___realization.html#ae9f9fda457f7564bf53bc9a9785eba7c">create_formulation()</a>, <a class="el" href="class_simple___lumped___model___realization.html#a653d3057d73191c45f0f3749def92486">get_output_line_for_timestep()</a>, and <a class="el" href="class_simple___lumped___model___realization.html#a65e1e6ce403d39e655c68a5cd321ac63">get_response()</a>.</p>
 
 </div>
 </div>
-<a id="ae531b310e5bc1b004b92f2008f863cfa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae531b310e5bc1b004b92f2008f863cfa">&#9670;&nbsp;</a></span>forcing</h2>
+<a id="a83d2e09cd1264be6cc41dce294ad702d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a83d2e09cd1264be6cc41dce294ad702d">&#9670;&nbsp;</a></span>forcing</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1317,7 +1348,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="class_forcing.html">Forcing</a> HY_CatchmentRealization::forcing</td>
+          <td class="memname">std::unique_ptr&lt;<a class="el" href="classforcing_1_1_forcing_provider.html">forcing::ForcingProvider</a>&gt; HY_CatchmentRealization::forcing</td>
         </tr>
       </table>
   </td>
@@ -1326,8 +1357,6 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p class="reference">Referenced by <a class="el" href="class_simple___lumped___model___realization.html#afe66f3b2527c02cca375f71f0e520e23">Simple_Lumped_Model_Realization()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aa04167ad9a3f4c384673ef1157fb3cb8">realization::Bmi_Module_Formulation&lt; M &gt;::set_model_inputs_prior_to_update()</a>.</p>
 
 </div>
 </div>
@@ -1377,6 +1406,30 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a5838e9abbc63804c4502bbc1c6f6bd18"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5838e9abbc63804c4502bbc1c6f6bd18">&#9670;&nbsp;</a></span>legacy_forcing</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_forcing.html">Forcing</a> realization::Catchment_Formulation::legacy_forcing</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="class_simple___lumped___model___realization.html#afe66f3b2527c02cca375f71f0e520e23">Simple_Lumped_Model_Realization()</a>, <a class="el" href="class_simple___lumped___model___realization.html#a65e1e6ce403d39e655c68a5cd321ac63">get_response()</a>, <a class="el" href="classrealization_1_1_tshirt___c___realization.html#aeb579caa25422a0eac04c19b27e791e3">realization::Tshirt_C_Realization::get_response()</a>, and <a class="el" href="classrealization_1_1_tshirt___realization.html#aea64b8b1d6f77cde58c4c8b3e767df46">realization::Tshirt_Realization::get_response()</a>.</p>
+
+</div>
+</div>
 <a id="a55857dc16551760ff59487991fc525fe"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a55857dc16551760ff59487991fc525fe">&#9670;&nbsp;</a></span>output</h2>
 
@@ -1421,7 +1474,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="class_simple___lumped___model___realization.html#a0a0c83b6ecf5b3f88fa101d35335888f">Simple_Lumped_Model_Realization()</a>, <a class="el" href="class_simple___lumped___model___realization.html#aea254a605d59c1489dfe0a8af0d5f291">add_time()</a>, <a class="el" href="class_simple___lumped___model___realization.html#ae9f9fda457f7564bf53bc9a9785eba7c">create_formulation()</a>, and <a class="el" href="class_simple___lumped___model___realization.html#a65e1e6ce403d39e655c68a5cd321ac63">get_response()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="class_simple___lumped___model___realization.html#aea254a605d59c1489dfe0a8af0d5f291">add_time()</a>, <a class="el" href="class_simple___lumped___model___realization.html#ae9f9fda457f7564bf53bc9a9785eba7c">create_formulation()</a>, and <a class="el" href="class_simple___lumped___model___realization.html#a65e1e6ce403d39e655c68a5cd321ac63">get_response()</a>.</p>
 
 </div>
 </div>
@@ -1505,7 +1558,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="class_simple___lumped___model___realization.html#a0a0c83b6ecf5b3f88fa101d35335888f">Simple_Lumped_Model_Realization()</a>, <a class="el" href="class_simple___lumped___model___realization.html#aea254a605d59c1489dfe0a8af0d5f291">add_time()</a>, <a class="el" href="class_simple___lumped___model___realization.html#ae9f9fda457f7564bf53bc9a9785eba7c">create_formulation()</a>, and <a class="el" href="class_simple___lumped___model___realization.html#a65e1e6ce403d39e655c68a5cd321ac63">get_response()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="class_simple___lumped___model___realization.html#afe66f3b2527c02cca375f71f0e520e23">Simple_Lumped_Model_Realization()</a>, <a class="el" href="class_simple___lumped___model___realization.html#aea254a605d59c1489dfe0a8af0d5f291">add_time()</a>, <a class="el" href="class_simple___lumped___model___realization.html#ae9f9fda457f7564bf53bc9a9785eba7c">create_formulation()</a>, and <a class="el" href="class_simple___lumped___model___realization.html#a65e1e6ce403d39e655c68a5cd321ac63">get_response()</a>.</p>
 
 </div>
 </div>
@@ -1519,7 +1572,7 @@ Private Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_simple___lumped___model___realization.html">Simple_Lumped_Model_Realization</a></li>
-    <li class="footer">Generated on Wed Oct 27 2021 19:47:55 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Thu Oct 28 2021 19:09:01 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

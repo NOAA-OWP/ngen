@@ -117,6 +117,7 @@ var annotated_dup =
     [ "Bmi", "struct_bmi.html", "struct_bmi" ],
     [ "completed_time_step", "structcompleted__time__step.html", "structcompleted__time__step" ],
     [ "conceptual_reservoir", "structconceptual__reservoir.html", "structconceptual__reservoir" ],
+    [ "CsvPerFeatureForcingProvider", "class_csv_per_feature_forcing_provider.html", "class_csv_per_feature_forcing_provider" ],
     [ "CSVReader", "class_c_s_v_reader.html", "class_c_s_v_reader" ],
     [ "EtCalcKernelTest", "class_et_calc_kernel_test.html", "class_et_calc_kernel_test" ],
     [ "evapotranspiration_forcing", "structevapotranspiration__forcing.html", "structevapotranspiration__forcing" ],

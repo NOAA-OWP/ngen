@@ -122,11 +122,9 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a5bb72e5a08d129551fc0207bb21d1d20"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___module___formulation.html#a5bb72e5a08d129551fc0207bb21d1d20">Bmi_Module_Formulation</a> (std::string <a class="el" href="classrealization_1_1_formulation.html#a8bfec24b0d57240e7ada2493a781db6d">id</a>, <a class="el" href="structforcing__params.html">forcing_params</a> forcing_config, <a class="el" href="classutils_1_1_stream_handler.html">utils::StreamHandler</a> output_stream)</td></tr>
-<tr class="memdesc:a5bb72e5a08d129551fc0207bb21d1d20"><td class="mdescLeft">&#160;</td><td class="mdescRight">Minimal constructor for objects initialize using the <a class="el" href="classrealization_1_1_formulation___manager.html">Formulation_Manager</a> and subsequent calls to <code>create_formulation</code>.  <a href="classrealization_1_1_bmi___module___formulation.html#a5bb72e5a08d129551fc0207bb21d1d20">More...</a><br /></td></tr>
-<tr class="separator:a5bb72e5a08d129551fc0207bb21d1d20"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a790ebafc2b86ac9e802e2ed6a64e7e73"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___module___formulation.html#a790ebafc2b86ac9e802e2ed6a64e7e73">Bmi_Module_Formulation</a> (std::string <a class="el" href="classrealization_1_1_formulation.html#a8bfec24b0d57240e7ada2493a781db6d">id</a>, <a class="el" href="class_forcing.html">Forcing</a> <a class="el" href="class_h_y___catchment_realization.html#ae531b310e5bc1b004b92f2008f863cfa">forcing</a>, <a class="el" href="classutils_1_1_stream_handler.html">utils::StreamHandler</a> output_stream)</td></tr>
-<tr class="separator:a790ebafc2b86ac9e802e2ed6a64e7e73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8799fa5c66d6a9b625526363a758d3a3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___module___formulation.html#a8799fa5c66d6a9b625526363a758d3a3">Bmi_Module_Formulation</a> (std::string <a class="el" href="classrealization_1_1_formulation.html#a8bfec24b0d57240e7ada2493a781db6d">id</a>, std::unique_ptr&lt; <a class="el" href="classforcing_1_1_forcing_provider.html">forcing::ForcingProvider</a> &gt; forcing_provider, <a class="el" href="classutils_1_1_stream_handler.html">utils::StreamHandler</a> output_stream)</td></tr>
+<tr class="memdesc:a8799fa5c66d6a9b625526363a758d3a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Minimal constructor for objects initialize using the <a class="el" href="classrealization_1_1_formulation___manager.html">Formulation_Manager</a> and subsequent calls to <code>create_formulation</code>.  <a href="classrealization_1_1_bmi___module___formulation.html#a8799fa5c66d6a9b625526363a758d3a3">More...</a><br /></td></tr>
+<tr class="separator:a8799fa5c66d6a9b625526363a758d3a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a650f0f48916600d9ee87f88c76c77387"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___module___formulation.html#a650f0f48916600d9ee87f88c76c77387">~Bmi_Module_Formulation</a> ()</td></tr>
 <tr class="separator:a650f0f48916600d9ee87f88c76c77387"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad8d9a56ad3614fb821d88f623030defc"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___module___formulation.html#ad8d9a56ad3614fb821d88f623030defc">calc_et</a> () override</td></tr>
@@ -221,8 +219,6 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:aeb5da97e5027d6946df247ee1eb9e681"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___module___formulation.html#aeb5da97e5027d6946df247ee1eb9e681">calc_et</a> (size_t forcing_ts_index)</td></tr>
-<tr class="separator:aeb5da97e5027d6946df247ee1eb9e681"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a55330516fc6d32ed7f6103b22e0c406b"><td class="memItemLeft" align="right" valign="top">virtual std::shared_ptr&lt; M &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___module___formulation.html#a55330516fc6d32ed7f6103b22e0c406b">construct_model</a> (const <a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> &amp;properties)=0</td></tr>
 <tr class="memdesc:a55330516fc6d32ed7f6103b22e0c406b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct model and its shared pointer, potentially supplying input variable values from config.  <a href="classrealization_1_1_bmi___module___formulation.html#a55330516fc6d32ed7f6103b22e0c406b">More...</a><br /></td></tr>
 <tr class="separator:a55330516fc6d32ed7f6103b22e0c406b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -301,6 +297,8 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:a633b7407d447f77910476c0315c8beb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2cce2b5b18eaa0ed7e0df10db57da144"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#a2cce2b5b18eaa0ed7e0df10db57da144">set_catchment_id</a> (std::string cat_id) override</td></tr>
 <tr class="separator:a2cce2b5b18eaa0ed7e0df10db57da144"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20117323c1944ffc7850838842769ca1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#a20117323c1944ffc7850838842769ca1">_link_legacy_forcing</a> ()</td></tr>
+<tr class="separator:a20117323c1944ffc7850838842769ca1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a65f97b5efe05e786f59d9f5fd1b10209"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation.html#a65f97b5efe05e786f59d9f5fd1b10209">interpret_parameters</a> (boost::property_tree::ptree &amp;config, <a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> *global=nullptr)</td></tr>
 <tr class="separator:a65f97b5efe05e786f59d9f5fd1b10209"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aceabe9927b36dce61f338919f2af4c1f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation.html#aceabe9927b36dce61f338919f2af4c1f">validate_parameters</a> (<a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> options)</td></tr>
@@ -318,6 +316,8 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:ab176f1bb0fddc82dc0e0ba17551f6321"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a00fcf6ac08de2a23aa73f561b69d5287"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::string, std::shared_ptr&lt; <a class="el" href="classforcing_1_1_forcing_provider.html">forcing::ForcingProvider</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___module___formulation.html#a00fcf6ac08de2a23aa73f561b69d5287">input_forcing_providers</a></td></tr>
 <tr class="separator:a00fcf6ac08de2a23aa73f561b69d5287"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5838e9abbc63804c4502bbc1c6f6bd18"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_forcing.html">Forcing</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#a5838e9abbc63804c4502bbc1c6f6bd18">legacy_forcing</a></td></tr>
+<tr class="separator:a5838e9abbc63804c4502bbc1c6f6bd18"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8bfec24b0d57240e7ada2493a781db6d"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation.html#a8bfec24b0d57240e7ada2493a781db6d">id</a></td></tr>
 <tr class="separator:a8bfec24b0d57240e7ada2493a781db6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaebc4992c38cb5db68e859e0487ad929"><td class="memItemLeft" align="right" valign="top">polygon_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_area.html#aaebc4992c38cb5db68e859e0487ad929">bounds</a></td></tr>
@@ -328,8 +328,8 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a7c6de72bd8ebf427d71aacca7baa23c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af996a3e50eaf51c63865f1fdbe4f8661"><td class="memItemLeft" align="right" valign="top">unsigned long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_realization.html#af996a3e50eaf51c63865f1fdbe4f8661">id_number</a></td></tr>
 <tr class="separator:af996a3e50eaf51c63865f1fdbe4f8661"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae531b310e5bc1b004b92f2008f863cfa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_forcing.html">Forcing</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_realization.html#ae531b310e5bc1b004b92f2008f863cfa">forcing</a></td></tr>
-<tr class="separator:ae531b310e5bc1b004b92f2008f863cfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83d2e09cd1264be6cc41dce294ad702d"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classforcing_1_1_forcing_provider.html">forcing::ForcingProvider</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_realization.html#a83d2e09cd1264be6cc41dce294ad702d">forcing</a></td></tr>
+<tr class="separator:a83d2e09cd1264be6cc41dce294ad702d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -420,8 +420,8 @@ class realization::Bmi_Module_Formulation&lt; M &gt;</h3>
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a5bb72e5a08d129551fc0207bb21d1d20"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5bb72e5a08d129551fc0207bb21d1d20">&#9670;&nbsp;</a></span>Bmi_Module_Formulation() <span class="overload">[1/2]</span></h2>
+<a id="a8799fa5c66d6a9b625526363a758d3a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8799fa5c66d6a9b625526363a758d3a3">&#9670;&nbsp;</a></span>Bmi_Module_Formulation()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -440,8 +440,8 @@ template&lt;class M &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structforcing__params.html">forcing_params</a>&#160;</td>
-          <td class="paramname"><em>forcing_config</em>, </td>
+          <td class="paramtype">std::unique_ptr&lt; <a class="el" href="classforcing_1_1_forcing_provider.html">forcing::ForcingProvider</a> &gt;&#160;</td>
+          <td class="paramname"><em>forcing_provider</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -466,55 +466,11 @@ template&lt;class M &gt; </div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">id</td><td></td></tr>
-    <tr><td class="paramname">forcing_config</td><td></td></tr>
+    <tr><td class="paramname">forcing_provider</td><td></td></tr>
     <tr><td class="paramname">output_stream</td><td></td></tr>
   </table>
   </dd>
 </dl>
-
-</div>
-</div>
-<a id="a790ebafc2b86ac9e802e2ed6a64e7e73"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a790ebafc2b86ac9e802e2ed6a64e7e73">&#9670;&nbsp;</a></span>Bmi_Module_Formulation() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class M &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classrealization_1_1_bmi___module___formulation.html">realization::Bmi_Module_Formulation</a>&lt; M &gt;::<a class="el" href="classrealization_1_1_bmi___module___formulation.html">Bmi_Module_Formulation</a> </td>
-          <td>(</td>
-          <td class="paramtype">std::string&#160;</td>
-          <td class="paramname"><em>id</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class_forcing.html">Forcing</a>&#160;</td>
-          <td class="paramname"><em>forcing</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classutils_1_1_stream_handler.html">utils::StreamHandler</a>&#160;</td>
-          <td class="paramname"><em>output_stream</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
 
 </div>
 </div>
@@ -546,6 +502,33 @@ template&lt;class M &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a20117323c1944ffc7850838842769ca1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a20117323c1944ffc7850838842769ca1">&#9670;&nbsp;</a></span>_link_legacy_forcing()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void realization::Catchment_Formulation::_link_legacy_forcing </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="class_simple___lumped___model___realization.html#a2870d7a5af6255bc4d9dbed7307d0514">Simple_Lumped_Model_Realization::Simple_Lumped_Model_Realization()</a>, <a class="el" href="classrealization_1_1_tshirt___c___realization.html#ae8ac906d01ebad2ad980b11fdd13666e">realization::Tshirt_C_Realization::Tshirt_C_Realization()</a>, and <a class="el" href="classrealization_1_1_tshirt___realization.html#a95ef014f906bfcd122f085094579c63d">realization::Tshirt_Realization::Tshirt_Realization()</a>.</p>
+
+</div>
+</div>
 <a id="a248b562be5dc9a21e7afbc014de15114"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a248b562be5dc9a21e7afbc014de15114">&#9670;&nbsp;</a></span>add_time()</h2>
 
@@ -585,7 +568,7 @@ template&lt;class M &gt; </div>
 </div>
 </div>
 <a id="ad8d9a56ad3614fb821d88f623030defc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad8d9a56ad3614fb821d88f623030defc">&#9670;&nbsp;</a></span>calc_et() <span class="overload">[1/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ad8d9a56ad3614fb821d88f623030defc">&#9670;&nbsp;</a></span>calc_et() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -610,49 +593,19 @@ template&lt;class M &gt; </div>
 </div><div class="memdoc">
 
 <p>Perform (potential) ET calculation, getting input params from instance's backing model as needed. </p>
-<p>Function uses AORC forcings from the "current" time step.</p>
+<p>Function uses forcings from the "current" time step.</p>
 <dl class="section return"><dt>Returns</dt><dd>Calculated ET or potential ET, or <code>0.0</code> if required parameters could not be obtained. </dd></dl>
 
 <p>Implements <a class="el" href="classrealization_1_1_et___accountable.html#a1af6f5c88bda174c8ba855e796a55439">realization::Et_Accountable</a>.</p>
 
-<p class="reference">References <a class="el" href="classrealization_1_1_bmi___module___formulation.html#accc78ec90a83dc338006ef64aed6754a">realization::Bmi_Module_Formulation&lt; M &gt;::convert_model_time()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a0539c240236829e5b3f5841961542c2c">realization::Bmi_Module_Formulation&lt; M &gt;::get_bmi_model()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#adace17ae2dc0375b709710df1afe955c">realization::Bmi_Module_Formulation&lt; M &gt;::get_bmi_model_start_time_forcing_offset_s()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aca477749b4e3f41aeea7e724e2351219">realization::Bmi_Module_Formulation&lt; M &gt;::get_ts_index_for_time()</a>.</p>
+<p class="reference">References <a class="el" href="struct_a_o_r_c__data.html#afe55907c1902e4dd8c47655ab4d1ba7c">AORC_data::APCP_surface_kg_per_meters_squared</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#accc78ec90a83dc338006ef64aed6754a">realization::Bmi_Module_Formulation&lt; M &gt;::convert_model_time()</a>, <a class="el" href="struct_a_o_r_c__data.html#a385e5f8c684246ac9eabc4639fe14c68">AORC_data::DLWRF_surface_W_per_meters_squared</a>, <a class="el" href="struct_a_o_r_c__data.html#a348db9d91f46ca3cb892c6f045ede04c">AORC_data::DSWRF_surface_W_per_meters_squared</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a0539c240236829e5b3f5841961542c2c">realization::Bmi_Module_Formulation&lt; M &gt;::get_bmi_model()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#adace17ae2dc0375b709710df1afe955c">realization::Bmi_Module_Formulation&lt; M &gt;::get_bmi_model_start_time_forcing_offset_s()</a>, <a class="el" href="struct_a_o_r_c__data.html#a01514ef87b4e39415aaa8b45815f2c7d">AORC_data::PRES_surface_Pa</a>, <a class="el" href="struct_a_o_r_c__data.html#a78ab2785f505256dd8b35a620a94067d">AORC_data::SPFH_2maboveground_kg_per_kg</a>, <a class="el" href="struct_a_o_r_c__data.html#acbb68a182047e80854628a329ea317db">AORC_data::TMP_2maboveground_K</a>, <a class="el" href="struct_a_o_r_c__data.html#a60a4f68a6fc80445090dabac9a53979d">AORC_data::UGRD_10maboveground_meters_per_second</a>, and <a class="el" href="struct_a_o_r_c__data.html#ae4ead5c316f609a2c8884d3a593256e9">AORC_data::VGRD_10maboveground_meters_per_second</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aeb5da97e5027d6946df247ee1eb9e681">realization::Bmi_Module_Formulation&lt; M &gt;::calc_et()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a7f11d9a147cbba2f191988995e171f75">realization::Bmi_Module_Formulation&lt; M &gt;::get_value()</a>.</p>
-
-</div>
-</div>
-<a id="aeb5da97e5027d6946df247ee1eb9e681"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeb5da97e5027d6946df247ee1eb9e681">&#9670;&nbsp;</a></span>calc_et() <span class="overload">[2/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class M &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">double <a class="el" href="classrealization_1_1_bmi___module___formulation.html">realization::Bmi_Module_Formulation</a>&lt; M &gt;::calc_et </td>
-          <td>(</td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>forcing_ts_index</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="reference">References <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ad8d9a56ad3614fb821d88f623030defc">realization::Bmi_Module_Formulation&lt; M &gt;::calc_et()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a7f11d9a147cbba2f191988995e171f75">realization::Bmi_Module_Formulation&lt; M &gt;::get_value()</a>.</p>
 
 </div>
 </div>
 <a id="a49aa9cfff0958d7e509de7dd5187a0c6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a49aa9cfff0958d7e509de7dd5187a0c6">&#9670;&nbsp;</a></span>calc_et() <span class="overload">[3/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a49aa9cfff0958d7e509de7dd5187a0c6">&#9670;&nbsp;</a></span>calc_et() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -677,7 +630,7 @@ template&lt;class M &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="structet_1_1evapotranspiration__forcing.html#a949fd8df44eaf969b82c051b1d65ecd9">et::evapotranspiration_forcing::air_pressure_Pa</a>, <a class="el" href="structet_1_1evapotranspiration__forcing.html#afb192d068934bb959e99892e0de28c4c">et::evapotranspiration_forcing::air_temperature_C</a>, <a class="el" href="structet_1_1surface__radiation__forcing.html#ac4b64b6097866588185c6652a34b43f7">et::surface_radiation_forcing::air_temperature_C</a>, <a class="el" href="namespaceet.html#a332efda318dd91804afb4615c4d87dcc">et::calc_air_saturation_vapor_pressure_Pa()</a>, <a class="el" href="namespaceet.html#a2000cbfe1117d7001d52df9ec7e03396">et::calculate_net_radiation_W_per_sq_m()</a>, <a class="el" href="structet_1_1evapotranspiration__forcing.html#a0fd101f844e188373e9a6eb56e6d8014">et::evapotranspiration_forcing::canopy_resistance_sec_per_m</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a1801f902d2246126249c363de2dcb496">realization::Bmi_Module_Formulation&lt; M &gt;::convert_aorc_structs()</a>, <a class="el" href="struct_a_o_r_c__data.html#a385e5f8c684246ac9eabc4639fe14c68">AORC_data::DLWRF_surface_W_per_meters_squared</a>, <a class="el" href="struct_a_o_r_c__data.html#a348db9d91f46ca3cb892c6f045ede04c">AORC_data::DSWRF_surface_W_per_meters_squared</a>, <a class="el" href="classrealization_1_1_et___accountable.html#a5fab369fc039b378dfd270490ddb9e5c">realization::Et_Accountable::et_params</a>, <a class="el" href="namespaceet_1_1combined.html#acf215ac58a15b404d9c9c537ee67db2b">et::combined::evapotranspiration_combination_method()</a>, <a class="el" href="structet_1_1evapotranspiration__forcing.html#ac33b8f3a7320051061393299e30650f7">et::evapotranspiration_forcing::ground_heat_flux_W_per_sq_m</a>, <a class="el" href="structet_1_1surface__radiation__forcing.html#a594968ae10f296acba3b537169976705">et::surface_radiation_forcing::incoming_longwave_radiation_W_per_sq_m</a>, <a class="el" href="structet_1_1surface__radiation__forcing.html#a14e38c344ecc7f4a464b82abb93c8b18">et::surface_radiation_forcing::incoming_shortwave_radiation_W_per_sq_m</a>, <a class="el" href="structet_1_1evapotranspiration__forcing.html#af8058e5618bb4fc7f04207eb2831d2cc">et::evapotranspiration_forcing::net_radiation_W_per_sq_m</a>, <a class="el" href="struct_a_o_r_c__data.html#a01514ef87b4e39415aaa8b45815f2c7d">AORC_data::PRES_surface_Pa</a>, <a class="el" href="structet_1_1evapotranspiration__forcing.html#a7a1b6dc8dbd7155eee5dc62ba5ff39d7">et::evapotranspiration_forcing::relative_humidity_percent</a>, <a class="el" href="structet_1_1surface__radiation__forcing.html#aa594397c9b943002f43e4ebfc9ab4454">et::surface_radiation_forcing::relative_humidity_percent</a>, <a class="el" href="structet_1_1evapotranspiration__forcing.html#a0e44cf46b7385a47afe404b77d6b14bb">et::evapotranspiration_forcing::specific_humidity_2m_kg_per_kg</a>, <a class="el" href="struct_a_o_r_c__data.html#a78ab2785f505256dd8b35a620a94067d">AORC_data::SPFH_2maboveground_kg_per_kg</a>, <a class="el" href="structet_1_1surface__radiation__params.html#a4ee734d86b9bcce418082e4407252868">et::surface_radiation_params::surface_longwave_emissivity</a>, <a class="el" href="structet_1_1surface__radiation__params.html#a22804e8f41ad31ea9578fe9f9bb0cb76">et::surface_radiation_params::surface_shortwave_albedo</a>, <a class="el" href="structet_1_1surface__radiation__forcing.html#a122aa44d336ce0dbac118791e8ff218d">et::surface_radiation_forcing::surface_skin_temperature_C</a>, <a class="el" href="struct_a_o_r_c__data.html#acbb68a182047e80854628a329ea317db">AORC_data::TMP_2maboveground_K</a>, <a class="el" href="struct_a_o_r_c__data.html#a60a4f68a6fc80445090dabac9a53979d">AORC_data::UGRD_10maboveground_meters_per_second</a>, <a class="el" href="structet_1_1evapotranspiration__options.html#a78976e7f0027baae1252c1d1cdec17a0">et::evapotranspiration_options::use_aerodynamic_method</a>, <a class="el" href="structet_1_1evapotranspiration__options.html#aaa9815da68f2b0de5be8e5a0db662d7f">et::evapotranspiration_options::use_combination_method</a>, <a class="el" href="structet_1_1evapotranspiration__options.html#a22f1800b7d9a578b94ef199e8d63ddba">et::evapotranspiration_options::use_energy_balance_method</a>, <a class="el" href="structet_1_1evapotranspiration__options.html#adb0037b78cc05713c964365050150875">et::evapotranspiration_options::use_penman_monteith_method</a>, <a class="el" href="structet_1_1evapotranspiration__options.html#a4610db5710cad9322dbc514ae48ad25f">et::evapotranspiration_options::use_priestley_taylor_method</a>, <a class="el" href="struct_a_o_r_c__data.html#ae4ead5c316f609a2c8884d3a593256e9">AORC_data::VGRD_10maboveground_meters_per_second</a>, <a class="el" href="structet_1_1evapotranspiration__forcing.html#afecbbbe604d22144db92d07aae63c383">et::evapotranspiration_forcing::water_temperature_C</a>, <a class="el" href="structet_1_1evapotranspiration__forcing.html#a75f3eecf49ecf9078df9688cb98036fe">et::evapotranspiration_forcing::wind_speed_m_per_s</a>, and <a class="el" href="structet_1_1evapotranspiration__options.html#a80444e1cc009b709fa5b895e68f3931c">et::evapotranspiration_options::yes_aorc</a>.</p>
+<p class="reference">References <a class="el" href="structet_1_1evapotranspiration__forcing.html#a949fd8df44eaf969b82c051b1d65ecd9">et::evapotranspiration_forcing::air_pressure_Pa</a>, <a class="el" href="structet_1_1evapotranspiration__forcing.html#afb192d068934bb959e99892e0de28c4c">et::evapotranspiration_forcing::air_temperature_C</a>, <a class="el" href="structet_1_1surface__radiation__forcing.html#ac4b64b6097866588185c6652a34b43f7">et::surface_radiation_forcing::air_temperature_C</a>, <a class="el" href="namespaceet.html#a332efda318dd91804afb4615c4d87dcc">et::calc_air_saturation_vapor_pressure_Pa()</a>, <a class="el" href="namespaceet.html#a2000cbfe1117d7001d52df9ec7e03396">et::calculate_net_radiation_W_per_sq_m()</a>, <a class="el" href="structet_1_1evapotranspiration__forcing.html#a0fd101f844e188373e9a6eb56e6d8014">et::evapotranspiration_forcing::canopy_resistance_sec_per_m</a>, <a class="el" href="struct_a_o_r_c__data.html#a385e5f8c684246ac9eabc4639fe14c68">AORC_data::DLWRF_surface_W_per_meters_squared</a>, <a class="el" href="struct_a_o_r_c__data.html#a348db9d91f46ca3cb892c6f045ede04c">AORC_data::DSWRF_surface_W_per_meters_squared</a>, <a class="el" href="classrealization_1_1_et___accountable.html#a5fab369fc039b378dfd270490ddb9e5c">realization::Et_Accountable::et_params</a>, <a class="el" href="namespaceet_1_1combined.html#acf215ac58a15b404d9c9c537ee67db2b">et::combined::evapotranspiration_combination_method()</a>, <a class="el" href="structet_1_1evapotranspiration__forcing.html#ac33b8f3a7320051061393299e30650f7">et::evapotranspiration_forcing::ground_heat_flux_W_per_sq_m</a>, <a class="el" href="structet_1_1surface__radiation__forcing.html#a594968ae10f296acba3b537169976705">et::surface_radiation_forcing::incoming_longwave_radiation_W_per_sq_m</a>, <a class="el" href="structet_1_1surface__radiation__forcing.html#a14e38c344ecc7f4a464b82abb93c8b18">et::surface_radiation_forcing::incoming_shortwave_radiation_W_per_sq_m</a>, <a class="el" href="structet_1_1evapotranspiration__forcing.html#af8058e5618bb4fc7f04207eb2831d2cc">et::evapotranspiration_forcing::net_radiation_W_per_sq_m</a>, <a class="el" href="struct_a_o_r_c__data.html#a01514ef87b4e39415aaa8b45815f2c7d">AORC_data::PRES_surface_Pa</a>, <a class="el" href="structet_1_1evapotranspiration__forcing.html#a7a1b6dc8dbd7155eee5dc62ba5ff39d7">et::evapotranspiration_forcing::relative_humidity_percent</a>, <a class="el" href="structet_1_1surface__radiation__forcing.html#aa594397c9b943002f43e4ebfc9ab4454">et::surface_radiation_forcing::relative_humidity_percent</a>, <a class="el" href="structet_1_1evapotranspiration__forcing.html#a0e44cf46b7385a47afe404b77d6b14bb">et::evapotranspiration_forcing::specific_humidity_2m_kg_per_kg</a>, <a class="el" href="struct_a_o_r_c__data.html#a78ab2785f505256dd8b35a620a94067d">AORC_data::SPFH_2maboveground_kg_per_kg</a>, <a class="el" href="structet_1_1surface__radiation__params.html#a4ee734d86b9bcce418082e4407252868">et::surface_radiation_params::surface_longwave_emissivity</a>, <a class="el" href="structet_1_1surface__radiation__params.html#a22804e8f41ad31ea9578fe9f9bb0cb76">et::surface_radiation_params::surface_shortwave_albedo</a>, <a class="el" href="structet_1_1surface__radiation__forcing.html#a122aa44d336ce0dbac118791e8ff218d">et::surface_radiation_forcing::surface_skin_temperature_C</a>, <a class="el" href="struct_a_o_r_c__data.html#acbb68a182047e80854628a329ea317db">AORC_data::TMP_2maboveground_K</a>, <a class="el" href="struct_a_o_r_c__data.html#a60a4f68a6fc80445090dabac9a53979d">AORC_data::UGRD_10maboveground_meters_per_second</a>, <a class="el" href="structet_1_1evapotranspiration__options.html#a78976e7f0027baae1252c1d1cdec17a0">et::evapotranspiration_options::use_aerodynamic_method</a>, <a class="el" href="structet_1_1evapotranspiration__options.html#aaa9815da68f2b0de5be8e5a0db662d7f">et::evapotranspiration_options::use_combination_method</a>, <a class="el" href="structet_1_1evapotranspiration__options.html#a22f1800b7d9a578b94ef199e8d63ddba">et::evapotranspiration_options::use_energy_balance_method</a>, <a class="el" href="structet_1_1evapotranspiration__options.html#adb0037b78cc05713c964365050150875">et::evapotranspiration_options::use_penman_monteith_method</a>, <a class="el" href="structet_1_1evapotranspiration__options.html#a4610db5710cad9322dbc514ae48ad25f">et::evapotranspiration_options::use_priestley_taylor_method</a>, <a class="el" href="struct_a_o_r_c__data.html#ae4ead5c316f609a2c8884d3a593256e9">AORC_data::VGRD_10maboveground_meters_per_second</a>, <a class="el" href="structet_1_1evapotranspiration__forcing.html#afecbbbe604d22144db92d07aae63c383">et::evapotranspiration_forcing::water_temperature_C</a>, <a class="el" href="structet_1_1evapotranspiration__forcing.html#a75f3eecf49ecf9078df9688cb98036fe">et::evapotranspiration_forcing::wind_speed_m_per_s</a>, and <a class="el" href="structet_1_1evapotranspiration__options.html#a80444e1cc009b709fa5b895e68f3931c">et::evapotranspiration_options::yes_aorc</a>.</p>
 
 </div>
 </div>
@@ -748,8 +701,6 @@ template&lt;class M &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a49aa9cfff0958d7e509de7dd5187a0c6">realization::Bmi_Module_Formulation&lt; M &gt;::calc_et()</a>.</p>
 
 </div>
 </div>
@@ -1762,8 +1713,6 @@ template&lt;class M &gt; </div>
 </dl>
 
 <p>Implements <a class="el" href="classforcing_1_1_forcing_provider.html#a542531c62f0fa91cf4e877aa69ff2479">forcing::ForcingProvider</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ad8d9a56ad3614fb821d88f623030defc">realization::Bmi_Module_Formulation&lt; M &gt;::calc_et()</a>.</p>
 
 </div>
 </div>
@@ -2832,7 +2781,7 @@ template&lt;class M &gt; </div>
   </dd>
 </dl>
 
-<p class="reference">References <a class="el" href="classrealization_1_1_bmi___module___formulation.html#accc78ec90a83dc338006ef64aed6754a">realization::Bmi_Module_Formulation&lt; M &gt;::convert_model_time()</a>, <a class="el" href="class_h_y___catchment_realization.html#ae531b310e5bc1b004b92f2008f863cfa">HY_CatchmentRealization::forcing</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a0539c240236829e5b3f5841961542c2c">realization::Bmi_Module_Formulation&lt; M &gt;::get_bmi_model()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#adace17ae2dc0375b709710df1afe955c">realization::Bmi_Module_Formulation&lt; M &gt;::get_bmi_model_start_time_forcing_offset_s()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aa3fb347c7c3a6c9f6989eaa289a3a8a8">realization::Bmi_Module_Formulation&lt; M &gt;::get_config_mapped_variable_name()</a>, <a class="el" href="classforcing_1_1_forcing_provider.html#a84ca58d5a524d1f07ef8e062a97e8301">forcing::ForcingProvider::get_value()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a388d1b0e70d2fa6a1a33e278e5f38d4f">realization::Bmi_Module_Formulation&lt; M &gt;::get_value_as_type()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a00fcf6ac08de2a23aa73f561b69d5287">realization::Bmi_Module_Formulation&lt; M &gt;::input_forcing_providers</a>.</p>
+<p class="reference">References <a class="el" href="classrealization_1_1_bmi___module___formulation.html#accc78ec90a83dc338006ef64aed6754a">realization::Bmi_Module_Formulation&lt; M &gt;::convert_model_time()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a0539c240236829e5b3f5841961542c2c">realization::Bmi_Module_Formulation&lt; M &gt;::get_bmi_model()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#adace17ae2dc0375b709710df1afe955c">realization::Bmi_Module_Formulation&lt; M &gt;::get_bmi_model_start_time_forcing_offset_s()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aa3fb347c7c3a6c9f6989eaa289a3a8a8">realization::Bmi_Module_Formulation&lt; M &gt;::get_config_mapped_variable_name()</a>, <a class="el" href="classforcing_1_1_forcing_provider.html#a84ca58d5a524d1f07ef8e062a97e8301">forcing::ForcingProvider::get_value()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a388d1b0e70d2fa6a1a33e278e5f38d4f">realization::Bmi_Module_Formulation&lt; M &gt;::get_value_as_type()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a00fcf6ac08de2a23aa73f561b69d5287">realization::Bmi_Module_Formulation&lt; M &gt;::input_forcing_providers</a>.</p>
 
 </div>
 </div>
@@ -3385,8 +3334,8 @@ template&lt;class M &gt; </div>
 
 </div>
 </div>
-<a id="ae531b310e5bc1b004b92f2008f863cfa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae531b310e5bc1b004b92f2008f863cfa">&#9670;&nbsp;</a></span>forcing</h2>
+<a id="a83d2e09cd1264be6cc41dce294ad702d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a83d2e09cd1264be6cc41dce294ad702d">&#9670;&nbsp;</a></span>forcing</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3395,7 +3344,7 @@ template&lt;class M &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="class_forcing.html">Forcing</a> HY_CatchmentRealization::forcing</td>
+          <td class="memname">std::unique_ptr&lt;<a class="el" href="classforcing_1_1_forcing_provider.html">forcing::ForcingProvider</a>&gt; HY_CatchmentRealization::forcing</td>
         </tr>
       </table>
   </td>
@@ -3404,8 +3353,6 @@ template&lt;class M &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p class="reference">Referenced by <a class="el" href="class_simple___lumped___model___realization.html#afe66f3b2527c02cca375f71f0e520e23">Simple_Lumped_Model_Realization::Simple_Lumped_Model_Realization()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aa04167ad9a3f4c384673ef1157fb3cb8">realization::Bmi_Module_Formulation&lt; M &gt;::set_model_inputs_prior_to_update()</a>.</p>
 
 </div>
 </div>
@@ -3556,6 +3503,30 @@ template&lt;class M &gt; </div>
 </div><div class="memdoc">
 
 <p>The epoch time of the model at the beginning of its last update. </p>
+
+</div>
+</div>
+<a id="a5838e9abbc63804c4502bbc1c6f6bd18"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5838e9abbc63804c4502bbc1c6f6bd18">&#9670;&nbsp;</a></span>legacy_forcing</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_forcing.html">Forcing</a> realization::Catchment_Formulation::legacy_forcing</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="class_simple___lumped___model___realization.html#afe66f3b2527c02cca375f71f0e520e23">Simple_Lumped_Model_Realization::Simple_Lumped_Model_Realization()</a>, <a class="el" href="class_simple___lumped___model___realization.html#a65e1e6ce403d39e655c68a5cd321ac63">Simple_Lumped_Model_Realization::get_response()</a>, <a class="el" href="classrealization_1_1_tshirt___c___realization.html#aeb579caa25422a0eac04c19b27e791e3">realization::Tshirt_C_Realization::get_response()</a>, and <a class="el" href="classrealization_1_1_tshirt___realization.html#aea64b8b1d6f77cde58c4c8b3e767df46">realization::Tshirt_Realization::get_response()</a>.</p>
 
 </div>
 </div>
@@ -3775,7 +3746,7 @@ template&lt;class M &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li><li class="navelem"><a class="el" href="classrealization_1_1_bmi___module___formulation.html">Bmi_Module_Formulation</a></li>
-    <li class="footer">Generated on Wed Oct 27 2021 19:47:56 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Thu Oct 28 2021 19:09:01 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

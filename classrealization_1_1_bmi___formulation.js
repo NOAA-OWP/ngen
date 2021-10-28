@@ -1,9 +1,9 @@
 var classrealization_1_1_bmi___formulation =
 [
     [ "time_step_t", "classrealization_1_1_bmi___formulation.html#aee10dc672e5a9e106f49dcbe0080cf7c", null ],
-    [ "Bmi_Formulation", "classrealization_1_1_bmi___formulation.html#aebb71b82a6c0b79a52bef73fbfc872d0", null ],
-    [ "Bmi_Formulation", "classrealization_1_1_bmi___formulation.html#a0bf5470dcaca3748309571f3f80fd646", null ],
+    [ "Bmi_Formulation", "classrealization_1_1_bmi___formulation.html#a1ea8c09adf4f0417cfde87782ca7f9e0", null ],
     [ "~Bmi_Formulation", "classrealization_1_1_bmi___formulation.html#af04ef53959ce9c63da57f1f767740401", null ],
+    [ "_link_legacy_forcing", "classrealization_1_1_bmi___formulation.html#a20117323c1944ffc7850838842769ca1", null ],
     [ "add_time", "classrealization_1_1_bmi___formulation.html#a248b562be5dc9a21e7afbc014de15114", null ],
     [ "calc_et", "classrealization_1_1_bmi___formulation.html#a1af6f5c88bda174c8ba855e796a55439", null ],
     [ "create_formulation", "classrealization_1_1_bmi___formulation.html#a4fb8ec9b08820c29d88627ee9781d579", null ],
@@ -56,9 +56,10 @@ var classrealization_1_1_bmi___formulation =
     [ "bmi_main_output_var", "classrealization_1_1_bmi___formulation.html#a494171a1888c373c2a1e03008e00e5d5", null ],
     [ "bounds", "classrealization_1_1_bmi___formulation.html#aaebc4992c38cb5db68e859e0487ad929", null ],
     [ "et_params", "classrealization_1_1_bmi___formulation.html#a5fab369fc039b378dfd270490ddb9e5c", null ],
-    [ "forcing", "classrealization_1_1_bmi___formulation.html#ae531b310e5bc1b004b92f2008f863cfa", null ],
+    [ "forcing", "classrealization_1_1_bmi___formulation.html#a83d2e09cd1264be6cc41dce294ad702d", null ],
     [ "id", "classrealization_1_1_bmi___formulation.html#a8bfec24b0d57240e7ada2493a781db6d", null ],
     [ "id_number", "classrealization_1_1_bmi___formulation.html#af996a3e50eaf51c63865f1fdbe4f8661", null ],
+    [ "legacy_forcing", "classrealization_1_1_bmi___formulation.html#a5838e9abbc63804c4502bbc1c6f6bd18", null ],
     [ "model_type_name", "classrealization_1_1_bmi___formulation.html#a3e6136d3fde105fd835c8be24db7d1b7", null ],
     [ "OPTIONAL_PARAMETERS", "classrealization_1_1_bmi___formulation.html#a64a1aede44084c581c07a48e86ab2c17", null ],
     [ "output", "classrealization_1_1_bmi___formulation.html#a55857dc16551760ff59487991fc525fe", null ],

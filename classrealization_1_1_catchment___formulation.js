@@ -1,10 +1,10 @@
 var classrealization_1_1_catchment___formulation =
 [
     [ "time_step_t", "classrealization_1_1_catchment___formulation.html#aee10dc672e5a9e106f49dcbe0080cf7c", null ],
-    [ "Catchment_Formulation", "classrealization_1_1_catchment___formulation.html#aa0a8036b94aab2b177bc38bf0766d2bb", null ],
-    [ "Catchment_Formulation", "classrealization_1_1_catchment___formulation.html#a2f62b7ae63d8ae4cc8f872ad23ab5310", null ],
+    [ "Catchment_Formulation", "classrealization_1_1_catchment___formulation.html#a0ac15391af3381299272e18f29b20722", null ],
     [ "Catchment_Formulation", "classrealization_1_1_catchment___formulation.html#ae20086b1dc436b0a42f149b3d9de1009", null ],
     [ "~Catchment_Formulation", "classrealization_1_1_catchment___formulation.html#ab1efe9c78511cf0cc5d9b79dc99e9881", null ],
+    [ "_link_legacy_forcing", "classrealization_1_1_catchment___formulation.html#a20117323c1944ffc7850838842769ca1", null ],
     [ "add_time", "classrealization_1_1_catchment___formulation.html#a248b562be5dc9a21e7afbc014de15114", null ],
     [ "calc_et", "classrealization_1_1_catchment___formulation.html#a1af6f5c88bda174c8ba855e796a55439", null ],
     [ "create_formulation", "classrealization_1_1_catchment___formulation.html#a4fb8ec9b08820c29d88627ee9781d579", null ],
@@ -29,9 +29,10 @@ var classrealization_1_1_catchment___formulation =
     [ "write_output", "classrealization_1_1_catchment___formulation.html#aa989be0629ecaa29a2410f7588404ff9", null ],
     [ "bounds", "classrealization_1_1_catchment___formulation.html#aaebc4992c38cb5db68e859e0487ad929", null ],
     [ "et_params", "classrealization_1_1_catchment___formulation.html#a5fab369fc039b378dfd270490ddb9e5c", null ],
-    [ "forcing", "classrealization_1_1_catchment___formulation.html#ae531b310e5bc1b004b92f2008f863cfa", null ],
+    [ "forcing", "classrealization_1_1_catchment___formulation.html#a83d2e09cd1264be6cc41dce294ad702d", null ],
     [ "id", "classrealization_1_1_catchment___formulation.html#a8bfec24b0d57240e7ada2493a781db6d", null ],
     [ "id_number", "classrealization_1_1_catchment___formulation.html#af996a3e50eaf51c63865f1fdbe4f8661", null ],
+    [ "legacy_forcing", "classrealization_1_1_catchment___formulation.html#a5838e9abbc63804c4502bbc1c6f6bd18", null ],
     [ "output", "classrealization_1_1_catchment___formulation.html#a55857dc16551760ff59487991fc525fe", null ],
     [ "realized_catchment", "classrealization_1_1_catchment___formulation.html#a7c6de72bd8ebf427d71aacca7baa23c1", null ]
 ];

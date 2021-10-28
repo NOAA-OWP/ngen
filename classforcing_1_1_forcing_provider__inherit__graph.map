@@ -1,10 +1,11 @@
 <map id="forcing::ForcingProvider" name="forcing::ForcingProvider">
-<area shape="rect" id="node1" title="An abstraction interface for types that provides forcing data." alt="" coords="251,5,419,215"/>
-<area shape="rect" id="node2" href="$class_forcing.html" title="Forcing class providing time&#45;series precipiation forcing data to the model." alt="" coords="5,264,205,1031"/>
-<area shape="rect" id="node3" href="$classforcing_1_1_wrapped_forcing_provider.html" title="Simple implementation that basically wraps another instance." alt="" coords="230,521,439,774"/>
-<area shape="rect" id="node4" href="$classrealization_1_1_bmi___formulation.html" title="Abstraction of formulation with backing model object(s) that implements the BMI." alt="" coords="464,337,661,957"/>
-<area shape="rect" id="node5" href="$classrealization_1_1_bmi___module___formulation.html" title=" " alt="" coords="349,2203,547,3263"/>
-<area shape="rect" id="node7" href="$classrealization_1_1_bmi___module___formulation.html" title="Abstraction of a formulation with a single backing model object that implements the BMI." alt="" coords="464,1080,661,2125"/>
-<area shape="rect" id="node8" href="$classrealization_1_1_bmi___multi___formulation.html" title="Abstraction of a formulation with multiple backing model object that implements the BMI." alt="" coords="685,1351,883,1854"/>
-<area shape="rect" id="node6" href="$classrealization_1_1_bmi___c___formulation.html" title=" " alt="" coords="355,3312,541,3609"/>
+<area shape="rect" id="node1" title="An abstraction interface for types that provides forcing data." alt="" coords="379,5,547,215"/>
+<area shape="rect" id="node2" href="$class_csv_per_feature_forcing_provider.html" title="Forcing class providing time&#45;series precipiation forcing data to the model." alt="" coords="5,345,224,950"/>
+<area shape="rect" id="node3" href="$class_forcing.html" title="Forcing class providing time&#45;series precipiation forcing data to the model." alt="" coords="248,264,448,1031"/>
+<area shape="rect" id="node4" href="$classforcing_1_1_wrapped_forcing_provider.html" title="Simple implementation that basically wraps another instance." alt="" coords="473,521,682,774"/>
+<area shape="rect" id="node5" href="$classrealization_1_1_bmi___formulation.html" title="Abstraction of formulation with backing model object(s) that implements the BMI." alt="" coords="707,345,904,950"/>
+<area shape="rect" id="node6" href="$classrealization_1_1_bmi___module___formulation.html" title=" " alt="" coords="592,2203,789,3263"/>
+<area shape="rect" id="node8" href="$classrealization_1_1_bmi___module___formulation.html" title="Abstraction of a formulation with a single backing model object that implements the BMI." alt="" coords="707,1080,904,2125"/>
+<area shape="rect" id="node9" href="$classrealization_1_1_bmi___multi___formulation.html" title="Abstraction of a formulation with multiple backing model object that implements the BMI." alt="" coords="928,1351,1125,1854"/>
+<area shape="rect" id="node7" href="$classrealization_1_1_bmi___c___formulation.html" title=" " alt="" coords="597,3312,784,3595"/>
 </map>

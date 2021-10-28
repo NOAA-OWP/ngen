@@ -332,7 +332,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="structforcing__params.html#a2f43abdd38531314c220ef34b5ee0037">forcing_params::path</a>.</p>
+<p class="reference">References <a class="el" href="structforcing__params.html#a2f43abdd38531314c220ef34b5ee0037">forcing_params::path</a>, and <a class="el" href="class_forcing.html#a1704a153713241f70d85b3cc85c6d45b">read_forcing_aorc()</a>.</p>
 
 </div>
 </div>
@@ -399,7 +399,9 @@ Private Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000003">Todo:</a></b></dt><dd>: when using catchment_id parameter, need to enforce their explicit inclusion when calling constructors instead of allowing default ID of 0. </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000011">Todo:</a></b></dt><dd>: when using catchment_id parameter, need to enforce their explicit inclusion when calling constructors instead of allowing default ID of 0. </dd></dl>
+
+<p class="reference">References <a class="el" href="class_forcing.html#a1a515f2d188bba352c1e8e03251dfc0f">current_date_time_epoch</a>, <a class="el" href="class_forcing.html#a928ad254e5ed10376cd4611a2f89370e">end_date_time</a>, <a class="el" href="class_forcing.html#ac17a15ad701a10e0aa780ed904bbf8c8">end_date_time_epoch</a>, <a class="el" href="class_forcing.html#aa3b1eeb085aba92b6aa33f16f59ed7c7">forcing_file_name</a>, <a class="el" href="class_forcing.html#af4256642e73731a17c73e0e7d364fdd8">forcing_vector_index</a>, <a class="el" href="class_forcing.html#a1704a153713241f70d85b3cc85c6d45b">read_forcing_aorc()</a>, <a class="el" href="class_forcing.html#a432b8c3322bdca3babbf1b6a716a504f">start_date_time</a>, and <a class="el" href="class_forcing.html#aa9c42f1f07d2bcdc065f46a4980f2eb3">start_date_time_epoch</a>.</p>
 
 </div>
 </div>
@@ -428,10 +430,14 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Checks forcing vector index bounds and adjusts index if out of vector bounds ///. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000004">Todo:</a></b></dt><dd>: Bounds checking is based on precipitation vector.</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000012">Todo:</a></b></dt><dd>: Bounds checking is based on precipitation vector.</dd></dl>
 <p>Consider potential for vectors of different sizes and indices. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000005">Todo:</a></b></dt><dd>: Return appropriate warning </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000006">Todo:</a></b></dt><dd>: Return appropriate warning </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000013">Todo:</a></b></dt><dd>: Return appropriate warning </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000014">Todo:</a></b></dt><dd>: Return appropriate warning </dd></dl>
+
+<p class="reference">References <a class="el" href="class_forcing.html#af4256642e73731a17c73e0e7d364fdd8">forcing_vector_index</a>, and <a class="el" href="class_forcing.html#a0baf6b085ce5d7ac81d7479b09d50439">precipitation_rate_meters_per_second_vector</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="class_forcing.html#a15cc6da319d151a0fc7faa7ae00306d6">get_AORC_APCP_surface_kg_per_meters_squared()</a>, <a class="el" href="class_forcing.html#a93eba5c22f7ec9ce53329acaf25c7807">get_AORC_data()</a>, <a class="el" href="class_forcing.html#ae19f8bb5af6b73ec65ef6e4734ce8370">get_AORC_DLWRF_surface_W_per_meters_squared()</a>, <a class="el" href="class_forcing.html#a4690d31f78b922e65ba9a753dfe36317">get_AORC_DSWRF_surface_W_per_meters_squared()</a>, <a class="el" href="class_forcing.html#a8f632a6056966b29e721a243db22aeb4">get_AORC_PRES_surface_Pa()</a>, <a class="el" href="class_forcing.html#ad22537e7e4e6d09f450274e4d5f9b16f">get_AORC_SPFH_2maboveground_kg_per_kg()</a>, <a class="el" href="class_forcing.html#a18c6565ba672337508408c54710c4d6a">get_AORC_TMP_2maboveground_K()</a>, <a class="el" href="class_forcing.html#acb2cef30786c65e56251a0722a993cb4">get_AORC_UGRD_10maboveground_meters_per_second()</a>, <a class="el" href="class_forcing.html#a99daba93e137933e33a93b816b447c28">get_AORC_VGRD_10maboveground_meters_per_second()</a>, <a class="el" href="class_forcing.html#a8a841264256741c24fef45a2c4bbcb93">get_converted_value_for_param_in_units()</a>, <a class="el" href="class_forcing.html#ab9266a64e7f3d72851ff53511c117be2">get_current_hourly_precipitation_meters_per_second()</a>, <a class="el" href="class_forcing.html#aff5203458deb9a377fbb3f8f69582fd0">get_day_of_year()</a>, <a class="el" href="class_forcing.html#a3e1399b10a0913e34a1dd2c12cdfb558">get_time_epoch()</a>, and <a class="el" href="class_forcing.html#a02794b3270222a7ddeb1e2637e4ad232">get_time_step_size()</a>.</p>
 
 </div>
 </div>
@@ -461,6 +467,8 @@ Private Attributes</h2></td></tr>
 <p>Accessor to AORC APCP_surface_kg_per_meters_squared. </p>
 <dl class="section return"><dt>Returns</dt><dd>APCP_surface_kg_per_meters_squared </dd></dl>
 
+<p class="reference">References <a class="el" href="class_forcing.html#af61d987af7888999e6525cbf2d2725f6">AORC_vector</a>, <a class="el" href="class_forcing.html#adbe0cf692ced9e0634e4858a72547785">check_forcing_vector_index_bounds()</a>, and <a class="el" href="class_forcing.html#af4256642e73731a17c73e0e7d364fdd8">forcing_vector_index</a>.</p>
+
 </div>
 </div>
 <a id="a93eba5c22f7ec9ce53329acaf25c7807"></a>
@@ -488,6 +496,8 @@ Private Attributes</h2></td></tr>
 
 <p>Accessor to AORC data struct. </p>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="struct_a_o_r_c__data.html">AORC_data</a> </dd></dl>
+
+<p class="reference">References <a class="el" href="class_forcing.html#af61d987af7888999e6525cbf2d2725f6">AORC_vector</a>, <a class="el" href="class_forcing.html#adbe0cf692ced9e0634e4858a72547785">check_forcing_vector_index_bounds()</a>, and <a class="el" href="class_forcing.html#af4256642e73731a17c73e0e7d364fdd8">forcing_vector_index</a>.</p>
 
 </div>
 </div>
@@ -517,6 +527,8 @@ Private Attributes</h2></td></tr>
 <p>Accessor to AORC DLWRF_surface_W_per_meters_squared. </p>
 <dl class="section return"><dt>Returns</dt><dd>DLWRF_surface_W_per_meters_squared </dd></dl>
 
+<p class="reference">References <a class="el" href="class_forcing.html#af61d987af7888999e6525cbf2d2725f6">AORC_vector</a>, <a class="el" href="class_forcing.html#adbe0cf692ced9e0634e4858a72547785">check_forcing_vector_index_bounds()</a>, and <a class="el" href="class_forcing.html#af4256642e73731a17c73e0e7d364fdd8">forcing_vector_index</a>.</p>
+
 </div>
 </div>
 <a id="a4690d31f78b922e65ba9a753dfe36317"></a>
@@ -544,6 +556,8 @@ Private Attributes</h2></td></tr>
 
 <p>Accessor to AORC DSWRF_surface_W_per_meters_squared. </p>
 <dl class="section return"><dt>Returns</dt><dd>DSWRF_surface_W_per_meters_squared </dd></dl>
+
+<p class="reference">References <a class="el" href="class_forcing.html#af61d987af7888999e6525cbf2d2725f6">AORC_vector</a>, <a class="el" href="class_forcing.html#adbe0cf692ced9e0634e4858a72547785">check_forcing_vector_index_bounds()</a>, and <a class="el" href="class_forcing.html#af4256642e73731a17c73e0e7d364fdd8">forcing_vector_index</a>.</p>
 
 </div>
 </div>
@@ -599,6 +613,8 @@ Private Attributes</h2></td></tr>
 <p>Accessor to AORC PRES_surface_Pa. </p>
 <dl class="section return"><dt>Returns</dt><dd>PRES_surface_Pa </dd></dl>
 
+<p class="reference">References <a class="el" href="class_forcing.html#af61d987af7888999e6525cbf2d2725f6">AORC_vector</a>, <a class="el" href="class_forcing.html#adbe0cf692ced9e0634e4858a72547785">check_forcing_vector_index_bounds()</a>, and <a class="el" href="class_forcing.html#af4256642e73731a17c73e0e7d364fdd8">forcing_vector_index</a>.</p>
+
 </div>
 </div>
 <a id="ad22537e7e4e6d09f450274e4d5f9b16f"></a>
@@ -626,6 +642,8 @@ Private Attributes</h2></td></tr>
 
 <p>Accessor to AORC SPFH_2maboveground_kg_per_kg. </p>
 <dl class="section return"><dt>Returns</dt><dd>SPFH_2maboveground_kg_per_kg </dd></dl>
+
+<p class="reference">References <a class="el" href="class_forcing.html#af61d987af7888999e6525cbf2d2725f6">AORC_vector</a>, <a class="el" href="class_forcing.html#adbe0cf692ced9e0634e4858a72547785">check_forcing_vector_index_bounds()</a>, and <a class="el" href="class_forcing.html#af4256642e73731a17c73e0e7d364fdd8">forcing_vector_index</a>.</p>
 
 </div>
 </div>
@@ -655,6 +673,8 @@ Private Attributes</h2></td></tr>
 <p>Accessor to AORC TMP_2maboveground_K. </p>
 <dl class="section return"><dt>Returns</dt><dd>TMP_2maboveground_K </dd></dl>
 
+<p class="reference">References <a class="el" href="class_forcing.html#af61d987af7888999e6525cbf2d2725f6">AORC_vector</a>, <a class="el" href="class_forcing.html#adbe0cf692ced9e0634e4858a72547785">check_forcing_vector_index_bounds()</a>, and <a class="el" href="class_forcing.html#af4256642e73731a17c73e0e7d364fdd8">forcing_vector_index</a>.</p>
+
 </div>
 </div>
 <a id="acb2cef30786c65e56251a0722a993cb4"></a>
@@ -682,6 +702,8 @@ Private Attributes</h2></td></tr>
 
 <p>Accessor to AORC UGRD_10maboveground_meters_per_second. </p>
 <dl class="section return"><dt>Returns</dt><dd>UGRD_10maboveground_meters_per_second </dd></dl>
+
+<p class="reference">References <a class="el" href="class_forcing.html#af61d987af7888999e6525cbf2d2725f6">AORC_vector</a>, <a class="el" href="class_forcing.html#adbe0cf692ced9e0634e4858a72547785">check_forcing_vector_index_bounds()</a>, and <a class="el" href="class_forcing.html#af4256642e73731a17c73e0e7d364fdd8">forcing_vector_index</a>.</p>
 
 </div>
 </div>
@@ -711,6 +733,8 @@ Private Attributes</h2></td></tr>
 <p>Accessor to AORC VGRD_10maboveground_meters_per_second. </p>
 <dl class="section return"><dt>Returns</dt><dd>VGRD_10maboveground_meters_per_second </dd></dl>
 
+<p class="reference">References <a class="el" href="class_forcing.html#af61d987af7888999e6525cbf2d2725f6">AORC_vector</a>, <a class="el" href="class_forcing.html#adbe0cf692ced9e0634e4858a72547785">check_forcing_vector_index_bounds()</a>, and <a class="el" href="class_forcing.html#af4256642e73731a17c73e0e7d364fdd8">forcing_vector_index</a>.</p>
+
 </div>
 </div>
 <a id="a3455af909d9f8f8a96aa28995aafd8d5"></a>
@@ -738,7 +762,7 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classforcing_1_1_forcing_provider.html#aada025e246ca68db37c7fc705e8a8abd">forcing::ForcingProvider</a>.</p>
 
-<p class="reference">References <a class="el" href="class_forcing.html#a7f4d64d248b056189c16a486f2b76468">get_forcing_field_names()</a>.</p>
+<p class="reference">References <a class="el" href="class_forcing.html#a608d5703074ff027a3c363956b542986">available_forcings</a>, and <a class="el" href="class_forcing.html#a7f4d64d248b056189c16a486f2b76468">get_forcing_field_names()</a>.</p>
 
 </div>
 </div>
@@ -786,6 +810,8 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>For now, just the param value, but in the future, the value converted. </dd></dl>
+
+<p class="reference">References <a class="el" href="class_forcing.html#adbe0cf692ced9e0634e4858a72547785">check_forcing_vector_index_bounds()</a>, <a class="el" href="class_forcing.html#af4256642e73731a17c73e0e7d364fdd8">forcing_vector_index</a>, and <a class="el" href="class_forcing.html#a96352313bf0c1343ffbaea1b0759b52d">get_converted_value_for_param_in_units()</a>.</p>
 
 </div>
 </div>
@@ -840,6 +866,10 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>For now, just the param value, but in the future, the value converted. </dd></dl>
 
+<p class="reference">References <a class="el" href="class_forcing.html#aa8013150906cd10090c62c59c5e8c730">get_value_for_param_name()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="class_forcing.html#a8a841264256741c24fef45a2c4bbcb93">get_converted_value_for_param_in_units()</a>.</p>
+
 </div>
 </div>
 <a id="ab9266a64e7f3d72851ff53511c117be2"></a>
@@ -866,8 +896,12 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Gets current hourly precipitation in meters per second Precipitation frequency is assumed to be hourly for now. </p>
-<p>/// </p><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000007">Todo:</a></b></dt><dd>: Add input for dt (delta time) for different frequencies in the data than the model frequency. </dd></dl>
+<p>/// </p><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000015">Todo:</a></b></dt><dd>: Add input for dt (delta time) for different frequencies in the data than the model frequency. </dd></dl>
 <dl class="section return"><dt>Returns</dt><dd>the current hourly precipitation in meters per second </dd></dl>
+
+<p class="reference">References <a class="el" href="class_forcing.html#adbe0cf692ced9e0634e4858a72547785">check_forcing_vector_index_bounds()</a>, <a class="el" href="class_forcing.html#af4256642e73731a17c73e0e7d364fdd8">forcing_vector_index</a>, and <a class="el" href="class_forcing.html#a0baf6b085ce5d7ac81d7479b09d50439">precipitation_rate_meters_per_second_vector</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="class_forcing.html#aa4114463ad31b1847576ee73535ea90d">get_next_hourly_precipitation_meters_per_second()</a>.</p>
 
 </div>
 </div>
@@ -896,7 +930,9 @@ Private Attributes</h2></td></tr>
 
 <p>Gets day of year integer. </p>
 <dl class="section return"><dt>Returns</dt><dd>day of year integer </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000010">Todo:</a></b></dt><dd>: Sort out using local versus UTC time </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000018">Todo:</a></b></dt><dd>: Sort out using local versus UTC time </dd></dl>
+
+<p class="reference">References <a class="el" href="class_forcing.html#adbe0cf692ced9e0634e4858a72547785">check_forcing_vector_index_bounds()</a>, <a class="el" href="class_forcing.html#a1a515f2d188bba352c1e8e03251dfc0f">current_date_time_epoch</a>, <a class="el" href="class_forcing.html#af4256642e73731a17c73e0e7d364fdd8">forcing_vector_index</a>, and <a class="el" href="class_forcing.html#ab50e6f84e71ff7415bdb328be94d8464">time_epoch_vector</a>.</p>
 
 </div>
 </div>
@@ -959,6 +995,8 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classforcing_1_1_forcing_provider.html#ae7fbfcbecc65ad92f6cbfb44b4761938">forcing::ForcingProvider</a>.</p>
 
+<p class="reference">References <a class="el" href="class_forcing.html#aa9c42f1f07d2bcdc065f46a4980f2eb3">start_date_time_epoch</a>.</p>
+
 </div>
 </div>
 <a id="a40baa10ae26f810d5b668dff11a90892"></a>
@@ -990,6 +1028,8 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classforcing_1_1_forcing_provider.html#aa0851aef3ecc864d25c29fdd55ecc3f9">forcing::ForcingProvider</a>.</p>
 
+<p class="reference">References <a class="el" href="class_forcing.html#ac17a15ad701a10e0aa780ed904bbf8c8">end_date_time_epoch</a>.</p>
+
 </div>
 </div>
 <a id="aa4114463ad31b1847576ee73535ea90d"></a>
@@ -1016,11 +1056,15 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Gets next hourly precipitation in meters per second Increments pointer in forcing vector by one timestep Precipitation frequency is assumed to be hourly for now. </p>
-<p>/// </p><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000008">Todo:</a></b></dt><dd><p class="startdd">: Add input for dt (delta time) for different frequencies in the data than the model frequency. /// </p>
+<p>/// </p><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000016">Todo:</a></b></dt><dd><p class="startdd">: Add input for dt (delta time) for different frequencies in the data than the model frequency. /// </p>
 <p class="enddd">: Reconsider incrementing the forcing_vector_index because other functions rely on this, and it could have side effects </p>
 </dd></dl>
 <dl class="section return"><dt>Returns</dt><dd>the current hourly precipitation in meters per second after pointer is incremented by one timestep </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000009">Todo:</a></b></dt><dd>: Return appropriate warning </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000017">Todo:</a></b></dt><dd>: Return appropriate warning </dd></dl>
+
+<p class="reference">References <a class="el" href="class_forcing.html#af4256642e73731a17c73e0e7d364fdd8">forcing_vector_index</a>, <a class="el" href="class_forcing.html#ab9266a64e7f3d72851ff53511c117be2">get_current_hourly_precipitation_meters_per_second()</a>, and <a class="el" href="class_forcing.html#a0baf6b085ce5d7ac81d7479b09d50439">precipitation_rate_meters_per_second_vector</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="class_simple___lumped___model___realization.html#a65e1e6ce403d39e655c68a5cd321ac63">Simple_Lumped_Model_Realization::get_response()</a>, <a class="el" href="classrealization_1_1_tshirt___c___realization.html#aeb579caa25422a0eac04c19b27e791e3">realization::Tshirt_C_Realization::get_response()</a>, and <a class="el" href="classrealization_1_1_tshirt___realization.html#aea64b8b1d6f77cde58c4c8b3e767df46">realization::Tshirt_Realization::get_response()</a>.</p>
 
 </div>
 </div>
@@ -1050,6 +1094,8 @@ Private Attributes</h2></td></tr>
 <p>Accessor to time epoch. </p>
 <dl class="section return"><dt>Returns</dt><dd>current_date_time_epoch </dd></dl>
 
+<p class="reference">References <a class="el" href="class_forcing.html#adbe0cf692ced9e0634e4858a72547785">check_forcing_vector_index_bounds()</a>, <a class="el" href="class_forcing.html#a1a515f2d188bba352c1e8e03251dfc0f">current_date_time_epoch</a>, <a class="el" href="class_forcing.html#af4256642e73731a17c73e0e7d364fdd8">forcing_vector_index</a>, and <a class="el" href="class_forcing.html#ab50e6f84e71ff7415bdb328be94d8464">time_epoch_vector</a>.</p>
+
 </div>
 </div>
 <a id="a02794b3270222a7ddeb1e2637e4ad232"></a>
@@ -1077,6 +1123,8 @@ Private Attributes</h2></td></tr>
 
 <p>Get the time step size, based on epoch vector, assuming the last ts is equal to the next to last. </p>
 <dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+<p class="reference">References <a class="el" href="class_forcing.html#adbe0cf692ced9e0634e4858a72547785">check_forcing_vector_index_bounds()</a>, <a class="el" href="class_forcing.html#af4256642e73731a17c73e0e7d364fdd8">forcing_vector_index</a>, and <a class="el" href="class_forcing.html#ab50e6f84e71ff7415bdb328be94d8464">time_epoch_vector</a>.</p>
 
 </div>
 </div>
@@ -1121,6 +1169,10 @@ Private Attributes</h2></td></tr>
 </dl>
 
 <p>Implements <a class="el" href="classforcing_1_1_forcing_provider.html#a542531c62f0fa91cf4e877aa69ff2479">forcing::ForcingProvider</a>.</p>
+
+<p class="reference">References <a class="el" href="class_forcing.html#ac17a15ad701a10e0aa780ed904bbf8c8">end_date_time_epoch</a>, and <a class="el" href="class_forcing.html#aa9c42f1f07d2bcdc065f46a4980f2eb3">start_date_time_epoch</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="class_forcing.html#a45e538add006e81f797fcd8ce2f44bd3">get_value()</a>.</p>
 
 </div>
 </div>
@@ -1191,6 +1243,8 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classforcing_1_1_forcing_provider.html#a84ca58d5a524d1f07ef8e062a97e8301">forcing::ForcingProvider</a>.</p>
 
+<p class="reference">References <a class="el" href="class_forcing.html#a5a6e6d24f60ea8e99311cf3301148287">get_ts_index_for_time()</a>, <a class="el" href="class_forcing.html#aa8013150906cd10090c62c59c5e8c730">get_value_for_param_name()</a>, <a class="el" href="class_forcing.html#a1fb70d287a4a8b2c73352ec86f3986b3">is_param_sum_over_time_step()</a>, and <a class="el" href="class_forcing.html#aa9c42f1f07d2bcdc065f46a4980f2eb3">start_date_time_epoch</a>.</p>
+
 </div>
 </div>
 <a id="aa8013150906cd10090c62c59c5e8c730"></a>
@@ -1237,6 +1291,10 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The particular param's value at the given forcing time step. </dd></dl>
 
+<p class="reference">References <a class="el" href="class_forcing.html#af61d987af7888999e6525cbf2d2725f6">AORC_vector</a>, and <a class="el" href="class_forcing.html#a0baf6b085ce5d7ac81d7479b09d50439">precipitation_rate_meters_per_second_vector</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="class_forcing.html#a96352313bf0c1343ffbaea1b0759b52d">get_converted_value_for_param_in_units()</a>, and <a class="el" href="class_forcing.html#a45e538add006e81f797fcd8ce2f44bd3">get_value()</a>.</p>
+
 </div>
 </div>
 <a id="a27a8452d12c67dece00bb83efab16087"></a>
@@ -1261,6 +1319,8 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="class_forcing.html#a26c3e599e9b34248d5019491efc5c187">is_aorc_data</a>.</p>
 
 </div>
 </div>
@@ -1298,6 +1358,8 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Whether the param's value is an aggregate sum. </dd></dl>
+
+<p class="reference">Referenced by <a class="el" href="class_forcing.html#a45e538add006e81f797fcd8ce2f44bd3">get_value()</a>, and <a class="el" href="class_forcing.html#a3636054ac315721a22226ccf5833f64e">is_property_sum_over_time_step()</a>.</p>
 
 </div>
 </div>
@@ -1338,6 +1400,8 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classforcing_1_1_forcing_provider.html#acb93550e1f3cca96cbb644a5f2247986">forcing::ForcingProvider</a>.</p>
 
+<p class="reference">References <a class="el" href="class_forcing.html#a1fb70d287a4a8b2c73352ec86f3986b3">is_param_sum_over_time_step()</a>.</p>
+
 </div>
 </div>
 <a id="a8685863b123be9f26497c2d0fc66c939"></a>
@@ -1372,7 +1436,7 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="reference">References <a class="el" href="class_c_s_v_reader.html#a2dea725de823f6932ae29552aa05b97d">CSVReader::getData()</a>.</p>
+<p class="reference">References <a class="el" href="class_forcing.html#ac17a15ad701a10e0aa780ed904bbf8c8">end_date_time_epoch</a>, <a class="el" href="class_c_s_v_reader.html#a2dea725de823f6932ae29552aa05b97d">CSVReader::getData()</a>, <a class="el" href="class_forcing.html#a0baf6b085ce5d7ac81d7479b09d50439">precipitation_rate_meters_per_second_vector</a>, and <a class="el" href="class_forcing.html#aa9c42f1f07d2bcdc065f46a4980f2eb3">start_date_time_epoch</a>.</p>
 
 </div>
 </div>
@@ -1407,10 +1471,12 @@ Private Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000011">Todo:</a></b></dt><dd>TODO: Return appropriate error </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000012">Todo:</a></b></dt><dd>TODO: Return appropriate error </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000019">Todo:</a></b></dt><dd>TODO: Return appropriate error </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000020">Todo:</a></b></dt><dd>TODO: Return appropriate error </dd></dl>
 
-<p class="reference">References <a class="el" href="struct_a_o_r_c__data.html#afe55907c1902e4dd8c47655ab4d1ba7c">AORC_data::APCP_surface_kg_per_meters_squared</a>, <a class="el" href="struct_a_o_r_c__data.html#a385e5f8c684246ac9eabc4639fe14c68">AORC_data::DLWRF_surface_W_per_meters_squared</a>, <a class="el" href="struct_a_o_r_c__data.html#a348db9d91f46ca3cb892c6f045ede04c">AORC_data::DSWRF_surface_W_per_meters_squared</a>, <a class="el" href="class_c_s_v_reader.html#a2dea725de823f6932ae29552aa05b97d">CSVReader::getData()</a>, <a class="el" href="struct_a_o_r_c__data.html#a01514ef87b4e39415aaa8b45815f2c7d">AORC_data::PRES_surface_Pa</a>, <a class="el" href="struct_a_o_r_c__data.html#a78ab2785f505256dd8b35a620a94067d">AORC_data::SPFH_2maboveground_kg_per_kg</a>, <a class="el" href="struct_a_o_r_c__data.html#acbb68a182047e80854628a329ea317db">AORC_data::TMP_2maboveground_K</a>, <a class="el" href="struct_a_o_r_c__data.html#a60a4f68a6fc80445090dabac9a53979d">AORC_data::UGRD_10maboveground_meters_per_second</a>, and <a class="el" href="struct_a_o_r_c__data.html#ae4ead5c316f609a2c8884d3a593256e9">AORC_data::VGRD_10maboveground_meters_per_second</a>.</p>
+<p class="reference">References <a class="el" href="class_forcing.html#af61d987af7888999e6525cbf2d2725f6">AORC_vector</a>, <a class="el" href="struct_a_o_r_c__data.html#afe55907c1902e4dd8c47655ab4d1ba7c">AORC_data::APCP_surface_kg_per_meters_squared</a>, <a class="el" href="struct_a_o_r_c__data.html#a385e5f8c684246ac9eabc4639fe14c68">AORC_data::DLWRF_surface_W_per_meters_squared</a>, <a class="el" href="struct_a_o_r_c__data.html#a348db9d91f46ca3cb892c6f045ede04c">AORC_data::DSWRF_surface_W_per_meters_squared</a>, <a class="el" href="class_forcing.html#ac17a15ad701a10e0aa780ed904bbf8c8">end_date_time_epoch</a>, <a class="el" href="class_c_s_v_reader.html#a2dea725de823f6932ae29552aa05b97d">CSVReader::getData()</a>, <a class="el" href="class_forcing.html#a26c3e599e9b34248d5019491efc5c187">is_aorc_data</a>, <a class="el" href="class_forcing.html#a0baf6b085ce5d7ac81d7479b09d50439">precipitation_rate_meters_per_second_vector</a>, <a class="el" href="struct_a_o_r_c__data.html#a01514ef87b4e39415aaa8b45815f2c7d">AORC_data::PRES_surface_Pa</a>, <a class="el" href="struct_a_o_r_c__data.html#a78ab2785f505256dd8b35a620a94067d">AORC_data::SPFH_2maboveground_kg_per_kg</a>, <a class="el" href="class_forcing.html#aa9c42f1f07d2bcdc065f46a4980f2eb3">start_date_time_epoch</a>, <a class="el" href="class_forcing.html#ab50e6f84e71ff7415bdb328be94d8464">time_epoch_vector</a>, <a class="el" href="struct_a_o_r_c__data.html#acbb68a182047e80854628a329ea317db">AORC_data::TMP_2maboveground_K</a>, <a class="el" href="struct_a_o_r_c__data.html#a60a4f68a6fc80445090dabac9a53979d">AORC_data::UGRD_10maboveground_meters_per_second</a>, and <a class="el" href="struct_a_o_r_c__data.html#ae4ead5c316f609a2c8884d3a593256e9">AORC_data::VGRD_10maboveground_meters_per_second</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="class_forcing.html#af922942034ace4956736d830992e0502">Forcing()</a>.</p>
 
 </div>
 </div>
@@ -1457,6 +1523,8 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="reference">Referenced by <a class="el" href="class_forcing.html#a15cc6da319d151a0fc7faa7ae00306d6">get_AORC_APCP_surface_kg_per_meters_squared()</a>, <a class="el" href="class_forcing.html#a93eba5c22f7ec9ce53329acaf25c7807">get_AORC_data()</a>, <a class="el" href="class_forcing.html#ae19f8bb5af6b73ec65ef6e4734ce8370">get_AORC_DLWRF_surface_W_per_meters_squared()</a>, <a class="el" href="class_forcing.html#a4690d31f78b922e65ba9a753dfe36317">get_AORC_DSWRF_surface_W_per_meters_squared()</a>, <a class="el" href="class_forcing.html#a8f632a6056966b29e721a243db22aeb4">get_AORC_PRES_surface_Pa()</a>, <a class="el" href="class_forcing.html#ad22537e7e4e6d09f450274e4d5f9b16f">get_AORC_SPFH_2maboveground_kg_per_kg()</a>, <a class="el" href="class_forcing.html#a18c6565ba672337508408c54710c4d6a">get_AORC_TMP_2maboveground_K()</a>, <a class="el" href="class_forcing.html#acb2cef30786c65e56251a0722a993cb4">get_AORC_UGRD_10maboveground_meters_per_second()</a>, <a class="el" href="class_forcing.html#a99daba93e137933e33a93b816b447c28">get_AORC_VGRD_10maboveground_meters_per_second()</a>, <a class="el" href="class_forcing.html#aa8013150906cd10090c62c59c5e8c730">get_value_for_param_name()</a>, and <a class="el" href="class_forcing.html#a1704a153713241f70d85b3cc85c6d45b">read_forcing_aorc()</a>.</p>
+
 </div>
 </div>
 <a id="a608d5703074ff027a3c363956b542986"></a>
@@ -1478,6 +1546,8 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="class_forcing.html#a3455af909d9f8f8a96aa28995aafd8d5">get_available_forcing_outputs()</a>.</p>
 
 </div>
 </div>
@@ -1523,6 +1593,8 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="reference">Referenced by <a class="el" href="class_forcing.html#ab7dfc0d71a1f8231a46f8f119b13f584">Forcing()</a>, <a class="el" href="class_forcing.html#aff5203458deb9a377fbb3f8f69582fd0">get_day_of_year()</a>, and <a class="el" href="class_forcing.html#a3e1399b10a0913e34a1dd2c12cdfb558">get_time_epoch()</a>.</p>
+
 </div>
 </div>
 <a id="a4f192d35cd2e7be49cf58d8fc2bbfaf0"></a>
@@ -1567,6 +1639,8 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="reference">Referenced by <a class="el" href="class_forcing.html#ab7dfc0d71a1f8231a46f8f119b13f584">Forcing()</a>.</p>
+
 </div>
 </div>
 <a id="ac17a15ad701a10e0aa780ed904bbf8c8"></a>
@@ -1588,6 +1662,8 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="class_forcing.html#ab7dfc0d71a1f8231a46f8f119b13f584">Forcing()</a>, <a class="el" href="class_forcing.html#a40baa10ae26f810d5b668dff11a90892">get_forcing_output_time_end()</a>, <a class="el" href="class_forcing.html#a5a6e6d24f60ea8e99311cf3301148287">get_ts_index_for_time()</a>, <a class="el" href="class_forcing.html#a8685863b123be9f26497c2d0fc66c939">read_forcing()</a>, and <a class="el" href="class_forcing.html#a1704a153713241f70d85b3cc85c6d45b">read_forcing_aorc()</a>.</p>
 
 </div>
 </div>
@@ -1611,6 +1687,8 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="reference">Referenced by <a class="el" href="class_forcing.html#ab7dfc0d71a1f8231a46f8f119b13f584">Forcing()</a>.</p>
+
 </div>
 </div>
 <a id="af4256642e73731a17c73e0e7d364fdd8"></a>
@@ -1632,6 +1710,8 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="class_forcing.html#ab7dfc0d71a1f8231a46f8f119b13f584">Forcing()</a>, <a class="el" href="class_forcing.html#adbe0cf692ced9e0634e4858a72547785">check_forcing_vector_index_bounds()</a>, <a class="el" href="class_forcing.html#a15cc6da319d151a0fc7faa7ae00306d6">get_AORC_APCP_surface_kg_per_meters_squared()</a>, <a class="el" href="class_forcing.html#a93eba5c22f7ec9ce53329acaf25c7807">get_AORC_data()</a>, <a class="el" href="class_forcing.html#ae19f8bb5af6b73ec65ef6e4734ce8370">get_AORC_DLWRF_surface_W_per_meters_squared()</a>, <a class="el" href="class_forcing.html#a4690d31f78b922e65ba9a753dfe36317">get_AORC_DSWRF_surface_W_per_meters_squared()</a>, <a class="el" href="class_forcing.html#a8f632a6056966b29e721a243db22aeb4">get_AORC_PRES_surface_Pa()</a>, <a class="el" href="class_forcing.html#ad22537e7e4e6d09f450274e4d5f9b16f">get_AORC_SPFH_2maboveground_kg_per_kg()</a>, <a class="el" href="class_forcing.html#a18c6565ba672337508408c54710c4d6a">get_AORC_TMP_2maboveground_K()</a>, <a class="el" href="class_forcing.html#acb2cef30786c65e56251a0722a993cb4">get_AORC_UGRD_10maboveground_meters_per_second()</a>, <a class="el" href="class_forcing.html#a99daba93e137933e33a93b816b447c28">get_AORC_VGRD_10maboveground_meters_per_second()</a>, <a class="el" href="class_forcing.html#a8a841264256741c24fef45a2c4bbcb93">get_converted_value_for_param_in_units()</a>, <a class="el" href="class_forcing.html#ab9266a64e7f3d72851ff53511c117be2">get_current_hourly_precipitation_meters_per_second()</a>, <a class="el" href="class_forcing.html#aff5203458deb9a377fbb3f8f69582fd0">get_day_of_year()</a>, <a class="el" href="class_forcing.html#aa4114463ad31b1847576ee73535ea90d">get_next_hourly_precipitation_meters_per_second()</a>, <a class="el" href="class_forcing.html#a3e1399b10a0913e34a1dd2c12cdfb558">get_time_epoch()</a>, and <a class="el" href="class_forcing.html#a02794b3270222a7ddeb1e2637e4ad232">get_time_step_size()</a>.</p>
 
 </div>
 </div>
@@ -1656,6 +1736,8 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Whether this forcing instance has read in full AORC data or just <code>precipitation_rate_meters_per_second_vector</code>. </p>
+
+<p class="reference">Referenced by <a class="el" href="class_forcing.html#a27a8452d12c67dece00bb83efab16087">is_aorc_forcing()</a>, and <a class="el" href="class_forcing.html#a1704a153713241f70d85b3cc85c6d45b">read_forcing_aorc()</a>.</p>
 
 </div>
 </div>
@@ -1744,7 +1826,9 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000013">Todo:</a></b></dt><dd>: Look into aggregation of data, relevant libraries, and storing frequency information </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000021">Todo:</a></b></dt><dd>: Look into aggregation of data, relevant libraries, and storing frequency information </dd></dl>
+
+<p class="reference">Referenced by <a class="el" href="class_forcing.html#adbe0cf692ced9e0634e4858a72547785">check_forcing_vector_index_bounds()</a>, <a class="el" href="class_forcing.html#ab9266a64e7f3d72851ff53511c117be2">get_current_hourly_precipitation_meters_per_second()</a>, <a class="el" href="class_forcing.html#aa4114463ad31b1847576ee73535ea90d">get_next_hourly_precipitation_meters_per_second()</a>, <a class="el" href="class_forcing.html#aa8013150906cd10090c62c59c5e8c730">get_value_for_param_name()</a>, <a class="el" href="class_forcing.html#a8685863b123be9f26497c2d0fc66c939">read_forcing()</a>, and <a class="el" href="class_forcing.html#a1704a153713241f70d85b3cc85c6d45b">read_forcing_aorc()</a>.</p>
 
 </div>
 </div>
@@ -1768,6 +1852,8 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="reference">Referenced by <a class="el" href="class_forcing.html#ab7dfc0d71a1f8231a46f8f119b13f584">Forcing()</a>.</p>
+
 </div>
 </div>
 <a id="aa9c42f1f07d2bcdc065f46a4980f2eb3"></a>
@@ -1790,6 +1876,8 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="reference">Referenced by <a class="el" href="class_forcing.html#ab7dfc0d71a1f8231a46f8f119b13f584">Forcing()</a>, <a class="el" href="class_forcing.html#a054d02502ce4ad3a60da53e14f311c47">get_forcing_output_time_begin()</a>, <a class="el" href="class_forcing.html#a5a6e6d24f60ea8e99311cf3301148287">get_ts_index_for_time()</a>, <a class="el" href="class_forcing.html#a45e538add006e81f797fcd8ce2f44bd3">get_value()</a>, <a class="el" href="class_forcing.html#a8685863b123be9f26497c2d0fc66c939">read_forcing()</a>, and <a class="el" href="class_forcing.html#a1704a153713241f70d85b3cc85c6d45b">read_forcing_aorc()</a>.</p>
+
 </div>
 </div>
 <a id="ab50e6f84e71ff7415bdb328be94d8464"></a>
@@ -1811,7 +1899,9 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000014">Todo:</a></b></dt><dd>: Consider making epoch time the iterator </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000022">Todo:</a></b></dt><dd>: Consider making epoch time the iterator </dd></dl>
+
+<p class="reference">Referenced by <a class="el" href="class_forcing.html#aff5203458deb9a377fbb3f8f69582fd0">get_day_of_year()</a>, <a class="el" href="class_forcing.html#a3e1399b10a0913e34a1dd2c12cdfb558">get_time_epoch()</a>, <a class="el" href="class_forcing.html#a02794b3270222a7ddeb1e2637e4ad232">get_time_step_size()</a>, and <a class="el" href="class_forcing.html#a1704a153713241f70d85b3cc85c6d45b">read_forcing_aorc()</a>.</p>
 
 </div>
 </div>
@@ -1824,7 +1914,7 @@ Private Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_forcing.html">Forcing</a></li>
-    <li class="footer">Generated on Wed Oct 27 2021 19:47:55 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Thu Oct 28 2021 19:09:01 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

@@ -1,8 +1,13 @@
 var searchData=
 [
-  ['operator_21_3d_1637',['operator!=',['../classgeojson_1_1_feature_base.html#a6ea15e613f60abad67e86f379a158255',1,'geojson::FeatureBase::operator!=()'],['../classgeojson_1_1_j_s_o_n_property.html#ae1815462ba6862ac036d8ce098b7d941',1,'geojson::JSONProperty::operator!=()']]],
-  ['operator_3c_3c_1638',['operator&lt;&lt;',['../classutils_1_1_stream_handler.html#a8d118a6ccdfd6c32325ed4d933490122',1,'utils::StreamHandler']]],
-  ['operator_3d_1639',['operator=',['../classutils_1_1_stream_handler.html#a356248873a465429ee9c5eef37cb625d',1,'utils::StreamHandler']]],
-  ['operator_3d_3d_1640',['operator==',['../classgeojson_1_1_feature_base.html#a684df94c7a8a1838d23470a5b166d0a6',1,'geojson::FeatureBase::operator==()'],['../classgeojson_1_1_j_s_o_n_property.html#a4a15af4438529f165427486327d67e8e',1,'geojson::JSONProperty::operator==()']]],
-  ['origination_5ffeatures_1641',['origination_features',['../classgeojson_1_1_feature_base.html#a27d261f05aece3a56abdf48f82530306',1,'geojson::FeatureBase']]]
+  ['neighbor_5ffeatures_1638',['neighbor_features',['../classgeojson_1_1_feature_base.html#ac0233c0a1d4ffc9d69d699a704dd94ce',1,'geojson::FeatureBase']]],
+  ['network_1639',['Network',['../classnetwork_1_1_network.html#ac60dfffd85f613c714ca674730ee2a7a',1,'network::Network::Network()'],['../classnetwork_1_1_network.html#ad81217c6e3e7e1d64d6067a29ea1c3e3',1,'network::Network::Network(geojson::GeoJSON fabric)'],['../classnetwork_1_1_network.html#ab5746f910f2b6112c6a94557d52d7189',1,'network::Network::Network(geojson::GeoJSON features, std::string *link_key)']]],
+  ['network_5ftest_1640',['Network_Test',['../class_network___test.html#af81a274735d5fb4005800ad66b2fb9d0',1,'Network_Test']]],
+  ['network_5ftest1_1641',['Network_Test1',['../class_network___test1.html#a0b0ececeeb44837e5f1fc2165c14a471',1,'Network_Test1']]],
+  ['network_5ftest2_1642',['Network_Test2',['../class_network___test2.html#a9c5bd2e0f04f8f1b067bf5f8d3270075',1,'Network_Test2']]],
+  ['nexus_5fat_1643',['nexus_at',['../classhy__features_1_1_h_y___features.html#acfb3881ea8ed22f7d834e7949a9d139e',1,'hy_features::HY_Features']]],
+  ['nexus_5fmanager_1644',['Nexus_Manager',['../classnexus_1_1_nexus___manager.html#a2719ec4cb2f1a4e0db48831ca8f219dd',1,'nexus::Nexus_Manager']]],
+  ['nexus_5fremote_5ftest_1645',['Nexus_Remote_Test',['../class_nexus___remote___test.html#a84ef792b6f6ec0b55fc6f1a45d969460',1,'Nexus_Remote_Test']]],
+  ['nexus_5ftest_1646',['Nexus_Test',['../class_nexus___test.html#ab44b788bdf27a20acba375001c999cb0',1,'Nexus_Test']]],
+  ['nexuses_1647',['nexuses',['../classhy__features_1_1_h_y___features.html#a133814bb22aa41a0ad1827cb68561037',1,'hy_features::HY_Features']]]
 ];

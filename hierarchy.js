@@ -40,6 +40,7 @@ var hierarchy =
     [ "evapotranspiration_options", "structevapotranspiration__options.html", null ],
     [ "evapotranspiration_params", "structevapotranspiration__params.html", null ],
     [ "forcing::ForcingProvider", "classforcing_1_1_forcing_provider.html", [
+      [ "CsvPerFeatureForcingProvider", "class_csv_per_feature_forcing_provider.html", null ],
       [ "Forcing", "class_forcing.html", null ],
       [ "forcing::WrappedForcingProvider", "classforcing_1_1_wrapped_forcing_provider.html", null ],
       [ "realization::Bmi_Formulation", "classrealization_1_1_bmi___formulation.html", [
