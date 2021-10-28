@@ -2,6 +2,7 @@
 #define RESPONSEVALUE_H
 
 #include <map>
+#include <string>
 
 
 namespace responsevalue {
