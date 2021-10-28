@@ -437,18 +437,6 @@ namespace realization {
         virtual std::shared_ptr<M> construct_model(const geojson::PropertyMap& properties) = 0;
 
         /**
-         * Convert a time value from the model to an epoch time in seconds.
-         *
-         * Model time values are typically (though not always) 0-based totals count upward as time progresses.  The
-         * units are not necessarily seconds.  This performs the necessary lookup and conversion for such units, and
-         * then shifts the value appropriately for epoch time representation.
-         *
-         * @param model_time
-         * @return
-         */
-        virtual time_t convert_model_time(const double &model_time) = 0;
-
-        /**
          * Determine and set the offset time of the model in seconds, compared to forcing data.
          *
          * BMI models frequently have their model start time be set to 0.  As such, to know what the forcing time is
