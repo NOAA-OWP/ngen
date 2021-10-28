@@ -218,6 +218,7 @@ add_test(
         geojson/FeatureCollection_Test.cpp
         forcing/Forcing_Test.cpp
         forcing/CsvPerFeatureForcingProvider_Test.cpp
+        core/mediator/Units_Helper_Tests.cpp
         simulation_time/Simulation_Time_Test.cpp
         core/catchment/giuh/GIUH_Test.cpp
         core/NetworkTests.cpp
@@ -249,8 +250,7 @@ add_test(
         forcing/CsvPerFeatureForcingProvider_Test.cpp
         simulation_time/Simulation_Time_Test.cpp
         core/catchment/giuh/GIUH_Test.cpp
-        core/NetworkTests.cpp
-        core/ResponseValueTests.cpp
+        core/mediator/Units_Helper_Tests.cpp
         realizations/Formulation_Manager_Test.cpp
         core/nexus/NexusTests.cpp
         # TODO: this probably should be added, but at the moment it's broken (update number-of-files arg above also)
