@@ -22,7 +22,8 @@ namespace realization {
 
     public:
 
-        typedef std::shared_ptr<Bmi_Module_Formulation<bmi::Bmi>> nested_module_ptr;
+        typedef Bmi_Formulation nested_module_type;
+        typedef std::shared_ptr<nested_module_type> nested_module_ptr;
 
         /**
          * Minimal constructor for objects initialize using the Formulation_Manager and subsequent calls to
@@ -47,6 +48,19 @@ namespace realization {
          */
         double calc_et() override {
             return modules[determine_et_formulation_index()]->calc_et();
+        }
+
+        /**
+         * Convert a time value from the model to an epoch time in seconds.
+         *
+         * This type defers to a method of the same name in its "primary" nested formulation, specifically the one at
+         * ind
+         *
+         * @param model_time
+         * @return
+         */
+        time_t convert_model_time(const double &model_time) override {
+            return modules[get_index_for_primary_module()]->convert_model_time(model_time);
         }
 
         void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr) override {
@@ -267,6 +281,24 @@ namespace realization {
             return "bmi_multi";
         }
 
+        /**
+         * Get the current time for the primary nested BMI model in its native format and units.
+         *
+         * @return The current time for the primary nested BMI model in its native format and units.
+         */
+        const double get_model_current_time() override {
+            return modules[get_index_for_primary_module()]->get_model_current_time();
+        }
+
+        /**
+         * Get the end time for the primary nested BMI model in its native format and units.
+         *
+         * @return The end time for the primary nested BMI model in its native format and units.
+         */
+        const double get_model_end_time() override {
+            return modules[get_index_for_primary_module()]->get_model_end_time();
+        }
+
         string get_output_line_for_timestep(int timestep, std::string delimiter) override;
 
         double get_response(time_step_t t_index, time_step_t t_delta) override;
@@ -374,6 +406,29 @@ namespace realization {
          */
         bool is_time_step_beyond_end_time(time_step_t t_index);
 
+        /**
+         * Get the index of the primary module.
+         *
+         * @return The index of the primary module.
+         */
+        inline int get_index_for_primary_module() {
+            return primary_module_index;
+        }
+
+        /**
+         * Set the index of the primary module.
+         *
+         * Note that this function does not alter the state of the class, or produce an error, if the index is out of
+         * range.
+         *
+         * @param index The index for the module.
+         */
+        inline void set_index_for_primary_module(int index) {
+            if (index < modules.size()) {
+                primary_module_index = index;
+            }
+        }
+
     protected:
 
         /**
@@ -383,6 +438,58 @@ namespace realization {
          * @param needs_param_validation
          */
         void create_multi_formulation(geojson::PropertyMap properties, bool needs_param_validation);
+
+        template<class T>
+        double get_module_var_value_as_double(const std::string &var_name, std::shared_ptr<Bmi_Formulation> mod) {
+            std::shared_ptr<T> module = std::static_pointer_cast<T>(mod);
+            return module->get_var_value_as_double(var_name);
+        }
+
+        //std::shared_ptr<Bmi_C_Formulation> init_nested_module(int mod_index, std::string identifier, geojson::PropertyMap properties) {
+        template<class T>
+        std::shared_ptr<T> init_nested_module(int mod_index, std::string identifier, geojson::PropertyMap properties) {
+            std::unique_ptr<forcing::ForcingProvider> wfp = std::make_unique<forcing::WrappedForcingProvider>(this);
+            //std::shared_ptr<Bmi_C_Formulation> mod = std::make_shared<Bmi_C_Formulation>(identifier, forcing, output);
+            std::shared_ptr<T> mod = std::make_shared<T>(identifier, std::move(wfp), output);
+
+            // Call create_formulation on each formulation
+            mod->create_formulation(properties);
+
+            // Set this up for placing in the module_variable_maps member variable
+            std::shared_ptr<std::map<std::string, std::string>> var_aliases;
+            var_aliases = std::make_shared<std::map<std::string, std::string>>(std::map<std::string, std::string>());
+            for (const std::string &var_name : mod->get_bmi_input_variables()) {
+                std::string framework_alias = mod->get_config_mapped_variable_name(var_name);
+                (*var_aliases)[framework_alias] = var_name;
+                // If framework_name is not in collection from which we have available data sources ...
+                if (availableData.count(framework_alias) != 1) {
+                    throw std::runtime_error(
+                            "Multi BMI cannot be created with module " + mod->get_model_type_name() + " with input " +
+                            "variable " + framework_alias +
+                            (var_name == framework_alias ? "" : " (an alias of BMI variable " + var_name + ")") +
+                            " when there is no previously-enabled source for this input.");
+                }
+                else {
+                    mod->input_forcing_providers[var_name] = availableData[framework_alias];
+                    mod->input_forcing_providers[framework_alias] = availableData[framework_alias];
+                }
+            }
+
+            // Also add the output variable aliases
+            for (const std::string &var_name : mod->get_bmi_output_variables()) {
+                std::string framework_alias = mod->get_config_mapped_variable_name(var_name);
+                (*var_aliases)[framework_alias] = var_name;
+                if (availableData.count(framework_alias) > 0) {
+                    throw std::runtime_error(
+                            "Multi BMI cannot be created with module " + mod->get_model_type_name() +
+                            " with output variable " + framework_alias +
+                            (var_name == framework_alias ? "" : " (an alias of BMI variable " + var_name + ")") +
+                            " because a previous module is using this output variable name/alias.");
+                }
+                availableData[framework_alias] = mod;
+            }
+            module_variable_maps[mod_index] = var_aliases;
+        }
 
         /**
          * A mapping of data properties to their providers.
@@ -405,6 +512,7 @@ namespace realization {
         bool is_out_vars_from_last_mod = false;
         /** The nested BMI modules composing this multi-module formulation, in their order of execution. */
         std::vector<nested_module_ptr> modules;
+        std::vector<std::string> module_types;
         /**
          * Per-module maps (ordered as in @ref modules) of configuration-mapped names to BMI variable names.
          */
@@ -412,7 +520,8 @@ namespace realization {
         std::vector<std::shared_ptr<std::map<std::string, std::string>>> module_variable_maps;
         /** Index value (0-based) of the time step that will be processed by the next update of the model. */
         int next_time_step_index = 0;
-
+        /** The index of the "primary" nested module, used when functionality is deferred to a particular module's behavior. */
+        int primary_module_index = -1;
 
     };
 }
