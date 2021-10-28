@@ -84,6 +84,7 @@ find_package(Boost 1.72.0 REQUIRED)
 if(UDUNITS_ACTIVE)
     add_library(libudunits2 SHARED IMPORTED)
     set_property(TARGET libudunits2 PROPERTY IMPORTED_LOCATION "${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/lib/.libs/libudunits2.so")
+    add_compile_definitions("NGEN_UDUNITS2_XML_PATH=\"${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/lib/udunits2.xml\"")
 endif()
 
 # Handle several steps for BMI C library logic and dependencies, at top level, if functionality is turned on
