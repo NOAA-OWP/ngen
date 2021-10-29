@@ -1411,7 +1411,7 @@ Friends</h2></td></tr>
 <p>The resulting string contains only the calculated output values for the time step, and not the time step index itself.</p>
 <p>An empty string is returned if the time step value is not in the range of valid time steps for which there are calculated values for all variables.</p>
 <p>The default delimiter is a comma.</p>
-<p>Implementations will throw <code>invalid_argument</code> exceptions if data for the provided time step parameter is not accessible.</p>
+<p>Implementations will throw <code>invalid_argument</code> exceptions if data for the provided time step parameter is not accessible. Note that, for this type, only the last processed time step is accessible, because formulations do not save results from previous time steps. This also has the consequence of there being no valid set of arguments before a least one call to <a class="el" href="classrealization_1_1_bmi___c___formulation.html#ad21457d65986b77870b896e541264286">get_response</a> has been made.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">timestep</td><td>The time step for which data is desired. </td></tr>
@@ -3387,6 +3387,9 @@ template&lt;class T , class O &gt; </div>
 </div><div class="memdoc">
 
 <p>Index value (0-based) of the time step that will be processed by the next update of the model. </p>
+<p>A formulation time step for BMI types can be thought of as the execution of a call to any of the functions of the underlying BMI model that advance the model (either <code>update</code> or <code>update_until</code>). This member stores the ordinal index of the next time step to be executed. Except in the initial formulation state, this will be one greater than the index of the last executed time step.</p>
+<p>E.g., on initialization, before any calls to <a class="el" href="classrealization_1_1_bmi___c___formulation.html#ad21457d65986b77870b896e541264286">get_response</a>, this value will be <code>0</code>. After a call to <a class="el" href="classrealization_1_1_bmi___c___formulation.html#ad21457d65986b77870b896e541264286">get_response</a> (assuming <code>0</code> as the passed <code>t_index</code> argument), time step <code>0</code> will be processed, and this member would be incremented by 1, thus making it <code>1</code>.</p>
+<p>The member serves as an implicit marker of how many time steps have been processed so far. Knowing this is required to maintain valid behavior in certain things, such as <a class="el" href="classrealization_1_1_bmi___c___formulation.html#ad21457d65986b77870b896e541264286">get_response</a> (we may want to process multiple time steps forward to a particular index other than the next, but it would not be valid to receive a <code>t_index</code> earlier than the last processed time step) and <a class="el" href="classrealization_1_1_bmi___c___formulation.html#aafe6012e3cc560517e2dd66a58c04d90">get_output_line_for_timestep</a> (because formulations do not save results from previous time steps, only the results from the last processed time step can be used to generate output). </p>
 
 <p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___c___formulation.html#aafe6012e3cc560517e2dd66a58c04d90">get_output_line_for_timestep()</a>, and <a class="el" href="classrealization_1_1_bmi___c___formulation.html#ad21457d65986b77870b896e541264286">get_response()</a>.</p>
 
@@ -3540,7 +3543,7 @@ template&lt;class T , class O &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li><li class="navelem"><a class="el" href="classrealization_1_1_bmi___c___formulation.html">Bmi_C_Formulation</a></li>
-    <li class="footer">Generated on Fri Oct 29 2021 14:37:05 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Fri Oct 29 2021 22:39:14 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
