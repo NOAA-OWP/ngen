@@ -1,11 +1,11 @@
 #include "UnitsHelper.hpp"
 
 ut_system* UnitsHelper::unit_system;
-
+std::once_flag UnitsHelper::unit_system_inited;
 
 double UnitsHelper::get_converted_value(const std::string &in_units, double value, const std::string &out_units)
 {
-    init_unit_system();
+    std::call_once(unit_system_inited, init_unit_system);
     ut_unit* from = ut_parse(unit_system, in_units.c_str(), UT_UTF8);
     if (from == NULL)
     {
