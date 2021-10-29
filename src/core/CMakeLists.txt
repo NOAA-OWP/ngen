@@ -13,6 +13,7 @@ target_include_directories(core PUBLIC
         ${PROJECT_SOURCE_DIR}/include/core/catchment/giuh
         ${PROJECT_SOURCE_DIR}/include/core/nexus
         ${PROJECT_SOURCE_DIR}/include/core/hydrolocation
+        ${PROJECT_SOURCE_DIR}/include/core/mediator
         ${PROJECT_SOURCE_DIR}/include/realizations/catchment
         ${PROJECT_SOURCE_DIR}/models/kernels
         ${PROJECT_SOURCE_DIR}/models/kernels/evapotranspiration
@@ -33,6 +34,7 @@ if (${NGEN_ACTIVATE_PYTHON})
             ${PROJECT_SOURCE_DIR}/include/core/catchment/giuh
             ${PROJECT_SOURCE_DIR}/include/core/nexus
             ${PROJECT_SOURCE_DIR}/include/core/hydrolocation
+            ${PROJECT_SOURCE_DIR}/include/core/mediator
             ${PROJECT_SOURCE_DIR}/include/realizations/catchment
             ${PROJECT_SOURCE_DIR}/models/kernels
             ${PROJECT_SOURCE_DIR}/models/kernels/evapotranspiration
@@ -56,6 +58,7 @@ else ()
             ${PROJECT_SOURCE_DIR}/include/core/catchment/giuh
             ${PROJECT_SOURCE_DIR}/include/core/nexus
             ${PROJECT_SOURCE_DIR}/include/core/hydrolocation
+            ${PROJECT_SOURCE_DIR}/include/core/mediator
             ${PROJECT_SOURCE_DIR}/include/realizations/catchment
             ${PROJECT_SOURCE_DIR}/models/kernels
             ${PROJECT_SOURCE_DIR}/models/kernels/evapotranspiration
@@ -73,3 +76,4 @@ endif ()
 add_subdirectory("catchment")
 add_subdirectory("nexus")
 add_subdirectory("hydrolocation")
+add_subdirectory("mediator")
