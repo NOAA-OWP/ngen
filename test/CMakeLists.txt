@@ -226,6 +226,7 @@ add_test(
         realizations/Formulation_Manager_Test.cpp
         NGen::core
         NGen::core_nexus
+        NGen::core_mediator
         NGen::geojson
         NGen::realizations_catchment
         libudunits2
@@ -259,6 +260,7 @@ add_test(
         NGen::core
         gmock
         NGen::core_nexus
+        NGen::core_mediator
         NGen::geojson
         NGen::realizations_catchment
         libudunits2
