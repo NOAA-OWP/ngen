@@ -4774,9 +4774,11 @@
         <topic label="HydroLocation" href="class_h_y___hydro_nexus.html#a69406ee5d134f20ffc1f470489987b97"/>
         <topic label="time_step_t" href="class_h_y___hydro_nexus.html#aeaab4f70efb4f3bba130414296374c9b"/>
         <topic label="HY_HydroNexus" href="class_h_y___hydro_nexus.html#a800b5a623c58b25098c9ec666e90bdb2"/>
+        <topic label="HY_HydroNexus" href="class_h_y___hydro_nexus.html#a11dc68437650f47aad75eadc071b51e5"/>
         <topic label="HY_HydroNexus" href="class_h_y___hydro_nexus.html#a8b137ee3a97a12fc2131576cadb4912f"/>
         <topic label="~HY_HydroNexus" href="class_h_y___hydro_nexus.html#a0a84a02f104fd0270790f57cfd5160f4"/>
         <topic label="add_upstream_flow" href="class_h_y___hydro_nexus.html#a25198c16baaea6478cd7b83de78e6fea"/>
+        <topic label="get_contributing_catchments" href="class_h_y___hydro_nexus.html#a17994249b4cbe3a561a83599b14d34aa"/>
         <topic label="get_downstream_flow" href="class_h_y___hydro_nexus.html#a8fb66f25c3d6a1d480b1686510d7bc16"/>
         <topic label="get_flow_units" href="class_h_y___hydro_nexus.html#af515ce59ff427551b6e61cbdba65dd7f"/>
         <topic label="get_id" href="class_h_y___hydro_nexus.html#ac8fba3c168f653e7f94b52dd1399c40a"/>
@@ -4814,8 +4816,10 @@
         <topic label="HydroLocation" href="class_h_y___point_hydro_nexus.html#a69406ee5d134f20ffc1f470489987b97"/>
         <topic label="time_step_t" href="class_h_y___point_hydro_nexus.html#aeaab4f70efb4f3bba130414296374c9b"/>
         <topic label="HY_PointHydroNexus" href="class_h_y___point_hydro_nexus.html#a511775a49116a52db653731866f98b54"/>
+        <topic label="HY_PointHydroNexus" href="class_h_y___point_hydro_nexus.html#a94216b672307de3a748daa0cbbdd8cbe"/>
         <topic label="~HY_PointHydroNexus" href="class_h_y___point_hydro_nexus.html#a4a61dc18ee9c6004925880e43dc23c3c"/>
         <topic label="add_upstream_flow" href="class_h_y___point_hydro_nexus.html#a3582f14abc7e68e9aa35a01a70609ac9"/>
+        <topic label="get_contributing_catchments" href="class_h_y___point_hydro_nexus.html#a17994249b4cbe3a561a83599b14d34aa"/>
         <topic label="get_downstream_flow" href="class_h_y___point_hydro_nexus.html#afa2d0caa7e461973609494edd195023a"/>
         <topic label="get_flow_units" href="class_h_y___point_hydro_nexus.html#a162c1183486d8f0a25c58e553dbd5b4f"/>
         <topic label="get_id" href="class_h_y___point_hydro_nexus.html#ac8fba3c168f653e7f94b52dd1399c40a"/>

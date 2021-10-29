@@ -249,5 +249,5 @@ var NAVTREEINDEX0 =
 "class_h_y___hydro_network.html#af996a3e50eaf51c63865f1fdbe4f8661":[21,0,42,7],
 "class_h_y___hydro_network.html#afffc8690df116d936a4d8c1026a9f491":[21,0,42,2],
 "class_h_y___hydro_nexus.html":[21,0,43],
-"class_h_y___hydro_nexus.html#a0a84a02f104fd0270790f57cfd5160f4":[21,0,43,5]
+"class_h_y___hydro_nexus.html#a0a84a02f104fd0270790f57cfd5160f4":[21,0,43,6]
 };

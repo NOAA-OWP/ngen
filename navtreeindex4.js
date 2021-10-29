@@ -1,5 +1,9 @@
 var NAVTREEINDEX4 =
 {
+"classgeojson_1_1_line_string_feature.html#af289e5db1d2039bddd84bef755f0bab6":[21,0,4,3,36],
+"classgeojson_1_1_line_string_feature.html#af92534c1068a597dd1fb10dc13d2e7a0":[21,0,4,3,14],
+"classgeojson_1_1_multi_line_string_feature.html":[21,0,4,4],
+"classgeojson_1_1_multi_line_string_feature.html#a07a793b858d72f62d5bde068cc9d7cbe":[21,0,4,4,20],
 "classgeojson_1_1_multi_line_string_feature.html#a0a6da4b7b4427ff7c624a79e3aeaa248":[21,0,4,4,12],
 "classgeojson_1_1_multi_line_string_feature.html#a0e329f3a2c6b3989a42756534d1bdf10":[21,0,4,4,53],
 "classgeojson_1_1_multi_line_string_feature.html#a12a39105fe661aec11fe6e8a1dd2caab":[21,0,4,4,44],
@@ -245,9 +249,5 @@ var NAVTREEINDEX4 =
 "classgeojson_1_1_polygon_feature.html#a18f3153350fa48aae42f3b302473e2c6":[21,0,4,8,46],
 "classgeojson_1_1_polygon_feature.html#a27d261f05aece3a56abdf48f82530306":[21,0,4,8,33],
 "classgeojson_1_1_polygon_feature.html#a2874f4fa4ef4a40ceb7120f20b4f291b":[21,0,4,8,18],
-"classgeojson_1_1_polygon_feature.html#a28c9a47577e2984d1f6f6b1e1dd053a2":[21,0,4,8,1],
-"classgeojson_1_1_polygon_feature.html#a29b6852ed6a7359d1e844de4faa9f170":[21,0,4,8,4],
-"classgeojson_1_1_polygon_feature.html#a2e62de0267a14d019a8e230b276bb6b4":[21,0,4,8,54],
-"classgeojson_1_1_polygon_feature.html#a2e7471a77aedbc2ad61ac7ad8e1891f7":[21,0,4,8,14],
-"classgeojson_1_1_polygon_feature.html#a30269e3419054d9f3e06e4d1c74b44e0":[21,0,4,8,6]
+"classgeojson_1_1_polygon_feature.html#a28c9a47577e2984d1f6f6b1e1dd053a2":[21,0,4,8,1]
 };
