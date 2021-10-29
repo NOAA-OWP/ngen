@@ -20,11 +20,5 @@ class UnitsHelper {
         }
     }
 
-    //public:
-
-    //static double get_converted_value(const std::string &in_units, double value, const std::string &out_units);
-
 };
 
-/*
-*/
