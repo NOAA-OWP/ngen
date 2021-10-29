@@ -18,7 +18,7 @@
                                 "forcing_file": "",
                                 "init_config": "./data/multi_bmi/noah-mp-modular-init.namelist.input",
                                 "allow_exceed_end_time": true,
-                                "main_output_variable": "Q_OUT",
+                                "main_output_variable": "QINSUR",
                                 "variable_names_map": {
                                     "ETRAN": "water_potential_evaporation_flux",
                                     "PRCPNONC": "atmosphere_water__liquid_equivalent_precipitation_rate",
@@ -45,6 +45,7 @@
                                 "registration_function": "register_bmi_cfe",
                                 "variable_names_map": {
                                     "atmosphere_water__liquid_equivalent_precipitation_rate": "precip_rate",
+                                    "water_potential_evaporation_flux": "ETRAN",
                                     "atmosphere_air_water~vapor__relative_saturation": "SPFH_2maboveground",
                                     "land_surface_air__temperature": "TMP_2maboveground",
                                     "land_surface_wind__x_component_of_velocity": "UGRD_10maboveground",
