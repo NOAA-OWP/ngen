@@ -83,6 +83,8 @@ add_test(test_realization_config
         realizations/Formulation_Manager_Test.cpp
         NGen::core
         NGen::realizations_catchment
+        NGen::core_mediator
+        libudunits2
 )
 
 ########################## GIUH Unit Tests
@@ -133,6 +135,8 @@ if(BMI_C_LIB_ACTIVE)
             realizations/catchments/Bmi_C_Formulation_Test.cpp
             NGen::core
             NGen::realizations_catchment
+            NGen::core_mediator
+            libudunits2
     )
 endif()
 
@@ -145,6 +149,8 @@ if (${BMI_FORTRAN_ACTIVE})
             realizations/catchments/Bmi_Fortran_Formulation_Test.cpp
             NGen::core
             NGen::realizations_catchment
+            NGen::core_mediator
+            libudunits2
     )
 endif()
 
@@ -157,6 +163,8 @@ if (${NGEN_ACTIVATE_PYTHON})
             realizations/catchments/Bmi_Py_Formulation_Test.cpp
             NGen::core
             NGen::realizations_catchment
+            NGen::core_mediator
+            libudunits2
     )
 endif()
 
@@ -168,6 +176,8 @@ add_test(
         realizations/catchments/Bmi_C_Cfe_IT.cpp
         NGen::core
         NGen::realizations_catchment
+        NGen::core_mediator
+        libudunits2
 )
 
 ########################## Internal Torchlib LSTM Tests
@@ -179,6 +189,10 @@ if(LSTM_TORCH_LIB_ACTIVE)
             realizations/catchments/LSTM_Realization_Test.cpp
             NGen::core
             NGen::realizations_catchment
+            NGen::core_mediator
+            libudunits2
+
+
     )
 endif()
 
