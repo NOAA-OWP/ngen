@@ -19,7 +19,7 @@ set(SURFACE_LIB_NAME_CMAKE surfacebmi)
 set(SURFACE_LIB_DESC_CMAKE "External Noah-MP Surface Shared Library")
 
 # Make sure these are compiled with this directive
-add_compile_definitions(BMI_ACTIVE NGEN_FORCING_ACTIVE NGEN_OUTPUT_ACTIVE)
+add_compile_definitions(BMI_ACTIVE NGEN_FORCING_ACTIVE NGEN_OUTPUT_ACTIVE NGEN_ACTIVE)
 
 #Use ../../../FindNetCDF.cmake, which looks for config package, pkgconfig, and standard file locations
 #in that order
@@ -90,6 +90,7 @@ target_compile_options(surfacebmi PUBLIC -cpp -ffree-line-length-none)
 ##### NETCDF #####
 #target_link_libraries( surfacebmi iso_c_bmi ${netCDF_C_LIB} ${netCDF_FORTRAN_LIB})
 ##### END NETCDF #####
+target_link_libraries( surfacebmi PUBLIC iso_c_bmi )
 set_target_properties(surfacebmi PROPERTIES VERSION ${PROJECT_VERSION})
 
 #TODO is this needed for fortran?
