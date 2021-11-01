@@ -1,6 +1,9 @@
 #include <udunits2.h>
 #include <mutex>
 
+#ifndef NGEN_UNITSHELPER_H
+#define NGEN_UNITSHELPER_H
+
 class UnitsHelper {
 
     public:
@@ -22,3 +25,4 @@ class UnitsHelper {
 
 };
 
+#endif //NGEN_UNITSHELPER_H
