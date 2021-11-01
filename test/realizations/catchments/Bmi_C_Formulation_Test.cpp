@@ -205,7 +205,7 @@ void Bmi_C_Formulation_Test::SetUp() {
                          + variables_line +
                          "                \"uses_forcing_file\": " + (uses_forcing_file[i] ? "true" : "false") + ""
                          "            },"
-                         "            \"forcing\": { \"path\": \"" + forcing_file[i] + "\"}"
+                         "            \"forcing\": { \"path\": \"" + forcing_file[i] + "\", \"provider\": \"CsvPerFeature\"}"
                          "        }"
                          "    }"
                          "}";
