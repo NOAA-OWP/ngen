@@ -10,6 +10,7 @@
 #include "Bmi_C_Adapter.hpp"
 #include <AorcForcing.hpp>
 #include <ForcingProvider.hpp>
+#include <UnitsHelper.hpp>
 
 // Forward declaration to provide access to protected items in testing
 class Bmi_Formulation_Test;
@@ -392,9 +393,18 @@ namespace realization {
                     }
                 }
             }
-            // Then return the value
-            // TODO: also just assume units are the same, but need to implement this correctly later
-            return get_var_value_as_double(bmi_var_name);
+            
+            double value = get_var_value_as_double(bmi_var_name);
+
+            // Convert units
+            std::string native_units = get_bmi_model()->GetVarUnits(bmi_var_name);
+            try {
+                return UnitsHelper::get_converted_value(native_units, value, output_units);
+            }
+            catch (const std::runtime_error& e){
+                std::cerr<<"Unit conversion error: "<<std::endl<<e.what()<<std::endl<<"Returning unconverted value!";
+                return value;
+            }
         }
 
         bool is_bmi_input_variable(const std::string &var_name) override {
