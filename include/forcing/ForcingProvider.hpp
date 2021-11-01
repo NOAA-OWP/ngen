@@ -23,6 +23,8 @@ namespace forcing {
 
     public:
 
+        virtual ~ForcingProvider() = default;
+
         virtual const std::vector<std::string> &get_available_forcing_outputs() = 0;
 
         /**
