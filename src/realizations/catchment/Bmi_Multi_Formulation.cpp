@@ -15,6 +15,11 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
     set_bmi_main_output_var(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__MAIN_OUT_VAR).as_string());
     set_model_type_name(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__MODEL_TYPE).as_string());
 
+    std::shared_ptr<forcing::WrappedForcingProvider> forcing_provider = std::make_shared<forcing::WrappedForcingProvider>(&forcing);
+    for (const std::string &forcing_name_or_alias : forcing.get_available_forcing_outputs()) {
+        availableData[forcing_name_or_alias] = forcing_provider;
+    }
+
     // TODO: go back and set this up properly in required params collection
     auto sub_formulation_it = properties.find(BMI_REALIZATION_CFG_PARAM_REQ__MODULES);
     std::vector<geojson::JSONProperty> sub_formulations_list = sub_formulation_it->second.as_list();
