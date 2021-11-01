@@ -21,17 +21,17 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
     }
 
     // TODO: go back and set this up properly in required params collection
-    auto sub_formulation_it = properties.find(BMI_REALIZATION_CFG_PARAM_REQ__MODULES);
-    std::vector<geojson::JSONProperty> sub_formulations_list = sub_formulation_it->second.as_list();
+    auto nested_module_configs_it = properties.find(BMI_REALIZATION_CFG_PARAM_REQ__MODULES);
+    std::vector<geojson::JSONProperty> nested_module_configs = nested_module_configs_it->second.as_list();
     // By default, have the "primary" module be the last
-    primary_module_index = sub_formulations_list.size() - 1;
-    modules = std::vector<nested_module_ptr>(sub_formulations_list.size());
-    module_types = std::vector<std::string>(sub_formulations_list.size());
+    primary_module_index = nested_module_configs.size() - 1;
+    modules = std::vector<nested_module_ptr>(nested_module_configs.size());
+    module_types = std::vector<std::string>(nested_module_configs.size());
     module_variable_maps = std::vector<std::shared_ptr<std::map<std::string, std::string>>>(modules.size());
 
     /* ************************ Begin outer loop: "for sub_formulations_list" ************************ */
-    for (size_t i = 0; i < sub_formulations_list.size(); ++i) {
-        geojson::JSONProperty formulation_config = sub_formulations_list[i];
+    for (size_t i = 0; i < nested_module_configs.size(); ++i) {
+        geojson::JSONProperty formulation_config = nested_module_configs[i];
         std::string type_name = formulation_config.at("name").as_string();
         std::string identifier = get_catchment_id() + "." + std::to_string(i);
         nested_module_ptr module = nullptr;
