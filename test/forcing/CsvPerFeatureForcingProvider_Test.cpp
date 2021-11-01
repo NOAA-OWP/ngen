@@ -131,3 +131,26 @@ TEST_F(CsvPerFeatureForcingProviderTest, TestForcingDataReadAltFormat)
     EXPECT_NEAR(current_precipitation, 0.00013539, 0.00000001);
 
 }
+
+
+TEST_F(CsvPerFeatureForcingProviderTest, TestForcingDataUnitConversion)
+{
+    double current_precipitation;
+
+    time_t begin = Forcing_Object->get_forcing_output_time_begin("");
+
+    int current_day_of_year;
+    int i = 65;
+    time_t t = begin+(i*3600);
+    std::cerr << std::ctime(&t) << std::endl;
+
+    current_precipitation = Forcing_Object->get_value(CSDMS_STD_NAME_RAIN_RATE, begin+(i*3600), 3600, "");
+
+    EXPECT_NEAR(current_precipitation, 7.9999999999999996e-07, 0.00000005);
+
+    double temp_f = Forcing_Object->get_value(CSDMS_STD_NAME_SURFACE_TEMP, begin+(i*3600), 3600, "degF");
+
+    EXPECT_NEAR(temp_f, 56.749989014, 0.00001);
+
+}
+

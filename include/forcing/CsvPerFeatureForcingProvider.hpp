@@ -18,6 +18,7 @@
 #include "AorcForcing.hpp"
 #include "ForcingProvider.hpp"
 #include <exception>
+#include <UnitsHelper.hpp>
 
 
 /**
@@ -135,6 +136,7 @@ class CsvPerFeatureForcingProvider : public forcing::ForcingProvider
             involved_time_step_values.push_back(get_value_for_param_name(output_name, current_index));
             time_remaining -= ts_involved_s;
             current_index++;
+
         }
         double value = 0;
         for (size_t i = 0; i < involved_time_step_values.size(); ++i) {
@@ -143,7 +145,15 @@ class CsvPerFeatureForcingProvider : public forcing::ForcingProvider
             else
                 value += involved_time_step_values[i] * ((double)involved_time_step_seconds[i] / (double)duration_s);
         }
-        return value;
+
+        // Convert units
+        try {
+            return UnitsHelper::get_converted_value(available_forcings_units[output_name], value, output_units);
+        }
+        catch (const std::runtime_error& e){
+            std::cerr<<"Unit conversion error: "<<std::endl<<e.what()<<std::endl<<"Returning unconverted value!";
+            return value;
+        }
     }
 
     /**
