@@ -55,12 +55,12 @@ namespace realization {
             struct AORC_data raw_aorc;
             raw_aorc.TMP_2maboveground_K = forcing->get_value(CSDMS_STD_NAME_SURFACE_TEMP, model_time, timestep, "K");
             raw_aorc.SPFH_2maboveground_kg_per_kg = forcing->get_value(NGEN_STD_NAME_SPECIFIC_HUMIDITY, model_time, timestep, "kg/kg");
-            raw_aorc.PRES_surface_Pa = forcing->get_value(CSDMS_STD_NAME_SURFACE_AIR_PRESSURE, model_time, timestep, "K");
-            raw_aorc.UGRD_10maboveground_meters_per_second = forcing->get_value(CSDMS_STD_NAME_WIND_U_X, model_time, timestep, "K");
-            raw_aorc.VGRD_10maboveground_meters_per_second = forcing->get_value(CSDMS_STD_NAME_WIND_V_Y, model_time, timestep, "K");
-            raw_aorc.DSWRF_surface_W_per_meters_squared = forcing->get_value(CSDMS_STD_NAME_SOLAR_SHORTWAVE, model_time, timestep, "K");
-            raw_aorc.DLWRF_surface_W_per_meters_squared = forcing->get_value(CSDMS_STD_NAME_SOLAR_LONGWAVE, model_time, timestep, "K");
-            raw_aorc.APCP_surface_kg_per_meters_squared = forcing->get_value(CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, model_time, timestep, "K");
+            raw_aorc.PRES_surface_Pa = forcing->get_value(CSDMS_STD_NAME_SURFACE_AIR_PRESSURE, model_time, timestep, "Pa");
+            raw_aorc.UGRD_10maboveground_meters_per_second = forcing->get_value(CSDMS_STD_NAME_WIND_U_X, model_time, timestep, "m s^-1");
+            raw_aorc.VGRD_10maboveground_meters_per_second = forcing->get_value(CSDMS_STD_NAME_WIND_V_Y, model_time, timestep, "m s^-1");
+            raw_aorc.DSWRF_surface_W_per_meters_squared = forcing->get_value(CSDMS_STD_NAME_SOLAR_SHORTWAVE, model_time, timestep, "W m^-2");
+            raw_aorc.DLWRF_surface_W_per_meters_squared = forcing->get_value(CSDMS_STD_NAME_SOLAR_LONGWAVE, model_time, timestep, "W m^-2");
+            raw_aorc.APCP_surface_kg_per_meters_squared = forcing->get_value(CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, model_time, timestep, "kg m^-2");
 
             return calc_et(raw_aorc);
         }
