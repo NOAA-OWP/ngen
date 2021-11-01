@@ -301,8 +301,9 @@ class CsvPerFeatureForcingProvider : public forcing::ForcingProvider
 
                 if(well_known_fields.count(n) > 0){
                     auto t = well_known_fields[n];
-                    n = std::get<0>(t);
                     u = u == "" ? std::get<1>(t) : u;
+                    available_forcings_units[n] = u; // Allow lookup of units by non-canonical name
+                    n = std::get<0>(t);
                 }
 
                 //col_indices[n] = i;
