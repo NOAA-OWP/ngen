@@ -110,17 +110,24 @@ class Forcing : public forcing::ForcingProvider
 
     const std::vector<std::string> &get_available_forcing_outputs() override {
         if (available_forcings.empty()) {
-            for (std::string forcing_name : *(Forcing::get_forcing_field_names())) {
+            std::vector<std::string> csdms_names = {
+                    CSDMS_STD_NAME_SOLAR_LONGWAVE,
+                    CSDMS_STD_NAME_SOLAR_SHORTWAVE,
+                    CSDMS_STD_NAME_SURFACE_AIR_PRESSURE,
+                    CSDMS_STD_NAME_HUMIDITY,
+                    CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE,
+                    CSDMS_STD_NAME_SURFACE_TEMP,
+                    CSDMS_STD_NAME_WIND_U_X,
+                    CSDMS_STD_NAME_WIND_V_Y
+            };
+            auto aorc_field_names = Forcing::get_forcing_field_names();
+            available_forcings.reserve(aorc_field_names->size() + csdms_names.size());
+            for (const std::string &forcing_name : *aorc_field_names) {
                 available_forcings.push_back(forcing_name);
             }
-            available_forcings.push_back(CSDMS_STD_NAME_SOLAR_LONGWAVE);
-            available_forcings.push_back(CSDMS_STD_NAME_SOLAR_SHORTWAVE);
-            available_forcings.push_back(CSDMS_STD_NAME_SURFACE_AIR_PRESSURE);
-            available_forcings.push_back(CSDMS_STD_NAME_HUMIDITY);
-            available_forcings.push_back(CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE);
-            available_forcings.push_back(CSDMS_STD_NAME_SURFACE_TEMP);
-            available_forcings.push_back(CSDMS_STD_NAME_WIND_U_X);
-            available_forcings.push_back(CSDMS_STD_NAME_WIND_V_Y);
+            for (const std::string &forcing_name : csdms_names) {
+                available_forcings.push_back(forcing_name);
+            }
         }
         return available_forcings;
     }
