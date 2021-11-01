@@ -489,6 +489,7 @@ namespace realization {
                 availableData[framework_alias] = mod;
             }
             module_variable_maps[mod_index] = var_aliases;
+            return mod;
         }
 
         /**
