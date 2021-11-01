@@ -402,7 +402,7 @@ namespace realization {
                 return UnitsHelper::get_converted_value(native_units, value, output_units);
             }
             catch (const std::runtime_error& e){
-                std::cerr<<"Unit conversion error: "<<std::endl<<e.what()<<std::endl<<"Returning unconverted value!";
+                std::cerr<<"Unit conversion error: "<<std::endl<<e.what()<<std::endl<<"Returning unconverted value!"<<std::endl;
                 return value;
             }
         }
