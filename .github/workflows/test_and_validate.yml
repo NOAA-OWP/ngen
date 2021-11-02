@@ -47,7 +47,7 @@ jobs:
       run: |
         export BOOST_ROOT="$(pwd)/boost_1_72_0"
         [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
-        cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=OFF -DNGEN_ACTIVATE_PYTHON:BOOL=OFF -S .
+        cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=OFF -DNGEN_ACTIVATE_PYTHON:BOOL=OFF -DUDUNITS_ACTIVE:BOOL=ON -S .
     
     - name: build_tests
       run: cmake --build cmake_build --target test_unit -- -j ${{ env.LINUX_NUM_PROC_CORES }}
@@ -99,7 +99,7 @@ jobs:
         run: |
           export BOOST_ROOT="$(pwd)/boost_1_72_0"
           [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
-          cmake -B cmake_build -DMPI_ACTIVE:BOOL=ON -DBMI_C_LIB_ACTIVE:BOOL=OFF -DNGEN_ACTIVATE_PYTHON:BOOL=OFF -S .
+          cmake -B cmake_build -DMPI_ACTIVE:BOOL=ON -DBMI_C_LIB_ACTIVE:BOOL=OFF -DNGEN_ACTIVATE_PYTHON:BOOL=OFF -DUDUNITS_ACTIVE:BOOL=ON -S .
 
       - name: build_tests
         run: cmake --build cmake_build --target test_remote_nexus -- -j ${{ env.LINUX_NUM_PROC_CORES }}
@@ -145,7 +145,7 @@ jobs:
           deactivate
 
       - name: cmake_init_shared_lib_build
-        run: cmake -B extern/test_bmi_c/cmake_build -S extern/test_bmi_c
+        run: cmake -B extern/test_bmi_c/cmake_build -S extern/test_bmi_c 
 
       - name: build_test_bmi_c_shared_lib
         run: cmake --build extern/test_bmi_c/cmake_build --target testbmicmodel
@@ -167,7 +167,7 @@ jobs:
         run: |
           export BOOST_ROOT="$(pwd)/boost_1_72_0"
           [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
-          cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=ON -DNGEN_ACTIVATE_PYTHON:BOOL=ON -S .
+          cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=ON -DNGEN_ACTIVATE_PYTHON:BOOL=ON -DUDUNITS_ACTIVE:BOOL=ON -S .
 
       - name: build_bmi_c_tests
         run: cmake --build cmake_build --target test_bmi_c -- -j ${{ env.LINUX_NUM_PROC_CORES }}
@@ -240,7 +240,7 @@ jobs:
         run: |
           export BOOST_ROOT="$(pwd)/boost_1_72_0"
           [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
-          cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=ON -DBMI_FORTRAN_ACTIVE:BOOL=ON -DNGEN_ACTIVATE_PYTHON:BOOL=OFF -S .
+          cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=ON -DBMI_FORTRAN_ACTIVE:BOOL=ON -DNGEN_ACTIVATE_PYTHON:BOOL=OFF -DUDUNITS_ACTIVE:BOOL=ON -S .
 
       - name: build_bmi_fortran_tests
         run: cmake --build cmake_build --target test_bmi_fortran -- -j ${{ env.LINUX_NUM_PROC_CORES }}
@@ -303,7 +303,7 @@ jobs:
         run: |
           export BOOST_ROOT="$(pwd)/boost_1_72_0"
           [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
-          cmake -B cmake_build -DCMAKE_BUILD_TYPE=Debug -DBMI_C_LIB_ACTIVE:BOOL=ON -DNGEN_ACTIVATE_PYTHON:BOOL=ON -S .
+          cmake -B cmake_build -DCMAKE_BUILD_TYPE=Debug -DBMI_C_LIB_ACTIVE:BOOL=ON -DNGEN_ACTIVATE_PYTHON:BOOL=ON -DUDUNITS_ACTIVE:BOOL=ON -S .
 
       - name: build_bmi_python_tests
         run: cmake --build cmake_build --target test_bmi_python -- -j ${{ env.LINUX_NUM_PROC_CORES }}
@@ -349,7 +349,7 @@ jobs:
         run: |
           export BOOST_ROOT="$(pwd)/boost_1_72_0"
           [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
-          cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=OFF -DNGEN_ACTIVATE_PYTHON:BOOL=OFF -S .
+          cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=OFF -DNGEN_ACTIVATE_PYTHON:BOOL=OFF -DUDUNITS_ACTIVE:BOOL=ON -S .
 
       - name: build_tests
         run: cmake --build cmake_build --target test_unit -- -j ${{ env.MACOS_NUM_PROC_CORES }}
@@ -417,7 +417,7 @@ jobs:
         run: |
           export BOOST_ROOT="$(pwd)/boost_1_72_0"
           [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
-          cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=ON -DNGEN_ACTIVATE_PYTHON:BOOL=ON -S .
+          cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=ON -DNGEN_ACTIVATE_PYTHON:BOOL=ON -DUDUNITS_ACTIVE:BOOL=ON -S .
 
       - name: build_bmi_c_tests
         run: cmake --build cmake_build --target test_bmi_c -- -j ${{ env.MACOS_NUM_PROC_CORES }}
@@ -490,7 +490,7 @@ jobs:
         run: |
           export BOOST_ROOT="$(pwd)/boost_1_72_0"
           [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
-          cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=ON -DBMI_FORTRAN_ACTIVE:BOOL=ON -DNGEN_ACTIVATE_PYTHON:BOOL=OFF -S .
+          cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=ON -DBMI_FORTRAN_ACTIVE:BOOL=ON -DNGEN_ACTIVATE_PYTHON:BOOL=OFF -DUDUNITS_ACTIVE:BOOL=ON -S .
 
       - name: build_bmi_fortran_tests
         run: cmake --build cmake_build --target test_bmi_fortran -- -j ${{ env.MACOS_NUM_PROC_CORES }}
@@ -553,7 +553,7 @@ jobs:
         run: |
           export BOOST_ROOT="$(pwd)/boost_1_72_0"
           [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
-          cmake -B cmake_build -DCMAKE_BUILD_TYPE=Debug -DBMI_C_LIB_ACTIVE:BOOL=ON -DNGEN_ACTIVATE_PYTHON:BOOL=ON -S .
+          cmake -B cmake_build -DCMAKE_BUILD_TYPE=Debug -DBMI_C_LIB_ACTIVE:BOOL=ON -DNGEN_ACTIVATE_PYTHON:BOOL=ON -DUDUNITS_ACTIVE:BOOL=ON -S .
 
       - name: build_bmi_python_tests
         run: cmake --build cmake_build --target test_bmi_python -- -j ${{ env.MACOS_NUM_PROC_CORES }}
