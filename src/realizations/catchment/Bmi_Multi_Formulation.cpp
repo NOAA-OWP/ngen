@@ -35,14 +35,13 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
         std::string type_name = formulation_config.at("name").as_string();
         std::string identifier = get_catchment_id() + "." + std::to_string(i);
         nested_module_ptr module = nullptr;
+        bool inactive_type_requested = false;
         module_types[i] = type_name;
         if (type_name == "bmi_c") {
             #ifdef NGEN_BMI_C_LIB_ACTIVE
             module = init_nested_module<Bmi_C_Formulation>(i, identifier, formulation_config.at("params").get_values());
             #else  // NGEN_BMI_C_LIB_ACTIVE
-            throw runtime_error(
-                        get_formulation_type() + " could not initialize sub formulation of type " + type_name +
-                        " due to support for this type not being activated.");
+            inactive_type_requested = true;
             #endif // NGEN_BMI_C_LIB_ACTIVE
         }
         if (type_name == "bmi_fortran") {
@@ -50,19 +49,20 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
             #ifdef NGEN_BMI_FORTRAN_ACTIVE
             module = init_nested_module<Bmi_Fortran_Formulation>(i, identifier, formulation_config.at("params").get_values());
             #else // NGEN_BMI_FORTRAN_ACTIVE
-            throw runtime_error(
-                        get_formulation_type() + " could not initialize sub formulation of type " + type_name +
-                        " due to support for this type not being activated.");
+            inactive_type_requested = true;
             #endif // NGEN_BMI_FORTRAN_ACTIVE
         }
         if (type_name == "bmi_python") {
             #ifdef ACTIVATE_PYTHON
             module = init_nested_module<Bmi_Py_Formulation>(i, identifier, formulation_config.at("params").get_values());
             #else // ACTIVATE_PYTHON
-            throw runtime_error(
-                        get_formulation_type() + " could not initialize sub formulation of type " + type_name +
-                        " due to support for this type not being activated.");
+            inactive_type_requested = true;
             #endif // ACTIVATE_PYTHON
+        }
+        if (inactive_type_requested) {
+            throw runtime_error(
+                    get_formulation_type() + " could not initialize sub formulation of type " + type_name +
+                    " due to support for this type not being activated.");
         }
         if (module == nullptr) {
             throw runtime_error(get_formulation_type() + " received unexpected subtype formulation " + type_name);
