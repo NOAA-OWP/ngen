@@ -204,7 +204,12 @@ namespace network {
           //which is a reasonable semantic
           return get_sorted_index(order) | boost::adaptors::reversed
                         | boost::adaptors::transformed([this](int const& i) { return get_id(i); })
-                        | boost::adaptors::filtered([type](std::string const& s) { return s.substr(0,3) == type; });
+                        | boost::adaptors::filtered([type](std::string const& s) { 
+                          if(type == "nex"){
+                            return s.substr(0,3) == type || s.substr(0,3) == "tnx";
+                          }
+                          return s.substr(0,3) == type; 
+                        });
 
         }
         /**
