@@ -1,5 +1,6 @@
 var NAVTREEINDEX12 =
 {
+"structsolar__radiation__options.html":[21,0,75],
 "structsolar__radiation__options.html#ac69f14364ec436f79b61ae3926e57e80":[21,0,75,0],
 "structsolar__radiation__parameters.html":[21,0,76],
 "structsolar__radiation__parameters.html#a114701f8f42f9bdacde9074c0e39cacb":[21,0,76,2],
@@ -77,6 +78,5 @@ var NAVTREEINDEX12 =
 "todo.html":[19],
 "unique_8hpp.html#a114e9c954eee68b8f2058949ef4c8345":[20,0,12,5],
 "unique_8hpp.html#a300958e41ca196cf6108a2b91a363b1c":[20,0,12,3],
-"unique_8hpp.html#adf12c752a5b1bdeb568aa5bf2086dd16":[20,0,12,4],
-"":[20,0,12]
+"unique_8hpp.html#adf12c752a5b1bdeb568aa5bf2086dd16":[20,0,12,4]
 };
