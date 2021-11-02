@@ -166,6 +166,10 @@ void generate_partitions(network::Network& network, const int& num_partitions, c
                 nexus_set.emplace(downstream);
                 //nexus_list.push_back(downstream);
             }
+            if(nexus_set.size() == 0){
+                std::cerr<<"Error: Catchment "<<catchment<<" has no destination nexus.\n";
+                exit(1);
+            }
             for( auto upstream : network.get_origination_ids(catchment) ){
                 nexus_set.emplace(upstream);
                 //nexus_list.push_back(upstream);
@@ -179,8 +183,12 @@ void generate_partitions(network::Network& network, const int& num_partitions, c
             {
                 //std::cout<<"nexus "<<nexus<<" is remote DOWN on partition "<<partition<<std::endl;
                 //FIXME partitioning shouldn't have to assume dendridic network
-                std::string nexus = network.get_destination_ids(catchment)[0];
-                down_nexus = nexus;
+                std::vector<std::string> destinations = network.get_destination_ids(catchment);
+                if(destinations.size() == 0){
+                    std::cerr<<"Error: Catchment "<<catchment<<" has no destinatin nexus.\n";
+                    exit(1);
+                }
+                down_nexus = destinations[0];
 
                 part_id = std::to_string(partition);  // Is id used?
                 partition_str = std::to_string(partition);
@@ -227,7 +235,7 @@ void generate_partitions(network::Network& network, const int& num_partitions, c
                 //this nexus overlaps partitions
                 //Handeled above by ensure all up/down stream nexuses are recorded 
                 //nexus_list.push_back(nexus);
-                up_nexus = nexus;
+                up_nexus = down_nexus;
                 //std::cout<<"\nin partition "<<partition<<":"<<std::endl;
             }
     }
