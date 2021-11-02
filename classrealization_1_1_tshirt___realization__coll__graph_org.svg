@@ -699,29 +699,30 @@
 <g id="node20" class="node">
 <title>Node20</title>
 <g id="a_node20"><a xlink:href="classforcing_1_1_forcing_provider.html" target="_top" xlink:title="An abstraction interface for types that provides forcing data.">
-<polygon fill="white" stroke="black" points="1109.65,-1154.5 1109.65,-1310.5 1235.65,-1310.5 1235.65,-1154.5 1109.65,-1154.5"/>
-<text text-anchor="middle" x="1172.65" y="-1298.5" font-family="Helvetica,sans-Serif" font-size="10.00">forcing::ForcingProvider</text>
-<polyline fill="none" stroke="black" points="1109.65,-1291.5 1235.65,-1291.5 "/>
-<text text-anchor="middle" x="1172.65" y="-1279.5" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
-<polyline fill="none" stroke="black" points="1109.65,-1272.5 1235.65,-1272.5 "/>
-<text text-anchor="start" x="1117.65" y="-1260.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_forcing</text>
-<text text-anchor="start" x="1117.65" y="-1249.5" font-family="Helvetica,sans-Serif" font-size="10.00">_outputs()</text>
-<text text-anchor="start" x="1117.65" y="-1238.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_forcing_output</text>
-<text text-anchor="start" x="1117.65" y="-1227.5" font-family="Helvetica,sans-Serif" font-size="10.00">_time_begin()</text>
-<text text-anchor="start" x="1117.65" y="-1216.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_forcing_output</text>
-<text text-anchor="start" x="1117.65" y="-1205.5" font-family="Helvetica,sans-Serif" font-size="10.00">_time_end()</text>
-<text text-anchor="start" x="1117.65" y="-1194.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_ts_index_for_time()</text>
-<text text-anchor="start" x="1117.65" y="-1183.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_value()</text>
-<text text-anchor="start" x="1117.65" y="-1172.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ is_property_sum_over</text>
-<text text-anchor="start" x="1117.65" y="-1161.5" font-family="Helvetica,sans-Serif" font-size="10.00">_time_step()</text>
+<polygon fill="white" stroke="black" points="1109.65,-1149 1109.65,-1316 1235.65,-1316 1235.65,-1149 1109.65,-1149"/>
+<text text-anchor="middle" x="1172.65" y="-1304" font-family="Helvetica,sans-Serif" font-size="10.00">forcing::ForcingProvider</text>
+<polyline fill="none" stroke="black" points="1109.65,-1297 1235.65,-1297 "/>
+<text text-anchor="middle" x="1172.65" y="-1285" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
+<polyline fill="none" stroke="black" points="1109.65,-1278 1235.65,-1278 "/>
+<text text-anchor="start" x="1117.65" y="-1266" font-family="Helvetica,sans-Serif" font-size="10.00">+ ~ForcingProvider()</text>
+<text text-anchor="start" x="1117.65" y="-1255" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_forcing</text>
+<text text-anchor="start" x="1117.65" y="-1244" font-family="Helvetica,sans-Serif" font-size="10.00">_outputs()</text>
+<text text-anchor="start" x="1117.65" y="-1233" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_forcing_output</text>
+<text text-anchor="start" x="1117.65" y="-1222" font-family="Helvetica,sans-Serif" font-size="10.00">_time_begin()</text>
+<text text-anchor="start" x="1117.65" y="-1211" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_forcing_output</text>
+<text text-anchor="start" x="1117.65" y="-1200" font-family="Helvetica,sans-Serif" font-size="10.00">_time_end()</text>
+<text text-anchor="start" x="1117.65" y="-1189" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_ts_index_for_time()</text>
+<text text-anchor="start" x="1117.65" y="-1178" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_value()</text>
+<text text-anchor="start" x="1117.65" y="-1167" font-family="Helvetica,sans-Serif" font-size="10.00">+ is_property_sum_over</text>
+<text text-anchor="start" x="1117.65" y="-1156" font-family="Helvetica,sans-Serif" font-size="10.00">_time_step()</text>
 </a>
 </g>
 </g>
 <!-- Node20&#45;&gt;Node19 -->
 <g id="edge24" class="edge">
 <title>Node20&#45;&gt;Node19</title>
-<path fill="none" stroke="midnightblue" d="M1177.55,-1144.02C1179.46,-1109.83 1181.75,-1068.8 1184.1,-1026.87"/>
-<polygon fill="none" stroke="midnightblue" points="1174.03,-1144.22 1176.96,-1154.4 1181.02,-1144.61 1174.03,-1144.22"/>
+<path fill="none" stroke="midnightblue" d="M1177.83,-1138.89C1179.69,-1105.72 1181.88,-1066.6 1184.11,-1026.68"/>
+<polygon fill="none" stroke="midnightblue" points="1174.33,-1138.81 1177.27,-1148.99 1181.32,-1139.2 1174.33,-1138.81"/>
 </g>
 <!-- Node21 -->
 <g id="node21" class="node">

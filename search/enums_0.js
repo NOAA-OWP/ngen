@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['featuretype_2285',['FeatureType',['../namespacegeojson.html#ad5d0756236bbc62039740c0b6258cee0',1,'geojson']]]
+  ['featuretype_2306',['FeatureType',['../namespacegeojson.html#ad5d0756236bbc62039740c0b6258cee0',1,'geojson']]]
 ];

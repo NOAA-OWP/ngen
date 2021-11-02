@@ -1,5 +1,6 @@
 var classforcing_1_1_forcing_provider =
 [
+    [ "~ForcingProvider", "classforcing_1_1_forcing_provider.html#ac783579df7a4ea9ca3e27a925a254fab", null ],
     [ "get_available_forcing_outputs", "classforcing_1_1_forcing_provider.html#aada025e246ca68db37c7fc705e8a8abd", null ],
     [ "get_forcing_output_time_begin", "classforcing_1_1_forcing_provider.html#ae7fbfcbecc65ad92f6cbfb44b4761938", null ],
     [ "get_forcing_output_time_end", "classforcing_1_1_forcing_provider.html#aa0851aef3ecc864d25c29fdd55ecc3f9", null ],

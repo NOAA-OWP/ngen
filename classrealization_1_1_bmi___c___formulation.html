@@ -156,6 +156,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2cdb5c771c20a19646176feb893c7105"><td class="memItemLeft" align="right" valign="top">time_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___module___formulation.html#a2cdb5c771c20a19646176feb893c7105">get_forcing_output_time_end</a> (const std::string &amp;output_name) override</td></tr>
 <tr class="memdesc:a2cdb5c771c20a19646176feb893c7105"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the exclusive ending of the period of time over which this instance can provide data for this forcing.  <a href="classrealization_1_1_bmi___module___formulation.html#a2cdb5c771c20a19646176feb893c7105">More...</a><br /></td></tr>
 <tr class="separator:a2cdb5c771c20a19646176feb893c7105"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9961eb8ca3f725a847a9c756ae62aa5"><td class="memItemLeft" align="right" valign="top">const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___module___formulation.html#ab9961eb8ca3f725a847a9c756ae62aa5">get_model_current_time</a> () override</td></tr>
+<tr class="memdesc:ab9961eb8ca3f725a847a9c756ae62aa5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current time for the backing BMI model in its native format and units.  <a href="classrealization_1_1_bmi___module___formulation.html#ab9961eb8ca3f725a847a9c756ae62aa5">More...</a><br /></td></tr>
+<tr class="separator:ab9961eb8ca3f725a847a9c756ae62aa5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9de6583471d63bd31481a01b2436b91b"><td class="memItemLeft" align="right" valign="top">const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9de6583471d63bd31481a01b2436b91b">get_model_end_time</a> () override</td></tr>
+<tr class="memdesc:a9de6583471d63bd31481a01b2436b91b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the end time for the backing BMI model in its native format and units.  <a href="classrealization_1_1_bmi___module___formulation.html#a9de6583471d63bd31481a01b2436b91b">More...</a><br /></td></tr>
+<tr class="separator:a9de6583471d63bd31481a01b2436b91b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac614801078ade31467823584232f5a4a"><td class="memItemLeft" align="right" valign="top">const vector&lt; std::string &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___module___formulation.html#ac614801078ade31467823584232f5a4a">get_required_parameters</a> () override</td></tr>
 <tr class="separator:ac614801078ade31467823584232f5a4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa3fb347c7c3a6c9f6989eaa289a3a8a8"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___module___formulation.html#aa3fb347c7c3a6c9f6989eaa289a3a8a8">get_config_mapped_variable_name</a> (const std::string &amp;model_var_name) override</td></tr>
@@ -378,6 +384,8 @@ Private Attributes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
 Friends</h2></td></tr>
+<tr class="memitem:a272943c5e7e6e9dbd7a648a220df263c"><td class="memItemLeft" align="right" valign="top">class&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___c___formulation.html#a272943c5e7e6e9dbd7a648a220df263c">Bmi_Multi_Formulation</a></td></tr>
+<tr class="separator:a272943c5e7e6e9dbd7a648a220df263c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a04abbbee1836c2cdfbe44fd9ebb136a4"><td class="memItemLeft" align="right" valign="top">class&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___c___formulation.html#a04abbbee1836c2cdfbe44fd9ebb136a4">::Bmi_Formulation_Test</a></td></tr>
 <tr class="separator:a04abbbee1836c2cdfbe44fd9ebb136a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab629620cdc1831773640b662bc1615b5"><td class="memItemLeft" align="right" valign="top">class&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___c___formulation.html#ab629620cdc1831773640b662bc1615b5">::Bmi_C_Formulation_Test</a></td></tr>
@@ -674,7 +682,7 @@ Friends</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
-<p>Implements <a class="el" href="classrealization_1_1_bmi___module___formulation.html#accc78ec90a83dc338006ef64aed6754a">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>.</p>
+<p>Implements <a class="el" href="classrealization_1_1_bmi___formulation.html#a71539f348de57ae368bfd8bdcd6ef1d5">realization::Bmi_Formulation</a>.</p>
 
 <p class="reference">References <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a0539c240236829e5b3f5841961542c2c">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;::get_bmi_model()</a>.</p>
 
@@ -1275,6 +1283,66 @@ Friends</h2></td></tr>
 <p class="reference">References <a class="el" href="classrealization_1_1_formulation.html#a8bfec24b0d57240e7ada2493a781db6d">realization::Formulation::id</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classrealization_1_1_tshirt___c___realization.html#a6a47b0f7e4b5ef28a054d5258b1eabe2">realization::Tshirt_C_Realization::create_formulation()</a>, and <a class="el" href="classrealization_1_1_tshirt___realization.html#a40e6a3298f4f8c2724ddda7736925909">realization::Tshirt_Realization::create_formulation()</a>.</p>
+
+</div>
+</div>
+<a id="ab9961eb8ca3f725a847a9c756ae62aa5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab9961eb8ca3f725a847a9c756ae62aa5">&#9670;&nbsp;</a></span>get_model_current_time()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const double <a class="el" href="classrealization_1_1_bmi___module___formulation.html">realization::Bmi_Module_Formulation</a>&lt; <a class="el" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html">models::bmi::Bmi_C_Adapter</a>  &gt;::get_model_current_time </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the current time for the backing BMI model in its native format and units. </p>
+<dl class="section return"><dt>Returns</dt><dd>The current time for the backing BMI model in its native format and units. </dd></dl>
+
+<p>Implements <a class="el" href="classrealization_1_1_bmi___formulation.html#a7f6b7763bbb81fb56006630e0c63c6d9">realization::Bmi_Formulation</a>.</p>
+
+</div>
+</div>
+<a id="a9de6583471d63bd31481a01b2436b91b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9de6583471d63bd31481a01b2436b91b">&#9670;&nbsp;</a></span>get_model_end_time()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const double <a class="el" href="classrealization_1_1_bmi___module___formulation.html">realization::Bmi_Module_Formulation</a>&lt; <a class="el" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html">models::bmi::Bmi_C_Adapter</a>  &gt;::get_model_end_time </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the end time for the backing BMI model in its native format and units. </p>
+<dl class="section return"><dt>Returns</dt><dd>The end time for the backing BMI model in its native format and units. </dd></dl>
+
+<p>Implements <a class="el" href="classrealization_1_1_bmi___formulation.html#aec8618aad576db5f22c9a430249b7210">realization::Bmi_Formulation</a>.</p>
 
 </div>
 </div>
@@ -2881,6 +2949,28 @@ template&lt;class T , class O &gt; </div>
 
 </div>
 </div>
+<a id="a272943c5e7e6e9dbd7a648a220df263c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a272943c5e7e6e9dbd7a648a220df263c">&#9670;&nbsp;</a></span>Bmi_Multi_Formulation</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">friend class <a class="el" href="classrealization_1_1_bmi___multi___formulation.html">Bmi_Multi_Formulation</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">friend</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <h2 class="groupheader">Member Data Documentation</h2>
 <a id="a4bdc86c0655cdc4b14b2f61f5e66efd7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4bdc86c0655cdc4b14b2f61f5e66efd7">&#9670;&nbsp;</a></span>allow_model_exceed_end_time</h2>
@@ -3437,7 +3527,7 @@ template&lt;class T , class O &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a974d1eac6a95751c4e4570a61bad8541">construct_model()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a8694f5e94f40224efca11a73892da8ff">realization::Bmi_Multi_Formulation::create_multi_formulation()</a>, <a class="el" href="class_h_y___catchment_area.html#a9d02de255937deb8f6169ef20f5a07d6">HY_CatchmentArea::set_output_stream()</a>, and <a class="el" href="class_h_y___catchment_area.html#aa989be0629ecaa29a2410f7588404ff9">HY_CatchmentArea::write_output()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a974d1eac6a95751c4e4570a61bad8541">construct_model()</a>, <a class="el" href="class_h_y___catchment_area.html#a9d02de255937deb8f6169ef20f5a07d6">HY_CatchmentArea::set_output_stream()</a>, and <a class="el" href="class_h_y___catchment_area.html#aa989be0629ecaa29a2410f7588404ff9">HY_CatchmentArea::write_output()</a>.</p>
 
 </div>
 </div>
@@ -3543,7 +3633,7 @@ template&lt;class T , class O &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li><li class="navelem"><a class="el" href="classrealization_1_1_bmi___c___formulation.html">Bmi_C_Formulation</a></li>
-    <li class="footer">Generated on Tue Nov 2 2021 19:01:32 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Tue Nov 2 2021 19:01:59 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

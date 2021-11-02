@@ -127,6 +127,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a1ea8c09adf4f0417cfde87782ca7f9e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af04ef53959ce9c63da57f1f767740401"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___formulation.html#af04ef53959ce9c63da57f1f767740401">~Bmi_Formulation</a> ()</td></tr>
 <tr class="separator:af04ef53959ce9c63da57f1f767740401"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71539f348de57ae368bfd8bdcd6ef1d5"><td class="memItemLeft" align="right" valign="top">virtual time_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___formulation.html#a71539f348de57ae368bfd8bdcd6ef1d5">convert_model_time</a> (const double &amp;model_time)=0</td></tr>
+<tr class="memdesc:a71539f348de57ae368bfd8bdcd6ef1d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a time value from the model to an epoch time in seconds.  <a href="classrealization_1_1_bmi___formulation.html#a71539f348de57ae368bfd8bdcd6ef1d5">More...</a><br /></td></tr>
+<tr class="separator:a71539f348de57ae368bfd8bdcd6ef1d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c827a4010e0c178481684cdffb57f33"><td class="memItemLeft" align="right" valign="top">virtual const bool &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___formulation.html#a4c827a4010e0c178481684cdffb57f33">get_allow_model_exceed_end_time</a> () const =0</td></tr>
 <tr class="memdesc:a4c827a4010e0c178481684cdffb57f33"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get whether a model may perform updates beyond its <code>end_time</code>.  <a href="classrealization_1_1_bmi___formulation.html#a4c827a4010e0c178481684cdffb57f33">More...</a><br /></td></tr>
 <tr class="separator:a4c827a4010e0c178481684cdffb57f33"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -141,6 +144,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:adb8c092c273f87a0796e53e12bf48de9"><td class="memItemLeft" align="right" valign="top">virtual const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___formulation.html#adb8c092c273f87a0796e53e12bf48de9">get_config_mapped_variable_name</a> (const std::string &amp;model_var_name)=0</td></tr>
 <tr class="memdesc:adb8c092c273f87a0796e53e12bf48de9"><td class="mdescLeft">&#160;</td><td class="mdescRight">When possible, translate a variable name for a BMI model to an internally recognized name.  <a href="classrealization_1_1_bmi___formulation.html#adb8c092c273f87a0796e53e12bf48de9">More...</a><br /></td></tr>
 <tr class="separator:adb8c092c273f87a0796e53e12bf48de9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7f6b7763bbb81fb56006630e0c63c6d9"><td class="memItemLeft" align="right" valign="top">virtual const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___formulation.html#a7f6b7763bbb81fb56006630e0c63c6d9">get_model_current_time</a> ()=0</td></tr>
+<tr class="memdesc:a7f6b7763bbb81fb56006630e0c63c6d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current time for the backing BMI model in its native format and units.  <a href="classrealization_1_1_bmi___formulation.html#a7f6b7763bbb81fb56006630e0c63c6d9">More...</a><br /></td></tr>
+<tr class="separator:a7f6b7763bbb81fb56006630e0c63c6d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec8618aad576db5f22c9a430249b7210"><td class="memItemLeft" align="right" valign="top">virtual const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___formulation.html#aec8618aad576db5f22c9a430249b7210">get_model_end_time</a> ()=0</td></tr>
+<tr class="memdesc:aec8618aad576db5f22c9a430249b7210"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the end time for the backing BMI model in its native format and units.  <a href="classrealization_1_1_bmi___formulation.html#aec8618aad576db5f22c9a430249b7210">More...</a><br /></td></tr>
+<tr class="separator:aec8618aad576db5f22c9a430249b7210"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1922deea19f96c6e59d11354831ec231"><td class="memItemLeft" align="right" valign="top">virtual const string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___formulation.html#a1922deea19f96c6e59d11354831ec231">get_forcing_file_path</a> () const =0</td></tr>
 <tr class="separator:a1922deea19f96c6e59d11354831ec231"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c1b8eb13fa7fba0e3d8fd00370ddcc2"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___formulation.html#a4c1b8eb13fa7fba0e3d8fd00370ddcc2">get_model_type_name</a> ()</td></tr>
@@ -486,6 +495,46 @@ Friends</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implemented in <a class="el" href="classrealization_1_1_tshirt___realization.html#aff217eec7cb3cf1fdaf67f05c30a6ac6">realization::Tshirt_Realization</a>, <a class="el" href="classrealization_1_1_tshirt___c___realization.html#ad03da1ffdbf70d4e23e5aa504c56b14f">realization::Tshirt_C_Realization</a>, <a class="el" href="class_simple___lumped___model___realization.html#afe77f2e5e89fd90ce73a84303429309f">Simple_Lumped_Model_Realization</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a5044c4cf0c139b0c6b5b5a3ce679555b">realization::Bmi_Multi_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ad8d9a56ad3614fb821d88f623030defc">realization::Bmi_Module_Formulation&lt; M &gt;</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ad8d9a56ad3614fb821d88f623030defc">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>.</p>
+
+</div>
+</div>
+<a id="a71539f348de57ae368bfd8bdcd6ef1d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a71539f348de57ae368bfd8bdcd6ef1d5">&#9670;&nbsp;</a></span>convert_model_time()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual time_t realization::Bmi_Formulation::convert_model_time </td>
+          <td>(</td>
+          <td class="paramtype">const double &amp;&#160;</td>
+          <td class="paramname"><em>model_time</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Convert a time value from the model to an epoch time in seconds. </p>
+<p>Model time values are typically (though not always) 0-based totals count upward as time progresses. The units are not necessarily seconds. This performs the necessary lookup and conversion for such units, and then shifts the value appropriately for epoch time representation.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">model_time</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+<p>Implemented in <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a5887212a446b23c0e57eba37fdaca073">realization::Bmi_Multi_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a5511312775b6bc3481ff5ec282874e12">realization::Bmi_C_Formulation</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ad8d9a56ad3614fb821d88f623030defc">realization::Bmi_Module_Formulation&lt; M &gt;::calc_et()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a39cf248257ea2a34052fa65ad08bf2ba">realization::Bmi_Module_Formulation&lt; M &gt;::determine_model_time_offset()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aa04167ad9a3f4c384673ef1157fb3cb8">realization::Bmi_Module_Formulation&lt; M &gt;::set_model_inputs_prior_to_update()</a>.</p>
 
 </div>
 </div>
@@ -1005,6 +1054,66 @@ Friends</h2></td></tr>
 <p class="reference">References <a class="el" href="classrealization_1_1_formulation.html#a8bfec24b0d57240e7ada2493a781db6d">realization::Formulation::id</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classrealization_1_1_tshirt___c___realization.html#a6a47b0f7e4b5ef28a054d5258b1eabe2">realization::Tshirt_C_Realization::create_formulation()</a>, and <a class="el" href="classrealization_1_1_tshirt___realization.html#a40e6a3298f4f8c2724ddda7736925909">realization::Tshirt_Realization::create_formulation()</a>.</p>
+
+</div>
+</div>
+<a id="a7f6b7763bbb81fb56006630e0c63c6d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7f6b7763bbb81fb56006630e0c63c6d9">&#9670;&nbsp;</a></span>get_model_current_time()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual const double realization::Bmi_Formulation::get_model_current_time </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the current time for the backing BMI model in its native format and units. </p>
+<dl class="section return"><dt>Returns</dt><dd>The current time for the backing BMI model in its native format and units. </dd></dl>
+
+<p>Implemented in <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#ac685fcc1b03765e752c44a6c9a7b0758">realization::Bmi_Multi_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ab9961eb8ca3f725a847a9c756ae62aa5">realization::Bmi_Module_Formulation&lt; M &gt;</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ab9961eb8ca3f725a847a9c756ae62aa5">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>.</p>
+
+</div>
+</div>
+<a id="aec8618aad576db5f22c9a430249b7210"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aec8618aad576db5f22c9a430249b7210">&#9670;&nbsp;</a></span>get_model_end_time()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual const double realization::Bmi_Formulation::get_model_end_time </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the end time for the backing BMI model in its native format and units. </p>
+<dl class="section return"><dt>Returns</dt><dd>The end time for the backing BMI model in its native format and units. </dd></dl>
+
+<p>Implemented in <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#ab6c36a1442ed98975b58b59308d3af43">realization::Bmi_Multi_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9de6583471d63bd31481a01b2436b91b">realization::Bmi_Module_Formulation&lt; M &gt;</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9de6583471d63bd31481a01b2436b91b">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>.</p>
 
 </div>
 </div>
@@ -2253,7 +2362,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a974d1eac6a95751c4e4570a61bad8541">realization::Bmi_C_Formulation::construct_model()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a8694f5e94f40224efca11a73892da8ff">realization::Bmi_Multi_Formulation::create_multi_formulation()</a>, <a class="el" href="class_h_y___catchment_area.html#a9d02de255937deb8f6169ef20f5a07d6">HY_CatchmentArea::set_output_stream()</a>, and <a class="el" href="class_h_y___catchment_area.html#aa989be0629ecaa29a2410f7588404ff9">HY_CatchmentArea::write_output()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a974d1eac6a95751c4e4570a61bad8541">realization::Bmi_C_Formulation::construct_model()</a>, <a class="el" href="class_h_y___catchment_area.html#a9d02de255937deb8f6169ef20f5a07d6">HY_CatchmentArea::set_output_stream()</a>, and <a class="el" href="class_h_y___catchment_area.html#aa989be0629ecaa29a2410f7588404ff9">HY_CatchmentArea::write_output()</a>.</p>
 
 </div>
 </div>
@@ -2364,7 +2473,7 @@ Friends</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li><li class="navelem"><a class="el" href="classrealization_1_1_bmi___formulation.html">Bmi_Formulation</a></li>
-    <li class="footer">Generated on Tue Nov 2 2021 19:01:32 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Tue Nov 2 2021 19:01:59 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
