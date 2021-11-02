@@ -53,14 +53,36 @@ namespace realization {
         /**
          * Convert a time value from the model to an epoch time in seconds.
          *
-         * This type defers to a method of the same name in its "primary" nested formulation, specifically the one at
-         * ind
+         * Model time values are typically (though not always) 0-based totals count upward as time progresses.  The
+         * units are not necessarily seconds.  This performs the necessary lookup and conversion for such units, and
+         * then shifts the value appropriately for epoch time representation.
          *
-         * @param model_time
-         * @return
+         * For this type, this function will behave in the same manner as the analogous function of the current
+         * "primary" nested formulation, which is found in the instance's ordered collection of nested module
+         * formulations at the index returned by @ref get_index_for_primary_module.
+         *
+         * @param model_time The time value in a model's representation that is to be converted.
+         * @return The equivalent epoch time.
          */
         time_t convert_model_time(const double &model_time) override {
-            return modules[get_index_for_primary_module()]->convert_model_time(model_time);
+            return convert_model_time(model_time, get_index_for_primary_module());
+        }
+
+        /**
+         * Convert a time value from the model to an epoch time in seconds.
+         *
+         * Model time values are typically (though not always) 0-based totals count upward as time progresses.  The
+         * units are not necessarily seconds.  This performs the necessary lookup and conversion for such units, and
+         * then shifts the value appropriately for epoch time representation.
+         *
+         * For this type, this function will behave in the same manner as the analogous function of nested formulation
+         * found at the provided index within the instance's ordered collection of nested module formulations.
+         *
+         * @param model_time The time value in a model's representation that is to be converted.
+         * @return The equivalent epoch time.
+         */
+        inline time_t convert_model_time(const double &model_time, int module_index) {
+            return modules[module_index]->convert_model_time(model_time);
         }
 
         void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr) override {
