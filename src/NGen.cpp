@@ -265,7 +265,12 @@ int main(int argc, char *argv[]) {
                              r_c->get_output_line_for_timestep(output_time_index)+"\n";
         r_c->write_output(output);
         //TODO put this somewhere else.  For now, just trying to ensure we get m^3/s into nexus output
-        response *= (catchment_collection->get_feature(id)->get_property("areasqkm").as_real_number() * 1000000);
+        try{
+          response *= (catchment_collection->get_feature(id)->get_property("areasqkm").as_real_number() * 1000000);
+        }catch(std::invalid_argument &e)
+        {
+          response *= (catchment_collection->get_feature(id)->get_property("area_sqkm").as_real_number() * 1000000);
+        }
         //update the nexus with this flow
         for(auto& nexus : features.destination_nexuses(id)) {
           //TODO in a DENDRIDIC network, only one destination nexus per catchment
