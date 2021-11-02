@@ -80,11 +80,22 @@ endif()
 
 find_package(Boost 1.72.0 REQUIRED)
 
+include(ExternalProject)
+
 # UDUNITS
 if(UDUNITS_ACTIVE)
+    ExternalProject_Add(libudunits2_build
+        PREFIX ${PROJECT_SOURCE_DIR}/extern/UDUNITS-2
+        SOURCE_DIR .
+        CONFIGURE_COMMAND ${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/configure || autoreconf -fi ${PROJECT_SOURCE_DIR}/extern/UDUNITS-2 && make distclean && ${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/configure 
+        BUILD_COMMAND make -j
+    )
     add_library(libudunits2 SHARED IMPORTED)
-    set_property(TARGET libudunits2 PROPERTY IMPORTED_LOCATION "${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/lib/.libs/libudunits2.so")
-    add_compile_definitions("NGEN_UDUNITS2_XML_PATH=\"${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/lib/udunits2.xml\"")
+    add_dependencies(libudunits2 libudunits2_build)
+    set_property(TARGET libudunits2 PROPERTY IMPORTED_LOCATION "${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/src/lib/libudunits2.so")
+    add_compile_definitions("NGEN_UDUNITS2_XML_PATH=\"${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/src/share/udunits/udunits2.xml\"")
+    #target_include_directories(libudunits2 INTERFACE "${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/src/include") # This seems like it should have worked...??
+    include_directories("${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/src/include")
 endif()
 
 # Handle several steps for BMI C library logic and dependencies, at top level, if functionality is turned on
@@ -188,10 +199,7 @@ target_include_directories(ngen PUBLIC
         "${PROJECT_BINARY_DIR}/include" # For generated config header file in binary tree
         )
 
-if(UDUNITS_ACTIVE)
-    include_directories("${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/lib")
-endif()
-    
+  
 # In some IDEs (e.g., CLion), it is easier to work with the code in the included example of an "external" shared library
 # when that code appears to be part of the main project, which can be done by add a statement like the ones below.
 #
