@@ -41,7 +41,7 @@ HY_Features::HY_Features(network::Network network, std::shared_ptr<Formulation_M
 
           _catchments.emplace(feat_id, c);
         }
-        else if(feat_type == "nex")
+        else if(feat_type == "nex" || feat_type == "tnx")
         {
             _nexuses.emplace(feat_id, std::make_unique<HY_PointHydroNexus>(
                                           HY_PointHydroNexus(feat_id, destinations) ));

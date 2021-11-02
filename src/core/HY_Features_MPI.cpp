@@ -49,7 +49,7 @@ HY_Features_MPI::HY_Features_MPI( PartitionData partition_data, geojson::GeoJSON
 
           _catchments.emplace(feat_id, c);
         }
-        else if(feat_type == "nex")
+        else if(feat_type == "nex" || feat_type == "tnx")
         {   //origins only contains LOCAL origin features (catchments) as read from
             //the geojson/partition subset.  We need to make sure `origins` passed to remote nexus
             //contain IDS of ALL upstream features, including those in remote partitions
