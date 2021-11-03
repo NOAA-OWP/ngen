@@ -628,6 +628,9 @@ namespace realization {
             std::shared_ptr<forcing::ForcingProvider> self = std::make_shared<forcing::WrappedForcingProvider>(this);
             input_forcing_providers[NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP] = self;
             input_forcing_providers[CSDMS_STD_NAME_POTENTIAL_ET] = self;
+
+            // Finally, make sure this is set
+            model_initialized = get_bmi_model()->is_model_initialized();
         }
 
         /**
