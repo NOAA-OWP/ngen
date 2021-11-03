@@ -467,14 +467,31 @@ namespace realization {
             return module->get_var_value_as_double(var_name);
         }
 
-        //std::shared_ptr<Bmi_C_Formulation> init_nested_module(int mod_index, std::string identifier, geojson::PropertyMap properties) {
+        /**
+         * Initialize a nested formulation from the given properties and update multi formulation metadata.
+         *
+         * This function creates a new formulation, processes the mapping of BMI variables, and adds outputs to the outer
+         * module's provideable data items.
+         *
+         * Note that it is VERY IMPORTANT that ``properties`` argument`` is provided by value, as this copy is
+         * potentially updated to perform per-feature pattern substitution for certain property element values.
+         *
+         * @tparam T The particular type for the nested formulation object.
+         * @param mod_index The index for the new formulation in this instance's collection of nested formulations.
+         * @param identifier The id of for the represented feature.
+         * @param properties A COPY of the nested module config properties for the nested formulation of interest.
+         * @return
+         */
         template<class T>
         std::shared_ptr<T> init_nested_module(int mod_index, std::string identifier, geojson::PropertyMap properties) {
             std::unique_ptr<forcing::ForcingProvider> wfp = std::make_unique<forcing::WrappedForcingProvider>(this);
-            //std::shared_ptr<Bmi_C_Formulation> mod = std::make_shared<Bmi_C_Formulation>(identifier, forcing, output);
             std::shared_ptr<T> mod = std::make_shared<T>(identifier, std::move(wfp), output);
 
-            // Call create_formulation on each formulation
+            // Since this is a nested formulation, support usage of the '{{id}}' syntax for init config file paths.
+            Catchment_Formulation::config_pattern_substitution(properties, BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG,
+                                                               "{{id}}", id);
+
+            // Call create_formulation to perform the rest of the typical initialization steps for the formulation.
             mod->create_formulation(properties);
 
             // Set this up for placing in the module_variable_maps member variable
