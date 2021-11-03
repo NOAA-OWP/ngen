@@ -103,7 +103,9 @@ double Simple_Lumped_Model_Realization::calc_et()
 double Simple_Lumped_Model_Realization::get_response(time_step_t t, time_step_t dt)
 {
     //TODO input_et = this->forcing.get_et(t)
-    double precip = this->legacy_forcing.get_next_hourly_precipitation_meters_per_second();
+    double precip;
+    time_t t_unix = this->forcing->get_forcing_output_time_begin("") + (t * 3600);
+    precip = this->forcing->get_value("precip_rate", t_unix, dt, "");
     add_time(t+1, params.n);
     //FIXME should this run "daily" or hourly (t) which should really be dt
     //Do we keep an "internal dt" i.e. this->dt and reconcile with t?

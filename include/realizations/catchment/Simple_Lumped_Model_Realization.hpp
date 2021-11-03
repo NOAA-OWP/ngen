@@ -33,7 +33,8 @@ class Simple_Lumped_Model_Realization
         );
 
         Simple_Lumped_Model_Realization(std::string id, unique_ptr<forcing::ForcingProvider> forcing_provider, utils::StreamHandler output_stream) : Catchment_Formulation(id, std::move(forcing_provider), output_stream) {
-            _link_legacy_forcing();
+            // We now only use the ForcingProvider interface on Forcing objects, so this is not needed (and explodes).
+            //_link_legacy_forcing();
         };
 
         Simple_Lumped_Model_Realization(std::string id) : Catchment_Formulation(id){};
