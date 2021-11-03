@@ -206,7 +206,7 @@ void Bmi_Py_Formulation_Test::SetUp() {
         examples[i].bmi_init_config = repo_root + "/test/data/bmi/test_bmi_python/test_bmi_python_config_"
                                       + std::to_string(i) + ".yml";
         forcing_file = forcing_data_dir + examples[i].catchment_id + "_2015-12-01 00_00_00_2015-12-30 23_00_00.csv";
-        examples[i].forcing_params = std::make_shared<forcing_params>(forcing_file, "2015-12-01 00:00:00",
+        examples[i].forcing_params = std::make_shared<forcing_params>(forcing_file, "legacy", "2015-12-01 00:00:00",
                                                                       "2015-12-30 23:00:00");
         generate_realization_config((int)i);
 
