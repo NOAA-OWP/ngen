@@ -66,7 +66,7 @@ namespace realization {
         constructor formulation_constructor = formulations.at(formulation_type);
         std::unique_ptr<forcing::ForcingProvider> fp;
         if (formulation_type == "tshirt" || formulation_type == "tshirt_c"  || formulation_type == "lstm" // These formulations are still using the legacy interface!
-            || forcing_config.provider == "" // Permit legacy Forcing class with BMI formulations and simple_lumped--don't break old configs
+            || forcing_config.provider == "" || forcing_config.provider == "legacy" // Permit legacy Forcing class with BMI formulations and simple_lumped--don't break old configs
             ){
             fp = std::make_unique<Forcing>(forcing_config);
         }
