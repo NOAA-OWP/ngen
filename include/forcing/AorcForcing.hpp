@@ -30,8 +30,8 @@ struct forcing_params
   /*
     Constructor for forcing_params
   */
-  forcing_params(std::string path, std::string start_time, std::string end_time):
-    path(path), start_time(start_time), end_time(end_time)
+  forcing_params(std::string path, std::string provider, std::string start_time, std::string end_time):
+    path(path), provider(provider), start_time(start_time), end_time(end_time)
     {
       /// \todo converting to UTC can be tricky, especially if thread safety is a concern
       /* https://stackoverflow.com/questions/530519/stdmktime-and-timezone-info */

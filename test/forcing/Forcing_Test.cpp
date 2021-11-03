@@ -91,7 +91,7 @@ void ForcingTest::setupForcing_AORC()
 
     std::string forcing_file_name_AORC = utils::FileChecker::find_first_readable(forcing_file_names_AORC);
 
-    forcing_params forcing_p(forcing_file_name_AORC, "2015-12-14 21:00:00", "2015-12-30 23:00:00");
+    forcing_params forcing_p(forcing_file_name_AORC, "", "2015-12-14 21:00:00", "2015-12-30 23:00:00");
 
     Forcing_Object_AORC = std::make_shared<Forcing>(forcing_p);
 }

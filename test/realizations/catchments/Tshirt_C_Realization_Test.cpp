@@ -219,7 +219,7 @@ void Tshirt_C_Realization_Test::init_forcing_params_examples() {
                 "../../test/data/forcing/cat-89_2015-12-01 00_00_00_2015-12-30 23_00_00.csv"
         };
         std::string path = utils::FileChecker::find_first_readable(forcing_path_opts);
-        forcing_params_examples.push_back(forcing_params(path, "2015-12-01 00:00:00", "2015-12-01 23:00:00"));
+        forcing_params_examples.push_back(forcing_params(path, "legacy", "2015-12-01 00:00:00", "2015-12-01 23:00:00"));
 
         is_forcing_params_examples = true;
     }
