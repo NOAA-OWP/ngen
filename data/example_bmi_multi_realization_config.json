@@ -20,7 +20,6 @@
                                 "allow_exceed_end_time": true,
                                 "main_output_variable": "QINSUR",
                                 "variables_names_map": {
-                                    "ETRAN": "water_potential_evaporation_flux",
                                     "PRCPNONC": "atmosphere_water__liquid_equivalent_precipitation_rate",
                                     "Q2": "atmosphere_air_water~vapor__relative_saturation",
                                     "SFCTMP": "land_surface_air__temperature",
@@ -64,7 +63,8 @@
         ],
         "forcing": {
             "file_pattern": ".*{{id}}.*..csv",
-            "path": "./data/forcings/"
+            "path": "./data/forcings/",
+            "provider": "CsvPerFeature"
         }
     },
     "time": {
