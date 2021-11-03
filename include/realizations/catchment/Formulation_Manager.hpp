@@ -310,7 +310,12 @@ namespace realization {
                 forcing_params forcing_config = this->get_global_forcing_params(identifier, simulation_time_config);
 
                 std::shared_ptr<Catchment_Formulation> missing_formulation = construct_formulation(formulation_type_key, identifier, forcing_config, output_stream);
-                missing_formulation->create_formulation(this->global_formulation_parameters);
+                // Need to work with a copy, since it is altered in-place
+                geojson::PropertyMap global_properties_copy = global_formulation_parameters;
+                Catchment_Formulation::config_pattern_substitution(global_properties_copy,
+                                                                   BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG, "{{id}}",
+                                                                   identifier);
+                missing_formulation->create_formulation(global_properties_copy);
                 return missing_formulation;
             }
 
