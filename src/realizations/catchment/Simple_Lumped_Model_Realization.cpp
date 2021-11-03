@@ -105,7 +105,12 @@ double Simple_Lumped_Model_Realization::get_response(time_step_t t, time_step_t 
     //TODO input_et = this->forcing.get_et(t)
     double precip;
     time_t t_unix = this->forcing->get_forcing_output_time_begin("") + (t * 3600);
-    precip = this->forcing->get_value("precip_rate", t_unix, dt, "");
+    try {
+        precip = this->forcing->get_value("precip_rate", t_unix, dt, ""); // classic forcing object/format
+    }
+    catch (const std::exception& e){
+        precip = this->forcing->get_value(CSDMS_STD_NAME_RAIN_RATE, t_unix, dt, ""); // CsvPerFeatureForcingProvider
+    }
     add_time(t+1, params.n);
     //FIXME should this run "daily" or hourly (t) which should really be dt
     //Do we keep an "internal dt" i.e. this->dt and reconcile with t?
