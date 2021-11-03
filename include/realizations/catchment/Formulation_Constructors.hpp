@@ -65,14 +65,15 @@ namespace realization {
     ) {
         constructor formulation_constructor = formulations.at(formulation_type);
         std::unique_ptr<forcing::ForcingProvider> fp;
-        if (formulation_type == "tshirt" || formulation_type == "tshirt_c" || formulation_type == "simple_lumped" || formulation_type == "lstm"){
-            // These formulations are still using the legacy interface!
+        if (formulation_type == "tshirt" || formulation_type == "tshirt_c"  || formulation_type == "lstm" // These formulations are still using the legacy interface!
+            || forcing_config.provider == "" // Permit legacy Forcing class with BMI formulations and simple_lumped--don't break old configs
+            ){
             fp = std::make_unique<Forcing>(forcing_config);
         }
         else if (forcing_config.provider == "CsvPerFeature"){
             fp = std::make_unique<CsvPerFeatureForcingProvider>(forcing_config);
         }
-        else {
+        else { // Some unknown string in the provider field?
             throw std::runtime_error(
                     "Invalid formulation forcing provider configuration! identifier: \"" + identifier +
                     "\", formulation_type: \"" + formulation_type +
