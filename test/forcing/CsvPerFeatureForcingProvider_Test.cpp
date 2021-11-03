@@ -54,7 +54,7 @@ void CsvPerFeatureForcingProviderTest::setupForcing()
         };
     std::string forcing_file_name = utils::FileChecker::find_first_readable(forcing_file_names);
 
-    forcing_params forcing_p(forcing_file_name, "2015-12-14 21:00:00", "2015-12-30 23:00:00");
+    forcing_params forcing_p(forcing_file_name, "CsvPerFeature", "2015-12-14 21:00:00", "2015-12-30 23:00:00");
 
     Forcing_Object = std::make_shared<CsvPerFeatureForcingProvider>(forcing_p);
 
@@ -65,7 +65,7 @@ void CsvPerFeatureForcingProviderTest::setupForcing()
         };
     forcing_file_name = utils::FileChecker::find_first_readable(forcing_file_names);
 
-    forcing_params forcing_p_2(forcing_file_name, "2007-01-01 00:00:00", "2007-01-05 02:00:00");
+    forcing_params forcing_p_2(forcing_file_name, "CsvPerFeature", "2015-12-01 00:00:00", "2015-12-05 02:00:00");
 
     Forcing_Object_2 = std::make_shared<CsvPerFeatureForcingProvider>(forcing_p_2);
 }
