@@ -205,7 +205,6 @@ if(NGEN_ACTIVATE_ROUTING)
             NGen::routing
             pybind11::embed
     )
-    target_include_directories(test_routing_pybind PUBLIC ${PROJECT_SOURCE_DIR}/extern/pybind11/include)
 endif()
 
 ########################## Network Class Tests

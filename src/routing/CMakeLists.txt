@@ -8,6 +8,7 @@ add_library(NGen::routing ALIAS routing)
 target_include_directories(routing PUBLIC
         ${PROJECT_SOURCE_DIR}/include/routing
         ${PROJECT_SOURCE_DIR}/extern/pybind11/include
+        ${PROJECT_SOURCE_DIR}/include/utilities
         )
         
 target_link_libraries(routing PUBLIC pybind11::embed)

@@ -1,9 +1,9 @@
 #ifdef ROUTING_PYBIND_TESTS_ACTIVE
 #include "gtest/gtest.h"
-#include "routing/Routing_Py_Adapter.hpp"
+#include "Routing_Py_Adapter.hpp"
 #include <string>
 #include <pybind11/embed.h>
-//#include <pybind11/stl.h>
+#include <pybind11/stl.h>
 namespace py = pybind11;
 
 //using namespace std;
@@ -24,8 +24,6 @@ protected:
 
 TEST_F(RoutingPyBindTest, TestRoutingPyBind)
 {
-  // Start Python interpreter and keep it alive
-  py::scoped_interpreter guard{};
 
   //Use below if calling constructor that includes nexus values
   //std::vector<double> nexus_values_vec{1.1, 2.2, 3.3, 4.4, 5.5};

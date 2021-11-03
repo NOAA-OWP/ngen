@@ -38,15 +38,6 @@ Routing_Py_Adapter::Routing_Py_Adapter(std::string t_route_connection_path,
                                        int number_of_timesteps, int delta_time)
 {
 
-  //Bind python sys module
-  py::module_ sys = py::module_::import("sys");
-
-  //Create object sys_path for the Python system path
-  py::object sys_path = sys.attr("path");
-
-  //Create object to append to the sys_path
-  py::object sys_path_append = sys_path.attr("append");
-
   //Append the t_route_connection_path
   utils::ngenPy::InterpreterUtil::addToPyPath(t_route_connection_path);
 
