@@ -1,6 +1,5 @@
 var NAVTREEINDEX10 =
 {
-"md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md97":[5,2,0,1],
 "md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md98":[5,2,0,2],
 "md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md99":[5,2,1],
 "md_doc__g_i_t__u_s_a_g_e.html":[6],
@@ -249,5 +248,6 @@ var NAVTREEINDEX10 =
 "struct_bmi.html#a662d854641721716253877a53ab5f16b":[21,0,18,3],
 "struct_bmi.html#a7214e5c7168e962e7bb2c11e76488e3e":[21,0,18,28],
 "struct_bmi.html#a79cf6117dc2f88575dd4de0a5d536389":[21,0,18,38],
-"struct_bmi.html#a83147196d0d3f1d9f0994578fd3e262e":[21,0,18,14]
+"struct_bmi.html#a83147196d0d3f1d9f0994578fd3e262e":[21,0,18,14],
+"struct_bmi.html#a85d1916d7fedbe0f9382b56a83952064":[21,0,18,13]
 };

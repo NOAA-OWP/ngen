@@ -114,8 +114,8 @@ $(document).ready(function(){initNavTree('_aorc_forcing_8hpp_source.html',''); i
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;  <span class="comment">/*</span></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">    Constructor for forcing_params</span></div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">  */</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="structforcing__params.html#ac26b126ed9ca20bafa786341843923ea">   33</a></span>&#160;  <a class="code" href="structforcing__params.html#ac26b126ed9ca20bafa786341843923ea">forcing_params</a>(std::string path, std::string start_time, std::string end_time):</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    path(path), start_time(start_time), end_time(end_time)</div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="structforcing__params.html#a4476f96c6181db3929c57d964cc3e99f">   33</a></span>&#160;  <a class="code" href="structforcing__params.html#a4476f96c6181db3929c57d964cc3e99f">forcing_params</a>(std::string path, std::string provider, std::string start_time, std::string end_time):</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    path(path), provider(provider), start_time(start_time), end_time(end_time)</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    {</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;      <span class="comment">/* https://stackoverflow.com/questions/530519/stdmktime-and-timezone-info */</span></div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;      <span class="keyword">struct </span>tm tm;</div>
@@ -155,10 +155,10 @@ $(document).ready(function(){initNavTree('_aorc_forcing_8hpp_source.html',''); i
 <div class="ttc" id="astruct_a_o_r_c__data_html_afe55907c1902e4dd8c47655ab4d1ba7c"><div class="ttname"><a href="struct_a_o_r_c__data.html#afe55907c1902e4dd8c47655ab4d1ba7c">AORC_data::APCP_surface_kg_per_meters_squared</a></div><div class="ttdeci">double APCP_surface_kg_per_meters_squared</div><div class="ttdef"><b>Definition:</b> AorcForcing.hpp:52</div></div>
 <div class="ttc" id="astructforcing__params_html"><div class="ttname"><a href="structforcing__params.html">forcing_params</a></div><div class="ttdoc">forcing_params providing configuration information for forcing time period and source.</div><div class="ttdef"><b>Definition:</b> AorcForcing.hpp:22</div></div>
 <div class="ttc" id="astructforcing__params_html_a2f43abdd38531314c220ef34b5ee0037"><div class="ttname"><a href="structforcing__params.html#a2f43abdd38531314c220ef34b5ee0037">forcing_params::path</a></div><div class="ttdeci">std::string path</div><div class="ttdef"><b>Definition:</b> AorcForcing.hpp:23</div></div>
+<div class="ttc" id="astructforcing__params_html_a4476f96c6181db3929c57d964cc3e99f"><div class="ttname"><a href="structforcing__params.html#a4476f96c6181db3929c57d964cc3e99f">forcing_params::forcing_params</a></div><div class="ttdeci">forcing_params(std::string path, std::string provider, std::string start_time, std::string end_time)</div><div class="ttdef"><b>Definition:</b> AorcForcing.hpp:33</div></div>
 <div class="ttc" id="astructforcing__params_html_a625b5e1b9db215c9dde0f753b1ec239c"><div class="ttname"><a href="structforcing__params.html#a625b5e1b9db215c9dde0f753b1ec239c">forcing_params::end_time</a></div><div class="ttdeci">std::string end_time</div><div class="ttdef"><b>Definition:</b> AorcForcing.hpp:25</div></div>
 <div class="ttc" id="astructforcing__params_html_a8262c953da3386a43bf323a309d5a501"><div class="ttname"><a href="structforcing__params.html#a8262c953da3386a43bf323a309d5a501">forcing_params::end_t</a></div><div class="ttdeci">time_t end_t</div><div class="ttdef"><b>Definition:</b> AorcForcing.hpp:29</div></div>
 <div class="ttc" id="astructforcing__params_html_a86028ec75ffd2fb7ecdb4f4ce56d66ef"><div class="ttname"><a href="structforcing__params.html#a86028ec75ffd2fb7ecdb4f4ce56d66ef">forcing_params::start_time</a></div><div class="ttdeci">std::string start_time</div><div class="ttdef"><b>Definition:</b> AorcForcing.hpp:24</div></div>
-<div class="ttc" id="astructforcing__params_html_ac26b126ed9ca20bafa786341843923ea"><div class="ttname"><a href="structforcing__params.html#ac26b126ed9ca20bafa786341843923ea">forcing_params::forcing_params</a></div><div class="ttdeci">forcing_params(std::string path, std::string start_time, std::string end_time)</div><div class="ttdef"><b>Definition:</b> AorcForcing.hpp:33</div></div>
 <div class="ttc" id="astructforcing__params_html_ade4fb727ea0eac594b7d1c84aedd9b5a"><div class="ttname"><a href="structforcing__params.html#ade4fb727ea0eac594b7d1c84aedd9b5a">forcing_params::provider</a></div><div class="ttdeci">std::string provider</div><div class="ttdef"><b>Definition:</b> AorcForcing.hpp:27</div></div>
 <div class="ttc" id="astructforcing__params_html_adf1229aeb4e44be7bc262f8967ac8b11"><div class="ttname"><a href="structforcing__params.html#adf1229aeb4e44be7bc262f8967ac8b11">forcing_params::start_t</a></div><div class="ttdeci">time_t start_t</div><div class="ttdef"><b>Definition:</b> AorcForcing.hpp:28</div></div>
 </div><!-- fragment --></div><!-- contents -->
@@ -167,7 +167,7 @@ $(document).ready(function(){initNavTree('_aorc_forcing_8hpp_source.html',''); i
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_1a34ade7a8ced74dfa5d1494ffac178f.html">forcing</a></li><li class="navelem"><b>AorcForcing.hpp</b></li>
-    <li class="footer">Generated on Tue Nov 2 2021 19:01:57 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Thu Nov 4 2021 18:32:56 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
