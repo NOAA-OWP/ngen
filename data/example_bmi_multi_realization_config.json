@@ -16,7 +16,7 @@
                                 "model_type_name": "bmi_fortran_noahmp",
                                 "library_file": "./extern/noah-mp-modular/cmake_build/libsurfacebmi.so",
                                 "forcing_file": "",
-                                "init_config": "./data/multi_bmi/noah-mp-modular-init.namelist.input",
+                                "init_config": "./data/multi_bmi/noah-mp-modular-init-{{id}}.namelist.input",
                                 "allow_exceed_end_time": true,
                                 "main_output_variable": "QINSUR",
                                 "variables_names_map": {
@@ -38,7 +38,7 @@
                                 "model_type_name": "bmi_c_cfe",
                                 "library_file": "./extern/cfe/cmake_build/libcfebmi.so",
                                 "forcing_file": "",
-                                "init_config": "./bmi_cfe_config.ini",
+                                "init_config": "./{{id}}_bmi_cfe_config.ini",
                                 "allow_exceed_end_time": true,
                                 "main_output_variable": "Q_OUT",
                                 "registration_function": "register_bmi_cfe",
