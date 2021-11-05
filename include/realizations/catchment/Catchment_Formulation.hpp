@@ -47,8 +47,7 @@ namespace realization {
                 } while (id_index != std::string::npos);
 
                 properties.erase(key);
-                properties.template insert(
-                        std::pair<std::string, geojson::JSONProperty>(key, geojson::JSONProperty(key, value)));
+                properties.emplace(key, geojson::JSONProperty(key, value));
             }
         }
 
