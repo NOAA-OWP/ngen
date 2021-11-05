@@ -95,7 +95,8 @@ if(UDUNITS_ACTIVE)
     set_property(TARGET libudunits2 PROPERTY IMPORTED_LOCATION "${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/src/lib/libudunits2.so")
     add_compile_definitions("NGEN_UDUNITS2_XML_PATH=\"${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/src/share/udunits/udunits2.xml\"")
     #target_include_directories(libudunits2 INTERFACE "${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/src/include") # This seems like it should have worked...??
-    include_directories("${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/src/include")
+    # this should probably be src, not lib, but in parallel builds that doesn't get generated before udunits2.h is included, so...
+    include_directories("${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/lib")
 endif()
 
 # Handle several steps for BMI C library logic and dependencies, at top level, if functionality is turned on
