@@ -345,6 +345,10 @@ jobs:
           curl -L -O https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2
           tar xjf boost_1_72_0.tar.bz2
 
+      - name: Install automake (for UDUNITS2)
+        run: |
+          brew install automake
+
       - name: cmake_init_build
         run: |
           export BOOST_ROOT="$(pwd)/boost_1_72_0"
