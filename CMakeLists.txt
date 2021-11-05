@@ -87,7 +87,7 @@ if(UDUNITS_ACTIVE)
     ExternalProject_Add(libudunits2_build
         PREFIX ${PROJECT_SOURCE_DIR}/extern/UDUNITS-2
         SOURCE_DIR .
-        CONFIGURE_COMMAND ${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/configure || autoreconf -fi ${PROJECT_SOURCE_DIR}/extern/UDUNITS-2 && ${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/configure 
+        CONFIGURE_COMMAND autoreconf -fi ${PROJECT_SOURCE_DIR}/extern/UDUNITS-2 && ${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/configure 
         BUILD_COMMAND make -j
     )
     add_library(libudunits2 SHARED IMPORTED)
