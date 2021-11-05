@@ -93,31 +93,32 @@ var sectionId = 'dynsection-1';
 <g id="node2" class="node">
 <title>Node2</title>
 <g id="a_node2"><a xlink:href="classrealization_1_1_catchment___formulation.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="black" points="447.5,-358.5 447.5,-536.5 587.5,-536.5 587.5,-358.5 447.5,-358.5"/>
-<text text-anchor="start" x="455.5" y="-524.5" font-family="Helvetica,sans-Serif" font-size="10.00">realization::Catchment</text>
-<text text-anchor="middle" x="517.5" y="-513.5" font-family="Helvetica,sans-Serif" font-size="10.00">_Formulation</text>
-<polyline fill="none" stroke="black" points="447.5,-506.5 587.5,-506.5 "/>
-<text text-anchor="middle" x="517.5" y="-494.5" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
-<polyline fill="none" stroke="black" points="447.5,-487.5 587.5,-487.5 "/>
-<text text-anchor="start" x="455.5" y="-475.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Catchment_Formulation()</text>
-<text text-anchor="start" x="455.5" y="-464.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Catchment_Formulation()</text>
-<text text-anchor="start" x="455.5" y="-453.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_output_header_line()</text>
-<text text-anchor="start" x="455.5" y="-442.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_response()</text>
-<text text-anchor="start" x="455.5" y="-431.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_required_parameters()</text>
-<text text-anchor="start" x="455.5" y="-420.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
-<text text-anchor="start" x="455.5" y="-409.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
-<text text-anchor="start" x="455.5" y="-398.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ ~Catchment_Formulation()</text>
-<text text-anchor="start" x="455.5" y="-387.5" font-family="Helvetica,sans-Serif" font-size="10.00"># get_catchment_id()</text>
-<text text-anchor="start" x="455.5" y="-376.5" font-family="Helvetica,sans-Serif" font-size="10.00"># set_catchment_id()</text>
-<text text-anchor="start" x="455.5" y="-365.5" font-family="Helvetica,sans-Serif" font-size="10.00"># _link_legacy_forcing()</text>
+<polygon fill="white" stroke="black" points="444,-353 444,-542 591,-542 591,-353 444,-353"/>
+<text text-anchor="start" x="452" y="-530" font-family="Helvetica,sans-Serif" font-size="10.00">realization::Catchment</text>
+<text text-anchor="middle" x="517.5" y="-519" font-family="Helvetica,sans-Serif" font-size="10.00">_Formulation</text>
+<polyline fill="none" stroke="black" points="444,-512 591,-512 "/>
+<text text-anchor="middle" x="517.5" y="-500" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
+<polyline fill="none" stroke="black" points="444,-493 591,-493 "/>
+<text text-anchor="start" x="452" y="-481" font-family="Helvetica,sans-Serif" font-size="10.00">+ Catchment_Formulation()</text>
+<text text-anchor="start" x="452" y="-470" font-family="Helvetica,sans-Serif" font-size="10.00">+ Catchment_Formulation()</text>
+<text text-anchor="start" x="452" y="-459" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_output_header_line()</text>
+<text text-anchor="start" x="452" y="-448" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_response()</text>
+<text text-anchor="start" x="452" y="-437" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_required_parameters()</text>
+<text text-anchor="start" x="452" y="-426" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
+<text text-anchor="start" x="452" y="-415" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
+<text text-anchor="start" x="452" y="-404" font-family="Helvetica,sans-Serif" font-size="10.00">+ ~Catchment_Formulation()</text>
+<text text-anchor="start" x="452" y="-393" font-family="Helvetica,sans-Serif" font-size="10.00">+ config_pattern_substitution()</text>
+<text text-anchor="start" x="452" y="-382" font-family="Helvetica,sans-Serif" font-size="10.00"># get_catchment_id()</text>
+<text text-anchor="start" x="452" y="-371" font-family="Helvetica,sans-Serif" font-size="10.00"># set_catchment_id()</text>
+<text text-anchor="start" x="452" y="-360" font-family="Helvetica,sans-Serif" font-size="10.00"># _link_legacy_forcing()</text>
 </a>
 </g>
 </g>
 <!-- Node2&#45;&gt;Node1 -->
 <g id="edge1" class="edge">
 <title>Node2&#45;&gt;Node1</title>
-<path fill="none" stroke="midnightblue" d="M597.3,-423.23C793.55,-365.98 1297.11,-219.11 1480.97,-165.49"/>
-<polygon fill="none" stroke="midnightblue" points="596.24,-419.89 587.62,-426.05 598.2,-426.61 596.24,-419.89"/>
+<path fill="none" stroke="midnightblue" d="M601.12,-422.11C800.02,-364.1 1298.3,-218.77 1480.98,-165.49"/>
+<polygon fill="none" stroke="midnightblue" points="599.92,-418.81 591.3,-424.97 601.88,-425.53 599.92,-418.81"/>
 </g>
 <!-- Node3 -->
 <g id="node3" class="node">
@@ -148,7 +149,7 @@ var sectionId = 'dynsection-1';
 <!-- Node3&#45;&gt;Node2 -->
 <g id="edge2" class="edge">
 <title>Node3&#45;&gt;Node2</title>
-<path fill="none" stroke="midnightblue" d="M255.56,-1152.79C298.77,-1024.08 374.39,-803.63 446.5,-617 456.63,-590.79 468.24,-562.57 479.09,-536.85"/>
+<path fill="none" stroke="midnightblue" d="M255.56,-1152.79C298.77,-1024.08 374.39,-803.63 446.5,-617 455.94,-592.57 466.67,-566.39 476.88,-542.12"/>
 <polygon fill="none" stroke="midnightblue" points="252.24,-1151.69 252.38,-1162.28 258.88,-1153.91 252.24,-1151.69"/>
 </g>
 <!-- Node4 -->
@@ -366,7 +367,7 @@ var sectionId = 'dynsection-1';
 <!-- Node7&#45;&gt;Node2 -->
 <g id="edge6" class="edge">
 <title>Node7&#45;&gt;Node2</title>
-<path fill="none" stroke="midnightblue" d="M517.5,-799.65C517.5,-730.51 517.5,-616.14 517.5,-536.79"/>
+<path fill="none" stroke="midnightblue" d="M517.5,-799.88C517.5,-732.38 517.5,-621.52 517.5,-542.38"/>
 <polygon fill="none" stroke="midnightblue" points="514,-799.92 517.5,-809.92 521,-799.92 514,-799.92"/>
 </g>
 <!-- Node8 -->
@@ -643,7 +644,7 @@ var sectionId = 'dynsection-1';
 <!-- Node17&#45;&gt;Node2 -->
 <g id="edge19" class="edge">
 <title>Node17&#45;&gt;Node2</title>
-<path fill="none" stroke="midnightblue" d="M73.47,-1190.94C89.03,-1064.52 136.4,-795.93 269.5,-617 315.64,-554.98 391.7,-508.21 447.44,-479.87"/>
+<path fill="none" stroke="midnightblue" d="M73.47,-1190.94C89.03,-1064.52 136.4,-795.93 269.5,-617 314.63,-556.34 388.38,-510.27 443.75,-481.76"/>
 <polygon fill="none" stroke="midnightblue" points="69.99,-1190.55 72.27,-1200.89 76.94,-1191.38 69.99,-1190.55"/>
 </g>
 <!-- Node18&#45;&gt;Node17 -->
@@ -656,8 +657,8 @@ var sectionId = 'dynsection-1';
 <!-- Node19&#45;&gt;Node2 -->
 <g id="edge23" class="edge">
 <title>Node19&#45;&gt;Node2</title>
-<path fill="none" stroke="#404040" d="M929.47,-796.18C839.45,-720.21 689.16,-593.37 597.14,-515.71"/>
-<polygon fill="none" stroke="#404040" points="597.04,-515.62 589.87,-514.81 587.86,-507.88 595.03,-508.7 597.04,-515.62"/>
+<path fill="none" stroke="#404040" d="M929.47,-796.18C840.48,-721.08 692.6,-596.27 600.32,-518.4"/>
+<polygon fill="none" stroke="#404040" points="600.19,-518.28 593.02,-517.47 591.02,-510.54 598.18,-511.36 600.19,-518.28"/>
 <text text-anchor="middle" x="724.5" y="-585.5" font-family="Helvetica,sans-Serif" font-size="10.00"> #legacy_forcing</text>
 </g>
 <!-- Node20 -->

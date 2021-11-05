@@ -7,6 +7,7 @@ var classrealization_1_1_catchment___formulation =
     [ "_link_legacy_forcing", "classrealization_1_1_catchment___formulation.html#a20117323c1944ffc7850838842769ca1", null ],
     [ "add_time", "classrealization_1_1_catchment___formulation.html#a248b562be5dc9a21e7afbc014de15114", null ],
     [ "calc_et", "classrealization_1_1_catchment___formulation.html#a1af6f5c88bda174c8ba855e796a55439", null ],
+    [ "config_pattern_substitution", "classrealization_1_1_catchment___formulation.html#a17f32257b65c7930f8b3570ab43fd58c", null ],
     [ "create_formulation", "classrealization_1_1_catchment___formulation.html#a4fb8ec9b08820c29d88627ee9781d579", null ],
     [ "create_formulation", "classrealization_1_1_catchment___formulation.html#a2a2ac83503092d24da0ee4e4c6eeaa25", null ],
     [ "get_catchment_id", "classrealization_1_1_catchment___formulation.html#a633b7407d447f77910476c0315c8beb6", null ],

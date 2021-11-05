@@ -6,6 +6,7 @@ var classrealization_1_1_tshirt___realization =
     [ "_link_legacy_forcing", "classrealization_1_1_tshirt___realization.html#a20117323c1944ffc7850838842769ca1", null ],
     [ "add_time", "classrealization_1_1_tshirt___realization.html#a248b562be5dc9a21e7afbc014de15114", null ],
     [ "calc_et", "classrealization_1_1_tshirt___realization.html#aff217eec7cb3cf1fdaf67f05c30a6ac6", null ],
+    [ "config_pattern_substitution", "classrealization_1_1_tshirt___realization.html#a17f32257b65c7930f8b3570ab43fd58c", null ],
     [ "create_formulation", "classrealization_1_1_tshirt___realization.html#a2303335bc613d277d4e16b9fd7619063", null ],
     [ "create_formulation", "classrealization_1_1_tshirt___realization.html#a40e6a3298f4f8c2724ddda7736925909", null ],
     [ "get_catchment_id", "classrealization_1_1_tshirt___realization.html#a633b7407d447f77910476c0315c8beb6", null ],

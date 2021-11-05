@@ -10,6 +10,7 @@ var class_simple___lumped___model___realization =
     [ "_link_legacy_forcing", "class_simple___lumped___model___realization.html#a20117323c1944ffc7850838842769ca1", null ],
     [ "add_time", "class_simple___lumped___model___realization.html#aea254a605d59c1489dfe0a8af0d5f291", null ],
     [ "calc_et", "class_simple___lumped___model___realization.html#afe77f2e5e89fd90ce73a84303429309f", null ],
+    [ "config_pattern_substitution", "class_simple___lumped___model___realization.html#a17f32257b65c7930f8b3570ab43fd58c", null ],
     [ "create_formulation", "class_simple___lumped___model___realization.html#aa14160e9f8563df42947278c8e91cc78", null ],
     [ "create_formulation", "class_simple___lumped___model___realization.html#ae9f9fda457f7564bf53bc9a9785eba7c", null ],
     [ "get_catchment_id", "class_simple___lumped___model___realization.html#a633b7407d447f77910476c0315c8beb6", null ],

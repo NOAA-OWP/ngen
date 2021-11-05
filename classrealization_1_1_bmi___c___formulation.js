@@ -6,6 +6,7 @@ var classrealization_1_1_bmi___c___formulation =
     [ "add_time", "classrealization_1_1_bmi___c___formulation.html#a248b562be5dc9a21e7afbc014de15114", null ],
     [ "calc_et", "classrealization_1_1_bmi___c___formulation.html#ad8d9a56ad3614fb821d88f623030defc", null ],
     [ "calc_et", "classrealization_1_1_bmi___c___formulation.html#a49aa9cfff0958d7e509de7dd5187a0c6", null ],
+    [ "config_pattern_substitution", "classrealization_1_1_bmi___c___formulation.html#a17f32257b65c7930f8b3570ab43fd58c", null ],
     [ "construct_model", "classrealization_1_1_bmi___c___formulation.html#a974d1eac6a95751c4e4570a61bad8541", null ],
     [ "convert_aorc_structs", "classrealization_1_1_bmi___c___formulation.html#a1801f902d2246126249c363de2dcb496", null ],
     [ "convert_model_time", "classrealization_1_1_bmi___c___formulation.html#a5511312775b6bc3481ff5ec282874e12", null ],

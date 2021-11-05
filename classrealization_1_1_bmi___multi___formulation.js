@@ -8,6 +8,7 @@ var classrealization_1_1_bmi___multi___formulation =
     [ "_link_legacy_forcing", "classrealization_1_1_bmi___multi___formulation.html#a20117323c1944ffc7850838842769ca1", null ],
     [ "add_time", "classrealization_1_1_bmi___multi___formulation.html#a248b562be5dc9a21e7afbc014de15114", null ],
     [ "calc_et", "classrealization_1_1_bmi___multi___formulation.html#a5044c4cf0c139b0c6b5b5a3ce679555b", null ],
+    [ "config_pattern_substitution", "classrealization_1_1_bmi___multi___formulation.html#a17f32257b65c7930f8b3570ab43fd58c", null ],
     [ "convert_model_time", "classrealization_1_1_bmi___multi___formulation.html#a5887212a446b23c0e57eba37fdaca073", null ],
     [ "convert_model_time", "classrealization_1_1_bmi___multi___formulation.html#ac1e6b155be16a0562d62d16f3b42313d", null ],
     [ "create_formulation", "classrealization_1_1_bmi___multi___formulation.html#acb4534a0030f794320625be0313fe825", null ],

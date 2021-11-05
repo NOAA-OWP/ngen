@@ -1,5 +1,13 @@
 var NAVTREEINDEX12 =
 {
+"structpdm03__struct.html#afdf4335357bca8e8c6f13911909e740f":[21,0,62,2],
+"structrequest__from__empty__nexus.html":[21,0,64],
+"structrequest__from__empty__nexus.html#a0f92272f0cb2968121986d26848974a7":[21,0,64,0],
+"structreservoir__parameters.html":[21,0,65],
+"structreservoir__parameters.html#a76ccec73d9c510392697627cdf8b5b56":[21,0,65,0],
+"structreservoir__parameters.html#ae8d00010d4013349c222faa6d18a86fc":[21,0,65,1],
+"structreservoir__state.html":[21,0,66],
+"structreservoir__state.html#a8e5ace81f634e69a85961044f01755a4":[21,0,66,0],
 "structrouting__params.html":[21,0,69],
 "structrouting__params.html#a3035f89785e029fd0a00c5b2d4940c76":[21,0,69,1],
 "structrouting__params.html#a570e4aa3990c2c4225a327020268c595":[21,0,69,2],

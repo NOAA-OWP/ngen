@@ -84,6 +84,7 @@ $(document).ready(function(){initNavTree('classrealization_1_1_bmi___multi___for
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
@@ -262,6 +263,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:aa76f5a7b1287c92f4e785e1a206ae452"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a reference to the appropriate object holding ET parameters for use when executing the model calculations.  <a href="classrealization_1_1_et___accountable.html#aa76f5a7b1287c92f4e785e1a206ae452">More...</a><br /></td></tr>
 <tr class="separator:aa76f5a7b1287c92f4e785e1a206ae452"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a17f32257b65c7930f8b3570ab43fd58c"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#a17f32257b65c7930f8b3570ab43fd58c">config_pattern_substitution</a> (<a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> &amp;properties, const std::string &amp;key, const std::string &amp;pattern, const std::string &amp;replacement)</td></tr>
+<tr class="memdesc:a17f32257b65c7930f8b3570ab43fd58c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform in-place substitution on the given config property item, if the item and the pattern are present.  <a href="classrealization_1_1_catchment___formulation.html#a17f32257b65c7930f8b3570ab43fd58c">More...</a><br /></td></tr>
+<tr class="separator:a17f32257b65c7930f8b3570ab43fd58c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:a8694f5e94f40224efca11a73892da8ff"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a8694f5e94f40224efca11a73892da8ff">create_multi_formulation</a> (<a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> properties, bool needs_param_validation)</td></tr>
@@ -272,6 +279,7 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:ae1676155690e50a2ab4b9d11dd42bc75"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b42b0bb9559bab767c04a35b9cd5bec"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
 <tr class="memitem:a0b42b0bb9559bab767c04a35b9cd5bec"><td class="memTemplItemLeft" align="right" valign="top">std::shared_ptr&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a0b42b0bb9559bab767c04a35b9cd5bec">init_nested_module</a> (int mod_index, std::string identifier, <a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> properties)</td></tr>
+<tr class="memdesc:a0b42b0bb9559bab767c04a35b9cd5bec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a nested formulation from the given properties and update multi formulation metadata.  <a href="classrealization_1_1_bmi___multi___formulation.html#a0b42b0bb9559bab767c04a35b9cd5bec">More...</a><br /></td></tr>
 <tr class="separator:a0b42b0bb9559bab767c04a35b9cd5bec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae137604ca81006a617221733d8d36f62"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___formulation.html#ae137604ca81006a617221733d8d36f62">set_bmi_main_output_var</a> (const string &amp;main_output_var)</td></tr>
 <tr class="separator:ae137604ca81006a617221733d8d36f62"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -580,6 +588,70 @@ Private Attributes</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>The ET calculation from the appropriate module from this instance's collection of BMI nested modules. </dd></dl>
 
 <p>Implements <a class="el" href="classrealization_1_1_et___accountable.html#a1af6f5c88bda174c8ba855e796a55439">realization::Et_Accountable</a>.</p>
+
+</div>
+</div>
+<a id="a17f32257b65c7930f8b3570ab43fd58c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a17f32257b65c7930f8b3570ab43fd58c">&#9670;&nbsp;</a></span>config_pattern_substitution()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void realization::Catchment_Formulation::config_pattern_substitution </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> &amp;&#160;</td>
+          <td class="paramname"><em>properties</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>pattern</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>replacement</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Perform in-place substitution on the given config property item, if the item and the pattern are present. </p>
+<p>Any and all instances of the substring <code>pattern</code> are replaced by <code>replacement</code>, if <code>key</code> maps to a present string-type property value.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">properties</td><td>A reference to the properties config object to be altered. </td></tr>
+    <tr><td class="paramname">key</td><td>The key for the configuration property to potentially adjust. </td></tr>
+    <tr><td class="paramname">pattern</td><td>The pattern substring to search for that, when present, should be replaced. </td></tr>
+    <tr><td class="paramname">replacement</td><td>The replacement substring to potentially insert. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a27118326006d3829667a400ad23d5d98">geojson::String</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_formulation___manager.html#ad9f970f9729d00979ff59b4f313a5f20">realization::Formulation_Manager::construct_missing_formulation()</a>.</p>
 
 </div>
 </div>
@@ -1940,6 +2012,25 @@ template&lt;class T &gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p>Initialize a nested formulation from the given properties and update multi formulation metadata. </p>
+<p>This function creates a new formulation, processes the mapping of BMI variables, and adds outputs to the outer module's provideable data items.</p>
+<p>Note that it is VERY IMPORTANT that <code>properties</code> argument`` is provided by value, as this copy is potentially updated to perform per-feature pattern substitution for certain property element values.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>The particular type for the nested formulation object. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">mod_index</td><td>The index for the new formulation in this instance's collection of nested formulations. </td></tr>
+    <tr><td class="paramname">identifier</td><td>The id of for the represented feature. </td></tr>
+    <tr><td class="paramname">properties</td><td>A COPY of the nested module config properties for the nested formulation of interest. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
 </div>
 </div>
 <a id="a65f97b5efe05e786f59d9f5fd1b10209"></a>
@@ -3167,7 +3258,7 @@ template&lt;class T &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li><li class="navelem"><a class="el" href="classrealization_1_1_bmi___multi___formulation.html">Bmi_Multi_Formulation</a></li>
-    <li class="footer">Generated on Thu Nov 4 2021 18:32:57 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Fri Nov 5 2021 18:08:59 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
