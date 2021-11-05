@@ -346,8 +346,7 @@ jobs:
           tar xjf boost_1_72_0.tar.bz2
 
       - name: Install automake (for UDUNITS2)
-        run: |
-          brew install automake
+        run: brew install automake
 
       - name: cmake_init_build
         run: |
