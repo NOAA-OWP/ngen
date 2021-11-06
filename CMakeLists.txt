@@ -86,16 +86,19 @@ include(ExternalProject)
 if(UDUNITS_ACTIVE)
     ExternalProject_Add(libudunits2_build
         PREFIX ${PROJECT_SOURCE_DIR}/extern/UDUNITS-2
-        SOURCE_DIR .
+        SOURCE_DIR ${PROJECT_SOURCE_DIR}/extern/UDUNITS-2
+        BUILD_IN_SOURCE 1
         PATCH_COMMAND find ${PROJECT_SOURCE_DIR}/extern/UDUNITS-2  \( -type d -name .git -prune \) -o -type f -name "CMakeLists.txt" -exec sed -i -e "s/CMAKE_MINIMUM_REQUIRED(VERSION 3\.19)/CMAKE_MINIMUM_REQUIRED(VERSION 3.17)/" {} +
+        CMAKE_ARGS -DBOOST_ROOT=${BOOST_ROOT} -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+        # ${CMAKE_COMMAND} -DBOOST_ROOT=${BOOST_ROOT} -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR> <SOURCE_DIR>
         #CONFIGURE_COMMAND autoreconf -fi ${PROJECT_SOURCE_DIR}/extern/UDUNITS-2 && ${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/configure 
         #BUILD_COMMAND make -j
     )
-    add_subdirectory(extern/UDUNITS-2)
-    #add_library(libudunits2 SHARED IMPORTED)
+    #add_subdirectory(extern/UDUNITS-2)
+    add_library(libudunits2 SHARED IMPORTED)
     add_dependencies(libudunits2 libudunits2_build)
-    #set_property(TARGET libudunits2 PROPERTY IMPORTED_LOCATION "${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/src/lib/libudunits2.so")
-    add_compile_definitions("NGEN_UDUNITS2_XML_PATH=\"${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/src/share/udunits/udunits2.xml\"")
+    set_property(TARGET libudunits2 PROPERTY IMPORTED_LOCATION "${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/lib/libudunits2.so")
+    add_compile_definitions("NGEN_UDUNITS2_XML_PATH=\"${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/lib/udunits2.xml\"")
     #target_include_directories(libudunits2 INTERFACE "${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/src/include") # This seems like it should have worked...??
     # this should probably be src, not lib, but in parallel builds that doesn't get generated before udunits2.h is included, so...
     include_directories("${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/lib")
