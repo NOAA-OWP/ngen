@@ -98,19 +98,26 @@ if(UDUNITS_ACTIVE)
     ExternalProject_Add(libudunits2_build
         PREFIX ${PROJECT_SOURCE_DIR}/extern/UDUNITS-2
         SOURCE_DIR ${PROJECT_SOURCE_DIR}/extern/UDUNITS-2
+        INSTALL_DIR ${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/install
         BUILD_IN_SOURCE 1
         PATCH_COMMAND find ${PROJECT_SOURCE_DIR}/extern/UDUNITS-2  \( -type d -name .git -prune \) -o -type f -name "CMakeLists.txt" -exec sed -i -e "s/CMAKE_MINIMUM_REQUIRED(VERSION 3\.19)/CMAKE_MINIMUM_REQUIRED(VERSION 3.17)/" {} +
-        CMAKE_ARGS -DBOOST_ROOT=${BOOST_ROOT} -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+        #CMAKE_ARGS -DBOOST_ROOT=${BOOST_ROOT} CMAKE_INSTALL_RPATH_USE_LINK_PATH="ON" -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+        CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/install
     )
     add_library(libudunits2 SHARED IMPORTED)
     add_dependencies(libudunits2 libudunits2_build)
     if (${CMAKE_HOST_SYSTEM_NAME} MATCHES "Darwin")
-        set_property(TARGET libudunits2 PROPERTY IMPORTED_LOCATION "${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/lib/libudunits2.dylib")
-    else()
-        set_property(TARGET libudunits2 PROPERTY IMPORTED_LOCATION "${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/lib/libudunits2.so")
+        message("Linking libudunits2 to path \"${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/install/lib/libudunits2.dylib\"")
+        set_property(TARGET libudunits2 PROPERTY GENERATED TRUE)
+        set_property(TARGET libudunits2 PROPERTY IMPORTED_LOCATION "${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/install/lib/libudunits2.dylib")
+        #set_property(TARGET libudunits2 PROPERTY INSTALL_RPATH_USE_LINK_PATH TRUE)
+        else()
+        #message("Linking libudunits2 to path ${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/lib/libudunits2.dylib")
+        set_property(TARGET libudunits2 PROPERTY IMPORTED_LOCATION "${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/install/lib/libudunits2.so")
     endif()
-    add_compile_definitions("NGEN_UDUNITS2_XML_PATH=\"${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/lib/udunits2.xml\"")
-    #target_include_directories(libudunits2 INTERFACE "${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/src/include") # This seems like it should have worked...??
+    #set_property(TARGET libudunits2 PROPERTY GENERATED TRUE)
+    add_compile_definitions("NGEN_UDUNITS2_XML_PATH=\"${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/install/lib/udunits2.xml\"")
+    #target_include_directories(libudunits2 INTERFACE "${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/install/include") # This seems like it should have worked...??
     include_directories("${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/lib")
 endif()
 
