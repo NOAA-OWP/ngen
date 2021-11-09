@@ -43,7 +43,6 @@
                                 "main_output_variable": "Q_OUT",
                                 "registration_function": "register_bmi_cfe",
                                 "variables_names_map": {
-                                    "atmosphere_water__liquid_equivalent_precipitation_rate": "precip_rate",
                                     "water_potential_evaporation_flux": "ETRAN",
                                     "atmosphere_air_water~vapor__relative_saturation": "SPFH_2maboveground",
                                     "land_surface_air__temperature": "TMP_2maboveground",
