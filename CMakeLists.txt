@@ -40,15 +40,20 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 
+# Account for different OS and how that impacts shared lib file names
+if ("${CMAKE_SYSTEM_NAME}" STREQUAL "Darwin")
+    set(SHARED_LIB_EXTENSION "dylib")
+elseif(WIN32)
+    error( "Windows platforms are not currently supported" )
+else()
+    set(SHARED_LIB_EXTENSION "so")
+endif()
+
 set(PROJ_ROOT_INCLUDE_DIR ./include)
 set(PROJ_ROOT_MODELS_DIR ./models)
 
 set(HYMOD_DIR ${PROJ_ROOT_MODELS_DIR}/hymod)
 set(HYMOD_INCLUDE_DIR ${HYMOD_DIR}/include)
-
-add_executable(ngen
-        src/NGen.cpp
-        )
 
 # Find the Boost library and configure usage
 set(Boost_USE_STATIC_LIBS OFF)
@@ -95,31 +100,39 @@ if (NOT (DEFINED UDUNITS_ACTIVE))
 endif()
 
 if(UDUNITS_ACTIVE)
+    set(UDUNITS_DIR ${PROJECT_SOURCE_DIR}/extern/UDUNITS-2)
+    set(UDUNITS_BUILD_BASE ${CMAKE_CURRENT_BINARY_DIR}/UDUNITS-2)
+    set(UDUNITS_BUILD_DIR ${UDUNITS_BUILD_BASE}/build)
+    set(UDUNITS_INSTALL_DIR ${UDUNITS_BUILD_BASE}/build)
     ExternalProject_Add(libudunits2_build
-        PREFIX ${PROJECT_SOURCE_DIR}/extern/UDUNITS-2
-        SOURCE_DIR ${PROJECT_SOURCE_DIR}/extern/UDUNITS-2
-        INSTALL_DIR ${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/install
-        BUILD_IN_SOURCE 1
+        PREFIX ${UDUNITS_BUILD_BASE}
+        SOURCE_DIR ${UDUNITS_DIR}
+        BINARY_DIR ${UDUNITS_BUILD_DIR}
+        INSTALL_DIR ${UDUNITS_INSTALL_DIR}
         PATCH_COMMAND find ${PROJECT_SOURCE_DIR}/extern/UDUNITS-2  \( -type d -name .git -prune \) -o -type f -name "CMakeLists.txt" -exec sed -i -e "s/CMAKE_MINIMUM_REQUIRED(VERSION 3\.19)/CMAKE_MINIMUM_REQUIRED(VERSION 3.17)/" {} +
         #CMAKE_ARGS -DBOOST_ROOT=${BOOST_ROOT} CMAKE_INSTALL_RPATH_USE_LINK_PATH="ON" -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
-        CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/install
+        CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${UDUNITS_INSTALL_DIR}
     )
     add_library(libudunits2 SHARED IMPORTED)
     add_dependencies(libudunits2 libudunits2_build)
-    if (${CMAKE_HOST_SYSTEM_NAME} MATCHES "Darwin")
-        message("Linking libudunits2 to path \"${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/install/lib/libudunits2.dylib\"")
-        set_property(TARGET libudunits2 PROPERTY GENERATED TRUE)
-        set_property(TARGET libudunits2 PROPERTY IMPORTED_LOCATION "${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/install/lib/libudunits2.dylib")
-        #set_property(TARGET libudunits2 PROPERTY INSTALL_RPATH_USE_LINK_PATH TRUE)
-        else()
-        #message("Linking libudunits2 to path ${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/lib/libudunits2.dylib")
-        set_property(TARGET libudunits2 PROPERTY IMPORTED_LOCATION "${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/install/lib/libudunits2.so")
-    endif()
+
+    #set_property(TARGET libudunits2 PROPERTY INSTALL_RPATH_USE_LINK_PATH TRUE)
+    #set(CMAKE_MACOSX_RPATH 1)
+    message("INFO - Linking libudunits2 to path \"${UDUNITS_INSTALL_DIR}/lib/libudunits2.${SHARED_LIB_EXTENSION}\"")
+    set_property(TARGET libudunits2 PROPERTY IMPORTED_LOCATION "${UDUNITS_INSTALL_DIR}/lib/libudunits2.${SHARED_LIB_EXTENSION}")
+    list( APPEND CMAKE_INSTALL_RPATH ${UDUNITS_INSTALL_DIR}/lib ${UDUNITS_INSTALL_DIR}/include )
+    list( APPEND CMAKE_BUILD_RPATH ${UDUNITS_BUILD_DIR}/lib )
+    
     #set_property(TARGET libudunits2 PROPERTY GENERATED TRUE)
-    add_compile_definitions("NGEN_UDUNITS2_XML_PATH=\"${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/install/lib/udunits2.xml\"")
-    #target_include_directories(libudunits2 INTERFACE "${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/install/include") # This seems like it should have worked...??
-    include_directories("${PROJECT_SOURCE_DIR}/extern/UDUNITS-2/lib")
+    target_include_directories(libudunits2 INTERFACE "${UDUNITS_DIR}/lib") # This seems like it should have worked...??
+    include_directories("${UDUNITS_DIR}/lib")
+
+    add_compile_definitions("NGEN_UDUNITS2_XML_PATH=\"${UDUNITS_INSTALL_DIR}/share/udunits/udunits2.xml\"")
 endif()
+
+add_executable(ngen
+    src/NGen.cpp
+    )
 
 # Handle several steps for BMI C library logic and dependencies, at top level, if functionality is turned on
 if(BMI_C_LIB_ACTIVE)
@@ -232,6 +245,7 @@ target_include_directories(ngen PUBLIC
 #add_subdirectory("extern/test_bmi_c")
 
 add_subdirectory("src/core")
+add_dependencies(core libudunits2)
 add_subdirectory("src/geojson")
 add_subdirectory("src/realizations/catchment")
 add_subdirectory("src/models/tshirt")
