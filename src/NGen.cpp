@@ -317,34 +317,42 @@ int main(int argc, char *argv[]) {
 
 
   #ifdef NGEN_ROUTING_ACTIVE
-    
-    //Syncronization here. MPI barrier. If rank == 0, do routing
-
-    if(manager->get_using_routing()) {
-      std::cout<<"Using Routing"<<std::endl;
-
-      std::string t_route_connection_path = manager->get_t_route_connection_path();
-      
-      std::string t_route_config_file_with_path = manager->get_t_route_config_file_with_path();
-   
-      //Note: Currently, delta_time is set in the t-route yaml configuration file, and the
-      //number_of_timesteps is determined from the total number of nexus outputs in t-route.
-      //It is recommended to still pass these values to the routing_py_adapter object in
-      //case a future implmentation needs these two values from the ngen framework.
-      int number_of_timesteps = manager->Simulation_Time_Object->get_total_output_times();
-
-      int delta_time = manager->Simulation_Time_Object->get_output_interval_seconds();
- 
-      routing_py_adapter::Routing_Py_Adapter routing_py_adapter1(t_route_connection_path, 
-      t_route_config_file_with_path, number_of_timesteps, delta_time);
-    }
-    else {
-      std::cout<<"Not Using Routing"<<std::endl;
-    }
-
-  #endif // NGEN_ROUTING_ACTIVE
 
   #ifdef NGEN_MPI_ACTIVE
+    //Syncronization here. MPI barrier. If rank == 0, do routing
+    MPI_Barrier(MPI_COMM_WORLD);
     MPI_Finalize();
-  #endif
+    if( mpi_rank == 0 )
+    { // Run t-route from single process
+  #endif //NGEN_MPI_ACTIME
+        if(manager->get_using_routing()) {
+          std::cout<<"Using Routing"<<std::endl;
+
+          std::string t_route_connection_path = manager->get_t_route_connection_path();
+          
+          std::string t_route_config_file_with_path = manager->get_t_route_config_file_with_path();
+       
+          //Note: Currently, delta_time is set in the t-route yaml configuration file, and the
+          //number_of_timesteps is determined from the total number of nexus outputs in t-route.
+          //It is recommended to still pass these values to the routing_py_adapter object in
+          //case a future implmentation needs these two values from the ngen framework.
+          int number_of_timesteps = manager->Simulation_Time_Object->get_total_output_times();
+
+          int delta_time = manager->Simulation_Time_Object->get_output_interval_seconds();
+     
+          routing_py_adapter::Routing_Py_Adapter routing_py_adapter1(t_route_connection_path, 
+          t_route_config_file_with_path, number_of_timesteps, delta_time);
+        }
+        else {
+          std::cout<<"Not Using Routing"<<std::endl;
+        }
+ #ifdef NGEN_MPI_ACTIVE
+    }
+ #endif //NGEN_MPI_ACTIVE
+ #else
+ #ifdef NGEN_MPI_ACTIVE
+    MPI_Finalize();
+ #endif //NGEN_MPI_ACTIVE
+ #endif // NGEN_ROUTING_ACTIVE
+    return 0;
 }
