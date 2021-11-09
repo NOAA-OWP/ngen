@@ -54,6 +54,10 @@ namespace utils {
 
         public:
 
+            InterpreterUtil(InterpreterUtil const &instance) = delete;
+
+            void operator=(InterpreterUtil const &instance) = delete;
+
             /**
              * Add to the Python system path of the singleton instance.
              *
