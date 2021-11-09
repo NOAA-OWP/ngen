@@ -1,13 +1,17 @@
 FROM centos:8.4.2105 as builder
 
-RUN yum update -y
-    && yum -y install epel-release
-    && yum repolist
-    && yum install -y tar git gcc-c++ gcc make cmake python38 python38-devel python38-numpy bzip2 udunits2-devel
+RUN yum update -y \
+    && yum install dnf-plugins-core \
+    && yum config-manager --set-enabled powertools \
+    && yum -y install epel-release \
+    && yum repolist \
+    && yum install -y tar git gcc-c++ gcc make cmake python38 python38-devel python38-numpy bzip2 udunits2-devel texinfo \
+    && dnf clean all \
+  	&& rm -rf /var/cache/yum
 
-RUN curl -L -O https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2
-
-RUN tar -xjf boost_1_72_0.tar.bz2
+RUN curl -L -O https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2 \
+    && tar -xjf boost_1_72_0.tar.bz2 \
+    && rm boost_1_72_0.tar.bz2
 
 ENV BOOST_ROOT="/boost_1_72_0"
 
