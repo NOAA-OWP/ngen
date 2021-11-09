@@ -40,6 +40,8 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 
+include(ExternalProject)
+
 # Account for different OS and how that impacts shared lib file names
 if ("${CMAKE_SYSTEM_NAME}" STREQUAL "Darwin")
     set(SHARED_LIB_EXTENSION "dylib")
@@ -48,6 +50,25 @@ elseif(WIN32)
 else()
     set(SHARED_LIB_EXTENSION "so")
 endif()
+
+find_package(Git QUIET)
+if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
+    # Update submodules as needed
+    option(GIT_SUBMODULE "Check submodules during build" ON)
+endif()
+function(git_update_submodule PATH)
+    if(GIT_SUBMODULE)
+        message(STATUS "Updating submodule ${PATH}")
+        execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init -- ${PATH}
+            RESULT_VARIABLE GIT_SUBMOD_RESULT
+            )
+        if(NOT GIT_SUBMOD_RESULT EQUAL "0")
+            message(FATAL_ERROR "git submodule update --init for ${PATH} failed with ${GIT_SUBMOD_RESULT}")
+        endif()
+    else()
+        message(FATAL_ERROR "Git not detected: cannot obtain Udunits submodule (but how is this even working?)")
+    endif()
+endfunction()
 
 set(PROJ_ROOT_INCLUDE_DIR ./include)
 set(PROJ_ROOT_MODELS_DIR ./models)
@@ -85,8 +106,6 @@ endif()
 
 find_package(Boost 1.72.0 REQUIRED)
 
-include(ExternalProject)
-
 # UDUNITS
 # Since UDUNITS is currently not really optional (yet) let's make it default to on...
 if (NOT (DEFINED UDUNITS_ACTIVE))
@@ -104,6 +123,7 @@ if(UDUNITS_ACTIVE)
     set(UDUNITS_BUILD_BASE ${CMAKE_CURRENT_BINARY_DIR}/UDUNITS-2)
     set(UDUNITS_BUILD_DIR ${UDUNITS_BUILD_BASE}/build)
     set(UDUNITS_INSTALL_DIR ${UDUNITS_BUILD_BASE}/build)
+    git_update_submodule(${UDUNITS_DIR})
     ExternalProject_Add(libudunits2_build
         PREFIX ${UDUNITS_BUILD_BASE}
         SOURCE_DIR ${UDUNITS_DIR}
