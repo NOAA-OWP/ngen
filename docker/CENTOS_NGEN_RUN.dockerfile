@@ -1,8 +1,8 @@
 FROM centos:8.4.2105 as builder
 
 RUN yum update -y \
-    && yum install dnf-plugins-core \
-    && yum config-manager --set-enabled powertools \
+    && yum install -y dnf-plugins-core \
+    && yum -y config-manager --set-enabled powertools \
     && yum -y install epel-release \
     && yum repolist \
     && yum install -y tar git gcc-c++ gcc make cmake python38 python38-devel python38-numpy bzip2 udunits2-devel texinfo \
