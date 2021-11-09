@@ -1,7 +1,9 @@
-FROM centos:8.3.2011 as builder
+FROM centos:8.4.2105 as builder
 
 RUN yum update -y
-RUN yum install -y tar git gcc-c++ gcc make cmake python38 python38-devel python38-numpy bzip2 expat expat-devel
+    && yum -y install epel-release
+    && yum repolist
+    && yum install -y tar git gcc-c++ gcc make cmake python38 python38-devel python38-numpy bzip2 udunits2-devel
 
 RUN curl -L -O https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2
 
