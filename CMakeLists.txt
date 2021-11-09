@@ -127,7 +127,7 @@ if(UDUNITS_ACTIVE)
     target_include_directories(libudunits2 INTERFACE "${UDUNITS_DIR}/lib") # This seems like it should have worked...??
     include_directories("${UDUNITS_DIR}/lib")
 
-    add_compile_definitions("NGEN_UDUNITS2_XML_PATH=\"${UDUNITS_INSTALL_DIR}/share/udunits/udunits2.xml\"")
+    #add_compile_definitions("NGEN_UDUNITS2_XML_PATH=\"${UDUNITS_INSTALL_DIR}/share/udunits/udunits2.xml\"")
 endif()
 
 add_executable(ngen
