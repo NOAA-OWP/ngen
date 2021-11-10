@@ -208,8 +208,8 @@ class CsvPerFeatureForcingProvider : public forcing::ForcingProvider
 
     // This map may be applicable to well-known netCDF formats as well?
     map<std::string, std::tuple<std::string, std::string>> well_known_fields = {
-        {"precip_rate", { CSDMS_STD_NAME_RAIN_RATE, "mm s^-1" } }, 
-        {"APCP_surface", { CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, "kg m^-2" } }, // Especially this one, is it correct? 
+        {"precip_rate", { CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, "mm s^-1" } }, 
+        {"APCP_surface", { CSDMS_STD_NAME_RAIN_RATE, "kg m^-2" } }, // Especially this one, is it correct? 
         {"DLWRF_surface", { CSDMS_STD_NAME_SOLAR_LONGWAVE, "W m-2" } }, 
         {"DSWRF_surface", { CSDMS_STD_NAME_SOLAR_SHORTWAVE, "W m-2" } }, 
         {"PRES_surface", { CSDMS_STD_NAME_SURFACE_AIR_PRESSURE, "Pa" } }, 
@@ -217,7 +217,7 @@ class CsvPerFeatureForcingProvider : public forcing::ForcingProvider
         {"TMP_2maboveground", { CSDMS_STD_NAME_SURFACE_TEMP, "K" } }, 
         {"UGRD_10maboveground", { CSDMS_STD_NAME_WIND_U_X, "m s-1" } }, 
         {"VGRD_10maboveground", { CSDMS_STD_NAME_WIND_V_Y, "m s-1" } }, 
-        {"RAINRATE", { CSDMS_STD_NAME_RAIN_RATE , "mm s^-1" } }, 
+        {"RAINRATE", { CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE , "mm s^-1" } }, 
         {"T2D", { CSDMS_STD_NAME_SURFACE_TEMP, "K" } }, 
         {"Q2D", { NGEN_STD_NAME_SPECIFIC_HUMIDITY, "kg kg-1" } }, 
         {"U2D", { CSDMS_STD_NAME_WIND_U_X, "m s-1" } }, 
