@@ -275,11 +275,30 @@ namespace realization {
          * @return The inclusive beginning of the period of time over which this instance can provide this data.
          */
         time_t get_forcing_output_time_begin(const std::string &forcing_name) override {
-            // If not found ...
-            if (availableData.empty() || availableData.find(forcing_name) == availableData.end()) {
-                throw runtime_error(get_formulation_type() + " cannot get output time for unknown " + forcing_name);
+            std::string var_name = forcing_name;
+            if(var_name == "*" || var_name == ""){
+                // when unspecified, assume all data is available for the same range.
+                // Find one that successfully returns...
+                for(std::map<std::string,std::shared_ptr<forcing::ForcingProvider>>::iterator iter = availableData.begin(); iter != availableData.end(); ++iter)
+                {
+                    var_name = iter->first;
+                    std::cerr<<"Trying var_name "<<var_name<<std::endl;
+                    try {
+                        time_t rv = availableData[var_name]->get_forcing_output_time_begin(var_name);
+                        std::cerr<<"Success! "<<rv<<std::endl;
+                        return rv;
+                    }
+                    catch (...){
+                        continue;
+                    }
+                    break;
+                }
             }
-            return availableData[forcing_name]->get_forcing_output_time_begin(forcing_name);
+            // If not found ...
+            if (availableData.empty() || availableData.find(var_name) == availableData.end()) {
+                throw runtime_error(get_formulation_type() + " cannot get output time for unknown \"" + forcing_name + "\"");
+            }
+            return availableData[var_name]->get_forcing_output_time_begin(var_name);
         }
 
         /**
@@ -293,10 +312,30 @@ namespace realization {
          */
         time_t get_forcing_output_time_end(const std::string &forcing_name) override {
             // If not found ...
-            if (availableData.empty() || availableData.find(forcing_name) == availableData.end()) {
-                throw runtime_error(get_formulation_type() + " cannot get output time for unknown " + forcing_name);
+            std::string var_name = forcing_name;
+            if(var_name == "*" || var_name == ""){
+                // when unspecified, assume all data is available for the same range.
+                // Find one that successfully returns...
+                for(std::map<std::string,std::shared_ptr<forcing::ForcingProvider>>::iterator iter = availableData.begin(); iter != availableData.end(); ++iter)
+                {
+                    var_name = iter->first;
+                    std::cerr<<"Trying var_name "<<var_name<<std::endl;
+                    try {
+                        time_t rv = availableData[var_name]->get_forcing_output_time_end(var_name);
+                        std::cerr<<"Success! "<<rv<<std::endl;
+                        return rv;
+                    }
+                    catch (...){
+                        continue;
+                    }
+                    break;
+                }
             }
-            return availableData[forcing_name]->get_forcing_output_time_begin(forcing_name);
+            // If not found ...
+            if (availableData.empty() || availableData.find(var_name) == availableData.end()) {
+                throw runtime_error(get_formulation_type() + " cannot get output time for unknown \"" + forcing_name + "\"");
+            }
+            return availableData[var_name]->get_forcing_output_time_end(var_name);
         }
 
         string get_formulation_type() override {
