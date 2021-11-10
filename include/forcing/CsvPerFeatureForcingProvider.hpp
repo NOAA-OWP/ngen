@@ -1,5 +1,5 @@
-#ifndef NGEN_CSVPREFEATUREFORCING_H
-#define NGEN_CSVPREFEATUREFORCING_H
+#ifndef NGEN_CSVPERFEATUREFORCING_H
+#define NGEN_CSVPERFEATUREFORCING_H
 
 #include <vector>
 #include <set>
@@ -410,4 +410,4 @@ class CsvPerFeatureForcingProvider : public forcing::ForcingProvider
 /// \todo Consider passing grid to class
 /// \todo Consider following GDAL API functionality
 
-#endif // NGEN_CSVPREFEATUREFORCING_H
+#endif // NGEN_CSVPERFEATUREFORCING_H
