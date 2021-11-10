@@ -1,0 +1,65 @@
+name: Testing and Validation
+
+# Controls when the action will run.
+on:
+  push:
+    branches: [ master, dev, notreal ]
+  pull_request:
+    branches: [ master, dev, notreal ]
+
+env:
+  # Obtained from https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
+  # TODO: add something later that can check the runners for hyperthreading
+  LINUX_NUM_PROC_CORES: 2
+  MACOS_NUM_PROC_CORES: 3
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # Run general unit tests in linux environment
+  test_surfacebmi_plus_cfe:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+      
+    - name: Init Submodules
+      run: git submodule update --init --recursive
+
+    - name: Cache Boost Dependency
+      id: cache-boost-dep
+      uses: actions/cache@v1
+      with:
+        path: boost_1_72_0
+        key: unix-boost-dep
+
+    - name: Get Boost Dependency
+      if: steps.cache-boost-dep.outputs.cache-hit != 'true'
+      run: |
+        curl -L -O https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2
+        tar xjf boost_1_72_0.tar.bz2
+
+    - name: Build surfacebmi module
+      run: |
+        cmake -B extern/noah-mp-modular/cmake_build cmake_build -S extern/noah-mp-modular
+        cmake --build extern/noah-mp-modular/cmake_build --target surfacebmi -- -j ${{ env.LINUX_NUM_PROC_CORES }}
+
+    - name: Build cfebmi module
+      run: |
+        cmake -B extern/cfe/cmake_build -S extern/cfe/
+        cmake --build extern/cfe/cmake_build/ --target cfebmi -- -j ${{ env.LINUX_NUM_PROC_CORES }}
+
+    - name: cmake_init_build
+      run: |
+        export BOOST_ROOT="$(pwd)/boost_1_72_0"
+        [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
+        cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=ON -DBMI_FORTRAN_ACTIVE=ON -DNGEN_ACTIVATE_PYTHON:BOOL=OFF -S .
+
+    - name: Build ngen
+      run: cmake --build cmake_build --target ngen -- -j ${{ env.LINUX_NUM_PROC_CORES }}
+      timeout-minutes: 15
+
+    - name: Run surfacebmi plus cfebmi
+      run: ./build/ngen data/catchment_data.geojson "cat-27" data/nexus_data.geojson "" data/example_bmi_multi_realization_config.json
