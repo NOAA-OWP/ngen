@@ -1,5 +1,6 @@
 var NAVTREEINDEX1 =
 {
+"class_h_y___hydro_nexus.html#a0a84a02f104fd0270790f57cfd5160f4":[21,0,43,6],
 "class_h_y___hydro_nexus.html#a11dc68437650f47aad75eadc071b51e5":[21,0,43,4],
 "class_h_y___hydro_nexus.html#a17994249b4cbe3a561a83599b14d34aa":[21,0,43,8],
 "class_h_y___hydro_nexus.html#a25198c16baaea6478cd7b83de78e6fea":[21,0,43,7],
@@ -248,6 +249,5 @@ var NAVTREEINDEX1 =
 "class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html#a3c9b22977b1e3bbae37c4c29edf5b59e":[21,0,11,1,2,7],
 "class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html#a774a7d02cb9189fb7651efe9805a5d1a":[21,0,11,1,2,3],
 "class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html#a79272d74ceb6db9a58e615c72eb65000":[21,0,11,1,2,2],
-"class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html#a7e3b4d24c9b1b25de3bb7264b096f460":[21,0,11,1,2,4],
-"class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html#a89e37b57167c51755091e69862c24365":[21,0,11,1,2,8]
+"class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html#a7e3b4d24c9b1b25de3bb7264b096f460":[21,0,11,1,2,4]
 };
