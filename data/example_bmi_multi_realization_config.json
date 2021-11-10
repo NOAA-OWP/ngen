@@ -16,7 +16,7 @@
                                 "model_type_name": "bmi_fortran_noahmp",
                                 "library_file": "./extern/noah-mp-modular/cmake_build/libsurfacebmi.so",
                                 "forcing_file": "",
-                                "init_config": "./data/multi_bmi/noah-mp-modular-init-{{id}}.namelist.input",
+                                "init_config": "./data/bmi/fortran/noah-mp-modular-init-{{id}}.namelist.input",
                                 "allow_exceed_end_time": true,
                                 "main_output_variable": "QINSUR",
                                 "variables_names_map": {
@@ -38,7 +38,7 @@
                                 "model_type_name": "bmi_c_cfe",
                                 "library_file": "./extern/cfe/cmake_build/libcfebmi.so",
                                 "forcing_file": "",
-                                "init_config": "./{{id}}_bmi_cfe_config.ini",
+                                "init_config": "./data/bmi/c/cfe/{{id}}_bmi_config.ini",
                                 "allow_exceed_end_time": true,
                                 "main_output_variable": "Q_OUT",
                                 "registration_function": "register_bmi_cfe",
@@ -62,13 +62,13 @@
         ],
         "forcing": {
             "file_pattern": ".*{{id}}.*..csv",
-            "path": "./data/forcings/",
+            "path": "./data/forcing/",
             "provider": "CsvPerFeature"
         }
     },
     "time": {
-        "start_time": "2012-05-01 00:00:00",
-        "end_time": "2012-05-31 23:00:00",
+        "start_time": "2015-12-01 00:00:00",
+        "end_time": "2015-12-30 23:00:00",
         "output_interval": 3600
     }
 }

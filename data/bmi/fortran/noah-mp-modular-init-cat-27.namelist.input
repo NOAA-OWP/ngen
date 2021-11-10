@@ -1,0 +1,222 @@
+&timing ! and output
+  dt              = 1800.0   ! timestep [seconds]
+  maxtime         = 8500     ! total simulation time [hours]
+  startdate       = "199801010630" ! UTC time start of simulation (YYYYMMDDhhmm)
+  enddate         = "199901010630" ! UTC time end of simulation (YYYYMMDDhhmm)
+  input_filename  = "data/config/bmi/sugar_creek/noah-mp-modular.dat" ! change filename to match your forcing data
+  output_filename = "data/config/bmi/sugar_creek/output.nc"
+/
+
+&location ! for point runs, needs to be modified for gridded
+  lat              = 40.01    ! latitude [degrees]
+  lon              = -88.37  ! longitude [degrees]
+/
+
+&forcing
+  ZREF            = 10.0    ! measurment height for wind speed
+/
+
+&model_options
+  precip_phase_option               = 2
+  snow_albedo_option                = 2 ! 1 = BATS, 2 = CLASS
+  dynamic_veg_option                = 1
+  radiative_transfer_option         = 3
+  sfc_drag_coeff_option             = 1
+  canopy_stom_resist_option         = 1
+  crop_model_option                 = 0
+  snowsoil_temp_time_option         = 3
+  soil_temp_boundary_option         = 2
+  supercooled_water_option          = 1
+  stomatal_resistance_option        = 1
+  evap_srfc_resistance_option       = 1
+/
+
+&structure
+ isltyp           = 1       ! soil texture class
+ nsoil            = 4       ! number of soil levels
+ nsnow            = 3       ! number of snow levels
+ nveg             = 20      ! number of vegetation types
+ structure_option = 1       ! 1: use preset zsoil; 2: uniform levels
+ soil_depth       = 2.0     ! total soil thickness [m] for structure_option > 1
+ vegtyp           = 1       ! vegetation type modis
+ croptype         = 0       ! crop type (0 = no crops)
+ sfctyp           = 1       ! land surface type, 1:soil, 2:lake
+ soilcolor        = 4       ! soil color code
+/
+
+&fixed_initial
+ zsoil     = -0.1, -0.4, -1.0, -2.0  ! depth to level interface [m]
+ dzsnso    =  0.0,  0.0,  0.0,  0.1,  0.3,  0.6,  1.0  ! level thickness [m]
+ sice      =  0.0,  0.0,  0.0,  0.0  ! initial soil ice profile [vol]
+ sh2o      =  0.3,  0.3,  0.3,  0.3  ! initial soil liquid profile [vol]
+ zwt       =  -2.0                   ! initial water table depth below surface [m]
+/
+
+&uniform_initial
+ initial_uniform    = .true.         ! initial all levels the same
+ initial_sh2o_value = 0.3            ! constant soil liquid value [vol]
+ initial_sice_value = 0.0            ! constant soil ice value [vol]
+ initial_zwt        =  -2.0          ! initial water table depth below surface [m]
+/
+
+&soil_parameters
+         !        1,       2,       3,       4,       5,       6,       7,       8,       9,      10,      11,      12
+         !     sand,  l sand, sa loam, si loam,    silt,    loam,sa cl lo,si cl lo, cl loam, sa clay, si clay,    clay
+      bb =     2.79,    4.26,    4.74,    5.33,    3.86,    5.25,    6.77,    8.72,    8.17,   10.73,   10.39,   11.55
+   satdk =  4.66e-5, 1.41e-5, 5.23e-6, 2.81e-6, 2.18e-6, 3.38e-6, 4.45e-6, 2.03e-6, 2.45e-6, 7.22e-6, 1.34e-6, 9.74e-7
+   satdw =  2.65e-5, 5.14e-6, 8.05e-6, 2.39e-5, 1.66e-5, 1.43e-5, 1.01e-5, 2.35e-5, 1.13e-5, 1.87e-5, 9.64e-6, 1.12e-5
+  maxsmc =    0.339,   0.421,   0.434,   0.476,   0.484,   0.439,   0.404,   0.464,   0.465,   0.406,   0.468,   0.468
+  satpsi =    0.069,   0.036,   0.141,   0.759,   0.955,   0.355,   0.135,   0.617,   0.263,   0.098,   0.324,   0.468
+  wltsmc =    0.010,   0.028,   0.047,   0.084,   0.061,   0.066,   0.069,   0.120,   0.103,   0.100,   0.126,   0.138
+  refsmc =    0.192,   0.283,   0.312,   0.360,   0.347,   0.329,   0.315,   0.387,   0.382,   0.338,   0.404,   0.412
+ pctsand =       92,      82,      58,      17,       5,      43,      58,      10,      32,      52,       6,      22
+ pctclay =        3,       6,      10,      13,       5,      18,      27,      34,      34,      42,      47,      58
+    bvic =     0.05,    0.08,    0.09,    0.25,    0.15,    0.18,    0.20,    0.22,    0.23,    0.25,    0.28,    0.30
+    AXAJ =    0.009,   0.010,   0.009,   0.010,   0.012,   0.013,   0.014,   0.015,   0.016,   0.015,   0.016,   0.017
+    BXAJ =     0.05,    0.08,    0.09,    0.25,    0.15,    0.18,    0.20,    0.22,    0.23,    0.25,    0.28,    0.30
+    XXAJ =     0.05,    0.08,    0.09,    0.25,    0.15,    0.18,    0.20,    0.22,    0.23,    0.25,    0.28,    0.30
+   BBVIC =    1.000,   1.010,   1.020,   1.025,   1.000,   1.000,   1.032,   1.035,   1.040,   1.042,   1.045,   1.000
+       G =    0.050,   0.070,   0.130,   0.200,   0.170,   0.110,   0.260,   0.350,   0.260,   0.300,   0.380,   0.410
+  QUARTZ =     0.92,    0.82,    0.58,    0.17,     0.5,    0.43,    0.58,    0.10,    0.32,    0.52,     0.6,    0.22
+   slope = 0.1
+  refkdt = 3.0
+   refdk = 2.0e-6
+   csoil = 2.0e+6 ! volumetric soil heat capacity [j/m3/K]
+      Z0 = 0.002  ! bare soil roughness length (m)
+    CZIL = 0.1    ! Parameter used in the calculation of the roughness length for heat, originally in GENPARM.TBL
+    ZBOT = -8.0   ! Depth (m) of lower boundary soil temperature, originally in GENPARM.TBL
+/
+
+&snow_parameters
+ SSI          = 0.03  ! liquid water holding capacity of snowpack (m3/m3)
+ MFSNO        = 2.5   ! fractional snow covered area (FSNO) curve parameter
+ Z0SNO        = 0.002 ! snow surface roughness length (m)
+ SWEMX        = 1.00  ! new SWE required (QSNOW * dt) to fully cover old snow (mm)
+ TAU0         = 1.e6  ! tau0 from Yang97 eqn. 10a
+ GRAIN_GROWTH = 5000. ! growth from vapor diffusion Yang97 eqn. 10b
+ EXTRA_GROWTH = 10.   ! extra growth near freezing Yang97 eqn. 10c
+ DIRT_SOOT    = 0.3   ! dirt and soot term Yang97 eqn. 10d
+ BATS_COSZ    = 2.0   ! zenith angle snow albedo adjustment; b in Yang97 eqn. 15
+ BATS_VIS_NEW = 0.95  ! new snow visible albedo
+ BATS_NIR_NEW = 0.65  ! new snow NIR albedo
+ BATS_VIS_AGE = 0.2   ! age factor for diffuse visible snow albedo Yang97 eqn. 17
+ BATS_NIR_AGE = 0.5   ! age factor for diffuse NIR snow albedo Yang97 eqn. 18
+ BATS_VIS_DIR = 0.4   ! cosz factor for direct visible snow albedo Yang97 eqn. 15
+ BATS_NIR_DIR = 0.4   ! cosz factor for direct NIR snow albedo Yang97 eqn. 16
+ RSURF_SNOW   = 50.0  ! surface resistence for snow [s/m]
+ RSURF_EXP    = 5.0   ! exponent in the shape parameter for soil resistance option 1
+/
+
+&veg_parameters ! these are the modis parameters from MPTABLE.TBL in HRLDAS
+ !---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ !           1       2       3       4       5       6       7       8       9      10      11      12      13      14      15      16      17      18      19      20
+ !---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ CH2OP  =   0.1,    0.1,    0.1,    0.1,    0.1,    0.1,    0.1,    0.1,    0.1,    0.1,    0.1,    0.1,    0.1,    0.1,    0.1,    0.1,    0.1,    0.1,    0.1,    0.1,
+ NROOT  =     4,      4,      4,      4,      4,      3,      3,      3,      3,      3,      2,      3,      1,      3,      1,      1,      0,      3,      3,      2,
+ HVT    =  20.0,   20.0,   18.0,   16.0,   16.0,   1.10,   1.10,   13.0,   10.0,   1.00,   5.00,   2.00,   15.0,   1.50,   0.00,   0.00,   0.00,   4.00,   2.00,   0.50,
+ HVB    =  8.50,   8.00,   7.00,   11.5,   10.0,   0.10,   0.10,   0.10,   0.10,   0.05,   0.10,   0.10,   1.00,   0.10,   0.00,   0.00,   0.00,   0.30,   0.20,   0.10,
+ TMIN   =   265,    273,    268,    273,    268,    273,    273,    273,    273,    273,    268,    273,      0,    273,      0,      0,      0,    268,    268,    268,
+ SHDFAC =  0.70,   0.95,   0.70,   0.80,   0.80,   0.70,   0.70,   0.70,   0.50,   0.80,   0.60,   0.80,   0.10,   0.80,   0.00,   0.01,   0.00,   0.60,   0.60,   0.30,
+ SHDMAX =  0.70,   0.95,   0.70,   0.80,   0.80,   0.70,   0.70,   0.70,   0.50,   0.80,   0.60,   0.80,   0.10,   0.80,   0.00,   0.01,   0.00,   0.60,   0.60,   0.30,
+ Z0MVT  =  1.09,   1.10,   0.85,   0.80,   0.80,   0.20,   0.06,   0.60,   0.50,   0.12,   0.30,   0.15,   1.00,   0.14,   0.00,   0.00,   0.00,   0.30,   0.20,   0.03,
+ RC     =  1.20,   3.60,   1.20,   1.40,   1.40,   0.12,   0.12,   0.12,   3.00,   0.03,   0.75,   0.08,   1.00,   0.08,   0.00,   0.01,   0.01,   0.30,   0.30,   0.30,
+ XL     = 0.010,  0.010,  0.010,  0.250,  0.250,  0.010,  0.010,  0.010,  0.010,  -0.30, -0.025,  -0.30,  0.000,  -0.30,  0.000,  0.000,  0.000,  0.250,  0.250,  0.250,
+ BP     =  2.E3,   2.E3,   2.E3,   2.E3,   2.E3,   2.E3,   2.E3,   2.E3,   2.E3,   2.E3,   2.E3,   2.E3,  1.E15,   2.E3,  1.E15,   2.E3,  1.E15,   2.E3,   2.E3,   2.E3,
+ FOLNMX =   1.5,    1.5,    1.5,    1.5,    1.5,    1.5,    1.5,    1.5,    1.5,    1.5,    1.5,    1.5,   0.00,    1.5,   0.00,    1.5,   0.00,    1.5,    1.5,    1.5,
+ QE25   =  0.06,   0.06,   0.06,   0.06,   0.06,   0.06,   0.06,   0.06,   0.06,   0.06,   0.06,   0.06,   0.00,   0.06,   0.00,   0.06,   0.00,   0.06,   0.06,   0.06,
+ VCMX25 =  50.0,   60.0,   60.0,   60.0,   55.0,   40.0,   40.0,   40.0,   40.0,   40.0,   50.0,   80.0,   0.00,   60.0,   0.00,   0.00,   0.00,   50.0,   50.0,   50.0,
+ MP     =    6.,     9.,     6.,     9.,     9.,     9.,     9.,     9.,     9.,     9.,     9.,     9.,     9.,     9.,     9.,     9.,     9.,     9.,     9.,     9.,
+ RGL    =  30.0,   30.0,   30.0,   30.0,   30.0,  100.0,  100.0,  100.0,   65.0,  100.0,   65.0,  100.0,  999.0,  100.0,  999.0,  999.0,   30.0,  100.0,  100.0,  100.0,
+ RSMIN  = 125.0,  150.0,  150.0,  100.0,  125.0,  300.0,  170.0,  300.0,   70.0,   40.0,   70.0,   40.0,  200.0,   40.0,  999.0,  999.0,  100.0,  150.0,  150.0,  200.0,
+ HS     = 47.35,  41.69,  47.35,  54.53,  51.93,  42.00,  39.18,  42.00,  54.53,  36.35,  55.97,  36.25,  999.0,  36.25,  999.0,  999.0,  51.75,  42.00,  42.00,  42.00,
+ AKC    =   2.1,    2.1,    2.1,    2.1,    2.1,    2.1,    2.1,    2.1,    2.1,    2.1,    2.1,    2.1,    2.1,    2.1,    2.1,    2.1,    2.1,    2.1,    2.1,    2.1,
+ AKO    =   1.2,    1.2,    1.2,    1.2,    1.2,    1.2,    1.2,    1.2,    1.2,    1.2,    1.2,    1.2,    1.2,    1.2,    1.2,    1.2,    1.2,    1.2,    1.2,    1.2,
+ AVCMX  =   2.4,    2.4,    2.4,    2.4,    2.4,    2.4,    2.4,    2.4,    2.4,    2.4,    2.4,    2.4,    2.4,    2.4,    2.4,    2.4,    2.4,    2.4,    2.4,    2.4,
+ RSMAX  = 5000.,  5000.,  5000.,  5000.,  5000.,  5000.,  5000.,  5000.,  5000.,  5000.,  5000.,  5000.,  5000.,  5000.,  5000.,  5000.,  5000.,  5000.,  5000.,  5000.,
+
+
+
+
+
+ CWP    =  0.18,
+ C3PSN  =  1.0,
+ DLEAF  =  0.04,
+ KC25   =  30.0,
+ KO25   =  3.E4,
+
+ ! Row 1:  Vis
+ ! Row 2:  Near IR
+ RHOL_VIS= 0.07,   0.10,   0.07,   0.10,   0.10,   0.07,   0.07,   0.07,   0.10,   0.11,  0.105,   0.11,   0.00,   0.11,   0.00,   0.00,   0.00,   0.10,   0.10,   0.10,
+ RHOL_NIR= 0.35,   0.45,   0.35,   0.45,   0.45,   0.35,   0.35,   0.35,   0.45,   0.58,  0.515,   0.58,   0.00,   0.58,   0.00,   0.00,   0.00,   0.45,   0.45,   0.45,
+
+ ! Row 1:  Vis
+ ! Row 2:  Near IR
+ RHOS_VIS= 0.16,   0.16,   0.16,   0.16,   0.16,   0.16,   0.16,   0.16,   0.16,   0.36,   0.26,   0.36,   0.00,   0.36,   0.00,   0.00,   0.00,   0.16,   0.16,   0.16,
+ RHOS_NIR= 0.39,   0.39,   0.39,   0.39,   0.39,   0.39,   0.39,   0.39,   0.39,   0.58,  0.485,   0.58,   0.00,   0.58,   0.00,   0.00,   0.00,   0.39,   0.39,   0.39,
+
+ ! Row 1:  Vis
+ ! Row 2:  Near IR
+ TAUL_VIS= 0.05,   0.05,   0.05,   0.05,   0.05,   0.05,   0.05,   0.05,   0.05,   0.07,   0.06,   0.07,   0.00,   0.07,   0.00,   0.00,   0.00,   0.05,   0.05,   0.05,
+ TAUL_NIR= 0.10,   0.25,   0.10,   0.25,   0.25,   0.10,   0.10,   0.10,   0.25,   0.25,   0.25,   0.25,   0.00,   0.25,   0.00,   0.00,   0.00,   0.25,   0.25,   0.25,
+
+ ! Row 1:  Vis
+ ! Row 2:  Near IR
+ TAUS_VIS= 0.001,  0.001,  0.001,  0.001,  0.001,  0.001,  0.001,  0.001,  0.001,  0.220, 0.1105,  0.220,  0.000,  0.220,  0.000,  0.000,  0.000,  0.001,  0.001,  0.001,
+ TAUS_NIR= 0.001,  0.001,  0.001,  0.001,  0.001,  0.001,  0.001,  0.001,  0.001,  0.380, 0.1905,  0.380,  0.000,  0.380,  0.000,  0.000,  0.000,  0.001,  0.001,  0.001,
+ 
+! Monthly values, one row for each month:
+ SAI_JAN = 0.4,    0.5,    0.3,    0.4,    0.4,    0.3,    0.2,    0.4,    0.3,    0.3,    0.3,    0.3,    0.0,    0.3,    0.0,    0.0,    0.0,    0.2,    0.1,    0.0,
+ SAI_FEB = 0.4,    0.5,    0.3,    0.4,    0.4,    0.3,    0.2,    0.4,    0.3,    0.3,    0.3,    0.3,    0.0,    0.3,    0.0,    0.0,    0.0,    0.2,    0.1,    0.0,
+ SAI_MAR = 0.4,    0.5,    0.3,    0.4,    0.4,    0.3,    0.2,    0.4,    0.3,    0.3,    0.3,    0.3,    0.0,    0.3,    0.0,    0.0,    0.0,    0.2,    0.1,    0.0,
+ SAI_APR = 0.3,    0.5,    0.4,    0.4,    0.4,    0.3,    0.2,    0.4,    0.3,    0.3,    0.3,    0.3,    0.0,    0.3,    0.0,    0.0,    0.0,    0.2,    0.1,    0.0,
+ SAI_MAY = 0.4,    0.5,    0.4,    0.4,    0.4,    0.3,    0.2,    0.4,    0.3,    0.3,    0.3,    0.3,    0.0,    0.3,    0.0,    0.0,    0.0,    0.2,    0.1,    0.0,
+ SAI_JUN = 0.5,    0.5,    0.7,    0.4,    0.4,    0.3,    0.2,    0.4,    0.4,    0.4,    0.4,    0.3,    0.0,    0.4,    0.0,    0.0,    0.0,    0.2,    0.2,    0.0,
+ SAI_JUL = 0.5,    0.5,    1.3,    0.9,    0.7,    0.6,    0.4,    0.7,    0.8,    0.8,    0.6,    0.4,    0.0,    0.6,    0.0,    0.0,    0.0,    0.4,    0.4,    0.0,
+ SAI_AUG = 0.6,    0.5,    1.2,    1.2,    0.8,    0.9,    0.6,    1.2,    1.2,    1.3,    0.9,    0.5,    0.0,    0.9,    0.0,    0.0,    0.0,    0.6,    0.6,    0.0,
+ SAI_SEP = 0.6,    0.5,    1.0,    1.6,    1.0,    1.2,    0.8,    1.4,    1.3,    1.1,    0.9,    0.4,    0.0,    0.7,    0.0,    0.0,    0.0,    0.8,    0.7,    0.0,
+ SAI_OCT = 0.7,    0.5,    0.8,    1.4,    1.0,    0.9,    0.7,    1.1,    0.7,    0.4,    0.6,    0.3,    0.0,    0.3,    0.0,    0.0,    0.0,    0.7,    0.5,    0.0,
+ SAI_NOV = 0.6,    0.5,    0.6,    0.6,    0.5,    0.4,    0.3,    0.5,    0.4,    0.4,    0.4,    0.3,    0.0,    0.3,    0.0,    0.0,    0.0,    0.3,    0.3,    0.0,
+ SAI_DEC = 0.5,    0.5,    0.5,    0.4,    0.4,    0.3,    0.2,    0.4,    0.4,    0.4,    0.3,    0.3,    0.0,    0.3,    0.0,    0.0,    0.0,    0.2,    0.2,    0.0,
+
+ LAI_JAN = 4.0,    4.5,    0.0,    0.0,    2.0,    0.0,    0.0,    0.2,    0.3,    0.4,    0.2,    0.0,    0.0,    0.2,    0.0,    0.0,    0.0,    1.0,    0.6,    0.0,
+ LAI_FEB = 4.0,    4.5,    0.0,    0.0,    2.0,    0.0,    0.0,    0.2,    0.3,    0.5,    0.3,    0.0,    0.0,    0.3,    0.0,    0.0,    0.0,    1.0,    0.6,    0.0,
+ LAI_MAR = 4.0,    4.5,    0.0,    0.3,    2.2,    0.3,    0.2,    0.4,    0.5,    0.6,    0.3,    0.0,    0.0,    0.3,    0.0,    0.0,    0.0,    1.1,    0.7,    0.0,
+ LAI_APR = 4.0,    4.5,    0.6,    1.2,    2.6,    0.9,    0.6,    1.0,    0.8,    0.7,    0.5,    0.0,    0.0,    0.4,    0.0,    0.0,    0.0,    1.3,    0.8,    0.0,
+ LAI_MAY = 4.0,    4.5,    1.2,    3.0,    3.5,    2.2,    1.5,    2.4,    1.8,    1.2,    1.5,    1.0,    0.0,    1.1,    0.0,    0.0,    0.0,    1.7,    1.2,    0.0,
+ LAI_JUN = 4.0,    4.5,    2.0,    4.7,    4.3,    3.5,    2.3,    4.1,    3.6,    3.0,    2.9,    2.0,    0.0,    2.5,    0.0,    0.0,    0.0,    2.1,    1.8,    0.0,
+ LAI_JUL = 4.0,    4.5,    2.6,    4.5,    4.3,    3.5,    2.3,    4.1,    3.8,    3.5,    3.5,    3.0,    0.0,    3.2,    0.0,    0.0,    0.0,    2.1,    1.8,    0.0,
+ LAI_AUG = 4.0,    4.5,    1.7,    3.4,    3.7,    2.5,    1.7,    2.7,    2.1,    1.5,    2.7,    3.0,    0.0,    2.2,    0.0,    0.0,    0.0,    1.8,    1.3,    0.0,
+ LAI_SEP = 4.0,    4.5,    1.0,    1.2,    2.6,    0.9,    0.6,    1.0,    0.9,    0.7,    1.2,    1.5,    0.0,    1.1,    0.0,    0.0,    0.0,    1.3,    0.8,    0.0,
+ LAI_OCT = 4.0,    4.5,    0.5,    0.3,    2.2,    0.3,    0.2,    0.4,    0.5,    0.6,    0.3,    0.0,    0.0,    0.3,    0.0,    0.0,    0.0,    1.1,    0.7,    0.0,
+ LAI_NOV = 4.0,    4.5,    0.2,    0.0,    2.0,    0.0,    0.0,    0.2,    0.3,    0.5,    0.3,    0.0,    0.0,    0.3,    0.0,    0.0,    0.0,    1.0,    0.6,    0.0,
+ LAI_DEC = 4.0,    4.5,    0.0,    0.0,    2.0,    0.0,    0.0,    0.2,    0.3,    0.4,    0.2,    0.0,    0.0,    0.2,    0.0,    0.0,    0.0,    1.0,    0.6,    0.0,
+/
+
+&radiation_parameters
+ !------------------------------------------------------------------------------
+ !                1       2       3       4       5       6       7       8     soil color index for soil albedo
+ !------------------------------------------------------------------------------
+ ALBSAT_VIS =   0.15,   0.11,   0.10,   0.09,   0.08,   0.07,   0.06,   0.05   ! saturated soil albedos
+ ALBSAT_NIR =   0.30,   0.22,   0.20,   0.18,   0.16,   0.14,   0.12,   0.10   ! saturated soil albedos
+ ALBDRY_VIS =   0.27,   0.22,   0.20,   0.18,   0.16,   0.14,   0.12,   0.10   ! dry soil albedos
+ ALBDRY_NIR =   0.54,   0.44,   0.40,   0.36,   0.32,   0.28,   0.24,   0.20   ! dry soil albedos
+ ALBICE     =   0.80,   0.55                                                   ! albedo land ice: 1=vis, 2=nir
+ ALBLAK     =   0.60,   0.40                                                   ! albedo frozen lakes: 1=vis, 2=nir
+ OMEGAS     =   0.8 ,   0.4                                                    ! two-stream parameter omega for snow
+ BETADS     =   0.5                                                            ! two-stream parameter betad for snow
+ BETAIS     =   0.5                                                            ! two-stream parameter betaI for snow
+ EG         =   0.97,   0.98                                                   ! emissivity soil surface 1-soil;2-lake
+/
+
+&land_parameters
+ ISURBAN                   = 13
+ ISWATER                   = 17
+ ISBARREN                  = 16
+ ISICE                     = 15
+ ISCROP                    = 12
+ EBLFOREST                 =  2
+ NATURAL                   = 14
+ LOW_DENSITY_RESIDENTIAL   = 31
+ HIGH_DENSITY_RESIDENTIAL  = 32
+ HIGH_INTENSITY_INDUSTRIAL = 33
+/

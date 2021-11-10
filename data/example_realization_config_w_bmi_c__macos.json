@@ -50,7 +50,7 @@
                     "params": {
                         "model_type_name": "bmi_c_cfe",
                         "library_file": "./extern/cfe/cmake_build/libcfebmi.dylib",
-                        "init_config": "./data/bmi/c/cfe/cat_27_bmi_config.txt",
+                        "init_config": "./data/bmi/c/cfe/cat-27_bmi_config.ini",
                         "main_output_variable": "Q_OUT",
                         "registration_function": "register_bmi_cfe",
                         "variables_names_map" : {
