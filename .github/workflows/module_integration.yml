@@ -68,4 +68,4 @@ jobs:
       timeout-minutes: 15
 
     - name: Run surfacebmi plus cfebmi
-      run: ./build/ngen data/catchment_data.geojson "cat-27" data/nexus_data.geojson "" data/example_bmi_multi_realization_config.json
+      run: ./cmake_build/ngen data/catchment_data.geojson "cat-27" data/nexus_data.geojson "" data/example_bmi_multi_realization_config.json
