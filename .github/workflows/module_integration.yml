@@ -43,7 +43,6 @@ jobs:
 
     - name: Build surfacebmi module
       run: |
-        gfortran -dumpversion
         cmake -B extern/noah-mp-modular/cmake_build cmake_build -S extern/noah-mp-modular
         cmake --build extern/noah-mp-modular/cmake_build --target surfacebmi -- -j ${{ env.LINUX_NUM_PROC_CORES }}
 
@@ -68,4 +67,4 @@ jobs:
       timeout-minutes: 15
 
     - name: Run surfacebmi plus cfebmi
-      run: ./cmake_build/ngen data/catchment_data.geojson "cat-27" data/nexus_data.geojson "" data/example_bmi_multi_realization_config.json
+      run: ./cmake_build/ngen data/catchment_data.geojson "cat-27" data/nexus_data.geojson "nex-26" data/example_bmi_multi_realization_config.json
