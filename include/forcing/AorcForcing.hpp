@@ -2,7 +2,8 @@
 #define NGEN_AORCFORCING_H
 
 // CSDMS Standard Names for several forcings
-#define CSDMS_STD_NAME_RAIN_RATE "atmosphere_water__rainfall_volume_flux"
+#define CSDMS_STD_NAME_RAIN_VOLUME_FLUX "atmosphere_water__rainfall_volume_flux"
+#define CSDMS_STD_NAME_PRECIP_MASS_FLUX "atmosphere_water__precipitation_mass_flux"
 #define CSDMS_STD_NAME_SOLAR_LONGWAVE "land_surface_radiation~incoming~longwave__energy_flux"
 #define CSDMS_STD_NAME_SOLAR_SHORTWAVE "land_surface_radiation~incoming~shortwave__energy_flux"
 #define CSDMS_STD_NAME_SURFACE_AIR_PRESSURE "land_surface_air__pressure"

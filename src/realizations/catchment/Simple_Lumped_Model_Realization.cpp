@@ -109,7 +109,7 @@ double Simple_Lumped_Model_Realization::get_response(time_step_t t, time_step_t 
         precip = this->forcing->get_value("precip_rate", t_unix, dt, ""); // classic forcing object/format
     }
     catch (const std::exception& e){
-        precip = this->forcing->get_value(CSDMS_STD_NAME_RAIN_RATE, t_unix, dt, ""); // CsvPerFeatureForcingProvider
+        precip = this->forcing->get_value(CSDMS_STD_NAME_RAIN_VOLUME_FLUX, t_unix, dt, ""); // CsvPerFeatureForcingProvider
     }
     add_time(t+1, params.n);
     //FIXME should this run "daily" or hourly (t) which should really be dt
