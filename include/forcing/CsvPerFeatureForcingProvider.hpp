@@ -170,7 +170,7 @@ class CsvPerFeatureForcingProvider : public forcing::ForcingProvider
      * @return Whether the param's value is an aggregate sum.
      */
     inline bool is_param_sum_over_time_step(const std::string& name) {
-        if (name == CSDMS_STD_NAME_RAIN_RATE) {
+        if (name == CSDMS_STD_NAME_RAIN_VOLUME_FLUX) {
             return true;
         }
         if (name == CSDMS_STD_NAME_SOLAR_SHORTWAVE) {
@@ -209,7 +209,7 @@ class CsvPerFeatureForcingProvider : public forcing::ForcingProvider
     // This map may be applicable to well-known netCDF formats as well?
     map<std::string, std::tuple<std::string, std::string>> well_known_fields = {
         {"precip_rate", { CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, "mm s^-1" } }, 
-        {"APCP_surface", { CSDMS_STD_NAME_RAIN_RATE, "kg m^-2" } }, // Especially this one, is it correct? 
+        {"APCP_surface", { CSDMS_STD_NAME_RAIN_VOLUME_FLUX, "kg m^-2" } }, // Especially this one, is it correct? 
         {"DLWRF_surface", { CSDMS_STD_NAME_SOLAR_LONGWAVE, "W m-2" } }, 
         {"DSWRF_surface", { CSDMS_STD_NAME_SOLAR_SHORTWAVE, "W m-2" } }, 
         {"PRES_surface", { CSDMS_STD_NAME_SURFACE_AIR_PRESSURE, "Pa" } }, 
