@@ -64,10 +64,10 @@ function(git_update_submodule PATH)
             RESULT_VARIABLE GIT_SUBMOD_RESULT
             )
         if(NOT GIT_SUBMOD_RESULT EQUAL "0")
-            message(FATAL_ERROR "git submodule update --init for ${PATH} failed with ${GIT_SUBMOD_RESULT}")
+            message(FATAL_ERROR "git submodule update --init for \"${PATH}\" failed with ${GIT_SUBMOD_RESULT}")
         endif()
     else()
-        message(FATAL_ERROR "Git not detected: cannot obtain Udunits submodule (but how is this even working?)")
+        message(FATAL_ERROR "Git not detected: cannot obtain submodule at \"${PATH}\" (but how is this even working?)")
     endif()
 endfunction()
 
