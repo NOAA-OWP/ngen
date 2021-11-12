@@ -282,10 +282,9 @@ namespace realization {
                 for(std::map<std::string,std::shared_ptr<forcing::ForcingProvider>>::iterator iter = availableData.begin(); iter != availableData.end(); ++iter)
                 {
                     var_name = iter->first;
-                    std::cerr<<"Trying var_name "<<var_name<<std::endl;
+                    //TODO: Find a probably more performant way than trial and exception here.
                     try {
                         time_t rv = availableData[var_name]->get_forcing_output_time_begin(var_name);
-                        std::cerr<<"Success! "<<rv<<std::endl;
                         return rv;
                     }
                     catch (...){
@@ -319,10 +318,9 @@ namespace realization {
                 for(std::map<std::string,std::shared_ptr<forcing::ForcingProvider>>::iterator iter = availableData.begin(); iter != availableData.end(); ++iter)
                 {
                     var_name = iter->first;
-                    //std::cerr<<"Trying var_name "<<var_name<<std::endl;
+                    //TODO: Find a probably more performant way than trial and exception here.
                     try {
                         time_t rv = availableData[var_name]->get_forcing_output_time_end(var_name);
-                        //std::cerr<<"Success! "<<rv<<std::endl;
                         return rv;
                     }
                     catch (...){
