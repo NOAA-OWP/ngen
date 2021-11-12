@@ -297,32 +297,30 @@ class CsvPerFeatureForcingProvider : public forcing::ForcingProvider
         std::vector<std::vector<std::string> > data_list = reader.getData();
 
         // Process the header (first) row..
-        int c = 0;
-        for (const auto& s : data_list[0]){
+        int col_num = 0;
+        for (const auto& col_head : data_list[0]){
             //std::cerr << s << std::endl;
-            if(s == "Time" || s == "time"){
-                time_col_index = c;
+            if(col_head == "Time" || col_head == "time"){
+                time_col_index = col_num;
                 local_valvec_index.push_back(nullptr); // make sure the column indices line up!
             } else {
-                std::string n = s;
-                std::string u = "";
+                std::string var_name = col_head;
+                std::string units = "";
 
                 //TODO: parse units in parens and/or square brackets?
 
-                if(well_known_fields.count(n) > 0){
-                    auto t = well_known_fields[n];
-                    u = u == "" ? std::get<1>(t) : u;
-                    available_forcings_units[n] = u; // Allow lookup of units by non-canonical name
-                    n = std::get<0>(t);
+                if(well_known_fields.count(var_name) > 0){
+                    units = units.empty() ? std::get<1>(well_known_fields[var_name]) : units;
+                    available_forcings_units[var_name] = units; // Allow lookup of units by non-canonical name
+                    var_name = std::get<0>(well_known_fields[var_name]);
                 }
 
-                //col_indices[n] = i;
-                forcing_vectors[n] = {};
-                local_valvec_index.push_back(&(forcing_vectors[n]));
-                available_forcings.push_back(n);
-                available_forcings_units[n] = u;
+                forcing_vectors[var_name] = {};
+                local_valvec_index.push_back(&(forcing_vectors[var_name]));
+                available_forcings.push_back(var_name);
+                available_forcings_units[var_name] = units;
             }
-            c++;
+            col_num++;
         }
 
         time_t current_row_date_time_epoch;
