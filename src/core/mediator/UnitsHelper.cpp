@@ -9,7 +9,7 @@ double UnitsHelper::get_converted_value(const std::string &in_units, double valu
         return value; // Early-out optimization
     }
     if(in_units == "" || out_units == ""){
-        return value; //TODO: Warn? Make behavior configurable?
+        throw std::runtime_error("Unable to process empty units value for pairing \"" + in_units + "\" \"" + out_units + "\"");
     }
     std::call_once(unit_system_inited, init_unit_system);
     ut_unit* from = ut_parse(unit_system, in_units.c_str(), UT_UTF8);
