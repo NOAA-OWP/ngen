@@ -39,8 +39,9 @@ TEST_F(RoutingPyBindTest, TestRoutingPyBind)
   int number_of_timesteps = 10;
   int delta_time = 3600; 
 
-  routing_py_adapter::Routing_Py_Adapter routing_py_adapter1(t_route_connection_path, 
-                      t_route_config_file_with_path, number_of_timesteps, delta_time);
+  routing_py_adapter::Routing_Py_Adapter routing_py_adapter(t_route_connection_path, 
+                      t_route_config_file_with_path);
+  routing_py_adapter.route(number_of_timesteps, delta_time);
   
   //Use below if calling constructor that includes nexus values
   //routing_py_adapter::Routing_Py_Adapter routing_py_adapter1(t_route_connection_path, input_path, nexus_values_vec);

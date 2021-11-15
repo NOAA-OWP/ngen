@@ -20,33 +20,51 @@ namespace routing_py_adapter {
 
     public:
         /**
-         * Parameterized constructor Routing_Py_Adapter with the flow_vector
+         * @brief Construct Routing_Py_Adapter with configured paths
+         * 
+         * @param t_route_connection_path path to the t-route python module
+         * @param t_route_config_file_with_path path to a t-route yaml configuration file
+         */
+        Routing_Py_Adapter(std::string t_route_connection_path, 
+                           std::string t_route_config_file_with_path):
+                           t_route_module_path(t_route_connection_path),
+                           t_route_config_path(t_route_config_file_with_path){}
+
+        /**
+         * Function to run @p number_of_timesteps of routing, extracting 
+         * lateral inflows from @p flow_vector
+         * 
+         * FIXME This is current unimplemented and will require some addtional
+         * work to properly map flows to the correct t-route network segments.
+         * This may not even be the correct concept to implement this type of
+         * "integrated" routing.  But the basic idea is that after a catchment 
+         * update occurs, it contributes some amount of lateral flow to the channel
+         * as represented by @p flow_vector and this flow should be routed down stream
+         * for @p number_of_timesteps .  Note though, that all lateral inflows are required
+         * for a single routing pass of the network, so this would probably end up being a
+         * flow map that we pass to a custom t-route function that extracts the lateral inflow
+         * vector for each identity and constructs the correct lateral inflow setup to make
+         * a full routing pass.
          *
-         * @param t_route_connection_path
-         * @param t_route_config_file_with_path
-         * @param input_path
          * @param number_of_timesteps
          * @param delta_time
          * @param flow_vector
          */
-        Routing_Py_Adapter(std::string t_route_connection_path, 
-                           std::string t_route_config_file_with_path,
-                           std::string input_path, 
-                           int number_of_timesteps, int delta_time,
-                           const std::vector<double> &flow_vector);
+        void route(int number_of_timesteps, int delta_time,
+              const std::vector<double> &flow_vector);
 
 
         /**
-         * Parameterized constructor Routing_Py_Adapter without the flow_vector
-         *
-         * @param t_route_connection_path
-         * @param t_route_config_file_with_path
+         * Function to run a full set of routing computations using the nexus output files
+         * from an ngen simulation.
+         * 
+         * Currently, these parameters are ignored and are read instead from the yaml configuration
+         * file contained in #t_route_config_path
+         * 
          * @param number_of_timesteps
          * @param delta_time
          */
-        Routing_Py_Adapter(std::string t_route_connection_path, 
-                           std::string t_route_config_file_with_path,
-                           int number_of_timesteps, int delta_time);
+        void route(int number_of_timesteps, int delta_time);
 
 
         template <typename T>
@@ -86,6 +104,12 @@ namespace routing_py_adapter {
 
         /** A binding to the t-route module. */
         py::module_ t_route_module;
+
+        /** Path to the t-route routing module */
+        std::string t_route_module_path;
+        
+        /** Path to a t-route yaml configuration file */
+        std::string t_route_config_path;
     };
 
 }
