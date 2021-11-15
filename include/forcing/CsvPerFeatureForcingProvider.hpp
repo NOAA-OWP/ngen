@@ -198,7 +198,10 @@ class CsvPerFeatureForcingProvider : public forcing::ForcingProvider
      * @return Whether the property's value is an aggregate sum.
      */
     inline bool is_property_sum_over_time_step(const std::string& name) override {
-        return is_param_sum_over_time_step(name);
+    }
+
+    const std::vector<std::string> &get_available_forcing_outputs() override {
+        return available_forcings;
     }
 
     private:
@@ -223,10 +226,6 @@ class CsvPerFeatureForcingProvider : public forcing::ForcingProvider
         {"SWDOWN", { CSDMS_STD_NAME_SOLAR_SHORTWAVE, "W m-2" } }, 
         {"LWDOWN", { CSDMS_STD_NAME_SOLAR_LONGWAVE, "W m-2" } }
     };
-
-    const std::vector<std::string> &get_available_forcing_outputs() override {
-        return available_forcings;
-    }
 
     /**
      * @brief Checks forcing vector index bounds and adjusts index if out of vector bounds
@@ -311,8 +310,9 @@ class CsvPerFeatureForcingProvider : public forcing::ForcingProvider
 
                 if(well_known_fields.count(var_name) > 0){
                     units = units.empty() ? std::get<1>(well_known_fields[var_name]) : units;
+                    available_forcings.push_back(var_name); // Allow lookup by non-canonical name
                     available_forcings_units[var_name] = units; // Allow lookup of units by non-canonical name
-                    var_name = std::get<0>(well_known_fields[var_name]);
+                    var_name = std::get<0>(well_known_fields[var_name]); // Use the CSDMS name from here on
                 }
 
                 forcing_vectors[var_name] = {};
