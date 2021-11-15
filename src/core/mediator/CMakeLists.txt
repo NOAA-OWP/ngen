@@ -12,16 +12,8 @@ endif()
 target_include_directories(core_mediator PUBLIC
         ${PROJECT_SOURCE_DIR}/include/core
         ${PROJECT_SOURCE_DIR}/include/core/mediator
-        ${PROJECT_SOURCE_DIR}/include/utilities
         )
-
-# TODO: consider setting a minimum or required version
-find_package(Boost)
 
 target_link_libraries(core_mediator PUBLIC
         Boost::boost                # Headers-only Boost
         )
-
-if(MPI_ACTIVE)
-    add_compile_definitions(NGEN_MPI_ACTIVE)
-endif()
