@@ -5266,6 +5266,17 @@
         <topic label="setupArbitraryExampleCase" href="class_tshirt_model_test.html#a6bab90cd485a52709f6e825197d4a51d"/>
         <topic label="TearDown" href="class_tshirt_model_test.html#a305abb1fc17a250c4662e6d2e01f0ec1"/>
       </topic>
+      <topic label="UnitsHelper" href="class_units_helper.html">
+        <topic label="get_converted_value" href="class_units_helper.html#a5b1a7a720885a985480f58c8991335b5"/>
+        <topic label="init_unit_system" href="class_units_helper.html#a4a2ffc262b5d1f3c189ec2b9218d7fa2"/>
+        <topic label="unit_system" href="class_units_helper.html#acf10e14be86359c23340af4f42a2b05e"/>
+        <topic label="unit_system_inited" href="class_units_helper.html#af945b2c2a45ae72606435fc3e122655a"/>
+      </topic>
+      <topic label="UnitsHelper_Test" href="class_units_helper___test.html">
+        <topic label="UnitsHelper_Test" href="class_units_helper___test.html#ad0c8947f3effd82db3cfe3f867fad40c"/>
+        <topic label="~UnitsHelper_Test" href="class_units_helper___test.html#ac342c365275e4173691ab84e9b76b5a5"/>
+        <topic label="SetUp" href="class_units_helper___test.html#a93374c581ec6fcffcd9234d3283b2718"/>
+      </topic>
       <topic label="Visitor" href="class_visitor.html">
         <topic label="get" href="class_visitor.html#a4f075bc5c429e201ee31d7f1161d6c57"/>
         <topic label="visit" href="class_visitor.html#ad7bc9770abc999696cbeb804db217a17"/>
@@ -5458,6 +5469,7 @@
         <topic label="ReservoirTimelessKernelTest" href="class_reservoir_timeless_kernel_test.html"/>
         <topic label="SchaakeKernelTest" href="class_schaake_kernel_test.html"/>
         <topic label="TshirtModelTest" href="class_tshirt_model_test.html"/>
+        <topic label="UnitsHelper_Test" href="class_units_helper___test.html"/>
       </topic>
       <topic label="testing::TestWithParam">
         <topic label="Network_Test1" href="class_network___test1.html"/>
@@ -5467,6 +5479,7 @@
       <topic label="tshirt::tshirt_params" href="structtshirt_1_1tshirt__params.html"/>
       <topic label="tshirt::tshirt_state" href="structtshirt_1_1tshirt__state.html"/>
       <topic label="tshirt_c_result_fluxes" href="structtshirt__c__result__fluxes.html"/>
+      <topic label="UnitsHelper" href="class_units_helper.html"/>
       <topic label="utils::FileChecker" href="classutils_1_1_file_checker.html"/>
       <topic label="utils::StreamHandler" href="classutils_1_1_stream_handler.html">
         <topic label="utils::FileStreamHandler" href="classutils_1_1_file_stream_handler.html"/>

@@ -117,7 +117,7 @@ var sectionId = 'dynsection-0';
 <text text-anchor="start" x="8" y="-2134" font-family="Helvetica,sans-Serif" font-size="10.00">_step()</text>
 <text text-anchor="start" x="8" y="-2123" font-family="Helvetica,sans-Serif" font-size="10.00">+ is_property_sum_over</text>
 <text text-anchor="start" x="8" y="-2112" font-family="Helvetica,sans-Serif" font-size="10.00">_time_step()</text>
-<text text-anchor="start" x="8" y="-2101" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; get_available_forcing</text>
+<text text-anchor="start" x="8" y="-2101" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_forcing</text>
 <text text-anchor="start" x="8" y="-2090" font-family="Helvetica,sans-Serif" font-size="10.00">_outputs()</text>
 <text text-anchor="start" x="8" y="-2079" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; check_forcing_vector</text>
 <text text-anchor="start" x="8" y="-2068" font-family="Helvetica,sans-Serif" font-size="10.00">_index_bounds()</text>

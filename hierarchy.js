@@ -177,7 +177,8 @@ var hierarchy =
       [ "ReservoirKernelTest", "class_reservoir_kernel_test.html", null ],
       [ "ReservoirTimelessKernelTest", "class_reservoir_timeless_kernel_test.html", null ],
       [ "SchaakeKernelTest", "class_schaake_kernel_test.html", null ],
-      [ "TshirtModelTest", "class_tshirt_model_test.html", null ]
+      [ "TshirtModelTest", "class_tshirt_model_test.html", null ],
+      [ "UnitsHelper_Test", "class_units_helper___test.html", null ]
     ] ],
     [ "testing::TestWithParam", null, [
       [ "Network_Test1", "class_network___test1.html", null ]
@@ -187,6 +188,7 @@ var hierarchy =
     [ "tshirt::tshirt_params", "structtshirt_1_1tshirt__params.html", null ],
     [ "tshirt::tshirt_state", "structtshirt_1_1tshirt__state.html", null ],
     [ "tshirt_c_result_fluxes", "structtshirt__c__result__fluxes.html", null ],
+    [ "UnitsHelper", "class_units_helper.html", null ],
     [ "utils::FileChecker", "classutils_1_1_file_checker.html", null ],
     [ "utils::StreamHandler", "classutils_1_1_stream_handler.html", [
       [ "utils::FileStreamHandler", "classutils_1_1_file_stream_handler.html", null ]

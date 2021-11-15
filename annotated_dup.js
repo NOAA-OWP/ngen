@@ -178,5 +178,7 @@ var annotated_dup =
     [ "surface_radiation_params", "structsurface__radiation__params.html", "structsurface__radiation__params" ],
     [ "tshirt_c_result_fluxes", "structtshirt__c__result__fluxes.html", "structtshirt__c__result__fluxes" ],
     [ "TshirtModelTest", "class_tshirt_model_test.html", "class_tshirt_model_test" ],
+    [ "UnitsHelper", "class_units_helper.html", "class_units_helper" ],
+    [ "UnitsHelper_Test", "class_units_helper___test.html", "class_units_helper___test" ],
     [ "Visitor", "class_visitor.html", "class_visitor" ]
 ];

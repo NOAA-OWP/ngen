@@ -1,5 +1,14 @@
 var NAVTREEINDEX4 =
 {
+"classgeojson_1_1_line_string_feature.html#ad2b3f513a87e2787c8450254c0187857":[21,0,4,3,54],
+"classgeojson_1_1_line_string_feature.html#ad3946b483dae8cba1affb2228a760f1c":[21,0,4,3,37],
+"classgeojson_1_1_line_string_feature.html#ad5c17592b32c507dbbc2bc9984fdda27":[21,0,4,3,21],
+"classgeojson_1_1_line_string_feature.html#ad61e9cbecf802cb275eef65ddb5c6837":[21,0,4,3,9],
+"classgeojson_1_1_line_string_feature.html#ad821415b00bf3b84764ad4c39e978d6d":[21,0,4,3,10],
+"classgeojson_1_1_line_string_feature.html#ad98ff61a80945cecf25cf0024931f05b":[21,0,4,3,46],
+"classgeojson_1_1_line_string_feature.html#adeaad86857d6659de80eb99302d1f141":[21,0,4,3,35],
+"classgeojson_1_1_line_string_feature.html#adfb6ba4107e752620dcb9a04aeb4a158":[21,0,4,3,4],
+"classgeojson_1_1_line_string_feature.html#ae084da5ad3b56346b7c3e942e0e10e8e":[21,0,4,3,40],
 "classgeojson_1_1_line_string_feature.html#ae1da9784ab4cf7b0f9a31082866aff78":[21,0,4,3,41],
 "classgeojson_1_1_line_string_feature.html#ae3da4d699f37811a450985f094b45bf8":[21,0,4,3,49],
 "classgeojson_1_1_line_string_feature.html#af289e5db1d2039bddd84bef755f0bab6":[21,0,4,3,36],
@@ -240,14 +249,5 @@ var NAVTREEINDEX4 =
 "classgeojson_1_1_point_feature.html#af289e5db1d2039bddd84bef755f0bab6":[21,0,4,7,36],
 "classgeojson_1_1_point_feature.html#af92534c1068a597dd1fb10dc13d2e7a0":[21,0,4,7,14],
 "classgeojson_1_1_point_feature.html#aff267fca7b513036a662225695538ba1":[21,0,4,7,47],
-"classgeojson_1_1_polygon_feature.html":[21,0,4,8],
-"classgeojson_1_1_polygon_feature.html#a07a793b858d72f62d5bde068cc9d7cbe":[21,0,4,8,19],
-"classgeojson_1_1_polygon_feature.html#a0a6da4b7b4427ff7c624a79e3aeaa248":[21,0,4,8,11],
-"classgeojson_1_1_polygon_feature.html#a0e329f3a2c6b3989a42756534d1bdf10":[21,0,4,8,52],
-"classgeojson_1_1_polygon_feature.html#a12a39105fe661aec11fe6e8a1dd2caab":[21,0,4,8,43],
-"classgeojson_1_1_polygon_feature.html#a15e8c3693a636453b0af958337cb516f":[21,0,4,8,24],
-"classgeojson_1_1_polygon_feature.html#a183773cc983dfc1df44f2e80f3c3ee7a":[21,0,4,8,38],
-"classgeojson_1_1_polygon_feature.html#a18f0dfe6c520c6eb867f7b29426f757c":[21,0,4,8,42],
-"classgeojson_1_1_polygon_feature.html#a18f3153350fa48aae42f3b302473e2c6":[21,0,4,8,46],
-"classgeojson_1_1_polygon_feature.html#a27d261f05aece3a56abdf48f82530306":[21,0,4,8,33]
+"classgeojson_1_1_polygon_feature.html":[21,0,4,8]
 };

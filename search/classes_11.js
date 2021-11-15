@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['vertexproperty_1273',['VertexProperty',['../structnetwork_1_1_vertex_property.html',1,'network']]],
-  ['visitor_1274',['Visitor',['../class_visitor.html',1,'']]]
+  ['unitshelper_1280',['UnitsHelper',['../class_units_helper.html',1,'']]],
+  ['unitshelper_5ftest_1281',['UnitsHelper_Test',['../class_units_helper___test.html',1,'']]]
 ];

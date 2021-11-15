@@ -140,11 +140,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af480a5b863976ab4f62d22b125dfa854"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_csv_per_feature_forcing_provider.html#af480a5b863976ab4f62d22b125dfa854">is_property_sum_over_time_step</a> (const std::string &amp;name) override</td></tr>
 <tr class="memdesc:af480a5b863976ab4f62d22b125dfa854"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get whether a property's per-time-step values are each an aggregate sum over the entire time step.  <a href="class_csv_per_feature_forcing_provider.html#af480a5b863976ab4f62d22b125dfa854">More...</a><br /></td></tr>
 <tr class="separator:af480a5b863976ab4f62d22b125dfa854"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad0cddfc1fc74b144fd97ba0c2ce36b67"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; std::string &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_csv_per_feature_forcing_provider.html#ad0cddfc1fc74b144fd97ba0c2ce36b67">get_available_forcing_outputs</a> () override</td></tr>
+<tr class="separator:ad0cddfc1fc74b144fd97ba0c2ce36b67"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
-<tr class="memitem:ad0cddfc1fc74b144fd97ba0c2ce36b67"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; std::string &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_csv_per_feature_forcing_provider.html#ad0cddfc1fc74b144fd97ba0c2ce36b67">get_available_forcing_outputs</a> () override</td></tr>
-<tr class="separator:ad0cddfc1fc74b144fd97ba0c2ce36b67"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a64d117949c5c1b9cfed33017ed388119"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_csv_per_feature_forcing_provider.html#a64d117949c5c1b9cfed33017ed388119">check_forcing_vector_index_bounds</a> ()</td></tr>
 <tr class="memdesc:a64d117949c5c1b9cfed33017ed388119"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks forcing vector index bounds and adjusts index if out of vector bounds ///.  <a href="class_csv_per_feature_forcing_provider.html#a64d117949c5c1b9cfed33017ed388119">More...</a><br /></td></tr>
 <tr class="separator:a64d117949c5c1b9cfed33017ed388119"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -292,7 +292,7 @@ Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">private</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -484,7 +484,7 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classforcing_1_1_forcing_provider.html#a84ca58d5a524d1f07ef8e062a97e8301">forcing::ForcingProvider</a>.</p>
 
-<p class="reference">References <a class="el" href="class_csv_per_feature_forcing_provider.html#ad1f87f13f0bc6c5d616158d90eac9fc3">get_ts_index_for_time()</a>, <a class="el" href="class_csv_per_feature_forcing_provider.html#a15472ef2b848232ee48033e439c4ec3d">get_value_for_param_name()</a>, <a class="el" href="class_csv_per_feature_forcing_provider.html#a2a4007eda42c2abbcd8b3089473df8e6">is_param_sum_over_time_step()</a>, <a class="el" href="class_csv_per_feature_forcing_provider.html#a54ce6043ebf56cc336cf551feddf268d">start_date_time_epoch</a>, and <a class="el" href="class_csv_per_feature_forcing_provider.html#a77179863f36899fe6d3a22bdc7a6bee7">time_epoch_vector</a>.</p>
+<p class="reference">References <a class="el" href="class_csv_per_feature_forcing_provider.html#a9aa01ca7a86b6586a03fa8cdcd39921b">available_forcings_units</a>, <a class="el" href="class_units_helper.html#a5b1a7a720885a985480f58c8991335b5">UnitsHelper::get_converted_value()</a>, <a class="el" href="class_csv_per_feature_forcing_provider.html#ad1f87f13f0bc6c5d616158d90eac9fc3">get_ts_index_for_time()</a>, <a class="el" href="class_csv_per_feature_forcing_provider.html#a15472ef2b848232ee48033e439c4ec3d">get_value_for_param_name()</a>, <a class="el" href="class_csv_per_feature_forcing_provider.html#a2a4007eda42c2abbcd8b3089473df8e6">is_param_sum_over_time_step()</a>, <a class="el" href="class_csv_per_feature_forcing_provider.html#a54ce6043ebf56cc336cf551feddf268d">start_date_time_epoch</a>, and <a class="el" href="class_csv_per_feature_forcing_provider.html#a77179863f36899fe6d3a22bdc7a6bee7">time_epoch_vector</a>.</p>
 
 </div>
 </div>
@@ -573,7 +573,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Whether the param's value is an aggregate sum. </dd></dl>
 
-<p class="reference">Referenced by <a class="el" href="class_csv_per_feature_forcing_provider.html#a803a469db576d70f739f2228566c2136">get_value()</a>, and <a class="el" href="class_csv_per_feature_forcing_provider.html#af480a5b863976ab4f62d22b125dfa854">is_property_sum_over_time_step()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="class_csv_per_feature_forcing_provider.html#a803a469db576d70f739f2228566c2136">get_value()</a>.</p>
 
 </div>
 </div>
@@ -613,8 +613,6 @@ Private Attributes</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>Whether the property's value is an aggregate sum. </dd></dl>
 
 <p>Implements <a class="el" href="classforcing_1_1_forcing_provider.html#acb93550e1f3cca96cbb644a5f2247986">forcing::ForcingProvider</a>.</p>
-
-<p class="reference">References <a class="el" href="class_csv_per_feature_forcing_provider.html#a2a4007eda42c2abbcd8b3089473df8e6">is_param_sum_over_time_step()</a>.</p>
 
 </div>
 </div>
@@ -724,7 +722,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="class_csv_per_feature_forcing_provider.html#a55897203be74dc4e29caf2b12b666432">read_csv()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="class_csv_per_feature_forcing_provider.html#a803a469db576d70f739f2228566c2136">get_value()</a>, and <a class="el" href="class_csv_per_feature_forcing_provider.html#a55897203be74dc4e29caf2b12b666432">read_csv()</a>.</p>
 
 </div>
 </div>
@@ -1101,7 +1099,7 @@ Private Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_csv_per_feature_forcing_provider.html">CsvPerFeatureForcingProvider</a></li>
-    <li class="footer">Generated on Wed Nov 10 2021 21:17:13 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Mon Nov 15 2021 16:27:48 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
