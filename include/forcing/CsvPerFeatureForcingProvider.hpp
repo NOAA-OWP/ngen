@@ -198,6 +198,7 @@ class CsvPerFeatureForcingProvider : public forcing::ForcingProvider
      * @return Whether the property's value is an aggregate sum.
      */
     inline bool is_property_sum_over_time_step(const std::string& name) override {
+        return is_param_sum_over_time_step(name);
     }
 
     const std::vector<std::string> &get_available_forcing_outputs() override {
