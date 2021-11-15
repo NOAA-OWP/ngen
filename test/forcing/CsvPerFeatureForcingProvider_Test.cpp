@@ -144,7 +144,7 @@ TEST_F(CsvPerFeatureForcingProviderTest, TestForcingDataUnitConversion)
     time_t t = begin+(i*3600);
     std::cerr << std::ctime(&t) << std::endl;
 
-    current_precipitation = Forcing_Object->get_value(CSDMS_STD_NAME_RAIN_RATE, begin+(i*3600), 3600, "");
+    current_precipitation = Forcing_Object->get_value(CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, begin+(i*3600), 3600, "");
 
     EXPECT_NEAR(current_precipitation, 7.9999999999999996e-07, 0.00000005);
 
