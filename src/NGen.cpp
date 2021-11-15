@@ -340,8 +340,11 @@ int main(int argc, char *argv[]) {
 
           int delta_time = manager->Simulation_Time_Object->get_output_interval_seconds();
      
-          routing_py_adapter::Routing_Py_Adapter routing_py_adapter1(t_route_connection_path, 
-          t_route_config_file_with_path, number_of_timesteps, delta_time);
+          routing_py_adapter::Routing_Py_Adapter routing_py_adapter(t_route_connection_path, 
+          t_route_config_file_with_path);
+          
+          routing_py_adapter.route(number_of_timesteps, delta_time);
+          
         }
         else {
           std::cout<<"Not Using Routing"<<std::endl;

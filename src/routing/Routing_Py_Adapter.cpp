@@ -8,22 +8,10 @@
 using namespace routing_py_adapter;
 
 
-/**
- * Parameterized constructor Routing_Py_Adapter with the flow_vector
- *
- * @param t_route_connection_path
- * @param t_route_config_file_with_path
- * @param input_path
- * @param number_of_timesteps
- * @param delta_time
- * @param flow_vector
- */
-Routing_Py_Adapter::Routing_Py_Adapter(std::string t_route_connection_path, 
-                                       std::string t_route_config_file_with_path,
-                                       std::string input_path,
-                                       int number_of_timesteps, int delta_time,
-                                       const std::vector<double> &flow_vector)
-{}
+void Routing_Py_Adapter::route(int number_of_timesteps, int delta_time,
+                          const std::vector<double> &flow_vector){
+  throw "Routing_Py_Adapter::route overload with flow_vector unimplemented.";
+};
 
 /**
  * Parameterized constructor Routing_Py_Adapter without the flow_vector
@@ -33,22 +21,20 @@ Routing_Py_Adapter::Routing_Py_Adapter(std::string t_route_connection_path,
  * @param number_of_timesteps
  * @param delta_time
  */
-Routing_Py_Adapter::Routing_Py_Adapter(std::string t_route_connection_path,
-                                       std::string t_route_config_file_with_path,
-                                       int number_of_timesteps, int delta_time)
+void Routing_Py_Adapter::route(int number_of_timesteps, int delta_time)
 {
 
   //Append the t_route_connection_path
-  utils::ngenPy::InterpreterUtil::addToPyPath(t_route_connection_path);
+  utils::ngenPy::InterpreterUtil::addToPyPath(this->t_route_module_path);
 
   //Import ngen_main
-  this->t_route_module = py::module_::import("ngen_main");
+  this->t_route_module = utils::ngenPy::InterpreterUtil::getPyModule("ngen_main");//py::module_::import("ngen_main");
 
   std::vector<std::string> arg_vector;
 
   arg_vector.push_back("-f");
 
-  arg_vector.push_back(t_route_config_file_with_path);
+  arg_vector.push_back(this->t_route_config_path);
 
   //Cast vector of args to Python list 
   py::list arg_list = py::cast(arg_vector);
