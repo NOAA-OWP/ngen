@@ -235,14 +235,20 @@ namespace realization {
              * @return routing t_route_connection_path
              */
             std::string get_t_route_connection_path() {
-                return this->routing_config->t_route_connection_path;
+                if(this->routing_config != nullptr)
+                    return this->routing_config->t_route_connection_path;
+                else
+                    return "";
             }
 
             /**
              * @return routing t_route_config_file_with_path
              */
             std::string get_t_route_config_file_with_path() {
-                return this->routing_config->t_route_config_file_with_path;
+                if(this->routing_config != nullptr)
+                    return this->routing_config->t_route_config_file_with_path;
+                else
+                    return "";
             }
 
 
