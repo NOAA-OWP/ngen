@@ -127,6 +127,9 @@ namespace realization {
                 auto possible_routing_configs = tree.get_child_optional("routing");
                 
                 if (possible_routing_configs) {
+                    //Since it is possible to build NGEN without routing support, if we see it in the config
+                    //but it isn't enabled in the build, we should at least put up a warning
+                #ifdef NGEN_ROUTING_ACTIVE
                     geojson::JSONProperty routing_parameters("routing", *possible_routing_configs);
                     
                     this->routing_config = std::make_shared<routing_params>(
@@ -134,6 +137,11 @@ namespace realization {
                         routing_parameters.at("t_route_config_file_with_path").as_string()
                     );
                     using_routing = true;
+                #else
+                    using_routing = false;
+                    std::cerr<<"WARNING: Formulation Manager found routing configuration"
+                             <<", but routing support isn't enabled. No routing will occur."<<std::endl;
+                #endif //NGEN_ROUTING_ACTIVE
                  }
 
                 /**
