@@ -36,4 +36,4 @@ The basic outline of steps needed to run Python Routing is:
     ./cmake-build-debug/test/test_routing_pybind
     ```
   
-An [example realization](example_realization_config_w_routing.json) with routing inputs.
+An [example realization](example_bmi_multi_realization_config_w_routing.json) with routing inputs.
