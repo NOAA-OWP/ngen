@@ -219,6 +219,29 @@ int main(int argc, char *argv[]) {
 
     std::shared_ptr<realization::Formulation_Manager> manager = std::make_shared<realization::Formulation_Manager>(REALIZATION_CONFIG_PATH);
     manager->read(catchment_collection, utils::getStdOut());
+
+    //TODO refactor manager->read so certain configs can be queried before the entire
+    //realization collection is created
+    #ifdef NGEN_ROUTING_ACTIVE
+    std::unique_ptr<routing_py_adapter::Routing_Py_Adapter> router;
+    #ifdef NGEN_MPI_ACTIVE
+    //If rank == 0, do routing
+    if( mpi_rank == 0 )
+    { // Run t-route from single process
+    #endif //NGEN_MPI_ACTIVE
+    if(manager->get_using_routing()) {
+      std::cout<<"Using Routing"<<std::endl;
+      std::string t_route_config_file_with_path = manager->get_t_route_config_file_with_path();
+      router = make_unique<routing_py_adapter::Routing_Py_Adapter>(t_route_config_file_with_path);
+    }
+    else {
+      std::cout<<"Not Using Routing"<<std::endl;
+    }
+    #ifdef NGEN_MPI_ACTIVE
+    }
+    #endif //NGEN_MPI_ACTIVE
+    #endif //NGEN_ROUTING_ACTIVE
+
     std::string link_key = "toid";
     #ifdef NGEN_MPI_ACTIVE
     nexus_collection->link_features_from_property(nullptr, &link_key);
@@ -324,12 +347,8 @@ int main(int argc, char *argv[]) {
     MPI_Finalize();
     if( mpi_rank == 0 )
     { // Run t-route from single process
-  #endif //NGEN_MPI_ACTIME
+  #endif //NGEN_MPI_ACTIVE
         if(manager->get_using_routing()) {
-          std::cout<<"Using Routing"<<std::endl;
-          
-          std::string t_route_config_file_with_path = manager->get_t_route_config_file_with_path();
-       
           //Note: Currently, delta_time is set in the t-route yaml configuration file, and the
           //number_of_timesteps is determined from the total number of nexus outputs in t-route.
           //It is recommended to still pass these values to the routing_py_adapter object in
@@ -337,14 +356,8 @@ int main(int argc, char *argv[]) {
           int number_of_timesteps = manager->Simulation_Time_Object->get_total_output_times();
 
           int delta_time = manager->Simulation_Time_Object->get_output_interval_seconds();
-     
-          routing_py_adapter::Routing_Py_Adapter routing_py_adapter(t_route_config_file_with_path);
           
-          routing_py_adapter.route(number_of_timesteps, delta_time);
-          
-        }
-        else {
-          std::cout<<"Not Using Routing"<<std::endl;
+          router->route(number_of_timesteps, delta_time); 
         }
  #ifdef NGEN_MPI_ACTIVE
     }
