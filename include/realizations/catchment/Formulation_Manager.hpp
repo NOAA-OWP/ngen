@@ -47,6 +47,9 @@ namespace realization {
             virtual ~Formulation_Manager(){};
 
             virtual void read(geojson::GeoJSON fabric, utils::StreamHandler output_stream) {
+                //TODO seperate the parsing of configuration options like time
+                //and routing and other non feature specific tasks from this main function
+                //which has to iterate the entire hydrofabric.
                 auto possible_global_config = tree.get_child_optional("global");
 
                 if (possible_global_config) {
