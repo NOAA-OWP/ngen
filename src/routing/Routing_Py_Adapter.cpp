@@ -13,22 +13,12 @@ void Routing_Py_Adapter::route(int number_of_timesteps, int delta_time,
   throw "Routing_Py_Adapter::route overload with flow_vector unimplemented.";
 };
 
-/**
- * Parameterized constructor Routing_Py_Adapter without the flow_vector
- *
- * @param t_route_connection_path
- * @param t_route_config_file_with_path
- * @param number_of_timesteps
- * @param delta_time
- */
 void Routing_Py_Adapter::route(int number_of_timesteps, int delta_time)
 {
 
-  //Append the t_route_connection_path
-  utils::ngenPy::InterpreterUtil::addToPyPath(this->t_route_module_path);
-
-  //Import ngen_main
-  this->t_route_module = utils::ngenPy::InterpreterUtil::getPyModule("ngen_main");//py::module_::import("ngen_main");
+  //Import ngen_main.  Will throw error if module isn't available
+  //in the embedded interperters PYTHON_PATH
+  this->t_route_module = utils::ngenPy::InterpreterUtil::getPyModule("ngen_main");
 
   std::vector<std::string> arg_vector;
 
