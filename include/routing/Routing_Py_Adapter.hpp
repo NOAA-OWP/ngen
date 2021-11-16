@@ -24,8 +24,7 @@ namespace routing_py_adapter {
          * 
          * @param t_route_config_file_with_path path to a t-route yaml configuration file
          */
-        Routing_Py_Adapter(std::string t_route_config_file_with_path):
-                           t_route_config_path(t_route_config_file_with_path){}
+        Routing_Py_Adapter(std::string t_route_config_file_with_path);
 
         /**
          * Function to run @p number_of_timesteps of routing, extracting 

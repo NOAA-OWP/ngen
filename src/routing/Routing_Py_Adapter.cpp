@@ -7,6 +7,12 @@
 
 using namespace routing_py_adapter;
 
+Routing_Py_Adapter::Routing_Py_Adapter(std::string t_route_config_file_with_path):
+  t_route_config_path(t_route_config_file_with_path){
+  //Import ngen_main.  Will throw error if module isn't available
+  //in the embedded interperters PYTHON_PATH
+  this->t_route_module = utils::ngenPy::InterpreterUtil::getPyModule("ngen_main");
+  }
 
 void Routing_Py_Adapter::route(int number_of_timesteps, int delta_time,
                           const std::vector<double> &flow_vector){
@@ -15,10 +21,6 @@ void Routing_Py_Adapter::route(int number_of_timesteps, int delta_time,
 
 void Routing_Py_Adapter::route(int number_of_timesteps, int delta_time)
 {
-
-  //Import ngen_main.  Will throw error if module isn't available
-  //in the embedded interperters PYTHON_PATH
-  this->t_route_module = utils::ngenPy::InterpreterUtil::getPyModule("ngen_main");
 
   std::vector<std::string> arg_vector;
 
