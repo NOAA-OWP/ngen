@@ -29,7 +29,6 @@ TEST_F(RoutingPyBindTest, TestRoutingPyBind)
   //std::vector<double> nexus_values_vec{1.1, 2.2, 3.3, 4.4, 5.5};
 
   //SET THESE AS INPUTS
-  std::string t_route_connection_path = "./extern/t-route/src/ngen_routing/src";
   std::string t_route_config_file_with_path = "./test/data/routing/ngen_routing_config_unit_test.yaml";
 
   //Note: Currently, delta_time is set in the t-route yaml configuration file, and the
@@ -39,12 +38,8 @@ TEST_F(RoutingPyBindTest, TestRoutingPyBind)
   int number_of_timesteps = 10;
   int delta_time = 3600; 
 
-  routing_py_adapter::Routing_Py_Adapter routing_py_adapter(t_route_connection_path, 
-                      t_route_config_file_with_path);
+  routing_py_adapter::Routing_Py_Adapter routing_py_adapter(t_route_config_file_with_path);
   routing_py_adapter.route(number_of_timesteps, delta_time);
-  
-  //Use below if calling constructor that includes nexus values
-  //routing_py_adapter::Routing_Py_Adapter routing_py_adapter1(t_route_connection_path, input_path, nexus_values_vec);
  
   ASSERT_TRUE(true);
 

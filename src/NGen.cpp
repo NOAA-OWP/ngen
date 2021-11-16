@@ -327,8 +327,6 @@ int main(int argc, char *argv[]) {
   #endif //NGEN_MPI_ACTIME
         if(manager->get_using_routing()) {
           std::cout<<"Using Routing"<<std::endl;
-
-          std::string t_route_connection_path = manager->get_t_route_connection_path();
           
           std::string t_route_config_file_with_path = manager->get_t_route_config_file_with_path();
        
@@ -340,8 +338,7 @@ int main(int argc, char *argv[]) {
 
           int delta_time = manager->Simulation_Time_Object->get_output_interval_seconds();
      
-          routing_py_adapter::Routing_Py_Adapter routing_py_adapter(t_route_connection_path, 
-          t_route_config_file_with_path);
+          routing_py_adapter::Routing_Py_Adapter routing_py_adapter(t_route_config_file_with_path);
           
           routing_py_adapter.route(number_of_timesteps, delta_time);
           

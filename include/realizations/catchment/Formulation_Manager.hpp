@@ -133,7 +133,6 @@ namespace realization {
                     geojson::JSONProperty routing_parameters("routing", *possible_routing_configs);
                     
                     this->routing_config = std::make_shared<routing_params>(
-                        routing_parameters.at("t_route_connection_path").as_string(),
                         routing_parameters.at("t_route_config_file_with_path").as_string()
                     );
                     using_routing = true;
@@ -229,16 +228,6 @@ namespace realization {
              */
             bool get_using_routing() {
                 return this->using_routing;
-            }
-
-            /**
-             * @return routing t_route_connection_path
-             */
-            std::string get_t_route_connection_path() {
-                if(this->routing_config != nullptr)
-                    return this->routing_config->t_route_connection_path;
-                else
-                    return "";
             }
 
             /**
