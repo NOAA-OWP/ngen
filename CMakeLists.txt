@@ -61,6 +61,7 @@ function(git_update_submodule PATH)
     if(GIT_SUBMODULE)
         message(STATUS "Updating submodule ${PATH}")
         execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init -- ${PATH}
+            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
             RESULT_VARIABLE GIT_SUBMOD_RESULT
             )
         if(NOT GIT_SUBMOD_RESULT EQUAL "0")
