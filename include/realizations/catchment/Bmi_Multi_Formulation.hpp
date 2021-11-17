@@ -13,6 +13,8 @@
 
 using namespace std;
 
+class Bmi_Multi_Formulation_Test;
+
 namespace realization {
 
     /**
@@ -599,6 +601,8 @@ namespace realization {
         int next_time_step_index = 0;
         /** The index of the "primary" nested module, used when functionality is deferred to a particular module's behavior. */
         int primary_module_index = -1;
+
+        friend Bmi_Multi_Formulation_Test;
 
     };
 }
