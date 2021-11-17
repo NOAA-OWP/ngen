@@ -12,6 +12,7 @@
 | [Python 3 Libraries](#python-3-libraries) | external | \> `3.6.8` | Can be [excluded](#overriding-python-dependency). Requires ``numpy`` package |
 | [pybind11](#pybind11) | submodule | `v2.6.0` | Can be [excluded](#overriding-pybind11-dependency). |
 | [dmod.subsetservice](#the-dmodsubsetservice-package) | external | `>= 0.3.0` | Only required to perform integrated [hydrofabric file subdividing](DISTRIBUTED_PROCESSING.md#subdivided-hydrofabric) for distributed processing . |
+| [t-route](#t-route) | submodule | see below | Module required to enable channel-routing.  Requires pybind11 to enable |
 
 # Details
 
@@ -182,3 +183,28 @@ If installing to a virtual env as suggested above, the installation steps are si
 ### Version Requirements
 
 Version `0.3.0` or greater must be installed.
+
+## t-route
+
+### Setup
+
+The dependency is handled as a Git Submodule, located at `extern/t-route`.   To initialize the submodule after cloning the repo:
+```sh
+git submodule update --init extern/t-route
+```
+Git _should_ take care of checking out the commit for the required version automatically (assuming latest upstream changes have been fetched), so it should be possible to also use the command above to sync future updates to the required version.
+ 
+Once the submodule is fetched, the routing module must installed in a suitable environment.
+
+One supported option is to create a `virtualenv` environment at `.venv` in the project root and activate this environment for any simulations using routing.  
+
+See the [installing t-route section here](PYTHON_ROUTING.md#installing-t-route) for more details.
+
+### Enabling Routing in Simulations
+
+To do this, include the `-DNGEN_ACTIVATE_ROUTING:BOOL=true` option when running the `cmake` build on the command line to generate the build system.  An appropriate `routing_config.yaml` must be passed to the NGen realization config.  More info can be found in the [python routing documentation](PYTHON_ROUTING.md#routing-config)
+
+Before executing any simulation, be sure to activate the virtual environment.
+```sh
+source .venv/bin/activate
+```
