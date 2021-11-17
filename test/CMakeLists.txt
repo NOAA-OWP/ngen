@@ -168,6 +168,18 @@ if (${NGEN_ACTIVATE_PYTHON})
     )
 endif()
 
+########################## BMI Multi Tests
+if (${NGEN_ACTIVATE_PYTHON})
+    add_test(
+            test_bmi_multi
+            2
+            realizations/catchments/Bmi_Multi_Formulation_Test.cpp
+            realizations/catchments/Bmi_Testing_Util.cpp
+            NGen::core
+            NGen::realizations_catchment
+    )
+endif()
+
 ########################## Comparison tests for the BMI CFE implementation
 # TODO: this probably needs to be added to integration testing also
 add_test(
