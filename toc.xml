@@ -118,105 +118,113 @@
         <topic label="Setup" href="md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md89"/>
         <topic label="Version Requirements" href="md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md90"/>
       </topic>
+      <topic label="t-route" href="md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md91">
+        <topic label="Setup" href="md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md92"/>
+        <topic label="Enabling Routing in Simulations" href="md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md93"/>
+      </topic>
     </topic>
   </topic>
   <topic label="Distributed Processing" href="md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html">
-    <topic label="Overview" href="md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md92"/>
-    <topic label="Building the MPI-Enabled Nextgen Driver" href="md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md93"/>
-    <topic label="Running the MPI-Enabled Nextgen Driver" href="md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md94">
-      <topic label="Subdivided Hydrofabric" href="md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md95">
-        <topic label="Driver Runtime Differences" href="md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md96"/>
-        <topic label="File Names" href="md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md97"/>
-        <topic label="On-the-fly Generation" href="md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md98"/>
+    <topic label="Overview" href="md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md95"/>
+    <topic label="Building the MPI-Enabled Nextgen Driver" href="md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md96"/>
+    <topic label="Running the MPI-Enabled Nextgen Driver" href="md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md97">
+      <topic label="Subdivided Hydrofabric" href="md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md98">
+        <topic label="Driver Runtime Differences" href="md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md99"/>
+        <topic label="File Names" href="md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md100"/>
+        <topic label="On-the-fly Generation" href="md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md101"/>
       </topic>
-      <topic label="Examples" href="md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md99">
-        <topic label="Example 1 - Full Hydrofabric" href="md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md100"/>
-        <topic label="Example 2 - Subdivided Hydrofabric" href="md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md101"/>
+      <topic label="Examples" href="md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md102">
+        <topic label="Example 1 - Full Hydrofabric" href="md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md103"/>
+        <topic label="Example 2 - Subdivided Hydrofabric" href="md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md104"/>
       </topic>
     </topic>
-    <topic label="Partitioning Config Generator" href="md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md102"/>
+    <topic label="Partitioning Config Generator" href="md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md105"/>
   </topic>
   <topic label="Git Strategy" href="md_doc__g_i_t__u_s_a_g_e.html">
-    <topic label="Branching Design" href="md_doc__g_i_t__u_s_a_g_e.html#autotoc_md104"/>
-    <topic label="Contributing" href="md_doc__g_i_t__u_s_a_g_e.html#autotoc_md105">
-      <topic label="Contributing TLDR;" href="md_doc__g_i_t__u_s_a_g_e.html#autotoc_md106"/>
-      <topic label="Fork Consistency Requirements" href="md_doc__g_i_t__u_s_a_g_e.html#autotoc_md107"/>
-      <topic label="Fork Setup Suggestions" href="md_doc__g_i_t__u_s_a_g_e.html#autotoc_md108"/>
+    <topic label="Branching Design" href="md_doc__g_i_t__u_s_a_g_e.html#autotoc_md107"/>
+    <topic label="Contributing" href="md_doc__g_i_t__u_s_a_g_e.html#autotoc_md108">
+      <topic label="Contributing TLDR;" href="md_doc__g_i_t__u_s_a_g_e.html#autotoc_md109"/>
+      <topic label="Fork Consistency Requirements" href="md_doc__g_i_t__u_s_a_g_e.html#autotoc_md110"/>
+      <topic label="Fork Setup Suggestions" href="md_doc__g_i_t__u_s_a_g_e.html#autotoc_md111"/>
     </topic>
-    <topic label="Keeping Forks Up to Date" href="md_doc__g_i_t__u_s_a_g_e.html#autotoc_md109">
-      <topic label="Setting the &lt;strong&gt;upstream&lt;/strong&gt; Remote" href="md_doc__g_i_t__u_s_a_g_e.html#autotoc_md110"/>
-      <topic label="Getting Upstream Changes" href="md_doc__g_i_t__u_s_a_g_e.html#autotoc_md111"/>
-      <topic label="Rebasing Development Branches" href="md_doc__g_i_t__u_s_a_g_e.html#autotoc_md112"/>
-      <topic label="Fixing Diverging Development Branches" href="md_doc__g_i_t__u_s_a_g_e.html#autotoc_md113"/>
+    <topic label="Keeping Forks Up to Date" href="md_doc__g_i_t__u_s_a_g_e.html#autotoc_md112">
+      <topic label="Setting the &lt;strong&gt;upstream&lt;/strong&gt; Remote" href="md_doc__g_i_t__u_s_a_g_e.html#autotoc_md113"/>
+      <topic label="Getting Upstream Changes" href="md_doc__g_i_t__u_s_a_g_e.html#autotoc_md114"/>
+      <topic label="Rebasing Development Branches" href="md_doc__g_i_t__u_s_a_g_e.html#autotoc_md115"/>
+      <topic label="Fixing Diverging Development Branches" href="md_doc__g_i_t__u_s_a_g_e.html#autotoc_md116"/>
     </topic>
   </topic>
   <topic label="Definitions" href="md_doc_glossary.html">
-    <topic label="References" href="md_doc_glossary.html#autotoc_md115"/>
+    <topic label="References" href="md_doc_glossary.html#autotoc_md118"/>
   </topic>
   <topic label="LSTM Model" href="md_doc__l_s_t_m__m_o_d_e_l.html">
-    <topic label="Summary" href="md_doc__l_s_t_m__m_o_d_e_l.html#autotoc_md117"/>
-    <topic label="Formulation Config" href="md_doc__l_s_t_m__m_o_d_e_l.html#autotoc_md118">
-      <topic label="Required Parameters" href="md_doc__l_s_t_m__m_o_d_e_l.html#autotoc_md119"/>
+    <topic label="Summary" href="md_doc__l_s_t_m__m_o_d_e_l.html#autotoc_md120"/>
+    <topic label="Formulation Config" href="md_doc__l_s_t_m__m_o_d_e_l.html#autotoc_md121">
+      <topic label="Required Parameters" href="md_doc__l_s_t_m__m_o_d_e_l.html#autotoc_md122"/>
     </topic>
   </topic>
   <topic label="MPI Remote Nexus" href="md_doc__m_p_i__r_e_m_o_t_e__n_e_x_u_s.html">
-    <topic label="Summary" href="md_doc__m_p_i__r_e_m_o_t_e__n_e_x_u_s.html#autotoc_md121"/>
+    <topic label="Summary" href="md_doc__m_p_i__r_e_m_o_t_e__n_e_x_u_s.html#autotoc_md124"/>
   </topic>
   <topic label="Precision guidelines for validation of NGEN code translation and upgrades" href="md_doc__precision__guidelines_for__ngen__code__validation.html"/>
   <topic label="Standards for Programming" href="md_doc_programming_standards.html">
-    <topic label="Source Documentation" href="md_doc_programming_standards.html#autotoc_md124"/>
-    <topic label="Naming" href="md_doc_programming_standards.html#autotoc_md125">
-        <topic label="Bad Variable Names:" href="md_doc_programming_standards.html#autotoc_md126"/>
-        <topic label="General Guidelines" href="md_doc_programming_standards.html#autotoc_md127"/>
+    <topic label="Source Documentation" href="md_doc_programming_standards.html#autotoc_md127"/>
+    <topic label="Naming" href="md_doc_programming_standards.html#autotoc_md128">
+        <topic label="Bad Variable Names:" href="md_doc_programming_standards.html#autotoc_md129"/>
+        <topic label="General Guidelines" href="md_doc_programming_standards.html#autotoc_md130"/>
     </topic>
-    <topic label="Other" href="md_doc_programming_standards.html#autotoc_md128">
-      <topic label="Headers" href="md_doc_programming_standards.html#autotoc_md129"/>
-      <topic label="Spaces vs Tabs" href="md_doc_programming_standards.html#autotoc_md130"/>
-      <topic label="Braces" href="md_doc_programming_standards.html#autotoc_md131"/>
-      <topic label="Line Width" href="md_doc_programming_standards.html#autotoc_md132"/>
+    <topic label="Other" href="md_doc_programming_standards.html#autotoc_md131">
+      <topic label="Headers" href="md_doc_programming_standards.html#autotoc_md132"/>
+      <topic label="Spaces vs Tabs" href="md_doc_programming_standards.html#autotoc_md133"/>
+      <topic label="Braces" href="md_doc_programming_standards.html#autotoc_md134"/>
+      <topic label="Line Width" href="md_doc_programming_standards.html#autotoc_md135"/>
     </topic>
   </topic>
   <topic label="Python Routing" href="md_doc__p_y_t_h_o_n__r_o_u_t_i_n_g.html">
-    <topic label="Summary" href="md_doc__p_y_t_h_o_n__r_o_u_t_i_n_g.html#autotoc_md134"/>
+    <topic label="Summary" href="md_doc__p_y_t_h_o_n__r_o_u_t_i_n_g.html#autotoc_md137"/>
+    <topic label="Installing t-route" href="md_doc__p_y_t_h_o_n__r_o_u_t_i_n_g.html#autotoc_md138"/>
+    <topic label="Using t-route with ngen" href="md_doc__p_y_t_h_o_n__r_o_u_t_i_n_g.html#autotoc_md139">
+      <topic label="Routing Config" href="md_doc__p_y_t_h_o_n__r_o_u_t_i_n_g.html#autotoc_md140"/>
+    </topic>
   </topic>
   <topic label="Realization Configuration" href="md_doc__r_e_a_l_i_z_a_t_i_o_n__c_o_n_f_i_g_u_r_a_t_i_o_n.html"/>
   <topic label="&lt;a href=&quot;https://docs.opengeospatial.org/is/14-111r6/14-111r6.html&quot;&gt;HY_Features&lt;/a&gt;" href="md_doc_references.html">
-    <topic label="&lt;a href=&quot;https://bmi-spec.readthedocs.io/en/latest/&quot;&gt;BMI&lt;/a&gt;" href="md_doc_references.html#autotoc_md137"/>
-    <topic label="Formulations" href="md_doc_references.html#autotoc_md138"/>
-    <topic label="HYMOD" href="md_doc_references.html#autotoc_md139"/>
-    <topic label="T-shirt" href="md_doc_references.html#autotoc_md140"/>
-    <topic label="GIUH" href="md_doc_references.html#autotoc_md141">
-      <topic label="Modeling References" href="md_doc_references.html#autotoc_md142"/>
+    <topic label="&lt;a href=&quot;https://bmi-spec.readthedocs.io/en/latest/&quot;&gt;BMI&lt;/a&gt;" href="md_doc_references.html#autotoc_md143"/>
+    <topic label="Formulations" href="md_doc_references.html#autotoc_md144"/>
+    <topic label="HYMOD" href="md_doc_references.html#autotoc_md145"/>
+    <topic label="T-shirt" href="md_doc_references.html#autotoc_md146"/>
+    <topic label="GIUH" href="md_doc_references.html#autotoc_md147">
+      <topic label="Modeling References" href="md_doc_references.html#autotoc_md148"/>
     </topic>
   </topic>
   <topic label="Installation instructions" href="md__i_n_s_t_a_l_l.html"/>
   <topic label="Guidance on how to contribute" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html">
-    <topic label="Using the issue tracker" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md145"/>
-    <topic label="Changing the code-base" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md146"/>
+    <topic label="Using the issue tracker" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md151"/>
+    <topic label="Changing the code-base" href="md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md152"/>
   </topic>
   <topic label="Disclaimer" href="md__t_e_r_m_s.html">
-      <topic label="Other Information" href="md__t_e_r_m_s.html#autotoc_md148"/>
-    <topic label="Exceptions" href="md__t_e_r_m_s.html#autotoc_md149"/>
+      <topic label="Other Information" href="md__t_e_r_m_s.html#autotoc_md154"/>
+    <topic label="Exceptions" href="md__t_e_r_m_s.html#autotoc_md155"/>
   </topic>
   <topic label="Testing" href="md_test__r_e_a_d_m_e.html">
-    <topic label="Testing Frameworks" href="md_test__r_e_a_d_m_e.html#autotoc_md151">
-      <topic label="&lt;strong&gt;Google Test&lt;/strong&gt;" href="md_test__r_e_a_d_m_e.html#autotoc_md152">
-        <topic label="(Re)generating CMake Project Buildsystem" href="md_test__r_e_a_d_m_e.html#autotoc_md153"/>
+    <topic label="Testing Frameworks" href="md_test__r_e_a_d_m_e.html#autotoc_md157">
+      <topic label="&lt;strong&gt;Google Test&lt;/strong&gt;" href="md_test__r_e_a_d_m_e.html#autotoc_md158">
+        <topic label="(Re)generating CMake Project Buildsystem" href="md_test__r_e_a_d_m_e.html#autotoc_md159"/>
       </topic>
     </topic>
-    <topic label="Executing Automated Tests" href="md_test__r_e_a_d_m_e.html#autotoc_md154">
-      <topic label="C++ Tests" href="md_test__r_e_a_d_m_e.html#autotoc_md155">
-        <topic label="Test Targets and Executables" href="md_test__r_e_a_d_m_e.html#autotoc_md156"/>
+    <topic label="Executing Automated Tests" href="md_test__r_e_a_d_m_e.html#autotoc_md160">
+      <topic label="C++ Tests" href="md_test__r_e_a_d_m_e.html#autotoc_md161">
+        <topic label="Test Targets and Executables" href="md_test__r_e_a_d_m_e.html#autotoc_md162"/>
       </topic>
     </topic>
-    <topic label="Creating New Automated Tests" href="md_test__r_e_a_d_m_e.html#autotoc_md157">
-      <topic label="Adding Tests to CMake Builds" href="md_test__r_e_a_d_m_e.html#autotoc_md158"/>
-      <topic label="Test Creation Rules of Thumb" href="md_test__r_e_a_d_m_e.html#autotoc_md159">
-          <topic label="Test Work Before Push or PR" href="md_test__r_e_a_d_m_e.html#autotoc_md160"/>
-          <topic label="Separate Test Types in Separate Files" href="md_test__r_e_a_d_m_e.html#autotoc_md161"/>
-          <topic label="Use Analogous Names" href="md_test__r_e_a_d_m_e.html#autotoc_md162"/>
-          <topic label="Use Analogous Paths" href="md_test__r_e_a_d_m_e.html#autotoc_md163"/>
-          <topic label="Keep Unit Test Assertions to a Minimum" href="md_test__r_e_a_d_m_e.html#autotoc_md164"/>
+    <topic label="Creating New Automated Tests" href="md_test__r_e_a_d_m_e.html#autotoc_md163">
+      <topic label="Adding Tests to CMake Builds" href="md_test__r_e_a_d_m_e.html#autotoc_md164"/>
+      <topic label="Test Creation Rules of Thumb" href="md_test__r_e_a_d_m_e.html#autotoc_md165">
+          <topic label="Test Work Before Push or PR" href="md_test__r_e_a_d_m_e.html#autotoc_md166"/>
+          <topic label="Separate Test Types in Separate Files" href="md_test__r_e_a_d_m_e.html#autotoc_md167"/>
+          <topic label="Use Analogous Names" href="md_test__r_e_a_d_m_e.html#autotoc_md168"/>
+          <topic label="Use Analogous Paths" href="md_test__r_e_a_d_m_e.html#autotoc_md169"/>
+          <topic label="Keep Unit Test Assertions to a Minimum" href="md_test__r_e_a_d_m_e.html#autotoc_md170"/>
       </topic>
     </topic>
   </topic>
@@ -2004,9 +2012,8 @@
           <topic label="end" href="classrealization_1_1_formulation___manager.html#a06163e6cf570da56ecf5a0924ffc1fc8"/>
           <topic label="get_formulation" href="classrealization_1_1_formulation___manager.html#a3cbcafc6e7ddca7c0a545454290355b8"/>
           <topic label="get_global_forcing_params" href="classrealization_1_1_formulation___manager.html#a84b5e11580f6ebeed689ddce25b6d3e1"/>
-          <topic label="get_input_path" href="classrealization_1_1_formulation___manager.html#a10eeadd9a63d84bad224cbfe1c9e8f64"/>
           <topic label="get_size" href="classrealization_1_1_formulation___manager.html#a3d0b2db8f821d4b05502a04fa3f01870"/>
-          <topic label="get_t_route_connection_path" href="classrealization_1_1_formulation___manager.html#ae5dec32117f580e5c4c09c185229563b"/>
+          <topic label="get_t_route_config_file_with_path" href="classrealization_1_1_formulation___manager.html#af98f0237deac6fe02782231b5ba41ea7"/>
           <topic label="get_using_routing" href="classrealization_1_1_formulation___manager.html#a599aadb9ffea1e8c28cbd010b3160bd7"/>
           <topic label="is_empty" href="classrealization_1_1_formulation___manager.html#ae4048912588864e785ebefab84faa9cc"/>
           <topic label="read" href="classrealization_1_1_formulation___manager.html#aab2168aff25e065967c382a2b6cef41a"/>
@@ -4057,9 +4064,8 @@
           <topic label="end" href="classrealization_1_1_formulation___manager.html#a06163e6cf570da56ecf5a0924ffc1fc8"/>
           <topic label="get_formulation" href="classrealization_1_1_formulation___manager.html#a3cbcafc6e7ddca7c0a545454290355b8"/>
           <topic label="get_global_forcing_params" href="classrealization_1_1_formulation___manager.html#a84b5e11580f6ebeed689ddce25b6d3e1"/>
-          <topic label="get_input_path" href="classrealization_1_1_formulation___manager.html#a10eeadd9a63d84bad224cbfe1c9e8f64"/>
           <topic label="get_size" href="classrealization_1_1_formulation___manager.html#a3d0b2db8f821d4b05502a04fa3f01870"/>
-          <topic label="get_t_route_connection_path" href="classrealization_1_1_formulation___manager.html#ae5dec32117f580e5c4c09c185229563b"/>
+          <topic label="get_t_route_config_file_with_path" href="classrealization_1_1_formulation___manager.html#af98f0237deac6fe02782231b5ba41ea7"/>
           <topic label="get_using_routing" href="classrealization_1_1_formulation___manager.html#a599aadb9ffea1e8c28cbd010b3160bd7"/>
           <topic label="is_empty" href="classrealization_1_1_formulation___manager.html#ae4048912588864e785ebefab84faa9cc"/>
           <topic label="read" href="classrealization_1_1_formulation___manager.html#aab2168aff25e065967c382a2b6cef41a"/>
@@ -5132,9 +5138,8 @@
       </topic>
       <topic label="routing_params" href="structrouting__params.html">
         <topic label="routing_params" href="structrouting__params.html#af966a73055663bca37095a4e4feb754d"/>
-        <topic label="routing_params" href="structrouting__params.html#a3035f89785e029fd0a00c5b2d4940c76"/>
-        <topic label="input_path" href="structrouting__params.html#a570e4aa3990c2c4225a327020268c595"/>
-        <topic label="t_route_connection_path" href="structrouting__params.html#a9596b637d606a3388c657cfe56e43879"/>
+        <topic label="routing_params" href="structrouting__params.html#ad7665d897b5fea34e7a928db23a4c1f3"/>
+        <topic label="t_route_config_file_with_path" href="structrouting__params.html#ab8b3e8f2fc74ca5193fd305d711b3b18"/>
       </topic>
       <topic label="SchaakeKernelTest" href="class_schaake_kernel_test.html">
         <topic label="SchaakeKernelTest" href="class_schaake_kernel_test.html#a66ea4a961ea878e50b8279328eaea72d"/>

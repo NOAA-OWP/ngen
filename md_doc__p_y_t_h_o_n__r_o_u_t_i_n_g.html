@@ -86,39 +86,75 @@ $(document).ready(function(){initNavTree('md_doc__p_y_t_h_o_n__r_o_u_t_i_n_g.htm
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><ul>
+<li><a href="#python-routing">Python Routing</a></li>
 <li><a href="#summary">Summary</a></li>
+<li><a href="#installing-t-route">Installing t-route</a></li>
+<li><a href="#using-t-route-with-ngen">Using t-route with ngen</a><ul>
+<li><a href="#routing-config">Routing Config</a></li>
 </ul>
-<h1><a class="anchor" id="autotoc_md134"></a>
+</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md137"></a>
 Summary</h1>
 <p>This describes how to use the Python-based t-route routing module with ngen.</p>
 <p><a href="https://github.com/NOAA-OWP/t-route">t-route</a> is the routing framework developed by NOAA-OWP.</p>
-<p>The basic outline of steps needed to run Python Routing is:</p><ul>
-<li><a href="DEPENDENCIES.md#pybind11">Set up pybind11</a></li>
-<li>The t-route module is handled as a Git Submodule, located at extern/t-route. To initialize the submodule: <code>git submodule update --init extern/t-route</code></li>
-<li>Navigate to extern/t-route and <a href="https://github.com/NOAA-OWP/t-route#configuration-and-dependencies">follow these steps for configuration and dependencies of t-route</a>. <br  />
-</li>
+<p>See <a href="DEPENDENCIES.md#t-route">Setting up t-route source</a> for details on aquiring the t-route submodule. You will also need to <a href="DEPENDENCIES.md#pybind11">set up pybind11</a> to use t-route.</p>
+<h1><a class="anchor" id="autotoc_md138"></a>
+Installing t-route</h1>
+<p>These steps will cover installing the t-route package into a virtual environment in the ngen project. From the project root (if this virutal environment exists, you may skip this step.)</p>
+<div class="fragment"><div class="line">mkdir .venv</div>
+<div class="line">python3 -m venv .venv</div>
+</div><!-- fragment --><p>Activate the virtual environment and update a couple of tools.</p>
+<div class="fragment"><div class="line">source .venv/bin/activate</div>
+<div class="line">pip install -U pip setuptools cython dask</div>
+</div><!-- fragment --><p>Install the routing driver modules.</p>
+<div class="fragment"><div class="line">pip install -e ngen/extern/t-route/src/ngen_routing/</div>
+<div class="line">pip install -e ngen/extern/t-route/src/nwm_routing/</div>
+</div><!-- fragment --><p>Next, we need to build some python extension modules that the routing package requires. A convience script is located in the t-route package to help with this.</p>
+<p>NOTE t-route extension modules rely on netcdf fortran, and thus they need to be compiled with the same fortran compiler that compiled the netcdf library. In the example below, <code>libnetcdff</code> was provided by the el7 package <code>netcdf-fortran-openmpi-static-4.2-16.el7.x86_64</code> which was compiled with the openmpi fortran compiler. So we have to set the <code>FC</code> environment variable appropriately before executing the script. By default, gfortran is the selected fortran compiler.</p>
+<div class="fragment"><div class="line">pushd ngen/extern/t-route/src/python_routing_v02</div>
+<div class="line">F90=mpif90 ./compiler.sh</div>
+<div class="line">popd</div>
+</div><!-- fragment --><p> This should compile all extension modules and <code>pip install -e</code> the various namespace package modules for the t-route framework and routing modules.</p>
+<p><a href="https://github.com/NOAA-OWP/t-route#configuration-and-dependencies">Additional documentation for configuration and dependencies of t-route</a>. <br  />
+</p>
+<h1><a class="anchor" id="autotoc_md139"></a>
+Using t-route with ngen</h1>
+<ul>
 <li><p class="startli">Create the build directory including the options to activate Python and Routing:</p><ul>
 <li>Activate Python flag with <code>-DNGEN_ACTIVATE_PYTHON:BOOL=ON</code></li>
 <li>Activate Routing flag with <code>-DNGEN_ACTIVATE_ROUTING:BOOL=ON.</code> <br  />
 </li>
 <li>An example create build directory command with the above two options activated:</li>
 </ul>
-<p class="startli">``` cmake -DCMAKE_BUILD_TYPE=Debug -B cmake-build-debug -DNGEN_ACTIVATE_PYTHON:BOOL=ON -DNGEN_ACTIVATE_ROUTING:BOOL=ON . ``` <br  />
+<p class="startli">```sh cmake -DCMAKE_BUILD_TYPE=Debug -B cmake-build-debug -DNGEN_ACTIVATE_PYTHON:BOOL=ON -DNGEN_ACTIVATE_ROUTING:BOOL=ON . ``` <br  />
 </p>
 </li>
 <li><p class="startli">Unit tests for the Routing_Py_Adapter class can then be built and run from the main directory with the following two commands:</p>
-<p class="startli">``` cmake &ndash;build cmake-build-debug &ndash;target test_routing_pybind</p>
-<p class="startli">./cmake-build-debug/test/test_routing_pybind ```</p>
+<p class="startli">```sh cmake &ndash;build cmake-build-debug &ndash;target test_routing_pybind ./cmake-build-debug/test/test_routing_pybind ``` <br  />
+</p>
 </li>
+<li>An <a href="../data/example_bmi_multi_realization_config_w_routing.json">example realization config</a> with routing inputs.</li>
 </ul>
-<p>An <a href="example_realization_config_w_routing.json">example realization</a> with routing inputs. </p>
-</div></div><!-- contents -->
+<h2><a class="anchor" id="autotoc_md140"></a>
+Routing Config</h2>
+<p>t-route uses a yaml input file for configuring the routing setup. An <a href="../data/ngen_routing.yaml">example configuration</a> file is included in the example data. In this file, the following keys should be set appropriately: </p><div class="fragment"><div class="line">supernetwork_parameters:</div>
+<div class="line">    title_string: &quot;Ngen&quot;</div>
+<div class="line">    #Below will change with new catchment route link</div>
+<div class="line">    geo_file_path: &quot;&lt;path_to_hydrofabric&gt;/waterbody-params.json&quot;</div>
+<div class="line">    #CHANGE BELOW WITH NEW NGEN HYDRO FABRIC DATA</div>
+<div class="line">     ngen_nexus_file: &quot;&lt;path_to_hydrofabric&gt;/flowpath_edge_list.json&quot;</div>
+<div class="line">#ngen output files</div>
+<div class="line">forcing_parameters:</div>
+<div class="line">    nexus_input_folder: &quot;&lt;path_to_ngen_output&gt;&quot;</div>
+<div class="line">    nexus_file_pattern_filter: &quot;nex-*&quot;</div>
+</div><!-- fragment --> </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed Nov 17 2021 22:07:07 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Wed Nov 17 2021 22:08:10 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
