@@ -177,6 +177,8 @@ if (BMI_C_LIB_ACTIVE OR ${BMI_FORTRAN_ACTIVE} OR ${NGEN_ACTIVATE_PYTHON})
             realizations/catchments/Bmi_Testing_Util.cpp
             NGen::core
             NGen::realizations_catchment
+            NGen::core_mediator
+            libudunits2
     )
 endif()
 
