@@ -41,6 +41,11 @@ protected:
         return formulation.get_bmi_main_output_var();
     }
 
+    static std::string get_friend_nested_module_main_output_variable(const Bmi_Multi_Formulation& formulation,
+                                                                     const int nested_index) {
+        return formulation.modules[nested_index]->get_bmi_main_output_var();
+    }
+
     /*
     static std::vector<nested_module_ptr> get_friend_nested_formulations(Bmi_Multi_Formulation& formulation) {
         return formulation.get_bmi_model();
@@ -295,7 +300,6 @@ private:
                                       const std::vector<std::string> &nested_types) {
         catchment_ids[ex_index] = cat_id;
         example_forcing_files[ex_index] = testUtil.getForcingFilePath(cat_id);
-        main_output_variables[ex_index] = "OUTPUT_VAR_1";
         uses_forcing_file[ex_index] = false;
         // TODO: re-implement things to have these be retrieved from the testing util object
         forcing_params_examples[ex_index] = std::make_shared<forcing_params>(
@@ -309,10 +313,14 @@ private:
             nested_module_type_name_lists[ex_index][j] = testUtil.bmiFormulationConfigNames.at(typeKey);
             nested_module_file_lists[ex_index][j] = testUtil.getModuleFilePath(typeKey);
             nested_init_config_lists[ex_index][j] = testUtil.getBmiInitConfigFilePath(typeKey, j);
+            // TODO: look at setting this a different way
+            nested_module_main_output_variables[ex_index][j] = "OUTPUT_VAR_1";
             // For any Python modules, this isn't strictly correct, but it'll be ignored.
             nested_registration_function_lists[ex_index][j] = "register_bmi";
-
         }
+        //main_output_variables[ex_index] = "OUTPUT_VAR_1__" + std::to_string(example_module_depth[ex_index] - 1);
+        main_output_variables[ex_index] = nested_module_main_output_variables[ex_index][example_module_depth[ex_index] - 1];
+
         buildExampleConfig(ex_index);
     }
 
@@ -377,6 +385,8 @@ TEST_F(Bmi_Multi_Formulation_Test, Initialize_0_a) {
 
     ASSERT_EQ(get_friend_nested_module_model_type_name(formulation, 0), nested_module_type_name_lists[ex_index][0]);
     ASSERT_EQ(get_friend_nested_module_model_type_name(formulation, 1), nested_module_type_name_lists[ex_index][1]);
+    ASSERT_EQ(get_friend_nested_module_main_output_variable(formulation, 0), nested_module_main_output_variables[ex_index][0]);
+    ASSERT_EQ(get_friend_nested_module_main_output_variable(formulation, 1), nested_module_main_output_variables[ex_index][1]);
     ASSERT_EQ(get_friend_bmi_main_output_var(formulation), main_output_variables[ex_index]);
     ASSERT_EQ(get_friend_is_bmi_using_forcing_file(formulation), uses_forcing_file[ex_index]);
 }
@@ -390,6 +400,8 @@ TEST_F(Bmi_Multi_Formulation_Test, Initialize_1_a) {
 
     ASSERT_EQ(get_friend_nested_module_model_type_name(formulation, 0), nested_module_type_name_lists[ex_index][0]);
     ASSERT_EQ(get_friend_nested_module_model_type_name(formulation, 1), nested_module_type_name_lists[ex_index][1]);
+    ASSERT_EQ(get_friend_nested_module_main_output_variable(formulation, 0), nested_module_main_output_variables[ex_index][0]);
+    ASSERT_EQ(get_friend_nested_module_main_output_variable(formulation, 1), nested_module_main_output_variables[ex_index][1]);
     ASSERT_EQ(get_friend_bmi_main_output_var(formulation), main_output_variables[ex_index]);
     ASSERT_EQ(get_friend_is_bmi_using_forcing_file(formulation), uses_forcing_file[ex_index]);
 }
