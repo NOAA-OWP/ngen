@@ -13,6 +13,11 @@
 #include "CsvPerFeatureForcingProvider.hpp"
 #include "FileChecker.h"
 
+#ifdef ACTIVATE_PYTHON
+#include "python/InterpreterUtil.hpp"
+using namespace utils::ngenPy;
+#endif // ACTIVATE_PYTHON
+
 using namespace realization;
 
 class Bmi_Multi_Formulation_Test : public ::testing::Test {
@@ -50,9 +55,8 @@ protected:
         return formulation.get_bmi_model_start_time_forcing_offset_s();
     }
 
-    static std::string get_friend_nested_module_forcing_file_path(const Bmi_Multi_Formulation& formulation,
-                                                                  const int nested_index) {
-        return formulation.modules[nested_index]->get_forcing_file_path();
+    static std::string get_friend_forcing_file_path(const Bmi_Multi_Formulation& formulation) {
+        return formulation.get_forcing_file_path();
     }
 
     /*
@@ -91,6 +95,8 @@ protected:
     */
 
     void SetUp() override;
+
+    static void SetUpTestSuite();
 
     void TearDown() override;
 
@@ -159,24 +165,32 @@ private:
         // Certain properties must be set only for certain BMI types
         std::string type_specific_properties;
         if (bmi_type == BMI_C_TYPE || bmi_type == BMI_FORTRAN_TYPE) {
+            // The library file is only needed (at least for the moment) when there is a shared lib involved
+            type_specific_properties += "                                \"library_file\": \"" + nested_module_file_lists[ex_index][nested_index] + "\",\n";
             // Registration function is only needed for C or Fortran type modules.
             type_specific_properties += "                                \"registration_function\": \"" + nested_registration_function_lists[ex_index][nested_index] + "\",\n";
         }
         if (bmi_type == BMI_PYTHON_TYPE) {
             // Python requires the "python_type" to be set
-            type_specific_properties += "                                \"" + std::string(BMI_REALIZATION_CFG_PARAM_OPT__PYTHON_TYPE_NAME) + "\": \"" + bmi_type + "\",\n";
+            type_specific_properties += "                                \"" + std::string(BMI_REALIZATION_CFG_PARAM_OPT__PYTHON_TYPE_NAME) + "\": \"" + nested_module_type_name_lists[ex_index][nested_index] + "\",\n";
         }
 
         std::string nested_index_str = std::to_string(nested_index);
-        std::string input_var_alias = nested_index == 0 ? AORC_FIELD_NAME_PRECIP_RATE : nested_index_str;
+        std::string nested_prior_index_str = std::to_string(nested_index - 1);
+        std::string input_var_alias;
+        if (nested_index == 0) {
+            input_var_alias = AORC_FIELD_NAME_PRECIP_RATE;
+        }
+        else {
+            input_var_alias = "OUTPUT_VAR_1__" + nested_prior_index_str;
+        }
 
         std::string uses_forcing_file_text = uses_forcing_file[ex_index] ? "true" : "false";
 
         return  "                        {\n"
                 "                            \"name\": \"" + bmi_type + "\",\n"
                 "                            \"params\": {\n"
-                "                                \"model_type_name\": \"test_" + bmi_type + "_with_multi\",\n"
-                "                                \"library_file\": \"" + nested_module_file_lists[ex_index][nested_index] + "\",\n"
+                "                                \"model_type_name\": \"" + nested_module_type_name_lists[ex_index][nested_index] + "\",\n"
                 "                                \"forcing_file\": \"\",\n"
                 "                                \"init_config\": \"" + nested_init_config_lists[ex_index][nested_index] + "\",\n"
                 "                                \"allow_exceed_end_time\": true,\n"
@@ -185,7 +199,7 @@ private:
                 "                                \"variables_names_map\": {\n"
                 "                                    \"OUTPUT_VAR_2\": \"OUTPUT_VAR_2__" + nested_index_str + "\",\n"
                 "                                    \"OUTPUT_VAR_1\": \"OUTPUT_VAR_1__" + nested_index_str + "\",\n"
-                "                                    \"INPUT_VAR_2\": \"" + NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP + "\",\n"
+                "                                    \"INPUT_VAR_2\": \"" + CSDMS_STD_NAME_SURFACE_AIR_PRESSURE + "\",\n"
                 "                                    \"INPUT_VAR_1\": \"" + input_var_alias + "\"\n"
                 "                                },\n"
                 "                                \"uses_forcing_file\": " + uses_forcing_file_text + "\n"
@@ -242,7 +256,43 @@ private:
                 "formulations").begin()->second.get_child("params");
     }
 
+    /**
+     * Find the repo root directory using Python, starting from the current directory and working upward.
+     *
+     * This will throw a runtime error if Python functionality is not active.
+     *
+     * @return The absolute path of the repo root, as a string.
+     */
+    static std::string py_find_repo_root() {
+        #ifdef ACTIVATE_PYTHON
+        py::module_ Path = InterpreterUtil::getPyModule(std::vector<std::string> {"pathlib", "Path"});
+        py::object dir = Path(".").attr("resolve")();
+        while (!dir.equal(dir.attr("parent"))) {
+            // If there is a child .git dir and a child .github dir, then dir is the root
+            py::bool_ is_git_dir = py::bool_(dir.attr("joinpath")(".git").attr("is_dir")());
+            py::bool_ is_github_dir = py::bool_(dir.attr("joinpath")(".github").attr("is_dir")());
+            if (is_git_dir && is_github_dir) {
+                return py::str(dir);
+            }
+            dir = dir.attr("parent");
+        }
+        throw std::runtime_error("Can't find repo root starting at " + std::string(py::str(Path(".").attr("resolve")())));
+        #else // (i.e., if not ACTIVATE_PYTHON)
+        throw std::runtime_error("Can't use Python-based test helper function 'py_find_repo_root'; Python not active!");
+        #endif // ACTIVATE_PYTHON
+    }
+
 };
+
+void Bmi_Multi_Formulation_Test::SetUpTestSuite() {
+    #ifdef ACTIVATE_PYTHON
+    std::string repo_root = py_find_repo_root();
+    std::string module_directory = repo_root + "/extern/";
+
+    // Add the extern dir with our test lib to Python system path
+    InterpreterUtil::addToPyPath(module_directory);
+    #endif // ACTIVATE_PYTHON
+}
 
 void Bmi_Multi_Formulation_Test::TearDown() {
     testing::Test::TearDown();
@@ -345,8 +395,6 @@ TEST_F(Bmi_Multi_Formulation_Test, Initialize_0_a) {
 
     ASSERT_EQ(get_friend_nested_module_model_type_name(formulation, 0), nested_module_type_name_lists[ex_index][0]);
     ASSERT_EQ(get_friend_nested_module_model_type_name(formulation, 1), nested_module_type_name_lists[ex_index][1]);
-    ASSERT_EQ(get_friend_nested_module_forcing_file_path(formulation, 0), example_forcing_files[ex_index]);
-    ASSERT_EQ(get_friend_nested_module_forcing_file_path(formulation, 1), example_forcing_files[ex_index]);
     ASSERT_EQ(get_friend_bmi_main_output_var(formulation), main_output_variables[ex_index]);
     ASSERT_EQ(get_friend_is_bmi_using_forcing_file(formulation), uses_forcing_file[ex_index]);
 }
@@ -360,8 +408,6 @@ TEST_F(Bmi_Multi_Formulation_Test, Initialize_1_a) {
 
     ASSERT_EQ(get_friend_nested_module_model_type_name(formulation, 0), nested_module_type_name_lists[ex_index][0]);
     ASSERT_EQ(get_friend_nested_module_model_type_name(formulation, 1), nested_module_type_name_lists[ex_index][1]);
-    ASSERT_EQ(get_friend_nested_module_forcing_file_path(formulation, 0), example_forcing_files[ex_index]);
-    ASSERT_EQ(get_friend_nested_module_forcing_file_path(formulation, 1), example_forcing_files[ex_index]);
     ASSERT_EQ(get_friend_bmi_main_output_var(formulation), main_output_variables[ex_index]);
     ASSERT_EQ(get_friend_is_bmi_using_forcing_file(formulation), uses_forcing_file[ex_index]);
 }
