@@ -169,18 +169,16 @@ if (${NGEN_ACTIVATE_PYTHON})
 endif()
 
 ########################## BMI Multi Tests
-if (${BMI_C_LIB_ACTIVE} OR ${BMI_FORTRAN_ACTIVE} OR ${NGEN_ACTIVATE_PYTHON})
-    add_test(
-            test_bmi_multi
-            2
-            realizations/catchments/Bmi_Multi_Formulation_Test.cpp
-            realizations/catchments/Bmi_Testing_Util.cpp
-            NGen::core
-            NGen::realizations_catchment
-            NGen::core_mediator
-            libudunits2
-    )
-endif()
+add_test(
+        test_bmi_multi
+        2
+        realizations/catchments/Bmi_Multi_Formulation_Test.cpp
+        realizations/catchments/Bmi_Testing_Util.cpp
+        NGen::core
+        NGen::realizations_catchment
+        NGen::core_mediator
+        libudunits2
+)
 
 ########################## Comparison tests for the BMI CFE implementation
 # TODO: this probably needs to be added to integration testing also
