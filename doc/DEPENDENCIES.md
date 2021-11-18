@@ -8,6 +8,7 @@
 | [C/C++ Compiler](#c-and-c-compiler) | external | see below |  |
 | [CMake](#cmake) | external | \>= `3.12` | |
 | [Boost (Headers Only)](#boost-headers-only) | external | `1.72.0` | headers only library |
+| [Udunits libraries](https://www.unidata.ucar.edu/software/udunits) | hybrid (external or submodule) | >= 2.0 | Can be installed via package manager; if not installed, will be automatically downloaded as submodule, and build will be attempted. |
 | [MPI](https://www.mpi-forum.org) | external | No current implementation or version requirements | Required for [multi-process distributed execution](DISTRIBUTED_PROCESSING.md) |
 | [Python 3 Libraries](#python-3-libraries) | external | \> `3.6.8` | Can be [excluded](#overriding-python-dependency). Requires ``numpy`` package |
 | [pybind11](#pybind11) | submodule | `v2.6.0` | Can be [excluded](#overriding-pybind11-dependency). |
@@ -101,6 +102,54 @@ The variable should be set to the value of the **boost root directory**, which i
 ### Version Requirements
 
 At present, a version >= `1.72.0` is required.
+
+## Udunits
+
+[Udunits](https://www.unidata.ucar.edu/software/udunits) is a C library and associated command line tool for converting between compatible units.  Only the C library is a required dependency, though these frequently get bundled together.
+
+### Setup
+
+The description of the setup is more complicated than most other current dependencies.  However, the required steps should be very easy to perform.
+
+Basically, the library and needed development files can be installed via typical package managing tools.  But, the ngen project build is also be able to automatically obtain and build it, but only when the transitive dependencies are already available.
+
+#### Option 1: Package Manager Install
+
+The Udunits library and development files can be installed via standard OS package management tools.  The ngen project will automatically detect and use these.  Note that both the library itself and development files must be installed, which are typically two separate, similarly named packages.
+
+The ngen build will automatically search for these, so no additional steps are required to configure the build or the environment once they are installed.  Installation can be done using the typical OS package manager, like `yum` or `apt`.  Different distributions like to call the packages different things (e.g., _udunits2-dev_, _udunits2-devel_, _libudunits2-dev_, etc.), so you may need to do some searching.  [This page](https://pkgs.org/search/?q=udunits2) also provide details on package names for various Linux distros.  
+
+Also, for CentOS in particular, you'll need [the EPEL repo enabled](https://docs.fedoraproject.org/en-US/epel/)
+
+Packages for both the _library_ and _development files_ are needed.  Package managers usually make this easy, but just make sure to pay attention to it if things do not work as expected.
+
+##### Example Install Commands
+
+###### Ubuntu
+
+`apt-get install libudunits2-dev`
+
+###### CentOS
+
+`yum install udunits2-devel`
+
+As mentioned before, you may need to [enable the EPEL repo first](https://docs.fedoraproject.org/en-US/epel/) first, if yum can't find the package.
+
+#### Option 2: Automatic Submodule Build
+
+The CMake build will attempt to find an installed copy of the Udunits library.  If it can't though, it will automatically initialize and download Udunits as a Git submodule (under _extern/UDUNITS-2/_), and then build an internal copy of the library.
+
+When this works, it will work totally automatically when building an existing build targets (e.g., `ngen` or `test_bmi_c`).  However, it won't always work.  The reason for this is that the ngen build cannot currently automatically manage the dependencies of Udunits, in the same way it can manage its own dependency on Udunits.
+
+What this means is that, if all the transitive dependencies are already available locally, builds will "just work".  But, if any aren't, they would have to be "manually" obtained.  "Manually" here will frequently mean installing via a package manager, but at that point it's usually easier to just install Udunits itself that way.
+
+##### Caveat: Regenerate When Switching Options
+
+If you try to go from one option to another, is best to make sure to [fully regenerate your CMake build](BUILDS_AND_CMAKE.md#build-system-regeneration) to avoid any unexpected issues.  The most common case for doing that is if an automatic build (option 2) is tried but doesn't work successfully, so the Udunits packages are installed instead.
+
+### Version Requirements
+
+Any version greater >= 2.0 (i.e., _udunits2_ or _libudunits2_).
 
 ## Python 3 Libraries
 

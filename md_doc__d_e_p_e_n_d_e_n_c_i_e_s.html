@@ -99,14 +99,16 @@ Summary</h1>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><a href="#boost-headers-only">Boost (Headers Only)</a>   </td><td class="markdownTableBodyLeft">external   </td><td class="markdownTableBodyCenter"><code>1.72.0</code>   </td><td class="markdownTableBodyCenter">headers only library    </td></tr>
 <tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a href="https://www.unidata.ucar.edu/software/udunits">Udunits libraries</a>   </td><td class="markdownTableBodyLeft">hybrid (external or submodule)   </td><td class="markdownTableBodyCenter">&gt;= 2.0   </td><td class="markdownTableBodyCenter">Can be installed via package manager; if not installed, will be automatically downloaded as submodule, and build will be attempted.    </td></tr>
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><a href="https://www.mpi-forum.org">MPI</a>   </td><td class="markdownTableBodyLeft">external   </td><td class="markdownTableBodyCenter">No current implementation or version requirements   </td><td class="markdownTableBodyCenter">Required for <a class="el" href="md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html">multi-process distributed execution</a>    </td></tr>
-<tr class="markdownTableRowEven">
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><a href="#python-3-libraries">Python 3 Libraries</a>   </td><td class="markdownTableBodyLeft">external   </td><td class="markdownTableBodyCenter">&gt; <code>3.6.8</code>   </td><td class="markdownTableBodyCenter">Can be <a href="#overriding-python-dependency">excluded</a>. Requires <code>numpy</code> package    </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><a href="#pybind11">pybind11</a>   </td><td class="markdownTableBodyLeft">submodule   </td><td class="markdownTableBodyCenter"><code>v2.6.0</code>   </td><td class="markdownTableBodyCenter">Can be <a href="#overriding-pybind11-dependency">excluded</a>.    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><a href="#the-dmodsubsetservice-package">dmod.subsetservice</a>   </td><td class="markdownTableBodyLeft">external   </td><td class="markdownTableBodyCenter"><code>&gt;= 0.3.0</code>   </td><td class="markdownTableBodyCenter">Only required to perform integrated <a href="DISTRIBUTED_PROCESSING.md#subdivided-hydrofabric">hydrofabric file subdividing</a> for distributed processing .    </td></tr>
+<td class="markdownTableBodyNone"><a href="#pybind11">pybind11</a>   </td><td class="markdownTableBodyLeft">submodule   </td><td class="markdownTableBodyCenter"><code>v2.6.0</code>   </td><td class="markdownTableBodyCenter">Can be <a href="#overriding-pybind11-dependency">excluded</a>.    </td></tr>
 <tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a href="#the-dmodsubsetservice-package">dmod.subsetservice</a>   </td><td class="markdownTableBodyLeft">external   </td><td class="markdownTableBodyCenter"><code>&gt;= 0.3.0</code>   </td><td class="markdownTableBodyCenter">Only required to perform integrated <a href="DISTRIBUTED_PROCESSING.md#subdivided-hydrofabric">hydrofabric file subdividing</a> for distributed processing .    </td></tr>
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><a href="#t-route">t-route</a>   </td><td class="markdownTableBodyLeft">submodule   </td><td class="markdownTableBodyCenter">see below   </td><td class="markdownTableBodyCenter">Module required to enable channel-routing. Requires pybind11 to enable   </td></tr>
 </table>
 <h1><a class="anchor" id="autotoc_md63"></a>
@@ -172,15 +174,45 @@ Setting &lt;strong&gt;BOOST_ROOT&lt;/strong&gt;</h4>
 Version Requirements</h3>
 <p>At present, a version &gt;= <code>1.72.0</code> is required.</p>
 <h2><a class="anchor" id="autotoc_md79"></a>
+Udunits</h2>
+<p><a href="https://www.unidata.ucar.edu/software/udunits">Udunits</a> is a C library and associated command line tool for converting between compatible units. Only the C library is a required dependency, though these frequently get bundled together.</p>
+<h3><a class="anchor" id="autotoc_md80"></a>
+Setup</h3>
+<p>The description of the setup is more complicated than most other current dependencies. However, the required steps should be very easy to perform.</p>
+<p>Basically, the library and needed development files can be installed via typical package managing tools. But, the ngen project build is also be able to automatically obtain and build it, but only when the transitive dependencies are already available.</p>
+<h4><a class="anchor" id="autotoc_md81"></a>
+Option 1: Package Manager Install</h4>
+<p>The Udunits library and development files can be installed via standard OS package management tools. The ngen project will automatically detect and use these. Note that both the library itself and development files must be installed, which are typically two separate, similarly named packages.</p>
+<p>The ngen build will automatically search for these, so no additional steps are required to configure the build or the environment once they are installed. Installation can be done using the typical OS package manager, like <code>yum</code> or <code>apt</code>. Different distributions like to call the packages different things (e.g., <em>udunits2-dev</em>, <em>udunits2-devel</em>, <em>libudunits2-dev</em>, etc.), so you may need to do some searching. <a href="https://pkgs.org/search/?q=udunits2">This page</a> also provide details on package names for various Linux distros. <br  />
+</p>
+<p>Also, for CentOS in particular, you'll need <a href="https://docs.fedoraproject.org/en-US/epel/">the EPEL repo enabled</a></p>
+<p>Packages for both the <em>library</em> and <em>development files</em> are needed. Package managers usually make this easy, but just make sure to pay attention to it if things do not work as expected.</p>
+<p><a class="anchor" id="autotoc_md82"></a> </p><h5>Example Install Commands</h5>
+<h6>Ubuntu</h6>
+<p><code>apt-get install libudunits2-dev</code></p>
+<h6>CentOS</h6>
+<p><code>yum install udunits2-devel</code></p>
+<p>As mentioned before, you may need to <a href="https://docs.fedoraproject.org/en-US/epel/">enable the EPEL repo first</a> first, if yum can't find the package.</p>
+<h4><a class="anchor" id="autotoc_md83"></a>
+Option 2: Automatic Submodule Build</h4>
+<p>The CMake build will attempt to find an installed copy of the Udunits library. If it can't though, it will automatically initialize and download Udunits as a Git submodule (under <em>extern/UDUNITS-2/</em>), and then build an internal copy of the library.</p>
+<p>When this works, it will work totally automatically when building an existing build targets (e.g., <code>ngen</code> or <code>test_bmi_c</code>). However, it won't always work. The reason for this is that the ngen build cannot currently automatically manage the dependencies of Udunits, in the same way it can manage its own dependency on Udunits.</p>
+<p>What this means is that, if all the transitive dependencies are already available locally, builds will "just work". But, if any aren't, they would have to be "manually" obtained. "Manually" here will frequently mean installing via a package manager, but at that point it's usually easier to just install Udunits itself that way.</p>
+<p><a class="anchor" id="autotoc_md84"></a> </p><h5>Caveat: Regenerate When Switching Options</h5>
+<p>If you try to go from one option to another, is best to make sure to <a href="BUILDS_AND_CMAKE.md#build-system-regeneration">fully regenerate your CMake build</a> to avoid any unexpected issues. The most common case for doing that is if an automatic build (option 2) is tried but doesn't work successfully, so the Udunits packages are installed instead.</p>
+<h3><a class="anchor" id="autotoc_md85"></a>
+Version Requirements</h3>
+<p>Any version greater &gt;= 2.0 (i.e., <em>udunits2</em> or <em>libudunits2</em>).</p>
+<h2><a class="anchor" id="autotoc_md86"></a>
 Python 3 Libraries</h2>
 <p>In order to interact with external models written in Python, the Python libraries must be made available. <br  />
 </p>
 <p>Further, the Python environment must have <code>numpy</code> installed. Several Python BMI function calls utilize <code>numpy</code> arrays, making <code>numpy</code> a necessity for using external Python models implementing BMI</p>
-<h4><a class="anchor" id="autotoc_md80"></a>
+<h4><a class="anchor" id="autotoc_md87"></a>
 Overriding Python Dependency</h4>
 <p>It is possible to run the build, build artifacts, etc. in a way that excludes Python-related functionality, thereby relieving this as a dependency. This may be useful in runtime environments that will not interact with a Python external model, and/or installing Python is prohibitively difficult.</p>
 <p>To do this, set either the <code>NGEN_ACTIVATE_PYTHON</code> environment variable to <code>false</code> or include the <code>-DNGEN_ACTIVATE_PYTHON:BOOL=false</code> option when running the <code>cmake</code> build on the command line to generate the build system.</p>
-<h3><a class="anchor" id="autotoc_md81"></a>
+<h3><a class="anchor" id="autotoc_md88"></a>
 Setup</h3>
 <p>The first step is to make sure Python is installed (with step 1a being installing NumPy. CMake will then use its <a href="https://cmake.org/cmake/help/v3.19/module/FindPython.html#module:FindPython">FindPython</a> functionality to obtain the Python libraries. On some systems, CMake may be able to find everything automatically, though that will not always be the case.</p>
 <p>If CMake cannot find the needed Python artifacts on its own, the following user environmental variables can be set in the user's shell to control where CMake looks:</p>
@@ -194,45 +226,45 @@ Setup</h3>
 </ul>
 </li>
 </ul>
-<h4><a class="anchor" id="autotoc_md82"></a>
+<h4><a class="anchor" id="autotoc_md89"></a>
 NumPy</h4>
 <p>Additionally, the NumPy package must be installed and its headers available, in particular to work with Python BMI functions (with the general details of installing Python packages left to the user). The simplest method is installing in the root/global environment, though this is not always an option.</p>
 <p>One supported option is to create a <code>virtualenv</code> environment at <code>.venv</code> in the project root, then install <code>numpy</code> within it. Such <code>.venv</code> directory is ignored by Git and searched by CMake for the NumPy headers.</p>
 <p>The variable <code>Python_NumPy_INCLUDE_DIR</code> (either as a CMake variable or a user environment variable) can also be used to set the NumPy include directory path searched by CMake. However, this will be ignored if there is a <code>.venv</code> directory found, as described above.</p>
-<h3><a class="anchor" id="autotoc_md83"></a>
+<h3><a class="anchor" id="autotoc_md90"></a>
 Version Requirements</h3>
 <p>A version of Python 3 &gt;= <code>3.6.8</code> is required. There are no specific version requirements for <code>numpy</code> currently.</p>
-<h2><a class="anchor" id="autotoc_md84"></a>
+<h2><a class="anchor" id="autotoc_md91"></a>
 pybind11</h2>
 <p>The <code>pybind11</code> dependency is a header-only library that allows for exposing Python types, etc. within C++ code. It is necessary to work with externally maintained, modular Python models.</p>
-<h4><a class="anchor" id="autotoc_md85"></a>
+<h4><a class="anchor" id="autotoc_md92"></a>
 Overriding pybind11 Dependency</h4>
 <p>This dependency can be overridden and disabled if the Python dependency is configured as such, as described <a href="#overriding-python-dependency">here</a>.</p>
-<h3><a class="anchor" id="autotoc_md86"></a>
+<h3><a class="anchor" id="autotoc_md93"></a>
 Setup</h3>
 <p>The dependency is handled as a Git Submodule, located at <code>extern/pybind11</code>. To initialize the submodule after cloning the repo: </p><pre class="fragment">git submodule update --init extern/pybind11
 </pre><p> Git <em>should</em> take care of checking out the commit for the required version automatically (assuming latest upstream changes have been fetched), so it should be possible to also use the command above to sync future updates to the required version.</p>
 <p>However, to verify the checked out version, examine the output of: </p><pre class="fragment">git submodule status
 </pre><p> If the above <code>update</code> command does not check out the expected version, this can be done manually. Below is an example of how to do this for the version tagged <code>v2.6.0</code>: </p><pre class="fragment">cd extern/pybind11
 git checkout v2.6.0
-</pre> <h3><a class="anchor" id="autotoc_md87"></a>
+</pre> <h3><a class="anchor" id="autotoc_md94"></a>
 Version Requirements</h3>
 <p>The version used is automatically handled by submodule config. This can be synced by re-running the initialization command above.</p>
 <p>As of project version <code>0.1.0</code>, the required version is tag <code>v2.6.0</code>.</p>
-<h2><a class="anchor" id="autotoc_md88"></a>
+<h2><a class="anchor" id="autotoc_md95"></a>
 The &lt;tt&gt;dmod.subsetservice&lt;/tt&gt; Package</h2>
 <p>This is an optional package available via the <a href="https://github.com/NOAA-OWP/DMOD">OWP DMOD tool</a>. It only is required to enable the driver to generate partition-specific subdivided hydrofabric files from the complete hydrofabric file, as is conditionally required for <a class="el" href="md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html">distributed processing</a>. Further, its use is only attempted when such files are needed for distributed processing <em>and</em> are not already created.</p>
 <p>As such, this dependency is ignored unless both Python support and MPI support are enabled and built into the <em>ngen</em> driver.</p>
-<h3><a class="anchor" id="autotoc_md89"></a>
+<h3><a class="anchor" id="autotoc_md96"></a>
 Setup</h3>
 <p>This must be installed in the active Python environment at the time the <code>ngen</code> executable is called. This is usually best done via a virtual environment, especially if one is already set up as described for the <a href="#numpy">Numpy</a> dependency. However, all that matters is that the Python environment available to the ngen driver has this package installed.</p>
 <p>If installing to a virtual env as suggested above, the installation steps are similar to what is described in the <a href="https://github.com/NOAA-OWP/DMOD/tree/master/doc/SUBSETTING_CLI_TOOL.md">DMOD project document for the subsetting CLI tool</a>. The difference is just to create and/or source a virtual environment locate here first, and then change to the DMOD project directory. All the example commands after the step of sourcing the virtual environment can then be followed as described on that page.</p>
-<h3><a class="anchor" id="autotoc_md90"></a>
+<h3><a class="anchor" id="autotoc_md97"></a>
 Version Requirements</h3>
 <p>Version <code>0.3.0</code> or greater must be installed.</p>
-<h2><a class="anchor" id="autotoc_md91"></a>
+<h2><a class="anchor" id="autotoc_md98"></a>
 t-route</h2>
-<h3><a class="anchor" id="autotoc_md92"></a>
+<h3><a class="anchor" id="autotoc_md99"></a>
 Setup</h3>
 <p>The dependency is handled as a Git Submodule, located at <code>extern/t-route</code>. To initialize the submodule after cloning the repo: </p><div class="fragment"><div class="line">git submodule update --init extern/t-route</div>
 </div><!-- fragment --><p> Git <em>should</em> take care of checking out the commit for the required version automatically (assuming latest upstream changes have been fetched), so it should be possible to also use the command above to sync future updates to the required version.</p>
@@ -240,7 +272,7 @@ Setup</h3>
 <p>One supported option is to create a <code>virtualenv</code> environment at <code>.venv</code> in the project root and activate this environment for any simulations using routing. <br  />
 </p>
 <p>See the <a href="PYTHON_ROUTING.md#installing-t-route">installing t-route section here</a> for more details.</p>
-<h3><a class="anchor" id="autotoc_md93"></a>
+<h3><a class="anchor" id="autotoc_md100"></a>
 Enabling Routing in Simulations</h3>
 <p>To do this, include the <code>-DNGEN_ACTIVATE_ROUTING:BOOL=true</code> option when running the <code>cmake</code> build on the command line to generate the build system. An appropriate <code>routing_config.yaml</code> must be passed to the NGen realization config. More info can be found in the <a href="PYTHON_ROUTING.md#routing-config">python routing documentation</a></p>
 <p>Before executing any simulation, be sure to activate the virtual environment. </p><div class="fragment"><div class="line">source .venv/bin/activate</div>
@@ -250,7 +282,7 @@ Enabling Routing in Simulations</h3>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed Nov 17 2021 22:08:10 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Thu Nov 18 2021 22:22:49 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

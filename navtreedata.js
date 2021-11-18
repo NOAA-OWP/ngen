@@ -126,122 +126,129 @@ var NAVTREE =
           ] ],
           [ "Version Requirements", "md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md78", null ]
         ] ],
-        [ "Python 3 Libraries", "md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md79", [
-          [ "Setup", "md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md81", [
-            [ "Overriding Python Dependency", "md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md80", null ],
-            [ "NumPy", "md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md82", null ]
+        [ "Udunits", "md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md79", [
+          [ "Setup", "md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md80", [
+            [ "Option 1: Package Manager Install", "md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md81", null ],
+            [ "Option 2: Automatic Submodule Build", "md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md83", null ]
           ] ],
-          [ "Version Requirements", "md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md83", null ]
+          [ "Version Requirements", "md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md85", null ]
         ] ],
-        [ "pybind11", "md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md84", [
-          [ "Setup", "md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md86", null ],
-          [ "Version Requirements", "md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md87", null ]
-        ] ],
-        [ "The <tt>dmod.subsetservice</tt> Package", "md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md88", [
-          [ "Setup", "md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md89", null ],
+        [ "Python 3 Libraries", "md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md86", [
+          [ "Setup", "md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md88", [
+            [ "Overriding Python Dependency", "md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md87", null ],
+            [ "NumPy", "md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md89", null ]
+          ] ],
           [ "Version Requirements", "md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md90", null ]
         ] ],
-        [ "t-route", "md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md91", [
-          [ "Setup", "md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md92", null ],
-          [ "Enabling Routing in Simulations", "md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md93", null ]
+        [ "pybind11", "md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md91", [
+          [ "Setup", "md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md93", null ],
+          [ "Version Requirements", "md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md94", null ]
+        ] ],
+        [ "The <tt>dmod.subsetservice</tt> Package", "md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md95", [
+          [ "Setup", "md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md96", null ],
+          [ "Version Requirements", "md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md97", null ]
+        ] ],
+        [ "t-route", "md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md98", [
+          [ "Setup", "md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md99", null ],
+          [ "Enabling Routing in Simulations", "md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md100", null ]
         ] ]
       ] ]
     ] ],
     [ "Distributed Processing", "md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html", [
-      [ "Overview", "md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md95", null ],
-      [ "Building the MPI-Enabled Nextgen Driver", "md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md96", null ],
-      [ "Running the MPI-Enabled Nextgen Driver", "md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md97", [
-        [ "Subdivided Hydrofabric", "md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md98", [
-          [ "Driver Runtime Differences", "md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md99", null ],
-          [ "File Names", "md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md100", null ],
-          [ "On-the-fly Generation", "md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md101", null ]
+      [ "Overview", "md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md102", null ],
+      [ "Building the MPI-Enabled Nextgen Driver", "md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md103", null ],
+      [ "Running the MPI-Enabled Nextgen Driver", "md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md104", [
+        [ "Subdivided Hydrofabric", "md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md105", [
+          [ "Driver Runtime Differences", "md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md106", null ],
+          [ "File Names", "md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md107", null ],
+          [ "On-the-fly Generation", "md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md108", null ]
         ] ],
-        [ "Examples", "md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md102", [
-          [ "Example 1 - Full Hydrofabric", "md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md103", null ],
-          [ "Example 2 - Subdivided Hydrofabric", "md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md104", null ]
+        [ "Examples", "md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md109", [
+          [ "Example 1 - Full Hydrofabric", "md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md110", null ],
+          [ "Example 2 - Subdivided Hydrofabric", "md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md111", null ]
         ] ]
       ] ],
-      [ "Partitioning Config Generator", "md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md105", null ]
+      [ "Partitioning Config Generator", "md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html#autotoc_md112", null ]
     ] ],
     [ "Git Strategy", "md_doc__g_i_t__u_s_a_g_e.html", [
-      [ "Branching Design", "md_doc__g_i_t__u_s_a_g_e.html#autotoc_md107", null ],
-      [ "Contributing", "md_doc__g_i_t__u_s_a_g_e.html#autotoc_md108", [
-        [ "Contributing TLDR;", "md_doc__g_i_t__u_s_a_g_e.html#autotoc_md109", null ],
-        [ "Fork Consistency Requirements", "md_doc__g_i_t__u_s_a_g_e.html#autotoc_md110", null ],
-        [ "Fork Setup Suggestions", "md_doc__g_i_t__u_s_a_g_e.html#autotoc_md111", null ]
+      [ "Branching Design", "md_doc__g_i_t__u_s_a_g_e.html#autotoc_md114", null ],
+      [ "Contributing", "md_doc__g_i_t__u_s_a_g_e.html#autotoc_md115", [
+        [ "Contributing TLDR;", "md_doc__g_i_t__u_s_a_g_e.html#autotoc_md116", null ],
+        [ "Fork Consistency Requirements", "md_doc__g_i_t__u_s_a_g_e.html#autotoc_md117", null ],
+        [ "Fork Setup Suggestions", "md_doc__g_i_t__u_s_a_g_e.html#autotoc_md118", null ]
       ] ],
-      [ "Keeping Forks Up to Date", "md_doc__g_i_t__u_s_a_g_e.html#autotoc_md112", [
-        [ "Setting the <strong>upstream</strong> Remote", "md_doc__g_i_t__u_s_a_g_e.html#autotoc_md113", null ],
-        [ "Getting Upstream Changes", "md_doc__g_i_t__u_s_a_g_e.html#autotoc_md114", null ],
-        [ "Rebasing Development Branches", "md_doc__g_i_t__u_s_a_g_e.html#autotoc_md115", null ],
-        [ "Fixing Diverging Development Branches", "md_doc__g_i_t__u_s_a_g_e.html#autotoc_md116", null ]
+      [ "Keeping Forks Up to Date", "md_doc__g_i_t__u_s_a_g_e.html#autotoc_md119", [
+        [ "Setting the <strong>upstream</strong> Remote", "md_doc__g_i_t__u_s_a_g_e.html#autotoc_md120", null ],
+        [ "Getting Upstream Changes", "md_doc__g_i_t__u_s_a_g_e.html#autotoc_md121", null ],
+        [ "Rebasing Development Branches", "md_doc__g_i_t__u_s_a_g_e.html#autotoc_md122", null ],
+        [ "Fixing Diverging Development Branches", "md_doc__g_i_t__u_s_a_g_e.html#autotoc_md123", null ]
       ] ]
     ] ],
     [ "Definitions", "md_doc_glossary.html", [
-      [ "References", "md_doc_glossary.html#autotoc_md118", null ]
+      [ "References", "md_doc_glossary.html#autotoc_md125", null ]
     ] ],
     [ "LSTM Model", "md_doc__l_s_t_m__m_o_d_e_l.html", [
-      [ "Summary", "md_doc__l_s_t_m__m_o_d_e_l.html#autotoc_md120", null ],
-      [ "Formulation Config", "md_doc__l_s_t_m__m_o_d_e_l.html#autotoc_md121", [
-        [ "Required Parameters", "md_doc__l_s_t_m__m_o_d_e_l.html#autotoc_md122", null ]
+      [ "Summary", "md_doc__l_s_t_m__m_o_d_e_l.html#autotoc_md127", null ],
+      [ "Formulation Config", "md_doc__l_s_t_m__m_o_d_e_l.html#autotoc_md128", [
+        [ "Required Parameters", "md_doc__l_s_t_m__m_o_d_e_l.html#autotoc_md129", null ]
       ] ]
     ] ],
     [ "MPI Remote Nexus", "md_doc__m_p_i__r_e_m_o_t_e__n_e_x_u_s.html", [
-      [ "Summary", "md_doc__m_p_i__r_e_m_o_t_e__n_e_x_u_s.html#autotoc_md124", null ]
+      [ "Summary", "md_doc__m_p_i__r_e_m_o_t_e__n_e_x_u_s.html#autotoc_md131", null ]
     ] ],
     [ "Precision guidelines for validation of NGEN code translation and upgrades", "md_doc__precision__guidelines_for__ngen__code__validation.html", null ],
     [ "Standards for Programming", "md_doc_programming_standards.html", [
-      [ "Source Documentation", "md_doc_programming_standards.html#autotoc_md127", null ],
-      [ "Naming", "md_doc_programming_standards.html#autotoc_md128", null ],
-      [ "Other", "md_doc_programming_standards.html#autotoc_md131", [
-        [ "Headers", "md_doc_programming_standards.html#autotoc_md132", null ],
-        [ "Spaces vs Tabs", "md_doc_programming_standards.html#autotoc_md133", null ],
-        [ "Braces", "md_doc_programming_standards.html#autotoc_md134", null ],
-        [ "Line Width", "md_doc_programming_standards.html#autotoc_md135", null ]
+      [ "Source Documentation", "md_doc_programming_standards.html#autotoc_md134", null ],
+      [ "Naming", "md_doc_programming_standards.html#autotoc_md135", null ],
+      [ "Other", "md_doc_programming_standards.html#autotoc_md138", [
+        [ "Headers", "md_doc_programming_standards.html#autotoc_md139", null ],
+        [ "Spaces vs Tabs", "md_doc_programming_standards.html#autotoc_md140", null ],
+        [ "Braces", "md_doc_programming_standards.html#autotoc_md141", null ],
+        [ "Line Width", "md_doc_programming_standards.html#autotoc_md142", null ]
       ] ]
     ] ],
     [ "Python Routing", "md_doc__p_y_t_h_o_n__r_o_u_t_i_n_g.html", [
-      [ "Summary", "md_doc__p_y_t_h_o_n__r_o_u_t_i_n_g.html#autotoc_md137", null ],
-      [ "Installing t-route", "md_doc__p_y_t_h_o_n__r_o_u_t_i_n_g.html#autotoc_md138", null ],
-      [ "Using t-route with ngen", "md_doc__p_y_t_h_o_n__r_o_u_t_i_n_g.html#autotoc_md139", [
-        [ "Routing Config", "md_doc__p_y_t_h_o_n__r_o_u_t_i_n_g.html#autotoc_md140", null ]
+      [ "Summary", "md_doc__p_y_t_h_o_n__r_o_u_t_i_n_g.html#autotoc_md144", null ],
+      [ "Installing t-route", "md_doc__p_y_t_h_o_n__r_o_u_t_i_n_g.html#autotoc_md145", null ],
+      [ "Using t-route with ngen", "md_doc__p_y_t_h_o_n__r_o_u_t_i_n_g.html#autotoc_md146", [
+        [ "Routing Config", "md_doc__p_y_t_h_o_n__r_o_u_t_i_n_g.html#autotoc_md147", null ]
       ] ]
     ] ],
     [ "Realization Configuration", "md_doc__r_e_a_l_i_z_a_t_i_o_n__c_o_n_f_i_g_u_r_a_t_i_o_n.html", null ],
     [ "<a href=\"https://docs.opengeospatial.org/is/14-111r6/14-111r6.html\">HY_Features</a>", "md_doc_references.html", [
-      [ "<a href=\"https://bmi-spec.readthedocs.io/en/latest/\">BMI</a>", "md_doc_references.html#autotoc_md143", null ],
-      [ "Formulations", "md_doc_references.html#autotoc_md144", null ],
-      [ "HYMOD", "md_doc_references.html#autotoc_md145", null ],
-      [ "T-shirt", "md_doc_references.html#autotoc_md146", null ],
-      [ "GIUH", "md_doc_references.html#autotoc_md147", [
-        [ "Modeling References", "md_doc_references.html#autotoc_md148", null ]
+      [ "<a href=\"https://bmi-spec.readthedocs.io/en/latest/\">BMI</a>", "md_doc_references.html#autotoc_md150", null ],
+      [ "Formulations", "md_doc_references.html#autotoc_md151", null ],
+      [ "HYMOD", "md_doc_references.html#autotoc_md152", null ],
+      [ "T-shirt", "md_doc_references.html#autotoc_md153", null ],
+      [ "GIUH", "md_doc_references.html#autotoc_md154", [
+        [ "Modeling References", "md_doc_references.html#autotoc_md155", null ]
       ] ]
     ] ],
     [ "Installation instructions", "md__i_n_s_t_a_l_l.html", null ],
     [ "Guidance on how to contribute", "md__c_o_n_t_r_i_b_u_t_i_n_g.html", [
-      [ "Using the issue tracker", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md151", null ],
-      [ "Changing the code-base", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md152", null ]
+      [ "Using the issue tracker", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md158", null ],
+      [ "Changing the code-base", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md159", null ]
     ] ],
     [ "Disclaimer", "md__t_e_r_m_s.html", [
-      [ "Exceptions", "md__t_e_r_m_s.html#autotoc_md155", null ]
+      [ "Exceptions", "md__t_e_r_m_s.html#autotoc_md162", null ]
     ] ],
     [ "Testing", "md_test__r_e_a_d_m_e.html", [
-      [ "Testing Frameworks", "md_test__r_e_a_d_m_e.html#autotoc_md157", [
-        [ "Other Information", "md__t_e_r_m_s.html#autotoc_md154", null ],
-        [ "<strong>Google Test</strong>", "md_test__r_e_a_d_m_e.html#autotoc_md158", [
-          [ "Bad Variable Names:", "md_doc_programming_standards.html#autotoc_md129", null ],
-          [ "General Guidelines", "md_doc_programming_standards.html#autotoc_md130", null ],
-          [ "(Re)generating CMake Project Buildsystem", "md_test__r_e_a_d_m_e.html#autotoc_md159", null ]
+      [ "Testing Frameworks", "md_test__r_e_a_d_m_e.html#autotoc_md164", [
+        [ "Other Information", "md__t_e_r_m_s.html#autotoc_md161", null ],
+        [ "<strong>Google Test</strong>", "md_test__r_e_a_d_m_e.html#autotoc_md165", [
+          [ "Bad Variable Names:", "md_doc_programming_standards.html#autotoc_md136", null ],
+          [ "General Guidelines", "md_doc_programming_standards.html#autotoc_md137", null ],
+          [ "(Re)generating CMake Project Buildsystem", "md_test__r_e_a_d_m_e.html#autotoc_md166", null ]
         ] ]
       ] ],
-      [ "Executing Automated Tests", "md_test__r_e_a_d_m_e.html#autotoc_md160", [
-        [ "C++ Tests", "md_test__r_e_a_d_m_e.html#autotoc_md161", [
-          [ "Test Targets and Executables", "md_test__r_e_a_d_m_e.html#autotoc_md162", null ]
+      [ "Executing Automated Tests", "md_test__r_e_a_d_m_e.html#autotoc_md167", [
+        [ "C++ Tests", "md_test__r_e_a_d_m_e.html#autotoc_md168", [
+          [ "Test Targets and Executables", "md_test__r_e_a_d_m_e.html#autotoc_md169", null ]
         ] ]
       ] ],
-      [ "Creating New Automated Tests", "md_test__r_e_a_d_m_e.html#autotoc_md163", [
-        [ "Adding Tests to CMake Builds", "md_test__r_e_a_d_m_e.html#autotoc_md164", null ],
-        [ "Test Creation Rules of Thumb", "md_test__r_e_a_d_m_e.html#autotoc_md165", null ]
+      [ "Creating New Automated Tests", "md_test__r_e_a_d_m_e.html#autotoc_md170", [
+        [ "Adding Tests to CMake Builds", "md_test__r_e_a_d_m_e.html#autotoc_md171", null ],
+        [ "Test Creation Rules of Thumb", "md_test__r_e_a_d_m_e.html#autotoc_md172", null ]
       ] ]
     ] ],
     [ "Todo List", "todo.html", null ],
@@ -283,9 +290,9 @@ var NAVTREEINDEX =
 "classrealization_1_1_bmi___c___formulation.html#aa04167ad9a3f4c384673ef1157fb3cb8",
 "classrealization_1_1_bmi___multi___formulation.html#a566505f80702c117ef23688ce6892a51",
 "classrealization_1_1_tshirt___realization.html#a95ef014f906bfcd122f085094579c63d",
-"md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md85",
-"struct_bmi.html#a0574c01b8e52228fc51a4818ed26f28d",
-"structnetwork_1_1preorder__visitor.html#a86ea1b3077ec3a0689a5a9a5852d32bc"
+"md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md86",
+"struct_a_o_r_c__data.html#acbb68a182047e80854628a329ea317db",
+"structinvalid__time__step.html#aabd985aaaa9adca0fad600a7643fb67f"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
