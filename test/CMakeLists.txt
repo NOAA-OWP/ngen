@@ -169,7 +169,7 @@ if (${NGEN_ACTIVATE_PYTHON})
 endif()
 
 ########################## BMI Multi Tests
-if (BMI_C_LIB_ACTIVE OR ${BMI_FORTRAN_ACTIVE} OR ${NGEN_ACTIVATE_PYTHON})
+if (${BMI_C_LIB_ACTIVE} OR ${BMI_FORTRAN_ACTIVE} OR ${NGEN_ACTIVATE_PYTHON})
     add_test(
             test_bmi_multi
             2
