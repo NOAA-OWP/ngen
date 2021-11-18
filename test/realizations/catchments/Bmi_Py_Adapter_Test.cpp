@@ -105,8 +105,8 @@ protected:
 
     static py::object Path;
 
-    std::vector<std::string> expected_output_var_names = { "output_var_1", "output_var_2", "output_var_3" };
-    std::vector<std::string> expected_input_var_names = { "input_var_1", "input_var_2"};
+    std::vector<std::string> expected_output_var_names = { "OUTPUT_VAR_1", "OUTPUT_VAR_2", "OUTPUT_VAR_3" };
+    std::vector<std::string> expected_input_var_names = { "INPUT_VAR_1", "INPUT_VAR_2"};
     std::vector<std::string> expected_output_var_locations = { "node", "node", "node" };
     std::vector<int> expected_output_var_grids = { 0, 0, 0 };
     std::vector<std::string> expected_output_var_units = { "m", "m", "m" };
@@ -394,11 +394,11 @@ TEST_F(Bmi_Py_Adapter_Test, GetVarNbytes_0_a) {
 
     examples[ex_index].adapter->Initialize();
     std::shared_ptr<py::object> raw_model = friend_get_raw_model(examples[ex_index].adapter.get());
-    py::array value_array = raw_model->attr("get_value_ptr")("input_var_1");
+    py::array value_array = raw_model->attr("get_value_ptr")("INPUT_VAR_1");
 
     int expected = (int)py::int_(value_array.nbytes());
 
-    double observed = examples[ex_index].adapter->GetVarNbytes("input_var_1");
+    double observed = examples[ex_index].adapter->GetVarNbytes("INPUT_VAR_1");
     examples[ex_index].adapter->Finalize();
     ASSERT_EQ(observed, expected);
 }
@@ -409,7 +409,7 @@ TEST_F(Bmi_Py_Adapter_Test, GetVarNbytes_0_a) {
 TEST_F(Bmi_Py_Adapter_Test, GetValue_0_a) {
     size_t ex_index = 0;
 
-    std::string var_name = "input_var_1";
+    std::string var_name = "INPUT_VAR_1";
 
     examples[ex_index].adapter->Initialize();
 
@@ -431,7 +431,7 @@ TEST_F(Bmi_Py_Adapter_Test, GetValue_0_a) {
 TEST_F(Bmi_Py_Adapter_Test, GetValue_0_b) {
     size_t ex_index = 0;
 
-    std::string var_name = "input_var_1";
+    std::string var_name = "INPUT_VAR_1";
     double value = 5.0;
 
     examples[ex_index].adapter->Initialize();
@@ -457,7 +457,7 @@ TEST_F(Bmi_Py_Adapter_Test, GetValue_0_b) {
 TEST_F(Bmi_Py_Adapter_Test, GetValue_0_c) {
     size_t ex_index = 0;
 
-    std::string var_name = "input_var_2";
+    std::string var_name = "INPUT_VAR_2";
     double value = 10.0;
 
     examples[ex_index].adapter->Initialize();
@@ -483,7 +483,7 @@ TEST_F(Bmi_Py_Adapter_Test, GetValue_0_c) {
 TEST_F(Bmi_Py_Adapter_Test, GetValue_0_d) {
     size_t ex_index = 0;
 
-    std::string var_name = "output_var_2";
+    std::string var_name = "OUTPUT_VAR_2";
     double value = 10.0;
 
     examples[ex_index].adapter->Initialize();
@@ -509,7 +509,7 @@ TEST_F(Bmi_Py_Adapter_Test, GetValue_0_d) {
 TEST_F(Bmi_Py_Adapter_Test, GetValuePtr_0_a) {
     size_t ex_index = 0;
 
-    std::string var_name = "input_var_1";
+    std::string var_name = "INPUT_VAR_1";
     double value = 5.0;
 
     examples[ex_index].adapter->Initialize();
@@ -529,7 +529,7 @@ TEST_F(Bmi_Py_Adapter_Test, GetValuePtr_0_a) {
 TEST_F(Bmi_Py_Adapter_Test, GetValueAtIndices_0_a) {
     size_t ex_index = 0;
 
-    std::string var_name = "output_var_3";
+    std::string var_name = "OUTPUT_VAR_3";
     double retrieved[2];
     double expected[2] = {0, 2};
     int indexes[] = {0, 2};
@@ -548,7 +548,7 @@ TEST_F(Bmi_Py_Adapter_Test, GetValueAtIndices_0_a) {
 TEST_F(Bmi_Py_Adapter_Test, GetValueAtIndices_0_b) {
     size_t ex_index = 0;
 
-    std::string var_name = "output_var_3";
+    std::string var_name = "OUTPUT_VAR_3";
     double retrieved[2];
     double expected[2] = {1, 3};
     int indexes[] = {0, 2};
@@ -570,7 +570,7 @@ TEST_F(Bmi_Py_Adapter_Test, GetValueAtIndices_0_b) {
 TEST_F(Bmi_Py_Adapter_Test, SetValueAtIndices_0_a) {
     size_t ex_index = 0;
 
-    std::string var_name = "output_var_3";
+    std::string var_name = "OUTPUT_VAR_3";
     double retrieved[2];
     double expected[2] = {1, 3};
     int indexes[] = {0, 2};
@@ -681,8 +681,8 @@ TEST_F(Bmi_Py_Adapter_Test, GetCurrentTime_0_b) {
     examples[ex_index].adapter->Initialize();
     int expected_time = examples[ex_index].adapter->GetStartTime() + examples[ex_index].adapter->GetTimeStep();
     double value = 10.0;
-    examples[ex_index].adapter->SetValue("input_var_1", &value);
-    examples[ex_index].adapter->SetValue("input_var_2", &value);
+    examples[ex_index].adapter->SetValue("INPUT_VAR_1", &value);
+    examples[ex_index].adapter->SetValue("INPUT_VAR_2", &value);
     examples[ex_index].adapter->Update();
     int current_time = examples[ex_index].adapter->GetCurrentTime();
     examples[ex_index].adapter->Finalize();
@@ -695,7 +695,7 @@ TEST_F(Bmi_Py_Adapter_Test, GetCurrentTime_0_b) {
 TEST_F(Bmi_Py_Adapter_Test, SetValue_0_a) {
     size_t ex_index = 0;
 
-    std::string var_name = "input_var_1";
+    std::string var_name = "INPUT_VAR_1";
     double value = 5.0;
 
 
@@ -723,7 +723,7 @@ TEST_F(Bmi_Py_Adapter_Test, SetValue_0_a) {
 TEST_F(Bmi_Py_Adapter_Test, SetValue_0_b) {
     size_t ex_index = 0;
 
-    std::string var_name = "input_var_2";
+    std::string var_name = "INPUT_VAR_2";
     double value = 7.0;
 
 
@@ -751,7 +751,7 @@ TEST_F(Bmi_Py_Adapter_Test, SetValue_0_b) {
 TEST_F(Bmi_Py_Adapter_Test, GetVarGrid_0_a) {
     size_t ex_index = 0;
 
-    std::string var_name = "output_var_1";
+    std::string var_name = "OUTPUT_VAR_1";
     examples[ex_index].adapter->Initialize();
     int grid = examples[ex_index].adapter->GetVarGrid(var_name);
 
@@ -764,7 +764,7 @@ TEST_F(Bmi_Py_Adapter_Test, GetVarGrid_0_a) {
 TEST_F(Bmi_Py_Adapter_Test, GetGridRank_0_a) {
     size_t ex_index = 0;
 
-    std::string var_name = "output_var_1";
+    std::string var_name = "OUTPUT_VAR_1";
     examples[ex_index].adapter->Initialize();
     int grid_id = examples[ex_index].adapter->GetVarGrid(var_name);
     int grid_rank = examples[ex_index].adapter->GetGridRank(grid_id);
@@ -778,7 +778,7 @@ TEST_F(Bmi_Py_Adapter_Test, GetGridRank_0_a) {
 TEST_F(Bmi_Py_Adapter_Test, GetGridSize_0_a) {
     size_t ex_index = 0;
 
-    std::string var_name = "output_var_1";
+    std::string var_name = "OUTPUT_VAR_1";
     examples[ex_index].adapter->Initialize();
     int grid_id = examples[ex_index].adapter->GetVarGrid(var_name);
     int grid_size = examples[ex_index].adapter->GetGridSize(grid_id);
@@ -794,7 +794,7 @@ TEST_F(Bmi_Py_Adapter_Test, GetGridShape_0_a) {
 
     size_t ex_index = 0;
 
-    std::string var_name = "output_var_1";
+    std::string var_name = "OUTPUT_VAR_1";
     examples[ex_index].adapter->Initialize();
     int grid_id = examples[ex_index].adapter->GetVarGrid(var_name);
     int grid_shape[10];
@@ -824,7 +824,7 @@ TEST_F(Bmi_Py_Adapter_Test, DISABLED_GetGridSpacing_0_a) {
     /*
     size_t ex_index = 0;
 
-    std::string var_name = "output_var_1";
+    std::string var_name = "OUTPUT_VAR_1";
     examples[ex_index].adapter->Initialize();
     int grid_id = examples[ex_index].adapter->GetVarGrid(var_name);
     int *grid_spacing = examples[ex_index].adapter->GetGridSpacing(grid_id);
@@ -874,7 +874,7 @@ TEST_F(Bmi_Py_Adapter_Test, DISABLED_GetGridNodeCount_0_a) {
     /*
     size_t ex_index = 0;
 
-    std::string var_name = "output_var_1";
+    std::string var_name = "OUTPUT_VAR_1";
     examples[ex_index].adapter->Initialize();
     int grid_id = examples[ex_index].adapter->GetVarGrid(var_name);
     int *grid_spacing = examples[ex_index].adapter->GetGridSpacing(grid_id);
@@ -892,7 +892,7 @@ TEST_F(Bmi_Py_Adapter_Test, DISABLED_GetGridEdgeCount_0_a) {
     /*
     size_t ex_index = 0;
 
-    std::string var_name = "output_var_1";
+    std::string var_name = "OUTPUT_VAR_1";
     examples[ex_index].adapter->Initialize();
     int grid_id = examples[ex_index].adapter->GetVarGrid(var_name);
     int *grid_spacing = examples[ex_index].adapter->GetGridSpacing(grid_id);
@@ -910,7 +910,7 @@ TEST_F(Bmi_Py_Adapter_Test, DISABLED_GetGridFaceCount_0_a) {
     /*
     size_t ex_index = 0;
 
-    std::string var_name = "output_var_1";
+    std::string var_name = "OUTPUT_VAR_1";
     examples[ex_index].adapter->Initialize();
     int grid_id = examples[ex_index].adapter->GetVarGrid(var_name);
     int *grid_spacing = examples[ex_index].adapter->GetGridSpacing(grid_id);
@@ -928,7 +928,7 @@ TEST_F(Bmi_Py_Adapter_Test, DISABLED_GetGridEdgeNodes_0_a) {
     /*
     size_t ex_index = 0;
 
-    std::string var_name = "output_var_1";
+    std::string var_name = "OUTPUT_VAR_1";
     examples[ex_index].adapter->Initialize();
     int grid_id = examples[ex_index].adapter->GetVarGrid(var_name);
     int *grid_spacing = examples[ex_index].adapter->GetGridSpacing(grid_id);
@@ -946,7 +946,7 @@ TEST_F(Bmi_Py_Adapter_Test, DISABLED_GetGridFaceEdges_0_a) {
     /*
     size_t ex_index = 0;
 
-    std::string var_name = "output_var_1";
+    std::string var_name = "OUTPUT_VAR_1";
     examples[ex_index].adapter->Initialize();
     int grid_id = examples[ex_index].adapter->GetVarGrid(var_name);
     int *grid_spacing = examples[ex_index].adapter->GetGridSpacing(grid_id);
@@ -964,7 +964,7 @@ TEST_F(Bmi_Py_Adapter_Test, DISABLED_GetGridFaceNodes_0_a) {
     /*
     size_t ex_index = 0;
 
-    std::string var_name = "output_var_1";
+    std::string var_name = "OUTPUT_VAR_1";
     examples[ex_index].adapter->Initialize();
     int grid_id = examples[ex_index].adapter->GetVarGrid(var_name);
     int *grid_spacing = examples[ex_index].adapter->GetGridSpacing(grid_id);
@@ -982,7 +982,7 @@ TEST_F(Bmi_Py_Adapter_Test, DISABLED_GetGridNodesPerFace_0_a) {
     /*
     size_t ex_index = 0;
 
-    std::string var_name = "output_var_1";
+    std::string var_name = "OUTPUT_VAR_1";
     examples[ex_index].adapter->Initialize();
     int grid_id = examples[ex_index].adapter->GetVarGrid(var_name);
     int *grid_spacing = examples[ex_index].adapter->GetGridSpacing(grid_id);
