@@ -203,8 +203,9 @@ namespace ngen {
                 return projectRoot + forcingFileRelativePaths.at(catchmentId);
             }
 
-            string getModuleFilePath(const string &catchmentId) {
-                return projectRoot + bmiModuleRelativePaths.at(catchmentId);
+            string getModuleFilePath(const string &bmiType) {
+                return projectRoot + bmiModuleRelativePaths.at(bmiType) + bmiFormulationLibNames.at(bmiType) +
+                       string(SHARED_LIB_FILE_EXTENSION);
             }
 
         private:
