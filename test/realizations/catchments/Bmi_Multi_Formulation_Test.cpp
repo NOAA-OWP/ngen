@@ -466,6 +466,68 @@ TEST_F(Bmi_Multi_Formulation_Test, GetResponse_1_b) {
     ASSERT_EQ(expected, response);
 }
 
+/**
+ * Simple test of output for example 0.
+ */
+TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_0_a) {
+    int ex_index = 0;
+
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+
+    formulation.get_response(0, 3600);
+    std::string output = formulation.get_output_line_for_timestep(0, ",");
+    ASSERT_EQ(output, "0.000000,200620.000000");
+}
+
+/**
+ * Simple test of output for example 0 with modified variables, picking time step when there was non-zero rain rate.
+ */
+TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_0_b) {
+    int ex_index = 0;
+
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+
+    int i = 0;
+    while (i < 542)
+        formulation.get_response(i++, 3600);
+    formulation.get_response(i, 3600);
+    std::string output = formulation.get_output_line_for_timestep(i, ",");
+    ASSERT_EQ(output, "0.000002,199280.000000");
+}
+
+/**
+ * Simple test of output for example 1.
+ */
+TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_1_a) {
+    int ex_index = 1;
+
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+
+    formulation.get_response(0, 3600);
+    std::string output = formulation.get_output_line_for_timestep(0, ",");
+    ASSERT_EQ(output, "0.000000,200620.000000,1.000000");
+}
+
+/**
+ * Simple test of output for example 1 with modified variables, picking time step when there was non-zero rain rate.
+ */
+TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_1_b) {
+    int ex_index = 1;
+
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+
+    int i = 0;
+    while (i < 542)
+        formulation.get_response(i++, 3600);
+    formulation.get_response(i, 3600);
+    std::string output = formulation.get_output_line_for_timestep(i, ",");
+    ASSERT_EQ(output, "0.000002,199280.000000,543.000000");
+}
+
 #endif // NGEN_BMI_C_LIB_ACTIVE || NGEN_BMI_FORTRAN_ACTIVE || ACTIVATE_PYTHON
 
 #endif // NGEN_BMI_MULTI_FORMULATION_TEST_CPP
