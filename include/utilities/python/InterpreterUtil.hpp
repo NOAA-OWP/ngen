@@ -160,25 +160,52 @@ namespace utils {
         protected:
 
             /**
+             * Search for and return a recognized virtual env directory.
+             *
+             * Both ``.venv`` and ``venv`` will be recognized.  Search locations are the current working directory, one
+             * level up (parent directory), and two levels up, with the first find being return.
+             *
+             * A Python ``None`` object is returned if no existing directory is found in the search locations.
+             *
+             * @return A Python Path object for a found venv dir, or a Python ``None`` object.
+             */
+            py::object searchForVenvDir() {
+                py::object current_dir = Path.attr("cwd")();
+                std::vector<py::object> parent_options = {
+                        current_dir,
+                        current_dir.attr("parent"),
+                        current_dir.attr("parent").attr("parent")
+                };
+                std::vector<std::string> dir_name_options = {".venv", "venv"};
+                for (py::object &parent_option : parent_options) {
+                    for (const std::string &dir_name_option : dir_name_options) {
+                        py::object venv_dir_candidate = parent_option.attr("joinpath")(dir_name_option);
+                        if (py::bool_(venv_dir_candidate.attr("is_dir")())) {
+                            return venv_dir_candidate;
+                        }
+                    }
+                }
+                return py::none();
+            }
+
+            /**
              * Find any virtual environment site packages directory, starting from options under the current directory.
              *
              * @return The absolute path of the site packages directory, as a string.
              */
             py::list getVenvPackagesDirOptions() {
+                // TODO: figure out exactly why this doesn't seem to work by itself (i.e., PYTHONPATH has to be set in the shell environment)
                 // Add the package dir from a local virtual environment directory also, if there is one
-                py::object venv_dir = Path("./.venv");
-                // Try switching to a secondary if primary isn't a directory
-                if (!(py::bool_(venv_dir.attr("is_dir")()))) {
-                    venv_dir = Path("./venv");
-                }
-                // At this point, proceed if we have a good venv dir found
-                if (py::bool_(venv_dir.attr("is_dir")())) {
+                py::object venv_dir = searchForVenvDir();
+
+                if (!venv_dir.is_none() && py::bool_(venv_dir.attr("is_dir")())) {
                     // Resolve the full path
                     venv_dir = venv_dir.attr("resolve")();
                     // Get options for the packages dir
                     py::list site_packages_options = py::list(venv_dir.attr("glob")("**/site-packages/"));
                     return site_packages_options;
                 }
+
                 return py::list();
             }
 
