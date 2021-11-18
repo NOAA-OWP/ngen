@@ -41,7 +41,7 @@ protected:
     py::object Path;
 
     std::vector<py_formulation_example_scenario> examples;
-    std::vector<std::string> expected_output_var_names = { "output_var_1", "output_var_2", "output_var_3" };
+    std::vector<std::string> expected_output_var_names = { "OUTPUT_VAR_1", "OUTPUT_VAR_2", "OUTPUT_VAR_3" };
 
     static std::string get_friend_bmi_init_config(const Bmi_Py_Formulation& formulation) {
         return formulation.get_bmi_init_config();
@@ -476,9 +476,9 @@ TEST_F(Bmi_Py_Formulation_Test, get_var_value_as_double_0_a) {
 
     double value = 4;
 
-    model_adapter->SetValue("input_var_2", &value);
+    model_adapter->SetValue("INPUT_VAR_2", &value);
 
-    double retrieved = get_friend_var_value_as_double(*examples[ex_index].formulation, "input_var_2");
+    double retrieved = get_friend_var_value_as_double(*examples[ex_index].formulation, "INPUT_VAR_2");
 
     ASSERT_EQ(value, retrieved);
 }
