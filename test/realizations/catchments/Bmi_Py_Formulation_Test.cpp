@@ -187,7 +187,7 @@ void Bmi_Py_Formulation_Test::SetUp() {
     // These should be safe for all examples
     template_ex_struct.module_name = "test_bmi_py.bmi_model";
     template_ex_struct.module_directory = repo_root + "/extern/";
-    template_ex_struct.main_output_variable = "output_var_1";
+    template_ex_struct.main_output_variable = "OUTPUT_VAR_1";
     template_ex_struct.uses_forcing_file = false;
 
 #define BMI_PY_FORM_TEST_EX_COUNT 1
@@ -265,8 +265,8 @@ void Bmi_Py_Formulation_Test::generate_realization_config(int ex_idx) {
               "                \"init_config\": \"" + examples[ex_idx].bmi_init_config + "\","
               "                \"main_output_variable\": \"" + examples[ex_idx].main_output_variable + "\","
               "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES + "\": { "
-              "                      \"input_var_2\": \"" + NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP + "\","
-              "                      \"input_var_1\": \"" + AORC_FIELD_NAME_PRECIP_RATE + "\""
+              "                      \"INPUT_VAR_2\": \"" + NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP + "\","
+              "                      \"INPUT_VAR_1\": \"" + AORC_FIELD_NAME_PRECIP_RATE + "\""
               "                },"
               + variables_line +
               "                \"uses_forcing_file\": " + (examples[ex_idx].uses_forcing_file ? "true" : "false") + ""
