@@ -397,10 +397,7 @@ jobs:
         timeout-minutes: 15
 
       - name: run_bmi_multi_tests
-        run: |
-          cd ./cmake_build/test/
-          ./test_bmi_multi
-          cd ../../
+        run: ./cmake_build/test/test_bmi_multi
         timeout-minutes: 15
 
       - name: cleanup_builds
@@ -739,10 +736,7 @@ jobs:
         timeout-minutes: 15
 
       - name: run_bmi_multi_tests
-        run: |
-          cd ./cmake_build/test/
-          ./test_bmi_multi
-          cd ../../
+        run: ./cmake_build/test/test_bmi_multi
         timeout-minutes: 15
 
       - name: cleanup_builds
