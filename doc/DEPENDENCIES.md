@@ -117,7 +117,9 @@ Basically, the library and needed development files can be installed via typical
 
 The Udunits library and development files can be installed via standard OS package management tools.  The ngen project will automatically detect and use these.  Note that both the library itself and development files must be installed, which are typically two separate, similarly named packages.
 
-The ngen build will automatically search for these, so no additional steps are required to configure the build or the environment once they are installed.  Installation can be done using the typical OS package manager, like `yum` or `apt`.  Different distributions like to call the packages different things (e.g., _udunits2-dev_, _udunits2-devel_, _libudunits2-dev_, etc.), so you may need to do some searching.  Also, for CentOS, you'll need [the EPEL repo enabled](https://docs.fedoraproject.org/en-US/epel/)
+The ngen build will automatically search for these, so no additional steps are required to configure the build or the environment once they are installed.  Installation can be done using the typical OS package manager, like `yum` or `apt`.  Different distributions like to call the packages different things (e.g., _udunits2-dev_, _udunits2-devel_, _libudunits2-dev_, etc.), so you may need to do some searching.  [This page](https://pkgs.org/search/?q=udunits2) also provide details on package names for various Linux distros.  
+
+Also, for CentOS in particular, you'll need [the EPEL repo enabled](https://docs.fedoraproject.org/en-US/epel/)
 
 Packages for both the _library_ and _development files_ are needed.  Package managers usually make this easy, but just make sure to pay attention to it if things do not work as expected.
 
