@@ -23,8 +23,8 @@ def execute():
     for x in range(10):
 
         # Create test case inputs from random values ###########
-        model.set_value('input_var_1', np.random.uniform(2, 10, model.var_array_lengths))  ##
-        model.set_value('input_var_2', np.random.uniform(1, 4, model.var_array_lengths))   ##
+        model.set_value('INPUT_VAR_1', np.random.uniform(2, 10, model.var_array_lengths))  ##
+        model.set_value('INPUT_VAR_2', np.random.uniform(1, 4, model.var_array_lengths))   ##
         ########################################################
 
         #########################################
@@ -34,11 +34,11 @@ def execute():
 
         # PRINT THE MODEL RESULTS FOR THIS TIME STEP#################################################
         print('{:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}'.format(model.get_current_time(),
-                                                                 model.get_value('input_var_1'),
-                                                                 model.get_value('input_var_2'),
-                                                                 model.get_value('output_var_1'),
-                                                                 model.get_value('output_var_2'),
-                                                                 model.get_value('output_var_3')))
+                                                                 model.get_value('INPUT_VAR_1'),
+                                                                 model.get_value('INPUT_VAR_2'),
+                                                                 model.get_value('OUTPUT_VAR_1'),
+                                                                 model.get_value('OUTPUT_VAR_2'),
+                                                                 model.get_value('OUTPUT_VAR_3')))
 
 
     # Finalizing the BMI
