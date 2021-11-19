@@ -4,7 +4,7 @@
 // Don't bother with the rest if none of these are active (although what are we really doing here, then?)
 #if NGEN_BMI_C_LIB_ACTIVE || NGEN_BMI_FORTRAN_ACTIVE || ACTIVATE_PYTHON
 
-#include "Bmi_Testing_Util.cpp"
+#include "Bmi_Testing_Util.hpp"
 #include <exception>
 #include <map>
 #include <vector>
