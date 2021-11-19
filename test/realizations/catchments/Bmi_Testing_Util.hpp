@@ -63,17 +63,17 @@ namespace ngen {
             /**
              * All available types for BMI formulations.
              */
-            const vector<const string> bmiAllFormulationTypes = {BMI_C_TYPE, BMI_FORTRAN_TYPE, BMI_PYTHON_TYPE, BMI_MULTI_TYPE};
+            const vector<string> bmiAllFormulationTypes = {BMI_C_TYPE, BMI_FORTRAN_TYPE, BMI_PYTHON_TYPE, BMI_MULTI_TYPE};
 
             /**
              * Available types for BMI formulations that are backed by a single module.
              */
-            const vector<const string> bmiModuleFormulationTypes = {BMI_C_TYPE, BMI_FORTRAN_TYPE, BMI_PYTHON_TYPE};
+            const vector<string> bmiModuleFormulationTypes = {BMI_C_TYPE, BMI_FORTRAN_TYPE, BMI_PYTHON_TYPE};
 
             /**
              * Config names for BMI formulation types.
              */
-            const map<string, const string> bmiFormulationConfigNames = {
+            const map<string, string> bmiFormulationConfigNames = {
                     {BMI_C_TYPE, "test_bmi_c"},
                     {BMI_FORTRAN_TYPE, "test_bmi_fortran"},
                     {BMI_PYTHON_TYPE, BMI_TEST_PYTHON_LIB_NAME}
@@ -86,7 +86,7 @@ namespace ngen {
              * likely need to be read to property tree objects, and then have those config trees customized according to
              * the particular state of a given example.
              */
-            const map<string, const string> bmiRealizationConfigTemplates = {
+            const map<string, string> bmiRealizationConfigTemplates = {
                     {BMI_C_TYPE, "data/example_realization_config_w_bmi_c__linux.json"},
                     {BMI_FORTRAN_TYPE, "data/example_realization_config_w_bmi_c__linux.json"},
                     {BMI_PYTHON_TYPE, "data/example_realization_config_w_bmi_c__linux.json"},
@@ -96,7 +96,7 @@ namespace ngen {
             /**
              * Library/package names for BMI module formulation types.
              */
-            const map<string, const string> bmiFormulationLibNames = {
+            const map<string, string> bmiFormulationLibNames = {
                     {BMI_C_TYPE, BMI_TEST_C_LIB_NAME},
                     {BMI_FORTRAN_TYPE, BMI_TEST_FORTRAN_LIB_NAME},
                     {BMI_PYTHON_TYPE, BMI_TEST_PYTHON_LIB_NAME}
@@ -105,7 +105,7 @@ namespace ngen {
             /**
              * Relative paths to the directories containing BMI init config examples, from the project root.
              */
-            const map<string, const string> bmiInitConfigDirRelativePaths = {
+            const map<string, string> bmiInitConfigDirRelativePaths = {
                     {BMI_C_TYPE, "test/data/bmi/test_bmi_c/"},
                     {BMI_FORTRAN_TYPE, "test/data/bmi/test_bmi_fortran/"},
                     {BMI_PYTHON_TYPE, "test/data/bmi/test_bmi_python/"}
@@ -114,7 +114,7 @@ namespace ngen {
             /**
              * Init config example file basename pattern.
              */
-            const map<string, const string> bmiInitConfigBasenamePattern = {
+            const map<string, string> bmiInitConfigBasenamePattern = {
                     {BMI_C_TYPE, "test_bmi_c_config_"},
                     {BMI_FORTRAN_TYPE, "test_bmi_fortran_config_"},
                     {BMI_PYTHON_TYPE, "test_bmi_python_config_"}
@@ -123,7 +123,7 @@ namespace ngen {
             /**
              * Init config example file extensions.
              */
-            const map<string, const string> bmiInitConfigBasenameExtensions = {
+            const map<string, string> bmiInitConfigBasenameExtensions = {
                     {BMI_C_TYPE, ".txt"},
                     {BMI_FORTRAN_TYPE, ".txt"},
                     {BMI_PYTHON_TYPE, ".yml"}
@@ -132,7 +132,7 @@ namespace ngen {
             /**
              * Relative paths to the directories containing each testing BMI modules, from the project root.
              */
-            const map<string, const string> bmiModuleRelativePaths = {
+            const map<string, string> bmiModuleRelativePaths = {
                     {BMI_C_TYPE, "extern/test_bmi_c/cmake_build/"},
                     {BMI_FORTRAN_TYPE, "extern/test_bmi_fortran/cmake_build/"},
                     // TODO, this may need to just be extern/
@@ -147,7 +147,7 @@ namespace ngen {
             /**
              * Paths to forcing data files by catchment id, relative with respect to the project root.
              */
-            const map<string, const string> forcingFileRelativePaths = {
+            const map<string, string> forcingFileRelativePaths = {
                     {"cat-27", forcingDirRelative + "cat-27_2015-12-01 00_00_00_2015-12-30 23_00_00.csv"}
             };
 
