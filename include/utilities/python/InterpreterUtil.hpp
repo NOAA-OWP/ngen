@@ -3,6 +3,7 @@
 
 #ifdef ACTIVATE_PYTHON
 
+#include <cstdlib>
 #include <map>
 #include <pybind11/embed.h>
 #include <pybind11/stl.h>
@@ -194,9 +195,9 @@ namespace utils {
              * @return The absolute path of the site packages directory, as a string.
              */
             py::list getVenvPackagesDirOptions() {
-                // TODO: figure out exactly why this doesn't seem to work by itself (i.e., PYTHONPATH has to be set in the shell environment)
-                // Add the package dir from a local virtual environment directory also, if there is one
-                py::object venv_dir = searchForVenvDir();
+                // Look for a local virtual environment directory also, if there is one
+                const char* env_var_venv = std::getenv("VIRTUAL_ENV");
+                py::object venv_dir = env_var_venv != nullptr ? Path(env_var_venv): searchForVenvDir();
 
                 if (!venv_dir.is_none() && py::bool_(venv_dir.attr("is_dir")())) {
                     // Resolve the full path
