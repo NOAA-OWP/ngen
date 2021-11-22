@@ -151,7 +151,7 @@ $(document).ready(function(){initNavTree('_abstract_c_lib_bmi_adapter_8hpp_sourc
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
 <div class="line"><a name="l00123"></a><span class="lineno"><a class="line" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a54e81984934696cf2bc990768df932f1">  123</a></span>&#160;            <span class="keyword">inline</span> <span class="keywordtype">void</span> *<a class="code" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a54e81984934696cf2bc990768df932f1">dynamic_load_symbol</a>(<span class="keyword">const</span> std::string &amp;symbol_name, <span class="keywordtype">bool</span> is_null_valid) {</div>
 <div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;                <span class="keywordflow">if</span> (<a class="code" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a8a7a5596d34a9858dfc6754acade23e8">dyn_lib_handle</a> == <span class="keyword">nullptr</span>) {</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;                    <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Cannot load symbol &quot;</span> + symbol_name + <span class="stringliteral">&quot;without handle to shared library&quot;</span>);</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;                    <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Cannot load symbol &quot;</span> + symbol_name + <span class="stringliteral">&quot; without handle to shared library&quot;</span>);</div>
 <div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;                }</div>
 <div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;                <span class="comment">// Call first to ensure any previous error is cleared before trying to load the symbol</span></div>
 <div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;                dlerror();</div>
@@ -229,7 +229,7 @@ $(document).ready(function(){initNavTree('_abstract_c_lib_bmi_adapter_8hpp_sourc
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_9058ef7c383dff996c678c5ba80ec03e.html">realizations</a></li><li class="navelem"><a class="el" href="dir_8dbd500a1ae0b3d23deb7285e2980d8b.html">catchment</a></li><li class="navelem"><b>AbstractCLibBmiAdapter.hpp</b></li>
-    <li class="footer">Generated on Sat Nov 20 2021 00:55:10 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Mon Nov 22 2021 15:28:52 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

@@ -70,6 +70,7 @@ var classrealization_1_1_bmi___multi___formulation =
     [ "available_forcings", "classrealization_1_1_bmi___multi___formulation.html#aa4a7afd0056334dde2a3ad6185a8b26c", null ],
     [ "availableData", "classrealization_1_1_bmi___multi___formulation.html#ae7c621893c7d58f090a762b5de9db159", null ],
     [ "bmi_main_output_var", "classrealization_1_1_bmi___multi___formulation.html#a494171a1888c373c2a1e03008e00e5d5", null ],
+    [ "Bmi_Multi_Formulation_Test", "classrealization_1_1_bmi___multi___formulation.html#a9d60563afdee1eaf85b5b699e3d3326a", null ],
     [ "bounds", "classrealization_1_1_bmi___multi___formulation.html#aaebc4992c38cb5db68e859e0487ad929", null ],
     [ "et_params", "classrealization_1_1_bmi___multi___formulation.html#a5fab369fc039b378dfd270490ddb9e5c", null ],
     [ "forcing", "classrealization_1_1_bmi___multi___formulation.html#a83d2e09cd1264be6cc41dce294ad702d", null ],
