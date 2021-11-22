@@ -7,6 +7,7 @@
 #include "Bmi_Module_Formulation.hpp"
 #include "bmi.hpp"
 #include "ForcingProvider.hpp"
+#include "DeferredWrappedProvider.hpp"
 
 #define BMI_REALIZATION_CFG_PARAM_REQ__MODULES "modules"
 #define DEFAULT_ET_FORMULATION_INDEX 0
@@ -643,6 +644,23 @@ namespace realization {
 
         /** The set of available "forcings" (output variables, plus their mapped aliases) this instance can provide. */
         std::vector<std::string> available_forcings;
+        /**
+         * A collection of wrappers to nested formulations providing some output to an earlier nested formulation.
+         *
+         * During formulation creation, when a nested formulation requires as input some output from a later formulation
+         * (e.g., in a look-back scenario to an earlier time step), then an "optimistic" wrapper gets put into place.
+         * It assumes that the necessary provider will be available and associated once all nested formulations have
+         * been created.  This member tracks these so that this deferred association can be done.
+         */
+        std::vector<std::shared_ptr<forcing::DeferredWrappedProvider>> deferredProviders;
+
+        /**
+         * The module indices for the modules associated with each item in @ref deferredProviders.
+         *
+         * E.g., the value in this vector at index ``0`` is the index of a module within @ref modules.  That module is
+         * what required the deferred provider in the @ref deferredProviders collection at its index ``0``.
+         */
+        std::vector<int> deferredProviderModuleIndices;
         /**
          * Whether the @ref Bmi_Formulation::output_variable_names value is just the analogous value from this
          * instance's final nested module.
