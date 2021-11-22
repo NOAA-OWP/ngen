@@ -15,7 +15,9 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
     set_bmi_main_output_var(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__MAIN_OUT_VAR).as_string());
     set_model_type_name(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__MODEL_TYPE).as_string());
 
+    // TODO: move this to an inline function and/or perhaps the constructor
     std::shared_ptr<forcing::WrappedForcingProvider> forcing_provider = std::make_shared<forcing::WrappedForcingProvider>(forcing.get());
+    // TODO: look through the existing provider types to add the valid alias names also
     for (const std::string &forcing_name_or_alias : forcing->get_available_forcing_outputs()) {
         availableData[forcing_name_or_alias] = forcing_provider;
     }
@@ -73,6 +75,9 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
         modules[i] = module;
 
     } /* ************************ End outer loop: "for sub_formulations_list" ************************ */
+
+    // After all nested formulations have been initialized, reconcile deferred providers
+    init_deferred_associations();
 
     // TODO: get synced start_time values for all models
     // TODO: get synced end_time values for all models
