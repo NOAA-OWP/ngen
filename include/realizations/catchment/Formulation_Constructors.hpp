@@ -12,6 +12,7 @@
 #include "Tshirt_Realization.hpp"
 #include "Tshirt_C_Realization.hpp"
 #include "Simple_Lumped_Model_Realization.hpp"
+#include "Bmi_Cpp_Formulation.hpp"
 #include "Bmi_C_Formulation.hpp"
 #include "Bmi_Fortran_Formulation.hpp"
 #include "Bmi_Multi_Formulation.hpp"
@@ -34,6 +35,7 @@ namespace realization {
     };
 
     static std::map<std::string, constructor> formulations = {
+        {"bmi_c++", create_formulation_constructor<Bmi_Cpp_Formulation>()},
 #ifdef NGEN_BMI_C_LIB_ACTIVE
         {"bmi_c", create_formulation_constructor<Bmi_C_Formulation>()},
 #endif // NGEN_BMI_C_LIB_ACTIVE
