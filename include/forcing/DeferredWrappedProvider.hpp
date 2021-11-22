@@ -33,14 +33,14 @@ namespace forcing {
          *
          * @param providedValues The collection of the names of values this instance will need to provide.
          */
-        DeferredWrappedProvider(vector<string> providedValues) : WrappedForcingProvider(nullptr), providedValues(providedValues) { }
+        explicit DeferredWrappedProvider(vector<string> providedValues) : WrappedForcingProvider(nullptr), providedValues(providedValues) { }
 
         /**
          * Convenience constructor for when there is only one provided property name.
          *
          * @param valueName The name of the single value this instance will need to provide.
          */
-        DeferredWrappedProvider(const string& valueName) : DeferredWrappedProvider(vector<string>(1)) {
+        explicit DeferredWrappedProvider(const string& valueName) : DeferredWrappedProvider(vector<string>(1)) {
             providedValues[0] = valueName;
         }
 
@@ -49,8 +49,8 @@ namespace forcing {
          *
          * @param provider_to_move
          */
-        DeferredWrappedProvider(DeferredWrappedProvider &&provider_to_move)
-        : DeferredWrappedProvider(provider_to_move.providedValues)
+        DeferredWrappedProvider(DeferredWrappedProvider &&provider_to_move) noexcept
+            : DeferredWrappedProvider(provider_to_move.providedValues)
         {
             wrapped_provider = provider_to_move.wrapped_provider;
             provider_to_move.wrapped_provider = nullptr;
