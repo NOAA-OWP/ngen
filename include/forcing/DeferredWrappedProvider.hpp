@@ -2,6 +2,7 @@
 #define NGEN_DEFERREDWRAPPEDPROVIDER_HPP
 
 #include <string>
+#include <utility>
 #include <vector>
 #include "WrappedForcingProvider.hpp"
 
@@ -33,7 +34,7 @@ namespace forcing {
          *
          * @param providedValues The collection of the names of values this instance will need to provide.
          */
-        explicit DeferredWrappedProvider(vector<string> providedValues) : WrappedForcingProvider(nullptr), providedValues(providedValues) { }
+        explicit DeferredWrappedProvider(vector<string> providedValues) : WrappedForcingProvider(nullptr), providedValues(std::move(providedValues)) { }
 
         /**
          * Convenience constructor for when there is only one provided property name.
