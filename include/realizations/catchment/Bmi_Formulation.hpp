@@ -26,6 +26,10 @@
 #define BMI_REALIZATION_CFG_PARAM_OPT__LIB_FILE "library_file"
 #define BMI_REALIZATION_CFG_PARAM_OPT__PYTHON_TYPE_NAME "python_type"
 #define BMI_REALIZATION_CFG_PARAM_OPT__REGISTRATION_FUNC "registration_function"
+#define BMI_REALIZATION_CFG_PARAM_OPT__CPP_CREATE_FUNC "create_function"
+#define BMI_REALIZATION_CFG_PARAM_OPT__CPP_DESTROY_FUNC "destroy_function"
+#define BMI_REALIZATION_CFG_PARAM_OPT__CPP_CREATE_FUNC_DEFAULT "bmi_model_create"
+#define BMI_REALIZATION_CFG_PARAM_OPT__CPP_DESTROY_FUNC_DEFAULT "bmi_model_destroy"
 
 // Supported Standard Names for BMI variables
 // This is needed to provide a calculated potential ET value back to a BMI model
