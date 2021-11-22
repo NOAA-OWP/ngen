@@ -12,7 +12,7 @@
 <!-- Node1 -->
 <g id="node1" class="node">
 <title>Node1</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="Collection interface to HY_Features objects and their associated model formulations.">
 <polygon fill="#bfbfbf" stroke="black" points="633.5,-0.5 633.5,-167.5 762.5,-167.5 762.5,-0.5 633.5,-0.5"/>
 <text text-anchor="middle" x="698" y="-155.5" font-family="Helvetica,sans-Serif" font-size="10.00">hy_features::HY_Features</text>
 <polyline fill="none" stroke="black" points="633.5,-148.5 762.5,-148.5 "/>

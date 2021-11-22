@@ -12,7 +12,7 @@
 <!-- Node0 -->
 <g id="node1" class="node">
 <title>Node0</title>
-<g id="a_node1"><a xlink:href="classhy__features_1_1_h_y___features.html" target="_top" xlink:title=" ">
+<g id="a_node1"><a xlink:href="classhy__features_1_1_h_y___features.html" target="_top" xlink:title="Collection interface to HY_Features objects and their associated model formulations.">
 <polygon fill="white" stroke="black" points="0,-0.5 0,-19.5 129,-19.5 129,-0.5 0,-0.5"/>
 <text text-anchor="middle" x="64.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">hy_features::HY_Features</text>
 </a>
