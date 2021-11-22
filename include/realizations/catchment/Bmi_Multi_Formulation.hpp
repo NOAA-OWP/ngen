@@ -567,6 +567,48 @@ namespace realization {
         }
 
         /**
+         * Initialize the deferred associations with the providers in @ref deferredProviders.
+         *
+         * During nested formulation creation, when a nested formulation requires as input some output expected from
+         * soon-to-be-created (i.e., later in execution order) formulation (e.g., in a look-back scenario to an earlier
+         * time step), then a deferred provider gets registered with the nested module and has a referenced added to
+         * the @ref deferredProviders member.  This function goes through all such the deferred providers, ensures there
+         * is something available that can serve as the backing wrapped provider, and associates them.
+         */
+        inline void init_deferred_associations() {
+            for (int d = 0; d < deferredProviders.size(); ++d) {
+                std::shared_ptr<forcing::DeferredWrappedProvider> &deferredProvider  = deferredProviders[d];
+                // Skip doing anything for any deferred provider that already has its backing provider set
+                if (!deferredProvider->isWrappedProviderSet())
+                    continue;
+
+                // Iterate through available data providers and set association once a sufficient one is found
+                std::map<std::string, std::shared_ptr<forcing::ForcingProvider>>::iterator avail_it;
+                for (avail_it = availableData.begin(); avail_it != availableData.end(); avail_it++) {
+                    // If this satisfies everything this deferred provider needs to provide, and thus can be set ...
+                    if (deferredProvider->setWrappedProvider(avail_it->second.get())) {
+                        break;
+                    }
+                }
+
+                // If none of the available data providers could be used for this deferred one, throw exception
+                if (!deferredProvider->isWrappedProviderSet()) {
+                    // TODO: this probably needs to be some kind of custom configuration exception
+                    std::string msg = "Multi BMI formulation cannot be created from config: cannot find available data "
+                                      "provider to satisfy set of deferred provisions for nested module at index "
+                                      + std::to_string(deferredProviderModuleIndices[d]) + ": {";
+                    // There must always be at least 1; get manually to help with formatting
+                    msg += deferredProvider->get_available_forcing_outputs()[0];
+                    // And here make sure to start at 1 instead of 0
+                    for (int i = 1; i < deferredProvider->get_available_forcing_outputs().size(); ++i)
+                        msg += ", " + deferredProvider->get_available_forcing_outputs()[i];
+                    msg += "}";
+                    throw std::runtime_error(msg);
+                }
+            }
+        }
+
+        /**
          * Initialize a nested formulation from the given properties and update multi formulation metadata.
          *
          * This function creates a new formulation, processes the mapping of BMI variables, and adds outputs to the outer
