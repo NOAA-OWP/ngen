@@ -114,7 +114,7 @@ namespace forcing {
             return wrapped_provider->is_property_sum_over_time_step(name);
         }
 
-    private:
+    protected:
         ForcingProvider* wrapped_provider;
 
     };
