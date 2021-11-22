@@ -599,13 +599,16 @@ namespace realization {
             for (const std::string &var_name : mod->get_bmi_input_variables()) {
                 std::string framework_alias = mod->get_config_mapped_variable_name(var_name);
                 (*var_aliases)[framework_alias] = var_name;
-                // If framework_name is not in collection from which we have available data sources ...
+                // If framework_name is not yest in collection from which we have available data sources ...
                 if (availableData.count(framework_alias) != 1) {
-                    throw std::runtime_error(
-                            "Multi BMI cannot be created with module " + mod->get_model_type_name() + " with input " +
-                            "variable " + framework_alias +
-                            (var_name == framework_alias ? "" : " (an alias of BMI variable " + var_name + ")") +
-                            " when there is no previously-enabled source for this input.");
+                    // Create deferred provider for providing this
+                    // Only include BMI variable name, as that's what'll be visible when associating to backing provider
+                    std::shared_ptr<forcing::DeferredWrappedProvider> deferredProv = std::make_shared<forcing::DeferredWrappedProvider>(var_name);
+                    // Add deferred to collection and module index to collection
+                    deferredProviders.push_back(deferredProv);
+                    deferredProviderModuleIndices.push_back(mod_index);
+                    // Assign as provider within module
+                    mod->input_forcing_providers[var_name] = deferredProv;
                 }
                 else {
                     mod->input_forcing_providers[var_name] = availableData[framework_alias];
