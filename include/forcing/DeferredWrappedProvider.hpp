@@ -82,10 +82,21 @@ namespace forcing {
         }
 
         /**
-         * Get whether the backing provider this instance wraps has been set yet.
+         * Get whether the instance is initialized such that it can handle requests to provide data.
          *
-         * @return Whether the backing provider this instance wraps has been set yet.
+         * For this type, this is equivalent to whether the wrapped provider member has been set.
+         *
+         * @return Whether the instance is initialized such that it can handle requests to provide data.
          */
+        virtual bool isReadyToProvideData() {
+            return isWrappedProviderSet();
+        }
+
+        /**
+      * Get whether the backing provider this instance wraps has been set yet.
+      *
+      * @return Whether the backing provider this instance wraps has been set yet.
+      */
         inline bool isWrappedProviderSet() {
             return wrapped_provider != nullptr;
         }
@@ -106,7 +117,7 @@ namespace forcing {
          * @param provider A pointer for the wrapped provider.
          * @return Whether @ref wrapped_provider was set to the given arg.
          */
-        inline bool setWrappedProvider(ForcingProvider *provider) {
+        virtual bool setWrappedProvider(ForcingProvider *provider) {
             // Disallow re-setting the provider if already validly set
             if (isWrappedProviderSet()) {
                 setMessage = "Cannot change wrapped provider after a valid provide has already been set";
@@ -134,7 +145,7 @@ namespace forcing {
             return true;
         }
 
-    private:
+    protected:
         /** The collection of names of the values this type can/will be able to provide from its wrapped source. */
         vector<string> providedValues;
 
