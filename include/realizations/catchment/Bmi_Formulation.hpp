@@ -1,6 +1,7 @@
 #ifndef NGEN_BMI_FORMULATION_HPP
 #define NGEN_BMI_FORMULATION_HPP
 
+#include <iomanip>
 #include <string>
 #include <utility>
 #include <vector>
@@ -62,7 +63,11 @@ namespace realization {
          * @param output_stream
          */
         Bmi_Formulation(std::string id, std::unique_ptr<forcing::ForcingProvider> forcing, utils::StreamHandler output_stream)
-                : Catchment_Formulation(std::move(id), std::move(forcing), output_stream) { };
+                : Catchment_Formulation(std::move(id), std::move(forcing), output_stream)
+        {
+            // Do this here, as this function also handles initializing the output string stream for formatting.
+            set_output_precision(9);
+        };
 
 
         virtual ~Bmi_Formulation() {};
@@ -202,7 +207,26 @@ namespace realization {
          */
         virtual bool is_model_initialized() = 0;
 
+        /**
+         * Set the precision of output values when converted to text.
+         *
+         * @param precision The desired precision, as a number of decimal places.
+         */
+        void set_output_precision(int precision) {
+            output_precision = precision;
+            output_text_stream = std::make_shared<std::ostringstream>();
+            *output_text_stream << std::fixed;
+            *output_text_stream << std::setprecision(output_precision);
+        }
+
     protected:
+
+        /** Object to help with converting numeric output values to text. */
+        std::shared_ptr<std::ostringstream> output_text_stream;
+
+        int get_output_precision() {
+            return output_precision;
+        }
 
         void set_bmi_main_output_var(const string &main_output_var) {
             bmi_main_output_var = main_output_var;
@@ -247,6 +271,8 @@ namespace realization {
          * the BMI module output variables accessible to the instance.
          */
         std::vector<std::string> output_variable_names;
+        /** The degree of precision in output values when converting to text. */
+        int output_precision;
 
         std::vector<std::string> OPTIONAL_PARAMETERS = {
                 BMI_REALIZATION_CFG_PARAM_OPT__FORCING_FILE,
