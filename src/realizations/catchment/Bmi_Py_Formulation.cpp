@@ -49,12 +49,21 @@ string Bmi_Py_Formulation::get_output_line_for_timestep(int timestep, std::strin
     if (timestep != (next_time_step_index - 1)) {
         throw std::invalid_argument("Only current time step valid when getting output for BMI Python formulation");
     }
-    std::string output_str;
+    // Clear anything currently in there
+    output_text_stream->str(std::string());
 
-    for (const std::string& name : get_output_variable_names()) {
-        output_str += (output_str.empty() ? "" : ",") + std::to_string(get_var_value_as_double(name));
+    const std::vector<std::string> &output_var_names = get_output_variable_names();
+    // This probably should never happen, but just to be safe ...
+    if (output_var_names.empty()) { return ""; }
+
+    // Do the first separately, without the leading comma
+    *output_text_stream << get_var_value_as_double(output_var_names[0]);
+
+    // Do the rest with a leading comma
+    for (int i = 1; i < output_var_names.size(); ++i) {
+        *output_text_stream << "," << get_var_value_as_double(output_var_names[i]);
     }
-    return output_str;
+    return output_text_stream->str();
 }
 
 double Bmi_Py_Formulation::get_response(time_step_t t_index, time_step_t t_delta) {
