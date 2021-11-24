@@ -197,6 +197,7 @@ void Bmi_C_Formulation_Test::SetUp() {
                          "                \"forcing_file\": \"" + forcing_file[i] + "\","
                          "                \"init_config\": \"" + init_config[i] + "\","
                          "                \"main_output_variable\": \"" + main_output_variable[i] + "\","
+                         "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION + "\": 6, "
                          "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES + "\": { "
                          "                      \"INPUT_VAR_2\": \"" + NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP + "\","
                          "                      \"INPUT_VAR_1\": \"" + AORC_FIELD_NAME_PRECIP_RATE + "\""
