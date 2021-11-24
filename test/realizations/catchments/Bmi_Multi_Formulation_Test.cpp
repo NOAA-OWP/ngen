@@ -208,6 +208,7 @@ private:
                 "                                \"init_config\": \"" + nested_init_config_lists[ex_index][nested_index] + "\",\n"
                 "                                \"allow_exceed_end_time\": true,\n"
                 "                                \"main_output_variable\": \"" + nested_module_main_output_variables[ex_index][nested_index] + "\",\n"
+                "                                \"" + BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION + "\": 6, "
                 + type_specific_properties +
                 "                                \"variables_names_map\": {\n"
                 + type_specific_var_map +
