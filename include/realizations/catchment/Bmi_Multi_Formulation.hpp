@@ -507,6 +507,65 @@ namespace realization {
         }
 
         /**
+         * Get value for some BMI model variable.
+         *
+         * This function assumes that the given variable, while returned by the model within an array per the BMI spec,
+         * is actual a single, scalar value.  Thus, it returns what is at index 0 of the array reference.
+         *
+         * @param index
+         * @param var_name
+         * @return
+         */
+        double get_var_value_as_double(const std::string &var_name) {
+            return get_var_value_as_double(0, var_name);
+        }
+
+        /**
+         * Get value for some BMI model variable at a specific index.
+         *
+         * Function gets the value for a provided variable, retrieving the variable array from the backing model of the
+         * appropriate nested formulation. The function then returns the specific value at the desired index, cast as a
+         * double type.
+         *
+         * The function makes several assumptions:
+         *
+         *     1. `index` is within array bounds
+         *     2. `var_name` corresponds to a BMI variable for some nested module.
+         *     3. `var_name` is sufficient to identify what value needs to be retrieved
+         *     4. the type for output variable allows the value to be cast to a `double` appropriately
+         *
+         * Item 3. here can be inferred from 2. for non-multi formulations.  For multi formulations, this means the
+         * provided ``var_name`` must either be a unique BMI variable name among all nested module, or a unique mapped
+         * alias to a specific variable in a specific module.
+         *
+         * It falls to users of this function (i.e., other functions) to ensure these assumptions hold before invoking.
+         *
+         * @param index
+         * @param var_name
+         * @return
+         */
+        double get_var_value_as_double(const int& index, const std::string& var_name) {
+            auto data_provider_iter = availableData.find(var_name);
+            if (data_provider_iter == availableData.end()) {
+                throw external::ExternalIntegrationException(
+                        "Multi BMI formulation can't find correct nested module for BMI variable " + var_name);
+            }
+            // Otherwise, we have a provider, and we can cast it based on the documented assumptions
+            try {
+                std::shared_ptr <Bmi_Module_Formulation<bmi::Bmi>> nested_module =
+                        std::dynamic_pointer_cast < Bmi_Module_Formulation <
+                                bmi::Bmi >> (data_provider_iter->second);
+                return nested_module->get_var_value_as_double(index, var_name);
+            }
+            // If there was any problem with the cast and extraction of the value, throw runtime error
+            catch (std::exception &e) {
+                throw std::runtime_error("Multi BMI formulation can't use associated data provider as a nested module"
+                                         " when attempting to get values of BMI variable " + var_name);
+                // TODO: look at adjusting defs to move this function up in class hierarchy (or at least add TODO there)
+            }
+        }
+
+        /**
          * Initialize a nested formulation from the given properties and update multi formulation metadata.
          *
          * This function creates a new formulation, processes the mapping of BMI variables, and adds outputs to the outer
