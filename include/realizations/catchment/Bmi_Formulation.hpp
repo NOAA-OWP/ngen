@@ -22,6 +22,7 @@
 // TODO: change this (and output_header_fields) to something like output_file_variables to distinguish from BMI output variables
 #define BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS "output_variables"
 #define BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS "output_header_fields"
+#define BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION "output_precision"
 #define BMI_REALIZATION_CFG_PARAM_OPT__ALLOW_EXCEED_END "allow_exceed_end_time"
 #define BMI_REALIZATION_CFG_PARAM_OPT__FIXED_TIME_STEP "fixed_time_step"
 #define BMI_REALIZATION_CFG_PARAM_OPT__LIB_FILE "library_file"
