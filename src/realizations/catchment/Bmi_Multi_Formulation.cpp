@@ -267,55 +267,39 @@ string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, std::st
     if (timestep != (next_time_step_index - 1)) {
         throw std::invalid_argument("Only current time step valid when getting multi-module BMI formulation output");
     }
-    std::string output_str;
 
     // Start by first checking whether we are NOT just using the last module's values
-    // Doing it this way so that, if there is a problem with the config, we can later fall back to this method
     if (!is_out_vars_from_last_mod) {
-        for (const std::string &out_var_name: get_output_variable_names()) {
-            auto output_data_provider_iter = availableData.find(out_var_name);
-            // If something unrecognized was requested to be in the formulation output ...
-            if (output_data_provider_iter == availableData.end()) {
-                // ... print warning ...
-                std::cerr << "WARN: unrecognized variable '" << out_var_name
-                          << "' configured for formulation output; reverting to default behavior for multi-BMI "
-                             "formulation type (using last module)";
-                output_str.clear();                 // ... clear any temporary output contents being staged ...
-                is_out_vars_from_last_mod = true;   // ... revert to default behavior (just use last nested module) ...
-                break;                              // ... and break out of this loop through out_var_names
+
+        // Clear anything currently in the multi formulation's stream buffer
+        output_text_stream->str(std::string());
+
+        const std::vector<std::string> &output_var_names = get_output_variable_names();
+        // This almost certainly should never happen, but just to be safe ...
+        if (output_var_names.empty()) { return ""; }
+
+        try {
+            // Do the first separately, without the leading comma
+            auto output_data_provider_iter = availableData.find(output_var_names[0]);
+            *output_text_stream << get_var_value_as_double(output_var_names[0]);
+
+            // Do the rest with a leading comma
+            for (int i = 1; i < output_var_names.size(); ++i) {
+                *output_text_stream << "," << get_var_value_as_double(output_var_names[i]);
             }
-            else {
-                // TODO: right now, not a easy way to properly support an output coming from something other than a
-                //  nested formulation, so restrict this for now, but come back to improve things later.
-                try {
-                    std::shared_ptr <Bmi_Module_Formulation<bmi::Bmi>> nested_module =
-                            std::dynamic_pointer_cast < Bmi_Module_Formulation <
-                            bmi::Bmi >> (output_data_provider_iter->second);
-                    output_str += (output_str.empty() ? "" : ",") +
-                                  std::to_string(nested_module->get_var_value_as_double(out_var_name));
-                }
-                // Similarly, if there was any problem with the cast and extraction of the value, revert
-                catch (std::exception &e) {
-                    std::cerr << "WARN: variable '" << out_var_name
-                            << "' is not an expected output from a nest module of this multi-module BMI formulation"
-                               "; reverting to used of outputs from last module";
-                    output_str.clear();
-                    is_out_vars_from_last_mod = true;
-                    break;
-                }
-            }
+            return output_text_stream->str();
+        }
+        catch (const std::exception &e) {
+            std::cerr << "WARN: " << e.what()
+                      << "; reverting to default behavior for multi-BMI formulation type (using last module)";
+            output_text_stream->str(std::string()); // ... clear any output contents being staged ...
+            is_out_vars_from_last_mod = true;          // ... revert to default behavior (just use last nested module)
         }
     }
-
-    // Now, check this again (i.e., we could have either not entered the previous "if" block, or started it but then
-    // exited after a problem and needed to revert to this method)
-    if (!is_out_vars_from_last_mod) {
-        // If we are (still) not using vars from the last module, this means the last "if" has built the output
-        return output_str;
-    }
-    else {
-        return modules.back()->get_output_line_for_timestep(timestep, delimiter);
-    }
+    // Otherwise, use the default behavior, which means we either
+    //   - were originally set to use the default of getting the output of the last module
+    //   - tried a more complex config, but ran into an error, and are needing to revert to the default
+    return modules.back()->get_output_line_for_timestep(timestep, delimiter);
 }
 
 double Bmi_Multi_Formulation::get_response(time_step_t t_index, time_step_t t_delta) {
@@ -425,7 +409,7 @@ bool Bmi_Multi_Formulation::is_model_initialized() {
 }
 
 /**
- * Get whether this time step goes beyond this formulations (i.e., any of it's modules') end time.
+ * Get whether this time step goes beyond this formulation's (i.e., any of it's modules') end time.
  *
  * @param t_index The time step index in question.
  * @return Whether this time step goes beyond this formulations (i.e., any of it's modules') end time.
