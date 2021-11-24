@@ -179,6 +179,29 @@ add_test(
         libudunits2
 )
 
+########################## All BMI Unit Tests
+if(BMI_C_LIB_ACTIVE)
+    if (${BMI_FORTRAN_ACTIVE})
+        if (${NGEN_ACTIVATE_PYTHON})
+            add_test(
+                    test_bmi_unit_all
+                    7
+                    realizations/catchments/Bmi_C_Adapter_Test.cpp
+                    realizations/catchments/Bmi_C_Formulation_Test.cpp
+                    realizations/catchments/Bmi_Fortran_Adapter_Test.cpp
+                    realizations/catchments/Bmi_Fortran_Formulation_Test.cpp
+                    realizations/catchments/Bmi_Py_Adapter_Test.cpp
+                    realizations/catchments/Bmi_Py_Formulation_Test.cpp
+                    realizations/catchments/Bmi_Multi_Formulation_Test.cpp
+                    NGen::core
+                    NGen::realizations_catchment
+                    NGen::core_mediator
+                    libudunits2
+            )
+        endif()
+    endif()
+endif()
+
 ########################## Comparison tests for the BMI CFE implementation
 # TODO: this probably needs to be added to integration testing also
 add_test(
