@@ -639,6 +639,12 @@ namespace realization {
             input_forcing_providers[NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP] = self;
             input_forcing_providers[CSDMS_STD_NAME_POTENTIAL_ET] = self;
 
+            // Output precision, if present
+            auto out_precision_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION);
+            if (out_precision_it != properties.end()) {
+                set_output_precision(properties.at(BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION).as_natural_number());
+            }
+
             // Finally, make sure this is set
             model_initialized = get_bmi_model()->is_model_initialized();
         }
@@ -838,6 +844,7 @@ namespace realization {
                 BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES,
                 BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS,
                 BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS,
+                BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION,
                 BMI_REALIZATION_CFG_PARAM_OPT__ALLOW_EXCEED_END,
                 BMI_REALIZATION_CFG_PARAM_OPT__FIXED_TIME_STEP,
                 BMI_REALIZATION_CFG_PARAM_OPT__LIB_FILE
