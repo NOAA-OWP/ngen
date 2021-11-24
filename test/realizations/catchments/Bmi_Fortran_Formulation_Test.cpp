@@ -205,6 +205,7 @@ void Bmi_Fortran_Formulation_Test::SetUp() {
                          "                \"forcing_file\": \"" + forcing_file[i] + "\","
                          "                \"init_config\": \"" + init_config[i] + "\","
                          "                \"main_output_variable\": \"" + main_output_variable[i] + "\","
+                         "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION + "\": 6, "
                          "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES + "\": { "
                          "                      \"INPUT_VAR_3\": \"" + AORC_FIELD_NAME_PRESSURE_SURFACE + "\","
                          "                      \"INPUT_VAR_2\": \"" + AORC_FIELD_NAME_SPEC_HUMID_2M_AG + "\","
