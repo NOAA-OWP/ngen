@@ -58,14 +58,14 @@ add_compile_definitions(BMI_ACTIVE NGEN_FORCING_ACTIVE NGEN_OUTPUT_ACTIVE NGEN_A
 # "The path to the C shared object library file, libnetcdff.so or the library name if it can be found by the linker, i.e. netcdff")
 ##### END NETCDF #####
 
-set(MODEL_SOURCE_DIR noah-mp-modular/modules/surface_bmi/src/)
-set(BMI_SOURCE_DIR noah-mp-modular/modules/surface_bmi/bmi/)
+set(MODEL_SOURCE_DIR noah-mp-modular/src/)
+set(BMI_SOURCE_DIR noah-mp-modular/bmi/)
 
 file(GLOB BMI_SOURCE ${BMI_SOURCE_DIR}*.f90)
 file( GLOB MODEL_SOURCES ${MODEL_SOURCE_DIR}*.f90)
 
-list(APPEND MODEL_SOURCES noah-mp-modular/modules/surface_bmi/driver/noahmp_ascii_read.f90
-                          noah-mp-modular/modules/surface_bmi/driver/noahmp_output.f90)
+list(APPEND MODEL_SOURCES noah-mp-modular/driver/AsciiReadModule.f90
+                          noah-mp-modular/driver/OutputModule.f90)
 
 #add_library(surfacebmi_obj STATIC ${MODEL_SOURCES} )
 #target_compile_options(surfacebmi_obj PUBLIC -cpp -ffree-line-length-none)
