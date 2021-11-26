@@ -14,6 +14,7 @@
 
 // Forward declaration to provide access to protected items in testing
 class Bmi_Formulation_Test;
+class Bmi_Multi_Formulation_Test;
 class Bmi_C_Formulation_Test;
 class Bmi_Cpp_Formulation_Test;
 class Bmi_C_Cfe_IT;
@@ -442,9 +443,9 @@ namespace realization {
 
         /**
          * @brief Get correct BMI variable name, which may be the output or something mapped to this output.
-         * 
-         * @param name 
-         * @param bmi_var_name 
+         *
+         * @param name
+         * @param bmi_var_name
          */
         inline void get_bmi_output_var_name(const std::string &name, std::string &bmi_var_name)
         {
@@ -473,12 +474,12 @@ namespace realization {
 
         /**
          * @brief Check for implementation of internal calculators/data for a given requsted output_name
-         * 
+         *
          * @tparam T the type expected to be returned for the value of @p output_name
-         * @param output_name 
+         * @param output_name
          * @return T
          * @throws std::runtime_error If no known value or function for @p output_name
-         */ 
+         */
         template <typename T>
         inline T check_internal_providers(std::string output_name){
             // Only use the internal et_calc() if this formulation (or possibly multi-formulation)
@@ -853,6 +854,7 @@ namespace realization {
         // Unit test access
         friend class ::Bmi_Formulation_Test;
         friend class ::Bmi_C_Formulation_Test;
+        friend class ::Bmi_Multi_Formulation_Test;
         friend class ::Bmi_Cpp_Formulation_Test;
 
     private:

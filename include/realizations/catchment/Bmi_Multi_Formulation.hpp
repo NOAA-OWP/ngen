@@ -7,9 +7,10 @@
 #include "Bmi_Module_Formulation.hpp"
 #include "bmi.hpp"
 #include "ForcingProvider.hpp"
-#include "DeferredWrappedProvider.hpp"
+#include "OptionalWrappedProvider.hpp"
 
 #define BMI_REALIZATION_CFG_PARAM_REQ__MODULES "modules"
+#define BMI_REALIZATION_CFG_PARAM_OPT__DEFAULT_OUT_VALS "default_output_values"
 #define DEFAULT_ET_FORMULATION_INDEX 0
 
 using namespace std;
@@ -577,15 +578,17 @@ namespace realization {
          */
         inline void init_deferred_associations() {
             for (int d = 0; d < deferredProviders.size(); ++d) {
-                std::shared_ptr<forcing::DeferredWrappedProvider> &deferredProvider  = deferredProviders[d];
+                std::shared_ptr<forcing::OptionalWrappedProvider> &deferredProvider  = deferredProviders[d];
                 // Skip doing anything for any deferred provider that already has its backing provider set
                 if (!deferredProvider->isWrappedProviderSet())
                     continue;
 
+                // TODO: improve this later; since defaults can be used, it is technically possible to grab something
+                //  valid when something more appropriate would later be available
                 // Iterate through available data providers and set association once a sufficient one is found
                 std::map<std::string, std::shared_ptr<forcing::ForcingProvider>>::iterator avail_it;
                 for (avail_it = availableData.begin(); avail_it != availableData.end(); avail_it++) {
-                    // If this satisfies everything this deferred provider needs to provide, and thus can be set ...
+                    // If this satisfies everything this deferred provider needs to provide, and thus can be/was set ...
                     if (deferredProvider->setWrappedProvider(avail_it->second.get())) {
                         break;
                     }
@@ -641,16 +644,9 @@ namespace realization {
             for (const std::string &var_name : mod->get_bmi_input_variables()) {
                 std::string framework_alias = mod->get_config_mapped_variable_name(var_name);
                 (*var_aliases)[framework_alias] = var_name;
-                // If framework_name is not yest in collection from which we have available data sources ...
+                // If framework_name is not yet in collection from which we have available data sources ...
                 if (availableData.count(framework_alias) != 1) {
-                    // Create deferred provider for providing this
-                    // Only include BMI variable name, as that's what'll be visible when associating to backing provider
-                    std::shared_ptr<forcing::DeferredWrappedProvider> deferredProv = std::make_shared<forcing::DeferredWrappedProvider>(var_name);
-                    // Add deferred to collection and module index to collection
-                    deferredProviders.push_back(deferredProv);
-                    deferredProviderModuleIndices.push_back(mod_index);
-                    // Assign as provider within module
-                    mod->input_forcing_providers[var_name] = deferredProv;
+                    setup_nested_deferred_provider(var_name, framework_alias, mod, mod_index);
                 }
                 else {
                     mod->input_forcing_providers[var_name] = availableData[framework_alias];
@@ -687,8 +683,53 @@ namespace realization {
 
     private:
 
+        /**
+         * Setup a deferred provider for a nested module, tracking the class as needed.
+         *
+         * Create an optional wrapped provider for use with a nested module and some required variable it needs
+         * provided. Track this and the index of the nested modules in the member collections necessary for later
+         * initializing associations to backing providers that were originally deferred.  Then, assign the created
+         * deferred wrapper provider as the provider for the variable in the nested module.
+         *
+         * @tparam T
+         * @param var_name The name of the required variable a nested module needs provided.
+         * @param framework_alias The framework alias of the required variable, so that it can be distinguished uniquely
+         *                        in the framework (will be the same as ``var_name`` except when another module uses the
+         *                        same name).
+         * @param mod The nested module requiring a deferred wrapped provider for a variable.
+         * @param mod_index The index of the given nested module in the ordering of all this instance's nested modules.
+         */
+        template<class T>
+        void setup_nested_deferred_provider(const std::string &var_name, const std::string &framework_alias,
+                                            std::shared_ptr<T> mod, int mod_index) {
+            // Create deferred, optional provider for providing this
+            // Only include BMI variable name, as that's what'll be visible when associating to backing provider
+            // It's "deferred" in that we'll set the backing later.
+            // It's "optional" in that it waits to use backing provider, using the default some number of times
+            std::shared_ptr<forcing::OptionalWrappedProvider> provider;
+            // TODO: make sure only alias is needed
+            auto defs_it = default_output_values.find(framework_alias);
+            if (defs_it != default_output_values.end()) {
+                // TODO: consider also reading wait count from config
+                provider = std::make_shared<forcing::OptionalWrappedProvider>(var_name, defs_it->second, 1);
+            }
+            else {
+                provider = std::make_shared<forcing::OptionalWrappedProvider>(var_name);
+            }
+
+            // Add deferred to collection and module index to collection
+            deferredProviders.push_back(provider);
+            deferredProviderModuleIndices.push_back(mod_index);
+            // Assign as provider within module
+            mod->input_forcing_providers[var_name] = provider;
+        }
+
         /** The set of available "forcings" (output variables, plus their mapped aliases) this instance can provide. */
         std::vector<std::string> available_forcings;
+        /**
+         * Any configured default values for outputs, keyed by framework alias (or var name if this is globally unique).
+         */
+        std::map<std::string, double> default_output_values;
         /**
          * A collection of wrappers to nested formulations providing some output to an earlier nested formulation.
          *
@@ -697,7 +738,7 @@ namespace realization {
          * It assumes that the necessary provider will be available and associated once all nested formulations have
          * been created.  This member tracks these so that this deferred association can be done.
          */
-        std::vector<std::shared_ptr<forcing::DeferredWrappedProvider>> deferredProviders;
+        std::vector<std::shared_ptr<forcing::OptionalWrappedProvider>> deferredProviders;
 
         /**
          * The module indices for the modules associated with each item in @ref deferredProviders.
