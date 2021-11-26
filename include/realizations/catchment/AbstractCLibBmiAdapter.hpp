@@ -94,8 +94,19 @@ namespace models {
                     throw std::runtime_error(this->init_exception_msg);
                 }
 
+                // Call first to ensure any previous error is cleared before trying to load the symbol
+                dlerror();
                 // Load up the necessary library dynamically
                 dyn_lib_handle = dlopen(bmi_lib_file.c_str(), RTLD_NOW | RTLD_LOCAL);
+                // Now call again to see if there was an error (if there was, this will not be null)
+                char *err_message = dlerror();
+                if (dyn_lib_handle == nullptr && err_message != nullptr) {
+                    this->init_exception_msg = "Cannot load shared lib '" + bmi_lib_file + "' for model " + this->model_name;
+                    if (err_message != nullptr) {
+                        this->init_exception_msg += " (" + std::string(err_message) + ")";
+                    }
+                    throw ::external::ExternalIntegrationException(this->init_exception_msg);
+                }
             }
 
             /**
