@@ -22,6 +22,17 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
         availableData[forcing_name_or_alias] = forcing_provider;
     }
 
+    // Pull default output values, if any present
+    auto defaults_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__DEFAULT_OUT_VALS);
+    if (defaults_it != properties.end()) {
+        std::vector<geojson::JSONProperty> default_entries_list = defaults_it->second.as_list();
+        for (size_t i = 0; i < default_entries_list.size(); ++i) {
+            // TODO: think through whether something needed to check for duplicates (probably not, because caught later)
+            geojson::JSONProperty default_entry = default_entries_list[i];
+            default_output_values[default_entry.at("name").as_string()] = default_entry.at("value").as_real_number();
+        }
+    }
+
     // TODO: go back and set this up properly in required params collection
     auto nested_module_configs_it = properties.find(BMI_REALIZATION_CFG_PARAM_REQ__MODULES);
     std::vector<geojson::JSONProperty> nested_module_configs = nested_module_configs_it->second.as_list();
