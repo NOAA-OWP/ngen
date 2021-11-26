@@ -68,6 +68,7 @@ module iso_c_bmif_2_0
       !convert c style string to fortran character array
       f_file = c_to_f_string(config_file)
       bmi_status = bmi_box%ptr%initialize(f_file)
+      deallocate(f_file)
     end function initialize
 
     ! Advance the model one time step.
@@ -209,10 +210,12 @@ module iso_c_bmif_2_0
       integer(kind=c_int) :: bmi_status
       !use a wrapper for c interop
       type(box), pointer :: bmi_box
-
+      character(kind=c_char, len=:), allocatable :: f_str
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      bmi_status = bmi_box%ptr%get_var_grid(c_to_f_string(name), grid)
+      f_str = c_to_f_string(name)
+      bmi_status = bmi_box%ptr%get_var_grid(f_str, grid)
+      deallocate(f_str)
     end function get_var_grid
 
     ! Get the data type of the given variable as a string.
@@ -224,11 +227,14 @@ module iso_c_bmif_2_0
       integer(kind=c_int) :: bmi_status
       !use a wrapper for c interop
       type(box), pointer :: bmi_box
+      character(kind=c_char, len=:), allocatable :: f_str
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      bmi_status = bmi_box%ptr%get_var_type(c_to_f_string(name), f_type)
+      f_str = c_to_f_string(name)
+      bmi_status = bmi_box%ptr%get_var_type(f_str, f_type)
       type(1:len_trim(f_type)+1) = f_to_c_string(f_type)
+      deallocate(f_str)
     end function get_var_type
 
     ! Get the units of the given variable.
@@ -240,11 +246,14 @@ module iso_c_bmif_2_0
       integer(kind=c_int) :: bmi_status
       !use a wrapper for c interop
       type(box), pointer :: bmi_box
+      character(kind=c_char, len=:), allocatable :: f_str
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      bmi_status = bmi_box%ptr%get_var_units(c_to_f_string(name), f_units)
+      f_str = c_to_f_string(name)
+      bmi_status = bmi_box%ptr%get_var_units(f_str, f_units)
       units(1:len_trim(f_units)+1) = f_to_c_string(f_units)
+      deallocate(f_str)
     end function get_var_units
 
     ! Get memory use per array element, in bytes.
@@ -255,10 +264,13 @@ module iso_c_bmif_2_0
       integer(kind=c_int) :: bmi_status
       !use a wrapper for c interop
       type(box), pointer :: bmi_box
+      character(kind=c_char, len=:), allocatable :: f_str
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      bmi_status = bmi_box%ptr%get_var_itemsize(c_to_f_string(name), size)
+      f_str = c_to_f_string(name)
+      bmi_status = bmi_box%ptr%get_var_itemsize(f_str, size)
+      deallocate(f_str)
     end function get_var_itemsize
 
     ! Get size of the given variable, in bytes.
@@ -269,10 +281,13 @@ module iso_c_bmif_2_0
       integer(kind=c_int) :: bmi_status
       !use a wrapper for c interop
       type(box), pointer :: bmi_box
+      character(kind=c_char, len=:), allocatable :: f_str
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      bmi_status = bmi_box%ptr%get_var_nbytes(c_to_f_string(name), nbytes)
+      f_str = c_to_f_string(name)
+      bmi_status = bmi_box%ptr%get_var_nbytes(f_str, nbytes)
+      deallocate(f_str)
     end function get_var_nbytes
 
     ! Describe where a variable is located: node, edge, or face.
@@ -284,11 +299,15 @@ module iso_c_bmif_2_0
       integer(kind=c_int) :: bmi_status
       !use a wrapper for c interop
       type(box), pointer :: bmi_box
+      character(kind=c_char, len=:), allocatable :: f_str
 
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-      bmi_status = bmi_box%ptr%get_var_location(c_to_f_string(name), f_location)
+
+      f_str = c_to_f_string(name)
+      bmi_status = bmi_box%ptr%get_var_location(f_str, f_location)
       location(1:len_trim(f_location)+1) = f_to_c_string(f_location)
+      deallocate(f_str)
     end function get_var_location
 
     ! Current time of the model.
@@ -368,12 +387,15 @@ module iso_c_bmif_2_0
       type(box), pointer :: bmi_box
       !for determining the number of items to get
       integer :: item_size, num_bytes, num_items, grid
+      character(kind=c_char, len=:), allocatable :: f_str
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-  
-      bmi_status = bmi_box%ptr%get_var_grid(c_to_f_string(name), grid)
+
+      f_str = c_to_f_string(name)
+      bmi_status = bmi_box%ptr%get_var_grid(f_str, grid)
       bmi_status = bmi_box%ptr%get_grid_size(grid, num_items)
-      bmi_status = bmi_box%ptr%get_value_int(c_to_f_string(name), dest(:num_items))
+      bmi_status = bmi_box%ptr%get_value_int(f_str, dest(:num_items))
+      deallocate(f_str)
     end function get_value_int
 
     ! Get a copy of values (flattened!) of the given real variable.
@@ -386,12 +408,15 @@ module iso_c_bmif_2_0
       type(box), pointer :: bmi_box
       !for determining the number of items to get
       integer :: item_size, num_bytes, num_items, grid
+      character(kind=c_char, len=:), allocatable :: f_str
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
-  
-      bmi_status = bmi_box%ptr%get_var_grid(c_to_f_string(name), grid)
+      
+      f_str = c_to_f_string(name)
+      bmi_status = bmi_box%ptr%get_var_grid(f_str, grid)
       bmi_status = bmi_box%ptr%get_grid_size(grid, num_items)
-      bmi_status = bmi_box%ptr%get_value_float(c_to_f_string(name), dest(:num_items))
+      bmi_status = bmi_box%ptr%get_value_float(f_str, dest(:num_items))
+      deallocate(f_str)
     end function get_value_float
 
     ! Get a copy of values (flattened!) of the given double variable.
@@ -404,12 +429,15 @@ module iso_c_bmif_2_0
       type(box), pointer :: bmi_box
       !for determining the number of items to get
       integer :: item_size, num_bytes, num_items, grid
+      character(kind=c_char, len=:), allocatable :: f_str
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
   
-      bmi_status = bmi_box%ptr%get_var_grid(c_to_f_string(name), grid)
+      f_str = c_to_f_string(name)
+      bmi_status = bmi_box%ptr%get_var_grid(f_str, grid)
       bmi_status = bmi_box%ptr%get_grid_size(grid, num_items)
-      bmi_status = bmi_box%ptr%get_value_double(c_to_f_string(name), dest(:num_items))
+      bmi_status = bmi_box%ptr%get_value_double(f_str, dest(:num_items))
+      deallocate(f_str)
     end function get_value_double
 
     ! Set new values for an integer model variable.
@@ -422,12 +450,15 @@ module iso_c_bmif_2_0
       type(box), pointer :: bmi_box
       !for determining the number of items to set
       integer :: item_size, num_bytes, num_items, grid
+      character(kind=c_char, len=:), allocatable :: f_str
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
   
-      bmi_status = bmi_box%ptr%get_var_grid(c_to_f_string(name), grid)
+      f_str = c_to_f_string(name)
+      bmi_status = bmi_box%ptr%get_var_grid(f_str, grid)
       bmi_status = bmi_box%ptr%get_grid_size(grid, num_items)
-      bmi_status = bmi_box%ptr%set_value_int(c_to_f_string(name), src(:num_items))
+      bmi_status = bmi_box%ptr%set_value_int(f_str, src(:num_items))
+      deallocate(f_str)
     end function set_value_int
 
     ! Set new values for a real model variable.
@@ -440,13 +471,16 @@ module iso_c_bmif_2_0
       type(box), pointer :: bmi_box
       !for determining the number of items to set
       integer :: item_size, num_bytes, num_items, grid
+      character(kind=c_char, len=:), allocatable :: f_str
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
       !FIXME try both paths, nbytes/itemsize and grid info in cause some model doesn't implement
       !one one or the other????
-      bmi_status = bmi_box%ptr%get_var_grid(c_to_f_string(name), grid)
+      f_str = c_to_f_string(name)
+      bmi_status = bmi_box%ptr%get_var_grid(f_str, grid)
       bmi_status = bmi_box%ptr%get_grid_size(grid, num_items)
-      bmi_status = bmi_box%ptr%set_value_float(c_to_f_string(name), src(:num_items))
+      bmi_status = bmi_box%ptr%set_value_float(f_str, src(:num_items))
+      deallocate(f_str)
     end function set_value_float
 
     ! Set new values for a double model variable.
@@ -459,12 +493,16 @@ module iso_c_bmif_2_0
       type(box), pointer :: bmi_box
       !for determining the number of items to set
       integer :: item_size, num_bytes, num_items, grid
+      character(kind=c_char, len=:), allocatable :: f_str
+
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
   
-      bmi_status = bmi_box%ptr%get_var_grid(c_to_f_string(name), grid)
+      f_str = c_to_f_string(name)
+      bmi_status = bmi_box%ptr%get_var_grid(f_str, grid)
       bmi_status = bmi_box%ptr%get_grid_size(grid, num_items)
-      bmi_status = bmi_box%ptr%set_value_double(c_to_f_string(name), src(:num_items))
+      bmi_status = bmi_box%ptr%set_value_double(f_str, src(:num_items))
+      deallocate(f_str)
     end function set_value_double
 
     ! Get number of dimensions of the computational grid.
