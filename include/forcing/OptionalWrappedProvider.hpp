@@ -335,17 +335,17 @@ namespace forcing {
          */
         map<string, int> defaultUsageWaits;
 
-        static bool isSuppliedByProvider(const string &valName, ForcingProvider *provider) {
+        static bool isSuppliedByProvider(const string &outputName, ForcingProvider *provider) {
             const vector<string> &available = provider->get_available_forcing_outputs();
-            return find(available.begin(), available.end(), valName) != available.end();
+            return find(available.begin(), available.end(), outputName) != available.end();
         }
 
-        inline bool isSuppliedByWrappedProvider(const string &valName) {
-            return wrapped_provider != nullptr && isSuppliedByProvider(valName, wrapped_provider);
+        inline bool isSuppliedByWrappedProvider(const string &outputName) {
+            return wrapped_provider != nullptr && isSuppliedByProvider(outputName, wrapped_provider);
         }
 
-        inline bool isSuppliedWithDefault(const string &valName) {
-            return defaultValues.find(valName) != defaultValues.end();
+        inline bool isSuppliedWithDefault(const string &outputName) {
+            return defaultValues.find(outputName) != defaultValues.end();
         }
 
     };
