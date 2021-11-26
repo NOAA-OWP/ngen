@@ -386,7 +386,7 @@ double Bmi_Multi_Formulation::get_response(time_step_t t_index, time_step_t t_de
     }
     // With the module index, we can also pick the type
     if (module_types[index] == "bmi_c++") {
-        return get_module_var_value_as_double<Bmi_C_Formulation>(get_bmi_main_output_var(), modules[index]);
+        return get_module_var_value_as_double<Bmi_Cpp_Formulation>(get_bmi_main_output_var(), modules[index]);
     }
     #ifdef NGEN_BMI_C_LIB_ACTIVE
     if (module_types[index] == "bmi_c") {
