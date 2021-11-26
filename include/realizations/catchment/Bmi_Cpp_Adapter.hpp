@@ -9,7 +9,7 @@
 #include "StreamHandler.hpp"
 
 // Forward declaration to provide access to protected items in testing
-//class Bmi_Cpp_Adapter_Test;
+class Bmi_Cpp_Adapter_Test;
 
 using Cpp_Bmi = bmi::Bmi;
 
@@ -131,7 +131,13 @@ namespace models {
              * @throws models::external::State_Exception Thrown if nested model `finalize()` call is not successful.
              */
             void Finalize() override {
-                //finalizeForCppAdapter();
+                if (model_initialized) {
+                    // Acquire and call the BMI destroyer function
+                    ModelDestroyer dynamic_destroyer;
+                    void* symbol = dynamic_load_symbol(model_destroy_fname);
+                    dynamic_destroyer = (ModelDestroyer) symbol;
+                    dynamic_destroyer(this->bmi_model.get());
+                }
             }
 
             string GetComponentName() override;
@@ -364,20 +370,33 @@ namespace models {
                 void *symbol;
                 //Cpp_Bmi *(*dynamic_create_bmi)(Cpp_Bmi *model);
                 ModelCreator dynamic_creator;
-                ModelDestroyer dynamic_destroyer;
 
                 try {
                     // Acquire the BMI creator function
                     symbol = dynamic_load_symbol(model_create_fname);
                     dynamic_creator = (ModelCreator) symbol;
-                    // Acquire the BMI destroyer function
-                    symbol = dynamic_load_symbol(model_destroy_fname);
-                    dynamic_destroyer = (ModelDestroyer) symbol;
-                    // Setup the shared pointer to the model object
                     bmi_model = std::shared_ptr<Cpp_Bmi>(
                         dynamic_creator(),
-                        [dynamic_destroyer](Cpp_Bmi *p){ dynamic_destroyer(p); }); //CCP
-                    ; // ^ This *should* obviate the need for specific destructor/Finalize logic.
+                        [](Cpp_Bmi* p) {
+                            // DO NOTHING.
+                            /* The best practice pattern for using C++ objects with dlopen is to declare a creator function
+                             * AND a destroyer function. It is not wise to create the object in the library and destroy it
+                             * in the calling environment because reasons (https://stackoverflow.com/a/40109212). Originally
+                             * here I had a call to the destroyer function, but that blew up because in our implementation
+                             * dlclose() gets called before this shared_ptr gets decremented to zero, so segfault happens
+                             * when calling the library-resident destroyer function. It would probably be simpler to skip
+                             * shared_ptr entirely and just keep a raw pointer to the object, but that makes it look like 
+                             * we're being ignorant of smart pointers...so this is left here as an explicit NO-OP and the
+                             * destroyer is called in Finalize() above, which occurs in the right sequence. Better ideas?
+                             * 
+                             * Note also that the creator function is called in our *constructor*, not in Initialize(), so
+                             * this is somewhat asymmetric...however, BMI's documentation only stipulates that Initialize()
+                             * "should perform all tasks that are to take place before entering the model’s time loop," so
+                             * it seems legal to e.g. call GetInputVarNames() before Initialize()--which would require the
+                             * backing model to already exist--so creating it in Initialize() is not an option.
+                             */
+                        }
+                    );
                 }
                 catch (const ::external::ExternalIntegrationException &e) {
                     // "Override" the default message in this case
@@ -444,7 +463,7 @@ namespace models {
             }
 
             // For unit testing
-            //friend class ::Bmi_Cpp_Adapter_Test;
+            friend class ::Bmi_Cpp_Adapter_Test;
 
         };
 

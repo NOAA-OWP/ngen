@@ -15,6 +15,7 @@
 // Forward declaration to provide access to protected items in testing
 class Bmi_Formulation_Test;
 class Bmi_C_Formulation_Test;
+class Bmi_Cpp_Formulation_Test;
 class Bmi_C_Cfe_IT;
 
 namespace realization {
@@ -814,6 +815,7 @@ namespace realization {
         // Unit test access
         friend class ::Bmi_Formulation_Test;
         friend class ::Bmi_C_Formulation_Test;
+        friend class ::Bmi_Cpp_Formulation_Test;
 
     private:
         /**
