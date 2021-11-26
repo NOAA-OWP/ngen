@@ -243,38 +243,6 @@ namespace forcing {
         }
 
         /**
-         * Record that there was an instance of a default value being used and manage the default usage "waits."
-         *
-         * When constructed, this instance may have been provided with a number of default usage "waits" for one or more
-         * outputs; i.e., a number of times it should wait to proxy a particular output value from the backing provider
-         * and instead allow a default value to override the aforementioned backing value.  This function, which should
-         * be called by @ref get_value any time a default is used, performs any modifications to the object's state that
-         * are necessary when a default is used, in particular with respect to managing "waits."
-         *
-         * In this base implementation, a recorded default usage does not count against the required number of "waits"
-         * for an output unless/until there is a wrapped backing provider set that can provide the given output.
-         * Otherwise, positive wait counts for this output be reduced by 1.  This allows negative wait counts to be used
-         * to represent that some output should always have the default used, even if the backing provider could supply
-         * a value for it.
-         *
-         * @param output_name The name of the output for which a default was used.
-         */
-        virtual void recordUsingDefault(const string &output_name) {
-            // Don't bother doing anything if there aren't waits assigned for this output
-            // Also, in this implementation, don't count usages until there is a backing provider that can provide this
-            auto waits_it = defaultUsageWaits.find(output_name);
-            if (waits_it != defaultUsageWaits.end() && isSuppliedByWrappedProvider(output_name)) {
-                // A value of 0 should be inferred and cleared from the collection, so ...
-                if (waits_it->second == 1) {
-                    defaultUsageWaits.erase(waits_it);
-                }
-                else if (waits_it->second > 1) {
-                    waits_it->second -= 1;
-                }
-            }
-        }
-
-        /**
          * Set the wrapped provider, if the given arg is valid for doing so.
          *
          * For a valid provider pointer argument, set the wrapped provider to it, clear the info message and return
@@ -317,6 +285,40 @@ namespace forcing {
             wrapped_provider = provider;
             setMessage.clear();
             return true;
+        }
+
+    protected:
+
+        /**
+         * Record that there was an instance of a default value being used and manage the default usage "waits."
+         *
+         * When constructed, this instance may have been provided with a number of default usage "waits" for one or more
+         * outputs; i.e., a number of times it should wait to proxy a particular output value from the backing provider
+         * and instead allow a default value to override the aforementioned backing value.  This function, which should
+         * be called by @ref get_value any time a default is used, performs any modifications to the object's state that
+         * are necessary when a default is used, in particular with respect to managing "waits."
+         *
+         * In this base implementation, a recorded default usage does not count against the required number of "waits"
+         * for an output unless/until there is a wrapped backing provider set that can provide the given output.
+         * Otherwise, positive wait counts for this output be reduced by 1.  This allows negative wait counts to be used
+         * to represent that some output should always have the default used, even if the backing provider could supply
+         * a value for it.
+         *
+         * @param output_name The name of the output for which a default was used.
+         */
+        virtual void recordUsingDefault(const string &output_name) {
+            // Don't bother doing anything if there aren't waits assigned for this output
+            // Also, in this implementation, don't count usages until there is a backing provider that can provide this
+            auto waits_it = defaultUsageWaits.find(output_name);
+            if (waits_it != defaultUsageWaits.end() && isSuppliedByWrappedProvider(output_name)) {
+                // A value of 0 should be inferred and cleared from the collection, so ...
+                if (waits_it->second == 1) {
+                    defaultUsageWaits.erase(waits_it);
+                }
+                else if (waits_it->second > 1) {
+                    waits_it->second -= 1;
+                }
+            }
         }
 
     private:
