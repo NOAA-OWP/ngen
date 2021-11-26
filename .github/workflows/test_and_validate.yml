@@ -115,6 +115,68 @@ jobs:
       - name: cleanup_dir
         run: rm -rf cmake_build
 
+
+  # Run BMI C++ tests in linux environment
+  test_bmi_cpp_ubuntu_latest:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Init Submodules
+        run: git submodule update --init --recursive
+
+      - name: cmake_init_shared_lib_build
+        run: cmake -B extern/test_bmi_cpp/cmake_build -S extern/test_bmi_cpp 
+
+      - name: build_test_bmi_cpp_shared_lib
+        run: cmake --build extern/test_bmi_cpp/cmake_build --target testbmicppmodel
+
+      - name: Cache Boost Dependency
+        id: cache-boost-dep
+        uses: actions/cache@v1
+        with:
+          path: boost_1_72_0
+          key: unix-boost-dep
+
+      - name: Get Boost Dependency
+        if: steps.cache-boost-dep.outputs.cache-hit != 'true'
+        run: |
+          curl -L -O https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2
+          tar xjf boost_1_72_0.tar.bz2
+
+      - name: cmake_init_build
+        run: |
+          export BOOST_ROOT="$(pwd)/boost_1_72_0"
+          [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
+          cmake -B cmake_build -DNGEN_ACTIVATE_PYTHON:BOOL=OFF -S .
+
+      - name: build_bmi_c++_tests
+        run: cmake --build cmake_build --target test_bmi_cpp -- -j ${{ env.LINUX_NUM_PROC_CORES }}
+        timeout-minutes: 15
+
+      - name: run_bmi_c++_tests
+        run: |
+          cd ./cmake_build/test/
+          ./test_bmi_cpp
+          cd ../../
+        timeout-minutes: 15
+
+      - name: clean_build
+        run: cmake --build cmake_build --target clean
+
+      - name: clean_shared_lib_build
+        run: cmake --build extern/test_bmi_cpp/cmake_build --target clean
+
+      - name: cleanup_dir
+        run: rm -rf cmake_build
+
+      - name: cleanup_dir
+        run: rm -rf extern/test_bmi_cpp/cmake_build
+
   # Run BMI C tests in linux environment, and separating to isolate
   test_bmi_c_ubuntu_latest:
     # The type of runner that the job will run on
@@ -367,6 +429,67 @@ jobs:
 
       - name: cleanup_dir
         run: rm -rf cmake_build
+
+  # Run BMI C++ tests in macOS environment
+  test_bmi_cpp_macos_latest:
+    # The type of runner that the job will run on
+    runs-on: macos-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Init Submodules
+        run: git submodule update --init --recursive
+
+      - name: cmake_init_shared_lib_build
+        run: cmake -B extern/test_bmi_cpp/cmake_build -S extern/test_bmi_cpp
+
+      - name: build_test_bmi_cpp_shared_lib
+        run: cmake --build extern/test_bmi_cpp/cmake_build --target testbmicppmodel
+
+      - name: Cache Boost Dependency
+        id: cache-boost-dep
+        uses: actions/cache@v1
+        with:
+          path: boost_1_72_0
+          key: unix-boost-dep
+
+      - name: Get Boost Dependency
+        if: steps.cache-boost-dep.outputs.cache-hit != 'true'
+        run: |
+          curl -L -O https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2
+          tar xjf boost_1_72_0.tar.bz2
+
+      - name: cmake_init_build
+        run: |
+          export BOOST_ROOT="$(pwd)/boost_1_72_0"
+          [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
+          cmake -B cmake_build -DNGEN_ACTIVATE_PYTHON:BOOL=OFF -S .
+
+      - name: build_bmi_c++_tests
+        run: cmake --build cmake_build --target test_bmi_cpp -- -j ${{ env.MACOS_NUM_PROC_CORES }}
+        timeout-minutes: 15
+
+      - name: run_bmi_c++_tests
+        run: |
+          cd ./cmake_build/test/
+          ./test_bmi_cpp
+          cd ../../
+        timeout-minutes: 15
+
+      - name: clean_build
+        run: cmake --build cmake_build --target clean
+
+      - name: clean_shared_lib_build
+        run: cmake --build extern/test_bmi_cpp/cmake_build --target clean
+
+      - name: cleanup_dir
+        run: rm -rf cmake_build
+
+      - name: cleanup_shared_lib_dir
+        run: rm -rf extern/test_bmi_cpp/cmake_build
 
   # Run BMI C tests in MacOS environment, and separating to isolate
   test_bmi_c_macos_latest:
