@@ -13,6 +13,8 @@ if(MPI_ACTIVE)
     add_compile_definitions(NGEN_MPI_TESTS_ACTIVE)
 endif()
 
+add_compile_definitions(NGEN_BMI_CPP_LIB_TESTS_ACTIVE)
+
 if(BMI_C_LIB_ACTIVE)
     add_compile_definitions(NGEN_BMI_C_LIB_TESTS_ACTIVE)
 endif()
@@ -125,6 +127,18 @@ if(MPI_ACTIVE)
            NGen::geojson
 )
 endif()
+
+########################## BMI C++ Tests
+add_test(
+        test_bmi_cpp
+        2
+        realizations/catchments/Bmi_Cpp_Adapter_Test.cpp
+        realizations/catchments/Bmi_Cpp_Formulation_Test.cpp
+        NGen::core
+        NGen::realizations_catchment
+        NGen::core_mediator
+        libudunits2
+)
 
 ########################## BMI C Tests
 if(BMI_C_LIB_ACTIVE)

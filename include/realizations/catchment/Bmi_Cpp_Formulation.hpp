@@ -54,6 +54,7 @@ namespace realization {
 
         // Unit test access
         friend class ::Bmi_Formulation_Test;
+        friend class ::Bmi_Cpp_Formulation_Test;
 
     private:
 
