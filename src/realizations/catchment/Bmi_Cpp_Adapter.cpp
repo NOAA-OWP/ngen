@@ -40,6 +40,11 @@ Bmi_Cpp_Adapter::Bmi_Cpp_Adapter(const std::string& type_name, std::string libra
             acquire_time_conversion_factor(bmi_model_time_convert_factor);
         }
         // Record the exception message before re-throwing to handle subsequent function calls properly
+        catch (const std::exception &e) {
+            std::clog << e.what() << std::endl;
+            model_initialized = true;
+            throw e;
+        }
         catch (...) {
             const std::exception_ptr& e = current_exception();
             // Make sure this is set to 'true' after this function call finishes
