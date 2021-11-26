@@ -243,6 +243,16 @@ namespace forcing {
         }
 
         /**
+         * Test whether the instance was supplied with default values that can be returned for this output.
+         *
+         * @param outputName The output in question.
+         * @return Whether a default value is available for this output.
+         */
+        inline bool isSuppliedWithDefault(const string &outputName) {
+            return defaultValues.find(outputName) != defaultValues.end();
+        }
+
+        /**
          * Set the wrapped provider, if the given arg is valid for doing so.
          *
          * For a valid provider pointer argument, set the wrapped provider to it, clear the info message and return
@@ -342,10 +352,6 @@ namespace forcing {
 
         inline bool isSuppliedByWrappedProvider(const string &outputName) {
             return wrapped_provider != nullptr && isSuppliedByProvider(outputName, wrapped_provider);
-        }
-
-        inline bool isSuppliedWithDefault(const string &outputName) {
-            return defaultValues.find(outputName) != defaultValues.end();
         }
 
     };
