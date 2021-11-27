@@ -90,18 +90,7 @@ void Bmi_Cpp_Adapter_Test::SetUp() {
         std::clog << e.what() << std::endl;
         throw e;
     }
-    catch (...) {
-        std::exception_ptr p = std::current_exception();
-        std::clog <<(p ? p.__cxa_exception_type()->name() : "null") << std::endl;
-        try{
-            std::rethrow_exception(p);
-        }
-        catch (const std::exception &e) {
-            std::clog << "Inner exception: " << e.what() << std::endl;
-        }
-        std::rethrow_exception(p);
-    }
-}
+ }
 
 void Bmi_Cpp_Adapter_Test::TearDown() {
 
