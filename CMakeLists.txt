@@ -43,6 +43,12 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 include(ExternalProject)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
 
+if (ENABLE_COVERAGE)
+    include(CodeCoverage)
+    # This must happen before anything compiles...
+    append_coverage_compiler_flags()
+endif()
+
 # Account for different OS and how that impacts shared lib file names
 if ("${CMAKE_SYSTEM_NAME}" STREQUAL "Darwin")
     set(SHARED_LIB_EXTENSION "dylib")
@@ -333,6 +339,53 @@ if(PACKAGE_TESTS)
     enable_testing()
     include(GoogleTest)
     add_subdirectory(test)
+    if(ENABLE_COVERAGE)
+        set(COVERAGE_EXCLUDES
+                "${PROJECT_SOURCE_DIR}/test/*",
+                "${PROJECT_SOURCE_DIR}/extern/*",
+                )
+        #set(COVERAGE_LCOV_ARGS "--no-external") # doesn't work
+        if(LCOV_PATH)
+            setup_target_for_coverage_lcov(
+                NAME test_unit_lcov
+                EXECUTABLE test_unit
+                LCOV_ARGS "--no-external"
+            )
+            setup_target_for_coverage_lcov(
+                NAME test_network_lcov
+                EXECUTABLE test_network
+                LCOV_ARGS "--no-external"
+            )
+            setup_target_for_coverage_lcov(
+                NAME test_bmi_multi_lcov
+                EXECUTABLE test_bmi_multi
+                LCOV_ARGS "--no-external"
+            )
+            setup_target_for_coverage_lcov(
+                NAME test_nexus_lcov
+                EXECUTABLE test_nexus
+                LCOV_ARGS "--no-external"
+            )
+            setup_target_for_coverage_lcov(
+                NAME test_giuh_lcov
+                EXECUTABLE test_giuh
+                LCOV_ARGS "--no-external"
+            )
+            if(BMI_C_LIB_ACTIVE)
+                setup_target_for_coverage_lcov(
+                    NAME test_bmi_c_lcov
+                    EXECUTABLE test_bmi_c
+                    LCOV_ARGS "--no-external"
+                )
+            endif()
+            setup_target_for_coverage_lcov(
+                NAME test_all_lcov
+                EXECUTABLE test_all
+                LCOV_ARGS "--no-external"
+            )
+            #TODO: Combine all the outputs with lcov ( https://stackoverflow.com/a/60636596/489116 )
+        endif()
+    endif()
 endif()
 
 #add_library(Hymod ${HYMOD_INCLUDE_DIR}/Hymod.h)
