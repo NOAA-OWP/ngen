@@ -95,6 +95,8 @@ CMakeCache.txt
 *.cmake
 # Specifically adding this to cover a symlink pointing to an alternate dir
 /cmake-build-debug
+/cmake_build
+/build
 
 # Static Headers
 include/bmi.hpp
