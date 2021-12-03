@@ -277,6 +277,7 @@ string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, std::st
     // Start by first checking whether we are NOT just using the last module's values
     if (!is_out_vars_from_last_mod) {
 
+        // TODO: see Github issue 355: this design (and formulation output handling in general) needs to be reworked
         // Clear anything currently in the multi formulation's stream buffer
         output_text_stream->str(std::string());
 

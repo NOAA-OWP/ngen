@@ -96,6 +96,7 @@ string Bmi_Fortran_Formulation::get_output_line_for_timestep(int timestep, std::
 
     // TODO: for now, just get current value, and ignore the timestep param
 
+    // TODO: see Github issue 355: this design (and formulation output handling in general) needs to be reworked
     // Clear anything currently in there
     output_text_stream->str(std::string());
 
