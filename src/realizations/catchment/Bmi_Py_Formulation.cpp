@@ -15,6 +15,11 @@ shared_ptr<Bmi_Py_Adapter> Bmi_Py_Formulation::construct_model(const geojson::Pr
     if (python_type_name_iter == properties.end()) {
         throw std::runtime_error("BMI Python formulation requires Python model class type, but none given in config");
     }
+    //Load a custom module path, if provided
+    auto python_module_path_iter = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__PYTHON_MODULE_PATH);
+    if(python_module_path_iter != properties.end()){
+        utils::ngenPy::InterpreterUtil::addToPyPath(python_module_path_iter->second.as_string());
+    }
     std::string python_type_name = python_type_name_iter->second.as_string();
 
     return std::make_shared<Bmi_Py_Adapter>(

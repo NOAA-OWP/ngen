@@ -25,6 +25,7 @@
 #define BMI_REALIZATION_CFG_PARAM_OPT__FIXED_TIME_STEP "fixed_time_step"
 #define BMI_REALIZATION_CFG_PARAM_OPT__LIB_FILE "library_file"
 #define BMI_REALIZATION_CFG_PARAM_OPT__PYTHON_TYPE_NAME "python_type"
+#define BMI_REALIZATION_CFG_PARAM_OPT__PYTHON_MODULE_PATH "module_path"
 #define BMI_REALIZATION_CFG_PARAM_OPT__REGISTRATION_FUNC "registration_function"
 
 // Supported Standard Names for BMI variables
