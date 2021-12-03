@@ -225,6 +225,7 @@ namespace models {
                  * this might cause trouble on certain systems, since (depending on the particular sizes of types) that
                  * could produce duplicate "case" values.
                  */
+                //TODO: include other numpy type strings, https://numpy.org/doc/stable/user/basics.types.html
                 if (py_type_name == "int" && item_size == sizeof(short)) {
                     return "short";
                 } else if (py_type_name == "int" && item_size == sizeof(int)) {
@@ -233,6 +234,8 @@ namespace models {
                     return "long";
                 } else if (py_type_name == "int" && item_size == sizeof(long long)) {
                     return "long long";
+                } else if (py_type_name == "longlong" && item_size == sizeof(long long)) {
+                    return "long long"; //numpy type
                 } else if (py_type_name == "float" && item_size == sizeof(float)) {
                     return "float";
                 } else if ((py_type_name == "float" || py_type_name == "float64" || py_type_name == "np.float64" ||
