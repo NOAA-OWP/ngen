@@ -645,6 +645,9 @@ namespace models {
                     bmi_model = make_shared<py::object>(bmi_py_class());
                     bmi_model->attr("initialize")(bmi_init_config);
                 }
+                catch (std::runtime_error& e){ //Catch specific exception types so the type/message don't get erased
+                    throw e;
+                }
                 // Record the exception message before re-throwing to handle subsequent function calls properly
                 // TODO: handle exceptions in better detail, without losing type information
                 catch (exception& e) {

@@ -29,7 +29,11 @@ Bmi_Py_Adapter::Bmi_Py_Adapter(const string &type_name, string bmi_init_config, 
         model_initialized = true;
         acquire_time_conversion_factor(bmi_model_time_convert_factor);
     }
-        // Record the exception message before re-throwing to handle subsequent function calls properly
+    catch (std::runtime_error& e){ //Catch specific exception and re-throw so type/message isn't erased
+        model_initialized = true;
+        throw e;
+    }
+    // Record the exception message before re-throwing to handle subsequent function calls properly
     catch (exception &e) {
         // Make sure this is set to 'true' after this function call finishes
         model_initialized = true;
