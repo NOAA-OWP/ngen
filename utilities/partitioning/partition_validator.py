@@ -30,7 +30,7 @@ def test_catchments_ids(data: dict):
     cat_id_conflicts = 0
 
     # make sure that each catchment has a unique set of catchment_ids
-    for key1, cachment_set1 in cat_ids.items():
+    for key1, catchment_set1 in cat_ids.items():
         for key2, catchment_set2 in cat_ids.items():
             if key1 != key2:
                 inter = cachment_set1.intersection(catchment_set2)
@@ -56,7 +56,7 @@ def test_nexus_ids(data: dict):
     remote_nexus_ids = set()
 
     # find the remote nexi by finding all nexus ids that are more than one partition
-    for key1, cachment_set1 in nex_ids.items():
+    for key1, catchment_set1 in nex_ids.items():
         for key2, catchment_set2 in nex_ids.items():
             if key1 != key2:
                 inter = cachment_set1.intersection(catchment_set2)
