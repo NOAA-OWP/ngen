@@ -151,7 +151,7 @@ class CsvPerFeatureForcingProvider : public forcing::ForcingProvider
             return UnitsHelper::get_converted_value(available_forcings_units[output_name], value, output_units);
         }
         catch (const std::runtime_error& e){
-            #ifndef UDUNITS_QUITE
+            #ifndef UDUNITS_QUIET
             std::cerr<<"Unit conversion error: "<<std::endl<<e.what()<<std::endl<<"Returning unconverted value!"<<std::endl;
             #endif
             return value;
