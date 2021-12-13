@@ -25,6 +25,9 @@ class UnitsHelper {
         {
             throw std::runtime_error("Unable to create UDUNITS2 Unit System.");
         }
+        #ifndef UDUNITS_QUIET
+        ut_set_error_message_handler(ut_ignore);
+        #endif
     }
 
 };
