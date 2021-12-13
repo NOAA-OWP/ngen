@@ -353,6 +353,10 @@ endif()
 if(ET_QUIET)
 add_compile_definitions(ET_QUIET)
 endif()
+
+if(NGEN_QUIET)
+add_compile_definitions(NGEN_QUIET)
+endif()
 #add_library(Hymod ${HYMOD_INCLUDE_DIR}/Hymod.h)
 #set_target_properties(Hymod PROPERTIES LINKER_LANGUAGE CXX)
 

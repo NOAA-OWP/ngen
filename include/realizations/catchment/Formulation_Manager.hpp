@@ -155,9 +155,11 @@ namespace realization {
                     for (std::pair<std::string, boost::property_tree::ptree> catchment_config : *possible_catchment_configs) {
                       if( fabric->find(catchment_config.first) == -1 )
                       {
-                        std::cout<<"WARNING Formulation_Manager::read: Cannot create formulation for catchment "
+                        #ifndef NGEN_QUIET
+                        std::cerr<<"WARNING Formulation_Manager::read: Cannot create formulation for catchment "
                                  <<catchment_config.first
                                  <<" that isn't identified in the hydrofabric or requested subset"<<std::endl;
+                        #endif
                         continue;
                       }
                       auto formulations = catchment_config.second.get_child_optional("formulations");
