@@ -335,6 +335,21 @@ if(PACKAGE_TESTS)
     add_subdirectory(test)
 endif()
 
+<<<<<<< HEAD
+if(UDUNITS_QUITE)
+add_compile_definitions(UDUNITS_QUITE)
+=======
+if(QUITE)
+set(UDUNITS_QUITE true)
+set(ET_QUITE true)
+set(NGEN_QUITE true)
+endif()
+
+if(UDUNITS_QUIET)
+add_compile_definitions(UDUNITS_QUIET)
+>>>>>>> 7888582... sq udunits
+endif()
+
 #add_library(Hymod ${HYMOD_INCLUDE_DIR}/Hymod.h)
 #set_target_properties(Hymod PROPERTIES LINKER_LANGUAGE CXX)
 
