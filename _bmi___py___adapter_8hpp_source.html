@@ -290,7 +290,7 @@ $(document).ready(function(){initNavTree('_bmi___py___adapter_8hpp_source.html',
 <div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;                    <span class="keywordflow">return</span> <span class="stringliteral">&quot;int&quot;</span>;</div>
 <div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;                } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (py_type_name == <span class="stringliteral">&quot;int&quot;</span> &amp;&amp; item_size == <span class="keyword">sizeof</span>(<span class="keywordtype">long</span>)) {</div>
 <div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;                    <span class="keywordflow">return</span> <span class="stringliteral">&quot;long&quot;</span>;</div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;                } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (py_type_name == <span class="stringliteral">&quot;int&quot;</span> &amp;&amp; item_size == <span class="keyword">sizeof</span>(<span class="keywordtype">long</span> <span class="keywordtype">long</span>)) {</div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;                } <span class="keywordflow">else</span> <span class="keywordflow">if</span> ( (py_type_name == <span class="stringliteral">&quot;int&quot;</span> || py_type_name == <span class="stringliteral">&quot;int64&quot;</span>) &amp;&amp; item_size == <span class="keyword">sizeof</span>(<span class="keywordtype">long</span> <span class="keywordtype">long</span>)) {</div>
 <div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;                    <span class="keywordflow">return</span> <span class="stringliteral">&quot;long long&quot;</span>;</div>
 <div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;                } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (py_type_name == <span class="stringliteral">&quot;longlong&quot;</span> &amp;&amp; item_size == <span class="keyword">sizeof</span>(<span class="keywordtype">long</span> <span class="keywordtype">long</span>)) {</div>
 <div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;                    <span class="keywordflow">return</span> <span class="stringliteral">&quot;long long&quot;</span>; <span class="comment">//numpy type</span></div>
@@ -608,7 +608,7 @@ $(document).ready(function(){initNavTree('_bmi___py___adapter_8hpp_source.html',
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_9058ef7c383dff996c678c5ba80ec03e.html">realizations</a></li><li class="navelem"><a class="el" href="dir_8dbd500a1ae0b3d23deb7285e2980d8b.html">catchment</a></li><li class="navelem"><b>Bmi_Py_Adapter.hpp</b></li>
-    <li class="footer">Generated on Mon Dec 13 2021 19:56:48 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Mon Dec 13 2021 20:30:55 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
