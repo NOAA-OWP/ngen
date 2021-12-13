@@ -64,7 +64,7 @@ pdm03_struct get_et_params() {
 }
 
 int main(int argc, char *argv[]) {
-    std::cout << "Hello there " << ngen_VERSION_MAJOR << "."
+    std::cout << "NGen Framework " << ngen_VERSION_MAJOR << "."
               << ngen_VERSION_MINOR << "."
               << ngen_VERSION_PATCH << std::endl;
     std::ios::sync_with_stdio(false);
