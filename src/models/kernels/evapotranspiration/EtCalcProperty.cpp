@@ -421,10 +421,12 @@ void et::calculate_intermediate_variables
         if (air_actual_vapor_pressure_Pa > air_saturation_vapor_pressure_Pa) {
             // this is bad.   Actual vapor pressure of air should not be higher than saturated value.
             // warn and reset to something meaningful
+            #ifndef ET_QUIET
             fprintf(stderr,
                     "Invalid value of specific humidity with no supplied rel. humidity in ET calc. function:\n");
             fprintf(stderr, "Relative Humidity: %lf percent\n", et_forcing->relative_humidity_percent);
             fprintf(stderr, "Specific Humidity: %lf kg/kg\n", et_forcing->specific_humidity_2m_kg_per_kg);
+            #endif
             air_actual_vapor_pressure_Pa = 0.65 * air_saturation_vapor_pressure_Pa;
         }
     }
