@@ -232,7 +232,7 @@ namespace models {
                     return "int";
                 } else if (py_type_name == "int" && item_size == sizeof(long)) {
                     return "long";
-                } else if (py_type_name == "int" && item_size == sizeof(long long)) {
+                } else if ( (py_type_name == "int" || py_type_name == "int64") && item_size == sizeof(long long)) {
                     return "long long";
                 } else if (py_type_name == "longlong" && item_size == sizeof(long long)) {
                     return "long long"; //numpy type
