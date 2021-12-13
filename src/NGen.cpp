@@ -294,6 +294,11 @@ int main(int argc, char *argv[]) {
         {
           response *= (catchment_collection->get_feature(id)->get_property("area_sqkm").as_real_number() * 1000000);
         }
+        //TODO put this somewhere else as well, for now, an implicit assumption is that a modules get_response returns
+        //m/timestep
+        //since we are operating on a 1 hour (3600s) dt, we need to scale the output appropriately
+        //so no response is m^2/hr...m^2/hr * 1hr/3600s = m^3/hr
+        response /= 3600.0;
         //update the nexus with this flow
         for(auto& nexus : features.destination_nexuses(id)) {
           //TODO in a DENDRIDIC network, only one destination nexus per catchment
