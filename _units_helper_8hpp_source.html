@@ -112,11 +112,14 @@ $(document).ready(function(){initNavTree('_units_helper_8hpp_source.html',''); i
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        {</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;            <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Unable to create UDUNITS2 Unit System.&quot;</span>);</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        }</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    }</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;};</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#endif </span><span class="comment">//NGEN_UNITSHELPER_H</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">        #ifndef UDUNITS_QUIET</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        ut_set_error_message_handler(ut_ignore);</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">        #endif</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    }</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;};</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#endif </span><span class="comment">//NGEN_UNITSHELPER_H</span></div>
 <div class="ttc" id="aclass_units_helper_html"><div class="ttname"><a href="class_units_helper.html">UnitsHelper</a></div><div class="ttdef"><b>Definition:</b> UnitsHelper.hpp:7</div></div>
 <div class="ttc" id="aclass_units_helper_html_a4a2ffc262b5d1f3c189ec2b9218d7fa2"><div class="ttname"><a href="class_units_helper.html#a4a2ffc262b5d1f3c189ec2b9218d7fa2">UnitsHelper::init_unit_system</a></div><div class="ttdeci">static void init_unit_system()</div><div class="ttdef"><b>Definition:</b> UnitsHelper.hpp:18</div></div>
 <div class="ttc" id="aclass_units_helper_html_a5b1a7a720885a985480f58c8991335b5"><div class="ttname"><a href="class_units_helper.html#a5b1a7a720885a985480f58c8991335b5">UnitsHelper::get_converted_value</a></div><div class="ttdeci">static double get_converted_value(const std::string &amp;in_units, double value, const std::string &amp;out_units)</div><div class="ttdef"><b>Definition:</b> UnitsHelper.cpp:6</div></div>
@@ -128,7 +131,7 @@ $(document).ready(function(){initNavTree('_units_helper_8hpp_source.html',''); i
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_3d69f64eaf81436fe2b22361382717e5.html">core</a></li><li class="navelem"><a class="el" href="dir_37fe149830521974d956964a619d45c1.html">mediator</a></li><li class="navelem"><b>UnitsHelper.hpp</b></li>
-    <li class="footer">Generated on Mon Dec 13 2021 18:17:09 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Mon Dec 13 2021 19:56:47 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
