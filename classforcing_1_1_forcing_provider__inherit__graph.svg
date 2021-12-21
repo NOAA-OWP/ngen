@@ -234,58 +234,52 @@ var sectionId = 'dynsection-0';
 <g id="node5" class="node">
 <title>Node5</title>
 <g id="a_node5"><a xlink:href="classrealization_1_1_bmi___formulation.html" target="_top" xlink:title="Abstraction of formulation with backing model object(s) that implements the BMI.">
-<polygon fill="white" stroke="black" points="526,-2011.5 526,-2497.5 674,-2497.5 674,-2011.5 526,-2011.5"/>
-<text text-anchor="middle" x="600" y="-2485.5" font-family="Helvetica,sans-Serif" font-size="10.00">realization::Bmi_Formulation</text>
-<polyline fill="none" stroke="black" points="526,-2478.5 674,-2478.5 "/>
-<text text-anchor="start" x="534" y="-2466.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; bmi_main_output_var</text>
-<text text-anchor="start" x="534" y="-2455.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; model_type_name</text>
-<text text-anchor="start" x="534" y="-2444.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; output_header_fields</text>
-<text text-anchor="start" x="534" y="-2433.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; output_variable_names</text>
-<text text-anchor="start" x="534" y="-2422.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; OPTIONAL_PARAMETERS</text>
-<text text-anchor="start" x="534" y="-2411.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; REQUIRED_PARAMETERS</text>
-<polyline fill="none" stroke="black" points="526,-2404.5 674,-2404.5 "/>
-<text text-anchor="start" x="534" y="-2392.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Bmi_Formulation()</text>
-<text text-anchor="start" x="534" y="-2381.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ ~Bmi_Formulation()</text>
-<text text-anchor="start" x="534" y="-2370.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ convert_model_time()</text>
-<text text-anchor="start" x="534" y="-2359.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_allow_model_exceed</text>
-<text text-anchor="start" x="534" y="-2348.5" font-family="Helvetica,sans-Serif" font-size="10.00">_end_time()</text>
-<text text-anchor="start" x="534" y="-2337.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_bmi_input_variables()</text>
-<text text-anchor="start" x="534" y="-2326.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_bmi_main_output</text>
-<text text-anchor="start" x="534" y="-2315.5" font-family="Helvetica,sans-Serif" font-size="10.00">_var()</text>
-<text text-anchor="start" x="534" y="-2304.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_bmi_model_start</text>
-<text text-anchor="start" x="534" y="-2293.5" font-family="Helvetica,sans-Serif" font-size="10.00">_time_forcing_offset_s()</text>
-<text text-anchor="start" x="534" y="-2282.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_bmi_output_variables()</text>
-<text text-anchor="start" x="534" y="-2271.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_config_mapped_variable</text>
-<text text-anchor="start" x="534" y="-2260.5" font-family="Helvetica,sans-Serif" font-size="10.00">_name()</text>
-<text text-anchor="start" x="534" y="-2249.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_model_current_time()</text>
-<text text-anchor="start" x="534" y="-2238.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_model_end_time()</text>
-<text text-anchor="start" x="534" y="-2227.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_forcing_file_path()</text>
-<text text-anchor="start" x="534" y="-2216.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_model_type_name()</text>
-<text text-anchor="start" x="534" y="-2205.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_output_header_fields()</text>
-<text text-anchor="start" x="534" y="-2194.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_output_header_line()</text>
-<text text-anchor="start" x="534" y="-2183.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_output_variable</text>
-<text text-anchor="start" x="534" y="-2172.5" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
-<text text-anchor="start" x="534" y="-2161.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_required_parameters()</text>
-<text text-anchor="start" x="534" y="-2150.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ is_bmi_input_variable()</text>
-<text text-anchor="start" x="534" y="-2139.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ is_bmi_model_time_step</text>
-<text text-anchor="start" x="534" y="-2128.5" font-family="Helvetica,sans-Serif" font-size="10.00">_fixed()</text>
-<text text-anchor="start" x="534" y="-2117.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ is_bmi_output_variable()</text>
-<text text-anchor="start" x="534" y="-2106.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ is_bmi_using_forcing</text>
-<text text-anchor="start" x="534" y="-2095.5" font-family="Helvetica,sans-Serif" font-size="10.00">_file()</text>
-<text text-anchor="start" x="534" y="-2084.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ is_model_initialized()</text>
-<text text-anchor="start" x="534" y="-2073.5" font-family="Helvetica,sans-Serif" font-size="10.00"># set_bmi_main_output</text>
-<text text-anchor="start" x="534" y="-2062.5" font-family="Helvetica,sans-Serif" font-size="10.00">_var()</text>
-<text text-anchor="start" x="534" y="-2051.5" font-family="Helvetica,sans-Serif" font-size="10.00"># set_model_type_name()</text>
-<text text-anchor="start" x="534" y="-2040.5" font-family="Helvetica,sans-Serif" font-size="10.00"># set_output_header_fields()</text>
-<text text-anchor="start" x="534" y="-2029.5" font-family="Helvetica,sans-Serif" font-size="10.00"># set_output_variable</text>
-<text text-anchor="start" x="534" y="-2018.5" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
+<polygon fill="white" stroke="black" points="526,-2044.5 526,-2464.5 674,-2464.5 674,-2044.5 526,-2044.5"/>
+<text text-anchor="middle" x="600" y="-2452.5" font-family="Helvetica,sans-Serif" font-size="10.00">realization::Bmi_Formulation</text>
+<polyline fill="none" stroke="black" points="526,-2445.5 674,-2445.5 "/>
+<text text-anchor="start" x="534" y="-2433.5" font-family="Helvetica,sans-Serif" font-size="10.00"># output_text_stream</text>
+<text text-anchor="start" x="534" y="-2422.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; bmi_main_output_var</text>
+<text text-anchor="start" x="534" y="-2411.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; model_type_name</text>
+<text text-anchor="start" x="534" y="-2400.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; output_header_fields</text>
+<text text-anchor="start" x="534" y="-2389.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; output_variable_names</text>
+<text text-anchor="start" x="534" y="-2378.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; output_precision</text>
+<text text-anchor="start" x="534" y="-2367.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; OPTIONAL_PARAMETERS</text>
+<text text-anchor="start" x="534" y="-2356.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; REQUIRED_PARAMETERS</text>
+<polyline fill="none" stroke="black" points="526,-2349.5 674,-2349.5 "/>
+<text text-anchor="start" x="534" y="-2337.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Bmi_Formulation()</text>
+<text text-anchor="start" x="534" y="-2326.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ ~Bmi_Formulation()</text>
+<text text-anchor="start" x="534" y="-2315.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ convert_model_time()</text>
+<text text-anchor="start" x="534" y="-2304.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_allow_model_exceed</text>
+<text text-anchor="start" x="534" y="-2293.5" font-family="Helvetica,sans-Serif" font-size="10.00">_end_time()</text>
+<text text-anchor="start" x="534" y="-2282.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_bmi_input_variables()</text>
+<text text-anchor="start" x="534" y="-2271.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_bmi_main_output</text>
+<text text-anchor="start" x="534" y="-2260.5" font-family="Helvetica,sans-Serif" font-size="10.00">_var()</text>
+<text text-anchor="start" x="534" y="-2249.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_bmi_model_start</text>
+<text text-anchor="start" x="534" y="-2238.5" font-family="Helvetica,sans-Serif" font-size="10.00">_time_forcing_offset_s()</text>
+<text text-anchor="start" x="534" y="-2227.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_bmi_output_variables()</text>
+<text text-anchor="start" x="534" y="-2216.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_config_mapped_variable</text>
+<text text-anchor="start" x="534" y="-2205.5" font-family="Helvetica,sans-Serif" font-size="10.00">_name()</text>
+<text text-anchor="start" x="534" y="-2194.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_model_current_time()</text>
+<text text-anchor="start" x="534" y="-2183.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_model_end_time()</text>
+<text text-anchor="start" x="534" y="-2172.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_forcing_file_path()</text>
+<text text-anchor="start" x="534" y="-2161.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_model_type_name()</text>
+<text text-anchor="start" x="534" y="-2150.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_output_header_fields()</text>
+<text text-anchor="start" x="534" y="-2139.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_output_header_line()</text>
+<text text-anchor="start" x="534" y="-2128.5" font-family="Helvetica,sans-Serif" font-size="10.00">and 8 more...</text>
+<text text-anchor="start" x="534" y="-2117.5" font-family="Helvetica,sans-Serif" font-size="10.00"># get_output_precision()</text>
+<text text-anchor="start" x="534" y="-2106.5" font-family="Helvetica,sans-Serif" font-size="10.00"># set_bmi_main_output</text>
+<text text-anchor="start" x="534" y="-2095.5" font-family="Helvetica,sans-Serif" font-size="10.00">_var()</text>
+<text text-anchor="start" x="534" y="-2084.5" font-family="Helvetica,sans-Serif" font-size="10.00"># set_model_type_name()</text>
+<text text-anchor="start" x="534" y="-2073.5" font-family="Helvetica,sans-Serif" font-size="10.00"># set_output_header_fields()</text>
+<text text-anchor="start" x="534" y="-2062.5" font-family="Helvetica,sans-Serif" font-size="10.00"># set_output_variable</text>
+<text text-anchor="start" x="534" y="-2051.5" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node5 -->
 <g id="edge4" class="edge">
 <title>Node1&#45;&gt;Node5</title>
-<path fill="none" stroke="midnightblue" d="M414.81,-2627.13C449.92,-2606.75 490.08,-2577.94 516,-2542 525.93,-2528.23 534.69,-2513.3 542.43,-2497.72"/>
+<path fill="none" stroke="midnightblue" d="M414.81,-2627.13C449.92,-2606.75 490.08,-2577.94 516,-2542 532.83,-2518.67 546.31,-2491.99 557.1,-2464.5"/>
 <polygon fill="none" stroke="midnightblue" points="412.97,-2624.14 406,-2632.12 416.43,-2630.23 412.97,-2624.14"/>
 </g>
 <!-- Node6 -->
@@ -373,8 +367,8 @@ var sectionId = 'dynsection-0';
 <!-- Node5&#45;&gt;Node6 -->
 <g id="edge5" class="edge">
 <title>Node5&#45;&gt;Node6</title>
-<path fill="none" stroke="midnightblue" d="M528.94,-2001.51C524.11,-1977.49 519.98,-1953.38 517,-1930 480.39,-1642.73 480.51,-1315.98 489.34,-1065.65"/>
-<polygon fill="none" stroke="midnightblue" points="525.54,-2002.34 530.98,-2011.44 532.39,-2000.94 525.54,-2002.34"/>
+<path fill="none" stroke="midnightblue" d="M536.04,-2034.64C528.16,-1999.91 521.35,-1964.17 517,-1930 480.39,-1642.73 480.51,-1315.98 489.34,-1065.65"/>
+<polygon fill="none" stroke="midnightblue" points="532.64,-2035.45 538.29,-2044.41 539.46,-2033.88 532.64,-2035.45"/>
 </g>
 <!-- Node8 -->
 <g id="node8" class="node">
@@ -460,61 +454,63 @@ var sectionId = 'dynsection-0';
 <!-- Node5&#45;&gt;Node8 -->
 <g id="edge7" class="edge">
 <title>Node5&#45;&gt;Node8</title>
-<path fill="none" stroke="midnightblue" d="M600,-2001.13C600,-1977.86 600,-1953.92 600,-1929.75"/>
-<polygon fill="none" stroke="midnightblue" points="596.5,-2001.41 600,-2011.41 603.5,-2001.41 596.5,-2001.41"/>
+<path fill="none" stroke="midnightblue" d="M600,-2033.87C600,-2000.55 600,-1965.31 600,-1929.57"/>
+<polygon fill="none" stroke="midnightblue" points="596.5,-2034.14 600,-2044.14 603.5,-2034.14 596.5,-2034.14"/>
 </g>
 <!-- Node9 -->
 <g id="node9" class="node">
 <title>Node9</title>
 <g id="a_node9"><a xlink:href="classrealization_1_1_bmi___multi___formulation.html" target="_top" xlink:title="Abstraction of a formulation with multiple backing model object that implements the BMI.">
-<polygon fill="white" stroke="black" points="692,-1311.5 692,-1742.5 840,-1742.5 840,-1311.5 692,-1311.5"/>
-<text text-anchor="start" x="700" y="-1730.5" font-family="Helvetica,sans-Serif" font-size="10.00">realization::Bmi_Multi</text>
-<text text-anchor="middle" x="766" y="-1719.5" font-family="Helvetica,sans-Serif" font-size="10.00">_Formulation</text>
-<polyline fill="none" stroke="black" points="692,-1712.5 840,-1712.5 "/>
-<text text-anchor="start" x="700" y="-1700.5" font-family="Helvetica,sans-Serif" font-size="10.00"># availableData</text>
-<text text-anchor="start" x="700" y="-1689.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; available_forcings</text>
-<text text-anchor="start" x="700" y="-1678.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; is_out_vars_from_last_mod</text>
-<text text-anchor="start" x="700" y="-1667.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; modules</text>
-<text text-anchor="start" x="700" y="-1656.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; module_types</text>
-<text text-anchor="start" x="700" y="-1645.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; module_variable_maps</text>
-<text text-anchor="start" x="700" y="-1634.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; next_time_step_index</text>
-<text text-anchor="start" x="700" y="-1623.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; primary_module_index</text>
-<text text-anchor="start" x="700" y="-1612.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; Bmi_Multi_Formulation_Test</text>
-<polyline fill="none" stroke="black" points="692,-1605.5 840,-1605.5 "/>
-<text text-anchor="start" x="700" y="-1593.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Bmi_Multi_Formulation()</text>
-<text text-anchor="start" x="700" y="-1582.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ ~Bmi_Multi_Formulation()</text>
-<text text-anchor="start" x="700" y="-1571.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ calc_et()</text>
+<polygon fill="white" stroke="black" points="692,-1300.5 692,-1753.5 840,-1753.5 840,-1300.5 692,-1300.5"/>
+<text text-anchor="start" x="700" y="-1741.5" font-family="Helvetica,sans-Serif" font-size="10.00">realization::Bmi_Multi</text>
+<text text-anchor="middle" x="766" y="-1730.5" font-family="Helvetica,sans-Serif" font-size="10.00">_Formulation</text>
+<polyline fill="none" stroke="black" points="692,-1723.5 840,-1723.5 "/>
+<text text-anchor="start" x="700" y="-1711.5" font-family="Helvetica,sans-Serif" font-size="10.00"># availableData</text>
+<text text-anchor="start" x="700" y="-1700.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; available_forcings</text>
+<text text-anchor="start" x="700" y="-1689.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; is_out_vars_from_last_mod</text>
+<text text-anchor="start" x="700" y="-1678.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; modules</text>
+<text text-anchor="start" x="700" y="-1667.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; module_types</text>
+<text text-anchor="start" x="700" y="-1656.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; module_variable_maps</text>
+<text text-anchor="start" x="700" y="-1645.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; next_time_step_index</text>
+<text text-anchor="start" x="700" y="-1634.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; primary_module_index</text>
+<text text-anchor="start" x="700" y="-1623.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; Bmi_Multi_Formulation_Test</text>
+<polyline fill="none" stroke="black" points="692,-1616.5 840,-1616.5 "/>
+<text text-anchor="start" x="700" y="-1604.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Bmi_Multi_Formulation()</text>
+<text text-anchor="start" x="700" y="-1593.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ ~Bmi_Multi_Formulation()</text>
+<text text-anchor="start" x="700" y="-1582.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ calc_et()</text>
+<text text-anchor="start" x="700" y="-1571.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ convert_model_time()</text>
 <text text-anchor="start" x="700" y="-1560.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ convert_model_time()</text>
-<text text-anchor="start" x="700" y="-1549.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ convert_model_time()</text>
+<text text-anchor="start" x="700" y="-1549.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
 <text text-anchor="start" x="700" y="-1538.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
-<text text-anchor="start" x="700" y="-1527.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
-<text text-anchor="start" x="700" y="-1516.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ determine_et_formulation</text>
-<text text-anchor="start" x="700" y="-1505.5" font-family="Helvetica,sans-Serif" font-size="10.00">_index()</text>
-<text text-anchor="start" x="700" y="-1494.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_allow_model_exceed</text>
-<text text-anchor="start" x="700" y="-1483.5" font-family="Helvetica,sans-Serif" font-size="10.00">_end_time()</text>
-<text text-anchor="start" x="700" y="-1472.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_forcing</text>
-<text text-anchor="start" x="700" y="-1461.5" font-family="Helvetica,sans-Serif" font-size="10.00">_outputs()</text>
-<text text-anchor="start" x="700" y="-1450.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_bmi_input_variables()</text>
-<text text-anchor="start" x="700" y="-1439.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_bmi_model_start</text>
-<text text-anchor="start" x="700" y="-1428.5" font-family="Helvetica,sans-Serif" font-size="10.00">_time_forcing_offset_s()</text>
-<text text-anchor="start" x="700" y="-1417.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_bmi_output_variables()</text>
-<text text-anchor="start" x="700" y="-1406.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_config_mapped_variable</text>
-<text text-anchor="start" x="700" y="-1395.5" font-family="Helvetica,sans-Serif" font-size="10.00">_name()</text>
-<text text-anchor="start" x="700" y="-1384.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_config_mapped_variable</text>
-<text text-anchor="start" x="700" y="-1373.5" font-family="Helvetica,sans-Serif" font-size="10.00">_name()</text>
-<text text-anchor="start" x="700" y="-1362.5" font-family="Helvetica,sans-Serif" font-size="10.00">and 20 more...</text>
-<text text-anchor="start" x="700" y="-1351.5" font-family="Helvetica,sans-Serif" font-size="10.00"># create_multi_formulation()</text>
-<text text-anchor="start" x="700" y="-1340.5" font-family="Helvetica,sans-Serif" font-size="10.00"># get_module_var_value</text>
-<text text-anchor="start" x="700" y="-1329.5" font-family="Helvetica,sans-Serif" font-size="10.00">_as_double()</text>
-<text text-anchor="start" x="700" y="-1318.5" font-family="Helvetica,sans-Serif" font-size="10.00"># init_nested_module()</text>
+<text text-anchor="start" x="700" y="-1527.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ determine_et_formulation</text>
+<text text-anchor="start" x="700" y="-1516.5" font-family="Helvetica,sans-Serif" font-size="10.00">_index()</text>
+<text text-anchor="start" x="700" y="-1505.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_allow_model_exceed</text>
+<text text-anchor="start" x="700" y="-1494.5" font-family="Helvetica,sans-Serif" font-size="10.00">_end_time()</text>
+<text text-anchor="start" x="700" y="-1483.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_forcing</text>
+<text text-anchor="start" x="700" y="-1472.5" font-family="Helvetica,sans-Serif" font-size="10.00">_outputs()</text>
+<text text-anchor="start" x="700" y="-1461.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_bmi_input_variables()</text>
+<text text-anchor="start" x="700" y="-1450.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_bmi_model_start</text>
+<text text-anchor="start" x="700" y="-1439.5" font-family="Helvetica,sans-Serif" font-size="10.00">_time_forcing_offset_s()</text>
+<text text-anchor="start" x="700" y="-1428.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_bmi_output_variables()</text>
+<text text-anchor="start" x="700" y="-1417.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_config_mapped_variable</text>
+<text text-anchor="start" x="700" y="-1406.5" font-family="Helvetica,sans-Serif" font-size="10.00">_name()</text>
+<text text-anchor="start" x="700" y="-1395.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_config_mapped_variable</text>
+<text text-anchor="start" x="700" y="-1384.5" font-family="Helvetica,sans-Serif" font-size="10.00">_name()</text>
+<text text-anchor="start" x="700" y="-1373.5" font-family="Helvetica,sans-Serif" font-size="10.00">and 20 more...</text>
+<text text-anchor="start" x="700" y="-1362.5" font-family="Helvetica,sans-Serif" font-size="10.00"># create_multi_formulation()</text>
+<text text-anchor="start" x="700" y="-1351.5" font-family="Helvetica,sans-Serif" font-size="10.00"># get_module_var_value</text>
+<text text-anchor="start" x="700" y="-1340.5" font-family="Helvetica,sans-Serif" font-size="10.00">_as_double()</text>
+<text text-anchor="start" x="700" y="-1329.5" font-family="Helvetica,sans-Serif" font-size="10.00"># get_var_value_as_double()</text>
+<text text-anchor="start" x="700" y="-1318.5" font-family="Helvetica,sans-Serif" font-size="10.00"># get_var_value_as_double()</text>
+<text text-anchor="start" x="700" y="-1307.5" font-family="Helvetica,sans-Serif" font-size="10.00"># init_nested_module()</text>
 </a>
 </g>
 </g>
 <!-- Node5&#45;&gt;Node9 -->
 <g id="edge9" class="edge">
 <title>Node5&#45;&gt;Node9</title>
-<path fill="none" stroke="midnightblue" d="M665.92,-2001.4C671.84,-1977.3 677.63,-1953.21 683,-1930 697.04,-1869.34 711.16,-1803.25 723.68,-1742.52"/>
-<polygon fill="none" stroke="midnightblue" points="662.46,-2000.81 663.46,-2011.36 669.25,-2002.49 662.46,-2000.81"/>
+<path fill="none" stroke="midnightblue" d="M657.72,-2034.36C666.47,-1999.52 675.17,-1963.82 683,-1930 696.19,-1872.98 709.46,-1811.17 721.4,-1753.52"/>
+<polygon fill="none" stroke="midnightblue" points="654.3,-2033.61 655.26,-2044.16 661.09,-2035.32 654.3,-2033.61"/>
 </g>
 <!-- Node7 -->
 <g id="node7" class="node">
