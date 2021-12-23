@@ -18,14 +18,18 @@ namespace forcing {
      * to eventually be able to provide.
      *
      * This type allows for deferring reconciling of whether a provider for some data output is available.  This is
-     * useful for situations when a required provider is not current known, but is expected, and there will be ample
+     * useful for situations when a required provider is not currently known, but is expected, and there will be ample
      * time to validate the expectation and make the necessary associations before the data must be provided.
      *
-     * Note that this type does not alter the behavior of inherited functions, except for
-     * @ref get_available_forcing_outputs.  That particular function is implemented to only return outputs guaranteed to
-     * be provideable by the instance.  Instances of this type otherwise defer to the wrapped, backing provider object
-     * and its function implementations.  This means the backing wrapped object's type control behavior of cases when
-     * some unknown value name is given.
+     * The runtime behavior of inherited functions depends on the type of the wrapped object.  I.e., nested calls to the
+     * analogous function of the wrapped provider object are made, with those results returned. The one exception to
+     * this is @ref get_available_forcing_outputs.  A particular effect of this is that the type of the wrapped provider
+     * object will dictate how an instance behaves in cases when an unrecognized output name is supplied as a parameter
+     * to @ref get_value.
+     *
+     * As noted above, the @ref get_available_forcing_outputs virtual function is overridden here.  Instead of directly
+     * returning results from a nested call to the wrapped provider, this type's implementation ensures only the outputs
+     * set as provideable in this instance (i.e., the outer wrapper) are returned.
      */
     class DeferredWrappedProvider : public WrappedForcingProvider {
     public:
