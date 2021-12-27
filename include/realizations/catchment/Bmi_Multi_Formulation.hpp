@@ -572,7 +572,7 @@ namespace realization {
          *
          * During nested formulation creation, when a nested formulation requires as input some output expected from
          * soon-to-be-created (i.e., later in execution order) formulation (e.g., in a look-back scenario to an earlier
-         * time step), then a deferred provider gets registered with the nested module and has a referenced added to
+         * time step), then a deferred provider gets registered with the nested module and has a reference added to
          * the @ref deferredProviders member.  This function goes through all such the deferred providers, ensures there
          * is something available that can serve as the backing wrapped provider, and associates them.
          */
