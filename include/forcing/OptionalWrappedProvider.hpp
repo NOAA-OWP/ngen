@@ -12,17 +12,37 @@ namespace forcing {
     /**
      * Extension of @ref DeferredWrappedProvider, where default values can be used instead of a backing provider.
      *
-     * This type allows for default values for provided outputs to be supplied during construction.  These can then be
-     * provided instead of values proxied from a backing provider.  Instances can, therefore, either be ready to provide
-     * even before/without a backing provider is set, or accept as valid a backing provider that does not supply all of
-     * its required outputs.
+     * Default Values
+     * ========================
+     * This type supports receiving at construction a collection of default values.  A default value can be supplied for
+     * one or more of the outputs the instance is create to provide.
      *
-     * Additionally, this type can be initialized to override a backing provider in some situations.  A collection of
-     * "wait" count values can be given at construction, with these mapped to provided outputs for which defaults are
-     * also supplied. These "wait" counts represent the number of times the instance should wait to proxy the
-     * corresponding output's value from a backing provider.  In such cases, the available default value is used
-     * instead.  It is also possible to set this "wait" count to a negative number to indicate that a default should
-     * always be used for a certain output, even if a backing provider could provide it.
+     * When a default is available for an output, an instance can use this default as the return value for calls to
+     * @ref get_value instead of proxying a value from a backing provider.
+     *
+     * Valid Wrapped Providers And Readiness
+     * ========================
+     * The potential of default values has implications on what constitutes a valid wrapped provider.  In this type's
+     * parent, @ref setWrappedProvider will only set the member variable if the would-be-wrapped-provider provides
+     * **all** outputs required by the instance.  For this type, that restriction is loosened, and the wrapped provider
+     * need not provide all the outputs required by the instance.
+     *
+     * If the instance has a default value for an output, then a would-be-wrapped-provider is not required to provide
+     * that output. It must still provide all outputs for which the instance does not have a default value.
+     *
+     * The addition of default values also introduces an interesting edge case: when default values are provided for all
+     * an instance's outputs.  There are two important implications of this. First, an instance requires a valid wrapped
+     * provider to provide at least one of the instance's outputs. Second, an instance does not necessarily need a
+     * wrapped provider to be set in order to be ready.
+     *
+     * When The Default Is Used
+     * ========================
+     * A default value will be used any time one is available for an output and a valid cannot be obtained from a
+     * wrapped provider.
+     *
+     * Additionally, an instance can created to override a backing provider in certain situations.  One or more "wait"
+     * counts can be supplied to the constructor. These "wait" counts represent the number of times an instance should
+     * wait to proxy the corresponding output's value from a wrapped provider and instead return the default value.
      */
     class OptionalWrappedProvider : public DeferredWrappedProvider {
 
@@ -38,7 +58,8 @@ namespace forcing {
         OptionalWrappedProvider(vector<string> providedOuts, map<string, double> defaultVals)
                 : DeferredWrappedProvider(move(providedOuts)), defaultValues(move(defaultVals))
         {
-            // Validate the provided map of defaults to make sure there aren't unrecognized keys
+            // Validate the provided map of default values to ensure there aren't any unrecognized keys, as this
+            //    constraint is later relied upon (i.e., keys of defaultValues being in the providedOutputs collection)
             if (!providedOutputs.empty() && !defaultValues.empty()) {
                 for (const auto &def_vals_it : defaultValues) {
                     auto name_it = find(providedOutputs.begin(), providedOutputs.end(), def_vals_it.first);
@@ -70,8 +91,9 @@ namespace forcing {
                                 map<string, int> defaultWaits)
                 : OptionalWrappedProvider(move(providedOuts), move(defaultVals))
         {
+            // Validate that all keys/names in the defaultWaits map have corresponding key in defaultValues
+            // (Note that this also depends on the delegated-to constructor to validate the keys in defaultValues)
             if (!defaultWaits.empty()) {
-                // Make sure all the keys/names in the mapping of waits are recognized
                 for (const auto &wait_it : defaultWaits) {
                     auto def_it = defaultValues.find(wait_it.first);
                     if (def_it == defaultValues.end()) {
