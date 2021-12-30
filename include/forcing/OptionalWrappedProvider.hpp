@@ -277,6 +277,8 @@ namespace forcing {
          */
         bool setWrappedProvider(ForcingProvider *provider) override {
             // Disallow re-setting the provider if already validly set
+            // TODO: consider if this is still appropriate, given backing providers can be valid without providing
+            //  everything (because of defaults), and so a new provider may supply more or less of what is needed
             if (isWrappedProviderSet()) {
                 setMessage = "Cannot change wrapped provider after a valid provide has already been set";
                 return false;
@@ -288,13 +290,25 @@ namespace forcing {
                 return false;
             }
 
-            // Confirm this will provide everything needed, though allow for defaults when available
+            // Check this provides everything needed, accounting for defaults (and also tallying the outputs provided)
+            unsigned short providedByProviderCount = 0;
             for (const string &requiredName : providedOutputs) {
-                // When not provided by this provider and there is not a default value set up ...
-                if (!isSuppliedByProvider(requiredName, provider) && !isSuppliedWithDefault(requiredName)) {
+                // If supplied by the provider, increment our count and continue to the next required output name
+                if (isSuppliedByProvider(requiredName, provider)) {
+                    ++providedByProviderCount;
+                    continue;
+                }
+                // If something isn't supplied by the provider (i.e., the "else"), there has to be a default, or we bail
+                else if (!isSuppliedWithDefault(requiredName)) {
                     setMessage = "Given provider does not provide the required " + requiredName;
                     return false;
                 }
+            }
+
+            // Also make sure it provides at least 1 relevant output (possible no outputs were "needed" due to defaults)
+            if (providedByProviderCount == 0) {
+                setMessage = "Given provider does not provide any required outputs (all satisfied via defaults)";
+                return false;
             }
 
             // If this is good, set things and return true
