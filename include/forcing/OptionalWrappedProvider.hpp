@@ -223,9 +223,13 @@ namespace forcing {
          * @see recordUsingDefault
          */
         bool isDefaultOverride(const string &output_name) {
-            return isSuppliedWithDefault(output_name)                                  // Must be a default
-                   && isSuppliedByWrappedProvider(output_name)                         // Must be something to override
-                   && defaultUsageWaits.find(output_name) != defaultUsageWaits.end();  // Must have a wait indicator
+            // First, there must be a default, and there must be something to override
+            if (!isSuppliedWithDefault(output_name) || !isSuppliedByWrappedProvider(output_name)) {
+                return false;
+            }
+            // Must have positive wait indicator value
+            const auto &wait_it = defaultUsageWaits.find(output_name);
+            return wait_it != defaultUsageWaits.end() && wait_it->second > 0;
         }
 
         /**
@@ -341,12 +345,14 @@ namespace forcing {
             // Also, in this implementation, don't count usages until there is a backing provider that can provide this
             auto waits_it = defaultUsageWaits.find(output_name);
             if (waits_it != defaultUsageWaits.end() && isSuppliedByWrappedProvider(output_name)) {
-                // A value of 0 should be inferred and cleared from the collection, so ...
-                if (waits_it->second == 1) {
-                    defaultUsageWaits.erase(waits_it);
-                }
-                else if (waits_it->second > 1) {
+                // If this was not the last required default usage, simply decrement the wait count
+                if (waits_it->second > 1) {
                     waits_it->second -= 1;
+                }
+                // If this was the last required default usage wait, clear this entry from the collection
+                // Also, right now we are only supporting positive counts, so remove anything else as well
+                else {
+                    defaultUsageWaits.erase(waits_it);
                 }
             }
         }
