@@ -182,16 +182,22 @@ namespace forcing {
                 throw runtime_error("Cannot get value for " + output_name
                                     + " from optional wrapped provider before it is ready");
             }
-            // If there is a backing provider and default should not override, try to get output from backing provider
-            if (isWrappedProviderSet() && !isDefaultOverride(output_name)) {
-                const vector<string> &backed_outputs = wrapped_provider->get_available_forcing_outputs();
-                if (find(backed_outputs.begin(), backed_outputs.end(), output_name) != backed_outputs.end()) {
-                    return wrapped_provider->get_value(output_name, init_time, duration_s, output_units);
-                }
+
+            // Remember: when the instance is ready to provide data, one or both of these **must** be true:
+            //      * the desired output has a default value available
+            //      * the desired output is provided by the backing wrapped provider
+
+            // If this output is not available from a wrapped provider OR we should override, then return the default
+            // Remember: isDefaultOverride() is not the same as "should use default" (see function docstring)
+            if (!isSuppliedByWrappedProvider(output_name) || isDefaultOverride(output_name)) {
+                // Take note if/how often default gets used in case that information is needed later
+                recordUsingDefault(output_name);
+                return defaultValues.at(output_name);
             }
-            // Take note if/how often default gets used in case that information is needed later
-            recordUsingDefault(output_name);
-            return defaultValues.at(output_name);
+            // Otherwise (i.e., available from wrapped provider and no override), get from backing wrapped provider
+            else {
+                return wrapped_provider->get_value(output_name, init_time, duration_s, output_units);
+            }
         }
 
         /**
