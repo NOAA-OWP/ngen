@@ -27,6 +27,8 @@ void OptionalWrappedProvider_Test::SetUp() {
     providers.push_back(OptionalWrappedProvider(OUTPUT_NAME_1, OUTPUT_DEFAULT_1, 1));
     // Example 2: 2 wait
     providers.push_back(OptionalWrappedProvider(OUTPUT_NAME_1, OUTPUT_DEFAULT_1, 2));
+    // Example 3: no defaults and no waits
+    providers.push_back(OptionalWrappedProvider(OUTPUT_NAME_1));
 
     backingProvider = test::TrivialForcingProvider();
 }
@@ -178,4 +180,37 @@ TEST_F(OptionalWrappedProvider_Test, test_get_value_2_a) {
     // Third time should be the actual value
     value = optProvider.get_value(OUTPUT_NAME_1, 0, 10, "m");
     ASSERT_EQ(value, OUTPUT_VALUE_1);
+}
+
+/**
+ * Test when default is not provided, for a single call after provider has been set.
+ */
+TEST_F(OptionalWrappedProvider_Test, test_get_value_3_a) {
+    int example_index = 3;
+
+    OptionalWrappedProvider &optProvider = providers[example_index];
+    optProvider.setWrappedProvider(&backingProvider);
+    // Args don't really matter (apart from the name) for backing trivial item
+    double value = optProvider.get_value(OUTPUT_NAME_1, 0, 10, "m");
+    double backing_value = backingProvider.get_value(OUTPUT_NAME_1, 0, 10, "m");
+
+    ASSERT_EQ(value, backing_value);
+}
+
+/**
+ * Test when default is not provided, for several calls after provider has been set.
+ */
+TEST_F(OptionalWrappedProvider_Test, test_get_value_3_b) {
+    int example_index = 3;
+
+    OptionalWrappedProvider &optProvider = providers[example_index];
+    optProvider.setWrappedProvider(&backingProvider);
+    // Args don't really matter (apart from the name) for backing trivial item
+    double value, backing_value;
+
+    for (int i = 0; i < 10; ++i) {
+        value = optProvider.get_value(OUTPUT_NAME_1, 0, 10, "m");
+        backing_value = backingProvider.get_value(OUTPUT_NAME_1, 0, 10, "m");
+        ASSERT_EQ(value, backing_value);
+    }
 }
