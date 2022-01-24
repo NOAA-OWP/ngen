@@ -48,7 +48,8 @@ namespace data_access
          *
          * An @ref std::out_of_range exception should be thrown if the data for the time period is not available.
          *
-         * @param output_name The name of the data property of interest.
+         * @param selector Data required to establish what subset of the stored data should be accessed
+         * @param variable_name The name of the data property of interest.
          * @param init_time_epoch The epoch time (in seconds) of the start of the time period.
          * @param duration_seconds The length of the time period, in seconds.
          * @param output_units The expected units of the desired output value.
