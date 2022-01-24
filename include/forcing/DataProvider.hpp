@@ -1,6 +1,8 @@
 #ifndef NGEN_DATAPROVIDER_HPP
 #define NGEN_DATAPROVIDER_HPP
 
+#include <string>
+
 
 namespace data_access
 {
