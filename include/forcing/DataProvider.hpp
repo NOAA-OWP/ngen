@@ -6,7 +6,7 @@
 
 namespace data_access
 {
-    /** An abstraction for classes that provider access to data.
+    /** An abstraction for classes that provides access to data.
     *
     * Data may be pre-provided from some external source, internally calculated by the implementing type, or some
     * combination of both.
@@ -24,13 +24,13 @@ namespace data_access
 
         /** Return the variables that are accessable by this data provider */
 
-        virtual const std::veector<std::string> get_avaliable_variable_names() = 0;
+        virtual const std::vector<std::string> get_avaliable_variable_names() = 0;
 
-        /** Return the first valid time for which data from the request variaable  can be requested */
+        /** Return the first valid time for which data from the request variable  can be requested */
 
         virtual get_data_start_time(std::string var) = 0;
 
-        /** Return the last valid time for which data from the requested variablle can be requested */
+        /** Return the last valid time for which data from the requested variable can be requested */
 
         virtual get_data_stop_time(std::string var) = 0;
 
