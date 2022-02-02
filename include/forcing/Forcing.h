@@ -647,8 +647,21 @@ class Forcing : public forcing::ForcingProvider
         //Call CSVReader constuctor
         CSVReader reader(file_name);
 
-	//Get the data from CSV File
-	std::vector<std::vector<std::string> > data_list = reader.getData();
+        //Get the data from CSV File
+        std::vector<std::vector<std::string> > data_list = reader.getData();
+        //Some quick validation of the data we read
+        if( data_list.size() > 0 ){
+            auto header = data_list[0];
+            if( header.size() != 10 ){
+                    throw std::runtime_error("Error: Forcing data " + file_name +
+                    " does not have the expected number of columns.  Did you mean to use "+
+                    "csvPerFeature forcing provider instead?");
+                }
+        }
+        else {
+            throw std::runtime_error("Error: Forcing data " + file_name +
+                    " does not have readable rows.");
+        }
 
         //Iterate through CSV starting on the second row
         for (int i = 1; i < data_list.size(); i++)
