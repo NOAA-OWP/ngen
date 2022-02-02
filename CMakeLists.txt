@@ -283,6 +283,14 @@ if(UDUNITS_QUIET)
 add_compile_definitions(UDUNITS_QUIET)
 endif()
 
+if(ET_QUIET)
+add_compile_definitions(ET_QUIET)
+endif()
+
+if(NGEN_QUIET)
+add_compile_definitions(NGEN_QUIET)
+endif()
+
 add_subdirectory("src/core")
 add_dependencies(core libudunits2)
 add_subdirectory("src/geojson")
