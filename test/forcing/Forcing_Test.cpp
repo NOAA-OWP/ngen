@@ -96,6 +96,28 @@ void ForcingTest::setupForcing_AORC()
     Forcing_Object_AORC = std::make_shared<Forcing>(forcing_p);
 }
 
+class ForcingTest2 : public ::testing::Test {
+   protected: 
+   void SetUp() override {
+      std::vector<std::string> forcing_file_names_AORC = {
+            "test/data/forcing/cat-27115-nwm-aorc-variant-derived-format.csv",
+            "../test/data/forcing/cat-27115-nwm-aorc-variant-derived-format.csv",
+            "../../test/data/forcing/cat-27115-nwm-aorc-variant-derived-format.csv"
+      };
+
+   forcing_file_name = utils::FileChecker::find_first_readable(forcing_file_names_AORC);
+
+   }
+   std::string forcing_file_name;
+};
+
+TEST_F(ForcingTest2, TestForcingDataLoad){
+
+   forcing_params forcing_p(forcing_file_name, "", "2015-12-14 21:00:00", "2015-12-30 23:00:00");
+
+   EXPECT_THROW(std::make_shared<Forcing>(forcing_p);, std::runtime_error);
+
+}
 /*Original Forcing Object Test
 //Test Forcing object
 TEST_F(ForcingTest, TestForcingDataRead)
