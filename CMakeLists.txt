@@ -273,6 +273,16 @@ target_include_directories(ngen PUBLIC
 #add_subdirectory("extern/cfe")
 #add_subdirectory("extern/test_bmi_c")
 
+if(QUIET)
+set(UDUNITS_QUIET true)
+set(ET_QUIET true)
+set(NGEN_QUIET true)
+endif()
+
+if(UDUNITS_QUIET)
+add_compile_definitions(UDUNITS_QUIET)
+endif()
+
 add_subdirectory("src/core")
 add_dependencies(core libudunits2)
 add_subdirectory("src/geojson")
@@ -333,16 +343,6 @@ if(PACKAGE_TESTS)
     enable_testing()
     include(GoogleTest)
     add_subdirectory(test)
-endif()
-
-if(QUIET)
-set(UDUNITS_QUIET true)
-set(ET_QUIET true)
-set(NGEN_QUIET true)
-endif()
-
-if(UDUNITS_QUIET)
-add_compile_definitions(UDUNITS_QUIET)
 endif()
 
 #add_library(Hymod ${HYMOD_INCLUDE_DIR}/Hymod.h)
