@@ -19,7 +19,7 @@ ENV CXX=/usr/bin/g++
 
 # Note that this may need to be temporarily used during development instead of the COPY below, to prevent any issues
 # cause by a local checkout being different than a fresh checkout (as is used in the Github Actions execution)
-RUN git clone https://github.com/NOAA-OWP/ngen.git
+#RUN git clone https://github.com/NOAA-OWP/ngen.git
 COPY . /ngen/
 
 WORKDIR /ngen
