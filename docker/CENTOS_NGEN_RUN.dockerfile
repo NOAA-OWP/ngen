@@ -1,11 +1,11 @@
-FROM centos:8.4.2105 as builder
+FROM rockylinux as builder
 
 RUN yum update -y \
     && yum install -y dnf-plugins-core \
-    && yum -y config-manager --set-enabled powertools \
+#    && yum -y config-manager --set-enabled powertools \
     && yum -y install epel-release \
     && yum repolist \
-    && yum install -y tar git gcc-c++ gcc make cmake python38 python38-devel python38-numpy bzip2 udunits2-devel texinfo \
+    && yum install -y tar git gcc-c++ gcc make cmake python38 python38-devel python38-numpy bzip2 udunits2-devel \
     && dnf clean all \
   	&& rm -rf /var/cache/yum
 
@@ -19,7 +19,7 @@ ENV CXX=/usr/bin/g++
 
 # Note that this may need to be temporarily used during development instead of the COPY below, to prevent any issues
 # cause by a local checkout being different than a fresh checkout (as is used in the Github Actions execution)
-#RUN git clone https://github.com/NOAA-OWP/ngen.git
+RUN git clone https://github.com/NOAA-OWP/ngen.git
 COPY . /ngen/
 
 WORKDIR /ngen
