@@ -10,7 +10,7 @@ var classrealization_1_1_formulation =
     [ "get_id", "classrealization_1_1_formulation.html#a02267e0cc9fec2e1d883f55c2c12b39d", null ],
     [ "get_output_header_line", "classrealization_1_1_formulation.html#a17b9945a1362e204c78f0126c6354327", null ],
     [ "get_output_line_for_timestep", "classrealization_1_1_formulation.html#adea6ed82d2fa734d87415d34b9c599bd", null ],
-    [ "get_required_parameters", "classrealization_1_1_formulation.html#a9959ffc79d52fda68ecc11c5698f4e86", null ],
+    [ "get_required_parameters", "classrealization_1_1_formulation.html#a12e690d066ac42ccafeae5b2b708cf21", null ],
     [ "get_response", "classrealization_1_1_formulation.html#ae70ca928c70b08b08c4bfc982ed8e3ca", null ],
     [ "interpret_parameters", "classrealization_1_1_formulation.html#a65f97b5efe05e786f59d9f5fd1b10209", null ],
     [ "is_et_params_set", "classrealization_1_1_formulation.html#a7117db623dafde1f5dfbf286e46aa99e", null ],

@@ -3,7 +3,7 @@ var class_csv_per_feature_forcing_provider =
     [ "time_type", "class_csv_per_feature_forcing_provider.html#aa40e6c7ba39854c2a69c2656376c95f0", null ],
     [ "CsvPerFeatureForcingProvider", "class_csv_per_feature_forcing_provider.html#a7034f120d89f39c83b61903669c2e435", null ],
     [ "check_forcing_vector_index_bounds", "class_csv_per_feature_forcing_provider.html#a64d117949c5c1b9cfed33017ed388119", null ],
-    [ "get_available_forcing_outputs", "class_csv_per_feature_forcing_provider.html#ad0cddfc1fc74b144fd97ba0c2ce36b67", null ],
+    [ "get_available_forcing_outputs", "class_csv_per_feature_forcing_provider.html#a21e5c9c3fee823d9d1c9235b4acd58b9", null ],
     [ "get_forcing_output_time_begin", "class_csv_per_feature_forcing_provider.html#a89e80607d8d772441e392e2afbe27266", null ],
     [ "get_forcing_output_time_end", "class_csv_per_feature_forcing_provider.html#a1a7e89f9b773eff7ad5d34e65c6d3932", null ],
     [ "get_ts_index_for_time", "class_csv_per_feature_forcing_provider.html#ad1f87f13f0bc6c5d616158d90eac9fc3", null ],

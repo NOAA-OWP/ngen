@@ -1,8 +1,8 @@
 var namespacenetwork =
 [
-    [ "VertexProperty", "structnetwork_1_1_vertex_property.html", "structnetwork_1_1_vertex_property" ],
-    [ "preorder_visitor", "structnetwork_1_1preorder__visitor.html", "structnetwork_1_1preorder__visitor" ],
     [ "Network", "classnetwork_1_1_network.html", "classnetwork_1_1_network" ],
+    [ "preorder_visitor", "structnetwork_1_1preorder__visitor.html", "structnetwork_1_1preorder__visitor" ],
+    [ "VertexProperty", "structnetwork_1_1_vertex_property.html", "structnetwork_1_1_vertex_property" ],
     [ "Graph", "namespacenetwork.html#a8903690478e87e5f1e1ca59765c1887f", null ],
     [ "IndexPair", "namespacenetwork.html#a05d497ef7e9d33654f544abf3a63461a", null ],
     [ "IndexT", "namespacenetwork.html#ac5d401482ea9247a9aaf6e4087e0ece4", null ],

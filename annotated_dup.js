@@ -5,16 +5,16 @@ var annotated_dup =
     ] ],
     [ "et", "namespaceet.html", [
       [ "aorc_forcing_data", "structet_1_1aorc__forcing__data.html", "structet_1_1aorc__forcing__data" ],
+      [ "evapotranspiration_forcing", "structet_1_1evapotranspiration__forcing.html", "structet_1_1evapotranspiration__forcing" ],
       [ "evapotranspiration_options", "structet_1_1evapotranspiration__options.html", "structet_1_1evapotranspiration__options" ],
       [ "evapotranspiration_params", "structet_1_1evapotranspiration__params.html", "structet_1_1evapotranspiration__params" ],
-      [ "evapotranspiration_forcing", "structet_1_1evapotranspiration__forcing.html", "structet_1_1evapotranspiration__forcing" ],
-      [ "surface_radiation_params", "structet_1_1surface__radiation__params.html", "structet_1_1surface__radiation__params" ],
-      [ "surface_radiation_forcing", "structet_1_1surface__radiation__forcing.html", "structet_1_1surface__radiation__forcing" ],
+      [ "intermediate_vars", "structet_1_1intermediate__vars.html", "structet_1_1intermediate__vars" ],
       [ "solar_radiation_forcing", "structet_1_1solar__radiation__forcing.html", "structet_1_1solar__radiation__forcing" ],
       [ "solar_radiation_options", "structet_1_1solar__radiation__options.html", "structet_1_1solar__radiation__options" ],
       [ "solar_radiation_parameters", "structet_1_1solar__radiation__parameters.html", "structet_1_1solar__radiation__parameters" ],
       [ "solar_radiation_results", "structet_1_1solar__radiation__results.html", "structet_1_1solar__radiation__results" ],
-      [ "intermediate_vars", "structet_1_1intermediate__vars.html", "structet_1_1intermediate__vars" ]
+      [ "surface_radiation_forcing", "structet_1_1surface__radiation__forcing.html", "structet_1_1surface__radiation__forcing" ],
+      [ "surface_radiation_params", "structet_1_1surface__radiation__params.html", "structet_1_1surface__radiation__params" ]
     ] ],
     [ "external", "namespaceexternal.html", [
       [ "ExternalIntegrationException", "classexternal_1_1_external_integration_exception.html", "classexternal_1_1_external_integration_exception" ]
@@ -24,28 +24,28 @@ var annotated_dup =
       [ "WrappedForcingProvider", "classforcing_1_1_wrapped_forcing_provider.html", "classforcing_1_1_wrapped_forcing_provider" ]
     ] ],
     [ "geojson", "namespacegeojson.html", [
-      [ "FeatureCollection", "classgeojson_1_1_feature_collection.html", "classgeojson_1_1_feature_collection" ],
       [ "CollectionFeature", "classgeojson_1_1_collection_feature.html", "classgeojson_1_1_collection_feature" ],
       [ "FeatureBase", "classgeojson_1_1_feature_base.html", "classgeojson_1_1_feature_base" ],
+      [ "FeatureCollection", "classgeojson_1_1_feature_collection.html", "classgeojson_1_1_feature_collection" ],
+      [ "FeatureVisitor", "classgeojson_1_1_feature_visitor.html", "classgeojson_1_1_feature_visitor" ],
+      [ "JSONProperty", "classgeojson_1_1_j_s_o_n_property.html", "classgeojson_1_1_j_s_o_n_property" ],
       [ "LineStringFeature", "classgeojson_1_1_line_string_feature.html", "classgeojson_1_1_line_string_feature" ],
       [ "MultiLineStringFeature", "classgeojson_1_1_multi_line_string_feature.html", "classgeojson_1_1_multi_line_string_feature" ],
       [ "MultiPointFeature", "classgeojson_1_1_multi_point_feature.html", "classgeojson_1_1_multi_point_feature" ],
       [ "MultiPolygonFeature", "classgeojson_1_1_multi_polygon_feature.html", "classgeojson_1_1_multi_polygon_feature" ],
       [ "PointFeature", "classgeojson_1_1_point_feature.html", "classgeojson_1_1_point_feature" ],
-      [ "PolygonFeature", "classgeojson_1_1_polygon_feature.html", "classgeojson_1_1_polygon_feature" ],
-      [ "FeatureVisitor", "classgeojson_1_1_feature_visitor.html", "classgeojson_1_1_feature_visitor" ],
-      [ "JSONProperty", "classgeojson_1_1_j_s_o_n_property.html", "classgeojson_1_1_j_s_o_n_property" ]
+      [ "PolygonFeature", "classgeojson_1_1_polygon_feature.html", "classgeojson_1_1_polygon_feature" ]
     ] ],
     [ "giuh", "namespacegiuh.html", [
       [ "giuh_carry_over", "structgiuh_1_1giuh__carry__over.html", "structgiuh_1_1giuh__carry__over" ],
-      [ "giuh_kernel_impl", "classgiuh_1_1giuh__kernel__impl.html", "classgiuh_1_1giuh__kernel__impl" ],
       [ "giuh_kernel", "classgiuh_1_1giuh__kernel.html", "classgiuh_1_1giuh__kernel" ],
+      [ "giuh_kernel_impl", "classgiuh_1_1giuh__kernel__impl.html", "classgiuh_1_1giuh__kernel__impl" ],
       [ "GiuhJsonReader", "classgiuh_1_1_giuh_json_reader.html", "classgiuh_1_1_giuh_json_reader" ]
     ] ],
     [ "hy_features", "namespacehy__features.html", [
       [ "hydrolocation", "namespacehy__features_1_1hydrolocation.html", [
-        [ "HY_HydroLocation", "classhy__features_1_1hydrolocation_1_1_h_y___hydro_location.html", "classhy__features_1_1hydrolocation_1_1_h_y___hydro_location" ],
         [ "HY_DistanceFromReferent", "structhy__features_1_1hydrolocation_1_1_h_y___distance_from_referent.html", "structhy__features_1_1hydrolocation_1_1_h_y___distance_from_referent" ],
+        [ "HY_HydroLocation", "classhy__features_1_1hydrolocation_1_1_h_y___hydro_location.html", "classhy__features_1_1hydrolocation_1_1_h_y___hydro_location" ],
         [ "HY_IndirectPosition", "classhy__features_1_1hydrolocation_1_1_h_y___indirect_position.html", "classhy__features_1_1hydrolocation_1_1_h_y___indirect_position" ]
       ] ],
       [ "HY_Features", "classhy__features_1_1_h_y___features.html", "classhy__features_1_1_h_y___features" ]
@@ -61,9 +61,9 @@ var annotated_dup =
       ] ]
     ] ],
     [ "network", "namespacenetwork.html", [
-      [ "VertexProperty", "structnetwork_1_1_vertex_property.html", "structnetwork_1_1_vertex_property" ],
+      [ "Network", "classnetwork_1_1_network.html", "classnetwork_1_1_network" ],
       [ "preorder_visitor", "structnetwork_1_1preorder__visitor.html", "structnetwork_1_1preorder__visitor" ],
-      [ "Network", "classnetwork_1_1_network.html", "classnetwork_1_1_network" ]
+      [ "VertexProperty", "structnetwork_1_1_vertex_property.html", "structnetwork_1_1_vertex_property" ]
     ] ],
     [ "nexus", "namespacenexus.html", [
       [ "Nexus_Manager", "classnexus_1_1_nexus___manager.html", "classnexus_1_1_nexus___manager" ]
@@ -89,20 +89,20 @@ var annotated_dup =
         [ "Reservoir_Outlet", "class_reservoir_1_1_explicit___time_1_1_reservoir___outlet.html", "class_reservoir_1_1_explicit___time_1_1_reservoir___outlet" ]
       ] ],
       [ "Implicit_Time", "namespace_reservoir_1_1_implicit___time.html", [
+        [ "Reservoir", "class_reservoir_1_1_implicit___time_1_1_reservoir.html", "class_reservoir_1_1_implicit___time_1_1_reservoir" ],
         [ "Reservoir_Exponential_Outlet", "class_reservoir_1_1_implicit___time_1_1_reservoir___exponential___outlet.html", "class_reservoir_1_1_implicit___time_1_1_reservoir___exponential___outlet" ],
         [ "Reservoir_Linear_Outlet", "class_reservoir_1_1_implicit___time_1_1_reservoir___linear___outlet.html", "class_reservoir_1_1_implicit___time_1_1_reservoir___linear___outlet" ],
-        [ "Reservoir_Outlet", "class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html", "class_reservoir_1_1_implicit___time_1_1_reservoir___outlet" ],
-        [ "Reservoir", "class_reservoir_1_1_implicit___time_1_1_reservoir.html", "class_reservoir_1_1_implicit___time_1_1_reservoir" ]
+        [ "Reservoir_Outlet", "class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html", "class_reservoir_1_1_implicit___time_1_1_reservoir___outlet" ]
       ] ]
     ] ],
-    [ "std", null, [
+    [ "std", "namespacestd.html", [
       [ "_Unique_if", "structstd_1_1___unique__if.html", "structstd_1_1___unique__if" ],
       [ "_Unique_if< T[]>", "structstd_1_1___unique__if_3_01_t_0f_0e_4.html", "structstd_1_1___unique__if_3_01_t_0f_0e_4" ],
       [ "_Unique_if< T[N]>", "structstd_1_1___unique__if_3_01_t_0f_n_0e_4.html", "structstd_1_1___unique__if_3_01_t_0f_n_0e_4" ]
     ] ],
     [ "tshirt", "namespacetshirt.html", [
-      [ "tshirt_model", "classtshirt_1_1tshirt__model.html", "classtshirt_1_1tshirt__model" ],
       [ "tshirt_fluxes", "structtshirt_1_1tshirt__fluxes.html", "structtshirt_1_1tshirt__fluxes" ],
+      [ "tshirt_model", "classtshirt_1_1tshirt__model.html", "classtshirt_1_1tshirt__model" ],
       [ "tshirt_params", "structtshirt_1_1tshirt__params.html", "structtshirt_1_1tshirt__params" ],
       [ "tshirt_state", "structtshirt_1_1tshirt__state.html", "structtshirt_1_1tshirt__state" ]
     ] ],

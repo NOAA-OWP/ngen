@@ -1,7 +1,7 @@
 var namespacehy__features_1_1hydrolocation =
 [
-    [ "HY_HydroLocation", "classhy__features_1_1hydrolocation_1_1_h_y___hydro_location.html", "classhy__features_1_1hydrolocation_1_1_h_y___hydro_location" ],
     [ "HY_DistanceFromReferent", "structhy__features_1_1hydrolocation_1_1_h_y___distance_from_referent.html", "structhy__features_1_1hydrolocation_1_1_h_y___distance_from_referent" ],
+    [ "HY_HydroLocation", "classhy__features_1_1hydrolocation_1_1_h_y___hydro_location.html", "classhy__features_1_1hydrolocation_1_1_h_y___hydro_location" ],
     [ "HY_IndirectPosition", "classhy__features_1_1hydrolocation_1_1_h_y___indirect_position.html", "classhy__features_1_1hydrolocation_1_1_h_y___indirect_position" ],
     [ "HY_DistanceDiscription", "namespacehy__features_1_1hydrolocation.html#a6332f21e5c195e289dd1b6c59a029b1a", [
       [ "at", "namespacehy__features_1_1hydrolocation.html#a6332f21e5c195e289dd1b6c59a029b1aa7d0db380a5b95a8ba1da0bca241abda1", null ],

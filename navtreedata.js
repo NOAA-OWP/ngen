@@ -43,12 +43,6 @@ var NAVTREE =
     [ "BMI External Models", "md_doc__b_m_i__m_o_d_e_l_s.html", [
       [ "Summary", "md_doc__b_m_i__m_o_d_e_l_s.html#autotoc_md21", null ],
       [ "Formulation Config", "md_doc__b_m_i__m_o_d_e_l_s.html#autotoc_md22", [
-        [ "x.y.z - YYYY-MM-DD", "md__c_h_a_n_g_e_l_o_g.html#autotoc_md15", [
-          [ "Added", "md__c_h_a_n_g_e_l_o_g.html#autotoc_md16", null ],
-          [ "Deprecated", "md__c_h_a_n_g_e_l_o_g.html#autotoc_md17", null ],
-          [ "Removed", "md__c_h_a_n_g_e_l_o_g.html#autotoc_md18", null ],
-          [ "Fixed", "md__c_h_a_n_g_e_l_o_g.html#autotoc_md19", null ]
-        ] ],
         [ "Required Parameters", "md_doc__b_m_i__m_o_d_e_l_s.html#autotoc_md23", null ],
         [ "Semi-Optional Parameters", "md_doc__b_m_i__m_o_d_e_l_s.html#autotoc_md25", null ],
         [ "Optional Parameters", "md_doc__b_m_i__m_o_d_e_l_s.html#autotoc_md26", null ]
@@ -61,7 +55,6 @@ var NAVTREE =
         [ "BMI C Caveats", "md_doc__b_m_i__m_o_d_e_l_s.html#autotoc_md31", [
           [ "BMI C Activate/Deactivation Required in CMake Build", "md_doc__b_m_i__m_o_d_e_l_s.html#autotoc_md32", null ],
           [ "Additional Bootstrapping Function Needed", "md_doc__b_m_i__m_o_d_e_l_s.html#autotoc_md33", [
-            [ "Parameter Details:", "md_doc__b_m_i__m_o_d_e_l_s.html#autotoc_md24", null ],
             [ "Why?", "md_doc__b_m_i__m_o_d_e_l_s.html#autotoc_md34", null ]
           ] ]
         ] ]
@@ -215,8 +208,8 @@ var NAVTREE =
       ] ]
     ] ],
     [ "Realization Configuration", "md_doc__r_e_a_l_i_z_a_t_i_o_n__c_o_n_f_i_g_u_r_a_t_i_o_n.html", null ],
-    [ "<a href=\"https://docs.opengeospatial.org/is/14-111r6/14-111r6.html\">HY_Features</a>", "md_doc_references.html", [
-      [ "<a href=\"https://bmi-spec.readthedocs.io/en/latest/\">BMI</a>", "md_doc_references.html#autotoc_md150", null ],
+    [ "<a href=\"https://docs.opengeospatial.org/is/14-111r6/14-111r6.html\" >HY_Features</a>", "md_doc_references.html", [
+      [ "<a href=\"https://bmi-spec.readthedocs.io/en/latest/\" >BMI</a>", "md_doc_references.html#autotoc_md150", null ],
       [ "Formulations", "md_doc_references.html#autotoc_md151", null ],
       [ "HYMOD", "md_doc_references.html#autotoc_md152", null ],
       [ "T-shirt", "md_doc_references.html#autotoc_md153", null ],
@@ -234,10 +227,7 @@ var NAVTREE =
     ] ],
     [ "Testing", "md_test__r_e_a_d_m_e.html", [
       [ "Testing Frameworks", "md_test__r_e_a_d_m_e.html#autotoc_md164", [
-        [ "Other Information", "md__t_e_r_m_s.html#autotoc_md161", null ],
         [ "<strong>Google Test</strong>", "md_test__r_e_a_d_m_e.html#autotoc_md165", [
-          [ "Bad Variable Names:", "md_doc_programming_standards.html#autotoc_md136", null ],
-          [ "General Guidelines", "md_doc_programming_standards.html#autotoc_md137", null ],
           [ "(Re)generating CMake Project Buildsystem", "md_test__r_e_a_d_m_e.html#autotoc_md166", null ]
         ] ]
       ] ],
@@ -282,17 +272,25 @@ var NAVTREEINDEX =
 [
 "annotated.html",
 "class_h_y___hydro_nexus.html#a11dc68437650f47aad75eadc071b51e5",
-"class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html#ac66090cf8b70610a0323520f3595b09c",
-"classgeojson_1_1_collection_feature.html#a30269e3419054d9f3e06e4d1c74b44e0",
-"classgeojson_1_1_line_string_feature.html#ad2b3f513a87e2787c8450254c0187857",
-"classgeojson_1_1_polygon_feature.html#a07a793b858d72f62d5bde068cc9d7cbe",
-"classmodels_1_1bmi_1_1_bmi___adapter.html#a48d9b9a2fbbb383b75d939ce6d93a923",
-"classrealization_1_1_bmi___c___formulation.html#a9d02de255937deb8f6169ef20f5a07d6",
-"classrealization_1_1_bmi___multi___formulation.html#a2cce2b5b18eaa0ed7e0df10db57da144",
-"classrealization_1_1_tshirt___realization.html#a2303335bc613d277d4e16b9fd7619063",
-"md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md65",
-"namespacerealization.html#a32035eafd8bf57eecbaf7c898ef920db",
-"structhymod__params.html#af361be9463004567a0008e5420fb3957"
+"class_reservoir_1_1_explicit___time_1_1_reservoir___outlet.html#aeffe8449c5cbe459c2bceedfcbb661e2",
+"class_simulation___time.html#a25ec4421aac064d6173070f552471669",
+"classgeojson_1_1_collection_feature.html#a876adde9550a49d9976878efa777c6b4",
+"classgeojson_1_1_feature_collection.html#abe473f53db4363c64bbda607822e6552",
+"classgeojson_1_1_multi_line_string_feature.html#a2e62de0267a14d019a8e230b276bb6b4",
+"classgeojson_1_1_multi_polygon_feature.html#a64eb5525c5fe5bbd51d5febd8952a424",
+"classgeojson_1_1_polygon_feature.html#a6ea15e613f60abad67e86f379a158255",
+"classhy__features_1_1hydrolocation_1_1_h_y___indirect_position.html#ad48d6a584872e887ccf62f23538df5d8",
+"classmodels_1_1bmi_1_1_bmi___adapter.html#a9bec826b32a2362ab32585e7f42d0230",
+"classnetwork_1_1_network.html#a1c14c00f48e05b57e9b0d4161acbc660",
+"classrealization_1_1_bmi___c___formulation.html#ad0c8c26e3216cfc05afcb4e15d1335c6",
+"classrealization_1_1_bmi___module___formulation.html#a39cf248257ea2a34052fa65ad08bf2ba",
+"classrealization_1_1_bmi___multi___formulation.html#a7c6de72bd8ebf427d71aacca7baa23c1",
+"classrealization_1_1_formulation___manager.html#a3d0b2db8f821d4b05502a04fa3f01870",
+"classrealization_1_1_tshirt___realization.html#aaebc4992c38cb5db68e859e0487ad929",
+"md_doc__b_m_i__m_o_d_e_l_s.html#autotoc_md29",
+"namespacehy__features_1_1hydrolocation.html#a7fcfe40520bcda2cd5be66a5b5bbbc0baaec182e4c2afe84b4cf05e24095e61eb",
+"structet_1_1solar__radiation__parameters.html",
+"structtshirt_1_1tshirt__fluxes.html#abdf83852bdac281ade82990996cab7e1"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -6,7 +6,7 @@ var class_h_y___interior_catchment =
     [ "Nexuses", "class_h_y___interior_catchment.html#a287e2db7317f88a8ba389ebb12dd3c7f", null ],
     [ "HY_InteriorCatchment", "class_h_y___interior_catchment.html#a3311e82e9eaed373c2fed90d2f85bcdf", null ],
     [ "~HY_InteriorCatchment", "class_h_y___interior_catchment.html#aa79342b39ab40730f0a3773144b7b235", null ],
-    [ "get_outflow_nexuses", "class_h_y___interior_catchment.html#a5298052fe162eaa3cb932de19dd40b27", null ],
+    [ "get_outflow_nexuses", "class_h_y___interior_catchment.html#ad9001b2546e79b586c9e368681ef038a", null ],
     [ "conjoint_catchment", "class_h_y___interior_catchment.html#a079a0321d5069bb15c26c689b5e7ac8c", null ],
     [ "contained_catchments", "class_h_y___interior_catchment.html#a4dd4f1031bac54385a3755f60d5b6f87", null ],
     [ "containing_catchment", "class_h_y___interior_catchment.html#ab468ea39a19ade8d47b2eb7ca42f3a1e", null ],

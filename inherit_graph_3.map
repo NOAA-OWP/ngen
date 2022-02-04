@@ -1,3 +1,9 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$struct_bmi.html" title=" " alt="" coords="5,5,51,32"/>
+<area shape="rect" id="node1" href="$classbmi_1_1_bmi.html" title=" " alt="" coords="5,77,77,103"/>
+<area shape="rect" id="node2" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title=" " alt="" coords="125,15,328,42"/>
+<area shape="rect" id="node4" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title=" " alt="" coords="141,69,313,111"/>
+<area shape="rect" id="node7" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title="Abstract adapter interface for C++ classes to interact with the essential aspects of external models ..." alt="" coords="125,135,328,162"/>
+<area shape="rect" id="node3" href="$classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html" title=" " alt="" coords="376,5,549,47"/>
+<area shape="rect" id="node5" href="$classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html" title=" " alt="" coords="376,71,549,112"/>
+<area shape="rect" id="node6" href="$classmodels_1_1bmi_1_1_bmi___c___adapter.html" title="An adapter class to serve as a C++ interface to the essential aspects of external models written in t..." alt="" coords="597,71,733,112"/>
 </map>

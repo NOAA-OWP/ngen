@@ -1,11 +1,24 @@
 <map id="hy_features::hydrolocation::HY_HydroLocation" name="hy_features::hydrolocation::HY_HydroLocation">
-<area shape="rect" id="node1" title=" " alt="" coords="153,653,323,892"/>
-<area shape="rect" id="node2" href="$class_g_m___object.html" title=" " alt="" coords="14,491,129,583"/>
-<area shape="rect" id="node3" href="$classhy__features_1_1hydrolocation_1_1_h_y___indirect_position.html" title=" " alt="" coords="153,484,323,591"/>
-<area shape="rect" id="node4" title=" " alt="" coords="5,322,143,414"/>
-<area shape="rect" id="node5" title=" " alt="" coords="5,160,143,237"/>
-<area shape="rect" id="node6" title=" " alt="" coords="55,13,93,90"/>
-<area shape="rect" id="node7" href="$structhy__features_1_1hydrolocation_1_1_h_y___distance_from_referent.html" title=" " alt="" coords="167,315,365,421"/>
-<area shape="rect" id="node8" title=" " alt="" coords="299,160,377,237"/>
-<area shape="rect" id="node9" title=" " alt="" coords="276,5,400,97"/>
+<area shape="rect" id="node1" title=" " alt="" coords="281,1801,452,2040"/>
+<area shape="rect" id="node2" href="$class_g_m___object.html" title=" " alt="" coords="460,1139,575,1231"/>
+<area shape="rect" id="node8" href="$class_h_y___flow_path.html" title=" " alt="" coords="634,1323,763,1415"/>
+<area shape="rect" id="node3" href="$classhy__features_1_1hydrolocation_1_1_h_y___indirect_position.html" title=" " alt="" coords="404,1632,575,1739"/>
+<area shape="rect" id="node4" href="$structhy__features_1_1hydrolocation_1_1_h_y___distance_from_referent.html" title=" " alt="" coords="25,577,223,684"/>
+<area shape="rect" id="node5" title=" " alt="" coords="254,233,333,311"/>
+<area shape="rect" id="node11" href="$class_h_y___catchment.html" title=" " alt="" coords="277,708,440,829"/>
+<area shape="rect" id="node16" title=" " alt="" coords="641,469,783,546"/>
+<area shape="rect" id="node18" title=" " alt="" coords="450,469,617,546"/>
+<area shape="rect" id="node6" title=" " alt="" coords="231,5,355,97"/>
+<area shape="rect" id="node7" title=" " alt="" coords="630,1477,767,1569"/>
+<area shape="rect" id="node9" href="$class_h_y___catchment_realization.html" title=" " alt="" coords="599,1109,799,1260"/>
+<area shape="rect" id="node13" title=" " alt="" coords="309,1323,475,1415"/>
+<area shape="rect" id="node10" title=" " alt="" coords="575,892,713,984"/>
+<area shape="rect" id="node12" href="$class_h_y___hydro_feature.html" title=" " alt="" coords="93,461,245,553"/>
+<area shape="rect" id="node14" title=" " alt="" coords="943,730,1081,807"/>
+<area shape="rect" id="node22" title=" " alt="" coords="873,1008,1065,1085"/>
+<area shape="rect" id="node15" title=" " alt="" coords="953,13,991,90"/>
+<area shape="rect" id="node17" title=" " alt="" coords="576,233,688,311"/>
+<area shape="rect" id="node21" title=" " alt="" coords="904,233,1040,311"/>
+<area shape="rect" id="node19" title=" " alt="" coords="807,461,963,553"/>
+<area shape="rect" id="node20" href="$classforcing_1_1_forcing_provider.html" title="An abstraction interface for types that provides forcing data." alt="" coords="712,160,880,384"/>
 </map>

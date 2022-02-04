@@ -1,9 +1,13 @@
 <map id="utils::FileStreamHandler" name="utils::FileStreamHandler">
-<area shape="rect" id="node1" title=" " alt="" coords="74,713,234,805"/>
-<area shape="rect" id="node2" href="$classutils_1_1_stream_handler.html" title="This class provides a copyable interface to a std::ostream or std::ostream like object that may not s..." alt="" coords="85,455,223,664"/>
-<area shape="rect" id="node3" title=" " alt="" coords="21,300,157,392"/>
-<area shape="rect" id="node4" title=" " alt="" coords="5,153,143,230"/>
-<area shape="rect" id="node5" title=" " alt="" coords="55,5,93,83"/>
-<area shape="rect" id="node6" title=" " alt="" coords="187,307,265,385"/>
-<area shape="rect" id="node7" title=" " alt="" coords="167,145,291,237"/>
+<area shape="rect" id="node1" title=" " alt="" coords="206,981,366,1073"/>
+<area shape="rect" id="node2" href="$classutils_1_1_stream_handler.html" title="This class provides a copyable interface to a std::ostream or std::ostream like object that may not s..." alt="" coords="217,723,355,932"/>
+<area shape="rect" id="node3" title=" " alt="" coords="153,568,289,660"/>
+<area shape="rect" id="node4" title=" " alt="" coords="34,421,127,498"/>
+<area shape="rect" id="node5" title=" " alt="" coords="15,259,146,351"/>
+<area shape="rect" id="node6" title=" " alt="" coords="5,132,156,209"/>
+<area shape="rect" id="node7" title=" " alt="" coords="31,5,130,83"/>
+<area shape="rect" id="node8" title=" " alt="" coords="152,421,289,498"/>
+<area shape="rect" id="node9" title=" " alt="" coords="201,266,240,343"/>
+<area shape="rect" id="node10" title=" " alt="" coords="324,575,403,653"/>
+<area shape="rect" id="node11" title=" " alt="" coords="313,413,437,505"/>
 </map>
