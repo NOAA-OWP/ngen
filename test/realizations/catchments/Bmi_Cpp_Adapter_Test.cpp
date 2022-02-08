@@ -119,7 +119,7 @@ TEST_F(Bmi_Cpp_Adapter_Test, GetOutputVarNames_0_a) {
     try {
         ASSERT_EQ(adapter->GetOutputVarNames(), expected_output_var_names);
     }
-    catch (std::exception& e) {
+    catch (std::exception const & e) {
         printf("Exception getting output var names: %s", e.what());
         throw e;
     }
@@ -130,7 +130,7 @@ TEST_F(Bmi_Cpp_Adapter_Test, GetOutputItemCount_0_a) {
     try {
         ASSERT_EQ(adapter->GetOutputItemCount(), expected_output_var_names.size());
     }
-    catch (std::exception& e) {
+    catch (std::exception const & e) {
         printf("Exception getting output var count: %s", e.what());
         throw e;
     }
@@ -508,7 +508,7 @@ TEST_F(Bmi_Cpp_Adapter_Test, DISABLED_GetVarGrid_0_a) {
         int actual_grid = adapter->GetVarGrid(variable_name);
         ASSERT_EQ(actual_grid, expected_grid);
     }
-    catch (std::exception& e) {
+    catch (std::exception const & e) {
         printf("Exception getting var grid id: %s", e.what());
         throw e;
     }
@@ -524,7 +524,7 @@ TEST_F(Bmi_Cpp_Adapter_Test, DISABLED_GetVarGrid_0_b) {
     try {
         ASSERT_EQ(adapter->GetVarGrid(variable_name), expected_grid);
     }
-    catch (std::exception& e) {
+    catch (std::exception const & e) {
         printf("Exception getting var grid id: %s", e.what());
         throw e;
     }
@@ -540,7 +540,7 @@ TEST_F(Bmi_Cpp_Adapter_Test, GetVarLocation_0_a) {
     try {
         ASSERT_EQ(adapter->GetVarLocation(variable_name), expected_location);
     }
-    catch (std::exception& e) {
+    catch (std::exception const & e) {
         printf("Exception getting var location: %s", e.what());
         throw e;
     }
@@ -556,7 +556,7 @@ TEST_F(Bmi_Cpp_Adapter_Test, GetVarLocation_0_b) {
     try {
         ASSERT_EQ(adapter->GetVarLocation(variable_name), expected_location);
     }
-    catch (std::exception& e) {
+    catch (std::exception const & e) {
         printf("Exception getting var location: %s", e.what());
         throw e;
     }
@@ -572,7 +572,7 @@ TEST_F(Bmi_Cpp_Adapter_Test, GetVarUnits_0_a) {
     try {
         ASSERT_EQ(adapter->GetVarUnits(variable_name), expected_units);
     }
-    catch (std::exception& e) {
+    catch (std::exception const & e) {
         printf("Exception getting var units: %s", e.what());
         throw e;
     }
@@ -588,7 +588,7 @@ TEST_F(Bmi_Cpp_Adapter_Test, GetVarType_0_a) {
     try {
         ASSERT_EQ(adapter->GetVarType(variable_name), expected_type);
     }
-    catch (std::exception& e) {
+    catch (std::exception const & e) {
         printf("Exception getting var type: %s", e.what());
         throw e;
     }
@@ -604,7 +604,7 @@ TEST_F(Bmi_Cpp_Adapter_Test, GetVarNbytes_0_a) {
     try {
         ASSERT_EQ(adapter->GetVarNbytes(variable_name), expected_var_nbytes);
     }
-    catch (std::exception& e) {
+    catch (std::exception const & e) {
         printf("Exception getting var nbytes: %s", e.what());
         throw e;
     }
@@ -620,7 +620,7 @@ TEST_F(Bmi_Cpp_Adapter_Test, DISABLED_GetGridType_0_a) {
     try {
         ASSERT_EQ(adapter->GetGridType(grd), expected_grid_type);
     }
-    catch (std::exception& e) {
+    catch (std::exception const & e) {
         printf("Exception getting grid type: %s", e.what());
         throw e;
     }
@@ -637,7 +637,7 @@ TEST_F(Bmi_Cpp_Adapter_Test, DISABLED_GetGridRank_0_a) {
     try {
         ASSERT_EQ(adapter->GetGridRank(grd), expected_grid_rank);
     }
-    catch (std::exception& e) {
+    catch (std::exception const & e) {
         printf("Exception getting grid rank: %s", e.what());
         throw e;
     }
@@ -654,7 +654,7 @@ TEST_F(Bmi_Cpp_Adapter_Test, DISABLED_GetGridSize_0_a) {
     try {
         ASSERT_EQ(adapter->GetGridSize(grd), expected_grid_size);
     }
-    catch (std::exception& e) {
+    catch (std::exception const & e) {
         printf("Exception getting grid size: %s", e.what());
         throw e;
     }

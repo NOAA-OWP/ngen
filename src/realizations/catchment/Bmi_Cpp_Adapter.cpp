@@ -7,6 +7,8 @@
 
 using namespace models::bmi;
 
+const std::string Bmi_Cpp_Adapter::model_name = "BMI C++ model";
+
 Bmi_Cpp_Adapter::Bmi_Cpp_Adapter(const std::string& type_name, std::string library_file_path, std::string forcing_file_path,
                              bool allow_exceed_end, bool has_fixed_time_step,
                              const std::string& creator_func, const std::string& destroyer_func,
