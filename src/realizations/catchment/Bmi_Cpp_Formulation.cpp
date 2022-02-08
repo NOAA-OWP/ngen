@@ -117,7 +117,7 @@ double Bmi_Cpp_Formulation::get_response(time_step_t t_index, time_step_t t_delt
         if (!get_allow_model_exceed_end_time()) {
             int total_time_steps_to_process = abs((int)t_index - next_time_step_index) + 1;
             if (get_bmi_model()->GetEndTime() < (model_time + (t_delta_model_units * total_time_steps_to_process))) {
-                throw std::invalid_argument("Cannot process BMI C formulation to get response of future time step "
+                throw std::invalid_argument("Cannot process BMI C++ formulation to get response of future time step "
                                             "that exceeds model end time.");
             }
         }

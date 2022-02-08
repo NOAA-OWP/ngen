@@ -341,7 +341,7 @@ namespace models {
 
         protected:
             // TODO: look at setting this in some other way
-            std::string model_name = "BMI C++ model";
+            static const std::string model_name;
 
             /**
              * Construct the backing BMI model object, then call its BMI-native ``Initialize()`` function.
@@ -470,4 +470,5 @@ namespace models {
     }
 }
 
-#endif //NGEN_BMI_C_ADAPTER_H
+
+#endif //NGEN_BMI_CPP_ADAPTER_H
