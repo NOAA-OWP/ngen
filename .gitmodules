@@ -17,9 +17,9 @@
 	path = extern/topmodel/topmodel
 	url = https://github.com/NOAA-OWP/topmodel.git
 	branch = master
-[submodule "extern/noah-mp-modular/noah-mp-modular"]
-	path = extern/noah-mp-modular/noah-mp-modular
-	url = https://github.com/noaa-owp/noah-mp-modular
+[submodule "extern/noah-owp-modular/noah-owp-modular"]
+	path = extern/noah-owp-modular/noah-owp-modular
+	url = https://github.com/NOAA-OWP/noah-owp-modular
 	branch = main
 [submodule "extern/UDUNITS-2"]
 	path = extern/UDUNITS-2

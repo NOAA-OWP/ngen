@@ -4,7 +4,7 @@
             {
                 "name": "bmi_multi",
                 "params": {
-                    "model_type_name": "bmi_multi_noahmp_cfe",
+                    "model_type_name": "bmi_multi_noahowp_cfe",
                     "forcing_file": "",
                     "init_config": "",
                     "allow_exceed_end_time": true,
@@ -13,10 +13,10 @@
                         {
                             "name": "bmi_fortran",
                             "params": {
-                                "model_type_name": "bmi_fortran_noahmp",
-                                "library_file": "./extern/noah-mp-modular/cmake_build/libsurfacebmi.so",
+                                "model_type_name": "bmi_fortran_noahowp",
+                                "library_file": "./extern/noah-owp-modular/cmake_build/libsurfacebmi.so",
                                 "forcing_file": "",
-                                "init_config": "./data/bmi/fortran/noah-mp-modular-init-{{id}}.namelist.input",
+                                "init_config": "./data/bmi/fortran/noah-owp-modular-init-{{id}}.namelist.input",
                                 "allow_exceed_end_time": true,
                                 "main_output_variable": "QINSUR",
                                 "variables_names_map": {

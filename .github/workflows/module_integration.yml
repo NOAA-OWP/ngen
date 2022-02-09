@@ -43,8 +43,8 @@ jobs:
 
     - name: Build surfacebmi module
       run: |
-        cmake -B extern/noah-mp-modular/cmake_build cmake_build -S extern/noah-mp-modular
-        cmake --build extern/noah-mp-modular/cmake_build --target surfacebmi -- -j ${{ env.LINUX_NUM_PROC_CORES }}
+        cmake -B extern/noah-owp-modular/cmake_build cmake_build -S extern/noah-owp-modular
+        cmake --build extern/noah-owp-modular/cmake_build --target surfacebmi -- -j ${{ env.LINUX_NUM_PROC_CORES }}
 
     - name: Build cfebmi module
       run: |
