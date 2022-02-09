@@ -208,19 +208,19 @@ The proxy functions require an opaque handle to a created BMI Fortran object to 
 Because of the use of `iso_c_bindings`, integrating with a Fortran BMI module works very similarly to integrating with a C BMI module, where a [shared library](#bmi-c-model-as-shared-library) is [dynamically loaded](#dynamic-loading).  An extra [bootstrapping registration function](#required-additional-fortran-registration-function) is also, again, required.
 
 #### Required Additional Fortran Registration Function
-[As with C](#additional-bootstrapping-function-needed), a registration function must be provided by the module, beyond what is implemented for BMI.  It should look very similar to the example below.  In fact, it is likely sufficient to simply modify the `use bminoahmp` and `type(bmi_noahmp), target, save :: bmi_model` lines to suit the module in question.
+[As with C](#additional-bootstrapping-function-needed), a registration function must be provided by the module, beyond what is implemented for BMI.  It should look very similar to the example below.  In fact, it is likely sufficient to simply modify the `use bminoahowp` and `type(bmi_noahowp), target, save :: bmi_model` lines to suit the module in question.
 
 This function should receive an opaque pointer and set it to point to a created BMI object of the appropriate type for the module.  Note that while `save` is being used in a way that persists only the initial object, since this will be used within the scope of a dynamic library loaded specifically for working with a particular catchment formulation, it should not cause issues.
 
 ```fortran
 function register_bmi(this) result(bmi_status) bind(C, name="register_bmi")
       use, intrinsic:: iso_c_binding, only: c_ptr, c_loc, c_int
-      use bminoahmp
+      use bminoahowp
       implicit none
       type(c_ptr) :: this ! If not value, then from the C perspective `this` is a void**
       integer(kind=c_int) :: bmi_status
       !Create the momdel instance to use
-      type(bmi_noahmp), target, save :: bmi_model !should be safe, since this will only be used once within scope of dynamically loaded library
+      type(bmi_noahowp), target, save :: bmi_model !should be safe, since this will only be used once within scope of dynamically loaded library
       !Create a simple pointer wrapper
       type(box), pointer :: bmi_box
 

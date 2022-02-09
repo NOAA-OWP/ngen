@@ -9,14 +9,14 @@ add_compile_options(
   "-Wall"
   "$<$<CONFIG:DEBUG>:-g;-fbacktrace;-fbounds-check>"
 )
-project(noah-mp-modular VERSION 1.0.0 DESCRIPTION "External BMI Models Shared Libraries")
+project(noah-owp-modular VERSION 1.0.0 DESCRIPTION "External BMI Models Shared Libraries")
 
 set( CMAKE_Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR}/fortran)
 
 #### Add variables for individual libraries that are used withing the *.pc.in files
 # Surface 
 set(SURFACE_LIB_NAME_CMAKE surfacebmi)
-set(SURFACE_LIB_DESC_CMAKE "External Noah-MP Surface Shared Library")
+set(SURFACE_LIB_DESC_CMAKE "External Noah-OWP-Modular Surface Shared Library")
 
 # Make sure these are compiled with this directive
 add_compile_definitions(BMI_ACTIVE NGEN_FORCING_ACTIVE NGEN_OUTPUT_ACTIVE NGEN_ACTIVE)
@@ -24,7 +24,7 @@ add_compile_definitions(BMI_ACTIVE NGEN_FORCING_ACTIVE NGEN_OUTPUT_ACTIVE NGEN_A
 #Use ../../../FindNetCDF.cmake, which looks for config package, pkgconfig, and standard file locations
 #in that order
 ###### 
-# Updates to noah-mp-modular allow a build of the bmi module that does not require netcdf
+# Updates to noah-owp-modular allow a build of the bmi module that does not require netcdf
 # The NGEN_OUTPUT_ACTIVE compiler directive disables all netcdf related code, hence no need
 # to link the netcdf library. If at some point this becomes required, the following section
 # can be uncommented to provide mechanics to look for and/or define netcdf requirements.
@@ -58,18 +58,18 @@ add_compile_definitions(BMI_ACTIVE NGEN_FORCING_ACTIVE NGEN_OUTPUT_ACTIVE NGEN_A
 # "The path to the C shared object library file, libnetcdff.so or the library name if it can be found by the linker, i.e. netcdff")
 ##### END NETCDF #####
 
-set(MODEL_SOURCE_DIR noah-mp-modular/src/)
-set(BMI_SOURCE_DIR noah-mp-modular/bmi/)
+set(MODEL_SOURCE_DIR noah-owp-modular/src/)
+set(BMI_SOURCE_DIR noah-owp-modular/bmi/)
 
 file(GLOB BMI_SOURCE ${BMI_SOURCE_DIR}*.f90)
 file( GLOB MODEL_SOURCES ${MODEL_SOURCE_DIR}*.f90)
 
-list(APPEND MODEL_SOURCES noah-mp-modular/driver/AsciiReadModule.f90
-                          noah-mp-modular/driver/OutputModule.f90)
+list(APPEND MODEL_SOURCES noah-owp-modular/driver/AsciiReadModule.f90
+                          noah-owp-modular/driver/OutputModule.f90)
 
 #add_library(surfacebmi_obj STATIC ${MODEL_SOURCES} )
 #target_compile_options(surfacebmi_obj PUBLIC -cpp -ffree-line-length-none)
-#target_include_directories(surfacebmi_obj PUBLIC noah-mp-modular/modules/surface_bmi/driver)
+#target_include_directories(surfacebmi_obj PUBLIC noah-mp-modular/modules/surface_bmi/driver) #PATH IS OUT OF DATE
 
 #target_include_directories(surfacebmi_obj PUBLIC ${netCDF_INCLUDE_DIR})
 #ensure relocatable object, make a different obj lib for a static lib and turn this off
