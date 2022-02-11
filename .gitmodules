@@ -25,7 +25,10 @@
 	path = extern/UDUNITS-2
 	url = https://github.com/Unidata/UDUNITS-2.git
 	ignore = dirty
-
 [submodule "extern/bmi-cxx"]
 	path = extern/bmi-cxx
 	url = https://github.com/csdms/bmi-cxx.git
+[submodule "extern/evapotranspiration/evapotranspiration"]
+	path = extern/evapotranspiration/evapotranspiration
+	url = https://github.com/NOAA-OWP/evapotranspiration.git
+        branch = master
