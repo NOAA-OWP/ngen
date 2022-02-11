@@ -30,7 +30,7 @@ def create_netcdf(filename : str, num_catchments : int, variable_names):
 
 def create_partial_netcdf(filename : str, num_catchments : int, variable_names):
     ds = create_netcdf(filename, num_catchments, variable_names)
-    ds.createVariable("offset",'int4',('catchment-id'))
+    ds.createVariable("offset",'i4',('catchment-id'))
     return ds
 
 def add_data(ds : nc.Dataset, pos : int, cat_name : str, df: pd.DataFrame):
@@ -86,7 +86,7 @@ def merge_partial_files(output_path : str, num_processes : int):
     for i in range(num_processes):
         #open the partial file
         print("Updating final netcdf with file", i+1, " of ", num_processes)
-        part_path = output_path + "." + str(num)
+        part_path = output_path + "." + str(i)
         pds = nc.Dataset(part_path,"r")
 
         s1 = pds["offset"][0]
@@ -135,9 +135,9 @@ def main():
     num_processes = 96
     #generate the data objects for child processes
 
-    if (args.skip_csv == False)
-        csv_groups = np.split(np.array(csv_files), num_processes)
-        pos_groups = np.split(np.array(range(num_csv_inputs)), num_processes)
+    if args.skip_csv == False:
+        csv_groups = np.array_split(np.array(csv_files), num_processes)
+        pos_groups = np.array_split(np.array(range(num_csv_inputs)), num_processes)
 
         process_data = []
         process_list = []
