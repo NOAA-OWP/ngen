@@ -113,7 +113,7 @@ namespace models {
              * Note that this calls the `Finalize()` function for cleaning up this object and its backing BMI model.
              */
             virtual ~Bmi_Cpp_Adapter() {
-                //finalizeForCppAdapter();
+                finalizeForCppAdapter();
             }
 
             /**
@@ -131,13 +131,7 @@ namespace models {
              * @throws models::external::State_Exception Thrown if nested model `finalize()` call is not successful.
              */
             void Finalize() override {
-                if (model_initialized) {
-                    // Acquire and call the BMI destroyer function
-                    ModelDestroyer dynamic_destroyer;
-                    void* symbol = dynamic_load_symbol(model_destroy_fname);
-                    dynamic_destroyer = (ModelDestroyer) symbol;
-                    dynamic_destroyer(this->bmi_model.get());
-                }
+                finalizeForCppAdapter();
             }
 
             string GetComponentName() override;
@@ -365,6 +359,16 @@ namespace models {
              */
             inline void execModuleCreation() {
                 if (get_dyn_lib_handle() == nullptr) {
+                    if (model_create_fname.empty()) {
+                        this->init_exception_msg =
+                                "Can't init " + this->model_name + "; empty name given for module's create function.";
+                        throw std::runtime_error(this->init_exception_msg);
+                    }
+                    if (model_destroy_fname.empty()){
+                        this->init_exception_msg =
+                                "Can't init " + this->model_name + "; empty name given for module's destroy function.";
+                        throw std::runtime_error(this->init_exception_msg);
+                    }
                     dynamic_library_load();
                 }
                 void *symbol;
@@ -461,6 +465,31 @@ namespace models {
                 execModuleCreation();
                 bmi_model->Initialize(bmi_init_config.c_str());
             }
+
+            /**
+             * A non-virtual equivalent for the virtual @see Finalize.
+             *
+             * This function should be kept private.  If its logic needs to be invoked externally, that should be done
+             * via the destructor or via the public interface @see Finalize function.
+             *
+             * Primarily, this exists to contain the functionality appropriate for @see Finalize in a function that is
+             * non-virtual, and can therefore be called by a destructor.
+             */
+            void finalizeForCppAdapter() {
+                if (model_initialized) {
+                    model_initialized = false;
+
+                    //C++ Models should throw their own exceptions...do we want to wrap in State_Exception? 
+                    // It looks like the Python adapter just marshals native exceptions, so guessing not.
+                    bmi_model->Finalize();
+
+                    // Acquire and call the BMI destroyer function
+                    ModelDestroyer dynamic_destroyer;
+                    void* symbol = dynamic_load_symbol(model_destroy_fname);
+                    dynamic_destroyer = (ModelDestroyer) symbol;
+                    dynamic_destroyer(this->bmi_model.get());
+                }
+           }
 
             // For unit testing
             friend class ::Bmi_Cpp_Adapter_Test;
