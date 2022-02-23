@@ -704,7 +704,8 @@ namespace realization {
          * 
          */
         void set_initial_bmi_parameters(geojson::PropertyMap properties){
-            //NJF FIXME
+            auto model = get_bmi_model();
+            if( model == nullptr ) return;
             //Now that the model is ready, we can set some intial parameters passed in the config
             auto model_params = properties.find("model_params");
             
@@ -714,7 +715,7 @@ namespace realization {
                 for (auto& param : params) {
                     //FIXME type???
                     auto data = param.second.as_real_vector().data();
-                        get_bmi_model()->SetValue(param.first, &data);
+                        model->SetValue(param.first, &data);
                 }
                 
             }
