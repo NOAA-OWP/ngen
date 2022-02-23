@@ -641,20 +641,9 @@ namespace realization {
             // now construct the adapter and init the model
             set_bmi_model(construct_model(properties));
             
-            //NJF FIXME
-            //Now that the model is ready, we can set some intial parameters passed in the config
-            auto model_params = properties.find("model_params");
-            
-            if (model_params != properties.end() ){
-                
-                geojson::PropertyMap params = model_params->second.get_values();
-                for (auto& param : params) {
-                    //FIXME type???
-                    auto data = param.second.as_real_vector().data();
-                        get_bmi_model()->SetValue(param.first, &data);
-                }
-                
-            }
+            //Check if any parameter values need to be set on the BMI model,
+            //and set them before it is run
+            set_initial_bmi_parameters(properties);
             
             // Make sure that this is able to interpret model time and convert to real time, since BMI model time is
             // usually starting at 0 and just counting up
@@ -701,6 +690,34 @@ namespace realization {
 
             // Finally, make sure this is set
             model_initialized = get_bmi_model()->is_model_initialized();
+        }
+
+        /**
+         * @brief Check configuration properties for `model_params` and attempt to set them in the bmi model.
+         * 
+         * This checks for a key named `model_params` in the parsed properties, and for each property
+         * it will attempt to call `SetValue` using the property's key as the BMI variable
+         * and the property's value as the value to set.
+         * 
+         * This function should only be called once @p bmi_model is properly constructed.
+         * If @p bmi_model is a nullptr, this function becomes a no-op.
+         * 
+         */
+        void set_initial_bmi_parameters(geojson::PropertyMap properties){
+            //NJF FIXME
+            //Now that the model is ready, we can set some intial parameters passed in the config
+            auto model_params = properties.find("model_params");
+            
+            if (model_params != properties.end() ){
+                
+                geojson::PropertyMap params = model_params->second.get_values();
+                for (auto& param : params) {
+                    //FIXME type???
+                    auto data = param.second.as_real_vector().data();
+                        get_bmi_model()->SetValue(param.first, &data);
+                }
+                
+            }
         }
 
         /**
