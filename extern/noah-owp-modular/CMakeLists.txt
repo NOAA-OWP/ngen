@@ -67,14 +67,6 @@ file( GLOB MODEL_SOURCES ${MODEL_SOURCE_DIR}*.f90)
 list(APPEND MODEL_SOURCES noah-owp-modular/driver/AsciiReadModule.f90
                           noah-owp-modular/driver/OutputModule.f90)
 
-#add_library(surfacebmi_obj STATIC ${MODEL_SOURCES} )
-#target_compile_options(surfacebmi_obj PUBLIC -cpp -ffree-line-length-none)
-#target_include_directories(surfacebmi_obj PUBLIC noah-mp-modular/modules/surface_bmi/driver) #PATH IS OUT OF DATE
-
-#target_include_directories(surfacebmi_obj PUBLIC ${netCDF_INCLUDE_DIR})
-#ensure relocatable object, make a different obj lib for a static lib and turn this off
-#set_property(TARGET surfacebmi_obj PROPERTY POSITION_INDEPENDENT_CODE ON)
-
 if(WIN32)
     add_library(surfacebmi ${BMI_SOURCE} )
 else()
