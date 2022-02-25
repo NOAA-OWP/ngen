@@ -317,16 +317,16 @@ A Compiled Shared Library</h2>
 <p >Because of the use of <code>iso_c_bindings</code>, integrating with a Fortran BMI module works very similarly to integrating with a C BMI module, where a shared library is dynamically loaded. An extra bootstrapping registration function is also, again, required.</p>
 <h3><a class="anchor" id="autotoc_md39"></a>
 Required Additional Fortran Registration Function</h3>
-<p >As with C, a registration function must be provided by the module, beyond what is implemented for BMI. It should look very similar to the example below. In fact, it is likely sufficient to simply modify the <code>use bminoahmp</code> and <code>type(bmi_noahmp), target, save :: bmi_model</code> lines to suit the module in question.</p>
+<p >As with C, a registration function must be provided by the module, beyond what is implemented for BMI. It should look very similar to the example below. In fact, it is likely sufficient to simply modify the <code>use bminoahowp</code> and <code>type(bmi_noahowp), target, save :: bmi_model</code> lines to suit the module in question.</p>
 <p >This function should receive an opaque pointer and set it to point to a created BMI object of the appropriate type for the module. Note that while <code>save</code> is being used in a way that persists only the initial object, since this will be used within the scope of a dynamic library loaded specifically for working with a particular catchment formulation, it should not cause issues.</p>
 <div class="fragment"><div class="line"><span class="keyword">function </span>register_bmi(this) <span class="keyword">result</span>(bmi_status) <span class="keyword">bind(C, name=&quot;register_bmi&quot;)</span></div>
 <div class="line">      use, <span class="keywordtype">intrinsic</span>:: iso_c_binding, only: c_ptr, c_loc, c_int</div>
-<div class="line">      <span class="keywordtype">use </span>bminoahmp</div>
+<div class="line">      <span class="keywordtype">use </span>bminoahowp</div>
 <div class="line">      <span class="keywordtype">implicit none</span></div>
 <div class="line">      <span class="keywordtype">type</span>(c_ptr) :: this <span class="comment">! If not value, then from the C perspective `this` is a void**</span></div>
 <div class="line">      <span class="keywordtype">integer(kind=c_int)</span> :: bmi_status</div>
 <div class="line">      <span class="comment">!Create the momdel instance to use</span></div>
-<div class="line">      <span class="keywordtype">type</span>(bmi_noahmp), <span class="keywordtype">target</span>, <span class="keywordtype">save</span> :: bmi_model <span class="comment">!should be safe, since this will only be used once within scope of dynamically loaded library</span></div>
+<div class="line">      <span class="keywordtype">type</span>(bmi_noahowp), <span class="keywordtype">target</span>, <span class="keywordtype">save</span> :: bmi_model <span class="comment">!should be safe, since this will only be used once within scope of dynamically loaded library</span></div>
 <div class="line">      <span class="comment">!Create a simple pointer wrapper</span></div>
 <div class="line">      <span class="keywordtype">type</span>(box), <span class="keywordtype">pointer</span> :: bmi_box</div>
 <div class="line"> </div>
@@ -374,7 +374,7 @@ Multi-Module BMI Formulations</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Feb 10 2022 15:14:37 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3 </li>
+    <li class="footer">Generated on Fri Feb 25 2022 14:31:46 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3 </li>
   </ul>
 </div>
 </body>
