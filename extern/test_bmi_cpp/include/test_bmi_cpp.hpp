@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 #include <map>
-#include "bmi.hpp"
+#include "extern/bmi-cxx/bmi.hxx"
 
 #define TRUE 1
 #define FALSE 0
