@@ -26,3 +26,6 @@
 	url = https://github.com/Unidata/UDUNITS-2.git
 	ignore = dirty
 
+[submodule "extern/bmi-cxx"]
+	path = extern/bmi-cxx
+	url = https://github.com/csdms/bmi-cxx.git
