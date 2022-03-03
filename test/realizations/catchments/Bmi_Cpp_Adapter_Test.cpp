@@ -232,7 +232,8 @@ TEST_F(Bmi_Cpp_Adapter_Test, SetValue_0_c) {
 
 
 
-//Everything below this line 
+//Everything below this line is identical to Bmi_C_Adapter_Test.cpp ... 
+// possible to extract a common test suite for at least these two?
 
 /** Profile the update function and GetValues functions */
 TEST_F(Bmi_Cpp_Adapter_Test, Profile)
