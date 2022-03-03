@@ -27,6 +27,10 @@ struct test_bmi_c_model {
 
     double* output_var_1;
     double* output_var_2;
+
+    int param_var_1;
+    double param_var_2;
+    double* param_var_3;
 };
 typedef struct test_bmi_c_model test_bmi_c_model;
 
