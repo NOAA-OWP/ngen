@@ -728,7 +728,10 @@ namespace realization {
                     //Figure out the c++ type to convert data to
                     std::string type = get_bmi_model()->get_analogous_cxx_type(get_bmi_model()->GetVarType(param.first),
                                                                            varItemSize);
-
+                    //TODO might consider refactoring as_vector and get_values_as_type
+                    //(and by extension, as_c_array) into the JSONProperty class
+                    //then instead of the PropertyVariant visitor filling vectors
+                    //it could fill the c-like array and avoid another copy.
                      switch( param.second.get_type() ){
                         case geojson::PropertyType::Natural:
                             param.second.as_vector(long_vec);
