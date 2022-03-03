@@ -121,7 +121,8 @@ protected:
     std::vector<std::string> lib_file;
     std::vector<std::string> init_config;
     std::vector<std::string> main_output_variable;
-    std::vector<std::string> registration_functions;
+    std::vector<std::string> create_functions;
+    std::vector<std::string> destroy_functions;
     std::vector<bool> uses_forcing_file;
     std::vector<std::shared_ptr<forcing_params>> forcing_params_examples;
     std::vector<geojson::GeoJSON> config_properties;
@@ -153,7 +154,6 @@ void Bmi_Cpp_Formulation_Test::SetUp() {
     lib_file = std::vector<std::string>(EX_COUNT);
     init_config = std::vector<std::string>(EX_COUNT);
     main_output_variable  = std::vector<std::string>(EX_COUNT);
-    registration_functions  = std::vector<std::string>(EX_COUNT);
     uses_forcing_file = std::vector<bool>(EX_COUNT);
     forcing_params_examples = std::vector<std::shared_ptr<forcing_params>>(EX_COUNT);
     config_properties = std::vector<geojson::GeoJSON>(EX_COUNT);
@@ -166,7 +166,6 @@ void Bmi_Cpp_Formulation_Test::SetUp() {
     lib_file[0] = find_file(lib_dir_opts, BMI_TEST_CPP_LOCAL_LIB_NAME);
     init_config[0] = find_file(bmi_init_cfg_dir_opts, "test_bmi_c_config_0.txt");
     main_output_variable[0] = "OUTPUT_VAR_1";
-    registration_functions[0] = "register_bmi";
     uses_forcing_file[0] = false;
 
     catchment_ids[1] = "cat-27";
@@ -175,17 +174,19 @@ void Bmi_Cpp_Formulation_Test::SetUp() {
     lib_file[1] = find_file(lib_dir_opts, BMI_TEST_CPP_LOCAL_LIB_NAME);
     init_config[1] = find_file(bmi_init_cfg_dir_opts, "test_bmi_c_config_1.txt");
     main_output_variable[1] = "OUTPUT_VAR_1";
-    registration_functions[1] = "register_bmi";
     uses_forcing_file[1] = false;
 
     std::string variables_with_rain_rate = "                \"output_variables\": [\"OUTPUT_VAR_2\",\n"
                                            "                    \"OUTPUT_VAR_1\"],\n";
+    std::string function_names_explicit =  "                \"create_function\": \"bmi_model_create\",\n"
+                                           "                \"destroy_function\": \"bmi_model_destroy\",\n";
 
     /* Set up the derived example details */
     for (int i = 0; i < EX_COUNT; i++) {
         std::shared_ptr<forcing_params> params = std::make_shared<forcing_params>(
                 forcing_params(forcing_file[i], "legacy", "2015-12-01 00:00:00", "2015-12-30 23:00:00"));
         std::string variables_line = (i == 1) ? variables_with_rain_rate : "";
+        std::string function_names_lines = (i == 1) ? function_names_explicit : "";
         forcing_params_examples[i] = params;
         config_json[i] = "{"
                          "    \"global\": {},"
@@ -201,8 +202,7 @@ void Bmi_Cpp_Formulation_Test::SetUp() {
                          "                      \"INPUT_VAR_2\": \"" + NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP + "\","
                          "                      \"INPUT_VAR_1\": \"" + AORC_FIELD_NAME_PRECIP_RATE + "\""
                          "                },"
-                         "                \"registration_function\": \"" + registration_functions[i] + "\","
-                         + variables_line +
+                         + variables_line + function_names_lines +
                          "                \"uses_forcing_file\": " + (uses_forcing_file[i] ? "true" : "false") + ""
                          "            },"
                          "            \"forcing\": { \"path\": \"" + forcing_file[i] + "\", \"provider\": \"CsvPerFeature\"}"

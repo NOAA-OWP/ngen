@@ -43,7 +43,7 @@ namespace models {
              */
             explicit Bmi_Cpp_Adapter(const std::string &type_name, std::string library_file_path, std::string forcing_file_path,
                                    bool allow_exceed_end, bool has_fixed_time_step,
-                                   const std::string& creator_func, const std::string& destroyer_func,
+                                   std::string creator_func, std::string destroyer_func,
                                    utils::StreamHandler output);
 
             /**
@@ -476,7 +476,7 @@ namespace models {
              * non-virtual, and can therefore be called by a destructor.
              */
             void finalizeForCppAdapter() {
-                if (model_initialized) {
+                if (bmi_model != nullptr && model_initialized) {
                     model_initialized = false;
 
                     //C++ Models should throw their own exceptions...do we want to wrap in State_Exception? 
