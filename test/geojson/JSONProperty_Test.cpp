@@ -186,3 +186,113 @@ TEST_F(JSONProperty_Test, ptree_test) {
     ASSERT_EQ(properties[3].get_type(), geojson::PropertyType::Natural);
     ASSERT_EQ(properties[4].get_type(), geojson::PropertyType::Real);
 }
+
+TEST_F(JSONProperty_Test, test_as_vector_natural){
+    geojson::JSONProperty natural_property("natural", 4);
+    ASSERT_EQ(natural_property.get_type(), geojson::PropertyType::Natural);
+    ASSERT_EQ(natural_property.as_natural_number(), 4);
+    std::vector<long> vec;
+    natural_property.as_vector(vec);
+    ASSERT_EQ(vec.size(), 1);
+    ASSERT_EQ(vec[0], 4);
+}
+
+TEST_F(JSONProperty_Test, test_as_vector_real){
+    geojson::JSONProperty natural_property("real", 4.2);
+    ASSERT_EQ(natural_property.get_type(), geojson::PropertyType::Real);
+    ASSERT_EQ(natural_property.as_real_number(), 4.2);
+    std::vector<double> vec;
+    natural_property.as_vector(vec);
+    ASSERT_EQ(vec.size(), 1);
+    ASSERT_EQ(vec[0], 4.2);
+}
+
+TEST_F(JSONProperty_Test, test_as_vector_string){
+    geojson::JSONProperty natural_property("string", "test");
+    ASSERT_EQ(natural_property.get_type(), geojson::PropertyType::String);
+    ASSERT_EQ(natural_property.as_string(), "test");
+    std::vector<std::string> vec;
+    natural_property.as_vector(vec);
+    ASSERT_EQ(vec.size(), 1);
+    ASSERT_EQ(vec[0], "test");
+}
+
+TEST_F(JSONProperty_Test, test_as_vector_natural_list){
+    std::vector<long> test_list = {1,2,3,4};
+    std::vector<geojson::JSONProperty> properties;
+    for(auto const num : test_list){
+        properties.push_back(geojson::JSONProperty("", num));
+    }
+
+    geojson::JSONProperty natural_property("natural_list", properties);
+    ASSERT_EQ(natural_property.get_type(), geojson::PropertyType::List);
+    ASSERT_EQ(natural_property.as_natural_vector(), test_list);
+    std::vector<long> vec;
+    natural_property.as_vector(vec);
+    ASSERT_EQ(vec.size(), 4);
+    ASSERT_EQ(vec, test_list);
+}
+
+TEST_F(JSONProperty_Test, test_as_vector_real_list){
+    std::vector<double> test_list = {1.1,2.2,3.3,4.4};
+    std::vector<geojson::JSONProperty> properties;
+    for(auto const num : test_list){
+        properties.push_back(geojson::JSONProperty("", num));
+    }
+
+    geojson::JSONProperty real_property("real_list", properties);
+    ASSERT_EQ(real_property.get_type(), geojson::PropertyType::List);
+    ASSERT_EQ(real_property.as_real_vector(), test_list);
+    std::vector<double> vec;
+    real_property.as_vector(vec);
+    ASSERT_EQ(vec.size(), 4);
+    ASSERT_EQ(vec, test_list);
+}
+
+TEST_F(JSONProperty_Test, test_as_vector_mixed_list){
+    //Test to ensure a mixed list of natural and real numbers
+    //can be converted to a single vector of real (double)
+    std::vector<double> test_list_real = {1.1,2.2,3.3,4.4};
+    std::vector<long> test_list_natural = {1,2,3,4};
+    std::vector<geojson::JSONProperty> properties;
+    for(auto const num : test_list_real){
+        properties.push_back(geojson::JSONProperty("", num));
+    }
+    for(auto const num : test_list_natural){
+        properties.push_back(geojson::JSONProperty("", num));
+    }
+    geojson::JSONProperty mixed_property("mixed_list", properties);
+    std::vector<double> vec;
+    mixed_property.as_vector(vec);
+    ASSERT_EQ(vec.size(), 8);
+    std::vector<double> all = {1.1,2.2,3.3,4.4,1,2,3,4};
+    ASSERT_EQ(vec, all);
+}
+
+TEST_F(JSONProperty_Test, test_as_vector_mixed_list_0a){
+    std::vector<double> test_list_real = {1.1,2.2,3.3,4.4};
+    std::vector<long> test_list_natural = {1,2,3,4};
+    std::vector<std::string> test_list_str = {"hello", "world"};
+    std::vector<geojson::JSONProperty> properties;
+    for(auto const num : test_list_real){
+        properties.push_back(geojson::JSONProperty("", num));
+    }
+    for(auto const num : test_list_natural){
+        properties.push_back(geojson::JSONProperty("", num));
+    }
+    for(auto const str : test_list_str){
+        properties.push_back(geojson::JSONProperty("", str));
+    }
+    geojson::JSONProperty mixed_property("mixed_list", properties);
+    std::vector<double> vec;
+    mixed_property.as_vector(vec);
+    ASSERT_EQ(vec.size(), 8);
+    std::vector<double> all = {1.1,2.2,3.3,4.4,1,2,3,4};
+    ASSERT_EQ(vec, all);
+
+    std::vector<std::string> vec2;
+    mixed_property.as_vector(vec2);
+    ASSERT_EQ(vec2.size(), 2);
+    ASSERT_EQ(vec2, test_list_str);
+
+}
