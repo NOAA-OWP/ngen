@@ -712,13 +712,85 @@ namespace realization {
             if (model_params != properties.end() ){
                 
                 geojson::PropertyMap params = model_params->second.get_values();
+                //Declare/init the possible vectors here
+                //reuse them for each loop iteration, make sure to clear them
+                std::vector<long> long_vec;
+                std::vector<double> double_vec;
+                //not_supported
+                //std::vector<std::string> str_vec;
+                //std::vector<bool> bool_vec;
+                std::shared_ptr<void> value_ptr;
                 for (auto& param : params) {
-                    //FIXME type???
-                    auto data = param.second.as_real_vector().data();
-                        model->SetValue(param.first, &data);
-                }
+                    //Get some basic BMI info for this param
+                    int varItemSize = get_bmi_model()->GetVarItemsize(param.first);
+                    int totalBytes = get_bmi_model()->GetVarNbytes(param.first);
                 
+                    //Figure out the c++ type to convert data to
+                    std::string type = get_bmi_model()->get_analogous_cxx_type(get_bmi_model()->GetVarType(param.first),
+                                                                           varItemSize);
+
+                     switch( param.second.get_type() ){
+                        case geojson::PropertyType::Natural:
+                            param.second.as_vector(long_vec);
+                            value_ptr = get_values_as_type(type, long_vec.begin(), long_vec.end());
+                            std::cout<<"NAT VALUE: "<<long_vec[0]<<std::endl;
+                            break;
+                        case geojson::PropertyType::Real:
+                            param.second.as_vector(double_vec);
+                            value_ptr = get_values_as_type(type, double_vec.begin(), double_vec.end());
+                            std::cout<<"REAL VALUE: "<<double_vec[0]<<std::endl;
+                            break;
+                        /* Not currently supporting string parameter values
+                        case geojson::PropertyType::String:
+                            param.second.as_vector(str_vec);
+                            value_ptr = get_values_as_type(type, long_vec.begin(), long_vec.end());
+                        */
+                        /* Not currently supporting native bool (true/false) parameter values (use int 0/1)
+                        case geojson::PropertyType::Boolean:
+                            param.second.as_vector(bool_vec);
+                            //data_ptr = bool_vec.data();
+                        */
+                        case geojson::PropertyType::List:
+                            //In this case, only supporting numeric lists
+                            //will retrieve as double (longs will get casted)
+                            //TODO consider some additional introspection/optimization for this?
+                            param.second.as_vector(double_vec);
+                            if(double_vec.size() == 0){
+                                std::cout<<"Cannot pass non-numeric lists as a BMI parameter, skipping "<<param.first<<std::endl;
+                                continue;
+                            }
+                            value_ptr = get_values_as_type(type, double_vec.begin(), double_vec.end());
+                            break;
+                        default:
+                            std::cout<<"Cannot pass parameter of type "<<geojson::get_propertytype_name(param.second.get_type())<<" as a BMI parameter, skipping "<<param.first<<std::endl;
+                            continue;
+                    }
+                    try{
+                        
+                        // Finally, use the value obtained to set the model param 
+                        get_bmi_model()->SetValue(param.first, value_ptr.get());
+                    }
+                    catch (const std::exception &e)
+                    {
+                        std::cout<<"Exception setting parameter value: "<< e.what()<<std::endl;
+                        std::cout<<"Skipping parameter: "<<param.first<<std::endl;
+                    }
+                    catch (...)
+                    {
+                        std::cout<<"Unknown Exception setting parameter value: "<<std::endl;
+                        std::cout<<"Skipping parameter: "<<param.first<<std::endl;
+                    }
+                    long_vec.clear();
+                    double_vec.clear();
+                    //Not supported
+                    //str_vec.clear();
+                    //bool_vec.clear();
+                }
+
             }
+            //TODO use SetValue(name, vector<t>) overloads???
+            //implment the overloads in each adapter
+            //ensure proper type is prepared before setting value
         }
 
         /**
