@@ -267,6 +267,23 @@ TEST_F(Bmi_C_Formulation_Test, GetResponse_0_a) {
     ASSERT_EQ(response, 00);
 }
 
+/** Simple test of initial parameter setting. */
+TEST_F(Bmi_C_Formulation_Test, set_initial_parameters_0_a) {
+    int ex_index = 0;
+
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+
+    int param = get_friend_bmi_model(formulation)->GetValue<int>("PARAM_VAR_1")[0];
+    ASSERT_EQ(param, 42);
+    double param2 = get_friend_bmi_model(formulation)->GetValue<double>("PARAM_VAR_2")[0];
+    ASSERT_EQ(param2, 4.2);
+    std::vector<double> param3 = get_friend_bmi_model(formulation)->GetValue<double>("PARAM_VAR_3");
+    ASSERT_EQ(param3.size(), 2);
+    ASSERT_EQ(param3[0], 4.0);
+    ASSERT_EQ(param3[1], 2.0);
+}
+
 /** Test of get response after several iterations. */
 TEST_F(Bmi_C_Formulation_Test, GetResponse_0_b) {
     int ex_index = 0;
