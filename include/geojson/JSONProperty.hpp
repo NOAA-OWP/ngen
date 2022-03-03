@@ -451,6 +451,48 @@ namespace geojson {
             //TODO port this entire class to use this variant
             //TODO make sure all construction paths for `data` are unit tested
             PropertyVariant data;
+        
+            /**
+             * @brief Visitor to filter boost variants by type T into a vector of type T
+             * 
+             * A specialization is defined in JSONProperty.cpp which allows
+             * a vistitor to coerce long type variants into double types.
+             * See \ref as_vector for some explanation.
+             * 
+             * TODO rename this visitor to be a litte more clear on its semantics.
+             * @tparam T 
+             */
+            template<typename T>
+            struct PropertyVisitor : public boost::static_visitor<>
+            {
+                //PropertyVisitor takes a templated vector and stores the vector
+                //reference in the struct
+                PropertyVisitor(std::vector<T>& v) : vec(v) {}
+                //Vistor operators, first is generic template operator
+                template<typename Variant>
+                void operator () (const Variant& value) {
+                    //This is a no-op for all types that are not T
+                }
+     
+                //Visitor operator for type T, adds T types to vector
+                void operator () (const T& value)
+                {
+                    vec.push_back(value);
+                }
+
+                /* Can overload these with custom implementation and/or errors
+                void operator () (const boost::blank&){}
+                void operator () (const Object&) {}
+                */
+                void operator () (const List& values) {
+                    //Recurse through the list to filter for types T
+                    std::for_each(values.values.begin(), values.values.end(), boost::apply_visitor(*this));
+                }
+
+                private:
+                //Storage for filtered items
+                std::vector<T>& vec;
+            };
     };
 }
 #endif // GEOJSON_JSONPROPERTY_H
