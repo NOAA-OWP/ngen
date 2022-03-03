@@ -795,6 +795,36 @@ namespace realization {
             model_initialized = is_initialized;
         }
 
+        /**
+         * @brief Template function for copying iterator range into contiguous array.
+         * 
+         * This function will iterate the range and cast the iterator value to type T
+         * and copy that value into a C-like array of contiguous, dynamically allocated memory.
+         * This array is stored in a smart pointer with a custom array deleter.
+         * 
+         * @tparam T 
+         * @tparam Iterator 
+         * @param begin 
+         * @param end 
+         * @return std::shared_ptr<T> 
+         */
+        template <typename T, typename Iterator>
+        std::shared_ptr<T> as_c_array(Iterator begin, Iterator end){
+            //Make a shared pointer large enough to hold all elements
+            //This is a CONTIGUOUS array of type T
+            //Must provide a custom deleter to delete the array
+            std::shared_ptr<T> ptr( new T[std::distance(begin, end)], [](T *p) { delete[] p; } );
+            Iterator it = begin;
+            int i = 0;
+            while(it != end){
+                //Be safe and cast the input to the desired type
+                ptr.get()[i] = static_cast<T>(*it);
+                ++it;
+                ++i;
+            }
+            return ptr;
+        }
+
         // TODO: need to modify this to support arrays properly, since in general that's what BMI modules deal with
         template<typename T>
         std::shared_ptr<void> get_value_as_type(std::string type, T value)
