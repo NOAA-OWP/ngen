@@ -206,7 +206,8 @@ void Bmi_C_Formulation_Test::SetUp() {
                          "                },"
                          "                \"registration_function\": \"" + registration_functions[i] + "\","
                          + variables_line +
-                         "                \"uses_forcing_file\": " + (uses_forcing_file[i] ? "true" : "false") + ""
+                         "                \"uses_forcing_file\": " + (uses_forcing_file[i] ? "true" : "false") + ","
+                         "                \"model_params\": { \"PARAM_VAR_1\": 42, \"PARAM_VAR_2\": 4.2, \"PARAM_VAR_3\": [4, 2]}" +
                          "            },"
                          "            \"forcing\": { \"path\": \"" + forcing_file[i] + "\", \"provider\": \"CsvPerFeature\"}"
                          "        }"
