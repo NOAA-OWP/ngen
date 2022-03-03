@@ -8,7 +8,7 @@
 
 #define INPUT_VAR_NAME_COUNT 2
 #define OUTPUT_VAR_NAME_COUNT 2
-
+#define PARAM_VAR_NAME_COUNT 3
 
 // Don't forget to update Get_value/Get_value_at_indices (and setter) implementation if these are adjusted
 static const char *output_var_names[OUTPUT_VAR_NAME_COUNT] = { "OUTPUT_VAR_1", "OUTPUT_VAR_2" };
@@ -26,6 +26,13 @@ static const int input_var_item_count[INPUT_VAR_NAME_COUNT] = { 1, 1 };
 static const char *input_var_grids[INPUT_VAR_NAME_COUNT] = { 0, 0 };
 static const char *input_var_locations[INPUT_VAR_NAME_COUNT] = { "node", "node" };
 
+// Don't forget to update Get_value/Get_value_at_indices (and setter) implementation if these are adjusted
+static const char *param_var_names[PARAM_VAR_NAME_COUNT] = { "PARAM_VAR_1", "PARAM_VAR_2", "PARAM_VAR_3" };
+static const char *param_var_types[PARAM_VAR_NAME_COUNT] = { "int", "double", "double" };
+static const char *param_var_units[PARAM_VAR_NAME_COUNT] = {  "m", "m/s", "m"};
+static const int param_var_item_count[PARAM_VAR_NAME_COUNT] = { 1, 1, 2 };
+static const char *param_var_grids[PARAM_VAR_NAME_COUNT] = { 0, 0, 0 };
+static const char *param_var_locations[PARAM_VAR_NAME_COUNT] = { "node", "node", "node" };
 
 static int Finalize (Bmi *self)
 {
@@ -40,6 +47,8 @@ static int Finalize (Bmi *self)
             free(model->output_var_1);
         if( model->output_var_2 != NULL )
             free(model->output_var_2);
+        if (model->param_var_3 != NULL )
+            free(model->param_var_3);
         free(self->data);
     }
 
@@ -345,6 +354,20 @@ static int Get_value_ptr (Bmi *self, const char *name, void **dest)
         return BMI_SUCCESS;
     }
 
+    if (strcmp (name, "PARAM_VAR_1") == 0) {
+        *dest = &((test_bmi_c_model *)(self->data))->param_var_1;
+        return BMI_SUCCESS;
+    }
+
+    if (strcmp (name, "PARAM_VAR_2") == 0) {
+        *dest = &((test_bmi_c_model *)(self->data))->param_var_2;
+        return BMI_SUCCESS;
+    }
+
+    if (strcmp (name, "PARAM_VAR_3") == 0) {
+        *dest = ((test_bmi_c_model *)(self->data))->param_var_3;
+        return BMI_SUCCESS;
+    }
     return BMI_FAILURE;
 }
 
@@ -433,6 +456,14 @@ static int Get_var_nbytes (Bmi *self, const char *name, int * nbytes)
             }
         }
     }
+    if (item_count < 1) {
+        for (i = 0; i < PARAM_VAR_NAME_COUNT; i++) {
+            if (strcmp(name, param_var_names[i]) == 0) {
+                item_count = param_var_item_count[i];
+                break;
+            }
+        }
+    }
     if (item_count < 1)
         item_count = ((test_bmi_c_model *) self->data)->num_time_steps;
 
@@ -455,6 +486,13 @@ static int Get_var_type (Bmi *self, const char *name, char * type)
     for (i = 0; i < INPUT_VAR_NAME_COUNT; i++) {
         if (strcmp(name, input_var_names[i]) == 0) {
             strncpy(type, input_var_types[i], BMI_MAX_TYPE_NAME);
+            return BMI_SUCCESS;
+        }
+    }
+    // Finally check to see if in param array
+    for (i = 0; i < PARAM_VAR_NAME_COUNT; i++) {
+        if (strcmp(name, param_var_names[i]) == 0) {
+            strncpy(type, param_var_types[i], BMI_MAX_TYPE_NAME);
             return BMI_SUCCESS;
         }
     }
@@ -528,6 +566,12 @@ static int Initialize (Bmi *self, const char *file)
     model->input_var_2 = malloc(sizeof(double));
     model->output_var_1 = malloc(sizeof(double));
     model->output_var_2 = malloc(sizeof(double));
+
+    model->param_var_1 = 0;
+    model->param_var_2 = 0.0;
+    model->param_var_3 = malloc(2*sizeof(double));
+    model->param_var_3[0] = 0.0;
+    model->param_var_3[1] = 0.0;
 
     return BMI_SUCCESS;
 }
