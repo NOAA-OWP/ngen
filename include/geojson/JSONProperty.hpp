@@ -387,6 +387,39 @@ namespace geojson {
 
             bool as_boolean() const;
 
+            /**
+             * @brief Populates a std::vector<T> with PropertyVariant values.
+             * 
+             * Scalar properties will yeild a vector of size 1.
+             * 
+             * List properties will yield a vector of compatible types.
+             * E.g. a List with [1, 2.1, 3] can upcast the Natural number 1 and 3 iff 
+             * a container is provided with sufficient datatype (double)
+             * 
+             * std::vector<double> double_vec;
+             * as_vector(double_vec);
+             * 
+             * Will give a vector of doubles = {1.0, 2.1, 3.0}.
+             * 
+             * However, if a vector of long is used, only the Natural numbers will be extracted
+             * 
+             * std::vector<long> long_vec;
+             * as_vector(long_vec); 
+             * 
+             * Will give a vector of longs = {1, 3}.
+             * 
+             * Other than this caveat, as_vector effetively filters the property list for types
+             * representable by T.
+             * 
+             * @tparam T 
+             * @param vector 
+             */
+            template <typename T>
+            void as_vector(std::vector<T>& vector) const{
+                PropertyVisitor<T> visitor(vector);
+                boost::apply_visitor(visitor, data);
+            }
+
             std::vector<JSONProperty> as_list() const;
 
             std::vector<long> as_natural_vector() const;
