@@ -8,9 +8,45 @@
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/variant.hpp>
 
 namespace geojson {
     class JSONProperty;
+    //Forward declare variant types
+    struct List;
+    struct Object;
+    using PropertyVariant = boost::variant<boost::blank, 
+                                           long, 
+                                           double, 
+                                           bool, 
+                                           std::string, 
+                                           boost::recursive_wrapper<List>, 
+                                           boost::recursive_wrapper<Object>
+                                          >;
+    
+    /**
+     * @brief Struct wrapping a vector of \ref PropertyVariant representing a JSON list.
+     * 
+     */
+    struct List{
+        std::vector<PropertyVariant> values;
+        friend std::ostream& operator<<(std::ostream& os, const List& obj){
+            os<<"LIST";
+            return os;
+        }
+    };
+
+    /**
+     * @brief Struct wrapping a map of nested \ref PropertyVariant representing a JSON object.
+     * 
+     */
+    struct Object{
+        std::map<std::string, PropertyVariant> values;
+        friend std::ostream& operator<<(std::ostream& os, const Object& obj){
+            os<<"OBJECT";
+            return os;
+        }
+    };
     
     /**
      * Defines the different types of properties that are stored within a JSON property 
@@ -373,6 +409,11 @@ namespace geojson {
             bool boolean;
             PropertyMap values;
             std::vector<JSONProperty> value_list;
+            //boost::variant to hold the parsed data
+            //can be one of boost::blank, long, double, bool, string, List, Object
+            //Defaults to boost::blank
+            //TODO port this entire class to use this variant
+            PropertyVariant data;
     };
 }
 #endif // GEOJSON_JSONPROPERTY_H
