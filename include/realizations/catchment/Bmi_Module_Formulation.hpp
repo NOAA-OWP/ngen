@@ -825,6 +825,54 @@ namespace realization {
             return ptr;
         }
 
+        /**
+         * @brief Gets values in iterator range, casted based on @p type then returned as typeless (void) pointer.  
+         * 
+         * @tparam Iterator 
+         * @param type 
+         * @param begin 
+         * @param end 
+         * @return std::shared_ptr<void> 
+         */
+        template <typename Iterator>
+        std::shared_ptr<void> get_values_as_type(std::string type, Iterator begin, Iterator end)
+        {
+            //Use std::vector range constructor to ensure contiguous storage of values
+            //Return the pointer to the contiguous storage
+            if (type == "double" || type == "double precision")
+                return as_c_array<double>(begin, end);
+           
+            if (type == "float" || type == "real")
+                return as_c_array<float>(begin, end);
+
+            if (type == "short" || type == "short int" || type == "signed short" || type == "signed short int")
+                return as_c_array<short>(begin, end);
+
+            if (type == "unsigned short" || type == "unsigned short int")
+                return as_c_array<unsigned short>(begin, end);
+
+            if (type == "int" || type == "signed" || type == "signed int" || type == "integer")
+                return as_c_array<int>(begin, end);
+
+            if (type == "unsigned" || type == "unsigned int")
+                return as_c_array<unsigned int>(begin, end);
+
+            if (type == "long" || type == "long int" || type == "signed long" || type == "signed long int")
+                return as_c_array<long>(begin, end);
+
+            if (type == "unsigned long" || type == "unsigned long int")
+                return as_c_array<unsigned long>(begin, end);
+
+            if (type == "long long" || type == "long long int" || type == "signed long long" || type == "signed long long int")
+                return as_c_array<long long>(begin, end);
+
+            if (type == "unsigned long long" || type == "unsigned long long int")
+                return as_c_array<unsigned long long>(begin, end);
+
+            throw std::runtime_error("Unable to get values of iterable as type" + type + " from " + get_model_type_name() +
+                " : no logic for converting values to variable's type.");
+        }
+
         // TODO: need to modify this to support arrays properly, since in general that's what BMI modules deal with
         template<typename T>
         std::shared_ptr<void> get_value_as_type(std::string type, T value)
