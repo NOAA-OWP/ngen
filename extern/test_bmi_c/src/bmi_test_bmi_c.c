@@ -281,9 +281,28 @@ static int Get_time_units (Bmi *self, char * units)
 
 static int Get_value (Bmi *self, const char *name, void *dest)
 {
-    // Since all the variables are scalar, use nested call to "by index" version, with just index 0
-    int inds[] = {0};
-    return self->get_value_at_indices(self, name, dest, inds, 1);
+    int i = 0;
+    int item_count = -1;
+    for (i = 0; i < PARAM_VAR_NAME_COUNT; i++) {
+            if (strcmp(name, param_var_names[i]) == 0) {
+                item_count = param_var_item_count[i];
+                break;
+            }
+        }
+    
+    if( item_count < 1 ){
+        // Since all the variables are scalar, use nested call to "by index" version, with just index 0
+        int inds[] = {0};
+        return self->get_value_at_indices(self, name, dest, inds, 1);
+    }
+    else{
+        //All linear indicies
+        int inds[item_count];
+        for(i = 0; i < item_count; i++){
+            inds[i] = i;
+        }
+        return self->get_value_at_indices(self, name, dest, inds, item_count);
+    }
 }
 
 
