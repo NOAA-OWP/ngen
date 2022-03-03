@@ -11,7 +11,7 @@ const std::string Bmi_Cpp_Adapter::model_name = "BMI C++ model";
 
 Bmi_Cpp_Adapter::Bmi_Cpp_Adapter(const std::string& type_name, std::string library_file_path, std::string forcing_file_path,
                              bool allow_exceed_end, bool has_fixed_time_step,
-                             const std::string& creator_func, const std::string& destroyer_func,
+                             std::string creator_func, std::string destroyer_func,
                              utils::StreamHandler output)
         : Bmi_Cpp_Adapter(type_name, std::move(library_file_path), "", std::move(forcing_file_path),
                         allow_exceed_end, has_fixed_time_step, creator_func, destroyer_func, output) { }
@@ -29,11 +29,11 @@ Bmi_Cpp_Adapter::Bmi_Cpp_Adapter(const std::string& type_name, std::string libra
                              std::string creator_func, std::string destroyer_func,
                              utils::StreamHandler output, bool do_initialization)
                              : AbstractCLibBmiAdapter<Cpp_Bmi>(type_name, library_file_path, std::move(bmi_init_config), std::move(forcing_file_path), allow_exceed_end,
-                             has_fixed_time_step, creator_func, output)
+                             has_fixed_time_step, creator_func, output),
+                             model_create_fname(std::move(creator_func)),
+                             model_destroy_fname(std::move(destroyer_func))
                              //TODO: We are passing creator_func as registration_func because AbstractCLibBmiAdapter expects it to exist, but are not using it the same way...may be okay but we may want to generalize that assumption out!
 {
-    model_create_fname = creator_func;
-    model_destroy_fname = destroyer_func;
     if (do_initialization) {
         try {
             construct_and_init_backing_model_for_type();
@@ -86,7 +86,10 @@ Bmi_Cpp_Adapter::Bmi_Cpp_Adapter(Bmi_Cpp_Adapter &adapter) : model_name(adapter.
 }
 */
 
-Bmi_Cpp_Adapter::Bmi_Cpp_Adapter(Bmi_Cpp_Adapter &&adapter) noexcept : AbstractCLibBmiAdapter<Cpp_Bmi>(std::move(adapter)) { }
+Bmi_Cpp_Adapter::Bmi_Cpp_Adapter(Bmi_Cpp_Adapter &&adapter) noexcept : 
+    AbstractCLibBmiAdapter<Cpp_Bmi>(std::move(adapter)),
+    model_create_fname(std::move(adapter.model_create_fname)),
+    model_destroy_fname(std::move(adapter.model_destroy_fname)) { }
 
 std::string Bmi_Cpp_Adapter::GetComponentName() {
     return bmi_model->GetComponentName();

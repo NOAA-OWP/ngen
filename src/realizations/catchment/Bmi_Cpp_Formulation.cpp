@@ -25,9 +25,11 @@ std::shared_ptr<Bmi_Cpp_Adapter> Bmi_Cpp_Formulation::construct_model(const geoj
         throw std::runtime_error("BMI C++ formulation requires path to library file, but none provided in config");
     }
     std::string lib_file = json_prop_itr->second.as_string();
+
     json_prop_itr = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__CPP_CREATE_FUNC);
     std::string model_create_fname =
             json_prop_itr == properties.end() ? BMI_REALIZATION_CFG_PARAM_OPT__CPP_CREATE_FUNC_DEFAULT : json_prop_itr->second.as_string();
+            
     json_prop_itr = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__CPP_DESTROY_FUNC);
     std::string model_destroy_fname =
             json_prop_itr == properties.end() ? BMI_REALIZATION_CFG_PARAM_OPT__CPP_DESTROY_FUNC_DEFAULT : json_prop_itr->second.as_string();
