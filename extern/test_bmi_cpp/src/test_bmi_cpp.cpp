@@ -86,29 +86,35 @@ void TestBmiCpp::GetValueAtIndices(std::string name, void* dest, int* inds, int 
   ptr = this->GetValuePtr(name);
   type = this->GetVarType(name);
 
+  // Thought about making a small template function to handle these, but you'd
+  // have to do one of the casts first anyway...refactor?
   if(type == BMI_TYPE_NAME_DOUBLE){
+    double* out = static_cast<double*>(dest);
     for (size_t i = 0; i < len; ++i) {
-        ((double*)dest)[i] = ((double*)ptr)[inds[i]];
+      out[i] = static_cast<double*>(ptr)[inds[i]];
     }
     return;
   }
 
   if (type == BMI_TYPE_NAME_INT) {
+    int* out = static_cast<int*>(dest);
     for (size_t i = 0; i < len; ++i) {
-      ((int*)dest)[i] = ((int*)ptr)[inds[i]];
+      out[i] = static_cast<int*>(ptr)[inds[i]];
     }
   }
 
   if (type == BMI_TYPE_NAME_FLOAT) {
+    float* out = static_cast<float*>(dest);
     for (size_t i = 0; i < len; ++i) {
-      ((float*)dest)[i] = ((float*)ptr)[inds[i]];
+      out[i] = static_cast<float*>(ptr)[inds[i]];
     }
     return;
   }
 
   if (type == BMI_TYPE_NAME_LONG) {
+    long* out = static_cast<long*>(dest);
     for (size_t i = 0; i < len; ++i) {
-      ((long*)dest)[i] = ((long*)ptr)[inds[i]];
+      out[i] = static_cast<long*>(ptr)[inds[i]];
     }
     return;
   }
@@ -232,20 +238,24 @@ void TestBmiCpp::SetValueAtIndices(std::string name, int* inds, int len, void* s
   std::string type = this->GetVarType(name);
 
   if (type == BMI_TYPE_NAME_DOUBLE) {
+    double* in = static_cast<double*>(ptr);
     for (size_t i = 0; i < len; ++i) {
-        ((double*)ptr)[inds[i]] = ((double*)src)[i];
+      in[inds[i]] = static_cast<double*>(src)[i];
     }
   } else if (type == BMI_TYPE_NAME_INT) {
+    int* in = static_cast<int*>(ptr);
     for (size_t i = 0; i < len; ++i) {
-        ((int*)ptr)[inds[i]] = ((int*)src)[i];
+      in[inds[i]] = static_cast<int*>(src)[i];
     }
   } else if (type == BMI_TYPE_NAME_FLOAT) {
+    float* in = static_cast<float*>(ptr);
     for (size_t i = 0; i < len; ++i) {
-        ((float*)ptr)[inds[i]] = ((float*)src)[i];
+      in[inds[i]] = static_cast<float*>(src)[i];
     }
   } else if (type == BMI_TYPE_NAME_LONG) {
+    long* in = static_cast<long*>(ptr);
     for (size_t i = 0; i < len; ++i) {
-        ((long*)ptr)[inds[i]] = ((long*)src)[i];
+      in[inds[i]] = static_cast<long*>(src)[i];
     }
   }
 }
