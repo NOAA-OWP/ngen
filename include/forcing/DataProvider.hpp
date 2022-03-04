@@ -28,11 +28,11 @@ namespace data_access
 
         /** Return the first valid time for which data from the request variable  can be requested */
 
-        virtual get_data_start_time(std::string var) = 0;
+        virtual int get_data_start_time(std::string var) = 0;
 
         /** Return the last valid time for which data from the requested variable can be requested */
 
-        virtual get_data_stop_time(std::string var) = 0;
+        virtual int get_data_stop_time(std::string var) = 0;
 
         /**
          * Get the index of the data time step that contains the given point in time.
@@ -68,4 +68,4 @@ namespace data_access
 
 
 
-#endif // NGEN_DATAPROVIDER
+#endif // NGEN_DATAPROVIDER_HPP
