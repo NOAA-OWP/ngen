@@ -372,21 +372,10 @@ namespace realization {
             }
             */
 
-            // Get correct BMI variable name, which may be the output or something mapped to this output.
-            // TODO: move this to a dedicated function
+            // check if output is available from BMI
             std::string bmi_var_name;
-            std::vector<std::string> output_names = get_bmi_model()->GetOutputVarNames();
-            if (std::find(output_names.begin(), output_names.end(), output_name) != output_names.end()) {
-                bmi_var_name = output_name;
-            }
-            else {
-                for (auto & iter : bmi_var_names_map) {
-                    if (iter.second == output_name) {
-                        bmi_var_name = iter.first;
-                        break;
-                    }
-                }
-            }
+            get_bmi_var_name(output_name, bmi_var_name);
+            
             if( !bmi_var_name.empty() )
             {
                 //Get forcing value from BMI variable
@@ -447,6 +436,28 @@ namespace realization {
 
         const vector<string> get_bmi_output_variables() override {
             return get_bmi_model()->GetOutputVarNames();
+        }
+
+        /**
+         * @brief Get correct BMI variable name, which may be the output or something mapped to this output.
+         * 
+         * @param name 
+         * @param bmi_var_name 
+         */
+        inline void get_bmi_var_name(const std::string &name, std::string &bmi_var_name)
+        {
+            std::vector<std::string> output_names = get_bmi_model()->GetOutputVarNames();
+            if (std::find(output_names.begin(), output_names.end(), name) != output_names.end()) {
+                bmi_var_name = name;
+            }
+            else {
+                for (auto & iter : bmi_var_names_map) {
+                    if (iter.second == name) {
+                        bmi_var_name = iter.first;
+                        break;
+                    }
+                }
+            }
         }
 
     protected:
