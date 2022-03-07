@@ -83,8 +83,8 @@ void TestBmiCpp::GetValue(std::string name, void* dest){
 }
 
 void TestBmiCpp::GetValueAtIndices(std::string name, void* dest, int* inds, int count){
-  if (len < 1)
-    throw std::runtime_error(std::string("Illegal count ") + std::to_string(len) + std::string(" provided to SetValueAtIndices(name, dest, inds, count)" SOURCE_LOC));
+  if (count < 1)
+    throw std::runtime_error(std::string("Illegal count ") + std::to_string(count) + std::string(" provided to SetValueAtIndices(name, dest, inds, count)" SOURCE_LOC));
 
   void *ptr;
   std::string type;
@@ -95,7 +95,7 @@ void TestBmiCpp::GetValueAtIndices(std::string name, void* dest, int* inds, int 
   // have to do one of the casts first anyway...refactor?
   if(type == BMI_TYPE_NAME_DOUBLE){
     double* out = static_cast<double*>(dest);
-    for (size_t i = 0; i < len; ++i) {
+    for (size_t i = 0; i < count; ++i) {
       out[i] = static_cast<double*>(ptr)[inds[i]];
     }
     return;
@@ -103,14 +103,14 @@ void TestBmiCpp::GetValueAtIndices(std::string name, void* dest, int* inds, int 
 
   if (type == BMI_TYPE_NAME_INT) {
     int* out = static_cast<int*>(dest);
-    for (size_t i = 0; i < len; ++i) {
+    for (size_t i = 0; i < count; ++i) {
       out[i] = static_cast<int*>(ptr)[inds[i]];
     }
   }
 
   if (type == BMI_TYPE_NAME_FLOAT) {
     float* out = static_cast<float*>(dest);
-    for (size_t i = 0; i < len; ++i) {
+    for (size_t i = 0; i < count; ++i) {
       out[i] = static_cast<float*>(ptr)[inds[i]];
     }
     return;
@@ -118,7 +118,7 @@ void TestBmiCpp::GetValueAtIndices(std::string name, void* dest, int* inds, int 
 
   if (type == BMI_TYPE_NAME_LONG) {
     long* out = static_cast<long*>(dest);
-    for (size_t i = 0; i < len; ++i) {
+    for (size_t i = 0; i < count; ++i) {
       out[i] = static_cast<long*>(ptr)[inds[i]];
     }
     return;
