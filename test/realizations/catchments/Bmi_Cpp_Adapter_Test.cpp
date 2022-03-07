@@ -610,6 +610,16 @@ TEST_F(Bmi_Cpp_Adapter_Test, GetVarNbytes_0_a) {
         throw e;
     }
 }
+
+/** Test retrieving non-existent output variable nbytes throws. */
+TEST_F(Bmi_Cpp_Adapter_Test, GetVarNbytes_1_a) {
+    int out_var_index = 0;
+
+    std::string variable_name = "Jabberwock";
+
+    EXPECT_THROW(adapter->GetVarNbytes(variable_name), std::runtime_error);
+}
+
 // Test model GetVarGrid() function is disabled currently.  Suggest disabling test until fully implemented.
 /** Test grid type can be retrieved for output 1 */
 TEST_F(Bmi_Cpp_Adapter_Test, DISABLED_GetGridType_0_a) {
