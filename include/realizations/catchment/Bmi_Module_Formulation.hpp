@@ -387,19 +387,21 @@ namespace realization {
                     }
                 }
             }
-            
-            double value = get_var_value_as_double(bmi_var_name);
+            if( !bmi_var_name.empty() )
+            {
+                //Get forcing value from BMI variable
+                double value = get_var_value_as_double(bmi_var_name);
 
-            // Convert units
-            std::string native_units = get_bmi_model()->GetVarUnits(bmi_var_name);
-            try {
-                return UnitsHelper::get_converted_value(native_units, value, output_units);
+                // Convert units
+                std::string native_units = get_bmi_model()->GetVarUnits(bmi_var_name);
+                try {
+                    return UnitsHelper::get_converted_value(native_units, value, output_units);
+                }
+                catch (const std::runtime_error& e){
+                    std::cerr<<"Unit conversion error: "<<std::endl<<e.what()<<std::endl<<"Returning unconverted value!"<<std::endl;
+                    return value;
+                }
             }
-            catch (const std::runtime_error& e){
-                std::cerr<<"Unit conversion error: "<<std::endl<<e.what()<<std::endl<<"Returning unconverted value!"<<std::endl;
-                return value;
-            }
-        }
             //Fall back to any internal providers as a last resort.
             return check_internal_providers<double>(output_name);
         }
