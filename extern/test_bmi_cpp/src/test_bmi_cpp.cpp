@@ -1,3 +1,8 @@
+#define STRINGIFY(x) #x
+#define TOSTRING(x) STRINGIFY(x)
+#define SOURCE_LOC " (" __FILE__ ":" TOSTRING(__LINE__) ")"
+// ^ Credit https://www.decompile.com/cpp/faq/file_and_line_error_string.htm
+
 #include "test_bmi_cpp.hpp"
 
 #include <algorithm>
@@ -24,7 +29,7 @@ int TestBmiCpp::GetGridRank(const int grid){
       return 1;
   }
   else {
-    throw std::runtime_error("Rank requested for non-existent grid.");
+    throw std::runtime_error("Rank requested for non-existent grid." SOURCE_LOC);
   }
 }
 
@@ -33,7 +38,7 @@ int TestBmiCpp::GetGridSize(const int grid){
       return 1;
   }
   else {
-    throw std::runtime_error("Size requested for non-existent grid.");
+    throw std::runtime_error("Size requested for non-existent grid." SOURCE_LOC);
   }
 }
 
@@ -42,7 +47,7 @@ std::string TestBmiCpp::GetGridType(const int grid){
       return "scalar";
   }
   else {
-    throw std::runtime_error("Type requested for non-existent grid.");
+    throw std::runtime_error("Type requested for non-existent grid." SOURCE_LOC);
   }
 }
 
@@ -79,7 +84,7 @@ void TestBmiCpp::GetValue(std::string name, void* dest){
 
 void TestBmiCpp::GetValueAtIndices(std::string name, void* dest, int* inds, int len){
   if (len < 1)
-    throw std::runtime_error(std::string("Illegal count ") + std::to_string(len) + std::string(" provided to SetValueAtIndices(name, dest, inds, count)"));
+    throw std::runtime_error(std::string("Illegal count ") + std::to_string(len) + std::string(" provided to SetValueAtIndices(name, dest, inds, count)" SOURCE_LOC));
 
   void *ptr;
   std::string type;
@@ -134,7 +139,7 @@ void* TestBmiCpp::GetValuePtr(std::string name){
   if (name == "OUTPUT_VAR_2") {
     return this->output_var_2.get();
   }
-  throw std::runtime_error("GetValuePtr called for nknown variable: "+name);
+  throw std::runtime_error("GetValuePtr called for unknown variable: "+name);
 }
 
 int TestBmiCpp::GetVarItemsize(std::string name){
@@ -142,7 +147,7 @@ int TestBmiCpp::GetVarItemsize(std::string name){
   if(iter != this->type_sizes.end()){
     return iter->second;
   }
-  throw std::runtime_error("Item \""+name+"\" has illegal type \""+(this->GetVarType(name))+"\"!");
+  throw std::runtime_error("Item \""+name+"\" has illegal type \""+(this->GetVarType(name))+"\"!" SOURCE_LOC);
 }
 
 std::string TestBmiCpp::GetVarLocation(std::string name){
@@ -154,7 +159,7 @@ std::string TestBmiCpp::GetVarLocation(std::string name){
   if(iter != this->input_var_names.end()){
     return this->input_var_locations[iter - this->input_var_names.begin()];
   }
-  throw std::runtime_error("GetVarLocation called for non-existent variable: "+name);
+  throw std::runtime_error("GetVarLocation called for non-existent variable: "+name+"" SOURCE_LOC);
 }
 
 int TestBmiCpp::GetVarNbytes(std::string name){
@@ -162,7 +167,7 @@ int TestBmiCpp::GetVarNbytes(std::string name){
 
   // this will never actually get used, but mimicing the C version...
   // if a different item_count isn't found below, the call above will have already thrown.
-  int item_count = this->num_time_steps; 
+  int item_count = -1; 
 
   auto iter = std::find(this->output_var_names.begin(), this->output_var_names.end(), name);
   if(iter != this->output_var_names.end()){
@@ -171,6 +176,11 @@ int TestBmiCpp::GetVarNbytes(std::string name){
   iter = std::find(this->input_var_names.begin(), this->input_var_names.end(), name);
   if(iter != this->input_var_names.end()){
     item_count = this->input_var_item_count[iter - this->input_var_names.begin()];
+  }
+  if(item_count == -1){
+    // This is probably impossible to reach--the same conditions above failing will cause a throw
+    // in GetVarItemSize --> GetVarType (called earlier) instead.
+    throw std::runtime_error("GetVarNbytes called for non-existent variable: "+name+"" SOURCE_LOC );
   }
   return item_size * item_count;
 }
@@ -184,7 +194,7 @@ std::string TestBmiCpp::GetVarType(std::string name){
   if(iter != this->input_var_names.end()){
     return this->input_var_types[iter - this->input_var_names.begin()];
   }
-  throw std::runtime_error("GetVarType called for non-existent variable: "+name);
+  throw std::runtime_error("GetVarType called for non-existent variable: "+name+"" SOURCE_LOC );
 }
 
 std::string TestBmiCpp::GetVarUnits(std::string name){
@@ -196,7 +206,7 @@ std::string TestBmiCpp::GetVarUnits(std::string name){
   if(iter != this->input_var_names.end()){
     return this->input_var_units[iter - this->input_var_names.begin()];
   }
-  throw std::runtime_error("GetVarUnits called for non-existent variable: "+name);
+  throw std::runtime_error("GetVarUnits called for non-existent variable: "+name+"" SOURCE_LOC);
 }
 
 void TestBmiCpp::Initialize(std::string file){
@@ -231,7 +241,7 @@ void TestBmiCpp::Initialize(std::string file){
 
 void TestBmiCpp::SetValueAtIndices(std::string name, int* inds, int len, void* src){
   if (len < 1)
-    throw std::runtime_error(std::string("Illegal count ") + std::to_string(len) + std::string(" provided to SetValueAtIndices(name, dest, inds, count)"));
+    throw std::runtime_error(std::string("Illegal count ") + std::to_string(len) + std::string(" provided to SetValueAtIndices(name, dest, inds, count)" SOURCE_LOC));
 
   void* ptr;
   ptr = this->GetValuePtr(name);
@@ -281,46 +291,46 @@ void TestBmiCpp::Finalize(){
 }
 
 int TestBmiCpp::GetGridEdgeCount(const int grid){
-  throw std::logic_error("Not implemented.");
+  throw std::logic_error("Not implemented." SOURCE_LOC);
 }
 int TestBmiCpp::GetGridFaceCount(const int grid){
-  throw std::logic_error("Not implemented.");
+  throw std::logic_error("Not implemented." SOURCE_LOC);
 }
 void TestBmiCpp::GetGridEdgeNodes(const int grid, int* edge_nodes){
-  throw std::logic_error("Not implemented.");
+  throw std::logic_error("Not implemented." SOURCE_LOC);
 }
 void TestBmiCpp::GetGridFaceEdges(const int grid, int* face_edges){
-  throw std::logic_error("Not implemented.");
+  throw std::logic_error("Not implemented." SOURCE_LOC);
 }
 void TestBmiCpp::GetGridFaceNodes(const int grid, int* face_nodes){
-  throw std::logic_error("Not implemented.");
+  throw std::logic_error("Not implemented." SOURCE_LOC);
 }
 int TestBmiCpp::GetGridNodeCount(const int grid){
-  throw std::logic_error("Not implemented.");
+  throw std::logic_error("Not implemented." SOURCE_LOC);
 }
 void TestBmiCpp::GetGridNodesPerFace(const int grid, int* nodes_per_face){
-  throw std::logic_error("Not implemented.");
+  throw std::logic_error("Not implemented." SOURCE_LOC);
 }
 void TestBmiCpp::GetGridOrigin(const int grid, double* origin){
-  throw std::logic_error("Not implemented.");
+  throw std::logic_error("Not implemented." SOURCE_LOC);
 }
 void TestBmiCpp::GetGridShape(const int grid, int* shape){
-  throw std::logic_error("Not implemented.");
+  throw std::logic_error("Not implemented." SOURCE_LOC);
 }
 void TestBmiCpp::GetGridSpacing(const int grid, double* spacing){
-  throw std::logic_error("Not implemented.");
+  throw std::logic_error("Not implemented." SOURCE_LOC);
 }
 void TestBmiCpp::GetGridX(const int grid, double* x){
-  throw std::logic_error("Not implemented.");
+  throw std::logic_error("Not implemented." SOURCE_LOC);
 }
 void TestBmiCpp::GetGridY(const int grid, double* y){
-  throw std::logic_error("Not implemented.");
+  throw std::logic_error("Not implemented." SOURCE_LOC);
 }
 void TestBmiCpp::GetGridZ(const int grid, double* z){
-  throw std::logic_error("Not implemented.");
+  throw std::logic_error("Not implemented." SOURCE_LOC);
 }
 int TestBmiCpp::GetVarGrid(std::string name){
-  throw std::logic_error("Not implemented.");
+  throw std::logic_error("Not implemented." SOURCE_LOC);
 }
 
 void TestBmiCpp::read_init_config(std::string config_file)
@@ -331,7 +341,7 @@ void TestBmiCpp::read_init_config(std::string config_file)
 
   FILE* fp = fopen(config_file.c_str(), "r");
   if (fp == NULL)
-    throw std::runtime_error("Invalid config file \""+config_file+"\"");
+    throw std::runtime_error("Invalid config file \""+config_file+"\"" SOURCE_LOC);
 
   char config_line[max_config_line_length + 1];
 
@@ -373,7 +383,7 @@ void TestBmiCpp::read_init_config(std::string config_file)
   }
 
   if (is_epoch_start_time_set == FALSE) {
-    throw std::runtime_error("Config param 'epoch_start_time' not found in config file");
+    throw std::runtime_error("Config param 'epoch_start_time' not found in config file" SOURCE_LOC);
   }
 
 #if DEGUG >= 1
@@ -390,7 +400,7 @@ void TestBmiCpp::read_file_line_counts(std::string file_name, int* line_count, i
   FILE* fp = fopen(file_name.c_str(), "r");
   // Ensure exists
   if (fp == NULL) {
-    throw std::runtime_error("Configuration file does not exist.");
+    throw std::runtime_error("Configuration file does not exist." SOURCE_LOC);
   }
   int seen_non_whitespace = 0;
   char c;
