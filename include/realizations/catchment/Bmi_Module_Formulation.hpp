@@ -372,14 +372,7 @@ namespace realization {
             }
             */
 
-            // Handle ET requests slightly differently
-            //TODO: This should really only happen if neither of these output_names are provided by the module...
-            // But this code should also probably be removed in the near future (see GH #297 second comment).
-            if (output_name == NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP || output_name == CSDMS_STD_NAME_POTENTIAL_ET) {
-                return calc_et();
-            }
-
-            // If not ET, now get correct BMI variable name, which may be the output or something mapped to this output.
+            // Get correct BMI variable name, which may be the output or something mapped to this output.
             // TODO: move this to a dedicated function
             std::string bmi_var_name;
             std::vector<std::string> output_names = get_bmi_model()->GetOutputVarNames();
@@ -406,6 +399,9 @@ namespace realization {
                 std::cerr<<"Unit conversion error: "<<std::endl<<e.what()<<std::endl<<"Returning unconverted value!"<<std::endl;
                 return value;
             }
+        }
+            //Fall back to any internal providers as a last resort.
+            return check_internal_providers<double>(output_name);
         }
 
         bool is_bmi_input_variable(const std::string &var_name) override {
@@ -452,6 +448,26 @@ namespace realization {
         }
 
     protected:
+
+        /**
+         * @brief Check for implementation of internal calculators/data for a given requsted output_name
+         * 
+         * @tparam T the type expected to be returned for the value of @p output_name
+         * @param output_name 
+         * @return T
+         * @throws std::runtime_error If no known value or function for @p output_name
+         */ 
+        template <typename T>
+        inline T check_internal_providers(std::string output_name){
+            // Only use the internal et_calc() if this formulation (or possibly multi-formulation)
+            // does not know how to supply potential et
+            if (output_name == NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP || output_name == CSDMS_STD_NAME_POTENTIAL_ET) {
+                return calc_et();
+            }
+            //Note, when called via get_value, this is unlikely to throw since a pre-check on available names is done
+            //in that function.
+            throw runtime_error(get_formulation_type() + " received invalid output forcing name " + output_name);
+        }
 
         /**
          * Construct model and its shared pointer, potentially supplying input variable values from config.
