@@ -82,7 +82,7 @@ void TestBmiCpp::GetValue(std::string name, void* dest){
   this->GetValueAtIndices(name, dest, inds, 1);
 }
 
-void TestBmiCpp::GetValueAtIndices(std::string name, void* dest, int* inds, int len){
+void TestBmiCpp::GetValueAtIndices(std::string name, void* dest, int* inds, int count){
   if (len < 1)
     throw std::runtime_error(std::string("Illegal count ") + std::to_string(len) + std::string(" provided to SetValueAtIndices(name, dest, inds, count)" SOURCE_LOC));
 
