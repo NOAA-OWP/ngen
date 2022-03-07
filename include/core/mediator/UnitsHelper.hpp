@@ -1,5 +1,6 @@
 #include <udunits2.h>
 #include <mutex>
+#include "all.h"
 
 #ifndef NGEN_UNITSHELPER_H
 #define NGEN_UNITSHELPER_H
@@ -23,7 +24,7 @@ class UnitsHelper {
         #endif
         if (unit_system == NULL) 
         {
-            throw std::runtime_error("Unable to create UDUNITS2 Unit System.");
+            throw std::runtime_error("Unable to create UDUNITS2 Unit System." SOURCE_LOC);
         }
         #ifndef UDUNITS_QUIET
         ut_set_error_message_handler(ut_ignore);

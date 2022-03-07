@@ -116,7 +116,7 @@ TEST_F(ForcingTest2, TestForcingDataLoad){
    forcing_params forcing_p(forcing_file_name, "", "2015-12-14 21:00:00", "2015-12-30 23:00:00");
 
    EXPECT_THROW(std::make_shared<Forcing>(forcing_p);, std::runtime_error);
-
+   //try {std::make_shared<Forcing>(forcing_p);} catch (std::runtime_error e){ cerr<<e.what()<<std::endl; }
 }
 /*Original Forcing Object Test
 //Test Forcing object
