@@ -17,7 +17,7 @@
 #include "AorcForcing.hpp"
 #include "ForcingProvider.hpp"
 #include <exception>
-
+#include "all.h"
 // Recognized Forcing Value Names (in particular for use when configuring BMI input variables)
 // TODO: perhaps create way to configure a mapping of these to something different
 #define AORC_FIELD_NAME_PRECIP_RATE "precip_rate"
@@ -655,12 +655,12 @@ class Forcing : public forcing::ForcingProvider
             if( header.size() != 10 ){
                     throw std::runtime_error("Error: Forcing data " + file_name +
                     " does not have the expected number of columns.  Did you mean to use "+
-                    "csvPerFeature forcing provider instead?");
+                    "csvPerFeature forcing provider instead?" SOURCE_LOC);
                 }
         }
         else {
             throw std::runtime_error("Error: Forcing data " + file_name +
-                    " does not have readable rows.");
+                    " does not have readable rows." SOURCE_LOC);
         }
 
         //Iterate through CSV starting on the second row

@@ -10,6 +10,7 @@ if(UDUNITS_ACTIVE)
 endif()
 
 target_include_directories(core_mediator PUBLIC
+        ${PROJECT_SOURCE_DIR}/include
         ${PROJECT_SOURCE_DIR}/include/core
         ${PROJECT_SOURCE_DIR}/include/core/mediator
         )
