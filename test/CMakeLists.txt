@@ -250,6 +250,19 @@ add_test(
         NGen::geojson
 )
 
+########################### Netcdf Forcing Tests
+add_test(
+        test_netcdf_forcing
+        1
+        forcing/NetCDFPerFeatureDataProvider_Test.cpp
+        NGen::core
+        NGen::core_nexus
+        NGen::core_mediator
+        NGen::geojson
+        NGen::realizations_catchment
+        libudunits2
+)
+
 ########################## Primary Combined Unit Test Target
 add_test(
         test_unit
