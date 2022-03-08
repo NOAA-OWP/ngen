@@ -4,6 +4,8 @@
 #include "DataProvider.hpp"
 
 #include <string>
+#include <algorithm>
+
 #include <netcdf>
 
 using namespace netCDF;
@@ -32,7 +34,55 @@ namespace data_access
 
         NetCDFPerFeatureDataProvider(std::string input_path)
         {
+            //open the file
             nc_file = std::make_shared<NcFile>(input_path, NcFile::read);
+
+            //get the listing of all variables
+            auto var_set = nc_file->getVars();
+
+            // copy the variables names into the vector for easy use
+            std::for_each(var_set.begin(), var_set.end(), [&](const auto& element)
+                {
+                    variable_names.push_back(element.first);
+                });
+
+            // read the variable ids
+            auto ids = nc_file->getVar("ids"); 
+            auto id_dim_count = ids.getDimCount();
+
+            // some sanity checks
+            if ( id_dim_count > 1)
+            {
+                throw std::runtime_error("Provided NetCDF file has an \"ids\" variable with more than 1 dimension");       
+            }
+
+            auto id_dim = ids.getDim(0);
+
+            if (id_dim.isNull() )
+            {
+                throw std::runtime_error("Provided NetCDF file has a NuLL dimension for variable  \"ids\"");
+            }
+
+            auto num_ids = id_dim.getSize();
+
+            // allocate an array of character pointers 
+            std::vector< char* > string_buffers;
+
+            // resize to match dimension size
+            string_buffers.resize(num_ids);
+
+            // read the id strings
+            ids.getVar(&string_buffers[0]);
+
+            // initalize the map of catchment-name to offset location and free the strings allocated by the C library
+            size_t loc = 0;
+            for_each( string_buffers.begin(), string_buffers.end(), [&](char* str)
+            {
+                loc_ids.push_back(str);
+                id_pos[str] = loc++;
+                free(str);
+            });
+
         }
 
         NetCDFPerFeatureDataProvider(const char* input_path) : 
@@ -46,6 +96,12 @@ namespace data_access
         const std::vector<std::string> get_avaliable_variable_names()
         {
             return variable_names;
+        }
+
+        /** return a list of ids in the current file */
+        const std::vector<std::string>& get_ids() const
+        {
+            return loc_ids;
         }
 
         /** Return the first valid time for which data from the request variable  can be requested */
@@ -98,6 +154,8 @@ namespace data_access
         private:
 
         std::vector<std::string> variable_names;
+        std::vector<std::string> loc_ids;
+        std::map<std::string, std::size_t> id_pos;
         int start_time;
         int stop_time;
 
