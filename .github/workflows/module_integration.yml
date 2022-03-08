@@ -51,6 +51,10 @@ jobs:
         cmake -B extern/cfe/cmake_build -S extern/cfe/
         cmake --build extern/cfe/cmake_build/ --target cfebmi -- -j ${{ env.LINUX_NUM_PROC_CORES }}
 
+    - name: Build petbmi module
+        cmake3 -B extern/evapotranspiration/cmake_build -S extern/evapotranspiration/
+        cmake3 --build extern/evapotranspiration/cmake_build/ --target petbmi -- -j 2
+
     - name: Build iso_c_fortran_bmi module
       run: |
         cmake -B extern/iso_c_fortran_bmi/cmake_build -S extern/iso_c_fortran_bmi
