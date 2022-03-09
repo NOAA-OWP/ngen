@@ -286,7 +286,7 @@ TEST_F(Bmi_Fortran_Formulation_Test, GetResponse_0_b) {
     for (int i = 0; i < 39; i++) {
         response = formulation.get_response(i, 3600);
     }
-    double expected = 4.866464273262429e-08;
+    double expected = 2.7809780039160068e-08;
     ASSERT_EQ(expected, response);
 }
 
@@ -346,7 +346,7 @@ TEST_F(Bmi_Fortran_Formulation_Test, GetOutputLineForTimestep_1_b) {
     double response = formulation.get_response(i, 3600);
     std::string output = formulation.get_output_line_for_timestep(i, ",");
     //NOTE these answers are dependent on the INPUT vars selected and the data in the forcing file
-    ASSERT_EQ(output, "0.025400,0.000002,0.000000");
+    ASSERT_EQ(output, "0.025400,0.000001,0.000000");
 }
 
 TEST_F(Bmi_Fortran_Formulation_Test, determine_model_time_offset_0_a) {
