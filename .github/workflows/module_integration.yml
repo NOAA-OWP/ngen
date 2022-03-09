@@ -53,7 +53,7 @@ jobs:
 
     - name: Build petbmi module
         cmake3 -B extern/evapotranspiration/cmake_build -S extern/evapotranspiration/
-        cmake3 --build extern/evapotranspiration/cmake_build/ --target petbmi -- -j 2
+        cmake3 --build extern/evapotranspiration/cmake_build/ --target petbmi -- -j ${{ env.LINUX_NUM_PROC_CORES }}
 
     - name: Build iso_c_fortran_bmi module
       run: |
