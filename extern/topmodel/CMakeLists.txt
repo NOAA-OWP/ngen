@@ -23,6 +23,9 @@ set_target_properties(topmodelbmi PROPERTIES VERSION ${PROJECT_VERSION})
 
 set_target_properties(topmodelbmi PROPERTIES PUBLIC_HEADER topmodel/include/bmi_topmodel.h)
 
+# Code requires minimum of C99 standard to compile
+set_target_properties(topmodelbmi PROPERTIES C_STANDARD 99 C_STANDARD_REQUIRED ON)
+
 include(GNUInstallDirs)
 
 install(TARGETS topmodelbmi
