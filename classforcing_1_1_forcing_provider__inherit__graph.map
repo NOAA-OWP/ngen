@@ -4,8 +4,10 @@
 <area shape="rect" id="node3" href="$class_forcing.html" title="Forcing class providing time&#45;series precipiation forcing data to the model." alt="" coords="248,279,448,1045"/>
 <area shape="rect" id="node4" href="$classforcing_1_1_wrapped_forcing_provider.html" title="Simple implementation that basically wraps another instance." alt="" coords="473,535,682,789"/>
 <area shape="rect" id="node5" href="$classrealization_1_1_bmi___formulation.html" title="Abstraction of formulation with backing model object(s) that implements the BMI." alt="" coords="707,381,904,943"/>
-<area shape="rect" id="node6" href="$classrealization_1_1_bmi___module___formulation.html" title=" " alt="" coords="592,2247,789,3336"/>
-<area shape="rect" id="node8" href="$classrealization_1_1_bmi___module___formulation.html" title="Abstraction of a formulation with a single backing model object that implements the BMI." alt="" coords="707,1095,904,2169"/>
-<area shape="rect" id="node9" href="$classrealization_1_1_bmi___multi___formulation.html" title="Abstraction of a formulation with multiple backing model object that implements the BMI." alt="" coords="928,1329,1125,1935"/>
-<area shape="rect" id="node7" href="$classrealization_1_1_bmi___c___formulation.html" title=" " alt="" coords="597,3385,784,3668"/>
+<area shape="rect" id="node6" href="$classrealization_1_1_bmi___module___formulation.html" title=" " alt="" coords="441,2247,639,3336"/>
+<area shape="rect" id="node8" href="$classrealization_1_1_bmi___module___formulation.html" title=" " alt="" coords="701,2247,899,3336"/>
+<area shape="rect" id="node10" href="$classrealization_1_1_bmi___module___formulation.html" title="Abstraction of a formulation with a single backing model object that implements the BMI." alt="" coords="605,1095,803,2169"/>
+<area shape="rect" id="node11" href="$classrealization_1_1_bmi___multi___formulation.html" title="Abstraction of a formulation with multiple backing model object that implements the BMI." alt="" coords="877,1329,1075,1935"/>
+<area shape="rect" id="node7" href="$classrealization_1_1_bmi___c___formulation.html" title=" " alt="" coords="447,3385,633,3668"/>
+<area shape="rect" id="node9" href="$classrealization_1_1_bmi___cpp___formulation.html" title="Encapsulates a bmi::Bmi model in C++ such that it can be loaded as a formulation, as such also so tha..." alt="" coords="707,3385,893,3668"/>
 </map>

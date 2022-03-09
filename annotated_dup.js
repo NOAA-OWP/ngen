@@ -54,7 +54,8 @@ var annotated_dup =
       [ "bmi", "namespacemodels_1_1bmi.html", [
         [ "AbstractCLibBmiAdapter", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter" ],
         [ "Bmi_Adapter", "classmodels_1_1bmi_1_1_bmi___adapter.html", "classmodels_1_1bmi_1_1_bmi___adapter" ],
-        [ "Bmi_C_Adapter", "classmodels_1_1bmi_1_1_bmi___c___adapter.html", "classmodels_1_1bmi_1_1_bmi___c___adapter" ]
+        [ "Bmi_C_Adapter", "classmodels_1_1bmi_1_1_bmi___c___adapter.html", "classmodels_1_1bmi_1_1_bmi___c___adapter" ],
+        [ "Bmi_Cpp_Adapter", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html", "classmodels_1_1bmi_1_1_bmi___cpp___adapter" ]
       ] ],
       [ "external", "namespacemodels_1_1external.html", [
         [ "State_Exception", "classmodels_1_1external_1_1_state___exception.html", "classmodels_1_1external_1_1_state___exception" ]
@@ -70,6 +71,7 @@ var annotated_dup =
     ] ],
     [ "realization", "namespacerealization.html", [
       [ "Bmi_C_Formulation", "classrealization_1_1_bmi___c___formulation.html", "classrealization_1_1_bmi___c___formulation" ],
+      [ "Bmi_Cpp_Formulation", "classrealization_1_1_bmi___cpp___formulation.html", "classrealization_1_1_bmi___cpp___formulation" ],
       [ "Bmi_Formulation", "classrealization_1_1_bmi___formulation.html", "classrealization_1_1_bmi___formulation" ],
       [ "Bmi_Module_Formulation", "classrealization_1_1_bmi___module___formulation.html", "classrealization_1_1_bmi___module___formulation" ],
       [ "Bmi_Multi_Formulation", "classrealization_1_1_bmi___multi___formulation.html", "classrealization_1_1_bmi___multi___formulation" ],

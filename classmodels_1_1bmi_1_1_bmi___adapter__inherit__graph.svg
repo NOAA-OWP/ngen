@@ -46,7 +46,7 @@ if (edges && edges.length) {
         </defs>
 
 <script type="text/javascript">
-var viewWidth = 262;
+var viewWidth = 363;
 var viewHeight = 2444;
 var sectionId = 'dynsection-0';
 </script>
@@ -54,47 +54,47 @@ var sectionId = 'dynsection-0';
 <svg id="graph" class="graph">
 <g id="viewport">
 <title>models::bmi::Bmi_Adapter&lt; T &gt;</title>
-<polygon fill="white" stroke="transparent" points="-4,4 -4,-2440 257.5,-2440 257.5,4 -4,4"/>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-2440 359,-2440 359,4 -4,4"/>
 <!-- Node1 -->
 <g id="node1" class="node">
 <title>Node1</title>
 <g id="a_node1"><a xlink:title="Abstract adapter interface for C++ classes to interact with the essential aspects of external models ...">
-<polygon fill="#bfbfbf" stroke="black" points="52,-1788.5 52,-2175.5 204,-2175.5 204,-1788.5 52,-1788.5"/>
-<text text-anchor="middle" x="128" y="-2163.5" font-family="Helvetica,sans-Serif" font-size="10.00">models::bmi::Bmi_Adapter&lt; T &gt;</text>
-<polyline fill="none" stroke="black" points="52,-2156.5 204,-2156.5 "/>
-<text text-anchor="start" x="60" y="-2144.5" font-family="Helvetica,sans-Serif" font-size="10.00"># allow_model_exceed</text>
-<text text-anchor="start" x="60" y="-2133.5" font-family="Helvetica,sans-Serif" font-size="10.00">_end_time</text>
-<text text-anchor="start" x="60" y="-2122.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_init_config</text>
-<text text-anchor="start" x="60" y="-2111.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_model</text>
-<text text-anchor="start" x="60" y="-2100.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_model_has_fixed</text>
-<text text-anchor="start" x="60" y="-2089.5" font-family="Helvetica,sans-Serif" font-size="10.00">_time_step</text>
-<text text-anchor="start" x="60" y="-2078.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_model_time_convert</text>
-<text text-anchor="start" x="60" y="-2067.5" font-family="Helvetica,sans-Serif" font-size="10.00">_factor</text>
-<text text-anchor="start" x="60" y="-2056.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_model_time_step_size</text>
-<text text-anchor="start" x="60" y="-2045.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_model_uses_forcing_file</text>
-<text text-anchor="start" x="60" y="-2034.5" font-family="Helvetica,sans-Serif" font-size="10.00"># forcing_file_path</text>
-<text text-anchor="start" x="60" y="-2023.5" font-family="Helvetica,sans-Serif" font-size="10.00"># init_exception_msg</text>
-<text text-anchor="start" x="60" y="-2012.5" font-family="Helvetica,sans-Serif" font-size="10.00"># input_var_names</text>
-<text text-anchor="start" x="60" y="-2001.5" font-family="Helvetica,sans-Serif" font-size="10.00"># model_initialized</text>
-<text text-anchor="start" x="60" y="-1990.5" font-family="Helvetica,sans-Serif" font-size="10.00"># model_name</text>
-<text text-anchor="start" x="60" y="-1979.5" font-family="Helvetica,sans-Serif" font-size="10.00"># output</text>
-<text text-anchor="start" x="60" y="-1968.5" font-family="Helvetica,sans-Serif" font-size="10.00"># output_var_names</text>
-<polyline fill="none" stroke="black" points="52,-1961.5 204,-1961.5 "/>
-<text text-anchor="start" x="60" y="-1949.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Bmi_Adapter()</text>
-<text text-anchor="start" x="60" y="-1938.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Bmi_Adapter()</text>
-<text text-anchor="start" x="60" y="-1927.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Bmi_Adapter()</text>
-<text text-anchor="start" x="60" y="-1916.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ acquire_time_conversion</text>
-<text text-anchor="start" x="60" y="-1905.5" font-family="Helvetica,sans-Serif" font-size="10.00">_factor()</text>
-<text text-anchor="start" x="60" y="-1894.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ convert_model_time</text>
-<text text-anchor="start" x="60" y="-1883.5" font-family="Helvetica,sans-Serif" font-size="10.00">_to_seconds()</text>
-<text text-anchor="start" x="60" y="-1872.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ convert_seconds_to</text>
-<text text-anchor="start" x="60" y="-1861.5" font-family="Helvetica,sans-Serif" font-size="10.00">_model_time()</text>
-<text text-anchor="start" x="60" y="-1850.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_analogous_cxx_type()</text>
-<text text-anchor="start" x="60" y="-1839.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Initialize()</text>
-<text text-anchor="start" x="60" y="-1828.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Initialize()</text>
-<text text-anchor="start" x="60" y="-1817.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ isInitialized()</text>
-<text text-anchor="start" x="60" y="-1806.5" font-family="Helvetica,sans-Serif" font-size="10.00"># construct_and_init</text>
-<text text-anchor="start" x="60" y="-1795.5" font-family="Helvetica,sans-Serif" font-size="10.00">_backing_model()</text>
+<polygon fill="#bfbfbf" stroke="black" points="101.5,-1788.5 101.5,-2175.5 253.5,-2175.5 253.5,-1788.5 101.5,-1788.5"/>
+<text text-anchor="middle" x="177.5" y="-2163.5" font-family="Helvetica,sans-Serif" font-size="10.00">models::bmi::Bmi_Adapter&lt; T &gt;</text>
+<polyline fill="none" stroke="black" points="101.5,-2156.5 253.5,-2156.5 "/>
+<text text-anchor="start" x="109.5" y="-2144.5" font-family="Helvetica,sans-Serif" font-size="10.00"># allow_model_exceed</text>
+<text text-anchor="start" x="109.5" y="-2133.5" font-family="Helvetica,sans-Serif" font-size="10.00">_end_time</text>
+<text text-anchor="start" x="109.5" y="-2122.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_init_config</text>
+<text text-anchor="start" x="109.5" y="-2111.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_model</text>
+<text text-anchor="start" x="109.5" y="-2100.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_model_has_fixed</text>
+<text text-anchor="start" x="109.5" y="-2089.5" font-family="Helvetica,sans-Serif" font-size="10.00">_time_step</text>
+<text text-anchor="start" x="109.5" y="-2078.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_model_time_convert</text>
+<text text-anchor="start" x="109.5" y="-2067.5" font-family="Helvetica,sans-Serif" font-size="10.00">_factor</text>
+<text text-anchor="start" x="109.5" y="-2056.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_model_time_step_size</text>
+<text text-anchor="start" x="109.5" y="-2045.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_model_uses_forcing_file</text>
+<text text-anchor="start" x="109.5" y="-2034.5" font-family="Helvetica,sans-Serif" font-size="10.00"># forcing_file_path</text>
+<text text-anchor="start" x="109.5" y="-2023.5" font-family="Helvetica,sans-Serif" font-size="10.00"># init_exception_msg</text>
+<text text-anchor="start" x="109.5" y="-2012.5" font-family="Helvetica,sans-Serif" font-size="10.00"># input_var_names</text>
+<text text-anchor="start" x="109.5" y="-2001.5" font-family="Helvetica,sans-Serif" font-size="10.00"># model_initialized</text>
+<text text-anchor="start" x="109.5" y="-1990.5" font-family="Helvetica,sans-Serif" font-size="10.00"># model_name</text>
+<text text-anchor="start" x="109.5" y="-1979.5" font-family="Helvetica,sans-Serif" font-size="10.00"># output</text>
+<text text-anchor="start" x="109.5" y="-1968.5" font-family="Helvetica,sans-Serif" font-size="10.00"># output_var_names</text>
+<polyline fill="none" stroke="black" points="101.5,-1961.5 253.5,-1961.5 "/>
+<text text-anchor="start" x="109.5" y="-1949.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Bmi_Adapter()</text>
+<text text-anchor="start" x="109.5" y="-1938.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Bmi_Adapter()</text>
+<text text-anchor="start" x="109.5" y="-1927.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Bmi_Adapter()</text>
+<text text-anchor="start" x="109.5" y="-1916.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ acquire_time_conversion</text>
+<text text-anchor="start" x="109.5" y="-1905.5" font-family="Helvetica,sans-Serif" font-size="10.00">_factor()</text>
+<text text-anchor="start" x="109.5" y="-1894.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ convert_model_time</text>
+<text text-anchor="start" x="109.5" y="-1883.5" font-family="Helvetica,sans-Serif" font-size="10.00">_to_seconds()</text>
+<text text-anchor="start" x="109.5" y="-1872.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ convert_seconds_to</text>
+<text text-anchor="start" x="109.5" y="-1861.5" font-family="Helvetica,sans-Serif" font-size="10.00">_model_time()</text>
+<text text-anchor="start" x="109.5" y="-1850.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_analogous_cxx_type()</text>
+<text text-anchor="start" x="109.5" y="-1839.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Initialize()</text>
+<text text-anchor="start" x="109.5" y="-1828.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Initialize()</text>
+<text text-anchor="start" x="109.5" y="-1817.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ isInitialized()</text>
+<text text-anchor="start" x="109.5" y="-1806.5" font-family="Helvetica,sans-Serif" font-size="10.00"># construct_and_init</text>
+<text text-anchor="start" x="109.5" y="-1795.5" font-family="Helvetica,sans-Serif" font-size="10.00">_backing_model()</text>
 </a>
 </g>
 </g>
@@ -102,260 +102,398 @@ var sectionId = 'dynsection-0';
 <g id="node3" class="node">
 <title>Node3</title>
 <g id="a_node3"><a xlink:href="classmodels_1_1bmi_1_1_bmi___adapter.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="black" points="0,-1353.5 0,-1740.5 152,-1740.5 152,-1353.5 0,-1353.5"/>
-<text text-anchor="middle" x="76" y="-1728.5" font-family="Helvetica,sans-Serif" font-size="10.00">models::bmi::Bmi_Adapter&lt; C &gt;</text>
-<polyline fill="none" stroke="black" points="0,-1721.5 152,-1721.5 "/>
-<text text-anchor="start" x="8" y="-1709.5" font-family="Helvetica,sans-Serif" font-size="10.00"># allow_model_exceed</text>
-<text text-anchor="start" x="8" y="-1698.5" font-family="Helvetica,sans-Serif" font-size="10.00">_end_time</text>
-<text text-anchor="start" x="8" y="-1687.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_init_config</text>
-<text text-anchor="start" x="8" y="-1676.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_model</text>
-<text text-anchor="start" x="8" y="-1665.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_model_has_fixed</text>
-<text text-anchor="start" x="8" y="-1654.5" font-family="Helvetica,sans-Serif" font-size="10.00">_time_step</text>
-<text text-anchor="start" x="8" y="-1643.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_model_time_convert</text>
-<text text-anchor="start" x="8" y="-1632.5" font-family="Helvetica,sans-Serif" font-size="10.00">_factor</text>
-<text text-anchor="start" x="8" y="-1621.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_model_time_step_size</text>
-<text text-anchor="start" x="8" y="-1610.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_model_uses_forcing_file</text>
-<text text-anchor="start" x="8" y="-1599.5" font-family="Helvetica,sans-Serif" font-size="10.00"># forcing_file_path</text>
-<text text-anchor="start" x="8" y="-1588.5" font-family="Helvetica,sans-Serif" font-size="10.00"># init_exception_msg</text>
-<text text-anchor="start" x="8" y="-1577.5" font-family="Helvetica,sans-Serif" font-size="10.00"># input_var_names</text>
-<text text-anchor="start" x="8" y="-1566.5" font-family="Helvetica,sans-Serif" font-size="10.00"># model_initialized</text>
-<text text-anchor="start" x="8" y="-1555.5" font-family="Helvetica,sans-Serif" font-size="10.00"># model_name</text>
-<text text-anchor="start" x="8" y="-1544.5" font-family="Helvetica,sans-Serif" font-size="10.00"># output</text>
-<text text-anchor="start" x="8" y="-1533.5" font-family="Helvetica,sans-Serif" font-size="10.00"># output_var_names</text>
-<polyline fill="none" stroke="black" points="0,-1526.5 152,-1526.5 "/>
-<text text-anchor="start" x="8" y="-1514.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Bmi_Adapter()</text>
-<text text-anchor="start" x="8" y="-1503.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Bmi_Adapter()</text>
-<text text-anchor="start" x="8" y="-1492.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Bmi_Adapter()</text>
-<text text-anchor="start" x="8" y="-1481.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ acquire_time_conversion</text>
-<text text-anchor="start" x="8" y="-1470.5" font-family="Helvetica,sans-Serif" font-size="10.00">_factor()</text>
-<text text-anchor="start" x="8" y="-1459.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ convert_model_time</text>
-<text text-anchor="start" x="8" y="-1448.5" font-family="Helvetica,sans-Serif" font-size="10.00">_to_seconds()</text>
-<text text-anchor="start" x="8" y="-1437.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ convert_seconds_to</text>
-<text text-anchor="start" x="8" y="-1426.5" font-family="Helvetica,sans-Serif" font-size="10.00">_model_time()</text>
-<text text-anchor="start" x="8" y="-1415.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_analogous_cxx_type()</text>
-<text text-anchor="start" x="8" y="-1404.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Initialize()</text>
-<text text-anchor="start" x="8" y="-1393.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Initialize()</text>
-<text text-anchor="start" x="8" y="-1382.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ isInitialized()</text>
-<text text-anchor="start" x="8" y="-1371.5" font-family="Helvetica,sans-Serif" font-size="10.00"># construct_and_init</text>
-<text text-anchor="start" x="8" y="-1360.5" font-family="Helvetica,sans-Serif" font-size="10.00">_backing_model()</text>
+<polygon fill="white" stroke="black" points="101.5,-1353.5 101.5,-1740.5 253.5,-1740.5 253.5,-1353.5 101.5,-1353.5"/>
+<text text-anchor="middle" x="177.5" y="-1728.5" font-family="Helvetica,sans-Serif" font-size="10.00">models::bmi::Bmi_Adapter&lt; C &gt;</text>
+<polyline fill="none" stroke="black" points="101.5,-1721.5 253.5,-1721.5 "/>
+<text text-anchor="start" x="109.5" y="-1709.5" font-family="Helvetica,sans-Serif" font-size="10.00"># allow_model_exceed</text>
+<text text-anchor="start" x="109.5" y="-1698.5" font-family="Helvetica,sans-Serif" font-size="10.00">_end_time</text>
+<text text-anchor="start" x="109.5" y="-1687.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_init_config</text>
+<text text-anchor="start" x="109.5" y="-1676.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_model</text>
+<text text-anchor="start" x="109.5" y="-1665.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_model_has_fixed</text>
+<text text-anchor="start" x="109.5" y="-1654.5" font-family="Helvetica,sans-Serif" font-size="10.00">_time_step</text>
+<text text-anchor="start" x="109.5" y="-1643.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_model_time_convert</text>
+<text text-anchor="start" x="109.5" y="-1632.5" font-family="Helvetica,sans-Serif" font-size="10.00">_factor</text>
+<text text-anchor="start" x="109.5" y="-1621.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_model_time_step_size</text>
+<text text-anchor="start" x="109.5" y="-1610.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_model_uses_forcing_file</text>
+<text text-anchor="start" x="109.5" y="-1599.5" font-family="Helvetica,sans-Serif" font-size="10.00"># forcing_file_path</text>
+<text text-anchor="start" x="109.5" y="-1588.5" font-family="Helvetica,sans-Serif" font-size="10.00"># init_exception_msg</text>
+<text text-anchor="start" x="109.5" y="-1577.5" font-family="Helvetica,sans-Serif" font-size="10.00"># input_var_names</text>
+<text text-anchor="start" x="109.5" y="-1566.5" font-family="Helvetica,sans-Serif" font-size="10.00"># model_initialized</text>
+<text text-anchor="start" x="109.5" y="-1555.5" font-family="Helvetica,sans-Serif" font-size="10.00"># model_name</text>
+<text text-anchor="start" x="109.5" y="-1544.5" font-family="Helvetica,sans-Serif" font-size="10.00"># output</text>
+<text text-anchor="start" x="109.5" y="-1533.5" font-family="Helvetica,sans-Serif" font-size="10.00"># output_var_names</text>
+<polyline fill="none" stroke="black" points="101.5,-1526.5 253.5,-1526.5 "/>
+<text text-anchor="start" x="109.5" y="-1514.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Bmi_Adapter()</text>
+<text text-anchor="start" x="109.5" y="-1503.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Bmi_Adapter()</text>
+<text text-anchor="start" x="109.5" y="-1492.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Bmi_Adapter()</text>
+<text text-anchor="start" x="109.5" y="-1481.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ acquire_time_conversion</text>
+<text text-anchor="start" x="109.5" y="-1470.5" font-family="Helvetica,sans-Serif" font-size="10.00">_factor()</text>
+<text text-anchor="start" x="109.5" y="-1459.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ convert_model_time</text>
+<text text-anchor="start" x="109.5" y="-1448.5" font-family="Helvetica,sans-Serif" font-size="10.00">_to_seconds()</text>
+<text text-anchor="start" x="109.5" y="-1437.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ convert_seconds_to</text>
+<text text-anchor="start" x="109.5" y="-1426.5" font-family="Helvetica,sans-Serif" font-size="10.00">_model_time()</text>
+<text text-anchor="start" x="109.5" y="-1415.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_analogous_cxx_type()</text>
+<text text-anchor="start" x="109.5" y="-1404.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Initialize()</text>
+<text text-anchor="start" x="109.5" y="-1393.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Initialize()</text>
+<text text-anchor="start" x="109.5" y="-1382.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ isInitialized()</text>
+<text text-anchor="start" x="109.5" y="-1371.5" font-family="Helvetica,sans-Serif" font-size="10.00"># construct_and_init</text>
+<text text-anchor="start" x="109.5" y="-1360.5" font-family="Helvetica,sans-Serif" font-size="10.00">_backing_model()</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node3 -->
 <g id="edge2" class="edge">
 <title>Node1&#45;&gt;Node3</title>
-<path fill="none" stroke="orange" d="M103.65,-1778.23C102.15,-1765.71 100.64,-1753.14 99.14,-1740.68"/>
-<polygon fill="orange" stroke="orange" points="100.18,-1778.73 104.85,-1788.24 107.13,-1777.9 100.18,-1778.73"/>
-<text text-anchor="middle" x="115" y="-1762" font-family="Helvetica,sans-Serif" font-size="10.00"> &lt; C &gt;</text>
+<path fill="none" stroke="orange" d="M177.5,-1778.23C177.5,-1765.71 177.5,-1753.14 177.5,-1740.68"/>
+<polygon fill="orange" stroke="orange" points="174,-1778.24 177.5,-1788.24 181,-1778.24 174,-1778.24"/>
+<text text-anchor="middle" x="190.5" y="-1762" font-family="Helvetica,sans-Serif" font-size="10.00"> &lt; C &gt;</text>
 </g>
-<!-- Node7 -->
-<g id="node7" class="node">
-<title>Node7</title>
-<g id="a_node7"><a xlink:href="classmodels_1_1bmi_1_1_bmi___adapter.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="black" points="104.5,-936.5 104.5,-1334.5 253.5,-1334.5 253.5,-936.5 104.5,-936.5"/>
-<text text-anchor="start" x="112.5" y="-1322.5" font-family="Helvetica,sans-Serif" font-size="10.00">models::bmi::Bmi_Adapter</text>
-<text text-anchor="middle" x="179" y="-1311.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; C_Bmi &gt;</text>
-<polyline fill="none" stroke="black" points="104.5,-1304.5 253.5,-1304.5 "/>
-<text text-anchor="start" x="112.5" y="-1292.5" font-family="Helvetica,sans-Serif" font-size="10.00"># allow_model_exceed</text>
-<text text-anchor="start" x="112.5" y="-1281.5" font-family="Helvetica,sans-Serif" font-size="10.00">_end_time</text>
-<text text-anchor="start" x="112.5" y="-1270.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_init_config</text>
-<text text-anchor="start" x="112.5" y="-1259.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_model</text>
-<text text-anchor="start" x="112.5" y="-1248.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_model_has_fixed</text>
-<text text-anchor="start" x="112.5" y="-1237.5" font-family="Helvetica,sans-Serif" font-size="10.00">_time_step</text>
-<text text-anchor="start" x="112.5" y="-1226.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_model_time_convert</text>
-<text text-anchor="start" x="112.5" y="-1215.5" font-family="Helvetica,sans-Serif" font-size="10.00">_factor</text>
-<text text-anchor="start" x="112.5" y="-1204.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_model_time_step_size</text>
-<text text-anchor="start" x="112.5" y="-1193.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_model_uses_forcing_file</text>
-<text text-anchor="start" x="112.5" y="-1182.5" font-family="Helvetica,sans-Serif" font-size="10.00"># forcing_file_path</text>
-<text text-anchor="start" x="112.5" y="-1171.5" font-family="Helvetica,sans-Serif" font-size="10.00"># init_exception_msg</text>
-<text text-anchor="start" x="112.5" y="-1160.5" font-family="Helvetica,sans-Serif" font-size="10.00"># input_var_names</text>
-<text text-anchor="start" x="112.5" y="-1149.5" font-family="Helvetica,sans-Serif" font-size="10.00"># model_initialized</text>
-<text text-anchor="start" x="112.5" y="-1138.5" font-family="Helvetica,sans-Serif" font-size="10.00"># model_name</text>
-<text text-anchor="start" x="112.5" y="-1127.5" font-family="Helvetica,sans-Serif" font-size="10.00"># output</text>
-<text text-anchor="start" x="112.5" y="-1116.5" font-family="Helvetica,sans-Serif" font-size="10.00"># output_var_names</text>
-<polyline fill="none" stroke="black" points="104.5,-1109.5 253.5,-1109.5 "/>
-<text text-anchor="start" x="112.5" y="-1097.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Bmi_Adapter()</text>
-<text text-anchor="start" x="112.5" y="-1086.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Bmi_Adapter()</text>
-<text text-anchor="start" x="112.5" y="-1075.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Bmi_Adapter()</text>
-<text text-anchor="start" x="112.5" y="-1064.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ acquire_time_conversion</text>
-<text text-anchor="start" x="112.5" y="-1053.5" font-family="Helvetica,sans-Serif" font-size="10.00">_factor()</text>
-<text text-anchor="start" x="112.5" y="-1042.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ convert_model_time</text>
-<text text-anchor="start" x="112.5" y="-1031.5" font-family="Helvetica,sans-Serif" font-size="10.00">_to_seconds()</text>
-<text text-anchor="start" x="112.5" y="-1020.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ convert_seconds_to</text>
-<text text-anchor="start" x="112.5" y="-1009.5" font-family="Helvetica,sans-Serif" font-size="10.00">_model_time()</text>
-<text text-anchor="start" x="112.5" y="-998.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_analogous_cxx_type()</text>
-<text text-anchor="start" x="112.5" y="-987.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Initialize()</text>
-<text text-anchor="start" x="112.5" y="-976.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Initialize()</text>
-<text text-anchor="start" x="112.5" y="-965.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ isInitialized()</text>
-<text text-anchor="start" x="112.5" y="-954.5" font-family="Helvetica,sans-Serif" font-size="10.00"># construct_and_init</text>
-<text text-anchor="start" x="112.5" y="-943.5" font-family="Helvetica,sans-Serif" font-size="10.00">_backing_model()</text>
+<!-- Node9 -->
+<g id="node9" class="node">
+<title>Node9</title>
+<g id="a_node9"><a xlink:href="classmodels_1_1bmi_1_1_bmi___adapter.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="black" points="0,-936.5 0,-1334.5 149,-1334.5 149,-936.5 0,-936.5"/>
+<text text-anchor="start" x="8" y="-1322.5" font-family="Helvetica,sans-Serif" font-size="10.00">models::bmi::Bmi_Adapter</text>
+<text text-anchor="middle" x="74.5" y="-1311.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; C_Bmi &gt;</text>
+<polyline fill="none" stroke="black" points="0,-1304.5 149,-1304.5 "/>
+<text text-anchor="start" x="8" y="-1292.5" font-family="Helvetica,sans-Serif" font-size="10.00"># allow_model_exceed</text>
+<text text-anchor="start" x="8" y="-1281.5" font-family="Helvetica,sans-Serif" font-size="10.00">_end_time</text>
+<text text-anchor="start" x="8" y="-1270.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_init_config</text>
+<text text-anchor="start" x="8" y="-1259.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_model</text>
+<text text-anchor="start" x="8" y="-1248.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_model_has_fixed</text>
+<text text-anchor="start" x="8" y="-1237.5" font-family="Helvetica,sans-Serif" font-size="10.00">_time_step</text>
+<text text-anchor="start" x="8" y="-1226.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_model_time_convert</text>
+<text text-anchor="start" x="8" y="-1215.5" font-family="Helvetica,sans-Serif" font-size="10.00">_factor</text>
+<text text-anchor="start" x="8" y="-1204.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_model_time_step_size</text>
+<text text-anchor="start" x="8" y="-1193.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_model_uses_forcing_file</text>
+<text text-anchor="start" x="8" y="-1182.5" font-family="Helvetica,sans-Serif" font-size="10.00"># forcing_file_path</text>
+<text text-anchor="start" x="8" y="-1171.5" font-family="Helvetica,sans-Serif" font-size="10.00"># init_exception_msg</text>
+<text text-anchor="start" x="8" y="-1160.5" font-family="Helvetica,sans-Serif" font-size="10.00"># input_var_names</text>
+<text text-anchor="start" x="8" y="-1149.5" font-family="Helvetica,sans-Serif" font-size="10.00"># model_initialized</text>
+<text text-anchor="start" x="8" y="-1138.5" font-family="Helvetica,sans-Serif" font-size="10.00"># model_name</text>
+<text text-anchor="start" x="8" y="-1127.5" font-family="Helvetica,sans-Serif" font-size="10.00"># output</text>
+<text text-anchor="start" x="8" y="-1116.5" font-family="Helvetica,sans-Serif" font-size="10.00"># output_var_names</text>
+<polyline fill="none" stroke="black" points="0,-1109.5 149,-1109.5 "/>
+<text text-anchor="start" x="8" y="-1097.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Bmi_Adapter()</text>
+<text text-anchor="start" x="8" y="-1086.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Bmi_Adapter()</text>
+<text text-anchor="start" x="8" y="-1075.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Bmi_Adapter()</text>
+<text text-anchor="start" x="8" y="-1064.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ acquire_time_conversion</text>
+<text text-anchor="start" x="8" y="-1053.5" font-family="Helvetica,sans-Serif" font-size="10.00">_factor()</text>
+<text text-anchor="start" x="8" y="-1042.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ convert_model_time</text>
+<text text-anchor="start" x="8" y="-1031.5" font-family="Helvetica,sans-Serif" font-size="10.00">_to_seconds()</text>
+<text text-anchor="start" x="8" y="-1020.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ convert_seconds_to</text>
+<text text-anchor="start" x="8" y="-1009.5" font-family="Helvetica,sans-Serif" font-size="10.00">_model_time()</text>
+<text text-anchor="start" x="8" y="-998.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_analogous_cxx_type()</text>
+<text text-anchor="start" x="8" y="-987.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Initialize()</text>
+<text text-anchor="start" x="8" y="-976.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Initialize()</text>
+<text text-anchor="start" x="8" y="-965.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ isInitialized()</text>
+<text text-anchor="start" x="8" y="-954.5" font-family="Helvetica,sans-Serif" font-size="10.00"># construct_and_init</text>
+<text text-anchor="start" x="8" y="-943.5" font-family="Helvetica,sans-Serif" font-size="10.00">_backing_model()</text>
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node7 -->
-<g id="edge6" class="edge">
-<title>Node1&#45;&gt;Node7</title>
-<path fill="none" stroke="orange" d="M157.43,-1778.21C158.78,-1765.63 159.99,-1753.15 161,-1741 172.29,-1605.63 176.77,-1452.7 178.43,-1334.52"/>
-<polygon fill="orange" stroke="orange" points="153.94,-1777.99 156.33,-1788.31 160.9,-1778.75 153.94,-1777.99"/>
-<text text-anchor="middle" x="183.5" y="-1762" font-family="Helvetica,sans-Serif" font-size="10.00"> &lt; C_Bmi &gt;</text>
+<!-- Node1&#45;&gt;Node9 -->
+<g id="edge8" class="edge">
+<title>Node1&#45;&gt;Node9</title>
+<path fill="none" stroke="orange" d="M100.82,-1778.21C97.62,-1765.73 94.79,-1753.26 92.5,-1741 67.41,-1606.97 63.14,-1453.35 65.03,-1334.51"/>
+<polygon fill="orange" stroke="orange" points="97.53,-1779.45 103.47,-1788.23 104.29,-1777.66 97.53,-1779.45"/>
+<text text-anchor="middle" x="124" y="-1762" font-family="Helvetica,sans-Serif" font-size="10.00"> &lt; C_Bmi &gt;</text>
+</g>
+<!-- Node10 -->
+<g id="node10" class="node">
+<title>Node10</title>
+<g id="a_node10"><a xlink:href="classmodels_1_1bmi_1_1_bmi___adapter.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="black" points="206,-936.5 206,-1334.5 355,-1334.5 355,-936.5 206,-936.5"/>
+<text text-anchor="start" x="214" y="-1322.5" font-family="Helvetica,sans-Serif" font-size="10.00">models::bmi::Bmi_Adapter</text>
+<text text-anchor="middle" x="280.5" y="-1311.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; Cpp_Bmi &gt;</text>
+<polyline fill="none" stroke="black" points="206,-1304.5 355,-1304.5 "/>
+<text text-anchor="start" x="214" y="-1292.5" font-family="Helvetica,sans-Serif" font-size="10.00"># allow_model_exceed</text>
+<text text-anchor="start" x="214" y="-1281.5" font-family="Helvetica,sans-Serif" font-size="10.00">_end_time</text>
+<text text-anchor="start" x="214" y="-1270.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_init_config</text>
+<text text-anchor="start" x="214" y="-1259.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_model</text>
+<text text-anchor="start" x="214" y="-1248.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_model_has_fixed</text>
+<text text-anchor="start" x="214" y="-1237.5" font-family="Helvetica,sans-Serif" font-size="10.00">_time_step</text>
+<text text-anchor="start" x="214" y="-1226.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_model_time_convert</text>
+<text text-anchor="start" x="214" y="-1215.5" font-family="Helvetica,sans-Serif" font-size="10.00">_factor</text>
+<text text-anchor="start" x="214" y="-1204.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_model_time_step_size</text>
+<text text-anchor="start" x="214" y="-1193.5" font-family="Helvetica,sans-Serif" font-size="10.00"># bmi_model_uses_forcing_file</text>
+<text text-anchor="start" x="214" y="-1182.5" font-family="Helvetica,sans-Serif" font-size="10.00"># forcing_file_path</text>
+<text text-anchor="start" x="214" y="-1171.5" font-family="Helvetica,sans-Serif" font-size="10.00"># init_exception_msg</text>
+<text text-anchor="start" x="214" y="-1160.5" font-family="Helvetica,sans-Serif" font-size="10.00"># input_var_names</text>
+<text text-anchor="start" x="214" y="-1149.5" font-family="Helvetica,sans-Serif" font-size="10.00"># model_initialized</text>
+<text text-anchor="start" x="214" y="-1138.5" font-family="Helvetica,sans-Serif" font-size="10.00"># model_name</text>
+<text text-anchor="start" x="214" y="-1127.5" font-family="Helvetica,sans-Serif" font-size="10.00"># output</text>
+<text text-anchor="start" x="214" y="-1116.5" font-family="Helvetica,sans-Serif" font-size="10.00"># output_var_names</text>
+<polyline fill="none" stroke="black" points="206,-1109.5 355,-1109.5 "/>
+<text text-anchor="start" x="214" y="-1097.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Bmi_Adapter()</text>
+<text text-anchor="start" x="214" y="-1086.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Bmi_Adapter()</text>
+<text text-anchor="start" x="214" y="-1075.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Bmi_Adapter()</text>
+<text text-anchor="start" x="214" y="-1064.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ acquire_time_conversion</text>
+<text text-anchor="start" x="214" y="-1053.5" font-family="Helvetica,sans-Serif" font-size="10.00">_factor()</text>
+<text text-anchor="start" x="214" y="-1042.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ convert_model_time</text>
+<text text-anchor="start" x="214" y="-1031.5" font-family="Helvetica,sans-Serif" font-size="10.00">_to_seconds()</text>
+<text text-anchor="start" x="214" y="-1020.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ convert_seconds_to</text>
+<text text-anchor="start" x="214" y="-1009.5" font-family="Helvetica,sans-Serif" font-size="10.00">_model_time()</text>
+<text text-anchor="start" x="214" y="-998.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_analogous_cxx_type()</text>
+<text text-anchor="start" x="214" y="-987.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Initialize()</text>
+<text text-anchor="start" x="214" y="-976.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Initialize()</text>
+<text text-anchor="start" x="214" y="-965.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ isInitialized()</text>
+<text text-anchor="start" x="214" y="-954.5" font-family="Helvetica,sans-Serif" font-size="10.00"># construct_and_init</text>
+<text text-anchor="start" x="214" y="-943.5" font-family="Helvetica,sans-Serif" font-size="10.00">_backing_model()</text>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node10 -->
+<g id="edge10" class="edge">
+<title>Node1&#45;&gt;Node10</title>
+<path fill="none" stroke="orange" d="M254.18,-1778.21C257.38,-1765.73 260.21,-1753.26 262.5,-1741 287.59,-1606.97 291.86,-1453.35 289.97,-1334.51"/>
+<polygon fill="orange" stroke="orange" points="250.71,-1777.66 251.53,-1788.23 257.47,-1779.45 250.71,-1777.66"/>
+<text text-anchor="middle" x="289" y="-1762" font-family="Helvetica,sans-Serif" font-size="10.00"> &lt; Cpp_Bmi &gt;</text>
 </g>
 <!-- Node2 -->
 <g id="node2" class="node">
 <title>Node2</title>
 <g id="a_node2"><a xlink:href="classbmi_1_1_bmi.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="black" points="67,-2213.5 67,-2435.5 189,-2435.5 189,-2213.5 67,-2213.5"/>
-<text text-anchor="middle" x="128" y="-2423.5" font-family="Helvetica,sans-Serif" font-size="10.00">bmi::Bmi</text>
-<polyline fill="none" stroke="black" points="67,-2416.5 189,-2416.5 "/>
-<text text-anchor="middle" x="128" y="-2404.5" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
-<polyline fill="none" stroke="black" points="67,-2397.5 189,-2397.5 "/>
-<text text-anchor="start" x="75" y="-2385.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Initialize()</text>
-<text text-anchor="start" x="75" y="-2374.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Update()</text>
-<text text-anchor="start" x="75" y="-2363.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ UpdateUntil()</text>
-<text text-anchor="start" x="75" y="-2352.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Finalize()</text>
-<text text-anchor="start" x="75" y="-2341.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetComponentName()</text>
-<text text-anchor="start" x="75" y="-2330.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetInputItemCount()</text>
-<text text-anchor="start" x="75" y="-2319.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetOutputItemCount()</text>
-<text text-anchor="start" x="75" y="-2308.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetInputVarNames()</text>
-<text text-anchor="start" x="75" y="-2297.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetOutputVarNames()</text>
-<text text-anchor="start" x="75" y="-2286.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetVarGrid()</text>
-<text text-anchor="start" x="75" y="-2275.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetVarType()</text>
-<text text-anchor="start" x="75" y="-2264.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetVarUnits()</text>
-<text text-anchor="start" x="75" y="-2253.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetVarItemsize()</text>
-<text text-anchor="start" x="75" y="-2242.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetVarNbytes()</text>
-<text text-anchor="start" x="75" y="-2231.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetVarLocation()</text>
-<text text-anchor="start" x="75" y="-2220.5" font-family="Helvetica,sans-Serif" font-size="10.00">and 26 more...</text>
+<polygon fill="white" stroke="black" points="116.5,-2213.5 116.5,-2435.5 238.5,-2435.5 238.5,-2213.5 116.5,-2213.5"/>
+<text text-anchor="middle" x="177.5" y="-2423.5" font-family="Helvetica,sans-Serif" font-size="10.00">bmi::Bmi</text>
+<polyline fill="none" stroke="black" points="116.5,-2416.5 238.5,-2416.5 "/>
+<text text-anchor="middle" x="177.5" y="-2404.5" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
+<polyline fill="none" stroke="black" points="116.5,-2397.5 238.5,-2397.5 "/>
+<text text-anchor="start" x="124.5" y="-2385.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Initialize()</text>
+<text text-anchor="start" x="124.5" y="-2374.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Update()</text>
+<text text-anchor="start" x="124.5" y="-2363.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ UpdateUntil()</text>
+<text text-anchor="start" x="124.5" y="-2352.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Finalize()</text>
+<text text-anchor="start" x="124.5" y="-2341.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetComponentName()</text>
+<text text-anchor="start" x="124.5" y="-2330.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetInputItemCount()</text>
+<text text-anchor="start" x="124.5" y="-2319.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetOutputItemCount()</text>
+<text text-anchor="start" x="124.5" y="-2308.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetInputVarNames()</text>
+<text text-anchor="start" x="124.5" y="-2297.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetOutputVarNames()</text>
+<text text-anchor="start" x="124.5" y="-2286.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetVarGrid()</text>
+<text text-anchor="start" x="124.5" y="-2275.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetVarType()</text>
+<text text-anchor="start" x="124.5" y="-2264.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetVarUnits()</text>
+<text text-anchor="start" x="124.5" y="-2253.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetVarItemsize()</text>
+<text text-anchor="start" x="124.5" y="-2242.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetVarNbytes()</text>
+<text text-anchor="start" x="124.5" y="-2231.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetVarLocation()</text>
+<text text-anchor="start" x="124.5" y="-2220.5" font-family="Helvetica,sans-Serif" font-size="10.00">and 26 more...</text>
 </a>
 </g>
 </g>
 <!-- Node2&#45;&gt;Node1 -->
 <g id="edge1" class="edge">
 <title>Node2&#45;&gt;Node1</title>
-<path fill="none" stroke="midnightblue" d="M128,-2203.28C128,-2194.21 128,-2184.94 128,-2175.57"/>
-<polygon fill="none" stroke="midnightblue" points="124.5,-2203.42 128,-2213.42 131.5,-2203.42 124.5,-2203.42"/>
+<path fill="none" stroke="midnightblue" d="M177.5,-2203.28C177.5,-2194.21 177.5,-2184.94 177.5,-2175.57"/>
+<polygon fill="none" stroke="midnightblue" points="174,-2203.42 177.5,-2213.42 181,-2203.42 174,-2203.42"/>
 </g>
 <!-- Node4 -->
 <g id="node4" class="node">
 <title>Node4</title>
 <g id="a_node4"><a xlink:href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="black" points="7,-717.5 7,-917.5 151,-917.5 151,-717.5 7,-717.5"/>
-<text text-anchor="start" x="15" y="-905.5" font-family="Helvetica,sans-Serif" font-size="10.00">models::bmi::AbstractCLib</text>
-<text text-anchor="middle" x="79" y="-894.5" font-family="Helvetica,sans-Serif" font-size="10.00">BmiAdapter&lt; C &gt;</text>
-<polyline fill="none" stroke="black" points="7,-887.5 151,-887.5 "/>
-<text text-anchor="start" x="15" y="-875.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; bmi_lib_file</text>
-<text text-anchor="start" x="15" y="-864.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; bmi_registration_function</text>
-<text text-anchor="start" x="15" y="-853.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; dyn_lib_handle</text>
-<polyline fill="none" stroke="black" points="7,-846.5 151,-846.5 "/>
-<text text-anchor="start" x="15" y="-834.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ AbstractCLibBmiAdapter()</text>
-<text text-anchor="start" x="15" y="-823.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ AbstractCLibBmiAdapter()</text>
-<text text-anchor="start" x="15" y="-812.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ ~AbstractCLibBmiAdapter()</text>
-<text text-anchor="start" x="15" y="-801.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Finalize()</text>
-<text text-anchor="start" x="15" y="-790.5" font-family="Helvetica,sans-Serif" font-size="10.00"># dynamic_library_load()</text>
-<text text-anchor="start" x="15" y="-779.5" font-family="Helvetica,sans-Serif" font-size="10.00"># dynamic_load_symbol()</text>
-<text text-anchor="start" x="15" y="-768.5" font-family="Helvetica,sans-Serif" font-size="10.00"># dynamic_load_symbol()</text>
-<text text-anchor="start" x="15" y="-757.5" font-family="Helvetica,sans-Serif" font-size="10.00"># get_bmi_registration</text>
-<text text-anchor="start" x="15" y="-746.5" font-family="Helvetica,sans-Serif" font-size="10.00">_function()</text>
-<text text-anchor="start" x="15" y="-735.5" font-family="Helvetica,sans-Serif" font-size="10.00"># get_dyn_lib_handle()</text>
-<text text-anchor="start" x="15" y="-724.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; finalizeForLibAbstraction()</text>
+<polygon fill="white" stroke="black" points="105.5,-717.5 105.5,-917.5 249.5,-917.5 249.5,-717.5 105.5,-717.5"/>
+<text text-anchor="start" x="113.5" y="-905.5" font-family="Helvetica,sans-Serif" font-size="10.00">models::bmi::AbstractCLib</text>
+<text text-anchor="middle" x="177.5" y="-894.5" font-family="Helvetica,sans-Serif" font-size="10.00">BmiAdapter&lt; C &gt;</text>
+<polyline fill="none" stroke="black" points="105.5,-887.5 249.5,-887.5 "/>
+<text text-anchor="start" x="113.5" y="-875.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; bmi_lib_file</text>
+<text text-anchor="start" x="113.5" y="-864.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; bmi_registration_function</text>
+<text text-anchor="start" x="113.5" y="-853.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; dyn_lib_handle</text>
+<polyline fill="none" stroke="black" points="105.5,-846.5 249.5,-846.5 "/>
+<text text-anchor="start" x="113.5" y="-834.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ AbstractCLibBmiAdapter()</text>
+<text text-anchor="start" x="113.5" y="-823.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ AbstractCLibBmiAdapter()</text>
+<text text-anchor="start" x="113.5" y="-812.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ ~AbstractCLibBmiAdapter()</text>
+<text text-anchor="start" x="113.5" y="-801.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Finalize()</text>
+<text text-anchor="start" x="113.5" y="-790.5" font-family="Helvetica,sans-Serif" font-size="10.00"># dynamic_library_load()</text>
+<text text-anchor="start" x="113.5" y="-779.5" font-family="Helvetica,sans-Serif" font-size="10.00"># dynamic_load_symbol()</text>
+<text text-anchor="start" x="113.5" y="-768.5" font-family="Helvetica,sans-Serif" font-size="10.00"># dynamic_load_symbol()</text>
+<text text-anchor="start" x="113.5" y="-757.5" font-family="Helvetica,sans-Serif" font-size="10.00"># get_bmi_registration</text>
+<text text-anchor="start" x="113.5" y="-746.5" font-family="Helvetica,sans-Serif" font-size="10.00">_function()</text>
+<text text-anchor="start" x="113.5" y="-735.5" font-family="Helvetica,sans-Serif" font-size="10.00"># get_dyn_lib_handle()</text>
+<text text-anchor="start" x="113.5" y="-724.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; finalizeForLibAbstraction()</text>
 </a>
 </g>
 </g>
 <!-- Node3&#45;&gt;Node4 -->
 <g id="edge3" class="edge">
 <title>Node3&#45;&gt;Node4</title>
-<path fill="none" stroke="midnightblue" d="M76.84,-1343.09C77.41,-1204.3 78.14,-1026.41 78.59,-917.53"/>
-<polygon fill="none" stroke="midnightblue" points="73.34,-1343.42 76.79,-1353.43 80.34,-1343.44 73.34,-1343.42"/>
+<path fill="none" stroke="midnightblue" d="M177.5,-1343.09C177.5,-1204.3 177.5,-1026.41 177.5,-917.53"/>
+<polygon fill="none" stroke="midnightblue" points="174,-1343.43 177.5,-1353.43 181,-1343.43 174,-1343.43"/>
 </g>
 <!-- Node5 -->
 <g id="node5" class="node">
 <title>Node5</title>
 <g id="a_node5"><a xlink:href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="black" points="57,-469.5 57,-669.5 201,-669.5 201,-469.5 57,-469.5"/>
-<text text-anchor="start" x="65" y="-657.5" font-family="Helvetica,sans-Serif" font-size="10.00">models::bmi::AbstractCLib</text>
-<text text-anchor="middle" x="129" y="-646.5" font-family="Helvetica,sans-Serif" font-size="10.00">BmiAdapter&lt; C_Bmi &gt;</text>
-<polyline fill="none" stroke="black" points="57,-639.5 201,-639.5 "/>
-<text text-anchor="start" x="65" y="-627.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; bmi_lib_file</text>
-<text text-anchor="start" x="65" y="-616.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; bmi_registration_function</text>
-<text text-anchor="start" x="65" y="-605.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; dyn_lib_handle</text>
-<polyline fill="none" stroke="black" points="57,-598.5 201,-598.5 "/>
-<text text-anchor="start" x="65" y="-586.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ AbstractCLibBmiAdapter()</text>
-<text text-anchor="start" x="65" y="-575.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ AbstractCLibBmiAdapter()</text>
-<text text-anchor="start" x="65" y="-564.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ ~AbstractCLibBmiAdapter()</text>
-<text text-anchor="start" x="65" y="-553.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Finalize()</text>
-<text text-anchor="start" x="65" y="-542.5" font-family="Helvetica,sans-Serif" font-size="10.00"># dynamic_library_load()</text>
-<text text-anchor="start" x="65" y="-531.5" font-family="Helvetica,sans-Serif" font-size="10.00"># dynamic_load_symbol()</text>
-<text text-anchor="start" x="65" y="-520.5" font-family="Helvetica,sans-Serif" font-size="10.00"># dynamic_load_symbol()</text>
-<text text-anchor="start" x="65" y="-509.5" font-family="Helvetica,sans-Serif" font-size="10.00"># get_bmi_registration</text>
-<text text-anchor="start" x="65" y="-498.5" font-family="Helvetica,sans-Serif" font-size="10.00">_function()</text>
-<text text-anchor="start" x="65" y="-487.5" font-family="Helvetica,sans-Serif" font-size="10.00"># get_dyn_lib_handle()</text>
-<text text-anchor="start" x="65" y="-476.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; finalizeForLibAbstraction()</text>
+<polygon fill="white" stroke="black" points="23.5,-469.5 23.5,-669.5 167.5,-669.5 167.5,-469.5 23.5,-469.5"/>
+<text text-anchor="start" x="31.5" y="-657.5" font-family="Helvetica,sans-Serif" font-size="10.00">models::bmi::AbstractCLib</text>
+<text text-anchor="middle" x="95.5" y="-646.5" font-family="Helvetica,sans-Serif" font-size="10.00">BmiAdapter&lt; C_Bmi &gt;</text>
+<polyline fill="none" stroke="black" points="23.5,-639.5 167.5,-639.5 "/>
+<text text-anchor="start" x="31.5" y="-627.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; bmi_lib_file</text>
+<text text-anchor="start" x="31.5" y="-616.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; bmi_registration_function</text>
+<text text-anchor="start" x="31.5" y="-605.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; dyn_lib_handle</text>
+<polyline fill="none" stroke="black" points="23.5,-598.5 167.5,-598.5 "/>
+<text text-anchor="start" x="31.5" y="-586.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ AbstractCLibBmiAdapter()</text>
+<text text-anchor="start" x="31.5" y="-575.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ AbstractCLibBmiAdapter()</text>
+<text text-anchor="start" x="31.5" y="-564.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ ~AbstractCLibBmiAdapter()</text>
+<text text-anchor="start" x="31.5" y="-553.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Finalize()</text>
+<text text-anchor="start" x="31.5" y="-542.5" font-family="Helvetica,sans-Serif" font-size="10.00"># dynamic_library_load()</text>
+<text text-anchor="start" x="31.5" y="-531.5" font-family="Helvetica,sans-Serif" font-size="10.00"># dynamic_load_symbol()</text>
+<text text-anchor="start" x="31.5" y="-520.5" font-family="Helvetica,sans-Serif" font-size="10.00"># dynamic_load_symbol()</text>
+<text text-anchor="start" x="31.5" y="-509.5" font-family="Helvetica,sans-Serif" font-size="10.00"># get_bmi_registration</text>
+<text text-anchor="start" x="31.5" y="-498.5" font-family="Helvetica,sans-Serif" font-size="10.00">_function()</text>
+<text text-anchor="start" x="31.5" y="-487.5" font-family="Helvetica,sans-Serif" font-size="10.00"># get_dyn_lib_handle()</text>
+<text text-anchor="start" x="31.5" y="-476.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; finalizeForLibAbstraction()</text>
 </a>
 </g>
 </g>
 <!-- Node4&#45;&gt;Node5 -->
 <g id="edge4" class="edge">
 <title>Node4&#45;&gt;Node5</title>
-<path fill="none" stroke="orange" d="M101.21,-707.22C103.74,-694.77 106.31,-682.13 108.81,-669.82"/>
-<polygon fill="orange" stroke="orange" points="97.75,-706.65 99.19,-717.15 104.61,-708.05 97.75,-706.65"/>
-<text text-anchor="middle" x="128.5" y="-691" font-family="Helvetica,sans-Serif" font-size="10.00"> &lt; C_Bmi &gt;</text>
+<path fill="none" stroke="orange" d="M132.55,-707.89C131.5,-704.9 130.48,-701.94 129.5,-699 126.35,-689.59 123.3,-679.72 120.4,-669.8"/>
+<polygon fill="orange" stroke="orange" points="129.32,-709.25 136,-717.47 135.91,-706.88 129.32,-709.25"/>
+<text text-anchor="middle" x="154" y="-691" font-family="Helvetica,sans-Serif" font-size="10.00"> &lt; C_Bmi &gt;</text>
+</g>
+<!-- Node7 -->
+<g id="node7" class="node">
+<title>Node7</title>
+<g id="a_node7"><a xlink:href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="black" points="194.5,-469.5 194.5,-669.5 338.5,-669.5 338.5,-469.5 194.5,-469.5"/>
+<text text-anchor="start" x="202.5" y="-657.5" font-family="Helvetica,sans-Serif" font-size="10.00">models::bmi::AbstractCLib</text>
+<text text-anchor="middle" x="266.5" y="-646.5" font-family="Helvetica,sans-Serif" font-size="10.00">BmiAdapter&lt; Cpp_Bmi &gt;</text>
+<polyline fill="none" stroke="black" points="194.5,-639.5 338.5,-639.5 "/>
+<text text-anchor="start" x="202.5" y="-627.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; bmi_lib_file</text>
+<text text-anchor="start" x="202.5" y="-616.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; bmi_registration_function</text>
+<text text-anchor="start" x="202.5" y="-605.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; dyn_lib_handle</text>
+<polyline fill="none" stroke="black" points="194.5,-598.5 338.5,-598.5 "/>
+<text text-anchor="start" x="202.5" y="-586.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ AbstractCLibBmiAdapter()</text>
+<text text-anchor="start" x="202.5" y="-575.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ AbstractCLibBmiAdapter()</text>
+<text text-anchor="start" x="202.5" y="-564.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ ~AbstractCLibBmiAdapter()</text>
+<text text-anchor="start" x="202.5" y="-553.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Finalize()</text>
+<text text-anchor="start" x="202.5" y="-542.5" font-family="Helvetica,sans-Serif" font-size="10.00"># dynamic_library_load()</text>
+<text text-anchor="start" x="202.5" y="-531.5" font-family="Helvetica,sans-Serif" font-size="10.00"># dynamic_load_symbol()</text>
+<text text-anchor="start" x="202.5" y="-520.5" font-family="Helvetica,sans-Serif" font-size="10.00"># dynamic_load_symbol()</text>
+<text text-anchor="start" x="202.5" y="-509.5" font-family="Helvetica,sans-Serif" font-size="10.00"># get_bmi_registration</text>
+<text text-anchor="start" x="202.5" y="-498.5" font-family="Helvetica,sans-Serif" font-size="10.00">_function()</text>
+<text text-anchor="start" x="202.5" y="-487.5" font-family="Helvetica,sans-Serif" font-size="10.00"># get_dyn_lib_handle()</text>
+<text text-anchor="start" x="202.5" y="-476.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; finalizeForLibAbstraction()</text>
+</a>
+</g>
+</g>
+<!-- Node4&#45;&gt;Node7 -->
+<g id="edge6" class="edge">
+<title>Node4&#45;&gt;Node7</title>
+<path fill="none" stroke="orange" d="M200.1,-707.44C202.09,-700.81 204.23,-694.29 206.5,-688 208.68,-681.97 211.1,-675.85 213.69,-669.74"/>
+<polygon fill="orange" stroke="orange" points="196.69,-706.63 197.28,-717.21 203.42,-708.57 196.69,-706.63"/>
+<text text-anchor="middle" x="236" y="-691" font-family="Helvetica,sans-Serif" font-size="10.00"> &lt; Cpp_Bmi &gt;</text>
 </g>
 <!-- Node6 -->
 <g id="node6" class="node">
 <title>Node6</title>
 <g id="a_node6"><a xlink:href="classmodels_1_1bmi_1_1_bmi___c___adapter.html" target="_top" xlink:title="An adapter class to serve as a C++ interface to the essential aspects of external models written in t...">
-<polygon fill="white" stroke="black" points="62,-0.5 62,-431.5 196,-431.5 196,-0.5 62,-0.5"/>
-<text text-anchor="start" x="70" y="-419.5" font-family="Helvetica,sans-Serif" font-size="10.00">models::bmi::Bmi_C</text>
-<text text-anchor="middle" x="129" y="-408.5" font-family="Helvetica,sans-Serif" font-size="10.00">_Adapter</text>
-<polyline fill="none" stroke="black" points="62,-401.5 196,-401.5 "/>
-<text text-anchor="start" x="70" y="-389.5" font-family="Helvetica,sans-Serif" font-size="10.00"># model_name</text>
-<polyline fill="none" stroke="black" points="62,-382.5 196,-382.5 "/>
-<text text-anchor="start" x="70" y="-370.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Bmi_C_Adapter()</text>
-<text text-anchor="start" x="70" y="-359.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Bmi_C_Adapter()</text>
-<text text-anchor="start" x="70" y="-348.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Bmi_C_Adapter()</text>
-<text text-anchor="start" x="70" y="-337.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ ~Bmi_C_Adapter()</text>
-<text text-anchor="start" x="70" y="-326.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Finalize()</text>
-<text text-anchor="start" x="70" y="-315.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetComponentName()</text>
-<text text-anchor="start" x="70" y="-304.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetCurrentTime()</text>
-<text text-anchor="start" x="70" y="-293.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetEndTime()</text>
-<text text-anchor="start" x="70" y="-282.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetInputItemCount()</text>
-<text text-anchor="start" x="70" y="-271.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetInputVarNames()</text>
-<text text-anchor="start" x="70" y="-260.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetOutputItemCount()</text>
-<text text-anchor="start" x="70" y="-249.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetOutputVarNames()</text>
-<text text-anchor="start" x="70" y="-238.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetStartTime()</text>
-<text text-anchor="start" x="70" y="-227.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetTimeStep()</text>
-<text text-anchor="start" x="70" y="-216.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetTimeUnits()</text>
-<text text-anchor="start" x="70" y="-205.5" font-family="Helvetica,sans-Serif" font-size="10.00">and 35 more...</text>
-<text text-anchor="start" x="70" y="-194.5" font-family="Helvetica,sans-Serif" font-size="10.00"># Bmi_C_Adapter()</text>
-<text text-anchor="start" x="70" y="-183.5" font-family="Helvetica,sans-Serif" font-size="10.00"># construct_and_init</text>
-<text text-anchor="start" x="70" y="-172.5" font-family="Helvetica,sans-Serif" font-size="10.00">_backing_model()</text>
-<text text-anchor="start" x="70" y="-161.5" font-family="Helvetica,sans-Serif" font-size="10.00"># execModuleRegistration()</text>
-<text text-anchor="start" x="70" y="-150.5" font-family="Helvetica,sans-Serif" font-size="10.00"># get_bmi_model_time</text>
-<text text-anchor="start" x="70" y="-139.5" font-family="Helvetica,sans-Serif" font-size="10.00">_step_size_ptr()</text>
-<text text-anchor="start" x="70" y="-128.5" font-family="Helvetica,sans-Serif" font-size="10.00"># get_value()</text>
-<text text-anchor="start" x="70" y="-117.5" font-family="Helvetica,sans-Serif" font-size="10.00"># retrieve_bmi_model</text>
-<text text-anchor="start" x="70" y="-106.5" font-family="Helvetica,sans-Serif" font-size="10.00">_time_step_size()</text>
-<text text-anchor="start" x="70" y="-95.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; construct_and_init</text>
-<text text-anchor="start" x="70" y="-84.5" font-family="Helvetica,sans-Serif" font-size="10.00">_backing_model_for_type()</text>
-<text text-anchor="start" x="70" y="-73.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; finalizeForCAdapter()</text>
-<text text-anchor="start" x="70" y="-62.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; inner_get_input_item</text>
-<text text-anchor="start" x="70" y="-51.5" font-family="Helvetica,sans-Serif" font-size="10.00">_count()</text>
-<text text-anchor="start" x="70" y="-40.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; inner_get_output_item</text>
-<text text-anchor="start" x="70" y="-29.5" font-family="Helvetica,sans-Serif" font-size="10.00">_count()</text>
-<text text-anchor="start" x="70" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; inner_get_variable</text>
-<text text-anchor="start" x="70" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
+<polygon fill="white" stroke="black" points="28.5,-0.5 28.5,-431.5 162.5,-431.5 162.5,-0.5 28.5,-0.5"/>
+<text text-anchor="start" x="36.5" y="-419.5" font-family="Helvetica,sans-Serif" font-size="10.00">models::bmi::Bmi_C</text>
+<text text-anchor="middle" x="95.5" y="-408.5" font-family="Helvetica,sans-Serif" font-size="10.00">_Adapter</text>
+<polyline fill="none" stroke="black" points="28.5,-401.5 162.5,-401.5 "/>
+<text text-anchor="start" x="36.5" y="-389.5" font-family="Helvetica,sans-Serif" font-size="10.00"># model_name</text>
+<polyline fill="none" stroke="black" points="28.5,-382.5 162.5,-382.5 "/>
+<text text-anchor="start" x="36.5" y="-370.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Bmi_C_Adapter()</text>
+<text text-anchor="start" x="36.5" y="-359.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Bmi_C_Adapter()</text>
+<text text-anchor="start" x="36.5" y="-348.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Bmi_C_Adapter()</text>
+<text text-anchor="start" x="36.5" y="-337.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ ~Bmi_C_Adapter()</text>
+<text text-anchor="start" x="36.5" y="-326.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Finalize()</text>
+<text text-anchor="start" x="36.5" y="-315.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetComponentName()</text>
+<text text-anchor="start" x="36.5" y="-304.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetCurrentTime()</text>
+<text text-anchor="start" x="36.5" y="-293.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetEndTime()</text>
+<text text-anchor="start" x="36.5" y="-282.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetInputItemCount()</text>
+<text text-anchor="start" x="36.5" y="-271.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetInputVarNames()</text>
+<text text-anchor="start" x="36.5" y="-260.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetOutputItemCount()</text>
+<text text-anchor="start" x="36.5" y="-249.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetOutputVarNames()</text>
+<text text-anchor="start" x="36.5" y="-238.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetStartTime()</text>
+<text text-anchor="start" x="36.5" y="-227.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetTimeStep()</text>
+<text text-anchor="start" x="36.5" y="-216.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetTimeUnits()</text>
+<text text-anchor="start" x="36.5" y="-205.5" font-family="Helvetica,sans-Serif" font-size="10.00">and 35 more...</text>
+<text text-anchor="start" x="36.5" y="-194.5" font-family="Helvetica,sans-Serif" font-size="10.00"># Bmi_C_Adapter()</text>
+<text text-anchor="start" x="36.5" y="-183.5" font-family="Helvetica,sans-Serif" font-size="10.00"># construct_and_init</text>
+<text text-anchor="start" x="36.5" y="-172.5" font-family="Helvetica,sans-Serif" font-size="10.00">_backing_model()</text>
+<text text-anchor="start" x="36.5" y="-161.5" font-family="Helvetica,sans-Serif" font-size="10.00"># execModuleRegistration()</text>
+<text text-anchor="start" x="36.5" y="-150.5" font-family="Helvetica,sans-Serif" font-size="10.00"># get_bmi_model_time</text>
+<text text-anchor="start" x="36.5" y="-139.5" font-family="Helvetica,sans-Serif" font-size="10.00">_step_size_ptr()</text>
+<text text-anchor="start" x="36.5" y="-128.5" font-family="Helvetica,sans-Serif" font-size="10.00"># get_value()</text>
+<text text-anchor="start" x="36.5" y="-117.5" font-family="Helvetica,sans-Serif" font-size="10.00"># retrieve_bmi_model</text>
+<text text-anchor="start" x="36.5" y="-106.5" font-family="Helvetica,sans-Serif" font-size="10.00">_time_step_size()</text>
+<text text-anchor="start" x="36.5" y="-95.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; construct_and_init</text>
+<text text-anchor="start" x="36.5" y="-84.5" font-family="Helvetica,sans-Serif" font-size="10.00">_backing_model_for_type()</text>
+<text text-anchor="start" x="36.5" y="-73.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; finalizeForCAdapter()</text>
+<text text-anchor="start" x="36.5" y="-62.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; inner_get_input_item</text>
+<text text-anchor="start" x="36.5" y="-51.5" font-family="Helvetica,sans-Serif" font-size="10.00">_count()</text>
+<text text-anchor="start" x="36.5" y="-40.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; inner_get_output_item</text>
+<text text-anchor="start" x="36.5" y="-29.5" font-family="Helvetica,sans-Serif" font-size="10.00">_count()</text>
+<text text-anchor="start" x="36.5" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; inner_get_variable</text>
+<text text-anchor="start" x="36.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
 </a>
 </g>
 </g>
 <!-- Node5&#45;&gt;Node6 -->
 <g id="edge5" class="edge">
 <title>Node5&#45;&gt;Node6</title>
-<path fill="none" stroke="midnightblue" d="M129,-458.94C129,-450.11 129,-441.02 129,-431.78"/>
-<polygon fill="none" stroke="midnightblue" points="125.5,-459.18 129,-469.18 132.5,-459.18 125.5,-459.18"/>
+<path fill="none" stroke="midnightblue" d="M95.5,-458.94C95.5,-450.11 95.5,-441.02 95.5,-431.78"/>
+<polygon fill="none" stroke="midnightblue" points="92,-459.18 95.5,-469.18 99,-459.18 92,-459.18"/>
 </g>
-<!-- Node7&#45;&gt;Node5 -->
+<!-- Node8 -->
+<g id="node8" class="node">
+<title>Node8</title>
+<g id="a_node8"><a xlink:href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html" target="_top" xlink:title="A thin wrapper class to provide convenience functions around raw BMI models written in C++,...">
+<polygon fill="white" stroke="black" points="200,-28 200,-404 333,-404 333,-28 200,-28"/>
+<text text-anchor="start" x="208" y="-392" font-family="Helvetica,sans-Serif" font-size="10.00">models::bmi::Bmi_Cpp</text>
+<text text-anchor="middle" x="266.5" y="-381" font-family="Helvetica,sans-Serif" font-size="10.00">_Adapter</text>
+<polyline fill="none" stroke="black" points="200,-374 333,-374 "/>
+<text text-anchor="start" x="208" y="-362" font-family="Helvetica,sans-Serif" font-size="10.00"># model_name</text>
+<text text-anchor="start" x="208" y="-351" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; model_create_fname</text>
+<text text-anchor="start" x="208" y="-340" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; model_destroy_fname</text>
+<polyline fill="none" stroke="black" points="200,-333 333,-333 "/>
+<text text-anchor="start" x="208" y="-321" font-family="Helvetica,sans-Serif" font-size="10.00">+ Bmi_Cpp_Adapter()</text>
+<text text-anchor="start" x="208" y="-310" font-family="Helvetica,sans-Serif" font-size="10.00">+ Bmi_Cpp_Adapter()</text>
+<text text-anchor="start" x="208" y="-299" font-family="Helvetica,sans-Serif" font-size="10.00">+ Bmi_Cpp_Adapter()</text>
+<text text-anchor="start" x="208" y="-288" font-family="Helvetica,sans-Serif" font-size="10.00">+ ~Bmi_Cpp_Adapter()</text>
+<text text-anchor="start" x="208" y="-277" font-family="Helvetica,sans-Serif" font-size="10.00">+ Finalize()</text>
+<text text-anchor="start" x="208" y="-266" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetComponentName()</text>
+<text text-anchor="start" x="208" y="-255" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetCurrentTime()</text>
+<text text-anchor="start" x="208" y="-244" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetEndTime()</text>
+<text text-anchor="start" x="208" y="-233" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetInputItemCount()</text>
+<text text-anchor="start" x="208" y="-222" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetInputVarNames()</text>
+<text text-anchor="start" x="208" y="-211" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetOutputItemCount()</text>
+<text text-anchor="start" x="208" y="-200" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetOutputVarNames()</text>
+<text text-anchor="start" x="208" y="-189" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetStartTime()</text>
+<text text-anchor="start" x="208" y="-178" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetTimeStep()</text>
+<text text-anchor="start" x="208" y="-167" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetTimeUnits()</text>
+<text text-anchor="start" x="208" y="-156" font-family="Helvetica,sans-Serif" font-size="10.00">and 35 more...</text>
+<text text-anchor="start" x="208" y="-145" font-family="Helvetica,sans-Serif" font-size="10.00"># Bmi_Cpp_Adapter()</text>
+<text text-anchor="start" x="208" y="-134" font-family="Helvetica,sans-Serif" font-size="10.00"># construct_and_init</text>
+<text text-anchor="start" x="208" y="-123" font-family="Helvetica,sans-Serif" font-size="10.00">_backing_model()</text>
+<text text-anchor="start" x="208" y="-112" font-family="Helvetica,sans-Serif" font-size="10.00"># execModuleCreation()</text>
+<text text-anchor="start" x="208" y="-101" font-family="Helvetica,sans-Serif" font-size="10.00"># get_bmi_model_time</text>
+<text text-anchor="start" x="208" y="-90" font-family="Helvetica,sans-Serif" font-size="10.00">_step_size_ptr()</text>
+<text text-anchor="start" x="208" y="-79" font-family="Helvetica,sans-Serif" font-size="10.00"># retrieve_bmi_model</text>
+<text text-anchor="start" x="208" y="-68" font-family="Helvetica,sans-Serif" font-size="10.00">_time_step_size()</text>
+<text text-anchor="start" x="208" y="-57" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; construct_and_init</text>
+<text text-anchor="start" x="208" y="-46" font-family="Helvetica,sans-Serif" font-size="10.00">_backing_model_for_type()</text>
+<text text-anchor="start" x="208" y="-35" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; finalizeForCppAdapter()</text>
+</a>
+</g>
+</g>
+<!-- Node7&#45;&gt;Node8 -->
 <g id="edge7" class="edge">
-<title>Node7&#45;&gt;Node5</title>
-<path fill="none" stroke="midnightblue" d="M179.02,-926.3C176.33,-850.82 170.13,-765.16 157,-688 155.98,-682 154.83,-675.86 153.6,-669.68"/>
-<polygon fill="none" stroke="midnightblue" points="175.52,-926.53 179.36,-936.41 182.52,-926.3 175.52,-926.53"/>
+<title>Node7&#45;&gt;Node8</title>
+<path fill="none" stroke="midnightblue" d="M266.5,-459.01C266.5,-441.52 266.5,-423 266.5,-404.31"/>
+<polygon fill="none" stroke="midnightblue" points="263,-459.18 266.5,-469.18 270,-459.18 263,-459.18"/>
+</g>
+<!-- Node9&#45;&gt;Node5 -->
+<g id="edge9" class="edge">
+<title>Node9&#45;&gt;Node5</title>
+<path fill="none" stroke="midnightblue" d="M82.25,-926.34C85.52,-838.55 89.17,-740.48 91.81,-669.56"/>
+<polygon fill="none" stroke="midnightblue" points="78.75,-926.32 81.87,-936.45 85.74,-926.58 78.75,-926.32"/>
+</g>
+<!-- Node10&#45;&gt;Node7 -->
+<g id="edge11" class="edge">
+<title>Node10&#45;&gt;Node7</title>
+<path fill="none" stroke="midnightblue" d="M275.33,-926.34C273.15,-838.55 270.72,-740.48 268.96,-669.56"/>
+<polygon fill="none" stroke="midnightblue" points="271.84,-926.54 275.58,-936.45 278.83,-926.36 271.84,-926.54"/>
 </g>
 </g>
 </svg>

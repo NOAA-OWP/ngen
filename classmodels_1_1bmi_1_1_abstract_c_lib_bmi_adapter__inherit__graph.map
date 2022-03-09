@@ -1,8 +1,10 @@
 <map id="models::bmi::AbstractCLibBmiAdapter&lt; C &gt;" name="models::bmi::AbstractCLibBmiAdapter&lt; C &gt;">
-<area shape="rect" id="node1" title=" " alt="" coords="11,1499,203,1767"/>
-<area shape="rect" id="node5" href="$classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html" title=" " alt="" coords="11,1829,203,2097"/>
-<area shape="rect" id="node2" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title=" " alt="" coords="5,932,208,1449"/>
-<area shape="rect" id="node3" href="$classbmi_1_1_bmi.html" title=" " alt="" coords="20,5,183,303"/>
-<area shape="rect" id="node4" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title="Abstract adapter interface for C++ classes to interact with the essential aspects of external models ..." alt="" coords="123,352,325,869"/>
-<area shape="rect" id="node6" href="$classmodels_1_1bmi_1_1_bmi___c___adapter.html" title="An adapter class to serve as a C++ interface to the essential aspects of external models written in t..." alt="" coords="17,2147,196,2723"/>
+<area shape="rect" id="node1" title=" " alt="" coords="113,1499,305,1767"/>
+<area shape="rect" id="node5" href="$classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html" title=" " alt="" coords="5,1829,197,2097"/>
+<area shape="rect" id="node7" href="$classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html" title=" " alt="" coords="221,1829,413,2097"/>
+<area shape="rect" id="node2" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title=" " alt="" coords="108,932,311,1449"/>
+<area shape="rect" id="node3" href="$classbmi_1_1_bmi.html" title=" " alt="" coords="123,5,285,303"/>
+<area shape="rect" id="node4" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title="Abstract adapter interface for C++ classes to interact with the essential aspects of external models ..." alt="" coords="225,352,428,869"/>
+<area shape="rect" id="node6" href="$classmodels_1_1bmi_1_1_bmi___c___adapter.html" title="An adapter class to serve as a C++ interface to the essential aspects of external models written in t..." alt="" coords="12,2147,191,2723"/>
+<area shape="rect" id="node8" href="$classmodels_1_1bmi_1_1_bmi___cpp___adapter.html" title="A thin wrapper class to provide convenience functions around raw BMI models written in C++,..." alt="" coords="229,2183,406,2686"/>
 </map>

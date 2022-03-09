@@ -1,6 +1,7 @@
 <map id="realization::Bmi_Module_Formulation&lt; M &gt;" name="realization::Bmi_Module_Formulation&lt; M &gt;">
 <area shape="rect" id="node1" title="Abstraction of a formulation with a single backing model object that implements the BMI." alt="" coords="305,1465,502,2540"/>
-<area shape="rect" id="node11" href="$classrealization_1_1_bmi___module___formulation.html" title=" " alt="" coords="305,2617,502,3707"/>
+<area shape="rect" id="node11" href="$classrealization_1_1_bmi___module___formulation.html" title=" " alt="" coords="194,2617,391,3707"/>
+<area shape="rect" id="node13" href="$classrealization_1_1_bmi___module___formulation.html" title=" " alt="" coords="415,2617,613,3707"/>
 <area shape="rect" id="node2" href="$classrealization_1_1_bmi___formulation.html" title="Abstraction of formulation with backing model object(s) that implements the BMI." alt="" coords="305,855,502,1416"/>
 <area shape="rect" id="node3" href="$classrealization_1_1_catchment___formulation.html" title=" " alt="" coords="203,552,399,805"/>
 <area shape="rect" id="node4" href="$classrealization_1_1_formulation.html" title=" " alt="" coords="5,235,188,503"/>
@@ -10,5 +11,6 @@
 <area shape="rect" id="node7" href="$class_h_y___catchment_realization.html" title=" " alt="" coords="259,5,459,185"/>
 <area shape="rect" id="node8" href="$class_g_m___object.html" title=" " alt="" coords="483,49,598,141"/>
 <area shape="rect" id="node10" href="$classforcing_1_1_forcing_provider.html" title="An abstraction interface for types that provides forcing data." alt="" coords="423,567,591,791"/>
-<area shape="rect" id="node12" href="$classrealization_1_1_bmi___c___formulation.html" title=" " alt="" coords="310,3756,497,4039"/>
+<area shape="rect" id="node12" href="$classrealization_1_1_bmi___c___formulation.html" title=" " alt="" coords="199,3756,386,4039"/>
+<area shape="rect" id="node14" href="$classrealization_1_1_bmi___cpp___formulation.html" title="Encapsulates a bmi::Bmi model in C++ such that it can be loaded as a formulation, as such also so tha..." alt="" coords="421,3756,607,4039"/>
 </map>

@@ -12,6 +12,11 @@ var hierarchy =
           [ "models::bmi::Bmi_C_Adapter", "classmodels_1_1bmi_1_1_bmi___c___adapter.html", null ]
         ] ]
       ] ],
+      [ "models::bmi::Bmi_Adapter< Cpp_Bmi >", "classmodels_1_1bmi_1_1_bmi___adapter.html", [
+        [ "models::bmi::AbstractCLibBmiAdapter< Cpp_Bmi >", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html", [
+          [ "models::bmi::Bmi_Cpp_Adapter", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html", null ]
+        ] ]
+      ] ],
       [ "models::bmi::Bmi_Adapter< T >", "classmodels_1_1bmi_1_1_bmi___adapter.html", null ]
     ] ],
     [ "boost::dfs_visitor", null, [
@@ -47,6 +52,9 @@ var hierarchy =
       [ "realization::Bmi_Formulation", "classrealization_1_1_bmi___formulation.html", [
         [ "realization::Bmi_Module_Formulation< models::bmi::Bmi_C_Adapter >", "classrealization_1_1_bmi___module___formulation.html", [
           [ "realization::Bmi_C_Formulation", "classrealization_1_1_bmi___c___formulation.html", null ]
+        ] ],
+        [ "realization::Bmi_Module_Formulation< models::bmi::Bmi_Cpp_Adapter >", "classrealization_1_1_bmi___module___formulation.html", [
+          [ "realization::Bmi_Cpp_Formulation", "classrealization_1_1_bmi___cpp___formulation.html", null ]
         ] ],
         [ "realization::Bmi_Module_Formulation< M >", "classrealization_1_1_bmi___module___formulation.html", null ],
         [ "realization::Bmi_Multi_Formulation", "classrealization_1_1_bmi___multi___formulation.html", null ]
