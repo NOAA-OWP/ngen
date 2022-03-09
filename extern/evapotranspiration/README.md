@@ -2,11 +2,11 @@
 
 ## About
 
-This directory wraps the *pet* Git submodule repo, which contains a clone of the repo for the OWP PET module library that implements BMI.  From here, the shared library file for the PET module can be built for use in NGen.  This is configured with the [CMakeLists.txt](CMakeLists.txt) and other files in this outer directory.
+This directory wraps the *PET* Git submodule repo, which contains a clone of the repo for the OWP PET module library that implements BMI.  From here, the shared library file for the PET module can be built for use in NGen.  This is configured with the [CMakeLists.txt](CMakeLists.txt) and other files in this outer directory.
 
 #### Extra Outer Directory
 
-Currently there are two directory layers beneath the top-level *extern/* directory.  This was done so that certain things used by NGen (i.e., a *CMakeLists.txt* file for building shared library files) can be placed alongside, but not within, the submodule.
+Currently there are two directory layers beneath the top-level *extern/* directory. While this module has its CMakeLists.txt within the submodule, at present this extra directory exists primarily to be consistent with other modules which have their CMakeLists.txt files in the interstitial directory (this may change in the future).
 
 ## Working with the Submodule
 
