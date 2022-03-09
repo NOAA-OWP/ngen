@@ -433,7 +433,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetResponse_0_b) {
     for (int i = 0; i < 39; i++) {
         response = formulation.get_response(i, 3600);
     }
-    double expected = 4.866464273262429e-08;
+    double expected = 2.7809780039160068e-08;
     ASSERT_EQ(expected, response);
 }
 
@@ -463,7 +463,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetResponse_1_b) {
     for (int i = 0; i < 39; i++) {
         response = formulation.get_response(i, 3600);
     }
-    double expected = 4.866464273262429e-08;
+    double expected = 2.7809780039160068e-08;
     ASSERT_EQ(expected, response);
 }
 
@@ -495,7 +495,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_0_b) {
         formulation.get_response(i++, 3600);
     formulation.get_response(i, 3600);
     std::string output = formulation.get_output_line_for_timestep(i, ",");
-    ASSERT_EQ(output, "0.000002,199280.000000");
+    ASSERT_EQ(output, "0.000001,199280.000000");
 }
 
 /**
@@ -526,7 +526,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_1_b) {
         formulation.get_response(i++, 3600);
     formulation.get_response(i, 3600);
     std::string output = formulation.get_output_line_for_timestep(i, ",");
-    ASSERT_EQ(output, "0.000002,199280.000000,543.000000");
+    ASSERT_EQ(output, "0.000001,199280.000000,543.000000");
 }
 
 #endif // NGEN_BMI_C_LIB_ACTIVE || NGEN_BMI_FORTRAN_ACTIVE || ACTIVATE_PYTHON
