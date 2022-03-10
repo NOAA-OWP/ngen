@@ -374,7 +374,7 @@ namespace realization {
 
             // check if output is available from BMI
             std::string bmi_var_name;
-            get_bmi_var_name(output_name, bmi_var_name);
+            get_bmi_output_var_name(output_name, bmi_var_name);
             
             if( !bmi_var_name.empty() )
             {
@@ -444,19 +444,28 @@ namespace realization {
          * @param name 
          * @param bmi_var_name 
          */
-        inline void get_bmi_var_name(const std::string &name, std::string &bmi_var_name)
+        inline void get_bmi_output_var_name(const std::string &name, std::string &bmi_var_name)
         {
+            //check standard output names first
             std::vector<std::string> output_names = get_bmi_model()->GetOutputVarNames();
             if (std::find(output_names.begin(), output_names.end(), name) != output_names.end()) {
                 bmi_var_name = name;
             }
-            else {
+            else
+            {
+                //check mapped names
+                std::string mapped_name;
                 for (auto & iter : bmi_var_names_map) {
                     if (iter.second == name) {
-                        bmi_var_name = iter.first;
+                        mapped_name = iter.first;
                         break;
                     }
                 }
+                //ensure mapped name maps to an output variable, see GH #393 =)
+                if (std::find(output_names.begin(), output_names.end(), mapped_name) != output_names.end()){
+                    bmi_var_name = mapped_name;
+                }
+                //else not an output variable
             }
         }
 
