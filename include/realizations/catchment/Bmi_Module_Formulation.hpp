@@ -438,6 +438,8 @@ namespace realization {
             return get_bmi_model()->GetOutputVarNames();
         }
 
+    protected:
+
         /**
          * @brief Get correct BMI variable name, which may be the output or something mapped to this output.
          * 
@@ -468,8 +470,6 @@ namespace realization {
                 //else not an output variable
             }
         }
-
-    protected:
 
         /**
          * @brief Check for implementation of internal calculators/data for a given requsted output_name
