@@ -16,9 +16,9 @@
 #include "Bmi_Module_Formulation.hpp"
 #include "Bmi_C_Formulation.hpp"
 #include "gtest/gtest.h"
+#include "gmock/gmock.h"
 #include <iostream>
 #include <vector>
-#include <regex>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include "FileChecker.h"
@@ -26,6 +26,7 @@
 #include "Forcing.h"
 #include <boost/date_time.hpp>
 
+using ::testing::MatchesRegex;
 using namespace realization;
 
 class Bmi_C_Formulation_Test : public ::testing::Test {
@@ -306,8 +307,7 @@ TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_0_a) {
 
     formulation.get_response(0, 3600);
     std::string output = formulation.get_output_line_for_timestep(0, ",");
-    std::regex expected ("(-?)0.000000,(-?)0.000000");
-    ASSERT_TRUE(std::regex_match(output, expected));
+    EXPECT_THAT(output, MatchesRegex("-?0.000000,-?0.000000"));
 }
 
 /** Simple test of output with modified variables. */
@@ -323,8 +323,7 @@ TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_1_a) {
     // OUTPUT_VAR_1 first.
     formulation.get_response(0, 3600);
     std::string output = formulation.get_output_line_for_timestep(0, ",");
-    std::regex expected ("(-?)0.000000,(-?)0.000000");
-    ASSERT_TRUE(std::regex_match(output, expected));
+    EXPECT_THAT(output, MatchesRegex("-?0.000000,-?0.000000"));
 }
 
 /** Simple test of output with modified variables, picking time step when there was non-zero rain rate. */
@@ -339,8 +338,7 @@ TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_1_b) {
         formulation.get_response(i++, 3600);
     formulation.get_response(i, 3600);
     std::string output = formulation.get_output_line_for_timestep(i, ",");
-    std::regex expected ("(-?)0.000000,0.000001");
-    ASSERT_TRUE(std::regex_match(output, expected));
+    EXPECT_THAT(output, MatchesRegex("-?0.000000,0.000001"));
 }
 
 TEST_F(Bmi_C_Formulation_Test, determine_model_time_offset_0_a) {
