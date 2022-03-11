@@ -178,9 +178,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a4dd38ab58f5d4574198b0090074fe7e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5ecf0d920c608d0209e9417998749c09"><td class="memItemLeft" align="right" valign="top">const vector&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___module___formulation.html#a5ecf0d920c608d0209e9417998749c09">get_bmi_output_variables</a> () override</td></tr>
 <tr class="separator:a5ecf0d920c608d0209e9417998749c09"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4552d7b1df9cc02928afa7c8888c4a93"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___module___formulation.html#a4552d7b1df9cc02928afa7c8888c4a93">get_bmi_var_name</a> (const std::string &amp;name, std::string &amp;bmi_var_name)</td></tr>
-<tr class="memdesc:a4552d7b1df9cc02928afa7c8888c4a93"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get correct BMI variable name, which may be the output or something mapped to this output.  <a href="classrealization_1_1_bmi___module___formulation.html#a4552d7b1df9cc02928afa7c8888c4a93">More...</a><br /></td></tr>
-<tr class="separator:a4552d7b1df9cc02928afa7c8888c4a93"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a71539f348de57ae368bfd8bdcd6ef1d5"><td class="memItemLeft" align="right" valign="top">virtual time_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___formulation.html#a71539f348de57ae368bfd8bdcd6ef1d5">convert_model_time</a> (const double &amp;model_time)=0</td></tr>
 <tr class="memdesc:a71539f348de57ae368bfd8bdcd6ef1d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a time value from the model to an epoch time in seconds.  <a href="classrealization_1_1_bmi___formulation.html#a71539f348de57ae368bfd8bdcd6ef1d5">More...</a><br /></td></tr>
 <tr class="separator:a71539f348de57ae368bfd8bdcd6ef1d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -241,6 +238,9 @@ Static Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
+<tr class="memitem:ac55380d68e7f2eee47f498095d6a4a9e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___module___formulation.html#ac55380d68e7f2eee47f498095d6a4a9e">get_bmi_output_var_name</a> (const std::string &amp;name, std::string &amp;bmi_var_name)</td></tr>
+<tr class="memdesc:ac55380d68e7f2eee47f498095d6a4a9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get correct BMI variable name, which may be the output or something mapped to this output.  <a href="classrealization_1_1_bmi___module___formulation.html#ac55380d68e7f2eee47f498095d6a4a9e">More...</a><br /></td></tr>
+<tr class="separator:ac55380d68e7f2eee47f498095d6a4a9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5fe531a9cb651ed42fd8fdcb78dbef6d"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a5fe531a9cb651ed42fd8fdcb78dbef6d"><td class="memTemplItemLeft" align="right" valign="top">T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___module___formulation.html#a5fe531a9cb651ed42fd8fdcb78dbef6d">check_internal_providers</a> (std::string output_name)</td></tr>
 <tr class="memdesc:a5fe531a9cb651ed42fd8fdcb78dbef6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check for implementation of internal calculators/data for a given requsted output_name.  <a href="classrealization_1_1_bmi___module___formulation.html#a5fe531a9cb651ed42fd8fdcb78dbef6d">More...</a><br /></td></tr>
@@ -1198,7 +1198,7 @@ template&lt;class M &gt; </div>
 
 <p class="reference">References <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aab10faeb241f2c3fc38794576e8f4e66">realization::Bmi_Module_Formulation&lt; M &gt;::bmi_model</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ad8d9a56ad3614fb821d88f623030defc">realization::Bmi_Module_Formulation&lt; M &gt;::calc_et()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a39cf248257ea2a34052fa65ad08bf2ba">realization::Bmi_Module_Formulation&lt; M &gt;::determine_model_time_offset()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a2c28bec93c9e541a24b2e692a3ee3406">realization::Bmi_Module_Formulation&lt; M &gt;::get_available_forcing_outputs()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a4dd38ab58f5d4574198b0090074fe7e1">realization::Bmi_Module_Formulation&lt; M &gt;::get_bmi_input_variables()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a5ecf0d920c608d0209e9417998749c09">realization::Bmi_Module_Formulation&lt; M &gt;::get_bmi_output_variables()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a4552d7b1df9cc02928afa7c8888c4a93">realization::Bmi_Module_Formulation&lt; M &gt;::get_bmi_var_name()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ab9961eb8ca3f725a847a9c756ae62aa5">realization::Bmi_Module_Formulation&lt; M &gt;::get_model_current_time()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9de6583471d63bd31481a01b2436b91b">realization::Bmi_Module_Formulation&lt; M &gt;::get_model_end_time()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a7f11d9a147cbba2f191988995e171f75">realization::Bmi_Module_Formulation&lt; M &gt;::get_value()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a1456df2666b8e7e33da01a5a14f6591e">realization::Bmi_Module_Formulation&lt; M &gt;::inner_create_formulation()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aa04167ad9a3f4c384673ef1157fb3cb8">realization::Bmi_Module_Formulation&lt; M &gt;::set_model_inputs_prior_to_update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ad8d9a56ad3614fb821d88f623030defc">realization::Bmi_Module_Formulation&lt; M &gt;::calc_et()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a39cf248257ea2a34052fa65ad08bf2ba">realization::Bmi_Module_Formulation&lt; M &gt;::determine_model_time_offset()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a2c28bec93c9e541a24b2e692a3ee3406">realization::Bmi_Module_Formulation&lt; M &gt;::get_available_forcing_outputs()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a4dd38ab58f5d4574198b0090074fe7e1">realization::Bmi_Module_Formulation&lt; M &gt;::get_bmi_input_variables()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ac55380d68e7f2eee47f498095d6a4a9e">realization::Bmi_Module_Formulation&lt; M &gt;::get_bmi_output_var_name()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a5ecf0d920c608d0209e9417998749c09">realization::Bmi_Module_Formulation&lt; M &gt;::get_bmi_output_variables()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ab9961eb8ca3f725a847a9c756ae62aa5">realization::Bmi_Module_Formulation&lt; M &gt;::get_model_current_time()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9de6583471d63bd31481a01b2436b91b">realization::Bmi_Module_Formulation&lt; M &gt;::get_model_end_time()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a7f11d9a147cbba2f191988995e171f75">realization::Bmi_Module_Formulation&lt; M &gt;::get_value()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a1456df2666b8e7e33da01a5a14f6591e">realization::Bmi_Module_Formulation&lt; M &gt;::inner_create_formulation()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aa04167ad9a3f4c384673ef1157fb3cb8">realization::Bmi_Module_Formulation&lt; M &gt;::set_model_inputs_prior_to_update()</a>.</p>
 
 </div>
 </div>
@@ -1235,6 +1235,57 @@ template&lt;class M &gt; </div>
 
 </div>
 </div>
+<a id="ac55380d68e7f2eee47f498095d6a4a9e" name="ac55380d68e7f2eee47f498095d6a4a9e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac55380d68e7f2eee47f498095d6a4a9e">&#9670;&nbsp;</a></span>get_bmi_output_var_name()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class M &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classrealization_1_1_bmi___module___formulation.html">realization::Bmi_Module_Formulation</a>&lt; M &gt;::get_bmi_output_var_name </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string &amp;&#160;</td>
+          <td class="paramname"><em>bmi_var_name</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get correct BMI variable name, which may be the output or something mapped to this output. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td></td></tr>
+    <tr><td class="paramname">bmi_var_name</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a66a7020fd4b35a6e3f32348a680e92c1">realization::Bmi_Module_Formulation&lt; M &gt;::bmi_var_names_map</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a01639b29fee1e578097326ce85cd0472">realization::Bmi_Module_Formulation&lt; M &gt;::get_bmi_model()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a7f11d9a147cbba2f191988995e171f75">realization::Bmi_Module_Formulation&lt; M &gt;::get_value()</a>.</p>
+
+</div>
+</div>
 <a id="a5ecf0d920c608d0209e9417998749c09" name="a5ecf0d920c608d0209e9417998749c09"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5ecf0d920c608d0209e9417998749c09">&#9670;&nbsp;</a></span>get_bmi_output_variables()</h2>
 
@@ -1265,57 +1316,6 @@ template&lt;class M &gt; </div>
 <p class="reference">References <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a01639b29fee1e578097326ce85cd0472">realization::Bmi_Module_Formulation&lt; M &gt;::get_bmi_model()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a8d72af0f3a7f4057d69ec975246061fa">realization::Bmi_Module_Formulation&lt; M &gt;::is_bmi_output_variable()</a>.</p>
-
-</div>
-</div>
-<a id="a4552d7b1df9cc02928afa7c8888c4a93" name="a4552d7b1df9cc02928afa7c8888c4a93"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4552d7b1df9cc02928afa7c8888c4a93">&#9670;&nbsp;</a></span>get_bmi_var_name()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class M &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="classrealization_1_1_bmi___module___formulation.html">realization::Bmi_Module_Formulation</a>&lt; M &gt;::get_bmi_var_name </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string &amp;&#160;</td>
-          <td class="paramname"><em>bmi_var_name</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Get correct BMI variable name, which may be the output or something mapped to this output. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">name</td><td></td></tr>
-    <tr><td class="paramname">bmi_var_name</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p class="reference">References <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a66a7020fd4b35a6e3f32348a680e92c1">realization::Bmi_Module_Formulation&lt; M &gt;::bmi_var_names_map</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a01639b29fee1e578097326ce85cd0472">realization::Bmi_Module_Formulation&lt; M &gt;::get_bmi_model()</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a7f11d9a147cbba2f191988995e171f75">realization::Bmi_Module_Formulation&lt; M &gt;::get_value()</a>.</p>
 
 </div>
 </div>
@@ -2091,7 +2091,7 @@ template&lt;class M &gt; </div>
 
 <p>Implements <a class="el" href="classforcing_1_1_forcing_provider.html#a84ca58d5a524d1f07ef8e062a97e8301">forcing::ForcingProvider</a>.</p>
 
-<p class="reference">References <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a2c28bec93c9e541a24b2e692a3ee3406">realization::Bmi_Module_Formulation&lt; M &gt;::get_available_forcing_outputs()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a01639b29fee1e578097326ce85cd0472">realization::Bmi_Module_Formulation&lt; M &gt;::get_bmi_model()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a4552d7b1df9cc02928afa7c8888c4a93">realization::Bmi_Module_Formulation&lt; M &gt;::get_bmi_var_name()</a>, <a class="el" href="class_units_helper.html#a5b1a7a720885a985480f58c8991335b5">UnitsHelper::get_converted_value()</a>, <a class="el" href="classrealization_1_1_formulation.html#a2e9d4749500d3f5ea434d77861b03990">realization::Formulation::get_formulation_type()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a37a94300d3a9c3d9ead78687cccb3ff6">realization::Bmi_Module_Formulation&lt; M &gt;::get_var_value_as_double()</a>.</p>
+<p class="reference">References <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a2c28bec93c9e541a24b2e692a3ee3406">realization::Bmi_Module_Formulation&lt; M &gt;::get_available_forcing_outputs()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a01639b29fee1e578097326ce85cd0472">realization::Bmi_Module_Formulation&lt; M &gt;::get_bmi_model()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ac55380d68e7f2eee47f498095d6a4a9e">realization::Bmi_Module_Formulation&lt; M &gt;::get_bmi_output_var_name()</a>, <a class="el" href="class_units_helper.html#a5b1a7a720885a985480f58c8991335b5">UnitsHelper::get_converted_value()</a>, <a class="el" href="classrealization_1_1_formulation.html#a2e9d4749500d3f5ea434d77861b03990">realization::Formulation::get_formulation_type()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a37a94300d3a9c3d9ead78687cccb3ff6">realization::Bmi_Module_Formulation&lt; M &gt;::get_var_value_as_double()</a>.</p>
 
 </div>
 </div>
@@ -3660,7 +3660,7 @@ template&lt;class M &gt; </div>
 
 <p>A configured mapping of BMI model variable names to standard names for use inside the framework. </p>
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a2c28bec93c9e541a24b2e692a3ee3406">realization::Bmi_Module_Formulation&lt; M &gt;::get_available_forcing_outputs()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a4552d7b1df9cc02928afa7c8888c4a93">realization::Bmi_Module_Formulation&lt; M &gt;::get_bmi_var_name()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a054120ab736b626daef5fcd0d2d65c5e">realization::Bmi_Module_Formulation&lt; M &gt;::get_config_mapped_variable_name()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a1456df2666b8e7e33da01a5a14f6591e">realization::Bmi_Module_Formulation&lt; M &gt;::inner_create_formulation()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a2c28bec93c9e541a24b2e692a3ee3406">realization::Bmi_Module_Formulation&lt; M &gt;::get_available_forcing_outputs()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ac55380d68e7f2eee47f498095d6a4a9e">realization::Bmi_Module_Formulation&lt; M &gt;::get_bmi_output_var_name()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a054120ab736b626daef5fcd0d2d65c5e">realization::Bmi_Module_Formulation&lt; M &gt;::get_config_mapped_variable_name()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a1456df2666b8e7e33da01a5a14f6591e">realization::Bmi_Module_Formulation&lt; M &gt;::inner_create_formulation()</a>.</p>
 
 </div>
 </div>
@@ -4181,7 +4181,7 @@ template&lt;class M &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li><li class="navelem"><a class="el" href="classrealization_1_1_bmi___module___formulation.html">Bmi_Module_Formulation</a></li>
-    <li class="footer">Generated on Thu Mar 10 2022 18:05:36 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3 </li>
+    <li class="footer">Generated on Fri Mar 11 2022 16:20:34 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3 </li>
   </ul>
 </div>
 </body>
