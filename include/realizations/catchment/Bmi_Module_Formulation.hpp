@@ -447,10 +447,20 @@ namespace realization {
         /**
          * @brief Get correct BMI variable name, which may be the output or something mapped to this output.
          * 
-         * @param name 
-         * @param bmi_var_name 
+         * This function will introspectively look at this modules BMI variables for @p name
+         * If the name is recognized by the BMI module, @p bmi_var_name will be @p name
+         * Otherwise, name map aliases will be searched for @p name and if that alias is found
+         * then @p bmi_var_name will be set to the BMI variable name associated with that alias.
+         * 
+         * When using BMI_ANY_VAR type, this function will first search BMI output variables known to this module
+         * and then will search BMI input variables known to this module.  If the context of the variable is known
+         * and/or important, it should be passed to this function to avoid potential suble issues. (see GH issue #393)
+         * 
+         * @param name Name/alias to validate
+         * @param bmi_var_name Output variable to put the BMI variable into.
+         * @param type Type of BMI variable to validate, defaults to BMI_ANY_VAR
          */
-        inline void get_bmi_alias(const std::string &name, std::string &bmi_var_name, BMI_VAR_TYPE type)
+        inline void get_bmi_alias(const std::string &name, std::string &bmi_var_name, BMI_VAR_TYPE type = BMI_ANY_VAR)
         {
             std::vector<std::string> names;
             switch(type){
