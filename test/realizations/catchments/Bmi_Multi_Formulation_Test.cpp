@@ -295,13 +295,11 @@ private:
     }
 
     inline void buildExampleConfig(const int ex_index) {
-        int i = 0;
-
         std::string config =
                 "{\n"
                 "    \"global\": {},\n"
                 "    \"catchments\": {\n"
-                "        \"" + catchment_ids[i] + "\": {\n"
+                "        \"" + catchment_ids[ex_index] + "\": {\n"
                 "            \"formulations\": [\n"
                 "                {\n"
                 "                    \"name\": \"" + std::string(BMI_MULTI_TYPE) + "\",\n"
