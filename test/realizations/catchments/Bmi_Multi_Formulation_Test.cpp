@@ -41,6 +41,12 @@ protected:
         return formulation.get_bmi_main_output_var();
     }
 
+    static const std::vector<std::shared_ptr<forcing::OptionalWrappedProvider>> &get_friend_deferred_providers(
+            const Bmi_Multi_Formulation& formulation)
+    {
+        return formulation.deferredProviders;
+    }
+
     static std::string get_friend_nested_module_main_output_variable(const Bmi_Multi_Formulation& formulation,
                                                                      const int nested_index) {
         return formulation.modules[nested_index]->get_bmi_main_output_var();
@@ -466,6 +472,16 @@ TEST_F(Bmi_Multi_Formulation_Test, Initialize_0_a) {
     ASSERT_EQ(get_friend_is_bmi_using_forcing_file(formulation), uses_forcing_file[ex_index]);
 }
 
+/** Test to make sure the model config from example 0 initializes no deferred providers. */
+TEST_F(Bmi_Multi_Formulation_Test, Initialize_0_b) {
+    int ex_index = 0;
+
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+
+    ASSERT_EQ(get_friend_deferred_providers(formulation).size(), 0);
+}
+
 /** Simple test to make sure the model config from example 1 initializes. */
 TEST_F(Bmi_Multi_Formulation_Test, Initialize_1_a) {
     int ex_index = 1;
@@ -479,6 +495,16 @@ TEST_F(Bmi_Multi_Formulation_Test, Initialize_1_a) {
     ASSERT_EQ(get_friend_nested_module_main_output_variable(formulation, 1), nested_module_main_output_variables[ex_index][1]);
     ASSERT_EQ(get_friend_bmi_main_output_var(formulation), main_output_variables[ex_index]);
     ASSERT_EQ(get_friend_is_bmi_using_forcing_file(formulation), uses_forcing_file[ex_index]);
+}
+
+/** Test to make sure the model config from example 1 initializes no deferred providers. */
+TEST_F(Bmi_Multi_Formulation_Test, Initialize_1_b) {
+    int ex_index = 1;
+
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+
+    ASSERT_EQ(get_friend_deferred_providers(formulation).size(), 0);
 }
 
 /** Simple test to make sure the model config from example 2 does not initialize because of a bad config alias. */
@@ -501,6 +527,30 @@ TEST_F(Bmi_Multi_Formulation_Test, Initialize_3_a) {
     ASSERT_EQ(get_friend_nested_module_main_output_variable(formulation, 1), nested_module_main_output_variables[ex_index][1]);
     ASSERT_EQ(get_friend_bmi_main_output_var(formulation), main_output_variables[ex_index]);
     ASSERT_EQ(get_friend_is_bmi_using_forcing_file(formulation), uses_forcing_file[ex_index]);
+}
+
+/** Test to make sure the model config from example 3 initializes expected number of deferred providers. */
+TEST_F(Bmi_Multi_Formulation_Test, Initialize_3_b) {
+    int ex_index = 3;
+
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+
+    ASSERT_GT(get_friend_deferred_providers(formulation).size(), 0);
+}
+
+/** Test to make sure the model config from example 3 initializes wrapepd provider of deferred providers properly. */
+TEST_F(Bmi_Multi_Formulation_Test, Initialize_3_c) {
+    int ex_index = 3;
+
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+
+    const std::vector<std::shared_ptr<forcing::OptionalWrappedProvider>> deferred = get_friend_deferred_providers(
+            formulation);
+    for (size_t i = 0; i < deferred.size(); ++i) {
+        ASSERT_TRUE(deferred[i]->isWrappedProviderSet());
+    }
 }
 
 /**
