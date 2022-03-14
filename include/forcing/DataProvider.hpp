@@ -20,6 +20,12 @@ namespace data_access
 
         public:
 
+        enum ReSampleMethod
+        {
+            MEAN,
+            SUM
+        };
+
         virtual ~DataProvider() = default;
 
         /** Return the variables that are accessable by this data provider */
@@ -28,11 +34,14 @@ namespace data_access
 
         /** Return the first valid time for which data from the request variable  can be requested */
 
-        virtual int get_data_start_time(std::string var) = 0;
+        virtual long get_data_start_time() = 0;
 
         /** Return the last valid time for which data from the requested variable can be requested */
 
-        virtual int get_data_stop_time(std::string var) = 0;
+        virtual long get_data_stop_time() = 0;
+
+        /** Return the last valid time for which data from the requested variable can be requested */
+        virtual long record_duration() = 0;
 
         /**
          * Get the index of the data time step that contains the given point in time.
@@ -55,11 +64,12 @@ namespace data_access
          * @param init_time_epoch The epoch time (in seconds) of the start of the time period.
          * @param duration_seconds The length of the time period, in seconds.
          * @param output_units The expected units of the desired output value.
+         * @param m How data is to be resampled if there is a mismatch in data alignment or repeat rate
          * @return The value of the forcing property for the described time period, with units converted if needed.
          * @throws std::out_of_range If data for the time period is not available.
          */
         virtual data_type get_value(selection_type selector, const std::string &variable_name, const time_t &init_time, const long &duration_s,
-                                 const std::string &output_units) = 0;
+                                 const std::string &output_units, ReSampleMethod m=SUM) = 0;
 
         private:
     };

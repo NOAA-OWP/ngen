@@ -24,7 +24,7 @@ class NetCDFPerFeatureDataProviderTest : public ::testing::Test {
 
     void setupForcing();
 
-    std::shared_ptr<data_access::NetCDFPerFeatureDataProvider> Forcing_Object;
+    std::shared_ptr<data_access::NetCDFPerFeatureDataProvider> nc_provider;
 
     typedef struct tm time_type;
 
@@ -49,7 +49,7 @@ void NetCDFPerFeatureDataProviderTest::TearDown()
 //Construct a forcing object
 void NetCDFPerFeatureDataProviderTest::setupForcing()
 {
-    Forcing_Object = std::make_shared<data_access::NetCDFPerFeatureDataProvider>("/local/ngen/data/huc01/huc_01/forcing/netcdf/huc01.nc");
+    nc_provider = std::make_shared<data_access::NetCDFPerFeatureDataProvider>("/local/ngen/data/huc01/huc_01/forcing/netcdf/huc01.nc");
     start_date_time = std::make_shared<time_type>();
     end_date_time = std::make_shared<time_type>();
 }
@@ -57,8 +57,6 @@ void NetCDFPerFeatureDataProviderTest::setupForcing()
 ///Test AORC Forcing Object
 TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataRead)
 {
-    std::shared_ptr<NetCDFPerFeatureDataProvider> nc_provider = std::make_shared<NetCDFPerFeatureDataProvider>("/local/ngen/data/huc01/huc_01/forcing/netcdf/huc01.nc");
-
     // check to see that the variable "T2D" exists
     auto var_names = nc_provider->get_avaliable_variable_names();
     auto pos = std::find(var_names.begin(), var_names.end(), "T2D");
@@ -73,7 +71,17 @@ TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataRead)
         FAIL();
     }
 
-    
-    //double val = Forcing_Object->get_value("cat-10095","RAINRATE",0,1,"mm/h");
-    //EXPECT_NEAR(current_precipitation, 6.9999999999999996e-07, 0.00000005);
+    auto start_time = nc_provider->get_data_start_time();
+    auto ids = nc_provider->get_ids();
+    auto duration = nc_provider->record_duration();
+
+    double val1 = nc_provider->get_value(ids[0], "T2D", start_time, duration, "K", data_access::NetCDFPerFeatureDataProvider::MEAN);
+    std::cout <<  val1 << "\n";
+
+    EXPECT_NEAR(val1, 263.1, 0.00000612);
+
+    double val2 = nc_provider->get_value(ids[0], "T2D", start_time, duration / 2, "K", data_access::NetCDFPerFeatureDataProvider::MEAN);
+    std::cout <<  val2 << "\n";
+
+    EXPECT_NEAR(val2, 263.1, 0.00000612);
 }
