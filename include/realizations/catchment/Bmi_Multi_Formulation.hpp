@@ -581,7 +581,7 @@ namespace realization {
             for (int d = 0; d < deferredProviders.size(); ++d) {
                 std::shared_ptr<forcing::OptionalWrappedProvider> &deferredProvider  = deferredProviders[d];
                 // Skip doing anything for any deferred provider that already has its backing provider set
-                if (!deferredProvider->isWrappedProviderSet())
+                if (deferredProvider->isWrappedProviderSet())
                     continue;
 
                 // TODO: improve this later; since defaults can be used, it is technically possible to grab something
@@ -693,36 +693,39 @@ namespace realization {
          * deferred wrapper provider as the provider for the variable in the nested module.
          *
          * @tparam T
-         * @param var_name The name of the required variable a nested module needs provided.
-         * @param framework_alias The framework alias of the required variable, so that it can be distinguished uniquely
-         *                        in the framework (will be the same as ``var_name`` except when another module uses the
-         *                        same name).
+         * @param bmi_input_var_name The name of the required input variable a nested module needs provided.
+         * @param framework_output_name The framework alias of the required output variable that will be provided to the
+         *                              aforementioned input variable (which may be the same as ``bmi_input_var_name``).
          * @param mod The nested module requiring a deferred wrapped provider for a variable.
          * @param mod_index The index of the given nested module in the ordering of all this instance's nested modules.
          */
         template<class T>
-        void setup_nested_deferred_provider(const std::string &var_name, const std::string &framework_alias,
-                                            std::shared_ptr<T> mod, int mod_index) {
+        void setup_nested_deferred_provider(const std::string &bmi_input_var_name,
+                                            const std::string &framework_output_name,
+                                            std::shared_ptr<T> mod,
+                                            int mod_index) {
+            // TODO: probably don't actually need bmi_input_var_name, and just can deal with framework_output_name
             // Create deferred, optional provider for providing this
             // Only include BMI variable name, as that's what'll be visible when associating to backing provider
             // It's "deferred" in that we'll set the backing later.
             // It's "optional" in that it waits to use backing provider, using the default some number of times
             std::shared_ptr<forcing::OptionalWrappedProvider> provider;
             // TODO: make sure only alias is needed
-            auto defs_it = default_output_values.find(framework_alias);
+            auto defs_it = default_output_values.find(framework_output_name);
             if (defs_it != default_output_values.end()) {
                 // TODO: consider also reading wait count from config
-                provider = std::make_shared<forcing::OptionalWrappedProvider>(var_name, defs_it->second, 1);
+                provider = std::make_shared<forcing::OptionalWrappedProvider>(framework_output_name, defs_it->second, 1);
             }
             else {
-                provider = std::make_shared<forcing::OptionalWrappedProvider>(var_name);
+                provider = std::make_shared<forcing::OptionalWrappedProvider>(framework_output_name);
             }
 
             // Add deferred to collection and module index to collection
             deferredProviders.push_back(provider);
             deferredProviderModuleIndices.push_back(mod_index);
             // Assign as provider within module
-            mod->input_forcing_providers[var_name] = provider;
+            // TODO: per TODO at top, probably can replace bmi_input_var_name here with framework_output_name
+            mod->input_forcing_providers[bmi_input_var_name] = provider;
         }
 
         /** The set of available "forcings" (output variables, plus their mapped aliases) this instance can provide. */
