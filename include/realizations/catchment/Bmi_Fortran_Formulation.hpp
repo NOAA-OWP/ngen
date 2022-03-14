@@ -109,6 +109,7 @@ namespace realization {
         friend class Bmi_Multi_Formulation;
 
         // Unit test access
+        friend class ::Bmi_Multi_Formulation_Test;
         friend class ::Bmi_Formulation_Test;
         friend class ::Bmi_Fortran_Formulation_Test;
 
