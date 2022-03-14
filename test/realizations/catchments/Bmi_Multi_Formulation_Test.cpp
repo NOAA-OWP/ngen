@@ -11,7 +11,10 @@
 #include "gtest/gtest.h"
 #include "Bmi_Multi_Formulation.hpp"
 #include "Bmi_Module_Formulation.hpp"
+#include "Bmi_Fortran_Formulation.hpp"
+#include "Bmi_Py_Formulation.hpp"
 #include "CsvPerFeatureForcingProvider.hpp"
+#include "ConfigurationException.hpp"
 #include "FileChecker.h"
 
 #ifdef ACTIVATE_PYTHON
@@ -50,6 +53,13 @@ protected:
     static std::string get_friend_nested_module_main_output_variable(const Bmi_Multi_Formulation& formulation,
                                                                      const int nested_index) {
         return formulation.modules[nested_index]->get_bmi_main_output_var();
+    }
+
+    template <class N>
+    static double get_friend_nested_var_value(const Bmi_Multi_Formulation& formulation, const int mod_index,
+                                         const std::string& var_name) {
+        std::shared_ptr<N> nested = std::static_pointer_cast<N>(formulation.modules[mod_index]);
+        return nested->get_var_value_as_double(var_name);
     }
 
     /*
@@ -612,6 +622,59 @@ TEST_F(Bmi_Multi_Formulation_Test, GetResponse_1_b) {
     double expected = 2.7809780039160068e-08;
     ASSERT_EQ(expected, response);
 }
+
+/**
+ * Simple test of get response in example 3, which uses a deferred provider.
+ */
+TEST_F(Bmi_Multi_Formulation_Test, GetResponse_3_a) {
+    int ex_index = 3;
+
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+
+    double response = formulation.get_response(0, 3600);
+    ASSERT_EQ(response, 00);
+}
+
+/**
+ * Test of get response in example 3, which uses a deferred provider, after several iterations.
+ */
+TEST_F(Bmi_Multi_Formulation_Test, GetResponse_3_b) {
+    int ex_index = 3;
+
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+
+    double response;
+    for (int i = 0; i < 39; i++) {
+        response = formulation.get_response(i, 3600);
+    }
+    double expected = 4.866464273262429e-08;
+    ASSERT_EQ(expected, response);
+}
+
+/**
+ * Test of get response in example 3, which uses a deferred provider, checking the values for several iterations.
+ */
+    TEST_F(Bmi_Multi_Formulation_Test, GetResponse_3_c) {
+        int ex_index = 3;
+
+        Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+        formulation.create_formulation(config_prop_ptree[ex_index]);
+
+        double response, mod_0_input_1, mod_1_output_2;
+        for (int i = 0; i < 39; i++) {
+            // Note that we need to get this before the "current" get_response ...
+            mod_1_output_2 = get_friend_nested_var_value<Bmi_Py_Formulation>(formulation, 1, "OUTPUT_VAR_2");
+            response = formulation.get_response(i, 3600);
+            // But we need to get this after the "current" get_response ...
+            mod_0_input_1 = get_friend_nested_var_value<Bmi_Fortran_Formulation>(formulation, 0, "INPUT_VAR_1");
+            // ... and also, this won't work for the 0th index
+            if (i != 0) {
+                EXPECT_EQ(mod_0_input_1, mod_1_output_2);
+            }
+        }
+    }
 
 /**
  * Simple test of output for example 0.
