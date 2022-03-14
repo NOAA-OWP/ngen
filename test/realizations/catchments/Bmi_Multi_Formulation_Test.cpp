@@ -165,61 +165,133 @@ private:
         }
     }
 
-    inline std::string buildExampleNestedModuleSubConfig(const int ex_index, const int nested_index) {
-        std::string bmi_type = nested_module_lists[ex_index][nested_index];
-
-        // Certain properties must be set only for certain BMI types
-        std::string type_specific_properties;
-        if (bmi_type == BMI_C_TYPE || bmi_type == BMI_FORTRAN_TYPE) {
-            // The library file is only needed (at least for the moment) when there is a shared lib involved
-            type_specific_properties += "                                \"library_file\": \"" + nested_module_file_lists[ex_index][nested_index] + "\",\n";
-            // Registration function is only needed for C or Fortran type modules.
-            type_specific_properties += "                                \"registration_function\": \"" + nested_registration_function_lists[ex_index][nested_index] + "\",\n";
-        }
-        if (bmi_type == BMI_PYTHON_TYPE) {
-            // Python requires the "python_type" to be set
-            type_specific_properties += "                                \"" + std::string(BMI_REALIZATION_CFG_PARAM_OPT__PYTHON_TYPE_NAME) + "\": \"" + nested_module_type_name_lists[ex_index][nested_index] + "\",\n";
-        }
-
+    inline std::string buildNestedC(const int ex_index, const int nested_index) {
         std::string nested_index_str = std::to_string(nested_index);
-        std::string nested_prior_index_str = std::to_string(nested_index - 1);
-
-        std::string type_specific_var_map;
-        if (bmi_type == BMI_FORTRAN_TYPE) {
-            type_specific_var_map += "                                    \"OUTPUT_VAR_3\": \"OUTPUT_VAR_3__" + nested_index_str + "\",\n";
-            type_specific_var_map += "                                    \"INPUT_VAR_3\": \"" + std::string(CSDMS_STD_NAME_SURFACE_TEMP) + "\",\n";
-        }
-
-        std::string input_var_alias;
-        if (nested_index == 0) {
-            input_var_alias = AORC_FIELD_NAME_PRECIP_RATE;
-        }
-        else {
-            input_var_alias = "OUTPUT_VAR_1__" + nested_prior_index_str;
-        }
-
-        std::string uses_forcing_file_text = uses_forcing_file[ex_index] ? "true" : "false";
-
+        std::string input_var_alias = determineNestedInputAliasValue(ex_index, nested_index);
         return  "                        {\n"
-                "                            \"name\": \"" + bmi_type + "\",\n"
+                "                            \"name\": \"" + std::string(BMI_C_TYPE) + "\",\n"
                 "                            \"params\": {\n"
                 "                                \"model_type_name\": \"" + nested_module_type_name_lists[ex_index][nested_index] + "\",\n"
                 "                                \"forcing_file\": \"\",\n"
                 "                                \"init_config\": \"" + nested_init_config_lists[ex_index][nested_index] + "\",\n"
                 "                                \"allow_exceed_end_time\": true,\n"
                 "                                \"main_output_variable\": \"" + nested_module_main_output_variables[ex_index][nested_index] + "\",\n"
-                "                                \"" + BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION + "\": 6, "
-                + type_specific_properties +
+                "                                \"" + BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION + "\": 6,\n"
+
+                "                                \"library_file\": \"" + nested_module_file_lists[ex_index][nested_index] + "\",\n"
+                "                                \"registration_function\": \"" + nested_registration_function_lists[ex_index][nested_index] + "\",\n"
+
                 "                                \"variables_names_map\": {\n"
-                + type_specific_var_map +
                 "                                    \"OUTPUT_VAR_2\": \"OUTPUT_VAR_2__" + nested_index_str + "\",\n"
                 "                                    \"OUTPUT_VAR_1\": \"OUTPUT_VAR_1__" + nested_index_str + "\",\n"
                 "                                    \"INPUT_VAR_2\": \"" + CSDMS_STD_NAME_SURFACE_AIR_PRESSURE + "\",\n"
                 "                                    \"INPUT_VAR_1\": \"" + input_var_alias + "\"\n"
                 "                                },\n"
-                "                                \"uses_forcing_file\": " + uses_forcing_file_text + "\n"
+                "                                \"uses_forcing_file\": " + (uses_forcing_file[ex_index] ? "true" : "false") + "\n"
                 "                            }\n"
                 "                        }";
+    }
+
+    inline std::string buildNestedFortran(const int ex_index, const int nested_index) {
+        std::string nested_index_str = std::to_string(nested_index);
+        std::string input_var_alias = determineNestedInputAliasValue(ex_index, nested_index);
+        return  "                        {\n"
+                "                            \"name\": \"" + std::string(BMI_FORTRAN_TYPE) + "\",\n"
+                "                            \"params\": {\n"
+                "                                \"model_type_name\": \"" + nested_module_type_name_lists[ex_index][nested_index] + "\",\n"
+                "                                \"forcing_file\": \"\",\n"
+                "                                \"init_config\": \"" + nested_init_config_lists[ex_index][nested_index] + "\",\n"
+                "                                \"allow_exceed_end_time\": true,\n"
+                "                                \"main_output_variable\": \"" + nested_module_main_output_variables[ex_index][nested_index] + "\",\n"
+                "                                \"" + BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION + "\": 6,\n"
+
+                "                                \"library_file\": \"" + nested_module_file_lists[ex_index][nested_index] + "\",\n"
+                "                                \"registration_function\": \"" + nested_registration_function_lists[ex_index][nested_index] + "\",\n"
+
+                "                                \"variables_names_map\": {\n"
+                "                                    \"OUTPUT_VAR_3\": \"OUTPUT_VAR_3__" + nested_index_str + "\",\n"
+                "                                    \"INPUT_VAR_3\": \"" + std::string(CSDMS_STD_NAME_SURFACE_TEMP) + "\",\n"
+                "                                    \"OUTPUT_VAR_2\": \"OUTPUT_VAR_2__" + nested_index_str + "\",\n"
+                "                                    \"OUTPUT_VAR_1\": \"OUTPUT_VAR_1__" + nested_index_str + "\",\n"
+                "                                    \"INPUT_VAR_2\": \"" + CSDMS_STD_NAME_SURFACE_AIR_PRESSURE + "\",\n"
+                "                                    \"INPUT_VAR_1\": \"" + input_var_alias + "\"\n"
+                "                                },\n"
+                "                                \"uses_forcing_file\": " + (uses_forcing_file[ex_index] ? "true" : "false") + "\n"
+                "                            }\n"
+                "                        }";
+    }
+
+    inline std::string buildNestedPython(const int ex_index, const int nested_index) {
+        std::string nested_index_str = std::to_string(nested_index);
+        std::string input_var_alias = determineNestedInputAliasValue(ex_index, nested_index);
+        return  "                        {\n"
+                "                            \"name\": \"" + std::string(BMI_PYTHON_TYPE) + "\",\n"
+                "                            \"params\": {\n"
+                "                                \"model_type_name\": \"" + nested_module_type_name_lists[ex_index][nested_index] + "\",\n"
+                "                                \"forcing_file\": \"\",\n"
+                "                                \"init_config\": \"" + nested_init_config_lists[ex_index][nested_index] + "\",\n"
+                "                                \"allow_exceed_end_time\": true,\n"
+                "                                \"main_output_variable\": \"" + nested_module_main_output_variables[ex_index][nested_index] + "\",\n"
+                "                                \"" + BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION + "\": 6,\n"
+
+                "                                \"" + std::string(BMI_REALIZATION_CFG_PARAM_OPT__PYTHON_TYPE_NAME) + "\": \"" + nested_module_type_name_lists[ex_index][nested_index] + "\",\n"
+
+                "                                \"variables_names_map\": {\n"
+                "                                    \"OUTPUT_VAR_2\": \"OUTPUT_VAR_2__" + nested_index_str + "\",\n"
+                "                                    \"OUTPUT_VAR_1\": \"OUTPUT_VAR_1__" + nested_index_str + "\",\n"
+                "                                    \"INPUT_VAR_2\": \"" + CSDMS_STD_NAME_SURFACE_AIR_PRESSURE + "\",\n"
+                "                                    \"INPUT_VAR_1\": \"" + input_var_alias + "\"\n"
+                "                                },\n"
+                "                                \"uses_forcing_file\": " + (uses_forcing_file[ex_index] ? "true" : "false") + "\n"
+                "                            }\n"
+                "                        }";
+    }
+
+    /**
+     * Properly determine the mapped alias of one of the inputs, depending on the situation
+     *
+     * @param ex_index The index of the example config, corresponding to other index-specific saved values.
+     * @param nested_index The index of the particular module within the overall example config
+     * @return The appropriate input alias value for the example config being generated.
+     */
+    inline std::string determineNestedInputAliasValue(const int ex_index, const int nested_index) {
+        // For the first two examples (i.e. not 3 or 4), have an input of all but 1st module be an output of a prior
+        if (ex_index < 2) {
+            if (nested_index == 0)  return AORC_FIELD_NAME_PRECIP_RATE;
+            else                    return "OUTPUT_VAR_1__" + std::to_string(nested_index - 1);
+        }
+        // For the third, have the alias be a completely bogus value
+        else if (ex_index == 2) {
+            return "a_completely_bogus_value";
+        }
+        // For fourth, have alias for 1st module be an output from the 2nd module, to test lookback/deferred provided
+        else if (ex_index == 3) {
+            if (nested_index == 0)  return "OUTPUT_VAR_2__1";
+            else                    return AORC_FIELD_NAME_PRECIP_RATE;
+        }
+            // This isn't a case that is expected, so ...
+        else {
+            throw std::runtime_error("Unexpected example index in config setup for BMI Multi Formulation tests");
+        }
+    }
+
+    inline std::string buildExampleNestedModuleSubConfig(const int ex_index, const int nested_index) {
+        std::string bmi_type = nested_module_lists[ex_index][nested_index];
+        // Call right language-specific generator function for nested config
+        if (bmi_type == BMI_C_TYPE) {
+            return buildNestedC(ex_index, nested_index);
+        }
+        else if (bmi_type == BMI_FORTRAN_TYPE) {
+            return buildNestedFortran(ex_index, nested_index);
+        }
+        else if (bmi_type == BMI_PYTHON_TYPE) {
+            return buildNestedPython(ex_index, nested_index);
+        }
+        // Again, we don't quite support this yet
+        else {
+            throw std::runtime_error(
+                    "Unsupported type '" + bmi_type + "' received for BMI Multi Formulation test example");
+        }
     }
 
     inline void buildExampleConfig(const int ex_index) {
