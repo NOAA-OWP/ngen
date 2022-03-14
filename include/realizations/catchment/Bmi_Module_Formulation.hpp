@@ -20,6 +20,8 @@ class Bmi_C_Cfe_IT;
 
 namespace realization {
 
+
+
     /**
      * Abstraction of a formulation with a single backing model object that implements the BMI.
      *
@@ -374,7 +376,7 @@ namespace realization {
 
             // check if output is available from BMI
             std::string bmi_var_name;
-            get_bmi_output_var_name(output_name, bmi_var_name);
+            get_bmi_alias(output_name, bmi_var_name, BMI_OUTPUT_VAR);
             
             if( !bmi_var_name.empty() )
             {
@@ -440,22 +442,45 @@ namespace realization {
 
     protected:
 
+        enum BMI_VAR_TYPE{ BMI_INPUT_VAR, BMI_OUTPUT_VAR, BMI_ANY_VAR};
+
         /**
          * @brief Get correct BMI variable name, which may be the output or something mapped to this output.
          * 
-         * @param name 
-         * @param bmi_var_name 
+         * This function will introspectively look at this modules BMI variables for @p name
+         * If the name is recognized by the BMI module, @p bmi_var_name will be @p name
+         * Otherwise, name map aliases will be searched for @p name and if that alias is found
+         * then @p bmi_var_name will be set to the BMI variable name associated with that alias.
+         * 
+         * When using BMI_ANY_VAR type, this function will first search BMI output variables known to this module
+         * and then will search BMI input variables known to this module.  If the context of the variable is known
+         * and/or important, it should be passed to this function to avoid potential suble issues. (see GH issue #393)
+         * 
+         * @param name Name/alias to validate
+         * @param bmi_var_name Output variable to put the BMI variable into.
+         * @param type Type of BMI variable to validate, defaults to BMI_ANY_VAR
          */
-        inline void get_bmi_output_var_name(const std::string &name, std::string &bmi_var_name)
+        inline void get_bmi_alias(const std::string &name, std::string &bmi_var_name, BMI_VAR_TYPE type = BMI_ANY_VAR)
         {
-            //check standard output names first
-            std::vector<std::string> output_names = get_bmi_model()->GetOutputVarNames();
-            if (std::find(output_names.begin(), output_names.end(), name) != output_names.end()) {
+            std::vector<std::string> names;
+            switch(type){
+                case BMI_OUTPUT_VAR:
+                    //standard output names fi
+                    names = get_bmi_model()->GetOutputVarNames();
+                case BMI_INPUT_VAR:
+                    names = get_bmi_model()->GetInputVarNames();
+                case BMI_ANY_VAR:
+                    names = get_bmi_model()->GetOutputVarNames();
+                    std::vector<std::string> tmp = get_bmi_model()->GetInputVarNames();
+                    //dump input names after output names
+                    names.insert(names.end(), tmp.begin(), tmp.end());
+            }
+            if (std::find(names.begin(), names.end(), name) != names.end()) {
                 bmi_var_name = name;
             }
             else
             {
-                //check mapped names
+                //check mapped/alias names
                 std::string mapped_name;
                 for (auto & iter : bmi_var_names_map) {
                     if (iter.second == name) {
@@ -463,11 +488,10 @@ namespace realization {
                         break;
                     }
                 }
-                //ensure mapped name maps to an output variable, see GH #393 =)
-                if (std::find(output_names.begin(), output_names.end(), mapped_name) != output_names.end()){
+                if (std::find(names.begin(), names.end(), mapped_name) != names.end()){
                     bmi_var_name = mapped_name;
                 }
-                //else not an output variable
+                //else not a BMI recognizable variable for given type
             }
         }
 
