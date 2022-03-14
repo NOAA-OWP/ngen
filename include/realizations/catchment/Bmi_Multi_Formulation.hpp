@@ -8,6 +8,7 @@
 #include "bmi.hpp"
 #include "ForcingProvider.hpp"
 #include "OptionalWrappedProvider.hpp"
+#include "ConfigurationException.hpp"
 
 #define BMI_REALIZATION_CFG_PARAM_REQ__MODULES "modules"
 #define BMI_REALIZATION_CFG_PARAM_OPT__DEFAULT_OUT_VALS "default_output_values"
@@ -606,7 +607,7 @@ namespace realization {
                     for (int i = 1; i < deferredProvider->get_available_forcing_outputs().size(); ++i)
                         msg += ", " + deferredProvider->get_available_forcing_outputs()[i];
                     msg += "}";
-                    throw std::runtime_error(msg);
+                    throw realization::ConfigurationException(msg);
                 }
             }
         }
