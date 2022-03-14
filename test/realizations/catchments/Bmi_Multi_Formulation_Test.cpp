@@ -419,7 +419,7 @@ void Bmi_Multi_Formulation_Test::SetUp() {
 
     // Define this manually to set how many nested modules per example, and implicitly how many examples.
     // This means 2 example scenarios with 2 nested modules
-    example_module_depth = {2, 2};
+    example_module_depth = {2, 2, 2, 2};
 
     // Initialize the members for holding required input and result test data for individual example scenarios
     setupExampleDataCollections();
@@ -447,6 +447,10 @@ void Bmi_Multi_Formulation_Test::SetUp() {
     #endif // ACTIVATE_PYTHON
 
     initializeTestExample(1, "cat-27", {std::string(BMI_FORTRAN_TYPE), std::string(BMI_PYTHON_TYPE)});
+
+    initializeTestExample(2, "cat-27", {std::string(BMI_FORTRAN_TYPE), std::string(BMI_PYTHON_TYPE)});
+
+    initializeTestExample(3, "cat-27", {std::string(BMI_FORTRAN_TYPE), std::string(BMI_PYTHON_TYPE)});
 }
 
 /** Simple test to make sure the model config from example 0 initializes. */
@@ -467,6 +471,28 @@ TEST_F(Bmi_Multi_Formulation_Test, Initialize_0_a) {
 /** Simple test to make sure the model config from example 1 initializes. */
 TEST_F(Bmi_Multi_Formulation_Test, Initialize_1_a) {
     int ex_index = 1;
+
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+
+    ASSERT_EQ(get_friend_nested_module_model_type_name(formulation, 0), nested_module_type_name_lists[ex_index][0]);
+    ASSERT_EQ(get_friend_nested_module_model_type_name(formulation, 1), nested_module_type_name_lists[ex_index][1]);
+    ASSERT_EQ(get_friend_nested_module_main_output_variable(formulation, 0), nested_module_main_output_variables[ex_index][0]);
+    ASSERT_EQ(get_friend_nested_module_main_output_variable(formulation, 1), nested_module_main_output_variables[ex_index][1]);
+    ASSERT_EQ(get_friend_bmi_main_output_var(formulation), main_output_variables[ex_index]);
+    ASSERT_EQ(get_friend_is_bmi_using_forcing_file(formulation), uses_forcing_file[ex_index]);
+}
+
+/** Simple test to make sure the model config from example 2 does not initialize because of a bad config alias. */
+TEST_F(Bmi_Multi_Formulation_Test, Initialize_2_a) {
+    int ex_index = 2;
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    ASSERT_THROW(formulation.create_formulation(config_prop_ptree[ex_index]), realization::ConfigurationException);
+}
+
+/** Test to make sure the model config from example 3 initializes properly with module varible lookback configured. */
+TEST_F(Bmi_Multi_Formulation_Test, Initialize_3_a) {
+    int ex_index = 3;
 
     Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
     formulation.create_formulation(config_prop_ptree[ex_index]);
