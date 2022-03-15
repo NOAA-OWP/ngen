@@ -649,7 +649,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetResponse_3_b) {
     for (int i = 0; i < 39; i++) {
         response = formulation.get_response(i, 3600);
     }
-    double expected = 4.866464273262429e-08;
+    double expected = 2.7809780039160068e-08;
     ASSERT_EQ(expected, response);
 }
 
