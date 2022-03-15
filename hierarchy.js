@@ -29,6 +29,9 @@ var hierarchy =
       [ "invalid_time_step", "structinvalid__time__step.html", null ],
       [ "request_from_empty_nexus", "structrequest__from__empty__nexus.html", null ]
     ] ],
+    [ "boost::static_visitor", null, [
+      [ "geojson::JSONProperty::PropertyVisitor< T >", "structgeojson_1_1_j_s_o_n_property_1_1_property_visitor.html", null ]
+    ] ],
     [ "conceptual_reservoir", "structconceptual__reservoir.html", null ],
     [ "CSVReader", "class_c_s_v_reader.html", null ],
     [ "et::aorc_forcing_data", "structet_1_1aorc__forcing__data.html", null ],
@@ -75,6 +78,8 @@ var hierarchy =
       [ "Visitor", "class_visitor.html", null ]
     ] ],
     [ "geojson::JSONProperty", "classgeojson_1_1_j_s_o_n_property.html", null ],
+    [ "geojson::List", "structgeojson_1_1_list.html", null ],
+    [ "geojson::Object", "structgeojson_1_1_object.html", null ],
     [ "giuh::giuh_carry_over", "structgiuh_1_1giuh__carry__over.html", null ],
     [ "giuh::giuh_kernel", "classgiuh_1_1giuh__kernel.html", [
       [ "giuh::giuh_kernel_impl", "classgiuh_1_1giuh__kernel__impl.html", null ]

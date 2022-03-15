@@ -30,9 +30,11 @@ var annotated_dup =
       [ "FeatureVisitor", "classgeojson_1_1_feature_visitor.html", "classgeojson_1_1_feature_visitor" ],
       [ "JSONProperty", "classgeojson_1_1_j_s_o_n_property.html", "classgeojson_1_1_j_s_o_n_property" ],
       [ "LineStringFeature", "classgeojson_1_1_line_string_feature.html", "classgeojson_1_1_line_string_feature" ],
+      [ "List", "structgeojson_1_1_list.html", "structgeojson_1_1_list" ],
       [ "MultiLineStringFeature", "classgeojson_1_1_multi_line_string_feature.html", "classgeojson_1_1_multi_line_string_feature" ],
       [ "MultiPointFeature", "classgeojson_1_1_multi_point_feature.html", "classgeojson_1_1_multi_point_feature" ],
       [ "MultiPolygonFeature", "classgeojson_1_1_multi_polygon_feature.html", "classgeojson_1_1_multi_polygon_feature" ],
+      [ "Object", "structgeojson_1_1_object.html", "structgeojson_1_1_object" ],
       [ "PointFeature", "classgeojson_1_1_point_feature.html", "classgeojson_1_1_point_feature" ],
       [ "PolygonFeature", "classgeojson_1_1_polygon_feature.html", "classgeojson_1_1_polygon_feature" ]
     ] ],

@@ -109,11 +109,17 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgeojson_1_1_line_string_feature.html">LineStringFeature</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgeojson_1_1_list.html">List</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Struct wrapping a vector of <a class="el" href="namespacegeojson.html#a0e7f78cfe2859f6b67a1d8165e22a99c">PropertyVariant</a> representing a JSON list.  <a href="structgeojson_1_1_list.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgeojson_1_1_multi_line_string_feature.html">MultiLineStringFeature</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgeojson_1_1_multi_point_feature.html">MultiPointFeature</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgeojson_1_1_multi_polygon_feature.html">MultiPolygonFeature</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgeojson_1_1_object.html">Object</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Struct wrapping a map of nested <a class="el" href="namespacegeojson.html#a0e7f78cfe2859f6b67a1d8165e22a99c">PropertyVariant</a> representing a JSON object.  <a href="structgeojson_1_1_object.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgeojson_1_1_point_feature.html">PointFeature</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -158,6 +164,8 @@ Typedefs</h2></td></tr>
 <tr class="separator:ae039ae5aafb6de1ea115ab6216df49e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a68bb7aef6c1605a4c3662f936fc4164f"><td class="memItemLeft" align="right" valign="top">typedef boost::variant&lt; <a class="el" href="namespacegeojson.html#a1e973c44a04c54096fb9877033c21de5">coordinate_t</a>, <a class="el" href="namespacegeojson.html#afc3a529a1261a6dfe825882ff9f168da">linestring_t</a>, <a class="el" href="namespacegeojson.html#a7e3a2b10f60ebd32d3fb01d1537350ff">polygon_t</a>, <a class="el" href="namespacegeojson.html#a7a273ee312ad3ada76516127bef9a238">multipoint_t</a>, <a class="el" href="namespacegeojson.html#a89dc78a6264929ea729d0911730835b6">multilinestring_t</a>, <a class="el" href="namespacegeojson.html#a2801a4aa3be7124530f8d2b8de576993">multipolygon_t</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegeojson.html#a68bb7aef6c1605a4c3662f936fc4164f">geometry</a></td></tr>
 <tr class="separator:a68bb7aef6c1605a4c3662f936fc4164f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e7f78cfe2859f6b67a1d8165e22a99c"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegeojson.html#a0e7f78cfe2859f6b67a1d8165e22a99c">PropertyVariant</a> = boost::variant&lt; boost::blank, long, double, bool, std::string, boost::recursive_wrapper&lt; <a class="el" href="structgeojson_1_1_list.html">List</a> &gt;, boost::recursive_wrapper&lt; <a class="el" href="structgeojson_1_1_object.html">Object</a> &gt; &gt;</td></tr>
+<tr class="separator:a0e7f78cfe2859f6b67a1d8165e22a99c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6eabe3c674d580523aa920438fb82d34"><td class="memItemLeft" align="right" valign="top">typedef std::map&lt; std::string, <a class="el" href="classgeojson_1_1_j_s_o_n_property.html">JSONProperty</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">PropertyMap</a></td></tr>
 <tr class="memdesc:a6eabe3c674d580523aa920438fb82d34"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shorthand for a mapping between strings and properties.  <a href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">More...</a><br /></td></tr>
 <tr class="separator:a6eabe3c674d580523aa920438fb82d34"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -454,6 +462,20 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Shorthand for a mapping between strings and properties. </p>
+
+</div>
+</div>
+<a id="a0e7f78cfe2859f6b67a1d8165e22a99c" name="a0e7f78cfe2859f6b67a1d8165e22a99c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0e7f78cfe2859f6b67a1d8165e22a99c">&#9670;&nbsp;</a></span>PropertyVariant</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespacegeojson.html#a0e7f78cfe2859f6b67a1d8165e22a99c">geojson::PropertyVariant</a> = typedef boost::variant&lt;boost::blank, long, double, bool, std::string, boost::recursive_wrapper&lt;<a class="el" href="structgeojson_1_1_list.html">List</a>&gt;, boost::recursive_wrapper&lt;<a class="el" href="structgeojson_1_1_object.html">Object</a>&gt; &gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -1045,7 +1067,7 @@ template&lt;typename T &gt; </div>
 
 <p class="reference">References <a class="el" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a27226c864bac7454a8504f8edb15d95b">Boolean</a>, <a class="el" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a4ee29ca12c7d126654bd0e5275de6135">List</a>, <a class="el" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a2bd8ab451a35759c5737128e35c8011a">Natural</a>, <a class="el" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a7f80fcc452c2f1ed2bb51b39d0864df1">Real</a>, and <a class="el" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a27118326006d3829667a400ad23d5d98">String</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classgeojson_1_1_j_s_o_n_property.html#a6c9b6e556b9c2e2000bd9283ce8d1dbe">geojson::JSONProperty::as_boolean()</a>, <a class="el" href="classgeojson_1_1_j_s_o_n_property.html#a4e95480bc0ecde8028f0a68a11245617">geojson::JSONProperty::as_list()</a>, <a class="el" href="classgeojson_1_1_j_s_o_n_property.html#a99b488b0681f98286fe65be25f5cba06">geojson::JSONProperty::as_natural_number()</a>, <a class="el" href="classgeojson_1_1_j_s_o_n_property.html#abd96e16e7da59f6d4e98fd3abf375224">geojson::JSONProperty::as_real_number()</a>, <a class="el" href="classgeojson_1_1_j_s_o_n_property.html#a512af06cb32ed665a57a80129c84ec9b">geojson::JSONProperty::as_string()</a>, <a class="el" href="classgeojson_1_1_j_s_o_n_property.html#a4a62d9dc46a292bff3c4fd134f5469a7">geojson::JSONProperty::at()</a>, <a class="el" href="classgeojson_1_1_j_s_o_n_property.html#a44444e9dfa0d9e54cc11a66b8ba75998">geojson::JSONProperty::get_values()</a>, and <a class="el" href="classgeojson_1_1_j_s_o_n_property.html#a11b0d4cecda0a3f85cd9034d8638ac73">geojson::JSONProperty::keys()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classgeojson_1_1_j_s_o_n_property.html#a6c9b6e556b9c2e2000bd9283ce8d1dbe">geojson::JSONProperty::as_boolean()</a>, <a class="el" href="classgeojson_1_1_j_s_o_n_property.html#a4e95480bc0ecde8028f0a68a11245617">geojson::JSONProperty::as_list()</a>, <a class="el" href="classgeojson_1_1_j_s_o_n_property.html#a99b488b0681f98286fe65be25f5cba06">geojson::JSONProperty::as_natural_number()</a>, <a class="el" href="classgeojson_1_1_j_s_o_n_property.html#abd96e16e7da59f6d4e98fd3abf375224">geojson::JSONProperty::as_real_number()</a>, <a class="el" href="classgeojson_1_1_j_s_o_n_property.html#a512af06cb32ed665a57a80129c84ec9b">geojson::JSONProperty::as_string()</a>, <a class="el" href="classgeojson_1_1_j_s_o_n_property.html#a4a62d9dc46a292bff3c4fd134f5469a7">geojson::JSONProperty::at()</a>, <a class="el" href="classgeojson_1_1_j_s_o_n_property.html#a44444e9dfa0d9e54cc11a66b8ba75998">geojson::JSONProperty::get_values()</a>, <a class="el" href="classgeojson_1_1_j_s_o_n_property.html#a11b0d4cecda0a3f85cd9034d8638ac73">geojson::JSONProperty::keys()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9c3a2d69dd3610aa37eb6acc94d495de">realization::Bmi_Module_Formulation&lt; M &gt;::set_initial_bmi_parameters()</a>.</p>
 
 </div>
 </div>
@@ -1333,7 +1355,7 @@ template&lt;typename T &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacegeojson.html">geojson</a></li>
-    <li class="footer">Generated on Fri Mar 11 2022 20:16:17 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3 </li>
+    <li class="footer">Generated on Tue Mar 15 2022 17:55:16 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3 </li>
   </ul>
 </div>
 </body>

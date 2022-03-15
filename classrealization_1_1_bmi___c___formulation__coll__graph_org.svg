@@ -101,12 +101,12 @@
 <text text-anchor="start" x="1189" y="-344.5" font-family="Helvetica,sans-Serif" font-size="10.00"># get_var_value_as_double()</text>
 <text text-anchor="start" x="1189" y="-333.5" font-family="Helvetica,sans-Serif" font-size="10.00"># get_var_value_as_double()</text>
 <text text-anchor="start" x="1189" y="-322.5" font-family="Helvetica,sans-Serif" font-size="10.00"># inner_create_formulation()</text>
-<text text-anchor="start" x="1189" y="-311.5" font-family="Helvetica,sans-Serif" font-size="10.00"># is_bmi_model_time_step</text>
-<text text-anchor="start" x="1189" y="-300.5" font-family="Helvetica,sans-Serif" font-size="10.00">_fixed()</text>
-<text text-anchor="start" x="1189" y="-289.5" font-family="Helvetica,sans-Serif" font-size="10.00"># is_bmi_using_forcing</text>
-<text text-anchor="start" x="1189" y="-278.5" font-family="Helvetica,sans-Serif" font-size="10.00">_file()</text>
-<text text-anchor="start" x="1189" y="-267.5" font-family="Helvetica,sans-Serif" font-size="10.00"># is_model_initialized()</text>
-<text text-anchor="start" x="1189" y="-256.5" font-family="Helvetica,sans-Serif" font-size="10.00">and 10 more...</text>
+<text text-anchor="start" x="1189" y="-311.5" font-family="Helvetica,sans-Serif" font-size="10.00"># set_initial_bmi_parameters()</text>
+<text text-anchor="start" x="1189" y="-300.5" font-family="Helvetica,sans-Serif" font-size="10.00"># is_bmi_model_time_step</text>
+<text text-anchor="start" x="1189" y="-289.5" font-family="Helvetica,sans-Serif" font-size="10.00">_fixed()</text>
+<text text-anchor="start" x="1189" y="-278.5" font-family="Helvetica,sans-Serif" font-size="10.00"># is_bmi_using_forcing</text>
+<text text-anchor="start" x="1189" y="-267.5" font-family="Helvetica,sans-Serif" font-size="10.00">_file()</text>
+<text text-anchor="start" x="1189" y="-256.5" font-family="Helvetica,sans-Serif" font-size="10.00">and 13 more...</text>
 </a>
 </g>
 </g>
@@ -225,12 +225,12 @@
 <text text-anchor="start" x="1907" y="-1131.5" font-family="Helvetica,sans-Serif" font-size="10.00"># get_var_value_as_double()</text>
 <text text-anchor="start" x="1907" y="-1120.5" font-family="Helvetica,sans-Serif" font-size="10.00"># get_var_value_as_double()</text>
 <text text-anchor="start" x="1907" y="-1109.5" font-family="Helvetica,sans-Serif" font-size="10.00"># inner_create_formulation()</text>
-<text text-anchor="start" x="1907" y="-1098.5" font-family="Helvetica,sans-Serif" font-size="10.00"># is_bmi_model_time_step</text>
-<text text-anchor="start" x="1907" y="-1087.5" font-family="Helvetica,sans-Serif" font-size="10.00">_fixed()</text>
-<text text-anchor="start" x="1907" y="-1076.5" font-family="Helvetica,sans-Serif" font-size="10.00"># is_bmi_using_forcing</text>
-<text text-anchor="start" x="1907" y="-1065.5" font-family="Helvetica,sans-Serif" font-size="10.00">_file()</text>
-<text text-anchor="start" x="1907" y="-1054.5" font-family="Helvetica,sans-Serif" font-size="10.00"># is_model_initialized()</text>
-<text text-anchor="start" x="1907" y="-1043.5" font-family="Helvetica,sans-Serif" font-size="10.00">and 10 more...</text>
+<text text-anchor="start" x="1907" y="-1098.5" font-family="Helvetica,sans-Serif" font-size="10.00"># set_initial_bmi_parameters()</text>
+<text text-anchor="start" x="1907" y="-1087.5" font-family="Helvetica,sans-Serif" font-size="10.00"># is_bmi_model_time_step</text>
+<text text-anchor="start" x="1907" y="-1076.5" font-family="Helvetica,sans-Serif" font-size="10.00">_fixed()</text>
+<text text-anchor="start" x="1907" y="-1065.5" font-family="Helvetica,sans-Serif" font-size="10.00"># is_bmi_using_forcing</text>
+<text text-anchor="start" x="1907" y="-1054.5" font-family="Helvetica,sans-Serif" font-size="10.00">_file()</text>
+<text text-anchor="start" x="1907" y="-1043.5" font-family="Helvetica,sans-Serif" font-size="10.00">and 13 more...</text>
 </a>
 </g>
 </g>

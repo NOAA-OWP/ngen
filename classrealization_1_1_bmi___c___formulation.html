@@ -272,6 +272,9 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a1456df2666b8e7e33da01a5a14f6591e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___module___formulation.html#a1456df2666b8e7e33da01a5a14f6591e">inner_create_formulation</a> (<a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> properties, bool needs_param_validation)</td></tr>
 <tr class="memdesc:a1456df2666b8e7e33da01a5a14f6591e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Universal logic applied when creating a BMI-backed formulation from NGen config.  <a href="classrealization_1_1_bmi___module___formulation.html#a1456df2666b8e7e33da01a5a14f6591e">More...</a><br /></td></tr>
 <tr class="separator:a1456df2666b8e7e33da01a5a14f6591e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c3a2d69dd3610aa37eb6acc94d495de"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9c3a2d69dd3610aa37eb6acc94d495de">set_initial_bmi_parameters</a> (<a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> properties)</td></tr>
+<tr class="memdesc:a9c3a2d69dd3610aa37eb6acc94d495de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check configuration properties for <code>model_params</code> and attempt to set them in the bmi model.  <a href="classrealization_1_1_bmi___module___formulation.html#a9c3a2d69dd3610aa37eb6acc94d495de">More...</a><br /></td></tr>
+<tr class="separator:a9c3a2d69dd3610aa37eb6acc94d495de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5af40dac52c8e3cbcfe0059fcb0e15c7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___module___formulation.html#a5af40dac52c8e3cbcfe0059fcb0e15c7">is_bmi_model_time_step_fixed</a> () override</td></tr>
 <tr class="memdesc:a5af40dac52c8e3cbcfe0059fcb0e15c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test whether backing model has fixed time step size.  <a href="classrealization_1_1_bmi___module___formulation.html#a5af40dac52c8e3cbcfe0059fcb0e15c7">More...</a><br /></td></tr>
 <tr class="separator:a5af40dac52c8e3cbcfe0059fcb0e15c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -297,6 +300,12 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:ae15a6b5c9e36c2accebf72f2b218d9fe"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___module___formulation.html#ae15a6b5c9e36c2accebf72f2b218d9fe">set_model_initialized</a> (bool is_initialized)</td></tr>
 <tr class="memdesc:ae15a6b5c9e36c2accebf72f2b218d9fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set whether the backing model object has been initialize using the BMI standard <code>Initialize</code> function.  <a href="classrealization_1_1_bmi___module___formulation.html#ae15a6b5c9e36c2accebf72f2b218d9fe">More...</a><br /></td></tr>
 <tr class="separator:ae15a6b5c9e36c2accebf72f2b218d9fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a30e95c4b73a473da7013f9a73dadee5e"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___module___formulation.html#a30e95c4b73a473da7013f9a73dadee5e">as_c_array</a> (Iterator begin, Iterator end)</td></tr>
+<tr class="memdesc:a30e95c4b73a473da7013f9a73dadee5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Template function for copying iterator range into contiguous array.  <a href="classrealization_1_1_bmi___module___formulation.html#a30e95c4b73a473da7013f9a73dadee5e">More...</a><br /></td></tr>
+<tr class="separator:a30e95c4b73a473da7013f9a73dadee5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e6878da7032ba5d43e6b2befbd6fe36"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; void &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___module___formulation.html#a3e6878da7032ba5d43e6b2befbd6fe36">get_values_as_type</a> (std::string type, Iterator begin, Iterator end)</td></tr>
+<tr class="memdesc:a3e6878da7032ba5d43e6b2befbd6fe36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets values in iterator range, casted based on <code>type</code> then returned as typeless (void) pointer.  <a href="classrealization_1_1_bmi___module___formulation.html#a3e6878da7032ba5d43e6b2befbd6fe36">More...</a><br /></td></tr>
+<tr class="separator:a3e6878da7032ba5d43e6b2befbd6fe36"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a21492be599f5ea64fe6ca52505ab8ba5"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; void &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___module___formulation.html#a21492be599f5ea64fe6ca52505ab8ba5">get_value_as_type</a> (std::string type, T value)</td></tr>
 <tr class="separator:a21492be599f5ea64fe6ca52505ab8ba5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa04167ad9a3f4c384673ef1157fb3cb8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___module___formulation.html#aa04167ad9a3f4c384673ef1157fb3cb8">set_model_inputs_prior_to_update</a> (const double &amp;model_init_time, <a class="el" href="classrealization_1_1_formulation.html#aee10dc672e5a9e106f49dcbe0080cf7c">time_step_t</a> t_delta)</td></tr>
@@ -538,6 +547,60 @@ Friends</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Reimplemented in <a class="el" href="class_simple___lumped___model___realization.html#aea254a605d59c1489dfe0a8af0d5f291">Simple_Lumped_Model_Realization</a>.</p>
+
+</div>
+</div>
+<a id="a30e95c4b73a473da7013f9a73dadee5e" name="a30e95c4b73a473da7013f9a73dadee5e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a30e95c4b73a473da7013f9a73dadee5e">&#9670;&nbsp;</a></span>as_c_array()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; T &gt; <a class="el" href="classrealization_1_1_bmi___module___formulation.html">realization::Bmi_Module_Formulation</a>&lt; <a class="el" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html">models::bmi::Bmi_C_Adapter</a>  &gt;::as_c_array </td>
+          <td>(</td>
+          <td class="paramtype">Iterator&#160;</td>
+          <td class="paramname"><em>begin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Iterator&#160;</td>
+          <td class="paramname"><em>end</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Template function for copying iterator range into contiguous array. </p>
+<p >This function will iterate the range and cast the iterator value to type T and copy that value into a C-like array of contiguous, dynamically allocated memory. This array is stored in a smart pointer with a custom array deleter.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td></td></tr>
+    <tr><td class="paramname">Iterator</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">begin</td><td></td></tr>
+    <tr><td class="paramname">end</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>std::shared_ptr&lt;T&gt; </dd></dl>
 
 </div>
 </div>
@@ -1556,7 +1619,7 @@ Friends</h2></td></tr>
 
 <p class="reference">References <a class="el" href="classrealization_1_1_bmi___formulation.html#a3e6136d3fde105fd835c8be24db7d1b7">realization::Bmi_Formulation::model_type_name</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a974d1eac6a95751c4e4570a61bad8541">construct_model()</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#ab5e164de66bb4639a2f1a6cef4ac9f00">realization::Bmi_Cpp_Formulation::construct_model()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a21492be599f5ea64fe6ca52505ab8ba5">realization::Bmi_Module_Formulation&lt; M &gt;::get_value_as_type()</a>, <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a08e3342f5efce58c578b780cc95c0b5b">get_var_value_as_double()</a>, and <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#ab01f9dad8c3c543595848fd9bc8b887b">realization::Bmi_Cpp_Formulation::get_var_value_as_double()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a974d1eac6a95751c4e4570a61bad8541">construct_model()</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#ab5e164de66bb4639a2f1a6cef4ac9f00">realization::Bmi_Cpp_Formulation::construct_model()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a21492be599f5ea64fe6ca52505ab8ba5">realization::Bmi_Module_Formulation&lt; M &gt;::get_value_as_type()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a3e6878da7032ba5d43e6b2befbd6fe36">realization::Bmi_Module_Formulation&lt; M &gt;::get_values_as_type()</a>, <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a08e3342f5efce58c578b780cc95c0b5b">get_var_value_as_double()</a>, and <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#ab01f9dad8c3c543595848fd9bc8b887b">realization::Bmi_Cpp_Formulation::get_var_value_as_double()</a>.</p>
 
 </div>
 </div>
@@ -1973,6 +2036,67 @@ Friends</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3e6878da7032ba5d43e6b2befbd6fe36" name="a3e6878da7032ba5d43e6b2befbd6fe36"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e6878da7032ba5d43e6b2befbd6fe36">&#9670;&nbsp;</a></span>get_values_as_type()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; void &gt; <a class="el" href="classrealization_1_1_bmi___module___formulation.html">realization::Bmi_Module_Formulation</a>&lt; <a class="el" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html">models::bmi::Bmi_C_Adapter</a>  &gt;::get_values_as_type </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Iterator&#160;</td>
+          <td class="paramname"><em>begin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Iterator&#160;</td>
+          <td class="paramname"><em>end</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets values in iterator range, casted based on <code>type</code> then returned as typeless (void) pointer. </p>
+<p ><br  />
+</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Iterator</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">type</td><td></td></tr>
+    <tr><td class="paramname">begin</td><td></td></tr>
+    <tr><td class="paramname">end</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>std::shared_ptr&lt;void&gt; </dd></dl>
 
 </div>
 </div>
@@ -2832,6 +2956,36 @@ template&lt;class T , class O &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9c3a2d69dd3610aa37eb6acc94d495de" name="a9c3a2d69dd3610aa37eb6acc94d495de"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c3a2d69dd3610aa37eb6acc94d495de">&#9670;&nbsp;</a></span>set_initial_bmi_parameters()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classrealization_1_1_bmi___module___formulation.html">realization::Bmi_Module_Formulation</a>&lt; <a class="el" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html">models::bmi::Bmi_C_Adapter</a>  &gt;::set_initial_bmi_parameters </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a>&#160;</td>
+          <td class="paramname"><em>properties</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Check configuration properties for <code>model_params</code> and attempt to set them in the bmi model. </p>
+<p >This checks for a key named <code>model_params</code> in the parsed properties, and for each property it will attempt to call <code>SetValue</code> using the property's key as the BMI variable and the property's value as the value to set.</p>
+<p >This function should only be called once <code>bmi_model</code> is properly constructed. If <code>bmi_model</code> is a nullptr, this function becomes a no-op. </p>
 
 </div>
 </div>
@@ -3956,7 +4110,7 @@ template&lt;class T , class O &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li><li class="navelem"><a class="el" href="classrealization_1_1_bmi___c___formulation.html">Bmi_C_Formulation</a></li>
-    <li class="footer">Generated on Fri Mar 11 2022 20:16:18 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3 </li>
+    <li class="footer">Generated on Tue Mar 15 2022 17:55:16 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3 </li>
   </ul>
 </div>
 </body>

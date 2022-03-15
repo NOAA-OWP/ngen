@@ -1,5 +1,6 @@
 var classgeojson_1_1_j_s_o_n_property =
 [
+    [ "PropertyVisitor", "structgeojson_1_1_j_s_o_n_property_1_1_property_visitor.html", "structgeojson_1_1_j_s_o_n_property_1_1_property_visitor" ],
     [ "JSONProperty", "classgeojson_1_1_j_s_o_n_property.html#a67c06aa54d9f12507f8255ad3d6d860d", null ],
     [ "JSONProperty", "classgeojson_1_1_j_s_o_n_property.html#a8124b60e4f0a5d500d7635205344a158", null ],
     [ "JSONProperty", "classgeojson_1_1_j_s_o_n_property.html#afec6dc919d680e882f35f36581998cda", null ],
@@ -22,6 +23,7 @@ var classgeojson_1_1_j_s_o_n_property =
     [ "as_real_vector", "classgeojson_1_1_j_s_o_n_property.html#acf89f58eb4a1cdc915c2851f809d8156", null ],
     [ "as_string", "classgeojson_1_1_j_s_o_n_property.html#a512af06cb32ed665a57a80129c84ec9b", null ],
     [ "as_string_vector", "classgeojson_1_1_j_s_o_n_property.html#abc3fb5015f523acf462755a444896534", null ],
+    [ "as_vector", "classgeojson_1_1_j_s_o_n_property.html#a6ac4f78b1b7e87658600a4acf1b864d4", null ],
     [ "at", "classgeojson_1_1_j_s_o_n_property.html#a4a62d9dc46a292bff3c4fd134f5469a7", null ],
     [ "get_key", "classgeojson_1_1_j_s_o_n_property.html#aaa771ed1e1b210264bf8dad29ffcddc5", null ],
     [ "get_type", "classgeojson_1_1_j_s_o_n_property.html#a73f3dfb8a78bb6740d68aa67ebca8c1b", null ],
@@ -31,6 +33,7 @@ var classgeojson_1_1_j_s_o_n_property =
     [ "operator!=", "classgeojson_1_1_j_s_o_n_property.html#ae1815462ba6862ac036d8ce098b7d941", null ],
     [ "operator==", "classgeojson_1_1_j_s_o_n_property.html#a4a15af4438529f165427486327d67e8e", null ],
     [ "boolean", "classgeojson_1_1_j_s_o_n_property.html#a9797564a74d052880a95704bcbb5ae5e", null ],
+    [ "data", "classgeojson_1_1_j_s_o_n_property.html#af405297de7dae29f9bf8ee584ba08858", null ],
     [ "key", "classgeojson_1_1_j_s_o_n_property.html#a3fe2ade16ff994a3e9e3fbf106ba690a", null ],
     [ "natural_number", "classgeojson_1_1_j_s_o_n_property.html#ab0c6d37af263c7ba85a34d56275e2b8f", null ],
     [ "real_number", "classgeojson_1_1_j_s_o_n_property.html#ab682d395ee8b90c23bf2f82c1bc556e1", null ],

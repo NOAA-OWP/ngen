@@ -1,11 +1,11 @@
 <map id="geojson::JSONProperty" name="geojson::JSONProperty">
-<area shape="rect" id="node1" title="@TODO: Convert JSONProperty into a variant of the supported types" alt="" coords="307,301,465,643"/>
-<area shape="rect" id="node4" title=" " alt="" coords="117,705,260,797"/>
-<area shape="rect" id="node8" title=" " alt="" coords="489,705,627,797"/>
+<area shape="rect" id="node1" title="@TODO: Convert JSONProperty into a variant of the supported types" alt="" coords="307,301,465,657"/>
+<area shape="rect" id="node4" title=" " alt="" coords="117,720,260,812"/>
+<area shape="rect" id="node8" title=" " alt="" coords="489,720,627,812"/>
 <area shape="rect" id="node2" title=" " alt="" coords="28,147,107,224"/>
 <area shape="rect" id="node3" title=" " alt="" coords="5,5,129,97"/>
-<area shape="rect" id="node5" title=" " alt="" coords="141,433,258,511"/>
+<area shape="rect" id="node5" title=" " alt="" coords="141,441,258,518"/>
 <area shape="rect" id="node6" title=" " alt="" coords="180,147,219,224"/>
 <area shape="rect" id="node7" title=" " alt="" coords="435,147,473,224"/>
-<area shape="rect" id="node9" title=" " alt="" coords="542,433,654,511"/>
+<area shape="rect" id="node9" title=" " alt="" coords="542,441,654,518"/>
 </map>
