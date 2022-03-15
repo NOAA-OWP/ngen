@@ -8,6 +8,8 @@
 #include <sstream>
 #include <exception>
 
+#include <UnitsHelper.hpp>
+
 #include <netcdf>
 
 using namespace netCDF;
@@ -312,12 +314,26 @@ namespace data_access
 
             double rvalue = 0.0;
 
+            auto ncvar = nc_file->getVar(variable_name);
+
+            std::string native_units;
+            
+            auto units_att = ncvar.getAtt("units");
+            if ( units_att.isNull() )
+            {
+                native_units = "unknown";      
+            }
+            else
+            {
+                units_att.getValues(native_units);
+            }
+
             // case where less than one time step is requested
             if ( idx1 == idx2)
             {
                 count.push_back(1);
 
-                nc_file->getVar(variable_name).getVar(start,count,&rvalue);
+                ncvar.getVar(start,count,&rvalue);
 
                 switch(m)
                 {
@@ -331,12 +347,29 @@ namespace data_access
             {
                 count.push_back(2);
                 double raw_value[2];
-                nc_file->getVar(variable_name).getVar(start,count,raw_value);
+                ncvar.getVar(start,count,raw_value);
 
                 double a = (t2 - init_time) / time_stride;
                 double b = (stop_time - t2) / time_stride;
 
                 rvalue = (raw_value[0] * a) + (raw_value[1] * b);
+
+                switch(m)
+                {
+                    case SUM:   // we allready have the sum so do nothing
+                        ;
+                    break;
+
+                    case MEAN:  
+                        // This is getting a length weighted mean
+                        // the data values where allready scaled for where there was only partial use of a data value
+                        // so we just need to do a final scale to account for the differnce between time_stride and duration_s
+                        rvalue *= (time_stride / duration_s);
+                    break;
+
+                    default:
+                        ;
+                }
              }
             // general case
             else
@@ -347,7 +380,7 @@ namespace data_access
                 std::vector<double> raw_values;
                 raw_values.resize(read_len);
 
-                nc_file->getVar(variable_name).getVar(start,count,&raw_values[0]);
+                ncvar.getVar(start,count,&raw_values[0]);
 
                 rvalue = 0.0;
 
@@ -388,6 +421,16 @@ namespace data_access
                     default:
                         ;
                 }
+            }
+
+            try 
+            {
+                return UnitsHelper::get_converted_value(native_units, rvalue, output_units);
+            }
+            catch (const std::runtime_error& e)
+            {
+                std::cerr<<"Unit conversion error: "<<std::endl<<e.what()<<std::endl<<"Returning unconverted value!"<<std::endl;
+                return rvalue;
             }
 
             return rvalue;
