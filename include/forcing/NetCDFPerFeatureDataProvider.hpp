@@ -92,8 +92,12 @@ namespace data_access
             {
                 loc_ids.push_back(str);
                 id_pos[str] = loc++;
-                free(str);
+                
+                //free(str);
             });
+
+            // correct string release
+            ids.freeString(num_ids,&string_buffers[0]);
 
             // now get the size of the time dimension
             auto num_times = nc_file->getDim("time").getSize();
