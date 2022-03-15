@@ -318,14 +318,21 @@ namespace data_access
 
             std::string native_units;
             
-            auto units_att = ncvar.getAtt("units");
-            if ( units_att.isNull() )
+            try
             {
-                native_units = "unknown";      
+                auto units_att = ncvar.getAtt("units");
+                if ( units_att.isNull() )
+                {
+                    native_units = "unknown";      
+                }
+                else
+                {
+                    units_att.getValues(native_units);
+                }
             }
-            else
+            catch(...)
             {
-                units_att.getValues(native_units);
+                native_units = "unknown";
             }
 
             // case where less than one time step is requested
@@ -388,15 +395,15 @@ namespace data_access
                 {
                     if (i == 0 ) // the first data value may not be fully in the time window
                     {
-                        double a = (t2 - init_time) / time_stride;
+                        double a = 1.0 - ( (t1 - init_time) / time_stride );
 
-                        rvalue += (a * raw_values[0]);
+                        rvalue += (a * raw_values[i]);
                     }
                     else if ( i == raw_values.size() - 1) // likewise the last data value may not be fully in the window
                     {
                         double b = (stop_time - t2) / time_stride;
 
-                        rvalue += (b * raw_values[0]);
+                        rvalue += (b * raw_values[i]);
                     }
                     else // for all other values just accumulate
                     {
