@@ -84,4 +84,10 @@ TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataRead)
     std::cout <<  val2 << "\n";
 
     EXPECT_NEAR(val2, 263.1, 0.00000612);
+
+    double val3 = nc_provider->get_value(ids[0], "T2D", start_time, duration * 4, "K", data_access::NetCDFPerFeatureDataProvider::MEAN);
+    std::cout <<  val3 << "\n";
+
+    EXPECT_NEAR(val3, 262.31, 0.00000612);
+    
 }
