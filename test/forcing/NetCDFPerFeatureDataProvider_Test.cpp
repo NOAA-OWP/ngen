@@ -1,6 +1,7 @@
 #include <vector>
 #include "gtest/gtest.h"
 #include "NetCDFPerFeatureDataProvider.hpp"
+#include "StreamHandler.hpp"
 #include "FileChecker.h"
 #include <memory>
 #include <vector>
@@ -49,7 +50,7 @@ void NetCDFPerFeatureDataProviderTest::TearDown()
 //Construct a forcing object
 void NetCDFPerFeatureDataProviderTest::setupForcing()
 {
-    nc_provider = std::make_shared<data_access::NetCDFPerFeatureDataProvider>("/local/ngen/data/huc01/huc_01/forcing/netcdf/huc01.nc");
+    nc_provider = std::make_shared<data_access::NetCDFPerFeatureDataProvider>("/local/ngen/data/huc01/huc_01/forcing/netcdf/huc01.nc", utils::getStdErr() );
     start_date_time = std::make_shared<time_type>();
     end_date_time = std::make_shared<time_type>();
 }

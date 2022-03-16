@@ -23,7 +23,9 @@ namespace data_access
         enum ReSampleMethod
         {
             MEAN,
-            SUM
+            SUM,
+            FRONT_FILL,
+            BACK_FILL
         };
 
         virtual ~DataProvider() = default;
