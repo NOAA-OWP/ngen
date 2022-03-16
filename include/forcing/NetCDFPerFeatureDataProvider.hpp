@@ -94,8 +94,6 @@ namespace data_access
             {
                 loc_ids.push_back(str);
                 id_pos[str] = loc++;
-                
-                //free(str);
             });
 
             // correct string release
@@ -126,56 +124,48 @@ namespace data_access
             // if time att is not encoded 
             // TODO determine how this should be handled
             std::string time_unit_str;
+            double time_scale_factor;     
 
             if ( time_unit_att.isNull() )
             {
                 time_unit = TIME_SECONDS;
+                time_scale_factor = 1;
             }
             else
             {  
                 time_unit_att.getValues(time_unit_str);
             }
 
+            // set time unit and scale factor
             if ( time_unit_str == "h" || time_unit_str == "hours ")
-                time_unit = TIME_HOURS;
-            else if ( time_unit_str == "m" || time_unit_str == "minuets" )
-                    time_unit = TIME_MINUETS;
-            else if ( time_unit_str ==  "s" || time_unit_str == "seconds" )
-                    time_unit = TIME_SECONDS;
-            else if ( time_unit_str ==  "ms" || time_unit_str == "miliseconds" )
-                    time_unit = TIME_SECONDS;
-            else if ( time_unit_str ==  "us" || time_unit_str == "microseconds" )
-                    time_unit = TIME_SECONDS;
-            else if ( time_unit_str ==  "ns" || time_unit_str == "nanoseconds" )
-                    time_unit = TIME_SECONDS;
-            
-            double time_scale_factor;
-
-            switch (time_unit)
             {
-                case TIME_HOURS:
-                    time_scale_factor = 3600;
-                break;
-
-                case TIME_MINUETS:
+                time_unit = TIME_HOURS;
+                time_scale_factor = 3600;
+            }
+            else if ( time_unit_str == "m" || time_unit_str == "minuets" )
+            {
+                    time_unit = TIME_MINUETS;
                     time_scale_factor = 60;
-                break;
-
-                case TIME_SECONDS:
+            }
+            else if ( time_unit_str ==  "s" || time_unit_str == "seconds" )
+            {
+                    time_unit = TIME_SECONDS;
                     time_scale_factor = 1;
-                break;
-
-                case TIME_MILLISECONDS:
+            }
+            else if ( time_unit_str ==  "ms" || time_unit_str == "miliseconds" )
+            {
+                    time_unit = TIME_MILLISECONDS;
                     time_scale_factor = .001;
-                break;
-
-                case TIME_MICROSECONDS:
+            }
+            else if ( time_unit_str ==  "us" || time_unit_str == "microseconds" )
+            {
+                    time_unit = TIME_MICROSECONDS;
                     time_scale_factor = .000001;
-                break;
-
-                case TIME_NANOSECONDS:
+            }
+            else if ( time_unit_str ==  "ns" || time_unit_str == "nanoseconds" )
+            {
+                    time_unit = TIME_SECONDS;
                     time_scale_factor = .000000001;
-                break;
             }
 
             // read the meta data to get the epoc start
@@ -221,7 +211,7 @@ namespace data_access
 
         /** Return the variables that are accessable by this data provider */
 
-        const std::vector<std::string> get_avaliable_variable_names()
+        const std::vector<std::string>& get_avaliable_variable_names()
         {
             return variable_names;
         }
@@ -335,99 +325,50 @@ namespace data_access
                 native_units = "unknown";
             }
 
-            // case where less than one time step is requested
-            if ( idx1 == idx2)
+            auto read_len = idx2 - idx1 + 1;
+            count.push_back(read_len);
+
+            std::vector<double> raw_values;
+            raw_values.resize(read_len);
+
+            ncvar.getVar(start,count,&raw_values[0]);
+
+            rvalue = 0.0;
+
+            double a = 1.0 - ( (t1 - init_time) / time_stride );
+            rvalue += (a * raw_values[0]);
+
+            for( size_t i = 1; i < raw_values.size() -1; ++i )
             {
-                count.push_back(1);
-
-                ncvar.getVar(start,count,&rvalue);
-
-                switch(m)
-                {
-                    case SUM:
-                    rvalue *= (stride / time_stride);
-                    break;
-                }
+                rvalue += raw_values[i];
             }
-            // case where exactly 2 time steps are involved
-            else if ( idx1 + 1 == idx2)
-            {
-                count.push_back(2);
-                double raw_value[2];
-                ncvar.getVar(start,count,raw_value);
 
-                double a = (t2 - init_time) / time_stride;
+            if (  raw_values.size() > 1) // likewise the last data value may not be fully in the window
+            {
                 double b = (stop_time - t2) / time_stride;
+                rvalue += (b * raw_values.back() );
+            }
 
-                rvalue = (raw_value[0] * a) + (raw_value[1] * b);
-
-                switch(m)
-                {
-                    case SUM:   // we allready have the sum so do nothing
-                        ;
-                    break;
-
-                    case MEAN:  
-                        // This is getting a length weighted mean
-                        // the data values where allready scaled for where there was only partial use of a data value
-                        // so we just need to do a final scale to account for the differnce between time_stride and duration_s
-                        rvalue *= (time_stride / duration_s);
-                    break;
-
-                    default:
-                        ;
-                }
-             }
-            // general case
-            else
+            // account for the resampling methods
+            switch(m)
             {
-                auto read_len = idx2 - idx1 + 1;
-                count.push_back(read_len);
+                case SUM:   // we allready have the sum so do nothing
+                    ;
+                break;
 
-                std::vector<double> raw_values;
-                raw_values.resize(read_len);
-
-                ncvar.getVar(start,count,&raw_values[0]);
-
-                rvalue = 0.0;
-
-                for( size_t i = 0; i < raw_values.size(); ++i )
-                {
-                    if (i == 0 ) // the first data value may not be fully in the time window
-                    {
-                        double a = 1.0 - ( (t1 - init_time) / time_stride );
-
-                        rvalue += (a * raw_values[i]);
-                    }
-                    else if ( i == raw_values.size() - 1) // likewise the last data value may not be fully in the window
-                    {
-                        double b = (stop_time - t2) / time_stride;
-
-                        rvalue += (b * raw_values[i]);
-                    }
-                    else // for all other values just accumulate
-                    {
-                        rvalue += raw_values[i];
-                    }
+                case MEAN: 
+                { 
+                    // This is getting a length weighted mean
+                    // the data values where allready scaled for where there was only partial use of a data value
+                    // so we just need to do a final scale to account for the differnce between time_stride and duration_s
+                    // but only if the total values accessed are greater than 1
+                    double scale_factor = ((time_stride / duration_s) < 1.0) ? (time_stride / duration_s) : 1.0;
+                    rvalue *= scale_factor;
                 }
+                break;
 
-                // account for the resampling methods
-                switch(m)
-                {
-                    case SUM:   // we allready have the sum so do nothing
-                        ;
-                    break;
-
-                    case MEAN:  
-                        // This is getting a length weighted mean
-                        // the data values where allready scaled for where there was only partial use of a data value
-                        // so we just need to do a final scale to account for the differnce between time_stride and duration_s
-                        rvalue *= (time_stride / duration_s);
-                    break;
-
-                    default:
-                        ;
-                }
+                default:
+                    ;
             }
 
             try 
