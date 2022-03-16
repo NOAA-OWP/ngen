@@ -76,17 +76,14 @@ TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataRead)
     auto duration = nc_provider->record_duration();
 
     double val1 = nc_provider->get_value(ids[0], "T2D", start_time, duration, "K", data_access::NetCDFPerFeatureDataProvider::MEAN);
-    std::cout <<  val1 << "\n";
 
     EXPECT_NEAR(val1, 263.1, 0.00000612);
 
     double val2 = nc_provider->get_value(ids[0], "T2D", start_time, duration / 2, "K", data_access::NetCDFPerFeatureDataProvider::MEAN);
-    std::cout <<  val2 << "\n";
 
     EXPECT_NEAR(val2, 263.1, 0.00000612);
 
     double val3 = nc_provider->get_value(ids[0], "T2D", start_time, duration * 4, "K", data_access::NetCDFPerFeatureDataProvider::MEAN);
-    std::cout <<  val3 << "\n";
 
     EXPECT_NEAR(val3, 262.31, 0.00000612);
     
