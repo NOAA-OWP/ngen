@@ -335,7 +335,9 @@ namespace data_access
 
             rvalue = 0.0;
 
-            double a = 1.0 - ( (t1 - init_time) / time_stride );
+            double a , b = 0.0;
+            
+            a = 1.0 - ( (t1 - init_time) / time_stride );
             rvalue += (a * raw_values[0]);
 
             for( size_t i = 1; i < raw_values.size() -1; ++i )
@@ -345,7 +347,7 @@ namespace data_access
 
             if (  raw_values.size() > 1) // likewise the last data value may not be fully in the window
             {
-                double b = (stop_time - t2) / time_stride;
+                b = (stop_time - t2) / time_stride;
                 rvalue += (b * raw_values.back() );
             }
 
@@ -361,10 +363,8 @@ namespace data_access
                     // This is getting a length weighted mean
                     // the data values where allready scaled for where there was only partial use of a data value
                     // so we just need to do a final scale to account for the differnce between time_stride and duration_s
-                    // but only if the scale_factor would be less than 1. A scale factor greater than one indicated the total read
-                    // is less than one time peroid so the mean is either the single value or the average of the two values read
-                    // this has allready been calculated
-                    double scale_factor = ((time_stride / duration_s) < 1.0) ? (time_stride / duration_s) : 1.0;
+                    
+                    double scale_factor = (duration_s > time_stride ) ? (time_stride / duration_s) : (1.0 / (a + b));
                     rvalue *= scale_factor;
                 }
                 break;
