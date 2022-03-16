@@ -229,6 +229,18 @@ add_test(
         libudunits2
 )
 
+########################## Comparison tests for the BMI PET implementation
+# TODO: this probably needs to be added to integration testing also
+add_test(
+        compare_pet
+        1
+        realizations/catchments/Bmi_C_Pet_IT.cpp
+        NGen::core
+        NGen::realizations_catchment
+        NGen::core_mediator
+        libudunits2
+)
+
 ########################## Internal Torchlib LSTM Tests
 if(LSTM_TORCH_LIB_ACTIVE)
     add_test(

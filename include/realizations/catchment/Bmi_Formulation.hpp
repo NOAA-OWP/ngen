@@ -47,6 +47,7 @@
 class Bmi_Formulation_Test;
 class Bmi_C_Formulation_Test;
 class Bmi_C_Cfe_IT;
+class Bmi_C_Pet_IT;
 
 using namespace std;
 
