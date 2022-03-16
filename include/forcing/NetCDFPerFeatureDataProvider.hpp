@@ -9,6 +9,7 @@
 #include <exception>
 
 #include <UnitsHelper.hpp>
+#include <StreamHandler.hpp>
 
 #include <netcdf>
 
@@ -46,7 +47,7 @@ namespace data_access
             TIME_NANOSECONDS
         };
 
-        NetCDFPerFeatureDataProvider(std::string input_path)
+        NetCDFPerFeatureDataProvider(std::string input_path, utils::StreamHandler log_s) : log_stream(log_s)
         {
             //open the file
             nc_file = std::make_shared<NcFile>(input_path, NcFile::read);
@@ -175,6 +176,7 @@ namespace data_access
             if ( epoc_att.isNull() )
             {
                 epoc_start_str = "01/01/1970 00:00:00";
+                log_stream << "Warning using defualt epoc string\n";
             }
             else
             {  
@@ -196,6 +198,21 @@ namespace data_access
             // determine the stride of the time array
             time_stride = time_vals[1] - time_vals[0];
 
+            #ifndef NCEP_OPERATIONS
+            // verify the time stride
+            for( size_t i = 1; i < time_vals.size() -1; ++i)
+            {
+                double tinterval = time_vals[i+1] - time_vals[i];
+
+                if ( tinterval - time_stride > 0.000001)
+                {
+                    log_stream << "Error: Time intervals are not constant in forcing file\n";
+
+                    throw std::runtime_error("Time intervals in forcing file are not constant");
+                }
+            }
+            #endif
+
             // determine start_time and stop_time;
             start_time = time_vals[0];
             stop_time = time_vals.back() + time_stride;
@@ -203,8 +220,8 @@ namespace data_access
 
         }
 
-        NetCDFPerFeatureDataProvider(const char* input_path) : 
-            NetCDFPerFeatureDataProvider(std::string(input_path))
+        NetCDFPerFeatureDataProvider(const char* input_path, utils::StreamHandler stream_h) : 
+            NetCDFPerFeatureDataProvider(std::string(input_path), stream_h)
         {
 
         }
@@ -363,7 +380,7 @@ namespace data_access
                     // This is getting a length weighted mean
                     // the data values where allready scaled for where there was only partial use of a data value
                     // so we just need to do a final scale to account for the differnce between time_stride and duration_s
-                    
+
                     double scale_factor = (duration_s > time_stride ) ? (time_stride / duration_s) : (1.0 / (a + b));
                     rvalue *= scale_factor;
                 }
@@ -396,6 +413,7 @@ namespace data_access
         double stop_time;                               // the end of the last time for which data is stored
         TimeUnit time_unit;                             // the unit that time was stored as in the file
         double time_stride;                             // the amount of time between stored time values
+        utils::StreamHandler log_stream;
 
 
         std::shared_ptr<NcFile> nc_file;
