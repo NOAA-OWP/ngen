@@ -361,7 +361,9 @@ namespace data_access
                     // This is getting a length weighted mean
                     // the data values where allready scaled for where there was only partial use of a data value
                     // so we just need to do a final scale to account for the differnce between time_stride and duration_s
-                    // but only if the total values accessed are greater than 1
+                    // but only if the scale_factor would be less than 1. A scale factor greater than one indicated the total read
+                    // is less than one time peroid so the mean is either the single value or the average of the two values read
+                    // this has allready been calculated
                     double scale_factor = ((time_stride / duration_s) < 1.0) ? (time_stride / duration_s) : 1.0;
                     rvalue *= scale_factor;
                 }
