@@ -30,7 +30,7 @@ namespace data_access
 
         /** Return the variables that are accessable by this data provider */
 
-        virtual const std::vector<std::string> get_avaliable_variable_names() = 0;
+        virtual const std::vector<std::string>& get_avaliable_variable_names() = 0;
 
         /** Return the first valid time for which data from the request variable  can be requested */
 
@@ -40,7 +40,7 @@ namespace data_access
 
         virtual long get_data_stop_time() = 0;
 
-        /** Return the last valid time for which data from the requested variable can be requested */
+        /** Return the stride in the time dimension */
         virtual long record_duration() = 0;
 
         /**
