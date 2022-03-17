@@ -9,6 +9,7 @@
 #include <cassert>
 #include <cstring>
 #include <math.h>
+#include <stdexcept>
 
 std::string TestBmiCpp::GetComponentName(){
   return "Testing BMI C++ Model";
