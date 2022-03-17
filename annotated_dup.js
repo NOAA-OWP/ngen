@@ -20,7 +20,9 @@ var annotated_dup =
       [ "ExternalIntegrationException", "classexternal_1_1_external_integration_exception.html", "classexternal_1_1_external_integration_exception" ]
     ] ],
     [ "forcing", "namespaceforcing.html", [
+      [ "DeferredWrappedProvider", "classforcing_1_1_deferred_wrapped_provider.html", "classforcing_1_1_deferred_wrapped_provider" ],
       [ "ForcingProvider", "classforcing_1_1_forcing_provider.html", "classforcing_1_1_forcing_provider" ],
+      [ "OptionalWrappedProvider", "classforcing_1_1_optional_wrapped_provider.html", "classforcing_1_1_optional_wrapped_provider" ],
       [ "WrappedForcingProvider", "classforcing_1_1_wrapped_forcing_provider.html", "classforcing_1_1_wrapped_forcing_provider" ]
     ] ],
     [ "geojson", "namespacegeojson.html", [
@@ -78,6 +80,7 @@ var annotated_dup =
       [ "Bmi_Module_Formulation", "classrealization_1_1_bmi___module___formulation.html", "classrealization_1_1_bmi___module___formulation" ],
       [ "Bmi_Multi_Formulation", "classrealization_1_1_bmi___multi___formulation.html", "classrealization_1_1_bmi___multi___formulation" ],
       [ "Catchment_Formulation", "classrealization_1_1_catchment___formulation.html", "classrealization_1_1_catchment___formulation" ],
+      [ "ConfigurationException", "classrealization_1_1_configuration_exception.html", "classrealization_1_1_configuration_exception" ],
       [ "Et_Accountable", "classrealization_1_1_et___accountable.html", "classrealization_1_1_et___accountable" ],
       [ "Et_Aware", "classrealization_1_1_et___aware.html", "classrealization_1_1_et___aware" ],
       [ "Formulation", "classrealization_1_1_formulation.html", "classrealization_1_1_formulation" ],

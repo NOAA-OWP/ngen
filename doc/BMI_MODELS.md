@@ -330,6 +330,29 @@ A few other items of note:
       * since modules get executed in order of configuration, "earlier" and "later" are with respect to the order they are defined in the ``modules`` config list
 * the framework allows independent configuration of the `uses_forcing_file` property among the individual sub-formulations, although this is not generally recommended
 * configuration of `variables_names_map` maps a given variable to a variable name of the directly 
+* it is now possible to have an earlier nested module use as a provider (for one of its inputs) a later nested module, as long as a default value is configured
+  * a collection of variable default values can be given in the formulation config at the top level by providing an entry in `default_output_values` with the variable's mapped configuration alias (or just variable name if it is unique) and the default value:
+```json
+{
+  "global": {
+    "formulations": [
+      {
+        "name": "bmi_multi",
+        "params": {
+          "model_type_name": "bmi_multi_noahmp_cfe",
+          "forcing_file": "",
+          "init_config": "",
+          "allow_exceed_end_time": true,
+          "main_output_variable": "Q_OUT",
+          "default_output_values": [
+            {
+              "name": "QINSUR",
+              "value": 42.0
+            }
+          ],
+          "modules": [
+...
+```
 
 
 

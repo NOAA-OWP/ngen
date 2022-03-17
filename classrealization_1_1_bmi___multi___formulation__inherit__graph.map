@@ -1,5 +1,5 @@
 <map id="realization::Bmi_Multi_Formulation" name="realization::Bmi_Multi_Formulation">
-<area shape="rect" id="node1" title="Abstraction of a formulation with multiple backing model object that implements the BMI." alt="" coords="305,1460,502,2065"/>
+<area shape="rect" id="node1" title="Abstraction of a formulation with multiple backing model object that implements the BMI." alt="" coords="299,1460,507,2153"/>
 <area shape="rect" id="node2" href="$classrealization_1_1_bmi___formulation.html" title="Abstraction of formulation with backing model object(s) that implements the BMI." alt="" coords="305,851,502,1412"/>
 <area shape="rect" id="node3" href="$classrealization_1_1_catchment___formulation.html" title=" " alt="" coords="203,549,399,803"/>
 <area shape="rect" id="node4" href="$classrealization_1_1_formulation.html" title=" " alt="" coords="5,233,188,501"/>

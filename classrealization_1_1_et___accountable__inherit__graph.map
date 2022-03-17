@@ -9,7 +9,7 @@
 <area shape="rect" id="node6" href="$classrealization_1_1_bmi___module___formulation.html" title=" " alt="" coords="46,2573,243,3663"/>
 <area shape="rect" id="node8" href="$classrealization_1_1_bmi___module___formulation.html" title=" " alt="" coords="306,2573,503,3663"/>
 <area shape="rect" id="node10" href="$classrealization_1_1_bmi___module___formulation.html" title="Abstraction of a formulation with a single backing model object that implements the BMI." alt="" coords="210,1421,407,2496"/>
-<area shape="rect" id="node11" href="$classrealization_1_1_bmi___multi___formulation.html" title="Abstraction of a formulation with multiple backing model object that implements the BMI." alt="" coords="482,1656,679,2261"/>
+<area shape="rect" id="node11" href="$classrealization_1_1_bmi___multi___formulation.html" title="Abstraction of a formulation with multiple backing model object that implements the BMI." alt="" coords="482,1612,690,2305"/>
 <area shape="rect" id="node7" href="$classrealization_1_1_bmi___c___formulation.html" title=" " alt="" coords="51,3712,238,3995"/>
 <area shape="rect" id="node9" href="$classrealization_1_1_bmi___cpp___formulation.html" title="Encapsulates a bmi::Bmi model in C++ such that it can be loaded as a formulation, as such also so tha..." alt="" coords="311,3712,498,3995"/>
 </map>

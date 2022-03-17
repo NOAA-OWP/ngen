@@ -676,12 +676,15 @@ var sectionId = 'dynsection-0';
 <g id="node12" class="node">
 <title>Node12</title>
 <g id="a_node12"><a xlink:href="classrealization_1_1_bmi___multi___formulation.html" target="_top" xlink:title="Abstraction of a formulation with multiple backing model object that implements the BMI.">
-<polygon fill="white" stroke="black" points="342.28,-1300.5 342.28,-1753.5 490.28,-1753.5 490.28,-1300.5 342.28,-1300.5"/>
-<text text-anchor="start" x="350.28" y="-1741.5" font-family="Helvetica,sans-Serif" font-size="10.00">realization::Bmi_Multi</text>
-<text text-anchor="middle" x="416.28" y="-1730.5" font-family="Helvetica,sans-Serif" font-size="10.00">_Formulation</text>
-<polyline fill="none" stroke="black" points="342.28,-1723.5 490.28,-1723.5 "/>
-<text text-anchor="start" x="350.28" y="-1711.5" font-family="Helvetica,sans-Serif" font-size="10.00"># availableData</text>
-<text text-anchor="start" x="350.28" y="-1700.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; available_forcings</text>
+<polygon fill="white" stroke="black" points="342.28,-1267.5 342.28,-1786.5 498.28,-1786.5 498.28,-1267.5 342.28,-1267.5"/>
+<text text-anchor="start" x="350.28" y="-1774.5" font-family="Helvetica,sans-Serif" font-size="10.00">realization::Bmi_Multi</text>
+<text text-anchor="middle" x="420.28" y="-1763.5" font-family="Helvetica,sans-Serif" font-size="10.00">_Formulation</text>
+<polyline fill="none" stroke="black" points="342.28,-1756.5 498.28,-1756.5 "/>
+<text text-anchor="start" x="350.28" y="-1744.5" font-family="Helvetica,sans-Serif" font-size="10.00"># availableData</text>
+<text text-anchor="start" x="350.28" y="-1733.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; available_forcings</text>
+<text text-anchor="start" x="350.28" y="-1722.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; default_output_values</text>
+<text text-anchor="start" x="350.28" y="-1711.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; deferredProviders</text>
+<text text-anchor="start" x="350.28" y="-1700.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; deferredProviderModuleIndices</text>
 <text text-anchor="start" x="350.28" y="-1689.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; is_out_vars_from_last_mod</text>
 <text text-anchor="start" x="350.28" y="-1678.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; modules</text>
 <text text-anchor="start" x="350.28" y="-1667.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; module_types</text>
@@ -689,7 +692,7 @@ var sectionId = 'dynsection-0';
 <text text-anchor="start" x="350.28" y="-1645.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; next_time_step_index</text>
 <text text-anchor="start" x="350.28" y="-1634.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; primary_module_index</text>
 <text text-anchor="start" x="350.28" y="-1623.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; Bmi_Multi_Formulation_Test</text>
-<polyline fill="none" stroke="black" points="342.28,-1616.5 490.28,-1616.5 "/>
+<polyline fill="none" stroke="black" points="342.28,-1616.5 498.28,-1616.5 "/>
 <text text-anchor="start" x="350.28" y="-1604.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ Bmi_Multi_Formulation()</text>
 <text text-anchor="start" x="350.28" y="-1593.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ ~Bmi_Multi_Formulation()</text>
 <text text-anchor="start" x="350.28" y="-1582.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ calc_et()</text>
@@ -717,15 +720,18 @@ var sectionId = 'dynsection-0';
 <text text-anchor="start" x="350.28" y="-1340.5" font-family="Helvetica,sans-Serif" font-size="10.00">_as_double()</text>
 <text text-anchor="start" x="350.28" y="-1329.5" font-family="Helvetica,sans-Serif" font-size="10.00"># get_var_value_as_double()</text>
 <text text-anchor="start" x="350.28" y="-1318.5" font-family="Helvetica,sans-Serif" font-size="10.00"># get_var_value_as_double()</text>
-<text text-anchor="start" x="350.28" y="-1307.5" font-family="Helvetica,sans-Serif" font-size="10.00"># init_nested_module()</text>
+<text text-anchor="start" x="350.28" y="-1307.5" font-family="Helvetica,sans-Serif" font-size="10.00"># init_deferred_associations()</text>
+<text text-anchor="start" x="350.28" y="-1296.5" font-family="Helvetica,sans-Serif" font-size="10.00"># init_nested_module()</text>
+<text text-anchor="start" x="350.28" y="-1285.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; setup_nested_deferred</text>
+<text text-anchor="start" x="350.28" y="-1274.5" font-family="Helvetica,sans-Serif" font-size="10.00">_provider()</text>
 </a>
 </g>
 </g>
 <!-- Node6&#45;&gt;Node12 -->
 <g id="edge13" class="edge">
 <title>Node6&#45;&gt;Node12</title>
-<path fill="none" stroke="midnightblue" d="M316.3,-2001.42C320.42,-1983.7 324.45,-1966.06 328.28,-1949 342.47,-1885.7 357.16,-1816.88 370.38,-1753.58"/>
-<polygon fill="none" stroke="midnightblue" points="312.87,-2000.74 314.01,-2011.27 319.69,-2002.33 312.87,-2000.74"/>
+<path fill="none" stroke="midnightblue" d="M316.13,-2001.38C320.28,-1983.67 324.38,-1966.04 328.28,-1949 340.28,-1896.58 352.79,-1840.41 364.59,-1786.73"/>
+<polygon fill="none" stroke="midnightblue" points="312.7,-2000.69 313.82,-2011.23 319.51,-2002.29 312.7,-2000.69"/>
 </g>
 <!-- Node8 -->
 <g id="node8" class="node">

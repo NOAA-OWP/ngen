@@ -1,0 +1,15 @@
+<map id="forcing::OptionalWrappedProvider" name="forcing::OptionalWrappedProvider">
+<area shape="rect" id="node1" title="Extension of DeferredWrappedProvider, where default values can be used instead of a backing provider." alt="" coords="505,1021,715,1319"/>
+<area shape="rect" id="node2" href="$classforcing_1_1_deferred_wrapped_provider.html" title="A specialized @WrappedForcingProvider that is created without first knowing the backing source it wra..." alt="" coords="274,763,463,972"/>
+<area shape="rect" id="node3" href="$classforcing_1_1_wrapped_forcing_provider.html" title="Simple implementation that basically wraps another instance." alt="" coords="5,447,215,700"/>
+<area shape="rect" id="node4" href="$classforcing_1_1_forcing_provider.html" title="An abstraction interface for types that provides forcing data." alt="" coords="7,160,175,384"/>
+<area shape="rect" id="node5" title=" " alt="" coords="239,535,375,612"/>
+<area shape="rect" id="node6" title=" " alt="" coords="392,233,471,311"/>
+<area shape="rect" id="node10" title=" " alt="" coords="707,535,878,612"/>
+<area shape="rect" id="node13" title=" " alt="" coords="537,535,683,612"/>
+<area shape="rect" id="node7" title=" " alt="" coords="367,5,491,97"/>
+<area shape="rect" id="node8" title=" " alt="" coords="239,233,351,311"/>
+<area shape="rect" id="node9" title=" " alt="" coords="532,13,571,90"/>
+<area shape="rect" id="node11" title=" " alt="" coords="605,233,722,311"/>
+<area shape="rect" id="node12" title=" " alt="" coords="645,13,684,90"/>
+</map>

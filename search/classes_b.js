@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['multilinestringfeature_0',['MultiLineStringFeature',['../classgeojson_1_1_multi_line_string_feature.html',1,'geojson']]],
-  ['multipointfeature_1',['MultiPointFeature',['../classgeojson_1_1_multi_point_feature.html',1,'geojson']]],
-  ['multipolygonfeature_2',['MultiPolygonFeature',['../classgeojson_1_1_multi_polygon_feature.html',1,'geojson']]]
+  ['linestringfeature_0',['LineStringFeature',['../classgeojson_1_1_line_string_feature.html',1,'geojson']]],
+  ['list_1',['List',['../structgeojson_1_1_list.html',1,'geojson']]]
 ];
