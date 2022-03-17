@@ -28,13 +28,13 @@ tasks:
     command: cmake --build extern/topmodel/cmake_build/ --target all
   - name: build t-route
     init: pip install -r extern/t-route/requirements.txt
-    command: "pip install -e ngen/extern/t-route/src/ngen_routing \
-      && pip install -e ngen/extern/t-route/src/nwm_routing \
+    command: "pip install -e extern/t-route/src/ngen_routing \
+      && pip install -e extern/t-route/src/nwm_routing \
       && pushd extern/t-route/src/python_routing_v02 \
       && ./compiler.sh \
       ; popd"
   - name: Build ngen
-    init: cmake -S . -B cmake_build
+    init: cmake -S . -B cmake_build -DBMI_C_LIB_ACTIVE=1 -DBMI_FORTRAN_ACTIVE=1
     command: cmake --build cmake_build --target all
 
     
