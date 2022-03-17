@@ -4,7 +4,7 @@ tasks:
   - name: Prebuild
     before: export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
     init: |
-      python -m venv .venv
+      python3 -m venv .venv
       . .venv/bin/activate
       git submodule update --init --recursive extern/
       cmake -S extern/iso_c_fortran_bmi/ -B extern/iso_c_fortran_bmi/cmake_build
@@ -27,7 +27,8 @@ tasks:
       pushd extern/t-route/src/python_routing_v02
       ./compiler.sh
       popd
-      cmake -S . -B cmake_build -DBMI_C_LIB_ACTIVE=1 -DBMI_FORTRAN_ACTIVE=1
+      pip install pyyaml bmipy
+      cmake -S . -B cmake_build -DBMI_C_LIB_ACTIVE=1 -DBMI_FORTRAN_ACTIVE=1 -DNGEN_ACTIVATE_ROUTING=1
       cmake --build cmake_build --target all
   - name: Workshell
     before: |
