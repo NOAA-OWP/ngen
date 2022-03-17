@@ -1,40 +1,37 @@
 image:
   file: .gitpod.Dockerfile
 tasks:
-  - name: Update submodules
-    command: git submodule update --init --recursive extern/
-  - name: Python requirements
-    init: pip install -r extern/t-route/requirements.txt
-  - name: Build iso_c_fortran_bmi
-    init: cmake -S extern/iso_c_fortran_bmi/ -B extern/iso_c_fortran_bmi/cmake_build
-    command: cmake --build extern/iso_c_fortran_bmi/cmake_build/ --target all
-  - name: build test_bmi_c
-    init: cmake -S extern/test_bmi_c -B extern/test_bmi_c/cmake_build
-    command: cmake --build extern/test_bmi_c/cmake_build/ --target all
-  - name: build test_bmi_fortran
-    init: cmake -S extern/test_bmi_fortran/ -B extern/test_bmi_fortran/cmake_build
-    command: cmake --build extern/test_bmi_fortran/cmake_build/ --target all
-  - name: build evapotranspiration
-    init: cmake -S extern/evapotranspiration/ -B extern/evapotranspiration/cmake_build
-    command: cmake --build extern/evapotranspiration/cmake_build/ --target all
-  - name: build noah-owp-modular
-    init: cmake -S extern/noah-owp-modular/ -B extern/noah-owp-modular/cmake_build
-    command: cmake --build extern/noah-owp-modular/cmake_build/ --target all
-  - name: build cfe
-    init: cmake -S extern/cfe/ -B extern/cfe/cmake_build
-    command: cmake --build extern/cfe/cmake_build/ --target all
-  - name: build topmodel
-    init: cmake -S extern/topmodel/ -B extern/topmodel/cmake_build
-    command: cmake --build extern/topmodel/cmake_build/ --target all
-  - name: build t-route
-    init: pip install -r extern/t-route/requirements.txt
-    command: "pip install -e extern/t-route/src/ngen_routing \
-      && pip install -e extern/t-route/src/nwm_routing \
-      && pushd extern/t-route/src/python_routing_v02 \
-      && ./compiler.sh \
-      ; popd"
-  - name: Build ngen
-    init: cmake -S . -B cmake_build -DBMI_C_LIB_ACTIVE=1 -DBMI_FORTRAN_ACTIVE=1
-    command: cmake --build cmake_build --target all
+  - name: Prebuild
+    before: export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
+    init: |
+      python -m venv .venv
+      . .venv/bin/activate
+      git submodule update --init --recursive extern/
+      cmake -S extern/iso_c_fortran_bmi/ -B extern/iso_c_fortran_bmi/cmake_build
+      cmake -S extern/test_bmi_c -B extern/test_bmi_c/cmake_build
+      cmake -S extern/test_bmi_fortran/ -B extern/test_bmi_fortran/cmake_build
+      cmake -S extern/evapotranspiration/ -B extern/evapotranspiration/cmake_build
+      cmake -S extern/noah-owp-modular/ -B extern/noah-owp-modular/cmake_build
+      cmake -S extern/cfe/ -B extern/cfe/cmake_build
+      cmake -S extern/topmodel/ -B extern/topmodel/cmake_build
+      cmake --build extern/iso_c_fortran_bmi/cmake_build/ --target all
+      cmake --build extern/test_bmi_c/cmake_build/ --target all
+      cmake --build extern/test_bmi_fortran/cmake_build/ --target all
+      cmake --build extern/evapotranspiration/cmake_build/ --target all
+      cmake --build extern/noah-owp-modular/cmake_build/ --target all
+      cmake --build extern/cfe/cmake_build/ --target all
+      cmake --build extern/topmodel/cmake_build/ --target all
+      pip install -r extern/t-route/requirements.txt
+      pip install -e extern/t-route/src/ngen_routing
+      pip install -e extern/t-route/src/nwm_routing
+      pushd extern/t-route/src/python_routing_v02
+      ./compiler.sh
+      popd
+      cmake -S . -B cmake_build -DBMI_C_LIB_ACTIVE=1 -DBMI_FORTRAN_ACTIVE=1
+      cmake --build cmake_build --target all
+  - name: Workshell
+    before: |
+      export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
+      . .venv/bin/activate
 
     
