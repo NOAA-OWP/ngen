@@ -17,6 +17,7 @@
 #include <utility>
 #include <vector>
 #include <memory>
+#include <limits>
 
 namespace tshirt {
 

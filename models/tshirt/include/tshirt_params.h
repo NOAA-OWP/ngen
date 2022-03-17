@@ -1,6 +1,8 @@
 #ifndef NGEN_TSHIRT_PARAMS_H
 #define NGEN_TSHIRT_PARAMS_H
 
+#include <limits>
+
 namespace tshirt {
 
     /**
@@ -78,7 +80,7 @@ namespace tshirt {
                 max_groundwater_storage_meters(max_gw_storage) {
             this->max_soil_storage_meters = this->depth * maxsmc;
             this->Cschaake = refkdt * satdk / (2.0e-6);
-            this->max_lateral_flow = numeric_limits<double>::max();//satdk * multiplier * this->max_soil_storage_meters;
+            this->max_lateral_flow = std::numeric_limits<double>::max();//satdk * multiplier * this->max_soil_storage_meters;
         }
 
     };
