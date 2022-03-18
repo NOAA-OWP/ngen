@@ -83,53 +83,53 @@ supernetwork_parameters:
     layer_string: 0
 
 #waterbody parameters and assignments from lake parm file
-waterbody_parameters:
-    level_pool:
-        #WRF-Hydro lake parm file
-        level_pool_waterbody_parameter_file_path: "../../test/input/geo/NWM_2.1_Sample_Datasets/Croton_NY_TEST1/primary_domain/DOMAIN/LAKEPARM.nc"
-        level_pool_waterbody_id: lake_id
-        level_pool_waterbody_area: LkArea
-        level_pool_weir_elevation: WeirE
-        level_pool_waterbody_max_elevation: LkMxE
-        level_pool_outfall_weir_coefficient: WeirC
-        level_pool_outfall_weir_length: WeirL
-        level_pool_overall_dam_length: DamL
-        level_pool_orifice_elevation: OrificeE
-        level_pool_orifice_coefficient: OrificeC
-        level_pool_orifice_area: OrificeA
+# waterbody_parameters:
+#     level_pool:
+#         #WRF-Hydro lake parm file
+#         level_pool_waterbody_parameter_file_path: "./test/data/routing/waterbody-params.json"
+#         level_pool_waterbody_id: lake_id
+#         level_pool_waterbody_area: LkArea
+#         level_pool_weir_elevation: WeirE
+#         level_pool_waterbody_max_elevation: LkMxE
+#         level_pool_outfall_weir_coefficient: WeirC
+#         level_pool_outfall_weir_length: WeirL
+#         level_pool_overall_dam_length: DamL
+#         level_pool_orifice_elevation: OrificeE
+#         level_pool_orifice_coefficient: OrificeC
+#         level_pool_orifice_area: OrificeA
 
-    hybrid_and_rfc:
-        # Specify the reservoir parameter file
-        reservoir_parameter_file: ""
+#     hybrid_and_rfc:
+#         # Specify the reservoir parameter file
+#         reservoir_parameter_file: ""
 
-        # If using USGS persistence reservoirs, set to True. (default=.FALSE.)
-        reservoir_persistence_usgs: False
+#         # If using USGS persistence reservoirs, set to True. (default=.FALSE.)
+#         reservoir_persistence_usgs: False
 
-        # Specify the path to the timeslice files to be used by USGS reservoirs
-        reservoir_usgs_timeslice_path: "../../test/input/geo/NWM_2.1_Sample_Datasets/Croton_NY_TEST1/observations/"
+#         # Specify the path to the timeslice files to be used by USGS reservoirs
+#         reservoir_usgs_timeslice_path: "../../test/input/geo/NWM_2.1_Sample_Datasets/Croton_NY_TEST1/observations/"
 
-        # If using USACE persistence reservoirs, set to True. (default=.FALSE.)
-        reservoir_persistence_usace: False
+#         # If using USACE persistence reservoirs, set to True. (default=.FALSE.)
+#         reservoir_persistence_usace: False
 
-        # Specify the path to the timeslice files to be used by USACE reservoirs
-        reservoir_usace_timeslice_path: ""
+#         # Specify the path to the timeslice files to be used by USACE reservoirs
+#         reservoir_usace_timeslice_path: ""
 
-        # Specify lookback hours to read reservoir observation data
-        reservoir_observation_lookback_hours: 48
+#         # Specify lookback hours to read reservoir observation data
+#         reservoir_observation_lookback_hours: 48
 
-        # Specify update time interval in seconds to read new reservoir observation data
-        # The default is 86400 (seconds per day). Set to 3600 for standard and extended AnA simulations.
-        # Set to 1000000000 for short range and medium range forecasts.
-        reservoir_observation_update_time_interval_seconds: 1000000000
+#         # Specify update time interval in seconds to read new reservoir observation data
+#         # The default is 86400 (seconds per day). Set to 3600 for standard and extended AnA simulations.
+#         # Set to 1000000000 for short range and medium range forecasts.
+#         reservoir_observation_update_time_interval_seconds: 1000000000
         
-        # If using RFC forecast reservoirs, set to True. (default=.FALSE.)
-        reservoir_rfc_forecasts: False
+#         # If using RFC forecast reservoirs, set to True. (default=.FALSE.)
+#         reservoir_rfc_forecasts: False
 
-        # Specify the path to the RFC time series files to be used by reservoirs
-        reservoir_rfc_forecasts_time_series_path: "../../test/input/geo/NWM_2.1_Sample_Datasets/Croton_NY_TEST1/observations/"
+#         # Specify the path to the RFC time series files to be used by reservoirs
+#         reservoir_rfc_forecasts_time_series_path: "../../test/input/geo/NWM_2.1_Sample_Datasets/Croton_NY_TEST1/observations/"
 
-        # Specify lookback hours to read reservoir RFC forecasts
-        reservoir_rfc_forecasts_lookback_hours: 48
+#         # Specify lookback hours to read reservoir RFC forecasts
+#         reservoir_rfc_forecasts_lookback_hours: 48
 
 #WRF-Hydro output file
 forcing_parameters:
