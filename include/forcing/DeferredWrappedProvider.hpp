@@ -4,6 +4,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <algorithm>
 #include "WrappedForcingProvider.hpp"
 
 using namespace std;
