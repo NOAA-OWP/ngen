@@ -226,28 +226,31 @@ var NAVTREE =
         [ "Modeling References", "md_doc_references.html#autotoc_md164", null ]
       ] ]
     ] ],
-    [ "Installation instructions", "md__i_n_s_t_a_l_l.html", null ],
+    [ "Installation instructions", "md__i_n_s_t_a_l_l.html", [
+      [ "Building and running with docker:", "md__i_n_s_t_a_l_l.html#autotoc_md167", null ],
+      [ "Building manually:", "md__i_n_s_t_a_l_l.html#autotoc_md168", null ]
+    ] ],
     [ "Guidance on how to contribute", "md__c_o_n_t_r_i_b_u_t_i_n_g.html", [
-      [ "Using the issue tracker", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md167", null ],
-      [ "Changing the code-base", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md168", null ]
+      [ "Using the issue tracker", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md171", null ],
+      [ "Changing the code-base", "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md172", null ]
     ] ],
     [ "Disclaimer", "md__t_e_r_m_s.html", [
-      [ "Exceptions", "md__t_e_r_m_s.html#autotoc_md171", null ]
+      [ "Exceptions", "md__t_e_r_m_s.html#autotoc_md175", null ]
     ] ],
     [ "Testing", "md_test__r_e_a_d_m_e.html", [
-      [ "Testing Frameworks", "md_test__r_e_a_d_m_e.html#autotoc_md173", [
-        [ "<strong>Google Test</strong>", "md_test__r_e_a_d_m_e.html#autotoc_md174", [
-          [ "(Re)generating CMake Project Buildsystem", "md_test__r_e_a_d_m_e.html#autotoc_md175", null ]
+      [ "Testing Frameworks", "md_test__r_e_a_d_m_e.html#autotoc_md177", [
+        [ "<strong>Google Test</strong>", "md_test__r_e_a_d_m_e.html#autotoc_md178", [
+          [ "(Re)generating CMake Project Buildsystem", "md_test__r_e_a_d_m_e.html#autotoc_md179", null ]
         ] ]
       ] ],
-      [ "Executing Automated Tests", "md_test__r_e_a_d_m_e.html#autotoc_md176", [
-        [ "C++ Tests", "md_test__r_e_a_d_m_e.html#autotoc_md177", [
-          [ "Test Targets and Executables", "md_test__r_e_a_d_m_e.html#autotoc_md178", null ]
+      [ "Executing Automated Tests", "md_test__r_e_a_d_m_e.html#autotoc_md180", [
+        [ "C++ Tests", "md_test__r_e_a_d_m_e.html#autotoc_md181", [
+          [ "Test Targets and Executables", "md_test__r_e_a_d_m_e.html#autotoc_md182", null ]
         ] ]
       ] ],
-      [ "Creating New Automated Tests", "md_test__r_e_a_d_m_e.html#autotoc_md179", [
-        [ "Adding Tests to CMake Builds", "md_test__r_e_a_d_m_e.html#autotoc_md180", null ],
-        [ "Test Creation Rules of Thumb", "md_test__r_e_a_d_m_e.html#autotoc_md181", null ]
+      [ "Creating New Automated Tests", "md_test__r_e_a_d_m_e.html#autotoc_md183", [
+        [ "Adding Tests to CMake Builds", "md_test__r_e_a_d_m_e.html#autotoc_md184", null ],
+        [ "Test Creation Rules of Thumb", "md_test__r_e_a_d_m_e.html#autotoc_md185", null ]
       ] ]
     ] ],
     [ "Todo List", "todo.html", null ],
@@ -299,9 +302,9 @@ var NAVTREEINDEX =
 "classrealization_1_1_et___accountable.html#aecbcd97cc55243b6c1f5210471d92b55",
 "classrealization_1_1_tshirt___realization.html#a14ec7726c6849eb23e3de6d6c0005c47",
 "functions_vars_c.html",
-"namespacegeojson.html#a89dc78a6264929ea729d0911730835b6",
-"structet_1_1evapotranspiration__options.html#a80444e1cc009b709fa5b895e68f3931c",
-"structnetwork_1_1preorder__visitor.html#aba261774f75ea486a5602cfff798cf63"
+"namespacegeojson.html#a7a273ee312ad3ada76516127bef9a238",
+"structet_1_1evapotranspiration__options.html#a78976e7f0027baae1252c1d1cdec17a0",
+"structnetwork_1_1preorder__visitor.html#aafa30c5f3851cc919b9609401e238eed"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

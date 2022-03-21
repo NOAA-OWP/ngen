@@ -85,15 +85,39 @@ $(document).ready(function(){initNavTree('md__i_n_s_t_a_l_l.html',''); initResiz
   <div class="headertitle"><div class="title">Installation instructions </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p >At present, a standard installation process is not supported.</p>
-<p >To use, first make sure all necessary <a class="el" href="md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html">dependencies</a> are installed, and then <a class="el" href="md_doc__b_u_i_l_d_s__a_n_d__c_m_a_k_e.html">build the main ngen target with CMake</a>. Then run the executable, as described <a href="README.md#usage">here for basic use</a> or <a href="doc/DISTRIBUTED_PROCESSING.md#examples">here for distributed execution</a>. </p>
+<div class="textblock"><p >At present, there is no supported standard installation process.</p>
+<hr  />
+<h1><a class="anchor" id="autotoc_md167"></a>
+Building and running with docker:</h1>
+<p >The quickest way to build and run NGEN is to follow what we do for our <a href="./docker/CENTOS_NGEN_RUN.dockerfile">model run testing</a>:</p>
+<p >First we make a new directory: <code>mkdir ngen &amp;&amp; cd ngen</code></p>
+<p >Then clone the github repository: <code>git clone <a href="https://github.com/NOAA-OWP/ngen.git">https://github.com/NOAA-OWP/ngen.git</a></code></p>
+<p >Then we can build with docker: <code>docker build . --file ./docker/CENTOS_NGEN_RUN.dockerfile --tag localbuild/ngen:latest</code></p>
+<h1><a class="anchor" id="autotoc_md168"></a>
+Building manually:</h1>
+<p ><b>Install the Linux required packages (package names shown for Centos 8.4.2105):</b></p>
+<p >` yum install tar git gcc-c++ gcc make cmake python38 python38-devel python38-numpy bzip2 udunits2-devel texinfo `</p>
+<p ><b>Make a directory to contain all the NGEN items:</b></p>
+<p >` mkdir ngen &amp;&amp; cd ngen `</p>
+<p ><b>Download the Boost Libraries:</b></p>
+<p >` curl -L -O <a href="https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2">https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2</a> \ &amp;&amp; tar -xjf boost_1_72_0.tar.bz2 \ &amp;&amp; rm boost_1_72_0.tar.bz2 `</p>
+<p ><b>Set the ENV for Boost and C compiler:</b></p>
+<p >` set BOOST_ROOT="/boost_1_72_0" <code> </code> set CXX=/usr/bin/g++ `</p>
+<p ><b>Get the git submodules:</b></p>
+<p >` git submodule update &ndash;init &ndash;recursive &ndash; test/googletest <code> </code> git submodule update &ndash;init &ndash;recursive &ndash; extern/pybind11 `</p>
+<p ><b>Build NGEN using cmake:</b></p>
+<p >` cmake -B /ngen -S . &amp;&amp; cmake &ndash;build . &ndash;target ngen `</p>
+<p ><b>Running the Model:</b> ` ./ngen data/catchment_data.geojson "" data/nexus_data.geojson "" data/example_realization_config.json `</p>
+<hr  />
+<p ><b>Further information on each step:</b></p>
+<p >Make sure all necessary <a class="el" href="md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html">dependencies</a> are installed, and then <a class="el" href="md_doc__b_u_i_l_d_s__a_n_d__c_m_a_k_e.html">build the main ngen target with CMake</a>. Then run the executable, as described <a href="README.md#usage">here for basic use</a> or <a href="doc/DISTRIBUTED_PROCESSING.md#examples">here for distributed execution</a>. </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Mar 21 2022 16:12:56 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3 </li>
+    <li class="footer">Generated on Mon Mar 21 2022 16:32:49 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3 </li>
   </ul>
 </div>
 </body>
