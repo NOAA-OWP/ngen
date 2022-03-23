@@ -99,15 +99,20 @@ jobs:
       run: |
         sudo apt-get install -y libnetcdf-dev libnetcdff-dev
 
-    - name: Cache troute dependency
-      id: cache-linux-troute-dep
-      uses: actions/cache@v1
-      with:
-        path: .venv
-        key: linux-troute-dep
+    # Disabling this cache for the time being for a few reasons
+    # 1) t-route build/install can be tricky without pre-cythonized sources
+    # 2) may not want to use a cached version of t-route if we are testing its integration
+    #    we want to use the latest code in the submodule and make sure it works...a cached version
+    #    wouldn't be good for that...
+    #- name: Cache troute dependency
+    #  id: cache-linux-troute-dep
+    #  uses: actions/cache@v1
+    #  with:
+    #    path: .venv
+    #    key: linux-troute-dep-fixed
 
     - name: Build T-route Dependency
-      if: steps.cache-linux-troute-dep.outputs.cache-hit != 'true'
+      #if: steps.cache-linux-troute-dep.outputs.cache-hit != 'true'
       run: |
         python -m venv .venv
         . .venv/bin/activate
@@ -115,8 +120,8 @@ jobs:
         pip install pip
         pip install -r requirements.txt
         cd src
-        pip install -e nwm_routing
-        pip install -e ngen_routing
+        pip install -e nwm_routing/
+        pip install -e ngen_routing/
         cd python_routing_v02
         FC=gfortran ./compiler.sh
         deactivate
