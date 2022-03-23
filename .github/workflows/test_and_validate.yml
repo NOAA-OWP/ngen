@@ -479,10 +479,10 @@ jobs:
         run: git submodule update --init --recursive
 
       - name: cmake_petbmi_shared_lib_build
-        run: cmake -B extern/evapotranspiration/cmake_build -S extern/evapotranspiration/
+        run: cmake -B extern/evapotranspiration/evapotranspiration/cmake_build -S extern/evapotranspiration/evapotranspiration
 
       - name: build_petbmi_shared_lib
-        run: cmake --build extern/evapotranspiration/cmake_build/ --target petbmi -- -j ${{ env.LINUX_NUM_PROC_CORES }}
+        run: cmake --build extern/evapotranspiration/evapotranspiration/cmake_build/ --target petbmi -- -j ${{ env.LINUX_NUM_PROC_CORES }}
 
       - name: Cache Boost Dependency
         id: cache-boost-dep
@@ -517,13 +517,13 @@ jobs:
         run: cmake --build cmake_build --target clean
 
       - name: clean_shared_lib_build
-        run: cmake --build extern/evapotranspiration/cmake_build --target clean
+        run: cmake --build extern/evapotranspiration/evapotranspiration/cmake_build --target clean
 
       - name: cleanup_dir
         run: rm -rf cmake_build
 
       - name: cleanup_dir
-        run: rm -rf extern/evapotranspiration/cmake_build
+        run: rm -rf extern/evapotranspiration/evapotranspiration/cmake_build
 
   # Run general unit tests in MacOS environment
   test_unit_macos_latest:
@@ -938,10 +938,10 @@ jobs:
         run: git submodule update --init --recursive
 
       - name: cmake_petbmi_shared_lib_build
-        run: cmake -B extern/evapotranspiration/cmake_build -S extern/evapotranspiration/
+        run: cmake -B extern/evapotranspiration/evapotranspiration/cmake_build -S extern/evapotranspiration/evapotranspiration
 
       - name: build_petbmi_shared_lib
-        run: cmake --build extern/evapotranspiration/cmake_build/ --target petbmi -- -j ${{ env.MACOS_NUM_PROC_CORES }}
+        run: cmake --build extern/evapotranspiration/evapotranspiration/cmake_build/ --target petbmi -- -j ${{ env.MACOS_NUM_PROC_CORES }}
 
       - name: Cache Boost Dependency
         id: cache-boost-dep
@@ -976,13 +976,13 @@ jobs:
         run: cmake --build cmake_build --target clean
 
       - name: clean_shared_lib_build
-        run: cmake --build extern/evapotranspiration/cmake_build --target clean
+        run: cmake --build extern/evapotranspiration/evapotranspiration/cmake_build --target clean
 
       - name: cleanup_dir
         run: rm -rf cmake_build
 
       - name: cleanup_dir
-        run: rm -rf extern/evapotranspiration/cmake_build
+        run: rm -rf extern/evapotranspiration/evapotranspiration/cmake_build
 
   # TODO: fails due to compilation error, at least in large part due to use of POSIX functions not supported on Windows.
   # TODO: Need to determine whether Windows support (in particular, development environment support) is necessary.
