@@ -77,23 +77,23 @@ TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataRead)
     auto duration = nc_provider->record_duration();
 
     // read exactly one time step correctly aligned
-    double val1 = nc_provider->get_value(ids[0], "T2D", start_time, duration, "K", data_access::NetCDFPerFeatureDataProvider::MEAN);
+    double val1 = nc_provider->get_value(NetCDFDataSelector(ids[0], "T2D", start_time, duration, "K"), data_access::NetCDFPerFeatureDataProvider::MEAN);
 
     EXPECT_NEAR(val1, 263.1, 0.00000612);
 
     // read 1/2 of a time step correctly aligned
-    double val2 = nc_provider->get_value(ids[0], "T2D", start_time, duration / 2, "K", data_access::NetCDFPerFeatureDataProvider::MEAN);
+    double val2 = nc_provider->get_value(NetCDFDataSelector(ids[0], "T2D", start_time, duration / 2, "K"), data_access::NetCDFPerFeatureDataProvider::MEAN);
 
     EXPECT_NEAR(val2, 263.1, 0.00000612);
 
     // read 4 time steps correctly aligned
-    double val3 = nc_provider->get_value(ids[0], "T2D", start_time, duration * 4, "K", data_access::NetCDFPerFeatureDataProvider::MEAN);
+    double val3 = nc_provider->get_value(NetCDFDataSelector(ids[0], "T2D", start_time, duration * 4, "K"), data_access::NetCDFPerFeatureDataProvider::MEAN);
 
     EXPECT_NEAR(val3, 262.31, 0.00000612);
 
     // read exactly one time step correctly aligned but with a incorrect variable
     EXPECT_THROW(
-        double val4 = nc_provider->get_value(ids[0], "T3D", start_time, duration, "K", data_access::NetCDFPerFeatureDataProvider::MEAN);, 
+        double val4 = nc_provider->get_value(NetCDFDataSelector(ids[0], "T3D", start_time, duration, "K"), data_access::NetCDFPerFeatureDataProvider::MEAN);, 
         NcException);
     
 }
