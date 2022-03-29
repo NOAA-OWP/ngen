@@ -280,7 +280,7 @@ namespace data_access
          * @return The value of the forcing property for the described time period, with units converted if needed.
          * @throws std::out_of_range If data for the time period is not available.
          */
-        double get_value(NetCDFDataSelector selector, ReSampleMethod m)
+        double get_value(const NetCDFDataSelector& selector, ReSampleMethod m)
         {
             auto init_time = selector.get_init_time();
             auto stop_time = init_time + selector.get_duration_secs();

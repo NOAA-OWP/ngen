@@ -44,28 +44,28 @@ class DataSelector
      * 
      * @return std::string 
      */
-    std::string get_variable_name() { return variable_name; }
+    std::string get_variable_name() const { return variable_name; }
 
     /**
      * @brief Get the initial time for this selector
      * 
      * @return time_t 
      */
-    time_t get_init_time() { return init_time; }
+    time_t get_init_time() const { return init_time; }
 
     /**
      * @brief Get the duration in seconds that is requested by this selector
      * 
      * @return long 
      */
-    long get_duration_secs() { return duration_s; }
+    long get_duration_secs() const { return duration_s; }
 
     /**
      * @brief Get the output units that is requested by this selector
      * 
      * @return std::string 
      */
-    std::string get_output_units() { return output_units; }
+    std::string get_output_units() const { return output_units; }
 
     /**
      * @brief Set the variable name for this selector
@@ -104,6 +104,18 @@ class DataSelector
 };
 
 /**
+ * @brief This a data selector intended for use with CSV data
+ * 
+ */
+
+class CSVDataSelector : public DataSelector
+{
+    public:
+
+    private:
+};
+
+/**
  * @brief This is the data selector intended for use with netcdf providers
  * 
  */
@@ -125,7 +137,7 @@ class NetCDFDataSelector : public DataSelector
      * 
      * @return std::string 
      */
-    std::string get_id() { return id_str; }
+    std::string get_id() const { return id_str; }
 
     /**
      * @brief Set the id string for this NetCDF Data Selector
