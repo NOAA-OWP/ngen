@@ -2,6 +2,7 @@
 #define NGEN_NETCDF_PER_FEATURE_DATAPROVIDER_HPP
 
 #include "DataProvider.hpp"
+#include "DataProviderSelectors.hpp"
 
 #include <string>
 #include <algorithm>
@@ -18,21 +19,7 @@ using namespace netCDF::exceptions;
 
 namespace data_access
 {
-    class Catchment_Id
-    {
-        public:
-
-        Catchment_Id(std::string id) : id_str(id) {}
-        Catchment_Id(const char* id) : id_str(id) {}
-
-        operator std::string() const { return id_str; }
-
-        private:
-
-        std::string id_str;
-    };
-
-    class NetCDFPerFeatureDataProvider : public DataProvider<double, Catchment_Id>
+    class NetCDFPerFeatureDataProvider : public DataProvider<double, NetCDFDataSelector>
     {
         
         public:
@@ -289,18 +276,14 @@ namespace data_access
          * An @ref std::out_of_range exception should be thrown if the data for the time period is not available.
          *
          * @param selector Data required to establish what subset of the stored data should be accessed
-         * @param variable_name The name of the data property of interest.
-         * @param init_time The epoch time (in seconds) of the start of the time period.
-         * @param duration_seconds The length of the time period, in seconds.
-         * @param output_units The expected units of the desired output value.
          * @param m How data is to be resampled if there is a mismatch in data alignment or repeat rate
          * @return The value of the forcing property for the described time period, with units converted if needed.
          * @throws std::out_of_range If data for the time period is not available.
          */
-        double get_value(Catchment_Id selector, const std::string &variable_name, const time_t &init_time, const long &duration_s,
-                                 const std::string &output_units, ReSampleMethod m)
+        double get_value(NetCDFDataSelector selector, ReSampleMethod m)
         {
-            auto stop_time = init_time + duration_s;
+            auto init_time = selector.get_init_time();
+            auto stop_time = init_time + selector.get_duration_secs();
             
             auto idx1 = get_ts_index_for_time(init_time);
             auto idx2 = get_ts_index_for_time(stop_time);
@@ -309,7 +292,7 @@ namespace data_access
 
             std::vector<std::size_t> start, count;
 
-            auto cat_pos = id_pos[selector];
+            auto cat_pos = id_pos[selector.get_id()];
 
             start.push_back(cat_pos);
             start.push_back(idx1);
@@ -321,7 +304,7 @@ namespace data_access
 
             double rvalue = 0.0;
 
-            auto ncvar = nc_file->getVar(variable_name);
+            auto ncvar = nc_file->getVar(selector.get_variable_name());
 
             std::string native_units;
             
@@ -381,7 +364,7 @@ namespace data_access
                     // the data values where allready scaled for where there was only partial use of a data value
                     // so we just need to do a final scale to account for the differnce between time_stride and duration_s
 
-                    double scale_factor = (duration_s > time_stride ) ? (time_stride / duration_s) : (1.0 / (a + b));
+                    double scale_factor = (selector.get_duration_secs() > time_stride ) ? (time_stride / selector.get_duration_secs()) : (1.0 / (a + b));
                     rvalue *= scale_factor;
                 }
                 break;
@@ -392,7 +375,7 @@ namespace data_access
 
             try 
             {
-                return UnitsHelper::get_converted_value(native_units, rvalue, output_units);
+                return UnitsHelper::get_converted_value(native_units, rvalue, selector.get_output_units());
             }
             catch (const std::runtime_error& e)
             {
