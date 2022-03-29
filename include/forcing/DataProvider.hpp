@@ -66,7 +66,7 @@ namespace data_access
          * @return The value of the forcing property for the described time period, with units converted if needed.
          * @throws std::out_of_range If data for the time period is not available.
          */
-        virtual data_type get_value(selection_type selector, ReSampleMethod m=SUM) = 0;
+        virtual data_type get_value(const selection_type& selector, ReSampleMethod m=SUM) = 0;
 
         private:
     };
