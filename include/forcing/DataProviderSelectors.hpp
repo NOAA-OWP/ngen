@@ -114,6 +114,11 @@ class NetCDFDataSelector : public DataSelector
 
     NetCDFDataSelector(std::string id) : DataSelector(), id_str(id) {}
     NetCDFDataSelector(const char* id) : DataSelector(), id_str(id) {}
+    NetCDFDataSelector(std::string id, std::string var, time_t start, long dur, std::string units) :
+        DataSelector(var, start, dur, units), id_str(id)
+    {
+        
+    }
 
     /**
      * @brief Get the id string for this NetCDF Data Selector
