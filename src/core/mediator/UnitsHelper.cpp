@@ -44,3 +44,20 @@ double UnitsHelper::get_converted_value(const std::string &in_units, const doubl
     cv_free(conv);
     return r;
 }
+
+double* UnitsHelper::get_converted_values(const std::string &in_units, double* values, const std::string &out_units, const size_t& count)
+{
+    if(in_units == out_units){
+        return values; // Early-out optimization
+    }
+    std::call_once(unit_system_inited, init_unit_system);
+    ut_unit* to = NULL;
+    ut_unit* from = NULL;
+    cv_converter* conv = get_converter(in_units, out_units, to, from);
+    
+    cv_convert_doubles(conv, values, count, values);
+    ut_free(from);
+    ut_free(to);
+    cv_free(conv);
+    return values;
+}
