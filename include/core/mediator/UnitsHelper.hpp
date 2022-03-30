@@ -9,10 +9,10 @@ class UnitsHelper {
 
     public:
 
-    static double get_converted_value(const std::string &in_units, double value, const std::string &out_units);
+    static double get_converted_value(const std::string &in_units, const double &value, const std::string &out_units);
 
     private:
-
+    static cv_converter* get_converter(const std::string &in_units, const std::string& out_units, ut_unit*& to, ut_unit*& from);
     // Theoretically thread-safe. //TODO: Test?
     static ut_system* unit_system;
     static std::once_flag unit_system_inited;
