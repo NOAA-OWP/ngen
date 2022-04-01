@@ -4,6 +4,7 @@
 // Don't bother with the rest if none of these are active (although what are we really doing here, then?)
 #if NGEN_BMI_C_LIB_ACTIVE || NGEN_BMI_FORTRAN_ACTIVE || ACTIVATE_PYTHON
 
+#include "all.h"
 #include "Bmi_Testing_Util.hpp"
 #include <exception>
 #include <map>
@@ -440,11 +441,11 @@ void Bmi_Multi_Formulation_Test::SetUp() {
 
     /* ********************************** First example scenario (Fortran / C) ********************************** */
     #ifndef NGEN_BMI_C_LIB_ACTIVE
-    throw std::runtime_error("Error: can't run multi BMI tests for scenario at index 0 without BMI C functionality active");
+    throw std::runtime_error("Error: can't run multi BMI tests for scenario at index 0 without BMI C functionality active" SOURCE_LOC);
     #endif // NGEN_BMI_C_LIB_ACTIVE
 
     #ifndef NGEN_BMI_FORTRAN_ACTIVE
-    throw std::runtime_error("Error: can't run multi BMI tests for scenario at index 0 without BMI Fortran functionality active");
+    throw std::runtime_error("Error: can't run multi BMI tests for scenario at index 0 without BMI Fortran functionality active" SOURCE_LOC);
     #endif // NGEN_BMI_FORTRAN_ACTIVE
 
 
@@ -453,11 +454,11 @@ void Bmi_Multi_Formulation_Test::SetUp() {
     /* ********************************** Second example scenario ********************************** */
 
     #ifndef NGEN_BMI_FORTRAN_ACTIVE
-    throw std::runtime_error("Error: can't run multi BMI tests for scenario at index 1 without BMI Fortran functionality active");
+    throw std::runtime_error("Error: can't run multi BMI tests for scenario at index 1 without BMI Fortran functionality active" SOURCE_LOC);
     #endif // NGEN_BMI_FORTRAN_ACTIVE
 
     #ifndef ACTIVATE_PYTHON
-    throw std::runtime_error("Error: can't run multi BMI tests for scenario at index 1 without BMI C functionality active");
+    throw std::runtime_error("Error: can't run multi BMI tests for scenario at index 1 without BMI Python functionality active" SOURCE_LOC);
     #endif // ACTIVATE_PYTHON
 
     initializeTestExample(1, "cat-27", {std::string(BMI_FORTRAN_TYPE), std::string(BMI_PYTHON_TYPE)});
