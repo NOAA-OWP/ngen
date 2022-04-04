@@ -17,6 +17,7 @@
 using namespace std;
 
 class Bmi_Multi_Formulation_Test;
+class Bmi_Cpp_Multi_Array_Test;
 
 namespace realization {
 
@@ -844,6 +845,7 @@ namespace realization {
         int primary_module_index = -1;
 
         friend Bmi_Multi_Formulation_Test;
+        friend class ::Bmi_Cpp_Multi_Array_Test;
 
     };
 }
