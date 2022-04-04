@@ -15,12 +15,20 @@
 #define BMI_TEST_C_LIB_NAME "libtestbmicmodel"
 #endif
 
+#ifndef BMI_TEST_CPP_LIB_NAME
+#define BMI_TEST_CPP_LIB_NAME "libtestbmicppmodel"
+#endif
+
 #ifndef BMI_TEST_FORTRAN_LIB_NAME
 #define BMI_TEST_FORTRAN_LIB_NAME "libtestbmifortranmodel"
 #endif
 
 #ifndef BMI_TEST_PYTHON_LIB_NAME
 #define BMI_TEST_PYTHON_LIB_NAME "test_bmi_py.bmi_model"
+#endif
+
+#ifndef BMI_CPP_TYPE
+#define BMI_CPP_TYPE "bmi_c++"
 #endif
 
 #ifndef BMI_C_TYPE
@@ -74,6 +82,7 @@ namespace ngen {
              * Config names for BMI formulation types.
              */
             const map<string, string> bmiFormulationConfigNames = {
+                    {BMI_CPP_TYPE, "test_bmi_cpp"},
                     {BMI_C_TYPE, "test_bmi_c"},
                     {BMI_FORTRAN_TYPE, "test_bmi_fortran"},
                     {BMI_PYTHON_TYPE, BMI_TEST_PYTHON_LIB_NAME}
@@ -97,6 +106,7 @@ namespace ngen {
              * Library/package names for BMI module formulation types.
              */
             const map<string, string> bmiFormulationLibNames = {
+                    {BMI_CPP_TYPE, BMI_TEST_CPP_LIB_NAME},
                     {BMI_C_TYPE, BMI_TEST_C_LIB_NAME},
                     {BMI_FORTRAN_TYPE, BMI_TEST_FORTRAN_LIB_NAME},
                     {BMI_PYTHON_TYPE, BMI_TEST_PYTHON_LIB_NAME}
@@ -106,6 +116,7 @@ namespace ngen {
              * Relative paths to the directories containing BMI init config examples, from the project root.
              */
             const map<string, string> bmiInitConfigDirRelativePaths = {
+                    {BMI_CPP_TYPE, "test/data/bmi/test_bmi_cpp/"},
                     {BMI_C_TYPE, "test/data/bmi/test_bmi_c/"},
                     {BMI_FORTRAN_TYPE, "test/data/bmi/test_bmi_fortran/"},
                     {BMI_PYTHON_TYPE, "test/data/bmi/test_bmi_python/"}
@@ -115,6 +126,7 @@ namespace ngen {
              * Init config example file basename pattern.
              */
             const map<string, string> bmiInitConfigBasenamePattern = {
+                    {BMI_CPP_TYPE, "test_bmi_cpp_config_"},
                     {BMI_C_TYPE, "test_bmi_c_config_"},
                     {BMI_FORTRAN_TYPE, "test_bmi_fortran_config_"},
                     {BMI_PYTHON_TYPE, "test_bmi_python_config_"}
@@ -124,6 +136,7 @@ namespace ngen {
              * Init config example file extensions.
              */
             const map<string, string> bmiInitConfigBasenameExtensions = {
+                    {BMI_CPP_TYPE, ".txt"},
                     {BMI_C_TYPE, ".txt"},
                     {BMI_FORTRAN_TYPE, ".txt"},
                     {BMI_PYTHON_TYPE, ".yml"}
@@ -133,6 +146,7 @@ namespace ngen {
              * Relative paths to the directories containing each testing BMI modules, from the project root.
              */
             const map<string, string> bmiModuleRelativePaths = {
+                    {BMI_CPP_TYPE, "extern/test_bmi_cpp/cmake_build/"},
                     {BMI_C_TYPE, "extern/test_bmi_c/cmake_build/"},
                     {BMI_FORTRAN_TYPE, "extern/test_bmi_fortran/cmake_build/"},
                     // TODO, this may need to just be extern/
