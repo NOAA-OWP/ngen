@@ -429,7 +429,7 @@ namespace realization {
                 }
             }
             //Fall back to any internal providers as a last resort.
-            return check_internal_providers<double>(output_name);
+            return check_internal_providers<double>(output_name)[0];
         }
 
         bool is_bmi_input_variable(const std::string &var_name) override {
@@ -517,11 +517,11 @@ namespace realization {
          * @throws std::runtime_error If no known value or function for @p output_name
          */
         template <typename T>
-        inline T check_internal_providers(std::string output_name){
+        std::vector<T> check_internal_providers(std::string output_name){
             // Only use the internal et_calc() if this formulation (or possibly multi-formulation)
             // does not know how to supply potential et
             if (output_name == NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP || output_name == CSDMS_STD_NAME_POTENTIAL_ET) {
-                return calc_et();
+                return std::vector<T>( 1, calc_et() );
             }
             //Note, when called via get_value, this is unlikely to throw since a pre-check on available names is done
             //in that function.
