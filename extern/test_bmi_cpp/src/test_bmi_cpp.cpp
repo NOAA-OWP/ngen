@@ -79,8 +79,11 @@ std::string TestBmiCpp::GetTimeUnits(){
 }
 
 void TestBmiCpp::GetValue(std::string name, void* dest){
-  int inds[] = {0};
-  this->GetValueAtIndices(name, dest, inds, 1);
+  //FIXME inds should be related to var size???
+  int num_elements = this->GetVarNbytes(name)/this->GetVarItemsize(name);
+  std::vector<int> indicies(num_elements);
+  std::iota (std::begin(indicies), std::end(indicies), 0);
+  this->GetValueAtIndices(name, dest, indicies.data(), indicies.size());
 }
 
 void TestBmiCpp::GetValueAtIndices(std::string name, void* dest, int* inds, int count){
@@ -140,6 +143,13 @@ void* TestBmiCpp::GetValuePtr(std::string name){
   if (name == "OUTPUT_VAR_2") {
     return this->output_var_2.get();
   }
+  if (use_input_array && name == "INPUT_VAR_3") {
+    return this->input_var_3.get();
+  }
+  if (use_output_array && name == "OUTPUT_VAR_3") {
+    return this->output_var_3.get();
+  }
+
   throw std::runtime_error("GetValuePtr called for unknown variable: "+name);
 }
 
@@ -154,6 +164,7 @@ int TestBmiCpp::GetVarItemsize(std::string name){
 std::string TestBmiCpp::GetVarLocation(std::string name){
   auto iter = std::find(this->output_var_names.begin(), this->output_var_names.end(), name);
   if(iter != this->output_var_names.end()){
+    //WHY??? just return *iter;
     return this->output_var_locations[iter - this->output_var_names.begin()];
   }
   iter = std::find(this->input_var_names.begin(), this->input_var_names.end(), name);
@@ -238,6 +249,7 @@ void TestBmiCpp::Initialize(std::string file){
   this->input_var_2 = std::make_unique<double>(0);
   this->output_var_1 = std::make_unique<double>(0);
   this->output_var_2 = std::make_unique<double>(0);
+
 }
 
 void TestBmiCpp::SetValueAtIndices(std::string name, int* inds, int len, void* src){
@@ -381,6 +393,12 @@ void TestBmiCpp::read_init_config(std::string config_file)
       this->time_step_size = (int)strtol(param_value, NULL, 10);
       continue;
     }
+    if( strcmp(param_key, "use_input_array") == 0) {
+      this->use_input_array = true;
+    }
+    if( strcmp(param_key, "use_output_array") == 0) {
+      this->use_output_array = true;
+    }
   }
 
   if (is_epoch_start_time_set == FALSE) {
@@ -391,6 +409,10 @@ void TestBmiCpp::read_init_config(std::string config_file)
   std::cout<<"All TestBmiCpp config params present; finished parsing config"<<std::endl;
 #endif
 
+  //dynamic creation/usage of optional var 3
+  if(use_input_array || use_output_array ){
+    set_usage(use_input_array, use_output_array);
+  }
 }
 
 void TestBmiCpp::read_file_line_counts(std::string file_name, int* line_count, int* max_line_length)
@@ -444,6 +466,11 @@ void TestBmiCpp::run(long dt)
     else {
         *this->output_var_1 = *this->input_var_1 * (double) dt / this->time_step_size;
         *this->output_var_2 = 2.0 * *this->input_var_2 * (double) dt / this->time_step_size;
+    }
+    if(use_output_array){ //set some data for the output array
+      this->output_var_3.get()[0] += 1;
+      this->output_var_3.get()[1] += 2;
+      this->output_var_3.get()[2] += 3;
     }
     this->current_model_time += (double)dt;
 }
