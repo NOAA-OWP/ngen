@@ -6,6 +6,8 @@
 #include <vector>
 #include <map>
 #include "bmi.hxx"
+#include <numeric>
+#include <iostream>
 
 #define TRUE 1
 #define FALSE 0
@@ -33,8 +35,11 @@ class TestBmiCpp : public bmi::Bmi {
         *
         * @return Pointer to the newly created @ref test_bmi_c_model struct instance in memory.
         */
-        TestBmiCpp(){};
-
+        TestBmiCpp(bool input_array = false, bool output_array = false):
+            use_input_array(input_array), use_output_array(output_array)
+        {
+            set_usage(input_array, output_array);
+        };
 
         virtual void Initialize(std::string config_file);
         virtual void Update();
@@ -96,9 +101,43 @@ class TestBmiCpp : public bmi::Bmi {
 
 
     private:
-        static const int input_var_name_count = INPUT_VAR_NAME_COUNT;
-        static const int output_var_name_count = OUTPUT_VAR_NAME_COUNT;
 
+        inline void set_usage(bool input_array = false, bool output_array = false){
+            use_input_array = input_array;
+            use_output_array = output_array;
+            //NOTE use the correct array constructor here or things get weird
+            //make_unique<double>(3) will give a unique pointer to a single double initialized to 3
+            //make_unique<double[]>(3) will give a unique pointer to an array of 3 doubles, default initialized
+            if( use_input_array ){ //Add input_var_3 array to required inputs
+                this->input_var_3 = std::make_unique<double[]>(3);
+                this->input_var_3.get()[0] = 0;
+                this->input_var_3.get()[1] = 0;
+                this->input_var_3.get()[2] = 0;
+                std::cout<<"USING INPUT ARRAY\n";
+                input_var_names.push_back("INPUT_VAR_3");
+                input_var_types.push_back("double");
+                input_var_units.push_back("mm");
+                input_var_locations.push_back("node");
+                input_var_item_count.push_back(3); //an array of 3 values
+                input_var_grids.push_back(1);
+            }
+            if( use_output_array ){ //Add output_var_3 array to required outputs
+                this->output_var_3 = std::make_unique<double[]>(3);
+                this->output_var_3.get()[0] = 0;
+                this->output_var_3.get()[1] = 0;
+                this->output_var_3.get()[2] = 0;
+                std::cout<<"USING OUTPUT ARRAY\n";
+                output_var_names.push_back("OUTPUT_VAR_3");
+                output_var_types.push_back("double");
+                output_var_units.push_back("m");
+                output_var_locations.push_back("node");
+                output_var_item_count.push_back(3); //an array of 3 values
+                output_var_grids.push_back(1);
+            }
+        }
+        //flags for conditional use of input/output var 3
+        bool use_input_array, use_output_array;
+   
         std::vector<std::string> input_var_names = { "INPUT_VAR_1", "INPUT_VAR_2" };
         std::vector<std::string> output_var_names = { "OUTPUT_VAR_1", "OUTPUT_VAR_2" };
         std::vector<std::string> input_var_types = { "double", "double" };
@@ -108,11 +147,11 @@ class TestBmiCpp : public bmi::Bmi {
         std::vector<std::string> input_var_locations = { "node", "node" };
         std::vector<std::string> output_var_locations = { "node", "node" };
 
-        int input_var_item_count[INPUT_VAR_NAME_COUNT] = { 1, 1 };
-        int output_var_item_count[OUTPUT_VAR_NAME_COUNT] = { 1, 1 };
-        int input_var_grids[INPUT_VAR_NAME_COUNT] = { 1, 1 };
-        int output_var_grids[OUTPUT_VAR_NAME_COUNT] = { 1, 1 };
-
+        std::vector<int> input_var_item_count = { 1, 1 };
+        std::vector<int> output_var_item_count = { 1, 1 };
+        std::vector<int> input_var_grids = { 1, 1 };
+        std::vector<int> output_var_grids = { 1, 1 };
+        
         std::map<std::string,int> type_sizes = {
             {BMI_TYPE_NAME_DOUBLE, sizeof(double)},
             {BMI_TYPE_NAME_FLOAT, sizeof(float)},
@@ -139,6 +178,10 @@ class TestBmiCpp : public bmi::Bmi {
         std::unique_ptr<double> input_var_2 = nullptr;
         std::unique_ptr<double> output_var_1 = nullptr;
         std::unique_ptr<double> output_var_2 = nullptr;
+
+        //Variables for testing array in/out
+        std::unique_ptr<double[]> input_var_3 = nullptr;
+        std::unique_ptr<double[]> output_var_3 = nullptr;
 
         /**
         * Read the BMI initialization config file and use its contents to set the state of the model.
