@@ -11,6 +11,7 @@
 #include <AorcForcing.hpp>
 #include <ForcingProvider.hpp>
 #include <UnitsHelper.hpp>
+#include "bmi_utilities.hpp"
 
 using data_access::MEAN;
 using data_access::SUM;
@@ -369,6 +370,61 @@ namespace realization {
         size_t get_ts_index_for_time(const time_t &epoch_time) override {
             // TODO: come back and implement if actually necessary for this type; for now don't use
             throw runtime_error("Bmi_Singular_Formulation does not yet implement get_ts_index_for_time");
+        }
+
+        /**
+         * @brief Get the 1D values of a forcing property for an arbitrary time period, converting units if needed.
+         * 
+         * @param output_name The name of the forcing property of interest.
+         * @param init_time The epoch time (in seconds) of the start of the time period.
+         * @param duration_s The length of the time period, in seconds.
+         * @param output_units The expected units of the desired output value.
+         * @return std::vector<double> The 1D values of the forcing property for the described time period, with units converted if needed.
+         * @throws std::out_of_range If data for the time period is not available.
+         * @throws std::runtime_error output_name is not one of the available outputs of this provider instance.
+         */
+        std::vector<double> get_values(const std::string &output_name, const time_t &init_time, const long &duration_s,
+                                 const std::string &output_units) override{
+            // First make sure this is an available output
+            const std::vector<std::string> forcing_outputs = get_available_forcing_outputs();
+            if (std::find(forcing_outputs.begin(), forcing_outputs.end(), output_name) == forcing_outputs.end()) {
+                throw runtime_error(get_formulation_type() + " received invalid output forcing name " + output_name);
+            }
+            // TODO: do this, or something better, later; right now, just assume anything using this as a provider is
+            //  consistent with times
+            /*
+            if (last_model_response_delta == 0 && last_model_response_start_time == 0) {
+                throw runtime_error(get_formulation_type() + " does not properly set output time validity ranges "
+                                                             "needed to provide outputs as forcings");
+            }
+            */
+
+            // check if output is available from BMI
+            std::string bmi_var_name;
+            get_bmi_output_var_name(output_name, bmi_var_name);
+
+            if( !bmi_var_name.empty() )
+            {
+                auto model = get_bmi_model().get();
+                //Get vector of double values for variable
+                //The return type of the vector here dependent on what
+                //needs to use it.  For other BMI moudles, that is runtime dependent
+                //on the type of the requesting module 
+                auto values = models::bmi::GetValue<double>(*model, bmi_var_name);
+
+                // Convert units
+                std::string native_units = get_bmi_model()->GetVarUnits(bmi_var_name);
+                try {
+                    UnitsHelper::get_converted_values(native_units, values.data(), output_units, values.size());
+                    return values;
+                }
+                catch (const std::runtime_error& e){
+                    std::cerr<<"Unit conversion error: "<<std::endl<<e.what()<<std::endl<<"Returning unconverted value!"<<std::endl;
+                    return values;
+                }
+            }
+            //Fall back to any internal providers as a last resort.
+            return check_internal_providers<double>(output_name);
         }
 
         /**
