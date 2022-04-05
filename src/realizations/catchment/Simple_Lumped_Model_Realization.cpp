@@ -104,12 +104,12 @@ double Simple_Lumped_Model_Realization::get_response(time_step_t t, time_step_t 
 {
     //TODO input_et = this->forcing.get_et(t)
     double precip;
-    time_t t_unix = this->forcing->get_forcing_output_time_begin("") + (t * 3600);
+    time_t t_unix = this->forcing->get_data_start_time() + (t * 3600);
     try {
-        precip = this->forcing->get_value("precip_rate", t_unix, dt, ""); // classic forcing object/format
+        precip = this->forcing->get_value(CatchmentAggrDataSelector("","precip_rate", t_unix, dt, "")); // classic forcing object/format
     }
     catch (const std::exception& e){
-        precip = this->forcing->get_value(CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, t_unix, dt, ""); // CsvPerFeatureForcingProvider
+        precip = this->forcing->get_value(CatchmentAggrDataSelector("",CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, t_unix, dt, "")); // CsvPerFeatureForcingProvider
     }
     add_time(t+1, params.n);
     //FIXME should this run "daily" or hourly (t) which should really be dt

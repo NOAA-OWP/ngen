@@ -12,6 +12,14 @@ namespace data_access
     * combination of both.
     */
 
+    enum ReSampleMethod
+    {
+            MEAN,
+            SUM,
+            FRONT_FILL,
+            BACK_FILL
+    };
+
     template <class data_type, class selection_type> class DataProvider
     {
         /** This class provides a generic interface to data services
@@ -19,14 +27,6 @@ namespace data_access
         */
 
         public:
-
-        enum ReSampleMethod
-        {
-            MEAN,
-            SUM,
-            FRONT_FILL,
-            BACK_FILL
-        };
 
         virtual ~DataProvider() = default;
 
@@ -67,6 +67,8 @@ namespace data_access
          * @throws std::out_of_range If data for the time period is not available.
          */
         virtual data_type get_value(const selection_type& selector, ReSampleMethod m=SUM) = 0;
+
+        virtual bool is_property_sum_over_time_step(const std::string& name) {return false; }
 
         private:
     };
