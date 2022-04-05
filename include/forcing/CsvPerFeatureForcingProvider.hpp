@@ -16,7 +16,7 @@
 #include <time.h>
 #include <memory>
 #include "AorcForcing.hpp"
-#include "DataProvider.hpp"
+#include "GenericDataProvider.hpp"
 #include "DataProviderSelectors.hpp"
 #include <exception>
 #include <UnitsHelper.hpp>
@@ -25,7 +25,7 @@
 /**
  * @brief Forcing class providing time-series precipiation forcing data to the model.
  */
-class CsvPerFeatureForcingProvider : public data_access::DataProvider<double, CSVDataSelector>
+class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
 {
     public:
 
@@ -110,7 +110,7 @@ class CsvPerFeatureForcingProvider : public data_access::DataProvider<double, CS
      * @return The value of the forcing property for the described time period, with units converted if needed.
      * @throws std::out_of_range If data for the time period is not available.
      */
-    double get_value(const CSVDataSelector& selector, ReSampleMethod m) override
+    double get_value(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override
     {
         size_t current_index;
         long time_remaining = selector.get_duration_secs();
@@ -211,7 +211,7 @@ class CsvPerFeatureForcingProvider : public data_access::DataProvider<double, CS
      * @param name The name of the forcing property for which the current value is desired.
      * @return Whether the property's value is an aggregate sum.
      */
-    inline bool is_property_sum_over_time_step(const std::string& name) {
+    inline bool is_property_sum_over_time_step(const std::string& name) override {
         return is_param_sum_over_time_step(name);
     }
 

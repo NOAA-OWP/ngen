@@ -1,7 +1,7 @@
 #ifndef NGEN_NETCDF_PER_FEATURE_DATAPROVIDER_HPP
 #define NGEN_NETCDF_PER_FEATURE_DATAPROVIDER_HPP
 
-#include "DataProvider.hpp"
+#include "GenericDataProvider.hpp"
 #include "DataProviderSelectors.hpp"
 
 #include <string>
@@ -19,7 +19,7 @@ using namespace netCDF::exceptions;
 
 namespace data_access
 {
-    class NetCDFPerFeatureDataProvider : public DataProvider<double, NetCDFDataSelector>
+    class NetCDFPerFeatureDataProvider : public GenericDataProvider
     {
         
         public:
@@ -280,7 +280,7 @@ namespace data_access
          * @return The value of the forcing property for the described time period, with units converted if needed.
          * @throws std::out_of_range If data for the time period is not available.
          */
-        double get_value(const NetCDFDataSelector& selector, ReSampleMethod m)
+        double get_value(const CatchmentAggrDataSelector& selector, ReSampleMethod m) override
         {
             auto init_time = selector.get_init_time();
             auto stop_time = init_time + selector.get_duration_secs();

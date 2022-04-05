@@ -9,19 +9,20 @@
  * 
  */
 
-class DataSelector
+class CatchmentAggrDataSelector
 {
     public:
 
     /**
-     * @brief Construct a new Data Selector object with default values
+     * @brief Construct a new Catchment Aggregate Data Selector object with default values
      * 
      */
-    DataSelector() : 
+    CatchmentAggrDataSelector() : 
         variable_name(), 
         init_time(0), 
         duration_s(1), 
-        output_units()
+        output_units(),
+        id_str()
     {}
 
     /**
@@ -31,8 +32,10 @@ class DataSelector
      * @param start THe start time for this selector
      * @param dur The duration for this selector   
      * @param units The units to output the result in
+     * @param id the id of the associated catchment
      */
-    DataSelector(std::string var, time_t start, long dur, std::string units) : 
+    CatchmentAggrDataSelector(std::string id, std::string var, time_t start, long dur, std::string units) : 
+        id_str(id),
         variable_name(var), 
         init_time(start), 
         duration_s(dur), 
@@ -95,43 +98,6 @@ class DataSelector
      */
     void set_output_units(std::string units) { output_units = units; }
 
-    private:
-
-    std::string variable_name; //!< The variable name that should be queried
-    time_t init_time; //!< The inital time to query the requested variable
-    long duration_s;  //!< The duration of the query
-    std::string output_units; //!< required units for the result to be return in
-};
-
-/**
- * @brief This a data selector intended for use with CSV data
- * 
- */
-
-class CSVDataSelector : public DataSelector
-{
-    public:
-
-    private:
-};
-
-/**
- * @brief This is the data selector intended for use with netcdf providers
- * 
- */
-
-class NetCDFDataSelector : public DataSelector
-{
-    public:
-
-    NetCDFDataSelector(std::string id) : DataSelector(), id_str(id) {}
-    NetCDFDataSelector(const char* id) : DataSelector(), id_str(id) {}
-    NetCDFDataSelector(std::string id, std::string var, time_t start, long dur, std::string units) :
-        DataSelector(var, start, dur, units), id_str(id)
-    {
-        
-    }
-
     /**
      * @brief Get the id string for this NetCDF Data Selector
      * 
@@ -148,7 +114,65 @@ class NetCDFDataSelector : public DataSelector
 
     private:
 
-    std::string id_str;    
+    std::string variable_name; //!< The variable name that should be queried
+    time_t init_time; //!< The inital time to query the requested variable
+    long duration_s;  //!< The duration of the query
+    std::string output_units; //!< required units for the result to be return in
+    std::string id_str; //< the catchment to access data for
+};
+
+/**
+ * @brief This a data selector intended for use with CSV data
+ * 
+ */
+
+class CSVDataSelector : public CatchmentAggrDataSelector
+{
+    public:
+
+    CSVDataSelector(std::string var, time_t start, long dur, std::string units) : 
+        CatchmentAggrDataSelector(std::string(), var, start, dur, units)
+    {}
+
+    operator const CatchmentAggrDataSelector&() const { return *this; }
+
+    private:
+};
+
+class BMIDataSelector : public CatchmentAggrDataSelector
+{
+    public:
+
+    BMIDataSelector(std::string var, time_t start, long dur, std::string units) : 
+        CatchmentAggrDataSelector(std::string(), var, start, dur, units)
+    {}
+
+    operator const CatchmentAggrDataSelector&() const { return *this; }
+
+    private:
+};
+
+/**
+ * @brief This is the data selector intended for use with netcdf providers
+ * 
+ */
+
+class NetCDFDataSelector : public CatchmentAggrDataSelector
+{
+    public:
+
+    NetCDFDataSelector(std::string id) : CatchmentAggrDataSelector(id,std::string(),0,0,std::string()) {}
+    NetCDFDataSelector(const char* id) : CatchmentAggrDataSelector(std::string(id),std::string(),0,0,std::string()) {}
+    NetCDFDataSelector(std::string id, std::string var, time_t start, long dur, std::string units) :
+        CatchmentAggrDataSelector(id, var, start, dur, units)
+    {
+        
+    }
+
+    operator const CatchmentAggrDataSelector&() const { return *this; }
+
+
+    private: 
 };
 
 #endif

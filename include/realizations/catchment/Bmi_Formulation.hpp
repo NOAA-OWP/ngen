@@ -7,7 +7,7 @@
 #include <vector>
 #include <memory>
 #include "Catchment_Formulation.hpp"
-#include "ForcingProvider.hpp"
+#include "GenericDataProvider.hpp"
 
 // Define the configuration parameter names used in the realization/formulation config JSON file
 // First the required:
@@ -55,7 +55,7 @@ namespace realization {
     /**
      * Abstraction of formulation with backing model object(s) that implements the BMI.
      */
-    class Bmi_Formulation : public Catchment_Formulation, public forcing::ForcingProvider {
+    class Bmi_Formulation : public Catchment_Formulation, public data_access::GenericDataProvider {
 
     public:
 
@@ -67,8 +67,8 @@ namespace realization {
          * @param forcing
          * @param output_stream
          */
-        Bmi_Formulation(std::string id, std::unique_ptr<forcing::ForcingProvider> forcing, utils::StreamHandler output_stream)
-                : Catchment_Formulation(std::move(id), std::move(forcing), output_stream)
+        Bmi_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing, utils::StreamHandler output_stream)
+                : Catchment_Formulation(std::move(id), forcing, output_stream)
         {
             // Do this here, as this function also handles initializing the output string stream for formatting.
             set_output_precision(9);

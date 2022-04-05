@@ -15,7 +15,7 @@
 #include <time.h>
 #include <memory>
 #include "AorcForcing.hpp"
-#include "ForcingProvider.hpp"
+#include "GenericDataProvider.hpp"
 #include <exception>
 #include "all.h"
 // Recognized Forcing Value Names (in particular for use when configuring BMI input variables)
@@ -33,7 +33,7 @@
 /**
  * @brief Forcing class providing time-series precipiation forcing data to the model.
  */
-class Forcing : public forcing::ForcingProvider
+class Forcing : public data_access::GenericDataProvider
 {
     public:
 
@@ -108,7 +108,7 @@ class Forcing : public forcing::ForcingProvider
         return AORC_vector.at(index);
     }
 
-    const std::vector<std::string> &get_available_forcing_outputs() override {
+    const std::vector<std::string> &get_available_forcing_outputs() {
         if (available_forcings.empty()) {
             std::vector<std::string> csdms_names = {
                     CSDMS_STD_NAME_SOLAR_LONGWAVE,
@@ -130,6 +130,11 @@ class Forcing : public forcing::ForcingProvider
             }
         }
         return available_forcings;
+    }
+
+    const std::vector<std::string>& get_avaliable_variable_names() override
+    {
+        return get_available_forcing_outputs();
     }
 
     /**
@@ -167,7 +172,17 @@ class Forcing : public forcing::ForcingProvider
      *
      * @return The inclusive beginning of the period of time over which this instance can provide this data.
      */
-    time_t get_forcing_output_time_begin(const std::string &output_name) override {
+    time_t get_forcing_output_time_begin(const std::string &output_name) {
+        return start_date_time_epoch;
+    }
+
+    /**
+     * Get the inclusive beginning of the period of time over which this instance can provide data for this forcing.
+     *
+     * @return The inclusive beginning of the period of time over which this instance can provide this data.
+     */
+    long get_data_start_time() override
+    {
         return start_date_time_epoch;
     }
 
@@ -176,7 +191,17 @@ class Forcing : public forcing::ForcingProvider
      *
      * @return The exclusive ending of the period of time over which this instance can provide this data.
      */
-    time_t get_forcing_output_time_end(const std::string &output_name) override {
+    time_t get_forcing_output_time_end(const std::string &output_name) {
+        return end_date_time_epoch;
+    }
+
+    /**
+     * Get the exclusive ending of the period of time over which this instance can provide data for this forcing.
+     *
+     * @return The exclusive ending of the period of time over which this instance can provide this data.
+     */
+    long get_data_stop_time() override
+    {
         return end_date_time_epoch;
     }
 
@@ -223,10 +248,16 @@ class Forcing : public forcing::ForcingProvider
      * @return The value of the forcing property for the described time period, with units converted if needed.
      * @throws std::out_of_range If data for the time period is not available.
      */
-    double get_value(const std::string &output_name, const time_t &init_time, const long &duration_s,
-                     const std::string &output_units) override
+    //double get_value(const std::string &output_name, const time_t &init_time, const long &duration_s,
+    //                 const std::string &output_units) override
+    double get_value(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override
     {
         size_t current_index;
+
+        time_t init_time = selector.get_init_time();
+        long duration_s = selector.get_duration_secs();
+        const std::string& output_name = selector.get_variable_name();
+
         long time_remaining = duration_s;
         try {
             current_index = get_ts_index_for_time(init_time);
@@ -257,6 +288,7 @@ class Forcing : public forcing::ForcingProvider
             current_index++;
         }
         double value = 0;
+        // TODO change this to use resample methode instead
         for (size_t i = 0; i < involved_time_step_values.size(); ++i) {
             if (is_param_sum_over_time_step(output_name))
                 value += involved_time_step_values[i] * ((double)involved_time_step_seconds[i] / 3600.0);
@@ -417,6 +449,16 @@ class Forcing : public forcing::ForcingProvider
             return time_epoch_vector.at(forcing_vector_index) - time_epoch_vector.at(forcing_vector_index - 1);
         else
             return time_epoch_vector.at(forcing_vector_index + 1) - time_epoch_vector.at(forcing_vector_index);
+    }
+
+    /**
+     * Get the time step size, based on epoch vector, assuming the last ts is equal to the next to last.
+     *
+     * @return
+     */
+    long record_duration() override
+    {
+        return get_time_step_size();
     }
 
     /**

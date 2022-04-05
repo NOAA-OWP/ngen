@@ -5,7 +5,7 @@
 
 #include "Bmi_Module_Formulation.hpp"
 #include "Bmi_Fortran_Adapter.hpp"
-#include <ForcingProvider.hpp>
+#include <GenericDataProvider.hpp>
 
 // TODO: consider merging this somewhere with the C value in that formulation header
 #define BMI_FORTRAN_DEFAULT_REGISTRATION_FUNC "register_bmi"
@@ -20,7 +20,7 @@ namespace realization {
 
     public:
 
-        Bmi_Fortran_Formulation(std::string id, std::unique_ptr<ForcingProvider> forcing, utils::StreamHandler output_stream);
+        Bmi_Fortran_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing, utils::StreamHandler output_stream);
 
         std::string get_formulation_type() override;
 
