@@ -148,13 +148,8 @@ namespace data_access {
             return wrapped_provider->is_property_sum_over_time_step(name);
         }
 
-<<<<<<< HEAD
     protected:
-        ForcingProvider* wrapped_provider;
-=======
-    private:
         GenericDataProvider* wrapped_provider;
->>>>>>> Changes required to move framework code to use DataProvider Interface.
 
     };
 }

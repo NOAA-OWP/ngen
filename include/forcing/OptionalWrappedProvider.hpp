@@ -7,7 +7,7 @@
 
 using namespace std;
 
-namespace forcing {
+namespace data_access {
 
     /**
      * Extension of @ref DeferredWrappedProvider, where default values can be used instead of a backing provider.
@@ -192,9 +192,13 @@ namespace forcing {
          * @return The value of the forcing property for the described time period, with units converted if needed.
          * @throws out_of_range If data for the time period is not available.
          */
-        double get_value(const string &output_name, const time_t &init_time, const long &duration_s,
-                         const string &output_units) override
+        double get_value(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override
         {
+            string output_name = selector.get_variable_name();
+            time_t init_time = selector.get_init_time();
+            const long duration_s = selector.get_duration_secs();
+            const string output_units = selector.get_output_units();
+            
             // Balk if not in this instance's collection of outputs
             if (find(providedOutputs.begin(), providedOutputs.end(), output_name) == providedOutputs.end()) {
                 throw runtime_error("Unknown output " + output_name + " requested from wrapped provider");
@@ -218,7 +222,7 @@ namespace forcing {
             }
             // Otherwise (i.e., available from wrapped provider and no override), get from backing wrapped provider
             else {
-                return wrapped_provider->get_value(output_name, init_time, duration_s, output_units);
+                return wrapped_provider->get_value(selector,m);
             }
         }
 
@@ -301,7 +305,8 @@ namespace forcing {
          * @param provider A pointer for the wrapped provider.
          * @return Whether @ref wrapped_provider was set to the given arg.
          */
-        bool setWrappedProvider(ForcingProvider *provider) override {
+        bool setWrappedProvider(
+            GenericDataProvider *provider) override {
             // Disallow re-setting the provider if already validly set
             // TODO: consider if this is still appropriate, given backing providers can be valid without providing
             //  everything (because of defaults), and so a new provider may supply more or less of what is needed
@@ -393,8 +398,8 @@ namespace forcing {
          */
         map<string, int> defaultUsageWaits;
 
-        static bool isSuppliedByProvider(const string &outputName, ForcingProvider *provider) {
-            const vector<string> &available = provider->get_available_forcing_outputs();
+        static bool isSuppliedByProvider(const string &outputName, GenericDataProvider *provider) {
+            const vector<string> &available = provider->get_avaliable_variable_names();
             return find(available.begin(), available.end(), outputName) != available.end();
         }
 

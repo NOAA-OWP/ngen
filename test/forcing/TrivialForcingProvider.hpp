@@ -3,7 +3,8 @@
 
 #include <string>
 #include <vector>
-#include "ForcingProvider.hpp"
+#include "GenericDataProvider.hpp"
+
 
 #define OUTPUT_NAME_1 "output_name_1"
 #define OUTPUT_VALUE_1 42.0
@@ -11,27 +12,31 @@
 
 using namespace std;
 
-namespace forcing {
+namespace data_access {
     namespace test {
 /**
  * A trivial implementation, strictly for testing OptionalWrappedProvider.
  */
-        class TrivialForcingProvider : public ForcingProvider {
+        class TrivialForcingProvider : public GenericDataProvider {
         public:
 
             TrivialForcingProvider() {
                 outputs.push_back(OUTPUT_NAME_1);
             }
-
-            const vector<string> &get_available_forcing_outputs() override {
+                                  
+            const std::vector<std::string>& get_avaliable_variable_names() override {
                 return outputs;
             }
 
-            time_t get_forcing_output_time_begin(const string &output_name) override {
+            long get_data_start_time() override {
                 return 0;
             }
 
-            time_t get_forcing_output_time_end(const string &output_name) override {
+            long get_data_stop_time() override {
+                return 1000000;
+            }
+
+            long record_duration() override {
                 return 1000000;
             }
 
@@ -39,9 +44,8 @@ namespace forcing {
                 return 0;
             }
 
-            double get_value(const string &output_name, const time_t &init_time, const long &duration_s,
-                             const string &output_units) override {
-                return (output_name == OUTPUT_NAME_1) ? OUTPUT_VALUE_1 : 0.0;
+            double get_value(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override {
+                return (selector.get_variable_name() == OUTPUT_NAME_1) ? OUTPUT_VALUE_1 : 0.0;
             }
 
             bool is_property_sum_over_time_step(const string &name) override {

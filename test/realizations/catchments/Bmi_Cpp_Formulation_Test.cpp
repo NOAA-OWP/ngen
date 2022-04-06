@@ -61,7 +61,7 @@ protected:
     }
 
     static time_t get_friend_forcing_start_time(Bmi_Cpp_Formulation& formulation) {
-        return formulation.forcing->get_forcing_output_time_begin("");
+        return formulation.forcing->get_data_start_time();
     }
 
     static bool get_friend_is_bmi_using_forcing_file(const Bmi_Cpp_Formulation& formulation) {

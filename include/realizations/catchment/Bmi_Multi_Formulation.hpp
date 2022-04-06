@@ -622,7 +622,7 @@ namespace realization {
          */
         inline void init_deferred_associations() {
             for (int d = 0; d < deferredProviders.size(); ++d) {
-                std::shared_ptr<forcing::OptionalWrappedProvider> &deferredProvider  = deferredProviders[d];
+                std::shared_ptr<data_access::OptionalWrappedProvider> &deferredProvider  = deferredProviders[d];
                 // Skip doing anything for any deferred provider that already has its backing provider set
                 if (deferredProvider->isWrappedProviderSet())
                     continue;
@@ -630,7 +630,7 @@ namespace realization {
                 // TODO: improve this later; since defaults can be used, it is technically possible to grab something
                 //  valid when something more appropriate would later be available
                 // Iterate through available data providers and set association once a sufficient one is found
-                std::map<std::string, std::shared_ptr<forcing::ForcingProvider>>::iterator avail_it;
+                std::map<std::string, std::shared_ptr<data_access::GenericDataProvider>>::iterator avail_it;
                 for (avail_it = availableData.begin(); avail_it != availableData.end(); avail_it++) {
                     // If this satisfies everything this deferred provider needs to provide, and thus can be/was set ...
                     if (deferredProvider->setWrappedProvider(avail_it->second.get())) {
@@ -645,10 +645,10 @@ namespace realization {
                                       "provider to satisfy set of deferred provisions for nested module at index "
                                       + std::to_string(deferredProviderModuleIndices[d]) + ": {";
                     // There must always be at least 1; get manually to help with formatting
-                    msg += deferredProvider->get_available_forcing_outputs()[0];
+                    msg += deferredProvider->get_avaliable_variable_names()[0];
                     // And here make sure to start at 1 instead of 0
-                    for (int i = 1; i < deferredProvider->get_available_forcing_outputs().size(); ++i)
-                        msg += ", " + deferredProvider->get_available_forcing_outputs()[i];
+                    for (int i = 1; i < deferredProvider->get_avaliable_variable_names().size(); ++i)
+                        msg += ", " + deferredProvider->get_avaliable_variable_names()[i];
                     msg += "}";
                     throw realization::ConfigurationException(msg);
                 }
@@ -752,15 +752,15 @@ namespace realization {
             // Only include BMI variable name, as that's what'll be visible when associating to backing provider
             // It's "deferred" in that we'll set the backing later.
             // It's "optional" in that it waits to use backing provider, using the default some number of times
-            std::shared_ptr<forcing::OptionalWrappedProvider> provider;
+            std::shared_ptr<data_access::OptionalWrappedProvider> provider;
             // TODO: make sure only alias is needed
             auto defs_it = default_output_values.find(framework_output_name);
             if (defs_it != default_output_values.end()) {
                 // TODO: consider also reading wait count from config
-                provider = std::make_shared<forcing::OptionalWrappedProvider>(framework_output_name, defs_it->second, 1);
+                provider = std::make_shared<data_access::OptionalWrappedProvider>(framework_output_name, defs_it->second, 1);
             }
             else {
-                provider = std::make_shared<forcing::OptionalWrappedProvider>(framework_output_name);
+                provider = std::make_shared<data_access::OptionalWrappedProvider>(framework_output_name);
             }
 
             // Add deferred to collection and module index to collection
@@ -785,7 +785,7 @@ namespace realization {
          * It assumes that the necessary provider will be available and associated once all nested formulations have
          * been created.  This member tracks these so that this deferred association can be done.
          */
-        std::vector<std::shared_ptr<forcing::OptionalWrappedProvider>> deferredProviders;
+        std::vector<std::shared_ptr<data_access::OptionalWrappedProvider>> deferredProviders;
 
         /**
          * The module indices for the modules associated with each item in @ref deferredProviders.
