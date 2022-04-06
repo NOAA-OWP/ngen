@@ -281,7 +281,7 @@ add_test(
 ########################## Primary Combined Unit Test Target
 add_test(
         test_unit
-        18
+        19
         models/hymod/include/HymodTest.cpp
         models/hymod/include/Reservoir_Test.cpp
         models/hymod/include/Reservoir_Timeless_Test.cpp
@@ -315,7 +315,7 @@ add_test(
 # All automated tests
 add_test(
         test_all
-        17
+        18
         models/hymod/include/HymodTest.cpp
         models/hymod/include/Reservoir_Test.cpp
         models/hymod/include/Reservoir_Timeless_Test.cpp
@@ -327,11 +327,8 @@ add_test(
         geojson/FeatureCollection_Test.cpp
         forcing/Forcing_Test.cpp
         forcing/CsvPerFeatureForcingProvider_Test.cpp
-<<<<<<< HEAD
         forcing/OptionalWrappedProvider_Test.cpp
-=======
         forcing/NetCDFPerFeatureDataProvider_Test.cpp
->>>>>>> Make  cmake build the netcdf tests.
         simulation_time/Simulation_Time_Test.cpp
         core/catchment/giuh/GIUH_Test.cpp
         core/mediator/UnitsHelper_Tests.cpp

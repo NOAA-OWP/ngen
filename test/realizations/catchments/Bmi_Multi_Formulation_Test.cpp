@@ -45,7 +45,7 @@ protected:
         return formulation.get_bmi_main_output_var();
     }
 
-    static const std::vector<std::shared_ptr<forcing::OptionalWrappedProvider>> &get_friend_deferred_providers(
+    static const std::vector<std::shared_ptr<data_access::OptionalWrappedProvider>> &get_friend_deferred_providers(
             const Bmi_Multi_Formulation& formulation)
     {
         return formulation.deferredProviders;
@@ -557,7 +557,7 @@ TEST_F(Bmi_Multi_Formulation_Test, Initialize_3_c) {
     Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
-    const std::vector<std::shared_ptr<forcing::OptionalWrappedProvider>> deferred = get_friend_deferred_providers(
+    const std::vector<std::shared_ptr<data_access::OptionalWrappedProvider>> deferred = get_friend_deferred_providers(
             formulation);
     for (size_t i = 0; i < deferred.size(); ++i) {
         ASSERT_TRUE(deferred[i]->isWrappedProviderSet());

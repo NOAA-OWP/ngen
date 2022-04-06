@@ -14,7 +14,7 @@ namespace realization {
 
     public:
 
-        Bmi_Cpp_Formulation(std::string id, std::unique_ptr<forcing::ForcingProvider> forcing_provider, utils::StreamHandler output_stream);
+        Bmi_Cpp_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing_provider, utils::StreamHandler output_stream);
 
         std::string get_formulation_type() override;
 
