@@ -15,6 +15,8 @@ else()
 endif()
 
 target_include_directories(testbmicppmodel PRIVATE include)
+#Where to look for bmi header, depending on where cmake is run from
+target_include_directories(testbmicppmodel PRIVATE ../bmi-cxx/ )
 
 set_target_properties(testbmicppmodel PROPERTIES VERSION ${PROJECT_VERSION})
 
