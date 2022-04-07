@@ -8,6 +8,7 @@ on:
     branches: [ master, dev, notreal ]
   pull_request:
     branches: [ master, dev, notreal ]
+  workflow_dispatch:
 
 env:
   # Obtained from https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
@@ -24,44 +25,21 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v2
-      
-    - name: Init Submodules
-      run: git submodule update --init --recursive
-
-    - name: Cache Boost Dependency
-      id: cache-boost-dep
-      uses: actions/cache@v1
-      with:
-        path: boost_1_72_0
-        key: unix-boost-dep
-
-    - name: Get Boost Dependency
-      if: steps.cache-boost-dep.outputs.cache-hit != 'true'
-      run: |
-        curl -L -O https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2
-        tar xjf boost_1_72_0.tar.bz2
-
-    - name: cmake_init_build
-      run: |
-        export BOOST_ROOT="$(pwd)/boost_1_72_0"
-        [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
-        cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=OFF -DNGEN_ACTIVATE_PYTHON:BOOL=OFF -DUDUNITS_ACTIVE:BOOL=ON -S .
+    - name: Checkout the commit
+      uses: actions/checkout@v2
     
-    - name: build_tests
-      run: cmake --build cmake_build --target test_unit -- -j ${{ env.LINUX_NUM_PROC_CORES }}
-      timeout-minutes: 15
-      
-    - name: run_tests
+    - name: Build Unit Tests
+      uses: ./.github/actions/ngen-build
+      with:
+        targets: "test_unit"
+        build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
+
+    - name: Run Tests
       run: ./cmake_build/test/test_unit
       timeout-minutes: 15
     
-    - name: clean_build
-      run: cmake --build cmake_build --target clean
-    
-    - name: cleanup_dir
-      run: rm -rf cmake_build
+    - name: Clean Up
+      uses: ./.github/actions/clean-build
 
   # Test MPI remote nexus behavior in linux
   test_mpi_remote_nexus_ubuntu_latest:
@@ -73,47 +51,19 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Init Submodules
-        run: git submodule update --init --recursive
-
-      - name: Cache Boost Dependency
-        id: cache-boost-dep
-        uses: actions/cache@v1
+      - name: Build Unit Tests
+        uses: ./.github/actions/ngen-build
         with:
-          path: boost_1_72_0
-          key: unix-boost-dep
-
-      - name: Get Boost Dependency
-        if: steps.cache-boost-dep.outputs.cache-hit != 'true'
-        run: |
-          curl -L -O https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2
-          tar xjf boost_1_72_0.tar.bz2
-
-      - name: Install MPI
-        id: install-mpi
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libopenmpi-dev openmpi-bin openmpi-common
-
-      - name: cmake_init_build
-        run: |
-          export BOOST_ROOT="$(pwd)/boost_1_72_0"
-          [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
-          cmake -B cmake_build -DMPI_ACTIVE:BOOL=ON -DBMI_C_LIB_ACTIVE:BOOL=OFF -DNGEN_ACTIVATE_PYTHON:BOOL=OFF -DUDUNITS_ACTIVE:BOOL=ON -S .
-
-      - name: build_tests
-        run: cmake --build cmake_build --target test_remote_nexus -- -j ${{ env.LINUX_NUM_PROC_CORES }}
-        timeout-minutes: 15
+          targets: "test_remote_nexus"
+          build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
+          use_mpi: 'ON'
 
       - name: run_tests
         run: mpirun --allow-run-as-root -np 2 ./cmake_build/test/test_remote_nexus
         timeout-minutes: 15
 
-      - name: clean_build
-        run: cmake --build cmake_build --target clean
-
-      - name: cleanup_dir
-        run: rm -rf cmake_build
+      - name: Clean Up
+        uses: ./.github/actions/clean-build
 
 
   # Run BMI C++ tests in linux environment
@@ -126,56 +76,38 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Init Submodules
-        run: git submodule update --init --recursive
+      #make sure cxx bmi is initialized/ready
+      - uses: ./.github/actions/ngen-submod-build
+        with: 
+          mod-dir: "extern/bmi-cxx/"
 
-      - name: cmake_init_shared_lib_build
-        run: cmake -B extern/test_bmi_cpp/cmake_build -S extern/test_bmi_cpp 
+      - name: Build Submodules
+        id: submod_build
+        uses: ./.github/actions/ngen-submod-build
+        with: 
+          mod-dir: "extern/test_bmi_cpp/"
+          targets: "testbmicppmodel"
 
-      - name: build_test_bmi_cpp_shared_lib
-        run: cmake --build extern/test_bmi_cpp/cmake_build --target testbmicppmodel
-
-      - name: Cache Boost Dependency
-        id: cache-boost-dep
-        uses: actions/cache@v1
+      - name: Build Unit Tests
+        uses: ./.github/actions/ngen-build
         with:
-          path: boost_1_72_0
-          key: unix-boost-dep
+          targets: "test_bmi_cpp"
+          build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
 
-      - name: Get Boost Dependency
-        if: steps.cache-boost-dep.outputs.cache-hit != 'true'
-        run: |
-          curl -L -O https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2
-          tar xjf boost_1_72_0.tar.bz2
-
-      - name: cmake_init_build
-        run: |
-          export BOOST_ROOT="$(pwd)/boost_1_72_0"
-          [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
-          cmake -B cmake_build -DNGEN_ACTIVATE_PYTHON:BOOL=OFF -S .
-
-      - name: build_bmi_c++_tests
-        run: cmake --build cmake_build --target test_bmi_cpp -- -j ${{ env.LINUX_NUM_PROC_CORES }}
-        timeout-minutes: 15
-
-      - name: run_bmi_c++_tests
+      - name: Run Tests
         run: |
           cd ./cmake_build/test/
           ./test_bmi_cpp
           cd ../../
         timeout-minutes: 15
 
-      - name: clean_build
-        run: cmake --build cmake_build --target clean
+      - name: Clean Up Unit Test Build
+        uses: ./.github/actions/clean-build
 
-      - name: clean_shared_lib_build
-        run: cmake --build extern/test_bmi_cpp/cmake_build --target clean
-
-      - name: cleanup_dir
-        run: rm -rf cmake_build
-
-      - name: cleanup_dir
-        run: rm -rf extern/test_bmi_cpp/cmake_build
+      - name: Clean Up Submodule Build
+        uses: ./.github/actions/clean-build
+        with:
+          build-dir: ${{ steps.submod_build.outputs.build-dir }}
 
   # Run BMI C tests in linux environment, and separating to isolate
   test_bmi_c_ubuntu_latest:
@@ -187,53 +119,21 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Init Submodules
-        run: git submodule update --init --recursive
+      - name: Build Submodules
+        id: submod_build
+        uses: ./.github/actions/ngen-submod-build
+        with: 
+          mod-dir: "extern/test_bmi_c"
+          targets: "testbmicmodel"
 
-      - name: Cache Numpy Python Dependency
-        id: cache-linux-numpy-dep
-        uses: actions/cache@v1
+      - name: Build Unit Tests
+        uses: ./.github/actions/ngen-build
         with:
-          path: .venv
-          key: linux-numpy-dep
-
-      - name: Get Numpy Python Dependency
-        if: steps.cache-linux-numpy-dep.outputs.cache-hit != 'true'
-        run: |
-          python -m venv .venv
-          . .venv/bin/activate
-          pip install pip
-          pip install numpy
-          deactivate
-
-      - name: cmake_init_shared_lib_build
-        run: cmake -B extern/test_bmi_c/cmake_build -S extern/test_bmi_c 
-
-      - name: build_test_bmi_c_shared_lib
-        run: cmake --build extern/test_bmi_c/cmake_build --target testbmicmodel
-
-      - name: Cache Boost Dependency
-        id: cache-boost-dep
-        uses: actions/cache@v1
-        with:
-          path: boost_1_72_0
-          key: unix-boost-dep
-
-      - name: Get Boost Dependency
-        if: steps.cache-boost-dep.outputs.cache-hit != 'true'
-        run: |
-          curl -L -O https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2
-          tar xjf boost_1_72_0.tar.bz2
-
-      - name: cmake_init_build
-        run: |
-          export BOOST_ROOT="$(pwd)/boost_1_72_0"
-          [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
-          cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=ON -DNGEN_ACTIVATE_PYTHON:BOOL=ON -DUDUNITS_ACTIVE:BOOL=ON -S .
-
-      - name: build_bmi_c_tests
-        run: cmake --build cmake_build --target test_bmi_c -- -j ${{ env.LINUX_NUM_PROC_CORES }}
-        timeout-minutes: 15
+          targets: "test_bmi_c"
+          build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
+          bmi_c: 'ON'
+          #Is this required for this test???
+          use_python: 'ON'
 
       - name: run_bmi_c_tests
         run: |
@@ -242,17 +142,13 @@ jobs:
           cd ../../
         timeout-minutes: 15
 
-      - name: clean_build
-        run: cmake --build cmake_build --target clean
+      - name: Clean Up Unit Test Build
+        uses: ./.github/actions/clean-build
 
-      - name: clean_shared_lib_build
-        run: cmake --build extern/test_bmi_c/cmake_build --target clean
-
-      - name: cleanup_dir
-        run: rm -rf cmake_build
-
-      - name: cleanup_dir
-        run: rm -rf extern/test_bmi_c/cmake_build
+      - name: Clean Up Submodule Build
+        uses: ./.github/actions/clean-build
+        with:
+          build-dir: ${{ steps.submod_build.outputs.build-dir }}
 
   # As with the BMI C ubuntu job, separate Fortran in linux tests to keep setups clean and cause of failures clear.
   test_bmi_fortran_ubuntu_latest:
@@ -264,59 +160,45 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Init Submodules
-        run: git submodule update --init --recursive
+      - name: Build Submodules
+        id: submod_build_1
+        uses: ./.github/actions/ngen-submod-build
+        with: 
+          mod-dir: "extern/test_bmi_fortran/"
+      
+      - name: Build Submodules
+        id: submod_build_2
+        uses: ./.github/actions/ngen-submod-build
+        with: 
+          mod-dir: "extern/iso_c_fortran_bmi/"
 
-      - name: cmake_init_test_lib_build
-        run: cmake -B extern/test_bmi_fortran/cmake_build -S extern/test_bmi_fortran
-
-      - name: build_test_bmi_fortran_shared_lib
-        run: |
-          cd extern/test_bmi_fortran/cmake_build
-          make
-          cd ../../../
-
-      - name: cmake_init_fortran_iso_c_lib_build
-        run: cmake -B extern/iso_c_fortran_bmi/cmake_build -S extern/iso_c_fortran_bmi
-
-      - name: build_test_fortran_iso_c_shared_lib
-        run: |
-          cd extern/iso_c_fortran_bmi/cmake_build
-          make
-          cd ../../../
-
-      - name: Cache Boost Dependency
-        id: cache-boost-dep
-        uses: actions/cache@v1
+      - name: Build Unit Tests
+        uses: ./.github/actions/ngen-build
         with:
-          path: boost_1_72_0
-          key: unix-boost-dep
+          targets: "test_bmi_fortran"
+          build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
+          #is this required for this test?
+          bmi_c: 'ON'
+          bmi_fortran: 'ON'
 
-      - name: Get Boost Dependency
-        if: steps.cache-boost-dep.outputs.cache-hit != 'true'
-        run: |
-          curl -L -O https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2
-          tar xjf boost_1_72_0.tar.bz2
-
-      - name: cmake_init_build
-        run: |
-          export BOOST_ROOT="$(pwd)/boost_1_72_0"
-          [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
-          cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=ON -DBMI_FORTRAN_ACTIVE:BOOL=ON -DNGEN_ACTIVATE_PYTHON:BOOL=OFF -DUDUNITS_ACTIVE:BOOL=ON -S .
-
-      - name: build_bmi_fortran_tests
-        run: cmake --build cmake_build --target test_bmi_fortran -- -j ${{ env.LINUX_NUM_PROC_CORES }}
-        timeout-minutes: 15
-
-      - name: run_bmi_fortran_tests
+      - name: Run Unit Tests
         run: |
           cd ./cmake_build/test/
           ./test_bmi_fortran
           cd ../../
         timeout-minutes: 15
 
-      - name: cleanup_builds
-        run: find . -name cmake_build -type d -prune -exec rm -rf {} \;
+      - name: Clean Up Unit Test Build
+        uses: ./.github/actions/clean-build
+
+      - name: Clean Up Submodule Build
+        uses: ./.github/actions/clean-build
+        with:
+          build-dir: ${{ steps.submod_build_1.outputs.build-dir }}
+
+      - uses: ./.github/actions/clean-build
+        with:
+          build-dir: ${{ steps.submod_build_2.outputs.build-dir }}
 
   # As with the BMI C ubuntu job, separate Python in linux tests to keep setups clean and cause of failures clear.
   test_bmi_python_ubuntu_latest:
@@ -328,48 +210,15 @@ jobs:
       # Checks-out repository under $GITHUB_WORKSPACE, so job can access it
       - uses: actions/checkout@v2
 
-      - name: Init Submodules
-        run: git submodule update --init --recursive
-
-      - name: Cache Python Dependencies
-        id: cache-linux-py3-dependencies
-        uses: actions/cache@v1
+      - name: Build Unit Tests
+        uses: ./.github/actions/ngen-build
         with:
-          path: .venv
-          key: linux-py3-dependencies
-
-      - name: Init Python Dependencies
-        if: steps.cache-linux-py3-dependencies.outputs.cache-hit != 'true'
-        run: |
-          python -m venv .venv
-          . .venv/bin/activate
-          pip install pip
-          pip install numpy
-          pip install -r extern/test_bmi_py/requirements.txt
-          deactivate
-
-      - name: Cache Boost Dependency
-        id: cache-boost-dep
-        uses: actions/cache@v1
-        with:
-          path: boost_1_72_0
-          key: unix-boost-dep
-
-      - name: Get Boost Dependency
-        if: steps.cache-boost-dep.outputs.cache-hit != 'true'
-        run: |
-          curl -L -O https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2
-          tar xjf boost_1_72_0.tar.bz2
-
-      - name: cmake_init_build
-        run: |
-          export BOOST_ROOT="$(pwd)/boost_1_72_0"
-          [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
-          cmake -B cmake_build -DCMAKE_BUILD_TYPE=Debug -DBMI_C_LIB_ACTIVE:BOOL=ON -DNGEN_ACTIVATE_PYTHON:BOOL=ON -DUDUNITS_ACTIVE:BOOL=ON -S .
-
-      - name: build_bmi_python_tests
-        run: cmake --build cmake_build --target test_bmi_python -- -j ${{ env.LINUX_NUM_PROC_CORES }}
-        timeout-minutes: 15
+          targets: "test_bmi_python"
+          build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
+          #is this required for this test?
+          bmi_c: 'ON'
+          use_python: 'ON'
+          additional_python_requirements: 'extern/test_bmi_py/requirements.txt'
 
       - name: run_bmi_python_tests
         run: |
@@ -378,8 +227,8 @@ jobs:
           cd ../../
         timeout-minutes: 15
 
-      - name: cleanup
-        run: rm -rf cmake_build
+      - name: Clean Up Unit Test Build
+        uses: ./.github/actions/clean-build
 
   # As with the BMI C ubuntu job, separate multi BMI in linux tests to keep setups clean and cause of failures clear.
   test_bmi_multi_ubuntu_latest:
@@ -391,131 +240,79 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Cache Python Dependencies
-        id: cache-linux-py3-dependencies
-        uses: actions/cache@v1
+      - name: Build Submodules
+        id: submod_build_1
+        uses: ./.github/actions/ngen-submod-build
+        with: 
+          mod-dir: "extern/test_bmi_fortran/"
+
+      - name: Build Submodules
+        id: submod_build_2
+        uses: ./.github/actions/ngen-submod-build
+        with: 
+          mod-dir: "extern/iso_c_fortran_bmi/"
+
+      - name: Build Submodules
+        id: submod_build_3
+        uses: ./.github/actions/ngen-submod-build
+        with: 
+          mod-dir: "extern/test_bmi_c/"
+          targets: "testbmicmodel"
+
+      - name: Build Unit Tests
+        uses: ./.github/actions/ngen-build
         with:
-          path: .venv
-          key: linux-py3-dependencies
+          targets: "test_bmi_multi"
+          build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
+          bmi_c: 'ON'
+          bmi_fortran: 'ON'
+          use_python: 'ON'
+          additional_python_requirements: 'extern/test_bmi_py/requirements.txt'
 
-      - name: Init Python Dependencies
-        if: steps.cache-linux-py3-dependencies.outputs.cache-hit != 'true'
-        run: |
-          python -m venv .venv
-          . .venv/bin/activate
-          pip install pip
-          pip install numpy
-          pip install -r extern/test_bmi_py/requirements.txt
-          deactivate
-
-      - name: Init Submodules
-        run: git submodule update --init --recursive
-
-      - name: cmake_init_test_lib_build
-        run: cmake -B extern/test_bmi_fortran/cmake_build -S extern/test_bmi_fortran
-
-      - name: build_test_bmi_fortran_shared_lib
-        run: |
-          cd extern/test_bmi_fortran/cmake_build
-          make
-          cd ../../../
-
-      - name: cmake_init_fortran_iso_c_lib_build
-        run: cmake -B extern/iso_c_fortran_bmi/cmake_build -S extern/iso_c_fortran_bmi
-
-      - name: build_test_fortran_iso_c_shared_lib
-        run: |
-          cd extern/iso_c_fortran_bmi/cmake_build
-          make
-          cd ../../../
-
-      - name: cmake_init_shared_lib_build
-        run: cmake -B extern/test_bmi_c/cmake_build -S extern/test_bmi_c
-
-      - name: build_test_bmi_c_shared_lib
-        run: cmake --build extern/test_bmi_c/cmake_build --target testbmicmodel
-
-      - name: Cache Boost Dependency
-        id: cache-boost-dep
-        uses: actions/cache@v1
-        with:
-          path: boost_1_72_0
-          key: unix-boost-dep
-
-      - name: Get Boost Dependency
-        if: steps.cache-boost-dep.outputs.cache-hit != 'true'
-        run: |
-          curl -L -O https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2
-          tar xjf boost_1_72_0.tar.bz2
-
-      - name: cmake_init_build
-        run: |
-          export BOOST_ROOT="$(pwd)/boost_1_72_0"
-          [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
-          cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=ON -DBMI_FORTRAN_ACTIVE:BOOL=ON -DNGEN_ACTIVATE_PYTHON:BOOL=ON -DUDUNITS_ACTIVE:BOOL=ON -S .
-
-      - name: build_bmi_multi_tests
-        run: cmake --build cmake_build --target test_bmi_multi -- -j ${{ env.LINUX_NUM_PROC_CORES }}
-        timeout-minutes: 15
-
-      - name: run_bmi_multi_tests
+      - name: Run Unit Tests
         run: ./cmake_build/test/test_bmi_multi
         timeout-minutes: 15
 
-      - name: cleanup_builds
-        run: find . -name cmake_build -type d -prune -exec rm -rf {} \;
+      - name: Clean Up Unit Test Build
+        uses: ./.github/actions/clean-build
+
+      - name: Clean Up Submodule Build
+        uses: ./.github/actions/clean-build
+        with:
+          build-dir: ${{ steps.submod_build_1.outputs.build-dir }}
+      - uses: ./.github/actions/clean-build
+        with:
+          build-dir: ${{ steps.submod_build_2.outputs.build-dir }}
+      - uses: ./.github/actions/clean-build
+        with:
+          build-dir: ${{ steps.submod_build_3.outputs.build-dir }}
 
 
   # Run general unit tests in MacOS environment
+  #Repeat all tests in macos environment
   test_unit_macos_latest:
     # The type of runner that the job will run on
     runs-on: macos-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+    - name: Checkout the commit
+      uses: actions/checkout@v2
+    
+    - name: Build Unit Tests
+      uses: ./.github/actions/ngen-build
+      with:
+        targets: "test_unit"
+        build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
 
-      - name: Init Submodules
-        run: git submodule update --init --recursive
+    - name: Run Tests
+      run: ./cmake_build/test/test_unit
+      timeout-minutes: 15
+    
+    - name: Clean Up
+      uses: ./.github/actions/clean-build
 
-      - name: Cache Boost Dependency
-        id: cache-boost-dep
-        uses: actions/cache@v1
-        with:
-          path: boost_1_72_0
-          key: unix-boost-dep
-
-      - name: Get Boost Dependency
-        if: steps.cache-boost-dep.outputs.cache-hit != 'true'
-        run: |
-          curl -L -O https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2
-          tar xjf boost_1_72_0.tar.bz2
-
-      - name: Install automake (for UDUNITS2)
-        run: brew install automake
-
-      - name: cmake_init_build
-        run: |
-          export BOOST_ROOT="$(pwd)/boost_1_72_0"
-          [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
-          cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=OFF -DNGEN_ACTIVATE_PYTHON:BOOL=OFF -DUDUNITS_ACTIVE:BOOL=ON -S .
-
-      - name: build_tests
-        run: cmake --build cmake_build --target test_unit -- -j ${{ env.MACOS_NUM_PROC_CORES }}
-        timeout-minutes: 15
-
-      - name: run_tests
-        run: ./cmake_build/test/test_unit
-        timeout-minutes: 15
-
-      - name: clean_build
-        run: cmake --build cmake_build --target clean
-
-      - name: cleanup_dir
-        run: rm -rf cmake_build
-
-  # Run BMI C++ tests in macOS environment
+  # Run BMI C++ tests in linux environment
   test_bmi_cpp_macos_latest:
     # The type of runner that the job will run on
     runs-on: macos-latest
@@ -525,58 +322,40 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Init Submodules
-        run: git submodule update --init --recursive
+      #make sure cxx bmi is initialized/ready
+      - uses: ./.github/actions/ngen-submod-build
+        with: 
+          mod-dir: "extern/bmi-cxx/"
 
-      - name: cmake_init_shared_lib_build
-        run: cmake -B extern/test_bmi_cpp/cmake_build -S extern/test_bmi_cpp
+      - name: Build Submodules
+        id: submod_build
+        uses: ./.github/actions/ngen-submod-build
+        with: 
+          mod-dir: "extern/test_bmi_cpp/"
+          targets: "testbmicppmodel"
 
-      - name: build_test_bmi_cpp_shared_lib
-        run: cmake --build extern/test_bmi_cpp/cmake_build --target testbmicppmodel
-
-      - name: Cache Boost Dependency
-        id: cache-boost-dep
-        uses: actions/cache@v1
+      - name: Build Unit Tests
+        uses: ./.github/actions/ngen-build
         with:
-          path: boost_1_72_0
-          key: unix-boost-dep
+          targets: "test_bmi_cpp"
+          build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
 
-      - name: Get Boost Dependency
-        if: steps.cache-boost-dep.outputs.cache-hit != 'true'
-        run: |
-          curl -L -O https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2
-          tar xjf boost_1_72_0.tar.bz2
-
-      - name: cmake_init_build
-        run: |
-          export BOOST_ROOT="$(pwd)/boost_1_72_0"
-          [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
-          cmake -B cmake_build -DNGEN_ACTIVATE_PYTHON:BOOL=OFF -S .
-
-      - name: build_bmi_c++_tests
-        run: cmake --build cmake_build --target test_bmi_cpp -- -j ${{ env.MACOS_NUM_PROC_CORES }}
-        timeout-minutes: 15
-
-      - name: run_bmi_c++_tests
+      - name: Run Tests
         run: |
           cd ./cmake_build/test/
           ./test_bmi_cpp
           cd ../../
         timeout-minutes: 15
 
-      - name: clean_build
-        run: cmake --build cmake_build --target clean
+      - name: Clean Up Unit Test Build
+        uses: ./.github/actions/clean-build
 
-      - name: clean_shared_lib_build
-        run: cmake --build extern/test_bmi_cpp/cmake_build --target clean
+      - name: Clean Up Submodule Build
+        uses: ./.github/actions/clean-build
+        with:
+          build-dir: ${{ steps.submod_build.outputs.build-dir }}
 
-      - name: cleanup_dir
-        run: rm -rf cmake_build
-
-      - name: cleanup_shared_lib_dir
-        run: rm -rf extern/test_bmi_cpp/cmake_build
-
-  # Run BMI C tests in MacOS environment, and separating to isolate
+  # Run BMI C tests in linux environment, and separating to isolate
   test_bmi_c_macos_latest:
     # The type of runner that the job will run on
     runs-on: macos-latest
@@ -586,53 +365,21 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Init Submodules
-        run: git submodule update --init --recursive
+      - name: Build Submodules
+        id: submod_build
+        uses: ./.github/actions/ngen-submod-build
+        with: 
+          mod-dir: "extern/test_bmi_c"
+          targets: "testbmicmodel"
 
-      - name: Cache Numpy Python Dependency
-        id: cache-numpy-py3-dep
-        uses: actions/cache@v1
+      - name: Build Unit Tests
+        uses: ./.github/actions/ngen-build
         with:
-          path: .venv
-          key: unix-numpy-py3-dep
-
-      - name: Get Numpy Python Dependency
-        if: steps.cache-numpy-py3-dep.outputs.cache-hit != 'true'
-        run: |
-          python3 -m venv .venv
-          . .venv/bin/activate
-          pip install pip
-          pip install numpy
-          deactivate
-
-      - name: cmake_init_shared_lib_build
-        run: cmake -B extern/test_bmi_c/cmake_build -S extern/test_bmi_c
-
-      - name: build_test_bmi_c_shared_lib
-        run: cmake --build extern/test_bmi_c/cmake_build --target testbmicmodel
-
-      - name: Cache Boost Dependency
-        id: cache-boost-dep
-        uses: actions/cache@v1
-        with:
-          path: boost_1_72_0
-          key: unix-boost-dep
-
-      - name: Get Boost Dependency
-        if: steps.cache-boost-dep.outputs.cache-hit != 'true'
-        run: |
-          curl -L -O https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2
-          tar xjf boost_1_72_0.tar.bz2
-
-      - name: cmake_init_build
-        run: |
-          export BOOST_ROOT="$(pwd)/boost_1_72_0"
-          [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
-          cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=ON -DNGEN_ACTIVATE_PYTHON:BOOL=ON -DUDUNITS_ACTIVE:BOOL=ON -S .
-
-      - name: build_bmi_c_tests
-        run: cmake --build cmake_build --target test_bmi_c -- -j ${{ env.MACOS_NUM_PROC_CORES }}
-        timeout-minutes: 15
+          targets: "test_bmi_c"
+          build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
+          bmi_c: 'ON'
+          #Is this required for this test???
+          use_python: 'ON'
 
       - name: run_bmi_c_tests
         run: |
@@ -641,19 +388,15 @@ jobs:
           cd ../../
         timeout-minutes: 15
 
-      - name: clean_build
-        run: cmake --build cmake_build --target clean
+      - name: Clean Up Unit Test Build
+        uses: ./.github/actions/clean-build
 
-      - name: clean_shared_lib_build
-        run: cmake --build extern/test_bmi_c/cmake_build --target clean
+      - name: Clean Up Submodule Build
+        uses: ./.github/actions/clean-build
+        with:
+          build-dir: ${{ steps.submod_build.outputs.build-dir }}
 
-      - name: cleanup_dir
-        run: rm -rf cmake_build
-
-      - name: cleanup_shared_lib_dir
-        run: rm -rf extern/test_bmi_c/cmake_build
-
-  # As with the BMI C MacOS job, separate Fortran in MacOS tests to keep setups clean and cause of failures clear.
+  # As with the BMI C macos job, separate Fortran in linux tests to keep setups clean and cause of failures clear.
   test_bmi_fortran_macos_latest:
     # The type of runner that the job will run on
     runs-on: macos-latest
@@ -663,112 +406,64 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Init Submodules
-        run: git submodule update --init --recursive
+      - name: Build Submodules
+        id: submod_build_1
+        uses: ./.github/actions/ngen-submod-build
+        with: 
+          mod-dir: "extern/test_bmi_fortran/"
+      
+      - name: Build Submodules
+        id: submod_build_2
+        uses: ./.github/actions/ngen-submod-build
+        with: 
+          mod-dir: "extern/iso_c_fortran_bmi/"
 
-      - name: cmake_init_test_lib_build
-        run: cmake -B extern/test_bmi_fortran/cmake_build -DCMAKE_Fortran_COMPILER:FILEPATH=$(which gfortran-11) -S extern/test_bmi_fortran
-
-      - name: build_test_bmi_fortran_shared_lib
-        run: |
-          cd extern/test_bmi_fortran/cmake_build
-          make
-          cd ../../../
-
-      - name: cmake_init_fortran_iso_c_lib_build
-        run: cmake -B extern/iso_c_fortran_bmi/cmake_build -DCMAKE_Fortran_COMPILER:FILEPATH=$(which gfortran-11) -S extern/iso_c_fortran_bmi
-
-      - name: build_test_fortran_iso_c_shared_lib
-        run: |
-          cd extern/iso_c_fortran_bmi/cmake_build
-          make
-          cd ../../../
-
-      - name: Cache Boost Dependency
-        id: cache-boost-dep
-        uses: actions/cache@v1
+      - name: Build Unit Tests
+        uses: ./.github/actions/ngen-build
         with:
-          path: boost_1_72_0
-          key: unix-boost-dep
+          targets: "test_bmi_fortran"
+          build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
+          #is this required for this test?
+          bmi_c: 'ON'
+          bmi_fortran: 'ON'
 
-      - name: Get Boost Dependency
-        if: steps.cache-boost-dep.outputs.cache-hit != 'true'
-        run: |
-          curl -L -O https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2
-          tar xjf boost_1_72_0.tar.bz2
-
-      - name: cmake_init_build
-        run: |
-          export BOOST_ROOT="$(pwd)/boost_1_72_0"
-          [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
-          cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=ON -DBMI_FORTRAN_ACTIVE:BOOL=ON -DNGEN_ACTIVATE_PYTHON:BOOL=OFF -DUDUNITS_ACTIVE:BOOL=ON -S .
-
-      - name: build_bmi_fortran_tests
-        run: cmake --build cmake_build --target test_bmi_fortran -- -j ${{ env.MACOS_NUM_PROC_CORES }}
-        timeout-minutes: 15
-
-      - name: run_bmi_fortran_tests
+      - name: Run Unit Tests
         run: |
           cd ./cmake_build/test/
           ./test_bmi_fortran
           cd ../../
         timeout-minutes: 15
 
-      - name: cleanup_builds
-        run: find . -name cmake_build -type d -delete
+      - name: Clean Up Unit Test Build
+        uses: ./.github/actions/clean-build
 
-  # As with the BMI C MacOS job, separate Python in MacOS tests to keep setups clean and cause of failures clear.
+      - name: Clean Up Submodule Build
+        uses: ./.github/actions/clean-build
+        with:
+          build-dir: ${{ steps.submod_build_1.outputs.build-dir }}
+      - uses: ./.github/actions/clean-build
+        with:
+          build-dir: ${{ steps.submod_build_2.outputs.build-dir }}
+
+  # As with the BMI C macos job, separate Python in linux tests to keep setups clean and cause of failures clear.
   test_bmi_python_macos_latest:
     # The type of runner that the job will run on
     runs-on: macos-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      # Checks-out repository under $GITHUB_WORKSPACE, so job can access it
       - uses: actions/checkout@v2
 
-      - name: Init Submodules
-        run: git submodule update --init --recursive
-
-      - name: Cache Python Dependencies
-        id: cache-unix-py3-dependencies
-        uses: actions/cache@v1
+      - name: Build Unit Tests
+        uses: ./.github/actions/ngen-build
         with:
-          path: .venv
-          key: unix-py3-dependencies
-
-      - name: Init Python Dependencies
-        if: steps.cache-unix-py3-dependencies.outputs.cache-hit != 'true'
-        run: |
-          python3 -m venv .venv
-          . .venv/bin/activate
-          pip install pip
-          pip install numpy
-          pip install -r extern/test_bmi_py/requirements.txt
-          deactivate
-
-      - name: Cache Boost Dependency
-        id: cache-boost-dep
-        uses: actions/cache@v1
-        with:
-          path: boost_1_72_0
-          key: unix-boost-dep
-
-      - name: Get Boost Dependency
-        if: steps.cache-boost-dep.outputs.cache-hit != 'true'
-        run: |
-          curl -L -O https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2
-          tar xjf boost_1_72_0.tar.bz2
-
-      - name: cmake_init_build
-        run: |
-          export BOOST_ROOT="$(pwd)/boost_1_72_0"
-          [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
-          cmake -B cmake_build -DCMAKE_BUILD_TYPE=Debug -DBMI_C_LIB_ACTIVE:BOOL=ON -DNGEN_ACTIVATE_PYTHON:BOOL=ON -DUDUNITS_ACTIVE:BOOL=ON -S .
-
-      - name: build_bmi_python_tests
-        run: cmake --build cmake_build --target test_bmi_python -- -j ${{ env.MACOS_NUM_PROC_CORES }}
-        timeout-minutes: 15
+          targets: "test_bmi_python"
+          build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
+          #is this required for this test?
+          bmi_c: 'ON'
+          use_python: 'ON'
+          additional_python_requirements: 'extern/test_bmi_py/requirements.txt'
 
       - name: run_bmi_python_tests
         run: |
@@ -777,11 +472,10 @@ jobs:
           cd ../../
         timeout-minutes: 15
 
-      - name: cleanup
-        run: find . -name cmake_build -type d -delete
+      - name: Clean Up Unit Test Build
+        uses: ./.github/actions/clean-build
 
-
-  # As with the BMI C MacOS job, separate multi BMI in linux tests to keep setups clean and cause of failures clear.
+  # As with the BMI C macos job, separate multi BMI in linux tests to keep setups clean and cause of failures clear.
   test_bmi_multi_macos_latest:
     # The type of runner that the job will run on
     runs-on: macos-latest
@@ -791,79 +485,54 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Cache Python Dependencies
-        id: cache-unix-py3-dependencies
-        uses: actions/cache@v1
+      - name: Build Submodules
+        id: submod_build_1
+        uses: ./.github/actions/ngen-submod-build
+        with: 
+          mod-dir: "extern/test_bmi_fortran/"
+
+      - name: Build Submodules
+        id: submod_build_2
+        uses: ./.github/actions/ngen-submod-build
+        with: 
+          mod-dir: "extern/iso_c_fortran_bmi/"
+
+      - name: Build Submodules
+        id: submod_build_3
+        uses: ./.github/actions/ngen-submod-build
+        with: 
+          mod-dir: "extern/test_bmi_c/"
+          targets: "testbmicmodel"
+
+      - name: Build Unit Tests
+        uses: ./.github/actions/ngen-build
         with:
-          path: .venv
-          key: unix-py3-dependencies
+          targets: "test_bmi_multi"
+          build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
+          bmi_c: 'ON'
+          bmi_fortran: 'ON'
+          use_python: 'ON'
+          additional_python_requirements: 'extern/test_bmi_py/requirements.txt'
 
-      - name: Init Python Dependencies
-        if: steps.cache-unix-py3-dependencies.outputs.cache-hit != 'true'
-        run: |
-          python3 -m venv .venv
-          . .venv/bin/activate
-          pip install pip
-          pip install numpy
-          pip install -r extern/test_bmi_py/requirements.txt
-          deactivate
-
-      - name: Init Submodules
-        run: git submodule update --init --recursive
-
-      - name: cmake_init_test_lib_build
-        run: cmake -B extern/test_bmi_fortran/cmake_build -DCMAKE_Fortran_COMPILER:FILEPATH=$(which gfortran-11) -S extern/test_bmi_fortran
-
-      - name: build_test_bmi_fortran_shared_lib
-        run: |
-          cd extern/test_bmi_fortran/cmake_build
-          make
-          cd ../../../
-
-      - name: cmake_init_fortran_iso_c_lib_build
-        run: cmake -B extern/iso_c_fortran_bmi/cmake_build -DCMAKE_Fortran_COMPILER:FILEPATH=$(which gfortran-11) -S extern/iso_c_fortran_bmi
-
-      - name: build_test_fortran_iso_c_shared_lib
-        run: |
-          cd extern/iso_c_fortran_bmi/cmake_build
-          make
-          cd ../../../
-
-      - name: cmake_init_shared_lib_build
-        run: cmake -B extern/test_bmi_c/cmake_build -S extern/test_bmi_c
-
-      - name: build_test_bmi_c_shared_lib
-        run: cmake --build extern/test_bmi_c/cmake_build --target testbmicmodel
-
-      - name: Cache Boost Dependency
-        id: cache-boost-dep
-        uses: actions/cache@v1
-        with:
-          path: boost_1_72_0
-          key: unix-boost-dep
-
-      - name: Get Boost Dependency
-        if: steps.cache-boost-dep.outputs.cache-hit != 'true'
-        run: |
-          curl -L -O https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2
-          tar xjf boost_1_72_0.tar.bz2
-
-      - name: cmake_init_build
-        run: |
-          export BOOST_ROOT="$(pwd)/boost_1_72_0"
-          [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
-          cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=ON -DBMI_FORTRAN_ACTIVE:BOOL=ON -DNGEN_ACTIVATE_PYTHON:BOOL=ON -DUDUNITS_ACTIVE:BOOL=ON -S .
-
-      - name: build_bmi_multi_tests
-        run: cmake --build cmake_build --target test_bmi_multi -- -j ${{ env.MACOS_NUM_PROC_CORES }}
-        timeout-minutes: 15
-
-      - name: run_bmi_multi_tests
+      - name: Run Unit Tests
         run: ./cmake_build/test/test_bmi_multi
         timeout-minutes: 15
 
-      - name: cleanup_builds
-        run: find . -name cmake_build -type d -delete
+      - name: Clean Up Unit Test Build
+        uses: ./.github/actions/clean-build
+
+      - name: Clean Up Submodule Build
+        uses: ./.github/actions/clean-build
+        with:
+          build-dir: ${{ steps.submod_build_1.outputs.build-dir }}
+      - uses: ./.github/actions/clean-build
+        with:
+          build-dir: ${{ steps.submod_build_2.outputs.build-dir }}
+      - uses: ./.github/actions/clean-build
+        with:
+          build-dir: ${{ steps.submod_build_3.outputs.build-dir }}
+
+
 
   # TODO: fails due to compilation error, at least in large part due to use of POSIX functions not supported on Windows.
   # TODO: Need to determine whether Windows support (in particular, development environment support) is necessary.
