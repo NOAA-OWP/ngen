@@ -63,6 +63,20 @@ runs:
             sudo apt-get install -y libopenmpi-dev openmpi-bin openmpi-common
           shell: bash
 
+        - name: Install NetCDF
+          run: |
+            if [ ${{ runner.os }} == 'Linux' ]
+            then
+              sudo apt-get install -y libnetcdf-dev libnetcdff-dev
+            elif [ ${{ runner.os }} == 'macOS' ]
+            then
+              brew install netcdf
+              echo "LIBRARY_PATH=/usr/local/lib/:$LIBRARY_PATH" >> $GITHUB_ENV
+              echo "LD_LIBRARY_PATH=/usr/local/lib/:$LD_LIBRARY_PATH" >> $GITHUB_ENV
+              echo "LDFLAGS=-L/usr/local/lib" >> $GITHUB_ENV
+            fi
+          shell: bash
+
         - name: Init Submodules
           run: git submodule update --init --recursive
           shell: bash
