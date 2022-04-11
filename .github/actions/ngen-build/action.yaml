@@ -83,7 +83,7 @@ runs:
 
         - name: Cache Boost Dependency
           id: cache-boost-dep
-          uses: actions/cache@v1
+          uses: actions/cache@v3
           with:
             path: boost_1_72_0
             key: unix-boost-dep
@@ -97,7 +97,7 @@ runs:
 
         - name: Cache Python Dependencies
           id: cache-py3-dependencies
-          uses: actions/cache@v1
+          uses: actions/cache@v3
           with:
             path: .venv
             key: ${{ runner.os }}-python-deps
