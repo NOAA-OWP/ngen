@@ -7,8 +7,8 @@
 	url = https://github.com/pybind/pybind11
 [submodule "extern/t-route"]
 	path = extern/t-route
-	url = https://github.com/jdmattern-noaa/t-route.git
-  branch = ngen-routing2
+	url = https://github.com/noaa-owp/t-route.git
+  branch = ngen
 [submodule "extern/cfe/cfe"]
 	path = extern/cfe/cfe
 	url = https://github.com/NOAA-OWP/cfe.git
