@@ -19,9 +19,13 @@ env:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # Run general unit tests in linux environment
-  test_unit_ubuntu_latest:
+  test_unit:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -42,9 +46,13 @@ jobs:
       uses: ./.github/actions/clean-build
 
   # Test MPI remote nexus behavior in linux
-  test_mpi_remote_nexus_ubuntu_latest:
+  test_mpi_remote_nexus:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -67,9 +75,13 @@ jobs:
 
 
   # Run BMI C++ tests in linux environment
-  test_bmi_cpp_ubuntu_latest:
+  test_bmi_cpp:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -110,9 +122,13 @@ jobs:
           build-dir: ${{ steps.submod_build.outputs.build-dir }}
 
   # Run BMI C tests in linux environment, and separating to isolate
-  test_bmi_c_ubuntu_latest:
+  test_bmi_c:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -151,9 +167,13 @@ jobs:
           build-dir: ${{ steps.submod_build.outputs.build-dir }}
 
   # As with the BMI C ubuntu job, separate Fortran in linux tests to keep setups clean and cause of failures clear.
-  test_bmi_fortran_ubuntu_latest:
+  test_bmi_fortran:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -201,9 +221,13 @@ jobs:
           build-dir: ${{ steps.submod_build_2.outputs.build-dir }}
 
   # As with the BMI C ubuntu job, separate Python in linux tests to keep setups clean and cause of failures clear.
-  test_bmi_python_ubuntu_latest:
+  test_bmi_python:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -231,9 +255,13 @@ jobs:
         uses: ./.github/actions/clean-build
 
   # As with the BMI C ubuntu job, separate multi BMI in linux tests to keep setups clean and cause of failures clear.
-  test_bmi_multi_ubuntu_latest:
+  test_bmi_multi:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -286,253 +314,6 @@ jobs:
       - uses: ./.github/actions/clean-build
         with:
           build-dir: ${{ steps.submod_build_3.outputs.build-dir }}
-
-
-  # Run general unit tests in MacOS environment
-  #Repeat all tests in macos environment
-  test_unit_macos_latest:
-    # The type of runner that the job will run on
-    runs-on: macos-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-    - name: Checkout the commit
-      uses: actions/checkout@v2
-    
-    - name: Build Unit Tests
-      uses: ./.github/actions/ngen-build
-      with:
-        targets: "test_unit"
-        build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
-
-    - name: Run Tests
-      run: ./cmake_build/test/test_unit
-      timeout-minutes: 15
-    
-    - name: Clean Up
-      uses: ./.github/actions/clean-build
-
-  # Run BMI C++ tests in linux environment
-  test_bmi_cpp_macos_latest:
-    # The type of runner that the job will run on
-    runs-on: macos-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-
-      #make sure cxx bmi is initialized/ready
-      - uses: ./.github/actions/ngen-submod-build
-        with: 
-          mod-dir: "extern/bmi-cxx/"
-
-      - name: Build Submodules
-        id: submod_build
-        uses: ./.github/actions/ngen-submod-build
-        with: 
-          mod-dir: "extern/test_bmi_cpp/"
-          targets: "testbmicppmodel"
-
-      - name: Build Unit Tests
-        uses: ./.github/actions/ngen-build
-        with:
-          targets: "test_bmi_cpp"
-          build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
-
-      - name: Run Tests
-        run: |
-          cd ./cmake_build/test/
-          ./test_bmi_cpp
-          cd ../../
-        timeout-minutes: 15
-
-      - name: Clean Up Unit Test Build
-        uses: ./.github/actions/clean-build
-
-      - name: Clean Up Submodule Build
-        uses: ./.github/actions/clean-build
-        with:
-          build-dir: ${{ steps.submod_build.outputs.build-dir }}
-
-  # Run BMI C tests in linux environment, and separating to isolate
-  test_bmi_c_macos_latest:
-    # The type of runner that the job will run on
-    runs-on: macos-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-
-      - name: Build Submodules
-        id: submod_build
-        uses: ./.github/actions/ngen-submod-build
-        with: 
-          mod-dir: "extern/test_bmi_c"
-          targets: "testbmicmodel"
-
-      - name: Build Unit Tests
-        uses: ./.github/actions/ngen-build
-        with:
-          targets: "test_bmi_c"
-          build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
-          bmi_c: 'ON'
-          #Is this required for this test???
-          use_python: 'ON'
-
-      - name: run_bmi_c_tests
-        run: |
-          cd ./cmake_build/test/
-          ./test_bmi_c
-          cd ../../
-        timeout-minutes: 15
-
-      - name: Clean Up Unit Test Build
-        uses: ./.github/actions/clean-build
-
-      - name: Clean Up Submodule Build
-        uses: ./.github/actions/clean-build
-        with:
-          build-dir: ${{ steps.submod_build.outputs.build-dir }}
-
-  # As with the BMI C macos job, separate Fortran in linux tests to keep setups clean and cause of failures clear.
-  test_bmi_fortran_macos_latest:
-    # The type of runner that the job will run on
-    runs-on: macos-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-
-      - name: Build Submodules
-        id: submod_build_1
-        uses: ./.github/actions/ngen-submod-build
-        with: 
-          mod-dir: "extern/test_bmi_fortran/"
-      
-      - name: Build Submodules
-        id: submod_build_2
-        uses: ./.github/actions/ngen-submod-build
-        with: 
-          mod-dir: "extern/iso_c_fortran_bmi/"
-
-      - name: Build Unit Tests
-        uses: ./.github/actions/ngen-build
-        with:
-          targets: "test_bmi_fortran"
-          build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
-          #is this required for this test?
-          bmi_c: 'ON'
-          bmi_fortran: 'ON'
-
-      - name: Run Unit Tests
-        run: |
-          cd ./cmake_build/test/
-          ./test_bmi_fortran
-          cd ../../
-        timeout-minutes: 15
-
-      - name: Clean Up Unit Test Build
-        uses: ./.github/actions/clean-build
-
-      - name: Clean Up Submodule Build
-        uses: ./.github/actions/clean-build
-        with:
-          build-dir: ${{ steps.submod_build_1.outputs.build-dir }}
-      - uses: ./.github/actions/clean-build
-        with:
-          build-dir: ${{ steps.submod_build_2.outputs.build-dir }}
-
-  # As with the BMI C macos job, separate Python in linux tests to keep setups clean and cause of failures clear.
-  test_bmi_python_macos_latest:
-    # The type of runner that the job will run on
-    runs-on: macos-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out repository under $GITHUB_WORKSPACE, so job can access it
-      - uses: actions/checkout@v2
-
-      - name: Build Unit Tests
-        uses: ./.github/actions/ngen-build
-        with:
-          targets: "test_bmi_python"
-          build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
-          #is this required for this test?
-          bmi_c: 'ON'
-          use_python: 'ON'
-          additional_python_requirements: 'extern/test_bmi_py/requirements.txt'
-
-      - name: run_bmi_python_tests
-        run: |
-          cd ./cmake_build/test/
-          ./test_bmi_python
-          cd ../../
-        timeout-minutes: 15
-
-      - name: Clean Up Unit Test Build
-        uses: ./.github/actions/clean-build
-
-  # As with the BMI C macos job, separate multi BMI in linux tests to keep setups clean and cause of failures clear.
-  test_bmi_multi_macos_latest:
-    # The type of runner that the job will run on
-    runs-on: macos-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-
-      - name: Build Submodules
-        id: submod_build_1
-        uses: ./.github/actions/ngen-submod-build
-        with: 
-          mod-dir: "extern/test_bmi_fortran/"
-
-      - name: Build Submodules
-        id: submod_build_2
-        uses: ./.github/actions/ngen-submod-build
-        with: 
-          mod-dir: "extern/iso_c_fortran_bmi/"
-
-      - name: Build Submodules
-        id: submod_build_3
-        uses: ./.github/actions/ngen-submod-build
-        with: 
-          mod-dir: "extern/test_bmi_c/"
-          targets: "testbmicmodel"
-
-      - name: Build Unit Tests
-        uses: ./.github/actions/ngen-build
-        with:
-          targets: "test_bmi_multi"
-          build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
-          bmi_c: 'ON'
-          bmi_fortran: 'ON'
-          use_python: 'ON'
-          additional_python_requirements: 'extern/test_bmi_py/requirements.txt'
-
-      - name: Run Unit Tests
-        run: ./cmake_build/test/test_bmi_multi
-        timeout-minutes: 15
-
-      - name: Clean Up Unit Test Build
-        uses: ./.github/actions/clean-build
-
-      - name: Clean Up Submodule Build
-        uses: ./.github/actions/clean-build
-        with:
-          build-dir: ${{ steps.submod_build_1.outputs.build-dir }}
-      - uses: ./.github/actions/clean-build
-        with:
-          build-dir: ${{ steps.submod_build_2.outputs.build-dir }}
-      - uses: ./.github/actions/clean-build
-        with:
-          build-dir: ${{ steps.submod_build_3.outputs.build-dir }}
-
-
 
   # TODO: fails due to compilation error, at least in large part due to use of POSIX functions not supported on Windows.
   # TODO: Need to determine whether Windows support (in particular, development environment support) is necessary.
