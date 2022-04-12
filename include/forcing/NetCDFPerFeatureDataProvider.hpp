@@ -68,10 +68,7 @@ namespace data_access
             auto num_ids = id_dim.getSize();
 
             // allocate an array of character pointers 
-            std::vector< char* > string_buffers;
-
-            // resize to match dimension size
-            string_buffers.resize(num_ids);
+            std::vector< char* > string_buffers(num_ids);
 
             // read the id strings
             ids.getVar(&string_buffers[0]);
@@ -91,8 +88,7 @@ namespace data_access
             auto num_times = nc_file->getDim("time").getSize();
 
             // allocate storage for the raw time array
-            std::vector<double> raw_time;
-            raw_time.resize(num_times);
+            std::vector<double> raw_time(num_times);
 
             // get the time variable
             auto time_var = nc_file->getVar("Time");
@@ -130,7 +126,7 @@ namespace data_access
                 time_unit = TIME_HOURS;
                 time_scale_factor = 3600;
             }
-            else if ( time_unit_str == "m" || time_unit_str == "minuets" )
+            else if ( time_unit_str == "m" || time_unit_str == "minutes" )
             {
                     time_unit = TIME_MINUETS;
                     time_scale_factor = 60;
@@ -140,7 +136,7 @@ namespace data_access
                     time_unit = TIME_SECONDS;
                     time_scale_factor = 1;
             }
-            else if ( time_unit_str ==  "ms" || time_unit_str == "miliseconds" )
+            else if ( time_unit_str ==  "ms" || time_unit_str == "milliseconds" )
             {
                     time_unit = TIME_MILLISECONDS;
                     time_scale_factor = .001;
