@@ -66,7 +66,7 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
      * @return The duration of time over which this instance can provide this data.
      */
     long record_duration() override {
-        return end_date_time_epoch - start_date_time_epoch;
+        return time_epoch_vector[1] - time_epoch_vector[0];
     }
 
     /**
