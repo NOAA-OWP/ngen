@@ -152,6 +152,7 @@ class BMIDataSelector : public CatchmentAggrDataSelector
     private:
 };
 
+#ifdef NETCDF_ACTIVE
 /**
  * @brief This is the data selector intended for use with netcdf providers
  * 
@@ -174,5 +175,6 @@ class NetCDFDataSelector : public CatchmentAggrDataSelector
 
     private: 
 };
+#endif
 
 #endif

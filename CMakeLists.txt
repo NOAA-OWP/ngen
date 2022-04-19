@@ -159,6 +159,21 @@ if(UDUNITS_ACTIVE)
     #add_compile_definitions("NGEN_UDUNITS2_XML_PATH=\"${UDUNITS_INSTALL_DIR}/share/udunits/udunits2.xml\"")
 endif()
 
+cmake_policy(SET CMP0074 NEW)
+if(NETCDF_ACTIVE)
+    set (NETCDF_CXX "YES")
+    set (NETCDF_F77 "YES")
+    set (NETCDF_F90 "YES")
+    find_package(NetCDF REQUIRED)
+    add_compile_definitions(NETCDF_ACTIVE)
+    if(NETCDF_FOUND AND NETCDF_HAS_PARALLEL)
+        include_directories(${NETCDF_INCLUDE_DIRS})
+        message("INFO Using NETCDF at ${NETCDF_LIBRARIES} and ${NETCDF_INCLUDE_DIRS}")
+    else()
+        message("INFO netCDF library not found")
+    endif()
+endif()
+
 add_executable(ngen
     src/NGen.cpp
     )
@@ -314,6 +329,7 @@ target_link_libraries(ngen PUBLIC
         #NGen::forcing
         NGen::core_mediator
         libudunits2
+        ${NETCDF_LIBRARIES}
         )
 
 add_executable(partitionGenerator

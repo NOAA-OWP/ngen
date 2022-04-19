@@ -32,6 +32,10 @@ if(NGEN_ACTIVATE_ROUTING)
     add_compile_definitions(ROUTING_PYBIND_TESTS_ACTIVE)
 endif()
 
+if(NETCDF_ACTIVE)
+    add_compile_definitions(NETCDF_ACTIVE)
+endif()
+
 # Add test source files (e.g., test1.cpp)
 #add_executable(test_hymod models/hymod/include/HymodTest.cpp)
 #target_link_libraries(test_hymod gtest gtest_main)
@@ -88,6 +92,7 @@ add_test(test_realization_config
         NGen::realizations_catchment
         NGen::core_mediator
         libudunits2
+        ${NETCDF_LIBRARIES}
 )
 
 ########################## GIUH Unit Tests
@@ -139,6 +144,7 @@ add_test(
         NGen::realizations_catchment
         NGen::core_mediator
         libudunits2
+        ${NETCDF_LIBRARIES}
 )
 
 ########################## BMI C Tests
@@ -152,6 +158,7 @@ if(BMI_C_LIB_ACTIVE)
             NGen::realizations_catchment
             NGen::core_mediator
             libudunits2
+            ${NETCDF_LIBRARIES}
     )
 endif()
 
@@ -166,6 +173,7 @@ if (${BMI_FORTRAN_ACTIVE})
             NGen::realizations_catchment
             NGen::core_mediator
             libudunits2
+            ${NETCDF_LIBRARIES}
     )
 endif()
 
@@ -180,6 +188,7 @@ if (${NGEN_ACTIVATE_PYTHON})
             NGen::realizations_catchment
             NGen::core_mediator
             libudunits2
+            ${NETCDF_LIBRARIES}
     )
 endif()
 
@@ -192,6 +201,7 @@ add_test(
         NGen::realizations_catchment
         NGen::core_mediator
         libudunits2
+        ${NETCDF_LIBRARIES}
 )
 
 ########################## All BMI Unit Tests
@@ -212,6 +222,7 @@ if(BMI_C_LIB_ACTIVE)
                     NGen::realizations_catchment
                     NGen::core_mediator
                     libudunits2
+                    ${NETCDF_LIBRARIES}
             )
         endif()
     endif()
@@ -227,6 +238,7 @@ add_test(
         NGen::realizations_catchment
         NGen::core_mediator
         libudunits2
+        ${NETCDF_LIBRARIES}
 )
 
 ########################## Internal Torchlib LSTM Tests
@@ -240,8 +252,7 @@ if(LSTM_TORCH_LIB_ACTIVE)
             NGen::realizations_catchment
             NGen::core_mediator
             libudunits2
-
-
+            ${NETCDF_LIBRARIES}
     )
 endif()
 
@@ -266,6 +277,7 @@ add_test(
 )
 
 ########################### Netcdf Forcing Tests
+#if(NETCDF_ACTIVE)
 add_test(
         test_netcdf_forcing
         1
@@ -276,7 +288,9 @@ add_test(
         NGen::geojson
         NGen::realizations_catchment
         libudunits2
+        ${NETCDF_LIBRARIES}
 )
+#endif()
 
 ########################## Primary Combined Unit Test Target
 add_test(
@@ -307,6 +321,7 @@ add_test(
         NGen::geojson
         NGen::realizations_catchment
         libudunits2
+        ${NETCDF_LIBRARIES}
 )
 
 # Add for integration tests once we have some
@@ -343,4 +358,5 @@ add_test(
         NGen::geojson
         NGen::realizations_catchment
         libudunits2
+        ${NETCDF_LIBRARIES}
 )
