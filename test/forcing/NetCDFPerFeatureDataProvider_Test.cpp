@@ -1,3 +1,4 @@
+#ifdef NETCDF_ACTIVE
 #include <vector>
 #include "gtest/gtest.h"
 #include "NetCDFPerFeatureDataProvider.hpp"
@@ -97,3 +98,4 @@ TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataRead)
         NcException);
     
 }
+#endif

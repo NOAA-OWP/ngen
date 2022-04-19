@@ -19,7 +19,9 @@
 #include "Bmi_Py_Formulation.hpp"
 #include <GenericDataProvider.hpp>
 #include "CsvPerFeatureForcingProvider.hpp"
-#include "NetCDFPerFeatureDataProvider.hpp"
+#ifdef NETCDF_ACTIVE
+    #include "NetCDFPerFeatureDataProvider.hpp"
+#endif
 
 #ifdef NGEN_LSTM_TORCH_LIB_ACTIVE
     #include "LSTM_Realization.hpp"
@@ -76,9 +78,11 @@ namespace realization {
         else if (forcing_config.provider == "CsvPerFeature"){
             fp = std::make_shared<CsvPerFeatureForcingProvider>(forcing_config);
         }
+#ifdef NETCDF_ACTIVE
         else if (forcing_config.provider == "NetCDF"){
             fp = std::make_shared<data_access::NetCDFPerFeatureDataProvider>(forcing_config.path.c_str(), output_stream);
         }
+#endif
         else { // Some unknown string in the provider field?
             throw std::runtime_error(
                     "Invalid formulation forcing provider configuration! identifier: \"" + identifier +
