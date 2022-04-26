@@ -47,9 +47,9 @@ If the software is configurable, describe it in detail, either here or in other 
 
 To run the *ngen* engine, the following command line positional arguments are supported:
 - _catchment_data_path_ -- path to catchment data geojson input file.
-- _catchment subset ids_ -- list of comma separated ids (NO SPACES!!!) to subset the catchment data, i.e. 'cat-0,cat-1'
+- _catchment subset ids_ -- list of comma separated ids (NO SPACES!!!) to subset the catchment data, i.e. 'cat-0,cat-1', an empty string or "all" will use all catchments in the hydrofabric
 - _nexus_data_path_ -- path to nexus data geojson input file
-- _nexus subset ids_ -- list of comma separated ids (NO SPACES!!!) to subset the nexus data, i.e. 'nex-0,nex-1'
+- _nexus subset ids_ -- list of comma separated ids (NO SPACES!!!) to subset the nexus data, i.e. 'nex-0,nex-1', an empty string or "all" will use all nexus points
 - _realization_config_path_ -- path to json configuration file for realization/formulations associated with the hydrofabric inputs
 - _partition_config_path_ -- path to the partition json config file, when using the driver with [distributed processing](doc/DISTRIBUTED_PROCESSING.md).
 - `--subdivided-hydrofabric` -- an explicit, optional flag, when using the driver with [distributed processing](doc/DISTRIBUTED_PROCESSING.md), to indicate to the driver processes that they should operate on process-specific subdivided hydrofabric files.
@@ -57,8 +57,9 @@ To run the *ngen* engine, the following command line positional arguments are su
 An example of a complete invocation to run a subset of a hydrofabric.  If the realization configuration doesn't contain catchment definitions for the subset keys provided, the default `global` configuration is used.  Alternatively, if the realization configuration contains definitions that are not in the subset (or hydrofabric) keys, then a warning is produced and the formulation isn't created.
 `./cmake-build-debug/ngen ./data/catchment_data.geojson "cat-27,cat-52" ./data/nexus_data.geojson "nex-26,nex-34" ./data/example_realization_config.json`
 
-To simulate every catchment in the input hydrofabric, leave the subset lists empty, i.e.:
+To simulate every catchment in the input hydrofabric, leave the subset lists empty, or use "all" i.e.:
 `ngen ./data/catchment_data.geojson "" ./data/nexus_data.geojson "" ./data/refactored_example_realization_config.json`
+`ngen ./data/catchment_data.geojson "all" ./data/nexus_data.geojson "all" ./data/refactored_example_realization_config.json`
 
 Examples specific to running with with distributed processing can be found [here](doc/DISTRIBUTED_PROCESSING.md#examples).
 
