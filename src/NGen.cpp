@@ -78,9 +78,9 @@ int main(int argc, char *argv[]) {
     //Use "positional args"
     //arg 0 is program name
     //arg 1 is catchment_data file path
-    //arg 2 is catchment subset ids, comma seperated string of ids (no spaces!), "" for all
+    //arg 2 is catchment subset ids, comma seperated string of ids (no spaces!), "all" for all
     //arg 3 is nexus_data file path
-    //arg 4 is nexus subset ids, comma seperated string of ids (no spaces!), "" for all
+    //arg 4 is nexus subset ids, comma seperated string of ids (no spaces!), "all" for all
     //arg 5 is realization config path
     //arg 7 is the partition file path
     //arg 8 is an optional flag that driver should, if not already preprocessed this way, subdivided the hydrofabric
@@ -176,7 +176,11 @@ int main(int argc, char *argv[]) {
 
         //split the subset strings into vectors
         boost::split(catchment_subset_ids, argv[2], [](char c){return c == ','; } );
+        if( catchment_subset_ids.size() == 1 && catchment_subset_ids[0] == "all")
+          catchment_subset_ids.pop_back();
         boost::split(nexus_subset_ids, argv[4], [](char c){return c == ','; } );
+        if( nexus_subset_ids.size() == 1 && nexus_subset_ids[0] == "all")
+          nexus_subset_ids.pop_back();
         //If a single id or no id is passed, the subset vector will have size 1 and be the id or the ""
         //if we get an empy string, pop it from the subset list.
         if(nexus_subset_ids.size() == 1 && nexus_subset_ids[0] == "") nexus_subset_ids.pop_back();
