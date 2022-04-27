@@ -119,15 +119,15 @@ Configuration</h2>
 Usage</h2>
 <p >To run the <em>ngen</em> engine, the following command line positional arguments are supported:</p><ul>
 <li><em>catchment_data_path</em> &ndash; path to catchment data geojson input file.</li>
-<li><em>catchment subset ids</em> &ndash; list of comma separated ids (NO SPACES!!!) to subset the catchment data, i.e. 'cat-0,cat-1'</li>
+<li><em>catchment subset ids</em> &ndash; list of comma separated ids (NO SPACES!!!) to subset the catchment data, i.e. 'cat-0,cat-1', an empty string or "all" will use all catchments in the hydrofabric</li>
 <li><em>nexus_data_path</em> &ndash; path to nexus data geojson input file</li>
-<li><em>nexus subset ids</em> &ndash; list of comma separated ids (NO SPACES!!!) to subset the nexus data, i.e. 'nex-0,nex-1'</li>
+<li><em>nexus subset ids</em> &ndash; list of comma separated ids (NO SPACES!!!) to subset the nexus data, i.e. 'nex-0,nex-1', an empty string or "all" will use all nexus points</li>
 <li><em>realization_config_path</em> &ndash; path to json configuration file for realization/formulations associated with the hydrofabric inputs</li>
 <li><em>partition_config_path</em> &ndash; path to the partition json config file, when using the driver with <a class="el" href="md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html">distributed processing</a>.</li>
 <li><code>--subdivided-hydrofabric</code> &ndash; an explicit, optional flag, when using the driver with <a class="el" href="md_doc__d_i_s_t_r_i_b_u_t_e_d__p_r_o_c_e_s_s_i_n_g.html">distributed processing</a>, to indicate to the driver processes that they should operate on process-specific subdivided hydrofabric files.</li>
 </ul>
 <p >An example of a complete invocation to run a subset of a hydrofabric. If the realization configuration doesn't contain catchment definitions for the subset keys provided, the default <code>global</code> configuration is used. Alternatively, if the realization configuration contains definitions that are not in the subset (or hydrofabric) keys, then a warning is produced and the formulation isn't created. <code>./cmake-build-debug/ngen ./data/catchment_data.geojson "cat-27,cat-52" ./data/nexus_data.geojson "nex-26,nex-34" ./data/example_realization_config.json</code></p>
-<p >To simulate every catchment in the input hydrofabric, leave the subset lists empty, i.e.: <code>ngen ./data/catchment_data.geojson "" ./data/nexus_data.geojson "" ./data/refactored_example_realization_config.json</code></p>
+<p >To simulate every catchment in the input hydrofabric, leave the subset lists empty, or use "all" i.e.: <code>ngen ./data/catchment_data.geojson "" ./data/nexus_data.geojson "" ./data/refactored_example_realization_config.json</code> <code>ngen ./data/catchment_data.geojson "all" ./data/nexus_data.geojson "all" ./data/refactored_example_realization_config.json</code></p>
 <p >Examples specific to running with with distributed processing can be found <a href="doc/DISTRIBUTED_PROCESSING.md#examples">here</a>.</p>
 <h2><a class="anchor" id="autotoc_md9"></a>
 How to test the software</h2>
@@ -198,7 +198,7 @@ Credits and references</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Tue Apr 12 2022 12:25:17 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3 </li>
+    <li class="footer">Generated on Wed Apr 27 2022 17:56:26 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3 </li>
   </ul>
 </div>
 </body>
