@@ -32,3 +32,11 @@
 	path = extern/evapotranspiration/evapotranspiration
 	url = https://github.com/NOAA-OWP/evapotranspiration.git
         branch = master
+[submodule "extern/SoilFreezeThaw/SoilFreezeThaw"]
+	path = extern/SoilFreezeThaw/SoilFreezeThaw
+	url = https://github.com/NOAA-OWP/SoilFreezeThaw
+        branch = master
+[submodule "extern/SoilMoistureProfiles/SoilMoistureProfile"]
+	path = extern/SoilMoistureProfiles/SoilMoistureProfile
+	url = https://github.com/NOAA-OWP/SoilMoistureProfiles
+	branch = main
