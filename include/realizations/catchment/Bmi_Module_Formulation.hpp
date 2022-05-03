@@ -551,7 +551,6 @@ namespace realization {
         void determine_model_time_offset() {
             set_bmi_model_start_time_forcing_offset_s(
                     // TODO: Look at making this epoch start configurable instead of from forcing
-                    //WARN: This change potentially changes the behavior, though the previous behavior was incorrect.
                     forcing->get_data_start_time() - convert_model_time(get_bmi_model()->GetStartTime()));
         }
 
