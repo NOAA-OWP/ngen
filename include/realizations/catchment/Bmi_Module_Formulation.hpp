@@ -271,6 +271,15 @@ namespace realization {
             throw runtime_error("Bmi_Modular_Formulation does not yet implement get_forcing_output_time_begin");
         }
 
+        /**
+         * Get the inclusive beginning of the period of time over which this instance can provide data for this forcing.
+         *
+         * This is part of the @ref DataProvider interface.  This interface must be implemented for items of this
+         * type to be usable as "forcing" providers for situations when some other object needs to receive as an input
+         * (i.e., one of its forcings) a data property output from this object.
+         *
+         * @return The inclusive beginning of the period of time over which this instance can provide this data.
+         */
         long get_data_start_time() override
         {
             throw runtime_error("Bmi_Modular_Formulation does not yet implement get_data_start_time");
@@ -285,18 +294,19 @@ namespace realization {
          *
          * @return The exclusive ending of the period of time over which this instance can provide this data.
          */
+        [[deprecated]]
         time_t get_forcing_output_time_end(const std::string &output_name) {
             // TODO: come back and implement if actually necessary for this type; for now don't use
-            throw runtime_error("Bmi_Modular_Formulation does not yet implement get_forcing_output_time_end");
+            throw runtime_error("Bmi_Module_Formulation does not yet implement get_forcing_output_time_end");
         }
 
         long get_data_stop_time() override {
             // TODO: come back and implement if actually necessary for this type; for now don't use
-            throw runtime_error("Bmi_Modular_Formulation does not yet implement get_data_stop_time");
+            throw runtime_error("Bmi_Module_Formulation does not yet implement get_data_stop_time");
         }
 
         long record_duration() override {
-            return 0;
+            throw runtime_error("Bmi_Module_Formulation does not yet implement record_duration");
         }
 
         /**

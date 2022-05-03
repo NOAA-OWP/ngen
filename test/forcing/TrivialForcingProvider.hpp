@@ -29,15 +29,15 @@ namespace data_access {
             }
 
             long get_data_start_time() override {
-                return 0;
+                return std::numeric_limits<long>::min();
             }
 
             long get_data_stop_time() override {
-                return 1000000;
+                return std::numeric_limits<long>::max();
             }
 
             long record_duration() override {
-                return 1000000;
+                return 1;
             }
 
             size_t get_ts_index_for_time(const time_t &epoch_time) override {

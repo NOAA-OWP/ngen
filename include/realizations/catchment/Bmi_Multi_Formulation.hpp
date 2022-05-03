@@ -377,10 +377,29 @@ namespace realization {
 
         long record_duration() override
         {
-            return get_data_start_time() - get_data_stop_time();
+            std::string var_name;
+            for(std::map<std::string,std::shared_ptr<data_access::GenericDataProvider>>::iterator iter = availableData.begin(); iter != availableData.end(); ++iter)
+            {
+                var_name = iter->first;
+                //TODO: Find a probably more performant way than trial and exception here.
+                try {
+                    time_t rv = availableData[var_name]->record_duration();
+                    return rv;
+                }
+                catch (...){
+                    continue;
+                }
+                break;
+            }
+
+            // If not found ...
+            if (availableData.empty() || availableData.find(var_name) == availableData.end()) {
+                throw runtime_error(get_formulation_type() + " cannot get output record duration for unknown \"" + var_name + "\"");
+            }
+            return availableData[var_name]->record_duration();
         }
 
-        string get_formulation_type() override {
+        std::string get_formulation_type() override {
             return "bmi_multi";
         }
 

@@ -99,7 +99,7 @@ namespace data_access {
         }
 
         long record_duration() override {
-            return wrapped_provider->get_data_stop_time() - wrapped_provider->get_data_start_time();
+            return wrapped_provider->record_duration();
         }
 
         /**
