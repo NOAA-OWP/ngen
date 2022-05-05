@@ -475,7 +475,7 @@ namespace realization {
             if (availableData.empty() || availableData.find(output_name) == availableData.end()) {
                 throw runtime_error(get_formulation_type() + " cannot get output value for unknown " + output_name);
             }
-            return availableData[output_name]->get_value(CatchmentAggrDataSelector("",output_name, init_time, duration_s, output_units));
+            return availableData[output_name]->get_value(CatchmentAggrDataSelector("",output_name, init_time, duration_s, output_units), m);
         }
 
         bool is_bmi_input_variable(const string &var_name) override;
