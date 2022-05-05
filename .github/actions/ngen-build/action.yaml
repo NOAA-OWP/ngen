@@ -60,14 +60,14 @@ runs:
           id: install-mpi
           run: |
             sudo apt-get update
-            sudo apt-get install -y libopenmpi-dev openmpi-bin openmpi-common
+            sudo apt-get install -y --fix-missing libopenmpi-dev openmpi-bin openmpi-common
           shell: bash
 
         - name: Install NetCDF
           run: |
             if [ ${{ runner.os }} == 'Linux' ]
             then
-              sudo apt-get install -y libnetcdf-dev libnetcdff-dev
+              sudo apt-get install -y --fix-missing libnetcdf-dev libnetcdff-dev
             elif [ ${{ runner.os }} == 'macOS' ]
             then
               brew install netcdf
