@@ -1,0 +1,6 @@
+<map id="BMIDataSelector" name="BMIDataSelector">
+<area shape="rect" id="node1" title=" " alt="" coords="18,619,199,725"/>
+<area shape="rect" id="node2" href="$class_catchment_aggr_data_selector.html" title="This class is intended to be the virtual base for all data selectors used with the DataProvider API." alt="" coords="5,316,212,569"/>
+<area shape="rect" id="node3" title=" " alt="" coords="69,147,148,224"/>
+<area shape="rect" id="node4" title=" " alt="" coords="47,5,171,97"/>
+</map>

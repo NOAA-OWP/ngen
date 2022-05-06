@@ -13,5 +13,6 @@ var searchData=
   ['bmi_5fmodule_5fformulation_10',['Bmi_Module_Formulation',['../classrealization_1_1_bmi___module___formulation.html',1,'realization']]],
   ['bmi_5fmodule_5fformulation_3c_20models_3a_3abmi_3a_3abmi_5fc_5fadapter_20_3e_11',['Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;',['../classrealization_1_1_bmi___module___formulation.html',1,'realization']]],
   ['bmi_5fmodule_5fformulation_3c_20models_3a_3abmi_3a_3abmi_5fcpp_5fadapter_20_3e_12',['Bmi_Module_Formulation&lt; models::bmi::Bmi_Cpp_Adapter &gt;',['../classrealization_1_1_bmi___module___formulation.html',1,'realization']]],
-  ['bmi_5fmulti_5fformulation_13',['Bmi_Multi_Formulation',['../classrealization_1_1_bmi___multi___formulation.html',1,'realization']]]
+  ['bmi_5fmulti_5fformulation_13',['Bmi_Multi_Formulation',['../classrealization_1_1_bmi___multi___formulation.html',1,'realization']]],
+  ['bmidataselector_14',['BMIDataSelector',['../class_b_m_i_data_selector.html',1,'']]]
 ];

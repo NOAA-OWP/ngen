@@ -3,6 +3,14 @@ var annotated_dup =
     [ "bmi", "namespacebmi.html", [
       [ "Bmi", "classbmi_1_1_bmi.html", "classbmi_1_1_bmi" ]
     ] ],
+    [ "data_access", "namespacedata__access.html", [
+      [ "AsyncDataProvider", "classdata__access_1_1_async_data_provider.html", "classdata__access_1_1_async_data_provider" ],
+      [ "DataProvider", "classdata__access_1_1_data_provider.html", "classdata__access_1_1_data_provider" ],
+      [ "DeferredWrappedProvider", "classdata__access_1_1_deferred_wrapped_provider.html", "classdata__access_1_1_deferred_wrapped_provider" ],
+      [ "GenericDataProvider", "classdata__access_1_1_generic_data_provider.html", "classdata__access_1_1_generic_data_provider" ],
+      [ "OptionalWrappedProvider", "classdata__access_1_1_optional_wrapped_provider.html", "classdata__access_1_1_optional_wrapped_provider" ],
+      [ "WrappedForcingProvider", "classdata__access_1_1_wrapped_forcing_provider.html", "classdata__access_1_1_wrapped_forcing_provider" ]
+    ] ],
     [ "et", "namespaceet.html", [
       [ "aorc_forcing_data", "structet_1_1aorc__forcing__data.html", "structet_1_1aorc__forcing__data" ],
       [ "evapotranspiration_forcing", "structet_1_1evapotranspiration__forcing.html", "structet_1_1evapotranspiration__forcing" ],
@@ -20,10 +28,7 @@ var annotated_dup =
       [ "ExternalIntegrationException", "classexternal_1_1_external_integration_exception.html", "classexternal_1_1_external_integration_exception" ]
     ] ],
     [ "forcing", "namespaceforcing.html", [
-      [ "DeferredWrappedProvider", "classforcing_1_1_deferred_wrapped_provider.html", "classforcing_1_1_deferred_wrapped_provider" ],
-      [ "ForcingProvider", "classforcing_1_1_forcing_provider.html", "classforcing_1_1_forcing_provider" ],
-      [ "OptionalWrappedProvider", "classforcing_1_1_optional_wrapped_provider.html", "classforcing_1_1_optional_wrapped_provider" ],
-      [ "WrappedForcingProvider", "classforcing_1_1_wrapped_forcing_provider.html", "classforcing_1_1_wrapped_forcing_provider" ]
+      [ "ForcingProvider", "classforcing_1_1_forcing_provider.html", "classforcing_1_1_forcing_provider" ]
     ] ],
     [ "geojson", "namespacegeojson.html", [
       [ "CollectionFeature", "classgeojson_1_1_collection_feature.html", "classgeojson_1_1_collection_feature" ],
@@ -122,8 +127,11 @@ var annotated_dup =
     [ "AORC_data", "struct_a_o_r_c__data.html", "struct_a_o_r_c__data" ],
     [ "aorc_forcing_data", "structaorc__forcing__data.html", "structaorc__forcing__data" ],
     [ "Bmi", "struct_bmi.html", "struct_bmi" ],
+    [ "BMIDataSelector", "class_b_m_i_data_selector.html", "class_b_m_i_data_selector" ],
+    [ "CatchmentAggrDataSelector", "class_catchment_aggr_data_selector.html", "class_catchment_aggr_data_selector" ],
     [ "completed_time_step", "structcompleted__time__step.html", "structcompleted__time__step" ],
     [ "conceptual_reservoir", "structconceptual__reservoir.html", "structconceptual__reservoir" ],
+    [ "CSVDataSelector", "class_c_s_v_data_selector.html", "class_c_s_v_data_selector" ],
     [ "CsvPerFeatureForcingProvider", "class_csv_per_feature_forcing_provider.html", "class_csv_per_feature_forcing_provider" ],
     [ "CSVReader", "class_c_s_v_reader.html", "class_c_s_v_reader" ],
     [ "EtCalcKernelTest", "class_et_calc_kernel_test.html", "class_et_calc_kernel_test" ],

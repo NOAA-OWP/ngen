@@ -119,8 +119,8 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a0ac15391af3381299272e18f29b20722"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#a0ac15391af3381299272e18f29b20722">Catchment_Formulation</a> (std::string <a class="el" href="classrealization_1_1_formulation.html#a8bfec24b0d57240e7ada2493a781db6d">id</a>, std::unique_ptr&lt; <a class="el" href="classforcing_1_1_forcing_provider.html">forcing::ForcingProvider</a> &gt; <a class="el" href="class_h_y___catchment_realization.html#a83d2e09cd1264be6cc41dce294ad702d">forcing</a>, <a class="el" href="classutils_1_1_stream_handler.html">utils::StreamHandler</a> output_stream)</td></tr>
-<tr class="separator:a0ac15391af3381299272e18f29b20722"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ef879abdc4b2e6a9ecc8b2d5bf2bafb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#a0ef879abdc4b2e6a9ecc8b2d5bf2bafb">Catchment_Formulation</a> (std::string <a class="el" href="classrealization_1_1_formulation.html#a8bfec24b0d57240e7ada2493a781db6d">id</a>, std::shared_ptr&lt; <a class="el" href="classdata__access_1_1_generic_data_provider.html">data_access::GenericDataProvider</a> &gt; <a class="el" href="class_h_y___catchment_realization.html#a2010f61d0e7141bb48230923592de215">forcing</a>, <a class="el" href="classutils_1_1_stream_handler.html">utils::StreamHandler</a> output_stream)</td></tr>
+<tr class="separator:a0ef879abdc4b2e6a9ecc8b2d5bf2bafb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae20086b1dc436b0a42f149b3d9de1009"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#ae20086b1dc436b0a42f149b3d9de1009">Catchment_Formulation</a> (std::string <a class="el" href="classrealization_1_1_formulation.html#a8bfec24b0d57240e7ada2493a781db6d">id</a>)</td></tr>
 <tr class="separator:ae20086b1dc436b0a42f149b3d9de1009"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a12fad75c2e47f5da298e022429243199"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#a12fad75c2e47f5da298e022429243199">get_output_header_line</a> (std::string delimiter) override</td></tr>
@@ -203,8 +203,8 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a7c6de72bd8ebf427d71aacca7baa23c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af996a3e50eaf51c63865f1fdbe4f8661"><td class="memItemLeft" align="right" valign="top">unsigned long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_realization.html#af996a3e50eaf51c63865f1fdbe4f8661">id_number</a></td></tr>
 <tr class="separator:af996a3e50eaf51c63865f1fdbe4f8661"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a83d2e09cd1264be6cc41dce294ad702d"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classforcing_1_1_forcing_provider.html">forcing::ForcingProvider</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_realization.html#a83d2e09cd1264be6cc41dce294ad702d">forcing</a></td></tr>
-<tr class="separator:a83d2e09cd1264be6cc41dce294ad702d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2010f61d0e7141bb48230923592de215"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classdata__access_1_1_generic_data_provider.html">data_access::GenericDataProvider</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_realization.html#a2010f61d0e7141bb48230923592de215">forcing</a></td></tr>
+<tr class="separator:a2010f61d0e7141bb48230923592de215"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -235,8 +235,8 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a0ac15391af3381299272e18f29b20722" name="a0ac15391af3381299272e18f29b20722"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0ac15391af3381299272e18f29b20722">&#9670;&nbsp;</a></span>Catchment_Formulation() <span class="overload">[1/2]</span></h2>
+<a id="a0ef879abdc4b2e6a9ecc8b2d5bf2bafb" name="a0ef879abdc4b2e6a9ecc8b2d5bf2bafb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ef879abdc4b2e6a9ecc8b2d5bf2bafb">&#9670;&nbsp;</a></span>Catchment_Formulation() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -253,7 +253,7 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::unique_ptr&lt; <a class="el" href="classforcing_1_1_forcing_provider.html">forcing::ForcingProvider</a> &gt;&#160;</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classdata__access_1_1_generic_data_provider.html">data_access::GenericDataProvider</a> &gt;&#160;</td>
           <td class="paramname"><em>forcing</em>, </td>
         </tr>
         <tr>
@@ -352,7 +352,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_tshirt___c___realization.html#ae8ac906d01ebad2ad980b11fdd13666e">realization::Tshirt_C_Realization::Tshirt_C_Realization()</a>, and <a class="el" href="classrealization_1_1_tshirt___realization.html#a95ef014f906bfcd122f085094579c63d">realization::Tshirt_Realization::Tshirt_Realization()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_tshirt___c___realization.html#ae8ac906d01ebad2ad980b11fdd13666e">realization::Tshirt_C_Realization::Tshirt_C_Realization()</a>, and <a class="el" href="classrealization_1_1_tshirt___realization.html#a758b13ad8c46973f299dabf2036837eb">realization::Tshirt_Realization::Tshirt_Realization()</a>.</p>
 
 </div>
 </div>
@@ -670,9 +670,9 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classrealization_1_1_bmi___c___formulation.html#adf1873c11226bdff7098f16b717b9183">realization::Bmi_C_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#ac2a7b72c41763e7ef89c5454752d0566">realization::Bmi_Cpp_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a91122c62b8c3b0d4283b04bf0d18ef9e">realization::Bmi_Multi_Formulation</a>, <a class="el" href="class_simple___lumped___model___realization.html#a44ec42a333e39a22e3f1056ffdf95773">Simple_Lumped_Model_Realization</a>, <a class="el" href="classrealization_1_1_tshirt___c___realization.html#a62467e5e08120836b6f8f04117ec9de5">realization::Tshirt_C_Realization</a>, and <a class="el" href="classrealization_1_1_tshirt___realization.html#ab8138d9a7d6c8934fd0a99ff642bb83d">realization::Tshirt_Realization</a>.</p>
+<p>Implemented in <a class="el" href="classrealization_1_1_bmi___c___formulation.html#adf1873c11226bdff7098f16b717b9183">realization::Bmi_C_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#ac2a7b72c41763e7ef89c5454752d0566">realization::Bmi_Cpp_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#adbe82ffeec39c35a9b2c3ba5ab0a8f6d">realization::Bmi_Multi_Formulation</a>, <a class="el" href="class_simple___lumped___model___realization.html#a44ec42a333e39a22e3f1056ffdf95773">Simple_Lumped_Model_Realization</a>, <a class="el" href="classrealization_1_1_tshirt___c___realization.html#a62467e5e08120836b6f8f04117ec9de5">realization::Tshirt_C_Realization</a>, and <a class="el" href="classrealization_1_1_tshirt___realization.html#ab8138d9a7d6c8934fd0a99ff642bb83d">realization::Tshirt_Realization</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a5fe531a9cb651ed42fd8fdcb78dbef6d">realization::Bmi_Module_Formulation&lt; M &gt;::check_internal_providers()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a7f11d9a147cbba2f191988995e171f75">realization::Bmi_Module_Formulation&lt; M &gt;::get_value()</a>, and <a class="el" href="classrealization_1_1_formulation.html#aceabe9927b36dce61f338919f2af4c1f">realization::Formulation::validate_parameters()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a5fe531a9cb651ed42fd8fdcb78dbef6d">realization::Bmi_Module_Formulation&lt; M &gt;::check_internal_providers()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a84c65a95dc9472520092be8bdcf2c853">realization::Bmi_Module_Formulation&lt; M &gt;::get_value()</a>, and <a class="el" href="classrealization_1_1_formulation.html#aceabe9927b36dce61f338919f2af4c1f">realization::Formulation::validate_parameters()</a>.</p>
 
 </div>
 </div>
@@ -1197,8 +1197,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a83d2e09cd1264be6cc41dce294ad702d" name="a83d2e09cd1264be6cc41dce294ad702d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a83d2e09cd1264be6cc41dce294ad702d">&#9670;&nbsp;</a></span>forcing</h2>
+<a id="a2010f61d0e7141bb48230923592de215" name="a2010f61d0e7141bb48230923592de215"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2010f61d0e7141bb48230923592de215">&#9670;&nbsp;</a></span>forcing</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1207,7 +1207,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::unique_ptr&lt;<a class="el" href="classforcing_1_1_forcing_provider.html">forcing::ForcingProvider</a>&gt; HY_CatchmentRealization::forcing</td>
+          <td class="memname">std::shared_ptr&lt;<a class="el" href="classdata__access_1_1_generic_data_provider.html">data_access::GenericDataProvider</a>&gt; HY_CatchmentRealization::forcing</td>
         </tr>
       </table>
   </td>
@@ -1344,7 +1344,7 @@ Private Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li><li class="navelem"><a class="el" href="classrealization_1_1_catchment___formulation.html">Catchment_Formulation</a></li>
-    <li class="footer">Generated on Fri May 6 2022 13:58:03 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3 </li>
+    <li class="footer">Generated on Fri May 6 2022 14:27:18 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3 </li>
   </ul>
 </div>
 </body>

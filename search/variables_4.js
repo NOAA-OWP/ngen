@@ -8,10 +8,10 @@ var searchData=
   ['date_5fformat_5',['date_format',['../structforcing__params.html#a456da7a25cd74583931fc358ae545bbe',1,'forcing_params::date_format()'],['../structsimulation__time__params.html#a6dcab0dad65808a6a2a7dede455eaf83',1,'simulation_time_params::date_format()']]],
   ['day_5fof_5fyear_6',['day_of_year',['../class_csv_per_feature_forcing_provider.html#a16f72552b7f19627926b74b825656dad',1,'CsvPerFeatureForcingProvider::day_of_year()'],['../class_forcing.html#a4f192d35cd2e7be49cf58d8fc2bbfaf0',1,'Forcing::day_of_year()'],['../structevapotranspiration__params.html#ad2c57a1f95265d4999bd69a367fbb611',1,'evapotranspiration_params::day_of_year()'],['../structsurface__radiation__forcing.html#ab2d92803f931162e484419c8803b9e86',1,'surface_radiation_forcing::day_of_year()'],['../structsolar__radiation__forcing.html#a7c02961095c506178dd80b737a9f304c',1,'solar_radiation_forcing::day_of_year()'],['../structet_1_1evapotranspiration__params.html#a17a6050e0c8fc7d73e9917710543cd6e',1,'et::evapotranspiration_params::day_of_year()'],['../structet_1_1surface__radiation__forcing.html#a135a1b078f084e73cf964c0f13c17187',1,'et::surface_radiation_forcing::day_of_year()'],['../structet_1_1solar__radiation__forcing.html#a4f56c225946c3d7dc95e071ba9c8e44c',1,'et::solar_radiation_forcing::day_of_year()']]],
   ['default_5foutput_5fvalues_7',['default_output_values',['../classrealization_1_1_bmi___multi___formulation.html#aeced5793d29fdac7e6cc53ff1cc0a1e0',1,'realization::Bmi_Multi_Formulation']]],
-  ['defaultusagewaits_8',['defaultUsageWaits',['../classforcing_1_1_optional_wrapped_provider.html#a69d64d5ce9d72e18f0993b902bbda79c',1,'forcing::OptionalWrappedProvider']]],
-  ['defaultvalues_9',['defaultValues',['../classforcing_1_1_optional_wrapped_provider.html#ab1b085f6f816d9ff926af5a613305d67',1,'forcing::OptionalWrappedProvider']]],
+  ['defaultusagewaits_8',['defaultUsageWaits',['../classdata__access_1_1_optional_wrapped_provider.html#a3436762e820aa07272e4303439e3ad5a',1,'data_access::OptionalWrappedProvider']]],
+  ['defaultvalues_9',['defaultValues',['../classdata__access_1_1_optional_wrapped_provider.html#a3c4665fc40fc183d7f908c6e3828e0c2',1,'data_access::OptionalWrappedProvider']]],
   ['deferredprovidermoduleindices_10',['deferredProviderModuleIndices',['../classrealization_1_1_bmi___multi___formulation.html#ab12e7a6981776b57f4a562c414947928',1,'realization::Bmi_Multi_Formulation']]],
-  ['deferredproviders_11',['deferredProviders',['../classrealization_1_1_bmi___multi___formulation.html#a73dd05eca920d34952ace1b0dafb9f35',1,'realization::Bmi_Multi_Formulation']]],
+  ['deferredproviders_11',['deferredProviders',['../classrealization_1_1_bmi___multi___formulation.html#a32adb9241b76fbd542dc9392ec3de8c5',1,'realization::Bmi_Multi_Formulation']]],
   ['delimeter_12',['delimeter',['../class_c_s_v_reader.html#ac5e0e6866e56cfb8c0337940fa848fde',1,'CSVReader']]],
   ['depth_13',['depth',['../structtshirt_1_1tshirt__params.html#acdfad9da584fbe8c885b74543b4992ad',1,'tshirt::tshirt_params']]],
   ['descriptor_5fmap_14',['descriptor_map',['../classnetwork_1_1_network.html#ad342876420b17b59c22dcd4081305648',1,'network::Network']]],
@@ -23,5 +23,6 @@ var searchData=
   ['downstream_5frequests_20',['downstream_requests',['../class_h_y___point_hydro_nexus.html#a82e92313918794725a60e90d2159df44',1,'HY_PointHydroNexus']]],
   ['dswrf_5fsurface_5fw_5fper_5fmeters_5fsquared_21',['DSWRF_surface_W_per_meters_squared',['../struct_a_o_r_c__data.html#a348db9d91f46ca3cb892c6f045ede04c',1,'AORC_data']]],
   ['dt_22',['dt',['../classrealization_1_1_tshirt___realization.html#ac89d3d992bfc7bd5aa739dc12f9912c4',1,'realization::Tshirt_Realization']]],
-  ['dyn_5flib_5fhandle_23',['dyn_lib_handle',['../classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a8a7a5596d34a9858dfc6754acade23e8',1,'models::bmi::AbstractCLibBmiAdapter']]]
+  ['duration_5fs_23',['duration_s',['../class_catchment_aggr_data_selector.html#a2631de54b21cbad73b26e432a22516bc',1,'CatchmentAggrDataSelector']]],
+  ['dyn_5flib_5fhandle_24',['dyn_lib_handle',['../classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a8a7a5596d34a9858dfc6754acade23e8',1,'models::bmi::AbstractCLibBmiAdapter']]]
 ];

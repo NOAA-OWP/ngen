@@ -131,26 +131,35 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ab7dfc0d71a1f8231a46f8f119b13f584"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e6a2201490bd514bbc763e95e526363"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="struct_a_o_r_c__data.html">AORC_data</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_forcing.html#a6e6a2201490bd514bbc763e95e526363">get_aorc_for_index</a> (size_t index)</td></tr>
 <tr class="separator:a6e6a2201490bd514bbc763e95e526363"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a01cd9053290838e45f2a04d4cce2b8af"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; std::string &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_forcing.html#a01cd9053290838e45f2a04d4cce2b8af">get_available_forcing_outputs</a> () override</td></tr>
-<tr class="separator:a01cd9053290838e45f2a04d4cce2b8af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aade7821a7c4f755d8c57c193e019af7a"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; std::string &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_forcing.html#aade7821a7c4f755d8c57c193e019af7a">get_available_forcing_outputs</a> ()</td></tr>
+<tr class="separator:aade7821a7c4f755d8c57c193e019af7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a59351a4949ba74099b5c2d16ade0ef22"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; std::string &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_forcing.html#a59351a4949ba74099b5c2d16ade0ef22">get_avaliable_variable_names</a> () override</td></tr>
+<tr class="memdesc:a59351a4949ba74099b5c2d16ade0ef22"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the variables that are accessable by this data provider.  <a href="class_forcing.html#a59351a4949ba74099b5c2d16ade0ef22">More...</a><br /></td></tr>
+<tr class="separator:a59351a4949ba74099b5c2d16ade0ef22"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a96352313bf0c1343ffbaea1b0759b52d"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_forcing.html#a96352313bf0c1343ffbaea1b0759b52d">get_converted_value_for_param_in_units</a> (const std::string &amp;name, const std::string &amp;units_str, int index)</td></tr>
 <tr class="memdesc:a96352313bf0c1343ffbaea1b0759b52d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Placeholder implementation for function to return the given param adjusted to be in the supplied units.  <a href="class_forcing.html#a96352313bf0c1343ffbaea1b0759b52d">More...</a><br /></td></tr>
 <tr class="separator:a96352313bf0c1343ffbaea1b0759b52d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8a841264256741c24fef45a2c4bbcb93"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_forcing.html#a8a841264256741c24fef45a2c4bbcb93">get_converted_value_for_param_in_units</a> (const std::string &amp;name, const std::string &amp;units_str)</td></tr>
 <tr class="memdesc:a8a841264256741c24fef45a2c4bbcb93"><td class="mdescLeft">&#160;</td><td class="mdescRight">Placeholder implementation for function to return the given param adjusted to be in the supplied units.  <a href="class_forcing.html#a8a841264256741c24fef45a2c4bbcb93">More...</a><br /></td></tr>
 <tr class="separator:a8a841264256741c24fef45a2c4bbcb93"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a054d02502ce4ad3a60da53e14f311c47"><td class="memItemLeft" align="right" valign="top">time_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_forcing.html#a054d02502ce4ad3a60da53e14f311c47">get_forcing_output_time_begin</a> (const std::string &amp;output_name) override</td></tr>
-<tr class="memdesc:a054d02502ce4ad3a60da53e14f311c47"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the inclusive beginning of the period of time over which this instance can provide data for this forcing.  <a href="class_forcing.html#a054d02502ce4ad3a60da53e14f311c47">More...</a><br /></td></tr>
-<tr class="separator:a054d02502ce4ad3a60da53e14f311c47"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a40baa10ae26f810d5b668dff11a90892"><td class="memItemLeft" align="right" valign="top">time_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_forcing.html#a40baa10ae26f810d5b668dff11a90892">get_forcing_output_time_end</a> (const std::string &amp;output_name) override</td></tr>
-<tr class="memdesc:a40baa10ae26f810d5b668dff11a90892"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the exclusive ending of the period of time over which this instance can provide data for this forcing.  <a href="class_forcing.html#a40baa10ae26f810d5b668dff11a90892">More...</a><br /></td></tr>
-<tr class="separator:a40baa10ae26f810d5b668dff11a90892"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab53881cd8a5a99e1fdd2b61433fbbc85"><td class="memItemLeft" align="right" valign="top">time_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_forcing.html#ab53881cd8a5a99e1fdd2b61433fbbc85">get_forcing_output_time_begin</a> (const std::string &amp;output_name)</td></tr>
+<tr class="memdesc:ab53881cd8a5a99e1fdd2b61433fbbc85"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the inclusive beginning of the period of time over which this instance can provide data for this forcing.  <a href="class_forcing.html#ab53881cd8a5a99e1fdd2b61433fbbc85">More...</a><br /></td></tr>
+<tr class="separator:ab53881cd8a5a99e1fdd2b61433fbbc85"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e5d0637f767cd3e44439557453893bd"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_forcing.html#a9e5d0637f767cd3e44439557453893bd">get_data_start_time</a> () override</td></tr>
+<tr class="memdesc:a9e5d0637f767cd3e44439557453893bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the inclusive beginning of the period of time over which this instance can provide data for this forcing.  <a href="class_forcing.html#a9e5d0637f767cd3e44439557453893bd">More...</a><br /></td></tr>
+<tr class="separator:a9e5d0637f767cd3e44439557453893bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3544c346219dbdf2eb335ab4c98cc0e6"><td class="memItemLeft" align="right" valign="top">time_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_forcing.html#a3544c346219dbdf2eb335ab4c98cc0e6">get_forcing_output_time_end</a> (const std::string &amp;output_name)</td></tr>
+<tr class="memdesc:a3544c346219dbdf2eb335ab4c98cc0e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the exclusive ending of the period of time over which this instance can provide data for this forcing.  <a href="class_forcing.html#a3544c346219dbdf2eb335ab4c98cc0e6">More...</a><br /></td></tr>
+<tr class="separator:a3544c346219dbdf2eb335ab4c98cc0e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec798f5a1632b177b53cf49f2b09a3f1"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_forcing.html#aec798f5a1632b177b53cf49f2b09a3f1">get_data_stop_time</a> () override</td></tr>
+<tr class="memdesc:aec798f5a1632b177b53cf49f2b09a3f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the exclusive ending of the period of time over which this instance can provide data for this forcing.  <a href="class_forcing.html#aec798f5a1632b177b53cf49f2b09a3f1">More...</a><br /></td></tr>
+<tr class="separator:aec798f5a1632b177b53cf49f2b09a3f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5a6e6d24f60ea8e99311cf3301148287"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_forcing.html#a5a6e6d24f60ea8e99311cf3301148287">get_ts_index_for_time</a> (const time_t &amp;epoch_time) override</td></tr>
 <tr class="memdesc:a5a6e6d24f60ea8e99311cf3301148287"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the index of the forcing time step that contains the given point in time.  <a href="class_forcing.html#a5a6e6d24f60ea8e99311cf3301148287">More...</a><br /></td></tr>
 <tr class="separator:a5a6e6d24f60ea8e99311cf3301148287"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a45e538add006e81f797fcd8ce2f44bd3"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_forcing.html#a45e538add006e81f797fcd8ce2f44bd3">get_value</a> (const std::string &amp;output_name, const time_t &amp;init_time, const long &amp;duration_s, const std::string &amp;output_units) override</td></tr>
-<tr class="memdesc:a45e538add006e81f797fcd8ce2f44bd3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the value of a forcing property for an arbitrary time period, converting units if needed.  <a href="class_forcing.html#a45e538add006e81f797fcd8ce2f44bd3">More...</a><br /></td></tr>
-<tr class="separator:a45e538add006e81f797fcd8ce2f44bd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2def8c09c5369b80a5f4f7e754fb5a9d"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_forcing.html#a2def8c09c5369b80a5f4f7e754fb5a9d">get_value</a> (const <a class="el" href="class_catchment_aggr_data_selector.html">CatchmentAggrDataSelector</a> &amp;selector, <a class="el" href="namespacedata__access.html#a46435cb3579215dfdfffedc7833e43f9">data_access::ReSampleMethod</a> m) override</td></tr>
+<tr class="memdesc:a2def8c09c5369b80a5f4f7e754fb5a9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the value of a forcing property for an arbitrary time period, converting units if needed.  <a href="class_forcing.html#a2def8c09c5369b80a5f4f7e754fb5a9d">More...</a><br /></td></tr>
+<tr class="separator:a2def8c09c5369b80a5f4f7e754fb5a9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa8013150906cd10090c62c59c5e8c730"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_forcing.html#aa8013150906cd10090c62c59c5e8c730">get_value_for_param_name</a> (const std::string &amp;name, int index)</td></tr>
 <tr class="memdesc:aa8013150906cd10090c62c59c5e8c730"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current value of a forcing param identified by its name.  <a href="class_forcing.html#aa8013150906cd10090c62c59c5e8c730">More...</a><br /></td></tr>
 <tr class="separator:aa8013150906cd10090c62c59c5e8c730"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -172,6 +181,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a02794b3270222a7ddeb1e2637e4ad232"><td class="memItemLeft" align="right" valign="top">time_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_forcing.html#a02794b3270222a7ddeb1e2637e4ad232">get_time_step_size</a> ()</td></tr>
 <tr class="memdesc:a02794b3270222a7ddeb1e2637e4ad232"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the time step size, based on epoch vector, assuming the last ts is equal to the next to last.  <a href="class_forcing.html#a02794b3270222a7ddeb1e2637e4ad232">More...</a><br /></td></tr>
 <tr class="separator:a02794b3270222a7ddeb1e2637e4ad232"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a74ed4168b883ebde134cca79aa86d991"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_forcing.html#a74ed4168b883ebde134cca79aa86d991">record_duration</a> () override</td></tr>
+<tr class="memdesc:a74ed4168b883ebde134cca79aa86d991"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the time step size, based on epoch vector, assuming the last ts is equal to the next to last.  <a href="class_forcing.html#a74ed4168b883ebde134cca79aa86d991">More...</a><br /></td></tr>
+<tr class="separator:a74ed4168b883ebde134cca79aa86d991"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a93eba5c22f7ec9ce53329acaf25c7807"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_a_o_r_c__data.html">AORC_data</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_forcing.html#a93eba5c22f7ec9ce53329acaf25c7807">get_AORC_data</a> ()</td></tr>
 <tr class="memdesc:a93eba5c22f7ec9ce53329acaf25c7807"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accessor to AORC data struct.  <a href="class_forcing.html#a93eba5c22f7ec9ce53329acaf25c7807">More...</a><br /></td></tr>
 <tr class="separator:a93eba5c22f7ec9ce53329acaf25c7807"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -738,8 +750,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a01cd9053290838e45f2a04d4cce2b8af" name="a01cd9053290838e45f2a04d4cce2b8af"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a01cd9053290838e45f2a04d4cce2b8af">&#9670;&nbsp;</a></span>get_available_forcing_outputs()</h2>
+<a id="aade7821a7c4f755d8c57c193e019af7a" name="aade7821a7c4f755d8c57c193e019af7a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aade7821a7c4f755d8c57c193e019af7a">&#9670;&nbsp;</a></span>get_available_forcing_outputs()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -756,14 +768,45 @@ Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="class_forcing.html#a608d5703074ff027a3c363956b542986">available_forcings</a>, and <a class="el" href="class_forcing.html#aa28f7f38e0e1ba08ee088b668cb7222e">get_forcing_field_names()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="class_forcing.html#a59351a4949ba74099b5c2d16ade0ef22">get_avaliable_variable_names()</a>.</p>
+
+</div>
+</div>
+<a id="a59351a4949ba74099b5c2d16ade0ef22" name="a59351a4949ba74099b5c2d16ade0ef22"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a59351a4949ba74099b5c2d16ade0ef22">&#9670;&nbsp;</a></span>get_avaliable_variable_names()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::vector&lt; std::string &gt; &amp; Forcing::get_avaliable_variable_names </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classforcing_1_1_forcing_provider.html#a8e7e35bf30622e8ad6c8af5b7e8388cc">forcing::ForcingProvider</a>.</p>
+<p>Return the variables that are accessable by this data provider. </p>
 
-<p class="reference">References <a class="el" href="class_forcing.html#a608d5703074ff027a3c363956b542986">available_forcings</a>, and <a class="el" href="class_forcing.html#aa28f7f38e0e1ba08ee088b668cb7222e">get_forcing_field_names()</a>.</p>
+<p>Implements <a class="el" href="classdata__access_1_1_data_provider.html#a04a9a4b7e03e597e95344c3230b9c14b">data_access::DataProvider&lt; double, CatchmentAggrDataSelector &gt;</a>.</p>
+
+<p class="reference">References <a class="el" href="class_forcing.html#aade7821a7c4f755d8c57c193e019af7a">get_available_forcing_outputs()</a>.</p>
 
 </div>
 </div>
@@ -906,6 +949,70 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a9e5d0637f767cd3e44439557453893bd" name="a9e5d0637f767cd3e44439557453893bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e5d0637f767cd3e44439557453893bd">&#9670;&nbsp;</a></span>get_data_start_time()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">long Forcing::get_data_start_time </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the inclusive beginning of the period of time over which this instance can provide data for this forcing. </p>
+<dl class="section return"><dt>Returns</dt><dd>The inclusive beginning of the period of time over which this instance can provide this data. </dd></dl>
+
+<p>Implements <a class="el" href="classdata__access_1_1_data_provider.html#a9a5503cb5da0b2bf8fe25d0500bf33c4">data_access::DataProvider&lt; double, CatchmentAggrDataSelector &gt;</a>.</p>
+
+<p class="reference">References <a class="el" href="class_forcing.html#aa9c42f1f07d2bcdc065f46a4980f2eb3">start_date_time_epoch</a>.</p>
+
+</div>
+</div>
+<a id="aec798f5a1632b177b53cf49f2b09a3f1" name="aec798f5a1632b177b53cf49f2b09a3f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aec798f5a1632b177b53cf49f2b09a3f1">&#9670;&nbsp;</a></span>get_data_stop_time()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">long Forcing::get_data_stop_time </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the exclusive ending of the period of time over which this instance can provide data for this forcing. </p>
+<dl class="section return"><dt>Returns</dt><dd>The exclusive ending of the period of time over which this instance can provide this data. </dd></dl>
+
+<p>Implements <a class="el" href="classdata__access_1_1_data_provider.html#af598b54c03163287adc56400b3e9bdfe">data_access::DataProvider&lt; double, CatchmentAggrDataSelector &gt;</a>.</p>
+
+<p class="reference">References <a class="el" href="class_forcing.html#ac17a15ad701a10e0aa780ed904bbf8c8">end_date_time_epoch</a>.</p>
+
+</div>
+</div>
 <a id="aff5203458deb9a377fbb3f8f69582fd0" name="aff5203458deb9a377fbb3f8f69582fd0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aff5203458deb9a377fbb3f8f69582fd0">&#9670;&nbsp;</a></span>get_day_of_year()</h2>
 
@@ -963,12 +1070,12 @@ Private Attributes</h2></td></tr>
 <p>Get supported standard names for forcing fields. </p>
 <dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
-<p class="reference">Referenced by <a class="el" href="class_forcing.html#a01cd9053290838e45f2a04d4cce2b8af">get_available_forcing_outputs()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="class_forcing.html#aade7821a7c4f755d8c57c193e019af7a">get_available_forcing_outputs()</a>.</p>
 
 </div>
 </div>
-<a id="a054d02502ce4ad3a60da53e14f311c47" name="a054d02502ce4ad3a60da53e14f311c47"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a054d02502ce4ad3a60da53e14f311c47">&#9670;&nbsp;</a></span>get_forcing_output_time_begin()</h2>
+<a id="ab53881cd8a5a99e1fdd2b61433fbbc85" name="ab53881cd8a5a99e1fdd2b61433fbbc85"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab53881cd8a5a99e1fdd2b61433fbbc85">&#9670;&nbsp;</a></span>get_forcing_output_time_begin()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -986,7 +1093,7 @@ Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -994,14 +1101,12 @@ Private Attributes</h2></td></tr>
 <p>Get the inclusive beginning of the period of time over which this instance can provide data for this forcing. </p>
 <dl class="section return"><dt>Returns</dt><dd>The inclusive beginning of the period of time over which this instance can provide this data. </dd></dl>
 
-<p>Implements <a class="el" href="classforcing_1_1_forcing_provider.html#ae7fbfcbecc65ad92f6cbfb44b4761938">forcing::ForcingProvider</a>.</p>
-
 <p class="reference">References <a class="el" href="class_forcing.html#aa9c42f1f07d2bcdc065f46a4980f2eb3">start_date_time_epoch</a>.</p>
 
 </div>
 </div>
-<a id="a40baa10ae26f810d5b668dff11a90892" name="a40baa10ae26f810d5b668dff11a90892"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a40baa10ae26f810d5b668dff11a90892">&#9670;&nbsp;</a></span>get_forcing_output_time_end()</h2>
+<a id="a3544c346219dbdf2eb335ab4c98cc0e6" name="a3544c346219dbdf2eb335ab4c98cc0e6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3544c346219dbdf2eb335ab4c98cc0e6">&#9670;&nbsp;</a></span>get_forcing_output_time_end()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1019,15 +1124,13 @@ Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Get the exclusive ending of the period of time over which this instance can provide data for this forcing. </p>
 <dl class="section return"><dt>Returns</dt><dd>The exclusive ending of the period of time over which this instance can provide this data. </dd></dl>
-
-<p>Implements <a class="el" href="classforcing_1_1_forcing_provider.html#aa0851aef3ecc864d25c29fdd55ecc3f9">forcing::ForcingProvider</a>.</p>
 
 <p class="reference">References <a class="el" href="class_forcing.html#ac17a15ad701a10e0aa780ed904bbf8c8">end_date_time_epoch</a>.</p>
 
@@ -1127,6 +1230,8 @@ Private Attributes</h2></td></tr>
 
 <p class="reference">References <a class="el" href="class_forcing.html#adbe0cf692ced9e0634e4858a72547785">check_forcing_vector_index_bounds()</a>, <a class="el" href="class_forcing.html#af4256642e73731a17c73e0e7d364fdd8">forcing_vector_index</a>, and <a class="el" href="class_forcing.html#ab50e6f84e71ff7415bdb328be94d8464">time_epoch_vector</a>.</p>
 
+<p class="reference">Referenced by <a class="el" href="class_forcing.html#a74ed4168b883ebde134cca79aa86d991">record_duration()</a>.</p>
+
 </div>
 </div>
 <a id="a5a6e6d24f60ea8e99311cf3301148287" name="a5a6e6d24f60ea8e99311cf3301148287"></a>
@@ -1169,16 +1274,16 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implements <a class="el" href="classforcing_1_1_forcing_provider.html#a542531c62f0fa91cf4e877aa69ff2479">forcing::ForcingProvider</a>.</p>
+<p>Implements <a class="el" href="classdata__access_1_1_data_provider.html#acca503f7d24367b8a3298a2c10e5d75f">data_access::DataProvider&lt; double, CatchmentAggrDataSelector &gt;</a>.</p>
 
 <p class="reference">References <a class="el" href="class_forcing.html#ac17a15ad701a10e0aa780ed904bbf8c8">end_date_time_epoch</a>, and <a class="el" href="class_forcing.html#aa9c42f1f07d2bcdc065f46a4980f2eb3">start_date_time_epoch</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="class_forcing.html#a45e538add006e81f797fcd8ce2f44bd3">get_value()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="class_forcing.html#a2def8c09c5369b80a5f4f7e754fb5a9d">get_value()</a>.</p>
 
 </div>
 </div>
-<a id="a45e538add006e81f797fcd8ce2f44bd3" name="a45e538add006e81f797fcd8ce2f44bd3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a45e538add006e81f797fcd8ce2f44bd3">&#9670;&nbsp;</a></span>get_value()</h2>
+<a id="a2def8c09c5369b80a5f4f7e754fb5a9d" name="a2def8c09c5369b80a5f4f7e754fb5a9d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2def8c09c5369b80a5f4f7e754fb5a9d">&#9670;&nbsp;</a></span>get_value()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1189,26 +1294,14 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="memname">double Forcing::get_value </td>
           <td>(</td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>output_name</em>, </td>
+          <td class="paramtype">const <a class="el" href="class_catchment_aggr_data_selector.html">CatchmentAggrDataSelector</a> &amp;&#160;</td>
+          <td class="paramname"><em>selector</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const time_t &amp;&#160;</td>
-          <td class="paramname"><em>init_time</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const long &amp;&#160;</td>
-          <td class="paramname"><em>duration_s</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>output_units</em>&#160;</td>
+          <td class="paramtype"><a class="el" href="namespacedata__access.html#a46435cb3579215dfdfffedc7833e43f9">data_access::ReSampleMethod</a>&#160;</td>
+          <td class="paramname"><em>m</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1242,9 +1335,9 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implements <a class="el" href="classforcing_1_1_forcing_provider.html#a84ca58d5a524d1f07ef8e062a97e8301">forcing::ForcingProvider</a>.</p>
+<p>Implements <a class="el" href="classdata__access_1_1_data_provider.html#a2409247d93cc63d0626e623c3a024f1b">data_access::DataProvider&lt; double, CatchmentAggrDataSelector &gt;</a>.</p>
 
-<p class="reference">References <a class="el" href="class_forcing.html#a5a6e6d24f60ea8e99311cf3301148287">get_ts_index_for_time()</a>, <a class="el" href="class_forcing.html#aa8013150906cd10090c62c59c5e8c730">get_value_for_param_name()</a>, <a class="el" href="class_forcing.html#a1fb70d287a4a8b2c73352ec86f3986b3">is_param_sum_over_time_step()</a>, and <a class="el" href="class_forcing.html#aa9c42f1f07d2bcdc065f46a4980f2eb3">start_date_time_epoch</a>.</p>
+<p class="reference">References <a class="el" href="class_catchment_aggr_data_selector.html#a482e1fb8dbb5ac966ef5de3f0c5a8d70">CatchmentAggrDataSelector::get_duration_secs()</a>, <a class="el" href="class_catchment_aggr_data_selector.html#abe6340bf863bada7b0d753ebe60228bd">CatchmentAggrDataSelector::get_init_time()</a>, <a class="el" href="class_forcing.html#a5a6e6d24f60ea8e99311cf3301148287">get_ts_index_for_time()</a>, <a class="el" href="class_forcing.html#aa8013150906cd10090c62c59c5e8c730">get_value_for_param_name()</a>, <a class="el" href="class_catchment_aggr_data_selector.html#a1dd6a5bb4ab1e701463359d34d4d6738">CatchmentAggrDataSelector::get_variable_name()</a>, <a class="el" href="class_forcing.html#a1fb70d287a4a8b2c73352ec86f3986b3">is_param_sum_over_time_step()</a>, and <a class="el" href="class_forcing.html#aa9c42f1f07d2bcdc065f46a4980f2eb3">start_date_time_epoch</a>.</p>
 
 </div>
 </div>
@@ -1294,7 +1387,7 @@ Private Attributes</h2></td></tr>
 
 <p class="reference">References <a class="el" href="class_forcing.html#af61d987af7888999e6525cbf2d2725f6">AORC_vector</a>, and <a class="el" href="class_forcing.html#a0baf6b085ce5d7ac81d7479b09d50439">precipitation_rate_meters_per_second_vector</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="class_forcing.html#a96352313bf0c1343ffbaea1b0759b52d">get_converted_value_for_param_in_units()</a>, and <a class="el" href="class_forcing.html#a45e538add006e81f797fcd8ce2f44bd3">get_value()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="class_forcing.html#a96352313bf0c1343ffbaea1b0759b52d">get_converted_value_for_param_in_units()</a>, and <a class="el" href="class_forcing.html#a2def8c09c5369b80a5f4f7e754fb5a9d">get_value()</a>.</p>
 
 </div>
 </div>
@@ -1360,7 +1453,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Whether the param's value is an aggregate sum. </dd></dl>
 
-<p class="reference">Referenced by <a class="el" href="class_forcing.html#a45e538add006e81f797fcd8ce2f44bd3">get_value()</a>, and <a class="el" href="class_forcing.html#a3636054ac315721a22226ccf5833f64e">is_property_sum_over_time_step()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="class_forcing.html#a2def8c09c5369b80a5f4f7e754fb5a9d">get_value()</a>, and <a class="el" href="class_forcing.html#a3636054ac315721a22226ccf5833f64e">is_property_sum_over_time_step()</a>.</p>
 
 </div>
 </div>
@@ -1399,7 +1492,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Whether the property's value is an aggregate sum. </dd></dl>
 
-<p>Implements <a class="el" href="classforcing_1_1_forcing_provider.html#acb93550e1f3cca96cbb644a5f2247986">forcing::ForcingProvider</a>.</p>
+<p>Reimplemented from <a class="el" href="classdata__access_1_1_data_provider.html#a8254f58e64499bb4ae799ab120fd0934">data_access::DataProvider&lt; double, CatchmentAggrDataSelector &gt;</a>.</p>
 
 <p class="reference">References <a class="el" href="class_forcing.html#a1fb70d287a4a8b2c73352ec86f3986b3">is_param_sum_over_time_step()</a>.</p>
 
@@ -1481,6 +1574,38 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a74ed4168b883ebde134cca79aa86d991" name="a74ed4168b883ebde134cca79aa86d991"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a74ed4168b883ebde134cca79aa86d991">&#9670;&nbsp;</a></span>record_duration()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">long Forcing::record_duration </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the time step size, based on epoch vector, assuming the last ts is equal to the next to last. </p>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+<p>Implements <a class="el" href="classdata__access_1_1_data_provider.html#a558af5fd091e84283470af3ca74d24d8">data_access::DataProvider&lt; double, CatchmentAggrDataSelector &gt;</a>.</p>
+
+<p class="reference">References <a class="el" href="class_forcing.html#a02794b3270222a7ddeb1e2637e4ad232">get_time_step_size()</a>.</p>
+
+</div>
+</div>
 <h2 class="groupheader">Member Data Documentation</h2>
 <a id="a1dbaef5e5e08fa7c60d9b5cf37fa3f2b" name="a1dbaef5e5e08fa7c60d9b5cf37fa3f2b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1dbaef5e5e08fa7c60d9b5cf37fa3f2b">&#9670;&nbsp;</a></span>air_temperature_fahrenheit</h2>
@@ -1548,7 +1673,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="class_forcing.html#a01cd9053290838e45f2a04d4cce2b8af">get_available_forcing_outputs()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="class_forcing.html#aade7821a7c4f755d8c57c193e019af7a">get_available_forcing_outputs()</a>.</p>
 
 </div>
 </div>
@@ -1664,7 +1789,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="class_forcing.html#ab7dfc0d71a1f8231a46f8f119b13f584">Forcing()</a>, <a class="el" href="class_forcing.html#a40baa10ae26f810d5b668dff11a90892">get_forcing_output_time_end()</a>, <a class="el" href="class_forcing.html#a5a6e6d24f60ea8e99311cf3301148287">get_ts_index_for_time()</a>, <a class="el" href="class_forcing.html#a8685863b123be9f26497c2d0fc66c939">read_forcing()</a>, and <a class="el" href="class_forcing.html#a1704a153713241f70d85b3cc85c6d45b">read_forcing_aorc()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="class_forcing.html#ab7dfc0d71a1f8231a46f8f119b13f584">Forcing()</a>, <a class="el" href="class_forcing.html#aec798f5a1632b177b53cf49f2b09a3f1">get_data_stop_time()</a>, <a class="el" href="class_forcing.html#a3544c346219dbdf2eb335ab4c98cc0e6">get_forcing_output_time_end()</a>, <a class="el" href="class_forcing.html#a5a6e6d24f60ea8e99311cf3301148287">get_ts_index_for_time()</a>, <a class="el" href="class_forcing.html#a8685863b123be9f26497c2d0fc66c939">read_forcing()</a>, and <a class="el" href="class_forcing.html#a1704a153713241f70d85b3cc85c6d45b">read_forcing_aorc()</a>.</p>
 
 </div>
 </div>
@@ -1877,7 +2002,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="class_forcing.html#ab7dfc0d71a1f8231a46f8f119b13f584">Forcing()</a>, <a class="el" href="class_forcing.html#a054d02502ce4ad3a60da53e14f311c47">get_forcing_output_time_begin()</a>, <a class="el" href="class_forcing.html#a5a6e6d24f60ea8e99311cf3301148287">get_ts_index_for_time()</a>, <a class="el" href="class_forcing.html#a45e538add006e81f797fcd8ce2f44bd3">get_value()</a>, <a class="el" href="class_forcing.html#a8685863b123be9f26497c2d0fc66c939">read_forcing()</a>, and <a class="el" href="class_forcing.html#a1704a153713241f70d85b3cc85c6d45b">read_forcing_aorc()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="class_forcing.html#ab7dfc0d71a1f8231a46f8f119b13f584">Forcing()</a>, <a class="el" href="class_forcing.html#a9e5d0637f767cd3e44439557453893bd">get_data_start_time()</a>, <a class="el" href="class_forcing.html#ab53881cd8a5a99e1fdd2b61433fbbc85">get_forcing_output_time_begin()</a>, <a class="el" href="class_forcing.html#a5a6e6d24f60ea8e99311cf3301148287">get_ts_index_for_time()</a>, <a class="el" href="class_forcing.html#a2def8c09c5369b80a5f4f7e754fb5a9d">get_value()</a>, <a class="el" href="class_forcing.html#a8685863b123be9f26497c2d0fc66c939">read_forcing()</a>, and <a class="el" href="class_forcing.html#a1704a153713241f70d85b3cc85c6d45b">read_forcing_aorc()</a>.</p>
 
 </div>
 </div>
@@ -1915,7 +2040,7 @@ Private Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_forcing.html">Forcing</a></li>
-    <li class="footer">Generated on Fri May 6 2022 13:58:02 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3 </li>
+    <li class="footer">Generated on Fri May 6 2022 14:27:17 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3 </li>
   </ul>
 </div>
 </body>

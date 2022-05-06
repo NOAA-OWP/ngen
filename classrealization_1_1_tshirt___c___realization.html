@@ -130,8 +130,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a86b5c43ade59ed9d1fa6fe5f2f7236ad"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_tshirt___c___realization.html#a86b5c43ade59ed9d1fa6fe5f2f7236ad">Tshirt_C_Realization</a> (<a class="el" href="structforcing__params.html">forcing_params</a> forcing_config, <a class="el" href="classutils_1_1_stream_handler.html">utils::StreamHandler</a> output_stream, double soil_storage, double groundwater_storage, bool storage_values_are_ratios, std::string <a class="el" href="classrealization_1_1_tshirt___c___realization.html#aa22d8d4ce831a21fb2ab1ef9a8f01e3f">catchment_id</a>, <a class="el" href="classgiuh_1_1_giuh_json_reader.html">giuh::GiuhJsonReader</a> &amp;giuh_json_reader, double maxsmc, double wltsmc, double satdk, double satpsi, double slope, double b, double multiplier, double alpha_fc, double Klf, double Kn, int nash_n, double Cgw, double expon, double max_gw_storage, const std::vector&lt; double &gt; &amp;<a class="el" href="classrealization_1_1_tshirt___c___realization.html#a564be46296d61c3bba384ebaf7153d88">nash_storage</a>)</td></tr>
 <tr class="memdesc:a86b5c43ade59ed9d1fa6fe5f2f7236ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for when model parameters are provided individually instead of within encapsulating struct and a <a class="el" href="classgiuh_1_1_giuh_json_reader.html">giuh::GiuhJsonReader</a> is passed for obtaining GIUH ordinates.  <a href="classrealization_1_1_tshirt___c___realization.html#a86b5c43ade59ed9d1fa6fe5f2f7236ad">More...</a><br /></td></tr>
 <tr class="separator:a86b5c43ade59ed9d1fa6fe5f2f7236ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a99b1426030ff3037a80a2bb86564c84f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_tshirt___c___realization.html#a99b1426030ff3037a80a2bb86564c84f">Tshirt_C_Realization</a> (std::string <a class="el" href="classrealization_1_1_formulation.html#a8bfec24b0d57240e7ada2493a781db6d">id</a>, unique_ptr&lt; <a class="el" href="classforcing_1_1_forcing_provider.html">forcing::ForcingProvider</a> &gt; forcing_provider, <a class="el" href="classutils_1_1_stream_handler.html">utils::StreamHandler</a> output_stream)</td></tr>
-<tr class="separator:a99b1426030ff3037a80a2bb86564c84f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25874b76d63588d3fcdc58053f4892dc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_tshirt___c___realization.html#a25874b76d63588d3fcdc58053f4892dc">Tshirt_C_Realization</a> (std::string <a class="el" href="classrealization_1_1_formulation.html#a8bfec24b0d57240e7ada2493a781db6d">id</a>, shared_ptr&lt; <a class="el" href="classdata__access_1_1_generic_data_provider.html">data_access::GenericDataProvider</a> &gt; forcing_provider, <a class="el" href="classutils_1_1_stream_handler.html">utils::StreamHandler</a> output_stream)</td></tr>
+<tr class="separator:a25874b76d63588d3fcdc58053f4892dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3da9cab6a15099523471126536b7a4bc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_tshirt___c___realization.html#a3da9cab6a15099523471126536b7a4bc">Tshirt_C_Realization</a> (std::string <a class="el" href="classrealization_1_1_formulation.html#a8bfec24b0d57240e7ada2493a781db6d">id</a>, <a class="el" href="structforcing__params.html">forcing_params</a> forcing_config, <a class="el" href="classutils_1_1_stream_handler.html">utils::StreamHandler</a> output_stream)</td></tr>
 <tr class="separator:a3da9cab6a15099523471126536b7a4bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a683b7c23e045035e67e9e44d90ea1741"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_tshirt___c___realization.html#a683b7c23e045035e67e9e44d90ea1741">~Tshirt_C_Realization</a> ()</td></tr>
@@ -241,8 +241,8 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a7c6de72bd8ebf427d71aacca7baa23c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af996a3e50eaf51c63865f1fdbe4f8661"><td class="memItemLeft" align="right" valign="top">unsigned long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_realization.html#af996a3e50eaf51c63865f1fdbe4f8661">id_number</a></td></tr>
 <tr class="separator:af996a3e50eaf51c63865f1fdbe4f8661"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a83d2e09cd1264be6cc41dce294ad702d"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classforcing_1_1_forcing_provider.html">forcing::ForcingProvider</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_realization.html#a83d2e09cd1264be6cc41dce294ad702d">forcing</a></td></tr>
-<tr class="separator:a83d2e09cd1264be6cc41dce294ad702d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2010f61d0e7141bb48230923592de215"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classdata__access_1_1_generic_data_provider.html">data_access::GenericDataProvider</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_realization.html#a2010f61d0e7141bb48230923592de215">forcing</a></td></tr>
+<tr class="separator:a2010f61d0e7141bb48230923592de215"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
@@ -667,8 +667,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a99b1426030ff3037a80a2bb86564c84f" name="a99b1426030ff3037a80a2bb86564c84f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a99b1426030ff3037a80a2bb86564c84f">&#9670;&nbsp;</a></span>Tshirt_C_Realization() <span class="overload">[4/5]</span></h2>
+<a id="a25874b76d63588d3fcdc58053f4892dc" name="a25874b76d63588d3fcdc58053f4892dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a25874b76d63588d3fcdc58053f4892dc">&#9670;&nbsp;</a></span>Tshirt_C_Realization() <span class="overload">[4/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -682,7 +682,7 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">unique_ptr&lt; <a class="el" href="classforcing_1_1_forcing_provider.html">forcing::ForcingProvider</a> &gt;&#160;</td>
+          <td class="paramtype">shared_ptr&lt; <a class="el" href="classdata__access_1_1_generic_data_provider.html">data_access::GenericDataProvider</a> &gt;&#160;</td>
           <td class="paramname"><em>forcing_provider</em>, </td>
         </tr>
         <tr>
@@ -788,7 +788,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_tshirt___c___realization.html#ae8ac906d01ebad2ad980b11fdd13666e">Tshirt_C_Realization()</a>, and <a class="el" href="classrealization_1_1_tshirt___realization.html#a95ef014f906bfcd122f085094579c63d">realization::Tshirt_Realization::Tshirt_Realization()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_tshirt___c___realization.html#ae8ac906d01ebad2ad980b11fdd13666e">Tshirt_C_Realization()</a>, and <a class="el" href="classrealization_1_1_tshirt___realization.html#a758b13ad8c46973f299dabf2036837eb">realization::Tshirt_Realization::Tshirt_Realization()</a>.</p>
 
 </div>
 </div>
@@ -2196,8 +2196,8 @@ The names of the output data variables that are available from calculations for 
 
 </div>
 </div>
-<a id="a83d2e09cd1264be6cc41dce294ad702d" name="a83d2e09cd1264be6cc41dce294ad702d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a83d2e09cd1264be6cc41dce294ad702d">&#9670;&nbsp;</a></span>forcing</h2>
+<a id="a2010f61d0e7141bb48230923592de215" name="a2010f61d0e7141bb48230923592de215"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2010f61d0e7141bb48230923592de215">&#9670;&nbsp;</a></span>forcing</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2206,7 +2206,7 @@ The names of the output data variables that are available from calculations for 
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::unique_ptr&lt;<a class="el" href="classforcing_1_1_forcing_provider.html">forcing::ForcingProvider</a>&gt; HY_CatchmentRealization::forcing</td>
+          <td class="memname">std::shared_ptr&lt;<a class="el" href="classdata__access_1_1_generic_data_provider.html">data_access::GenericDataProvider</a>&gt; HY_CatchmentRealization::forcing</td>
         </tr>
       </table>
   </td>
@@ -2602,7 +2602,7 @@ The names of the output data variables that are available from calculations for 
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li><li class="navelem"><a class="el" href="classrealization_1_1_tshirt___c___realization.html">Tshirt_C_Realization</a></li>
-    <li class="footer">Generated on Fri May 6 2022 13:58:03 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3 </li>
+    <li class="footer">Generated on Fri May 6 2022 14:27:18 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3 </li>
   </ul>
 </div>
 </body>

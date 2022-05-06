@@ -168,10 +168,16 @@ $(document).ready(function(){initNavTree('_stream_handler_8hpp_source.html','');
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        std::shared_ptr&lt;std::ostream&gt; stream_pointer(raw_pointer, [](<span class="keywordtype">void</span>*) {});</div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="classutils_1_1_stream_handler.html">utils::StreamHandler</a>(stream_pointer);</div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    }</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>}</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span> </div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span> </div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span><span class="preprocessor">#endif </span><span class="comment">// NGEN_STREAM_HANDLER_HPP_</span></div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno"><a class="line" href="namespaceutils.html#a0d4e21fbb83912793512c7e9a37403ac">  108</a></span>    <span class="keyword">static</span> <a class="code hl_class" href="classutils_1_1_stream_handler.html">StreamHandler</a> <a class="code hl_function" href="namespaceutils.html#a0d4e21fbb83912793512c7e9a37403ac">getStdErr</a>() {    </div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        std::ostream* raw_pointer = &amp;std::cerr; </div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        std::shared_ptr&lt;std::ostream&gt; stream_pointer(raw_pointer, [](<span class="keywordtype">void</span>*) {});</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="classutils_1_1_stream_handler.html">utils::StreamHandler</a>(stream_pointer);</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    }</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>}</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span> </div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span><span class="preprocessor">#endif </span><span class="comment">// NGEN_STREAM_HANDLER_HPP_</span></div>
 <div class="ttc" id="aclassutils_1_1_stream_handler_html"><div class="ttname"><a href="classutils_1_1_stream_handler.html">utils::StreamHandler</a></div><div class="ttdoc">This class provides a copyable interface to a std::ostream or std::ostream like object that may not s...</div><div class="ttdef"><b>Definition:</b> StreamHandler.hpp:13</div></div>
 <div class="ttc" id="aclassutils_1_1_stream_handler_html_a0a807b146c1cfde1fc7a62c170f29444"><div class="ttname"><a href="classutils_1_1_stream_handler.html#a0a807b146c1cfde1fc7a62c170f29444">utils::StreamHandler::operator=</a></div><div class="ttdeci">StreamHandler &amp; operator=(StreamHandler &amp;&amp;other) noexcept</div><div class="ttdoc">Move Assignment operator for a StreamHandler.</div><div class="ttdef"><b>Definition:</b> StreamHandler.hpp:47</div></div>
 <div class="ttc" id="aclassutils_1_1_stream_handler_html_a15176069893e57510787897d9c8dea34"><div class="ttname"><a href="classutils_1_1_stream_handler.html#a15176069893e57510787897d9c8dea34">utils::StreamHandler::StreamHandler</a></div><div class="ttdeci">StreamHandler(StreamHandler &amp;src)</div><div class="ttdoc">Copy constructor for a StreamHandler.</div><div class="ttdef"><b>Definition:</b> StreamHandler.hpp:31</div></div>
@@ -187,6 +193,7 @@ $(document).ready(function(){initNavTree('_stream_handler_8hpp_source.html','');
 <div class="ttc" id="aclassutils_1_1_stream_handler_html_af7f3b5a4929b997eb4c1618dbdbaec2f"><div class="ttname"><a href="classutils_1_1_stream_handler.html#af7f3b5a4929b997eb4c1618dbdbaec2f">utils::StreamHandler::StreamHandler</a></div><div class="ttdeci">StreamHandler(StreamHandler &amp;&amp;src)</div><div class="ttdoc">Move constructor for a StreamHandler.</div><div class="ttdef"><b>Definition:</b> StreamHandler.hpp:36</div></div>
 <div class="ttc" id="anamespacestd_html"><div class="ttname"><a href="namespacestd.html">std</a></div><div class="ttdoc">STL namespace.</div></div>
 <div class="ttc" id="anamespaceutils_html"><div class="ttname"><a href="namespaceutils.html">utils</a></div><div class="ttdef"><b>Definition:</b> FileChecker.h:10</div></div>
+<div class="ttc" id="anamespaceutils_html_a0d4e21fbb83912793512c7e9a37403ac"><div class="ttname"><a href="namespaceutils.html#a0d4e21fbb83912793512c7e9a37403ac">utils::getStdErr</a></div><div class="ttdeci">static StreamHandler getStdErr()</div><div class="ttdef"><b>Definition:</b> StreamHandler.hpp:108</div></div>
 <div class="ttc" id="anamespaceutils_html_a36dea491674f3e0b6b11591f976a88cb"><div class="ttname"><a href="namespaceutils.html#a36dea491674f3e0b6b11591f976a88cb">utils::getStdOut</a></div><div class="ttdeci">static StreamHandler getStdOut()</div><div class="ttdef"><b>Definition:</b> StreamHandler.hpp:102</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
@@ -194,7 +201,7 @@ $(document).ready(function(){initNavTree('_stream_handler_8hpp_source.html','');
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_52b4106b6168f13dcdf82e33b1d195ee.html">utilities</a></li><li class="navelem"><b>StreamHandler.hpp</b></li>
-    <li class="footer">Generated on Fri May 6 2022 13:58:02 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3 </li>
+    <li class="footer">Generated on Fri May 6 2022 14:27:16 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3 </li>
   </ul>
 </div>
 </body>

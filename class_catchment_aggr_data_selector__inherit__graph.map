@@ -1,0 +1,5 @@
+<map id="CatchmentAggrDataSelector" name="CatchmentAggrDataSelector">
+<area shape="rect" id="node1" title="This class is intended to be the virtual base for all data selectors used with the DataProvider API." alt="" coords="95,5,302,303"/>
+<area shape="rect" id="node2" href="$class_b_m_i_data_selector.html" title=" " alt="" coords="5,351,187,457"/>
+<area shape="rect" id="node3" href="$class_c_s_v_data_selector.html" title="This a data selector intended for use with CSV data." alt="" coords="211,351,392,457"/>
+</map>
