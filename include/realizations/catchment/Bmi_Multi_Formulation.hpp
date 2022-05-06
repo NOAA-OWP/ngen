@@ -298,6 +298,7 @@ namespace realization {
          * @return The inclusive beginning of the period of time over which this instance can provide this data.
          */
 
+        [[deprecate]]
         time_t get_forcing_output_time_begin(const std::string &forcing_name) {
             std::string var_name = forcing_name;
             if(var_name == "*" || var_name == ""){
