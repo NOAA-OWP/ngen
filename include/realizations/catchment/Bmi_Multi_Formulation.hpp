@@ -422,6 +422,15 @@ namespace realization {
             return modules[get_index_for_primary_module()]->get_model_end_time();
         }
 
+        /**
+         * Get the end time for the primary nested BMI model in its native format and units.
+         *
+         * @return The end time for the primary nested BMI model in its native format and units.
+         */
+        const double get_model_start_time() {
+            return modules[get_index_for_primary_module()]->get_data_start_time();
+        }
+
         string get_output_line_for_timestep(int timestep, std::string delimiter) override;
 
         double get_response(time_step_t t_index, time_step_t t_delta) override;
@@ -620,7 +629,17 @@ namespace realization {
             try {
                 std::shared_ptr <data_access::GenericDataProvider> nested_module =
                         std::dynamic_pointer_cast<data_access::GenericDataProvider>(data_provider_iter->second);
-                auto selector = CatchmentAggrDataSelector("",var_name,this->get_model_current_time(),this->record_duration(),"1");
+                long nested_module_time = nested_module->get_data_start_time() + ( this->get_model_current_time() - this->get_model_start_time() );
+                cerr<<"nested_module start: "<< nested_module->get_data_start_time() << " multibmi start: "<< this->get_data_start_time() <<std::endl;
+                cerr<<"this->get_data_start_time():    "<< this->get_data_start_time() << std::endl
+                    <<"      get_data_stop_time():     "<< this->get_data_stop_time() << std::endl
+                    <<"      get_model_current_time(): "<< this->get_model_current_time() << std::endl
+                    <<"      get_model_start_time():   "<< this->get_model_start_time() << std::endl
+                    <<"      get_model_end_time():     "<< this->get_model_end_time() << std::endl
+                    <<"      convert_model_time(...):  "<< this->convert_model_time(this->get_model_current_time()) << std::endl
+                    <<"      get_bmi_model_start_time_forcing_offset_s():  "<< this->get_bmi_model_start_time_forcing_offset_s() << std::endl
+                    <<"so, nested_module_time = " << nested_module_time << std::endl;
+                auto selector = CatchmentAggrDataSelector("",var_name,nested_module_time,this->record_duration(),"1");
                 //TODO: After merge PR#405, try re-adding support for index
                 return nested_module->get_value(selector);
             }
