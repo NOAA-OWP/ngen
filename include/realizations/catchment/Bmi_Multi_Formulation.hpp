@@ -298,7 +298,7 @@ namespace realization {
          * @return The inclusive beginning of the period of time over which this instance can provide this data.
          */
 
-        [[deprecate]]
+        [[deprecated]]
         time_t get_forcing_output_time_begin(const std::string &forcing_name) {
             std::string var_name = forcing_name;
             if(var_name == "*" || var_name == ""){
@@ -614,18 +614,20 @@ namespace realization {
             auto data_provider_iter = availableData.find(var_name);
             if (data_provider_iter == availableData.end()) {
                 throw external::ExternalIntegrationException(
-                        "Multi BMI formulation can't find correct nested module for BMI variable " + var_name);
+                        "Multi BMI formulation can't find correct nested module for BMI variable " + var_name + SOURCE_LOC);
             }
             // Otherwise, we have a provider, and we can cast it based on the documented assumptions
             try {
-                std::shared_ptr <Bmi_Module_Formulation<bmi::Bmi>> nested_module =
-                        std::reinterpret_pointer_cast<Bmi_Module_Formulation<bmi::Bmi>>(data_provider_iter->second);
-                return nested_module->get_var_value_as_double(index, var_name);
+                std::shared_ptr <data_access::GenericDataProvider> nested_module =
+                        std::dynamic_pointer_cast<data_access::GenericDataProvider>(data_provider_iter->second);
+                auto selector = CatchmentAggrDataSelector("",var_name,this->get_model_current_time(),this->record_duration(),"1");
+                //TODO: After merge PR#405, try re-adding support for index
+                return nested_module->get_value(selector);
             }
             // If there was any problem with the cast and extraction of the value, throw runtime error
             catch (std::exception &e) {
                 throw std::runtime_error("Multi BMI formulation can't use associated data provider as a nested module"
-                                         " when attempting to get values of BMI variable " + var_name);
+                                         " when attempting to get values of BMI variable " + var_name + SOURCE_LOC);
                 // TODO: look at adjusting defs to move this function up in class hierarchy (or at least add TODO there)
             }
         }
