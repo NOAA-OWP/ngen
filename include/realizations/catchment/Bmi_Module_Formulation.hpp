@@ -282,7 +282,7 @@ namespace realization {
          */
         long get_data_start_time() override
         {
-            throw runtime_error("Bmi_Modular_Formulation does not yet implement get_data_start_time");
+            return this->get_bmi_model()->GetStartTime();
         }
 
         /**
