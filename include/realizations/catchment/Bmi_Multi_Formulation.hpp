@@ -619,8 +619,7 @@ namespace realization {
             // Otherwise, we have a provider, and we can cast it based on the documented assumptions
             try {
                 std::shared_ptr <Bmi_Module_Formulation<bmi::Bmi>> nested_module =
-                        std::dynamic_pointer_cast < Bmi_Module_Formulation <
-                                bmi::Bmi >> (data_provider_iter->second);
+                        std::reinterpret_pointer_cast<Bmi_Module_Formulation<bmi::Bmi>>(data_provider_iter->second);
                 return nested_module->get_var_value_as_double(index, var_name);
             }
             // If there was any problem with the cast and extraction of the value, throw runtime error
