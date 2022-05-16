@@ -67,6 +67,7 @@ runs:
           run: |
             if [ ${{ runner.os }} == 'Linux' ]
             then
+              sudo apt-get update
               sudo apt-get install -y --fix-missing libnetcdf-dev libnetcdff-dev
             elif [ ${{ runner.os }} == 'macOS' ]
             then
