@@ -630,15 +630,6 @@ namespace realization {
                 std::shared_ptr <data_access::GenericDataProvider> nested_module =
                         std::dynamic_pointer_cast<data_access::GenericDataProvider>(data_provider_iter->second);
                 long nested_module_time = nested_module->get_data_start_time() + ( this->get_model_current_time() - this->get_model_start_time() );
-                cerr<<"nested_module start: "<< nested_module->get_data_start_time() << " multibmi start: "<< this->get_data_start_time() <<std::endl;
-                cerr<<"this->get_data_start_time():    "<< this->get_data_start_time() << std::endl
-                    <<"      get_data_stop_time():     "<< this->get_data_stop_time() << std::endl
-                    <<"      get_model_current_time(): "<< this->get_model_current_time() << std::endl
-                    <<"      get_model_start_time():   "<< this->get_model_start_time() << std::endl
-                    <<"      get_model_end_time():     "<< this->get_model_end_time() << std::endl
-                    <<"      convert_model_time(...):  "<< this->convert_model_time(this->get_model_current_time()) << std::endl
-                    <<"      get_bmi_model_start_time_forcing_offset_s():  "<< this->get_bmi_model_start_time_forcing_offset_s() << std::endl
-                    <<"so, nested_module_time = " << nested_module_time << std::endl;
                 auto selector = CatchmentAggrDataSelector("",var_name,nested_module_time,this->record_duration(),"1");
                 //TODO: After merge PR#405, try re-adding support for index
                 return nested_module->get_value(selector);
