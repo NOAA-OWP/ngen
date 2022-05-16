@@ -110,12 +110,14 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", dest="input_path", type=str, required=True, help="The input directory with csv files")
     parser.add_argument("-o", dest="output_path", type=str, required=True, help="The output file path")
+    parser.add_argument("-j", dest="num_processes", type=int, required=False, default=96, help="The number of processes to run in parallel")
     parser.add_argument("-s", dest="skip_csv", action='store_true')
     args = parser.parse_args()
 
     #retrieve parsed values
     input_path = args.input_path
     output_path = args.output_path
+    num_processes = args.num_processes
 
     #get the list of all input csv files
     csv_files = [f for f in listdir(input_path) if isfile(join(input_path, f)) and f.endswith(".csv")]
@@ -131,8 +133,6 @@ def main():
     print("Creating output created")
     del df
 
-    
-    num_processes = 96
     #generate the data objects for child processes
 
     if args.skip_csv == False:
