@@ -1,7 +1,5 @@
 var NAVTREEINDEX23 =
 {
-"structsurface__radiation__forcing.html#a73c81911bbf820409ac2b5f0590b1f49":[21,0,82,2],
-"structsurface__radiation__forcing.html#a7cda613605e64d76e595a847850a0ab6":[21,0,82,9],
 "structsurface__radiation__forcing.html#a875976973997807de45795bc8baf398c":[21,0,82,10],
 "structsurface__radiation__forcing.html#a9775582ee92b8e50208b560d42fda3cd":[21,0,82,8],
 "structsurface__radiation__forcing.html#ab2d92803f931162e484419c8803b9e86":[21,0,82,5],

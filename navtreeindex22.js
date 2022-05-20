@@ -1,7 +1,5 @@
 var NAVTREEINDEX22 =
 {
-"structet_1_1solar__radiation__results.html":[21,0,2,8],
-"structet_1_1solar__radiation__results.html":[20,0,2,9],
 "structet_1_1solar__radiation__results.html#a513495a4f31d605f38c7a1ab9056bed5":[21,0,2,8,1],
 "structet_1_1solar__radiation__results.html#a513495a4f31d605f38c7a1ab9056bed5":[20,0,2,9,1],
 "structet_1_1solar__radiation__results.html#a522a93dcb01347cab107b9d6e1cfea5f":[20,0,2,9,2],
@@ -249,5 +247,7 @@ var NAVTREEINDEX22 =
 "structsurface__radiation__forcing.html#a041825dc21828116191cd59944c08769":[21,0,82,1],
 "structsurface__radiation__forcing.html#a48259934eba9769b9404a7d1c977d97b":[21,0,82,3],
 "structsurface__radiation__forcing.html#a4a3a1bbf5e64c14e28a68bd3e66cef2b":[21,0,82,4],
-"structsurface__radiation__forcing.html#a5edb4633179392f16bdc46a83fc12c2a":[21,0,82,6]
+"structsurface__radiation__forcing.html#a5edb4633179392f16bdc46a83fc12c2a":[21,0,82,6],
+"structsurface__radiation__forcing.html#a73c81911bbf820409ac2b5f0590b1f49":[21,0,82,2],
+"structsurface__radiation__forcing.html#a7cda613605e64d76e595a847850a0ab6":[21,0,82,9]
 };

@@ -7,17 +7,14 @@ var hierarchy =
       [ "models::bmi::Bmi_Adapter< C >", "classmodels_1_1bmi_1_1_bmi___adapter.html", [
         [ "models::bmi::AbstractCLibBmiAdapter< C >", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html", null ]
       ] ],
-      [ "models::bmi::Bmi_Adapter< C_Bmi >", "classmodels_1_1bmi_1_1_bmi___adapter.html", [
+      [ "models::bmi::Bmi_Adapter< T >", "classmodels_1_1bmi_1_1_bmi___adapter.html", [
         [ "models::bmi::AbstractCLibBmiAdapter< C_Bmi >", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html", [
           [ "models::bmi::Bmi_C_Adapter", "classmodels_1_1bmi_1_1_bmi___c___adapter.html", null ]
-        ] ]
-      ] ],
-      [ "models::bmi::Bmi_Adapter< Cpp_Bmi >", "classmodels_1_1bmi_1_1_bmi___adapter.html", [
+        ] ],
         [ "models::bmi::AbstractCLibBmiAdapter< Cpp_Bmi >", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html", [
           [ "models::bmi::Bmi_Cpp_Adapter", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html", null ]
         ] ]
-      ] ],
-      [ "models::bmi::Bmi_Adapter< T >", "classmodels_1_1bmi_1_1_bmi___adapter.html", null ]
+      ] ]
     ] ],
     [ "boost::dfs_visitor", null, [
       [ "network::preorder_visitor< OutputIterator >", "structnetwork_1_1preorder__visitor.html", null ]

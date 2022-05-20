@@ -38,6 +38,7 @@ var classrealization_1_1_bmi___multi___formulation =
     [ "get_index_for_primary_module", "classrealization_1_1_bmi___multi___formulation.html#ac12f1f5f18102de89814b44591f2a6f7", null ],
     [ "get_model_current_time", "classrealization_1_1_bmi___multi___formulation.html#ac685fcc1b03765e752c44a6c9a7b0758", null ],
     [ "get_model_end_time", "classrealization_1_1_bmi___multi___formulation.html#ab6c36a1442ed98975b58b59308d3af43", null ],
+    [ "get_model_start_time", "classrealization_1_1_bmi___multi___formulation.html#ab4374a374dd0032d13e344031b3a3656", null ],
     [ "get_model_type_name", "classrealization_1_1_bmi___multi___formulation.html#a4c1b8eb13fa7fba0e3d8fd00370ddcc2", null ],
     [ "get_module_var_value_as_double", "classrealization_1_1_bmi___multi___formulation.html#ae1676155690e50a2ab4b9d11dd42bc75", null ],
     [ "get_output_header_fields", "classrealization_1_1_bmi___multi___formulation.html#ac957d71ebe50ef94b32ebc2459934634", null ],

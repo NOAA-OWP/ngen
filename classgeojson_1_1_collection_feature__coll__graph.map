@@ -1,16 +1,11 @@
 <map id="geojson::CollectionFeature" name="geojson::CollectionFeature">
-<area shape="rect" id="node1" title=" " alt="" coords="660,1660,835,1987"/>
-<area shape="rect" id="node2" href="$classgeojson_1_1_feature_base.html" title="Represents an individual feature within a Geojson definition." alt="" coords="445,1183,623,1568"/>
-<area shape="rect" id="node14" title=" " alt="" coords="497,1777,635,1869"/>
-<area shape="rect" id="node3" title=" " alt="" coords="591,416,733,508"/>
-<area shape="rect" id="node4" title=" " alt="" coords="506,153,618,230"/>
-<area shape="rect" id="node10" title=" " alt="" coords="314,300,453,392"/>
-<area shape="rect" id="node13" title=" " alt="" coords="475,912,617,989"/>
-<area shape="rect" id="node5" title=" " alt="" coords="471,5,509,83"/>
-<area shape="rect" id="node11" title=" " alt="" coords="245,153,362,230"/>
-<area shape="rect" id="node6" title=" " alt="" coords="184,1013,327,1105"/>
-<area shape="rect" id="node9" href="$classgeojson_1_1_j_s_o_n_property.html" title="@TODO: Convert JSONProperty into a variant of the supported types" alt="" coords="273,532,430,888"/>
-<area shape="rect" id="node7" title=" " alt="" coords="28,307,107,385"/>
-<area shape="rect" id="node8" title=" " alt="" coords="5,145,129,237"/>
-<area shape="rect" id="node12" title=" " alt="" coords="284,5,323,83"/>
+<area shape="rect" id="node1" title=" " alt="" coords="274,977,449,1304"/>
+<area shape="rect" id="node2" href="$classgeojson_1_1_feature_base.html" title="Represents an individual feature within a Geojson definition." alt="" coords="272,469,451,928"/>
+<area shape="rect" id="node3" title=" " alt="" coords="49,300,191,392"/>
+<area shape="rect" id="node6" href="$classgeojson_1_1_j_s_o_n_property.html" title="@TODO: Convert JSONProperty into a variant of the supported types" alt="" coords="41,513,199,884"/>
+<area shape="rect" id="node4" title=" " alt="" coords="287,160,366,237"/>
+<area shape="rect" id="node5" title=" " alt="" coords="265,5,389,97"/>
+<area shape="rect" id="node7" title=" " alt="" coords="5,160,123,237"/>
+<area shape="rect" id="node8" title=" " alt="" coords="10,13,49,90"/>
+<area shape="rect" id="node9" title=" " alt="" coords="79,13,118,90"/>
 </map>

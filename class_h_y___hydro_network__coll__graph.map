@@ -1,40 +1,5 @@
 <map id="HY_HydroNetwork" name="HY_HydroNetwork">
-<area shape="rect" id="node1" title=" " alt="" coords="1547,2017,1705,2109"/>
-<area shape="rect" id="node2" href="$class_g_m___object.html" title=" " alt="" coords="1533,1267,1647,1359"/>
-<area shape="rect" id="node21" href="$class_h_y___flow_path.html" title=" " alt="" coords="1381,1531,1511,1623"/>
-<area shape="rect" id="node25" href="$class_h_y___catchment_area.html" title=" " alt="" coords="1723,1509,1887,1645"/>
-<area shape="rect" id="node3" href="$class_h_y___catchment_realization.html" title=" " alt="" coords="1043,1237,1243,1388"/>
-<area shape="rect" id="node7" title=" " alt="" coords="904,1531,1071,1623"/>
-<area shape="rect" id="node4" title=" " alt="" coords="1257,961,1395,1053"/>
-<area shape="rect" id="node5" href="$class_h_y___catchment.html" title=" " alt="" coords="879,763,1042,884"/>
-<area shape="rect" id="node6" href="$class_h_y___hydro_feature.html" title=" " alt="" coords="714,527,866,619"/>
-<area shape="rect" id="node8" title=" " alt="" coords="1368,785,1505,862"/>
-<area shape="rect" id="node15" title=" " alt="" coords="1025,961,1233,1053"/>
-<area shape="rect" id="node20" title=" " alt="" coords="1377,1708,1515,1800"/>
-<area shape="rect" id="node22" title=" " alt="" coords="1438,1077,1630,1155"/>
-<area shape="rect" id="node24" title=" " alt="" coords="2063,1708,2200,1800"/>
-<area shape="rect" id="node27" title=" " alt="" coords="1919,961,2055,1053"/>
-<area shape="rect" id="node33" title=" " alt="" coords="1698,961,1845,1053"/>
-<area shape="rect" id="node35" title=" " alt="" coords="368,1531,505,1623"/>
-<area shape="rect" id="node37" title=" " alt="" coords="691,961,828,1053"/>
-<area shape="rect" id="node9" title=" " alt="" coords="1855,13,1893,90"/>
-<area shape="rect" id="node13" title=" " alt="" coords="1625,233,1737,311"/>
-<area shape="rect" id="node10" title=" " alt="" coords="991,233,1069,311"/>
-<area shape="rect" id="node12" title=" " alt="" coords="890,535,1031,612"/>
-<area shape="rect" id="node14" title=" " alt="" coords="1056,535,1223,612"/>
-<area shape="rect" id="node26" href="$classutils_1_1_stream_handler.html" title="This class provides a copyable interface to a std::ostream or std::ostream like object that may not s..." alt="" coords="1957,1208,2095,1417"/>
-<area shape="rect" id="node36" href="$class_h_y___hydro_nexus.html" title=" " alt="" coords="298,1179,506,1447"/>
-<area shape="rect" id="node38" title=" " alt="" coords="285,535,445,612"/>
-<area shape="rect" id="node11" title=" " alt="" coords="968,5,1092,97"/>
-<area shape="rect" id="node19" title=" " alt="" coords="1605,1863,1764,1955"/>
-<area shape="rect" id="node23" title=" " alt="" coords="2035,1863,2228,1955"/>
-<area shape="rect" id="node32" title=" " alt="" coords="1723,1267,1932,1359"/>
-<area shape="rect" id="node34" title=" " alt="" coords="456,1708,631,1800"/>
-<area shape="rect" id="node16" href="$classdata__access_1_1_generic_data_provider.html" title=" " alt="" coords="259,777,433,869"/>
-<area shape="rect" id="node17" href="$classdata__access_1_1_data_provider.html" title=" " alt="" coords="5,461,260,685"/>
-<area shape="rect" id="node18" href="$classdata__access_1_1_data_provider.html" title=" " alt="" coords="37,160,228,384"/>
-<area shape="rect" id="node28" title=" " alt="" coords="2169,785,2262,862"/>
-<area shape="rect" id="node29" title=" " alt="" coords="2359,527,2490,619"/>
-<area shape="rect" id="node30" title=" " alt="" coords="2349,233,2500,311"/>
-<area shape="rect" id="node31" title=" " alt="" coords="2375,13,2474,90"/>
+<area shape="rect" id="node1" title=" " alt="" coords="75,233,232,369"/>
+<area shape="rect" id="node2" href="$class_g_m___object.html" title=" " alt="" coords="5,49,120,141"/>
+<area shape="rect" id="node3" href="$class_h_y___catchment_realization.html" title=" " alt="" coords="144,5,344,185"/>
 </map>

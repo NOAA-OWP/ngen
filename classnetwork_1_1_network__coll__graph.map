@@ -1,11 +1,6 @@
 <map id="network::Network" name="network::Network">
-<area shape="rect" id="node1" title="A lightweight, graph based index of hydrologic features." alt="" coords="82,543,235,840"/>
-<area shape="rect" id="node2" title=" " alt="" coords="8,337,147,429"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,167,117,245"/>
-<area shape="rect" id="node4" title=" " alt="" coords="91,13,130,90"/>
-<area shape="rect" id="node8" title=" " alt="" coords="187,160,322,252"/>
-<area shape="rect" id="node5" title=" " alt="" coords="187,329,325,436"/>
-<area shape="rect" id="node6" title=" " alt="" coords="365,167,443,245"/>
-<area shape="rect" id="node7" title=" " alt="" coords="342,5,466,97"/>
-<area shape="rect" id="node9" title=" " alt="" coords="235,13,274,90"/>
+<area shape="rect" id="node1" title="A lightweight, graph based index of hydrologic features." alt="" coords="5,484,159,796"/>
+<area shape="rect" id="node2" title=" " alt="" coords="13,285,151,377"/>
+<area shape="rect" id="node3" title=" " alt="" coords="26,145,138,223"/>
+<area shape="rect" id="node4" title=" " alt="" coords="63,5,101,83"/>
 </map>

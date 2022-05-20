@@ -59,7 +59,6 @@ var classmodels_1_1bmi_1_1_bmi___cpp___adapter =
     [ "GetVarType", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a6a9f11b324fa7d84303f98636ba8fecf", null ],
     [ "GetVarUnits", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a841e084e84ba0325b77e1a868c7407d6", null ],
     [ "Initialize", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a43ba9007b2536787eb95a330167068ff", null ],
-    [ "Initialize", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#acf73770254a92bc6e6a565aafcf261b4", null ],
     [ "Initialize", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a48f6705c514c7332edd8d59756ff7ca6", null ],
     [ "is_model_initialized", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a2902dc0ab6801565909137e72fd1f24a", null ],
     [ "isInitialized", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ad2f092a3ad436e555199eba325333b0b", null ],

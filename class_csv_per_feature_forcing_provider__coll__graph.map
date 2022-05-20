@@ -1,21 +1,8 @@
 <map id="CsvPerFeatureForcingProvider" name="CsvPerFeatureForcingProvider">
-<area shape="rect" id="node1" title="Forcing class providing time&#45;series precipiation forcing data to the model." alt="" coords="623,995,842,1453"/>
-<area shape="rect" id="node2" href="$classdata__access_1_1_generic_data_provider.html" title=" " alt="" coords="45,818,220,910"/>
-<area shape="rect" id="node3" href="$classdata__access_1_1_data_provider.html" title=" " alt="" coords="5,447,260,671"/>
-<area shape="rect" id="node4" href="$classdata__access_1_1_data_provider.html" title=" " alt="" coords="37,145,228,369"/>
-<area shape="rect" id="node5" title=" " alt="" coords="244,811,392,917"/>
-<area shape="rect" id="node6" title=" " alt="" coords="477,520,556,597"/>
-<area shape="rect" id="node11" title=" " alt="" coords="739,825,899,903"/>
-<area shape="rect" id="node13" title=" " alt="" coords="580,811,715,917"/>
-<area shape="rect" id="node15" title=" " alt="" coords="924,811,1059,917"/>
-<area shape="rect" id="node7" title=" " alt="" coords="463,211,587,303"/>
-<area shape="rect" id="node8" title=" " alt="" coords="314,520,431,597"/>
-<area shape="rect" id="node9" title=" " alt="" coords="615,219,653,296"/>
-<area shape="rect" id="node14" title=" " alt="" coords="611,513,745,605"/>
-<area shape="rect" id="node10" title=" " alt="" coords="767,5,805,83"/>
-<area shape="rect" id="node12" title=" " alt="" coords="850,219,962,296"/>
-<area shape="rect" id="node19" title=" " alt="" coords="1169,219,1307,296"/>
-<area shape="rect" id="node16" title=" " alt="" coords="955,520,1097,597"/>
-<area shape="rect" id="node17" title=" " alt="" coords="1139,702,1279,779"/>
-<area shape="rect" id="node18" title=" " alt="" coords="1285,695,1428,787"/>
+<area shape="rect" id="node1" title="Forcing class providing time&#45;series precipiation forcing data to the model." alt="" coords="122,735,341,1311"/>
+<area shape="rect" id="node2" href="$classdata__access_1_1_generic_data_provider.html" title=" " alt="" coords="69,580,244,672"/>
+<area shape="rect" id="node3" href="$classdata__access_1_1_data_provider.html" title=" " alt="" coords="5,307,260,531"/>
+<area shape="rect" id="node4" href="$classdata__access_1_1_data_provider.html" title=" " alt="" coords="37,5,228,229"/>
+<area shape="rect" id="node5" title=" " alt="" coords="299,587,377,665"/>
+<area shape="rect" id="node6" title=" " alt="" coords="284,373,408,465"/>
 </map>
