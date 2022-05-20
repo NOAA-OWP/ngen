@@ -15,6 +15,8 @@
 
 #include <netcdf>
 
+#include "AorcForcing.hpp"
+
 using namespace netCDF;
 using namespace netCDF::exceptions;
 
@@ -43,10 +45,42 @@ namespace data_access
             //get the listing of all variables
             auto var_set = nc_file->getVars();
 
-            // copy the variables names into the vector for easy use
+            // populate the ncvar and units caches...
             std::for_each(var_set.begin(), var_set.end(), [&](const auto& element)
             {
-                    variable_names.push_back(element.first);
+                std::string var_name = element.first;
+                auto ncvar = nc_file->getVar(var_name);
+                variable_names.push_back(var_name);
+                ncvar_cache[var_name] = ncvar;
+
+                std::string native_units;
+                try
+                {
+                    auto units_att = ncvar.getAtt("units");
+                    if ( units_att.isNull() )
+                    {
+                        native_units = "";
+                    }
+                    else
+                    {
+                        units_att.getValues(native_units);
+                    }
+                }
+                catch(...)
+                {
+                    native_units = "";
+                }
+
+                auto wkf = data_access::WellKnownFields.find(var_name);
+                if(wkf != data_access::WellKnownFields.end()){
+                    native_units = native_units.empty() ? std::get<1>(wkf->second) : native_units;
+                    std::string can_name = std::get<0>(wkf->second); // the CSDMS name
+                    variable_names.push_back(can_name);
+                    ncvar_cache[can_name] = ncvar;
+                    units_cache[can_name] = native_units;
+                }
+
+                units_cache[var_name] = native_units;
             });
 
             // read the variable ids
@@ -104,69 +138,81 @@ namespace data_access
             time_var.getVar(start, count, &raw_time[0]);
 
             // read the meta data to get the time_unit
-            auto time_unit_att = time_var.getAtt("units");
+            // if absent, assume seconds
+            double time_scale_factor = 1;
+            time_unit = TIME_SECONDS;
+            try {
+                auto time_unit_att = time_var.getAtt("units");
 
-            // if time att is not encoded 
-            // TODO determine how this should be handled
-            std::string time_unit_str;
-            double time_scale_factor;     
+                // if time att is not encoded 
+                // TODO determine how this should be handled
+                std::string time_unit_str;
 
-            if ( time_unit_att.isNull() )
-            {
-                time_unit = TIME_SECONDS;
-                time_scale_factor = 1;
-            }
-            else
-            {  
-                time_unit_att.getValues(time_unit_str);
-            }
+                if ( time_unit_att.isNull() )
+                {
+                    log_stream << "Warning using defualt time units\n";
+                }
+                else
+                {  
+                    time_unit_att.getValues(time_unit_str);
+                }
 
-            // set time unit and scale factor
-            if ( time_unit_str == "h" || time_unit_str == "hours ")
-            {
-                time_unit = TIME_HOURS;
-                time_scale_factor = 3600;
-            }
-            else if ( time_unit_str == "m" || time_unit_str == "minutes" )
-            {
+                // set time unit and scale factor
+                if ( time_unit_str == "h" || time_unit_str == "hours ")
+                {
+                    time_unit = TIME_HOURS;
+                    time_scale_factor = 3600;
+                }
+                else if ( time_unit_str == "m" || time_unit_str == "minutes" )
+                {
                     time_unit = TIME_MINUETS;
                     time_scale_factor = 60;
-            }
-            else if ( time_unit_str ==  "s" || time_unit_str == "seconds" )
-            {
+                }
+                else if ( time_unit_str ==  "s" || time_unit_str == "seconds" )
+                {
                     time_unit = TIME_SECONDS;
                     time_scale_factor = 1;
-            }
-            else if ( time_unit_str ==  "ms" || time_unit_str == "milliseconds" )
-            {
+                }
+                else if ( time_unit_str ==  "ms" || time_unit_str == "milliseconds" )
+                {
                     time_unit = TIME_MILLISECONDS;
                     time_scale_factor = .001;
-            }
-            else if ( time_unit_str ==  "us" || time_unit_str == "microseconds" )
-            {
+                }
+                else if ( time_unit_str ==  "us" || time_unit_str == "microseconds" )
+                {
                     time_unit = TIME_MICROSECONDS;
                     time_scale_factor = .000001;
+                }
+                else if ( time_unit_str ==  "ns" || time_unit_str == "nanoseconds" )
+                {
+                    log_stream << "Warning using defualt time units\n";
+                }
             }
-            else if ( time_unit_str ==  "ns" || time_unit_str == "nanoseconds" )
-            {
-                    time_unit = TIME_SECONDS;
-                    time_scale_factor = .000000001;
+            catch(const netCDF::exceptions::NcException& e){
+                std::cerr<<e.what()<<std::endl;
+                log_stream << "Warning using defualt time units\n";
             }
+            assert(time_scale_factor != 0); // This should not happen.
 
-            // read the meta data to get the epoc start
-            auto epoc_att = time_var.getAtt("epoc_start");
-            std::string epoc_start_str;
+            std::string epoc_start_str = "01/01/1970 00:00:00";
+            try {
+                // read the meta data to get the epoc start
+                auto epoc_att = time_var.getAtt("epoc_start");
 
-            if ( epoc_att.isNull() )
-            {
-                epoc_start_str = "01/01/1970 00:00:00";
+                if ( epoc_att.isNull() )
+                {
+                    log_stream << "Warning using defualt epoc string\n";
+                }
+                else
+                {  
+                    epoc_att.getValues(epoc_start_str);
+                }
+            }
+            catch(const netCDF::exceptions::NcException& e) {
+                std::cerr<<e.what()<<std::endl;
                 log_stream << "Warning using defualt epoc string\n";
             }
-            else
-            {  
-                epoc_att.getValues(epoc_start_str);
-            }
-
+            
             std::tm tm{};
             std::stringstream s(epoc_start_str);
             s >> std::get_time(&tm, "%F %R");
@@ -301,26 +347,9 @@ namespace data_access
 
             double rvalue = 0.0;
 
-            auto ncvar = nc_file->getVar(selector.get_variable_name());
+            auto ncvar = get_ncvar(selector.get_variable_name());
 
-            std::string native_units;
-            
-            try
-            {
-                auto units_att = ncvar.getAtt("units");
-                if ( units_att.isNull() )
-                {
-                    native_units = "unknown";      
-                }
-                else
-                {
-                    units_att.getValues(native_units);
-                }
-            }
-            catch(...)
-            {
-                native_units = "unknown";
-            }
+            std::string native_units = get_ncvar_units(selector.get_variable_name());
 
             auto read_len = idx2 - idx1 + 1;
             count.push_back(read_len);
@@ -403,6 +432,27 @@ namespace data_access
 
 
         std::shared_ptr<NcFile> nc_file;
+
+        std::map<std::string,netCDF::NcVar> ncvar_cache = {};
+        std::map<std::string,std::string> units_cache = {};
+
+        const netCDF::NcVar& get_ncvar(const std::string& name){
+            auto cache_hit = ncvar_cache.find(name);
+            if(cache_hit != ncvar_cache.end()){
+                return cache_hit->second;
+            }
+
+            throw std::logic_error("Got request for variable " + name + " but it was not found in the cache. This should not happen." + SOURCE_LOC);
+        }
+
+        const std::string& get_ncvar_units(const std::string& name){
+            auto cache_hit = units_cache.find(name);
+            if(cache_hit != units_cache.end()){
+                return cache_hit->second;
+            }
+
+            throw std::logic_error("Got units request for variable " + name + " but it was not found in the cache. This should not happen." + SOURCE_LOC);
+        }
 
     };
 }
