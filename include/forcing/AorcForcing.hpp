@@ -14,6 +14,8 @@
 #define CSDMS_STD_NAME_WIND_V_Y "land_surface_wind__y_component_of_velocity"
 #define NGEN_STD_NAME_SPECIFIC_HUMIDITY "atmosphere_air_water~vapor__relative_saturation" // This is not present in standard names, use this for now... may change!
 
+#include <map>
+
 using namespace std;
 
 /**
@@ -60,5 +62,28 @@ struct AORC_data
   double VGRD_10maboveground_meters_per_second; //V-Component of Wind (m/s)
 };
 
+namespace data_access {
+
+    const std::map<std::string, std::tuple<std::string, std::string>> WellKnownFields = {
+        {"precip_rate", { CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, "mm s^-1" } }, 
+        {"APCP_surface", { CSDMS_STD_NAME_RAIN_VOLUME_FLUX, "kg m^-2" } }, // Especially this one, is it correct? 
+        {"DLWRF_surface", { CSDMS_STD_NAME_SOLAR_LONGWAVE, "W m-2" } }, 
+        {"DSWRF_surface", { CSDMS_STD_NAME_SOLAR_SHORTWAVE, "W m-2" } }, 
+        {"PRES_surface", { CSDMS_STD_NAME_SURFACE_AIR_PRESSURE, "Pa" } }, 
+        {"SPFH_2maboveground", { NGEN_STD_NAME_SPECIFIC_HUMIDITY, "kg kg-1" } }, 
+        {"TMP_2maboveground", { CSDMS_STD_NAME_SURFACE_TEMP, "K" } }, 
+        {"UGRD_10maboveground", { CSDMS_STD_NAME_WIND_U_X, "m s-1" } }, 
+        {"VGRD_10maboveground", { CSDMS_STD_NAME_WIND_V_Y, "m s-1" } }, 
+        {"RAINRATE", { CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE , "mm s^-1" } }, 
+        {"T2D", { CSDMS_STD_NAME_SURFACE_TEMP, "K" } }, 
+        {"Q2D", { NGEN_STD_NAME_SPECIFIC_HUMIDITY, "kg kg-1" } }, 
+        {"U2D", { CSDMS_STD_NAME_WIND_U_X, "m s-1" } }, 
+        {"V2D", { CSDMS_STD_NAME_WIND_V_Y, "m s-1" } }, 
+        {"PSFC", { CSDMS_STD_NAME_SURFACE_AIR_PRESSURE, "Pa" } }, 
+        {"SWDOWN", { CSDMS_STD_NAME_SOLAR_SHORTWAVE, "W m-2" } }, 
+        {"LWDOWN", { CSDMS_STD_NAME_SOLAR_LONGWAVE, "W m-2" } }
+    };
+
+}
 
 #endif // NGEN_AORCFORCING_H
