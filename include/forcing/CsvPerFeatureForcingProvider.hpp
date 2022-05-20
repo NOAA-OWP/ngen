@@ -21,7 +21,6 @@
 #include <exception>
 #include <UnitsHelper.hpp>
 
-
 /**
  * @brief Forcing class providing time-series precipiation forcing data to the model.
  */
@@ -227,27 +226,6 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
 
     private:
 
-    // This map may be applicable to well-known netCDF formats as well?
-    map<std::string, std::tuple<std::string, std::string>> well_known_fields = {
-        {"precip_rate", { CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, "mm s^-1" } }, 
-        {"APCP_surface", { CSDMS_STD_NAME_RAIN_VOLUME_FLUX, "kg m^-2" } }, // Especially this one, is it correct? 
-        {"DLWRF_surface", { CSDMS_STD_NAME_SOLAR_LONGWAVE, "W m-2" } }, 
-        {"DSWRF_surface", { CSDMS_STD_NAME_SOLAR_SHORTWAVE, "W m-2" } }, 
-        {"PRES_surface", { CSDMS_STD_NAME_SURFACE_AIR_PRESSURE, "Pa" } }, 
-        {"SPFH_2maboveground", { NGEN_STD_NAME_SPECIFIC_HUMIDITY, "kg kg-1" } }, 
-        {"TMP_2maboveground", { CSDMS_STD_NAME_SURFACE_TEMP, "K" } }, 
-        {"UGRD_10maboveground", { CSDMS_STD_NAME_WIND_U_X, "m s-1" } }, 
-        {"VGRD_10maboveground", { CSDMS_STD_NAME_WIND_V_Y, "m s-1" } }, 
-        {"RAINRATE", { CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE , "mm s^-1" } }, 
-        {"T2D", { CSDMS_STD_NAME_SURFACE_TEMP, "K" } }, 
-        {"Q2D", { NGEN_STD_NAME_SPECIFIC_HUMIDITY, "kg kg-1" } }, 
-        {"U2D", { CSDMS_STD_NAME_WIND_U_X, "m s-1" } }, 
-        {"V2D", { CSDMS_STD_NAME_WIND_V_Y, "m s-1" } }, 
-        {"PSFC", { CSDMS_STD_NAME_SURFACE_AIR_PRESSURE, "Pa" } }, 
-        {"SWDOWN", { CSDMS_STD_NAME_SOLAR_SHORTWAVE, "W m-2" } }, 
-        {"LWDOWN", { CSDMS_STD_NAME_SOLAR_LONGWAVE, "W m-2" } }
-    };
-
     /**
      * @brief Checks forcing vector index bounds and adjusts index if out of vector bounds
      * /// \todo: Bounds checking is based on precipitation vector. Consider potential for vectors of different sizes and indices.
@@ -286,8 +264,8 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
         }
 
         std::string can_name = name;
-        if(well_known_fields.count(can_name) > 0){
-            auto t = well_known_fields[can_name];
+        if(data_access::WellKnownFields.count(can_name) > 0){
+            auto t = data_access::WellKnownFields.find(can_name)->second;
             can_name = std::get<0>(t);
         }
 
@@ -329,11 +307,12 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
 
                 //TODO: parse units in parens and/or square brackets?
 
-                if(well_known_fields.count(var_name) > 0){
-                    units = units.empty() ? std::get<1>(well_known_fields[var_name]) : units;
+                auto wkf = data_access::WellKnownFields.find(var_name);
+                if(wkf != data_access::WellKnownFields.end()){
+                    units = units.empty() ? std::get<1>(wkf->second) : units;
                     available_forcings.push_back(var_name); // Allow lookup by non-canonical name
                     available_forcings_units[var_name] = units; // Allow lookup of units by non-canonical name
-                    var_name = std::get<0>(well_known_fields[var_name]); // Use the CSDMS name from here on
+                    var_name = std::get<0>(wkf->second); // Use the CSDMS name from here on
                 }
 
                 forcing_vectors[var_name] = {};
