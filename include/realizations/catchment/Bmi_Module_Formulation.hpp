@@ -1117,8 +1117,8 @@ namespace realization {
                                                                            varItemSize);
                 if (varItemSize != get_bmi_model()->GetVarNbytes(var_name)) {
                     //more than a single value needed for var_name
-                    auto values = provider->get_values(var_map_alias, model_epoch_time, t_delta,
-                                                   get_bmi_model()->GetVarUnits(var_name));
+                    auto values = provider->get_values(CatchmentAggrDataSelector("",var_map_alias, model_epoch_time, t_delta,
+                                                   get_bmi_model()->GetVarUnits(var_name)));
                     //need to marshal data types to the reciever as well
                     //this could be done a little more elegantly if the provider interface were
                     //"type aware", but for now, this will do (but requires yet another copy)
@@ -1126,8 +1126,8 @@ namespace realization {
 
                 } else {
                     //scalar value
-                    double value = provider->get_value(var_map_alias, model_epoch_time, t_delta,
-                                                    get_bmi_model()->GetVarUnits(var_name));
+                    double value = provider->get_value(CatchmentAggrDataSelector("",var_map_alias, model_epoch_time, t_delta,
+                                                   get_bmi_model()->GetVarUnits(var_name)));
                     value_ptr = get_value_as_type(type, value);      
                 }
                 get_bmi_model()->SetValue(var_name, value_ptr.get());
