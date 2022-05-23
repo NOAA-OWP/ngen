@@ -300,6 +300,11 @@ class Forcing : public data_access::GenericDataProvider
         return value;
     }
 
+    virtual std::vector<double> get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override
+    {
+        return std::vector<double>(1, get_value(selector, m));
+    }
+
     /**
      * Get the current value of a forcing param identified by its name.
      *
