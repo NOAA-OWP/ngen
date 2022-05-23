@@ -31,7 +31,7 @@ protected:
         return formulation.get_bmi_main_output_var();
     }
 
-    static const std::vector<std::shared_ptr<forcing::OptionalWrappedProvider>> &get_friend_deferred_providers(
+    static const std::vector<std::shared_ptr<data_access::OptionalWrappedProvider>> &get_friend_deferred_providers(
             const Bmi_Multi_Formulation& formulation)
     {
         return formulation.deferredProviders;
@@ -52,7 +52,8 @@ protected:
     template <class N, class M>
     static std::vector<double> get_friend_nested_var_values(const Bmi_Multi_Formulation& formulation, const int mod_index,
                                          const std::string& var_name) {
-        std::shared_ptr<N> nested = std::static_pointer_cast<N>( std::static_pointer_cast<M>(formulation.modules[mod_index])->get_bmi_model());
+        std::shared_ptr<M> module_formulation = std::static_pointer_cast<M>(formulation.modules[mod_index]);
+        std::shared_ptr<N> nested = std::static_pointer_cast<N>( module_formulation->get_bmi_model());
         //return (*nested).template GetValue<double>(var_name);
         return models::bmi::GetValue<double>(*nested.get(), var_name);
     }

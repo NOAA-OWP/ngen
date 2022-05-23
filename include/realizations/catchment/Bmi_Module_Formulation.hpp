@@ -9,7 +9,7 @@
 #include "WrappedForcingProvider.hpp"
 #include "Bmi_C_Adapter.hpp"
 #include <AorcForcing.hpp>
-#include <ForcingProvider.hpp>
+#include <DataProvider.hpp>
 #include <UnitsHelper.hpp>
 #include "bmi_utilities.hpp"
 
@@ -384,8 +384,13 @@ namespace realization {
          * @throws std::out_of_range If data for the time period is not available.
          * @throws std::runtime_error output_name is not one of the available outputs of this provider instance.
          */
-        std::vector<double> get_values(const std::string &output_name, const time_t &init_time, const long &duration_s,
-                                 const std::string &output_units) override{
+        std::vector<double> get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m=SUM) override
+        {
+            std::string output_name = selector.get_variable_name();
+            time_t init_time = selector.get_init_time();
+            long duration_s = selector.get_duration_secs();
+            std::string output_units = selector.get_output_units();
+
             // First make sure this is an available output
             const std::vector<std::string> forcing_outputs = get_available_forcing_outputs();
             if (std::find(forcing_outputs.begin(), forcing_outputs.end(), output_name) == forcing_outputs.end()) {

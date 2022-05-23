@@ -383,6 +383,12 @@ namespace data_access
             return rvalue;
         }
 
+        virtual std::vector<double> get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override
+        {
+            return std::vector<double>(1, get_value(selector, m));
+        }
+
+
         private:
 
         std::vector<std::string> variable_names;

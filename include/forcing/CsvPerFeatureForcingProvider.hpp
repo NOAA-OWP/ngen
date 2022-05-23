@@ -170,6 +170,12 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
         }
     }
 
+    virtual std::vector<double> get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override
+    {
+        return std::vector<double>(1, get_value(selector, m));
+    }
+
+
     /**
      * Get whether a param's value is an aggregate sum over the entire time step.
      *
