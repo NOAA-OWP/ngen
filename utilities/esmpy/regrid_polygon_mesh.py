@@ -1,0 +1,766 @@
+import numpy as np
+import ESMF
+
+import numpy
+import netCDF4 as nc4
+import os
+import sys
+from shapely.geometry import Point, Polygon
+
+import ESMF.util.helpers as helpers
+import ESMF.api.constants as constants
+
+import glob
+from pathlib import Path
+
+from os import listdir
+from os.path import isfile, join
+import argparse
+import pandas as pd
+from  multiprocessing import Process, Lock
+import multiprocessing
+import time
+import math
+
+def get_cat_id(path):
+    """
+    Extract the id from the file path
+    """
+    path = Path(path)
+    name = path.stem
+    id = name.split('_')[0]
+    return id
+
+def mesh_create_polygon(infile, cat_id):
+    """
+    Create a ESMF mesh from the infile that contains the coordinates of the polygon
+    corresponding to a catchment
+    """
+    # Read in polygon coordinates
+    sep = " "
+    filename = infile
+    node_id = []
+    lons = []
+    lats = []
+    lons_lats = []
+    poly_coords = []
+    with open(filename) as f:
+        next(f)
+        for x in f:
+            node_id.append(int(x.split(' ')[0]))
+            lons.append(float(x.split(' ')[1]))
+            lats.append(float(x.split(' ')[2]))
+            lons_lats.append(float(x.split(' ')[1]))
+            lons_lats.append(float(x.split(' ')[2]))
+            thistuple = (float(x.split(' ')[1]), float(x.split(' ')[2]))
+            poly_coords.append(thistuple)
+    f.close()
+
+    # This part of the codes correct the error present in the hydrofabric data for the
+    # two listed catchments that contains zero angle and clockwise ordering that cause meshing error
+    #FIXME This can be removed for hydrofabric without error or can be used as a validation check
+    #for a new hydrofabric
+    if cat_id == 'cat-39990' or cat_id == 'cat-39965':
+        # check that the angle is not zero
+        index = []
+        for i in range(len(lons)-2):
+            x0 = lons[i]
+            y0 = lats[i]
+            x1 = lons[i+1]
+            y1 = lats[i+1]
+            x2 = lons[i+2]
+            y2 = lats[i+2]
+            vec1x = x0 - x1
+            vec1y = y0 - y1
+            vec2x = x2 - x1
+            vec2y = y2 - y1
+            dot_prod = vec1x*vec2x + vec1y*vec2y
+            abs_vec1 = math.sqrt(vec1x**2 + vec1y**2)
+            abs_vec2 = math.sqrt(vec2x**2 + vec2y**2)
+            try:
+                norm_dot_prod = dot_prod / (abs_vec1 * abs_vec2)
+                angle = math.acos(norm_dot_prod)
+                if (abs(norm_dot_prod-1.0) < 10e-6):
+                    index.append(i+1)    # (i+1)th element is the apex of the angle
+            except ZeroDivisionError:
+                raise(ZeroDivisionError("ZeroDivisionError, abs_vec1, abs_vec2 = {}, {}".format(abs_vec1, abs_vec2)))
+
+        #remove the vertices associated with zero angle
+        idx = index[0]
+        idx2 = idx * 2
+        del node_id[idx]
+        # keep the node_id contiguous
+        for i in range(len(node_id)):
+            if i >= idx:
+                node_id[i] = node_id[i] - 1
+        del lons[idx]
+        del lats[idx]
+        del lons_lats[idx2]
+        del lons_lats[idx2]  # after the first del action, element at idx2+1 shift to idx2
+        del poly_coords[idx]
+        # Handle the clockwise ordering of polygon vertices
+        node_id.reverse()
+        lons.reverse()
+        lats.reverse()
+        lons_lats.reverse()
+        poly_coords.reverse()
+
+    #add the center of the polygon to the nodes
+    elem_id = []
+    elem_id.append(int(0))
+    elemId = np.array(elem_id)
+
+    #two parametric dimensions, and two spatial dimensions
+    mesh = ESMF.Mesh(parametric_dim=2, spatial_dim=2, coord_sys=ESMF.CoordSys.SPH_DEG)
+    
+    #number of nodes equal to the number of vortices of the polygon
+    num_node = len(node_id)
+    num_elem = 1
+    nodeId = np.array(node_id)
+
+    #find max and min of the lons and lats of the polygon
+    lons_array = np.array(lons)
+    lats_array = np.array(lats)
+    lons_max = np.max(lons_array)
+    lons_min = np.min(lons_array)
+    lats_max = np.max(lats_array)
+    lats_min = np.min(lats_array)
+
+    nodeCoord = np.array(lons_lats)
+    polygon = Polygon(poly_coords)
+    nodeOwner = np.zeros(num_node)
+
+    #build up the polygon by forming connection between successive vertices
+    #no need to connect the last vertex with the first, otherwise it will give an error
+    elem_conn = []
+    elem_coord = []
+    i = 0
+    for nid in node_id:
+        elem_conn1 = node_id[i]
+        elem_conn.append(elem_conn1)
+        i += 1
+
+    elem_coordx = np.sum(lons_array)/num_node
+    elem_coordy = np.sum(lats_array)/num_node
+    elem_coord.append(elem_coordx)
+    elem_coord.append(elem_coordy)
+
+    elemConn = np.array(elem_conn)
+    elemCoord = np.array(elem_coord)
+
+    elem_type = []
+    elem_type.append(num_node)
+
+    #for polygon with vertices greater than 4, elemType is a numerical value
+    elemType=np.array(elem_type)
+
+    mesh.add_nodes(num_node,nodeId,nodeCoord,nodeOwner)
+
+    mesh.add_elements(num_elem,elemId,elemType,elemConn, element_coords=elemCoord)
+
+    return mesh, lons_min, lons_max, lats_min, lats_max, polygon
+
+
+def get_cat_geometry(aorcfile, lons_min, lons_max, lats_min, lats_max):
+    """
+    This function takes input from aorc netcdf file and the polygon boundary to set the limit
+    for the rectangle that encompasses the polygon
+    """
+
+    ds = nc4.Dataset(aorcfile)
+
+    lons_first = ds['longitude'][0]
+    lons_2nd = ds['longitude'][1]
+    lons_delta = lons_2nd - lons_first
+    lats_first = ds['latitude'][0]
+    lats_2nd = ds['latitude'][1]
+    lats_delta = lats_2nd - lats_first
+
+    #calculate local grid
+    lons_min_grid = (lons_min - lons_first)/lons_delta
+    #to fully encompass the polygon, we need to do the round down operation at lower boundary
+    lons_min_grid = int(lons_min_grid)
+    lons_max_grid = (lons_max - lons_first)/lons_delta
+    #to fully encompass the polygon, we need to do the round up operation at the upper boundary
+    lons_max_grid = int(lons_max_grid) + 2    # lons_max_grid = int(lons_max_grid) + 1 causes an out of range error
+    lats_min_grid = (lats_min - lats_first)/lats_delta
+    #to fully encompass the polygon, we need to do the round down operation at lower boundary
+    lats_min_grid = int(lats_min_grid)
+    lats_max_grid = (lats_max - lats_first)/lats_delta
+    #to fully encompass the polygon, we need to do the round up operation at upper boundary
+    lats_max_grid = int(lats_max_grid) + 2    # lats_max_grid = int(lats_max_grid) + 1 causes an out of range error
+    ds.close()
+
+    return lats_min_grid, lats_max_grid, lats_delta, lats_first, lons_min_grid, lons_max_grid, lons_delta, lons_first
+
+def read_sub_netcdf(datafile, var_name_list, var_value_list, lons_min_grid, lons_max_grid, lats_min_grid, lats_max_grid, lons_delta, lats_delta, polygon):
+    """
+    Extract a sebset netcdf from the large original netcdf file
+    """
+    #TODO it might be possible to read huc01 basin into memory as an intermediate sub-region to speed up 
+    # the reading process. read_sub_netcdf is currently the slowest process as the input netcdf file is too large
+    ds = nc4.Dataset(datafile)
+
+    i = 0
+    for var_name in var_name_list:
+        if var_name == 'time':
+            var_value = ds.variables['time'][0]
+            var_value_list[0].append(var_value)
+        elif var_name == 'latitude':
+            var_value = ds.variables[var_name][lats_min_grid:lats_max_grid]
+            var_value_list[1].append(var_value)
+        elif var_name == 'longitude':
+            var_value = ds.variables[var_name][lons_min_grid:lons_max_grid]
+            var_value_list[2].append(var_value)
+        else:
+            var_value = ds.variables[var_name][0, lats_min_grid:lats_max_grid, lons_min_grid:lons_max_grid]
+            var_value_list[i].append(var_value)
+        i += 1
+
+    lons_first = ds['longitude'][0]
+    lats_first = ds['latitude'][0]
+    nlons = lons_max_grid - lons_min_grid
+    nlats = lats_max_grid - lats_min_grid
+    #TODO a mask may possibly be used to calculate average value of properties to obtain more accurate average property values
+    landmask = numpy.zeros([nlats, nlons], dtype='int')
+
+    Var_array = []
+    for var_name in var_name_list:
+        Var_array.append([])
+
+    for i in range(len(var_name_list)):
+        Var_array[i] = numpy.array(var_value_list[i])
+
+    return var_value_list, Var_array, nlats, nlons
+
+
+def write_sub_netcdf(filename_out, var_name_list, var_value_list, Var_array, nlats, nlons):
+    """
+    Write the extracted data to a netcdf file per catchment
+    """
+    ntime = Var_array[0].size
+
+    ncfile_out = nc4.Dataset(filename_out, 'w', format='NETCDF4')
+    ncfile_out.createDimension('time', None)
+    ncfile_out.createDimension('lat', nlats)
+    ncfile_out.createDimension('lon', nlons)
+
+
+    time = Var_array[0]
+    lat = Var_array[1][0]
+    lon = Var_array[2][0]
+    APCP_surface = Var_array[3]
+    PRES_surface = Var_array[4]
+    DLWRF_surface = Var_array[5]
+    DSWRF_surface = Var_array[6]
+    SPFH_2maboveground = Var_array[7]
+    TMP_2maboveground = Var_array[8]
+    UGRD_10maboveground = Var_array[9]
+    VGRD_10maboveground = Var_array[10]
+
+    time_out = ncfile_out.createVariable('time', 'double', ('time',), fill_value=-99999)
+    lat_out = ncfile_out.createVariable('lat', 'double', ('lat',), fill_value=-99999)
+    lon_out = ncfile_out.createVariable('lon', 'double', ('lon',), fill_value=-99999)
+    #landmask_out = ncfile_out.createVariable('landmask', 'i', ('time', 'lat', 'lon',), fill_value=-99999)
+    APCP_surface_out = ncfile_out.createVariable('APCP_surface', 'f4', ('time', 'lat', 'lon',), fill_value=-99999)
+    PRES_surface_out = ncfile_out.createVariable('PRES_surface', 'f4', ('time', 'lat', 'lon',), fill_value=-99999)
+    DLWRF_surface_out = ncfile_out.createVariable('DLWRF_surface', 'f4', ('time', 'lat', 'lon',), fill_value=-99999)
+    DSWRF_surface_out = ncfile_out.createVariable('DSWRF_surface', 'f4', ('time', 'lat', 'lon',), fill_value=-99999)
+    SPFH_2maboveground_out = ncfile_out.createVariable('SPFH_2maboveground', 'f4', ('time', 'lat', 'lon',), fill_value=-99999)
+    TMP_2maboveground_out = ncfile_out.createVariable('TMP_2maboveground', 'f4', ('time', 'lat', 'lon',), fill_value=-99999)
+    UGRD_10maboveground_out = ncfile_out.createVariable('UGRD_10maboveground', 'f4', ('time', 'lat', 'lon',), fill_value=-99999)
+    VGRD_10maboveground_out = ncfile_out.createVariable('VGRD_10maboveground', 'f4', ('time', 'lat', 'lon',), fill_value=-99999)
+    #APCP_surface_out[:,:,:] = Var_array[3]
+
+    # Set up attributes
+    setattr(time_out, 'units', 'seconds since 1970-01-01 00:00:00.0 0:00')
+    setattr(time_out, 'missing_value', -99999)
+    setattr(time_out, 'time_step_setting', 'auto')
+    setattr(lat_out, 'units', 'degrees_north')
+    setattr(lon_out, 'units', 'degrees_east')
+    #setattr(landmask_out, 'description', '1=in polygon 0=outside polygon')
+    setattr(APCP_surface_out, 'units', 'kg/m^2')
+    setattr(APCP_surface_out, 'missing_value', -99999)
+    setattr(APCP_surface_out, 'long_name', 'Total Precipitation')
+    setattr(PRES_surface_out, 'units', 'Pa')
+    setattr(PRES_surface_out, 'missing_value', -99999)
+    setattr(PRES_surface_out, 'long_name', 'Pressure')
+    setattr(DLWRF_surface_out, 'units', 'W/m^2')
+    setattr(DLWRF_surface_out, 'missing_value', -99999)
+    setattr(DLWRF_surface_out, 'long_name', 'Downward Long-Wave Rad. Flux')
+    setattr(DSWRF_surface_out, 'units', 'W/m^2')
+    setattr(DSWRF_surface_out, 'missing_value', -99999)
+    setattr(DSWRF_surface_out, 'long_name', 'Downward Short-Wave Rad. Flux')
+    setattr(SPFH_2maboveground_out, 'units', 'kg/kg')
+    setattr(SPFH_2maboveground_out, 'missing_value', -99999)
+    setattr(SPFH_2maboveground_out, 'long_name', 'Specific Humidity')
+    setattr(TMP_2maboveground_out, 'units', 'K')
+    setattr(TMP_2maboveground_out, 'missing_value', -99999)
+    setattr(TMP_2maboveground_out, 'long_name', 'Temperature')
+    setattr(UGRD_10maboveground_out, 'units', 'm/s')
+    setattr(UGRD_10maboveground_out, 'missing_value', -99999)
+    setattr(UGRD_10maboveground_out, 'long_name', 'U-Component of Wind')
+    setattr(VGRD_10maboveground_out, 'units', 'm/s')
+    setattr(VGRD_10maboveground_out, 'missing_value', -99999)
+    setattr(VGRD_10maboveground_out, 'long_name', 'V-Component of Wind')
+
+    time_out[:] = time
+    lat_out[:] = lat
+    lon_out[:] = lon
+    #landmask_out[:,:] = landmask[:,:]
+    APCP_surface_out[:,:,:] = APCP_surface[:,:,:]
+    PRES_surface_out[:,:,:] = PRES_surface[:,:,:]
+    DLWRF_surface_out[:,:,:] = DLWRF_surface[:,:,:]
+    DSWRF_surface_out[:,:,:] = DSWRF_surface[:,:,:]
+    SPFH_2maboveground_out[:,:,:] = SPFH_2maboveground[:,:,:]
+    TMP_2maboveground_out[:,:,:] = TMP_2maboveground[:,:,:]
+    UGRD_10maboveground_out[:,:,:] = UGRD_10maboveground[:,:,:]
+    VGRD_10maboveground_out[:,:,:] = VGRD_10maboveground[:,:,:]
+    ncfile_out.close()
+
+def grid_to_mesh_regrid(cat_id, lons_start, lats_start, lons_min, lons_max, lats_min, lats_max, polygon, esmf_outfile, mesh,
+                        lats_min_grid, lats_max_grid, lats_delta, lons_min_grid, lons_max_grid, lons_delta, iter_k):
+    """
+    Regrid a rectangular area to a polygon generated in ESMF.Mesh
+    See read_write_weight_file.py in the examples of ESMPY
+    """
+    datafile_in = join(input_root, "huc01/netcdf_files/", "AORC_"+cat_id+".nc")
+
+    # Create the source grid from memory with no periodic dimension.
+    [lat,lon] = [1,0]
+
+    # These values are obtained from the original input AORC file: AORC-OWP_2012063023z.nc4
+    #lats_start = 20.0
+    #lons_start = -130.0
+
+    lats_upper = lats_start + lats_max_grid * lats_delta
+    lats_lower = lats_start + lats_min_grid * lats_delta
+    lons_upper = lons_start + lons_max_grid * lons_delta
+    lons_lower = lons_start + lons_min_grid * lons_delta
+
+    lats  = numpy.arange(lats_lower, lats_upper, lats_delta)
+    lons = numpy.arange(lons_lower, lons_upper, lons_delta)
+    max_index = numpy.array([lons.size, lats.size])
+
+    srcgrid = ESMF.Grid(max_index, 
+                        coord_sys=ESMF.CoordSys.SPH_DEG,
+                        staggerloc=ESMF.StaggerLoc.CENTER,
+                        coord_typekind=ESMF.TypeKind.R4,
+                        num_peri_dims=0, periodic_dim=0, pole_dim=0)
+
+    gridCoordLat = srcgrid.get_coords(lat)
+    gridCoordLon = srcgrid.get_coords(lon)
+
+    lons_par = lons[srcgrid.lower_bounds[ESMF.StaggerLoc.CENTER][0]:srcgrid.upper_bounds[ESMF.StaggerLoc.CENTER][0]]
+    lats_par = lats[srcgrid.lower_bounds[ESMF.StaggerLoc.CENTER][1]:srcgrid.upper_bounds[ESMF.StaggerLoc.CENTER][1]]
+
+    # make sure to use indexing='ij' as ESMPy backend uses matrix indexing (not Cartesian)
+    lonm, latm = numpy.meshgrid(lons_par, lats_par, indexing='ij')
+
+    gridCoordLon[:] = lonm
+    gridCoordLat[:] = latm
+
+    # Create a field on the centers of the source grid with the mask applied.
+    srcfield = ESMF.Field(srcgrid, name="srcfield", staggerloc=ESMF.StaggerLoc.CENTER)
+
+    gridLon = srcfield.grid.get_coords(lon, ESMF.StaggerLoc.CENTER)
+    gridLat = srcfield.grid.get_coords(lat, ESMF.StaggerLoc.CENTER)
+
+    srcfield_tmp = srcfield.data[:,:]
+
+    dstfield = ESMF.Field(mesh, name='dstfield', meshloc=ESMF.MeshLoc.ELEMENT)
+    xctfield = ESMF.Field(mesh, name='xctfield', meshloc=ESMF.MeshLoc.ELEMENT)
+    dstfield.data[:] = 2.0
+
+    weight_file = join(input_root, "huc01/weight_files/", "weight_file_"+cat_id+".nc")
+    if iter_k == 0:
+        if os.path.exists(weight_file):
+            os.remove(weight_file)
+        else:
+            print("The weight_file does not exist")
+
+        regrid = ESMF.Regrid(srcfield, dstfield, filename=weight_file, 
+                             #regrid_method=ESMF.RegridMethod.BILINEAR, 
+                             regrid_method=ESMF.RegridMethod.PATCH,
+                             unmapped_action=ESMF.UnmappedAction.IGNORE)
+        regrid.destroy()
+
+    # process the srcfield data
+    srcfield_vars = []
+    srcfield_vars.append('APCP_surface')
+    srcfield_vars.append('DLWRF_surface')
+    srcfield_vars.append('DSWRF_surface')
+    srcfield_vars.append('PRES_surface')
+    srcfield_vars.append('SPFH_2maboveground')
+    srcfield_vars.append('TMP_2maboveground')
+    srcfield_vars.append('UGRD_10maboveground')
+    srcfield_vars.append('VGRD_10maboveground')
+
+    # read in the weight file
+    ds = nc4.Dataset(weight_file)
+
+    weight = ds['S']
+    col = ds['col']
+    row = ds['row']
+
+    ds1 = nc4.Dataset(datafile_in)
+    time = ds1.variables['time'][0]
+    with open(esmf_outfile, 'a') as wfile:
+        for m in range(1):
+            time = ds1.variables['time'][m]
+            out_data = "{},{}".format(cat_id, time)
+            for i in range(len(srcfield_vars)):
+                srcfield.read(filename=datafile_in, variable=srcfield_vars[i], timeslice=m+1)
+                srcfield_tmp = srcfield.data[:,:]
+                #ESMF matrix uses Fortran convention
+                flat_array = srcfield_tmp.flatten(order='F')
+
+                # calculate the weighted average
+                sum = 0.0
+                for k in range(len(col)):
+                    l = col[k] - 1
+                    sum += weight[k] * flat_array[l]
+                average = sum
+                if i == 0 and average < 0:    # i == 0 corresponds srcfield_vars for APCP_surface
+                    average = 0.0
+                out_data += ",{}".format(average)
+            wfile.write(out_data+'\n')
+    wfile.close()
+
+    return srcfield.data, lons_par, lats_par
+
+def csv_to_netcdf(num_catchments, num_time, date_time):
+    """
+    Convert from csv to netcdf format
+    """
+    #get the input csv file and create output netcdf file name
+    csv_infile = join(output_root, "huc01/esmf_output.csv")
+    output_path = join(output_root, "huc01/forcing/", "huc01_forcing_"+date_time+".nc")
+
+    df = pd.read_csv(csv_infile)
+    variable_names = df.columns
+
+    #make the data set
+    filename = output_path
+    filename_out = output_path
+
+    print("num_catchments = {}".format(num_catchments))
+    cat_id = numpy.zeros(num_catchments, dtype=object)
+    print("cat_id.size = {}".format(cat_id.size))
+    time = []
+
+    apcp_surface = []
+    dlwrf_surface = []
+    dswrf_surface = []
+    pres_surface = []
+    spfh_2maboveground = []
+    tmp_2maboveground = []
+    ugrd_10maboveground = []
+    vgrd_10maboveground = []
+
+    #initialize temporary list
+    apcp_tmp = []
+    dlwrf_tmp = []
+    dswrf_tmp = []
+    pres_tmp = []
+    spfh_tmp = []
+    tmp_tmp = []
+    ugrd_tmp = []
+    vgrd_tmp = []
+
+    #save data into list of list
+    df = df.reset_index()  # make sure indexes pair with number of rows
+    i = 0
+    for index, row in df.iterrows():
+        cat_id[i] = row['id']
+        if index < num_time:
+            time.append(row['time'])
+        i += 1
+        apcp_tmp.append(row['APCP_surface'])
+        dlwrf_tmp.append(row['DLWRF_surface'])
+        dswrf_tmp.append(row['DSWRF_surface'])
+        pres_tmp.append(row['PRES_surface'])
+        spfh_tmp.append(row['SPFH_2maboveground'])
+        tmp_tmp.append(row['TMP_2maboveground'])
+        ugrd_tmp.append(row['UGRD_10maboveground'])
+        vgrd_tmp.append(row['VGRD_10maboveground'])
+        #
+        apcp_surface.append(apcp_tmp)
+        dlwrf_surface.append(dlwrf_tmp)
+        dswrf_surface.append(dswrf_tmp)
+        pres_surface.append(pres_tmp)
+        spfh_2maboveground.append(spfh_tmp)
+        tmp_2maboveground.append(tmp_tmp)
+        ugrd_10maboveground.append(ugrd_tmp)
+        vgrd_10maboveground.append(vgrd_tmp)
+        apcp_tmp = []
+        dlwrf_tmp = []
+        dswrf_tmp = []
+        pres_tmp = []
+        spfh_tmp = []
+        tmp_tmp = []
+        ugrd_tmp = []
+        vgrd_tmp = []
+
+    # Convert to numpy array
+    time = numpy.array(time)
+    APCP_surface = numpy.array(apcp_surface)
+    PRES_surface = numpy.array(pres_surface)
+    DLWRF_surface = numpy.array(dlwrf_surface)
+    DSWRF_surface = numpy.array(dswrf_surface)
+    SPFH_2maboveground = numpy.array(spfh_2maboveground)
+    TMP_2maboveground = numpy.array(tmp_2maboveground)
+    UGRD_10maboveground = numpy.array(ugrd_10maboveground)
+    VGRD_10maboveground = numpy.array(vgrd_10maboveground)
+
+    # write data to netcdf files
+    filename_out = output_path
+    ncfile_out = nc4.Dataset(filename_out, 'w', format='NETCDF4')
+
+    #add the dimensions
+    time_dim = ncfile_out.createDimension('time', None)
+    catchment_id_dim = ncfile_out.createDimension('catchment-id', num_catchments)
+    string_dim =ncfile_out.createDimension('str_dim', 1)
+  
+    # create variables
+    cat_id_out = ncfile_out.createVariable('ids', 'str', ('catchment-id'), fill_value="None")
+    time_out = ncfile_out.createVariable('Time', 'double', ('time',), fill_value=-99999)
+    APCP_surface_out = ncfile_out.createVariable('RAINRATE', 'f4', ('catchment-id', 'time',), fill_value=-99999)
+    TMP_2maboveground_out = ncfile_out.createVariable('T2D', 'f4', ('catchment-id', 'time',), fill_value=-99999)
+    SPFH_2maboveground_out = ncfile_out.createVariable('Q2D', 'f4', ('catchment-id', 'time',), fill_value=-99999)
+    UGRD_10maboveground_out = ncfile_out.createVariable('U2D', 'f4', ('catchment-id', 'time',), fill_value=-99999)
+    VGRD_10maboveground_out = ncfile_out.createVariable('V2D', 'f4', ('catchment-id', 'time',), fill_value=-99999)
+    PRES_surface_out = ncfile_out.createVariable('PSFC', 'f4', ('catchment-id', 'time',), fill_value=-99999)
+    DSWRF_surface_out = ncfile_out.createVariable('SWDOWN', 'f4', ('catchment-id', 'time',), fill_value=-99999)
+    DLWRF_surface_out = ncfile_out.createVariable('LWDOWN', 'f4', ('catchment-id', 'time',), fill_value=-99999)
+
+    # Set up attributes
+    setattr(cat_id_out, 'description', 'catchment_id')
+    setattr(time_out, 'units', 'seconds since 1970-01-01 00:00:00.0 0:00')
+    setattr(time_out, 'missing_value', -99999)
+    setattr(time_out, 'time_step_setting', 'auto')
+    setattr(APCP_surface_out, 'units', 'kg/m^2')
+    setattr(APCP_surface_out, 'missing_value', -99999)
+    setattr(APCP_surface_out, 'long_name', 'Total Precipitation')
+    setattr(PRES_surface_out, 'units', 'Pa')
+    setattr(PRES_surface_out, 'missing_value', -99999)
+    setattr(PRES_surface_out, 'long_name', 'Pressure')
+    setattr(DLWRF_surface_out, 'units', 'W/m^2')
+    setattr(DLWRF_surface_out, 'missing_value', -99999)
+    setattr(DLWRF_surface_out, 'long_name', 'Downward Long-Wave Rad. Flux')
+    setattr(DSWRF_surface_out, 'units', 'W/m^2')
+    setattr(DSWRF_surface_out, 'missing_value', -99999)
+    setattr(DSWRF_surface_out, 'long_name', 'Downward Short-Wave Rad. Flux')
+    setattr(SPFH_2maboveground_out, 'units', 'kg/kg')
+    setattr(SPFH_2maboveground_out, 'missing_value', -99999)
+    setattr(SPFH_2maboveground_out, 'long_name', 'Specific Humidity')
+    setattr(TMP_2maboveground_out, 'units', 'K')
+    setattr(TMP_2maboveground_out, 'missing_value', -99999)
+    setattr(TMP_2maboveground_out, 'long_name', 'Temperature')
+    setattr(UGRD_10maboveground_out, 'units', 'm/s')
+    setattr(UGRD_10maboveground_out, 'missing_value', -99999)
+    setattr(UGRD_10maboveground_out, 'long_name', 'U-Component of Wind')
+    setattr(VGRD_10maboveground_out, 'units', 'm/s')
+    setattr(VGRD_10maboveground_out, 'missing_value', -99999)
+    setattr(VGRD_10maboveground_out, 'long_name', 'V-Component of Wind')
+
+    cat_id_out[:] = cat_id[:]
+    time_out[:] = time[:]
+    APCP_surface_out[:,:] = APCP_surface[:,:]
+    PRES_surface_out[:,:] = PRES_surface[:,:]
+    DLWRF_surface_out[:,:] = DLWRF_surface[:,:]
+    DSWRF_surface_out[:,:] = DSWRF_surface[:,:]
+    SPFH_2maboveground_out[:,:] = SPFH_2maboveground[:,:]
+    TMP_2maboveground_out[:,:] = TMP_2maboveground[:,:]
+    UGRD_10maboveground_out[:,:] = UGRD_10maboveground[:,:]
+    VGRD_10maboveground_out[:,:] = VGRD_10maboveground[:,:]
+     
+    ncfile_out.close()
+
+def process_sublist(data : dict, lock: Lock, num: int):
+    num_inputs = len(data["csv_files"])
+    input_dir = data["input_dir"]
+    datafile = data["datafile"]
+    aorcfile = datafile
+    iter_k = data["iter"]
+
+    for i in range(num_inputs):
+        #extract data
+        csv_file = data["csv_files"][i]
+        cat_poly = csv_file[:-3]
+        cat_id = cat_poly.split('_')[0]
+        pos = data["offsets"][i]
+        infile = os.path.join(input_dir, csv_file)
+
+        #create polygon mesh
+        #(mesh, nodeCoord, nodeOwner, elemType, elemConn, elemCoord, lons_min, lons_max, lats_min, lats_max, polygon) = mesh_create_polygon(infile, cat_id)
+        (mesh, lons_min, lons_max, lats_min, lats_max, polygon) = mesh_create_polygon(infile, cat_id)
+
+        #define the boundary for extract sub-netcdf data
+        lats_min_grid, lats_max_grid, lats_delta, lats_first, lons_min_grid, lons_max_grid, lons_delta, lons_first = get_cat_geometry(aorcfile,
+        lons_min, lons_max, lats_min, lats_max)
+
+        var_name_list = ['time', 'latitude', 'longitude', 'APCP_surface', 'PRES_surface', 'DLWRF_surface', 'DSWRF_surface', 'SPFH_2maboveground',
+                         'TMP_2maboveground', 'UGRD_10maboveground', 'VGRD_10maboveground']
+
+        var_value_list = []
+        for var_name in var_name_list:
+            var_value_list.append([])
+
+        #extract sub-netcdf data
+        var_value_list, Var_array, nlats, nlons = read_sub_netcdf(datafile, var_name_list, var_value_list,
+                                                                  lons_min_grid, lons_max_grid, lats_min_grid, lats_max_grid,
+                                                                  lons_delta, lats_delta, polygon)
+
+        #write to netcdf file for the cat_id
+        filename_out = join(output_root, "huc01/netcdf_files/", "AORC_"+cat_id+".nc")
+        write_sub_netcdf(filename_out, var_name_list, var_value_list, Var_array, nlats, nlons)
+
+        #perform regridding, generate weight file, and calculate average for cat_id
+        (srcfield_data, lons_par, lats_par) = grid_to_mesh_regrid(cat_id, lons_first, lats_first, lons_min, lons_max, lats_min, lats_max, polygon, esmf_outfile, mesh,
+                                                                  lats_min_grid, lats_max_grid, lats_delta, lons_min_grid, lons_max_grid, lons_delta, iter_k)
+
+
+def plot_srcfield(srcfield_data, lons_par, lats_par):
+    """
+    plot the property in colored spectrum for a sub-area
+    """
+    if ESMF.local_pet() == 0:
+        print(type(srcfield_data))
+        print(srcfield_data)
+        print(srcfield_data.T)
+        import matplotlib.pyplot as plt
+        fig = plt.figure(1, (15, 6))
+        fig.suptitle('ESMPy Grids', fontsize=14, fontweight='bold')
+
+        ax = fig.add_subplot(1, 2, 1)
+        im = ax.imshow(srcfield_data.T, vmin=0.012, vmax=0.0132, cmap='gist_ncar', aspect='auto',
+                       extent=[min(lons_par), max(lons_par), min(lats_par), max(lats_par)])
+        ax.set_xbound(lower=min(lons_par), upper=max(lons_par))
+        ax.set_ybound(lower=min(lats_par), upper=max(lats_par))
+        ax.set_xlabel("Longitude")
+        ax.set_ylabel("Latitude")
+        ax.set_title("SPFH_2maboveground")
+
+        #ax = fig.add_subplot(1, 2, 2)
+        #im = ax.imshow(dstfield.data, vmin=1, vmax=3, cmap='gist_ncar', aspect='auto',
+        #extent=[min(lons_par), max(lons_par), min(lats_par), max(lats_par)])
+        #ax.set_xlabel("Longitude")
+        #ax.set_ylabel("Latitude")
+        #ax.set_title("Regrid Solution")
+
+        fig.subplots_adjust(right=0.8)
+        cbar_ax = fig.add_axes([0.9, 0.1, 0.01, 0.8])
+        fig.colorbar(im, cax=cbar_ax)
+
+        #plt.show()
+        plt.savefig("srcfield_SPFH.png")
+        print("Finished plotting figure")
+
+
+if __name__ == '__main__':
+    #parse the input and output root directory
+    #run code with "python code_name -i /local/esmpy -o /local/esmpy"
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-i", dest="input_root", type=str, required=True, help="The input directory with csv files")
+    parser.add_argument("-o", dest="output_root", type=str, required=True, help="The output file path")
+    args = parser.parse_args()
+
+    #retrieve parsed values
+    input_root = args.input_root
+    output_root = args.output_root
+
+    #prepare to read in the pre-generated catchment geometry in polygon form
+    catfile_path = join(input_root, "huc01/polygons/", "cat-*_poly.csv")
+    cat_files = glob.glob(catfile_path)
+    print("number of catchments = {}".format(len(cat_files)))
+    cat_files.sort()
+    csv_files = []
+    i = 0
+    for path in cat_files:
+        #if i < 100:    #use for a short est
+        path = Path(path)
+        name = path.stem
+        id = name.split('_')[0]
+        csv_name = name + '.csv'
+        csv_files.append(csv_name)
+        #    i += 1
+
+    esmf_outfile = join(output_root,  "huc01/esmf_output.csv")
+    if os.path.exists(esmf_outfile):
+        os.remove(esmf_outfile)
+    else:
+        print("The esmf_outfile does not exist")
+    with open(esmf_outfile, 'w') as wfile:
+        out_header = "id,time,APCP_surface,DLWRF_surface,DSWRF_surface,PRES_surface,SPFH_2maboveground,TMP_2maboveground,UGRD_10maboveground,VGRD_10maboveground"
+        wfile.write(out_header+'\n')
+    wfile.close()
+
+    datafile_path = join(input_root, "huc01/aorc_netcdf/", "AORC-OWP_*.nc4")
+    datafiles = glob.glob(datafile_path)
+    print("number of forcing files = {}".format(len(datafiles)))
+    #process data with time ordered
+    datafiles.sort()
+    # some function only executed once at the beginning (k = 0)
+    k = 0
+    for datafile in datafiles:
+        esmf_outfile = join(output_root, "huc01/esmf_output.csv")
+        if os.path.exists(esmf_outfile):
+            os.remove(esmf_outfile)
+        else:
+            print("The esmf_outfile does not exist")
+        with open(esmf_outfile, 'w') as wfile:
+            out_header = "id,time,APCP_surface,DLWRF_surface,DSWRF_surface,PRES_surface,SPFH_2maboveground,TMP_2maboveground,UGRD_10maboveground,VGRD_10maboveground"
+            wfile.write(out_header+'\n')
+        wfile.close()
+
+        num_csv_inputs = len(csv_files)
+        num_processes = 50
+
+        #generate the data objects for child processes
+        csv_groups = np.array_split(np.array(csv_files), num_processes)
+        pos_groups = np.array_split(np.array(range(num_csv_inputs)), num_processes)
+
+        process_data = []
+        process_list = []
+        lock = Lock()
+
+        input_dir = join(input_root, "huc01/polygons")
+        for i in range(num_processes):
+            # fill the dictionary with needed at
+            data = {}
+            data["csv_files"] = csv_groups[i]
+            data["offsets"] = pos_groups[i]
+            data["input_dir"] = input_dir
+            data["datafile"] = datafile
+            data["iter"] = k
+
+            #append to the list
+            process_data.append(data)
+
+            p = Process(target=process_sublist, args=(data, lock, i))
+
+            process_list.append(p)
+
+        #start all processes
+        for p in process_list:
+            p.start()
+
+        #wait for termination
+        for p in process_list:
+            p.join()
+
+        num_catchments = len(cat_files)
+
+        #write a netcdf file every time step the same as the input file
+        ntime = 1
+
+        path = Path(datafile)
+        name = path.stem
+        date_time = name.split('.')[0]
+        date_time = date_time.split('_')[1]
+        #csv_to_netcdf(num_catchments, ntime, var_name_list, var_value_list, date_time)
+        csv_to_netcdf(num_catchments, ntime, date_time)
+        os.remove(esmf_outfile)
+        k += 1
+
