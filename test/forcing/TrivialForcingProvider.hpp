@@ -47,6 +47,11 @@ namespace data_access {
             double get_value(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override {
                 return (selector.get_variable_name() == OUTPUT_NAME_1) ? OUTPUT_VALUE_1 : 0.0;
             }
+	   
+            std::vector<double> get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override
+            {
+                return std::vector<double>(1, get_value(selector, m));
+            }
 
             bool is_property_sum_over_time_step(const string &name) override {
                 return true;
