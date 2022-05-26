@@ -287,6 +287,18 @@ jobs:
           mod-dir: "extern/test_bmi_c/"
           targets: "testbmicmodel"
 
+      #make sure cxx bmi is initialized/ready
+      - uses: ./.github/actions/ngen-submod-build
+        with: 
+          mod-dir: "extern/bmi-cxx/"
+
+      - name: Build Submodules
+        id: submod_build_4
+        uses: ./.github/actions/ngen-submod-build
+        with:
+          mod-dir: "extern/test_bmi_cpp/"
+          targets: "testbmicppmodel"
+
       - name: Build Unit Tests
         uses: ./.github/actions/ngen-build
         with:
@@ -314,6 +326,10 @@ jobs:
       - uses: ./.github/actions/clean-build
         with:
           build-dir: ${{ steps.submod_build_3.outputs.build-dir }}
+      - uses: ./.github/actions/clean-build
+        with:
+          build-dir: ${{ steps.submod_build_4.outputs.build-dir }}
+
 
   # TODO: fails due to compilation error, at least in large part due to use of POSIX functions not supported on Windows.
   # TODO: Need to determine whether Windows support (in particular, development environment support) is necessary.
