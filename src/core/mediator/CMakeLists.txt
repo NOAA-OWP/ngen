@@ -9,6 +9,8 @@ if(UDUNITS_ACTIVE)
         target_link_libraries(core_mediator PUBLIC libudunits2)
 endif()
 
+find_package(Threads REQUIRED)
+
 target_include_directories(core_mediator PUBLIC
         ${PROJECT_SOURCE_DIR}/include
         ${PROJECT_SOURCE_DIR}/include/core
@@ -17,4 +19,5 @@ target_include_directories(core_mediator PUBLIC
 
 target_link_libraries(core_mediator PUBLIC
         Boost::boost                # Headers-only Boost
+        Threads::Threads
         )
