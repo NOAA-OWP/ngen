@@ -95,7 +95,7 @@ TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataRead)
     // read exactly one time step correctly aligned but with a incorrect variable
     EXPECT_THROW(
         double val4 = nc_provider->get_value(NetCDFDataSelector(ids[0], "T3D", start_time, duration, "K"), data_access::MEAN);, 
-        NcException);
+        std::runtime_error);
     
 }
 #endif
