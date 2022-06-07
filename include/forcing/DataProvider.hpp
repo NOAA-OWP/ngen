@@ -2,7 +2,7 @@
 #define NGEN_DATAPROVIDER_HPP
 
 #include <string>
-
+#include <vector>
 
 namespace data_access
 {
