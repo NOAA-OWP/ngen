@@ -313,7 +313,7 @@ add_subdirectory("src/realizations/catchment")
 add_subdirectory("src/models/tshirt")
 add_subdirectory("src/models/kernels/reservoir")
 add_subdirectory("src/models/kernels/evapotranspiration")
-#add_subdirectory("src/forcing")
+add_subdirectory("src/forcing")
 
 target_link_libraries(ngen PUBLIC
         NGen::core
@@ -326,7 +326,7 @@ target_link_libraries(ngen PUBLIC
         NGen::kernels_reservoir
         NGen::kernels_evapotranspiration
         #NGen::kernels_reservoir_timeless
-        #NGen::forcing
+        NGen::forcing
         NGen::core_mediator
         libudunits2
         ${NETCDF_LIBRARIES}

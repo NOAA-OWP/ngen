@@ -9,6 +9,9 @@
 #include <algorithm>
 #include <sstream>
 #include <exception>
+#include <mutex>
+#include "assert.h"
+#include <iomanip>
 
 #include <UnitsHelper.hpp>
 #include <StreamHandler.hpp>
@@ -36,6 +39,24 @@ namespace data_access
             TIME_MICROSECONDS,
             TIME_NANOSECONDS
         };
+
+        /**
+         * @brief Factory method that creates or returns an existing provider for the provided path.
+         * @param input_path The path to a NetCDF file with lumped catchment forcing values.
+         * @param log_s An output log stream for messages from the underlying library. If a provider object for
+         * the given path already exists, this argument will be ignored.
+         */
+        static std::shared_ptr<NetCDFPerFeatureDataProvider> get_shared_provider(std::string input_path, utils::StreamHandler log_s){
+            const std::lock_guard<std::mutex> lock(shared_providers_mutex);
+            std::shared_ptr<NetCDFPerFeatureDataProvider> p;
+            if(shared_providers.count(input_path) > 0){
+                p = shared_providers[input_path];
+            } else {
+                p = std::make_shared<data_access::NetCDFPerFeatureDataProvider>(input_path, log_s);
+                shared_providers[input_path] = p;
+            }
+            return p;
+        }
 
         NetCDFPerFeatureDataProvider(std::string input_path, utils::StreamHandler log_s) : log_stream(log_s)
         {
@@ -419,6 +440,9 @@ namespace data_access
 
 
         private:
+
+        static std::mutex shared_providers_mutex;
+        static std::map<std::string, std::shared_ptr<NetCDFPerFeatureDataProvider>> shared_providers;
 
         std::vector<std::string> variable_names;
         std::vector<std::string> loc_ids;

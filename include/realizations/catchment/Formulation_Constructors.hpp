@@ -80,7 +80,7 @@ namespace realization {
         }
 #ifdef NETCDF_ACTIVE
         else if (forcing_config.provider == "NetCDF"){
-            fp = std::make_shared<data_access::NetCDFPerFeatureDataProvider>(forcing_config.path.c_str(), output_stream);
+            fp = data_access::NetCDFPerFeatureDataProvider::get_shared_provider(forcing_config.path, output_stream);
         }
 #endif
         else { // Some unknown string in the provider field?
