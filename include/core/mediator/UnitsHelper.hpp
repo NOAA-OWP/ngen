@@ -1,4 +1,6 @@
 #include <udunits2.h>
+#include <map>
+#include <memory>
 #include <mutex>
 #include "all.h"
 
@@ -14,9 +16,13 @@ class UnitsHelper {
     static double* convert_values(const std::string &in_units, double* values, const std::string &out_units, double* out_values, const size_t & count);
 
     private:
-    static cv_converter* get_converter(const std::string &in_units, const std::string& out_units, ut_unit*& to, ut_unit*& from);
+     
     // Theoretically thread-safe. //TODO: Test?
     static ut_system* unit_system;
+
+    static std::map<std::string, std::shared_ptr<cv_converter>> converters;
+    static std::mutex converters_mutex;
+
     static std::once_flag unit_system_inited;
     static void init_unit_system(){
         #ifdef NGEN_UDUNITS2_XML_PATH
@@ -32,6 +38,8 @@ class UnitsHelper {
         ut_set_error_message_handler(ut_ignore);
         #endif
     }
+
+    static std::shared_ptr<cv_converter> get_converter(const std::string& in_units, const std::string& out_units, utEncoding in_encoding = UT_UTF8, utEncoding out_encoding = UT_UTF8 );
 
 };
 
