@@ -297,6 +297,7 @@ add_test(
         NGen::forcing
         NGen::geojson
         NGen::realizations_catchment
+        NGen::forcing
         libudunits2
         ${NETCDF_LIBRARIES}
 )
@@ -331,6 +332,7 @@ add_test(
         NGen::forcing
         NGen::geojson
         NGen::realizations_catchment
+        NGen::forcing
         libudunits2
         ${NETCDF_LIBRARIES}
 )
@@ -369,6 +371,7 @@ add_test(
         NGen::forcing
         NGen::geojson
         NGen::realizations_catchment
+        NGen::forcing
         libudunits2
         ${NETCDF_LIBRARIES}
 )
