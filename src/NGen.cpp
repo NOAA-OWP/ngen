@@ -41,6 +41,11 @@ bool is_subdivided_hydrofabric_wanted = false;
 #include "core/Partition_Parser.hpp"
 #include <HY_Features_MPI.hpp>
 
+#define NGEN_PROFILING
+#ifdef NGEN_PROFILING
+#include <ctime>
+#endif
+
 std::string PARTITION_PATH = "";
 int mpi_rank;
 int mpi_num_procs;
@@ -68,8 +73,33 @@ int main(int argc, char *argv[]) {
               << ngen_VERSION_MINOR << "."
               << ngen_VERSION_PATCH << std::endl;
     std::ios::sync_with_stdio(false);
-
+  
     ut_set_error_message_handler(ut_ignore);
+
+    // setup variables for profiling
+    #ifdef NGEN_PROFILING
+    struct timespec ts1;
+    struct timespec ts2;
+    long long model_time_local = 0;
+    long long model_time_global = 0;
+    long long model_time_max = 0;
+    long long model_time_min = 0;
+
+    long long startup_time_local = 0;
+    long long startup_time_global = 0;
+    long long startup_time_max = 0;
+    long long startup_time_min = 0;
+
+    long long io_time_local = 0;
+    long long io_time_global = 0;
+    long long io_time_max = 0;
+    long long io_time_min = 0;
+
+    long long profiled_time;
+    int rv1, rv2;
+    time_t delta_s;
+    long delta_ns; 
+    #endif
 
     #ifdef ACTIVATE_PYTHON
     // Start Python interpreter via the manager singleton
@@ -191,6 +221,10 @@ int main(int argc, char *argv[]) {
 
     //Read the collection of nexus
     std::cout << "Building Nexus collection" << std::endl;
+
+    #ifdef NGEN_PROFILING
+    rv1 = clock_gettime(CLOCK_REALTIME,&ts1);
+    #endif // NGEN_PROFILING
     
     #ifdef NGEN_MPI_ACTIVE
     Partitions_Parser partition_parser(PARTITION_PATH);
@@ -274,6 +308,16 @@ int main(int argc, char *argv[]) {
         #endif
     }
 
+    #ifdef NGEN_PROFILING
+    rv2 = clock_gettime(CLOCK_REALTIME,&ts2);
+
+    delta_s = ts2.tv_sec - ts1.tv_sec;
+    delta_ns = ts2.tv_nsec - ts1.tv_nsec;
+
+    profiled_time = (delta_s * 1000000000) + delta_ns;
+    startup_time_local += profiled_time;
+    #endif // NGEN_PROFILING
+
     std::cout<<"Running Models"<<std::endl;
 
     std::shared_ptr<pdm03_struct> pdm_et_data = std::make_shared<pdm03_struct>(get_et_params());
@@ -289,10 +333,39 @@ int main(int argc, char *argv[]) {
         //TODO redesign to avoid this cast
         auto r_c = dynamic_pointer_cast<realization::Catchment_Formulation>(r);
         r_c->set_et_params(pdm_et_data);
+
+        #ifdef NGEN_PROFILING
+        rv1 = clock_gettime(CLOCK_REALTIME,&ts1);
+        #endif // NGEN_PROFILING
+
         double response = r_c->get_response(output_time_index, 3600.0);
+
+        #ifdef NGEN_PROFILING
+        rv2 = clock_gettime(CLOCK_REALTIME,&ts2);
+
+        delta_s = ts2.tv_sec - ts1.tv_sec;
+        delta_ns = ts2.tv_nsec - ts1.tv_nsec;
+
+        profiled_time = (delta_s * 1000000000) + delta_ns;
+        model_time_local += profiled_time;
+        #endif // NGEN_PROFILING
+
+        #ifdef NGEN_PROFILING
+        rv1 = clock_gettime(CLOCK_REALTIME,&ts1);
+        #endif // NGEN_PROFILING
         std::string output = std::to_string(output_time_index)+","+current_timestamp+","+
                              r_c->get_output_line_for_timestep(output_time_index)+"\n";
         r_c->write_output(output);
+        #ifdef NGEN_PROFILING
+        rv2 = clock_gettime(CLOCK_REALTIME,&ts2);
+
+        delta_s = ts2.tv_sec - ts1.tv_sec;
+        delta_ns = ts2.tv_nsec - ts1.tv_nsec;
+
+        profiled_time = (delta_s * 1000000000) + delta_ns;
+        io_time_local += profiled_time;
+        #endif //NGEN_PROFILING
+
         //TODO put this somewhere else.  For now, just trying to ensure we get m^3/s into nexus output
         try{
           response *= (catchment_collection->get_feature(id)->get_property("areasqkm").as_real_number() * 1000000);
@@ -335,7 +408,21 @@ int main(int argc, char *argv[]) {
           }
           double contribution_at_t = features.nexus_at(id)->get_downstream_flow(cat_id, output_time_index, 100.0);
           if(nexus_outfiles[id].is_open()) {
+            #ifdef NGEN_PROFILING
+            rv1 = clock_gettime(CLOCK_REALTIME,&ts1);
+            #endif // NGEN_PROFILING
+
             nexus_outfiles[id] << output_time_index << ", " << current_timestamp << ", " << contribution_at_t << std::endl;
+
+            #ifdef NGEN_PROFILING
+            rv2 = clock_gettime(CLOCK_REALTIME,&ts2);
+
+            delta_s = ts2.tv_sec - ts1.tv_sec;
+            delta_ns = ts2.tv_nsec - ts1.tv_nsec;
+
+            profiled_time = (delta_s * 1000000000) + delta_ns;
+            io_time_local += profiled_time;
+            #endif //NGEN_PROFILING
           }
   #ifdef NGEN_MPI_ACTIVE
         }
@@ -349,6 +436,52 @@ int main(int argc, char *argv[]) {
     } //done time
     std::cout<<"Finished "<<manager->Simulation_Time_Object->get_total_output_times()<<" timesteps."<<std::endl;
 
+    #ifdef NGEN_PROFILING
+    #ifdef NGEN_MPI_ACTIVE
+    MPI_Reduce(&startup_time_local, &startup_time_global, 1, MPI_LONG_LONG, MPI_SUM, 0, MPI_COMM_WORLD);
+    MPI_Reduce(&io_time_local, &io_time_global, 1, MPI_LONG_LONG, MPI_SUM, 0, MPI_COMM_WORLD);
+    MPI_Reduce(&model_time_local, &model_time_global, 1, MPI_LONG_LONG, MPI_SUM, 0, MPI_COMM_WORLD);
+
+    MPI_Reduce(&startup_time_local, &startup_time_max, 1, MPI_LONG_LONG, MPI_MAX, 0, MPI_COMM_WORLD);
+    MPI_Reduce(&io_time_local, &io_time_max, 1, MPI_LONG_LONG, MPI_MAX, 0, MPI_COMM_WORLD);
+    MPI_Reduce(&model_time_local, &model_time_max, 1, MPI_LONG_LONG, MPI_MAX, 0, MPI_COMM_WORLD);
+
+    MPI_Reduce(&startup_time_local, &startup_time_min, 1, MPI_LONG_LONG, MPI_MIN, 0, MPI_COMM_WORLD);
+    MPI_Reduce(&io_time_local, &io_time_min, 1, MPI_LONG_LONG, MPI_MIN, 0, MPI_COMM_WORLD);
+    MPI_Reduce(&model_time_local, &model_time_min, 1, MPI_LONG_LONG, MPI_MIN, 0, MPI_COMM_WORLD);
+    if (mpi_rank == 0)
+    {
+    #else // NGEN_MPI_ACTIVE
+    io_time_global = io_time_local;
+    model_time_global = model_time_local;
+    startup_time_global = startup_time_local;
+
+    io_time_max = io_time_local;
+    model_time_max = model_time_local;
+    startup_time_max = startup_time_local;
+
+    io_time_min = io_time_local;
+    model_time_min = model_time_local;
+    startup_time_min = startup_time_local;
+  
+    #endif //NGEN_MPI_ACTIVE
+
+    std::cout << setprecision(6);
+    std::cout << "Total Startup Time = " << std::setw(9) << startup_time_global / 1000000000.0 << "s" << std::endl;
+    std::cout << "Total Model Time = " << std::setw(9) <<  model_time_global / 1000000000.0 << "s" <<  std::endl;
+    std::cout << "Total I/O Time = " << std::setw(9) <<  io_time_global / 1000000000.0 << "s" <<  std::endl << std::endl;
+
+    std::cout << "Max Startup Time = " << std::setw(9) <<  startup_time_max / 1000000000.0 << "s" <<  std::endl;
+    std::cout << "Max Model Time = " << std::setw(9) <<  model_time_max / 1000000000.0 << "s" <<  std::endl;
+    std::cout << "Max I/O Time = " << std::setw(9) <<  io_time_max / 1000000000.0 << "s" <<  std::endl << std::endl;
+
+    std::cout << "Min Startup Time = " << std::setw(9) <<  startup_time_min / 1000000000.0 << "s" <<  std::endl;
+    std::cout << "Min Model Time = " << std::setw(9) <<  model_time_min / 1000000000.0 << "s" <<  std::endl;
+    std::cout << "Min I/O Time = " << std::setw(9) <<  io_time_min / 1000000000.0 << "s" <<  std::endl;
+    #ifdef NGEN_MPI_ACTIVE
+    }
+    #endif // NGEN_MPI_ACTIVE
+    #endif // NGEN_PROFILING
 
   #ifdef NGEN_ROUTING_ACTIVE
 
@@ -378,5 +511,6 @@ int main(int argc, char *argv[]) {
     MPI_Finalize();
  #endif //NGEN_MPI_ACTIVE
  #endif // NGEN_ROUTING_ACTIVE
+
     return 0;
 }
