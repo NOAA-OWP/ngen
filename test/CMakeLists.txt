@@ -90,6 +90,7 @@ add_test(test_realization_config
         realizations/Formulation_Manager_Test.cpp
         NGen::core
         NGen::realizations_catchment
+        NGen::forcing
         NGen::core_mediator
         NGen::forcing
         libudunits2
