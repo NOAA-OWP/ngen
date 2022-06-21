@@ -36,7 +36,7 @@ namespace data_access
         enum TimeUnit
         {
             TIME_HOURS,
-            TIME_MINUETS,
+            TIME_MINUTES,
             TIME_SECONDS,
             TIME_MILLISECONDS,
             TIME_MICROSECONDS,
@@ -189,7 +189,7 @@ namespace data_access
                 }
                 else if ( time_unit_str == "m" || time_unit_str == "minutes" )
                 {
-                    time_unit = TIME_MINUETS;
+                    time_unit = TIME_MINUTES;
                     time_scale_factor = 60;
                 }
                 else if ( time_unit_str ==  "s" || time_unit_str == "seconds" )
