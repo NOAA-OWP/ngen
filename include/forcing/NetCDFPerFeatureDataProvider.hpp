@@ -209,6 +209,10 @@ namespace data_access
                 }
                 else if ( time_unit_str ==  "ns" || time_unit_str == "nanoseconds" )
                 {
+                    time_unit = TIME_NANOSECONDS;
+                    time_scale_factor = .000000001;
+                }
+                else {
                     log_stream << "Warning using defualt time units\n";
                 }
             }
@@ -239,7 +243,7 @@ namespace data_access
             
             std::tm tm{};
             std::stringstream s(epoc_start_str);
-            s >> std::get_time(&tm, "%F %R");
+            s >> std::get_time(&tm, "%D %T");
             std::time_t epoc_start_time = mktime(&tm);
 
             // scale the time to account for time units and epoc_start
@@ -332,7 +336,7 @@ namespace data_access
             else
             {
                 std::stringstream ss;
-                ss << "The value " << epoch_time << "was not in the range [" << start_time << "," << stop_time << ")\n";
+                ss << "The value " << (int)epoch_time << " was not in the range [" << (int)start_time << "," << (int)stop_time << ")\n" << SOURCE_LOC;
                 throw std::out_of_range(ss.str().c_str());
             }
         }
@@ -350,10 +354,16 @@ namespace data_access
         double get_value(const CatchmentAggrDataSelector& selector, ReSampleMethod m) override
         {
             auto init_time = selector.get_init_time();
-            auto stop_time = init_time + selector.get_duration_secs();
+            auto stop_time = init_time + selector.get_duration_secs(); // scope hiding! BAD JUJU!
             
-            auto idx1 = get_ts_index_for_time(init_time);
-            auto idx2 = get_ts_index_for_time(stop_time);
+            size_t idx1 = get_ts_index_for_time(init_time);
+            size_t idx2;
+            try {
+                idx2 = get_ts_index_for_time(stop_time);
+            }
+            catch(const std::out_of_range &e){
+                idx2 = get_ts_index_for_time(this->stop_time-1); //to the edge
+            }
 
             auto stride = idx2 - idx1;
 
