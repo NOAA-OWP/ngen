@@ -15,6 +15,7 @@
 #include <mutex>
 #include "assert.h"
 #include <iomanip>
+#include <boost/compute/detail/lru_cache.hpp>
 
 #include <UnitsHelper.hpp>
 #include <StreamHandler.hpp>
@@ -61,10 +62,17 @@ namespace data_access
             return p;
         }
 
-        NetCDFPerFeatureDataProvider(std::string input_path, utils::StreamHandler log_s) : log_stream(log_s)
+        NetCDFPerFeatureDataProvider(std::string input_path, utils::StreamHandler log_s) : log_stream(log_s), value_cache(100)
         {
+            //size_t sizep = 1073741824, nelemsp = 202481;
+            //float preemptionp = 0.75;
+            //nc_set_chunk_cache(sizep, nelemsp, preemptionp);
+
             //open the file
             nc_file = std::make_shared<NcFile>(input_path, NcFile::read);
+            
+            //nc_get_chunk_cache(&sizep, &nelemsp, &preemptionp);
+            //std::cout << "Chunk cache parameters: "<<sizep<<", "<<nelemsp<<", "<<preemptionp<<std::endl;
 
             //get the listing of all variables
             auto var_set = nc_file->getVars();
@@ -75,7 +83,7 @@ namespace data_access
                 std::string var_name = element.first;
                 auto ncvar = nc_file->getVar(var_name);
                 variable_names.push_back(var_name);
-                ncvar_cache[var_name] = ncvar;
+                ncvar_cache.emplace(var_name,ncvar);
 
                 std::string native_units;
                 try
@@ -100,7 +108,7 @@ namespace data_access
                     native_units = native_units.empty() ? std::get<1>(wkf->second) : native_units;
                     std::string can_name = std::get<0>(wkf->second); // the CSDMS name
                     variable_names.push_back(can_name);
-                    ncvar_cache[can_name] = ncvar;
+                    ncvar_cache.emplace(can_name,ncvar);
                     units_cache[can_name] = native_units;
                 }
 
@@ -125,6 +133,9 @@ namespace data_access
             }
 
             auto num_ids = id_dim.getSize();
+
+            //TODO: split into smaller slices if num_ids is large.
+            cache_slice_c_size = num_ids;
 
             // allocate an array of character pointers 
             std::vector< char* > string_buffers(num_ids);
@@ -371,28 +382,52 @@ namespace data_access
 
             auto cat_pos = id_pos[selector.get_id()];
 
-            start.push_back(cat_pos);
-            start.push_back(idx1);
 
-            count.push_back(1);
 
             double t1 = time_vals[idx1];
             double t2 = time_vals[idx2];
 
             double rvalue = 0.0;
-
+            
             auto ncvar = get_ncvar(selector.get_variable_name());
 
             std::string native_units = get_ncvar_units(selector.get_variable_name());
 
             auto read_len = idx2 - idx1 + 1;
-            count.push_back(read_len);
 
             std::vector<double> raw_values;
             raw_values.resize(read_len);
 
-            ncvar.getVar(start,count,&raw_values[0]);
+            //TODO: Currently assuming a whole variable cache slice across all catchments for a single timestep...but some stuff here to support otherwise.
+            size_t cache_slices_t_n = read_len / cache_slice_t_size; // Integer division!
+            // For reference: https://stackoverflow.com/a/72030286
+            for( size_t i = 0; i < cache_slices_t_n; i++ ) {
+                shared_ptr<std::vector<double>> cached;
+                int cache_t_idx = (idx1 - (idx1 % cache_slice_t_size) + i);
+                std::string key = ncvar.getName() + "|" + std::to_string(cache_t_idx);
+//cerr<<"Processing key "<<key<<" (idx1: "<<idx1<<", init_time: "<<init_time<<")"<<std::endl;
+                if(value_cache.contains(key)){
+                    cached = value_cache.get(key).get();
+//cerr<<"  Found in cache!"<<std::endl;
+                } else {
+                    cached = std::make_shared<std::vector<double>>(cache_slice_c_size * cache_slice_t_size);
+                    start.push_back(0);
+                    start.push_back(cache_t_idx * cache_slice_t_size);
+                    count.push_back(cache_slice_c_size);
+                    count.push_back(cache_slice_t_size); // Must be 1 for now!...probably...
+                    ncvar.getVar(start,count,&(*cached)[0]);
+                    value_cache.insert(key, cached);
+//cerr<<"  Inserted in cache."<<std::endl;
+                }
+                for( size_t j = 0; j < cache_slice_t_size; j++){
+                    raw_values[i+j] = cached->at((j*cache_slice_t_size) + cat_pos);
+//if(ncvar.getName() == "T2D" || ncvar.getName() == CSDMS_STD_NAME_SURFACE_TEMP || ncvar.getName() == "TMP_2maboveground"){                    
+//cerr<<"Populating raw_values["<<(i+j)<<"] with cache array position ["<<((j*cache_slice_t_size) + cat_pos)<<"] because cat_pos, i, j is "<<cat_pos<<", "<<i<<", "<<j<<", value for T2D is: "<<raw_values[i+j]<<std::endl;
+//}
+                }
+            }
 
+            
             rvalue = 0.0;
 
             double a , b = 0.0;
@@ -472,6 +507,9 @@ namespace data_access
 
         std::map<std::string,netCDF::NcVar> ncvar_cache = {};
         std::map<std::string,std::string> units_cache = {};
+        boost::compute::detail::lru_cache<std::string, std::shared_ptr<std::vector<double>>> value_cache;
+        size_t cache_slice_t_size = 1;
+        size_t cache_slice_c_size = 1;
 
         const netCDF::NcVar& get_ncvar(const std::string& name){
             auto cache_hit = ncvar_cache.find(name);
