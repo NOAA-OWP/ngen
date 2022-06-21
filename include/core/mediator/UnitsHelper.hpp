@@ -11,7 +11,7 @@ class UnitsHelper {
 
     static double get_converted_value(const std::string &in_units, const double &value, const std::string &out_units);
 
-    static double* get_converted_values(const std::string &in_units, double* values, const std::string &out_units, const size_t & count);
+    static double* convert_values(const std::string &in_units, double* values, const std::string &out_units, double* out_values, const size_t & count);
 
     private:
     static cv_converter* get_converter(const std::string &in_units, const std::string& out_units, ut_unit*& to, ut_unit*& from);
