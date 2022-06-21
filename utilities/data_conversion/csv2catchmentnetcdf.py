@@ -5,6 +5,7 @@ import netCDF4 as nc
 import pandas as pd
 from  multiprocessing import Process, Lock
 import numpy as np
+import re
 
 def create_netcdf(filename : str, num_catchments : int, variable_names):
     #make the data set
@@ -22,9 +23,10 @@ def create_netcdf(filename : str, num_catchments : int, variable_names):
     #add variables from the csv
     for name in variable_names:
         if name.lower() == "time":
-            ds.createVariable(name,'f8',('catchment-id','time'))
+            ds.createVariable("Time",'f8',('catchment-id','time'))
+            ds["Time"].units = 'ns'
         else:
-            ds.createVariable(name,'f4',('catchment-id','time'))
+            ds.createVariable(name,'f4',('catchment-id','time'), chunksizes=(num_catchments,2))
 
     return ds
 
@@ -39,7 +41,10 @@ def add_data(ds : nc.Dataset, pos : int, cat_name : str, df: pd.DataFrame):
 
     # set other variables from csv data
     for var in df.columns:
-        ds[var][pos,:] = df[var]
+        var_name = var
+        if var.lower() == "time": 
+            var_name = "Time"
+        ds[var_name][pos,:] = df[var]
     
     # release memory
     del df
@@ -59,13 +64,14 @@ def process_sublist(data : dict, lock: Lock, num: int):
     for i in range(num_inputs):
         #extract data
         csv_file = data["csv_files"][i]
-        cat_name = csv_file[:-3]
+        cat_name = re.sub('(cat-\d+)\D.*','\\1',csv_file)
         pos = data["offsets"][i]
         netcdf_path = data["netcdf_path"]
 
         #load the csv data
         print("Process ", num, " reading file", csv_file)
-        df = pd.read_csv(join(input_path,csv_file), parse_dates=["Time"], na_values=["   nan"])
+        
+        df = pd.read_csv(join(input_path,csv_file), parse_dates={"Time": [0]}, na_values=["   nan"])
 
         if first:
             ds = create_partial_netcdf(netcdf_path + "." + str(num), num_inputs, df.columns)
@@ -123,7 +129,7 @@ def main():
     csv_files = [f for f in listdir(input_path) if isfile(join(input_path, f)) and f.endswith(".csv")]
 
     #load the first csv to get the variable names
-    df = pd.read_csv(join(input_path,csv_files[0]), parse_dates=["Time"], na_values=["   nan"])
+    df = pd.read_csv(join(input_path,csv_files[0]), na_values=["   nan"])
 
     #create the output file
     print("Creating output file")
