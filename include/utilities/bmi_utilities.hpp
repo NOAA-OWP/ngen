@@ -48,6 +48,9 @@ namespace models {
             
             //C++ form of malloc
             void* data = ::operator new(total_mem);
+            // Use smart pointer to ensure cleanup on throw/out of scope...
+            // This works, and is relatively cheap since the lambda is stateless, only one instance should be created.
+            auto sptr = std::shared_ptr<void>(data, [](void *p) { ::operator delete(p); });
             //Delegate to specific adapter's GetValue()
             //Note, may be able to optimize this furthur using GetValuePtr
             //which would avoid copying in the BMI model and copying again here
@@ -100,8 +103,6 @@ namespace models {
                 throw std::runtime_error("Unable to get value of variable " + name +
                                 " as " + boost::typeindex::type_id<T>().pretty_name() + ": no logic for converting variable type " + type);
             }
-            //clean up the temporary data
-            ::operator delete(data); 
             return result;
         }
     }
