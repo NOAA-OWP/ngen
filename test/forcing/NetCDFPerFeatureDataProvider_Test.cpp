@@ -51,10 +51,6 @@ void NetCDFPerFeatureDataProviderTest::TearDown()
 //Construct a forcing object
 void NetCDFPerFeatureDataProviderTest::setupForcing()
 {
-    char tmp[256];
-    getcwd(tmp, 256);
-    cout << "Current working directory: " << tmp << endl;
-
     std::vector<std::string> forcing_file_names = { 
         "data/forcing/cats-27_52_67-2015_12_01-2015_12_30.nc",
         "../data/forcing/cats-27_52_67-2015_12_01-2015_12_30.nc",
@@ -73,14 +69,13 @@ TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataRead)
     // check to see that the variable "T2D" exists
     auto var_names = nc_provider->get_avaliable_variable_names();
     auto pos = std::find(var_names.begin(), var_names.end(), CSDMS_STD_NAME_SURFACE_TEMP);
-
     if ( pos != var_names.end() )
     {
-        std::cout << "Found variable "<<CSDMS_STD_NAME_SURFACE_TEMP<<"\n";
+        //std::cout << "Found variable "<<CSDMS_STD_NAME_SURFACE_TEMP<<"\n";
     }
     else
     {
-        std::cout << "The variable "<<CSDMS_STD_NAME_SURFACE_TEMP<<" is missing\n";
+        //std::cout << "The variable "<<CSDMS_STD_NAME_SURFACE_TEMP<<" is missing\n";
         FAIL();
     }
 
@@ -88,13 +83,13 @@ TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataRead)
     auto ids = nc_provider->get_ids();
     auto duration = nc_provider->record_duration();
 
-    std::cout << "Checking values in catchment "<<ids[0]<<" at time "<<start_time<<" ..."<<std::endl;
+    //std::cout << "Checking values in catchment "<<ids[0]<<" at time "<<start_time<<" with duration "<<duration<<"..."<<std::endl;
 
     // read exactly one time step correctly aligned
     double val1 = nc_provider->get_value(NetCDFDataSelector(ids[0], CSDMS_STD_NAME_SURFACE_TEMP, start_time, duration, "K"), data_access::MEAN);
 
     //double tol = 0.00000612;
-    double tol = 0.001;
+    double tol = 0.00002;
 
     EXPECT_NEAR(val1, 285.8, tol);
 
