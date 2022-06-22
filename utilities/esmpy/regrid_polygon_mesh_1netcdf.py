@@ -284,6 +284,8 @@ def read_sub_netcdf(cat_id, datafile, var_name_list, var_value_list, lons_min_gr
     with open(avg_outfile, 'a') as wfile:
         out_data = "{}".format(cat_id)
         for i in range(len(var_name_list)):
+            if i == 0:
+                out_data += ",{}".format(Var_array[i][0])
             if i > 2:
                 out_data += ",{}".format(avg_var_value[i])
         wfile.write(out_data+'\n')
@@ -762,12 +764,24 @@ if __name__ == '__main__':
         csv_name = name + '.csv'
         csv_files.append(csv_name)
 
+    # weight based average
     esmf_outfile = join(output_root,  "huc01/esmf_output.csv")
     if os.path.exists(esmf_outfile):
         os.remove(esmf_outfile)
     else:
         print("The esmf_outfile does not exist")
     with open(esmf_outfile, 'w') as wfile:
+        out_header = "id,time,APCP_surface,DLWRF_surface,DSWRF_surface,PRES_surface,SPFH_2maboveground,TMP_2maboveground,UGRD_10maboveground,VGRD_10maboveground"
+        wfile.write(out_header+'\n')
+    wfile.close()
+
+    # mask based average
+    avg_outfile = "/local/esmpy/huc01/mask_avg/avg_output.csv"
+    if os.path.exists(avg_outfile):
+        os.remove(avg_outfile)
+    else:
+        print("The avg_outfile does not exist")
+    with open(avg_outfile, 'w') as wfile:
         out_header = "id,time,APCP_surface,DLWRF_surface,DSWRF_surface,PRES_surface,SPFH_2maboveground,TMP_2maboveground,UGRD_10maboveground,VGRD_10maboveground"
         wfile.write(out_header+'\n')
     wfile.close()
@@ -782,18 +796,9 @@ if __name__ == '__main__':
     # some function only executed once at the beginning (k = 0)
     k = 0
     for datafile in datafiles:
-        #create output file for data calculated from averaging using landmask
+        #check the preogress of the calculation
         date_time = get_date_time(datafile)
         print("processing forcing file for date_time = {}".format(date_time))
-        avg_outfile = "/local/esmpy/huc01/mask_avg/avg_output_"+date_time+".csv"
-        if os.path.exists(avg_outfile):
-            os.remove(avg_outfile)
-        else:
-            print("The avg_outfile does not exist")
-        with open(avg_outfile, 'w') as wfile:
-            out_header = "id,APCP_surface,DLWRF_surface,DSWRF_surface,PRES_surface,SPFH_2maboveground,TMP_2maboveground,UGRD_10maboveground,VGRD_10maboveground"
-            wfile.write(out_header+'\n')
-        wfile.close()
 
         num_csv_inputs = len(csv_files)
         num_processes = 50

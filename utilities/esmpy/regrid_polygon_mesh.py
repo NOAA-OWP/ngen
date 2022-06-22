@@ -284,6 +284,8 @@ def read_sub_netcdf(cat_id, datafile, var_name_list, var_value_list, lons_min_gr
     with open(avg_outfile, 'a') as wfile:
         out_data = "{}".format(cat_id)
         for i in range(len(var_name_list)):
+            if i == 0:
+                out_data += ",{}".format(Var_array[i][0])
             if i > 2:
                 out_data += ",{}".format(avg_var_value[i])
         wfile.write(out_data+'\n')
@@ -775,7 +777,7 @@ if __name__ == '__main__':
         else:
             print("The avg_outfile does not exist")
         with open(avg_outfile, 'w') as wfile:
-            out_header = "id,APCP_surface,DLWRF_surface,DSWRF_surface,PRES_surface,SPFH_2maboveground,TMP_2maboveground,UGRD_10maboveground,VGRD_10maboveground"
+            out_header = "id,time,APCP_surface,DLWRF_surface,DSWRF_surface,PRES_surface,SPFH_2maboveground,TMP_2maboveground,UGRD_10maboveground,VGRD_10maboveground"
             wfile.write(out_header+'\n')
         wfile.close()
 
