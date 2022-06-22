@@ -291,7 +291,6 @@ def read_sub_netcdf(cat_id, datafile, var_name_list, var_value_list, lons_min_gr
 
     return var_value_list, Var_array, landmask, nlats, nlons
 
-
 def write_sub_netcdf(filename_out, var_name_list, var_value_list, Var_array, landmask, nlats, nlons):
     """
     Write the extracted data to a netcdf file per catchment
@@ -388,13 +387,9 @@ def grid_to_mesh_regrid(cat_id, lons_start, lats_start, lons_min, lons_max, lats
     [lat,lon] = [1,0]
 
     # These values are obtained from the original input AORC file: AORC-OWP_2012063023z.nc4
-    # they have now been generalized
-    #for huc01
+    # they are now generalized to arbitrary starting longitude and latitude value
     #lats_start = 20.0
     #lons_start = -130.0
-    #for sugar_creek
-    #lats_start = 34.49942
-    #lons_start = -81.5102730000392
 
     lats_upper = lats_start + lats_max_grid * lats_delta
     lats_lower = lats_start + lats_min_grid * lats_delta
@@ -492,25 +487,27 @@ def grid_to_mesh_regrid(cat_id, lons_start, lats_start, lons_min, lons_max, lats
 
     return srcfield.data, lons_par, lats_par
 
-def csv_to_netcdf(num_catchments, num_time, date_time):
+def csv_to_netcdf(num_catchments, num_time):
     """
     Convert from csv to netcdf format
     """
     #get the input csv file and create output netcdf file name
     csv_infile = join(output_root, "huc01/esmf_output.csv")
-    output_path = join(output_root, "huc01/forcing/", "huc01_forcing_"+date_time+".nc")
+    #output_path = join(output_root, "huc01/forcing/", "huc01_forcing_"+date_time+".nc")
+    output_path = join(output_root, "huc01/forcing/", "huc01_forcing.nc")
 
     df = pd.read_csv(csv_infile)
     df = df.sort_values(['time', 'id'])
     variable_names = df.columns
+    print(df.head(3), "\n")
 
     #make the data set
     filename = output_path
     filename_out = output_path
 
-    print("num_catchments = {}".format(num_catchments))
+    #print("num_catchments = {}".format(num_catchments))
     cat_id = numpy.zeros(num_catchments, dtype=object)
-    print("cat_id.size = {}".format(cat_id.size))
+    #print("cat_id.size = {}".format(cat_id.size))
     time = []
 
     apcp_surface = []
@@ -534,12 +531,19 @@ def csv_to_netcdf(num_catchments, num_time, date_time):
 
     #save data into list of list
     df = df.reset_index()  # make sure indexes pair with number of rows
-    i = 0
+    print(df.head(3), "\n")
+    #here we assume all time steps have been written to the esmf_outfile in csv format
+    k = 0
     for index, row in df.iterrows():
-        cat_id[i] = row['id']
-        if index < num_time:
+        #increase by 1 to account the header line
+        k += 1
+        #print(row['id'], row['time'], row['APCP_surface'], row['DLWRF_surface'])
+        remainder = index % num_catchments
+        if index < num_catchments:
+            i = remainder
+            cat_id[i] = row['id']
+        if remainder == 0:
             time.append(row['time'])
-        i += 1
         apcp_tmp.append(row['APCP_surface'])
         dlwrf_tmp.append(row['DLWRF_surface'])
         dswrf_tmp.append(row['DSWRF_surface'])
@@ -548,23 +552,25 @@ def csv_to_netcdf(num_catchments, num_time, date_time):
         tmp_tmp.append(row['TMP_2maboveground'])
         ugrd_tmp.append(row['UGRD_10maboveground'])
         vgrd_tmp.append(row['VGRD_10maboveground'])
-        #
-        apcp_surface.append(apcp_tmp)
-        dlwrf_surface.append(dlwrf_tmp)
-        dswrf_surface.append(dswrf_tmp)
-        pres_surface.append(pres_tmp)
-        spfh_2maboveground.append(spfh_tmp)
-        tmp_2maboveground.append(tmp_tmp)
-        ugrd_10maboveground.append(ugrd_tmp)
-        vgrd_10maboveground.append(vgrd_tmp)
-        apcp_tmp = []
-        dlwrf_tmp = []
-        dswrf_tmp = []
-        pres_tmp = []
-        spfh_tmp = []
-        tmp_tmp = []
-        ugrd_tmp = []
-        vgrd_tmp = []
+        # completed appending all catchment rows for this time step
+        if k % num_catchments == 0:
+            print("len(apcp_tmp) = {}".format(len(apcp_tmp)))
+            apcp_surface.append(apcp_tmp)
+            dlwrf_surface.append(dlwrf_tmp)
+            dswrf_surface.append(dswrf_tmp)
+            pres_surface.append(pres_tmp)
+            spfh_2maboveground.append(spfh_tmp)
+            tmp_2maboveground.append(tmp_tmp)
+            ugrd_10maboveground.append(ugrd_tmp)
+            vgrd_10maboveground.append(vgrd_tmp)
+            apcp_tmp = []
+            dlwrf_tmp = []
+            dswrf_tmp = []
+            pres_tmp = []
+            spfh_tmp = []
+            tmp_tmp = []
+            ugrd_tmp = []
+            vgrd_tmp = []
 
     # Convert to numpy array
     time = numpy.array(time)
@@ -576,6 +582,16 @@ def csv_to_netcdf(num_catchments, num_time, date_time):
     TMP_2maboveground = numpy.array(tmp_2maboveground)
     UGRD_10maboveground = numpy.array(ugrd_10maboveground)
     VGRD_10maboveground = numpy.array(vgrd_10maboveground)
+
+    # change the order of time and cat-id dimension
+    APCP_surface = numpy.transpose(APCP_surface)
+    PRES_surface = numpy.transpose(PRES_surface)
+    DLWRF_surface = numpy.transpose(DLWRF_surface)
+    DSWRF_surface = numpy.transpose(DSWRF_surface)
+    SPFH_2maboveground = numpy.transpose(SPFH_2maboveground)
+    TMP_2maboveground = numpy.transpose(TMP_2maboveground)
+    UGRD_10maboveground = numpy.transpose(UGRD_10maboveground)
+    VGRD_10maboveground = numpy.transpose(VGRD_10maboveground)
 
     # write data to netcdf files
     filename_out = output_path
@@ -746,7 +762,17 @@ if __name__ == '__main__':
         csv_name = name + '.csv'
         csv_files.append(csv_name)
 
-    #datafile_path = join(input_root, "huc01/aorc_netcdf/2015/", "AORC_Charlotte_*.nc4")
+    esmf_outfile = join(output_root,  "huc01/esmf_output.csv")
+    if os.path.exists(esmf_outfile):
+        os.remove(esmf_outfile)
+    else:
+        print("The esmf_outfile does not exist")
+    with open(esmf_outfile, 'w') as wfile:
+        out_header = "id,time,APCP_surface,DLWRF_surface,DSWRF_surface,PRES_surface,SPFH_2maboveground,TMP_2maboveground,UGRD_10maboveground,VGRD_10maboveground"
+        wfile.write(out_header+'\n')
+    wfile.close()
+
+    #datafile_path = join(input_root, "huc01/aorc_netcdf/", "AORC-OWP_*.nc4")
     datafile_path = join(input_root, "huc01/aorc_netcdf_test/", "AORC-OWP_*.nc4")
     datafiles = glob.glob(datafile_path)
     print("number of forcing files = {}".format(len(datafiles)))
@@ -756,16 +782,6 @@ if __name__ == '__main__':
     # some function only executed once at the beginning (k = 0)
     k = 0
     for datafile in datafiles:
-        esmf_outfile = join(output_root, "huc01/esmf_output.csv")
-        if os.path.exists(esmf_outfile):
-            os.remove(esmf_outfile)
-        else:
-            print("The esmf_outfile does not exist")
-        with open(esmf_outfile, 'w') as wfile:
-            out_header = "id,time,APCP_surface,DLWRF_surface,DSWRF_surface,PRES_surface,SPFH_2maboveground,TMP_2maboveground,UGRD_10maboveground,VGRD_10maboveground"
-            wfile.write(out_header+'\n')
-        wfile.close()
-
         #create output file for data calculated from averaging using landmask
         date_time = get_date_time(datafile)
         print("processing forcing file for date_time = {}".format(date_time))
@@ -779,7 +795,6 @@ if __name__ == '__main__':
             wfile.write(out_header+'\n')
         wfile.close()
 
-        #prepare for processing
         num_csv_inputs = len(csv_files)
         num_processes = 50
 
@@ -815,12 +830,10 @@ if __name__ == '__main__':
         #wait for termination
         for p in process_list:
             p.join()
-
-        num_catchments = len(cat_files)
-
-        #write a netcdf file every time step the same as the input file
-        ntime = 1
-        date_time = get_date_time(datafile)
-        csv_to_netcdf(num_catchments, ntime, date_time)
         k += 1
 
+    num_catchments = len(cat_files)
+
+    #write to a sngle netcdf file all time steps
+    ntime = len(datafiles)
+    csv_to_netcdf(num_catchments, ntime)
