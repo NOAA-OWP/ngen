@@ -127,6 +127,7 @@ int main(int argc, char *argv[]) {
         MPI_Init(NULL, NULL);
         MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
         MPI_Comm_size(MPI_COMM_WORLD, &mpi_num_procs);
+        
         #endif // NGEN_MPI_ACTIVE
 
         #ifdef WRITE_PID_FILE_FOR_GDB_SERVER
