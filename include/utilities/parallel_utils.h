@@ -51,6 +51,7 @@ namespace parallel {
      * @return Whether all ranks coordinating status had a success/ready status value.
      */
     bool mpiSyncStatusAnd(bool status, int mpi_rank, int mpi_num_procs, const std::string &taskDesc) {
+        
         // Expect 0 is good and 1 is no good for goodCode
         // TODO: assert this in constructor or somewhere, or maybe just in a unit test
         unsigned short codeBuffer;
@@ -75,8 +76,9 @@ namespace parallel {
             // Rank 0 must also now prepare the codeBuffer value for broadcasting the global status
             codeBuffer = status ? MPI_HF_SUB_CODE_GOOD : MPI_HF_SUB_CODE_BAD;
         }
+
         // Execute broadcast of global status rooted at rank 0
-        MPI_Bcast(&codeBuffer, mpi_num_procs - 1, MPI_UNSIGNED_SHORT, 0, MPI_COMM_WORLD);
+        MPI_Bcast(&codeBuffer, 1, MPI_UNSIGNED_SHORT, 0, MPI_COMM_WORLD);
         return codeBuffer == MPI_HF_SUB_CODE_GOOD;
     }
 
@@ -116,12 +118,13 @@ namespace parallel {
         // Initialize isGood based on local state.  Here, local file is "good" when it already exists.
         // TODO: this isn't actually checking whether the files are right (just that they are present) so do we need to?
         bool isGood = utils::FileChecker::file_is_readable(name);
+
         if (mpiSyncStatusAnd(isGood, mpi_rank, mpi_num_procs)) {
-            if (printMsg) { std::cout << "Hydrofabric already subdivided in " << mpi_num_procs << " files." << std::endl; }
+            if (printMsg) { std::cout << "Process " << mpi_rank << ": Hydrofabric already subdivided in " << mpi_num_procs << " files." << std::endl; }
             return true;
         }
         else {
-            if (printMsg) { std::cout << "Hydrofabric has not yet been subdivided." << std::endl; }
+            if (printMsg) { std::cout << "Process " << mpi_rank << ": Hydrofabric has not yet been subdivided." << std::endl; }
             return false;
         }
     }
