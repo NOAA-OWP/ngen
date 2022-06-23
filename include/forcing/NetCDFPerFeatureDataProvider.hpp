@@ -62,7 +62,7 @@ namespace data_access
             return p;
         }
 
-        NetCDFPerFeatureDataProvider(std::string input_path, utils::StreamHandler log_s) : log_stream(log_s), value_cache(100)
+        NetCDFPerFeatureDataProvider(std::string input_path, utils::StreamHandler log_s) : log_stream(log_s), value_cache(20)
         {
             //size_t sizep = 1073741824, nelemsp = 202481;
             //float preemptionp = 0.75;
