@@ -1,6 +1,8 @@
 import numpy as np
 import ESMF
 
+import geopandas as gpd
+
 import numpy
 import netCDF4 as nc4
 import os
@@ -41,79 +43,77 @@ def get_date_time(path):
     date_time = date_time.split('_')[1]  #this index may depend on the naming format of the forcing data
     return date_time
 
-def mesh_create_polygon(infile, cat_id):
+def mesh_create_polygon(coord_list, cat_id, cleanup_geometry=False):
     """
     Create a ESMF mesh from the infile that contains the coordinates of the polygon
     corresponding to a catchment
     """
     # Read in polygon coordinates
-    sep = " "
-    filename = infile
     node_id = []
     lons = []
     lats = []
-    lons_lats = []
     poly_coords = []
-    with open(filename) as f:
-        next(f)
-        for x in f:
-            node_id.append(int(x.split(' ')[0]))
-            lons.append(float(x.split(' ')[1]))
-            lats.append(float(x.split(' ')[2]))
-            lons_lats.append(float(x.split(' ')[1]))
-            lons_lats.append(float(x.split(' ')[2]))
-            thistuple = (float(x.split(' ')[1]), float(x.split(' ')[2]))
-            poly_coords.append(thistuple)
-    f.close()
+    node_id1 = range(len(coord_list))
+    i = 0
+    for coord in coord_list:
+        node_id.append(i)
+        lons.append(float(coord[0]))
+        lats.append(float(coord[1]))
+        thistuple = (float(coord[0]), float(coord[1]))
+        poly_coords.append(thistuple)
+        i += 1
 
+    #FIXME The following code is specific for the current huc01 hydrofabric.
+    # Note also that this part of code does not throw an exception, so no exception to catch here. Rather,
+    # it generates a ValueError when the function mesh.add_elements() is executed.
     # This part of the codes correct the error present in the hydrofabric data for the
     # two listed catchments that contains zero angle and clockwise ordering that cause meshing error
-    #FIXME This can be removed for hydrofabric without error or can be used as a validation check
-    #for a new hydrofabric
-    if cat_id == 'cat-39990' or cat_id == 'cat-39965':
-        # check that the angle is not zero
-        index = []
-        for i in range(len(lons)-2):
-            x0 = lons[i]
-            y0 = lats[i]
-            x1 = lons[i+1]
-            y1 = lats[i+1]
-            x2 = lons[i+2]
-            y2 = lats[i+2]
-            vec1x = x0 - x1
-            vec1y = y0 - y1
-            vec2x = x2 - x1
-            vec2y = y2 - y1
-            dot_prod = vec1x*vec2x + vec1y*vec2y
-            abs_vec1 = math.sqrt(vec1x**2 + vec1y**2)
-            abs_vec2 = math.sqrt(vec2x**2 + vec2y**2)
-            try:
-                norm_dot_prod = dot_prod / (abs_vec1 * abs_vec2)
-                angle = math.acos(norm_dot_prod)
-                if (abs(norm_dot_prod-1.0) < 10e-6):
-                    index.append(i+1)    # (i+1)th element is the apex of the angle
-            except ZeroDivisionError:
-                raise(ZeroDivisionError("ZeroDivisionError, abs_vec1, abs_vec2 = {}, {}".format(abs_vec1, abs_vec2)))
+    # This can be removed for hydrofabric without error or can be used as a validation check
+    # for a new hydrofabric
+    if cleanup_geometry:
+        #only incorrect catchments need clean up
+        #the following cat-ids are specific for huc01. For general case, users need to identify the cat-ids that cause
+        #meshing to fail
+        if cat_id == 'cat-39990' or cat_id == 'cat-39965':
+            # check that the angle is not zero
+            index = []
+            for i in range(len(lons)-2):
+                x0 = lons[i]
+                y0 = lats[i]
+                x1 = lons[i+1]
+                y1 = lats[i+1]
+                x2 = lons[i+2]
+                y2 = lats[i+2]
+                vec1x = x0 - x1
+                vec1y = y0 - y1
+                vec2x = x2 - x1
+                vec2y = y2 - y1
+                dot_prod = vec1x*vec2x + vec1y*vec2y
+                abs_vec1 = math.sqrt(vec1x**2 + vec1y**2)
+                abs_vec2 = math.sqrt(vec2x**2 + vec2y**2)
+                try:
+                    norm_dot_prod = dot_prod / (abs_vec1 * abs_vec2)
+                    angle = math.acos(norm_dot_prod)
+                    if (abs(norm_dot_prod-1.0) < 10e-6):
+                        index.append(i+1)    # (i+1)th element is the apex of the angle
+                except ZeroDivisionError:
+                    raise(ZeroDivisionError("ZeroDivisionError, abs_vec1, abs_vec2 = {}, {}".format(abs_vec1, abs_vec2)))
 
-        #remove the vertices associated with zero angle
-        idx = index[0]
-        idx2 = idx * 2
-        del node_id[idx]
-        # keep the node_id contiguous
-        for i in range(len(node_id)):
-            if i >= idx:
-                node_id[i] = node_id[i] - 1
-        del lons[idx]
-        del lats[idx]
-        del lons_lats[idx2]
-        del lons_lats[idx2]  # after the first del action, element at idx2+1 shift to idx2
-        del poly_coords[idx]
-        # Handle the clockwise ordering of polygon vertices
-        node_id.reverse()
-        lons.reverse()
-        lats.reverse()
-        lons_lats.reverse()
-        poly_coords.reverse()
+            #remove the vertices associated with zero angle
+            idx = index[0]
+            del node_id[idx]
+            # keep the node_id contiguous
+            for i in range(len(node_id)):
+                if i >= idx:
+                    node_id[i] = node_id[i] - 1
+            del lons[idx]
+            del lats[idx]
+            del poly_coords[idx]
+            # Handle the clockwise ordering of polygon vertices
+            node_id.reverse()
+            lons.reverse()
+            lats.reverse()
+            poly_coords.reverse()
 
     #add the center of the polygon to the nodes
     elem_id = []
@@ -136,7 +136,18 @@ def mesh_create_polygon(infile, cat_id):
     lats_max = np.max(lats_array)
     lats_min = np.min(lats_array)
 
-    nodeCoord = np.array(lons_lats)
+    #lons_lats_array = np.empty((lons_array.size + lats_array.size), dtype=int)
+    lons_lats_array = numpy.zeros([lons_array.size + lats_array.size], dtype='float64')
+    if cleanup_geometry:
+        if cat_id == 'cat-39990' or cat_id == 'cat-39965':
+            lons_lats_array[0::2] = lats_array    #lons_array -> lats_array for cat-39990, cat-39965
+            lons_lats_array[1::2] = lons_array    #lats_array -> lons_array for cat-39990, cat-39965
+        else:
+            lons_lats_array[0::2] = lons_array
+            lons_lats_array[1::2] = lats_array
+
+    nodeCoord = lons_lats_array
+
     polygon = Polygon(poly_coords)
     nodeOwner = np.zeros(num_node)
 
@@ -207,7 +218,6 @@ def read_sub_netcdf(cat_id, datafile, var_name_list, var_value_list, lons_min_gr
     """
     Extract a sebset netcdf from the large original netcdf file
     """
-    #TODO it might be possible to read huc01 basin into memory as an intermediate sub-region to speed up 
     # the reading process. read_sub_netcdf is currently the slowest process as the input netcdf file is too large
     ds = nc4.Dataset(datafile)
 
@@ -291,9 +301,10 @@ def read_sub_netcdf(cat_id, datafile, var_name_list, var_value_list, lons_min_gr
         wfile.write(out_data+'\n')
     wfile.close()
 
-    return var_value_list, Var_array, landmask, nlats, nlons
+    return var_value_list, Var_array, landmask, nlats, nlons, ds
 
-def write_sub_netcdf(filename_out, var_name_list, var_value_list, Var_array, landmask, nlats, nlons):
+
+def write_sub_netcdf(filename_out, var_name_list, var_value_list, Var_array, landmask, nlats, nlons, ds):
     """
     Write the extracted data to a netcdf file per catchment
     """
@@ -303,7 +314,6 @@ def write_sub_netcdf(filename_out, var_name_list, var_value_list, Var_array, lan
     ncfile_out.createDimension('time', None)
     ncfile_out.createDimension('lat', nlats)
     ncfile_out.createDimension('lon', nlons)
-
 
     time = Var_array[0]
     lat = Var_array[1][0]
@@ -320,7 +330,6 @@ def write_sub_netcdf(filename_out, var_name_list, var_value_list, Var_array, lan
     time_out = ncfile_out.createVariable('time', 'double', ('time',), fill_value=-99999)
     lat_out = ncfile_out.createVariable('lat', 'double', ('lat',), fill_value=-99999)
     lon_out = ncfile_out.createVariable('lon', 'double', ('lon',), fill_value=-99999)
-    landmask_out = ncfile_out.createVariable('landmask', 'i', ('time', 'lat', 'lon',), fill_value=-99999)
     APCP_surface_out = ncfile_out.createVariable('APCP_surface', 'f4', ('time', 'lat', 'lon',), fill_value=-99999)
     PRES_surface_out = ncfile_out.createVariable('PRES_surface', 'f4', ('time', 'lat', 'lon',), fill_value=-99999)
     DLWRF_surface_out = ncfile_out.createVariable('DLWRF_surface', 'f4', ('time', 'lat', 'lon',), fill_value=-99999)
@@ -329,44 +338,25 @@ def write_sub_netcdf(filename_out, var_name_list, var_value_list, Var_array, lan
     TMP_2maboveground_out = ncfile_out.createVariable('TMP_2maboveground', 'f4', ('time', 'lat', 'lon',), fill_value=-99999)
     UGRD_10maboveground_out = ncfile_out.createVariable('UGRD_10maboveground', 'f4', ('time', 'lat', 'lon',), fill_value=-99999)
     VGRD_10maboveground_out = ncfile_out.createVariable('VGRD_10maboveground', 'f4', ('time', 'lat', 'lon',), fill_value=-99999)
+    landmask_out = ncfile_out.createVariable('landmask', 'i', ('time', 'lat', 'lon',), fill_value=-99999)
     #APCP_surface_out[:,:,:] = Var_array[3]
 
-    # Set up attributes
-    setattr(time_out, 'units', 'seconds since 1970-01-01 00:00:00.0 0:00')
-    setattr(time_out, 'missing_value', -99999)
-    setattr(time_out, 'time_step_setting', 'auto')
-    setattr(lat_out, 'units', 'degrees_north')
-    setattr(lon_out, 'units', 'degrees_east')
+    varout_dict = {'time':time_out, 'latitude':lat_out, 'longitude':lon_out,
+                   'APCP_surface':APCP_surface_out, 'PRES_surface':PRES_surface_out, 'DLWRF_surface':DLWRF_surface_out,
+                   'DSWRF_surface':DSWRF_surface_out, 'SPFH_2maboveground':SPFH_2maboveground_out, 'TMP_2maboveground':TMP_2maboveground_out,
+                   'UGRD_10maboveground':UGRD_10maboveground_out, 'VGRD_10maboveground':VGRD_10maboveground_out}
+
+    for name, variable in ds.variables.items():
+        varout_name = varout_dict[name]
+        for attrname in variable.ncattrs():
+            if attrname != '_FillValue':
+                setattr(varout_name, attrname, getattr(variable, attrname))
+
     setattr(landmask_out, 'description', '1=in polygon 0=outside polygon')
-    setattr(APCP_surface_out, 'units', 'kg/m^2')
-    setattr(APCP_surface_out, 'missing_value', -99999)
-    setattr(APCP_surface_out, 'long_name', 'Total Precipitation')
-    setattr(PRES_surface_out, 'units', 'Pa')
-    setattr(PRES_surface_out, 'missing_value', -99999)
-    setattr(PRES_surface_out, 'long_name', 'Pressure')
-    setattr(DLWRF_surface_out, 'units', 'W/m^2')
-    setattr(DLWRF_surface_out, 'missing_value', -99999)
-    setattr(DLWRF_surface_out, 'long_name', 'Downward Long-Wave Rad. Flux')
-    setattr(DSWRF_surface_out, 'units', 'W/m^2')
-    setattr(DSWRF_surface_out, 'missing_value', -99999)
-    setattr(DSWRF_surface_out, 'long_name', 'Downward Short-Wave Rad. Flux')
-    setattr(SPFH_2maboveground_out, 'units', 'kg/kg')
-    setattr(SPFH_2maboveground_out, 'missing_value', -99999)
-    setattr(SPFH_2maboveground_out, 'long_name', 'Specific Humidity')
-    setattr(TMP_2maboveground_out, 'units', 'K')
-    setattr(TMP_2maboveground_out, 'missing_value', -99999)
-    setattr(TMP_2maboveground_out, 'long_name', 'Temperature')
-    setattr(UGRD_10maboveground_out, 'units', 'm/s')
-    setattr(UGRD_10maboveground_out, 'missing_value', -99999)
-    setattr(UGRD_10maboveground_out, 'long_name', 'U-Component of Wind')
-    setattr(VGRD_10maboveground_out, 'units', 'm/s')
-    setattr(VGRD_10maboveground_out, 'missing_value', -99999)
-    setattr(VGRD_10maboveground_out, 'long_name', 'V-Component of Wind')
 
     time_out[:] = time
     lat_out[:] = lat
     lon_out[:] = lon
-    landmask_out[:,:,:] = landmask[:,:,:]
     APCP_surface_out[:,:,:] = APCP_surface[:,:,:]
     PRES_surface_out[:,:,:] = PRES_surface[:,:,:]
     DLWRF_surface_out[:,:,:] = DLWRF_surface[:,:,:]
@@ -375,6 +365,7 @@ def write_sub_netcdf(filename_out, var_name_list, var_value_list, Var_array, lan
     TMP_2maboveground_out[:,:,:] = TMP_2maboveground[:,:,:]
     UGRD_10maboveground_out[:,:,:] = UGRD_10maboveground[:,:,:]
     VGRD_10maboveground_out[:,:,:] = VGRD_10maboveground[:,:,:]
+    landmask_out[:,:,:] = landmask[:,:,:]
     ncfile_out.close()
 
 def grid_to_mesh_regrid(cat_id, lons_start, lats_start, lons_min, lons_max, lats_min, lats_max, polygon, esmf_outfile, mesh,
@@ -389,7 +380,8 @@ def grid_to_mesh_regrid(cat_id, lons_start, lats_start, lons_min, lons_max, lats
     [lat,lon] = [1,0]
 
     # These values are obtained from the original input AORC file: AORC-OWP_2012063023z.nc4
-    # they are now generalized to arbitrary starting longitude and latitude value
+    # they have now been generalized
+    #for huc01
     #lats_start = 20.0
     #lons_start = -130.0
 
@@ -427,6 +419,7 @@ def grid_to_mesh_regrid(cat_id, lons_start, lats_start, lons_min, lons_max, lats
     gridLat = srcfield.grid.get_coords(lat, ESMF.StaggerLoc.CENTER)
 
     srcfield_tmp = srcfield.data[:,:]
+    #print("type of srcfield.data = {}".format(type(srcfield_tmp)))    #<class 'numpy.ndarray'>
 
     dstfield = ESMF.Field(mesh, name='dstfield', meshloc=ESMF.MeshLoc.ELEMENT)
     xctfield = ESMF.Field(mesh, name='xctfield', meshloc=ESMF.MeshLoc.ELEMENT)
@@ -456,6 +449,20 @@ def grid_to_mesh_regrid(cat_id, lons_start, lats_start, lons_min, lons_max, lats
     srcfield_vars.append('UGRD_10maboveground')
     srcfield_vars.append('VGRD_10maboveground')
 
+    #get input datafile_in atributes: scale_factor, offset
+    ds1 = nc4.Dataset(datafile_in)
+   
+    add_offset = numpy.zeros([len(srcfield_vars)])
+    scale_factor = numpy.zeros([len(srcfield_vars)])
+    i = 0
+    for key in srcfield_vars:
+        scale_factor[i] = ds1.variables[key].scale_factor
+        try:
+            add_offset[i] = ds1.variables[key].add_offset
+        except AttributeError as e:
+            add_offset[i] = 0.0
+        i += 1
+
     # read in the weight file
     ds = nc4.Dataset(weight_file)
 
@@ -463,7 +470,6 @@ def grid_to_mesh_regrid(cat_id, lons_start, lats_start, lons_min, lons_max, lats
     col = ds['col']
     row = ds['row']
 
-    ds1 = nc4.Dataset(datafile_in)
     time = ds1.variables['time'][0]
     with open(esmf_outfile, 'a') as wfile:
         for m in range(1):
@@ -480,7 +486,8 @@ def grid_to_mesh_regrid(cat_id, lons_start, lats_start, lons_min, lons_max, lats
                 for k in range(len(col)):
                     l = col[k] - 1
                     sum += weight[k] * flat_array[l]
-                average = sum
+                #take into account the scale_factor and offset in the input netcdf datafile
+                average = sum * scale_factor[i] + add_offset[i]
                 if i == 0 and average < 0:    # i == 0 corresponds srcfield_vars for APCP_surface
                     average = 0.0
                 out_data += ",{}".format(average)
@@ -489,7 +496,7 @@ def grid_to_mesh_regrid(cat_id, lons_start, lats_start, lons_min, lons_max, lats
 
     return srcfield.data, lons_par, lats_par
 
-def csv_to_netcdf(num_catchments, num_time):
+def csv_to_netcdf(num_catchments, num_time, aorc_ncfile):
     """
     Convert from csv to netcdf format
     """
@@ -501,7 +508,7 @@ def csv_to_netcdf(num_catchments, num_time):
     df = pd.read_csv(csv_infile)
     df = df.sort_values(['time', 'id'])
     variable_names = df.columns
-    print(df.head(3), "\n")
+    #print(df.head(3), "\n")
 
     #make the data set
     filename = output_path
@@ -533,7 +540,6 @@ def csv_to_netcdf(num_catchments, num_time):
 
     #save data into list of list
     df = df.reset_index()  # make sure indexes pair with number of rows
-    print(df.head(3), "\n")
     #here we assume all time steps have been written to the esmf_outfile in csv format
     k = 0
     for index, row in df.iterrows():
@@ -556,7 +562,6 @@ def csv_to_netcdf(num_catchments, num_time):
         vgrd_tmp.append(row['VGRD_10maboveground'])
         # completed appending all catchment rows for this time step
         if k % num_catchments == 0:
-            print("len(apcp_tmp) = {}".format(len(apcp_tmp)))
             apcp_surface.append(apcp_tmp)
             dlwrf_surface.append(dlwrf_tmp)
             dswrf_surface.append(dswrf_tmp)
@@ -616,35 +621,24 @@ def csv_to_netcdf(num_catchments, num_time):
     DSWRF_surface_out = ncfile_out.createVariable('SWDOWN', 'f4', ('catchment-id', 'time',), fill_value=-99999)
     DLWRF_surface_out = ncfile_out.createVariable('LWDOWN', 'f4', ('catchment-id', 'time',), fill_value=-99999)
 
-    # Set up attributes
+    #get input aorc_ncfile atributes
+    ds = nc4.Dataset(aorc_ncfile)
+    varout_dict = {'time':time_out,
+                   'APCP_surface':APCP_surface_out, 'PRES_surface':PRES_surface_out, 'DLWRF_surface':DLWRF_surface_out,
+                   'DSWRF_surface':DSWRF_surface_out, 'SPFH_2maboveground':SPFH_2maboveground_out, 'TMP_2maboveground':TMP_2maboveground_out,
+                   'UGRD_10maboveground':UGRD_10maboveground_out, 'VGRD_10maboveground':VGRD_10maboveground_out}
+
+    for name, variable in ds.variables.items():
+        if name == 'latitude' or name == 'longitude':
+            pass
+        else:
+            varout_name = varout_dict[name]
+            for attrname in variable.ncattrs():
+                if attrname != '_FillValue':
+                    setattr(varout_name, attrname, getattr(variable, attrname))
+
+    #set attributes for additional variables
     setattr(cat_id_out, 'description', 'catchment_id')
-    setattr(time_out, 'units', 'seconds since 1970-01-01 00:00:00.0 0:00')
-    setattr(time_out, 'missing_value', -99999)
-    setattr(time_out, 'time_step_setting', 'auto')
-    setattr(APCP_surface_out, 'units', 'kg/m^2')
-    setattr(APCP_surface_out, 'missing_value', -99999)
-    setattr(APCP_surface_out, 'long_name', 'Total Precipitation')
-    setattr(PRES_surface_out, 'units', 'Pa')
-    setattr(PRES_surface_out, 'missing_value', -99999)
-    setattr(PRES_surface_out, 'long_name', 'Pressure')
-    setattr(DLWRF_surface_out, 'units', 'W/m^2')
-    setattr(DLWRF_surface_out, 'missing_value', -99999)
-    setattr(DLWRF_surface_out, 'long_name', 'Downward Long-Wave Rad. Flux')
-    setattr(DSWRF_surface_out, 'units', 'W/m^2')
-    setattr(DSWRF_surface_out, 'missing_value', -99999)
-    setattr(DSWRF_surface_out, 'long_name', 'Downward Short-Wave Rad. Flux')
-    setattr(SPFH_2maboveground_out, 'units', 'kg/kg')
-    setattr(SPFH_2maboveground_out, 'missing_value', -99999)
-    setattr(SPFH_2maboveground_out, 'long_name', 'Specific Humidity')
-    setattr(TMP_2maboveground_out, 'units', 'K')
-    setattr(TMP_2maboveground_out, 'missing_value', -99999)
-    setattr(TMP_2maboveground_out, 'long_name', 'Temperature')
-    setattr(UGRD_10maboveground_out, 'units', 'm/s')
-    setattr(UGRD_10maboveground_out, 'missing_value', -99999)
-    setattr(UGRD_10maboveground_out, 'long_name', 'U-Component of Wind')
-    setattr(VGRD_10maboveground_out, 'units', 'm/s')
-    setattr(VGRD_10maboveground_out, 'missing_value', -99999)
-    setattr(VGRD_10maboveground_out, 'long_name', 'V-Component of Wind')
 
     cat_id_out[:] = cat_id[:]
     time_out[:] = time[:]
@@ -660,22 +654,24 @@ def csv_to_netcdf(num_catchments, num_time):
     ncfile_out.close()
 
 def process_sublist(data : dict, lock: Lock, num: int):
-    num_inputs = len(data["csv_files"])
-    input_dir = data["input_dir"]
+    num_inputs = len(data["g_sublist"])
     datafile = data["datafile"]
     aorcfile = datafile
     iter_k = data["iter"]
 
     for i in range(num_inputs):
         #extract data
-        csv_file = data["csv_files"][i]
-        cat_poly = csv_file[:-3]
-        cat_id = cat_poly.split('_')[0]
         pos = data["offsets"][i]
-        infile = os.path.join(input_dir, csv_file)
+        g_sublist = data["g_sublist"][i]
+
+        #extract catchment geometry
+        x,y = g_sublist.exterior.coords.xy
+        all_coords = np.dstack((x,y))
+        coord_list = all_coords[0]
+        cat_id = data["cat_ids"][i]
 
         #create polygon mesh
-        (mesh, lons_min, lons_max, lats_min, lats_max, polygon) = mesh_create_polygon(infile, cat_id)
+        (mesh, lons_min, lons_max, lats_min, lats_max, polygon) = mesh_create_polygon(coord_list, cat_id, cleanup_geometry)
 
         #define the boundary for extract sub-netcdf data
         lats_min_grid, lats_max_grid, lats_delta, lats_first, lons_min_grid, lons_max_grid, lons_delta, lons_first = get_cat_geometry(aorcfile,
@@ -689,13 +685,13 @@ def process_sublist(data : dict, lock: Lock, num: int):
             var_value_list.append([])
 
         #extract sub-netcdf data
-        var_value_list, Var_array, landmask, nlats, nlons = read_sub_netcdf(cat_id, datafile, var_name_list, var_value_list,
+        var_value_list, Var_array, landmask, nlats, nlons, ds = read_sub_netcdf(cat_id, datafile, var_name_list, var_value_list,
                                                                   lons_min_grid, lons_max_grid, lats_min_grid, lats_max_grid,
                                                                   lons_delta, lats_delta, polygon)
 
         #write to netcdf file for the cat_id
         filename_out = join(output_root, "huc01/netcdf_files/", "AORC_"+cat_id+".nc")
-        write_sub_netcdf(filename_out, var_name_list, var_value_list, Var_array, landmask, nlats, nlons)
+        write_sub_netcdf(filename_out, var_name_list, var_value_list, Var_array, landmask, nlats, nlons, ds)
 
         #perform regridding, generate weight file, and calculate average for cat_id
         (srcfield_data, lons_par, lats_par) = grid_to_mesh_regrid(cat_id, lons_first, lats_first, lons_min, lons_max, lats_min, lats_max, polygon, esmf_outfile, mesh,
@@ -741,28 +737,40 @@ def plot_srcfield(srcfield_data, lons_par, lats_par):
 
 if __name__ == '__main__':
     #parse the input and output root directory
-    #run code with "python code_name -i /local/esmpy -o /local/esmpy"
+    #example for huc01: run code with "python code_name -i /local/esmpy -o /local/esmpy -c 1"
+    #for completely correct hydrofabric, run code with "python code_name -i /local/esmpy -o /local/esmpy -c 0"
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", dest="input_root", type=str, required=True, help="The input directory with csv files")
     parser.add_argument("-o", dest="output_root", type=str, required=True, help="The output file path")
+    parser.add_argument("-c", dest="cleanup_geometry", type=int, required=True, help="The logic variable for clean up abnormal catchment geometry")
     args = parser.parse_args()
 
     #retrieve parsed values
     input_root = args.input_root
     output_root = args.output_root
+    cleanup_geometry = args.cleanup_geometry
 
-    #prepare to read in the pre-generated catchment geometry in polygon form
-    catfile_path = join(input_root, "huc01/polygons/", "cat-*_poly.csv")
-    cat_files = glob.glob(catfile_path)
-    print("number of catchments = {}".format(len(cat_files)))
-    cat_files.sort()
-    csv_files = []
-    for path in cat_files:
-        path = Path(path)
-        name = path.stem
-        id = name.split('_')[0]
-        csv_name = name + '.csv'
-        csv_files.append(csv_name)
+    if cleanup_geometry == 0:
+        cleanup_geometry = False
+    else:
+        cleanup_geometry = True
+
+    #generate catchment geometry from hydrofabric 
+    hyfabfile = "/local/ngen/data/huc01/huc_01/hydrofabric/spatial/catchment_data.geojson"
+    cat_df_full = gpd.read_file(hyfabfile)
+    g = [i for i in cat_df_full.geometry]
+    h = [i for i in cat_df_full.id]
+    n_cats = len(g)
+    print("number of catchments = {}".format(n_cats))
+
+    cat_dict = {}
+    for i in range(n_cats):
+        if h[i] == "cat-39990":
+            cat_dict.update({"cat-39990":i})
+            print("for cat-39990, list index = {}".format(i))
+        if h[i] == "cat-39965":
+            cat_dict.update({"cat-39965":i})
+            print("for cat-39965, list index = {}".format(i))
 
     # weight based average
     esmf_outfile = join(output_root,  "huc01/esmf_output.csv")
@@ -786,8 +794,9 @@ if __name__ == '__main__':
         wfile.write(out_header+'\n')
     wfile.close()
 
-    #datafile_path = join(input_root, "huc01/aorc_netcdf/", "AORC-OWP_*.nc4")
-    datafile_path = join(input_root, "huc01/aorc_netcdf_test/", "AORC-OWP_*.nc4")
+    #datafile_path = join(input_root, "huc01/aorc_netcdf/", "AORC-OWP_*.nc4")    # run the whole data set
+    datafile_path = join(input_root, "huc01/aorc_netcdf_test/", "AORC-OWP_*.nc4")    # run a few input forcing file
+    #datafile_path = join(input_root, "huc01/aorc_netcdf_test/", "AORC-OWP_2012062018z.nc4")    # run a single file for fast testing
     datafiles = glob.glob(datafile_path)
     print("number of forcing files = {}".format(len(datafiles)))
     #process data with time ordered
@@ -796,28 +805,33 @@ if __name__ == '__main__':
     # some function only executed once at the beginning (k = 0)
     k = 0
     for datafile in datafiles:
-        #check the preogress of the calculation
+        if k == 0:
+            aorc_ncfile = datafile    #save a file to get attributes
+
+        #checking the progress of the computation
         date_time = get_date_time(datafile)
         print("processing forcing file for date_time = {}".format(date_time))
 
-        num_csv_inputs = len(csv_files)
+        #prepare for processing
+        #num_csv_inputs = len(csv_files)
+        num_csv_inputs = len(g)
         num_processes = 50
 
         #generate the data objects for child processes
-        csv_groups = np.array_split(np.array(csv_files), num_processes)
-        pos_groups = np.array_split(np.array(range(num_csv_inputs)), num_processes)
+        g_groups = np.array_split(np.array(g), num_processes)
+        cat_groups = np.array_split(np.array(h), num_processes)
+        pos_groups = np.array_split(np.array(range(n_cats)), num_processes)
 
         process_data = []
         process_list = []
         lock = Lock()
 
-        input_dir = join(input_root, "huc01/polygons")
         for i in range(num_processes):
             # fill the dictionary with needed at
             data = {}
-            data["csv_files"] = csv_groups[i]
+            data["g_sublist"] = g_groups[i].tolist()
+            data["cat_ids"] = cat_groups[i]
             data["offsets"] = pos_groups[i]
-            data["input_dir"] = input_dir
             data["datafile"] = datafile
             data["iter"] = k
 
@@ -837,8 +851,8 @@ if __name__ == '__main__':
             p.join()
         k += 1
 
-    num_catchments = len(cat_files)
+    num_catchments = n_cats
 
-    #write to a sngle netcdf file all time steps
+    #write a netcdf file every time step the same as the input file
     ntime = len(datafiles)
-    csv_to_netcdf(num_catchments, ntime)
+    csv_to_netcdf(num_catchments, ntime, aorc_ncfile)
