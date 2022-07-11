@@ -60,6 +60,7 @@ var classmodels_1_1bmi_1_1_bmi___c___adapter =
     [ "GetVarType", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#a3c386edbfd2f2efaf0a988d4dfe2f8e3", null ],
     [ "GetVarUnits", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#af9480c18092311e95bc0fb263b906101", null ],
     [ "Initialize", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#a43ba9007b2536787eb95a330167068ff", null ],
+    [ "Initialize", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#acf73770254a92bc6e6a565aafcf261b4", null ],
     [ "Initialize", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#a48f6705c514c7332edd8d59756ff7ca6", null ],
     [ "inner_get_input_item_count", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#af842e9fa306ecfa967fe4cee07f4b5fa", null ],
     [ "inner_get_output_item_count", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#a06bbf0b8e0c99f860fc60679152269d5", null ],

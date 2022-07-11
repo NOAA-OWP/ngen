@@ -1,4 +1,16 @@
 <map id="ReservoirKernelTest" name="ReservoirKernelTest">
-<area shape="rect" id="node1" title=" " alt="" coords="5,131,241,677"/>
-<area shape="rect" id="node2" title=" " alt="" coords="77,5,170,83"/>
+<area shape="rect" id="node1" title=" " alt="" coords="499,1755,735,2037"/>
+<area shape="rect" id="node2" title=" " alt="" coords="247,1417,340,1494"/>
+<area shape="rect" id="node3" title=" " alt="" coords="365,1409,542,1501"/>
+<area shape="rect" id="node4" href="$class_reservoir_1_1_explicit___time_1_1_reservoir.html" title="Reservoir that has zero, one, or multiple outlets." alt="" coords="356,932,516,1244"/>
+<area shape="rect" id="node5" href="$structreservoir__parameters.html" title=" " alt="" coords="336,770,523,862"/>
+<area shape="rect" id="node6" href="$structreservoir__state.html" title=" " alt="" coords="147,770,312,862"/>
+<area shape="rect" id="node7" title=" " alt="" coords="547,770,722,862"/>
+<area shape="rect" id="node8" title=" " alt="" coords="499,571,672,663"/>
+<area shape="rect" id="node9" href="$class_reservoir_1_1_explicit___time_1_1_reservoir___outlet.html" title="Base Single Reservior Outlet Class." alt="" coords="652,145,855,487"/>
+<area shape="rect" id="node13" title=" " alt="" coords="696,564,869,671"/>
+<area shape="rect" id="node10" title=" " alt="" coords="421,277,558,355"/>
+<area shape="rect" id="node11" title=" " alt="" coords="749,5,787,83"/>
+<area shape="rect" id="node12" title=" " alt="" coords="893,579,1005,656"/>
+<area shape="rect" id="node14" title=" " alt="" coords="873,763,1055,869"/>
 </map>

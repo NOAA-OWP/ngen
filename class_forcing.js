@@ -32,6 +32,7 @@ var class_forcing =
     [ "get_ts_index_for_time", "class_forcing.html#a5a6e6d24f60ea8e99311cf3301148287", null ],
     [ "get_value", "class_forcing.html#a2def8c09c5369b80a5f4f7e754fb5a9d", null ],
     [ "get_value_for_param_name", "class_forcing.html#aa8013150906cd10090c62c59c5e8c730", null ],
+    [ "get_values", "class_forcing.html#af3ec12b72c1001ff5977d113a6bca37f", null ],
     [ "is_aorc_forcing", "class_forcing.html#a27a8452d12c67dece00bb83efab16087", null ],
     [ "is_param_sum_over_time_step", "class_forcing.html#a1fb70d287a4a8b2c73352ec86f3986b3", null ],
     [ "is_property_sum_over_time_step", "class_forcing.html#a3636054ac315721a22226ccf5833f64e", null ],

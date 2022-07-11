@@ -11,6 +11,7 @@ var classdata__access_1_1_deferred_wrapped_provider =
     [ "get_forcing_output_time_end", "classdata__access_1_1_deferred_wrapped_provider.html#acc2f7b841659083ff2030c4ab5daba94", null ],
     [ "get_ts_index_for_time", "classdata__access_1_1_deferred_wrapped_provider.html#a49a51a3a5789bcdd2cf94e489bb46889", null ],
     [ "get_value", "classdata__access_1_1_deferred_wrapped_provider.html#aaba36c469c4f8b7310061768c388341c", null ],
+    [ "get_values", "classdata__access_1_1_deferred_wrapped_provider.html#a07808059fd486668843ae326877fb51a", null ],
     [ "getSetMessage", "classdata__access_1_1_deferred_wrapped_provider.html#a60c2eb820c4b4fadce6204d6b291508a", null ],
     [ "is_property_sum_over_time_step", "classdata__access_1_1_deferred_wrapped_provider.html#ae20826e249a64e1622fedc8f74f1df9a", null ],
     [ "isReadyToProvideData", "classdata__access_1_1_deferred_wrapped_provider.html#abfedf77bdf3e834efd4365942bc6db56", null ],

@@ -1,11 +1,17 @@
 <map id="HY_PointHydroNexus" name="HY_PointHydroNexus">
-<area shape="rect" id="node1" title=" " alt="" coords="167,787,349,1069"/>
-<area shape="rect" id="node2" href="$class_h_y___hydro_nexus.html" title=" " alt="" coords="154,469,362,737"/>
-<area shape="rect" id="node3" title=" " alt="" coords="313,160,392,237"/>
-<area shape="rect" id="node8" title=" " alt="" coords="178,307,338,385"/>
-<area shape="rect" id="node4" title=" " alt="" coords="291,5,415,97"/>
-<area shape="rect" id="node5" title=" " alt="" coords="5,300,143,392"/>
-<area shape="rect" id="node6" title=" " alt="" coords="8,160,145,237"/>
-<area shape="rect" id="node7" title=" " alt="" coords="125,13,164,90"/>
-<area shape="rect" id="node9" title=" " alt="" coords="174,160,286,237"/>
+<area shape="rect" id="node1" title=" " alt="" coords="466,815,647,1024"/>
+<area shape="rect" id="node2" href="$class_h_y___hydro_nexus.html" title=" " alt="" coords="114,469,322,737"/>
+<area shape="rect" id="node3" title=" " alt="" coords="28,160,107,237"/>
+<area shape="rect" id="node8" title=" " alt="" coords="85,307,245,385"/>
+<area shape="rect" id="node4" title=" " alt="" coords="5,5,129,97"/>
+<area shape="rect" id="node5" title=" " alt="" coords="269,300,407,392"/>
+<area shape="rect" id="node6" title=" " alt="" coords="147,160,284,237"/>
+<area shape="rect" id="node7" title=" " alt="" coords="353,13,392,90"/>
+<area shape="rect" id="node9" title=" " alt="" coords="317,160,429,237"/>
+<area shape="rect" id="node11" title=" " alt="" coords="560,300,695,392"/>
+<area shape="rect" id="node10" title=" " alt="" coords="405,550,540,657"/>
+<area shape="rect" id="node13" title=" " alt="" coords="565,550,722,657"/>
+<area shape="rect" id="node12" title=" " alt="" coords="717,160,756,237"/>
+<area shape="rect" id="node15" title=" " alt="" coords="727,307,885,385"/>
+<area shape="rect" id="node14" title=" " alt="" coords="747,557,875,649"/>
 </map>

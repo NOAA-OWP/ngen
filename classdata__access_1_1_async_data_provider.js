@@ -5,6 +5,7 @@ var classdata__access_1_1_async_data_provider =
     [ "get_data_stop_time", "classdata__access_1_1_async_data_provider.html#af598b54c03163287adc56400b3e9bdfe", null ],
     [ "get_ts_index_for_time", "classdata__access_1_1_async_data_provider.html#acca503f7d24367b8a3298a2c10e5d75f", null ],
     [ "get_value", "classdata__access_1_1_async_data_provider.html#a2409247d93cc63d0626e623c3a024f1b", null ],
+    [ "get_values", "classdata__access_1_1_async_data_provider.html#adcd588f997aa5ec185744d36e801054a", null ],
     [ "is_property_sum_over_time_step", "classdata__access_1_1_async_data_provider.html#a8254f58e64499bb4ae799ab120fd0934", null ],
     [ "record_duration", "classdata__access_1_1_async_data_provider.html#a558af5fd091e84283470af3ca74d24d8", null ],
     [ "request_value", "classdata__access_1_1_async_data_provider.html#a31d15fd72f35c01c67c790f33f8aa2c1", null ],

@@ -37,6 +37,7 @@ var classrealization_1_1_bmi___formulation =
     [ "get_response", "classrealization_1_1_bmi___formulation.html#adf21a61a7da1e87a200d8391cb3e33ce", null ],
     [ "get_ts_index_for_time", "classrealization_1_1_bmi___formulation.html#acca503f7d24367b8a3298a2c10e5d75f", null ],
     [ "get_value", "classrealization_1_1_bmi___formulation.html#a2409247d93cc63d0626e623c3a024f1b", null ],
+    [ "get_values", "classrealization_1_1_bmi___formulation.html#adcd588f997aa5ec185744d36e801054a", null ],
     [ "interpret_parameters", "classrealization_1_1_bmi___formulation.html#a65f97b5efe05e786f59d9f5fd1b10209", null ],
     [ "is_bmi_input_variable", "classrealization_1_1_bmi___formulation.html#a27f3c3f1d1d36edead0b3c17870d720c", null ],
     [ "is_bmi_model_time_step_fixed", "classrealization_1_1_bmi___formulation.html#a9d83489e654b1aecfc84d7c08396fa28", null ],
