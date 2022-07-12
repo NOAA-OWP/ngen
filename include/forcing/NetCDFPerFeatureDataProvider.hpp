@@ -8,6 +8,8 @@
 #include <string>
 #include <algorithm>
 #include <map>
+#include <memory>
+#include <string>
 #include <sstream>
 #include <exception>
 #include <mutex>
