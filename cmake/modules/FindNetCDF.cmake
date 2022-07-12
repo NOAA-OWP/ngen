@@ -70,7 +70,7 @@ macro (NetCDF_check_interface lang header libs)
       HINTS "${NETCDF_INCLUDE_DIR}"
       HINTS "${NETCDF_${lang}_ROOT}/include"
       ${USE_DEFAULT_PATHS})
-
+message( "Looking for ${libs} ...")
     find_library (NETCDF_${lang}_LIBRARY NAMES ${libs}
       HINTS "${NetCDF_lib_dirs}"
       HINTS "${NETCDF_${lang}_ROOT}/lib"
@@ -104,7 +104,8 @@ list (FIND NetCDF_FIND_COMPONENTS "F90" _nextcomp)
 if (_nextcomp GREATER -1)
   set (NETCDF_F90 1)
 endif ()
-NetCDF_check_interface (CXX netcdf netcdf_c++4)
+set( NETCDF_CXX_LIBRARY_NAMES_LIST netcdf_c++4 netcdf-cxx4 )
+NetCDF_check_interface (CXX netcdf "${NETCDF_CXX_LIBRARY_NAMES_LIST}")
 NetCDF_check_interface (F77 netcdf.inc  netcdff)
 NetCDF_check_interface (F90 netcdf.mod  netcdff)
 
