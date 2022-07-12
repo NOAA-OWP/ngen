@@ -35,6 +35,10 @@ inputs:
       required: false
       description: 'Use UDUNITS2 for unit conversion'
       default: 'ON'
+    use_netcdf:
+      required: false
+      description: 'Activate NetCDF Lumped Forcing Support'
+      default: 'ON'
     use_troute:
       required: false
       description: 'Enable t-route integration support'
@@ -146,7 +150,7 @@ runs:
           run: |
             export BOOST_ROOT="$(pwd)/boost_1_72_0"
             [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
-            cmake -B ${{ inputs.build-dir }} -DBMI_C_LIB_ACTIVE:BOOL=${{ inputs.bmi_c }} -DNGEN_ACTIVATE_PYTHON:BOOL=${{ inputs.use_python }} -DUDUNITS_ACTIVE:BOOL=${{ inputs.use_udunits }} -DBMI_FORTRAN_ACTIVE:BOOL=${{ inputs.bmi_fortran }} -DNGEN_ACTIVATE_ROUTING:BOOL=${{ inputs.use_troute }} -DMPI_ACTIVE:BOOL=${{ inputs.use_mpi }} -S .
+            cmake -B ${{ inputs.build-dir }} -DBMI_C_LIB_ACTIVE:BOOL=${{ inputs.bmi_c }} -DNGEN_ACTIVATE_PYTHON:BOOL=${{ inputs.use_python }} -DUDUNITS_ACTIVE:BOOL=${{ inputs.use_udunits }} -DBMI_FORTRAN_ACTIVE:BOOL=${{ inputs.bmi_fortran }} -DNGEN_ACTIVATE_ROUTING:BOOL=${{ inputs.use_troute }} -DNETCDF_ACTIVE:BOOL=${{ inputs.use_netcdf }} -DMPI_ACTIVE:BOOL=${{ inputs.use_mpi }} -S .
             echo "::set-output name=build-dir::$(echo ${{ inputs.build-dir }})"
           shell: bash
 
