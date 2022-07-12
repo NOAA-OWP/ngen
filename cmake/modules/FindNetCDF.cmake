@@ -70,7 +70,6 @@ macro (NetCDF_check_interface lang header libs)
       HINTS "${NETCDF_INCLUDE_DIR}"
       HINTS "${NETCDF_${lang}_ROOT}/include"
       ${USE_DEFAULT_PATHS})
-message( "Looking for ${libs} ...")
     find_library (NETCDF_${lang}_LIBRARY NAMES ${libs}
       HINTS "${NetCDF_lib_dirs}"
       HINTS "${NETCDF_${lang}_ROOT}/lib"
