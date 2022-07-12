@@ -7,6 +7,7 @@
 
 #include <string>
 #include <algorithm>
+#include <map>
 #include <sstream>
 #include <exception>
 #include <mutex>
