@@ -91,6 +91,7 @@ add_test(test_realization_config
         NGen::core
         NGen::realizations_catchment
         NGen::core_mediator
+        NGen::forcing
         libudunits2
         ${NETCDF_LIBRARIES}
 )
@@ -143,6 +144,7 @@ add_test(
         NGen::core
         NGen::realizations_catchment
         NGen::core_mediator
+        NGen::forcing
         libudunits2
         ${NETCDF_LIBRARIES}
 )
@@ -157,6 +159,7 @@ if(BMI_C_LIB_ACTIVE)
             NGen::core
             NGen::realizations_catchment
             NGen::core_mediator
+            NGen::forcing
             libudunits2
             ${NETCDF_LIBRARIES}
     )
@@ -172,6 +175,7 @@ if (${BMI_FORTRAN_ACTIVE})
             NGen::core
             NGen::realizations_catchment
             NGen::core_mediator
+            NGen::forcing
             libudunits2
             ${NETCDF_LIBRARIES}
     )
@@ -187,6 +191,7 @@ if (${NGEN_ACTIVATE_PYTHON})
             NGen::core
             NGen::realizations_catchment
             NGen::core_mediator
+            NGen::forcing
             libudunits2
             ${NETCDF_LIBRARIES}
     )
@@ -201,6 +206,7 @@ add_test(
         NGen::core
         NGen::realizations_catchment
         NGen::core_mediator
+        NGen::forcing
         libudunits2
         ${NETCDF_LIBRARIES}
 )
@@ -222,6 +228,7 @@ if(BMI_C_LIB_ACTIVE)
                     NGen::core
                     NGen::realizations_catchment
                     NGen::core_mediator
+                    NGen::forcing
                     libudunits2
                     ${NETCDF_LIBRARIES}
             )
@@ -238,6 +245,7 @@ add_test(
         NGen::core
         NGen::realizations_catchment
         NGen::core_mediator
+        NGen::forcing
         libudunits2
         ${NETCDF_LIBRARIES}
 )
@@ -286,6 +294,7 @@ add_test(
         NGen::core
         NGen::core_nexus
         NGen::core_mediator
+        NGen::forcing
         NGen::geojson
         NGen::realizations_catchment
         libudunits2
@@ -319,6 +328,7 @@ add_test(
         NGen::core
         NGen::core_nexus
         NGen::core_mediator
+        NGen::forcing
         NGen::geojson
         NGen::realizations_catchment
         libudunits2
@@ -356,6 +366,7 @@ add_test(
         gmock
         NGen::core_nexus
         NGen::core_mediator
+        NGen::forcing
         NGen::geojson
         NGen::realizations_catchment
         libudunits2
