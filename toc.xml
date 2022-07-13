@@ -6159,8 +6159,10 @@
       <topic label="UnitsHelper" href="class_units_helper.html">
         <topic label="convert_values" href="class_units_helper.html#a60789bcaf4c43a12ff3be963454eafca"/>
         <topic label="get_converted_value" href="class_units_helper.html#a0e2dd4070640d0c0425da6aa0828cedd"/>
-        <topic label="get_converter" href="class_units_helper.html#a8c5eee68c135b2dd9cf1a60d4da52759"/>
+        <topic label="get_converter" href="class_units_helper.html#ae12d6ae6e7207ef7961ca7184cc3627f"/>
         <topic label="init_unit_system" href="class_units_helper.html#a4a2ffc262b5d1f3c189ec2b9218d7fa2"/>
+        <topic label="converters" href="class_units_helper.html#aa4b358c65c746a1abd2097a3e626937c"/>
+        <topic label="converters_mutex" href="class_units_helper.html#a9ff8aebf7a7507c44ad1d903bca04563"/>
         <topic label="unit_system" href="class_units_helper.html#acf10e14be86359c23340af4f42a2b05e"/>
         <topic label="unit_system_inited" href="class_units_helper.html#af945b2c2a45ae72606435fc3e122655a"/>
       </topic>

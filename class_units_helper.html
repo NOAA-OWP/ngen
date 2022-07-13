@@ -97,7 +97,7 @@ $(document).ready(function(){initNavTree('class_units_helper.html',''); initResi
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="class_units_helper__coll__graph.svg" width="172" height="147"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="class_units_helper__coll__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 <table class="memberdecls">
@@ -110,15 +110,19 @@ Static Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-static-methods" name="pri-static-methods"></a>
 Static Private Member Functions</h2></td></tr>
-<tr class="memitem:a8c5eee68c135b2dd9cf1a60d4da52759"><td class="memItemLeft" align="right" valign="top">static cv_converter *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_units_helper.html#a8c5eee68c135b2dd9cf1a60d4da52759">get_converter</a> (const std::string &amp;in_units, const std::string &amp;out_units, ut_unit *&amp;to, ut_unit *&amp;from)</td></tr>
-<tr class="separator:a8c5eee68c135b2dd9cf1a60d4da52759"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4a2ffc262b5d1f3c189ec2b9218d7fa2"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_units_helper.html#a4a2ffc262b5d1f3c189ec2b9218d7fa2">init_unit_system</a> ()</td></tr>
 <tr class="separator:a4a2ffc262b5d1f3c189ec2b9218d7fa2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae12d6ae6e7207ef7961ca7184cc3627f"><td class="memItemLeft" align="right" valign="top">static std::shared_ptr&lt; cv_converter &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_units_helper.html#ae12d6ae6e7207ef7961ca7184cc3627f">get_converter</a> (const std::string &amp;in_units, const std::string &amp;out_units, utEncoding in_encoding=UT_UTF8, utEncoding out_encoding=UT_UTF8)</td></tr>
+<tr class="separator:ae12d6ae6e7207ef7961ca7184cc3627f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-static-attribs" name="pri-static-attribs"></a>
 Static Private Attributes</h2></td></tr>
 <tr class="memitem:acf10e14be86359c23340af4f42a2b05e"><td class="memItemLeft" align="right" valign="top">static ut_system *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_units_helper.html#acf10e14be86359c23340af4f42a2b05e">unit_system</a></td></tr>
 <tr class="separator:acf10e14be86359c23340af4f42a2b05e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4b358c65c746a1abd2097a3e626937c"><td class="memItemLeft" align="right" valign="top">static std::map&lt; std::string, std::shared_ptr&lt; cv_converter &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_units_helper.html#aa4b358c65c746a1abd2097a3e626937c">converters</a></td></tr>
+<tr class="separator:aa4b358c65c746a1abd2097a3e626937c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ff8aebf7a7507c44ad1d903bca04563"><td class="memItemLeft" align="right" valign="top">static std::mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_units_helper.html#a9ff8aebf7a7507c44ad1d903bca04563">converters_mutex</a></td></tr>
+<tr class="separator:a9ff8aebf7a7507c44ad1d903bca04563"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af945b2c2a45ae72606435fc3e122655a"><td class="memItemLeft" align="right" valign="top">static std::once_flag&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_units_helper.html#af945b2c2a45ae72606435fc3e122655a">unit_system_inited</a></td></tr>
 <tr class="separator:af945b2c2a45ae72606435fc3e122655a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -175,7 +179,7 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="class_units_helper.html#a8c5eee68c135b2dd9cf1a60d4da52759">get_converter()</a>, <a class="el" href="class_units_helper.html#a4a2ffc262b5d1f3c189ec2b9218d7fa2">init_unit_system()</a>, and <a class="el" href="class_units_helper.html#af945b2c2a45ae72606435fc3e122655a">unit_system_inited</a>.</p>
+<p class="reference">References <a class="el" href="class_units_helper.html#ae12d6ae6e7207ef7961ca7184cc3627f">get_converter()</a>, <a class="el" href="class_units_helper.html#a4a2ffc262b5d1f3c189ec2b9218d7fa2">init_unit_system()</a>, and <a class="el" href="class_units_helper.html#af945b2c2a45ae72606435fc3e122655a">unit_system_inited</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#af5fe4a67cdb0eb555ced60e0b6fba6d3">realization::Bmi_Module_Formulation&lt; M &gt;::get_values()</a>.</p>
 
@@ -221,14 +225,14 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="class_units_helper.html#a8c5eee68c135b2dd9cf1a60d4da52759">get_converter()</a>, <a class="el" href="class_units_helper.html#a4a2ffc262b5d1f3c189ec2b9218d7fa2">init_unit_system()</a>, and <a class="el" href="class_units_helper.html#af945b2c2a45ae72606435fc3e122655a">unit_system_inited</a>.</p>
+<p class="reference">References <a class="el" href="class_units_helper.html#ae12d6ae6e7207ef7961ca7184cc3627f">get_converter()</a>, <a class="el" href="class_units_helper.html#a4a2ffc262b5d1f3c189ec2b9218d7fa2">init_unit_system()</a>, and <a class="el" href="class_units_helper.html#af945b2c2a45ae72606435fc3e122655a">unit_system_inited</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="class_csv_per_feature_forcing_provider.html#a7c0b7ab4bb62990ef33e4bc6c5d9d1b7">CsvPerFeatureForcingProvider::get_value()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a84c65a95dc9472520092be8bdcf2c853">realization::Bmi_Module_Formulation&lt; M &gt;::get_value()</a>.</p>
 
 </div>
 </div>
-<a id="a8c5eee68c135b2dd9cf1a60d4da52759" name="a8c5eee68c135b2dd9cf1a60d4da52759"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8c5eee68c135b2dd9cf1a60d4da52759">&#9670;&nbsp;</a></span>get_converter()</h2>
+<a id="ae12d6ae6e7207ef7961ca7184cc3627f" name="ae12d6ae6e7207ef7961ca7184cc3627f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae12d6ae6e7207ef7961ca7184cc3627f">&#9670;&nbsp;</a></span>get_converter()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -237,7 +241,7 @@ Static Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">cv_converter * UnitsHelper::get_converter </td>
+          <td class="memname">std::shared_ptr&lt; cv_converter &gt; UnitsHelper::get_converter </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>in_units</em>, </td>
@@ -251,14 +255,14 @@ Static Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">ut_unit *&amp;&#160;</td>
-          <td class="paramname"><em>to</em>, </td>
+          <td class="paramtype">utEncoding&#160;</td>
+          <td class="paramname"><em>in_encoding</em> = <code>UT_UTF8</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">ut_unit *&amp;&#160;</td>
-          <td class="paramname"><em>from</em>&#160;</td>
+          <td class="paramtype">utEncoding&#160;</td>
+          <td class="paramname"><em>out_encoding</em> = <code>UT_UTF8</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -273,7 +277,7 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="class_units_helper.html#acf10e14be86359c23340af4f42a2b05e">unit_system</a>.</p>
+<p class="reference">References <a class="el" href="class_units_helper.html#aa4b358c65c746a1abd2097a3e626937c">converters</a>, <a class="el" href="class_units_helper.html#a9ff8aebf7a7507c44ad1d903bca04563">converters_mutex</a>, and <a class="el" href="class_units_helper.html#acf10e14be86359c23340af4f42a2b05e">unit_system</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="class_units_helper.html#a60789bcaf4c43a12ff3be963454eafca">convert_values()</a>, and <a class="el" href="class_units_helper.html#a0e2dd4070640d0c0425da6aa0828cedd">get_converted_value()</a>.</p>
 
@@ -309,6 +313,54 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="aa4b358c65c746a1abd2097a3e626937c" name="aa4b358c65c746a1abd2097a3e626937c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa4b358c65c746a1abd2097a3e626937c">&#9670;&nbsp;</a></span>converters</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::map&lt; std::string, std::shared_ptr&lt; cv_converter &gt; &gt; UnitsHelper::converters</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="class_units_helper.html#ae12d6ae6e7207ef7961ca7184cc3627f">get_converter()</a>.</p>
+
+</div>
+</div>
+<a id="a9ff8aebf7a7507c44ad1d903bca04563" name="a9ff8aebf7a7507c44ad1d903bca04563"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9ff8aebf7a7507c44ad1d903bca04563">&#9670;&nbsp;</a></span>converters_mutex</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::mutex UnitsHelper::converters_mutex</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="class_units_helper.html#ae12d6ae6e7207ef7961ca7184cc3627f">get_converter()</a>.</p>
+
+</div>
+</div>
 <a id="acf10e14be86359c23340af4f42a2b05e" name="acf10e14be86359c23340af4f42a2b05e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acf10e14be86359c23340af4f42a2b05e">&#9670;&nbsp;</a></span>unit_system</h2>
 
@@ -329,7 +381,7 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="class_units_helper.html#a8c5eee68c135b2dd9cf1a60d4da52759">get_converter()</a>, and <a class="el" href="class_units_helper.html#a4a2ffc262b5d1f3c189ec2b9218d7fa2">init_unit_system()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="class_units_helper.html#ae12d6ae6e7207ef7961ca7184cc3627f">get_converter()</a>, and <a class="el" href="class_units_helper.html#a4a2ffc262b5d1f3c189ec2b9218d7fa2">init_unit_system()</a>.</p>
 
 </div>
 </div>
@@ -367,7 +419,7 @@ Static Private Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_units_helper.html">UnitsHelper</a></li>
-    <li class="footer">Generated on Mon Jul 11 2022 16:49:21 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
+    <li class="footer">Generated on Wed Jul 13 2022 17:45:24 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
   </ul>
 </div>
 </body>
