@@ -51,7 +51,18 @@ void NetCDFPerFeatureDataProviderTest::TearDown()
 //Construct a forcing object
 void NetCDFPerFeatureDataProviderTest::setupForcing()
 {
-    nc_provider = std::make_shared<data_access::NetCDFPerFeatureDataProvider>("/local/ngen/data/huc01/huc_01/forcing/netcdf/huc01.nc", utils::getStdErr() );
+    char tmp[256];
+    getcwd(tmp, 256);
+    cout << "Current working directory: " << tmp << endl;
+
+    std::vector<std::string> forcing_file_names = { 
+        "data/forcing/cats-27_52_67-2015_12_01-2015_12_30.nc",
+        "../data/forcing/cats-27_52_67-2015_12_01-2015_12_30.nc",
+        "../../data/forcing/cats-27_52_67-2015_12_01-2015_12_30.nc"
+        };
+    std::string forcing_file_name = utils::FileChecker::find_first_readable(forcing_file_names);
+
+    nc_provider = std::make_shared<data_access::NetCDFPerFeatureDataProvider>(forcing_file_name, utils::getStdErr() );
     start_date_time = std::make_shared<time_type>();
     end_date_time = std::make_shared<time_type>();
 }
@@ -61,15 +72,15 @@ TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataRead)
 {
     // check to see that the variable "T2D" exists
     auto var_names = nc_provider->get_avaliable_variable_names();
-    auto pos = std::find(var_names.begin(), var_names.end(), "T2D");
+    auto pos = std::find(var_names.begin(), var_names.end(), CSDMS_STD_NAME_SURFACE_TEMP);
 
     if ( pos != var_names.end() )
     {
-        std::cout << "Found variable T2D\n";
+        std::cout << "Found variable "<<CSDMS_STD_NAME_SURFACE_TEMP<<"\n";
     }
     else
     {
-        std::cout << "The variable \"T2D\" is missing\n";
+        std::cout << "The variable "<<CSDMS_STD_NAME_SURFACE_TEMP<<" is missing\n";
         FAIL();
     }
 
@@ -77,20 +88,25 @@ TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataRead)
     auto ids = nc_provider->get_ids();
     auto duration = nc_provider->record_duration();
 
-    // read exactly one time step correctly aligned
-    double val1 = nc_provider->get_value(NetCDFDataSelector(ids[0], "T2D", start_time, duration, "K"), data_access::MEAN);
+    std::cout << "Checking values in catchment "<<ids[0]<<" at time "<<start_time<<" ..."<<std::endl;
 
-    EXPECT_NEAR(val1, 263.1, 0.00000612);
+    // read exactly one time step correctly aligned
+    double val1 = nc_provider->get_value(NetCDFDataSelector(ids[0], CSDMS_STD_NAME_SURFACE_TEMP, start_time, duration, "K"), data_access::MEAN);
+
+    //double tol = 0.00000612;
+    double tol = 0.001;
+
+    EXPECT_NEAR(val1, 285.8, tol);
 
     // read 1/2 of a time step correctly aligned
-    double val2 = nc_provider->get_value(NetCDFDataSelector(ids[0], "T2D", start_time, duration / 2, "K"), data_access::MEAN);
+    double val2 = nc_provider->get_value(NetCDFDataSelector(ids[0], CSDMS_STD_NAME_SURFACE_TEMP, start_time, duration / 2, "K"), data_access::MEAN);
 
-    EXPECT_NEAR(val2, 263.1, 0.00000612);
+    EXPECT_NEAR(val2, 285.8, tol);
 
     // read 4 time steps correctly aligned
-    double val3 = nc_provider->get_value(NetCDFDataSelector(ids[0], "T2D", start_time, duration * 4, "K"), data_access::MEAN);
+    double val3 = nc_provider->get_value(NetCDFDataSelector(ids[0], CSDMS_STD_NAME_SURFACE_TEMP, start_time, duration * 4, "K"), data_access::MEAN);
 
-    EXPECT_NEAR(val3, 262.31, 0.00000612);
+    EXPECT_NEAR(val3, 284.95, tol);
 
     // read exactly one time step correctly aligned but with a incorrect variable
     EXPECT_THROW(
