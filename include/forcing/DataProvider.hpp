@@ -68,6 +68,23 @@ namespace data_access
          */
         virtual data_type get_value(const selection_type& selector, ReSampleMethod m=SUM) = 0;
 
+        /**
+         * Get the values of a forcing property for an arbitrary time period, converting units if needed.
+         *
+         * An @ref std::out_of_range exception should be thrown if the data for the time period is not available.
+         * 
+         * If a provider doesn't implement this function, then by default, get_values will be a simple proxy to @ref get_value
+         * with the result wrapped in a std::vector<double>
+         * 
+         * @param output_name The name of the forcing property of interest.
+         * @param init_time_epoch The epoch time (in seconds) of the start of the time period.
+         * @param duration_seconds The length of the time period, in seconds.
+         * @param output_units The expected units of the desired output value.
+         * @return std::vector<double> The vector of values of the forcing property for the described time period, with units converted if needed.
+         * @throws std::out_of_range If data for the time period is not available.
+         */
+        virtual std::vector<data_type> get_values(const selection_type& selector, ReSampleMethod m=SUM) = 0;
+
         virtual bool is_property_sum_over_time_step(const std::string& name) {return false; }
 
         private:

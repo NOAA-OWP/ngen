@@ -68,6 +68,26 @@ namespace forcing {
                                  const std::string &output_units) = 0;
 
         /**
+         * Get the values of a forcing property for an arbitrary time period, converting units if needed.
+         *
+         * An @ref std::out_of_range exception should be thrown if the data for the time period is not available.
+         * 
+         * If a provider doesn't implement this function, then by default, get_values will be a simple proxy to @ref get_value
+         * with the result wrapped in a std::vector<double>
+         * 
+         * @param output_name The name of the forcing property of interest.
+         * @param init_time_epoch The epoch time (in seconds) of the start of the time period.
+         * @param duration_seconds The length of the time period, in seconds.
+         * @param output_units The expected units of the desired output value.
+         * @return std::vector<double> The vector of values of the forcing property for the described time period, with units converted if needed.
+         * @throws std::out_of_range If data for the time period is not available.
+         */
+        virtual std::vector<double> get_values(const std::string &output_name, const time_t &init_time, const long &duration_s,
+                                 const std::string &output_units){
+            return std::vector<double>(1, get_value(output_name, init_time, duration_s, output_units));
+        };
+
+        /**
          * Get whether a property's per-time-step values are each an aggregate sum over the entire time step.
          *
          * Certain properties, like rain fall, are aggregated sums over an entire time step.  Others, such as pressure,

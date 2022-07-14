@@ -132,6 +132,11 @@ namespace data_access {
             return wrapped_provider->get_value(selector, m);
         }
 
+        std::vector<double> get_values(const CatchmentAggrDataSelector& selector, ReSampleMethod m) override
+        {
+            return wrapped_provider->get_values(selector, m);
+        }
+
         /**
          * Get whether a property's per-time-step values are each an aggregate sum over the entire time step.
          *

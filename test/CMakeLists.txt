@@ -195,8 +195,9 @@ endif()
 ########################## BMI Multi Tests
 add_test(
         test_bmi_multi
-        1
+        2
         realizations/catchments/Bmi_Multi_Formulation_Test.cpp
+        realizations/catchments/Bmi_Cpp_Multi_Array_Test.cpp
         NGen::core
         NGen::realizations_catchment
         NGen::core_mediator

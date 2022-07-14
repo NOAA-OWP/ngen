@@ -17,6 +17,7 @@
 using namespace std;
 
 class Bmi_Multi_Formulation_Test;
+class Bmi_Cpp_Multi_Array_Test;
 
 namespace realization {
 
@@ -483,9 +484,22 @@ namespace realization {
             
             // If not found ...
             if (availableData.empty() || availableData.find(output_name) == availableData.end()) {
-                throw runtime_error(get_formulation_type() + " cannot get output value for unknown " + output_name);
+                throw runtime_error(get_formulation_type() + " cannot get output value for unknown " + output_name + SOURCE_LOC);
             }
             return availableData[output_name]->get_value(CatchmentAggrDataSelector("",output_name, init_time, duration_s, output_units), m);
+        }
+
+        std::vector<double> get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override
+        {
+            std::string output_name = selector.get_variable_name();
+            time_t init_time = selector.get_init_time();
+            long duration_s = selector.get_duration_secs();
+            std::string output_units = selector.get_output_units();
+
+            if (availableData.empty() || availableData.find(output_name) == availableData.end()) {
+                throw runtime_error(get_formulation_type() + " cannot get output values for unknown " + output_name + SOURCE_LOC);
+            }
+            return availableData[output_name]->get_values(CatchmentAggrDataSelector("",output_name, init_time, duration_s, output_units), m);
         }
 
         bool is_bmi_input_variable(const string &var_name) override;
@@ -844,6 +858,7 @@ namespace realization {
         int primary_module_index = -1;
 
         friend Bmi_Multi_Formulation_Test;
+        friend class ::Bmi_Cpp_Multi_Array_Test;
 
     };
 }

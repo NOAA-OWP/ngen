@@ -216,6 +216,7 @@ namespace models {
              * @see get_value
              */
             template <typename T>
+            [[deprecated("Functionality moved to models::bmi::GetValues in bmi_utilities.hpp")]]
             std::vector<T> GetValue(const std::string& name) {
                 std::string type = GetVarType(name);
                 int total_mem = GetVarNbytes(name);
