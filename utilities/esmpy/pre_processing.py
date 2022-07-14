@@ -150,9 +150,9 @@ def write_sub_netcdf(filename_out, var_name_list, var_value_list, Var_array, nla
     lat = Var_array[1][0]
     lon = Var_array[2][0]
     APCP_surface = Var_array[3]
-    PRES_surface = Var_array[4]
-    DLWRF_surface = Var_array[5]
-    DSWRF_surface = Var_array[6]
+    DLWRF_surface = Var_array[4]
+    DSWRF_surface = Var_array[5]
+    PRES_surface = Var_array[6]
     SPFH_2maboveground = Var_array[7]
     TMP_2maboveground = Var_array[8]
     UGRD_10maboveground = Var_array[9]
@@ -162,9 +162,9 @@ def write_sub_netcdf(filename_out, var_name_list, var_value_list, Var_array, nla
     lat_out = ncfile_out.createVariable('latitude', 'double', ('lat',), fill_value=-32767.)
     lon_out = ncfile_out.createVariable('longitude', 'double', ('lon',), fill_value=-32767.)
     APCP_surface_out = ncfile_out.createVariable('APCP_surface', 'f4', ('time', 'lat', 'lon',), fill_value=-32767)
-    PRES_surface_out = ncfile_out.createVariable('PRES_surface', 'f4', ('time', 'lat', 'lon',), fill_value=-32767)
     DLWRF_surface_out = ncfile_out.createVariable('DLWRF_surface', 'f4', ('time', 'lat', 'lon',), fill_value=-32767)
     DSWRF_surface_out = ncfile_out.createVariable('DSWRF_surface', 'f4', ('time', 'lat', 'lon',), fill_value=-32767)
+    PRES_surface_out = ncfile_out.createVariable('PRES_surface', 'f4', ('time', 'lat', 'lon',), fill_value=-32767)
     SPFH_2maboveground_out = ncfile_out.createVariable('SPFH_2maboveground', 'f4', ('time', 'lat', 'lon',), fill_value=-32767)
     TMP_2maboveground_out = ncfile_out.createVariable('TMP_2maboveground', 'f4', ('time', 'lat', 'lon',), fill_value=-32767)
     UGRD_10maboveground_out = ncfile_out.createVariable('UGRD_10maboveground', 'f4', ('time', 'lat', 'lon',), fill_value=-32767)
@@ -172,8 +172,8 @@ def write_sub_netcdf(filename_out, var_name_list, var_value_list, Var_array, nla
     #APCP_surface_out[:,:,:] = Var_array[3]
 
     varout_dict = {'time':time_out, 'latitude':lat_out, 'longitude':lon_out,
-                   'APCP_surface':APCP_surface_out, 'PRES_surface':PRES_surface_out, 'DLWRF_surface':DLWRF_surface_out,
-                   'DSWRF_surface':DSWRF_surface_out, 'SPFH_2maboveground':SPFH_2maboveground_out, 'TMP_2maboveground':TMP_2maboveground_out,
+                   'APCP_surface':APCP_surface_out, 'DLWRF_surface':DLWRF_surface_out, 'DSWRF_surface':DSWRF_surface_out,
+                   'PRES_surface':PRES_surface_out, 'SPFH_2maboveground':SPFH_2maboveground_out, 'TMP_2maboveground':TMP_2maboveground_out,
                    'UGRD_10maboveground':UGRD_10maboveground_out, 'VGRD_10maboveground':VGRD_10maboveground_out}
 
     for name, variable in ds.variables.items():
@@ -186,9 +186,9 @@ def write_sub_netcdf(filename_out, var_name_list, var_value_list, Var_array, nla
     lat_out[:] = lat
     lon_out[:] = lon
     APCP_surface_out[:,:,:] = APCP_surface[:,:,:]
-    PRES_surface_out[:,:,:] = PRES_surface[:,:,:]
     DLWRF_surface_out[:,:,:] = DLWRF_surface[:,:,:]
     DSWRF_surface_out[:,:,:] = DSWRF_surface[:,:,:]
+    PRES_surface_out[:,:,:] = PRES_surface[:,:,:]
     SPFH_2maboveground_out[:,:,:] = SPFH_2maboveground[:,:,:]
     TMP_2maboveground_out[:,:,:] = TMP_2maboveground[:,:,:]
     UGRD_10maboveground_out[:,:,:] = UGRD_10maboveground[:,:,:]
@@ -336,7 +336,7 @@ if __name__ == '__main__':
             lats_min_grid, lats_max_grid, lats_delta, lats_first, lons_min_grid, lons_max_grid, lons_delta, lons_first = get_basin_geometry(
             aorcfile, lons_min_global, lons_max_global, lats_min_global, lats_max_global)
 
-        var_name_list = ['time', 'latitude', 'longitude', 'APCP_surface', 'PRES_surface', 'DLWRF_surface', 'DSWRF_surface', 'SPFH_2maboveground',
+        var_name_list = ['time', 'latitude', 'longitude', 'APCP_surface', 'DLWRF_surface', 'DSWRF_surface', 'PRES_surface', 'SPFH_2maboveground',
                          'TMP_2maboveground', 'UGRD_10maboveground', 'VGRD_10maboveground']
 
         var_value_list = []

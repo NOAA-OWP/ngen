@@ -319,9 +319,9 @@ def write_sub_netcdf(filename_out, var_name_list, var_value_list, Var_array, lan
     lat = Var_array[1][0]
     lon = Var_array[2][0]
     APCP_surface = Var_array[3]
-    PRES_surface = Var_array[4]
-    DLWRF_surface = Var_array[5]
-    DSWRF_surface = Var_array[6]
+    DLWRF_surface = Var_array[4]
+    DSWRF_surface = Var_array[5]
+    PRES_surface = Var_array[6]
     SPFH_2maboveground = Var_array[7]
     TMP_2maboveground = Var_array[8]
     UGRD_10maboveground = Var_array[9]
@@ -331,9 +331,9 @@ def write_sub_netcdf(filename_out, var_name_list, var_value_list, Var_array, lan
     lat_out = ncfile_out.createVariable('lat', 'double', ('lat',), fill_value=-99999)
     lon_out = ncfile_out.createVariable('lon', 'double', ('lon',), fill_value=-99999)
     APCP_surface_out = ncfile_out.createVariable('APCP_surface', 'f4', ('time', 'lat', 'lon',), fill_value=-99999)
-    PRES_surface_out = ncfile_out.createVariable('PRES_surface', 'f4', ('time', 'lat', 'lon',), fill_value=-99999)
     DLWRF_surface_out = ncfile_out.createVariable('DLWRF_surface', 'f4', ('time', 'lat', 'lon',), fill_value=-99999)
     DSWRF_surface_out = ncfile_out.createVariable('DSWRF_surface', 'f4', ('time', 'lat', 'lon',), fill_value=-99999)
+    PRES_surface_out = ncfile_out.createVariable('PRES_surface', 'f4', ('time', 'lat', 'lon',), fill_value=-99999)
     SPFH_2maboveground_out = ncfile_out.createVariable('SPFH_2maboveground', 'f4', ('time', 'lat', 'lon',), fill_value=-99999)
     TMP_2maboveground_out = ncfile_out.createVariable('TMP_2maboveground', 'f4', ('time', 'lat', 'lon',), fill_value=-99999)
     UGRD_10maboveground_out = ncfile_out.createVariable('UGRD_10maboveground', 'f4', ('time', 'lat', 'lon',), fill_value=-99999)
@@ -342,8 +342,8 @@ def write_sub_netcdf(filename_out, var_name_list, var_value_list, Var_array, lan
     #APCP_surface_out[:,:,:] = Var_array[3]
 
     varout_dict = {'time':time_out, 'latitude':lat_out, 'longitude':lon_out,
-                   'APCP_surface':APCP_surface_out, 'PRES_surface':PRES_surface_out, 'DLWRF_surface':DLWRF_surface_out,
-                   'DSWRF_surface':DSWRF_surface_out, 'SPFH_2maboveground':SPFH_2maboveground_out, 'TMP_2maboveground':TMP_2maboveground_out,
+                   'APCP_surface':APCP_surface_out, 'DLWRF_surface':DLWRF_surface_out, 'DSWRF_surface':DSWRF_surface_out,
+                   'PRES_surface':PRES_surface_out, 'SPFH_2maboveground':SPFH_2maboveground_out, 'TMP_2maboveground':TMP_2maboveground_out,
                    'UGRD_10maboveground':UGRD_10maboveground_out, 'VGRD_10maboveground':VGRD_10maboveground_out}
 
     for name, variable in ds.variables.items():
@@ -358,9 +358,9 @@ def write_sub_netcdf(filename_out, var_name_list, var_value_list, Var_array, lan
     lat_out[:] = lat
     lon_out[:] = lon
     APCP_surface_out[:,:,:] = APCP_surface[:,:,:]
-    PRES_surface_out[:,:,:] = PRES_surface[:,:,:]
     DLWRF_surface_out[:,:,:] = DLWRF_surface[:,:,:]
     DSWRF_surface_out[:,:,:] = DSWRF_surface[:,:,:]
+    PRES_surface_out[:,:,:] = PRES_surface[:,:,:]
     SPFH_2maboveground_out[:,:,:] = SPFH_2maboveground[:,:,:]
     TMP_2maboveground_out[:,:,:] = TMP_2maboveground[:,:,:]
     UGRD_10maboveground_out[:,:,:] = UGRD_10maboveground[:,:,:]
@@ -374,7 +374,7 @@ def grid_to_mesh_regrid(cat_id, lons_start, lats_start, lons_min, lons_max, lats
     Regrid a rectangular area to a polygon generated in ESMF.Mesh
     See read_write_weight_file.py in the examples of ESMPY
     """
-    datafile_in = join(input_root, "huc01/netcdf_files/", "AORC_"+cat_id+".nc")
+    datafile_in = join(input_root, netcdf_files, "AORC_"+cat_id+".nc")
 
     # Create the source grid from memory with no periodic dimension.
     [lat,lon] = [1,0]
@@ -425,7 +425,8 @@ def grid_to_mesh_regrid(cat_id, lons_start, lats_start, lons_min, lons_max, lats
     xctfield = ESMF.Field(mesh, name='xctfield', meshloc=ESMF.MeshLoc.ELEMENT)
     dstfield.data[:] = 2.0
 
-    weight_file = join(input_root, "huc01/weight_files/", "weight_file_"+cat_id+".nc")
+    weight_file = join(input_root, weight_files, "weight_file_"+cat_id+".nc")
+
     if iter_k == 0:
         if os.path.exists(weight_file):
             os.remove(weight_file)
@@ -496,14 +497,17 @@ def grid_to_mesh_regrid(cat_id, lons_start, lats_start, lons_min, lons_max, lats
 
     return srcfield.data, lons_par, lats_par
 
-def csv_to_netcdf(num_catchments, num_time, aorc_ncfile):
+def csv_to_netcdf(num_catchments, aorc_ncfile, regrid_weight_forcing):
     """
     Convert from csv to netcdf format
     """
     #get the input csv file and create output netcdf file name
-    csv_infile = join(output_root, "huc01/esmf_output.csv")
-    #output_path = join(output_root, "huc01/forcing/", "huc01_forcing_"+date_time+".nc")
-    output_path = join(output_root, "huc01/forcing/", "huc01_forcing.nc")
+    if regrid_weight_forcing:
+        csv_infile = join(input_root, "esmf_output.csv")
+        output_path = join(output_root, forcing, "huc01_forcing.nc")
+    else:
+        csv_infile = join(input_root, mask_avg, "avg_output.csv")
+        output_path = join(output_root, mask_avg, "huc01_forcing.nc")
 
     df = pd.read_csv(csv_infile)
     df = df.sort_values(['time', 'id'])
@@ -582,9 +586,9 @@ def csv_to_netcdf(num_catchments, num_time, aorc_ncfile):
     # Convert to numpy array
     time = numpy.array(time)
     APCP_surface = numpy.array(apcp_surface)
-    PRES_surface = numpy.array(pres_surface)
     DLWRF_surface = numpy.array(dlwrf_surface)
     DSWRF_surface = numpy.array(dswrf_surface)
+    PRES_surface = numpy.array(pres_surface)
     SPFH_2maboveground = numpy.array(spfh_2maboveground)
     TMP_2maboveground = numpy.array(tmp_2maboveground)
     UGRD_10maboveground = numpy.array(ugrd_10maboveground)
@@ -592,9 +596,9 @@ def csv_to_netcdf(num_catchments, num_time, aorc_ncfile):
 
     # change the order of time and cat-id dimension
     APCP_surface = numpy.transpose(APCP_surface)
-    PRES_surface = numpy.transpose(PRES_surface)
     DLWRF_surface = numpy.transpose(DLWRF_surface)
     DSWRF_surface = numpy.transpose(DSWRF_surface)
+    PRES_surface = numpy.transpose(PRES_surface)
     SPFH_2maboveground = numpy.transpose(SPFH_2maboveground)
     TMP_2maboveground = numpy.transpose(TMP_2maboveground)
     UGRD_10maboveground = numpy.transpose(UGRD_10maboveground)
@@ -624,8 +628,8 @@ def csv_to_netcdf(num_catchments, num_time, aorc_ncfile):
     #get input aorc_ncfile atributes
     ds = nc4.Dataset(aorc_ncfile)
     varout_dict = {'time':time_out,
-                   'APCP_surface':APCP_surface_out, 'PRES_surface':PRES_surface_out, 'DLWRF_surface':DLWRF_surface_out,
-                   'DSWRF_surface':DSWRF_surface_out, 'SPFH_2maboveground':SPFH_2maboveground_out, 'TMP_2maboveground':TMP_2maboveground_out,
+                   'APCP_surface':APCP_surface_out, 'DLWRF_surface':DLWRF_surface_out, 'DSWRF_surface':DSWRF_surface_out,
+                   'PRES_surface':PRES_surface_out, 'SPFH_2maboveground':SPFH_2maboveground_out, 'TMP_2maboveground':TMP_2maboveground_out,
                    'UGRD_10maboveground':UGRD_10maboveground_out, 'VGRD_10maboveground':VGRD_10maboveground_out}
 
     for name, variable in ds.variables.items():
@@ -643,9 +647,9 @@ def csv_to_netcdf(num_catchments, num_time, aorc_ncfile):
     cat_id_out[:] = cat_id[:]
     time_out[:] = time[:]
     APCP_surface_out[:,:] = APCP_surface[:,:]
-    PRES_surface_out[:,:] = PRES_surface[:,:]
     DLWRF_surface_out[:,:] = DLWRF_surface[:,:]
     DSWRF_surface_out[:,:] = DSWRF_surface[:,:]
+    PRES_surface_out[:,:] = PRES_surface[:,:]
     SPFH_2maboveground_out[:,:] = SPFH_2maboveground[:,:]
     TMP_2maboveground_out[:,:] = TMP_2maboveground[:,:]
     UGRD_10maboveground_out[:,:] = UGRD_10maboveground[:,:]
@@ -677,7 +681,7 @@ def process_sublist(data : dict, lock: Lock, num: int):
         lats_min_grid, lats_max_grid, lats_delta, lats_first, lons_min_grid, lons_max_grid, lons_delta, lons_first = get_cat_geometry(aorcfile,
         lons_min, lons_max, lats_min, lats_max)
 
-        var_name_list = ['time', 'latitude', 'longitude', 'APCP_surface', 'PRES_surface', 'DLWRF_surface', 'DSWRF_surface', 'SPFH_2maboveground',
+        var_name_list = ['time', 'latitude', 'longitude', 'APCP_surface', 'DLWRF_surface', 'DSWRF_surface', 'PRES_surface', 'SPFH_2maboveground',
                          'TMP_2maboveground', 'UGRD_10maboveground', 'VGRD_10maboveground']
 
         var_value_list = []
@@ -690,7 +694,7 @@ def process_sublist(data : dict, lock: Lock, num: int):
                                                                   lons_delta, lats_delta, polygon)
 
         #write to netcdf file for the cat_id
-        filename_out = join(output_root, "huc01/netcdf_files/", "AORC_"+cat_id+".nc")
+        filename_out = join(output_root, netcdf_files, "AORC_"+cat_id+".nc")
         write_sub_netcdf(filename_out, var_name_list, var_value_list, Var_array, landmask, nlats, nlons, ds)
 
         #perform regridding, generate weight file, and calculate average for cat_id
@@ -737,17 +741,28 @@ def plot_srcfield(srcfield_data, lons_par, lats_par):
 
 if __name__ == '__main__':
     #parse the input and output root directory
-    #example for huc01: run code with "python code_name -i /local/esmpy -o /local/esmpy -c 1"
-    #for completely correct hydrofabric, run code with "python code_name -i /local/esmpy -o /local/esmpy -c 0"
+    #example: python code_name -i /local/esmpy/huc01 -o /local/esmpy/huc01 -a aorc_netcdf_sub/ -w weight_files/ -f forcing/ -m mask_avg/ -n netcdf_files/ -c 1
+    #for huc01: option "-c 1" for current hydrofabric where some defect exist
+    #for completely correct hydrofabric, use option "-c 0"
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", dest="input_root", type=str, required=True, help="The input directory with csv files")
     parser.add_argument("-o", dest="output_root", type=str, required=True, help="The output file path")
+    parser.add_argument("-a", dest="aorc_netcdf", type=str, required=True, help="The input aorc netcdf files directory")
+    parser.add_argument("-w", dest="weight_files", type=str, required=True, help="The output weight files sub_dir")
+    parser.add_argument("-f", dest="forcing", type=str, required=True, help="The output forcing files sub_dir")
+    parser.add_argument("-m", dest="mask_avg", type=str, required=True, help="The output forcing calculated using mask sub_dir")
+    parser.add_argument("-n", dest="netcdf_files", type=str, required=True, help="The netcdf files directory")
     parser.add_argument("-c", dest="cleanup_geometry", type=int, required=True, help="The logic variable for clean up abnormal catchment geometry")
     args = parser.parse_args()
 
     #retrieve parsed values
     input_root = args.input_root
     output_root = args.output_root
+    aorc_netcdf = args.aorc_netcdf
+    weight_files = args.weight_files
+    forcing = args.forcing
+    mask_avg = args.mask_avg
+    netcdf_files = args.netcdf_files
     cleanup_geometry = args.cleanup_geometry
 
     if cleanup_geometry == 0:
@@ -773,7 +788,7 @@ if __name__ == '__main__':
             print("for cat-39965, list index = {}".format(i))
 
     # weight based average
-    esmf_outfile = join(output_root,  "huc01/esmf_output.csv")
+    esmf_outfile = join(output_root, "esmf_output.csv")
     if os.path.exists(esmf_outfile):
         os.remove(esmf_outfile)
     else:
@@ -784,7 +799,7 @@ if __name__ == '__main__':
     wfile.close()
 
     # mask based average
-    avg_outfile = "/local/esmpy/huc01/mask_avg/avg_output.csv"
+    avg_outfile = join(output_root, mask_avg, "avg_output.csv")
     if os.path.exists(avg_outfile):
         os.remove(avg_outfile)
     else:
@@ -792,11 +807,8 @@ if __name__ == '__main__':
     with open(avg_outfile, 'w') as wfile:
         out_header = "id,time,APCP_surface,DLWRF_surface,DSWRF_surface,PRES_surface,SPFH_2maboveground,TMP_2maboveground,UGRD_10maboveground,VGRD_10maboveground"
         wfile.write(out_header+'\n')
-    wfile.close()
 
-    #datafile_path = join(input_root, "huc01/aorc_netcdf/", "AORC-OWP_*.nc4")    # run the whole data set
-    datafile_path = join(input_root, "huc01/aorc_netcdf_test/", "AORC-OWP_*.nc4")    # run a few input forcing file
-    #datafile_path = join(input_root, "huc01/aorc_netcdf_test/", "AORC-OWP_2012062018z.nc4")    # run a single file for fast testing
+    datafile_path = join(input_root, aorc_netcdf, "AORC-OWP_*.nc4")
     datafiles = glob.glob(datafile_path)
     print("number of forcing files = {}".format(len(datafiles)))
     #process data with time ordered
@@ -854,5 +866,7 @@ if __name__ == '__main__':
     num_catchments = n_cats
 
     #write a netcdf file every time step the same as the input file
-    ntime = len(datafiles)
-    csv_to_netcdf(num_catchments, ntime, aorc_ncfile)
+    regrid_weight_forcing = True
+    csv_to_netcdf(num_catchments, aorc_ncfile, regrid_weight_forcing)
+    regrid_weight_forcing = False
+    csv_to_netcdf(num_catchments, aorc_ncfile, regrid_weight_forcing)
