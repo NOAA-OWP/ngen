@@ -90,7 +90,6 @@ add_test(test_realization_config
         realizations/Formulation_Manager_Test.cpp
         NGen::core
         NGen::realizations_catchment
-        NGen::forcing
         NGen::core_mediator
         NGen::forcing
         libudunits2
@@ -298,7 +297,6 @@ add_test(
         NGen::forcing
         NGen::geojson
         NGen::realizations_catchment
-        NGen::forcing
         libudunits2
         ${NETCDF_LIBRARIES}
 )
@@ -333,7 +331,6 @@ add_test(
         NGen::forcing
         NGen::geojson
         NGen::realizations_catchment
-        NGen::forcing
         libudunits2
         ${NETCDF_LIBRARIES}
 )
@@ -372,7 +369,6 @@ add_test(
         NGen::forcing
         NGen::geojson
         NGen::realizations_catchment
-        NGen::forcing
         libudunits2
         ${NETCDF_LIBRARIES}
 )
