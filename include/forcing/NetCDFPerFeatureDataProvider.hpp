@@ -222,18 +222,18 @@ namespace data_access
             }
             assert(time_scale_factor != 0); // This should not happen.
 
-            std::string epoc_start_str = "01/01/1970 00:00:00";
+            std::string epoch_start_str = "01/01/1970 00:00:00";
             try {
                 // read the meta data to get the epoc start
-                auto epoc_att = time_var.getAtt("epoc_start");
+                auto epoch_att = time_var.getAtt("epoch_start");
 
-                if ( epoc_att.isNull() )
+                if ( epoch_att.isNull() )
                 {
                     log_stream << "Warning using defualt epoc string\n";
                 }
                 else
                 {  
-                    epoc_att.getValues(epoc_start_str);
+                    epoch_att.getValues(epoch_start_str);
                 }
             }
             catch(const netCDF::exceptions::NcException& e) {
@@ -242,15 +242,15 @@ namespace data_access
             }
             
             std::tm tm{};
-            std::stringstream s(epoc_start_str);
+            std::stringstream s(epoch_start_str);
             s >> std::get_time(&tm, "%D %T");
-            std::time_t epoc_start_time = mktime(&tm);
+            std::time_t epoch_start_time = mktime(&tm);
 
-            // scale the time to account for time units and epoc_start
+            // scale the time to account for time units and epoch_start
             // TODO make sure this happens with a FMA instruction
             time_vals.resize(raw_time.size());
             std::transform(raw_time.begin(), raw_time.end(), time_vals.begin(), 
-                [&](const auto& n){return n * time_scale_factor + epoc_start_time; });
+                [&](const auto& n){return n * time_scale_factor + epoch_start_time; });
                 
 
             // determine the stride of the time array
