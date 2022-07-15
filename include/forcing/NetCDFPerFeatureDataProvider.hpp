@@ -405,16 +405,19 @@ namespace data_access
                 shared_ptr<std::vector<double>> cached;
                 int cache_t_idx = (idx1 - (idx1 % cache_slice_t_size) + i);
                 std::string key = ncvar.getName() + "|" + std::to_string(cache_t_idx);
-//cerr<<"Processing key "<<key<<" (idx1: "<<idx1<<", init_time: "<<init_time<<")"<<std::endl;
+//cerr<<"Processing key "<<key<<" (idx1: "<<idx1<<", idx2: "<<idx2<<", init_time: "<<init_time<<")"<<std::endl;
                 if(value_cache.contains(key)){
                     cached = value_cache.get(key).get();
 //cerr<<"  Found in cache!"<<std::endl;
                 } else {
                     cached = std::make_shared<std::vector<double>>(cache_slice_c_size * cache_slice_t_size);
-                    start.push_back(0);
+                    start.clear();
+                    start.push_back(0); // only always 0 when cache_slice_c_size = numids!
                     start.push_back(cache_t_idx * cache_slice_t_size);
+                    count.clear();
                     count.push_back(cache_slice_c_size);
                     count.push_back(cache_slice_t_size); // Must be 1 for now!...probably...
+//cerr<<"  Getting data for start "<<start[0]<<","<<start[1]<<" count "<<count[0]<<","<<count[1]<<std::endl;
                     ncvar.getVar(start,count,&(*cached)[0]);
                     value_cache.insert(key, cached);
 //cerr<<"  Inserted in cache."<<std::endl;
