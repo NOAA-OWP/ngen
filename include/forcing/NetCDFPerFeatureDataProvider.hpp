@@ -370,7 +370,7 @@ namespace data_access
             size_t idx1 = get_ts_index_for_time(init_time);
             size_t idx2;
             try {
-                idx2 = get_ts_index_for_time(stop_time);
+                idx2 = get_ts_index_for_time(stop_time-1); // Don't include next timestep when duration % timestep = 0
             }
             catch(const std::out_of_range &e){
                 idx2 = get_ts_index_for_time(this->stop_time-1); //to the edge
@@ -405,10 +405,8 @@ namespace data_access
                 shared_ptr<std::vector<double>> cached;
                 int cache_t_idx = (idx1 - (idx1 % cache_slice_t_size) + i);
                 std::string key = ncvar.getName() + "|" + std::to_string(cache_t_idx);
-//cerr<<"Processing key "<<key<<" (idx1: "<<idx1<<", idx2: "<<idx2<<", init_time: "<<init_time<<")"<<std::endl;
                 if(value_cache.contains(key)){
                     cached = value_cache.get(key).get();
-//cerr<<"  Found in cache!"<<std::endl;
                 } else {
                     cached = std::make_shared<std::vector<double>>(cache_slice_c_size * cache_slice_t_size);
                     start.clear();
@@ -417,16 +415,11 @@ namespace data_access
                     count.clear();
                     count.push_back(cache_slice_c_size);
                     count.push_back(cache_slice_t_size); // Must be 1 for now!...probably...
-//cerr<<"  Getting data for start "<<start[0]<<","<<start[1]<<" count "<<count[0]<<","<<count[1]<<std::endl;
                     ncvar.getVar(start,count,&(*cached)[0]);
                     value_cache.insert(key, cached);
-//cerr<<"  Inserted in cache."<<std::endl;
                 }
                 for( size_t j = 0; j < cache_slice_t_size; j++){
                     raw_values[i+j] = cached->at((j*cache_slice_t_size) + cat_pos);
-//if(ncvar.getName() == "T2D" || ncvar.getName() == CSDMS_STD_NAME_SURFACE_TEMP || ncvar.getName() == "TMP_2maboveground"){                    
-//cerr<<"Populating raw_values["<<(i+j)<<"] with cache array position ["<<((j*cache_slice_t_size) + cat_pos)<<"] because cat_pos, i, j is "<<cat_pos<<", "<<i<<", "<<j<<", value for T2D is: "<<raw_values[i+j]<<std::endl;
-//}
                 }
             }
 
