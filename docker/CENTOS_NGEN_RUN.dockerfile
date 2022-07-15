@@ -1,4 +1,4 @@
-FROM rockylinux as builder
+FROM rockylinux:8 as builder
 
 RUN yum update -y \
     && yum install -y dnf-plugins-core \
