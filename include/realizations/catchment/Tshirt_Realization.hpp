@@ -9,7 +9,7 @@
 #include "tshirt/include/tshirt_params.h"
 #include <memory>
 #include <Forcing.h>
-#include <ForcingProvider.hpp>
+#include <GenericDataProvider.hpp>
 
 namespace realization {
 
@@ -58,9 +58,9 @@ namespace realization {
 
             Tshirt_Realization(
                 std::string id,
-                unique_ptr<forcing::ForcingProvider> forcing_provider,
+                shared_ptr<data_access::GenericDataProvider> forcing_provider,
                 utils::StreamHandler output_stream
-            ) : Catchment_Formulation(id, std::move(forcing_provider), output_stream) {
+            ) : Catchment_Formulation(id, forcing_provider, output_stream) {
                 _link_legacy_forcing();
             }
 

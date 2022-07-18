@@ -1,0 +1,49 @@
+name: 'Checkout and build tests'
+description: 'This action checks out the commit, sets up Ngen environemnt.'
+author: 'hellkite500'
+inputs:
+    targets:
+        required: false
+        description: 'Build targets'
+        default: 'all'
+    build-cores:
+      required: false
+      description: 'Number of cores to use for parallel builds'
+      default: '1'
+    build-dir:
+      required: false
+      description: 'Name of the build directory to run cmake in'
+      default: 'cmake_build'
+    mod-dir:
+      required: true
+      description: 'Path to the submodule with CMakeLists.txt to build'
+outputs:
+  build-dir:
+    description: "Directory build was performed in"
+    value: ${{ steps.cmake_init.outputs.build-dir }}
+runs:
+    using: 'composite'
+    steps:
+        #This may be redundant
+        - name: Init Submodules
+          run: git submodule update --init --recursive -- ${{ inputs.mod-dir }}
+          shell: bash
+
+        - name: Configure Fortran Compiler
+          if: |
+            runner.os == 'macOS'
+          run: |
+            echo "FC=gfortran-11" >> $GITHUB_ENV
+          shell: bash
+
+        - name: Cmake Initialization
+          id: cmake_init
+          run: |
+            cmake -B ${{ inputs.mod-dir}}/${{ inputs.build-dir }} -S ${{ inputs.mod-dir }}
+            echo "::set-output name=build-dir::$(echo ${{ inputs.mod-dir}}/${{ inputs.build-dir }})"
+          shell: bash
+
+        - name: Build Targets
+          #cmake >= 3.15 can build multiple targets
+          run: cmake --build ${{ inputs.mod-dir}}/${{ inputs.build-dir }} --target ${{ inputs.targets }} -- -j  ${{ inputs.build-cores }} VERBOSE=1
+          shell: bash

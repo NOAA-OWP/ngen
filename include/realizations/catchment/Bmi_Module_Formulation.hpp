@@ -9,8 +9,13 @@
 #include "WrappedForcingProvider.hpp"
 #include "Bmi_C_Adapter.hpp"
 #include <AorcForcing.hpp>
-#include <ForcingProvider.hpp>
+#include <DataProvider.hpp>
 #include <UnitsHelper.hpp>
+#include "bmi_utilities.hpp"
+
+using data_access::MEAN;
+using data_access::SUM;
+
 
 // Forward declaration to provide access to protected items in testing
 class Bmi_Formulation_Test;
@@ -19,6 +24,7 @@ class Bmi_C_Formulation_Test;
 class Bmi_Cpp_Formulation_Test;
 class Bmi_C_Cfe_IT;
 class Bmi_C_Pet_IT;
+class Bmi_Cpp_Multi_Array_Test;
 
 namespace realization {
 
@@ -40,8 +46,8 @@ namespace realization {
          * @param forcing_provider
          * @param output_stream
          */
-        Bmi_Module_Formulation(std::string id, std::unique_ptr<forcing::ForcingProvider> forcing_provider, utils::StreamHandler output_stream)
-                : Bmi_Formulation(std::move(id), std::move(forcing_provider), output_stream) { };
+        Bmi_Module_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing_provider, utils::StreamHandler output_stream)
+                : Bmi_Formulation(std::move(id), forcing_provider, output_stream) { };
 
         virtual ~Bmi_Module_Formulation() {};
 
@@ -57,14 +63,14 @@ namespace realization {
             time_t model_time = convert_model_time(get_bmi_model()->GetCurrentTime()) + get_bmi_model_start_time_forcing_offset_s();
 
             struct AORC_data raw_aorc;
-            raw_aorc.TMP_2maboveground_K = forcing->get_value(CSDMS_STD_NAME_SURFACE_TEMP, model_time, timestep, "K");
-            raw_aorc.SPFH_2maboveground_kg_per_kg = forcing->get_value(NGEN_STD_NAME_SPECIFIC_HUMIDITY, model_time, timestep, "kg/kg");
-            raw_aorc.PRES_surface_Pa = forcing->get_value(CSDMS_STD_NAME_SURFACE_AIR_PRESSURE, model_time, timestep, "Pa");
-            raw_aorc.UGRD_10maboveground_meters_per_second = forcing->get_value(CSDMS_STD_NAME_WIND_U_X, model_time, timestep, "m s^-1");
-            raw_aorc.VGRD_10maboveground_meters_per_second = forcing->get_value(CSDMS_STD_NAME_WIND_V_Y, model_time, timestep, "m s^-1");
-            raw_aorc.DSWRF_surface_W_per_meters_squared = forcing->get_value(CSDMS_STD_NAME_SOLAR_SHORTWAVE, model_time, timestep, "W m^-2");
-            raw_aorc.DLWRF_surface_W_per_meters_squared = forcing->get_value(CSDMS_STD_NAME_SOLAR_LONGWAVE, model_time, timestep, "W m^-2");
-            raw_aorc.APCP_surface_kg_per_meters_squared = forcing->get_value(CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, model_time, timestep, "kg m^-2");
+            raw_aorc.TMP_2maboveground_K = forcing->get_value(BMIDataSelector(CSDMS_STD_NAME_SURFACE_TEMP, model_time, timestep, "K"), MEAN);
+            raw_aorc.SPFH_2maboveground_kg_per_kg = forcing->get_value(BMIDataSelector(NGEN_STD_NAME_SPECIFIC_HUMIDITY, model_time, timestep, "kg/kg"), MEAN);
+            raw_aorc.PRES_surface_Pa = forcing->get_value(BMIDataSelector(CSDMS_STD_NAME_SURFACE_AIR_PRESSURE, model_time, timestep, "Pa"), MEAN);
+            raw_aorc.UGRD_10maboveground_meters_per_second = forcing->get_value(BMIDataSelector(CSDMS_STD_NAME_WIND_U_X, model_time, timestep, "m s^-1"), MEAN);
+            raw_aorc.VGRD_10maboveground_meters_per_second = forcing->get_value(BMIDataSelector(CSDMS_STD_NAME_WIND_V_Y, model_time, timestep, "m s^-1"), MEAN);
+            raw_aorc.DSWRF_surface_W_per_meters_squared = forcing->get_value(BMIDataSelector(CSDMS_STD_NAME_SOLAR_SHORTWAVE, model_time, timestep, "W m^-2"), SUM);
+            raw_aorc.DLWRF_surface_W_per_meters_squared = forcing->get_value(BMIDataSelector(CSDMS_STD_NAME_SOLAR_LONGWAVE, model_time, timestep, "W m^-2"), SUM);
+            raw_aorc.APCP_surface_kg_per_meters_squared = forcing->get_value(BMIDataSelector(CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, model_time, timestep, "kg m^-2"), SUM);
 
             return calc_et(raw_aorc);
         }
@@ -237,7 +243,7 @@ namespace realization {
          * @return The collection of forcing output property names this instance can provide.
          * @see ForcingProvider
          */
-        const vector<std::string> &get_available_forcing_outputs() override {
+        const vector<std::string> &get_available_forcing_outputs() {
             if (is_model_initialized() && available_forcings.empty()) {
                 for (const std::string &output_var_name : get_bmi_model()->GetOutputVarNames()) {
                     available_forcings.push_back(output_var_name);
@@ -250,6 +256,10 @@ namespace realization {
             return available_forcings;
         }
 
+        inline const vector<std::string> &get_avaliable_variable_names() override {
+            return get_available_forcing_outputs();
+        }
+
         /**
          * Get the inclusive beginning of the period of time over which this instance can provide data for this forcing.
          *
@@ -259,9 +269,23 @@ namespace realization {
          *
          * @return The inclusive beginning of the period of time over which this instance can provide this data.
          */
-        time_t get_forcing_output_time_begin(const std::string &forcing_name) override {
+        time_t get_forcing_output_time_begin(const std::string &forcing_name) {
             // TODO: come back and implement if actually necessary for this type; for now don't use
             throw runtime_error("Bmi_Modular_Formulation does not yet implement get_forcing_output_time_begin");
+        }
+
+        /**
+         * Get the inclusive beginning of the period of time over which this instance can provide data for this forcing.
+         *
+         * This is part of the @ref DataProvider interface.  This interface must be implemented for items of this
+         * type to be usable as "forcing" providers for situations when some other object needs to receive as an input
+         * (i.e., one of its forcings) a data property output from this object.
+         *
+         * @return The inclusive beginning of the period of time over which this instance can provide this data.
+         */
+        long get_data_start_time() override
+        {
+            return this->get_bmi_model()->GetStartTime();
         }
 
         /**
@@ -273,9 +297,19 @@ namespace realization {
          *
          * @return The exclusive ending of the period of time over which this instance can provide this data.
          */
-        time_t get_forcing_output_time_end(const std::string &output_name) override {
+        [[deprecated]]
+        time_t get_forcing_output_time_end(const std::string &output_name) {
             // TODO: come back and implement if actually necessary for this type; for now don't use
-            throw runtime_error("Bmi_Modular_Formulation does not yet implement get_forcing_output_time_end");
+            throw runtime_error("Bmi_Module_Formulation does not yet implement get_forcing_output_time_end");
+        }
+
+        long get_data_stop_time() override {
+            // TODO: come back and implement if actually necessary for this type; for now don't use
+            throw runtime_error("Bmi_Module_Formulation does not yet implement get_data_stop_time");
+        }
+
+        long record_duration() override {
+            throw runtime_error("Bmi_Module_Formulation does not yet implement record_duration");
         }
 
         /**
@@ -341,6 +375,66 @@ namespace realization {
         }
 
         /**
+         * @brief Get the 1D values of a forcing property for an arbitrary time period, converting units if needed.
+         * 
+         * @param output_name The name of the forcing property of interest.
+         * @param init_time The epoch time (in seconds) of the start of the time period.
+         * @param duration_s The length of the time period, in seconds.
+         * @param output_units The expected units of the desired output value.
+         * @return std::vector<double> The 1D values of the forcing property for the described time period, with units converted if needed.
+         * @throws std::out_of_range If data for the time period is not available.
+         * @throws std::runtime_error output_name is not one of the available outputs of this provider instance.
+         */
+        std::vector<double> get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m=SUM) override
+        {
+            std::string output_name = selector.get_variable_name();
+            time_t init_time = selector.get_init_time();
+            long duration_s = selector.get_duration_secs();
+            std::string output_units = selector.get_output_units();
+
+            // First make sure this is an available output
+            const std::vector<std::string> forcing_outputs = get_available_forcing_outputs();
+            if (std::find(forcing_outputs.begin(), forcing_outputs.end(), output_name) == forcing_outputs.end()) {
+                throw runtime_error(get_formulation_type() + " received invalid output forcing name " + output_name);
+            }
+            // TODO: do this, or something better, later; right now, just assume anything using this as a provider is
+            //  consistent with times
+            /*
+            if (last_model_response_delta == 0 && last_model_response_start_time == 0) {
+                throw runtime_error(get_formulation_type() + " does not properly set output time validity ranges "
+                                                             "needed to provide outputs as forcings");
+            }
+            */
+
+            // check if output is available from BMI
+            std::string bmi_var_name;
+            get_bmi_output_var_name(output_name, bmi_var_name);
+
+            if( !bmi_var_name.empty() )
+            {
+                auto model = get_bmi_model().get();
+                //Get vector of double values for variable
+                //The return type of the vector here dependent on what
+                //needs to use it.  For other BMI moudles, that is runtime dependent
+                //on the type of the requesting module 
+                auto values = models::bmi::GetValue<double>(*model, bmi_var_name);
+
+                // Convert units
+                std::string native_units = get_bmi_model()->GetVarUnits(bmi_var_name);
+                try {
+                    UnitsHelper::convert_values(native_units, values.data(), output_units, values.data(), values.size());
+                    return values;
+                }
+                catch (const std::runtime_error& e){
+                    std::cerr<<"Unit conversion error: "<<std::endl<<e.what()<<std::endl<<"Returning unconverted value!"<<std::endl;
+                    return values;
+                }
+            }
+            //Fall back to any internal providers as a last resort.
+            return check_internal_providers<double>(output_name);
+        }
+
+        /**
          * Get the value of a forcing property for an arbitrary time period, converting units if needed.
          *
          * This is part of the @ref ForcingProvider interface.  This interface must be implemented for items of this
@@ -357,9 +451,13 @@ namespace realization {
          * @throws std::out_of_range If data for the time period is not available.
          * @see ForcingProvider::get_value
          */
-        double get_value(const std::string &output_name, const time_t &init_time, const long &duration_s,
-                         const std::string &output_units) override
+        double get_value(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override
         {
+            std::string output_name = selector.get_variable_name();
+            time_t init_time = selector.get_init_time();
+            long duration_s = selector.get_duration_secs();
+            std::string output_units = selector.get_output_units();
+
             // First make sure this is an available output
             const std::vector<std::string> forcing_outputs = get_available_forcing_outputs();
             if (std::find(forcing_outputs.begin(), forcing_outputs.end(), output_name) == forcing_outputs.end()) {
@@ -394,7 +492,7 @@ namespace realization {
                 }
             }
             //Fall back to any internal providers as a last resort.
-            return check_internal_providers<double>(output_name);
+            return check_internal_providers<double>(output_name)[0];
         }
 
         bool is_bmi_input_variable(const std::string &var_name) override {
@@ -482,11 +580,11 @@ namespace realization {
          * @throws std::runtime_error If no known value or function for @p output_name
          */
         template <typename T>
-        inline T check_internal_providers(std::string output_name){
+        std::vector<T> check_internal_providers(std::string output_name){
             // Only use the internal et_calc() if this formulation (or possibly multi-formulation)
             // does not know how to supply potential et
             if (output_name == NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP || output_name == CSDMS_STD_NAME_POTENTIAL_ET) {
-                return calc_et();
+                return std::vector<T>( 1, calc_et() );
             }
             //Note, when called via get_value, this is unlikely to throw since a pre-check on available names is done
             //in that function.
@@ -516,8 +614,7 @@ namespace realization {
         void determine_model_time_offset() {
             set_bmi_model_start_time_forcing_offset_s(
                     // TODO: Look at making this epoch start configurable instead of from forcing
-                    //WARN: This change potentially changes the behavior, though the previous behavior was incorrect.
-                    forcing->get_forcing_output_time_begin("") - convert_model_time(get_bmi_model()->GetStartTime()));
+                    forcing->get_data_start_time() - convert_model_time(get_bmi_model()->GetStartTime()));
         }
 
         /**
@@ -680,7 +777,7 @@ namespace realization {
                 set_output_header_fields(get_output_variable_names());
             }
             // Create a reference to this for ET by using a WrappedForcingProvider
-            std::shared_ptr<forcing::ForcingProvider> self = std::make_shared<forcing::WrappedForcingProvider>(this);
+            std::shared_ptr<data_access::GenericDataProvider> self = std::make_shared<data_access::WrappedForcingProvider>(this);
             input_forcing_providers[NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP] = self;
             input_forcing_providers[CSDMS_STD_NAME_POTENTIAL_ET] = self;
 
@@ -1000,7 +1097,7 @@ namespace realization {
             time_t model_epoch_time = convert_model_time(model_init_time) + get_bmi_model_start_time_forcing_offset_s();
 
             for (std::string & var_name : in_var_names) {
-                forcing::ForcingProvider *provider;
+                data_access::GenericDataProvider *provider;
                 std::string var_map_alias = get_config_mapped_variable_name(var_name);
                 if (input_forcing_providers.find(var_map_alias) != input_forcing_providers.end()) {
                     provider = input_forcing_providers[var_map_alias].get();
@@ -1015,16 +1112,25 @@ namespace realization {
                 //  this type of behavior
                 // TODO: account for arrays later
                 int varItemSize = get_bmi_model()->GetVarItemsize(var_name);
-                if (varItemSize != get_bmi_model()->GetVarNbytes(var_name)) {
-                    throw std::runtime_error(
-                            "BMI input variable '" + var_name + "' is an array - not currently supported");
-                }
-                double value = provider->get_value(var_map_alias, model_epoch_time, t_delta,
-                                                   get_bmi_model()->GetVarUnits(var_name));
+                std::shared_ptr<void> value_ptr;
                 // Finally, use the value obtained to set the model input
                 std::string type = get_bmi_model()->get_analogous_cxx_type(get_bmi_model()->GetVarType(var_name),
                                                                            varItemSize);
-                std::shared_ptr<void> value_ptr = get_value_as_type(type, value);
+                if (varItemSize != get_bmi_model()->GetVarNbytes(var_name)) {
+                    //more than a single value needed for var_name
+                    auto values = provider->get_values(CatchmentAggrDataSelector("",var_map_alias, model_epoch_time, t_delta,
+                                                   get_bmi_model()->GetVarUnits(var_name)));
+                    //need to marshal data types to the reciever as well
+                    //this could be done a little more elegantly if the provider interface were
+                    //"type aware", but for now, this will do (but requires yet another copy)
+                    value_ptr = get_values_as_type( type, values.begin(), values.end() );
+
+                } else {
+                    //scalar value
+                    double value = provider->get_value(CatchmentAggrDataSelector("",var_map_alias, model_epoch_time, t_delta,
+                                                   get_bmi_model()->GetVarUnits(var_name)));
+                    value_ptr = get_value_as_type(type, value);      
+                }
                 get_bmi_model()->SetValue(var_name, value_ptr.get());
             }
         }
@@ -1033,7 +1139,7 @@ namespace realization {
         time_step_t last_model_response_delta = 0;
         /** The epoch time of the model at the beginning of its last update. */
         time_t last_model_response_start_time = 0;
-        std::map<std::string, std::shared_ptr<forcing::ForcingProvider>> input_forcing_providers;
+        std::map<std::string, std::shared_ptr<data_access::GenericDataProvider>> input_forcing_providers;
 
         // Access for multi-BMI
         friend class Bmi_Multi_Formulation;
@@ -1043,6 +1149,7 @@ namespace realization {
         friend class ::Bmi_C_Formulation_Test;
         friend class ::Bmi_Multi_Formulation_Test;
         friend class ::Bmi_Cpp_Formulation_Test;
+        friend class ::Bmi_Cpp_Multi_Array_Test;
 
     private:
         /**

@@ -1,0 +1,157 @@
+name: 'Checkout and build tests'
+description: 'This action checks out the commit, sets up Ngen environemnt.'
+author: 'hellkite500'
+inputs:
+    targets:
+        required: false
+        description: 'Build targets'
+        default: 'all'
+    build-cores:
+      required: false
+      description: 'Number of cores to use for parallel builds'
+      default: '1'
+    build-dir:
+      required: false
+      description: 'Name of the build directory to run cmake in'
+      default: 'cmake_build'
+    bmi_c:
+      required: false
+      description: 'Activate C BMI library support'
+      default: 'OFF'
+    bmi_fortran:
+      required: false
+      description: 'Activate Fortran BMI library support'
+      default: 'OFF'
+    use_python:
+      required: false
+      description: 'Activate Python integration and BMI support'
+      #A lot of things oddly fail when this is not on by default...
+      default: 'OFF'
+    additional_python_requirements:
+      required: false
+      description: 'Path to additional requirements.txt for python packages'
+      default: ''
+    use_udunits:
+      required: false
+      description: 'Use UDUNITS2 for unit conversion'
+      default: 'ON'
+    use_troute:
+      required: false
+      description: 'Enable t-route integration support'
+      default: 'OFF'
+    use_mpi:
+      required: false
+      description: 'Enable mpi support, only available for Linux runners'
+      default: 'OFF'
+outputs:
+  build-dir:
+    description: "Directory build was performed in"
+    value: ${{ steps.cmake_init.outputs.build-dir }}
+
+runs:
+    using: 'composite'
+    steps:
+
+        - name: Install MPI
+          #Only use this step if Linux/ubuntu is being used
+          if: |
+            inputs.use_mpi != 'OFF' &&
+            runner.os == 'Linux'
+          id: install-mpi
+          run: |
+            sudo apt-get update
+            sudo apt-get install -y --fix-missing libopenmpi-dev openmpi-bin openmpi-common
+          shell: bash
+
+        - name: Install NetCDF
+          run: |
+            if [ ${{ runner.os }} == 'Linux' ]
+            then
+              sudo apt-get update
+              sudo apt-get install -y --fix-missing libnetcdf-dev libnetcdff-dev
+            elif [ ${{ runner.os }} == 'macOS' ]
+            then
+              brew install netcdf
+              echo "LIBRARY_PATH=/usr/local/lib/:$LIBRARY_PATH" >> $GITHUB_ENV
+              echo "LD_LIBRARY_PATH=/usr/local/lib/:$LD_LIBRARY_PATH" >> $GITHUB_ENV
+              echo "LDFLAGS=-L/usr/local/lib" >> $GITHUB_ENV
+            fi
+          shell: bash
+
+        - name: Init Submodules
+          run: git submodule update --init --recursive
+          shell: bash
+
+        - name: Cache Boost Dependency
+          id: cache-boost-dep
+          uses: actions/cache@v3
+          with:
+            path: boost_1_72_0
+            key: unix-boost-dep
+
+        - name: Get Boost Dependency
+          if: steps.cache-boost-dep.outputs.cache-hit != 'true'
+          run: |
+            curl -L -O https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2
+            tar xjf boost_1_72_0.tar.bz2
+          shell: bash
+
+        - name: Cache Python Dependencies
+          id: cache-py3-dependencies
+          uses: actions/cache@v3
+          with:
+            path: .venv
+            key: ${{ runner.os }}-python-deps
+
+        - name: Get Numpy Python Dependency
+          # Tried conditioning the cache/install of python with an extra check:
+          # inputs.use_python != 'OFF' &&
+          # but what happens is that a runner not requiring python will create an empty cache
+          # and future runners will pull that and then fail...
+          # What we could do is try to create a master `requirements.txt`
+          # and/or a `test_requirements.txt` file that we can build the hash key from
+          # and read it from the repo...but we still have to always initialize the cache
+          # regardless of whether a given runner uses it, to avoid another runner failing to 
+          # find it.  Or just initialize this minimum requirement of numpy, and let the venv
+          # grow based on other runners needs, effectively building the cache with each new addition
+          if: |
+            steps.cache-py3-dependencies.outputs.cache-hit != 'true'
+          run: |
+            python3 -m venv .venv
+            . .venv/bin/activate
+            pip install pip
+            pip install numpy
+            deactivate
+          shell: bash
+
+        - name: Init Additional Python Dependencies
+          # Don't condition additonal installs on a cache hit
+          # What will happen, however, is that the venv will get updated
+          # and thus the cache will get updated
+          # so any pip install will find modules already installed...
+          # if: |
+          #   inputs.additional_python_requirements != '' &&
+          #   steps.cache-py3-dependencies.outputs.cache-hit != 'true'
+          if: |
+            inputs.additional_python_requirements != ''
+          run: |
+            python3 -m venv .venv
+            . .venv/bin/activate
+            pip install -r ${{ inputs.additional_python_requirements }}
+            deactivate
+          shell: bash
+
+        - name: Cmake Initialization
+          id: cmake_init
+          run: |
+            export BOOST_ROOT="$(pwd)/boost_1_72_0"
+            [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
+            cmake -B ${{ inputs.build-dir }} -DBMI_C_LIB_ACTIVE:BOOL=${{ inputs.bmi_c }} -DNGEN_ACTIVATE_PYTHON:BOOL=${{ inputs.use_python }} -DUDUNITS_ACTIVE:BOOL=${{ inputs.use_udunits }} -DBMI_FORTRAN_ACTIVE:BOOL=${{ inputs.bmi_fortran }} -DNGEN_ACTIVATE_ROUTING:BOOL=${{ inputs.use_troute }} -DMPI_ACTIVE:BOOL=${{ inputs.use_mpi }} -S .
+            echo "::set-output name=build-dir::$(echo ${{ inputs.build-dir }})"
+          shell: bash
+
+        - name: Build Targets
+          #cmake >= 3.15 can build multiple targets
+          run: cmake --build ${{ inputs.build-dir }} --target ${{ inputs.targets }} -- -j  ${{ inputs.build-cores }}
+          shell: bash
+

@@ -17,20 +17,23 @@
 #include "Bmi_Fortran_Formulation.hpp"
 #include "Bmi_Multi_Formulation.hpp"
 #include "Bmi_Py_Formulation.hpp"
-#include <ForcingProvider.hpp>
+#include <GenericDataProvider.hpp>
 #include "CsvPerFeatureForcingProvider.hpp"
+#ifdef NETCDF_ACTIVE
+    #include "NetCDFPerFeatureDataProvider.hpp"
+#endif
 
 #ifdef NGEN_LSTM_TORCH_LIB_ACTIVE
     #include "LSTM_Realization.hpp"
 #endif
 
 namespace realization {
-    typedef std::shared_ptr<Catchment_Formulation> (*constructor)(std::string, unique_ptr<forcing::ForcingProvider>, utils::StreamHandler);
+    typedef std::shared_ptr<Catchment_Formulation> (*constructor)(std::string, shared_ptr<data_access::GenericDataProvider>, utils::StreamHandler);
 
     template<class T>
     static constructor create_formulation_constructor() {
-        return [](std::string id, std::unique_ptr<forcing::ForcingProvider> forcing_provider, utils::StreamHandler output_stream) -> std::shared_ptr<Catchment_Formulation>{
-            return std::make_shared<T>(id, std::move(forcing_provider), output_stream);
+        return [](std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing_provider, utils::StreamHandler output_stream) -> std::shared_ptr<Catchment_Formulation>{
+            return std::make_shared<T>(id, forcing_provider, output_stream);
         };
     };
 
@@ -66,22 +69,27 @@ namespace realization {
         utils::StreamHandler output_stream
     ) {
         constructor formulation_constructor = formulations.at(formulation_type);
-        std::unique_ptr<forcing::ForcingProvider> fp;
+        std::shared_ptr<data_access::GenericDataProvider> fp;
         if (formulation_type == "tshirt" || formulation_type == "tshirt_c"  || formulation_type == "lstm" // These formulations are still using the legacy interface!
             || forcing_config.provider == "" || forcing_config.provider == "legacy" // Permit legacy Forcing class with BMI formulations and simple_lumped--don't break old configs
             ){
-            fp = std::make_unique<Forcing>(forcing_config);
+            fp = std::make_shared<Forcing>(forcing_config);
         }
         else if (forcing_config.provider == "CsvPerFeature"){
-            fp = std::make_unique<CsvPerFeatureForcingProvider>(forcing_config);
+            fp = std::make_shared<CsvPerFeatureForcingProvider>(forcing_config);
         }
+#ifdef NETCDF_ACTIVE
+        else if (forcing_config.provider == "NetCDF"){
+            fp = std::make_shared<data_access::NetCDFPerFeatureDataProvider>(forcing_config.path.c_str(), output_stream);
+        }
+#endif
         else { // Some unknown string in the provider field?
             throw std::runtime_error(
                     "Invalid formulation forcing provider configuration! identifier: \"" + identifier +
                     "\", formulation_type: \"" + formulation_type +
                     "\", provider: \"" + forcing_config.provider + "\"");
         }
-        return formulation_constructor(identifier, std::move(fp), output_stream);
+        return formulation_constructor(identifier, fp, output_stream);
     };
 
     static std::string get_formulation_key(const boost::property_tree::ptree &tree) {

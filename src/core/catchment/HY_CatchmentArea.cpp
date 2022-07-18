@@ -5,7 +5,7 @@ HY_CatchmentArea::HY_CatchmentArea()
     //ctor
 }
 
-HY_CatchmentArea::HY_CatchmentArea(std::unique_ptr<forcing::ForcingProvider> forcing, utils::StreamHandler output_stream) : HY_CatchmentRealization(std::move(forcing)), output(output_stream) { }
+HY_CatchmentArea::HY_CatchmentArea(std::shared_ptr<data_access::GenericDataProvider> forcing, utils::StreamHandler output_stream) : HY_CatchmentRealization(forcing), output(output_stream) { }
 
 HY_CatchmentArea::~HY_CatchmentArea()
 {

@@ -5,7 +5,7 @@
 #include "OptionalWrappedProvider.hpp"
 
 using namespace std;
-using namespace forcing;
+using namespace data_access;
 
 class OptionalWrappedProvider_Test : public ::testing::Test {
 protected:
@@ -92,7 +92,7 @@ TEST_F(OptionalWrappedProvider_Test, test_is_default_override_1_b) {
 
     // Try again, after getting the (default) value once, meaning it should no longer override
     // Args don't really matter (apart from the name) for backing trivial item
-    double output_value = optProvider.get_value(OUTPUT_NAME_1, 0, 10, "m");
+    double output_value = optProvider.get_value(CatchmentAggrDataSelector("",OUTPUT_NAME_1, 0, 10, "m"), data_access::SUM);
     value = optProvider.isDefaultOverride(OUTPUT_NAME_1);
     ASSERT_FALSE(value);
 }
@@ -106,7 +106,7 @@ TEST_F(OptionalWrappedProvider_Test, test_get_value_0_a) {
     OptionalWrappedProvider &optProvider = providers[example_index];
     optProvider.setWrappedProvider(&backingProvider);
     // Args don't really matter (apart from the name) for backing trivial item
-    double value = optProvider.get_value(OUTPUT_NAME_1, 0, 10, "m");
+    double value = optProvider.get_value(CatchmentAggrDataSelector("",OUTPUT_NAME_1, 0, 10, "m"), data_access::SUM);
 
     ASSERT_EQ(value, OUTPUT_VALUE_1);
 }
@@ -123,7 +123,7 @@ TEST_F(OptionalWrappedProvider_Test, test_get_value_0_b) {
     double value;
 
     for (int i = 0; i < 10; ++i) {
-        value = optProvider.get_value(OUTPUT_NAME_1, 0, 10, "m");
+        value = optProvider.get_value(CatchmentAggrDataSelector("",OUTPUT_NAME_1, 0, 10, "m"), data_access::SUM);
         ASSERT_EQ(value, OUTPUT_VALUE_1);
     }
 }
@@ -139,7 +139,7 @@ TEST_F(OptionalWrappedProvider_Test, test_get_value_0_c) {
     double value;
 
     for (int i = 0; i < 10; ++i) {
-        value = optProvider.get_value(OUTPUT_NAME_1, 0, 10, "m");
+        value = optProvider.get_value(CatchmentAggrDataSelector("",OUTPUT_NAME_1, 0, 10, "m"), data_access::SUM);
         ASSERT_EQ(value, OUTPUT_DEFAULT_1);
     }
 }
@@ -153,11 +153,11 @@ TEST_F(OptionalWrappedProvider_Test, test_get_value_1_a) {
     OptionalWrappedProvider &optProvider = providers[example_index];
     optProvider.setWrappedProvider(&backingProvider);
     // Args don't really matter (apart from the name) for backing trivial item
-    double value = optProvider.get_value(OUTPUT_NAME_1, 0, 10, "m");
+    double value = optProvider.get_value(CatchmentAggrDataSelector("", OUTPUT_NAME_1, 0, 10, "m"), data_access::SUM);
     ASSERT_EQ(value, OUTPUT_DEFAULT_1);
 
     // Second time should be the actual value
-    value = optProvider.get_value(OUTPUT_NAME_1, 0, 10, "m");
+    value = optProvider.get_value(CatchmentAggrDataSelector("", OUTPUT_NAME_1, 0, 10, "m"), data_access::SUM);
     ASSERT_EQ(value, OUTPUT_VALUE_1);
 }
 
@@ -171,14 +171,14 @@ TEST_F(OptionalWrappedProvider_Test, test_get_value_2_a) {
     optProvider.setWrappedProvider(&backingProvider);
     // Args don't really matter (apart from the name) for backing trivial item
     double value;
-
+ 
     for (int i = 0; i < 2; ++i) {
-        value = optProvider.get_value(OUTPUT_NAME_1, 0, 10, "m");
+        value = optProvider.get_value(CatchmentAggrDataSelector("", OUTPUT_NAME_1, 0, 10, "m"), data_access::SUM);
         ASSERT_EQ(value, OUTPUT_DEFAULT_1);
     }
 
     // Third time should be the actual value
-    value = optProvider.get_value(OUTPUT_NAME_1, 0, 10, "m");
+    value = optProvider.get_value(CatchmentAggrDataSelector("", OUTPUT_NAME_1, 0, 10, "m"), data_access::SUM);
     ASSERT_EQ(value, OUTPUT_VALUE_1);
 }
 
@@ -191,8 +191,8 @@ TEST_F(OptionalWrappedProvider_Test, test_get_value_3_a) {
     OptionalWrappedProvider &optProvider = providers[example_index];
     optProvider.setWrappedProvider(&backingProvider);
     // Args don't really matter (apart from the name) for backing trivial item
-    double value = optProvider.get_value(OUTPUT_NAME_1, 0, 10, "m");
-    double backing_value = backingProvider.get_value(OUTPUT_NAME_1, 0, 10, "m");
+    double value = optProvider.get_value(CatchmentAggrDataSelector("", OUTPUT_NAME_1, 0, 10, "m"), data_access::SUM);
+    double backing_value = backingProvider.get_value(CatchmentAggrDataSelector("", OUTPUT_NAME_1, 0, 10, "m"), data_access::SUM);
 
     ASSERT_EQ(value, backing_value);
 }
@@ -209,8 +209,8 @@ TEST_F(OptionalWrappedProvider_Test, test_get_value_3_b) {
     double value, backing_value;
 
     for (int i = 0; i < 10; ++i) {
-        value = optProvider.get_value(OUTPUT_NAME_1, 0, 10, "m");
-        backing_value = backingProvider.get_value(OUTPUT_NAME_1, 0, 10, "m");
+        value = optProvider.get_value(CatchmentAggrDataSelector("", OUTPUT_NAME_1, 0, 10, "m"), data_access::SUM);
+        backing_value = backingProvider.get_value(CatchmentAggrDataSelector("", OUTPUT_NAME_1, 0, 10, "m"), data_access::SUM);
         ASSERT_EQ(value, backing_value);
     }
 }

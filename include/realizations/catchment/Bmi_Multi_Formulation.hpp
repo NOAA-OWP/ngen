@@ -6,7 +6,7 @@
 #include "Bmi_Formulation.hpp"
 #include "Bmi_Module_Formulation.hpp"
 #include "bmi.hpp"
-#include "ForcingProvider.hpp"
+#include "GenericDataProvider.hpp"
 #include "OptionalWrappedProvider.hpp"
 #include "ConfigurationException.hpp"
 
@@ -17,6 +17,7 @@
 using namespace std;
 
 class Bmi_Multi_Formulation_Test;
+class Bmi_Cpp_Multi_Array_Test;
 
 namespace realization {
 
@@ -38,8 +39,8 @@ namespace realization {
          * @param forcing_config
          * @param output_stream
          */
-        Bmi_Multi_Formulation(string id, std::unique_ptr<forcing::ForcingProvider> forcing_provider, utils::StreamHandler output_stream)
-                : Bmi_Formulation(move(id), move(forcing_provider), output_stream) { };
+        Bmi_Multi_Formulation(string id, std::shared_ptr<data_access::GenericDataProvider> forcing_provider, utils::StreamHandler output_stream)
+                : Bmi_Formulation(move(id), forcing_provider, output_stream) { };
 
         virtual ~Bmi_Multi_Formulation() {};
 
@@ -118,7 +119,7 @@ namespace realization {
          * @return The index of correct sub-module formulation from which ET values should be obtain.
          */
         size_t determine_et_formulation_index() {
-            std::shared_ptr<forcing::ForcingProvider> et_provider = nullptr;
+            std::shared_ptr<data_access::GenericDataProvider> et_provider = nullptr;
             if (availableData.find(NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP) != availableData.end()) {
                 et_provider = availableData[NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP];
             }
@@ -136,7 +137,7 @@ namespace realization {
             }
             // Otherwise, check the modules directly for the standard ET output variable names.
             for (size_t i = 0; i < modules.size(); ++i) {
-                std::vector<std::string> values = modules[i]->get_available_forcing_outputs();
+                std::vector<std::string> values = modules[i]->get_avaliable_variable_names();
                 if (std::find(values.begin(), values.end(), NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP) != values.end()) {
                     return i;
                 }
@@ -178,10 +179,12 @@ namespace realization {
          * @return The collection of forcing output property names this instance can provide.
          * @see ForcingProvider
          */
-        const vector<std::string> &get_available_forcing_outputs() override;
+        const vector<std::string> &get_available_forcing_outputs();
+        const vector<std::string> &get_avaliable_variable_names() override { return get_available_forcing_outputs(); }
 
         /**
-        * Get the input variables of the first nested BMI model.
+        * Get the input variables of 
+        * the first nested BMI model.
         *
         * @return The input variables of the first nested BMI model.
         */
@@ -279,17 +282,35 @@ namespace realization {
          *
          * @return The inclusive beginning of the period of time over which this instance can provide this data.
          */
-        time_t get_forcing_output_time_begin(const std::string &forcing_name) override {
+
+
+        long get_data_start_time() override
+        {
+            return get_forcing_output_time_begin("");
+        }
+
+        /**
+         * Get the inclusive beginning of the period of time over which this instance can provide data for this forcing.
+         *
+         * This is part of the @ref ForcingProvider interface.  This interface must be implemented for items of this
+         * type to be usable as "forcing" providers for situations when some other object needs to receive as an input
+         * (i.e., one of its forcings) a data property output from this object.
+         *
+         * @return The inclusive beginning of the period of time over which this instance can provide this data.
+         */
+
+        [[deprecated]]
+        time_t get_forcing_output_time_begin(const std::string &forcing_name) {
             std::string var_name = forcing_name;
             if(var_name == "*" || var_name == ""){
                 // when unspecified, assume all data is available for the same range.
                 // Find one that successfully returns...
-                for(std::map<std::string,std::shared_ptr<forcing::ForcingProvider>>::iterator iter = availableData.begin(); iter != availableData.end(); ++iter)
+                for(std::map<std::string,std::shared_ptr<data_access::GenericDataProvider>>::iterator iter = availableData.begin(); iter != availableData.end(); ++iter)
                 {
                     var_name = iter->first;
                     //TODO: Find a probably more performant way than trial and exception here.
                     try {
-                        time_t rv = availableData[var_name]->get_forcing_output_time_begin(var_name);
+                        time_t rv = availableData[var_name]->get_data_start_time();
                         return rv;
                     }
                     catch (...){
@@ -302,7 +323,7 @@ namespace realization {
             if (availableData.empty() || availableData.find(var_name) == availableData.end()) {
                 throw runtime_error(get_formulation_type() + " cannot get output time for unknown \"" + forcing_name + "\"");
             }
-            return availableData[var_name]->get_forcing_output_time_begin(var_name);
+            return availableData[var_name]->get_data_start_time();
         }
 
         /**
@@ -314,18 +335,33 @@ namespace realization {
          *
          * @return The exclusive ending of the period of time over which this instance can provide this data.
          */
-        time_t get_forcing_output_time_end(const std::string &forcing_name) override {
+
+        long get_data_stop_time() override
+        {
+            return get_forcing_output_time_end("");
+        }
+
+        /**
+         * Get the exclusive ending of the period of time over which this instance can provide data for this forcing.
+         *
+         * This is part of the @ref ForcingProvider interface.  This interface must be implemented for items of this
+         * type to be usable as "forcing" providers for situations when some other object needs to receive as an input
+         * (i.e., one of its forcings) a data property output from this object.
+         *
+         * @return The exclusive ending of the period of time over which this instance can provide this data.
+         */
+        time_t get_forcing_output_time_end(const std::string &forcing_name) {
             // If not found ...
             std::string var_name = forcing_name;
             if(var_name == "*" || var_name == ""){
                 // when unspecified, assume all data is available for the same range.
                 // Find one that successfully returns...
-                for(std::map<std::string,std::shared_ptr<forcing::ForcingProvider>>::iterator iter = availableData.begin(); iter != availableData.end(); ++iter)
+                for(std::map<std::string,std::shared_ptr<data_access::GenericDataProvider>>::iterator iter = availableData.begin(); iter != availableData.end(); ++iter)
                 {
                     var_name = iter->first;
                     //TODO: Find a probably more performant way than trial and exception here.
                     try {
-                        time_t rv = availableData[var_name]->get_forcing_output_time_end(var_name);
+                        time_t rv = availableData[var_name]->get_data_stop_time();
                         return rv;
                     }
                     catch (...){
@@ -338,10 +374,34 @@ namespace realization {
             if (availableData.empty() || availableData.find(var_name) == availableData.end()) {
                 throw runtime_error(get_formulation_type() + " cannot get output time for unknown \"" + forcing_name + "\"");
             }
-            return availableData[var_name]->get_forcing_output_time_end(var_name);
+            return availableData[var_name]->get_data_stop_time();
         }
 
-        string get_formulation_type() override {
+        long record_duration() override
+        {
+            std::string var_name;
+            for(std::map<std::string,std::shared_ptr<data_access::GenericDataProvider>>::iterator iter = availableData.begin(); iter != availableData.end(); ++iter)
+            {
+                var_name = iter->first;
+                //TODO: Find a probably more performant way than trial and exception here.
+                try {
+                    time_t rv = availableData[var_name]->record_duration();
+                    return rv;
+                }
+                catch (...){
+                    continue;
+                }
+                break;
+            }
+
+            // If not found ...
+            if (availableData.empty() || availableData.find(var_name) == availableData.end()) {
+                throw runtime_error(get_formulation_type() + " cannot get output record duration for unknown \"" + var_name + "\"");
+            }
+            return availableData[var_name]->record_duration();
+        }
+
+        std::string get_formulation_type() override {
             return "bmi_multi";
         }
 
@@ -361,6 +421,15 @@ namespace realization {
          */
         const double get_model_end_time() override {
             return modules[get_index_for_primary_module()]->get_model_end_time();
+        }
+
+        /**
+         * Get the end time for the primary nested BMI model in its native format and units.
+         *
+         * @return The end time for the primary nested BMI model in its native format and units.
+         */
+        const double get_model_start_time() {
+            return modules[get_index_for_primary_module()]->get_data_start_time();
         }
 
         string get_output_line_for_timestep(int timestep, std::string delimiter) override;
@@ -406,14 +475,31 @@ namespace realization {
          * @return The value of the forcing property for the described time period, with units converted if needed.
          * @throws std::out_of_range If data for the time period is not available.
          */
-        double get_value(const std::string &output_name, const time_t &init_time, const long &duration_s,
-                         const std::string &output_units) override
+        double get_value(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override
         {
+            std::string output_name = selector.get_variable_name();
+            time_t init_time = selector.get_init_time();
+            long duration_s = selector.get_duration_secs();
+            std::string output_units = selector.get_output_units();
+            
             // If not found ...
             if (availableData.empty() || availableData.find(output_name) == availableData.end()) {
-                throw runtime_error(get_formulation_type() + " cannot get output value for unknown " + output_name);
+                throw runtime_error(get_formulation_type() + " cannot get output value for unknown " + output_name + SOURCE_LOC);
             }
-            return availableData[output_name]->get_value(output_name, init_time, duration_s, output_units);
+            return availableData[output_name]->get_value(CatchmentAggrDataSelector("",output_name, init_time, duration_s, output_units), m);
+        }
+
+        std::vector<double> get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override
+        {
+            std::string output_name = selector.get_variable_name();
+            time_t init_time = selector.get_init_time();
+            long duration_s = selector.get_duration_secs();
+            std::string output_units = selector.get_output_units();
+
+            if (availableData.empty() || availableData.find(output_name) == availableData.end()) {
+                throw runtime_error(get_formulation_type() + " cannot get output values for unknown " + output_name + SOURCE_LOC);
+            }
+            return availableData[output_name]->get_values(CatchmentAggrDataSelector("",output_name, init_time, duration_s, output_units), m);
         }
 
         bool is_bmi_input_variable(const string &var_name) override;
@@ -551,19 +637,21 @@ namespace realization {
             auto data_provider_iter = availableData.find(var_name);
             if (data_provider_iter == availableData.end()) {
                 throw external::ExternalIntegrationException(
-                        "Multi BMI formulation can't find correct nested module for BMI variable " + var_name);
+                        "Multi BMI formulation can't find correct nested module for BMI variable " + var_name + SOURCE_LOC);
             }
             // Otherwise, we have a provider, and we can cast it based on the documented assumptions
             try {
-                std::shared_ptr <Bmi_Module_Formulation<bmi::Bmi>> nested_module =
-                        std::dynamic_pointer_cast < Bmi_Module_Formulation <
-                                bmi::Bmi >> (data_provider_iter->second);
-                return nested_module->get_var_value_as_double(index, var_name);
+                std::shared_ptr <data_access::GenericDataProvider> nested_module =
+                        std::dynamic_pointer_cast<data_access::GenericDataProvider>(data_provider_iter->second);
+                long nested_module_time = nested_module->get_data_start_time() + ( this->get_model_current_time() - this->get_model_start_time() );
+                auto selector = CatchmentAggrDataSelector("",var_name,nested_module_time,this->record_duration(),"1");
+                //TODO: After merge PR#405, try re-adding support for index
+                return nested_module->get_value(selector);
             }
             // If there was any problem with the cast and extraction of the value, throw runtime error
             catch (std::exception &e) {
                 throw std::runtime_error("Multi BMI formulation can't use associated data provider as a nested module"
-                                         " when attempting to get values of BMI variable " + var_name);
+                                         " when attempting to get values of BMI variable " + var_name + SOURCE_LOC);
                 // TODO: look at adjusting defs to move this function up in class hierarchy (or at least add TODO there)
             }
         }
@@ -579,7 +667,7 @@ namespace realization {
          */
         inline void init_deferred_associations() {
             for (int d = 0; d < deferredProviders.size(); ++d) {
-                std::shared_ptr<forcing::OptionalWrappedProvider> &deferredProvider  = deferredProviders[d];
+                std::shared_ptr<data_access::OptionalWrappedProvider> &deferredProvider  = deferredProviders[d];
                 // Skip doing anything for any deferred provider that already has its backing provider set
                 if (deferredProvider->isWrappedProviderSet())
                     continue;
@@ -587,7 +675,7 @@ namespace realization {
                 // TODO: improve this later; since defaults can be used, it is technically possible to grab something
                 //  valid when something more appropriate would later be available
                 // Iterate through available data providers and set association once a sufficient one is found
-                std::map<std::string, std::shared_ptr<forcing::ForcingProvider>>::iterator avail_it;
+                std::map<std::string, std::shared_ptr<data_access::GenericDataProvider>>::iterator avail_it;
                 for (avail_it = availableData.begin(); avail_it != availableData.end(); avail_it++) {
                     // If this satisfies everything this deferred provider needs to provide, and thus can be/was set ...
                     if (deferredProvider->setWrappedProvider(avail_it->second.get())) {
@@ -602,10 +690,10 @@ namespace realization {
                                       "provider to satisfy set of deferred provisions for nested module at index "
                                       + std::to_string(deferredProviderModuleIndices[d]) + ": {";
                     // There must always be at least 1; get manually to help with formatting
-                    msg += deferredProvider->get_available_forcing_outputs()[0];
+                    msg += deferredProvider->get_avaliable_variable_names()[0];
                     // And here make sure to start at 1 instead of 0
-                    for (int i = 1; i < deferredProvider->get_available_forcing_outputs().size(); ++i)
-                        msg += ", " + deferredProvider->get_available_forcing_outputs()[i];
+                    for (int i = 1; i < deferredProvider->get_avaliable_variable_names().size(); ++i)
+                        msg += ", " + deferredProvider->get_avaliable_variable_names()[i];
                     msg += "}";
                     throw realization::ConfigurationException(msg);
                 }
@@ -629,8 +717,8 @@ namespace realization {
          */
         template<class T>
         std::shared_ptr<T> init_nested_module(int mod_index, std::string identifier, geojson::PropertyMap properties) {
-            std::unique_ptr<forcing::ForcingProvider> wfp = std::make_unique<forcing::WrappedForcingProvider>(this);
-            std::shared_ptr<T> mod = std::make_shared<T>(identifier, std::move(wfp), output);
+            std::shared_ptr<data_access::GenericDataProvider> wfp = std::make_shared<data_access::WrappedForcingProvider>(this);
+            std::shared_ptr<T> mod = std::make_shared<T>(identifier, wfp, output);
 
             // Since this is a nested formulation, support usage of the '{{id}}' syntax for init config file paths.
             Catchment_Formulation::config_pattern_substitution(properties, BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG,
@@ -680,7 +768,7 @@ namespace realization {
          * input data to also have either an input variable name or input variable name mapping identical to one of
          * these keys (and though ordering is important at a higher level, it is not handled directly by this member).
          */
-        std::map<std::string, std::shared_ptr<forcing::ForcingProvider>> availableData;
+        std::map<std::string, std::shared_ptr<data_access::GenericDataProvider>> availableData;
 
     private:
 
@@ -709,15 +797,15 @@ namespace realization {
             // Only include BMI variable name, as that's what'll be visible when associating to backing provider
             // It's "deferred" in that we'll set the backing later.
             // It's "optional" in that it waits to use backing provider, using the default some number of times
-            std::shared_ptr<forcing::OptionalWrappedProvider> provider;
+            std::shared_ptr<data_access::OptionalWrappedProvider> provider;
             // TODO: make sure only alias is needed
             auto defs_it = default_output_values.find(framework_output_name);
             if (defs_it != default_output_values.end()) {
                 // TODO: consider also reading wait count from config
-                provider = std::make_shared<forcing::OptionalWrappedProvider>(framework_output_name, defs_it->second, 1);
+                provider = std::make_shared<data_access::OptionalWrappedProvider>(framework_output_name, defs_it->second, 1);
             }
             else {
-                provider = std::make_shared<forcing::OptionalWrappedProvider>(framework_output_name);
+                provider = std::make_shared<data_access::OptionalWrappedProvider>(framework_output_name);
             }
 
             // Add deferred to collection and module index to collection
@@ -742,7 +830,7 @@ namespace realization {
          * It assumes that the necessary provider will be available and associated once all nested formulations have
          * been created.  This member tracks these so that this deferred association can be done.
          */
-        std::vector<std::shared_ptr<forcing::OptionalWrappedProvider>> deferredProviders;
+        std::vector<std::shared_ptr<data_access::OptionalWrappedProvider>> deferredProviders;
 
         /**
          * The module indices for the modules associated with each item in @ref deferredProviders.
@@ -770,6 +858,7 @@ namespace realization {
         int primary_module_index = -1;
 
         friend Bmi_Multi_Formulation_Test;
+        friend class ::Bmi_Cpp_Multi_Array_Test;
 
     };
 }

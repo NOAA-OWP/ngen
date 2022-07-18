@@ -4,6 +4,7 @@
 // Don't bother with the rest if none of these are active (although what are we really doing here, then?)
 #if NGEN_BMI_C_LIB_ACTIVE || NGEN_BMI_FORTRAN_ACTIVE || ACTIVATE_PYTHON
 
+#include "all.h"
 #include "Bmi_Testing_Util.hpp"
 #include <exception>
 #include <map>
@@ -44,7 +45,7 @@ protected:
         return formulation.get_bmi_main_output_var();
     }
 
-    static const std::vector<std::shared_ptr<forcing::OptionalWrappedProvider>> &get_friend_deferred_providers(
+    static const std::vector<std::shared_ptr<data_access::OptionalWrappedProvider>> &get_friend_deferred_providers(
             const Bmi_Multi_Formulation& formulation)
     {
         return formulation.deferredProviders;
@@ -132,6 +133,8 @@ protected:
     std::vector<std::string> example_forcing_files;
     /** Main output variables for the outter formulation in each example. */
     std::vector<std::string> main_output_variables;
+    /** Lists for "output_variables" entries; one list per example, NOT one string per nested module */
+    std::vector<std::vector<std::string>> specified_output_variables;
     /** Collections of lib/package files names for nested modules of each example, in the order of the nested modules. */
     std::vector<std::vector<std::string>> nested_module_file_lists;
     /** Collections of model types for each example, in the order of the nested modules. */
@@ -159,6 +162,7 @@ private:
         catchment_ids = std::vector<std::string>(EX_COUNT);
         example_forcing_files = std::vector<std::string>(EX_COUNT);
         main_output_variables  = std::vector<std::string>(EX_COUNT);
+        specified_output_variables = std::vector<std::vector<std::string>>(EX_COUNT);
         uses_forcing_file = std::vector<bool>(EX_COUNT);
         forcing_params_examples = std::vector<std::shared_ptr<forcing_params>>(EX_COUNT);
         config_prop_ptree = std::vector<boost::property_tree::ptree>(EX_COUNT);
@@ -310,6 +314,22 @@ private:
         }
     }
 
+    inline std::string buildExampleOutputVariablesSubConfig(const int ex_index){
+        auto list = specified_output_variables[ex_index];
+        std::string s = "";
+        if(list.size() == 0){
+            return s;
+        }
+        s = ",\"output_variables\": [";
+        std::string comma = "";
+        for (auto item : list) {
+            s += comma + "\"" + item + "\"" ;
+            comma = ",";
+        }
+        s += "]";
+        return s;
+    }
+
     inline void buildExampleConfig(const int ex_index) {
         std::string config =
                 "{\n"
@@ -330,6 +350,7 @@ private:
                 + buildExampleNestedModuleSubConfig(ex_index, 1) + "\n"
                 "                        ],\n"
                 "                        \"uses_forcing_file\": false\n"
+                + buildExampleOutputVariablesSubConfig(ex_index) + "\n"
                 "                    }\n"
                 "                }\n"
                 "            ],\n"
@@ -384,7 +405,7 @@ private:
     }
 
     inline void initializeTestExample(const int ex_index, const std::string &cat_id,
-                                      const std::vector<std::string> &nested_types) {
+                                      const std::vector<std::string> &nested_types, const std::vector<std::string> &output_variables) {
         catchment_ids[ex_index] = cat_id;
         example_forcing_files[ex_index] = testUtil.getForcingFilePath(cat_id);
         uses_forcing_file[ex_index] = false;
@@ -407,6 +428,7 @@ private:
         }
         //main_output_variables[ex_index] = "OUTPUT_VAR_1__" + std::to_string(example_module_depth[ex_index] - 1);
         main_output_variables[ex_index] = nested_module_main_output_variables[ex_index][example_module_depth[ex_index] - 1];
+        specified_output_variables[ex_index] = output_variables;
 
         buildExampleConfig(ex_index);
     }
@@ -440,31 +462,31 @@ void Bmi_Multi_Formulation_Test::SetUp() {
 
     /* ********************************** First example scenario (Fortran / C) ********************************** */
     #ifndef NGEN_BMI_C_LIB_ACTIVE
-    throw std::runtime_error("Error: can't run multi BMI tests for scenario at index 0 without BMI C functionality active");
+    throw std::runtime_error("Error: can't run multi BMI tests for scenario at index 0 without BMI C functionality active" SOURCE_LOC);
     #endif // NGEN_BMI_C_LIB_ACTIVE
 
     #ifndef NGEN_BMI_FORTRAN_ACTIVE
-    throw std::runtime_error("Error: can't run multi BMI tests for scenario at index 0 without BMI Fortran functionality active");
+    throw std::runtime_error("Error: can't run multi BMI tests for scenario at index 0 without BMI Fortran functionality active" SOURCE_LOC);
     #endif // NGEN_BMI_FORTRAN_ACTIVE
 
 
-    initializeTestExample(0, "cat-27", {std::string(BMI_FORTRAN_TYPE), std::string(BMI_C_TYPE)});
+    initializeTestExample(0, "cat-27", {std::string(BMI_FORTRAN_TYPE), std::string(BMI_C_TYPE)}, {});
 
     /* ********************************** Second example scenario ********************************** */
 
     #ifndef NGEN_BMI_FORTRAN_ACTIVE
-    throw std::runtime_error("Error: can't run multi BMI tests for scenario at index 1 without BMI Fortran functionality active");
+    throw std::runtime_error("Error: can't run multi BMI tests for scenario at index 1 without BMI Fortran functionality active" SOURCE_LOC);
     #endif // NGEN_BMI_FORTRAN_ACTIVE
 
     #ifndef ACTIVATE_PYTHON
-    throw std::runtime_error("Error: can't run multi BMI tests for scenario at index 1 without BMI C functionality active");
+    throw std::runtime_error("Error: can't run multi BMI tests for scenario at index 1 without BMI Python functionality active" SOURCE_LOC);
     #endif // ACTIVATE_PYTHON
 
-    initializeTestExample(1, "cat-27", {std::string(BMI_FORTRAN_TYPE), std::string(BMI_PYTHON_TYPE)});
+    initializeTestExample(1, "cat-27", {std::string(BMI_FORTRAN_TYPE), std::string(BMI_PYTHON_TYPE)}, {});
 
-    initializeTestExample(2, "cat-27", {std::string(BMI_FORTRAN_TYPE), std::string(BMI_PYTHON_TYPE)});
+    initializeTestExample(2, "cat-27", {std::string(BMI_FORTRAN_TYPE), std::string(BMI_PYTHON_TYPE)}, {});
 
-    initializeTestExample(3, "cat-27", {std::string(BMI_FORTRAN_TYPE), std::string(BMI_PYTHON_TYPE)});
+    initializeTestExample(3, "cat-27", {std::string(BMI_FORTRAN_TYPE), std::string(BMI_PYTHON_TYPE)}, {"OUTPUT_VAR_1__1", "OUTPUT_VAR_2__1", "OUTPUT_VAR_1__0", "OUTPUT_VAR_2__0", "OUTPUT_VAR_3__0", "precip_rate" });
 }
 
 /** Simple test to make sure the model config from example 0 initializes. */
@@ -556,7 +578,7 @@ TEST_F(Bmi_Multi_Formulation_Test, Initialize_3_c) {
     Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
-    const std::vector<std::shared_ptr<forcing::OptionalWrappedProvider>> deferred = get_friend_deferred_providers(
+    const std::vector<std::shared_ptr<data_access::OptionalWrappedProvider>> deferred = get_friend_deferred_providers(
             formulation);
     for (size_t i = 0; i < deferred.size(); ++i) {
         ASSERT_TRUE(deferred[i]->isWrappedProviderSet());
@@ -657,6 +679,12 @@ TEST_F(Bmi_Multi_Formulation_Test, GetResponse_3_b) {
  * Test of get response in example 3, which uses a deferred provider, checking the values for several iterations.
  */
     TEST_F(Bmi_Multi_Formulation_Test, GetResponse_3_c) {
+
+/* Note that a runtime check in SetUp() prevents this from executing when it can't, but
+   this needs to be here to prevent compile-time errors if either of these flags is not
+   enabled. */
+#if ACTIVATE_PYTHON && NGEN_BMI_FORTRAN_ACTIVE
+
         int ex_index = 3;
 
         Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
@@ -666,6 +694,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetResponse_3_b) {
         for (int i = 0; i < 39; i++) {
             // Note that we need to get this before the "current" get_response ...
             mod_1_output_2 = get_friend_nested_var_value<Bmi_Py_Formulation>(formulation, 1, "OUTPUT_VAR_2");
+
             response = formulation.get_response(i, 3600);
             // But we need to get this after the "current" get_response ...
             mod_0_input_1 = get_friend_nested_var_value<Bmi_Fortran_Formulation>(formulation, 0, "INPUT_VAR_1");
@@ -674,6 +703,9 @@ TEST_F(Bmi_Multi_Formulation_Test, GetResponse_3_b) {
                 EXPECT_EQ(mod_0_input_1, mod_1_output_2);
             }
         }
+
+#endif // ACTIVATE_PYTHON && NGEN_BMI_FORTRAN_ACTIVE
+
     }
 
 /**
@@ -736,6 +768,23 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_1_b) {
     formulation.get_response(i, 3600);
     std::string output = formulation.get_output_line_for_timestep(i, ",");
     ASSERT_EQ(output, "0.000001,199280.000000,543.000000");
+}
+
+/**
+ * Test of output for example 3 with output_variables from multiple BMI modules, picking time step when there was non-zero rain rate.
+ */
+TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_3_a) {
+    int ex_index = 3;
+
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+
+    int i = 0;
+    while (i < 542)
+        formulation.get_response(i++, 3600);
+    formulation.get_response(i, 3600);
+    std::string output = formulation.get_output_line_for_timestep(i, ",");
+    ASSERT_EQ(output, "0.000001112,199280.000000000,199240.000000000,199280.000000000,0.000000000,0.000001001");
 }
 
 #endif // NGEN_BMI_C_LIB_ACTIVE || NGEN_BMI_FORTRAN_ACTIVE || ACTIVATE_PYTHON

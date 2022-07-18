@@ -5,7 +5,7 @@
 #include "reservoir/Reservoir.hpp"
 #include "hymod/include/Hymod.h"
 #include <unordered_map>
-#include <ForcingProvider.hpp>
+#include <GenericDataProvider.hpp>
 #include <Forcing.h>
 
 class Simple_Lumped_Model_Realization
@@ -32,7 +32,7 @@ class Simple_Lumped_Model_Realization
             time_step_t t
         );
 
-        Simple_Lumped_Model_Realization(std::string id, unique_ptr<forcing::ForcingProvider> forcing_provider, utils::StreamHandler output_stream) : Catchment_Formulation(id, std::move(forcing_provider), output_stream) {
+        Simple_Lumped_Model_Realization(std::string id, shared_ptr<data_access::GenericDataProvider> forcing_provider, utils::StreamHandler output_stream) : Catchment_Formulation(id, forcing_provider, output_stream) {
             // We now only use the ForcingProvider interface on Forcing objects, so this is not needed (and explodes).
             //_link_legacy_forcing();
         };

@@ -9,7 +9,7 @@
 
 using namespace std;
 
-namespace forcing {
+namespace data_access {
 
     /**
      * A specialized @WrappedForcingProvider that is created without first knowing the backing source it wraps.
@@ -32,7 +32,8 @@ namespace forcing {
      * returning results from a nested call to the wrapped provider, this type's implementation ensures only the outputs
      * set as provideable in this instance (i.e., the outer wrapper) are returned.
      */
-    class DeferredWrappedProvider : public WrappedForcingProvider {
+    class DeferredWrappedProvider : public WrappedForcingProvider 
+    {
     public:
 
         /**
@@ -70,7 +71,13 @@ namespace forcing {
          *
          * @return The names of the outputs for which this instance is (or will be) able to provide values.
          */
-        const std::vector<std::string> &get_available_forcing_outputs() override {
+
+        const std::vector<std::string> &get_avaliable_variable_names() {
+            return providedOutputs;
+        }
+
+        [[deprecated]]
+        const std::vector<std::string> &get_available_forcing_outputs() {
             return providedOutputs;
         }
 
@@ -123,7 +130,7 @@ namespace forcing {
          * @param provider A pointer for the wrapped provider.
          * @return Whether @ref wrapped_provider was set to the given arg.
          */
-        virtual bool setWrappedProvider(ForcingProvider *provider) {
+        virtual bool setWrappedProvider(GenericDataProvider *provider) {
             // Disallow re-setting the provider if already validly set
             if (isWrappedProviderSet()) {
                 setMessage = "Cannot change wrapped provider after a valid provider has already been set";
@@ -137,7 +144,7 @@ namespace forcing {
             }
 
             // Confirm this will provide everything needed
-            const vector<string> &available = provider->get_available_forcing_outputs();
+            const vector<string> &available = provider->get_avaliable_variable_names();
             for (const string &requiredName : providedOutputs) {
                 if (std::find(available.begin(), available.end(), requiredName) == available.end()) {
                     setMessage = "Given provider does not provide the required " + requiredName;

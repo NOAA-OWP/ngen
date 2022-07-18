@@ -32,6 +32,10 @@ if(NGEN_ACTIVATE_ROUTING)
     add_compile_definitions(ROUTING_PYBIND_TESTS_ACTIVE)
 endif()
 
+if(NETCDF_ACTIVE)
+    add_compile_definitions(NETCDF_ACTIVE)
+endif()
+
 # Add test source files (e.g., test1.cpp)
 #add_executable(test_hymod models/hymod/include/HymodTest.cpp)
 #target_link_libraries(test_hymod gtest gtest_main)
@@ -88,6 +92,7 @@ add_test(test_realization_config
         NGen::realizations_catchment
         NGen::core_mediator
         libudunits2
+        ${NETCDF_LIBRARIES}
 )
 
 ########################## GIUH Unit Tests
@@ -139,6 +144,7 @@ add_test(
         NGen::realizations_catchment
         NGen::core_mediator
         libudunits2
+        ${NETCDF_LIBRARIES}
 )
 
 ########################## BMI C Tests
@@ -152,6 +158,7 @@ if(BMI_C_LIB_ACTIVE)
             NGen::realizations_catchment
             NGen::core_mediator
             libudunits2
+            ${NETCDF_LIBRARIES}
     )
 endif()
 
@@ -166,6 +173,7 @@ if (${BMI_FORTRAN_ACTIVE})
             NGen::realizations_catchment
             NGen::core_mediator
             libudunits2
+            ${NETCDF_LIBRARIES}
     )
 endif()
 
@@ -180,18 +188,21 @@ if (${NGEN_ACTIVATE_PYTHON})
             NGen::realizations_catchment
             NGen::core_mediator
             libudunits2
+            ${NETCDF_LIBRARIES}
     )
 endif()
 
 ########################## BMI Multi Tests
 add_test(
         test_bmi_multi
-        1
+        2
         realizations/catchments/Bmi_Multi_Formulation_Test.cpp
+        realizations/catchments/Bmi_Cpp_Multi_Array_Test.cpp
         NGen::core
         NGen::realizations_catchment
         NGen::core_mediator
         libudunits2
+        ${NETCDF_LIBRARIES}
 )
 
 ########################## All BMI Unit Tests
@@ -212,6 +223,7 @@ if(BMI_C_LIB_ACTIVE)
                     NGen::realizations_catchment
                     NGen::core_mediator
                     libudunits2
+                    ${NETCDF_LIBRARIES}
             )
         endif()
     endif()
@@ -227,6 +239,7 @@ add_test(
         NGen::realizations_catchment
         NGen::core_mediator
         libudunits2
+        ${NETCDF_LIBRARIES}
 )
 
 ########################## Comparison tests for the BMI PET implementation
@@ -252,8 +265,7 @@ if(LSTM_TORCH_LIB_ACTIVE)
             NGen::realizations_catchment
             NGen::core_mediator
             libudunits2
-
-
+            ${NETCDF_LIBRARIES}
     )
 endif()
 
@@ -277,9 +289,60 @@ add_test(
         NGen::geojson
 )
 
+########################### Netcdf Forcing Tests
+#if(NETCDF_ACTIVE)
+add_test(
+        test_netcdf_forcing
+        1
+        forcing/NetCDFPerFeatureDataProvider_Test.cpp
+        NGen::core
+        NGen::core_nexus
+        NGen::core_mediator
+        NGen::geojson
+        NGen::realizations_catchment
+        libudunits2
+        ${NETCDF_LIBRARIES}
+)
+#endif()
+
 ########################## Primary Combined Unit Test Target
 add_test(
         test_unit
+        19
+        models/hymod/include/HymodTest.cpp
+        models/hymod/include/Reservoir_Test.cpp
+        models/hymod/include/Reservoir_Timeless_Test.cpp
+        models/tshirt/include/TshirtTest.cpp
+        realizations/catchments/Tshirt_C_Realization_Test.cpp
+        geojson/JSONProperty_Test.cpp
+        geojson/JSONGeometry_Test.cpp
+        geojson/Feature_Test.cpp
+        geojson/FeatureCollection_Test.cpp
+        forcing/Forcing_Test.cpp
+        forcing/CsvPerFeatureForcingProvider_Test.cpp
+        forcing/OptionalWrappedProvider_Test.cpp
+        forcing/NetCDFPerFeatureDataProvider_Test.cpp
+        core/mediator/UnitsHelper_Tests.cpp
+        simulation_time/Simulation_Time_Test.cpp
+        core/catchment/giuh/GIUH_Test.cpp
+        core/NetworkTests.cpp
+        utils/include/StreamOutputTest.cpp
+        realizations/Formulation_Manager_Test.cpp
+        NGen::core
+        NGen::core_nexus
+        NGen::core_mediator
+        NGen::geojson
+        NGen::realizations_catchment
+        libudunits2
+        ${NETCDF_LIBRARIES}
+)
+
+# Add for integration tests once we have some
+#add_automated_test(test_it models/hymod/include/HymodTest.cpp)
+
+# All automated tests
+add_test(
+        test_all
         18
         models/hymod/include/HymodTest.cpp
         models/hymod/include/Reservoir_Test.cpp
@@ -293,39 +356,7 @@ add_test(
         forcing/Forcing_Test.cpp
         forcing/CsvPerFeatureForcingProvider_Test.cpp
         forcing/OptionalWrappedProvider_Test.cpp
-        core/mediator/UnitsHelper_Tests.cpp
-        simulation_time/Simulation_Time_Test.cpp
-        core/catchment/giuh/GIUH_Test.cpp
-        core/NetworkTests.cpp
-        utils/include/StreamOutputTest.cpp
-        realizations/Formulation_Manager_Test.cpp
-        NGen::core
-        NGen::core_nexus
-        NGen::core_mediator
-        NGen::geojson
-        NGen::realizations_catchment
-        libudunits2
-)
-
-# Add for integration tests once we have some
-#add_automated_test(test_it models/hymod/include/HymodTest.cpp)
-
-# All automated tests
-add_test(
-        test_all
-        17
-        models/hymod/include/HymodTest.cpp
-        models/hymod/include/Reservoir_Test.cpp
-        models/hymod/include/Reservoir_Timeless_Test.cpp
-        models/tshirt/include/TshirtTest.cpp
-        realizations/catchments/Tshirt_C_Realization_Test.cpp
-        geojson/JSONProperty_Test.cpp
-        geojson/JSONGeometry_Test.cpp
-        geojson/Feature_Test.cpp
-        geojson/FeatureCollection_Test.cpp
-        forcing/Forcing_Test.cpp
-        forcing/CsvPerFeatureForcingProvider_Test.cpp
-        forcing/OptionalWrappedProvider_Test.cpp
+        forcing/NetCDFPerFeatureDataProvider_Test.cpp
         simulation_time/Simulation_Time_Test.cpp
         core/catchment/giuh/GIUH_Test.cpp
         core/mediator/UnitsHelper_Tests.cpp
@@ -340,4 +371,5 @@ add_test(
         NGen::geojson
         NGen::realizations_catchment
         libudunits2
+        ${NETCDF_LIBRARIES}
 )

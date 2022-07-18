@@ -13,8 +13,8 @@ namespace realization {
 
     class Catchment_Formulation : public Formulation, public HY_CatchmentArea, public Et_Accountable {
         public:
-            Catchment_Formulation(std::string id, std::unique_ptr<forcing::ForcingProvider> forcing, utils::StreamHandler output_stream)
-                : Formulation(id), HY_CatchmentArea(std::move(forcing), output_stream) { };
+            Catchment_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing, utils::StreamHandler output_stream)
+                : Formulation(id), HY_CatchmentArea(forcing, output_stream) { };
 
             Catchment_Formulation(std::string id) : Formulation(id){};
 
@@ -97,6 +97,7 @@ namespace realization {
         //TODO: VERY BAD JUJU...the following two members are an ugly hack to avoid having to gut the legacy C/C++ realizations for now.
         Forcing legacy_forcing;
         // Use this a a deprecation chokepoint to get rid of Forcing when ready.
+        [[deprecated]]
         void _link_legacy_forcing()
         {
             void* f { this->forcing.get() };

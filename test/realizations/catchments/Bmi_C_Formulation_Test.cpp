@@ -63,7 +63,7 @@ protected:
     }
 
     static time_t get_friend_forcing_start_time(Bmi_C_Formulation& formulation) {
-        return formulation.forcing->get_forcing_output_time_begin("");
+        return formulation.forcing->get_data_start_time();
     }
 
     static bool get_friend_is_bmi_using_forcing_file(const Bmi_C_Formulation& formulation) {
@@ -231,7 +231,7 @@ void Bmi_C_Formulation_Test::TearDown() {
 TEST_F(Bmi_C_Formulation_Test, Initialize_0_a) {
     int ex_index = 0;
 
-    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
     ASSERT_EQ(get_friend_model_type_name(formulation), model_type_name[ex_index]);
@@ -243,10 +243,10 @@ TEST_F(Bmi_C_Formulation_Test, Initialize_0_a) {
 
 /** Test to make sure we can initialize multiple model instances with dynamic loading. */
 TEST_F(Bmi_C_Formulation_Test, Initialize_1_a) {
-    Bmi_C_Formulation form_1(catchment_ids[0], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[0]), utils::StreamHandler());
+    Bmi_C_Formulation form_1(catchment_ids[0], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[0]), utils::StreamHandler());
     form_1.create_formulation(config_prop_ptree[0]);
 
-    Bmi_C_Formulation form_2(catchment_ids[1], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[1]), utils::StreamHandler());
+    Bmi_C_Formulation form_2(catchment_ids[1], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[1]), utils::StreamHandler());
     form_2.create_formulation(config_prop_ptree[1]);
 
     std::string header_1 = form_1.get_output_header_line(",");
@@ -260,7 +260,7 @@ TEST_F(Bmi_C_Formulation_Test, Initialize_1_a) {
 TEST_F(Bmi_C_Formulation_Test, GetResponse_0_a) {
     int ex_index = 0;
 
-    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
     double response = formulation.get_response(0, 3600);
@@ -271,7 +271,7 @@ TEST_F(Bmi_C_Formulation_Test, GetResponse_0_a) {
 TEST_F(Bmi_C_Formulation_Test, set_initial_parameters_0_a) {
     int ex_index = 0;
 
-    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
     int param = get_friend_bmi_model(formulation)->GetValue<int>("PARAM_VAR_1")[0];
@@ -288,7 +288,7 @@ TEST_F(Bmi_C_Formulation_Test, set_initial_parameters_0_a) {
 TEST_F(Bmi_C_Formulation_Test, GetResponse_0_b) {
     int ex_index = 0;
 
-    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
     double response;
@@ -301,10 +301,10 @@ TEST_F(Bmi_C_Formulation_Test, GetResponse_0_b) {
 
 /** Test to make sure we can execute multiple model instances with dynamic loading. */
 TEST_F(Bmi_C_Formulation_Test, GetResponse_1_a) {
-    Bmi_C_Formulation form_1(catchment_ids[0], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[0]), utils::StreamHandler());
+    Bmi_C_Formulation form_1(catchment_ids[0], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[0]), utils::StreamHandler());
     form_1.create_formulation(config_prop_ptree[0]);
 
-    Bmi_C_Formulation form_2(catchment_ids[1], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[1]), utils::StreamHandler());
+    Bmi_C_Formulation form_2(catchment_ids[1], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[1]), utils::StreamHandler());
     form_2.create_formulation(config_prop_ptree[1]);
 
     double response_1, response_2;
@@ -320,7 +320,7 @@ TEST_F(Bmi_C_Formulation_Test, GetResponse_1_a) {
 TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_0_a) {
     int ex_index = 0;
 
-    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
     formulation.get_response(0, 3600);
@@ -332,7 +332,7 @@ TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_0_a) {
 TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_1_a) {
     int ex_index = 1;
 
-    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
     // Notably--this test could fail if both output vars were not the same. get_output_line_for_timestep assumes
@@ -348,7 +348,7 @@ TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_1_a) {
 TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_1_b) {
     int ex_index = 1;
 
-    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
     int i = 0;
@@ -362,7 +362,7 @@ TEST_F(Bmi_C_Formulation_Test, GetOutputLineForTimestep_1_b) {
 TEST_F(Bmi_C_Formulation_Test, determine_model_time_offset_0_a) {
     int ex_index = 0;
 
-    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
     formulation.create_formulation(config_prop_ptree[ex_index]);
     std::shared_ptr<models::bmi::Bmi_C_Adapter> model_adapter = get_friend_bmi_model(formulation);
 
@@ -373,7 +373,7 @@ TEST_F(Bmi_C_Formulation_Test, determine_model_time_offset_0_a) {
 TEST_F(Bmi_C_Formulation_Test, determine_model_time_offset_0_b) {
     int ex_index = 0;
 
-    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
     formulation.create_formulation(config_prop_ptree[ex_index]);
     std::shared_ptr<models::bmi::Bmi_C_Adapter> model_adapter = get_friend_bmi_model(formulation);
     time_t forcing_start = get_friend_forcing_start_time(formulation);
@@ -384,7 +384,7 @@ TEST_F(Bmi_C_Formulation_Test, determine_model_time_offset_0_b) {
 TEST_F(Bmi_C_Formulation_Test, determine_model_time_offset_0_c) {
     int ex_index = 0;
 
-    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
     formulation.create_formulation(config_prop_ptree[ex_index]);
     std::shared_ptr<models::bmi::Bmi_C_Adapter> model_adapter = get_friend_bmi_model(formulation);
 

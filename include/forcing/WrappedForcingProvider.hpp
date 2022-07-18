@@ -2,9 +2,9 @@
 #define NGEN_WRAPPEDFORCINGPROVIDER_HPP
 
 #include <memory>
-#include "ForcingProvider.hpp"
+#include "GenericDataProvider.hpp"
 
-namespace forcing {
+namespace data_access {
 
     /**
      * Simple implementation that basically wraps another instance.
@@ -15,7 +15,7 @@ namespace forcing {
      * Instances of this type must be used carefully, as they do not contain any mechanisms for making sure they
      * actually point to a valid backing object.
      */
-    class WrappedForcingProvider : public ForcingProvider {
+    class WrappedForcingProvider : public GenericDataProvider {
 
     public:
 
@@ -24,7 +24,7 @@ namespace forcing {
          *
          * @param provider Simple pointer to some existing @ref ForcingProvider object for this new instance to wrap.
          */
-        explicit WrappedForcingProvider(ForcingProvider* provider) : wrapped_provider(provider) { }
+        explicit WrappedForcingProvider(GenericDataProvider* provider) : wrapped_provider(provider) { }
 
         /**
          * Copy constructor.
@@ -45,8 +45,19 @@ namespace forcing {
             provider_to_move.wrapped_provider = nullptr;
         }
 
-        const std::vector<std::string> &get_available_forcing_outputs() override {
-            return wrapped_provider->get_available_forcing_outputs();
+        [[deprecated]]
+        const std::vector<std::string> &get_available_forcing_outputs() {
+            return wrapped_provider->get_avaliable_variable_names();
+        }
+
+        /**
+         * @brief Get the avaliable variable names object
+         * 
+         * @return const std::vector<std::string>& the names of avaliable data variables
+         */
+
+        const std::vector<std::string> &get_avaliable_variable_names() override {
+            return wrapped_provider->get_avaliable_variable_names();
         }
 
         /**
@@ -54,8 +65,18 @@ namespace forcing {
          *
          * @return The inclusive beginning of the period of time over which this instance can provide this data.
          */
-        time_t get_forcing_output_time_begin(const std::string &output_name) override {
-            return wrapped_provider->get_forcing_output_time_begin(output_name);
+        [[deprecated]]
+        time_t get_forcing_output_time_begin(const std::string &output_name) {
+            return wrapped_provider->get_data_start_time();
+        }
+
+        /**
+         * Get the inclusive beginning of the period of time over which this instance can provide data for this forcing.
+         *
+         * @return The inclusive beginning of the period of time over which this instance can provide this data.
+         */
+        long get_data_start_time() override {
+            return wrapped_provider->get_data_start_time();
         }
 
         /**
@@ -63,8 +84,22 @@ namespace forcing {
          *
          * @return The exclusive ending of the period of time over which this instance can provide this data.
          */
-        time_t get_forcing_output_time_end(const std::string &output_name) override {
-            return wrapped_provider->get_forcing_output_time_end(output_name);
+        [[deprecated]]
+        time_t get_forcing_output_time_end(const std::string &output_name) {
+            return wrapped_provider->get_data_stop_time();
+        }
+
+        /**
+         * Get the exclusive ending of the period of time over which this instance can provide data for this forcing.
+         *
+         * @return The exclusive ending of the period of time over which this instance can provide this data.
+         */
+        long get_data_stop_time() override {
+            return wrapped_provider->get_data_stop_time();
+        }
+
+        long record_duration() override {
+            return wrapped_provider->record_duration();
         }
 
         /**
@@ -92,10 +127,14 @@ namespace forcing {
          * @return The value of the forcing property for the described time period, with units converted if needed.
          * @throws std::out_of_range If data for the time period is not available.
          */
-        double get_value(const std::string &output_name, const time_t &init_time, const long &duration_s,
-                         const std::string &output_units) override
+        double get_value(const CatchmentAggrDataSelector& selector, ReSampleMethod m) override
         {
-            return wrapped_provider->get_value(output_name, init_time, duration_s, output_units);
+            return wrapped_provider->get_value(selector, m);
+        }
+
+        std::vector<double> get_values(const CatchmentAggrDataSelector& selector, ReSampleMethod m) override
+        {
+            return wrapped_provider->get_values(selector, m);
         }
 
         /**
@@ -115,7 +154,7 @@ namespace forcing {
         }
 
     protected:
-        ForcingProvider* wrapped_provider;
+        GenericDataProvider* wrapped_provider;
 
     };
 }

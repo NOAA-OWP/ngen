@@ -4,6 +4,7 @@
 #include <memory>
 #include "Bmi_Module_Formulation.hpp"
 #include "Bmi_C_Adapter.hpp"
+#include "GenericDataProvider.hpp"
 
 #define BMI_C_DEFAULT_REGISTRATION_FUNC "register_bmi"
 
@@ -13,7 +14,7 @@ namespace realization {
 
     public:
 
-        Bmi_C_Formulation(std::string id, std::unique_ptr<forcing::ForcingProvider> forcing_provider, utils::StreamHandler output_stream);
+        Bmi_C_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing_provider, utils::StreamHandler output_stream);
 
         std::string get_formulation_type() override;
 

@@ -1,0 +1,24 @@
+name: 'Clean build directory'
+description: 'This action cleans up build artifacts'
+author: 'hellkite500'
+inputs:
+    build-dir:
+      required: false
+      description: 'name of the build directory to clean'
+      default: 'cmake_build'
+    remove-dir:
+      required: false
+      description: 'remove the build directory'
+      default: 'true'
+runs:
+    using: 'composite'
+    steps:
+      - name: Clean Target
+        if: inputs.remove-dir != 'true'
+        run: cmake --build ${{ inputs.build-dir }} --target clean
+        shell: bash
+
+      - name: Remove Build Directory
+        if: inputs.remove-dir == 'true'
+        run: rm -rf ${{ inputs.build-dir }}
+        shell: bash

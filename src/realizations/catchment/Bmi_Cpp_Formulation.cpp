@@ -6,8 +6,8 @@ using namespace models::bmi;
 using ModelCreator = bmi::Bmi* (*)();
 using ModelDestoryer = void (*)(bmi::Bmi*);
 
-Bmi_Cpp_Formulation::Bmi_Cpp_Formulation(std::string id, std::unique_ptr<forcing::ForcingProvider> forcing_provider, utils::StreamHandler output_stream)
-    : Bmi_Module_Formulation<models::bmi::Bmi_Cpp_Adapter>(id, std::move(forcing_provider), output_stream) { }
+Bmi_Cpp_Formulation::Bmi_Cpp_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing_provider, utils::StreamHandler output_stream)
+    : Bmi_Module_Formulation<models::bmi::Bmi_Cpp_Adapter>(id, forcing_provider, output_stream) { }
 
 std::string Bmi_Cpp_Formulation::get_formulation_type() {
     return "bmi_c++";

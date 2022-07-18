@@ -113,9 +113,9 @@ Tshirt_C_Realization::Tshirt_C_Realization(
 
 Tshirt_C_Realization::Tshirt_C_Realization(
         std::string id,
-        unique_ptr<forcing::ForcingProvider> forcing_provider,
+        shared_ptr<data_access::GenericDataProvider> forcing_provider,
         utils::StreamHandler output_stream
-) : Catchment_Formulation(std::move(id), std::move(forcing_provider), output_stream) {
+) : Catchment_Formulation(std::move(id), forcing_provider, output_stream) {
     _link_legacy_forcing();
 
     fluxes = std::vector<std::shared_ptr<tshirt_c_result_fluxes>>();

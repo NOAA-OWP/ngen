@@ -7,6 +7,7 @@
 #include <string>
 #include "Bmi_Module_Formulation.hpp"
 #include "Bmi_Py_Adapter.hpp"
+#include "GenericDataProvider.hpp"
 #include "pybind11/pybind11.h"
 #include "pybind11/pytypes.h"
 #include "pybind11/numpy.h"
@@ -20,7 +21,7 @@ namespace realization {
 
     public:
 
-        Bmi_Py_Formulation(std::string id, std::unique_ptr<ForcingProvider> forcing, utils::StreamHandler output_stream);
+        Bmi_Py_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing, utils::StreamHandler output_stream);
 
         const vector<string> get_bmi_input_variables() override;
 
