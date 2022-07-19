@@ -1,6 +1,5 @@
 var NAVTREEINDEX20 =
 {
-"md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md171":[16,0],
 "md__c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md172":[16,1],
 "md__i_n_s_t_a_l_l.html":[15],
 "md__i_n_s_t_a_l_l.html#autotoc_md167":[15,0],
@@ -165,6 +164,7 @@ var NAVTREEINDEX20 =
 "namespacebmi.html#aea3326679ef22728e57255a71ef1f01c":[20,0,0,6],
 "namespacebmi.html#af3c63c2ca142e13c57dc137f963be87b":[20,0,0,1],
 "namespacedata__access.html":[20,0,1],
+"namespacedata__access.html#a2dcd647363ddb5cc6803f9d94bd12151":[20,0,1,7],
 "namespacedata__access.html#a46435cb3579215dfdfffedc7833e43f9":[20,0,1,6],
 "namespacedata__access.html#a46435cb3579215dfdfffedc7833e43f9a23479be6dbd2f550bf03811d78647a68":[20,0,1,6,2],
 "namespacedata__access.html#a46435cb3579215dfdfffedc7833e43f9a52f32bc197123b0d24b5291d60af3186":[20,0,1,6,1],

@@ -164,8 +164,6 @@ Private Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:a037222499da7b829faa12a0169d5cf6e"><td class="memItemLeft" align="right" valign="top">map&lt; std::string, std::tuple&lt; std::string, std::string &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_csv_per_feature_forcing_provider.html#a037222499da7b829faa12a0169d5cf6e">well_known_fields</a></td></tr>
-<tr class="separator:a037222499da7b829faa12a0169d5cf6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a483bd1b029bb9dd378aea3b81af2fd6d"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_csv_per_feature_forcing_provider.html#a483bd1b029bb9dd378aea3b81af2fd6d">available_forcings</a></td></tr>
 <tr class="separator:a483bd1b029bb9dd378aea3b81af2fd6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9aa01ca7a86b6586a03fa8cdcd39921b"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; std::string, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_csv_per_feature_forcing_provider.html#a9aa01ca7a86b6586a03fa8cdcd39921b">available_forcings_units</a></td></tr>
@@ -526,7 +524,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The particular param's value at the given forcing time step. </dd></dl>
 
-<p class="reference">References <a class="el" href="class_csv_per_feature_forcing_provider.html#a7e406dfc4e9d235d25ae1db1b5fab9cd">forcing_vectors</a>, <a class="el" href="class_csv_per_feature_forcing_provider.html#a77179863f36899fe6d3a22bdc7a6bee7">time_epoch_vector</a>, and <a class="el" href="class_csv_per_feature_forcing_provider.html#a037222499da7b829faa12a0169d5cf6e">well_known_fields</a>.</p>
+<p class="reference">References <a class="el" href="class_csv_per_feature_forcing_provider.html#a7e406dfc4e9d235d25ae1db1b5fab9cd">forcing_vectors</a>, <a class="el" href="class_csv_per_feature_forcing_provider.html#a77179863f36899fe6d3a22bdc7a6bee7">time_epoch_vector</a>, and <a class="el" href="namespacedata__access.html#a2dcd647363ddb5cc6803f9d94bd12151">data_access::WellKnownFields</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="class_csv_per_feature_forcing_provider.html#a7c0b7ab4bb62990ef33e4bc6c5d9d1b7">get_value()</a>.</p>
 
@@ -705,7 +703,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="todo"><dt><b><a class="el" href="todo.html#_todo000006">Todo:</a></b></dt><dd>TODO: Return appropriate error </dd></dl>
 
-<p class="reference">References <a class="el" href="class_csv_per_feature_forcing_provider.html#a483bd1b029bb9dd378aea3b81af2fd6d">available_forcings</a>, <a class="el" href="class_csv_per_feature_forcing_provider.html#a9aa01ca7a86b6586a03fa8cdcd39921b">available_forcings_units</a>, <a class="el" href="class_csv_per_feature_forcing_provider.html#a9fc3d0f5e03c05b0cc86e5bb2fc5d360">end_date_time_epoch</a>, <a class="el" href="class_csv_per_feature_forcing_provider.html#a7e406dfc4e9d235d25ae1db1b5fab9cd">forcing_vectors</a>, <a class="el" href="class_c_s_v_reader.html#a2dea725de823f6932ae29552aa05b97d">CSVReader::getData()</a>, <a class="el" href="class_csv_per_feature_forcing_provider.html#a54ce6043ebf56cc336cf551feddf268d">start_date_time_epoch</a>, <a class="el" href="class_csv_per_feature_forcing_provider.html#a77179863f36899fe6d3a22bdc7a6bee7">time_epoch_vector</a>, and <a class="el" href="class_csv_per_feature_forcing_provider.html#a037222499da7b829faa12a0169d5cf6e">well_known_fields</a>.</p>
+<p class="reference">References <a class="el" href="class_csv_per_feature_forcing_provider.html#a483bd1b029bb9dd378aea3b81af2fd6d">available_forcings</a>, <a class="el" href="class_csv_per_feature_forcing_provider.html#a9aa01ca7a86b6586a03fa8cdcd39921b">available_forcings_units</a>, <a class="el" href="class_csv_per_feature_forcing_provider.html#a9fc3d0f5e03c05b0cc86e5bb2fc5d360">end_date_time_epoch</a>, <a class="el" href="class_csv_per_feature_forcing_provider.html#a7e406dfc4e9d235d25ae1db1b5fab9cd">forcing_vectors</a>, <a class="el" href="class_c_s_v_reader.html#a2dea725de823f6932ae29552aa05b97d">CSVReader::getData()</a>, <a class="el" href="class_csv_per_feature_forcing_provider.html#a54ce6043ebf56cc336cf551feddf268d">start_date_time_epoch</a>, <a class="el" href="class_csv_per_feature_forcing_provider.html#a77179863f36899fe6d3a22bdc7a6bee7">time_epoch_vector</a>, and <a class="el" href="namespacedata__access.html#a2dcd647363ddb5cc6803f9d94bd12151">data_access::WellKnownFields</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="class_csv_per_feature_forcing_provider.html#a7034f120d89f39c83b61903669c2e435">CsvPerFeatureForcingProvider()</a>.</p>
 
@@ -1135,49 +1133,6 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a037222499da7b829faa12a0169d5cf6e" name="a037222499da7b829faa12a0169d5cf6e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a037222499da7b829faa12a0169d5cf6e">&#9670;&nbsp;</a></span>well_known_fields</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">map&lt;std::string, std::tuple&lt;std::string, std::string&gt; &gt; CsvPerFeatureForcingProvider::well_known_fields</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">        {<span class="stringliteral">&quot;precip_rate&quot;</span>, { CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, <span class="stringliteral">&quot;mm s^-1&quot;</span> } }, </div>
-<div class="line">        {<span class="stringliteral">&quot;APCP_surface&quot;</span>, { CSDMS_STD_NAME_RAIN_VOLUME_FLUX, <span class="stringliteral">&quot;kg m^-2&quot;</span> } }, </div>
-<div class="line">        {<span class="stringliteral">&quot;DLWRF_surface&quot;</span>, { CSDMS_STD_NAME_SOLAR_LONGWAVE, <span class="stringliteral">&quot;W m-2&quot;</span> } }, </div>
-<div class="line">        {<span class="stringliteral">&quot;DSWRF_surface&quot;</span>, { CSDMS_STD_NAME_SOLAR_SHORTWAVE, <span class="stringliteral">&quot;W m-2&quot;</span> } }, </div>
-<div class="line">        {<span class="stringliteral">&quot;PRES_surface&quot;</span>, { CSDMS_STD_NAME_SURFACE_AIR_PRESSURE, <span class="stringliteral">&quot;Pa&quot;</span> } }, </div>
-<div class="line">        {<span class="stringliteral">&quot;SPFH_2maboveground&quot;</span>, { NGEN_STD_NAME_SPECIFIC_HUMIDITY, <span class="stringliteral">&quot;kg kg-1&quot;</span> } }, </div>
-<div class="line">        {<span class="stringliteral">&quot;TMP_2maboveground&quot;</span>, { CSDMS_STD_NAME_SURFACE_TEMP, <span class="stringliteral">&quot;K&quot;</span> } }, </div>
-<div class="line">        {<span class="stringliteral">&quot;UGRD_10maboveground&quot;</span>, { CSDMS_STD_NAME_WIND_U_X, <span class="stringliteral">&quot;m s-1&quot;</span> } }, </div>
-<div class="line">        {<span class="stringliteral">&quot;VGRD_10maboveground&quot;</span>, { CSDMS_STD_NAME_WIND_V_Y, <span class="stringliteral">&quot;m s-1&quot;</span> } }, </div>
-<div class="line">        {<span class="stringliteral">&quot;RAINRATE&quot;</span>, { CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE , <span class="stringliteral">&quot;mm s^-1&quot;</span> } }, </div>
-<div class="line">        {<span class="stringliteral">&quot;T2D&quot;</span>, { CSDMS_STD_NAME_SURFACE_TEMP, <span class="stringliteral">&quot;K&quot;</span> } }, </div>
-<div class="line">        {<span class="stringliteral">&quot;Q2D&quot;</span>, { NGEN_STD_NAME_SPECIFIC_HUMIDITY, <span class="stringliteral">&quot;kg kg-1&quot;</span> } }, </div>
-<div class="line">        {<span class="stringliteral">&quot;U2D&quot;</span>, { CSDMS_STD_NAME_WIND_U_X, <span class="stringliteral">&quot;m s-1&quot;</span> } }, </div>
-<div class="line">        {<span class="stringliteral">&quot;V2D&quot;</span>, { CSDMS_STD_NAME_WIND_V_Y, <span class="stringliteral">&quot;m s-1&quot;</span> } }, </div>
-<div class="line">        {<span class="stringliteral">&quot;PSFC&quot;</span>, { CSDMS_STD_NAME_SURFACE_AIR_PRESSURE, <span class="stringliteral">&quot;Pa&quot;</span> } }, </div>
-<div class="line">        {<span class="stringliteral">&quot;SWDOWN&quot;</span>, { CSDMS_STD_NAME_SOLAR_SHORTWAVE, <span class="stringliteral">&quot;W m-2&quot;</span> } }, </div>
-<div class="line">        {<span class="stringliteral">&quot;LWDOWN&quot;</span>, { CSDMS_STD_NAME_SOLAR_LONGWAVE, <span class="stringliteral">&quot;W m-2&quot;</span> } }</div>
-<div class="line">    }</div>
-</div><!-- fragment -->
-<p class="reference">Referenced by <a class="el" href="class_csv_per_feature_forcing_provider.html#a15472ef2b848232ee48033e439c4ec3d">get_value_for_param_name()</a>, and <a class="el" href="class_csv_per_feature_forcing_provider.html#a55897203be74dc4e29caf2b12b666432">read_csv()</a>.</p>
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>include/forcing/<a class="el" href="_csv_per_feature_forcing_provider_8hpp_source.html">CsvPerFeatureForcingProvider.hpp</a></li>
 </ul>
@@ -1187,7 +1142,7 @@ Private Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_csv_per_feature_forcing_provider.html">CsvPerFeatureForcingProvider</a></li>
-    <li class="footer">Generated on Fri Jul 15 2022 19:05:42 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
+    <li class="footer">Generated on Tue Jul 19 2022 13:05:29 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
   </ul>
 </div>
 </body>
