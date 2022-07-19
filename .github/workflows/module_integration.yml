@@ -1,4 +1,4 @@
-name: Module Integration Tests
+name: Testing and Validation
 
 # Controls when the action will run.
 on:
@@ -6,7 +6,6 @@ on:
     branches: [ master, dev, notreal ]
   pull_request:
     branches: [ master, dev, notreal ]
-  workflow_dispatch:
 
 env:
   # Obtained from https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
@@ -19,178 +18,129 @@ jobs:
   # Run general unit tests in linux environment
   test_surfacebmi_plus_cfe:
     # The type of runner that the job will run on
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest]
-      fail-fast: false
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-    
-      - name: Build Surfacebmi
-        id: submod_build_1
-        uses: ./.github/actions/ngen-submod-build
-        with: 
-          mod-dir: " extern/noah-owp-modular/"
-          targets: "surfacebmi"
+    - uses: actions/checkout@v2
       
-      - name: Init Submodules
-        run: git submodule update --init --recursive
+    - name: Init Submodules
+      run: git submodule update --init --recursive
 
-      - name: Cache Boost Dependency
-        id: cache-boost-dep
-        uses: actions/cache@v1
-        with:
-          path: boost_1_72_0
-          key: unix-boost-dep
+    - name: Cache Boost Dependency
+      id: cache-boost-dep
+      uses: actions/cache@v1
+      with:
+        path: boost_1_72_0
+        key: unix-boost-dep
 
-      - name: Get Boost Dependency
-        if: steps.cache-boost-dep.outputs.cache-hit != 'true'
-        run: |
-          curl -L -O https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2
-          tar xjf boost_1_72_0.tar.bz2
+    - name: Get Boost Dependency
+      if: steps.cache-boost-dep.outputs.cache-hit != 'true'
+      run: |
+        curl -L -O https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2
+        tar xjf boost_1_72_0.tar.bz2
 
-      - name: Build surfacebmi module
-        run: |
-          cmake -B extern/noah-owp-modular/cmake_build cmake_build -S extern/noah-owp-modular
-          cmake --build extern/noah-owp-modular/cmake_build --target surfacebmi -- -j ${{ env.LINUX_NUM_PROC_CORES }}
+    - name: Build surfacebmi module
+      run: |
+        cmake -B extern/noah-owp-modular/cmake_build cmake_build -S extern/noah-owp-modular
+        cmake --build extern/noah-owp-modular/cmake_build --target surfacebmi -- -j ${{ env.LINUX_NUM_PROC_CORES }}
 
-      - name: Build cfebmi module
-        run: |
-          cmake -B extern/cfe/cmake_build -S extern/cfe/
-          cmake --build extern/cfe/cmake_build/ --target cfebmi -- -j ${{ env.LINUX_NUM_PROC_CORES }}
+    - name: Build cfebmi module
+      run: |
+        cmake -B extern/cfe/cmake_build -S extern/cfe/
+        cmake --build extern/cfe/cmake_build/ --target cfebmi -- -j ${{ env.LINUX_NUM_PROC_CORES }}
 
-      - name: Build petbmi module
-        run: |
-          cmake -B extern/evapotranspiration/evapotranspiration/cmake_build -S extern/evapotranspiration/evapotranspiration/
-          cmake --build extern/evapotranspiration/evapotranspiration/cmake_build/ --target petbmi -- -j ${{ env.LINUX_NUM_PROC_CORES }}
+    - name: Build petbmi module
+      run: |
+        cmake -B extern/evapotranspiration/evapotranspiration/cmake_build -S extern/evapotranspiration/evapotranspiration/
+        cmake --build extern/evapotranspiration/evapotranspiration/cmake_build/ --target petbmi -- -j ${{ env.LINUX_NUM_PROC_CORES }}
 
-      - name: Build iso_c_fortran_bmi module
-        run: |
-          cmake -B extern/iso_c_fortran_bmi/cmake_build -S extern/iso_c_fortran_bmi
-          cmake --build extern/iso_c_fortran_bmi/cmake_build --target iso_c_bmi -- -j ${{ env.LINUX_NUM_PROC_CORES }}
+    - name: Build iso_c_fortran_bmi module
+      run: |
+        cmake -B extern/iso_c_fortran_bmi/cmake_build -S extern/iso_c_fortran_bmi
+        cmake --build extern/iso_c_fortran_bmi/cmake_build --target iso_c_bmi -- -j ${{ env.LINUX_NUM_PROC_CORES }}
 
-      - name: cmake_init_build
-        run: |
-          export BOOST_ROOT="$(pwd)/boost_1_72_0"
-          [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
-          cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=ON -DBMI_FORTRAN_ACTIVE=ON -DNGEN_ACTIVATE_PYTHON:BOOL=OFF -S .
+    - name: cmake_init_build
+      run: |
+        export BOOST_ROOT="$(pwd)/boost_1_72_0"
+        [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
+        cmake -B cmake_build -DBMI_C_LIB_ACTIVE:BOOL=ON -DBMI_FORTRAN_ACTIVE=ON -DNGEN_ACTIVATE_PYTHON:BOOL=OFF -S .
 
-      - name: Build ngen
-        run: cmake --build cmake_build --target ngen -- -j ${{ env.LINUX_NUM_PROC_CORES }}
-        timeout-minutes: 15
+    - name: Build ngen
+      run: cmake --build cmake_build --target ngen -- -j ${{ env.LINUX_NUM_PROC_CORES }}
+      timeout-minutes: 15
 
-      - name: Run surfacebmi plus cfebmi
-        run: ./cmake_build/ngen data/catchment_data.geojson "cat-27" data/nexus_data.geojson "nex-26" data/example_bmi_multi_realization_config.json
-        
-      - name: Build ISO C Fortran BMI
-        id: submod_build_2
-        uses: ./.github/actions/ngen-submod-build
-        with: 
-          mod-dir: "extern/iso_c_fortran_bmi/"
-      
-      - name: Build CFE
-        id: submod_build_3
-        uses: ./.github/actions/ngen-submod-build
-        with: 
-          mod-dir: "extern/cfe/"
-          targets: "cfebmi"
-
-      - name: Build Ngen
-        uses: ./.github/actions/ngen-build
-        with:
-          targets: "ngen"
-          build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
-          #is this required for this test?
-          bmi_c: 'ON'
-          bmi_fortran: 'ON'
-        timeout-minutes: 15
-
-      - name: Run surfacebmi plus cfebmi
-        run: |
-          inputfile='data/example_bmi_multi_realization_config.json'
-          if [ ${{ runner.os }} == 'macOS' ] 
-          then
-              inputfile=data/example_bmi_multi_realization_config__macos.json
-          fi
-          ./cmake_build/ngen data/catchment_data.geojson "cat-27" data/nexus_data.geojson "nex-26" $inputfile
+    - name: Run surfacebmi plus cfebmi
+      run: ./cmake_build/ngen data/catchment_data.geojson "cat-27" data/nexus_data.geojson "nex-26" data/example_bmi_multi_realization_config.json
 
     - name: Run surfacebmi, petbmi and cfebmi
       run: ./cmake_build/ngen data/catchment_data.geojson "cat-27" data/nexus_data.geojson "nex-26" data/example_bmi_multi_realization_config_w_noah_pet_cfe.json
-      
+
 # Run t-route/pybind integration test
   test_troute_integration:
     # The type of runner that the job will run on
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest]
-      fail-fast: false
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+      
+    - name: Init Submodules
+      run: git submodule update --init --recursive
 
-      - name: Build Ngen
-        uses: ./.github/actions/ngen-build
-        with:
-          targets: "test_routing_pybind"
-          build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
-          #is this required for this test?
-          use_python: 'ON'
-          use_troute: 'ON'
-        timeout-minutes: 15
-      # Disabling this cache for the time being for a few reasons
-      # 1) t-route build/install can be tricky without pre-cythonized sources
-      # 2) may not want to use a cached version of t-route if we are testing its integration
-      #    we want to use the latest code in the submodule and make sure it works...a cached version
-      #    wouldn't be good for that...
-      #- name: Cache troute dependency
-      #  id: cache-linux-troute-dep
-      #  uses: actions/cache@v1
-      #  with:
-      #    path: .venv
-      #    key: linux-troute-dep-fixed
+    - name: Cache Boost Dependency
+      id: cache-boost-dep
+      uses: actions/cache@v1
+      with:
+        path: boost_1_72_0
+        key: unix-boost-dep
 
-      #This step should come after ngen build???
-      - name: Configure Fortran Compiler
-        run: |
-          if [ ${{ runner.os }} == 'macOS' ] 
-          then
-            sudo ln -s $(which gfortran-11) $(dirname $(which gfortran-11))/gfortran
-            export FC=gfortran-11
-            export F90=gfortran-11
-          fi
+    - name: Get Boost Dependency
+      if: steps.cache-boost-dep.outputs.cache-hit != 'true'
+      run: |
+        curl -L -O https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2
+        tar xjf boost_1_72_0.tar.bz2
 
-      - name: Build T-route Dependency
-        #if: steps.cache-linux-troute-dep.outputs.cache-hit != 'true'
-        #MacOS pybind has issues with egg links, so install all packages without egg links on that os
-        run: |
-          python3 -m venv .venv
-          . .venv/bin/activate
-          cd extern/t-route
-          pip install pip
-          pip install -r requirements.txt
-          cd src
-          pip install nwm_routing/
-          pip install ngen_routing/
-          cd python_routing_v02
-          if [ ${{ runner.os }} == 'macOS' ] 
-          then
-            export LIBRARY_PATH=/usr/local/lib/gcc/11/
-            export LD_LIBRARY_PATH=/usr/local/lib/gcc/11/
-            sed -i'.bak' 's/pip install -e/pip install/g' compiler.sh
-          fi
-          
-          FC=gfortran F90=gfortran ./compiler.sh
-          deactivate
+    - name: Get netcdff library
+      run: |
+        sudo apt-get install -y libnetcdf-dev libnetcdff-dev
 
-      - name: Run test
-        run: |
-          . .venv/bin/activate
-          ./cmake_build/test/test_routing_pybind
-          deactivate
+    - name: Cache troute dependency
+      id: cache-linux-troute-dep
+      uses: actions/cache@v1
+      with:
+        path: .venv
+        key: linux-troute-dep
+
+    - name: Build T-route Dependency
+      if: steps.cache-linux-troute-dep.outputs.cache-hit != 'true'
+      run: |
+        python -m venv .venv
+        . .venv/bin/activate
+        cd extern/t-route
+        pip install pip
+        pip install -r requirements.txt
+        cd src
+        pip install -e nwm_routing
+        pip install -e ngen_routing
+        cd python_routing_v02
+        FC=gfortran ./compiler.sh
+        deactivate
+
+    - name: cmake_init_build
+      run: |
+        export BOOST_ROOT="$(pwd)/boost_1_72_0"
+        [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
+        cmake -B cmake_build -DNGEN_ACTIVATE_ROUTING:BOOL=on -S .
+
+    - name: Build test
+      run: cmake --build cmake_build --target test_routing_pybind -- -j ${{ env.LINUX_NUM_PROC_CORES }}
+      timeout-minutes: 15
+
+    - name: Run test
+      run: |
+        . .venv/bin/activate
+        ./cmake_build/test/test_routing_pybind
+        deactivate
