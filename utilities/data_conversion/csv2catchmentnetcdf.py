@@ -26,7 +26,7 @@ def create_netcdf(filename : str, num_catchments : int, variable_names):
             ds.createVariable("Time",'f8',('catchment-id','time'))
             ds["Time"].units = 'ns'
         else:
-            ds.createVariable(name,'f4',('catchment-id','time'), chunksizes=(num_catchments,2))
+            ds.createVariable(name,'f4',('catchment-id','time'), chunksizes=(num_catchments,1))
 
     return ds
 
