@@ -439,9 +439,7 @@ namespace data_access
             }
             catch (const std::runtime_error& e)
             {
-                #ifndef NGEN_PROFILING
                 std::cerr<<"Unit conversion error: "<<std::endl<<e.what()<<std::endl<<"Returning unconverted value!"<<std::endl;
-                #endif
                 return rvalue;
             }
 
