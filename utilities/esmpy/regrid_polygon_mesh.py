@@ -607,13 +607,14 @@ def csv_to_netcdf(num_catchments, num_time, date_time, aorc_ncfile, regrid_weigh
     DSWRF_surface_out = ncfile_out.createVariable('SWDOWN', 'f4', ('catchment-id', 'time',), fill_value=-99999)
     DLWRF_surface_out = ncfile_out.createVariable('LWDOWN', 'f4', ('catchment-id', 'time',), fill_value=-99999)
 
-    #get input aorc_ncfile atributes
+    #set output netcdf file atributes
     ds = nc4.Dataset(aorc_ncfile)
     varout_dict = {'time':time_out,
                    'APCP_surface':APCP_surface_out, 'DLWRF_surface':DLWRF_surface_out, 'DSWRF_surface':DSWRF_surface_out,
                    'PRES_surface':PRES_surface_out, 'SPFH_2maboveground':SPFH_2maboveground_out, 'TMP_2maboveground':TMP_2maboveground_out,
                    'UGRD_10maboveground':UGRD_10maboveground_out, 'VGRD_10maboveground':VGRD_10maboveground_out}
 
+    #copy all attributes from input netcdf file
     for name, variable in ds.variables.items():
         if name == 'latitude' or name == 'longitude':
             pass
@@ -622,6 +623,11 @@ def csv_to_netcdf(num_catchments, num_time, date_time, aorc_ncfile, regrid_weigh
             for attrname in variable.ncattrs():
                 if attrname != '_FillValue':
                     setattr(varout_name, attrname, getattr(variable, attrname))
+
+    #drop the scale_factor from the output netcdf forcing file attributes
+    for key, varout_name in varout_dict.items():
+        if key != 'time':
+            del varout_name.scale_factor
 
     #set attributes for additional variables
     setattr(cat_id_out, 'description', 'catchment_id')
@@ -771,6 +777,7 @@ if __name__ == '__main__':
             print("for cat-39965, list index = {}".format(i))
 
     datafile_path = join(input_root, aorc_netcdf, "AORC-OWP_*.nc4")
+    #datafile_path = join(input_root, aorc_netcdf, "AORC-OWP_2012063005z.nc4")
     datafiles = glob.glob(datafile_path)
     print("number of forcing files = {}".format(len(datafiles)))
     #process data with time ordered
