@@ -70,12 +70,11 @@ namespace realization {
     ) {
         constructor formulation_constructor = formulations.at(formulation_type);
         std::shared_ptr<data_access::GenericDataProvider> fp;
-        if (formulation_type == "tshirt" || formulation_type == "tshirt_c"  || formulation_type == "lstm" // These formulations are still using the legacy interface!
-            || forcing_config.provider == "" || forcing_config.provider == "legacy" // Permit legacy Forcing class with BMI formulations and simple_lumped--don't break old configs
+        if (formulation_type == "tshirt"  || formulation_type == "tshirt_c"  || formulation_type == "lstm" // These formulations are still using the legacy interface!
             ){
             fp = std::make_shared<Forcing>(forcing_config);
         }
-        else if (forcing_config.provider == "CsvPerFeature"){
+        else if (forcing_config.provider == "CsvPerFeature" || forcing_config.provider == ""){
             fp = std::make_shared<CsvPerFeatureForcingProvider>(forcing_config);
         }
 #ifdef NETCDF_ACTIVE

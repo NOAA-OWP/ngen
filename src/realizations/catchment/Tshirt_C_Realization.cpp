@@ -434,7 +434,7 @@ double Tshirt_C_Realization::get_response(time_step_t t_index, time_step_t t_del
     //  forcing.  It may actually belong within the forcing object.
 
     // TODO: it also needs to account for getting the right precip data point (i.e., t_index may not be "next")
-    double precip = this->legacy_forcing.get_next_hourly_precipitation_meters_per_second();
+    double precip = this->legacy_forcing->get_next_hourly_precipitation_meters_per_second();
     int response_result = run_formulation_for_timestep(precip, t_delta_s);
     // TODO: check t_index is the next expected time step to be calculated
 

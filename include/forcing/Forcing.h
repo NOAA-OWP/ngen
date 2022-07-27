@@ -33,7 +33,7 @@
 /**
  * @brief Forcing class providing time-series precipiation forcing data to the model.
  */
-class Forcing : public data_access::GenericDataProvider
+class [[deprecated("Legacy Forcing object will be removed soon.")]] Forcing : public data_access::GenericDataProvider
 {
     public:
 

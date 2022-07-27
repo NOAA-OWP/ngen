@@ -92,7 +92,7 @@ double Tshirt_Realization::get_response(time_step_t t_index, time_step_t t_delta
     //FIXME doesn't do anything, don't call???
     //add_time(t+1, params.nash_n);
     // TODO: this is problematic, because what happens if the wrong t_index is passed?
-    double precip = this->legacy_forcing.get_next_hourly_precipitation_meters_per_second();
+    double precip = this->legacy_forcing->get_next_hourly_precipitation_meters_per_second();
     //FIXME should this run "daily" or hourly (t) which should really be dt
     //Do we keep an "internal dt" i.e. this->dt and reconcile with t?
     int error = model->run(t_index, precip * t_delta_s / 1000, get_et_params_ptr());
