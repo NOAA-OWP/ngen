@@ -201,8 +201,8 @@ Protected Member Functions</h2></td></tr>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:a7f7265139f0ad8485198efb2c5880402"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_simple___lumped___model___realization.html#a7f7265139f0ad8485198efb2c5880402">REQUIRED_PARAMETERS</a></td></tr>
 <tr class="separator:a7f7265139f0ad8485198efb2c5880402"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5838e9abbc63804c4502bbc1c6f6bd18"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_forcing.html">Forcing</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#a5838e9abbc63804c4502bbc1c6f6bd18">legacy_forcing</a></td></tr>
-<tr class="separator:a5838e9abbc63804c4502bbc1c6f6bd18"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a67a34af40f82c6627182aae66c79f02d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_forcing.html">Forcing</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#a67a34af40f82c6627182aae66c79f02d">legacy_forcing</a></td></tr>
+<tr class="separator:a67a34af40f82c6627182aae66c79f02d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8bfec24b0d57240e7ada2493a781db6d"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation.html#a8bfec24b0d57240e7ada2493a781db6d">id</a></td></tr>
 <tr class="separator:a8bfec24b0d57240e7ada2493a781db6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaebc4992c38cb5db68e859e0487ad929"><td class="memItemLeft" align="right" valign="top">polygon_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_area.html#aaebc4992c38cb5db68e859e0487ad929">bounds</a></td></tr>
@@ -457,7 +457,7 @@ Private Attributes</h2></td></tr>
 
 <p>Explicit copy constructor This constuctor explicitly copies <a class="el" href="class_simple___lumped___model___realization.html">Simple_Lumped_Model_Realization</a> and is required to properly copy the <a class="el" href="class_h_y___catchment_realization.html">HY_CatchmentRealization</a> forcing object as well connectet the <a class="el" href="structhymod__state.html#a820e80017a337b20ce054a136036533a" title="amount of water in each reservoir unsafe for binding suport check latter">hymod_state.Sr</a>* to the copied cascade_backing_storage vector. </p>
 
-<p class="reference">References <a class="el" href="class_simple___lumped___model___realization.html#aa362564a0409107f5f2342140b55b332">cascade_backing_storage</a>, <a class="el" href="classrealization_1_1_catchment___formulation.html#a5838e9abbc63804c4502bbc1c6f6bd18">realization::Catchment_Formulation::legacy_forcing</a>, and <a class="el" href="class_simple___lumped___model___realization.html#ad6f43918a1a6b73d0fb748c14ce78bad">state</a>.</p>
+<p class="reference">References <a class="el" href="class_simple___lumped___model___realization.html#aa362564a0409107f5f2342140b55b332">cascade_backing_storage</a>, <a class="el" href="classrealization_1_1_catchment___formulation.html#a67a34af40f82c6627182aae66c79f02d">realization::Catchment_Formulation::legacy_forcing</a>, and <a class="el" href="class_simple___lumped___model___realization.html#ad6f43918a1a6b73d0fb748c14ce78bad">state</a>.</p>
 
 </div>
 </div>
@@ -1477,8 +1477,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a5838e9abbc63804c4502bbc1c6f6bd18" name="a5838e9abbc63804c4502bbc1c6f6bd18"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5838e9abbc63804c4502bbc1c6f6bd18">&#9670;&nbsp;</a></span>legacy_forcing</h2>
+<a id="a67a34af40f82c6627182aae66c79f02d" name="a67a34af40f82c6627182aae66c79f02d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a67a34af40f82c6627182aae66c79f02d">&#9670;&nbsp;</a></span>legacy_forcing</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1487,7 +1487,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="class_forcing.html">Forcing</a> realization::Catchment_Formulation::legacy_forcing</td>
+          <td class="memname"><a class="el" href="class_forcing.html">Forcing</a>* realization::Catchment_Formulation::legacy_forcing</td>
         </tr>
       </table>
   </td>
@@ -1643,7 +1643,7 @@ Private Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_simple___lumped___model___realization.html">Simple_Lumped_Model_Realization</a></li>
-    <li class="footer">Generated on Tue Jul 26 2022 13:09:04 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
+    <li class="footer">Generated on Thu Jul 28 2022 13:32:07 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
   </ul>
 </div>
 </body>

@@ -67,7 +67,7 @@ var classrealization_1_1_bmi___formulation =
     [ "forcing", "classrealization_1_1_bmi___formulation.html#a2010f61d0e7141bb48230923592de215", null ],
     [ "id", "classrealization_1_1_bmi___formulation.html#a8bfec24b0d57240e7ada2493a781db6d", null ],
     [ "id_number", "classrealization_1_1_bmi___formulation.html#af996a3e50eaf51c63865f1fdbe4f8661", null ],
-    [ "legacy_forcing", "classrealization_1_1_bmi___formulation.html#a5838e9abbc63804c4502bbc1c6f6bd18", null ],
+    [ "legacy_forcing", "classrealization_1_1_bmi___formulation.html#a67a34af40f82c6627182aae66c79f02d", null ],
     [ "model_type_name", "classrealization_1_1_bmi___formulation.html#a3e6136d3fde105fd835c8be24db7d1b7", null ],
     [ "OPTIONAL_PARAMETERS", "classrealization_1_1_bmi___formulation.html#a64a1aede44084c581c07a48e86ab2c17", null ],
     [ "output", "classrealization_1_1_bmi___formulation.html#a55857dc16551760ff59487991fc525fe", null ],

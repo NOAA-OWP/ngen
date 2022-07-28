@@ -111,7 +111,7 @@ var classrealization_1_1_bmi___module___formulation =
     [ "input_forcing_providers", "classrealization_1_1_bmi___module___formulation.html#af291fda11cdc832501bf5eeaeaea18c8", null ],
     [ "last_model_response_delta", "classrealization_1_1_bmi___module___formulation.html#a9f7b1f5b251acbb6a7e3570358aed7a0", null ],
     [ "last_model_response_start_time", "classrealization_1_1_bmi___module___formulation.html#ab176f1bb0fddc82dc0e0ba17551f6321", null ],
-    [ "legacy_forcing", "classrealization_1_1_bmi___module___formulation.html#a5838e9abbc63804c4502bbc1c6f6bd18", null ],
+    [ "legacy_forcing", "classrealization_1_1_bmi___module___formulation.html#a67a34af40f82c6627182aae66c79f02d", null ],
     [ "model_initialized", "classrealization_1_1_bmi___module___formulation.html#aea700f63f272c43b594d6789536f67ba", null ],
     [ "model_type_name", "classrealization_1_1_bmi___module___formulation.html#a3e6136d3fde105fd835c8be24db7d1b7", null ],
     [ "OPTIONAL_PARAMETERS", "classrealization_1_1_bmi___module___formulation.html#a2cf44552ae1229dcfedf93c5e07d4698", null ],

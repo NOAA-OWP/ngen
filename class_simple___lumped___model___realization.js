@@ -38,7 +38,7 @@ var class_simple___lumped___model___realization =
     [ "forcing", "class_simple___lumped___model___realization.html#a2010f61d0e7141bb48230923592de215", null ],
     [ "id", "class_simple___lumped___model___realization.html#a8bfec24b0d57240e7ada2493a781db6d", null ],
     [ "id_number", "class_simple___lumped___model___realization.html#af996a3e50eaf51c63865f1fdbe4f8661", null ],
-    [ "legacy_forcing", "class_simple___lumped___model___realization.html#a5838e9abbc63804c4502bbc1c6f6bd18", null ],
+    [ "legacy_forcing", "class_simple___lumped___model___realization.html#a67a34af40f82c6627182aae66c79f02d", null ],
     [ "output", "class_simple___lumped___model___realization.html#a55857dc16551760ff59487991fc525fe", null ],
     [ "params", "class_simple___lumped___model___realization.html#a799f47e36352e7773f64015613257346", null ],
     [ "realized_catchment", "class_simple___lumped___model___realization.html#a7c6de72bd8ebf427d71aacca7baa23c1", null ],

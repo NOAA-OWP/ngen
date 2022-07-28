@@ -93,7 +93,7 @@ var classrealization_1_1_bmi___multi___formulation =
     [ "id", "classrealization_1_1_bmi___multi___formulation.html#a8bfec24b0d57240e7ada2493a781db6d", null ],
     [ "id_number", "classrealization_1_1_bmi___multi___formulation.html#af996a3e50eaf51c63865f1fdbe4f8661", null ],
     [ "is_out_vars_from_last_mod", "classrealization_1_1_bmi___multi___formulation.html#a2b3b0cb7670a2ab18107ec428ac06fa2", null ],
-    [ "legacy_forcing", "classrealization_1_1_bmi___multi___formulation.html#a5838e9abbc63804c4502bbc1c6f6bd18", null ],
+    [ "legacy_forcing", "classrealization_1_1_bmi___multi___formulation.html#a67a34af40f82c6627182aae66c79f02d", null ],
     [ "model_type_name", "classrealization_1_1_bmi___multi___formulation.html#a3e6136d3fde105fd835c8be24db7d1b7", null ],
     [ "module_types", "classrealization_1_1_bmi___multi___formulation.html#a6f3245df4fa219eb275a0d9dcc0e722f", null ],
     [ "module_variable_maps", "classrealization_1_1_bmi___multi___formulation.html#a9f72d1b2887273f405171535928ebf29", null ],
