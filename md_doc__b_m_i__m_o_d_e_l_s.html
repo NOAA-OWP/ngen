@@ -134,6 +134,12 @@ $(document).ready(function(){initNavTree('md_doc__b_m_i__m_o_d_e_l_s.html',''); 
 </li>
 </ul>
 </li>
+<li>BMI Models Written in Python<ul>
+<li>Enabling Python Integration</li>
+<li>BMI Python Model as Package Class</li>
+<li>BMI Python Example</li>
+</ul>
+</li>
 <li>Multi-Module BMI Formulations</li>
 </ul>
 </li>
@@ -151,16 +157,17 @@ Summary</h1>
 </ul>
 <h1><a class="anchor" id="autotoc_md25"></a>
 Formulation Config</h1>
-<p >The catchment entry in the formulation/realization config must be set to used the appropriate type for the associated BMI realization, via the formulation's <code>name</code> JSON element. E.g.: </p><pre class="fragment">  ...
-  "cat-87": {
-       "formulations": [
-           {
-               "name": "bmi_c",
-               "params": { ... }
-           }
-       }
-  ...
-</pre><p> Valid name values for the currently implemented BMI formulation types are:</p>
+<p >The catchment entry in the formulation/realization config must be set to used the appropriate type for the associated BMI realization, via the formulation's <code>name</code> JSON element. E.g.:</p>
+<div class="fragment"><div class="line">//...</div>
+<div class="line">&quot;cat-87&quot;: {</div>
+<div class="line">     &quot;formulations&quot;: [</div>
+<div class="line">         {</div>
+<div class="line">             &quot;name&quot;: &quot;bmi_c&quot;,</div>
+<div class="line">             &quot;params&quot;: { ... }</div>
+<div class="line">         }</div>
+<div class="line">     }</div>
+<div class="line">//...</div>
+</div><!-- fragment --><p >Valid name values for the currently implemented BMI formulation types are:</p>
 <ul>
 <li><code>bmi_c++</code></li>
 <li><code>bmi_c</code></li>
@@ -236,6 +243,12 @@ Semi-Optional Parameters</h2>
 <li>Name of the bootstrapping pointer registration function in the external module</li>
 <li>required for C-based BMI modules if the module's implemented function is not named <code>register_bmi</code> as discussed here</li>
 <li>only needed for C-based BMI modules</li>
+</ul>
+</li>
+<li><code>python_type</code><ul>
+<li>Name of the Python class that represents a BMI model, including the package name as appropriate.</li>
+<li>Required for Python-based BMI modules</li>
+<li>Only needed for Python-based modules</li>
 </ul>
 </li>
 </ul>
@@ -347,30 +360,32 @@ Dynamic Loading</h3>
 <p >As noted above, the path to the shared library must be provided in the configuration so that the module can be loaded at runtime.</p>
 <h3><a class="anchor" id="autotoc_md41"></a>
 Additional Bootstrapping Functions Needed</h3>
-<p >BMI models written in <b>C++</b> should implement two <b>C</b> functions declared with <code>extern "C"</code>. These functions instantiate and destroy a <b>C++</b> BMI model object. By default, these functions are expected to be named <code>bmi_model_create</code> and <code>bmi_model_destroy</code>, and have signatures like the following: </p><pre class="fragment">extern "C"
-{
-  /**
-  * @brief Construct this BMI instance as a normal C++ object, to be returned to the framework.
-  * @return A pointer to the newly allocated instance.
-  */
-  MyBmiModelClass *bmi_model_create()
-  {
-    /* You can do anything necessary to set up a model instance here, but do NOT call `Initialize()`. */
-    return new MyBmiModelClass(/* e.g. any applicable constructor parameters */);
-  }
-
-  /**
-    * @brief Destroy/free an instance created with @see bmi_model_create
-    * @param ptr 
-    */
-  void bmi_model_destroy(MyBmiModelClass *ptr)
-  {
-    /* You can do anything necessary to dispose of a model instance here, but note that `Finalize()` 
-     * will already have been called!
-    delete ptr;
-  }
-}
-</pre><p> It is possible to configure different <em>names</em> for the functions within the NGen realization config by using the keys <code>create_function</code> and <code>destroy_function</code>, but the return types and parameters must be as shown above.</p>
+<p >BMI models written in <b>C++</b> should implement two <b>C</b> functions declared with <code>extern "C"</code>. These functions instantiate and destroy a <b>C++</b> BMI model object. By default, these functions are expected to be named <code>bmi_model_create</code> and <code>bmi_model_destroy</code>, and have signatures like the following:</p>
+<div class="fragment"><div class="line">{c++}</div>
+<div class="line">   extern &quot;C&quot;</div>
+<div class="line">   {</div>
+<div class="line">     /**</div>
+<div class="line">     * @brief Construct this BMI instance as a normal C++ object, to be returned to the framework.</div>
+<div class="line">     * @return A pointer to the newly allocated instance.</div>
+<div class="line">     */</div>
+<div class="line">     MyBmiModelClass *bmi_model_create()</div>
+<div class="line">     {</div>
+<div class="line">       /* You can do anything necessary to set up a model instance here, but do NOT call `Initialize()`. */</div>
+<div class="line">       return new MyBmiModelClass(/* e.g. any applicable constructor parameters */);</div>
+<div class="line">     }</div>
+<div class="line"> </div>
+<div class="line">     /**</div>
+<div class="line">       * @brief Destroy/free an instance created with @see bmi_model_create</div>
+<div class="line">       * @param ptr </div>
+<div class="line">       */</div>
+<div class="line">     void bmi_model_destroy(MyBmiModelClass *ptr)</div>
+<div class="line">     {</div>
+<div class="line">       /* You can do anything necessary to dispose of a model instance here, but note that `Finalize()` </div>
+<div class="line">        * will already have been called!</div>
+<div class="line">       delete ptr;</div>
+<div class="line">     }</div>
+<div class="line">   }</div>
+</div><!-- fragment --><p >It is possible to configure different <em>names</em> for the functions within the NGen realization config by using the keys <code>create_function</code> and <code>destroy_function</code>, but the return types and parameters must be as shown above.</p>
 <p >An example of implementing these functions can be found in the test harness implementation at <a href="../extern/test_bmi_cpp/include/test_bmi_cpp.hpp">/extern/test_bmi_cpp/include/test_bmi_cpp.hpp</a>. </p>
 <h4><a class="anchor" id="autotoc_md42"></a>
 Why?</h4>
@@ -380,6 +395,38 @@ Why?</h4>
 BMI C++ Example</h2>
 <p >An example implementation for an appropriate BMI model as a <b>C++</b> shared library is provided in the project <a href="../extern/test_bmi_cpp">here</a>.</p>
 <h1><a class="anchor" id="autotoc_md44"></a>
+BMI Models Written in Python</h1>
+<ul>
+<li>Enabling Python Integration</li>
+<li>BMI Python Model as Package Class</li>
+<li>BMI Python Example</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md45"></a>
+Enabling Python Integration</h2>
+<p >Python integration is controlled with the CMake build flag <code>NGEN_ACTIVATE_PYTHON</code>, however this currently defaults to "On"&ndash;you would need to turn this off if Python is not available in your environment. See <a href="DEPENDENCIES.md#python-3-libraries">the Dependencies documentation</a> for specifics on Python requirements, but in summary you will need a working Python environment with NumPy installed. You can set up a Python environment anywhere with the usual environment variables, but note that ngen will look for a Python environment in the build directory named <code>.venv</code> or <code>venv</code> by default. The appropriate Python environment should be active in the shell when ngen is run.</p>
+<p >For Python BMI models specifically, you will also need to install the <a href="https://github.com/csdms/bmi-python">bmipy</a> package, which provides a base class for Python BMI models.</p>
+<h2><a class="anchor" id="autotoc_md46"></a>
+BMI Python Model as Package Class</h2>
+<p >To use a Python BMI model, the model needs to be installed as a package in the Python environment and the package must have a class that extends bmipy, like so</p>
+<div class="fragment"><div class="line"><span class="keyword">from</span> bmipy <span class="keyword">import</span> Bmi</div>
+<div class="line"><span class="keyword">class </span>bmi_model(<a class="code hl_struct" href="struct_bmi.html">Bmi</a>):</div>
+<div class="line">    ...</div>
+<div class="ttc" id="astruct_bmi_html"><div class="ttname"><a href="struct_bmi.html">Bmi</a></div><div class="ttdef"><b>Definition:</b> bmi.h:53</div></div>
+</div><!-- fragment --><p ><b>TIP:</b> If you are actively developing a Python BMI model, you may want to <a href="https://pip.pypa.io/en/stable/topics/local-project-installs/#editable-installs">install your package with the <code>-e</code> flag</a>.</p>
+<p >As noted above, Python modules require the package and class name to be specified in the realization config via the <code>python_class</code> key, such as:</p>
+<div class="fragment"><div class="line">{</div>
+<div class="line">  &quot;global&quot;: {</div>
+<div class="line">    &quot;formulations&quot;: [</div>
+<div class="line">        { </div>
+<div class="line">            &quot;name&quot;: &quot;bmi_python&quot;,</div>
+<div class="line">            &quot;params&quot;: {</div>
+<div class="line">                &quot;python_type&quot;: &quot;mypackage.bmi_model&quot;,</div>
+<div class="line">                &quot;model_type_name&quot;: &quot;bmi_model&quot;,</div>
+<div class="line">                //...</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md47"></a>
+BMI Python Example</h2>
+<p >An example implementation for an appropriate BMI model as a <b>Python</b> class is <a href="../extern/test_bmi_py">provided in the project</a>, or you can examine the CSDMS-provided <a href="https://github.com/csdms/bmi-example-python">example Python model</a>.</p>
+<h1><a class="anchor" id="autotoc_md48"></a>
 BMI Models Written in Fortran</h1>
 <ul>
 <li>Enabling Fortran Integration</li>
@@ -389,19 +436,19 @@ BMI Models Written in Fortran</h1>
 </ul>
 </li>
 </ul>
-<h2><a class="anchor" id="autotoc_md45"></a>
+<h2><a class="anchor" id="autotoc_md49"></a>
 Enabling Fortran Integration</h2>
 <p >To enable Fortran integration functionality, the CMake build system has to be <a href="BUILDS_AND_CMAKE.md#generating-a-build-system">generated</a> with the <code>NGEN_BMI_FORTRAN_ACTIVE</code> CMake variable set to <code>ON</code>.</p>
-<h2><a class="anchor" id="autotoc_md46"></a>
+<h2><a class="anchor" id="autotoc_md50"></a>
 ISO C Binding Middleware</h2>
 <p >Nextgen takes advantage of the Fortran <code>iso_c_binding</code> module to achieve interoperability with Fortran modules. In short, this works through use of an intermediate middleware module maintained within Nextgen. This module handles the (majority of the) binding through proxy functions that make use of the actual external BMI Fortran module. <br  />
 </p>
 <p >The middleware module source is located in <em>extern/iso_c_fortran_bmi/</em>.</p>
 <p >The proxy functions require an opaque handle to a created BMI Fortran object to be provided as an argument, so such an object and its opaque handle must be setup and returned via a `register_bmi` function.</p>
-<h2><a class="anchor" id="autotoc_md47"></a>
+<h2><a class="anchor" id="autotoc_md51"></a>
 A Compiled Shared Library</h2>
 <p >Because of the use of <code>iso_c_bindings</code>, integrating with a Fortran BMI module works very similarly to integrating with a C BMI module, where a shared library is dynamically loaded. An extra bootstrapping registration function is also, again, required.</p>
-<h3><a class="anchor" id="autotoc_md48"></a>
+<h3><a class="anchor" id="autotoc_md52"></a>
 Required Additional Fortran Registration Function</h3>
 <p >As with C, a registration function must be provided by the module, beyond what is implemented for BMI. It should look very similar to the example below. In fact, it is likely sufficient to simply modify the <code>use bminoahowp</code> and <code>type(bmi_noahowp), target, save :: bmi_model</code> lines to suit the module in question.</p>
 <p >This function should receive an opaque pointer and set it to point to a created BMI object of the appropriate type for the module. Note that while <code>save</code> is being used in a way that persists only the initial object, since this will be used within the scope of a dynamic library loaded specifically for working with a particular catchment formulation, it should not cause issues.</p>
@@ -426,7 +473,7 @@ Required Additional Fortran Registration Function</h3>
 <div class="line">      this = c_loc(bmi_box)</div>
 <div class="line">      bmi_status = bmi_success</div>
 <div class="line">    <span class="keyword">end function </span>register_bmi</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md49"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md53"></a>
 Multi-Module BMI Formulations</h1>
 <p >It is possible to configure a formulation to be a combination of several different individual BMI module components. This is the <code>bmi_multi</code> formulation type.</p>
 <p >As described in Required Parameters, a BMI <code>init_config</code> does not need to be specified for this formulation type, but a nested list of sub-formulation configs (in <code>modules</code>) does. Execution of a formulation time step update proceeds through each module in list order.</p>
@@ -483,7 +530,7 @@ Multi-Module BMI Formulations</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Jul 28 2022 17:43:44 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
+    <li class="footer">Generated on Tue Aug 2 2022 20:57:59 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
   </ul>
 </div>
 </body>

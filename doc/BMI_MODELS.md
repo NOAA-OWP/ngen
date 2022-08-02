@@ -26,6 +26,10 @@
     - [ISO C Binding Middleware](#iso-c-binding-middleware)
     - [A Compiled Shared Library](#a-compiled-shared-library)
       - [Required Additional Fortran Registration Function](#required-additional-fortran-registration-function)
+  - [BMI Models Written in Python](#bmi-models-written-in-python)
+    - [Enabling Python Integration](#enabling-python-integration)
+    - [BMI Python Model as Package Class](#bmi-python-model-as-package-class)
+    - [BMI Python Example](#bmi-python-example)
   - [Multi-Module BMI Formulations](#multi-module-bmi-formulations)
 
 ## Summary
@@ -45,7 +49,8 @@ The basic outline of steps needed to work with an external BMI model is:
 
 The catchment entry in the formulation/realization config must be set to used the appropriate type for the associated BMI realization, via the formulation's `name` JSON element.  E.g.:
 
-      ...
+```javascript
+      //...
       "cat-87": {
            "formulations": [
                {
@@ -53,7 +58,8 @@ The catchment entry in the formulation/realization config must be set to used th
                    "params": { ... }
                }
            }
-      ...
+      //...
+```
 
 Valid name values for the currently implemented BMI formulation types are:
 
@@ -108,6 +114,10 @@ There are some special BMI formulation config parameters which are required in c
   * Name of the [bootstrapping pointer registration function](#additional-bootstrapping-function-needed) in the external module 
   * required for C-based BMI modules if the module's implemented function is not named `register_bmi` as discussed [here](#additional-bootstrapping-function-needed)
   * only needed for C-based BMI modules
+* `python_type`
+  * Name of the Python class that represents a BMI model, including the package name as appropriate.
+  * Required for Python-based BMI modules
+  * Only needed for Python-based modules
 
 ### Optional Parameters
 * `variables_names_map`
@@ -222,6 +232,7 @@ As noted [above](#semi-optional-parameters), the path to the shared library must
 
 BMI models written in **C++** should implement two **C** functions declared with `extern "C"`. These functions instantiate and destroy a **C++** BMI model object. By default, these functions are expected to be named `bmi_model_create` and `bmi_model_destroy`, and have signatures like the following:
 
+```c++
     extern "C"
     {
       /**
@@ -245,6 +256,7 @@ BMI models written in **C++** should implement two **C** functions declared with
         delete ptr;
       }
     }
+```
 
 It is possible to configure different *names* for the functions within the NGen realization config by using the keys `create_function` and `destroy_function`, but the return types and parameters must be as shown above.
 
@@ -258,6 +270,48 @@ Similarly, different compilers (or different compiler versions) may implement `d
 ### BMI C++ Example
 
 An example implementation for an appropriate BMI model as a **C++** shared library is provided in the project [here](../extern/test_bmi_cpp).
+
+## BMI Models Written in Python
+
+  - [Enabling Python Integration](#enabling-python-integration)
+  - [BMI Python Model as Package Class](#bmi-python-model-as-package-class)
+  - [BMI Python Example](#bmi-python-example)
+
+### Enabling Python Integration
+
+Python integration is controlled with the CMake build flag `NGEN_ACTIVATE_PYTHON`, however this currently defaults to "On"--you would need to turn this off if Python is not available in your environment. See [the Dependencies documentation](DEPENDENCIES.md#python-3-libraries) for specifics on Python requirements, but in summary you will need a working Python environment with NumPy installed. You can set up a Python environment anywhere with the usual environment variables, but note that ngen will look for a Python environment in the build directory named `.venv` or `venv` by default. The appropriate Python environment should be active in the shell when ngen is run.
+
+For Python BMI models specifically, you will also need to install the [bmipy](https://github.com/csdms/bmi-python) package, which provides a base class for Python BMI models.
+
+### BMI Python Model as Package Class
+
+To use a Python BMI model, the model needs to be installed as a package in the Python environment and the package must have a class that extends bmipy, like so
+
+```python
+from bmipy import Bmi
+class bmi_model(Bmi):
+    ...
+```
+
+**TIP:** If you are actively developing a Python BMI model, you may want to [install your package with the `-e` flag](https://pip.pypa.io/en/stable/topics/local-project-installs/#editable-installs).
+
+As noted above, Python modules require the package and class name to be specified in the realization config via the `python_class` key, such as:
+
+```javascript
+{
+  "global": {
+    "formulations": [
+        { 
+            "name": "bmi_python",
+            "params": {
+                "python_type": "mypackage.bmi_model",
+                "model_type_name": "bmi_model",
+                //...
+```
+
+### BMI Python Example
+
+An example implementation for an appropriate BMI model as a **Python** class is [provided in the project](../extern/test_bmi_py), or you can examine the CSDMS-provided [example Python model](https://github.com/csdms/bmi-example-python).
 
 ## BMI Models Written in Fortran
 
@@ -332,7 +386,7 @@ A few other items of note:
 * configuration of `variables_names_map` maps a given variable to a variable name of the directly 
 * it is now possible to have an earlier nested module use as a provider (for one of its inputs) a later nested module, as long as a default value is configured
   * a collection of variable default values can be given in the formulation config at the top level by providing an entry in `default_output_values` with the variable's mapped configuration alias (or just variable name if it is unique) and the default value:
-```json
+```javascript
 {
   "global": {
     "formulations": [
