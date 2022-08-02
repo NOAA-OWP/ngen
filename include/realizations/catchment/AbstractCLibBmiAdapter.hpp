@@ -89,9 +89,22 @@ namespace models {
                     return;
                 }
                 if (!utils::FileChecker::file_is_readable(bmi_lib_file)) {
-                    this->init_exception_msg =
-                            "Can't init " + this->model_name + "; unreadable shared library file '" + bmi_lib_file + "'";
-                    throw std::runtime_error(this->init_exception_msg);
+                    //Try alternative extension...
+                    size_t idx = bmi_lib_file.rfind(".");
+                    std::string alt_bmi_lib_file;                    
+                    if(bmi_lib_file.substr(idx) == ".so"){
+                        alt_bmi_lib_file = bmi_lib_file.substr(0,idx) + ".dylib";
+                    } else {
+                        alt_bmi_lib_file = bmi_lib_file.substr(0,idx) + ".so";
+                    }
+                    if (utils::FileChecker::file_is_readable(alt_bmi_lib_file)) {
+                        bmi_lib_file = alt_bmi_lib_file;
+                    } else {
+                        this->init_exception_msg =
+                                "Can't init " + this->model_name + "; unreadable shared library file '" + bmi_lib_file + "'";
+                        throw std::runtime_error(this->init_exception_msg);
+                    }
+
                 }
 
                 // Call first to ensure any previous error is cleared before trying to load the symbol

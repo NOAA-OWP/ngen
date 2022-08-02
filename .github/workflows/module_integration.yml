@@ -63,10 +63,6 @@ jobs:
       - name: Run surfacebmi plus cfebmi
         run: |
           inputfile='data/example_bmi_multi_realization_config.json'
-          if [ ${{ runner.os }} == 'macOS' ] 
-          then
-              inputfile=data/example_bmi_multi_realization_config__macos.json
-          fi
           ./cmake_build/ngen data/catchment_data.geojson "cat-27" data/nexus_data.geojson "nex-26" $inputfile
 
 # Run t-route/pybind integration test
