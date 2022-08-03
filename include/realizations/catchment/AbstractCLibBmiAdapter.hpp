@@ -94,9 +94,19 @@ namespace models {
                     std::string alt_bmi_lib_file;                    
                     if(bmi_lib_file.substr(idx) == ".so"){
                         alt_bmi_lib_file = bmi_lib_file.substr(0,idx) + ".dylib";
-                    } else {
+                    } else if(bmi_lib_file.substr(idx) == ".dylib"){
                         alt_bmi_lib_file = bmi_lib_file.substr(0,idx) + ".so";
+                    } else {
+                        // Try appending instead of replacing...
+                        #ifdef __APPLE__
+                        alt_bmi_lib_file = bmi_lib_file + ".dylib";
+                        #else
+                        #ifdef __GNUC__
+                        alt_bmi_lib_file = bmi_lib_file + ".so";
+                        #endif // __GNUC__
+                        #endif // __APPLE__
                     }
+                    //TODO: Try looking in e.g. /usr/lib, /usr/local/lib, $LD_LIBRARY_PATH... try pre-pending "lib"...
                     if (utils::FileChecker::file_is_readable(alt_bmi_lib_file)) {
                         bmi_lib_file = alt_bmi_lib_file;
                     } else {
