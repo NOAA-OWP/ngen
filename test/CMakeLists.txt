@@ -250,6 +250,20 @@ add_test(
         ${NETCDF_LIBRARIES}
 )
 
+########################## Comparison tests for the BMI PET implementation
+# TODO: this probably needs to be added to integration testing also
+add_test(
+        compare_pet
+        1
+        realizations/catchments/Bmi_C_Pet_IT.cpp
+        NGen::core
+        NGen::realizations_catchment
+        NGen::core_mediator
+        NGen::forcing
+        libudunits2
+        ${NETCDF_LIBRARIES}
+)
+
 ########################## Internal Torchlib LSTM Tests
 if(LSTM_TORCH_LIB_ACTIVE)
     add_test(
