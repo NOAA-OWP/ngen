@@ -89,6 +89,7 @@ var classrealization_1_1_bmi___c___formulation =
     [ "write_output", "classrealization_1_1_bmi___c___formulation.html#aa989be0629ecaa29a2410f7588404ff9", null ],
     [ "::Bmi_C_Cfe_IT", "classrealization_1_1_bmi___c___formulation.html#a61c175da89028ff89f2b446b3e97d3f0", null ],
     [ "::Bmi_C_Formulation_Test", "classrealization_1_1_bmi___c___formulation.html#ab629620cdc1831773640b662bc1615b5", null ],
+    [ "::Bmi_C_Pet_IT", "classrealization_1_1_bmi___c___formulation.html#a3914d5635678eb8adfe56cedb9a5e255", null ],
     [ "::Bmi_Formulation_Test", "classrealization_1_1_bmi___c___formulation.html#a04abbbee1836c2cdfbe44fd9ebb136a4", null ],
     [ "Bmi_Multi_Formulation", "classrealization_1_1_bmi___c___formulation.html#a272943c5e7e6e9dbd7a648a220df263c", null ],
     [ "allow_model_exceed_end_time", "classrealization_1_1_bmi___c___formulation.html#a4bdc86c0655cdc4b14b2f61f5e66efd7", null ],
