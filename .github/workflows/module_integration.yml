@@ -50,6 +50,13 @@ jobs:
           mod-dir: "extern/cfe/"
           targets: "cfebmi"
 
+      - name: Build PET
+        id: submod_build_5
+        uses: ./.github/actions/ngen-submod-build
+        with:
+          mod-dir: "extern/evapotranspiration/evapotranspiration"
+          targets: "petbmi"
+
       - name: Build Ngen
         uses: ./.github/actions/ngen-build
         with:
@@ -63,6 +70,11 @@ jobs:
       - name: Run surfacebmi plus cfebmi
         run: |
           inputfile='data/example_bmi_multi_realization_config.json'
+          ./cmake_build/ngen data/catchment_data.geojson "cat-27" data/nexus_data.geojson "nex-26" $inputfile
+
+      - name: Run surfacebmi, cfebmi and petbmi
+        run: |
+          inputfile='data/example_bmi_multi_realization_config_w_noah_pet_cfe.json'
           ./cmake_build/ngen data/catchment_data.geojson "cat-27" data/nexus_data.geojson "nex-26" $inputfile
 
 # Run t-route/pybind integration test

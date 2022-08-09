@@ -45,6 +45,40 @@ jobs:
     - name: Clean Up
       uses: ./.github/actions/clean-build
 
+  # Test PET
+  test_pet:
+    # The type of runner that the job will run on
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Build PET Submodule
+        id: submod_build_5
+        uses: ./.github/actions/ngen-submod-build
+        with:
+          mod-dir: "extern/evapotranspiration/evapotranspiration"
+          targets: "petbmi"
+
+      - name: Build PET Tests
+        uses: ./.github/actions/ngen-build
+        with:
+          targets: "compare_pet"
+          build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
+
+      - name: Run Tests
+        run: ./cmake_build/test/compare_pet
+        timeout-minutes: 15
+
+      - name: Clean Up
+        uses: ./.github/actions/clean-build
+
   # Test MPI remote nexus behavior in linux
   test_mpi_remote_nexus:
     # The type of runner that the job will run on

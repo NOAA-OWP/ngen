@@ -188,6 +188,7 @@ namespace realization {
         friend class ::Bmi_Formulation_Test;
         friend class ::Bmi_C_Formulation_Test;
         friend class ::Bmi_C_Cfe_IT;
+        friend class ::Bmi_C_Pet_IT;
 
     private:
 
