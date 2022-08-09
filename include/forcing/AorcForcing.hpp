@@ -14,6 +14,18 @@
 #define CSDMS_STD_NAME_WIND_V_Y "land_surface_wind__y_component_of_velocity"
 #define NGEN_STD_NAME_SPECIFIC_HUMIDITY "atmosphere_air_water~vapor__relative_saturation" // This is not present in standard names, use this for now... may change!
 
+// Recognized Forcing Value Names (in particular for use when configuring BMI input variables)
+// TODO: perhaps create way to configure a mapping of these to something different
+#define AORC_FIELD_NAME_PRECIP_RATE "precip_rate"
+#define AORC_FIELD_NAME_SOLAR_SHORTWAVE "DSWRF_surface"
+#define AORC_FIELD_NAME_SOLAR_LONGWAVE "DLWRF_surface"
+#define AORC_FIELD_NAME_PRESSURE_SURFACE "PRES_surface"
+#define AORC_FIELD_NAME_TEMP_2M_AG "TMP_2maboveground"
+#define AORC_FIELD_NAME_APCP_SURFACE "APCP_surface"
+#define AORC_FIELD_NAME_WIND_U_10M_AG "UGRD_10maboveground"
+#define AORC_FIELD_NAME_WIND_V_10M_AG "VGRD_10maboveground"
+#define AORC_FIELD_NAME_SPEC_HUMID_2M_AG "SPFH_2maboveground"
+
 #include <map>
 
 using namespace std;

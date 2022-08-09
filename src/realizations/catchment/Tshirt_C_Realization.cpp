@@ -9,6 +9,8 @@
 #include <boost/algorithm/string/join.hpp>
 
 using namespace realization;
+using data_access::MEAN;
+using data_access::SUM;
 
 Tshirt_C_Realization::Tshirt_C_Realization(forcing_params forcing_config,
                                            utils::StreamHandler output_stream,
@@ -434,7 +436,11 @@ double Tshirt_C_Realization::get_response(time_step_t t_index, time_step_t t_del
     //  forcing.  It may actually belong within the forcing object.
 
     // TODO: it also needs to account for getting the right precip data point (i.e., t_index may not be "next")
-    double precip = this->legacy_forcing->get_next_hourly_precipitation_meters_per_second();
+    //double precip = this->legacy_forcing->get_next_hourly_precipitation_meters_per_second();
+    double precip;
+    time_t t_unix = legacy_forcing->get_data_start_time() + (t_index * 3600);
+    const std::string forcing_name = CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE;
+    precip = legacy_forcing->get_value(CatchmentAggrDataSelector("",CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, t_unix, t_delta_s, ""), SUM); // CsvPerFeatureForcingProvider
     int response_result = run_formulation_for_timestep(precip, t_delta_s);
     // TODO: check t_index is the next expected time step to be calculated
 

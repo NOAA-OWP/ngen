@@ -7,7 +7,8 @@
 #include "Et_Accountable.hpp"
 #include <HY_CatchmentArea.hpp>
 
-#include <Forcing.h> // Remove when _link_legacy_forcing() is removed!
+//#include <Forcing.h> // Remove when _link_legacy_forcing() is removed!
+#include "CsvPerFeatureForcingProvider.hpp"
 
 namespace realization {
 
@@ -103,13 +104,16 @@ namespace realization {
         }
 
         //TODO: VERY BAD JUJU...the following two members are an ugly hack to avoid having to gut the legacy C/C++ realizations for now.
-        Forcing* legacy_forcing;
+        //Forcing* legacy_forcing;
+        CsvPerFeatureForcingProvider* legacy_forcing;
         // Use this a a deprecation chokepoint to get rid of Forcing when ready.
         [[deprecated]]
         void _link_legacy_forcing()
         {
             void* f { this->forcing.get() };
-            legacy_forcing = ((Forcing *)f);
+            //legacy_forcing = ((Forcing *)f);
+            //void* f { this->CsvPerFeatureForcingProvider.get() };
+            legacy_forcing = ((CsvPerFeatureForcingProvider* )f);
         }
     private:
         std::string cat_id;
