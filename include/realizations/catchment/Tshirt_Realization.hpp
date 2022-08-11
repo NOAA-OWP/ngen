@@ -8,7 +8,7 @@
 #include "tshirt/include/Tshirt.h"
 #include "tshirt/include/tshirt_params.h"
 #include <memory>
-#include <Forcing.h>
+//#include <Forcing.h>
 #include <GenericDataProvider.hpp>
 
 namespace realization {
@@ -61,7 +61,6 @@ namespace realization {
                 shared_ptr<data_access::GenericDataProvider> forcing_provider,
                 utils::StreamHandler output_stream
             ) : Catchment_Formulation(id, forcing_provider, output_stream) {
-                _link_legacy_forcing();
             }
 
             void set_giuh_kernel(std::shared_ptr<giuh::GiuhJsonReader> reader);

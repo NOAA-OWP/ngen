@@ -6,7 +6,7 @@
 #include "hymod/include/Hymod.h"
 #include <unordered_map>
 #include <GenericDataProvider.hpp>
-#include <Forcing.h>
+//#include <Forcing.h>
 
 class Simple_Lumped_Model_Realization
         : public realization::Catchment_Formulation {
@@ -33,8 +33,6 @@ class Simple_Lumped_Model_Realization
         );
 
         Simple_Lumped_Model_Realization(std::string id, shared_ptr<data_access::GenericDataProvider> forcing_provider, utils::StreamHandler output_stream) : Catchment_Formulation(id, forcing_provider, output_stream) {
-            // We now only use the ForcingProvider interface on Forcing objects, so this is not needed (and explodes).
-            //_link_legacy_forcing();
         };
 
         Simple_Lumped_Model_Realization(std::string id) : Catchment_Formulation(id){};
