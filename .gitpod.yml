@@ -11,7 +11,8 @@ tasks:
       cmake -S extern/test_bmi_c -B extern/test_bmi_c/cmake_build
       cmake -S extern/test_bmi_cpp -B extern/test_bmi_cpp/cmake_build
       cmake -S extern/test_bmi_fortran/ -B extern/test_bmi_fortran/cmake_build
-      cmake -S extern/evapotranspiration/ -B extern/evapotranspiration/cmake_build
+      cmake -S extern/sloth -B extern/sloth/cmake_build
+      cmake -S extern/evapotranspiration/evapotranspiration -B extern/evapotranspiration/cmake_build
       cmake -S extern/noah-owp-modular/ -B extern/noah-owp-modular/cmake_build
       cmake -S extern/cfe/ -B extern/cfe/cmake_build
       cmake -S extern/topmodel/ -B extern/topmodel/cmake_build
@@ -19,6 +20,7 @@ tasks:
       cmake --build extern/test_bmi_c/cmake_build/ --target all
       cmake --build extern/test_bmi_cpp/cmake_build/ --target all
       cmake --build extern/test_bmi_fortran/cmake_build/ --target all
+      cmake --build extern/sloth/cmake_build/ --target all
       cmake --build extern/evapotranspiration/cmake_build/ --target all
       cmake --build extern/noah-owp-modular/cmake_build/ --target all
       cmake --build extern/cfe/cmake_build/ --target all
