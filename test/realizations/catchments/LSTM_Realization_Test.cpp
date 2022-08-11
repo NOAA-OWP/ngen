@@ -2,7 +2,7 @@
 
 #include "gtest/gtest.h"
 #include "realizations/catchment/LSTM_Realization.hpp"
-#include "forcing/Forcing.h"
+//#include "forcing/Forcing.h"
 #include "utilities/StreamHandler.hpp"
 
 class LSTMRealizationTest : public ::testing::Test {

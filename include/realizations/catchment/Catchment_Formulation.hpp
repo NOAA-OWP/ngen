@@ -102,21 +102,6 @@ namespace realization {
         void set_catchment_id(std::string cat_id) override {
             this->cat_id = cat_id;
         }
-
-        //TODO: VERY BAD JUJU...the following two members are an ugly hack to avoid having to gut the legacy C/C++ realizations for now.
-        //Forcing* legacy_forcing;
-        CsvPerFeatureForcingProvider* legacy_forcing;
-        // Use this a a deprecation chokepoint to get rid of Forcing when ready.
-        [[deprecated]]
-        void _link_legacy_forcing()
-        {
-            void* f { this->forcing.get() };
-            //legacy_forcing = ((Forcing *)f);
-            //void* f { this->CsvPerFeatureForcingProvider.get() };
-            legacy_forcing = ((CsvPerFeatureForcingProvider* )f);
-        }
-    private:
-        std::string cat_id;
     };
 }
 #endif // CATCHMENT_FORMULATION_H

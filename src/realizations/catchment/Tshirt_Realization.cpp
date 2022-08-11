@@ -95,11 +95,24 @@ double Tshirt_Realization::get_response(time_step_t t_index, time_step_t t_delta
     //add_time(t+1, params.nash_n);
     // TODO: this is problematic, because what happens if the wrong t_index is passed?
     //double precip = this->legacy_forcing->get_next_hourly_precipitation_meters_per_second();
+    time_t t_delta = this->forcing->record_duration();
+    if (t_delta != t_delta_s) {    //Checking the time step used is consistent with that provided in forcing data
+        throw std::invalid_argument("Getting response using insonsistent time step with provided forcing data");
+    }
+    //t_index can't be negative
+    if (t_index < 0) {
+        throw std::invalid_argument("Getting response of negative time step in Tshirt C Realization is not allowed.");
+    }
+    time_t start_time = this->forcing->get_data_start_time();
+    time_t stop_time = this->forcing->get_data_stop_time();
+    time_t t_current = start_time + t_index * t_delta_s;
+    //Ensure model run does not exceed the end time of forcing
+    if (t_current > stop_time) {
+        throw std::invalid_argument("Getting response beyond time with available forcing.");
+    }
     double precip;
-    time_t t_unix = legacy_forcing->get_data_start_time() + (t_index * 3600);
     const std::string forcing_name = CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE;
-    //double precip = legacy_forcing->get_value_for_param_name(forcing_name, t_index);
-    precip = legacy_forcing->get_value(CatchmentAggrDataSelector("",CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, t_unix, t_delta_s, ""), SUM); // CsvPerFeatureForcingProvider
+    precip = this->forcing->get_value(CatchmentAggrDataSelector("",CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, t_current, t_delta_s, ""), SUM);
     //FIXME should this run "daily" or hourly (t) which should really be dt
     //Do we keep an "internal dt" i.e. this->dt and reconcile with t?
     int error = model->run(t_index, precip * t_delta_s / 1000, get_et_params_ptr());
