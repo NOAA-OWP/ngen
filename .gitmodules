@@ -40,3 +40,7 @@
 	path = extern/SoilMoistureProfiles/SoilMoistureProfiles
 	url = https://github.com/NOAA-OWP/SoilMoistureProfiles
 	branch = main
+[submodule "extern/sloth"]
+	path = extern/sloth
+	url = https://github.com/noaa-owp/SLoTH
+	branch = latest
