@@ -3,8 +3,6 @@
 #include "TshirtErrorCodes.h"
 #include "Catchment_Formulation.hpp"
 using namespace realization;
-using data_access::MEAN;
-using data_access::SUM;
 
 /*
 Tshirt_Realization::Tshirt_Realization(
@@ -94,7 +92,6 @@ double Tshirt_Realization::get_response(time_step_t t_index, time_step_t t_delta
     //FIXME doesn't do anything, don't call???
     //add_time(t+1, params.nash_n);
     // TODO: this is problematic, because what happens if the wrong t_index is passed?
-    //double precip = this->legacy_forcing->get_next_hourly_precipitation_meters_per_second();
     time_t t_delta = this->forcing->record_duration();
     if (t_delta != t_delta_s) {    //Checking the time step used is consistent with that provided in forcing data
         throw std::invalid_argument("Getting response using insonsistent time step with provided forcing data");
@@ -112,7 +109,7 @@ double Tshirt_Realization::get_response(time_step_t t_index, time_step_t t_delta
     }
     double precip;
     const std::string forcing_name = CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE;
-    precip = this->forcing->get_value(CatchmentAggrDataSelector("",CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, t_current, t_delta_s, ""), SUM);
+    precip = this->forcing->get_value(CatchmentAggrDataSelector("",CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, t_current, t_delta_s, ""), data_access::SUM);
     //FIXME should this run "daily" or hourly (t) which should really be dt
     //Do we keep an "internal dt" i.e. this->dt and reconcile with t?
     int error = model->run(t_index, precip * t_delta_s / 1000, get_et_params_ptr());

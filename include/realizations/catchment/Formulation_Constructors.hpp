@@ -18,7 +18,6 @@
 #include "Bmi_Multi_Formulation.hpp"
 #include "Bmi_Py_Formulation.hpp"
 #include <GenericDataProvider.hpp>
-//#include "CsvPerFeatureForcingProvider.hpp"
 #ifdef NETCDF_ACTIVE
     #include "NetCDFPerFeatureDataProvider.hpp"
 #endif
@@ -70,9 +69,7 @@ namespace realization {
     ) {
         constructor formulation_constructor = formulations.at(formulation_type);
         std::shared_ptr<data_access::GenericDataProvider> fp;
-        if (formulation_type == "tshirt"  || formulation_type == "tshirt_c"  || formulation_type == "lstm" // These formulations are still using the legacy interface!
-            ){
-            //fp = std::make_shared<Forcing>(forcing_config);
+        if (formulation_type == "lstm") {
             fp = std::make_shared<CsvPerFeatureForcingProvider>(forcing_config);
         }
         else if (forcing_config.provider == "CsvPerFeature" || forcing_config.provider == ""){
