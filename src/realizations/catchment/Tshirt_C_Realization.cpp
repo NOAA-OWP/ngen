@@ -9,8 +9,6 @@
 #include <boost/algorithm/string/join.hpp>
 
 using namespace realization;
-using data_access::MEAN;
-using data_access::SUM;
 
 Tshirt_C_Realization::Tshirt_C_Realization(forcing_params forcing_config,
                                            utils::StreamHandler output_stream,
@@ -450,7 +448,7 @@ double Tshirt_C_Realization::get_response(time_step_t t_index, time_step_t t_del
     }
     double precip;
     const std::string forcing_name = CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE;
-    precip = this->forcing->get_value(CatchmentAggrDataSelector("",CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, t_current, t_delta_s, ""), SUM);
+    precip = this->forcing->get_value(CatchmentAggrDataSelector("",CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, t_current, t_delta_s, ""), data_access::SUM);
     int response_result = run_formulation_for_timestep(precip, t_delta_s);
     // TODO: check t_index is the next expected time step to be calculated
 

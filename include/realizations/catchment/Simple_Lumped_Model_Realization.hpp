@@ -6,7 +6,6 @@
 #include "hymod/include/Hymod.h"
 #include <unordered_map>
 #include <GenericDataProvider.hpp>
-//#include <Forcing.h>
 
 class Simple_Lumped_Model_Realization
         : public realization::Catchment_Formulation {

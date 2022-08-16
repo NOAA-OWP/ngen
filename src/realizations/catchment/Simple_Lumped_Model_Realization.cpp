@@ -56,7 +56,6 @@ Simple_Lumped_Model_Realization::Simple_Lumped_Model_Realization(const Simple_Lu
 cascade_backing_storage( other.cascade_backing_storage ),
 state( other.state ), realization::Catchment_Formulation(other.get_id())
 {
-  //this->legacy_forcing = other.legacy_forcing;
   //rehook state.Sr* -> cascade_backing_storage
   for(auto &s : state)
   {

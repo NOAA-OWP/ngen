@@ -6,9 +6,7 @@
 #include "Formulation.hpp"
 #include "Et_Accountable.hpp"
 #include <HY_CatchmentArea.hpp>
-
-//#include <Forcing.h> // Remove when _link_legacy_forcing() is removed!
-#include "CsvPerFeatureForcingProvider.hpp"
+#include "GenericDataProvider.hpp"
 
 namespace realization {
 
