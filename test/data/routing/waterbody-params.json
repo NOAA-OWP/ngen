@@ -19,7 +19,7 @@
       "TopWdthCC": 169.355,
       "TopWdth": 56.452,
       "slope": 0.001,
-      "toID": 0,
+      "toID": "tnx-0",
       "length_m": 5939.3079
     }
   ],
@@ -44,7 +44,7 @@
       "TopWdthCC": 113.809,
       "TopWdth": 37.936,
       "slope": 0.002,
-      "toID": 45,
+      "toID": "nex-45",
       "length_m": 5771.7623
     }
   ]
