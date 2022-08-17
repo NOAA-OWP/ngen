@@ -129,7 +129,8 @@ jobs:
           python3 -m venv .venv
           . .venv/bin/activate
           cd extern/t-route
-          pip install pip
+          pip install -U pip
+          pip install -U setuptools
           pip install -r requirements.txt
           cd src
           pip install nwm_routing/
