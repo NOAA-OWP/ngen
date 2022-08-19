@@ -10,6 +10,22 @@
                     "allow_exceed_end_time": true,
                     "main_output_variable": "Q_OUT",
                     "modules": [
+			{
+			    "name": "bmi_c++",
+			    "params": {
+                                "model_type_name": "bmi_c++_sloth",
+                                "library_file": "./extern/sloth/cmake_build/libslothmodel.so",
+                                "init_config": "/dev/null",
+                                "allow_exceed_end_time": true,
+                                "main_output_variable": "z",
+                                "uses_forcing_file": false,
+                                "model_params": {
+				    "sloth_ice_fraction_schaake(1,double,m,node)": 0.0,
+				    "sloth_ice_fraction_xinan(1,double,1,node)": 0.0,
+				    "sloth_smp(1,double,1,node)": 0.0
+                                }
+			    }
+                        },
                         {
                             "name": "bmi_fortran",
                             "params": {
@@ -50,7 +66,10 @@
                                     "land_surface_wind__y_component_of_velocity": "VGRD_10maboveground",
                                     "land_surface_radiation~incoming~longwave__energy_flux": "DLWRF_surface",
                                     "land_surface_radiation~incoming~shortwave__energy_flux": "DSWRF_surface",
-                                    "land_surface_air__pressure": "PRES_surface"
+                                    "land_surface_air__pressure": "PRES_surface",
+				    "ice_fraction_schaake" : "sloth_ice_fraction_schaake",
+				    "ice_fraction_xinan" : "sloth_ice_fraction_xinan",
+				    "soil_moisture_profile" : "sloth_smp"
                                 },
                                 "uses_forcing_file": false
                             }
