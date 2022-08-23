@@ -13,7 +13,7 @@ set(CFE_LIB_DESC_CMAKE "OWP CFE BMI Module Shared Library")
 add_compile_definitions(BMI_ACTIVE)
 
 if(WIN32)
-    add_library(cfebmi cfe/src/bmi_cfe.c cfe/src/cfe.c)
+    add_library(cfebmi cfe/src/bmi_cfe.c cfe/src/cfe.c cfe/src/giuh.c)
 else()
     add_library(cfebmi SHARED cfe/src/bmi_cfe.c cfe/src/cfe.c cfe/src/giuh.c)
 endif()
