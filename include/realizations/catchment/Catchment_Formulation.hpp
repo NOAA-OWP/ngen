@@ -17,13 +17,13 @@ namespace realization {
                 : Formulation(id), HY_CatchmentArea(forcing, output_stream) { 
                     // Assume the catchment ID is equal to or embedded in the formulation `id`
                     size_t idx = id.find(".");
-                    cat_id = ( idx == std::string::npos ? id : id.substr(0, idx) );
+                    set_catchment_id( idx == std::string::npos ? id : id.substr(0, idx) );
                 };
 
             Catchment_Formulation(std::string id) : Formulation(id){
                     // Assume the catchment ID is equal to or embedded in the formulation `id`
                     size_t idx = id.find(".");
-                    cat_id = ( idx == std::string::npos ? id : id.substr(0, idx) );
+                    set_catchment_id( idx == std::string::npos ? id : id.substr(0, idx) );
             };
 
         /**
@@ -95,11 +95,11 @@ namespace realization {
 
     protected:
         std::string get_catchment_id() override {
-            return id;
+            return this->cat_id;
         }
 
         void set_catchment_id(std::string cat_id) override {
-            id = cat_id;
+            this->cat_id = cat_id;
         }
 
         //TODO: VERY BAD JUJU...the following two members are an ugly hack to avoid having to gut the legacy C/C++ realizations for now.
