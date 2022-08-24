@@ -486,7 +486,7 @@ namespace realization {
             if (availableData.empty() || availableData.find(output_name) == availableData.end()) {
                 throw runtime_error(get_formulation_type() + " cannot get output value for unknown " + output_name + SOURCE_LOC);
             }
-            return availableData[output_name]->get_value(CatchmentAggrDataSelector("",output_name, init_time, duration_s, output_units), m);
+            return availableData[output_name]->get_value(CatchmentAggrDataSelector(this->get_catchment_id(),output_name, init_time, duration_s, output_units), m);
         }
 
         std::vector<double> get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override
@@ -499,7 +499,7 @@ namespace realization {
             if (availableData.empty() || availableData.find(output_name) == availableData.end()) {
                 throw runtime_error(get_formulation_type() + " cannot get output values for unknown " + output_name + SOURCE_LOC);
             }
-            return availableData[output_name]->get_values(CatchmentAggrDataSelector("",output_name, init_time, duration_s, output_units), m);
+            return availableData[output_name]->get_values(CatchmentAggrDataSelector(this->get_catchment_id(),output_name, init_time, duration_s, output_units), m);
         }
 
         bool is_bmi_input_variable(const string &var_name) override;
@@ -644,7 +644,7 @@ namespace realization {
                 std::shared_ptr <data_access::GenericDataProvider> nested_module =
                         std::dynamic_pointer_cast<data_access::GenericDataProvider>(data_provider_iter->second);
                 long nested_module_time = nested_module->get_data_start_time() + ( this->get_model_current_time() - this->get_model_start_time() );
-                auto selector = CatchmentAggrDataSelector("",var_name,nested_module_time,this->record_duration(),"1");
+                auto selector = CatchmentAggrDataSelector(this->get_catchment_id(),var_name,nested_module_time,this->record_duration(),"1");
                 //TODO: After merge PR#405, try re-adding support for index
                 return nested_module->get_value(selector);
             }
