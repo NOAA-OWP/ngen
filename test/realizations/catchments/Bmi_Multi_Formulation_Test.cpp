@@ -63,6 +63,16 @@ protected:
         return nested->get_var_value_as_double(var_name);
     }
 
+    static std::string get_friend_catchment_id(Bmi_Multi_Formulation& formulation){
+        return formulation.get_catchment_id();
+    }
+
+    template <class N>
+    static std::string get_friend_nested_catchment_id(const Bmi_Multi_Formulation& formulation, const int mod_index) {
+        std::shared_ptr<N> nested = std::static_pointer_cast<N>(formulation.modules[mod_index]);
+        return nested->get_catchment_id();
+    }
+
     /*
     static std::vector<nested_module_ptr> get_friend_nested_formulations(Bmi_Multi_Formulation& formulation) {
         return formulation.get_bmi_model();
@@ -787,6 +797,19 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_3_a) {
     ASSERT_EQ(output, "0.000001112,199280.000000000,199240.000000000,199280.000000000,0.000000000,0.000001001");
 }
 
+/**
+ * Test if Catchment Ids of submodules correctly trim any suffix
+ */
+TEST_F(Bmi_Multi_Formulation_Test, GetIdAndCatchmentId) {
+    int ex_index = 3;
+
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+    ASSERT_EQ(formulation.get_id(), "cat-27");
+    ASSERT_EQ(get_friend_catchment_id(formulation), "cat-27");
+    ASSERT_EQ(get_friend_nested_catchment_id<Bmi_Fortran_Formulation>(formulation, 0), "cat-27");
+    //ASSERT_EQ(formulation.get_catchment_id(), "id");
+}
 #endif // NGEN_BMI_C_LIB_ACTIVE || NGEN_BMI_FORTRAN_ACTIVE || ACTIVATE_PYTHON
 
 #endif // NGEN_BMI_MULTI_FORMULATION_TEST_CPP
