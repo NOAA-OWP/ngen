@@ -14,9 +14,17 @@ namespace realization {
     class Catchment_Formulation : public Formulation, public HY_CatchmentArea, public Et_Accountable {
         public:
             Catchment_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing, utils::StreamHandler output_stream)
-                : Formulation(id), HY_CatchmentArea(forcing, output_stream) { };
+                : Formulation(id), HY_CatchmentArea(forcing, output_stream) { 
+                    // Assume the catchment ID is equal to or embedded in the formulation `id`
+                    size_t idx = id.find(".");
+                    cat_id = ( idx == std::string::npos ? id : id.substr(0, idx) );
+                };
 
-            Catchment_Formulation(std::string id) : Formulation(id){};
+            Catchment_Formulation(std::string id) : Formulation(id){
+                    // Assume the catchment ID is equal to or embedded in the formulation `id`
+                    size_t idx = id.find(".");
+                    cat_id = ( idx == std::string::npos ? id : id.substr(0, idx) );
+            };
 
         /**
          * Perform in-place substitution on the given config property item, if the item and the pattern are present.
@@ -103,6 +111,8 @@ namespace realization {
             void* f { this->forcing.get() };
             legacy_forcing = ((Forcing *)f);
         }
+    private:
+        std::string cat_id;
     };
 }
 #endif // CATCHMENT_FORMULATION_H
