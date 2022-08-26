@@ -50,6 +50,7 @@ var classrealization_1_1_tshirt___c___realization =
     [ "bounds", "classrealization_1_1_tshirt___c___realization.html#aaebc4992c38cb5db68e859e0487ad929", null ],
     [ "c_aorc_params", "classrealization_1_1_tshirt___c___realization.html#a46866909d877fb66681b25af6e663f1d", null ],
     [ "c_soil_params", "classrealization_1_1_tshirt___c___realization.html#ae2515f0f774e5f1d6add715e90aefea9", null ],
+    [ "cat_id", "classrealization_1_1_tshirt___c___realization.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b", null ],
     [ "catchment_id", "classrealization_1_1_tshirt___c___realization.html#aa22d8d4ce831a21fb2ab1ef9a8f01e3f", null ],
     [ "et_params", "classrealization_1_1_tshirt___c___realization.html#a5fab369fc039b378dfd270490ddb9e5c", null ],
     [ "fluxes", "classrealization_1_1_tshirt___c___realization.html#ab6b1f82681faeed2f77992032ac601aa", null ],

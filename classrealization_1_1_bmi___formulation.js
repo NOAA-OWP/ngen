@@ -63,6 +63,7 @@ var classrealization_1_1_bmi___formulation =
     [ "::Bmi_Formulation_Test", "classrealization_1_1_bmi___formulation.html#a04abbbee1836c2cdfbe44fd9ebb136a4", null ],
     [ "bmi_main_output_var", "classrealization_1_1_bmi___formulation.html#a494171a1888c373c2a1e03008e00e5d5", null ],
     [ "bounds", "classrealization_1_1_bmi___formulation.html#aaebc4992c38cb5db68e859e0487ad929", null ],
+    [ "cat_id", "classrealization_1_1_bmi___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b", null ],
     [ "et_params", "classrealization_1_1_bmi___formulation.html#a5fab369fc039b378dfd270490ddb9e5c", null ],
     [ "forcing", "classrealization_1_1_bmi___formulation.html#a2010f61d0e7141bb48230923592de215", null ],
     [ "id", "classrealization_1_1_bmi___formulation.html#a8bfec24b0d57240e7ada2493a781db6d", null ],

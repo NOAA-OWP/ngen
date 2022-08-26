@@ -33,6 +33,7 @@ var class_simple___lumped___model___realization =
     [ "write_output", "class_simple___lumped___model___realization.html#aa989be0629ecaa29a2410f7588404ff9", null ],
     [ "bounds", "class_simple___lumped___model___realization.html#aaebc4992c38cb5db68e859e0487ad929", null ],
     [ "cascade_backing_storage", "class_simple___lumped___model___realization.html#aa362564a0409107f5f2342140b55b332", null ],
+    [ "cat_id", "class_simple___lumped___model___realization.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b", null ],
     [ "et_params", "class_simple___lumped___model___realization.html#a5fab369fc039b378dfd270490ddb9e5c", null ],
     [ "fluxes", "class_simple___lumped___model___realization.html#ac98db05180754f1db41262a205cfbfa2", null ],
     [ "forcing", "class_simple___lumped___model___realization.html#a2010f61d0e7141bb48230923592de215", null ],

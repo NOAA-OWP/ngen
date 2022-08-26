@@ -1893,6 +1893,7 @@
           <topic label="bmi_using_forcing_file" href="classrealization_1_1_bmi___c___formulation.html#a2e84d036f980988830aec7155e2e7ba8"/>
           <topic label="bmi_var_names_map" href="classrealization_1_1_bmi___c___formulation.html#a66a7020fd4b35a6e3f32348a680e92c1"/>
           <topic label="bounds" href="classrealization_1_1_bmi___c___formulation.html#aaebc4992c38cb5db68e859e0487ad929"/>
+          <topic label="cat_id" href="classrealization_1_1_bmi___c___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b"/>
           <topic label="et_params" href="classrealization_1_1_bmi___c___formulation.html#a5fab369fc039b378dfd270490ddb9e5c"/>
           <topic label="forcing" href="classrealization_1_1_bmi___c___formulation.html#a2010f61d0e7141bb48230923592de215"/>
           <topic label="forcing_file_path" href="classrealization_1_1_bmi___c___formulation.html#ae5e3e2b19dc503516b684311c88df25d"/>
@@ -2015,6 +2016,7 @@
           <topic label="bmi_using_forcing_file" href="classrealization_1_1_bmi___cpp___formulation.html#a2e84d036f980988830aec7155e2e7ba8"/>
           <topic label="bmi_var_names_map" href="classrealization_1_1_bmi___cpp___formulation.html#a66a7020fd4b35a6e3f32348a680e92c1"/>
           <topic label="bounds" href="classrealization_1_1_bmi___cpp___formulation.html#aaebc4992c38cb5db68e859e0487ad929"/>
+          <topic label="cat_id" href="classrealization_1_1_bmi___cpp___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b"/>
           <topic label="et_params" href="classrealization_1_1_bmi___cpp___formulation.html#a5fab369fc039b378dfd270490ddb9e5c"/>
           <topic label="forcing" href="classrealization_1_1_bmi___cpp___formulation.html#a2010f61d0e7141bb48230923592de215"/>
           <topic label="forcing_file_path" href="classrealization_1_1_bmi___cpp___formulation.html#ae5e3e2b19dc503516b684311c88df25d"/>
@@ -2100,6 +2102,7 @@
           <topic label="::Bmi_Formulation_Test" href="classrealization_1_1_bmi___formulation.html#a04abbbee1836c2cdfbe44fd9ebb136a4"/>
           <topic label="bmi_main_output_var" href="classrealization_1_1_bmi___formulation.html#a494171a1888c373c2a1e03008e00e5d5"/>
           <topic label="bounds" href="classrealization_1_1_bmi___formulation.html#aaebc4992c38cb5db68e859e0487ad929"/>
+          <topic label="cat_id" href="classrealization_1_1_bmi___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b"/>
           <topic label="et_params" href="classrealization_1_1_bmi___formulation.html#a5fab369fc039b378dfd270490ddb9e5c"/>
           <topic label="forcing" href="classrealization_1_1_bmi___formulation.html#a2010f61d0e7141bb48230923592de215"/>
           <topic label="id" href="classrealization_1_1_bmi___formulation.html#a8bfec24b0d57240e7ada2493a781db6d"/>
@@ -2219,6 +2222,7 @@
           <topic label="bmi_using_forcing_file" href="classrealization_1_1_bmi___module___formulation.html#a2e84d036f980988830aec7155e2e7ba8"/>
           <topic label="bmi_var_names_map" href="classrealization_1_1_bmi___module___formulation.html#a66a7020fd4b35a6e3f32348a680e92c1"/>
           <topic label="bounds" href="classrealization_1_1_bmi___module___formulation.html#aaebc4992c38cb5db68e859e0487ad929"/>
+          <topic label="cat_id" href="classrealization_1_1_bmi___module___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b"/>
           <topic label="et_params" href="classrealization_1_1_bmi___module___formulation.html#a5fab369fc039b378dfd270490ddb9e5c"/>
           <topic label="forcing" href="classrealization_1_1_bmi___module___formulation.html#a2010f61d0e7141bb48230923592de215"/>
           <topic label="forcing_file_path" href="classrealization_1_1_bmi___module___formulation.html#ae5e3e2b19dc503516b684311c88df25d"/>
@@ -2325,6 +2329,7 @@
           <topic label="bmi_main_output_var" href="classrealization_1_1_bmi___multi___formulation.html#a494171a1888c373c2a1e03008e00e5d5"/>
           <topic label="Bmi_Multi_Formulation_Test" href="classrealization_1_1_bmi___multi___formulation.html#a9d60563afdee1eaf85b5b699e3d3326a"/>
           <topic label="bounds" href="classrealization_1_1_bmi___multi___formulation.html#aaebc4992c38cb5db68e859e0487ad929"/>
+          <topic label="cat_id" href="classrealization_1_1_bmi___multi___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b"/>
           <topic label="default_output_values" href="classrealization_1_1_bmi___multi___formulation.html#aeced5793d29fdac7e6cc53ff1cc0a1e0"/>
           <topic label="deferredProviderModuleIndices" href="classrealization_1_1_bmi___multi___formulation.html#ab12e7a6981776b57f4a562c414947928"/>
           <topic label="deferredProviders" href="classrealization_1_1_bmi___multi___formulation.html#a32adb9241b76fbd542dc9392ec3de8c5"/>
@@ -2379,6 +2384,7 @@
           <topic label="validate_parameters" href="classrealization_1_1_catchment___formulation.html#aceabe9927b36dce61f338919f2af4c1f"/>
           <topic label="write_output" href="classrealization_1_1_catchment___formulation.html#aa989be0629ecaa29a2410f7588404ff9"/>
           <topic label="bounds" href="classrealization_1_1_catchment___formulation.html#aaebc4992c38cb5db68e859e0487ad929"/>
+          <topic label="cat_id" href="classrealization_1_1_catchment___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b"/>
           <topic label="et_params" href="classrealization_1_1_catchment___formulation.html#a5fab369fc039b378dfd270490ddb9e5c"/>
           <topic label="forcing" href="classrealization_1_1_catchment___formulation.html#a2010f61d0e7141bb48230923592de215"/>
           <topic label="id" href="classrealization_1_1_catchment___formulation.html#a8bfec24b0d57240e7ada2493a781db6d"/>
@@ -2509,6 +2515,7 @@
           <topic label="bounds" href="classrealization_1_1_tshirt___c___realization.html#aaebc4992c38cb5db68e859e0487ad929"/>
           <topic label="c_aorc_params" href="classrealization_1_1_tshirt___c___realization.html#a46866909d877fb66681b25af6e663f1d"/>
           <topic label="c_soil_params" href="classrealization_1_1_tshirt___c___realization.html#ae2515f0f774e5f1d6add715e90aefea9"/>
+          <topic label="cat_id" href="classrealization_1_1_tshirt___c___realization.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b"/>
           <topic label="catchment_id" href="classrealization_1_1_tshirt___c___realization.html#aa22d8d4ce831a21fb2ab1ef9a8f01e3f"/>
           <topic label="et_params" href="classrealization_1_1_tshirt___c___realization.html#a5fab369fc039b378dfd270490ddb9e5c"/>
           <topic label="fluxes" href="classrealization_1_1_tshirt___c___realization.html#ab6b1f82681faeed2f77992032ac601aa"/>
@@ -2559,6 +2566,7 @@
           <topic label="write_output" href="classrealization_1_1_tshirt___realization.html#aa989be0629ecaa29a2410f7588404ff9"/>
           <topic label="bounds" href="classrealization_1_1_tshirt___realization.html#aaebc4992c38cb5db68e859e0487ad929"/>
           <topic label="cascade_backing_storage" href="classrealization_1_1_tshirt___realization.html#a14ec7726c6849eb23e3de6d6c0005c47"/>
+          <topic label="cat_id" href="classrealization_1_1_tshirt___realization.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b"/>
           <topic label="catchment_id" href="classrealization_1_1_tshirt___realization.html#a12152fda31d618b47b590f9f23b452cf"/>
           <topic label="dt" href="classrealization_1_1_tshirt___realization.html#ac89d3d992bfc7bd5aa739dc12f9912c4"/>
           <topic label="et_params" href="classrealization_1_1_tshirt___realization.html#a5fab369fc039b378dfd270490ddb9e5c"/>
@@ -4342,6 +4350,7 @@
           <topic label="bmi_using_forcing_file" href="classrealization_1_1_bmi___c___formulation.html#a2e84d036f980988830aec7155e2e7ba8"/>
           <topic label="bmi_var_names_map" href="classrealization_1_1_bmi___c___formulation.html#a66a7020fd4b35a6e3f32348a680e92c1"/>
           <topic label="bounds" href="classrealization_1_1_bmi___c___formulation.html#aaebc4992c38cb5db68e859e0487ad929"/>
+          <topic label="cat_id" href="classrealization_1_1_bmi___c___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b"/>
           <topic label="et_params" href="classrealization_1_1_bmi___c___formulation.html#a5fab369fc039b378dfd270490ddb9e5c"/>
           <topic label="forcing" href="classrealization_1_1_bmi___c___formulation.html#a2010f61d0e7141bb48230923592de215"/>
           <topic label="forcing_file_path" href="classrealization_1_1_bmi___c___formulation.html#ae5e3e2b19dc503516b684311c88df25d"/>
@@ -4464,6 +4473,7 @@
           <topic label="bmi_using_forcing_file" href="classrealization_1_1_bmi___cpp___formulation.html#a2e84d036f980988830aec7155e2e7ba8"/>
           <topic label="bmi_var_names_map" href="classrealization_1_1_bmi___cpp___formulation.html#a66a7020fd4b35a6e3f32348a680e92c1"/>
           <topic label="bounds" href="classrealization_1_1_bmi___cpp___formulation.html#aaebc4992c38cb5db68e859e0487ad929"/>
+          <topic label="cat_id" href="classrealization_1_1_bmi___cpp___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b"/>
           <topic label="et_params" href="classrealization_1_1_bmi___cpp___formulation.html#a5fab369fc039b378dfd270490ddb9e5c"/>
           <topic label="forcing" href="classrealization_1_1_bmi___cpp___formulation.html#a2010f61d0e7141bb48230923592de215"/>
           <topic label="forcing_file_path" href="classrealization_1_1_bmi___cpp___formulation.html#ae5e3e2b19dc503516b684311c88df25d"/>
@@ -4549,6 +4559,7 @@
           <topic label="::Bmi_Formulation_Test" href="classrealization_1_1_bmi___formulation.html#a04abbbee1836c2cdfbe44fd9ebb136a4"/>
           <topic label="bmi_main_output_var" href="classrealization_1_1_bmi___formulation.html#a494171a1888c373c2a1e03008e00e5d5"/>
           <topic label="bounds" href="classrealization_1_1_bmi___formulation.html#aaebc4992c38cb5db68e859e0487ad929"/>
+          <topic label="cat_id" href="classrealization_1_1_bmi___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b"/>
           <topic label="et_params" href="classrealization_1_1_bmi___formulation.html#a5fab369fc039b378dfd270490ddb9e5c"/>
           <topic label="forcing" href="classrealization_1_1_bmi___formulation.html#a2010f61d0e7141bb48230923592de215"/>
           <topic label="id" href="classrealization_1_1_bmi___formulation.html#a8bfec24b0d57240e7ada2493a781db6d"/>
@@ -4668,6 +4679,7 @@
           <topic label="bmi_using_forcing_file" href="classrealization_1_1_bmi___module___formulation.html#a2e84d036f980988830aec7155e2e7ba8"/>
           <topic label="bmi_var_names_map" href="classrealization_1_1_bmi___module___formulation.html#a66a7020fd4b35a6e3f32348a680e92c1"/>
           <topic label="bounds" href="classrealization_1_1_bmi___module___formulation.html#aaebc4992c38cb5db68e859e0487ad929"/>
+          <topic label="cat_id" href="classrealization_1_1_bmi___module___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b"/>
           <topic label="et_params" href="classrealization_1_1_bmi___module___formulation.html#a5fab369fc039b378dfd270490ddb9e5c"/>
           <topic label="forcing" href="classrealization_1_1_bmi___module___formulation.html#a2010f61d0e7141bb48230923592de215"/>
           <topic label="forcing_file_path" href="classrealization_1_1_bmi___module___formulation.html#ae5e3e2b19dc503516b684311c88df25d"/>
@@ -4774,6 +4786,7 @@
           <topic label="bmi_main_output_var" href="classrealization_1_1_bmi___multi___formulation.html#a494171a1888c373c2a1e03008e00e5d5"/>
           <topic label="Bmi_Multi_Formulation_Test" href="classrealization_1_1_bmi___multi___formulation.html#a9d60563afdee1eaf85b5b699e3d3326a"/>
           <topic label="bounds" href="classrealization_1_1_bmi___multi___formulation.html#aaebc4992c38cb5db68e859e0487ad929"/>
+          <topic label="cat_id" href="classrealization_1_1_bmi___multi___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b"/>
           <topic label="default_output_values" href="classrealization_1_1_bmi___multi___formulation.html#aeced5793d29fdac7e6cc53ff1cc0a1e0"/>
           <topic label="deferredProviderModuleIndices" href="classrealization_1_1_bmi___multi___formulation.html#ab12e7a6981776b57f4a562c414947928"/>
           <topic label="deferredProviders" href="classrealization_1_1_bmi___multi___formulation.html#a32adb9241b76fbd542dc9392ec3de8c5"/>
@@ -4828,6 +4841,7 @@
           <topic label="validate_parameters" href="classrealization_1_1_catchment___formulation.html#aceabe9927b36dce61f338919f2af4c1f"/>
           <topic label="write_output" href="classrealization_1_1_catchment___formulation.html#aa989be0629ecaa29a2410f7588404ff9"/>
           <topic label="bounds" href="classrealization_1_1_catchment___formulation.html#aaebc4992c38cb5db68e859e0487ad929"/>
+          <topic label="cat_id" href="classrealization_1_1_catchment___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b"/>
           <topic label="et_params" href="classrealization_1_1_catchment___formulation.html#a5fab369fc039b378dfd270490ddb9e5c"/>
           <topic label="forcing" href="classrealization_1_1_catchment___formulation.html#a2010f61d0e7141bb48230923592de215"/>
           <topic label="id" href="classrealization_1_1_catchment___formulation.html#a8bfec24b0d57240e7ada2493a781db6d"/>
@@ -4958,6 +4972,7 @@
           <topic label="bounds" href="classrealization_1_1_tshirt___c___realization.html#aaebc4992c38cb5db68e859e0487ad929"/>
           <topic label="c_aorc_params" href="classrealization_1_1_tshirt___c___realization.html#a46866909d877fb66681b25af6e663f1d"/>
           <topic label="c_soil_params" href="classrealization_1_1_tshirt___c___realization.html#ae2515f0f774e5f1d6add715e90aefea9"/>
+          <topic label="cat_id" href="classrealization_1_1_tshirt___c___realization.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b"/>
           <topic label="catchment_id" href="classrealization_1_1_tshirt___c___realization.html#aa22d8d4ce831a21fb2ab1ef9a8f01e3f"/>
           <topic label="et_params" href="classrealization_1_1_tshirt___c___realization.html#a5fab369fc039b378dfd270490ddb9e5c"/>
           <topic label="fluxes" href="classrealization_1_1_tshirt___c___realization.html#ab6b1f82681faeed2f77992032ac601aa"/>
@@ -5008,6 +5023,7 @@
           <topic label="write_output" href="classrealization_1_1_tshirt___realization.html#aa989be0629ecaa29a2410f7588404ff9"/>
           <topic label="bounds" href="classrealization_1_1_tshirt___realization.html#aaebc4992c38cb5db68e859e0487ad929"/>
           <topic label="cascade_backing_storage" href="classrealization_1_1_tshirt___realization.html#a14ec7726c6849eb23e3de6d6c0005c47"/>
+          <topic label="cat_id" href="classrealization_1_1_tshirt___realization.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b"/>
           <topic label="catchment_id" href="classrealization_1_1_tshirt___realization.html#a12152fda31d618b47b590f9f23b452cf"/>
           <topic label="dt" href="classrealization_1_1_tshirt___realization.html#ac89d3d992bfc7bd5aa739dc12f9912c4"/>
           <topic label="et_params" href="classrealization_1_1_tshirt___realization.html#a5fab369fc039b378dfd270490ddb9e5c"/>
@@ -6074,6 +6090,7 @@
         <topic label="write_output" href="class_simple___lumped___model___realization.html#aa989be0629ecaa29a2410f7588404ff9"/>
         <topic label="bounds" href="class_simple___lumped___model___realization.html#aaebc4992c38cb5db68e859e0487ad929"/>
         <topic label="cascade_backing_storage" href="class_simple___lumped___model___realization.html#aa362564a0409107f5f2342140b55b332"/>
+        <topic label="cat_id" href="class_simple___lumped___model___realization.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b"/>
         <topic label="et_params" href="class_simple___lumped___model___realization.html#a5fab369fc039b378dfd270490ddb9e5c"/>
         <topic label="fluxes" href="class_simple___lumped___model___realization.html#ac98db05180754f1db41262a205cfbfa2"/>
         <topic label="forcing" href="class_simple___lumped___model___realization.html#a2010f61d0e7141bb48230923592de215"/>

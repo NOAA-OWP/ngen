@@ -100,6 +100,7 @@ var classrealization_1_1_bmi___cpp___formulation =
     [ "bmi_using_forcing_file", "classrealization_1_1_bmi___cpp___formulation.html#a2e84d036f980988830aec7155e2e7ba8", null ],
     [ "bmi_var_names_map", "classrealization_1_1_bmi___cpp___formulation.html#a66a7020fd4b35a6e3f32348a680e92c1", null ],
     [ "bounds", "classrealization_1_1_bmi___cpp___formulation.html#aaebc4992c38cb5db68e859e0487ad929", null ],
+    [ "cat_id", "classrealization_1_1_bmi___cpp___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b", null ],
     [ "et_params", "classrealization_1_1_bmi___cpp___formulation.html#a5fab369fc039b378dfd270490ddb9e5c", null ],
     [ "forcing", "classrealization_1_1_bmi___cpp___formulation.html#a2010f61d0e7141bb48230923592de215", null ],
     [ "forcing_file_path", "classrealization_1_1_bmi___cpp___formulation.html#ae5e3e2b19dc503516b684311c88df25d", null ],

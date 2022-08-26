@@ -186,7 +186,7 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:a28005ff0e92cd3e0f4aebc97906fdef6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a633b7407d447f77910476c0315c8beb6"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#a633b7407d447f77910476c0315c8beb6">get_catchment_id</a> () override</td></tr>
 <tr class="separator:a633b7407d447f77910476c0315c8beb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2cce2b5b18eaa0ed7e0df10db57da144"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#a2cce2b5b18eaa0ed7e0df10db57da144">set_catchment_id</a> (std::string cat_id) override</td></tr>
+<tr class="memitem:a2cce2b5b18eaa0ed7e0df10db57da144"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#a2cce2b5b18eaa0ed7e0df10db57da144">set_catchment_id</a> (std::string <a class="el" href="classrealization_1_1_catchment___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b">cat_id</a>) override</td></tr>
 <tr class="separator:a2cce2b5b18eaa0ed7e0df10db57da144"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a20117323c1944ffc7850838842769ca1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#a20117323c1944ffc7850838842769ca1">_link_legacy_forcing</a> ()</td></tr>
 <tr class="separator:a20117323c1944ffc7850838842769ca1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -226,6 +226,8 @@ Private Attributes</h2></td></tr>
 <tr class="separator:aa362564a0409107f5f2342140b55b332"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a799f47e36352e7773f64015613257346"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structhymod__params.html">hymod_params</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_simple___lumped___model___realization.html#a799f47e36352e7773f64015613257346">params</a></td></tr>
 <tr class="separator:a799f47e36352e7773f64015613257346"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4fe13a1bc94d6c8c0cf47c2248c22f1b"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b">cat_id</a></td></tr>
+<tr class="separator:a4fe13a1bc94d6c8c0cf47c2248c22f1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5fab369fc039b378dfd270490ddb9e5c"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="structpdm03__struct.html">pdm03_struct</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_et___accountable.html#a5fab369fc039b378dfd270490ddb9e5c">et_params</a></td></tr>
 <tr class="separator:a5fab369fc039b378dfd270490ddb9e5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -744,9 +746,9 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="class_h_y___catchment_realization.html#afffc8690df116d936a4d8c1026a9f491">HY_CatchmentRealization</a>.</p>
 
-<p class="reference">References <a class="el" href="classrealization_1_1_formulation.html#a8bfec24b0d57240e7ada2493a781db6d">realization::Formulation::id</a>.</p>
+<p class="reference">References <a class="el" href="classrealization_1_1_catchment___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b">realization::Catchment_Formulation::cat_id</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a8694f5e94f40224efca11a73892da8ff">realization::Bmi_Multi_Formulation::create_multi_formulation()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a8694f5e94f40224efca11a73892da8ff">realization::Bmi_Multi_Formulation::create_multi_formulation()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#afeffb2218b1c297653d88afe685d7abf">realization::Bmi_Multi_Formulation::get_value()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a31836fab0684d4102fb8c534a4d5cad8">realization::Bmi_Multi_Formulation::get_values()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a2b571eebb80d69deffc140c7eccfa8ea">realization::Bmi_Multi_Formulation::get_var_value_as_double()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aa04167ad9a3f4c384673ef1157fb3cb8">realization::Bmi_Module_Formulation&lt; M &gt;::set_model_inputs_prior_to_update()</a>.</p>
 
 </div>
 </div>
@@ -1164,6 +1166,10 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="class_h_y___catchment_realization.html#a86a05a47bfa53a6feb4ef14e117b1928">HY_CatchmentRealization</a>.</p>
 
+<p class="reference">References <a class="el" href="classrealization_1_1_catchment___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b">realization::Catchment_Formulation::cat_id</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_catchment___formulation.html#a0ef879abdc4b2e6a9ecc8b2d5bf2bafb">realization::Catchment_Formulation::Catchment_Formulation()</a>.</p>
+
 </div>
 </div>
 <a id="ad4e23441f5a4ceb63262f796c5bb411f" name="ad4e23441f5a4ceb63262f796c5bb411f"></a>
@@ -1361,6 +1367,30 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a4fe13a1bc94d6c8c0cf47c2248c22f1b" name="a4fe13a1bc94d6c8c0cf47c2248c22f1b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4fe13a1bc94d6c8c0cf47c2248c22f1b">&#9670;&nbsp;</a></span>cat_id</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string realization::Catchment_Formulation::cat_id</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_catchment___formulation.html#a633b7407d447f77910476c0315c8beb6">realization::Catchment_Formulation::get_catchment_id()</a>, and <a class="el" href="classrealization_1_1_catchment___formulation.html#a2cce2b5b18eaa0ed7e0df10db57da144">realization::Catchment_Formulation::set_catchment_id()</a>.</p>
+
+</div>
+</div>
 <a id="a5fab369fc039b378dfd270490ddb9e5c" name="a5fab369fc039b378dfd270490ddb9e5c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5fab369fc039b378dfd270490ddb9e5c">&#9670;&nbsp;</a></span>et_params</h2>
 
@@ -1451,7 +1481,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_catchment___formulation.html#a633b7407d447f77910476c0315c8beb6">realization::Catchment_Formulation::get_catchment_id()</a>, and <a class="el" href="classrealization_1_1_formulation.html#a02267e0cc9fec2e1d883f55c2c12b39d">realization::Formulation::get_id()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_formulation.html#a02267e0cc9fec2e1d883f55c2c12b39d">realization::Formulation::get_id()</a>.</p>
 
 </div>
 </div>
@@ -1643,7 +1673,7 @@ Private Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_simple___lumped___model___realization.html">Simple_Lumped_Model_Realization</a></li>
-    <li class="footer">Generated on Thu Aug 18 2022 20:26:08 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
+    <li class="footer">Generated on Fri Aug 26 2022 13:23:22 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
   </ul>
 </div>
 </body>

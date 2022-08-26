@@ -30,6 +30,7 @@ var classrealization_1_1_tshirt___realization =
     [ "write_output", "classrealization_1_1_tshirt___realization.html#aa989be0629ecaa29a2410f7588404ff9", null ],
     [ "bounds", "classrealization_1_1_tshirt___realization.html#aaebc4992c38cb5db68e859e0487ad929", null ],
     [ "cascade_backing_storage", "classrealization_1_1_tshirt___realization.html#a14ec7726c6849eb23e3de6d6c0005c47", null ],
+    [ "cat_id", "classrealization_1_1_tshirt___realization.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b", null ],
     [ "catchment_id", "classrealization_1_1_tshirt___realization.html#a12152fda31d618b47b590f9f23b452cf", null ],
     [ "dt", "classrealization_1_1_tshirt___realization.html#ac89d3d992bfc7bd5aa739dc12f9912c4", null ],
     [ "et_params", "classrealization_1_1_tshirt___realization.html#a5fab369fc039b378dfd270490ddb9e5c", null ],

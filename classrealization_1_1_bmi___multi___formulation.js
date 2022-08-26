@@ -85,6 +85,7 @@ var classrealization_1_1_bmi___multi___formulation =
     [ "bmi_main_output_var", "classrealization_1_1_bmi___multi___formulation.html#a494171a1888c373c2a1e03008e00e5d5", null ],
     [ "Bmi_Multi_Formulation_Test", "classrealization_1_1_bmi___multi___formulation.html#a9d60563afdee1eaf85b5b699e3d3326a", null ],
     [ "bounds", "classrealization_1_1_bmi___multi___formulation.html#aaebc4992c38cb5db68e859e0487ad929", null ],
+    [ "cat_id", "classrealization_1_1_bmi___multi___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b", null ],
     [ "default_output_values", "classrealization_1_1_bmi___multi___formulation.html#aeced5793d29fdac7e6cc53ff1cc0a1e0", null ],
     [ "deferredProviderModuleIndices", "classrealization_1_1_bmi___multi___formulation.html#ab12e7a6981776b57f4a562c414947928", null ],
     [ "deferredProviders", "classrealization_1_1_bmi___multi___formulation.html#a32adb9241b76fbd542dc9392ec3de8c5", null ],

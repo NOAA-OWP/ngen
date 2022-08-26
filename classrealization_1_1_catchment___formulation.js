@@ -29,6 +29,7 @@ var classrealization_1_1_catchment___formulation =
     [ "validate_parameters", "classrealization_1_1_catchment___formulation.html#aceabe9927b36dce61f338919f2af4c1f", null ],
     [ "write_output", "classrealization_1_1_catchment___formulation.html#aa989be0629ecaa29a2410f7588404ff9", null ],
     [ "bounds", "classrealization_1_1_catchment___formulation.html#aaebc4992c38cb5db68e859e0487ad929", null ],
+    [ "cat_id", "classrealization_1_1_catchment___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b", null ],
     [ "et_params", "classrealization_1_1_catchment___formulation.html#a5fab369fc039b378dfd270490ddb9e5c", null ],
     [ "forcing", "classrealization_1_1_catchment___formulation.html#a2010f61d0e7141bb48230923592de215", null ],
     [ "id", "classrealization_1_1_catchment___formulation.html#a8bfec24b0d57240e7ada2493a781db6d", null ],
