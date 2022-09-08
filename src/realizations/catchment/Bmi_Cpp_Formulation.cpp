@@ -1,5 +1,4 @@
 #include "Bmi_Cpp_Formulation.hpp"
-#include <ForcingProvider.hpp>
 using namespace realization;
 using namespace models::bmi;
 
