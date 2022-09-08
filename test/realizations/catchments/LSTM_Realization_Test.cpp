@@ -48,7 +48,7 @@ TEST_F(LSTMRealizationTest, TestLSTMRealization)
 
     flow = lstm_realization1.get_response(1, 3600);
 
-    EXPECT_DOUBLE_EQ(0.17717867679512117, flow);
+    EXPECT_DOUBLE_EQ(0.17564937836377131, flow);
 
     ASSERT_TRUE(true);
 }
