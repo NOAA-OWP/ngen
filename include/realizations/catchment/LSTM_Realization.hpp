@@ -18,61 +18,38 @@ namespace realization {
 
         typedef long time_step_t;
 
+
         /**
          * Parameterized constructor for LSTM Realization with lstm_params and lstm_config
          * already constructed.
          *
-         * @param forcing_config
-         * @param output_stream
          * @param catchment_id
+         * @param forcing
+         * @param output_stream
          * @param params
          * @param config
          */
-        LSTM_Realization(forcing_params forcing_config,
-                           utils::StreamHandler output_stream,
-                           std::string catchment_id,
-                           lstm::lstm_params params,
-                           lstm::lstm_config config);
-
-        /**
-         * Parameterized constructor for LSTM Realization with individual paths and parameters
-         * needed lstm_params and lstm_config passed.
-         *
-         * @param forcing_config
-         * @param output_stream
-         * @param catchment_id
-         * @param pytorch_model_path
-         * @param normalization_path
-         * @param initial_state_path
-         * @param latitude
-         * @param longitude
-         * @param area_square_km
-         */
         LSTM_Realization(
-                forcing_params forcing_config,
-                utils::StreamHandler output_stream,
                 std::string catchment_id,
-                std::string pytorch_model_path,
-                std::string normalization_path,
-                std::string initial_state_path,
-                double latitude,
-                double longitude,
-                double area_square_km
-                );
+                std::shared_ptr<data_access::GenericDataProvider> gdp,
+                utils::StreamHandler output_stream,
+                lstm::lstm_params params,
+                lstm::lstm_config config
+            );
 
         /**
          * Parameterized constructor for LSTM Realization with only
-         * catchment_id, forcing_config, and output_stream as parameters.
+         * catchment_id, GenericDataProvider, and output_stream as parameters.
          *
          * @param catchment_id
-         * @param forcing_config
+         * @param forcing
          * @param output_stream
          */
         LSTM_Realization(
-                std::string id,
-                forcing_params forcing_config,
+                std::string catchment_id,
+                std::shared_ptr<data_access::GenericDataProvider> gdp,
                 utils::StreamHandler output_stream
-            ) : Catchment_Formulation(id, forcing_config, output_stream) {}
+            ) : Catchment_Formulation(catchment_id, gdp, output_stream) {}
 
             virtual ~LSTM_Realization(){};
 
@@ -88,7 +65,9 @@ namespace realization {
              */
             double get_response(time_step_t t_index, time_step_t t_delta_s) override;
 
-            double calc_et(double soil_m) override {return 0.0;}
+            //double calc_et(double soil_m) override {return 0.0;}
+            
+            double calc_et() override {return 0.0;}
 
             std::string get_formulation_type() override {
                 return "lstm";

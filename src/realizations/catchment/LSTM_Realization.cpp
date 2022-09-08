@@ -10,55 +10,22 @@ using namespace realization;
  * Parameterized constructor for LSTM Realization with lstm_params and lstm_config
  * already constructed.
  *
- * @param forcing_config
- * @param output_stream
  * @param catchment_id
+ * @param forcing
+ * @param output_stream
  * @param params
  * @param config
  */
 LSTM_Realization::LSTM_Realization(
-        forcing_params forcing_config,
+        std::string id,
+        std::shared_ptr<data_access::GenericDataProvider> gdp,
         utils::StreamHandler output_stream,
-        std::string catchment_id,
         lstm::lstm_params params,
-        lstm::lstm_config config)
-    : Catchment_Formulation(catchment_id, forcing_config, output_stream),
-      catchment_id(catchment_id), params(params), config(config)
-{
-    model = make_unique<lstm::lstm_model>(lstm::lstm_model(config, params));
-}
+        lstm::lstm_config config
+    ) : Catchment_Formulation(id, gdp, output_stream), params(params), config(config) {
+        model = make_unique<lstm::lstm_model>(lstm::lstm_model(config, params));
+    }
 
-/**
- * Parameterized constructor for LSTM Realization with individual paths and parameters
- * needed lstm_params and lstm_config passed.
- *
- * @param forcing_config
- * @param output_stream
- * @param catchment_id
- * @param pytorch_model_path
- * @param normalization_path
- * @param initial_state_path
- * @param latitude
- * @param longitude
- * @param area_square_km
- */
-LSTM_Realization::LSTM_Realization(
-        forcing_params forcing_config,
-        utils::StreamHandler output_stream,
-        std::string catchment_id,
-        std::string pytorch_model_path,
-        std::string normalization_path,
-        std::string initial_state_path,
-        double latitude,
-        double longitude,
-        double area_square_km)
-    : LSTM_Realization::LSTM_Realization(forcing_config, output_stream,
-                                         catchment_id,
-                                         lstm::lstm_params(latitude, longitude, area_square_km),
-                                         lstm::lstm_config(pytorch_model_path, normalization_path, initial_state_path, false)
-                                         ) {
-
-}
 
 /**
  * Execute the backing model formulation for the given time step, where it is of the specified size, and
@@ -72,14 +39,33 @@ LSTM_Realization::LSTM_Realization(
  */
 double LSTM_Realization::get_response(time_step_t t_index, time_step_t t_delta_s) {
 
-    double precip = this->forcing.get_next_hourly_precipitation_meters_per_second();
+    //Checking the time step used is consistent with that provided in forcing data
+    time_t t_delta = this->forcing->record_duration();
+    if (t_delta != t_delta_s) {    //Checking the time step used is consistent with that provided in forcing data
+        throw std::invalid_argument("Getting response using insonsistent time step with provided forcing data");
+    }
+    //Negative t_index is not allowed
+    if (t_index < 0) {
+        throw std::invalid_argument("Getting response of negative time step in Tshirt C Realization is not allowed.");
+    }
+    time_t start_time = this->forcing->get_data_start_time();
+    time_t stop_time = this->forcing->get_data_stop_time();
+    time_t t_current = start_time + t_index * t_delta_s;
+    //Ensure model run does not exceed the end time of forcing
+    if (t_current > stop_time) {
+        throw std::invalid_argument("Getting response beyond time with available forcing.");
+    }
 
-    AORC_data forcing_data = this->forcing.get_AORC_data();
-    int error = model->run(t_delta_s, forcing_data.DLWRF_surface_W_per_meters_squared, 
-                           forcing_data.PRES_surface_Pa, forcing_data.SPFH_2maboveground_kg_per_kg, 
-                           precip, forcing_data.DSWRF_surface_W_per_meters_squared, 
-                           forcing_data.TMP_2maboveground_K, forcing_data.UGRD_10maboveground_meters_per_second, 
-                           forcing_data.VGRD_10maboveground_meters_per_second);
+    int error = model->run(t_delta_s, 
+        this->forcing->get_value(CatchmentAggrDataSelector(this->catchment_id, CSDMS_STD_NAME_SOLAR_LONGWAVE, t_current, t_delta_s, ""), data_access::MEAN), 
+        this->forcing->get_value(CatchmentAggrDataSelector(this->catchment_id, CSDMS_STD_NAME_SURFACE_AIR_PRESSURE, t_current, t_delta_s, ""), data_access::MEAN), 
+        this->forcing->get_value(CatchmentAggrDataSelector(this->catchment_id, NGEN_STD_NAME_SPECIFIC_HUMIDITY, t_current, t_delta_s, ""), data_access::MEAN), 
+        this->forcing->get_value(CatchmentAggrDataSelector(this->catchment_id, CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, t_current, t_delta_s, ""), data_access::SUM),
+        this->forcing->get_value(CatchmentAggrDataSelector(this->catchment_id, CSDMS_STD_NAME_SOLAR_SHORTWAVE, t_current, t_delta_s, ""), data_access::MEAN), 
+        this->forcing->get_value(CatchmentAggrDataSelector(this->catchment_id, CSDMS_STD_NAME_SURFACE_TEMP, t_current, t_delta_s, ""), data_access::MEAN), 
+        this->forcing->get_value(CatchmentAggrDataSelector(this->catchment_id, CSDMS_STD_NAME_WIND_U_X, t_current, t_delta_s, ""), data_access::MEAN), 
+        this->forcing->get_value(CatchmentAggrDataSelector(this->catchment_id, CSDMS_STD_NAME_WIND_V_Y, t_current, t_delta_s, ""), data_access::MEAN)
+        );
 
     return model->get_fluxes()->flow;
 }
