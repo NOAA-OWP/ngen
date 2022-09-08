@@ -319,7 +319,7 @@ add_test(
 ########################## Primary Combined Unit Test Target
 add_test(
         test_unit
-        19
+        18
         models/hymod/include/HymodTest.cpp
         models/hymod/include/Reservoir_Test.cpp
         models/hymod/include/Reservoir_Timeless_Test.cpp
@@ -329,7 +329,6 @@ add_test(
         geojson/JSONGeometry_Test.cpp
         geojson/Feature_Test.cpp
         geojson/FeatureCollection_Test.cpp
-        forcing/Forcing_Test.cpp
         forcing/CsvPerFeatureForcingProvider_Test.cpp
         forcing/OptionalWrappedProvider_Test.cpp
         forcing/NetCDFPerFeatureDataProvider_Test.cpp
@@ -355,7 +354,7 @@ add_test(
 # All automated tests
 add_test(
         test_all
-        18
+        17
         models/hymod/include/HymodTest.cpp
         models/hymod/include/Reservoir_Test.cpp
         models/hymod/include/Reservoir_Timeless_Test.cpp
@@ -365,7 +364,6 @@ add_test(
         geojson/JSONGeometry_Test.cpp
         geojson/Feature_Test.cpp
         geojson/FeatureCollection_Test.cpp
-        forcing/Forcing_Test.cpp
         forcing/CsvPerFeatureForcingProvider_Test.cpp
         forcing/OptionalWrappedProvider_Test.cpp
         forcing/NetCDFPerFeatureDataProvider_Test.cpp
