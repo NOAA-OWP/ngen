@@ -3,6 +3,7 @@
 #include "gtest/gtest.h"
 #include "realizations/catchment/LSTM_Realization.hpp"
 #include "utilities/StreamHandler.hpp"
+#include "CsvPerFeatureForcingProvider.hpp"
 
 class LSTMRealizationTest : public ::testing::Test {
 
@@ -22,8 +23,9 @@ TEST_F(LSTMRealizationTest, TestLSTMRealization)
 {
     utils::StreamHandler output_stream;
 
-    forcing_params forcing_config("./test/forcing/cat-10_2015-12-01 00_00_00_2015-12-30 23_00_00.csv",
-                                   "2015-12-01 00:00:00", "2015-12-30 23:00:00");
+    forcing_params forcing_config("./test/data/forcing/cat-10_2015-12-01 00_00_00_2015-12-30 23_00_00.csv",
+                                   "CsvPerFeature", "2015-12-01 00:00:00", "2015-12-30 23:00:00");
+    auto fp = std::make_shared<CsvPerFeatureForcingProvider>(forcing_config);
 
     std::string catchment_id = "cat-87";
 
@@ -40,7 +42,7 @@ TEST_F(LSTMRealizationTest, TestLSTMRealization)
       false
     };
  
-    realization::LSTM_Realization lstm_realization1(forcing_config, output_stream, catchment_id, params, config);
+    realization::LSTM_Realization lstm_realization1(catchment_id, fp, output_stream, params, config);
 
     double flow;
 
