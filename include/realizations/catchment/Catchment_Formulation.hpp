@@ -100,6 +100,9 @@ namespace realization {
         void set_catchment_id(std::string cat_id) override {
             this->cat_id = cat_id;
         }
+
+    private:
+        std::string cat_id;
     };
 }
 #endif // CATCHMENT_FORMULATION_H
