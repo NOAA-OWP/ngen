@@ -38,9 +38,9 @@ using RemoteConnectionVec = std::vector< RemoteConnection >;
  * @param num_part 
  * @param outFile 
  */
-void write_remote_connections(PartitionVSet catchment_part, PartitionVSet nexus_part,
-                 std::vector<RemoteConnectionVec> remote_connections_vec,
-                 int num_part, std::ofstream& outFile)
+void write_remote_connections(const PartitionVSet& catchment_part, const PartitionVSet& nexus_part,
+                 const std::vector<RemoteConnectionVec>& remote_connections_vec,
+                 const int& num_part, std::ofstream& outFile)
 {
     outFile<<"{"<<std::endl;
     outFile<<"    \"partitions\":["<<std::endl;
@@ -276,7 +276,7 @@ void generate_partitions(network::Network& network, const int& num_partitions, c
  * 
  * @throws runtime_error if no partition contains the requested id
  */
-int find_remote_rank(std::string id, PartitionVSet catchment_partitions)
+int find_remote_rank(const std::string& id, const PartitionVSet& catchment_partitions)
 {
     int pos = -1;
     for ( int i = 0; i < catchment_partitions.size(); ++i )
@@ -327,7 +327,7 @@ int find_remote_rank(std::string id, PartitionVSet catchment_partitions)
  * 
  * @throws invalid_argument if the partition_number is not in the range of valid partition numbers (size of catchment_partitions)
  */
-int find_partition_connections(std::string nexus, PartitionVSet catchment_partitions, int partition_number,  std::vector<std::string>& origin_ids_to_find, std::vector<std::string>& destination_ids_to_find, RemoteConnectionVec& remote_connections )
+int find_partition_connections(const std::string& nexus, const PartitionVSet& catchment_partitions, const int& partition_number,  const std::vector<std::string>& origin_ids_to_find, const std::vector<std::string>& destination_ids_to_find, RemoteConnectionVec& remote_connections )
 {
 
     const std::string origination_cat_to_nex = "orig_cat-to-nex";
