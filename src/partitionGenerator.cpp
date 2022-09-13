@@ -144,6 +144,9 @@ void generate_partitions(network::Network& network, const int& num_partitions, c
     std::cout << "remainder:" << remainder << std::endl;
     **/
     std::unordered_set<std::string> catchment_set, nexus_set;
+    //We know we want ~partition_size catchments in the set, so reserve enough space for that to avoid a lot of realloction/rehash
+    catchment_set.reserve(partition_size);
+    nexus_set.reserve(partition_size);
     std::string part_id, partition_str;
     std::vector<std::string> part_ids;
 
