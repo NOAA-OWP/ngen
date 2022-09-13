@@ -332,8 +332,8 @@ int find_remote_rank(const std::string& id, const PartitionVSet& catchment_parti
 int find_partition_connections(const std::string& nexus, const PartitionVSet& catchment_partitions, const int& partition_number,  const std::vector<std::string>& origin_ids_to_find, const std::vector<std::string>& destination_ids_to_find, RemoteConnectionVec& remote_connections )
 {
 
-    const std::string origination_cat_to_nex = "orig_cat-to-nex";
-    const std::string nex_to_destination_cat = "nex-to-dest_cat";
+    const static std::string origination_cat_to_nex = "orig_cat-to-nex";
+    const static std::string nex_to_destination_cat = "nex-to-dest_cat";
 
     if( partition_number < 0 || partition_number >= catchment_partitions.size() ){
         throw std::invalid_argument("find_partition_connections: partition_number not valid for catchment_partitions of size "+
