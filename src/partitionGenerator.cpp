@@ -53,7 +53,7 @@ void write_remote_connections(const PartitionVSet& catchment_part, const Partiti
     {
         // write catchments
         outFile<<"        {\"id\":" << id <<",\n        \"cat-ids\":[";
-        std::unordered_set<std::string> cat_set = catchment_part[i];
+        const std::unordered_set<std::string>& cat_set = catchment_part[i];
         // iterate over elements in catchment set
         for (auto it = cat_set.begin(); it != cat_set.end(); it++) {
             std::string catchment_id = *it;
@@ -64,7 +64,7 @@ void write_remote_connections(const PartitionVSet& catchment_part, const Partiti
 
         // write nexuses
         outFile<<"        \"nex-ids\":[";
-        std::unordered_set<std::string> nex_set = nexus_part[i];
+        const std::unordered_set<std::string>& nex_set = nexus_part[i];
         // loop over elements in nexus set
         for (auto it = nex_set.begin(); it != nex_set.end(); it++) {
             std::string nexus_id = *it;
@@ -74,8 +74,7 @@ void write_remote_connections(const PartitionVSet& catchment_part, const Partiti
         outFile<<"],\n";
 
         // wrtie remote_connections
-        RemoteConnectionVec remote_conn_vec;
-        remote_conn_vec = remote_connections_vec[i];
+        const RemoteConnectionVec& remote_conn_vec = remote_connections_vec[i];
 
         outFile<<"        \"remote-connections\":[";
         int vec_size = remote_conn_vec.size();
@@ -244,7 +243,7 @@ void generate_partitions(network::Network& network, const int& num_partitions, c
     std::cout << "Validating catchments..." << std::endl;
     std::vector<std::string> cat_id_vec;
     for (int i =0; i < catchment_part.size(); ++i) {
-        std::unordered_set<std::string> cat_set = catchment_part[i];
+        std::unordered_set<std::string>& cat_set = catchment_part[i];
         // convert unordered_set to vector
         for (const auto &it: cat_set) {
             cat_id_vec.push_back(it);
@@ -337,7 +336,7 @@ int find_partition_connections(const std::string& nexus, const PartitionVSet& ca
         throw std::invalid_argument("find_partition_connections: partition_number not valid for catchment_partitions of size "+
                                      std::to_string( catchment_partitions.size()) + ".");
     }
-    std::unordered_set<std::string> catchments = catchment_partitions[partition_number];
+    const std::unordered_set<std::string> & catchments = catchment_partitions[partition_number];
     int remote_catchments = 0;
 
     //Find senders
@@ -505,8 +504,8 @@ int main(int argc, char* argv[])
         RemoteConnectionVec remote_connections;
 
         //std::vector<std::string> local_cat_ids = catchment_part[ipart]["cat-ids"];
-        std::unordered_set<std::string> local_cat_set = catchment_part[ipart];
-        std::unordered_set<std::string> local_nex_set = nexus_part[ipart];
+        std::unordered_set<std::string> & local_cat_set = catchment_part[ipart];
+        std::unordered_set<std::string> & local_nex_set = nexus_part[ipart];
         std::unordered_set<std::string> local_node_set;
         
         std::merge(local_cat_set.begin(), local_cat_set.end(),
