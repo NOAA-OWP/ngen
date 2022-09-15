@@ -99,13 +99,11 @@ namespace geojson {
 
         public:
         /**
-         * @brief Set the values pointed to by the object
+         * @brief Construct a new Object and set its values pointer to values
          * 
-         * @param values a pointer to the \ref PropertyMap holding the Object's JSONProperty nested objects
+         * @param values 
          */
-        void set_values(PropertyMap* values){
-            this->values = values;
-        }
+        Object (PropertyMap* values): values(values){}
 
         /**
          * @brief A stream overload to represent this type as an Object
@@ -202,7 +200,6 @@ namespace geojson {
                 }
                 else {
                     // This isn't a terminal node, therefore represents an object or array
-                    Object tmp_obj;
                     //TODO unit test these construction paths...
                     for (auto &property : property_tree) {
                         if (property.first.empty()) {
@@ -213,8 +210,7 @@ namespace geojson {
                         else {
                             type = PropertyType::Object;
                             values.emplace(property.first, std::move(JSONProperty(property.first, property.second)));
-                            tmp_obj.set_values( & values );
-                            data = tmp_obj;
+                            data = Object( & values );
                         }
                     }
                 }
@@ -424,9 +420,7 @@ namespace geojson {
                     key(std::move(value_key)),
                     values(value)
             {   
-                Object tmp;
-                tmp.set_values( &values );
-                data = tmp;
+                data = Object( &values );
             }
 
             /**
