@@ -351,7 +351,6 @@ namespace geojson {
             }
 
             JSONProperty(std::string value_key, std::vector<JSONProperty> properties) : type(PropertyType::List), key(std::move(value_key)), value_list(std::move(properties))  {
-                std::cout<<"Building json list: "<<value_list.size()<<std::endl;
                 data = List( &value_list );
             }
 
