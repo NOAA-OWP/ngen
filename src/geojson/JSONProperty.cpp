@@ -181,10 +181,3 @@ bool JSONProperty::has_key(std::string key) const {
 std::string JSONProperty::get_key() const {
     return key;
 }
-
-namespace geojson{
-    //Template specialization
-    template<> template<> void JSONProperty::PropertyVisitor<double>::operator ()<long>(const long& value){
-                        vec.push_back(static_cast<double>(value));
-        }
-}
