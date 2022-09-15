@@ -55,8 +55,7 @@ std::vector<JSONProperty> JSONProperty::as_list() const {
     std::vector<JSONProperty> copy;
 
     if (type == PropertyType::List) {
-       auto values = *boost::get<List>(data).get_values();
-       for( auto & val : values){
+       for( auto & val : value_list){
             copy.push_back(JSONProperty(val));
        }
        return copy;
@@ -118,11 +117,10 @@ std::string JSONProperty::as_string() const {
     }
     else if (type == PropertyType::List) {
         std::string list_description = "[";
-        auto values = *boost::get<List>(data).get_values();
-        for (int list_index = 0; list_index < values.size(); list_index++) {
-            list_description += values[list_index].as_string();
+        for (int list_index = 0; list_index < value_list.size(); list_index++) {
+            list_description += value_list[list_index].as_string();
 
-            if (list_index < values.size() - 1) {
+            if (list_index < value_list.size() - 1) {
                 list_description += ",";
             }
         }
