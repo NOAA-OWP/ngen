@@ -252,7 +252,7 @@ void FeatureCollection::update_ids() {
 
 void FeatureCollection::add_feature_id(std::string id, Feature feature) {
     if (id != "") {
-        feature_by_id.emplace(id, feature);
+        feature_by_id.emplace(id, std::move(feature));
     }
     else {
         throw std::invalid_argument("id");

@@ -473,7 +473,7 @@ int main(int argc, char* argv[])
     outFile.open(partitionOutFile, std::ios::trunc);
 
     //Get the feature collecion for the given hydrofabric
-    geojson::GeoJSON catchment_collection = geojson::read(catchmentDataFile, catchment_subset_ids);
+    geojson::GeoJSON catchment_collection = std::move( geojson::read(catchmentDataFile, catchment_subset_ids) );
     int num_catchments = catchment_collection->get_size();
     std::cout<<"Partitioning "<<num_catchments<<" catchments into "<<num_partitions<<" partitions."<<std::endl;
     std::string link_key = "toid";
@@ -486,7 +486,7 @@ int main(int argc, char* argv[])
 
     //build the remote connections from network
     // read the nexus hydrofabric, reuse the catchments
-    geojson::GeoJSON global_nexus_collection = geojson::read(nexusDataFile, nexus_subset_ids);
+    geojson::GeoJSON global_nexus_collection = std::move( geojson::read(nexusDataFile, nexus_subset_ids) );
 
     //Now read the collection of catchments, iterate it and add them to the nexus collection
     //also link them by to->id

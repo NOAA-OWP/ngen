@@ -29,7 +29,7 @@ namespace geojson {
                 std::vector<FeatureBase*> upstream_features = std::vector<FeatureBase*>(),
                 std::vector<FeatureBase*> downstream_features = std::vector<FeatureBase*>(),
                 std::map<std::string, JSONProperty> members = std::map<std::string, JSONProperty>()
-            ) : FeatureBase(new_id, new_properties, new_bounding_box, upstream_features, downstream_features, members) {
+            ) : FeatureBase(std::move(new_id), std::move(new_properties), std::move(new_bounding_box), std::move(upstream_features), std::move(downstream_features), std::move(members)) {
                 this->geom = coordinate;
                 this->type = geojson::FeatureType::Point;
             }

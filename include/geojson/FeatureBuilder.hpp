@@ -81,10 +81,9 @@ namespace geojson {
                 for (auto &coordinate : group.second) {
                     latLon.push_back(std::stod(coordinate.second.data()));
                 }
-                shape_coordinates.push_back(latLon);
+                shape_coordinates.push_back(std::move(latLon));
             }
-            total_coordinates.push_back(shape_coordinates);
-            
+            total_coordinates.push_back(std::move(shape_coordinates));
         }
 
         polygon_t polygon;
@@ -172,14 +171,12 @@ namespace geojson {
                     for(auto &coordinate : point.second) {
                         latLon.push_back(std::stod(coordinate.second.data()));
                     }
-
-                    coordinate_group.push_back(latLon);
+                    coordinate_group.push_back(std::move(latLon));
                 }
-
-                polygon_coordinates.push_back(coordinate_group);
+                polygon_coordinates.push_back(std::move(coordinate_group));
             }
 
-            coordinates_groups.push_back(polygon_coordinates);
+            coordinates_groups.push_back(std::move(polygon_coordinates));
         }
 
         bg::model::multi_polygon<polygon_t> multi_polygon;
@@ -190,7 +187,7 @@ namespace geojson {
                 for (auto &point : polygon_points) {
                     bg::append(polygon, coordinate_t(point[0], point[1]));
                 }
-                multi_polygon.push_back(polygon);
+                multi_polygon.push_back(std::move(polygon));
             }
         }
 
@@ -198,7 +195,7 @@ namespace geojson {
     }
 
     static geometry build_geometry(boost::property_tree::ptree &tree) {
-        std::string type = tree.get<std::string>("type");
+        std::string type = std::move(tree.get<std::string>("type"));
 
         if (type == "Point") {
             
@@ -241,7 +238,7 @@ namespace geojson {
 
         for (auto& child : tree) {
             if (child.first == "geometry") {
-                std::string geometry_type = child.second.get<std::string>("type");
+                const std::string& geometry_type = child.second.get<std::string>("type");
                 geometry_object = build_geometry(child.second);
                 has_geometry = true;
 
@@ -277,7 +274,7 @@ namespace geojson {
                 }
             }
             else if (child.first == "id") {
-                id = child.second.data();
+                id = std::move(child.second.data());
             }
             else if (child.first == "bbox") {
                 for (auto &value : tree.get_child("bbox")) {
@@ -286,11 +283,11 @@ namespace geojson {
             }
             else if (child.first == "properties") {
                 for (auto& property : child.second) {
-                    properties.emplace(property.first, JSONProperty(property.first, property.second));
+                    properties.emplace(property.first, std::move(JSONProperty(property.first, property.second)));
                 }
             }
             else {
-                foreign_members.emplace(child.first, JSONProperty(child.first, child.second));
+                foreign_members.emplace(child.first, std::move(JSONProperty(child.first, child.second)));
             }
         }
 
@@ -374,7 +371,7 @@ namespace geojson {
      * @param tree boost::property_tree::ptree holding the parsed GeoJSON
      * @param ids optional subset of string feature ids, only features in tree with these ids will be in the collection
      */
-    static GeoJSON build_collection(const boost::property_tree::ptree tree, const std::vector<std::string> ids={}) {
+    static GeoJSON build_collection(const boost::property_tree::ptree& tree, const std::vector<std::string>& ids={}) {
         std::vector<double> bbox_values;
         std::vector<Feature> features;
         PropertyMap foreign_members;
@@ -384,7 +381,7 @@ namespace geojson {
             if (child.first == "bbox") {
                 std::vector<std::string> bounding_box;
                 for (auto &feature : tree.get_child("bbox")) {
-                    bounding_box.push_back(feature.second.data());
+                    bounding_box.push_back(std::move(feature.second.data()));
                 }
 
                 for (int point_index = 0; point_index < bounding_box.size(); point_index++) {
@@ -402,7 +399,7 @@ namespace geojson {
                         //optional id, but the input files set id under the 'property' key, so when a feature is constructed
                         //feature->get_id() returns '' because the feature itself doesn't have an id, so we hae to read
                         //from the associated properties to find the id.  If the inputs change, we will need to adjust
-                        //this line to read feature->get_id()
+                        //this line to read feature->get_id()  
                         if( tmp_id == "" ) {
                           try {
                             tmp_id = feature->get_property("id").as_string();
@@ -418,8 +415,9 @@ namespace geojson {
                           //or feature id was found in the provided ids vector
                           //so hold the feature to add to collection later
 
-                          features.push_back(feature);
+                          features.push_back(std::move(feature));
                         }
+                        feature_tree.second.erase("child"); //we are done with this feature, drop it from the ptree.  Not convinced this releases any resources, though =(
                     }
                 }
                 else {
@@ -427,11 +425,12 @@ namespace geojson {
                 }
             }
             else {
-                foreign_members.emplace(child.first, JSONProperty(child.first, child.second));
+                foreign_members.emplace(child.first, std::move(JSONProperty(child.first, child.second)));
+                
             }
+            
         }
-
-        GeoJSON collection = std::make_shared<FeatureCollection>(FeatureCollection(features, bbox_values));
+        GeoJSON collection = std::make_shared<FeatureCollection>(FeatureCollection(std::move(features), std::move(bbox_values)));
 
         for (Feature feature : features) {
             if (feature->get_id() != "") {
