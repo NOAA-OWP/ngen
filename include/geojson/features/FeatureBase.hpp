@@ -76,7 +76,7 @@ namespace geojson {
                 std::vector<FeatureBase*> destination_features = std::vector<FeatureBase*>(),
                 PropertyMap members = PropertyMap()
             ) {
-                id = new_id;
+                id = std::move(new_id);
 
                 for (auto& feature : origination_features) {
                     this->add_origination_feature(feature);
@@ -86,9 +86,9 @@ namespace geojson {
                     this->add_destination_feature(feature);
                 }
                 
-                foreign_members = members;
-                bounding_box = new_bounding_box;
-                properties = new_properties;
+                foreign_members = std::move(members);
+                bounding_box = std::move(new_bounding_box);
+                properties = std::move(new_properties);
             }
 
         public:

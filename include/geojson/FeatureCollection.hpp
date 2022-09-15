@@ -31,6 +31,16 @@ namespace geojson {
                 }
             }
 
+             /**
+             * Move Constructor
+             * 
+             * @param new_features An overall list of features
+             * @param bounding_box A set of bounds for all features
+             */
+            FeatureCollection(FeatureList &&new_features, std::vector<double> &&bounding_box) :features(new_features), bounding_box(bounding_box)
+            {
+            }
+
             FeatureCollection() {}
 
             /**
@@ -60,10 +70,10 @@ namespace geojson {
                 {
                     idset.insert(*it);
                 }
-                for (Feature feature : feature_collection) {
+                for (const Feature& feature : feature_collection) {
                     auto id = feature->get_id();
                     if (idset.count(id)) {
-                        features.push_back(feature);
+                        features.push_back(std::move(feature));
                     }
                 }
                 this->update_ids();
