@@ -168,7 +168,18 @@ namespace geojson {
             JSONProperty(std::string value_key, const boost::property_tree::ptree& property_tree):
             key(std::move(value_key)) {
 
-                if (property_tree.empty() && !property_tree.data().empty()) {
+                if(property_tree.empty() && property_tree.data().empty()) {
+                    //Since property trees don't represent empty strings, list, or objects, they are all just `empty`
+                    //so we can trap that case with `property_tree.data().empty()`, and the best we can do is make it an
+                    //empty string
+                    type = PropertyType::String;
+                    //Also note that a boost::variant assigned to the static empty string "" like this
+                    //`data = "";`
+                    //will cause `data` to actually become a bool type, not the std::string. 
+                    //So use a default string to intialize the empty data
+                    data = std::string();
+                }
+                else if (property_tree.empty() && !property_tree.data().empty()) {
                     // This is a terminal node and has a raw value
 
                     const std::string& value = property_tree.data();
@@ -370,6 +381,7 @@ namespace geojson {
                                 values.emplace(pair.first, std::move(pair.second));
                             }
                             data = Object( &values );
+                            break;
                         default:
                             data = original.data;
                     }
