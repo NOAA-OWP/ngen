@@ -65,7 +65,7 @@ namespace geojson {
         Object      /*!< Represents a nested map of properties */
     };
 
-    static inline std::string get_propertytype_name(PropertyType property_type) {
+    static inline std::string get_propertytype_name(PropertyType&& property_type) {
         switch(property_type) {
             case PropertyType::Natural:
                 return "Natural";
