@@ -30,26 +30,106 @@ namespace geojson {
                                           >;
     
     /**
-     * @brief Struct wrapping a vector of \ref PropertyVariant representing a JSON list.
+     * @brief Struct wrapping a vector of \ref JSONProperty representing a JSON list.
      * 
+     * Note: that due to the forward declaration of JSONProperty and the recursive nature of the property and the variant types
+     * a pointer is required to allow this incomplete type to encapsulate the vectory of JSONProperties.
      */
     struct List{
-        std::vector<PropertyVariant> values;
+        private:
+        std::vector<JSONProperty>* values;
+
+        public:
+        /**
+         * @brief Set the values pointed to by this List
+         * 
+         * @param values a pointer to the vector holding the List's JSONProperties
+         */
+        void set_values(std::vector<JSONProperty>* values){
+            this->values = values;
+        }
+
+        /**
+         * @brief Get the pointer to the values vector
+         * 
+         * @return const std::vector<JSONProperty>* 
+         */
+        std::vector<JSONProperty>* get_values() const {
+            return values;
+        }
+
+        /**
+         * @brief Add a JSONProperty to List backing storage via the values pointer
+         * 
+         * @param property JSONProperty to add to the back of the List
+         */
+        void push_back(const JSONProperty& property){
+            values->push_back(property);
+        }
+
+        /**
+         * @brief A stream overload to represent this type as a LIST
+         * 
+         * @param os 
+         * @param obj List
+         * @return std::ostream& 
+         */
         friend std::ostream& operator<<(std::ostream& os, const List& obj){
             os<<"LIST";
             return os;
         }
+
+        /**
+         * @brief Equality operator
+         * 
+         * @param other List to check equality against
+         * @return true If the JSONProperty vector \ref values is equal to \ref other vector of JSONProperty.
+         * @return false If the JSONProperty vectors are not equivalent.
+         */
+        bool inline operator==(const List& other) const{
+            return *values == *(other.values);
+        }
     };
 
     /**
-     * @brief Struct wrapping a map of nested \ref PropertyVariant representing a JSON object.
+     * @brief Struct wrapping a nested \ref PropertyMap representing a JSON object.
      * 
      */
     struct Object{
-        std::map<std::string, PropertyVariant> values;
+        private:
+        PropertyMap* values;
+
+        public:
+        /**
+         * @brief Set the values pointed to by the object
+         * 
+         * @param values a pointer to the \ref PropertyMap holding the Object's JSONProperty nested objects
+         */
+        void set_values(PropertyMap* values){
+            this->values = values;
+        }
+
+        /**
+         * @brief A stream overload to represent this type as an Object
+         * 
+         * @param os 
+         * @param obj 
+         * @return std::ostream& 
+         */
         friend std::ostream& operator<<(std::ostream& os, const Object& obj){
             os<<"OBJECT";
             return os;
+        }
+
+        /**
+         * @brief Equality operator
+         * 
+         * @param other Object to check equality against
+         * @return true If the backing storage pointers are the same.
+         * @return false If the \ref other JSONProperty isn't pointing the same data as this JSONProperty
+         */
+        bool inline operator==(const Object& other) const{
+            return values == other.values; //FIXME right now, Objects must be pointing to the SAME data to be considered equal...
         }
     };
     
@@ -95,26 +175,23 @@ namespace geojson {
                 if (property_tree.empty() && !property_tree.data().empty()) {
                     // This is a terminal node and has a raw value
 
-                        std::string value = property_tree.data();
+                    const std::string& value = property_tree.data();
 
-                        if (value == "true" || value == "false") {
-                            type = PropertyType::Boolean;
-                            boolean = value == "true";
-                            data = boolean;
-                        }
-                        else {
-                          //Try natural number first since double cant cast to int/long
+                    if (value == "true" || value == "false") {
+                        type = PropertyType::Boolean;
+                        data = value == "true";
+                    }
+                    else {
+                        //Try natural number first since double cant cast to int/long
                         long casted_long_data;
                         double casted_double_data;
                         if( boost::conversion::try_lexical_convert<long>(value, casted_long_data) ){
                             type = PropertyType::Natural;
-                            natural_number = casted_long_data;
                             data = casted_long_data;
                         }
                         else if( boost::conversion::try_lexical_convert<double>(value, casted_double_data) ){
                             //Try to cast to double/real next
                             type = PropertyType::Real;
-                            real_number = casted_double_data;
                             data = casted_double_data;
                         }
                         else{
@@ -133,16 +210,14 @@ namespace geojson {
                     for (auto &property : property_tree) {
                         if (property.first.empty()) {
                             type = PropertyType::List;
-                            JSONProperty tmp = JSONProperty(value_key, property.second);
-                            value_list.push_back(tmp);
-                            tmp_list.values.push_back(tmp.data);
+                            value_list.push_back(std::move(JSONProperty(value_key, property.second)));
+                            tmp_list.set_values( & value_list );
                             data = tmp_list;
                         }
                         else {
                             type = PropertyType::Object;
-                            JSONProperty tmp = JSONProperty(property.first, property.second);
-                            values.emplace(property.first, tmp);
-                            tmp_obj.values.emplace(property.first, tmp.data);
+                            values.emplace(property.first, std::move(JSONProperty(property.first, property.second)));
+                            tmp_obj.set_values( & values );
                             data = tmp_obj;
                         }
                     }
@@ -158,7 +233,6 @@ namespace geojson {
             JSONProperty(std::string value_key, short value)
                 : type(PropertyType::Natural),
                     key(std::move(value_key)),
-                    natural_number(long(value)),
                     data(long(value))
             {}
 
@@ -171,7 +245,6 @@ namespace geojson {
             JSONProperty(std::string value_key, int value)
                 : type(PropertyType::Natural),
                     key(std::move(value_key)),
-                    natural_number(long(value)),
                     data(long(value))
             {}
 
@@ -184,7 +257,6 @@ namespace geojson {
             JSONProperty(std::string value_key, long value)
                 : type(PropertyType::Natural),
                     key(std::move(value_key)),
-                    natural_number(value),
                     data(value)
             {}
 
@@ -197,7 +269,6 @@ namespace geojson {
             JSONProperty(std::string value_key, float value)
                 : type(PropertyType::Real),
                     key(std::move(value_key)),
-                    real_number(double(value)),
                     data(double(value))
             {}
 
@@ -210,7 +281,6 @@ namespace geojson {
             JSONProperty(std::string value_key, double value)
                 : type(PropertyType::Real),
                     key(std::move(value_key)),
-                    real_number(value),
                     data(value)
             {}
 
@@ -223,7 +293,6 @@ namespace geojson {
             JSONProperty(std::string value_key, const char *value):
                 type(PropertyType::String),
                 key(std::move(value_key)),
-                string(value),
                 data(std::string(value))
             {}
 
@@ -234,12 +303,10 @@ namespace geojson {
              * @param value: The text that will be stored
              */
             JSONProperty(std::string value_key, std::string value):key(std::move(value_key)) {
-                string = value;
-
                 if (value == "true" || value == "false") {
                     type = PropertyType::Boolean;
-                    boolean = value == "true";
-                    data = boolean;
+                    //boolean = value == "true";
+                    data = value == "true";
                 }
                 else {
                     bool is_numeric = true;
@@ -274,19 +341,19 @@ namespace geojson {
                     // If the value can be represented as a whole number, we want to go with that
                     if (is_numeric) {
                         type = PropertyType::Natural;
-                        natural_number = std::stol(value);
-                        data = natural_number;
+                        //natural_number = std::stol(value);
+                        data = std::stol(value);
                     }
                     else if (is_real) {
                         type = PropertyType::Real;
-                        real_number = std::stod(value);
-                        data = real_number;
+                        //real_number = std::stod(value);
+                        data = std::stod(value);
                     }
                     else {
                         // Otherwise we'll store everything as a raw string
                         type = PropertyType::String;
-                        string = value;
-                        data = string;
+                        //string = value;
+                        data = value;
                     }
                 }
             }
@@ -294,37 +361,45 @@ namespace geojson {
             JSONProperty(std::string value_key, std::vector<JSONProperty> properties) : type(PropertyType::List), key(std::move(value_key)), value_list(std::move(properties))  {
                 List tmp;
                 for(const auto& p : properties){
-                    tmp.values.push_back(p.data);
+                    tmp.push_back(p);
                 }
                 data = tmp;
             }
 
+            // JSONProperty(const JSONProperty &&original){
+            //     type = original.type;
+            //     key = original.key;
+            //     data = original.data;
+            //     switch (type) {
+            //         case PropertyType::Boolean:
+            //             boolean = original.boolean;
+            //             break;
+            //         case PropertyType::Natural:
+            //             natural_number = original.natural_number;
+            //             break;
+            //         case PropertyType::Real:
+            //             real_number = original.real_number;
+            //             break;
+            //         case PropertyType::String:
+            //             string = original.string;
+            //             break;
+            //         case PropertyType::List:
+            //             for (const JSONProperty& property : original.value_list) {
+            //                 value_list.push_back(std::move(property));
+            //             }
+            //             break;
+            //         default:
+            //             for (std::pair<std::string, const JSONProperty& > pair : original.values) {
+            //                 values.emplace(pair.first, std::move(pair.second));
+            //             }
+            //     }
+            // };
+
             JSONProperty(const JSONProperty &original) {
-                type = original.type;
-                key = original.key;
-                data = original.data;
-                switch (type) {
-                    case PropertyType::Boolean:
-                        boolean = original.boolean;
-                        break;
-                    case PropertyType::Natural:
-                        natural_number = original.natural_number;
-                        break;
-                    case PropertyType::Real:
-                        real_number = original.real_number;
-                        break;
-                    case PropertyType::String:
-                        string = original.string;
-                        break;
-                    case PropertyType::List:
-                        for (JSONProperty property : original.value_list) {
-                            value_list.push_back(JSONProperty(property));
-                        }
-                        break;
-                    default:
-                        for (std::pair<std::string, JSONProperty> pair : original.values) {
-                            values.emplace(pair.first, JSONProperty(pair.second));
-                        }
+                if( this != &original){
+                    type = original.type;
+                    key = original.key;
+                    data = original.data;
                 }
             }
 
@@ -342,7 +417,6 @@ namespace geojson {
             JSONProperty(std::string value_key, bool value):
                 type(PropertyType::Boolean),
                 key(std::move(value_key)),
-                boolean(value),
                 data(value)
             {}
 
@@ -358,9 +432,7 @@ namespace geojson {
                     values(value)
             {   
                 Object tmp;
-                for(auto const& property : value){
-                    tmp.values.emplace(property.first, property.second.data);
-                }
+                tmp.set_values( &values );
                 data = tmp;
             }
 
@@ -439,7 +511,7 @@ namespace geojson {
 
             bool has_key(std::string key) const;
 
-            bool inline operator==(const JSONProperty& other) {
+            bool inline operator==(const JSONProperty& other) const {
                 if (not (this->type == other.type)) {
                     return false;
                 }
@@ -457,28 +529,22 @@ namespace geojson {
 
                 }
 
-                return this->natural_number == other.natural_number 
-                    and this->real_number == other.real_number 
-                    and this->string == other.string 
-                    and this->boolean == other.boolean;
+                return this->data == other.data;
             }
 
             bool inline operator!=(const JSONProperty& other) {
                 return not this->operator==(other);
             }
         private:
-            PropertyType type;
             std::string key;
-            long natural_number;
-            double real_number;
-            std::string string;
-            bool boolean;
+            PropertyType type;
             PropertyMap values;
             std::vector<JSONProperty> value_list;
             //boost::variant to hold the parsed data
             //can be one of boost::blank, long, double, bool, string, List, Object
             //Defaults to boost::blank
-            //TODO port this entire class to use this variant
+            //Note that for recurssive types, the JSONProperty holds the storage for the additional JSONProperties
+            //in values (for Object) and value_list (for List).  The variant types simply point to the properties values as needed.
             //TODO make sure all construction paths for `data` are unit tested
             PropertyVariant data;
         
@@ -516,7 +582,10 @@ namespace geojson {
                 */
                 void operator () (const List& values) {
                     //Recurse through the list to filter for types T
-                    std::for_each(values.values.begin(), values.values.end(), boost::apply_visitor(*this));
+                    for(auto property : *values.get_values()){
+                        boost::apply_visitor(*this, property.data);
+                    }
+                    //std::for_each(values.values->begin(), values.values->end(), boost::apply_visitor(*this));
                 }
 
                 private:
