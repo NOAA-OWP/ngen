@@ -73,12 +73,25 @@ TEST_F(JSONProperty_Test, list_property_test) {
     properties.push_back(geojson::JSONProperty("string", "test_string"));
     properties.push_back(geojson::JSONProperty("boolean", true));
 
+    //Also, dump an object in the list, for fun
+    geojson::PropertyMap object;
+    
+    object.emplace("natural", geojson::JSONProperty("natural", 4));
+    object.emplace("real", geojson::JSONProperty("real", 3.0));
+    object.emplace("string", geojson::JSONProperty("string", "test_string"));
+    object.emplace("boolean", geojson::JSONProperty("boolean", true));
+
+    geojson::JSONProperty object_property("object", object);
+    properties.push_back(object_property);
+
     geojson::JSONProperty list_property("list_property", properties);
 
     ASSERT_EQ(list_property.as_list()[0].as_natural_number(), properties[0].as_natural_number());
     ASSERT_EQ(list_property.as_list()[1].as_real_number(), properties[1].as_real_number());
     ASSERT_EQ(list_property.as_list()[2].as_string(), properties[2].as_string());
     ASSERT_EQ(list_property.as_list()[3].as_boolean(), properties[3].as_boolean());
+    //test the object extracted from the list
+    ASSERT_EQ(list_property.as_list()[4].at("real").as_real_number(), object.at("real").as_real_number());
 }
 
 TEST_F(JSONProperty_Test, natural_vector_test) {
@@ -153,13 +166,42 @@ TEST_F(JSONProperty_Test, string_vector_test) {
     ASSERT_EQ(values[2], "three");
 }
 
+TEST_F(JSONProperty_Test, ptree_empty_test){
+    std::string empties = "{ "
+                          "\"empty_string\": \"\", "
+                          "\"empty_list\": [], "
+                          "\"empty_object\": {} }";
+
+    std::stringstream stream;
+    stream << empties;
+    boost::property_tree::ptree tree;
+    boost::property_tree::json_parser::read_json(stream, tree);
+    std::vector<geojson::JSONProperty> properties;
+    for(auto &pair : tree) {
+        properties.push_back(geojson::JSONProperty(pair.first, pair.second));
+    }
+    
+    ASSERT_EQ(properties.size(), 3);
+
+    ASSERT_EQ(properties[0].get_type(), geojson::PropertyType::String);
+    ASSERT_EQ(properties[0].as_string(), "");
+    //Not supported by property trees
+    //ASSERT_EQ(properties[1].get_type(), geojson::PropertyType::List);
+    //ASSERT_EQ(properties[1].as_list().size(), 0);
+
+    //ASSERT_EQ(properties[2].get_type(), geojson::PropertyType::Object);
+    //ASSERT_EQ(properties[2].get_values().size(), 0);
+}
+
 TEST_F(JSONProperty_Test, ptree_test) {
     std::string data = "{ "
                "\"type\": \"LineString\", "
                "\"coordinates\": [0.0,1.0,3.0], "
                "\"boolean_value\": true, " 
                "\"natural_value\": 4, "
-               "\"real_value\": 4.3123 "
+               "\"real_value\": 4.3123, "
+               "\"object\": { \"nested\": true, "
+               "\"deep_nested\": {\"nested\": \"deep\" } } "
            "}";
 
     std::stringstream stream;
@@ -172,7 +214,7 @@ TEST_F(JSONProperty_Test, ptree_test) {
         properties.push_back(geojson::JSONProperty(pair.first, pair.second));
     }
 
-    ASSERT_EQ(properties.size(), 5);
+    ASSERT_EQ(properties.size(), 6);
     ASSERT_EQ(properties[0].get_type(), geojson::PropertyType::String);
     ASSERT_EQ(properties[0].as_string(), "LineString");
 
@@ -185,6 +227,9 @@ TEST_F(JSONProperty_Test, ptree_test) {
     ASSERT_EQ(properties[2].get_type(), geojson::PropertyType::Boolean);
     ASSERT_EQ(properties[3].get_type(), geojson::PropertyType::Natural);
     ASSERT_EQ(properties[4].get_type(), geojson::PropertyType::Real);
+    ASSERT_EQ(properties[5].get_type(), geojson::PropertyType::Object);
+    ASSERT_EQ(properties[5].at("nested").as_boolean(), true);
+    ASSERT_EQ(properties[5].at("deep_nested").at("nested").as_string(), "deep");
 }
 
 TEST_F(JSONProperty_Test, test_as_vector_natural){
