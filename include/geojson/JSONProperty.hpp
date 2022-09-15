@@ -159,7 +159,7 @@ namespace geojson {
              */
             JSONProperty(std::string value_key, short value)
                 : type(PropertyType::Natural),
-                    key(value_key),
+                    key(std::move(value_key)),
                     natural_number(long(value)),
                     data(long(value))
             {}
@@ -172,7 +172,7 @@ namespace geojson {
              */
             JSONProperty(std::string value_key, int value)
                 : type(PropertyType::Natural),
-                    key(value_key),
+                    key(std::move(value_key)),
                     natural_number(long(value)),
                     data(long(value))
             {}
@@ -185,7 +185,7 @@ namespace geojson {
              */
             JSONProperty(std::string value_key, long value)
                 : type(PropertyType::Natural),
-                    key(value_key),
+                    key(std::move(value_key)),
                     natural_number(value),
                     data(value)
             {}
@@ -198,7 +198,7 @@ namespace geojson {
              */
             JSONProperty(std::string value_key, float value)
                 : type(PropertyType::Real),
-                    key(value_key),
+                    key(std::move(value_key)),
                     real_number(double(value)),
                     data(double(value))
             {}
@@ -211,7 +211,7 @@ namespace geojson {
              */
             JSONProperty(std::string value_key, double value)
                 : type(PropertyType::Real),
-                    key(value_key),
+                    key(std::move(value_key)),
                     real_number(value),
                     data(value)
             {}
@@ -224,7 +224,7 @@ namespace geojson {
              */
             JSONProperty(std::string value_key, const char *value) {
                 type = PropertyType::String;
-                key = value_key;
+                key = std::move(value_key);
                 string = value;
                 data = string;
             }
@@ -235,8 +235,7 @@ namespace geojson {
              * @param value_key: The name of the key that stores this value
              * @param value: The text that will be stored
              */
-            JSONProperty(std::string value_key, std::string value) {
-                key = value_key;
+            JSONProperty(std::string value_key, std::string value):key(std::move(value_key)) {
                 string = value;
 
                 if (value == "true" || value == "false") {
@@ -294,7 +293,7 @@ namespace geojson {
                 }
             }
 
-            JSONProperty(std::string value_key, std::vector<JSONProperty> properties) : type(PropertyType::List), key(value_key), value_list(properties) {
+            JSONProperty(std::string value_key, std::vector<JSONProperty> properties) : type(PropertyType::List), key(std::move(value_key)), value_list(std::move(properties))  {
                 List tmp;
                 for(const auto& p : properties){
                     tmp.values.push_back(p.data);
@@ -344,7 +343,7 @@ namespace geojson {
              */
             JSONProperty(std::string value_key, bool value) {
                 type = PropertyType::Boolean;
-                key = value_key;
+                key = std::move(value_key);
                 boolean = value;
                 data = boolean;
             }
@@ -357,7 +356,7 @@ namespace geojson {
              */
             JSONProperty(std::string value_key, PropertyMap &value)
                 : type(PropertyType::Object),
-                    key(value_key),
+                    key(std::move(value_key)),
                     values(value)
             {   
                 Object tmp;
