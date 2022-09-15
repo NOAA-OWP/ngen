@@ -41,13 +41,11 @@ namespace geojson {
 
         public:
         /**
-         * @brief Set the values pointed to by this List
+         * @brief Construct a new List and set its values pointer to values
          * 
-         * @param values a pointer to the vector holding the List's JSONProperties
+         * @param values 
          */
-        void set_values(std::vector<JSONProperty>* values){
-            this->values = values;
-        }
+        List (std::vector<JSONProperty>* values): values(values){}
 
         /**
          * @brief Get the pointer to the values vector
@@ -204,15 +202,13 @@ namespace geojson {
                 }
                 else {
                     // This isn't a terminal node, therefore represents an object or array
-                    List tmp_list;
                     Object tmp_obj;
                     //TODO unit test these construction paths...
                     for (auto &property : property_tree) {
                         if (property.first.empty()) {
                             type = PropertyType::List;
                             value_list.push_back(std::move(JSONProperty(value_key, property.second)));
-                            tmp_list.set_values( & value_list );
-                            data = tmp_list;
+                            data = List(& value_list );
                         }
                         else {
                             type = PropertyType::Object;
@@ -359,11 +355,8 @@ namespace geojson {
             }
 
             JSONProperty(std::string value_key, std::vector<JSONProperty> properties) : type(PropertyType::List), key(std::move(value_key)), value_list(std::move(properties))  {
-                List tmp;
-                for(const auto& p : properties){
-                    tmp.push_back(p);
-                }
-                data = tmp;
+                std::cout<<"Building json list: "<<value_list.size()<<std::endl;
+                data = List( &value_list );
             }
 
             // JSONProperty(const JSONProperty &&original){
