@@ -12,7 +12,7 @@ using namespace geojson;
 long JSONProperty::as_natural_number() const {
     // Return a natural number if this IS a natural number
     if (type == PropertyType::Natural) {
-        return natural_number;
+        return boost::get<long>(data);
     }
 
     // Throw an exception since this can't be considered a natural number
@@ -32,10 +32,10 @@ PropertyType JSONProperty::get_type() const {
 
 double JSONProperty::as_real_number() const {
     if (type == PropertyType::Real) {
-        return real_number;
+        return boost::get<double>(data);
     }
     else if (type == PropertyType::Natural) {
-        return double(natural_number);
+        return double(boost::get<long>(data)); //TODO consider a visitor?
     }
 
     std::string message = key + " is a " + get_propertytype_name(get_type()) + " and cannot be converted into a real number.";
@@ -44,7 +44,7 @@ double JSONProperty::as_real_number() const {
 
 bool JSONProperty::as_boolean() const {
     if (type == PropertyType::Boolean) {
-        return boolean;
+        return boost::get<bool>(data);
     }
 
     std::string message = key + " is a " + get_propertytype_name(get_type()) + " and cannot be converted into a boolean.";
@@ -52,13 +52,14 @@ bool JSONProperty::as_boolean() const {
 };
 
 std::vector<JSONProperty> JSONProperty::as_list() const {
-        std::vector<JSONProperty> copy;
+    std::vector<JSONProperty> copy;
 
     if (type == PropertyType::List) {
-        for (JSONProperty value : value_list) {
-            copy.push_back(JSONProperty(value));
-        }
-        return copy;
+       auto values = *boost::get<List>(data).get_values();
+       for( auto & val : values){
+            copy.push_back(JSONProperty(val));
+       }
+       return copy;
     }
     else if (type != PropertyType::Object) {
         copy.push_back(JSONProperty(*this));
@@ -72,49 +73,37 @@ std::vector<JSONProperty> JSONProperty::as_list() const {
 std::vector<long> JSONProperty::as_natural_vector() const {
     std::vector<long> values;
 
-    for (JSONProperty value : this->as_list()) {
-        values.push_back(value.as_natural_number());
-    }
-
+    as_vector(values);
     return values;
 }
 
 std::vector<double> JSONProperty::as_real_vector() const {
     std::vector<double> values;
 
-    for (JSONProperty value : this->as_list()) {
-        values.push_back(value.as_real_number());
-    }
-
+    as_vector(values);
     return values;
 }
 
 std::vector<std::string> JSONProperty::as_string_vector() const {
     std::vector<std::string> values;
 
-    for (JSONProperty value : this->as_list()) {
-        values.push_back(value.as_string());
-    }
-
+    as_vector(values);
     return values;
 }
 
 std::vector<bool> JSONProperty::as_boolean_vector() const {
     std::vector<bool> values;
 
-    for (JSONProperty value : this->as_list()) {
-        values.push_back(value.as_boolean());
-    }
-
+    as_vector(values);
     return values;
 }
 
 std::string JSONProperty::as_string() const {
     if (type == PropertyType::String) {
-        return string;
+        return boost::get<std::string>(data);
     }
     else if (type == PropertyType::Boolean) {
-        if (boolean) {
+        if (boost::get<bool>(data)) {
             return "true";
         }
         else {
@@ -122,18 +111,18 @@ std::string JSONProperty::as_string() const {
         }
     }
     else if (type == PropertyType::Natural) {
-        return std::to_string(natural_number);
+        return std::to_string(boost::get<long>(data));
     }
     else if(type == PropertyType::Real) {
-        return std::to_string(real_number);
+        return std::to_string(boost::get<double>(data));
     }
     else if (type == PropertyType::List) {
         std::string list_description = "[";
+        auto values = *boost::get<List>(data).get_values();
+        for (int list_index = 0; list_index < values.size(); list_index++) {
+            list_description += values[list_index].as_string();
 
-        for (int list_index = 0; list_index < this->value_list.size(); list_index++) {
-            list_description += this->value_list[list_index].as_string();
-
-            if (list_index < this->value_list.size() - 1) {
+            if (list_index < values.size() - 1) {
                 list_description += ",";
             }
         }
