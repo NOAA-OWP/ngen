@@ -485,7 +485,7 @@ namespace geojson {
              */
             template <typename T>
             void as_vector(std::vector<T>& vector) const{
-                PropertyVisitor<T> visitor(vector);
+                AsVectorVisitor<T> visitor(vector);
                 boost::apply_visitor(visitor, data);
             }
 
@@ -559,20 +559,26 @@ namespace geojson {
              * @tparam T 
              */
             template<typename T>
-            struct PropertyVisitor : public boost::static_visitor<>
+            struct AsVectorVisitor : public boost::static_visitor<>
             {
-                //PropertyVisitor takes a templated vector and stores the vector
+                //AsVectorVisitor takes a templated vector and stores the vector
                 //reference in the struct
-                PropertyVisitor(std::vector<T>& v) : vec(v) {}
+                AsVectorVisitor(std::vector<T>& v) : vec(v) {}
                 //Vistor operators, first is generic template operator
                 template<typename Variant>
                 void operator () (const Variant& value) {
                     //This is a no-op for all types that are not T
                 }
-     
+
                 //Visitor operator for type T, adds T types to vector
                 void operator () (const T& value)
                 {
+                    vec.push_back(value);
+                }
+
+                //Enable this conversion only if the original template param is floating point, so there is no loss
+                template <typename Floating = T, std::enable_if_t<std::is_floating_point<Floating>::value, bool> = true >
+                void operator () (const long& value){
                     vec.push_back(value);
                 }
 
