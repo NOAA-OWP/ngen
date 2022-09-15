@@ -15,6 +15,11 @@ namespace geojson {
     //Forward declare variant types
     struct List;
     struct Object;
+    /**
+     * Shorthand for a mapping between strings and properties
+     */
+    typedef std::map<std::string, JSONProperty> PropertyMap;
+
     using PropertyVariant = boost::variant<boost::blank, 
                                            long, 
                                            double, 
@@ -76,11 +81,6 @@ namespace geojson {
                 return "Object";
         }
     }
-
-    /**
-     * Shorthand for a mapping between strings and properties
-     */
-    typedef std::map<std::string, JSONProperty> PropertyMap;
 
     /** @TODO: Convert JSONProperty into a variant of the supported types  */
     /**
