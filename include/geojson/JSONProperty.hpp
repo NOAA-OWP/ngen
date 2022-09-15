@@ -94,7 +94,7 @@ namespace geojson {
 
                 if (property_tree.empty() && !property_tree.data().empty()) {
                     // This is a terminal node and has a raw value
-                        // TODO: Add handling for nested objects by determining if property.second is another ptree
+
                         std::string value = property_tree.data();
 
                         if (value == "true" || value == "false") {
