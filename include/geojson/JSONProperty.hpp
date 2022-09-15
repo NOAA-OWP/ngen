@@ -355,40 +355,25 @@ namespace geojson {
                 data = List( &value_list );
             }
 
-            // JSONProperty(const JSONProperty &&original){
-            //     type = original.type;
-            //     key = original.key;
-            //     data = original.data;
-            //     switch (type) {
-            //         case PropertyType::Boolean:
-            //             boolean = original.boolean;
-            //             break;
-            //         case PropertyType::Natural:
-            //             natural_number = original.natural_number;
-            //             break;
-            //         case PropertyType::Real:
-            //             real_number = original.real_number;
-            //             break;
-            //         case PropertyType::String:
-            //             string = original.string;
-            //             break;
-            //         case PropertyType::List:
-            //             for (const JSONProperty& property : original.value_list) {
-            //                 value_list.push_back(std::move(property));
-            //             }
-            //             break;
-            //         default:
-            //             for (std::pair<std::string, const JSONProperty& > pair : original.values) {
-            //                 values.emplace(pair.first, std::move(pair.second));
-            //             }
-            //     }
-            // };
-
             JSONProperty(const JSONProperty &original) {
                 if( this != &original){
                     type = original.type;
                     key = original.key;
-                    data = original.data;
+                    switch (type) {
+                        case PropertyType::List:
+                            for (const JSONProperty& property : original.value_list) {
+                                value_list.push_back(std::move(property));
+                            }
+                            data = List( &value_list );
+                            break;
+                        case PropertyType::Object:
+                            for (std::pair<std::string, const JSONProperty& > pair : original.values) {
+                                values.emplace(pair.first, std::move(pair.second));
+                            }
+                            data = Object( &values );
+                        default:
+                            data = original.data;
+                    }
                 }
             }
 
