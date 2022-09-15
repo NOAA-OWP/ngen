@@ -104,28 +104,26 @@ namespace geojson {
                         }
                         else {
                           //Try natural number first since double cant cast to int/long
-                          try{
-                            natural_number = boost::lexical_cast<long>(value);
+                        long casted_long_data;
+                        double casted_double_data;
+                        if( boost::conversion::try_lexical_convert<long>(value, casted_long_data) ){
                             type = PropertyType::Natural;
-                            data = natural_number;
-                          }
-                          catch (boost::bad_lexical_cast &e)
-                          {
-                            try {
-                              //Try to cast to double/real next
-                              real_number = boost::lexical_cast<double>(value);
-                              type = PropertyType::Real;
-                              data = real_number;
-                            }
-                            catch (boost::bad_lexical_cast & e)
-                            {
-                              //At this point, we are left with string option
-                              string = value;
-                              type = PropertyType::String;
-                              data = string;
-                            }
-                          }
+                            natural_number = casted_long_data;
+                            data = casted_long_data;
                         }
+                        else if( boost::conversion::try_lexical_convert<double>(value, casted_double_data) ){
+                            //Try to cast to double/real next
+                            type = PropertyType::Real;
+                            real_number = casted_double_data;
+                            data = casted_double_data;
+                        }
+                        else{
+                            //At this point, we are left with string option
+                            //string = value;
+                            type = PropertyType::String;
+                            data = std::move(value);
+                        }
+                    }
                 }
                 else {
                     // This isn't a terminal node, therefore represents an object or array
