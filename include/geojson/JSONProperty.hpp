@@ -89,8 +89,8 @@ namespace geojson {
     class JSONProperty {
         public:
             
-            JSONProperty(std::string value_key, const boost::property_tree::ptree& property_tree) {
-                key = value_key;
+            JSONProperty(std::string value_key, const boost::property_tree::ptree& property_tree):
+            key(std::move(value_key)) {
 
                 if (property_tree.empty() && !property_tree.data().empty()) {
                     // This is a terminal node and has a raw value
@@ -222,12 +222,12 @@ namespace geojson {
              * @param value_key: The name of the key that stores this value
              * @param value: The text that will be stored
              */
-            JSONProperty(std::string value_key, const char *value) {
-                type = PropertyType::String;
-                key = std::move(value_key);
-                string = value;
-                data = string;
-            }
+            JSONProperty(std::string value_key, const char *value):
+                type(PropertyType::String),
+                key(std::move(value_key)),
+                string(value),
+                data(std::string(value))
+            {}
 
             /**
              * Create a JSONProperty that stores text
@@ -341,12 +341,12 @@ namespace geojson {
              * @param value_key: The name of the key that stores this value
              * @param value: The true or false value that will be stored
              */
-            JSONProperty(std::string value_key, bool value) {
-                type = PropertyType::Boolean;
-                key = std::move(value_key);
-                boolean = value;
-                data = boolean;
-            }
+            JSONProperty(std::string value_key, bool value):
+                type(PropertyType::Boolean),
+                key(std::move(value_key)),
+                boolean(value),
+                data(value)
+            {}
 
             /**
              * Create a JSONProperty that stores a nested map of properties
