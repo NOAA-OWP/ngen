@@ -15,7 +15,7 @@ using namespace std;
 namespace data_access {
     namespace test {
 /**
- * A trivial implementation, strictly for testing OptionalWrappedProvider.
+ * A trivial implementation, strictly for testing OptionalWrappedDataProvider.
  */
         class TrivialForcingProvider : public GenericDataProvider {
         public:

@@ -31,7 +31,7 @@ protected:
         return formulation.get_bmi_main_output_var();
     }
 
-    static const std::vector<std::shared_ptr<data_access::OptionalWrappedProvider>> &get_friend_deferred_providers(
+    static const std::vector<std::shared_ptr<data_access::OptionalWrappedDataProvider>> &get_friend_deferred_providers(
             const Bmi_Multi_Formulation& formulation)
     {
         return formulation.deferredProviders;

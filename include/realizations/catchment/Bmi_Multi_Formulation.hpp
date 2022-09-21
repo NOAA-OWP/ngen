@@ -7,7 +7,7 @@
 #include "Bmi_Module_Formulation.hpp"
 #include "bmi.hpp"
 #include "GenericDataProvider.hpp"
-#include "OptionalWrappedProvider.hpp"
+#include "OptionalWrappedDataProvider.hpp"
 #include "ConfigurationException.hpp"
 
 #define BMI_REALIZATION_CFG_PARAM_REQ__MODULES "modules"
@@ -179,8 +179,9 @@ namespace realization {
          * @return The collection of forcing output property names this instance can provide.
          * @see ForcingProvider
          */
-        const vector<std::string> &get_available_forcing_outputs();
-        const vector<std::string> &get_avaliable_variable_names() override { return get_available_forcing_outputs(); }
+        //const vector<std::string> &get_available_forcing_outputs();
+        //const vector<std::string> &get_avaliable_variable_names() override { return get_available_forcing_outputs(); }
+        const vector<std::string> &get_avaliable_variable_names();
 
         /**
         * Get the input variables of 
@@ -286,7 +287,7 @@ namespace realization {
 
         long get_data_start_time() override
         {
-            return get_forcing_output_time_begin("");
+            return get_variable_time_begin("");
         }
 
         /**
@@ -299,9 +300,8 @@ namespace realization {
          * @return The inclusive beginning of the period of time over which this instance can provide this data.
          */
 
-        [[deprecated]]
-        time_t get_forcing_output_time_begin(const std::string &forcing_name) {
-            std::string var_name = forcing_name;
+        time_t get_variable_time_begin(const std::string &variable_name) {
+            std::string var_name = variable_name;
             if(var_name == "*" || var_name == ""){
                 // when unspecified, assume all data is available for the same range.
                 // Find one that successfully returns...
@@ -321,7 +321,7 @@ namespace realization {
             }
             // If not found ...
             if (availableData.empty() || availableData.find(var_name) == availableData.end()) {
-                throw runtime_error(get_formulation_type() + " cannot get output time for unknown \"" + forcing_name + "\"");
+                throw runtime_error(get_formulation_type() + " cannot get output time for unknown \"" + variable_name + "\"");
             }
             return availableData[var_name]->get_data_start_time();
         }
@@ -338,7 +338,7 @@ namespace realization {
 
         long get_data_stop_time() override
         {
-            return get_forcing_output_time_end("");
+            return get_variable_time_end("");
         }
 
         /**
@@ -350,9 +350,10 @@ namespace realization {
          *
          * @return The exclusive ending of the period of time over which this instance can provide this data.
          */
-        time_t get_forcing_output_time_end(const std::string &forcing_name) {
+        //time_t get_forcing_output_time_end(const std::string &forcing_name) {
+        time_t get_variable_time_end(const std::string &variable_name) {
             // If not found ...
-            std::string var_name = forcing_name;
+            std::string var_name = variable_name;
             if(var_name == "*" || var_name == ""){
                 // when unspecified, assume all data is available for the same range.
                 // Find one that successfully returns...
@@ -372,7 +373,7 @@ namespace realization {
             }
             // If not found ...
             if (availableData.empty() || availableData.find(var_name) == availableData.end()) {
-                throw runtime_error(get_formulation_type() + " cannot get output time for unknown \"" + forcing_name + "\"");
+                throw runtime_error(get_formulation_type() + " cannot get output time for unknown \"" + variable_name + "\"");
             }
             return availableData[var_name]->get_data_stop_time();
         }
@@ -667,7 +668,7 @@ namespace realization {
          */
         inline void init_deferred_associations() {
             for (int d = 0; d < deferredProviders.size(); ++d) {
-                std::shared_ptr<data_access::OptionalWrappedProvider> &deferredProvider  = deferredProviders[d];
+                std::shared_ptr<data_access::OptionalWrappedDataProvider> &deferredProvider  = deferredProviders[d];
                 // Skip doing anything for any deferred provider that already has its backing provider set
                 if (deferredProvider->isWrappedProviderSet())
                     continue;
@@ -717,7 +718,7 @@ namespace realization {
          */
         template<class T>
         std::shared_ptr<T> init_nested_module(int mod_index, std::string identifier, geojson::PropertyMap properties) {
-            std::shared_ptr<data_access::GenericDataProvider> wfp = std::make_shared<data_access::WrappedForcingProvider>(this);
+            std::shared_ptr<data_access::GenericDataProvider> wfp = std::make_shared<data_access::WrappedDataProvider>(this);
             std::shared_ptr<T> mod = std::make_shared<T>(identifier, wfp, output);
 
             // Since this is a nested formulation, support usage of the '{{id}}' syntax for init config file paths.
@@ -797,15 +798,15 @@ namespace realization {
             // Only include BMI variable name, as that's what'll be visible when associating to backing provider
             // It's "deferred" in that we'll set the backing later.
             // It's "optional" in that it waits to use backing provider, using the default some number of times
-            std::shared_ptr<data_access::OptionalWrappedProvider> provider;
+            std::shared_ptr<data_access::OptionalWrappedDataProvider> provider;
             // TODO: make sure only alias is needed
             auto defs_it = default_output_values.find(framework_output_name);
             if (defs_it != default_output_values.end()) {
                 // TODO: consider also reading wait count from config
-                provider = std::make_shared<data_access::OptionalWrappedProvider>(framework_output_name, defs_it->second, 1);
+                provider = std::make_shared<data_access::OptionalWrappedDataProvider>(framework_output_name, defs_it->second, 1);
             }
             else {
-                provider = std::make_shared<data_access::OptionalWrappedProvider>(framework_output_name);
+                provider = std::make_shared<data_access::OptionalWrappedDataProvider>(framework_output_name);
             }
 
             // Add deferred to collection and module index to collection
@@ -830,7 +831,7 @@ namespace realization {
          * It assumes that the necessary provider will be available and associated once all nested formulations have
          * been created.  This member tracks these so that this deferred association can be done.
          */
-        std::vector<std::shared_ptr<data_access::OptionalWrappedProvider>> deferredProviders;
+        std::vector<std::shared_ptr<data_access::OptionalWrappedDataProvider>> deferredProviders;
 
         /**
          * The module indices for the modules associated with each item in @ref deferredProviders.

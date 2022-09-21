@@ -6,7 +6,7 @@
 #include "Bmi_Formulation.hpp"
 #include "EtCalcProperty.hpp"
 #include "EtCombinationMethod.hpp"
-#include "WrappedForcingProvider.hpp"
+#include "WrappedDataProvider.hpp"
 #include "Bmi_C_Adapter.hpp"
 #include <AorcForcing.hpp>
 #include <DataProvider.hpp>
@@ -243,7 +243,8 @@ namespace realization {
          * @return The collection of forcing output property names this instance can provide.
          * @see ForcingProvider
          */
-        const vector<std::string> &get_available_forcing_outputs() {
+        //const vector<std::string> &get_available_forcing_outputs() {
+        const vector<std::string> &get_avaliable_variable_names() {
             if (is_model_initialized() && available_forcings.empty()) {
                 for (const std::string &output_var_name : get_bmi_model()->GetOutputVarNames()) {
                     available_forcings.push_back(output_var_name);
@@ -256,9 +257,9 @@ namespace realization {
             return available_forcings;
         }
 
-        inline const vector<std::string> &get_avaliable_variable_names() override {
-            return get_available_forcing_outputs();
-        }
+        //inline const vector<std::string> &get_avaliable_variable_names() override {
+        //    return get_available_forcing_outputs();
+        //}
 
         /**
          * Get the inclusive beginning of the period of time over which this instance can provide data for this forcing.
@@ -269,9 +270,9 @@ namespace realization {
          *
          * @return The inclusive beginning of the period of time over which this instance can provide this data.
          */
-        time_t get_forcing_output_time_begin(const std::string &forcing_name) {
+        time_t get_variable_time_begin(const std::string &variable_name) {
             // TODO: come back and implement if actually necessary for this type; for now don't use
-            throw runtime_error("Bmi_Modular_Formulation does not yet implement get_forcing_output_time_begin");
+            throw runtime_error("Bmi_Modular_Formulation does not yet implement get_variable_time_begin");
         }
 
         /**
@@ -297,10 +298,10 @@ namespace realization {
          *
          * @return The exclusive ending of the period of time over which this instance can provide this data.
          */
-        [[deprecated]]
-        time_t get_forcing_output_time_end(const std::string &output_name) {
+        //time_t get_forcing_output_time_end(const std::string &output_name) {
+        time_t get_variable_time_end(const std::string &varibale_name) {
             // TODO: come back and implement if actually necessary for this type; for now don't use
-            throw runtime_error("Bmi_Module_Formulation does not yet implement get_forcing_output_time_end");
+            throw runtime_error("Bmi_Module_Formulation does not yet implement get_variable_time_end");
         }
 
         long get_data_stop_time() override {
@@ -393,7 +394,8 @@ namespace realization {
             std::string output_units = selector.get_output_units();
 
             // First make sure this is an available output
-            const std::vector<std::string> forcing_outputs = get_available_forcing_outputs();
+            //const std::vector<std::string> forcing_outputs = get_available_forcing_outputs();
+            const std::vector<std::string> forcing_outputs = get_avaliable_variable_names();
             if (std::find(forcing_outputs.begin(), forcing_outputs.end(), output_name) == forcing_outputs.end()) {
                 throw runtime_error(get_formulation_type() + " received invalid output forcing name " + output_name);
             }
@@ -459,7 +461,8 @@ namespace realization {
             std::string output_units = selector.get_output_units();
 
             // First make sure this is an available output
-            const std::vector<std::string> forcing_outputs = get_available_forcing_outputs();
+            //const std::vector<std::string> forcing_outputs = get_available_forcing_outputs();
+            const std::vector<std::string> forcing_outputs = get_avaliable_variable_names();
             if (std::find(forcing_outputs.begin(), forcing_outputs.end(), output_name) == forcing_outputs.end()) {
                 throw runtime_error(get_formulation_type() + " received invalid output forcing name " + output_name);
             }
@@ -776,8 +779,8 @@ namespace realization {
             else {
                 set_output_header_fields(get_output_variable_names());
             }
-            // Create a reference to this for ET by using a WrappedForcingProvider
-            std::shared_ptr<data_access::GenericDataProvider> self = std::make_shared<data_access::WrappedForcingProvider>(this);
+            // Create a reference to this for ET by using a WrappedDataProvider
+            std::shared_ptr<data_access::GenericDataProvider> self = std::make_shared<data_access::WrappedDataProvider>(this);
             input_forcing_providers[NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP] = self;
             input_forcing_providers[CSDMS_STD_NAME_POTENTIAL_ET] = self;
 

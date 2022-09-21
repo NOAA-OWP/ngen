@@ -3,7 +3,7 @@
 #include "Bmi_Formulation.hpp"
 #include <iostream>
 #include "Bmi_Py_Formulation.hpp"
-#include <WrappedForcingProvider.hpp>
+#include <WrappedDataProvider.hpp>
 
 using namespace realization;
 
@@ -15,7 +15,7 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
     set_bmi_main_output_var(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__MAIN_OUT_VAR).as_string());
     set_model_type_name(properties.at(BMI_REALIZATION_CFG_PARAM_REQ__MODEL_TYPE).as_string());
 
-    std::shared_ptr<data_access::WrappedForcingProvider> forcing_provider = std::make_shared<data_access::WrappedForcingProvider>(forcing.get());
+    std::shared_ptr<data_access::WrappedDataProvider> forcing_provider = std::make_shared<data_access::WrappedDataProvider>(forcing.get());
     for (const std::string &forcing_name_or_alias : forcing->get_avaliable_variable_names()) {
         availableData[forcing_name_or_alias] = forcing_provider;
     }
@@ -176,7 +176,8 @@ const bool &Bmi_Multi_Formulation::get_allow_model_exceed_end_time() const {
  * @return The collection of forcing output property names this instance can provide.
  * @see ForcingProvider
  */
-const vector<std::string> &Bmi_Multi_Formulation::get_available_forcing_outputs() {
+//const vector<std::string> &Bmi_Multi_Formulation::get_available_forcing_outputs() {
+const vector<std::string> &Bmi_Multi_Formulation::get_avaliable_variable_names() {
     if (is_model_initialized() && available_forcings.empty()) {
         for (const nested_module_ptr &module: modules) {
             for (const std::string &out_var_name: module->get_bmi_output_variables()) {

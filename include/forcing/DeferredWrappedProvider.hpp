@@ -5,14 +5,14 @@
 #include <utility>
 #include <vector>
 #include <algorithm>
-#include "WrappedForcingProvider.hpp"
+#include "WrappedDataProvider.hpp"
 
 using namespace std;
 
 namespace data_access {
 
     /**
-     * A specialized @WrappedForcingProvider that is created without first knowing the backing source it wraps.
+     * A specialized @WrappedDataProvider that is created without first knowing the backing source it wraps.
      *
      * This type wraps another @ref ForcingProvider, similarly to its parent.  This is "optimistic," however, in that it
      * is constructed without the backing data source it will wrap.  It only requires the data output names it expects
@@ -32,7 +32,7 @@ namespace data_access {
      * returning results from a nested call to the wrapped provider, this type's implementation ensures only the outputs
      * set as provideable in this instance (i.e., the outer wrapper) are returned.
      */
-    class DeferredWrappedProvider : public WrappedForcingProvider 
+    class DeferredWrappedProvider : public WrappedDataProvider 
     {
     public:
 
@@ -41,7 +41,7 @@ namespace data_access {
          *
          * @param providedOutputs The collection of the names of outputs this instance will need to provide.
          */
-        explicit DeferredWrappedProvider(vector<string> providedOutputs) : WrappedForcingProvider(nullptr), providedOutputs(std::move(providedOutputs)) { }
+        explicit DeferredWrappedProvider(vector<string> providedOutputs) : WrappedDataProvider(nullptr), providedOutputs(std::move(providedOutputs)) { }
 
         /**
          * Convenience constructor for when there is only one provided output name.
@@ -73,11 +73,6 @@ namespace data_access {
          */
 
         const std::vector<std::string> &get_avaliable_variable_names() {
-            return providedOutputs;
-        }
-
-        [[deprecated]]
-        const std::vector<std::string> &get_available_forcing_outputs() {
             return providedOutputs;
         }
 
