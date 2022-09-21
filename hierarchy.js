@@ -44,7 +44,6 @@ var hierarchy =
     [ "data_access::DataProvider< double, CatchmentAggrDataSelector >", "classdata__access_1_1_data_provider.html", [
       [ "data_access::GenericDataProvider", "classdata__access_1_1_generic_data_provider.html", [
         [ "CsvPerFeatureForcingProvider", "class_csv_per_feature_forcing_provider.html", null ],
-        [ "Forcing", "class_forcing.html", null ],
         [ "data_access::WrappedForcingProvider", "classdata__access_1_1_wrapped_forcing_provider.html", [
           [ "data_access::DeferredWrappedProvider", "classdata__access_1_1_deferred_wrapped_provider.html", [
             [ "data_access::OptionalWrappedProvider", "classdata__access_1_1_optional_wrapped_provider.html", null ]
@@ -76,7 +75,6 @@ var hierarchy =
     [ "evapotranspiration_forcing", "structevapotranspiration__forcing.html", null ],
     [ "evapotranspiration_options", "structevapotranspiration__options.html", null ],
     [ "evapotranspiration_params", "structevapotranspiration__params.html", null ],
-    [ "forcing::ForcingProvider", "classforcing_1_1_forcing_provider.html", null ],
     [ "forcing_params", "structforcing__params.html", null ],
     [ "geojson::FeatureBase", "classgeojson_1_1_feature_base.html", [
       [ "geojson::CollectionFeature", "classgeojson_1_1_collection_feature.html", null ],

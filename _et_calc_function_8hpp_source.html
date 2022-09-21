@@ -369,7 +369,7 @@ $(document).ready(function(){initNavTree('_et_calc_function_8hpp_source.html',''
 <div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>(</div>
 <div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span><a class="code hl_struct" href="structsolar__radiation__options.html">solar_radiation_options</a> *options, </div>
 <div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span><a class="code hl_struct" href="structsolar__radiation__parameters.html">solar_radiation_parameters</a> *params,</div>
-<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span><a class="code hl_struct" href="structsolar__radiation__forcing.html">solar_radiation_forcing</a> *<a class="code hl_namespace" href="namespaceforcing.html">forcing</a>, </div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span><a class="code hl_struct" href="structsolar__radiation__forcing.html">solar_radiation_forcing</a> *forcing, </div>
 <div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span><a class="code hl_struct" href="structsolar__radiation__results.html">solar_radiation_results</a> *results</div>
 <div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>);</div>
 <div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span> </div>
@@ -941,7 +941,7 @@ $(document).ready(function(){initNavTree('_et_calc_function_8hpp_source.html',''
 <div class="line"><a id="l00854" name="l00854"></a><span class="lineno">  854</span><span class="comment">//############################################################/</span></div>
 <div class="line"><a id="l00855" name="l00855"></a><span class="lineno">  855</span> </div>
 <div class="line"><a id="l00856" name="l00856"></a><span class="lineno">  856</span><span class="keywordtype">void</span> calculate_solar_radiation(<a class="code hl_struct" href="structsolar__radiation__options.html">solar_radiation_options</a> *options, <a class="code hl_struct" href="structsolar__radiation__parameters.html">solar_radiation_parameters</a> *params, </div>
-<div class="line"><a id="l00857" name="l00857"></a><span class="lineno">  857</span>                  <a class="code hl_struct" href="structsolar__radiation__forcing.html">solar_radiation_forcing</a> *<a class="code hl_namespace" href="namespaceforcing.html">forcing</a>, <a class="code hl_struct" href="structsolar__radiation__results.html">solar_radiation_results</a> *results)</div>
+<div class="line"><a id="l00857" name="l00857"></a><span class="lineno">  857</span>                  <a class="code hl_struct" href="structsolar__radiation__forcing.html">solar_radiation_forcing</a> *forcing, <a class="code hl_struct" href="structsolar__radiation__results.html">solar_radiation_results</a> *results)</div>
 <div class="line"><a id="l00858" name="l00858"></a><span class="lineno">  858</span>{</div>
 <div class="line"><a id="l00859" name="l00859"></a><span class="lineno">  859</span><span class="keywordtype">double</span> delta,r,equation_of_time_minutes,M,phi;</div>
 <div class="line"><a id="l00860" name="l00860"></a><span class="lineno">  860</span><span class="keywordtype">double</span> sinalpha,tau,alpha,cosalpha,azimuth;</div>
@@ -965,10 +965,10 @@ $(document).ready(function(){initNavTree('_et_calc_function_8hpp_source.html',''
 <div class="line"><a id="l00878" name="l00878"></a><span class="lineno">  878</span> </div>
 <div class="line"><a id="l00879" name="l00879"></a><span class="lineno">  879</span>solar_constant_W_per_sq_m = 1361.6;     <span class="comment">// Dudock de Wit et al. 2017 GRL, approx. avg. value</span></div>
 <div class="line"><a id="l00880" name="l00880"></a><span class="lineno">  880</span> </div>
-<div class="line"><a id="l00881" name="l00881"></a><span class="lineno">  881</span>solar_declination_angle_degrees=23.45*M_PI/180.0*cos(2.0*M_PI/365.0*(172.0-<a class="code hl_namespace" href="namespaceforcing.html">forcing</a>-&gt;day_of_year));</div>
+<div class="line"><a id="l00881" name="l00881"></a><span class="lineno">  881</span>solar_declination_angle_degrees=23.45*M_PI/180.0*cos(2.0*M_PI/365.0*(172.0-forcing-&gt;<a class="code hl_variable" href="structsolar__radiation__forcing.html#a7c02961095c506178dd80b737a9f304c">day_of_year</a>));</div>
 <div class="line"><a id="l00882" name="l00882"></a><span class="lineno">  882</span>solar_declination_angle_radians=solar_declination_angle_degrees*M_PI/180.0;</div>
 <div class="line"><a id="l00883" name="l00883"></a><span class="lineno">  883</span> </div>
-<div class="line"><a id="l00884" name="l00884"></a><span class="lineno">  884</span>earth_sun_distance_ratio=1.0+0.017*cos(2.0*M_PI/365*(186.0-<a class="code hl_namespace" href="namespaceforcing.html">forcing</a>-&gt;day_of_year));</div>
+<div class="line"><a id="l00884" name="l00884"></a><span class="lineno">  884</span>earth_sun_distance_ratio=1.0+0.017*cos(2.0*M_PI/365*(186.0-forcing-&gt;<a class="code hl_variable" href="structsolar__radiation__forcing.html#a7c02961095c506178dd80b737a9f304c">day_of_year</a>));</div>
 <div class="line"><a id="l00885" name="l00885"></a><span class="lineno">  885</span> </div>
 <div class="line"><a id="l00886" name="l00886"></a><span class="lineno">  886</span><span class="comment">// calculate the local hour angle using a unit circle centered on the observer, with Obs. at x=1, y=0.</span></div>
 <div class="line"><a id="l00887" name="l00887"></a><span class="lineno">  887</span><span class="comment">//      Note: G=Greenwich, A=180E=180W==antipode, O=obs., S=sun.</span></div>
@@ -997,9 +997,9 @@ $(document).ready(function(){initNavTree('_et_calc_function_8hpp_source.html',''
 <div class="line"><a id="l00910" name="l00910"></a><span class="lineno">  910</span><span class="comment">//</span></div>
 <div class="line"><a id="l00911" name="l00911"></a><span class="lineno">  911</span> </div>
 <div class="line"><a id="l00912" name="l00912"></a><span class="lineno">  912</span><span class="comment">// this is the &quot;equation of time&quot; that accounts for the analemma effect </span></div>
-<div class="line"><a id="l00913" name="l00913"></a><span class="lineno">  913</span>M=2.0*M_PI*<a class="code hl_namespace" href="namespaceforcing.html">forcing</a>-&gt;day_of_year/365.242;     <span class="comment">// mean anomaly of sun  from wikipedia, works for leap years </span></div>
+<div class="line"><a id="l00913" name="l00913"></a><span class="lineno">  913</span>M=2.0*M_PI*forcing-&gt;<a class="code hl_variable" href="structsolar__radiation__forcing.html#a7c02961095c506178dd80b737a9f304c">day_of_year</a>/365.242;     <span class="comment">// mean anomaly of sun  from wikipedia, works for leap years </span></div>
 <div class="line"><a id="l00914" name="l00914"></a><span class="lineno">  914</span>equation_of_time_minutes=-7.655*sin(M)+9.873*sin(2.0*M+3.588);    <span class="comment">// an approximation of the equation of time, minutes </span></div>
-<div class="line"><a id="l00915" name="l00915"></a><span class="lineno">  915</span>zulu_time_h=<a class="code hl_namespace" href="namespaceforcing.html">forcing</a>-&gt;zulu_time_h-equation_of_time_minutes/1440.0; <span class="comment">// adjust the position of the sun for analemma effect</span></div>
+<div class="line"><a id="l00915" name="l00915"></a><span class="lineno">  915</span>zulu_time_h=forcing-&gt;<a class="code hl_variable" href="structsolar__radiation__forcing.html#a4a2ef20cd64d5bcc4f7310c299b5be23">zulu_time_h</a>-equation_of_time_minutes/1440.0; <span class="comment">// adjust the position of the sun for analemma effect</span></div>
 <div class="line"><a id="l00916" name="l00916"></a><span class="lineno">  916</span> </div>
 <div class="line"><a id="l00917" name="l00917"></a><span class="lineno">  917</span><span class="comment">// here I use the antipode as the time origin, because that is where the sun is overhead at 00:00Z</span></div>
 <div class="line"><a id="l00918" name="l00918"></a><span class="lineno">  918</span>antipodal_hour_angle_degrees    =            zulu_time_h*15.0; <span class="comment">// see note on above figure</span></div>
@@ -1059,19 +1059,19 @@ $(document).ready(function(){initNavTree('_et_calc_function_8hpp_source.html',''
 <div class="line"><a id="l00972" name="l00972"></a><span class="lineno">  972</span>  b=0.664+0.163/fh1;</div>
 <div class="line"><a id="l00973" name="l00973"></a><span class="lineno">  973</span>  </div>
 <div class="line"><a id="l00974" name="l00974"></a><span class="lineno">  974</span>  <span class="comment">// note, atm_turbidity is equal to Tlk in Ineichen and Perez, 2002.</span></div>
-<div class="line"><a id="l00975" name="l00975"></a><span class="lineno">  975</span>  Ic=b*Io*exp(-0.09*optical_air_mass*(<a class="code hl_namespace" href="namespaceforcing.html">forcing</a>-&gt;atmospheric_turbidity_factor-1.0));  <span class="comment">// clear sky radiation</span></div>
+<div class="line"><a id="l00975" name="l00975"></a><span class="lineno">  975</span>  Ic=b*Io*exp(-0.09*optical_air_mass*(forcing-&gt;<a class="code hl_variable" href="structsolar__radiation__forcing.html#a1aac1d52879b6c6d3bfab7555a675937">atmospheric_turbidity_factor</a>-1.0));  <span class="comment">// clear sky radiation</span></div>
 <div class="line"><a id="l00976" name="l00976"></a><span class="lineno">  976</span> </div>
 <div class="line"><a id="l00977" name="l00977"></a><span class="lineno">  977</span>  <span class="comment">// adjust for cloudiness effects using procedure from Bras&#39; Hydrology text</span></div>
 <div class="line"><a id="l00978" name="l00978"></a><span class="lineno">  978</span>  <span class="keywordflow">if</span>(options-&gt;<a class="code hl_variable" href="structsolar__radiation__options.html#ac69f14364ec436f79b61ae3926e57e80">cloud_base_height_known</a>==TRUE) </div>
 <div class="line"><a id="l00979" name="l00979"></a><span class="lineno">  979</span>    {</div>
 <div class="line"><a id="l00980" name="l00980"></a><span class="lineno">  980</span>    <span class="comment">// percent of cloudless insolation, z= cloud base elev km.</span></div>
-<div class="line"><a id="l00981" name="l00981"></a><span class="lineno">  981</span>    kshort=0.18+0.0853*<a class="code hl_namespace" href="namespaceforcing.html">forcing</a>-&gt;cloud_base_height_m/1000.0;   <span class="comment">// convert cloud base height to km for this calc.                                   </span></div>
-<div class="line"><a id="l00982" name="l00982"></a><span class="lineno">  982</span>    Ips=Ic*(1.0-(1.0-kshort)*<a class="code hl_namespace" href="namespaceforcing.html">forcing</a>-&gt;cloud_cover_fraction);   <span class="comment">// insolation considering clouds, Eagleson, 1970.</span></div>
+<div class="line"><a id="l00981" name="l00981"></a><span class="lineno">  981</span>    kshort=0.18+0.0853*forcing-&gt;<a class="code hl_variable" href="structsolar__radiation__forcing.html#ad3b0328019aa78661749e49b44d21116">cloud_base_height_m</a>/1000.0;   <span class="comment">// convert cloud base height to km for this calc.                                   </span></div>
+<div class="line"><a id="l00982" name="l00982"></a><span class="lineno">  982</span>    Ips=Ic*(1.0-(1.0-kshort)*forcing-&gt;<a class="code hl_variable" href="structsolar__radiation__forcing.html#ac69d1135c0564c906b38aba939f627f1">cloud_cover_fraction</a>);   <span class="comment">// insolation considering clouds, Eagleson, 1970.</span></div>
 <div class="line"><a id="l00983" name="l00983"></a><span class="lineno">  983</span>    }</div>
 <div class="line"><a id="l00984" name="l00984"></a><span class="lineno">  984</span>  <span class="keywordflow">else</span></div>
 <div class="line"><a id="l00985" name="l00985"></a><span class="lineno">  985</span>    {</div>
 <div class="line"><a id="l00986" name="l00986"></a><span class="lineno">  986</span>    <span class="comment">// cloud base elevation not known.</span></div>
-<div class="line"><a id="l00987" name="l00987"></a><span class="lineno">  987</span>    kshort=0.65*<a class="code hl_namespace" href="namespaceforcing.html">forcing</a>-&gt;cloud_cover_fraction*<a class="code hl_namespace" href="namespaceforcing.html">forcing</a>-&gt;cloud_cover_fraction;  <span class="comment">// (TVA, 1972)</span></div>
+<div class="line"><a id="l00987" name="l00987"></a><span class="lineno">  987</span>    kshort=0.65*forcing-&gt;<a class="code hl_variable" href="structsolar__radiation__forcing.html#ac69d1135c0564c906b38aba939f627f1">cloud_cover_fraction</a>*forcing-&gt;<a class="code hl_variable" href="structsolar__radiation__forcing.html#ac69d1135c0564c906b38aba939f627f1">cloud_cover_fraction</a>;  <span class="comment">// (TVA, 1972)</span></div>
 <div class="line"><a id="l00988" name="l00988"></a><span class="lineno">  988</span>    Ips=Ic*(1.0-kshort);</div>
 <div class="line"><a id="l00989" name="l00989"></a><span class="lineno">  989</span>    }</div>
 <div class="line"><a id="l00990" name="l00990"></a><span class="lineno">  990</span> </div>
@@ -1200,7 +1200,6 @@ $(document).ready(function(){initNavTree('_et_calc_function_8hpp_source.html',''
 <div class="line"><a id="l01113" name="l01113"></a><span class="lineno"> 1113</span>inter_vars-&gt;<a class="code hl_variable" href="structintermediate__vars.html#adb2f9cf2eb5f3eb0a65aa8af9ea489ad">water_latent_heat_of_vaporization_J_per_kg</a>=inter_vars-&gt;<a class="code hl_variable" href="structintermediate__vars.html#adb2f9cf2eb5f3eb0a65aa8af9ea489ad">water_latent_heat_of_vaporization_J_per_kg</a>;</div>
 <div class="line"><a id="l01114" name="l01114"></a><span class="lineno"> 1114</span>inter_vars-&gt;<a class="code hl_variable" href="structintermediate__vars.html#a99f2587e49496470b65a3795ba9d1efa">psychrometric_constant_Pa_per_C</a>=psychrometric_constant_Pa_per_C;</div>
 <div class="line"><a id="l01115" name="l01115"></a><span class="lineno"> 1115</span>}</div>
-<div class="ttc" id="anamespaceforcing_html"><div class="ttname"><a href="namespaceforcing.html">forcing</a></div><div class="ttdef"><b>Definition:</b> ForcingProvider.hpp:7</div></div>
 <div class="ttc" id="astructaorc__forcing__data_html"><div class="ttname"><a href="structaorc__forcing__data.html">aorc_forcing_data</a></div><div class="ttdef"><b>Definition:</b> EtCalcFunction.hpp:79</div></div>
 <div class="ttc" id="astructaorc__forcing__data_html_a1f130970a4b28b7665daf9b6114d7e66"><div class="ttname"><a href="structaorc__forcing__data.html#a1f130970a4b28b7665daf9b6114d7e66">aorc_forcing_data::time</a></div><div class="ttdeci">long int time</div><div class="ttdef"><b>Definition:</b> EtCalcFunction.hpp:92</div></div>
 <div class="ttc" id="astructaorc__forcing__data_html_a47d5f3f48603f63174dfe560f47e7508"><div class="ttname"><a href="structaorc__forcing__data.html#a47d5f3f48603f63174dfe560f47e7508">aorc_forcing_data::longitude</a></div><div class="ttdeci">float longitude</div><div class="ttdef"><b>Definition:</b> EtCalcFunction.hpp:91</div></div>
@@ -1292,7 +1291,7 @@ $(document).ready(function(){initNavTree('_et_calc_function_8hpp_source.html',''
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_1ae4179d5e953611aae20c997279e02c.html">models</a></li><li class="navelem"><a class="el" href="dir_ae4020a59a6f2cd2f975599ed2a9b2b8.html">kernels</a></li><li class="navelem"><b>EtCalcFunction.hpp</b></li>
-    <li class="footer">Generated on Fri Aug 26 2022 13:23:21 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
+    <li class="footer">Generated on Wed Sep 21 2022 16:31:35 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
   </ul>
 </div>
 </body>

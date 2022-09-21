@@ -2,7 +2,6 @@ var classrealization_1_1_bmi___c___formulation =
 [
     [ "time_step_t", "classrealization_1_1_bmi___c___formulation.html#aee10dc672e5a9e106f49dcbe0080cf7c", null ],
     [ "Bmi_C_Formulation", "classrealization_1_1_bmi___c___formulation.html#afb7f4b7f7d8e5b3f636a059181e1a521", null ],
-    [ "_link_legacy_forcing", "classrealization_1_1_bmi___c___formulation.html#a20117323c1944ffc7850838842769ca1", null ],
     [ "add_time", "classrealization_1_1_bmi___c___formulation.html#a248b562be5dc9a21e7afbc014de15114", null ],
     [ "as_c_array", "classrealization_1_1_bmi___c___formulation.html#a30e95c4b73a473da7013f9a73dadee5e", null ],
     [ "calc_et", "classrealization_1_1_bmi___c___formulation.html#ad8d9a56ad3614fb821d88f623030defc", null ],
@@ -111,7 +110,6 @@ var classrealization_1_1_bmi___c___formulation =
     [ "input_forcing_providers", "classrealization_1_1_bmi___c___formulation.html#af291fda11cdc832501bf5eeaeaea18c8", null ],
     [ "last_model_response_delta", "classrealization_1_1_bmi___c___formulation.html#a9f7b1f5b251acbb6a7e3570358aed7a0", null ],
     [ "last_model_response_start_time", "classrealization_1_1_bmi___c___formulation.html#ab176f1bb0fddc82dc0e0ba17551f6321", null ],
-    [ "legacy_forcing", "classrealization_1_1_bmi___c___formulation.html#a67a34af40f82c6627182aae66c79f02d", null ],
     [ "model_initialized", "classrealization_1_1_bmi___c___formulation.html#aea700f63f272c43b594d6789536f67ba", null ],
     [ "model_type_name", "classrealization_1_1_bmi___c___formulation.html#a3e6136d3fde105fd835c8be24db7d1b7", null ],
     [ "next_time_step_index", "classrealization_1_1_bmi___c___formulation.html#ae1511b7095bf219a0139e999642cb573", null ],

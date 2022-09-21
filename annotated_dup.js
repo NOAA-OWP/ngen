@@ -27,9 +27,6 @@ var annotated_dup =
     [ "external", "namespaceexternal.html", [
       [ "ExternalIntegrationException", "classexternal_1_1_external_integration_exception.html", "classexternal_1_1_external_integration_exception" ]
     ] ],
-    [ "forcing", "namespaceforcing.html", [
-      [ "ForcingProvider", "classforcing_1_1_forcing_provider.html", "classforcing_1_1_forcing_provider" ]
-    ] ],
     [ "geojson", "namespacegeojson.html", [
       [ "CollectionFeature", "classgeojson_1_1_collection_feature.html", "classgeojson_1_1_collection_feature" ],
       [ "FeatureBase", "classgeojson_1_1_feature_base.html", "classgeojson_1_1_feature_base" ],
@@ -140,7 +137,6 @@ var annotated_dup =
     [ "evapotranspiration_params", "structevapotranspiration__params.html", "structevapotranspiration__params" ],
     [ "Feature_Test", "class_feature___test.html", "class_feature___test" ],
     [ "FeatureCollection_Test", "class_feature_collection___test.html", "class_feature_collection___test" ],
-    [ "Forcing", "class_forcing.html", "class_forcing" ],
     [ "forcing_params", "structforcing__params.html", "structforcing__params" ],
     [ "GIUH_Test", "class_g_i_u_h___test.html", "class_g_i_u_h___test" ],
     [ "GM_Object", "class_g_m___object.html", "class_g_m___object" ],

@@ -4,7 +4,6 @@ var namespaces_dup =
     [ "data_access", "namespacedata__access.html", "namespacedata__access" ],
     [ "et", "namespaceet.html", "namespaceet" ],
     [ "external", "namespaceexternal.html", "namespaceexternal" ],
-    [ "forcing", "namespaceforcing.html", "namespaceforcing" ],
     [ "geojson", "namespacegeojson.html", "namespacegeojson" ],
     [ "giuh", "namespacegiuh.html", "namespacegiuh" ],
     [ "hy_features", "namespacehy__features.html", "namespacehy__features" ],

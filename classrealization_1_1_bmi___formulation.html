@@ -268,8 +268,6 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:a633b7407d447f77910476c0315c8beb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2cce2b5b18eaa0ed7e0df10db57da144"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#a2cce2b5b18eaa0ed7e0df10db57da144">set_catchment_id</a> (std::string <a class="el" href="classrealization_1_1_catchment___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b">cat_id</a>) override</td></tr>
 <tr class="separator:a2cce2b5b18eaa0ed7e0df10db57da144"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a20117323c1944ffc7850838842769ca1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#a20117323c1944ffc7850838842769ca1">_link_legacy_forcing</a> ()</td></tr>
-<tr class="separator:a20117323c1944ffc7850838842769ca1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a65f97b5efe05e786f59d9f5fd1b10209"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation.html#a65f97b5efe05e786f59d9f5fd1b10209">interpret_parameters</a> (boost::property_tree::ptree &amp;config, <a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> *global=nullptr)</td></tr>
 <tr class="separator:a65f97b5efe05e786f59d9f5fd1b10209"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aceabe9927b36dce61f338919f2af4c1f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation.html#aceabe9927b36dce61f338919f2af4c1f">validate_parameters</a> (<a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> options)</td></tr>
@@ -282,8 +280,6 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:a0dd771991a46889d4bc299f8c13cb5e3"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; std::ostringstream &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___formulation.html#a0dd771991a46889d4bc299f8c13cb5e3">output_text_stream</a></td></tr>
 <tr class="memdesc:a0dd771991a46889d4bc299f8c13cb5e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Object to help with converting numeric output values to text.  <a href="classrealization_1_1_bmi___formulation.html#a0dd771991a46889d4bc299f8c13cb5e3">More...</a><br /></td></tr>
 <tr class="separator:a0dd771991a46889d4bc299f8c13cb5e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a67a34af40f82c6627182aae66c79f02d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_forcing.html">Forcing</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#a67a34af40f82c6627182aae66c79f02d">legacy_forcing</a></td></tr>
-<tr class="separator:a67a34af40f82c6627182aae66c79f02d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8bfec24b0d57240e7ada2493a781db6d"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation.html#a8bfec24b0d57240e7ada2493a781db6d">id</a></td></tr>
 <tr class="separator:a8bfec24b0d57240e7ada2493a781db6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaebc4992c38cb5db68e859e0487ad929"><td class="memItemLeft" align="right" valign="top">polygon_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_area.html#aaebc4992c38cb5db68e859e0487ad929">bounds</a></td></tr>
@@ -434,33 +430,6 @@ Friends</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a20117323c1944ffc7850838842769ca1" name="a20117323c1944ffc7850838842769ca1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a20117323c1944ffc7850838842769ca1">&#9670;&nbsp;</a></span>_link_legacy_forcing()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void realization::Catchment_Formulation::_link_legacy_forcing </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">inherited</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_tshirt___c___realization.html#ae8ac906d01ebad2ad980b11fdd13666e">realization::Tshirt_C_Realization::Tshirt_C_Realization()</a>, and <a class="el" href="classrealization_1_1_tshirt___realization.html#a758b13ad8c46973f299dabf2036837eb">realization::Tshirt_Realization::Tshirt_Realization()</a>.</p>
-
-</div>
-</div>
 <a id="a248b562be5dc9a21e7afbc014de15114" name="a248b562be5dc9a21e7afbc014de15114"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a248b562be5dc9a21e7afbc014de15114">&#9670;&nbsp;</a></span>add_time()</h2>
 
@@ -757,7 +726,7 @@ Friends</h2></td></tr>
 
 <p>Return the variables that are accessable by this data provider. </p>
 
-<p>Implemented in <a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#a3e2194443ec7c23448b39627c30808e7">data_access::DeferredWrappedProvider</a>, <a class="el" href="class_csv_per_feature_forcing_provider.html#af1c179e7ad72c07c8e123b12bd593a27">CsvPerFeatureForcingProvider</a>, <a class="el" href="class_forcing.html#a59351a4949ba74099b5c2d16ade0ef22">Forcing</a>, <a class="el" href="classdata__access_1_1_wrapped_forcing_provider.html#ac2b6c28dd26079d063f588864a21a059">data_access::WrappedForcingProvider</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ab2fd3b0f141f6afb196d61e3ce1d7311">realization::Bmi_Module_Formulation&lt; M &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ab2fd3b0f141f6afb196d61e3ce1d7311">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ab2fd3b0f141f6afb196d61e3ce1d7311">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_Cpp_Adapter &gt;</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a362ca8f07343dd4aabee0bc47def3ce9">realization::Bmi_Multi_Formulation</a>.</p>
+<p>Implemented in <a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#a3e2194443ec7c23448b39627c30808e7">data_access::DeferredWrappedProvider</a>, <a class="el" href="class_csv_per_feature_forcing_provider.html#af1c179e7ad72c07c8e123b12bd593a27">CsvPerFeatureForcingProvider</a>, <a class="el" href="classdata__access_1_1_wrapped_forcing_provider.html#ac2b6c28dd26079d063f588864a21a059">data_access::WrappedForcingProvider</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ab2fd3b0f141f6afb196d61e3ce1d7311">realization::Bmi_Module_Formulation&lt; M &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ab2fd3b0f141f6afb196d61e3ce1d7311">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ab2fd3b0f141f6afb196d61e3ce1d7311">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_Cpp_Adapter &gt;</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a362ca8f07343dd4aabee0bc47def3ce9">realization::Bmi_Multi_Formulation</a>.</p>
 
 </div>
 </div>
@@ -964,7 +933,7 @@ Friends</h2></td></tr>
 
 <p>Return the first valid time for which data from the request variable can be requested. </p>
 
-<p>Implemented in <a class="el" href="class_csv_per_feature_forcing_provider.html#ad96c3f70785165d98d3a3f13e5256e6c">CsvPerFeatureForcingProvider</a>, <a class="el" href="class_forcing.html#a9e5d0637f767cd3e44439557453893bd">Forcing</a>, <a class="el" href="classdata__access_1_1_wrapped_forcing_provider.html#a5d8242b78413194240e77e52d7f99318">data_access::WrappedForcingProvider</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a2abfd86b2354292e5a8a740a85f8a9de">realization::Bmi_Module_Formulation&lt; M &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a2abfd86b2354292e5a8a740a85f8a9de">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a2abfd86b2354292e5a8a740a85f8a9de">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_Cpp_Adapter &gt;</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#ad3b2f3f6294014fde8f6a10b5d3058f8">realization::Bmi_Multi_Formulation</a>.</p>
+<p>Implemented in <a class="el" href="class_csv_per_feature_forcing_provider.html#ad96c3f70785165d98d3a3f13e5256e6c">CsvPerFeatureForcingProvider</a>, <a class="el" href="classdata__access_1_1_wrapped_forcing_provider.html#a5d8242b78413194240e77e52d7f99318">data_access::WrappedForcingProvider</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a2abfd86b2354292e5a8a740a85f8a9de">realization::Bmi_Module_Formulation&lt; M &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a2abfd86b2354292e5a8a740a85f8a9de">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a2abfd86b2354292e5a8a740a85f8a9de">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_Cpp_Adapter &gt;</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#ad3b2f3f6294014fde8f6a10b5d3058f8">realization::Bmi_Multi_Formulation</a>.</p>
 
 </div>
 </div>
@@ -993,7 +962,7 @@ Friends</h2></td></tr>
 
 <p>Return the last valid time for which data from the requested variable can be requested. </p>
 
-<p>Implemented in <a class="el" href="class_csv_per_feature_forcing_provider.html#a88f3732ea7088e8f2b582302f7b2fee6">CsvPerFeatureForcingProvider</a>, <a class="el" href="class_forcing.html#aec798f5a1632b177b53cf49f2b09a3f1">Forcing</a>, <a class="el" href="classdata__access_1_1_wrapped_forcing_provider.html#a82036215857912499089e3ff9fd7ea3e">data_access::WrappedForcingProvider</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a5c29aca0567d1aeb3966f3c7a9608a53">realization::Bmi_Module_Formulation&lt; M &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a5c29aca0567d1aeb3966f3c7a9608a53">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a5c29aca0567d1aeb3966f3c7a9608a53">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_Cpp_Adapter &gt;</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a4b3db6bb593b3d3261ac5ed2f35684b3">realization::Bmi_Multi_Formulation</a>.</p>
+<p>Implemented in <a class="el" href="class_csv_per_feature_forcing_provider.html#a88f3732ea7088e8f2b582302f7b2fee6">CsvPerFeatureForcingProvider</a>, <a class="el" href="classdata__access_1_1_wrapped_forcing_provider.html#a82036215857912499089e3ff9fd7ea3e">data_access::WrappedForcingProvider</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a5c29aca0567d1aeb3966f3c7a9608a53">realization::Bmi_Module_Formulation&lt; M &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a5c29aca0567d1aeb3966f3c7a9608a53">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a5c29aca0567d1aeb3966f3c7a9608a53">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_Cpp_Adapter &gt;</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a4b3db6bb593b3d3261ac5ed2f35684b3">realization::Bmi_Multi_Formulation</a>.</p>
 
 </div>
 </div>
@@ -1535,7 +1504,7 @@ Friends</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="class_csv_per_feature_forcing_provider.html#ad1f87f13f0bc6c5d616158d90eac9fc3">CsvPerFeatureForcingProvider</a>, <a class="el" href="class_forcing.html#a5a6e6d24f60ea8e99311cf3301148287">Forcing</a>, <a class="el" href="classdata__access_1_1_wrapped_forcing_provider.html#a49a51a3a5789bcdd2cf94e489bb46889">data_access::WrappedForcingProvider</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aca477749b4e3f41aeea7e724e2351219">realization::Bmi_Module_Formulation&lt; M &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aca477749b4e3f41aeea7e724e2351219">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aca477749b4e3f41aeea7e724e2351219">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_Cpp_Adapter &gt;</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#ad07b6aa1c71e7e3f1381adf1ec65d835">realization::Bmi_Multi_Formulation</a>.</p>
+<p>Implemented in <a class="el" href="class_csv_per_feature_forcing_provider.html#ad1f87f13f0bc6c5d616158d90eac9fc3">CsvPerFeatureForcingProvider</a>, <a class="el" href="classdata__access_1_1_wrapped_forcing_provider.html#a49a51a3a5789bcdd2cf94e489bb46889">data_access::WrappedForcingProvider</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aca477749b4e3f41aeea7e724e2351219">realization::Bmi_Module_Formulation&lt; M &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aca477749b4e3f41aeea7e724e2351219">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aca477749b4e3f41aeea7e724e2351219">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_Cpp_Adapter &gt;</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#ad07b6aa1c71e7e3f1381adf1ec65d835">realization::Bmi_Multi_Formulation</a>.</p>
 
 </div>
 </div>
@@ -1590,7 +1559,7 @@ Friends</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="class_csv_per_feature_forcing_provider.html#a7c0b7ab4bb62990ef33e4bc6c5d9d1b7">CsvPerFeatureForcingProvider</a>, <a class="el" href="class_forcing.html#a2def8c09c5369b80a5f4f7e754fb5a9d">Forcing</a>, <a class="el" href="classdata__access_1_1_optional_wrapped_provider.html#a03228b06c4a6c2229701bb237bb7443b">data_access::OptionalWrappedProvider</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a84c65a95dc9472520092be8bdcf2c853">realization::Bmi_Module_Formulation&lt; M &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a84c65a95dc9472520092be8bdcf2c853">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a84c65a95dc9472520092be8bdcf2c853">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_Cpp_Adapter &gt;</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#afeffb2218b1c297653d88afe685d7abf">realization::Bmi_Multi_Formulation</a>, and <a class="el" href="classdata__access_1_1_wrapped_forcing_provider.html#aaba36c469c4f8b7310061768c388341c">data_access::WrappedForcingProvider</a>.</p>
+<p>Implemented in <a class="el" href="class_csv_per_feature_forcing_provider.html#a7c0b7ab4bb62990ef33e4bc6c5d9d1b7">CsvPerFeatureForcingProvider</a>, <a class="el" href="classdata__access_1_1_optional_wrapped_provider.html#a03228b06c4a6c2229701bb237bb7443b">data_access::OptionalWrappedProvider</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a84c65a95dc9472520092be8bdcf2c853">realization::Bmi_Module_Formulation&lt; M &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a84c65a95dc9472520092be8bdcf2c853">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a84c65a95dc9472520092be8bdcf2c853">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_Cpp_Adapter &gt;</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#afeffb2218b1c297653d88afe685d7abf">realization::Bmi_Multi_Formulation</a>, and <a class="el" href="classdata__access_1_1_wrapped_forcing_provider.html#aaba36c469c4f8b7310061768c388341c">data_access::WrappedForcingProvider</a>.</p>
 
 </div>
 </div>
@@ -1648,7 +1617,7 @@ Friends</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="class_csv_per_feature_forcing_provider.html#a14b41560f41e9aea01c604136ea5a55f">CsvPerFeatureForcingProvider</a>, <a class="el" href="class_forcing.html#af3ec12b72c1001ff5977d113a6bca37f">Forcing</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a31836fab0684d4102fb8c534a4d5cad8">realization::Bmi_Multi_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#af5fe4a67cdb0eb555ced60e0b6fba6d3">realization::Bmi_Module_Formulation&lt; M &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#af5fe4a67cdb0eb555ced60e0b6fba6d3">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#af5fe4a67cdb0eb555ced60e0b6fba6d3">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_Cpp_Adapter &gt;</a>, and <a class="el" href="classdata__access_1_1_wrapped_forcing_provider.html#a07808059fd486668843ae326877fb51a">data_access::WrappedForcingProvider</a>.</p>
+<p>Implemented in <a class="el" href="class_csv_per_feature_forcing_provider.html#a14b41560f41e9aea01c604136ea5a55f">CsvPerFeatureForcingProvider</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a31836fab0684d4102fb8c534a4d5cad8">realization::Bmi_Multi_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#af5fe4a67cdb0eb555ced60e0b6fba6d3">realization::Bmi_Module_Formulation&lt; M &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#af5fe4a67cdb0eb555ced60e0b6fba6d3">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#af5fe4a67cdb0eb555ced60e0b6fba6d3">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_Cpp_Adapter &gt;</a>, and <a class="el" href="classdata__access_1_1_wrapped_forcing_provider.html#a07808059fd486668843ae326877fb51a">data_access::WrappedForcingProvider</a>.</p>
 
 </div>
 </div>
@@ -1924,7 +1893,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="class_csv_per_feature_forcing_provider.html#af480a5b863976ab4f62d22b125dfa854">CsvPerFeatureForcingProvider</a>, <a class="el" href="class_forcing.html#a3636054ac315721a22226ccf5833f64e">Forcing</a>, <a class="el" href="classdata__access_1_1_wrapped_forcing_provider.html#ae20826e249a64e1622fedc8f74f1df9a">data_access::WrappedForcingProvider</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9e0008a5794de910fa919ec78be14b9e">realization::Bmi_Module_Formulation&lt; M &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9e0008a5794de910fa919ec78be14b9e">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9e0008a5794de910fa919ec78be14b9e">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_Cpp_Adapter &gt;</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#ac6cf3c9c80cad9d426ebf062ec6629f2">realization::Bmi_Multi_Formulation</a>.</p>
+<p>Reimplemented in <a class="el" href="class_csv_per_feature_forcing_provider.html#af480a5b863976ab4f62d22b125dfa854">CsvPerFeatureForcingProvider</a>, <a class="el" href="classdata__access_1_1_wrapped_forcing_provider.html#ae20826e249a64e1622fedc8f74f1df9a">data_access::WrappedForcingProvider</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9e0008a5794de910fa919ec78be14b9e">realization::Bmi_Module_Formulation&lt; M &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9e0008a5794de910fa919ec78be14b9e">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9e0008a5794de910fa919ec78be14b9e">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_Cpp_Adapter &gt;</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#ac6cf3c9c80cad9d426ebf062ec6629f2">realization::Bmi_Multi_Formulation</a>.</p>
 
 </div>
 </div>
@@ -1953,7 +1922,7 @@ Friends</h2></td></tr>
 
 <p>Return the stride in the time dimension. </p>
 
-<p>Implemented in <a class="el" href="class_csv_per_feature_forcing_provider.html#a81b126f38311fe27d45ba14fb694270b">CsvPerFeatureForcingProvider</a>, <a class="el" href="class_forcing.html#a74ed4168b883ebde134cca79aa86d991">Forcing</a>, <a class="el" href="classdata__access_1_1_wrapped_forcing_provider.html#aa3fb2561cc06fde4e2c67d9250fad5ed">data_access::WrappedForcingProvider</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a01a24d38c70d1592d2b95a1d35c5214d">realization::Bmi_Module_Formulation&lt; M &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a01a24d38c70d1592d2b95a1d35c5214d">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a01a24d38c70d1592d2b95a1d35c5214d">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_Cpp_Adapter &gt;</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a7b8ee244748b42fa4740f37ad5d14cc7">realization::Bmi_Multi_Formulation</a>.</p>
+<p>Implemented in <a class="el" href="class_csv_per_feature_forcing_provider.html#a81b126f38311fe27d45ba14fb694270b">CsvPerFeatureForcingProvider</a>, <a class="el" href="classdata__access_1_1_wrapped_forcing_provider.html#aa3fb2561cc06fde4e2c67d9250fad5ed">data_access::WrappedForcingProvider</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a01a24d38c70d1592d2b95a1d35c5214d">realization::Bmi_Module_Formulation&lt; M &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a01a24d38c70d1592d2b95a1d35c5214d">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a01a24d38c70d1592d2b95a1d35c5214d">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_Cpp_Adapter &gt;</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a7b8ee244748b42fa4740f37ad5d14cc7">realization::Bmi_Multi_Formulation</a>.</p>
 
 </div>
 </div>
@@ -2472,6 +2441,8 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ad8d9a56ad3614fb821d88f623030defc">realization::Bmi_Module_Formulation&lt; M &gt;::calc_et()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a8694f5e94f40224efca11a73892da8ff">realization::Bmi_Multi_Formulation::create_multi_formulation()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a39cf248257ea2a34052fa65ad08bf2ba">realization::Bmi_Module_Formulation&lt; M &gt;::determine_model_time_offset()</a>, <a class="el" href="class_simple___lumped___model___realization.html#a65e1e6ce403d39e655c68a5cd321ac63">Simple_Lumped_Model_Realization::get_response()</a>, <a class="el" href="classrealization_1_1_tshirt___c___realization.html#aeb579caa25422a0eac04c19b27e791e3">realization::Tshirt_C_Realization::get_response()</a>, <a class="el" href="classrealization_1_1_tshirt___realization.html#aea64b8b1d6f77cde58c4c8b3e767df46">realization::Tshirt_Realization::get_response()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aa04167ad9a3f4c384673ef1157fb3cb8">realization::Bmi_Module_Formulation&lt; M &gt;::set_model_inputs_prior_to_update()</a>.</p>
+
 </div>
 </div>
 <a id="a8bfec24b0d57240e7ada2493a781db6d" name="a8bfec24b0d57240e7ada2493a781db6d"></a>
@@ -2517,30 +2488,6 @@ Friends</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-</div>
-</div>
-<a id="a67a34af40f82c6627182aae66c79f02d" name="a67a34af40f82c6627182aae66c79f02d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a67a34af40f82c6627182aae66c79f02d">&#9670;&nbsp;</a></span>legacy_forcing</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_forcing.html">Forcing</a>* realization::Catchment_Formulation::legacy_forcing</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">inherited</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="reference">Referenced by <a class="el" href="class_simple___lumped___model___realization.html#afe66f3b2527c02cca375f71f0e520e23">Simple_Lumped_Model_Realization::Simple_Lumped_Model_Realization()</a>, <a class="el" href="classrealization_1_1_tshirt___c___realization.html#aeb579caa25422a0eac04c19b27e791e3">realization::Tshirt_C_Realization::get_response()</a>, and <a class="el" href="classrealization_1_1_tshirt___realization.html#aea64b8b1d6f77cde58c4c8b3e767df46">realization::Tshirt_Realization::get_response()</a>.</p>
 
 </div>
 </div>
@@ -2788,7 +2735,7 @@ Friends</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li><li class="navelem"><a class="el" href="classrealization_1_1_bmi___formulation.html">Bmi_Formulation</a></li>
-    <li class="footer">Generated on Fri Aug 26 2022 13:23:23 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
+    <li class="footer">Generated on Wed Sep 21 2022 16:31:37 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
   </ul>
 </div>
 </body>
