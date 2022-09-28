@@ -1,0 +1,196 @@
+{
+    "global": {
+      "formulations": [
+        {
+            "name": "tshirt_c",
+            "params": {
+                "maxsmc": 0.439,
+                "wltsmc": 0.066,
+                "satdk": 0.00000338,
+                "satpsi": 0.355,
+                "slope": 1.0,
+                "scaled_distribution_fn_shape_parameter": 4.05,
+                "multiplier": 0.0,
+                "alpha_fc": 0.33,
+                "Klf": 0.01,
+                "Kn": 0.03,
+                "nash_n": 2,
+                "Cgw": 0.01,
+                "expon": 6.0,
+                "max_groundwater_storage_meters": 1.0,
+                "nash_storage": [
+                    0.0,
+                    0.0
+                ],
+                "soil_storage_percentage": 0.667,
+                "groundwater_storage_percentage": 0.5,
+                "timestep": 3600,
+                "giuh": {
+                    "giuh_path": "./test/data/giuh/GIUH.json",
+                    "crosswalk_path": "./data/crosswalk.json"
+                }
+            }
+        }
+      ],
+      "forcing": {
+          "file_pattern": ".*{{id}}.*.csv",
+          "path": "./data/forcing/"
+      }
+    },
+    "time": {
+        "start_time": "2015-12-01 00:00:00",
+        "end_time": "2015-12-30 23:00:00",
+        "output_interval": 3600
+    },
+    "catchments": {
+        "cat-27": {
+          "formulations": [
+            {
+              "name":"tshirt_c",
+                "params": {
+                  "maxsmc": 0.439,
+                  "wltsmc": 0.066,
+                  "satdk": 0.00000338,
+                  "satpsi": 0.355,
+                  "slope": 1.0,
+                  "scaled_distribution_fn_shape_parameter": 4.05,
+                  "multiplier": 0.0,
+                  "alpha_fc": 0.33,
+                  "Klf": 0.01,
+                  "Kn": 0.03,
+                  "nash_n": 2,
+                  "Cgw": 0.01,
+                  "expon": 6.0,
+                  "max_groundwater_storage_meters": 1.0,
+                  "nash_storage": [
+                      0.0,
+                      0.0
+                  ],
+                  "soil_storage_percentage": 0.667,
+                  "groundwater_storage_percentage": 0.5,
+                  "timestep": 3600,
+                  "giuh": {
+                    "giuh_path": "./test/data/giuh/GIUH.json",
+                    "crosswalk_path": "./data/crosswalk.json",
+                    "cdf_ordinates": [
+                              0.1,
+                              0.35,
+                              0.2,
+                              0.14,
+                              0.1,
+                              0.06,
+                              0.05
+                          ]
+                  }
+                }
+              }
+            ],
+            "forcing": {
+                "path": "./data/forcing/cat-27_2015-12-01 00_00_00_2015-12-30 23_00_00.csv"
+            }
+        },
+        "cat-52": {
+          "formulations": [
+            {
+                "name": "simple_lumped",
+                "params": {
+                  "sr": [
+                      1.0,
+                      1.0,
+                      1.0
+                  ],
+                  "storage": 1.0,
+                  "gw_storage": 1.0,
+                  "gw_max_storage": 10.0,
+                  "nash_max_storage": 2.0,
+                  "smax": 5,
+                  "a": 1.0,
+                  "b": 10.0,
+                  "Ks": 0.1,
+                  "Kq": 0.01,
+                  "n": 3,
+                  "t": 0
+              }
+            }
+          ],
+          "forcing": {
+              "path": "./data/forcing/cat-52_2015-12-01 00_00_00_2015-12-30 23_00_00.csv"
+          }
+        },
+        "cat-67": {
+          "formulations": [
+            {
+              "name":"tshirt_c",
+              "params": {
+                "maxsmc": 0.439,
+                "wltsmc": 0.066,
+                "satdk": 0.00000338,
+                "satpsi": 0.355,
+                "slope": 1.0,
+                "scaled_distribution_fn_shape_parameter": 4.05,
+                "multiplier": 0.0,
+                "alpha_fc": 0.33,
+                "Klf": 0.01,
+                "Kn": 0.03,
+                "nash_n": 2,
+                "Cgw": 0.01,
+                "expon": 6.0,
+                "max_groundwater_storage_meters": 1.0,
+                "nash_storage": [
+                    0.0,
+                    0.0
+                ],
+                "soil_storage_percentage": 0.667,
+                "groundwater_storage_percentage": 0.5,
+                "timestep": 3600,
+                "giuh": {
+                    "giuh_path": "./test/data/giuh/GIUH.json",
+                    "crosswalk_path": "./data/crosswalk.json",
+                    "cdf_ordinates": [
+                                0.1,
+                                0.35,
+                                0.2,
+                                0.14,
+                                0.1,
+                                0.06,
+                                0.05
+                            ]
+                }
+              }
+            }
+          ],
+          "forcing": {
+              "path": "./data/forcing/cat-67_2015-12-01 00_00_00_2015-12-30 23_00_00.csv"
+          }
+        },
+        "agg-1": {
+            "formulations": [
+                {
+                    "name": "bmi_fortran",
+                    "params": {
+                        "model_type_name": "bmi_fortran_noahowp",
+                        "library_file": "./extern/noah-owp-modular/cmake_build/libsurfacebmi.so",
+                        "forcing_file": "",
+                        "init_config": "./data/bmi/fortran/noah-owp-modular-init-agg-1.namelist.input",
+                        "allow_exceed_end_time": true,
+                        "main_output_variable": "QINSUR",
+                        "variables_names_map": {
+                            "PRCPNONC": "atmosphere_water__liquid_equivalent_precipitation_rate",
+                            "Q2": "atmosphere_air_water~vapor__relative_saturation",
+                            "SFCTMP": "land_surface_air__temperature",
+                            "UU": "land_surface_wind__x_component_of_velocity",
+                            "VV": "land_surface_wind__y_component_of_velocity",
+                            "LWDN": "land_surface_radiation~incoming~longwave__energy_flux",
+                            "SOLDN": "land_surface_radiation~incoming~shortwave__energy_flux",
+                            "SFCPRS": "land_surface_air__pressure"
+                        },
+                        "uses_forcing_file": false
+                    }
+                }
+            ],
+            "forcing": {
+                "path": "./data/forcing/agg-1_2015-12-01 00_00_00_2015-12-30 23_00_00.csv"
+            }
+          }
+    }
+}
