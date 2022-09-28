@@ -402,7 +402,7 @@ namespace data_access
             size_t cache_slices_t_n = read_len / cache_slice_t_size; // Integer division!
             // For reference: https://stackoverflow.com/a/72030286
             for( size_t i = 0; i < cache_slices_t_n; i++ ) {
-                shared_ptr<std::vector<double>> cached;
+                std::shared_ptr<std::vector<double>> cached;
                 int cache_t_idx = (idx1 - (idx1 % cache_slice_t_size) + i);
                 std::string key = ncvar.getName() + "|" + std::to_string(cache_t_idx);
                 if(value_cache.contains(key)){

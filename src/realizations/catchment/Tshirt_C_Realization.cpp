@@ -18,7 +18,7 @@ Tshirt_C_Realization::Tshirt_C_Realization(forcing_params forcing_config,
                                            std::string catchment_id,
                                            giuh::GiuhJsonReader &giuh_json_reader,
                                            tshirt::tshirt_params params,
-                                           const vector<double> &nash_storage)
+                                           const std::vector<double> &nash_storage)
         : Tshirt_C_Realization::Tshirt_C_Realization(std::move(forcing_config), output_stream, soil_storage,
                                                      groundwater_storage, storage_values_are_ratios,
                                                      std::move(catchment_id),
@@ -36,7 +36,7 @@ Tshirt_C_Realization::Tshirt_C_Realization(forcing_params forcing_config,
                                            std::string catchment_id,
                                            std::vector<double> giuh_ordinates,
                                            tshirt::tshirt_params params,
-                                           const vector<double> &nash_storage)
+                                           const std::vector<double> &nash_storage)
         //: Catchment_Formulation(catchment_id, std::move(std::make_unique<Forcing>(forcing_config)), output_stream), catchment_id(std::move(catchment_id)),
         : Catchment_Formulation(catchment_id, std::move(std::make_unique<CsvPerFeatureForcingProvider>(forcing_config)), output_stream), catchment_id(std::move(catchment_id)),
           giuh_cdf_ordinates(std::move(giuh_ordinates)), params(std::make_shared<tshirt_params>(params)), nash_storage(nash_storage), c_soil_params(NWM_soil_parameters()),
@@ -89,7 +89,7 @@ Tshirt_C_Realization::Tshirt_C_Realization(forcing_params forcing_config,
                                            double Cgw,
                                            double expon,
                                            double max_gw_storage,
-                                           const vector<double> &nash_storage)
+                                           const std::vector<double> &nash_storage)
            : Tshirt_C_Realization::Tshirt_C_Realization(std::move(forcing_config), output_stream, soil_storage,
                                                         groundwater_storage, storage_values_are_ratios,
                                                         std::move(catchment_id), giuh_json_reader,
@@ -388,7 +388,7 @@ std::string Tshirt_C_Realization::get_output_line_for_timestep(int timestep, std
     tshirt_c_result_fluxes flux_for_timestep = *fluxes[timestep];
     for (const std::string& name : get_output_var_names()) {
         // Get a lambda that takes a fluxes struct and returns the right (double) member value from it from the name
-        function<double(tshirt_c_result_fluxes)> get_val_func = get_output_var_flux_extraction_func(name);
+        std::function<double(tshirt_c_result_fluxes)> get_val_func = get_output_var_flux_extraction_func(name);
         double output_var_value = get_val_func(flux_for_timestep);
         output_str += output_str.empty() ? std::to_string(output_var_value) : "," + std::to_string(output_var_value);
     }
@@ -455,7 +455,7 @@ double Tshirt_C_Realization::get_response(time_step_t t_index, time_step_t t_del
     return fluxes.back()->Qout_m;
 }
 
-function<double(tshirt_c_result_fluxes)>
+std::function<double(tshirt_c_result_fluxes)>
 Tshirt_C_Realization::get_output_var_flux_extraction_func(const std::string& var_name) {
     // TODO: think about making this a lazily initialized member map
     if (var_name == OUT_VAR_BASE_FLOW) {
@@ -489,7 +489,7 @@ Tshirt_C_Realization::get_output_var_flux_extraction_func(const std::string& var
  */
 std::vector<double> Tshirt_C_Realization::get_value(const std::string& name) {
     // Generate a lambda that takes a fluxes struct and returns the right (double) member value from it from the name
-    function<double(tshirt_c_result_fluxes)> get_val_func = get_output_var_flux_extraction_func(name);
+    std::function<double(tshirt_c_result_fluxes)> get_val_func = get_output_var_flux_extraction_func(name);
     // Then, assuming we don't bail, use the lambda to build the result array
     std::vector<double> outputs = std::vector<double>(fluxes.size());
     for (int i = 0; i < fluxes.size(); ++i) {
