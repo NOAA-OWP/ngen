@@ -71,8 +71,8 @@ TEST_F(Nexus_Remote_Test, TestInit0)
     HY_PointHydroNexusRemote::catcment_location_map_t loc_map;
 
     std::shared_ptr<HY_PointHydroNexusRemote> nexus;
-    std::vector<string> upstream_catchments = {"cat-26"};
-    std::vector<string> downstream_catchments = {"cat-27"};
+    std::vector<std::string> upstream_catchments = {"cat-26"};
+    std::vector<std::string> downstream_catchments = {"cat-27"};
 
     // create a nexus at both ranks
     if ( mpi_rank == 0)
@@ -131,8 +131,8 @@ TEST_F(Nexus_Remote_Test, Test2RemoteSenders)
     HY_PointHydroNexusRemote::catcment_location_map_t loc_map;
 
     std::shared_ptr<HY_PointHydroNexusRemote> nexus;
-    std::vector<string> upstream_catchments;
-    std::vector<string> downstream_catchments = {"cat-27"};
+    std::vector<std::string> upstream_catchments;
+    std::vector<std::string> downstream_catchments = {"cat-27"};
     // create a nexus at both ranks
     if ( mpi_rank == 0)
     {
@@ -211,8 +211,8 @@ TEST_F(Nexus_Remote_Test, Test2RemoteSenders1LocalSender)
     HY_PointHydroNexusRemote::catcment_location_map_t loc_map;
 
     std::shared_ptr<HY_PointHydroNexusRemote> nexus;
-    std::vector<string> upstream_catchments;
-    std::vector<string> downstream_catchments = {"cat-27"};
+    std::vector<std::string> upstream_catchments;
+    std::vector<std::string> downstream_catchments = {"cat-27"};
     // create a nexus at both ranks
     if ( mpi_rank == 0)
     {
@@ -293,8 +293,8 @@ TEST_F(Nexus_Remote_Test, Test4R2S2LS)
     HY_PointHydroNexusRemote::catcment_location_map_t loc_map;
 
     std::shared_ptr<HY_PointHydroNexusRemote> nexus;
-    std::vector<string> upstream_catchments;
-    std::vector<string> downstream_catchments = {"cat-27"};
+    std::vector<std::string> upstream_catchments;
+    std::vector<std::string> downstream_catchments = {"cat-27"};
     // create a nexus at both ranks
     if ( mpi_rank == 0)
     {
@@ -418,8 +418,8 @@ TEST_F(Nexus_Remote_Test, TestDeadlock1)
     double recieved_flow;
     long ts = 0;
 
-    std::vector<string> downstream_catchments;
-    std::vector<string> upstream_catchments;
+    std::vector<std::string> downstream_catchments;
+    std::vector<std::string> upstream_catchments;
 
     // In this test both processes send before recieving. If communciation are synchronus this will dead lock
 
@@ -437,7 +437,7 @@ TEST_F(Nexus_Remote_Test, TestDeadlock1)
         nexus1->add_upstream_flow(200.0,"cat-25",ts);						// sending to rank 1
                               
         recieved_flow = nexus2->get_downstream_flow("cat-26",ts,100);       // get the recieved flow
-        cout << "rank 0 recieved a flow of " << recieved_flow << "\n";
+        std::cout << "rank 0 recieved a flow of " << recieved_flow << "\n";
     }
     else if ( mpi_rank == 1)
     {
@@ -452,7 +452,7 @@ TEST_F(Nexus_Remote_Test, TestDeadlock1)
         nexus1->add_upstream_flow(200.0,"cat-26",ts);						// sending to rank 0
                               
         recieved_flow = nexus2->get_downstream_flow("cat-25",ts,100);       // get the recieved flow
-        cout << "rank 1 recieved a flow of " << recieved_flow << "\n";
+        std::cout << "rank 1 recieved a flow of " << recieved_flow << "\n";
     }
 
     MPI_Barrier(MPI_COMM_WORLD);
@@ -477,7 +477,7 @@ TEST_F(Nexus_Remote_Test, DISABLED_TestTree1)
         int target_rank = static_cast<int>(i / nodes_per_rank);
         if ( target_rank != mpi_rank )
         {
-            loc_map[string("cat-"+std::to_string(i))] = target_rank;
+            loc_map[std::string("cat-"+std::to_string(i))] = target_rank;
         }
         else
         {

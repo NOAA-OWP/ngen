@@ -237,7 +237,7 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
         {
             forcing_vector_index = 0;
             /// \todo: Return appropriate warning
-            cout << "WARNING: Forcing vector index is less than zero. Therefore, setting index to zero." << endl;
+            std::cout << "WARNING: Forcing vector index is less than zero. Therefore, setting index to zero." << std::endl;
         }
 
         //Check if forcing index is greater than or equal to the size of the size of the time vector and if so, set to zero.
@@ -245,7 +245,7 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
         {
             forcing_vector_index = time_epoch_vector.size() - 1;
             /// \todo: Return appropriate warning
-            cout << "WARNING: Reached beyond the size of the forcing vector. Therefore, setting index to last value of the vector." << endl;
+            std::cout << "WARNING: Reached beyond the size of the forcing vector. Therefore, setting index to last value of the vector." << std::endl;
         }
 
         return;
@@ -282,7 +282,7 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
      * Reads only data within the specified model start and end date-times.
      * @param file_name Forcing file name
      */
-    void read_csv(string file_name)
+    void read_csv(std::string file_name)
     {
         int time_col_index = 0;
         //std::map<std::string, int> col_indices;
@@ -332,7 +332,7 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
             std::vector<std::string>& vec = data_list[i];
 
             struct tm current_row_date_time_utc = tm();
-            string time_str = vec[time_col_index];
+            std::string time_str = vec[time_col_index];
             //TODO: Support more time string formats? This is basically ISO8601 but not complete, support TZ?
             strptime(time_str.c_str(), "%Y-%m-%d %H:%M:%S", &current_row_date_time_utc);
 
@@ -372,7 +372,7 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
         if (i <= 1 || current_row_date_time_epoch < end_date_time_epoch)
         {
             /// \todo TODO: Return appropriate error
-            cout << "WARNING: Forcing data ends before the model end time." << endl;
+            std::cout << "WARNING: Forcing data ends before the model end time." << std::endl;
             //throw std::runtime_error("Error: Forcing data ends before the model end time.");
         }
     }
@@ -384,7 +384,7 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
     std::unordered_map<std::string, std::vector<double>> forcing_vectors;
 
     /// \todo: Consider making epoch time the iterator
-    vector<time_t> time_epoch_vector;     
+    std::vector<time_t> time_epoch_vector;     
     int forcing_vector_index;
 
     /// \todo: Are these used?
@@ -395,7 +395,7 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
     double longitude; //longitude (degrees_east)
     int catchment_id;
     int day_of_year;
-    string forcing_file_name;
+    std::string forcing_file_name;
 
     std::shared_ptr<time_type> start_date_time;
     std::shared_ptr<time_type> end_date_time;

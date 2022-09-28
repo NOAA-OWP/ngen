@@ -290,8 +290,7 @@ TEST_F(Tshirt_C_Realization_Test, TestGetOutputLineForTimestep1a) {
             nash_storage);
 
     std::vector<std::string> result_vector;
-    string line;
-
+    std::string line;
     int timestep = 0;
 
     while (getline(standalone_data_ingest_stream, line)) {
@@ -301,8 +300,8 @@ TEST_F(Tshirt_C_Realization_Test, TestGetOutputLineForTimestep1a) {
         double input_storage = std::stod(result_vector[1]) / 1000 / 3600;
 
         // Output the line essentially
-        //copy(result_vector.begin(), result_vector.end(), ostream_iterator<string>(cout, "|"));
-        //cout << "\n";
+        //copy(result_vector.begin(), result_vector.end(), std::ostream_iterator<std::string>(std::cout, "|"));
+        //std::cout << "\n";
 
         tshirt_c_real.run_formulation_for_timestep(input_storage, 3600);
         timestep++;
@@ -349,7 +348,7 @@ TEST_F(Tshirt_C_Realization_Test, TestGetOutputLineForTimestep1b) {
             nash_storage);
 
     std::vector<std::string> result_vector;
-    string line;
+    std::string line;
 
     int timestep = 0;
 
@@ -404,7 +403,7 @@ TEST_F(Tshirt_C_Realization_Test, TestGetOutputLineForTimestep2a) {
             nash_storage);
 
     std::vector<std::string> result_vector;
-    string line;
+    std::string line;
 
     for (int timestep = 0; timestep < 5; ++timestep) {
         tshirt_c_real.get_response(timestep, 3600);
@@ -453,7 +452,7 @@ TEST_F(Tshirt_C_Realization_Test, TestGetOutputLineForTimestep2b) {
             nash_storage);
 
     std::vector<std::string> result_vector;
-    string line;
+    std::string line;
 
     for (int timestep = 0; timestep < 5; ++timestep) {
         tshirt_c_real.get_response(timestep, 3600);
@@ -614,7 +613,7 @@ TEST_F(Tshirt_C_Realization_Test, TestGetValue1a) {
 
     std::vector<std::string> result_vector;
     std::vector<double> values_vector;
-    string line;
+    std::string line;
 
     while (getline(standalone_data_ingest_stream, line)) {
         Tokenizer tokenizer(line);
@@ -661,7 +660,7 @@ TEST_F(Tshirt_C_Realization_Test, TestGetValue1b) {
 
     std::vector<std::string> result_vector;
     std::vector<double> values_vector;
-    string line;
+    std::string line;
 
     while (getline(standalone_data_ingest_stream, line)) {
         Tokenizer tokenizer(line);
@@ -707,7 +706,7 @@ TEST_F(Tshirt_C_Realization_Test, TestSurfaceRunoffCalc1a) {
             nash_storage);
 
     std::vector<std::string> result_vector;
-    string line;
+    std::string line;
 
     while (getline(standalone_data_ingest_stream, line)) {
         Tokenizer tokenizer(line);
@@ -730,8 +729,8 @@ TEST_F(Tshirt_C_Realization_Test, TestSurfaceRunoffCalc1a) {
         expected /= 1000;
 
         // Output the line essentially
-        copy(result_vector.begin(), result_vector.end(), ostream_iterator<string>(cout, "|"));
-        cout << "\n";
+        copy(result_vector.begin(), result_vector.end(), std::ostream_iterator<std::string>(std::cout, "|"));
+        std::cout << "\n";
 
         tshirt_c_real.run_formulation_for_timestep(input_storage, 3600);
 
@@ -785,7 +784,7 @@ TEST_F(Tshirt_C_Realization_Test, TestGiuhRunoffCalc1a) {
             nash_storage);
 
     std::vector<std::string> result_vector;
-    string line;
+    std::string line;
 
     while (getline(standalone_data_ingest_stream, line)) {
         Tokenizer tokenizer(line);
@@ -808,8 +807,8 @@ TEST_F(Tshirt_C_Realization_Test, TestGiuhRunoffCalc1a) {
         expected /= 1000;
 
         // Output the line essentially
-        copy(result_vector.begin(), result_vector.end(), ostream_iterator<string>(cout, "|"));
-        cout << "\n";
+        copy(result_vector.begin(), result_vector.end(), std::ostream_iterator<std::string>(std::cout, "|"));
+        std::cout << "\n";
 
         tshirt_c_real.run_formulation_for_timestep(input_storage, 3600);
         double actual = tshirt_c_real.get_latest_flux_giuh_runoff();
@@ -875,7 +874,7 @@ TEST_F(Tshirt_C_Realization_Test, TestLateralFlowCalc1a) {
             nash_storage);
 
     std::vector<std::string> result_vector;
-    string line;
+    std::string line;
 
     while (getline(standalone_data_ingest_stream, line)) {
         Tokenizer tokenizer(line);
@@ -898,8 +897,8 @@ TEST_F(Tshirt_C_Realization_Test, TestLateralFlowCalc1a) {
         expected /= 1000;
 
         // Output the line essentially
-        copy(result_vector.begin(), result_vector.end(), ostream_iterator<string>(cout, "|"));
-        cout << "\n";
+        copy(result_vector.begin(), result_vector.end(), std::ostream_iterator<std::string>(std::cout, "|"));
+        std::cout << "\n";
 
         tshirt_c_real.run_formulation_for_timestep(input_storage, 3600);
         double actual = tshirt_c_real.get_latest_flux_lateral_flow();
@@ -954,7 +953,7 @@ TEST_F(Tshirt_C_Realization_Test, TestBaseFlowCalc1a) {
             nash_storage);
 
     std::vector<std::string> result_vector;
-    string line;
+    std::string line;
 
     while (getline(standalone_data_ingest_stream, line)) {
         Tokenizer tokenizer(line);
@@ -977,8 +976,8 @@ TEST_F(Tshirt_C_Realization_Test, TestBaseFlowCalc1a) {
         expected /= 1000;
 
         // Output the line essentially
-        copy(result_vector.begin(), result_vector.end(), ostream_iterator<string>(cout, "|"));
-        cout << "\n";
+        copy(result_vector.begin(), result_vector.end(), std::ostream_iterator<std::string>(std::cout, "|"));
+        std::cout << "\n";
 
         tshirt_c_real.run_formulation_for_timestep(input_storage, 3600);
         double actual = tshirt_c_real.get_latest_flux_base_flow();
@@ -1033,7 +1032,7 @@ TEST_F(Tshirt_C_Realization_Test, TestTotalDischargeOutputCalc1a) {
             nash_storage);
 
     std::vector<std::string> result_vector;
-    string line;
+    std::string line;
 
     while (getline(standalone_data_ingest_stream, line)) {
         Tokenizer tokenizer(line);
@@ -1056,8 +1055,8 @@ TEST_F(Tshirt_C_Realization_Test, TestTotalDischargeOutputCalc1a) {
         expected /= 1000;
 
         // Output the line essentially
-        copy(result_vector.begin(), result_vector.end(), ostream_iterator<string>(cout, "|"));
-        cout << "\n";
+        copy(result_vector.begin(), result_vector.end(), std::ostream_iterator<std::string>(std::cout, "|"));
+        std::cout << "\n";
 
         tshirt_c_real.run_formulation_for_timestep(input_storage, 3600);
         double actual = tshirt_c_real.get_latest_flux_total_discharge();

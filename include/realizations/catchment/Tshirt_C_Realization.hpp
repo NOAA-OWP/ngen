@@ -327,7 +327,7 @@ namespace realization {
                 "giuh"
         };
 
-        function<double(tshirt_c_result_fluxes)> get_output_var_flux_extraction_func(const std::string& var_name);
+        std::function<double(tshirt_c_result_fluxes)> get_output_var_flux_extraction_func(const std::string& var_name);
 
         const std::vector<std::string>& get_required_parameters() override;
 
