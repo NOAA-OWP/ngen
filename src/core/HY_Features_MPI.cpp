@@ -34,7 +34,7 @@ HY_Features_MPI::HY_Features_MPI( PartitionData partition_data, geojson::GeoJSON
         destinations  = network.get_destination_ids(feat_id);
         //Find upstream ids
         origins = network.get_origination_ids(feat_id);
-        if(feat_type == "cat")
+        if(feat_type == "cat" || feat_type == "agg")
         {
           //Find and prepare formulation
           auto formulation = formulations->get_formulation(feat_id);
@@ -42,9 +42,14 @@ HY_Features_MPI::HY_Features_MPI( PartitionData partition_data, geojson::GeoJSON
           // TODO: add command line or config option to have this be omitted
           //FIXME why isn't default param working here??? get_output_header_line() fails.
           formulation->write_output("Time Step,""Time,"+formulation->get_output_header_line(",")+"\n");
+          
+          // get the catchment level from the hydro fabric
+          const auto& cat_json_node = linked_hydro_fabric->get_feature(feat_id);
+          long lv = cat_json_node->has_key("level") ? cat_json_node->get_property("level").as_natural_number() : 0;
+
           //Create the HY_Catchment with the formulation realization
           std::shared_ptr<HY_Catchment> c = std::make_shared<HY_Catchment>(
-              HY_Catchment(feat_id, origins, destinations, formulation)
+              HY_Catchment(feat_id, origins, destinations, formulation, lv)
             );
 
           _catchments.emplace(feat_id, c);
