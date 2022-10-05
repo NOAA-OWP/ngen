@@ -193,7 +193,7 @@ namespace data_access
                 }
 
                 // set time unit and scale factor
-                if ( time_unit_str == "h" || time_unit_str == "hours ")
+                if ( time_unit_str == "h" || time_unit_str == "hours")
                 {
                     time_unit = TIME_HOURS;
                     time_scale_factor = 3600;
