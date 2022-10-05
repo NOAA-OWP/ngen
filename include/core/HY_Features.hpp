@@ -65,18 +65,7 @@ namespace hy_features {
          * @param network 
          * @param formulations 
          */
-        HY_Features( network::Network network, std::shared_ptr<Formulation_Manager> formulations);
 
-        /**
-         * @brief Construct a new HY_Features object From a GeoJSON feature collection and a set of formulations.
-         * 
-         * Constructs the network::Network index from the GeoJSON feature collection and link_key and then
-         * \copydetails HY_Features::HY_Features(network::Network,std::shared_ptr<Formulation_Manager>)
-         * 
-         * @param catchments 
-         * @param link_key 
-         * @param formulations 
-         */
         HY_Features( geojson::GeoJSON catchments, std::string* link_key, std::shared_ptr<Formulation_Manager> formulations);
 
         /**
@@ -179,6 +168,8 @@ namespace hy_features {
         virtual ~HY_Features(){}
 
       private:
+
+        void init();
 
         /**
          * @brief Internal mapping of catchment id -> HY_Catchment pointer.
