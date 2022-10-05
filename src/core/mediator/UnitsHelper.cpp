@@ -16,6 +16,10 @@ std::shared_ptr<cv_converter> UnitsHelper::get_converter(const std::string& in_u
 
     std::string key = in_units + "|" + out_units; //Better solution? Good enough? Bother with nested maps?
     if(converters.count(key) == 1){
+        if(converters[key] == nullptr){
+            // same as last throw below
+            throw std::runtime_error("Unable to convert " + in_units + " to " + out_units);
+        }
         return converters[key];
     } else {
         ut_unit* from = ut_parse(unit_system, in_units.c_str(), in_encoding);
@@ -34,6 +38,7 @@ std::shared_ptr<cv_converter> UnitsHelper::get_converter(const std::string& in_u
         {
             ut_free(from);
             ut_free(to);
+            converters[key] = nullptr;
             throw std::runtime_error("Unable to convert " + in_units + " to " + out_units);
         }
         auto c = std::shared_ptr<cv_converter>(
