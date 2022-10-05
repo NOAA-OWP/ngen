@@ -163,7 +163,7 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
         }
         catch (const std::runtime_error& e){
             #ifndef UDUNITS_QUIET
-            std::cerr<<"Unit conversion error: "<<std::endl<<e.what()<<std::endl<<"Returning unconverted value!"<<std::endl;
+            std::cerr<<"WARN: Unit conversion unsuccessful - Returning unconverted value! (\""<<e.what()<<"\")"<<std::endl;
             #endif
             return value;
         }

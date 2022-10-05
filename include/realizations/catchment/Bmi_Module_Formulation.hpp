@@ -426,7 +426,9 @@ namespace realization {
                     return values;
                 }
                 catch (const std::runtime_error& e){
-                    std::cerr<<"Unit conversion error: "<<std::endl<<e.what()<<std::endl<<"Returning unconverted value!"<<std::endl;
+                    #ifndef UDUNITS_QUIET
+                    std::cerr<<"WARN: Unit conversion unsuccessful - Returning unconverted value! (\""<<e.what()<<"\")"<<std::endl;
+                    #endif
                     return values;
                 }
             }
@@ -487,7 +489,9 @@ namespace realization {
                     return UnitsHelper::get_converted_value(native_units, value, output_units);
                 }
                 catch (const std::runtime_error& e){
-                    std::cerr<<"Unit conversion error: "<<std::endl<<e.what()<<std::endl<<"Returning unconverted value!"<<std::endl;
+                    #ifndef UDUNITS_QUIET
+                    std::cerr<<"WARN: Unit conversion unsuccessful - Returning unconverted value! (\""<<e.what()<<"\")"<<std::endl;
+                    #endif
                     return value;
                 }
             }
@@ -835,12 +839,16 @@ namespace realization {
                         case geojson::PropertyType::Natural:
                             param.second.as_vector(long_vec);
                             value_ptr = get_values_as_type(type, long_vec.begin(), long_vec.end());
+                            #ifndef NGEN_QUIET
                             std::cout<<"NAT VALUE: "<<long_vec[0]<<std::endl;
+                            #endif
                             break;
                         case geojson::PropertyType::Real:
                             param.second.as_vector(double_vec);
                             value_ptr = get_values_as_type(type, double_vec.begin(), double_vec.end());
+                            #ifndef NGEN_QUIET
                             std::cout<<"REAL VALUE: "<<double_vec[0]<<std::endl;
+                            #endif
                             break;
                         /* Not currently supporting string parameter values
                         case geojson::PropertyType::String:
