@@ -457,7 +457,7 @@ $(document).ready(function(){initNavTree('_net_c_d_f_per_feature_data_provider_8
 <div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>            <span class="keywordtype">size_t</span> cache_slices_t_n = read_len / cache_slice_t_size; <span class="comment">// Integer division!</span></div>
 <div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span>            <span class="comment">// For reference: https://stackoverflow.com/a/72030286</span></div>
 <div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>            <span class="keywordflow">for</span>( <span class="keywordtype">size_t</span> i = 0; i &lt; cache_slices_t_n; i++ ) {</div>
-<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span>                shared_ptr&lt;std::vector&lt;double&gt;&gt; cached;</div>
+<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span>                std::shared_ptr&lt;std::vector&lt;double&gt;&gt; cached;</div>
 <div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>                <span class="keywordtype">int</span> cache_t_idx = (idx1 - (idx1 % cache_slice_t_size) + i);</div>
 <div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span>                std::string key = ncvar.getName() + <span class="stringliteral">&quot;|&quot;</span> + std::to_string(cache_t_idx);</div>
 <div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span>                <span class="keywordflow">if</span>(value_cache.contains(key)){</div>
@@ -608,7 +608,7 @@ $(document).ready(function(){initNavTree('_net_c_d_f_per_feature_data_provider_8
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_1a34ade7a8ced74dfa5d1494ffac178f.html">forcing</a></li><li class="navelem"><b>NetCDFPerFeatureDataProvider.hpp</b></li>
-    <li class="footer">Generated on Wed Oct 5 2022 18:31:52 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
+    <li class="footer">Generated on Wed Oct 5 2022 18:32:28 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
   </ul>
 </div>
 </body>

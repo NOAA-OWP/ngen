@@ -115,7 +115,7 @@ $(document).ready(function(){initNavTree('_aorc_forcing_8hpp_source.html',''); i
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &lt;map&gt;</span></div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacestd.html">std</a>;</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="comment">//using namespace std// causes build error on gcc-12 with boost::geometry</span></div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="structforcing__params.html">   36</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structforcing__params.html">forcing_params</a></div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>{</div>
@@ -184,7 +184,6 @@ $(document).ready(function(){initNavTree('_aorc_forcing_8hpp_source.html',''); i
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span><span class="preprocessor">#endif </span><span class="comment">// NGEN_AORCFORCING_H</span></div>
 <div class="ttc" id="anamespacedata__access_html"><div class="ttname"><a href="namespacedata__access.html">data_access</a></div><div class="ttdef"><b>Definition:</b> AorcForcing.hpp:77</div></div>
 <div class="ttc" id="anamespacedata__access_html_a2dcd647363ddb5cc6803f9d94bd12151"><div class="ttname"><a href="namespacedata__access.html#a2dcd647363ddb5cc6803f9d94bd12151">data_access::WellKnownFields</a></div><div class="ttdeci">const std::map&lt; std::string, std::tuple&lt; std::string, std::string &gt; &gt; WellKnownFields</div><div class="ttdef"><b>Definition:</b> AorcForcing.hpp:79</div></div>
-<div class="ttc" id="anamespacestd_html"><div class="ttname"><a href="namespacestd.html">std</a></div><div class="ttdoc">STL namespace.</div></div>
 <div class="ttc" id="astruct_a_o_r_c__data_html"><div class="ttname"><a href="struct_a_o_r_c__data.html">AORC_data</a></div><div class="ttdef"><b>Definition:</b> AorcForcing.hpp:66</div></div>
 <div class="ttc" id="astruct_a_o_r_c__data_html_a01514ef87b4e39415aaa8b45815f2c7d"><div class="ttname"><a href="struct_a_o_r_c__data.html#a01514ef87b4e39415aaa8b45815f2c7d">AORC_data::PRES_surface_Pa</a></div><div class="ttdeci">double PRES_surface_Pa</div><div class="ttdef"><b>Definition:</b> AorcForcing.hpp:70</div></div>
 <div class="ttc" id="astruct_a_o_r_c__data_html_a348db9d91f46ca3cb892c6f045ede04c"><div class="ttname"><a href="struct_a_o_r_c__data.html#a348db9d91f46ca3cb892c6f045ede04c">AORC_data::DSWRF_surface_W_per_meters_squared</a></div><div class="ttdeci">double DSWRF_surface_W_per_meters_squared</div><div class="ttdef"><b>Definition:</b> AorcForcing.hpp:69</div></div>
@@ -209,7 +208,7 @@ $(document).ready(function(){initNavTree('_aorc_forcing_8hpp_source.html',''); i
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_1a34ade7a8ced74dfa5d1494ffac178f.html">forcing</a></li><li class="navelem"><b>AorcForcing.hpp</b></li>
-    <li class="footer">Generated on Wed Oct 5 2022 18:31:52 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
+    <li class="footer">Generated on Wed Oct 5 2022 18:32:28 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
   </ul>
 </div>
 </body>
