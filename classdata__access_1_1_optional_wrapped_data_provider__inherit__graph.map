@@ -1,0 +1,8 @@
+<map id="data_access::OptionalWrappedDataProvider" name="data_access::OptionalWrappedDataProvider">
+<area shape="rect" id="node1" title="Extension of DeferredWrappedProvider, where default values can be used instead of a backing provider." alt="" coords="25,1341,240,1653"/>
+<area shape="rect" id="node2" href="$classdata__access_1_1_deferred_wrapped_provider.html" title="A specialized @WrappedDataProvider that is created without first knowing the backing source it wraps." alt="" coords="31,1068,234,1292"/>
+<area shape="rect" id="node3" href="$classdata__access_1_1_wrapped_data_provider.html" title="Simple implementation that basically wraps another instance." alt="" coords="43,751,223,1019"/>
+<area shape="rect" id="node4" href="$classdata__access_1_1_generic_data_provider.html" title=" " alt="" coords="45,609,220,701"/>
+<area shape="rect" id="node5" href="$classdata__access_1_1_data_provider.html" title=" " alt="" coords="5,321,260,560"/>
+<area shape="rect" id="node6" href="$classdata__access_1_1_data_provider.html" title=" " alt="" coords="37,5,228,244"/>
+</map>

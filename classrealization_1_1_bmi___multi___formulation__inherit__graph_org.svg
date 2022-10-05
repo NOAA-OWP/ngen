@@ -41,17 +41,17 @@
 <text text-anchor="start" x="270.5" y="-249.5" font-family="Helvetica,sans-Serif" font-size="10.00">_index()</text>
 <text text-anchor="start" x="270.5" y="-238.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_allow_model_exceed</text>
 <text text-anchor="start" x="270.5" y="-227.5" font-family="Helvetica,sans-Serif" font-size="10.00">_end_time()</text>
-<text text-anchor="start" x="270.5" y="-216.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_forcing</text>
-<text text-anchor="start" x="270.5" y="-205.5" font-family="Helvetica,sans-Serif" font-size="10.00">_outputs()</text>
-<text text-anchor="start" x="270.5" y="-194.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_avaliable_variable</text>
-<text text-anchor="start" x="270.5" y="-183.5" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
-<text text-anchor="start" x="270.5" y="-172.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_bmi_input_variables()</text>
-<text text-anchor="start" x="270.5" y="-161.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_bmi_model_start</text>
-<text text-anchor="start" x="270.5" y="-150.5" font-family="Helvetica,sans-Serif" font-size="10.00">_time_forcing_offset_s()</text>
-<text text-anchor="start" x="270.5" y="-139.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_bmi_output_variables()</text>
+<text text-anchor="start" x="270.5" y="-216.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_avaliable_variable</text>
+<text text-anchor="start" x="270.5" y="-205.5" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
+<text text-anchor="start" x="270.5" y="-194.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_bmi_input_variables()</text>
+<text text-anchor="start" x="270.5" y="-183.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_bmi_model_start</text>
+<text text-anchor="start" x="270.5" y="-172.5" font-family="Helvetica,sans-Serif" font-size="10.00">_time_forcing_offset_s()</text>
+<text text-anchor="start" x="270.5" y="-161.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_bmi_output_variables()</text>
+<text text-anchor="start" x="270.5" y="-150.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_config_mapped_variable</text>
+<text text-anchor="start" x="270.5" y="-139.5" font-family="Helvetica,sans-Serif" font-size="10.00">_name()</text>
 <text text-anchor="start" x="270.5" y="-128.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_config_mapped_variable</text>
 <text text-anchor="start" x="270.5" y="-117.5" font-family="Helvetica,sans-Serif" font-size="10.00">_name()</text>
-<text text-anchor="start" x="270.5" y="-106.5" font-family="Helvetica,sans-Serif" font-size="10.00">and 26 more...</text>
+<text text-anchor="start" x="270.5" y="-106.5" font-family="Helvetica,sans-Serif" font-size="10.00">and 25 more...</text>
 <text text-anchor="start" x="270.5" y="-95.5" font-family="Helvetica,sans-Serif" font-size="10.00"># create_multi_formulation()</text>
 <text text-anchor="start" x="270.5" y="-84.5" font-family="Helvetica,sans-Serif" font-size="10.00"># get_module_var_value</text>
 <text text-anchor="start" x="270.5" y="-73.5" font-family="Helvetica,sans-Serif" font-size="10.00">_as_double()</text>

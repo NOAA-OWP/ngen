@@ -53,9 +53,9 @@
 <!-- Node3 -->
 <g id="node4" class="node">
 <title>Node3</title>
-<g id="a_node4"><a xlink:href="classdata__access_1_1_wrapped_forcing_provider.html" target="_top" xlink:title="Simple implementation that basically wraps another instance.">
-<polygon fill="white" stroke="black" points="562.5,-379 562.5,-409 709.5,-409 709.5,-379 562.5,-379"/>
-<text text-anchor="start" x="570.5" y="-397" font-family="Helvetica,sans-Serif" font-size="10.00">data_access::WrappedForcing</text>
+<g id="a_node4"><a xlink:href="classdata__access_1_1_wrapped_data_provider.html" target="_top" xlink:title="Simple implementation that basically wraps another instance.">
+<polygon fill="white" stroke="black" points="568.5,-379 568.5,-409 703.5,-409 703.5,-379 568.5,-379"/>
+<text text-anchor="start" x="576.5" y="-397" font-family="Helvetica,sans-Serif" font-size="10.00">data_access::WrappedData</text>
 <text text-anchor="middle" x="636" y="-386" font-family="Helvetica,sans-Serif" font-size="10.00">Provider</text>
 </a>
 </g>
@@ -63,7 +63,7 @@
 <!-- Node1&#45;&gt;Node3 -->
 <g id="edge3" class="edge">
 <title>Node1&#45;&gt;Node3</title>
-<path fill="none" stroke="midnightblue" d="M535.74,-394C544.56,-394 553.55,-394 562.34,-394"/>
+<path fill="none" stroke="midnightblue" d="M535.74,-394C546.54,-394 557.59,-394 568.22,-394"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="535.48,-390.5 525.48,-394 535.48,-397.5 535.48,-390.5"/>
 </g>
 <!-- Node6 -->
@@ -84,7 +84,7 @@
 <!-- Node4 -->
 <g id="node5" class="node">
 <title>Node4</title>
-<g id="a_node5"><a xlink:href="classdata__access_1_1_deferred_wrapped_provider.html" target="_top" xlink:title="A specialized @WrappedForcingProvider that is created without first knowing the backing source it wra...">
+<g id="a_node5"><a xlink:href="classdata__access_1_1_deferred_wrapped_provider.html" target="_top" xlink:title="A specialized @WrappedDataProvider that is created without first knowing the backing source it wraps.">
 <polygon fill="white" stroke="black" points="747,-411 747,-441 899,-441 899,-411 747,-411"/>
 <text text-anchor="start" x="755" y="-429" font-family="Helvetica,sans-Serif" font-size="10.00">data_access::DeferredWrapped</text>
 <text text-anchor="middle" x="823" y="-418" font-family="Helvetica,sans-Serif" font-size="10.00">Provider</text>
@@ -94,16 +94,16 @@
 <!-- Node3&#45;&gt;Node4 -->
 <g id="edge4" class="edge">
 <title>Node3&#45;&gt;Node4</title>
-<path fill="none" stroke="midnightblue" d="M719.72,-408.31C728.77,-409.87 737.94,-411.46 746.88,-413.01"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="720.04,-404.81 709.59,-406.56 718.84,-411.71 720.04,-404.81"/>
+<path fill="none" stroke="midnightblue" d="M713.56,-407.24C724.6,-409.15 735.95,-411.12 746.96,-413.02"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="713.98,-403.76 703.53,-405.51 712.78,-410.66 713.98,-403.76"/>
 </g>
 <!-- Node5 -->
 <g id="node6" class="node">
 <title>Node5</title>
-<g id="a_node6"><a xlink:href="classdata__access_1_1_optional_wrapped_provider.html" target="_top" xlink:title="Extension of DeferredWrappedProvider, where default values can be used instead of a backing provider.">
+<g id="a_node6"><a xlink:href="classdata__access_1_1_optional_wrapped_data_provider.html" target="_top" xlink:title="Extension of DeferredWrappedProvider, where default values can be used instead of a backing provider.">
 <polygon fill="white" stroke="black" points="935,-411 935,-441 1086,-441 1086,-411 935,-411"/>
 <text text-anchor="start" x="943" y="-429" font-family="Helvetica,sans-Serif" font-size="10.00">data_access::OptionalWrapped</text>
-<text text-anchor="middle" x="1010.5" y="-418" font-family="Helvetica,sans-Serif" font-size="10.00">Provider</text>
+<text text-anchor="middle" x="1010.5" y="-418" font-family="Helvetica,sans-Serif" font-size="10.00">DataProvider</text>
 </a>
 </g>
 </g>

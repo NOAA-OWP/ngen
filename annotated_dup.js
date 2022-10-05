@@ -8,8 +8,8 @@ var annotated_dup =
       [ "DataProvider", "classdata__access_1_1_data_provider.html", "classdata__access_1_1_data_provider" ],
       [ "DeferredWrappedProvider", "classdata__access_1_1_deferred_wrapped_provider.html", "classdata__access_1_1_deferred_wrapped_provider" ],
       [ "GenericDataProvider", "classdata__access_1_1_generic_data_provider.html", "classdata__access_1_1_generic_data_provider" ],
-      [ "OptionalWrappedProvider", "classdata__access_1_1_optional_wrapped_provider.html", "classdata__access_1_1_optional_wrapped_provider" ],
-      [ "WrappedForcingProvider", "classdata__access_1_1_wrapped_forcing_provider.html", "classdata__access_1_1_wrapped_forcing_provider" ]
+      [ "OptionalWrappedDataProvider", "classdata__access_1_1_optional_wrapped_data_provider.html", "classdata__access_1_1_optional_wrapped_data_provider" ],
+      [ "WrappedDataProvider", "classdata__access_1_1_wrapped_data_provider.html", "classdata__access_1_1_wrapped_data_provider" ]
     ] ],
     [ "et", "namespaceet.html", [
       [ "aorc_forcing_data", "structet_1_1aorc__forcing__data.html", "structet_1_1aorc__forcing__data" ],
