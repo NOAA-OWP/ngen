@@ -57,6 +57,13 @@ jobs:
           mod-dir: "extern/evapotranspiration/evapotranspiration"
           targets: "petbmi"
 
+      - name: Build SLoTH
+        id: submod_build_6
+        uses: ./.github/actions/ngen-submod-build
+        with:
+          mod-dir: "extern/sloth/"
+          targets: "slothmodel"
+	  
       - name: Build Ngen
         uses: ./.github/actions/ngen-build
         with:
