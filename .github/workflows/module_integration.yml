@@ -63,7 +63,7 @@ jobs:
         with:
           mod-dir: "extern/sloth/"
           targets: "slothmodel"
-	  
+
       - name: Build Ngen
         uses: ./.github/actions/ngen-build
         with:
