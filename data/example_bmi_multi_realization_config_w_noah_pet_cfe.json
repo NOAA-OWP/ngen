@@ -52,7 +52,7 @@
                             "name": "bmi_c",
                             "params": {
                                 "model_type_name": "bmi_c_pet",
-                                "library_file": "./extern/evapotranspiration/cmake_build/libpetbmi",
+                                "library_file": "./extern/evapotranspiration/evapotranspiration/cmake_build/libpetbmi",
                                 "forcing_file": "",
                                 "init_config": "./data/bmi/c/pet/{{id}}_bmi_config.ini",
                                 "allow_exceed_end_time": true,
