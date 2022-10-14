@@ -255,7 +255,10 @@ namespace data_access
             std::tm tm{};
             std::stringstream s(epoch_start_str);
             s >> std::get_time(&tm, "%D %T");
-            std::time_t epoch_start_time = mktime(&tm);
+            //std::time_t epoch_start_time = mktime(&tm);
+            // See also comments in Simulation_Time.h .. timegm is not available on Windows at least (elsewhere?)
+            //TODO: Probably make the default string above explicit to UTC and interpret TZ from the string in all cases?
+            std::time_t epoch_start_time = timegm(&tm);
 
             // scale the time to account for time units and epoch_start
             // TODO make sure this happens with a FMA instruction
