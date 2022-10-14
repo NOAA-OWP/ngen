@@ -40,8 +40,8 @@ struct forcing_params
   std::string end_time;
   std::string date_format =  "%Y-%m-%d %H:%M:%S";
   std::string provider;
-  time_t start_t;
-  time_t end_t;
+  time_t simulation_start_t;
+  time_t simulation_end_t;
   /*
     Constructor for forcing_params
   */
@@ -54,10 +54,10 @@ struct forcing_params
       strptime(this->start_time.c_str(), this->date_format.c_str() , &tm);
       //mktime returns time in local time based on system timezone
       //FIXME use timegm (not standard)? or implement timegm (see above link)
-      this->start_t = timegm( &tm );
+      this->simulation_start_t = timegm( &tm );
 
       strptime(this->end_time.c_str(), this->date_format.c_str() , &tm);
-      this->end_t = timegm( &tm );
+      this->simulation_end_t = timegm( &tm );
     }
 };
 

@@ -31,9 +31,9 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
     typedef struct tm time_type;
 
 
-    CsvPerFeatureForcingProvider(forcing_params forcing_config):start_date_time_epoch(forcing_config.start_t),
-                                           end_date_time_epoch(forcing_config.end_t),
-                                           current_date_time_epoch(forcing_config.start_t),
+    CsvPerFeatureForcingProvider(forcing_params forcing_config):start_date_time_epoch(forcing_config.simulation_start_t),
+                                           end_date_time_epoch(forcing_config.simulation_end_t),
+                                           current_date_time_epoch(forcing_config.simulation_start_t),
                                            forcing_vector_index(-1)
     {
         read_csv(forcing_config.path);
@@ -47,6 +47,8 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
      * @return The inclusive beginning of the period of time over which this instance can provide this data.
      */
     long get_data_start_time() override {
+        //FIXME: Trace this back and you will find that it is the simulation start time, not having anything to do with the forcing at all.
+        // Apparently this "worked", but at a minimum the description above is false.
         return start_date_time_epoch;
     }
 
