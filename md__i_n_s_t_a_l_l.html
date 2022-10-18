@@ -100,15 +100,21 @@ Building manually:</h1>
 <p ><b>Make a directory to contain all the NGEN items:</b></p>
 <p >` mkdir ngen &amp;&amp; cd ngen `</p>
 <p ><b>Download the Boost Libraries:</b></p>
-<p >` curl -L -O <a href="https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2">https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2</a> \ &amp;&amp; tar -xjf boost_1_72_0.tar.bz2 \ &amp;&amp; rm boost_1_72_0.tar.bz2 `</p>
-<p ><b>Set the ENV for Boost and C compiler:</b></p>
-<p >` set BOOST_ROOT="/boost_1_72_0" <code> </code> set CXX=/usr/bin/g++ `</p>
-<p ><b>Get the git submodules:</b></p>
-<p >` git submodule update &ndash;init &ndash;recursive &ndash; test/googletest <code> </code> git submodule update &ndash;init &ndash;recursive &ndash; extern/pybind11 `</p>
-<p ><b>Build NGEN using cmake:</b></p>
-<p >` cmake -B /ngen -S . &amp;&amp; cmake &ndash;build . &ndash;target ngen `</p>
-<p ><b>Running the Model:</b> ` ./ngen data/catchment_data.geojson "" data/nexus_data.geojson "" data/example_realization_config.json `</p>
-<hr  />
+<div class="fragment"><div class="line">curl -L -O https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2 \</div>
+<div class="line">    &amp;&amp; tar -xjf boost_1_72_0.tar.bz2 \</div>
+<div class="line">    &amp;&amp; rm boost_1_72_0.tar.bz2</div>
+</div><!-- fragment --><p ><b>Set the ENV for Boost and C compiler:</b></p>
+<div class="fragment"><div class="line">set BOOST_ROOT=&quot;/boost_1_72_0&quot;</div>
+<div class="line">set CXX=/usr/bin/g++</div>
+</div><!-- fragment --><p ><b>Get the git submodules:</b></p>
+<div class="fragment"><div class="line">git submodule update --init --recursive -- test/googletest </div>
+<div class="line">git submodule update --init --recursive -- extern/pybind11</div>
+</div><!-- fragment --><p ><b>Build NGEN using cmake:</b></p>
+<div class="fragment"><div class="line">cmake -B /ngen -S . &amp;&amp;</div>
+<div class="line">cmake --build . --target ngen</div>
+</div><!-- fragment --><p ><b>Running the Model:</b></p>
+<div class="fragment"><div class="line">./ngen data/catchment_data.geojson &quot;&quot; data/nexus_data.geojson &quot;&quot; data/example_realization_config.json</div>
+</div><!-- fragment --><hr  />
 <p ><b>Further information on each step:</b></p>
 <p >Make sure all necessary <a class="el" href="md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html">dependencies</a> are installed, and then <a class="el" href="md_doc__b_u_i_l_d_s__a_n_d__c_m_a_k_e.html">build the main ngen target with CMake</a>. Then run the executable, as described <a href="README.md#usage">here for basic use</a> or <a href="doc/DISTRIBUTED_PROCESSING.md#examples">here for distributed execution</a>. </p>
 </div></div><!-- contents -->
@@ -117,7 +123,7 @@ Building manually:</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed Oct 12 2022 19:04:41 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
+    <li class="footer">Generated on Tue Oct 18 2022 20:18:52 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
   </ul>
 </div>
 </body>

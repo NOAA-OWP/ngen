@@ -34,41 +34,38 @@ mkdir ngen && cd ngen
 
 **Download the Boost Libraries:**
 
-`
+```shell
 curl -L -O https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2 \
     && tar -xjf boost_1_72_0.tar.bz2 \
     && rm boost_1_72_0.tar.bz2
-`
+```
 
 **Set the ENV for Boost and C compiler:**
 
-`
+```shell
 set BOOST_ROOT="/boost_1_72_0"
-`
-`
 set CXX=/usr/bin/g++
-`
+```
 
 **Get the git submodules:**
 
-`
+```shell
 git submodule update --init --recursive -- test/googletest 
-`
-`
 git submodule update --init --recursive -- extern/pybind11
-`
+```
 
 **Build NGEN using cmake:**
 
-`
+```shell
 cmake -B /ngen -S . &&
 cmake --build . --target ngen
-`
+```
 
 **Running the Model:**
-`
+
+```shell
 ./ngen data/catchment_data.geojson "" data/nexus_data.geojson "" data/example_realization_config.json
-`
+```
 
 ---
 
