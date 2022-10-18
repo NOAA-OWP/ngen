@@ -83,14 +83,15 @@ $(document).ready(function(){initNavTree('structgeojson_1_1_list.html',''); init
 
 <div class="header">
   <div class="summary">
-<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="#friends">Friends</a> &#124;
 <a href="structgeojson_1_1_list-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">geojson::List Struct Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Struct wrapping a vector of <a class="el" href="namespacegeojson.html#a0e7f78cfe2859f6b67a1d8165e22a99c">PropertyVariant</a> representing a JSON list.  
+<p>Struct wrapping a vector of <a class="el" href="classgeojson_1_1_j_s_o_n_property.html">JSONProperty</a> representing a JSON list.  
  <a href="structgeojson_1_1_list.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="_j_s_o_n_property_8hpp_source.html">JSONProperty.hpp</a>&gt;</code></p>
@@ -99,23 +100,181 @@ $(document).ready(function(){initNavTree('structgeojson_1_1_list.html',''); init
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="structgeojson_1_1_list__coll__graph.svg" width="223" height="508"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="structgeojson_1_1_list__coll__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr class="memitem:ad3a3e7534c1e280d0f958b65d2e5c974"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="namespacegeojson.html#a0e7f78cfe2859f6b67a1d8165e22a99c">PropertyVariant</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgeojson_1_1_list.html#ad3a3e7534c1e280d0f958b65d2e5c974">values</a></td></tr>
-<tr class="separator:ad3a3e7534c1e280d0f958b65d2e5c974"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a42c12fa9ad6bb881589e5acb3319fe4e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgeojson_1_1_list.html#a42c12fa9ad6bb881589e5acb3319fe4e">List</a> (std::vector&lt; <a class="el" href="classgeojson_1_1_j_s_o_n_property.html">JSONProperty</a> &gt; *<a class="el" href="structgeojson_1_1_list.html#af53a8a24c290efe2a19958f898175c69">values</a>)</td></tr>
+<tr class="memdesc:a42c12fa9ad6bb881589e5acb3319fe4e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a new <a class="el" href="structgeojson_1_1_list.html" title="Struct wrapping a vector of JSONProperty representing a JSON list.">List</a> and set its values pointer to values.  <a href="structgeojson_1_1_list.html#a42c12fa9ad6bb881589e5acb3319fe4e">More...</a><br /></td></tr>
+<tr class="separator:a42c12fa9ad6bb881589e5acb3319fe4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17e1299e5d8015bf47feb402cd0585be"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classgeojson_1_1_j_s_o_n_property.html">JSONProperty</a> &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgeojson_1_1_list.html#a17e1299e5d8015bf47feb402cd0585be">get_values</a> () const</td></tr>
+<tr class="memdesc:a17e1299e5d8015bf47feb402cd0585be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the pointer to the values vector.  <a href="structgeojson_1_1_list.html#a17e1299e5d8015bf47feb402cd0585be">More...</a><br /></td></tr>
+<tr class="separator:a17e1299e5d8015bf47feb402cd0585be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f45981e383d8ad0cc5679e93420f3b1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgeojson_1_1_list.html#a9f45981e383d8ad0cc5679e93420f3b1">push_back</a> (const <a class="el" href="classgeojson_1_1_j_s_o_n_property.html">JSONProperty</a> &amp;property)</td></tr>
+<tr class="memdesc:a9f45981e383d8ad0cc5679e93420f3b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a <a class="el" href="classgeojson_1_1_j_s_o_n_property.html" title="@TODO: Convert JSONProperty into a variant of the supported types">JSONProperty</a> to <a class="el" href="structgeojson_1_1_list.html" title="Struct wrapping a vector of JSONProperty representing a JSON list.">List</a> backing storage via the values pointer.  <a href="structgeojson_1_1_list.html#a9f45981e383d8ad0cc5679e93420f3b1">More...</a><br /></td></tr>
+<tr class="separator:a9f45981e383d8ad0cc5679e93420f3b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e5a3a1f7c53785ef22743cff3dc5d91"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgeojson_1_1_list.html#a6e5a3a1f7c53785ef22743cff3dc5d91">operator==</a> (const <a class="el" href="structgeojson_1_1_list.html">List</a> &amp;other) const</td></tr>
+<tr class="memdesc:a6e5a3a1f7c53785ef22743cff3dc5d91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Equality operator.  <a href="structgeojson_1_1_list.html#a6e5a3a1f7c53785ef22743cff3dc5d91">More...</a><br /></td></tr>
+<tr class="separator:a6e5a3a1f7c53785ef22743cff3dc5d91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:af53a8a24c290efe2a19958f898175c69"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classgeojson_1_1_j_s_o_n_property.html">JSONProperty</a> &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgeojson_1_1_list.html#af53a8a24c290efe2a19958f898175c69">values</a></td></tr>
+<tr class="separator:af53a8a24c290efe2a19958f898175c69"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
 Friends</h2></td></tr>
 <tr class="memitem:aff28ac43c013d316714e52f7dd35765e"><td class="memItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgeojson_1_1_list.html#aff28ac43c013d316714e52f7dd35765e">operator&lt;&lt;</a> (std::ostream &amp;os, const <a class="el" href="structgeojson_1_1_list.html">List</a> &amp;obj)</td></tr>
+<tr class="memdesc:aff28ac43c013d316714e52f7dd35765e"><td class="mdescLeft">&#160;</td><td class="mdescRight">A stream overload to represent this type as a LIST.  <a href="structgeojson_1_1_list.html#aff28ac43c013d316714e52f7dd35765e">More...</a><br /></td></tr>
 <tr class="separator:aff28ac43c013d316714e52f7dd35765e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p >Struct wrapping a vector of <a class="el" href="namespacegeojson.html#a0e7f78cfe2859f6b67a1d8165e22a99c">PropertyVariant</a> representing a JSON list. </p>
-</div><h2 class="groupheader">Friends And Related Function Documentation</h2>
+<div class="textblock"><p >Struct wrapping a vector of <a class="el" href="classgeojson_1_1_j_s_o_n_property.html">JSONProperty</a> representing a JSON list. </p>
+<p >Note: that due to the forward declaration of <a class="el" href="classgeojson_1_1_j_s_o_n_property.html" title="@TODO: Convert JSONProperty into a variant of the supported types">JSONProperty</a> and the recursive nature of the property and the variant types a pointer is required to allow this incomplete type to encapsulate the vectory of JSONProperties. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a42c12fa9ad6bb881589e5acb3319fe4e" name="a42c12fa9ad6bb881589e5acb3319fe4e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a42c12fa9ad6bb881589e5acb3319fe4e">&#9670;&nbsp;</a></span>List()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">geojson::List::List </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="classgeojson_1_1_j_s_o_n_property.html">JSONProperty</a> &gt; *&#160;</td>
+          <td class="paramname"><em>values</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Construct a new <a class="el" href="structgeojson_1_1_list.html" title="Struct wrapping a vector of JSONProperty representing a JSON list.">List</a> and set its values pointer to values. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">values</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a17e1299e5d8015bf47feb402cd0585be" name="a17e1299e5d8015bf47feb402cd0585be"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a17e1299e5d8015bf47feb402cd0585be">&#9670;&nbsp;</a></span>get_values()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; <a class="el" href="classgeojson_1_1_j_s_o_n_property.html">JSONProperty</a> &gt; * geojson::List::get_values </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the pointer to the values vector. </p>
+<dl class="section return"><dt>Returns</dt><dd>const std::vector&lt;JSONProperty&gt;* </dd></dl>
+
+<p class="reference">References <a class="el" href="structgeojson_1_1_list.html#af53a8a24c290efe2a19958f898175c69">values</a>.</p>
+
+</div>
+</div>
+<a id="a6e5a3a1f7c53785ef22743cff3dc5d91" name="a6e5a3a1f7c53785ef22743cff3dc5d91"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e5a3a1f7c53785ef22743cff3dc5d91">&#9670;&nbsp;</a></span>operator==()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool geojson::List::operator== </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structgeojson_1_1_list.html">List</a> &amp;&#160;</td>
+          <td class="paramname"><em>other</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Equality operator. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">other</td><td><a class="el" href="structgeojson_1_1_list.html" title="Struct wrapping a vector of JSONProperty representing a JSON list.">List</a> to check equality against </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true If the <a class="el" href="classgeojson_1_1_j_s_o_n_property.html" title="@TODO: Convert JSONProperty into a variant of the supported types">JSONProperty</a> vector <a class="el" href="structgeojson_1_1_list.html#af53a8a24c290efe2a19958f898175c69">values</a> is equal to other vector of <a class="el" href="classgeojson_1_1_j_s_o_n_property.html" title="@TODO: Convert JSONProperty into a variant of the supported types">JSONProperty</a>. </dd>
+<dd>
+false If the <a class="el" href="classgeojson_1_1_j_s_o_n_property.html" title="@TODO: Convert JSONProperty into a variant of the supported types">JSONProperty</a> vectors are not equivalent. </dd></dl>
+
+<p class="reference">References <a class="el" href="structgeojson_1_1_list.html#af53a8a24c290efe2a19958f898175c69">values</a>.</p>
+
+</div>
+</div>
+<a id="a9f45981e383d8ad0cc5679e93420f3b1" name="a9f45981e383d8ad0cc5679e93420f3b1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f45981e383d8ad0cc5679e93420f3b1">&#9670;&nbsp;</a></span>push_back()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void geojson::List::push_back </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classgeojson_1_1_j_s_o_n_property.html">JSONProperty</a> &amp;&#160;</td>
+          <td class="paramname"><em>property</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Add a <a class="el" href="classgeojson_1_1_j_s_o_n_property.html" title="@TODO: Convert JSONProperty into a variant of the supported types">JSONProperty</a> to <a class="el" href="structgeojson_1_1_list.html" title="Struct wrapping a vector of JSONProperty representing a JSON list.">List</a> backing storage via the values pointer. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">property</td><td><a class="el" href="classgeojson_1_1_j_s_o_n_property.html" title="@TODO: Convert JSONProperty into a variant of the supported types">JSONProperty</a> to add to the back of the <a class="el" href="structgeojson_1_1_list.html" title="Struct wrapping a vector of JSONProperty representing a JSON list.">List</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="structgeojson_1_1_list.html#af53a8a24c290efe2a19958f898175c69">values</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Friends And Related Function Documentation</h2>
 <a id="aff28ac43c013d316714e52f7dd35765e" name="aff28ac43c013d316714e52f7dd35765e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aff28ac43c013d316714e52f7dd35765e">&#9670;&nbsp;</a></span>operator&lt;&lt;</h2>
 
@@ -150,22 +309,40 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>A stream overload to represent this type as a LIST. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">os</td><td></td></tr>
+    <tr><td class="paramname">obj</td><td><a class="el" href="structgeojson_1_1_list.html" title="Struct wrapping a vector of JSONProperty representing a JSON list.">List</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>std::ostream&amp; </dd></dl>
+
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="ad3a3e7534c1e280d0f958b65d2e5c974" name="ad3a3e7534c1e280d0f958b65d2e5c974"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad3a3e7534c1e280d0f958b65d2e5c974">&#9670;&nbsp;</a></span>values</h2>
+<a id="af53a8a24c290efe2a19958f898175c69" name="af53a8a24c290efe2a19958f898175c69"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af53a8a24c290efe2a19958f898175c69">&#9670;&nbsp;</a></span>values</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt;<a class="el" href="namespacegeojson.html#a0e7f78cfe2859f6b67a1d8165e22a99c">PropertyVariant</a>&gt; geojson::List::values</td>
+          <td class="memname">std::vector&lt;<a class="el" href="classgeojson_1_1_j_s_o_n_property.html">JSONProperty</a>&gt;* geojson::List::values</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classgeojson_1_1_j_s_o_n_property.html#a67c06aa54d9f12507f8255ad3d6d860d">geojson::JSONProperty::JSONProperty()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="structgeojson_1_1_list.html#a17e1299e5d8015bf47feb402cd0585be">get_values()</a>, <a class="el" href="structgeojson_1_1_list.html#a6e5a3a1f7c53785ef22743cff3dc5d91">operator==()</a>, and <a class="el" href="structgeojson_1_1_list.html#a9f45981e383d8ad0cc5679e93420f3b1">push_back()</a>.</p>
 
 </div>
 </div>
@@ -178,7 +355,7 @@ Friends</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacegeojson.html">geojson</a></li><li class="navelem"><a class="el" href="structgeojson_1_1_list.html">List</a></li>
-    <li class="footer">Generated on Tue Oct 18 2022 20:18:52 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
+    <li class="footer">Generated on Tue Oct 18 2022 20:22:59 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
   </ul>
 </div>
 </body>

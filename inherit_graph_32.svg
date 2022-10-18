@@ -12,7 +12,7 @@
 <!-- Node0 -->
 <g id="node1" class="node">
 <title>Node0</title>
-<g id="a_node1"><a xlink:href="structgeojson_1_1_object.html" target="_top" xlink:title="Struct wrapping a map of nested PropertyVariant representing a JSON object.">
+<g id="a_node1"><a xlink:href="structgeojson_1_1_object.html" target="_top" xlink:title="Struct wrapping a nested PropertyMap representing a JSON object.">
 <polygon fill="white" stroke="black" points="0,-0.5 0,-19.5 83,-19.5 83,-0.5 0,-0.5"/>
 <text text-anchor="middle" x="41.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">geojson::Object</text>
 </a>

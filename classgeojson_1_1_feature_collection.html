@@ -105,6 +105,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a17faef997ef12990c512aa418b8f3f92"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgeojson_1_1_feature_collection.html#a17faef997ef12990c512aa418b8f3f92">FeatureCollection</a> (<a class="el" href="namespacegeojson.html#ad8a5fd2f9372cc99bdbe55db73a64f0d">FeatureList</a> &amp;new_features, std::vector&lt; double &gt; <a class="el" href="classgeojson_1_1_feature_collection.html#a1670256b5f383cbb26306bd96e7d1bd2">bounding_box</a>)</td></tr>
 <tr class="memdesc:a17faef997ef12990c512aa418b8f3f92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="classgeojson_1_1_feature_collection.html#a17faef997ef12990c512aa418b8f3f92">More...</a><br /></td></tr>
 <tr class="separator:a17faef997ef12990c512aa418b8f3f92"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec2ef7ba1398e2bf989c2018f5a09364"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgeojson_1_1_feature_collection.html#aec2ef7ba1398e2bf989c2018f5a09364">FeatureCollection</a> (<a class="el" href="namespacegeojson.html#ad8a5fd2f9372cc99bdbe55db73a64f0d">FeatureList</a> &amp;&amp;new_features, std::vector&lt; double &gt; &amp;&amp;<a class="el" href="classgeojson_1_1_feature_collection.html#a1670256b5f383cbb26306bd96e7d1bd2">bounding_box</a>)</td></tr>
+<tr class="memdesc:aec2ef7ba1398e2bf989c2018f5a09364"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move Constructor.  <a href="classgeojson_1_1_feature_collection.html#aec2ef7ba1398e2bf989c2018f5a09364">More...</a><br /></td></tr>
+<tr class="separator:aec2ef7ba1398e2bf989c2018f5a09364"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9ac4ee68e42574202f43662d04b0ffd8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgeojson_1_1_feature_collection.html#a9ac4ee68e42574202f43662d04b0ffd8">FeatureCollection</a> ()</td></tr>
 <tr class="separator:a9ac4ee68e42574202f43662d04b0ffd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5ab3c315b661b44e1fc52c3274f89b2f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgeojson_1_1_feature_collection.html#a5ab3c315b661b44e1fc52c3274f89b2f">FeatureCollection</a> (const <a class="el" href="classgeojson_1_1_feature_collection.html">FeatureCollection</a> &amp;feature_collection)</td></tr>
@@ -194,7 +197,7 @@ Private Attributes</h2></td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a17faef997ef12990c512aa418b8f3f92" name="a17faef997ef12990c512aa418b8f3f92"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a17faef997ef12990c512aa418b8f3f92">&#9670;&nbsp;</a></span>FeatureCollection() <span class="overload">[1/4]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a17faef997ef12990c512aa418b8f3f92">&#9670;&nbsp;</a></span>FeatureCollection() <span class="overload">[1/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -240,8 +243,53 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="aec2ef7ba1398e2bf989c2018f5a09364" name="aec2ef7ba1398e2bf989c2018f5a09364"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aec2ef7ba1398e2bf989c2018f5a09364">&#9670;&nbsp;</a></span>FeatureCollection() <span class="overload">[2/5]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">geojson::FeatureCollection::FeatureCollection </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacegeojson.html#ad8a5fd2f9372cc99bdbe55db73a64f0d">FeatureList</a> &amp;&amp;&#160;</td>
+          <td class="paramname"><em>new_features</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; double &gt; &amp;&amp;&#160;</td>
+          <td class="paramname"><em>bounding_box</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Move Constructor. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">new_features</td><td>An overall list of features </td></tr>
+    <tr><td class="paramname">bounding_box</td><td>A set of bounds for all features </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a9ac4ee68e42574202f43662d04b0ffd8" name="a9ac4ee68e42574202f43662d04b0ffd8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9ac4ee68e42574202f43662d04b0ffd8">&#9670;&nbsp;</a></span>FeatureCollection() <span class="overload">[2/4]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a9ac4ee68e42574202f43662d04b0ffd8">&#9670;&nbsp;</a></span>FeatureCollection() <span class="overload">[3/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -266,7 +314,7 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a5ab3c315b661b44e1fc52c3274f89b2f" name="a5ab3c315b661b44e1fc52c3274f89b2f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5ab3c315b661b44e1fc52c3274f89b2f">&#9670;&nbsp;</a></span>FeatureCollection() <span class="overload">[3/4]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ab3c315b661b44e1fc52c3274f89b2f">&#9670;&nbsp;</a></span>FeatureCollection() <span class="overload">[4/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -302,7 +350,7 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a83e8f797646c87ca9e0b7a4d2147da9d" name="a83e8f797646c87ca9e0b7a4d2147da9d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a83e8f797646c87ca9e0b7a4d2147da9d">&#9670;&nbsp;</a></span>FeatureCollection() <span class="overload">[4/4]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a83e8f797646c87ca9e0b7a4d2147da9d">&#9670;&nbsp;</a></span>FeatureCollection() <span class="overload">[5/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1226,7 +1274,7 @@ template&lt;typename C &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacegeojson.html">geojson</a></li><li class="navelem"><a class="el" href="classgeojson_1_1_feature_collection.html">FeatureCollection</a></li>
-    <li class="footer">Generated on Tue Oct 18 2022 20:18:52 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
+    <li class="footer">Generated on Tue Oct 18 2022 20:22:59 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
   </ul>
 </div>
 </body>

@@ -55,7 +55,7 @@ var namespacegeojson =
       [ "List", "namespacegeojson.html#a972cd4a487858a36473c775ac360f361a4ee29ca12c7d126654bd0e5275de6135", null ],
       [ "Object", "namespacegeojson.html#a972cd4a487858a36473c775ac360f361a497031794414a552435f90151ac3b54b", null ]
     ] ],
-    [ "build_collection", "namespacegeojson.html#a451eeb84b57ff5d1d2123312ea8b2374", null ],
+    [ "build_collection", "namespacegeojson.html#a6c56f04132a1174ba51a89356713e209", null ],
     [ "build_feature", "namespacegeojson.html#a9c216b34a0daddc5c999f512e06125ed", null ],
     [ "build_geometry", "namespacegeojson.html#a5c82b2a9948b6f057381bf16e197bde4", null ],
     [ "build_linestring", "namespacegeojson.html#a5da2bcd4b8b0e11f7de4508d134ef244", null ],
@@ -67,7 +67,7 @@ var namespacegeojson =
     [ "contains", "namespacegeojson.html#a2fd0ff0c76d9798103057ccaf435b714", null ],
     [ "contains", "namespacegeojson.html#a9ad46c0f15062ad9678a7ebacb8744db", null ],
     [ "get_geometry_type", "namespacegeojson.html#ab0d9763d1e5c2779a05a0b98dac3581c", null ],
-    [ "get_propertytype_name", "namespacegeojson.html#a4ff2b57b059743e853ab30671712c157", null ],
+    [ "get_propertytype_name", "namespacegeojson.html#a51a3ed6d91b88684d46710614638d53b", null ],
     [ "get_shape", "namespacegeojson.html#a5fa652fcd4985537f8f9060c77d55b3d", null ],
     [ "linestring", "namespacegeojson.html#a6f75554e907f047ae914eadf3d61c43d", null ],
     [ "multilinestring", "namespacegeojson.html#af1cddc2efbfbf791ed06243ba22877cb", null ],

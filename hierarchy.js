@@ -30,7 +30,7 @@ var hierarchy =
       [ "request_from_empty_nexus", "structrequest__from__empty__nexus.html", null ]
     ] ],
     [ "boost::static_visitor", null, [
-      [ "geojson::JSONProperty::PropertyVisitor< T >", "structgeojson_1_1_j_s_o_n_property_1_1_property_visitor.html", null ]
+      [ "geojson::JSONProperty::AsVectorVisitor< T >", "structgeojson_1_1_j_s_o_n_property_1_1_as_vector_visitor.html", null ]
     ] ],
     [ "CatchmentAggrDataSelector", "class_catchment_aggr_data_selector.html", [
       [ "BMIDataSelector", "class_b_m_i_data_selector.html", null ],

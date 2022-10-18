@@ -673,6 +673,7 @@
         </topic>
         <topic label="FeatureCollection" href="classgeojson_1_1_feature_collection.html">
           <topic label="FeatureCollection" href="classgeojson_1_1_feature_collection.html#a17faef997ef12990c512aa418b8f3f92"/>
+          <topic label="FeatureCollection" href="classgeojson_1_1_feature_collection.html#aec2ef7ba1398e2bf989c2018f5a09364"/>
           <topic label="FeatureCollection" href="classgeojson_1_1_feature_collection.html#a9ac4ee68e42574202f43662d04b0ffd8"/>
           <topic label="FeatureCollection" href="classgeojson_1_1_feature_collection.html#a5ab3c315b661b44e1fc52c3274f89b2f"/>
           <topic label="FeatureCollection" href="classgeojson_1_1_feature_collection.html#a83e8f797646c87ca9e0b7a4d2147da9d"/>
@@ -720,13 +721,13 @@
           <topic label="visit" href="classgeojson_1_1_feature_visitor.html#a2676b1f6dbb3071b3d32df3712b43855"/>
         </topic>
         <topic label="JSONProperty" href="classgeojson_1_1_j_s_o_n_property.html">
-          <topic label="PropertyVisitor" href="structgeojson_1_1_j_s_o_n_property_1_1_property_visitor.html">
-            <topic label="PropertyVisitor" href="structgeojson_1_1_j_s_o_n_property_1_1_property_visitor.html#ac88a4bab47315029c8ba4c3c37136974"/>
-            <topic label="operator()" href="structgeojson_1_1_j_s_o_n_property_1_1_property_visitor.html#af201c7276c498f14bd04897689d353b7"/>
-            <topic label="operator()" href="structgeojson_1_1_j_s_o_n_property_1_1_property_visitor.html#a54c0c3ea2424a202283d386a0e005402"/>
-            <topic label="operator()" href="structgeojson_1_1_j_s_o_n_property_1_1_property_visitor.html#ae851f84d1d8e03b576e205afe692d76a"/>
-            <topic label="operator()" href="structgeojson_1_1_j_s_o_n_property_1_1_property_visitor.html#af60466f3ab263485c34e45371aaf7989"/>
-            <topic label="vec" href="structgeojson_1_1_j_s_o_n_property_1_1_property_visitor.html#ac23d77aed125304248e05760c2738133"/>
+          <topic label="AsVectorVisitor" href="structgeojson_1_1_j_s_o_n_property_1_1_as_vector_visitor.html">
+            <topic label="AsVectorVisitor" href="structgeojson_1_1_j_s_o_n_property_1_1_as_vector_visitor.html#a5799c960bad5171fede3d518204093b9"/>
+            <topic label="operator()" href="structgeojson_1_1_j_s_o_n_property_1_1_as_vector_visitor.html#a42bfc02aaf6e2de7a9dcb7475f40e64b"/>
+            <topic label="operator()" href="structgeojson_1_1_j_s_o_n_property_1_1_as_vector_visitor.html#a214aedf3b3e73ed4f5de14f0806675d4"/>
+            <topic label="operator()" href="structgeojson_1_1_j_s_o_n_property_1_1_as_vector_visitor.html#a7e97290db6eaa65e9485563af7579620"/>
+            <topic label="operator()" href="structgeojson_1_1_j_s_o_n_property_1_1_as_vector_visitor.html#aac213898d13bd98b01fe59c0ee7becc6"/>
+            <topic label="vec" href="structgeojson_1_1_j_s_o_n_property_1_1_as_vector_visitor.html#ab014d75505e8ff9be2fef989bb03ce69"/>
           </topic>
           <topic label="JSONProperty" href="classgeojson_1_1_j_s_o_n_property.html#a67c06aa54d9f12507f8255ad3d6d860d"/>
           <topic label="JSONProperty" href="classgeojson_1_1_j_s_o_n_property.html#a8124b60e4f0a5d500d7635205344a158"/>
@@ -758,13 +759,9 @@
           <topic label="has_key" href="classgeojson_1_1_j_s_o_n_property.html#afe12f98e6dafc1abb943d3865e601ec1"/>
           <topic label="keys" href="classgeojson_1_1_j_s_o_n_property.html#a11b0d4cecda0a3f85cd9034d8638ac73"/>
           <topic label="operator!=" href="classgeojson_1_1_j_s_o_n_property.html#ae1815462ba6862ac036d8ce098b7d941"/>
-          <topic label="operator==" href="classgeojson_1_1_j_s_o_n_property.html#a4a15af4438529f165427486327d67e8e"/>
-          <topic label="boolean" href="classgeojson_1_1_j_s_o_n_property.html#a9797564a74d052880a95704bcbb5ae5e"/>
+          <topic label="operator==" href="classgeojson_1_1_j_s_o_n_property.html#a06efd343c58f799d6636b04be36f8d5a"/>
           <topic label="data" href="classgeojson_1_1_j_s_o_n_property.html#af405297de7dae29f9bf8ee584ba08858"/>
           <topic label="key" href="classgeojson_1_1_j_s_o_n_property.html#a3fe2ade16ff994a3e9e3fbf106ba690a"/>
-          <topic label="natural_number" href="classgeojson_1_1_j_s_o_n_property.html#ab0c6d37af263c7ba85a34d56275e2b8f"/>
-          <topic label="real_number" href="classgeojson_1_1_j_s_o_n_property.html#ab682d395ee8b90c23bf2f82c1bc556e1"/>
-          <topic label="string" href="classgeojson_1_1_j_s_o_n_property.html#a864b411ee1ce948aef80e9cbc8e47e4a"/>
           <topic label="type" href="classgeojson_1_1_j_s_o_n_property.html#a1d92b4f0ec6df2fef86a7b4ef183973b"/>
           <topic label="value_list" href="classgeojson_1_1_j_s_o_n_property.html#a1bd38dc99c8773465bbd8989b9f563ca"/>
           <topic label="values" href="classgeojson_1_1_j_s_o_n_property.html#ae1d7def48bf2d357a5a1b086930a74b2"/>
@@ -830,8 +827,12 @@
           <topic label="type" href="classgeojson_1_1_line_string_feature.html#ac2786341bb4e570fa8d60fefe18dbe0f"/>
         </topic>
         <topic label="List" href="structgeojson_1_1_list.html">
+          <topic label="List" href="structgeojson_1_1_list.html#a42c12fa9ad6bb881589e5acb3319fe4e"/>
+          <topic label="get_values" href="structgeojson_1_1_list.html#a17e1299e5d8015bf47feb402cd0585be"/>
+          <topic label="operator==" href="structgeojson_1_1_list.html#a6e5a3a1f7c53785ef22743cff3dc5d91"/>
+          <topic label="push_back" href="structgeojson_1_1_list.html#a9f45981e383d8ad0cc5679e93420f3b1"/>
           <topic label="operator&lt;&lt;" href="structgeojson_1_1_list.html#aff28ac43c013d316714e52f7dd35765e"/>
-          <topic label="values" href="structgeojson_1_1_list.html#ad3a3e7534c1e280d0f958b65d2e5c974"/>
+          <topic label="values" href="structgeojson_1_1_list.html#af53a8a24c290efe2a19958f898175c69"/>
         </topic>
         <topic label="MultiLineStringFeature" href="classgeojson_1_1_multi_line_string_feature.html">
           <topic label="MultiLineStringFeature" href="classgeojson_1_1_multi_line_string_feature.html#aa81c8d5ff880544b87b792258be1ae2a"/>
@@ -1014,8 +1015,10 @@
           <topic label="type" href="classgeojson_1_1_multi_polygon_feature.html#ac2786341bb4e570fa8d60fefe18dbe0f"/>
         </topic>
         <topic label="Object" href="structgeojson_1_1_object.html">
+          <topic label="Object" href="structgeojson_1_1_object.html#aaefa12425c4e5fe8ff462a124eacc528"/>
+          <topic label="operator==" href="structgeojson_1_1_object.html#a7e233aa5767b7df4b602265bd6752504"/>
           <topic label="operator&lt;&lt;" href="structgeojson_1_1_object.html#ab61122231c92c4dcc8c7d1479044815e"/>
-          <topic label="values" href="structgeojson_1_1_object.html#ad425a1f081e96f36bd3548e8fb7578bb"/>
+          <topic label="values" href="structgeojson_1_1_object.html#a5900b6b42c266ee090cff113c2024ea4"/>
         </topic>
         <topic label="PointFeature" href="classgeojson_1_1_point_feature.html">
           <topic label="PointFeature" href="classgeojson_1_1_point_feature.html#a59370cc9ac5d234a229d04f42ed54385"/>
@@ -1178,7 +1181,7 @@
           <topic label="List" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a4ee29ca12c7d126654bd0e5275de6135"/>
           <topic label="Object" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a497031794414a552435f90151ac3b54b"/>
         </topic>
-        <topic label="build_collection" href="namespacegeojson.html#a451eeb84b57ff5d1d2123312ea8b2374"/>
+        <topic label="build_collection" href="namespacegeojson.html#a6c56f04132a1174ba51a89356713e209"/>
         <topic label="build_feature" href="namespacegeojson.html#a9c216b34a0daddc5c999f512e06125ed"/>
         <topic label="build_geometry" href="namespacegeojson.html#a5c82b2a9948b6f057381bf16e197bde4"/>
         <topic label="build_linestring" href="namespacegeojson.html#a5da2bcd4b8b0e11f7de4508d134ef244"/>
@@ -1190,7 +1193,7 @@
         <topic label="contains" href="namespacegeojson.html#a2fd0ff0c76d9798103057ccaf435b714"/>
         <topic label="contains" href="namespacegeojson.html#a9ad46c0f15062ad9678a7ebacb8744db"/>
         <topic label="get_geometry_type" href="namespacegeojson.html#ab0d9763d1e5c2779a05a0b98dac3581c"/>
-        <topic label="get_propertytype_name" href="namespacegeojson.html#a4ff2b57b059743e853ab30671712c157"/>
+        <topic label="get_propertytype_name" href="namespacegeojson.html#a51a3ed6d91b88684d46710614638d53b"/>
         <topic label="get_shape" href="namespacegeojson.html#a5fa652fcd4985537f8f9060c77d55b3d"/>
         <topic label="linestring" href="namespacegeojson.html#a6f75554e907f047ae914eadf3d61c43d"/>
         <topic label="multilinestring" href="namespacegeojson.html#af1cddc2efbfbf791ed06243ba22877cb"/>
@@ -3206,6 +3209,7 @@
         </topic>
         <topic label="FeatureCollection" href="classgeojson_1_1_feature_collection.html">
           <topic label="FeatureCollection" href="classgeojson_1_1_feature_collection.html#a17faef997ef12990c512aa418b8f3f92"/>
+          <topic label="FeatureCollection" href="classgeojson_1_1_feature_collection.html#aec2ef7ba1398e2bf989c2018f5a09364"/>
           <topic label="FeatureCollection" href="classgeojson_1_1_feature_collection.html#a9ac4ee68e42574202f43662d04b0ffd8"/>
           <topic label="FeatureCollection" href="classgeojson_1_1_feature_collection.html#a5ab3c315b661b44e1fc52c3274f89b2f"/>
           <topic label="FeatureCollection" href="classgeojson_1_1_feature_collection.html#a83e8f797646c87ca9e0b7a4d2147da9d"/>
@@ -3253,13 +3257,13 @@
           <topic label="visit" href="classgeojson_1_1_feature_visitor.html#a2676b1f6dbb3071b3d32df3712b43855"/>
         </topic>
         <topic label="JSONProperty" href="classgeojson_1_1_j_s_o_n_property.html">
-          <topic label="PropertyVisitor" href="structgeojson_1_1_j_s_o_n_property_1_1_property_visitor.html">
-            <topic label="PropertyVisitor" href="structgeojson_1_1_j_s_o_n_property_1_1_property_visitor.html#ac88a4bab47315029c8ba4c3c37136974"/>
-            <topic label="operator()" href="structgeojson_1_1_j_s_o_n_property_1_1_property_visitor.html#af201c7276c498f14bd04897689d353b7"/>
-            <topic label="operator()" href="structgeojson_1_1_j_s_o_n_property_1_1_property_visitor.html#a54c0c3ea2424a202283d386a0e005402"/>
-            <topic label="operator()" href="structgeojson_1_1_j_s_o_n_property_1_1_property_visitor.html#ae851f84d1d8e03b576e205afe692d76a"/>
-            <topic label="operator()" href="structgeojson_1_1_j_s_o_n_property_1_1_property_visitor.html#af60466f3ab263485c34e45371aaf7989"/>
-            <topic label="vec" href="structgeojson_1_1_j_s_o_n_property_1_1_property_visitor.html#ac23d77aed125304248e05760c2738133"/>
+          <topic label="AsVectorVisitor" href="structgeojson_1_1_j_s_o_n_property_1_1_as_vector_visitor.html">
+            <topic label="AsVectorVisitor" href="structgeojson_1_1_j_s_o_n_property_1_1_as_vector_visitor.html#a5799c960bad5171fede3d518204093b9"/>
+            <topic label="operator()" href="structgeojson_1_1_j_s_o_n_property_1_1_as_vector_visitor.html#a42bfc02aaf6e2de7a9dcb7475f40e64b"/>
+            <topic label="operator()" href="structgeojson_1_1_j_s_o_n_property_1_1_as_vector_visitor.html#a214aedf3b3e73ed4f5de14f0806675d4"/>
+            <topic label="operator()" href="structgeojson_1_1_j_s_o_n_property_1_1_as_vector_visitor.html#a7e97290db6eaa65e9485563af7579620"/>
+            <topic label="operator()" href="structgeojson_1_1_j_s_o_n_property_1_1_as_vector_visitor.html#aac213898d13bd98b01fe59c0ee7becc6"/>
+            <topic label="vec" href="structgeojson_1_1_j_s_o_n_property_1_1_as_vector_visitor.html#ab014d75505e8ff9be2fef989bb03ce69"/>
           </topic>
           <topic label="JSONProperty" href="classgeojson_1_1_j_s_o_n_property.html#a67c06aa54d9f12507f8255ad3d6d860d"/>
           <topic label="JSONProperty" href="classgeojson_1_1_j_s_o_n_property.html#a8124b60e4f0a5d500d7635205344a158"/>
@@ -3291,13 +3295,9 @@
           <topic label="has_key" href="classgeojson_1_1_j_s_o_n_property.html#afe12f98e6dafc1abb943d3865e601ec1"/>
           <topic label="keys" href="classgeojson_1_1_j_s_o_n_property.html#a11b0d4cecda0a3f85cd9034d8638ac73"/>
           <topic label="operator!=" href="classgeojson_1_1_j_s_o_n_property.html#ae1815462ba6862ac036d8ce098b7d941"/>
-          <topic label="operator==" href="classgeojson_1_1_j_s_o_n_property.html#a4a15af4438529f165427486327d67e8e"/>
-          <topic label="boolean" href="classgeojson_1_1_j_s_o_n_property.html#a9797564a74d052880a95704bcbb5ae5e"/>
+          <topic label="operator==" href="classgeojson_1_1_j_s_o_n_property.html#a06efd343c58f799d6636b04be36f8d5a"/>
           <topic label="data" href="classgeojson_1_1_j_s_o_n_property.html#af405297de7dae29f9bf8ee584ba08858"/>
           <topic label="key" href="classgeojson_1_1_j_s_o_n_property.html#a3fe2ade16ff994a3e9e3fbf106ba690a"/>
-          <topic label="natural_number" href="classgeojson_1_1_j_s_o_n_property.html#ab0c6d37af263c7ba85a34d56275e2b8f"/>
-          <topic label="real_number" href="classgeojson_1_1_j_s_o_n_property.html#ab682d395ee8b90c23bf2f82c1bc556e1"/>
-          <topic label="string" href="classgeojson_1_1_j_s_o_n_property.html#a864b411ee1ce948aef80e9cbc8e47e4a"/>
           <topic label="type" href="classgeojson_1_1_j_s_o_n_property.html#a1d92b4f0ec6df2fef86a7b4ef183973b"/>
           <topic label="value_list" href="classgeojson_1_1_j_s_o_n_property.html#a1bd38dc99c8773465bbd8989b9f563ca"/>
           <topic label="values" href="classgeojson_1_1_j_s_o_n_property.html#ae1d7def48bf2d357a5a1b086930a74b2"/>
@@ -3363,8 +3363,12 @@
           <topic label="type" href="classgeojson_1_1_line_string_feature.html#ac2786341bb4e570fa8d60fefe18dbe0f"/>
         </topic>
         <topic label="List" href="structgeojson_1_1_list.html">
+          <topic label="List" href="structgeojson_1_1_list.html#a42c12fa9ad6bb881589e5acb3319fe4e"/>
+          <topic label="get_values" href="structgeojson_1_1_list.html#a17e1299e5d8015bf47feb402cd0585be"/>
+          <topic label="operator==" href="structgeojson_1_1_list.html#a6e5a3a1f7c53785ef22743cff3dc5d91"/>
+          <topic label="push_back" href="structgeojson_1_1_list.html#a9f45981e383d8ad0cc5679e93420f3b1"/>
           <topic label="operator&lt;&lt;" href="structgeojson_1_1_list.html#aff28ac43c013d316714e52f7dd35765e"/>
-          <topic label="values" href="structgeojson_1_1_list.html#ad3a3e7534c1e280d0f958b65d2e5c974"/>
+          <topic label="values" href="structgeojson_1_1_list.html#af53a8a24c290efe2a19958f898175c69"/>
         </topic>
         <topic label="MultiLineStringFeature" href="classgeojson_1_1_multi_line_string_feature.html">
           <topic label="MultiLineStringFeature" href="classgeojson_1_1_multi_line_string_feature.html#aa81c8d5ff880544b87b792258be1ae2a"/>
@@ -3547,8 +3551,10 @@
           <topic label="type" href="classgeojson_1_1_multi_polygon_feature.html#ac2786341bb4e570fa8d60fefe18dbe0f"/>
         </topic>
         <topic label="Object" href="structgeojson_1_1_object.html">
+          <topic label="Object" href="structgeojson_1_1_object.html#aaefa12425c4e5fe8ff462a124eacc528"/>
+          <topic label="operator==" href="structgeojson_1_1_object.html#a7e233aa5767b7df4b602265bd6752504"/>
           <topic label="operator&lt;&lt;" href="structgeojson_1_1_object.html#ab61122231c92c4dcc8c7d1479044815e"/>
-          <topic label="values" href="structgeojson_1_1_object.html#ad425a1f081e96f36bd3548e8fb7578bb"/>
+          <topic label="values" href="structgeojson_1_1_object.html#a5900b6b42c266ee090cff113c2024ea4"/>
         </topic>
         <topic label="PointFeature" href="classgeojson_1_1_point_feature.html">
           <topic label="PointFeature" href="classgeojson_1_1_point_feature.html#a59370cc9ac5d234a229d04f42ed54385"/>
@@ -6096,7 +6102,7 @@
         <topic label="request_from_empty_nexus" href="structrequest__from__empty__nexus.html"/>
       </topic>
       <topic label="boost::static_visitor">
-        <topic label="geojson::JSONProperty::PropertyVisitor&lt; T &gt;" href="structgeojson_1_1_j_s_o_n_property_1_1_property_visitor.html"/>
+        <topic label="geojson::JSONProperty::AsVectorVisitor&lt; T &gt;" href="structgeojson_1_1_j_s_o_n_property_1_1_as_vector_visitor.html"/>
       </topic>
       <topic label="CatchmentAggrDataSelector" href="class_catchment_aggr_data_selector.html">
         <topic label="BMIDataSelector" href="class_b_m_i_data_selector.html"/>

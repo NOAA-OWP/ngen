@@ -12,7 +12,7 @@ var searchData=
   ['bmi_5fmulti_5fformulation_9',['Bmi_Multi_Formulation',['../classrealization_1_1_bmi___multi___formulation.html#add34061f00ab855e4385d368bd9f61b5',1,'realization::Bmi_Multi_Formulation']]],
   ['bmidataselector_10',['BMIDataSelector',['../class_b_m_i_data_selector.html#a69be092238617eb9a3a33a5a03e15801',1,'BMIDataSelector']]],
   ['break_5flinks_11',['break_links',['../classgeojson_1_1_feature_base.html#a30269e3419054d9f3e06e4d1c74b44e0',1,'geojson::FeatureBase']]],
-  ['build_5fcollection_12',['build_collection',['../namespacegeojson.html#a451eeb84b57ff5d1d2123312ea8b2374',1,'geojson']]],
+  ['build_5fcollection_12',['build_collection',['../namespacegeojson.html#a6c56f04132a1174ba51a89356713e209',1,'geojson']]],
   ['build_5ffeature_13',['build_feature',['../namespacegeojson.html#a9c216b34a0daddc5c999f512e06125ed',1,'geojson']]],
   ['build_5fgeometry_14',['build_geometry',['../namespacegeojson.html#a5c82b2a9948b6f057381bf16e197bde4',1,'geojson']]],
   ['build_5fgiuh_5fkernel_15',['build_giuh_kernel',['../classgiuh_1_1_giuh_json_reader.html#a2a5e47652fd88cd1b2f6c028a01e21cb',1,'giuh::GiuhJsonReader']]],
