@@ -2,7 +2,7 @@
   dt                 = 3600.0                       ! timestep [seconds]
   startdate          = "201512010000"               ! UTC time start of simulation (YYYYMMDDhhmm)
   enddate            = "201512302300"               ! UTC time end of simulation (YYYYMMDDhhmm)
-  forcing_filename   = "./data/forcing/cat-67.csv"      ! file containing forcing data
+  forcing_filename   = "./data/forcing/cat-67.csv"  ! file containing forcing data
   output_filename    = "./data/output.nc"
 /
 
