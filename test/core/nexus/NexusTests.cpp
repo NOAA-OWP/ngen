@@ -47,7 +47,7 @@ TEST_F(Nexus_Test, TestInit0)
     //HY_HydroLocationType type(HY_HydroLocationType::undefined);    //!< Test data type
     //HY_IndirectPosition pos;
     //std::shared_ptr<HY_HydroLocation>location = std::make_shared<HY_HydroLocation>(point, type, pos);
-    std::vector<string> contrib = {"cat-1"};
+    std::vector<std::string> contrib = {"cat-1"};
     //HY_PointHydroNexus("nex-0", location, std::vector<string>(), contrib);
     HY_PointHydroNexus("nex-0", contrib);
     ASSERT_TRUE( true );
