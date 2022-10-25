@@ -134,7 +134,9 @@ class CSVDataSelector : public CatchmentAggrDataSelector
         CatchmentAggrDataSelector(std::string(), var, start, dur, units)
     {}
 
+    #if GCC_VERSION < 8 && !defined(__llvm__)
     operator const CatchmentAggrDataSelector&() const { return *this; }
+    #endif
 
     private:
 };
@@ -147,7 +149,9 @@ class BMIDataSelector : public CatchmentAggrDataSelector
         CatchmentAggrDataSelector(std::string(), var, start, dur, units)
     {}
 
+    #if GCC_VERSION < 8 && !defined(__llvm__)
     operator const CatchmentAggrDataSelector&() const { return *this; }
+    #endif
 
     private:
 };
@@ -170,8 +174,9 @@ class NetCDFDataSelector : public CatchmentAggrDataSelector
         
     }
 
+    #if GCC_VERSION < 8 && !defined(__llvm__)
     operator const CatchmentAggrDataSelector&() const { return *this; }
-
+    #endif
 
     private: 
 };
