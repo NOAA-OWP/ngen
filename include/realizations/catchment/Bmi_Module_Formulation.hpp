@@ -244,7 +244,7 @@ namespace realization {
          * @see ForcingProvider
          */
         //const vector<std::string> &get_available_forcing_outputs() {
-        const vector<std::string> &get_avaliable_variable_names() {
+        const vector<std::string> &get_avaliable_variable_names() override {
             if (is_model_initialized() && available_forcings.empty()) {
                 for (const std::string &output_var_name : get_bmi_model()->GetOutputVarNames()) {
                     available_forcings.push_back(output_var_name);
