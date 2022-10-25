@@ -297,7 +297,7 @@ namespace data_access
 
         /** Return the variables that are accessable by this data provider */
 
-        const std::vector<std::string>& get_avaliable_variable_names()
+        const std::vector<std::string>& get_avaliable_variable_names() override
         {
             return variable_names;
         }
@@ -310,19 +310,19 @@ namespace data_access
 
         /** Return the first valid time for which data from the request variable  can be requested */
 
-        long get_data_start_time()
+        long get_data_start_time() override
         {
             return start_time;
         }
 
         /** Return the last valid time for which data from the requested variable can be requested */
 
-        long get_data_stop_time()
+        long get_data_stop_time() override
         {
             return stop_time;
         }
 
-        long record_duration()
+        long record_duration() override
         {
             return time_stride;
         }
@@ -336,7 +336,7 @@ namespace data_access
          * @return The index of the forcing time step that contains the given point in time.
          * @throws std::out_of_range If the given point is not in any time step.
          */
-        size_t get_ts_index_for_time(const time_t &epoch_time)
+        size_t get_ts_index_for_time(const time_t &epoch_time) override
         {
             if (start_time <= epoch_time && epoch_time < stop_time)
             {

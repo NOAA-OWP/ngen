@@ -181,7 +181,7 @@ namespace realization {
          */
         //const vector<std::string> &get_available_forcing_outputs();
         //const vector<std::string> &get_avaliable_variable_names() override { return get_available_forcing_outputs(); }
-        const vector<std::string> &get_avaliable_variable_names();
+        const vector<std::string> &get_avaliable_variable_names() override;
 
         /**
         * Get the input variables of 
