@@ -38,8 +38,8 @@
         }
     },
     "time": {
-	"start_time": "2009-06-14 20:00:00",
-        "end_time": "2009-12-31 23:00:00",
+        "start_time": "2015-12-01 00:00:00",
+        "end_time": "2015-12-30 23:00:00",
         "output_interval": 3600
     },
     "catchments": {
@@ -48,7 +48,7 @@
                 {
 		    "name": "bmi_multi",
                     "params": {
-			"model_type_name": "bmi_multi_cfe_sft_smp",
+			"model_type_name": "bmi_multi_pet_cfe",
 			"forcing_file": "",
 			"init_config": "",
 			"allow_exceed_end_time": true,
@@ -64,13 +64,15 @@
                                     "main_output_variable": "z",
                                     "uses_forcing_file": false,
                                     "model_params": {
-                                        "soil_moisture_layered(1,double,1,node)": 0.0
+					"sloth_ice_fraction_schaake(1,double,m,node)": 0.0,
+					"sloth_ice_fraction_xinan(1,double,1,node)": 0.0,
+					"sloth_smp(1,double,1,node)": 0.0
                                     }
 				}
                             },
-			    {
-				"name": "bmi_c",
-				"params": {
+                            {
+                                "name": "bmi_c",
+                                "params": {
                                     "model_type_name": "test_bmi_pet",
                                     "library_file": "./extern/evapotranspiration/evapotranspiration/cmake_build/libpetbmi",
                                     "forcing_file": "",
@@ -79,86 +81,41 @@
                                     "main_output_variable": "water_potential_evaporation_flux",
                                     "registration_function":"register_bmi_pet",
                                     "uses_forcing_file": false
-				}
+                                }
                             },
-			    {
-				"name": "bmi_c++",
-				"params": {
-				    "model_type_name": "bmi_smp",
-				    "library_file": "./extern/SoilMoistureProfiles/cmake_build/libsmpbmi",
-				    "init_config": "./extern/SoilFreezeThaw/SoilFreezeThaw/configs/laramie_bmi_config_smp.txt",
-				    "allow_exceed_end_time": true,
-				    "main_output_variable": "soil_water_table",
-				    "variables_names_map" : {
-					"soil_storage" : "SOIL_STORAGE",
-					"soil_storage_change" : "SOIL_STORAGE_CHANGE"
-				    },
-				    "default_output_values": [
-					{
-					    "name": "SOIL_STORAGE_CHANGE",
-					    "value": 0.0
-					}
-				    ],
-				    "uses_forcing_file": false
-				}
-			    },
-			    {
-				"name": "bmi_c++",
-				"params": {
-				    "model_type_name": "bmi_sft",
-				    "library_file": "./extern/SoilFreezeThaw/cmake_build/libsftbmi",
-				    "init_config": "./extern/SoilFreezeThaw/SoilFreezeThaw/configs/laramie_bmi_config_ftm.txt",
-				    "allow_exceed_end_time": true,
-				    "main_output_variable": "num_cells",
-				    "variables_names_map" : {
-					"ground_temperature" : "TMP_ground_surface"
-				    },
-				    "uses_forcing_file": false
-				}
-			    },
-			    {
+                            {
 				"name": "bmi_c",
 				"params": {
-                                    "model_type_name": "test_bmi_cfe",
-                                    "library_file": "./extern/cfe/cmake_build/libcfebmi",
-                                    "forcing_file": "",
-                                    "init_config": "./extern/SoilFreezeThaw/SoilFreezeThaw/configs/laramie_bmi_config_cfe_pass.txt",
-                                    "allow_exceed_end_time": true,
-                                    "main_output_variable": "Q_OUT",
-                                    "registration_function": "register_bmi_cfe",
-                                    "variables_names_map": {
-					"water_potential_evaporation_flux" : "water_potential_evaporation_flux",
-					"atmosphere_water__liquid_equivalent_precipitation_rate" : "APCP_surface",
+				    "model_type_name": "test_bmi_cfe",
+				    "library_file": "./extern/cfe/cmake_build/libcfebmi",
+				    "init_config": "./data/bmi/c/cfe/cat-27_bmi_config.ini",
+				    "main_output_variable": "Q_OUT",
+				    "registration_function": "register_bmi_cfe",
+				    "allow_exceed_end_time": true,
+				    "variables_names_map" : {
+					"water_potential_evaporation_flux" : "potential_evapotranspiration",
+					"atmosphere_water__liquid_equivalent_precipitation_rate" : "precip_rate",
 					"atmosphere_air_water~vapor__relative_saturation" : "SPFH_2maboveground",
 					"land_surface_air__temperature" : "TMP_2maboveground",
 					"land_surface_wind__x_component_of_velocity" : "UGRD_10maboveground",
 					"land_surface_wind__y_component_of_velocity" : "VGRD_10maboveground",
 					"land_surface_radiation~incoming~longwave__energy_flux" : "DLWRF_surface",
 					"land_surface_radiation~incoming~shortwave__energy_flux" : "DSWRF_surface",
-					"land_surface_air__pressure" : "PRES_surface"
-                                    },
-				    "output_variables" : [
-					"RAIN_RATE",
-					"DIRECT_RUNOFF",
-					"GIUH_RUNOFF",
-					"NASH_LATERAL_RUNOFF",
-					"DEEP_GW_TO_CHANNEL_FLUX",
-					"Q_OUT",
-					"SOIL_STORAGE",
-					"ice_fraction_schaake"
-				    ],
-                                    "uses_forcing_file": false
+					"land_surface_air__pressure" : "PRES_surface",
+					"ice_fraction_schaake" : "sloth_ice_fraction_schaake",
+					"ice_fraction_xinan" : "sloth_ice_fraction_xinan",
+					"soil_moisture_profile" : "sloth_smp"
+				    },
+				    "uses_forcing_file": false
 				}
-                            }
-			    
+			    }
 			],
 			"uses_forcing_file": false
                     }
 		}
             ],
             "forcing": {
-		"path" : "./data/forcing/Laramie_14Jun09_to_15Apr12_ngen.csv",
-		"provider": "CsvPerFeature"
+                "path": "./data/forcing/cat-27_2015-12-01 00_00_00_2015-12-30 23_00_00.csv"
             }
         },
         "cat-52": {
@@ -186,7 +143,7 @@
           }
         ],
         "forcing": {
-            "path":  "./data/forcing/Laramie_14Jun09_to_15Apr12_ngen.csv"
+            "path": "./data/forcing/cat-52_2015-12-01 00_00_00_2015-12-30 23_00_00.csv"
           }
         },
         "cat-67": {
@@ -223,7 +180,35 @@
             }
           ],
           "forcing": {
-              "path": "./data/forcing/Laramie_14Jun09_to_15Apr12_ngen.csv"
+              "path": "./data/forcing/cat-67_2015-12-01 00_00_00_2015-12-30 23_00_00.csv"
+          }
+        },
+        "cat-92": {
+          "formulations": [
+            {
+              "name": "simple_lumped",
+              "params": {
+                "sr": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "storage": 1.0,
+                "gw_storage": 1.0,
+                "gw_max_storage": 1000.0,
+                "nash_max_storage": 1000.0,
+                "smax": 1000.0,
+                "a": 1.0,
+                "b": 10.0,
+                "Ks": 0.1,
+                "Kq": 0.01,
+                "n": 3,
+                "t": 0
+              }
+            }
+          ],
+          "forcing": {
+              "path": "./data/forcing/cat-92_2015-12-01 00_00_00_2015-12-30 23_00_00.csv"
           }
         }
     }
