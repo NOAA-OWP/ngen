@@ -51,23 +51,6 @@
                         {
                             "name": "bmi_c",
                             "params": {
-                                "model_type_name": "test_bmi_c",
-                                "library_file": "./extern/test_bmi_c/cmake_build/libtestbmicmodel",
-                                "forcing_file": "",
-                                "init_config": "./data/bmi/c/test/test_bmi_c_config.ini",
-                                "allow_exceed_end_time": true,
-                                "main_output_variable": "OUTPUT_VAR_2",
-                                "registration_function":"register_bmi",
-                                "uses_forcing_file": false,
-                                "variables_names_map" : {
-                                    "INPUT_VAR_1" : "atmosphere_water__liquid_equivalent_precipitation_rate",
-                                    "INPUT_VAR_2" : "atmosphere_water__liquid_equivalent_precipitation_rate"
-                                }
-                            }
-                        },
-                        {
-                            "name": "bmi_c",
-                            "params": {
                                 "model_type_name": "bmi_c_cfe",
                                 "library_file": "./extern/cfe/cmake_build/libcfebmi",
                                 "forcing_file": "",
