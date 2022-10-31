@@ -15,7 +15,7 @@ var classrealization_1_1_bmi___cpp___formulation =
     [ "create_formulation", "classrealization_1_1_bmi___cpp___formulation.html#ac24b58505cb49f6594fd79fec5005014", null ],
     [ "determine_model_time_offset", "classrealization_1_1_bmi___cpp___formulation.html#a39cf248257ea2a34052fa65ad08bf2ba", null ],
     [ "get_allow_model_exceed_end_time", "classrealization_1_1_bmi___cpp___formulation.html#ac6aeccf2c3eacc748f0e3c4dc4360903", null ],
-    [ "get_avaliable_variable_names", "classrealization_1_1_bmi___cpp___formulation.html#a402d062a27dea612bb55eca9b4a37cc8", null ],
+    [ "get_avaliable_variable_names", "classrealization_1_1_bmi___cpp___formulation.html#ab2fd3b0f141f6afb196d61e3ce1d7311", null ],
     [ "get_bmi_init_config", "classrealization_1_1_bmi___cpp___formulation.html#a5373b7a714024935f72432dd45dfc6ba", null ],
     [ "get_bmi_input_variables", "classrealization_1_1_bmi___cpp___formulation.html#a4dd38ab58f5d4574198b0090074fe7e1", null ],
     [ "get_bmi_main_output_var", "classrealization_1_1_bmi___cpp___formulation.html#aa3d5c6575d0323fe28b21ac4b079eba5", null ],

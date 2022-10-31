@@ -376,8 +376,8 @@ $(document).ready(function(){initNavTree('_net_c_d_f_per_feature_data_provider_8
 <div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span> </div>
 <div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>        }</div>
 <div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span> </div>
-<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>        <span class="keyword">const</span> std::vector&lt;std::string&gt;&amp; get_avaliable_variable_names()</div>
-<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>        {</div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>        <span class="keyword">const</span> std::vector&lt;std::string&gt;&amp; get_avaliable_variable_names()<span class="keyword"> override</span></div>
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span><span class="keyword">        </span>{</div>
 <div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>            <span class="keywordflow">return</span> variable_names;</div>
 <div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>        }</div>
 <div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span> </div>
@@ -386,23 +386,23 @@ $(document).ready(function(){initNavTree('_net_c_d_f_per_feature_data_provider_8
 <div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>            <span class="keywordflow">return</span> loc_ids;</div>
 <div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>        }</div>
 <div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span> </div>
-<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>        <span class="keywordtype">long</span> get_data_start_time()</div>
-<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>        {</div>
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>        <span class="keywordtype">long</span> get_data_start_time()<span class="keyword"> override</span></div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span><span class="keyword">        </span>{</div>
 <div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>            <span class="keywordflow">return</span> start_time;</div>
 <div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>        }</div>
 <div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span> </div>
-<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>        <span class="keywordtype">long</span> get_data_stop_time()</div>
-<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>        {</div>
+<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>        <span class="keywordtype">long</span> get_data_stop_time()<span class="keyword"> override</span></div>
+<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span><span class="keyword">        </span>{</div>
 <div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>            <span class="keywordflow">return</span> stop_time;</div>
 <div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>        }</div>
 <div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span> </div>
-<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>        <span class="keywordtype">long</span> record_duration()</div>
-<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>        {</div>
+<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>        <span class="keywordtype">long</span> record_duration()<span class="keyword"> override</span></div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span><span class="keyword">        </span>{</div>
 <div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>            <span class="keywordflow">return</span> time_stride;</div>
 <div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>        }</div>
 <div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span> </div>
-<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>        <span class="keywordtype">size_t</span> get_ts_index_for_time(<span class="keyword">const</span> time_t &amp;epoch_time)</div>
-<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>        {</div>
+<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>        <span class="keywordtype">size_t</span> get_ts_index_for_time(<span class="keyword">const</span> time_t &amp;epoch_time)<span class="keyword"> override</span></div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span><span class="keyword">        </span>{</div>
 <div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>            <span class="keywordflow">if</span> (start_time &lt;= epoch_time &amp;&amp; epoch_time &lt; stop_time)</div>
 <div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>            {</div>
 <div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>                <span class="keywordtype">double</span> offset = epoch_time - start_time;</div>
@@ -608,7 +608,7 @@ $(document).ready(function(){initNavTree('_net_c_d_f_per_feature_data_provider_8
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_1a34ade7a8ced74dfa5d1494ffac178f.html">forcing</a></li><li class="navelem"><b>NetCDFPerFeatureDataProvider.hpp</b></li>
-    <li class="footer">Generated on Wed Oct 19 2022 12:40:30 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
+    <li class="footer">Generated on Mon Oct 31 2022 16:46:47 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
   </ul>
 </div>
 </body>
