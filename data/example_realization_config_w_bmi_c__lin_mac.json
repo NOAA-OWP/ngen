@@ -20,7 +20,7 @@
             }
         ],
         "forcing": {
-            "file_pattern": ".*{{ID}}.*.csv",
+            "file_pattern": ".*{{id}}.*.csv",
             "path": "./data/forcing/"
         }
     },
