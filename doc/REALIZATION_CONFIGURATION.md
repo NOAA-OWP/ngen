@@ -128,5 +128,5 @@ Each catchment is a key-value object and must have the following two object keys
 
 An [example realization configuration](https://github.com/NOAA-OWP/ngen/blob/master/data/example_realization_config.json).
 
-BMI is a commonly used model interface and formulation type used in ngen. [BMI documenation](https://github.com/NOAA-OWP/ngen/blob/master/doc/BMI_MODELS.md) with example [Linux realization](https://github.com/NOAA-OWP/ngen/blob/master/data/example_realization_config_w_bmi_c__linux.json) and [macOS realization](https://github.com/NOAA-OWP/ngen/blob/master/data/example_realization_config_w_bmi_c__macos.json).
+BMI is a commonly used model interface and formulation type used in ngen. [BMI documenation](https://github.com/NOAA-OWP/ngen/blob/master/doc/BMI_MODELS.md) with an example [for both Linux and macOS realizations](https://github.com/NOAA-OWP/ngen/blob/master/data/example_realization_config_w_bmi_c__lin_mac.json).
 
