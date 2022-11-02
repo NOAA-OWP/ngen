@@ -33,6 +33,7 @@ Network::Network( geojson::GeoJSON fabric ){
   for(auto& feature: *fabric)
   {
     feature_id = feature->get_id();
+
     if( this->descriptor_map.find( feature_id ) == this->descriptor_map.end() )
     {
       //Haven't visited this feature yet, add it to graph

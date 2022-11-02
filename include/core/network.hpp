@@ -206,7 +206,10 @@ namespace network {
                         | boost::adaptors::transformed([this](int const& i) { return get_id(i); })
                         | boost::adaptors::filtered([type](std::string const& s) { 
                           if(type == "nex"){
-                            return s.substr(0,3) == type || s.substr(0,3) == "tnx";
+                            return s.substr(0,3) == type || s.substr(0,3) == "tnx" || s.substr(0,4) == "tnex";
+                          }
+                          if(type == "cat"){
+                            return s.substr(0,3) == type || s.substr(0,3) == "agg";
                           }
                           return s.substr(0,3) == type; 
                         });
