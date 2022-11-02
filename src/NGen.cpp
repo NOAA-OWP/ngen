@@ -335,6 +335,7 @@ int main(int argc, char *argv[]) {
 
     //Now loop some time, iterate catchments, do stuff for total number of output times
     for(int output_time_index = 0; output_time_index < manager->Simulation_Time_Object->get_total_output_times(); output_time_index++) {
+<<<<<<< HEAD
       //std::cout<<"Output Time Index: "<<output_time_index<<std::endl;
       if(output_time_index%100 == 0) std::cout<<"Running timestep "<<output_time_index<<std::endl;
       std::string current_timestamp = manager->Simulation_Time_Object->get_timestamp(output_time_index);
@@ -368,6 +369,44 @@ int main(int argc, char *argv[]) {
 	        break;
         }
       } //done catchments
+=======
+      for ( long lv : features.levels() ) {
+        //std::cout<<"Output Time Index: "<<output_time_index<<std::endl;
+        if(output_time_index%100 == 0) std::cout<<"Running timestep "<<output_time_index<<std::endl;
+        std::string current_timestamp = manager->Simulation_Time_Object->get_timestamp(output_time_index);
+        for(const auto& id : features.catchments(lv)) {
+          //std::cout<<"Running cat "<<id<<std::endl;
+          auto r = features.catchment_at(id);
+          //TODO redesign to avoid this cast
+          auto r_c = dynamic_pointer_cast<realization::Catchment_Formulation>(r);
+          r_c->set_et_params(pdm_et_data);
+          double response = r_c->get_response(output_time_index, 3600.0);
+          std::string output = std::to_string(output_time_index)+","+current_timestamp+","+
+                              r_c->get_output_line_for_timestep(output_time_index)+"\n";
+          r_c->write_output(output);
+          //TODO put this somewhere else.  For now, just trying to ensure we get m^3/s into nexus output
+          try{
+            response *= (catchment_collection->get_feature(id)->get_property("areasqkm").as_real_number() * 1000000);
+          }catch(std::invalid_argument &e)
+          {
+            response *= (catchment_collection->get_feature(id)->get_property("area_sqkm").as_real_number() * 1000000);
+          }
+          //TODO put this somewhere else as well, for now, an implicit assumption is that a modules get_response returns
+          //m/timestep
+          //since we are operating on a 1 hour (3600s) dt, we need to scale the output appropriately
+          //so no response is m^2/hr...m^2/hr * 1hr/3600s = m^3/hr
+          response /= 3600.0;
+          //update the nexus with this flow
+          for(auto& nexus : features.destination_nexuses(id)) {
+            //TODO in a DENDRIDIC network, only one destination nexus per catchment
+            //If there is more than one, some form of catchment partitioning will be required.
+            //for now, only contribute to the first one in the list
+            nexus->add_upstream_flow(response, id, output_time_index);
+            break;
+          }
+        } //done catchments
+      } //done levels
+>>>>>>> Added runtime loop based on levels.
       //At this point, could make an internal routing pass, extracting flows from nexuses and routing
       //across the flowpath to the next nexus.
       //Once everything is updated for this timestep, dump the nexus output
