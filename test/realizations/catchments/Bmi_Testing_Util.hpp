@@ -96,9 +96,9 @@ namespace ngen {
              * the particular state of a given example.
              */
             const map<string, string> bmiRealizationConfigTemplates = {
-                    {BMI_C_TYPE, "data/example_realization_config_w_bmi_c__linux.json"},
-                    {BMI_FORTRAN_TYPE, "data/example_realization_config_w_bmi_c__linux.json"},
-                    {BMI_PYTHON_TYPE, "data/example_realization_config_w_bmi_c__linux.json"},
+                    {BMI_C_TYPE, "data/example_realization_config_w_bmi_c__lin_mac.json"},
+                    {BMI_FORTRAN_TYPE, "data/example_realization_config_w_bmi_c__lin_mac.json"},
+                    {BMI_PYTHON_TYPE, "data/example_realization_config_w_bmi_c__lin_mac.json"},
                     {BMI_MULTI_TYPE, "data/example_bmi_multi_realization_config.json"}
             };
 

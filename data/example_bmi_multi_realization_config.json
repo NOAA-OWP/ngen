@@ -14,7 +14,7 @@
 			    "name": "bmi_c++",
 			    "params": {
                                 "model_type_name": "bmi_c++_sloth",
-                                "library_file": "./extern/sloth/cmake_build/libslothmodel.so",
+                                "library_file": "./extern/sloth/cmake_build/libslothmodel",
                                 "init_config": "/dev/null",
                                 "allow_exceed_end_time": true,
                                 "main_output_variable": "z",

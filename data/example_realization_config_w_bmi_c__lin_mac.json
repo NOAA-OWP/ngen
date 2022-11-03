@@ -1,0 +1,54 @@
+{
+    "global": {
+      "formulations": [
+            {
+                "name": "bmi_c",
+                "params": {
+                    "model_type_name": "test_bmi_c",
+                    "library_file": "./extern/test_bmi_c/cmake_build/libtestbmicmodel",
+                    "forcing_file": "",
+                    "init_config": "./data/bmi/c/test/test_bmi_c_config.ini",
+                    "allow_exceed_end_time": true,
+                    "main_output_variable": "OUTPUT_VAR_2",
+                    "registration_function":"register_bmi",
+                    "uses_forcing_file": false,
+                    "variables_names_map" : {
+                        "INPUT_VAR_1" : "atmosphere_water__liquid_equivalent_precipitation_rate",
+                        "INPUT_VAR_2" : "atmosphere_air_water~vapor__relative_saturation"
+                    }
+                }
+            }
+        ],
+        "forcing": {
+            "file_pattern": ".*{{id}}.*.csv",
+            "path": "./data/forcing/"
+        }
+    },
+    "time": {
+        "start_time": "2015-12-01 00:00:00",
+        "end_time": "2015-12-30 23:00:00",
+        "output_interval": 3600
+    },
+    "catchments": {
+        "cat-27": {
+            "formulations": [
+                {
+                    "name": "bmi_c",
+                    "params": {
+                        "model_type_name": "test_bmi_pet",
+                        "library_file": "./extern/evapotranspiration/evapotranspiration/cmake_build/libpetbmi",
+                        "forcing_file": "",
+                        "init_config": "./data/bmi/c/pet/laramie_bmi_config_pet_pass.txt",
+                        "allow_exceed_end_time": true,
+                        "main_output_variable": "water_potential_evaporation_flux",
+                        "registration_function":"register_bmi_pet",
+                        "uses_forcing_file": false
+                    }
+                }
+            ],
+            "forcing": {
+                "path": "./data/forcing/cat-27_2015-12-01 00_00_00_2015-12-30 23_00_00.csv"
+            }
+        }
+    }
+}
