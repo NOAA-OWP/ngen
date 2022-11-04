@@ -1,0 +1,52 @@
+---
+#initial input parameters
+run_parameters:
+    parallel_compute_method: by-network # OPTIONS: <omit flag for serial execution>, "by-network", "by-subnetwork-jit", "by-subnetwork-jit-clustered"
+    subnetwork_target_size: 20  # by-subnetwork* requires a value here to identify the target subnetwork size.
+    verbose: true  # verbose output (leave blank for quiet output.)
+    showtiming: true  # set the showtiming (omit flag for no timing information.)
+    debuglevel: 2  # set the debuglevel for additional console output.
+
+    #FOR NGEN: SET TO FALSE FOR NOW
+    break_network_at_waterbodies: false # replace waterbodies in the route-link dataset with segments representing the reservoir and calculate to divide the computation (leave blank for no splitting.)
+                          # WARNING: `break_network_at_waterbodies: true` will only work if compute_kernel is set to "V02-structured-obj" and parallel_compute_method is unset (serial execution) or set to "by-network".
+    compute_kernel: V02-structured  # OPTIONS: "V02-caching", "V02-structured-obj", "V02-structured"
+    assume_short_ts: true  # use the previous timestep value for both current and previous flow.
+    qts_subdivisions: 12  # number of timesteps per forcing (qlateral) timestep.
+    dt: 300  # default timestep length, seconds
+    #nts: 288  # number of timesteps to simulate. If used with ql_file or ql_folder, nts must be less than the number of ql inputs x qts_subdivisions.
+    #SHOULD BE MODIFIED BY TEST DRIVER
+    nts: 40  # number of timesteps to simulate. If used with ql_file or ql_folder, nts must be less than the number of ql inputs x qts_subdivisions.
+    return_courant: false  # WARNING: true will only work with compute_kernel "V02-caching", therefore not currently compatible with simulation for waterbodies.
+#output file parameters
+output_parameters:
+    #output location for csv/hdf5 file
+    csv_output:
+        csv_output_folder: "./"
+        #csv_output_segments: []
+#data column assignment inside supernetwork_parameters
+supernetwork_parameters:
+    title_string: "NgenTest"
+    geo_file_path: "" #WILL BE ASSIGNED BY TEST DRIVER
+    flowpath_edge_list: ""
+    columns:
+        key: id
+        downstream: toid
+        dx: length_m
+        n: n
+        ncc: nCC
+        s0: So
+        bw: BtmWdth
+        tw: TopWdth
+        twcc: TopWdthCC
+        musk: MusK
+        musx: MusX
+        cs: ChSlp
+    waterbody_null_code: -9999
+    terminal_code: 0
+    driver_string: NetCDF
+    layer_string: 0
+
+forcing_parameters:
+    nexus_input_folder: "" #WILL BE ASSIGNED BY TEST DRIVER
+    nexus_file_pattern_filter: "nex-*.csv"
