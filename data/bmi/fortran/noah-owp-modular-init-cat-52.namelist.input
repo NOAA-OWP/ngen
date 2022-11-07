@@ -1,27 +1,30 @@
 &timing ! and output
-  dt              = 1800.0   ! timestep [seconds]
-  startdate       = "199801010630" ! UTC time start of simulation (YYYYMMDDhhmm)
-  enddate         = "199901010630" ! UTC time end of simulation (YYYYMMDDhhmm)
-  input_filename  = "data/config/bmi/sugar_creek/noah-mp-modular.dat" ! change filename to match your forcing data
-  output_filename = "data/config/bmi/sugar_creek/output.nc"
+  dt               = 1800.0   ! timestep [seconds]
+  startdate        = "199801010630" ! UTC time start of simulation (YYYYMMDDhhmm)
+  enddate          = "199901010630" ! UTC time end of simulation (YYYYMMDDhhmm)
+  forcing_filename = "data/config/bmi/sugar_creek/noah-mp-modular.dat" ! change filename to match your forcing data
+  output_filename  = "data/config/bmi/sugar_creek/output.nc"
 /
 
 &parameters
   parameter_dir      = "extern/noah-owp-modular/noah-owp-modular/parameters/"
   general_table      = "GENPARM.TBL"                    ! general param tables and misc params
   soil_table         = "SOILPARM.TBL"                   ! soil param table
-  noahowp_table       = "MPTABLE.TBL"                   ! noah-mp related param tables
+  noahowp_table      = "MPTABLE.TBL"                    ! noah-mp related param tables
   soil_class_name    = "STAS"                           ! soil class data source - "STAS" or "STAS-RUC"
   veg_class_name     = "MODIFIED_IGBP_MODIS_NOAH"       ! vegetation class data source - "MODIFIED_IGBP_MODIS_NOAH" or "USGS" 
 /
 
 &location ! for point runs, needs to be modified for gridded
-  lat              = 40.01    ! latitude [degrees]
-  lon              = -88.37  ! longitude [degrees]
+  lat                = 40.01                        ! latitude [degrees]
+  lon                = -88.37                       ! longitude [degrees]
+  terrain_slope      = 0.0                          ! terrain slope [degrees]
+  azimuth            = 0.0                          ! terrain azimuth or aspect [degrees clockwise from north]
 /
 
 &forcing
-  ZREF            = 10.0    ! measurment height for wind speed
+  ZREF               = 10.0    ! measurment height for wind speed
+  rain_snow_thresh   = 1.0     ! rain-snow temperature threshold (degrees Celcius)  
 /
 
 &model_options
@@ -49,27 +52,17 @@
  nsoil            = 4       ! number of soil levels
  nsnow            = 3       ! number of snow levels
  nveg             = 20      ! number of vegetation types
- structure_option = 1       ! 1: use preset zsoil; 2: uniform levels
- soil_depth       = 2.0     ! total soil thickness [m] for structure_option > 1
  vegtyp           = 1       ! vegetation type modis
  croptype         = 0       ! crop type (0 = no crops)
  sfctyp           = 1       ! land surface type, 1:soil, 2:lake
  soilcolor        = 4       ! soil color code
 /
 
-&fixed_initial
- zsoil     = -0.1, -0.4, -1.0, -2.0  ! depth to level interface [m]
+&initial_values
  dzsnso    =  0.0,  0.0,  0.0,  0.1,  0.3,  0.6,  1.0  ! level thickness [m]
  sice      =  0.0,  0.0,  0.0,  0.0  ! initial soil ice profile [vol]
  sh2o      =  0.3,  0.3,  0.3,  0.3  ! initial soil liquid profile [vol]
  zwt       =  -2.0                   ! initial water table depth below surface [m]
-/
-
-&uniform_initial
- initial_uniform    = .true.         ! initial all levels the same
- initial_sh2o_value = 0.3            ! constant soil liquid value [vol]
- initial_sice_value = 0.0            ! constant soil ice value [vol]
- initial_zwt        =  -2.0          ! initial water table depth below surface [m]
 /
 
 
