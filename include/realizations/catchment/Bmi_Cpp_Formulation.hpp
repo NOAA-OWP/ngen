@@ -38,7 +38,7 @@ namespace realization {
 
         template<class T, class O>
         T get_var_value_as(time_step_t t_index, const std::string& var_name) {
-            std::vector<O> outputs = get_bmi_model()->GetValue<O>(var_name);
+            std::vector<O> outputs = models::bmi::GetValue<O>(*get_bmi_model(), var_name);
             return (T) outputs[t_index];
         }
 

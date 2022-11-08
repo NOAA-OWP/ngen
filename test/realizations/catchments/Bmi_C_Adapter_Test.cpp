@@ -10,6 +10,7 @@
 #include "FileChecker.h"
 #include "Bmi_C_Adapter.hpp"
 #include "State_Exception.hpp"
+#include "bmi_utilities.hpp"
 
 #ifndef BMI_TEST_C_LOCAL_LIB_NAME
 #ifdef __APPLE__
@@ -146,7 +147,7 @@ TEST_F(Bmi_C_Adapter_Test, GetValue_0_a) {
     model_data* model = friend_get_model_data_struct(adapter.get());
     *model->input_var_1 = value;
     adapter->SetValue("INPUT_VAR_1", &value);
-    double retrieved = adapter->GetValue<double>("INPUT_VAR_1")[0];
+    double retrieved = GetValue<double>(*adapter, "INPUT_VAR_1")[0];
     adapter->Finalize();
     ASSERT_EQ(value, retrieved);
 }
@@ -157,7 +158,7 @@ TEST_F(Bmi_C_Adapter_Test, GetValue_0_b) {
     double value = 6.0;
     model_data* model = friend_get_model_data_struct(adapter.get());
     *model->input_var_2 = value;
-    double retrieved = adapter->GetValue<double>("INPUT_VAR_2")[0];
+    double retrieved = GetValue<double>(*adapter, "INPUT_VAR_2")[0];
     adapter->Finalize();
     ASSERT_EQ(value, retrieved);
 }
@@ -168,7 +169,7 @@ TEST_F(Bmi_C_Adapter_Test, GetValue_0_c) {
     double value = 7.0;
     model_data* model = friend_get_model_data_struct(adapter.get());
     *model->output_var_1 = value;
-    double retrieved = adapter->GetValue<double>("OUTPUT_VAR_1")[0];
+    double retrieved = GetValue<double>(*adapter, "OUTPUT_VAR_1")[0];
     adapter->Finalize();
     ASSERT_EQ(value, retrieved);
 }
@@ -202,7 +203,7 @@ TEST_F(Bmi_C_Adapter_Test, Profile)
         for(std::string name : output_names)
         {
             auto s2 = std::chrono::steady_clock::now();
-            std::vector<double> values = adapter->GetValue<double>(name);
+            std::vector<double> values = GetValue<double>(*adapter, name);
             auto e2 = std::chrono::steady_clock::now();
             saved_times["Get " + name].push_back(to_micros(s2,e2));
         }
@@ -211,7 +212,7 @@ TEST_F(Bmi_C_Adapter_Test, Profile)
         for(std::string name : input_names)
         {
             auto s3 = std::chrono::steady_clock::now();
-            std::vector<double> values = adapter->GetValue<double>(name);
+            std::vector<double> values = GetValue<double>(*adapter, name);
             auto e3 = std::chrono::steady_clock::now();
             saved_times["Get " + name].push_back(to_micros(s3,e3));
         }
@@ -241,7 +242,7 @@ TEST_F(Bmi_C_Adapter_Test, GetValue_0_d) {
     double value = 8.0;
     model_data* model = friend_get_model_data_struct(adapter.get());
     *model->output_var_2 = value;
-    double retrieved = adapter->GetValue<double>("OUTPUT_VAR_2")[0];
+    double retrieved = GetValue<double>(*adapter, "OUTPUT_VAR_2")[0];
     adapter->Finalize();
     ASSERT_EQ(value, retrieved);
 }
@@ -261,7 +262,7 @@ TEST_F(Bmi_C_Adapter_Test, GetValuePtr_0_b) {
     double value = 6.0;
     double* in_2_ptr = adapter->GetValuePtr<double>("INPUT_VAR_2");
     *in_2_ptr = value;
-    ASSERT_EQ(value, adapter->GetValue<double>("INPUT_VAR_2")[0]);
+    ASSERT_EQ(value, GetValue<double>(*adapter, "INPUT_VAR_2")[0]);
     adapter->Finalize();
 }
 
@@ -409,7 +410,7 @@ TEST_F(Bmi_C_Adapter_Test, Update_0_b) {
     adapter->SetValue("INPUT_VAR_1", &value_1);
     adapter->SetValue("INPUT_VAR_2", &value_2);
     adapter->Update();
-    ASSERT_EQ(value_1, adapter->GetValue<double>("OUTPUT_VAR_1")[0]);
+    ASSERT_EQ(value_1, GetValue<double>(*adapter, "OUTPUT_VAR_1")[0]);
     adapter->Finalize();
 }
 
@@ -421,7 +422,7 @@ TEST_F(Bmi_C_Adapter_Test, Update_0_c) {
     adapter->SetValue("INPUT_VAR_1", &value_1);
     adapter->SetValue("INPUT_VAR_2", &value_2);
     adapter->Update();
-    ASSERT_EQ(value_2 * 2, adapter->GetValue<double>("OUTPUT_VAR_2")[0]);
+    ASSERT_EQ(value_2 * 2, GetValue<double>(*adapter, "OUTPUT_VAR_2")[0]);
     adapter->Finalize();
 }
 
@@ -438,7 +439,7 @@ TEST_F(Bmi_C_Adapter_Test, Update_1_a) {
         adapter->SetValue("INPUT_VAR_1", &value);
         adapter->SetValue("INPUT_VAR_2", &value);
         adapter->Update();
-        out_1_vals[i] = adapter->GetValue<double>("OUTPUT_VAR_1")[0];
+        out_1_vals[i] = GetValue<double>(*adapter, "OUTPUT_VAR_1")[0];
     }
     adapter->Finalize();
     ASSERT_EQ(expected, out_1_vals);
@@ -457,7 +458,7 @@ TEST_F(Bmi_C_Adapter_Test, Update_1_b) {
         adapter->SetValue("INPUT_VAR_1", &value);
         adapter->SetValue("INPUT_VAR_2", &value);
         adapter->Update();
-        out_2_vals[i] = adapter->GetValue<double>("OUTPUT_VAR_2")[0];
+        out_2_vals[i] = GetValue<double>(*adapter, "OUTPUT_VAR_2")[0];
     }
     adapter->Finalize();
     ASSERT_EQ(expected, out_2_vals);
@@ -474,7 +475,7 @@ TEST_F(Bmi_C_Adapter_Test, Update_until_0_a) {
     double time = 5400 + adapter->GetCurrentTime();
     adapter->UpdateUntil(time);
     // Normally and update would produce out_2 as 2 * input_2, but here must further multiply by 1.5 for the longer time
-    ASSERT_EQ(value_2 * 2.0 * 1.5, adapter->GetValue<double>("OUTPUT_VAR_2")[0]);
+    ASSERT_EQ(value_2 * 2.0 * 1.5, GetValue<double>(*adapter, "OUTPUT_VAR_2")[0]);
     adapter->Finalize();
 }
 

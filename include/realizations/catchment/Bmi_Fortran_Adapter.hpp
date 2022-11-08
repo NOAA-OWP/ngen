@@ -165,34 +165,6 @@ namespace models {
                 inner_get_value(name, dest);
             }
 
-            /**
-             * Get a copy of values of a given variable.
-             *
-             * @tparam T
-             * @param name
-             * @see get_value
-             */
-            template <typename T>
-            [[deprecated("Functionality moved to models::bmi::GetValues in bmi_utilities.hpp")]]
-            std::vector<T> GetValue(const std::string& name) {
-                std::string type = inner_get_var_type(name);
-                int total_mem = GetVarNbytes(name);
-                int item_size = GetVarItemsize(name);
-                int num_items = total_mem/item_size;
-
-                T * dest = new T [num_items];
-
-                inner_get_value(name, dest);
-
-                std::vector<T> retrieved_results(num_items);
-
-                for (int i = 0; i < num_items; i++)
-                    retrieved_results[i] = dest[i];
-
-                delete [] dest;
-                return retrieved_results;
-            }
-
             void GetValueAtIndices(std::string name, void *dest, int *inds, int count) override;
 
             void GetGridShape(const int grid, int *shape) override;
