@@ -275,11 +275,11 @@ TEST_F(Bmi_C_Formulation_Test, set_initial_parameters_0_a) {
 
     static std::shared_ptr<models::bmi::Bmi_C_Adapter> bmi_c_adapter;
     bmi_c_adapter =  get_friend_bmi_model(formulation);
-    int param = GetValue<int>(*bmi_c_adapter, "PARAM_VAR_1")[0];
+    int param = models::bmi::GetValue<int>(*bmi_c_adapter, "PARAM_VAR_1")[0];
     ASSERT_EQ(param, 42);
-    double param2 = GetValue<double>(*bmi_c_adapter, "PARAM_VAR_2")[0];
+    double param2 = models::bmi::GetValue<double>(*bmi_c_adapter, "PARAM_VAR_2")[0];
     ASSERT_EQ(param2, 4.2);
-    std::vector<double> param3 = GetValue<double>(*bmi_c_adapter, "PARAM_VAR_3");
+    std::vector<double> param3 = models::bmi::GetValue<double>(*bmi_c_adapter, "PARAM_VAR_3");
     ASSERT_EQ(param3.size(), 2);
     ASSERT_EQ(param3[0], 4.0);
     ASSERT_EQ(param3[1], 2.0);
