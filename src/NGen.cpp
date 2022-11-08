@@ -71,7 +71,11 @@ int main(int argc, char *argv[]) {
 
     #ifdef ACTIVATE_PYTHON
     // Start Python interpreter via the manager singleton
-    utils::ngenPy::InterpreterUtil::getInstance();
+    // Need to bind to a variable so that the underlying reference count
+    // is incremented, this essentially becomes the global reference to keep
+    // the interpreter alive till the end of `main`
+    auto _interp = utils::ngenPy::InterpreterUtil::getInstance();
+    //utils::ngenPy::InterpreterUtil::getInstance();
     #endif // ACTIVATE_PYTHON
 
     //Pull a few "options" form the cli input, this is a temporary solution to CLI parsing!
