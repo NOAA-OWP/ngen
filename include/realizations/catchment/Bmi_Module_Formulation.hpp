@@ -842,16 +842,10 @@ namespace realization {
                         case geojson::PropertyType::Natural:
                             param.second.as_vector(long_vec);
                             value_ptr = get_values_as_type(type, long_vec.begin(), long_vec.end());
-                            #ifndef NGEN_QUIET
-                            std::cout<<"NAT VALUE: "<<long_vec[0]<<std::endl;
-                            #endif
                             break;
                         case geojson::PropertyType::Real:
                             param.second.as_vector(double_vec);
                             value_ptr = get_values_as_type(type, double_vec.begin(), double_vec.end());
-                            #ifndef NGEN_QUIET
-                            std::cout<<"REAL VALUE: "<<double_vec[0]<<std::endl;
-                            #endif
                             break;
                         /* Not currently supporting string parameter values
                         case geojson::PropertyType::String:
