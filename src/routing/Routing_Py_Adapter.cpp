@@ -2,7 +2,7 @@
 
 #include <exception>
 #include <utility>
-
+#include <iostream>
 #include "Routing_Py_Adapter.hpp"
 
 using namespace routing_py_adapter;
