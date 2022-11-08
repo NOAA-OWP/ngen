@@ -107,6 +107,14 @@ namespace routing_py_adapter {
 
     private:
 
+
+        /** Handle to the interperter util.
+         * 
+         * Order is important, must be constructed before anything depending on it
+         * and destructed after all dependent members.
+        */
+        std::shared_ptr<utils::ngenPy::InterpreterUtil> interperter;
+
         /** A binding to the Python numpy package/module. */
         py::object np;
 
