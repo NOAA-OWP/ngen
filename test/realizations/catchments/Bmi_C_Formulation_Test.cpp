@@ -273,11 +273,13 @@ TEST_F(Bmi_C_Formulation_Test, set_initial_parameters_0_a) {
     Bmi_C_Formulation formulation(catchment_ids[ex_index], std::make_shared<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
-    int param = get_friend_bmi_model(formulation)->GetValue<int>("PARAM_VAR_1")[0];
+    static std::shared_ptr<models::bmi::Bmi_C_Adapter> bmi_c_adapter;
+    bmi_c_adapter =  get_friend_bmi_model(formulation);
+    int param = GetValue<int>(*bmi_c_adapter, "PARAM_VAR_1")[0];
     ASSERT_EQ(param, 42);
-    double param2 = get_friend_bmi_model(formulation)->GetValue<double>("PARAM_VAR_2")[0];
+    double param2 = GetValue<double>(*bmi_c_adapter, "PARAM_VAR_2")[0];
     ASSERT_EQ(param2, 4.2);
-    std::vector<double> param3 = get_friend_bmi_model(formulation)->GetValue<double>("PARAM_VAR_3");
+    std::vector<double> param3 = GetValue<double>(*bmi_c_adapter, "PARAM_VAR_3");
     ASSERT_EQ(param3.size(), 2);
     ASSERT_EQ(param3[0], 4.0);
     ASSERT_EQ(param3[1], 2.0);
