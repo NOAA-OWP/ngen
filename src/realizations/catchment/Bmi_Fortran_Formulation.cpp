@@ -54,37 +54,37 @@ double Bmi_Fortran_Formulation::get_var_value_as_double(const int &index, const 
     //  don't fit or might convert inappropriately
     std::string type = get_bmi_model()->GetVarType(var_name);
     if (type == "long double")
-        return (double) GetValue<long double>(*get_bmi_model(), var_name)[index];
+        return (double) (models::bmi::GetValue<long double>(*get_bmi_model(), var_name))[index];
 
     if (type == "double" || type == "double precision")
-        return (double) (GetValue<double>(*get_bmi_model(), var_name))[index];
+        return (double) (models::bmi::GetValue<double>(*get_bmi_model(), var_name))[index];
 
     if (type == "float" || type == "real")
-        return (double) (GetValue<float>(*get_bmi_model(), var_name))[index];
+        return (double) (models::bmi::GetValue<float>(*get_bmi_model(), var_name))[index];
 
     if (type == "short" || type == "short int" || type == "signed short" || type == "signed short int")
-        return (double) (GetValue<short>(*get_bmi_model(), var_name))[index];
+        return (double) (models::bmi::GetValue<short>(*get_bmi_model(), var_name))[index];
 
     if (type == "unsigned short" || type == "unsigned short int")
-        return (double) (GetValue<unsigned short>(*get_bmi_model(), var_name))[index];
+        return (double) (models::bmi::GetValue<unsigned short>(*get_bmi_model(), var_name))[index];
 
     if (type == "int" || type == "signed" || type == "signed int" || type == "integer")
-        return (double) (GetValue<int>(*get_bmi_model(), var_name))[index];
+        return (double) (models::bmi::GetValue<int>(*get_bmi_model(), var_name))[index];
 
     if (type == "unsigned" || type == "unsigned int")
-        return (double) (GetValue<unsigned int>(*get_bmi_model(), var_name))[index];
+        return (double) (models::bmi::GetValue<unsigned int>(*get_bmi_model(), var_name))[index];
 
     if (type == "long" || type == "long int" || type == "signed long" || type == "signed long int")
-        return (double) (GetValue<long>(*get_bmi_model(), var_name))[index];
+        return (double) (models::bmi::GetValue<long>(*get_bmi_model(), var_name))[index];
 
     if (type == "unsigned long" || type == "unsigned long int")
-        return (double) (GetValue<unsigned long>(*get_bmi_model(), var_name))[index];
+        return (double) (models::bmi::GetValue<unsigned long>(*get_bmi_model(), var_name))[index];
 
     if (type == "long long" || type == "long long int" || type == "signed long long" || type == "signed long long int")
-        return (double) (GetValue<long long>(*get_bmi_model(), var_name))[index];
+        return (double) (models::bmi::GetValue<long long>(*get_bmi_model(), var_name))[index];
 
     if (type == "unsigned long long" || type == "unsigned long long int")
-        return (double) (GetValue<unsigned long long>(*get_bmi_model(), var_name))[index];
+        return (double) (models::bmi::GetValue<unsigned long long>(*get_bmi_model(), var_name))[index];
 
     throw std::runtime_error("Unable to get value of variable " + var_name + " from " + get_model_type_name() +
     " as double: no logic for converting variable type " + type);
