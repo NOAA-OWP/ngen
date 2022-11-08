@@ -255,9 +255,9 @@ namespace utils {
             // This is required for the Python interpreter and must be kept alive
             std::shared_ptr<py::scoped_interpreter> guardPtr;
 
-            std::map<std::string, py::module_> importedTopLevelModules;
+            std::map<std::string, py::object> importedTopLevelModules;
 
-            py::module_ Path;
+            py::object Path;
 
             /**
              * Import a specified top level module.
