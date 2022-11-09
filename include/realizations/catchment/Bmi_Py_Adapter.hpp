@@ -640,7 +640,7 @@ namespace models {
                     separate_package_and_simple_name();
                     vector<string> moduleComponents = {*bmi_type_py_module_name, *bmi_type_py_class_name};
                     // This is a class object for the BMI module Python class
-                    py::module_ bmi_py_class = utils::ngenPy::InterpreterUtil::getPyModule(moduleComponents);
+                    py::object bmi_py_class = utils::ngenPy::InterpreterUtil::getPyModule(moduleComponents);
                     // This is the actual backing model object
                     bmi_model = make_shared<py::object>(bmi_py_class());
                     bmi_model->attr("initialize")(bmi_init_config);
