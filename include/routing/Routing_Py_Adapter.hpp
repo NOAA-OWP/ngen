@@ -108,10 +108,10 @@ namespace routing_py_adapter {
     private:
 
         /** A binding to the Python numpy package/module. */
-        py::module_ np;
+        py::object np;
 
         /** A binding to the t-route module. */
-        py::module_ t_route_module;
+        py::object t_route_module;
         
         /** Path to a t-route yaml configuration file */
         std::string t_route_config_path;
