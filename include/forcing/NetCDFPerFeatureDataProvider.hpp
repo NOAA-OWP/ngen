@@ -50,19 +50,23 @@ namespace data_access
          * @param log_s An output log stream for messages from the underlying library. If a provider object for
          * the given path already exists, this argument will be ignored.
          */
-        static std::shared_ptr<NetCDFPerFeatureDataProvider> get_shared_provider(std::string input_path, utils::StreamHandler log_s){
+        static std::shared_ptr<NetCDFPerFeatureDataProvider> get_shared_provider(std::string input_path, time_t sim_start, time_t sim_end, utils::StreamHandler log_s)
+        {
             const std::lock_guard<std::mutex> lock(shared_providers_mutex);
             std::shared_ptr<NetCDFPerFeatureDataProvider> p;
             if(shared_providers.count(input_path) > 0){
                 p = shared_providers[input_path];
             } else {
-                p = std::make_shared<data_access::NetCDFPerFeatureDataProvider>(input_path, log_s);
+                p = std::make_shared<data_access::NetCDFPerFeatureDataProvider>(input_path, sim_start, sim_end, log_s);
                 shared_providers[input_path] = p;
             }
             return p;
         }
 
-        NetCDFPerFeatureDataProvider(std::string input_path, utils::StreamHandler log_s) : log_stream(log_s), value_cache(20)
+        NetCDFPerFeatureDataProvider(std::string input_path, time_t sim_start, time_t sim_end,  utils::StreamHandler log_s) : log_stream(log_s), value_cache(20),
+            sim_start_date_time_epoch(sim_start),
+            sim_end_date_time_epoch(sim_end)
+
         {
             //size_t sizep = 1073741824, nelemsp = 202481;
             //float preemptionp = 0.75;
@@ -289,14 +293,16 @@ namespace data_access
             start_time = time_vals[0];
             stop_time = time_vals.back() + time_stride;
 
-
+            sim_to_data_time_offset = sim_start_date_time_epoch - start_time;
         }
 
+        /*
         NetCDFPerFeatureDataProvider(const char* input_path, utils::StreamHandler stream_h) : 
             NetCDFPerFeatureDataProvider(std::string(input_path), stream_h)
         {
 
         }
+        */
 
         /** Return the variables that are accessable by this data provider */
 
@@ -315,14 +321,18 @@ namespace data_access
 
         long get_data_start_time() override
         {
-            return start_time;
+            //return start_time;
+            //FIXME: Matching behavior from CsvPerFeatureForcingProvider, but both are probably wrong!
+            return sim_start_date_time_epoch; // return start_time + sim_to_data_time_offset;
         }
 
         /** Return the last valid time for which data from the requested variable can be requested */
 
         long get_data_stop_time() override
         {
-            return stop_time;
+            //return stop_time;
+            //FIXME: Matching behavior from CsvPerFeatureForcingProvider, but both are probably wrong!
+            return sim_end_date_time_epoch; // return end_time + sim_to_data_time_offset;
         }
 
         long record_duration() override
@@ -489,6 +499,10 @@ namespace data_access
 
 
         private:
+
+        time_t sim_start_date_time_epoch;
+        time_t sim_end_date_time_epoch;
+        time_t sim_to_data_time_offset; // Deliberately signed--sim should never start before data, yes?
 
         static std::mutex shared_providers_mutex;
         static std::map<std::string, std::shared_ptr<NetCDFPerFeatureDataProvider>> shared_providers;
