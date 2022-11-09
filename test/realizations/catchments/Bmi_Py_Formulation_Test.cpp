@@ -34,7 +34,8 @@ typedef struct py_formulation_example_scenario {
 } py_formulation_example_scenario;
 
 class Bmi_Py_Formulation_Test : public ::testing::Test {
-
+private:
+    static std::shared_ptr<InterpreterUtil> interperter;
 protected:
     
     py::object Path;
@@ -175,6 +176,8 @@ protected:
                                    const std::vector<std::string> &file_basenames);
 
 };
+//Make sure the interperter is instansiated and lives throught the test class
+std::shared_ptr<InterpreterUtil> Bmi_Py_Formulation_Test::interperter = InterpreterUtil::getInstance();
 
 void Bmi_Py_Formulation_Test::SetUp() {
     Path = InterpreterUtil::getPyModule(std::vector<std::string> {"pathlib", "Path"});
