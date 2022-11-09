@@ -648,7 +648,7 @@ TEST_F(Bmi_Py_Adapter_Test, GetEndTime_0_a) {
     size_t ex_index = 0;
 
     examples[ex_index].adapter->Initialize();
-    py::module_ np = py::module_::import("numpy");
+    py::object np = py::module_::import("numpy");
 
 
     double max_float = py::float_(np.attr("finfo")(py::float_(0.0)).attr("max"));

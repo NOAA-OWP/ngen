@@ -617,7 +617,7 @@ namespace models {
             /** Fully qualified Python type name for backing module. */
             string bmi_type_py_full_name;
             /** A binding to the Python numpy package/module. */
-            py::module_ np;
+            py::object np;
             /** A pointer to a string with the parent package name of the Python type referenced by ``py_bmi_type_ref``. */
             shared_ptr<string> bmi_type_py_module_name;
             /** A pointer to a string with the simple name of the Python type referenced by ``py_bmi_type_ref``. */

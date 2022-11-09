@@ -100,7 +100,7 @@ namespace utils {
              * @param name Name of the desired top level module or package.
              * @return Handle to the desired top level Python module.
              */
-            static py::module_ getPyModule(const std::string &name) {
+            static py::object getPyModule(const std::string &name) {
                 return getInstance().getModule(name);
             }
 
@@ -118,7 +118,7 @@ namespace utils {
              *                         and (when applicable) submodules.
              * @return Handle to the desired Python module or type.
              */
-            static py::module_ getPyModule(const std::vector<std::string> &moduleLevelNames) {
+            static py::object getPyModule(const std::vector<std::string> &moduleLevelNames) {
                 return getInstance().getModule(moduleLevelNames);
             }
 
@@ -132,7 +132,7 @@ namespace utils {
              * @param name Name of the desired top level module or namespace package.
              * @return Handle to the desired top level Python module.
              */
-            py::module_ getModule(const std::string &name) {
+            py::object getModule(const std::string &name) {
                 if (!isImported(name)) {
                     importTopLevelModule(name);
                 }
@@ -149,9 +149,9 @@ namespace utils {
              *                         and (when applicable) submodules.
              * @return Handle to the desired Python module or type.
              */
-            py::module_ getModule(const std::vector<std::string> &moduleLevelNames) {
+            py::object getModule(const std::vector<std::string> &moduleLevelNames) {
                 // Start with top-level module name, then descend through attributes as needed
-                py::module_ module = getModule(moduleLevelNames[0]);
+                py::object module = getModule(moduleLevelNames[0]);
                 for (size_t i = 1; i < moduleLevelNames.size(); ++i) {
                     module = module.attr(moduleLevelNames[i].c_str());
                 }
