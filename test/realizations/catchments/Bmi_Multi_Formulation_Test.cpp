@@ -26,6 +26,8 @@ using namespace utils::ngenPy;
 using namespace realization;
 
 class Bmi_Multi_Formulation_Test : public ::testing::Test {
+private:
+    static std::shared_ptr<InterpreterUtil> interperter;
 protected:
 
     static std::string find_file(std::vector<std::string> dir_opts, const std::string& basename) {
@@ -445,6 +447,8 @@ private:
 
 
 };
+//Make sure the interperter is instansiated and lives throught the test class
+std::shared_ptr<InterpreterUtil> Bmi_Multi_Formulation_Test::interperter = InterpreterUtil::getInstance();
 
 void Bmi_Multi_Formulation_Test::SetUpTestSuite() {
     #ifdef ACTIVATE_PYTHON
