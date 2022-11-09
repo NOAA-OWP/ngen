@@ -520,7 +520,7 @@ $(document).ready(function(){initNavTree('_bmi___py___adapter_8hpp_source.html',
 <div class="line"><a id="l00615" name="l00615"></a><span class="lineno">  615</span>        <span class="keyword">private</span>:</div>
 <div class="line"><a id="l00616" name="l00616"></a><span class="lineno">  616</span> </div>
 <div class="line"><a id="l00618" name="l00618"></a><span class="lineno">  618</span>            <span class="keywordtype">string</span> bmi_type_py_full_name;</div>
-<div class="line"><a id="l00620" name="l00620"></a><span class="lineno">  620</span>            py::module_ np;</div>
+<div class="line"><a id="l00620" name="l00620"></a><span class="lineno">  620</span>            py::object np;</div>
 <div class="line"><a id="l00622" name="l00622"></a><span class="lineno">  622</span>            shared_ptr&lt;string&gt; bmi_type_py_module_name;</div>
 <div class="line"><a id="l00624" name="l00624"></a><span class="lineno">  624</span>            shared_ptr&lt;string&gt; bmi_type_py_class_name;</div>
 <div class="line"><a id="l00625" name="l00625"></a><span class="lineno">  625</span> </div>
@@ -531,7 +531,7 @@ $(document).ready(function(){initNavTree('_bmi___py___adapter_8hpp_source.html',
 <div class="line"><a id="l00640" name="l00640"></a><span class="lineno">  640</span>                    separate_package_and_simple_name();</div>
 <div class="line"><a id="l00641" name="l00641"></a><span class="lineno">  641</span>                    vector&lt;string&gt; moduleComponents = {*bmi_type_py_module_name, *bmi_type_py_class_name};</div>
 <div class="line"><a id="l00642" name="l00642"></a><span class="lineno">  642</span>                    <span class="comment">// This is a class object for the BMI module Python class</span></div>
-<div class="line"><a id="l00643" name="l00643"></a><span class="lineno">  643</span>                    py::module_ bmi_py_class = utils::ngenPy::InterpreterUtil::getPyModule(moduleComponents);</div>
+<div class="line"><a id="l00643" name="l00643"></a><span class="lineno">  643</span>                    py::object bmi_py_class = utils::ngenPy::InterpreterUtil::getPyModule(moduleComponents);</div>
 <div class="line"><a id="l00644" name="l00644"></a><span class="lineno">  644</span>                    <span class="comment">// This is the actual backing model object</span></div>
 <div class="line"><a id="l00645" name="l00645"></a><span class="lineno">  645</span>                    bmi_model = make_shared&lt;py::object&gt;(bmi_py_class());</div>
 <div class="line"><a id="l00646" name="l00646"></a><span class="lineno">  646</span>                    bmi_model-&gt;attr(<span class="stringliteral">&quot;initialize&quot;</span>)(bmi_init_config);</div>
@@ -610,7 +610,7 @@ $(document).ready(function(){initNavTree('_bmi___py___adapter_8hpp_source.html',
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_9058ef7c383dff996c678c5ba80ec03e.html">realizations</a></li><li class="navelem"><a class="el" href="dir_8dbd500a1ae0b3d23deb7285e2980d8b.html">catchment</a></li><li class="navelem"><b>Bmi_Py_Adapter.hpp</b></li>
-    <li class="footer">Generated on Wed Nov 9 2022 13:52:33 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
+    <li class="footer">Generated on Wed Nov 9 2022 16:41:31 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
   </ul>
 </div>
 </body>
