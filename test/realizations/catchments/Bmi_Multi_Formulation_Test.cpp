@@ -397,7 +397,7 @@ private:
      */
     static std::string py_find_repo_root() {
         #ifdef ACTIVATE_PYTHON
-        py::module_ Path = InterpreterUtil::getPyModule(std::vector<std::string> {"pathlib", "Path"});
+        py::object Path = InterpreterUtil::getPyModule(std::vector<std::string> {"pathlib", "Path"});
         py::object dir = Path(".").attr("resolve")();
         while (!dir.equal(dir.attr("parent"))) {
             // If there is a child .git dir and a child .github dir, then dir is the root

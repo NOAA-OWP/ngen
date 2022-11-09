@@ -332,7 +332,7 @@ std::string Bmi_Py_Formulation_Test::file_search(const vector<std::string> &pare
  * @return The path of the first found option which is an existing directory.
  */
 std::string Bmi_Py_Formulation_Test::py_dir_search(const std::vector<std::string> &dir_options) {
-    py::module_ Path = InterpreterUtil::getPyModule(std::vector<std::string> {"pathlib", "Path"});
+    py::object Path = InterpreterUtil::getPyModule(std::vector<std::string> {"pathlib", "Path"});
     for (const std::string &dir : dir_options) {
         // Uses "Path", which is a class object, to init a Python pathlib.Path instance, retrieve its "is_dir" function,
         // and then call the function, which takes no arguments.
@@ -348,7 +348,7 @@ std::string Bmi_Py_Formulation_Test::py_dir_search(const std::vector<std::string
  * @return The absolute path of the repo root, as a string.
  */
 std::string Bmi_Py_Formulation_Test::py_find_repo_root() {
-    py::module_ Path = InterpreterUtil::getPyModule(std::vector<std::string> {"pathlib", "Path"});
+    py::object Path = InterpreterUtil::getPyModule(std::vector<std::string> {"pathlib", "Path"});
     py::object dir = Path(".").attr("resolve")();
     while (!dir.equal(dir.attr("parent"))) {
         // If there is a child .git dir and a child .github dir, then dir is the root
@@ -369,7 +369,7 @@ std::string Bmi_Py_Formulation_Test::py_find_repo_root() {
  * @return The absolute path of the site packages directory, as a string.
  */
 std::string Bmi_Py_Formulation_Test::py_find_venv_site_packages_dir(const std::string &venv_dir) {
-    py::module_ Path = InterpreterUtil::getPyModule(std::vector<std::string> {"pathlib", "Path"});
+    py::object Path = InterpreterUtil::getPyModule(std::vector<std::string> {"pathlib", "Path"});
     py::object venv_dir_path = Path(venv_dir.c_str()).attr("resolve")();
     py::list site_packages_options = py::list(venv_dir_path.attr("glob")("**/site-packages"));
     for (auto &opt : site_packages_options) {
