@@ -1,9 +1,5 @@
 var NAVTREEINDEX23 =
 {
-"structtshirt_1_1tshirt__state.html#a27ff5470fa20ba28c779fae88dfd6f56":[20,0,13,3,3],
-"structtshirt_1_1tshirt__state.html#a27ff5470fa20ba28c779fae88dfd6f56":[21,0,13,3,3],
-"structtshirt_1_1tshirt__state.html#a6fedbba194981da0de78d3e1ed654b56":[21,0,13,3,2],
-"structtshirt_1_1tshirt__state.html#a6fedbba194981da0de78d3e1ed654b56":[20,0,13,3,2],
 "structtshirt_1_1tshirt__state.html#a883f2b4ffacd391d7806bc381705d6e4":[20,0,13,3,0],
 "structtshirt_1_1tshirt__state.html#a883f2b4ffacd391d7806bc381705d6e4":[21,0,13,3,0],
 "structtshirt__c__result__fluxes.html":[21,0,82],

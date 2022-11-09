@@ -48,7 +48,6 @@ var classmodels_1_1bmi_1_1_bmi___c___adapter =
     [ "GetStartTime", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#a3efe91aae5bff8829b14ecde76326f4d", null ],
     [ "GetTimeStep", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#ada25ab304eae90b46408f7f9d77c5d8c", null ],
     [ "GetTimeUnits", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#aa9f01effaff62b863230b1f0727b4b22", null ],
-    [ "GetValue", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#ae2b10eaa34ce398a1a7dd4f850cb04e9", null ],
     [ "GetValue", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#a2d15cade3652d580838f0b74c8e0f5ba", null ],
     [ "GetValueAtIndices", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#a9e2a2062bc3680b0f0f9be054c51f18d", null ],
     [ "GetValuePtr", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#a560ec71847532fc2fd0a101e23cbaf48", null ],

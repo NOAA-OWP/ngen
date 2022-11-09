@@ -1559,7 +1559,6 @@
             <topic label="GetStartTime" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a3efe91aae5bff8829b14ecde76326f4d"/>
             <topic label="GetTimeStep" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#ada25ab304eae90b46408f7f9d77c5d8c"/>
             <topic label="GetTimeUnits" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#aa9f01effaff62b863230b1f0727b4b22"/>
-            <topic label="GetValue" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#ae2b10eaa34ce398a1a7dd4f850cb04e9"/>
             <topic label="GetValue" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a2d15cade3652d580838f0b74c8e0f5ba"/>
             <topic label="GetValueAtIndices" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a9e2a2062bc3680b0f0f9be054c51f18d"/>
             <topic label="GetValuePtr" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a560ec71847532fc2fd0a101e23cbaf48"/>
@@ -1652,7 +1651,6 @@
             <topic label="GetStartTime" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#acc80b86af4c9a9b925ae69e6e5648da3"/>
             <topic label="GetTimeStep" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a1cc8f64a26e66c172ec1b18b0ffd9416"/>
             <topic label="GetTimeUnits" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ace1062b59c99e99e4ea2db034bb19e27"/>
-            <topic label="GetValue" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a2fe6a94dae9c93c935ba6dc274a8ceab"/>
             <topic label="GetValue" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a9bea0cc777d5a640dc7f89dbe5f6d789"/>
             <topic label="GetValueAtIndices" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#af9dd2629499833ef47718489a31d7929"/>
             <topic label="GetValuePtr" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a01ef25ce848b6b9ac9622ea974ae96d5"/>
@@ -3990,7 +3988,6 @@
             <topic label="GetStartTime" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a3efe91aae5bff8829b14ecde76326f4d"/>
             <topic label="GetTimeStep" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#ada25ab304eae90b46408f7f9d77c5d8c"/>
             <topic label="GetTimeUnits" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#aa9f01effaff62b863230b1f0727b4b22"/>
-            <topic label="GetValue" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#ae2b10eaa34ce398a1a7dd4f850cb04e9"/>
             <topic label="GetValue" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a2d15cade3652d580838f0b74c8e0f5ba"/>
             <topic label="GetValueAtIndices" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a9e2a2062bc3680b0f0f9be054c51f18d"/>
             <topic label="GetValuePtr" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a560ec71847532fc2fd0a101e23cbaf48"/>
@@ -4083,7 +4080,6 @@
             <topic label="GetStartTime" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#acc80b86af4c9a9b925ae69e6e5648da3"/>
             <topic label="GetTimeStep" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a1cc8f64a26e66c172ec1b18b0ffd9416"/>
             <topic label="GetTimeUnits" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ace1062b59c99e99e4ea2db034bb19e27"/>
-            <topic label="GetValue" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a2fe6a94dae9c93c935ba6dc274a8ceab"/>
             <topic label="GetValue" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a9bea0cc777d5a640dc7f89dbe5f6d789"/>
             <topic label="GetValueAtIndices" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#af9dd2629499833ef47718489a31d7929"/>
             <topic label="GetValuePtr" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a01ef25ce848b6b9ac9622ea974ae96d5"/>

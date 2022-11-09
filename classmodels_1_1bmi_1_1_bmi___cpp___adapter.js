@@ -47,7 +47,6 @@ var classmodels_1_1bmi_1_1_bmi___cpp___adapter =
     [ "GetStartTime", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#acc80b86af4c9a9b925ae69e6e5648da3", null ],
     [ "GetTimeStep", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a1cc8f64a26e66c172ec1b18b0ffd9416", null ],
     [ "GetTimeUnits", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ace1062b59c99e99e4ea2db034bb19e27", null ],
-    [ "GetValue", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a2fe6a94dae9c93c935ba6dc274a8ceab", null ],
     [ "GetValue", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a9bea0cc777d5a640dc7f89dbe5f6d789", null ],
     [ "GetValueAtIndices", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#af9dd2629499833ef47718489a31d7929", null ],
     [ "GetValuePtr", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a01ef25ce848b6b9ac9622ea974ae96d5", null ],

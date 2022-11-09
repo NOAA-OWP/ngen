@@ -495,7 +495,7 @@
 <text text-anchor="start" x="270.5" y="-1764.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetStartTime()</text>
 <text text-anchor="start" x="270.5" y="-1753.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetTimeStep()</text>
 <text text-anchor="start" x="270.5" y="-1742.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ GetTimeUnits()</text>
-<text text-anchor="start" x="270.5" y="-1731.5" font-family="Helvetica,sans-Serif" font-size="10.00">and 35 more...</text>
+<text text-anchor="start" x="270.5" y="-1731.5" font-family="Helvetica,sans-Serif" font-size="10.00">and 34 more...</text>
 <text text-anchor="start" x="270.5" y="-1720.5" font-family="Helvetica,sans-Serif" font-size="10.00"># Bmi_Cpp_Adapter()</text>
 <text text-anchor="start" x="270.5" y="-1709.5" font-family="Helvetica,sans-Serif" font-size="10.00"># construct_and_init</text>
 <text text-anchor="start" x="270.5" y="-1698.5" font-family="Helvetica,sans-Serif" font-size="10.00">_backing_model()</text>
