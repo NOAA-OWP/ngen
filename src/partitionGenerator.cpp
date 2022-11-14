@@ -476,6 +476,13 @@ int main(int argc, char* argv[])
     geojson::GeoJSON catchment_collection = std::move( geojson::read(catchmentDataFile, catchment_subset_ids) );
     int num_catchments = catchment_collection->get_size();
     std::cout<<"Partitioning "<<num_catchments<<" catchments into "<<num_partitions<<" partitions."<<std::endl;
+
+    //Check that the number of partitions is less or equal to the number of catchment
+    if (num_catchments < num_partitions) {
+        throw std::runtime_error("Input error: total number of catchments: " + std::to_string(num_catchments) + \
+                                 ", cannot be less than the number of partitions: " + std::to_string(num_partitions));
+    }
+
     std::string link_key = "toid";
   
     Network catchment_network(catchment_collection, &link_key);
