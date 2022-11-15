@@ -123,7 +123,7 @@ if(MPI_ACTIVE)
 endif()
 
 ########################## Partitioning Tests
-if(MPI_ACTIVE)
+#if(MPI_ACTIVE)
    #TODO this test depends on a "reference hydrofabric" that is rather large
    #and the path to that reference is absolute in the test code.  Need to rethink this.
    add_test(
@@ -133,7 +133,7 @@ if(MPI_ACTIVE)
            NGen::core
            NGen::geojson
 )
-endif()
+#endif()
 
 ########################## BMI C++ Tests
 add_test(
@@ -319,7 +319,7 @@ add_test(
 ########################## Primary Combined Unit Test Target
 add_test(
         test_unit
-        18
+        19
         models/hymod/include/HymodTest.cpp
         models/hymod/include/Reservoir_Test.cpp
         models/hymod/include/Reservoir_Timeless_Test.cpp
@@ -338,6 +338,7 @@ add_test(
         core/NetworkTests.cpp
         utils/include/StreamOutputTest.cpp
         realizations/Formulation_Manager_Test.cpp
+        utils/Partition_Test.cpp
         NGen::core
         NGen::core_nexus
         NGen::core_mediator
@@ -354,7 +355,7 @@ add_test(
 # All automated tests
 add_test(
         test_all
-        17
+        18
         models/hymod/include/HymodTest.cpp
         models/hymod/include/Reservoir_Test.cpp
         models/hymod/include/Reservoir_Timeless_Test.cpp
@@ -372,8 +373,7 @@ add_test(
         core/mediator/UnitsHelper_Tests.cpp
         realizations/Formulation_Manager_Test.cpp
         core/nexus/NexusTests.cpp
-        # TODO: this probably should be added, but at the moment it's broken (update number-of-files arg above also)
-        #utils/Partition_Test.cpp
+        utils/Partition_Test.cpp
         NGen::core
         gmock
         NGen::core_nexus
