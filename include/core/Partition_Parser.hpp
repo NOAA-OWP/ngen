@@ -45,6 +45,10 @@ class Partitions_Parser {
             std::cout << "file_path: " << file_path << std::endl;
         };
 
+        Partitions_Parser(const boost::property_tree::ptree tree){
+            this->tree = tree;
+        }
+
         virtual ~Partitions_Parser(){};
 
         //The function that parses the json file and build a unordered set and vector of structs for each line in the json list
