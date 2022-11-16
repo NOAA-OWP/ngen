@@ -254,6 +254,7 @@ namespace utils {
                 return py::list();
             }
 
+        public:
             /**
              * Get the current Python interpreter system path, returning in both a Python and C++ format.
              *
@@ -269,7 +270,33 @@ namespace utils {
                 }
                 return std::make_tuple(sys_path, sys_path_vector);
             }
+            /**
+             * Find any virtual environment site packages directory, starting from options under the current directory.
+             *
+             * @return The absolute path of the site packages directory, as a string.
+             */
+            std::string getDiscoveredVenvPath() {
+                // Look for a local virtual environment directory also, if there is one
+                const char* env_var_venv = std::getenv("VIRTUAL_ENV");
+                if(env_var_venv != nullptr){
+                    //std::string r(env_var_venv);
+                    return std::string(env_var_venv);
+                }
+                py::object venv_dir;
+                venv_dir = searchForVenvDir();
+                if(venv_dir.is_none()){
+                    return std::string("None");
+                }
+                if(py::bool_(venv_dir.attr("is_dir")())) {
+                    // Probably better to not resolve symlinks so you can see where it was found...
+                    //venv_dir = venv_dir.attr("resolve")();
+                    return py::str(venv_dir);
+                }
+                assert("Unexpected value of venv_dir in InterpreterUtil::getDiscoveredVenvPath()!");
+                return ""; // silence warning
+            }
 
+        protected:
             /**
              * Get whether a Python module is imported.
              *

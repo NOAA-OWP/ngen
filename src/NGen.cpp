@@ -92,15 +92,61 @@ int main(int argc, char *argv[]) {
     std::vector<string> catchment_subset_ids;
     std::vector<string> nexus_subset_ids;
 
-    if( argc < 6) {
+    if( argc < 2) {
+        // Usage
+        std::cout << "Usage: " << std::endl;
+        std::cout << argv[0] << " <catchment_data_path> <catchment subset ids> <nexus_data_path> <nexus subset ids>"
+                  << " <realization_config_path>" << std::endl
+                  << "Arguments for <catchment subset ids> and <nexus subset ids> must be given." << std::endl
+                  << "Use \"all\" as explicit argument when no subset is needed." << std::endl;
+
+        // Build and environment information
+        cout<<std::endl<<"Build Info:"<<std::endl;
+        cout<<"  NGen version: " // This is here mainly so that there will be *some* output if somehow no other options are enabled.
+          << ngen_VERSION_MAJOR << "."
+          << ngen_VERSION_MINOR << "."
+          << ngen_VERSION_PATCH << std::endl;
+        #ifdef NGEN_MPI_ACTIVE
+        cout<<"  Parallel build"<<std::endl;
+        #endif
+        #ifdef NETCDF_ACTIVE
+        cout<<"  NetCDF lumped forcing enabled"<<std::endl;
+        #endif
+        #ifdef NGEN_BMI_FORTRAN_ACTIVE
+        cout<<"  Fortran BMI enabled"<<std::endl;
+        #endif
+        #ifdef NGEN_C_LIB_ACTIVE
+        cout<<"  C BMI enabled"<<std::endl;
+        #endif
+        #ifdef ACTIVATE_PYTHON
+        cout<<"  Python active"<<std::endl;
+        cout<<"    Embedded interpreter version: "<<PY_MAJOR_VERSION<<"."<<PY_MINOR_VERSION<<"."<<PY_MICRO_VERSION<<std::endl;
+        #endif
+        #ifdef NGEN_ROUTING_ACTIVE
+        cout<<"  Routing active"<<std::endl;
+        #endif
+        #ifdef ACTIVATE_PYTHON
+        cout<<std::endl<<"Python Environment Info:"<<std::endl;
+        cout<<"  VIRTUAL_ENV environment variable: "<<(std::getenv("VIRTUAL_ENV") == nullptr ? "(not set)" : std::getenv("VIRTUAL_ENV"))<<std::endl;
+        cout<<"  Discovered venv: "<<_interp->getDiscoveredVenvPath()<<std::endl;
+        auto paths = _interp->getSystemPath();
+        cout<<"  System paths:"<<std::endl;
+        for(std::string& path: std::get<1>(paths)){
+          cout<<"    "<<path<<std::endl;
+        }
+        #endif
+        cout<<std::endl;
+        exit(0); // Unsure if this path should have a non-zero exit code?
+    } else if( argc < 6) {
         std::cout << "Missing required args:" << std::endl;
         std::cout << argv[0] << " <catchment_data_path> <catchment subset ids> <nexus_data_path> <nexus subset ids>"
                   << " <realization_config_path>" << std::endl;
         if(argc > 3) {
             std::cout << std::endl << "Note:" << std::endl
                       << "Arguments for <catchment subset ids> and <nexus subset ids> must be given." << std::endl
-                      << "Use empty string (\"\") as explicit argument when no subset is needed." << std::endl;
+                      << "Use \"all\" as explicit argument when no subset is needed." << std::endl;
         }
+
         exit(-1);
     }
     else {
