@@ -27,7 +27,9 @@ using namespace realization;
 
 class Bmi_Multi_Formulation_Test : public ::testing::Test {
 private:
+#ifdef ACTIVATE_PYTHON
     static std::shared_ptr<InterpreterUtil> interperter;
+#endif
 protected:
 
     static std::string find_file(std::vector<std::string> dir_opts, const std::string& basename) {
@@ -448,7 +450,9 @@ private:
 
 };
 //Make sure the interperter is instansiated and lives throught the test class
+#ifdef ACTIVATE_PYTHON
 std::shared_ptr<InterpreterUtil> Bmi_Multi_Formulation_Test::interperter = InterpreterUtil::getInstance();
+#endif
 
 void Bmi_Multi_Formulation_Test::SetUpTestSuite() {
     #ifdef ACTIVATE_PYTHON
