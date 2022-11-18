@@ -40,7 +40,7 @@ runs:
           id: cmake_init
           run: |
             cmake -B ${{ inputs.mod-dir}}/${{ inputs.build-dir }} -S ${{ inputs.mod-dir }}
-            echo "::set-output name=build-dir::$(echo ${{ inputs.mod-dir}}/${{ inputs.build-dir }})"
+            echo "build-dir=$(echo ${{ inputs.mod-dir}}/${{ inputs.build-dir }})" >> $GITHUB_OUTPUT
           shell: bash
 
         - name: Build Targets
