@@ -446,9 +446,10 @@ double Tshirt_C_Realization::get_response(time_step_t t_index, time_step_t t_del
     if (t_current > stop_time) {
         throw std::invalid_argument("Getting response beyond time with available forcing.");
     }
+
     double precip;
     const std::string forcing_name = CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE;
-    precip = this->forcing->get_value(CatchmentAggrDataSelector("",CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, t_current, t_delta_s, ""), data_access::SUM);
+    precip = this->forcing->get_value(CatchmentAggrDataSelector(this->catchment_id, CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, t_current, t_delta_s, ""), data_access::SUM);
     int response_result = run_formulation_for_timestep(precip, t_delta_s);
     // TODO: check t_index is the next expected time step to be calculated
 
