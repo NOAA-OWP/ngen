@@ -99,25 +99,43 @@ double Simple_Lumped_Model_Realization::calc_et()
  * @param d_delta_s The duration, in seconds, of the time step for which to run model calculations.
  * @return The total discharge for this time step.
  */
-double Simple_Lumped_Model_Realization::get_response(time_step_t t, time_step_t dt)
+double Simple_Lumped_Model_Realization::get_response(time_step_t t_index, time_step_t t_delta_s)
 {
     //TODO input_et = this->forcing.get_et(t)
+    //Checking the time step used is consistent with that provided in forcing data
+    time_t t_delta = this->forcing->record_duration();
+    if (t_delta != t_delta_s) {    //Checking the time step used is consistent with that provided in forcing data
+        throw std::invalid_argument("Getting response using insonsistent time step with provided forcing data");
+    }
+    //Negative t_index is not allowed
+    if (t_index < 0) {
+        throw std::invalid_argument("Getting response of negative time step in Tshirt C Realization is not allowed.");
+    }
+
+    time_t start_time = this->forcing->get_data_start_time();
+    time_t stop_time = this->forcing->get_data_stop_time();
+    time_t t_current = start_time + t_index * t_delta_s;
+    //Ensure model run does not exceed the end time of forcing
+    if (t_current > stop_time) {
+        throw std::invalid_argument("Getting response beyond time with available forcing.");
+    }
+
     double precip;
-    time_t t_unix = this->forcing->get_data_start_time() + (t * 3600);
+    const std::string forcing_name = CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE;
     try {
-        precip = this->forcing->get_value(CatchmentAggrDataSelector("","precip_rate", t_unix, dt, "")); // classic forcing object/format
+        precip = this->forcing->get_value(CatchmentAggrDataSelector(this->id, CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, t_current, t_delta_s, ""), data_access::SUM);
     }
     catch (const std::exception& e){
-        precip = this->forcing->get_value(CatchmentAggrDataSelector("",CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, t_unix, dt, "")); // CsvPerFeatureForcingProvider
+        precip = this->forcing->get_value(CatchmentAggrDataSelector(this->id, CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, t_current, t_delta_s, ""), data_access::SUM);
     }
-    add_time(t+1, params.n);
+    add_time(t_index+1, params.n);
     //FIXME should this run "daily" or hourly (t) which should really be dt
     //Do we keep an "internal dt" i.e. this->dt and reconcile with t?
     //hymod_kernel::run(68400.0, params, state[t], state[t+1], fluxes[t], precip, et_params);
 
     pdm03_struct params_copy = get_et_params();
-    hymod_kernel::run(dt, params, state[t], state[t+1], fluxes[t], precip*dt, &params_copy);
-    return fluxes[t].slow_flow_meters_per_second + fluxes[t].runoff_meters_per_second;
+    hymod_kernel::run(t_delta_s, params, state[t_index], state[t_index+1], fluxes[t_index], precip*t_delta_s, &params_copy);
+    return fluxes[t_index].slow_flow_meters_per_second + fluxes[t_index].runoff_meters_per_second;
 }
 
 /**
