@@ -107,9 +107,10 @@ double Tshirt_Realization::get_response(time_step_t t_index, time_step_t t_delta
     if (t_current > stop_time) {
         throw std::invalid_argument("Getting response beyond time with available forcing.");
     }
+
     double precip;
     const std::string forcing_name = CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE;
-    precip = this->forcing->get_value(CatchmentAggrDataSelector("",CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, t_current, t_delta_s, ""), data_access::SUM);
+    precip = this->forcing->get_value(CatchmentAggrDataSelector(this->catchment_id, CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, t_current, t_delta_s, ""), data_access::SUM);
     //FIXME should this run "daily" or hourly (t) which should really be dt
     //Do we keep an "internal dt" i.e. this->dt and reconcile with t?
     int error = model->run(t_index, precip * t_delta_s / 1000, get_et_params_ptr());
