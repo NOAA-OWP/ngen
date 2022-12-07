@@ -21,7 +21,6 @@
 #include <StreamHandler.hpp>
 
 #include <netcdf>
-
 #include "AorcForcing.hpp"
 
 using namespace netCDF;
@@ -33,6 +32,11 @@ namespace data_access
     {
         
         public:
+
+        //Placeholder for default destructor
+        virtual ~NetCDFPerFeatureDataProvider()
+        {
+        }
 
         enum TimeUnit
         {
@@ -88,7 +92,6 @@ namespace data_access
                 auto ncvar = nc_file->getVar(var_name);
                 variable_names.push_back(var_name);
                 ncvar_cache.emplace(var_name,ncvar);
-
                 std::string native_units;
                 try
                 {
@@ -303,6 +306,12 @@ namespace data_access
 
         }
         */
+
+        /** Retrun the shared_ptr to the NcFile */
+        virtual std::shared_ptr<NcFile> get_nc_file() override
+        {
+            return nc_file;
+        }
 
         /** Return the variables that are accessable by this data provider */
 

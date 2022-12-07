@@ -64,6 +64,7 @@ pdm03_struct get_et_params() {
 }
 
 int main(int argc, char *argv[]) {
+    std::ios_base::sync_with_stdio(true);
     std::cout << "NGen Framework " << ngen_VERSION_MAJOR << "."
               << ngen_VERSION_MINOR << "."
               << ngen_VERSION_PATCH << std::endl;
@@ -423,7 +424,15 @@ int main(int argc, char *argv[]) {
     }
  #endif //NGEN_MPI_ACTIVE
  #else
+
+  #ifdef NETCDF_ACTIVE
+    manager->close_nc_file();
+  #endif
+
  #ifdef NGEN_MPI_ACTIVE
+   if (mpi_rank == 0) {
+       std::cout << "Calling MPI_Finalize()" << std::endl;
+   }
     MPI_Finalize();
  #endif //NGEN_MPI_ACTIVE
  #endif // NGEN_ROUTING_ACTIVE
