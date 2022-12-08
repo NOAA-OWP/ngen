@@ -245,6 +245,7 @@ namespace realization {
                     return "";
             }
 
+   #ifdef NETCDF_ACTIVE
             void close_nc_file()
             {
                 for (std::vector<std::shared_ptr<Catchment_Formulation>>::iterator it = missing_formulation_vec.begin(); it != missing_formulation_vec.end(); ++it)
@@ -254,6 +255,7 @@ namespace realization {
                     }
                 }
             }
+   #endif
 
 
         protected:
