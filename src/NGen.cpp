@@ -430,9 +430,6 @@ int main(int argc, char *argv[]) {
   #endif
 
  #ifdef NGEN_MPI_ACTIVE
-   if (mpi_rank == 0) {
-       std::cout << "Calling MPI_Finalize()" << std::endl;
-   }
     MPI_Finalize();
  #endif //NGEN_MPI_ACTIVE
  #endif // NGEN_ROUTING_ACTIVE

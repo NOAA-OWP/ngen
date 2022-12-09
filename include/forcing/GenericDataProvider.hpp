@@ -15,12 +15,12 @@ namespace data_access
     {
         public:
 
-  #ifdef NETCDF_ACTIVE
+#ifdef NETCDF_ACTIVE
         /** Retrun the shared_ptr to the NcFile */
         virtual std::shared_ptr<netCDF::NcFile> get_nc_file() {
-            return 0;
+            return nullptr;
         }
-  #endif
+#endif
 
         private:
     };
