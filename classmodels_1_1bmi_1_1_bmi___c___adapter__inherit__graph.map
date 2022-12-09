@@ -1,9 +1,9 @@
 <map id="models::bmi::Bmi_C_Adapter" name="models::bmi::Bmi_C_Adapter">
-<area shape="rect" id="node1" title="An adapter class to serve as a C++ interface to the essential aspects of external models written in t..." alt="" coords="82,2161,261,2737"/>
-<area shape="rect" id="node2" href="$classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html" title=" " alt="" coords="75,1844,267,2112"/>
-<area shape="rect" id="node3" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title=" " alt="" coords="5,932,204,1464"/>
-<area shape="rect" id="node4" href="$classbmi_1_1_bmi.html" title=" " alt="" coords="135,5,298,303"/>
-<area shape="rect" id="node5" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title="Abstract adapter interface for C++ classes to interact with the essential aspects of external models ..." alt="" coords="115,352,318,869"/>
-<area shape="rect" id="node7" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title=" " alt="" coords="229,939,431,1457"/>
-<area shape="rect" id="node6" href="$classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html" title=" " alt="" coords="210,1513,402,1781"/>
+<area shape="rect" id="node1" title="An adapter class to serve as a C++ interface to the essential aspects of external models written in t..." alt="" coords="41,2587,219,3155"/>
+<area shape="rect" id="node2" href="$classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html" title=" " alt="" coords="34,2277,226,2537"/>
+<area shape="rect" id="node3" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title="Abstract adapter interface for C++ classes to interact with the essential aspects of external models ..." alt="" coords="5,863,212,1372"/>
+<area shape="rect" id="node4" href="$classbmi_1_1_bmi.html" title=" " alt="" coords="151,5,314,280"/>
+<area shape="rect" id="node6" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title=" " alt="" coords="147,1396,353,1905"/>
+<area shape="rect" id="node7" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title="Abstract adapter interface for C++ classes to interact with the essential aspects of external models ..." alt="" coords="271,329,477,839"/>
+<area shape="rect" id="node5" href="$classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html" title=" " alt="" coords="150,1955,342,2215"/>
 </map>

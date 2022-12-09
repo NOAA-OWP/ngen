@@ -1,5 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$class_catchment_aggr_data_selector.html" title="This class is intended to be the virtual base for all data selectors used with the DataProvider API." alt="" coords="5,31,192,57"/>
-<area shape="rect" id="node2" href="$class_b_m_i_data_selector.html" title=" " alt="" coords="241,5,363,32"/>
-<area shape="rect" id="node3" href="$class_c_s_v_data_selector.html" title="This a data selector intended for use with CSV data." alt="" coords="240,56,364,83"/>
+<area shape="rect" id="node1" href="$class_catchment_aggr_data_selector.html" title="This class is intended to be the virtual base for all data selectors used with the DataProvider API." alt="" coords="5,31,192,56"/>
+<area shape="rect" id="node2" href="$class_b_m_i_data_selector.html" title=" " alt="" coords="241,5,363,31"/>
+<area shape="rect" id="node3" href="$class_c_s_v_data_selector.html" title="This a data selector intended for use with CSV data." alt="" coords="240,55,364,80"/>
 </map>

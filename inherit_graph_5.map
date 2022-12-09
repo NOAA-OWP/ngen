@@ -1,12 +1,12 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,115,120,141"/>
-<area shape="rect" id="node2" href="$structadd__to__summed__nexus.html" title=" " alt="" coords="179,5,337,32"/>
-<area shape="rect" id="node3" href="$structcompleted__time__step.html" title=" " alt="" coords="185,56,331,83"/>
-<area shape="rect" id="node4" href="$structinvalid__downstream__request.html" title=" " alt="" coords="189,107,327,149"/>
-<area shape="rect" id="node5" href="$structinvalid__time__step.html" title=" " alt="" coords="197,173,319,200"/>
-<area shape="rect" id="node6" href="$structrequest__from__empty__nexus.html" title=" " alt="" coords="188,225,328,266"/>
-<area shape="rect" id="node7" title=" " alt="" coords="12,203,113,229"/>
-<area shape="rect" id="node8" href="$classexternal_1_1_external_integration_exception.html" title="Custom exception indicating a problem when integrating with some external component." alt="" coords="168,290,348,331"/>
-<area shape="rect" id="node9" href="$classmodels_1_1external_1_1_state___exception.html" title="Custom exception indicating bad external model state." alt="" coords="182,355,334,397"/>
-<area shape="rect" id="node10" href="$classrealization_1_1_configuration_exception.html" title="Custom exception indicating a problem when integrating with the provided realization configuration." alt="" coords="177,421,339,462"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,112,120,137"/>
+<area shape="rect" id="node2" href="$structadd__to__summed__nexus.html" title=" " alt="" coords="179,5,337,31"/>
+<area shape="rect" id="node3" href="$structcompleted__time__step.html" title=" " alt="" coords="185,55,331,80"/>
+<area shape="rect" id="node4" href="$structinvalid__downstream__request.html" title=" " alt="" coords="189,105,327,145"/>
+<area shape="rect" id="node5" href="$structinvalid__time__step.html" title=" " alt="" coords="197,169,319,195"/>
+<area shape="rect" id="node6" href="$structrequest__from__empty__nexus.html" title=" " alt="" coords="188,219,328,259"/>
+<area shape="rect" id="node7" title=" " alt="" coords="12,197,113,223"/>
+<area shape="rect" id="node8" href="$classexternal_1_1_external_integration_exception.html" title="Custom exception indicating a problem when integrating with some external component." alt="" coords="168,283,348,323"/>
+<area shape="rect" id="node9" href="$classmodels_1_1external_1_1_state___exception.html" title="Custom exception indicating bad external model state." alt="" coords="182,347,334,387"/>
+<area shape="rect" id="node10" href="$classrealization_1_1_configuration_exception.html" title="Custom exception indicating a problem when integrating with the provided realization configuration." alt="" coords="177,411,339,451"/>
 </map>

@@ -1,12 +1,12 @@
 <map id="UnitsHelper" name="UnitsHelper">
-<area shape="rect" id="node1" title=" " alt="" coords="209,624,371,760"/>
-<area shape="rect" id="node2" title=" " alt="" coords="151,455,293,561"/>
-<area shape="rect" id="node3" title=" " alt="" coords="41,307,120,385"/>
-<area shape="rect" id="node4" title=" " alt="" coords="5,145,129,237"/>
-<area shape="rect" id="node5" title=" " alt="" coords="156,300,288,392"/>
-<area shape="rect" id="node6" title=" " alt="" coords="153,153,291,230"/>
-<area shape="rect" id="node7" title=" " alt="" coords="232,5,271,83"/>
-<area shape="rect" id="node8" title=" " alt="" coords="315,153,433,230"/>
-<area shape="rect" id="node9" title=" " alt="" coords="356,5,395,83"/>
-<area shape="rect" id="node10" title=" " alt="" coords="317,469,399,547"/>
+<area shape="rect" id="node1" title=" " alt="" coords="215,504,379,632"/>
+<area shape="rect" id="node2" title=" " alt="" coords="155,372,301,441"/>
+<area shape="rect" id="node3" title=" " alt="" coords="41,247,124,287"/>
+<area shape="rect" id="node4" title=" " alt="" coords="5,108,133,163"/>
+<area shape="rect" id="node5" title=" " alt="" coords="160,225,296,309"/>
+<area shape="rect" id="node6" title=" " alt="" coords="157,108,299,163"/>
+<area shape="rect" id="node7" title=" " alt="" coords="241,5,279,45"/>
+<area shape="rect" id="node8" title=" " alt="" coords="323,115,445,155"/>
+<area shape="rect" id="node9" title=" " alt="" coords="365,5,403,45"/>
+<area shape="rect" id="node10" title=" " alt="" coords="325,387,411,427"/>
 </map>

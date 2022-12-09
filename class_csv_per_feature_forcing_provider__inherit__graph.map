@@ -1,6 +1,6 @@
 <map id="CsvPerFeatureForcingProvider" name="CsvPerFeatureForcingProvider">
-<area shape="rect" id="node1" title="Forcing class providing time&#45;series precipiation forcing data to the model." alt="" coords="23,751,242,1341"/>
-<area shape="rect" id="node2" href="$classdata__access_1_1_generic_data_provider.html" title=" " alt="" coords="45,609,220,701"/>
-<area shape="rect" id="node3" href="$classdata__access_1_1_data_provider.html" title=" " alt="" coords="5,321,260,560"/>
-<area shape="rect" id="node4" href="$classdata__access_1_1_data_provider.html" title=" " alt="" coords="37,5,228,244"/>
+<area shape="rect" id="node1" title="Forcing class providing time&#45;series precipiation forcing data to the model." alt="" coords="21,668,244,1251"/>
+<area shape="rect" id="node2" href="$classdata__access_1_1_generic_data_provider.html" title=" " alt="" coords="43,564,222,619"/>
+<area shape="rect" id="node3" href="$classdata__access_1_1_data_provider.html" title=" " alt="" coords="5,299,260,515"/>
+<area shape="rect" id="node4" href="$classdata__access_1_1_data_provider.html" title=" " alt="" coords="37,5,228,221"/>
 </map>

@@ -1,12 +1,12 @@
 <map id="data_access::DeferredWrappedProvider" name="data_access::DeferredWrappedProvider">
-<area shape="rect" id="node1" title="A specialized @WrappedDataProvider that is created without first knowing the backing source it wraps." alt="" coords="203,1108,406,1317"/>
-<area shape="rect" id="node2" href="$classdata__access_1_1_wrapped_data_provider.html" title="Simple implementation that basically wraps another instance." alt="" coords="76,777,256,1045"/>
-<area shape="rect" id="node3" href="$classdata__access_1_1_generic_data_provider.html" title=" " alt="" coords="45,623,220,715"/>
-<area shape="rect" id="node4" href="$classdata__access_1_1_data_provider.html" title=" " alt="" coords="5,321,260,560"/>
-<area shape="rect" id="node5" href="$classdata__access_1_1_data_provider.html" title=" " alt="" coords="37,5,228,244"/>
-<area shape="rect" id="node6" title=" " alt="" coords="410,873,546,950"/>
-<area shape="rect" id="node7" title=" " alt="" coords="315,630,393,707"/>
-<area shape="rect" id="node8" title=" " alt="" coords="292,395,416,487"/>
-<area shape="rect" id="node9" title=" " alt="" coords="422,630,534,707"/>
-<area shape="rect" id="node10" title=" " alt="" coords="459,402,497,479"/>
+<area shape="rect" id="node1" title="A specialized @WrappedDataProvider that is created without first knowing the backing source it wraps." alt="" coords="203,1003,409,1189"/>
+<area shape="rect" id="node2" href="$classdata__access_1_1_wrapped_data_provider.html" title="Simple implementation that basically wraps another instance." alt="" coords="74,695,258,940"/>
+<area shape="rect" id="node3" href="$classdata__access_1_1_generic_data_provider.html" title=" " alt="" coords="43,577,222,632"/>
+<area shape="rect" id="node4" href="$classdata__access_1_1_data_provider.html" title=" " alt="" coords="5,299,260,515"/>
+<area shape="rect" id="node5" href="$classdata__access_1_1_data_provider.html" title=" " alt="" coords="37,5,228,221"/>
+<area shape="rect" id="node6" title=" " alt="" coords="412,797,552,837"/>
+<area shape="rect" id="node7" title=" " alt="" coords="314,585,397,625"/>
+<area shape="rect" id="node8" title=" " alt="" coords="291,379,419,434"/>
+<area shape="rect" id="node9" title=" " alt="" coords="424,585,540,625"/>
+<area shape="rect" id="node10" title=" " alt="" coords="463,387,501,427"/>
 </map>

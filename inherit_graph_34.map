@@ -1,4 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classgiuh_1_1giuh__kernel.html" title="Pseudo&#45;abstract class declaring the interface for a GIUH calculation kernel for a catchment." alt="" coords="5,5,124,32"/>
-<area shape="rect" id="node2" href="$classgiuh_1_1giuh__kernel__impl.html" title="A concrete implementation of a GIUH calculation kernel." alt="" coords="172,5,321,32"/>
+<area shape="rect" id="node1" href="$classgiuh_1_1giuh__kernel.html" title="Pseudo&#45;abstract class declaring the interface for a GIUH calculation kernel for a catchment." alt="" coords="5,5,124,31"/>
+<area shape="rect" id="node2" href="$classgiuh_1_1giuh__kernel__impl.html" title="A concrete implementation of a GIUH calculation kernel." alt="" coords="172,5,321,31"/>
 </map>

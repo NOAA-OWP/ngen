@@ -1,5 +1,5 @@
 <map id="CatchmentAggrDataSelector" name="CatchmentAggrDataSelector">
-<area shape="rect" id="node1" title="This class is intended to be the virtual base for all data selectors used with the DataProvider API." alt="" coords="5,316,212,569"/>
-<area shape="rect" id="node2" title=" " alt="" coords="69,147,148,224"/>
-<area shape="rect" id="node3" title=" " alt="" coords="47,5,171,97"/>
+<area shape="rect" id="node1" title="This class is intended to be the virtual base for all data selectors used with the DataProvider API." alt="" coords="5,241,215,487"/>
+<area shape="rect" id="node2" title=" " alt="" coords="69,109,151,149"/>
+<area shape="rect" id="node3" title=" " alt="" coords="46,5,174,60"/>
 </map>

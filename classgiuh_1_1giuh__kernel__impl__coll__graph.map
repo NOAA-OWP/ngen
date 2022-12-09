@@ -1,13 +1,13 @@
 <map id="giuh::giuh_kernel_impl" name="giuh::giuh_kernel_impl">
-<area shape="rect" id="node1" title="A concrete implementation of a GIUH calculation kernel." alt="" coords="229,719,428,1001"/>
-<area shape="rect" id="node2" href="$classgiuh_1_1giuh__kernel.html" title="Pseudo&#45;abstract class declaring the interface for a GIUH calculation kernel for a catchment." alt="" coords="5,315,204,597"/>
-<area shape="rect" id="node3" title=" " alt="" coords="65,160,144,237"/>
-<area shape="rect" id="node4" title=" " alt="" coords="43,5,167,97"/>
-<area shape="rect" id="node5" title=" " alt="" coords="228,417,371,495"/>
-<area shape="rect" id="node6" title=" " alt="" coords="398,160,510,237"/>
-<area shape="rect" id="node8" title=" " alt="" coords="395,417,513,495"/>
-<area shape="rect" id="node7" title=" " alt="" coords="497,13,536,90"/>
-<area shape="rect" id="node11" title=" " alt="" coords="537,160,675,237"/>
-<area shape="rect" id="node9" title=" " alt="" coords="591,410,733,502"/>
-<area shape="rect" id="node10" href="$structgiuh_1_1giuh__carry__over.html" title=" " alt="" coords="697,807,856,913"/>
+<area shape="rect" id="node1" title="A concrete implementation of a GIUH calculation kernel." alt="" coords="235,651,433,911"/>
+<area shape="rect" id="node2" href="$classgiuh_1_1giuh__kernel.html" title="Pseudo&#45;abstract class declaring the interface for a GIUH calculation kernel for a catchment." alt="" coords="5,255,204,529"/>
+<area shape="rect" id="node3" title=" " alt="" coords="63,130,146,170"/>
+<area shape="rect" id="node4" title=" " alt="" coords="41,5,169,60"/>
+<area shape="rect" id="node5" title=" " alt="" coords="229,365,375,419"/>
+<area shape="rect" id="node6" title=" " alt="" coords="403,130,519,170"/>
+<area shape="rect" id="node8" title=" " alt="" coords="399,365,522,419"/>
+<area shape="rect" id="node7" title=" " alt="" coords="504,13,543,53"/>
+<area shape="rect" id="node11" title=" " alt="" coords="545,123,686,177"/>
+<area shape="rect" id="node9" title=" " alt="" coords="595,357,742,427"/>
+<area shape="rect" id="node10" href="$structgiuh_1_1giuh__carry__over.html" title=" " alt="" coords="701,731,863,830"/>
 </map>

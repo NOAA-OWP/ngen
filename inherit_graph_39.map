@@ -1,7 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$class_h_y___hydro_feature.html" title=" " alt="" coords="5,56,132,83"/>
-<area shape="rect" id="node2" href="$class_h_y___catchment.html" title=" " alt="" coords="180,56,291,83"/>
-<area shape="rect" id="node3" href="$class_h_y___catchment_aggregate.html" title=" " alt="" coords="339,5,509,32"/>
-<area shape="rect" id="node4" href="$class_h_y___dendritic_catchment.html" title=" " alt="" coords="343,56,505,83"/>
-<area shape="rect" id="node5" href="$class_h_y___interior_catchment.html" title=" " alt="" coords="349,107,499,133"/>
+<area shape="rect" id="node1" href="$class_h_y___hydro_feature.html" title=" " alt="" coords="5,55,132,80"/>
+<area shape="rect" id="node2" href="$class_h_y___catchment.html" title=" " alt="" coords="180,55,291,80"/>
+<area shape="rect" id="node3" href="$class_h_y___catchment_aggregate.html" title=" " alt="" coords="339,5,509,31"/>
+<area shape="rect" id="node4" href="$class_h_y___dendritic_catchment.html" title=" " alt="" coords="343,55,505,80"/>
+<area shape="rect" id="node5" href="$class_h_y___interior_catchment.html" title=" " alt="" coords="349,104,499,129"/>
 </map>

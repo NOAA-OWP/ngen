@@ -1,10 +1,10 @@
 <map id="geojson::FeatureBase" name="geojson::FeatureBase">
-<area shape="rect" id="node1" title="Represents an individual feature within a Geojson definition." alt="" coords="599,5,778,508"/>
-<area shape="rect" id="node2" href="$classgeojson_1_1_collection_feature.html" title=" " alt="" coords="5,556,180,883"/>
-<area shape="rect" id="node3" href="$classgeojson_1_1_line_string_feature.html" title=" " alt="" coords="205,651,381,787"/>
-<area shape="rect" id="node4" href="$classgeojson_1_1_multi_line_string_feature.html" title=" " alt="" coords="405,644,577,795"/>
-<area shape="rect" id="node5" href="$classgeojson_1_1_multi_point_feature.html" title=" " alt="" coords="601,651,776,787"/>
-<area shape="rect" id="node6" href="$classgeojson_1_1_multi_polygon_feature.html" title=" " alt="" coords="800,651,991,787"/>
-<area shape="rect" id="node7" href="$classgeojson_1_1_point_feature.html" title=" " alt="" coords="1015,651,1162,787"/>
-<area shape="rect" id="node8" href="$classgeojson_1_1_polygon_feature.html" title="Represents a feature based around a polygon defining an area." alt="" coords="1186,659,1349,780"/>
+<area shape="rect" id="node1" title="Represents an individual feature within a Geojson definition." alt="" coords="616,5,795,500"/>
+<area shape="rect" id="node2" href="$classgeojson_1_1_collection_feature.html" title=" " alt="" coords="5,548,184,852"/>
+<area shape="rect" id="node3" href="$classgeojson_1_1_line_string_feature.html" title=" " alt="" coords="209,643,389,757"/>
+<area shape="rect" id="node4" href="$classgeojson_1_1_multi_line_string_feature.html" title=" " alt="" coords="413,636,592,764"/>
+<area shape="rect" id="node5" href="$classgeojson_1_1_multi_point_feature.html" title=" " alt="" coords="616,643,795,757"/>
+<area shape="rect" id="node6" href="$classgeojson_1_1_multi_polygon_feature.html" title=" " alt="" coords="819,643,1013,757"/>
+<area shape="rect" id="node7" href="$classgeojson_1_1_point_feature.html" title=" " alt="" coords="1038,643,1189,757"/>
+<area shape="rect" id="node8" href="$classgeojson_1_1_polygon_feature.html" title="Represents a feature based around a polygon defining an area." alt="" coords="1213,651,1379,749"/>
 </map>

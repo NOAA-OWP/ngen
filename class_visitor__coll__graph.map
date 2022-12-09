@@ -1,9 +1,9 @@
 <map id="Visitor" name="Visitor">
-<area shape="rect" id="node1" title=" " alt="" coords="71,528,137,708"/>
-<area shape="rect" id="node2" href="$classgeojson_1_1_feature_visitor.html" title="An abstract class used to operate on the children of FeatureBase." alt="" coords="5,300,160,465"/>
-<area shape="rect" id="node3" title=" " alt="" coords="184,344,344,421"/>
-<area shape="rect" id="node4" title=" " alt="" coords="162,160,241,237"/>
-<area shape="rect" id="node5" title=" " alt="" coords="139,5,263,97"/>
-<area shape="rect" id="node6" title=" " alt="" coords="265,160,377,237"/>
-<area shape="rect" id="node7" title=" " alt="" coords="302,13,341,90"/>
+<area shape="rect" id="node1" title=" " alt="" coords="71,431,141,588"/>
+<area shape="rect" id="node2" href="$classgeojson_1_1_feature_visitor.html" title="An abstract class used to operate on the children of FeatureBase." alt="" coords="5,225,164,368"/>
+<area shape="rect" id="node3" title=" " alt="" coords="188,277,352,317"/>
+<area shape="rect" id="node4" title=" " alt="" coords="165,123,247,163"/>
+<area shape="rect" id="node5" title=" " alt="" coords="142,5,270,60"/>
+<area shape="rect" id="node6" title=" " alt="" coords="272,123,388,163"/>
+<area shape="rect" id="node7" title=" " alt="" coords="311,13,349,53"/>
 </map>

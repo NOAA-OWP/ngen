@@ -1,16 +1,16 @@
 <map id="HY_CatchmentArea" name="HY_CatchmentArea">
-<area shape="rect" id="node1" title=" " alt="" coords="460,235,624,385"/>
-<area shape="rect" id="node4" href="$classrealization_1_1_catchment___formulation.html" title=" " alt="" coords="444,435,640,673"/>
-<area shape="rect" id="node2" href="$class_h_y___catchment_realization.html" title=" " alt="" coords="351,5,551,185"/>
-<area shape="rect" id="node3" href="$class_g_m___object.html" title=" " alt="" coords="575,49,690,141"/>
-<area shape="rect" id="node5" href="$class_simple___lumped___model___realization.html" title=" " alt="" coords="62,840,256,1284"/>
-<area shape="rect" id="node6" href="$classrealization_1_1_bmi___formulation.html" title="Abstraction of formulation with backing model object(s) that implements the BMI." alt="" coords="280,781,478,1343"/>
-<area shape="rect" id="node13" href="$classrealization_1_1_tshirt___c___realization.html" title=" " alt="" coords="502,723,712,1401"/>
-<area shape="rect" id="node14" href="$classrealization_1_1_tshirt___realization.html" title=" " alt="" coords="736,884,928,1240"/>
-<area shape="rect" id="node7" href="$classrealization_1_1_bmi___module___formulation.html" title=" " alt="" coords="23,2456,218,3399"/>
-<area shape="rect" id="node9" href="$classrealization_1_1_bmi___module___formulation.html" title=" " alt="" coords="282,2456,476,3399"/>
-<area shape="rect" id="node11" href="$classrealization_1_1_bmi___module___formulation.html" title="Abstraction of a formulation with a single backing model object that implements the BMI." alt="" coords="188,1451,383,2379"/>
-<area shape="rect" id="node12" href="$classrealization_1_1_bmi___multi___formulation.html" title="Abstraction of a formulation with multiple backing model object that implements the BMI." alt="" coords="458,1568,666,2261"/>
-<area shape="rect" id="node8" href="$classrealization_1_1_bmi___c___formulation.html" title=" " alt="" coords="27,3448,214,3731"/>
-<area shape="rect" id="node10" href="$classrealization_1_1_bmi___cpp___formulation.html" title="Encapsulates a bmi::Bmi model in C++ such that it can be loaded as a formulation, as such also so tha..." alt="" coords="286,3448,472,3731"/>
+<area shape="rect" id="node1" title=" " alt="" coords="425,227,589,369"/>
+<area shape="rect" id="node4" href="$classrealization_1_1_catchment___formulation.html" title=" " alt="" coords="409,419,605,649"/>
+<area shape="rect" id="node2" href="$class_h_y___catchment_realization.html" title=" " alt="" coords="316,5,516,177"/>
+<area shape="rect" id="node3" href="$class_g_m___object.html" title=" " alt="" coords="540,57,655,126"/>
+<area shape="rect" id="node5" href="$class_simple___lumped___model___realization.html" title=" " alt="" coords="14,816,213,1252"/>
+<area shape="rect" id="node6" href="$classrealization_1_1_bmi___formulation.html" title="Abstraction of formulation with backing model object(s) that implements the BMI." alt="" coords="237,757,435,1311"/>
+<area shape="rect" id="node13" href="$classrealization_1_1_tshirt___c___realization.html" title=" " alt="" coords="459,699,669,1369"/>
+<area shape="rect" id="node14" href="$classrealization_1_1_tshirt___realization.html" title=" " alt="" coords="693,860,885,1208"/>
+<area shape="rect" id="node7" href="$classrealization_1_1_bmi___module___formulation.html" title=" " alt="" coords="5,2416,200,3351"/>
+<area shape="rect" id="node9" href="$classrealization_1_1_bmi___module___formulation.html" title=" " alt="" coords="264,2416,459,3351"/>
+<area shape="rect" id="node11" href="$classrealization_1_1_bmi___module___formulation.html" title="Abstraction of a formulation with a single backing model object that implements the BMI." alt="" coords="171,1419,365,2339"/>
+<area shape="rect" id="node12" href="$classrealization_1_1_bmi___multi___formulation.html" title="Abstraction of a formulation with multiple backing model object that implements the BMI." alt="" coords="440,1536,648,2221"/>
+<area shape="rect" id="node8" href="$classrealization_1_1_bmi___c___formulation.html" title=" " alt="" coords="9,3400,196,3675"/>
+<area shape="rect" id="node10" href="$classrealization_1_1_bmi___cpp___formulation.html" title="Encapsulates a bmi::Bmi model in C++ such that it can be loaded as a formulation, as such also so tha..." alt="" coords="268,3400,455,3675"/>
 </map>

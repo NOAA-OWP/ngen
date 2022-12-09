@@ -1570,7 +1570,6 @@
             <topic label="GetVarType" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a3c386edbfd2f2efaf0a988d4dfe2f8e3"/>
             <topic label="GetVarUnits" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#af9480c18092311e95bc0fb263b906101"/>
             <topic label="Initialize" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a43ba9007b2536787eb95a330167068ff"/>
-            <topic label="Initialize" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#acf73770254a92bc6e6a565aafcf261b4"/>
             <topic label="Initialize" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a48f6705c514c7332edd8d59756ff7ca6"/>
             <topic label="inner_get_input_item_count" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#af842e9fa306ecfa967fe4cee07f4b5fa"/>
             <topic label="inner_get_output_item_count" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a06bbf0b8e0c99f860fc60679152269d5"/>
@@ -1662,7 +1661,6 @@
             <topic label="GetVarType" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a6a9f11b324fa7d84303f98636ba8fecf"/>
             <topic label="GetVarUnits" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a841e084e84ba0325b77e1a868c7407d6"/>
             <topic label="Initialize" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a43ba9007b2536787eb95a330167068ff"/>
-            <topic label="Initialize" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#acf73770254a92bc6e6a565aafcf261b4"/>
             <topic label="Initialize" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a48f6705c514c7332edd8d59756ff7ca6"/>
             <topic label="is_model_initialized" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a2902dc0ab6801565909137e72fd1f24a"/>
             <topic label="isInitialized" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ad2f092a3ad436e555199eba325333b0b"/>
@@ -3999,7 +3997,6 @@
             <topic label="GetVarType" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a3c386edbfd2f2efaf0a988d4dfe2f8e3"/>
             <topic label="GetVarUnits" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#af9480c18092311e95bc0fb263b906101"/>
             <topic label="Initialize" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a43ba9007b2536787eb95a330167068ff"/>
-            <topic label="Initialize" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#acf73770254a92bc6e6a565aafcf261b4"/>
             <topic label="Initialize" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a48f6705c514c7332edd8d59756ff7ca6"/>
             <topic label="inner_get_input_item_count" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#af842e9fa306ecfa967fe4cee07f4b5fa"/>
             <topic label="inner_get_output_item_count" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a06bbf0b8e0c99f860fc60679152269d5"/>
@@ -4091,7 +4088,6 @@
             <topic label="GetVarType" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a6a9f11b324fa7d84303f98636ba8fecf"/>
             <topic label="GetVarUnits" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a841e084e84ba0325b77e1a868c7407d6"/>
             <topic label="Initialize" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a43ba9007b2536787eb95a330167068ff"/>
-            <topic label="Initialize" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#acf73770254a92bc6e6a565aafcf261b4"/>
             <topic label="Initialize" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a48f6705c514c7332edd8d59756ff7ca6"/>
             <topic label="is_model_initialized" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a2902dc0ab6801565909137e72fd1f24a"/>
             <topic label="isInitialized" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ad2f092a3ad436e555199eba325333b0b"/>
@@ -6075,17 +6071,16 @@
         <topic label="models::bmi::Bmi_Adapter&lt; C &gt;" href="classmodels_1_1bmi_1_1_bmi___adapter.html">
           <topic label="models::bmi::AbstractCLibBmiAdapter&lt; C &gt;" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html"/>
         </topic>
-        <topic label="models::bmi::Bmi_Adapter&lt; C_Bmi &gt;" href="classmodels_1_1bmi_1_1_bmi___adapter.html">
+        <topic label="models::bmi::Bmi_Adapter&lt; C_Bmi &gt;" href="classmodels_1_1bmi_1_1_bmi___adapter.html"/>
+        <topic label="models::bmi::Bmi_Adapter&lt; Cpp_Bmi &gt;" href="classmodels_1_1bmi_1_1_bmi___adapter.html"/>
+        <topic label="models::bmi::Bmi_Adapter&lt; T &gt;" href="classmodels_1_1bmi_1_1_bmi___adapter.html">
           <topic label="models::bmi::AbstractCLibBmiAdapter&lt; C_Bmi &gt;" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html">
             <topic label="models::bmi::Bmi_C_Adapter" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html"/>
           </topic>
-        </topic>
-        <topic label="models::bmi::Bmi_Adapter&lt; Cpp_Bmi &gt;" href="classmodels_1_1bmi_1_1_bmi___adapter.html">
           <topic label="models::bmi::AbstractCLibBmiAdapter&lt; Cpp_Bmi &gt;" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html">
             <topic label="models::bmi::Bmi_Cpp_Adapter" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html"/>
           </topic>
         </topic>
-        <topic label="models::bmi::Bmi_Adapter&lt; T &gt;" href="classmodels_1_1bmi_1_1_bmi___adapter.html"/>
       </topic>
       <topic label="boost::dfs_visitor">
         <topic label="network::preorder_visitor&lt; OutputIterator &gt;" href="structnetwork_1_1preorder__visitor.html"/>

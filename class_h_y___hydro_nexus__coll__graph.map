@@ -1,10 +1,10 @@
 <map id="HY_HydroNexus" name="HY_HydroNexus">
-<area shape="rect" id="node1" title=" " alt="" coords="154,469,362,737"/>
-<area shape="rect" id="node2" title=" " alt="" coords="313,160,392,237"/>
-<area shape="rect" id="node7" title=" " alt="" coords="178,307,338,385"/>
-<area shape="rect" id="node3" title=" " alt="" coords="291,5,415,97"/>
-<area shape="rect" id="node4" title=" " alt="" coords="5,300,143,392"/>
-<area shape="rect" id="node5" title=" " alt="" coords="8,160,145,237"/>
-<area shape="rect" id="node6" title=" " alt="" coords="125,13,164,90"/>
-<area shape="rect" id="node8" title=" " alt="" coords="174,160,286,237"/>
+<area shape="rect" id="node1" title=" " alt="" coords="157,401,365,661"/>
+<area shape="rect" id="node2" title=" " alt="" coords="313,130,396,170"/>
+<area shape="rect" id="node7" title=" " alt="" coords="179,262,343,302"/>
+<area shape="rect" id="node3" title=" " alt="" coords="291,5,419,60"/>
+<area shape="rect" id="node4" title=" " alt="" coords="5,240,147,324"/>
+<area shape="rect" id="node5" title=" " alt="" coords="7,123,148,177"/>
+<area shape="rect" id="node6" title=" " alt="" coords="123,13,162,53"/>
+<area shape="rect" id="node8" title=" " alt="" coords="173,130,289,170"/>
 </map>
