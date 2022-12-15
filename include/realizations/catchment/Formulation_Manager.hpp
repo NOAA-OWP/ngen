@@ -246,19 +246,18 @@ namespace realization {
             }
 
 #ifdef NETCDF_ACTIVE
-            void close_nc_file()
+        void close_nc_file()
+        {
+            for (auto const& fmap: formulations)
             {
-                for (std::vector<std::shared_ptr<Catchment_Formulation>>::iterator it = missing_formulation_vec.begin(); it != missing_formulation_vec.end(); ++it)
-                {
-                    if (it == missing_formulation_vec.begin()) {
-                        if (((*it)->get_forcing()->get_nc_file()) != nullptr) {
-                            (*it)->get_forcing()->get_nc_file()->close();
-                        }
-                    }
+                if (fmap.second->get_forcing()->get_nc_file() != nullptr) {
+                    fmap.second->get_forcing()->get_nc_file()->close();
+                } else {
+                    continue;
                 }
             }
+        }
 #endif
-
 
         protected:
             std::shared_ptr<Catchment_Formulation> construct_formulation_from_tree(
@@ -332,14 +331,12 @@ namespace realization {
                 forcing_params forcing_config = this->get_global_forcing_params(identifier, simulation_time_config);
 
                 std::shared_ptr<Catchment_Formulation> missing_formulation = construct_formulation(formulation_type_key, identifier, forcing_config, output_stream);
-                missing_formulation_vec.push_back(missing_formulation);
                 // Need to work with a copy, since it is altered in-place
                 geojson::PropertyMap global_properties_copy = global_formulation_parameters;
                 Catchment_Formulation::config_pattern_substitution(global_properties_copy,
                                                                    BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG, "{{id}}",
                                                                    identifier);
                 missing_formulation->create_formulation(global_properties_copy);
-                //missing_formulation->forcing->get_nc_file()->close();
                 return missing_formulation;
             }
 
@@ -458,8 +455,6 @@ namespace realization {
             geojson::PropertyMap global_forcing;
 
             std::map<std::string, std::shared_ptr<Catchment_Formulation>> formulations;
-
-            std::vector<std::shared_ptr<Catchment_Formulation>> missing_formulation_vec;
 
             std::shared_ptr<routing_params> routing_config;
 
