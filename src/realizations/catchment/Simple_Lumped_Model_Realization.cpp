@@ -121,13 +121,7 @@ double Simple_Lumped_Model_Realization::get_response(time_step_t t_index, time_s
     }
 
     double precip;
-    const std::string forcing_name = CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE;
-    try {
-        precip = this->forcing->get_value(CatchmentAggrDataSelector(this->id, CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, t_current, t_delta_s, ""), data_access::SUM);
-    }
-    catch (const std::exception& e){
-        precip = this->forcing->get_value(CatchmentAggrDataSelector(this->id, CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, t_current, t_delta_s, ""), data_access::SUM);
-    }
+    precip = this->forcing->get_value(CatchmentAggrDataSelector(this->id, CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, t_current, t_delta_s, ""), data_access::SUM);
     add_time(t_index+1, params.n);
     //FIXME should this run "daily" or hourly (t) which should really be dt
     //Do we keep an "internal dt" i.e. this->dt and reconcile with t?
