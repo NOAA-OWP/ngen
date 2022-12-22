@@ -63,6 +63,16 @@ namespace data_access
             return p;
         }
 
+        /**
+         * @brief Cleanup the shared providers cache, ensuring that the files get closed.
+         */
+        static void cleanup_shared_providers()
+        {
+            const std::lock_guard<std::mutex> lock(shared_providers_mutex);
+            // First lets try just emptying the map... if all goes well, everything will destruct properly on its own...
+            shared_providers.clear();
+        }
+
         NetCDFPerFeatureDataProvider(std::string input_path, time_t sim_start, time_t sim_end,  utils::StreamHandler log_s) : log_stream(log_s), value_cache(20),
             sim_start_date_time_epoch(sim_start),
             sim_end_date_time_epoch(sim_end)

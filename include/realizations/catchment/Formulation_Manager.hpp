@@ -44,7 +44,11 @@ namespace realization {
                 this->tree = loaded_tree;
             }
 
-            virtual ~Formulation_Manager(){};
+            virtual ~Formulation_Manager(){
+#ifdef NETCDF_ACTIVE
+                data_access::NetCDFPerFeatureDataProvider::cleanup_shared_providers();
+#endif
+            };
 
             virtual void read(geojson::GeoJSON fabric, utils::StreamHandler output_stream) {
                 //TODO seperate the parsing of configuration options like time
