@@ -297,23 +297,100 @@ namespace realization {
                     throw std::runtime_error(message);
                 }
 
-                std::string provider = "";
-                if(forcing_parameters.has_key("provider")){
-                    provider = forcing_parameters.at("provider").as_string();
-                } else if(this->global_forcing.count("provider") != 0){
-                    provider = global_forcing.at("provider").as_string();
-                }
-                forcing_params forcing_config(
-                    forcing_parameters.at("path").as_string(),
-                    provider,
-                    simulation_time_config.start_time,
-                    simulation_time_config.end_time
-                );
+                std::regex pattern("");
+                std::string path = "";
+                if(forcing_parameters.has_key("file_pattern")) {
+                    if (forcing_parameters.has_key("path")) {
+                        path = forcing_parameters.at("path").as_string();
+                    }
 
-                std::shared_ptr<Catchment_Formulation> constructed_formulation = construct_formulation(formulation_type_key, identifier, forcing_config, output_stream);
-                //, geometry);
-                constructed_formulation->create_formulation(formulation_config, &global_formulation_parameters);
-                return constructed_formulation;
+                    // See get_global_forcing_params() function for detailed comments
+                    if (path.compare(path.size() - 1, 1, "/") != 0) {
+                        path += "/";
+                    }
+                    std::string filepattern = forcing_parameters.at("file_pattern").as_string();
+                    int id_index = filepattern.find("{{id}}");
+                    if (id_index != std::string::npos) {
+                        filepattern = filepattern.replace(id_index, sizeof("{{id}}") - 1, identifier);
+                    }
+                    std::regex pattern(filepattern);
+
+                    // A stream providing the functions necessary for evaluating a directory:
+                    //    https://www.gnu.org/software/libc/manual/html_node/Opening-a-Directory.html#Opening-a-Directory
+                    DIR *directory = nullptr;
+
+                    // structure representing the member of a directory: https://www.gnu.org/software/libc/manual/html_node/Directory-Entries.html
+                    struct dirent *entry = nullptr;
+
+                    // Attempt to open the directory for evaluation
+                    directory = opendir(path.c_str());
+
+                    std::string errMsg;
+                    size_t attemptCount = 0;
+                    std::string err_num = check_opendir(path, errMsg);
+                    if (err_num == "") {
+                        directory = opendir(path.c_str());
+
+                        // Allow for a few retries in certain failure situations
+                        while (directory == nullptr && attemptCount++ < 5) {
+                            sleep(2);
+                            directory = opendir(path.c_str());
+                        }
+                    }
+
+                    std::string provider = "";
+                    if(forcing_parameters.has_key("provider")){
+                        provider = forcing_parameters.at("provider").as_string();
+                    } else if(this->global_forcing.count("provider") != 0){
+                        provider = global_forcing.at("provider").as_string();
+                    }
+
+                    // If the directory could be found and opened, we can go ahead and iterate
+                    if (directory != nullptr) {
+                        while ((entry = readdir(directory))) {
+                            // If the entry is a regular file or symlink AND the name matches the pattern,
+                            //    we can consider this ready to be interpretted as valid forcing data (even if it isn't)
+                            if ((entry->d_type == DT_REG or entry->d_type == DT_LNK) and std::regex_match(entry->d_name, pattern)) {
+                            forcing_params forcing_config(
+                                    path + entry->d_name,
+                                    provider,
+                                    simulation_time_config.start_time,
+                                    simulation_time_config.end_time
+                                );
+                            std::shared_ptr<Catchment_Formulation> constructed_formulation = construct_formulation(formulation_type_key, identifier, forcing_config, output_stream);
+                            constructed_formulation->create_formulation(formulation_config, &global_formulation_parameters);
+                            return constructed_formulation;
+                            }
+                        }
+                    }
+                    else {
+                        // The directory wasn't found or otherwise couldn't be opened; forcing data cannot be retrieved
+                        throw std::runtime_error("Error opening forcing data dir '" + path + "' after " + std::to_string(attemptCount) + " attempts: " + errMsg);
+                    }
+                    closedir(directory);
+
+                } else { //case for no file_pattern follows
+
+                    std::string provider = "";
+                    if(forcing_parameters.has_key("provider")){
+                        provider = forcing_parameters.at("provider").as_string();
+                    } else if(this->global_forcing.count("provider") != 0){
+                        provider = global_forcing.at("provider").as_string();
+                    }
+                    forcing_params forcing_config(
+                        forcing_parameters.at("path").as_string(),
+                        provider,
+                        simulation_time_config.start_time,
+                        simulation_time_config.end_time
+                    );
+
+                    std::shared_ptr<Catchment_Formulation> constructed_formulation = construct_formulation(formulation_type_key, identifier, forcing_config, output_stream);
+                    //, geometry);
+                    constructed_formulation->create_formulation(formulation_config, &global_formulation_parameters);
+                    return constructed_formulation;
+                }
+
+                throw std::runtime_error("formulation could not be created for '" + identifier + "'");
             }
 
             std::shared_ptr<Catchment_Formulation> construct_missing_formulation(std::string identifier, utils::StreamHandler output_stream, simulation_time_params &simulation_time_config){
@@ -374,9 +451,61 @@ namespace realization {
 
                 // Attempt to open the directory for evaluation
                 directory = opendir(path.c_str());
+
+                std::string errMsg;
+                size_t attemptCount = 0;
+                //Test that the directory can be opened
+                std::string err_num = check_opendir(path, errMsg);
+
+                //Upon successful validation, open the directory for reading
+                if (err_num  == "") {
+                    directory = opendir(path.c_str());
+
+                    // Allow for a few retries in certain failure situations
+                    while (directory == nullptr && attemptCount++ < 5) {
+                        sleep(2);
+                        directory = opendir(path.c_str());
+                    }
+                }
+
+                // If the directory could be found and opened, we can go ahead and iterate
+                if (directory != nullptr) {
+                    while ((entry = readdir(directory))) {
+                        // If the entry is a regular file or symlink AND the name matches the pattern, 
+                        //    we can consider this ready to be interpretted as valid forcing data (even if it isn't)
+                        if ((entry->d_type == DT_REG or entry->d_type == DT_LNK) and std::regex_match(entry->d_name, pattern)) {
+                            return forcing_params(
+                                path + entry->d_name,
+                                provider,
+                                simulation_time_config.start_time,
+                                simulation_time_config.end_time
+                            );
+                        }
+                    }
+                }
+                else {
+                    // The directory wasn't found or otherwise couldn't be opened; forcing data cannot be retrieved
+                    throw std::runtime_error("Error opening forcing data dir '" + path + "' after " + std::to_string(attemptCount) + " attempts: " + errMsg);
+                }
+
+                closedir(directory);
+
+                throw std::runtime_error("Forcing data could not be found for '" + identifier + "'");
+            }
+
+            std::string check_opendir(std::string path, std::string &errMsg) {
+                // A stream providing the functions necessary for evaluating a directory:
+                //    https://www.gnu.org/software/libc/manual/html_node/Opening-a-Directory.html#Opening-a-Directory
+                DIR *directory = nullptr;
+
+                // structure representing the member of a directory: https://www.gnu.org/software/libc/manual/html_node/Directory-Entries.html
+                struct dirent *entry = nullptr;
+
+                // Attempt to open the directory for evaluation
+                directory = opendir(path.c_str());
                 // Allow for a few retries in certain failure situations
                 size_t attemptCount = 0;
-                std::string errMsg;
+                //std::string errMsg;
                 while (directory == nullptr && attemptCount++ < 5) {
                     // For several error codes, we should break immediately and not retry
                     if (errno == ENOENT) {
@@ -411,30 +540,8 @@ namespace realization {
                     directory = opendir(path.c_str());
                     errMsg = "Received system error number " + std::to_string(errno);
                 }
-
-                // If the directory could be found and opened, we can go ahead and iterate
-                if (directory != nullptr) {
-                    while ((entry = readdir(directory))) {
-                        // If the entry is a regular file or symlink AND the name matches the pattern, 
-                        //    we can consider this ready to be interpretted as valid forcing data (even if it isn't)
-                        if ((entry->d_type == DT_REG or entry->d_type == DT_LNK) and std::regex_match(entry->d_name, pattern)) {
-                            return forcing_params(
-                                path + entry->d_name,
-                                provider,
-                                simulation_time_config.start_time,
-                                simulation_time_config.end_time
-                            );
-                        }
-                    }
-                }
-                else {
-                    // The directory wasn't found or otherwise couldn't be opened; forcing data cannot be retrieved
-                    throw std::runtime_error("Error opening forcing data dir '" + path + "' after " + std::to_string(attemptCount) + " attempts: " + errMsg);
-                }
-
                 closedir(directory);
-
-                throw std::runtime_error("Forcing data could not be found for '" + identifier + "'");
+                return std::to_string(errno);
             }
 
             boost::property_tree::ptree tree;
