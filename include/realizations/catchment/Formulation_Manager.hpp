@@ -297,18 +297,15 @@ namespace realization {
                     throw std::runtime_error(message);
                 }
 
-                std::string provider = "";
-                if(forcing_parameters.has_key("provider")){
-                    provider = forcing_parameters.at("provider").as_string();
-                } else if(this->global_forcing.count("provider") != 0){
-                    provider = global_forcing.at("provider").as_string();
+                geojson::PropertyMap local_forcing;
+                for (auto &forcing_parameter : *possible_forcing) {
+                    local_forcing.emplace(
+                        forcing_parameter.first,
+                        geojson::JSONProperty(forcing_parameter.first, forcing_parameter.second)
+                    );
                 }
-                forcing_params forcing_config(
-                    forcing_parameters.at("path").as_string(),
-                    provider,
-                    simulation_time_config.start_time,
-                    simulation_time_config.end_time
-                );
+
+                forcing_params forcing_config = this->get_forcing_params(local_forcing, identifier, simulation_time_config);
 
                 std::shared_ptr<Catchment_Formulation> constructed_formulation = construct_formulation(formulation_type_key, identifier, forcing_config, output_stream);
                 //, geometry);
@@ -319,7 +316,7 @@ namespace realization {
             std::shared_ptr<Catchment_Formulation> construct_missing_formulation(std::string identifier, utils::StreamHandler output_stream, simulation_time_params &simulation_time_config){
                 std::string formulation_type_key = get_formulation_key(global_formulation_tree.get_child("formulations.."));
 
-                forcing_params forcing_config = this->get_global_forcing_params(identifier, simulation_time_config);
+                forcing_params forcing_config = this->get_forcing_params(this->global_forcing, identifier, simulation_time_config);
 
                 std::shared_ptr<Catchment_Formulation> missing_formulation = construct_formulation(formulation_type_key, identifier, forcing_config, output_stream);
                 // Need to work with a copy, since it is altered in-place
@@ -331,13 +328,13 @@ namespace realization {
                 return missing_formulation;
             }
 
-            forcing_params get_global_forcing_params(std::string identifier, simulation_time_params &simulation_time_config) {
-                std::string path = this->global_forcing.at("path").as_string();
+            forcing_params get_forcing_params(geojson::PropertyMap &forcing_prop_map, std::string identifier, simulation_time_params &simulation_time_config) {
+                std::string path = forcing_prop_map.at("path").as_string();
                 std::string provider = "";
-                if(this->global_forcing.count("provider") != 0){
-                    provider = global_forcing.at("provider").as_string();
+                if(forcing_prop_map.count("provider") != 0){
+                    provider = forcing_prop_map.at("provider").as_string();
                 }
-                if (this->global_forcing.count("file_pattern") == 0) {
+                if (forcing_prop_map.count("file_pattern") == 0) {
                     return forcing_params(
                         path,
                         provider,
@@ -351,7 +348,7 @@ namespace realization {
                     path += "/";
                 }
 
-                std::string filepattern = this->global_forcing.at("file_pattern").as_string();
+                std::string filepattern = forcing_prop_map.at("file_pattern").as_string();
 
                 int id_index = filepattern.find("{{id}}");
 
