@@ -38,8 +38,24 @@ def stage_routing_config(hydrofabric, workdir: Path):
     with open(workdir/'test_routing_config.yaml', 'w') as test_file:
         yaml.dump(template, test_file)
 
+def make_x_walk(hydrofabric):
+    """
+
+    Args:
+        hydrofabric (_type_): _description_
+    """
+    attributes = gpd.read_file(hydrofabric, layer="flowpath_attributes").set_index('id')
+    x_walk = pd.Series( attributes[ ~ attributes['rl_gages'].isna() ]['rl_gages'] )
+    
+    data = {}
+    for wb, gage in x_walk.items():
+        data[wb] = {'Gage_no':[gage]}
+    import json
+    with open('crosswalk.json', 'w') as fp:
+        json.dump(data, fp, indent=2)
+
 def make_geojson(hydrofabric: Path):
-    """Create the various required geojson/json files form the geopkg
+    """Create the various required geojson/json files from the geopkg
 
     Args:
         hydrofabric (Path): path to hydrofabric geopkg
@@ -49,6 +65,7 @@ def make_geojson(hydrofabric: Path):
         nexuses = gpd.read_file(hydrofabric, layer="nexus")
         flowpaths = gpd.read_file(hydrofabric, layer="flowpaths")
         edge_list = pd.DataFrame(gpd.read_file(hydrofabric, layer="flowpath_edge_list").drop(columns='geometry'))
+        make_x_walk(hydrofabric)
         catchments.to_file("catchments.geojson")
         nexuses.to_file("nexus.geojson")
         flowpaths.to_file("flowpaths.geojson")
