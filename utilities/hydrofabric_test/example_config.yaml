@@ -8,6 +8,9 @@ general:
   #hydrofabric: s3://nextgen-hydrofabric/pre-release/subsets_sample/
   #hydrofabric: s3://nextgen-hydrofabric/pre-release/subsets_sample/gauge_01011000.gpkg
   hydrofabric: ~/Downloads/gauge_01089100.gpkg
+  #hydrofabric: s3://nextgen-hydrofabric/pre-release/subsets_sample/gauge_01089100.gpkg #BROKEN
+  #hydrofabric: s3://nextgen-hydrofabric/calibration/subsets_sample/gauge_01089100.gpkg
+  #hydrofabric: s3://nextgen-hydrofabric/v1.1/camels/VPU01/gauge_01134500.gpkg
   realization: none
   forcing:
     provider: CsvPerFeature
