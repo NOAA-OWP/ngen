@@ -11,7 +11,7 @@
 
 module iso_c_bmif_2_0
   use bmif_2_0_iso
-  use, intrinsic :: iso_c_binding, only: c_ptr, c_loc, c_f_pointer, c_char, c_null_char, c_int, c_double, c_float
+  use, intrinsic :: iso_c_binding, only: c_ptr, c_loc, c_f_pointer, c_char, c_null_char, c_int, c_double, c_float, c_null_ptr
   implicit none
 
   type box
@@ -440,6 +440,72 @@ module iso_c_bmif_2_0
       deallocate(f_str)
     end function get_value_double
 
+    ! Get a reference to the given integer variable.
+    function get_value_ptr_int(this, name, dest_ptr) result(bmi_status) bind(C, name="get_value_ptr_int")
+      type(c_ptr) :: this
+      type(c_ptr) :: dest_ptr
+      character(kind=c_char, len=1), dimension(BMI_MAX_COMPONENT_NAME), intent(in) :: name
+      integer(kind=c_int) :: bmi_status
+
+      dest_ptr = c_null_ptr
+      bmi_status = BMI_FAILURE
+    end function get_value_ptr_int
+
+    ! Get a reference to the given float variable.
+    function get_value_ptr_float(this, name, dest_ptr) result(bmi_status) bind(C, name="get_value_ptr_float")
+      type(c_ptr) :: this
+      type(c_ptr) :: dest_ptr
+      character(kind=c_char, len=1), dimension(BMI_MAX_COMPONENT_NAME), intent(in) :: name
+      integer(kind=c_int) :: bmi_status
+
+      dest_ptr = c_null_ptr
+      bmi_status = BMI_FAILURE
+    end function get_value_ptr_float
+
+    ! Get a reference to the given double variable.
+    function get_value_ptr_double(this, name, dest_ptr) result(bmi_status) bind(C, name="get_value_ptr_double")
+      type(c_ptr) :: this
+      type(c_ptr) :: dest_ptr
+      character(kind=c_char, len=1), dimension(BMI_MAX_COMPONENT_NAME), intent(in) :: name
+      integer(kind=c_int) :: bmi_status
+
+      dest_ptr = c_null_ptr
+      bmi_status = BMI_FAILURE
+    end function get_value_ptr_double
+
+    ! Get integer values at particular (one-dimensional) indices.
+    function get_value_at_indices_int(this, name, dest, inds) result(bmi_status) bind(C, name="get_value_at_indices_int")
+      type(c_ptr) :: this
+      character(kind=c_char, len=1), dimension(BMI_MAX_COMPONENT_NAME), intent(in) :: name
+      integer(kind=c_int), intent(inout) :: dest(*)
+      integer(kind=c_int), intent(in) :: inds(*)
+      integer(kind=c_int) :: bmi_status
+
+      bmi_status = BMI_FAILURE
+    end function get_value_at_indices_int
+
+    ! Get real values at particular (one-dimensional) indices.
+    function get_value_at_indices_float(this, name, dest, inds) result(bmi_status) bind(C, name="get_value_at_indices_float")
+      type(c_ptr) :: this
+      character(kind=c_char, len=1), dimension(BMI_MAX_COMPONENT_NAME), intent(in) :: name
+      real(kind=c_float), intent(inout) :: dest(*)
+      integer(kind=c_int), intent(in) :: inds(*)
+      integer(kind=c_int) :: bmi_status
+
+      bmi_status = BMI_FAILURE
+    end function get_value_at_indices_float
+
+    ! Get real values at particular (one-dimensional) indices.
+    function get_value_at_indices_double(this, name, dest, inds) result(bmi_status) bind(C, name="get_value_at_indices_double")
+      type(c_ptr) :: this
+      character(kind=c_char, len=1), dimension(BMI_MAX_COMPONENT_NAME), intent(in) :: name
+      real(kind=c_double), intent(inout) :: dest(*)
+      integer(kind=c_int), intent(in) :: inds(*)
+      integer(kind=c_int) :: bmi_status
+
+      bmi_status = BMI_FAILURE
+    end function get_value_at_indices_double
+
     ! Set new values for an integer model variable.
     function set_value_int(this, name, src) result(bmi_status) bind(C, name="set_value_int")
       type(c_ptr) :: this
@@ -504,6 +570,39 @@ module iso_c_bmif_2_0
       bmi_status = bmi_box%ptr%set_value_double(f_str, src(:num_items))
       deallocate(f_str)
     end function set_value_double
+
+    ! Set integer values at particular (one-dimensional) indices.
+    function set_value_at_indices_int(this, name, inds, src) result(bmi_status) bind(C, name="set_value_at_indices_int")
+      type(c_ptr) :: this
+      character(kind=c_char, len=1), dimension(BMI_MAX_COMPONENT_NAME), intent(in) :: name
+      integer(kind=c_int), intent(in) :: inds(*)
+      integer(kind=c_int), intent(in) :: src(*)
+      integer(kind=c_int) :: bmi_status
+
+      bmi_status = BMI_FAILURE
+    end function set_value_at_indices_int
+
+    ! Set real values at particular (one-dimensional) indices.
+    function set_value_at_indices_float(this, name, inds, src) result(bmi_status) bind(C, name="set_value_at_indices_float")
+      type(c_ptr) :: this
+      character(kind=c_char, len=1), dimension(BMI_MAX_COMPONENT_NAME), intent(in) :: name
+      integer(kind=c_int), intent(in) :: inds(*)
+      real(kind=c_float), intent(in) :: src(*)
+      integer(kind=c_int) :: bmi_status
+
+      bmi_status = BMI_FAILURE
+    end function set_value_at_indices_float
+
+    ! Set double values at particular (one-dimensional) indices.
+    function set_value_at_indices_double(this, name, inds, src) result(bmi_status) bind(C, name="set_value_at_indices_double")
+      type(c_ptr) :: this
+      character(kind=c_char, len=1), dimension(BMI_MAX_COMPONENT_NAME), intent(in) :: name
+      integer(kind=c_int), intent(in) :: inds(*)
+      real(kind=c_double), intent(in) :: src(*)
+      integer(kind=c_int) :: bmi_status
+
+      bmi_status = BMI_FAILURE
+    end function set_value_at_indices_double
 
     ! Get number of dimensions of the computational grid.
     function get_grid_rank(this, grid, rank) result(bmi_status) bind(C, name="get_grid_rank")
