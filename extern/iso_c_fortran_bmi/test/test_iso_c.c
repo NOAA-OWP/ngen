@@ -26,9 +26,18 @@ extern get_time_step(void*, double *);
 extern get_value_int(void*, char*, int*);
 extern get_value_float(void*, char*, float*);
 extern get_value_double(void*, char*, double*);
+extern get_value_ptr_int(void*, char*, int*);
+extern get_value_ptr_float(void*, char*, float*);
+extern get_value_ptr_double(void*, char*, double*);
+extern get_value_at_indices_int(void*, char*, int*, int*);
+extern get_value_at_indices_float(void*, char*, float*, int*);
+extern get_value_at_indices_double(void*, char*, double*, int*);
 extern set_value_int(void*, char*, int*);
 extern set_value_float(void*, char*, float*);
 extern set_value_double(void*, char*, double*);
+extern set_value_at_indices_int(void*, char*, int*, int*);
+extern set_value_at_indices_float(void*, char*, int*, float*);
+extern set_value_at_indices_double(void*, char*, int*, double*);
 extern get_grid_rank(void*, int*, int*);
 extern get_grid_size(void*, int*, int*);
 extern get_grid_type(void*, int*, char*);
@@ -47,6 +56,7 @@ extern get_grid_face_nodes(void*, int*, int*);
 extern get_grid_nodes_per_face(void*, int*, int*);
 
 int BMI_SUCCESS = 0;
+int BMI_FAILURE = 1;
 int BMI_MAX_VAR_NAME = 2048;
 
 void check_status(int* status, char* name){
@@ -57,6 +67,17 @@ void check_status(int* status, char* name){
     else{
         printf("FAILURE\n");
         exit(*status);
+    }
+}
+
+void check_failure(int* status, char* name) {
+    printf("%s: ", name);
+    if( *status == BMI_FAILURE ){
+        printf("EXPECTED FAILURE\n");
+    }
+    else {
+        printf("FAILURE TO FAIL\n");
+        exit(-1);
     }
 }
 
@@ -204,6 +225,42 @@ int main(int argc, char** argv)
     printf("get_value_double INPUT_VAR_1: %f\n", value_d);
     check_status(&status, "get_value_double");
 
+    value = -2;
+    int *value_ptr = &value;
+    status = get_value_ptr_int(&bmi_handle, "INPUT_VAR_3", value_ptr);
+    printf("get_value_ptr_int: %d\n", value_ptr);
+    check_failure(&status, "get_value_ptr_int");
+
+    value_f = -2.0;
+    float *value_ptr_f = &value_f;
+    status = get_value_ptr_float(&bmi_handle, "INPUT_VAR_2", value_ptr_f);
+    printf("get_value_ptr_float: %d\n", value_ptr_f);
+    check_failure(&status, "get_value_ptr_float");
+
+    value_d = 2.0;
+    double *value_ptr_d = &value_d;
+    status = get_value_ptr_double(&bmi_handle, "INPUT_VAR_1", value_ptr_d);
+    printf("get_value_ptr_double: %d\n", value_ptr_d);
+    check_failure(&status, "get_value_ptr_double");
+
+    value = -2;
+    int indices = 10;
+    status = get_value_at_indices_int(&bmi_handle, "INPUT_VAR_3", &value, &indices);
+    printf("get_value_at_indices_int: %d, %d\n", value, indices);
+    check_failure(&status, "get_value_at_indices_int");
+
+    value_f = -2.0;
+    indices = 20;
+    status = get_value_at_indices_float(&bmi_handle, "INPUT_VAR_2", &value_f, &indices);
+    printf("get_value_at_indices_float: %f, %d\n", value_f, indices);
+    check_failure(&status, "get_value_at_indices_float");
+
+    value_d = 2.0;
+    indices = 30;
+    status = get_value_at_indices_double(&bmi_handle, "INPUT_VAR_1", &value_d, &indices);
+    printf("get_value_at_indices_double: %f, %d\n", value_d, indices);
+    check_failure(&status, "get_value_at_indices_double");
+
     value = 2;
     status = set_value_int(&bmi_handle, "INPUT_VAR_3", &value);
     printf("set_value_int: %d\n", value);
@@ -222,6 +279,24 @@ int main(int argc, char** argv)
     status = set_value_double(&bmi_handle, "INPUT_VAR_1", &value_d);
     printf("set_value_double INPUT_VAR_1: %f\n", value_d);
     check_status(&status, "set_value_double");
+
+    value = -2;
+    indices = 10;
+    status = set_value_at_indices_int(&bmi_handle, "INPUT_VAR_3", &indices, &value);
+    printf("set_value_at_indices_int: %d, %d\n", value, indices);
+    check_failure(&status, "set_value_at_indices_int");
+
+    value_f = -2.0;
+    indices = 20;
+    status = set_value_at_indices_float(&bmi_handle, "INPUT_VAR_2", &indices, &value_f);
+    printf("set_value_at_indices_float: %f, %d\n", value_f, indices);
+    check_failure(&status, "set_value_at_indices_float");
+
+    value_d = 2.0;
+    indices = 30;
+    status = set_value_at_indices_double(&bmi_handle, "INPUT_VAR_1", &indices, &value_d);
+    printf("set_value_at_indices_double: %f, %d\n", value_d, indices);
+    check_failure(&status, "set_value_at_indices_double");
 
     int rank = -2;
     grid = 0;
