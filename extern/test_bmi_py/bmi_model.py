@@ -10,6 +10,7 @@ import pandas as pd
 import yaml
 from bmipy import Bmi
 
+from bmi_grid import Grid, GridType
 # Here is the model we want to run
 from model import ngen_model
 
@@ -26,6 +27,15 @@ class bmi_model(Bmi):
         self._model = None
         self.var_array_lengths = 1
 
+        self.grid_0: Grid = Grid(0, 0, GridType.scalar) #Grid 0 is a 0 dimension "grid" for scalars
+        self.grid_1: Grid = Grid(1, 2, GridType.uniform_rectilinear) #Grid 1 is a 2 dimensional grid
+
+        self._grids = [self.grid_0, self.grid_1]
+
+        #TODO this can be done more elegantly using a more coherent data structure representing a BMI variable
+        self._grid_map = {'INPUT_VAR_1': self.grid_0, 'INPUT_VAR_2': self.grid_0, 'GRID_VAR_1': self.grid_1,
+                          'OUTPUT_VAR_1': self.grid_0, 'OUTPUT_VAR_2': self.grid_0, 'OUTPUT_VAR_3': self.grid_0,
+                          'GRID_VAR_2': self.grid_1}
     #----------------------------------------------
     # Required, static attributes of the model
     #----------------------------------------------
@@ -33,21 +43,24 @@ class bmi_model(Bmi):
         'model_name':         'Test Python model for Next Generation NWM',
         'version':            '1.0',
         'author_name':        'Jonathan Martin Frame',
-        'grid_type':          'scalar',
+        'grid_type':          'scalar&uniform_rectilinear',
         'time_units':         'seconds',
                }
 
     #---------------------------------------------
     # Input variable names (CSDMS standard names)
     #---------------------------------------------
-    _input_var_names = ['INPUT_VAR_1', 'INPUT_VAR_2']
-
+    #will use these implicitly for grid meta data, could in theory advertise them???
+    #grid_1_shape, grid_1_size, grid_1_origin
+    _input_var_names = ['INPUT_VAR_1', 'INPUT_VAR_2', 'GRID_VAR_1']
     _input_var_types = {'INPUT_VAR_1': float, 'INPUT_VAR_2': np.int32}
 
     #---------------------------------------------
     # Output variable names (CSDMS standard names)
     #---------------------------------------------
-    _output_var_names = ['OUTPUT_VAR_1', 'OUTPUT_VAR_2', 'OUTPUT_VAR_3']
+    #will use these implicitly for grid meta data, could in theory advertise them?
+    # grid_1_rank -- could probably establish a pattern grid_{id}_rank for managing different ones?
+    _output_var_names = ['OUTPUT_VAR_1', 'OUTPUT_VAR_2', 'OUTPUT_VAR_3', 'GRID_VAR_2']
 
     #------------------------------------------------------
     # Create a Python dictionary that maps CSDMS Standard
@@ -61,6 +74,8 @@ class bmi_model(Bmi):
                            'OUTPUT_VAR_1':['OUTPUT_VAR_1','-'],
                            'OUTPUT_VAR_2':['OUTPUT_VAR_2','-'],
                            'OUTPUT_VAR_3':['OUTPUT_VAR_3','-'],
+                           'GRID_VAR_1':['OUTPUT_VAR_1','-'],
+                           'GRID_VAR_2':['GRID_VAR_2','-'],
                             }
 
     #------------------------------------------------------
