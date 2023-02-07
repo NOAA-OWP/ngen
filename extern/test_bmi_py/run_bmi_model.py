@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import numpy as np
-
+np.set_printoptions(precision=2)
 # This is the BMI LSTM that we will be running
 from bmi_model import bmi_model
 
@@ -33,13 +33,12 @@ def execute():
         #########################################
 
         # PRINT THE MODEL RESULTS FOR THIS TIME STEP#################################################
-        print('{:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}'.format(model.get_current_time(),
-                                                                 model.get_value('INPUT_VAR_1'),
-                                                                 model.get_value('INPUT_VAR_2'),
-                                                                 model.get_value('OUTPUT_VAR_1'),
-                                                                 model.get_value('OUTPUT_VAR_2'),
-                                                                 model.get_value('OUTPUT_VAR_3')))
-
+    print('IN 1:{}, IN 2:{}, OUT 1:{}, OUT 2{}, OUT 3{}'.format(model.get_current_time(),
+                                                                model.get_value('INPUT_VAR_1', np.zeros(0)),
+                                                                model.get_value('INPUT_VAR_2',np.zeros(0)),
+                                                                model.get_value('OUTPUT_VAR_1',np.zeros(0)),
+                                                                model.get_value('OUTPUT_VAR_2',np.zeros(0)),
+                                                                model.get_value('OUTPUT_VAR_3',np.zeros(3))))
 
     # Finalizing the BMI
     print('Finalizing the BMI')
