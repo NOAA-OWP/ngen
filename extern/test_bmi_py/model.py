@@ -27,5 +27,5 @@ class ngen_model():
         model['OUTPUT_VAR_1'] = model['INPUT_VAR_1']
         model['OUTPUT_VAR_2'] = 2.0 * model['INPUT_VAR_2']
         model['OUTPUT_VAR_3'] += 1
-
+        model['GRID_VAR_2'] = model['GRID_VAR_1'] + 1
         model['current_model_time'] = model['current_model_time'] + dt
