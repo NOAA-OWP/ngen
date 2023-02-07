@@ -216,7 +216,14 @@ class bmi_model(Bmi):
         array_like
             Copy of values.
         """
-        dest[:] = self.get_value_ptr(var_name)
+        if var_name == "grid:count":
+            dest[...] = 2
+        elif var_name == "grid:ids":
+            dest[:] = [self.grid_0.id, self.grid_1.id]
+        elif var_name == "grid:ranks":
+            dest[:] = [self.grid_0.rank, self.grid_1.rank]
+        else:
+            dest = self.get_value_ptr(var_name)
         return dest
 
     #-------------------------------------------------------------------
