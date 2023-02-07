@@ -276,7 +276,10 @@ class bmi_model(Bmi):
         
         # all vars have grid 0 but check if its in names list first
         if name in (self._output_var_names + self._input_var_names):
-            return self._var_grid_id  
+            if(name == "GRID_VAR_1" or name == "GRID_VAR_2"):
+                return 1 #FIXME remove "magic number"
+            else:
+                return self._var_grid_id  
 
     #------------------------------------------------------------ 
     def get_var_itemsize(self, name):
@@ -290,8 +293,10 @@ class bmi_model(Bmi):
 
     #-------------------------------------------------------------------
     def get_var_rank(self, long_var_name):
-
-        return np.int16(0)
+        if(long_var_name == "GRID_VAR_1" or long_var_name == "GRID_VAR_2"):
+            return np.int16(2) #FIXME magic number
+        else:
+            return np.int16(0)
 
     #-------------------------------------------------------------------
     def get_start_time( self ):
