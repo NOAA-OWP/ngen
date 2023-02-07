@@ -5,6 +5,28 @@ np.set_printoptions(precision=2)
 # This is the BMI LSTM that we will be running
 from bmi_model import bmi_model
 
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from bmipy import Bmi
+
+def query_bmi_var(model: 'Bmi', name: str) -> np.ndarray:
+    """_summary_
+
+    Args:
+        model (Bmi): the Bmi model to query
+        name (str): the name of the variable to query
+
+    Returns:
+        ndarray: numpy array with the value of the variable marshalled through BMI
+    """
+    #TODO most (if not all) of this can be cached...unless the grid can change?
+    rank = model.get_var_rank(name)
+    grid = model.get_var_grid(name)
+    shape = np.zeros(rank, dtype=int)
+    model.get_grid_shape(grid, shape)
+    #TODO call model.get_var_type(name) and determine the correct type of nd array to create
+    result = model.get_value(name, np.zeros(shape))
+    return result
 
 def execute():
     # creating an instance of a model
