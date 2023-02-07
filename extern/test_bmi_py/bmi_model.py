@@ -115,14 +115,16 @@ class bmi_model(Bmi):
         for parm in self._model_parameters_list:
             self._values[self._var_name_map_short_first[parm]] = self.cfg_bmi[parm]
         for model_input in self.get_input_var_names():
-            self._values[model_input] = np.zeros(self.var_array_lengths, dtype=float)
+            #This won't actually allocate the size, just the rank...
+            self._values[model_input] = np.zeros(self._grid_map[model_input].shape, dtype=float)
         #for model_input in self._input_var_types:
         #    self._values[model_input] = np.zeros(self.var_array_lengths, dtype=self._input_var_types[model_input])
         for model_output in self.get_output_var_names():
             if model_output == "OUTPUT_VAR_3":
                 self._values[model_output] = np.arange(3, dtype=float)
             else:
-                self._values[model_output] = np.zeros(self.var_array_lengths, dtype=float)
+                #TODO why is output var 3 an arange?  should this be a unique "grid"?
+                self._values[model_output] = np.zeros(self._grid_map[model_input].shape, dtype=float)
         #print(self._values)
 
         # ------------- Set time to initial value -----------------------#
