@@ -3,7 +3,7 @@ from pathlib import Path
 import numpy as np
 
 # This is the BMI LSTM that we will be running
-from . import bmi_model
+from bmi_model import bmi_model
 
 
 def execute():

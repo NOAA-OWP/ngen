@@ -11,8 +11,7 @@ import yaml
 from bmipy import Bmi
 
 # Here is the model we want to run
-from .model import ngen_model
-
+from model import ngen_model
 
 class bmi_model(Bmi):
 
