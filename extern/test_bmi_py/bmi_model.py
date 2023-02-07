@@ -287,7 +287,7 @@ class bmi_model(Bmi):
 
     #------------------------------------------------------------ 
     def get_var_location(self, name):
-        
+        #FIXME what about grid vars?
         if name in (self._output_var_names + self._input_var_names):
             return self._var_loc
 
@@ -438,51 +438,78 @@ class bmi_model(Bmi):
     
     #------------------------------------------------------------ 
     def get_grid_origin(self, grid_id, origin):
-        raise NotImplementedError("get_grid_origin") 
+
+        for grid in self._grids:
+            if grid_id == grid.id: 
+                origin[:] = grid.origin
+        raise ValueError(f"get_grid_origin: grid_id {grid_id} unknown")
+
 
     #------------------------------------------------------------ 
     def get_grid_rank(self, grid_id):
  
-        # JG Edit
-        # 0 is the only id we have
-        if grid_id == 0: 
-            return 1
+        for grid in self._grids:
+            if grid_id == grid.id: 
+                return grid.rank
+        raise ValueError(f"get_grid_rank: grid_id {grid_id} unknown")
 
     #------------------------------------------------------------ 
     def get_grid_shape(self, grid_id, shape):
-        raise NotImplementedError("get_grid_shape") 
+
+        for grid in self._grids:
+            if grid_id == grid.id: 
+                shape[:] = grid.shape
+                return
+        raise ValueError(f"get_grid_shape: grid_id {grid_id} unknown")
 
     #------------------------------------------------------------ 
     def get_grid_size(self, grid_id):
        
-        # JG Edit
-        # 0 is the only id we have
-        if grid_id == 0:
-            return 1
+        for grid in self._grids:
+            if grid_id == grid.id: 
+                return grid.size
+        raise ValueError(f"get_grid_size: grid_id {grid_id} unknown")
 
     #------------------------------------------------------------ 
     def get_grid_spacing(self, grid_id, spacing):
-        raise NotImplementedError("get_grid_spacing") 
+
+        for grid in self._grids:
+            if grid_id == grid.id: 
+                spacing[:] = grid.spacing
+                return
+        raise ValueError(f"get_grid_spacing: grid_id {grid_id} unknown") 
 
     #------------------------------------------------------------ 
-    def get_grid_type(self, grid_id=0):
+    def get_grid_type(self, grid_id):
 
-        # JG Edit
-        # 0 is the only id we have        
-        if grid_id == 0:
-            return 'scalar'
-
-    #------------------------------------------------------------ 
-    def get_grid_x(self):
-        raise NotImplementedError("get_grid_x") 
+        for grid in self._grids:
+            if grid_id == grid.id: 
+                return grid.type
+        raise ValueError(f"get_grid_type: grid_id {grid_id} unknown")
 
     #------------------------------------------------------------ 
-    def get_grid_y(self):
-        raise NotImplementedError("get_grid_y") 
+    def get_grid_x(self, grid_id: int, dest: np.ndarray):
+        for grid in self._grids:
+            if grid_id == grid.id: 
+                dest[:] = grid.grid_x
+                return
+        raise ValueError(f"get_grid_x: grid_id {grid_id} unknown")
 
     #------------------------------------------------------------ 
-    def get_grid_z(self):
-        raise NotImplementedError("get_grid_z") 
+    def get_grid_y(self, grid_id: int, dest: np.ndarray):
+        for grid in self._grids:
+            if grid_id == grid.id: 
+                dest[:] = grid.grid_y
+                return
+        raise ValueError(f"get_grid_y: grid_id {grid_id} unknown")
+
+    #------------------------------------------------------------ 
+    def get_grid_z(self, grid_id: int, dest: np.ndarray):
+        for grid in self._grids:
+            if grid_id == grid.id: 
+                dest[:] = grid.grid_z
+                return
+        raise ValueError(f"get_grid_z: grid_id {grid_id} unknown")
 
 
     #------------------------------------------------------------ 
