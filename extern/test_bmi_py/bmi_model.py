@@ -336,7 +336,18 @@ class bmi_model(Bmi):
         values : np.ndarray
               Array of new values.
         """ 
-        self._values[var_name][:] = values
+        if( var_name == 'grid_1_shape' ):
+            self.grid_1.shape = values
+            for var, grid in self._grid_map.items():
+                if grid.id == 1:
+                    #shape is set externally, need to reshape/allocate all vars associated with the grid
+                    self._values[var] = np.resize(self._values[var], self._grid_map[var].shape)
+        elif( var_name == 'grid_1_spacing' ):
+            self.grid_1.spacing = values
+        elif( var_name == 'grid_1_origin' ):
+            self.grid_1.origin = values
+        else:
+            self._values[var_name] = values
 
     #------------------------------------------------------------ 
     def set_value_at_indices(self, var_name: str, indices: np.ndarray, src: np.ndarray):
