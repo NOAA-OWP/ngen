@@ -84,19 +84,21 @@ def execute():
         model.set_value('INPUT_VAR_1', np.random.uniform(2, 10, model.var_array_lengths))  ##
         model.set_value('INPUT_VAR_2', np.random.uniform(1, 4, model.var_array_lengths))   ##
         ########################################################
-
+        model.set_value('GRID_VAR_1', grid_data*x)
         #########################################
         # UPDATE THE MODEL WITH THE NEW INPUTS ##
         model.update()     ######################
         #########################################
 
         # PRINT THE MODEL RESULTS FOR THIS TIME STEP#################################################
-    print('IN 1:{}, IN 2:{}, OUT 1:{}, OUT 2{}, OUT 3{}'.format(model.get_current_time(),
-                                                                model.get_value('INPUT_VAR_1', np.zeros(0)),
-                                                                model.get_value('INPUT_VAR_2',np.zeros(0)),
-                                                                model.get_value('OUTPUT_VAR_1',np.zeros(0)),
-                                                                model.get_value('OUTPUT_VAR_2',np.zeros(0)),
-                                                                model.get_value('OUTPUT_VAR_3',np.zeros(3))))
+        print('IN 1:{}, IN 2:{}, OUT 1:{}, OUT 2{}, OUT 3{}'.format(model.get_current_time(),
+                                                                    model.get_value('INPUT_VAR_1', np.zeros(0)),
+                                                                    model.get_value('INPUT_VAR_2',np.zeros(0)),
+                                                                    model.get_value('OUTPUT_VAR_1',np.zeros(0)),
+                                                                    model.get_value('OUTPUT_VAR_2',np.zeros(0)),
+                                                                    model.get_value('OUTPUT_VAR_3',np.zeros(3))))
+        print("Grid input\n", query_bmi_var(model, "GRID_VAR_1"))
+        print("Grid output\n", query_bmi_var(model, "GRID_VAR_2"))
 
     # Finalizing the BMI
     print('Finalizing the BMI')
