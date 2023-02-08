@@ -106,17 +106,19 @@ protected:
 
     static py::object Path;
 
-    std::vector<std::string> expected_output_var_names = { "OUTPUT_VAR_1", "OUTPUT_VAR_2", "OUTPUT_VAR_3" };
-    std::vector<std::string> expected_input_var_names = { "INPUT_VAR_1", "INPUT_VAR_2"};
-    std::vector<std::string> expected_output_var_locations = { "node", "node", "node" };
-    std::vector<int> expected_output_var_grids = { 0, 0, 0 };
-    std::vector<std::string> expected_output_var_units = { "m", "m", "m" };
-    std::vector<std::string> expected_input_var_types = { "float64", "float64" };
-    std::vector<int> expected_input_var_item_sizes = { 8, 8 };
-    std::vector<std::string> expected_output_var_types = { "float64", "float64", "float64" };
-    std::vector<int> expected_output_var_item_sizes = { 8, 8, 8 };
-    int expected_grid_rank = 1;
-    int expected_grid_size = 1;
+    std::vector<std::string> expected_output_var_names = { "OUTPUT_VAR_1", "OUTPUT_VAR_2", "OUTPUT_VAR_3", "GRID_VAR_2" };
+    std::vector<std::string> expected_input_var_names = { "INPUT_VAR_1", "INPUT_VAR_2", "GRID_VAR_1"};
+    std::vector<std::string> expected_output_var_locations = { "node", "node", "node", "node" };
+    std::vector<int> expected_output_var_grids = { 0, 0, 0, 1 };
+    std::vector<std::string> expected_output_var_units = { "m", "m", "m", "m" };
+    std::vector<std::string> expected_input_var_types = { "float64", "float64", "float64" };
+    std::vector<int> expected_input_var_item_sizes = { 8, 8, 8 };
+    std::vector<std::string> expected_output_var_types = { "float64", "float64", "float64", "float64" };
+    std::vector<int> expected_output_var_item_sizes = { 8, 8, 8, 8 };
+    std::vector<int> expected_input_grid_rank = {0, 0, 0, 1};
+    std::vector<int> expected_output_grid_rank = {0, 0, 1};
+    std::vector<int> expected_input_grid_size = {0, 0, 0, 9};
+    std::vector<int> expected_output_grid_size = {0, 0, 9};
     std::string expected_grid_type = "scalar";
     int expected_var_nbytes = 8; //type double
 
@@ -497,6 +499,8 @@ TEST_F(Bmi_Py_Adapter_Test, GetValue_0_d) {
     double initial_var_value = unchecked(0);
     ASSERT_NE(initial_var_value, value);
 
+    //NOTE this doesn't work if get_value_ptr returns a flattened array using `array.flatten()`...its a new copy/reference
+    //See implementation in extern/test_bmi_py/bmi_model.py for using `ravel()` with a check that it won't make a copy
     unchecked(0) = value;
 
     double retrieved;
@@ -714,6 +718,7 @@ TEST_F(Bmi_Py_Adapter_Test, SetValue_0_a) {
     examples[ex_index].adapter->SetValue(var_name, &value);
 
     //double actual_stored_value = *((double*) raw_var_values.request(false).ptr);
+    //This only works if the BMI model `set_value` implementation is guaranteed to not assign a new reference...
     double actual_stored_value = unchecked(0);
 
     ASSERT_EQ(value, actual_stored_value);
@@ -771,7 +776,7 @@ TEST_F(Bmi_Py_Adapter_Test, GetGridRank_0_a) {
     int grid_id = examples[ex_index].adapter->GetVarGrid(var_name);
     int grid_rank = examples[ex_index].adapter->GetGridRank(grid_id);
 
-    ASSERT_EQ(grid_rank, expected_grid_rank);
+    ASSERT_EQ(grid_rank, expected_output_grid_rank[0]);
 }
 
 /**
@@ -785,7 +790,7 @@ TEST_F(Bmi_Py_Adapter_Test, GetGridSize_0_a) {
     int grid_id = examples[ex_index].adapter->GetVarGrid(var_name);
     int grid_size = examples[ex_index].adapter->GetGridSize(grid_id);
 
-    ASSERT_EQ(grid_size, expected_grid_size);
+    ASSERT_EQ(grid_size, expected_output_grid_size[0]);
 }
 
 /**
@@ -800,22 +805,8 @@ TEST_F(Bmi_Py_Adapter_Test, GetGridShape_0_a) {
     examples[ex_index].adapter->Initialize();
     int grid_id = examples[ex_index].adapter->GetVarGrid(var_name);
     int grid_shape[10];
-    // For now, expect an exception
-    ASSERT_THROW(
-        {
-            try {
-                examples[ex_index].adapter->GetGridShape(grid_id, grid_shape);
-            }
-            catch (const py::error_already_set &e) {
-                std::string msg = e.what();
-                std::string expected_msg_start = "NotImplementedError";
-                ASSERT_TRUE(msg.rfind(expected_msg_start, 0) == 0);
-                throw e;
-            }
-        },
-        py::error_already_set);
-
-    //ASSERT_EQ(grid_shape, expected_grid_size);
+    examples[ex_index].adapter->GetGridShape(grid_id, grid_shape);
+    ASSERT_EQ(grid_shape[0], 0);
 }
 
 /**
