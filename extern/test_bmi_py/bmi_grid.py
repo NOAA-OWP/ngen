@@ -75,7 +75,7 @@ class Grid():
         Returns:
             int: number of grid elements
         """
-        if self.shape == None:
+        if not self.shape: #it is None or ()
             return 0
         else:
             #multiply the shape of each dimension together
