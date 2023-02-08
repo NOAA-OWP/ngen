@@ -10,9 +10,9 @@ import pandas as pd
 import yaml
 from bmipy import Bmi
 
-from bmi_grid import Grid, GridType
+from .bmi_grid import Grid, GridType
 # Here is the model we want to run
-from model import ngen_model
+from .model import ngen_model
 
 class bmi_model(Bmi):
 
@@ -124,7 +124,7 @@ class bmi_model(Bmi):
                 self._values[model_output] = np.arange(3, dtype=float)
             else:
                 #TODO why is output var 3 an arange?  should this be a unique "grid"?
-                self._values[model_output] = np.zeros(self._grid_map[model_input].shape, dtype=float)
+                self._values[model_output] = np.zeros(self._grid_map[model_output].shape, dtype=float)
         #print(self._values)
 
         # ------------- Set time to initial value -----------------------#
@@ -238,8 +238,18 @@ class bmi_model(Bmi):
         array_like
             Value array.
         """
-        
-        return self._values[var_name]
+
+        #Make sure to return a flattened array
+        shape = self._values[var_name].shape
+        try:
+            #see if raveling is possible without a copy
+            self._values[var_name].shape = (-1,)
+            #reset original shape
+            self._values[var_name].shape = shape
+        except ValueError as e:
+            raise RuntimeError("Cannot flatten array without copying -- "+str(e).split(": ")[-1])
+
+        return self._values[var_name].ravel()#.reshape((-1,))
 
     #-------------------------------------------------------------------
     #-------------------------------------------------------------------
@@ -347,7 +357,8 @@ class bmi_model(Bmi):
         elif( var_name == 'grid_1_origin' ):
             self.grid_1.origin = values
         else:
-            self._values[var_name] = values
+            #values is a FLATTENED array, need to reshape it...
+            self._values[var_name][...] = np.ndarray( self._values[var_name].shape, self._values[var_name].dtype, values )
 
     #------------------------------------------------------------ 
     def set_value_at_indices(self, var_name: str, indices: np.ndarray, src: np.ndarray):
