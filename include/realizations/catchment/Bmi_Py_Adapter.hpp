@@ -345,8 +345,13 @@ namespace models {
                 py::array_t<T> np_array = np.attr("zeros")(dest_length, "dtype"_a = np_dtype);
                 bmi_model->attr(grid_func_name)(grid, np_array);
                 auto np_array_direct = np_array.template unchecked<1>();
-                for (int i = 0; i < dest_length; ++i)
-                    dest[i] = np_array_direct(i);
+                if( dest_length == 0 ){
+                    dest[0] = np_array_direct(0);
+                }
+                else{
+                    for (int i = 0; i < dest_length; ++i)
+                        dest[i] = np_array_direct(i);
+                }
             }
 
             /**
