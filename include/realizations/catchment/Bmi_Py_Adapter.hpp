@@ -342,7 +342,13 @@ namespace models {
             void get_and_copy_grid_array(const char* grid_func_name, const int grid, T* dest, int dest_length,
                                          const char* np_dtype)
             {
-                py::array_t<T> np_array = np.attr("zeros")(dest_length, "dtype"_a = np_dtype);
+                //This is required here because grid info can be a non dimensional `np.zeros( () )`
+                py::array_t<T> np_array;
+                if( dest_length == 0 ){
+                    np_array = np.attr("zeros")(1, "dtype"_a = np_dtype);;
+                } else{
+                    np_array = np.attr("zeros")(dest_length, "dtype"_a = np_dtype);
+                }
                 bmi_model->attr(grid_func_name)(grid, np_array);
                 auto np_array_direct = np_array.template unchecked<1>();
                 if( dest_length == 0 ){
