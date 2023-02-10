@@ -228,7 +228,7 @@ namespace models {
                 //TODO: include other numpy type strings, https://numpy.org/doc/stable/user/basics.types.html
                 if (py_type_name == "int" && item_size == sizeof(short)) {
                     return "short";
-                } else if (py_type_name == "int" && item_size == sizeof(int)) {
+                } else if ( (py_type_name == "int" || py_type_name == "int32" )&& item_size == sizeof(int)) {
                     return "int";
                 } else if (py_type_name == "int" && item_size == sizeof(long)) {
                     return "long";
@@ -521,6 +521,10 @@ namespace models {
                 } else if (cxx_type == "long") {
                     set_value<long>(name, (long *) src);
                 } else if (cxx_type == "long long") {
+                    //FIXME this gets dicey -- if a python numpy array is of type np.int64 (long long), 
+                    //but a c++ int* is passed to this function as src, it will fail in undefined ways...
+                    //the template type overload may be perferred for doing SetValue from framework components
+                    //such as forcing providers...
                     set_value<long long>(name, (long long *) src);
                 } else if (cxx_type == "float") {
                     set_value<float>(name, (float *) src);
