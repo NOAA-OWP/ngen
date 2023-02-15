@@ -38,9 +38,11 @@ namespace hy_features {
             return network.filter("cat");
         }
 
-        inline const auto& levels() {
-            return hf_levels;
-        }
+        /**
+         * @brief Return a set of levels that contain a catchment
+         */
+
+        inline const auto& levels() { return hf_levels; }
 
         inline bool is_remote_sender_nexus(std::string id) {
 
