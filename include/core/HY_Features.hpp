@@ -207,6 +207,8 @@ namespace hy_features {
         */
         std::set<long> hf_levels;
 
+        geojson::GeoJSON fabric;
+
     };
 }
 
