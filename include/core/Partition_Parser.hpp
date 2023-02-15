@@ -94,32 +94,34 @@ class Partitions_Parser {
                 part_data.nexus_ids = nexus_ids;
                 nexus_ids.clear();
 
-                if( part.at("remote-connections").get_type() == geojson::PropertyType::List ) {
+                if( part.at("remote-connections").get_type() == geojson::PropertyType::List ) 
+                {
                     //It is valid to have no remote connections, but the backend property tree parser
                     //can't represent empty lists/objects, so it turns into an ampty string (which is iterable)
                     //so we check to ensure the remote connections are a list type (not string) before we attempt
                     //to process the remote-connections.  If they are empty, this step gets skipped entirely.
                     //Get remote-connections and set the corresponding part_data struct member
                     
-                for (auto &remote_conn : part.at("remote-connections").as_list())
-                {
-                    if ( remote_conn.get_type() != geojson::PropertyType::String )
+                    for (auto &remote_conn : part.at("remote-connections").as_list())
                     {
-                        remote_mpi_rank = remote_conn.at("mpi-rank").as_natural_number();
-                        remote_nex_id = remote_conn.at("nex-id").as_string();
-                        remote_cat_id = remote_conn.at("cat-id").as_string();
-                        direction = remote_conn.at("cat-direction").as_string();
-                        tmp_tuple = std::make_tuple(remote_mpi_rank, remote_nex_id, remote_cat_id, direction);
-                        remote_conn_vec.push_back(tmp_tuple);
+                        if ( remote_conn.get_type() != geojson::PropertyType::String )
+                        {
+                            remote_mpi_rank = remote_conn.at("mpi-rank").as_natural_number();
+                            remote_nex_id = remote_conn.at("nex-id").as_string();
+                            remote_cat_id = remote_conn.at("cat-id").as_string();
+                            direction = remote_conn.at("cat-direction").as_string();
+                            tmp_tuple = std::make_tuple(remote_mpi_rank, remote_nex_id, remote_cat_id, direction);
+                            remote_conn_vec.push_back(tmp_tuple);
+                        }
                     }
+                    part_data.remote_connections = remote_conn_vec;
+                    remote_conn_vec.clear();
+
+                    //Push part_data struct the vector
+                    partition_ranks.push_back(part_data);
+
+                    part_counter++;   
                 }
-                part_data.remote_connections = remote_conn_vec;
-                remote_conn_vec.clear();
-
-                //Push part_data struct the vector
-                partition_ranks.push_back(part_data);
-
-                part_counter++;       
             }
         };
 
@@ -162,7 +164,7 @@ class Partitions_Parser {
             */
 
             return part_data;
-        };
+        }
 
         //This example function shows how to get a specific member of the struct
         int get_mpi_rank(int part_id)
@@ -174,7 +176,7 @@ class Partitions_Parser {
 
             std::cout << "mpi_world_rank: " << mpi_world_rank << std::endl;
             return mpi_world_rank;
-        };
+        }
 
         // partition_ranks is a vector of struct: PartitionData
         std::vector<PartitionData> partition_ranks;
