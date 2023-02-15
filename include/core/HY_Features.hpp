@@ -2,6 +2,7 @@
 #define HY_FEATURES_H
 
 #include <unordered_map>
+#include <set>
 
 #include <HY_Catchment.hpp>
 #include <HY_HydroNexus.hpp>
@@ -106,6 +107,12 @@ namespace hy_features {
         inline auto catchments(){return network.filter("cat");}
 
         /**
+         * @brief Return a set of levels that contain a catchment
+         */
+
+        inline const auto& levels() { return hf_levels; }
+
+        /**
          * @brief An iterator of only the nexus feature ids
          * 
          * @return auto 
@@ -194,6 +201,11 @@ namespace hy_features {
          * 
          */
         std::shared_ptr<Formulation_Manager> formulations;
+
+        /**
+         *  @brief The set of levels that contain at least one catchment
+        */
+        std::set<long> hf_levels;
 
     };
 }
