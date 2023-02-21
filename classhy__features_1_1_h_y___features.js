@@ -11,7 +11,7 @@ var classhy__features_1_1_h_y___features =
     [ "destination_nexuses", "classhy__features_1_1_h_y___features.html#a637fcce4f0f5e4a306543af357bf2cbb", null ],
     [ "nexus_at", "classhy__features_1_1_h_y___features.html#aa6af8c094aabd4c07f99b4011e228fea", null ],
     [ "nexuses", "classhy__features_1_1_h_y___features.html#a133814bb22aa41a0ad1827cb68561037", null ],
-    [ "validate_dendridic", "classhy__features_1_1_h_y___features.html#ab70dddca9d2fb06eef4dd578fcd5eeed", null ],
+    [ "validate_dendritic", "classhy__features_1_1_h_y___features.html#a3a28c4767f2f53b70d200148de764d9e", null ],
     [ "_catchments", "classhy__features_1_1_h_y___features.html#afc8c857297e0c07979d92c6a864544d1", null ],
     [ "_nexuses", "classhy__features_1_1_h_y___features.html#af4e9887f4d592bd84d9d68f027d5725a", null ],
     [ "formulations", "classhy__features_1_1_h_y___features.html#a44dc3f3c851960bb138e5ddca70c27d0", null ],
