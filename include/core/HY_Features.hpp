@@ -145,10 +145,10 @@ namespace hy_features {
         }
 
         /**
-         * @brief Validates that the feature topology is dendridic.
+         * @brief Validates that the feature topology is dendritic.
          * 
          */
-        void validate_dendridic()
+        void validate_dendritic()
         {
           for(const auto& id : catchments())
           {
@@ -169,7 +169,7 @@ namespace hy_features {
                 assert( false );
               }
           }
-          std::cout<<"Catchment topology is dendridic."<<std::endl;
+          std::cout<<"Catchment topology is dendritic."<<std::endl;
         }
 
         /**
