@@ -184,7 +184,7 @@ void generate_partitions(network::Network& network, const int& num_partitions, c
             if(counter == partition_size)
             {
                 //std::cout<<"nexus "<<nexus<<" is remote DOWN on partition "<<partition<<std::endl;
-                //FIXME partitioning shouldn't have to assume dendridic network
+                //FIXME partitioning shouldn't have to assume dendritic network
                 std::vector<std::string> destinations = network.get_destination_ids(catchment);
                 if(destinations.size() == 0){
                     std::cerr<<"Error: Catchment "<<catchment<<" has no destinatin nexus.\n";
@@ -486,7 +486,7 @@ int main(int argc, char* argv[])
     std::string link_key = "toid";
   
     Network catchment_network(catchment_collection, &link_key);
-    //Assumes dendridic, can add check in network if needed.
+    //Assumes dendritic, can add check in network if needed.
     PartitionVSet catchment_part, nexus_part;
     
     //catchment_network.print_network();

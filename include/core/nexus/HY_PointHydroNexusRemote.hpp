@@ -104,7 +104,7 @@ class HY_PointHydroNexusRemote : public HY_PointHydroNexus
         communication_type type;
         /** List of ranks we expect to send data to (downstream).
          *
-         *  Note that in a dendridic network, downstream_ranks.size() == 1 (only one downstream receiver on a single rank)
+         *  Note that in a dendritic network, downstream_ranks.size() == 1 (only one downstream receiver on a single rank)
          */
         std::unordered_set<int> downstream_ranks; //Set
         /** List of ranks we expect to receive data from

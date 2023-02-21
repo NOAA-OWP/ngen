@@ -51,7 +51,7 @@ namespace hy_features {
             return network.filter("nex");
         }
 
-        void validate_dendridic() {
+        void validate_dendritic() {
             for(const auto& id : catchments()) {
                 auto downstream = network.get_destination_ids(id);
                 if(downstream.size() > 1) {
@@ -68,7 +68,7 @@ namespace hy_features {
                     assert( false );
                 }
             }
-            std::cout<<"Catchment topology is dendridic."<<std::endl;
+            std::cout<<"Catchment topology is dendritic."<<std::endl;
         }
 
       private:

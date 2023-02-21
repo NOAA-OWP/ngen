@@ -305,8 +305,8 @@ int main(int argc, char *argv[]) {
     hy_features::HY_Features features = hy_features::HY_Features(catchment_collection, &link_key, manager);
     #endif
 
-    //validate dendridic connections
-    features.validate_dendridic();
+    //validate dendritic connections
+    features.validate_dendritic();
     //TODO don't really need catchment_collection once catchments are added to nexus collection
     //Still using  catchments for geometry at the moment, fix this later
     //catchment_collection.reset();
@@ -356,7 +356,7 @@ int main(int argc, char *argv[]) {
         response /= 3600.0;
         //update the nexus with this flow
         for(auto& nexus : features.destination_nexuses(id)) {
-          //TODO in a DENDRIDIC network, only one destination nexus per catchment
+          //TODO in a dendritic network, only one destination nexus per catchment
           //If there is more than one, some form of catchment partitioning will be required.
           //for now, only contribute to the first one in the list
           nexus->add_upstream_flow(response, id, output_time_index);
@@ -375,7 +375,7 @@ int main(int argc, char *argv[]) {
           const auto& cat_ids = nexus->get_receiving_catchments();
           std::string cat_id;
           if( cat_ids.size() > 0 ) {
-            //Assumes dendridic, e.g. only a single downstream...it will consume 100%  of the available flow
+            //Assumes dendritic, e.g. only a single downstream...it will consume 100%  of the available flow
             cat_id = cat_ids[0];
           }
           else {
