@@ -411,6 +411,7 @@ int main(int argc, char *argv[]) {
       //across the flowpath to the next nexus.
       //Once everything is updated for this timestep, dump the nexus output
       for(const auto& id : features.nexuses()) {
+        std::string current_timestamp = manager->Simulation_Time_Object->get_timestamp(output_time_index);
   #ifdef NGEN_MPI_ACTIVE
         if (!features.is_remote_sender_nexus(id)) { //Ensures only one side of the dual sided remote nexus actually doing this...
   #endif

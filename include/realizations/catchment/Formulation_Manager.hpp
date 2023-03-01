@@ -130,6 +130,32 @@ namespace realization {
                 this->Simulation_Time_Object = std::make_shared<Simulation_Time>(simulation_time_config);
 
                 /**
+                 * Read the layer descriptions
+                */
+
+                // try to get the json node
+                auto layers_json_array = tree.get_child_optional("layers");
+
+                // check to see if the node existed
+                if (!layers_json_array) {
+                    // If there is no layers section create data for a default surface hydrology
+                    // TODO
+                }
+                else
+                {
+                    for (std::pair<std::string, boost::property_tree::ptree> layer_config : *layers_json_array) 
+                    {
+                        std::string layer_name = layer_config.second.get<std::string>("name");
+                        int layer_id = layer_config.second.get<int>("id");
+                        int layer_time_step = layer_config.second.get<int>("time_step");
+                        boost::optional<std::string> layer_units = layer_config.second.get_optional<std::string>("time_step_units");
+                        if (*layer_units == "") layer_units = "s";
+
+                        std::cout << layer_name << ", " << layer_id << ", " << layer_time_step << ", " << layer_units << "\n";
+                    }
+                }
+
+                /**
                  * Read routing configurations from configuration file
                  */      
                 auto possible_routing_configs = tree.get_child_optional("routing");
