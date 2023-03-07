@@ -155,25 +155,25 @@ namespace realization {
                         layer_desc.time_step = layer_config.second.get<double>("time_step");
                         boost::optional<std::string> layer_units = layer_config.second.get_optional<std::string>("time_step_units");
                         if (*layer_units == "") layer_units = "s";
-                        layer_desc.time_step_units = layer_units;
+                        layer_desc.time_step_units = *layer_units;
 
                         // check to see if this layer was allready defined
-                        if (layer_storage.exist(layer_desc.id) )
+                        if (layer_storage.exists(layer_desc.id) )
                         {
                             std::string message = "A layer with id = ";
                             message += std::to_string(layer_desc.id);
-                            message += " was defined more than once"
+                            message += " was defined more than once";
 
-                            std::runtime_error error(message);
+                            std::runtime_error r_error(message);
                             
-                            throw error;
+                            throw r_error;
                         }
 
                         // add the layer to storage
-                        layer_storage.put(layer_desc);
+                        layer_storage.put_layer(layer_desc, layer_desc.id);
 
                         // debuggin print to see parsed data
-                        std::cout << layer_desc.name << ", " << layer_desc.id << ", " << layer_desc.time_step << ", " << layer_desc.time_step_unit << "\n";
+                        std::cout << layer_desc.name << ", " << layer_desc.id << ", " << layer_desc.time_step << ", " << layer_desc.time_step_units << "\n";
                     }
                 }
 
@@ -303,7 +303,7 @@ namespace realization {
              * @return a reference to the LayerStorageObject
             */
 
-           LayerDataStorage& get_layer_metadata() { return layer_storage; }
+           ngen::LayerDataStorage& get_layer_metadata() { return layer_storage; }
 
 
         protected:
