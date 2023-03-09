@@ -90,6 +90,7 @@ class Simulation_Time
      */ 
     std::string get_timestamp(int current_output_time_index)
     {
+        // "get" method mutates state!
         current_date_time_epoch = start_date_time_epoch + current_output_time_index * output_interval_seconds;
             
         struct tm *temp_gmtime_struct;
@@ -106,6 +107,29 @@ class Simulation_Time
 
         return current_timestamp;
     }
+
+    inline int next_timestep_index(int epoch_time_seconds)
+    {
+        return int(epoch_time_seconds - start_date_time_epoch) / output_interval_seconds;
+    }
+
+    inline int next_timestep_index()
+    {
+        return next_timestep_index(current_date_time_epoch);
+    }
+
+    inline time_t next_timestep_epoch_time(int epoch_time_seconds){
+        return start_date_time_epoch + ( next_timestep_index(epoch_time_seconds) * output_interval_seconds );
+    }
+
+    inline time_t next_timestep_epoch_time(){
+        return next_timestep_epoch_time(current_date_time_epoch);
+    }
+
+    inline int diff(const Simulation_Time& other){
+        return start_date_time_epoch - other.start_date_time_epoch;
+    }
+
 
     private:
 

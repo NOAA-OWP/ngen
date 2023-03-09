@@ -70,4 +70,55 @@ TEST_F(SimulationTimeTest, TestSimulationTime)
 
 }
 
+TEST_F(SimulationTimeTest, TestSimTimeNextIndex)
+{
+    simulation_time_params other_stp("2015-12-14 21:00:00", "2015-12-30 23:00:00", 3600);
+
+    int next_index;
+
+    // for 2.5h in the future
+    next_index = Simulation_Time_Object1->next_timestep_index(other_stp.start_t + (3600 * 2.5));
+
+    EXPECT_EQ(2, next_index);
+
+    // for 2.0h in the future
+    next_index = Simulation_Time_Object1->next_timestep_index(other_stp.start_t + (3600 * 2.00));
+
+    EXPECT_EQ(2, next_index);
+
+}
+
+TEST_F(SimulationTimeTest, TestSimTimeNextEpochTime)
+{
+    simulation_time_params other_stp("2015-12-14 21:00:00", "2015-12-30 23:00:00", 3600);
+
+    int next_time;
+
+    // for 2.5h in the future
+    next_time = Simulation_Time_Object1->next_timestep_epoch_time(other_stp.start_t + (3600 * 2.5));
+
+    EXPECT_EQ(other_stp.start_t + (3600 * 2.0), next_time);
+
+    // for 2.0h in the future
+    next_time = Simulation_Time_Object1->next_timestep_epoch_time(other_stp.start_t + (3600 * 2.00));
+
+    EXPECT_EQ(other_stp.start_t + (3600 * 2.0), next_time);
+
+}
+
+TEST_F(SimulationTimeTest, TestSimTimeDiff)
+{
+    simulation_time_params other_stp("2015-12-14 23:00:00", "2015-12-30 23:00:00", 3600);
+    Simulation_Time other_st(other_stp);
+    int diff;
+
+    diff = other_st.diff(*Simulation_Time_Object1);
+
+    EXPECT_EQ(7200, diff);
+
+    diff = Simulation_Time_Object1->diff(other_st);
+
+    EXPECT_EQ(-7200, diff);
+
+}
 
