@@ -384,7 +384,11 @@ namespace geojson {
                 return bounding_box;
             }
 
-            PropertyMap get_properties() const {
+            const PropertyMap& get_properties() const {
+                return properties;
+            }
+
+            PropertyMap& get_properties() {
                 return properties;
             }
 
