@@ -319,6 +319,12 @@ namespace network {
          * 
          */
         std::unordered_map<std::string, Graph::vertex_descriptor> descriptor_map;
+
+        /**
+         * @brief Mapping of identifier to hydrofabric level
+         * 
+        */
+        std::unordered_map<std::string, long> level_map;
         
         /**
          * @brief Get an index of the graph in a particular order.
