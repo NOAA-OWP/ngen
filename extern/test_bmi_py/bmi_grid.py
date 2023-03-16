@@ -123,7 +123,10 @@ class Grid():
         Returns:
             int: number of grid elements
         """
-        if not self.shape or self.shape.ndim == 0: #it is None or () or np.array( () )
+        if _error_on_grid_type and self.type == GridType.scalar:
+            raise GridTypeAccessError("Scalar has no grid size")
+
+        if self.shape is None or self.shape.ndim == 0: #it is None or np.array( () )
             return 0
         else:
             #multiply the shape of each dimension together
@@ -145,6 +148,14 @@ class Grid():
         Returns:
             Tuple[int]: size of each dimension
         """
+        """
+            From the BMI docs:
+            The grid shape is the number of rows and columns of nodes,
+            as opposed to other types of element (such as cells or faces). 
+            It is possible for grid values to be associated with the nodes or with the cells.
+        """
+        if _error_on_grid_type and self.type == GridType.scalar:
+            raise GridTypeAccessError("Scalar has no shape")
         return self._shape
     
     @shape.setter
@@ -155,9 +166,11 @@ class Grid():
             shape (Tuple[int]): the size of each dimension of the grid
         """
         #Create a new shape array and replace the old one, make it immutable
-        self._shape = np.array(shape, dtype=np.int32)
-        self._shape.flags.writeable = False
-    
+        if self.rank > 0:
+            self._shape = np.array(shape, dtype=np.int32)
+            self._shape.flags.writeable = False
+        #noop for scalar or grids with rank < 1
+
     @property
     def spacing(self) -> 'NDArray[np.float64]':
         """The spacing of the grid
@@ -165,6 +178,8 @@ class Grid():
         Returns:
             Tuple[float]: Tuple of size rank with the spacing in each of rank dimensions
         """
+        if _error_on_grid_type and self.type == GridType.scalar:
+            raise GridTypeAccessError("Scalar has no grid spacing")
         return self._spacing
     
     @spacing.setter
@@ -174,7 +189,10 @@ class Grid():
         Args:
             spacing (Tuple[float]): Tuple of size rank with the spacing for each dimension
         """
-        self._spacing = spacing
+        if self.rank > 0:
+            self._spacing = np.array(spacing, dtype=np.float64)
+            self._spacing.flags.writeable = False
+        #noop for scalar or grids with rank < 1
 
     @property
     def origin(self) -> 'NDArray[np.float64]':
@@ -183,6 +201,8 @@ class Grid():
         Returns:
             Tuple[float]: Tuple of size rank with the coordinates of the the grid origin
         """
+        if _error_on_grid_type and self.type == GridType.scalar:
+            raise GridTypeAccessError("Scalar has no grid origin")
         return self._origin
     
     @origin.setter
@@ -192,7 +212,10 @@ class Grid():
         Args:
             origin (Tuple[float]): Tuple of size rank with grid origin coordinates.
         """
-        self._origin = origin
+        if self.rank > 0:
+            self._origin = np.array(origin, dtype=np.float64)
+            self._origin.flags.writeable = False
+        #noop for scalar or grids with rank < 1
 
     @property
     def grid_x(self) -> 'NDArray[np.float64]':
@@ -201,8 +224,14 @@ class Grid():
         Returns:
             ndarray: array of cooridnate values in the x direction
         """
-        if len(self.shape) > 0:
-            return np.array( [ self.origin[0] + self.spacing[0]*x for x in range(self.shape[0]) ], dtype=np.float64 )
+        if _error_on_grid_type and self.type == GridType.scalar:
+            raise GridTypeAccessError("Scalar has no grid x value")
+        #TODO refactor this -- not generic to grid, this works for structured/quads, not for unstructured
+        if (self.type == GridType.rectilinear or self.type == GridType.uniform_rectilinear) and len(self.shape) > 0:
+            # https://bmi.readthedocs.io/en/stable/model_grids.html#model-grids
+            # bmi states dimension info in `ij` form (last dimension indexed first...) in the shape meta
+            # so x would at index rank, y at rank-1, z at rank-2 ect...
+            return np.array( [ self.origin[self.rank] + self.spacing[self.rank]*x for x in range(self.shape[0]) ], dtype=np.float64 )
         else:    
             #TODO should this raise an error or return an empty array?
             #raise RuntimeError(f"Cannot get x coordinates of grid with shape {self.shape}")
@@ -215,8 +244,11 @@ class Grid():
         Returns:
             ndarray: array of coordinate values in the y direction
         """
-        if len(self.shape) > 1:
-            return np.array( [ self.origin[1] + self.spacing[1]*y for y in range(self.shape[1]) ], dtype=np.float64 )
+        if _error_on_grid_type and self.type == GridType.scalar:
+            raise GridTypeAccessError("Scalar has no grid y value")
+
+        if (self.type == GridType.rectilinear or self.type == GridType.uniform_rectilinear) and len(self.shape) > 1:
+            return np.array( [ self.origin[self.rank-1] + self.spacing[self.rank-1]*y for y in range(self.shape[1]) ], dtype=np.float64 )
         else:    
             #TODO should this raise an error or return an empty array?
             #raise RuntimeError(f"Cannot get y coordinates of grid with shape {self.shape}")
@@ -229,8 +261,11 @@ class Grid():
         Returns:
             ndarray: array of coordinate values in the z direction
         """
-        if len(self.shape) > 2:
-            return np.array( [ self.origin[2] + self.spacing[2]*z for z in range(self.shape[2]) ], dtype=np.float64 )
+        if _error_on_grid_type and self.type == GridType.scalar:
+            raise GridTypeAccessError("Scalar has no grid z value")
+
+        if (self.type == GridType.rectilinear or self.type == GridType.uniform_rectilinear) and len(self.shape) > 2:
+            return np.array( [ self.origin[self.rank-2] + self.spacing[self.rank-2]*z for z in range(self.shape[2]) ], dtype=np.float64 )
         else:    
             #TODO should this raise an error or return an empty array?
             #raise RuntimeError(f"Cannot get z coordinates of grid with shape {self.shape}")
