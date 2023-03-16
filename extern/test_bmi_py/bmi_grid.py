@@ -14,6 +14,26 @@ if TYPE_CHECKING:
     from typing import Tuple
     from numpy.typing import NDArray
 
+_error_on_grid_type: bool = False
+
+def error_on_grid_type(flag: bool = False) -> None:
+    """Set the behavior of the module to throw an error on grid functions that are not applicable.
+
+    Args:
+        flag (bool): 
+            True will enable exceptions to be thrown for access to grid functions that are not applicable to the grid type.
+            
+            False will attempt to provide reasonable default semantics for returning information from those functions.
+
+    Returns:
+        None
+    """
+    global _error_on_grid_type
+    _error_on_grid_type = flag
+
+class GridTypeAccessError(TypeError):
+    """Grid meta data not accessible for grid type"""
+
 class GridType(str, Enum):
     """
         Enumeration of supported BMI grid types (https://bmi.readthedocs.io/en/stable/#get-grid-type)
