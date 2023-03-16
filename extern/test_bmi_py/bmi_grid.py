@@ -18,13 +18,13 @@ class GridType(str, Enum):
     """
         Enumeration of supported BMI grid types (https://bmi.readthedocs.io/en/stable/#get-grid-type)
     """
-    scalar = "scalar",
-    points = "points",
-    vector = "vector",
-    unstructured = "unstructured",
-    structured_quadrilateral = "structured_quadrilaterl",
-    rectilinear = "rectilinear",
-    uniform_rectilinear = "uniform_rectilinear"
+    scalar = "scalar", #0 dim
+    points = "points", #1 dim
+    vector = "vector", #1 dim
+    unstructured = "unstructured", #1-N
+    structured_quadrilateral = "structured_quadrilaterl", #2 dim
+    rectilinear = "rectilinear", #2 dim dx != dy
+    uniform_rectilinear = "uniform_rectilinear" #2 dim -- dx = dy
 
 class Grid():
     """
