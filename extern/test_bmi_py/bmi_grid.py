@@ -75,11 +75,15 @@ class Grid():
             # This latter is really what we want, but then it is hard to communicate the actual size
             # (as a numerical value...)
             self._shape = np.zeros( (), np.int32 ) #note, int32 is important here -- assumed by ngen
+            self._spacing = np.zeros( (), np.float64 )
+            self._origin = np.zeros( (), np.float64 )
             self._units = np.array( (), dtype='S32')
             self._units[()] = units
             #self._shape[...] = 1
         else:
             self._shape = np.zeros( rank, np.int32) #set the shape rank, with 0 allocated values
+            self._spacing = np.zeros( rank, np.float64 )
+            self._origin = np.zeros( rank, np.float64 )
             self._units = np.array( [units]*rank, dtype=np.string_ )
         #Make the array "immutable", can only modify via setting
         self._shape.flags.writeable = False
