@@ -115,8 +115,8 @@ protected:
     std::vector<int> expected_input_var_item_sizes = { 8, 8, 8 };
     std::vector<std::string> expected_output_var_types = { "float64", "float64", "float64", "float64" };
     std::vector<int> expected_output_var_item_sizes = { 8, 8, 8, 8 };
-    std::vector<int> expected_input_grid_rank = {0, 0, 0, 1};
-    std::vector<int> expected_output_grid_rank = {0, 0, 1};
+    std::vector<int> expected_input_grid_rank = {0, 0, 0, 2};
+    std::vector<int> expected_output_grid_rank = {0, 0, 2};
     std::vector<int> expected_input_grid_size = {0, 0, 0, 9};
     std::vector<int> expected_output_grid_size = {0, 0, 9};
     std::string expected_grid_type = "scalar";
@@ -750,6 +750,80 @@ TEST_F(Bmi_Py_Adapter_Test, SetValue_0_b) {
     double actual_stored_value = unchecked(0);
 
     ASSERT_EQ(value, actual_stored_value);
+}
+
+/**
+ * Test that the set value function works for grid input 1 using pointer data.
+ */
+TEST_F(Bmi_Py_Adapter_Test, SetValue_0_c) {
+    size_t ex_index = 0;
+
+    std::string var_name = "GRID_VAR_1";
+    std::vector<double> values = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0};
+
+
+    examples[ex_index].adapter->Initialize();
+    //Initialize the grid shape
+    std::vector<int> shape = {2,3};
+    examples[ex_index].adapter->SetValue("grid_1_shape", shape.data());
+    //Get the initial values
+    std::shared_ptr<py::object> raw_model = friend_get_raw_model(examples[ex_index].adapter.get());
+    py::array_t<double> raw_var_values = raw_model->attr("get_value_ptr")(var_name.c_str());
+    auto unchecked = raw_var_values.mutable_unchecked<1>();
+    
+    std::vector<double> initial_values(values.size());
+    for(int i = 0; i < initial_values.size(); i++){
+        initial_values[i] = unchecked(i);
+    }
+
+    EXPECT_NE(values, initial_values);
+
+    examples[ex_index].adapter->SetValue(var_name, values.data());
+
+    //double actual_stored_value = *((double*) raw_var_values.request(false).ptr);
+    std::vector<double> actual_stored_values(values.size());
+    for(int i = 0; i < actual_stored_values.size(); i++){
+        actual_stored_values[i] = unchecked(i);
+    }
+
+    EXPECT_EQ(values, actual_stored_values);
+}
+
+/**
+ * Test that the set value function works for grid input 1 using vector data.
+ */
+TEST_F(Bmi_Py_Adapter_Test, SetValue_0_d) {
+    size_t ex_index = 0;
+
+    std::string var_name = "GRID_VAR_1";
+    std::vector<double> values = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0};
+
+
+    examples[ex_index].adapter->Initialize();
+    //Initialize the grid shape
+    std::vector<int> shape = {2,3};
+    examples[ex_index].adapter->SetValue("grid_1_shape", shape.data());
+    //Get the initial values
+    std::shared_ptr<py::object> raw_model = friend_get_raw_model(examples[ex_index].adapter.get());
+    py::array_t<double> raw_var_values = raw_model->attr("get_value_ptr")(var_name.c_str());
+    auto unchecked = raw_var_values.mutable_unchecked<1>();
+    
+    std::vector<double> initial_values(values.size());
+    for(int i = 0; i < initial_values.size(); i++){
+        initial_values[i] = unchecked(i);
+    }
+
+    EXPECT_NE(values, initial_values);
+
+    examples[ex_index].adapter->set_value(var_name, values);
+
+    //double actual_stored_value = *((double*) raw_var_values.request(false).ptr);
+    std::vector<double> actual_stored_values(values.size());
+    for(int i = 0; i < actual_stored_values.size(); i++){
+        actual_stored_values[i] = unchecked(i);
+    }
+
+    EXPECT_EQ(values, actual_stored_values);
 }
 
 /**
