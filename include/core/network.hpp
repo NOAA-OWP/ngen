@@ -215,6 +215,44 @@ namespace network {
                         });
 
         }
+
+        /**
+         * @brief Provides a boost transform_iterator, filtered by @p type , to the topologically ordered graph vertex string id's
+         * 
+         * This function is useful when only interested in a single type of feature.
+         * It returns the a topologically ordered set of feature ids.  For example, to print all catchments
+         * in the network:
+         * @code {.cpp}
+         * for( auto catchment : network.filter('cat') ){
+         *    std::cout << catchment;
+         * }
+         * @endcode
+         * 
+         * @param type The type of feature to filter for, i.e. 'cat', 'nex'
+         * @param target_level The level that filtered results should be in
+         * @param order What order to return results in
+         * @return auto 
+         */
+        auto filter(std::string type, int target_level, SortOrder order = SortOrder::Topological)
+        {
+          //todo need to worry about valivdating input???
+          //if type isn't found as a prefix, this iterator range should be empty,
+          //which is a reasonable semantic
+          return get_sorted_index(order) | boost::adaptors::reversed
+                        | boost::adaptors::transformed([this](int const& i) { return get_id(i); })
+                        | boost::adaptors::filtered([this,type,target_level](std::string const& s) { 
+                          if(type == "nex"){
+                            return (s.substr(0,3) == type || s.substr(0,3) == "tnx" || s.substr(0,4) == "tnex") && 
+                                   (this->level_map.find(target_level) != this->level_map.end() && this->level_map[s] == target_level);
+                          }
+                          if(type == "cat"){
+                            return (s.substr(0,3) == type || s.substr(0,3) == "agg") && 
+                                   (this->level_map.find(target_level) != this->level_map.end() && this->level_map[s] == target_level);
+                          }
+                          return (s.substr(0,3) == type) && 
+                                  (this->level_map.find(target_level) != this->level_map.end() && (this->level_map[s] == target_level)); 
+                        });
+        }
         /**
          * @brief Get the string id of a given graph vertex_descriptor @p idx
          * 
