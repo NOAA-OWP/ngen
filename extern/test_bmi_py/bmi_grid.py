@@ -100,12 +100,26 @@ class Grid():
 
     @property
     def units(self) -> 'NDArray[np.int16]':
+        """The grid units, specifically the units of grid spacing in each rank
+
+        Raises:
+            GridTypeAccessError: When error_on_grid_type is toggled on, this exeption is raised when called on a scalar grid.
+
+        Returns:
+            NDArray[np.int16]: array of GridUnit enum VALUES denoting the grid unit for each rank.
+        """
         if _error_on_grid_type and self.type == GridType.scalar:
             raise GridTypeAccessError("Scalar has no grid units")
         return self._units
     
     @units.setter
     def units(self, units: 'NDArray[np.int16]'):
+        """Set the grid spacing units for each dimension.
+
+        Args:
+            units (NDArray[np.int16]): the GridUnit enum VALUES denoting the grid spacing units in each dimension.
+        """
+
         if self.rank > 0:
             self._units = np.array(units, dtype=np.int16)
             self._units.flags.writeable = False
@@ -159,7 +173,7 @@ class Grid():
         """The shape of the grid (the size of each dimension)
 
         Returns:
-            Tuple[int]: size of each dimension
+            NDArray[np.int32]: size of each dimension
         """
         """
             From the BMI docs:
@@ -176,7 +190,7 @@ class Grid():
         """Set the shape of the grid to the provided shape
 
         Args:
-            shape (Tuple[int]): the size of each dimension of the grid
+            shape (NDArray[np.int32]): the size of each dimension of the grid
         """
         #Create a new shape array and replace the old one, make it immutable
         if self.rank > 0:
@@ -189,7 +203,7 @@ class Grid():
         """The spacing of the grid
 
         Returns:
-            Tuple[float]: Tuple of size rank with the spacing in each of rank dimensions
+            NDArray[np.float64]: Tuple of size rank with the spacing in each of rank dimensions
         """
         if _error_on_grid_type and self.type == GridType.scalar:
             raise GridTypeAccessError("Scalar has no grid spacing")
@@ -200,7 +214,7 @@ class Grid():
         """Set the spacing of each grid dimension.
 
         Args:
-            spacing (Tuple[float]): Tuple of size rank with the spacing for each dimension
+            spacing (NDArray[np.float64]): Tuple of size rank with the spacing for each dimension
         """
         if self.rank > 0:
             self._spacing = np.array(spacing, dtype=np.float64)
@@ -212,7 +226,7 @@ class Grid():
         """The origin point of the grid
 
         Returns:
-            Tuple[float]: Tuple of size rank with the coordinates of the the grid origin
+            NDArray[np.float64]: Tuple of size rank with the coordinates of the the grid origin
         """
         if _error_on_grid_type and self.type == GridType.scalar:
             raise GridTypeAccessError("Scalar has no grid origin")
@@ -223,7 +237,7 @@ class Grid():
         """Set the grid origin location
 
         Args:
-            origin (Tuple[float]): Tuple of size rank with grid origin coordinates.
+            origin (NDArray[np.float64]): Tuple of size rank with grid origin coordinates.
         """
         if self.rank > 0:
             self._origin = np.array(origin, dtype=np.float64)
@@ -235,7 +249,7 @@ class Grid():
         """Coordinates of the x components of the grid
 
         Returns:
-            ndarray: array of cooridnate values in the x direction
+            NDArray[np.float64]: array of cooridnate values in the x direction
         """
         if _error_on_grid_type and self.type == GridType.scalar:
             raise GridTypeAccessError("Scalar has no grid x value")
@@ -255,7 +269,7 @@ class Grid():
         """Coordinates of the y components of the grid
 
         Returns:
-            ndarray: array of coordinate values in the y direction
+            NDArray[np.float64]: array of coordinate values in the y direction
         """
         if _error_on_grid_type and self.type == GridType.scalar:
             raise GridTypeAccessError("Scalar has no grid y value")
@@ -272,7 +286,7 @@ class Grid():
         """Coordinates of the z components of the grid
 
         Returns:
-            ndarray: array of coordinate values in the z direction
+            NDArray[np.float64]: array of coordinate values in the z direction
         """
         if _error_on_grid_type and self.type == GridType.scalar:
             raise GridTypeAccessError("Scalar has no grid z value")
