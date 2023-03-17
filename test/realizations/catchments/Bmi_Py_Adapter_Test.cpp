@@ -840,6 +840,19 @@ TEST_F(Bmi_Py_Adapter_Test, GetVarGrid_0_a) {
 }
 
 /**
+ * Test the function for getting the grid for grid variable 1.
+ * */
+TEST_F(Bmi_Py_Adapter_Test, GetVarGrid_0_b) {
+    size_t ex_index = 0;
+
+    std::string var_name = "GRID_VAR_1";
+    examples[ex_index].adapter->Initialize();
+    int grid = examples[ex_index].adapter->GetVarGrid(var_name);
+
+    ASSERT_EQ(grid, expected_output_var_grids[3]);
+}
+
+/**
  * Test the function for getting the grid rank for the grid of output variable 1.
  * */
 TEST_F(Bmi_Py_Adapter_Test, GetGridRank_0_a) {
@@ -854,6 +867,20 @@ TEST_F(Bmi_Py_Adapter_Test, GetGridRank_0_a) {
 }
 
 /**
+ * Test the function for getting the grid rank for the grid of grid output variable 2.
+ * */
+TEST_F(Bmi_Py_Adapter_Test, GetGridRank_0_b) {
+    size_t ex_index = 0;
+
+    std::string var_name = "GRID_VAR_2";
+    examples[ex_index].adapter->Initialize();
+    int grid_id = examples[ex_index].adapter->GetVarGrid(var_name);
+    int grid_rank = examples[ex_index].adapter->GetGridRank(grid_id);
+
+    ASSERT_EQ(grid_rank, expected_output_grid_rank[2]);
+}
+
+/**
  * Test the function for getting the grid size for the grid of output variable 1.
  * */
 TEST_F(Bmi_Py_Adapter_Test, GetGridSize_0_a) {
@@ -865,6 +892,22 @@ TEST_F(Bmi_Py_Adapter_Test, GetGridSize_0_a) {
     int grid_size = examples[ex_index].adapter->GetGridSize(grid_id);
 
     ASSERT_EQ(grid_size, expected_output_grid_size[0]);
+}
+
+/**
+ * Test the function for getting the grid size for the grid of grid variable 2.
+ * */
+TEST_F(Bmi_Py_Adapter_Test, GetGridSize_0_b) {
+    size_t ex_index = 0;
+
+    std::string var_name = "GRID_VAR_2";
+    examples[ex_index].adapter->Initialize();
+    std::vector<int> shape = {3,4};
+    examples[ex_index].adapter->SetValue("grid_1_shape", shape.data());
+    int grid_id = examples[ex_index].adapter->GetVarGrid(var_name);
+    int grid_size = examples[ex_index].adapter->GetGridSize(grid_id);
+    
+    ASSERT_EQ(grid_size, shape[0]*shape[1]);
 }
 
 /**
