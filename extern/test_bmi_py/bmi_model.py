@@ -229,7 +229,7 @@ class bmi_model(Bmi):
         elif var_name == "grid:ranks":
             dest[:] = [self.grid_0.rank, self.grid_1.rank]
         else:
-            dest = self.get_value_ptr(var_name)
+            dest[:] = self.get_value_ptr(var_name)
         return dest
 
     #-------------------------------------------------------------------
@@ -470,6 +470,7 @@ class bmi_model(Bmi):
         for grid in self._grids:
             if grid_id == grid.id: 
                 origin[:] = grid.origin
+                return
         raise ValueError(f"get_grid_origin: grid_id {grid_id} unknown")
 
 
@@ -485,7 +486,7 @@ class bmi_model(Bmi):
     def get_grid_shape(self, grid_id, shape):
 
         for grid in self._grids:
-            if grid_id == grid.id: 
+            if grid_id == grid.id:
                 shape[:] = grid.shape
                 return
         raise ValueError(f"get_grid_shape: grid_id {grid_id} unknown")
