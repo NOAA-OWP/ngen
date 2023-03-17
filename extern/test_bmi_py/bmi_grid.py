@@ -46,11 +46,19 @@ class GridType(str, Enum):
     rectilinear = "rectilinear", #2 dim dx != dy
     uniform_rectilinear = "uniform_rectilinear" #2 dim -- dx = dy
 
+class GridUnits(Enum):
+    """
+        Enumeration of supported Grid Units to facilitate framework interactions
+    """
+    none = -1
+    m = 0
+    km = 1
+
 class Grid():
     """
         Structure for holding required BMI meta data for any grid intended to be used via BMI
     """
-    def __init__(self, id: int, rank: int , type: GridType, units: str = '--'):
+    def __init__(self, id: int, rank: int , type: GridType, units: GridUnits = GridUnits.none) :
         """_summary_
 
         Args:
@@ -65,7 +73,7 @@ class Grid():
         self._shape: 'NDArray[np.int32]' = None #array of size rank
         self._spacing: 'NDArray[np.float64]' = None #array of size rank
         self._origin: 'NDArray[np.float64]' = None #array of size rank
-        self._units: 'NDArray[np.string_]' = None #array of size rank
+        self._units: 'NDArray[np.int16]' = None #array of size rank
 
         if( rank == 0 ):
             # We have to use a 1 dim representation for a scalar cause numpy initialization is weird
@@ -77,26 +85,31 @@ class Grid():
             self._shape = np.zeros( (), np.int32 ) #note, int32 is important here -- assumed by ngen
             self._spacing = np.zeros( (), np.float64 )
             self._origin = np.zeros( (), np.float64 )
-            self._units = np.array( (), dtype='S32')
-            self._units[()] = units
+            self._units = np.ones( (), dtype=np.int16)
+            self._units[()] = units.value
             #self._shape[...] = 1
         else:
             self._shape = np.zeros( rank, np.int32) #set the shape rank, with 0 allocated values
             self._spacing = np.zeros( rank, np.float64 )
             self._origin = np.zeros( rank, np.float64 )
-            self._units = np.array( [units]*rank, dtype=np.string_ )
+            self._units = np.array( [units.value]*rank, dtype=np.int16)
         #Make the array "immutable", can only modify via setting
         self._shape.flags.writeable = False
-
+ 
     # TODO consider restricting resetting of grid values after they have been initialized
 
     @property
-    def units(self) -> str:
+    def units(self) -> 'NDArray[np.int16]':
+        if _error_on_grid_type and self.type == GridType.scalar:
+            raise GridTypeAccessError("Scalar has no grid units")
         return self._units
     
     @units.setter
-    def units(self, units: str):
-        self._units[...] = units
+    def units(self, units: 'NDArray[np.int16]'):
+        if self.rank > 0:
+            self._units = np.array(units, dtype=np.int16)
+            self._units.flags.writeable = False
+        #noop for scalar or grids with rank < 1
 
     @property
     def id(self) -> int:
