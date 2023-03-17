@@ -14,6 +14,9 @@ from .bmi_grid import Grid, GridType
 # Here is the model we want to run
 from .model import ngen_model
 
+class UnknownBMIVariable(RuntimeError):
+    pass
+
 class bmi_model(Bmi):
 
     def __init__(self):
@@ -29,13 +32,14 @@ class bmi_model(Bmi):
 
         self.grid_0: Grid = Grid(0, 0, GridType.scalar) #Grid 0 is a 0 dimension "grid" for scalars
         self.grid_1: Grid = Grid(1, 2, GridType.uniform_rectilinear) #Grid 1 is a 2 dimensional grid
+        self.grid_2: Grid = Grid(2, 3, GridType.rectilinear) #Grid 2 is a 3 dimensional grid
 
-        self._grids = [self.grid_0, self.grid_1]
+        self._grids = [self.grid_0, self.grid_1, self.grid_2]
 
         #TODO this can be done more elegantly using a more coherent data structure representing a BMI variable
         self._grid_map = {'INPUT_VAR_1': self.grid_0, 'INPUT_VAR_2': self.grid_0, 'GRID_VAR_1': self.grid_1,
                           'OUTPUT_VAR_1': self.grid_0, 'OUTPUT_VAR_2': self.grid_0, 'OUTPUT_VAR_3': self.grid_0,
-                          'GRID_VAR_2': self.grid_1}
+                          'GRID_VAR_2': self.grid_1, 'GRID_VAR_3': self.grid_0}
     #----------------------------------------------
     # Required, static attributes of the model
     #----------------------------------------------
@@ -60,7 +64,7 @@ class bmi_model(Bmi):
     #---------------------------------------------
     #will use these implicitly for grid meta data, could in theory advertise them?
     # grid_1_rank -- could probably establish a pattern grid_{id}_rank for managing different ones?
-    _output_var_names = ['OUTPUT_VAR_1', 'OUTPUT_VAR_2', 'OUTPUT_VAR_3', 'GRID_VAR_2']
+    _output_var_names = ['OUTPUT_VAR_1', 'OUTPUT_VAR_2', 'OUTPUT_VAR_3', 'GRID_VAR_2', 'GRID_VAR_3']
 
     #------------------------------------------------------
     # Create a Python dictionary that maps CSDMS Standard
@@ -254,6 +258,18 @@ class bmi_model(Bmi):
             return self.grid_1.origin
         if(var_name == "grid_1_units"):
             return self.grid_1.units
+        #grid 2 meta
+        if(var_name == "grid_2_shape"): # FIXME cannot expose shape as ptr, because it has to side affect variable construction...
+            return self.grid_2.shape
+        if(var_name == "grid_2_spacing"):
+            return self.grid_2.spacing
+        if(var_name == "grid_2_origin"):
+            return self.grid_2.origin
+        if(var_name == "grid_2_units"):
+            return self.grid_2.units
+
+        if var_name not in self._values.keys():
+            raise(UnknownBMIVariable(f"No known variable in BMI model: {var_name}"))
 
         shape = self._values[var_name].shape
         try:
@@ -303,8 +319,11 @@ class bmi_model(Bmi):
         if name in (self._output_var_names + self._input_var_names):
             if(name == "GRID_VAR_1" or name == "GRID_VAR_2"):
                 return 1 #FIXME remove "magic number"
+            if(name == "GRID_VAR_3"):
+                return 2
             else:
-                return self._var_grid_id  
+                return self._var_grid_id
+        raise(UnknownBMIVariable(f"No known variable in BMI model: {name}"))
 
     #------------------------------------------------------------ 
     def get_var_itemsize(self, name):
@@ -373,6 +392,20 @@ class bmi_model(Bmi):
             self.grid_1.origin = values
         elif( var_name == 'grid_1_units' ):
             self.grid_1.units = values
+        #grid 2 meta
+        elif( var_name == 'grid_2_shape' ):
+            self.grid_2.shape = values
+            for var, grid in self._grid_map.items():
+                if grid.id == 2:
+                    #shape is set externally, need to reshape/allocate all vars associated with the grid
+                    self._values[var] = np.resize(self._values[var], self._grid_map[var].shape)
+        elif( var_name == 'grid_2_spacing' ):
+            self.grid_2.spacing = values
+        elif( var_name == 'grid_2_origin' ):
+            self.grid_2.origin = values
+        elif( var_name == 'grid_2_units' ):
+            self.grid_2.units = values
+    
         else:
             #values is a FLATTENED array, need to reshape it...
             self._values[var_name][...] = np.ndarray( self._values[var_name].shape, self._values[var_name].dtype, values )
