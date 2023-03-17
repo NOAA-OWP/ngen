@@ -35,7 +35,7 @@ namespace hy_features {
         }
         
         inline auto catchments(long lv) {
-            return network.filter("cat");
+            return network.filter("cat",lv);
         }
 
         /**
