@@ -921,9 +921,38 @@ TEST_F(Bmi_Py_Adapter_Test, GetGridShape_0_a) {
     std::string var_name = "OUTPUT_VAR_1";
     examples[ex_index].adapter->Initialize();
     int grid_id = examples[ex_index].adapter->GetVarGrid(var_name);
-    int grid_shape[10];
+    int rank = examples[ex_index].adapter->GetGridRank(grid_id);
+
+    ASSERT_EQ(rank, 0);
+    int grid_shape[rank+1];
+
     examples[ex_index].adapter->GetGridShape(grid_id, grid_shape);
     ASSERT_EQ(grid_shape[0], 0);
+}
+
+/**
+ * Test the function for getting the grid shape for the grid of grid variable 2.
+ * */
+TEST_F(Bmi_Py_Adapter_Test, GetGridShape_0_b) {
+    // TODO: requires model support
+
+    size_t ex_index = 0;
+
+    std::string var_name = "GRID_VAR_2";
+    examples[ex_index].adapter->Initialize();
+    //NOTE shape for BMI is number of nodes in ij (column-major) order, so this would create a grid of 
+    // 3x2 cells/faces (2 rows, 3 columns) defined by the corner coordinates
+    std::vector<int> shape = {3,4};
+    examples[ex_index].adapter->SetValue("grid_1_shape", shape.data());
+    int grid_id = examples[ex_index].adapter->GetVarGrid(var_name);
+    int rank = examples[ex_index].adapter->GetGridRank(grid_id);
+
+    ASSERT_EQ(rank, 2);
+    int grid_shape[rank];
+
+    examples[ex_index].adapter->GetGridShape(grid_id, grid_shape);
+    ASSERT_EQ(grid_shape[0], shape[0]);
+    ASSERT_EQ(grid_shape[1], shape[1]);
 }
 
 /**
