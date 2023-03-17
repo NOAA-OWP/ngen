@@ -958,15 +958,88 @@ TEST_F(Bmi_Py_Adapter_Test, GetGridShape_0_b) {
 /**
  * Test the function for getting the grid spacing for the grid of output variable 1.
  * */
-TEST_F(Bmi_Py_Adapter_Test, DISABLED_GetGridSpacing_0_a) {
-    // TODO: requires model support
-    /*
+TEST_F(Bmi_Py_Adapter_Test, GetGridSpacing_0_a) {
+
     size_t ex_index = 0;
 
     std::string var_name = "OUTPUT_VAR_1";
     examples[ex_index].adapter->Initialize();
     int grid_id = examples[ex_index].adapter->GetVarGrid(var_name);
-    int *grid_spacing = examples[ex_index].adapter->GetGridSpacing(grid_id);
+    int rank = examples[ex_index].adapter->GetGridRank(grid_id);
+
+    ASSERT_EQ(rank, 0);
+    double grid_spacing[rank+1];
+
+    examples[ex_index].adapter->GetGridSpacing(grid_id, grid_spacing);
+    ASSERT_EQ(grid_spacing[0], 0);
+}
+
+/**
+ * Test the function for getting the default grid spacing for grid var 1.
+ * */
+TEST_F(Bmi_Py_Adapter_Test, GetGridSpacing_0_b) {
+
+    size_t ex_index = 0;
+
+    std::string var_name = "GRID_VAR_1";
+    examples[ex_index].adapter->Initialize();
+    int grid_id = examples[ex_index].adapter->GetVarGrid(var_name);
+    int rank = examples[ex_index].adapter->GetGridRank(grid_id);
+
+    ASSERT_EQ(rank, 2);
+    double grid_spacing[rank];
+
+    examples[ex_index].adapter->GetGridSpacing(grid_id, grid_spacing);
+    for(int i = 0; i < rank; i++){
+        ASSERT_EQ(grid_spacing[i], 0);
+    }
+}
+
+/**
+ * Test the function for setting then getting the grid spacing for grid var 1.
+ * */
+TEST_F(Bmi_Py_Adapter_Test, GetGridSpacing_0_c) {
+
+    size_t ex_index = 0;
+
+    std::string var_name = "GRID_VAR_1";
+    examples[ex_index].adapter->Initialize();
+    int grid_id = examples[ex_index].adapter->GetVarGrid(var_name);
+    int rank = examples[ex_index].adapter->GetGridRank(grid_id);
+    //NOTE spacing in BMI is again ij order, so this is `dy, dx`
+    std::vector<double> spacing = {2.0, 2.0}; //TODO if this isn't double, the results are wacky...but it doesn't crash...
+    examples[ex_index].adapter->SetValue("grid_1_spacing", spacing.data());
+    
+    ASSERT_EQ(rank, 2);
+    double grid_spacing[rank];
+
+    examples[ex_index].adapter->GetGridSpacing(grid_id, grid_spacing);
+    for(int i = 0; i < rank; i++){
+        ASSERT_EQ(grid_spacing[i], 2.0);
+    }
+}
+
+/**
+ * Test the function for setting then getting the grid spacing units for grid var 1.
+ * */
+TEST_F(Bmi_Py_Adapter_Test, GetGridSpacing_0_d) {
+
+    size_t ex_index = 0;
+
+    std::string var_name = "GRID_VAR_1";
+    examples[ex_index].adapter->Initialize();
+    int grid_id = examples[ex_index].adapter->GetVarGrid(var_name);
+    int rank = examples[ex_index].adapter->GetGridRank(grid_id);
+    //NOTE spacing in BMI is again ij order, so this is `dy, dx`
+    std::vector<short> units = {1,1}; //The enum value for `m` or `meters` in bmi_grid.py
+    examples[ex_index].adapter->SetValue("grid_1_units", units.data());
+
+    short grid_units[rank];
+    examples[ex_index].adapter->GetValue("grid_1_units", grid_units);
+    for(int i = 0; i < rank; i++){
+        ASSERT_EQ(grid_units[i], units[i]);
+    }
+}
 
     ASSERT_EQ(grid_size, expected_grid_size);
     */
