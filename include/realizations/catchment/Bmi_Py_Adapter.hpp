@@ -226,7 +226,7 @@ namespace models {
                  * could produce duplicate "case" values.
                  */
                 //TODO: include other numpy type strings, https://numpy.org/doc/stable/user/basics.types.html
-                if (py_type_name == "int" && item_size == sizeof(short)) {
+                if ( (py_type_name == "int" || py_type_name == "int16") && item_size == sizeof(short)) {
                     return "short";
                 } else if ( (py_type_name == "int" || py_type_name == "int32" )&& item_size == sizeof(int)) {
                     return "int";
@@ -345,7 +345,7 @@ namespace models {
                 //This is required here because grid info can be a non dimensional `np.zeros( () )`
                 py::array_t<T> np_array;
                 if( dest_length == 0 ){
-                    np_array = np.attr("zeros")(1, "dtype"_a = np_dtype);;
+                    np_array = np.attr("zeros")(1, "dtype"_a = np_dtype);
                 } else{
                     np_array = np.attr("zeros")(dest_length, "dtype"_a = np_dtype);
                 }
