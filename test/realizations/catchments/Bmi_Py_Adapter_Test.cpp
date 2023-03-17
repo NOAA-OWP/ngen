@@ -106,7 +106,7 @@ protected:
 
     static py::object Path;
 
-    std::vector<std::string> expected_output_var_names = { "OUTPUT_VAR_1", "OUTPUT_VAR_2", "OUTPUT_VAR_3", "GRID_VAR_2" };
+    std::vector<std::string> expected_output_var_names = { "OUTPUT_VAR_1", "OUTPUT_VAR_2", "OUTPUT_VAR_3", "GRID_VAR_2", "GRID_VAR_3" };
     std::vector<std::string> expected_input_var_names = { "INPUT_VAR_1", "INPUT_VAR_2", "GRID_VAR_1"};
     std::vector<std::string> expected_output_var_locations = { "node", "node", "node", "node" };
     std::vector<int> expected_output_var_grids = { 0, 0, 0, 1 };
@@ -1108,25 +1108,96 @@ TEST_F(Bmi_Py_Adapter_Test, GetGridOrigin_0_c) {
 /**
  * Test the function for getting the location of grid nodes in the first dimension for the grid of output variable 1.
  */
-TEST_F(Bmi_Py_Adapter_Test, DISABLED_GetGridX_0_a) {
-    // TODO: requires model support
-    ASSERT_TRUE(false);
+TEST_F(Bmi_Py_Adapter_Test, GetGridX_0_a) {
+
+    size_t ex_index = 0;
+
+    std::string var_name = "GRID_VAR_2";
+    examples[ex_index].adapter->Initialize();
+    int grid_id = examples[ex_index].adapter->GetVarGrid(var_name);
+    int rank = examples[ex_index].adapter->GetGridRank(grid_id);
+    //Initialize the grid shape (y,x)
+    std::vector<int> shape = {3,4};
+    examples[ex_index].adapter->SetValue("grid_1_shape", shape.data());
+    //Initialize the origin
+    //NOTE origin is also ij order, so this is `y0,x0`
+    std::vector<double> origin = {42.0, 42.0}; //TODO if this isn't double, the results are wacky...but it doesn't crash...
+    examples[ex_index].adapter->SetValue("grid_1_origin", origin.data());
+    
+    //NOTE spacing in BMI is again ij order, so this is `dy, dx`
+    std::vector<double> spacing = {2.0, 2.0}; //TODO if this isn't double, the results are wacky...but it doesn't crash...
+    examples[ex_index].adapter->SetValue("grid_1_spacing", spacing.data());
+
+    ASSERT_EQ(rank, 2);
+    std::vector<double> xs = std::vector<double>(shape[1], 0.0 );
+    examples[ex_index].adapter->GetGridX(grid_id, xs.data());
+
+    for(int i = 0; i < shape[1]; i++){
+        ASSERT_EQ(xs[i], origin[1] + spacing[1]*i);
+    }
 }
 
 /**
  * Test the function for getting the location of grid nodes in the second dimension for the grid of output variable 1.
  */
-TEST_F(Bmi_Py_Adapter_Test, DISABLED_GetGridY_0_a) {
-    // TODO: requires model support
-    ASSERT_TRUE(false);
+TEST_F(Bmi_Py_Adapter_Test, GetGridY_0_a) {
+    size_t ex_index = 0;
+
+    std::string var_name = "GRID_VAR_2";
+    examples[ex_index].adapter->Initialize();
+    int grid_id = examples[ex_index].adapter->GetVarGrid(var_name);
+    int rank = examples[ex_index].adapter->GetGridRank(grid_id);
+    //Initialize the grid shape (y,x)
+    std::vector<int> shape = {3,4};
+    examples[ex_index].adapter->SetValue("grid_1_shape", shape.data());
+    //Initialize the origin
+    //NOTE origin is also ij order, so this is `y0,x0`
+    std::vector<double> origin = {42.0, 42.0}; //TODO if this isn't double, the results are wacky...but it doesn't crash...
+    examples[ex_index].adapter->SetValue("grid_1_origin", origin.data());
+    
+    //NOTE spacing in BMI is again ij order, so this is `dy, dx`
+    std::vector<double> spacing = {2.0, 2.0}; //TODO if this isn't double, the results are wacky...but it doesn't crash...
+    examples[ex_index].adapter->SetValue("grid_1_spacing", spacing.data());
+
+    ASSERT_EQ(rank, 2);
+    std::vector<double> ys = std::vector<double>(shape[0], 0.0 );
+    examples[ex_index].adapter->GetGridY(grid_id, ys.data());
+
+    for(int i = 0; i < shape[0]; i++){
+        ASSERT_EQ(ys[i], origin[0] + spacing[0]*i);
+    }
 }
 
 /**
  * Test the function for getting the location of grid nodes in the third dimension for the grid of output variable 1.
  */
-TEST_F(Bmi_Py_Adapter_Test, DISABLED_GetGridZ_0_a) {
-    // TODO: requires model support
-    ASSERT_TRUE(false);
+TEST_F(Bmi_Py_Adapter_Test, GetGridZ_0_a) {
+    size_t ex_index = 0;
+
+    std::string var_name = "GRID_VAR_3";
+    examples[ex_index].adapter->Initialize();
+    int grid_id = examples[ex_index].adapter->GetVarGrid(var_name);
+    int rank = examples[ex_index].adapter->GetGridRank(grid_id);
+    //Initialize the grid shape (z,y,x)
+    std::vector<int> shape = {3,4,5};
+    examples[ex_index].adapter->SetValue("grid_2_shape", shape.data());
+    //Initialize the origin
+    //NOTE origin is also ij order, so this is `z0, y0,x0`
+    std::vector<double> origin = {42.0, 42.0, 42.0}; //TODO if this isn't double, the results are wacky...but it doesn't crash...
+    examples[ex_index].adapter->SetValue("grid_2_origin", origin.data());
+    
+    //NOTE spacing in BMI is again ij order, so this is `dz, dy, dx`
+    std::vector<double> spacing = {2.0, 2.0, 2.0}; //TODO if this isn't double, the results are wacky...but it doesn't crash...
+    examples[ex_index].adapter->SetValue("grid_2_spacing", spacing.data());
+
+    ASSERT_EQ(rank, 3);
+    std::vector<double> zs = std::vector<double>(shape[0], 0.0 );
+
+    examples[ex_index].adapter->GetGridZ(grid_id, zs.data());
+
+    for(int i = 0; i < shape[0]; i++){
+        ASSERT_EQ(zs[i], origin[0] + spacing[0]*i);
+    }
 }
 
 /**
