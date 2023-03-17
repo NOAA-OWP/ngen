@@ -258,7 +258,8 @@ class Grid():
             # https://bmi.readthedocs.io/en/stable/model_grids.html#model-grids
             # bmi states dimension info in `ij` form (last dimension indexed first...) in the shape meta
             # so x would at index rank, y at rank-1, z at rank-2 ect...
-            return np.array( [ self.origin[self.rank] + self.spacing[self.rank]*x for x in range(self.shape[0]) ], dtype=np.float64 )
+            idx = self.rank-1 #index is 0 based, rank is 1 based, adjust...
+            return np.array( [ self.origin[idx] + self.spacing[idx]*x for x in range(self.shape[idx]) ], dtype=np.float64 )
         else:    
             #TODO should this raise an error or return an empty array?
             #raise RuntimeError(f"Cannot get x coordinates of grid with shape {self.shape}")
@@ -275,7 +276,8 @@ class Grid():
             raise GridTypeAccessError("Scalar has no grid y value")
 
         if (self.type == GridType.rectilinear or self.type == GridType.uniform_rectilinear) and len(self.shape) > 1:
-            return np.array( [ self.origin[self.rank-1] + self.spacing[self.rank-1]*y for y in range(self.shape[1]) ], dtype=np.float64 )
+            idx = self.rank-2 #index is 0 based, rank is 1 based, adjust...
+            return np.array( [ self.origin[idx] + self.spacing[idx]*y for y in range(self.shape[idx]) ], dtype=np.float64 )
         else:    
             #TODO should this raise an error or return an empty array?
             #raise RuntimeError(f"Cannot get y coordinates of grid with shape {self.shape}")
@@ -292,7 +294,8 @@ class Grid():
             raise GridTypeAccessError("Scalar has no grid z value")
 
         if (self.type == GridType.rectilinear or self.type == GridType.uniform_rectilinear) and len(self.shape) > 2:
-            return np.array( [ self.origin[self.rank-2] + self.spacing[self.rank-2]*z for z in range(self.shape[2]) ], dtype=np.float64 )
+            idx = self.rank-3 #index is 0 based, rank is 1 based, adjust...
+            return np.array( [ self.origin[idx] + self.spacing[idx]*z for z in range(self.shape[idx]) ], dtype=np.float64 )
         else:    
             #TODO should this raise an error or return an empty array?
             #raise RuntimeError(f"Cannot get z coordinates of grid with shape {self.shape}")
