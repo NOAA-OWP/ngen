@@ -163,7 +163,8 @@ namespace models {
                 //   get_grid_rank or get_grid_size elements.) See Model grids for more information."
                 // Leaving this not implemented for now, since it is probably not yet needed, to make sure a proper
                 // solution to determining the array length is used.
-                throw runtime_error("GetGridX not yet implemented for Python BMI adapter");
+                // FIXME adjust comment
+                    get_grid_coordinates("get_grid_x", grid, 0, x);          
             }
 
             void GetGridY(const int grid, double *y) override {
@@ -172,7 +173,8 @@ namespace models {
                 //   get_grid_rank or get_grid_size elements.) See Model grids for more information."
                 // Leaving this not implemented for now, since it is probably not yet needed, to make sure a proper
                 // solution to determining the array length is used.
-                throw runtime_error("GetGridY not yet implemented for Python BMI adapter");
+                // FIXME adjust comment
+                get_grid_coordinates("get_grid_y", grid, 1, y);       
             }
 
             void GetGridZ(const int grid, double *z) override {
@@ -181,7 +183,8 @@ namespace models {
                 //   get_grid_rank or get_grid_size elements.) See Model grids for more information."
                 // Leaving this not implemented for now, since it is probably not yet needed, to make sure a proper
                 // solution to determining the array length is used.
-                throw runtime_error("GetGridZ not yet implemented for Python BMI adapter");
+                // FIXME adjust comment
+                get_grid_coordinates("get_grid_z", grid, 2, z);       
             }
 
             double GetStartTime() override;
@@ -673,6 +676,36 @@ namespace models {
                     }
                     throw e;
                 }
+            }
+
+            /**
+             * @brief Get the grid coordinates object for supported grid types
+             * 
+             * Currently supports querying x/y/z coordinates from BMI models on grids that are of type 
+             * "uniform_rectilinear" or "rectilinear".
+             * 
+             * This function uses other BMI functions to determine the correct number of elements to copy into dest.
+             * It is up to the caller to ensure that dest is properly allocated to the correct size before calling this function.
+             * 
+             * @param name name of the corresponding python BMI coordinate function to call, e.g. `get_grid_x`
+             * @param grid the grid id to query
+             * @param index a 0 based dimension index, (0, 1, 2) for (x, y, z)
+             * @param dest the destination pointer to put the coordinate data
+             * 
+             * * @throw std::runtime_error Thrown if the grid type corresponding to grid isn't supported.
+             */
+            void get_grid_coordinates(const char* name, const int grid, const int index, double* dest){
+                std::string grid_type = GetGridType(grid);
+                if( grid_type == "uniform_rectilinear" || grid_type == "rectilinear"){
+                    int rank = GetGridRank(grid);
+                    int shape[rank];
+                    GetGridShape(grid, shape);
+                    get_and_copy_grid_array<double>(name, grid, dest, shape[rank-index-1], "float");
+                    return;
+                }else{
+                    throw runtime_error("GetGrid<X|Y|Z> coordinates not yet implemented for Python BMI adapter for grid type "+grid_type);
+                }
+
             }
 
             /**
