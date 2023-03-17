@@ -246,6 +246,15 @@ class bmi_model(Bmi):
         """
 
         #Make sure to return a flattened array
+        if(var_name == "grid_1_shape"): # FIXME cannot expose shape as ptr, because it has to side affect variable construction...
+            return self.grid_1.shape
+        if(var_name == "grid_1_spacing"):
+            return self.grid_1.spacing
+        if(var_name == "grid_1_origin"):
+            return self.grid_1.origin
+        if(var_name == "grid_1_units"):
+            return self.grid_1.units
+
         shape = self._values[var_name].shape
         try:
             #see if raveling is possible without a copy
