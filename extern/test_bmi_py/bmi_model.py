@@ -371,6 +371,8 @@ class bmi_model(Bmi):
             self.grid_1.spacing = values
         elif( var_name == 'grid_1_origin' ):
             self.grid_1.origin = values
+        elif( var_name == 'grid_1_units' ):
+            self.grid_1.units = values
         else:
             #values is a FLATTENED array, need to reshape it...
             self._values[var_name][...] = np.ndarray( self._values[var_name].shape, self._values[var_name].dtype, values )
