@@ -1041,17 +1041,68 @@ TEST_F(Bmi_Py_Adapter_Test, GetGridSpacing_0_d) {
     }
 }
 
-    ASSERT_EQ(grid_size, expected_grid_size);
-    */
-    ASSERT_TRUE(false);
+/**
+ * Test the function for getting the grid origin for the grid of grid var 2.
+ */
+TEST_F(Bmi_Py_Adapter_Test, GetGridOrigin_0_a) {
+    size_t ex_index = 0;
+
+    std::string var_name = "GRID_VAR_2";
+    examples[ex_index].adapter->Initialize();
+    int grid_id = examples[ex_index].adapter->GetVarGrid(var_name);
+    int rank = examples[ex_index].adapter->GetGridRank(grid_id);
+
+    ASSERT_EQ(rank, 2);
+    double grid_origin[rank];
+
+    examples[ex_index].adapter->GetGridSpacing(grid_id, grid_origin);
+    ASSERT_EQ(grid_origin[0], 0);
+    ASSERT_EQ(grid_origin[1], 0);
 }
 
 /**
- * Test the function for getting the grid origin for the grid of output variable 1.
- */
-TEST_F(Bmi_Py_Adapter_Test, DISABLED_GetGridOrigin_0_a) {
-    // TODO: requires model support
-    ASSERT_TRUE(false);
+ * Test the function for getting the default grid origin for grid var 2.
+ * */
+TEST_F(Bmi_Py_Adapter_Test, GetGridOrigin_0_b) {
+
+    size_t ex_index = 0;
+
+    std::string var_name = "GRID_VAR_2";
+    examples[ex_index].adapter->Initialize();
+    int grid_id = examples[ex_index].adapter->GetVarGrid(var_name);
+    int rank = examples[ex_index].adapter->GetGridRank(grid_id);
+
+    ASSERT_EQ(rank, 2);
+    double grid_origin[rank];
+
+    examples[ex_index].adapter->GetGridOrigin(grid_id, grid_origin);
+    for(int i = 0; i < rank; i++){
+        ASSERT_EQ(grid_origin[i], 0);
+    }
+}
+
+/**
+ * Test the function for setting then getting the grid origin for grid var 2.
+ * */
+TEST_F(Bmi_Py_Adapter_Test, GetGridOrigin_0_c) {
+
+    size_t ex_index = 0;
+
+    std::string var_name = "GRID_VAR_2";
+    examples[ex_index].adapter->Initialize();
+    int grid_id = examples[ex_index].adapter->GetVarGrid(var_name);
+    int rank = examples[ex_index].adapter->GetGridRank(grid_id);
+    //NOTE origin is also ij order, so this is `y0,x0`
+    std::vector<double> origin = {42.0, 42.0}; //TODO if this isn't double, the results are wacky...but it doesn't crash...
+    examples[ex_index].adapter->SetValue("grid_1_origin", origin.data());
+    
+    ASSERT_EQ(rank, 2);
+    double grid_origin[rank];
+
+    examples[ex_index].adapter->GetGridOrigin(grid_id, grid_origin);
+    for(int i = 0; i < rank; i++){
+        ASSERT_EQ(grid_origin[i], 42.0);
+    }
 }
 
 /**
