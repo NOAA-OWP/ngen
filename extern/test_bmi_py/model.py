@@ -24,8 +24,11 @@ class ngen_model():
         -------
 
         """
-        model['OUTPUT_VAR_1'] = model['INPUT_VAR_1']
-        model['OUTPUT_VAR_2'] = 2.0 * model['INPUT_VAR_2']
+        #Since VAR_1 and 2 are scalars wrapped in a (0,) sized numpy array, need to index with either `...` or `()`
+        model['OUTPUT_VAR_1'][...] = model['INPUT_VAR_1']
+        model['OUTPUT_VAR_2'][...] = 2.0 * model['INPUT_VAR_2']
         model['OUTPUT_VAR_3'] += 1
-        model['GRID_VAR_2'] = model['GRID_VAR_1'] + 1
+        #Update the grid data
+        model['GRID_VAR_2'] = model['GRID_VAR_1'] + 2
+        model['GRID_VAR_3'] = model['GRID_VAR_1'] + 3
         model['current_model_time'] = model['current_model_time'] + dt
