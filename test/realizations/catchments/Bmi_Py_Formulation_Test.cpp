@@ -216,6 +216,11 @@ void Bmi_Py_Formulation_Test::SetUp() {
                                                                        std::make_unique<CsvPerFeatureForcingProvider>(*examples[i].forcing_params),
                                                                        utils::StreamHandler());
         examples[i].formulation->create_formulation(examples[i].realization_config_properties_tree);
+
+        //Init the test grids
+        std::shared_ptr<models::bmi::Bmi_Py_Adapter> model_adapter = get_friend_bmi_model(*examples[i].formulation);
+        std::vector<int> shape = {2,3};
+        model_adapter->SetValue("grid_1_shape", shape.data());
     }
 
 }
