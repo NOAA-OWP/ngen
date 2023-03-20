@@ -269,7 +269,8 @@ void Bmi_Py_Formulation_Test::generate_realization_config(int ex_idx) {
               "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION + "\": 6, "
               "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES + "\": { "
               "                      \"INPUT_VAR_2\": \"" + NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP + "\","
-              "                      \"INPUT_VAR_1\": \"" + AORC_FIELD_NAME_PRECIP_RATE + "\""
+              "                      \"INPUT_VAR_1\": \"" + AORC_FIELD_NAME_PRECIP_RATE + "\","
+              "                      \"GRID_VAR_1\": \""  + AORC_FIELD_NAME_PRECIP_RATE +"\""
               "                },"
               + variables_line +
               "                \"uses_forcing_file\": " + (examples[ex_idx].uses_forcing_file ? "true" : "false") + ""
