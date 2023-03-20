@@ -1,6 +1,15 @@
 cmake_minimum_required(VERSION 3.12)
+
 project(iso_c_fortran_bmi VERSION 1.0.0 DESCRIPTION "Shared library for ISO_C_BINDING Fortran Libraries implementing BMI")
+
 enable_language( Fortran )
+
+# https://www.intel.com/content/www/us/en/develop/documentation/oneapi-dpcpp-cpp-compiler-dev-guide-and-reference/top/compiler-setup/use-the-command-line/use-cmake-with-the-compiler.html
+if (INTEL_DPCPP)
+    cmake_minimum_required(VERSION 3.20)
+    find_package(IntelDPCPP REQUIRED)
+endif()
+
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/../../cmake/")
 # Uncomment this and rebuild artifacts to enable debugging
 #set(CMAKE_BUILD_TYPE Debug)

@@ -6,7 +6,8 @@
                      + __GNUC_PATCHLEVEL__)
 
 #if GCC_VERSION < 40900
-#include <unique.hpp>
+//TODO: This was being included on Intel compilers--we will probably never need this again, consider removal.
+//#include <unique.hpp>
 #endif
 #endif
 

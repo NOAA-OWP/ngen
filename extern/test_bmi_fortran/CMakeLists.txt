@@ -1,14 +1,25 @@
 cmake_minimum_required(VERSION 3.10)
-enable_language( Fortran )
 
 project(testbmifortranmodel VERSION 1.0.0 DESCRIPTION "BMI Fortran Testing Model Shared Library")
+
+enable_language( Fortran )
+
+# https://www.intel.com/content/www/us/en/develop/documentation/oneapi-dpcpp-cpp-compiler-dev-guide-and-reference/top/compiler-setup/use-the-command-line/use-cmake-with-the-compiler.html
+if (INTEL_DPCPP)
+    cmake_minimum_required(VERSION 3.20)
+    find_package(IntelDPCPP REQUIRED)
+    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -g -traceback -check all -debug all -mcmodel=medium -shared-intel")
+else()
+    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -g -fbacktrace -fbounds-check -Wall")
+endif()
+
+
 add_subdirectory(../iso_c_fortran_bmi ${CMAKE_BINARY_DIR}/iso_c_bmi)
 #Get the iso_c_fortran binding module to build as part of this build
 #add_subdirectory(../iso_c_fortran_bmi ${CMAKE_BINARY_DIR}/iso_c_bmi)
 
 # Uncomment this and rebuild artifacts to enable debugging
 set(CMAKE_BUILD_TYPE Debug)
-set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -g -fbacktrace -fbounds-check -Wall")
 
 set( CMAKE_Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR}/fortran)
 
