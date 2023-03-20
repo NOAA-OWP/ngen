@@ -88,6 +88,12 @@ protected:
         return nested_formulation.get_bmi_model();
     }
 
+    template<class M, class N>
+    static std::shared_ptr<N> get_friend_bmi_adapter(const Bmi_Multi_Formulation& formulation, const int mod_index) {
+        std::shared_ptr<N> nested = std::static_pointer_cast<M>(formulation.modules[mod_index])->get_bmi_model();
+        return nested;
+    }
+
     static time_t get_friend_bmi_model_start_time_forcing_offset_s(Bmi_Multi_Formulation& formulation) {
         return formulation.get_bmi_model_start_time_forcing_offset_s();
     }
@@ -768,7 +774,13 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_1_a) {
 
     Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
     formulation.create_formulation(config_prop_ptree[ex_index]);
-
+    //Init the test grids #FIXME do this better...highly volitile if example changes...
+    //This only works if the python module is at index 1 in the multi BMI layers, and would need repeated
+    //if for whatever reason there were more than one of the python test modles in the stack (which is possible...)
+    //This is really just a tempoary work around to get the basic funcationality of grid support in place...
+    std::shared_ptr<models::bmi::Bmi_Py_Adapter> model_adapter = get_friend_bmi_adapter<Bmi_Py_Formulation, models::bmi::Bmi_Py_Adapter>(formulation, 1);
+    std::vector<int> shape = {2,3};
+    model_adapter->SetValue("grid_1_shape", shape.data());
     formulation.get_response(0, 3600);
     std::string output = formulation.get_output_line_for_timestep(0, ",");
     ASSERT_EQ(output, "0.000000,200620.000000,1.000000");
@@ -782,7 +794,13 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_1_b) {
 
     Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
     formulation.create_formulation(config_prop_ptree[ex_index]);
-
+    //Init the test grids #FIXME do this better...highly volitile if example changes...
+    //This only works if the python module is at index 1 in the multi BMI layers, and would need repeated
+    //if for whatever reason there were more than one of the python test modles in the stack (which is possible...)
+    //This is really just a tempoary work around to get the basic funcationality of grid support in place...
+    std::shared_ptr<models::bmi::Bmi_Py_Adapter> model_adapter = get_friend_bmi_adapter<Bmi_Py_Formulation, models::bmi::Bmi_Py_Adapter>(formulation, 1);
+    std::vector<int> shape = {2,3};
+    model_adapter->SetValue("grid_1_shape", shape.data());
     int i = 0;
     while (i < 542)
         formulation.get_response(i++, 3600);
