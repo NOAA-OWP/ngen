@@ -11,6 +11,12 @@ add_compile_options(
 )
 project(noah-owp-modular VERSION 1.0.0 DESCRIPTION "External BMI Models Shared Libraries")
 
+# https://www.intel.com/content/www/us/en/develop/documentation/oneapi-dpcpp-cpp-compiler-dev-guide-and-reference/top/compiler-setup/use-the-command-line/use-cmake-with-the-compiler.html
+if (INTEL_DPCPP)
+    cmake_minimum_required(VERSION 3.20)
+    find_package(IntelDPCPP REQUIRED)
+endif()
+
 set( CMAKE_Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR}/fortran)
 
 #### Add variables for individual libraries that are used withing the *.pc.in files

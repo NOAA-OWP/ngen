@@ -97,6 +97,7 @@ CMakeCache.txt
 /cmake-build-debug
 /cmake_build
 /build
+/cmake_build*
 
 # Static Headers
 include/bmi.hpp

@@ -14,6 +14,11 @@ else()
     option(PACKAGE_TESTS "Build automated tests")
 endif()
 
+# https://www.intel.com/content/www/us/en/develop/documentation/oneapi-dpcpp-cpp-compiler-dev-guide-and-reference/top/compiler-setup/use-the-command-line/use-cmake-with-the-compiler.html
+if (INTEL_DPCPP)
+    find_package(IntelDPCPP REQUIRED)
+endif()
+
 if (NOT DEFINED CMAKE_C_COMPILER)
     message(STATUS "Checking environment variable 'C' for C compiler")
     if (DEFINED ENV{CC})
