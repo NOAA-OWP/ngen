@@ -501,8 +501,9 @@ void Bmi_Multi_Formulation_Test::SetUp() {
     #ifndef ACTIVATE_PYTHON
     throw std::runtime_error("Error: can't run multi BMI tests for scenario at index 1 without BMI Python functionality active" SOURCE_LOC);
     #endif // ACTIVATE_PYTHON
-
-    initializeTestExample(1, "cat-27", {std::string(BMI_FORTRAN_TYPE), std::string(BMI_PYTHON_TYPE)}, {});
+    //This example is used to get getting output, but since we aren't initialize the test model grid just yet, need to specifiy only the variables to ask for
+    //to avoid an index error if we try to get the grid data without properly intializing the grid
+    initializeTestExample(1, "cat-27", {std::string(BMI_FORTRAN_TYPE), std::string(BMI_PYTHON_TYPE)}, {"OUTPUT_VAR_1", "OUTPUT_VAR_2", "OUTPUT_VAR_3"});
 
     initializeTestExample(2, "cat-27", {std::string(BMI_FORTRAN_TYPE), std::string(BMI_PYTHON_TYPE)}, {});
 
