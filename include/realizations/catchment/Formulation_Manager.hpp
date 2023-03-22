@@ -15,7 +15,7 @@
 #include "features/Features.hpp"
 #include <FeatureCollection.hpp>
 #include "Formulation_Constructors.hpp"
-#include "Simulation_Time.h"
+#include "Simulation_Time.hpp"
 #include "GIUH.hpp"
 #include "GiuhJsonReader.h"
 #include "routing/Routing_Params.h"

@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "Simulation_Time.h"
+#include "Simulation_Time.hpp"
 #include <memory>
 #include <vector>
 #include <string>

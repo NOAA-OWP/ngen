@@ -3,6 +3,7 @@
 
 #include <unordered_map>
 #include <string>
+#include <vector>
 
 namespace ngen
 {
@@ -30,15 +31,28 @@ namespace ngen
 
         ~LayerDataStorage() {}
 
-        const LayerDescription& get_layer(int id) const { return stored_layers.at(id); }
+        const LayerDescription& get_layer(int id) const 
+        { 
+            return stored_layers.at(id); 
+        }
 
-        void put_layer(const LayerDescription& desc, int id) { stored_layers[id] = desc;}
+        void put_layer(const LayerDescription& desc, int id) 
+        {
+             stored_layers[id] = desc;
+             keys.push_back(id);
+        }
 
-        bool exists(int id) { return stored_layers.find(id) != stored_layers.end(); }
+        bool exists(int id) 
+        { 
+            return stored_layers.find(id) != stored_layers.end(); 
+        }
+
+        std::vector<int>& get_keys() { return keys; }
 
         private:
 
         std::unordered_map<int,LayerDescription> stored_layers;
+        std::vector<int> keys;
     };
 }
 
