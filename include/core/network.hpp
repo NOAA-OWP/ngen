@@ -243,14 +243,14 @@ namespace network {
                         | boost::adaptors::filtered([this,type,target_level](std::string const& s) { 
                           if(type == "nex"){
                             return (s.substr(0,3) == type || s.substr(0,3) == "tnx" || s.substr(0,4) == "tnex") && 
-                                   (this->level_map.find(target_level) != this->level_map.end() && this->level_map[s] == target_level);
+                                   (this->level_map.find(s) != this->level_map.end() && this->level_map[s] == target_level);
                           }
                           if(type == "cat"){
                             return (s.substr(0,3) == type || s.substr(0,3) == "agg") && 
-                                   (this->level_map.find(target_level) != this->level_map.end() && this->level_map[s] == target_level);
+                                   (this->level_map.find(s) != this->level_map.end() && this->level_map[s] == target_level);
                           }
                           return (s.substr(0,3) == type) && 
-                                  (this->level_map.find(target_level) != this->level_map.end() && (this->level_map[s] == target_level)); 
+                                  (this->level_map.find(s) != this->level_map.end() && (this->level_map[s] == target_level)); 
                         });
         }
         /**
