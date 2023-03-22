@@ -46,6 +46,11 @@ inline std::vector<std::vector<std::string> > CSVReader::getData()
 	// Iterate through each line and split the content using delimeter
 	while (getline(file, line))
 	{
+		// Consider more robust solution like https://stackoverflow.com/a/6089413/489116
+		if ( line.size() && line[line.size()-1] == '\r' ) {
+           line = line.substr( 0, line.size() - 1 );
+       	}
+
 		std::vector<std::string> vec;
 
                 /// \todo Look into replacement from STD for split to reduce dependency on Boost
