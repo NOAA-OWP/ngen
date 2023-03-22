@@ -2,7 +2,7 @@ from pathlib import Path
 
 import numpy as np
 np.set_printoptions(precision=2)
-# This is the BMI LSTM that we will be running
+# This is the BMI model that we will be running
 from bmi_model import bmi_model
 
 from typing import TYPE_CHECKING
