@@ -56,7 +56,7 @@ namespace data_access {
          * @param defaultVals Mapping of some or all provided output defaults, keyed by output name.
          */
         OptionalWrappedDataProvider(vector<string> providedOuts, map<string, double> defaultVals)
-                : DeferredWrappedProvider(move(providedOuts)), defaultValues(move(defaultVals))
+                : DeferredWrappedProvider(std::move(providedOuts)), defaultValues(std::move(defaultVals))
         {
             // Validate the provided map of default values to ensure there aren't any unrecognized keys, as this
             //    constraint is later relied upon (i.e., keys of defaultValues being in the providedOutputs collection)
@@ -89,7 +89,7 @@ namespace data_access {
          */
         OptionalWrappedDataProvider(vector<string> providedOuts, map<string, double> defaultVals,
                                 map<string, int> defaultWaits)
-                : OptionalWrappedDataProvider(move(providedOuts), move(defaultVals))
+                : OptionalWrappedDataProvider(std::move(providedOuts), std::move(defaultVals))
         {
             // Validate that all keys/names in the defaultWaits map have corresponding key in defaultValues
             // (Note that this also depends on the delegated-to constructor to validate the keys in defaultValues)
@@ -111,7 +111,7 @@ namespace data_access {
                     }
                 }
                 // Assuming the mapping is valid, set it for the instance
-                defaultUsageWaits = move(defaultWaits);
+                defaultUsageWaits = std::move(defaultWaits);
             }
         }
 
@@ -121,7 +121,7 @@ namespace data_access {
          * @param providedOutputs The collection of the names of outputs this instance will need to provide.
          */
         explicit OptionalWrappedDataProvider(vector<string> providedOutputs)
-            : OptionalWrappedDataProvider(move(providedOutputs), map<string, double>()) { }
+            : OptionalWrappedDataProvider(std::move(providedOutputs), map<string, double>()) { }
 
         /**
          * Convenience constructor for when there is only one provided output name, which does not have a default.
@@ -171,8 +171,8 @@ namespace data_access {
         OptionalWrappedDataProvider(OptionalWrappedDataProvider &&provider_to_move) noexcept
                 : OptionalWrappedDataProvider(provider_to_move.providedOutputs)
         {
-            defaultValues = move(provider_to_move.defaultValues);
-            defaultUsageWaits = move(provider_to_move.defaultUsageWaits);
+            defaultValues = std::move(provider_to_move.defaultValues);
+            defaultUsageWaits = std::move(provider_to_move.defaultUsageWaits);
             wrapped_provider = provider_to_move.wrapped_provider;
             provider_to_move.wrapped_provider = nullptr;
         }

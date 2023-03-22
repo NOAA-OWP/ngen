@@ -23,13 +23,13 @@ namespace models {
 
             Bmi_Adapter(string model_name, string bmi_init_config, string forcing_file_path, bool allow_exceed_end,
                         bool has_fixed_time_step, utils::StreamHandler output)
-                : model_name(move(model_name)),
-                  bmi_init_config(move(bmi_init_config)),
+                : model_name(std::move(model_name)),
+                  bmi_init_config(std::move(bmi_init_config)),
                   bmi_model_uses_forcing_file(!forcing_file_path.empty()),
-                  forcing_file_path(move(forcing_file_path)),
+                  forcing_file_path(std::move(forcing_file_path)),
                   bmi_model_has_fixed_time_step(has_fixed_time_step),
                   allow_model_exceed_end_time(allow_exceed_end),
-                  output(move(output)),
+                  output(std::move(output)),
                   bmi_model_time_convert_factor(1.0)
             {
                 // This replicates a lot of Initialize, but it's necessary to be able to do it separately to support

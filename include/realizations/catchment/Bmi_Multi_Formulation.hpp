@@ -40,7 +40,7 @@ namespace realization {
          * @param output_stream
          */
         Bmi_Multi_Formulation(string id, std::shared_ptr<data_access::GenericDataProvider> forcing_provider, utils::StreamHandler output_stream)
-                : Bmi_Formulation(move(id), forcing_provider, output_stream) { };
+                : Bmi_Formulation(std::move(id), forcing_provider, output_stream) { };
 
         virtual ~Bmi_Multi_Formulation() {};
 
