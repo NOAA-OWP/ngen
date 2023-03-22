@@ -11,14 +11,14 @@ using namespace pybind11::literals; // to bring in the `_a` literal for pybind11
 
 Bmi_Py_Adapter::Bmi_Py_Adapter(const string &type_name, string bmi_init_config, const string &bmi_python_type,
                                bool allow_exceed_end, bool has_fixed_time_step, utils::StreamHandler output)
-        : Bmi_Py_Adapter(type_name, move(bmi_init_config), bmi_python_type, "", allow_exceed_end, has_fixed_time_step,
-                         move(output)) {}
+        : Bmi_Py_Adapter(type_name, std::move(bmi_init_config), bmi_python_type, "", allow_exceed_end, has_fixed_time_step,
+                         std::move(output)) {}
 
 Bmi_Py_Adapter::Bmi_Py_Adapter(const string &type_name, string bmi_init_config, const string &bmi_python_type,
                                string forcing_file_path, bool allow_exceed_end, bool has_fixed_time_step,
                                utils::StreamHandler output)
-        : Bmi_Adapter<py::object>(type_name + " (BMI Py)", move(bmi_init_config),
-                                  move(forcing_file_path), allow_exceed_end, has_fixed_time_step,
+        : Bmi_Adapter<py::object>(type_name + " (BMI Py)", std::move(bmi_init_config),
+                                  std::move(forcing_file_path), allow_exceed_end, has_fixed_time_step,
                                   output),
           bmi_type_py_full_name(bmi_python_type),
           np(utils::ngenPy::InterpreterUtil::getPyModule("numpy")) /* like 'import numpy as np' */
