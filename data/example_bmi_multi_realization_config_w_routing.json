@@ -11,6 +11,22 @@
                     "main_output_variable": "Q_OUT",
                     "modules": [
                         {
+                            "name": "bmi_c++",
+                            "params": {
+                                "model_type_name": "bmi_c++_sloth",
+                                "library_file": "./extern/sloth/cmake_build/libslothmodel",
+                                "init_config": "/dev/null",
+                                "allow_exceed_end_time": true,
+                                "main_output_variable": "z",
+                                "uses_forcing_file": false,
+                                "model_params": {
+                                    "ice_fraction_schaake(1,double,m,node)": 0.0,
+                                    "ice_fraction_xinan(1,double,none,node)": 0.0,
+                                    "soil_moisture_profile(1,double,none,node)": 0.0
+                                }
+                            }
+                        },
+                        {
                             "name": "bmi_fortran",
                             "params": {
                                 "model_type_name": "bmi_fortran_noahowp",
