@@ -110,7 +110,7 @@ jobs:
       # Disabling this cache for the time being for a few reasons
       # 1) t-route build/install can be tricky without pre-cythonized sources
       # 2) may not want to use a cached version of t-route if we are testing its integration
-      #    we want to use the latest code in the submodule and make sure it works...a cached version
+      #    we want to use the latest code in the repo and make sure it works...a cached version
       #    wouldn't be good for that...
       #- name: Cache troute dependency
       #  id: cache-linux-troute-dep
@@ -118,6 +118,12 @@ jobs:
       #  with:
       #    path: .venv
       #    key: linux-troute-dep-fixed
+
+      - name: Checkout t-route (latest master)
+        uses: actions/checkout@v3
+        with:
+          repository: NOAA-OWP/t-route
+          path: /t-route
 
       #This step should come after ngen build???
       - name: Configure Fortran Compiler
@@ -135,22 +141,22 @@ jobs:
         run: |
           python3 -m venv .venv
           . .venv/bin/activate
-          cd extern/t-route
+          cd /t-route
           pip install -U pip
           pip install -U setuptools
           pip install -r requirements.txt
-          cd src
-          pip install nwm_routing/
-          pip install ngen_routing/
-          cd python_routing_v02
+          pip install deprecated pyarrow pytables
           if [ ${{ runner.os }} == 'macOS' ] 
           then
             export LIBRARY_PATH=/usr/local/lib/gcc/11/
             export LD_LIBRARY_PATH=/usr/local/lib/gcc/11/
-            sed -i'.bak' 's/pip install -e/pip install/g' compiler.sh
           fi
-          
           FC=gfortran F90=gfortran ./compiler.sh
+          cd src
+          pip install troute-nwm/
+          pip install troute-network/
+          pip install troute-routing/
+          
           deactivate
 
       - name: Run test
