@@ -73,6 +73,7 @@ runs:
             then
               sudo apt-get update
               sudo apt-get install -y --fix-missing libnetcdf-dev libnetcdff-dev libnetcdf-c++4-1 libnetcdf-c++4-dev
+              echo "NETCDF=/usr" >> $GITHUB_ENV
             elif [ ${{ runner.os }} == 'macOS' ]
             then
               brew install netcdf netcdf-cxx netcdf-fortran
@@ -81,6 +82,7 @@ runs:
               echo "LDFLAGS=-L/usr/local/lib" >> $GITHUB_ENV
               echo "LIB=$LD_LIBRARY_PATH" >> $GITHUB_ENV
               echo "INCLUDE=/usr/local/include" >> $GITHUB_ENV
+              echo "NETCDF=/usr/local" >> $GITHUB_ENV
             fi
           shell: bash
 
