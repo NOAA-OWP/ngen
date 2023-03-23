@@ -19,7 +19,7 @@ module bmitestbmi
      procedure :: get_component_name => test_component_name
      procedure :: get_input_item_count => test_input_item_count
      procedure :: get_output_item_count => test_output_item_count
-      procedure :: get_input_var_names => test_input_var_names
+     procedure :: get_input_var_names => test_input_var_names
      procedure :: get_output_var_names => test_output_var_names
      procedure :: initialize => test_initialize
      procedure :: finalize => test_finalize
@@ -55,39 +55,39 @@ module bmitestbmi
      procedure :: get_value_int => test_get_int
      procedure :: get_value_float => test_get_float
      procedure :: get_value_double => test_get_double
-!      generic :: get_value => &
-!           get_value_int, &
-!           get_value_float, &
-!           get_value_double
-! !      procedure :: get_value_ptr_int => test_get_ptr_int
-! !      procedure :: get_value_ptr_float => test_get_ptr_float
-! !      procedure :: get_value_ptr_double => test_get_ptr_double
-! !      generic :: get_value_ptr => &
-! !           get_value_ptr_int, &
-! !           get_value_ptr_float, &
-! !           get_value_ptr_double
-! !      procedure :: get_value_at_indices_int => test_get_at_indices_int
-! !      procedure :: get_value_at_indices_float => test_get_at_indices_float
-! !      procedure :: get_value_at_indices_double => test_get_at_indices_double
-! !      generic :: get_value_at_indices => &
-! !           get_value_at_indices_int, &
-! !           get_value_at_indices_float, &
-! !           get_value_at_indices_double
+     generic :: get_value => &
+          get_value_int, &
+          get_value_float, &
+          get_value_double
+     procedure :: get_value_ptr_int => test_get_ptr_int
+     procedure :: get_value_ptr_float => test_get_ptr_float
+     procedure :: get_value_ptr_double => test_get_ptr_double
+     generic :: get_value_ptr => &
+          get_value_ptr_int, &
+          get_value_ptr_float, &
+          get_value_ptr_double
+     procedure :: get_value_at_indices_int => test_get_at_indices_int
+     procedure :: get_value_at_indices_float => test_get_at_indices_float
+     procedure :: get_value_at_indices_double => test_get_at_indices_double
+     generic :: get_value_at_indices => &
+          get_value_at_indices_int, &
+          get_value_at_indices_float, &
+          get_value_at_indices_double
      procedure :: set_value_int => test_set_int
      procedure :: set_value_float => test_set_float
      procedure :: set_value_double => test_set_double
-!      generic :: set_value => &
-!           set_value_int, &
-!           set_value_float, &
-!           set_value_double
-! !      procedure :: set_value_at_indices_int => test_set_at_indices_int
-! !      procedure :: set_value_at_indices_float => test_set_at_indices_float
-! !      procedure :: set_value_at_indices_double => test_set_at_indices_double
-! !      generic :: set_value_at_indices => &
-! !           set_value_at_indices_int, &
-! !           set_value_at_indices_float, &
-! !           set_value_at_indices_double
-! !      procedure :: print_model_info
+     generic :: set_value => &
+          set_value_int, &
+          set_value_float, &
+          set_value_double
+     procedure :: set_value_at_indices_int => test_set_at_indices_int
+     procedure :: set_value_at_indices_float => test_set_at_indices_float
+     procedure :: set_value_at_indices_double => test_set_at_indices_double
+     generic :: set_value_at_indices => &
+          set_value_at_indices_int, &
+          set_value_at_indices_float, &
+          set_value_at_indices_double
+!      procedure :: print_model_info
   end type bmi_test_bmi
 
   private
@@ -257,7 +257,7 @@ end function test_finalize
     bmi_status = BMI_SUCCESS
   end function test_component_name
 
-    ! Model time units.
+  ! Model time units.
   function test_time_units(this, units) result (bmi_status)
     class (bmi_test_bmi), intent(in) :: this
     character (len=*), intent(out) :: units
@@ -277,7 +277,7 @@ end function test_finalize
     bmi_status = BMI_SUCCESS
   end function test_output_item_count
 
-! List output variables.
+  ! List output variables.
   function test_output_var_names(this, names) result (bmi_status)
     class (bmi_test_bmi), intent(in) :: this
     character (*), pointer, intent(out) :: names(:)
@@ -676,7 +676,7 @@ end function test_finalize
     end select
   end function test_grid_type
 
-! Memory use per array element.
+  ! Memory use per array element.
   function test_var_itemsize(this, name, size) result (bmi_status)
     class (bmi_test_bmi), intent(in) :: this
     character (len=*), intent(in) :: name
@@ -731,7 +731,7 @@ end function test_finalize
     end if
   end function test_var_nbytes
 
-! Set new integer values.
+  ! Set new integer values.
   function test_set_int(this, name, src) result (bmi_status)
     class (bmi_test_bmi), intent(inout) :: this
     character (len=*), intent(in) :: name
@@ -784,6 +784,39 @@ end function test_finalize
     ! NOTE, if vars are gridded, then use:
     ! this%model%var = reshape(src, [this%model%n_y, this%model%n_x])
   end function test_set_double
+
+  ! Test setting integer values at particular (one-dimensional) indices.
+  function test_set_at_indices_int(this, name, inds, src) result(bmi_status)
+    class(bmi_test_bmi), intent(inout) :: this
+    character(len=*), intent(in) :: name
+    integer, intent(in) :: inds(:)
+    integer, intent(in) :: src(:)
+    integer :: bmi_status
+
+    bmi_status = BMI_FAILURE
+  end function test_set_at_indices_int
+
+  ! Test setting real values at particular (one-dimensional) indices.
+  function test_set_at_indices_float(this, name, inds, src) result(bmi_status)
+    class(bmi_test_bmi), intent(inout) :: this
+    character(len=*), intent(in) :: name
+    integer, intent(in) :: inds(:)
+    real, intent(in) :: src(:)
+    integer :: bmi_status
+
+    bmi_status = BMI_FAILURE
+  end function test_set_at_indices_float
+
+  ! Test setting double precision values at particular (one-dimensional) indices.
+  function test_set_at_indices_double(this, name, inds, src) result(bmi_status)
+    class(bmi_test_bmi), intent(inout) :: this
+    character(len=*), intent(in) :: name
+    integer, intent(in) :: inds(:)
+    double precision, intent(in) :: src(:)
+    integer :: bmi_status
+
+    bmi_status = BMI_FAILURE
+  end function test_set_at_indices_double
 
   ! Get a copy of a integer variable's values, flattened.
   function test_get_int(this, name, dest) result (bmi_status)
@@ -853,7 +886,70 @@ end function test_finalize
     ! dest = reshape(this%model%var, [this%model%n_x*this%model%n_y])
   end function test_get_double
 
-    ! Model start time.
+  ! Test getting a reference to the given integer variable.
+  function test_get_ptr_int(this, name, dest_ptr) result (bmi_status)
+    class (bmi_test_bmi), intent(in) :: this
+    character(len=*), intent(in) :: name
+    integer, pointer, intent(inout) :: dest_ptr(:)
+    integer :: bmi_status
+
+    bmi_status = BMI_FAILURE
+  end function test_get_ptr_int
+
+  ! Test getting a reference to the given real variable.
+  function test_get_ptr_float(this, name, dest_ptr) result (bmi_status)
+    class (bmi_test_bmi), intent(in) :: this
+    character(len=*), intent(in) :: name
+    real, pointer, intent(inout) :: dest_ptr(:)
+    integer :: bmi_status
+
+    bmi_status = BMI_FAILURE
+  end function test_get_ptr_float
+
+  ! Test getting a reference to the given double variable.
+  function test_get_ptr_double(this, name, dest_ptr) result (bmi_status)
+    class (bmi_test_bmi), intent(in) :: this
+    character(len=*), intent(in) :: name
+    double precision, pointer, intent(inout) :: dest_ptr(:)
+    integer :: bmi_status
+
+    bmi_status = BMI_FAILURE
+  end function test_get_ptr_double
+
+  ! Test getting integer values at particular (one-dimensional) indices.
+  function test_get_at_indices_int(this, name, dest, inds) result(bmi_status)
+    class(bmi_test_bmi), intent(in) :: this
+    character(len=*), intent(in) :: name
+    integer, intent(inout) :: dest(:)
+    integer, intent(in) :: inds(:)
+    integer :: bmi_status
+
+    bmi_status = BMI_FAILURE
+  end function test_get_at_indices_int
+
+  ! Test getting real values at particular (one-dimensional) indices.
+  function test_get_at_indices_float(this, name, dest, inds) result(bmi_status)
+    class(bmi_test_bmi), intent(in) :: this
+    character(len=*), intent(in) :: name
+    real, intent(inout) :: dest(:)
+    integer, intent(in) :: inds(:)
+    integer :: bmi_status
+
+    bmi_status = BMI_FAILURE
+  end function test_get_at_indices_float
+
+  ! Test getting double precision values at particular (one-dimensional) indices.
+  function test_get_at_indices_double(this, name, dest, inds) result(bmi_status)
+    class(bmi_test_bmi), intent(in) :: this
+    character(len=*), intent(in) :: name
+    double precision, intent(inout) :: dest(:)
+    integer, intent(in) :: inds(:)
+    integer :: bmi_status
+
+    bmi_status = BMI_FAILURE
+  end function test_get_at_indices_double
+
+  ! Model start time.
   function test_start_time(this, time) result (bmi_status)
     class (bmi_test_bmi), intent(in) :: this
     double precision, intent(out) :: time
