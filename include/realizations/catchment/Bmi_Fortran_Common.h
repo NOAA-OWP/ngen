@@ -74,17 +74,16 @@ extern "C" {
      *
      * They can be added if needed/possible in the future, but implementations must be added to the middleware before
      * these declarations will be valid.
-     *
-     * extern int get_value_ptr_int(void *fortran_bmi_handle, const char *name, int *dest);
-     * extern int get_value_ptr_float(void *fortran_bmi_handle, const char *name, float *dest);
-     * extern int get_value_ptr_double(void *fortran_bmi_handle, const char *name, double *dest);
-     * extern int get_value_at_indices_int(void *fortran_bmi_handle, const char *name, int *dest, int indices);
-     * extern int get_value_at_indices_float(void *fortran_bmi_handle, const char *name, float *dest, int indices);
-     * extern int get_value_at_indices_double(void *fortran_bmi_handle, const char *name, double *dest, int indices);
-     * extern int set_value_at_indices_int(void *fortran_bmi_handle, const char *name, int indices, int *src);
-     * extern int set_value_at_indices_float(void *fortran_bmi_handle, const char *name, int indices, float *src);
-     * extern int set_value_at_indices_double(void *fortran_bmi_handle, const char *name, int indices, double *src);
      */
+     extern int get_value_ptr_int(void *fortran_bmi_handle, const char *name, int *dest);
+     extern int get_value_ptr_float(void *fortran_bmi_handle, const char *name, float *dest);
+     extern int get_value_ptr_double(void *fortran_bmi_handle, const char *name, double *dest);
+     extern int get_value_at_indices_int(void *fortran_bmi_handle, const char *name, int *dest, int indices);
+     extern int get_value_at_indices_float(void *fortran_bmi_handle, const char *name, float *dest, int indices);
+     extern int get_value_at_indices_double(void *fortran_bmi_handle, const char *name, double *dest, int indices);
+     extern int set_value_at_indices_int(void *fortran_bmi_handle, const char *name, int indices, int *src);
+     extern int set_value_at_indices_float(void *fortran_bmi_handle, const char *name, int indices, float *src);
+     extern int set_value_at_indices_double(void *fortran_bmi_handle, const char *name, int indices, double *src);
 
     /* Setters */
     extern int set_value_int(void *fortran_bmi_handle, const char *name, int *src);
