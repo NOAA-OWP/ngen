@@ -13,7 +13,7 @@ Routing_Py_Adapter::Routing_Py_Adapter(std::string t_route_config_file_with_path
   interperter = utils::ngenPy::InterpreterUtil::getInstance();
   //Import ngen_main.  Will throw error if module isn't available
   //in the embedded interperters PYTHON_PATH
-  this->t_route_module = utils::ngenPy::InterpreterUtil::getPyModule("ngen_routing.ngen_main");
+  this->t_route_module = utils::ngenPy::InterpreterUtil::getPyModule("nwm_routing.__main__");
   }
 
 void Routing_Py_Adapter::route(int number_of_timesteps, int delta_time,
@@ -34,7 +34,7 @@ void Routing_Py_Adapter::route(int number_of_timesteps, int delta_time)
   py::list arg_list = py::cast(arg_vector);
 
   //Create object for the ngen_main subroutine
-  py::object ngen_main = t_route_module.attr("ngen_main");
+  py::object ngen_main = t_route_module.attr("main_v04");
 
   //Call ngen_main subroutine
   ngen_main(arg_list);

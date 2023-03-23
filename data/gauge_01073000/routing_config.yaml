@@ -1,0 +1,103 @@
+#--------------------------------------------------------------------------------
+log_parameters:
+    #----------
+    showtiming: True
+    log_level : DEBUG
+#--------------------------------------------------------------------------------
+network_topology_parameters:
+    #----------
+    supernetwork_parameters:
+        #----------
+        geo_file_type: HYFeaturesNetwork 
+        geo_file_path: data/gauge_01073000/gauge_01073000.gpkg 
+        mask_file_path: # domain/unit_test_noRS/coastal_subset.txt
+        synthetic_wb_segments:
+            #- 4800002
+            #- 4800004
+            #- 4800006
+            #- 4800007
+    waterbody_parameters:
+        #----------
+        break_network_at_waterbodies: False 
+        level_pool:
+            #----------
+            level_pool_waterbody_parameter_file_path: data/gauge_01073000/gauge_01073000.gpkg 
+            reservoir_parameter_file                : data/gauge_01073000/gauge_01073000.gpkg
+        #rfc:
+            #----------
+            #reservoir_parameter_file                : domain/reservoir_index_AnA.nc
+            #reservoir_rfc_forecasts                 : False
+            #reservoir_rfc_forecasts_time_series_path: rfc_TimeSeries/
+            #reservoir_rfc_forecasts_lookback_hours  : 48
+#--------------------------------------------------------------------------------
+compute_parameters:
+    #----------
+    parallel_compute_method: by-subnetwork-jit-clustered #serial 
+    compute_kernel         : V02-structured
+    assume_short_ts        : True
+    subnetwork_target_size : 10000
+    cpu_pool               : 36
+    restart_parameters:
+        #----------
+        #wrf_hydro_channel_restart_file: restart/HYDRO_RST.2020-08-26_00:00_DOMAIN1
+        #wrf_hydro_channel_ID_crosswalk_file: domain/RouteLink_NWMv2.1.nc
+        #wrf_hydro_waterbody_restart_file: restart/HYDRO_RST.2020-08-26_00:00_DOMAIN1
+        #wrf_hydro_waterbody_ID_crosswalk_file    : domain/LAKEPARM_NWMv2.1.nc 
+        #wrf_hydro_waterbody_crosswalk_filter_file: domain/LAKEPARM_NWMv2.1.nc
+        start_datetime: "2015-12-01_00:00:00"
+    #hybrid_parameters:
+    #    run_hybrid_routing: True
+    #    diffusive_domain  : domain/coastal_domain.yaml  
+    #    use_natl_xsections: False
+    #    topobathy_domain  : # domain/final_diffusive_natural_xs.nc 
+    #    run_refactored_network: False
+    #    refactored_domain: # domain/unit_test_noRS/refactored_coastal_domain.yaml 
+    #    refactored_topobathy_domain: # domain/refac_final_diffusive_natural_xs.nc 
+    #    coastal_boundary_domain: domain/coastal_boundary_domain.yaml
+    forcing_parameters:
+        #----------
+        qts_subdivisions            : 12
+        dt                          : 300 # [sec]
+        qlat_input_folder           : ./ 
+        qlat_file_pattern_filter    : "nex-*"
+        nexus_input_folder          : ./ 
+        nexus_file_pattern_filter   : "nex-*" #OR "*NEXOUT.parquet" OR "nex-*"
+        binary_nexus_file_folder    : ./ # this is required if nexus_file_pattern_filter="nex-*"
+        #coastal_boundary_input_file : channel_forcing/schout_1.nc  
+        nts                         : 8640 #288 for 1day
+        max_loop_size               : 720 # [hr]  
+    data_assimilation_parameters:
+    #    #----------
+    #    usgs_timeslices_folder   : #usgs_TimeSlice/
+    #    usace_timeslices_folder  : #usace_TimeSlice/
+    #    timeslice_lookback_hours : #48 
+    #    qc_threshold             : #1
+        streamflow_da:
+    #        #----------
+            streamflow_nudging            : False
+            diffusive_streamflow_nudging  : False
+    #        gage_segID_crosswalk_file     : # domain/RouteLink_NWMv2.1.nc  
+    #        crosswalk_gage_field          : # 'gages'
+    #        crosswalk_segID_field         : # 'link'
+    #        wrf_hydro_lastobs_file        :                
+    #        lastobs_output_folder         : lastobs/
+    #    reservoir_da:
+    #        #----------
+    #        reservoir_persistence_usgs  : False
+    #        reservoir_persistence_usace : False
+    #        gage_lakeID_crosswalk_file  : # domain/reservoir_index_AnA.nc
+#--------------------------------------------------------------------------------
+output_parameters:
+    #----------
+    #test_output: output/unit_test_hyfeature.pkl 
+    #lite_restart:
+    #    #----------
+    #    lite_restart_output_directory: restart/
+    chrtout_output:
+        #----------
+        #wrf_hydro_channel_output_source_folder: ./
+    chanobs_output:
+        #----------
+        chanobs_output_directory: ./ 
+        chanobs_filepath        : Chanobs.nc
+    lakeout_output: ./
