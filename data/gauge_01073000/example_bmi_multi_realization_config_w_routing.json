@@ -1,0 +1,107 @@
+{
+    "global": {
+        "formulations": [
+            {
+                "name": "bmi_multi",
+                "params": {
+                    "model_type_name": "bmi_multi_noahowp_cfe",
+                    "forcing_file": "",
+                    "init_config": "",
+                    "allow_exceed_end_time": true,
+                    "main_output_variable": "Q_OUT",
+                    "modules": [
+                        {
+                            "name": "bmi_c++",
+                            "params": {
+                                "model_type_name": "bmi_c++_sloth",
+                                "library_file": "./extern/sloth/cmake_build/libslothmodel.so",
+                                "init_config": "/dev/null",
+                                "allow_exceed_end_time": true,
+                                "main_output_variable": "z",
+                                "uses_forcing_file": false,
+                                "model_params_disabled": {
+                                    "ice_fraction_schaake(1,double,m,node)": 0.0,
+                                    "ice_fraction_xinan(1,double,none,node)": 0.0,
+                                    "soil_moisture_profile(1,double,none,node)": 0.0
+                                },
+                                "model_params": {
+                                    "sloth_ice_fraction_schaake(1,double,m,node)": 0.0,
+                                    "sloth_ice_fraction_xinan(1,double,1,node)": 0.0,
+                                    "sloth_smp(1,double,1,node)": 0.0
+                                }
+                            }
+                        },
+                        {
+                            "name": "bmi_c",
+                            "params": {
+                                "model_type_name": "PET",
+                                "library_file": "./extern/evapotranspiration/evapotranspiration/cmake_build/libpetbmi.so",
+                                "forcing_file": "",
+                                "init_config": "./data/gauge_01073000/PET/{{id}}_pet_config.txt",
+                                "allow_exceed_end_time": true,
+                                "main_output_variable": "water_potential_evaporation_flux",
+                                "registration_function":"register_bmi_pet",
+                                "uses_forcing_file": false
+                            }
+                        },
+                        {
+                            "name": "bmi_fortran",
+                            "params": {
+                                "model_type_name": "bmi_fortran_noahowp",
+                                "library_file": "./extern/noah-owp-modular/cmake_build/libsurfacebmi.so",
+                                "forcing_file": "",
+                                "init_config": "./data/gauge_01073000/NOAH/{{id}}.input",
+                                "allow_exceed_end_time": true,
+                                "main_output_variable": "QINSUR",
+                                "variables_names_map": {
+                                    "PRCPNONC": "atmosphere_water__liquid_equivalent_precipitation_rate",
+                                    "Q2": "atmosphere_air_water~vapor__relative_saturation",
+                                    "SFCTMP": "land_surface_air__temperature",
+                                    "UU": "land_surface_wind__x_component_of_velocity",
+                                    "VV": "land_surface_wind__y_component_of_velocity",
+                                    "LWDN": "land_surface_radiation~incoming~longwave__energy_flux",
+                                    "SOLDN": "land_surface_radiation~incoming~shortwave__energy_flux",
+                                    "SFCPRS": "land_surface_air__pressure"
+                                },
+                                "uses_forcing_file": false
+                            }
+                        },
+                        {
+                            "name": "bmi_c",
+                            "params": {
+                                "model_type_name": "bmi_c_cfe",
+                                "library_file": "./extern/cfe/cmake_build/libcfebmi.so",
+                                "forcing_file": "",
+                                "init_config": "./data/gauge_01073000/CFE/{{id}}_bmi_config_cfe_pass.txt",
+                                "allow_exceed_end_time": true,
+                                "main_output_variable": "Q_OUT",
+                                "registration_function": "register_bmi_cfe",
+                                "variables_names_map": {
+                                    "atmosphere_water__liquid_equivalent_precipitation_rate": "QINSUR",
+                                    "water_potential_evaporation_flux": "water_potential_evaporation_flux",
+                                    "ice_fraction_schaake" : "sloth_ice_fraction_schaake",
+                                    "ice_fraction_xinan" : "sloth_ice_fraction_xinan",
+                                    "soil_moisture_profile" : "sloth_smp"
+                                },
+                                "uses_forcing_file": false
+                            }
+                        }
+                    ],
+                    "uses_forcing_file": false
+                }
+            }
+        ],
+        "forcing": {
+            "path": "./data/gauge_01073000/forcing.nc",
+            "provider": "NetCDF"
+        }
+    },
+    "time": {
+        "start_time": "2015-12-01 0:00:00",
+        "end_time": "2015-12-30 23:00:00",
+        "output_interval": 3600
+    },
+    "routing": {
+        "t_route_config_file_with_path": "./data/gauge_01073000/routing_config.yaml"
+    }
+}
