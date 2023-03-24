@@ -145,17 +145,20 @@ jobs:
           pip install -U pip
           pip install -U setuptools
           pip install -r requirements.txt
-          pip install deprecated pyarrow pytables
+          pip install deprecated pyarrow tables geopandas
           if [ ${{ runner.os }} == 'macOS' ] 
           then
             export LIBRARY_PATH=/usr/local/lib/gcc/11/
             export LD_LIBRARY_PATH=/usr/local/lib/gcc/11/
           fi
-          FC=gfortran F90=gfortran ./compiler.sh
+          sed -i.bak 's/NETCDF}"/NETCDF}\/include"/' compiler.sh
+          export FC=gfortran
+          export F90=gfortran 
+          ./compiler.sh
           cd src
           pip install troute-nwm/
-          pip install troute-network/
-          pip install troute-routing/
+          pip install --install-option="--use-cython" troute-network/
+          pip install --install-option="--use-cython" troute-routing/
           
           deactivate
 
