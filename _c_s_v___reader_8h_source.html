@@ -138,18 +138,23 @@ $(document).ready(function(){initNavTree('_c_s_v___reader_8h_source.html',''); i
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="comment">// Iterate through each line and split the content using delimeter</span></div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keywordflow">while</span> (getline(file, line))</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    {</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        std::vector&lt;std::string&gt; vec;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        boost::algorithm::split(vec, line, boost::is_any_of(<a class="code hl_variable" href="class_c_s_v_reader.html#ac5e0e6866e56cfb8c0337940fa848fde">delimeter</a>));</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        dataList.push_back(vec);</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    }</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="comment">// Close the File</span></div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    file.close();</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="keywordflow">return</span> dataList;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>}</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="preprocessor">#endif </span><span class="comment">//CSV_Reader_H</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        <span class="comment">// Consider more robust solution like https://stackoverflow.com/a/6089413/489116</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        <span class="keywordflow">if</span> ( line.size() &amp;&amp; line[line.size()-1] == <span class="charliteral">&#39;\r&#39;</span> ) {</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>           line = line.substr( 0, line.size() - 1 );</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        }</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        std::vector&lt;std::string&gt; vec;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        boost::algorithm::split(vec, line, boost::is_any_of(<a class="code hl_variable" href="class_c_s_v_reader.html#ac5e0e6866e56cfb8c0337940fa848fde">delimeter</a>));</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        dataList.push_back(vec);</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    }</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="comment">// Close the File</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    file.close();</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keywordflow">return</span> dataList;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>}</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="preprocessor">#endif </span><span class="comment">//CSV_Reader_H</span></div>
 <div class="ttc" id="aclass_c_s_v_reader_html"><div class="ttname"><a href="class_c_s_v_reader.html">CSVReader</a></div><div class="ttdef"><b>Definition:</b> CSV_Reader.h:15</div></div>
 <div class="ttc" id="aclass_c_s_v_reader_html_a2dea725de823f6932ae29552aa05b97d"><div class="ttname"><a href="class_c_s_v_reader.html#a2dea725de823f6932ae29552aa05b97d">CSVReader::getData</a></div><div class="ttdeci">std::vector&lt; std::vector&lt; std::string &gt; &gt; getData()</div><div class="ttdef"><b>Definition:</b> CSV_Reader.h:32</div></div>
 <div class="ttc" id="aclass_c_s_v_reader_html_aad272ffbafdbe83fe50091a18d658b59"><div class="ttname"><a href="class_c_s_v_reader.html#aad272ffbafdbe83fe50091a18d658b59">CSVReader::fileName</a></div><div class="ttdeci">std::string fileName</div><div class="ttdef"><b>Definition:</b> CSV_Reader.h:16</div></div>
@@ -161,7 +166,7 @@ $(document).ready(function(){initNavTree('_c_s_v___reader_8h_source.html',''); i
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_52b4106b6168f13dcdf82e33b1d195ee.html">utilities</a></li><li class="navelem"><b>CSV_Reader.h</b></li>
-    <li class="footer">Generated on Wed Mar 22 2023 13:59:46 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
+    <li class="footer">Generated on Tue Mar 28 2023 20:59:48 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
   </ul>
 </div>
 </body>
