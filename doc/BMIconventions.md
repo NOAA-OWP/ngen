@@ -83,7 +83,96 @@ Since the [BMI Documentation] simply states that, "Use of native language type n
     * `int`, `long`, `long long`, `int64`, `longlong`, `float`, `float64`, `long double`
     * also accepts `numpy.float64` and `np.float64` but this usage is discouraged! Please use the non-namespaced names above.
 
+## Array representation
 
+## Contiguousness
+
+In order to pass arrays back and forth between modules and ngen (and indrectly from BMI modules to other BMI modules), it is necessary that the arrays being passed are stored in contiguous memory blocks in a known layout. This does not necessarily require that this is how data is stored in memory and used for computation within the model, but when passing data through BMI functions array data must conform to this constraint.
+
+### Zero-Indexing
+
+Arrays should be zero-indexed (the index of the first item is 0, not 1 or some other number) and indexes appearing in the BMI functions (e.g. [`get_value_at_indices`](https://bmi.readthedocs.io/en/stable/#get-value-at-indices)) must be treated as zero-based indices. Of the supported languages, this mainly affects Fortran developers, as Fortran uses 1-based indices by default.
+
+### Layout and Flattening
+
+The [BMI best practices](https://bmi.readthedocs.io/en/stable/bmi.best_practices.html) document states:
+
+> BMI functions always use flattened, one-dimensional arrays...It’s the developer’s responsibility to ensure that array information is flattened/redimensionalized in the correct order.
+
+However, strictly speaking, *how* a multi-dimensional array should be flattened into a one-dimensional one is never directly addressed. **For ngen, it is required that flattening happens as if the array was a C array, sometimes referred to as "row major order".** That is, if you create a multi-dimensional array in C (or a C array in C++) it will already be in the appropriate order and layout such that if the data is copied into a 1D array (or the pointer is passed as the result of `get_value_ptr`) it is already in the correct order/layout and will "just work".
+
+However, if you have a multi-dimensional array in Fortran or in Python/NumPy it may *not* be in the correct order. In Fortran, arrays are created in memory in "column major order"--however if you treat the last index as the fastest changing, it is the same thing as C ordering. In Python, NumPy `ndarray`s are created as contiguous C-ordered blocks by default, but it is possible to create Fortran-ordered arrays, and if you take a view or slice of an array it is no longer a contiguous array and can't be passed without copying.
+
+The simplest way to give the proper ordering is by example. Consider a `float` array with dimensions X = 4, Y = 3, and Z = 2. Such an array could be created and populated with the same values in the correct ordering and layout in the following ways:
+
+***THE BELOW NEEDS A SANITY CHECK. I HAVE BEEN STARING AT THIS STUFF TOO LONG AND MAY HAVE SOMETHING WRONG.***
+
+C/C++
+```C
+float var[4][3][2];
+int x, y, z;
+float v = 0.0;
+for(z = 0; z < 2; z++) for(y = 0; y < 3; y++) for(x = 0; x < 4; x++)
+    var[x][y][z] = v += 0.01;
+printf("%f %f %f %f", var[0][0][0], var[1][0][0], var[0][1][0], var[0][0][1]);
+```
+
+Fortran:
+```Fortran
+real, dimension(0:1,0:2,0:3) :: var
+integer:: x,y,z
+real:: v = 0.0
+zloop: do z = 0, 1
+   yloop: do y = 0, 2
+      xloop: do x = 0, 3
+        v = v + 0.01
+        var(z,y,x) = v ! Note the indices ordering here
+      end do xloop
+   end do yloop  
+end do zloop
+```
+
+Python:
+```Python
+var = np.zeros((2,3,4))
+v = 0.0
+for z in range(0,2):
+    for y in range(0,3):
+        for x in range(0,4):
+            v += 0.01
+            var[z,y,x] = v
+# OR...
+var = np.arange(0.01, 0.25, 0.01)
+var = var.reshape((2,3,4))
+```
+
+These all will produce contiguous arrays with the following contents and layouts: 
+
+Represented as X, Y and Z:
+
+| index       | 0, *, 0 | 1, *, 0 | 2, *, 0 | 3, *, 0 |
+| ------------|---------|---------|---------|---------|
+| ***, 0, 0** |    0.01 |    0.02 |    0.03 |    0.04 |
+| ***, 1, 0** |    0.05 |    0.06 |    0.07 |    0.08 |
+| ***, 2, 0** |    0.09 |    0.10 |    0.11 |    0.12 |
+
+| index       | 0, *, 1 | 1, *, 1 | 2, *, 1 | 3, *, 1 |
+| ------------|---------|---------|---------|---------|
+| ***, 0, 1** |    0.13 |    0.14 |    0.15 |    0.16 |
+| ***, 1, 1** |    0.17 |    0.18 |    0.19 |    0.20 |
+| ***, 2, 1** |    0.21 |    0.22 |    0.23 |    0.24 |
+
+Flattened, or as in the contiguous memory block:
+
+| index     |    0 |    1 |    2 | ... |   21 |   22 |   23 |
+|-----------|------|------|------|-----|------|------|------|
+| **value** | 0.01 | 0.02 | 0.03 | ... | 0.06 | 0.07 | 0.08 |
+
+
+BMI `get_grid_shape` for this structure should be:
+```
+4, 3, 2
+```
 
 
 
