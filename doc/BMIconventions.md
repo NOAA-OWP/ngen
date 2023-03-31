@@ -85,7 +85,7 @@ Since the [BMI Documentation] simply states that, "Use of native language type n
 
 ## Array representation
 
-## Contiguousness
+### Contiguousness
 
 In order to pass arrays back and forth between modules and ngen (and indrectly from BMI modules to other BMI modules), it is necessary that the arrays being passed are stored in contiguous memory blocks in a known layout. This does not necessarily require that this is how data is stored in memory and used for computation within the model, but when passing data through BMI functions array data must conform to this constraint.
 
@@ -103,7 +103,7 @@ However, strictly speaking, *how* a multi-dimensional array should be flattened 
 
 However, if you have a multi-dimensional array in Fortran or in Python/NumPy it may *not* be in the correct order. In Fortran, arrays are created in memory in "column major order"--however if you treat the last index as the fastest changing, it is the same thing as C ordering. In Python, NumPy `ndarray`s are created as contiguous C-ordered blocks by default, but it is possible to create Fortran-ordered arrays, and if you take a view or slice of an array it is no longer a contiguous array and can't be passed without copying.
 
-The simplest way to give the proper ordering is by example. Consider a `float` array with dimensions X = 4, Y = 3, and Z = 2. Such an array could be created and populated with the same values in the correct ordering and layout in the following ways:
+The simplest way to explain the proper ordering is by example. Consider a `float` array with dimensions X = 4, Y = 3, and Z = 2. Such an array could be created and populated with the same values in the correct ordering and layout in the following ways:
 
 ***THE BELOW NEEDS A SANITY CHECK. I HAVE BEEN STARING AT THIS STUFF TOO LONG AND MAY HAVE SOMETHING WRONG.***
 
@@ -114,7 +114,6 @@ int x, y, z;
 float v = 0.0;
 for(z = 0; z < 2; z++) for(y = 0; y < 3; y++) for(x = 0; x < 4; x++)
     var[x][y][z] = v += 0.01;
-printf("%f %f %f %f", var[0][0][0], var[1][0][0], var[0][1][0], var[0][0][1]);
 ```
 
 Fortran:
@@ -166,13 +165,14 @@ Flattened, or as in the contiguous memory block:
 
 | index     |    0 |    1 |    2 | ... |   21 |   22 |   23 |
 |-----------|------|------|------|-----|------|------|------|
-| **value** | 0.01 | 0.02 | 0.03 | ... | 0.06 | 0.07 | 0.08 |
+| **value** | 0.01 | 0.02 | 0.03 | ... | 0.22 | 0.23 | 0.24 |
 
 
-BMI `get_grid_shape` for this structure should be:
+Notably, the BMI [`get_grid_shape`]() result for this structure should be:
 ```
 4, 3, 2
 ```
+
 
 
 
