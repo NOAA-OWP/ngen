@@ -168,9 +168,9 @@ Flattened, or as in the contiguous memory block:
 | **value** | 0.01 | 0.02 | 0.03 | ... | 0.22 | 0.23 | 0.24 |
 
 
-Notably, the BMI [`get_grid_shape`]() result for this structure should be:
+Notably, the BMI [`get_grid_shape`](https://bmi.readthedocs.io/en/stable/#get-grid-shape) result for this structure should be:
 ```
-4, 3, 2
+2, 3, 4
 ```
 
 
