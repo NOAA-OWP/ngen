@@ -95,6 +95,8 @@ Arrays should be zero-indexed (the index of the first item is 0, not 1 or some o
 
 ### Layout and Flattening
 
+#### C ordering required
+
 The [BMI best practices](https://bmi.readthedocs.io/en/stable/bmi.best_practices.html) document states:
 
 > BMI functions always use flattened, one-dimensional arrays...It’s the developer’s responsibility to ensure that array information is flattened/redimensionalized in the correct order.
@@ -102,6 +104,8 @@ The [BMI best practices](https://bmi.readthedocs.io/en/stable/bmi.best_practices
 However, strictly speaking, *how* a multi-dimensional array should be flattened into a one-dimensional one is never directly addressed. **For ngen, it is required that flattening happens as if the array was a C array, sometimes referred to as "row major order".** That is, if you create a multi-dimensional array in C (or a C array in C++) it will already be in the appropriate order and layout such that if the data is copied into a 1D array (or the pointer is passed as the result of `get_value_ptr`) it is already in the correct order/layout and will "just work".
 
 However, if you have a multi-dimensional array in Fortran or in Python/NumPy it may *not* be in the correct order. In Fortran, arrays are created in memory in "column major order"--however if you treat the first (left-most) index as the fastest changing, it is the same thing as C ordering where the C code would treat the last (right-most) index as the fastest changing. In Python, NumPy `ndarray`s are created as contiguous C-ordered blocks by default, but it is possible to create Fortran-ordered arrays, and if you take a view or slice of an array it is no longer a contiguous array and can't be passed without copying.
+
+#### Proper ordering example
 
 The simplest way to explain the proper ordering is by example. Consider a `float` array with dimensions X = 4, Y = 3, and Z = 2. Such an array could be created and populated with the same values in the correct ordering and layout in the following ways:
 
