@@ -101,23 +101,31 @@ The [BMI best practices](https://bmi.readthedocs.io/en/stable/bmi.best_practices
 
 However, strictly speaking, *how* a multi-dimensional array should be flattened into a one-dimensional one is never directly addressed. **For ngen, it is required that flattening happens as if the array was a C array, sometimes referred to as "row major order".** That is, if you create a multi-dimensional array in C (or a C array in C++) it will already be in the appropriate order and layout such that if the data is copied into a 1D array (or the pointer is passed as the result of `get_value_ptr`) it is already in the correct order/layout and will "just work".
 
-However, if you have a multi-dimensional array in Fortran or in Python/NumPy it may *not* be in the correct order. In Fortran, arrays are created in memory in "column major order"--however if you treat the last index as the fastest changing, it is the same thing as C ordering. In Python, NumPy `ndarray`s are created as contiguous C-ordered blocks by default, but it is possible to create Fortran-ordered arrays, and if you take a view or slice of an array it is no longer a contiguous array and can't be passed without copying.
+However, if you have a multi-dimensional array in Fortran or in Python/NumPy it may *not* be in the correct order. In Fortran, arrays are created in memory in "column major order"--however if you treat the first (left-most) index as the fastest changing, it is the same thing as C ordering where the C code would treat the last (right-most) index as the fastest changing. In Python, NumPy `ndarray`s are created as contiguous C-ordered blocks by default, but it is possible to create Fortran-ordered arrays, and if you take a view or slice of an array it is no longer a contiguous array and can't be passed without copying.
 
 The simplest way to explain the proper ordering is by example. Consider a `float` array with dimensions X = 4, Y = 3, and Z = 2. Such an array could be created and populated with the same values in the correct ordering and layout in the following ways:
 
-***THE BELOW NEEDS A SANITY CHECK. I HAVE BEEN STARING AT THIS STUFF TOO LONG AND MAY HAVE SOMETHING WRONG.***
+(See also https://www.visitusers.org/index.php?title=C_vs_Fortran_memory_order )
 
 C/C++
 ```C
-float var[4][3][2];
+float var[2][3][4];
 int x, y, z;
 float v = 0.0;
-for(z = 0; z < 2; z++) for(y = 0; y < 3; y++) for(x = 0; x < 4; x++)
-    var[x][y][z] = v += 0.01;
+for(z = 0; z < 2; z++)
+    for(y = 0; y < 3; y++)
+        for(x = 0; x < 4; x++)
+            var[z][y][x] = v += 0.01;
 ```
+<!--
+float var_flat[24];
+memcpy(var_flat, var, 24*sizeof(float));
+printf("%f %f %f %f %f\n", var[0][0][0], var[0][0][1], var[0][0][2], var[0][1][0], var[1][0][0] );
+printf("%f %f %f %f %f\n", var_flat[0],  var_flat[1],  var_flat[2],  var_flat[4],  var_flat[12] );
+-->
 
 Fortran:
-```Fortran
+<!--
 real, dimension(0:1,0:2,0:3) :: var
 integer:: x,y,z
 real:: v = 0.0
@@ -129,7 +137,23 @@ zloop: do z = 0, 1
       end do xloop
    end do yloop  
 end do zloop
+-->
+```Fortran
+real, dimension(0:3,0:2,0:1) :: var ! Note the reversal of the dimension sizes
+integer:: x,y,z
+real:: v = 0.0
+zloop: do z = 0, 1
+    yloop: do y = 0, 2
+        xloop: do x = 0, 3
+            v = v + 0.01
+            var(x,y,z) = v ! Note the indices ordering here
+        end do xloop
+    end do yloop  
+end do zloop
 ```
+<!--
+print *, var(0,0,0), " ", var(1,0,0), " ", var(2,0,0), " ", var(3,0,0), " ", var(0,1,0), " ", var(0,0,1)
+-->
 
 Python:
 ```Python
@@ -147,7 +171,7 @@ var = var.reshape((2,3,4))
 
 These all will produce contiguous arrays with the following contents and layouts: 
 
-Represented as X, Y and Z:
+Represented as X, Y, and Z:
 
 | index       | 0, *, 0 | 1, *, 0 | 2, *, 0 | 3, *, 0 |
 | ------------|---------|---------|---------|---------|
@@ -172,7 +196,33 @@ Notably, the BMI [`get_grid_shape`](https://bmi.readthedocs.io/en/stable/#get-gr
 ```
 2, 3, 4
 ```
+Which is consistent with the C and NumPy array shapes.
 
+#### When this matters
+
+##### Fortran models using z,y,x index ordering
+
+If you have a Fortran model and are using `(y,x)` or `(z,y,x)` ordering for your array indices, then the flattened, linear contiguous memory representation of your array is not the same as C ordering. In this case, the BMI interface layer in your module will have to copy/reorganize the memory in the array to be in C order whenever responding to BMI functions--essentially, recopy `(z,y,x)` arrays to be in `(x,y,z)` order. This is necessary when exposing an array outside of your model module because other models and ngen will assume that the `get_value_at_index` and `set_value_at_index` operations work a certain way on the memory representation and that the array is in a specific layout when it represents spatial data. See below for details on both of these scenarios.
+
+##### Clarification for `get_value_at_indices` and `set_value_at_indices`
+
+The BMI documentation for [`get_value_at_indices`]() and [`set_value_at_indices`]() states that the `inds` parameter designates:
+
+> ...the locations specified by the one-dimensional array indices in the `inds` argument...Both `dest` and `inds` are flattened arrays....
+
+However if read perfectly literally, `inds` is by necessity already a one-dimensional array and therefore can't be flattened--rather, the implication is that the indexes in `inds` are *indexes into a flattened representation of the target variable array*. That is, in the example above, an `inds` array containing `[2, 21]` should return `[0.03, 0.22]`. However, if the flatteing is assumed to be done differently by different parts of the system, the wrong values may be retrieved or set.
+
+The ngen BMI driver assumes that the documentation implies that `inds` is a zero-based index into a flattened array and that the array is flattened according to C memory ordering as demonstrated above.
+
+##### Spatial data arrays for structured grids
+
+The BMI documentation for [`get_grid_shape`](https://bmi.readthedocs.io/en/stable/#get-grid-shape) specifies:
+
+> Note that this function (as well as the other grid functions) returns information ordered with “ij” indexing (as opposed to “xy”). For example, consider a two-dimensional rectilinear grid with four columns (nx = 4) and three rows (ny = 3). The get_grid_shape function would return a shape of [ny, nx], or [3,4]. If there were a third dimension, the length of the z-dimension, nz, would be listed first.
+
+This matches the C and NumPy examples above, with a shape of `(2,3,4)`, and clarifies that the last shape ordinate is the X dimension.
+
+Importantly, besides needing to pass multidimentional array data (spatial or otherwise) between BMI modules in a known flattened form, ngen will perform some spatial operations--such as grid data aggregation or re-gridding--on array data from modules if it represents spatial data. Since all BMI arrays are flattened, the flattening order must be consistent, or ngen will perform the spatial operations incorrectly.
 
 
 
