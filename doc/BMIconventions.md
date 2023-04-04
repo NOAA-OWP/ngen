@@ -83,19 +83,74 @@ Since the [BMI Documentation] simply states that, "Use of native language type n
     * `int`, `long`, `long long`, `int64`, `longlong`, `float`, `float64`, `long double`
     * also accepts `numpy.float64` and `np.float64` but this usage is discouraged! Please use the non-namespaced names above.
 
-## Array representation
+# Input and output published variables
 
-### Contiguousness
+The BMI documentation says that input variables should be declared for a model by returning the list of inputs via `get_input_var_names`, and outputs likewise via `get_output_var_names`. However, it does not specify any difference in behavior for variables published by these functions. In practice this has few technical implications--for instance, it is not explicitly forbidden to call `get_value` on an input variable, nor even to call `set_value` on an output variable. 
+
+Also, it is not forbidden to call `get_value` and `set_value` for variable names that appear in neither returned list. In the remainder of this document, such variables will be referred to as "unpublished" variables, and variables appearing in either `get_*_var_names` list as "published".
+
+The openness of the BMI in these areas both adds some danger and some flexibility, which ngen will mitigate and leverage with the conventions defined below.
+
+## Input/output variables and the time loop
+
+Variables published via `get_input_var_names` and `get_output_var_names` are assumed to be part of the function of the time loop execution of the simulation, e.g. forcing inputs or model quantity outputs. Other types of variables (configuration settings, file names, a version identifier, etc.) should not be published in these functions. See below for impacts of this assumption and potential pitfalls.
+
+## Validation of formulations for input variables
+
+For all model variables returned from `get_input_var_names`, a realization configuration *must* provide inputs for those variables (either by implicit name matching or explicit name mapping). If a module in a realization publishes a variable name as an input requirement, and an input source to provide the value cannot be found, validation will fail and the simulation will not run.
+
+## Validation of formulations for output variables
+
+Unlike input variables, variables with the names returned from `get_output_var_names` are not required to be consumed by another module or output writer, and an unused/unconnected output variable will not cause a validation failure. However, if a variable from a module is consumed in the realization config (by another module or an output writer), that variable *must* be listed in `get_output_var_names`--otherwise validation will fail *even if the source module could respond to a request for it via* `get_value`. In other words, you cannot use an unpublished variable as input to another module or to be captured as output.
+
+## Calling `set_value` on output variables
+
+The ngen process should not call `set_value` on an output variable. Attempting to create a formulation that connects forcing or another module's output to an input name that is in `get_output_var_names` risks undefined behavior.
+
+## Calling `get_value` on input variables
+
+The ngen process *may* call `get_value` on a variable that is returned from `get_input_var_names`. A model *should* return the last value provided to the input variable, unmodified, in this case. At a minimum, a model *must* not crash if this occurs, and should return some reasonable value, rather than throwing an exception or returning BMI_FAILURE (throwing an exception or returning BMI_FAILURE *is* however an appropriate and preferred response if no value has yet been set for the variable).
+
+## Input and output with the same name not permitted
+
+A single variable name cannot be published in both `get_var_input_names` and `get_var_output_names`--this will cause a validation error. Furthermore, it is not presently possible to work around this situation with variable name mapping, because <!-- TODO: This may change with a config file format refactor? --> a variable name mapping does not specify whether it is an input or output variable and could therefore not map only one or the other.
+
+# Unpublished variables
+
+As discussed above, it is not defined by the BMI specification that you may *only* call `get_value` and `set_value` on variable names returned by either `get_input_var_names` or `get_output_var_names`. We refer to variables that appear in neither list--but are understood by a BMI module--as "unpublished" variables. Because ngen uses the input and output variable listings to validate formulations, there are many use cases for such variables, for instance:
+
+* Initialization parameters
+* Calibratable parameters
+* State inspection (for serialization or debugging)
+* Metadata variables (spatial reference information, hyperparameters, etc.) 
+
+These and other uses may be applied by ngen. Specifically, ngen will make use of specified, reserved unpublished variables enumerated later in this document. Therefore, a module should be able to communicate via unpublished variables or at least not malfunction in the case of unpublished variables being used, as described below.
+
+Note that there is currently no discoverability mechanism for unpublished variables, they must be described in documentation (such as this document or a module's  documentation) and often manually implemented or configured for use (such as in a realization config file).
+
+## Unknown/unexpected variables passed to `set_value`
+
+Importantly, if an unexpected variable name is passed to `set_value` this *must* not cause an error or instability! Consider the unknown unpublished value to be "offered" and it can be ignored<!-- TODO: " (unless otherwise specified for specific variable names later in this document)"? We might have a required one at some point. -->. Generally, the preferred behavior in the case of an unknown variable is to do nothing and report success (i.e. throw no exception and return `BMI_SUCCESS`).
+
+This scenario should be avoided by ngen, but there may be cases where ngen does not yet know whether a module supports an unpublished variable and will try to set it. These attempts can be ignored if the module does not support or understand the variable. (Returning `BMI_SUCCESS` from `set_value` does *not* imply that the module understands/supports the variable, see below section on probing.)
+
+## Must support variable metadata functions
+
+If a module *does* support an unpublished variable, it is not sufficient to *only* implenent it in `set_value`--as described above, the variable metadata functions (`get_var_type`, `get_var_itemsize`, `get_var_nbytes`) *must* be implemented and return correct values for the variable. Implementation of `get_var_units` is also strongly encouraged.
+
+# Array representation
+
+## Contiguousness
 
 In order to pass arrays back and forth between modules and ngen (and indrectly from BMI modules to other BMI modules), it is necessary that the arrays being passed are stored in contiguous memory blocks in a known layout. This does not necessarily require that this is how data is stored in memory and used for computation within the model, but when passing data through BMI functions array data must conform to this constraint.
 
-### Zero-Indexing
+## Zero-Indexing
 
 Arrays should be zero-indexed (the index of the first item is 0, not 1 or some other number) and indexes appearing in the BMI functions (e.g. [`get_value_at_indices`](https://bmi.readthedocs.io/en/stable/#get-value-at-indices)) must be treated as zero-based indices. Of the supported languages, this mainly affects Fortran developers, as Fortran uses 1-based indices by default.
 
-### Layout and Flattening
+## Layout and Flattening
 
-#### C ordering required
+### C ordering required
 
 The [BMI best practices](https://bmi.readthedocs.io/en/stable/bmi.best_practices.html) document states:
 
@@ -105,7 +160,7 @@ However, strictly speaking, *how* a multi-dimensional array should be flattened 
 
 However, if you have a multi-dimensional array in Fortran or in Python/NumPy it may *not* be in the correct order. In Fortran, arrays are created in memory in "column major order"--however if you treat the first (left-most) index as the fastest changing, it is the same thing as C ordering where the C code would treat the last (right-most) index as the fastest changing. In Python, NumPy `ndarray`s are created as contiguous C-ordered blocks by default, but it is possible to create Fortran-ordered arrays, and if you take a view or slice of an array it is no longer a contiguous array and can't be passed without copying.
 
-#### Proper ordering example
+### Proper ordering example
 
 The simplest way to explain the proper ordering is by example. Consider a `float` array with dimensions X = 4, Y = 3, and Z = 2. Such an array could be created and populated with the same values in the correct ordering and layout in the following ways:
 
@@ -202,13 +257,13 @@ Notably, the BMI [`get_grid_shape`](https://bmi.readthedocs.io/en/stable/#get-gr
 ```
 Which is consistent with the C and NumPy array shapes.
 
-#### When this matters
+### When this matters
 
-##### Fortran models using z,y,x index ordering
+#### Fortran models using z,y,x index ordering
 
 If you have a Fortran model and are using `(y,x)` or `(z,y,x)` ordering for your array indices, then the flattened, linear contiguous memory representation of your array is not the same as C ordering. In this case, the BMI interface layer in your module will have to copy/reorganize the memory in the array to be in C order whenever responding to BMI functions--essentially, recopy `(z,y,x)` arrays to be in `(x,y,z)` order. This is necessary when exposing an array outside of your model module because other models and ngen will assume that the `get_value_at_index` and `set_value_at_index` operations work a certain way on the memory representation and that the array is in a specific layout when it represents spatial data. See below for details on both of these scenarios.
 
-##### Clarification for `get_value_at_indices` and `set_value_at_indices`
+#### Clarification for `get_value_at_indices` and `set_value_at_indices`
 
 The BMI documentation for [`get_value_at_indices`]() and [`set_value_at_indices`]() states that the `inds` parameter designates:
 
@@ -218,7 +273,7 @@ However if read perfectly literally, `inds` is by necessity already a one-dimens
 
 The ngen BMI driver assumes that the documentation implies that `inds` is a zero-based index into a flattened array and that the array is flattened according to C memory ordering as demonstrated above.
 
-##### Spatial data arrays for structured grids
+#### Spatial data arrays for structured grids
 
 The BMI documentation for [`get_grid_shape`](https://bmi.readthedocs.io/en/stable/#get-grid-shape) specifies:
 
@@ -227,6 +282,32 @@ The BMI documentation for [`get_grid_shape`](https://bmi.readthedocs.io/en/stabl
 This matches the C and NumPy examples above, with a shape of `(2,3,4)`, and clarifies that the last shape ordinate is the X dimension.
 
 Importantly, besides needing to pass multidimentional array data (spatial or otherwise) between BMI modules in a known flattened form, ngen will perform some spatial operations--such as grid data aggregation or re-gridding--on array data from modules if it represents spatial data. Since all BMI arrays are flattened, the flattening order must be consistent, or ngen will perform the spatial operations incorrectly.
+
+# Grid metadata functions
+
+TODO
+
+## Required metadata functions
+
+## Ranks and sizes for scalar values
+
+# Specific ngen uses of unpublished variables
+
+TODO
+
+## The `model_params` list
+
+TODO
+
+## Grid sizing parameters
+
+TODO: Thinking we should add `ngen_` to the front of these, BTW...
+
+### `ngen_grid_N_shape`
+
+### `ngen_grid_N_spacing`
+
+### `ngen_grid_N_origin`
 
 
 
