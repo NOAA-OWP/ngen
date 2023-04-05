@@ -86,7 +86,9 @@ namespace ngen
                     nexus->add_upstream_flow(response, id, output_time_index);
                     break;
                 }
-            } //done catchments          
+            } //done catchments   
+
+            simulation_time.advance_timestep();       
         }
 
         
