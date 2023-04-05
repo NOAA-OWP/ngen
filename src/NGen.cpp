@@ -352,40 +352,6 @@ int main(int argc, char *argv[]) {
         auto& m_data = layer_meta_data.get_layer(keys[i]);
         double c_value = UnitsHelper::get_converted_value(m_data.time_step_units,m_data.time_step,"s");
         time_steps.push_back(c_value);
-
-        if ( i == 0 )
-        {
-            min_time_step = max_time_step = c_value;
-        }
-        else
-        {
-            if ( c_value < min_time_step )
-            {
-                min_time_step = c_value;
-            }
-            else if ( c_value > max_time_step)
-            {
-                max_time_step = c_value;
-            }
-        }
-    }
-
-    // check that all layers are time steps divide into the max time step evenly
-    // and calculate the time step multiplyer for each layer
-
-    std::unordered_map<int, int> steps_for_level;
-
-    for( int i = 0; i < keys.size(); ++i )
-    {
-      if ( int(max_time_step) % int(time_steps[i]) != 0 )
-      {
-          throw std::runtime_error("Incompatible time steps");
-      }
-      else
-      {
-        int sub_steps = int(max_time_step) / int(time_steps[i]);
-        steps_for_level[keys[i]] = sub_steps;
-      }
     }
 
     std::vector<int> output_time_index;
@@ -407,18 +373,31 @@ int main(int argc, char *argv[]) {
       Simulation_Time sim_time(*manager->Simulation_Time_Object);
   
       for ( std::string id : features.catchments(keys[i]) ) { cat_ids.push_back(id); }
-      layer[i] = make_shared<ngen::Layer>(desc, cat_ids, sim_time, features, catchment_data, pdm_et_data, 0);
+      layers[i] = make_shared<ngen::Layer>(desc, cat_ids, sim_time, features, catchment_data, pdm_et_data, 0);
 
     }
-
 
     //Now loop some time, iterate catchments, do stuff for total number of output times
 
     for( int count = 0; count < manager->Simulation_Time_Object->get_total_output_times(); count++) {
-      manager->Simulation_Time_Object
-      for ( long lv : features.levels() ) {
-
-      } //done levels
+      auto next_time = manager->Simulation_Time_Object->next_timestep_epoch_time();
+      auto layer_min_next_time = next_time;
+      do
+      {
+        for ( auto& layer : layers ) 
+        {
+          auto layer_next_time = layer.next_timestep_epoch_time();
+          if ( layer_next_time <= next_time)
+          {
+            layer.update_models();
+          }
+          if ( layer_min_next_time > layer_next_time)
+          {
+            layer_min_next_time = layer_next_time;
+          }
+        } //done levels
+      } while( layer_min_next_time < next_time )
+      
       //At this point, could make an internal routing pass, extracting flows from nexuses and routing
       //across the flowpath to the next nexus.
       //Once everything is updated for this timestep, dump the nexus output
