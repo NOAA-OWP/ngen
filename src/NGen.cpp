@@ -373,7 +373,7 @@ int main(int argc, char *argv[]) {
       Simulation_Time sim_time(*manager->Simulation_Time_Object);
   
       for ( std::string id : features.catchments(keys[i]) ) { cat_ids.push_back(id); }
-      layers[i] = make_shared<ngen::Layer>(desc, cat_ids, sim_time, features, catchment_data, pdm_et_data, 0);
+      layers[i] = make_shared<ngen::Layer>(desc, cat_ids, sim_time, features, catchment_collection, pdm_et_data, 0);
 
     }
 
@@ -386,22 +386,23 @@ int main(int argc, char *argv[]) {
       {
         for ( auto& layer : layers ) 
         {
-          auto layer_next_time = layer.next_timestep_epoch_time();
+          auto layer_next_time = layer->next_timestep_epoch_time();
           if ( layer_next_time <= next_time)
           {
-            layer.update_models();
+            layer->update_models();
           }
           if ( layer_min_next_time > layer_next_time)
           {
             layer_min_next_time = layer_next_time;
           }
         } //done levels
-      } while( layer_min_next_time < next_time )
+      } while( layer_min_next_time < next_time );
       
       //At this point, could make an internal routing pass, extracting flows from nexuses and routing
       //across the flowpath to the next nexus.
       //Once everything is updated for this timestep, dump the nexus output
-      for(const auto& id : features.nexuses()) {
+      for(const auto& id : features.nexuses()) 
+      {
         std::string current_timestamp = manager->Simulation_Time_Object->get_timestamp(output_time_index[0]);
         
         #ifdef NGEN_MPI_ACTIVE
