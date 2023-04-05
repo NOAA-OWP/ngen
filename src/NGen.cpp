@@ -381,16 +381,23 @@ int main(int argc, char *argv[]) {
 
     for( int count = 0; count < manager->Simulation_Time_Object->get_total_output_times(); count++) {
       auto next_time = manager->Simulation_Time_Object->next_timestep_epoch_time();
+      auto prev_layer_time = next_time;
       auto layer_min_next_time = next_time;
       do
       {
         for ( auto& layer : layers ) 
         {
           auto layer_next_time = layer->next_timestep_epoch_time();
-          if ( layer_next_time <= next_time)
+          if ( layer_next_time <= next_time && layer_next_time <=  prev_layer_time)
           {
             layer->update_models();
+            prev_layer_time = layer_next_time;
           }
+          else
+          {
+            layer_min_next_time = prev_layer_time = layer->current_timestep_epoc_time(); 
+          }
+
           if ( layer_min_next_time > layer_next_time)
           {
             layer_min_next_time = layer_next_time;
