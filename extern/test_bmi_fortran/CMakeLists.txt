@@ -23,7 +23,7 @@ set(CMAKE_BUILD_TYPE Debug)
 
 set( CMAKE_Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR}/fortran)
 
-file(GLOB SOURCES src/*.f90)
+file(GLOB SOURCES src/*.f90) #TODO why does this not pick up new modules/src files after initial configuration?
 
 if(WIN32)
     add_library(testbmifortranmodel ${SOURCES})
