@@ -218,6 +218,10 @@ function test_initialize(this, config_file) result (bmi_status)
   class (bmi_test_bmi), intent(out) :: this
   character (len=*), intent(in) :: config_file
   integer :: bmi_status
+  !initialize the internal grid meta data structures
+  call grids(1)%init(0, 0, scalar, none) !the scalar grid
+  call grids(2)%init(1, 2, rectilinear, none) !the 2D grid
+  call grids(3)%init(2, 3, rectilinear, none) !the 3D grid
 
   if (len(config_file) > 0) then
      bmi_status = read_init_config(this%model, config_file)
