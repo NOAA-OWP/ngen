@@ -7,6 +7,7 @@ module bmitestbmi
 #endif
 
   use test_model
+  use bmi_grid
   use, intrinsic :: iso_c_binding, only: c_ptr, c_loc, c_f_pointer
   implicit none
   integer :: DEFAULT_TIME_STEP_SIZE = 3600
@@ -95,7 +96,15 @@ module bmitestbmi
 
   character (len=BMI_MAX_COMPONENT_NAME), target :: &
        component_name = "Testing BMI Fortran Model"
+  
+  type(GridType) :: grids(3)
 
+  character (len=BMI_MAX_VAR_NAME), target :: &
+    grid_meta_vars(8) = [character(BMI_MAX_VAR_NAME):: "grid_1_shape", "grid_1_spacing", "grid_1_units", "grid_1_origin", &
+                                                       "grid_2_shape", "grid_2_spacing", "grid_2_units", "grid_2_origin"    ]
+  character (len=BMI_MAX_VAR_NAME), target :: &
+    grid_meta_vars_types(8) = [character(BMI_MAX_VAR_NAME):: "integer", "double precision", "integer", "double precision", & 
+                                                             "integer", "double precision", "integer", "double precision" ]
   ! Exchange items
 
   character (len=BMI_MAX_VAR_NAME), target :: &
