@@ -438,6 +438,31 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetGridSize_0_a) {
     }
 }
 
+/** Test grid size can be retrieved for input 4. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetGridSize_0_b) {
+    int in_var_index = 3;
+
+    std::string variable_name = adapter->GetInputVarNames()[in_var_index];
+    int grd = adapter->GetVarGrid(variable_name);
+    int rank = adapter->GetGridRank(grd);
+    ASSERT_EQ(rank, 2);
+    std::vector<int> shape = {3,3};
+    adapter->SetValue("grid_1_shape", shape.data());
+    //Must be int to align with fortran c_int
+    int grid_shape[rank+1];
+    adapter->GetGridShape(grd, grid_shape);
+
+    // FIXME embed the expected value directly in the test and remove from "expected_input_grid_size"...
+    // since the shape is dictated in this test...
+    try {
+        ASSERT_EQ(adapter->GetGridSize(grd), expected_input_grid_size[in_var_index]);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting grid size: %s", e.what());
+        FAIL();
+    }
+}
+
 /** Test grid rank can be retrieved for output 1. */
 TEST_F(Bmi_Fortran_Adapter_Test, GetGridRank_0_a) {
     int out_var_index = 0;
