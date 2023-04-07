@@ -565,16 +565,15 @@ end function test_finalize
     class (bmi_test_bmi), intent(in) :: this
     integer, intent(in) :: grid
     double precision, dimension(:), intent(out) :: x
-    integer :: bmi_status
+    integer :: bmi_status, i
 
-    select case(grid)
-    case(0)
-       x(:) = [0.d0]
-       bmi_status = BMI_SUCCESS
-    case default
-       x(:) = -1.d0
-       bmi_status = BMI_FAILURE
-    end select
+    bmi_status = BMI_FAILURE
+    do i = 1, size(grids)
+      if ( grids(i)%id .eq. grid ) then
+        call grids(i)%grid_x(x)
+        bmi_status = BMI_SUCCESS
+      end if
+    end do
   end function test_grid_x
 
   ! Y-coordinates of grid nodes.

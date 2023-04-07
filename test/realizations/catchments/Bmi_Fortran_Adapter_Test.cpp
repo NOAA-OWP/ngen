@@ -645,17 +645,60 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetGridX_0_a) {
 
     std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
     int grd = adapter->GetVarGrid(variable_name);
-    int size = adapter->GetGridSize(grd);
-    double* grid = new double [size];
+    int rank = adapter->GetGridRank(grd);
+    ASSERT_EQ(rank, 0);
+    //single element vector to hold the result
+    std::vector<double> xs = std::vector<double>(1, -1 );
+
     try {
-        adapter->GetGridX(grd, grid);
-        ASSERT_EQ(grid[0], expected_grid_x);
+        adapter->GetGridX(grd, xs.data());
+        //The value passed in xs should be unchanged since GridX isn't defined for scalars
+        ASSERT_EQ(xs[0], -1);
     }
     catch (std::exception& e) {
         printf("Exception getting grid X: %s", e.what());
         FAIL();
     }
-    delete [] grid;
+
+}
+
+/** Test grid X can be retrieved for output 4. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetGridX_0_b) {
+    int out_var_index = 3;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    int grd = adapter->GetVarGrid(variable_name);
+    int rank = adapter->GetGridRank(grd);
+    ASSERT_EQ(rank, 2);
+
+    //Initialize the grid shape (y,x)
+    std::vector<int> shape = {3,4};
+    adapter->SetValue("grid_1_shape", shape.data());
+    //Initialize the origin
+    //NOTE origin is also ij order, so this is `y0,x0`
+    std::vector<double> origin = {42.0, 42.0}; //TODO if this isn't double, the results are wacky...but it doesn't crash...
+    adapter->SetValue("grid_1_origin", origin.data());
+    
+    //NOTE spacing in BMI is again ij order, so this is `dy, dx`
+    std::vector<double> spacing = {2.0, 2.0}; //TODO if this isn't double, the results are wacky...but it doesn't crash...
+    adapter->SetValue("grid_1_spacing", spacing.data());
+
+    
+    std::vector<double> xs = std::vector<double>(shape[1], 0.0 );
+
+    int size = adapter->GetGridSize(grd);
+  
+    try {
+        adapter->GetGridX(grd, xs.data());
+            for(int i = 0; i < shape[1]; i++){
+        ASSERT_EQ(xs[i], origin[1] + spacing[1]*i);
+    }
+    }
+    catch (std::exception& e) {
+        printf("Exception getting grid X: %s", e.what());
+        FAIL();
+    }
+
 }
 
 /** Test grid Y can be retrieved for output 1. */
