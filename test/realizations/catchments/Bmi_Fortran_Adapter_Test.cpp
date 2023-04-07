@@ -535,16 +535,61 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetGridSpacing_0_a) {
 
     std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
     int grd = adapter->GetVarGrid(variable_name);
-    double spacing;
-    EXPECT_THROW(adapter->GetGridSpacing(grd, &spacing), std::runtime_error);
-    ASSERT_EQ(spacing, expected_grid_spacing);
-    // try {
-    //     adapter->GetGridSpacing(grd, &spacing);
-    //     ASSERT_EQ(spacing, expected_grid_spacing);
-    // }
-    // catch (std::exception& e) {
-    //     printf("Exception getting grid spacing: %s", e.what());
-    // }
+    int rank = adapter->GetGridRank(grd);
+    ASSERT_EQ(rank, 0);
+    double spacing[rank+1];
+    adapter->GetGridSpacing(grd, spacing);
+    //spacing undefined for scalar, so should be 0
+    ASSERT_EQ(spacing[0], 0);
+}
+
+/** Test default grid spacing can be retrieved for output 4. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetGridSpacing_0_b) {
+    int out_var_index = 3;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    int grd = adapter->GetVarGrid(variable_name);
+    int rank = adapter->GetGridRank(grd);
+    ASSERT_EQ(rank, 2);
+    double grid_spacing[rank];
+    adapter->GetGridSpacing(grd, grid_spacing);
+    //spacing not yet established for grid, so should be 0, 0
+    ASSERT_EQ(grid_spacing[0], 0.0);
+    ASSERT_EQ(grid_spacing[1], 0.0);
+}
+
+/** Test grid spacing can be set and retrieved for output 4. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetGridSpacing_0_c) {
+    int out_var_index = 3;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    int grd = adapter->GetVarGrid(variable_name);
+    int rank = adapter->GetGridRank(grd);
+    ASSERT_EQ(rank, 2);
+    //NOTE spacing in BMI is again ij order, so this is `dy, dx`
+    std::vector<double> spacing = {2.0, 2.0}; //TODO if this isn't double, the results are wacky...but it doesn't crash...
+    adapter->SetValue("grid_1_spacing", spacing.data());
+    double grid_spacing[rank];
+    adapter->GetGridSpacing(grd, grid_spacing);
+    ASSERT_EQ(grid_spacing[0], spacing[0]);
+    ASSERT_EQ(grid_spacing[1], spacing[1]);
+}
+
+/** Test grid spacing units can be set and retrieved for output 4. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetGridSpacing_0_d) {
+    int out_var_index = 3;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    int grd = adapter->GetVarGrid(variable_name);
+    int rank = adapter->GetGridRank(grd);
+    ASSERT_EQ(rank, 2);
+    //NOTE spacing in BMI is again ij order, so this is `dy, dx`
+    std::vector<int> units= {1, 1}; //The enum value for `m` or `meters` in bmi_grid.f90 must be int type
+    adapter->SetValue("grid_1_units", units.data());
+    int grid_units[rank];
+    adapter->GetValue("grid_1_units", grid_units);
+    ASSERT_EQ(grid_units[0], units[0]);
+    ASSERT_EQ(grid_units[1], units[1]);
 }
 
 /** Test grid origin can be retrieved for output 1. */
@@ -553,16 +598,45 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetGridOrigin_0_a) {
 
     std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
     int grd = adapter->GetVarGrid(variable_name);
-    double origin;
-    EXPECT_THROW(adapter->GetGridOrigin(grd, &origin), std::runtime_error);
-    ASSERT_EQ(origin, expected_grid_origin);
-    // try {
-    //     adapter->GetGridOrigin(grd, &origin);
-    //     ASSERT_EQ(origin, expected_grid_origin);
-    // }
-    // catch (std::exception& e) {
-    //     printf("Exception getting grid origin: %s", e.what());
-    // }
+    int rank = adapter->GetGridRank(grd);
+    ASSERT_EQ(rank, 0);
+    double origin[rank+1];
+    adapter->GetGridOrigin(grd, origin);
+    //origin undefined for scalar, so should be 0
+    ASSERT_EQ(origin[0], 0);
+}
+
+/** Test default grid origin can be retrieved for output 4. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetGridOrigin_0_b) {
+    int out_var_index = 3;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    int grd = adapter->GetVarGrid(variable_name);
+    int rank = adapter->GetGridRank(grd);
+    ASSERT_EQ(rank, 2);
+    double origin[rank];
+    adapter->GetGridOrigin(grd, origin);
+    //origin not yet established for grid, should be 0,0
+    ASSERT_EQ(origin[0], 0);
+    ASSERT_EQ(origin[1], 0);
+}
+
+/** Test grid origin can be set and retrieved for output 4. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetGridOrigin_0_c) {
+    int out_var_index = 3;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    int grd = adapter->GetVarGrid(variable_name);
+    int rank = adapter->GetGridRank(grd);
+    ASSERT_EQ(rank, 2);
+    //NOTE origin is also ij order, so this is `y0,x0`
+    std::vector<double> _origin = {42.0, 42.0}; //TODO if this isn't double, the results are wacky...but it doesn't crash...
+    adapter->SetValue("grid_1_origin", _origin.data());
+    double origin[rank];
+    adapter->GetGridOrigin(grd, origin);
+    for(int i = 0; i < rank; i++){
+        ASSERT_EQ(origin[i], _origin[i]);
+    }
 }
 
 /** Test grid X can be retrieved for output 1. */
