@@ -99,31 +99,31 @@ module bmitestbmi
   ! Exchange items
 
   character (len=BMI_MAX_VAR_NAME), target :: &
-    output_items(3) = ['OUTPUT_VAR_1', 'OUTPUT_VAR_2', 'OUTPUT_VAR_3']
+    output_items(6) = [character(BMI_MAX_VAR_NAME):: 'OUTPUT_VAR_1', 'OUTPUT_VAR_2', 'OUTPUT_VAR_3', 'GRID_VAR_2', 'GRID_VAR_3', 'GRID_VAR_4']
 
   character (len=BMI_MAX_VAR_NAME), target :: &
-    input_items(3) = ['INPUT_VAR_1', 'INPUT_VAR_2', 'INPUT_VAR_3']
+    input_items(4) = [character(BMI_MAX_VAR_NAME):: 'INPUT_VAR_1', 'INPUT_VAR_2', 'INPUT_VAR_3', 'GRID_VAR_1']
 
   character (len=BMI_MAX_TYPE_NAME) :: &
-    output_type(3) = [character(BMI_MAX_TYPE_NAME):: 'double precision', 'real', 'integer']
+    output_type(6) = [character(BMI_MAX_TYPE_NAME):: 'double precision', 'real', 'integer', 'double precision', 'double precision', 'double precision']
 
   character (len=BMI_MAX_TYPE_NAME) :: &
-    input_type(3) = [character(BMI_MAX_TYPE_NAME):: 'double precision', 'real', 'integer']
+    input_type(4) = [character(BMI_MAX_TYPE_NAME):: 'double precision', 'real', 'integer', 'double precision']
 
-  integer :: output_grid(3) = [0, 0, 0]
-  integer :: input_grid(3) = [0, 0, 0]
-
-  character (len=BMI_MAX_UNITS_NAME) :: &
-    output_units(3) = [character(BMI_MAX_UNITS_NAME):: 'm', 'm', 's']
+  integer :: output_grid(6) = [0, 0, 0, 1, 2, 2]
+  integer :: input_grid(4) = [0, 0, 0, 1]
 
   character (len=BMI_MAX_UNITS_NAME) :: &
-    input_units(3) = [character(BMI_MAX_UNITS_NAME):: 'm', 'm', 's']
+    output_units(6) = [character(BMI_MAX_UNITS_NAME):: 'm', 'm', 's', 'm', 'm', 'm']
+
+  character (len=BMI_MAX_UNITS_NAME) :: &
+    input_units(4) = [character(BMI_MAX_UNITS_NAME):: 'm', 'm', 's', 'm']
 
   character (len=BMI_MAX_LOCATION_NAME) :: &
-    output_location(3) = [character(BMI_MAX_LOCATION_NAME):: 'node', 'node', 'node']
+    output_location(6) = [character(BMI_MAX_LOCATION_NAME):: 'node', 'node', 'node', 'node', 'node', 'node']
 
   character (len=BMI_MAX_LOCATION_NAME) :: &
-    input_location(3) = [character(BMI_MAX_LOCATION_NAME):: 'node', 'node', 'node']
+    input_location(4) = [character(BMI_MAX_LOCATION_NAME):: 'node', 'node', 'node', 'node']
 
 contains
 
@@ -327,6 +327,15 @@ end function test_finalize
     do  i = 1, size(input_items)
       if(input_items(i) .eq. trim(name) ) then
         type = input_type(i)
+        bmi_status = BMI_SUCCESS
+        return
+      endif
+    end do
+
+    !check grid meta vars
+    do i = 1, size(grid_meta_vars)
+      if( grid_meta_vars(i) .eq. trim(name) ) then
+        type = grid_meta_vars_types(i)
         bmi_status = BMI_SUCCESS
         return
       endif
@@ -695,6 +704,18 @@ end function test_finalize
     case("INPUT_VAR_3")
        size = sizeof(this%model%input_var_3)
        bmi_status = BMI_SUCCESS
+    case("GRID_VAR_1")
+        size = sizeof(this%model%grid_var_1)
+        bmi_status = BMI_SUCCESS
+    case("GRID_VAR_2")
+       size = sizeof(this%model%grid_var_2)
+       bmi_status = BMI_SUCCESS
+    case("GRID_VAR_3")
+        size = sizeof(this%model%grid_var_3)
+        bmi_status = BMI_SUCCESS
+    case("GRID_VAR_4")
+        size = sizeof(this%model%grid_var_4)
+        bmi_status = BMI_SUCCESS
     case("OUTPUT_VAR_1")
        size = sizeof(this%model%output_var_1)
        bmi_status = BMI_SUCCESS
