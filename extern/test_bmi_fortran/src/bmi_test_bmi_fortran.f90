@@ -463,15 +463,17 @@ end function test_finalize
     integer, intent(in) :: grid
     integer, intent(out) :: rank
     integer :: bmi_status
+    integer :: i
+    ! Failure unless we find what we are looking for...
+    bmi_status = BMI_FAILURE
+    do i = 1, size(grids)
+      if ( grids(i)%id .eq. grid ) then
+        rank = grids(i)%rank
+        bmi_status = BMI_SUCCESS
+        return
+      end if
+    end do
 
-    select case(grid)
-    case(0)
-       rank = 1
-       bmi_status = BMI_SUCCESS
-    case default
-       rank = -1
-       bmi_status = BMI_FAILURE
-    end select
   end function test_grid_rank
 
   ! The total number of elements in a grid.

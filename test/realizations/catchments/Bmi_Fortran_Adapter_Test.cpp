@@ -479,6 +479,24 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetGridRank_0_a) {
     }
 }
 
+/**
+ * Test the function for getting the grid rank for the grid of grid output variable 2.
+ * */
+TEST_F(Bmi_Fortran_Adapter_Test, GetGridRank_0_b) {
+    int out_var_index = 3;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    int grd = adapter->GetVarGrid(variable_name);
+
+    try {
+        ASSERT_EQ(adapter->GetGridRank(grd), expected_output_grid_rank[out_var_index]);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting grid rank: %s", e.what());
+        FAIL();
+    }
+}
+
 /** Test grid shape can be retrieved for output 1. */
 TEST_F(Bmi_Fortran_Adapter_Test, GetGridShape_0_a) {
     int out_var_index = 0;
