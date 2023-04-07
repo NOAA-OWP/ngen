@@ -48,32 +48,33 @@ protected:
     std::unique_ptr<Bmi_Fortran_Adapter> adapter;
 
     std::string expected_component_name = "Testing BMI Fortran Model";
-    std::vector<std::string> expected_output_var_names = { "OUTPUT_VAR_1", "OUTPUT_VAR_2", "OUTPUT_VAR_3" };
-    std::vector<std::string> expected_input_var_names = { "INPUT_VAR_1", "INPUT_VAR_2", "INPUT_VAR_3" };
-    std::vector<std::string> expected_output_var_locations = { "node", "node", "node" };
-    std::vector<int> expected_output_var_grids = { 0, 0, 0 };
-    std::vector<int> expected_input_var_grids = { 0, 0, 0 };
-    std::vector<std::string> expected_output_var_units = { "m", "m", "s" };
-    std::vector<std::string> expected_output_var_types = { "double precision", "real", "integer" };
-    std::vector<std::string> expected_input_var_types = { "double precision", "real", "integer" };
-    int expected_grid_rank = 1;
-    int expected_grid_size = 1;
+    std::vector<std::string> expected_output_var_names = { "OUTPUT_VAR_1", "OUTPUT_VAR_2", "OUTPUT_VAR_3", "GRID_VAR_2", "GRID_VAR_3", "GRID_VAR_4" };
+    std::vector<std::string> expected_input_var_names = { "INPUT_VAR_1", "INPUT_VAR_2", "INPUT_VAR_3", "GRID_VAR_1" };
+    std::vector<std::string> expected_output_var_locations = { "node", "node", "node", "node", "node"};
+    std::vector<int> expected_output_var_grids = { 0, 0, 0, 1, 2, 2 };
+    std::vector<int> expected_input_var_grids = { 0, 0, 0, 1 };
+    std::vector<std::string> expected_output_var_units = { "m", "m", "s", "m", "m", "m" };
+    std::vector<std::string> expected_output_var_types = { "double precision", "real", "integer", "double precision", "double precision", "double precision" };
+    std::vector<int> expected_output_var_item_sizes = { 8, 4, 4, 8, 8, 8};
+    std::vector<std::string> expected_input_var_types = { "double precision", "real", "integer", "double precision" };
+    std::vector<int> expected_input_var_item_sizes = { 8, 4, 4, 8 };
+    std::vector<int> expected_input_grid_rank = {0, 0, 0, 2};
+    std::vector<int> expected_output_grid_rank = {0, 0, 0, 2, 3, 3};
+    std::vector<int> expected_input_grid_size = {1, 1, 1, 9};
+    std::vector<int> expected_output_grid_size = {0, 0, 0, 9, 18, 18}; //FIXME correct 3D SIZE?
+    std::vector<int> expected_input_var_nbytes = {8, 4, 4, 8}; //FIXME are these correct???
+    std::vector<int> expected_output_var_nbytes = {8, 4, 4, 8, 8, 8}; //FIXME are these correct??? Probably not for the gridded ones...
+    std::vector<int> expected_input_var_itemsize = {8, 4, 4, 8}; //FIXME are these correct???
+    std::vector<int> expected_output_var_itemsize = {8, 4, 4, 8, 8, 8}; //FIXME are these correct???
     int expected_grid_shape = -1;
     double expected_grid_x = 0;
     double expected_grid_y = 0;
     double expected_grid_z = 0;
-    double expected_grid_spacing = -1.0;
-    double expected_grid_origin = -1.0;
+    double expected_grid_origin = -1;
+    double expected_grid_spacing = -1;
     int expected_grid_node_count = 1;
     int expected_grid_edge_count = -1;
     int expected_grid_face_count = -1;
-    std::string expected_grid_type = "scalar";
-    int expected_var_itemsize_0 = 8; //type double
-    int expected_var_itemsize_1 = 4; //type float/real
-    int expected_var_itemsize_2 = 4; //type int/integer
-    int expected_var_nbytes_0 = 8; //type double
-    int expected_var_nbytes_1 = 4; //type float/real
-    int expected_var_nbytes_2 = 4; //type int/integer
 
 };
 
@@ -384,7 +385,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetGridSize_0_a) {
     int grd = adapter->GetVarGrid(variable_name);
 
     try {
-        ASSERT_EQ(adapter->GetGridSize(grd), expected_grid_size);
+        ASSERT_EQ(adapter->GetGridSize(grd), expected_output_grid_size[out_var_index]);
     }
     catch (std::exception& e) {
         printf("Exception getting grid size: %s", e.what());
@@ -400,7 +401,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetGridRank_0_a) {
     int grd = adapter->GetVarGrid(variable_name);
 
     try {
-        ASSERT_EQ(adapter->GetGridRank(grd), expected_grid_rank);
+        ASSERT_EQ(adapter->GetGridRank(grd), expected_output_grid_rank[out_var_index]);
     }
     catch (std::exception& e) {
         printf("Exception getting grid rank: %s", e.what());
@@ -665,7 +666,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetGridType_0_a) {
     int grd = adapter->GetVarGrid(variable_name);
 
     try {
-        ASSERT_EQ(adapter->GetGridType(grd), expected_grid_type);
+        ASSERT_EQ(adapter->GetGridType(grd), "scalar");
     }
     catch (std::exception& e) {
         printf("Exception getting grid type: %s", e.what());
@@ -678,7 +679,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarItemsize_0_a) {
     std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
 
     try {
-        ASSERT_EQ(adapter->GetVarItemsize(variable_name), expected_var_itemsize_0);
+        ASSERT_EQ(adapter->GetVarItemsize(variable_name), expected_output_var_itemsize[out_var_index]);
     }
     catch (std::exception& e) {
         printf("Exception getting var nbytes: %s", e.what());
@@ -693,7 +694,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarItemsize_0_b) {
     std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
 
     try {
-        ASSERT_EQ(adapter->GetVarItemsize(variable_name), expected_var_itemsize_1);
+        ASSERT_EQ(adapter->GetVarItemsize(variable_name), expected_output_var_itemsize[out_var_index]);
     }
     catch (std::exception& e) {
         printf("Exception getting var itemsize: %s", e.what());
@@ -708,7 +709,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarItemsize_0_c) {
     std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
 
     try {
-        ASSERT_EQ(adapter->GetVarItemsize(variable_name), expected_var_itemsize_2);
+        ASSERT_EQ(adapter->GetVarItemsize(variable_name), expected_output_var_itemsize[out_var_index]);
     }
     catch (std::exception& e) {
         printf("Exception getting var itemsize: %s", e.what());
@@ -723,7 +724,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarNbytes_0_a) {
     std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
 
     try {
-        ASSERT_EQ(adapter->GetVarNbytes(variable_name), expected_var_nbytes_0);
+        ASSERT_EQ(adapter->GetVarNbytes(variable_name), expected_output_var_nbytes[out_var_index]);
     }
     catch (std::exception& e) {
         printf("Exception getting var nbytes: %s", e.what());
@@ -738,7 +739,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarNbytes_0_b) {
     std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
 
     try {
-        ASSERT_EQ(adapter->GetVarNbytes(variable_name), expected_var_nbytes_1);
+        ASSERT_EQ(adapter->GetVarNbytes(variable_name), expected_output_var_nbytes[out_var_index]);
     }
     catch (std::exception& e) {
         printf("Exception getting var nbytes: %s", e.what());
@@ -753,7 +754,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarNbytes_0_c) {
     std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
 
     try {
-        ASSERT_EQ(adapter->GetVarNbytes(variable_name), expected_var_nbytes_2);
+        ASSERT_EQ(adapter->GetVarNbytes(variable_name), expected_output_var_nbytes[out_var_index]);
     }
     catch (std::exception& e) {
         printf("Exception getting var nbytes: %s", e.what());
