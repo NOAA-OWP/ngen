@@ -755,13 +755,15 @@ module iso_c_bmif_2_0
       type(c_ptr) :: this
       integer(kind=c_int), intent(in) :: grid
       real(kind=c_double), intent(out) :: x (*)
-      integer(kind=c_int) :: bmi_status
+      integer(kind=c_int) :: bmi_status, rank
       !use a wrapper for c interop
       type(box), pointer :: bmi_box
       integer :: num_nodes
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
       bmi_status = bmi_box%ptr%get_grid_size(grid, num_nodes)
+      bmi_status = bmi_box%ptr%get_grid_rank(grid, rank)
+      if( rank .eq. 0 ) num_nodes = 1 ! treat scalars as 1 element array
       bmi_status = bmi_box%ptr%get_grid_x(grid, x(:num_nodes))
     end function get_grid_x
 
@@ -770,13 +772,15 @@ module iso_c_bmif_2_0
       type(c_ptr) :: this
       integer(kind=c_int), intent(in) :: grid
       real(kind=c_double), intent(out) :: y (*)
-      integer(kind=c_int) :: bmi_status
+      integer(kind=c_int) :: bmi_status, rank
       !use a wrapper for c interop
       type(box), pointer :: bmi_box
       integer :: num_nodes
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
       bmi_status = bmi_box%ptr%get_grid_size(grid, num_nodes)
+      bmi_status = bmi_box%ptr%get_grid_rank(grid, rank)
+      if( rank .eq. 0 ) num_nodes = 1 ! treat scalars as 1 element array
       bmi_status = bmi_box%ptr%get_grid_y(grid, y(:num_nodes))
     end function get_grid_y
 
@@ -785,13 +789,15 @@ module iso_c_bmif_2_0
       type(c_ptr) :: this
       integer(kind=c_int), intent(in) :: grid
       real(kind=c_double), intent(out) :: z (*)
-      integer(kind=c_int) :: bmi_status
+      integer(kind=c_int) :: bmi_status, rank
       !use a wrapper for c interop
       type(box), pointer :: bmi_box
       integer :: num_nodes
       !extract the fortran type from handle
       call c_f_pointer(this, bmi_box)
       bmi_status = bmi_box%ptr%get_grid_size(grid, num_nodes)
+      bmi_status = bmi_box%ptr%get_grid_rank(grid, rank)
+      if( rank .eq. 0 ) num_nodes = 1 ! treat scalars as 1 element array
       bmi_status = bmi_box%ptr%get_grid_z(grid, z(:num_nodes))
     end function get_grid_z
 
