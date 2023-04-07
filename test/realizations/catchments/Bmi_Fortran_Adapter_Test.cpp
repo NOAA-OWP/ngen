@@ -504,17 +504,29 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetGridShape_0_a) {
     std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
     int grd = adapter->GetVarGrid(variable_name);
     int rank = adapter->GetGridRank(grd);
-    int* shape = new int [rank];
-    EXPECT_THROW(adapter->GetGridShape(grd, shape), std::runtime_error);
-    ASSERT_EQ(shape[0], expected_grid_shape);
-    // try {
-    //     adapter->GetGridShape(grd, shape);
-    //     ASSERT_EQ(*shape, expected_grid_shape)
-    // }
-    // catch (std::exception& e) {
-    //     printf("Exception getting grid shape: %s", e.what());
-    // }
-    delete [] shape;
+    ASSERT_EQ(rank, 0);
+    //Must be int to align with fortran c_int
+    int shape[rank+1];
+    adapter->GetGridShape(grd, shape);
+    //shape not defined for scalars, so should be 0
+    ASSERT_EQ(shape[0], 0);
+}
+
+/** Test grid shape can be retrieved for output 3. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetGridShape_0_b) {
+    int out_var_index = 3;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    int grd = adapter->GetVarGrid(variable_name);
+    int rank = adapter->GetGridRank(grd);
+    ASSERT_EQ(rank, 2);
+    std::vector<int> shape = {3,4};
+    adapter->SetValue("grid_1_shape", shape.data());
+    //Must be int to align with fortran c_int
+    int grid_shape[rank];
+    adapter->GetGridShape(grd, grid_shape);
+    ASSERT_EQ(shape[0], grid_shape[0]);
+    ASSERT_EQ(shape[1], grid_shape[1]);
 }
 
 /** Test grid spacing can be retrieved for output 1. */

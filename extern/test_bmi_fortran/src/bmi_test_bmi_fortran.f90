@@ -825,6 +825,30 @@ end function test_finalize
     integer :: bmi_status
   
     select case(name)
+    
+    ! fun story...set_value_int in iso_c bindings uses "get_grid_size" to determine the number of elements to write
+    ! but that size is dependent on the shape...so if we try to set the shape we can only get a single dimension.
+    case("grid_1_shape")
+      grids(2)%shape = src
+      bmi_status = BMI_SUCCESS
+    case("grid_1_units")
+      grids(2)%units = src
+      bmi_status = BMI_SUCCESS
+    case("grid_2_shape")
+      grids(3)%shape = src
+      !OUTPUT vars must be allocated.  If they have already, deallocate and allocate the correct size
+      if( allocated(this%model%grid_var_3) ) deallocate( this%model%grid_var_3 )
+      ! src is in z, y, x order (last dimension first)
+      ! make this variable be x, y, z
+      allocate( this%model%grid_var_3(src(3), src(2), src(1)) )
+      if( allocated(this%model%grid_var_4) ) deallocate( this%model%grid_var_4 )
+      ! src is in z, y, x order (last dimension first)
+      ! make this variable be z, y, x as well
+      allocate( this%model%grid_var_4(src(1), src(2), src(3)) )
+      bmi_status = BMI_SUCCESS
+    case("grid_2_units")
+      grids(3)%units = src
+      bmi_status = BMI_SUCCESS
     case("INPUT_VAR_3")
        this%model%input_var_3 = src(1)
        bmi_status = BMI_SUCCESS
@@ -912,6 +936,12 @@ end function test_finalize
     integer :: bmi_status
 
     select case(name)
+    case("grid_1_units")
+      dest = grids(2)%units
+      bmi_status = BMI_SUCCESS
+    case("grid_2_units")
+      dest = grids(3)%units
+      bmi_status = BMI_SUCCESS
     case("INPUT_VAR_3")
        dest = [this%model%input_var_3]
        bmi_status = BMI_SUCCESS
