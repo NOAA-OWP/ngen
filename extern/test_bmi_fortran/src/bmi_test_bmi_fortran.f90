@@ -885,6 +885,18 @@ end function test_finalize
     integer :: bmi_status
 
     select case(name)
+    case("grid_1_spacing")
+      grids(2)%spacing = src
+      bmi_status = BMI_SUCCESS
+    case("grid_1_origin")
+      grids(2)%origin = src
+      bmi_status = BMI_SUCCESS
+    case("grid_2_spacing")
+      grids(3)%spacing = src
+      bmi_status = BMI_SUCCESS
+    case("grid_2_origin")
+      grids(3)%origin = src
+      bmi_status = BMI_SUCCESS
     case("INPUT_VAR_1")
       this%model%input_var_1 = src(1)
       bmi_status=BMI_SUCCESS
