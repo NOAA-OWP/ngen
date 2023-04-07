@@ -342,6 +342,38 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarGrid_1_b) {
     }
 }
 
+/** Test input 3 variable grid (id) can be retrieved. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetVarGrid_2_a) {
+    int out_var_index = 2;
+
+    std::string variable_name = adapter->GetInputVarNames()[out_var_index];
+    int expected_grid = expected_input_var_grids[out_var_index];
+
+    try {
+        ASSERT_EQ(adapter->GetVarGrid(variable_name), expected_grid);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting var grid id: %s", e.what());
+        FAIL();
+    }
+}
+
+/** Test output 5 variable grid (id) can be retrieved. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetVarGrid_2_b) {
+    int out_var_index = 4;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    int expected_grid = expected_output_var_grids[out_var_index];
+
+    try {
+        ASSERT_EQ(adapter->GetVarGrid(variable_name), expected_grid);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting var grid id: %s", e.what());
+        FAIL();
+    }
+}
+
 /** Test output 1 variable units can be retrieved. */
 TEST_F(Bmi_Fortran_Adapter_Test, GetVarUnits_0_a) {
     int out_var_index = 0;
