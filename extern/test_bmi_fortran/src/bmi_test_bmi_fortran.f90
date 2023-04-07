@@ -510,17 +510,19 @@ end function test_finalize
     class (bmi_test_bmi), intent(in) :: this
     integer, intent(in) :: grid
     integer, dimension(:), intent(out) :: shape
-    integer :: bmi_status
+    integer :: bmi_status, i
 
-    select case(grid)
-! NOTE: Scalar "grids" do not have dimensions, ie. there is no case(0)
-!     case(1)
-!        shape(:) = [this%model%n_y, this%model%n_x]
-!        bmi_status = BMI_SUCCESS
-    case default
-       shape(:) = -1
-       bmi_status = BMI_FAILURE
-    end select
+    bmi_status = BMI_FAILURE
+    ! FIXME using shape as an arg shadows the intrinsic SHAPE function and makes it unsuable!!!!!!
+    ! TODO add to CSDMS issue related
+    
+    do i = 1, size(grids)
+      if ( grids(i)%id .eq. grid ) then
+        shape = grids(i)%shape
+        bmi_status = BMI_SUCCESS
+        return
+      end if
+    end do
   end function test_grid_shape
 
   ! The distance between nodes of a grid.
@@ -528,17 +530,17 @@ end function test_finalize
     class (bmi_test_bmi), intent(in) :: this
     integer, intent(in) :: grid
     double precision, dimension(:), intent(out) :: spacing
-    integer :: bmi_status
+    integer :: bmi_status, i
 
-    select case(grid)
-!! NOTE: Scalar "grids" do not have spacing, ie. there is no case(0)
-!     case(1)
-!        spacing(:) = [this%model%dy, this%model%dx]
-!        bmi_status = BMI_SUCCESS
-    case default
-       spacing(:) = -1.d0
-       bmi_status = BMI_FAILURE
-    end select
+    bmi_status = BMI_FAILURE
+    do i = 1, size(grids)
+      if ( grids(i)%id .eq. grid ) then
+        spacing = grids(i)%spacing
+        bmi_status = BMI_SUCCESS
+        return
+      end if
+    end do
+
   end function test_grid_spacing
 !
   ! Coordinates of grid origin.
@@ -546,17 +548,16 @@ end function test_finalize
     class (bmi_test_bmi), intent(in) :: this
     integer, intent(in) :: grid
     double precision, dimension(:), intent(out) :: origin
-    integer :: bmi_status
+    integer :: bmi_status, i
 
-    select case(grid)
-! NOTE: Scalar "grids" do not have coordinates, ie. there is no case(0)
-!     case(1)
-!        origin(:) = [0.d0, 0.d0]
-!        bmi_status = BMI_SUCCESS
-    case default
-       origin(:) = -1.d0
-       bmi_status = BMI_FAILURE
-    end select
+    bmi_status = BMI_FAILURE
+    do i = 1, size(grids)
+      if ( grids(i)%id .eq. grid ) then
+        origin = grids(i)%origin
+        bmi_status = BMI_SUCCESS
+        return
+      end if
+    end do
   end function test_grid_origin
 
   ! X-coordinates of grid nodes.
