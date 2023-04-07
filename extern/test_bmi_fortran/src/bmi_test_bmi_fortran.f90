@@ -717,6 +717,30 @@ end function test_finalize
     !TODO think of a better way to do this
     !Use 'sizeof' in gcc & ifort
     select case(name)
+    case("grid_1_shape")
+      size = sizeof(grids(2)%shape)
+      bmi_status = BMI_SUCCESS
+    case("grid_1_spacing")
+      size = sizeof(grids(2)%spacing)
+      bmi_status = BMI_SUCCESS
+    case("grid_1_units")
+      size = sizeof(grids(2)%units)
+      bmi_status = BMI_SUCCESS
+    case("grid_1_origin")
+      size = sizeof(grids(2)%units)
+      bmi_status = BMI_SUCCESS
+    case("grid_2_shape")
+      size = sizeof(grids(3)%shape)
+      bmi_status = BMI_SUCCESS
+    case("grid_2_spacing")
+      size = sizeof(grids(3)%spacing)
+      bmi_status = BMI_SUCCESS
+    case("grid_2_units")
+      size = sizeof(grids(3)%units)
+      bmi_status = BMI_SUCCESS
+    case("grid_2_origin")
+      size = sizeof(grids(3)%units)
+      bmi_status = BMI_SUCCESS
     case("INPUT_VAR_1")
        size = sizeof(this%model%input_var_1)
        bmi_status = BMI_SUCCESS
@@ -761,11 +785,27 @@ end function test_finalize
     integer :: bmi_status
     integer :: s1, s2, s3, grid, grid_size, item_size
 
-    s1 = this%get_var_grid(name, grid)
-    s2 = this%get_grid_size(grid, grid_size)
     s3 = this%get_var_itemsize(name, item_size)
 
-    if ((s1 == BMI_SUCCESS).and.(s2 == BMI_SUCCESS).and.(s3 == BMI_SUCCESS)) then
+    select case(name)
+    case("grid_1_shape", "grid_1_spacing", "grid_1_units", "grid_1_origin")
+      nbytes = item_size*grids(2)%rank
+      bmi_status = BMI_SUCCESS
+      return !FIXME refactor the rest of this function
+    case("grid_2_shape", "grid_2_spacing", "grid_2_units", "grid_2_origin")
+      nbytes = item_size*grids(3)%rank
+      bmi_status = BMI_SUCCESS
+      return !FIXME refactor the rest of this function
+    end select
+  
+    s1 = this%get_var_grid(name, grid)
+    s2 = this%get_grid_size(grid, grid_size)
+
+    if( grid .eq. 0) then
+      !these are the scalar values wrapped in an array
+      nbytes = item_size
+      bmi_status = BMI_SUCCESS
+    else if ((s1 == BMI_SUCCESS).and.(s2 == BMI_SUCCESS).and.(s3 == BMI_SUCCESS)) then
        nbytes = item_size * grid_size
        bmi_status = BMI_SUCCESS
     else
