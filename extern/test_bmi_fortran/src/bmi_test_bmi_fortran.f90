@@ -480,18 +480,27 @@ end function test_finalize
     integer, intent(in) :: grid
     integer, intent(out) :: size
     integer :: bmi_status
+    
+    integer :: i, upper
+    block
+      ! This is problematic given that BMI uses intrinsic names for dummy arguements
+      ! which leads to a shadowing issue.  If this wasn't in the block like this, 
+      ! size(grids) would attempt to treat size as an array indexed by grids which cause all kinds
+      ! of compiler errors that are not intuitive.  Also, this kind of shadowing prevents the ability
+      ! to do some thing like call size on the size variable...e.g. `size(size)` couldn't be done even
+      ! with this block method of exlicitly defining size to be the intrinsic
+      ! TODO open an issue with CSDMS fortran BMI
+      intrinsic :: size
+      upper = size(grids)
+    end block
+    do i = 1, upper
+      if ( grids(i)%id .eq. grid ) then
+        size = product( grids(i)%shape )
+        bmi_status = BMI_SUCCESS
+        return
+      end if
+    end do
 
-    select case(grid)
-    case(0)
-       size = 1
-       bmi_status = BMI_SUCCESS
-!     case(1)
-!        size = this%model%n_y * this%model%n_x
-!        bmi_status = BMI_SUCCESS
-    case default
-       size = -1
-       bmi_status = BMI_FAILURE
-    end select
   end function test_grid_size
 
   ! The dimensions of a grid.
