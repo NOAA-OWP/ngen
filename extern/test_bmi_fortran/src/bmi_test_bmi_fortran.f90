@@ -597,16 +597,15 @@ end function test_finalize
     class (bmi_test_bmi), intent(in) :: this
     integer, intent(in) :: grid
     double precision, dimension(:), intent(out) :: z
-    integer :: bmi_status
+    integer :: bmi_status, i
 
-    select case(grid)
-    case(0)
-       z(:) = [0.d0]
-       bmi_status = BMI_SUCCESS
-    case default
-       z(:) = -1.d0
-       bmi_status = BMI_FAILURE
-    end select
+    bmi_status = BMI_FAILURE
+    do i = 1, size(grids)
+      if ( grids(i)%id .eq. grid ) then
+        call grids(i)%grid_z(z)
+        bmi_status = BMI_SUCCESS
+      end if
+    end do
   end function test_grid_z
 
   ! Get the number of nodes in an unstructured grid.
