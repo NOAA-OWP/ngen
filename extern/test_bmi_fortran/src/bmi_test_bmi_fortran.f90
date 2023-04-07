@@ -895,6 +895,10 @@ end function test_finalize
     case("grid_2_origin")
       grids(3)%origin = src
       bmi_status = BMI_SUCCESS
+    case("GRID_VAR_1")
+      ! shape is in y, x
+      ! make this var x, y
+      this%model%grid_var_1 = reshape(src, [grids(2)%shape(2), grids(2)%shape(1)])
     case("INPUT_VAR_1")
       this%model%input_var_1 = src(1)
       bmi_status=BMI_SUCCESS
@@ -993,14 +997,33 @@ end function test_finalize
     class (bmi_test_bmi), intent(in) :: this
     character (len=*), intent(in) :: name
     double precision, intent(inout) :: dest(:)
-    integer :: bmi_status
-
+    integer :: bmi_status, size
     !==================== UPDATE IMPLEMENTATION IF NECESSARY FOR DOUBLE VARS =================
 
     select case(name)
     case("INPUT_VAR_1")
       dest = [this%model%input_var_1]
       bmi_status = BMI_SUCCESS
+    case("GRID_VAR_1")
+      bmi_status = this%get_grid_size(1, size)
+      if( bmi_status == BMI_SUCCESS ) then
+        dest = reshape(this%model%grid_var_1, [size])
+      end if
+    case("GRID_VAR_2")
+      bmi_status = this%get_grid_size(1, size)
+      if( bmi_status == BMI_SUCCESS ) then
+        dest = reshape(this%model%grid_var_2, [size])
+      end if
+    case("GRID_VAR_3")
+      bmi_status = this%get_grid_size(2, size)
+      if( bmi_status == BMI_SUCCESS ) then
+        dest = reshape(this%model%grid_var_3, [size])
+      end if
+    case("GRID_VAR_4")
+      bmi_status = this%get_grid_size(2, size)
+      if( bmi_status == BMI_SUCCESS ) then
+        dest = reshape(this%model%grid_var_4, [size])
+      end if
     case("OUTPUT_VAR_1")
       dest = [this%model%output_var_1]
       bmi_status = BMI_SUCCESS

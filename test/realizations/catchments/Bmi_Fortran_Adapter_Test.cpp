@@ -1098,6 +1098,229 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetValue_0_c) {
     ASSERT_EQ(value, retrieved);
 }
 
+/** Test that gridded data can be set for grid var 1*/
+TEST_F(Bmi_Fortran_Adapter_Test, GetValue_1_a) {
+    adapter->Initialize();
+    std::string variable_name = "GRID_VAR_1";
+    int grd = adapter->GetVarGrid(variable_name);
+    int rank = adapter->GetGridRank(grd);
+    ASSERT_EQ(rank, 2);
+
+    //Initialize the grid shape (y,x)
+    std::vector<int> shape = {2,3};
+    adapter->SetValue("grid_1_shape", shape.data());
+    /*
+    *    pass a 2 row, 3 column flattened data into the model
+    *        1 2 3
+    *        4 5 6
+    *   flattened as 1 2 3 4 5 6 (row major)
+    *   (column major would be 1 4 2 5 3 6)
+    */
+    std::vector<double> data = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0};
+    adapter->SetValue(variable_name, data.data());
+    std::vector<double> retrieved = GetValue<double>(*adapter, variable_name);
+    adapter->Finalize();
+    ASSERT_EQ(data, retrieved);
+}
+
+/** Test that gridded data can be set and retrieved for grid var 3 in (x,y,z) order*/
+TEST_F(Bmi_Fortran_Adapter_Test, GetValue_1_b) {
+    adapter->Initialize();
+    std::string variable_name = "GRID_VAR_1";
+    int grd = adapter->GetVarGrid(variable_name);
+    int rank = adapter->GetGridRank(grd);
+    ASSERT_EQ(rank, 2);
+    //Initialize the output grid shape (z,y,x)
+    std::vector<int> shape2 = {2,2,3};
+    adapter->SetValue("grid_2_shape", shape2.data());
+    //Initialize the grid shape (y,x)
+    std::vector<int> shape = {2,3};
+    adapter->SetValue("grid_1_shape", shape.data());
+    /*
+    *    pass a 2 row, 3 column flattened data into the model
+    *        1 2 3
+    *        4 5 6
+    *   flattened as 1 2 3 4 5 6 (row major)
+    */
+    std::vector<double> data = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0};
+    adapter->SetValue(variable_name, data.data());
+
+    /*
+    *  Now, update the model one time step, which feeds this grid into grid var 3 and test the 
+    *  output of that variable.
+    * 
+    *  The test model applies this 2D grid to the 3D grid, with +10 in the Z0 dimension
+    *  and + 100 in the Z1 dimension, so the resulting grid should look like
+    * 
+    *  Z0 =      x0   x1  x2
+    *       y0: [11   12  13]
+    *       y1: [14   15  16]
+    * 
+    *  Z1 =      x0   x1  x2
+    *       y0: [101   102  103]
+    *       y1: [104   105  106]
+    * 
+    *  a row-major flattening of this looks like (last index changes fastest):
+    * 
+    *       assuming the index is (z,y,x):
+    *           
+    *           [ 11, 12, 13, 14, 15, 16, 101, 102, 103, 104, 105, 106 ]
+    * 
+    *       assuming the index is (z,x,y):
+    * 
+    *           [ 11, 14, 12, 15, 13, 16, 101, 104, 102, 105, 103, 106 ]
+    * 
+    *       assuming the index is (y,x,z):
+    * 
+    *           [ 11, 101, 12, 102, 13, 103, 14, 104, 15, 105, 16, 106 ]
+    *  
+    *       assuming the index is (y,z,x):
+    * 
+    *           [ 11, 12, 13, 101, 102, 103, 14, 15, 16, 104, 105, 106 ]
+    *  
+    *       assuming the index is (x,y,z):
+    *  
+    *           [ 11, 101, 14, 104, 12, 102, 15, 105, 13, 103, 16, 106 ]
+    *  
+    *       assuming the index is (x,z,y):
+    *       
+    *           [ 11, 14, 101, 104, 12, 15, 102, 105, 13, 16, 103, 106 ]
+    *
+    *  a column-major flattening of this looks like (first index changes fastest):
+    *  
+    *       assuming the index is (z,y,x):
+    * 
+    *           [ 11, 101, 14, 104, 12, 102, 15, 105, 13, 103, 16, 106 ]
+    *  
+    *       assuming the index is (z,x,y):
+    *  
+    *           [ 11, 101, 12, 102, 13, 103, 14, 104, 15, 105, 16, 106 ]
+    *  
+    *       assuming the index is (y,x,z):
+    *  
+    *           [ 11, 14, 12, 15, 13, 16, 101, 104, 102, 105, 103, 106 ]
+    * 
+    *       assuming the index is (y,z,x):
+    *           
+    *           [ 11, 14, 101, 104, 12, 15, 102, 105, 13, 16, 103, 106 ]
+    *  
+    *       assuming the index is (x,y,z):
+    * 
+    *           [ 11, 12, 13, 14, 15, 16, 101, 102, 103, 104, 105, 106 ]
+    *  
+    *       assuming the index is (x,z,y)
+    *  
+    *       [ 11, 12, 13, 101, 102, 103, 14, 15, 16, 104, 105, 106 ]
+    * 
+    *  Indexing the returned array in 3 dimensions using row-major conventions approriately would be (assuming y,x,z indexing)
+    *  
+    *  data[i][j][k] = flattened_data[ depth*(j+cols*i) + k ]
+    *  
+    *  where depth is the size of the 3rd dimension (z) and cols is the size of the second second dimension (x)
+    *  i = row iterator (first dimension)
+    *  j = column iterator (second dimension)
+    *  k = depth iterator (thrid dimension)
+    *  
+    *  For example, using the grid described above, extracting the linear data into a y,x,z 3D array would look like this
+    * 
+    *  data[i][j][k] = flattened_data[ 2*(j+3*i) + k ]
+    * 
+    *  for( i = 0; i < 3; i++){
+    *      for( j = 0; j < 2; j++){
+    *          for( k = 0; k < 2; k++){
+    *               data[i][j][k] = flattened_data[ depth*(j+cols*i) + k ]
+    *               data[i][j][k] = flattened_data[  2*3*i + 2*j + k ]
+    *           }   
+    *      }
+    *  }
+    * 
+    *  indexing with column major conventions would look like (assuming y,x,z indexing)
+    *  
+    *  data[i][j][k] = flattened_data[ rows*cols*k + rows*j + i ]
+    * 
+    *  where rows is the size of the first dimension, and the rest of the of the variables are as before.
+    * 
+    *  Using our example grid, this looks the following
+    * 
+    *  data[i][j][k] = flattened_data[ 2*3*k + 2*j + i ]
+    * 
+    *  for( i = 0; i < 3; i++){
+    *      for( j = 0; j < 2; j++){
+    *          for( k = 0; k < 2; k++){
+    *               data[i][j][k] = flattened_data[ rows*cols*k + rows*j + i  ]
+    *               data[i][j][k] = arr[  2*3*k + 2*j + i  ]
+    *           }   
+    *      }
+    *  }  
+    *   
+    */
+    adapter->Update();
+    std::vector<double> retrieved = GetValue<double>(*adapter, "GRID_VAR_3");
+    adapter->Finalize();
+    std::vector<double> expected = {11, 12, 13, 14, 15, 16, 101, 102, 103, 104, 105, 106};
+
+    int rows = shape2[1]; // 2
+    int cols = shape2[2]; // 3
+    int depth = shape2[1]; //2
+    int i, j, k, r_idx, iter = 0;
+
+    for( i = 0; i < rows; i++){ //rows (y)
+        for( j = 0; j < cols; j++){ //cols (x) 
+            for( k = 0; k < depth; k++){ //depth (z)
+                r_idx =  depth*(j+cols*i) + k;
+                ASSERT_EQ( retrieved[ r_idx ], expected[iter]);
+                iter++;
+            }
+        }
+    }
+}
+
+/** Test that gridded data can be set and retrieved for grid var 4 in (z,y,x) order*/
+TEST_F(Bmi_Fortran_Adapter_Test, GetValue_1_c) {
+    adapter->Initialize();
+    std::string variable_name = "GRID_VAR_1";
+    int grd = adapter->GetVarGrid(variable_name);
+    int rank = adapter->GetGridRank(grd);
+    ASSERT_EQ(rank, 2);
+    //Initialize the output grid shape (z,y,x)
+    std::vector<int> shape2 = {2,2,3};
+    adapter->SetValue("grid_2_shape", shape2.data());
+    //Initialize the grid shape (y,x)
+    std::vector<int> shape = {2,3};
+    adapter->SetValue("grid_1_shape", shape.data());
+    /*
+    *    pass a 2 row, 3 column flattened data into the model
+    *        1 2 3
+    *        4 5 6
+    *   flattened as 1 2 3 4 5 6 (row major)
+    */
+    std::vector<double> data = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0};
+    adapter->SetValue(variable_name, data.data());
+
+    //Now, update the model one time step, which feeds this grid into grid var 3 and test the 
+    //output of that variable
+
+    adapter->Update();
+    std::vector<double> retrieved = GetValue<double>(*adapter, "GRID_VAR_4");
+    adapter->Finalize();
+    std::vector<double> expected = {11, 101, 14, 104, 12, 102, 15, 105, 13, 103, 16, 106};
+
+    int rows = shape2[1]; // 2
+    int cols = shape2[2]; // 3
+    int depth = shape2[1]; //2
+    int i, j, k, r_idx, iter = 0;
+
+    for( i = 0; i < rows; i++){ //rows (y)
+        for( j = 0; j < cols; j++){ //cols (x) 
+            for( k = 0; k < depth; k++){ //depth (z)
+                r_idx =  depth*(j+cols*i) + k;
+                ASSERT_EQ( retrieved[ r_idx ], expected[iter]);
+                iter++;
+            }
+        }
+    }
+}
+
 /** Test that both the set value function works for input 1. */
 TEST_F(Bmi_Fortran_Adapter_Test, SetValue_0_a) {
     adapter->Initialize();
