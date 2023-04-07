@@ -194,6 +194,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarType_0_a) {
     }
     catch (std::exception& e) {
         printf("Exception getting var type: %s", e.what());
+        FAIL();
     }
 }
 
@@ -209,6 +210,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarType_0_b) {
     }
     catch (std::exception& e) {
         printf("Exception getting var type: %s", e.what());
+        FAIL();
     }
 }
 
@@ -224,6 +226,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarType_0_c) {
     }
     catch (std::exception& e) {
         printf("Exception getting var type: %s", e.what());
+        FAIL();
     }
 }
 
@@ -239,6 +242,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarType_1_a) {
     }
     catch (std::exception& e) {
         printf("Exception getting var type: %s", e.what());
+        FAIL();
     }
 }
 
@@ -254,6 +258,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarType_1_b) {
     }
     catch (std::exception& e) {
         printf("Exception getting var type: %s", e.what());
+        FAIL();
     }
 }
 
@@ -269,6 +274,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarType_1_c) {
     }
     catch (std::exception& e) {
         printf("Exception getting var type: %s", e.what());
+        FAIL();
     }
 }
 
@@ -284,6 +290,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarGrid_0_a) {
     }
     catch (std::exception& e) {
         printf("Exception getting var grid id: %s", e.what());
+        FAIL();
     }
 }
 
@@ -299,6 +306,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarGrid_0_b) {
     }
     catch (std::exception& e) {
         printf("Exception getting var grid id: %s", e.what());
+        FAIL();
     }
 }
 
@@ -314,6 +322,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarGrid_1_a) {
     }
     catch (std::exception& e) {
         printf("Exception getting var grid id: %s", e.what());
+        FAIL();
     }
 }
 
@@ -329,6 +338,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarGrid_1_b) {
     }
     catch (std::exception& e) {
         printf("Exception getting var grid id: %s", e.what());
+        FAIL();
     }
 }
 
@@ -344,6 +354,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarUnits_0_a) {
     }
     catch (std::exception& e) {
         printf("Exception getting var units: %s", e.what());
+        FAIL();
     }
 }
 
@@ -359,6 +370,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarLocation_0_a) {
     }
     catch (std::exception& e) {
         printf("Exception getting var location: %s", e.what());
+        FAIL();
     }
 }
 
@@ -374,6 +386,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarLocation_0_b) {
     }
     catch (std::exception& e) {
         printf("Exception getting var location: %s", e.what());
+        FAIL();
     }
 }
 
@@ -405,6 +418,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetGridRank_0_a) {
     }
     catch (std::exception& e) {
         printf("Exception getting grid rank: %s", e.what());
+        FAIL();
     }
 }
 
@@ -478,6 +492,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetGridX_0_a) {
     }
     catch (std::exception& e) {
         printf("Exception getting grid X: %s", e.what());
+        FAIL();
     }
     delete [] grid;
 }
@@ -496,6 +511,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetGridY_0_a) {
     }
     catch (std::exception& e) {
         printf("Exception getting grid Y: %s", e.what());
+        FAIL();
     }
     delete [] grid;
 }
@@ -514,6 +530,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetGridZ_0_a) {
     }
     catch (std::exception& e) {
         printf("Exception getting grid Z: %s", e.what());
+        FAIL();
     }
     delete [] grid;
 }
@@ -529,6 +546,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetGridNodeCount_0_a) {
     }
     catch (std::exception& e) {
         printf("Exception getting grid node count: %s", e.what());
+        FAIL();
     }
 }
 
@@ -670,6 +688,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetGridType_0_a) {
     }
     catch (std::exception& e) {
         printf("Exception getting grid type: %s", e.what());
+        FAIL();
     }
 }
 
