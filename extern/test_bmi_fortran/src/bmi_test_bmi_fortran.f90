@@ -616,8 +616,9 @@ end function test_finalize
     integer :: bmi_status
 
     select case(grid)
-    case(0:1)
-       bmi_status = this%get_grid_size(grid, count)
+    case(0:1) ! Scalars are single "node"
+       count = 1
+       bmi_status = BMI_SUCCESS
     case default
        count = -1
        bmi_status = BMI_FAILURE
