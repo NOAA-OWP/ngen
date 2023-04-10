@@ -33,8 +33,12 @@ module bmi_grid
         real(kind=c_double), allocatable :: origin(:)
         ! TODO possible to keep a pointer/handle to all vars referencing this grid?
         integer(kind(none)), allocatable :: units(:)
+        ! Allocation guard
+        logical, private :: allocated = .false.
+
         contains
             procedure :: init => grid_init
+            ! TODO implement grid destruction to deallocate
             procedure :: grid_x => grid_x
             procedure :: grid_y => grid_y
             procedure :: grid_z => grid_z
@@ -71,10 +75,15 @@ module bmi_grid
             rank_ = 1 ! use a 1 element 1D array for scalar representation
         end if
 
-        allocate( this%shape(rank_), source=0_c_int )
-        allocate( this%spacing(rank_), source=0.0_c_double )
-        allocate( this%origin(rank_), source=0.0_c_double )
-        allocate( this%units(rank_), source=units_ )
+        ! TODO should we allow re-allocation/construction?  This seeems to be a bit dangerous
+        ! if things are dependent on the grid to not change without explicit reference changing...
+        if( .not. this%allocated ) then 
+            allocate( this%shape(rank_), source=0_c_int )
+            allocate( this%spacing(rank_), source=0.0_c_double )
+            allocate( this%origin(rank_), source=0.0_c_double )
+            allocate( this%units(rank_), source=units_ )
+            this%allocated = .true.
+        end if
         
     end subroutine grid_init
 
