@@ -370,7 +370,9 @@ int main(int argc, char *argv[]) {
     {
       auto& desc = layer_meta_data.get_layer(keys[i]);
       std::vector<std::string> cat_ids;
-      Simulation_Time sim_time(*manager->Simulation_Time_Object);
+
+      // make a new simulation time object with a differnt output interval
+      Simulation_Time sim_time(*manager->Simulation_Time_Object, time_steps[i]);
   
       for ( std::string id : features.catchments(keys[i]) ) { cat_ids.push_back(id); }
       layers[i] = make_shared<ngen::Layer>(desc, cat_ids, sim_time, features, catchment_collection, pdm_et_data, 0);
@@ -378,8 +380,8 @@ int main(int argc, char *argv[]) {
     }
 
     //Now loop some time, iterate catchments, do stuff for total number of output times
-
-    for( int count = 0; count < manager->Simulation_Time_Object->get_total_output_times(); count++) {
+    for( int count = 0; count < manager->Simulation_Time_Object->get_total_output_times(); count++) 
+    {
       auto next_time = manager->Simulation_Time_Object->next_timestep_epoch_time();
       auto prev_layer_time = next_time;
       auto layer_min_next_time = next_time;
@@ -387,7 +389,7 @@ int main(int argc, char *argv[]) {
       {
         for ( auto& layer : layers ) 
         {
-          auto layer_next_time = layer->next_timestep_epoch_time();
+          auto layer_next_time = layer->next_epoch_time();
           if ( layer_next_time <= next_time && layer_next_time <=  prev_layer_time)
           {
             layer->update_models();
@@ -395,7 +397,7 @@ int main(int argc, char *argv[]) {
           }
           else
           {
-            layer_min_next_time = prev_layer_time = layer->current_timestep_epoc_time(); 
+            layer_min_next_time = prev_layer_time = layer->current_epoch_time(); 
           }
 
           if ( layer_min_next_time > layer_next_time)

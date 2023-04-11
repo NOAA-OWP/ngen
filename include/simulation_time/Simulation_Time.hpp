@@ -67,6 +67,12 @@ class Simulation_Time
         total_output_times = simulation_total_time_seconds / output_interval_seconds + 1;
     }
 
+    Simulation_Time(const Simulation_Time& t, int interval) : Simulation_Time(t)
+    {
+        output_interval_seconds = interval;
+        total_output_times = simulation_total_time_seconds / output_interval_seconds + 1;
+    }
+
     /**
      * @brief Accessor to the total number of time steps
      * @return total_output_times
@@ -84,6 +90,16 @@ class Simulation_Time
     {
         return output_interval_seconds;
     }
+
+    /**
+     * @brief Accessor to the the current simulation time
+     * @return current_date_time_epoch
+    */
+
+    time_t get_current_epoc_time()
+    {
+        return current_date_time_epoch;
+    }   
 
     /**
      * @brief Accessor to the current timestamp string
@@ -129,6 +145,19 @@ class Simulation_Time
 
     inline int diff(const Simulation_Time& other){
         return start_date_time_epoch - other.start_date_time_epoch;
+    }
+
+    /**
+     * @brief move this simulation time object to represent the next time step as the current time
+    */
+
+    inline void advance_timestep(){
+        current_date_time_epoch += output_interval_seconds;
+
+        if (current_date_time_epoch > end_date_time_epoch)
+        {
+            throw std::runtime_error("Simulation time objects current time exceeded the end_date_time_epoch value for that object");
+        }
     }
 
 
