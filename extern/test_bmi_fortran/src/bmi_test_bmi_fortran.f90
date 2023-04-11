@@ -881,6 +881,8 @@ end function test_finalize
     character (len=*), intent(in) :: name
     double precision, intent(in) :: src(:)
     integer :: bmi_status
+    !Default return
+    bmi_status = BMI_FAILURE
 
     select case(name)
     case("grid_1_spacing")
@@ -899,6 +901,7 @@ end function test_finalize
       ! shape is in y, x
       ! make this var x, y
       this%model%grid_var_1 = reshape(src, [grids(2)%shape(2), grids(2)%shape(1)])
+      bmi_status = BMI_SUCCESS
     case("INPUT_VAR_1")
       this%model%input_var_1 = src(1)
       bmi_status=BMI_SUCCESS
