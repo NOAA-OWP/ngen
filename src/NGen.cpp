@@ -389,7 +389,7 @@ int main(int argc, char *argv[]) {
       {
         for ( auto& layer : layers ) 
         {
-          auto layer_next_time = layer->next_epoch_time();
+          auto layer_next_time = layer->next_timestep_epoch_time();
           if ( layer_next_time <= next_time && layer_next_time <=  prev_layer_time)
           {
             layer->update_models();
@@ -397,7 +397,7 @@ int main(int argc, char *argv[]) {
           }
           else
           {
-            layer_min_next_time = prev_layer_time = layer->current_epoch_time(); 
+            layer_min_next_time = prev_layer_time = layer->current_timestep_epoch_time(); 
           }
 
           if ( layer_min_next_time > layer_next_time)
