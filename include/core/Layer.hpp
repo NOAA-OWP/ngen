@@ -45,7 +45,7 @@ namespace ngen
         }
 
         time_t next_timestep_epoch_time() { return simulation_time.next_timestep_epoch_time(); }
-        time_t current_timestep_epoch_time() { return simulation_time.current_timestep_epoch_time(); }
+        time_t current_timestep_epoch_time() { return simulation_time.get_current_epoc_time(); }
 
         void update_models()
         {
@@ -91,7 +91,6 @@ namespace ngen
 
             simulation_time.advance_timestep();       
         }
-
         
 
         private:
