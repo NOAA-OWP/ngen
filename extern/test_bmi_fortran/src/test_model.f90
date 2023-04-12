@@ -46,16 +46,16 @@ module test_model
         ! because we test grid and regular variables seperately, so we don't always
         ! initialize the grid variables in the test setup.  These if's ensure
         ! we don't use unallocated arrays
-        if( allocated(model%grid_var_2) ) then
+        if( allocated(model%grid_var_2) .and. allocated(model%grid_var_1) ) then
             model%grid_var_2 = model%grid_var_1 + 2
         endif
         ! Update x,y,z
-        if( allocated(model%grid_var_3) ) then
+        if( allocated(model%grid_var_3) .and. allocated(model%grid_var_1) ) then
             model%grid_var_3(:,:,1) = model%grid_var_1 + 10
             model%grid_var_3(:,:,2) = model%grid_var_1 + 100
         endif
         ! Update z,y,x
-        if( allocated(model%grid_var_4) ) then
+        if( allocated(model%grid_var_4) .and. allocated(model%grid_var_1) ) then
             model%grid_var_4(1,:,:) = transpose(model%grid_var_1) + 10
             model%grid_var_4(2,:,:) = transpose(model%grid_var_1) + 100
         endif
