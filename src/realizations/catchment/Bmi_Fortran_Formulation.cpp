@@ -53,6 +53,8 @@ double Bmi_Fortran_Formulation::get_var_value_as_double(const int &index, const 
     // TODO: consider different way of handling (and how to document) cases like long double or unsigned long long that
     //  don't fit or might convert inappropriately
     std::string type = get_bmi_model()->GetVarType(var_name);
+    //Can cause a segfault here if GetValue returns an empty vector...a "fix" in bmi_utilities GetValue
+    //will throw a relevant runtime_error if the vector is empty, so this is safe to use this way for now...
     if (type == "long double")
         return (double) (models::bmi::GetValue<long double>(*get_bmi_model(), var_name))[index];
 
