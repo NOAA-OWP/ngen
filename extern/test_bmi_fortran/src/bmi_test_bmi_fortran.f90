@@ -823,10 +823,11 @@ end function test_finalize
     integer :: bmi_status
   
     select case(name)
-    
-    ! fun story...set_value_int in iso_c bindings uses "get_grid_size" to determine the number of elements to write
-    ! but that size is dependent on the shape...so if we try to set the shape we can only get a single dimension.
     case("grid_1_shape")
+      if( allocated(this%model%grid_var_2) ) deallocate( this%model%grid_var_2 )
+      ! src is in y, x order (last dimension first)
+      ! make this variable be x, y
+      allocate( this%model%grid_var_2(src(2), src(1)) )
       grids(2)%shape = src
       bmi_status = BMI_SUCCESS
     case("grid_1_units")
