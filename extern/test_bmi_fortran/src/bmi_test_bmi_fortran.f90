@@ -1010,8 +1010,11 @@ end function test_finalize
       bmi_status = BMI_SUCCESS
     case("GRID_VAR_1")
       bmi_status = this%get_grid_size(1, size)
-      if( bmi_status == BMI_SUCCESS ) then
+      if( bmi_status == BMI_SUCCESS .and. allocated(this%model%grid_var_1) ) then
+        ! Have to ensure grid_var_1 as been set by something before we try to get it...
         dest = reshape(this%model%grid_var_1, [size])
+      else
+        bmi_status = BMI_FAILURE
       end if
     case("GRID_VAR_2")
       bmi_status = this%get_grid_size(1, size)
