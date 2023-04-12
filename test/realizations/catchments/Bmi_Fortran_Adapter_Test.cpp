@@ -1552,6 +1552,14 @@ TEST_F(Bmi_Fortran_Adapter_Test, Profile)
     auto to_micros = [](const time_point& s, const time_point& e){ return std::chrono::duration_cast<std::chrono::microseconds>(e - s).count();};
 
     adapter->Initialize();
+    //init the grid shapes to prevent errors getting gridded var outputs
+    std::vector<int> shape = {2,3};
+    adapter->SetValue("grid_1_shape", shape.data());
+    //set some initial value for grid var 1
+    double data = 0.0;
+    adapter->SetValue("GRID_VAR_1", &data);
+    shape = {2,2,3};
+    adapter->SetValue("grid_2_shape", shape.data());
     // Do the first few time steps
     for (int i = 0; i < 720; i++)
     {
