@@ -307,8 +307,6 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
                 std::string var_name = col_head;
                 std::string units = "";
 
-                //TODO: parse units in parens and/or square brackets?
-
                 boost::trim(var_name); // remove leading/trailing ws
                 const auto var_name_close = var_name.back();
                 if (var_name_close == ']' || var_name_close == ')') {
