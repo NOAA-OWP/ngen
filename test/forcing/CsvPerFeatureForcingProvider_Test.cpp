@@ -1,6 +1,10 @@
+#include <boost/iterator/zip_iterator.hpp>
 #include <vector>
 #include "gtest/gtest.h"
+#include "AorcForcing.hpp"
 #include "CsvPerFeatureForcingProvider.hpp"
+#include "DataProvider.hpp"
+#include "DataProviderSelectors.hpp"
 #include "FileChecker.h"
 #include <memory>
 #include <vector>
@@ -23,6 +27,7 @@ class CsvPerFeatureForcingProviderTest : public ::testing::Test {
 
     std::shared_ptr<CsvPerFeatureForcingProvider> Forcing_Object;
     std::shared_ptr<CsvPerFeatureForcingProvider> Forcing_Object_2;
+    std::shared_ptr<CsvPerFeatureForcingProvider> Forcing_Object_3; // explicit units
 
     typedef struct tm time_type;
 
@@ -68,6 +73,17 @@ void CsvPerFeatureForcingProviderTest::setupForcing()
     forcing_params forcing_p_2(forcing_file_name, "CsvPerFeature", "2015-12-01 00:00:00", "2015-12-05 02:00:00");
 
     Forcing_Object_2 = std::make_shared<CsvPerFeatureForcingProvider>(forcing_p_2);
+
+    forcing_file_names = { 
+        "test/data/forcing/cat-27115-nwm-aorc-variant-derived-format-units.csv",
+        "../test/data/forcing/cat-27115-nwm-aorc-variant-derived-format-units.csv",
+        "../../test/data/forcing/cat-27115-nwm-aorc-variant-derived-format-units.csv"
+    };
+    forcing_file_name = utils::FileChecker::find_first_readable(forcing_file_names);
+
+    forcing_params forcing_p_3(forcing_file_name, "CsvPerFeature", "2015-12-01 00:00:00", "2015-12-05 02:00:00");
+
+    Forcing_Object_3 = std::make_shared<CsvPerFeatureForcingProvider>(forcing_p_3);
 }
 
 ///Test AORC Forcing Object
@@ -164,3 +180,63 @@ TEST_F(CsvPerFeatureForcingProviderTest, TestGetAvailableForcingOutputs)
 
 }
 
+///Test CSV Units Parsing
+TEST_F(CsvPerFeatureForcingProviderTest, TestForcingUnitHeaderParsing)
+{
+    time_t begin = Forcing_Object_3->get_data_start_time();
+    int i = 8;
+    time_t t = begin+(i*3600);
+
+    const std::vector<std::string>& varnames = this->Forcing_Object_3->get_avaliable_variable_names();
+    const std::vector<std::string>& expected = {
+        "RAINRATE",
+        CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, // RAINRATE
+        "T2D",
+        CSDMS_STD_NAME_SURFACE_TEMP, // T2D
+        "Q2D",
+        NGEN_STD_NAME_SPECIFIC_HUMIDITY, // Q2D
+        "U2D",
+        CSDMS_STD_NAME_WIND_U_X, // U2D
+        "V2D",
+        CSDMS_STD_NAME_WIND_V_Y, // V2D
+        "PSFC[Pa)",
+        "SWDOWN(W m-2]",
+        "LWDOWN      (W m-2]"
+    };
+
+    EXPECT_EQ(varnames.size(), expected.size());
+
+    auto ite = expected.begin();
+    for (auto itv = varnames.begin(); itv != varnames.end(); itv++, ite++) {
+        EXPECT_EQ(*ite, *itv); // names should match
+
+        if (ite - expected.begin() < 9) {
+            // we are expecting warnings, since udunits is trying to map some unit to no units
+            testing::internal::CaptureStderr();
+            const auto val = this->Forcing_Object_3->get_value(
+                CSVDataSelector(*itv, t, 3600, ""),
+                data_access::SUM
+            );
+            const std::string cerr_output = testing::internal::GetCapturedStderr();
+            EXPECT_NE(cerr_output, "");
+        }
+    }
+
+    // quick lambda to check conversion values
+    const auto check_conversion = [this, t](
+        const std::string& in_units,
+        const std::string& out_units,
+        const std::string& var_name,
+        const double out_val
+    ) {
+        auto val = this->Forcing_Object_3->get_value(CSVDataSelector(var_name, t, 3600, in_units), data_access::SUM);
+        val = UnitsHelper::get_converted_value(in_units, val, out_units);
+        EXPECT_NEAR(val, out_val, 0.00001);
+    };
+
+    // check some conversions
+    check_conversion("K", "degC", CSDMS_STD_NAME_SURFACE_TEMP, -7.38);
+    check_conversion("mm s^-1", "cm min^-1", "RAINRATE", 0.0019611);
+    check_conversion("kg kg-1", "g kg-1", "Q2D", 1.92);
+    check_conversion("kg kg-1", "g kg-1", NGEN_STD_NAME_SPECIFIC_HUMIDITY, 1.92);
+}
