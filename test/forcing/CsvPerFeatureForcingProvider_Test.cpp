@@ -190,6 +190,7 @@ TEST_F(CsvPerFeatureForcingProviderTest, TestForcingUnitHeaderParsing)
         "Q2D",
         "U2D",
         "V2D",
+        "TEST",
         "PSFC[Pa)",
         "SWDOWN(W m-2]",
         "LWDOWN      (W m-2]"
@@ -206,7 +207,7 @@ TEST_F(CsvPerFeatureForcingProviderTest, TestForcingUnitHeaderParsing)
         );
         const std::string cerr_output = testing::internal::GetCapturedStderr();
 
-        if (ite - expected.begin() < 5) {
+        if (ite - expected.begin() < 6) {
             // we are expecting warnings, since udunits is trying to map some unit to no units
             // if we don't get a warning, then the unit type was not parsed
             EXPECT_NE(cerr_output, "");
@@ -233,4 +234,5 @@ TEST_F(CsvPerFeatureForcingProviderTest, TestForcingUnitHeaderParsing)
     check_conversion("mm s^-1", "cm min^-1", "RAINRATE", 0.0019611);
     check_conversion("kg kg-1", "g kg-1", "Q2D", 1.92);
     check_conversion("kg kg-1", "g kg-1", NGEN_STD_NAME_SPECIFIC_HUMIDITY, 1.92);
+    check_conversion("kg", "g", "TEST", 560.6602705);
 }
