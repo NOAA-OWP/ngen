@@ -398,6 +398,12 @@ module iso_c_bmif_2_0
       if( bmi_status .ne. BMI_SUCCESS ) return
       bmi_status = bmi_box%ptr%get_var_itemsize(f_str, item_size)
       if( bmi_status .ne. BMI_SUCCESS ) return
+      if( item_size .eq. 0 ) then
+        ! cannot get a value no size, fail
+        ! also prevents divide by 0 below
+        bmi_status = BMI_FAILURE
+        return
+      endif
       num_items = num_bytes/item_size
       bmi_status = bmi_box%ptr%get_value_int(f_str, dest(:num_items))
       deallocate(f_str)
@@ -424,6 +430,12 @@ module iso_c_bmif_2_0
       if( bmi_status .ne. BMI_SUCCESS ) return
       bmi_status = bmi_box%ptr%get_var_itemsize(f_str, item_size)
       if( bmi_status .ne. BMI_SUCCESS ) return
+      if( item_size .eq. 0 ) then
+        ! cannot get a value no size, fail
+        ! also prevents divide by 0 below
+        bmi_status = BMI_FAILURE
+        return
+      endif
       num_items = num_bytes/item_size
       bmi_status = bmi_box%ptr%get_value_float(f_str, dest(:num_items))
       deallocate(f_str)
@@ -451,6 +463,12 @@ module iso_c_bmif_2_0
       bmi_status = bmi_box%ptr%get_var_itemsize(f_str, item_size)
       if( bmi_status .ne. BMI_SUCCESS ) return
       num_items = num_bytes/item_size
+      if( item_size .eq. 0 ) then
+        ! cannot get a value no size, fail
+        ! also prevents divide by 0 below
+        bmi_status = BMI_FAILURE
+        return
+      endif
       bmi_status = bmi_box%ptr%get_value_double(f_str, dest(:num_items))
       deallocate(f_str)
     end function get_value_double
@@ -542,7 +560,13 @@ module iso_c_bmif_2_0
       if( bmi_status .ne. BMI_SUCCESS ) return
       bmi_status = bmi_box%ptr%get_var_itemsize(f_str, item_size)
       if( bmi_status .ne. BMI_SUCCESS ) return
-      num_items = num_bytes/item_size
+      if( item_size .eq. 0 ) then
+        ! we can attempt to set a value of 0 size
+        ! but we need to avoid divide by 0
+        num_items = 0
+      else 
+        num_items = num_bytes/item_size
+      endif
       !write(0,*) "set_value_int, grid_size: ", num_items
       bmi_status = bmi_box%ptr%set_value_int(f_str, src(:num_items))
       deallocate(f_str)
@@ -570,7 +594,13 @@ module iso_c_bmif_2_0
       if( bmi_status .ne. BMI_SUCCESS ) return
       bmi_status = bmi_box%ptr%get_var_itemsize(f_str, item_size)
       if( bmi_status .ne. BMI_SUCCESS ) return
-      num_items = num_bytes/item_size
+      if( item_size .eq. 0 ) then
+        ! we can attempt to set a value of 0 size
+        ! but we need to avoid divide by 0
+        num_items = 0
+      else 
+        num_items = num_bytes/item_size
+      endif
       bmi_status = bmi_box%ptr%set_value_float(f_str, src(:num_items))
       deallocate(f_str)
     end function set_value_float
@@ -605,7 +635,13 @@ module iso_c_bmif_2_0
         write(0,*) "Failed to get var itemsize: ", f_str
         return
       end if
-      num_items = num_bytes/item_size
+      if( item_size .eq. 0 ) then
+        ! we can attempt to set a value of 0 size
+        ! but we need to avoid divide by 0
+        num_items = 0
+      else 
+        num_items = num_bytes/item_size
+      endif
       bmi_status = bmi_box%ptr%set_value_double(f_str, src(:num_items))
       deallocate(f_str)
     end function set_value_double

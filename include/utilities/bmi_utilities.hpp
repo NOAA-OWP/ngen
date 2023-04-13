@@ -42,9 +42,8 @@ namespace models {
             //TODO make model const ref
             int total_mem = model.GetVarNbytes(name);
             int item_size = model.GetVarItemsize(name);
-            int num_items = total_mem/item_size;
-            if( num_items == 0 ){
-                 // Early stop if no items to be returned
+            if( total_mem == 0 || item_size == 0){
+                 // Early stop if no items to be returned (also prevents possible divide by 0 computing num_items)
                  // Becuase this function is used by others which assume the return value to have AT LEAST
                  // 1 value, then this is a terminal error.  This happens when the BMI model hasn't properly
                  // initialized/allocated/set the value to something meaningful.  This can happen, for example,
@@ -54,8 +53,10 @@ namespace models {
                  // but since this function has to deal with both int and floating point types, that isn't possible
                  // because int has not NaN representation.  So the best we can do at this point is raise a runtime exception
                 throw std::runtime_error("Unable to get value of variable "+name+". Model "+ model.get_model_name() + 
-                                         " reports no valid items (Nbytes/Itemsize = 0).");
+                                         " reports no valid items (Nbytes = "+std::to_string(total_mem) +
+                                         ", Itemsize = "+std::to_string(item_size)+".");
             }
+            int num_items = total_mem/item_size;
             //Determine what type we need to cast from
             std::string type = model.get_analogous_cxx_type(model.GetVarType(name), item_size);
             
