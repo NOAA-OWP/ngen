@@ -190,35 +190,33 @@ TEST_F(CsvPerFeatureForcingProviderTest, TestForcingUnitHeaderParsing)
     const std::vector<std::string>& varnames = this->Forcing_Object_3->get_avaliable_variable_names();
     const std::vector<std::string>& expected = {
         "RAINRATE",
-        CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, // RAINRATE
         "T2D",
-        CSDMS_STD_NAME_SURFACE_TEMP, // T2D
         "Q2D",
-        NGEN_STD_NAME_SPECIFIC_HUMIDITY, // Q2D
         "U2D",
-        CSDMS_STD_NAME_WIND_U_X, // U2D
         "V2D",
-        CSDMS_STD_NAME_WIND_V_Y, // V2D
         "PSFC[Pa)",
         "SWDOWN(W m-2]",
         "LWDOWN      (W m-2]"
     };
 
-    EXPECT_EQ(varnames.size(), expected.size());
+    for (auto ite = expected.begin(); ite != expected.end(); ite++) {
+        // make sure each expected column name is within varnames
+        EXPECT_NE(std::find(varnames.begin(), varnames.end(), *ite), varnames.end());
 
-    auto ite = expected.begin();
-    for (auto itv = varnames.begin(); itv != varnames.end(); itv++, ite++) {
-        EXPECT_EQ(*ite, *itv); // names should match
+        testing::internal::CaptureStderr();
+        const auto val = this->Forcing_Object_3->get_value(
+            CSVDataSelector(*ite, t, 3600, ""),
+            data_access::SUM
+        );
+        const std::string cerr_output = testing::internal::GetCapturedStderr();
 
-        if (ite - expected.begin() < 9) {
+        if (ite - expected.begin() < 5) {
             // we are expecting warnings, since udunits is trying to map some unit to no units
-            testing::internal::CaptureStderr();
-            const auto val = this->Forcing_Object_3->get_value(
-                CSVDataSelector(*itv, t, 3600, ""),
-                data_access::SUM
-            );
-            const std::string cerr_output = testing::internal::GetCapturedStderr();
+            // if we don't get a warning, then the unit type was not parsed
             EXPECT_NE(cerr_output, "");
+        } else {
+            // failed to parse shouldn't output to stderr since the known unit is empty
+            EXPECT_EQ(cerr_output, "");
         }
     }
 
