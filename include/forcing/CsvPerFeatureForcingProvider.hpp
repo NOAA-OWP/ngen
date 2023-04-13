@@ -1,7 +1,6 @@
 #ifndef NGEN_CSVPERFEATUREFORCING_H
 #define NGEN_CSVPERFEATUREFORCING_H
 
-#include <cctype>
 #include <vector>
 #include <set>
 #include <cmath>
