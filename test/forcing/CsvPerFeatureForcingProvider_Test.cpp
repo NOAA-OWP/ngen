@@ -193,13 +193,12 @@ TEST_F(CsvPerFeatureForcingProviderTest, TestForcingUnitHeaderParsing)
         "TEST",
         "PSFC[Pa)",
         "SWDOWN(W m-2]",
-        "LWDOWN      (W m-2]"
+        "LWDOWN [alt]"
     };
 
     for (auto ite = expected.begin(); ite != expected.end(); ite++) {
         // make sure each expected column name is within varnames
         EXPECT_NE(std::find(varnames.begin(), varnames.end(), *ite), varnames.end());
-
         testing::internal::CaptureStderr();
         const auto val = this->Forcing_Object_3->get_value(
             CSVDataSelector(*ite, t, 3600, ""),
@@ -233,6 +232,6 @@ TEST_F(CsvPerFeatureForcingProviderTest, TestForcingUnitHeaderParsing)
     check_conversion("K", "degC", CSDMS_STD_NAME_SURFACE_TEMP, -7.38);
     check_conversion("mm s^-1", "cm min^-1", "RAINRATE", 0.0019611);
     check_conversion("kg kg-1", "g kg-1", "Q2D", 1.92);
-    check_conversion("kg kg-1", "g kg-1", NGEN_STD_NAME_SPECIFIC_HUMIDITY, 1.92);
+    check_conversion("kg/kg", "g/kg", NGEN_STD_NAME_SPECIFIC_HUMIDITY, 1.92);
     check_conversion("kg", "g", "TEST", 560.6602705);
 }
