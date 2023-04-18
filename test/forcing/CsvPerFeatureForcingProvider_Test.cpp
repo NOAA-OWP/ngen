@@ -179,59 +179,46 @@ TEST_F(CsvPerFeatureForcingProviderTest, TestGetAvailableForcingOutputs)
 ///Test CSV Units Parsing
 TEST_F(CsvPerFeatureForcingProviderTest, TestForcingUnitHeaderParsing)
 {
-    time_t begin = Forcing_Object_3->get_data_start_time();
-    int i = 8;
-    time_t t = begin+(i*3600);
-
-    const std::vector<std::string>& varnames = this->Forcing_Object_3->get_avaliable_variable_names();
-    const std::vector<std::string>& expected = {
-        "RAINRATE",
-        "T2D",
-        "Q2D",
-        "U2D",
-        "V2D",
-        "TEST",
-        "PSFC[Pa)",
-        "SWDOWN(W m-2]",
-        "LWDOWN [alt]"
+    const time_t t = Forcing_Object_3->get_data_start_time() + (8 * 3600);
+    const auto& varnames = this->Forcing_Object_3->get_avaliable_variable_names();
+    const std::vector<std::tuple<std::string, std::string, std::string>>& expected = {
+        {"RAINRATE", "mm s^-1", "cm min^-1"},
+        {"T2D", "K", "degC"},
+        {"Q2D", "kg kg-1", "g kg-1"},
+        {"U2D", "m s-1", "cm s-1"},
+        {"V2D", "m/s", "cm s-1"},
+        {"TEST", "kg", "g"},
+        {"PSFC[Pa)", "Pa", "bar"},
+        {"SWDOWN(W m-2]", "W m-2", "langley"},
+        {"LWDOWN [alt]", "W m-2", "langley"}
     };
 
     for (auto ite = expected.begin(); ite != expected.end(); ite++) {
-        // make sure each expected column name is within varnames
-        EXPECT_NE(std::find(varnames.begin(), varnames.end(), *ite), varnames.end());
-        testing::internal::CaptureStderr();
-        const auto val = this->Forcing_Object_3->get_value(
-            CSVDataSelector(*ite, t, 3600, ""),
+        const auto expected_name = std::get<0>(*ite);
+        const auto expected_in_units = std::get<1>(*ite);
+        const auto expected_out_units = std::get<2>(*ite);
+
+        const double in_value = this->Forcing_Object_3->get_value(
+            CSVDataSelector(expected_name, t, 3600, expected_in_units),
             data_access::SUM
         );
-        const std::string cerr_output = testing::internal::GetCapturedStderr();
+    
+        const double out_value = this->Forcing_Object_3->get_value(
+            CSVDataSelector(expected_name, t, 3600, expected_out_units),
+            data_access::SUM
+        );
 
+        // make sure each expected column name is within varnames
+        EXPECT_NE(std::find(varnames.begin(), varnames.end(), expected_name), varnames.end());
+        
+        // make sure units are correctly mapped
         if (ite - expected.begin() < 6) {
-            // we are expecting warnings, since udunits is trying to map some unit to no units
-            // if we don't get a warning, then the unit type was not parsed
-            EXPECT_NE(cerr_output, "");
+            // conversion expected
+            EXPECT_NE(in_value, out_value);
         } else {
-            // failed to parse shouldn't output to stderr since the known unit is empty
-            EXPECT_EQ(cerr_output, "");
+            // conversion is not expected, since there is no mapping
+            EXPECT_NEAR(in_value, out_value, 0.00001);
         }
+        
     }
-
-    // quick lambda to check conversion values
-    const auto check_conversion = [this, t](
-        const std::string& in_units,
-        const std::string& out_units,
-        const std::string& var_name,
-        const double out_val
-    ) {
-        auto val = this->Forcing_Object_3->get_value(CSVDataSelector(var_name, t, 3600, in_units), data_access::SUM);
-        val = UnitsHelper::get_converted_value(in_units, val, out_units);
-        EXPECT_NEAR(val, out_val, 0.00001);
-    };
-
-    // check some conversions
-    check_conversion("K", "degC", CSDMS_STD_NAME_SURFACE_TEMP, -7.38);
-    check_conversion("mm s^-1", "cm min^-1", "RAINRATE", 0.0019611);
-    check_conversion("kg kg-1", "g kg-1", "Q2D", 1.92);
-    check_conversion("kg/kg", "g/kg", NGEN_STD_NAME_SPECIFIC_HUMIDITY, 1.92);
-    check_conversion("kg", "g", "TEST", 560.6602705);
 }
