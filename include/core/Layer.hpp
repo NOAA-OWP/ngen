@@ -16,14 +16,14 @@ namespace ngen
 {
 
     class Layer
-    {
+    {    
+        public:
+
         #ifdef NGEN_MPI_ACTIVE
             typedef hy_features::HY_Features_MPI feature_type;
         #else
             typedef hy_features::HY_Features feature_type;
         #endif
-        
-        public:
 
         Layer(
                 const LayerDescription& desc, 
@@ -44,10 +44,44 @@ namespace ngen
 
         }
 
+        virtual ~Layer() {}
+
+        /***
+         * @brief Return the next timestep that will be processed by this layer in epoc time units
+        */
         time_t next_timestep_epoch_time() { return simulation_time.next_timestep_epoch_time(); }
+
+
+        /***
+         * @brief Return the last timesteo that was processed by this layer in epoc time units
+        */
         time_t current_timestep_epoch_time() { return simulation_time.get_current_epoc_time(); }
 
-        void update_models()
+
+        /***
+         * @brief Return the numeric id of this layer
+        */
+        int get_id() const { return this->description.id; }
+
+        /***
+         * @brief Return the name of this layer
+        */
+        const std::string& get_name() const { return this->description.name; }
+
+        /***
+         * @brief Return this time_step interval used for this layer
+        */
+        const double get_time_step() const { return this->description.time_step; }
+
+        /***
+         * @brief Return the units for the time_step value of this layer
+        */
+        const std::string& get_time_step_units() const { return this->description.time_step_units; }
+
+        /***
+         * @breif Run one simulation timestep for each model in this layer
+        */
+        virtual void update_models()
         {
             auto idx = simulation_time.next_timestep_index();
             auto step = simulation_time.get_output_interval_seconds();
@@ -63,7 +97,7 @@ namespace ngen
                 //TODO redesign to avoid this cast
                 auto r_c = std::dynamic_pointer_cast<realization::Catchment_Formulation>(r);
                 r_c->set_et_params(pdm_et_data);
-                double response = r_c->get_response(output_time_index++, description.time_step);
+                double response = r_c->get_response(output_time_index, description.time_step);
                 std::string output = std::to_string(output_time_index)+","+current_timestamp+","+
                                     r_c->get_output_line_for_timestep(output_time_index)+"\n";
                 r_c->write_output(output);
@@ -85,15 +119,19 @@ namespace ngen
                     //If there is more than one, some form of catchment partitioning will be required.
                     //for now, only contribute to the first one in the list
                     nexus->add_upstream_flow(response, id, output_time_index);
+                    std::cerr << "Add water to nexus ID = " << nexus->get_id() << " from catchment ID = " << id << " value = "
+                              << response << ", ID = " << id << ", time-index = " << output_time_index << std::endl; 
                     break;
                 }
+                
             } //done catchments   
 
+            ++output_time_index;
             simulation_time.advance_timestep();       
         }
         
 
-        private:
+        protected:
 
         LayerDescription description;
         std::vector<std::string> processing_units;

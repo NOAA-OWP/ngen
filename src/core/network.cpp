@@ -40,16 +40,24 @@ Network::Network( geojson::GeoJSON fabric ){
       //get feature id and add vertex to graph
       v1 = add_vertex( feature_id, this->graph );
       this->descriptor_map.emplace( feature_id, v1);
+    }
+    else{
+      v1 = this->descriptor_map[ feature_id];
+    }
 
+    if ( this->level_map.find(feature_id) == this->level_map.end() )
+    {
       if ( feature->has_property("level") )
       {
         const auto& prop = feature->get_property("level");
         this->level_map.emplace( feature_id, prop.as_natural_number() );
       }
+      else
+      {
+        this->level_map.emplace( feature_id, DEFAULT_LAYER_ID);
+      }
     }
-    else{
-      v1 = this->descriptor_map[ feature_id];
-    }
+
     //Add the downstream features/edges
     for( auto& downstream: feature->destination_features() )
     {

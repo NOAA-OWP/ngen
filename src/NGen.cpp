@@ -47,6 +47,7 @@ bool is_subdivided_hydrofabric_wanted = false;
 #include "core/Partition_Parser.hpp"
 #include <HY_Features_MPI.hpp>
 #include <Layer.hpp>
+#include <SurfaceLayer.hpp>
 
 std::string PARTITION_PATH = "";
 int mpi_rank;
@@ -375,7 +376,14 @@ int main(int argc, char *argv[]) {
       Simulation_Time sim_time(*manager->Simulation_Time_Object, time_steps[i]);
   
       for ( std::string id : features.catchments(keys[i]) ) { cat_ids.push_back(id); }
-      layers[i] = make_shared<ngen::Layer>(desc, cat_ids, sim_time, features, catchment_collection, pdm_et_data, 0);
+      if (keys[i] != 0 )
+      {
+        layers[i] = make_shared<ngen::Layer>(desc, cat_ids, sim_time, features, catchment_collection, pdm_et_data, 0);
+      }
+      else
+      {
+        layers[i] = make_shared<ngen::SurfaceLayer>(desc, cat_ids, sim_time, features, catchment_collection, pdm_et_data, 0, nexus_subset_ids, nexus_outfiles);
+      }
 
     }
 
@@ -440,10 +448,6 @@ int main(int argc, char *argv[]) {
         #endif
         //std::cout<<"\tNexus "<<id<<" has "<<contribution_at_t<<" m^3/s"<<std::endl;
 
-        //Note: Use below if developing in-memory transfer of nexus flows to routing
-        //If using below, then another single time vector would be needed to hold the timestamp
-        //nexus_flows[id].push_back(contribution_at_t); 
-      } //done nexuses
     } //done time
     std::cout<<"Finished "<<manager->Simulation_Time_Object->get_total_output_times()<<" timesteps."<<std::endl;
 
