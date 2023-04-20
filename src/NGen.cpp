@@ -42,6 +42,7 @@ bool is_subdivided_hydrofabric_wanted = false;
 #include "core/Partition_Parser.hpp"
 #include <HY_Features_MPI.hpp>
 #include <Layer.hpp>
+#include <SurfaceLayer.hpp>
 
 std::string PARTITION_PATH = "";
 int mpi_rank;
@@ -367,7 +368,14 @@ int main(int argc, char *argv[]) {
       Simulation_Time sim_time(*manager->Simulation_Time_Object, time_steps[i]);
   
       for ( std::string id : features.catchments(keys[i]) ) { cat_ids.push_back(id); }
-      layers[i] = make_shared<ngen::Layer>(desc, cat_ids, sim_time, features, catchment_collection, pdm_et_data, 0);
+      if (keys[i] != 0 )
+      {
+        layers[i] = make_shared<ngen::Layer>(desc, cat_ids, sim_time, features, catchment_collection, pdm_et_data, 0);
+      }
+      else
+      {
+        layers[i] = make_shared<ngen::SurfaceLayer>(desc, cat_ids, sim_time, features, catchment_collection, pdm_et_data, 0, nexus_subset_ids, nexus_outfiles);
+      }
 
     }
 
@@ -398,44 +406,7 @@ int main(int argc, char *argv[]) {
           }
         } //done levels
       } while( layer_min_next_time < next_time );
-      
-      //At this point, could make an internal routing pass, extracting flows from nexuses and routing
-      //across the flowpath to the next nexus.
-      //Once everything is updated for this timestep, dump the nexus output
-      for(const auto& id : features.nexuses()) 
-      {
-        std::string current_timestamp = manager->Simulation_Time_Object->get_timestamp(output_time_index[0]);
-        
-        #ifdef NGEN_MPI_ACTIVE
-          if (!features.is_remote_sender_nexus(id)) { //Ensures only one side of the dual sided remote nexus actually doing this...
-        #endif
 
-        //Get the correct "requesting" id for downstream_flow
-	      const auto& nexus = features.nexus_at(id);
-        const auto& cat_ids = nexus->get_receiving_catchments();
-        std::string cat_id;
-        if( cat_ids.size() > 0 ) {
-          //Assumes dendridic, e.g. only a single downstream...it will consume 100%  of the available flow
-          cat_id = cat_ids[0];
-        }
-        else {
-          //This is a terminal node, SHOULDN'T be remote, so ID shouldn't matter too much
-          cat_id = "terminal";
-        }
-        double contribution_at_t = features.nexus_at(id)->get_downstream_flow(cat_id, output_time_index[0], 100.0);
-        if(nexus_outfiles[id].is_open()) {
-          nexus_outfiles[id] << output_time_index[0] << ", " << current_timestamp << ", " << contribution_at_t << std::endl;
-        }
-
-        #ifdef NGEN_MPI_ACTIVE
-        }
-        #endif
-        //std::cout<<"\tNexus "<<id<<" has "<<contribution_at_t<<" m^3/s"<<std::endl;
-
-        //Note: Use below if developing in-memory transfer of nexus flows to routing
-        //If using below, then another single time vector would be needed to hold the timestamp
-        //nexus_flows[id].push_back(contribution_at_t); 
-      } //done nexuses
     } //done time
     std::cout<<"Finished "<<manager->Simulation_Time_Object->get_total_output_times()<<" timesteps."<<std::endl;
 

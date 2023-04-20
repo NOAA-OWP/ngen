@@ -114,14 +114,16 @@ class Partitions_Parser {
                             remote_conn_vec.push_back(tmp_tuple);
                         }
                     }
-                    part_data.remote_connections = remote_conn_vec;
-                    remote_conn_vec.clear();
-
-                    //Push part_data struct the vector
-                    partition_ranks.push_back(part_data);
-
-                    part_counter++;   
                 }
+                
+                part_data.remote_connections = remote_conn_vec;
+                remote_conn_vec.clear();
+
+                //Push part_data struct the vector
+                partition_ranks.push_back(part_data);
+
+                part_counter++;   
+                
             }
         };
 

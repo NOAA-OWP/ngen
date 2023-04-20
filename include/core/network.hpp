@@ -18,6 +18,9 @@
 #include <FeatureBuilder.hpp>
 
 namespace network {
+
+  const static int DEFAULT_LAYER_ID = 0;
+
   /**
    * @brief Selector for using different traversal orders for linear return
    */
