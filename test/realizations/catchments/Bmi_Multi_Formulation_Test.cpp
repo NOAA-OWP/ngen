@@ -772,6 +772,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_0_b) {
 /**
  * Simple test of output for example 1.
  */
+#ifdef ACTIVATE_PYTHON
 TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_1_a) {
     int ex_index = 1;
 
@@ -817,7 +818,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_1_b) {
     //initializing/using the grid vars in this test, and try to find a better way in the future.
     ASSERT_EQ(output, "0.000001,199280.000000,543.000000,2.000001,3.000001");
 }
-
+#endif
 /**
  * Test of output for example 3 with output_variables from multiple BMI modules, picking time step when there was non-zero rain rate.
  */
