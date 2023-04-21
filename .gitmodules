@@ -45,6 +45,6 @@
 	url = https://github.com/noaa-owp/SLoTH
 	branch = latest
 [submodule "extern/summa"]
-	path = extern/summa
+	path = extern/summa/summa
 	url = https://git.cs.usask.ca/numerical_simulations_lab/summa.git
 	branch = bmi
