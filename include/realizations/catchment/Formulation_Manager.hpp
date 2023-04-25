@@ -6,6 +6,7 @@
 #include <tuple>
 #include <functional>
 #include <dirent.h>
+#include <sys/stat.h>
 #include <regex>
 
 #include <boost/property_tree/ptree.hpp>
@@ -411,19 +412,45 @@ namespace realization {
 
                 // If the directory could be found and opened, we can go ahead and iterate
                 if (directory != nullptr) {
+                    bool match;
                     while ((entry = readdir(directory))) {
-                        // If the entry is a regular file or symlink AND the name matches the pattern, 
-                        //    we can consider this ready to be interpretted as valid forcing data (even if it isn't)
-                        if ((entry->d_type == DT_REG or entry->d_type == DT_LNK) and std::regex_match(entry->d_name, pattern)) {
-                            return forcing_params(
-                                path + entry->d_name,
-                                provider,
-                                simulation_time_config.start_time,
-                                simulation_time_config.end_time
-                            );
-                        }
-                    }
-                }
+                        match = std::regex_match(entry->d_name, pattern);
+                        if( match ) {
+                            // If the entry is a regular file or symlink AND the name matches the pattern, 
+                            //    we can consider this ready to be interpretted as valid forcing data (even if it isn't)
+                            #ifdef _DIRENT_HAVE_D_TYPE
+                            if ( entry->d_type == DT_REG or entry->d_type == DT_LNK ) {
+                                return forcing_params(
+                                    path + entry->d_name,
+                                    provider,
+                                    simulation_time_config.start_time,
+                                    simulation_time_config.end_time
+                                );
+                            }
+                            else if ( entry->d_type == DT_UNKNOWN )
+                            #endif
+                            {
+                                //dirent is not guaranteed to provide propoer file type identification in d_type
+                                //so if a system returns unknown or it isn't supported, need to use stat to determine if it is a file
+                                struct stat st;
+                                if( stat((path+entry->d_name).c_str(), &st) != 0) {
+                                    throw std::runtime_error("Could not stat file "+path+entry->d_name);
+                                }
+                                if( S_ISREG(st.st_mode) ) {
+                                    //Sinde we used stat and not lstat, we get the result of the target of links as well
+                                    //so this covers both cases we are interested in.
+                                    return forcing_params(
+                                        path + entry->d_name,
+                                        provider,
+                                        simulation_time_config.start_time,
+                                        simulation_time_config.end_time
+                                    );
+                                }
+                                throw std::runtime_error("Forcing data is path "+path+entry->d_name+" is not a file");
+                            }
+                        } //no match found, try next entry
+                    } // end while iter dir
+                } //end if directory
                 else {
                     // The directory wasn't found or otherwise couldn't be opened; forcing data cannot be retrieved
                     throw std::runtime_error("Error opening forcing data dir '" + path + "' after " + std::to_string(attemptCount) + " attempts: " + errMsg);
