@@ -69,11 +69,12 @@ class Formulation_Manager_Test : public ::testing::Test {
 
     std::vector<std::string> path_options = {
             "",
+            "../",
+            "../../",
             "./test/",
             "../test/",
-            "../../test/",
-            "../",
-            "../../"
+            "../../test/"
+
     };
 
     std::string fix_paths(std::string json)
@@ -84,6 +85,17 @@ class Formulation_Manager_Test : public ::testing::Test {
                 "./data/forcing/cat-27_2015-12-01 00_00_00_2015-12-30 23_00_00.csv",
                 "./data/forcing/cat-27115-nwm-aorc-variant-derived-format.csv"
         };
+        std::vector<std::string> v = {};
+        for(unsigned int i = 0; i < path_options.size(); i++){
+                v.push_back( path_options[i] + "data/forcing" );
+        }
+        std::string dir = utils::FileChecker::find_first_readable(v);
+        if(dir != ""){
+                std::string remove = "\"./data/forcing/\"";
+                std::string replace = "\""+dir+"\"";
+                //std::cerr<<"TRYING TO REPLACE DIRECTORY... "<<remove<<" -> "<<replace<<std::endl;
+                boost::replace_all(json, remove , replace);
+        }
         for (unsigned int i = 0; i < forcing_paths.size(); i++) {
           if(json.find(forcing_paths[i]) == std::string::npos){
             continue;
@@ -95,7 +107,7 @@ class Formulation_Manager_Test : public ::testing::Test {
           std::string right_path = utils::FileChecker::find_first_readable(v);
           if(right_path != forcing_paths[i]){
             std::cerr<<"Replacing "<<forcing_paths[i]<<" with "<<right_path<<std::endl;
-            json = json.replace(json.find(forcing_paths[i]), forcing_paths[i].length(), right_path);
+            boost::replace_all(json, forcing_paths[i] , right_path);
           }
         }
         return json;
