@@ -68,6 +68,10 @@ void Nexus_Remote_Test::TearDown()
 //to a downstream remote nexus.
 TEST_F(Nexus_Remote_Test, TestInit0)
 {
+    if ( mpi_num_procs < 2 ) {
+	    GTEST_SKIP();
+    }
+
     HY_PointHydroNexusRemote::catcment_location_map_t loc_map;
 
     std::shared_ptr<HY_PointHydroNexusRemote> nexus;
@@ -409,6 +413,10 @@ TEST_F(Nexus_Remote_Test, Test4R2S2LS)
 
 TEST_F(Nexus_Remote_Test, TestDeadlock1)
 {
+    if ( mpi_num_procs < 2 ) {
+	    GTEST_SKIP();
+    }
+
     HY_PointHydroNexusRemote::catcment_location_map_t loc_map;
 
     std::shared_ptr<HY_PointHydroNexusRemote> nexus1;
