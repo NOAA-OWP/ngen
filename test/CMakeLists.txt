@@ -285,6 +285,7 @@ if(NGEN_ACTIVATE_ROUTING)
             test_routing_pybind
             1
             routing/Routing_Py_Bind_Test.cpp
+            NGen::core # for filechecker utility
             NGen::routing
             pybind11::embed
     )
