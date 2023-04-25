@@ -15,7 +15,7 @@ set( CMAKE_Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR}/fortran)
 set(SUMMA_LIB_NAME_CMAKE summabmi)
 set(SUMMA_LIB_DESC_CMAKE "Summa-Sundials BMI Module Shared Library")
 
-# Make sure these are compiled with this directive UNCLEAR IF WE NEED THESE
+# Make sure these are compiled with this directive
 add_compile_definitions(BMI_ACTIVE NGEN_FORCING_ACTIVE NGEN_OUTPUT_ACTIVE NGEN_ACTIVE)
 
 
