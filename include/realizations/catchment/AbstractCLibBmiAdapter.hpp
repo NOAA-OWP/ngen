@@ -91,7 +91,12 @@ namespace models {
                 if (!utils::FileChecker::file_is_readable(bmi_lib_file)) {
                     //Try alternative extension...
                     size_t idx = bmi_lib_file.rfind(".");
-                    std::string alt_bmi_lib_file;                    
+                    std::string alt_bmi_lib_file;  
+                    if(bmi_lib_file.length() == 0){
+                        this->init_exception_msg =
+                                "Can't init " + this->model_name + "; library file path is empty";
+                        throw std::runtime_error(this->init_exception_msg);
+                    }                
                     if(bmi_lib_file.substr(idx) == ".so"){
                         alt_bmi_lib_file = bmi_lib_file.substr(0,idx) + ".dylib";
                     } else if(bmi_lib_file.substr(idx) == ".dylib"){
