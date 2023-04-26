@@ -69,8 +69,6 @@ int main(int argc, char *argv[]) {
               << ngen_VERSION_PATCH << std::endl;
     std::ios::sync_with_stdio(false);
 
-    ut_set_error_message_handler(ut_ignore);
-
     #ifdef ACTIVATE_PYTHON
     // Start Python interpreter via the manager singleton
     // Need to bind to a variable so that the underlying reference count
