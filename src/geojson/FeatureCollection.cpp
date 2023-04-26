@@ -100,31 +100,32 @@ void FeatureCollection::visit_features(FeatureVisitor& visitor) {
     }
 }
 
-void FeatureCollection::set(std::string key, short value) {
+void FeatureCollection::set(const std::string& key, short value) {
     foreign_members.emplace(key, JSONProperty(key, value));
 }
 
-void FeatureCollection::set(std::string key, int value) {
+void FeatureCollection::set(const std::string& key, int value) {
     foreign_members.emplace(key, JSONProperty(key, value));
 }
 
-void FeatureCollection::set(std::string key, long value) {
+void FeatureCollection::set(const std::string& key, long value) {
     foreign_members.emplace(key, JSONProperty(key, value));
 }
 
-void FeatureCollection::set(std::string key, float value) {
+void FeatureCollection::set(const std::string& key, float value) {
     foreign_members.emplace(key, JSONProperty(key, value));
 }
 
-void FeatureCollection::set(std::string key, double value) {
+void FeatureCollection::set(const std::string& key, double value) {
     foreign_members.emplace(key, JSONProperty(key, value));
 }
 
-void FeatureCollection::set(std::string key, std::string value) {
+// the 'value' arguement will be copied and then moved so only one copy should occure
+void FeatureCollection::set(const std::string& key, std::string value) {
     foreign_members.emplace(key, JSONProperty(key, value));
 }
 
-void FeatureCollection::set(std::string key, JSONProperty& property) {
+void FeatureCollection::set(const std::string& key, JSONProperty& property) {
     foreign_members.emplace(key, property);
 }
 
@@ -208,7 +209,7 @@ void FeatureCollection::add_feature(Feature feature, std::string *id) {
     }
 }
 
-void FeatureCollection::set_ids_from_member(std::string member_name) {
+void FeatureCollection::set_ids_from_member(const std::string& member_name) {
     for (auto feature : this->features) {
         if(contains(feature->keys(), member_name)) {
             feature->set_id(feature->get(member_name).as_string());
@@ -218,7 +219,7 @@ void FeatureCollection::set_ids_from_member(std::string member_name) {
     this->update_ids();
 }
 
-void FeatureCollection::set_ids_from_property(std::string property_name) {
+void FeatureCollection::set_ids_from_property(const std::string& property_name) {
     for (auto feature : this->features) {
         if (contains(feature->property_keys(), property_name)) {
             feature->set_id(feature->get_property(property_name).as_string());
@@ -228,7 +229,7 @@ void FeatureCollection::set_ids_from_property(std::string property_name) {
     this->update_ids();
 }
 
-void FeatureCollection::set_ids(std::string id_field_name) {
+void FeatureCollection::set_ids(const std::string& id_field_name) {
     for (auto feature : this->features) {
         if(contains(feature->property_keys(), id_field_name)) {
             feature->set_id(feature->get_property(id_field_name).as_string());
@@ -250,7 +251,7 @@ void FeatureCollection::update_ids() {
     }
 }
 
-void FeatureCollection::add_feature_id(std::string id, Feature feature) {
+void FeatureCollection::add_feature_id(const std::string& id, Feature feature) {
     if (id != "") {
         feature_by_id.emplace(id, std::move(feature));
     }
