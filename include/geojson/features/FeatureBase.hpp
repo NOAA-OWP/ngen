@@ -209,7 +209,7 @@ namespace geojson {
              * @param key The name of the property to get
              * @return The property identified by the key
              */
-            virtual JSONProperty get_property(std::string key) const {
+            virtual JSONProperty get_property(const std::string& key) const {
                 if (properties.find(key) == properties.end()) {
                     std::string error_message = "JSON Property '" + key + "' not found."; 
                     throw std::invalid_argument(error_message);
@@ -223,7 +223,7 @@ namespace geojson {
              * 
              * @param new_id The new identifier for this feature
              */
-            virtual void set_id(std::string new_id) {
+            virtual void set_id(const std::string& new_id) {
                 id = new_id;
             }
 
@@ -233,7 +233,7 @@ namespace geojson {
              * @param key The name of the foreign member whose value to look for
              * @return The member value identified by the key
              */
-            virtual JSONProperty get(std::string key) const {
+            virtual JSONProperty get(const std::string& key) const {
                 return foreign_members.at(key);
             }
 
@@ -243,7 +243,7 @@ namespace geojson {
              * @param key The name of the value to set
              * @param value The value to set
              */
-            virtual void set(std::string key, short value) {
+            virtual void set(const std::string& key, short value) {
                 foreign_members.emplace(key, JSONProperty(key, value));
             }
 
@@ -253,7 +253,7 @@ namespace geojson {
              * @param key The name of the value to set
              * @param value The value to set
              */
-            virtual void set(std::string key, int value) {
+            virtual void set(const std::string& key, int value) {
                 foreign_members.emplace(key, JSONProperty(key, value));
             }
 
@@ -263,7 +263,7 @@ namespace geojson {
              * @param key The name of the value to set
              * @param value The value to set
              */
-            virtual void set(std::string key, long value) {
+            virtual void set(const std::string& key, long value) {
                 foreign_members.emplace(key, JSONProperty(key, value));
             }
 
@@ -273,7 +273,7 @@ namespace geojson {
              * @param key The name of the value to set
              * @param value The value to set
              */
-            virtual void set(std::string key, float value) {
+            virtual void set(const std::string& key, float value) {
                 foreign_members.emplace(key, JSONProperty(key, value));
             }
 
@@ -283,7 +283,7 @@ namespace geojson {
              * @param key The name of the value to set
              * @param value The value to set
              */
-            virtual void set(std::string key, double value) {
+            virtual void set(const std::string& key, double value) {
                 foreign_members.emplace(key, JSONProperty(key, value));
             }
 
@@ -293,7 +293,7 @@ namespace geojson {
              * @param key The name of the value to set
              * @param value The value to set
              */
-            virtual void set(std::string key, std::string value) {
+            virtual void set(const std::string& key, std::string value) {
                 foreign_members.emplace(key, JSONProperty(key, value));
             }
 
@@ -303,11 +303,11 @@ namespace geojson {
              * @param key The name of the value to set
              * @param value The value to set
              */
-            virtual void set(std::string key, JSONProperty property) {
+            virtual void set(const std::string& key, JSONProperty property) {
                 foreign_members.emplace(key, property);
             }
 
-            virtual bool has_key(std::string key) {
+            virtual bool has_key(const std::string& key) {
                 std::vector<std::string> all_keys = this->keys();
 
                 for(auto member_key : all_keys) {
