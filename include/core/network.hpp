@@ -228,7 +228,7 @@ namespace network {
          * @param id 
          * @return std::vector<std::string> 
          */
-        std::vector<std::string> get_origination_ids(std::string id);
+        std::vector<std::string> get_origination_ids(const std::string& id);
 
         /**
          * @brief Get the destination (downstream) ids (immediate neighbors) of all vertices with an edge from @p id
@@ -236,7 +236,7 @@ namespace network {
          * @param id 
          * @return std::vector<std::string> 
          */
-        std::vector<std::string> get_destination_ids(std::string id);
+        std::vector<std::string> get_destination_ids(const std::string& id);
 
         /**
          * @brief The number of features in the network (number of vertices)

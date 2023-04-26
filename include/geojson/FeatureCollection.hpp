@@ -152,19 +152,19 @@ namespace geojson {
 
             void visit_features(FeatureVisitor& visitor);
 
-            void set(std::string key, short value);
+            void set(const std::string& key, short value);
 
-            void set(std::string key, int value);
+            void set(const std::string& key, int value);
 
-            void set(std::string key, long value);
+            void set(const std::string& key, long value);
 
-            void set(std::string key, float value);
+            void set(const std::string& key, float value);
 
-            void set(std::string key, double value);
+            void set(const std::string& key, double value);
 
-            void set(std::string key, std::string value);
+            void set(const std::string& key, std::string value);
 
-            void set(std::string key, JSONProperty& property);
+            void set(const std::string& key, JSONProperty& property);
 
             void add_feature(Feature feature, std::string *id = nullptr);
 
@@ -174,13 +174,13 @@ namespace geojson {
              * @param id The id used to reference a feature
              * @param feature A feature that may be referred to by id
              */
-            void add_feature_id(std::string id, Feature feature);
+            void add_feature_id(const std::string& id, Feature feature);
 
-            void set_ids_from_member(std::string member_name = "id");
+            void set_ids_from_member(const std::string& member_name = "id");
 
-            void set_ids_from_property(std::string property_name = "id");
+            void set_ids_from_property(const std::string& property_name = "id");
 
-            void set_ids(std::string id_field_name = "id");
+            void set_ids(const std::string& id_field_name = "id");
 
             void update_ids();
 
