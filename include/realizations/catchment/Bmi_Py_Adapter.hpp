@@ -674,6 +674,10 @@ namespace models {
                     if (init_exception_msg.empty()) {
                         init_exception_msg = "Unknown Python model initialization exception.";
                     }
+                    //This message is lost and often contains valuable info.  Either need to break up and catch 
+                    //other possible exceptions, wrap all these in a custom exception, or at the very least, print
+                    //the original messge before it gets lost in this re-throw.
+                    std::cerr<<init_exception_msg<<std::endl;
                     throw e;
                 }
             }
