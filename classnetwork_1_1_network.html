@@ -137,12 +137,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1c14c00f48e05b57e9b0d4161acbc660"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1_network.html#a1c14c00f48e05b57e9b0d4161acbc660">get_id</a> (Graph::vertex_descriptor idx)</td></tr>
 <tr class="memdesc:a1c14c00f48e05b57e9b0d4161acbc660"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the string id of a given graph vertex_descriptor <code>idx</code>.  <a href="classnetwork_1_1_network.html#a1c14c00f48e05b57e9b0d4161acbc660">More...</a><br /></td></tr>
 <tr class="separator:a1c14c00f48e05b57e9b0d4161acbc660"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f1e27cb4c48ab736fca2d6fd58472c0"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1_network.html#a3f1e27cb4c48ab736fca2d6fd58472c0">get_origination_ids</a> (std::string id)</td></tr>
-<tr class="memdesc:a3f1e27cb4c48ab736fca2d6fd58472c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the origination (upstream) ids (immediate neighbors) of all vertices with an edge connecting to <code>id</code>.  <a href="classnetwork_1_1_network.html#a3f1e27cb4c48ab736fca2d6fd58472c0">More...</a><br /></td></tr>
-<tr class="separator:a3f1e27cb4c48ab736fca2d6fd58472c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af83ce2ba6cd82d318ec433c82d16f328"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1_network.html#af83ce2ba6cd82d318ec433c82d16f328">get_destination_ids</a> (std::string id)</td></tr>
-<tr class="memdesc:af83ce2ba6cd82d318ec433c82d16f328"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the destination (downstream) ids (immediate neighbors) of all vertices with an edge from <code>id</code>.  <a href="classnetwork_1_1_network.html#af83ce2ba6cd82d318ec433c82d16f328">More...</a><br /></td></tr>
-<tr class="separator:af83ce2ba6cd82d318ec433c82d16f328"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a099489c63f54a90f82788f1904b19f92"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1_network.html#a099489c63f54a90f82788f1904b19f92">get_origination_ids</a> (const std::string &amp;id)</td></tr>
+<tr class="memdesc:a099489c63f54a90f82788f1904b19f92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the origination (upstream) ids (immediate neighbors) of all vertices with an edge connecting to <code>id</code>.  <a href="classnetwork_1_1_network.html#a099489c63f54a90f82788f1904b19f92">More...</a><br /></td></tr>
+<tr class="separator:a099489c63f54a90f82788f1904b19f92"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a620aa0b99a7574fdb19590a3e1df909a"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1_network.html#a620aa0b99a7574fdb19590a3e1df909a">get_destination_ids</a> (const std::string &amp;id)</td></tr>
+<tr class="memdesc:a620aa0b99a7574fdb19590a3e1df909a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the destination (downstream) ids (immediate neighbors) of all vertices with an edge from <code>id</code>.  <a href="classnetwork_1_1_network.html#a620aa0b99a7574fdb19590a3e1df909a">More...</a><br /></td></tr>
+<tr class="separator:a620aa0b99a7574fdb19590a3e1df909a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac0b0218f1ef3612ae37e5ffe5fa7af02"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1_network.html#ac0b0218f1ef3612ae37e5ffe5fa7af02">size</a> ()</td></tr>
 <tr class="memdesc:ac0b0218f1ef3612ae37e5ffe5fa7af02"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of features in the network (number of vertices)  <a href="classnetwork_1_1_network.html#ac0b0218f1ef3612ae37e5ffe5fa7af02">More...</a><br /></td></tr>
 <tr class="separator:ac0b0218f1ef3612ae37e5ffe5fa7af02"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -331,7 +331,7 @@ Private Attributes</h2></td></tr>
 
 <p class="reference">References <a class="el" href="classnetwork_1_1_network.html#a17193c5c4eeebbcbe2eeda9879e22e83">topo_order</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classnetwork_1_1_network.html#af83ce2ba6cd82d318ec433c82d16f328">get_destination_ids()</a>, <a class="el" href="classnetwork_1_1_network.html#a3f1e27cb4c48ab736fca2d6fd58472c0">get_origination_ids()</a>, and <a class="el" href="classnetwork_1_1_network.html#a63da3bc2620f058457ff7b23d956e20a">init_indicies()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classnetwork_1_1_network.html#a620aa0b99a7574fdb19590a3e1df909a">get_destination_ids()</a>, <a class="el" href="classnetwork_1_1_network.html#a099489c63f54a90f82788f1904b19f92">get_origination_ids()</a>, and <a class="el" href="classnetwork_1_1_network.html#a63da3bc2620f058457ff7b23d956e20a">init_indicies()</a>.</p>
 
 </div>
 </div>
@@ -355,7 +355,7 @@ Private Attributes</h2></td></tr>
 
 <p class="reference">References <a class="el" href="classnetwork_1_1_network.html#a17193c5c4eeebbcbe2eeda9879e22e83">topo_order</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classnetwork_1_1_network.html#af83ce2ba6cd82d318ec433c82d16f328">get_destination_ids()</a>, <a class="el" href="classnetwork_1_1_network.html#a3f1e27cb4c48ab736fca2d6fd58472c0">get_origination_ids()</a>, and <a class="el" href="classnetwork_1_1_network.html#a63da3bc2620f058457ff7b23d956e20a">init_indicies()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classnetwork_1_1_network.html#a620aa0b99a7574fdb19590a3e1df909a">get_destination_ids()</a>, <a class="el" href="classnetwork_1_1_network.html#a099489c63f54a90f82788f1904b19f92">get_origination_ids()</a>, and <a class="el" href="classnetwork_1_1_network.html#a63da3bc2620f058457ff7b23d956e20a">init_indicies()</a>.</p>
 
 </div>
 </div>
@@ -411,8 +411,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="af83ce2ba6cd82d318ec433c82d16f328" name="af83ce2ba6cd82d318ec433c82d16f328"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af83ce2ba6cd82d318ec433c82d16f328">&#9670;&#160;</a></span>get_destination_ids()</h2>
+<a id="a620aa0b99a7574fdb19590a3e1df909a" name="a620aa0b99a7574fdb19590a3e1df909a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a620aa0b99a7574fdb19590a3e1df909a">&#9670;&#160;</a></span>get_destination_ids()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -420,7 +420,7 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="memname">std::vector&lt; std::string &gt; Network::get_destination_ids </td>
           <td>(</td>
-          <td class="paramtype">std::string&#160;</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>id</em></td><td>)</td>
           <td></td>
         </tr>
@@ -473,12 +473,12 @@ Private Attributes</h2></td></tr>
 
 <p class="reference">References <a class="el" href="classnetwork_1_1_network.html#a81433a0d0c450c400051ac4b894d8eb5">graph</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classnetwork_1_1_network.html#a36b9c9b32d814a8b4f1eb689f92af0f3">filter()</a>, <a class="el" href="classnetwork_1_1_network.html#af83ce2ba6cd82d318ec433c82d16f328">get_destination_ids()</a>, and <a class="el" href="classnetwork_1_1_network.html#a3f1e27cb4c48ab736fca2d6fd58472c0">get_origination_ids()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classnetwork_1_1_network.html#a36b9c9b32d814a8b4f1eb689f92af0f3">filter()</a>, <a class="el" href="classnetwork_1_1_network.html#a620aa0b99a7574fdb19590a3e1df909a">get_destination_ids()</a>, and <a class="el" href="classnetwork_1_1_network.html#a099489c63f54a90f82788f1904b19f92">get_origination_ids()</a>.</p>
 
 </div>
 </div>
-<a id="a3f1e27cb4c48ab736fca2d6fd58472c0" name="a3f1e27cb4c48ab736fca2d6fd58472c0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3f1e27cb4c48ab736fca2d6fd58472c0">&#9670;&#160;</a></span>get_origination_ids()</h2>
+<a id="a099489c63f54a90f82788f1904b19f92" name="a099489c63f54a90f82788f1904b19f92"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a099489c63f54a90f82788f1904b19f92">&#9670;&#160;</a></span>get_origination_ids()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -486,7 +486,7 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="memname">std::vector&lt; std::string &gt; Network::get_origination_ids </td>
           <td>(</td>
-          <td class="paramtype">std::string&#160;</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>id</em></td><td>)</td>
           <td></td>
         </tr>
@@ -704,7 +704,7 @@ Private Attributes</h2></td></tr>
 
 <p>Mapping of identity to graph vertex descriptor. </p>
 
-<p class="reference">Referenced by <a class="el" href="classnetwork_1_1_network.html#ad81217c6e3e7e1d64d6067a29ea1c3e3">Network()</a>, <a class="el" href="classnetwork_1_1_network.html#af83ce2ba6cd82d318ec433c82d16f328">get_destination_ids()</a>, and <a class="el" href="classnetwork_1_1_network.html#a3f1e27cb4c48ab736fca2d6fd58472c0">get_origination_ids()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classnetwork_1_1_network.html#ad81217c6e3e7e1d64d6067a29ea1c3e3">Network()</a>, <a class="el" href="classnetwork_1_1_network.html#a620aa0b99a7574fdb19590a3e1df909a">get_destination_ids()</a>, and <a class="el" href="classnetwork_1_1_network.html#a099489c63f54a90f82788f1904b19f92">get_origination_ids()</a>.</p>
 
 </div>
 </div>
@@ -730,7 +730,7 @@ Private Attributes</h2></td></tr>
 
 <p>The underlying boost::Graph. </p>
 
-<p class="reference">Referenced by <a class="el" href="classnetwork_1_1_network.html#ad81217c6e3e7e1d64d6067a29ea1c3e3">Network()</a>, <a class="el" href="classnetwork_1_1_network.html#af83ce2ba6cd82d318ec433c82d16f328">get_destination_ids()</a>, <a class="el" href="classnetwork_1_1_network.html#a1c14c00f48e05b57e9b0d4161acbc660">get_id()</a>, <a class="el" href="classnetwork_1_1_network.html#a3f1e27cb4c48ab736fca2d6fd58472c0">get_origination_ids()</a>, <a class="el" href="classnetwork_1_1_network.html#a964911e2c0bea1579b9b5bd3e197d248">get_sorted_index()</a>, <a class="el" href="classnetwork_1_1_network.html#a63da3bc2620f058457ff7b23d956e20a">init_indicies()</a>, <a class="el" href="classnetwork_1_1_network.html#a3c4ff515a92a465e551dde546c5dd6ca">print_network()</a>, and <a class="el" href="classnetwork_1_1_network.html#ac0b0218f1ef3612ae37e5ffe5fa7af02">size()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classnetwork_1_1_network.html#ad81217c6e3e7e1d64d6067a29ea1c3e3">Network()</a>, <a class="el" href="classnetwork_1_1_network.html#a620aa0b99a7574fdb19590a3e1df909a">get_destination_ids()</a>, <a class="el" href="classnetwork_1_1_network.html#a1c14c00f48e05b57e9b0d4161acbc660">get_id()</a>, <a class="el" href="classnetwork_1_1_network.html#a099489c63f54a90f82788f1904b19f92">get_origination_ids()</a>, <a class="el" href="classnetwork_1_1_network.html#a964911e2c0bea1579b9b5bd3e197d248">get_sorted_index()</a>, <a class="el" href="classnetwork_1_1_network.html#a63da3bc2620f058457ff7b23d956e20a">init_indicies()</a>, <a class="el" href="classnetwork_1_1_network.html#a3c4ff515a92a465e551dde546c5dd6ca">print_network()</a>, and <a class="el" href="classnetwork_1_1_network.html#ac0b0218f1ef3612ae37e5ffe5fa7af02">size()</a>.</p>
 
 </div>
 </div>
@@ -846,7 +846,7 @@ Private Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacenetwork.html">network</a></li><li class="navelem"><a class="el" href="classnetwork_1_1_network.html">Network</a></li>
-    <li class="footer">Generated on Wed Apr 26 2023 19:25:27 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
+    <li class="footer">Generated on Wed Apr 26 2023 19:52:54 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
   </ul>
 </div>
 </body>
