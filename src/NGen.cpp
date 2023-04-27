@@ -382,14 +382,30 @@ int main(int argc, char *argv[]) {
     //Now loop some time, iterate catchments, do stuff for total number of output times
     for( int count = 0; count < manager->Simulation_Time_Object->get_total_output_times(); count++) 
     {
+      // The Inner loop will advance all layers unless doing so will break one of two constraints
+      // 1) A layer may not preceed ahead of the master simulation objects current time
+      // 2) A layer may not preceed ahead of any layer that is computed before it
+      // The do while loop insures that all layers are tested at least once while allowing 
+      // layers small time steps to be updated more than once
+      // If a layer with a large time step is after a layer with a small time step the
+      // layer with the large time step will wait for multiple timesteps from the preceeding
+      // layer.
+      
+      // this is the time that layers are trying to reach (or get as close as possible)
       auto next_time = manager->Simulation_Time_Object->next_timestep_epoch_time();
+
+      // this is the time that the layer above the current layer is at
       auto prev_layer_time = next_time;
+
+      // this is the time that the least advanced layer is at
       auto layer_min_next_time = next_time;
       do
       {
         for ( auto& layer : layers ) 
         {
           auto layer_next_time = layer->next_timestep_epoch_time();
+
+          // only advance if you would not pass the master next time and the previous layer next time
           if ( layer_next_time <= next_time && layer_next_time <=  prev_layer_time)
           {
             layer->update_models();
@@ -405,7 +421,7 @@ int main(int argc, char *argv[]) {
             layer_min_next_time = layer_next_time;
           }
         } //done levels
-      } while( layer_min_next_time < next_time );
+      } while( layer_min_next_time < next_time );  // rerun the loop until the last layer would pass the master next time
 
     } //done time
     std::cout<<"Finished "<<manager->Simulation_Time_Object->get_total_output_times()<<" timesteps."<<std::endl;
