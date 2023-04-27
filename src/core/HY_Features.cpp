@@ -42,6 +42,12 @@ void HY_Features::init()
       const auto& cat_json_node = fabric->get_feature(feat_id);
       long lv = cat_json_node->has_key("level") ? cat_json_node->get_property("level").as_natural_number() : 0;
 
+      // add this level to the set of levels if needed
+      if (hf_levels.find(lv) == hf_levels.end() )
+      {
+          hf_levels.insert(lv);
+      }
+
       //Create the HY_Catchment with the formulation realization
       std::shared_ptr<HY_Catchment> c = std::make_shared<HY_Catchment>(
           HY_Catchment(feat_id, origins, destinations, formulation)
