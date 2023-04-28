@@ -719,28 +719,28 @@ end function test_finalize
     !Use 'sizeof' in gcc & ifort
     select case(name)
     case("grid_1_shape")
-      size = sizeof(grids(2)%shape)
+      size = sizeof(grids(2)%shape(1)) !FIXME this does NOT work the same as C sizeof...it gives total bytes of the array, not a single element
       bmi_status = BMI_SUCCESS
     case("grid_1_spacing")
-      size = sizeof(grids(2)%spacing)
+      size = sizeof(grids(2)%spacing(1))
       bmi_status = BMI_SUCCESS
     case("grid_1_units")
-      size = sizeof(grids(2)%units)
+      size = sizeof(grids(2)%units(1))
       bmi_status = BMI_SUCCESS
     case("grid_1_origin")
-      size = sizeof(grids(2)%units)
+      size = sizeof(grids(2)%units(1))
       bmi_status = BMI_SUCCESS
     case("grid_2_shape")
-      size = sizeof(grids(3)%shape)
+      size = sizeof(grids(3)%shape(1))
       bmi_status = BMI_SUCCESS
     case("grid_2_spacing")
-      size = sizeof(grids(3)%spacing)
+      size = sizeof(grids(3)%spacing(1))
       bmi_status = BMI_SUCCESS
     case("grid_2_units")
-      size = sizeof(grids(3)%units)
+      size = sizeof(grids(3)%units(1))
       bmi_status = BMI_SUCCESS
     case("grid_2_origin")
-      size = sizeof(grids(3)%units)
+      size = sizeof(grids(3)%units(1))
       bmi_status = BMI_SUCCESS
     case("INPUT_VAR_1")
        size = sizeof(this%model%input_var_1)
@@ -752,16 +752,16 @@ end function test_finalize
        size = sizeof(this%model%input_var_3)
        bmi_status = BMI_SUCCESS
     case("GRID_VAR_1")
-        size = sizeof(this%model%grid_var_1)
+        size = sizeof(this%model%grid_var_1(1,1))
         bmi_status = BMI_SUCCESS
     case("GRID_VAR_2")
-       size = sizeof(this%model%grid_var_2)
+       size = sizeof(this%model%grid_var_2(1,1))
        bmi_status = BMI_SUCCESS
     case("GRID_VAR_3")
-        size = sizeof(this%model%grid_var_3)
+        size = sizeof(this%model%grid_var_3(1,1,1))
         bmi_status = BMI_SUCCESS
     case("GRID_VAR_4")
-        size = sizeof(this%model%grid_var_4)
+        size = sizeof(this%model%grid_var_4(1,1,1))
         bmi_status = BMI_SUCCESS
     case("OUTPUT_VAR_1")
        size = sizeof(this%model%output_var_1)
@@ -1020,11 +1020,6 @@ end function test_finalize
         dest = reshape(this%model%grid_var_1, [size])
       else
         bmi_status = BMI_FAILURE
-      end if
-    case("GRID_VAR_2")
-      bmi_status = this%get_grid_size(1, size)
-      if( bmi_status == BMI_SUCCESS ) then
-        dest = reshape(this%model%grid_var_2, [size])
       end if
     case("GRID_VAR_3")
       bmi_status = this%get_grid_size(2, size)
