@@ -114,7 +114,7 @@ module bmitestbmi
     input_items(4) = [character(BMI_MAX_VAR_NAME):: 'INPUT_VAR_1', 'INPUT_VAR_2', 'INPUT_VAR_3', 'GRID_VAR_1']
 
   character (len=BMI_MAX_TYPE_NAME) :: &
-    output_type(6) = [character(BMI_MAX_TYPE_NAME):: 'double precision', 'real', 'integer', 'double precision', 'double precision', 'double precision']
+    output_type(6) = [character(BMI_MAX_TYPE_NAME):: 'double precision', 'real', 'integer', 'real', 'double precision', 'double precision']
 
   character (len=BMI_MAX_TYPE_NAME) :: &
     input_type(4) = [character(BMI_MAX_TYPE_NAME):: 'double precision', 'real', 'integer', 'double precision']
@@ -979,7 +979,7 @@ end function test_finalize
     class (bmi_test_bmi), intent(in) :: this
     character (len=*), intent(in) :: name
     real, intent(inout) :: dest(:)
-    integer :: bmi_status
+    integer :: bmi_status, size
 
     select case(name)
     case("INPUT_VAR_2")
@@ -988,6 +988,11 @@ end function test_finalize
     case("OUTPUT_VAR_2")
       dest = [this%model%output_var_2]
       bmi_status = BMI_SUCCESS
+    case("GRID_VAR_2")
+      bmi_status = this%get_grid_size(1, size)
+      if( bmi_status == BMI_SUCCESS ) then
+        dest = reshape(this%model%grid_var_2, [size])
+    end if
     case default
        dest(:) = -1.0
        bmi_status = BMI_FAILURE
