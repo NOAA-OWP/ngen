@@ -139,8 +139,17 @@ namespace realization {
 
                 // check to see if the node existed
                 if (!layers_json_array) {
-                    // If there is no layers section create data for a default surface hydrology
-                    // TODO
+                    // layer description struct
+                        ngen::LayerDescription layer_desc;
+
+                        // extract and store layer data from the json
+                        layer_desc.name = "surface layer";
+                        layer_desc.id = 0;
+                        layer_desc.time_step = 3600;
+                        layer_desc.time_step_units = "S";
+
+                        // add the layer to storage
+                        layer_storage.put_layer(layer_desc, layer_desc.id);
                 }
                 else
                 {
