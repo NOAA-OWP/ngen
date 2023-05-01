@@ -1,6 +1,8 @@
+#include "JSONGeometry.hpp"
+#include <boost/variant/detail/apply_visitor_delayed.hpp>
 #include <gtest/gtest.h>
+
 #include <wkb/reader.hpp>
-#include <wkb/visitors/wkt.hpp>
 
 using namespace geopackage;
 
@@ -29,7 +31,7 @@ class WKB_Test : public ::testing::Test
 
         this->little_endian = {
             0x01,
-            0x00, 0x00, 0x00, 0x01,
+            0x01, 0x00, 0x00, 0x00,
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40,
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x10, 0x40
         };
@@ -51,10 +53,10 @@ class WKB_Test : public ::testing::Test
 
 TEST_F(WKB_Test, wkb_read_test)
 {    
-    const wkb::wkb_geometry geom = wkb::read_wkb(this->wkb);
+    const geojson::geometry geom = wkb::read_wkb(this->wkb);
     EXPECT_EQ(geom.which() + 1, 3); // +1 since variant.which() is 0-based
 
-    const wkb::wkb_polygon& poly = boost::get<wkb::wkb_polygon>(geom);
+    const geojson::polygon_t& poly = boost::get<geojson::polygon_t>(geom);
     const std::vector<std::pair<double, double>> expected_coordinates = {
         {10.689, -25.092},
         {34.595, -20.170},
@@ -64,20 +66,19 @@ TEST_F(WKB_Test, wkb_read_test)
     };
 
     for (int i = 0; i < expected_coordinates.size(); i++) {
-        EXPECT_NEAR(poly.rings[0].points[i].x, expected_coordinates[i].first, 0.0001);
-        EXPECT_NEAR(poly.rings[0].points[i].y, expected_coordinates[i].second, 0.0001);
+        EXPECT_NEAR(poly.outer().at(i).get<0>(), expected_coordinates[i].first, 0.0001);
+        EXPECT_NEAR(poly.outer().at(i).get<1>(), expected_coordinates[i].second, 0.0001);
     }
-
-    const wkb::wkt_visitor wkt_v;
-    const auto wkt = "POLYGON ((10.689 -25.092,34.595 -20.170,38.814 -35.639,13.502 -39.155,10.689 -25.092))";
-    EXPECT_EQ(boost::apply_visitor(wkt_v, geom), wkt);
-    EXPECT_EQ(wkt_v(poly), wkt);
 }
 
 TEST_F(WKB_Test, wkb_endianness_test)
 {
-    const auto geom_big    = wkb::read_known_wkb<wkb::wkb_point>(this->big_endian);
-    const auto geom_little = wkb::read_known_wkb<wkb::wkb_point>(this->little_endian);
-    EXPECT_NEAR(geom_big.x, geom_little.x, 0.000001);
-    EXPECT_NEAR(geom_big.y, geom_little.y, 0.000001);
+    const auto geom_big    = wkb::read_known_wkb<geojson::coordinate_t>(this->big_endian);
+    const auto geom_little = wkb::read_known_wkb<geojson::coordinate_t>(this->little_endian);
+    EXPECT_NEAR(geom_big.get<0>(), geom_little.get<0>(), 0.000001);
+    EXPECT_NEAR(geom_big.get<1>(), geom_little.get<1>(), 0.000001);
+    EXPECT_NEAR(geom_big.get<0>(), 2.0, 0.000001);
+    EXPECT_NEAR(geom_big.get<1>(), 4.0, 0.000001);
+    EXPECT_NEAR(geom_big.get<0>(), 2.0, 0.000001);
+    EXPECT_NEAR(geom_big.get<1>(), 4.0, 0.000001);
 }

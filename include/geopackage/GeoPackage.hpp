@@ -1,18 +1,28 @@
 #ifndef NGEN_GEOPACKAGE_H
 #define NGEN_GEOPACKAGE_H
 
+#include <boost/geometry/srs/projections/epsg_params.hpp>
 #include <memory>
 #include <numeric>
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include <sqlite3.h>
 
-#include "SQLite.hpp"
+#include <boost/geometry/srs/transformation.hpp>
+#include <boost/geometry/srs/epsg.hpp>
+
 #include "FeatureCollection.hpp"
+
+#include "JSONGeometry.hpp"
+#include "SQLite.hpp"
+#include "features/CollectionFeature.hpp"
+#include "wkb/reader.hpp"
+
+namespace bsrs = boost::geometry::srs;
 
 namespace geopackage {
 
+namespace {
 inline const geojson::FeatureType feature_type_map(const std::string& g)
 {
     if (g == "POINT") return geojson::FeatureType::Point;
@@ -23,30 +33,66 @@ inline const geojson::FeatureType feature_type_map(const std::string& g)
     if (g == "MULTIPOLYGON") return geojson::FeatureType::MultiPolygon;
     return geojson::FeatureType::GeometryCollection;
 }
+} // anonymous namespace
 
 inline geojson::geometry build_geometry(const sqlite_iter& row, const geojson::FeatureType geom_type, const std::string& geom_col)
 {
     const std::vector<uint8_t> geometry_blob = row.get<std::vector<uint8_t>>(geom_col);
+    int index = 0;
+    if (geometry_blob[0] != 'G' && geometry_blob[1] != 'P') {
+        throw std::runtime_error("expected geopackage WKB, but found invalid format instead");
+    }
+    index += 2;
+    
+    // skip version
+    index++;
 
-    geojson::geometry geometry;
+    // flags
+    const bool is_extended  =  geometry_blob[index] & 0x00100000;
+    const bool is_empty     =  geometry_blob[index] & 0x00010000;
+    const uint8_t indicator = (geometry_blob[index] & 0x00001110) >> 1;
+    const uint8_t endian    =  geometry_blob[index] & 0x00000001;
+    index++;
 
-    switch(geom_type) {
-        case geojson::FeatureType::Point:
-            break;
-        case geojson::FeatureType::LineString:
-            break;
-        case geojson::FeatureType::Polygon:
-            break;
-        case geojson::FeatureType::MultiPoint:
-            break;
-        case geojson::FeatureType::MultiLineString:
-            break;
-        case geojson::FeatureType::MultiPolygon:
-            break;
-        case geojson::FeatureType::GeometryCollection:
-            break;
-        default:
-            break;
+    // Read srs_id
+    uint32_t srs_id;
+    wkb::copy_from(geometry_blob, index, srs_id, endian);
+
+    std::vector<double> envelope; // may be unused
+    if (indicator > 0 & indicator < 5) {
+        // not an empty envelope
+
+        envelope.resize(4); // only 4, not supporting Z or M dims
+        wkb::copy_from(geometry_blob, index, envelope[0], endian);
+        wkb::copy_from(geometry_blob, index, envelope[1], endian);
+        wkb::copy_from(geometry_blob, index, envelope[2], endian);
+        wkb::copy_from(geometry_blob, index, envelope[3], endian);
+
+        // ensure `index` is at beginning of data
+        if (indicator == 2 || indicator == 3) {
+            index += 2 * sizeof(double);
+        } else if (indicator == 4) {
+            index += 4 * sizeof(double);
+        }
+    }
+
+    const std::vector<uint8_t> geometry_data(geometry_blob.begin() + index, geometry_blob.end());
+    geojson::geometry geometry = wkb::read_wkb(geometry_data);
+
+    if (srs_id != 4326) {
+        return geometry;
+    } else {
+        geojson::geometry projected;
+
+        // project coordinates from whatever they are to 4326
+        boost::geometry::srs::transformation<> tr{
+            bsrs::epsg(srs_id),
+            bsrs::epsg(4326)
+        };
+
+        tr.forward(geometry, projected);
+
+        return projected;
     }
 }
 
@@ -101,9 +147,84 @@ inline geojson::Feature build_feature(
   const std::string& geom_col
 )
 {
-    const auto type = feature_type_map(geom_type);
-    const geojson::PropertyMap properties = build_properties(row, geom_col);
-    const geojson::geometry geometry = build_geometry(row, type, geom_col);
+    const auto type                  = feature_type_map(geom_type);
+    const auto id                    = row.get<std::string>("id");
+    std::vector<double> bounding_box = {0, 0, 0, 0}; // TODO
+    geojson::PropertyMap properties  = std::move(build_properties(row, geom_col));
+    geojson::geometry geometry       = std::move(build_geometry(row, type, geom_col));
+
+    switch(type) {
+        case geojson::FeatureType::Point:
+            return std::make_shared<geojson::PointFeature>(geojson::PointFeature(
+                boost::get<geojson::coordinate_t>(geometry),
+                id,
+                properties,
+                bounding_box,
+                std::vector<geojson::FeatureBase*>(),
+                std::vector<geojson::FeatureBase*>(),
+                {}
+            ));
+        case geojson::FeatureType::LineString:
+            return std::make_shared<geojson::LineStringFeature>(geojson::LineStringFeature(
+                boost::get<geojson::linestring_t>(geometry),
+                id,
+                properties,
+                bounding_box,
+                std::vector<geojson::FeatureBase*>(),
+                std::vector<geojson::FeatureBase*>(),
+                {}
+            ));
+        case geojson::FeatureType::Polygon:
+            return std::make_shared<geojson::PolygonFeature>(geojson::PolygonFeature(
+                boost::get<geojson::polygon_t>(geometry),
+                id,
+                properties,
+                bounding_box,
+                std::vector<geojson::FeatureBase*>(),
+                std::vector<geojson::FeatureBase*>(),
+                {}
+            ));
+        case geojson::FeatureType::MultiPoint:
+            return std::make_shared<geojson::MultiPointFeature>(geojson::MultiPointFeature(
+                boost::get<geojson::multipoint_t>(geometry),
+                id,
+                properties,
+                bounding_box,
+                std::vector<geojson::FeatureBase*>(),
+                std::vector<geojson::FeatureBase*>(),
+                {}
+            ));
+        case geojson::FeatureType::MultiLineString:
+            return std::make_shared<geojson::MultiLineStringFeature>(geojson::MultiLineStringFeature(
+                boost::get<geojson::multilinestring_t>(geometry),
+                id,
+                properties,
+                bounding_box,
+                std::vector<geojson::FeatureBase*>(),
+                std::vector<geojson::FeatureBase*>(),
+                {}
+            ));
+        case geojson::FeatureType::MultiPolygon:
+            return std::make_shared<geojson::MultiPolygonFeature>(geojson::MultiPolygonFeature(
+                boost::get<geojson::multipolygon_t>(geometry),
+                id,
+                properties,
+                bounding_box,
+                std::vector<geojson::FeatureBase*>(),
+                std::vector<geojson::FeatureBase*>(),
+                {}
+            ));
+        default:
+            return std::make_shared<geojson::CollectionFeature>(geojson::CollectionFeature(
+                std::vector<geojson::geometry>{geometry},
+                id,
+                properties,
+                bounding_box,
+                std::vector<geojson::FeatureBase*>(),
+                std::vector<geojson::FeatureBase*>(),
+                {}
+            ));
+    }
 };
 
 inline std::shared_ptr<geojson::FeatureCollection> read(const std::string& gpkg_path, const std::string& layer = "", const std::vector<std::string>& ids = {})
