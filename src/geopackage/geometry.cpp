@@ -3,7 +3,7 @@
 #include <boost/geometry/srs/transformation.hpp>
 #include <boost/geometry/srs/epsg.hpp>
 
-#include "wkb/reader.hpp"
+#include "WKB.hpp"
 
 namespace bsrs = boost::geometry::srs;
 
@@ -32,17 +32,17 @@ geojson::geometry geopackage::build_geometry(
 
     // Read srs_id
     uint32_t srs_id;
-    wkb::copy_from(geometry_blob, index, srs_id, endian);
+    utils::copy_from(geometry_blob, index, srs_id, endian);
 
     std::vector<double> envelope; // may be unused
     if (indicator > 0 & indicator < 5) {
         // not an empty envelope
 
         envelope.resize(4); // only 4, not supporting Z or M dims
-        wkb::copy_from(geometry_blob, index, envelope[0], endian);
-        wkb::copy_from(geometry_blob, index, envelope[1], endian);
-        wkb::copy_from(geometry_blob, index, envelope[2], endian);
-        wkb::copy_from(geometry_blob, index, envelope[3], endian);
+        utils::copy_from(geometry_blob, index, envelope[0], endian);
+        utils::copy_from(geometry_blob, index, envelope[1], endian);
+        utils::copy_from(geometry_blob, index, envelope[2], endian);
+        utils::copy_from(geometry_blob, index, envelope[3], endian);
 
         // ensure `index` is at beginning of data
         if (indicator == 2 || indicator == 3) {
