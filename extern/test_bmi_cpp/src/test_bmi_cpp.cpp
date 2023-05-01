@@ -426,7 +426,11 @@ void TestBmiCpp::read_file_line_counts(std::string file_name, int* line_count, i
     throw std::runtime_error("Configuration file does not exist." SOURCE_LOC);
   }
   int seen_non_whitespace = 0;
-  char c;
+  int c; //EOF is a negative constant...and char may be either signed OR unsigned
+  //depending on the compiler, system, achitectured, ect.  So there are cases
+  //where this loop could go infinite comparing EOF to unsigned char
+  //the return of fgetc is int, and should be stored as such!
+  //https://stackoverflow.com/questions/35356322/difference-between-int-and-char-in-getchar-fgetc-and-putchar-fputc
   for (c = fgetc(fp); c != EOF; c = fgetc(fp)) {
     // keep track if this line has seen any char other than space or tab
     if (c != ' ' && c != '\t' && c != '\n')

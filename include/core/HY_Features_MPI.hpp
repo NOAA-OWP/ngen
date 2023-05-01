@@ -29,11 +29,11 @@ namespace hy_features {
             return network.filter("cat");
         }
 
-        inline bool is_remote_sender_nexus(std::string id) {
+        inline bool is_remote_sender_nexus(const std::string& id) {
             return _nexuses.find(id) != _nexuses.end() && _nexuses[id]->is_remote_sender();
         }
 
-        inline std::vector<std::shared_ptr<HY_HydroNexus>> destination_nexuses(std::string id) {
+        inline std::vector<std::shared_ptr<HY_HydroNexus>> destination_nexuses(const std::string& id) {
             std::vector<std::shared_ptr<HY_HydroNexus>> downstream;
             if (_catchments.find(id) != _catchments.end()) {
                 for(const auto& nex_id : _catchments[id]->get_outflow_nexuses()) {
@@ -43,7 +43,7 @@ namespace hy_features {
             return downstream;
         }
 
-        std::shared_ptr<HY_HydroNexus> nexus_at(std::string id) {
+        std::shared_ptr<HY_HydroNexus> nexus_at(const std::string& id) {
             return (_nexuses.find(id) != _nexuses.end()) ? _nexuses[id] : nullptr;
         }
 

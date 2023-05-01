@@ -102,7 +102,7 @@ namespace hy_features {
          * @param id 
          * @return std::shared_ptr<HY_HydroNexus> 
          */
-        std::shared_ptr<HY_HydroNexus> nexus_at(std::string id)
+        std::shared_ptr<HY_HydroNexus> nexus_at(const std::string& id)
         {
           if( _nexuses.find(id) != _nexuses.end() )
             return _nexuses[id];
@@ -131,7 +131,7 @@ namespace hy_features {
          * @param id 
          * @return std::vector<std::shared_ptr<HY_HydroNexus>> 
          */
-        inline std::vector<std::shared_ptr<HY_HydroNexus>> destination_nexuses(std::string  id)
+        inline std::vector<std::shared_ptr<HY_HydroNexus>> destination_nexuses(const std::string&  id)
         {
           std::vector<std::shared_ptr<HY_HydroNexus>> downstream;
           if( _catchments.find(id) != _catchments.end())

@@ -142,10 +142,10 @@ jobs:
           python3 -m venv .venv
           . .venv/bin/activate
           cd t-route
-          pip install -U pip
+          pip install 'pip>=23.0,<23.1'
           pip install -U setuptools
           pip install -r requirements.txt
-          pip install deprecated pyarrow tables geopandas
+          pip install deprecated pyarrow tables geopandas numpy
           if [ ${{ runner.os }} == 'macOS' ] 
           then
             export LIBRARY_PATH=/usr/local/lib/gcc/11/
