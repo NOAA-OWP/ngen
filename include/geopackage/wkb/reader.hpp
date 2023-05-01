@@ -86,16 +86,37 @@ inline std::string wkt_coords(const multipolygon& g)
     return output;
 }
 
-}
+} // anonymous namespace
 
+/**
+ * @brief Get the WKT form from WKB structs
+ * 
+ * @tparam T WKB geometry struct type
+ * @param g geometry object
+ * @return std::string @param{g} in WKT form
+ */
 template<typename T>
 inline std::string as_wkt(const T& g)
 {
     return wkb::wkt_type(g) + " " + wkb::wkt_coords(g);
 }
 
+/**
+ * @brief
+ * Copies bytes from @param{src} to @param{dst},
+ * converts the endianness to native,
+ * and increments @param{index} by the number of bytes
+ * used to store @tparam{S}
+ * 
+ * @tparam T an integral type
+ * @tparam S a primitive type
+ * @param src a vector of bytes
+ * @param index an integral type tracking the starting position of @param{dst}'s memory
+ * @param dst output primitive
+ * @param order endianness value (0x01 == Little; 0x00 == Big)
+ */
 template<typename T, typename S>
-inline void copy_from(std::vector<byte_t> src, T& index, S& dst, uint8_t order)
+inline void copy_from(byte_vector src, T& index, S& dst, uint8_t order)
 {
     std::memcpy(&dst, &src[index], sizeof(S));
 
@@ -108,6 +129,15 @@ inline void copy_from(std::vector<byte_t> src, T& index, S& dst, uint8_t order)
     index += sizeof(S);
 }
 
+/**
+ * @brief Recursively read WKB data into known structs
+ * 
+ * @tparam T geometry struct type
+ * @param buffer vector of bytes
+ * @param index tracked buffer index
+ * @param order endianness
+ * @return T parsed WKB in geometry struct
+ */
 template<typename T>
 static inline T read_wkb_internal(const byte_vector& buffer, int& index, uint8_t order);
 
@@ -149,6 +179,13 @@ INTERNAL_WKB_DEF(multipolygon, polygon)
 
 #undef INTERNAL_WKB_DEF
 
+/**
+ * @brief Read WKB into a naive geometry struct
+ * 
+ * @tparam T geometry struct type (i.e. @code{wkb::point}, @code{wkb::polygon}, etc.)
+ * @param buffer vector of bytes
+ * @return T geometry struct containing the parsed WKB values.
+ */
 template<typename T>
 static inline T read_wkb(const byte_vector& buffer)
 {
