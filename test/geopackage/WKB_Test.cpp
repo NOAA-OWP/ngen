@@ -50,8 +50,11 @@ class WKB_Test : public ::testing::Test
 
 TEST_F(WKB_Test, wkb_read_test)
 {    
-    wkb::polygon geom = wkb::read_wkb<wkb::polygon>(this->wkb);
-    std::vector<std::pair<double, double>> expected_coordinates = {
+    const wkb::geometry geom = wkb::read_wkb(this->wkb);
+    EXPECT_EQ(geom.type, 3);
+
+    const wkb::polygon& poly = boost::get<wkb::polygon>(geom.data);
+    const std::vector<std::pair<double, double>> expected_coordinates = {
         {10.689, -25.092},
         {34.595, -20.170},
         {38.814, -35.639},
@@ -60,20 +63,20 @@ TEST_F(WKB_Test, wkb_read_test)
     };
 
     for (int i = 0; i < expected_coordinates.size(); i++) {
-        EXPECT_NEAR(geom.rings[0].points[i].x, expected_coordinates[i].first, 0.0001);
-        EXPECT_NEAR(geom.rings[0].points[i].y, expected_coordinates[i].second, 0.0001);
+        EXPECT_NEAR(poly.rings[0].points[i].x, expected_coordinates[i].first, 0.0001);
+        EXPECT_NEAR(poly.rings[0].points[i].y, expected_coordinates[i].second, 0.0001);
     }
 
-    EXPECT_EQ(
-        wkb::as_wkt(geom),
-        "POLYGON ((10.689 -25.092,34.595 -20.170,38.814 -35.639,13.502 -39.155,10.689 -25.092))"
-    );
+    const wkb::wkt wkt_visitor;
+    const auto wkt = "POLYGON ((10.689 -25.092,34.595 -20.170,38.814 -35.639,13.502 -39.155,10.689 -25.092))";
+    EXPECT_EQ(boost::apply_visitor(wkt_visitor, geom.data), wkt);
+    EXPECT_EQ(wkt_visitor(poly), wkt);
 }
 
 TEST_F(WKB_Test, wkb_endianness_test)
 {
-    wkb::point geom_big    = wkb::read_wkb<wkb::point>(this->big_endian);
-    wkb::point geom_little = wkb::read_wkb<wkb::point>(this->little_endian);
+    wkb::point geom_big    = wkb::read_known_wkb<wkb::point>(this->big_endian);
+    wkb::point geom_little = wkb::read_known_wkb<wkb::point>(this->little_endian);
     EXPECT_NEAR(geom_big.x, geom_little.x, 0.000001);
     EXPECT_NEAR(geom_big.y, geom_little.y, 0.000001);
 }
