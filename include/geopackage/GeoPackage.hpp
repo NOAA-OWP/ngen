@@ -10,6 +10,7 @@
 
 #include "SQLite.hpp"
 #include "FeatureCollection.hpp"
+#include "WKB.hpp"
 
 namespace geopackage {
 
@@ -31,13 +32,87 @@ inline geojson::multipoint_t build_multipoint();
 inline geojson::multilinestring_t build_multilinestring();
 inline geojson::multipolygon_t build_multipolygon();
 
-inline geojson::geometry build_geometry();
+inline geojson::geometry build_geometry(const sqlite_iter& row, const geojson::FeatureType geom_type, const std::string& geom_col)
+{
+    const std::vector<uint8_t> geometry_blob = row.get<std::vector<uint8_t>>(geom_col);
+
+    geojson::geometry geometry;
+
+    switch(geom_type) {
+        case geojson::FeatureType::Point:
+            break;
+        case geojson::FeatureType::LineString:
+            break;
+        case geojson::FeatureType::Polygon:
+            break;
+        case geojson::FeatureType::MultiPoint:
+            break;
+        case geojson::FeatureType::MultiLineString:
+            break;
+        case geojson::FeatureType::MultiPolygon:
+            break;
+        case geojson::FeatureType::GeometryCollection:
+            break;
+        default:
+            break;
+    }
+}
+
+inline geojson::PropertyMap build_properties(const sqlite_iter& row, const std::string& geom_col)
+{
+    geojson::PropertyMap properties;
+
+    std::map<std::string, int> property_types;
+    const auto data_cols = row.columns();
+    const auto data_types = row.types();
+    std::transform(
+        data_cols.begin(),
+        data_cols.end(),
+        data_types.begin(),
+        std::inserter(property_types, property_types.end()), [](const std::string& name, int type) {
+            return std::make_pair(name, type);
+        }
+    );
+
+    for (auto& col : property_types) {
+        const auto name = col.first;
+        const auto type = col.second;
+        if (name == geom_col) {
+            continue;
+        }
+
+        geojson::JSONProperty* property = nullptr;
+        switch(type) {
+            case SQLITE_INTEGER:
+                *property = geojson::JSONProperty(name, row.get<int>(name));
+                break;
+            case SQLITE_FLOAT:
+                *property = geojson::JSONProperty(name, row.get<double>(name));
+                break;
+            case SQLITE_TEXT:
+                *property = geojson::JSONProperty(name, row.get<std::string>(name));
+                break;
+            default:
+                *property = geojson::JSONProperty(name, "null");
+                break;
+        }
+
+        properties.emplace(col, std::move(*property));
+    }
+
+    return properties;
+}
 
 inline geojson::Feature build_feature(
   const sqlite_iter& row,
   const std::string& geom_type,
   const std::string& geom_col
-);
+)
+{
+    const auto type = feature_type_map(geom_type);
+    const geojson::PropertyMap properties = build_properties(row, geom_col);
+    const geojson::geometry geometry = build_geometry(row, type, geom_col);
+};
 
 inline std::shared_ptr<geojson::FeatureCollection> read(const std::string& gpkg_path, const std::string& layer = "", const std::vector<std::string>& ids = {})
 {
