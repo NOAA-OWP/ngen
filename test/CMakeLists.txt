@@ -84,6 +84,12 @@ add_test(test_geojson
         NGen::geojson
         )
 
+########################## GeoPackage Unit Tests
+add_test(test_geopackage
+        1
+        geopackage/WKB_Test.cpp
+        NGen::geopackage)
+
 ########################## Realization Config Unit Tests
 add_test(test_realization_config
         1
