@@ -10,7 +10,6 @@
 
 #include "SQLite.hpp"
 #include "FeatureCollection.hpp"
-#include "WKB.hpp"
 
 namespace geopackage {
 
@@ -24,13 +23,6 @@ inline const geojson::FeatureType feature_type_map(const std::string& g)
     if (g == "MULTIPOLYGON") return geojson::FeatureType::MultiPolygon;
     return geojson::FeatureType::GeometryCollection;
 }
-
-inline geojson::coordinate_t build_point();
-inline geojson::linestring_t build_linestring();
-inline geojson::polygon_t build_polygon();
-inline geojson::multipoint_t build_multipoint();
-inline geojson::multilinestring_t build_multilinestring();
-inline geojson::multipolygon_t build_multipolygon();
 
 inline geojson::geometry build_geometry(const sqlite_iter& row, const geojson::FeatureType geom_type, const std::string& geom_col)
 {
