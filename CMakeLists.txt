@@ -259,6 +259,7 @@ endif()
 add_subdirectory("src/core")
 add_dependencies(core libudunits2)
 add_subdirectory("src/geojson")
+add_subdirectory("src/geopackage")
 add_subdirectory("src/realizations/catchment")
 add_subdirectory("src/models/tshirt")
 add_subdirectory("src/models/kernels/reservoir")
@@ -271,6 +272,7 @@ target_link_libraries(ngen PUBLIC
         #NGen::core_catchment_giuh
         NGen::core_nexus
         NGen::geojson
+        NGen::geopackage
         NGen::models_tshirt
         NGen::realizations_catchment
         NGen::kernels_reservoir
