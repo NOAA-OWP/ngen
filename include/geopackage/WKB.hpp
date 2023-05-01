@@ -1,14 +1,7 @@
 #ifndef NGEN_GEOPACKAGE_WKB_READER_H
 #define NGEN_GEOPACKAGE_WKB_READER_H
 
-#include <cstring>
-#include <sstream>
-#include <numeric>
-#include <vector>
-#include <cmath>
-
-#include <boost/endian.hpp>
-
+#include "EndianCopy.hpp"
 #include "JSONGeometry.hpp"
 
 namespace geopackage {
@@ -17,33 +10,7 @@ namespace wkb {
 using byte_t = uint8_t;
 using byte_vector = std::vector<byte_t>;
 
-/**
- * @brief
- * Copies bytes from @param{src} to @param{dst},
- * converts the endianness to native,
- * and increments @param{index} by the number of bytes
- * used to store @tparam{S}
- * 
- * @tparam T an integral type
- * @tparam S a primitive type
- * @param src a vector of bytes
- * @param index an integral type tracking the starting position of @param{dst}'s memory
- * @param dst output primitive
- * @param order endianness value (0x01 == Little; 0x00 == Big)
- */
-template<typename T, typename S>
-inline void copy_from(byte_vector src, T& index, S& dst, uint8_t order)
-{
-    std::memcpy(&dst, &src[index], sizeof(S));
-
-    if (order == 0x01) {
-        boost::endian::little_to_native_inplace(dst);
-    } else {
-        boost::endian::big_to_native_inplace(dst);
-    }
-
-    index += sizeof(S);
-}
+namespace {
 
 /**
  * @brief Recursively read WKB data into known structs
@@ -63,8 +30,8 @@ template<>
 inline READ_WKB_INTERNAL_SIG(geojson::coordinate_t)
 {
     double x, y;
-    copy_from(buffer, index, x, order);
-    copy_from(buffer, index, y, order);
+    utils::copy_from(buffer, index, x, order);
+    utils::copy_from(buffer, index, y, order);
     return geojson::coordinate_t{x, y};
 };
 
@@ -72,7 +39,7 @@ template<>
 inline READ_WKB_INTERNAL_SIG(geojson::linestring_t)
 {
     uint32_t count;
-    copy_from(buffer, index, count, order);
+    utils::copy_from(buffer, index, count, order);
 
     geojson::linestring_t linestring;
     linestring.resize(count);
@@ -88,7 +55,7 @@ template<>
 inline READ_WKB_INTERNAL_SIG(geojson::polygon_t)
 {
     uint32_t count;
-    copy_from(buffer, index, count, order);
+    utils::copy_from(buffer, index, count, order);
 
     geojson::polygon_t polygon;
     
@@ -119,7 +86,7 @@ inline T read_multi_wkb_internal(const byte_vector& buffer, int& index, uint32_t
     index++;
 
     uint32_t type;
-    copy_from(buffer, index, type, new_order);
+    utils::copy_from(buffer, index, type, new_order);
 
     if (type != expected_type) {
         throw std::runtime_error("expected type " + std::to_string(expected_type) + ", but found type: " + std::to_string(type));
@@ -132,7 +99,7 @@ template<>
 inline READ_WKB_INTERNAL_SIG(geojson::multipoint_t)
 {
     uint32_t count;
-    copy_from(buffer, index, count, order);
+    utils::copy_from(buffer, index, count, order);
 
     geojson::multipoint_t mp;
     mp.resize(count);
@@ -148,7 +115,7 @@ template<>
 inline READ_WKB_INTERNAL_SIG(geojson::multilinestring_t)
 {
     uint32_t count;
-    copy_from(buffer, index, count, order);
+    utils::copy_from(buffer, index, count, order);
 
     geojson::multilinestring_t ml;
     ml.resize(count);
@@ -163,7 +130,7 @@ template<>
 inline READ_WKB_INTERNAL_SIG(geojson::multipolygon_t)
 {
     uint32_t count;
-    copy_from(buffer, index, count, order);
+    utils::copy_from(buffer, index, count, order);
 
     geojson::multipolygon_t mpl;
     mpl.resize(count);
@@ -175,6 +142,8 @@ inline READ_WKB_INTERNAL_SIG(geojson::multipolygon_t)
 }
 
 #undef READ_WKB_INTERNAL_SIG
+
+} // anonymouse namespace
 
 /**
  * @brief Read (known) WKB into a specific geometry struct
@@ -199,7 +168,7 @@ static inline T read_known_wkb(const byte_vector& buffer)
     index++;
 
     uint32_t type;
-    copy_from(buffer, index, type, order);
+    utils::copy_from(buffer, index, type, order);
 
     return read_wkb_internal<T>(buffer, index, order);
 };
@@ -221,7 +190,7 @@ static inline geojson::geometry read_wkb(const byte_vector&buffer)
     index++;
 
     uint32_t type;
-    copy_from(buffer, index, type, order);
+    utils::copy_from(buffer, index, type, order);
 
     geojson::geometry g = geojson::coordinate_t{std::nan("0"), std::nan("0")};
     switch(type) {
