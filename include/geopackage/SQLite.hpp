@@ -73,7 +73,7 @@ class sqlite_iter
     sqlite3_stmt* ptr() const noexcept;
 
     // checks if int is out of range, and throws error if so
-    void handle_get_index(int);
+    void handle_get_index(int) const;
 
   public:
     sqlite_iter(stmt_t stmt);
@@ -88,10 +88,10 @@ class sqlite_iter
     const std::vector<int>&         types() const noexcept { return this->column_types; }
 
     template<typename T>
-    T get(int col);
+    T get(int col) const;
 
     template<typename T>
-    T get(const std::string&);
+    T get(const std::string&) const;
 };
 
 inline sqlite_iter::sqlite_iter(stmt_t stmt)
@@ -114,7 +114,7 @@ inline sqlite3_stmt* sqlite_iter::ptr() const noexcept
     return this->stmt.get();
 }
 
-inline void sqlite_iter::handle_get_index(int col)
+inline void sqlite_iter::handle_get_index(int col) const
 {
     if (this->done()) {
         throw sqlite_get_done_error;
@@ -181,28 +181,28 @@ inline int sqlite_iter::column_index(const std::string& name) const noexcept
 }
 
 template<>
-inline std::vector<uint8_t> sqlite_iter::get<std::vector<uint8_t>>(int col)
+inline std::vector<uint8_t> sqlite_iter::get<std::vector<uint8_t>>(int col) const
 {
     this->handle_get_index(col);
     return *reinterpret_cast<const std::vector<uint8_t>*>(sqlite3_column_blob(this->ptr(), col));
 }
 
 template<>
-inline double sqlite_iter::get<double>(int col)
+inline double sqlite_iter::get<double>(int col) const
 {
     this->handle_get_index(col);
     return sqlite3_column_double(this->ptr(), col);
 }
 
 template<>
-inline int sqlite_iter::get<int>(int col)
+inline int sqlite_iter::get<int>(int col) const
 {
     this->handle_get_index(col);
     return sqlite3_column_int(this->ptr(), col);
 }
 
 template<>
-inline std::string sqlite_iter::get<std::string>(int col)
+inline std::string sqlite_iter::get<std::string>(int col) const
 {
     this->handle_get_index(col);
     // TODO: this won't work with non-ASCII text
@@ -210,7 +210,7 @@ inline std::string sqlite_iter::get<std::string>(int col)
 }
 
 template<typename T>
-inline T sqlite_iter::get(const std::string& name)
+inline T sqlite_iter::get(const std::string& name) const
 {
     const int index = this->column_index(name);
     return this->get<T>(index);
