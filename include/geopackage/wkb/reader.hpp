@@ -1,5 +1,5 @@
-#ifndef NGEN_GEOPACKAGE_WKB_POD_H
-#define NGEN_GEOPACKAGE_WKB_POD_H
+#ifndef NGEN_GEOPACKAGE_WKB_READER_H
+#define NGEN_GEOPACKAGE_WKB_READER_H
 
 #include <cstring>
 #include <sstream>
@@ -15,104 +15,20 @@ namespace wkb {
 
 using byte_t = uint8_t;
 using byte_vector = std::vector<byte_t>;
-
-struct point           { double                  x, y;     };
-struct linestring      { std::vector<point>      points;   };
-struct polygon         { std::vector<linestring> rings;    };
-struct multipoint      { std::vector<point>      points;   };
-struct multilinestring { std::vector<linestring> lines;    };
-struct multipolygon    { std::vector<polygon>    polygons; };
-
-struct geometry {
-    using gtype = boost::variant<
-        point, linestring, polygon,
-        multipoint, multilinestring, multipolygon
-    >;
-
-    uint32_t type;
-    gtype data;
-};
-
-class wkt : public boost::static_visitor<std::string>
-{
-  public:
-
-    /**
-    * @brief Get the WKT form from WKB structs
-    * 
-    * @tparam T WKB geometry struct type
-    * @param g geometry object
-    * @return std::string @param{g} in WKT form
-    */
-    template<typename T>
-    std::string operator()(T& g) const
-    {
-        return this->wkt_type(g) + " " + this->wkt_coords(g);
-    }
-
-  private:
-    std::string wkt_type(const point&)           const { return "POINT";           }
-    std::string wkt_type(const linestring&)      const { return "LINESTRING";      }
-    std::string wkt_type(const polygon&)         const { return "POLYGON";         }
-    std::string wkt_type(const multipoint&)      const { return "MULTIPOINT";      }
-    std::string wkt_type(const multilinestring&) const { return "MULTILINESTRING"; }
-    std::string wkt_type(const multipolygon&)    const { return "MULTIPOLYGON";    }
-
-    std::string wkt_coords(const point& g) const
-    {
-        std::ostringstream out;
-        out.precision(3);
-        out << std::fixed << g.x << " " << g.y;
-        return std::move(out).str();
-    } 
-
-    std::string wkt_coords(const linestring& g) const
-    {
-        return "(" + std::accumulate(
-            std::next(g.points.begin()),
-            g.points.end(),
-            wkt_coords(g.points[0]),
-            [this](const std::string& a, const point b) { return a + "," + this->wkt_coords(b); }
-        ) + ")";
-    }
-
-    std::string wkt_coords(const multipoint& g) const
-    {
-        return "(" + std::accumulate(
-            std::next(g.points.begin()),
-            g.points.end(),
-            wkt_coords(g.points[0]),
-            [this](const std::string& a, const point b) { return a + "," + this->wkt_coords(b); }
-        ) + ")";
-    }
-
-    std::string wkt_coords(const polygon& g) const
-    {
-        std::string output;
-        for (const auto& gg : g.rings) {
-            output += "(" + wkt_coords(gg) + ")";
-        }
-        return output;
-    }
-
-    std::string wkt_coords(const multilinestring& g) const
-    {
-        std::string output;
-        for (const auto& gg : g.lines) {
-            output += "(" + wkt_coords(gg) + ")";
-        }
-        return output;
-    }
-
-    std::string wkt_coords(const multipolygon& g) const
-    {
-        std::string output;
-        for (const auto& gg : g.polygons) {
-            output += "(" + wkt_coords(gg) + ")";
-        }
-        return output;
-    }
-};
+struct wkb_point           { double                      x, y;     };
+struct wkb_linestring      { std::vector<wkb_point>      points;   };
+struct wkb_polygon         { std::vector<wkb_linestring> rings;    };
+struct wkb_multipoint      { std::vector<wkb_point>      points;   };
+struct wkb_multilinestring { std::vector<wkb_linestring> lines;    };
+struct wkb_multipolygon    { std::vector<wkb_polygon>    polygons; };
+using wkb_geometry = boost::variant<
+    wkb_point,
+    wkb_linestring,
+    wkb_polygon,
+    wkb_multipoint,
+    wkb_multilinestring,
+    wkb_multipolygon
+>;
 
 /**
  * @brief
@@ -152,80 +68,67 @@ inline void copy_from(byte_vector src, T& index, S& dst, uint8_t order)
  * @return T parsed WKB in geometry struct
  */
 template<typename T>
-static inline T read_wkb_internal(const byte_vector& buffer, int& index, uint8_t order);
+inline T read_wkb_internal(const byte_vector& buffer, int& index, uint8_t order);
+
+namespace {
+template<typename output_t, typename child_t>
+inline output_t read_wkb_compound_internal(const byte_vector& buffer, int& index, uint8_t order)
+{
+    uint32_t count;
+    copy_from(buffer, index, count, order);
+    std::vector<child_t> children(count);
+    for (auto& child : children) {
+        child = read_wkb_internal<child_t>(buffer, index, order);
+    }
+    return output_t{children};
+}
+} // anonymous namespace
+
+#define READ_WKB_INTERNAL_SIG(output_t) output_t read_wkb_internal<output_t>(const byte_vector& buffer, int& index, uint8_t order)
 
 template<>
-inline point read_wkb_internal<point>(const byte_vector& buffer, int& index, uint8_t order)
+inline READ_WKB_INTERNAL_SIG(wkb_point)
 {
     double x, y;
     copy_from(buffer, index, x, order);
     copy_from(buffer, index, y, order);
-    return point{x, y};
+    return wkb_point{x, y};
 };
 
-template<>                                                        
-inline linestring read_wkb_internal<linestring>(const byte_vector& buffer, int& index, uint8_t order)
+template<>
+inline READ_WKB_INTERNAL_SIG(wkb_linestring)
 {
-    uint32_t count;
-    copy_from(buffer, index, count, order);
-    std::vector<point> children(count);
-    for (auto& child : children) {
-        child = read_wkb_internal<point>(buffer, index, order);
-    }
-    return linestring{children};
+    return read_wkb_compound_internal<wkb_linestring, wkb_point>(buffer, index, order);
 }
 
-template<>                                                        
-inline polygon read_wkb_internal<polygon>(const byte_vector& buffer, int& index, uint8_t order)
+template<>
+inline READ_WKB_INTERNAL_SIG(wkb_polygon)
 {
-    uint32_t count;
-    copy_from(buffer, index, count, order);
-    std::vector<linestring> children(count);
-    for (auto& child : children) {
-        child = read_wkb_internal<linestring>(buffer, index, order);
-    }
-    
-    return polygon{children};
+    return read_wkb_compound_internal<wkb_polygon, wkb_linestring>(buffer, index, order);
 }
 
-template<>                                                        
-inline multipoint read_wkb_internal<multipoint>(const byte_vector& buffer, int& index, uint8_t order)
+template<>
+inline READ_WKB_INTERNAL_SIG(wkb_multipoint)
 {
-    uint32_t count;
-    copy_from(buffer, index, count, order);
-    std::vector<point> children(count);
-    for (auto& child : children) {
-        child = read_wkb_internal<point>(buffer, index, order);
-    }
-    return multipoint{children};
+    return read_wkb_compound_internal<wkb_multipoint, wkb_point>(buffer, index, order);
 }
 
-template<>                                                        
-inline multilinestring read_wkb_internal<multilinestring>(const byte_vector& buffer, int& index, uint8_t order)
+template<>
+inline READ_WKB_INTERNAL_SIG(wkb_multilinestring)
 {
-    uint32_t count;
-    copy_from(buffer, index, count, order);
-    std::vector<linestring> children(count);
-    for (auto& child : children) {
-        child = read_wkb_internal<linestring>(buffer, index, order);
-    }
-    return multilinestring{children};
+    return read_wkb_compound_internal<wkb_multilinestring, wkb_linestring>(buffer, index, order);
 }
 
-template<>                                                        
-inline multipolygon read_wkb_internal<multipolygon>(const byte_vector& buffer, int& index, uint8_t order)
+template<>
+inline READ_WKB_INTERNAL_SIG(wkb_multipolygon)
 {
-    uint32_t count;
-    copy_from(buffer, index, count, order);
-    std::vector<polygon> children(count);
-    for (auto& child : children) {
-        child = read_wkb_internal<polygon>(buffer, index, order);
-    }
-    return multipolygon{children};
+    return read_wkb_compound_internal<wkb_multipolygon, wkb_polygon>(buffer, index, order);
 }
+
+#undef READ_WKB_INTERNAL_SIG
 
 /**
- * @brief Read WKB into a naive geometry struct
+ * @brief Read (known) WKB into a specific geometry struct
  * 
  * @tparam T geometry struct type (i.e. @code{wkb::point}, @code{wkb::polygon}, etc.)
  * @param buffer vector of bytes
@@ -252,14 +155,16 @@ static inline T read_known_wkb(const byte_vector& buffer)
     return read_wkb_internal<T>(buffer, index, order);
 };
 
-static inline wkb::geometry read_wkb(const byte_vector&buffer)
+/**
+ * @brief Read WKB into a variant geometry struct
+ * 
+ * @param buffer vector of bytes
+ * @return wkb::geometry geometry struct containing the parsed WKB values.
+ */
+static inline wkb::wkb_geometry read_wkb(const byte_vector&buffer)
 {
     if (buffer.size() < 5) {
-        
-        throw std::runtime_error(
-            "buffer reached end before encountering WKB\n\tdebug: [" +
-            std::string(buffer.begin(), buffer.end()) + "]"
-        );
+        throw std::runtime_error("buffer reached end before encountering WKB");
     }
 
     int index = 0;
@@ -269,36 +174,21 @@ static inline wkb::geometry read_wkb(const byte_vector&buffer)
     uint32_t type;
     copy_from(buffer, index, type, order);
 
-    wkb::geometry g;
-    g.type = type;
+    wkb_geometry g;
     switch(type) {
-        case 1:
-            g.data = read_wkb_internal<point>(buffer, index, order);
-            break;
-        case 2:
-            g.data = read_wkb_internal<linestring>(buffer, index, order);
-            break;
-        case 3:
-            g.data = read_wkb_internal<polygon>(buffer, index, order);
-            break;
-        case 4:
-            g.data = read_wkb_internal<multipoint>(buffer, index, order);
-            break;
-        case 5:
-            g.data = read_wkb_internal<multilinestring>(buffer, index, order);
-            break;
-        case 6:
-            g.data = read_wkb_internal<multipolygon>(buffer, index, order);
-            break;
-        default:
-            g.data = point{std::nan("0"), std::nan("0")};
-            break;
+        case 1:  g = read_wkb_internal<wkb_point>(buffer, index, order); break;
+        case 2:  g = read_wkb_internal<wkb_linestring>(buffer, index, order); break;
+        case 3:  g = read_wkb_internal<wkb_polygon>(buffer, index, order); break;
+        case 4:  g = read_wkb_internal<wkb_multipoint>(buffer, index, order); break;
+        case 5:  g = read_wkb_internal<wkb_multilinestring>(buffer, index, order); break;
+        case 6:  g = read_wkb_internal<wkb_multipolygon>(buffer, index, order); break;
+        default: g = wkb_point{std::nan("0"), std::nan("0")}; break;
     }
 
-    return std::move(g);
+    return g;
 }
 
 } // namespace wkb
 } // namespace geopackage
 
-#endif // NGEN_GEOPACKAGE_WKB_POD_H
+#endif // NGEN_GEOPACKAGE_WKB_READER_H
