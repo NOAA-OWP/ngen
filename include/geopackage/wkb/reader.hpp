@@ -113,6 +113,21 @@ inline READ_WKB_INTERNAL_SIG(geojson::polygon_t)
     return polygon;
 }
 
+template<typename T>
+inline T read_multi_wkb_internal(const byte_vector& buffer, int& index, uint32_t expected_type) {
+    const byte_t new_order = buffer[index];
+    index++;
+
+    uint32_t type;
+    copy_from(buffer, index, type, new_order);
+
+    if (type != expected_type) {
+        throw std::runtime_error("expected type " + std::to_string(expected_type) + ", but found type: " + std::to_string(type));
+    }
+
+    return read_wkb_internal<T>(buffer, index, new_order);
+};
+
 template<>
 inline READ_WKB_INTERNAL_SIG(geojson::multipoint_t)
 {
@@ -121,8 +136,9 @@ inline READ_WKB_INTERNAL_SIG(geojson::multipoint_t)
 
     geojson::multipoint_t mp;
     mp.resize(count);
+
     for (auto& point : mp) {
-        point = read_wkb_internal<geojson::coordinate_t>(buffer, index, order);
+        point = read_multi_wkb_internal<geojson::coordinate_t>(buffer, index, 1);
     }
 
     return mp;
@@ -137,8 +153,7 @@ inline READ_WKB_INTERNAL_SIG(geojson::multilinestring_t)
     geojson::multilinestring_t ml;
     ml.resize(count);
     for (auto& line : ml) {
-        auto l = read_wkb_internal<geojson::linestring_t>(buffer, index, order);
-        
+        line = read_multi_wkb_internal<geojson::linestring_t>(buffer, index, 2);
     }
 
     return ml;
@@ -153,7 +168,7 @@ inline READ_WKB_INTERNAL_SIG(geojson::multipolygon_t)
     geojson::multipolygon_t mpl;
     mpl.resize(count);
     for (auto& polygon : mpl) {
-        polygon = read_wkb_internal<geojson::polygon_t>(buffer, index, order);
+        polygon = read_multi_wkb_internal<geojson::polygon_t>(buffer, index, 3);
     }
 
     return mpl;
