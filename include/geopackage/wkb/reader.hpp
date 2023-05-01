@@ -8,27 +8,14 @@
 #include <cmath>
 
 #include <boost/endian.hpp>
-#include <boost/variant.hpp>
+
+#include "JSONGeometry.hpp"
 
 namespace geopackage {
 namespace wkb {
 
 using byte_t = uint8_t;
 using byte_vector = std::vector<byte_t>;
-struct wkb_point           { double                      x, y;     };
-struct wkb_linestring      { std::vector<wkb_point>      points;   };
-struct wkb_polygon         { std::vector<wkb_linestring> rings;    };
-struct wkb_multipoint      { std::vector<wkb_point>      points;   };
-struct wkb_multilinestring { std::vector<wkb_linestring> lines;    };
-struct wkb_multipolygon    { std::vector<wkb_polygon>    polygons; };
-using wkb_geometry = boost::variant<
-    wkb_point,
-    wkb_linestring,
-    wkb_polygon,
-    wkb_multipoint,
-    wkb_multilinestring,
-    wkb_multipolygon
->;
 
 /**
  * @brief
@@ -70,59 +57,106 @@ inline void copy_from(byte_vector src, T& index, S& dst, uint8_t order)
 template<typename T>
 inline T read_wkb_internal(const byte_vector& buffer, int& index, uint8_t order);
 
-namespace {
-template<typename output_t, typename child_t>
-inline output_t read_wkb_compound_internal(const byte_vector& buffer, int& index, uint8_t order)
-{
-    uint32_t count;
-    copy_from(buffer, index, count, order);
-    std::vector<child_t> children(count);
-    for (auto& child : children) {
-        child = read_wkb_internal<child_t>(buffer, index, order);
-    }
-    return output_t{children};
-}
-} // anonymous namespace
-
 #define READ_WKB_INTERNAL_SIG(output_t) output_t read_wkb_internal<output_t>(const byte_vector& buffer, int& index, uint8_t order)
 
 template<>
-inline READ_WKB_INTERNAL_SIG(wkb_point)
+inline READ_WKB_INTERNAL_SIG(geojson::coordinate_t)
 {
     double x, y;
     copy_from(buffer, index, x, order);
     copy_from(buffer, index, y, order);
-    return wkb_point{x, y};
+    return geojson::coordinate_t{x, y};
 };
 
 template<>
-inline READ_WKB_INTERNAL_SIG(wkb_linestring)
+inline READ_WKB_INTERNAL_SIG(geojson::linestring_t)
 {
-    return read_wkb_compound_internal<wkb_linestring, wkb_point>(buffer, index, order);
+    uint32_t count;
+    copy_from(buffer, index, count, order);
+
+    geojson::linestring_t linestring;
+    linestring.resize(count);
+
+    for (auto& child : linestring) {
+        child = read_wkb_internal<geojson::coordinate_t>(buffer, index, order);
+    }
+
+    return linestring;
 }
 
 template<>
-inline READ_WKB_INTERNAL_SIG(wkb_polygon)
+inline READ_WKB_INTERNAL_SIG(geojson::polygon_t)
 {
-    return read_wkb_compound_internal<wkb_polygon, wkb_linestring>(buffer, index, order);
+    uint32_t count;
+    copy_from(buffer, index, count, order);
+
+    geojson::polygon_t polygon;
+    
+    if (count > 1) {
+        polygon.inners().resize(count - 1);
+    }
+
+    auto outer = read_wkb_internal<geojson::linestring_t>(buffer, index, order);
+    polygon.outer().reserve(outer.size());
+    for (auto& p : outer) {
+        polygon.outer().push_back(p);
+    }
+
+    for (uint32_t i = 1; i < count; i++) {
+        auto inner = read_wkb_internal<geojson::linestring_t>(buffer, index, order);
+        polygon.inners().at(i).reserve(inner.size());
+        for (auto& p : inner) {
+            polygon.inners().at(i).push_back(p);
+        }
+    }
+
+    return polygon;
 }
 
 template<>
-inline READ_WKB_INTERNAL_SIG(wkb_multipoint)
+inline READ_WKB_INTERNAL_SIG(geojson::multipoint_t)
 {
-    return read_wkb_compound_internal<wkb_multipoint, wkb_point>(buffer, index, order);
+    uint32_t count;
+    copy_from(buffer, index, count, order);
+
+    geojson::multipoint_t mp;
+    mp.resize(count);
+    for (auto& point : mp) {
+        point = read_wkb_internal<geojson::coordinate_t>(buffer, index, order);
+    }
+
+    return mp;
 }
 
 template<>
-inline READ_WKB_INTERNAL_SIG(wkb_multilinestring)
+inline READ_WKB_INTERNAL_SIG(geojson::multilinestring_t)
 {
-    return read_wkb_compound_internal<wkb_multilinestring, wkb_linestring>(buffer, index, order);
+    uint32_t count;
+    copy_from(buffer, index, count, order);
+
+    geojson::multilinestring_t ml;
+    ml.resize(count);
+    for (auto& line : ml) {
+        auto l = read_wkb_internal<geojson::linestring_t>(buffer, index, order);
+        
+    }
+
+    return ml;
 }
 
 template<>
-inline READ_WKB_INTERNAL_SIG(wkb_multipolygon)
+inline READ_WKB_INTERNAL_SIG(geojson::multipolygon_t)
 {
-    return read_wkb_compound_internal<wkb_multipolygon, wkb_polygon>(buffer, index, order);
+    uint32_t count;
+    copy_from(buffer, index, count, order);
+
+    geojson::multipolygon_t mpl;
+    mpl.resize(count);
+    for (auto& polygon : mpl) {
+        polygon = read_wkb_internal<geojson::polygon_t>(buffer, index, order);
+    }
+
+    return mpl;
 }
 
 #undef READ_WKB_INTERNAL_SIG
@@ -161,7 +195,7 @@ static inline T read_known_wkb(const byte_vector& buffer)
  * @param buffer vector of bytes
  * @return wkb::geometry geometry struct containing the parsed WKB values.
  */
-static inline wkb::wkb_geometry read_wkb(const byte_vector&buffer)
+static inline geojson::geometry read_wkb(const byte_vector&buffer)
 {
     if (buffer.size() < 5) {
         throw std::runtime_error("buffer reached end before encountering WKB");
@@ -174,15 +208,14 @@ static inline wkb::wkb_geometry read_wkb(const byte_vector&buffer)
     uint32_t type;
     copy_from(buffer, index, type, order);
 
-    wkb_geometry g;
+    geojson::geometry g = geojson::coordinate_t{std::nan("0"), std::nan("0")};
     switch(type) {
-        case 1:  g = read_wkb_internal<wkb_point>(buffer, index, order); break;
-        case 2:  g = read_wkb_internal<wkb_linestring>(buffer, index, order); break;
-        case 3:  g = read_wkb_internal<wkb_polygon>(buffer, index, order); break;
-        case 4:  g = read_wkb_internal<wkb_multipoint>(buffer, index, order); break;
-        case 5:  g = read_wkb_internal<wkb_multilinestring>(buffer, index, order); break;
-        case 6:  g = read_wkb_internal<wkb_multipolygon>(buffer, index, order); break;
-        default: g = wkb_point{std::nan("0"), std::nan("0")}; break;
+        case 1:  g = read_wkb_internal<geojson::coordinate_t>(buffer, index, order); break;
+        case 2:  g = read_wkb_internal<geojson::linestring_t>(buffer, index, order); break;
+        case 3:  g = read_wkb_internal<geojson::polygon_t>(buffer, index, order); break;
+        case 4:  g = read_wkb_internal<geojson::multipoint_t>(buffer, index, order); break;
+        case 5:  g = read_wkb_internal<geojson::multilinestring_t>(buffer, index, order); break;
+        case 6:  g = read_wkb_internal<geojson::multipolygon_t>(buffer, index, order); break;
     }
 
     return g;
