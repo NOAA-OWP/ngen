@@ -1,6 +1,4 @@
-#include "gtest/gtest.h"
 #include <gtest/gtest.h>
-#include <stdexcept>
 
 #include "SQLite.hpp"
 #include "FileChecker.h"
