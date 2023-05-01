@@ -113,6 +113,8 @@ endif()
 
 find_package(Boost 1.72.0 REQUIRED)
 
+find_package(SQLite3 REQUIRED) # required for now
+
 # UDUNITS
 # Since UDUNITS is currently not really optional (yet) let's make it default to on...
 if (NOT (DEFINED UDUNITS_ACTIVE))
