@@ -1,12 +1,10 @@
 #ifndef NGEN_GEOPACKAGE_SQLITE_H
 #define NGEN_GEOPACKAGE_SQLITE_H
 
-
-#include <algorithm>
-#include <string>
-#include <vector>
 #include <memory>
 #include <stdexcept>
+#include <vector>
+
 #include <sqlite3.h>
 
 namespace geopackage {
@@ -45,7 +43,7 @@ using stmt_t = std::shared_ptr<sqlite3_stmt>;
  * @param code sqlite3 result code
  * @return std::runtime_error
  */
-static inline std::runtime_error sqlite_error(const std::string& f, int code)
+inline std::runtime_error sqlite_error(const std::string& f, int code)
 {
     std::string errmsg = f + " returned code " + std::to_string(code);
     return std::runtime_error(errmsg);
@@ -94,121 +92,6 @@ class sqlite_iter
     T get(const std::string&) const;
 };
 
-inline sqlite_iter::sqlite_iter(stmt_t stmt)
-  : stmt(stmt)
-{
-    this->column_count = sqlite3_column_count(this->ptr());
-    this->column_names = std::vector<std::string>();
-    this->column_names.reserve(this->column_count);
-    this->column_types = std::vector<int>();
-    this->column_types.reserve(this->column_count);
-
-    for (int i = 0; i < this->column_count; i++) {
-        this->column_names.push_back(sqlite3_column_name(this->ptr(), i));
-        this->column_types.push_back(sqlite3_column_type(this->ptr(), i));
-    }
-};
-
-inline sqlite3_stmt* sqlite_iter::ptr() const noexcept
-{
-    return this->stmt.get();
-}
-
-inline void sqlite_iter::handle_get_index(int col) const
-{
-    if (this->done()) {
-        throw sqlite_get_done_error;
-    }
-
-    if (this->current_row() == -1) {
-        throw sqlite_get_notstarted_error;
-    }
-
-    if (col < 0 || col >= this->column_count) {
-        throw std::out_of_range(
-            "column " + std::to_string(col) + " out of range of " + std::to_string(this->column_count) + " columns"
-        );
-    }
-}
-
-inline bool sqlite_iter::done() const noexcept
-{
-    return this->iteration_finished;
-}
-
-inline sqlite_iter& sqlite_iter::next()
-{
-    if (!this->done()) {
-        const int returncode = sqlite3_step(this->ptr());
-        if (returncode == SQLITE_DONE) {
-            this->iteration_finished = true;
-        }
-        this->iteration_step++;
-    }
-
-    return *this;
-}
-
-inline sqlite_iter& sqlite_iter::restart()
-{
-    sqlite3_reset(this->ptr());
-    this->iteration_step = -1;
-    this->iteration_finished = false;
-    return *this;
-}
-
-inline void sqlite_iter::close()
-{
-    this->~sqlite_iter();
-}
-
-inline int sqlite_iter::current_row() const noexcept
-{
-    return this->iteration_step;
-}
-
-inline int sqlite_iter::num_columns() const noexcept
-{
-    return this->column_count;
-}
-
-inline int sqlite_iter::column_index(const std::string& name) const noexcept
-{
-    const ptrdiff_t pos =
-      std::distance(this->column_names.begin(), std::find(this->column_names.begin(), this->column_names.end(), name));
-
-    return pos >= this->column_names.size() ? -1 : pos;
-}
-
-template<>
-inline std::vector<uint8_t> sqlite_iter::get<std::vector<uint8_t>>(int col) const
-{
-    this->handle_get_index(col);
-    return *reinterpret_cast<const std::vector<uint8_t>*>(sqlite3_column_blob(this->ptr(), col));
-}
-
-template<>
-inline double sqlite_iter::get<double>(int col) const
-{
-    this->handle_get_index(col);
-    return sqlite3_column_double(this->ptr(), col);
-}
-
-template<>
-inline int sqlite_iter::get<int>(int col) const
-{
-    this->handle_get_index(col);
-    return sqlite3_column_int(this->ptr(), col);
-}
-
-template<>
-inline std::string sqlite_iter::get<std::string>(int col) const
-{
-    this->handle_get_index(col);
-    // TODO: this won't work with non-ASCII text
-    return std::string(reinterpret_cast<const char*>(sqlite3_column_text(this->ptr(), col)));
-}
-
 template<typename T>
 inline T sqlite_iter::get(const std::string& name) const
 {
@@ -217,7 +100,7 @@ inline T sqlite_iter::get(const std::string& name) const
 }
 
 /**
- * @brief Wrapper around SQLite3 Databases
+ * @brief Wrapper around a SQLite3 database
  */
 class sqlite
 {
@@ -272,88 +155,19 @@ class sqlite
     /**
      * Query the SQLite Database and get the result
      * @param statement String query
-     * @return read-only SQLite row iterator (see: [sqlite_iter])
+     * @return sqlite_iter SQLite row iterator
      */
     sqlite_iter query(const std::string& statement);
 
     /**
-     * @brief TODO!!!
-     *
-     * @param statement
-     * @param params
-     * @return sqlite_iter*
+     * Query the SQLite Database with a bound statement and get the result
+     * @param statement String query with parameters
+     * @param params parameters to bind to statement
+     * @return sqlite_iter SQLite row iterator
      */
     template<typename... T>
     sqlite_iter query(const std::string& statement, T const&... params);
 };
-
-inline sqlite::sqlite(const std::string& path)
-{
-    sqlite3* conn;
-    int      code = sqlite3_open_v2(path.c_str(), &conn, SQLITE_OPEN_READONLY, NULL);
-    if (code != SQLITE_OK) {
-        throw sqlite_error("sqlite3_open_v2", code);
-    }
-    this->conn = sqlite_t(conn);
-}
-
-inline sqlite::sqlite(sqlite& db)
-{
-    this->conn = std::move(db.conn);
-    this->stmt = db.stmt;
-}
-
-inline sqlite& sqlite::operator=(sqlite& db)
-{
-    this->conn = std::move(db.conn);
-    this->stmt = db.stmt;
-    return *this;
-}
-
-inline sqlite::sqlite(sqlite&& db)
-{
-    this->conn = std::move(db.conn);
-    this->stmt = db.stmt;
-}
-
-inline sqlite& sqlite::operator=(sqlite&& db)
-{
-    this->conn = std::move(db.conn);
-    this->stmt = db.stmt;
-    return *this;
-}
-
-inline sqlite3* sqlite::connection() const noexcept
-{
-    return this->conn.get();
-}
-
-inline bool sqlite::has_table(const std::string& table) noexcept
-{
-    auto q = this->query("SELECT 1 from sqlite_master WHERE type='table' AND name = ?", table);
-    q.next();
-    if (q.done()) {
-        return false;
-    } else {
-        return static_cast<bool>(q.get<int>(0));
-    }
-};
-
-inline sqlite_iter sqlite::query(const std::string& statement)
-{
-    sqlite3_stmt* stmt;
-    const auto    cstmt = statement.c_str();
-    const int     code  = sqlite3_prepare_v2(this->connection(), cstmt, statement.length() + 1, &stmt, NULL);
-
-    if (code != SQLITE_OK) {
-        // something happened, can probably switch on result codes
-        // https://www.sqlite.org/rescode.html
-        throw sqlite_error("sqlite3_prepare_v2", code);
-    }
-
-    this->stmt        = stmt_t(stmt, sqlite_deleter{});
-    return sqlite_iter(this->stmt);
-}
 
 template<typename... T>
 inline sqlite_iter sqlite::query(const std::string& statement, T const&... params)

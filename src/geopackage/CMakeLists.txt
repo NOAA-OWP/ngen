@@ -3,6 +3,8 @@ add_library(geopackage STATIC geometry.cpp
                               properties.cpp
                               feature.cpp
                               read.cpp
+                              sqlite/iterator.cpp
+                              sqlite/database.cpp
 )
 add_library(NGen::geopackage ALIAS geopackage)
 target_include_directories(geopackage PUBLIC ${PROJECT_SOURCE_DIR}/include/geopackage)
