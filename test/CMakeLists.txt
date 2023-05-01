@@ -86,8 +86,10 @@ add_test(test_geojson
 
 ########################## GeoPackage Unit Tests
 add_test(test_geopackage
-        1
+        2
         geopackage/WKB_Test.cpp
+        geopackage/SQLite_Test.cpp
+        NGen::core
         NGen::geopackage)
 
 ########################## Realization Config Unit Tests

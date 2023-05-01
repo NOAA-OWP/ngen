@@ -1,4 +1,3 @@
-#include "JSONGeometry.hpp"
 #include <gtest/gtest.h>
 
 #include <wkb/reader.hpp>
@@ -40,6 +39,7 @@ class WKB_Test : public ::testing::Test
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x44, 0x40
         };
         
+        // POLYGON((10.689 -25.092, 34.595 -20.170, 38.814 -35.639, 13.502 -39.155, 10.689 -25.092))
         this->wkb["polygon"] = {
             0x01,
             0x03, 0x00, 0x00, 0x00,

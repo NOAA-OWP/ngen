@@ -11,6 +11,14 @@
 
 namespace geopackage {
 
+const auto sqlite_get_notstarted_error = std::runtime_error(
+    "sqlite iteration is has not started, get() is not callable (call sqlite_iter::next() before)"
+);
+
+const auto sqlite_get_done_error = std::runtime_error(
+    "sqlite iteration is done, get() is not callable"
+);
+
 /**
  * @brief Deleter used to provide smart pointer support for sqlite3 structs.
  */
@@ -64,9 +72,11 @@ class sqlite_iter
     // returns the raw pointer to the sqlite statement
     sqlite3_stmt* ptr() const noexcept;
 
+    // checks if int is out of range, and throws error if so
+    void handle_get_index(int);
+
   public:
     sqlite_iter(stmt_t stmt);
-    ~sqlite_iter();
     bool                            done() const noexcept;
     sqlite_iter&                    next();
     sqlite_iter&                    restart();
@@ -78,10 +88,10 @@ class sqlite_iter
     const std::vector<int>&         types() const noexcept { return this->column_types; }
 
     template<typename T>
-    T get(int col) const;
+    T get(int col);
 
     template<typename T>
-    T get(const std::string& name) const;
+    T get(const std::string&);
 };
 
 inline sqlite_iter::sqlite_iter(stmt_t stmt)
@@ -99,14 +109,26 @@ inline sqlite_iter::sqlite_iter(stmt_t stmt)
     }
 };
 
-inline sqlite_iter::~sqlite_iter()
-{
-    this->stmt.reset();
-}
-
 inline sqlite3_stmt* sqlite_iter::ptr() const noexcept
 {
     return this->stmt.get();
+}
+
+inline void sqlite_iter::handle_get_index(int col)
+{
+    if (this->done()) {
+        throw sqlite_get_done_error;
+    }
+
+    if (this->current_row() == -1) {
+        throw sqlite_get_notstarted_error;
+    }
+
+    if (col < 0 || col >= this->column_count) {
+        throw std::out_of_range(
+            "column " + std::to_string(col) + " out of range of " + std::to_string(this->column_count) + " columns"
+        );
+    }
 }
 
 inline bool sqlite_iter::done() const noexcept
@@ -131,6 +153,7 @@ inline sqlite_iter& sqlite_iter::restart()
 {
     sqlite3_reset(this->ptr());
     this->iteration_step = -1;
+    this->iteration_finished = false;
     return *this;
 }
 
@@ -158,32 +181,36 @@ inline int sqlite_iter::column_index(const std::string& name) const noexcept
 }
 
 template<>
-inline std::vector<uint8_t> sqlite_iter::get<std::vector<uint8_t>>(int col) const
+inline std::vector<uint8_t> sqlite_iter::get<std::vector<uint8_t>>(int col)
 {
+    this->handle_get_index(col);
     return *reinterpret_cast<const std::vector<uint8_t>*>(sqlite3_column_blob(this->ptr(), col));
 }
 
 template<>
-inline double sqlite_iter::get<double>(int col) const
+inline double sqlite_iter::get<double>(int col)
 {
+    this->handle_get_index(col);
     return sqlite3_column_double(this->ptr(), col);
 }
 
 template<>
-inline int sqlite_iter::get<int>(int col) const
+inline int sqlite_iter::get<int>(int col)
 {
+    this->handle_get_index(col);
     return sqlite3_column_int(this->ptr(), col);
 }
 
 template<>
-inline std::string sqlite_iter::get<std::string>(int col) const
+inline std::string sqlite_iter::get<std::string>(int col)
 {
+    this->handle_get_index(col);
     // TODO: this won't work with non-ASCII text
     return std::string(reinterpret_cast<const char*>(sqlite3_column_text(this->ptr(), col)));
 }
 
 template<typename T>
-inline T sqlite_iter::get(const std::string& name) const
+inline T sqlite_iter::get(const std::string& name)
 {
     const int index = this->column_index(name);
     return this->get<T>(index);
@@ -225,11 +252,6 @@ class sqlite
      * @return sqlite& reference to sqlite3 database
      */
     sqlite& operator=(sqlite&& db);
-
-    /**
-     * @brief Destroy the sqlite object
-     */
-    ~sqlite();
 
     /**
      * @brief Return the originating sqlite3 database pointer
@@ -301,12 +323,6 @@ inline sqlite& sqlite::operator=(sqlite&& db)
     return *this;
 }
 
-inline sqlite::~sqlite()
-{
-    this->stmt.reset();
-    this->conn.reset();
-}
-
 inline sqlite3* sqlite::connection() const noexcept
 {
     return this->conn.get();
@@ -316,7 +332,11 @@ inline bool sqlite::has_table(const std::string& table) noexcept
 {
     auto q = this->query("SELECT 1 from sqlite_master WHERE type='table' AND name = ?", table);
     q.next();
-    return static_cast<bool>(q.get<int>(0));
+    if (q.done()) {
+        return false;
+    } else {
+        return static_cast<bool>(q.get<int>(0));
+    }
 };
 
 inline sqlite_iter sqlite::query(const std::string& statement)
