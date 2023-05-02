@@ -1,11 +1,12 @@
 #include "GeoPackage.hpp"
 
+#include <boost/geometry/core/cs.hpp>
 #include <boost/geometry/srs/transformation.hpp>
 #include <boost/geometry/srs/epsg.hpp>
+#include <boost/variant/detail/apply_visitor_delayed.hpp>
 
+#include "EndianCopy.hpp"
 #include "WKB.hpp"
-
-namespace bsrs = boost::geometry::srs;
 
 geojson::geometry geopackage::build_geometry(
     const sqlite_iter& row,
@@ -14,19 +15,16 @@ geojson::geometry geopackage::build_geometry(
 )
 {
     const std::vector<uint8_t> geometry_blob = row.get<std::vector<uint8_t>>(geom_col);
-    int index = 0;
-    if (geometry_blob[0] != 'G' && geometry_blob[1] != 'P') {
+    if (geometry_blob[0] != 'G' || geometry_blob[1] != 'P') {
         throw std::runtime_error("expected geopackage WKB, but found invalid format instead");
     }
-    index += 2;
-    
-    // skip version
-    index++;
+
+    int index = 3; // skip version
 
     // flags
     const bool is_extended  =  geometry_blob[index] & 0x00100000;
     const bool is_empty     =  geometry_blob[index] & 0x00010000;
-    const uint8_t indicator = (geometry_blob[index] & 0x00001110) >> 1;
+    const uint8_t indicator = (geometry_blob[index] >> 1) & 0x00000111;
     const uint8_t endian    =  geometry_blob[index] & 0x00000001;
     index++;
 
@@ -52,22 +50,13 @@ geojson::geometry geopackage::build_geometry(
         }
     }
 
-    const std::vector<uint8_t> geometry_data(geometry_blob.begin() + index, geometry_blob.end());
-    geojson::geometry geometry = wkb::read_wkb(geometry_data);
-
-    if (srs_id != 4326) {
+    if (!is_empty) {
+        const std::vector<uint8_t> geometry_data(geometry_blob.begin() + index, geometry_blob.end());
+        auto wkb_geometry = wkb::read(geometry_data);
+        wkb::wgs84 pvisitor{srs_id};
+        geojson::geometry geometry = boost::apply_visitor(pvisitor, wkb_geometry);
         return geometry;
     } else {
-        geojson::geometry projected;
-
-        // project coordinates from whatever they are to 4326
-        boost::geometry::srs::transformation<> tr{
-            bsrs::epsg(srs_id),
-            bsrs::epsg(4326)
-        };
-
-        tr.forward(geometry, projected);
-
-        return projected;
+        return geojson::geometry{};
     }
 }

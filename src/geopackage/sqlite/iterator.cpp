@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "SQLite.hpp"
 
 using namespace geopackage;
@@ -92,7 +94,10 @@ template<>
 std::vector<uint8_t> sqlite_iter::get<std::vector<uint8_t>>(int col) const
 {
     this->handle_get_index(col);
-    return *reinterpret_cast<const std::vector<uint8_t>*>(sqlite3_column_blob(this->ptr(), col));
+    int size = sqlite3_column_bytes(this->ptr(), col);
+    const uint8_t* ptr = static_cast<const uint8_t*>(sqlite3_column_blob(this->ptr(), col));
+    std::vector<uint8_t> blob(ptr, ptr+size);
+    return blob;
 }
 
 template<>
@@ -114,5 +119,7 @@ std::string sqlite_iter::get<std::string>(int col) const
 {
     this->handle_get_index(col);
     // TODO: this won't work with non-ASCII text
-    return std::string(reinterpret_cast<const char*>(sqlite3_column_text(this->ptr(), col)));
+    int size = sqlite3_column_bytes(this->ptr(), col);
+    const unsigned char* ptr = sqlite3_column_text(this->ptr(), col);
+    return std::string(ptr, ptr+size);
 }

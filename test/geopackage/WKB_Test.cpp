@@ -1,6 +1,7 @@
+#include <boost/geometry/core/cs.hpp>
 #include <gtest/gtest.h>
 
-#include <wkb/reader.hpp>
+#include <WKB.hpp>
 
 using namespace geopackage;
 
@@ -12,14 +13,14 @@ class WKB_Test : public ::testing::Test
     ~WKB_Test() override {}
 
     void SetUp() override {
-        this->wkb["point"] = {
+        this->wkb_bytes["point"] = {
             0x01,
             0x01, 0x00, 0x00, 0x00,
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40,
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x10, 0x40
         };
 
-        this->wkb["point_big"] = {
+        this->wkb_bytes["point_big"] = {
             0x00,
             0x00, 0x00, 0x00, 0x01,
             0x40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -27,7 +28,7 @@ class WKB_Test : public ::testing::Test
         };
 
         // LINESTRING(30 10, 10 30, 40 40)
-        this->wkb["linestring"] = {
+        this->wkb_bytes["linestring"] = {
             0x01,
             0x02, 0x00, 0x00, 0x00,
             0x03, 0x00, 0x00, 0x00,
@@ -40,7 +41,7 @@ class WKB_Test : public ::testing::Test
         };
         
         // POLYGON((10.689 -25.092, 34.595 -20.170, 38.814 -35.639, 13.502 -39.155, 10.689 -25.092))
-        this->wkb["polygon"] = {
+        this->wkb_bytes["polygon"] = {
             0x01,
             0x03, 0x00, 0x00, 0x00,
             0x01, 0x00, 0x00, 0x00,
@@ -58,7 +59,7 @@ class WKB_Test : public ::testing::Test
         };
 
         // MULTIPOINT(10 40,40 30,20 20,30 10)
-        this->wkb["multipoint"] = {
+        this->wkb_bytes["multipoint"] = {
             0x01,
             0x04, 0x00, 0x00, 0x00,
             0x04, 0x00, 0x00, 0x00,
@@ -81,7 +82,7 @@ class WKB_Test : public ::testing::Test
         };
 
         // MULTILINESTRING((10 10,20 20,10 40),(40 40,30 30,40 20,30 10))
-        this->wkb["multilinestring"] = {
+        this->wkb_bytes["multilinestring"] = {
             0x01,
             0x05, 0x00, 0x00, 0x00,
             0x02, 0x00, 0x00, 0x00,
@@ -110,13 +111,13 @@ class WKB_Test : public ::testing::Test
 
     void TearDown() override {}
     
-    std::map<std::string, std::vector<wkb::byte_t>> wkb;
+    std::map<std::string, std::vector<uint8_t>> wkb_bytes;
 };
 
 TEST_F(WKB_Test, wkb_point_test) // also tests endianness
-{
-    const auto geom_big    = wkb::read_known_wkb<geojson::coordinate_t>(this->wkb["point_big"]);
-    const auto geom_little = wkb::read_known_wkb<geojson::coordinate_t>(this->wkb["point"]);
+{  
+    const auto geom_big    = boost::get<wkb::point_t>(wkb::read(this->wkb_bytes["point_big"]));
+    const auto geom_little = boost::get<wkb::point_t>(wkb::read(this->wkb_bytes["point"]));
     EXPECT_NEAR(geom_big.get<0>(), geom_little.get<0>(), 0.000001);
     EXPECT_NEAR(geom_big.get<1>(), geom_little.get<1>(), 0.000001);
     EXPECT_NEAR(geom_big.get<0>(), 2.0, 0.000001);
@@ -127,10 +128,10 @@ TEST_F(WKB_Test, wkb_point_test) // also tests endianness
 
 TEST_F(WKB_Test, wkb_linestring_test)
 {
-    const geojson::geometry geom = wkb::read_wkb(this->wkb["linestring"]);
+    const wkb::geometry geom = wkb::read(this->wkb_bytes["linestring"]);
     EXPECT_EQ(geom.which() + 1, 2);
 
-    const geojson::linestring_t& line = boost::get<geojson::linestring_t>(geom);
+    const wkb::linestring_t& line = boost::get<wkb::linestring_t>(geom);
     const std::vector<std::pair<double, double>> expected_coordinates = {
         {30, 10}, {10, 30}, {40, 40}
     };
@@ -143,10 +144,10 @@ TEST_F(WKB_Test, wkb_linestring_test)
 
 TEST_F(WKB_Test, wkb_polygon_test)
 {    
-    const geojson::geometry geom = wkb::read_wkb(this->wkb["polygon"]);
+    const wkb::geometry geom = wkb::read(this->wkb_bytes["polygon"]);
     EXPECT_EQ(geom.which() + 1, 3); // +1 since variant.which() is 0-based
 
-    const geojson::polygon_t& poly = boost::get<geojson::polygon_t>(geom);
+    const wkb::polygon_t& poly = boost::get<wkb::polygon_t>(geom);
     const std::vector<std::pair<double, double>> expected_coordinates = {
         {10.689, -25.092},
         {34.595, -20.170},
@@ -163,10 +164,10 @@ TEST_F(WKB_Test, wkb_polygon_test)
 
 TEST_F(WKB_Test, wkb_multipoint_test)
 {
-    const geojson::geometry geom = wkb::read_wkb(this->wkb["multipoint"]);
+    const wkb::geometry geom = wkb::read(this->wkb_bytes["multipoint"]);
     EXPECT_EQ(geom.which() + 1, 4);
 
-    const geojson::multipoint_t& mp = boost::get<geojson::multipoint_t>(geom);
+    const wkb::multipoint_t& mp = boost::get<wkb::multipoint_t>(geom);
     const std::vector<std::pair<double, double>> expected_coordinates = {
         {10, 40}, {40, 30}, {20, 20}, {30, 10}
     };
@@ -179,10 +180,10 @@ TEST_F(WKB_Test, wkb_multipoint_test)
 
 TEST_F(WKB_Test, wkb_multilinestring_test)
 {
-    const geojson::geometry geom = wkb::read_wkb(this->wkb["multilinestring"]);
+    const wkb::geometry geom = wkb::read(this->wkb_bytes["multilinestring"]);
     EXPECT_EQ(geom.which() + 1, 5);
 
-    const geojson::multilinestring_t& mp = boost::get<geojson::multilinestring_t>(geom);
+    const wkb::multilinestring_t& mp = boost::get<wkb::multilinestring_t>(geom);
     const std::vector<std::vector<std::pair<double, double>>> expected_coordinates = {
         { {10, 10}, {20, 20}, {10, 40} },
         { {40, 40}, {30, 30}, {40, 20}, {30, 10} }

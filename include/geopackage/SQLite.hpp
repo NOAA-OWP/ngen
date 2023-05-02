@@ -177,7 +177,8 @@ inline sqlite_iter sqlite::query(const std::string& statement, T const&... param
     const int     code  = sqlite3_prepare_v2(this->connection(), cstmt, statement.length() + 1, &stmt, NULL);
 
     if (code != SQLITE_OK) {
-        throw sqlite_error("sqlite3_prepare_v2", code);
+        
+        throw sqlite_error("[with statement: " + std::string(sqlite3_errmsg(this->conn.get()))  + "] " + "sqlite3_prepare_v2", code);
     }
 
     std::vector<std::string> binds{ { params... } };

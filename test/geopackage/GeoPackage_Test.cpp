@@ -1,3 +1,4 @@
+#include <boost/geometry/io/wkt/write.hpp>
 #include <gtest/gtest.h>
 
 #include "GeoPackage.hpp"
@@ -26,5 +27,5 @@ class GeoPackage_Test : public ::testing::Test
 
 TEST_F(GeoPackage_Test, geopackage_read_test)
 {
-    const auto gpkg = geopackage::read(this->path, "flowpaths");
+    const auto gpkg = geopackage::read(this->path, "flowpaths", {});
 }

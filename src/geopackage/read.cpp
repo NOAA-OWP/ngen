@@ -7,9 +7,10 @@ std::shared_ptr<geojson::FeatureCollection> geopackage::read(
 )
 {
     sqlite db(gpkg_path);
+
     // Check if layer exists
     if (!db.has_table(layer)) {
-        throw std::runtime_error("");
+        throw std::runtime_error("table " + layer + " does not exist");
     }
 
     // Layer exists, getting statement for it
@@ -42,34 +43,27 @@ std::shared_ptr<geojson::FeatureCollection> geopackage::read(
 
     // Get layer feature metadata (geometry column name + type)
     sqlite_iter query_get_layer_geom_meta = db.query("SELECT column_name, geometry_type_name FROM gpkg_geometry_columns WHERE table_name = ?", layer);
+    query_get_layer_geom_meta.next();
     const std::string layer_geometry_column = query_get_layer_geom_meta.get<std::string>(0);
     const std::string layer_geometry_type   = query_get_layer_geom_meta.get<std::string>(1);
 
-    sqlite_iter query_get_layer_data_meta = db.query("SELECT column_name FROM gpkg_data_columns WHERE table_name = ?", layer);
-    std::vector<std::string> layer_data_columns;
-    query_get_layer_data_meta.next();
-    while (!query_get_layer_data_meta.done()) {
-        layer_data_columns.push_back(query_get_layer_data_meta.get<std::string>(0));
-        query_get_layer_data_meta.next();
-    }
-
     // Get layer
-    sqlite_iter query_get_layer = db.query("SELECT * FROM " + layer + joined_ids + " ORDER BY id");
+    sqlite_iter query_get_layer = db.query("SELECT * FROM " + layer);
+    query_get_layer.next();
+
     std::vector<geojson::Feature> features;
     features.reserve(layer_feature_count);
-    query_get_layer.next();
     while(!query_get_layer.done()) {
-        features.push_back(build_feature(
+        geojson::Feature feature = build_feature(
             query_get_layer,
             layer_geometry_type,
             layer_geometry_column
-        ));
+        );
+    
+        features.emplace_back(feature);
+        query_get_layer.next();
     }
 
-    const auto fc = geojson::FeatureCollection(
-        std::move(features),
-        {min_x, min_y, max_x, max_y}
-    );
-
+    const auto fc = geojson::FeatureCollection(std::move(features), {min_x, min_y, max_x, max_y});
     return std::make_shared<geojson::FeatureCollection>(fc);
 }
