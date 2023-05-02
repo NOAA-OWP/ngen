@@ -46,6 +46,7 @@ sqlite3* sqlite::connection() const noexcept
 bool sqlite::has_table(const std::string& table) noexcept
 {
     auto q = this->query("SELECT 1 from sqlite_master WHERE type='table' AND name = ?", table);
+
     q.next();
     if (q.done()) {
         return false;
@@ -63,7 +64,7 @@ sqlite_iter sqlite::query(const std::string& statement)
     if (code != SQLITE_OK) {
         // something happened, can probably switch on result codes
         // https://www.sqlite.org/rescode.html
-        throw sqlite_error("sqlite3_prepare_v2", code);
+        throw sqlite_error("[with statement: " + statement + "] " + "sqlite3_prepare_v2", code);
     }
 
     this->stmt        = stmt_t(stmt, sqlite_deleter{});
