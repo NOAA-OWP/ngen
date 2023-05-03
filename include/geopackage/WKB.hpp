@@ -10,6 +10,9 @@ namespace bg = boost::geometry;
 
 namespace geopackage {
 
+/**
+ * WKB reader struct
+ */
 struct wkb {
     using point_t = bg::model::point<double, 2, bg::cs::cartesian>;
     using linestring_t = bg::model::linestring<point_t>;
@@ -32,7 +35,13 @@ struct wkb {
     struct wgs84;
 
     wkb() = delete;
-    static geometry read(const byte_vector&);
+
+    /**
+     * Read WKB from a given buffer
+     * @param[in] buffer byte vector buffer
+     * @return geometry wkb::geometry struct containing the geometry data from the buffer
+     */
+    static geometry read(const byte_vector& buffer);
 
   private:
     static point_t read_point(const byte_vector&, int&, uint8_t);
@@ -156,13 +165,6 @@ inline typename wkb::multipolygon_t wkb::read_multipolygon(const byte_vector& bu
 }
 
 
-/**
- * @brief Read WKB into a variant geometry struct
- * 
- * @tparam CoordinateSystem boost coordinate system (i.e. boost::geometry::cs::cartesian)
- * @param buffer buffer vector of bytes
- * @return g_geometry_t<CoordinateSystem> Variant geometry struct
- */
 inline typename wkb::geometry wkb::read(const byte_vector& buffer)
 {
     if (buffer.size() < 5) {
@@ -190,26 +192,21 @@ inline typename wkb::geometry wkb::read(const byte_vector& buffer)
     return g;
 }
 
-using namespace bg::srs;
-const auto epsg5070 = bg::srs::dpar::parameters<>(
-    dpar::proj_aea
-)(
-    bg::srs::dpar::ellps_grs80
-)(
-    bg::srs::dpar::towgs84, {0,0,0,0,0,0,0}
-)(
-    bg::srs::dpar::lat_0, 23
-)(
-    bg::srs::dpar::lon_0, -96
-)(
-    bg::srs::dpar::lat_1, 29.5
-)(
-    bg::srs::dpar::lat_2, 45.5
-)(
-    bg::srs::dpar::x_0, 0
-)(
-    bg::srs::dpar::y_0, 0
-);
+/**
+ * EPSG 5070 projection definition for use with boost::geometry.
+ * 
+ * @note this is required because boost 1.72.0 does not
+ *       have an EPSG definition for 5070 in boost::srs::epsg.
+ */
+const auto epsg5070 = bg::srs::dpar::parameters<>(bg::srs::dpar::proj_aea)
+                                                 (bg::srs::dpar::ellps_grs80)
+                                                 (bg::srs::dpar::towgs84, {0,0,0,0,0,0,0})
+                                                 (bg::srs::dpar::lat_0, 23)
+                                                 (bg::srs::dpar::lon_0, -96)
+                                                 (bg::srs::dpar::lat_1, 29.5)
+                                                 (bg::srs::dpar::lat_2, 45.5)
+                                                 (bg::srs::dpar::x_0, 0)
+                                                 (bg::srs::dpar::y_0, 0);
 
 struct wkb::wgs84 : public boost::static_visitor<geojson::geometry>
 {
