@@ -1,10 +1,5 @@
 #include "GeoPackage.hpp"
 
-#include <boost/geometry/core/cs.hpp>
-#include <boost/geometry/srs/transformation.hpp>
-#include <boost/geometry/srs/epsg.hpp>
-#include <boost/variant/detail/apply_visitor_delayed.hpp>
-
 #include "EndianCopy.hpp"
 #include "WKB.hpp"
 
