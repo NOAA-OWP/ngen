@@ -10,8 +10,8 @@
 
 geojson::geometry geopackage::build_geometry(
     const sqlite_iter& row,
-    const geojson::FeatureType geom_type,
-    const std::string& geom_col
+    const std::string& geom_col,
+    std::vector<double>& bounding_box
 )
 {
     const std::vector<uint8_t> geometry_blob = row.get<std::vector<uint8_t>>(geom_col);
@@ -32,15 +32,14 @@ geojson::geometry geopackage::build_geometry(
     uint32_t srs_id;
     utils::copy_from(geometry_blob, index, srs_id, endian);
 
-    std::vector<double> envelope; // may be unused
     if (indicator > 0 & indicator < 5) {
         // not an empty envelope
-
-        envelope.resize(4); // only 4, not supporting Z or M dims
-        utils::copy_from(geometry_blob, index, envelope[0], endian);
-        utils::copy_from(geometry_blob, index, envelope[1], endian);
-        utils::copy_from(geometry_blob, index, envelope[2], endian);
-        utils::copy_from(geometry_blob, index, envelope[3], endian);
+        bounding_box.clear();
+        bounding_box.resize(4); // only 4, not supporting Z or M dims
+        utils::copy_from(geometry_blob, index, bounding_box[0], endian); // min_x
+        utils::copy_from(geometry_blob, index, bounding_box[2], endian); // max_x
+        utils::copy_from(geometry_blob, index, bounding_box[1], endian); // min_y
+        utils::copy_from(geometry_blob, index, bounding_box[3], endian); // max_y
 
         // ensure `index` is at beginning of data
         if (indicator == 2 || indicator == 3) {

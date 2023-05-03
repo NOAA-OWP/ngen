@@ -1,35 +1,25 @@
 #include "GeoPackage.hpp"
 
-const geojson::FeatureType feature_type_map(const std::string& g)
-{
-    if (g == "POINT") return geojson::FeatureType::Point;
-    if (g == "LINESTRING") return geojson::FeatureType::LineString;
-    if (g == "POLYGON") return geojson::FeatureType::Polygon;
-    if (g == "MULTIPOINT") return geojson::FeatureType::MultiPoint;
-    if (g == "MULTILINESTRING") return geojson::FeatureType::MultiLineString;
-    if (g == "MULTIPOLYGON") return geojson::FeatureType::MultiPolygon;
-    return geojson::FeatureType::GeometryCollection;
-}
-
 geojson::Feature geopackage::build_feature(
   const sqlite_iter& row,
-  const std::string& geom_type,
   const std::string& geom_col
 )
 {
-    const auto type                  = feature_type_map(geom_type);
+    std::vector<double> bounding_box(4);
     const auto id                    = row.get<std::string>("id");
     geojson::PropertyMap properties  = std::move(build_properties(row, geom_col));
-    geojson::geometry geometry       = std::move(build_geometry(row, type, geom_col));
-    const auto geometry_bbox = bg::return_envelope<bg::model::box<geojson::coordinate_t>>(geometry);
-    const std::vector<double> bounding_box = {
-        geometry_bbox.min_corner().get<0>(),
-        geometry_bbox.min_corner().get<1>(),
-        geometry_bbox.max_corner().get<0>(),
-        geometry_bbox.max_corner().get<1>()
-    };
+    geojson::geometry geometry       = std::move(build_geometry(row, geom_col, bounding_box));
 
-    switch(type) {
+    const auto wkb_type = geojson::FeatureType(geometry.which() + 1);
+    if (wkb_type == geojson::FeatureType::Point) {
+        const auto& pt = boost::get<geojson::coordinate_t>(geometry);
+        bounding_box[0] = pt.get<0>();
+        bounding_box[1] = pt.get<1>();
+        bounding_box[2] = pt.get<0>();
+        bounding_box[3] = pt.get<1>();
+    }
+    
+    switch(wkb_type) {
         case geojson::FeatureType::Point:
             return std::make_shared<geojson::PointFeature>(geojson::PointFeature(
                 boost::get<geojson::coordinate_t>(geometry),

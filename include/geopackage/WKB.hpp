@@ -178,7 +178,7 @@ inline typename wkb::geometry wkb::read(const byte_vector& buffer)
     uint32_t type;
     utils::copy_from(buffer, index, type, order);
 
-    geometry g = point_t{std::nan("0"), std::nan("0")};
+    geometry g;
     switch(type) {
         case 1:  g = read_point(buffer, index, order); break;
         case 2:  g = read_linestring(buffer, index, order); break;
@@ -186,7 +186,9 @@ inline typename wkb::geometry wkb::read(const byte_vector& buffer)
         case 4:  g = read_multipoint(buffer, index, order); break;
         case 5:  g = read_multilinestring(buffer, index, order); break;
         case 6:  g = read_multipolygon(buffer, index, order); break;
+        default: g = point_t{std::nan("0"), std::nan("0")}; break;
     }
+
     return g;
 }
 
@@ -234,6 +236,10 @@ struct wkb::wgs84 : public boost::static_visitor<geojson::geometry>
 
     geojson::geometry operator()(point_t& g)
     {
+        if (this->srs == 4326) {
+            return geojson::coordinate_t(g.get<0>(), g.get<1>());
+        }
+
         geojson::coordinate_t h;
         this->tr->forward(g, h);
         return h;
@@ -242,35 +248,108 @@ struct wkb::wgs84 : public boost::static_visitor<geojson::geometry>
     geojson::geometry operator()(linestring_t& g)
     {
         geojson::linestring_t h;
-        this->tr->forward(g, h);
+
+        if (this->srs == 4326) {
+            h.reserve(g.size());
+            for (auto&& gg : g) {
+                h.emplace_back(
+                    std::move(gg.get<0>()),
+                    std::move(gg.get<1>())
+                );
+            }
+        } else {
+            this->tr->forward(g, h);
+        }
         return h;
     }
 
     geojson::geometry operator()(polygon_t& g)
     {
         geojson::polygon_t h;
-        this->tr->forward(g, h);
+
+        if(this->srs == 4326) {
+            h.outer().reserve(g.outer().size());
+            for (auto&& gg : g.outer()) {
+                h.outer().emplace_back(
+                    std::move(gg.get<0>()),
+                    std::move(gg.get<1>())
+                );
+            }
+
+            h.inners().resize(g.inners().size());
+            auto&& inner_g = g.inners().begin();
+            auto&& inner_h = h.inners().begin();
+            for (; inner_g != g.inners().end(); inner_g++, inner_h++) {
+                inner_h->reserve(inner_g->size());
+                for (auto&& gg : *inner_g) {
+                    inner_h->emplace_back(
+                        std::move(gg.get<0>()),
+                        std::move(gg.get<1>())
+                    );
+                }
+            }
+        } else {
+            this->tr->forward(g, h);
+        }
         return h;
     }
 
     geojson::geometry operator()(multipoint_t& g)
     {
         geojson::multipoint_t h;
-        this->tr->forward(g, h);
+
+        if (this->srs == 4326) {
+            h.reserve(g.size());
+            for (auto&& gg : g) {
+                h.emplace_back(
+                    std::move(gg.get<0>()),
+                    std::move(gg.get<1>())
+                );
+            }
+        } else {
+            this->tr->forward(g, h);
+        }
+
         return h;
     }
 
     geojson::geometry operator()(multilinestring_t& g)
     {
         geojson::multilinestring_t h;
-        this->tr->forward(g, h);
+
+        if (this->srs == 4326) {
+            h.resize(g.size());
+            auto&& line_g = g.begin();
+            auto&& line_h = h.begin();
+            for(; line_g != g.end(); line_g++, line_h++) {
+                *line_h = std::move(
+                    boost::get<geojson::linestring_t>(this->operator()(*line_g))
+                );
+            }
+        } else {
+            this->tr->forward(g, h);
+        }
+
         return h;
     }
 
     geojson::geometry operator()(multipolygon_t& g)
     {
         geojson::multipolygon_t h;
-        this->tr->forward(g, h);
+
+        if (this->srs == 4326) {
+            h.resize(g.size());
+            auto&& polygon_g = g.begin();
+            auto&& polygon_h = h.begin();
+            for (; polygon_g != g.end(); polygon_g++, polygon_h++) {
+                *polygon_h = std::move(
+                    boost::get<geojson::polygon_t>(this->operator()(*polygon_g))
+                );
+            }
+        } else {
+            this->tr->forward(g, h);
+        }
+
         return h;
     }
 

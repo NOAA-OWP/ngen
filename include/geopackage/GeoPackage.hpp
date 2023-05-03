@@ -8,8 +8,8 @@ namespace geopackage {
 
 geojson::geometry build_geometry(
     const sqlite_iter& row,
-    const geojson::FeatureType geom_type,
-    const std::string& geom_col
+    const std::string& geom_col,
+    std::vector<double>& bounding_box
 );
 
 geojson::PropertyMap build_properties(
@@ -19,7 +19,6 @@ geojson::PropertyMap build_properties(
 
 geojson::Feature build_feature(
     const sqlite_iter& row,
-    const std::string& geom_type,
     const std::string& geom_col
 );
 
