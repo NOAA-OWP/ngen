@@ -1,5 +1,7 @@
 #include "GeoPackage.hpp"
 
+#include <numeric>
+
 std::shared_ptr<geojson::FeatureCollection> geopackage::read(
     const std::string& gpkg_path,
     const std::string& layer = "",
