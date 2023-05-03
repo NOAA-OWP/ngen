@@ -4,8 +4,6 @@
 #include "EndianCopy.hpp"
 #include "JSONGeometry.hpp"
 #include <boost/geometry/srs/epsg.hpp>
-#include <boost/geometry/srs/projections/epsg_params.hpp>
-#include <boost/geometry/srs/projections/spar.hpp>
 #include <boost/geometry/srs/transformation.hpp>
 
 namespace bg = boost::geometry;
