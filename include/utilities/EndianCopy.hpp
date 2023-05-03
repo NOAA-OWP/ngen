@@ -14,15 +14,14 @@ namespace utils {
  * and increments @param{index} by the number of bytes
  * used to store @tparam{S}
  * 
- * @tparam T an integral type
  * @tparam S a primitive type
  * @param src a vector of bytes
  * @param index an integral type tracking the starting position of @param{dst}'s memory
  * @param dst output primitive
  * @param order endianness value (0x01 == Little; 0x00 == Big)
  */
-template<typename T, typename S>
-void copy_from(std::vector<uint8_t> src, T& index, S& dst, uint8_t order)
+template<typename S>
+void copy_from(const std::vector<uint8_t>& src, int& index, S& dst, uint8_t order)
 {
     std::memcpy(&dst, &src[index], sizeof(S));
 
@@ -33,6 +32,25 @@ void copy_from(std::vector<uint8_t> src, T& index, S& dst, uint8_t order)
     }
 
     index += sizeof(S);
+}
+
+// boost::endian doesn't support using primitive doubles
+// see: https://github.com/boostorg/endian/issues/36
+template<>
+inline void copy_from<double>(const std::vector<uint8_t>& src, int& index, double& dst, uint8_t order)
+{
+    static_assert(sizeof(uint64_t) == sizeof(double), "sizeof(uint64_t) is not the same as sizeof(double)!");
+
+    uint64_t tmp;
+
+    // copy into uint64_t
+    copy_from(src, index, tmp, order); 
+
+    // copy resolved endianness into double
+    std::memcpy(&dst, &tmp, sizeof(double));
+
+    // above call to copy_from handles index
+    // incrementing, so we don't need to.
 }
 
 }
