@@ -44,9 +44,6 @@ namespace hy_features {
 
         inline const auto& levels() { return hf_levels; }
 
-        inline bool is_remote_sender_nexus(std::string id) {
-
-
         inline std::vector<std::shared_ptr<HY_HydroNexus>> destination_nexuses(const std::string& id) {
             std::vector<std::shared_ptr<HY_HydroNexus>> downstream;
             if (_catchments.find(id) != _catchments.end()) {
