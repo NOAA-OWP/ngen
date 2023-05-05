@@ -146,7 +146,7 @@ namespace realization {
                         layer_desc.name = "surface layer";
                         layer_desc.id = 0;
                         layer_desc.time_step = 3600;
-                        layer_desc.time_step_units = "S";
+                        layer_desc.time_step_units = "s";
 
                         // add the layer to storage
                         layer_storage.put_layer(layer_desc, layer_desc.id);
