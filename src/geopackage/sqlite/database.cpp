@@ -45,14 +45,9 @@ sqlite3* sqlite::connection() const noexcept
 
 bool sqlite::has_table(const std::string& table) noexcept
 {
-    auto q = this->query("SELECT 1 from sqlite_master WHERE type='table' AND name = ?", table);
-
+    auto q = this->query("SELECT EXISTS(SELECT 1 from sqlite_master WHERE type='table' AND name=?)", table);
     q.next();
-    if (q.done()) {
-        return false;
-    } else {
-        return static_cast<bool>(q.get<int>(0));
-    }
+    return q.get<int>(0);
 };
 
 sqlite_iter sqlite::query(const std::string& statement)
@@ -64,7 +59,53 @@ sqlite_iter sqlite::query(const std::string& statement)
     if (code != SQLITE_OK) {
         // something happened, can probably switch on result codes
         // https://www.sqlite.org/rescode.html
-        throw sqlite_error("[with statement: " + statement + "] " + "sqlite3_prepare_v2", code);
+        throw sqlite_error("sqlite3_prepare_v2", code, "(query: " + statement + ")");
+    }
+
+    this->stmt = stmt_t(stmt, sqlite_deleter{});
+    return sqlite_iter(this->stmt);
+}
+
+sqlite_iter sqlite::query(const std::string& statement, const std::vector<std::string>& binds)
+{
+    sqlite3_stmt* stmt;
+    const auto    cstmt = statement.c_str();
+    const int     code  = sqlite3_prepare_v2(this->connection(), cstmt, statement.length() + 1, &stmt, NULL);
+
+    if (code != SQLITE_OK) {
+        throw sqlite_error("sqlite3_prepare_v2", code, "(query: " + statement + ")");
+    }
+
+    if (!binds.empty()) {
+        for (size_t i = 0; i < binds.size(); i++) {
+            const int code = sqlite3_bind_text(stmt, i + 1, binds[i].c_str(), -1, SQLITE_TRANSIENT);
+            if (code != SQLITE_OK) {
+                throw sqlite_error("sqlite3_bind_text", code);
+            }
+        }
+    }
+
+    this->stmt        = stmt_t(stmt, sqlite_deleter{});
+    return sqlite_iter(this->stmt);
+}
+
+template<typename... T>
+inline sqlite_iter sqlite::query(const std::string& statement, T const&... params)
+{
+    sqlite3_stmt* stmt;
+    const auto    cstmt = statement.c_str();
+    const int     code  = sqlite3_prepare_v2(this->connection(), cstmt, statement.length() + 1, &stmt, NULL);
+
+    if (code != SQLITE_OK) {
+        throw sqlite_error("sqlite3_prepare_v2", code, "(query: " + statement + ")");
+    }
+
+    std::vector<std::string> binds{ { params... } };
+    for (size_t i = 0; i < binds.size(); i++) {
+        const int code = sqlite3_bind_text(stmt, i + 1, binds[i].c_str(), -1, SQLITE_TRANSIENT);
+        if (code != SQLITE_OK) {
+            throw sqlite_error("sqlite3_bind_text", code);
+        }
     }
 
     this->stmt        = stmt_t(stmt, sqlite_deleter{});

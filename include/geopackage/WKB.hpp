@@ -83,7 +83,7 @@ inline typename wkb::polygon_t wkb::read_polygon(const byte_vector& buffer, int&
     polygon_t polygon;
     
     if (count > 1) {
-        polygon.inners().resize(count - 1);
+        polygon.inners().resize(count);
     }
 
     auto outer = read_linestring(buffer, index, order);

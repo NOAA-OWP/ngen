@@ -43,9 +43,19 @@ using stmt_t = std::shared_ptr<sqlite3_stmt>;
  * @param code sqlite3 result code
  * @return std::runtime_error
  */
-inline std::runtime_error sqlite_error(const std::string& f, int code)
+inline std::runtime_error sqlite_error(const std::string& f, int code, const std::string& extra = "")
 {
-    std::string errmsg = f + " returned code " + std::to_string(code);
+    std::string errmsg = f + " returned code "
+                           + std::to_string(code)
+                           + " (msg: "
+                           + std::string(sqlite3_errstr(code))
+                           + ")";
+
+    if (!extra.empty()) {
+      errmsg += " ";
+      errmsg += extra;
+    }
+
     return std::runtime_error(errmsg);
 }
 
@@ -159,6 +169,8 @@ class sqlite
      */
     sqlite_iter query(const std::string& statement);
 
+    sqlite_iter query(const std::string& statement, const std::vector<std::string>& binds);
+
     /**
      * Query the SQLite Database with a bound statement and get the result
      * @param statement String query with parameters
@@ -168,27 +180,6 @@ class sqlite
     template<typename... T>
     sqlite_iter query(const std::string& statement, T const&... params);
 };
-
-template<typename... T>
-inline sqlite_iter sqlite::query(const std::string& statement, T const&... params)
-{
-    sqlite3_stmt* stmt;
-    const auto    cstmt = statement.c_str();
-    const int     code  = sqlite3_prepare_v2(this->connection(), cstmt, statement.length() + 1, &stmt, NULL);
-
-    if (code != SQLITE_OK) {
-        
-        throw sqlite_error("[with statement: " + std::string(sqlite3_errmsg(this->conn.get()))  + "] " + "sqlite3_prepare_v2", code);
-    }
-
-    std::vector<std::string> binds{ { params... } };
-    for (size_t i = 0; i < binds.size(); i++) {
-        sqlite3_bind_text(stmt, i + 1, binds[i].c_str(), -1, SQLITE_STATIC);
-    }
-
-    this->stmt        = stmt_t(stmt, sqlite_deleter{});
-    return sqlite_iter(this->stmt);
-}
 
 } // namespace geopackage
 
