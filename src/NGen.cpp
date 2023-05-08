@@ -6,6 +6,7 @@
 #include "realizations/catchment/Formulation_Manager.hpp"
 #include <Catchment_Formulation.hpp>
 #include <HY_Features.hpp>
+#include <GeoPackage.hpp>
 
 #include "NGenConfig.h"
 #include "tshirt_params.h"
@@ -259,11 +260,21 @@ int main(int argc, char *argv[]) {
     #endif // NGEN_MPI_ACTIVE
 
     // TODO: Instead of iterating through a collection of FeatureBase objects mapping to nexi, we instead want to iterate through HY_HydroLocation objects
-    geojson::GeoJSON nexus_collection = geojson::read(nexusDataFile, nexus_subset_ids);
+    geojson::GeoJSON nexus_collection;
+    if (boost::algorithm::ends_with(nexusDataFile, "gpkg")) {
+      nexus_collection = geopackage::read(nexusDataFile, "nexus", nexus_subset_ids);
+    } else {
+      nexus_collection = geojson::read(nexusDataFile, nexus_subset_ids);
+    }
     std::cout << "Building Catchment collection" << std::endl;
 
     // TODO: Instead of iterating through a collection of FeatureBase objects mapping to catchments, we instead want to iterate through HY_Catchment objects
-    geojson::GeoJSON catchment_collection = geojson::read(catchmentDataFile, catchment_subset_ids);
+    geojson::GeoJSON catchment_collection;
+    if (boost::algorithm::ends_with(catchmentDataFile, "gpkg")) {
+      catchment_collection = geopackage::read(catchmentDataFile, "divides", catchment_subset_ids);
+    } else {
+      catchment_collection = geojson::read(catchmentDataFile, catchment_subset_ids);
+    }
     
     for(auto& feature: *catchment_collection)
     {
