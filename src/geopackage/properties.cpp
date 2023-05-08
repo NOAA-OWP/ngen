@@ -27,6 +27,7 @@ geojson::PropertyMap geopackage::build_properties(
     std::map<std::string, int> property_types;
     const auto data_cols = row.columns();
     const auto data_types = row.types();
+
     std::transform(
         data_cols.begin(),
         data_cols.end(),
@@ -43,7 +44,7 @@ geojson::PropertyMap geopackage::build_properties(
             continue;
         }
 
-        geojson::JSONProperty property = get_property(row, std::move(name), type);
+        geojson::JSONProperty property = get_property(row, name, type);
         properties.emplace(name, std::move(property));
     }
 

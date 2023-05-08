@@ -16,7 +16,7 @@ class GeoPackage_Test : public ::testing::Test
         });
 
         if (this->path.empty()) {
-            FAIL() << "can't find gauge_01073000.gpkg";
+            FAIL() << "can't find test/data/geopackage/example.gpkg";
         }
     }
 
