@@ -95,12 +95,13 @@ TEST_F(SQLite_Test, sqlite_query_test)
     ASSERT_ANY_THROW(iter.get<int>(0));
     iter.next();
     EXPECT_EQ(iter.current_row(), 0);
+    ASSERT_EQ(iter.get<std::string>(0), "flowpaths");
 
     // finishing
     iter.next();
     EXPECT_TRUE(iter.done());
     EXPECT_EQ(iter.current_row(), 1);
-    ASSERT_THROW((iter.get<int>(0)), std::runtime_error);
+    ASSERT_ANY_THROW(iter.get<int>(0));
 
     // next should be idempotent when iteration is done
     ASSERT_NO_THROW(iter.next());

@@ -1,5 +1,4 @@
 #include "GeoPackage.hpp"
-
 #include "EndianCopy.hpp"
 #include "WKB.hpp"
 

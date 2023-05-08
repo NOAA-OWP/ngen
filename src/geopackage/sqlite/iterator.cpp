@@ -7,6 +7,11 @@ using namespace geopackage;
 sqlite_iter::sqlite_iter(stmt_t stmt)
   : stmt(stmt)
 {
+    // sqlite3_column_type requires the last result code to be
+    // SQLITE_ROW, so we need to iterate on the first row.
+    // TODO: need to test how this functions if the last result code
+    //       was SQLITE_DONE.
+    this->next();
     this->column_count = sqlite3_column_count(this->ptr());
     this->column_names = std::vector<std::string>();
     this->column_names.reserve(this->column_count);
@@ -14,9 +19,11 @@ sqlite_iter::sqlite_iter(stmt_t stmt)
     this->column_types.reserve(this->column_count);
 
     for (int i = 0; i < this->column_count; i++) {
-        this->column_names.push_back(sqlite3_column_name(this->ptr(), i));
-        this->column_types.push_back(sqlite3_column_type(this->ptr(), i));
+        this->column_names.emplace_back(sqlite3_column_name(this->ptr(), i));
+        this->column_types.emplace_back(sqlite3_column_type(this->ptr(), i));
     }
+
+    this->restart();
 };
 
 sqlite3_stmt* sqlite_iter::ptr() const noexcept
@@ -35,6 +42,7 @@ void sqlite_iter::handle_get_index(int col) const
     }
 
     if (col < 0 || col >= this->column_count) {
+        
         throw std::out_of_range(
             "column " + std::to_string(col) + " out of range of " + std::to_string(this->column_count) + " columns"
         );
@@ -52,6 +60,8 @@ sqlite_iter& sqlite_iter::next()
         const int returncode = sqlite3_step(this->ptr());
         if (returncode == SQLITE_DONE) {
             this->iteration_finished = true;
+        } else if (returncode != SQLITE_ROW) {
+            throw sqlite_error("sqlite3_step", returncode);
         }
         this->iteration_step++;
     }
