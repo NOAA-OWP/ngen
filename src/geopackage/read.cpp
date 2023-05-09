@@ -12,6 +12,10 @@ std::shared_ptr<geojson::FeatureCollection> geopackage::read(
 
     // Check if layer exists
     if (!db.has_table(layer)) {
+        // Since the layer doesn't exist, we need to output some additional
+        // debug information with the error. In this case, we add ALL the tables
+        // available in the GPKG, so that if the user sees this error, then it
+        // might've been either a typo or a bad data input, and they can correct.
         std::string errmsg = "[" + std::string(sqlite3_errmsg(db.connection())) + "] " +
                              "table " + layer + " does not exist.\n\tTables: ";
 
@@ -26,6 +30,12 @@ std::shared_ptr<geojson::FeatureCollection> geopackage::read(
     }
 
     // Layer exists, getting statement for it
+    //
+    // this creates a string in the form:
+    //     WHERE id IN (?, ?, ?, ...)
+    // so that it can be bound by SQLite.
+    // This is safer than trying to concatenate
+    // the IDs together.
     std::string joined_ids = "";
     if (!ids.empty()) {
         joined_ids = " WHERE id IN (?";
@@ -41,6 +51,7 @@ std::shared_ptr<geojson::FeatureCollection> geopackage::read(
     const int layer_feature_count = query_get_layer_count.get<int>(0);
 
     #ifndef NGEN_QUIET
+    // output debug info on what is read exactly
     std::cout << "Reading " << layer_feature_count << " features in layer " << layer;
     if (!ids.empty()) {
         std::cout << " (id subset:";
@@ -61,6 +72,7 @@ std::shared_ptr<geojson::FeatureCollection> geopackage::read(
     sqlite_iter query_get_layer = db.query("SELECT * FROM " + layer + joined_ids, ids);
     query_get_layer.next();
 
+    // build features out of layer query
     std::vector<geojson::Feature> features;
     features.reserve(layer_feature_count);
     while(!query_get_layer.done()) {
@@ -73,7 +85,12 @@ std::shared_ptr<geojson::FeatureCollection> geopackage::read(
         query_get_layer.next();
     }
 
-    // get layer bounding box
+    // get layer bounding box from features
+    //
+    // GeoPackage contains a bounding box in the SQLite DB,
+    // however, it is in the SRS of the GPKG. By creating
+    // the bbox after the features are built, the projection
+    // is already done. This also should be fairly cheap to do.
     double min_x = std::numeric_limits<double>::infinity();
     double min_y = std::numeric_limits<double>::infinity();
     double max_x = -std::numeric_limits<double>::infinity();

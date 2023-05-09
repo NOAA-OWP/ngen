@@ -7,10 +7,13 @@ geojson::Feature geopackage::build_feature(
 {
     std::vector<double> bounding_box(4);
     const auto id                    = row.get<std::string>("id");
-    geojson::PropertyMap properties  = std::move(build_properties(row, geom_col));
-    geojson::geometry geometry       = std::move(build_geometry(row, geom_col, bounding_box));
+    geojson::PropertyMap properties  = build_properties(row, geom_col);
+    geojson::geometry geometry       = build_geometry(row, geom_col, bounding_box);
 
+    // Convert variant type (0-based) to FeatureType
     const auto wkb_type = geojson::FeatureType(geometry.which() + 1);
+
+    // Points don't have a bounding box, so we can say its bbox is itself
     if (wkb_type == geojson::FeatureType::Point) {
         const auto& pt = boost::get<geojson::coordinate_t>(geometry);
         bounding_box[0] = pt.get<0>();
