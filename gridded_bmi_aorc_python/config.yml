@@ -1,0 +1,12 @@
+start_time : 2015-12-01 00:00:00
+time_step_seconds: 3600
+initial_time: 0
+ERRDAP_data : "true"
+aorc_beg : "AORC-OWP_"
+aorc_end : "z.nc4"
+aorc_new_end : ".nc4"
+base_url : 'https://nwcal-wrds-ti01.nwc.nws.noaa.gov/aorc_erddap/erddap/files/erddap_dadf_1012_a549/'
+AORC_data : "aorc_cache"
+hyfabfile : /home/shengting.cui/ngen_forcing/ngen_py_model/ngen/test_bmi_AORC_gridded/nextgen_06.gpkg
+cat_id : "cat-298118"
+grid_yx : [[2001, 4001]]

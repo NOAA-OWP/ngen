@@ -1,0 +1,60 @@
+{
+    "global": {
+        "formulations": [
+            {
+                "name": "bmi_multi",
+                "params": {
+                    "model_type_name": "bmi_jinja_source",
+                    "forcing_file": "",
+                    "init_config": "",
+                    "allow_exceed_end_time": true,
+                    "main_output_variable": "TMP_2maboveground",
+                    "modules": [
+                        {
+                            "name": "bmi_python",
+                            "params": {
+                                "model_type_name": "jinjabmi",
+                                "python_type": "jinjabmi.Jinja",
+                                "init_config": "./jinja_grid_source.yml",
+                                "allow_exceed_end_time": true,
+                                "main_output_variable": "dummy_output_scalar",
+                                "uses_forcing_file": false
+                            }
+                        },
+                        {
+                            "name": "bmi_python",
+                            "params": {
+                                "python_type": "AORC_bmi_model.AORC_bmi_model",
+                                "model_type_name": "AORC_bmi_model",
+                                "init_config": "./config.yml",
+                                "main_output_variable": "APCP_surface",
+                                "uses_forcing_file": false,
+                                "variables_names_map_disable" : {
+                                    "APCP_surface": "atmosphere_water__liquid_equivalent_precipitation_rate",
+                                    "TMP_2maboveground": "land_surface_radiation~incoming~longwave__energy_flux",
+                                    "SPFH_2maboveground": "atmosphere_air_water~vapor__relative_saturation",
+                                    "UGRD_10maboveground": "land_surface_wind__x_component_of_velocity",
+                                    "VGRD_10maboveground": "land_surface_wind__y_component_of_velocity",
+                                    "PRES_surface": "land_surface_air__pressure",
+                                    "DSWRF_surface": "land_surface_radiation~incoming~shortwave__energy_flux",
+                                    "DLWRF_surface": "land_surface_radiation~incoming~longwave__energy_flux"
+                                }
+                            }
+                        }
+                    ],
+                    "uses_forcing_file": false
+                }
+            }
+        ],
+        "forcing": {
+            "file_pattern": ".*{{id}}.*..csv",
+            "path": "../data/forcing/",
+            "provider": "CsvPerFeature"
+        }
+    },
+    "time": {
+        "start_time": "2015-12-01 00:00:00",
+        "end_time": "2015-12-01 09:00:00",
+        "output_interval": 3600
+    }
+}

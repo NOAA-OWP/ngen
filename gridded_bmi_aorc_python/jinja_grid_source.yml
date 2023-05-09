@@ -1,0 +1,26 @@
+grids: # Default grid is 0 and is always `scalar`.
+  1:
+    rank: 2
+    shape: [2,2]
+
+variables:
+  precip_rate_grid:
+    init:
+      seed: 42
+      range: [0,12]
+      stddev: 2
+      mean: 5
+    output: True
+    type: float64
+    units: "mm/h"
+    grid: 1
+    expression: >
+      precip_rate_grid.value
+
+  dummy_output_scalar:
+    init: 0
+    output: True
+    type: float64
+    units: "1"
+    expression: >
+      dummy_output_scalar.value    

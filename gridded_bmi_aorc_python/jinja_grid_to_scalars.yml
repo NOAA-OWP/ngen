@@ -1,0 +1,64 @@
+grids: # Default grid is 0 and is always `scalar`.
+  1:
+    rank: 2
+    shape: [2,2]
+
+variables:
+  precip_rate_grid_in:
+    init: 0
+    input: True
+    type: float64
+    units: "mm/h"
+    grid: 1
+    expression: >
+      precip_rate_grid_in.value
+
+  prg_0_0:
+    output: True
+    type: float64
+    units: "mm/h"
+    expression: >
+      precip_rate_grid_in.value[0,0] 
+
+  prg_0_1:
+    output: True
+    type: float64
+    units: "mm/h"
+    expression: >
+      precip_rate_grid_in.value[0,1]
+
+  prg_1_0:
+    output: True
+    type: float64
+    units: "mm/h"
+    expression: >
+      precip_rate_grid_in.value[1,0] 
+
+  prg_1_1:
+    output: True
+    type: float64
+    units: "mm/h"
+    expression: >
+      precip_rate_grid_in.value[1,1]
+
+  prg_max:
+    output: True
+    type: float64
+    units: "mm/h"
+    expression: >
+      precip_rate_grid_in.value.max()
+
+  prg_min:
+    output: True
+    type: float64
+    units: "mm/h"
+    expression: >
+      precip_rate_grid_in.value.min()
+
+  prg_mean:
+    output: True
+    type: float64
+    units: "mm/h"
+    expression: >
+      precip_rate_grid_in.value.mean()
+
