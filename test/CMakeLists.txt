@@ -1,5 +1,6 @@
 project(test)
 
+include(CTest)
 add_subdirectory(googletest)
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 include_directories(${gmock_SOURCE_DIR}/include ${gmock_SOURCE_DIR})
@@ -85,13 +86,15 @@ add_test(test_geojson
         )
 
 ########################## GeoPackage Unit Tests
+if(NGEN_WITH_SQLITE3)
 add_test(test_geopackage
         3
         geopackage/WKB_Test.cpp
         geopackage/SQLite_Test.cpp
         geopackage/GeoPackage_Test.cpp
-        NGen::core
+        NGen::core # needed for FileChecker.h
         NGen::geopackage)
+endif()
 
 ########################## Realization Config Unit Tests
 add_test(test_realization_config
