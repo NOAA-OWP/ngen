@@ -2,6 +2,7 @@
 #include <map>
 #include <memory>
 #include <mutex>
+#include <stdexcept>
 #include "all.h"
 
 #ifndef NGEN_UNITSHELPER_H
