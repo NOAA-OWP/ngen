@@ -4,21 +4,28 @@
 #include <memory>
 #include <stdexcept>
 #include <vector>
+#include <string>
 
 #include <sqlite3.h>
 
 namespace geopackage {
 
+/**
+ * Runtime error for iterations that haven't started
+ */
 const auto sqlite_get_notstarted_error = std::runtime_error(
     "sqlite iteration is has not started, get() is not callable (call sqlite_iter::next() before)"
 );
 
+/**
+ * Runtime error for iterations that are finished
+ */
 const auto sqlite_get_done_error = std::runtime_error(
     "sqlite iteration is done, get() is not callable"
 );
 
 /**
- * @brief Deleter used to provide smart pointer support for sqlite3 structs.
+ * Deleter used to provide smart pointer support for sqlite3 structs.
  */
 struct sqlite_deleter
 {
@@ -27,20 +34,21 @@ struct sqlite_deleter
 };
 
 /**
- * @brief Smart pointer (unique) type for sqlite3 database
+ * Smart pointer (unique) type for sqlite3 database
  */
 using sqlite_t = std::unique_ptr<sqlite3, sqlite_deleter>;
 
 /**
- * @brief Smart pointer (shared) type for sqlite3 prepared statements
+ * Smart pointer (shared) type for sqlite3 prepared statements
  */
 using stmt_t = std::shared_ptr<sqlite3_stmt>;
 
 /**
- * @brief Get a runtime error based on a function and code.
+ * Get a runtime error based on a function and code.
  *
  * @param f String denoting the function where the error originated
  * @param code sqlite3 result code
+ * @param extra additional messages to add to the end of the error
  * @return std::runtime_error
  */
 inline std::runtime_error sqlite_error(const std::string& f, int code, const std::string& extra = "")
@@ -60,7 +68,7 @@ inline std::runtime_error sqlite_error(const std::string& f, int code, const std
 }
 
 /**
- * @brief SQLite3 row iterator
+ * SQLite3 row iterator
  *
  * Provides a simple iterator-like implementation
  * over rows of a SQLite3 query.
@@ -69,13 +77,14 @@ class sqlite_iter
 {
   private:
     stmt_t stmt;
-    int    iteration_step     = -1;
-    bool   iteration_finished = false;
+    int iteration_step = -1;
+    bool iteration_finished = false;
 
-    // column metadata
-    int                      column_count;
+    int column_count;
     std::vector<std::string> column_names;
-    std::vector<int>         column_types;
+
+    // vector of SQLITE data types, see: https://www.sqlite.org/datatype3.html
+    std::vector<int> column_types;
 
     // returns the raw pointer to the sqlite statement
     sqlite3_stmt* ptr() const noexcept;
@@ -85,19 +94,90 @@ class sqlite_iter
 
   public:
     sqlite_iter(stmt_t stmt);
-    bool                            done() const noexcept;
-    sqlite_iter&                    next();
-    sqlite_iter&                    restart();
-    void                            close();
-    int                             current_row() const noexcept;
-    int                             num_columns() const noexcept;
-    int                             column_index(const std::string& name) const noexcept;
-    const std::vector<std::string>& columns() const noexcept { return this->column_names; }
-    const std::vector<int>&         types() const noexcept { return this->column_types; }
 
+    /**
+     * Check if a row iterator is finished
+     * 
+     * @return true if next() returned SQLITE_DONE
+     * @return false if there is more rows available
+     */
+    bool done() const noexcept;
+
+    /**
+     * Step into the next row of a SQLite query
+     * 
+     * If the query is finished, next() acts idempotently,
+     * but will change done() to return true.
+     * @return sqlite_iter& returns itself
+     */
+    sqlite_iter& next();
+
+    /**
+     * Restart an iteration to its initial state.
+     * next() must be called after calling this.
+     * 
+     * @return sqlite_iter& returns itself
+     */
+    sqlite_iter& restart();
+
+    /**
+     * Call the row iterator destructor
+     */
+    void close();
+
+    /**
+     * Get the current row index for the iterator
+     * 
+     * @return int the current row index, or -1 if next() hasn't been called
+     */
+    int current_row() const noexcept;
+
+    /**
+     * Get the number of columns within this iterator
+     * @return int number of columns in query
+     */
+    int num_columns() const noexcept;
+
+    /**
+     * Return the column index for a named column 
+     * 
+     * @param name column name to search for
+     * @return int index of given column name, or -1 if not found.
+     */
+    int column_index(const std::string& name) const noexcept;
+
+    /**
+     * Get a vector of column names
+     * 
+     * @return const std::vector<std::string>& column names as a vector of strings
+     */
+    const std::vector<std::string>& columns() const noexcept { return this->column_names; }
+
+    /**
+     * Get a vector of column types
+     *
+     * See https://www.sqlite.org/datatype3.html for type values. The integers
+     * are the affinity for data types.
+     * @return const std::vector<int>& column types as a vector of ints
+     */
+    const std::vector<int>& types() const noexcept { return this->column_types; }
+
+    /**
+     * Get a column value from a row iterator by index
+     * 
+     * @tparam T Type to parse value as, i.e. int
+     * @param col Column index to parse
+     * @return T value at column `col`
+     */
     template<typename T>
     T get(int col) const;
 
+    /**
+     * Get a column value from a row iterator by name
+     * 
+     * @tparam T Type to parse value as, i.e. int
+     * @return T value at the named column
+     */
     template<typename T>
     T get(const std::string&) const;
 };
@@ -110,7 +190,7 @@ inline T sqlite_iter::get(const std::string& name) const
 }
 
 /**
- * @brief Wrapper around a SQLite3 database
+ * Wrapper around a SQLite3 database
  */
 class sqlite
 {
@@ -122,7 +202,7 @@ class sqlite
     sqlite() = default;
 
     /**
-     * @brief Construct a new sqlite object from a path to database
+     * Construct a new sqlite object from a path to database
      *
      * @param path File path to sqlite3 database
      */
@@ -132,14 +212,14 @@ class sqlite
     sqlite& operator=(sqlite& db);
 
     /**
-     * @brief Take ownership of a sqlite3 database
+     * Take ownership of a sqlite3 database
      *
      * @param db sqlite3 database object
      */
     sqlite(sqlite&& db);
 
     /**
-     * @brief Move assignment operator
+     * Move assignment operator
      *
      * @param db sqlite3 database object
      * @return sqlite& reference to sqlite3 database
@@ -147,14 +227,14 @@ class sqlite
     sqlite& operator=(sqlite&& db);
 
     /**
-     * @brief Return the originating sqlite3 database pointer
+     * Return the originating sqlite3 database pointer
      *
      * @return sqlite3*
      */
     sqlite3* connection() const noexcept;
 
     /**
-     * @brief Check if SQLite database contains a given table
+     * Check if SQLite database contains a given table
      *
      * @param table name of table
      * @return true if table does exist
@@ -169,6 +249,13 @@ class sqlite
      */
     sqlite_iter query(const std::string& statement);
 
+    /**
+     * Query the SQLite Database with multiple boundable text parameters.
+     * 
+     * @param statement String query with parameters
+     * @param binds text parameters to bind to statement
+     * @return sqlite_iter SQLite row iterator
+     */
     sqlite_iter query(const std::string& statement, const std::vector<std::string>& binds);
 
     /**
