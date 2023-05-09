@@ -113,7 +113,15 @@ endif()
 
 find_package(Boost 1.72.0 REQUIRED)
 
-find_package(SQLite3 REQUIRED) # required for now
+
+find_package(SQLite3)
+if(SQLITE3_LIBRARY AND SQLITE3_INCLUDE)
+     set(NGEN_WITH_SQLITE3 ON)
+else()
+    set(NGEN_WITH_SQLITE3 OFF)
+endif()
+add_compile_definitions(NGEN_WITH_SQLITE3)
+message(INFO " SQLite3 support is ${NGEN_WITH_SQLITE3}")
 
 # UDUNITS
 # Since UDUNITS is currently not really optional (yet) let's make it default to on...
@@ -261,7 +269,12 @@ endif()
 add_subdirectory("src/core")
 add_dependencies(core libudunits2)
 add_subdirectory("src/geojson")
-add_subdirectory("src/geopackage")
+
+if(NGEN_WITH_SQLITE3)
+    add_subdirectory("src/geopackage")
+    target_link_libraries(ngen PUBLIC NGen::geopackage)
+endif()
+
 add_subdirectory("src/realizations/catchment")
 add_subdirectory("src/models/tshirt")
 add_subdirectory("src/models/kernels/reservoir")
@@ -274,7 +287,6 @@ target_link_libraries(ngen PUBLIC
         #NGen::core_catchment_giuh
         NGen::core_nexus
         NGen::geojson
-        NGen::geopackage
         NGen::models_tshirt
         NGen::realizations_catchment
         NGen::kernels_reservoir
