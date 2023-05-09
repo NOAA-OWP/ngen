@@ -1,0 +1,12 @@
+pathlib
+numpy
+pandas
+pyyaml
+bmipy
+netCDF4
+osgeo
+geopandas
+wget
+ssl
+os
+exactextract (https://github.com/jduckerOWP/exactextract-pythonbind/tree/add-pybindings-with-netcdf-OWP)

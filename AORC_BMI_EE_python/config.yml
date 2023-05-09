@@ -1,0 +1,5 @@
+hyfabfile : /home/shengting.cui/AORC_BMI_EE_Python/AORC_BMI_EE_python/nextgen_06.gpkg
+start_time : 2015-12-01 00:00:00
+time_step_seconds: 3600
+initial_time: 0
+cat_ids: [cat-304922, cat-298118, cat-313395]

@@ -1,0 +1,114 @@
+{
+    "global": {
+        "formulations": [
+            {
+                "name": "bmi_multi",
+                "params": {
+                    "model_type_name": "bmi_multi_noahowp_cfe",
+                    "forcing_file": "",
+                    "init_config": "",
+                    "allow_exceed_end_time": true,
+                    "main_output_variable": "Q_OUT",
+                    "modules": [
+                        {
+                            "name": "bmi_python",
+                            "params": {
+                                "python_type": "AORC_bmi_model.AORC_bmi_model",
+                                "model_type_name": "AORC_bmi_model",
+                                "init_config": "./config.yml",
+                                "main_output_variable": "APCP_surface",
+                                "uses_forcing_file": false,
+                                "variables_names_map_disable" : {
+                                    "APCP_surface": "atmosphere_water__liquid_equivalent_precipitation_rate",
+                                    "TMP_2maboveground": "land_surface_radiation~incoming~longwave__energy_flux",
+                                    "SPFH_2maboveground": "atmosphere_air_water~vapor__relative_saturation",
+                                    "UGRD_10maboveground": "land_surface_wind__x_component_of_velocity",
+                                    "VGRD_10maboveground": "land_surface_wind__y_component_of_velocity",
+                                    "PRES_surface": "land_surface_air__pressure",
+                                    "DSWRF_surface": "land_surface_radiation~incoming~shortwave__energy_flux",
+                                    "DLWRF_surface": "land_surface_radiation~incoming~longwave__energy_flux"
+                                }
+                            }
+                        },
+			{
+			    "name": "bmi_c++",
+			    "params": {
+                                "model_type_name": "bmi_c++_sloth",
+                                "library_file": "../extern/sloth/cmake_build/libslothmodel",
+                                "init_config": "/dev/null",
+                                "allow_exceed_end_time": true,
+                                "main_output_variable": "z",
+                                "uses_forcing_file": false,
+                                "model_params": {
+				    "sloth_ice_fraction_schaake(1,double,m,node)": 0.0,
+				    "sloth_ice_fraction_xinan(1,double,1,node)": 0.0,
+				    "sloth_smp(1,double,1,node)": 0.0
+                                }
+			    }
+                        },
+                        {
+                            "name": "bmi_fortran",
+                            "params": {
+                                "model_type_name": "bmi_fortran_noahowp",
+                                "library_file": "../extern/noah-owp-modular/cmake_build/libsurfacebmi",
+                                "forcing_file": "",
+                                "init_config": "../data/bmi/fortran/noah-owp-modular-init-{{id}}.namelist.input",
+                                "allow_exceed_end_time": true,
+                                "main_output_variable": "QINSUR",
+                                "variables_names_map": {
+                                    "PRCPNONC": "APCP_surface",
+                                    "Q2": "SPFH_2maboveground",
+                                    "SFCTMP": "TMP_2maboveground",
+                                    "UU": "UGRD_10maboveground",
+                                    "VV": "VGRD_10maboveground",
+                                    "LWDN": "DLWRF_surface",
+                                    "SOLDN": "DSWRF_surface",
+                                    "SFCPRS": "PRES_surface"
+                                },
+                                "uses_forcing_file": false
+                            }
+                        },
+                        {
+                            "name": "bmi_c",
+                            "params": {
+                                "model_type_name": "bmi_c_cfe",
+                                "library_file": "../extern/cfe/cmake_build/libcfebmi",
+                                "forcing_file": "",
+                                "init_config": "../data/bmi/c/cfe/{{id}}_bmi_config.ini",
+                                "allow_exceed_end_time": true,
+                                "main_output_variable": "Q_OUT",
+                                "registration_function": "register_bmi_cfe",
+                                "variables_names_map": {
+                                    "water_potential_evaporation_flux": "ETRAN",
+                                    "atmosphere_water__liquid_equivalent_precipitation_rate": "APCP_surface",
+                                    "atmosphere_air_water~vapor__relative_saturation": "SPFH_2maboveground",
+                                    "land_surface_air__temperature": "TMP_2maboveground",
+                                    "land_surface_wind__x_component_of_velocity": "UGRD_10maboveground",
+                                    "land_surface_wind__y_component_of_velocity": "VGRD_10maboveground",
+                                    "land_surface_radiation~incoming~longwave__energy_flux": "DLWRF_surface",
+                                    "land_surface_radiation~incoming~shortwave__energy_flux": "DSWRF_surface",
+                                    "land_surface_air__pressure": "PRES_surface",
+				    "ice_fraction_schaake" : "sloth_ice_fraction_schaake",
+				    "ice_fraction_xinan" : "sloth_ice_fraction_xinan",
+				    "soil_moisture_profile" : "sloth_smp"
+                                },
+                                "uses_forcing_file": false
+                            }
+                        }
+                    ],
+                    "uses_forcing_file": false
+                }
+            }
+        ],
+        "forcing": {
+            "file_pattern": ".*{{id}}.*..csv",
+            "path": "../data/forcing/",
+            "provider": "CsvPerFeature"
+        }
+    },
+    "time": {
+        "start_time": "2015-12-01 00:00:00",
+        "end_time": "2015-12-01 04:00:00",
+        "output_interval": 3600
+    }
+}

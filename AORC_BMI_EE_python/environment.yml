@@ -1,0 +1,21 @@
+name: bmi_test
+channels:
+  - defaults
+  - anaconda
+  - conda-forge
+dependencies:
+  - bmipy
+  - bokeh
+  - pandas
+  - python=3.7
+  - ruamel.yaml
+  - netCDF4
+  - pybind11
+  - geopandas
+  - osgeo
+  - exactextract
+  - numpy
+  - ssl
+  - wget
+  - pathlib
+  - os
