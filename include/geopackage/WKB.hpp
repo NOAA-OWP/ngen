@@ -11,7 +11,7 @@ namespace bg = boost::geometry;
 namespace geopackage {
 
 /**
- * WKB reader struct
+ * A recursive WKB reader
  */
 struct wkb {
     using point_t = bg::model::point<double, 2, bg::cs::cartesian>;
@@ -32,8 +32,13 @@ struct wkb {
     using byte_t = uint8_t;
     using byte_vector = std::vector<byte_t>;
 
+    /**
+     * projection visitor. applied with boost to project from
+     * cartesian coordinates to WGS84.
+     */
     struct wgs84;
 
+    // prevent instatiation of this struct
     wkb() = delete;
 
     /**
@@ -43,15 +48,45 @@ struct wkb {
      */
     static geometry read(const byte_vector& buffer);
 
+    static bg::srs::dpar::parameters<> get_prj(uint32_t srid);
+
   private:
+    /**
+     * Read a WKB point into a cartesian model.
+     * @return point_t 
+     */
     static point_t read_point(const byte_vector&, int&, uint8_t);
+
+    /**
+     * Read a WKB linestring into a cartesian model.
+     * @return linestring_t 
+     */
     static linestring_t read_linestring(const byte_vector&, int&, uint8_t);
+
+    /**
+     * Read a WKB polygon into a cartesian model.
+     * @return polygon_t 
+     */
     static polygon_t read_polygon(const byte_vector&, int&, uint8_t);
+
+    /**
+     * Read a WKB multipoint into a cartesian model.
+     * @return multipoint_t 
+     */
     static multipoint_t read_multipoint(const byte_vector&, int&, uint8_t);
+
+    /**
+     * Read a WKB multilinestring into a cartesian model.
+     * @return multilinestring_t 
+     */
     static multilinestring_t read_multilinestring(const byte_vector&, int&, uint8_t);
+
+    /**
+     * Read a WKB multipolygon into a cartesian model.
+     * @return multipolygon_t 
+     */
     static multipolygon_t read_multipolygon(const byte_vector&, int&, uint8_t);
 };
-
 
 inline typename wkb::point_t wkb::read_point(const byte_vector& buffer, int& index, uint8_t order)
 {
@@ -83,6 +118,9 @@ inline typename wkb::polygon_t wkb::read_polygon(const byte_vector& buffer, int&
     polygon_t polygon;
     
     if (count > 1) {
+        // polygons only have 1 outer ring,
+        // so any extra vectors are considered to be
+        // inner rings.
         polygon.inners().resize(count);
     }
 
@@ -208,26 +246,33 @@ const auto epsg5070 = bg::srs::dpar::parameters<>(bg::srs::dpar::proj_aea)
                                                  (bg::srs::dpar::x_0, 0)
                                                  (bg::srs::dpar::y_0, 0);
 
+const auto epsg3857 = bg::srs::dpar::parameters<>(bg::srs::dpar::proj_merc)
+                                                 (bg::srs::dpar::units_m)
+                                                 (bg::srs::dpar::no_defs)
+                                                 (bg::srs::dpar::a, 6378137)
+                                                 (bg::srs::dpar::b, 6378137)
+                                                 (bg::srs::dpar::lat_ts, 0)
+                                                 (bg::srs::dpar::lon_0, 0)
+                                                 (bg::srs::dpar::x_0, 0)
+                                                 (bg::srs::dpar::y_0, 0)
+                                                 (bg::srs::dpar::k, 1);
+
+inline bg::srs::dpar::parameters<> wkb::get_prj(uint32_t srid) {
+    switch(srid) {
+        case 5070:
+            return epsg5070;
+        case 3857:
+            return epsg3857;
+        default:
+            return bg::projections::detail::epsg_to_parameters(srid);
+    }
+}
+
 struct wkb::wgs84 : public boost::static_visitor<geojson::geometry>
 {
-    wgs84(uint32_t srs) : srs(srs)
-    {
-        if (srs == 5070) {
-            this->tr = std::make_unique<bg::srs::transformation<bg::srs::dynamic, bg::srs::dynamic>>(
-                bg::srs::transformation<bg::srs::dynamic, bg::srs::dynamic>{
-                    epsg5070,
-                    bg::srs::dpar::parameters<>(bg::srs::dpar::proj_longlat)(bg::srs::dpar::datum_wgs84)(bg::srs::dpar::no_defs)
-                }
-            );
-        } else {
-            this->tr = std::make_unique<bg::srs::transformation<bg::srs::dynamic, bg::srs::dynamic>>(
-                bg::srs::transformation<bg::srs::dynamic, bg::srs::dynamic>{
-                    bg::srs::epsg(srs),
-                    bg::srs::epsg(4326)
-                }
-            );
-        }
-    };
+    wgs84(uint32_t srs, const bg::srs::transformation<>& tr)
+        : srs(srs)
+        , tr(tr) {};
 
     geojson::geometry operator()(point_t& g)
     {
@@ -236,7 +281,7 @@ struct wkb::wgs84 : public boost::static_visitor<geojson::geometry>
         }
 
         geojson::coordinate_t h;
-        this->tr->forward(g, h);
+        this->tr.forward(g, h);
         return h;
     }
 
@@ -253,7 +298,7 @@ struct wkb::wgs84 : public boost::static_visitor<geojson::geometry>
                 );
             }
         } else {
-            this->tr->forward(g, h);
+            this->tr.forward(g, h);
         }
         return h;
     }
@@ -284,7 +329,7 @@ struct wkb::wgs84 : public boost::static_visitor<geojson::geometry>
                 }
             }
         } else {
-            this->tr->forward(g, h);
+            this->tr.forward(g, h);
         }
         return h;
     }
@@ -302,7 +347,7 @@ struct wkb::wgs84 : public boost::static_visitor<geojson::geometry>
                 );
             }
         } else {
-            this->tr->forward(g, h);
+            this->tr.forward(g, h);
         }
 
         return h;
@@ -322,7 +367,7 @@ struct wkb::wgs84 : public boost::static_visitor<geojson::geometry>
                 );
             }
         } else {
-            this->tr->forward(g, h);
+            this->tr.forward(g, h);
         }
 
         return h;
@@ -342,7 +387,7 @@ struct wkb::wgs84 : public boost::static_visitor<geojson::geometry>
                 );
             }
         } else {
-            this->tr->forward(g, h);
+            this->tr.forward(g, h);
         }
 
         return h;
@@ -350,7 +395,7 @@ struct wkb::wgs84 : public boost::static_visitor<geojson::geometry>
 
     private:
         uint32_t srs;
-        std::unique_ptr<bg::srs::transformation<bg::srs::dynamic, bg::srs::dynamic>> tr;
+        const bg::srs::transformation<>& tr;
 };
 
 } // namespace geopackage

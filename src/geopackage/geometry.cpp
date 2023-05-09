@@ -25,15 +25,46 @@ geojson::geometry geopackage::build_geometry(
     // Read srs_id
     uint32_t srs_id;
     utils::copy_from(geometry_blob, index, srs_id, endian);
-
+    
+    const auto epsg = wkb::get_prj(srs_id);
+    const auto prj = bg::srs::transformation<>(epsg, wkb::get_prj(4326));
+    wkb::wgs84 pvisitor{srs_id, prj};
+    
     if (indicator > 0 & indicator < 5) {
         // not an empty envelope
+
+        double min_x = 0, max_x = 0, min_y = 0, max_y = 0;
+        utils::copy_from(geometry_blob, index, min_x, endian); // min_x
+        utils::copy_from(geometry_blob, index, max_x, endian); // max_x
+        utils::copy_from(geometry_blob, index, min_y, endian); // min_y
+        utils::copy_from(geometry_blob, index, max_y, endian); // max_y
+
+        // we need to transform the bounding box from its initial SRS
+        // to EPSG: 4326 -- so, we construct a temporary WKB linestring_t type
+        // which will get projected to a geojson::geometry (aka geojson::linestring_t) type.
+
+        // create a wkb::linestring_t bbox object
+        wkb::point_t max{max_x, max_y};
+        wkb::point_t min{min_x, min_y};
+        geojson::coordinate_t max_prj{};
+        geojson::coordinate_t min_prj{};
+
+        // project the raw bounding box
+        if (srs_id == 4326) {
+            max_prj = geojson::coordinate_t{max.get<0>(), max.get<1>()};
+            min_prj = geojson::coordinate_t{min.get<0>(), min.get<1>()};
+        } else {
+            prj.forward(max, max_prj);
+            prj.forward(min, min_prj);
+        }
+
+        // assign the projected values to the bounding_box parameter
         bounding_box.clear();
         bounding_box.resize(4); // only 4, not supporting Z or M dims
-        utils::copy_from(geometry_blob, index, bounding_box[0], endian); // min_x
-        utils::copy_from(geometry_blob, index, bounding_box[2], endian); // max_x
-        utils::copy_from(geometry_blob, index, bounding_box[1], endian); // min_y
-        utils::copy_from(geometry_blob, index, bounding_box[3], endian); // max_y
+        bounding_box[0] = min_prj.get<0>(); // min_x
+        bounding_box[1] = min_prj.get<1>(); // min_y
+        bounding_box[2] = max_prj.get<0>(); // max_x
+        bounding_box[3] = max_prj.get<1>(); // max_y
 
         // ensure `index` is at beginning of data
         if (indicator == 2 || indicator == 3) {
@@ -46,9 +77,9 @@ geojson::geometry geopackage::build_geometry(
     if (!is_empty) {
         const std::vector<uint8_t> geometry_data(geometry_blob.begin() + index, geometry_blob.end());
         auto wkb_geometry = wkb::read(geometry_data);
-        wkb::wgs84 pvisitor{srs_id};
         geojson::geometry geometry = boost::apply_visitor(pvisitor, wkb_geometry);
         return geometry;
+        return geojson::geometry{};
     } else {
         return geojson::geometry{};
     }
