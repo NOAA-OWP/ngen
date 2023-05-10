@@ -22,7 +22,7 @@ def execute():
     #print('model time', 'ids', 'RAINRATE', 'T2D', 'Q2D', 'U2D', 'V2D', 'PSFC', 'SWDOWN', 'LWDOWN')
 
     #print out the state variables in the order as in AORC csv forcing file
-    print("{},{},{},{},{},{},{},{},{}".format("time","APCP_surface","DLWRF_surface","DSWRF_surface","PRES_surface","SPFH_2maboveground","TMP_2maboveground","UGRD_10maboveground","VGRD_10maboveground"))
+    print("{},{},{},{},{},{},{},{},{},{}".format("time","ids","APCP_surface","DLWRF_surface","DSWRF_surface","PRES_surface","SPFH_2maboveground","TMP_2maboveground","UGRD_10maboveground","VGRD_10maboveground"))
 
     num_cats = len(model.get_value_ptr('ids'))
     print("Number of catchments = ", num_cats)

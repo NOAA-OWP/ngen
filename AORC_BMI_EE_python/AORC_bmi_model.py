@@ -340,7 +340,7 @@ class AORC_bmi_model(Bmi):
 
         if var_name == "ids":
             self._values['ids'] = self._values['cat_ids']
-            print("self._values['ids']: ", self._values['ids'])
+            #print("self._values['ids']: ", self._values['ids'])
             return np.atleast_1d(self._values[var_name])
             #return np.self._values[var_name]
         else:
