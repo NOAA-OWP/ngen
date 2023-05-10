@@ -94,7 +94,7 @@ int sqlite_iter::num_columns() const noexcept
 
 int sqlite_iter::column_index(const std::string& name) const noexcept
 {
-    const ptrdiff_t pos =
+    const size_t pos =
       std::distance(this->column_names.begin(), std::find(this->column_names.begin(), this->column_names.end(), name));
 
     return pos >= this->column_names.size() ? -1 : pos;

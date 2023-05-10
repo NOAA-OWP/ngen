@@ -27,7 +27,7 @@ geojson::geometry geopackage::build_geometry(
     utils::copy_from(geometry_blob, index, srs_id, endian);
     
     const auto epsg = wkb::get_prj(srs_id);
-    const auto prj = bg::srs::transformation<>(epsg, wkb::get_prj(4326));
+    const bg::srs::transformation<> prj{epsg, wkb::get_prj(4326)};
     wkb::wgs84 pvisitor{srs_id, prj};
     
     if (indicator > 0 & indicator < 5) {
