@@ -7,7 +7,7 @@
 #include <Catchment_Formulation.hpp>
 #include <HY_Features.hpp>
 
-#if NGEN_WITH_SQLITE3
+#ifdef NGEN_WITH_SQLITE3
 #include <GeoPackage.hpp>
 #endif
 
@@ -265,10 +265,10 @@ int main(int argc, char *argv[]) {
     // TODO: Instead of iterating through a collection of FeatureBase objects mapping to nexi, we instead want to iterate through HY_HydroLocation objects
     geojson::GeoJSON nexus_collection;
     if (boost::algorithm::ends_with(nexusDataFile, "gpkg")) {
-      #if NGEN_WITH_SQLITE3
+      #ifdef NGEN_WITH_SQLITE3
       nexus_collection = geopackage::read(nexusDataFile, "nexus", nexus_subset_ids);
       #else
-      throw std::runtime_error("SQLite3 support required to read GeoPackage files.")
+      throw std::runtime_error("SQLite3 support required to read GeoPackage files.");
       #endif
     } else {
       nexus_collection = geojson::read(nexusDataFile, nexus_subset_ids);
@@ -278,10 +278,10 @@ int main(int argc, char *argv[]) {
     // TODO: Instead of iterating through a collection of FeatureBase objects mapping to catchments, we instead want to iterate through HY_Catchment objects
     geojson::GeoJSON catchment_collection;
     if (boost::algorithm::ends_with(catchmentDataFile, "gpkg")) {
-      #if NGEN_WITH_SQLITE3
+      #ifdef NGEN_WITH_SQLITE3
       catchment_collection = geopackage::read(catchmentDataFile, "divides", catchment_subset_ids);
       #else
-      throw std::runtime_error("SQLite3 support required to read GeoPackage files.")
+      throw std::runtime_error("SQLite3 support required to read GeoPackage files.");
       #endif
     } else {
       catchment_collection = geojson::read(catchmentDataFile, catchment_subset_ids);
