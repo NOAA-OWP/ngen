@@ -6,8 +6,11 @@
  - config.yml: This is a configuration file that the BMI reads to set inital_time (initial value of current_model_time) and time_step_seconds (time_step_size).
  - environment.yml: Environment file with the required Python libraries needed to run the model with BMI. Create the environment with this command: `conda env create -f environment.yml`, then activate it with `conda activate bmi_test`
 
+# Running the Module in ngen Framework
+This module has been set up to run in the ngen framework. To run it, in the same environment set up for the testing, execute `python run_ngen_aorc_bmi.py`. The python script contains command to run ngen through time steps. Similar to running ngen in Linux environment, several input files are needed. We have provided some example files for a test run, in addition to files used in "Testing BMI Python modules" step. These include forcing files in data/forcing/ and initialization files in data/bmi/ subdirectories. Specific catchment ids are in config.yml and hydrofabric file names used can be found in "run_ngen_aorc_bmi.py".
+
 # About
-This is an implementation of a Python-based model that fulfills the Python language BMI interface and can be used in the Framework. It is intended to serve as a control for testing purposes, freeing the framework from dependency on any real-world model in order to test BMI related functionality.
+This is an implementation of a Python-based model that fulfills the Python language BMI interface and can be used in the Framework. It not only serves as a control for testing purposes, but can also run ngen models directly within the ngen framework.
 
 # Implementation Details
 
@@ -23,3 +26,6 @@ model time ids RAINRATE T2D Q2D U2D V2D PSFC SWDOWN LWDOWN
 7200 cat-298141 0.0 291.4287885223148 0.009017457352766267 -1.3006835177642628 -1.600000023841858 98119.267578125 0.0 360.27102587626905
 10800 cat-298141 0.0 290.0400922125591 0.009098991164183112 -1.7708498264975816 -1.600000023841858 98033.759765625 0.0 360.15591356986624
 14400 cat-298141 0.0 288.66411562955545 0.009186683422710007 -2.1909006445244046 -1.5513213388818698 97948.603515625 0.0 371.8681207756417
+
+## Run the ngen model
+`python run_ngen_aorc_bmi.py`
