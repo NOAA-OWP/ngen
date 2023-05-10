@@ -7,7 +7,7 @@
 #include <Catchment_Formulation.hpp>
 #include <HY_Features.hpp>
 
-#ifdef NGEN_WITH_SQLITE3
+#if NGEN_WITH_SQLITE3
 #include <GeoPackage.hpp>
 #endif
 
