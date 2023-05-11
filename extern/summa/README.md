@@ -51,7 +51,7 @@ First, cd into the outer directory containing the submodule:
 
     cd extern/summa
 
-If you want to use Sundials, set -DSUNDIALS_ACTIVE:BOOL=ON in the build script.  Then, before summa can be built, Sundials needs to be installed. 
+If you want to use Sundials IDA or BE Kinsol, set -DCMAKE_BUILD_TYPE=Sundials_NexGen in the build script.  Then, before summa can be built, Sundials needs to be installed. 
 Download the latest release of IDA solver from SUNDIALS package in https://computing.llnl.gov/projects/sundials/sundials-software
 
     wget "https://github.com/LLNL/sundials/releases/download/v6.3.0/sundials-6.3.0.tar.gz"
@@ -73,11 +73,11 @@ Before ngen library files can be built, a CMake build system must be generated. 
 
     cmake -B cmake_build -S .
 
-Note (similar to above) that when there is an existing directory, it may sometimes be necessary to clear it and regenerate, especially if any changes were made to the [CMakeLists.txt](CMakeLists.txt) file.
+Note (similar to above) that when there is an existing directory, it may sometimes be necessary to clear it and regenerate, especially if any changes were made to the CMakeLists.txt file.
 
 After there is build system directory, the shared library can be built using the `summabmi` CMake target. For example, the SummaSundials shared library file (i.e., the build config's `summabmi` target) can be built using:
 
-    cmake --build cmake_build --target summabmi -- -j 2
+    cmake --build cmake_build --target all
 
 This will build a `cmake_build/libsummabmi.<version>.<ext>` file, where the version is configured within the CMake config, and the extension depends on the local machine's operating system.    
 
