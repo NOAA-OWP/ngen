@@ -56,11 +56,12 @@ std::string Bmi_C_Formulation::get_output_line_for_timestep(int timestep, std::s
     if (output_var_names.empty()) { return ""; }
 
     // Do the first separately, without the leading comma
-    *output_text_stream << get_var_value_as_double(output_var_names[0]);
+    //*output_text_stream << get_var_value_as_double(output_var_names[0]);
+    *output_text_stream << get_var_vec_as_double(timestep, output_var_names[0])[0];
 
     // Do the rest with a leading comma
     for (int i = 1; i < output_var_names.size(); ++i) {
-        *output_text_stream << "," << get_var_value_as_double(output_var_names[i]);
+        *output_text_stream << "," << get_var_vec_as_double(timestep, output_var_names[i])[0];
     }
     return output_text_stream->str();
 }
@@ -136,6 +137,54 @@ double Bmi_C_Formulation::get_response(time_step_t t_index, time_step_t t_delta)
         next_time_step_index++;
     }
     return get_var_value_as_double( get_bmi_main_output_var());
+}
+
+/*
+std::vector<std::vector<double> > Bmi_Fortran_Formulation::get_output_array_for_timestep(int timestep, std::vector<int> indices) {
+    // TODO: something must be added to store values if more than the current time step is wanted
+    // TODO: if such a thing is added, it should probably be configurable to turn it off
+    if (timestep != (next_time_step_index - 1)) {
+        throw std::invalid_argument("Only current time step valid when getting output for BMI Python formulation");
+    }
+    // TODO: could do some data manipulation within the function or return the dest to the calling tunction for processing
+    // for now we just simply output some variables
+    const std::vector<std::string> &output_var_names = get_output_variable_names();
+    double* dest_as_doubles;
+    std::vector<double> dest_vec_doubles;
+    std::string var_name;
+    std::vector<std::vector<double> > dest_vec_vec;
+    for (int i = 0; i < output_var_names.size(); ++i) {
+        var_name = output_var_names[i];
+        dest_vec_doubles = get_var_arr_as_double(indices, var_name, dest_as_doubles);
+        dest_vec_vec.push_back(dest_vec_doubles)
+    }
+    return dest_vec_vec;
+}
+
+std::vector<double> Bmi_Fortran_Formulation::get_var_arr_as_double(std::vector<int> indices, const string &var_name) {
+    string val_type = get_bmi_model()->GetVarType(var_name);
+    size_t val_item_size = (size_t)get_bmi_model()->GetVarItemsize(var_name);
+    // The available types and how they are handled here should match what is in SetValueAtIndices
+    if (val_type == "int" && val_item_size == sizeof(short)) {
+        short dest[indices.size()];
+        int* inds = &indices[0];
+        get_bmi_model()->GetValueAtIndices(var_name, dest, inds, indices.size());
+
+        double dest_as_doubles[indices.size()];
+        for (int i = 0; i < indices.size(); i++) {
+            dest_as_doubles[i] = (double)dest[i];
+        }
+        std::vector<double> dest_vec_doubles(std::begin(dest_as_doubles), std::end(dest_as_doubles));
+        return dest_vec_doubles;
+    }
+}
+*/
+
+std::vector<double> Bmi_C_Formulation::get_var_vec_as_double(int t_index, const string &var_name) {
+    //std::vector<double> output_var_vec;
+    //auto output_var_vec = get_var_value_as(t_index, var_name);
+    auto output_var_vec = get_var_value_as<std::vector<double>, double>(t_index, var_name);
+    return output_var_vec;
 }
 
 double Bmi_C_Formulation::get_var_value_as_double(const std::string& var_name) {

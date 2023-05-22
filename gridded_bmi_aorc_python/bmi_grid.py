@@ -259,7 +259,11 @@ class Grid():
             # bmi states dimension info in `ij` form (last dimension indexed first...) in the shape meta
             # so x would at index rank, y at rank-1, z at rank-2 ect...
             idx = self.rank-1 #index is 0 based, rank is 1 based, adjust...
+            print("bmi_grid: idx = ", idx)
+            print("bmi_grid: grid_x:, self.shape[idx]: ", self.shape[idx])
             return np.array( [ self.origin[idx] + self.spacing[idx]*x for x in range(self.shape[idx]) ], dtype=np.float64 )
+            #print("In bmi_grid: self.shape[idx]: ", self.shape[idx])
+            #return np.array( [ self.origin[idx] + self.spacing[idx]*(x+2000) for x in range(self.shape[idx]-4000) ], dtype=np.float64 )
         else:    
             #TODO should this raise an error or return an empty array?
             #raise RuntimeError(f"Cannot get x coordinates of grid with shape {self.shape}")
@@ -277,7 +281,10 @@ class Grid():
 
         if (self.type == GridType.rectilinear or self.type == GridType.uniform_rectilinear) and len(self.shape) > 1:
             idx = self.rank-2 #index is 0 based, rank is 1 based, adjust...
+            print("bmi_grid: grid_y: self.shape[idx]: ", self.shape[idx])
             return np.array( [ self.origin[idx] + self.spacing[idx]*y for y in range(self.shape[idx]) ], dtype=np.float64 )
+            #print("In bmi_grid: self.shape[idx]: ", self.shape[idx])
+            #return np.array( [ self.origin[idx] + self.spacing[idx]*(y+1000) for y in range(self.shape[idx]-2000) ], dtype=np.float64 )
         else:    
             #TODO should this raise an error or return an empty array?
             #raise RuntimeError(f"Cannot get y coordinates of grid with shape {self.shape}")

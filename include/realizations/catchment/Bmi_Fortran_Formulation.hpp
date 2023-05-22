@@ -98,6 +98,12 @@ namespace realization {
          */
         std::shared_ptr<Bmi_Fortran_Adapter> construct_model(const geojson::PropertyMap& properties) override;
 
+        template<class T, class O>
+        T get_var_value_as(time_step_t t_index, const std::string& var_name) {
+            std::vector<O> outputs = models::bmi::GetValue<O>(*get_bmi_model(), var_name);
+            return (T) outputs[t_index];
+        }
+
         time_t convert_model_time(const double &model_time) override {
             return (time_t) (get_bmi_model()->convert_model_time_to_seconds(model_time));
         }
@@ -105,6 +111,13 @@ namespace realization {
         double get_var_value_as_double(const string &var_name) override;
 
         double get_var_value_as_double(const int &index, const string &var_name) override;
+
+        std::vector<double> get_var_vec_as_double(int t_index, const string &var_name) override;
+
+        //void get_var_arr_as_double(const std::vector<int> indices, const string &var_name, double* dest_as_doubles) override;
+        //void get_var_arr_as_double(std::vector<int> indices, const string &var_name, double* dest_as_doubles) override;
+
+        //double** get_output_array_for_timestep(int timestep, std::vector<int> indices) override;
 
         friend class Bmi_Multi_Formulation;
 

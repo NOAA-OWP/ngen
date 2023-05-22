@@ -11,7 +11,7 @@ class ngen_AORC_model():
     #    super(ngen_model, self).__init__()
     #    #self._model = model
 
-    def run(self, model: dict, dt: int, date, base_url, aorc_beg, aorc_end, aorc_new_end, ERRDAP_data, AORC_data_pathway, AORC_files, AORC_met_vars, scale_factor, add_offset, missing_value, _grid_x, _grid_y):
+    def run(self, model: dict, dt: int, date, base_url, aorc_beg, aorc_end, aorc_new_end, ERRDAP_data, AORC_data_pathway, AORC_files, AORC_met_vars, scale_factor, add_offset, missing_value): #, _grid_x, _grid_y):
         """
         Run this model into the future.
 
@@ -73,10 +73,10 @@ class ngen_AORC_model():
 
                 #swap between model[var][0][0][0] and model[var][0][_grid_y][_grid_x] so than ngen framework run on real values
                 tmp_var = model[var][0][0][0]
-                #model[var][0][0][0] = model[var][0][2101][4201]
-                #model[var][0][2101][4201] = tmp_var
-                model[var][0][0][0] = model[var][0][_grid_y][_grid_x]
-                model[var][0][_grid_y][_grid_x] = tmp_var
+                model[var][0][0][0] = model[var][0][2101][4201]
+                model[var][0][2101][4201] = tmp_var
+                #model[var][0][0][0] = model[var][0][_grid_y][_grid_x]
+                #model[var][0][_grid_y][_grid_x] = tmp_var
 
                 num_nan = np.count_nonzero(~np.isnan(model[var]))
                 #print("In AORC_model: num_nan = ", num_nan)

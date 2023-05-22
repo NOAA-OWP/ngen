@@ -696,6 +696,18 @@ namespace realization {
          */
         virtual double get_var_value_as_double(const int& index, const std::string& var_name) = 0;
 
+        /*
+        */
+
+        //virtual void get_var_arr_as_double(std::vector<int> indices, const string &var_name, double* dest_as_doubles) = 0;
+
+        //virtual double** get_output_array_for_timestep(int timestep, std::vector<int> indices) = 0;
+
+        //virtual std::vector<std::vector<double> > Bmi_Fortran_Formulation::get_output_array_for_timestep(int timestep, std::vector<int> indices) = 0;
+
+        //virtual std::vector<double> Bmi_Fortran_Formulation::get_var_arr_as_double(std::vector<int> indices, const string &var_name) = 0;
+        virtual std::vector<double> get_var_vec_as_double(int t_index, const string &var_name) = 0;
+
         /**
          * Universal logic applied when creating a BMI-backed formulation from NGen config.
          *

@@ -306,11 +306,12 @@ string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, std::st
         try {
             // Do the first separately, without the leading comma
             auto output_data_provider_iter = availableData.find(output_var_names[0]);
-            *output_text_stream << get_var_value_as_double(output_var_names[0]);
+            //*output_text_stream << get_var_value_as_double(output_var_names[0]);
+            *output_text_stream << get_var_vec_as_double(timestep, output_var_names[0])[0];
 
             // Do the rest with a leading comma
             for (int i = 1; i < output_var_names.size(); ++i) {
-                *output_text_stream << "," << get_var_value_as_double(output_var_names[i]);
+                *output_text_stream << "," << get_var_vec_as_double(timestep, output_var_names[i])[0];
             }
             return output_text_stream->str();
         }
@@ -411,6 +412,13 @@ double Bmi_Multi_Formulation::get_response(time_step_t t_index, time_step_t t_de
     #endif // ACTIVATE_PYTHON
     throw runtime_error(get_formulation_type() + " unimplemented type " + module_types[index] +
                         " in get_response for main return value");
+}
+
+std::vector<double> Bmi_Multi_Formulation::get_var_vec_as_double(int t_index, const string &var_name) {
+    //std::vector<double> output_var_vec;
+    //auto output_var_vec = get_var_value_as(t_index, var_name);
+    auto output_var_vec = get_var_value_as<std::vector<double>, double>(t_index, var_name);
+    return output_var_vec;
 }
 
 bool Bmi_Multi_Formulation::is_bmi_input_variable(const string &var_name) {

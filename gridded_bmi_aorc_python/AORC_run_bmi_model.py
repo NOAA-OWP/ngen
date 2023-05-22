@@ -26,8 +26,9 @@ def query_bmi_var(model: 'Bmi', name: str) -> np.ndarray:
     grid = model.get_var_grid(name)
     shape = np.zeros(rank, dtype=int)
     model.get_grid_shape(grid, shape)
-    #if name == "APCP_surface":
-    #    print("shape = ", shape)
+    if name == "APCP_surface":
+        print("shape = ", shape)
+        print("grid = ", grid)
     #TODO call model.get_var_type(name) and determine the correct type of nd array to create
     result = model.get_value(name, np.zeros(model.get_grid_size(0),float))
     return result

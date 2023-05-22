@@ -64,11 +64,11 @@ string Bmi_Py_Formulation::get_output_line_for_timestep(int timestep, std::strin
     if (output_var_names.empty()) { return ""; }
 
     // Do the first separately, without the leading comma
-    *output_text_stream << get_var_value_as_double(output_var_names[0]);
+    *output_text_stream << get_var_vec_as_double(timestep, output_var_names[0])[0];
 
     // Do the rest with a leading comma
     for (int i = 1; i < output_var_names.size(); ++i) {
-        *output_text_stream << "," << get_var_value_as_double(output_var_names[i]);
+        *output_text_stream << "," << get_var_vec_as_double(timestep, output_var_names[i])[0];
     }
     return output_text_stream->str();
 }
@@ -111,6 +111,24 @@ double Bmi_Py_Formulation::get_response(time_step_t t_index, time_step_t t_delta
         next_time_step_index++;
     }
     return get_var_value_as_double( get_bmi_main_output_var());
+}
+
+//std::vector<double> Bmi_Py_Formulation::get_var_vec_as_double(const string &var_name) {
+    ////time_t model_epoch_time = convert_model_time(model_init_time) + get_bmi_model_start_time_forcing_offset_s();
+    //time_t start_time = convert_model_time(model_init_time) + get_bmi_model_start_time_forcing_offset_s();
+    //Bmi_Module_Formulation::get_bmi_output_var_name(const std::string &var_name, std::string &bmi_var_name);
+    //CatchmentAggrDataSelector(std::string(), var, start, dur, units)
+    //auto selector = CatchmentAggrDataSelector(std::string(),bmi_var_name,start_time,t_delta,"1");
+    ////std::vector<double> value_vec = get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m=SUM);
+    //// does value_vec contains only one element?
+    //std::vector<double> value_vec = get_values(selector)
+    //return value_vec;
+
+std::vector<double> Bmi_Py_Formulation::get_var_vec_as_double(int t_index, const string &var_name) {
+    //std::vector<double> output_var_vec;
+    //auto output_var_vec = get_var_value_as(t_index, var_name);
+    auto output_var_vec = get_var_value_as<std::vector<double>, double>(t_index, var_name);
+    return output_var_vec;
 }
 
 double Bmi_Py_Formulation::get_var_value_as_double(const string &var_name) {

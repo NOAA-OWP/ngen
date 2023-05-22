@@ -44,6 +44,7 @@ class AORC_bmi_model(Bmi):
         # Initalize AORC dataset as a 2D rectilinear
         # gridded product
         self.grid_1: Grid = Grid(0, 2, GridType.rectilinear) #Grid 1 is a 2 dimensional grid
+        print("In AORC_bmi_model: self.grid_1 = ",  self.grid_1)
 
     #----------------------------------------------
     # Required, static attributes of the model
@@ -69,6 +70,7 @@ class AORC_bmi_model(Bmi):
     #---------------------------------------------
     #will use these implicitly for grid meta data, could in theory advertise them?
     # grid_1_rank -- could probably establish a pattern grid_{id}_rank for managing different ones?
+    #_output_var_names = ['ids', 'APCP_surface', 'TMP_2maboveground', 'SPFH_2maboveground', 'UGRD_10maboveground', 'VGRD_10maboveground', 'PRES_surface', 'DSWRF_surface', 'DLWRF_surface']
     _output_var_names = ['APCP_surface', 'TMP_2maboveground', 'SPFH_2maboveground', 'UGRD_10maboveground', 'VGRD_10maboveground', 'PRES_surface', 'DSWRF_surface', 'DLWRF_surface']
 
     #------------------------------------------------------
@@ -78,6 +80,7 @@ class AORC_bmi_model(Bmi):
     #     since the input variable names could come from any forcing...
     #------------------------------------------------------
     #_var_name_map_long_first = {
+    #_var_name_units_map = {'ids':['ids','-'],
     _var_name_units_map = {'APCP_surface':['APCP_surface','kg/m^2'],
                            'TMP_2maboveground':['TMP_2maboveground','K'],
                            'SPFH_2maboveground':['SPFH_2maboveground','kg/kg'],
@@ -195,13 +198,11 @@ class AORC_bmi_model(Bmi):
 
         # Get variable grid dimensions
         self.grid_1._shape = np.array(nc_file.variables['PRES_surface'][:][0,:,:].shape,np.int32)
-        print("AORC_bmi_model: shape = ", self.grid_1._shape)
+        print("In AORC_bmi_model: self.grid_1._shape = ", self.grid_1._shape)
    
         # Get grid coordinates for AORC Forcings BMI functions
         self.grid_1._grid_x = nc_file.variables['longitude'][:]
-        print("AORC_bmi_model: _grid_x = ", self.grid_1._grid_x[4201])
         self.grid_1._grid_y = nc_file.variables['latitude'][:]
-        print("AORC_bmi_model: _grid_y = ", self.grid_1._grid_y[2101])
 
         # get scale_factor and offset keys if available
         # and append missing values to BMI class
@@ -256,6 +257,7 @@ class AORC_bmi_model(Bmi):
         # ------------- Set catchment id -----------------------#
         self._values['cat_id'] = self.cfg_bmi['cat_id']
         self.var_array_lengths = len(np.atleast_1d(self._values['cat_id']))
+        #print("self.var_array_lengths = ", self.var_array_lengths)
 
         # Find the index number for the specified cat-id in the catchment array
         array = np.array(g)
@@ -264,20 +266,16 @@ class AORC_bmi_model(Bmi):
             arr_idx = (arr_index[0])[0]
             self.arr_index = arr_idx
         #print("self.arr_index = ", self.arr_index)
-
-        self._values['grid_x'] = self.cfg_bmi['grid_yx'][0][1]
-        self._values['grid_y'] = self.cfg_bmi['grid_yx'][0][0]
-        self._grid_x = self._values['grid_x']
-        self._grid_y = self._values['grid_y']
-        print("self._values['grid_x'] = ", self._values['grid_x'])
-        print("self._values['grid_y'] = ", self._values['grid_y'])
-        print("AORC_bmi_model: grid point: longitude = ", self.grid_1._grid_x[self._grid_x])
-        print("AORC_bmi_model: grid point: latitude = ", self.grid_1._grid_y[self._grid_y])
        
         # ------------- Initialize the parameters, inputs and outputs ----------#
         for parm in self._model_parameters_list:
             self._values[self._var_name_map_short_first[parm]] = self.cfg_bmi[parm]
         for model_input in self.get_input_var_names():
+            #print("model_input names: ", model_input)
+            # cat-id still needed for now in ngen framework
+            #if model_input == "ids":
+            #    self._values[model_input] = np.empty(self.var_array_lengths, dtype=object)
+            #else:
             #This won't actually allocate the size, just the rank...
             if self._grid_map[model_input].type == GridType.scalar:
                 self._values[model_input] = np.zeros( (), dtype=float)
@@ -286,16 +284,35 @@ class AORC_bmi_model(Bmi):
         #for model_input in self._input_var_types:
         #    self._values[model_input] = np.zeros(self.var_array_lengths, dtype=self._input_var_types[model_input])
         for model_output in self.get_output_var_names():
+            # cat-id still needed for now in ngen framework
+            #print("model_output names: ", model_output)
+            #if model_output == "ids":
+            #    self._values[model_output] = np.empty(self.var_array_lengths, dtype=object)
+            #else:
             if self._grid_map[model_output].type == GridType.scalar:
                 self._values[model_output] = np.zeros( (), dtype=float)
             else: 
                 self._values[model_output] = np.zeros(self._grid_map[model_output].shape, dtype=float)
+        #print(self._values)
 
         # ------------- Set time to initial value -----------------------#
         self._values['current_model_time'] = self.cfg_bmi['initial_time']
         
         # ------------- Set time step size -----------------------#
         self._values['time_step_size'] = self.cfg_bmi['time_step_seconds']
+
+        """
+        # ------------- Set catchment id -----------------------#
+        self._values['cat_id'] = self.cfg_bmi['cat_id']
+
+        # Find the index number for the specified cat-id in the catchment array
+        array = np.array(g)
+        if np.all(array != None):
+            arr_index = np.where(array == self._values['cat_id'])
+            arr_idx = (arr_index[0])[0]
+            self.arr_index = arr_idx
+        print("self.arr_index = ", self.arr_index)
+        """
 
         # ------------- Initialize a model ------------------------------#
         #self._model = ngen_model(self._values.keys())
@@ -320,7 +337,7 @@ class AORC_bmi_model(Bmi):
             The future time to when the model should be advanced.
         """
         update_delta_t = future_time - self._values['current_model_time']
-        self._model.run(self._values, update_delta_t, self._date, self._base_url, self._aorc_beg, self._aorc_end, self._aorc_new_end,  self._ERRDAP_data, self._AORC_data_pathway, self._AORC_files, self._AORC_met_vars, self._scale_factor, self._add_offset, self._missing_value, self._grid_x, self._grid_y)
+        self._model.run(self._values, update_delta_t, self._date, self._base_url, self._aorc_beg, self._aorc_end, self._aorc_new_end,  self._ERRDAP_data, self._AORC_data_pathway, self._AORC_files, self._AORC_met_vars, self._scale_factor, self._add_offset, self._missing_value)
     #------------------------------------------------------------    
     def finalize( self ):
         """Finalize model."""
@@ -388,6 +405,9 @@ class AORC_bmi_model(Bmi):
             dest[:] = [self.grid_0.rank, self.grid_1.rank]
         else:
             dest[:] = self.get_value_ptr(var_name)
+            #print("In AORC_bmi_model, dest = ", dest[:])
+            #if var_name == "ids":
+            #    print("dest = ", dest[:])
         return dest
 
     #-------------------------------------------------------------------
@@ -434,6 +454,28 @@ class AORC_bmi_model(Bmi):
             self._values[var_name].shape = shape
         except ValueError as e:
             raise RuntimeError("Cannot flatten array without copying -- "+str(e).split(": ")[-1])
+
+        """
+        if var_name == "ids":
+            self._values['ids'] = self._values['cat_id']
+            #print("self._values['ids']: ", self._values['ids'])
+            return np.atleast_1d(self._values[var_name])
+        else:
+            #print("var_name, self._values[var_name])[self.arr_index]: ", var_name, (self._values[var_name])[self.arr_index])
+            #return np.atleast_1d((self._values[var_name])[self.arr_index])
+
+            #if var_name == "APCP_surface":
+            #    self._values[var_name] = np.nan_to_num(self._values[var_name], copy=False, nan=2.5, posinf=None, neginf=None)
+            #else:
+            #    self._values[var_name] = np.nan_to_num(self._values[var_name], copy=False, nan=10.5, posinf=None, neginf=None)
+            #return self._values[var_name].ravel()#.reshape((-1,))
+
+            #testing good values on the grids
+            #if var_name == "PRES_surface":
+            #    self._values[var_name] = self._values[var_name][~np.isnan(self._values[var_name])]
+            #    print("self._values[var_name] = ", var_name,  self._values[var_name])
+            return self._values[var_name].ravel()#.reshape((-1,))
+        """
 
         return self._values[var_name].ravel()#.reshape((-1,))
 
