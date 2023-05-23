@@ -250,6 +250,80 @@ namespace realization {
                     return "";
             }
 
+            /**
+             * @brief Get the formatted nexus output path with the given @c id interpolated
+             *
+             * @code{.cpp}
+             * // Example config:
+             * // ...
+             * // "outputs": {
+             * //   ...
+             * //   "nexus": "/path/to/nexus-dir/{{id}}-output.csv",
+             * //   ...
+             * // }
+             * // ...
+             * const auto manager = Formulation_Manger(CONFIG);
+             * manager.get_nexus_output_path("nex-27");
+             * //> "/path/to/nexus-dir/nex-27-output.csv"
+             * @endcode
+             *
+             * @param id Nexus string ID
+             * @return std::string of the interpolated nexus output path if the realization config file
+                                   contains it, otherwise an output path in the form "./{{id}}_output.csv".
+             */
+            std::string get_nexus_output_path(const std::string& id) const noexcept {
+                const auto nexus_path_format = this->tree.get_optional<std::string>("global.outputs.nexus");
+                if (nexus_path_format != boost::none) {
+                    const auto pattern_idx = nexus_path_format->find("{{id}}");
+                    if (pattern_idx != std::string::npos) {
+                        std::string nexus_path = *nexus_path_format; // copy
+                        return nexus_path.replace(pattern_idx, sizeof("{{id}}") - 1, id);
+                    }
+                    // TODO: should we still return the path if it doesn't have an ID parameter?
+                    // this would imply that the user specified a path (and may know) that will
+                    // only ever output 1 file. Since, if there is more than 1 output, they will
+                    // overwrite one another.
+                }
+
+                // TODO: Should catchments and nexi have the same default output format?
+                return "./" + id + "_output.csv";
+            }
+
+            /**
+             * @brief Get the formatted catchment output path with the given @c id interpolated
+             *
+             * @code{.cpp}
+             * // Example config:
+             * // ...
+             * // "outputs": {
+             * //   ...
+             * //   "catchment": "/path/to/catchment-dir/{{id}}-output.csv",
+             * //   ...
+             * // }
+             * // ...
+             * const auto manager = Formulation_Manger(CONFIG);
+             * manager.get_catchment_output_path("cat-27");
+             * //> "/path/to/catchment-dir/cat-27-output.csv"
+             * @endcode
+             * 
+             * @param id Catchment string ID
+             * @return std::string of the interpolated catchment output path if the realization config file
+                                   contains it, otherwise an output path in the form "./{{id}}.csv".
+             */
+            std::string get_catchment_output_path(const std::string& id) const noexcept {
+                const auto catchment_path_format = this->tree.get_optional<std::string>("global.outputs.catchment");
+                if (catchment_path_format != boost::none) {
+                    const auto pattern_idx = catchment_path_format->find("{{id}}");
+                    if (pattern_idx != std::string::npos) {
+                        std::string catchment_path = *catchment_path_format; // copy
+                        return catchment_path.replace(pattern_idx, sizeof("{{id}}") - 1, id);
+                    }
+                    // TODO: same TODO as this::get_nexus_output_path
+                }
+
+                return "./" + id + ".csv";
+            }
+
 
         protected:
             std::shared_ptr<Catchment_Formulation> construct_formulation_from_tree(
