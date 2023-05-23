@@ -340,10 +340,10 @@ int main(int argc, char *argv[]) {
     for(const auto& id : features.nexuses()) {
         #ifdef NGEN_MPI_ACTIVE
         if (!features.is_remote_sender_nexus(id)) {
-          nexus_outfiles[id].open("./"+id+"_output.csv", std::ios::trunc);
+          nexus_outfiles[id].open(manager->get_nexus_output_path(id), std::ios::trunc);
         }
         #else
-        nexus_outfiles[id].open("./"+id+"_output.csv", std::ios::trunc);
+        nexus_outfiles[id].open(manager->get_nexus_output_path(id), std::ios::trunc);
         #endif
     }
 
@@ -394,6 +394,7 @@ int main(int argc, char *argv[]) {
   #ifdef NGEN_MPI_ACTIVE
         if (!features.is_remote_sender_nexus(id)) { //Ensures only one side of the dual sided remote nexus actually doing this...
   #endif
+
           //Get the correct "requesting" id for downstream_flow
 	        const auto& nexus = features.nexus_at(id);
           const auto& cat_ids = nexus->get_receiving_catchments();
