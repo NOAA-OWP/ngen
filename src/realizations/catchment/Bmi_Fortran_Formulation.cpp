@@ -45,52 +45,13 @@ std::string Bmi_Fortran_Formulation::get_formulation_type() {
     return "bmi_fortran";
 }
 
-/*
-std::vector<std::vector<double> > Bmi_Fortran_Formulation::get_output_array_for_timestep(int timestep, std::vector<int> indices) {
-    // TODO: something must be added to store values if more than the current time step is wanted
-    // TODO: if such a thing is added, it should probably be configurable to turn it off
-    if (timestep != (next_time_step_index - 1)) {
-        throw std::invalid_argument("Only current time step valid when getting output for BMI Python formulation");
-    }
-    // TODO: could do some data manipulation within the function or return the dest to the calling tunction for processing
-    // for now we just simply output some variables
-    const std::vector<std::string> &output_var_names = get_output_variable_names();
-    double* dest_as_doubles;
-    std::vector<double> dest_vec_doubles;
-    std::string var_name;
-    std::vector<std::vector<double> > dest_vec_vec;
-    for (int i = 0; i < output_var_names.size(); ++i) {
-        var_name = output_var_names[i];
-        dest_vec_doubles = get_var_arr_as_double(indices, var_name, dest_as_doubles);
-        dest_vec_vec.push_back(dest_vec_doubles)
-    }
-    return dest_vec_vec;
-}
-
-std::vector<double> Bmi_Fortran_Formulation::get_var_arr_as_double(std::vector<int> indices, const string &var_name) {
-    string val_type = get_bmi_model()->GetVarType(var_name);
-    size_t val_item_size = (size_t)get_bmi_model()->GetVarItemsize(var_name);
-    // The available types and how they are handled here should match what is in SetValueAtIndices
-    if (val_type == "int" && val_item_size == sizeof(short)) {
-        short dest[indices.size()];
-        int* inds = &indices[0];
-        get_bmi_model()->GetValueAtIndices(var_name, dest, inds, indices.size());
-
-        double dest_as_doubles[indices.size()];
-        for (int i = 0; i < indices.size(); i++) {
-            dest_as_doubles[i] = (double)dest[i];
-        }
-        std::vector<double> dest_vec_doubles(std::begin(dest_as_doubles), std::end(dest_as_doubles));
-        return dest_vec_doubles;
-    }
-}
-*/
-
-std::vector<double> Bmi_Fortran_Formulation::get_var_vec_as_double(int t_index, const string &var_name) {
-    //std::vector<double> output_var_vec;
-    //auto output_var_vec = get_var_value_as(t_index, var_name);
-    auto output_var_vec = get_var_value_as<std::vector<double>, double>(t_index, var_name);
-    return output_var_vec;
+std::vector<double> Bmi_Fortran_Formulation::get_var_vec_as_double(time_t t_delta, const string &var_name) {
+    time_t start_time = convert_model_time(get_bmi_model()->GetCurrentTime()) + get_bmi_model_start_time_forcing_offset_s();
+    std::string bmi_var_name;
+    Bmi_Module_Formulation::get_bmi_output_var_name(var_name, bmi_var_name);
+    auto selector = CatchmentAggrDataSelector(std::string(),bmi_var_name,start_time,t_delta,"1");
+    std::vector<double> value_vec = get_values(selector);
+    return value_vec;
 }
 
 double Bmi_Fortran_Formulation::get_var_value_as_double(const string &var_name) {
@@ -152,12 +113,17 @@ string Bmi_Fortran_Formulation::get_output_line_for_timestep(int timestep, std::
     // This probably should never happen, but just to be safe ...
     if (output_var_names.empty()) { return ""; }
 
+    // TODO: add codes to handle both scalar and vector outputs
+    // Convert int to long
+    time_t t_delta = timestep;
     // Do the first separately, without the leading comma
-    *output_text_stream << get_var_vec_as_double(timestep, output_var_names[0])[0];
+    //*output_text_stream << "," << get_var_value_as_double(output_var_names[0]);
+    *output_text_stream << get_var_vec_as_double(t_delta, output_var_names[0])[0];
 
     // Do the rest with a leading comma
     for (int i = 1; i < output_var_names.size(); ++i) {
-        *output_text_stream << "," << get_var_vec_as_double(timestep, output_var_names[i])[0];
+        //*output_text_stream << "," << get_var_value_as_double(output_var_names[i]);
+        *output_text_stream << "," << get_var_vec_as_double(t_delta, output_var_names[i])[0];
     }
     return output_text_stream->str();
 }

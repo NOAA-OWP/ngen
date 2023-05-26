@@ -1,7 +1,7 @@
 start_time : 2015-12-01 00:00:00
 time_step_seconds: 3600
 initial_time: 0
-ERRDAP_data : "true"
+ERRDAP_data : "false"
 aorc_beg : "AORC-OWP_"
 aorc_end : "z.nc4"
 aorc_new_end : ".nc4"

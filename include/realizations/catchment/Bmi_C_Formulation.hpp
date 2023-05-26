@@ -139,6 +139,11 @@ namespace realization {
         }
 
         /**
+         * Get value vector for some BMI model variable.
+         */
+        std::vector<double> get_var_vec_as_double(time_t timestep, const string &var_name) override;
+
+        /**
          * Get value for some BMI model variable.
          *
          * This function assumes that the given variable, while returned by the model within an array per the BMI spec,
@@ -148,6 +153,7 @@ namespace realization {
          * @param var_name
          * @return
          */
+
         double get_var_value_as_double(const std::string& var_name) override;
 
         /**
@@ -169,13 +175,6 @@ namespace realization {
          * @return
          */
         double get_var_value_as_double(const int& index, const std::string& var_name) override;
-
-        std::vector<double> get_var_vec_as_double(int t_index, const string &var_name) override;
-
-        //void get_var_arr_as_double(const std::vector<int> indices, const string &var_name, double* dest_as_doubles) override;
-        //void get_var_arr_as_double(std::vector<int> indices, const string &var_name, double* dest_as_doubles) override;
-
-        //double** get_output_array_for_timestep(int timestep, std::vector<int> indices) override;
 
         /**
          * Test whether backing model has run BMI ``Initialize``.

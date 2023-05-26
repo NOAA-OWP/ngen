@@ -590,17 +590,36 @@ namespace realization {
          */
         void create_multi_formulation(geojson::PropertyMap properties, bool needs_param_validation);
 
-        template<class T, class O>
-        //T get_var_value_as(time_step_t t_index, const std::string& var_name) {
-        T get_var_value_as(int t_index, const std::string& var_name) {
-            std::vector<O> outputs = models::bmi::GetValue<O>(*get_bmi_model(), var_name);
-            return (T) outputs[t_index];
-        }
-
         template<class T>
         double get_module_var_value_as_double(const std::string &var_name, std::shared_ptr<Bmi_Formulation> mod) {
             std::shared_ptr<T> module = std::static_pointer_cast<T>(mod);
             return module->get_var_value_as_double(var_name);
+        }
+
+        /**
+         * Get value vector for some BMI model variable.
+         */
+        std::vector<double> get_var_vec_as_double(const int& index, const std::string& var_name) {
+            auto data_provider_iter = availableData.find(var_name);
+            if (data_provider_iter == availableData.end()) {
+                throw external::ExternalIntegrationException(
+                        "Multi BMI formulation can't find correct nested module for BMI variable " + var_name + SOURCE_LOC);
+            }
+            // Otherwise, we have a provider, and we can cast it based on the documented assumptions
+            try {
+                std::shared_ptr <data_access::GenericDataProvider> nested_module =
+                        std::dynamic_pointer_cast<data_access::GenericDataProvider>(data_provider_iter->second);
+                long nested_module_time = nested_module->get_data_start_time() + ( this->get_model_current_time() - this->get_model_start_time() );
+                auto selector = CatchmentAggrDataSelector(this->get_catchment_id(),var_name,nested_module_time,this->record_duration(),"1");
+                //TODO: After merge PR#405, try re-adding support for index
+                return nested_module->get_values(selector);
+            }
+            // If there was any problem with the cast and extraction of the value, throw runtime error
+            catch (std::exception &e) {
+                throw std::runtime_error("Multi BMI formulation can't use associated data provider as a nested module"
+                                         " when attempting to get values of BMI variable " + var_name + SOURCE_LOC);
+                // TODO: look at adjusting defs to move this function up in class hierarchy (or at least add TODO there)
+            }
         }
 
         /**
