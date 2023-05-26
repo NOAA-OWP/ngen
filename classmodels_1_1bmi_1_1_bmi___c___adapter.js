@@ -21,6 +21,7 @@ var classmodels_1_1bmi_1_1_bmi___c___adapter =
     [ "get_bmi_model_time_step_size_ptr", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#a53eca48ab8aa5e1d5c56dc6c9d00d3af", null ],
     [ "get_bmi_registration_function", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#ac1a86e6285c9d8c809d1bd1bdc013215", null ],
     [ "get_dyn_lib_handle", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#a57d36aeb7ab195f31e59d19812a511b5", null ],
+    [ "get_model_name", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#a29ece37345ba1fc58e578131f728a3b3", null ],
     [ "get_value", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#acb41ceded0e5f7fea73f3aa6ce06226c", null ],
     [ "GetComponentName", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#a3c4148c0f9e8138eb6bcf2a86e340d13", null ],
     [ "GetCurrentTime", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#a8bde25bf9fad9061daf126e213b8ce07", null ],
