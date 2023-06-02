@@ -7,14 +7,13 @@
 See [Setting up t-route source](DEPENDENCIES.md#t-route) for details on aquiring the t-route submodule.
 You will also need to [set up pybind11](DEPENDENCIES.md#pybind11) to use t-route.
 
-## Installing t-route
+## Setup Virtual Environment
 
 Since t-route is set of Python modules, it will need to be installed in the Python environment ngen will be running with. Below are recommended steps to accomplish this: 
 
 1. From the ngen project root (if this virtual environment exists, you may skip this step.)
 
 ```sh
-mkdir venv
 python3 -m venv venv
 ```
 
@@ -25,23 +24,30 @@ source venv/bin/activate
 pip install -U pip deprecated pyarrow geopandas tables
 ```
 
-3. Obtain the t-route software and [compile and install it](https://github.com/NOAA-OWP/t-route#usage-and-testing). This should install the modules in your activated venv from step 2. The t-route source can be downloaded and placed anywhere, it is only important that the Python modules are installed in the right environment/site.
+## Install t-route
+
+[Compile and install t-route](https://github.com/NOAA-OWP/t-route#usage-and-testing) following the instructions from the t-route repository.
+Ensure that you install the t-route modules in the virtual environment from step 2 of the Setup Virtual Environment section.
+The t-route source can be downloaded and placed anywhere, it is only important that the Python modules are installed in the right virtual environment.
 
 ## Installation Caveats
 
 ### Compilers and Libraries
 
-The t-route extension modules rely on netcdf fortran, and thus they need to be compiled with the same fortran compiler that compiled
+The t-route compiler script, `compiler.sh`, compiles and links `C` and `Fortran` code that will run _within_ an `ngen` process.
+Ensure that compiler paths and flags, include paths, library paths, and other build time environment variables match the settings used to compile `ngen` to avoid conflicting dependencies and undefined behavior.
+
+Note, the t-route extension modules rely on netcdf fortran, and thus they need to be compiled with the same fortran compiler that compiled
 the netcdf library.  For example, if `libnetcdff` was provided by the RHEL7 package `netcdf-fortran-openmpi-static-4.2-16.el7.x86_64`
 which was compiled with the openmpi fortran compiler, you will have to set the `FC` environment variable appropriately before executing the t-route `compiler.sh` script, like so:
+
 ```sh
 FC=mpif90 ./compiler.sh
 ```
-More generally speaking, the t-route compiler script is going to compile and link C and Fortran code, which will end up being run inside the ngen process--so you should make sure that the compilers, include paths, library paths, etc. are properly prepared in environment variables the same way that they were when you compiled ngen, so that there are not conflicting dependencies when they are run together.
 
 ### Default installation is in development mode (impacts macOS)
 
-The compiler.sh script will install the Python modules with `-e`. On macOS, you may need to re-install the modules in t-route's `src` directory directly after running `compiler.sh`.
+The `compiler.sh` script will install the Python modules with `-e`. On macOS, you may need to re-install the modules in t-route's `src` directory directly after running `compiler.sh`.
 
 [Additional documentation for configuration and dependencies of t-route](https://github.com/NOAA-OWP/t-route#configuration-and-dependencies).
  
