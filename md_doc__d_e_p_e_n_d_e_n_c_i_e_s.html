@@ -273,23 +273,16 @@ Version Requirements</h3>
 t-route</h2>
 <h3><a class="anchor" id="autotoc_md112"></a>
 Setup</h3>
-<p >The dependency is handled as a Git Submodule, located at <code>extern/t-route</code>. To initialize the submodule after cloning the repo: </p><div class="fragment"><div class="line">git submodule update --init extern/t-route</div>
-</div><!-- fragment --><p> Git <em>should</em> take care of checking out the commit for the required version automatically (assuming latest upstream changes have been fetched), so it should be possible to also use the command above to sync future updates to the required version.</p>
-<p >Once the submodule is fetched, the routing module must installed in a suitable environment.</p>
-<p >One supported option is to create a <code>virtualenv</code> environment at <code>.venv</code> in the project root and activate this environment for any simulations using routing. <br  />
-</p>
-<p >See the <a href="PYTHON_ROUTING.md#installing-t-route">installing t-route section here</a> for more details.</p>
-<h3><a class="anchor" id="autotoc_md113"></a>
-Enabling Routing in Simulations</h3>
-<p >To do this, include the <code>-DNGEN_ACTIVATE_ROUTING:BOOL=true</code> option when running the <code>cmake</code> build on the command line to generate the build system. An appropriate <code>routing_config.yaml</code> must be passed to the NGen realization config. More info can be found in the <a href="PYTHON_ROUTING.md#routing-config">python routing documentation</a></p>
-<p >Before executing any simulation, be sure to activate the virtual environment. </p><div class="fragment"><div class="line">source .venv/bin/activate</div>
+<p >See the <a href="PYTHON_ROUTING.md#installing-t-route">installing t-route section</a> for more details.</p>
+<p >Be sure to build ngen with Python and Routing support as discussed there, and if using a virtual environment, make sure it is activated when running ngen, e.g.:</p>
+<div class="fragment"><div class="line">source venv/bin/activate</div>
 </div><!-- fragment --> </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri May 26 2023 17:18:29 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
+    <li class="footer">Generated on Mon Jun 5 2023 18:32:48 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
   </ul>
 </div>
 </body>
