@@ -30,5 +30,4 @@ class ngen_model():
         model['OUTPUT_VAR_3'] += 1
         #Update the grid data
         model['GRID_VAR_2'] = model['GRID_VAR_1'] + 2
-        model['GRID_VAR_3'] = model['GRID_VAR_1'] + 3
         model['current_model_time'] = model['current_model_time'] + dt

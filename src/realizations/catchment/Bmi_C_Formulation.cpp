@@ -44,30 +44,24 @@ std::string Bmi_C_Formulation::get_output_line_for_timestep(int timestep, std::s
     // TODO: something must be added to store values if more than the current time step is wanted
     // TODO: if such a thing is added, it should probably be configurable to turn it off
     if (timestep != (next_time_step_index - 1)) {
-        throw std::invalid_argument("Only current time step valid when getting output for BMI C formulation");
+        throw std::invalid_argument("Only current time step valid when getting output for BMI C++ formulation");
     }
-
-    // TODO: see Github issue 355: this design (and formulation output handling in general) needs to be reworked
-    // Clear anything currently in there
-    output_text_stream->str(std::string());
-
-    // Convert int to long type
-    time_t t_delta = timestep;
-    const std::vector<std::string> &output_var_names = get_output_variable_names();
-    // This probably should never happen, but just to be safe ...
-    if (output_var_names.empty()) { return ""; }
+    std::string output_str;
 
     // TODO: add codes to handle both scalar and vector outputs
-    // Do the first separately, without the leading comma
-    //*output_text_stream << get_var_value_as_double(output_var_names[0]);
-    *output_text_stream << get_var_vec_as_double(t_delta, output_var_names[0])[0];
-
-    // Do the rest with a leading comma
-    for (int i = 1; i < output_var_names.size(); ++i) {
-        //*output_text_stream << get_var_value_as_double(output_var_names[i]);
-        *output_text_stream << "," << get_var_vec_as_double(t_delta, output_var_names[i])[0];
+    time_t t_delta = timestep;
+    for (const std::string& name : get_output_variable_names()) {
+        //for scalar, get_var_vec_as_double() function would return a vector with one element
+        std::vector<double> vector_var = get_var_vec_as_double(t_delta, name);
+        if (vector_var.size() == 1) {
+            output_str += (output_str.empty() ? "" : ",") + std::to_string(vector_var[0]);
+        }
+        else {
+            //using index 1 to show vector_var size is greater than 1
+            output_str += (output_str.empty() ? "" : ",") + std::to_string(vector_var[1]);
+        }
     }
-    return output_text_stream->str();
+    return output_str;
 }
 
 /**

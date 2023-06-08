@@ -97,12 +97,6 @@ namespace realization {
 
         shared_ptr<models::bmi::Bmi_Py_Adapter> construct_model(const geojson::PropertyMap &properties) override;
 
-        template<class T, class O>
-        T get_var_value_as(int t_index, const std::string& var_name) {
-            std::vector<O> outputs = models::bmi::GetValue<O>(*get_bmi_model(), var_name);
-            return (T) outputs[t_index];
-        }
-
         time_t convert_model_time(const double &model_time) override;
 
         double get_var_value_as_double(const string &var_name) override;

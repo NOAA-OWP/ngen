@@ -48,55 +48,28 @@ std::string Bmi_Py_Formulation::get_formulation_type() {
     return "bmi_py";
 }
 
-string Bmi_Py_Formulation::get_output_line_for_timestep(int timestep, std::string delimiter) {
+std::string Bmi_Py_Formulation::get_output_line_for_timestep(int timestep, std::string delimiter) {
     // TODO: something must be added to store values if more than the current time step is wanted
     // TODO: if such a thing is added, it should probably be configurable to turn it off
     if (timestep != (next_time_step_index - 1)) {
-        throw std::invalid_argument("Only current time step valid when getting output for BMI Python formulation");
+        throw std::invalid_argument("Only current time step valid when getting output for BMI C++ formulation");
     }
+    std::string output_str;
 
-    // TODO: see Github issue 355: this design (and formulation output handling in general) needs to be reworked
-    // Clear anything currently in there
-    output_text_stream->str(std::string());
-
-    const std::vector<std::string> &output_var_names = get_output_variable_names();
-    // This probably should never happen, but just to be safe ...
-    if (output_var_names.empty()) { return ""; }
-
-    // TODO: add codes to handle both the scalar and vector outputs
+    // TODO: add codes to handle both scalar and vector outputs
     time_t t_delta = timestep;
-    // Do the first separately, without the leading comma
-    // The following cases has beeb tested:
-    //*output_text_stream << get_var_vec_as_double(t_delta, output_var_names[0])[0];
-    //*output_text_stream <<"," << get_var_vec_as_double(t_delta, output_var_names[0])[1];
-    //*output_text_stream <<"," << get_var_vec_as_double(t_delta, output_var_names[0])[17646500];
-
-    // Using array to select indices of grid points for output data
-    int array[5] = {0,1,17646300,17646500,17646000};
-    // Do the first without the leading comma
-    *output_text_stream << get_var_vec_as_double(t_delta, output_var_names[0])[0];
-    for (int j = 1; j < 5; ++j) {
-        int index = array[j];
-        *output_text_stream <<"," << get_var_vec_as_double(t_delta, output_var_names[0])[index];
-    }
-
-    /*
-    // Do the rest with a leading comma
-    // The following cases has beeb tested:
-    for (int i = 1; i < output_var_names.size(); ++i) {
-        // Cases tested
-        *output_text_stream << "," << get_var_vec_as_double(t_delta, output_var_names[i])[0];
-        *output_text_stream << "," << get_var_vec_as_double(t_delta, output_var_names[i])[1];
-        *output_text_stream << "," << get_var_vec_as_double(t_delta, output_var_names[i])[17646500];
-    }
-    */
-    for (int i = 1; i < output_var_names.size(); ++i) {
-        for (int j = 0; j < 5; ++j) {
-            int index = array[j];
-            *output_text_stream << "," << get_var_vec_as_double(t_delta, output_var_names[i])[index];
+    for (const std::string& name : get_output_variable_names()) {
+        std::vector<double> vector_var = get_var_vec_as_double(t_delta, name);
+        //for scalar, get_var_vec_as_double() function would return a vector with one element
+        if (vector_var.size() == 1) {
+            output_str += (output_str.empty() ? "" : ",") + std::to_string(vector_var[0]);
+        }
+        else {
+            //using index 1 to show vector_var size is greater than 1
+            output_str += (output_str.empty() ? "" : ",") + std::to_string(vector_var[1]);
         }
     }
-    return output_text_stream->str();
+    return output_str;
 }
 
 double Bmi_Py_Formulation::get_response(time_step_t t_index, time_step_t t_delta) {
@@ -136,20 +109,16 @@ double Bmi_Py_Formulation::get_response(time_step_t t_index, time_step_t t_delta
         // TODO: again, consider whether we should store any historic response, ts_delta, or other var values
         next_time_step_index++;
     }
-    return get_var_value_as_double( get_bmi_main_output_var());
+    //return get_var_value_as_double( get_bmi_main_output_var());
+    return get_var_vec_as_double(t_index, get_bmi_main_output_var())[0];
 }
 
 std::vector<double> Bmi_Py_Formulation::get_var_vec_as_double(time_t t_delta, const string &var_name) {
-    //time_t model_epoch_time = convert_model_time(model_init_time) + get_bmi_model_start_time_forcing_offset_s();
-    //time_t start_time = convert_model_time(model_initial_time) + get_bmi_model_start_time_forcing_offset_s();
     time_t start_time = convert_model_time(get_bmi_model()->GetCurrentTime()) + get_bmi_model_start_time_forcing_offset_s();
     std::string bmi_var_name;
     Bmi_Module_Formulation::get_bmi_output_var_name(var_name, bmi_var_name);
     auto selector = CatchmentAggrDataSelector(std::string(),bmi_var_name,start_time,t_delta,"1");
-    //std::vector<double> value_vec = get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m=SUM);
-    // does value_vec contains only one element?
     std::vector<double> value_vec = get_values(selector);
-    std::cout << "value_vec size = " << value_vec.size() << std::endl;
     return value_vec;
 }
 

@@ -39,7 +39,7 @@ class bmi_model(Bmi):
         #TODO this can be done more elegantly using a more coherent data structure representing a BMI variable
         self._grid_map = {'INPUT_VAR_1': self.grid_0, 'INPUT_VAR_2': self.grid_0, 'GRID_VAR_1': self.grid_1,
                           'OUTPUT_VAR_1': self.grid_0, 'OUTPUT_VAR_2': self.grid_0, 'OUTPUT_VAR_3': self.grid_0,
-                          'GRID_VAR_2': self.grid_1, 'GRID_VAR_3': self.grid_0}
+                          'GRID_VAR_2': self.grid_1}
     #----------------------------------------------
     # Required, static attributes of the model
     #----------------------------------------------
@@ -64,7 +64,7 @@ class bmi_model(Bmi):
     #---------------------------------------------
     #will use these implicitly for grid meta data, could in theory advertise them?
     # grid_1_rank -- could probably establish a pattern grid_{id}_rank for managing different ones?
-    _output_var_names = ['OUTPUT_VAR_1', 'OUTPUT_VAR_2', 'OUTPUT_VAR_3', 'GRID_VAR_2', 'GRID_VAR_3']
+    _output_var_names = ['OUTPUT_VAR_1', 'OUTPUT_VAR_2', 'OUTPUT_VAR_3', 'GRID_VAR_2']
 
     #------------------------------------------------------
     # Create a Python dictionary that maps CSDMS Standard
@@ -319,8 +319,6 @@ class bmi_model(Bmi):
         if name in (self._output_var_names + self._input_var_names):
             if(name == "GRID_VAR_1" or name == "GRID_VAR_2"):
                 return 1 #FIXME remove "magic number"
-            if(name == "GRID_VAR_3"):
-                return 2
             else:
                 return self._var_grid_id
         raise(UnknownBMIVariable(f"No known variable in BMI model: {name}"))

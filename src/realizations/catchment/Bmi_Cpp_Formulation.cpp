@@ -61,8 +61,15 @@ std::string Bmi_Cpp_Formulation::get_output_line_for_timestep(int timestep, std:
     // TODO: add codes to handle both scalar and vector outputs
     time_t t_delta = timestep;
     for (const std::string& name : get_output_variable_names()) {
-        //output_str += (output_str.empty() ? "" : ",") + std::to_string(get_var_value_as_double(name));
-        output_str += (output_str.empty() ? "" : ",") + std::to_string(get_var_vec_as_double(t_delta, name)[0]);
+        //for scalar, get_var_vec_as_double() function would return a vector with one element
+        std::vector<double> vector_var = get_var_vec_as_double(t_delta, name);
+        if (vector_var.size() == 1) {
+            output_str += (output_str.empty() ? "" : ",") + std::to_string(vector_var[0]);
+        }
+        else {
+            //using index 1 to show vector_var size is greater than 1
+            output_str += (output_str.empty() ? "" : ",") + std::to_string(vector_var[1]);
+        }
     }
     return output_str;
 }

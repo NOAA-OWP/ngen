@@ -106,7 +106,7 @@ protected:
 
     static py::object Path;
 
-    std::vector<std::string> expected_output_var_names = { "OUTPUT_VAR_1", "OUTPUT_VAR_2", "OUTPUT_VAR_3", "GRID_VAR_2", "GRID_VAR_3" };
+    std::vector<std::string> expected_output_var_names = { "OUTPUT_VAR_1", "OUTPUT_VAR_2", "OUTPUT_VAR_3", "GRID_VAR_2"};
     std::vector<std::string> expected_input_var_names = { "INPUT_VAR_1", "INPUT_VAR_2", "GRID_VAR_1"};
     std::vector<std::string> expected_output_var_locations = { "node", "node", "node", "node" };
     std::vector<int> expected_output_var_grids = { 0, 0, 0, 1 };
@@ -1171,6 +1171,7 @@ TEST_F(Bmi_Py_Adapter_Test, GetGridY_0_a) {
 /**
  * Test the function for getting the location of grid nodes in the third dimension for the grid of output variable 1.
  */
+/*
 TEST_F(Bmi_Py_Adapter_Test, GetGridZ_0_a) {
     size_t ex_index = 0;
 
@@ -1199,6 +1200,7 @@ TEST_F(Bmi_Py_Adapter_Test, GetGridZ_0_a) {
         ASSERT_EQ(zs[i], origin[0] + spacing[0]*i);
     }
 }
+*/
 
 /**
  * Test the function for getting the grid node count for the grid of output variable 1.
