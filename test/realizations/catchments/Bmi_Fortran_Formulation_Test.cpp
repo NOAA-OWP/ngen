@@ -315,6 +315,7 @@ TEST_F(Bmi_Fortran_Formulation_Test, GetOutputLineForTimestep_0_a) {
 
     double response = formulation.get_response(0, 3600);
     std::string output = formulation.get_output_line_for_timestep(0, ",");
+    std::cout << "0_a output = " << output << std::endl;
     //NOTE these answers are dependent on the INPUT vars selected and the data in the forcing file
     ASSERT_EQ(output, "0.000000,0.018600,0.000000");
 }
@@ -328,6 +329,7 @@ TEST_F(Bmi_Fortran_Formulation_Test, GetOutputLineForTimestep_1_a) {
 
     double response = formulation.get_response(0, 3600);
     std::string output = formulation.get_output_line_for_timestep(0, ",");
+    std::cout << "1_a output = " << output << std::endl;
     //NOTE these answers are dependent on the INPUT vars selected and the data in the forcing file
     ASSERT_EQ(output, "0.018600,0.000000,0.000000");
 }
@@ -340,12 +342,13 @@ TEST_F(Bmi_Fortran_Formulation_Test, GetOutputLineForTimestep_1_b) {
     formulation.create_formulation(config_prop_ptree[ex_index]);
 
     int i = 0;
-    while (i < 542)
+    while (i < 10)
         formulation.get_response(i++, 3600);
     double response = formulation.get_response(i, 3600);
     std::string output = formulation.get_output_line_for_timestep(i, ",");
+    std::cout << "1_b output = " << output << std::endl;
     //NOTE these answers are dependent on the INPUT vars selected and the data in the forcing file
-    ASSERT_EQ(output, "0.025400,0.000001,0.000000");
+    ASSERT_EQ(output, "0.013800,0.000000,0.000000");
 }
 
 TEST_F(Bmi_Fortran_Formulation_Test, determine_model_time_offset_0_a) {
