@@ -100,6 +100,12 @@ add_test(test_realization_config
         ${NETCDF_LIBRARIES}
 )
 
+########################## Series Unit Tests
+add_test(test_io
+         1
+         io/mdvector_Test.cpp
+         NGen::io)
+
 ########################## Nexus Tests
 add_test(
         test_nexus

@@ -224,6 +224,7 @@ if(NGEN_WITH_SQLITE3)
     target_link_libraries(ngen PUBLIC NGen::geopackage)
 endif()
 
+add_subdirectory("src/io")
 add_subdirectory("src/realizations/catchment")
 add_subdirectory("src/forcing")
 
@@ -231,6 +232,7 @@ target_link_libraries(ngen PUBLIC
         NGen::core
         NGen::core_catchment
         NGen::core_nexus
+        NGen::io
         NGen::geojson
         NGen::realizations_catchment
         NGen::forcing
