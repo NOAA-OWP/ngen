@@ -14,16 +14,54 @@ namespace traits
     struct bool_pack
     {};
 
+    template<bool B>
+    using bool_constant = std::integral_constant<bool, B>;
+
     // a C++17 conjunction impl
     template<bool... Bs>
     using conjunction = std::is_same<bool_pack<true, Bs...>, bool_pack<Bs..., true>>;
 
+    // a C++17 disjunction impl
+    template<bool... Bs>
+    using disjunction = bool_constant<!conjunction<!Bs...>::value>;
+
+    /**
+     * Check that all types @c{Ts} are the same as @c{T}.
+     * 
+     * @tparam T Type to constrain to
+     * @tparam Ts Types to check
+     */
     template<typename T, typename... Ts>
     using all_is_same = conjunction<std::is_same<Ts, T>::value...>;
 
+    /**
+     * Checks that all types @c{From} are convertible to @c{T}
+     * 
+     * @tparam To Type to constrain to
+     * @tparam From Types to check
+     */
+    template<typename To, typename... From>
+    using all_is_convertible = conjunction<std::is_convertible<From, To>::value...>;
+
+    /**
+     * Checks that @c{From} is convertible to any types in @c{To}
+     * 
+     * @tparam From Type to constrain to
+     * @tparam To Types to check
+     */
+    template<typename From, typename... To>
+    using is_convertible_to_any = disjunction<std::is_convertible<From, To>::value...>;
+
+    /**
+     * Checks that @c{T} is the same as at least one of @c{Ts}
+     * 
+     * @tparam T Type to check
+     * @tparam Ts Types to contrain to
+     */
     template<typename T, typename... Ts>
-    using all_is_convertible = conjunction<std::is_convertible<Ts, T>::value...>;
-}
+    using is_same_to_any = disjunction<std::is_same<T, Ts>::value...>;
+
+} // namespace traits
 
 /**
  * A container type for handling multi-dimensional data.
@@ -51,8 +89,11 @@ class mdvector
     using pointer         = typename container::pointer;
     using const_pointer   = typename container::const_pointer;
 
+    /**
+     * An axis view is akin to a std::span (or std::mdspan),
+     * over either the vertical or horizontal axes.
+     */
     struct axis_view;
-    struct axis_iterator;
 
     /**
      * Constructs a new mdvector object with
@@ -62,9 +103,65 @@ class mdvector
         : m_data(std::vector<Tp>{})
         , m_stride(0) {};
 
+    /**
+     * Constructs a new mdvector object with
+     * the given dimensions.
+     * 
+     * @param dimensions Size of dimensions (aka number of columns)
+     */
     mdvector(size_type dimensions) noexcept
         : m_data(std::vector<Tp>{})
         , m_stride(dimensions) {};
+
+    /**
+     * Constructs a new mdvector object with the given dimensions,
+     * allocates enough space to fit @c{n} elements, and default
+     * constructs the values.
+     *
+     * @param dimensions Size of dimensions (aka number of columns)
+     * @param n Initial size of container (aka number of rows)
+     */
+    mdvector(size_type dimensions, size_type n) noexcept
+        : m_data(std::vector<Tp>{dimensions * n})
+        , m_stride(dimensions) {};
+
+    /**
+     * Construct a new mdvector object using the values given.
+     *
+     * @note The nested initializer lists @b{must} be the same size,
+     *       otherwise, they will be padded with default constructed
+     *       values to ensure the dimensions of vector are invariant.
+     * 
+     * @param values An initializer list of initializer lists containing type @c{Tp}.
+     */
+    mdvector(std::initializer_list<std::initializer_list<Tp>> values) noexcept
+    {
+        // Get total size and figure out stride
+        for (const std::initializer_list<Tp>& list : values) {
+            const size_type lsize = list.size();
+            this->m_data.reserve(lsize);
+
+            if (this->m_stride < lsize) {
+                this->m_stride = lsize;
+            }
+        }
+
+        for (const auto& list : values) {
+            const size_type lsize = list.size();
+            size_type remainder = this->m_stride - lsize;
+
+            // Push back values
+            for (const auto& value : list) {
+                this->m_data.push_back(value);
+            }
+
+            // Add any remainder values to ensure invariance
+            while (remainder > 0) {
+                this->m_data.emplace_back();
+                remainder--;
+            }
+        }
+    }
 
     /**
      * Retrieve a reference to a value.
@@ -204,13 +301,12 @@ class mdvector
     }
 
     /**
-     * View an axis as a sequential container (aka like a std::span).
+     * View a vertical axis as a sequential container (aka like a std::span).
      *
-     * @note An axis view can be thought of as a column
-     *       of a multi-dimensional vector projected
-     *       down to a 2D table.
+     * @note A vertical axis view can be thought of as columns
+     *       of a multi-dimensional vector in matrix representation.
      * 
-     * @param n Axis index
+     * @param n vertical axis index
      * @return axis_view 
      */
     axis_view vaxis(size_type n)
@@ -227,6 +323,15 @@ class mdvector
         );
     }
 
+    /**
+     * View a horizontal axis as a sequential container (aka like a std::span).
+     *
+     * @note A horizontal axis view can be thought of as rows
+     *       of a multi-dimensional vector in matrix representation.
+     * 
+     * @param n horizontal axis index
+     * @return axis_view 
+     */
     axis_view haxis(size_type n)
     {
         if (n >= this->size())
@@ -245,64 +350,46 @@ class mdvector
 };
 
 template<typename Tp>
-struct mdvector<Tp>::axis_iterator
-{
-    using iterator_category = std::random_access_iterator_tag;
-    using size_type         = typename mdvector<Tp>::size_type;
-    using difference_type   = typename mdvector<Tp>::difference_type;
-    using value_type        = typename mdvector<Tp>::value_type;
-    using pointer           = typename mdvector<Tp>::pointer;
-    using reference         = typename mdvector<Tp>::reference;
-
-    axis_iterator(pointer ptr, size_type dimensions)
-        : m_ptr(ptr)
-        , m_stride(dimensions) {};
-
-    reference operator*() const { return *m_ptr; }
-    pointer operator->() { return m_ptr; }
-
-    axis_iterator& operator++()
-    {
-        m_ptr += m_stride;
-        return *this;
-    }
-
-    axis_iterator operator++(int)
-    {
-        axis_iterator tmp = *this;
-        tmp.m_ptr += m_stride;
-        return tmp;
-    }
-
-    friend bool operator==(const axis_iterator& lhs, const axis_iterator& rhs)
-    {
-        return lhs.m_ptr == rhs.m_ptr;
-    }
-
-    friend bool operator!=(const axis_iterator& lhs, const axis_iterator& rhs)
-    {
-        return lhs.m_ptr != rhs.m_ptr;
-    }
-
-  private:
-    pointer m_ptr;
-    size_type m_stride;
-};
-
-template<typename Tp>
 struct mdvector<Tp>::axis_view
 {
-    using iterator  = mdvector<Tp>::axis_iterator;
     using reference = mdvector<Tp>::reference;
     using size_type = mdvector<Tp>::size_type;
 
+    /**
+     * An axis iterator. This is a generalization
+     * of a typical std::vector<Tp> iterator,
+     * but contains information about this view's
+     * dimensions. This is so traversal can be
+     * stride-based.
+     */
+    struct iterator;
+
+    /**
+     * Axis views are not default constructible.
+     */
     axis_view() = delete;
 
+    /**
+     * Constructs a new axis_view object ranging from
+     * the @c{start} to @c{end} pointers spanned with
+     * rank @c{dimensions}.
+     * 
+     * @param start Starting pointer
+     * @param end Ending pointer
+     * @param dimensions rank/stride
+     */
     axis_view(pointer start, pointer end, size_type dimensions)
         : m_start(start)
         , m_end(end)
         , m_stride(dimensions) {};
 
+    /**
+     * Returns a reference to a value within this axis.
+     * @param n index of element
+     * @return reference 
+     * @throws std::out_of_range if @c{n} is greater than
+     *                           the size of this axis.
+     */
     reference at(size_type n)
     {
         pointer loc = m_start + (n * m_stride);
@@ -312,18 +399,99 @@ struct mdvector<Tp>::axis_view
         return *loc;
     }
 
-    reference operator[](size_type n)
+    /**
+     * Returns a reference to a value within this axis.
+     * @note The bracket operator does not perform bounds checking.
+     * @param n index of element
+     * @return reference 
+     */
+    reference operator[](size_type n) noexcept
     {
         return *(m_start + (n * m_stride));
     }
 
-    iterator begin() noexcept { return iterator(m_start, m_stride); }
-    iterator end()   noexcept { return iterator(m_end, m_stride); }
-    size_type size() noexcept { return static_cast<size_type>(m_end - m_start); }
+    /**
+     * Returns an iterator to the beginning of this axis.
+     * @return iterator 
+     */
+    iterator begin() noexcept
+    {
+        return iterator(m_start, m_stride);
+    }
+
+    /**
+     * Returns an iterator positioned at the end of this axis
+     * (aka one past the last element).
+     * @return iterator 
+     */
+    iterator end() noexcept
+    {
+        return iterator(m_end, m_stride);
+    }
+
+    /**
+     * Returns the true size of this axis.
+     * @return size_type 
+     */
+    size_type size() noexcept
+    {
+        return static_cast<size_type>(m_end - m_start);
+    }
 
   private:
     pointer m_start;
     pointer m_end;
+    size_type m_stride;
+};
+
+template<typename Tp>
+struct mdvector<Tp>::axis_view::iterator
+{
+    using iterator_category = std::random_access_iterator_tag;
+    using size_type         = typename mdvector<Tp>::size_type;
+    using difference_type   = typename mdvector<Tp>::difference_type;
+    using value_type        = typename mdvector<Tp>::value_type;
+    using pointer           = typename mdvector<Tp>::pointer;
+    using reference         = typename mdvector<Tp>::reference;
+
+    iterator(pointer ptr, size_type dimensions)
+        : m_ptr(ptr)
+        , m_stride(dimensions) {};
+
+    reference operator*() const
+    {
+        return *m_ptr;
+    }
+
+    pointer operator->()
+    {
+        return m_ptr;
+    }
+
+    iterator& operator++()
+    {
+        m_ptr += m_stride;
+        return *this;
+    }
+
+    iterator& operator++(int)
+    {
+        m_ptr += m_stride;
+        return *this;
+    }
+
+    friend bool operator==(const iterator& lhs, const iterator& rhs)
+    {
+        return lhs.m_ptr == rhs.m_ptr;
+    }
+
+    friend bool operator!=(const iterator& lhs, const iterator& rhs)
+    {
+        return lhs.m_ptr != rhs.m_ptr;
+    }
+
+  private:
+    pointer m_ptr;
     size_type m_stride;
 };
 
