@@ -2,7 +2,9 @@
 #define NGEN_IO_MDFRAME_HPP
 
 #include <algorithm>
+#include <initializer_list>
 #include <unordered_map>
+#include <unordered_set>
 #include <type_traits>
 #include <boost/variant.hpp>
 #include <boost/optional.hpp>
@@ -10,6 +12,8 @@
 #include "mdvector.hpp"
 
 namespace io {
+
+class mdframe;
 
 namespace traits {
 
@@ -60,8 +64,58 @@ struct type_list{
 
 } // namespace traits
 
+namespace detail {
+
+struct dimension {
+  public:
+
+    struct hash {
+        std::size_t operator()(const dimension& d) const noexcept;
+    };
+
+    dimension(const std::string& name);
+    dimension(const std::string& name, std::size_t size);
+    bool operator==(const dimension& rhs) const;
+
+  private:
+    friend mdframe;
+
+    std::string m_name;
+
+    // we declare m_size as mutable so that
+    // its size can be updated during construction
+    mutable boost::optional<std::size_t> m_size;
+};
+
+} // namespace detail
+
 /**
  * A multi-dimensional, tagged data frame.
+ *
+ * This structure (somewhat) mimics the conceptual format
+ * of NetCDF. In particular, we can think of an mdframe
+ * as a multimap between dimension tuples to multi-dimensional arrays.
+ * In other words, it is similar to an R data.frame or pandas dataframe
+ * where the column types are multi-dimensional arrays.
+ *
+ * Heterogenous data types are handled via boost::variant types
+ * over mdvector types. As a result, each column
+ * is represented by a contiguous block of memory
+ * (since mdvector is backed by a std::vector).
+ *
+ * For example, consider the dimensions: x, y, z; and
+ * the variables:
+ *   - v1<std::string>(x)
+ *   - v2<double>(x, y)
+ *   - v3<int>(x, y, z)
+ *
+ * Then, it follows that the corresponding mdframe can be imagined as:
+ *
+ * v1: Vector of std::string, rank 1 -> [...]
+ *
+ * v2: Matrix of doubles, rank 2 -> [[...]]
+ *
+ * v3: Tensor of integers, rank 3 -> [[[...]]]
  */
 class mdframe {
     using size_type = std::size_t;
@@ -81,42 +135,125 @@ class mdframe {
      */
     using vector_variant = types::variant_container<io::mdvector>;
 
-    using dimension_type = std::pair<std::string, boost::optional<size_type>>;
+    // ------------------------------------------------------------------------
+    // Dimension Member Functions
+    // ------------------------------------------------------------------------
 
+    /**
+     * Return reference to a dimension if it exists. Otherwise, returns boost::none.
+     * 
+     * @param name Name of the dimension
+     * @return boost::optional<const detail::dimension&> 
+     */
     auto get_dimension(const std::string& name) const noexcept
-    {
-        const auto pos = std::find(
-            this->dimensions.begin(),
-            this->dimensions.end(),
-            [&name](const dimension_type& p) {
-                return name == p.first;
-            }
-        );
+        -> boost::optional<const detail::dimension&>;
 
-        boost::optional<const dimension_type&> opt;
-        if (pos != std::end(this->dimensions)) {
-            opt = *pos;
-        }
-        return opt;
-    }
+    /**
+     * Check if a dimension exists.
+     * 
+     * @param name Name of the dimension
+     * @return true if the dimension exists in this mdframe.
+     * @return false if the dimension does **not** exist in this mdframe.
+     */
+    bool has_dimension(const std::string& name) const noexcept;
 
-    bool has_dimension(const std::string& name) const noexcept
-    {
-        return this->get_dimension(name) != boost::none;
-    }
+    /**
+     * Add a dimension with *unlimited* size to this mdframe.
+     * 
+     * @param name Name of the dimension.
+     * @return mdframe& 
+     */
+    mdframe& add_dimension(const std::string& name);
 
-    mdframe& add_dimension(const std::string& name)
-    {
-        if (!this->has_dimension(name)) {
-            this->dimensions.push_back({ name, boost::none });
-        }
+    /**
+     * Add a dimension with a specified size to this mdframe,
+     * or update an existing dimension.
+     * 
+     * @param name Name of the dimension.
+     * @param size Size of the dimension.
+     * @return mdframe& 
+     */
+    mdframe& add_dimension(const std::string& name, std::size_t size);
+
+    // ------------------------------------------------------------------------
+    // Variable Member Functions
+    // ------------------------------------------------------------------------
+
+    /**
+     * Return reference to a mdvector representing a variable, if it exists.
+     * Otherwise, returns boost::none.
+     * 
+     * @param name Name of the variable.
+     * @return boost::optional<boost::variant<mdvector>>
+     *         (aka, potentially, a variant of supported mdvector types)
+     */
+    auto get_variable(const std::string& name) const noexcept;
+
+    /**
+     * Check if a variable exists.
+     * 
+     * @param name Name of the variable.
+     * @return true if the variable exists in this mdframe.
+     * @return false if the variables does **not** exist in this mdframe.
+     */
+    bool has_variable(const std::string& name) const noexcept;
+
+    /**
+     * Add a (scalar) variable definition to this mdframe.
+     * 
+     * @param name Name of the variable.
+     * @return mdframe& 
+     */
+    mdframe& add_variable(const std::string& name);
+
     
-        return *this;
-    }
+    /**
+     * Add a (vector) variable definition to this mdframe.
+     *
+     * @note This member function is constrained by @c{Args}
+     *       being constructible to a std::initializer_list of std::string
+     *       (i.e. a list of std::string).
+     * 
+     * @tparam Args list of std::string representing dimension names.
+     * @param name Name of the variable.
+     * @param dimensions Names of the dimensions this variable spans.
+     * @return mdframe&
+     */
+    template<typename... Args, std::enable_if_t<
+        std::is_constructible<std::initializer_list<std::string>, Args...>::value,
+        bool> = true>
+    mdframe& add_variable(const std::string& name, Args&&... dimensions);
+
+    /**
+     * Add a (vector) variable definition to this mdframe, with an initial value.
+     *
+     * @note This member function is constrained by @c{T} being
+     *       a supported type, and @c{Args} being constructible
+     *       to a std::initializer_list of std::string (i.e. a list of std::string).
+     *
+     * @tparam T supported types of this mdframe.
+     * @tparam Args list of std::string representing dimension names.
+     * @param name Name of the variable.
+     * @param values Values to push into this variable.
+     * @param dimennsions Names of the dimensions this variable spans.
+     * @return mdframe& 
+     */
+    template<
+        typename T,
+        typename... Args,
+        types::enable_if_supports<T, bool> = true,
+        std::enable_if_t<
+            std::is_constructible<
+                std::initializer_list<std::string>,
+                Args...
+            >::value, bool
+        > = true
+    >
+    mdframe& add_variable(const std::string& name, const mdvector<T>& values, Args&&... dimensions);
 
   private:
-    std::vector<dimension_type> dimensions;
-    std::unordered_map<std::string, vector_variant> variables;
+    std::unordered_set<detail::dimension, detail::dimension::hash> m_dimensions;
+    std::unordered_map<std::string, vector_variant> m_variables;
 };
 
 } // namespace io
