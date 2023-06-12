@@ -109,13 +109,20 @@ struct dimension {
  *   - v2<double>(x, y)
  *   - v3<int>(x, y, z)
  *
- * Then, it follows that the corresponding mdframe can be imagined as:
+ * Then, it follows that the corresponding mdframe (spanned over x):
  *
- * v1: Vector of std::string, rank 1 -> [...]
+ * <mdframe>
+ *  v1 |    v2 |      v3
+ * --- | ----- | -------
+ * s_0 | [...] | [[...]]
+ * s_1 | [...] | [[...]]
+ *  ...| [...] | [[...]]
+ * s_n | [...] | [[...]]
  *
- * v2: Matrix of doubles, rank 2 -> [[...]]
- *
- * v3: Tensor of integers, rank 3 -> [[[...]]]
+ * where:
+ * - v1: Vector of strings,  rank 1 -> [...]
+ * - v2: Matrix of doubles,  rank 2 -> [[...]]
+ * - v3: Tensor of integers, rank 3 -> [[[...]]]
  */
 class mdframe {
     using size_type = std::size_t;
