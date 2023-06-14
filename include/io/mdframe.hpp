@@ -64,13 +64,23 @@ struct type_list{
 
 } // namespace traits
 
-namespace detail {
+namespace detail
+{
 
+/**
+ * Dimension Key
+ * 
+ * Provides a tagged dimension structure,
+ * with an optional size constraint.
+ */
 struct dimension {
-  public:
 
-    struct hash {
-        std::size_t operator()(const dimension& d) const noexcept;
+    struct hash
+    {
+        std::size_t operator()(const dimension& d) const noexcept
+        {
+            return std::hash<std::string>{}(d.m_name);
+        }
     };
 
     dimension(const std::string& name);
@@ -87,7 +97,58 @@ struct dimension {
     mutable boost::optional<std::size_t> m_size;
 };
 
-} // namespace detail
+/**
+ * Variable Key
+ *
+ * Provides a tagged variable structure.
+ * 
+ * @tparam SupportedTypes types that this variable is able to hold.
+ */
+template<typename... SupportedTypes>
+struct variable {
+    using size_type = std::size_t;
+
+    /**
+     * The variable value types this frame can support.
+     * These are stored as a compile-time type list to
+     * derive further type aliases.
+     */
+    using types = traits::type_list<SupportedTypes...>;
+
+    /**
+     * A boost::variant type consisting of mdvectors of the
+     * support types, i.e. for types int and double, this is
+     * equivalent to:
+     *     boost::variant<io::mdvector<int>, io::mdvector<double>>
+     */
+    using mdvector_variant = typename types::template variant_container<io::mdvector>;
+
+    struct hash
+    {
+        std::size_t operator()(const variable& v) const noexcept
+        {
+            return std::hash<std::string>{}(v.m_name);
+        }
+    };
+
+    variable(const std::string& name) noexcept;
+
+    const mdvector_variant& values() const noexcept;
+
+    bool operator==(const variable& rhs) const;
+
+  private:
+    // Name of this variable
+    mutable std::string m_name;
+
+    // multi-dimensional vector associated with this variable
+    mdvector_variant m_data;
+
+    // References to dimensions that this variable spans
+    std::vector<std::reference_wrapper<dimension>> m_dimensions;
+};
+
+}
 
 /**
  * A multi-dimensional, tagged data frame.
@@ -103,7 +164,8 @@ struct dimension {
  * is represented by a contiguous block of memory
  * (since mdvector is backed by a std::vector).
  *
- * For example, consider the dimensions: x, y, z; and
+ * @section representation Frame Representation
+ * Consider the dimensions: x, y, z; and
  * the variables:
  *   - v1<std::string>(x)
  *   - v2<double>(x, y)
@@ -111,36 +173,49 @@ struct dimension {
  *
  * Then, it follows that the corresponding mdframe (spanned over x):
  *
- * <mdframe>
- *  v1 |    v2 |      v3
- * --- | ----- | -------
- * s_0 | [...] | [[...]]
- * s_1 | [...] | [[...]]
- *  ...| [...] | [[...]]
- * s_n | [...] | [[...]]
+ *   x |  v1 |      v2 |      v3
+ * --- | --- | ------- | -------
+ *   0 | s_0 | [...]_0 | [[...]]_0
+ *   1 | s_1 | [...]_1 | [[...]]_1
+ * ... | ... |  ...    |   ...
+ *   n | s_n | [...]_n | [[...]]_n
  *
  * where:
  * - v1: Vector of strings,  rank 1 -> [...]
  * - v2: Matrix of doubles,  rank 2 -> [[...]]
  * - v3: Tensor of integers, rank 3 -> [[[...]]]
+ *
+ * Alternatively, we can project down to a 2D representation by
+ * unpacking the dimensions, such that:
+ *
+ *      dimensions ||                variables
+ * =============== || ========================
+ *   x |   y |   z ||   v1 |     v2 |       v3
+ * --- | --- | --- || ---- | ------ | --------
+ *   n |   m |   p || s[n] | d[n,m] | i[n,m,p]
+ *
+ * > **note:** this is the physical representation
+ * >           of how the mdvectors store the data.
  */
 class mdframe {
-    using size_type = std::size_t;
+    
+    using dimension = detail::dimension;
+    using dimension_set = std::unordered_set<dimension, dimension::hash>;
+
+    using variable  = detail::variable<int, double, bool, std::string>;
+    using variable_set = std::unordered_set<variable, variable::hash>;
+
+    using size_type = variable::size_type;
 
     /**
      * The variable value types this frame can support.
      * These are stored as a compile-time type list to
      * derive further type aliases.
+     * @see detail::variable
      */
-    using types = traits::type_list<int, double, bool, std::string>;
+    using types = variable::types;
 
-    /**
-     * A boost::variant type consisting of mdvectors of the
-     * support types, i.e. for types int and double, this is
-     * equivalent to:
-     *     boost::variant<io::mdvector<int>, io::mdvector<double>>
-     */
-    using vector_variant = types::variant_container<io::mdvector>;
+    using mdvector_variant = variable::mdvector_variant;
 
     // ------------------------------------------------------------------------
     // Dimension Member Functions
@@ -194,7 +269,8 @@ class mdframe {
      * @return boost::optional<boost::variant<mdvector>>
      *         (aka, potentially, a variant of supported mdvector types)
      */
-    auto get_variable(const std::string& name) const noexcept;
+    auto get_variable(const std::string& name) const noexcept
+        -> boost::optional<variable>;
 
     /**
      * Check if a variable exists.
@@ -229,7 +305,10 @@ class mdframe {
     template<typename... Args, std::enable_if_t<
         std::is_constructible<std::initializer_list<std::string>, Args...>::value,
         bool> = true>
-    mdframe& add_variable(const std::string& name, Args&&... dimensions);
+    mdframe& add_variable(const std::string& name, Args&&... dimensions)
+    {
+
+    }
 
     /**
      * Add a (vector) variable definition to this mdframe, with an initial value.
@@ -259,8 +338,8 @@ class mdframe {
     mdframe& add_variable(const std::string& name, const mdvector<T>& values, Args&&... dimensions);
 
   private:
-    std::unordered_set<detail::dimension, detail::dimension::hash> m_dimensions;
-    std::unordered_map<std::string, vector_variant> m_variables;
+    dimension_set m_dimensions;
+    variable_set  m_variables;
 };
 
 } // namespace io
