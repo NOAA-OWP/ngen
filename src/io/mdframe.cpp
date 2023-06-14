@@ -1,12 +1,7 @@
 #include "mdframe.hpp"
 
 namespace io {
-
 namespace detail {
-
-std::size_t dimension::hash::operator()(const dimension& d) const noexcept {
-        return std::hash<std::string>{}(d.m_name);
-    }
 
 dimension::dimension(const std::string& name)
     : m_name(name)
@@ -23,10 +18,10 @@ bool dimension::operator==(const dimension& rhs) const
 
 } // namespace detail
 
+// Dimension Member Functions -------------------------------------------------
 
-// Dimension Member Functions
-
-boost::optional<const detail::dimension&> mdframe::get_dimension(const std::string& name) const noexcept
+auto mdframe::get_dimension(const std::string& name) const noexcept
+    -> boost::optional<const detail::dimension&>
 {
     decltype(auto) pos = this->m_dimensions.find(name);
 
@@ -60,8 +55,32 @@ mdframe& mdframe::add_dimension(const std::string& name, std::size_t size)
     return *this;
 }
 
-// Variable Member Functions
+// Variable Member Functions --------------------------------------------------
 
+auto mdframe::get_variable(const std::string& name) const noexcept
+    -> boost::optional<variable>
+{
+   
+    decltype(auto) var = this->m_variables.find(variable(name));
+    
+    boost::optional<variable> result;
+    if (var != this->m_variables.end()) {
+        result = *var;
+    }
 
+    return result;
+}
+
+bool mdframe::has_variable(const std::string& name) const noexcept
+{
+    return this->m_variables.find(name) != this->m_variables.end();
+}
+
+mdframe& mdframe::add_variable(const std::string& name)
+{
+    // should not update if the variable already exists
+    this->m_variables.emplace(name, mdvector_variant{});
+    return *this;
+}
 
 } // namespace io
