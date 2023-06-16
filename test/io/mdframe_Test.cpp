@@ -40,5 +40,4 @@ TEST(mdframe_Test, construction)
 
     EXPECT_EQ(df["2D"]->size(), 0);
     EXPECT_EQ(df["2D"]->rank(), 2);
-    EXPECT_EQ(df["2D"]->capacity(), 100);
 }

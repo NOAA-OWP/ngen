@@ -7,7 +7,6 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "mdvector.hpp"
 #include "mdframe/dimension.hpp"
 #include "mdframe/variable.hpp"
 
@@ -23,9 +22,7 @@ namespace io {
  * where the column types are multi-dimensional arrays.
  *
  * Heterogenous data types are handled via boost::variant types
- * over mdvector types. As a result, each column
- * is represented by a contiguous block of memory
- * (since mdvector is backed by a std::vector).
+ * over mdarray types.
  *
  * @section representation Frame Representation
  * Consider the dimensions: x, y, z; and
@@ -57,18 +54,14 @@ namespace io {
  * --- | --- | --- || ---- | ------ | --------
  *   n |   m |   p || s[n] | d[n,m] | i[n,m,p]
  *
- * > **note:** this is the physical representation
- * >           of how the mdvectors store the data.
  */
 class mdframe {
   public:
-    using dimension = detail::dimension;
+    using dimension     = detail::dimension;
     using dimension_set = std::unordered_set<dimension, dimension::hash>;
-
-    using variable  = detail::variable<int, double, bool, std::string>;
-    using variable_set = std::unordered_set<variable, variable::hash>;
-
-    using size_type = variable::size_type;
+    using variable      = detail::variable<int, double, bool, std::string>;
+    using variable_set  = std::unordered_set<variable, variable::hash>;
+    using size_type     = variable::size_type;
 
     /**
      * The variable value types this frame can support.
@@ -78,16 +71,28 @@ class mdframe {
      */
     using types = variable::types;
 
-    using mdvector_variant = variable::mdvector_variant;
+    using mdarray_variant = variable::mdarray_variant;
 
     // ------------------------------------------------------------------------
     // Dimension Member Functions
     // ------------------------------------------------------------------------
     
   private:
+    /**
+     * Get an iterator to a dimension, if it exists in the set
+     * 
+     * @param name Name of the dimension
+     * @return dimension_set::const_iterator or dimension_set::end() if not found
+     */
     auto find_dimension(const std::string& name) const noexcept
         -> dimension_set::const_iterator;
 
+    /**
+     * Get an iterator to a variable, if it exists in the set
+     * 
+     * @param name Name of the variable
+     * @return variable_set::const_iterator  or variable_set::end() if not found
+     */
     auto find_variable(const std::string& name) const noexcept
         -> variable_set::const_iterator;
 
@@ -133,12 +138,11 @@ class mdframe {
     // ------------------------------------------------------------------------
 
     /**
-     * Return reference to a mdvector representing a variable, if it exists.
+     * Return reference to a mdarray representing a variable, if it exists.
      * Otherwise, returns boost::none.
      * 
      * @param name Name of the variable.
-     * @return boost::optional<boost::variant<mdvector>>
-     *         (aka, potentially, a variant of supported mdvector types)
+     * @return boost::optional<variable>
      */
     auto get_variable(const std::string& name) const noexcept
         -> boost::optional<variable>;
@@ -200,14 +204,17 @@ class mdframe {
         return *this;
     }
 
+    #warning NO DOCUMENTATION
     #warning NOT IMPLEMENTED
     template<typename T, types::enable_if_supports<T, bool> = true>
     mdframe& push_back(const std::string& variable, T value);
 
+    #warning NO DOCUMENTATION
     #warning NOT IMPLEMENTED
     template<typename T, types::enable_if_supports<T, bool> = true>
     mdframe& push_back(const std::string& variable, std::initializer_list<T> values);
 
+    #warning NO DOCUMENTATION
     #warning NOT IMPLEMENTED
     template<typename T, types::enable_if_supports<T, bool> = true>
     mdframe& insert(const std::string& variable, T value, std::size_t axis);
