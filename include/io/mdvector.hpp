@@ -3,65 +3,11 @@
 
 #include <iterator>
 #include <stdexcept>
-#include <type_traits>
 #include <vector>
 
+#include "traits.hpp"
+
 namespace io {
-
-namespace traits
-{
-    template<bool...>
-    struct bool_pack
-    {};
-
-    template<bool B>
-    using bool_constant = std::integral_constant<bool, B>;
-
-    // a C++17 conjunction impl
-    template<bool... Bs>
-    using conjunction = std::is_same<bool_pack<true, Bs...>, bool_pack<Bs..., true>>;
-
-    // a C++17 disjunction impl
-    template<bool... Bs>
-    using disjunction = bool_constant<!conjunction<!Bs...>::value>;
-
-    /**
-     * Check that all types @c{Ts} are the same as @c{T}.
-     * 
-     * @tparam T Type to constrain to
-     * @tparam Ts Types to check
-     */
-    template<typename T, typename... Ts>
-    using all_is_same = conjunction<std::is_same<Ts, T>::value...>;
-
-    /**
-     * Checks that all types @c{From} are convertible to @c{T}
-     * 
-     * @tparam To Type to constrain to
-     * @tparam From Types to check
-     */
-    template<typename To, typename... From>
-    using all_is_convertible = conjunction<std::is_convertible<From, To>::value...>;
-
-    /**
-     * Checks that @c{From} is convertible to any types in @c{To}
-     * 
-     * @tparam From Type to constrain to
-     * @tparam To Types to check
-     */
-    template<typename From, typename... To>
-    using is_convertible_to_any = disjunction<std::is_convertible<From, To>::value...>;
-
-    /**
-     * Checks that @c{T} is the same as at least one of @c{Ts}
-     * 
-     * @tparam T Type to check
-     * @tparam Ts Types to contrain to
-     */
-    template<typename T, typename... Ts>
-    using is_same_to_any = disjunction<std::is_same<T, Ts>::value...>;
-
-} // namespace traits
 
 /**
  * A container type for handling multi-dimensional data.
@@ -298,6 +244,11 @@ class mdvector
                 this->m_data.resize(this->true_size() + remainder);
             }
         }
+    }
+
+    size_type capacity() const noexcept
+    {
+        return this->m_data.capacity();
     }
 
     /**

@@ -3,152 +3,15 @@
 
 #include <algorithm>
 #include <initializer_list>
+#include <string>
 #include <unordered_map>
 #include <unordered_set>
-#include <type_traits>
-#include <boost/variant.hpp>
-#include <boost/optional.hpp>
 
 #include "mdvector.hpp"
+#include "mdframe/dimension.hpp"
+#include "mdframe/variable.hpp"
 
 namespace io {
-
-class mdframe;
-
-namespace traits {
-
-template<typename... Ts>
-struct type_list{
-    /**
-     * Provides a type alias for a boost::variant
-     * containing the types of this type list.
-     *
-     * For example, for a type_list<int, std::string>:
-     *
-     *   boost::variant<int, std::string>
-     */
-    using variant_scalar = boost::variant<Ts...>;
-
-    /**
-     * Like variant_scalars, but for container types.
-     *
-     * For example, for a type_list<int, std::string> with @c{Container} -> std::vector:
-     *
-     *   boost::variant<std::vector<int>, std::vector<std::string>>
-     * 
-     * @tparam Container Type of container to hold
-     *                   each type in within the variant.
-     */
-    template<template<typename> class Container>
-    using variant_container = boost::variant<Container<Ts>...>;
-
-    /**
-     * Semantically, we define that a type is support if it's
-     * convertible to (not necessarily the same as) any of the
-     * supported types.
-     *
-     * @tparam S type to check
-     */
-    template<typename S>
-    using is_supported = is_convertible_to_any<S, Ts...>;
-
-    /**
-     * Used for SFINAE. Enables a template if the given type is
-     * supported within this type list.
-     *
-     * @tparam S type to check
-     */
-    template<typename S, typename Tp>
-    using enable_if_supports = std::enable_if_t<is_supported<S>::value, Tp>;
-};
-
-} // namespace traits
-
-namespace detail
-{
-
-/**
- * Dimension Key
- * 
- * Provides a tagged dimension structure,
- * with an optional size constraint.
- */
-struct dimension {
-
-    struct hash
-    {
-        std::size_t operator()(const dimension& d) const noexcept
-        {
-            return std::hash<std::string>{}(d.m_name);
-        }
-    };
-
-    dimension(const std::string& name);
-    dimension(const std::string& name, std::size_t size);
-    bool operator==(const dimension& rhs) const;
-
-  private:
-    friend mdframe;
-
-    std::string m_name;
-
-    // we declare m_size as mutable so that
-    // its size can be updated during construction
-    mutable boost::optional<std::size_t> m_size;
-};
-
-/**
- * Variable Key
- *
- * Provides a tagged variable structure.
- * 
- * @tparam SupportedTypes types that this variable is able to hold.
- */
-template<typename... SupportedTypes>
-struct variable {
-    using size_type = std::size_t;
-
-    /**
-     * The variable value types this frame can support.
-     * These are stored as a compile-time type list to
-     * derive further type aliases.
-     */
-    using types = traits::type_list<SupportedTypes...>;
-
-    /**
-     * A boost::variant type consisting of mdvectors of the
-     * support types, i.e. for types int and double, this is
-     * equivalent to:
-     *     boost::variant<io::mdvector<int>, io::mdvector<double>>
-     */
-    using mdvector_variant = typename types::template variant_container<io::mdvector>;
-
-    struct hash
-    {
-        std::size_t operator()(const variable& v) const noexcept
-        {
-            return std::hash<std::string>{}(v.m_name);
-        }
-    };
-
-    variable(const std::string& name) noexcept;
-
-    const mdvector_variant& values() const noexcept;
-
-    bool operator==(const variable& rhs) const;
-
-  private:
-    // Name of this variable
-    mutable std::string m_name;
-
-    // multi-dimensional vector associated with this variable
-    mdvector_variant m_data;
-
-    // References to dimensions that this variable spans
-    std::vector<std::reference_wrapper<dimension>> m_dimensions;
-};
-
-}
 
 /**
  * A multi-dimensional, tagged data frame.
@@ -198,7 +61,7 @@ struct variable {
  * >           of how the mdvectors store the data.
  */
 class mdframe {
-    
+  public:
     using dimension = detail::dimension;
     using dimension_set = std::unordered_set<dimension, dimension::hash>;
 
@@ -220,7 +83,15 @@ class mdframe {
     // ------------------------------------------------------------------------
     // Dimension Member Functions
     // ------------------------------------------------------------------------
+    
+  private:
+    auto find_dimension(const std::string& name) const noexcept
+        -> dimension_set::const_iterator;
 
+    auto find_variable(const std::string& name) const noexcept
+        -> variable_set::const_iterator;
+
+  public:
     /**
      * Return reference to a dimension if it exists. Otherwise, returns boost::none.
      * 
@@ -272,6 +143,9 @@ class mdframe {
     auto get_variable(const std::string& name) const noexcept
         -> boost::optional<variable>;
 
+    auto operator[](const std::string& name) const noexcept
+        -> boost::optional<variable>;
+
     /**
      * Check if a variable exists.
      * 
@@ -287,7 +161,13 @@ class mdframe {
      * @param name Name of the variable.
      * @return mdframe& 
      */
-    mdframe& add_variable(const std::string& name);
+    template<typename T, types::enable_if_supports<T, bool> = true>
+    mdframe& add_variable(const std::string& name)
+    {
+        // should not update if the variable already exists
+        this->m_variables.emplace(name);
+        return *this;
+    }
 
     
     /**
@@ -297,45 +177,71 @@ class mdframe {
      *       being constructible to a std::initializer_list of std::string
      *       (i.e. a list of std::string).
      * 
-     * @tparam Args list of std::string representing dimension names.
+     * @tparam Arg list of std::string representing dimension names.
      * @param name Name of the variable.
      * @param dimensions Names of the dimensions this variable spans.
      * @return mdframe&
      */
-    template<typename... Args, std::enable_if_t<
-        std::is_constructible<std::initializer_list<std::string>, Args...>::value,
-        bool> = true>
-    mdframe& add_variable(const std::string& name, Args&&... dimensions)
+    template<typename T, types::enable_if_supports<T, bool> = true>
+    mdframe& add_variable(const std::string& name, std::initializer_list<std::string> dimensions)
     {
+        std::vector<dimension> references(dimensions.size());
 
+        for (const auto& d : dimensions) {
+            auto dopt = this->get_dimension(d);
+            if (dopt == boost::none) {
+                throw std::runtime_error("not a dimension");
+            }
+            
+            references.push_back(dopt.get());
+        }
+
+        this->m_variables.emplace(name, references);
+        return *this;
     }
 
+    #warning NOT IMPLEMENTED
+    template<typename T, types::enable_if_supports<T, bool> = true>
+    mdframe& push_back(const std::string& variable, T value);
+
+    #warning NOT IMPLEMENTED
+    template<typename T, types::enable_if_supports<T, bool> = true>
+    mdframe& push_back(const std::string& variable, std::initializer_list<T> values);
+
+    #warning NOT IMPLEMENTED
+    template<typename T, types::enable_if_supports<T, bool> = true>
+    mdframe& insert(const std::string& variable, T value, std::size_t axis);
+
+
+    // ------------------------------------------------------------------------
+    // Output Member Functions
+    // ------------------------------------------------------------------------
+
     /**
-     * Add a (vector) variable definition to this mdframe, with an initial value.
+     * Write this mdframe to a CSV file.
      *
-     * @note This member function is constrained by @c{T} being
-     *       a supported type, and @c{Args} being constructible
-     *       to a std::initializer_list of std::string (i.e. a list of std::string).
+     * The outputted CSV is a projected (or normalized)
+     * table spanning all possible dimensions, similar
+     * to the description of tidy data by Hadley Wickham (2014):
+     * https://www.jstatsoft.org/article/view/v059i10
      *
-     * @tparam T supported types of this mdframe.
-     * @tparam Args list of std::string representing dimension names.
-     * @param name Name of the variable.
-     * @param values Values to push into this variable.
-     * @param dimennsions Names of the dimensions this variable spans.
-     * @return mdframe& 
+     * @note The dimensions are not outputted to the CSV,
+     *       since they only form the basis for the mdframe's
+     *       dimensions, and do not inherently store any information.
+     * 
+     * @param path File path to output CSV
+     * @param header Should the CSV header be included?
      */
-    template<
-        typename T,
-        typename... Args,
-        types::enable_if_supports<T, bool> = true,
-        std::enable_if_t<
-            std::is_constructible<
-                std::initializer_list<std::string>,
-                Args...
-            >::value, bool
-        > = true
-    >
-    mdframe& add_variable(const std::string& name, const mdvector<T>& values, Args&&... dimensions);
+    #warning NOT IMPLEMENTED
+    void to_csv(const std::string& path, bool header = true) const;
+
+    /**
+     * Write this mdframe to a NetCDF file.
+     * 
+     * @param path File path to the output NetCDF
+     */
+    #warning NOT IMPLEMENTED
+    void to_netcdf(const std::string& path) const;
 
   private:
     dimension_set m_dimensions;

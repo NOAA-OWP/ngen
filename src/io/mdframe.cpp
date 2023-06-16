@@ -1,29 +1,20 @@
 #include "mdframe.hpp"
+#include <type_traits>
 
 namespace io {
-namespace detail {
-
-dimension::dimension(const std::string& name)
-    : m_name(name)
-    , m_size(boost::none) {};
-
-dimension::dimension(const std::string& name, std::size_t size)
-    : m_name(name)
-    , m_size(size) {};
-
-bool dimension::operator==(const dimension& rhs) const
-{
-    return this->m_name == rhs.m_name;
-}
-
-} // namespace detail
 
 // Dimension Member Functions -------------------------------------------------
+
+auto mdframe::find_dimension(const std::string& name) const noexcept
+    -> dimension_set::const_iterator
+{
+    return this->m_dimensions.find(dimension(name));
+}
 
 auto mdframe::get_dimension(const std::string& name) const noexcept
     -> boost::optional<const detail::dimension&>
 {
-    decltype(auto) pos = this->m_dimensions.find(name);
+    decltype(auto) pos = this->find_dimension(name);
 
     boost::optional<const detail::dimension&> result;
     if (pos != this->m_dimensions.end()) {
@@ -35,7 +26,7 @@ auto mdframe::get_dimension(const std::string& name) const noexcept
 
 bool mdframe::has_dimension(const std::string& name) const noexcept
 {
-    return this->m_dimensions.find(name) != this->m_dimensions.end();
+    return this->find_dimension(name) != this->m_dimensions.end();
 }
 
 mdframe& mdframe::add_dimension(const std::string& name)
@@ -57,11 +48,17 @@ mdframe& mdframe::add_dimension(const std::string& name, std::size_t size)
 
 // Variable Member Functions --------------------------------------------------
 
+auto mdframe::find_variable(const std::string& name) const noexcept
+    -> variable_set::const_iterator
+{
+    return this->m_variables.find(variable(name));
+}
+
 auto mdframe::get_variable(const std::string& name) const noexcept
     -> boost::optional<variable>
 {
    
-    decltype(auto) var = this->m_variables.find(variable(name));
+    decltype(auto) var = this->find_variable(name);
     
     boost::optional<variable> result;
     if (var != this->m_variables.end()) {
@@ -71,16 +68,15 @@ auto mdframe::get_variable(const std::string& name) const noexcept
     return result;
 }
 
-bool mdframe::has_variable(const std::string& name) const noexcept
+auto mdframe::operator[](const std::string& name) const noexcept
+    -> boost::optional<variable>
 {
-    return this->m_variables.find(name) != this->m_variables.end();
+    return this->get_variable(name);
 }
 
-mdframe& mdframe::add_variable(const std::string& name)
+bool mdframe::has_variable(const std::string& name) const noexcept
 {
-    // should not update if the variable already exists
-    this->m_variables.emplace(name, mdvector_variant{});
-    return *this;
+    return this->find_variable(name) != this->m_variables.end();
 }
 
 } // namespace io
