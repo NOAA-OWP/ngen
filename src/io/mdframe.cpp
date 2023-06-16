@@ -1,5 +1,4 @@
 #include "mdframe.hpp"
-#include <type_traits>
 
 namespace io {
 

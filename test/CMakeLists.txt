@@ -103,7 +103,8 @@ add_test(test_realization_config
 ########################## Series Unit Tests
 add_test(test_io
          1
-         io/mdvector_Test.cpp
+         io/mdarray_Test.cpp
+         # io/mdframe_Test.cpp
          NGen::io)
 
 ########################## Nexus Tests
