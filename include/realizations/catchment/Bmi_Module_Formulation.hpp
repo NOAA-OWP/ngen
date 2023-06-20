@@ -463,11 +463,8 @@ namespace realization {
             return bmi_model_start_time_forcing_offset_s;
         }
 
-<<<<<<< HEAD
         virtual std::vector<double> get_var_vec_as_double(time_t timestep, const std::string &var_name) = 0;
 
-=======
->>>>>>> Revise config json file to include bounding box
         /**
          * Get value for some BMI model variable.
          *
