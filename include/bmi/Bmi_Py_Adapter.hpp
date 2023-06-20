@@ -243,6 +243,8 @@ namespace models {
                     return "long long"; //numpy type
                 } else if (py_type_name == "float" && item_size == sizeof(float)) {
                     return "float";
+                } else if (py_type_name == "float32" && item_size == sizeof(float)) {
+                    return "float";
                 } else if ((py_type_name == "float" || py_type_name == "float64" || py_type_name == "np.float64" ||
                             py_type_name == "numpy.float64") && item_size == sizeof(double)) {
                     return "double";
@@ -266,7 +268,7 @@ namespace models {
                 if (cxx_type_name == "short" || cxx_type_name == "int" || cxx_type_name == "long" ||
                     cxx_type_name == "long long") {
                     return "int";
-                } else if (cxx_type_name == "float" || cxx_type_name == "double" || cxx_type_name == "long double") {
+                } else if (cxx_type_name == "float" || cxx_type_name == "float32" || cxx_type_name == "double" || cxx_type_name == "long double") {
                     return "double";
                 } else {
                     throw std::runtime_error("(Bmi_Py_Adapter) Failed determining analogous built-in Python type for C++ '" +

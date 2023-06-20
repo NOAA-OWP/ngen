@@ -139,6 +139,11 @@ namespace realization {
         }
 
         /**
+         * Get value vector for some BMI model variable.
+         */
+        std::vector<double> get_var_vec_as_double(time_t timestep, const string &var_name) override;
+
+        /**
          * Get value for some BMI model variable.
          *
          * This function assumes that the given variable, while returned by the model within an array per the BMI spec,
@@ -148,6 +153,7 @@ namespace realization {
          * @param var_name
          * @return
          */
+
         double get_var_value_as_double(const std::string& var_name) override;
 
         /**
