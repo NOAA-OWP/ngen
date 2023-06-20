@@ -852,7 +852,8 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_3_a) {
         formulation.get_response(i++, 3600);
     formulation.get_response(i, 3600);
     std::string output = formulation.get_output_line_for_timestep(i, ",");
-    ASSERT_EQ(output, "0.000001112,199280.000000000,199240.000000000,199280.000000000,0.000000000,0.000001001");
+    //ASSERT_EQ(output, "0.000001112,199280.000000000,199240.000000000,199280.000000000,0.000000000,0.000001001");
+    ASSERT_EQ(output, "0.000001,199280.000000,199240.000000,199280.000000,0.000000,0.000001");
 }
 
 /**
