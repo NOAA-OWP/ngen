@@ -48,6 +48,45 @@ std::string Bmi_Py_Formulation::get_formulation_type() {
     return "bmi_py";
 }
 
+std::string Bmi_Py_Formulation::get_output_line_for_timestep(int timestep, std::string delimiter) {
+    // TODO: something must be added to store values if more than the current time step is wanted
+    // TODO: if such a thing is added, it should probably be configurable to turn it off
+    if (timestep != (next_time_step_index - 1)) {
+        throw std::invalid_argument("Only current time step valid when getting output for BMI C++ formulation");
+    }
+    std::string output_str;
+    bool return_all = false;
+
+    // TODO: add codes to handle both scalar and vector outputs
+    time_t t_delta = timestep;
+    for (const std::string& name : get_output_variable_names()) {
+        std::cout << "var name: " << name << std::endl;
+        std::vector<double> vector_var = get_var_vec_as_double(t_delta, name);
+        //for scalar, get_var_vec_as_double() function would return a vector with one element
+        std::cout << "vector_var.size = " << vector_var.size() << std::endl;
+        /*
+        if (vector_var.size() == 1) {
+            output_str += (output_str.empty() ? "" : ",") + std::to_string(vector_var[0]);
+            std::cout << "vector_var[0] = " << vector_var[0] << std::endl;
+            std::cout << "output_str = " << output_str << std::endl;
+        }
+        else if (!return_all) {
+            output_str += (output_str.empty() ? "" : ",") + std::to_string(vector_var[0]);
+        }
+        else if (return_all) {
+        */
+            for (int i = 0; i < vector_var.size(); ++i) {
+                output_str += (output_str.empty() ? "" : ",") + std::to_string(vector_var[i]);
+                //std::cout << "vector_var[0] = " << vector_var[0] << std::endl;
+                //std::cout << "i, vector_var[i] = " << i << ", " << vector_var[i] << std::endl;
+                //std::cout << "output_str = " << output_str << std::endl;
+            }
+        }
+    //}
+    return output_str;
+}
+
+/*
 string Bmi_Py_Formulation::get_output_line_for_timestep(int timestep, std::string delimiter) {
     // TODO: something must be added to store values if more than the current time step is wanted
     // TODO: if such a thing is added, it should probably be configurable to turn it off
@@ -72,6 +111,7 @@ string Bmi_Py_Formulation::get_output_line_for_timestep(int timestep, std::strin
     }
     return output_text_stream->str();
 }
+*/
 
 double Bmi_Py_Formulation::get_response(time_step_t t_index, time_step_t t_delta) {
     if (get_bmi_model() == nullptr) {
@@ -110,7 +150,18 @@ double Bmi_Py_Formulation::get_response(time_step_t t_index, time_step_t t_delta
         // TODO: again, consider whether we should store any historic response, ts_delta, or other var values
         next_time_step_index++;
     }
-    return get_var_value_as_double( get_bmi_main_output_var());
+    //return get_var_value_as_double( get_bmi_main_output_var());
+    return get_var_vec_as_double(t_index, get_bmi_main_output_var())[0];
+}
+
+std::vector<double> Bmi_Py_Formulation::get_var_vec_as_double(time_t t_delta, const string &var_name) {
+    time_t start_time = convert_model_time(get_bmi_model()->GetCurrentTime()) + get_bmi_model_start_time_forcing_offset_s();
+    //time_t start_time = convert_model_time(get_bmi_model()->GetCurrentTime());
+    std::string bmi_var_name;
+    Bmi_Module_Formulation::get_bmi_output_var_name(var_name, bmi_var_name);
+    auto selector = CatchmentAggrDataSelector(std::string(),bmi_var_name,start_time,t_delta,"1");
+    std::vector<double> value_vec = get_values(selector);
+    return value_vec;
 }
 
 double Bmi_Py_Formulation::get_var_value_as_double(const string &var_name) {

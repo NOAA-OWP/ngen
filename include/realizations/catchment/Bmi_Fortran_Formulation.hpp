@@ -106,6 +106,8 @@ namespace realization {
 
         double get_var_value_as_double(const int &index, const string &var_name) override;
 
+        std::vector<double> get_var_vec_as_double(time_t timestep, const string &var_name) override;
+
         friend class Bmi_Multi_Formulation;
 
         // Unit test access
