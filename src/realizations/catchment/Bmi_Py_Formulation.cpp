@@ -54,63 +54,15 @@ std::string Bmi_Py_Formulation::get_output_line_for_timestep(int timestep, std::
         throw std::invalid_argument("Only current time step valid when getting output for BMI C++ formulation");
     }
     std::string output_str;
-    bool return_all = false;
 
     // TODO: add codes to handle both scalar and vector outputs
     time_t t_delta = timestep;
     for (const std::string& name : get_output_variable_names()) {
-        std::cout << "var name: " << name << std::endl;
         std::vector<double> vector_var = get_var_vec_as_double(t_delta, name);
-        //for scalar, get_var_vec_as_double() function would return a vector with one element
-        std::cout << "vector_var.size = " << vector_var.size() << std::endl;
-        /*
-        if (vector_var.size() == 1) {
-            output_str += (output_str.empty() ? "" : ",") + std::to_string(vector_var[0]);
-            std::cout << "vector_var[0] = " << vector_var[0] << std::endl;
-            std::cout << "output_str = " << output_str << std::endl;
-        }
-        else if (!return_all) {
-            output_str += (output_str.empty() ? "" : ",") + std::to_string(vector_var[0]);
-        }
-        else if (return_all) {
-        */
-            for (int i = 0; i < vector_var.size(); ++i) {
-                output_str += (output_str.empty() ? "" : ",") + std::to_string(vector_var[i]);
-                //std::cout << "vector_var[0] = " << vector_var[0] << std::endl;
-                //std::cout << "i, vector_var[i] = " << i << ", " << vector_var[i] << std::endl;
-                //std::cout << "output_str = " << output_str << std::endl;
-            }
-        }
-    //}
+        output_str += (output_str.empty() ? "" : ",") + std::to_string(vector_var[0]);
+    }
     return output_str;
 }
-
-/*
-string Bmi_Py_Formulation::get_output_line_for_timestep(int timestep, std::string delimiter) {
-    // TODO: something must be added to store values if more than the current time step is wanted
-    // TODO: if such a thing is added, it should probably be configurable to turn it off
-    if (timestep != (next_time_step_index - 1)) {
-        throw std::invalid_argument("Only current time step valid when getting output for BMI Python formulation");
-    }
-
-    // TODO: see Github issue 355: this design (and formulation output handling in general) needs to be reworked
-    // Clear anything currently in there
-    output_text_stream->str(std::string());
-
-    const std::vector<std::string> &output_var_names = get_output_variable_names();
-    // This probably should never happen, but just to be safe ...
-    if (output_var_names.empty()) { return ""; }
-
-    // Do the first separately, without the leading comma
-    *output_text_stream << get_var_value_as_double(output_var_names[0]);
-
-    // Do the rest with a leading comma
-    for (int i = 1; i < output_var_names.size(); ++i) {
-        *output_text_stream << "," << get_var_value_as_double(output_var_names[i]);
-    }
-    return output_text_stream->str();
-}
-*/
 
 double Bmi_Py_Formulation::get_response(time_step_t t_index, time_step_t t_delta) {
     if (get_bmi_model() == nullptr) {
