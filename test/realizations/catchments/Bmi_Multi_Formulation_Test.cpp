@@ -836,6 +836,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_1_a) {
     //initializing/using the grid vars in this test, and try to find a better way in the future.
     ASSERT_EQ(output, "0.000000,200620.000000,1.000000,2.000000,2.000000");
 #endif // ACTIVATE_PYTHON
+    //ASSERT_EQ(output, "0.000000,200620.000000,1.000000,2.000000,3.000000");
 }
 
 /**
@@ -866,6 +867,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_1_b) {
     //initializing/using the grid vars in this test, and try to find a better way in the future.
     ASSERT_EQ(output, "0.000001,199280.000000,543.000000,2.000001,2.000001");
 #endif // ACTIVATE_PYTHON
+    //ASSERT_EQ(output, "0.000001,199280.000000,543.000000,2.000001,3.000001");
 }
 
 /**
