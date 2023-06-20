@@ -396,7 +396,7 @@ TEST_F(Bmi_Py_Formulation_Test, DISABLED_GetResponse_1_a) {
 }
 
 /**
- * Simple test of output.
+ * Simple test of output for scalar.
  */
 /*
 TEST_F(Bmi_Py_Formulation_Test, GetOutputLineForTimestep_0_a) {
@@ -409,12 +409,11 @@ TEST_F(Bmi_Py_Formulation_Test, GetOutputLineForTimestep_0_a) {
     ASSERT_EQ(output, "0.000000,571.600037,1.000000,2.000000,3.000000");
     //ASSERT_EQ(output, "0.000000,0.000000,1.000000,2.000000,3.000000");  //using vector index 0
     //ASSERT_EQ(output, "0.000000,0.000000,2.000000,2.000000,3.000000");  //using vector index 1
-    //ASSERT_EQ(output, "0.000000,0.000000,1.000000,2.000000,3.000000,2.000000,2.000000,2.000000,2.000000,2.000000,2.000000,3.000000,3.000000,3.000000,3.000000,3.000000,3.000000");
 }
 */
 
 /**
- * Simple test of output, picking time step when there was non-zero rain rate.
+ * Simple test of scalar output, picking time step when there was non-zero rain rate.
  * This test applies to the case of taking the first element in the vector in the
  * get_output_line_for_timestep() function
  */

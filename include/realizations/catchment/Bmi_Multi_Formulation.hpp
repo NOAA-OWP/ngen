@@ -533,20 +533,13 @@ namespace realization {
         template<class T>
         double get_module_var_value_as_double(const std::string &var_name, std::shared_ptr<Bmi_Formulation> mod) {
             std::shared_ptr<T> module = std::static_pointer_cast<T>(mod);
-            return module->get_var_value_as_double(var_name);
+            return module->get_var_value_as_double(0, var_name);
         }
 
         /**
-         * Get value for some BMI model variable.
-         *
-         * This function assumes that the given variable, while returned by the model within an array per the BMI spec,
-         * is actual a single, scalar value.  Thus, it returns what is at index 0 of the array reference.
-         *
-         * @param index
-         * @param var_name
-         * @return
+         * Get value vector for some BMI model variable.
          */
-        double get_var_value_as_double(const std::string &var_name) override {
+        double get_var_value_as_double(const int& index, const std::string& var_name) override {
             return get_var_value_as_double(0, var_name);
         }
 
@@ -574,7 +567,7 @@ namespace realization {
          * @param var_name
          * @return
          */
-        double get_var_value_as_double(const int& index, const std::string& var_name) override {
+        std::vector<double> get_var_vec_as_double(const int& index, const std::string& var_name) override {
             auto data_provider_iter = availableData.find(var_name);
             if (data_provider_iter == availableData.end()) {
                 throw external::ExternalIntegrationException(
@@ -587,7 +580,7 @@ namespace realization {
                 long nested_module_time = nested_module->get_data_start_time() + ( this->get_model_current_time() - this->get_model_start_time() );
                 auto selector = CatchmentAggrDataSelector(this->get_catchment_id(),var_name,nested_module_time,this->record_duration(),"1");
                 //TODO: After merge PR#405, try re-adding support for index
-                return nested_module->get_value(selector);
+                return nested_module->get_values(selector);
             }
             // If there was any problem with the cast and extraction of the value, throw runtime error
             catch (std::exception &e) {
@@ -595,6 +588,20 @@ namespace realization {
                                          " when attempting to get values of BMI variable " + var_name + SOURCE_LOC);
                 // TODO: look at adjusting defs to move this function up in class hierarchy (or at least add TODO there)
             }
+        }
+
+        /**
+         * Get value for some BMI model variable.
+         *
+         * This function assumes that the given variable, while returned by the model within an array per the BMI spec,
+         * is actual a single, scalar value.  Thus, it returns what is at index 0 of the array reference.
+         *
+         * @param index
+         * @param var_name
+         * @return
+         */
+        double get_var_value_as_double(const int& index, const std::string& var_name) {
+            return get_var_vec_as_double(index, var_name)[0];
         }
 
         /**
