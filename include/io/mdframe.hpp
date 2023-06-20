@@ -205,19 +205,14 @@ class mdframe {
     }
 
     #warning NO DOCUMENTATION
-    #warning NOT IMPLEMENTED
     template<typename T, types::enable_if_supports<T, bool> = true>
-    mdframe& push_back(const std::string& variable, T value);
+    mdframe& emplace(const std::string& variable, std::initializer_list<size_type> index, T value)
+    {
+        auto var = this->get_variable(variable);
+        var->emplace(index, value);
 
-    #warning NO DOCUMENTATION
-    #warning NOT IMPLEMENTED
-    template<typename T, types::enable_if_supports<T, bool> = true>
-    mdframe& push_back(const std::string& variable, std::initializer_list<T> values);
-
-    #warning NO DOCUMENTATION
-    #warning NOT IMPLEMENTED
-    template<typename T, types::enable_if_supports<T, bool> = true>
-    mdframe& insert(const std::string& variable, T value, std::size_t axis);
+        return *this;
+    }
 
 
     // ------------------------------------------------------------------------

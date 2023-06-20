@@ -3,19 +3,20 @@
 
 #include "mdarray.hpp"
 #include "traits.hpp"
+#include "dimension.hpp"
+#include <initializer_list>
+
 
 #define MDARRAY_VISITOR(name, return_type) struct name : boost::static_visitor<return_type>
-#define MDARRAY_VISITOR_TEMPLATE_IMPL(var_name) \
+#define MDARRAY_VISITOR_IMPL(var_name) \
     template<typename T> \
     auto operator()(mdarray<T> var_name) const noexcept
 
-#define MDARRAY_VISITOR_IMPL(prototype) \
+#define MDARRAY_VISITOR_TEMPLATE_IMPL(prototype, ...) \
     template<typename T> \
-    auto operator()(prototype) const noexcept \
+    auto operator()(prototype, ##__VA_ARGS__) const noexcept \
 
 namespace io {
-
-struct dimension;
 
 namespace detail {
 
@@ -24,13 +25,41 @@ namespace visitors { // -------------------------------------------------------
 #warning NO DOCUMENTATION
 MDARRAY_VISITOR(mdarray_size, std::size_t)
 {
-    MDARRAY_VISITOR_TEMPLATE_IMPL(v) -> std::size_t { return v.size(); }
+    MDARRAY_VISITOR_IMPL(v) -> std::size_t { return v.size(); }
 };
 
 #warning NO DOCUMENTATION
 MDARRAY_VISITOR(mdarray_rank, std::size_t)
 {
-    MDARRAY_VISITOR_TEMPLATE_IMPL(v) -> std::size_t { return v.rank(); }
+    MDARRAY_VISITOR_IMPL(v) -> std::size_t { return v.rank(); }
+};
+
+#warning NO DOCUMENTATION
+MDARRAY_VISITOR(mdarray_emplace, void)
+{   
+    MDARRAY_VISITOR_TEMPLATE_IMPL(
+        mdarray<T> v,
+        T val,
+        std::initializer_list<std::size_t> index
+    ) -> void
+    {
+        v.emplace(index, val);
+    };
+};
+
+#warning NO DOCUMENTATION
+template<typename... SupportedTypes>
+MDARRAY_VISITOR(mdarray_at, typename traits::type_list<SupportedTypes...>::variant_scalar)
+{
+    using variant_scalar = typename traits::type_list<SupportedTypes...>::variant_scalar;
+
+    MDARRAY_VISITOR_TEMPLATE_IMPL(
+        mdarray<T> v,
+        std::initializer_list<std::size_t> index
+    ) -> variant_scalar
+    {
+        return v.at(index);
+    }
 };
 
 } // namespace visitors -------------------------------------------------------
@@ -54,10 +83,10 @@ struct variable {
     using types = traits::type_list<SupportedTypes...>;
 
     /**
-     * A boost::variant type consisting of mdvectors of the
+     * A boost::variant type consisting of mdarrays of the
      * support types, i.e. for types int and double, this is
      * equivalent to:
-     *     boost::variant<io::mdvector<int>, io::mdvector<double>>
+     *     boost::variant<io::mdarray<int>, io::mdarray<double>>
      */
     using mdarray_variant = typename types::template variant_container<io::mdarray>;
 
@@ -118,7 +147,7 @@ struct variable {
     /**
      * Get the values of this variable
      * 
-     * @return const mdvector_variant& 
+     * @return const mdarray_variant& 
      */
     const mdarray_variant& values() const noexcept
     {
@@ -132,9 +161,28 @@ struct variable {
     }
 
     /**
-     * Get the (true) size of this variable
+     * Get the name of this variable
+     * 
+     * @return const std::string& 
+     */
+    const std::string& name() const noexcept {
+        return this->m_name;
+    }
+
+    std::vector<std::string> dimensions() const noexcept {
+        std::vector<std::string> names;
+        names.reserve(this->m_dimensions.size());
+        for (const dimension& dim : this->m_dimensions) {
+            names.push_back(dim.name());
+        }
+
+        return names;
+    }
+
+    /**
+     * Get the size of this variable
      *
-     * @see mdvector::true_size
+     * @see mdarray::size
      * 
      * @return size_type 
      */
@@ -145,12 +193,48 @@ struct variable {
     /**
      * Get the rank of this variable
      *
-     * @see mdvector::rank
+     * @see mdarray::rank
      * 
      * @return size_type 
      */
     size_type rank() const noexcept {
         return boost::apply_visitor(visitors::mdarray_rank{}, this->m_data);
+    }
+
+    /**
+     * Construct and insert a mdvalue into the backing mdarray.
+     *
+     * @see mdarray::emplace
+     * 
+     * @tparam T Must be the type stored within the mdarray
+     * @param index Multi-dimensional index to insert to
+     * @param value Value to insert into mdarray
+     */
+    template<typename T, typename types::template enable_if_supports<T, bool> = true>
+    void emplace(std::initializer_list<size_type> index, T value)
+    {
+        // bind arguments to operator()
+        auto visitor = std::bind(
+            visitors::mdarray_emplace{},
+            std::placeholders::_1,
+            value,
+            index
+        );
+    
+        boost::apply_visitor(visitor, this->m_data);
+    }
+
+    #warning NO DOCUMENTATION
+    auto at(std::initializer_list<size_type> index)
+        -> typename types::variant_scalar
+    {
+        auto visitor = std::bind(
+            visitors::mdarray_at<SupportedTypes...>{},
+            std::placeholders::_1,
+            index
+        );
+    
+        return boost::apply_visitor(visitor, this->m_data);
     }
 
   private:
