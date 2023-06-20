@@ -96,14 +96,31 @@ class mdvalue
     {
         uint64_t index = 0;
         const size_type dsize = v.size();
-
-        for (uint64_t i = 0; i < (sizeof(uint64_t) * CHAR_BIT)/3; i++) {
+        const size_type checkbits = (sizeof(uint64_t) * CHAR_BIT) / 3;
+        for (uint64_t i = 0; i < checkbits; i++) {
             for (size_type vi = 0; vi < dsize; vi++) {
                 index |= (v.at(vi) & static_cast<uint64_t>(1) << i) << ((dsize - 1) * i + vi);
             }
         }
 
         return index;
+    }
+
+    #warning NO DOCUMENTATION
+    static std::vector<size_type> decode(uint64_t key, size_type rank)
+    {
+        std::vector<size_type> indices(rank);
+    
+        const size_type checkbits = (sizeof(uint64_t) * CHAR_BIT) / 3;
+        for (size_type i = 0; i < checkbits; i++) {
+            const size_type shift_fwd = rank * i;
+            const size_type shift_bck = (rank - 1) * i;
+            for (size_type j = 0; j < rank; j++) {
+                indices[j] |= (key & (static_cast<uint64_t>(1) << (shift_fwd + j))) >> (shift_bck + j);
+            }
+        }
+
+        return indices;
     }
 
     #warning NO DOCUMENTATION
@@ -125,60 +142,60 @@ template<typename T>
 struct equal_to<io::mdvalue<T>>
 {
     constexpr bool operator()(const io::mdvalue<T>& lhs, const io::mdvalue<T>& rhs) const noexcept
-    { return this->m_index == rhs.m_index; }
+    { return lhs.m_index == rhs.m_index; }
 
     constexpr bool operator()(const io::mdvalue<T>& lhs, const std::vector<typename io::mdvalue<T>::size_type>& rhs) const noexcept
-    { return this->m_index == io::mdvalue<T>::encode(rhs); }
+    { return lhs.m_index == io::mdvalue<T>::encode(rhs); }
 };
 
 template<typename T>
 struct not_equal_to<io::mdvalue<T>>
 {
     constexpr bool operator()(const io::mdvalue<T>& lhs, const io::mdvalue<T>& rhs) const noexcept
-    { return this->m_index != rhs.m_index; }
+    { return lhs.m_index != rhs.m_index; }
 
     constexpr bool operator()(const io::mdvalue<T>& lhs, const std::vector<typename io::mdvalue<T>::size_type>& rhs) const noexcept
-    { return this->m_index != io::mdvalue<T>::encode(rhs); }
+    { return lhs.m_index != io::mdvalue<T>::encode(rhs); }
 };
 
 template<typename T>
 struct greater<io::mdvalue<T>>
 {
     constexpr bool operator()(const io::mdvalue<T>& lhs, const io::mdvalue<T>& rhs) const noexcept
-    { return this->m_index > rhs.m_index;  }
+    { return lhs.m_index > rhs.m_index;  }
 
     constexpr bool operator()(const io::mdvalue<T>& lhs, const std::vector<typename io::mdvalue<T>::size_type>& rhs) const noexcept
-    { return this->m_index > io::mdvalue<T>::encode(rhs);  }
+    { return lhs.m_index > io::mdvalue<T>::encode(rhs);  }
 };
 
 template<typename T>
 struct less<io::mdvalue<T>>
 {
     constexpr bool operator()(const io::mdvalue<T>& lhs, const io::mdvalue<T>& rhs) const noexcept
-    { return this->m_index < rhs.m_index;  }
+    { return lhs.m_index < rhs.m_index;  }
 
     constexpr bool operator()(const io::mdvalue<T>& lhs, const std::vector<typename io::mdvalue<T>::size_type>& rhs) const noexcept
-    { return this->m_index < io::mdvalue<T>::encode(rhs);  }
+    { return lhs.m_index < io::mdvalue<T>::encode(rhs);  }
 };
 
 template<typename T>
 struct greater_equal<io::mdvalue<T>>
 {
     constexpr bool operator()(const io::mdvalue<T>& lhs, const io::mdvalue<T>& rhs) const noexcept
-    { return this->m_index >= rhs.m_index; }
+    { return lhs.m_index >= rhs.m_index; }
 
     constexpr bool operator()(const io::mdvalue<T>& lhs, const std::vector<typename io::mdvalue<T>::size_type>& rhs) const noexcept
-    { return this->m_index >= io::mdvalue<T>::encode(rhs); }
+    { return lhs.m_index >= io::mdvalue<T>::encode(rhs); }
 };
 
 template<typename T>
 struct less_equal<io::mdvalue<T>>
 {
     constexpr bool operator()(const io::mdvalue<T>& lhs, const io::mdvalue<T>& rhs) const noexcept
-    { return this->m_index <= rhs.m_index; }
+    { return lhs.m_index <= rhs.m_index; }
 
     constexpr bool operator()(const io::mdvalue<T>& lhs, const std::vector<typename io::mdvalue<T>::size_type>& rhs) const noexcept
-    { return this->m_index <= io::mdvalue<T>::encode(rhs); }
+    { return lhs.m_index <= io::mdvalue<T>::encode(rhs); }
 };
 
 } // namespace std

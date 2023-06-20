@@ -40,4 +40,10 @@ TEST(mdframe_Test, construction)
 
     EXPECT_EQ(df["2D"]->size(), 0);
     EXPECT_EQ(df["2D"]->rank(), 2);
+
+    EXPECT_NO_THROW(df.emplace("2D", {0, 0}, 1));
+    EXPECT_NO_THROW(df["2D"]->emplace({0, 1}, 2));
+
+    EXPECT_EQ(df["2D"]->at({0, 0}), 1);
+    EXPECT_EQ(df["2D"]->at({0, 1}), 2);
 }
