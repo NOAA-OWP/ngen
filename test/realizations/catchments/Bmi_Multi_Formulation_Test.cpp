@@ -792,7 +792,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_1_a) {
     //FIXME the last two outputs are the first value from the GRID_VAR in the python module...couldn't get the output variables
     //configured in the example realization generation to not query those, so hacked in here.  See comment above about not worrying about
     //initializing/using the grid vars in this test, and try to find a better way in the future.
-    ASSERT_EQ(output, "0.000000,200620.000000,1.000000,2.000000,3.000000,2.000000,2.000000,2.000000,2.000000,2.000000,2.000000,3.000000,3.000000,3.000000,3.000000,3.000000,3.000000");
+    ASSERT_EQ(output, "0.000000,200620.000000,1.000000,2.000000,3.000000");
 }
 
 /**
@@ -818,7 +818,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_1_b) {
     //FIXME the last two outputs are the first value from the GRID_VAR in the python module...couldn't get the output variables
     //configured in the example realization generation to not query those, so hacked in here.  See comment above about not worrying about
     //initializing/using the grid vars in this test, and try to find a better way in the future.
-    ASSERT_EQ(output, "0.000001,199280.000000,543.000000,544.000000,545.000000,2.000001,2.000000,2.000000,2.000000,2.000000,2.000000,3.000001,3.000000,3.000000,3.000000,3.000000,3.000000");
+    ASSERT_EQ(output, "0.000001,199280.000000,543.000000,2.000001,3.000001");
 }
 
 /**
