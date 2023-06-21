@@ -479,9 +479,10 @@ TEST_F(Bmi_Py_Formulation_Test, GetOutputLineForTimestep_1_a) {
 
     double response = examples[ex_index].formulation->get_response(0, 3600);
     std::string output = examples[ex_index].formulation->get_output_line_for_timestep(0, ",");
-    std::cout << "0_a: output = " << output << std::endl;
+    std::cout << "1_a: output = " << output << std::endl;
     //NOTE the last two values are simply the FIRST element of the grid vars
-    ASSERT_EQ(output, "0.000000,0.000000,1.000000,2.000000,3.000000");
+    //ASSERT_EQ(output, "0.000000,0.000000,1.000000,2.000000,3.000000");
+    ASSERT_EQ(output, "0.000000,0.000000,1.000000,2.000000,3.000000,2.000000,2.000000,2.000000,2.000000,2.000000,2.000000,3.000000,3.000000,3.000000,3.000000,3.000000,3.000000");
 }
 
 /**
@@ -496,9 +497,10 @@ TEST_F(Bmi_Py_Formulation_Test, GetOutputLineForTimestep_1_b) {
 
     double response = examples[ex_index].formulation->get_response(543, 3600);
     std::string output = examples[ex_index].formulation->get_output_line_for_timestep(543, ",");
-    std::cout << "0_b: output = " << output << std::endl;
+    std::cout << "1_b: output = " << output << std::endl;
     //NOTE the last two values are simply the FIRST element of the grid vars
-    ASSERT_EQ(output, "0.000001,0.000000,544.000000,2.000001,3.000001");
+    //ASSERT_EQ(output, "0.000001,0.000000,544.000000,2.000001,3.000001");
+    ASSERT_EQ(output, "0.000001,0.000000,544.000000,545.000000,546.000000,2.000001,2.000000,2.000000,2.000000,2.000000,2.000000,3.000001,3.000000,3.000000,3.000000,3.000000,3.000000");
 }
 
 /**

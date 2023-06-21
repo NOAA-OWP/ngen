@@ -60,7 +60,10 @@ std::string Bmi_Py_Formulation::get_output_line_for_timestep(int timestep, std::
     time_t t_delta = timestep;
     for (const std::string& name : get_output_variable_names()) {
         std::vector<double> vector_var = get_var_vec_as_double(t_delta, name);
-        output_str += (output_str.empty() ? "" : ",") + std::to_string(vector_var[0]);
+        //output_str += (output_str.empty() ? "" : ",") + std::to_string(vector_var[0]);
+        for (int i = 0; i < vector_var.size(); ++i) {
+            output_str += (output_str.empty() ? "" : ",") + std::to_string(vector_var[i]);
+        }
     }
     return output_str;
 }
