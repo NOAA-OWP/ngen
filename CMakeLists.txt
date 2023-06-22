@@ -214,65 +214,6 @@ endif()
 # If Python set to be active, run steps to make sure it is included properly, and set compiler definition to true
 if (${NGEN_ACTIVATE_PYTHON})
     add_compile_definitions(ACTIVATE_PYTHON=true)
-    # If there is a virtual environment directory then look for several things there
-    if(EXISTS ${PROJECT_SOURCE_DIR}/.venv OR EXISTS ${PROJECT_SOURCE_DIR}/venv)
-        if (EXISTS ${PROJECT_SOURCE_DIR}/.venv)
-            set(PY_VENV_DIR ${PROJECT_SOURCE_DIR}/.venv)
-        else()
-            set(PY_VENV_DIR ${PROJECT_SOURCE_DIR}/venv)
-        endif()
-        # Start with looking for NumPy
-        file(GLOB_RECURSE NP_COMMON_HEADER ${PY_VENV_DIR}/*npy_common.h)
-        get_filename_component(NP_HEADER_DIR ${NP_COMMON_HEADER} DIRECTORY)
-        get_filename_component(NP_INCLUDE_DIR ${NP_HEADER_DIR} DIRECTORY)
-        set(Python_NumPy_INCLUDE_DIR ${NP_INCLUDE_DIR})
-        message(INFO " Found numpy include path  ${Python_NumPy_INCLUDE_DIR}")
-        # Also try to get the real python root
-        message(INFO " Before Python exec  ${PYTHON_EXECUTABLE}")
-        get_filename_component(PYTHON_EXECUTABLE ${PY_VENV_DIR}/bin/python REALPATH)
-        message(INFO " After Python exec  ${PYTHON_EXECUTABLE}")
-        get_filename_component(PYTHON_BIN ${PYTHON_EXECUTABLE} DIRECTORY)
-        get_filename_component(PY_ROOT_DIR ${PYTHON_BIN} DIRECTORY)
-        set(Python_ROOT_DIR "${PY_ROOT_DIR}")
-        message(INFO " Python root dir to search is  ${Python_ROOT_DIR}")
-        set(Python_FIND_VIRTUALENV ONLY)
-
-        # use, i.e. don't skip the full RPATH for the build tree
-        #set(CMAKE_SKIP_BUILD_RPATH FALSE)
-        #set(CMAKE_SKIP_BUILD_RPATH TRUE)
-        #set(CMAKE_INSTALL_RPATH "/Library/Developer/CommandLineTools/Library/Frameworks")
-        #message(INFO " ORIGIN is ${ORIGIN}")
-        #SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-
-        # add the automatically determined parts of the RPATH
-        # which point to directories outside the build tree to the install RPATH
-        #set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-        #set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
-
-        # the RPATH to be used when installing, but only if it's not a system directory
-        #list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/lib" isSystemDir)
-        #if("${isSystemDir}" STREQUAL "-1")
-        #    set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
-        #endif("${isSystemDir}" STREQUAL "-1")
-
-        # Alternatively, if there is something in the ENV for the user, try that
-    elseif(DEFINED ENV{Python_NumPy_INCLUDE_DIR})
-        set(Python_NumPy_INCLUDE_DIR $ENV{Python_NumPy_INCLUDE_DIR})
-    endif()
-
-#    if(DEFINED ENV{PYTHON_INCLUDE_DIR})
-#        set(PYTHON_INCLUDE_DIR $ENV{PYTHON_INCLUDE_DIR})
-#        message(INFO " Found 'PYTHON_INCLUDE_DIR' from ENV ($ENV{PYTHON_INCLUDE_DIR})")
-#    else()
-#        message(INFO " Did not find 'PYTHON_INCLUDE_DIR' in ENV")
-#    endif()
-#    if(DEFINED ENV{PYTHON_LIBRARIES})
-#        set(PYTHON_LIBRARIES $ENV{PYTHON_LIBRARIES})
-#        message(INFO " Found 'PYTHON_LIBRARIES' from ENV ($ENV{PYTHON_LIBRARIES})")
-#    else()
-#        message(INFO " Did not find 'PYTHON_LIBRARIES' in ENV")
-#    endif()
-#    include_directories(${PYTHON_INCLUDE_DIR})
 
     find_package(Python 3.6.8 REQUIRED COMPONENTS Interpreter Development NumPy)
     #message(INFO " the final Py lib is ${Python_LIBRARY}")
