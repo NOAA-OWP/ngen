@@ -23,6 +23,7 @@ class CsvPerFeatureForcingProviderTest : public ::testing::Test {
 
     std::shared_ptr<CsvPerFeatureForcingProvider> Forcing_Object;
     std::shared_ptr<CsvPerFeatureForcingProvider> Forcing_Object_2;
+    std::shared_ptr<CsvPerFeatureForcingProvider> Forcing_Object_3; // explicit units
 
     typedef struct tm time_type;
 
@@ -68,6 +69,17 @@ void CsvPerFeatureForcingProviderTest::setupForcing()
     forcing_params forcing_p_2(forcing_file_name, "CsvPerFeature", "2015-12-01 00:00:00", "2015-12-05 02:00:00");
 
     Forcing_Object_2 = std::make_shared<CsvPerFeatureForcingProvider>(forcing_p_2);
+
+    forcing_file_names = { 
+        "test/data/forcing/cat-27115-nwm-aorc-variant-derived-format-units.csv",
+        "../test/data/forcing/cat-27115-nwm-aorc-variant-derived-format-units.csv",
+        "../../test/data/forcing/cat-27115-nwm-aorc-variant-derived-format-units.csv"
+    };
+    forcing_file_name = utils::FileChecker::find_first_readable(forcing_file_names);
+
+    forcing_params forcing_p_3(forcing_file_name, "CsvPerFeature", "2015-12-01 00:00:00", "2015-12-05 02:00:00");
+
+    Forcing_Object_3 = std::make_shared<CsvPerFeatureForcingProvider>(forcing_p_3);
 }
 
 ///Test AORC Forcing Object
@@ -164,3 +176,49 @@ TEST_F(CsvPerFeatureForcingProviderTest, TestGetAvailableForcingOutputs)
 
 }
 
+///Test CSV Units Parsing
+TEST_F(CsvPerFeatureForcingProviderTest, TestForcingUnitHeaderParsing)
+{
+    const time_t t = Forcing_Object_3->get_data_start_time() + (8 * 3600);
+    const auto& varnames = this->Forcing_Object_3->get_avaliable_variable_names();
+    const std::vector<std::tuple<std::string, std::string, std::string>>& expected = {
+        {"RAINRATE", "mm s^-1", "cm min^-1"},
+        {"T2D", "K", "degC"},
+        {"Q2D", "kg kg-1", "g kg-1"},
+        {"U2D", "m s-1", "cm s-1"},
+        {"V2D", "m/s", "cm s-1"},
+        {"TEST", "kg", "g"},
+        {"PSFC[Pa)", "Pa", "bar"},
+        {"SWDOWN(W m-2]", "W m-2", "langley"},
+        {"LWDOWN [alt]", "W m-2", "langley"}
+    };
+
+    for (auto ite = expected.begin(); ite != expected.end(); ite++) {
+        const auto expected_name = std::get<0>(*ite);
+        const auto expected_in_units = std::get<1>(*ite);
+        const auto expected_out_units = std::get<2>(*ite);
+
+        const double in_value = this->Forcing_Object_3->get_value(
+            CSVDataSelector(expected_name, t, 3600, expected_in_units),
+            data_access::SUM
+        );
+    
+        const double out_value = this->Forcing_Object_3->get_value(
+            CSVDataSelector(expected_name, t, 3600, expected_out_units),
+            data_access::SUM
+        );
+
+        // make sure each expected column name is within varnames
+        EXPECT_NE(std::find(varnames.begin(), varnames.end(), expected_name), varnames.end());
+        
+        // make sure units are correctly mapped
+        if (ite - expected.begin() < 6) {
+            // conversion expected
+            EXPECT_NE(in_value, out_value);
+        } else {
+            // conversion is not expected, since there is no mapping
+            EXPECT_NEAR(in_value, out_value, 0.00001);
+        }
+        
+    }
+}

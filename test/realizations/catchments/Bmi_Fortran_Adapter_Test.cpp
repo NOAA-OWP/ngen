@@ -48,32 +48,33 @@ protected:
     std::unique_ptr<Bmi_Fortran_Adapter> adapter;
 
     std::string expected_component_name = "Testing BMI Fortran Model";
-    std::vector<std::string> expected_output_var_names = { "OUTPUT_VAR_1", "OUTPUT_VAR_2", "OUTPUT_VAR_3" };
-    std::vector<std::string> expected_input_var_names = { "INPUT_VAR_1", "INPUT_VAR_2", "INPUT_VAR_3" };
-    std::vector<std::string> expected_output_var_locations = { "node", "node", "node" };
-    std::vector<int> expected_output_var_grids = { 0, 0, 0 };
-    std::vector<int> expected_input_var_grids = { 0, 0, 0 };
-    std::vector<std::string> expected_output_var_units = { "m", "m", "s" };
-    std::vector<std::string> expected_output_var_types = { "double precision", "real", "integer" };
-    std::vector<std::string> expected_input_var_types = { "double precision", "real", "integer" };
-    int expected_grid_rank = 1;
-    int expected_grid_size = 1;
+    std::vector<std::string> expected_output_var_names = { "OUTPUT_VAR_1", "OUTPUT_VAR_2", "OUTPUT_VAR_3", "GRID_VAR_2", "GRID_VAR_3", "GRID_VAR_4" };
+    std::vector<std::string> expected_input_var_names = { "INPUT_VAR_1", "INPUT_VAR_2", "INPUT_VAR_3", "GRID_VAR_1" };
+    std::vector<std::string> expected_output_var_locations = { "node", "node", "node", "node", "node"};
+    std::vector<int> expected_output_var_grids = { 0, 0, 0, 1, 2, 2 };
+    std::vector<int> expected_input_var_grids = { 0, 0, 0, 1 };
+    std::vector<std::string> expected_output_var_units = { "m", "m", "s", "m", "m", "m" };
+    std::vector<std::string> expected_output_var_types = { "double precision", "real", "integer", "double precision", "double precision", "double precision" };
+    std::vector<int> expected_output_var_item_sizes = { 8, 4, 4, 8, 8, 8};
+    std::vector<std::string> expected_input_var_types = { "double precision", "real", "integer", "double precision" };
+    std::vector<int> expected_input_var_item_sizes = { 8, 4, 4, 8 };
+    std::vector<int> expected_input_grid_rank = {0, 0, 0, 2};
+    std::vector<int> expected_output_grid_rank = {0, 0, 0, 2, 3, 3};
+    std::vector<int> expected_input_grid_size = {1, 1, 1, 9};
+    std::vector<int> expected_output_grid_size = {0, 0, 0, 9, 18, 18}; //FIXME correct 3D SIZE?
+    std::vector<int> expected_input_var_nbytes = {8, 4, 4, 8}; //FIXME are these correct???
+    std::vector<int> expected_output_var_nbytes = {8, 4, 4, 8, 8, 8}; //FIXME are these correct??? Probably not for the gridded ones...
+    std::vector<int> expected_input_var_itemsize = {8, 4, 4, 8}; //FIXME are these correct???
+    std::vector<int> expected_output_var_itemsize = {8, 4, 4, 8, 8, 8}; //FIXME are these correct???
     int expected_grid_shape = -1;
     double expected_grid_x = 0;
     double expected_grid_y = 0;
     double expected_grid_z = 0;
-    double expected_grid_spacing = -1.0;
-    double expected_grid_origin = -1.0;
+    double expected_grid_origin = -1;
+    double expected_grid_spacing = -1;
     int expected_grid_node_count = 1;
     int expected_grid_edge_count = -1;
     int expected_grid_face_count = -1;
-    std::string expected_grid_type = "scalar";
-    int expected_var_itemsize_0 = 8; //type double
-    int expected_var_itemsize_1 = 4; //type float/real
-    int expected_var_itemsize_2 = 4; //type int/integer
-    int expected_var_nbytes_0 = 8; //type double
-    int expected_var_nbytes_1 = 4; //type float/real
-    int expected_var_nbytes_2 = 4; //type int/integer
 
 };
 
@@ -193,6 +194,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarType_0_a) {
     }
     catch (std::exception& e) {
         printf("Exception getting var type: %s", e.what());
+        FAIL();
     }
 }
 
@@ -208,6 +210,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarType_0_b) {
     }
     catch (std::exception& e) {
         printf("Exception getting var type: %s", e.what());
+        FAIL();
     }
 }
 
@@ -223,6 +226,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarType_0_c) {
     }
     catch (std::exception& e) {
         printf("Exception getting var type: %s", e.what());
+        FAIL();
     }
 }
 
@@ -238,6 +242,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarType_1_a) {
     }
     catch (std::exception& e) {
         printf("Exception getting var type: %s", e.what());
+        FAIL();
     }
 }
 
@@ -253,6 +258,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarType_1_b) {
     }
     catch (std::exception& e) {
         printf("Exception getting var type: %s", e.what());
+        FAIL();
     }
 }
 
@@ -268,6 +274,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarType_1_c) {
     }
     catch (std::exception& e) {
         printf("Exception getting var type: %s", e.what());
+        FAIL();
     }
 }
 
@@ -283,6 +290,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarGrid_0_a) {
     }
     catch (std::exception& e) {
         printf("Exception getting var grid id: %s", e.what());
+        FAIL();
     }
 }
 
@@ -298,6 +306,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarGrid_0_b) {
     }
     catch (std::exception& e) {
         printf("Exception getting var grid id: %s", e.what());
+        FAIL();
     }
 }
 
@@ -313,6 +322,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarGrid_1_a) {
     }
     catch (std::exception& e) {
         printf("Exception getting var grid id: %s", e.what());
+        FAIL();
     }
 }
 
@@ -328,6 +338,39 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarGrid_1_b) {
     }
     catch (std::exception& e) {
         printf("Exception getting var grid id: %s", e.what());
+        FAIL();
+    }
+}
+
+/** Test input 3 variable grid (id) can be retrieved. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetVarGrid_2_a) {
+    int out_var_index = 2;
+
+    std::string variable_name = adapter->GetInputVarNames()[out_var_index];
+    int expected_grid = expected_input_var_grids[out_var_index];
+
+    try {
+        ASSERT_EQ(adapter->GetVarGrid(variable_name), expected_grid);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting var grid id: %s", e.what());
+        FAIL();
+    }
+}
+
+/** Test output 5 variable grid (id) can be retrieved. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetVarGrid_2_b) {
+    int out_var_index = 4;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    int expected_grid = expected_output_var_grids[out_var_index];
+
+    try {
+        ASSERT_EQ(adapter->GetVarGrid(variable_name), expected_grid);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting var grid id: %s", e.what());
+        FAIL();
     }
 }
 
@@ -343,6 +386,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarUnits_0_a) {
     }
     catch (std::exception& e) {
         printf("Exception getting var units: %s", e.what());
+        FAIL();
     }
 }
 
@@ -358,6 +402,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarLocation_0_a) {
     }
     catch (std::exception& e) {
         printf("Exception getting var location: %s", e.what());
+        FAIL();
     }
 }
 
@@ -373,6 +418,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarLocation_0_b) {
     }
     catch (std::exception& e) {
         printf("Exception getting var location: %s", e.what());
+        FAIL();
     }
 }
 
@@ -384,7 +430,32 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetGridSize_0_a) {
     int grd = adapter->GetVarGrid(variable_name);
 
     try {
-        ASSERT_EQ(adapter->GetGridSize(grd), expected_grid_size);
+        ASSERT_EQ(adapter->GetGridSize(grd), expected_output_grid_size[out_var_index]);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting grid size: %s", e.what());
+        FAIL();
+    }
+}
+
+/** Test grid size can be retrieved for input 4. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetGridSize_0_b) {
+    int in_var_index = 3;
+
+    std::string variable_name = adapter->GetInputVarNames()[in_var_index];
+    int grd = adapter->GetVarGrid(variable_name);
+    int rank = adapter->GetGridRank(grd);
+    ASSERT_EQ(rank, 2);
+    std::vector<int> shape = {3,3};
+    adapter->SetValue("grid_1_shape", shape.data());
+    //Must be int to align with fortran c_int
+    int grid_shape[rank+1];
+    adapter->GetGridShape(grd, grid_shape);
+
+    // FIXME embed the expected value directly in the test and remove from "expected_input_grid_size"...
+    // since the shape is dictated in this test...
+    try {
+        ASSERT_EQ(adapter->GetGridSize(grd), expected_input_grid_size[in_var_index]);
     }
     catch (std::exception& e) {
         printf("Exception getting grid size: %s", e.what());
@@ -400,10 +471,29 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetGridRank_0_a) {
     int grd = adapter->GetVarGrid(variable_name);
 
     try {
-        ASSERT_EQ(adapter->GetGridRank(grd), expected_grid_rank);
+        ASSERT_EQ(adapter->GetGridRank(grd), expected_output_grid_rank[out_var_index]);
     }
     catch (std::exception& e) {
         printf("Exception getting grid rank: %s", e.what());
+        FAIL();
+    }
+}
+
+/**
+ * Test the function for getting the grid rank for the grid of grid output variable 2.
+ * */
+TEST_F(Bmi_Fortran_Adapter_Test, GetGridRank_0_b) {
+    int out_var_index = 3;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    int grd = adapter->GetVarGrid(variable_name);
+
+    try {
+        ASSERT_EQ(adapter->GetGridRank(grd), expected_output_grid_rank[out_var_index]);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting grid rank: %s", e.what());
+        FAIL();
     }
 }
 
@@ -414,17 +504,29 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetGridShape_0_a) {
     std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
     int grd = adapter->GetVarGrid(variable_name);
     int rank = adapter->GetGridRank(grd);
-    int* shape = new int [rank];
-    EXPECT_THROW(adapter->GetGridShape(grd, shape), std::runtime_error);
-    ASSERT_EQ(shape[0], expected_grid_shape);
-    // try {
-    //     adapter->GetGridShape(grd, shape);
-    //     ASSERT_EQ(*shape, expected_grid_shape)
-    // }
-    // catch (std::exception& e) {
-    //     printf("Exception getting grid shape: %s", e.what());
-    // }
-    delete [] shape;
+    ASSERT_EQ(rank, 0);
+    //Must be int to align with fortran c_int
+    int shape[rank+1];
+    adapter->GetGridShape(grd, shape);
+    //shape not defined for scalars, so should be 0
+    ASSERT_EQ(shape[0], 0);
+}
+
+/** Test grid shape can be retrieved for output 3. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetGridShape_0_b) {
+    int out_var_index = 3;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    int grd = adapter->GetVarGrid(variable_name);
+    int rank = adapter->GetGridRank(grd);
+    ASSERT_EQ(rank, 2);
+    std::vector<int> shape = {3,4};
+    adapter->SetValue("grid_1_shape", shape.data());
+    //Must be int to align with fortran c_int
+    int grid_shape[rank];
+    adapter->GetGridShape(grd, grid_shape);
+    ASSERT_EQ(shape[0], grid_shape[0]);
+    ASSERT_EQ(shape[1], grid_shape[1]);
 }
 
 /** Test grid spacing can be retrieved for output 1. */
@@ -433,16 +535,61 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetGridSpacing_0_a) {
 
     std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
     int grd = adapter->GetVarGrid(variable_name);
-    double spacing;
-    EXPECT_THROW(adapter->GetGridSpacing(grd, &spacing), std::runtime_error);
-    ASSERT_EQ(spacing, expected_grid_spacing);
-    // try {
-    //     adapter->GetGridSpacing(grd, &spacing);
-    //     ASSERT_EQ(spacing, expected_grid_spacing);
-    // }
-    // catch (std::exception& e) {
-    //     printf("Exception getting grid spacing: %s", e.what());
-    // }
+    int rank = adapter->GetGridRank(grd);
+    ASSERT_EQ(rank, 0);
+    double spacing[rank+1];
+    adapter->GetGridSpacing(grd, spacing);
+    //spacing undefined for scalar, so should be 0
+    ASSERT_EQ(spacing[0], 0);
+}
+
+/** Test default grid spacing can be retrieved for output 4. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetGridSpacing_0_b) {
+    int out_var_index = 3;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    int grd = adapter->GetVarGrid(variable_name);
+    int rank = adapter->GetGridRank(grd);
+    ASSERT_EQ(rank, 2);
+    double grid_spacing[rank];
+    adapter->GetGridSpacing(grd, grid_spacing);
+    //spacing not yet established for grid, so should be 0, 0
+    ASSERT_EQ(grid_spacing[0], 0.0);
+    ASSERT_EQ(grid_spacing[1], 0.0);
+}
+
+/** Test grid spacing can be set and retrieved for output 4. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetGridSpacing_0_c) {
+    int out_var_index = 3;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    int grd = adapter->GetVarGrid(variable_name);
+    int rank = adapter->GetGridRank(grd);
+    ASSERT_EQ(rank, 2);
+    //NOTE spacing in BMI is again ij order, so this is `dy, dx`
+    std::vector<double> spacing = {2.0, 2.0}; //TODO if this isn't double, the results are wacky...but it doesn't crash...
+    adapter->SetValue("grid_1_spacing", spacing.data());
+    double grid_spacing[rank];
+    adapter->GetGridSpacing(grd, grid_spacing);
+    ASSERT_EQ(grid_spacing[0], spacing[0]);
+    ASSERT_EQ(grid_spacing[1], spacing[1]);
+}
+
+/** Test grid spacing units can be set and retrieved for output 4. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetGridSpacing_0_d) {
+    int out_var_index = 3;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    int grd = adapter->GetVarGrid(variable_name);
+    int rank = adapter->GetGridRank(grd);
+    ASSERT_EQ(rank, 2);
+    //NOTE spacing in BMI is again ij order, so this is `dy, dx`
+    std::vector<int> units= {1, 1}; //The enum value for `m` or `meters` in bmi_grid.f90 must be int type
+    adapter->SetValue("grid_1_units", units.data());
+    int grid_units[rank];
+    adapter->GetValue("grid_1_units", grid_units);
+    ASSERT_EQ(grid_units[0], units[0]);
+    ASSERT_EQ(grid_units[1], units[1]);
 }
 
 /** Test grid origin can be retrieved for output 1. */
@@ -451,16 +598,45 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetGridOrigin_0_a) {
 
     std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
     int grd = adapter->GetVarGrid(variable_name);
-    double origin;
-    EXPECT_THROW(adapter->GetGridOrigin(grd, &origin), std::runtime_error);
-    ASSERT_EQ(origin, expected_grid_origin);
-    // try {
-    //     adapter->GetGridOrigin(grd, &origin);
-    //     ASSERT_EQ(origin, expected_grid_origin);
-    // }
-    // catch (std::exception& e) {
-    //     printf("Exception getting grid origin: %s", e.what());
-    // }
+    int rank = adapter->GetGridRank(grd);
+    ASSERT_EQ(rank, 0);
+    double origin[rank+1];
+    adapter->GetGridOrigin(grd, origin);
+    //origin undefined for scalar, so should be 0
+    ASSERT_EQ(origin[0], 0);
+}
+
+/** Test default grid origin can be retrieved for output 4. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetGridOrigin_0_b) {
+    int out_var_index = 3;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    int grd = adapter->GetVarGrid(variable_name);
+    int rank = adapter->GetGridRank(grd);
+    ASSERT_EQ(rank, 2);
+    double origin[rank];
+    adapter->GetGridOrigin(grd, origin);
+    //origin not yet established for grid, should be 0,0
+    ASSERT_EQ(origin[0], 0);
+    ASSERT_EQ(origin[1], 0);
+}
+
+/** Test grid origin can be set and retrieved for output 4. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetGridOrigin_0_c) {
+    int out_var_index = 3;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    int grd = adapter->GetVarGrid(variable_name);
+    int rank = adapter->GetGridRank(grd);
+    ASSERT_EQ(rank, 2);
+    //NOTE origin is also ij order, so this is `y0,x0`
+    std::vector<double> _origin = {42.0, 42.0}; //TODO if this isn't double, the results are wacky...but it doesn't crash...
+    adapter->SetValue("grid_1_origin", _origin.data());
+    double origin[rank];
+    adapter->GetGridOrigin(grd, origin);
+    for(int i = 0; i < rank; i++){
+        ASSERT_EQ(origin[i], _origin[i]);
+    }
 }
 
 /** Test grid X can be retrieved for output 1. */
@@ -469,16 +645,60 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetGridX_0_a) {
 
     std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
     int grd = adapter->GetVarGrid(variable_name);
-    int size = adapter->GetGridSize(grd);
-    double* grid = new double [size];
+    int rank = adapter->GetGridRank(grd);
+    ASSERT_EQ(rank, 0);
+    //single element vector to hold the result
+    std::vector<double> xs = std::vector<double>(1, -1 );
+
     try {
-        adapter->GetGridX(grd, grid);
-        ASSERT_EQ(grid[0], expected_grid_x);
+        adapter->GetGridX(grd, xs.data());
+        //The value passed in xs should be unchanged since GridX isn't defined for scalars
+        ASSERT_EQ(xs[0], -1);
     }
     catch (std::exception& e) {
         printf("Exception getting grid X: %s", e.what());
+        FAIL();
     }
-    delete [] grid;
+
+}
+
+/** Test grid X can be retrieved for output 4. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetGridX_0_b) {
+    int out_var_index = 3;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    int grd = adapter->GetVarGrid(variable_name);
+    int rank = adapter->GetGridRank(grd);
+    ASSERT_EQ(rank, 2);
+
+    //Initialize the grid shape (y,x)
+    std::vector<int> shape = {3,4};
+    adapter->SetValue("grid_1_shape", shape.data());
+    //Initialize the origin
+    //NOTE origin is also ij order, so this is `y0,x0`
+    std::vector<double> origin = {42.0, 42.0}; //TODO if this isn't double, the results are wacky...but it doesn't crash...
+    adapter->SetValue("grid_1_origin", origin.data());
+    
+    //NOTE spacing in BMI is again ij order, so this is `dy, dx`
+    std::vector<double> spacing = {2.0, 2.0}; //TODO if this isn't double, the results are wacky...but it doesn't crash...
+    adapter->SetValue("grid_1_spacing", spacing.data());
+
+    
+    std::vector<double> xs = std::vector<double>(shape[1], 0.0 );
+
+    int size = adapter->GetGridSize(grd);
+  
+    try {
+        adapter->GetGridX(grd, xs.data());
+            for(int i = 0; i < shape[1]; i++){
+        ASSERT_EQ(xs[i], origin[1] + spacing[1]*i);
+    }
+    }
+    catch (std::exception& e) {
+        printf("Exception getting grid X: %s", e.what());
+        FAIL();
+    }
+
 }
 
 /** Test grid Y can be retrieved for output 1. */
@@ -487,16 +707,59 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetGridY_0_a) {
 
     std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
     int grd = adapter->GetVarGrid(variable_name);
-    int size = adapter->GetGridSize(grd);
-    double* grid = new double [size];
+    int rank = adapter->GetGridRank(grd);
+    ASSERT_EQ(rank, 0);
+    //single element vector to hold the result
+    std::vector<double> ys = std::vector<double>(1, -1 );
+
     try {
-        adapter->GetGridY(grd, grid);
-        ASSERT_EQ(grid[0], expected_grid_y);
+        adapter->GetGridY(grd, ys.data());
+        //The value passed in ys should be unchanged since GridY isn't defined for scalars
+        ASSERT_EQ(ys[0], -1);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting grid X: %s", e.what());
+        FAIL();
+    }
+
+}
+
+/** Test grid Y can be retrieved for output 4. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetGridY_0_b) {
+       int out_var_index = 3;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    int grd = adapter->GetVarGrid(variable_name);
+    int rank = adapter->GetGridRank(grd);
+    ASSERT_EQ(rank, 2);
+
+    //Initialize the grid shape (y,x)
+    std::vector<int> shape = {3,4};
+    adapter->SetValue("grid_1_shape", shape.data());
+    //Initialize the origin
+    //NOTE origin is also ij order, so this is `y0,x0`
+    std::vector<double> origin = {42.0, 42.0}; //TODO if this isn't double, the results are wacky...but it doesn't crash...
+    adapter->SetValue("grid_1_origin", origin.data());
+    
+    //NOTE spacing in BMI is again ij order, so this is `dy, dx`
+    std::vector<double> spacing = {2.0, 2.0}; //TODO if this isn't double, the results are wacky...but it doesn't crash...
+    adapter->SetValue("grid_1_spacing", spacing.data());
+
+    
+    std::vector<double> ys = std::vector<double>(shape[0], 0.0 );
+
+    int size = adapter->GetGridSize(grd);
+  
+    try {
+        adapter->GetGridY(grd, ys.data());
+            for(int i = 0; i < shape[0]; i++){
+        ASSERT_EQ(ys[i], origin[0] + spacing[0]*i);
+    }
     }
     catch (std::exception& e) {
         printf("Exception getting grid Y: %s", e.what());
+        FAIL();
     }
-    delete [] grid;
 }
 
 /** Test grid Z can be retrieved for output 1. */
@@ -505,16 +768,59 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetGridZ_0_a) {
 
     std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
     int grd = adapter->GetVarGrid(variable_name);
-    int size = adapter->GetGridSize(grd);
-    double* grid = new double [size];
+    int rank = adapter->GetGridRank(grd);
+    ASSERT_EQ(rank, 0);
+    //single element vector to hold the result
+    std::vector<double> zs = std::vector<double>(1, -1 );
+
     try {
-        adapter->GetGridZ(grd, grid);
-        ASSERT_EQ(grid[0], expected_grid_z);
+        adapter->GetGridZ(grd, zs.data());
+        //The value passed in zs should be unchanged since GridZ isn't defined for scalars
+        ASSERT_EQ(zs[0], -1);
+    }
+    catch (std::exception& e) {
+        printf("Exception getting grid X: %s", e.what());
+        FAIL();
+    }
+
+}
+
+/** Test grid Z can be retrieved for output 5. */
+TEST_F(Bmi_Fortran_Adapter_Test, GetGridZ_0_b) {
+       int out_var_index = 4;
+
+    std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
+    int grd = adapter->GetVarGrid(variable_name);
+    int rank = adapter->GetGridRank(grd);
+    ASSERT_EQ(rank, 3);
+
+    //Initialize the grid shape (z,y,x)
+    std::vector<int> shape = {3,4,5};
+    adapter->SetValue("grid_2_shape", shape.data());
+    //Initialize the origin
+    //NOTE origin is also ij order, so this is `z0,y0,x0`
+    std::vector<double> origin = {42.0, 42.0, 42.0}; //TODO if this isn't double, the results are wacky...but it doesn't crash...
+    adapter->SetValue("grid_2_origin", origin.data());
+    
+    //NOTE spacing in BMI is again ij order, so this is `dz, dy, dx`
+    std::vector<double> spacing = {2.0, 2.0, 2.0}; //TODO if this isn't double, the results are wacky...but it doesn't crash...
+    adapter->SetValue("grid_2_spacing", spacing.data());
+
+    
+    std::vector<double> zs = std::vector<double>(shape[0], 0.0 );
+
+    int size = adapter->GetGridSize(grd);
+  
+    try {
+        adapter->GetGridZ(grd, zs.data());
+            for(int i = 0; i < shape[0]; i++){
+        ASSERT_EQ(zs[i], origin[0] + spacing[0]*i);
+    }
     }
     catch (std::exception& e) {
         printf("Exception getting grid Z: %s", e.what());
+        FAIL();
     }
-    delete [] grid;
 }
 
 /** Test grid node count can be retrieved for output 1. */
@@ -528,6 +834,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetGridNodeCount_0_a) {
     }
     catch (std::exception& e) {
         printf("Exception getting grid node count: %s", e.what());
+        FAIL();
     }
 }
 
@@ -665,10 +972,11 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetGridType_0_a) {
     int grd = adapter->GetVarGrid(variable_name);
 
     try {
-        ASSERT_EQ(adapter->GetGridType(grd), expected_grid_type);
+        ASSERT_EQ(adapter->GetGridType(grd), "scalar");
     }
     catch (std::exception& e) {
         printf("Exception getting grid type: %s", e.what());
+        FAIL();
     }
 }
 
@@ -678,7 +986,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarItemsize_0_a) {
     std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
 
     try {
-        ASSERT_EQ(adapter->GetVarItemsize(variable_name), expected_var_itemsize_0);
+        ASSERT_EQ(adapter->GetVarItemsize(variable_name), expected_output_var_itemsize[out_var_index]);
     }
     catch (std::exception& e) {
         printf("Exception getting var nbytes: %s", e.what());
@@ -693,7 +1001,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarItemsize_0_b) {
     std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
 
     try {
-        ASSERT_EQ(adapter->GetVarItemsize(variable_name), expected_var_itemsize_1);
+        ASSERT_EQ(adapter->GetVarItemsize(variable_name), expected_output_var_itemsize[out_var_index]);
     }
     catch (std::exception& e) {
         printf("Exception getting var itemsize: %s", e.what());
@@ -708,7 +1016,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarItemsize_0_c) {
     std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
 
     try {
-        ASSERT_EQ(adapter->GetVarItemsize(variable_name), expected_var_itemsize_2);
+        ASSERT_EQ(adapter->GetVarItemsize(variable_name), expected_output_var_itemsize[out_var_index]);
     }
     catch (std::exception& e) {
         printf("Exception getting var itemsize: %s", e.what());
@@ -723,7 +1031,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarNbytes_0_a) {
     std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
 
     try {
-        ASSERT_EQ(adapter->GetVarNbytes(variable_name), expected_var_nbytes_0);
+        ASSERT_EQ(adapter->GetVarNbytes(variable_name), expected_output_var_nbytes[out_var_index]);
     }
     catch (std::exception& e) {
         printf("Exception getting var nbytes: %s", e.what());
@@ -738,7 +1046,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarNbytes_0_b) {
     std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
 
     try {
-        ASSERT_EQ(adapter->GetVarNbytes(variable_name), expected_var_nbytes_1);
+        ASSERT_EQ(adapter->GetVarNbytes(variable_name), expected_output_var_nbytes[out_var_index]);
     }
     catch (std::exception& e) {
         printf("Exception getting var nbytes: %s", e.what());
@@ -753,7 +1061,7 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetVarNbytes_0_c) {
     std::string variable_name = adapter->GetOutputVarNames()[out_var_index];
 
     try {
-        ASSERT_EQ(adapter->GetVarNbytes(variable_name), expected_var_nbytes_2);
+        ASSERT_EQ(adapter->GetVarNbytes(variable_name), expected_output_var_nbytes[out_var_index]);
     }
     catch (std::exception& e) {
         printf("Exception getting var nbytes: %s", e.what());
@@ -788,6 +1096,229 @@ TEST_F(Bmi_Fortran_Adapter_Test, GetValue_0_c) {
     double retrieved = GetValue<int>(*adapter, "INPUT_VAR_3")[0];
     adapter->Finalize();
     ASSERT_EQ(value, retrieved);
+}
+
+/** Test that gridded data can be set for grid var 1*/
+TEST_F(Bmi_Fortran_Adapter_Test, GetValue_1_a) {
+    adapter->Initialize();
+    std::string variable_name = "GRID_VAR_1";
+    int grd = adapter->GetVarGrid(variable_name);
+    int rank = adapter->GetGridRank(grd);
+    ASSERT_EQ(rank, 2);
+
+    //Initialize the grid shape (y,x)
+    std::vector<int> shape = {2,3};
+    adapter->SetValue("grid_1_shape", shape.data());
+    /*
+    *    pass a 2 row, 3 column flattened data into the model
+    *        1 2 3
+    *        4 5 6
+    *   flattened as 1 2 3 4 5 6 (row major)
+    *   (column major would be 1 4 2 5 3 6)
+    */
+    std::vector<double> data = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0};
+    adapter->SetValue(variable_name, data.data());
+    std::vector<double> retrieved = GetValue<double>(*adapter, variable_name);
+    adapter->Finalize();
+    ASSERT_EQ(data, retrieved);
+}
+
+/** Test that gridded data can be set and retrieved for grid var 3 in (x,y,z) order*/
+TEST_F(Bmi_Fortran_Adapter_Test, GetValue_1_b) {
+    adapter->Initialize();
+    std::string variable_name = "GRID_VAR_1";
+    int grd = adapter->GetVarGrid(variable_name);
+    int rank = adapter->GetGridRank(grd);
+    ASSERT_EQ(rank, 2);
+    //Initialize the output grid shape (z,y,x)
+    std::vector<int> shape2 = {2,2,3};
+    adapter->SetValue("grid_2_shape", shape2.data());
+    //Initialize the grid shape (y,x)
+    std::vector<int> shape = {2,3};
+    adapter->SetValue("grid_1_shape", shape.data());
+    /*
+    *    pass a 2 row, 3 column flattened data into the model
+    *        1 2 3
+    *        4 5 6
+    *   flattened as 1 2 3 4 5 6 (row major)
+    */
+    std::vector<double> data = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0};
+    adapter->SetValue(variable_name, data.data());
+
+    /*
+    *  Now, update the model one time step, which feeds this grid into grid var 3 and test the 
+    *  output of that variable.
+    * 
+    *  The test model applies this 2D grid to the 3D grid, with +10 in the Z0 dimension
+    *  and + 100 in the Z1 dimension, so the resulting grid should look like
+    * 
+    *  Z0 =      x0   x1  x2
+    *       y0: [11   12  13]
+    *       y1: [14   15  16]
+    * 
+    *  Z1 =      x0   x1  x2
+    *       y0: [101   102  103]
+    *       y1: [104   105  106]
+    * 
+    *  a row-major flattening of this looks like (last index changes fastest):
+    * 
+    *       assuming the index is (z,y,x):
+    *           
+    *           [ 11, 12, 13, 14, 15, 16, 101, 102, 103, 104, 105, 106 ]
+    * 
+    *       assuming the index is (z,x,y):
+    * 
+    *           [ 11, 14, 12, 15, 13, 16, 101, 104, 102, 105, 103, 106 ]
+    * 
+    *       assuming the index is (y,x,z):
+    * 
+    *           [ 11, 101, 12, 102, 13, 103, 14, 104, 15, 105, 16, 106 ]
+    *  
+    *       assuming the index is (y,z,x):
+    * 
+    *           [ 11, 12, 13, 101, 102, 103, 14, 15, 16, 104, 105, 106 ]
+    *  
+    *       assuming the index is (x,y,z):
+    *  
+    *           [ 11, 101, 14, 104, 12, 102, 15, 105, 13, 103, 16, 106 ]
+    *  
+    *       assuming the index is (x,z,y):
+    *       
+    *           [ 11, 14, 101, 104, 12, 15, 102, 105, 13, 16, 103, 106 ]
+    *
+    *  a column-major flattening of this looks like (first index changes fastest):
+    *  
+    *       assuming the index is (z,y,x):
+    * 
+    *           [ 11, 101, 14, 104, 12, 102, 15, 105, 13, 103, 16, 106 ]
+    *  
+    *       assuming the index is (z,x,y):
+    *  
+    *           [ 11, 101, 12, 102, 13, 103, 14, 104, 15, 105, 16, 106 ]
+    *  
+    *       assuming the index is (y,x,z):
+    *  
+    *           [ 11, 14, 12, 15, 13, 16, 101, 104, 102, 105, 103, 106 ]
+    * 
+    *       assuming the index is (y,z,x):
+    *           
+    *           [ 11, 14, 101, 104, 12, 15, 102, 105, 13, 16, 103, 106 ]
+    *  
+    *       assuming the index is (x,y,z):
+    * 
+    *           [ 11, 12, 13, 14, 15, 16, 101, 102, 103, 104, 105, 106 ]
+    *  
+    *       assuming the index is (x,z,y)
+    *  
+    *       [ 11, 12, 13, 101, 102, 103, 14, 15, 16, 104, 105, 106 ]
+    * 
+    *  Indexing the returned array in 3 dimensions using row-major conventions approriately would be (assuming y,x,z indexing)
+    *  
+    *  data[i][j][k] = flattened_data[ depth*(j+cols*i) + k ]
+    *  
+    *  where depth is the size of the 3rd dimension (z) and cols is the size of the second second dimension (x)
+    *  i = row iterator (first dimension)
+    *  j = column iterator (second dimension)
+    *  k = depth iterator (thrid dimension)
+    *  
+    *  For example, using the grid described above, extracting the linear data into a y,x,z 3D array would look like this
+    * 
+    *  data[i][j][k] = flattened_data[ 2*(j+3*i) + k ]
+    * 
+    *  for( i = 0; i < 3; i++){
+    *      for( j = 0; j < 2; j++){
+    *          for( k = 0; k < 2; k++){
+    *               data[i][j][k] = flattened_data[ depth*(j+cols*i) + k ]
+    *               data[i][j][k] = flattened_data[  2*3*i + 2*j + k ]
+    *           }   
+    *      }
+    *  }
+    * 
+    *  indexing with column major conventions would look like (assuming y,x,z indexing)
+    *  
+    *  data[i][j][k] = flattened_data[ rows*cols*k + rows*j + i ]
+    * 
+    *  where rows is the size of the first dimension, and the rest of the of the variables are as before.
+    * 
+    *  Using our example grid, this looks the following
+    * 
+    *  data[i][j][k] = flattened_data[ 2*3*k + 2*j + i ]
+    * 
+    *  for( i = 0; i < 3; i++){
+    *      for( j = 0; j < 2; j++){
+    *          for( k = 0; k < 2; k++){
+    *               data[i][j][k] = flattened_data[ rows*cols*k + rows*j + i  ]
+    *               data[i][j][k] = arr[  2*3*k + 2*j + i  ]
+    *           }   
+    *      }
+    *  }  
+    *   
+    */
+    adapter->Update();
+    std::vector<double> retrieved = GetValue<double>(*adapter, "GRID_VAR_3");
+    adapter->Finalize();
+    std::vector<double> expected = {11, 12, 13, 14, 15, 16, 101, 102, 103, 104, 105, 106};
+
+    int rows = shape2[1]; // 2
+    int cols = shape2[2]; // 3
+    int depth = shape2[1]; //2
+    int i, j, k, r_idx, iter = 0;
+
+    for( i = 0; i < rows; i++){ //rows (y)
+        for( j = 0; j < cols; j++){ //cols (x) 
+            for( k = 0; k < depth; k++){ //depth (z)
+                r_idx =  depth*(j+cols*i) + k;
+                ASSERT_EQ( retrieved[ r_idx ], expected[iter]);
+                iter++;
+            }
+        }
+    }
+}
+
+/** Test that gridded data can be set and retrieved for grid var 4 in (z,y,x) order*/
+TEST_F(Bmi_Fortran_Adapter_Test, GetValue_1_c) {
+    adapter->Initialize();
+    std::string variable_name = "GRID_VAR_1";
+    int grd = adapter->GetVarGrid(variable_name);
+    int rank = adapter->GetGridRank(grd);
+    ASSERT_EQ(rank, 2);
+    //Initialize the output grid shape (z,y,x)
+    std::vector<int> shape2 = {2,2,3};
+    adapter->SetValue("grid_2_shape", shape2.data());
+    //Initialize the grid shape (y,x)
+    std::vector<int> shape = {2,3};
+    adapter->SetValue("grid_1_shape", shape.data());
+    /*
+    *    pass a 2 row, 3 column flattened data into the model
+    *        1 2 3
+    *        4 5 6
+    *   flattened as 1 2 3 4 5 6 (row major)
+    */
+    std::vector<double> data = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0};
+    adapter->SetValue(variable_name, data.data());
+
+    //Now, update the model one time step, which feeds this grid into grid var 3 and test the 
+    //output of that variable
+
+    adapter->Update();
+    std::vector<double> retrieved = GetValue<double>(*adapter, "GRID_VAR_4");
+    adapter->Finalize();
+    std::vector<double> expected = {11, 101, 14, 104, 12, 102, 15, 105, 13, 103, 16, 106};
+
+    int rows = shape2[1]; // 2
+    int cols = shape2[2]; // 3
+    int depth = shape2[1]; //2
+    int i, j, k, r_idx, iter = 0;
+
+    for( i = 0; i < rows; i++){ //rows (y)
+        for( j = 0; j < cols; j++){ //cols (x) 
+            for( k = 0; k < depth; k++){ //depth (z)
+                r_idx =  depth*(j+cols*i) + k;
+                ASSERT_EQ( retrieved[ r_idx ], expected[iter]);
+                iter++;
+            }
+        }
+    }
 }
 
 /** Test that both the set value function works for input 1. */
@@ -1021,6 +1552,14 @@ TEST_F(Bmi_Fortran_Adapter_Test, Profile)
     auto to_micros = [](const time_point& s, const time_point& e){ return std::chrono::duration_cast<std::chrono::microseconds>(e - s).count();};
 
     adapter->Initialize();
+    //init the grid shapes to prevent errors getting gridded var outputs
+    std::vector<int> shape = {2,3};
+    adapter->SetValue("grid_1_shape", shape.data());
+    //set some initial value for grid var 1
+    double data = 0.0;
+    adapter->SetValue("GRID_VAR_1", &data);
+    shape = {2,2,3};
+    adapter->SetValue("grid_2_shape", shape.data());
     // Do the first few time steps
     for (int i = 0; i < 720; i++)
     {

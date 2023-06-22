@@ -307,7 +307,23 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
                 std::string var_name = col_head;
                 std::string units = "";
 
-                //TODO: parse units in parens and/or square brackets?
+                boost::trim(var_name); // remove leading/trailing ws
+                const auto var_name_close = var_name.back();
+                if (var_name_close == ']' || var_name_close == ')') {
+                    // found closing bracket/parenth
+
+                    const bool is_bracket = var_name_close == ']';
+                    const size_t var_name_open = is_bracket ? var_name.rfind('[') : var_name.rfind('(');
+                    if (var_name_open != std::string::npos) {
+                        // found matching opening bracket/parenth
+
+                        units = var_name.substr(var_name_open + 1);
+                        units.pop_back(); // remove closing bracket
+
+                        var_name = var_name.substr(0, var_name_open);
+                        boost::trim(var_name); // trim again in case of ws between name and units
+                    }
+                }
 
                 auto wkf = data_access::WellKnownFields.find(var_name);
                 if(wkf != data_access::WellKnownFields.end()){

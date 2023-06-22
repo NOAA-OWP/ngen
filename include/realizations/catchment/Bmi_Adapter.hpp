@@ -256,6 +256,16 @@ namespace models {
                 return model_initialized;
             }
 
+            /**
+             * @brief Get the model name.
+             * 
+             * @return The name of the model connected to the adapter.
+             * 
+             */
+            inline std::string get_model_name(){
+                return model_name;
+            }
+
         protected:
             /** Whether model ``Update`` calls are allowed and handled in some way by the backing model. */
             bool allow_model_exceed_end_time = false;

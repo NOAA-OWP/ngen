@@ -7,6 +7,7 @@ module bmitestbmi
 #endif
 
   use test_model
+  use bmi_grid
   use, intrinsic :: iso_c_binding, only: c_ptr, c_loc, c_f_pointer
   implicit none
   integer :: DEFAULT_TIME_STEP_SIZE = 3600
@@ -95,35 +96,43 @@ module bmitestbmi
 
   character (len=BMI_MAX_COMPONENT_NAME), target :: &
        component_name = "Testing BMI Fortran Model"
+  
+  type(GridType) :: grids(3)
 
+  character (len=BMI_MAX_VAR_NAME), target :: &
+    grid_meta_vars(8) = [character(BMI_MAX_VAR_NAME):: "grid_1_shape", "grid_1_spacing", "grid_1_units", "grid_1_origin", &
+                                                       "grid_2_shape", "grid_2_spacing", "grid_2_units", "grid_2_origin"    ]
+  character (len=BMI_MAX_VAR_NAME), target :: &
+    grid_meta_vars_types(8) = [character(BMI_MAX_VAR_NAME):: "integer", "double precision", "integer", "double precision", & 
+                                                             "integer", "double precision", "integer", "double precision" ]
   ! Exchange items
 
   character (len=BMI_MAX_VAR_NAME), target :: &
-    output_items(3) = ['OUTPUT_VAR_1', 'OUTPUT_VAR_2', 'OUTPUT_VAR_3']
+    output_items(6) = [character(BMI_MAX_VAR_NAME):: 'OUTPUT_VAR_1', 'OUTPUT_VAR_2', 'OUTPUT_VAR_3', 'GRID_VAR_2', 'GRID_VAR_3', 'GRID_VAR_4']
 
   character (len=BMI_MAX_VAR_NAME), target :: &
-    input_items(3) = ['INPUT_VAR_1', 'INPUT_VAR_2', 'INPUT_VAR_3']
+    input_items(4) = [character(BMI_MAX_VAR_NAME):: 'INPUT_VAR_1', 'INPUT_VAR_2', 'INPUT_VAR_3', 'GRID_VAR_1']
 
   character (len=BMI_MAX_TYPE_NAME) :: &
-    output_type(3) = [character(BMI_MAX_TYPE_NAME):: 'double precision', 'real', 'integer']
+    output_type(6) = [character(BMI_MAX_TYPE_NAME):: 'double precision', 'real', 'integer', 'real', 'double precision', 'double precision']
 
   character (len=BMI_MAX_TYPE_NAME) :: &
-    input_type(3) = [character(BMI_MAX_TYPE_NAME):: 'double precision', 'real', 'integer']
+    input_type(4) = [character(BMI_MAX_TYPE_NAME):: 'double precision', 'real', 'integer', 'double precision']
 
-  integer :: output_grid(3) = [0, 0, 0]
-  integer :: input_grid(3) = [0, 0, 0]
-
-  character (len=BMI_MAX_UNITS_NAME) :: &
-    output_units(3) = [character(BMI_MAX_UNITS_NAME):: 'm', 'm', 's']
+  integer :: output_grid(6) = [0, 0, 0, 1, 2, 2]
+  integer :: input_grid(4) = [0, 0, 0, 1]
 
   character (len=BMI_MAX_UNITS_NAME) :: &
-    input_units(3) = [character(BMI_MAX_UNITS_NAME):: 'm', 'm', 's']
+    output_units(6) = [character(BMI_MAX_UNITS_NAME):: 'm', 'm', 's', 'm', 'm', 'm']
+
+  character (len=BMI_MAX_UNITS_NAME) :: &
+    input_units(4) = [character(BMI_MAX_UNITS_NAME):: 'm', 'm', 's', 'm']
 
   character (len=BMI_MAX_LOCATION_NAME) :: &
-    output_location(3) = [character(BMI_MAX_LOCATION_NAME):: 'node', 'node', 'node']
+    output_location(6) = [character(BMI_MAX_LOCATION_NAME):: 'node', 'node', 'node', 'node', 'node', 'node']
 
   character (len=BMI_MAX_LOCATION_NAME) :: &
-    input_location(3) = [character(BMI_MAX_LOCATION_NAME):: 'node', 'node', 'node']
+    input_location(4) = [character(BMI_MAX_LOCATION_NAME):: 'node', 'node', 'node', 'node']
 
 contains
 
@@ -209,6 +218,10 @@ function test_initialize(this, config_file) result (bmi_status)
   class (bmi_test_bmi), intent(out) :: this
   character (len=*), intent(in) :: config_file
   integer :: bmi_status
+  !initialize the internal grid meta data structures
+  call grids(1)%init(0, 0, scalar, none) !the scalar grid
+  call grids(2)%init(1, 2, rectilinear, none) !the 2D grid
+  call grids(3)%init(2, 3, rectilinear, none) !the 3D grid
 
   if (len(config_file) > 0) then
      bmi_status = read_init_config(this%model, config_file)
@@ -331,6 +344,15 @@ end function test_finalize
         return
       endif
     end do
+
+    !check grid meta vars
+    do i = 1, size(grid_meta_vars)
+      if( grid_meta_vars(i) .eq. trim(name) ) then
+        type = grid_meta_vars_types(i)
+        bmi_status = BMI_SUCCESS
+        return
+      endif
+    end do
   
     !check any other vars???
 
@@ -441,15 +463,17 @@ end function test_finalize
     integer, intent(in) :: grid
     integer, intent(out) :: rank
     integer :: bmi_status
+    integer :: i
+    ! Failure unless we find what we are looking for...
+    bmi_status = BMI_FAILURE
+    do i = 1, size(grids)
+      if ( grids(i)%id .eq. grid ) then
+        rank = grids(i)%rank
+        bmi_status = BMI_SUCCESS
+        return
+      end if
+    end do
 
-    select case(grid)
-    case(0)
-       rank = 1
-       bmi_status = BMI_SUCCESS
-    case default
-       rank = -1
-       bmi_status = BMI_FAILURE
-    end select
   end function test_grid_rank
 
   ! The total number of elements in a grid.
@@ -458,18 +482,27 @@ end function test_finalize
     integer, intent(in) :: grid
     integer, intent(out) :: size
     integer :: bmi_status
+    
+    integer :: i, upper
+    block
+      ! This is problematic given that BMI uses intrinsic names for dummy arguements
+      ! which leads to a shadowing issue.  If this wasn't in the block like this, 
+      ! size(grids) would attempt to treat size as an array indexed by grids which cause all kinds
+      ! of compiler errors that are not intuitive.  Also, this kind of shadowing prevents the ability
+      ! to do some thing like call size on the size variable...e.g. `size(size)` couldn't be done even
+      ! with this block method of exlicitly defining size to be the intrinsic
+      ! TODO open an issue with CSDMS fortran BMI
+      intrinsic :: size
+      upper = size(grids)
+    end block
+    do i = 1, upper
+      if ( grids(i)%id .eq. grid ) then
+        size = product( grids(i)%shape )
+        bmi_status = BMI_SUCCESS
+        return
+      end if
+    end do
 
-    select case(grid)
-    case(0)
-       size = 1
-       bmi_status = BMI_SUCCESS
-!     case(1)
-!        size = this%model%n_y * this%model%n_x
-!        bmi_status = BMI_SUCCESS
-    case default
-       size = -1
-       bmi_status = BMI_FAILURE
-    end select
   end function test_grid_size
 
   ! The dimensions of a grid.
@@ -477,17 +510,19 @@ end function test_finalize
     class (bmi_test_bmi), intent(in) :: this
     integer, intent(in) :: grid
     integer, dimension(:), intent(out) :: shape
-    integer :: bmi_status
+    integer :: bmi_status, i
 
-    select case(grid)
-! NOTE: Scalar "grids" do not have dimensions, ie. there is no case(0)
-!     case(1)
-!        shape(:) = [this%model%n_y, this%model%n_x]
-!        bmi_status = BMI_SUCCESS
-    case default
-       shape(:) = -1
-       bmi_status = BMI_FAILURE
-    end select
+    bmi_status = BMI_FAILURE
+    ! FIXME using shape as an arg shadows the intrinsic SHAPE function and makes it unsuable!!!!!!
+    ! TODO add to CSDMS issue related
+    
+    do i = 1, size(grids)
+      if ( grids(i)%id .eq. grid ) then
+        shape = grids(i)%shape
+        bmi_status = BMI_SUCCESS
+        return
+      end if
+    end do
   end function test_grid_shape
 
   ! The distance between nodes of a grid.
@@ -495,17 +530,17 @@ end function test_finalize
     class (bmi_test_bmi), intent(in) :: this
     integer, intent(in) :: grid
     double precision, dimension(:), intent(out) :: spacing
-    integer :: bmi_status
+    integer :: bmi_status, i
 
-    select case(grid)
-!! NOTE: Scalar "grids" do not have spacing, ie. there is no case(0)
-!     case(1)
-!        spacing(:) = [this%model%dy, this%model%dx]
-!        bmi_status = BMI_SUCCESS
-    case default
-       spacing(:) = -1.d0
-       bmi_status = BMI_FAILURE
-    end select
+    bmi_status = BMI_FAILURE
+    do i = 1, size(grids)
+      if ( grids(i)%id .eq. grid ) then
+        spacing = grids(i)%spacing
+        bmi_status = BMI_SUCCESS
+        return
+      end if
+    end do
+
   end function test_grid_spacing
 !
   ! Coordinates of grid origin.
@@ -513,17 +548,16 @@ end function test_finalize
     class (bmi_test_bmi), intent(in) :: this
     integer, intent(in) :: grid
     double precision, dimension(:), intent(out) :: origin
-    integer :: bmi_status
+    integer :: bmi_status, i
 
-    select case(grid)
-! NOTE: Scalar "grids" do not have coordinates, ie. there is no case(0)
-!     case(1)
-!        origin(:) = [0.d0, 0.d0]
-!        bmi_status = BMI_SUCCESS
-    case default
-       origin(:) = -1.d0
-       bmi_status = BMI_FAILURE
-    end select
+    bmi_status = BMI_FAILURE
+    do i = 1, size(grids)
+      if ( grids(i)%id .eq. grid ) then
+        origin = grids(i)%origin
+        bmi_status = BMI_SUCCESS
+        return
+      end if
+    end do
   end function test_grid_origin
 
   ! X-coordinates of grid nodes.
@@ -531,16 +565,15 @@ end function test_finalize
     class (bmi_test_bmi), intent(in) :: this
     integer, intent(in) :: grid
     double precision, dimension(:), intent(out) :: x
-    integer :: bmi_status
+    integer :: bmi_status, i
 
-    select case(grid)
-    case(0)
-       x(:) = [0.d0]
-       bmi_status = BMI_SUCCESS
-    case default
-       x(:) = -1.d0
-       bmi_status = BMI_FAILURE
-    end select
+    bmi_status = BMI_FAILURE
+    do i = 1, size(grids)
+      if ( grids(i)%id .eq. grid ) then
+        call grids(i)%grid_x(x)
+        bmi_status = BMI_SUCCESS
+      end if
+    end do
   end function test_grid_x
 
   ! Y-coordinates of grid nodes.
@@ -548,16 +581,15 @@ end function test_finalize
     class (bmi_test_bmi), intent(in) :: this
     integer, intent(in) :: grid
     double precision, dimension(:), intent(out) :: y
-    integer :: bmi_status
+    integer :: bmi_status, i
 
-    select case(grid)
-    case(0)
-       y(:) = [0.d0]
-       bmi_status = BMI_SUCCESS
-    case default
-       y(:) = -1.d0
-       bmi_status = BMI_FAILURE
-    end select
+    bmi_status = BMI_FAILURE
+    do i = 1, size(grids)
+      if ( grids(i)%id .eq. grid ) then
+        call grids(i)%grid_y(y)
+        bmi_status = BMI_SUCCESS
+      end if
+    end do
   end function test_grid_y
 
   ! Z-coordinates of grid nodes.
@@ -565,16 +597,15 @@ end function test_finalize
     class (bmi_test_bmi), intent(in) :: this
     integer, intent(in) :: grid
     double precision, dimension(:), intent(out) :: z
-    integer :: bmi_status
+    integer :: bmi_status, i
 
-    select case(grid)
-    case(0)
-       z(:) = [0.d0]
-       bmi_status = BMI_SUCCESS
-    case default
-       z(:) = -1.d0
-       bmi_status = BMI_FAILURE
-    end select
+    bmi_status = BMI_FAILURE
+    do i = 1, size(grids)
+      if ( grids(i)%id .eq. grid ) then
+        call grids(i)%grid_z(z)
+        bmi_status = BMI_SUCCESS
+      end if
+    end do
   end function test_grid_z
 
   ! Get the number of nodes in an unstructured grid.
@@ -585,8 +616,9 @@ end function test_finalize
     integer :: bmi_status
 
     select case(grid)
-    case(0:1)
-       bmi_status = this%get_grid_size(grid, count)
+    case(0:1) ! Scalars are single "node"
+       count = 1
+       bmi_status = BMI_SUCCESS
     case default
        count = -1
        bmi_status = BMI_FAILURE
@@ -686,6 +718,30 @@ end function test_finalize
     !TODO think of a better way to do this
     !Use 'sizeof' in gcc & ifort
     select case(name)
+    case("grid_1_shape")
+      size = sizeof(grids(2)%shape(1)) !FIXME this does NOT work the same as C sizeof...it gives total bytes of the array, not a single element
+      bmi_status = BMI_SUCCESS
+    case("grid_1_spacing")
+      size = sizeof(grids(2)%spacing(1))
+      bmi_status = BMI_SUCCESS
+    case("grid_1_units")
+      size = sizeof(grids(2)%units(1))
+      bmi_status = BMI_SUCCESS
+    case("grid_1_origin")
+      size = sizeof(grids(2)%units(1))
+      bmi_status = BMI_SUCCESS
+    case("grid_2_shape")
+      size = sizeof(grids(3)%shape(1))
+      bmi_status = BMI_SUCCESS
+    case("grid_2_spacing")
+      size = sizeof(grids(3)%spacing(1))
+      bmi_status = BMI_SUCCESS
+    case("grid_2_units")
+      size = sizeof(grids(3)%units(1))
+      bmi_status = BMI_SUCCESS
+    case("grid_2_origin")
+      size = sizeof(grids(3)%units(1))
+      bmi_status = BMI_SUCCESS
     case("INPUT_VAR_1")
        size = sizeof(this%model%input_var_1)
        bmi_status = BMI_SUCCESS
@@ -695,6 +751,18 @@ end function test_finalize
     case("INPUT_VAR_3")
        size = sizeof(this%model%input_var_3)
        bmi_status = BMI_SUCCESS
+    case("GRID_VAR_1")
+        size = sizeof(this%model%grid_var_1(1,1))
+        bmi_status = BMI_SUCCESS
+    case("GRID_VAR_2")
+       size = sizeof(this%model%grid_var_2(1,1))
+       bmi_status = BMI_SUCCESS
+    case("GRID_VAR_3")
+        size = sizeof(this%model%grid_var_3(1,1,1))
+        bmi_status = BMI_SUCCESS
+    case("GRID_VAR_4")
+        size = sizeof(this%model%grid_var_4(1,1,1))
+        bmi_status = BMI_SUCCESS
     case("OUTPUT_VAR_1")
        size = sizeof(this%model%output_var_1)
        bmi_status = BMI_SUCCESS
@@ -718,11 +786,27 @@ end function test_finalize
     integer :: bmi_status
     integer :: s1, s2, s3, grid, grid_size, item_size
 
-    s1 = this%get_var_grid(name, grid)
-    s2 = this%get_grid_size(grid, grid_size)
     s3 = this%get_var_itemsize(name, item_size)
 
-    if ((s1 == BMI_SUCCESS).and.(s2 == BMI_SUCCESS).and.(s3 == BMI_SUCCESS)) then
+    select case(name)
+    case("grid_1_shape", "grid_1_spacing", "grid_1_units", "grid_1_origin")
+      nbytes = item_size*grids(2)%rank
+      bmi_status = BMI_SUCCESS
+      return !FIXME refactor the rest of this function
+    case("grid_2_shape", "grid_2_spacing", "grid_2_units", "grid_2_origin")
+      nbytes = item_size*grids(3)%rank
+      bmi_status = BMI_SUCCESS
+      return !FIXME refactor the rest of this function
+    end select
+  
+    s1 = this%get_var_grid(name, grid)
+    s2 = this%get_grid_size(grid, grid_size)
+
+    if( grid .eq. 0) then
+      !these are the scalar values wrapped in an array
+      nbytes = item_size
+      bmi_status = BMI_SUCCESS
+    else if ((s1 == BMI_SUCCESS).and.(s2 == BMI_SUCCESS).and.(s3 == BMI_SUCCESS)) then
        nbytes = item_size * grid_size
        bmi_status = BMI_SUCCESS
     else
@@ -739,6 +823,31 @@ end function test_finalize
     integer :: bmi_status
   
     select case(name)
+    case("grid_1_shape")
+      if( allocated(this%model%grid_var_2) ) deallocate( this%model%grid_var_2 )
+      ! src is in y, x order (last dimension first)
+      ! make this variable be x, y
+      allocate( this%model%grid_var_2(src(2), src(1)) )
+      grids(2)%shape = src
+      bmi_status = BMI_SUCCESS
+    case("grid_1_units")
+      grids(2)%units = src
+      bmi_status = BMI_SUCCESS
+    case("grid_2_shape")
+      grids(3)%shape = src
+      !OUTPUT vars must be allocated.  If they have already, deallocate and allocate the correct size
+      if( allocated(this%model%grid_var_3) ) deallocate( this%model%grid_var_3 )
+      ! src is in z, y, x order (last dimension first)
+      ! make this variable be x, y, z
+      allocate( this%model%grid_var_3(src(3), src(2), src(1)) )
+      if( allocated(this%model%grid_var_4) ) deallocate( this%model%grid_var_4 )
+      ! src is in z, y, x order (last dimension first)
+      ! make this variable be z, y, x as well
+      allocate( this%model%grid_var_4(src(1), src(2), src(3)) )
+      bmi_status = BMI_SUCCESS
+    case("grid_2_units")
+      grids(3)%units = src
+      bmi_status = BMI_SUCCESS
     case("INPUT_VAR_3")
        this%model%input_var_3 = src(1)
        bmi_status = BMI_SUCCESS
@@ -773,8 +882,27 @@ end function test_finalize
     character (len=*), intent(in) :: name
     double precision, intent(in) :: src(:)
     integer :: bmi_status
+    !Default return
+    bmi_status = BMI_FAILURE
 
     select case(name)
+    case("grid_1_spacing")
+      grids(2)%spacing = src
+      bmi_status = BMI_SUCCESS
+    case("grid_1_origin")
+      grids(2)%origin = src
+      bmi_status = BMI_SUCCESS
+    case("grid_2_spacing")
+      grids(3)%spacing = src
+      bmi_status = BMI_SUCCESS
+    case("grid_2_origin")
+      grids(3)%origin = src
+      bmi_status = BMI_SUCCESS
+    case("GRID_VAR_1")
+      ! shape is in y, x
+      ! make this var x, y
+      this%model%grid_var_1 = reshape(src, [grids(2)%shape(2), grids(2)%shape(1)])
+      bmi_status = BMI_SUCCESS
     case("INPUT_VAR_1")
       this%model%input_var_1 = src(1)
       bmi_status=BMI_SUCCESS
@@ -826,6 +954,12 @@ end function test_finalize
     integer :: bmi_status
 
     select case(name)
+    case("grid_1_units")
+      dest = grids(2)%units
+      bmi_status = BMI_SUCCESS
+    case("grid_2_units")
+      dest = grids(3)%units
+      bmi_status = BMI_SUCCESS
     case("INPUT_VAR_3")
        dest = [this%model%input_var_3]
        bmi_status = BMI_SUCCESS
@@ -845,7 +979,7 @@ end function test_finalize
     class (bmi_test_bmi), intent(in) :: this
     character (len=*), intent(in) :: name
     real, intent(inout) :: dest(:)
-    integer :: bmi_status
+    integer :: bmi_status, size
 
     select case(name)
     case("INPUT_VAR_2")
@@ -854,6 +988,11 @@ end function test_finalize
     case("OUTPUT_VAR_2")
       dest = [this%model%output_var_2]
       bmi_status = BMI_SUCCESS
+    case("GRID_VAR_2")
+      bmi_status = this%get_grid_size(1, size)
+      if( bmi_status == BMI_SUCCESS ) then
+        dest = reshape(this%model%grid_var_2, [size])
+    end if
     case default
        dest(:) = -1.0
        bmi_status = BMI_FAILURE
@@ -867,14 +1006,31 @@ end function test_finalize
     class (bmi_test_bmi), intent(in) :: this
     character (len=*), intent(in) :: name
     double precision, intent(inout) :: dest(:)
-    integer :: bmi_status
-
+    integer :: bmi_status, size
     !==================== UPDATE IMPLEMENTATION IF NECESSARY FOR DOUBLE VARS =================
 
     select case(name)
     case("INPUT_VAR_1")
       dest = [this%model%input_var_1]
       bmi_status = BMI_SUCCESS
+    case("GRID_VAR_1")
+      bmi_status = this%get_grid_size(1, size)
+      if( bmi_status == BMI_SUCCESS .and. allocated(this%model%grid_var_1) ) then
+        ! Have to ensure grid_var_1 as been set by something before we try to get it...
+        dest = reshape(this%model%grid_var_1, [size])
+      else
+        bmi_status = BMI_FAILURE
+      end if
+    case("GRID_VAR_3")
+      bmi_status = this%get_grid_size(2, size)
+      if( bmi_status == BMI_SUCCESS ) then
+        dest = reshape(this%model%grid_var_3, [size])
+      end if
+    case("GRID_VAR_4")
+      bmi_status = this%get_grid_size(2, size)
+      if( bmi_status == BMI_SUCCESS ) then
+        dest = reshape(this%model%grid_var_4, [size])
+      end if
     case("OUTPUT_VAR_1")
       dest = [this%model%output_var_1]
       bmi_status = BMI_SUCCESS
