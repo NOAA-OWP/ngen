@@ -80,7 +80,7 @@ else()
 
         # CMakeLists in ${summa-actors GIT directory}/build/summa/build/cmake
         set(PARENT_DIR ${F_MASTER}../../) # directory of summa actors source code
-        set(EXEC_DIR ${PARENT_DIR}../bin)
+        set(EXEC_DIR ${PARENT_DIR}/bin)
 
     else()
         project(summa DESCRIPTION "Summa-Sundials-BE")
@@ -292,8 +292,8 @@ set(UTILMS
     ${ENGINE_DIR}/time_utils.f90
     ${ENGINE_DIR}/updatState.f90)
 set(UTILMS_SUNDIALS
-    ${ENGINE_DIR}/soil_utilsAddSundials.f90
-    ${ENGINE_DIR}/updatStateSundials.f90)
+    ${ENGINE_DIR}/soil_utilsAddPrime.f90
+    ${ENGINE_DIR}/updatStateWithPrime.f90)
 
 # NetCDF routines
 set(NETCDF
@@ -341,7 +341,7 @@ set(MODRUN_NOT_ACTORS
     ${ENGINE_DIR}/read_force.f90)
 set(MODRUN_SUNDIALS
     ${ENGINE_DIR}/tol4ida.f90
-    ${ENGINE_DIR}/updateVarsSundials.f90)
+    ${ENGINE_DIR}/updateVarsWithPrime.f90)
 
 # Solver main modules
 set(SOLVER
@@ -362,7 +362,7 @@ set(SOLVER
     ${ENGINE_DIR}/soilLiqFlx.f90
     ${ENGINE_DIR}/ssdNrgFlux.f90
     ${ENGINE_DIR}/stomResist.f90
-    ${ENGINE_DIR}/summaSolve.f90
+    ${ENGINE_DIR}/summaSolve4numrec.f90
     ${ENGINE_DIR}/systemSolv.f90
     ${ENGINE_DIR}/varSubstep.f90
     ${ENGINE_DIR}/vegLiqFlux.f90
@@ -373,11 +373,11 @@ set(SOLVER_NOT_ACTORS
     ${ENGINE_DIR}/run_oneGRU.f90
     ${ENGINE_DIR}/run_oneHRU.f90)
 set(SOLVER_SUNDIALS
-    ${ENGINE_DIR}/computJacobSundials.f90
-    ${ENGINE_DIR}/computResidSundials.f90
-    ${ENGINE_DIR}/eval8summaSundials.f90
-    ${ENGINE_DIR}/summaSolveSundials4ida.f90
-    ${ENGINE_DIR}/systemSolvSundials.f90)
+    ${ENGINE_DIR}/computJacobWithPrime.f90
+    ${ENGINE_DIR}/computResidWithPrime.f90
+    ${ENGINE_DIR}/eval8summaWithPrime.f90
+    ${ENGINE_DIR}/summaSolve4ida.f90
+    ${ENGINE_DIR}/summaSolve4kinsol.f90)
 
 # Driver support modules
 set(DRIVER

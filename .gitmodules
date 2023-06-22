@@ -46,5 +46,5 @@
 	branch = latest
 [submodule "extern/summa"]
 	path = extern/summa/summa
-	url = https://git.cs.usask.ca/numerical_simulations_lab/summa.git
-	branch = master
+	url = https://github.com/ashleymedin/summa.git
+	branch = develop

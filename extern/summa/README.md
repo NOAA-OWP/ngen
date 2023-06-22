@@ -77,11 +77,11 @@ Note (similar to above) that when there is an existing directory, it may sometim
 
 After there is build system directory, the shared library can be built using the `summabmi` CMake target. For example, the SummaSundials shared library file (i.e., the build config's `summabmi` target) can be built using:
 
-    cmake --build cmake_build --target all
+    cmake --build extern/summa/cmake_build --target all
 
 This will build a `cmake_build/libsummabmi.<version>.<ext>` file, where the version is configured within the CMake config, and the extension depends on the local machine's operating system.    
 
-There is an example of a bash script to build the ngen libraries at ngen/extern/summa/summa/build/cmake_ngen/build_ngen.[system_type].bash. Sundials is turned off here. These need to be run in the main ngen directory.
+There is an example of a bash script to build the ngen libraries at ngen/extern/summa/summa/build/cmake/build_ngen.[system_type].bash. Sundials is turned off here. These need to be run in the main ngen directory.
 
 To run a test basin, in the main ngen directory, run
 
