@@ -7,6 +7,7 @@ namespace fs = std::experimental::filesystem;
 
 #include "mdframe.hpp"
 
+// TODO: Convert to test fixture for setup/teardown members.
 TEST(mdframe_Test, io_netcdf)
 {
     io::mdframe df;
