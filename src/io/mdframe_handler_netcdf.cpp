@@ -1,22 +1,28 @@
 #include "mdframe.hpp"
+#include "mdframe/variable.hpp"
 
 #include <netcdf>
 
 namespace io {
-namespace visitors {
-    struct mdarray_putvar : boost::static_visitor<void>
+
+namespace visitors { // -------------------------------------------------------
+
+/**
+ * mdarray visitor for putting values from the mdarray into a netCDF var.
+ */
+MDARRAY_VISITOR(mdarray_putvar, void)
+{
+    MDARRAY_VISITOR_TEMPLATE_IMPL(T& v, netCDF::NcVar& var) -> void
     {
-        template<typename T>
-        void operator()(mdarray<T> v, netCDF::NcVar& var)
-        {
-            for (const mdvalue<T>& value : v) {
-                auto index = value.decode(value.m_index, value.m_rank);
-                var.putVar(index, value.m_value);
-            }
+        for (auto it = v.begin(); it != v.end(); it++) {
+            var.putVar(it.mdindex(), *it);
         }
-    };
-}
-}
+    }
+};
+
+} // namespace visitors -------------------------------------------------------
+
+} // namespace io
 
 void io::mdframe::to_netcdf(const std::string& path) const
 {
@@ -26,24 +32,22 @@ void io::mdframe::to_netcdf(const std::string& path) const
     std::unordered_map<std::string, netCDF::NcVar> varmap;
 
     for (const auto& dim : this->m_dimensions) {
-        dimmap[dim.name()] = dim.size() == boost::none
-            ? output.addDim(dim.name())
-            : output.addDim(dim.name(), dim.size().get());
+        dimmap[dim.name()] = output.addDim(dim.name(), dim.size());
     }
 
-    for (const auto& var : this->m_variables) {
+    for (const auto& pair : this->m_variables) {
         netCDF::NcType* type = nullptr;
+        const auto var = pair.second;
         switch (var.values().which()) {
             case 0: // int
-            case 2: // boolean
                 type = &netCDF::ncInt;
                 break;
 
-            case 3: // string
-                type = &netCDF::ncString;
+            case 1: // float
+                type = &netCDF::ncFloat;
                 break;
-
-            case 1: // double
+        
+            case 2: // double
             default:
                 type = &netCDF::ncDouble;
                 break;

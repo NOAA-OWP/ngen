@@ -5,16 +5,17 @@
 #include "traits.hpp"
 #include "dimension.hpp"
 #include <initializer_list>
+#include <boost/bind.hpp>
 
 
-#define MDARRAY_VISITOR(name, return_type) struct name : boost::static_visitor<return_type>
+#define MDARRAY_VISITOR(name, return_type) struct name : public boost::static_visitor<return_type>
 #define MDARRAY_VISITOR_IMPL(var_name) \
     template<typename T> \
-    auto operator()(mdarray<T> var_name) const noexcept
+    auto operator()(T& var_name) const
 
 #define MDARRAY_VISITOR_TEMPLATE_IMPL(prototype, ...) \
     template<typename T> \
-    auto operator()(prototype, ##__VA_ARGS__) const noexcept \
+    auto operator()(prototype, ##__VA_ARGS__) const \
 
 namespace io {
 
@@ -22,43 +23,49 @@ namespace detail {
 
 namespace visitors { // -------------------------------------------------------
 
-#warning NO DOCUMENTATION
+/**
+ * mdarray visitor for retrieving the size of the mdarray
+ */
 MDARRAY_VISITOR(mdarray_size, std::size_t)
 {
     MDARRAY_VISITOR_IMPL(v) -> std::size_t { return v.size(); }
 };
 
-#warning NO DOCUMENTATION
+/**
+ * mdarray visitor for retrieving the rank of the mdarray
+ */
 MDARRAY_VISITOR(mdarray_rank, std::size_t)
 {
     MDARRAY_VISITOR_IMPL(v) -> std::size_t { return v.rank(); }
 };
 
-#warning NO DOCUMENTATION
-MDARRAY_VISITOR(mdarray_emplace, void)
-{   
-    MDARRAY_VISITOR_TEMPLATE_IMPL(
-        mdarray<T> v,
-        T val,
-        std::initializer_list<std::size_t> index
-    ) -> void
+MDARRAY_VISITOR(mdarray_shape, std::vector<std::size_t>)
+{
+    MDARRAY_VISITOR_IMPL(v) -> std::vector<std::size_t> { return v.shape(); }
+};
+
+/**
+ * mdarray visitor for inserting a value
+ */
+MDARRAY_VISITOR(mdarray_insert, void)
+{
+    MDARRAY_VISITOR_TEMPLATE_IMPL(T& v, std::initializer_list<std::size_t> index, typename T::value_type val) -> void
     {
-        v.emplace(index, val);
+        v.insert(index, val);
     };
 };
 
-#warning NO DOCUMENTATION
+/**
+ * mdarray visitor for indexed access
+ */
 template<typename... SupportedTypes>
 MDARRAY_VISITOR(mdarray_at, typename traits::type_list<SupportedTypes...>::variant_scalar)
 {
-    using variant_scalar = typename traits::type_list<SupportedTypes...>::variant_scalar;
-
-    MDARRAY_VISITOR_TEMPLATE_IMPL(
-        mdarray<T> v,
-        std::initializer_list<std::size_t> index
-    ) -> variant_scalar
+    MDARRAY_VISITOR_TEMPLATE_IMPL(const T& v, std::initializer_list<std::size_t> index) -> typename T::value_type
     {
-        return v.at(index);
+        auto val = v.at(index);
+
+        return val;
     }
 };
 
@@ -90,7 +97,9 @@ struct variable {
      */
     using mdarray_variant = typename types::template variant_container<io::mdarray>;
 
-    #warning NO DOCUMENTATION
+    using element_type = typename types::variant_scalar;
+
+    // Hasher for variables
     struct hash
     {
         std::size_t operator()(const variable& v) const noexcept
@@ -109,40 +118,57 @@ struct variable {
      */
     variable() noexcept
         : m_name()
-        , m_data()
+        , m_data(mdarray<int>{0})
         , m_dimensions() {};
 
     /**
-     * Constructs an empty named variable
-     *
-     * @param name Name of the dimension
-     */
-    variable(const std::string& name) noexcept
-        : m_name(name)
-        , m_data()
-        , m_dimensions(){};
-
-    /**
      * Constructs a named variable spanned over the given dimensions
      *
      * @param name Name of the dimension
      * @param dimensions List of dimensions
      */
-    variable(const std::string& name, const std::vector<dimension>& dimensions)
-        : m_name(name)
-        , m_data()
-        , m_dimensions(dimensions) {};
+    template<typename T, typename types::template enable_if_supports<T, bool> = true>
+    static variable make(const std::string& name, const std::vector<dimension>& dimensions)
+    {
+        variable var;
+        var.m_name = name;
+        var.m_dimensions = dimensions;
+
+        std::vector<size_type> dsizes;
+        dsizes.reserve(dimensions.size());
+        for (const auto& d : dimensions) {
+            dsizes.push_back(d.size());
+        }
+    
+        var.m_data = mdarray<T>{dsizes};
+        return var;
+    }
 
     /**
-     * Constructs a named variable spanned over the given dimensions
-     *
-     * @param name Name of the dimension
-     * @param dimensions List of dimensions
+     * Assign an mdarray to this variable.
+     * 
+     * @tparam T Supported mdframe types.
+     * @param data The mdarray to assign.
+     * @return variable& 
      */
-    variable(const std::string& name, std::initializer_list<dimension> dimensions)
-        : m_name(name)
-        , m_data()
-        , m_dimensions(dimensions) {};
+    template<typename T, typename types::template enable_if_supports<T, bool> = true>
+    variable& set_data(const mdarray<T>& data)
+    {
+        this->m_data = data;
+    }
+
+    /**
+     * Assign an mdarray to this variable.
+     * 
+     * @tparam T Supported mdframe types.
+     * @param data The mdarray to assign.
+     * @return variable& 
+     */
+    template<typename T, typename types::template enable_if_supports<T, bool> = true>
+    variable& set_data(mdarray<T>&& data)
+    {
+        this->m_data = std::move(data);
+    }
 
     /**
      * Get the values of this variable
@@ -154,7 +180,22 @@ struct variable {
         return this->m_data;
     }
 
-    #warning NO DOCUMENTATION
+    template<typename T, typename types::template enable_if_supports<T, bool> = true>
+    const mdarray<T>& values() const noexcept
+    {
+        return boost::get<mdarray<T>>(this->m_data);
+    }
+
+    /**
+     * Equality operator to check equality between two variables.
+     *
+     * @note This operator compares the hashes of the variable **names**,
+     *       not the backing mdarray.
+     * 
+     * @param rhs
+     * @return true if the variables have the same name
+     * @return false if the variables have different names
+     */
     bool operator==(const variable& rhs) const
     {
         return hash{}(*this) == hash{}(rhs);
@@ -169,6 +210,11 @@ struct variable {
         return this->m_name;
     }
 
+    /**
+     * Get the names of all dimensions associated with this variable.
+     * 
+     * @return std::vector<std::string> 
+     */
     std::vector<std::string> dimensions() const noexcept {
         std::vector<std::string> names;
         names.reserve(this->m_dimensions.size());
@@ -211,22 +257,30 @@ struct variable {
      * @param value Value to insert into mdarray
      */
     template<typename T, typename types::template enable_if_supports<T, bool> = true>
-    void emplace(std::initializer_list<size_type> index, T value)
+    void insert(std::initializer_list<size_type> index, T value)
     {
         // bind arguments to operator()
-        auto visitor = std::bind(
-            visitors::mdarray_emplace{},
-            std::placeholders::_1,
-            value,
-            index
+        auto visitor = boost::bind(
+            visitors::mdarray_insert{},
+            boost::placeholders::_1,
+            index,
+            value
         );
-    
+
         boost::apply_visitor(visitor, this->m_data);
     }
 
-    #warning NO DOCUMENTATION
-    auto at(std::initializer_list<size_type> index)
-        -> typename types::variant_scalar
+    /**
+     * Access value at a given index
+     * 
+     * @param index Multi-dimensional index.
+     *        Size of this index list must match
+     *        the dimensions of this variable.
+     *
+     * @return A variant corresponding to the
+     *         value within this variable at the given index.
+     */
+    element_type at(std::initializer_list<size_type> index)
     {
         auto visitor = std::bind(
             visitors::mdarray_at<SupportedTypes...>{},
@@ -235,6 +289,25 @@ struct variable {
         );
     
         return boost::apply_visitor(visitor, this->m_data);
+    }
+
+    template<typename T, typename types::template enable_if_supports<T, bool> = true>
+    T at(std::initializer_list<size_type> index)
+    {
+        auto visitor = std::bind(
+            visitors::mdarray_at<SupportedTypes...>{},
+            std::placeholders::_1,
+            index
+        );
+
+        element_type result = boost::apply_visitor(visitor, this->m_data);
+        T value = boost::get<T>(result);
+        return value;
+    }
+
+    std::vector<size_type> shape() const noexcept
+    {
+        return boost::apply_visitor(visitors::mdarray_shape{}, this->m_data);
     }
 
   private:
@@ -249,6 +322,7 @@ struct variable {
 };
 
 } // namespace detail
+
 } // namespace io
 
 #endif // NGEN_IO_MDFRAME_VARIABLE_HPP

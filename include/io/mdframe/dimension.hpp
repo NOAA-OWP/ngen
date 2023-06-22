@@ -36,7 +36,7 @@ struct dimension {
 
     dimension(const std::string& name)
         : m_name(name)
-        , m_size(boost::none) {};
+        , m_size(static_cast<std::size_t>(-1)) {};
     
     dimension(const std::string& name, std::size_t size)
         : m_name(name)
@@ -77,7 +77,7 @@ struct dimension {
 
     // we declare m_size as mutable so that
     // its size can be updated during construction
-    mutable boost::optional<std::size_t> m_size;
+    mutable std::size_t m_size;
 };
 
 } // namespace detail

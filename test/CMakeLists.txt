@@ -102,10 +102,13 @@ add_test(test_realization_config
 
 ########################## Series Unit Tests
 add_test(test_io
-         1
+         3
          io/mdarray_Test.cpp
-         # io/mdframe_Test.cpp
-         NGen::io)
+         io/mdframe_Test.cpp
+         io/mdframe_netcdf_Test.cpp
+         NGen::io
+         stdc++fs
+         ${NETCDF_LIBRARIES})
 
 ########################## Nexus Tests
 add_test(
