@@ -20,10 +20,10 @@ TEST(mdframe_Test, io_netcdf)
       .add_variable<double>("v", {"x", "y"});
 
     for (size_t x = 0; x < 2; x++) {
-        df.insert("x", { x }, x + 1);
+        df["x"].insert({ x }, x + 1);
         for (size_t y = 0; y < 2; y++) {
-            df.insert("y", { y }, y + 1);
-            df.insert("v", { x, y }, (x + 1) * (y + 1));
+            df["y"].insert({ y }, y + 1);
+            df["v"].insert({ x, y }, (x + 1) * (y + 1));
         }
     }
     
