@@ -319,7 +319,7 @@ string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, std::st
             // Do the rest with a leading comma
             std::vector<double> vector_var;
             for (int i = 1; i < output_var_names.size(); ++i) {
-                vector_var = get_var_vec_as_double(t_delta, output_var_names[i]);
+                vector_var = get_var_vec_as_double(0, output_var_names[i]);
                 for (int j = 0; j < vector_var.size(); ++j) {
                     *output_text_stream << ((output_text_stream->str()).empty() ? "" : ",") + std::to_string(vector_var[j]);
                 }
