@@ -6,7 +6,7 @@
 | ------------- |:------------- | :-----:| :-------: |
 | [Google Test](#google-test) | submodule  | `release-1.10.0` | |
 | [C/C++ Compiler](#c-and-c-compiler) | external | see below |  |
-| [CMake](#cmake) | external | \>= `3.12` | |
+| [CMake](#cmake) | external | \>= `3.14` | |
 | [Boost (Headers Only)](#boost-headers-only) | external | `1.72.0` | headers only library |
 | [Udunits libraries](https://www.unidata.ucar.edu/software/udunits) | hybrid (external or submodule) | >= 2.0 | Can be installed via package manager; if not installed, will be automatically downloaded as submodule, and build will be attempted. |
 | [MPI](https://www.mpi-forum.org) | external | No current implementation or version requirements | Required for [multi-process distributed execution](DISTRIBUTED_PROCESSING.md) |
@@ -75,7 +75,7 @@ However, a [CMake build system](BUILDS_AND_CMAKE.md#generating-a-build-system) m
 
 ### Version Requirements
 
-Currently, a version of CMake >= `3.12.0` is required.
+Currently, a version of CMake >= `3.14.0` is required.
 
 ## Boost (Headers Only)
 
