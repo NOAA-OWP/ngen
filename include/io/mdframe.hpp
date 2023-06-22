@@ -59,8 +59,8 @@ class mdframe {
   public:
     using dimension     = detail::dimension;
     using dimension_set = std::unordered_set<dimension, dimension::hash>;
-    using variable      = detail::variable<int, double, bool, std::string>;
-    using variable_set  = std::unordered_set<variable, variable::hash>;
+    using variable      = detail::variable<int, float, double>;
+    using variable_map  = std::unordered_map<std::string, variable>;
     using size_type     = variable::size_type;
 
     /**
@@ -94,17 +94,17 @@ class mdframe {
      * @return variable_set::const_iterator  or variable_set::end() if not found
      */
     auto find_variable(const std::string& name) const noexcept
-        -> variable_set::const_iterator;
+        -> variable_map::const_iterator;
 
   public:
     /**
-     * Return reference to a dimension if it exists. Otherwise, returns boost::none.
+     * Return a dimension if it exists. Otherwise, returns boost::none.
      * 
      * @param name Name of the dimension
-     * @return boost::optional<const detail::dimension&> 
+     * @return boost::optional<detail::dimension> 
      */
     auto get_dimension(const std::string& name) const noexcept
-        -> boost::optional<const detail::dimension&>;
+        -> boost::optional<detail::dimension>;
 
     /**
      * Check if a dimension exists.
@@ -144,11 +144,18 @@ class mdframe {
      * @param name Name of the variable.
      * @return boost::optional<variable>
      */
-    auto get_variable(const std::string& name) const noexcept
-        -> boost::optional<variable>;
+    auto get_variable(const std::string& name) noexcept
+        -> variable&;
 
-    auto operator[](const std::string& name) const noexcept
-        -> boost::optional<variable>;
+    /**
+     * Return reference to a mdarray representing a variable, if it exists.
+     * Otherwise, returns boost::none.
+     * 
+     * @param name Name of the variable.
+     * @return boost::optional<variable>
+     */
+    auto operator[](const std::string& name) noexcept
+        -> variable&;
 
     /**
      * Check if a variable exists.
@@ -159,21 +166,6 @@ class mdframe {
      */
     bool has_variable(const std::string& name) const noexcept;
 
-    /**
-     * Add a (scalar) variable definition to this mdframe.
-     * 
-     * @param name Name of the variable.
-     * @return mdframe& 
-     */
-    template<typename T, types::enable_if_supports<T, bool> = true>
-    mdframe& add_variable(const std::string& name)
-    {
-        // should not update if the variable already exists
-        this->m_variables.emplace(name);
-        return *this;
-    }
-
-    
     /**
      * Add a (vector) variable definition to this mdframe.
      *
@@ -189,27 +181,35 @@ class mdframe {
     template<typename T, types::enable_if_supports<T, bool> = true>
     mdframe& add_variable(const std::string& name, std::initializer_list<std::string> dimensions)
     {
-        std::vector<dimension> references(dimensions.size());
+        std::vector<dimension> references;
+        references.reserve(dimensions.size());
 
         for (const auto& d : dimensions) {
             auto dopt = this->get_dimension(d);
             if (dopt == boost::none) {
                 throw std::runtime_error("not a dimension");
             }
-            
             references.push_back(dopt.get());
         }
 
-        this->m_variables.emplace(name, references);
+        this->m_variables[name] = variable::make<T>(name, references);
+    
         return *this;
     }
 
-    #warning NO DOCUMENTATION
+    /**
+     * Construct and insert a multi-dimensional value into a variable.
+     * 
+     * @tparam T Type of the value, must match the type of the variable.
+     * @param variable Name of the variable
+     * @param index List of indices corresponding to the index where this value should be placed.
+     * @param value
+     * @return mdframe& 
+     */
     template<typename T, types::enable_if_supports<T, bool> = true>
-    mdframe& emplace(const std::string& variable, std::initializer_list<size_type> index, T value)
+    mdframe& insert(const std::string& variable, std::initializer_list<size_type> index, T value)
     {
-        auto var = this->get_variable(variable);
-        var->emplace(index, value);
+        this->get_variable(variable).insert(index, value);
 
         return *this;
     }
@@ -242,12 +242,11 @@ class mdframe {
      * 
      * @param path File path to the output NetCDF
      */
-    #warning NOT IMPLEMENTED
     void to_netcdf(const std::string& path) const;
 
   private:
     dimension_set m_dimensions;
-    variable_set  m_variables;
+    variable_map  m_variables;
 };
 
 } // namespace io

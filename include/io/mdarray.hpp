@@ -1,150 +1,273 @@
 #ifndef NGEN_IO_MDARRAY_HPP
 #define NGEN_IO_MDARRAY_HPP
 
-#include <set>
+#include <initializer_list>
 #include <stdexcept>
-
-#include "mdvalue.hpp"
+#include <vector>
 
 namespace io {
 
-#warning NO DOCUMENTATION
 template<typename T>
-class mdarray {
+class mdarray
+{
   public:
     using value_type      = T;
-    using element_type    = mdvalue<value_type>;
-    using index_type      = typename element_type::ilist_type;
-    using container       = std::set<element_type>;
-    using size_type       = typename container::size_type;
-    using difference_type = typename container::difference_type;
-    using reference       = typename container::reference;
-    using const_reference = typename container::const_reference;
-    using pointer         = typename container::pointer;
-    using const_pointer   = typename container::const_pointer;
-    using iterator        = typename container::iterator;
-    using const_iterator  = typename container::const_iterator;
+    using container_type  = std::vector<value_type>;
+    using ilist           = std::vector<std::size_t>;
+    using size_type       = typename container_type::size_type;
+    using difference_type = typename container_type::difference_type;
+    using reference       = typename container_type::reference;
+    using const_reference = typename container_type::const_reference;
+    using pointer         = typename container_type::pointer;
+    using const_pointer   = typename container_type::const_pointer;
+    
+    struct iterator // --------------------------------------------------------
+    {
+        using iterator_category = std::random_access_iterator_tag;
+        using difference_type   = std::ptrdiff_t;
+        using value_type        = mdarray::value_type;
+        using pointer           = mdarray::pointer;
+        using reference         = mdarray::reference;
 
-    // Default constructor
-    mdarray() = default;
+        iterator(const mdarray& ref, size_type idx)
+            : m_ref(ref)
+            , m_idx(idx){};
+
+        const_reference operator*() const
+        {
+            return this->m_ref.m_data.at(this->m_idx);
+        }
+    
+        pointer operator->()
+        {
+            return &this->m_ref.m_data.at(this->m_idx);
+        }
+
+        iterator& operator++()
+        {
+            this->m_idx++;
+            return *this;
+        }
+
+        iterator operator++(int)
+        {
+            iterator tmp = *this;
+            ++(*this);
+            return tmp;
+        }
+
+        iterator& operator--()
+        {
+            this->m_idx--;
+            return *this;
+        }
+
+        iterator operator--(int)
+        {
+            iterator tmp = *this;
+            --(*this);
+            return tmp;
+        }
+
+        ilist mdindex() const noexcept
+        {
+            return this->m_ref.deindex(this->m_idx);
+        }
+
+        friend bool operator==(const iterator& a, const iterator& b)
+        {
+            return (&a.m_ref == &b.m_ref) &&
+                   (a.m_idx == b.m_idx);
+        }
+
+        friend bool operator!=(const iterator& a, const iterator& b)
+        {
+            return !(a == b);
+        }
+
+      private:
+        const mdarray& m_ref;
+        size_type m_idx;
+
+    }; // struct iterator -----------------------------------------------------
+
+    friend iterator;
+
+    // Deleted default constructor. mdarray must be given a rank at least.
+    mdarray() = delete;
+
+    mdarray(size_type rank) noexcept
+        : m_shape(rank)
+        , m_data() {};
+
+    mdarray(ilist dsizes)
+        : m_shape(dsizes.begin(), dsizes.end())
+        , m_data(this->max_size()) {};
 
     /**
-     * Construct an empty mdarray with the
-     * specified rank
-     * 
-     * @param rank Number of dimensions
+     * Retrieve a reference to the value at the given index.
+     *
+     * @example
+     * mdarray<int> x(2); // rank 2
+     * x.at({0, 0});      // get the value at (0, 0) in a 2D array.
+     * x.at({1, 1}) = 3;  // set the value at (1, 1) in a 2D array.
+     *
+     * @param n Index list
+     * @return reference 
      */
-    mdarray(size_type rank) noexcept
-        : m_data()
-        , m_rank(rank){};
-
-    // ========================================================================
-    // STL Interface
-    // ========================================================================
-
-    // Iterators --------------------------------------------------------------
-    #warning NO DOCUMENTATION
-    iterator       begin() noexcept { return this->m_data.begin(); }
-
-    #warning NO DOCUMENTATION
-    const_iterator begin() const noexcept { return this->m_data.begin(); }
-
-    #warning NO DOCUMENTATION
-    iterator       end() noexcept { return this->m_data.end(); }
-
-    #warning NO DOCUMENTATION
-    const_iterator end() const noexcept { return this->m_data.end(); }
-
-    // Capacity ---------------------------------------------------------------
-    #warning NO DOCUMENTATION
-    bool empty() const noexcept { return this->m_data.empty(); }
-
-    #warning NO DOCUMENTATION
-    size_type size() const noexcept { return this->m_data.size(); }
-
-    #warning NO DOCUMENTATION
-    size_type max_size() const noexcept { return this->m_data.max_size(); }
-
-    // Modifiers --------------------------------------------------------------
-    #warning NO DOCUMENTATION
-    void clear() noexcept
+    reference at(const ilist& n)
     {
-        this->m_data.clear();
+        return this->m_data.at(this->index(n));
     }
 
-    #warning NO DOCUMENTATION
-    std::pair<iterator, bool> emplace(std::initializer_list<size_type> index, value_type value)
+    /**
+     * Retrieve const reference to the value at the given index.
+     *
+     * @example
+     * mdarray<int> x(2); // rank 2
+     * x.at({0, 0});      // get the value at (0, 0) in a 2D array.
+     *
+     * @param n Index list
+     * @return reference 
+     */
+    const_reference at(const ilist& n) const
     {
-        return this->m_data.emplace(index, value);
+        return this->m_data.at(this->index(n));
     }
 
-    #warning NO DOCUMENTATION
-    void emplace(std::initializer_list<std::pair<std::initializer_list<size_type>, value_type>> elements)
+    void insert(const ilist& n, value_type value)
     {
-        for (const auto& e : elements) {
-          this->emplace(e.first, e.second);
+        size_type index = this->index(n);
+    
+        if (index > this->max_size())
+            throw std::out_of_range("out of range");
+        
+        if (index > this->size() || this->size() == 0)
+            this->m_data.resize(index + 1);
+    
+        this->m_data.at(index) = value;
+    }
+
+    void insert(std::initializer_list<std::pair<std::initializer_list<size_type>, value_type>> args)
+    {
+        for (const auto& arg : args) {
+            this->insert(arg.first, arg.second);
         }
     }
 
-    #warning NO DOCUMENTATION
-    std::pair<iterator, bool> insert(const element_type& value)
+    /**
+     * Allocate this mdarray based on the indices given.
+     * 
+     * @example
+     * mdarray<double> x(3);   // rank 3
+     * x.allocate({5, 10, 10}) // Allocates 5 * 10 * 10 elements
+     * @param n 
+     */
+    void allocate(const ilist& n)
     {
-        return this->m_data.insert(value);
+        this->m_data.resize(this->index(n));
     }
 
-    #warning NO DOCUMENTATION
-    std::pair<iterator, bool> insert(element_type&& value)
+    /**
+     * Get the (total) size of this mdarray
+     * (aka the total number of elements).
+     * 
+     * @return size_type
+     */
+    size_type size() const noexcept
     {
-        return this->m_data.insert(std::move(value));
+        return this->m_data.size();
     }
 
-    #warning NO DOCUMENTATION
-    void insert(std::initializer_list<element_type> values)
+    size_type max_size() const noexcept
     {
-        this->m_data.insert(values);
+        size_type max = 1;
+        for (const auto& v : this->m_shape) {
+            max *= v;
+        }
+        return max;
     }
 
-    // Lookup -----------------------------------------------------------------
-    #warning NO DOCUMENTATION
-    const_reference at(std::initializer_list<size_type> n)
-    {
-        iterator x = this->m_data.find(n);
-        if (x == this->m_data.end())
-          #warning NO ERROR MESSAGE
-          throw std::out_of_range("");
-      
-        return *x;
+    iterator begin() const noexcept {
+        return iterator(*this, 0);
     }
 
-    #warning NO DOCUMENTATION
-    const_reference at(std::initializer_list<size_type> n) const
-    {
-        const_iterator x = this->m_data.find(n);
-        if (x == this->m_data.end())
-          #warning NO ERROR MESSAGE
-          throw std::out_of_range("");
-      
-        return *x;
+    iterator end() const noexcept {
+        return iterator(*this, this->m_data.size());
     }
 
-    // ========================================================================
-    // mdarray-specific Interface
-    // ========================================================================
-    #warning NO DOCUMENTATION
+    /**
+     * Get the rank of this mdarray.
+     * 
+     * @return size_type 
+     */
     size_type rank() const noexcept
     {
-        return this->m_rank;
+        return this->m_shape.size();
     }
 
-    #warning NO DOCUMENTATION
-    void rank(size_type r) noexcept
+    /**
+     * Get the shape of this mdarray.
+     * 
+     * @return ilist
+     */
+    ilist shape() const noexcept
     {
-        this->m_rank = r;
+        return this->m_shape;
+    }
+
+    /**
+     * Index a multi-dimensional set of indices to a single address index.
+     * 
+     * @param n 
+     * @return size_type 
+     */
+    size_type index(const ilist& n) const
+    {
+        size_type index = 0;
+    
+        for (size_type k = 0; k < this->rank(); k++) {
+            size_type N = 1;
+        
+            for (size_type l = k + 1; l < this->rank(); l++) {
+                N *= this->m_shape[l];
+            }
+
+            index += n[k] * N;
+        }
+    
+        return index;
+    }
+
+    /**
+     * Retrieve the multi-dimensional index from a given address index.
+     * 
+     * @param idx Address index (aka flat index)
+     * @return ilist 
+     */
+    ilist deindex(size_type idx) const
+    {
+        if (idx == 0) { // trivial case
+            return ilist(this->rank(), 0);
+        }
+
+        ilist n(this->rank());
+    
+        size_type addr = idx;
+
+        for (size_type k = this->rank() - 1; k > 0; k--) {
+            n[k] = addr % this->m_shape[k];
+            addr /= this->m_shape[k];
+        }
+
+        n[0] = addr;
+
+        return n;
     }
 
   private:
-    container m_data;
-    size_type m_rank;
+    ilist          m_shape;
+    container_type m_data;
 };
 
 } // namespace io

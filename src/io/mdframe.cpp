@@ -11,11 +11,11 @@ auto mdframe::find_dimension(const std::string& name) const noexcept
 }
 
 auto mdframe::get_dimension(const std::string& name) const noexcept
-    -> boost::optional<const detail::dimension&>
+    -> boost::optional<detail::dimension>
 {
     decltype(auto) pos = this->find_dimension(name);
 
-    boost::optional<const detail::dimension&> result;
+    boost::optional<detail::dimension> result;
     if (pos != this->m_dimensions.end()) {
         result = *pos;
     }
@@ -48,27 +48,19 @@ mdframe& mdframe::add_dimension(const std::string& name, std::size_t size)
 // Variable Member Functions --------------------------------------------------
 
 auto mdframe::find_variable(const std::string& name) const noexcept
-    -> variable_set::const_iterator
+    -> variable_map::const_iterator
 {
-    return this->m_variables.find(variable(name));
+    return this->m_variables.find(name);
 }
 
-auto mdframe::get_variable(const std::string& name) const noexcept
-    -> boost::optional<variable>
+auto mdframe::get_variable(const std::string& name) noexcept
+    -> variable&
 {
-   
-    decltype(auto) var = this->find_variable(name);
-    
-    boost::optional<variable> result;
-    if (var != this->m_variables.end()) {
-        result = *var;
-    }
-
-    return result;
+    return this->m_variables[name];
 }
 
-auto mdframe::operator[](const std::string& name) const noexcept
-    -> boost::optional<variable>
+auto mdframe::operator[](const std::string& name) noexcept
+    -> variable&
 {
     return this->get_variable(name);
 }
