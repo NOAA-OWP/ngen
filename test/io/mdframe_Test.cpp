@@ -35,7 +35,7 @@ TEST(mdframe_Test, construction)
 
     EXPECT_EQ(df["2D"].size(), 100);
     EXPECT_EQ(df["2D"].rank(), 2);
-    EXPECT_NO_THROW(df.insert("2D", {0, 0}, 1.0));
+    EXPECT_NO_THROW(df["2D"].insert({0, 0}, 1.0));
     EXPECT_NO_THROW(df["2D"].insert({0, 1}, 2));
     EXPECT_THROW(df["2D"].insert({10, 0}, 3), std::out_of_range);
     EXPECT_EQ(df["2D"].at<double>({0, 0}), 1);

@@ -27,7 +27,7 @@ namespace io {
  * @section representation Frame Representation
  * Consider the dimensions: x, y, z; and
  * the variables:
- *   - v1<std::string>(x)
+ *   - v1<float>(x)
  *   - v2<double>(x, y)
  *   - v3<int>(x, y, z)
  *
@@ -35,13 +35,13 @@ namespace io {
  *
  *   x |  v1 |      v2 |      v3
  * --- | --- | ------- | -------
- *   0 | s_0 | [...]_0 | [[...]]_0
- *   1 | s_1 | [...]_1 | [[...]]_1
+ *   0 | f_0 | [...]_0 | [[...]]_0
+ *   1 | f_1 | [...]_1 | [[...]]_1
  * ... | ... |  ...    |   ...
- *   n | s_n | [...]_n | [[...]]_n
+ *   n | f_n | [...]_n | [[...]]_n
  *
  * where:
- * - v1: Vector of strings,  rank 1 -> [...]
+ * - v1: Vector of floats,   rank 1 -> [...]
  * - v2: Matrix of doubles,  rank 2 -> [[...]]
  * - v3: Tensor of integers, rank 3 -> [[[...]]]
  *
@@ -194,23 +194,6 @@ class mdframe {
 
         this->m_variables[name] = variable::make<T>(name, references);
     
-        return *this;
-    }
-
-    /**
-     * Construct and insert a multi-dimensional value into a variable.
-     * 
-     * @tparam T Type of the value, must match the type of the variable.
-     * @param variable Name of the variable
-     * @param index List of indices corresponding to the index where this value should be placed.
-     * @param value
-     * @return mdframe& 
-     */
-    template<typename T, types::enable_if_supports<T, bool> = true>
-    mdframe& insert(const std::string& variable, std::initializer_list<size_type> index, T value)
-    {
-        this->get_variable(variable).insert(index, value);
-
         return *this;
     }
 
