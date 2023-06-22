@@ -997,7 +997,28 @@ namespace realization {
                     value_ptr = get_values_as_type( type, values.begin(), values.end() );
 
                 } else {
-                    //scalar value
+                */
+                int varItemSize = get_bmi_model()->GetVarItemsize(var_name);
+                int nbytes = get_bmi_model()->GetVarNbytes(var_name);
+                std::shared_ptr<void> value_ptr;
+                // Finally, use the value obtained to set the model input
+                std::string type = get_bmi_model()->get_analogous_cxx_type(get_bmi_model()->GetVarType(var_name),
+                                                                           varItemSize);
+                if (varItemSize != get_bmi_model()->GetVarNbytes(var_name)) {
+                    //more than a single value needed for var_name
+                    auto values = provider->get_values(CatchmentAggrDataSelector(this->get_catchment_id(),var_map_alias, model_epoch_time, t_delta,
+                                                   get_bmi_model()->GetVarUnits(var_name)));
+                    //need to marshal data types to the reciever as well
+                    //this could be done a little more elegantly if the provider interface were
+                    //"type aware", but for now, this will do (but requires yet another copy)
+                    if(values.size() == 1){
+                        //FIXME this isn't generic broacasting, but works for scalar implementations
+                        values.resize(nbytes/varItemSize, values[0]);
+                    }
+                    value_ptr = get_values_as_type( type, values.begin(), values.end() );
+
+                } else {
+                //scalar value
                     double value = provider->get_value(CatchmentAggrDataSelector(this->get_catchment_id(),var_map_alias, model_epoch_time, t_delta,
                                                    get_bmi_model()->GetVarUnits(var_name)));
                     value_ptr = get_value_as_type(type, value);      
