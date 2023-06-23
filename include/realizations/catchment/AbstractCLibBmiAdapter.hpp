@@ -91,6 +91,9 @@ namespace models {
                 if (!utils::FileChecker::file_is_readable(bmi_lib_file)) {
                     //Try alternative extension...
                     size_t idx = bmi_lib_file.rfind(".");
+                    if(idx == string::npos){
+                        idx = bmi_lib_file.length()-1;
+                    }
                     std::string alt_bmi_lib_file;  
                     if(bmi_lib_file.length() == 0){
                         this->init_exception_msg =
