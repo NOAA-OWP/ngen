@@ -145,7 +145,7 @@ jobs:
           pip install 'pip>=23.0,<23.1'
           pip install -U setuptools
           pip install -r requirements.txt
-          pip install deprecated 'pyarrow!=12.*' tables geopandas numpy
+          pip install deprecated 'pyarrow==11.0.0' tables geopandas numpy
           if [ ${{ runner.os }} == 'macOS' ] 
           then
             export LIBRARY_PATH=/usr/local/lib/gcc/11/
