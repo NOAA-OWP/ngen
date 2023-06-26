@@ -14,7 +14,7 @@ struct mdvalue_to_string : public boost::static_visitor<std::string>
 }
 }
 
-void generate_indices(
+void io::detail::cartesian_indices(
     const std::vector<std::size_t>&        shape,
     std::vector<std::size_t>&              index,
     std::size_t                            dimension,
@@ -29,7 +29,7 @@ void generate_indices(
     const auto& size = shape[dimension];
     for (std::size_t i = 0; i < size; i++) {
         index[dimension] = i;
-        generate_indices(shape, index, dimension + 1, output);
+        io::detail::cartesian_indices(shape, index, dimension + 1, output);
     }
 }
 
@@ -94,7 +94,7 @@ void io::mdframe::to_csv(const std::string& path, bool header) const
     indices.reserve(rows);
     std::vector<size_type> index(max_rank, 0);
     io::visitors::mdvalue_to_string visitor;
-    generate_indices(shape, index, 0, indices);
+    io::detail::cartesian_indices(shape, index, 0, indices);
     for (const auto& index : indices) {
         for (auto var : subvar) {
             const std::vector<size_type> tmp(index.begin(), index.begin() + var.rank());

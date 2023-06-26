@@ -29,6 +29,43 @@ class mdframe_csv_Test : public ::testing::Test
     fs::path tempfile;
 };
 
+/**
+ * This unit test checks that `io::detail::cartesian_indices`
+ * correctly generates lists of indices based on the
+ * cartesian product of the dimensions given (i.e. the `shape`).
+ */
+TEST_F(mdframe_csv_Test, io_csv_cartesian)
+{
+    std::vector<size_t> shape { 1, 2, 3 };
+    std::vector<size_t> index(3);
+    std::vector<std::vector<size_t>> output;
+    io::detail::cartesian_indices(shape, index, 0, output);
+
+    EXPECT_EQ(output[0][0], 0);
+    EXPECT_EQ(output[0][1], 0);
+    EXPECT_EQ(output[0][2], 0);
+
+    EXPECT_EQ(output[1][0], 0);
+    EXPECT_EQ(output[1][1], 0);
+    EXPECT_EQ(output[1][2], 1);
+
+    EXPECT_EQ(output[2][0], 0);
+    EXPECT_EQ(output[2][1], 0);
+    EXPECT_EQ(output[2][2], 2);
+
+    EXPECT_EQ(output[3][0], 0);
+    EXPECT_EQ(output[3][1], 1);
+    EXPECT_EQ(output[3][2], 0);
+
+    EXPECT_EQ(output[4][0], 0);
+    EXPECT_EQ(output[4][1], 1);
+    EXPECT_EQ(output[4][2], 1);
+
+    EXPECT_EQ(output[5][0], 0);
+    EXPECT_EQ(output[5][1], 1);
+    EXPECT_EQ(output[5][2], 2);
+}
+
 TEST_F(mdframe_csv_Test, io_csv)
 {
     io::mdframe df;
