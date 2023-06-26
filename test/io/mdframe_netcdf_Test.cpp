@@ -28,7 +28,7 @@ TEST(mdframe_Test, io_netcdf)
     }
     
     fs::path tempfile(testing::TempDir());
-    tempfile.append("mdframeTest_ioNetcdf.netcdf");
+    tempfile.append("mdframeTest_ioNetcdf.nc");
     df.to_netcdf(tempfile.string());
 
     netCDF::NcFile ex;
