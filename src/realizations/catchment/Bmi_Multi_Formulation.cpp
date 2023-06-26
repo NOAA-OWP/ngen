@@ -311,7 +311,6 @@ std::string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, st
 
             // Do the first without the leading comma
             std::vector<double> vector_var_0;
-            //vector_var_0 = get_var_vec_as_double(0, output_var_names[0])[0];
             vector_var_0 = get_var_vec_as_double(0, output_var_names[0]);
 
             for (int j = 0; j < vector_var_0.size(); ++j) {
