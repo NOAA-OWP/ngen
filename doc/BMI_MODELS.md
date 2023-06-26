@@ -279,7 +279,7 @@ An example implementation for an appropriate BMI model as a **C++** shared libra
 
 ### Enabling Python Integration
 
-Python integration is controlled with the CMake build flag `NGEN_ACTIVATE_PYTHON`, however this currently defaults to "On"--you would need to turn this off if Python is not available in your environment. See [the Dependencies documentation](DEPENDENCIES.md#python-3-libraries) for specifics on Python requirements, but in summary you will need a working Python environment with NumPy installed. You can set up a Python environment anywhere with the usual environment variables, but note that ngen will look for a Python environment in the build directory named `.venv` or `venv` by default. The appropriate Python environment should be active in the shell when ngen is run.
+Python integration is controlled with the CMake build flag `NGEN_ACTIVATE_PYTHON`, however this currently defaults to "On"--you would need to turn this off if Python is not available in your environment. See [the Dependencies documentation](DEPENDENCIES.md#python-3-libraries) for specifics on Python requirements, but in summary you will need a working Python environment with NumPy installed. You can set up a Python environment anywhere with the usual environment variables. The appropriate Python environment should be active in the shell when ngen is run.
 
 For Python BMI models specifically, you will also need to install the [bmipy](https://github.com/csdms/bmi-python) package, which provides a base class for Python BMI models.
 
