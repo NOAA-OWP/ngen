@@ -102,10 +102,11 @@ add_test(test_realization_config
 
 ########################## Series Unit Tests
 add_test(test_io
-         3
+         4
          io/mdarray_Test.cpp
          io/mdframe_Test.cpp
          io/mdframe_netcdf_Test.cpp
+         io/mdframe_csv_Test.cpp
          NGen::io
          stdc++fs
          ${NETCDF_LIBRARIES})

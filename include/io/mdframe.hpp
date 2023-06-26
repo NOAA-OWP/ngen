@@ -215,9 +215,9 @@ class mdframe {
      *       dimensions, and do not inherently store any information.
      * 
      * @param path File path to output CSV
+     * @param basis Dimension to span CSV over, defaults to "time"
      * @param header Should the CSV header be included?
      */
-    #warning NOT IMPLEMENTED
     void to_csv(const std::string& path, bool header = true) const;
 
     /**

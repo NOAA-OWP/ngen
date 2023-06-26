@@ -61,7 +61,7 @@ MDARRAY_VISITOR(mdarray_insert, void)
 template<typename... SupportedTypes>
 MDARRAY_VISITOR(mdarray_at, typename traits::type_list<SupportedTypes...>::variant_scalar)
 {
-    MDARRAY_VISITOR_TEMPLATE_IMPL(const T& v, std::initializer_list<std::size_t> index) -> typename T::value_type
+    MDARRAY_VISITOR_TEMPLATE_IMPL(T& v, std::vector<std::size_t> index) -> typename T::value_type
     {
         auto val = v.at(index);
 
@@ -280,7 +280,7 @@ struct variable {
      * @return A variant corresponding to the
      *         value within this variable at the given index.
      */
-    element_type at(std::initializer_list<size_type> index)
+    element_type at(const std::vector<size_type>& index)
     {
         auto visitor = std::bind(
             visitors::mdarray_at<SupportedTypes...>{},
