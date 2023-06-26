@@ -831,7 +831,6 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_1_a) {
     model_adapter->SetValue("grid_1_shape", shape.data());
     formulation.get_response(0, 3600);
     std::string output = formulation.get_output_line_for_timestep(0, ",");
-    std::cout << "1_a: output = " << output << std::endl;
     //FIXME the last two outputs are the first value from the GRID_VAR in the python module...couldn't get the output variables
     //configured in the example realization generation to not query those, so hacked in here.  See comment above about not worrying about
     //initializing/using the grid vars in this test, and try to find a better way in the future.
@@ -862,7 +861,6 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_1_b) {
         formulation.get_response(i++, 3600);
     formulation.get_response(i, 3600);
     std::string output = formulation.get_output_line_for_timestep(i, ",");
-    std::cout << "1_b: output = " << output << std::endl;
     //FIXME the last two outputs are the first value from the GRID_VAR in the python module...couldn't get the output variables
     //configured in the example realization generation to not query those, so hacked in here.  See comment above about not worrying about
     //initializing/using the grid vars in this test, and try to find a better way in the future.

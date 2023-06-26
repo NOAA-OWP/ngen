@@ -966,6 +966,7 @@ namespace realization {
                     value_ptr = get_values_as_type( type, values.begin(), values.end() );
 
                 } else {
+<<<<<<< HEAD
                 int varItemSize = get_bmi_model()->GetVarItemsize(var_name);
                 int nbytes = get_bmi_model()->GetVarNbytes(var_name);
                 int varItemSize = get_bmi_model()->GetVarItemsize(var_name);
@@ -998,6 +999,8 @@ namespace realization {
 
                 } else {
                 */
+=======
+>>>>>>> Minor revision and clean up.
                 int varItemSize = get_bmi_model()->GetVarItemsize(var_name);
                 int nbytes = get_bmi_model()->GetVarNbytes(var_name);
                 std::shared_ptr<void> value_ptr;
@@ -1018,7 +1021,7 @@ namespace realization {
                     value_ptr = get_values_as_type( type, values.begin(), values.end() );
 
                 } else {
-                //scalar value
+                    //scalar value
                     double value = provider->get_value(CatchmentAggrDataSelector(this->get_catchment_id(),var_map_alias, model_epoch_time, t_delta,
                                                    get_bmi_model()->GetVarUnits(var_name)));
                     value_ptr = get_value_as_type(type, value);      
