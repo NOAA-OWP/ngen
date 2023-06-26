@@ -12,6 +12,17 @@
 
 namespace io {
 
+namespace detail {
+
+void cartesian_indices(
+    const std::vector<std::size_t>&        shape,
+    std::vector<std::size_t>&              index,
+    std::size_t                            dimension,
+    std::vector<std::vector<std::size_t>>& output
+);
+
+}
+
 /**
  * A multi-dimensional, tagged data frame.
  *
