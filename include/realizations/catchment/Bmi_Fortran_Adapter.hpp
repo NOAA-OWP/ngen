@@ -368,7 +368,7 @@ namespace models {
                 if (src.size() != total_bytes / item_size) {
                     throw std::runtime_error(
                             "Cannot set " + name + " variable of " + model_name + " from vector of size " +
-                            std::to_string(src.size) + " (expected size " + std::to_string(total_bytes / item_size) +
+                            std::to_string(src.size()) + " (expected size " + std::to_string(total_bytes / item_size) +
                             ")");
                 }
                 SetValue(std::move(name), static_cast<void *>(src.data()));
