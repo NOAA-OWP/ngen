@@ -32,16 +32,16 @@ namespace utils {
         public:
             static std::shared_ptr<InterpreterUtil> getInstance() {
                 /**
-                 * @brief Singleton instance of embdedded python interpreter.
+                 * @brief Singleton instance of embedded python interpreter.
                  * 
-                 * Note that if no client holds a currernt reference to this singleton, it will get destroyed
+                 * Note that if no client holds a current reference to this singleton, it will get destroyed
                  * and the next call to getInstance will create and initialize a new scoped interpreter
                  * 
                  * This is required for the simple reason that a traditional static singleton instance has no guarantee
-                 * about the destrutction order of resources across multiple compliation units,
+                 * about the destruction order of resources across multiple compilation units,
                  * and this will cause seg faults if the python interpreter is torn down before the destruction of bound modules
                  * (such as this class' Path module).  If the interpreter is not available when those destructors are called,
-                 * a seg fault will occur.  With this implementaiton, the interpreter is guarnateed to exist as long as anything 
+                 * a seg fault will occur.  With this implementation, the interpreter is guaranteed to exist as long as anything
                  * referencing it needs it, and then can cleanly clean up internal references before the `py::scoped_interpreter`
                  * guard is destroyed, removing the python interpreter.
                  * 
