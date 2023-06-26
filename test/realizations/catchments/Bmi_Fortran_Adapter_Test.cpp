@@ -1556,8 +1556,8 @@ TEST_F(Bmi_Fortran_Adapter_Test, Profile)
     std::vector<int> shape = {2,3};
     adapter->SetValue("grid_1_shape", shape.data());
     //set some initial value for grid var 1
-    double data = 0.0;
-    adapter->SetValue("GRID_VAR_1", &data);
+    std::vector<double> data = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+    adapter->SetValue("GRID_VAR_1", data.data());
     shape = {2,2,3};
     adapter->SetValue("grid_2_shape", shape.data());
     // Do the first few time steps
