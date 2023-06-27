@@ -123,7 +123,7 @@ void giuh_kernel_impl::interpolate_regularized_cdf()
 
         // Find index 'i' of largest CDF time less than the time for the current ordinate
         // Start by getting the index of the first time greater than time_for_ordinate
-        int cdf_times_index_for_iteration = 0;
+        int cdf_times_index_for_iteration = 1;
         while (this->cdf_times[cdf_times_index_for_iteration] < regularized_times_s.back()) {
             cdf_times_index_for_iteration++;
         }
