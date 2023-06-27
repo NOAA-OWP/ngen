@@ -1,6 +1,8 @@
 #include "mdframe.hpp"
 #include <fstream>
+#include <unordered_map>
 #include <unordered_set>
+#include <iostream>
 
 namespace io {
 namespace visitors {
@@ -33,6 +35,7 @@ void io::detail::cartesian_indices(
     }
 }
 
+// TODO: The logic of this function is kind of messy, but it works... might be worth a refactor later on.
 void io::mdframe::to_csv(const std::string& path, bool header) const
 {
     std::ofstream output(path);
@@ -46,19 +49,11 @@ void io::mdframe::to_csv(const std::string& path, bool header) const
     // will be at most # of vars
     subvar.reserve(this->m_variables.size());
 
-    dimension_set subdim = this->m_dimensions;
-    // will be at most # of dims
-    // subdim.reserve(this->m_dimensions.size());
-
     // Get subset of variables that span over the given basis
     size_type max_rank = 0;
     for (const auto& pair : this->m_variables) {
         const auto& dims = pair.second.dimensions();
-        // if (std::find(dims.begin(), dims.end(), basis) != dims.end()) {
             subvar.push_back(pair.second);
-            // for (const auto& dim : dims) {
-            //     subdim.insert(this->get_dimension(dim).get());
-            // }
             
             size_type rank = pair.second.rank();
             if (rank > max_rank) {
@@ -69,14 +64,13 @@ void io::mdframe::to_csv(const std::string& path, bool header) const
             if (header) {
                 header_line += pair.first + ",";
             }
-        // }
     }
 
     // Calculate total number of rows across all subdimensions (not including header)
     size_type rows = 1;
     std::vector<size_type> shape;
-    shape.reserve(subdim.size());
-    for (const auto& dim : subdim) {
+    shape.reserve(this->m_dimensions.size());
+    for (const auto& dim : this->m_dimensions) {
         rows *= dim.size();
         shape.push_back(dim.size());
     }
@@ -88,16 +82,42 @@ void io::mdframe::to_csv(const std::string& path, bool header) const
         output << header_line << std::endl;
     }
 
-    // Iterate over rows, and output lines
+    // Create an index between the variable's dimensions, and the dimensions
+    // of the mdframe, such that when a variable needs to be passed an index,
+    // the dimensions will be ordered correctly.
+    //
+    // i.e. { value(x, t, y) : {2, 1, 3} }
+    std::unordered_map<std::string, std::vector<size_type>> vd_index;
+    for (auto var : subvar) {
+        vd_index[var.name()] = std::vector<size_type>{};
+        vd_index[var.name()].reserve(var.rank());
+        for (const auto& dim : var.dimensions()) {
+            vd_index[var.name()].push_back(
+                std::distance(
+                    this->m_dimensions.begin(),
+                    this->m_dimensions.find(dim)
+                )
+            );
+        }
+    }
+
+    io::visitors::mdvalue_to_string visitor;
     std::string output_line = "";
+    std::vector<size_type> buffer(max_rank, 0);
+
+    // contains n-size tuples of md-indices in the nested vectors
     std::vector<std::vector<size_type>> indices;
     indices.reserve(rows);
-    std::vector<size_type> index(max_rank, 0);
-    io::visitors::mdvalue_to_string visitor;
-    io::detail::cartesian_indices(shape, index, 0, indices);
+    io::detail::cartesian_indices(shape, buffer, 0, indices);
     for (const auto& index : indices) {
         for (auto var : subvar) {
-            const std::vector<size_type> tmp(index.begin(), index.begin() + var.rank());
+            // TODO: this won't work for variables with rank < the variable with the largest rank
+            std::vector<size_type> tmp;
+            tmp.reserve(var.rank());
+            for (const auto& i : vd_index[var.name()]) {
+                tmp.push_back(index.at(i));
+            }
+
             auto value = var.at(tmp);
             output_line += value.apply_visitor(visitor) + ",";
         }
