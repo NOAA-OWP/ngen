@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 
+#include <fstream>
 #include <experimental/filesystem>
 
 namespace fs = std::experimental::filesystem;
@@ -23,7 +24,7 @@ class mdframe_csv_Test : public ::testing::Test
 
     void TearDown() override
     {
-        // fs::remove(this->tempfile);
+        fs::remove(this->tempfile);
     }
 
     fs::path tempfile;
@@ -77,13 +78,25 @@ TEST_F(mdframe_csv_Test, io_csv)
       .add_variable<int>("y", { "y" })
       .add_variable<double>("v", {"x", "y"});
 
+    for (size_t i = 0; i < 2; ++i) {
+        df["x"].insert({ i }, i + 1);
+        df["y"].insert({ i }, i + 1);
+    }
+
     for (size_t x = 0; x < 2; x++) {
-        df["x"].insert({ x }, x);
-        df["y"].insert({ x }, x);
         for (size_t y = 0; y < 2; y++) {
-            df["v"].insert({ x, y }, x * y);
+            df["v"].insert({ x, y }, (x + 1) * (y + 1));
         }
     }
 
     df.to_csv(this->tempfile.string(), "x");
+
+    std::ifstream csv{this->tempfile.string()};
+    if (!csv.is_open())
+        FAIL() << "failed to open " << this->tempfile.string();
+
+    std::stringstream buffer;
+    buffer << csv.rdbuf();
+    csv.close();
+    ASSERT_EQ(buffer.str(), "v,y,x\n1.000000,1,1\n2.000000,1,2\n2.000000,2,1\n4.000000,2,2\n");
 }
