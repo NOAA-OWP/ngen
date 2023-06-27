@@ -231,12 +231,14 @@ class mdframe {
      */
     void to_csv(const std::string& path, bool header = true) const;
 
+#if NETCDF_ACTIVE
     /**
      * Write this mdframe to a NetCDF file.
      * 
      * @param path File path to the output NetCDF
      */
     void to_netcdf(const std::string& path) const;
+#endif
 
   private:
     dimension_set m_dimensions;
