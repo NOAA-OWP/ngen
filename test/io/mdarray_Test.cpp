@@ -41,8 +41,23 @@ TEST(mdarray_Test, indexing)
     };
 
     expect({0, 0}, 0);
-    expect({0, 1}, 1);
-    expect({0, 2}, 2);
+    expect({0, 1}, 10);
+    expect({0, 2}, 20);
     expect({1, 1}, 11);
-    expect({3, 5}, 35);
+    expect({3, 5}, 53);
+}
+
+TEST(mdarray_Test, layout)
+{
+    io::mdarray<int> s{{2, 2, 2, 2, 2}};
+
+    ASSERT_EQ(
+        s.index({0, 0, 0, 0, 0}) + 1,
+        s.index({1, 0, 0, 0, 0})
+    );
+
+    ASSERT_EQ(
+        s.index({0, 1, 1, 0, 1}) + 1,
+        s.index({1, 1, 1, 0, 1})
+    );
 }

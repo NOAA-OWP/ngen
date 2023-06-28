@@ -68,6 +68,11 @@ class mdarray
 
     void insert(const ilist& n, value_type value)
     {
+        for (size_type i = 0; i < this->m_shape.size(); i++) {
+            if (n[i] >= this->m_shape[i])
+                throw std::out_of_range("out of range");
+        }
+
         size_type index = this->index(n);
     
         if (index > this->max_size())
@@ -156,15 +161,10 @@ class mdarray
     size_type index(const ilist& n) const
     {
         size_type index = 0;
-    
+        size_type stride = 1;
         for (size_type k = 0; k < this->rank(); k++) {
-            size_type N = 1;
-        
-            for (size_type l = k + 1; l < this->rank(); l++) {
-                N *= this->m_shape[l];
-            }
-
-            index += n[k] * N;
+            index += n[k] * stride;
+            stride *= this->m_shape[k];
         }
     
         return index;
@@ -183,15 +183,12 @@ class mdarray
         }
 
         ilist n(this->rank());
-    
-        size_type addr = idx;
 
-        for (size_type k = this->rank() - 1; k > 0; k--) {
-            n[k] = addr % this->m_shape[k];
-            addr /= this->m_shape[k];
+        size_type stride = 1;
+        for (size_type k = 0; k < this->rank(); k++) {
+            n[k] = idx / stride % this->m_shape[k];
+            stride *= this->m_shape[k];
         }
-
-        n[0] = addr;
 
         return n;
     }

@@ -1,15 +1,20 @@
 #include "gtest/gtest.h"
+
+#if NETCDF_ACTIVE
 #include <netcdf>
-
 #include <experimental/filesystem>
-
-namespace fs = std::experimental::filesystem;
+#endif
 
 #include "mdframe.hpp"
 
 // TODO: Convert to test fixture for setup/teardown members.
 TEST(mdframe_Test, io_netcdf)
 {
+#if !NETCDF_ACTIVE
+    GTEST_SKIP() << "NetCDF is not available";
+#else
+    namespace fs = std::experimental::filesystem;
+  
     io::mdframe df;
 
     df.add_dimension("x", 2)
@@ -68,4 +73,5 @@ TEST(mdframe_Test, io_netcdf)
   ex.close();
   
   fs::remove(tempfile);
+#endif
 }
