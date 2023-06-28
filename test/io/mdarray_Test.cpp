@@ -49,15 +49,41 @@ TEST(mdarray_Test, indexing)
 
 TEST(mdarray_Test, layout)
 {
-    io::mdarray<int> s{{2, 2, 2, 2, 2}};
+    io::mdarray<int> a{{2, 2, 2, 2, 2}};
 
     ASSERT_EQ(
-        s.index({0, 0, 0, 0, 0}) + 1,
-        s.index({1, 0, 0, 0, 0})
+        a.index({0, 0, 0, 0, 0}) + 1,
+        a.index({1, 0, 0, 0, 0})
     );
 
     ASSERT_EQ(
-        s.index({0, 1, 1, 0, 1}) + 1,
-        s.index({1, 1, 1, 0, 1})
+        a.index({0, 1, 1, 0, 1}) + 1,
+        a.index({1, 1, 1, 0, 1})
+    );
+
+    io::mdarray<int> b{{2, 2, 2}};
+
+    ASSERT_EQ(
+        b.index({0, 0, 0}) + 1,
+        b.index({1, 0, 0})
+    );
+
+    ASSERT_EQ(
+        b.index({0, 1, 1}) + 1,
+        b.index({1, 1, 1})
+    );
+
+    // add `i` to prevent braces around scalar warnings
+    std::initializer_list<std::size_t> i = { 2 };
+    io::mdarray<int> c{i};
+
+    ASSERT_EQ(
+        c.index({0}) + 1,
+        c.index({1})
+    );
+
+    ASSERT_EQ(
+        c.index({0}) + 1,
+        c.index({1})
     );
 }
