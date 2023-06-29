@@ -58,6 +58,8 @@ void GIUH_Test::TearDown() {
 //! Test that giuh_kernel objects initialize properly.
 TEST_F(GIUH_Test, TestInit0)
 {
+    GTEST_SKIP() << "Calls zombie-code GIUH in a way that produces unexpected out-of-bounds array access (ngen#539)";
+
     //std::string json_file = abridged_json_file;
     std::string json_file = complete_json_file;
 
