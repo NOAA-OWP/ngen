@@ -165,13 +165,11 @@ TEST_F(GIUH_Test, TestOutput1)
     }
 
     std::vector<double> incremental_values {0.06, 0.51, 0.28, 0.12, 0.03};
-    std::vector<double> ordinates(incremental_values.size() + 1);
-    std::vector<double> ordinate_times(incremental_values.size() + 1);
+    std::vector<double> ordinates(incremental_values.size()+1, 0.0);
+    std::vector<double> ordinate_times(incremental_values.size()+1, 0.0);
 
     double ordinate_sum = 0.0;
     int time_sum = 0;
-    ordinates.push_back(ordinate_sum);
-    ordinate_times.push_back(time_sum);
     for (unsigned int i = 1; i < ordinates.size(); ++i) {
         ordinate_sum += incremental_values[i-1];
         ordinates[i] = ordinate_sum;
