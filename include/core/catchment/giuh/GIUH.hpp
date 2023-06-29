@@ -55,13 +55,11 @@ namespace giuh {
                                                               int interpolation_regularity_seconds,
                                                               std::vector<double> incremental_runoffs)
         {
-            std::vector<double> ordinates(incremental_runoffs.size() + 1);
-            std::vector<double> ordinate_times(incremental_runoffs.size() + 1);
+            std::vector<double> ordinates(incremental_runoffs.size() + 1, 0.0);
+            std::vector<double> ordinate_times(incremental_runoffs.size() + 1, 0.0);
 
             double ordinate_sum = 0.0;
             int time_sum = 0;
-            ordinates.push_back(ordinate_sum);
-            ordinate_times.push_back(time_sum);
             for (unsigned int i = 1; i < ordinates.size(); ++i) {
                 ordinate_sum += incremental_runoffs[i-1];
                 ordinates[i] = ordinate_sum;
