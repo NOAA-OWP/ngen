@@ -1130,11 +1130,11 @@ namespace realization {
                     //more than a single value needed for var_name
                     auto values = provider->get_values(CatchmentAggrDataSelector(this->get_catchment_id(),var_map_alias, model_epoch_time, t_delta,
                                                    get_bmi_model()->GetVarUnits(var_name)));
-                    //need to marshal data types to the reciever as well
+                    //need to marshal data types to the receiver as well
                     //this could be done a little more elegantly if the provider interface were
                     //"type aware", but for now, this will do (but requires yet another copy)
                     if(values.size() == 1){
-                        //FIXME this isn't generic broacasting, but works for scalar implementations
+                        //FIXME this isn't generic broadcasting, but works for scalar implementations
                         std::cerr << "WARN: broadcasting variable '" << var_name << "' from scalar to expected array\n";
                         values.resize(numItems, values[0]);
                     } else if (values.size() != numItems) {
