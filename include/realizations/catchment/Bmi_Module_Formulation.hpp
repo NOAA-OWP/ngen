@@ -1135,7 +1135,9 @@ namespace realization {
                     //"type aware", but for now, this will do (but requires yet another copy)
                     if(values.size() == 1){
                         //FIXME this isn't generic broadcasting, but works for scalar implementations
+                        #ifndef NGEN_QUIET
                         std::cerr << "WARN: broadcasting variable '" << var_name << "' from scalar to expected array\n";
+                        #endif
                         values.resize(numItems, values[0]);
                     } else if (values.size() != numItems) {
                         throw std::runtime_error("Mismatch in item count for variable '" + var_name + "': model expects " +
