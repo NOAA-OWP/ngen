@@ -1113,16 +1113,20 @@ namespace realization {
                 else {
                     provider = forcing.get();
                 }
+
                 // TODO: probably need to actually allow this by default and warn, but have config option to activate
                 //  this type of behavior
                 // TODO: account for arrays later
                 int nbytes = get_bmi_model()->GetVarNbytes(var_name);
                 int varItemSize = get_bmi_model()->GetVarItemsize(var_name);
+                int numItems = nbytes / varItemSize;
+                assert(nbytes % varItemSize == 0);
+
                 std::shared_ptr<void> value_ptr;
                 // Finally, use the value obtained to set the model input
                 std::string type = get_bmi_model()->get_analogous_cxx_type(get_bmi_model()->GetVarType(var_name),
                                                                            varItemSize);
-                if (varItemSize != get_bmi_model()->GetVarNbytes(var_name)) {
+                if (numItems != 1) {
                     //more than a single value needed for var_name
                     auto values = provider->get_values(CatchmentAggrDataSelector(this->get_catchment_id(),var_map_alias, model_epoch_time, t_delta,
                                                    get_bmi_model()->GetVarUnits(var_name)));
