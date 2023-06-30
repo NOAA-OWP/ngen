@@ -1135,7 +1135,12 @@ namespace realization {
                     //"type aware", but for now, this will do (but requires yet another copy)
                     if(values.size() == 1){
                         //FIXME this isn't generic broacasting, but works for scalar implementations
-                        values.resize(nbytes/varItemSize, values[0]);
+                        std::cerr << "WARN: broadcasting variable '" << var_name << "' from scalar to expected array\n";
+                        values.resize(numItems, values[0]);
+                    } else if (values.size() != numItems) {
+                        throw std::runtime_error("Mismatch in item count for variable '" + var_name + "': model expects " +
+                                                 std::to_string(numItems) + ", provider returned " + std::to_string(values.size()) +
+                                                 " items\n");
                     }
                     value_ptr = get_values_as_type( type, values.begin(), values.end() );
 
