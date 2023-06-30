@@ -6,11 +6,11 @@
 | ------------- |:------------- | :-----:| :-------: |
 | [Google Test](#google-test) | submodule  | `release-1.10.0` | |
 | [C/C++ Compiler](#c-and-c-compiler) | external | see below |  |
-| [CMake](#cmake) | external | \>= `3.12` | |
+| [CMake](#cmake) | external | \>= `3.14` | |
 | [Boost (Headers Only)](#boost-headers-only) | external | `1.72.0` | headers only library |
 | [Udunits libraries](https://www.unidata.ucar.edu/software/udunits) | hybrid (external or submodule) | >= 2.0 | Can be installed via package manager; if not installed, will be automatically downloaded as submodule, and build will be attempted. |
 | [MPI](https://www.mpi-forum.org) | external | No current implementation or version requirements | Required for [multi-process distributed execution](DISTRIBUTED_PROCESSING.md) |
-| [Python 3 Libraries](#python-3-libraries) | external | \> `3.6.8` | Can be [excluded](#overriding-python-dependency). Requires ``numpy`` package |
+| [Python 3 Libraries](#python-3-libraries) | external | \> `3.6.8` | Can be [excluded](#overriding-python-dependency). |
 | [pybind11](#pybind11) | submodule | `v2.6.0` | Can be [excluded](#overriding-pybind11-dependency). |
 | [dmod.subsetservice](#the-dmodsubsetservice-package) | external | `>= 0.3.0` | Only required to perform integrated [hydrofabric file subdividing](DISTRIBUTED_PROCESSING.md#subdivided-hydrofabric) for distributed processing . |
 | [t-route](#t-route) | submodule | see below | Module required to enable channel-routing.  Requires pybind11 to enable |
@@ -75,7 +75,7 @@ However, a [CMake build system](BUILDS_AND_CMAKE.md#generating-a-build-system) m
 
 ### Version Requirements
 
-Currently, a version of CMake >= `3.12.0` is required.
+Currently, a version of CMake >= `3.14.0` is required.
 
 ## Boost (Headers Only)
 
@@ -155,7 +155,7 @@ Any version greater >= 2.0 (i.e., _udunits2_ or _libudunits2_).
 
 In order to interact with external models written in Python, the Python libraries must be made available.  
 
-Further, the Python environment must have `numpy` installed.  Several Python BMI function calls utilize `numpy` arrays, making `numpy` a necessity for using external Python models implementing BMI
+Further, the Python environment must have NumPy and a few other libraries installed.  Several Python BMI function calls utilize `numpy` arrays, making `numpy` a necessity for using external Python models implementing BMI.
 
 #### Overriding Python Dependency
 
@@ -165,22 +165,17 @@ To do this, set either the `NGEN_ACTIVATE_PYTHON` environment variable to `false
 
 ### Setup
 
-The first step is to make sure Python is installed (with step 1a being installing NumPy.  CMake will then use its [FindPython](https://cmake.org/cmake/help/v3.19/module/FindPython.html#module:FindPython) functionality to obtain the Python libraries. On some systems, CMake may be able to find everything automatically, though that will not always be the case.
+The first step is to make sure Python is installed. NGen's CMake will use its [FindPython](https://cmake.org/cmake/help/v3.19/module/FindPython.html#module:FindPython) functionality to locate the Python installation.
 
-If CMake cannot find the needed Python artifacts on its own, the following user environmental variables can be set in the user's shell to control where CMake looks:
+We recommend creating a Python 'virtual environment', and having it activated when configuring, building, testing, and running `ngen`. Necessary libraries can be installed in that environment without affecting the surrounding system.
 
-* `PYTHON_INCLUDE_DIR`
-    * This should be the directory containing the Python header files in the local installation
-* `PYTHON_LIBRARIES`
-    * This should be set to the directory containing the appropriate local lib file(s) (e.g., `libpython*.dylib` on a Mac)
+Otherwise, CMake can be guided to use a particular Python installation according to [its documentation](https://cmake.org/cmake/help/latest/module/FindPython.html).
 
-#### NumPy
+The Python installation found by CMake needs to have the relevant libraries installed. These libraries can be installed with
 
-Additionally, the NumPy package must be installed and its headers available, in particular to work with Python BMI functions (with the general details of installing Python packages left to the user).  The simplest method is installing in the root/global environment, though this is not always an option.
+    pip install numpy pandas pyyaml bmipy
 
-One supported option is to create a `virtualenv` environment at `.venv` in the project root, then install `numpy` within it.   Such `.venv` directory is ignored by Git and searched by CMake for the NumPy headers.
-
-The variable `Python_NumPy_INCLUDE_DIR` (either as a CMake variable or a user environment variable) can also be used to set the NumPy include directory path searched by CMake.  However, this will be ignored if there is a `.venv` directory found, as described above.
+or an equivalent command if using a different Python package manager.
     
 ### Version Requirements
 

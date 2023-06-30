@@ -92,7 +92,7 @@ $(document).ready(function(){initNavTree('md_doc_programming_standards.html','')
   <div class="headertitle"><div class="title">Standards for Programming </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="autotoc_md146"></a>
+<div class="textblock"><h1><a class="anchor" id="autotoc_md145"></a>
 Source Documentation</h1>
 <p >The <code>ngen</code> project will be using Doxygen for documentation generation. Initially, we'll follow the Javadoc C-style standard. This means we'll see documentation like:</p>
 <div class="fragment"><div class="line">/**</div>
@@ -161,10 +161,10 @@ Source Documentation</h1>
 <div class="line">       int (*handler)(int a,int b);</div>
 <div class="line">};</div>
 </div><!-- fragment --><p >Each class should have comments detailing what it's used for and why. Each function and method should also have what those are used for, why, and descriptions of their parameters. Comments should be dotted throughout functions for complex lines describing intent rather than implementation.</p>
-<h1><a class="anchor" id="autotoc_md147"></a>
+<h1><a class="anchor" id="autotoc_md146"></a>
 Naming</h1>
 <p >Variable names should be descriptive, yet concise nouns. While a lay person may not understand that what and why of the source, they should be able to glean a rough idea as to what the implementation is.</p>
-<h3><a class="anchor" id="autotoc_md148"></a>
+<h3><a class="anchor" id="autotoc_md147"></a>
 Bad Variable Names:</h3>
 <div class="fragment"><div class="line">int x;</div>
 <div class="line">int variableForDeterminingSomeMathThingIDoNotKnowThatCalculates;</div>
@@ -204,13 +204,13 @@ Bad Variable Names:</h3>
 <div class="line">} </div>
 </div><!-- fragment --><p >On first glance, it is difficult to make out:</p>
 <p >a) What the function is supposed to be doing (what does <code>lcs</code> stand for?) b) How exactly <code>X</code> and <code>Y</code> are meant to be used c) What <code>i</code> is supposed to be indexing d) What <code>j</code> is supposed to be indexing c) What is supposed to be stored in <code>L</code></p>
-<h3><a class="anchor" id="autotoc_md149"></a>
+<h3><a class="anchor" id="autotoc_md148"></a>
 General Guidelines</h3>
 <p >When in doubt, follow the example given by C++ and Boost (though it would be prudent to stray away from some of their names like <code>point_t</code> that might hide intent). That means that most <code>class</code>, <code>variable</code>, <code>function</code>, and <code>parameter</code> names will be in snake case. Examples of snake case are <code>regex_search</code>, <code>forward_list</code>, and <code>variable_name</code>. <code>enum</code>s, however, should be represented with a leading upper case, like <code>Web_color</code>. Macros and template parameter names should always be defined as <code>ALL_UPPER_CASE</code>.</p>
 <p >In the end, err on the side of readability; code that strays from the standard, yet is easy to read is more valuable than code that sticks to the letter of the law, yet is hard to work with.</p>
-<h1><a class="anchor" id="autotoc_md150"></a>
+<h1><a class="anchor" id="autotoc_md149"></a>
 Other</h1>
-<h2><a class="anchor" id="autotoc_md151"></a>
+<h2><a class="anchor" id="autotoc_md150"></a>
 Headers</h2>
 <p ><b>ALWAYS</b> make sure that you guard your headers as such: </p><pre class="fragment">#ifndef EXAMPLE_H
 #define EXAMPLE_H
@@ -219,7 +219,7 @@ Headers</h2>
 .
 #endif // EXAMPLE_H
 </pre><p> Make sure to leave the comment at the end if the file is long, just as a common courtesy.</p>
-<h2><a class="anchor" id="autotoc_md152"></a>
+<h2><a class="anchor" id="autotoc_md151"></a>
 Spaces vs Tabs</h2>
 <p >Use spaces in lieu of tabs. Tabs are easier to type, but may cause code to become very difficult to read on systems with odd spacing. If you tab your code a couple times, it may look fine on your machine, but code like</p>
 <div class="fragment"><div class="line">int max(int a, int b); </div>
@@ -278,7 +278,7 @@ Spaces vs Tabs</h2>
 </div><!-- fragment --><p> <code>\t</code>, as entered by the 'tab' key, is generally rendered as four consecutive spaces. Before you start writing, you should ensure that your editor of choice interprets the 'tab' key as four spaces. Most, if not all, editors support this.</p>
 <p >In VIM, for example, you can set the tab key to insert spaces via: </p><pre class="fragment">set tabstop=4 shiftwidth=4 expandtab
 </pre><p> Editors like Visual Studio Code are already set to convert tabs to a language appropriate number of spaces.</p>
-<h2><a class="anchor" id="autotoc_md153"></a>
+<h2><a class="anchor" id="autotoc_md152"></a>
 Braces</h2>
 <p >Bracing should follow either the classical Kernighan and Ritchie style or it's popuplar offshoot, the 'One True Brace Style'.</p>
 <p >A block of K&amp;R will look like:</p>
@@ -316,7 +316,7 @@ Braces</h2>
 <div class="line">    ...</div>
 <div class="line">}</div>
 </div><!-- fragment --><p> This is identical to K&amp;R in all but two respects: opening braces are always on the same line and control statements <b>always</b> have braces.</p>
-<h2><a class="anchor" id="autotoc_md154"></a>
+<h2><a class="anchor" id="autotoc_md153"></a>
 Line Width</h2>
 <p >Lines should be kept at or less than 120 characters. </p>
 </div></div><!-- contents -->
@@ -325,7 +325,7 @@ Line Width</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Jun 5 2023 18:32:48 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
+    <li class="footer">Generated on Fri Jun 30 2023 20:30:27 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
   </ul>
 </div>
 </body>
