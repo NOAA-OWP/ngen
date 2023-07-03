@@ -29,7 +29,6 @@ target_link_libraries(realizations_catchment PUBLIC
         )
 
 if(NGEN_ACTIVATE_PYTHON)
-   target_include_directories(realizations_catchment PUBLIC ${PROJECT_SOURCE_DIR}/extern/pybind11/include)
    target_link_libraries(realizations_catchment PUBLIC pybind11::embed)
 endif()
 
