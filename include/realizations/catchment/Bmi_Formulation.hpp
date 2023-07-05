@@ -22,6 +22,7 @@
 // TODO: change this (and output_header_fields) to something like output_file_variables to distinguish from BMI output variables
 #define BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS "output_variables"
 #define BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS "output_header_fields"
+#define BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_BBOX "output_bbox"
 #define BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION "output_precision"
 #define BMI_REALIZATION_CFG_PARAM_OPT__ALLOW_EXCEED_END "allow_exceed_end_time"
 #define BMI_REALIZATION_CFG_PARAM_OPT__FIXED_TIME_STEP "fixed_time_step"
@@ -149,6 +150,13 @@ namespace realization {
             return output_header_fields;
         }
 
+        //const vector<std::string> &get_output_bbox() const {
+        //    return output_bbox;
+        //}
+        const vector<int> &get_output_bbox() const {
+            return output_bbox;
+        }
+
         /**
          * Get a header line appropriate for a file made up of entries from this type's implementation of
          * ``get_output_line_for_timestep``.
@@ -159,6 +167,18 @@ namespace realization {
          */
         std::string get_output_header_line(std::string delimiter) override {
             return boost::algorithm::join(get_output_header_fields(), delimiter);
+        }
+
+        /*
+        //std::vector<int> get_output_bbox_list(string delimiter) override {
+        string get_output_bbox_list(string delimiter) override {
+            //return get_output_bbox();
+            return boost::algorithm::join(get_output_bbox(), delimiter);
+        }
+        */
+
+        std::vector<int> get_output_bbox_list() override {
+            return get_output_bbox();
         }
 
         /**
@@ -273,6 +293,13 @@ namespace realization {
             output_header_fields = output_headers;
         }
 
+        //void set_output_bbox(const vector<std::string> &output_bound_box) {
+        //    output_bbox = output_bound_box;
+        //}
+        void set_output_bbox(const vector<int> &output_bound_box) {
+            output_bbox = output_bound_box;
+        }
+
         /**
          * Set the names of variables in formulation output.
          *
@@ -294,6 +321,9 @@ namespace realization {
          * `output_variable_names`.
          */
         std::vector<std::string> output_header_fields;
+
+        //std::vector<std::string> output_bbox;
+        std::vector<int> output_bbox;
         /**
          * Names of the variables to include in the output from this formulation, which will be some ordered subset of
          * the BMI module output variables accessible to the instance.
@@ -307,6 +337,7 @@ namespace realization {
                 BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES,
                 BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS,
                 BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS,
+                BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_BBOX,
                 BMI_REALIZATION_CFG_PARAM_OPT__ALLOW_EXCEED_END,
                 BMI_REALIZATION_CFG_PARAM_OPT__FIXED_TIME_STEP,
                 BMI_REALIZATION_CFG_PARAM_OPT__LIB_FILE

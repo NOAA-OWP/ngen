@@ -585,6 +585,28 @@ namespace realization {
                 set_output_header_fields(get_output_variable_names());
             }
 
+            // Output bound box, if present
+            auto out_bbox_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_BBOX);
+            if (out_bbox_it != properties.end()) {
+                std::vector<geojson::JSONProperty> out_bbox_json_list = out_bbox_it->second.as_list();
+                std::vector<int> out_bbox(out_bbox_json_list.size());
+                //std::vector<std::string> out_bbox(out_bbox_json_list.size());
+                std::cout << "out_bbox size: " << out_bbox_json_list.size() << std::endl;
+                for (int i = 0; i < out_bbox_json_list.size(); ++i) {
+                    out_bbox[i] = out_bbox_json_list[i].as_natural_number();
+                    //out_bbox[i] = out_bbox_json_list[i].as_string();
+                }
+                set_output_bbox(out_bbox);
+            }
+            //else {
+            //    throw std::runtime_error("Can't create BMI formulation: output bound box cannot be set");
+            //}
+
+            // Create a reference to this for ET by using a WrappedDataProvider
+            std::shared_ptr<data_access::GenericDataProvider> self = std::make_shared<data_access::WrappedDataProvider>(this);
+            input_forcing_providers[NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP] = self;
+            input_forcing_providers[CSDMS_STD_NAME_POTENTIAL_ET] = self;
+
             // Output precision, if present
             auto out_precision_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION);
             if (out_precision_it != properties.end()) {
@@ -1018,6 +1040,7 @@ namespace realization {
                 BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES,
                 BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS,
                 BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS,
+                BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_BBOX,
                 BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION,
                 BMI_REALIZATION_CFG_PARAM_OPT__ALLOW_EXCEED_END,
                 BMI_REALIZATION_CFG_PARAM_OPT__FIXED_TIME_STEP,

@@ -71,6 +71,15 @@ namespace realization {
                 return "Total Discharge";
             }
 
+            //std::string get_output_bbox_list(std::string delimiter) override {
+            //    return "100";
+            //}
+            std::vector<int> get_output_bbox_list() override {
+                std::vector<int> out_vec;
+                //out_vec.push_back(12345);
+                return out_vec;
+            }
+
             /**
              * Execute the backing model formulation for the given time step, where it is of the specified size, and
              * return the response output.

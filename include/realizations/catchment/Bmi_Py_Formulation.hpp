@@ -29,6 +29,11 @@ namespace realization {
 
         std::string get_formulation_type() override;
 
+        std::string get_output_header_line(std::string delimiter) override;
+
+        std::vector<int> get_output_bbox_list() override;
+        //std::string get_output_bbox_list(std::string delimiter) override;
+
         /**
          * Get a delimited string with all the output variable values for the given time step.
          *
@@ -104,6 +109,9 @@ namespace realization {
         double get_var_value_as_double(const int &index, const std::string &var_name) override;
 
         std::vector<double> get_var_vec_as_double(time_t timestep, const string &var_name) override;
+
+        //std::vector<int> get_array_indices_for_area(int &x_dim_len, int &y_dim_len, int &num_sub_nodes_x, int &num_sub_nodes_y);
+        std::vector<int> get_array_indices_for_area();
 
         /**
          * Test whether backing model has run BMI ``Initialize``.

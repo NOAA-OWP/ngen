@@ -132,6 +132,24 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
         set_output_header_fields(get_output_variable_names());
     }
 
+    // Output bound box, if present
+    auto out_bbox_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_BBOX);
+    if (out_bbox_it != properties.end()) {
+        std::vector<geojson::JSONProperty> out_bbox_json_list = out_bbox_it->second.as_list();
+        std::cout << "Multi: out_bbox_json_list size: " << out_bbox_json_list.size() << std::endl;
+        std::vector<int> out_bbox(out_bbox_json_list.size());
+        //std::vector<std::string> out_bbox(out_bbox_json_list.size());
+        for (int i = 0; i < out_bbox_json_list.size(); ++i) {
+            out_bbox[i] = out_bbox_json_list[i].as_natural_number();
+            //out_bbox[i] = out_bbox_json_list[i].as_string();
+            std::cout << "Multi: out_bbox_json_list [i]: " << out_bbox[i] << std::endl;
+        }
+        set_output_bbox(out_bbox);
+    }
+    else {
+        throw std::runtime_error("Can't create Multi formulation: output bound box cannot be set");
+    }
+
     // Output precision, if present
     auto out_precision_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION);
     if (out_precision_it != properties.end()) {
