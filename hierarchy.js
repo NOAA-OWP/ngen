@@ -172,9 +172,6 @@ var hierarchy =
     [ "solar_radiation_options", "structsolar__radiation__options.html", null ],
     [ "solar_radiation_parameters", "structsolar__radiation__parameters.html", null ],
     [ "solar_radiation_results", "structsolar__radiation__results.html", null ],
-    [ "std::_Unique_if< T >", "structstd_1_1___unique__if.html", null ],
-    [ "std::_Unique_if< T[]>", "structstd_1_1___unique__if_3_01_t_0f_0e_4.html", null ],
-    [ "std::_Unique_if< T[N]>", "structstd_1_1___unique__if_3_01_t_0f_n_0e_4.html", null ],
     [ "std::exception", null, [
       [ "add_to_summed_nexus", "structadd__to__summed__nexus.html", null ],
       [ "completed_time_step", "structcompleted__time__step.html", null ],

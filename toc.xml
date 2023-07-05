@@ -2693,20 +2693,6 @@
           </topic>
         </topic>
       </topic>
-      <topic label="std" href="namespacestd.html">
-        <topic label="_Unique_if" href="structstd_1_1___unique__if.html">
-          <topic label="_Single_object" href="structstd_1_1___unique__if.html#a44b040e059dd1e47fdf1ea85534eeca0"/>
-        </topic>
-        <topic label="_Unique_if&lt; T[]&gt;" href="structstd_1_1___unique__if_3_01_t_0f_0e_4.html">
-          <topic label="_Unknown_bound" href="structstd_1_1___unique__if_3_01_t_0f_0e_4.html#a7fa33e27fc1799a3923417d185f1882c"/>
-        </topic>
-        <topic label="_Unique_if&lt; T[N]&gt;" href="structstd_1_1___unique__if_3_01_t_0f_n_0e_4.html">
-          <topic label="_Known_bound" href="structstd_1_1___unique__if_3_01_t_0f_n_0e_4.html#a91725967ba499ae8ed13e5bc580f8a82"/>
-        </topic>
-        <topic label="make_unique" href="namespacestd.html#a35602c544eb8d78815595038d261ab23"/>
-        <topic label="make_unique" href="namespacestd.html#a244b768db39b70ffd8d2efef18e0dcd2"/>
-        <topic label="make_unique" href="namespacestd.html#a31263d37bfabdb06d888169ddb006e9a"/>
-      </topic>
       <topic label="tshirt" href="namespacetshirt.html">
         <topic label="tshirt_fluxes" href="structtshirt_1_1tshirt__fluxes.html">
           <topic label="tshirt_fluxes" href="structtshirt_1_1tshirt__fluxes.html#ad768e2fa875710154ac1c7cdf6b1d985"/>
@@ -5106,17 +5092,6 @@
           </topic>
         </topic>
       </topic>
-      <topic label="std" href="namespacestd.html">
-        <topic label="_Unique_if" href="structstd_1_1___unique__if.html">
-          <topic label="_Single_object" href="structstd_1_1___unique__if.html#a44b040e059dd1e47fdf1ea85534eeca0"/>
-        </topic>
-        <topic label="_Unique_if&lt; T[]&gt;" href="structstd_1_1___unique__if_3_01_t_0f_0e_4.html">
-          <topic label="_Unknown_bound" href="structstd_1_1___unique__if_3_01_t_0f_0e_4.html#a7fa33e27fc1799a3923417d185f1882c"/>
-        </topic>
-        <topic label="_Unique_if&lt; T[N]&gt;" href="structstd_1_1___unique__if_3_01_t_0f_n_0e_4.html">
-          <topic label="_Known_bound" href="structstd_1_1___unique__if_3_01_t_0f_n_0e_4.html#a91725967ba499ae8ed13e5bc580f8a82"/>
-        </topic>
-      </topic>
       <topic label="tshirt" href="namespacetshirt.html">
         <topic label="tshirt_fluxes" href="structtshirt_1_1tshirt__fluxes.html">
           <topic label="tshirt_fluxes" href="structtshirt_1_1tshirt__fluxes.html#ad768e2fa875710154ac1c7cdf6b1d985"/>
@@ -6253,9 +6228,6 @@
       <topic label="solar_radiation_options" href="structsolar__radiation__options.html"/>
       <topic label="solar_radiation_parameters" href="structsolar__radiation__parameters.html"/>
       <topic label="solar_radiation_results" href="structsolar__radiation__results.html"/>
-      <topic label="std::_Unique_if&lt; T &gt;" href="structstd_1_1___unique__if.html"/>
-      <topic label="std::_Unique_if&lt; T[]&gt;" href="structstd_1_1___unique__if_3_01_t_0f_0e_4.html"/>
-      <topic label="std::_Unique_if&lt; T[N]&gt;" href="structstd_1_1___unique__if_3_01_t_0f_n_0e_4.html"/>
       <topic label="std::exception">
         <topic label="add_to_summed_nexus" href="structadd__to__summed__nexus.html"/>
         <topic label="completed_time_step" href="structcompleted__time__step.html"/>

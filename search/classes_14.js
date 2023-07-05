@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['vertexproperty_0',['VertexProperty',['../structnetwork_1_1_vertex_property.html',1,'network']]],
-  ['visitor_1',['Visitor',['../class_visitor.html',1,'']]]
+  ['wrappeddataprovider_0',['WrappedDataProvider',['../classdata__access_1_1_wrapped_data_provider.html',1,'data_access']]]
 ];

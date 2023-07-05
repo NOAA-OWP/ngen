@@ -114,7 +114,7 @@ $(document).ready(function(){initNavTree('_giuh_json_reader_8h_source.html','');
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <span class="keyword">public</span>:</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="classgiuh_1_1_giuh_json_reader.html#adc94992f19fd2f8a315bfbbad17a4126">   22</a></span>        <a class="code hl_function" href="classgiuh_1_1_giuh_json_reader.html#adc94992f19fd2f8a315bfbbad17a4126">GiuhJsonReader</a>(std::string data_file_path, std::string id_map_path)</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>            : <a class="code hl_variable" href="classgiuh_1_1_giuh_json_reader.html#aaddc6971ad9b15d3ed734fdb8eaa53c7">data_json_file_path</a>(<a class="code hl_namespace" href="namespacestd.html">std</a>::move(data_file_path)), <a class="code hl_variable" href="classgiuh_1_1_giuh_json_reader.html#ad54e97b4868f8e6772095f36c4fa3cbc">id_map_json_file_path</a>(<a class="code hl_namespace" href="namespacestd.html">std</a>::move(id_map_path))</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>            : <a class="code hl_variable" href="classgiuh_1_1_giuh_json_reader.html#aaddc6971ad9b15d3ed734fdb8eaa53c7">data_json_file_path</a>(std::move(data_file_path)), <a class="code hl_variable" href="classgiuh_1_1_giuh_json_reader.html#ad54e97b4868f8e6772095f36c4fa3cbc">id_map_json_file_path</a>(std::move(id_map_path))</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        {</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>            <span class="comment">// Confirm data JSON file exists and is readable</span></div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>            <span class="keywordflow">if</span> (FILE *file = fopen(<a class="code hl_variable" href="classgiuh_1_1_giuh_json_reader.html#aaddc6971ad9b15d3ed734fdb8eaa53c7">data_json_file_path</a>.c_str(), <span class="stringliteral">&quot;r&quot;</span>)) {</div>
@@ -207,14 +207,13 @@ $(document).ready(function(){initNavTree('_giuh_json_reader_8h_source.html','');
 <div class="ttc" id="aclassgiuh_1_1_giuh_json_reader_html_ae7dd771e38b4a8fa2e146ea8868631b3"><div class="ttname"><a href="classgiuh_1_1_giuh_json_reader.html#ae7dd771e38b4a8fa2e146ea8868631b3">giuh::GiuhJsonReader::get_mapped_comid</a></div><div class="ttdeci">std::string get_mapped_comid(std::string catchment_id)</div></div>
 <div class="ttc" id="anamespacegiuh_html"><div class="ttname"><a href="namespacegiuh.html">giuh</a></div><div class="ttdef"><b>Definition:</b> GIUH.hpp:10</div></div>
 <div class="ttc" id="anamespacegiuh_html_af1db036dc4c64bcd41c2b0eae95a53aa"><div class="ttname"><a href="namespacegiuh.html#af1db036dc4c64bcd41c2b0eae95a53aa">giuh::ptree</a></div><div class="ttdeci">boost::property_tree::ptree ptree</div><div class="ttdef"><b>Definition:</b> GiuhJsonReader.h:17</div></div>
-<div class="ttc" id="anamespacestd_html"><div class="ttname"><a href="namespacestd.html">std</a></div><div class="ttdoc">STL namespace.</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_3d69f64eaf81436fe2b22361382717e5.html">core</a></li><li class="navelem"><a class="el" href="dir_5bea9f390e7a432a1b79aa466fef89f5.html">catchment</a></li><li class="navelem"><a class="el" href="dir_4846877e550d5d713eda1fde589811db.html">giuh</a></li><li class="navelem"><b>GiuhJsonReader.h</b></li>
-    <li class="footer">Generated on Fri Jun 30 2023 20:30:27 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
+    <li class="footer">Generated on Wed Jul 5 2023 17:46:52 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
   </ul>
 </div>
 </body>

@@ -104,11 +104,6 @@ var annotated_dup =
         [ "Reservoir_Outlet", "class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html", "class_reservoir_1_1_implicit___time_1_1_reservoir___outlet" ]
       ] ]
     ] ],
-    [ "std", "namespacestd.html", [
-      [ "_Unique_if", "structstd_1_1___unique__if.html", "structstd_1_1___unique__if" ],
-      [ "_Unique_if< T[]>", "structstd_1_1___unique__if_3_01_t_0f_0e_4.html", "structstd_1_1___unique__if_3_01_t_0f_0e_4" ],
-      [ "_Unique_if< T[N]>", "structstd_1_1___unique__if_3_01_t_0f_n_0e_4.html", "structstd_1_1___unique__if_3_01_t_0f_n_0e_4" ]
-    ] ],
     [ "tshirt", "namespacetshirt.html", [
       [ "tshirt_fluxes", "structtshirt_1_1tshirt__fluxes.html", "structtshirt_1_1tshirt__fluxes" ],
       [ "tshirt_model", "classtshirt_1_1tshirt__model.html", "classtshirt_1_1tshirt__model" ],
