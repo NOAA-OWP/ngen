@@ -59,6 +59,8 @@ std::vector<int> Bmi_Py_Formulation::get_output_bbox_list() {
 string Bmi_Py_Formulation::get_output_line_for_timestep(int timestep, std::string delimiter) {
     std::cout << "timestep = " << timestep << std::endl;
     std::string output_header = get_output_header_line(",");
+/*
+std::string Bmi_Py_Formulation::get_output_line_for_timestep(int timestep, std::string delimiter) {
     // TODO: something must be added to store values if more than the current time step is wanted
     // TODO: if such a thing is added, it should probably be configurable to turn it off
     if (timestep != (next_time_step_index - 1)) {
@@ -172,6 +174,115 @@ std::vector<int> Bmi_Py_Formulation::get_array_indices_for_area() {
         for (int j = 0; j < num_nodes; ++j) {
             index = start_node_idx + j * x_dim_len;
             index_array.push_back(index);
+        }
+    }
+
+    return index_array;
+}
+*/
+
+std::string Bmi_Py_Formulation::get_output_header_line(std::string delimiter) {
+    std::cout << "In get_output_header_line " << get_output_header_fields().size() << std::endl;
+    for (int i = 0; i < get_output_header_fields().size(); ++i) {
+        std::cout << "get_output_header_fields() = " << get_output_header_fields()[i] << std::endl;
+    }
+    return boost::algorithm::join(get_output_header_fields(), delimiter);
+}
+
+std::vector<int> Bmi_Py_Formulation::get_output_bbox_list() {
+    std::cout << "In get_output_bbox_list(): " << get_output_bbox().size() << std::endl;
+    return get_output_bbox();
+}
+//std::string Bmi_Py_Formulation::get_output_bbox_list(std::string delimiter) {
+//    std::cout << "In get_output_bbox_list(): " << get_output_bbox().size() << std::endl;
+//    return boost::algorithm::join(get_output_bbox(), delimiter);
+//}
+
+string Bmi_Py_Formulation::get_output_line_for_timestep(int timestep, std::string delimiter) {
+    std::cout << "entering Bmi_Py_Formulation::get_output_line_for_timestep(...) function " << std::endl;
+    std::string output_header = get_output_header_line(",");
+    // TODO: something must be added to store values if more than the current time step is wanted
+    // TODO: if such a thing is added, it should probably be configurable to turn it off
+    if (timestep != (next_time_step_index - 1)) {
+        throw std::invalid_argument("Only current time step valid when getting output for BMI Python formulation");
+    }
+
+    // TODO: see Github issue 355: this design (and formulation output handling in general) needs to be reworked
+    // Clear anything currently in there
+    output_text_stream->str(std::string());
+
+    const std::vector<std::string> &output_var_names = get_output_variable_names();
+    // This probably should never happen, but just to be safe ...
+    if (output_var_names.empty()) { return ""; }
+
+    // TODO: add codes to handle both the scalar and vector outputs
+    time_t t_delta = timestep;
+
+    std::vector<int> index_array = get_array_indices_for_area();
+
+    // Do the first without the leading comma
+    //*output_text_stream << get_var_vec_as_double(t_delta, output_var_names[0])[0];
+    int first_node = index_array[0];
+    std::cout << "first_node before calling function: " << first_node << std::endl;
+    *output_text_stream << get_var_vec_as_double(t_delta, output_var_names[0])[first_node];
+    for (int j = 1; j < index_array.size(); ++j) {
+        int index = index_array[j];
+        //std::cout << "j = " << j << ", index = " << index << std::endl;
+        *output_text_stream <<"," << get_var_vec_as_double(t_delta, output_var_names[0])[index];
+    }
+
+    for (int i = 1; i < output_var_names.size(); ++i) {
+        for (int j = 0; j < index_array.size(); ++j) {
+            int index = index_array[j];
+            //std::cout << "j = " << j << ", index = " << index << std::endl;
+            *output_text_stream << "," << get_var_vec_as_double(t_delta, output_var_names[i])[index];
+        }
+    }
+    return output_text_stream->str();
+}
+
+std::vector<int> Bmi_Py_Formulation::get_array_indices_for_area() {
+
+    const std::vector<std::string> &output_var_names = get_output_variable_names();
+
+    int grid_id = get_bmi_model()->GetVarGrid(output_var_names[0]);
+    std::cout << "grid_id = " << grid_id << std::endl;
+    int grid_size = get_bmi_model()->GetGridSize(grid_id);
+    std::cout << "grid_size = " << grid_size << std::endl;
+    int rank = get_bmi_model()->GetGridRank(grid_id);
+    std::cout << "grid_rank = " << rank << std::endl;
+    int shape[rank];
+    get_bmi_model()->GetGridShape(grid_id, shape);
+    std::cout << "grid_shape index 0 = " << shape[0] << std::endl;
+    std::cout << "grid_shape index 1 = " << shape[1] << std::endl;
+
+    int x_dim_len = shape[1];
+    int y_dim_len = shape[0];
+
+    std::vector<int> output_bbox = get_output_bbox_list();
+    std::cout << "output_bbox.size(): " << output_bbox.size() << std::endl;
+    for (int i = 0; i < output_bbox.size(); ++i) {
+        std::cout << "output_bbox = " << output_bbox[i] << std::endl;
+    }
+    const int node_x_idx = output_bbox[0];
+        std::cout << "node_x_idx = " << node_x_idx << std::endl;
+    const int node_y_idx = output_bbox[1];
+        std::cout << "node_y_idx = " << node_y_idx << std::endl;
+    const int num_sub_nodes_x = output_bbox[2];
+        std::cout << "num_sub_nodes_x = " << num_sub_nodes_x << std::endl;
+    const int num_sub_nodes_y = output_bbox[3];
+        std::cout << "num_sub_nodes_y = " << num_sub_nodes_y << std::endl;
+
+    // Calculate the index position of the first node of the rectilinear sub-region
+    const int first_node_idx = node_x_idx + node_y_idx * x_dim_len;
+    std::vector<int> index_array;
+    int index;
+    // Build array indices for the selected sub-region
+    for (int j = 0; j < num_sub_nodes_y; ++j) {
+        for (int k = 0; k < num_sub_nodes_x; ++k) {
+            index = first_node_idx + k +  j * x_dim_len;
+            index_array.push_back(index);
+            std::cout << "inddex_array: " << index << std::endl;
         }
     }
 

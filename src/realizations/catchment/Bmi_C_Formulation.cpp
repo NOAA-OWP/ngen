@@ -36,6 +36,7 @@ std::shared_ptr<Bmi_C_Adapter> Bmi_C_Formulation::construct_model(const geojson:
 }
 
 std::string Bmi_C_Formulation::get_output_header_line(std::string delimiter) {
+    std::cout << "In get_output_header_line " << get_output_header_fields().size() << std::endl;
     return boost::algorithm::join(get_output_header_fields(), delimiter);
 }
 

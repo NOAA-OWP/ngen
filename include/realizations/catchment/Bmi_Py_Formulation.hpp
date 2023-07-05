@@ -113,6 +113,9 @@ namespace realization {
         //std::vector<int> get_array_indices_for_area(int &x_dim_len, int &y_dim_len, int &num_sub_nodes_x, int &num_sub_nodes_y);
         std::vector<int> get_array_indices_for_area();
 
+        //std::vector<int> get_array_indices_for_area(int &x_dim_len, int &y_dim_len, int &num_sub_nodes_x, int &num_sub_nodes_y);
+        std::vector<int> get_array_indices_for_area();
+
         /**
          * Test whether backing model has run BMI ``Initialize``.
          *
