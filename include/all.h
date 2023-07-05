@@ -5,10 +5,6 @@
                      + __GNUC_MINOR__ * 100 \
                      + __GNUC_PATCHLEVEL__)
 
-#if GCC_VERSION < 40900
-//TODO: This was being included on Intel compilers--we will probably never need this again, consider removal.
-//#include <unique.hpp>
-#endif
 #endif
 
 #define STRINGIFY(x) #x
