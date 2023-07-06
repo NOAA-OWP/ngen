@@ -86,6 +86,18 @@ runs:
             fi
           shell: bash
 
+        - name: Install UDUNITS
+          run: |
+            if [ ${{ runner.os }} == 'Linux' ]
+            then
+              sudo apt-get update
+              sudo apt-get install -y --fix-missing libudunits2-dev
+            elif [ ${{ runner.os }} == 'macOS' ]
+            then
+              brew install udunits
+            fi
+          shell: bash
+
         - name: Init Submodules
           run: git submodule update --init --recursive
           shell: bash
