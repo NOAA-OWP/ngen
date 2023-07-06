@@ -21,10 +21,6 @@
 	path = extern/noah-owp-modular/noah-owp-modular
 	url = https://github.com/NOAA-OWP/noah-owp-modular
 	branch = main
-[submodule "extern/UDUNITS-2"]
-	path = extern/UDUNITS-2
-	url = https://github.com/Unidata/UDUNITS-2.git
-	ignore = dirty
 [submodule "extern/bmi-cxx"]
 	path = extern/bmi-cxx
 	url = https://github.com/csdms/bmi-cxx.git

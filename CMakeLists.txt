@@ -126,40 +126,12 @@ if (NOT (DEFINED UDUNITS_ACTIVE))
 endif()
 
 if(UDUNITS_ACTIVE)
-    find_package(UDUNITS2)
+    find_package(UDUNITS2 REQUIRED)
     if(UDUNITS2_LIBRARY)
         #add_library(libudunits2 SHARED IMPORTED)
         target_include_directories(libudunits2 INTERFACE ${UDUNITS2_INCLUDE})
         #include_directories(${UDUNITS2_INCLUDE})
         message("INFO Using UDUNITS2 at ${UDUNITS2_LIBRARY} and ${UDUNITS2_INCLUDE}")
-    else()
-        set(UDUNITS_DIR ${PROJECT_SOURCE_DIR}/extern/UDUNITS-2)
-        set(UDUNITS_BUILD_BASE ${CMAKE_CURRENT_BINARY_DIR}/UDUNITS-2)
-        set(UDUNITS_BUILD_DIR ${UDUNITS_BUILD_BASE}/build)
-        set(UDUNITS_INSTALL_DIR ${UDUNITS_BUILD_BASE}/build)
-        git_update_submodule(${UDUNITS_DIR})
-        ExternalProject_Add(libudunits2_build
-            PREFIX ${UDUNITS_BUILD_BASE}
-            SOURCE_DIR ${UDUNITS_DIR}
-            BINARY_DIR ${UDUNITS_BUILD_DIR}
-            INSTALL_DIR ${UDUNITS_INSTALL_DIR}
-            PATCH_COMMAND find ${PROJECT_SOURCE_DIR}/extern/UDUNITS-2  \( -type d -name .git -prune \) -o -type f -name "CMakeLists.txt" -exec sed -i -e "s/CMAKE_MINIMUM_REQUIRED(VERSION 3\.19)/CMAKE_MINIMUM_REQUIRED(VERSION 3.17)/" {} +
-            #CMAKE_ARGS -DBOOST_ROOT=${BOOST_ROOT} CMAKE_INSTALL_RPATH_USE_LINK_PATH="ON" -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
-            CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${UDUNITS_INSTALL_DIR}
-        )
-        add_library(libudunits2 SHARED IMPORTED)
-        add_dependencies(libudunits2 libudunits2_build)
-
-        #set_property(TARGET libudunits2 PROPERTY INSTALL_RPATH_USE_LINK_PATH TRUE)
-        #set(CMAKE_MACOSX_RPATH 1)
-        message("INFO - Linking libudunits2 to path \"${UDUNITS_INSTALL_DIR}/lib/libudunits2.${SHARED_LIB_EXTENSION}\"")
-        set_property(TARGET libudunits2 PROPERTY IMPORTED_LOCATION "${UDUNITS_INSTALL_DIR}/lib/libudunits2.${SHARED_LIB_EXTENSION}")
-        list( APPEND CMAKE_INSTALL_RPATH ${UDUNITS_INSTALL_DIR}/lib ${UDUNITS_INSTALL_DIR}/include )
-        list( APPEND CMAKE_BUILD_RPATH ${UDUNITS_BUILD_DIR}/lib )
-        
-        #set_property(TARGET libudunits2 PROPERTY GENERATED TRUE)
-        target_include_directories(libudunits2 INTERFACE "${UDUNITS_DIR}/lib") # This seems like it should have worked...??
-        include_directories("${UDUNITS_DIR}/lib")
     endif()
     #add_compile_definitions("NGEN_UDUNITS2_XML_PATH=\"${UDUNITS_INSTALL_DIR}/share/udunits/udunits2.xml\"")
 endif()
