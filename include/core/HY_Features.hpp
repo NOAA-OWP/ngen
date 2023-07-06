@@ -107,6 +107,15 @@ namespace hy_features {
         inline auto catchments(){return network.filter("cat");}
 
         /**
+         * @brief An iterator of only the catchment feature ids from only the specified layer
+         * 
+         * @return auto 
+         */
+        inline auto catchments(long lv) {
+            return network.filter("cat",lv);
+        }
+
+        /**
          * @brief Return a set of levels that contain a catchment
          */
 
