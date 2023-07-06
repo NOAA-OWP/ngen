@@ -46,13 +46,14 @@ bool is_subdivided_hydrofabric_wanted = false;
 #include "parallel_utils.h"
 #include "core/Partition_Parser.hpp"
 #include <HY_Features_MPI.hpp>
-#include <Layer.hpp>
-#include <SurfaceLayer.hpp>
 
 std::string PARTITION_PATH = "";
 int mpi_rank;
 int mpi_num_procs;
 #endif
+
+#include <Layer.hpp>
+#include <SurfaceLayer.hpp>
 
 std::unordered_map<std::string, std::ofstream> nexus_outfiles;
 
