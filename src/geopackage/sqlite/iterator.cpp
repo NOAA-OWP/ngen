@@ -1,8 +1,25 @@
 #include <algorithm>
 
-#include "SQLite.hpp"
+#include "NGen_SQLite.hpp"
 
 using namespace geopackage;
+
+// Defined in database.cpp
+extern std::runtime_error sqlite_error(const std::string& f, int code, const std::string& extra = "");
+
+/**
+ * Runtime error for iterations that haven't started
+ */
+const auto sqlite_get_notstarted_error = std::runtime_error(
+    "sqlite iteration is has not started, get() is not callable (call sqlite_iter::next() before)"
+);
+
+/**
+ * Runtime error for iterations that are finished
+ */
+const auto sqlite_get_done_error = std::runtime_error(
+    "sqlite iteration is done, get() is not callable"
+);
 
 sqlite_iter::sqlite_iter(stmt_t stmt)
   : stmt(stmt)

@@ -2,7 +2,7 @@
 #define NGEN_GEOPACKAGE_H
 
 #include "FeatureCollection.hpp"
-#include "SQLite.hpp"
+#include "NGen_SQLite.hpp"
 
 namespace geopackage {
 
