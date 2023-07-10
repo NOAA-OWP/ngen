@@ -1,6 +1,30 @@
-#include "SQLite.hpp"
+#include "NGen_SQLite.hpp"
 
 using namespace geopackage;
+
+/**
+ * Get a runtime error based on a function and code.
+ *
+ * @param f String denoting the function where the error originated
+ * @param code sqlite3 result code
+ * @param extra additional messages to add to the end of the error
+ * @return std::runtime_error
+ */
+std::runtime_error sqlite_error(const std::string& f, int code, const std::string& extra = "")
+{
+    std::string errmsg = f + " returned code "
+                           + std::to_string(code)
+                           + " (msg: "
+                           + std::string(sqlite3_errstr(code))
+                           + ")";
+
+    if (!extra.empty()) {
+      errmsg += " ";
+      errmsg += extra;
+    }
+
+    return std::runtime_error(errmsg);
+}
 
 sqlite::sqlite(const std::string& path)
 {

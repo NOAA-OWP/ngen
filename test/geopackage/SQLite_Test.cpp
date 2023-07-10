@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "SQLite.hpp"
+#include "NGen_SQLite.hpp"
 #include "FileChecker.h"
 
 using namespace geopackage;

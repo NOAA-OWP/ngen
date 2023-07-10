@@ -11,20 +11,6 @@
 namespace geopackage {
 
 /**
- * Runtime error for iterations that haven't started
- */
-const auto sqlite_get_notstarted_error = std::runtime_error(
-    "sqlite iteration is has not started, get() is not callable (call sqlite_iter::next() before)"
-);
-
-/**
- * Runtime error for iterations that are finished
- */
-const auto sqlite_get_done_error = std::runtime_error(
-    "sqlite iteration is done, get() is not callable"
-);
-
-/**
  * Deleter used to provide smart pointer support for sqlite3 structs.
  */
 struct sqlite_deleter
@@ -42,30 +28,6 @@ using sqlite_t = std::unique_ptr<sqlite3, sqlite_deleter>;
  * Smart pointer (shared) type for sqlite3 prepared statements
  */
 using stmt_t = std::shared_ptr<sqlite3_stmt>;
-
-/**
- * Get a runtime error based on a function and code.
- *
- * @param f String denoting the function where the error originated
- * @param code sqlite3 result code
- * @param extra additional messages to add to the end of the error
- * @return std::runtime_error
- */
-inline std::runtime_error sqlite_error(const std::string& f, int code, const std::string& extra = "")
-{
-    std::string errmsg = f + " returned code "
-                           + std::to_string(code)
-                           + " (msg: "
-                           + std::string(sqlite3_errstr(code))
-                           + ")";
-
-    if (!extra.empty()) {
-      errmsg += " ";
-      errmsg += extra;
-    }
-
-    return std::runtime_error(errmsg);
-}
 
 /**
  * SQLite3 row iterator
