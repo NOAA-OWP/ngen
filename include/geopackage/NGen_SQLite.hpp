@@ -20,11 +20,6 @@ struct sqlite_deleter
 };
 
 /**
- * Smart pointer (unique) type for sqlite3 database
- */
-using sqlite_t = std::unique_ptr<sqlite3, sqlite_deleter>;
-
-/**
  * Smart pointer (shared) type for sqlite3 prepared statements
  */
 using stmt_t = std::shared_ptr<sqlite3_stmt>;
@@ -157,6 +152,11 @@ inline T sqlite_iter::get(const std::string& name) const
 class sqlite
 {
   private:
+    /**
+     * Smart pointer (unique) type for sqlite3 database
+     */
+    using sqlite_t = std::unique_ptr<sqlite3, sqlite_deleter>;
+  
     sqlite_t conn = nullptr;
     stmt_t   stmt = nullptr;
 
