@@ -81,7 +81,7 @@ class mdarray
         if (index > this->size() || this->size() == 0)
             this->m_data.resize(index + 1);
     
-        this->m_data.at(index) = value;
+        this->m_data[index] = value;
     }
 
     void insert(std::initializer_list<std::pair<std::initializer_list<size_type>, value_type>> args)
