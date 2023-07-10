@@ -1,7 +1,7 @@
 #include "GeoPackage.hpp"
 #include "JSONProperty.hpp"
 
-geojson::JSONProperty get_property(const geopackage::sqlite_iter& row, std::string name, int type)
+geojson::JSONProperty get_property(const geopackage::sqlite_iter& row, const std::string& name, int type)
 {
     if (type == SQLITE_INTEGER) {
         auto val = row.get<int>(name);
