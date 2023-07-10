@@ -19,32 +19,33 @@ class SQLite_Test : public ::testing::Test
         if (this->path.empty()) {
             FAIL() << "can't find gauge_01073000.gpkg";
         }
-
-        ASSERT_NO_THROW(this->db = sqlite(this->path));
     }
 
     void TearDown() override {};
     
     std::string path;
-    sqlite db;
+    
 };
 
 TEST_F(SQLite_Test, sqlite_access_test)
 {
+    sqlite db {this->path};
     // user wants metadata
-    EXPECT_TRUE(this->db.has_table("gpkg_contents"));
-    EXPECT_FALSE(this->db.has_table("some_fake_table"));
+    EXPECT_TRUE(db.has_table("gpkg_contents"));
+    EXPECT_FALSE(db.has_table("some_fake_table"));
 }
 
 TEST_F(SQLite_Test, sqlite_query_test)
 {
-    if (this->db.connection() == nullptr) {
+    sqlite db {this->path};
+
+    if (db.connection() == nullptr) {
         FAIL() << "database is not loaded";
     }
 
     // user provides a query
     const std::string query = "SELECT * FROM gpkg_contents LIMIT 1";
-    sqlite_iter iter = this->db.query(query);
+    sqlite_iter iter = db.query(query);
 
     EXPECT_EQ(iter.num_columns(), 10);
     EXPECT_EQ(iter.columns(), std::vector<std::string>({

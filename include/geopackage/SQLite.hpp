@@ -199,7 +199,7 @@ class sqlite
     stmt_t   stmt = nullptr;
 
   public:
-    sqlite() = default;
+    sqlite() = delete;
 
     /**
      * Construct a new sqlite object from a path to database
