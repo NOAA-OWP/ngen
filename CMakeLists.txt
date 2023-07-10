@@ -115,7 +115,7 @@ find_package(Boost 1.72.0 REQUIRED)
 
 
 find_package(SQLite3)
-if(SQLITE3_LIBRARY AND SQLITE3_INCLUDE)
+if(SQLite3_FOUND)
     set(NGEN_WITH_SQLITE3 ON)
     add_compile_definitions(NGEN_WITH_SQLITE3)
 else()
