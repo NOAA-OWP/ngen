@@ -30,9 +30,7 @@ sqlite_iter::sqlite_iter(stmt_t stmt)
     //       was SQLITE_DONE.
     this->next();
     this->column_count = sqlite3_column_count(this->ptr());
-    this->column_names = std::vector<std::string>();
     this->column_names.reserve(this->column_count);
-    this->column_types = std::vector<int>();
     this->column_types.reserve(this->column_count);
 
     for (int i = 0; i < this->column_count; i++) {
