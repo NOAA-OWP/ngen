@@ -179,7 +179,7 @@ class sqlite
      *
      * @param db sqlite3 database object
      */
-    sqlite(sqlite&& db);
+    sqlite(sqlite&& db) = default;
 
     /**
      * Move assignment operator
@@ -187,7 +187,7 @@ class sqlite
      * @param db sqlite3 database object
      * @return sqlite& reference to sqlite3 database
      */
-    sqlite& operator=(sqlite&& db);
+    sqlite& operator=(sqlite&& db) = default;
 
     /**
      * Return the originating sqlite3 database pointer

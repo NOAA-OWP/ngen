@@ -36,19 +36,6 @@ sqlite::sqlite(const std::string& path)
     this->conn = sqlite_t(conn);
 }
 
-sqlite::sqlite(sqlite&& db)
-{
-    this->conn = std::move(db.conn);
-    this->stmt = db.stmt;
-}
-
-sqlite& sqlite::operator=(sqlite&& db)
-{
-    this->conn = std::move(db.conn);
-    this->stmt = db.stmt;
-    return *this;
-}
-
 sqlite3* sqlite::connection() const noexcept
 {
     return this->conn.get();
