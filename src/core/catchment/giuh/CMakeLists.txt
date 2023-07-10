@@ -13,7 +13,6 @@ target_include_directories(core_catchment_giuh PUBLIC
         ${PROJECT_SOURCE_DIR}/include/core/catchment/giuh
         )
 
-find_package(Boost)
 target_link_libraries(core_catchment_giuh PUBLIC
         Boost::boost                # Headers-only Boost
         )

@@ -14,9 +14,6 @@ target_include_directories(core_nexus PUBLIC
         ${PROJECT_SOURCE_DIR}/include/utilities
         )
 
-# TODO: consider setting a minimum or required version
-find_package(Boost)
-
 target_link_libraries(core_nexus PUBLIC
         Boost::boost                # Headers-only Boost
         )

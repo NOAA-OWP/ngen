@@ -13,9 +13,6 @@ target_include_directories(core_catchment PUBLIC
         ${PROJECT_SOURCE_DIR}/include/core/catchment/giuh
         )
 
-# TODO: consider setting a minimum or required version
-find_package(Boost)
-
 add_subdirectory("giuh")
 
 target_link_libraries(core_catchment PUBLIC
