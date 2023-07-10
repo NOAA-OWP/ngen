@@ -170,8 +170,9 @@ class sqlite
      */
     sqlite(const std::string& path);
 
-    sqlite(sqlite& db);
-    sqlite& operator=(sqlite& db);
+    sqlite(sqlite& db) = delete;
+  
+    sqlite& operator=(sqlite& db) = delete;
 
     /**
      * Take ownership of a sqlite3 database
