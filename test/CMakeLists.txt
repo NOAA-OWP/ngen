@@ -92,7 +92,6 @@ add_test(test_geopackage
         geopackage/WKB_Test.cpp
         geopackage/SQLite_Test.cpp
         geopackage/GeoPackage_Test.cpp
-        NGen::core # needed for FileChecker.h
         NGen::geopackage)
 endif()
 
