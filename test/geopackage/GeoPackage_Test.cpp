@@ -60,6 +60,21 @@ TEST_F(GeoPackage_Test, geopackage_read_test)
     ASSERT_TRUE(third == nullptr);
 }
 
+TEST_F(GeoPackage_Test, geopackage_idsubset_test)
+{
+    const auto gpkg = geopackage::read(this->path, "test", { "First" });
+    EXPECT_NE(gpkg->find("First"), -1);
+    EXPECT_EQ(gpkg->find("Second"), -1);
+
+    const auto& first = gpkg->get_feature(0);
+    EXPECT_EQ(first->get_id(), "First");
+    const auto& point = boost::get<geojson::coordinate_t>(first->geometry());
+    EXPECT_EQ(point.get<0>(), 102.0);
+    EXPECT_EQ(point.get<1>(), 0.5);
+
+    ASSERT_TRUE(gpkg->get_feature(1) == nullptr);
+}
+
 // this test is essentially the same as the above, however, the coordinates
 // are stored in EPSG:3857. When read in, they should convert to EPSG:4326.
 TEST_F(GeoPackage_Test, geopackage_projection_test)
