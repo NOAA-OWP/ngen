@@ -15,6 +15,7 @@ add_library(geopackage STATIC geometry.cpp
                               properties.cpp
                               feature.cpp
                               read.cpp
+                              wkb.cpp
                               sqlite/iterator.cpp
                               sqlite/database.cpp
 )
