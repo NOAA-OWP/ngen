@@ -79,7 +79,6 @@ geojson::geometry geopackage::build_geometry(
         auto wkb_geometry = wkb::read(geometry_data);
         geojson::geometry geometry = boost::apply_visitor(pvisitor, wkb_geometry);
         return geometry;
-        return geojson::geometry{};
     } else {
         return geojson::geometry{};
     }
