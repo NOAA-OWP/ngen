@@ -57,7 +57,7 @@ sqlite_iter sqlite::query(const std::string& statement)
     if (code != SQLITE_OK) {
         // something happened, can probably switch on result codes
         // https://www.sqlite.org/rescode.html
-        throw sqlite_error("sqlite3_prepare_v2", code, "(query: " + statement + ")");
+        throw sqlite_error("sqlite3_prepare_v2", code);
     }
 
     return sqlite_iter(std::move(stmt_t(stmt)));
@@ -70,7 +70,7 @@ sqlite_iter sqlite::query(const std::string& statement, const std::vector<std::s
     const int     code  = sqlite3_prepare_v2(this->connection(), cstmt, statement.length() + 1, &stmt, NULL);
 
     if (code != SQLITE_OK) {
-        throw sqlite_error("sqlite3_prepare_v2", code, "(query: " + statement + ")");
+        throw sqlite_error("sqlite3_prepare_v2", code);
     }
 
     if (!binds.empty()) {
@@ -93,7 +93,7 @@ inline sqlite_iter sqlite::query(const std::string& statement, T const&... param
     const int     code  = sqlite3_prepare_v2(this->connection(), cstmt, statement.length() + 1, &stmt, NULL);
 
     if (code != SQLITE_OK) {
-        throw sqlite_error("sqlite3_prepare_v2", code, "(query: " + statement + ")");
+        throw sqlite_error("sqlite3_prepare_v2", code);
     }
 
     std::vector<std::string> binds{ { params... } };
