@@ -172,17 +172,17 @@ typename wkb::geometry wkb::read(const byte_vector& buffer)
     utils::copy_from(buffer, index, type, order);
 
     switch(type) {
-        case 1:
+        case wkb_geom_t::point:
             return read_point(buffer, index, order);
-        case 2:
+        case wkb_geom_t::linestring:
             return read_linestring(buffer, index, order);
-        case 3:
+        case wkb_geom_t::polygon:
             return read_polygon(buffer, index, order);
-        case 4:
+        case wkb_geom_t::multipoint:
             return read_multipoint(buffer, index, order);
-        case 5:
+        case wkb_geom_t::multilinestring:
             return read_multilinestring(buffer, index, order);
-        case 6:
+        case wkb_geom_t::multipolygon:
             return read_multipolygon(buffer, index, order);
         default:
             throw std::runtime_error(
