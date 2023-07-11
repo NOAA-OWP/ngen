@@ -171,18 +171,25 @@ typename wkb::geometry wkb::read(const byte_vector& buffer)
     uint32_t type;
     utils::copy_from(buffer, index, type, order);
 
-    geometry g;
     switch(type) {
-        case 1:  g = read_point(buffer, index, order); break;
-        case 2:  g = read_linestring(buffer, index, order); break;
-        case 3:  g = read_polygon(buffer, index, order); break;
-        case 4:  g = read_multipoint(buffer, index, order); break;
-        case 5:  g = read_multilinestring(buffer, index, order); break;
-        case 6:  g = read_multipolygon(buffer, index, order); break;
-        default: g = point_t{std::nan("0"), std::nan("0")}; break;
+        case 1:
+            return read_point(buffer, index, order);
+        case 2:
+            return read_linestring(buffer, index, order);
+        case 3:
+            return read_polygon(buffer, index, order);
+        case 4:
+            return read_multipoint(buffer, index, order);
+        case 5:
+            return read_multilinestring(buffer, index, order);
+        case 6:
+            return read_multipolygon(buffer, index, order);
+        default:
+            throw std::runtime_error(
+                "this reader only implements OGC geometry types 1-6, "
+                "but received type " + std::to_string(type)
+            );
     }
-
-    return g;
 }
 
 // ----------------------------------------------------------------------------
