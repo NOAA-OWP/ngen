@@ -23,7 +23,7 @@ namespace utils {
 template<typename S>
 void copy_from(const std::vector<uint8_t>& src, int& index, S& dst, uint8_t order)
 {
-    std::memcpy(&dst, &src[index], sizeof(S));
+    std::memcpy(&dst, src.data() + index, sizeof(dst));
 
     if (order == 0x01) {
         boost::endian::little_to_native_inplace(dst);
