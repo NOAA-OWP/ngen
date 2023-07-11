@@ -60,8 +60,7 @@ sqlite_iter sqlite::query(const std::string& statement)
         throw sqlite_error("sqlite3_prepare_v2", code, "(query: " + statement + ")");
     }
 
-    this->stmt = stmt_t(stmt, sqlite_deleter{});
-    return sqlite_iter(this->stmt);
+    return sqlite_iter(std::move(stmt_t(stmt)));
 }
 
 sqlite_iter sqlite::query(const std::string& statement, const std::vector<std::string>& binds)
@@ -83,8 +82,7 @@ sqlite_iter sqlite::query(const std::string& statement, const std::vector<std::s
         }
     }
 
-    this->stmt        = stmt_t(stmt, sqlite_deleter{});
-    return sqlite_iter(this->stmt);
+    return sqlite_iter(std::move(stmt_t(stmt)));
 }
 
 template<typename... T>
@@ -106,6 +104,5 @@ inline sqlite_iter sqlite::query(const std::string& statement, T const&... param
         }
     }
 
-    this->stmt        = stmt_t(stmt, sqlite_deleter{});
-    return sqlite_iter(this->stmt);
+    return sqlite_iter(std::move(stmt_t(stmt)));
 }

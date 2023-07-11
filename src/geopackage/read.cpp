@@ -19,7 +19,8 @@ std::shared_ptr<geojson::FeatureCollection> geopackage::read(
         std::string errmsg = "[" + std::string(sqlite3_errmsg(db.connection())) + "] " +
                              "table " + layer + " does not exist.\n\tTables: ";
 
-        auto errquery = db.query("SELECT name FROM sqlite_master WHERE type='table'").next();
+        auto errquery = db.query("SELECT name FROM sqlite_master WHERE type='table'");
+        errquery.next();
         while(!errquery.done()) {
             errmsg += errquery.get<std::string>(0);
             errmsg += ", ";

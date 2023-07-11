@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <memory>
 
 #include "NGen_SQLite.hpp"
 
@@ -22,7 +23,7 @@ const auto sqlite_get_done_error = std::runtime_error(
 );
 
 sqlite_iter::sqlite_iter(stmt_t stmt)
-  : stmt(stmt)
+    : stmt(std::move(stmt))
 {
     // sqlite3_column_type requires the last result code to be
     // SQLITE_ROW, so we need to iterate on the first row.
@@ -39,7 +40,7 @@ sqlite_iter::sqlite_iter(stmt_t stmt)
     }
 
     this->restart();
-};
+}
 
 sqlite3_stmt* sqlite_iter::ptr() const noexcept
 {
@@ -90,11 +91,6 @@ sqlite_iter& sqlite_iter::restart()
     this->iteration_step = -1;
     this->iteration_finished = false;
     return *this;
-}
-
-void sqlite_iter::close()
-{
-    this->~sqlite_iter();
 }
 
 int sqlite_iter::current_row() const noexcept
