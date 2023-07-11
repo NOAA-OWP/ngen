@@ -22,7 +22,7 @@ struct sqlite_deleter
 /**
  * Smart pointer (shared) type for sqlite3 prepared statements
  */
-using stmt_t = std::shared_ptr<sqlite3_stmt>;
+using stmt_t = std::unique_ptr<sqlite3_stmt, sqlite_deleter>;
 
 /**
  * SQLite3 row iterator
@@ -76,11 +76,6 @@ class sqlite_iter
      * @return sqlite_iter& returns itself
      */
     sqlite_iter& restart();
-
-    /**
-     * Call the row iterator destructor
-     */
-    void close();
 
     /**
      * Get the current row index for the iterator
@@ -158,7 +153,6 @@ class sqlite
     using sqlite_t = std::unique_ptr<sqlite3, sqlite_deleter>;
   
     sqlite_t conn = nullptr;
-    stmt_t   stmt = nullptr;
 
   public:
     sqlite() = delete;
