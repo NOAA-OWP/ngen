@@ -11,7 +11,12 @@ namespace bg = boost::geometry;
 namespace geopackage {
 
 /**
- * A recursive WKB reader
+ * A recursive WKB reader.
+ *
+ * @note This WKB implementation follows a subset of the
+ *       OGC Specification found in https://www.ogc.org/standard/sfa/.
+ *       This is a strict WKB implementation and does not support
+ *       Extended WKB (EWKB) or Tiny WKB (TWKB).
  */
 struct wkb {
     using point_t = bg::model::point<double, 2, bg::cs::cartesian>;
