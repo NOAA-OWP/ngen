@@ -93,6 +93,27 @@ namespace utils {
                     addToPath(std::string(py::str(opt.attr("parent"))));
                     addToPath(std::string(py::str(opt)));
                 }
+
+                py::object python_version_info = importedTopLevelModules["sys"].attr("version_info");
+                py::str runtime_python_version = importedTopLevelModules["sys"].attr("version");
+                int major = py::int_(python_version_info.attr("major"));
+                int minor = py::int_(python_version_info.attr("minor"));
+                int patch = py::int_(python_version_info.attr("micro"));
+                if (major != python_major
+                    || minor != python_minor
+                    || patch != python_patch) {
+                    throw std::runtime_error("Python version mismatch between configure/build ("
+                                             + std::string(python_version)
+                                             + ") and runtime (" + std::string(runtime_python_version) + ")");
+                }
+
+                importTopLevelModule("numpy");
+                py::str runtime_numpy_version = importedTopLevelModules["numpy"].attr("version").attr("version");
+                if(std::string(runtime_numpy_version) != numpy_version) {
+                    throw std::runtime_error("NumPy version mismatch between configure/build ("
+                                             + std::string(numpy_version)
+                                             + ") and runtime (" + std::string(runtime_numpy_version) + ")");
+                }
             }
 
             ~InterpreterUtil() = default;
