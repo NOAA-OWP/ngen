@@ -2,6 +2,29 @@
 
 using namespace geopackage;
 
+enum wkb_geom_t {
+    geometry            = 0,
+    point               = 1,
+    linestring          = 2,
+    polygon             = 3,
+    multipoint          = 4,
+    multilinestring     = 5,
+    multipolygon        = 6,
+    geometry_collection = 7
+};
+
+void throw_if_not_type(uint32_t given, wkb_geom_t expected)
+{
+    if (given != expected) {
+        throw std::runtime_error(
+            "expected WKB geometry type " +
+            std::to_string(expected) +
+            ", but received " +
+            std::to_string(given)
+        );
+    }
+}
+
 // ----------------------------------------------------------------------------
 // WKB Readers
 // ----------------------------------------------------------------------------
@@ -79,6 +102,7 @@ typename wkb::multipoint_t wkb::read_multipoint(const byte_vector& buffer, int& 
 
         uint32_t type;
         utils::copy_from(buffer, index, type, new_order);
+        throw_if_not_type(type, wkb_geom_t::point);
 
         point = read_point(buffer, index, new_order);
     }
@@ -101,6 +125,7 @@ typename wkb::multilinestring_t wkb::read_multilinestring(const byte_vector& buf
 
         uint32_t type;
         utils::copy_from(buffer, index, type, new_order);
+        throw_if_not_type(type, wkb_geom_t::linestring);
 
         line = read_linestring(buffer, index, new_order);
     }
@@ -123,6 +148,7 @@ typename wkb::multipolygon_t wkb::read_multipolygon(const byte_vector& buffer, i
 
         uint32_t type;
         utils::copy_from(buffer, index, type, new_order);
+        throw_if_not_type(type, wkb_geom_t::polygon);
 
         polygon = read_polygon(buffer, index, new_order);
     }
