@@ -332,6 +332,14 @@ namespace utils {
 
             py::object Path;
 
+            static const int python_major;
+            static const int python_minor;
+            static const int python_patch;
+            static const char* python_version;
+
+            // NumPy version is not broken down by CMake
+            static const char* numpy_version;
+
             /**
              * Import a specified top level module.
              *

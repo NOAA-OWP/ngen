@@ -45,6 +45,8 @@ if (${NGEN_ACTIVATE_PYTHON})
             ${PROJECT_SOURCE_DIR}/include/utilities
             ${PROJECT_SOURCE_DIR}/extern/pybind11/include
             )
+    configure_file(${PROJECT_SOURCE_DIR}/src/core/NGen_Python_Build_Versions.in NGen_Python_Build_Versions.cpp)
+    target_sources(core PRIVATE NGen_Python_Build_Versions.cpp)
     target_link_libraries(core PUBLIC
             Boost::boost                # Headers-only Boost
             pybind11::embed
