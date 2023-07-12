@@ -3,12 +3,13 @@ cmake_minimum_required(VERSION 3.10)
 
 string(COMPARE EQUAL "${CMAKE_CXX_COMPILER_ID}" "IntelLLVM" _cmp)
 if (NOT _cmp)
-    message(WARNING "[NGen::geopackage] geometry.cpp cannot be optimized with "
-                    "${CMAKE_CXX_COMPILER_ID} due to a suspected compiler/boost issue. "
+    message(WARNING "[NGen::geopackage] wkb.cpp cannot be optimized with "
+                    "${CMAKE_CXX_COMPILER_ID} due to a suspected optimizer/boost issue:\n"
+                    "https://github.com/NOAA-OWP/ngen/issues/567.\n"
                     "Use IntelLLVM if optimization for this source file is required.")
     # !! Required due to optimizer issue with either clang or
     # !! boost::geometry::srs::transformation
-    set_source_files_properties(geometry.cpp PROPERTIES COMPILE_FLAGS -O0)
+    set_source_files_properties(wkb.cpp PROPERTIES COMPILE_FLAGS -O0)
 endif()
 
 add_library(geopackage STATIC geometry.cpp

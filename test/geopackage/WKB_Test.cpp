@@ -147,12 +147,12 @@ TEST_F(WKB_Test, wkb_point_test) // also tests endianness
 {  
     const auto geom_big    = boost::get<wkb::point_t>(wkb::read(this->wkb_bytes["point_big"]));
     const auto geom_little = boost::get<wkb::point_t>(wkb::read(this->wkb_bytes["point"]));
-    EXPECT_NEAR(geom_big.get<0>(), geom_little.get<0>(), 0.000001);
-    EXPECT_NEAR(geom_big.get<1>(), geom_little.get<1>(), 0.000001);
-    EXPECT_NEAR(geom_big.get<0>(), 2.0, 0.000001);
-    EXPECT_NEAR(geom_big.get<1>(), 4.0, 0.000001);
-    EXPECT_NEAR(geom_big.get<0>(), 2.0, 0.000001);
-    EXPECT_NEAR(geom_big.get<1>(), 4.0, 0.000001);
+    EXPECT_NEAR(geom_big.get<0>(), geom_little.get<0>(), 1e-6);
+    EXPECT_NEAR(geom_big.get<1>(), geom_little.get<1>(), 1e-6);
+    EXPECT_NEAR(geom_big.get<0>(), 2.0, 1e-6);
+    EXPECT_NEAR(geom_big.get<1>(), 4.0, 1e-6);
+    EXPECT_NEAR(geom_big.get<0>(), 2.0, 1e-6);
+    EXPECT_NEAR(geom_big.get<1>(), 4.0, 1e-6);
 }
 
 TEST_F(WKB_Test, wkb_linestring_test)
@@ -166,8 +166,8 @@ TEST_F(WKB_Test, wkb_linestring_test)
     };
 
     for (int i = 0; i < expected_coordinates.size(); i++) {
-        EXPECT_NEAR(line[i].get<0>(), expected_coordinates[i].first, 0.0001);
-        EXPECT_NEAR(line[i].get<1>(), expected_coordinates[i].second, 0.0001);
+        EXPECT_NEAR(line[i].get<0>(), expected_coordinates[i].first, 1e-4);
+        EXPECT_NEAR(line[i].get<1>(), expected_coordinates[i].second, 1e-4);
     }
 }
 
@@ -186,8 +186,8 @@ TEST_F(WKB_Test, wkb_polygon_test)
     };
 
     for (int i = 0; i < expected_coordinates.size(); i++) {
-        EXPECT_NEAR(poly.outer().at(i).get<0>(), expected_coordinates[i].first, 0.0001);
-        EXPECT_NEAR(poly.outer().at(i).get<1>(), expected_coordinates[i].second, 0.0001);
+        EXPECT_NEAR(poly.outer().at(i).get<0>(), expected_coordinates[i].first, 1e-4);
+        EXPECT_NEAR(poly.outer().at(i).get<1>(), expected_coordinates[i].second, 1e-4);
     }
 }
 
@@ -208,8 +208,8 @@ TEST_F(WKB_Test, wkb_polygon_with_holes_test)
     };
 
     for (int i = 0; i < expected_outer.size(); i++) {
-        EXPECT_NEAR(poly.outer()[i].get<0>(), expected_outer[i].first, 0.0001);
-        EXPECT_NEAR(poly.outer()[i].get<1>(), expected_outer[i].second, 0.0001);
+        EXPECT_NEAR(poly.outer()[i].get<0>(), expected_outer[i].first, 1e-4);
+        EXPECT_NEAR(poly.outer()[i].get<1>(), expected_outer[i].second, 1e-4);
     }
 
     const std::vector<std::pair<double, double>> expected_inner = {
@@ -221,8 +221,8 @@ TEST_F(WKB_Test, wkb_polygon_with_holes_test)
     };
 
     for (int i = 0; i < expected_inner.size(); i++) {
-        EXPECT_NEAR(poly.inners().at(0)[i].get<0>(), expected_inner[i].first, 0.0001);
-        EXPECT_NEAR(poly.inners().at(0)[i].get<1>(), expected_inner[i].second, 0.0001);
+        EXPECT_NEAR(poly.inners().at(0)[i].get<0>(), expected_inner[i].first, 1e-4);
+        EXPECT_NEAR(poly.inners().at(0)[i].get<1>(), expected_inner[i].second, 1e-4);
     }
 }
 
@@ -237,8 +237,8 @@ TEST_F(WKB_Test, wkb_multipoint_test)
     };
 
     for (int i = 0; i < expected_coordinates.size(); i++) {
-        EXPECT_NEAR(mp[i].get<0>(), expected_coordinates[i].first, 0.0001);
-        EXPECT_NEAR(mp[i].get<1>(), expected_coordinates[i].second, 0.0001);
+        EXPECT_NEAR(mp[i].get<0>(), expected_coordinates[i].first, 1e-4);
+        EXPECT_NEAR(mp[i].get<1>(), expected_coordinates[i].second, 1e-4);
     }
 }
 
@@ -255,8 +255,8 @@ TEST_F(WKB_Test, wkb_multilinestring_test)
 
     for (int i = 0; i < expected_coordinates.size(); i++) {
         for (int j = 0; j < expected_coordinates[i].size(); j++) {
-            EXPECT_NEAR(mp[i][j].get<0>(), expected_coordinates[i][j].first, 0.0001);
-            EXPECT_NEAR(mp[i][j].get<1>(), expected_coordinates[i][j].second, 0.0001);
+            EXPECT_NEAR(mp[i][j].get<0>(), expected_coordinates[i][j].first, 1e-4);
+            EXPECT_NEAR(mp[i][j].get<1>(), expected_coordinates[i][j].second, 1e-4);
         }
     }
 }
