@@ -1,6 +1,17 @@
 #include "GeoPackage.hpp"
 
 #include <numeric>
+#include <regex>
+
+void check_table_name(const std::string& table)
+{
+    if (boost::algorithm::starts_with(table, "sqlite_"))
+        throw std::runtime_error("table `" + table + "` is not queryable");
+
+    std::regex allowed("[^-A-Za-z0-9_ ]+");
+    if (std::regex_match(table, allowed))
+        throw std::runtime_error("table `" + table + "` contains invalid characters");
+}
 
 std::shared_ptr<geojson::FeatureCollection> geopackage::read(
     const std::string& gpkg_path,
@@ -8,6 +19,9 @@ std::shared_ptr<geojson::FeatureCollection> geopackage::read(
     const std::vector<std::string>& ids = {}
 )
 {
+    // Check for malicious/invalid layer input
+    check_table_name(layer);
+
     sqlite db(gpkg_path);
 
     // Check if layer exists
