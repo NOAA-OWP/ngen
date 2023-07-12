@@ -46,7 +46,6 @@ std::shared_ptr<Bmi_Cpp_Adapter> Bmi_Cpp_Formulation::construct_model(const geoj
 }
 
 std::string Bmi_Cpp_Formulation::get_output_header_line(std::string delimiter) {
-    std::cout << "In get_output_header_line " << get_output_header_fields().size() << std::endl;
     return boost::algorithm::join(get_output_header_fields(), delimiter);
 }
 

@@ -215,6 +215,15 @@ private:
                 "                                \"forcing_file\": \"\",\n"
                 "                                \"init_config\": \"" + nested_init_config_lists[ex_index][nested_index] + "\",\n"
                 "                                \"allow_exceed_end_time\": true,\n"
+                "                                \"output_bbox\": [ "
+                "                                  0, "
+                "                                  0, "
+                "                                  3, "
+                "                                  2, "
+                "                                  4, "
+                "                                  2, "
+                "                                  1 "
+                "                                ], \n"
                 "                                \"main_output_variable\": \"" + nested_module_main_output_variables[ex_index][nested_index] + "\",\n"
                 "                                \"" + BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION + "\": 6,\n"
 
@@ -243,6 +252,15 @@ private:
                 "                                \"forcing_file\": \"\",\n"
                 "                                \"init_config\": \"" + nested_init_config_lists[ex_index][nested_index] + "\",\n"
                 "                                \"allow_exceed_end_time\": true,\n"
+                "                                \"output_bbox\": [ "
+                "                                  0, "
+                "                                  0, "
+                "                                  3, "
+                "                                  2, "
+                "                                  4, "
+                "                                  2, "
+                "                                  1 "
+                "                                ], \n"
                 "                                \"main_output_variable\": \"" + nested_module_main_output_variables[ex_index][nested_index] + "\",\n"
                 "                                \"" + BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION + "\": 6,\n"
 
@@ -275,6 +293,15 @@ private:
                 "                                \"forcing_file\": \"\",\n"
                 "                                \"init_config\": \"" + nested_init_config_lists[ex_index][nested_index] + "\",\n"
                 "                                \"allow_exceed_end_time\": true,\n"
+                "                                \"output_bbox\": [ "
+                "                                  0, "
+                "                                  0, "
+                "                                  3, "
+                "                                  2, "
+                "                                  4, "
+                "                                  2, "
+                "                                  1 "
+                "                                ], \n"
                 "                                \"main_output_variable\": \"" + nested_module_main_output_variables[ex_index][nested_index] + "\",\n"
                 "                                \"" + BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION + "\": 6,\n"
 
@@ -370,6 +397,15 @@ private:
                 "                        \"init_config\": \"\",\n"
                 "                        \"allow_exceed_end_time\": true,\n"
                 "                        \"main_output_variable\": \"" + main_output_variables[ex_index] + "\",\n"
+                "                        \"output_bbox\": [ "
+                "                          0, "
+                "                          0, "
+                "                          3, "
+                "                          2, "
+                "                          4, "
+                "                          2, "
+                "                          1 "
+                "                        ], \n"
                 "                        \"modules\": [\n"
                 + buildExampleNestedModuleSubConfig(ex_index, 0) + ",\n"
                 + buildExampleNestedModuleSubConfig(ex_index, 1) + "\n"
@@ -798,12 +834,6 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_1_a) {
     //FIXME the last two outputs are the first value from the GRID_VAR in the python module...couldn't get the output variables
     //configured in the example realization generation to not query those, so hacked in here.  See comment above about not worrying about
     //initializing/using the grid vars in this test, and try to find a better way in the future.
-<<<<<<< HEAD
-    //ASSERT_EQ(output, "0.000000,200620.000000,1.000000,2.000000,3.000000");
-    //ASSERT_EQ(output, "0.000000,200620.000000,1.000000,2.000000,3.000000");
-    //ASSERT_EQ(output, "0.000000,200620.000000,2.000000,2.000000,3.000000");
-=======
->>>>>>> Minor revision and clean up.
     ASSERT_EQ(output, "0.000000,200620.000000,1.000000,2.000000,3.000000,2.000000,2.000000,2.000000,2.000000,2.000000,2.000000,3.000000,3.000000,3.000000,3.000000,3.000000,3.000000");
     //ASSERT_EQ(output, "0.000000,200620.000000,1.000000,2.000000,3.000000");
 #endif // ACTIVATE_PYTHON
@@ -835,10 +865,6 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_1_b) {
     //FIXME the last two outputs are the first value from the GRID_VAR in the python module...couldn't get the output variables
     //configured in the example realization generation to not query those, so hacked in here.  See comment above about not worrying about
     //initializing/using the grid vars in this test, and try to find a better way in the future.
-    //ASSERT_EQ(output, "0.000001,199280.000000,543.000000,2.000001,3.000001");
-    //ASSERT_EQ(output, "0.000001,199280.000000,543.000000,2.000001,3.000001");
-    //ASSERT_EQ(output, "0.000001,199280.000000,544.000000,2.000000,3.000000");
-    //ASSERT_EQ(output, "0.000001,199280.000000,543.000000,2.000001,3.000001");
     ASSERT_EQ(output, "0.000001,199280.000000,543.000000,544.000000,545.000000,2.000001,2.000001,2.000001,2.000001,2.000001,2.000001,3.000001,3.000001,3.000001,3.000001,3.000001,3.000001");
 #endif // ACTIVATE_PYTHON
 }

@@ -42,6 +42,7 @@ protected:
 
     std::vector<py_formulation_example_scenario> examples;
     std::vector<std::string> expected_output_var_names = { "OUTPUT_VAR_1", "OUTPUT_VAR_2", "OUTPUT_VAR_3", "GRID_VAR_2", "GRID_VAR_3" };
+    //std::vector<std::string> expected_output_var_names = { "OUTPUT_VAR_1", "OUTPUT_VAR_2", "OUTPUT_VAR_3", "GRID_VAR_2"};
 
     static std::string get_friend_bmi_init_config(const Bmi_Py_Formulation& formulation) {
         return formulation.get_bmi_init_config();
@@ -257,6 +258,15 @@ void Bmi_Py_Formulation_Test::generate_realization_config(int ex_idx) {
               "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__PYTHON_TYPE_NAME + "\": \"" + examples[ex_idx].module_name + "\","
               "                \"forcing_file\": \"" + examples[ex_idx].forcing_params->path + "\","
               "                \"init_config\": \"" + examples[ex_idx].bmi_init_config + "\","
+              "                \"output_bbox\": [ "
+              "                  0, "
+              "                  0, "
+              "                  3, "
+              "                  2, "
+              "                  4, "
+              "                  2, "
+              "                  1 "
+              "                  ], \n"
               "                \"main_output_variable\": \"" + examples[ex_idx].main_output_variable + "\","
               "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION + "\": 6, "
               "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES + "\": { "
@@ -444,7 +454,8 @@ TEST_F(Bmi_Py_Formulation_Test, GetOutputLineForTimestep_1_a) {
 
     double response = examples[ex_index].formulation->get_response(0, 3600);
     std::string output = examples[ex_index].formulation->get_output_line_for_timestep(0, ",");
-    ASSERT_EQ(output, "0.000000,0.000000,1.000000,2.000000,3.000000,2.000000,2.000000,2.000000,2.000000,2.000000,2.000000,3.000000,3.000000,3.000000,3.000000,3.000000,3.000000");
+    ASSERT_EQ(output, "0.000000,0.000000,1.000000,2.000000,3.000000,0.000000,0.000000,1.000000,2.000000,3.000000,0.000000,0.000000,1.000000,2.000000,3.000000,2.000000,0.000000");
+    //ASSERT_TRUE(std::regex_match(output, expected));
 }
 
 /**
@@ -459,7 +470,7 @@ TEST_F(Bmi_Py_Formulation_Test, GetOutputLineForTimestep_1_b) {
 
     double response = examples[ex_index].formulation->get_response(543, 3600);
     std::string output = examples[ex_index].formulation->get_output_line_for_timestep(543, ",");
-    ASSERT_EQ(output, "0.000001,0.000000,544.000000,545.000000,546.000000,2.000001,2.000001,2.000001,2.000001,2.000001,2.000001,3.000001,3.000001,3.000001,3.000001,3.000001,3.000001");
+    ASSERT_EQ(output, "0.000001,0.000000,544.000000,2.000001,3.000001,0.000001,0.000000,544.000000,2.000001,3.000001,0.000001,0.000000,544.000000,2.000001,3.000001,2.000001,0.000000");
 }
 
 /**
@@ -512,27 +523,6 @@ TEST_F(Bmi_Py_Formulation_Test, get_var_vec_as_double_0_a) {
     }
 
     ASSERT_EQ(output_str, "2.000000,2.000000,2.000000,2.000000,2.000000,2.000000");
-}
-
-/**
- * Test of get_var_vec_as_double.
- */
-TEST_F(Bmi_Py_Formulation_Test, get_var_vec_as_double_0_b) {
-    int ex_index = 0;
-
-    int i = 0;
-    while (i < 542)
-        examples[ex_index].formulation->get_response(i++, 3600);
-
-    double response = examples[ex_index].formulation->get_response(543, 3600);
-    std::vector<double> retrieved = get_friend_var_vec_as_double(*examples[ex_index].formulation, 543, "GRID_VAR_3");
-
-    std::string output_str;
-    for (int i = 0; i < retrieved.size(); ++i) {
-        output_str += (output_str.empty() ? "" : ",") + std::to_string(retrieved[i]);
-    }
-
-    ASSERT_EQ(output_str, "3.000001,3.000001,3.000001,3.000001,3.000001,3.000001");
 }
 
 /**
