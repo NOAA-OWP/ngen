@@ -13,14 +13,14 @@ class WKB_Test : public ::testing::Test
     ~WKB_Test() override {}
 
     void SetUp() override {
-        this->wkb_bytes["point"] = {
+        this->wkb_bytes["point_little_endian"] = {
             0x01,
             0x01, 0x00, 0x00, 0x00,
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40,
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x10, 0x40
         };
 
-        this->wkb_bytes["point_big"] = {
+        this->wkb_bytes["point_big_endian"] = {
             0x00,
             0x00, 0x00, 0x00, 0x01,
             0x40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -145,8 +145,8 @@ class WKB_Test : public ::testing::Test
 
 TEST_F(WKB_Test, wkb_point_test) // also tests endianness
 {  
-    const auto geom_big    = boost::get<wkb::point_t>(wkb::read(this->wkb_bytes["point_big"]));
-    const auto geom_little = boost::get<wkb::point_t>(wkb::read(this->wkb_bytes["point"]));
+    const auto geom_big    = boost::get<wkb::point_t>(wkb::read(this->wkb_bytes["point_big_endian"]));
+    const auto geom_little = boost::get<wkb::point_t>(wkb::read(this->wkb_bytes["point_little_endian"]));
     EXPECT_NEAR(geom_big.get<0>(), geom_little.get<0>(), 1e-6);
     EXPECT_NEAR(geom_big.get<1>(), geom_little.get<1>(), 1e-6);
     EXPECT_NEAR(geom_big.get<0>(), 2.0, 1e-6);
