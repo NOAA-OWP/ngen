@@ -938,36 +938,6 @@ namespace realization {
                 // TODO: probably need to actually allow this by default and warn, but have config option to activate
                 //  this type of behavior
                 // TODO: account for arrays later
-                int nbytes = get_bmi_model()->GetVarNbytes(var_name);
-                int varItemSize = get_bmi_model()->GetVarItemsize(var_name);
-                int numItems = nbytes / varItemSize;
-                assert(nbytes % varItemSize == 0);
-
-                std::shared_ptr<void> value_ptr;
-                // Finally, use the value obtained to set the model input
-                std::string type = get_bmi_model()->get_analogous_cxx_type(get_bmi_model()->GetVarType(var_name),
-                                                                           varItemSize);
-                if (numItems != 1) {
-                    //more than a single value needed for var_name
-                    auto values = provider->get_values(CatchmentAggrDataSelector(this->get_catchment_id(),var_map_alias, model_epoch_time, t_delta,
-                                                   get_bmi_model()->GetVarUnits(var_name)));
-                    //need to marshal data types to the receiver as well
-                    //this could be done a little more elegantly if the provider interface were
-                    //"type aware", but for now, this will do (but requires yet another copy)
-                    if(values.size() == 1){
-                        //FIXME this isn't generic broadcasting, but works for scalar implementations
-                        #ifndef NGEN_QUIET
-                        std::cerr << "WARN: broadcasting variable '" << var_name << "' from scalar to expected array\n";
-                        #endif
-                        values.resize(numItems, values[0]);
-                    } else if (values.size() != numItems) {
-                        throw std::runtime_error("Mismatch in item count for variable '" + var_name + "': model expects " +
-                                                 std::to_string(numItems) + ", provider returned " + std::to_string(values.size()) +
-                                                 " items\n");
-                    }
-                    value_ptr = get_values_as_type( type, values.begin(), values.end() );
-
-                } else {
                 int varItemSize = get_bmi_model()->GetVarItemsize(var_name);
                 int nbytes = get_bmi_model()->GetVarNbytes(var_name);
                 int varItemSize = get_bmi_model()->GetVarItemsize(var_name);
@@ -995,26 +965,6 @@ namespace realization {
                         throw std::runtime_error("Mismatch in item count for variable '" + var_name + "': model expects " +
                                                  std::to_string(numItems) + ", provider returned " + std::to_string(values.size()) +
                                                  " items\n");
-                    }
-                    value_ptr = get_values_as_type( type, values.begin(), values.end() );
-
-                } else {
-                int varItemSize = get_bmi_model()->GetVarItemsize(var_name);
-                int nbytes = get_bmi_model()->GetVarNbytes(var_name);
-                std::shared_ptr<void> value_ptr;
-                // Finally, use the value obtained to set the model input
-                std::string type = get_bmi_model()->get_analogous_cxx_type(get_bmi_model()->GetVarType(var_name),
-                                                                           varItemSize);
-                if (varItemSize != get_bmi_model()->GetVarNbytes(var_name)) {
-                    //more than a single value needed for var_name
-                    auto values = provider->get_values(CatchmentAggrDataSelector(this->get_catchment_id(),var_map_alias, model_epoch_time, t_delta,
-                                                   get_bmi_model()->GetVarUnits(var_name)));
-                    //need to marshal data types to the reciever as well
-                    //this could be done a little more elegantly if the provider interface were
-                    //"type aware", but for now, this will do (but requires yet another copy)
-                    if(values.size() == 1){
-                        //FIXME this isn't generic broacasting, but works for scalar implementations
-                        values.resize(nbytes/varItemSize, values[0]);
                     }
                     value_ptr = get_values_as_type( type, values.begin(), values.end() );
 

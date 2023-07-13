@@ -57,6 +57,7 @@ std::vector<int> Bmi_Py_Formulation::get_output_bbox_list() {
 }
 
 string Bmi_Py_Formulation::get_output_line_for_timestep(int timestep, std::string delimiter) {
+    std::cout << "timestep = " << timestep << std::endl;
     std::string output_header = get_output_header_line(",");
     // TODO: something must be added to store values if more than the current time step is wanted
     // TODO: if such a thing is added, it should probably be configurable to turn it off
