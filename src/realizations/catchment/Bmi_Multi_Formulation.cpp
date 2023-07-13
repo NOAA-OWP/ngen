@@ -142,9 +142,9 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
         }
         set_output_bbox(out_bbox);
     }
-    else {
-        throw std::runtime_error("Can't create Multi formulation: output bound box cannot be set");
-    }
+    //else {
+    //    throw std::runtime_error("Can't create Multi formulation: output bound box cannot be set");
+    //}
 
     // Output precision, if present
     auto out_precision_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION);
