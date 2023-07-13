@@ -696,6 +696,8 @@ namespace realization {
          */
         virtual double get_var_value_as_double(const int& index, const std::string& var_name) = 0;
 
+        virtual std::vector<double> get_var_vec_as_double(time_t timestep, const string &var_name) = 0;
+
         /**
          * Universal logic applied when creating a BMI-backed formulation from NGen config.
          *
