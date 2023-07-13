@@ -12,13 +12,13 @@ if (NOT _cmp)
     set_source_files_properties(wkb.cpp PROPERTIES COMPILE_FLAGS -O0)
 endif()
 
-add_library(geopackage STATIC geometry.cpp
-                              properties.cpp
-                              feature.cpp
-                              read.cpp
-                              wkb.cpp
-                              sqlite/iterator.cpp
-                              sqlite/database.cpp
+add_library(geopackage geometry.cpp
+                       properties.cpp
+                       feature.cpp
+                       read.cpp
+                       wkb.cpp
+                       sqlite/iterator.cpp
+                       sqlite/database.cpp
 )
 add_library(NGen::geopackage ALIAS geopackage)
 target_include_directories(geopackage PUBLIC ${PROJECT_SOURCE_DIR}/include/geopackage)
