@@ -67,12 +67,14 @@ geojson::Feature geopackage::build_feature(
                 properties,
                 bounding_box
             );
-        default:
+        case geojson::FeatureType::GeometryCollection:
             return std::make_shared<geojson::CollectionFeature>(
                 std::vector<geojson::geometry>{geometry},
                 id,
                 properties,
                 bounding_box
             );
+        default:
+            throw std::runtime_error("invalid WKB feature type. Received: " + std::to_string(geometry.which() + 1));
     }
 }
