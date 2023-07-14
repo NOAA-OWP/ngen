@@ -310,11 +310,11 @@ int main(int argc, char *argv[]) {
     #endif //NGEN_ROUTING_ACTIVE
 
     std::string link_key = "toid";
-    #ifdef NGEN_MPI_ACTIVE
     nexus_collection->link_features_from_property(nullptr, &link_key);
+    #ifdef NGEN_MPI_ACTIVE
     hy_features::HY_Features_MPI features = hy_features::HY_Features_MPI(local_data, nexus_collection, manager, mpi_rank, mpi_num_procs);
     #else
-    hy_features::HY_Features features = hy_features::HY_Features(catchment_collection, &link_key, manager);
+    hy_features::HY_Features features = hy_features::HY_Features(nexus_collection, manager);
     #endif
 
     //validate dendritic connections
