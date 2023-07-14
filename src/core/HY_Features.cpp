@@ -50,7 +50,7 @@ void HY_Features::init()
 
       //Create the HY_Catchment with the formulation realization
       std::shared_ptr<HY_Catchment> c = std::make_shared<HY_Catchment>(
-          HY_Catchment(feat_id, origins, destinations, formulation)
+          HY_Catchment(feat_id, origins, destinations, formulation, lv)
         );
 
       _catchments.emplace(feat_id, c);
