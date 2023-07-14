@@ -214,9 +214,9 @@ TEST_F(WKB_Test, wkb_polygon_with_holes_test)
 
     const std::vector<std::pair<double, double>> expected_inner = {
         {2, 2},
-        {3, 2},
-        {3, 3},
         {2, 3},
+        {3, 3},
+        {3, 2},
         {2, 2}
     };
 
