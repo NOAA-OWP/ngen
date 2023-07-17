@@ -97,7 +97,7 @@ class Partitions_Parser {
                 if( part.at("remote-connections").get_type() == geojson::PropertyType::List ) 
                 {
                     //It is valid to have no remote connections, but the backend property tree parser
-                    //can't represent empty lists/objects, so it turns into an ampty string (which is iterable)
+                    //can't represent empty lists/objects, so it turns into an empty string (which is iterable)
                     //so we check to ensure the remote connections are a list type (not string) before we attempt
                     //to process the remote-connections.  If they are empty, this step gets skipped entirely.
                     //Get remote-connections and set the corresponding part_data struct member

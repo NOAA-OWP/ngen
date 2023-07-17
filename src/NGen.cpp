@@ -362,7 +362,7 @@ int main(int argc, char *argv[]) {
 
     // now create the layer objects
 
-    // first make sure that the layer are listede in decreasing order
+    // first make sure that the layer are listed in decreasing order
     boost::range::sort(keys, std::greater<int>());
 
     std::vector<std::shared_ptr<ngen::Layer> > layers;
@@ -373,7 +373,7 @@ int main(int argc, char *argv[]) {
       auto& desc = layer_meta_data.get_layer(keys[i]);
       std::vector<std::string> cat_ids;
 
-      // make a new simulation time object with a differnt output interval
+      // make a new simulation time object with a different output interval
       Simulation_Time sim_time(*manager->Simulation_Time_Object, time_steps[i]);
   
       for ( std::string id : features.catchments(keys[i]) ) { cat_ids.push_back(id); }
@@ -392,10 +392,10 @@ int main(int argc, char *argv[]) {
     for( int count = 0; count < manager->Simulation_Time_Object->get_total_output_times(); count++) 
     {
       // The Inner loop will advance all layers unless doing so will break one of two constraints
-      // 1) A layer may not preceed ahead of the master simulation objects current time
-      // 2) A layer may not preceed ahead of any layer that is computed before it
-      // The do while loop insures that all layers are tested at least once while allowing 
-      // layers small time steps to be updated more than once
+      // 1) A layer may not proceed ahead of the master simulation object's current time
+      // 2) A layer may not proceed ahead of any layer that is computed before it
+      // The do while loop ensures that all layers are tested at least once while allowing 
+      // layers with small time steps to be updated more than once
       // If a layer with a large time step is after a layer with a small time step the
       // layer with the large time step will wait for multiple timesteps from the preceeding
       // layer.
