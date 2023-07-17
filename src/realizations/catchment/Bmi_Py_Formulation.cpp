@@ -85,17 +85,22 @@ string Bmi_Py_Formulation::get_output_line_for_timestep(int timestep, std::strin
         if (rank == 0) {
             // Do the first separately, without the leading comma
             //*output_text_stream << get_var_value_as_double(output_var_names[0]);
+            if (i == 0) {
             if ((output_text_stream->str()).empty()) {
                 *output_text_stream << get_var_value_as_double(output_var_names[0]);
             }
             else {
                 *output_text_stream << "," << get_var_value_as_double(output_var_names[0]);
             }
+            std::cout << "output_var_names[0]: " << output_var_names[i] << ", scalar value = " << get_var_value_as_double(output_var_names[0]) << std::endl;
+            } else {
 
             // Do the rest with a leading comma
-            for (int i = 1; i < output_var_names.size(); ++i) {
+            //for (int i = 1; i < output_var_names.size(); ++i) {
                 *output_text_stream << "," << get_var_value_as_double(output_var_names[i]);
-            }
+                std::cout << "output_var_names[i]: " << output_var_names[i] << ", scalar value = " << get_var_value_as_double(output_var_names[i]) << std::endl;
+            //}
+        }
         }
 
         // Skip 3d and higher grid variables for now since this type data not yet available
@@ -111,6 +116,7 @@ string Bmi_Py_Formulation::get_output_line_for_timestep(int timestep, std::strin
             for (int j = 0; j < index_array.size(); ++j) {
                 int index = index_array[j];
                 *output_text_stream << "," << get_var_vec_as_double(t_delta, output_var_names[i])[index];
+                std::cout << "output_var_names[i]: " << output_var_names[i] << ", vec value = " << get_var_vec_as_double(t_delta, output_var_names[i])[index] << std::endl;
             }
           }
     }
