@@ -3,6 +3,8 @@
 #include <string>
 #include <unordered_map>
 
+#include <utilities/span.hpp>
+
 #include "realizations/catchment/Formulation_Manager.hpp"
 #include <Catchment_Formulation.hpp>
 #include <HY_Features.hpp>
