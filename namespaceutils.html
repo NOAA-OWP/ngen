@@ -109,12 +109,152 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:afe3916e5865f10952d4a930fa13b70e7"><td class="memTemplParams" colspan="2">template&lt;typename S &gt; </td></tr>
+<tr class="memitem:afe3916e5865f10952d4a930fa13b70e7"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceutils.html#afe3916e5865f10952d4a930fa13b70e7">copy_from</a> (const std::vector&lt; uint8_t &gt; &amp;src, int &amp;index, S &amp;dst, uint8_t order)</td></tr>
+<tr class="memdesc:afe3916e5865f10952d4a930fa13b70e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copies bytes from.  <a href="namespaceutils.html#afe3916e5865f10952d4a930fa13b70e7">More...</a><br /></td></tr>
+<tr class="separator:afe3916e5865f10952d4a930fa13b70e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe54707f2450a5387dcbc4281d7fef6e"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:afe54707f2450a5387dcbc4281d7fef6e"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceutils.html#afe54707f2450a5387dcbc4281d7fef6e">copy_from&lt; double &gt;</a> (const std::vector&lt; uint8_t &gt; &amp;src, int &amp;index, double &amp;dst, uint8_t order)</td></tr>
+<tr class="separator:afe54707f2450a5387dcbc4281d7fef6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a36dea491674f3e0b6b11591f976a88cb"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classutils_1_1_stream_handler.html">StreamHandler</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceutils.html#a36dea491674f3e0b6b11591f976a88cb">getStdOut</a> ()</td></tr>
 <tr class="separator:a36dea491674f3e0b6b11591f976a88cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0d4e21fbb83912793512c7e9a37403ac"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classutils_1_1_stream_handler.html">StreamHandler</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceutils.html#a0d4e21fbb83912793512c7e9a37403ac">getStdErr</a> ()</td></tr>
 <tr class="separator:a0d4e21fbb83912793512c7e9a37403ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="afe3916e5865f10952d4a930fa13b70e7" name="afe3916e5865f10952d4a930fa13b70e7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe3916e5865f10952d4a930fa13b70e7">&#9670;&#160;</a></span>copy_from()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename S &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void utils::copy_from </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; uint8_t &gt; &amp;&#160;</td>
+          <td class="paramname"><em>src</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int &amp;&#160;</td>
+          <td class="paramname"><em>index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">S &amp;&#160;</td>
+          <td class="paramname"><em>dst</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>order</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Copies bytes from. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">to</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<p>param , converts the endianness to native, and increments</p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">by</td><td>the number of bytes used to store </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname"></td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<p>S}</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">S</td><td>a primitive type </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">src</td><td>a vector of bytes </td></tr>
+    <tr><td class="paramname">index</td><td>an integral type tracking the starting position of</td></tr>
+    <tr><td class="paramname">'s</td><td>memory </td></tr>
+    <tr><td class="paramname">dst</td><td>output primitive </td></tr>
+    <tr><td class="paramname">order</td><td>endianness value (0x01 == Little; 0x00 == Big) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">Referenced by <a class="el" href="namespacegeopackage.html#af4db1e0223650985023e30ffe06255b6">geopackage::build_geometry()</a>, <a class="el" href="namespaceutils.html#afe54707f2450a5387dcbc4281d7fef6e">copy_from&lt; double &gt;()</a>, <a class="el" href="structgeopackage_1_1wkb.html#a01e781a3f97ecdd28d98964c8bb426a1">geopackage::wkb::read()</a>, <a class="el" href="structgeopackage_1_1wkb.html#ad9e7143813acdc28bc499af24d44bc45">geopackage::wkb::read_linestring()</a>, <a class="el" href="structgeopackage_1_1wkb.html#aa792d92cd8c870d63e09bbc8f290d812">geopackage::wkb::read_multilinestring()</a>, <a class="el" href="structgeopackage_1_1wkb.html#a3fbc49aaf3f2854dcb0e81f078fd1721">geopackage::wkb::read_multipoint()</a>, <a class="el" href="structgeopackage_1_1wkb.html#af33e4671354c55511eb75e6b5aec5f32">geopackage::wkb::read_multipolygon()</a>, <a class="el" href="structgeopackage_1_1wkb.html#a090fafe7c120668ef579cdf4a94172d9">geopackage::wkb::read_point()</a>, and <a class="el" href="structgeopackage_1_1wkb.html#acccc2f283c939425cb01fab31596dd53">geopackage::wkb::read_polygon()</a>.</p>
+
+</div>
+</div>
+<a id="afe54707f2450a5387dcbc4281d7fef6e" name="afe54707f2450a5387dcbc4281d7fef6e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe54707f2450a5387dcbc4281d7fef6e">&#9670;&#160;</a></span>copy_from&lt; double &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="namespaceutils.html#afe3916e5865f10952d4a930fa13b70e7">utils::copy_from</a>&lt; double &gt; </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; uint8_t &gt; &amp;&#160;</td>
+          <td class="paramname"><em>src</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int &amp;&#160;</td>
+          <td class="paramname"><em>index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double &amp;&#160;</td>
+          <td class="paramname"><em>dst</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>order</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="namespaceutils.html#afe3916e5865f10952d4a930fa13b70e7">copy_from()</a>.</p>
+
+</div>
+</div>
 <a id="a0d4e21fbb83912793512c7e9a37403ac" name="a0d4e21fbb83912793512c7e9a37403ac"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0d4e21fbb83912793512c7e9a37403ac">&#9670;&#160;</a></span>getStdErr()</h2>
 
@@ -171,7 +311,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceutils.html">utils</a></li>
-    <li class="footer">Generated on Fri Jul 14 2023 23:27:43 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
+    <li class="footer">Generated on Tue Jul 18 2023 18:45:35 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
   </ul>
 </div>
 </body>

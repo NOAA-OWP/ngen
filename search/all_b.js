@@ -77,5 +77,7 @@ var searchData=
   ['issuppliedbywrappedprovider_74',['isSuppliedByWrappedProvider',['../classdata__access_1_1_optional_wrapped_data_provider.html#a62a2689c42f6d653aea295ceee403358',1,'data_access::OptionalWrappedDataProvider']]],
   ['issuppliedwithdefault_75',['isSuppliedWithDefault',['../classdata__access_1_1_optional_wrapped_data_provider.html#add79bc371338a1f1cfd487870a337e31',1,'data_access::OptionalWrappedDataProvider']]],
   ['iswrappedproviderset_76',['isWrappedProviderSet',['../classdata__access_1_1_deferred_wrapped_provider.html#a1d914d387e7ae2d933a372d0976ed959',1,'data_access::DeferredWrappedProvider']]],
-  ['itype_77',['itype',['../classhy__features_1_1hydrolocation_1_1_h_y___hydro_location.html#a16cf3e4df55d45b9763a556907302a4d',1,'hy_features::hydrolocation::HY_HydroLocation::itype() const'],['../classhy__features_1_1hydrolocation_1_1_h_y___hydro_location.html#a06131c25f47b07ea7a9c19c9b785e20e',1,'hy_features::hydrolocation::HY_HydroLocation::itype()']]]
+  ['iteration_5ffinished_77',['iteration_finished',['../classgeopackage_1_1sqlite__iter.html#a3dc181bdbc22febf1dfb77c371fa0fb2',1,'geopackage::sqlite_iter']]],
+  ['iteration_5fstep_78',['iteration_step',['../classgeopackage_1_1sqlite__iter.html#a34f525e0e556fb5154cdd296f556c5b8',1,'geopackage::sqlite_iter']]],
+  ['itype_79',['itype',['../classhy__features_1_1hydrolocation_1_1_h_y___hydro_location.html#a06131c25f47b07ea7a9c19c9b785e20e',1,'hy_features::hydrolocation::HY_HydroLocation::itype()'],['../classhy__features_1_1hydrolocation_1_1_h_y___hydro_location.html#a16cf3e4df55d45b9763a556907302a4d',1,'hy_features::hydrolocation::HY_HydroLocation::itype() const']]]
 ];

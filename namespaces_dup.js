@@ -5,6 +5,7 @@ var namespaces_dup =
     [ "et", "namespaceet.html", "namespaceet" ],
     [ "external", "namespaceexternal.html", "namespaceexternal" ],
     [ "geojson", "namespacegeojson.html", "namespacegeojson" ],
+    [ "geopackage", "namespacegeopackage.html", "namespacegeopackage" ],
     [ "giuh", "namespacegiuh.html", "namespacegiuh" ],
     [ "hy_features", "namespacehy__features.html", "namespacehy__features" ],
     [ "models", "namespacemodels.html", "namespacemodels" ],

@@ -42,6 +42,12 @@ var annotated_dup =
       [ "PointFeature", "classgeojson_1_1_point_feature.html", "classgeojson_1_1_point_feature" ],
       [ "PolygonFeature", "classgeojson_1_1_polygon_feature.html", "classgeojson_1_1_polygon_feature" ]
     ] ],
+    [ "geopackage", "namespacegeopackage.html", [
+      [ "sqlite", "classgeopackage_1_1sqlite.html", "classgeopackage_1_1sqlite" ],
+      [ "sqlite_deleter", "structgeopackage_1_1sqlite__deleter.html", "structgeopackage_1_1sqlite__deleter" ],
+      [ "sqlite_iter", "classgeopackage_1_1sqlite__iter.html", "classgeopackage_1_1sqlite__iter" ],
+      [ "wkb", "structgeopackage_1_1wkb.html", "structgeopackage_1_1wkb" ]
+    ] ],
     [ "giuh", "namespacegiuh.html", [
       [ "giuh_carry_over", "structgiuh_1_1giuh__carry__over.html", "structgiuh_1_1giuh__carry__over" ],
       [ "giuh_kernel", "classgiuh_1_1giuh__kernel.html", "classgiuh_1_1giuh__kernel" ],

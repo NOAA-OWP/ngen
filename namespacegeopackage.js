@@ -1,0 +1,14 @@
+var namespacegeopackage =
+[
+    [ "sqlite", "classgeopackage_1_1sqlite.html", "classgeopackage_1_1sqlite" ],
+    [ "sqlite_deleter", "structgeopackage_1_1sqlite__deleter.html", "structgeopackage_1_1sqlite__deleter" ],
+    [ "sqlite_iter", "classgeopackage_1_1sqlite__iter.html", "classgeopackage_1_1sqlite__iter" ],
+    [ "wkb", "structgeopackage_1_1wkb.html", "structgeopackage_1_1wkb" ],
+    [ "stmt_t", "namespacegeopackage.html#a9b052ec7251d73a0a61f5a2c9c17f26b", null ],
+    [ "build_feature", "namespacegeopackage.html#ad62d7034c9f884e4bb739444c4a9aed7", null ],
+    [ "build_geometry", "namespacegeopackage.html#af4db1e0223650985023e30ffe06255b6", null ],
+    [ "build_properties", "namespacegeopackage.html#ad83484f3bbaac91d9890c85713c448e3", null ],
+    [ "read", "namespacegeopackage.html#aaaf5f61e8b5234ef6c840267f06e2134", null ],
+    [ "epsg3857", "namespacegeopackage.html#ac094e174e65323898b26a052f5c87224", null ],
+    [ "epsg5070", "namespacegeopackage.html#a99923a306a98843b05f55bf3cc2560aa", null ]
+];

@@ -1213,6 +1213,88 @@
         <topic label="read" href="namespacegeojson.html#aa9d243ef2a01cd361aa02917e4151d1d"/>
         <topic label="read" href="namespacegeojson.html#a5c02053ab14ac924a8e8ce067149e084"/>
       </topic>
+      <topic label="geopackage" href="namespacegeopackage.html">
+        <topic label="sqlite" href="classgeopackage_1_1sqlite.html">
+          <topic label="sqlite_t" href="classgeopackage_1_1sqlite.html#a9c53ec837d19c9cbdf72e365ce00a27f"/>
+          <topic label="sqlite" href="classgeopackage_1_1sqlite.html#ab45c3b0eac4bd0950d9d12ab90b11dfa"/>
+          <topic label="sqlite" href="classgeopackage_1_1sqlite.html#ac24a1e4c13026853a6fa7d0c19af6708"/>
+          <topic label="sqlite" href="classgeopackage_1_1sqlite.html#aba0e91f87cc1ae1b7b2c96abb57c1523"/>
+          <topic label="sqlite" href="classgeopackage_1_1sqlite.html#a56fd8bce8f649eb7419686609344b6bf"/>
+          <topic label="connection" href="classgeopackage_1_1sqlite.html#a069126a028d382c51f571dff7126873b"/>
+          <topic label="has_table" href="classgeopackage_1_1sqlite.html#a1b5426d33f3fab055b20410347e75772"/>
+          <topic label="operator=" href="classgeopackage_1_1sqlite.html#a0719b4ced73bb6f664f9206190bee808"/>
+          <topic label="operator=" href="classgeopackage_1_1sqlite.html#a425421fba7b13eea523d63a2225e1bb9"/>
+          <topic label="query" href="classgeopackage_1_1sqlite.html#a9f67d3af2adc308af62babe1c728601c"/>
+          <topic label="query" href="classgeopackage_1_1sqlite.html#a00a40303c0df1390ce90bd194c67939e"/>
+          <topic label="query" href="classgeopackage_1_1sqlite.html#a4ee831f5791313e431d482c0a3b207e4"/>
+          <topic label="conn" href="classgeopackage_1_1sqlite.html#a9efa0f9041e32389f49a87117b84526f"/>
+        </topic>
+        <topic label="sqlite_deleter" href="structgeopackage_1_1sqlite__deleter.html">
+          <topic label="operator()" href="structgeopackage_1_1sqlite__deleter.html#a814e205cd0cce673f1208d0f1459ca61"/>
+          <topic label="operator()" href="structgeopackage_1_1sqlite__deleter.html#a67e61ea6b3aee811011b393edffdb101"/>
+        </topic>
+        <topic label="sqlite_iter" href="classgeopackage_1_1sqlite__iter.html">
+          <topic label="sqlite_iter" href="classgeopackage_1_1sqlite__iter.html#a88ceed4cb6b1a1fdd4819ab500ef71ed"/>
+          <topic label="column_index" href="classgeopackage_1_1sqlite__iter.html#ac4af68ba03773add1249bb5d35564174"/>
+          <topic label="columns" href="classgeopackage_1_1sqlite__iter.html#a2fddc0f7897685ca247c9403ad2574b6"/>
+          <topic label="current_row" href="classgeopackage_1_1sqlite__iter.html#ad09ba45435fee04e91a4e28f7c9c5924"/>
+          <topic label="done" href="classgeopackage_1_1sqlite__iter.html#a3e597483450dc7ecfdd01fefa8237309"/>
+          <topic label="get" href="classgeopackage_1_1sqlite__iter.html#aa8cff8b58c63ae6e347eb33436cd0850"/>
+          <topic label="get" href="classgeopackage_1_1sqlite__iter.html#af85fabea6f897969f3246fc3f911e1f2"/>
+          <topic label="get" href="classgeopackage_1_1sqlite__iter.html#a0a87b44403af8ab17e0c8ccb5939245d"/>
+          <topic label="get" href="classgeopackage_1_1sqlite__iter.html#ab267753b7e6a5fe3db32a938cb7eed1c"/>
+          <topic label="handle_get_index" href="classgeopackage_1_1sqlite__iter.html#a73603e282d82de895727e613ed6ef852"/>
+          <topic label="next" href="classgeopackage_1_1sqlite__iter.html#a1bfb8d4c9c127a4b905108e0c936f57a"/>
+          <topic label="num_columns" href="classgeopackage_1_1sqlite__iter.html#abca2e62dc04b13983484717d14753a66"/>
+          <topic label="ptr" href="classgeopackage_1_1sqlite__iter.html#a213ff3a8f2da8b98ea9431b4633b5d44"/>
+          <topic label="restart" href="classgeopackage_1_1sqlite__iter.html#a47fc1ae821c9f1c7dee3ba64bd1254b1"/>
+          <topic label="types" href="classgeopackage_1_1sqlite__iter.html#a14d08815944c48a03e8df4b982fd054e"/>
+          <topic label="column_count" href="classgeopackage_1_1sqlite__iter.html#a98abed2a88a7c2650a7ff0c38e60731b"/>
+          <topic label="column_names" href="classgeopackage_1_1sqlite__iter.html#aa39e4fbc60151233153b6b4609212454"/>
+          <topic label="column_types" href="classgeopackage_1_1sqlite__iter.html#a8dc8bea17472bb138eaff06c0fb32573"/>
+          <topic label="iteration_finished" href="classgeopackage_1_1sqlite__iter.html#a3dc181bdbc22febf1dfb77c371fa0fb2"/>
+          <topic label="iteration_step" href="classgeopackage_1_1sqlite__iter.html#a34f525e0e556fb5154cdd296f556c5b8"/>
+          <topic label="stmt" href="classgeopackage_1_1sqlite__iter.html#a508e93baad6ec9e0006866955ddad339"/>
+        </topic>
+        <topic label="wkb" href="structgeopackage_1_1wkb.html">
+          <topic label="wgs84" href="structgeopackage_1_1wkb_1_1wgs84.html">
+            <topic label="wgs84" href="structgeopackage_1_1wkb_1_1wgs84.html#a7a6bcad7be082fbe49021b066e8a49e1"/>
+            <topic label="operator()" href="structgeopackage_1_1wkb_1_1wgs84.html#a998c0f3ca6b36ba73167fb90b802383d"/>
+            <topic label="operator()" href="structgeopackage_1_1wkb_1_1wgs84.html#a50e68739197287afb021b8ec543a6753"/>
+            <topic label="operator()" href="structgeopackage_1_1wkb_1_1wgs84.html#a4058dbbc3082162e9e50cbb4a97f56c6"/>
+            <topic label="operator()" href="structgeopackage_1_1wkb_1_1wgs84.html#a82afe394b9dbfcfc96620e99f6f10033"/>
+            <topic label="operator()" href="structgeopackage_1_1wkb_1_1wgs84.html#af505449edf98349d21869aab39d6e8b0"/>
+            <topic label="operator()" href="structgeopackage_1_1wkb_1_1wgs84.html#a9726eac26033a069199ded47bd7aa150"/>
+            <topic label="srs" href="structgeopackage_1_1wkb_1_1wgs84.html#a18285fad59bab521f86627df61fe189d"/>
+            <topic label="tr" href="structgeopackage_1_1wkb_1_1wgs84.html#a124cc393291193ce56fbfd1ff095d387"/>
+          </topic>
+          <topic label="byte_t" href="structgeopackage_1_1wkb.html#abdcf3102008fba49930a175c6f4bc7c3"/>
+          <topic label="byte_vector" href="structgeopackage_1_1wkb.html#a278d5126f235d0b98a230f65bd6949c9"/>
+          <topic label="geometry" href="structgeopackage_1_1wkb.html#a742679979fb2a43cf55b80c6140686f3"/>
+          <topic label="linestring_t" href="structgeopackage_1_1wkb.html#a60fbcaabe34b0cf4ad6fb8e9eec8dc7c"/>
+          <topic label="multilinestring_t" href="structgeopackage_1_1wkb.html#aa29f0fc42b553018d6b9bebf45d15c87"/>
+          <topic label="multipoint_t" href="structgeopackage_1_1wkb.html#a967d3ed34992ce75dd84f8ddd960a4a3"/>
+          <topic label="multipolygon_t" href="structgeopackage_1_1wkb.html#aff13d90fae3ae1b2a1231c0e49fa73c0"/>
+          <topic label="point_t" href="structgeopackage_1_1wkb.html#ac0dd6981be8c69037eca9170a0e72263"/>
+          <topic label="polygon_t" href="structgeopackage_1_1wkb.html#a1bbc89d0d287b934932c0616ce4f2edb"/>
+          <topic label="wkb" href="structgeopackage_1_1wkb.html#ac348023235b7eec07e05d44d508c8857"/>
+          <topic label="get_prj" href="structgeopackage_1_1wkb.html#a479c54c989ff0cbe585074f7d92597e4"/>
+          <topic label="read" href="structgeopackage_1_1wkb.html#a01e781a3f97ecdd28d98964c8bb426a1"/>
+          <topic label="read_linestring" href="structgeopackage_1_1wkb.html#ad9e7143813acdc28bc499af24d44bc45"/>
+          <topic label="read_multilinestring" href="structgeopackage_1_1wkb.html#aa792d92cd8c870d63e09bbc8f290d812"/>
+          <topic label="read_multipoint" href="structgeopackage_1_1wkb.html#a3fbc49aaf3f2854dcb0e81f078fd1721"/>
+          <topic label="read_multipolygon" href="structgeopackage_1_1wkb.html#af33e4671354c55511eb75e6b5aec5f32"/>
+          <topic label="read_point" href="structgeopackage_1_1wkb.html#a090fafe7c120668ef579cdf4a94172d9"/>
+          <topic label="read_polygon" href="structgeopackage_1_1wkb.html#acccc2f283c939425cb01fab31596dd53"/>
+        </topic>
+        <topic label="stmt_t" href="namespacegeopackage.html#a9b052ec7251d73a0a61f5a2c9c17f26b"/>
+        <topic label="build_feature" href="namespacegeopackage.html#ad62d7034c9f884e4bb739444c4a9aed7"/>
+        <topic label="build_geometry" href="namespacegeopackage.html#af4db1e0223650985023e30ffe06255b6"/>
+        <topic label="build_properties" href="namespacegeopackage.html#ad83484f3bbaac91d9890c85713c448e3"/>
+        <topic label="read" href="namespacegeopackage.html#aaaf5f61e8b5234ef6c840267f06e2134"/>
+        <topic label="epsg3857" href="namespacegeopackage.html#ac094e174e65323898b26a052f5c87224"/>
+        <topic label="epsg5070" href="namespacegeopackage.html#a99923a306a98843b05f55bf3cc2560aa"/>
+      </topic>
       <topic label="giuh" href="namespacegiuh.html">
         <topic label="giuh_carry_over" href="structgiuh_1_1giuh__carry__over.html">
           <topic label="giuh_carry_over" href="structgiuh_1_1giuh__carry__over.html#ab10298751abb137f0213527d99a08139"/>
@@ -2796,6 +2878,8 @@
           <topic label="output_stream" href="classutils_1_1_stream_handler.html#a18d8a5d7ca89a77d60ed7e231c9eb798"/>
           <topic label="sep" href="classutils_1_1_stream_handler.html#a94fc95b39ccee186539087dcad20f43b"/>
         </topic>
+        <topic label="copy_from" href="namespaceutils.html#afe3916e5865f10952d4a930fa13b70e7"/>
+        <topic label="copy_from&lt; double &gt;" href="namespaceutils.html#afe54707f2450a5387dcbc4281d7fef6e"/>
         <topic label="getStdErr" href="namespaceutils.html#a0d4e21fbb83912793512c7e9a37403ac"/>
         <topic label="getStdOut" href="namespaceutils.html#a36dea491674f3e0b6b11591f976a88cb"/>
       </topic>
@@ -3669,6 +3753,81 @@
           <topic label="origination" href="classgeojson_1_1_polygon_feature.html#a2e62de0267a14d019a8e230b276bb6b4"/>
           <topic label="properties" href="classgeojson_1_1_polygon_feature.html#a8b5b4e112d4b3559c8876126f1f1412c"/>
           <topic label="type" href="classgeojson_1_1_polygon_feature.html#ac2786341bb4e570fa8d60fefe18dbe0f"/>
+        </topic>
+      </topic>
+      <topic label="geopackage" href="namespacegeopackage.html">
+        <topic label="sqlite" href="classgeopackage_1_1sqlite.html">
+          <topic label="sqlite_t" href="classgeopackage_1_1sqlite.html#a9c53ec837d19c9cbdf72e365ce00a27f"/>
+          <topic label="sqlite" href="classgeopackage_1_1sqlite.html#ab45c3b0eac4bd0950d9d12ab90b11dfa"/>
+          <topic label="sqlite" href="classgeopackage_1_1sqlite.html#ac24a1e4c13026853a6fa7d0c19af6708"/>
+          <topic label="sqlite" href="classgeopackage_1_1sqlite.html#aba0e91f87cc1ae1b7b2c96abb57c1523"/>
+          <topic label="sqlite" href="classgeopackage_1_1sqlite.html#a56fd8bce8f649eb7419686609344b6bf"/>
+          <topic label="connection" href="classgeopackage_1_1sqlite.html#a069126a028d382c51f571dff7126873b"/>
+          <topic label="has_table" href="classgeopackage_1_1sqlite.html#a1b5426d33f3fab055b20410347e75772"/>
+          <topic label="operator=" href="classgeopackage_1_1sqlite.html#a0719b4ced73bb6f664f9206190bee808"/>
+          <topic label="operator=" href="classgeopackage_1_1sqlite.html#a425421fba7b13eea523d63a2225e1bb9"/>
+          <topic label="query" href="classgeopackage_1_1sqlite.html#a9f67d3af2adc308af62babe1c728601c"/>
+          <topic label="query" href="classgeopackage_1_1sqlite.html#a00a40303c0df1390ce90bd194c67939e"/>
+          <topic label="query" href="classgeopackage_1_1sqlite.html#a4ee831f5791313e431d482c0a3b207e4"/>
+          <topic label="conn" href="classgeopackage_1_1sqlite.html#a9efa0f9041e32389f49a87117b84526f"/>
+        </topic>
+        <topic label="sqlite_deleter" href="structgeopackage_1_1sqlite__deleter.html">
+          <topic label="operator()" href="structgeopackage_1_1sqlite__deleter.html#a814e205cd0cce673f1208d0f1459ca61"/>
+          <topic label="operator()" href="structgeopackage_1_1sqlite__deleter.html#a67e61ea6b3aee811011b393edffdb101"/>
+        </topic>
+        <topic label="sqlite_iter" href="classgeopackage_1_1sqlite__iter.html">
+          <topic label="sqlite_iter" href="classgeopackage_1_1sqlite__iter.html#a88ceed4cb6b1a1fdd4819ab500ef71ed"/>
+          <topic label="column_index" href="classgeopackage_1_1sqlite__iter.html#ac4af68ba03773add1249bb5d35564174"/>
+          <topic label="columns" href="classgeopackage_1_1sqlite__iter.html#a2fddc0f7897685ca247c9403ad2574b6"/>
+          <topic label="current_row" href="classgeopackage_1_1sqlite__iter.html#ad09ba45435fee04e91a4e28f7c9c5924"/>
+          <topic label="done" href="classgeopackage_1_1sqlite__iter.html#a3e597483450dc7ecfdd01fefa8237309"/>
+          <topic label="get" href="classgeopackage_1_1sqlite__iter.html#aa8cff8b58c63ae6e347eb33436cd0850"/>
+          <topic label="get" href="classgeopackage_1_1sqlite__iter.html#af85fabea6f897969f3246fc3f911e1f2"/>
+          <topic label="get" href="classgeopackage_1_1sqlite__iter.html#a0a87b44403af8ab17e0c8ccb5939245d"/>
+          <topic label="get" href="classgeopackage_1_1sqlite__iter.html#ab267753b7e6a5fe3db32a938cb7eed1c"/>
+          <topic label="handle_get_index" href="classgeopackage_1_1sqlite__iter.html#a73603e282d82de895727e613ed6ef852"/>
+          <topic label="next" href="classgeopackage_1_1sqlite__iter.html#a1bfb8d4c9c127a4b905108e0c936f57a"/>
+          <topic label="num_columns" href="classgeopackage_1_1sqlite__iter.html#abca2e62dc04b13983484717d14753a66"/>
+          <topic label="ptr" href="classgeopackage_1_1sqlite__iter.html#a213ff3a8f2da8b98ea9431b4633b5d44"/>
+          <topic label="restart" href="classgeopackage_1_1sqlite__iter.html#a47fc1ae821c9f1c7dee3ba64bd1254b1"/>
+          <topic label="types" href="classgeopackage_1_1sqlite__iter.html#a14d08815944c48a03e8df4b982fd054e"/>
+          <topic label="column_count" href="classgeopackage_1_1sqlite__iter.html#a98abed2a88a7c2650a7ff0c38e60731b"/>
+          <topic label="column_names" href="classgeopackage_1_1sqlite__iter.html#aa39e4fbc60151233153b6b4609212454"/>
+          <topic label="column_types" href="classgeopackage_1_1sqlite__iter.html#a8dc8bea17472bb138eaff06c0fb32573"/>
+          <topic label="iteration_finished" href="classgeopackage_1_1sqlite__iter.html#a3dc181bdbc22febf1dfb77c371fa0fb2"/>
+          <topic label="iteration_step" href="classgeopackage_1_1sqlite__iter.html#a34f525e0e556fb5154cdd296f556c5b8"/>
+          <topic label="stmt" href="classgeopackage_1_1sqlite__iter.html#a508e93baad6ec9e0006866955ddad339"/>
+        </topic>
+        <topic label="wkb" href="structgeopackage_1_1wkb.html">
+          <topic label="wgs84" href="structgeopackage_1_1wkb_1_1wgs84.html">
+            <topic label="wgs84" href="structgeopackage_1_1wkb_1_1wgs84.html#a7a6bcad7be082fbe49021b066e8a49e1"/>
+            <topic label="operator()" href="structgeopackage_1_1wkb_1_1wgs84.html#a998c0f3ca6b36ba73167fb90b802383d"/>
+            <topic label="operator()" href="structgeopackage_1_1wkb_1_1wgs84.html#a50e68739197287afb021b8ec543a6753"/>
+            <topic label="operator()" href="structgeopackage_1_1wkb_1_1wgs84.html#a4058dbbc3082162e9e50cbb4a97f56c6"/>
+            <topic label="operator()" href="structgeopackage_1_1wkb_1_1wgs84.html#a82afe394b9dbfcfc96620e99f6f10033"/>
+            <topic label="operator()" href="structgeopackage_1_1wkb_1_1wgs84.html#af505449edf98349d21869aab39d6e8b0"/>
+            <topic label="operator()" href="structgeopackage_1_1wkb_1_1wgs84.html#a9726eac26033a069199ded47bd7aa150"/>
+            <topic label="srs" href="structgeopackage_1_1wkb_1_1wgs84.html#a18285fad59bab521f86627df61fe189d"/>
+            <topic label="tr" href="structgeopackage_1_1wkb_1_1wgs84.html#a124cc393291193ce56fbfd1ff095d387"/>
+          </topic>
+          <topic label="byte_t" href="structgeopackage_1_1wkb.html#abdcf3102008fba49930a175c6f4bc7c3"/>
+          <topic label="byte_vector" href="structgeopackage_1_1wkb.html#a278d5126f235d0b98a230f65bd6949c9"/>
+          <topic label="geometry" href="structgeopackage_1_1wkb.html#a742679979fb2a43cf55b80c6140686f3"/>
+          <topic label="linestring_t" href="structgeopackage_1_1wkb.html#a60fbcaabe34b0cf4ad6fb8e9eec8dc7c"/>
+          <topic label="multilinestring_t" href="structgeopackage_1_1wkb.html#aa29f0fc42b553018d6b9bebf45d15c87"/>
+          <topic label="multipoint_t" href="structgeopackage_1_1wkb.html#a967d3ed34992ce75dd84f8ddd960a4a3"/>
+          <topic label="multipolygon_t" href="structgeopackage_1_1wkb.html#aff13d90fae3ae1b2a1231c0e49fa73c0"/>
+          <topic label="point_t" href="structgeopackage_1_1wkb.html#ac0dd6981be8c69037eca9170a0e72263"/>
+          <topic label="polygon_t" href="structgeopackage_1_1wkb.html#a1bbc89d0d287b934932c0616ce4f2edb"/>
+          <topic label="wkb" href="structgeopackage_1_1wkb.html#ac348023235b7eec07e05d44d508c8857"/>
+          <topic label="get_prj" href="structgeopackage_1_1wkb.html#a479c54c989ff0cbe585074f7d92597e4"/>
+          <topic label="read" href="structgeopackage_1_1wkb.html#a01e781a3f97ecdd28d98964c8bb426a1"/>
+          <topic label="read_linestring" href="structgeopackage_1_1wkb.html#ad9e7143813acdc28bc499af24d44bc45"/>
+          <topic label="read_multilinestring" href="structgeopackage_1_1wkb.html#aa792d92cd8c870d63e09bbc8f290d812"/>
+          <topic label="read_multipoint" href="structgeopackage_1_1wkb.html#a3fbc49aaf3f2854dcb0e81f078fd1721"/>
+          <topic label="read_multipolygon" href="structgeopackage_1_1wkb.html#af33e4671354c55511eb75e6b5aec5f32"/>
+          <topic label="read_point" href="structgeopackage_1_1wkb.html#a090fafe7c120668ef579cdf4a94172d9"/>
+          <topic label="read_polygon" href="structgeopackage_1_1wkb.html#acccc2f283c939425cb01fab31596dd53"/>
         </topic>
       </topic>
       <topic label="giuh" href="namespacegiuh.html">
@@ -6086,6 +6245,7 @@
       </topic>
       <topic label="boost::static_visitor">
         <topic label="geojson::JSONProperty::AsVectorVisitor&lt; T &gt;" href="structgeojson_1_1_j_s_o_n_property_1_1_as_vector_visitor.html"/>
+        <topic label="geopackage::wkb::wgs84" href="structgeopackage_1_1wkb_1_1wgs84.html"/>
       </topic>
       <topic label="CatchmentAggrDataSelector" href="class_catchment_aggr_data_selector.html">
         <topic label="BMIDataSelector" href="class_b_m_i_data_selector.html"/>
@@ -6147,6 +6307,10 @@
       <topic label="geojson::JSONProperty" href="classgeojson_1_1_j_s_o_n_property.html"/>
       <topic label="geojson::List" href="structgeojson_1_1_list.html"/>
       <topic label="geojson::Object" href="structgeojson_1_1_object.html"/>
+      <topic label="geopackage::sqlite" href="classgeopackage_1_1sqlite.html"/>
+      <topic label="geopackage::sqlite_deleter" href="structgeopackage_1_1sqlite__deleter.html"/>
+      <topic label="geopackage::sqlite_iter" href="classgeopackage_1_1sqlite__iter.html"/>
+      <topic label="geopackage::wkb" href="structgeopackage_1_1wkb.html"/>
       <topic label="giuh::giuh_carry_over" href="structgiuh_1_1giuh__carry__over.html"/>
       <topic label="giuh::giuh_kernel" href="classgiuh_1_1giuh__kernel.html">
         <topic label="giuh::giuh_kernel_impl" href="classgiuh_1_1giuh__kernel__impl.html"/>
@@ -6321,6 +6485,7 @@
         <topic label="n" href="functions_func_n.html"/>
         <topic label="o" href="functions_func_o.html"/>
         <topic label="p" href="functions_func_p.html"/>
+        <topic label="q" href="functions_func_q.html"/>
         <topic label="r" href="functions_func_r.html"/>
         <topic label="s" href="functions_func_s.html"/>
         <topic label="t" href="functions_func_t.html"/>

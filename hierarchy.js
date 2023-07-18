@@ -29,7 +29,8 @@ var hierarchy =
       [ "request_from_empty_nexus", "structrequest__from__empty__nexus.html", null ]
     ] ],
     [ "boost::static_visitor", null, [
-      [ "geojson::JSONProperty::AsVectorVisitor< T >", "structgeojson_1_1_j_s_o_n_property_1_1_as_vector_visitor.html", null ]
+      [ "geojson::JSONProperty::AsVectorVisitor< T >", "structgeojson_1_1_j_s_o_n_property_1_1_as_vector_visitor.html", null ],
+      [ "geopackage::wkb::wgs84", "structgeopackage_1_1wkb_1_1wgs84.html", null ]
     ] ],
     [ "CatchmentAggrDataSelector", "class_catchment_aggr_data_selector.html", [
       [ "BMIDataSelector", "class_b_m_i_data_selector.html", null ],
@@ -91,6 +92,10 @@ var hierarchy =
     [ "geojson::JSONProperty", "classgeojson_1_1_j_s_o_n_property.html", null ],
     [ "geojson::List", "structgeojson_1_1_list.html", null ],
     [ "geojson::Object", "structgeojson_1_1_object.html", null ],
+    [ "geopackage::sqlite", "classgeopackage_1_1sqlite.html", null ],
+    [ "geopackage::sqlite_deleter", "structgeopackage_1_1sqlite__deleter.html", null ],
+    [ "geopackage::sqlite_iter", "classgeopackage_1_1sqlite__iter.html", null ],
+    [ "geopackage::wkb", "structgeopackage_1_1wkb.html", null ],
     [ "giuh::giuh_carry_over", "structgiuh_1_1giuh__carry__over.html", null ],
     [ "giuh::giuh_kernel", "classgiuh_1_1giuh__kernel.html", [
       [ "giuh::giuh_kernel_impl", "classgiuh_1_1giuh__kernel__impl.html", null ]
