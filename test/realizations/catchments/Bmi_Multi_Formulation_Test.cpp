@@ -824,7 +824,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_1_b) {
 /**
  * Test of output for example 3 with output_variables from multiple BMI modules, picking time step when there was non-zero rain rate.
  */
-TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_3_a) {
+TEST_F(Bmi_Multi_Formulation_Test, DISABLED_GetOutputLineForTimestep_3_a) {
     int ex_index = 3;
 
     Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());

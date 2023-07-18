@@ -303,6 +303,23 @@ string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, std::st
         // This almost certainly should never happen, but just to be safe ...
         if (output_var_names.empty()) { return ""; }
 
+        std::cout << "Multi: timestep = " << timestep << std::endl;
+        for (int i = 0; i < output_var_names.size(); ++i) {
+            std::cout << "Multi: output_var_names," << output_var_names[i] << std::endl;
+        }
+
+        // Remove invalid output variable name entry in the globle bmi-multi module
+        std::vector<std::string>::iterator it;
+        int last_index = modules.size() - 1;
+        auto module = modules[last_index];
+        std::vector<std::string> output_vec_name = module->get_bmi_output_variables();
+        for (int i = 0; i < output_var_names.size(); ++i) {
+            it = std::find(output_vec_name.begin(), output_vec_name.end(), output_var_names[i]);
+            if (it == output_vec_name.end()) {
+                throw std::runtime_error(output_var_names[i] + " does not exist in the output name list.");
+            }
+        }
+
         try {
             // Do the first separately, without the leading comma
             auto output_data_provider_iter = availableData.find(output_var_names[0]);
