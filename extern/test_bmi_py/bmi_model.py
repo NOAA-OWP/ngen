@@ -80,6 +80,7 @@ class bmi_model(Bmi):
                            'OUTPUT_VAR_3':['OUTPUT_VAR_3','-'],
                            'GRID_VAR_1':['OUTPUT_VAR_1','-'],
                            'GRID_VAR_2':['GRID_VAR_2','-'],
+                           'GRID_VAR_3':['GRID_VAR_3','-']
                             }
 
     #------------------------------------------------------
