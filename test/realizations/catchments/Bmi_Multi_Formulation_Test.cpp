@@ -776,6 +776,9 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_0_b) {
  * Simple test of output for example 1.
  */
 TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_1_a) {
+/* Note that a runtime check in SetUp() prevents this from executing when it can't, but
+   this needs to be here to prevent compile-time errors if this flag is not enabled. */
+#if ACTIVATE_PYTHON
     int ex_index = 1;
 
     Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
@@ -793,12 +796,16 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_1_a) {
     //configured in the example realization generation to not query those, so hacked in here.  See comment above about not worrying about
     //initializing/using the grid vars in this test, and try to find a better way in the future.
     ASSERT_EQ(output, "0.000000,200620.000000,1.000000,2.000000,3.000000");
+#endif // ACTIVATE_PYTHON
 }
 
 /**
  * Simple test of output for example 1 with modified variables, picking time step when there was non-zero rain rate.
  */
 TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_1_b) {
+/* Note that a runtime check in SetUp() prevents this from executing when it can't, but
+   this needs to be here to prevent compile-time errors if this flag is not enabled. */
+#if ACTIVATE_PYTHON
     int ex_index = 1;
 
     Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
@@ -819,6 +826,7 @@ TEST_F(Bmi_Multi_Formulation_Test, GetOutputLineForTimestep_1_b) {
     //configured in the example realization generation to not query those, so hacked in here.  See comment above about not worrying about
     //initializing/using the grid vars in this test, and try to find a better way in the future.
     ASSERT_EQ(output, "0.000001,199280.000000,543.000000,2.000001,3.000001");
+#endif // ACTIVATE_PYTHON
 }
 
 /**
