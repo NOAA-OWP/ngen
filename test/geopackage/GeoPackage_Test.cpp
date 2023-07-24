@@ -53,7 +53,7 @@ TEST_F(GeoPackage_Test, geopackage_read_test)
     const auto& third = gpkg->get_feature(2);
     EXPECT_EQ(first->get_id(), "First");
 
-    const auto& point = boost::get<geojson::coordinate_t>(first->geometry());
+    const auto point = boost::get<geojson::coordinate_t>(first->geometry());
     EXPECT_EQ(point.get<0>(), 102.0);
     EXPECT_EQ(point.get<1>(), 0.5);
 
@@ -68,7 +68,7 @@ TEST_F(GeoPackage_Test, geopackage_idsubset_test)
 
     const auto& first = gpkg->get_feature(0);
     EXPECT_EQ(first->get_id(), "First");
-    const auto& point = boost::get<geojson::coordinate_t>(first->geometry());
+    const auto point = boost::get<geojson::coordinate_t>(first->geometry());
     EXPECT_EQ(point.get<0>(), 102.0);
     EXPECT_EQ(point.get<1>(), 0.5);
 
@@ -94,7 +94,7 @@ TEST_F(GeoPackage_Test, geopackage_projection_test)
     const auto& third = gpkg->get_feature(2);
     EXPECT_EQ(first->get_id(), "First");
 
-    const auto& point = boost::get<geojson::coordinate_t>(first->geometry());
+    const auto point = boost::get<geojson::coordinate_t>(first->geometry());
     EXPECT_NEAR(point.get<0>(), 102.0, 0.0001);
     EXPECT_NEAR(point.get<1>(), 0.5, 0.0001);
 
