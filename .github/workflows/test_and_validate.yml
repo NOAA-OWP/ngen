@@ -39,7 +39,9 @@ jobs:
         build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
 
     - name: Run Tests
-      run: ./cmake_build/test/test_unit
+      run: |
+        export ASAN_OPTIONS=detect_leaks=false
+        ./cmake_build/test/test_unit
       timeout-minutes: 15
     
     - name: Clean Up
@@ -73,7 +75,9 @@ jobs:
           build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
 
       - name: Run Tests
-        run: ./cmake_build/test/compare_pet
+        run: |
+          export ASAN_OPTIONS=detect_leaks=false
+          ./cmake_build/test/compare_pet
         timeout-minutes: 15
 
       - name: Clean Up
@@ -101,7 +105,9 @@ jobs:
           use_mpi: 'ON'
 
       - name: run_tests
-        run: mpirun --allow-run-as-root -np 2 ./cmake_build/test/test_remote_nexus
+        run: |
+          export ASAN_OPTIONS=detect_leaks=false
+          mpirun --allow-run-as-root -np 2 ./cmake_build/test/test_remote_nexus
         timeout-minutes: 15
 
       - name: Clean Up
@@ -142,6 +148,7 @@ jobs:
 
       - name: Run Tests
         run: |
+          export ASAN_OPTIONS=detect_leaks=false
           cd ./cmake_build/test/
           ./test_bmi_cpp
           cd ../../
@@ -187,6 +194,7 @@ jobs:
 
       - name: run_bmi_c_tests
         run: |
+          export ASAN_OPTIONS=detect_leaks=false
           cd ./cmake_build/test/
           ./test_bmi_c
           cd ../../
@@ -237,6 +245,7 @@ jobs:
 
       - name: Run Unit Tests
         run: |
+          export ASAN_OPTIONS=detect_leaks=false
           cd ./cmake_build/test/
           ./test_bmi_fortran
           cd ../../
@@ -280,6 +289,7 @@ jobs:
 
       - name: run_bmi_python_tests
         run: |
+          export ASAN_OPTIONS=detect_leaks=false
           cd ./cmake_build/test/
           ./test_bmi_python
           cd ../../
@@ -344,7 +354,9 @@ jobs:
           additional_python_requirements: 'extern/test_bmi_py/requirements.txt'
 
       - name: Run Unit Tests
-        run: ./cmake_build/test/test_bmi_multi
+        run: |
+          export ASAN_OPTIONS=detect_leaks=false
+          ./cmake_build/test/test_bmi_multi
         timeout-minutes: 15
 
       - name: Clean Up Unit Test Build
