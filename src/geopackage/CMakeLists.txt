@@ -9,7 +9,7 @@ if (NOT _cmp)
                     "Use IntelLLVM if optimization for this source file is required.")
     # !! Required due to optimizer issue with either clang or
     # !! boost::geometry::srs::transformation
-    set_source_files_properties(wkb.cpp PROPERTIES COMPILE_FLAGS -O0)
+    set_source_files_properties(wkb.cpp PROPERTIES COMPILE_OPTIONS "-O0;-fno-sanitize=all")
 endif()
 
 add_library(geopackage geometry.cpp
