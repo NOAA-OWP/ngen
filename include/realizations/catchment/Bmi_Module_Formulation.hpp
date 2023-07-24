@@ -247,6 +247,7 @@ namespace realization {
         const vector<std::string> &get_avaliable_variable_names() override {
             if (is_model_initialized() && available_forcings.empty()) {
                 for (const std::string &output_var_name : get_bmi_model()->GetOutputVarNames()) {
+                    std::cout << "available output names: " << output_var_name << std::endl;
                     available_forcings.push_back(output_var_name);
                     if (bmi_var_names_map.find(output_var_name) != bmi_var_names_map.end())
                         available_forcings.push_back(bmi_var_names_map[output_var_name]);
@@ -388,6 +389,15 @@ namespace realization {
          */
         std::vector<double> get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m=SUM) override
         {
+            const vector<std::string> output_variable_names = Bmi_Formulation::get_output_variable_names();
+            //const vector<std::string> &output_variable_names = get_output_variable_names();
+            for (int i = 0; i < output_variable_names.size(); ++i) {
+                std::cout << "Bmi_Module 4: get_output_variable_names: " << output_variable_names[i] << std::endl;
+            }
+            const vector<std::string> formulation_out_var_names = get_formulation_out_var_names();
+            for (int i = 0; i < formulation_out_var_names.size(); ++i) {
+                std::cout << "Bmi_Module 5: get_formulation_out_var_names : " << formulation_out_var_names[i] << std::endl;
+            }
             std::string output_name = selector.get_variable_name();
             time_t init_time = selector.get_init_time();
             long duration_s = selector.get_duration_secs();
@@ -411,6 +421,7 @@ namespace realization {
             // check if output is available from BMI
             std::string bmi_var_name;
             get_bmi_output_var_name(output_name, bmi_var_name);
+            //std::cout << "Bmi_Module: get_bmi_output_var_name: " << get_bmi_output_var_name(output_name, bmi_var_name) << std::endl;
 
             if( !bmi_var_name.empty() )
             {
@@ -480,6 +491,7 @@ namespace realization {
             // check if output is available from BMI
             std::string bmi_var_name;
             get_bmi_output_var_name(output_name, bmi_var_name);
+            //std::cout << "In get_value: bmi_var_name = " << bmi_var_name << std::endl;
             
             if( !bmi_var_name.empty() )
             {
@@ -542,6 +554,17 @@ namespace realization {
         }
 
         const vector<string> get_bmi_output_variables() override {
+            const vector<std::string> &output_header = get_output_header_fields();
+            std::cout << "output_header.size(): " << output_header.size() << std::endl;
+            for (int i = 0; i < output_header.size(); ++i) {
+                std::cout << "Bmi_Module 1: get_output_header: " << output_header[i] << std::endl;
+            }
+            //const vector<std::string> &get_output_header_fields() const
+            const vector<string> bmi_output_var = get_bmi_model()->GetOutputVarNames();
+            for (int i = 0; i < bmi_output_var.size(); ++i) {
+                std::cout << "Bmi_Module 2: get_bmi_output_variables: " << bmi_output_var[i] << std::endl;
+            }
+            //const vector<std::string> formulation_out_var_names = Bmi_Formulation::get_formulation_out_var_names();
             return get_bmi_model()->GetOutputVarNames();
         }
 
@@ -762,12 +785,23 @@ namespace realization {
                 std::vector<std::string> out_vars(out_vars_json_list.size());
                 for (int i = 0; i < out_vars_json_list.size(); ++i) {
                     out_vars[i] = out_vars_json_list[i].as_string();
+                    std::cout << "else: in for loop for out_var_names" << std::endl;
                 }
                 set_output_variable_names(out_vars);
+                std::cout << "if block" << std::endl;
             }
                 // Otherwise, just take what literally is provided by the model
             else {
+                std::cout << "else block" << std::endl;
+                std::vector<std::string> out_var_names = get_bmi_model()->GetOutputVarNames();
+                //const std::vector<std::string> &out_var_names = Bmi_Formulation::get_output_variable_names();
+                std::cout << "else: outside for loop for out_var_names" << std::endl;
+                for (int i = 0; i < out_var_names.size(); ++i) {
+                    std::cout << "else: in for loop for out_var_names" << std::endl;
+                    std::cout << "else: out_var_names[i]: " << out_var_names[i] << std::endl;
+                }
                 set_output_variable_names(get_bmi_model()->GetOutputVarNames());
+                //set_output_variable_names(Bmi_Formulation::get_output_variable_names());
             }
 
             // Output header fields, if present
@@ -777,11 +811,15 @@ namespace realization {
                 std::vector<std::string> out_headers(out_headers_json_list.size());
                 for (int i = 0; i < out_headers_json_list.size(); ++i) {
                     out_headers[i] = out_headers_json_list[i].as_string();
+                    std::cout << "output_header[i] 1: " << out_headers[i] << std::endl;
                 }
                 set_output_header_fields(out_headers);
             }
             else {
                 set_output_header_fields(get_output_variable_names());
+                for (int i = 0; i < get_output_variable_names().size(); ++i) {
+                    std::cout << "output_header[i] 2: " << get_output_variable_names()[i] << std::endl;
+                }
             }
             // Create a reference to this for ET by using a WrappedDataProvider
             std::shared_ptr<data_access::GenericDataProvider> self = std::make_shared<data_access::WrappedDataProvider>(this);

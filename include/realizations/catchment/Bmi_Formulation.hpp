@@ -156,6 +156,9 @@ namespace realization {
          * @return The values making up the header line from get_output_header_line() organized as a vector.
          */
         const vector<std::string> &get_output_header_fields() const {
+            for (int i = 0; i < output_header_fields.size(); ++i) {
+                std::cout << "Bmi_Formulation: output_header_fields: " << output_header_fields[i] << std::endl;
+            }
             return output_header_fields;
         }
 
@@ -181,7 +184,17 @@ namespace realization {
          */
         // TODO: rename this function to make it more clear it is FORMULATION output contents, not simply BMI variables
         const vector<string> &get_output_variable_names() const {
+            for (int i = 0; i < output_variable_names.size(); ++i) {
+                std::cout << "Bmi_Formulation: output_variable_names: " << output_variable_names[i] << std::endl;
+            }
             return output_variable_names;
+        }
+
+        const vector<string> &get_formulation_out_var_names() const {
+            for (int i = 0; i < formulation_out_var_names.size(); ++i) {
+                std::cout << "Bmi_Formulation: formulation_out_var_names: " << formulation_out_var_names[i] << std::endl;
+            }
+            return formulation_out_var_names;
         }
 
         const vector<std::string> &get_required_parameters() override {
@@ -263,6 +276,10 @@ namespace realization {
             output_variable_names = out_var_names;
         }
 
+        void set_formulation_out_var_names(const vector<string> &out_var_names) {
+            formulation_out_var_names = out_var_names;
+        }
+
     private:
 
         std::string bmi_main_output_var;
@@ -277,6 +294,9 @@ namespace realization {
          * the BMI module output variables accessible to the instance.
          */
         std::vector<std::string> output_variable_names;
+
+        std::vector<std::string> formulation_out_var_names;
+
         /** The degree of precision in output values when converting to text. */
         int output_precision;
 
