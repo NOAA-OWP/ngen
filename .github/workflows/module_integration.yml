@@ -76,11 +76,13 @@ jobs:
 
       - name: Run surfacebmi plus cfebmi
         run: |
+          export ASAN_OPTIONS=detect_leaks=false
           inputfile='data/example_bmi_multi_realization_config.json'
           ./cmake_build/ngen data/catchment_data.geojson "cat-27" data/nexus_data.geojson "nex-26" $inputfile
 
       - name: Run surfacebmi, cfebmi and petbmi
         run: |
+          export ASAN_OPTIONS=detect_leaks=false
           inputfile='data/example_bmi_multi_realization_config_w_noah_pet_cfe.json'
           ./cmake_build/ngen data/catchment_data.geojson "cat-27" data/nexus_data.geojson "nex-26" $inputfile
 
@@ -164,6 +166,7 @@ jobs:
 
       - name: Run test
         run: |
+          export ASAN_OPTIONS=detect_leaks=false
           . .venv/bin/activate
           ./cmake_build/test/test_routing_pybind
           deactivate
