@@ -170,6 +170,9 @@ runs:
 
         - name: Build Targets
           #cmake >= 3.15 can build multiple targets
-          run: cmake --build ${{ inputs.build-dir }} --target ${{ inputs.targets }} -- -j  ${{ inputs.build-cores }}
+          run: |
+            # Disable leak detection during test enumeration
+            export ASAN_OPTIONS=detect_leaks=false
+            cmake --build ${{ inputs.build-dir }} --target ${{ inputs.targets }} -- -j  ${{ inputs.build-cores }}
           shell: bash
 
