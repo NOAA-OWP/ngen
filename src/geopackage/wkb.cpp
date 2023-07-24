@@ -197,6 +197,35 @@ typename wkb::geometry wkb::read(const byte_vector& buffer)
 // ----------------------------------------------------------------------------
 
 bg::srs::dpar::parameters<> wkb::get_prj(uint32_t srid) {
+    /**
+     * EPSG 5070 and 3857 projection definitions for use with boost::geometry.
+     *
+     * @note these are required because boost 1.72.0 does not
+     *       have an EPSG definition for 5070 or 3857 in boost::srs::epsg.
+     */
+    const static auto epsg5070 = bg::srs::dpar::parameters<>
+        (bg::srs::dpar::proj_aea)
+        (bg::srs::dpar::ellps_grs80)
+        (bg::srs::dpar::towgs84, {0,0,0,0,0,0,0})
+        (bg::srs::dpar::lat_0, 23)
+        (bg::srs::dpar::lon_0, -96)
+        (bg::srs::dpar::lat_1, 29.5)
+        (bg::srs::dpar::lat_2, 45.5)
+        (bg::srs::dpar::x_0, 0)
+        (bg::srs::dpar::y_0, 0);
+
+    const static auto epsg3857 = bg::srs::dpar::parameters<>
+        (bg::srs::dpar::proj_merc)
+        (bg::srs::dpar::units_m)
+        (bg::srs::dpar::no_defs)
+        (bg::srs::dpar::a, 6378137)
+        (bg::srs::dpar::b, 6378137)
+        (bg::srs::dpar::lat_ts, 0)
+        (bg::srs::dpar::lon_0, 0)
+        (bg::srs::dpar::x_0, 0)
+        (bg::srs::dpar::y_0, 0)
+        (bg::srs::dpar::k, 1);
+
     switch(srid) {
         case 5070:
             return epsg5070;

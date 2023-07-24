@@ -93,39 +93,6 @@ struct wkb {
     static multipolygon_t read_multipolygon(const byte_vector&, int&, uint8_t);
 };
 
-/**
- * EPSG 5070 projection definition for use with boost::geometry.
- * 
- * @note this is required because boost 1.72.0 does not
- *       have an EPSG definition for 5070 in boost::srs::epsg.
- */
-const auto epsg5070 = bg::srs::dpar::parameters<>(bg::srs::dpar::proj_aea)
-                                                 (bg::srs::dpar::ellps_grs80)
-                                                 (bg::srs::dpar::towgs84, {0,0,0,0,0,0,0})
-                                                 (bg::srs::dpar::lat_0, 23)
-                                                 (bg::srs::dpar::lon_0, -96)
-                                                 (bg::srs::dpar::lat_1, 29.5)
-                                                 (bg::srs::dpar::lat_2, 45.5)
-                                                 (bg::srs::dpar::x_0, 0)
-                                                 (bg::srs::dpar::y_0, 0);
-
-/**
- * EPSG 3857 projection definition for use with boost::geometry.
- * 
- * @note this is required because boost 1.72.0 does not
- *       have an EPSG definition for 3857 in boost::srs::epsg.
- */
-const auto epsg3857 = bg::srs::dpar::parameters<>(bg::srs::dpar::proj_merc)
-                                                 (bg::srs::dpar::units_m)
-                                                 (bg::srs::dpar::no_defs)
-                                                 (bg::srs::dpar::a, 6378137)
-                                                 (bg::srs::dpar::b, 6378137)
-                                                 (bg::srs::dpar::lat_ts, 0)
-                                                 (bg::srs::dpar::lon_0, 0)
-                                                 (bg::srs::dpar::x_0, 0)
-                                                 (bg::srs::dpar::y_0, 0)
-                                                 (bg::srs::dpar::k, 1);
-
 struct wkb::wgs84 : public boost::static_visitor<geojson::geometry>
 {
     wgs84(uint32_t srs, const bg::srs::transformation<>& tr)
