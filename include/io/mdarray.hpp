@@ -159,7 +159,7 @@ class mdarray
      * @param n 
      * @return size_type 
      */
-    size_type index(const ilist& n) const
+    size_type index(const boost::span<const size_t> n) const
     {
         size_type index = 0;
         size_type stride = 1;
