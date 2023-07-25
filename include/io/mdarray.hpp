@@ -71,7 +71,7 @@ class mdarray
         return this->m_data.at(this->index(n));
     }
 
-    void insert(const ilist& n, value_type value)
+    void insert(const boost::span<const size_t> n, value_type value)
     {
         for (size_type i = 0; i < this->m_shape.size(); i++) {
             if (n[i] >= this->m_shape[i])
@@ -104,7 +104,7 @@ class mdarray
      * x.allocate({5, 10, 10}) // Allocates 5 * 10 * 10 elements
      * @param n 
      */
-    void allocate(const ilist& n)
+    void allocate(const boost::span<const size_t> n)
     {
         this->m_data.resize(this->index(n));
     }
