@@ -280,7 +280,7 @@ struct variable {
      * @return A variant corresponding to the
      *         value within this variable at the given index.
      */
-    element_type at(const std::vector<size_type>& index)
+    element_type at(const boost::span<const size_type> index)
     {
         auto visitor = std::bind(
             visitors::mdarray_at<SupportedTypes...>{},
