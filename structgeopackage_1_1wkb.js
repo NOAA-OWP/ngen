@@ -12,11 +12,11 @@ var structgeopackage_1_1wkb =
     [ "polygon_t", "structgeopackage_1_1wkb.html#a1bbc89d0d287b934932c0616ce4f2edb", null ],
     [ "wkb", "structgeopackage_1_1wkb.html#ac348023235b7eec07e05d44d508c8857", null ],
     [ "get_prj", "structgeopackage_1_1wkb.html#a479c54c989ff0cbe585074f7d92597e4", null ],
-    [ "read", "structgeopackage_1_1wkb.html#a01e781a3f97ecdd28d98964c8bb426a1", null ],
-    [ "read_linestring", "structgeopackage_1_1wkb.html#ad9e7143813acdc28bc499af24d44bc45", null ],
-    [ "read_multilinestring", "structgeopackage_1_1wkb.html#aa792d92cd8c870d63e09bbc8f290d812", null ],
-    [ "read_multipoint", "structgeopackage_1_1wkb.html#a3fbc49aaf3f2854dcb0e81f078fd1721", null ],
-    [ "read_multipolygon", "structgeopackage_1_1wkb.html#af33e4671354c55511eb75e6b5aec5f32", null ],
-    [ "read_point", "structgeopackage_1_1wkb.html#a090fafe7c120668ef579cdf4a94172d9", null ],
-    [ "read_polygon", "structgeopackage_1_1wkb.html#acccc2f283c939425cb01fab31596dd53", null ]
+    [ "read", "structgeopackage_1_1wkb.html#ac4bec50cfa18192908b13b244cc2e7a1", null ],
+    [ "read_linestring", "structgeopackage_1_1wkb.html#a3e68d2e1dc80c41a6be39ed26eca6fa0", null ],
+    [ "read_multilinestring", "structgeopackage_1_1wkb.html#ae6125523143ae1b4f32fe5b676d97430", null ],
+    [ "read_multipoint", "structgeopackage_1_1wkb.html#a2dae14b7648b99640f16314afc750df8", null ],
+    [ "read_multipolygon", "structgeopackage_1_1wkb.html#a122f0f2c64cd4260ab58781e70700cf5", null ],
+    [ "read_point", "structgeopackage_1_1wkb.html#a27191fd1b3862e21883544a2c21cfd96", null ],
+    [ "read_polygon", "structgeopackage_1_1wkb.html#a0daa6ad342c5e20093c9578fce2e5c11", null ]
 ];

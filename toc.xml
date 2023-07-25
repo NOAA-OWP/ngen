@@ -1405,13 +1405,13 @@
           <topic label="polygon_t" href="structgeopackage_1_1wkb.html#a1bbc89d0d287b934932c0616ce4f2edb"/>
           <topic label="wkb" href="structgeopackage_1_1wkb.html#ac348023235b7eec07e05d44d508c8857"/>
           <topic label="get_prj" href="structgeopackage_1_1wkb.html#a479c54c989ff0cbe585074f7d92597e4"/>
-          <topic label="read" href="structgeopackage_1_1wkb.html#a01e781a3f97ecdd28d98964c8bb426a1"/>
-          <topic label="read_linestring" href="structgeopackage_1_1wkb.html#ad9e7143813acdc28bc499af24d44bc45"/>
-          <topic label="read_multilinestring" href="structgeopackage_1_1wkb.html#aa792d92cd8c870d63e09bbc8f290d812"/>
-          <topic label="read_multipoint" href="structgeopackage_1_1wkb.html#a3fbc49aaf3f2854dcb0e81f078fd1721"/>
-          <topic label="read_multipolygon" href="structgeopackage_1_1wkb.html#af33e4671354c55511eb75e6b5aec5f32"/>
-          <topic label="read_point" href="structgeopackage_1_1wkb.html#a090fafe7c120668ef579cdf4a94172d9"/>
-          <topic label="read_polygon" href="structgeopackage_1_1wkb.html#acccc2f283c939425cb01fab31596dd53"/>
+          <topic label="read" href="structgeopackage_1_1wkb.html#ac4bec50cfa18192908b13b244cc2e7a1"/>
+          <topic label="read_linestring" href="structgeopackage_1_1wkb.html#a3e68d2e1dc80c41a6be39ed26eca6fa0"/>
+          <topic label="read_multilinestring" href="structgeopackage_1_1wkb.html#ae6125523143ae1b4f32fe5b676d97430"/>
+          <topic label="read_multipoint" href="structgeopackage_1_1wkb.html#a2dae14b7648b99640f16314afc750df8"/>
+          <topic label="read_multipolygon" href="structgeopackage_1_1wkb.html#a122f0f2c64cd4260ab58781e70700cf5"/>
+          <topic label="read_point" href="structgeopackage_1_1wkb.html#a27191fd1b3862e21883544a2c21cfd96"/>
+          <topic label="read_polygon" href="structgeopackage_1_1wkb.html#a0daa6ad342c5e20093c9578fce2e5c11"/>
         </topic>
         <topic label="stmt_t" href="namespacegeopackage.html#a9b052ec7251d73a0a61f5a2c9c17f26b"/>
         <topic label="build_feature" href="namespacegeopackage.html#ad62d7034c9f884e4bb739444c4a9aed7"/>
@@ -3004,8 +3004,8 @@
           <topic label="output_stream" href="classutils_1_1_stream_handler.html#a18d8a5d7ca89a77d60ed7e231c9eb798"/>
           <topic label="sep" href="classutils_1_1_stream_handler.html#a94fc95b39ccee186539087dcad20f43b"/>
         </topic>
-        <topic label="copy_from" href="namespaceutils.html#afe3916e5865f10952d4a930fa13b70e7"/>
-        <topic label="copy_from&lt; double &gt;" href="namespaceutils.html#afe54707f2450a5387dcbc4281d7fef6e"/>
+        <topic label="copy_from" href="namespaceutils.html#ab26f60f96ec3cf8e061256397c1f501c"/>
+        <topic label="copy_from&lt; double &gt;" href="namespaceutils.html#a33d3d5f81f77152b00078923483b601c"/>
         <topic label="getStdErr" href="namespaceutils.html#a0d4e21fbb83912793512c7e9a37403ac"/>
         <topic label="getStdOut" href="namespaceutils.html#a36dea491674f3e0b6b11591f976a88cb"/>
       </topic>
@@ -4066,13 +4066,13 @@
           <topic label="polygon_t" href="structgeopackage_1_1wkb.html#a1bbc89d0d287b934932c0616ce4f2edb"/>
           <topic label="wkb" href="structgeopackage_1_1wkb.html#ac348023235b7eec07e05d44d508c8857"/>
           <topic label="get_prj" href="structgeopackage_1_1wkb.html#a479c54c989ff0cbe585074f7d92597e4"/>
-          <topic label="read" href="structgeopackage_1_1wkb.html#a01e781a3f97ecdd28d98964c8bb426a1"/>
-          <topic label="read_linestring" href="structgeopackage_1_1wkb.html#ad9e7143813acdc28bc499af24d44bc45"/>
-          <topic label="read_multilinestring" href="structgeopackage_1_1wkb.html#aa792d92cd8c870d63e09bbc8f290d812"/>
-          <topic label="read_multipoint" href="structgeopackage_1_1wkb.html#a3fbc49aaf3f2854dcb0e81f078fd1721"/>
-          <topic label="read_multipolygon" href="structgeopackage_1_1wkb.html#af33e4671354c55511eb75e6b5aec5f32"/>
-          <topic label="read_point" href="structgeopackage_1_1wkb.html#a090fafe7c120668ef579cdf4a94172d9"/>
-          <topic label="read_polygon" href="structgeopackage_1_1wkb.html#acccc2f283c939425cb01fab31596dd53"/>
+          <topic label="read" href="structgeopackage_1_1wkb.html#ac4bec50cfa18192908b13b244cc2e7a1"/>
+          <topic label="read_linestring" href="structgeopackage_1_1wkb.html#a3e68d2e1dc80c41a6be39ed26eca6fa0"/>
+          <topic label="read_multilinestring" href="structgeopackage_1_1wkb.html#ae6125523143ae1b4f32fe5b676d97430"/>
+          <topic label="read_multipoint" href="structgeopackage_1_1wkb.html#a2dae14b7648b99640f16314afc750df8"/>
+          <topic label="read_multipolygon" href="structgeopackage_1_1wkb.html#a122f0f2c64cd4260ab58781e70700cf5"/>
+          <topic label="read_point" href="structgeopackage_1_1wkb.html#a27191fd1b3862e21883544a2c21cfd96"/>
+          <topic label="read_polygon" href="structgeopackage_1_1wkb.html#a0daa6ad342c5e20093c9578fce2e5c11"/>
         </topic>
       </topic>
       <topic label="giuh" href="namespacegiuh.html">
