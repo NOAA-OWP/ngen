@@ -152,7 +152,7 @@ class mdarray
      * 
      * @return ilist
      */
-    ilist shape() const noexcept
+    boost::span<const size_t> shape() const noexcept
     {
         return this->m_shape;
     }
