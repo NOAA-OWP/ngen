@@ -36,7 +36,7 @@ jobs:
     - name: Build Unit Tests
       uses: ./.github/actions/ngen-build
       with:
-        targets: "test_unit"
+        targets: "test_unit test_geopackage"
         build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
 
     - name: Run Tests
@@ -45,8 +45,7 @@ jobs:
       timeout-minutes: 15
 
     - name: Run GeoPackage Tests
-      run: |
-        [ -x ./cmake_build/test/test_geopackage ] && ./cmake_build/test/test_geopackage
+      run: ./cmake_build/test/test_geopackage
       timeout-minutes: 15
     
     - name: Clean Up
