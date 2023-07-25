@@ -150,7 +150,7 @@ class mdarray
     /**
      * Get the shape of this mdarray.
      * 
-     * @return ilist
+     * @return span of the extents per dimension
      */
     boost::span<const size_t> shape() const noexcept
     {
