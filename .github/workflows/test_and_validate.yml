@@ -40,8 +40,7 @@ jobs:
         build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
 
     - name: Run Tests
-      run: |
-        ./cmake_build/test/test_unit
+      run: ./cmake_build/test/test_unit
       timeout-minutes: 15
 
     - name: Run GeoPackage Tests
@@ -83,8 +82,7 @@ jobs:
           build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
 
       - name: Run Tests
-        run: |
-          ./cmake_build/test/compare_pet
+        run: ./cmake_build/test/compare_pet
         timeout-minutes: 15
 
       - name: Clean Up
@@ -112,8 +110,7 @@ jobs:
           use_mpi: 'ON'
 
       - name: run_tests
-        run: |
-          mpirun --allow-run-as-root -np 2 ./cmake_build/test/test_remote_nexus
+        run: mpirun --allow-run-as-root -np 2 ./cmake_build/test/test_remote_nexus
         timeout-minutes: 15
 
       - name: Clean Up
@@ -356,8 +353,7 @@ jobs:
           additional_python_requirements: 'extern/test_bmi_py/requirements.txt'
 
       - name: Run Unit Tests
-        run: |
-          ./cmake_build/test/test_bmi_multi
+        run: ./cmake_build/test/test_bmi_multi
         timeout-minutes: 15
 
       - name: Clean Up Unit Test Build
