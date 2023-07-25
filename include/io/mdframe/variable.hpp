@@ -260,9 +260,9 @@ struct variable {
     void insert(std::initializer_list<size_type> index, T value)
     {
         // bind arguments to operator()
-        auto visitor = boost::bind(
+        auto visitor = std::bind(
             visitors::mdarray_insert{},
-            boost::placeholders::_1,
+            std::placeholders::_1,
             index,
             value
         );
