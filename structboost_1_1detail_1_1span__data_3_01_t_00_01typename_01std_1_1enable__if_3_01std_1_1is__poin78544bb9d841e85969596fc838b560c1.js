@@ -1,0 +1,4 @@
+var structboost_1_1detail_1_1span__data_3_01_t_00_01typename_01std_1_1enable__if_3_01std_1_1is__poin78544bb9d841e85969596fc838b560c1 =
+[
+    [ "type", "structboost_1_1detail_1_1span__data_3_01_t_00_01typename_01std_1_1enable__if_3_01std_1_1is__poin78544bb9d841e85969596fc838b560c1.html#af7670f3892d98eb11d64c78d195e396a", null ]
+];

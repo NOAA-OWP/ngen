@@ -3,6 +3,32 @@ var annotated_dup =
     [ "bmi", "namespacebmi.html", [
       [ "Bmi", "classbmi_1_1_bmi.html", "classbmi_1_1_bmi" ]
     ] ],
+    [ "boost", "namespaceboost.html", [
+      [ "detail", "namespaceboost_1_1detail.html", [
+        [ "span_bytes", "structboost_1_1detail_1_1span__bytes.html", "structboost_1_1detail_1_1span__bytes" ],
+        [ "span_bytes< T, boost::dynamic_extent >", "structboost_1_1detail_1_1span__bytes_3_01_t_00_01boost_1_1dynamic__extent_01_4.html", "structboost_1_1detail_1_1span__bytes_3_01_t_00_01boost_1_1dynamic__extent_01_4" ],
+        [ "span_capacity", "structboost_1_1detail_1_1span__capacity.html", "structboost_1_1detail_1_1span__capacity" ],
+        [ "span_compatible", "structboost_1_1detail_1_1span__compatible.html", "structboost_1_1detail_1_1span__compatible" ],
+        [ "span_convertible", "structboost_1_1detail_1_1span__convertible.html", "structboost_1_1detail_1_1span__convertible" ],
+        [ "span_copyable", "structboost_1_1detail_1_1span__copyable.html", "structboost_1_1detail_1_1span__copyable" ],
+        [ "span_data", "structboost_1_1detail_1_1span__data.html", null ],
+        [ "span_data< T, typename std::enable_if< std::is_pointer< span_ptr< T > >::value >::type >", "structboost_1_1detail_1_1span__data_3_01_t_00_01typename_01std_1_1enable__if_3_01std_1_1is__poin78544bb9d841e85969596fc838b560c1.html", "structboost_1_1detail_1_1span__data_3_01_t_00_01typename_01std_1_1enable__if_3_01std_1_1is__poin78544bb9d841e85969596fc838b560c1" ],
+        [ "span_has_data", "structboost_1_1detail_1_1span__has__data.html", "structboost_1_1detail_1_1span__has__data" ],
+        [ "span_has_data< R, T, typename std::enable_if< span_convertible< typename span_data< R >::type, T >::value >::type >", "structboost_1_1detail_1_1span__has__data_3_01_r_00_01_t_00_01typename_01std_1_1enable__if_3_01sp388a2003c5c8c3bc5d4e6ff6b6321c39.html", "structboost_1_1detail_1_1span__has__data_3_01_r_00_01_t_00_01typename_01std_1_1enable__if_3_01sp388a2003c5c8c3bc5d4e6ff6b6321c39" ],
+        [ "span_has_size", "structboost_1_1detail_1_1span__has__size.html", "structboost_1_1detail_1_1span__has__size" ],
+        [ "span_has_size< R, typename std::enable_if< std::is_convertible< decltype(std::declval< R & >().size()), std::size_t >::value >::type >", "structboost_1_1detail_1_1span__has__size_3_01_r_00_01typename_01std_1_1enable__if_3_01std_1_1is_895570961d4abb94bb76eb9662c26a69.html", "structboost_1_1detail_1_1span__has__size_3_01_r_00_01typename_01std_1_1enable__if_3_01std_1_1is_895570961d4abb94bb76eb9662c26a69" ],
+        [ "span_implicit", "structboost_1_1detail_1_1span__implicit.html", "structboost_1_1detail_1_1span__implicit" ],
+        [ "span_is_array", "structboost_1_1detail_1_1span__is__array.html", "structboost_1_1detail_1_1span__is__array" ],
+        [ "span_is_array< std::array< T, N > >", "structboost_1_1detail_1_1span__is__array_3_01std_1_1array_3_01_t_00_01_n_01_4_01_4.html", "structboost_1_1detail_1_1span__is__array_3_01std_1_1array_3_01_t_00_01_n_01_4_01_4" ],
+        [ "span_is_range", "structboost_1_1detail_1_1span__is__range.html", "structboost_1_1detail_1_1span__is__range" ],
+        [ "span_is_span", "structboost_1_1detail_1_1span__is__span.html", "structboost_1_1detail_1_1span__is__span" ],
+        [ "span_is_span< boost::span< T, E > >", "structboost_1_1detail_1_1span__is__span_3_01boost_1_1span_3_01_t_00_01_e_01_4_01_4.html", "structboost_1_1detail_1_1span__is__span_3_01boost_1_1span_3_01_t_00_01_e_01_4_01_4" ],
+        [ "span_store", "structboost_1_1detail_1_1span__store.html", "structboost_1_1detail_1_1span__store" ],
+        [ "span_store< T, boost::dynamic_extent >", "structboost_1_1detail_1_1span__store_3_01_t_00_01boost_1_1dynamic__extent_01_4.html", "structboost_1_1detail_1_1span__store_3_01_t_00_01boost_1_1dynamic__extent_01_4" ],
+        [ "span_sub", "structboost_1_1detail_1_1span__sub.html", "structboost_1_1detail_1_1span__sub" ]
+      ] ],
+      [ "span", "classboost_1_1span.html", "classboost_1_1span" ]
+    ] ],
     [ "data_access", "namespacedata__access.html", [
       [ "AsyncDataProvider", "classdata__access_1_1_async_data_provider.html", "classdata__access_1_1_async_data_provider" ],
       [ "DataProvider", "classdata__access_1_1_data_provider.html", "classdata__access_1_1_data_provider" ],
