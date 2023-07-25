@@ -43,6 +43,12 @@ jobs:
         export ASAN_OPTIONS=detect_leaks=false
         ./cmake_build/test/test_unit
       timeout-minutes: 15
+
+    - name: Run GeoPackage Tests
+      run: |
+        export ASAN_OPTIONS=detect_leaks=false
+        [ -x ./cmake_build/test/test_geopackage ] && ./cmake_build/test/test_geopackage
+      timeout-minutes: 15
     
     - name: Clean Up
       uses: ./.github/actions/clean-build
