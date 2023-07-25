@@ -108,7 +108,7 @@ add_test(test_io
          io/mdframe_netcdf_Test.cpp
          io/mdframe_csv_Test.cpp
          NGen::io
-         stdc++fs
+         ${Boost_FILESYSTEM_LIBRARY}
          ${NETCDF_LIBRARIES})
 
 ########################## Nexus Tests
