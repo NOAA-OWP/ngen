@@ -45,7 +45,11 @@ jobs:
       timeout-minutes: 15
 
     - name: Run GeoPackage Tests
-      run: ./cmake_build/test/test_geopackage
+      run: |
+        # Container underflow report is a false positive, from a build with instrumentation
+        # disabled in one file where it hangs the compiler (ngen#567)
+        export ASAN_OPTIONS=${ASAN_OPTIONS}:detect_container_overflow=0
+        ./cmake_build/test/test_geopackage
       timeout-minutes: 15
     
     - name: Clean Up
