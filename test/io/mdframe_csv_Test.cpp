@@ -79,13 +79,13 @@ TEST_F(mdframe_csv_Test, io_csv)
       .add_variable<double>("v", {"x", "y"});
 
     for (size_t i = 0; i < 2; ++i) {
-        df["x"].insert({ i }, i + 1);
-        df["y"].insert({ i }, i + 1);
+        df["x"].insert({{ i }}, i + 1);
+        df["y"].insert({{ i }}, i + 1);
     }
 
     for (size_t x = 0; x < 2; x++) {
         for (size_t y = 0; y < 2; y++) {
-            df["v"].insert({ x, y }, (x + 1) * (y + 1));
+            df["v"].insert({{ x, y }}, (x + 1) * (y + 1));
         }
     }
 

@@ -49,7 +49,7 @@ MDARRAY_VISITOR(mdarray_shape, boost::span<const size_t>)
  */
 MDARRAY_VISITOR(mdarray_insert, void)
 {
-    MDARRAY_VISITOR_TEMPLATE_IMPL(T& v, std::initializer_list<std::size_t> index, typename T::value_type val) -> void
+    MDARRAY_VISITOR_TEMPLATE_IMPL(T& v, boost::span<const std::size_t> index, typename T::value_type val) -> void
     {
         v.insert(index, val);
     };
@@ -257,7 +257,7 @@ struct variable {
      * @param value Value to insert into mdarray
      */
     template<typename T, typename types::template enable_if_supports<T, bool> = true>
-    void insert(std::initializer_list<size_type> index, T value)
+    void insert(boost::span<const size_type> index, T value)
     {
         // bind arguments to operator()
         auto visitor = std::bind(
@@ -292,7 +292,7 @@ struct variable {
     }
 
     template<typename T, typename types::template enable_if_supports<T, bool> = true>
-    T at(std::initializer_list<size_type> index)
+    T at(boost::span<const size_type> index)
     {
         auto visitor = std::bind(
             visitors::mdarray_at<SupportedTypes...>{},
