@@ -15,6 +15,7 @@ env:
   # TODO: add something later that can check the runners for hyperthreading
   LINUX_NUM_PROC_CORES: 2
   MACOS_NUM_PROC_CORES: 3
+  ASAN_OPTIONS: detect_leaks=false
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -40,13 +41,11 @@ jobs:
 
     - name: Run Tests
       run: |
-        export ASAN_OPTIONS=detect_leaks=false
         ./cmake_build/test/test_unit
       timeout-minutes: 15
 
     - name: Run GeoPackage Tests
       run: |
-        export ASAN_OPTIONS=detect_leaks=false
         [ -x ./cmake_build/test/test_geopackage ] && ./cmake_build/test/test_geopackage
       timeout-minutes: 15
     
@@ -82,7 +81,6 @@ jobs:
 
       - name: Run Tests
         run: |
-          export ASAN_OPTIONS=detect_leaks=false
           ./cmake_build/test/compare_pet
         timeout-minutes: 15
 
@@ -112,7 +110,6 @@ jobs:
 
       - name: run_tests
         run: |
-          export ASAN_OPTIONS=detect_leaks=false
           mpirun --allow-run-as-root -np 2 ./cmake_build/test/test_remote_nexus
         timeout-minutes: 15
 
@@ -154,7 +151,6 @@ jobs:
 
       - name: Run Tests
         run: |
-          export ASAN_OPTIONS=detect_leaks=false
           cd ./cmake_build/test/
           ./test_bmi_cpp
           cd ../../
@@ -200,7 +196,6 @@ jobs:
 
       - name: run_bmi_c_tests
         run: |
-          export ASAN_OPTIONS=detect_leaks=false
           cd ./cmake_build/test/
           ./test_bmi_c
           cd ../../
@@ -251,7 +246,6 @@ jobs:
 
       - name: Run Unit Tests
         run: |
-          export ASAN_OPTIONS=detect_leaks=false
           cd ./cmake_build/test/
           ./test_bmi_fortran
           cd ../../
@@ -295,7 +289,6 @@ jobs:
 
       - name: run_bmi_python_tests
         run: |
-          export ASAN_OPTIONS=detect_leaks=false
           cd ./cmake_build/test/
           ./test_bmi_python
           cd ../../
@@ -361,7 +354,6 @@ jobs:
 
       - name: Run Unit Tests
         run: |
-          export ASAN_OPTIONS=detect_leaks=false
           ./cmake_build/test/test_bmi_multi
         timeout-minutes: 15
 
