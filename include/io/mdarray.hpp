@@ -47,7 +47,7 @@ class mdarray
      * @param n Index list
      * @return reference 
      */
-    reference at(const ilist& n)
+    reference at(const boost::span<const size_t> n)
     {
         return this->m_data.at(this->index(n));
     }
@@ -62,7 +62,7 @@ class mdarray
      * @param n Index list
      * @return reference 
      */
-    const_reference at(const ilist& n) const
+    const_reference at(const boost::span<const size_t> n) const
     {
         return this->m_data.at(this->index(n));
     }

@@ -9,15 +9,15 @@ TEST(mdarray_Test, construction)
     EXPECT_EQ(s.rank(), 2);
 
     ASSERT_NO_THROW(s.insert({0, 0}, 1));
-    EXPECT_EQ(s.at({0, 0}), 1);
+    EXPECT_EQ(s.at({{0, 0}}), 1);
 
     ASSERT_NO_THROW(s.insert({0, 1}, 2));
-    EXPECT_EQ(s.at({0, 1}), 2);
+    EXPECT_EQ(s.at({{0, 1}}), 2);
 
-    EXPECT_THROW(s.at({2, 2}), std::out_of_range);
+    EXPECT_THROW(s.at({{2, 2}}), std::out_of_range);
 
-    ASSERT_NO_THROW(s.at({0, 0}) = 3);
-    EXPECT_EQ(s.at({0, 0}), 3);
+    ASSERT_NO_THROW(s.at({{0, 0}}) = 3);
+    EXPECT_EQ(s.at({{0, 0}}), 3);
 }
 
 TEST(mdarray_Test, indexing)
