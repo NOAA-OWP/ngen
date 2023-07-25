@@ -4,6 +4,7 @@
 #include <initializer_list>
 #include <stdexcept>
 #include <vector>
+#include <span.hpp>
 
 namespace io {
 
