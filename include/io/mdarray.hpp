@@ -32,7 +32,11 @@ class mdarray
         : m_shape(rank)
         , m_data() {};
 
-    mdarray(ilist dsizes)
+    mdarray(boost::span<size_t> dsizes)
+        : m_shape(dsizes.begin(), dsizes.end())
+        , m_data(this->max_size()) {};
+
+    mdarray(std::initializer_list<size_t> dsizes)
         : m_shape(dsizes.begin(), dsizes.end())
         , m_data(this->max_size()) {};
 
