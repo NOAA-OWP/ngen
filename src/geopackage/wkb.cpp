@@ -158,7 +158,7 @@ typename wkb::multipolygon_t wkb::read_multipolygon(const boost::span<const uint
 
 // ----------------------------------------------------------------------------
 
-typename wkb::geometry wkb::read(const byte_vector& buffer)
+typename wkb::geometry wkb::read(const boost::span<const uint8_t> buffer)
 {
     if (buffer.size() < 5) {
         throw std::runtime_error("buffer reached end before encountering WKB");

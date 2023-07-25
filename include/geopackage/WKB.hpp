@@ -51,7 +51,7 @@ struct wkb {
      * @param[in] buffer byte vector buffer
      * @return geometry wkb::geometry struct containing the geometry data from the buffer
      */
-    static geometry read(const byte_vector& buffer);
+    static geometry read(const boost::span<const uint8_t> buffer);
 
     static bg::srs::dpar::parameters<> get_prj(uint32_t srid);
 
