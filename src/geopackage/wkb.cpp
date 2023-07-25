@@ -29,7 +29,7 @@ void throw_if_not_type(uint32_t given, wkb_geom_t expected)
 // WKB Readers
 // ----------------------------------------------------------------------------
 
-typename wkb::point_t wkb::read_point(const byte_vector& buffer, int& index, uint8_t order)
+typename wkb::point_t wkb::read_point(const boost::span<const uint8_t> buffer, int& index, uint8_t order)
 {
     double x, y;
     utils::copy_from(buffer, index, x, order);
@@ -39,7 +39,7 @@ typename wkb::point_t wkb::read_point(const byte_vector& buffer, int& index, uin
 
 // ----------------------------------------------------------------------------
 
-typename wkb::linestring_t wkb::read_linestring(const byte_vector& buffer, int& index, uint8_t order)
+typename wkb::linestring_t wkb::read_linestring(const boost::span<const uint8_t> buffer, int& index, uint8_t order)
 {
     uint32_t count;
     utils::copy_from(buffer, index, count, order);
@@ -55,7 +55,7 @@ typename wkb::linestring_t wkb::read_linestring(const byte_vector& buffer, int& 
 
 // ----------------------------------------------------------------------------
 
-typename wkb::polygon_t wkb::read_polygon(const byte_vector& buffer, int& index, uint8_t order)
+typename wkb::polygon_t wkb::read_polygon(const boost::span<const uint8_t> buffer, int& index, uint8_t order)
 {
     uint32_t count;
     utils::copy_from(buffer, index, count, order);
@@ -88,7 +88,7 @@ typename wkb::polygon_t wkb::read_polygon(const byte_vector& buffer, int& index,
 
 // ----------------------------------------------------------------------------
 
-typename wkb::multipoint_t wkb::read_multipoint(const byte_vector& buffer, int& index, uint8_t order)
+typename wkb::multipoint_t wkb::read_multipoint(const boost::span<const uint8_t> buffer, int& index, uint8_t order)
 {
     uint32_t count;
     utils::copy_from(buffer, index, count, order);
@@ -112,7 +112,7 @@ typename wkb::multipoint_t wkb::read_multipoint(const byte_vector& buffer, int& 
 
 // ----------------------------------------------------------------------------
 
-typename wkb::multilinestring_t wkb::read_multilinestring(const byte_vector& buffer, int& index, uint8_t order)
+typename wkb::multilinestring_t wkb::read_multilinestring(const boost::span<const uint8_t> buffer, int& index, uint8_t order)
 {
     uint32_t count;
     utils::copy_from(buffer, index, count, order);
@@ -135,7 +135,7 @@ typename wkb::multilinestring_t wkb::read_multilinestring(const byte_vector& buf
 
 // ----------------------------------------------------------------------------
 
-typename wkb::multipolygon_t wkb::read_multipolygon(const byte_vector& buffer, int& index, uint8_t order)
+typename wkb::multipolygon_t wkb::read_multipolygon(const boost::span<const uint8_t> buffer, int& index, uint8_t order)
 {
     uint32_t count;
     utils::copy_from(buffer, index, count, order);

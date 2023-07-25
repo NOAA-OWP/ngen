@@ -60,37 +60,37 @@ struct wkb {
      * Read a WKB point into a cartesian model.
      * @return point_t 
      */
-    static point_t read_point(const byte_vector&, int&, uint8_t);
+    static point_t read_point(const boost::span<const uint8_t>, int&, uint8_t);
 
     /**
      * Read a WKB linestring into a cartesian model.
      * @return linestring_t 
      */
-    static linestring_t read_linestring(const byte_vector&, int&, uint8_t);
+    static linestring_t read_linestring(const boost::span<const uint8_t>, int&, uint8_t);
 
     /**
      * Read a WKB polygon into a cartesian model.
      * @return polygon_t 
      */
-    static polygon_t read_polygon(const byte_vector&, int&, uint8_t);
+    static polygon_t read_polygon(const boost::span<const uint8_t>, int&, uint8_t);
 
     /**
      * Read a WKB multipoint into a cartesian model.
      * @return multipoint_t 
      */
-    static multipoint_t read_multipoint(const byte_vector&, int&, uint8_t);
+    static multipoint_t read_multipoint(const boost::span<const uint8_t>, int&, uint8_t);
 
     /**
      * Read a WKB multilinestring into a cartesian model.
      * @return multilinestring_t 
      */
-    static multilinestring_t read_multilinestring(const byte_vector&, int&, uint8_t);
+    static multilinestring_t read_multilinestring(const boost::span<const uint8_t>, int&, uint8_t);
 
     /**
      * Read a WKB multipolygon into a cartesian model.
      * @return multipolygon_t 
      */
-    static multipolygon_t read_multipolygon(const byte_vector&, int&, uint8_t);
+    static multipolygon_t read_multipolygon(const boost::span<const uint8_t>, int&, uint8_t);
 };
 
 /**
