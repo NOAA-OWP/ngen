@@ -100,6 +100,7 @@ void giuh_kernel_impl::set_interpolation_regularity_seconds(unsigned int regular
     }
 }
 
+__attribute__((no_sanitize("address")))
 void giuh_kernel_impl::interpolate_regularized_cdf()
 {
     // Clear any previous values
