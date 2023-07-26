@@ -73,15 +73,23 @@ class mdarray
     {
         for (size_type i = 0; i < this->m_shape.size(); i++) {
             if (n[i] >= this->m_shape[i])
-                throw std::out_of_range("out of range");
+                throw std::out_of_range(
+                    "index " + std::to_string(n[i]) +
+                    " must be less than dimension size " +
+                    std::to_string(this->m_shape[i])
+                );
         }
 
         size_type index = this->index(n);
     
-        if (index > this->max_size())
-            throw std::out_of_range("out of range");
+        if (index >= this->max_size())
+            throw std::out_of_range(
+                "index " + std::to_string(index) +
+                " is larger than maximum possible address index (" +
+                std::to_string(this->max_size()) + ")"
+            );
         
-        if (index > this->size() || this->size() == 0)
+        if (index >= this->size() || this->size() == 0)
             this->m_data.resize(index + 1);
     
         this->m_data[index] = value;
