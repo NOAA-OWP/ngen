@@ -10,7 +10,7 @@
 #include "mdframe/dimension.hpp"
 #include "mdframe/variable.hpp"
 
-namespace io {
+namespace ngen {
 
 namespace detail {
 

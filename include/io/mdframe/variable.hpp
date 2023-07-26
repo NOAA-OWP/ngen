@@ -7,69 +7,11 @@
 #include <initializer_list>
 #include <boost/bind.hpp>
 
+#include "visitors.hpp"
 
-#define MDARRAY_VISITOR(name, return_type) struct name : public boost::static_visitor<return_type>
-#define MDARRAY_VISITOR_IMPL(var_name) \
-    template<typename T> \
-    auto operator()(T& var_name) const
-
-#define MDARRAY_VISITOR_TEMPLATE_IMPL(prototype, ...) \
-    template<typename T> \
-    auto operator()(prototype, ##__VA_ARGS__) const \
-
-namespace io {
+namespace ngen {
 
 namespace detail {
-
-namespace visitors { // -------------------------------------------------------
-
-/**
- * mdarray visitor for retrieving the size of the mdarray
- */
-MDARRAY_VISITOR(mdarray_size, std::size_t)
-{
-    MDARRAY_VISITOR_IMPL(v) -> std::size_t { return v.size(); }
-};
-
-/**
- * mdarray visitor for retrieving the rank of the mdarray
- */
-MDARRAY_VISITOR(mdarray_rank, std::size_t)
-{
-    MDARRAY_VISITOR_IMPL(v) -> std::size_t { return v.rank(); }
-};
-
-MDARRAY_VISITOR(mdarray_shape, boost::span<const size_t>)
-{
-    MDARRAY_VISITOR_IMPL(v) -> boost::span<const size_t> { return v.shape(); }
-};
-
-/**
- * mdarray visitor for inserting a value
- */
-MDARRAY_VISITOR(mdarray_insert, void)
-{
-    MDARRAY_VISITOR_TEMPLATE_IMPL(T& v, boost::span<const std::size_t> index, typename T::value_type val) -> void
-    {
-        v.insert(index, val);
-    };
-};
-
-/**
- * mdarray visitor for indexed access
- */
-template<typename... SupportedTypes>
-MDARRAY_VISITOR(mdarray_at, typename traits::type_list<SupportedTypes...>::variant_scalar)
-{
-    MDARRAY_VISITOR_TEMPLATE_IMPL(T& v, boost::span<const size_t> index) -> typename T::value_type
-    {
-        auto val = v.at(index);
-
-        return val;
-    }
-};
-
-} // namespace visitors -------------------------------------------------------
 
 /**
  * Variable Key
@@ -95,7 +37,7 @@ struct variable {
      * equivalent to:
      *     boost::variant<io::mdarray<int>, io::mdarray<double>>
      */
-    using mdarray_variant = typename types::template variant_container<io::mdarray>;
+    using mdarray_variant = typename types::template variant_container<ngen::mdarray>;
 
     using element_type = typename types::variant_scalar;
 
