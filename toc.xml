@@ -1418,8 +1418,6 @@
         <topic label="build_geometry" href="namespacegeopackage.html#af4db1e0223650985023e30ffe06255b6"/>
         <topic label="build_properties" href="namespacegeopackage.html#ad83484f3bbaac91d9890c85713c448e3"/>
         <topic label="read" href="namespacegeopackage.html#aaaf5f61e8b5234ef6c840267f06e2134"/>
-        <topic label="epsg3857" href="namespacegeopackage.html#ac094e174e65323898b26a052f5c87224"/>
-        <topic label="epsg5070" href="namespacegeopackage.html#a99923a306a98843b05f55bf3cc2560aa"/>
       </topic>
       <topic label="giuh" href="namespacegiuh.html">
         <topic label="giuh_carry_over" href="structgiuh_1_1giuh__carry__over.html">
@@ -1454,7 +1452,7 @@
           <topic label="get_interpolated_regularized_cdf" href="classgiuh_1_1giuh__kernel__impl.html#a743806dfaf0a26a0373a0092c3f14b4c"/>
           <topic label="get_interpolation_regularity_seconds" href="classgiuh_1_1giuh__kernel__impl.html#a4ae93bb56a9c00f8ceb4a32ccf072a92"/>
           <topic label="get_regularized_times_s" href="classgiuh_1_1giuh__kernel__impl.html#ad53664c11dbe1259bc8fb9cf3ea8e5bc"/>
-          <topic label="interpolate_regularized_cdf" href="classgiuh_1_1giuh__kernel__impl.html#aa313889cb8f38a1e0adabeb594115424"/>
+          <topic label="interpolate_regularized_cdf" href="classgiuh_1_1giuh__kernel__impl.html#a272b269b857a9c388c0b67134865662c"/>
           <topic label="make_from_incremental_runoffs" href="classgiuh_1_1giuh__kernel__impl.html#abd7d367548f4c374100093edf6259489"/>
           <topic label="set_interpolation_regularity_seconds" href="classgiuh_1_1giuh__kernel__impl.html#a5c32f00ef5910039e991846e5b847e46"/>
           <topic label="carry_overs_list_head" href="classgiuh_1_1giuh__kernel__impl.html#a031271c5238bcbcd0156df50f335ded4"/>
@@ -4108,7 +4106,7 @@
           <topic label="get_interpolated_regularized_cdf" href="classgiuh_1_1giuh__kernel__impl.html#a743806dfaf0a26a0373a0092c3f14b4c"/>
           <topic label="get_interpolation_regularity_seconds" href="classgiuh_1_1giuh__kernel__impl.html#a4ae93bb56a9c00f8ceb4a32ccf072a92"/>
           <topic label="get_regularized_times_s" href="classgiuh_1_1giuh__kernel__impl.html#ad53664c11dbe1259bc8fb9cf3ea8e5bc"/>
-          <topic label="interpolate_regularized_cdf" href="classgiuh_1_1giuh__kernel__impl.html#aa313889cb8f38a1e0adabeb594115424"/>
+          <topic label="interpolate_regularized_cdf" href="classgiuh_1_1giuh__kernel__impl.html#a272b269b857a9c388c0b67134865662c"/>
           <topic label="make_from_incremental_runoffs" href="classgiuh_1_1giuh__kernel__impl.html#abd7d367548f4c374100093edf6259489"/>
           <topic label="set_interpolation_regularity_seconds" href="classgiuh_1_1giuh__kernel__impl.html#a5c32f00ef5910039e991846e5b847e46"/>
           <topic label="carry_overs_list_head" href="classgiuh_1_1giuh__kernel__impl.html#a031271c5238bcbcd0156df50f335ded4"/>
@@ -5673,7 +5671,6 @@
         <topic label="get_init_time" href="class_b_m_i_data_selector.html#abe6340bf863bada7b0d753ebe60228bd"/>
         <topic label="get_output_units" href="class_b_m_i_data_selector.html#a92a56297b4fe7ad8c374f8808a5579f9"/>
         <topic label="get_variable_name" href="class_b_m_i_data_selector.html#a1dd6a5bb4ab1e701463359d34d4d6738"/>
-        <topic label="operator const CatchmentAggrDataSelector &amp;" href="class_b_m_i_data_selector.html#a9700174326b0b4a7ebf5c12f456793e2"/>
         <topic label="set_duration_secs" href="class_b_m_i_data_selector.html#ac2cb7c098699553e00ab893f26fafbcc"/>
         <topic label="set_id" href="class_b_m_i_data_selector.html#ac1382175edeea8eeae746b7d80f8c271"/>
         <topic label="set_init_time" href="class_b_m_i_data_selector.html#aad9e7ae1030d5dec90a6afcd5266944a"/>
@@ -5725,7 +5722,6 @@
         <topic label="get_init_time" href="class_c_s_v_data_selector.html#abe6340bf863bada7b0d753ebe60228bd"/>
         <topic label="get_output_units" href="class_c_s_v_data_selector.html#a92a56297b4fe7ad8c374f8808a5579f9"/>
         <topic label="get_variable_name" href="class_c_s_v_data_selector.html#a1dd6a5bb4ab1e701463359d34d4d6738"/>
-        <topic label="operator const CatchmentAggrDataSelector &amp;" href="class_c_s_v_data_selector.html#a97c017c59cbef78ba5d565e3208656b9"/>
         <topic label="set_duration_secs" href="class_c_s_v_data_selector.html#ac2cb7c098699553e00ab893f26fafbcc"/>
         <topic label="set_id" href="class_c_s_v_data_selector.html#ac1382175edeea8eeae746b7d80f8c271"/>
         <topic label="set_init_time" href="class_c_s_v_data_selector.html#aad9e7ae1030d5dec90a6afcd5266944a"/>

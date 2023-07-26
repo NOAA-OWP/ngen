@@ -6,7 +6,6 @@ var class_b_m_i_data_selector =
     [ "get_init_time", "class_b_m_i_data_selector.html#abe6340bf863bada7b0d753ebe60228bd", null ],
     [ "get_output_units", "class_b_m_i_data_selector.html#a92a56297b4fe7ad8c374f8808a5579f9", null ],
     [ "get_variable_name", "class_b_m_i_data_selector.html#a1dd6a5bb4ab1e701463359d34d4d6738", null ],
-    [ "operator const CatchmentAggrDataSelector &", "class_b_m_i_data_selector.html#a9700174326b0b4a7ebf5c12f456793e2", null ],
     [ "set_duration_secs", "class_b_m_i_data_selector.html#ac2cb7c098699553e00ab893f26fafbcc", null ],
     [ "set_id", "class_b_m_i_data_selector.html#ac1382175edeea8eeae746b7d80f8c271", null ],
     [ "set_init_time", "class_b_m_i_data_selector.html#aad9e7ae1030d5dec90a6afcd5266944a", null ],

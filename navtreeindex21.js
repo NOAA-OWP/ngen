@@ -1,7 +1,5 @@
 var NAVTREEINDEX21 =
 {
-"namespacegeojson.html#a0575056bcdcce0ccba81e6875591b702":[20,0,5,17],
-"namespacegeojson.html#a0e7f78cfe2859f6b67a1d8165e22a99c":[20,0,5,25],
 "namespacegeojson.html#a0f6ff987f88f0fa9f53225b87dc2d7db":[20,0,5,49],
 "namespacegeojson.html#a1c9774b2c97ea8d59d6d7255ef005c81":[20,0,5,27],
 "namespacegeojson.html#a1e973c44a04c54096fb9877033c21de5":[20,0,5,13],
@@ -62,10 +60,8 @@ var NAVTREEINDEX21 =
 "namespacegeojson.html#af1cddc2efbfbf791ed06243ba22877cb":[20,0,5,46],
 "namespacegeojson.html#afc3a529a1261a6dfe825882ff9f168da":[20,0,5,19],
 "namespacegeopackage.html":[20,0,6],
-"namespacegeopackage.html#a99923a306a98843b05f55bf3cc2560aa":[20,0,6,10],
 "namespacegeopackage.html#a9b052ec7251d73a0a61f5a2c9c17f26b":[20,0,6,4],
 "namespacegeopackage.html#aaaf5f61e8b5234ef6c840267f06e2134":[20,0,6,8],
-"namespacegeopackage.html#ac094e174e65323898b26a052f5c87224":[20,0,6,9],
 "namespacegeopackage.html#ad62d7034c9f884e4bb739444c4a9aed7":[20,0,6,5],
 "namespacegeopackage.html#ad83484f3bbaac91d9890c85713c448e3":[20,0,6,7],
 "namespacegeopackage.html#af4db1e0223650985023e30ffe06255b6":[20,0,6,6],
@@ -249,5 +245,9 @@ var NAVTREEINDEX21 =
 "structboost_1_1detail_1_1span__copyable.html":[20,0,1,0,5],
 "structboost_1_1detail_1_1span__copyable.html#a768e32b47fe763cf0fa7de3297671e71":[21,0,1,0,5,0],
 "structboost_1_1detail_1_1span__copyable.html#a768e32b47fe763cf0fa7de3297671e71":[20,0,1,0,5,0],
-"structboost_1_1detail_1_1span__data.html":[21,0,1,0,6]
+"structboost_1_1detail_1_1span__data.html":[21,0,1,0,6],
+"structboost_1_1detail_1_1span__data.html":[20,0,1,0,6],
+"structboost_1_1detail_1_1span__data_3_01_t_00_01typename_01std_1_1enable__if_3_01std_1_1is__poin78544bb9d841e85969596fc838b560c1.html":[21,0,1,0,7],
+"structboost_1_1detail_1_1span__data_3_01_t_00_01typename_01std_1_1enable__if_3_01std_1_1is__poin78544bb9d841e85969596fc838b560c1.html":[20,0,1,0,7],
+"structboost_1_1detail_1_1span__data_3_01_t_00_01typename_01std_1_1enable__if_3_01std_1_1is__poin78544bb9d841e85969596fc838b560c1.html#af7670f3892d98eb11d64c78d195e396a":[21,0,1,0,7,0]
 };

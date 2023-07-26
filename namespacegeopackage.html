@@ -92,8 +92,7 @@ $(document).ready(function(){initNavTree('namespacegeopackage.html',''); initRes
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
-<a href="#func-members">Functions</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">geopackage Namespace Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -133,15 +132,6 @@ Functions</h2></td></tr>
 <tr class="memitem:aaaf5f61e8b5234ef6c840267f06e2134"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classgeojson_1_1_feature_collection.html">geojson::FeatureCollection</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegeopackage.html#aaaf5f61e8b5234ef6c840267f06e2134">read</a> (const std::string &amp;gpkg_path, const std::string &amp;layer, const std::vector&lt; std::string &gt; &amp;ids)</td></tr>
 <tr class="memdesc:aaaf5f61e8b5234ef6c840267f06e2134"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build a feature collection from a GPKG layer.  <a href="namespacegeopackage.html#aaaf5f61e8b5234ef6c840267f06e2134">More...</a><br /></td></tr>
 <tr class="separator:aaaf5f61e8b5234ef6c840267f06e2134"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:a99923a306a98843b05f55bf3cc2560aa"><td class="memItemLeft" align="right" valign="top">const auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegeopackage.html#a99923a306a98843b05f55bf3cc2560aa">epsg5070</a></td></tr>
-<tr class="memdesc:a99923a306a98843b05f55bf3cc2560aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">EPSG 5070 projection definition for use with boost::geometry.  <a href="namespacegeopackage.html#a99923a306a98843b05f55bf3cc2560aa">More...</a><br /></td></tr>
-<tr class="separator:a99923a306a98843b05f55bf3cc2560aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac094e174e65323898b26a052f5c87224"><td class="memItemLeft" align="right" valign="top">const auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegeopackage.html#ac094e174e65323898b26a052f5c87224">epsg3857</a></td></tr>
-<tr class="memdesc:ac094e174e65323898b26a052f5c87224"><td class="mdescLeft">&#160;</td><td class="mdescRight">EPSG 3857 projection definition for use with boost::geometry.  <a href="namespacegeopackage.html#ac094e174e65323898b26a052f5c87224">More...</a><br /></td></tr>
-<tr class="separator:ac094e174e65323898b26a052f5c87224"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a id="a9b052ec7251d73a0a61f5a2c9c17f26b" name="a9b052ec7251d73a0a61f5a2c9c17f26b"></a>
@@ -337,71 +327,13 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<h2 class="groupheader">Variable Documentation</h2>
-<a id="ac094e174e65323898b26a052f5c87224" name="ac094e174e65323898b26a052f5c87224"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac094e174e65323898b26a052f5c87224">&#9670;&#160;</a></span>epsg3857</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const auto geopackage::epsg3857</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= bg::srs::dpar::parameters&lt;&gt;(bg::srs::dpar::proj_merc)</div>
-<div class="line">                                                 (bg::srs::dpar::units_m)</div>
-<div class="line">                                                 (bg::srs::dpar::no_defs)</div>
-<div class="line">                                                 (bg::srs::dpar::a, 6378137)</div>
-<div class="line">                                                 (bg::srs::dpar::b, 6378137)</div>
-<div class="line">                                                 (bg::srs::dpar::lat_ts, 0)</div>
-<div class="line">                                                 (bg::srs::dpar::lon_0, 0)</div>
-<div class="line">                                                 (bg::srs::dpar::x_0, 0)</div>
-<div class="line">                                                 (bg::srs::dpar::y_0, 0)</div>
-<div class="line">                                                 (bg::srs::dpar::k, 1)</div>
-</div><!-- fragment -->
-<p>EPSG 3857 projection definition for use with boost::geometry. </p>
-<dl class="section note"><dt>Note</dt><dd>this is required because boost 1.72.0 does not have an EPSG definition for 3857 in boost::srs::epsg. </dd></dl>
-
-<p class="reference">Referenced by <a class="el" href="structgeopackage_1_1wkb.html#a479c54c989ff0cbe585074f7d92597e4">geopackage::wkb::get_prj()</a>.</p>
-
-</div>
-</div>
-<a id="a99923a306a98843b05f55bf3cc2560aa" name="a99923a306a98843b05f55bf3cc2560aa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a99923a306a98843b05f55bf3cc2560aa">&#9670;&#160;</a></span>epsg5070</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const auto geopackage::epsg5070</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= bg::srs::dpar::parameters&lt;&gt;(bg::srs::dpar::proj_aea)</div>
-<div class="line">                                                 (bg::srs::dpar::ellps_grs80)</div>
-<div class="line">                                                 (bg::srs::dpar::towgs84, {0,0,0,0,0,0,0})</div>
-<div class="line">                                                 (bg::srs::dpar::lat_0, 23)</div>
-<div class="line">                                                 (bg::srs::dpar::lon_0, -96)</div>
-<div class="line">                                                 (bg::srs::dpar::lat_1, 29.5)</div>
-<div class="line">                                                 (bg::srs::dpar::lat_2, 45.5)</div>
-<div class="line">                                                 (bg::srs::dpar::x_0, 0)</div>
-<div class="line">                                                 (bg::srs::dpar::y_0, 0)</div>
-</div><!-- fragment -->
-<p>EPSG 5070 projection definition for use with boost::geometry. </p>
-<dl class="section note"><dt>Note</dt><dd>this is required because boost 1.72.0 does not have an EPSG definition for 5070 in boost::srs::epsg. </dd></dl>
-
-<p class="reference">Referenced by <a class="el" href="structgeopackage_1_1wkb.html#a479c54c989ff0cbe585074f7d92597e4">geopackage::wkb::get_prj()</a>.</p>
-
-</div>
-</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacegeopackage.html">geopackage</a></li>
-    <li class="footer">Generated on Tue Jul 25 2023 21:30:59 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
+    <li class="footer">Generated on Wed Jul 26 2023 16:43:20 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
   </ul>
 </div>
 </body>
