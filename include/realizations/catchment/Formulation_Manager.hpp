@@ -168,19 +168,21 @@ namespace realization {
                           continue;
                       }
 
-                      auto catchment_feature = fabric->get_feature(catchment_index);
-                      auto formulations = catchment_config.second.get_child_optional("formulations");
+                      decltype(auto) formulations = catchment_config.second.get_child_optional("formulations");
                       if( !formulations ) {
                         throw std::runtime_error("ERROR: No formulations defined for "+catchment_config.first+".");
                       }
 
                       // Parse catchment-specific model_params
-                      auto model_params = formulations->get_child_optional("params.model_params");
-                      if (model_params) {
-                        parse_external_model_params(*model_params, catchment_feature);
-                      }
+                      auto catchment_feature = fabric->get_feature(catchment_index);
 
-                      for (const auto &formulation: *formulations) {
+                      for (auto &formulation: *formulations) {
+                          decltype(auto) model_params = formulation.second.get_child_optional("params.model_params");
+                          if (model_params) {
+                              std::cerr << "Checking for external model_params\n";
+                              parse_external_model_params(*model_params, catchment_feature);
+                          }
+                        
                           this->add_formulation(
                               this->construct_formulation_from_tree(
                                   simulation_time_config,
@@ -505,49 +507,51 @@ namespace realization {
              * @param catchment_feature Associated catchment feature
              */
             void parse_external_model_params(boost::property_tree::ptree& model_params, const geojson::Feature catchment_feature) {
-                 for (auto& param : model_params) {
-                    auto param_source = param.second.get_child_optional("source");
-                    if (!param_source) {
+                 boost::property_tree::ptree attr {};
+                 for (decltype(auto) param : model_params) {
+                    if (param.second.count("source") == 0) {
+                        attr.put_child(param.first, param.second);
                         continue;
                     }
-
-                    auto param_source_name = param_source->get_value<std::string>();
+                
+                    decltype(auto) param_source = param.second.get_child("source");
+                    decltype(auto) param_source_name = param_source.get_value<std::string>();
                     if (param_source_name != "hydrofabric") {
                         // temporary until the logic for alternative sources is designed
                         throw std::logic_error("ERROR: 'model_params' source `" + param_source_name + "` not currently supported. Only `hydrofabric` is supported.");
                     }
 
-                    auto param_name = param.second.get_child_optional("from")
+                    decltype(auto) param_name = param.second.get_child_optional("from")
                         ? param.second.get_child("from").get_value<std::string>()
                         : param.first;
-
-                    model_params.erase(param.first);
 
                     if (catchment_feature->has_property(param_name)) {
                         auto catchment_attribute = catchment_feature->get_property(param_name);
                         switch (catchment_attribute.get_type()) {
                             case geojson::PropertyType::Natural:
-                                model_params.put(param_name, catchment_attribute.as_natural_number());
+                                attr.put(param_name, catchment_attribute.as_natural_number());
                                 break;
                             case geojson::PropertyType::Boolean:
-                                model_params.put(param_name, catchment_attribute.as_boolean());
+                                attr.put(param_name, catchment_attribute.as_boolean());
                                 break;
                             case geojson::PropertyType::Real:
-                                model_params.put(param_name, catchment_attribute.as_real_number());
+                                attr.put(param_name, catchment_attribute.as_real_number());
                                 break;
                             case geojson::PropertyType::String:
-                                model_params.put(param_name, catchment_attribute.as_string());
+                                attr.put(param_name, catchment_attribute.as_string());
                                 break;
 
                             case geojson::PropertyType::List:
                             case geojson::PropertyType::Object:
                             default:
                                 std::cerr << "WARNING: property type " << static_cast<int>(catchment_attribute.get_type()) << " not allowed as model parameter. "
-                                          << "Must be one of: Natural (int), Real (double), Boolean, or String" << std::endl;
+                                          << "Must be one of: Natural (int), Real (double), Boolean, or String" << '\n';
                                 break;
                         }
                     }
                 }
+
+                model_params.swap(attr);
             }
 
             boost::property_tree::ptree tree;

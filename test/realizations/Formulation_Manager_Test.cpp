@@ -1,3 +1,5 @@
+#include "FileChecker.h"
+#include "StreamHandler.hpp"
 #include "gtest/gtest.h"
 #include <Formulation_Manager.hpp>
 #include <Catchment_Formulation.hpp>
@@ -65,6 +67,30 @@ class Formulation_Manager_Test : public ::testing::Test {
         id,
         properties
         //bounding_box
+      ));
+
+      fabric->add_feature(feature);
+    }
+
+    void add_feature(const std::string& id, geojson::PropertyMap properties)
+    {
+      geojson::three_dimensional_coordinates three_dimensions {
+          {
+              {1.0, 2.0},
+              {3.0, 4.0},
+              {5.0, 6.0}
+          },
+          {
+              {7.0, 8.0},
+              {9.0, 10.0},
+              {11.0, 12.0}
+          }
+      };
+
+      geojson::Feature feature = std::make_shared<geojson::PolygonFeature>(geojson::PolygonFeature(
+        geojson::polygon(three_dimensions),
+        id,
+        properties
       ));
 
       fabric->add_feature(feature);
@@ -482,6 +508,60 @@ const std::string EXAMPLE_4 = "{ "
     "} "
 "}";
 
+const std::string EXAMPLE_5 =
+"{"
+"    \"time\": {"
+"        \"start_time\": \"2015-12-01 00:00:00\","
+"        \"end_time\": \"2015-12-30 23:00:00\","
+"        \"output_interval\": 3600"
+"    },"
+"    \"catchments\": {"
+"        \"cat-67\": {"
+"            \"formulations\": ["
+"                {"
+"                    \"name\": \"bmi_c++\","
+"                    \"params\": {"
+"                        \"model_type_name\": \"bmi_c++_sloth\","
+"                        \"library_file\": \"" +
+utils::FileChecker::find_first_readable({
+  "../../extern/sloth/cmake_build/libslothmodel.so",
+  "../extern/sloth/cmake_build/libslothmodel.so",
+  "./extern/sloth/cmake_build/libslothmodel.so",
+  "../../extern/sloth/build/libslothmodel.so",
+  "../extern/sloth/build/libslothmodel.so",
+  "./extern/sloth/build/libslothmodel.so",
+})+
+"\","
+"                        \"init_config\": \"/dev/null\","
+"                        \"allow_exceed_end_time\": true,"
+"                        \"main_output_variable\": \"Klf\","
+"                        \"uses_forcing_file\": false,"
+"                        \"model_params\": {"
+"                            \"Klf\": {"
+"                                \"source\": \"hydrofabric\""
+"                            },"
+"                            \"Kn\": {"
+"                                \"source\": \"hydrofabric\""
+"                            },"
+"                            \"nash_n\": {"
+"                                \"source\": \"hydrofabric\","
+"                                \"from\": \"n\""
+"                            },"
+"                            \"Cgw\": {"
+"                                \"source\": \"hydrofabric\""
+"                            },"
+"                            \"static_var\": 0.0"
+"                        }"
+"                    }"
+"                }"
+"            ],"
+"            \"forcing\": {"
+"                \"path\": \"./data/forcing/cat-67_2015-12-01 00_00_00_2015-12-30 23_00_00.csv\""
+"            }"
+"        }"
+"    }"
+"}";
+
 TEST_F(Formulation_Manager_Test, basic_reading_1) {
     std::stringstream stream;
 
@@ -652,3 +732,47 @@ TEST_F(Formulation_Manager_Test, forcing_provider_specification) {
     }
 }
 
+TEST_F(Formulation_Manager_Test, read_external_attributes) {
+    std::stringstream stream;
+    stream << fix_paths(EXAMPLE_5);
+
+    std::ostream* ptr = &std::cout;
+    std::shared_ptr<std::ostream> s_ptr(ptr, [](void*) {});
+    utils::StreamHandler catchment_output(s_ptr);
+
+    auto manager = realization::Formulation_Manager(stream);
+    this->add_feature("cat-67", geojson::PropertyMap{
+      { "Klf",    geojson::JSONProperty{"Klf",    1.70352 } },
+      { "Kn",     geojson::JSONProperty{"Kn",     0.03    } },
+      { "n",      geojson::JSONProperty{"n",      2       } }, // nash_n
+      { "Cgw",    geojson::JSONProperty{"Cgw",    0.01    } }
+    });
+
+    auto feature = this->fabric->get_feature("cat-67");
+    ASSERT_TRUE(feature->has_property("Klf"));
+    ASSERT_TRUE(feature->has_property("Kn"));
+    ASSERT_TRUE(feature->has_property("n"));
+    ASSERT_TRUE(feature->has_property("Cgw"));
+
+    manager.read(this->fabric, catchment_output);
+
+    ASSERT_EQ(manager.get_size(), 1);
+    ASSERT_TRUE(manager.contains("cat-67"));
+  
+    pdm03_struct pdm_et_data;
+    pdm_et_data.scaled_distribution_fn_shape_parameter = 1.3;
+    pdm_et_data.vegetation_adjustment = 0.99;
+    pdm_et_data.model_time_step = 0.0;
+    pdm_et_data.max_height_soil_moisture_storerage_tank = 400.0;
+    pdm_et_data.maximum_combined_contents = pdm_et_data.max_height_soil_moisture_storerage_tank / (1.0+pdm_et_data.scaled_distribution_fn_shape_parameter);
+    std::shared_ptr<pdm03_struct> et_params_ptr = std::make_shared<pdm03_struct>(pdm_et_data);
+
+    auto formulation = manager.get_formulation("cat-67");
+    formulation->set_et_params(et_params_ptr);
+    double result = formulation->get_response(0, 3600);
+
+
+    ASSERT_NEAR(result, 1.70352, 1e-5);
+    ASSERT_EQ(formulation->get_output_header_line(","), "Cgw,Klf,Kn,n,static_var");
+    ASSERT_EQ(formulation->get_output_line_for_timestep(0), "0.010000,1.703520,0.030000,2.000000,0.000000");
+}
