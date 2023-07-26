@@ -4,9 +4,6 @@
 #include <unordered_set>
 #include <unordered_map>
 
-// Used for CSV handler
-#include <fstream>
-
 #include "dimension.hpp"
 #include "mdframe/visitors.hpp"
 #include "variable.hpp"

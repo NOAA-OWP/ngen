@@ -1,6 +1,8 @@
 #ifndef NGEN_MDFRAME_HANDLERS_CSV_HPP
 #define NGEN_MDFRAME_HANDLERS_CSV_HPP
 
+#include <fstream>
+
 #include "mdframe.hpp"
 #include "cartesian.hpp"
 

@@ -13,7 +13,6 @@ class mdarray
   public:
     using value_type      = T;
     using container_type  = std::vector<value_type>;
-    using ilist           = std::vector<std::size_t>;
     using size_type       = typename container_type::size_type;
     using difference_type = typename container_type::difference_type;
     using reference       = typename container_type::reference;
@@ -164,8 +163,7 @@ class mdarray
      */
     size_type index(const boost::span<const size_t> n) const
     {
-        size_type index = 0;
-        size_type stride = 1;
+        size_type index = 0, stride = 1;
         for (size_type k = 0; k < this->rank(); k++) {
             index += n[k] * stride;
             stride *= this->m_shape[k];
@@ -177,29 +175,22 @@ class mdarray
     /**
      * Retrieve the multi-dimensional index from a given address index.
      * 
-     * @param idx Address index (aka flat index)
-     * @return ilist 
+     * @param[in] idx Address index (aka flat index)
+     * @param[out] n outputted index
      */
-    ilist deindex(size_type idx) const
+    void deindex(size_type idx, boost::span<size_type> n) const
     {
-        if (idx == 0) { // trivial case
-            return ilist(this->rank(), 0);
-        }
-
-        ilist n(this->rank());
-
+        // TODO: Need a bounds check?
         size_type stride = 1;
         for (size_type k = 0; k < this->rank(); k++) {
             n[k] = idx / stride % this->m_shape[k];
             stride *= this->m_shape[k];
         }
-
-        return n;
     }
 
   private:
-    ilist          m_shape;
-    container_type m_data;
+    std::vector<size_type> m_shape;
+    container_type         m_data;
 };
 
 } // namespace ngen

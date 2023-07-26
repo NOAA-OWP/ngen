@@ -6,7 +6,7 @@
 namespace ngen {
 
 template<typename T>
-struct mdarray<T>::iterator // ------------------------------------------------
+struct mdarray<T>::iterator
 {
     using iterator_category = std::random_access_iterator_tag;
     using difference_type   = std::ptrdiff_t;
@@ -54,9 +54,9 @@ struct mdarray<T>::iterator // ------------------------------------------------
         return tmp;
     }
 
-    ilist mdindex() const noexcept
+    void mdindex(boost::span<size_type> n) const noexcept
     {
-        return this->m_ref.deindex(this->m_idx);
+        return this->m_ref.deindex(this->m_idx, n);
     }
 
     friend bool operator==(const iterator& a, const iterator& b)
@@ -74,7 +74,7 @@ struct mdarray<T>::iterator // ------------------------------------------------
     const mdarray& m_ref;
     size_type m_idx;
 
-}; // struct iterator -----------------------------------------------------
+};
 
 }
 
