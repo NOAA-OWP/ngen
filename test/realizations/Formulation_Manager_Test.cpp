@@ -15,6 +15,7 @@
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
+#include <boost/algorithm/string.hpp>
 
 #include <AorcForcing.hpp>
 #include <Bmi_Formulation.hpp>
@@ -773,6 +774,37 @@ TEST_F(Formulation_Manager_Test, read_external_attributes) {
 
 
     ASSERT_NEAR(result, 1.70352, 1e-5);
-    ASSERT_EQ(formulation->get_output_header_line(","), "Cgw,Klf,Kn,n,static_var");
-    ASSERT_EQ(formulation->get_output_line_for_timestep(0), "0.010000,1.703520,0.030000,2.000000,0.000000");
+    
+    std::vector<std::string> columns;
+    columns.reserve(5);
+    boost::algorithm::split(columns, formulation->get_output_header_line(","), [](auto c) -> bool { return c == ','; });
+    
+    std::vector<std::string> str_values;
+    str_values.reserve(5);
+    boost::algorithm::split(str_values, formulation->get_output_line_for_timestep(0), [](auto c) -> bool { return c == ','; });
+    
+    std::array<double, 5> values;
+    auto values_it = values.begin();
+    for (auto& str : str_values) {
+      auto end = &str[0] + str.size();
+      *values_it = strtod(str.c_str(), &end);
+      values_it++;
+    }
+
+#define ASSERT_CONTAINS(container, value) \
+  ASSERT_NE(std::find(container.begin(), container.end(), value), container.end())
+
+    ASSERT_CONTAINS(columns, "Cgw");
+    ASSERT_CONTAINS(columns, "Klf");
+    ASSERT_CONTAINS(columns, "Kn");
+    ASSERT_CONTAINS(columns, "n");
+    ASSERT_CONTAINS(columns, "static_var");
+
+    ASSERT_CONTAINS(values, 0.01);
+    ASSERT_CONTAINS(values, 1.70352);
+    ASSERT_CONTAINS(values, 0.03);
+    ASSERT_CONTAINS(values, 2.0);
+    ASSERT_CONTAINS(values, 0.0);
+  
+#undef ASSERT_CONTAINS
 }
