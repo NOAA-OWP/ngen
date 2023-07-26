@@ -3,7 +3,7 @@
 
 #include <boost/optional.hpp>
 
-namespace io {
+namespace ngen {
 
 class mdframe;
 

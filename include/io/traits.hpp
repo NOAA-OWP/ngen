@@ -4,7 +4,7 @@
 #include <type_traits>
 #include <boost/variant.hpp>
 
-namespace io {
+namespace ngen {
 namespace traits {
 
 template<bool...>
