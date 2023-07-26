@@ -1,5 +1,5 @@
-#ifndef NGEN_IO_TRAITS_HPP
-#define NGEN_IO_TRAITS_HPP
+#ifndef NGEN_UTILITIES_TRAITS_HPP
+#define NGEN_UTILITIES_TRAITS_HPP
 
 #include <type_traits>
 #include <boost/variant.hpp>
