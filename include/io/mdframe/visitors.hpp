@@ -1,7 +1,7 @@
 #ifndef NGEN_IO_MDFRAME_VISITORS_HPP
 #define NGEN_IO_MDFRAME_VISITORS_HPP
 
-#include "mdarray.hpp"
+#include "mdarray/mdarray.hpp"
 #include <boost/variant.hpp>
 #include <span.hpp>
 #include <traits.hpp>
@@ -75,6 +75,16 @@ struct mdarray_at
     typename mdarray<T>::value_type operator()(mdarray<T>& arr, const boost::span<const std::size_t> index)
     {
         return arr.at(index);
+    }
+};
+
+// Apply std::to_string as a visitor
+struct to_string_visitor : public boost::static_visitor<std::string>
+{
+    template<typename T>
+    std::string operator()(T& v)
+    {
+        return std::to_string(v);
     }
 };
 
