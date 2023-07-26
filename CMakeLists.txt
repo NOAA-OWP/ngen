@@ -8,6 +8,8 @@ endif()
 project(ngen VERSION 0.1.0)
 configure_file(include/NGenConfig.h.in include/NGenConfig.h)
 
+cmake_policy(SET CMP0074 NEW)
+
 if("${PROJECT_NAME}" STREQUAL "${CMAKE_PROJECT_NAME}")
     option(PACKAGE_TESTS "Build automated tests" ON)
 else()
@@ -174,7 +176,6 @@ if(UDUNITS_ACTIVE)
     #add_compile_definitions("NGEN_UDUNITS2_XML_PATH=\"${UDUNITS_INSTALL_DIR}/share/udunits/udunits2.xml\"")
 endif()
 
-cmake_policy(SET CMP0074 NEW)
 if(NETCDF_ACTIVE)
     set (NETCDF_CXX "YES")
     set (NETCDF_F77 "NO")
