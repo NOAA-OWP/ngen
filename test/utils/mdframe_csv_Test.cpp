@@ -6,6 +6,7 @@
 namespace fs = boost::filesystem;
 
 #include "mdframe.hpp"
+#include "cartesian.hpp"
 
 class mdframe_csv_Test : public ::testing::Test
 {
@@ -40,7 +41,7 @@ TEST_F(mdframe_csv_Test, io_csv_cartesian)
     std::vector<size_t> shape { 1, 2, 3 };
     std::vector<size_t> index(3);
     std::vector<std::vector<size_t>> output;
-    io::detail::cartesian_indices(shape, index, 0, output);
+    ngen::cartesian_indices(shape, index, 0, output);
 
     EXPECT_EQ(output[0][0], 0);
     EXPECT_EQ(output[0][1], 0);
@@ -69,7 +70,7 @@ TEST_F(mdframe_csv_Test, io_csv_cartesian)
 
 TEST_F(mdframe_csv_Test, io_csv)
 {
-    io::mdframe df;
+    ngen::mdframe df;
 
     df.add_dimension("x", 2)
       .add_dimension("y", 2);
