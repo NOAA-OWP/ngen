@@ -17,7 +17,7 @@ struct mdarray_size
     : public boost::static_visitor<std::size_t>
 {
     template<typename T>
-    auto operator()(mdarray<T>& md_array) noexcept
+    auto operator()(const mdarray<T>& md_array) const noexcept
     {
         return md_array.size();
     }
@@ -30,7 +30,7 @@ struct mdarray_rank
     : public boost::static_visitor<std::size_t>
 {
     template<typename T>
-    auto operator()(mdarray<T>& arr) noexcept
+    auto operator()(const mdarray<T>& arr) const noexcept
     {
         return arr.rank();
     }
@@ -43,7 +43,7 @@ struct mdarray_shape
     : public boost::static_visitor<boost::span<const std::size_t>>
 {
     template<typename T>
-    auto operator()(mdarray<T>& arr) noexcept
+    auto operator()(const mdarray<T>& arr) const noexcept
     {
         return arr.shape();
     }
@@ -56,7 +56,7 @@ struct mdarray_insert
     : public boost::static_visitor<void>
 {
     template<typename T>
-    void operator()(mdarray<T>& arr, boost::span<const std::size_t> index, T value)
+    void operator()(T& arr, boost::span<const std::size_t> index, typename T::value_type value)
     {
         arr.insert(index, value);
     }
@@ -72,7 +72,7 @@ struct mdarray_at
     >
 {
     template<typename T>
-    typename mdarray<T>::value_type operator()(mdarray<T>& arr, const boost::span<const std::size_t> index)
+    typename T::value_type operator()(const T& arr, const boost::span<const std::size_t> index) const
     {
         return arr.at(index);
     }
@@ -82,7 +82,7 @@ struct mdarray_at
 struct to_string_visitor : public boost::static_visitor<std::string>
 {
     template<typename T>
-    std::string operator()(T& v)
+    std::string operator()(const T& v) const
     {
         return std::to_string(v);
     }

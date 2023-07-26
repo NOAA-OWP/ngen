@@ -101,33 +101,6 @@ class mdframe {
         return this->m_variables.find(name);
     }
 
-    /**
-     * @brief 
-     * 
-     * @param shape 
-     * @param index 
-     * @param dimension 
-     * @param output 
-     */
-    static void cartesian_indices(
-        boost::span<const size_type>         shape,
-        std::vector<size_type>&              index,
-        size_type                            dimension,
-        std::vector<std::vector<size_type>>& output
-    )
-    {
-        if (dimension == shape.size()) {
-            output.push_back(index);
-            return;
-        }
-
-        const auto& size = shape[dimension];
-        for (std::size_t i = 0; i < size; i++) {
-            index[dimension] = i;
-            cartesian_indices(shape, index, dimension + 1, output);
-        }
-    }
-
   public:
     /**
      * Return a dimension if it exists. Otherwise, returns boost::none.
