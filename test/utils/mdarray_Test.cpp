@@ -33,7 +33,8 @@ TEST(mdarray_Test, indexing)
         std::size_t x = s.index(idx);
         ASSERT_EQ(x, addr);
 
-        std::vector<std::size_t> y = s.deindex(x);
+        std::vector<std::size_t> y (s.rank());
+        s.deindex(x, y);
         ASSERT_EQ(y.size(), idx.size());
         for (std::size_t i = 0; i < y.size(); i++) {
             EXPECT_EQ(y[i], idx[i]);

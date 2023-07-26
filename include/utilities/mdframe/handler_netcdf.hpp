@@ -15,10 +15,15 @@ struct mdarray_netcdf_putvar : public boost::static_visitor<void>
 {
 
     template<typename T>
-    void operator()(mdarray<T> arr, netCDF::NcVar& var)
+    void operator()(const mdarray<T>& arr, netCDF::NcVar& var)
     {
-        for (auto it = arr.begin(); it != arr.end(); it++)
-            var.putVar(it.mdindex(), *it);
+        typename mdarray<T>::size_type rank = arr.rank();
+        std::vector<typename mdarray<T>::size_type> expanded_index(rank);
+        
+        for (auto it = arr.begin(); it != arr.end(); it++) {
+            it.mdindex(expanded_index);
+            var.putVar(expanded_index, *it);
+        }
     }
 
 };
