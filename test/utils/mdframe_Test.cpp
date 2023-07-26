@@ -4,7 +4,7 @@
 
 TEST(mdframe_Test, construction)
 {
-    io::mdframe df;
+    ngen::mdframe df;
 
     // Create constrained dimensions for time/x/y
     // (using method chaining)

@@ -121,6 +121,7 @@ if(UDUNITS_ACTIVE)
 endif()
 
 cmake_policy(SET CMP0074 NEW)
+set(NETCDF_ACTIVE ON)
 if(NETCDF_ACTIVE)
     set (NETCDF_CXX "YES")
     set (NETCDF_F77 "NO")
@@ -227,15 +228,17 @@ if(NGEN_WITH_SQLITE3)
     target_link_libraries(ngen PUBLIC NGen::geopackage)
 endif()
 
-add_subdirectory("src/io")
 add_subdirectory("src/realizations/catchment")
 add_subdirectory("src/forcing")
+
+add_library(ngen_utils INTERFACE)
+add_library(NGen::utils ALIAS ngen_utils)
+target_include_directories(ngen_utils INTERFACE ${CMAKE_CURRENT_LIST_DIR}/include/utilities)
 
 target_link_libraries(ngen PUBLIC
         NGen::core
         NGen::core_catchment
         NGen::core_nexus
-        NGen::io
         NGen::geojson
         NGen::realizations_catchment
         NGen::forcing

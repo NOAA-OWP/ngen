@@ -101,13 +101,13 @@ add_test(test_realization_config
 )
 
 ########################## Series Unit Tests
-add_test(test_io
+add_test(test_mdarray
          4
-         io/mdarray_Test.cpp
-         io/mdframe_Test.cpp
-         io/mdframe_netcdf_Test.cpp
-         io/mdframe_csv_Test.cpp
-         NGen::io
+         utils/mdarray_Test.cpp
+         utils/mdframe_Test.cpp
+         utils/mdframe_netcdf_Test.cpp
+         utils/mdframe_csv_Test.cpp
+         NGen::utils
          ${Boost_FILESYSTEM_LIBRARY}
          ${NETCDF_LIBRARIES})
 

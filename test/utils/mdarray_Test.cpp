@@ -4,7 +4,7 @@
 
 TEST(mdarray_Test, construction)
 {
-    io::mdarray<double> s{{2, 2}};
+    ngen::mdarray<double> s{{2, 2}};
 
     EXPECT_EQ(s.rank(), 2);
 
@@ -22,7 +22,7 @@ TEST(mdarray_Test, construction)
 
 TEST(mdarray_Test, indexing)
 {
-    io::mdarray<double> s{
+    ngen::mdarray<double> s{
         {10, 10}
     };
 
@@ -49,7 +49,7 @@ TEST(mdarray_Test, indexing)
 
 TEST(mdarray_Test, layout)
 {
-    io::mdarray<int> a{{2, 2, 2, 2, 2}};
+    ngen::mdarray<int> a{{2, 2, 2, 2, 2}};
 
     ASSERT_EQ(
         a.index({{0, 0, 0, 0, 0}}) + 1,
@@ -61,7 +61,7 @@ TEST(mdarray_Test, layout)
         a.index({{1, 1, 1, 0, 1}})
     );
 
-    io::mdarray<int> b{{2, 2, 2}};
+    ngen::mdarray<int> b{{2, 2, 2}};
 
     ASSERT_EQ(
         b.index({{0, 0, 0}}) + 1,
@@ -75,7 +75,7 @@ TEST(mdarray_Test, layout)
 
     // add `i` to prevent braces around scalar warnings
     std::initializer_list<std::size_t> i = { 2 };
-    io::mdarray<int> c{i};
+    ngen::mdarray<int> c{i};
 
     ASSERT_EQ(
         c.index({{0}}) + 1,

@@ -2,7 +2,7 @@
 
 #if NETCDF_ACTIVE
 #include <netcdf>
-#include <experimental/filesystem>
+#include <boost/filesystem.hpp>
 #endif
 
 #include "mdframe.hpp"
@@ -13,9 +13,9 @@ TEST(mdframe_Test, io_netcdf)
 #if !NETCDF_ACTIVE
     GTEST_SKIP() << "NetCDF is not available";
 #else
-    namespace fs = std::experimental::filesystem;
+    namespace fs = boost::filesystem;
   
-    io::mdframe df;
+    ngen::mdframe df;
 
     df.add_dimension("x", 2)
       .add_dimension("y", 2);
@@ -25,10 +25,10 @@ TEST(mdframe_Test, io_netcdf)
       .add_variable<double>("v", {"x", "y"});
 
     for (size_t x = 0; x < 2; x++) {
-        df["x"].insert({ x }, x + 1);
+        df["x"].insert({{ x }}, x + 1);
         for (size_t y = 0; y < 2; y++) {
-            df["y"].insert({ y }, y + 1);
-            df["v"].insert({ x, y }, (x + 1) * (y + 1));
+            df["y"].insert({{ y }}, y + 1);
+            df["v"].insert({{ x, y }}, (x + 1) * (y + 1));
         }
     }
     
