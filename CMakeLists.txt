@@ -121,7 +121,6 @@ if(UDUNITS_ACTIVE)
 endif()
 
 cmake_policy(SET CMP0074 NEW)
-set(NETCDF_ACTIVE ON)
 if(NETCDF_ACTIVE)
     set (NETCDF_CXX "YES")
     set (NETCDF_F77 "NO")
