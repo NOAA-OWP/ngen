@@ -2,6 +2,8 @@
 #define NGEN_MDFRAME_HANDLERS_CSV_HPP
 
 #include "mdframe.hpp"
+#include "cartesian.hpp"
+
 namespace ngen {
 
 inline void mdframe::to_csv(const std::string& path, bool header) const
@@ -73,7 +75,7 @@ inline void mdframe::to_csv(const std::string& path, bool header) const
     std::vector<std::vector<size_type>> indices;
     indices.reserve(rows);
 
-    this->cartesian_indices(shape, buffer, 0, indices);
+    ngen::cartesian_indices(shape, buffer, 0, indices);
     
     std::vector<size_type> index_buffer(max_rank);
     for (const auto& index : indices) {
