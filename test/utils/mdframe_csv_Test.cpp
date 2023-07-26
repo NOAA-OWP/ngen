@@ -1,9 +1,6 @@
 #include "gtest/gtest.h"
 
 #include <fstream>
-#include <boost/filesystem.hpp>
-
-namespace fs = boost::filesystem;
 
 #include "mdframe.hpp"
 #include "cartesian.hpp"
@@ -12,23 +9,27 @@ class mdframe_csv_Test : public ::testing::Test
 {
   protected:
     mdframe_csv_Test()
-        : tempfile(testing::TempDir())
-    {}
+        : path(testing::TempDir())
+    {
+        char last_char = *(path.end() - 1);
+
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+        if (last_char == '\\')
+            path.append("\\");
+#else
+        if (last_char != '/')
+            path.append("/");
+#endif
+
+        path.append("ngen__mdframe_Test_CSV.csv");
+    }
 
     ~mdframe_csv_Test() override
-    {}
-
-    void SetUp() override
     {
-        this->tempfile.append("mdframeTest_ioCSV.csv");
+        unlink(this->path.c_str());
     }
 
-    void TearDown() override
-    {
-        fs::remove(this->tempfile);
-    }
-
-    fs::path tempfile;
+    std::string path;
 };
 
 /**
@@ -90,11 +91,11 @@ TEST_F(mdframe_csv_Test, io_csv)
         }
     }
 
-    df.to_csv(this->tempfile.string(), "x");
+    df.to_csv(this->path, "x");
 
-    std::ifstream csv{this->tempfile.string()};
+    std::ifstream csv{this->path};
     if (!csv.is_open())
-        FAIL() << "failed to open " << this->tempfile.string();
+        FAIL() << "failed to open " << this->path;
 
     std::stringstream buffer;
     buffer << csv.rdbuf();

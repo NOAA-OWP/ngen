@@ -108,7 +108,6 @@ add_test(test_mdarray
          utils/mdframe_netcdf_Test.cpp
          utils/mdframe_csv_Test.cpp
          NGen::utils
-         ${Boost_FILESYSTEM_LIBRARY}
          ${NETCDF_LIBRARIES})
 
 ########################## Nexus Tests

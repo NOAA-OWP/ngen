@@ -85,7 +85,7 @@ if(LSTM_TORCH_LIB_ACTIVE)
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
 endif()
 
-find_package(Boost 1.72.0 REQUIRED COMPONENTS filesystem)
+find_package(Boost 1.72.0 REQUIRED)
 
 
 find_package(SQLite3)

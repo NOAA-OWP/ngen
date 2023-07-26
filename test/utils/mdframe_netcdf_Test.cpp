@@ -2,19 +2,44 @@
 
 #if NETCDF_ACTIVE
 #include <netcdf>
-#include <boost/filesystem.hpp>
 #endif
 
 #include "mdframe.hpp"
 
+class mdframe_netcdf_Test : public ::testing::Test
+{
+  protected:
+    mdframe_netcdf_Test()
+        : path(testing::TempDir())
+    {
+        char last_char = *(path.end() - 1);
+
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+        if (last_char == '\\')
+            path.append("\\");
+#else
+        if (last_char != '/')
+            path.append("/");
+#endif
+
+        path.append("ngen__mdframe_Test_netCDF.nc");
+    }
+
+    ~mdframe_netcdf_Test() override
+    {
+        unlink(this->path.c_str());
+    }
+
+    std::string path;
+};
+
 // TODO: Convert to test fixture for setup/teardown members.
-TEST(mdframe_Test, io_netcdf)
+TEST_F(mdframe_netcdf_Test, io_netcdf)
 {
 #if !NETCDF_ACTIVE
     GTEST_SKIP() << "NetCDF is not available";
 #else
-    namespace fs = boost::filesystem;
-  
+
     ngen::mdframe df;
 
     df.add_dimension("x", 2)
@@ -31,13 +56,11 @@ TEST(mdframe_Test, io_netcdf)
             df["v"].insert({{ x, y }}, (x + 1) * (y + 1));
         }
     }
-    
-    fs::path tempfile(testing::TempDir());
-    tempfile.append("mdframeTest_ioNetcdf.nc");
-    df.to_netcdf(tempfile.string());
+
+    df.to_netcdf(this->path);
 
     netCDF::NcFile ex;
-    ex.open(tempfile.string(), netCDF::NcFile::read);
+    ex.open(this->path, netCDF::NcFile::read);
 
     const auto xdim = ex.getDim("x");
     ASSERT_FALSE(xdim.isNull());
@@ -71,7 +94,5 @@ TEST(mdframe_Test, io_netcdf)
     }
 
   ex.close();
-  
-  fs::remove(tempfile);
 #endif
 }
