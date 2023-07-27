@@ -19,7 +19,7 @@
 <text text-anchor="start" x="34.5" y="-614" font-family="Helvetica,sans-Serif" font-size="10.00">|+ WrappedDataProvider()</text>
 <text text-anchor="start" x="34.5" y="-603" font-family="Helvetica,sans-Serif" font-size="10.00">+ WrappedDataProvider()</text>
 <text text-anchor="start" x="34.5" y="-592" font-family="Helvetica,sans-Serif" font-size="10.00">+ WrappedDataProvider()</text>
-<text text-anchor="start" x="34.5" y="-581" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_avaliable_variable</text>
+<text text-anchor="start" x="34.5" y="-581" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_variable</text>
 <text text-anchor="start" x="34.5" y="-570" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
 <text text-anchor="start" x="34.5" y="-559" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_start_time()</text>
 <text text-anchor="start" x="34.5" y="-548" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_stop_time()</text>
@@ -45,7 +45,7 @@
 <text text-anchor="start" x="26" y="-371" font-family="Helvetica,sans-Serif" font-size="10.00">|+ DeferredWrappedProvider()</text>
 <text text-anchor="start" x="26" y="-360" font-family="Helvetica,sans-Serif" font-size="10.00">+ DeferredWrappedProvider()</text>
 <text text-anchor="start" x="26" y="-349" font-family="Helvetica,sans-Serif" font-size="10.00">+ DeferredWrappedProvider()</text>
-<text text-anchor="start" x="26" y="-338" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_avaliable_variable</text>
+<text text-anchor="start" x="26" y="-338" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_variable</text>
 <text text-anchor="start" x="26" y="-327" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
 <text text-anchor="start" x="26" y="-316" font-family="Helvetica,sans-Serif" font-size="10.00">+ getSetMessage()</text>
 <text text-anchor="start" x="26" y="-305" font-family="Helvetica,sans-Serif" font-size="10.00">+ isReadyToProvideData()</text>
@@ -86,7 +86,7 @@
 <text text-anchor="start" x="8" y="-924" font-family="Helvetica,sans-Serif" font-size="10.00">{data_access::DataProvider</text>
 <text text-anchor="middle" x="95.5" y="-913" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; double, CatchmentAggrDataSelector &gt;</text>
 <text text-anchor="start" x="8" y="-902" font-family="Helvetica,sans-Serif" font-size="10.00">||+ ~DataProvider()</text>
-<text text-anchor="start" x="8" y="-891" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_avaliable_variable</text>
+<text text-anchor="start" x="8" y="-891" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_variable</text>
 <text text-anchor="start" x="8" y="-880" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
 <text text-anchor="start" x="8" y="-869" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_start_time()</text>
 <text text-anchor="start" x="8" y="-858" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_stop_time()</text>
@@ -114,7 +114,7 @@
 <text text-anchor="start" x="32" y="-1144" font-family="Helvetica,sans-Serif" font-size="10.00">{data_access::DataProvider</text>
 <text text-anchor="middle" x="95.5" y="-1133" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; data_type, selection_type &gt;</text>
 <text text-anchor="start" x="32" y="-1122" font-family="Helvetica,sans-Serif" font-size="10.00">||+ ~DataProvider()</text>
-<text text-anchor="start" x="32" y="-1111" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_avaliable_variable</text>
+<text text-anchor="start" x="32" y="-1111" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_variable</text>
 <text text-anchor="start" x="32" y="-1100" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
 <text text-anchor="start" x="32" y="-1089" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_start_time()</text>
 <text text-anchor="start" x="32" y="-1078" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_stop_time()</text>

@@ -285,7 +285,7 @@ var sectionId = 'dynsection-1';
 <text text-anchor="start" x="693.5" y="-645" font-family="Helvetica,sans-Serif" font-size="10.00">{data_access::DataProvider</text>
 <text text-anchor="middle" x="781" y="-634" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; double, CatchmentAggrDataSelector &gt;</text>
 <text text-anchor="start" x="693.5" y="-623" font-family="Helvetica,sans-Serif" font-size="10.00">||+ ~DataProvider()</text>
-<text text-anchor="start" x="693.5" y="-612" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_avaliable_variable</text>
+<text text-anchor="start" x="693.5" y="-612" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_variable</text>
 <text text-anchor="start" x="693.5" y="-601" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
 <text text-anchor="start" x="693.5" y="-590" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_start_time()</text>
 <text text-anchor="start" x="693.5" y="-579" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_stop_time()</text>
@@ -313,7 +313,7 @@ var sectionId = 'dynsection-1';
 <text text-anchor="start" x="717.5" y="-865" font-family="Helvetica,sans-Serif" font-size="10.00">{data_access::DataProvider</text>
 <text text-anchor="middle" x="781" y="-854" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; data_type, selection_type &gt;</text>
 <text text-anchor="start" x="717.5" y="-843" font-family="Helvetica,sans-Serif" font-size="10.00">||+ ~DataProvider()</text>
-<text text-anchor="start" x="717.5" y="-832" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_avaliable_variable</text>
+<text text-anchor="start" x="717.5" y="-832" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_variable</text>
 <text text-anchor="start" x="717.5" y="-821" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
 <text text-anchor="start" x="717.5" y="-810" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_start_time()</text>
 <text text-anchor="start" x="717.5" y="-799" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_stop_time()</text>

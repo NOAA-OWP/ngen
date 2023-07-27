@@ -115,7 +115,7 @@ var sectionId = 'dynsection-0';
 <text text-anchor="start" x="283.5" y="-635" font-family="Helvetica,sans-Serif" font-size="10.00">+ convert_aorc_structs()</text>
 <text text-anchor="start" x="283.5" y="-624" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
 <text text-anchor="start" x="283.5" y="-613" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
-<text text-anchor="start" x="283.5" y="-602" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_avaliable_variable</text>
+<text text-anchor="start" x="283.5" y="-602" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_variable</text>
 <text text-anchor="start" x="283.5" y="-591" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
 <text text-anchor="start" x="283.5" y="-580" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_variable_time_begin()</text>
 <text text-anchor="start" x="283.5" y="-569" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_start_time()</text>
@@ -242,7 +242,7 @@ var sectionId = 'dynsection-0';
 <text text-anchor="start" x="368.5" y="-1394" font-family="Helvetica,sans-Serif" font-size="10.00">+ convert_aorc_structs()</text>
 <text text-anchor="start" x="368.5" y="-1383" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
 <text text-anchor="start" x="368.5" y="-1372" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
-<text text-anchor="start" x="368.5" y="-1361" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_avaliable_variable</text>
+<text text-anchor="start" x="368.5" y="-1361" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_variable</text>
 <text text-anchor="start" x="368.5" y="-1350" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
 <text text-anchor="start" x="368.5" y="-1339" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_variable_time_begin()</text>
 <text text-anchor="start" x="368.5" y="-1328" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_start_time()</text>
@@ -485,7 +485,7 @@ var sectionId = 'dynsection-0';
 <text text-anchor="start" x="459" y="-2557.5" font-family="Helvetica,sans-Serif" font-size="10.00">{data_access::DataProvider</text>
 <text text-anchor="middle" x="546.5" y="-2546.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; double, CatchmentAggrDataSelector &gt;</text>
 <text text-anchor="start" x="459" y="-2535.5" font-family="Helvetica,sans-Serif" font-size="10.00">||+ ~DataProvider()</text>
-<text text-anchor="start" x="459" y="-2524.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_avaliable_variable</text>
+<text text-anchor="start" x="459" y="-2524.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_variable</text>
 <text text-anchor="start" x="459" y="-2513.5" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
 <text text-anchor="start" x="459" y="-2502.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_start_time()</text>
 <text text-anchor="start" x="459" y="-2491.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_stop_time()</text>
@@ -513,7 +513,7 @@ var sectionId = 'dynsection-0';
 <text text-anchor="start" x="483" y="-2794" font-family="Helvetica,sans-Serif" font-size="10.00">{data_access::DataProvider</text>
 <text text-anchor="middle" x="546.5" y="-2783" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; data_type, selection_type &gt;</text>
 <text text-anchor="start" x="483" y="-2772" font-family="Helvetica,sans-Serif" font-size="10.00">||+ ~DataProvider()</text>
-<text text-anchor="start" x="483" y="-2761" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_avaliable_variable</text>
+<text text-anchor="start" x="483" y="-2761" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_variable</text>
 <text text-anchor="start" x="483" y="-2750" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
 <text text-anchor="start" x="483" y="-2739" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_start_time()</text>
 <text text-anchor="start" x="483" y="-2728" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_stop_time()</text>

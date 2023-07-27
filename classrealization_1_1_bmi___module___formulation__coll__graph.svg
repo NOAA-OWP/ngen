@@ -80,7 +80,7 @@ var sectionId = 'dynsection-1';
 <text text-anchor="start" x="1763.5" y="-392" font-family="Helvetica,sans-Serif" font-size="10.00">+ convert_aorc_structs()</text>
 <text text-anchor="start" x="1763.5" y="-381" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
 <text text-anchor="start" x="1763.5" y="-370" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
-<text text-anchor="start" x="1763.5" y="-359" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_avaliable_variable</text>
+<text text-anchor="start" x="1763.5" y="-359" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_variable</text>
 <text text-anchor="start" x="1763.5" y="-348" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
 <text text-anchor="start" x="1763.5" y="-337" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_variable_time_begin()</text>
 <text text-anchor="start" x="1763.5" y="-326" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_start_time()</text>
@@ -828,7 +828,7 @@ var sectionId = 'dynsection-1';
 <text text-anchor="start" x="407" y="-2217" font-family="Helvetica,sans-Serif" font-size="10.00">{data_access::DataProvider</text>
 <text text-anchor="middle" x="494.5" y="-2206" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; double, CatchmentAggrDataSelector &gt;</text>
 <text text-anchor="start" x="407" y="-2195" font-family="Helvetica,sans-Serif" font-size="10.00">||+ ~DataProvider()</text>
-<text text-anchor="start" x="407" y="-2184" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_avaliable_variable</text>
+<text text-anchor="start" x="407" y="-2184" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_variable</text>
 <text text-anchor="start" x="407" y="-2173" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
 <text text-anchor="start" x="407" y="-2162" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_start_time()</text>
 <text text-anchor="start" x="407" y="-2151" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_stop_time()</text>
@@ -856,7 +856,7 @@ var sectionId = 'dynsection-1';
 <text text-anchor="start" x="431" y="-2437" font-family="Helvetica,sans-Serif" font-size="10.00">{data_access::DataProvider</text>
 <text text-anchor="middle" x="494.5" y="-2426" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; data_type, selection_type &gt;</text>
 <text text-anchor="start" x="431" y="-2415" font-family="Helvetica,sans-Serif" font-size="10.00">||+ ~DataProvider()</text>
-<text text-anchor="start" x="431" y="-2404" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_avaliable_variable</text>
+<text text-anchor="start" x="431" y="-2404" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_variable</text>
 <text text-anchor="start" x="431" y="-2393" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
 <text text-anchor="start" x="431" y="-2382" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_start_time()</text>
 <text text-anchor="start" x="431" y="-2371" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_stop_time()</text>

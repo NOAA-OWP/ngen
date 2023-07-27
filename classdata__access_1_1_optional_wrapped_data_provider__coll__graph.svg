@@ -90,7 +90,7 @@ var sectionId = 'dynsection-1';
 <text text-anchor="start" x="231" y="-349" font-family="Helvetica,sans-Serif" font-size="10.00">||+ DeferredWrappedProvider()</text>
 <text text-anchor="start" x="231" y="-338" font-family="Helvetica,sans-Serif" font-size="10.00">+ DeferredWrappedProvider()</text>
 <text text-anchor="start" x="231" y="-327" font-family="Helvetica,sans-Serif" font-size="10.00">+ DeferredWrappedProvider()</text>
-<text text-anchor="start" x="231" y="-316" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_avaliable_variable</text>
+<text text-anchor="start" x="231" y="-316" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_variable</text>
 <text text-anchor="start" x="231" y="-305" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
 <text text-anchor="start" x="231" y="-294" font-family="Helvetica,sans-Serif" font-size="10.00">+ getSetMessage()</text>
 <text text-anchor="start" x="231" y="-283" font-family="Helvetica,sans-Serif" font-size="10.00">+ isReadyToProvideData()</text>
@@ -116,7 +116,7 @@ var sectionId = 'dynsection-1';
 <text text-anchor="start" x="48.5" y="-580" font-family="Helvetica,sans-Serif" font-size="10.00">||+ WrappedDataProvider()</text>
 <text text-anchor="start" x="48.5" y="-569" font-family="Helvetica,sans-Serif" font-size="10.00">+ WrappedDataProvider()</text>
 <text text-anchor="start" x="48.5" y="-558" font-family="Helvetica,sans-Serif" font-size="10.00">+ WrappedDataProvider()</text>
-<text text-anchor="start" x="48.5" y="-547" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_avaliable_variable</text>
+<text text-anchor="start" x="48.5" y="-547" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_variable</text>
 <text text-anchor="start" x="48.5" y="-536" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
 <text text-anchor="start" x="48.5" y="-525" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_start_time()</text>
 <text text-anchor="start" x="48.5" y="-514" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_stop_time()</text>
@@ -168,7 +168,7 @@ var sectionId = 'dynsection-1';
 <text text-anchor="start" x="8" y="-899" font-family="Helvetica,sans-Serif" font-size="10.00">{data_access::DataProvider</text>
 <text text-anchor="middle" x="95.5" y="-888" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; double, CatchmentAggrDataSelector &gt;</text>
 <text text-anchor="start" x="8" y="-877" font-family="Helvetica,sans-Serif" font-size="10.00">||+ ~DataProvider()</text>
-<text text-anchor="start" x="8" y="-866" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_avaliable_variable</text>
+<text text-anchor="start" x="8" y="-866" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_variable</text>
 <text text-anchor="start" x="8" y="-855" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
 <text text-anchor="start" x="8" y="-844" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_start_time()</text>
 <text text-anchor="start" x="8" y="-833" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_stop_time()</text>
@@ -196,7 +196,7 @@ var sectionId = 'dynsection-1';
 <text text-anchor="start" x="32" y="-1119" font-family="Helvetica,sans-Serif" font-size="10.00">{data_access::DataProvider</text>
 <text text-anchor="middle" x="95.5" y="-1108" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; data_type, selection_type &gt;</text>
 <text text-anchor="start" x="32" y="-1097" font-family="Helvetica,sans-Serif" font-size="10.00">||+ ~DataProvider()</text>
-<text text-anchor="start" x="32" y="-1086" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_avaliable_variable</text>
+<text text-anchor="start" x="32" y="-1086" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_variable</text>
 <text text-anchor="start" x="32" y="-1075" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
 <text text-anchor="start" x="32" y="-1064" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_start_time()</text>
 <text text-anchor="start" x="32" y="-1053" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_stop_time()</text>

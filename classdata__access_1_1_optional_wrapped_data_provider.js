@@ -7,7 +7,7 @@ var classdata__access_1_1_optional_wrapped_data_provider =
     [ "OptionalWrappedDataProvider", "classdata__access_1_1_optional_wrapped_data_provider.html#a491d42b49465802a49d3d06e58e1f489", null ],
     [ "OptionalWrappedDataProvider", "classdata__access_1_1_optional_wrapped_data_provider.html#a1f84984e99fd947000cb56beb307c2a2", null ],
     [ "OptionalWrappedDataProvider", "classdata__access_1_1_optional_wrapped_data_provider.html#ab5c87312068edadb502830d0f0fa27ab", null ],
-    [ "get_avaliable_variable_names", "classdata__access_1_1_optional_wrapped_data_provider.html#a3e2194443ec7c23448b39627c30808e7", null ],
+    [ "get_available_variable_names", "classdata__access_1_1_optional_wrapped_data_provider.html#a135e4030e831f9ca2a2b7883ce4ac0cd", null ],
     [ "get_data_start_time", "classdata__access_1_1_optional_wrapped_data_provider.html#a514718777605106e5d18a6fe8af862b4", null ],
     [ "get_data_stop_time", "classdata__access_1_1_optional_wrapped_data_provider.html#a770a1a269bc8a34ee0e76c558b32ad3c", null ],
     [ "get_ts_index_for_time", "classdata__access_1_1_optional_wrapped_data_provider.html#a3a490ff322f48cbc9199cf277ad5aa25", null ],

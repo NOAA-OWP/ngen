@@ -160,9 +160,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae60095f82591ea53f01ef6ce37ede50d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_optional_wrapped_data_provider.html#ae60095f82591ea53f01ef6ce37ede50d">setWrappedProvider</a> (<a class="el" href="classdata__access_1_1_generic_data_provider.html">GenericDataProvider</a> *provider) override</td></tr>
 <tr class="memdesc:ae60095f82591ea53f01ef6ce37ede50d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the wrapped provider, if the given arg is valid for doing so.  <a href="classdata__access_1_1_optional_wrapped_data_provider.html#ae60095f82591ea53f01ef6ce37ede50d">More...</a><br /></td></tr>
 <tr class="separator:ae60095f82591ea53f01ef6ce37ede50d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e2194443ec7c23448b39627c30808e7"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; std::string &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#a3e2194443ec7c23448b39627c30808e7">get_avaliable_variable_names</a> ()</td></tr>
-<tr class="memdesc:a3e2194443ec7c23448b39627c30808e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the names of the outputs that this instance is (or will be) able to provide.  <a href="classdata__access_1_1_deferred_wrapped_provider.html#a3e2194443ec7c23448b39627c30808e7">More...</a><br /></td></tr>
-<tr class="separator:a3e2194443ec7c23448b39627c30808e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a135e4030e831f9ca2a2b7883ce4ac0cd"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; std::string &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#a135e4030e831f9ca2a2b7883ce4ac0cd">get_available_variable_names</a> ()</td></tr>
+<tr class="memdesc:a135e4030e831f9ca2a2b7883ce4ac0cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the names of the outputs that this instance is (or will be) able to provide.  <a href="classdata__access_1_1_deferred_wrapped_provider.html#a135e4030e831f9ca2a2b7883ce4ac0cd">More...</a><br /></td></tr>
+<tr class="separator:a135e4030e831f9ca2a2b7883ce4ac0cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a60c2eb820c4b4fadce6204d6b291508a"><td class="memItemLeft" align="right" valign="top">const string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#a60c2eb820c4b4fadce6204d6b291508a">getSetMessage</a> ()</td></tr>
 <tr class="memdesc:a60c2eb820c4b4fadce6204d6b291508a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the message string for the last call to <a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#a5d4c52b6952dd7d209dbfe936f22ce38">setWrappedProvider</a>.  <a href="classdata__access_1_1_deferred_wrapped_provider.html#a60c2eb820c4b4fadce6204d6b291508a">More...</a><br /></td></tr>
 <tr class="separator:a60c2eb820c4b4fadce6204d6b291508a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -550,8 +550,8 @@ When The Default Is Used</h1>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a3e2194443ec7c23448b39627c30808e7" name="a3e2194443ec7c23448b39627c30808e7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3e2194443ec7c23448b39627c30808e7">&#9670;&#160;</a></span>get_avaliable_variable_names()</h2>
+<a id="a135e4030e831f9ca2a2b7883ce4ac0cd" name="a135e4030e831f9ca2a2b7883ce4ac0cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a135e4030e831f9ca2a2b7883ce4ac0cd">&#9670;&#160;</a></span>get_available_variable_names()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -560,7 +560,7 @@ When The Default Is Used</h1>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const std::vector&lt; std::string &gt; &amp; data_access::DeferredWrappedProvider::get_avaliable_variable_names </td>
+          <td class="memname">const std::vector&lt; std::string &gt; &amp; data_access::DeferredWrappedProvider::get_available_variable_names </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -577,7 +577,7 @@ When The Default Is Used</h1>
 <p >Note that this function behaves the same regardless of whether the wrapped provider has been set.</p>
 <dl class="section return"><dt>Returns</dt><dd>The names of the outputs for which this instance is (or will be) able to provide values. </dd></dl>
 
-<p>Implements <a class="el" href="classdata__access_1_1_data_provider.html#a04a9a4b7e03e597e95344c3230b9c14b">data_access::DataProvider&lt; double, CatchmentAggrDataSelector &gt;</a>.</p>
+<p>Implements <a class="el" href="classdata__access_1_1_data_provider.html#a074f2ad6e6afe3e6edbdbbcf99c8e826">data_access::DataProvider&lt; double, CatchmentAggrDataSelector &gt;</a>.</p>
 
 <p class="reference">References <a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#a9f6fd4cc466ecda9402c8edc79aaf0aa">data_access::DeferredWrappedProvider::providedOutputs</a>.</p>
 
@@ -1000,7 +1000,7 @@ When The Default Is Used</h1>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classdata__access_1_1_data_provider.html#a04a9a4b7e03e597e95344c3230b9c14b">data_access::DataProvider&lt; data_type, selection_type &gt;::get_avaliable_variable_names()</a>.</p>
+<p class="reference">References <a class="el" href="classdata__access_1_1_data_provider.html#a074f2ad6e6afe3e6edbdbbcf99c8e826">data_access::DataProvider&lt; data_type, selection_type &gt;::get_available_variable_names()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdata__access_1_1_optional_wrapped_data_provider.html#a62a2689c42f6d653aea295ceee403358">isSuppliedByWrappedProvider()</a>, and <a class="el" href="classdata__access_1_1_optional_wrapped_data_provider.html#ae60095f82591ea53f01ef6ce37ede50d">setWrappedProvider()</a>.</p>
 
@@ -1303,7 +1303,7 @@ When The Default Is Used</h1>
 
 <p>The collection of names of the outputs this type can/will be able to provide from its wrapped source. </p>
 
-<p class="reference">Referenced by <a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#ac5b540da3d839f08cc8f5cb510c1faa9">data_access::DeferredWrappedProvider::DeferredWrappedProvider()</a>, <a class="el" href="classdata__access_1_1_optional_wrapped_data_provider.html#a1cce6368b1c9bb35b716b6fbd6e4379b">OptionalWrappedDataProvider()</a>, <a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#a3e2194443ec7c23448b39627c30808e7">data_access::DeferredWrappedProvider::get_avaliable_variable_names()</a>, <a class="el" href="classdata__access_1_1_optional_wrapped_data_provider.html#aedc8d5253a79ce0b4f79edf5a23a85e2">get_value()</a>, <a class="el" href="classdata__access_1_1_optional_wrapped_data_provider.html#a81d7bf8944e42cfd906d35aab1a054ff">isReadyToProvideData()</a>, <a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#a5d4c52b6952dd7d209dbfe936f22ce38">data_access::DeferredWrappedProvider::setWrappedProvider()</a>, and <a class="el" href="classdata__access_1_1_optional_wrapped_data_provider.html#ae60095f82591ea53f01ef6ce37ede50d">setWrappedProvider()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#ac5b540da3d839f08cc8f5cb510c1faa9">data_access::DeferredWrappedProvider::DeferredWrappedProvider()</a>, <a class="el" href="classdata__access_1_1_optional_wrapped_data_provider.html#a1cce6368b1c9bb35b716b6fbd6e4379b">OptionalWrappedDataProvider()</a>, <a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#a135e4030e831f9ca2a2b7883ce4ac0cd">data_access::DeferredWrappedProvider::get_available_variable_names()</a>, <a class="el" href="classdata__access_1_1_optional_wrapped_data_provider.html#aedc8d5253a79ce0b4f79edf5a23a85e2">get_value()</a>, <a class="el" href="classdata__access_1_1_optional_wrapped_data_provider.html#a81d7bf8944e42cfd906d35aab1a054ff">isReadyToProvideData()</a>, <a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#a5d4c52b6952dd7d209dbfe936f22ce38">data_access::DeferredWrappedProvider::setWrappedProvider()</a>, and <a class="el" href="classdata__access_1_1_optional_wrapped_data_provider.html#ae60095f82591ea53f01ef6ce37ede50d">setWrappedProvider()</a>.</p>
 
 </div>
 </div>
@@ -1354,7 +1354,7 @@ When The Default Is Used</h1>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#a6dbd4de7f3c3b4ebb6c720192715e670">data_access::DeferredWrappedProvider::DeferredWrappedProvider()</a>, <a class="el" href="classdata__access_1_1_optional_wrapped_data_provider.html#ab5c87312068edadb502830d0f0fa27ab">OptionalWrappedDataProvider()</a>, <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a327457205c69d74c1772f5acc15081bb">data_access::WrappedDataProvider::get_avaliable_variable_names()</a>, <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a514718777605106e5d18a6fe8af862b4">data_access::WrappedDataProvider::get_data_start_time()</a>, <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a770a1a269bc8a34ee0e76c558b32ad3c">data_access::WrappedDataProvider::get_data_stop_time()</a>, <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a3a490ff322f48cbc9199cf277ad5aa25">data_access::WrappedDataProvider::get_ts_index_for_time()</a>, <a class="el" href="classdata__access_1_1_optional_wrapped_data_provider.html#aedc8d5253a79ce0b4f79edf5a23a85e2">get_value()</a>, <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a428b42c9cdf72b63c2a0ac23b0bba4d4">data_access::WrappedDataProvider::get_value()</a>, <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a37c23079f7163f992ea90fd156a6b4d7">data_access::WrappedDataProvider::get_values()</a>, <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#ad9d424c2ab04077e4d82892ae17628ea">data_access::WrappedDataProvider::is_property_sum_over_time_step()</a>, <a class="el" href="classdata__access_1_1_optional_wrapped_data_provider.html#a62a2689c42f6d653aea295ceee403358">isSuppliedByWrappedProvider()</a>, <a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#a1d914d387e7ae2d933a372d0976ed959">data_access::DeferredWrappedProvider::isWrappedProviderSet()</a>, <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a9804e6089735525808ea17b385dec117">data_access::WrappedDataProvider::record_duration()</a>, <a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#a5d4c52b6952dd7d209dbfe936f22ce38">data_access::DeferredWrappedProvider::setWrappedProvider()</a>, and <a class="el" href="classdata__access_1_1_optional_wrapped_data_provider.html#ae60095f82591ea53f01ef6ce37ede50d">setWrappedProvider()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#a6dbd4de7f3c3b4ebb6c720192715e670">data_access::DeferredWrappedProvider::DeferredWrappedProvider()</a>, <a class="el" href="classdata__access_1_1_optional_wrapped_data_provider.html#ab5c87312068edadb502830d0f0fa27ab">OptionalWrappedDataProvider()</a>, <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#ac8e412b3881d5edb3a3c27296cee7a16">data_access::WrappedDataProvider::get_available_variable_names()</a>, <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a514718777605106e5d18a6fe8af862b4">data_access::WrappedDataProvider::get_data_start_time()</a>, <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a770a1a269bc8a34ee0e76c558b32ad3c">data_access::WrappedDataProvider::get_data_stop_time()</a>, <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a3a490ff322f48cbc9199cf277ad5aa25">data_access::WrappedDataProvider::get_ts_index_for_time()</a>, <a class="el" href="classdata__access_1_1_optional_wrapped_data_provider.html#aedc8d5253a79ce0b4f79edf5a23a85e2">get_value()</a>, <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a428b42c9cdf72b63c2a0ac23b0bba4d4">data_access::WrappedDataProvider::get_value()</a>, <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a37c23079f7163f992ea90fd156a6b4d7">data_access::WrappedDataProvider::get_values()</a>, <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#ad9d424c2ab04077e4d82892ae17628ea">data_access::WrappedDataProvider::is_property_sum_over_time_step()</a>, <a class="el" href="classdata__access_1_1_optional_wrapped_data_provider.html#a62a2689c42f6d653aea295ceee403358">isSuppliedByWrappedProvider()</a>, <a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#a1d914d387e7ae2d933a372d0976ed959">data_access::DeferredWrappedProvider::isWrappedProviderSet()</a>, <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a9804e6089735525808ea17b385dec117">data_access::WrappedDataProvider::record_duration()</a>, <a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#a5d4c52b6952dd7d209dbfe936f22ce38">data_access::DeferredWrappedProvider::setWrappedProvider()</a>, and <a class="el" href="classdata__access_1_1_optional_wrapped_data_provider.html#ae60095f82591ea53f01ef6ce37ede50d">setWrappedProvider()</a>.</p>
 
 </div>
 </div>
@@ -1367,7 +1367,7 @@ When The Default Is Used</h1>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacedata__access.html">data_access</a></li><li class="navelem"><a class="el" href="classdata__access_1_1_optional_wrapped_data_provider.html">OptionalWrappedDataProvider</a></li>
-    <li class="footer">Generated on Thu Jul 27 2023 13:17:53 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
+    <li class="footer">Generated on Thu Jul 27 2023 19:30:33 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
   </ul>
 </div>
 </body>

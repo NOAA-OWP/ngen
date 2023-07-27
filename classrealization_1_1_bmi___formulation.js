@@ -10,7 +10,7 @@ var classrealization_1_1_bmi___formulation =
     [ "create_formulation", "classrealization_1_1_bmi___formulation.html#a4fb8ec9b08820c29d88627ee9781d579", null ],
     [ "create_formulation", "classrealization_1_1_bmi___formulation.html#a2a2ac83503092d24da0ee4e4c6eeaa25", null ],
     [ "get_allow_model_exceed_end_time", "classrealization_1_1_bmi___formulation.html#ae4838e9f3baadb3f656fe5f9ca3327cd", null ],
-    [ "get_avaliable_variable_names", "classrealization_1_1_bmi___formulation.html#a04a9a4b7e03e597e95344c3230b9c14b", null ],
+    [ "get_available_variable_names", "classrealization_1_1_bmi___formulation.html#a074f2ad6e6afe3e6edbdbbcf99c8e826", null ],
     [ "get_bmi_input_variables", "classrealization_1_1_bmi___formulation.html#a84d8ef8dea56d2907a318a7a2ef8e4a5", null ],
     [ "get_bmi_main_output_var", "classrealization_1_1_bmi___formulation.html#aa3d5c6575d0323fe28b21ac4b079eba5", null ],
     [ "get_bmi_model_start_time_forcing_offset_s", "classrealization_1_1_bmi___formulation.html#ae6483564ad51952c5ecec50487c356bd", null ],

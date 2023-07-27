@@ -300,7 +300,7 @@
 <text text-anchor="start" x="8" y="-635" font-family="Helvetica,sans-Serif" font-size="10.00">+ convert_aorc_structs()</text>
 <text text-anchor="start" x="8" y="-624" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
 <text text-anchor="start" x="8" y="-613" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
-<text text-anchor="start" x="8" y="-602" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_avaliable_variable</text>
+<text text-anchor="start" x="8" y="-602" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_variable</text>
 <text text-anchor="start" x="8" y="-591" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
 <text text-anchor="start" x="8" y="-580" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_variable_time_begin()</text>
 <text text-anchor="start" x="8" y="-569" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_start_time()</text>
@@ -377,7 +377,7 @@
 <text text-anchor="start" x="202" y="-635" font-family="Helvetica,sans-Serif" font-size="10.00">+ convert_aorc_structs()</text>
 <text text-anchor="start" x="202" y="-624" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
 <text text-anchor="start" x="202" y="-613" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
-<text text-anchor="start" x="202" y="-602" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_avaliable_variable</text>
+<text text-anchor="start" x="202" y="-602" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_variable</text>
 <text text-anchor="start" x="202" y="-591" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
 <text text-anchor="start" x="202" y="-580" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_variable_time_begin()</text>
 <text text-anchor="start" x="202" y="-569" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_start_time()</text>
@@ -453,7 +453,7 @@
 <text text-anchor="start" x="132" y="-1394" font-family="Helvetica,sans-Serif" font-size="10.00">+ convert_aorc_structs()</text>
 <text text-anchor="start" x="132" y="-1383" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
 <text text-anchor="start" x="132" y="-1372" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
-<text text-anchor="start" x="132" y="-1361" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_avaliable_variable</text>
+<text text-anchor="start" x="132" y="-1361" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_variable</text>
 <text text-anchor="start" x="132" y="-1350" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
 <text text-anchor="start" x="132" y="-1339" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_variable_time_begin()</text>
 <text text-anchor="start" x="132" y="-1328" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_start_time()</text>
@@ -525,7 +525,7 @@
 <text text-anchor="start" x="334" y="-1350" font-family="Helvetica,sans-Serif" font-size="10.00">_index()</text>
 <text text-anchor="start" x="334" y="-1339" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_allow_model_exceed</text>
 <text text-anchor="start" x="334" y="-1328" font-family="Helvetica,sans-Serif" font-size="10.00">_end_time()</text>
-<text text-anchor="start" x="334" y="-1317" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_avaliable_variable</text>
+<text text-anchor="start" x="334" y="-1317" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_variable</text>
 <text text-anchor="start" x="334" y="-1306" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
 <text text-anchor="start" x="334" y="-1295" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_bmi_input_variables()</text>
 <text text-anchor="start" x="334" y="-1284" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_bmi_model_start</text>

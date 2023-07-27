@@ -155,9 +155,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:adc0e525bd28e3b2f72f31680617358d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac24b58505cb49f6594fd79fec5005014"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___module___formulation.html#ac24b58505cb49f6594fd79fec5005014">create_formulation</a> (<a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> properties) override</td></tr>
 <tr class="separator:ac24b58505cb49f6594fd79fec5005014"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab2fd3b0f141f6afb196d61e3ce1d7311"><td class="memItemLeft" align="right" valign="top">const vector&lt; std::string &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___module___formulation.html#ab2fd3b0f141f6afb196d61e3ce1d7311">get_avaliable_variable_names</a> () override</td></tr>
-<tr class="memdesc:ab2fd3b0f141f6afb196d61e3ce1d7311"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the collection of forcing output property names this instance can provide.  <a href="classrealization_1_1_bmi___module___formulation.html#ab2fd3b0f141f6afb196d61e3ce1d7311">More...</a><br /></td></tr>
-<tr class="separator:ab2fd3b0f141f6afb196d61e3ce1d7311"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38df8e662a2251aa2f4698989a650c98"><td class="memItemLeft" align="right" valign="top">const vector&lt; std::string &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___module___formulation.html#a38df8e662a2251aa2f4698989a650c98">get_available_variable_names</a> () override</td></tr>
+<tr class="memdesc:a38df8e662a2251aa2f4698989a650c98"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the collection of forcing output property names this instance can provide.  <a href="classrealization_1_1_bmi___module___formulation.html#a38df8e662a2251aa2f4698989a650c98">More...</a><br /></td></tr>
+<tr class="separator:a38df8e662a2251aa2f4698989a650c98"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abd66e7e71fbb1c5e7d51e15798470cd0"><td class="memItemLeft" align="right" valign="top">time_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___module___formulation.html#abd66e7e71fbb1c5e7d51e15798470cd0">get_variable_time_begin</a> (const std::string &amp;variable_name)</td></tr>
 <tr class="memdesc:abd66e7e71fbb1c5e7d51e15798470cd0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the inclusive beginning of the period of time over which this instance can provide data for this forcing.  <a href="classrealization_1_1_bmi___module___formulation.html#abd66e7e71fbb1c5e7d51e15798470cd0">More...</a><br /></td></tr>
 <tr class="separator:abd66e7e71fbb1c5e7d51e15798470cd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1004,8 +1004,8 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a id="ab2fd3b0f141f6afb196d61e3ce1d7311" name="ab2fd3b0f141f6afb196d61e3ce1d7311"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab2fd3b0f141f6afb196d61e3ce1d7311">&#9670;&#160;</a></span>get_avaliable_variable_names()</h2>
+<a id="a38df8e662a2251aa2f4698989a650c98" name="a38df8e662a2251aa2f4698989a650c98"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a38df8e662a2251aa2f4698989a650c98">&#9670;&#160;</a></span>get_available_variable_names()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1014,7 +1014,7 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const vector&lt; std::string &gt; &amp; <a class="el" href="classrealization_1_1_bmi___module___formulation.html">realization::Bmi_Module_Formulation</a>&lt; <a class="el" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html">models::bmi::Bmi_C_Adapter</a>  &gt;::get_avaliable_variable_names </td>
+          <td class="memname">const vector&lt; std::string &gt; &amp; <a class="el" href="classrealization_1_1_bmi___module___formulation.html">realization::Bmi_Module_Formulation</a>&lt; <a class="el" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html">models::bmi::Bmi_C_Adapter</a>  &gt;::get_available_variable_names </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -1033,7 +1033,7 @@ Friends</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>The collection of forcing output property names this instance can provide. </dd></dl>
 <dl class="section see"><dt>See also</dt><dd>ForcingProvider </dd></dl>
 
-<p>Implements <a class="el" href="classdata__access_1_1_data_provider.html#a04a9a4b7e03e597e95344c3230b9c14b">data_access::DataProvider&lt; double, CatchmentAggrDataSelector &gt;</a>.</p>
+<p>Implements <a class="el" href="classdata__access_1_1_data_provider.html#a074f2ad6e6afe3e6edbdbbcf99c8e826">data_access::DataProvider&lt; double, CatchmentAggrDataSelector &gt;</a>.</p>
 
 </div>
 </div>
@@ -4260,7 +4260,7 @@ template&lt;class T , class O &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li><li class="navelem"><a class="el" href="classrealization_1_1_bmi___c___formulation.html">Bmi_C_Formulation</a></li>
-    <li class="footer">Generated on Thu Jul 27 2023 13:17:54 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
+    <li class="footer">Generated on Thu Jul 27 2023 19:30:34 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
   </ul>
 </div>
 </body>

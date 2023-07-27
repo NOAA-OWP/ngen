@@ -30,7 +30,7 @@
 <text text-anchor="start" x="1940.5" y="-260" font-family="Helvetica,sans-Serif" font-size="10.00">_index()</text>
 <text text-anchor="start" x="1940.5" y="-249" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_allow_model_exceed</text>
 <text text-anchor="start" x="1940.5" y="-238" font-family="Helvetica,sans-Serif" font-size="10.00">_end_time()</text>
-<text text-anchor="start" x="1940.5" y="-227" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_avaliable_variable</text>
+<text text-anchor="start" x="1940.5" y="-227" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_variable</text>
 <text text-anchor="start" x="1940.5" y="-216" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
 <text text-anchor="start" x="1940.5" y="-205" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_bmi_input_variables()</text>
 <text text-anchor="start" x="1940.5" y="-194" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_bmi_model_start</text>
@@ -348,7 +348,7 @@
 <text text-anchor="start" x="2148" y="-1503" font-family="Helvetica,sans-Serif" font-size="10.00">||+ DeferredWrappedProvider()</text>
 <text text-anchor="start" x="2148" y="-1492" font-family="Helvetica,sans-Serif" font-size="10.00">+ DeferredWrappedProvider()</text>
 <text text-anchor="start" x="2148" y="-1481" font-family="Helvetica,sans-Serif" font-size="10.00">+ DeferredWrappedProvider()</text>
-<text text-anchor="start" x="2148" y="-1470" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_avaliable_variable</text>
+<text text-anchor="start" x="2148" y="-1470" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_variable</text>
 <text text-anchor="start" x="2148" y="-1459" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
 <text text-anchor="start" x="2148" y="-1448" font-family="Helvetica,sans-Serif" font-size="10.00">+ getSetMessage()</text>
 <text text-anchor="start" x="2148" y="-1437" font-family="Helvetica,sans-Serif" font-size="10.00">+ isReadyToProvideData()</text>
@@ -830,7 +830,7 @@
 <text text-anchor="start" x="2641.5" y="-1786" font-family="Helvetica,sans-Serif" font-size="10.00">||+ WrappedDataProvider()</text>
 <text text-anchor="start" x="2641.5" y="-1775" font-family="Helvetica,sans-Serif" font-size="10.00">+ WrappedDataProvider()</text>
 <text text-anchor="start" x="2641.5" y="-1764" font-family="Helvetica,sans-Serif" font-size="10.00">+ WrappedDataProvider()</text>
-<text text-anchor="start" x="2641.5" y="-1753" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_avaliable_variable</text>
+<text text-anchor="start" x="2641.5" y="-1753" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_variable</text>
 <text text-anchor="start" x="2641.5" y="-1742" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
 <text text-anchor="start" x="2641.5" y="-1731" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_start_time()</text>
 <text text-anchor="start" x="2641.5" y="-1720" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_stop_time()</text>
@@ -865,7 +865,7 @@
 <text text-anchor="start" x="2006" y="-2248" font-family="Helvetica,sans-Serif" font-size="10.00">{data_access::DataProvider</text>
 <text text-anchor="middle" x="2093.5" y="-2237" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; double, CatchmentAggrDataSelector &gt;</text>
 <text text-anchor="start" x="2006" y="-2226" font-family="Helvetica,sans-Serif" font-size="10.00">||+ ~DataProvider()</text>
-<text text-anchor="start" x="2006" y="-2215" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_avaliable_variable</text>
+<text text-anchor="start" x="2006" y="-2215" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_variable</text>
 <text text-anchor="start" x="2006" y="-2204" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
 <text text-anchor="start" x="2006" y="-2193" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_start_time()</text>
 <text text-anchor="start" x="2006" y="-2182" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_stop_time()</text>
@@ -893,7 +893,7 @@
 <text text-anchor="start" x="2030" y="-2468" font-family="Helvetica,sans-Serif" font-size="10.00">{data_access::DataProvider</text>
 <text text-anchor="middle" x="2093.5" y="-2457" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; data_type, selection_type &gt;</text>
 <text text-anchor="start" x="2030" y="-2446" font-family="Helvetica,sans-Serif" font-size="10.00">||+ ~DataProvider()</text>
-<text text-anchor="start" x="2030" y="-2435" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_avaliable_variable</text>
+<text text-anchor="start" x="2030" y="-2435" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_variable</text>
 <text text-anchor="start" x="2030" y="-2424" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
 <text text-anchor="start" x="2030" y="-2413" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_start_time()</text>
 <text text-anchor="start" x="2030" y="-2402" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_stop_time()</text>

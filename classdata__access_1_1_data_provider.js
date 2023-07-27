@@ -1,7 +1,7 @@
 var classdata__access_1_1_data_provider =
 [
     [ "~DataProvider", "classdata__access_1_1_data_provider.html#a78cbffa63282f92cec20f13ef3067436", null ],
-    [ "get_avaliable_variable_names", "classdata__access_1_1_data_provider.html#a04a9a4b7e03e597e95344c3230b9c14b", null ],
+    [ "get_available_variable_names", "classdata__access_1_1_data_provider.html#a074f2ad6e6afe3e6edbdbbcf99c8e826", null ],
     [ "get_data_start_time", "classdata__access_1_1_data_provider.html#a9a5503cb5da0b2bf8fe25d0500bf33c4", null ],
     [ "get_data_stop_time", "classdata__access_1_1_data_provider.html#af598b54c03163287adc56400b3e9bdfe", null ],
     [ "get_ts_index_for_time", "classdata__access_1_1_data_provider.html#acca503f7d24367b8a3298a2c10e5d75f", null ],

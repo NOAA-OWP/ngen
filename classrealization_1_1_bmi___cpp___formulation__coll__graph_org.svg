@@ -61,7 +61,7 @@
 <text text-anchor="start" x="1337.5" y="-635" font-family="Helvetica,sans-Serif" font-size="10.00">+ convert_aorc_structs()</text>
 <text text-anchor="start" x="1337.5" y="-624" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
 <text text-anchor="start" x="1337.5" y="-613" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
-<text text-anchor="start" x="1337.5" y="-602" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_avaliable_variable</text>
+<text text-anchor="start" x="1337.5" y="-602" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_variable</text>
 <text text-anchor="start" x="1337.5" y="-591" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
 <text text-anchor="start" x="1337.5" y="-580" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_variable_time_begin()</text>
 <text text-anchor="start" x="1337.5" y="-569" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_start_time()</text>
@@ -173,7 +173,7 @@
 <text text-anchor="start" x="1207.5" y="-1394" font-family="Helvetica,sans-Serif" font-size="10.00">+ convert_aorc_structs()</text>
 <text text-anchor="start" x="1207.5" y="-1383" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
 <text text-anchor="start" x="1207.5" y="-1372" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
-<text text-anchor="start" x="1207.5" y="-1361" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_avaliable_variable</text>
+<text text-anchor="start" x="1207.5" y="-1361" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_variable</text>
 <text text-anchor="start" x="1207.5" y="-1350" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
 <text text-anchor="start" x="1207.5" y="-1339" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_variable_time_begin()</text>
 <text text-anchor="start" x="1207.5" y="-1328" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_start_time()</text>
@@ -1112,7 +1112,7 @@
 <text text-anchor="start" x="68" y="-3693.5" font-family="Helvetica,sans-Serif" font-size="10.00">{data_access::DataProvider</text>
 <text text-anchor="middle" x="155.5" y="-3682.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; double, CatchmentAggrDataSelector &gt;</text>
 <text text-anchor="start" x="68" y="-3671.5" font-family="Helvetica,sans-Serif" font-size="10.00">||+ ~DataProvider()</text>
-<text text-anchor="start" x="68" y="-3660.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_avaliable_variable</text>
+<text text-anchor="start" x="68" y="-3660.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_variable</text>
 <text text-anchor="start" x="68" y="-3649.5" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
 <text text-anchor="start" x="68" y="-3638.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_start_time()</text>
 <text text-anchor="start" x="68" y="-3627.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_stop_time()</text>
@@ -1140,7 +1140,7 @@
 <text text-anchor="start" x="92" y="-3919" font-family="Helvetica,sans-Serif" font-size="10.00">{data_access::DataProvider</text>
 <text text-anchor="middle" x="155.5" y="-3908" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; data_type, selection_type &gt;</text>
 <text text-anchor="start" x="92" y="-3897" font-family="Helvetica,sans-Serif" font-size="10.00">||+ ~DataProvider()</text>
-<text text-anchor="start" x="92" y="-3886" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_avaliable_variable</text>
+<text text-anchor="start" x="92" y="-3886" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_variable</text>
 <text text-anchor="start" x="92" y="-3875" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
 <text text-anchor="start" x="92" y="-3864" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_start_time()</text>
 <text text-anchor="start" x="92" y="-3853" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_stop_time()</text>
