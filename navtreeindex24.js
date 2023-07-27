@@ -1,8 +1,5 @@
 var NAVTREEINDEX24 =
 {
-"structsolar__radiation__results.html#a4f293014a50e377fd617d9a9da790c1f":[21,0,80,5],
-"structsolar__radiation__results.html#a7d88801b4c6c0202a0384d68b8f41d06":[21,0,80,3],
-"structsolar__radiation__results.html#aaf8e630d427ede6d2938b02eb55ebbec":[21,0,80,0],
 "structsolar__radiation__results.html#ac8347cf2ca96658b48cd6b7b571b77b1":[21,0,80,4],
 "structsolar__radiation__results.html#aeb18106e9742c3dd9e41fd5197ea7f69":[21,0,80,6],
 "structsolar__radiation__results.html#af519ebec80c3126303192886c2b584a5":[21,0,80,2],
