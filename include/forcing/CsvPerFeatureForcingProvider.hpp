@@ -222,7 +222,7 @@ class CsvPerFeatureForcingProvider : public data_access::GenericDataProvider
         return is_param_sum_over_time_step(name);
     }
 
-    const std::vector<std::string> &get_avaliable_variable_names() override {
+    const std::vector<std::string> &get_available_variable_names() override {
         return available_forcings;
     }
 

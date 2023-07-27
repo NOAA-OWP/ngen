@@ -137,7 +137,7 @@ namespace realization {
             }
             // Otherwise, check the modules directly for the standard ET output variable names.
             for (size_t i = 0; i < modules.size(); ++i) {
-                std::vector<std::string> values = modules[i]->get_avaliable_variable_names();
+                std::vector<std::string> values = modules[i]->get_available_variable_names();
                 if (std::find(values.begin(), values.end(), NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP) != values.end()) {
                     return i;
                 }
@@ -180,8 +180,8 @@ namespace realization {
          * @see ForcingProvider
          */
         //const vector<std::string> &get_available_forcing_outputs();
-        //const vector<std::string> &get_avaliable_variable_names() override { return get_available_forcing_outputs(); }
-        const vector<std::string> &get_avaliable_variable_names() override;
+        //const vector<std::string> &get_available_variable_names() override { return get_available_forcing_outputs(); }
+        const vector<std::string> &get_available_variable_names() override;
 
         /**
         * Get the input variables of 
@@ -691,10 +691,10 @@ namespace realization {
                                       "provider to satisfy set of deferred provisions for nested module at index "
                                       + std::to_string(deferredProviderModuleIndices[d]) + ": {";
                     // There must always be at least 1; get manually to help with formatting
-                    msg += deferredProvider->get_avaliable_variable_names()[0];
+                    msg += deferredProvider->get_available_variable_names()[0];
                     // And here make sure to start at 1 instead of 0
-                    for (int i = 1; i < deferredProvider->get_avaliable_variable_names().size(); ++i)
-                        msg += ", " + deferredProvider->get_avaliable_variable_names()[i];
+                    for (int i = 1; i < deferredProvider->get_available_variable_names().size(); ++i)
+                        msg += ", " + deferredProvider->get_available_variable_names()[i];
                     msg += "}";
                     throw realization::ConfigurationException(msg);
                 }

@@ -24,7 +24,7 @@ namespace data_access {
                 outputs.push_back(OUTPUT_NAME_1);
             }
                                   
-            const std::vector<std::string>& get_avaliable_variable_names() override {
+            const std::vector<std::string>& get_available_variable_names() override {
                 return outputs;
             }
 

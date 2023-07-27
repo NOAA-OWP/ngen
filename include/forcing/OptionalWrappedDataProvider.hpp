@@ -399,7 +399,7 @@ namespace data_access {
         map<string, int> defaultUsageWaits;
 
         static bool isSuppliedByProvider(const string &outputName, GenericDataProvider *provider) {
-            const vector<string> &available = provider->get_avaliable_variable_names();
+            const vector<string> &available = provider->get_available_variable_names();
             return find(available.begin(), available.end(), outputName) != available.end();
         }
 

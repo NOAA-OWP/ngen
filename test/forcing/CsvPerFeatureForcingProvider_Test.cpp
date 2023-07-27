@@ -169,7 +169,7 @@ TEST_F(CsvPerFeatureForcingProviderTest, TestForcingDataUnitConversion)
 ///Test AORC Forcing Object
 TEST_F(CsvPerFeatureForcingProviderTest, TestGetAvailableForcingOutputs)
 {
-    const std::vector<std::string>& afos = Forcing_Object->get_avaliable_variable_names();
+    const std::vector<std::string>& afos = Forcing_Object->get_available_variable_names();
     EXPECT_EQ(afos.size(), 18);
     EXPECT_TRUE(std::find(afos.begin(), afos.end(), "DLWRF_surface") != afos.end());
     EXPECT_TRUE(std::find(afos.begin(), afos.end(), CSDMS_STD_NAME_SOLAR_LONGWAVE) != afos.end());
@@ -180,7 +180,7 @@ TEST_F(CsvPerFeatureForcingProviderTest, TestGetAvailableForcingOutputs)
 TEST_F(CsvPerFeatureForcingProviderTest, TestForcingUnitHeaderParsing)
 {
     const time_t t = Forcing_Object_3->get_data_start_time() + (8 * 3600);
-    const auto& varnames = this->Forcing_Object_3->get_avaliable_variable_names();
+    const auto& varnames = this->Forcing_Object_3->get_available_variable_names();
     const std::vector<std::tuple<std::string, std::string, std::string>>& expected = {
         {"RAINRATE", "mm s^-1", "cm min^-1"},
         {"T2D", "K", "degC"},
