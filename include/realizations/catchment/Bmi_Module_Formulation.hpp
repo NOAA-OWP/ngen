@@ -244,7 +244,7 @@ namespace realization {
          * @see ForcingProvider
          */
         //const vector<std::string> &get_available_forcing_outputs() {
-        const vector<std::string> &get_avaliable_variable_names() override {
+        const vector<std::string> &get_available_variable_names() override {
             if (is_model_initialized() && available_forcings.empty()) {
                 for (const std::string &output_var_name : get_bmi_model()->GetOutputVarNames()) {
                     available_forcings.push_back(output_var_name);
@@ -257,7 +257,7 @@ namespace realization {
             return available_forcings;
         }
 
-        //inline const vector<std::string> &get_avaliable_variable_names() override {
+        //inline const vector<std::string> &get_available_variable_names() override {
         //    return get_available_forcing_outputs();
         //}
 
@@ -395,7 +395,7 @@ namespace realization {
 
             // First make sure this is an available output
             //const std::vector<std::string> forcing_outputs = get_available_forcing_outputs();
-            const std::vector<std::string> forcing_outputs = get_avaliable_variable_names();
+            const std::vector<std::string> forcing_outputs = get_available_variable_names();
             if (std::find(forcing_outputs.begin(), forcing_outputs.end(), output_name) == forcing_outputs.end()) {
                 throw runtime_error(get_formulation_type() + " received invalid output forcing name " + output_name);
             }
@@ -464,7 +464,7 @@ namespace realization {
 
             // First make sure this is an available output
             //const std::vector<std::string> forcing_outputs = get_available_forcing_outputs();
-            const std::vector<std::string> forcing_outputs = get_avaliable_variable_names();
+            const std::vector<std::string> forcing_outputs = get_available_variable_names();
             if (std::find(forcing_outputs.begin(), forcing_outputs.end(), output_name) == forcing_outputs.end()) {
                 throw runtime_error(get_formulation_type() + " received invalid output forcing name " + output_name);
             }

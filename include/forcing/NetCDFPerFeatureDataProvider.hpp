@@ -316,7 +316,7 @@ namespace data_access
 
         /** Return the variables that are accessable by this data provider */
 
-        const std::vector<std::string>& get_avaliable_variable_names() override
+        const std::vector<std::string>& get_available_variable_names() override
         {
             return variable_names;
         }

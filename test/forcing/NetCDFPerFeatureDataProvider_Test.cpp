@@ -70,7 +70,7 @@ void NetCDFPerFeatureDataProviderTest::setupForcing()
 TEST_F(NetCDFPerFeatureDataProviderTest, TestForcingDataRead)
 {
     // check to see that the variable "T2D" exists
-    auto var_names = nc_provider->get_avaliable_variable_names();
+    auto var_names = nc_provider->get_available_variable_names();
     auto pos = std::find(var_names.begin(), var_names.end(), CSDMS_STD_NAME_SURFACE_TEMP);
     if ( pos != var_names.end() )
     {
