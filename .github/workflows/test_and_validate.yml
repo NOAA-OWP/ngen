@@ -289,6 +289,7 @@ jobs:
 
       - name: run_bmi_python_tests
         run: |
+          . .venv/bin/activate
           cd ./cmake_build/test/
           ./test_bmi_python
           cd ../../
@@ -353,7 +354,9 @@ jobs:
           additional_python_requirements: 'extern/test_bmi_py/requirements.txt'
 
       - name: Run Unit Tests
-        run: ./cmake_build/test/test_bmi_multi
+        run: |
+          . .venv/bin/activate
+          ./cmake_build/test/test_bmi_multi
         timeout-minutes: 15
 
       - name: Clean Up Unit Test Build
