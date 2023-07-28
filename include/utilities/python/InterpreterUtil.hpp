@@ -226,35 +226,6 @@ namespace utils {
         protected:
 
             /**
-             * Search for and return a recognized virtual env directory.
-             *
-             * Both ``.venv`` and ``venv`` will be recognized.  Search locations are the current working directory, one
-             * level up (parent directory), and two levels up, with the first find being return.
-             *
-             * A Python ``None`` object is returned if no existing directory is found in the search locations.
-             *
-             * @return A Python Path object for a found venv dir, or a Python ``None`` object.
-             */
-            py::object searchForVenvDir() {
-                py::object current_dir = Path.attr("cwd")();
-                std::vector<py::object> parent_options = {
-                        current_dir,
-                        current_dir.attr("parent"),
-                        current_dir.attr("parent").attr("parent")
-                };
-                std::vector<std::string> dir_name_options = {".venv", "venv"};
-                for (py::object &parent_option : parent_options) {
-                    for (const std::string &dir_name_option : dir_name_options) {
-                        py::object venv_dir_candidate = parent_option.attr("joinpath")(dir_name_option);
-                        if (py::bool_(venv_dir_candidate.attr("is_dir")())) {
-                            return venv_dir_candidate;
-                        }
-                    }
-                }
-                return py::none();
-            }
-
-            /**
              * Find any virtual environment site packages directory, starting from options under the current directory.
              *
              * @return The absolute path of the site packages directory, as a string.
@@ -262,7 +233,7 @@ namespace utils {
             py::list getVenvPackagesDirOptions() {
                 // Look for a local virtual environment directory also, if there is one
                 const char* env_var_venv = std::getenv("VIRTUAL_ENV");
-                py::object venv_dir = env_var_venv != nullptr ? Path(env_var_venv): searchForVenvDir();
+                py::object venv_dir = env_var_venv != nullptr ? Path(env_var_venv): py::none();
 
                 if (!venv_dir.is_none() && py::bool_(venv_dir.attr("is_dir")())) {
                     // Resolve the full path
@@ -303,18 +274,7 @@ namespace utils {
                     //std::string r(env_var_venv);
                     return std::string(env_var_venv);
                 }
-                py::object venv_dir;
-                venv_dir = searchForVenvDir();
-                if(venv_dir.is_none()){
-                    return std::string("None");
-                }
-                if(py::bool_(venv_dir.attr("is_dir")())) {
-                    // Probably better to not resolve symlinks so you can see where it was found...
-                    //venv_dir = venv_dir.attr("resolve")();
-                    return py::str(venv_dir);
-                }
-                assert("Unexpected value of venv_dir in InterpreterUtil::getDiscoveredVenvPath()!");
-                return ""; // silence warning
+                return std::string("None");
             }
 
         protected:
