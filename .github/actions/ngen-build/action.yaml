@@ -183,8 +183,11 @@ runs:
         - name: Build Targets
           #cmake >= 3.15 can build multiple targets
           run: |
+            # Build Targets
             # Disable leak detection during test enumeration
             export ASAN_OPTIONS=detect_leaks=false
+            # Activate venv so that test discovery run during build works
+            . .venv/bin/activate
             cmake --build ${{ inputs.build-dir }} --target ${{ inputs.targets }} -- -j  ${{ inputs.build-cores }}
           shell: bash
 
