@@ -153,6 +153,7 @@ namespace realization {
         /**
          * Get the values making up the header line from get_output_header_line(), but organized as a vector of strings.
          *
+         * utput_variables
          * @return The values making up the header line from get_output_header_line() organized as a vector.
          */
         const vector<std::string> &get_output_header_fields() const {
@@ -187,14 +188,85 @@ namespace realization {
             for (int i = 0; i < output_variable_names.size(); ++i) {
                 std::cout << "Bmi_Formulation: output_variable_names: " << output_variable_names[i] << std::endl;
             }
+            std::vector<string> one_mod_out_var_names = output_variable_names;
+            for (int i = 0; i < output_variable_names.size(); ++i) {
+                std::cout << "Bmi_Formulation 7: one_mod_out_var_names: " << one_mod_out_var_names[i] << std::endl;
+            }
             return output_variable_names;
         }
 
-        const vector<string> &get_formulation_out_var_names() const {
-            for (int i = 0; i < formulation_out_var_names.size(); ++i) {
-                std::cout << "Bmi_Formulation: formulation_out_var_names: " << formulation_out_var_names[i] << std::endl;
+        void set_glob_bmi_model_type(const vector<string> &output_variable_names) {
+            //if (get_model_type_name() == "issue535_example_1") {
+                glob_mod_out_var_names = output_variable_names;
+                std::cout << "Bmi_Formulation 1: glob_mod_out_var_names size: " << glob_mod_out_var_names.size() << std::endl;
+                std::cout << "Bmi_Formulation 1: output_variable_names size: " << output_variable_names.size() << std::endl;
+                for (int i = 0; i < output_variable_names.size(); ++i) {
+                    //glob_mod_out_var_names.push_back(output_variable_names[i]);
+                    std::cout << "Bmi_Formulation 1: glob_mod_out_var_names[i]: " << glob_mod_out_var_names[i] << std::endl;
+                }
+                std::cout << "Bmi_Formulation 1: glob_mod_out_var_names.size() " << glob_mod_out_var_names.size() << std::endl;
+            //}
+        }
+
+        void set_sub_bmi_model_type(const vector<string> &avaliable_names) {
+            //sub_mod_out_var_names = avaliable_names;
+            ///for (int i = 0; i < sub_mod_out_var_names.size(); ++i) {
+            for (int i = 0; i < avaliable_names.size(); ++i) {
+                sub_mod_out_var_names.push_back(avaliable_names[i]);
+                std::cout << "Bmi_Formulation 8: model_type_name: " << sub_mod_out_var_names[i] << std::endl;
             }
-            return formulation_out_var_names;
+            //std::cout << "sub_mod_out_var_names.size() = " << sub_mod_out_var_names.size() << std::endl;
+        }
+
+        //const vector<string> get_sub_mod_out_var_names() const {
+            //return sub_mod_out_var_names;
+        //}
+
+        void get_bmi_model_type() {
+            for (int i = 0; i < glob_mod_out_var_names.size(); ++i) {
+                std::cout << "Bmi_Formulation 3: glob_mod_out_var_names: " << glob_mod_out_var_names[i] << std::endl;
+            }
+            std::cout << "Bmi_Formulation 4: sub_mod_out_var_names.size(): " << sub_mod_out_var_names.size() << std::endl;
+            for (int i = 0; i < sub_mod_out_var_names.size(); ++i) {
+                std::cout << "Bmi_Formulation 4: sub_mod_out_var_names: " << sub_mod_out_var_names[i] << std::endl;
+            }
+            std::cout << "Bmi_Formulation 5: output_variable_names.size(): " << output_variable_names.size() << std::endl;
+            for (int i = 0; i < output_variable_names.size(); ++i) {
+                std::cout << "Bmi_Formulation 5: output_variable_names: " << output_variable_names[i] << std::endl;
+            }
+            std::vector<std::string>::iterator it;
+            for (int i = 0; i < glob_mod_out_var_names.size(); ++i) {
+                std::cout << "test: glob_mod_out_var_names[i]," << glob_mod_out_var_names[i] << std::endl;
+                it = std::find(output_variable_names.begin(), output_variable_names.end(), glob_mod_out_var_names[i]);
+                if (it == output_variable_names.end()) {
+                    std::cout << glob_mod_out_var_names[i] << " not found " << std::endl;
+                    //throw std::runtime_error(output_var_names[i] + " does not exist in the output name list.");
+                }
+            }
+        }
+
+        /*
+        std::vector<std::string>::iterator it;
+        int last_index = modules.size() - 1;
+        auto module = modules[last_index];
+        std::vector<std::string> output_vec_name = module->get_bmi_output_variables();
+        for (int i = 0; i < output_vec_name.size(); ++i) {
+            std::cout << "Multi: output_vec_name," << output_vec_name[i] << std::endl;
+        }
+        for (int i = 0; i < output_var_names.size(); ++i) {
+            std::cout << "Multi: output_var_names," << output_var_names[i] << std::endl;
+            it = std::find(output_vec_name.begin(), output_vec_name.end(), output_var_names[i]);
+            if (it == output_vec_name.end()) {
+                throw std::runtime_error(output_var_names[i] + " does not exist in the output name list.");
+            }
+        }
+        */
+
+        virtual const vector<string> get_output_variable_names_v() {
+            for (int i = 0; i < output_variable_names.size(); ++i) {
+                std::cout << "virtual Bmi_Formulation: output_variable_names_v: " << output_variable_names[i] << std::endl;
+            }
+            return output_variable_names;
         }
 
         const vector<std::string> &get_required_parameters() override {
@@ -238,6 +310,10 @@ namespace realization {
             *output_text_stream << std::setprecision(output_precision);
         }
 
+        std::vector<string> glob_mod_out_var_names;
+        std::vector<string> sub_mod_out_var_names;
+        std::vector<string> one_mod_out_var_names;
+
     protected:
 
         /** Object to help with converting numeric output values to text. */
@@ -276,11 +352,24 @@ namespace realization {
             output_variable_names = out_var_names;
         }
 
-        void set_formulation_out_var_names(const vector<string> &out_var_names) {
-            formulation_out_var_names = out_var_names;
+        /*
+        void set_sub_bmi_model_type(const vector<string> &avaliable_names) {
+            sub_mod_out_var_names = avaliable_names;
+            for (int i = 0; i < sub_mod_out_var_names.size(); ++i) {
+                //sub_mod_out_var_names.push_back(output_variable_names[i]);
+                std::cout << "Bmi_Formulation 2: model_type_name: " << sub_mod_out_var_names[i] << std::endl;
+            }
+            //std::cout << "sub_mod_out_var_names.size() = " << sub_mod_out_var_names.size() << std::endl;
         }
 
+        //std::vector<string> glob_mod_out_var_names;
+        //std::vector<string> sub_mod_out_var_names;
+        */
+
     private:
+
+        //std::vector<string> glob_mod_out_var_names;
+        //std::vector<string> sub_mod_out_var_names;
 
         std::string bmi_main_output_var;
         std::string model_type_name;
@@ -294,9 +383,6 @@ namespace realization {
          * the BMI module output variables accessible to the instance.
          */
         std::vector<std::string> output_variable_names;
-
-        std::vector<std::string> formulation_out_var_names;
-
         /** The degree of precision in output values when converting to text. */
         int output_precision;
 
