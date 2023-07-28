@@ -76,6 +76,8 @@ if(NOT DEFINED BOOST_ROOT AND NOT DEFINED ENV{BOOST_ROOT})
     endif()
 endif()
 
+find_package(Boost 1.72.0 REQUIRED)
+
 if(MPI_ACTIVE)
     find_package(MPI)
     add_compile_definitions(NGEN_MPI_ACTIVE)
@@ -85,9 +87,6 @@ if(LSTM_TORCH_LIB_ACTIVE)
    find_package(Torch REQUIRED)
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
 endif()
-
-find_package(Boost 1.72.0 REQUIRED)
-
 
 find_package(SQLite3)
 if(SQLite3_FOUND)
