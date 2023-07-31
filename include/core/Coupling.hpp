@@ -70,3 +70,28 @@ struct LumpedPrecipitationRateCoupling : public DirectCoupling
     }
 };
 
+template <typename T>
+using SparseMatrix = int;
+
+// Can handle subsetting, permutation, linear interpolation,
+// (potentially conservative) partitioning, and other conversions that
+// involve only linear combinations of the input to produce the output
+struct LinearTransferCoupling : public Coupling
+{
+    LinearTransferCoupling(shared_ptr<SourceVariable> from,
+                           shared_ptr<SinkVariable> to,
+                           SparseMatrix<double> transfer_weights)
+        : from_(from)
+        , to_(to)
+        , transfer_weights_(transfer_weights)
+    { }
+
+    void transfer() override
+    {
+        //SpMV(transfer_weights_(), from_->storage(), to_->storage());
+    }
+
+    shared_ptr<SourceVariable> from_;
+    shared_ptr<SinkVariable> to_;
+    SparseMatrix<double> transfer_weights_;
+};
