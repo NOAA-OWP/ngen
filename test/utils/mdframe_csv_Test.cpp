@@ -3,7 +3,17 @@
 #include <fstream>
 
 #include "mdframe.hpp"
-#include "cartesian.hpp"
+
+
+namespace ngen {
+
+// Defined in handler_csv.cpp
+extern void cartesian_indices(
+    boost::span<const std::size_t>         shape,
+    std::vector<std::vector<std::size_t>>& output
+);
+
+}
 
 class mdframe_csv_Test : public ::testing::Test
 {
@@ -33,16 +43,16 @@ class mdframe_csv_Test : public ::testing::Test
 };
 
 /**
- * This unit test checks that `io::detail::cartesian_indices`
+ * This unit test checks that `cartesian_indices`
  * correctly generates lists of indices based on the
  * cartesian product of the dimensions given (i.e. the `shape`).
  */
 TEST_F(mdframe_csv_Test, io_csv_cartesian)
 {
     std::vector<size_t> shape { 1, 2, 3 };
-    std::vector<size_t> index(3);
     std::vector<std::vector<size_t>> output;
-    ngen::cartesian_indices(shape, index, 0, output);
+    output.reserve(6);
+    ngen::cartesian_indices(shape, output);
 
     EXPECT_EQ(output[0][0], 0);
     EXPECT_EQ(output[0][1], 0);

@@ -60,7 +60,7 @@ struct variable {
      */
     variable() noexcept
         : m_name()
-        , m_data(mdarray<int>{0})
+        , m_data()
         , m_dimensions() {};
 
     /**

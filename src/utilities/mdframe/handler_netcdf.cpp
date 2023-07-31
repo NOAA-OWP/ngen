@@ -1,11 +1,8 @@
 #if NETCDF_ACTIVE
 
-#ifndef NGEN_MDFRAME_HANDLERS_NETCDF_HPP
-#define NGEN_MDFRAME_HANDLERS_NETCDF_HPP
-
 #include <netcdf>
 
-#include "mdframe.hpp"
+#include "mdframe/mdframe.hpp"
 
 namespace ngen {
 
@@ -30,7 +27,7 @@ struct mdarray_netcdf_putvar : public boost::static_visitor<void>
 
 } // namespace visitors
 
-inline void mdframe::to_netcdf(const std::string& path) const
+void mdframe::to_netcdf(const std::string& path) const
 {
     netCDF::NcFile output{path, netCDF::NcFile::replace};
 
@@ -77,7 +74,5 @@ inline void mdframe::to_netcdf(const std::string& path) const
 }
 
 } // namespace ngen
-
-#endif // NGEN_MDFRAME_HANDLERS_NETCDF_HPP
 
 #endif // NETCDF_ACTIVE

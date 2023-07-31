@@ -229,10 +229,8 @@ endif()
 
 add_subdirectory("src/realizations/catchment")
 add_subdirectory("src/forcing")
-
-add_library(ngen_utils INTERFACE)
-add_library(NGen::utils ALIAS ngen_utils)
-target_include_directories(ngen_utils INTERFACE ${CMAKE_CURRENT_LIST_DIR}/include/utilities)
+add_subdirectory("src/utilities/mdarray")
+add_subdirectory("src/utilities/mdframe")
 
 target_link_libraries(ngen PUBLIC
         NGen::core

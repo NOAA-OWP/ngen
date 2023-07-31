@@ -5,7 +5,7 @@
 #include <unordered_map>
 
 #include "dimension.hpp"
-#include "mdframe/visitors.hpp"
+#include "visitors.hpp"
 #include "variable.hpp"
 
 namespace ngen {

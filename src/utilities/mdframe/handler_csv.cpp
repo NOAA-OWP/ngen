@@ -1,14 +1,44 @@
-#ifndef NGEN_MDFRAME_HANDLERS_CSV_HPP
-#define NGEN_MDFRAME_HANDLERS_CSV_HPP
-
 #include <fstream>
 
-#include "mdframe.hpp"
-#include "cartesian.hpp"
+#include "mdframe/mdframe.hpp"
+
+#include "span.hpp"
 
 namespace ngen {
 
-inline void mdframe::to_csv(const std::string& path, bool header) const
+/**
+ * @brief 
+ * 
+ * @param shape 
+ * @param index 
+ * @param dimension 
+ * @param output 
+ */
+void cartesian_indices_recurse(
+    boost::span<const std::size_t>         shape,
+    std::size_t                            current_dimension_index,
+    std::vector<std::size_t>&              index_buffer,
+    std::vector<std::vector<std::size_t>>& output
+)
+{
+    if (current_dimension_index == shape.size()) {
+        output.push_back(index_buffer);
+        return;
+    }
+
+    for (std::size_t i = 0; i < shape[current_dimension_index]; i++) {
+        index_buffer[current_dimension_index] = i;
+        cartesian_indices_recurse(shape, current_dimension_index + 1, index_buffer, output);
+    }
+}
+
+void cartesian_indices(const boost::span<const std::size_t> shape, std::vector<std::vector<std::size_t>>& output)
+{
+    std::vector<std::size_t> index_buffer(shape.size());
+    cartesian_indices_recurse(shape, 0, index_buffer, output);
+}
+
+void mdframe::to_csv(const std::string& path, bool header) const
 {
     std::ofstream output(path);
     if (!output)
@@ -73,11 +103,10 @@ inline void mdframe::to_csv(const std::string& path, bool header) const
 
     detail::visitors::to_string_visitor visitor{};
     std::string output_line = "";
-    std::vector<size_type> buffer(max_rank, 0);
     std::vector<std::vector<size_type>> indices;
     indices.reserve(rows);
 
-    ngen::cartesian_indices(shape, buffer, 0, indices);
+    ngen::cartesian_indices(shape, indices);
     
     std::vector<size_type> index_buffer(max_rank);
     for (const auto& index : indices) {
@@ -99,4 +128,3 @@ inline void mdframe::to_csv(const std::string& path, bool header) const
 
 } // namespace ngen
 
-#endif // NGEN_MDFRAME_HANDLERS_CSV_HPP
