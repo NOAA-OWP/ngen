@@ -4,7 +4,7 @@
 
 TEST(mdarray_Test, construction)
 {
-    ngen::mdarray<double> s{{2, 2}};
+    ngen::mdarray<double> s{{{2, 2}}};
 
     EXPECT_EQ(s.rank(), 2);
 

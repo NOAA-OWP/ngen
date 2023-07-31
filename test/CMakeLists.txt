@@ -107,7 +107,8 @@ add_test(test_mdarray
          utils/mdframe_Test.cpp
          utils/mdframe_netcdf_Test.cpp
          utils/mdframe_csv_Test.cpp
-         NGen::utils
+         NGen::mdarray
+         NGen::mdframe
          ${NETCDF_LIBRARIES})
 
 ########################## Nexus Tests
