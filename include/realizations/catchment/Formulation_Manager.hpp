@@ -521,24 +521,24 @@ namespace realization {
                         throw std::logic_error("ERROR: 'model_params' source `" + param_source_name + "` not currently supported. Only `hydrofabric` is supported.");
                     }
 
-                    decltype(auto) param_name = param.second.get_child_optional("from")
-                        ? param.second.get_child("from").get_value<std::string>()
-                        : param.first;
+                    decltype(auto) param_name = param.second.find("from") == param.second.not_found()
+                        ? param.first
+                        : param.second.get_child("from").get_value<std::string>();
 
                     if (catchment_feature->has_property(param_name)) {
                         auto catchment_attribute = catchment_feature->get_property(param_name);
                         switch (catchment_attribute.get_type()) {
                             case geojson::PropertyType::Natural:
-                                attr.put(param_name, catchment_attribute.as_natural_number());
+                                attr.put(param.first, catchment_attribute.as_natural_number());
                                 break;
                             case geojson::PropertyType::Boolean:
-                                attr.put(param_name, catchment_attribute.as_boolean());
+                                attr.put(param.first, catchment_attribute.as_boolean());
                                 break;
                             case geojson::PropertyType::Real:
-                                attr.put(param_name, catchment_attribute.as_real_number());
+                                attr.put(param.first, catchment_attribute.as_real_number());
                                 break;
                             case geojson::PropertyType::String:
-                                attr.put(param_name, catchment_attribute.as_string());
+                                attr.put(param.first, catchment_attribute.as_string());
                                 break;
 
                             case geojson::PropertyType::List:
