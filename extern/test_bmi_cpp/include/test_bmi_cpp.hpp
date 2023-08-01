@@ -139,18 +139,24 @@ class TestBmiCpp : public bmi::Bmi {
         bool use_input_array, use_output_array;
    
         std::vector<std::string> input_var_names = { "INPUT_VAR_1", "INPUT_VAR_2" };
-        std::vector<std::string> output_var_names = { "OUTPUT_VAR_1", "OUTPUT_VAR_2" };
+        std::vector<std::string> output_var_names = { "OUTPUT_VAR_1", "OUTPUT_VAR_2", "OUTPUT_VAR_4", "OUTPUT_VAR_5" };
+        std::vector<std::string> model_var_names = { "MODEL_VAR_1", "MODEL_VAR_2" };
         std::vector<std::string> input_var_types = { "double", "double" };
-        std::vector<std::string> output_var_types = { "double", "double" };
+        std::vector<std::string> output_var_types = { "double", "double", "double", "double" };
+        std::vector<std::string> model_var_types = { "double", "double" };
         std::vector<std::string> input_var_units = { "m", "m" };
-        std::vector<std::string> output_var_units = { "m", "m/s" };
+        std::vector<std::string> output_var_units = { "m", "m/s", "m", "m" };
+        std::vector<std::string> model_var_units = { "m", "m" };
         std::vector<std::string> input_var_locations = { "node", "node" };
-        std::vector<std::string> output_var_locations = { "node", "node" };
+        std::vector<std::string> output_var_locations = { "node", "node", "node", "node" };
+        std::vector<std::string> model_var_locations = { "node", "node" };
 
         std::vector<int> input_var_item_count = { 1, 1 };
-        std::vector<int> output_var_item_count = { 1, 1 };
+        std::vector<int> output_var_item_count = { 1, 1, 1, 1 };
+        std::vector<int> model_var_item_count = { 1, 1 };
         std::vector<int> input_var_grids = { 1, 1 };
-        std::vector<int> output_var_grids = { 1, 1 };
+        std::vector<int> output_var_grids = { 1, 1, 1, 1 };
+        std::vector<int> model_var_grids = { 1, 1 };
         
         std::map<std::string,int> type_sizes = {
             {BMI_TYPE_NAME_DOUBLE, sizeof(double)},
@@ -178,6 +184,10 @@ class TestBmiCpp : public bmi::Bmi {
         std::unique_ptr<double> input_var_2 = nullptr;
         std::unique_ptr<double> output_var_1 = nullptr;
         std::unique_ptr<double> output_var_2 = nullptr;
+        std::unique_ptr<double> output_var_4 = nullptr;
+        std::unique_ptr<double> output_var_5 = nullptr;
+        std::unique_ptr<double> model_var_1 = nullptr;
+        std::unique_ptr<double> model_var_2 = nullptr;
 
         //Variables for testing array in/out
         std::unique_ptr<double[]> input_var_3 = nullptr;

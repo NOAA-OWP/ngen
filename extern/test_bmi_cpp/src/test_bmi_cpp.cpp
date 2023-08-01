@@ -149,6 +149,19 @@ void* TestBmiCpp::GetValuePtr(std::string name){
   if (use_output_array && name == "OUTPUT_VAR_3") {
     return this->output_var_3.get();
   }
+  if (name == "OUTPUT_VAR_4") {
+    return this->output_var_4.get();
+  }
+  if (name == "OUTPUT_VAR_5") {
+    return this->output_var_5.get();
+  }
+
+  if (name == "MODEL_VAR_1") {
+    return this->model_var_1.get();
+  }
+  if (name == "MODEL_VAR_2") {
+    return this->model_var_2.get();
+  }
 
   throw std::runtime_error("GetValuePtr called for unknown variable: "+name);
 }
@@ -171,6 +184,10 @@ std::string TestBmiCpp::GetVarLocation(std::string name){
   if(iter != this->input_var_names.end()){
     return this->input_var_locations[iter - this->input_var_names.begin()];
   }
+  iter = std::find(this->model_var_names.begin(), this->model_var_names.end(), name);
+  if(iter != this->model_var_names.end()){
+    return this->model_var_locations[iter - this->model_var_names.begin()];
+  }
   throw std::runtime_error("GetVarLocation called for non-existent variable: "+name+"" SOURCE_LOC);
 }
 
@@ -189,6 +206,10 @@ int TestBmiCpp::GetVarNbytes(std::string name){
   if(iter != this->input_var_names.end()){
     item_count = this->input_var_item_count[iter - this->input_var_names.begin()];
   }
+  iter = std::find(this->model_var_names.begin(), this->model_var_names.end(), name);
+  if(iter != this->model_var_names.end()){
+    item_count = this->model_var_item_count[iter - this->model_var_names.begin()];
+  }
   if(item_count == -1){
     // This is probably impossible to reach--the same conditions above failing will cause a throw
     // in GetVarItemSize --> GetVarType (called earlier) instead.
@@ -206,6 +227,10 @@ std::string TestBmiCpp::GetVarType(std::string name){
   if(iter != this->input_var_names.end()){
     return this->input_var_types[iter - this->input_var_names.begin()];
   }
+  iter = std::find(this->model_var_names.begin(), this->model_var_names.end(), name);
+  if(iter != this->model_var_names.end()){
+    return this->model_var_types[iter - this->model_var_names.begin()];
+  }
   throw std::runtime_error("GetVarType called for non-existent variable: "+name+"" SOURCE_LOC );
 }
 
@@ -217,6 +242,10 @@ std::string TestBmiCpp::GetVarUnits(std::string name){
   iter = std::find(this->input_var_names.begin(), this->input_var_names.end(), name);
   if(iter != this->input_var_names.end()){
     return this->input_var_units[iter - this->input_var_names.begin()];
+  }
+  iter = std::find(this->model_var_names.begin(), this->model_var_names.end(), name);
+  if(iter != this->model_var_names.end()){
+    return this->model_var_types[iter - this->model_var_names.begin()];
   }
   throw std::runtime_error("GetVarUnits called for non-existent variable: "+name+"" SOURCE_LOC);
 }
@@ -249,6 +278,10 @@ void TestBmiCpp::Initialize(std::string file){
   this->input_var_2 = std::make_unique<double>(0);
   this->output_var_1 = std::make_unique<double>(0);
   this->output_var_2 = std::make_unique<double>(0);
+  this->output_var_4 = std::make_unique<double>(0);
+  this->output_var_5 = std::make_unique<double>(1);
+  this->model_var_1 = std::make_unique<double>(1);
+  this->model_var_2 = std::make_unique<double>(2);
 
 }
 
@@ -463,6 +496,9 @@ void TestBmiCpp::read_file_line_counts(std::string file_name, int* line_count, i
 
 void TestBmiCpp::run(long dt)
 {
+    *this->output_var_4 = *this->model_var_1;
+    *this->output_var_5 = *this->model_var_2 * 1.0;
+  
     if (dt == this->time_step_size) {
         *this->output_var_1 = *this->input_var_1;
         *this->output_var_2 = 2.0 * *this->input_var_2;
