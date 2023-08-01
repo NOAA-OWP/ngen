@@ -27,6 +27,7 @@ target_include_directories(testbmicppmodel PRIVATE ../bmi-cxx/ )
 set_target_properties(testbmicppmodel PROPERTIES VERSION ${PROJECT_VERSION})
 
 set_target_properties(testbmicppmodel PROPERTIES PUBLIC_HEADER include/test_bmi_cpp.hpp)
+set_target_properties(testbmicppmodel PROPERTIES CXX_VISIBILITY_PRESET default)
 
 include(GNUInstallDirs)
 
