@@ -143,6 +143,12 @@ add_executable(ngen
     src/NGen.cpp
     )
 
+# Natively support BMI C++ modules and pre-compile in the test_bmi_cpp mock/example.
+set(TEST_BMI_CPP_DIR ${PROJECT_SOURCE_DIR}/extern/test_bmi_cpp)
+git_update_submodule(${PROJECT_SOURCE_DIR}/extern/bmi-cxx)
+add_subdirectory(${TEST_BMI_CPP_DIR} ${TEST_BMI_CPP_DIR}/cmake_build)
+add_dependencies(ngen testbmicppmodel) # because our demo realizations will use it
+
 # Handle several steps for BMI C library logic and dependencies, at top level, if functionality is turned on
 if(BMI_C_LIB_ACTIVE)
     # Define associated preprocessor directive

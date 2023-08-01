@@ -104,6 +104,7 @@ add_test(test_realization_config
         NGen::core_mediator
         NGen::forcing
         libudunits2
+        testbmicppmodel
         ${NETCDF_LIBRARIES}
 )
 
@@ -358,6 +359,7 @@ add_test(
         NGen::geojson
         NGen::realizations_catchment
         libudunits2
+        testbmicppmodel
         ${NETCDF_LIBRARIES}
 )
 
@@ -394,5 +396,6 @@ add_test(
         NGen::geojson
         NGen::realizations_catchment
         libudunits2
+        testbmicppmodel
         ${NETCDF_LIBRARIES}
 )
