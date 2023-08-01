@@ -28,7 +28,7 @@ HY_Features::HY_Features(network::Network network, std::shared_ptr<Formulation_M
         {
           //Find and prepare formulation
           auto formulation = formulations->get_formulation(feat_id);
-          formulation->set_output_stream(formulations->get_catchment_output_path(feat_id));
+          formulation->set_output_stream(formulations->get_output_root() + feat_id + ".csv");
           // TODO: add command line or config option to have this be omitted
           //FIXME why isn't default param working here??? get_output_header_line() fails.
           formulation->write_output("Time Step,""Time,"+formulation->get_output_header_line(",")+"\n");

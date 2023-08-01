@@ -31,7 +31,7 @@ The `global` key-value object must contain the following two object keys:
 * `forcing`
   * key-value object with keys for `file_pattern` and `path` that define the default CSV file pattern and path for the input forcings relative to the executable directory
 
-The `global` key-value object *may* contain an `outputs` object key for user-defined output patterns for nexus and catchment outputs, where the `{{id}}` syntax reflects the nexus or catchment string identifiers (i.e. `cat-27`, `nex-68`).
+The `global` key-value object *may* contain an `output_root` key for a user-defined root output directory for nexus and catchment outputs.
 
 ```
 "global": {
@@ -49,10 +49,7 @@ The `global` key-value object *may* contain an `outputs` object key for user-def
       "file_pattern": ".*{{id}}.*.csv",
       "path": "./data/forcing/"
   },
-  "outputs": {
-      "nexus": "/path/to/nexus/{{id}}-output.csv",
-      "catchment": "/path/to/catchment/{{id}}-output.csv"
-  }
+  "output_root": "/path/to/outputs/"
 },  
 ```
 

@@ -121,10 +121,7 @@ const double EPSILON = 0.0000001;
 
 const std::string EXAMPLE_1 = "{ "
     "\"global\": { "
-      "\"outputs\": {"
-        "\"nexus\": \"/tmp/nexus-dir/{{id}}-output.csv\","
-        "\"catchment\": \"/tmp/catchment-dir/{{id}}-output.csv\""
-      "},"
+      "\"output_root\": \"/tmp/output-dir/\","
       "\"formulations\": [ "
             "{"
               "\"name\": \"tshirt\", "
@@ -663,8 +660,7 @@ TEST_F(Formulation_Manager_Test, basic_reading_1) {
 
     ASSERT_TRUE(manager.contains("cat-52"));
     ASSERT_TRUE(manager.contains("cat-67"));
-    ASSERT_EQ(manager.get_nexus_output_path("nex-52"), "/tmp/nexus-dir/nex-52-output.csv");
-    ASSERT_EQ(manager.get_catchment_output_path("cat-52"), "/tmp/catchment-dir/cat-52-output.csv");
+    ASSERT_EQ(manager.get_output_root(), "/tmp/output-dir/");
 }
 
 TEST_F(Formulation_Manager_Test, basic_reading_2) {
