@@ -149,18 +149,20 @@ void* TestBmiCpp::GetValuePtr(std::string name){
   if (use_output_array && name == "OUTPUT_VAR_3") {
     return this->output_var_3.get();
   }
-  if (name == "OUTPUT_VAR_4") {
-    return this->output_var_4.get();
-  }
-  if (name == "OUTPUT_VAR_5") {
-    return this->output_var_5.get();
-  }
 
-  if (name == "MODEL_VAR_1") {
-    return this->model_var_1.get();
-  }
-  if (name == "MODEL_VAR_2") {
-    return this->model_var_2.get();
+  if (use_model_params) {
+    if (name == "OUTPUT_VAR_4") {
+      return this->output_var_4.get();
+    }
+    if (name == "OUTPUT_VAR_5") {
+      return this->output_var_5.get();
+    }
+    if (name == "MODEL_VAR_1") {
+      return this->model_var_1.get();
+    }
+    if (name == "MODEL_VAR_2") {
+      return this->model_var_2.get();
+    }
   }
 
   throw std::runtime_error("GetValuePtr called for unknown variable: "+name);
@@ -278,10 +280,6 @@ void TestBmiCpp::Initialize(std::string file){
   this->input_var_2 = std::make_unique<double>(0);
   this->output_var_1 = std::make_unique<double>(0);
   this->output_var_2 = std::make_unique<double>(0);
-  this->output_var_4 = std::make_unique<double>(0);
-  this->output_var_5 = std::make_unique<double>(1);
-  this->model_var_1 = std::make_unique<double>(1);
-  this->model_var_2 = std::make_unique<double>(2);
 
 }
 
@@ -432,6 +430,9 @@ void TestBmiCpp::read_init_config(std::string config_file)
     if( strcmp(param_key, "use_output_array") == 0) {
       this->use_output_array = true;
     }
+    if( strcmp(param_key, "use_model_params") == 0) {
+      this->use_model_params = true;
+    }
   }
 
   if (is_epoch_start_time_set == FALSE) {
@@ -443,8 +444,8 @@ void TestBmiCpp::read_init_config(std::string config_file)
 #endif
 
   //dynamic creation/usage of optional var 3
-  if(use_input_array || use_output_array ){
-    set_usage(use_input_array, use_output_array);
+  if(use_input_array || use_output_array || use_model_params){
+    set_usage(use_input_array, use_output_array, use_model_params);
   }
 }
 

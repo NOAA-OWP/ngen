@@ -35,10 +35,10 @@ class TestBmiCpp : public bmi::Bmi {
         *
         * @return Pointer to the newly created @ref test_bmi_c_model struct instance in memory.
         */
-        TestBmiCpp(bool input_array = false, bool output_array = false):
-            use_input_array(input_array), use_output_array(output_array)
+        TestBmiCpp(bool input_array = false, bool output_array = false, bool model_params = false):
+            use_input_array(input_array), use_output_array(output_array), use_model_params(model_params)
         {
-            set_usage(input_array, output_array);
+            set_usage(input_array, output_array, model_params);
         };
 
         virtual void Initialize(std::string config_file);
@@ -102,9 +102,10 @@ class TestBmiCpp : public bmi::Bmi {
 
     private:
 
-        inline void set_usage(bool input_array = false, bool output_array = false){
+        inline void set_usage(bool input_array = false, bool output_array = false, bool model_params = false){
             use_input_array = input_array;
             use_output_array = output_array;
+            use_model_params = model_params;
             //NOTE use the correct array constructor here or things get weird
             //make_unique<double>(3) will give a unique pointer to a single double initialized to 3
             //make_unique<double[]>(3) will give a unique pointer to an array of 3 doubles, default initialized
@@ -134,29 +135,56 @@ class TestBmiCpp : public bmi::Bmi {
                 output_var_item_count.push_back(3); //an array of 3 values
                 output_var_grids.push_back(1);
             }
+            if( use_model_params ){
+                this->output_var_4 = std::make_unique<double>(0);
+                this->output_var_5 = std::make_unique<double>(1);
+                this->model_var_1  = std::make_unique<double>(1);
+                this->model_var_2 = std::make_unique<double>(2);
+                std::cout<<"USING MODEL PARAMS\n";
+                output_var_names.push_back("OUTPUT_VAR_4");
+                output_var_types.push_back("double");
+                output_var_units.push_back("m");
+                output_var_locations.push_back("node");
+                output_var_item_count.push_back(1);
+                output_var_grids.push_back(1);
+
+                output_var_names.push_back("OUTPUT_VAR_5");
+                output_var_types.push_back("double");
+                output_var_units.push_back("m");
+                output_var_locations.push_back("node");
+                output_var_item_count.push_back(1);
+                output_var_grids.push_back(1);
+
+                this->model_var_names = { "MODEL_VAR_1", "MODEL_VAR_2" };
+                this->model_var_types = { "double", "double" };
+                this->model_var_units = { "m", "m" };
+                this->model_var_locations = { "node", "node" };
+                this->model_var_item_count = { 1, 1 };
+                this->model_var_grids = { 1, 1 };
+            }
         }
         //flags for conditional use of input/output var 3
-        bool use_input_array, use_output_array;
+        bool use_input_array, use_output_array, use_model_params;
    
         std::vector<std::string> input_var_names = { "INPUT_VAR_1", "INPUT_VAR_2" };
-        std::vector<std::string> output_var_names = { "OUTPUT_VAR_1", "OUTPUT_VAR_2", "OUTPUT_VAR_4", "OUTPUT_VAR_5" };
-        std::vector<std::string> model_var_names = { "MODEL_VAR_1", "MODEL_VAR_2" };
+        std::vector<std::string> output_var_names = { "OUTPUT_VAR_1", "OUTPUT_VAR_2"};
+        std::vector<std::string> model_var_names = {};
         std::vector<std::string> input_var_types = { "double", "double" };
-        std::vector<std::string> output_var_types = { "double", "double", "double", "double" };
-        std::vector<std::string> model_var_types = { "double", "double" };
+        std::vector<std::string> output_var_types = { "double", "double" };
+        std::vector<std::string> model_var_types = {};
         std::vector<std::string> input_var_units = { "m", "m" };
         std::vector<std::string> output_var_units = { "m", "m/s", "m", "m" };
-        std::vector<std::string> model_var_units = { "m", "m" };
+        std::vector<std::string> model_var_units = {};
         std::vector<std::string> input_var_locations = { "node", "node" };
-        std::vector<std::string> output_var_locations = { "node", "node", "node", "node" };
-        std::vector<std::string> model_var_locations = { "node", "node" };
+        std::vector<std::string> output_var_locations = { "node", "node" };
+        std::vector<std::string> model_var_locations = {};
 
         std::vector<int> input_var_item_count = { 1, 1 };
-        std::vector<int> output_var_item_count = { 1, 1, 1, 1 };
-        std::vector<int> model_var_item_count = { 1, 1 };
+        std::vector<int> output_var_item_count = { 1, 1 };
+        std::vector<int> model_var_item_count = {};
         std::vector<int> input_var_grids = { 1, 1 };
-        std::vector<int> output_var_grids = { 1, 1, 1, 1 };
-        std::vector<int> model_var_grids = { 1, 1 };
+        std::vector<int> output_var_grids = { 1, 1 };
+        std::vector<int> model_var_grids = {};
         
         std::map<std::string,int> type_sizes = {
             {BMI_TYPE_NAME_DOUBLE, sizeof(double)},
@@ -184,14 +212,16 @@ class TestBmiCpp : public bmi::Bmi {
         std::unique_ptr<double> input_var_2 = nullptr;
         std::unique_ptr<double> output_var_1 = nullptr;
         std::unique_ptr<double> output_var_2 = nullptr;
-        std::unique_ptr<double> output_var_4 = nullptr;
-        std::unique_ptr<double> output_var_5 = nullptr;
-        std::unique_ptr<double> model_var_1 = nullptr;
-        std::unique_ptr<double> model_var_2 = nullptr;
 
         //Variables for testing array in/out
         std::unique_ptr<double[]> input_var_3 = nullptr;
         std::unique_ptr<double[]> output_var_3 = nullptr;
+
+        // Variables for testing model params
+        std::unique_ptr<double> output_var_4 = nullptr;
+        std::unique_ptr<double> output_var_5 = nullptr;
+        std::unique_ptr<double> model_var_1 = nullptr;
+        std::unique_ptr<double> model_var_2 = nullptr;
 
         /**
         * Read the BMI initialization config file and use its contents to set the state of the model.
