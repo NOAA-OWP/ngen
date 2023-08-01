@@ -496,10 +496,7 @@ void TestBmiCpp::read_file_line_counts(std::string file_name, int* line_count, i
 
 
 void TestBmiCpp::run(long dt)
-{
-    *this->output_var_4 = *this->model_var_1;
-    *this->output_var_5 = *this->model_var_2 * 1.0;
-  
+{  
     if (dt == this->time_step_size) {
         *this->output_var_1 = *this->input_var_1;
         *this->output_var_2 = 2.0 * *this->input_var_2;
@@ -512,6 +509,10 @@ void TestBmiCpp::run(long dt)
       this->output_var_3.get()[0] += 1;
       this->output_var_3.get()[1] += 2;
       this->output_var_3.get()[2] += 3;
+    }
+    if (this->use_model_params) {
+        *this->output_var_4 = *this->model_var_1;
+        *this->output_var_5 = *this->model_var_2 * 1.0;
     }
     this->current_model_time += (double)dt;
 }
