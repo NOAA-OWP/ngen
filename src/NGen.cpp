@@ -316,10 +316,10 @@ int main(int argc, char *argv[]) {
     for(const auto& id : features.nexuses()) {
         #ifdef NGEN_MPI_ACTIVE
         if (!features.is_remote_sender_nexus(id)) {
-          nexus_outfiles[id].open(manager->get_nexus_output_path(id), std::ios::trunc);
+          nexus_outfiles[id].open(manager->get_output_root() + id + "_output.csv", std::ios::trunc);
         }
         #else
-        nexus_outfiles[id].open(manager->get_nexus_output_path(id), std::ios::trunc);
+        nexus_outfiles[id].open(manager->get_output_root() + id + "_output.csv", std::ios::trunc);
         #endif
     }
 
