@@ -22,7 +22,6 @@ class Bmi_Formulation_Test;
 class Bmi_Multi_Formulation_Test;
 class Bmi_C_Formulation_Test;
 class Bmi_Cpp_Formulation_Test;
-class Bmi_C_Cfe_IT;
 class Bmi_C_Pet_IT;
 class Bmi_Cpp_Multi_Array_Test;
 

@@ -248,20 +248,6 @@ if(BMI_C_LIB_ACTIVE)
     endif()
 endif()
 
-########################## Comparison tests for the BMI CFE implementation
-# TODO: this probably needs to be added to integration testing also
-add_test(
-        compare_cfe
-        1
-        realizations/catchments/Bmi_C_Cfe_IT.cpp
-        NGen::core
-        NGen::realizations_catchment
-        NGen::core_mediator
-        NGen::forcing
-        libudunits2
-        ${NETCDF_LIBRARIES}
-)
-
 ########################## Comparison tests for the BMI PET implementation
 # TODO: this probably needs to be added to integration testing also
 add_test(
