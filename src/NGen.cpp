@@ -52,6 +52,8 @@ int mpi_rank;
 int mpi_num_procs;
 #endif
 
+#include "core/Coupling.hpp"
+
 std::unordered_map<std::string, std::ofstream> nexus_outfiles;
 
 //Note: Use below if developing in-memory transfer of nexus flows to routing
