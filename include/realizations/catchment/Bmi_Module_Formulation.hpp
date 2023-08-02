@@ -4,8 +4,6 @@
 #include <utility>
 #include <memory>
 #include "Bmi_Formulation.hpp"
-#include "EtCalcProperty.hpp"
-#include "EtCombinationMethod.hpp"
 #include "WrappedDataProvider.hpp"
 #include "Bmi_C_Adapter.hpp"
 #include <AorcForcing.hpp>
@@ -50,176 +48,6 @@ namespace realization {
 
         virtual ~Bmi_Module_Formulation() {};
 
-        /**
-         * Perform (potential) ET calculation, getting input params from instance's backing model as needed.
-         *
-         * Function uses forcings from the "current" time step.
-         *
-         * @return Calculated ET or potential ET, or ``0.0`` if required parameters could not be obtained.
-         */
-        double calc_et() override {
-            long timestep = 3600;
-            time_t model_time = convert_model_time(get_bmi_model()->GetCurrentTime()) + get_bmi_model_start_time_forcing_offset_s();
-
-            struct AORC_data raw_aorc;
-            raw_aorc.TMP_2maboveground_K = forcing->get_value(BMIDataSelector(CSDMS_STD_NAME_SURFACE_TEMP, model_time, timestep, "K"), MEAN);
-            raw_aorc.SPFH_2maboveground_kg_per_kg = forcing->get_value(BMIDataSelector(NGEN_STD_NAME_SPECIFIC_HUMIDITY, model_time, timestep, "kg/kg"), MEAN);
-            raw_aorc.PRES_surface_Pa = forcing->get_value(BMIDataSelector(CSDMS_STD_NAME_SURFACE_AIR_PRESSURE, model_time, timestep, "Pa"), MEAN);
-            raw_aorc.UGRD_10maboveground_meters_per_second = forcing->get_value(BMIDataSelector(CSDMS_STD_NAME_WIND_U_X, model_time, timestep, "m s^-1"), MEAN);
-            raw_aorc.VGRD_10maboveground_meters_per_second = forcing->get_value(BMIDataSelector(CSDMS_STD_NAME_WIND_V_Y, model_time, timestep, "m s^-1"), MEAN);
-            raw_aorc.DSWRF_surface_W_per_meters_squared = forcing->get_value(BMIDataSelector(CSDMS_STD_NAME_SOLAR_SHORTWAVE, model_time, timestep, "W m^-2"), SUM);
-            raw_aorc.DLWRF_surface_W_per_meters_squared = forcing->get_value(BMIDataSelector(CSDMS_STD_NAME_SOLAR_LONGWAVE, model_time, timestep, "W m^-2"), SUM);
-            raw_aorc.APCP_surface_kg_per_meters_squared = forcing->get_value(BMIDataSelector(CSDMS_STD_NAME_LIQUID_EQ_PRECIP_RATE, model_time, timestep, "kg m^-2"), SUM);
-
-            return calc_et(raw_aorc);
-        }
-
-        double calc_et(struct AORC_data raw_aorc) {
-            // TODO: fix both not checking this, and how the way it's set currently doesn't fit with these kernels
-            //if (!is_et_params_set()) {
-            //    throw std::runtime_error("Can't calculate ET for BMI model without ET params being set");
-            //}
-            // TODO: the Et_Accountable and Et_Aware interfaces need to be overhauled, and these things need to all be
-            //  moved under whatever type is used for "et_parameters"
-
-            /*
-             * ********************************************************************************************************
-             * Logic based largely on et_wrapper_function() in EtWrapperFunction.hpp, and a little from et_setup() in
-             * EtSetParams.hpp.
-             * ********************************************************************************************************
-             */
-
-            // TODO: Putting made-up values here, but need to figure out where to actually get these from (these taken
-            //  from EtSetParams.hpp, with comments from relevant lines quoted)
-            double made_up_canopy_resistance_sec_per_m = 50.0; // "from plant growth model"
-            double made_up_water_temperature_C = 15.5; // "from soil or lake thermal model"
-            double made_up_ground_heat_flux_W_per_sq_m = -10.0; /* 0.0; */ // -40 "from soil thermal model. Negative denotes downward."
-            double made_up_vegetation_height_m = 0.12; // "used for unit test of aerodynamic resistance used in Penman Monteith method."
-            double made_up_zero_plane_displacement_height_m = 0.0003; /* 0.1; */  // "0.03 cm for unit testing"
-            double made_up_surface_longwave_emissivity = 1.0; // "this is 1.0 for granular surfaces, maybe 0.97 for water"
-            double made_up_surface_shortwave_albedo = 0.22; /* 0.0; */ // "this is a function of solar elev. angle for most surfaces."
-            double made_up_surface_skin_temperature_C = 12.0; /* 20.0; */  // "from soil thermal model or vegetation model"
-            double made_up_momentum_transfer_roughness_length_m = 0.0; /* 1.0; */ // zero means that default values will be used in routine.
-            double made_up_heat_transfer_roughness_length_m = 0.0; /* 1.0; */ // zero means that default values will be used in routine.
-
-            // TODO: for now, hard-code these things
-            struct et::evapotranspiration_options et_options;
-            et_options.yes_aorc = TRUE;
-            et_options.use_energy_balance_method   = FALSE;
-            et_options.use_aerodynamic_method      = FALSE;
-            et_options.use_combination_method      = TRUE;
-            et_options.use_priestley_taylor_method = FALSE;
-            et_options.use_penman_monteith_method  = FALSE;
-
-            struct et::evapotranspiration_forcing et_forcing;
-            et_forcing.air_temperature_C = raw_aorc.TMP_2maboveground_K - TK;  // gotta convert it to C
-            // TODO: is it correct to do this (copied from other code)
-            et_forcing.relative_humidity_percent = -99.9; // this negative number means use specific humidity
-            et_forcing.specific_humidity_2m_kg_per_kg = raw_aorc.SPFH_2maboveground_kg_per_kg;
-            et_forcing.air_pressure_Pa = raw_aorc.PRES_surface_Pa;
-            et_forcing.wind_speed_m_per_s = hypot(raw_aorc.UGRD_10maboveground_meters_per_second,
-                                                  raw_aorc.VGRD_10maboveground_meters_per_second);
-
-            et_forcing.canopy_resistance_sec_per_m = made_up_canopy_resistance_sec_per_m;
-            et_forcing.water_temperature_C = made_up_water_temperature_C;
-            et_forcing.ground_heat_flux_W_per_sq_m = made_up_ground_heat_flux_W_per_sq_m;
-
-            struct et::evapotranspiration_params et_params;
-            et_params.vegetation_height_m = made_up_vegetation_height_m;
-            et_params.zero_plane_displacement_height_m = made_up_zero_plane_displacement_height_m;
-            et_params.momentum_transfer_roughness_length_m = made_up_momentum_transfer_roughness_length_m;
-            et_params.heat_transfer_roughness_length_m = made_up_heat_transfer_roughness_length_m;
-
-            // AORC uses wind speeds from 10m.  Must convert to 2m.
-            if (et_options.yes_aorc == TRUE) {
-                // wind speed was measured at 10.0 m height, so we need to calculate the wind speed at 2.0m
-                double numerator = log(2.0 / et_params.zero_plane_displacement_height_m);
-                double denominator = log(10.0 / et_params.zero_plane_displacement_height_m);
-                // this is the 2 m value
-                et_forcing.wind_speed_m_per_s = et_forcing.wind_speed_m_per_s * numerator / denominator;
-            }
-            et_params.wind_speed_measurement_height_m = 2.0;
-
-            // surface radiation parameter values that are function of land cover. Must be assigned from land cover type
-            //----------------------------------------------------------------------------------------------------------
-            struct et::surface_radiation_params surf_rad_params;
-            // this is 1.0 for granular surfaces, maybe 0.97 for water
-            surf_rad_params.surface_longwave_emissivity = made_up_surface_longwave_emissivity;
-            // this is a function of solar elev. angle for most surfaces.
-            surf_rad_params.surface_shortwave_albedo = made_up_surface_shortwave_albedo;
-
-            struct et::surface_radiation_forcing  surf_rad_forcing;
-            if (et_options.yes_aorc==TRUE) {
-                et_params.humidity_measurement_height_m = 2.0;
-                // transfer aorc forcing data into our data structure for surface radiation calculations
-                surf_rad_forcing.incoming_shortwave_radiation_W_per_sq_m = raw_aorc.DSWRF_surface_W_per_meters_squared;
-                surf_rad_forcing.incoming_longwave_radiation_W_per_sq_m = raw_aorc.DLWRF_surface_W_per_meters_squared;
-                surf_rad_forcing.air_temperature_C = et_forcing.air_temperature_C;
-                // compute relative humidity from specific humidity..
-                double saturation_vapor_pressure_Pa, actual_vapor_pressure_Pa;
-                saturation_vapor_pressure_Pa = et::calc_air_saturation_vapor_pressure_Pa(surf_rad_forcing.air_temperature_C);
-                actual_vapor_pressure_Pa = raw_aorc.SPFH_2maboveground_kg_per_kg * raw_aorc.PRES_surface_Pa / 0.622;
-                surf_rad_forcing.relative_humidity_percent = 100.0 * actual_vapor_pressure_Pa / saturation_vapor_pressure_Pa;
-                // sanity check the resulting value.  Should be less than 100%.  Sometimes air can be supersaturated.
-                if (100.0 < surf_rad_forcing.relative_humidity_percent) {
-                    surf_rad_forcing.relative_humidity_percent = 99.0;
-                }
-            }
-            /* Shouldn't need this for now, but might later
-            else {
-                et_params.humidity_measurement_height_m = set_et_params->humidity_measurement_height_m;
-
-                // these values are needed if we don't have incoming longwave radiation measurements.
-                surf_rad_forcing.incoming_shortwave_radiation_W_per_sq_m \
-                     = surface_rad_forcing->incoming_shortwave_radiation_W_per_sq_m; \
-                     // must come from somewhere
-                surf_rad_forcing.incoming_longwave_radiation_W_per_sq_m \
-                     = surface_rad_forcing->incoming_longwave_radiation_W_per_sq_m; \
-                     // this huge negative value tells to calc.
-                surf_rad_forcing.air_temperature_C \
-                     = surface_rad_forcing->air_temperature_C;  // from some forcing data file
-                surf_rad_forcing.relative_humidity_percent \
-                     = surface_rad_forcing->relative_humidity_percent;  // from some forcing data file
-                surf_rad_forcing.ambient_temperature_lapse_rate_deg_C_per_km \
-                     = surface_rad_forcing->ambient_temperature_lapse_rate_deg_C_per_km; \
-                     // ICAO standard atmosphere lapse rate
-                surf_rad_forcing.cloud_cover_fraction = surface_rad_forcing->cloud_cover_fraction;  // from some forcing data file
-                surf_rad_forcing.cloud_base_height_m  = surface_rad_forcing->cloud_base_height_m;   // assumed 2500 ft.
-            }
-             */
-
-            // Surface radiation forcing parameter values that must come from other models
-            //--------------------------------------------------------------------------------------------------------
-            surf_rad_forcing.surface_skin_temperature_C = made_up_surface_skin_temperature_C;
-            //Compute net_radiation et forcing value
-            et_forcing.net_radiation_W_per_sq_m=et::calculate_net_radiation_W_per_sq_m(&et_options,&surf_rad_params, 
-                                                                         &surf_rad_forcing);
-            // TODO: and this just needs to be created with nothing set?
-            struct et::intermediate_vars inter_vars;
-
-            // TODO: there will need to be a way to establish in config which method should be used (especially
-            //  potential versus actual)
-            return et::combined::evapotranspiration_combination_method(&et_options,&et_params,&et_forcing,&inter_vars);
-        }
-
-        struct et::aorc_forcing_data convert_aorc_structs(struct AORC_data &aorc_data) {
-            struct et::aorc_forcing_data et_forcing;
-            et_forcing.precip_kg_per_m2 = (float)aorc_data.APCP_surface_kg_per_meters_squared;
-            et_forcing.incoming_longwave_W_per_m2 = (float)aorc_data.DLWRF_surface_W_per_meters_squared;
-            et_forcing.incoming_shortwave_W_per_m2 = (float)aorc_data.DSWRF_surface_W_per_meters_squared;
-            et_forcing.surface_pressure_Pa = (float)aorc_data.PRES_surface_Pa;
-            et_forcing.specific_humidity_2m_kg_per_kg = (float)aorc_data.SPFH_2maboveground_kg_per_kg;
-            et_forcing.air_temperature_2m_K = (float)aorc_data.TMP_2maboveground_K;
-            et_forcing.u_wind_speed_10m_m_per_s = (float)aorc_data.UGRD_10maboveground_meters_per_second;
-            et_forcing.v_wind_speed_10m_m_per_s = (float)aorc_data.VGRD_10maboveground_meters_per_second;
-            // TODO: these may or may not need to change in this particular function (though probably need to be set to
-            //  other values elsewhere)
-            et_forcing.latitude = 0.0;
-            et_forcing.longitude = 0.0;
-            et_forcing.time = 0.0;
-            return et_forcing;
-        }
-
         void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr) override {
             geojson::PropertyMap options = this->interpret_parameters(config, global);
             inner_create_formulation(options, false);
@@ -250,8 +78,6 @@ namespace realization {
                     if (bmi_var_names_map.find(output_var_name) != bmi_var_names_map.end())
                         available_forcings.push_back(bmi_var_names_map[output_var_name]);
                 }
-                available_forcings.emplace_back(NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP);
-                available_forcings.emplace_back(CSDMS_STD_NAME_POTENTIAL_ET);
             }
             return available_forcings;
         }
@@ -433,8 +259,8 @@ namespace realization {
                     return values;
                 }
             }
-            //Fall back to any internal providers as a last resort.
-            return check_internal_providers<double>(output_name);
+            //This is unlikely (impossible?) to throw since a pre-check on available names is done above. Assert instead?
+            throw runtime_error(get_formulation_type() + " received invalid output forcing name " + output_name);
         }
 
         /**
@@ -497,8 +323,9 @@ namespace realization {
                     return value;
                 }
             }
-            //Fall back to any internal providers as a last resort.
-            return check_internal_providers<double>(output_name)[0];
+
+            //This is unlikely (impossible?) to throw since a pre-check on available names is done above. Assert instead?
+            throw runtime_error(get_formulation_type() + " received invalid output forcing name " + output_name);
         }
 
         bool is_bmi_input_variable(const std::string &var_name) override {
@@ -575,26 +402,6 @@ namespace realization {
                 }
                 //else not an output variable
             }
-        }
-
-        /**
-         * @brief Check for implementation of internal calculators/data for a given requsted output_name
-         *
-         * @tparam T the type expected to be returned for the value of @p output_name
-         * @param output_name
-         * @return T
-         * @throws std::runtime_error If no known value or function for @p output_name
-         */
-        template <typename T>
-        std::vector<T> check_internal_providers(std::string output_name){
-            // Only use the internal et_calc() if this formulation (or possibly multi-formulation)
-            // does not know how to supply potential et
-            if (output_name == NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP || output_name == CSDMS_STD_NAME_POTENTIAL_ET) {
-                return std::vector<T>( 1, calc_et() );
-            }
-            //Note, when called via get_value, this is unlikely to throw since a pre-check on available names is done
-            //in that function.
-            throw runtime_error(get_formulation_type() + " received invalid output forcing name " + output_name);
         }
 
         /**
@@ -782,10 +589,6 @@ namespace realization {
             else {
                 set_output_header_fields(get_output_variable_names());
             }
-            // Create a reference to this for ET by using a WrappedDataProvider
-            std::shared_ptr<data_access::GenericDataProvider> self = std::make_shared<data_access::WrappedDataProvider>(this);
-            input_forcing_providers[NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP] = self;
-            input_forcing_providers[CSDMS_STD_NAME_POTENTIAL_ET] = self;
 
             // Output precision, if present
             auto out_precision_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION);

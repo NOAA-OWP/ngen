@@ -225,7 +225,6 @@ if(NGEN_WITH_SQLITE3)
 endif()
 
 add_subdirectory("src/realizations/catchment")
-add_subdirectory("src/models/kernels/evapotranspiration")
 add_subdirectory("src/forcing")
 
 target_link_libraries(ngen PUBLIC
@@ -234,7 +233,6 @@ target_link_libraries(ngen PUBLIC
         NGen::core_nexus
         NGen::geojson
         NGen::realizations_catchment
-        NGen::kernels_evapotranspiration
         NGen::forcing
         NGen::core_mediator
         libudunits2
