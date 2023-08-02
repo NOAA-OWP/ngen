@@ -80,11 +80,6 @@ if(MPI_ACTIVE)
     add_compile_definitions(NGEN_MPI_ACTIVE)
 endif()
 
-if(LSTM_TORCH_LIB_ACTIVE)
-   find_package(Torch REQUIRED)
-   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
-endif()
-
 find_package(SQLite3)
 if(SQLite3_FOUND)
     set(NGEN_WITH_SQLITE3 ON)
@@ -259,15 +254,6 @@ if(NGEN_ACTIVATE_ROUTING)
     add_subdirectory("src/routing")
     target_link_libraries(ngen PUBLIC
             NGen::routing
-           )
-endif()
-
-if(LSTM_TORCH_LIB_ACTIVE)
-    add_compile_definitions(NGEN_LSTM_TORCH_LIB_ACTIVE)
-    add_subdirectory("src/models/lstm")
-    target_link_libraries(ngen PUBLIC
-            NGen::models_lstm
-            ${TORCH_LIBRARIES}
            )
 endif()
 

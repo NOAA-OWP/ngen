@@ -34,14 +34,3 @@ if (${BMI_FORTRAN_ACTIVE})
    find_library(BMI_FORTRAN_ISO_C_LIB_PATH "${BMI_FORTRAN_ISO_C_LIB_NAME}" PATHS "${BMI_FORTRAN_ISO_C_LIB_DIR}")
    target_link_libraries(realizations_catchment PRIVATE "${BMI_FORTRAN_ISO_C_LIB_PATH}")
 endif()
-
-if(LSTM_TORCH_LIB_ACTIVE)
-   add_compile_definitions(NGEN_LSTM_TORCH_LIB_ACTIVE)
-
-   target_include_directories(realizations_catchment PUBLIC
-        ${PROJECT_SOURCE_DIR}/models/lstm/include
-        )
-   target_link_libraries(realizations_catchment PUBLIC
-        NGen::models_lstm
-        )
-endif()
