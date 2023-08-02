@@ -7,9 +7,7 @@
 #include <exception>
 #include <vector>
 
-#include "Et_Accountable.hpp"
 #include "JSONProperty.hpp"
-#include "Pdm03.h"
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/algorithm/string.hpp>
@@ -18,7 +16,7 @@
 
 namespace realization {
 
-    class Formulation : public virtual Et_Aware {
+    class Formulation {
         public:
             typedef long time_step_t;
 

@@ -34,13 +34,6 @@
 #define BMI_REALIZATION_CFG_PARAM_OPT__CPP_CREATE_FUNC_DEFAULT "bmi_model_create"
 #define BMI_REALIZATION_CFG_PARAM_OPT__CPP_DESTROY_FUNC_DEFAULT "bmi_model_destroy"
 
-// Supported Standard Names for BMI variables
-// This is needed to provide a calculated potential ET value back to a BMI model
-#define NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP "potential_evapotranspiration"
-
-// Taken from the CSDMS Standard Names list
-// TODO: need to add these in for anything BMI model input or output variables we need to know how to recognize
-#define CSDMS_STD_NAME_POTENTIAL_ET "water_potential_evaporation_flux"
 /* *************** See also the Forcing.h file for several CSDMS Standard Names definitions *************** */
 
 // Forward declaration to provide access to protected items in testing

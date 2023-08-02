@@ -18,5 +18,4 @@ target_link_libraries(routing PUBLIC pybind11::embed)
 #        ${CMAKE_DL_LIBS}
 #        NGen::core_catchment
 #        NGen::geojson
-#        NGen::kernels_evapotranspiration
 #        )

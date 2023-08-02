@@ -14,9 +14,6 @@ target_include_directories(core PUBLIC
         ${PROJECT_SOURCE_DIR}/include/core/hydrolocation
         ${PROJECT_SOURCE_DIR}/include/core/mediator
         ${PROJECT_SOURCE_DIR}/include/realizations/catchment
-        ${PROJECT_SOURCE_DIR}/models/kernels
-        ${PROJECT_SOURCE_DIR}/models/kernels/evapotranspiration
-        ${PROJECT_SOURCE_DIR}/models/
         ${PROJECT_SOURCE_DIR}/include/geojson
         ${PROJECT_SOURCE_DIR}/include/forcing
         ${PROJECT_SOURCE_DIR}/include/utilities
@@ -33,9 +30,6 @@ if (${NGEN_ACTIVATE_PYTHON})
             ${PROJECT_SOURCE_DIR}/include/core/hydrolocation
             ${PROJECT_SOURCE_DIR}/include/core/mediator
             ${PROJECT_SOURCE_DIR}/include/realizations/catchment
-            ${PROJECT_SOURCE_DIR}/models/kernels
-            ${PROJECT_SOURCE_DIR}/models/kernels/evapotranspiration
-            ${PROJECT_SOURCE_DIR}/models/
             ${PROJECT_SOURCE_DIR}/include/geojson
             ${PROJECT_SOURCE_DIR}/include/forcing
             ${PROJECT_SOURCE_DIR}/include/utilities
@@ -57,9 +51,6 @@ else ()
             ${PROJECT_SOURCE_DIR}/include/core/hydrolocation
             ${PROJECT_SOURCE_DIR}/include/core/mediator
             ${PROJECT_SOURCE_DIR}/include/realizations/catchment
-            ${PROJECT_SOURCE_DIR}/models/kernels
-            ${PROJECT_SOURCE_DIR}/models/kernels/evapotranspiration
-            ${PROJECT_SOURCE_DIR}/models/
             ${PROJECT_SOURCE_DIR}/include/geojson
             ${PROJECT_SOURCE_DIR}/include/forcing
             ${PROJECT_SOURCE_DIR}/include/utilities

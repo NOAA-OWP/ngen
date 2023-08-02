@@ -53,21 +53,6 @@ int mpi_num_procs;
 
 std::unordered_map<std::string, std::ofstream> nexus_outfiles;
 
-//Note: Use below if developing in-memory transfer of nexus flows to routing
-//std::unordered_map<std::string, std::vector<double>> nexus_flows;
-
-pdm03_struct get_et_params() {
-  // create the struct used for ET
-    pdm03_struct pdm_et_data;
-    pdm_et_data.scaled_distribution_fn_shape_parameter = 1.3;
-    pdm_et_data.vegetation_adjustment = 0.99;
-    pdm_et_data.model_time_step = 0.0;
-    pdm_et_data.max_height_soil_moisture_storerage_tank = 400.0;
-    pdm_et_data.maximum_combined_contents = pdm_et_data.max_height_soil_moisture_storerage_tank /
-                                            (1.0 + pdm_et_data.scaled_distribution_fn_shape_parameter);
-    return pdm_et_data;
-}
-
 int main(int argc, char *argv[]) {
     std::cout << "NGen Framework " << ngen_VERSION_MAJOR << "."
               << ngen_VERSION_MINOR << "."
@@ -348,8 +333,6 @@ int main(int argc, char *argv[]) {
 
     std::cout<<"Running Models"<<std::endl;
 
-    std::shared_ptr<pdm03_struct> pdm_et_data = std::make_shared<pdm03_struct>(get_et_params());
-
     //Now loop some time, iterate catchments, do stuff for total number of output times
     for(int output_time_index = 0; output_time_index < manager->Simulation_Time_Object->get_total_output_times(); output_time_index++) {
       //std::cout<<"Output Time Index: "<<output_time_index<<std::endl;
@@ -360,7 +343,6 @@ int main(int argc, char *argv[]) {
         auto r = features.catchment_at(id);
         //TODO redesign to avoid this cast
         auto r_c = dynamic_pointer_cast<realization::Catchment_Formulation>(r);
-        r_c->set_et_params(pdm_et_data);
         double response = r_c->get_response(output_time_index, 3600.0);
         std::string output = std::to_string(output_time_index)+","+current_timestamp+","+
                              r_c->get_output_line_for_timestep(output_time_index)+"\n";
