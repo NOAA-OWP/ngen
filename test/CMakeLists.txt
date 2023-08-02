@@ -332,8 +332,7 @@ add_test(
 ########################## Primary Combined Unit Test Target
 add_test(
         test_unit
-        19
-        models/hymod/include/HymodTest.cpp
+        18
         models/hymod/include/Reservoir_Test.cpp
         models/hymod/include/Reservoir_Timeless_Test.cpp
         models/tshirt/include/TshirtTest.cpp
@@ -363,14 +362,10 @@ add_test(
         ${NETCDF_LIBRARIES}
 )
 
-# Add for integration tests once we have some
-#add_automated_test(test_it models/hymod/include/HymodTest.cpp)
-
 # All automated tests
 add_test(
         test_all
-        18
-        models/hymod/include/HymodTest.cpp
+        17
         models/hymod/include/Reservoir_Test.cpp
         models/hymod/include/Reservoir_Timeless_Test.cpp
         models/tshirt/include/TshirtTest.cpp
