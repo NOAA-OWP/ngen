@@ -198,7 +198,7 @@ void Bmi_Cpp_Formulation_Test::SetUp() {
                          "                \"init_config\": \"" + init_config[i] + "\","
                          "                \"main_output_variable\": \"" + main_output_variable[i] + "\","
                          "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES + "\": { "
-                         "                      \"INPUT_VAR_2\": \"" + NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP + "\","
+                         "                      \"INPUT_VAR_2\": \"" + AORC_FIELD_NAME_TEMP_2M_AG  + "\","
                          "                      \"INPUT_VAR_1\": \"" + AORC_FIELD_NAME_PRECIP_RATE + "\""
                          "                },"
                          + variables_line + function_names_lines +

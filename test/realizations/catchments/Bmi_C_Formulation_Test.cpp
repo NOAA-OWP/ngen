@@ -200,7 +200,7 @@ void Bmi_C_Formulation_Test::SetUp() {
                          "                \"main_output_variable\": \"" + main_output_variable[i] + "\","
                          "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION + "\": 6, "
                          "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES + "\": { "
-                         "                      \"INPUT_VAR_2\": \"" + NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP + "\","
+                         "                      \"INPUT_VAR_2\": \"" + AORC_FIELD_NAME_TEMP_2M_AG + "\","
                          "                      \"INPUT_VAR_1\": \"" + AORC_FIELD_NAME_PRECIP_RATE + "\""
                          "                },"
                          "                \"registration_function\": \"" + registration_functions[i] + "\","

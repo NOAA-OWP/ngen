@@ -547,15 +547,6 @@ TEST_F(Formulation_Manager_Test, basic_run_1) {
 
     std::map<std::string, std::map<long, double>> calculated_results;
 
-    pdm03_struct pdm_et_data;
-    pdm_et_data.scaled_distribution_fn_shape_parameter = 1.3;
-    pdm_et_data.vegetation_adjustment = 0.99;
-    pdm_et_data.model_time_step = 0.0;
-    pdm_et_data.max_height_soil_moisture_storerage_tank = 400.0;
-    pdm_et_data.maximum_combined_contents = pdm_et_data.max_height_soil_moisture_storerage_tank / (1.0+pdm_et_data.scaled_distribution_fn_shape_parameter);
-
-    std::shared_ptr<pdm03_struct> et_params_ptr = std::make_shared<pdm03_struct>(pdm_et_data);
-
     double dt = 3600.0;
 
     for (std::pair<std::string, std::shared_ptr<realization::Formulation>> formulation : manager) {
@@ -564,8 +555,6 @@ TEST_F(Formulation_Manager_Test, basic_run_1) {
         }
 
         double calculation;
-
-        formulation.second->set_et_params(et_params_ptr);
 
         for (long t = 0; t < 4; t++) {
             calculation = formulation.second->get_response(t, dt);
@@ -652,17 +641,7 @@ TEST_F(Formulation_Manager_Test, forcing_provider_specification) {
 
     std::vector<double> actual_results(expected_results.size());
 
-    pdm03_struct pdm_et_data;
-    pdm_et_data.scaled_distribution_fn_shape_parameter = 1.3;
-    pdm_et_data.vegetation_adjustment = 0.99;
-    pdm_et_data.model_time_step = 0.0;
-    pdm_et_data.max_height_soil_moisture_storerage_tank = 400.0;
-    pdm_et_data.maximum_combined_contents = pdm_et_data.max_height_soil_moisture_storerage_tank / (1.0+pdm_et_data.scaled_distribution_fn_shape_parameter);
-
-    std::shared_ptr<pdm03_struct> et_params_ptr = std::make_shared<pdm03_struct>(pdm_et_data);
-
     for (std::pair<std::string, std::shared_ptr<realization::Formulation>> formulation : manager) {
-        formulation.second->set_et_params(et_params_ptr);
         formulation.second->get_response(0, 3600);
     }
 
