@@ -10,7 +10,6 @@ target_include_directories(core PUBLIC
         ${PROJECT_SOURCE_DIR}/include/simulation_time
         ${PROJECT_SOURCE_DIR}/include/core
         ${PROJECT_SOURCE_DIR}/include/core/catchment
-        ${PROJECT_SOURCE_DIR}/include/core/catchment/giuh
         ${PROJECT_SOURCE_DIR}/include/core/nexus
         ${PROJECT_SOURCE_DIR}/include/core/hydrolocation
         ${PROJECT_SOURCE_DIR}/include/core/mediator
@@ -30,7 +29,6 @@ if (${NGEN_ACTIVATE_PYTHON})
             ${PROJECT_SOURCE_DIR}/include/simulation_time
             ${PROJECT_SOURCE_DIR}/include/core
             ${PROJECT_SOURCE_DIR}/include/core/catchment
-            ${PROJECT_SOURCE_DIR}/include/core/catchment/giuh
             ${PROJECT_SOURCE_DIR}/include/core/nexus
             ${PROJECT_SOURCE_DIR}/include/core/hydrolocation
             ${PROJECT_SOURCE_DIR}/include/core/mediator
@@ -55,7 +53,6 @@ else ()
             ${PROJECT_SOURCE_DIR}/include/simulation_time
             ${PROJECT_SOURCE_DIR}/include/core
             ${PROJECT_SOURCE_DIR}/include/core/catchment
-            ${PROJECT_SOURCE_DIR}/include/core/catchment/giuh
             ${PROJECT_SOURCE_DIR}/include/core/nexus
             ${PROJECT_SOURCE_DIR}/include/core/hydrolocation
             ${PROJECT_SOURCE_DIR}/include/core/mediator
