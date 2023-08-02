@@ -25,10 +25,6 @@ if(BMI_FORTRAN_ACTIVE)
     add_compile_definitions(NGEN_BMI_FORTRAN_LIB_TESTS_ACTIVE)
 endif()
 
-if(LSTM_TORCH_LIB_ACTIVE)
-    add_compile_definitions(LSTM_TORCH_LIB_TESTS_ACTIVE)
-endif()
-
 if(NGEN_ACTIVATE_ROUTING)
     add_compile_definitions(ROUTING_PYBIND_TESTS_ACTIVE)
 endif()
@@ -245,21 +241,6 @@ add_test(
         libudunits2
         ${NETCDF_LIBRARIES}
 )
-
-########################## Internal Torchlib LSTM Tests
-if(LSTM_TORCH_LIB_ACTIVE)
-    add_test(
-            test_lstm
-            2
-            models/lstm/include/LSTM_Test.cpp
-            realizations/catchments/LSTM_Realization_Test.cpp
-            NGen::core
-            NGen::realizations_catchment
-            NGen::core_mediator
-            libudunits2
-            ${NETCDF_LIBRARIES}
-    )
-endif()
 
 ########################## Routing Tests
 if(NGEN_ACTIVATE_ROUTING)
