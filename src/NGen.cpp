@@ -14,7 +14,6 @@
 #endif
 
 #include "NGenConfig.h"
-#include "tshirt_params.h"
 
 #include <FileChecker.h>
 #include <boost/algorithm/string.hpp>

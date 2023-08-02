@@ -596,7 +596,6 @@ TEST_F(Formulation_Manager_Test, basic_run_3) {
     std::vector<double> actual_results(expected_results.size());
 
     for (int i = 0; i < expected_results.size(); i++) {
-        // Remember that for the Tshirt_C_Realization, the timestep sizes are implicit
         actual_results[i] = manager.get_formulation("cat-67")->get_response(i, 3600);
     }
 

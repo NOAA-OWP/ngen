@@ -67,14 +67,6 @@ endfunction()
 
 ########################## Individual tests ##########################
 
-#add_automated_test(test_hymod models/hymod/include/HymodTest.cpp)
-#
-#add_automated_test(
-#        test_tshirt
-#        models/tshirt/include/TshirtTest.cpp
-#        realizations/catchments/Tshirt_C_Realization_Test.cpp
-#)
-
 ########################## GeoJSON Unit Tests
 add_test(test_geojson
         4
@@ -318,11 +310,7 @@ add_test(
 ########################## Primary Combined Unit Test Target
 add_test(
         test_unit
-        18
-        models/hymod/include/Reservoir_Test.cpp
-        models/hymod/include/Reservoir_Timeless_Test.cpp
-        models/tshirt/include/TshirtTest.cpp
-        realizations/catchments/Tshirt_C_Realization_Test.cpp
+        14
         geojson/JSONProperty_Test.cpp
         geojson/JSONGeometry_Test.cpp
         geojson/Feature_Test.cpp
@@ -351,11 +339,7 @@ add_test(
 # All automated tests
 add_test(
         test_all
-        17
-        models/hymod/include/Reservoir_Test.cpp
-        models/hymod/include/Reservoir_Timeless_Test.cpp
-        models/tshirt/include/TshirtTest.cpp
-        realizations/catchments/Tshirt_C_Realization_Test.cpp
+        13
         geojson/JSONProperty_Test.cpp
         geojson/JSONGeometry_Test.cpp
         geojson/Feature_Test.cpp
