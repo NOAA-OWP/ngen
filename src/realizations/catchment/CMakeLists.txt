@@ -21,7 +21,6 @@ target_include_directories(realizations_catchment PUBLIC
 target_link_libraries(realizations_catchment PUBLIC
         ${CMAKE_DL_LIBS}
         NGen::core_catchment
-        NGen::core_catchment_giuh
         NGen::geojson
         NGen::kernels_evapotranspiration
         )

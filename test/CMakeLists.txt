@@ -100,14 +100,6 @@ add_test(test_realization_config
         ${NETCDF_LIBRARIES}
 )
 
-########################## GIUH Unit Tests
-add_test(
-        test_giuh
-        1
-        core/catchment/giuh/GIUH_Test.cpp
-        NGen::core_catchment_giuh
-)
-
 ########################## Nexus Tests
 add_test(
         test_nexus
@@ -310,7 +302,7 @@ add_test(
 ########################## Primary Combined Unit Test Target
 add_test(
         test_unit
-        14
+        13
         geojson/JSONProperty_Test.cpp
         geojson/JSONGeometry_Test.cpp
         geojson/Feature_Test.cpp
@@ -320,7 +312,6 @@ add_test(
         forcing/NetCDFPerFeatureDataProvider_Test.cpp
         core/mediator/UnitsHelper_Tests.cpp
         simulation_time/Simulation_Time_Test.cpp
-        core/catchment/giuh/GIUH_Test.cpp
         core/NetworkTests.cpp
         utils/include/StreamOutputTest.cpp
         realizations/Formulation_Manager_Test.cpp
@@ -339,7 +330,7 @@ add_test(
 # All automated tests
 add_test(
         test_all
-        13
+        12
         geojson/JSONProperty_Test.cpp
         geojson/JSONGeometry_Test.cpp
         geojson/Feature_Test.cpp
@@ -348,7 +339,6 @@ add_test(
         forcing/OptionalWrappedDataProvider_Test.cpp
         forcing/NetCDFPerFeatureDataProvider_Test.cpp
         simulation_time/Simulation_Time_Test.cpp
-        core/catchment/giuh/GIUH_Test.cpp
         core/mediator/UnitsHelper_Tests.cpp
         realizations/Formulation_Manager_Test.cpp
         core/nexus/NexusTests.cpp
