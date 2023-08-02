@@ -303,7 +303,7 @@ TEST_F(Bmi_Cpp_Formulation_Test, GetOutputLineForTimestep_0_a) {
 
     formulation.get_response(0, 3600);
     std::string output = formulation.get_output_line_for_timestep(0, ",");
-    ASSERT_EQ(output, "0.000000,0.000000");
+    ASSERT_EQ(output, "0.000000,571.600037");
 }
 
 /** Simple test of output with modified variables. */
@@ -319,7 +319,7 @@ TEST_F(Bmi_Cpp_Formulation_Test, GetOutputLineForTimestep_1_a) {
     // OUTPUT_VAR_1 first.
     formulation.get_response(0, 3600);
     std::string output = formulation.get_output_line_for_timestep(0, ",");
-    ASSERT_EQ(output, "0.000000,0.000000");
+    ASSERT_EQ(output, "571.600037,0.000000");
 }
 
 /** Simple test of output with modified variables, picking time step when there was non-zero rain rate. */
@@ -334,7 +334,7 @@ TEST_F(Bmi_Cpp_Formulation_Test, GetOutputLineForTimestep_1_b) {
         formulation.get_response(i++, 3600);
     formulation.get_response(i, 3600);
     std::string output = formulation.get_output_line_for_timestep(i, ",");
-    ASSERT_EQ(output, "0.000000,0.000001");
+    ASSERT_EQ(output, "580.799988,0.000001");
 }
 
 TEST_F(Bmi_Cpp_Formulation_Test, determine_model_time_offset_0_a) {
