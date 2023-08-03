@@ -266,7 +266,7 @@ namespace realization {
              * @return std::string of the output root directory
              */
             std::string get_output_root() const noexcept {
-                const auto output_root = this->tree.get_optional<std::string>("global.output_root");
+                const auto output_root = this->tree.get_optional<std::string>("output_root");
                 if (output_root != boost::none && *output_root != "") {
                     // Check if the path ends with a trailing slash,
                     // otherwise add it.
