@@ -15,11 +15,14 @@ The Configuration is a key-value object and must contain these three first level
 * `catchments` 
   *  is a key-value object that must include a list of individual catchments
 
+The configuration may *optionally* contain an `output_root` key with a user-defined root output directory as the key, for nexus and catchment outputs.
+
 ```
 {
    "global": {},
    "time": {},
-   "catchments": {}
+   "catchments": {},
+   "output_root": "/path/to/output/"
 } 
 ```
 
@@ -30,8 +33,6 @@ The `global` key-value object must contain the following two object keys:
   * `params` must be a list that holds key-value pairs
 * `forcing`
   * key-value object with keys for `file_pattern` and `path` that define the default CSV file pattern and path for the input forcings relative to the executable directory
-
-The `global` key-value object *may* contain an `output_root` key for a user-defined root output directory for nexus and catchment outputs.
 
 ```
 "global": {
@@ -48,8 +49,7 @@ The `global` key-value object *may* contain an `output_root` key for a user-defi
   "forcing": {
       "file_pattern": ".*{{id}}.*.csv",
       "path": "./data/forcing/"
-  },
-  "output_root": "/path/to/outputs/"
+  }
 },  
 ```
 
