@@ -512,8 +512,56 @@ const std::string EXAMPLE_4 = "{ "
     "} "
 "}";
 
+const std::string test_bmi_cpp_lib = utils::FileChecker::find_first_readable({
+  "../../extern/test_bmi_cpp/cmake_build/libtestbmicppmodel.so",
+  "../extern/test_bmi_cpp/cmake_build/libtestbmicppmodel.so",
+  "./extern/test_bmi_cpp/cmake_build/libtestbmicppmodel.so",
+  "../../extern/test_bmi_cpp/build/libtestbmicppmodel.so",
+  "../extern/test_bmi_cpp/build/libtestbmicppmodel.so",
+  "./extern/test_bmi_cpp/build/libtestbmicppmodel.so",
+});
+
+const std::string test_bmi_cpp_cfg = utils::FileChecker::find_first_readable({
+  "../../test/data/bmi/test_bmi_cpp/test_bmi_cpp_config_2.txt",
+  "../test/data/bmi/test_bmi_cpp/test_bmi_cpp_config_2.txt",
+  "./test/data/bmi/test_bmi_cpp/test_bmi_cpp_config_2.txt"
+});
+
 const std::string EXAMPLE_5 =
 "{"
+"    \"global\": {"
+"        \"formulations\": ["
+"            {"
+"                \"name\": \"bmi_c++\","
+"                \"params\": {"
+"                    \"model_type_name\": \"test_bmi_c++\","
+"                    \"library_file\": \"" + test_bmi_cpp_lib + "\","
+"                    \"init_config\": \"" + test_bmi_cpp_cfg + "\","
+"                    \"allow_exceed_end_time\": true,"
+"                    \"main_output_variable\": \"OUTPUT_VAR_4\","
+"                    \"uses_forcing_file\": false,"
+"                    \"model_params\": {"
+"                        \"MODEL_VAR_1\": {"
+"                            \"source\": \"hydrofabric\","
+"                            \"from\": \"pi\""
+"                        },"
+"                        \"MODEL_VAR_2\": {"
+"                            \"source\": \"hydrofabric\""
+"                        }"
+"                    },"
+"                    \"" BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES "\": {"
+"                        \"INPUT_VAR_1\": \"APCP_surface\","
+"                        \"INPUT_VAR_2\": \"APCP_surface\""
+"                    }"
+"                }"
+"            }"
+"        ],"
+"        \"forcing\": { "
+"            \"file_pattern\": \".*{{id}}.*.csv\","
+"            \"path\": \"./data/forcing/\","
+"            \"provider\": \"CsvPerFeature\""
+"        }"
+"    },"
 "    \"time\": {"
 "        \"start_time\": \"2015-12-01 00:00:00\","
 "        \"end_time\": \"2015-12-30 23:00:00\","
@@ -526,23 +574,8 @@ const std::string EXAMPLE_5 =
 "                    \"name\": \"bmi_c++\","
 "                    \"params\": {"
 "                        \"model_type_name\": \"test_bmi_c++\","
-"                        \"library_file\": \"" +
-utils::FileChecker::find_first_readable({
-  "../../extern/test_bmi_cpp/cmake_build/libtestbmicppmodel.so",
-  "../extern/test_bmi_cpp/cmake_build/libtestbmicppmodel.so",
-  "./extern/test_bmi_cpp/cmake_build/libtestbmicppmodel.so",
-  "../../extern/test_bmi_cpp/build/libtestbmicppmodel.so",
-  "../extern/test_bmi_cpp/build/libtestbmicppmodel.so",
-  "./extern/test_bmi_cpp/build/libtestbmicppmodel.so",
-}) +
-"\","
-"                        \"init_config\": \"" +
-utils::FileChecker::find_first_readable({
-  "../../test/data/bmi/test_bmi_cpp/test_bmi_cpp_config_2.txt",
-  "../test/data/bmi/test_bmi_cpp/test_bmi_cpp_config_2.txt",
-  "./test/data/bmi/test_bmi_cpp/test_bmi_cpp_config_2.txt"
-}) +
-"\","
+"                        \"library_file\": \"" + test_bmi_cpp_lib + "\","
+"                        \"init_config\": \"" + test_bmi_cpp_cfg + "\","
 "                        \"allow_exceed_end_time\": true,"
 "                        \"main_output_variable\": \"OUTPUT_VAR_4\","
 "                        \"uses_forcing_file\": false,"
@@ -740,6 +773,16 @@ TEST_F(Formulation_Manager_Test, forcing_provider_specification) {
 }
 
 TEST_F(Formulation_Manager_Test, read_external_attributes) {
+    if (utils::FileChecker::find_first_readable({
+      "../../extern/test_bmi_cpp/cmake_build/libtestbmicppmodel.so",
+      "../extern/test_bmi_cpp/cmake_build/libtestbmicppmodel.so",
+      "./extern/test_bmi_cpp/cmake_build/libtestbmicppmodel.so",
+      "../../extern/test_bmi_cpp/build/libtestbmicppmodel.so",
+      "../extern/test_bmi_cpp/build/libtestbmicppmodel.so",
+      "./extern/test_bmi_cpp/build/libtestbmicppmodel.so"
+    }) == "") {
+      GTEST_SKIP() << "Skipping external attributes test, can't find libtestbmicppmodel.so";
+    }
     std::stringstream stream;
     stream << fix_paths(EXAMPLE_5);
 
@@ -753,37 +796,45 @@ TEST_F(Formulation_Manager_Test, read_external_attributes) {
       { "n",           geojson::JSONProperty{"n",           1.70352 } },
     });
 
+    this->add_feature("cat-52", geojson::PropertyMap{
+      { "MODEL_VAR_2", geojson::JSONProperty{"MODEL_VAR_2", 15 } },
+      { "pi",           geojson::JSONProperty{"pi",         3.14159 } },
+    });
+
     auto feature = this->fabric->get_feature("cat-67");
     ASSERT_TRUE(feature->has_property("MODEL_VAR_2"));
     ASSERT_TRUE(feature->has_property("n"));
 
+    feature = this->fabric->get_feature("cat-52");
+    ASSERT_TRUE(feature->has_property("MODEL_VAR_2"));
+    ASSERT_TRUE(feature->has_property("pi"));
+
     manager.read(this->fabric, catchment_output);
 
-    ASSERT_EQ(manager.get_size(), 1);
+    ASSERT_EQ(manager.get_size(), 2);
     ASSERT_TRUE(manager.contains("cat-67"));
-  
-    auto formulation = manager.get_formulation("cat-67");
+    ASSERT_TRUE(manager.contains("cat-52"));
+
     time_step_t ts = 2;
-    formulation->get_response(ts, 3600);
-    
-    // std::cerr << formulation->get_output_header_line(",") << '\n';
-    
-    std::vector<std::string> str_values;
-    str_values.reserve(4);
-    boost::algorithm::split(str_values, formulation->get_output_line_for_timestep(ts), [](auto c) -> bool { return c == ','; });
-    // std::cerr << formulation->get_output_line_for_timestep(ts) << '\n';
-
     std::array<double, 5> values;
-    auto values_it = values.begin();
-    for (auto& str : str_values) {
-      auto end = &str[0] + str.size();
-      *values_it = strtod(str.c_str(), &end);
-      values_it++;
-    }
+    std::array<std::string, 4> str_values;
 
-#define ASSERT_CONTAINS(container, value) \
-  ASSERT_NE(std::find(container.begin(), container.end(), value), container.end())
-    ASSERT_CONTAINS(values, 1.70352);
-    ASSERT_CONTAINS(values, 10.0);
-#undef ASSERT_CONTAINS
+    auto check_formulation_values = [&](const std::string& id, std::initializer_list<double> expected) {
+        auto formulation = manager.get_formulation(id);
+        formulation->get_response(ts, 3600);
+        boost::algorithm::split(str_values, formulation->get_output_line_for_timestep(ts), [](auto c) -> bool { return c == ','; });
+        auto values_it = values.begin();
+        for (auto& str : str_values) {
+          auto end = &str[0] + str.size();
+          *values_it = strtod(str.c_str(), &end);
+          values_it++;
+        }
+
+        for (auto& expect : expected) {
+            ASSERT_NE(std::find(values.begin(), values.end(), expect), values.end());
+        }
+    };
+
+    check_formulation_values("cat-67", { 1.70352, 10.0 });
+    check_formulation_values("cat-52", { 3.14159, 15.0 });
 }
