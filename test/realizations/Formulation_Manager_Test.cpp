@@ -527,7 +527,13 @@ const std::string test_bmi_cpp_cfg = utils::FileChecker::find_first_readable({
   "./test/data/bmi/test_bmi_cpp/test_bmi_cpp_config_2.txt"
 });
 
-const std::string EXAMPLE_5 =
+/**
+ * Configuration for model_params parsing at levels:
+ * - global single-bmi
+ * - catchment-specific single-bmi
+ * - catchment-specific multi-bmi
+ */
+const std::string EXAMPLE_5_a =
 "{"
 "    \"global\": {"
 "        \"formulations\": ["
@@ -642,6 +648,65 @@ const std::string EXAMPLE_5 =
 "                \"path\": \"./data/forcing/cat-27115-nwm-aorc-variant-derived-format.csv\""
 "            }"
 "        }"
+"    }"
+"}";
+
+/**
+ * Configuration for model_params parsing at level:
+ * - global multi-bmi
+ */
+const std::string EXAMPLE_5_b =
+"{"
+"    \"global\": {"
+"         \"formulations\": ["
+"             {"
+"                 \"name\": \"bmi_multi\","
+"                 \"params\": {"
+"                     \"model_type_name\": \"bmi_multi_c++\","
+"                     \"forcing_file\": \"\","
+"                     \"init_config\": \"\","
+"                     \"allow_exceed_end_time\": true,"
+"                     \"main_output_variable\": \"OUTPUT_VAR_4\","
+"                     \"uses_forcing_file\": false,"
+"                     \"modules\": ["
+"                         {"
+"                             \"name\": \"bmi_c++\","
+"                             \"params\": {"
+"                                 \"model_type_name\": \"test_bmi_c++\","
+"                                 \"library_file\": \"" + test_bmi_cpp_lib + "\","
+"                                 \"init_config\": \"" + test_bmi_cpp_cfg + "\","
+"                                 \"allow_exceed_end_time\": true,"
+"                                 \"main_output_variable\": \"OUTPUT_VAR_4\","
+"                                 \"uses_forcing_file\": false,"
+"                                 \"model_params\": {"
+"                                     \"MODEL_VAR_1\": {"
+"                                         \"source\": \"hydrofabric\","
+"                                         \"from\": \"val\""
+"                                     },"
+"                                     \"MODEL_VAR_2\": {"
+"                                         \"source\": \"hydrofabric\""
+"                                     }"
+"                                 },"
+"                                 \"" BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES "\": {"
+"                                     \"INPUT_VAR_1\": \"APCP_surface\","
+"                                     \"INPUT_VAR_2\": \"APCP_surface\""
+"                                 }"
+"                             }"
+"                         }"
+"                     ]"
+"                 }"
+"             }"
+"         ],"
+"        \"forcing\": { "
+"            \"file_pattern\": \".*{{id}}.*.csv\","
+"            \"path\": \"./data/forcing/\","
+"            \"provider\": \"CsvPerFeature\""
+"        }"
+"    },"
+"    \"time\": {"
+"        \"start_time\": \"2015-12-01 00:00:00\","
+"        \"end_time\": \"2015-12-30 23:00:00\","
+"        \"output_interval\": 3600"
 "    }"
 "}";
 
@@ -819,13 +884,26 @@ TEST_F(Formulation_Manager_Test, read_external_attributes) {
     if (test_bmi_cpp_lib == "")
       GTEST_SKIP() << "Skipping external attributes test, can't find libtestbmicppmodel.so";
 
-    std::stringstream stream;
-    stream << fix_paths(EXAMPLE_5);
+    std::stringstream stream_a;
+    stream_a << fix_paths(EXAMPLE_5_a);
+
+    std::stringstream stream_b;
+    stream_b << fix_paths(EXAMPLE_5_b);
 
     std::ostream* ptr = &std::cout;
     std::shared_ptr<std::ostream> s_ptr(ptr, [](void*) {});
     utils::StreamHandler catchment_output(s_ptr);
 
+    time_step_t ts = 2;
+    std::array<double, 5> values;
+    std::vector<std::string> str_values;
+
+    /**
+     * Lambda to add a feature to the fabric, and then assert that its properties exists.
+     *
+     * Assertions:
+     * - Asserts that the feature with `id` correctly has all properties in `properties`.
+     */
     auto add_and_check_feature = [&, this](const std::string& id, geojson::PropertyMap properties) {
       this->add_feature(id, properties);
       auto feature = this->fabric->get_feature(id);
@@ -833,36 +911,21 @@ TEST_F(Formulation_Manager_Test, read_external_attributes) {
         ASSERT_TRUE(feature->has_property(pair.first));
     };
 
-    auto manager = realization::Formulation_Manager(stream);
-  
-    add_and_check_feature("cat-67", geojson::PropertyMap{
-      { "MODEL_VAR_2", geojson::JSONProperty{"MODEL_VAR_2", 10 } },
-      { "n",           geojson::JSONProperty{"n",           1.70352 } },
-    });
-
-    add_and_check_feature("cat-52", geojson::PropertyMap{
-      { "MODEL_VAR_2", geojson::JSONProperty{"MODEL_VAR_2", 15 } },
-      { "pi",           geojson::JSONProperty{"pi",         3.14159 } },
-    });
-
-    add_and_check_feature("cat-27115", geojson::PropertyMap{
-      { "MODEL_VAR_2", geojson::JSONProperty{"MODEL_VAR_2", 20 } },
-      { "e",           geojson::JSONProperty{"e",           2.71828 } },
-    });
-
-    manager.read(this->fabric, catchment_output);
-
-    ASSERT_EQ(manager.get_size(), 3);
-    ASSERT_TRUE(manager.contains("cat-67"));
-    ASSERT_TRUE(manager.contains("cat-52"));
-    ASSERT_TRUE(manager.contains("cat-27115"));
-
-    time_step_t ts = 2;
-    std::array<double, 5> values;
-    std::vector<std::string> str_values;
-
-    auto check_formulation_values = [&](const std::string& id, std::initializer_list<double> expected) {
-        auto formulation = manager.get_formulation(id);
+    /**
+     * Lambda to check that formulation values are present in output.
+     * 
+     * Assertions:
+     * - Asserts that the formulation manager contains the given catchment ID.
+     * - Asserts that the expected values are contained within the output line at
+     *   timestep `ts`.
+     *
+     * @note The output line is checked by splitting it along its delimiter,
+     *       and parsing the resulting strings to doubles. Then, `std::find`
+     *       is used to check for the existence of the expected doubles.
+     */
+    auto check_formulation_values = [&](auto fm, const std::string& id, std::initializer_list<double> expected) {
+        ASSERT_TRUE(fm.contains(id));
+        auto formulation = fm.get_formulation(id);
         formulation->get_response(ts, 3600);
         boost::algorithm::split(str_values, formulation->get_output_line_for_timestep(ts), [](auto c) -> bool { return c == ','; });
         auto values_it = values.begin();
@@ -877,7 +940,42 @@ TEST_F(Formulation_Manager_Test, read_external_attributes) {
         }
     };
 
-    check_formulation_values("cat-67",    { 1.70352, 10.0 });
-    check_formulation_values("cat-52",    { 3.14159, 15.0 });
-    check_formulation_values("cat-27115", { 2.71828, 20.0 });
+    auto manager = realization::Formulation_Manager(stream_a);
+  
+    add_and_check_feature("cat-67", geojson::PropertyMap{
+      { "MODEL_VAR_2", geojson::JSONProperty{"MODEL_VAR_2", 10 } },
+      { "n",           geojson::JSONProperty{"n",           1.70352 } }
+    });
+
+    add_and_check_feature("cat-52", geojson::PropertyMap{
+      { "MODEL_VAR_2", geojson::JSONProperty{"MODEL_VAR_2", 15 } },
+      { "pi",           geojson::JSONProperty{"pi",         3.14159 } }
+    });
+
+    add_and_check_feature("cat-27115", geojson::PropertyMap{
+      { "MODEL_VAR_2", geojson::JSONProperty{"MODEL_VAR_2", 20 } },
+      { "e",           geojson::JSONProperty{"e",           2.71828 } }
+    });
+
+    manager.read(this->fabric, catchment_output);
+
+    ASSERT_EQ(manager.get_size(), 3);
+    check_formulation_values(manager, "cat-67",    { 1.70352, 10.0 });
+    check_formulation_values(manager, "cat-52",    { 3.14159, 15.0 });
+    check_formulation_values(manager, "cat-27115", { 2.71828, 20.0 });
+
+    this->fabric->remove_feature_by_id("cat-67");
+    this->fabric->remove_feature_by_id("cat-52");
+    this->fabric->remove_feature_by_id("cat-27115");
+
+    manager = realization::Formulation_Manager(stream_b);
+    
+    add_and_check_feature("cat-67", geojson::PropertyMap{
+      { "MODEL_VAR_2", geojson::JSONProperty{"MODEL_VAR_2", 9231 } },
+      { "val",           geojson::JSONProperty{"val",       7.41722 } }
+    });
+
+    manager.read(this->fabric, catchment_output);
+
+    check_formulation_values(manager, "cat-67", { 7.41722, 9231 });
 }
