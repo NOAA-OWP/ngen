@@ -96,7 +96,7 @@ class Simulation_Time
      * @return current_date_time_epoch
     */
 
-    time_t get_current_epoc_time()
+    time_t get_current_epoch_time()
     {
         return current_date_time_epoch;
     }   

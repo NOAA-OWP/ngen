@@ -20,9 +20,9 @@ namespace ngen
         public:
 
         #ifdef NGEN_MPI_ACTIVE
-            typedef hy_features::HY_Features_MPI feature_type;
+            using feature_type = hy_features::HY_Features_MPI;
         #else
-            typedef hy_features::HY_Features feature_type;
+            typedef feature_type = hy_features::HY_Features;
         #endif
 
         Layer(
@@ -55,7 +55,7 @@ namespace ngen
         /***
          * @brief Return the last timesteo that was processed by this layer in epoc time units
         */
-        time_t current_timestep_epoch_time() { return simulation_time.get_current_epoc_time(); }
+        time_t current_timestep_epoch_time() { return simulation_time.get_current_epoch_time(); }
 
 
         /***
@@ -79,7 +79,7 @@ namespace ngen
         const std::string& get_time_step_units() const { return this->description.time_step_units; }
 
         /***
-         * @breif Run one simulation timestep for each model in this layer
+         * @brief Run one simulation timestep for each model in this layer
         */
         virtual void update_models()
         {
@@ -102,23 +102,26 @@ namespace ngen
                                     r_c->get_output_line_for_timestep(output_time_index)+"\n";
                 r_c->write_output(output);
                 //TODO put this somewhere else.  For now, just trying to ensure we get m^3/s into nexus output
+                double area;
                 try{
-                    response *= (catchment_data->get_feature(id)->get_property("areasqkm").as_real_number() * 1000000);
-                }catch(std::invalid_argument &e)
-                {
-                    response *= (catchment_data->get_feature(id)->get_property("area_sqkm").as_real_number() * 1000000);
+                    area = catchment_data->get_feature(id)->get_property("areasqkm").as_real_number();
                 }
-                //TODO put this somewhere else as well, for now, an implicit assumption is that a modules get_response returns
+                catch(std::invalid_argument &e)
+                {
+                    area = catchment_data->get_feature(id)->get_property("area_sqkm").as_real_number();
+                }
+                double response_m_s = response * (area * 1000000);
+                //TODO put this somewhere else as well, for now, an implicit assumption is that a module's get_response returns
                 //m/timestep
                 //since we are operating on a 1 hour (3600s) dt, we need to scale the output appropriately
                 //so no response is m^2/hr...m^2/hr * 1hr/3600s = m^3/hr
-                response /= 3600.0;
+                double response_m_h = response_m_s / 3600.0;
                 //update the nexus with this flow
                 for(auto& nexus : features.destination_nexuses(id)) {
                     //TODO in a DENDRIDIC network, only one destination nexus per catchment
                     //If there is more than one, some form of catchment partitioning will be required.
                     //for now, only contribute to the first one in the list
-                    nexus->add_upstream_flow(response, id, output_time_index);
+                    nexus->add_upstream_flow(response_m_h, id, output_time_index);
                     std::cerr << "Add water to nexus ID = " << nexus->get_id() << " from catchment ID = " << id << " value = "
                               << response << ", ID = " << id << ", time-index = " << output_time_index << std::endl; 
                     break;
@@ -133,11 +136,11 @@ namespace ngen
 
         protected:
 
-        LayerDescription description;
-        std::vector<std::string> processing_units;
+        const LayerDescription description;
+        const std::vector<std::string> processing_units;
         Simulation_Time simulation_time;
         feature_type& features;
-        geojson::GeoJSON catchment_data;
+        const geojson::GeoJSON catchment_data;
         std::shared_ptr<pdm03_struct> pdm_et_data;
         long output_time_index;       
 
