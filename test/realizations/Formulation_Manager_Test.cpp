@@ -881,9 +881,6 @@ TEST_F(Formulation_Manager_Test, forcing_provider_specification) {
 }
 
 TEST_F(Formulation_Manager_Test, read_external_attributes) {
-    if (test_bmi_cpp_lib == "")
-      GTEST_SKIP() << "Skipping external attributes test, can't find libtestbmicppmodel.so";
-
     std::stringstream stream_a;
     stream_a << fix_paths(EXAMPLE_5_a);
 
