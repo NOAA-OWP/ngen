@@ -598,6 +598,49 @@ const std::string EXAMPLE_5 =
 "            \"forcing\": {"
 "                \"path\": \"./data/forcing/cat-67_2015-12-01 00_00_00_2015-12-30 23_00_00.csv\""
 "            }"
+"        },"
+"        \"cat-27115\": {"
+"            \"formulations\": ["
+"                {"
+"                    \"name\": \"bmi_multi\","
+"                    \"params\": {"
+"                        \"model_type_name\": \"bmi_multi_c++\","
+"                        \"forcing_file\": \"\","
+"                        \"init_config\": \"\","
+"                        \"allow_exceed_end_time\": true,"
+"                        \"main_output_variable\": \"OUTPUT_VAR_4\","
+"                        \"modules\": ["
+"                            {"
+"                                \"name\": \"bmi_c++\","
+"                                \"params\": {"
+"                                    \"model_type_name\": \"test_bmi_c++\","
+"                                    \"library_file\": \"" + test_bmi_cpp_lib + "\","
+"                                    \"init_config\": \"" + test_bmi_cpp_cfg + "\","
+"                                    \"allow_exceed_end_time\": true,"
+"                                    \"main_output_variable\": \"OUTPUT_VAR_4\","
+"                                    \"uses_forcing_file\": false,"
+"                                    \"model_params\": {"
+"                                        \"MODEL_VAR_1\": {"
+"                                            \"source\": \"hydrofabric\","
+"                                            \"from\": \"e\""
+"                                        },"
+"                                        \"MODEL_VAR_2\": {"
+"                                            \"source\": \"hydrofabric\""
+"                                        }"
+"                                    },"
+"                                    \"" BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES "\": {"
+"                                        \"INPUT_VAR_1\": \"Q2D\","
+"                                        \"INPUT_VAR_2\": \"Q2D\""
+"                                    }"
+"                                }"
+"                            }"
+"                        ]"
+"                    }"
+"                }"
+"            ],"
+"            \"forcing\": {"
+"                \"path\": \"./data/forcing/cat-27115-nwm-aorc-variant-derived-format.csv\""
+"            }"
 "        }"
 "    }"
 "}";
@@ -794,16 +837,9 @@ TEST_F(Formulation_Manager_Test, forcing_provider_specification) {
 }
 
 TEST_F(Formulation_Manager_Test, read_external_attributes) {
-    if (utils::FileChecker::find_first_readable({
-      "../../extern/test_bmi_cpp/cmake_build/libtestbmicppmodel.so",
-      "../extern/test_bmi_cpp/cmake_build/libtestbmicppmodel.so",
-      "./extern/test_bmi_cpp/cmake_build/libtestbmicppmodel.so",
-      "../../extern/test_bmi_cpp/build/libtestbmicppmodel.so",
-      "../extern/test_bmi_cpp/build/libtestbmicppmodel.so",
-      "./extern/test_bmi_cpp/build/libtestbmicppmodel.so"
-    }) == "") {
+    if (test_bmi_cpp_lib == "")
       GTEST_SKIP() << "Skipping external attributes test, can't find libtestbmicppmodel.so";
-    }
+
     std::stringstream stream;
     stream << fix_paths(EXAMPLE_5);
 
@@ -811,34 +847,40 @@ TEST_F(Formulation_Manager_Test, read_external_attributes) {
     std::shared_ptr<std::ostream> s_ptr(ptr, [](void*) {});
     utils::StreamHandler catchment_output(s_ptr);
 
+    auto add_and_check_feature = [&, this](const std::string& id, geojson::PropertyMap properties) {
+      this->add_feature(id, properties);
+      auto feature = this->fabric->get_feature(id);
+      for (auto& pair : properties)
+        ASSERT_TRUE(feature->has_property(pair.first));
+    };
+
     auto manager = realization::Formulation_Manager(stream);
-    this->add_feature("cat-67", geojson::PropertyMap{
+  
+    add_and_check_feature("cat-67", geojson::PropertyMap{
       { "MODEL_VAR_2", geojson::JSONProperty{"MODEL_VAR_2", 10 } },
       { "n",           geojson::JSONProperty{"n",           1.70352 } },
     });
 
-    this->add_feature("cat-52", geojson::PropertyMap{
+    add_and_check_feature("cat-52", geojson::PropertyMap{
       { "MODEL_VAR_2", geojson::JSONProperty{"MODEL_VAR_2", 15 } },
       { "pi",           geojson::JSONProperty{"pi",         3.14159 } },
     });
 
-    auto feature = this->fabric->get_feature("cat-67");
-    ASSERT_TRUE(feature->has_property("MODEL_VAR_2"));
-    ASSERT_TRUE(feature->has_property("n"));
-
-    feature = this->fabric->get_feature("cat-52");
-    ASSERT_TRUE(feature->has_property("MODEL_VAR_2"));
-    ASSERT_TRUE(feature->has_property("pi"));
+    add_and_check_feature("cat-27115", geojson::PropertyMap{
+      { "MODEL_VAR_2", geojson::JSONProperty{"MODEL_VAR_2", 20 } },
+      { "e",           geojson::JSONProperty{"e",           2.71828 } },
+    });
 
     manager.read(this->fabric, catchment_output);
 
-    ASSERT_EQ(manager.get_size(), 2);
+    ASSERT_EQ(manager.get_size(), 3);
     ASSERT_TRUE(manager.contains("cat-67"));
     ASSERT_TRUE(manager.contains("cat-52"));
+    ASSERT_TRUE(manager.contains("cat-27115"));
 
     time_step_t ts = 2;
     std::array<double, 5> values;
-    std::array<std::string, 4> str_values;
+    std::vector<std::string> str_values;
 
     auto check_formulation_values = [&](const std::string& id, std::initializer_list<double> expected) {
         auto formulation = manager.get_formulation(id);
@@ -856,6 +898,7 @@ TEST_F(Formulation_Manager_Test, read_external_attributes) {
         }
     };
 
-    check_formulation_values("cat-67", { 1.70352, 10.0 });
-    check_formulation_values("cat-52", { 3.14159, 15.0 });
+    check_formulation_values("cat-67",    { 1.70352, 10.0 });
+    check_formulation_values("cat-52",    { 3.14159, 15.0 });
+    check_formulation_values("cat-27115", { 2.71828, 20.0 });
 }

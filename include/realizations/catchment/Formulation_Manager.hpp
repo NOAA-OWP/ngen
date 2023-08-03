@@ -186,9 +186,11 @@ namespace realization {
                           }
 
                           // Handle multi-bmi
-                          if (formulation.second.count("params.modules") > 0) {
-                            decltype(auto) nested_modules = formulation.second.get_child("params.modules");
-                            for (decltype(auto) nested_formulation : nested_modules) {
+                          // FIXME: this will not handle doubly nested multi-BMI configs,
+                          //        might need a recursive helper here?
+                          decltype(auto) nested_modules = formulation.second.get_child_optional("params.modules");
+                          if (nested_modules) {
+                            for (decltype(auto) nested_formulation : *nested_modules) {
                                 decltype(auto) nested_model_params = nested_formulation.second.get_child_optional("params.model_params");
                                 if (nested_model_params) {
                                     parse_external_model_params(*nested_model_params, catchment_feature);
@@ -572,6 +574,11 @@ namespace realization {
                                           << "Must be one of: Natural (int), Real (double), Boolean, or String" << '\n';
                                 break;
                         }
+                    } else {
+                        std::cerr << "WARNING Failed to parse external parameter: catchment `"
+                                  << catchment_feature->get_id()
+                                  << "` does not contain the property `"
+                                  << param_name << "`\n";
                     }
                 }
 
@@ -596,16 +603,22 @@ namespace realization {
                     decltype(auto) param_source = param.second.at("source");
                     decltype(auto) param_source_name = param_source.as_string();
                     if (param_source_name != "hydrofabric") {
-                        // temporary until the logic for alternative sources is designed
+                        // TODO: temporary until the logic for alternative sources is designed
                         throw std::logic_error("ERROR: 'model_params' source `" + param_source_name + "` not currently supported. Only `hydrofabric` is supported.");
                     }
 
+                    // Property name in the feature properties is either
+                    // the value of key "from", or has the same name as
+                    // the expected model parameter key
                     decltype(auto) param_name = param.second.has_key("from")
                         ? param.second.at("from").as_string()
                         : param.first;
 
                     if (catchment_feature->has_property(param_name)) {
                         auto catchment_attribute = catchment_feature->get_property(param_name);
+
+                        // Use param.first in the `.emplace` calls instead of param_name since
+                        // the expected name is given by the key of the model_params values.
                         switch (catchment_attribute.get_type()) {
                             case geojson::PropertyType::Natural:
                                 attr.emplace(param.first, geojson::JSONProperty(param.first, catchment_attribute.as_natural_number()));
@@ -623,6 +636,8 @@ namespace realization {
                             case geojson::PropertyType::List:
                             case geojson::PropertyType::Object:
                             default:
+                                // TODO: Should list/object values be passed to model parameters?
+                                //       Typically, feature properties *should* be scalars.
                                 std::cerr << "WARNING: property type " << static_cast<int>(catchment_attribute.get_type()) << " not allowed as model parameter. "
                                           << "Must be one of: Natural (int), Real (double), Boolean, or String" << '\n';
                                 break;
