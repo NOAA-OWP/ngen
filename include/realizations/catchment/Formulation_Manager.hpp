@@ -617,7 +617,8 @@ namespace realization {
             void parse_external_model_params(geojson::PropertyMap& model_params, const geojson::Feature catchment_feature) {
                 geojson::PropertyMap attr {};
                 for (decltype(auto) param : model_params) {
-                    if (!param.second.has_key("source")) {
+                    // Check for type to short-circuit. If param.second is not an object, `.has_key()` will throw
+                    if (param.second.get_type() != geojson::PropertyType::Object || !param.second.has_key("source")) {
                         attr.emplace(param.first, param.second);
                         continue;
                     }
