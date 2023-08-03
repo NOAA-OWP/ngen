@@ -180,6 +180,7 @@ namespace realization {
                       auto catchment_feature = fabric->get_feature(catchment_index);
 
                       for (auto &formulation: *formulations) {
+                          // Handle single-bmi
                           decltype(auto) model_params = formulation.second.get_child_optional("params.model_params");
                           if (model_params) {
                               parse_external_model_params(*model_params, catchment_feature);
@@ -382,11 +383,32 @@ namespace realization {
                                                                    identifier);
                                                             
                 // parse any external model parameters in this config
+
+                // handle single-bmi
                 if (global_properties_copy.count("model_params") > 0) {
                     decltype(auto) model_params = global_properties_copy.at("model_params");
                     geojson::PropertyMap model_params_copy = model_params.get_values();
                     parse_external_model_params(model_params_copy, feature);
                     global_properties_copy.at("model_params") = geojson::JSONProperty("model_params", model_params_copy);
+                }
+
+                // handle multi-bmi
+                // FIXME: this seems inefficient -- is there a better way?
+                if (global_properties_copy.count("modules") > 0) {
+                    decltype(auto) nested_modules = global_properties_copy.at("modules").as_list();
+                    for (auto& bmi_module : nested_modules) {
+                        geojson::PropertyMap module_def = bmi_module.get_values();
+                        geojson::PropertyMap module_params = module_def.at("params").get_values();
+                        if (module_params.count("model_params") > 0) {
+                            decltype(auto) model_params = module_params.at("model_params");
+                            geojson::PropertyMap model_params_copy = model_params.get_values();
+                            parse_external_model_params(model_params_copy, feature);
+                            module_params.at("model_params") = geojson::JSONProperty("model_params", model_params_copy);
+                        }
+                        module_def.at("params") = geojson::JSONProperty("params", module_params);
+                        bmi_module = geojson::JSONProperty("", module_def);
+                    }
+                    global_properties_copy.at("modules") = geojson::JSONProperty("", nested_modules);
                 }
         
                 missing_formulation->create_formulation(global_properties_copy);
