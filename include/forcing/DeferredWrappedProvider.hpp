@@ -137,7 +137,7 @@ namespace data_access {
             }
 
             // Confirm this will provide everything needed
-            const vector<string> &available = provider->get_available_variable_names();
+            const std::vector<std::string> &available = provider->get_available_variable_names();
             for (const std::string &requiredName : providedOutputs) {
                 if (std::find(available.begin(), available.end(), requiredName) == available.end()) {
                     setMessage = "Given provider does not provide the required " + requiredName;

@@ -48,7 +48,7 @@ Bmi_Cpp_Adapter::Bmi_Cpp_Adapter(const std::string& type_name, std::string libra
             throw e;
         }
         catch (...) {
-            const std::exception_ptr& e = current_exception();
+            const std::exception_ptr& e = std::current_exception();
             // Make sure this is set to 'true' after this function call finishes
             //TODO: This construct may not be necessary for the C++ adapter because the shared_ptr has a lambda set up to destroy the model?
             model_initialized = true;

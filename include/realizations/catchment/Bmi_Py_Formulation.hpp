@@ -23,9 +23,9 @@ namespace realization {
 
         Bmi_Py_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing, utils::StreamHandler output_stream);
 
-        const vector<string> get_bmi_input_variables() override;
+        const std::vector<std::string> get_bmi_input_variables() override;
 
-        const vector<string> get_bmi_output_variables() override;
+        const std::vector<std::string> get_bmi_output_variables() override;
 
         std::string get_formulation_type() override;
 
@@ -51,7 +51,7 @@ namespace realization {
          * @param timestep The time step for which data is desired.
          * @return A delimited string with all the output variable values for the given time step.
          */
-        string get_output_line_for_timestep(int timestep, std::string delimiter) override;
+        std::string get_output_line_for_timestep(int timestep, std::string delimiter) override;
 
         /**
          * Get the model response for a time step.
@@ -89,19 +89,19 @@ namespace realization {
          */
         double get_response(time_step_t t_index, time_step_t t_delta) override;
 
-        bool is_bmi_input_variable(const string &var_name) override;
+        bool is_bmi_input_variable(const std::string &var_name) override;
 
-        bool is_bmi_output_variable(const string &var_name) override;
+        bool is_bmi_output_variable(const std::string &var_name) override;
 
     protected:
 
-        shared_ptr<models::bmi::Bmi_Py_Adapter> construct_model(const geojson::PropertyMap &properties) override;
+        std::shared_ptr<models::bmi::Bmi_Py_Adapter> construct_model(const geojson::PropertyMap &properties) override;
 
         time_t convert_model_time(const double &model_time) override;
 
-        double get_var_value_as_double(const string &var_name) override;
+        double get_var_value_as_double(const std::string &var_name) override;
 
-        double get_var_value_as_double(const int &index, const string &var_name) override;
+        double get_var_value_as_double(const int &index, const std::string &var_name) override;
 
         /**
          * Test whether backing model has run BMI ``Initialize``.

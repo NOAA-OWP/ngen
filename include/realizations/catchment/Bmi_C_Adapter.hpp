@@ -36,7 +36,7 @@ namespace models {
              * @param registration_func The name for the @see bmi_registration_function.
              * @param output The output stream handler.
              */
-            explicit Bmi_C_Adapter(const string &type_name, std::string library_file_path, std::string forcing_file_path,
+            explicit Bmi_C_Adapter(const std::string &type_name, std::string library_file_path, std::string forcing_file_path,
                                    bool allow_exceed_end, bool has_fixed_time_step,
                                    const std::string& registration_func, utils::StreamHandler output);
 
@@ -53,7 +53,7 @@ namespace models {
              * @param registration_func The name for the @see bmi_registration_function.
              * @param output The output stream handler.
              */
-            Bmi_C_Adapter(const string &type_name, std::string library_file_path, std::string bmi_init_config,
+            Bmi_C_Adapter(const std::string &type_name, std::string library_file_path, std::string bmi_init_config,
                           std::string forcing_file_path, bool allow_exceed_end, bool has_fixed_time_step,
                           std::string registration_func, utils::StreamHandler output);
 
@@ -81,7 +81,7 @@ namespace models {
              * @param output The output stream handler.
              * @param do_initialization Whether initialization should be performed during construction or deferred.
              */
-            Bmi_C_Adapter(const string &type_name, std::string library_file_path, std::string bmi_init_config,
+            Bmi_C_Adapter(const std::string &type_name, std::string library_file_path, std::string bmi_init_config,
                           std::string forcing_file_path, bool allow_exceed_end, bool has_fixed_time_step,
                           std::string registration_func, utils::StreamHandler output, bool do_initialization);
 
@@ -124,7 +124,7 @@ namespace models {
                 finalizeForCAdapter();
             }
 
-            string GetComponentName() override;
+            std::string GetComponentName() override;
 
             /**
              * Get the backing model's current time.
