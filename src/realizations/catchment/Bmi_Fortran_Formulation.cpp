@@ -45,11 +45,11 @@ std::string Bmi_Fortran_Formulation::get_formulation_type() {
     return "bmi_fortran";
 }
 
-double Bmi_Fortran_Formulation::get_var_value_as_double(const string &var_name) {
+double Bmi_Fortran_Formulation::get_var_value_as_double(const std::string &var_name) {
     return get_var_value_as_double(0, var_name);
 }
 
-double Bmi_Fortran_Formulation::get_var_value_as_double(const int &index, const string &var_name) {
+double Bmi_Fortran_Formulation::get_var_value_as_double(const int &index, const std::string &var_name) {
     // TODO: consider different way of handling (and how to document) cases like long double or unsigned long long that
     //  don't fit or might convert inappropriately
     std::string type = get_bmi_model()->GetVarType(var_name);
@@ -92,7 +92,7 @@ double Bmi_Fortran_Formulation::get_var_value_as_double(const int &index, const 
     " as double: no logic for converting variable type " + type);
 }
 
-string Bmi_Fortran_Formulation::get_output_line_for_timestep(int timestep, std::string delimiter) {
+std::string Bmi_Fortran_Formulation::get_output_line_for_timestep(int timestep, std::string delimiter) {
     // TODO: something must be added to store values if more than the current time step is wanted
     // TODO: if such a thing is added, it should probably be configurable to turn it off
 
