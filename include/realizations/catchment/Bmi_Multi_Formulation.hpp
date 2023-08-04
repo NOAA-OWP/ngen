@@ -13,8 +13,6 @@
 #define BMI_REALIZATION_CFG_PARAM_REQ__MODULES "modules"
 #define BMI_REALIZATION_CFG_PARAM_OPT__DEFAULT_OUT_VALS "default_output_values"
 
-using namespace std;
-
 class Bmi_Multi_Formulation_Test;
 class Bmi_Cpp_Multi_Array_Test;
 
@@ -38,7 +36,7 @@ namespace realization {
          * @param forcing_config
          * @param output_stream
          */
-        Bmi_Multi_Formulation(string id, std::shared_ptr<data_access::GenericDataProvider> forcing_provider, utils::StreamHandler output_stream)
+        Bmi_Multi_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing_provider, utils::StreamHandler output_stream)
                 : Bmi_Formulation(std::move(id), forcing_provider, output_stream) { };
 
         virtual ~Bmi_Multi_Formulation() {};
@@ -120,7 +118,7 @@ namespace realization {
          */
         //const vector<std::string> &get_available_forcing_outputs();
         //const vector<std::string> &get_available_variable_names() override { return get_available_forcing_outputs(); }
-        const vector<std::string> &get_available_variable_names() override;
+        const std::vector<std::string> &get_available_variable_names() override;
 
         /**
         * Get the input variables of 
@@ -128,7 +126,7 @@ namespace realization {
         *
         * @return The input variables of the first nested BMI model.
         */
-        const vector<string> get_bmi_input_variables() override {
+        const std::vector<string> get_bmi_input_variables() override {
             return modules[0]->get_bmi_input_variables();
         }
 
@@ -139,7 +137,7 @@ namespace realization {
          *
          * @return The output variables of the last nested BMI model.
          */
-        const vector<string> get_bmi_output_variables() override {
+        const std::vector<string> get_bmi_output_variables() override {
             return modules.back()->get_bmi_output_variables();
         }
 
@@ -163,7 +161,7 @@ namespace realization {
          * @see get_config_mapped_variable_name(string, bool, bool)
          * @see get_config_mapped_variable_name(string, shared_ptr, shared_ptr)
          */
-        const string &get_config_mapped_variable_name(const string &model_var_name) override;
+        const std::string &get_config_mapped_variable_name(const std::string &model_var_name) override;
 
         /**
          * When possible, translate a variable name for the first or last BMI model to an internally recognized name.
@@ -181,7 +179,7 @@ namespace realization {
          * @param check_last Whether an output variable mapping for the last module should sought.
          * @return Either the translated equivalent variable name, or the provided name if there is not a mapping entry.
          */
-        const string &get_config_mapped_variable_name(const string &model_var_name, bool check_first, bool check_last);
+        const std::string &get_config_mapped_variable_name(const std::string &model_var_name, bool check_first, bool check_last);
 
         /**
          * When possible, translate the name of an output variable for one BMI model to an input variable for another.
@@ -207,11 +205,11 @@ namespace realization {
          * @param in_module The module needing a translation of ``output_var_name`` to one of its input variable names.
          * @return Either the translated equivalent variable name, or the provided name if there is not a mapping entry.
          */
-        const string &get_config_mapped_variable_name(const string &output_var_name,
+        const std::string &get_config_mapped_variable_name(const std::string &output_var_name,
                                                       const shared_ptr<Bmi_Formulation>& out_module,
                                                       const shared_ptr<Bmi_Formulation>& in_module);
 
-        const string &get_forcing_file_path() const override;
+        const std::string &get_forcing_file_path() const override;
 
         /**
          * Get the inclusive beginning of the period of time over which this instance can provide data for this forcing.
@@ -372,7 +370,7 @@ namespace realization {
             return modules[get_index_for_primary_module()]->get_data_start_time();
         }
 
-        string get_output_line_for_timestep(int timestep, std::string delimiter) override;
+        std::string get_output_line_for_timestep(int timestep, std::string delimiter) override;
 
         double get_response(time_step_t t_index, time_step_t t_delta) override;
 
@@ -442,7 +440,7 @@ namespace realization {
             return availableData[output_name]->get_values(CatchmentAggrDataSelector(this->get_catchment_id(),output_name, init_time, duration_s, output_units), m);
         }
 
-        bool is_bmi_input_variable(const string &var_name) override;
+        bool is_bmi_input_variable(const std::string &var_name) override;
 
         /**
          * Test whether all backing models have fixed time step size.
@@ -451,7 +449,7 @@ namespace realization {
          */
         bool is_bmi_model_time_step_fixed() override;
 
-        bool is_bmi_output_variable(const string &var_name) override;
+        bool is_bmi_output_variable(const std::string &var_name) override;
 
         bool is_bmi_using_forcing_file() const override;
 
@@ -480,7 +478,7 @@ namespace realization {
          * @param name The name of the forcing property for which the current value is desired.
          * @return Whether the property's value is an aggregate sum.
          */
-        bool is_property_sum_over_time_step(const string &name) override {
+        bool is_property_sum_over_time_step(const std::string &name) override {
             if (availableData.empty() || availableData.find(name) == availableData.end()) {
                 throw runtime_error(
                         get_formulation_type() + " cannot get whether unknown property " + name + " is summation");
