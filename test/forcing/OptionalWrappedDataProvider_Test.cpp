@@ -4,7 +4,6 @@
 #include "TrivialForcingProvider.hpp"
 #include "OptionalWrappedDataProvider.hpp"
 
-using namespace std;
 using namespace data_access;
 
 class OptionalWrappedDataProvider_Test : public ::testing::Test {
@@ -16,7 +15,7 @@ protected:
 
     test::TrivialForcingProvider backingProvider;
 
-    vector<OptionalWrappedDataProvider> providers;
+    std::vector<OptionalWrappedDataProvider> providers;
 
 };
 
