@@ -4,8 +4,6 @@
 #include <exception>
 #include <utility>
 
-using namespace std;
-
 namespace models {
     namespace external {
 
