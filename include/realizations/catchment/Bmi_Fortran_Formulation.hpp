@@ -46,7 +46,7 @@ namespace realization {
          * @param timestep The time step for which data is desired.
          * @return A delimited string with all the output variable values for the given time step.
          */
-        string get_output_line_for_timestep(int timestep, std::string delimiter) override;
+        std::string get_output_line_for_timestep(int timestep, std::string delimiter) override;
 
         /**
          * Get the model response for a time step.
@@ -102,9 +102,9 @@ namespace realization {
             return (time_t) (get_bmi_model()->convert_model_time_to_seconds(model_time));
         }
 
-        double get_var_value_as_double(const string &var_name) override;
+        double get_var_value_as_double(const std::string &var_name) override;
 
-        double get_var_value_as_double(const int &index, const string &var_name) override;
+        double get_var_value_as_double(const int &index, const std::string &var_name) override;
 
         friend class Bmi_Multi_Formulation;
 
