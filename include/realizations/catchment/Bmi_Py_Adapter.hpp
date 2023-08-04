@@ -22,7 +22,6 @@ class Bmi_Py_Adapter_Test;
 namespace py = pybind11;
 
 using namespace pybind11::literals; // to bring in the `_a` literal for pybind11 keyword args functionality
-using namespace std;
 
 namespace models {
     namespace bmi {
@@ -35,10 +34,10 @@ namespace models {
 
         public:
 
-            Bmi_Py_Adapter(const string &type_name, std::string bmi_init_config, const string &bmi_python_type,
+            Bmi_Py_Adapter(const std::string &type_name, std::string bmi_init_config, const std::string &bmi_python_type,
                            bool allow_exceed_end, bool has_fixed_time_step, utils::StreamHandler output);
 
-            Bmi_Py_Adapter(const string &type_name, std::string bmi_init_config, const string &bmi_python_type,
+            Bmi_Py_Adapter(const std::string &type_name, std::string bmi_init_config, const std::string &bmi_python_type,
                            std::string forcing_file_path, bool allow_exceed_end, bool has_fixed_time_step,
                            utils::StreamHandler output);
 
@@ -51,7 +50,7 @@ namespace models {
              *             variable, which is assume to be of the necessary size.
              */
             template <typename T>
-            void copy_to_array(const string& name, T *dest)
+            void copy_to_array(const std::string& name, T *dest)
             {
                 py::array_t<T> backing_array = bmi_model->attr("get_value_ptr")(name);
                 auto uncheck_proxy = backing_array.template unchecked<1>();
@@ -68,7 +67,7 @@ namespace models {
              * @return A vector containing the values of the desired BMI variable.
              */
             template <typename T>
-            std::vector<T> copy_to_vector(const string& name)
+            std::vector<T> copy_to_vector(const std::string& name)
             {
                 py::array_t<T> backing_array = bmi_model->attr("get_value_ptr")(name);
                 std::vector<T> dest(backing_array.size());
@@ -83,7 +82,7 @@ namespace models {
                 bmi_model->attr("finalize")();
             }
 
-            string GetComponentName() override;
+            std::string GetComponentName() override;
 
             double GetCurrentTime() override;
 
@@ -91,11 +90,11 @@ namespace models {
 
             int GetInputItemCount() override;
 
-            vector<std::string> GetInputVarNames() override;
+            std::vector<std::string> GetInputVarNames() override;
 
             int GetOutputItemCount() override;
 
-            vector<std::string> GetOutputVarNames() override;
+            std::vector<std::string> GetOutputVarNames() override;
 
             int GetGridEdgeCount(const int grid) override {
                 return py::int_(bmi_model->attr("get_grid_edge_count")(grid));
@@ -153,7 +152,7 @@ namespace models {
                 get_and_copy_grid_array<double>("get_grid_spacing", grid, spacing, GetGridRank(grid), "float");
             }
 
-            string GetGridType(const int grid) override {
+            std::string GetGridType(const int grid) override {
                 return py::str(bmi_model->attr("get_grid_type")(grid));
             }
 
@@ -189,13 +188,13 @@ namespace models {
 
             double GetStartTime() override;
 
-            string GetTimeUnits() override;
+            std::string GetTimeUnits() override;
 
             double GetTimeStep() override;
 
-            string GetVarType(std::string name) override;
+            std::string GetVarType(std::string name) override;
 
-            string GetVarUnits(std::string name) override;
+            std::string GetVarUnits(std::string name) override;
 
             int GetVarGrid(std::string name) override;
 
@@ -203,7 +202,7 @@ namespace models {
 
             int GetVarNbytes(std::string name) override;
 
-            string GetVarLocation(std::string name) override;
+            std::string GetVarLocation(std::string name) override;
 
             void GetValue(std::string name, void *dest) override;
 
@@ -417,10 +416,10 @@ namespace models {
              * @throws runtime_error Thrown if @ref GetVarType and @ref GetVarItemsize functions return a combination for
              *                       which there is not support for mapping to a native type in the framework.
              */
-            void get_value_at_indices(const string& name, void *dest, int *inds, int count, bool is_all_indices) {
-                string val_type = GetVarType(name);
+            void get_value_at_indices(const std::string& name, void *dest, int *inds, int count, bool is_all_indices) {
+                std::string val_type = GetVarType(name);
                 size_t val_item_size = (size_t)GetVarItemsize(name);
-                vector<string> in_v = GetInputVarNames();
+                std::vector<string> in_v = GetInputVarNames();
 
                 // The available types and how they are handled here should match what is in SetValueAtIndices
                 if (val_type == "int" && val_item_size == sizeof(short))
@@ -468,10 +467,10 @@ namespace models {
              * @return
              */
             template <typename T>
-            py::array_t<T> get_via_numpy_array(const string& name, void *dest, const int *indices, int item_count,
+            py::array_t<T> get_via_numpy_array(const std::string& name, void *dest, const int *indices, int item_count,
                                                size_t item_size, bool is_all_indices)
             {
-                string val_type = GetVarType(name);
+                std::string val_type = GetVarType(name);
                 py::array_t<T, py::array::c_style> dest_array
                     = np.attr("zeros")(item_count, "dtype"_a = val_type, "order"_a = "C");
                 if (is_all_indices) {
@@ -607,8 +606,8 @@ namespace models {
              * @param np_type The name of the Python dtype to use for the wrapped Numpy array of update values.
              */
             template <typename T>
-            void set_value_at_indices(const string &name, const int *inds, int count, void* cxx_array,
-                                      const string &np_type)
+            void set_value_at_indices(const std::string &name, const int *inds, int count, void* cxx_array,
+                                      const std::string &np_type)
             {
                 py::array_t<int> index_array(py::buffer_info(inds, count));
                 py::array_t<T> src_array(py::buffer_info((T*)cxx_array, count));
@@ -633,7 +632,7 @@ namespace models {
         private:
 
             /** Fully qualified Python type name for backing module. */
-            string bmi_type_py_full_name;
+            std::string bmi_type_py_full_name;
             /** A binding to the Python numpy package/module. */
             py::object np;
             /** A pointer to a string with the parent package name of the Python type referenced by ``py_bmi_type_ref``. */
@@ -656,7 +655,7 @@ namespace models {
                     return;
                 try {
                     separate_package_and_simple_name();
-                    vector<string> moduleComponents = {*bmi_type_py_module_name, *bmi_type_py_class_name};
+                    std::vector<string> moduleComponents = {*bmi_type_py_module_name, *bmi_type_py_class_name};
                     // This is a class object for the BMI module Python class
                     py::object bmi_py_class = utils::ngenPy::InterpreterUtil::getPyModule(moduleComponents);
                     // This is the actual backing model object
@@ -668,8 +667,8 @@ namespace models {
                 }
                 // Record the exception message before re-throwing to handle subsequent function calls properly
                 // TODO: handle exceptions in better detail, without losing type information
-                catch (exception& e) {
-                    init_exception_msg = string(e.what());
+                catch (std::exception& e) {
+                    init_exception_msg = std::string(e.what());
                     // Make sure this is non-empty to be consistent with the above logic
                     if (init_exception_msg.empty()) {
                         init_exception_msg = "Unknown Python model initialization exception.";
@@ -722,13 +721,13 @@ namespace models {
              */
             inline void separate_package_and_simple_name() {
                 if (!model_initialized) {
-                    vector<string> split_name;
-                    string delimiter = ".";
-                    string name_string = bmi_type_py_full_name;
+                    std::vector<string> split_name;
+                    std::string delimiter = ".";
+                    std::string name_string = bmi_type_py_full_name;
 
                     size_t pos = 0;
-                    string token;
-                    while ((pos = name_string.find(delimiter)) != string::npos) {
+                    std::string token;
+                    while ((pos = name_string.find(delimiter)) != std::string::npos) {
                         token = name_string.substr(0, pos);
                         split_name.emplace_back(token);
                         name_string.erase(0, pos + delimiter.length());
