@@ -69,7 +69,7 @@ namespace data_access {
                             msg += ", " + providedOutputs[i];
                         }
                         msg += "])";
-                        throw runtime_error(msg);
+                        throw std::runtime_error(msg);
                     }
                 }
             }
@@ -105,7 +105,7 @@ namespace data_access {
                             def_it++;
                         }
                         msg += "])";
-                        throw runtime_error(msg);
+                        throw std::runtime_error(msg);
                     }
                 }
                 // Assuming the mapping is valid, set it for the instance
@@ -199,11 +199,11 @@ namespace data_access {
             
             // Balk if not in this instance's collection of outputs
             if (find(providedOutputs.begin(), providedOutputs.end(), output_name) == providedOutputs.end()) {
-                throw runtime_error("Unknown output " + output_name + " requested from wrapped provider");
+                throw std::runtime_error("Unknown output " + output_name + " requested from wrapped provider");
             }
             // Balk if this instance is not ready
             if (!isReadyToProvideData()) {
-                throw runtime_error("Cannot get value for " + output_name
+                throw std::runtime_error("Cannot get value for " + output_name
                                     + " from optional wrapped provider before it is ready");
             }
 

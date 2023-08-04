@@ -126,7 +126,7 @@ namespace realization {
         *
         * @return The input variables of the first nested BMI model.
         */
-        const std::vector<string> get_bmi_input_variables() override {
+        const std::vector<std::string> get_bmi_input_variables() override {
             return modules[0]->get_bmi_input_variables();
         }
 
@@ -137,7 +137,7 @@ namespace realization {
          *
          * @return The output variables of the last nested BMI model.
          */
-        const std::vector<string> get_bmi_output_variables() override {
+        const std::vector<std::string> get_bmi_output_variables() override {
             return modules.back()->get_bmi_output_variables();
         }
 
@@ -258,7 +258,7 @@ namespace realization {
             }
             // If not found ...
             if (availableData.empty() || availableData.find(var_name) == availableData.end()) {
-                throw runtime_error(get_formulation_type() + " cannot get output time for unknown \"" + variable_name + "\"");
+                throw std::runtime_error(get_formulation_type() + " cannot get output time for unknown \"" + variable_name + "\"");
             }
             return availableData[var_name]->get_data_start_time();
         }
@@ -310,7 +310,7 @@ namespace realization {
             }
             // If not found ...
             if (availableData.empty() || availableData.find(var_name) == availableData.end()) {
-                throw runtime_error(get_formulation_type() + " cannot get output time for unknown \"" + variable_name + "\"");
+                throw std::runtime_error(get_formulation_type() + " cannot get output time for unknown \"" + variable_name + "\"");
             }
             return availableData[var_name]->get_data_stop_time();
         }
@@ -334,7 +334,7 @@ namespace realization {
 
             // If not found ...
             if (availableData.empty() || availableData.find(var_name) == availableData.end()) {
-                throw runtime_error(get_formulation_type() + " cannot get output record duration for unknown \"" + var_name + "\"");
+                throw std::runtime_error(get_formulation_type() + " cannot get output record duration for unknown \"" + var_name + "\"");
             }
             return availableData[var_name]->record_duration();
         }
@@ -389,7 +389,7 @@ namespace realization {
          */
         size_t get_ts_index_for_time(const time_t &epoch_time) override {
             // TODO: come back and implement if actually necessary for this type; for now don't use
-            throw runtime_error("Bmi_Multi_Formulation does not yet implement get_ts_index_for_time");
+            throw std::runtime_error("Bmi_Multi_Formulation does not yet implement get_ts_index_for_time");
         }
 
         /**
@@ -422,7 +422,7 @@ namespace realization {
             
             // If not found ...
             if (availableData.empty() || availableData.find(output_name) == availableData.end()) {
-                throw runtime_error(get_formulation_type() + " cannot get output value for unknown " + output_name + SOURCE_LOC);
+                throw std::runtime_error(get_formulation_type() + " cannot get output value for unknown " + output_name + SOURCE_LOC);
             }
             return availableData[output_name]->get_value(CatchmentAggrDataSelector(this->get_catchment_id(),output_name, init_time, duration_s, output_units), m);
         }
@@ -435,7 +435,7 @@ namespace realization {
             std::string output_units = selector.get_output_units();
 
             if (availableData.empty() || availableData.find(output_name) == availableData.end()) {
-                throw runtime_error(get_formulation_type() + " cannot get output values for unknown " + output_name + SOURCE_LOC);
+                throw std::runtime_error(get_formulation_type() + " cannot get output values for unknown " + output_name + SOURCE_LOC);
             }
             return availableData[output_name]->get_values(CatchmentAggrDataSelector(this->get_catchment_id(),output_name, init_time, duration_s, output_units), m);
         }
@@ -480,7 +480,7 @@ namespace realization {
          */
         bool is_property_sum_over_time_step(const std::string &name) override {
             if (availableData.empty() || availableData.find(name) == availableData.end()) {
-                throw runtime_error(
+                throw std::runtime_error(
                         get_formulation_type() + " cannot get whether unknown property " + name + " is summation");
             }
             return availableData[name]->is_property_sum_over_time_step(name);

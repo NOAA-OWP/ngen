@@ -185,7 +185,7 @@ void Bmi_Py_Adapter_Test::TearDownTestSuite() {
  * @param file_basename The basename of the desired file.
  * @return The path (as a string) of the first found existing file, or empty string of no existing file was found.
  */
-std::string Bmi_Py_Adapter_Test::file_search(const vector<std::string> &parent_dir_options, const string &file_basename) {
+std::string Bmi_Py_Adapter_Test::file_search(const std::vector<std::string> &parent_dir_options, const std::string &file_basename) {
     // Build vector of paths by building combinations of the path and basename options
     std::vector<std::string> path_possibilities(parent_dir_options.size());
     for (int i = 0; i < parent_dir_options.size(); ++i)
@@ -204,8 +204,8 @@ std::string Bmi_Py_Adapter_Test::file_search(const vector<std::string> &parent_d
  * @param file_basename The collection of possible basenames for a sought file.
  * @return The path (as a string) of the first found existing file, or empty string of no existing file was found.
  */
-std::string Bmi_Py_Adapter_Test::file_search(const vector<std::string> &parent_dir_options,
-                                             const vector<std::string> &file_basenames) {
+std::string Bmi_Py_Adapter_Test::file_search(const std::vector<std::string> &parent_dir_options,
+                                             const std::vector<std::string> &file_basenames) {
     std::string foundPathForBasename;
     for (const std::string &basename : file_basenames) {
         foundPathForBasename = file_search(parent_dir_options, basename);

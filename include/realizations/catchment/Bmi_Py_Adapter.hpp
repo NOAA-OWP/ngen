@@ -246,7 +246,7 @@ namespace models {
                 } else if (py_type_name == "float" && item_size == sizeof(long double)) {
                     return "long double";
                 } else {
-                    throw runtime_error(
+                    throw std::runtime_error(
                             "(Bmi_Py_Adapter) Failed determining analogous C++ type for Python model '" + py_type_name +
                             "' type with size " + std::to_string(item_size) + " bytes.");
                 }
@@ -266,7 +266,7 @@ namespace models {
                 } else if (cxx_type_name == "float" || cxx_type_name == "double" || cxx_type_name == "long double") {
                     return "double";
                 } else {
-                    throw runtime_error("(Bmi_Py_Adapter) Failed determining analogous built-in Python type for C++ '" +
+                    throw std::runtime_error("(Bmi_Py_Adapter) Failed determining analogous built-in Python type for C++ '" +
                                         cxx_type_name + "' type");
                 }
             }
@@ -303,7 +303,7 @@ namespace models {
                     }
                 }
 
-                throw runtime_error("(Bmi_Py_Adapter) Failed determining analogous Python dtype for C++ '" +
+                throw std::runtime_error("(Bmi_Py_Adapter) Failed determining analogous Python dtype for C++ '" +
                                     cxx_type_name + "' type with size " + std::to_string(item_size) + " bytes.");
             }
 
@@ -419,7 +419,7 @@ namespace models {
             void get_value_at_indices(const std::string& name, void *dest, int *inds, int count, bool is_all_indices) {
                 std::string val_type = GetVarType(name);
                 size_t val_item_size = (size_t)GetVarItemsize(name);
-                std::vector<string> in_v = GetInputVarNames();
+                std::vector<std::string> in_v = GetInputVarNames();
 
                 // The available types and how they are handled here should match what is in SetValueAtIndices
                 if (val_type == "int" && val_item_size == sizeof(short))
@@ -439,7 +439,7 @@ namespace models {
                         get_via_numpy_array<long double>(name, dest, inds, count, val_item_size, is_all_indices);
                 }
                 else
-                    throw runtime_error(
+                    throw std::runtime_error(
                             "(Bmi_Py_Adapter) Failed attempt to GET values of BMI variable '" + name + "' from '" +
                             model_name + "' model:  model advertises unsupported combination of type (" + val_type +
                             ") and size (" + std::to_string(val_item_size) + ").");
@@ -636,9 +636,9 @@ namespace models {
             /** A binding to the Python numpy package/module. */
             py::object np;
             /** A pointer to a string with the parent package name of the Python type referenced by ``py_bmi_type_ref``. */
-            shared_ptr<string> bmi_type_py_module_name;
+            std::shared_ptr<std::string> bmi_type_py_module_name;
             /** A pointer to a string with the simple name of the Python type referenced by ``py_bmi_type_ref``. */
-            shared_ptr<string> bmi_type_py_class_name;
+            std::shared_ptr<std::string> bmi_type_py_class_name;
 
             /**
              * Construct the backing BMI model object, then call its BMI-native ``Initialize()`` function.
@@ -655,11 +655,11 @@ namespace models {
                     return;
                 try {
                     separate_package_and_simple_name();
-                    std::vector<string> moduleComponents = {*bmi_type_py_module_name, *bmi_type_py_class_name};
+                    std::vector<std::string> moduleComponents = {*bmi_type_py_module_name, *bmi_type_py_class_name};
                     // This is a class object for the BMI module Python class
                     py::object bmi_py_class = utils::ngenPy::InterpreterUtil::getPyModule(moduleComponents);
                     // This is the actual backing model object
-                    bmi_model = make_shared<py::object>(bmi_py_class());
+                    bmi_model = std::make_shared<py::object>(bmi_py_class());
                     bmi_model->attr("initialize")(bmi_init_config);
                 }
                 catch (std::runtime_error& e){ //Catch specific exception types so the type/message don't get erased
@@ -706,7 +706,7 @@ namespace models {
                     get_and_copy_grid_array<double>(name, grid, dest, shape[rank-index-1], "float");
                     return;
                 }else{
-                    throw runtime_error("GetGrid<X|Y|Z> coordinates not yet implemented for Python BMI adapter for grid type "+grid_type);
+                    throw std::runtime_error("GetGrid<X|Y|Z> coordinates not yet implemented for Python BMI adapter for grid type "+grid_type);
                 }
 
             }
@@ -721,7 +721,7 @@ namespace models {
              */
             inline void separate_package_and_simple_name() {
                 if (!model_initialized) {
-                    std::vector<string> split_name;
+                    std::vector<std::string> split_name;
                     std::string delimiter = ".";
                     std::string name_string = bmi_type_py_full_name;
 
@@ -737,7 +737,7 @@ namespace models {
                                                  + "'; expected format is <python_module>.<python_class>");
                     }
                     // What's left should be the class name
-                    bmi_type_py_class_name = make_shared<string>(name_string);
+                    bmi_type_py_class_name = std::make_shared<std::string>(name_string);
                     //split_name.pop_back();
                     // And then the split name should contain the module
                     // TODO: going to need to look at this again in the future; right now, assuming the format
@@ -745,7 +745,7 @@ namespace models {
                     //  module, but the current logic is going to interpret any complex parent module name as a single
                     //  top-level namespace package; e.g., ngen.namespacepackage.model works if ngen.namespacepackage is
                     //  a namespace package, but there would be problems with something like ngenpkg.innermodule1.model.
-                    bmi_type_py_module_name = make_shared<string>(boost::algorithm::join(split_name, delimiter));
+                    bmi_type_py_module_name = std::make_shared<std::string>(boost::algorithm::join(split_name, delimiter));
                 }
             }
 

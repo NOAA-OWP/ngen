@@ -71,7 +71,7 @@ namespace realization {
          * @see ForcingProvider
          */
         //const vector<std::string> &get_available_forcing_outputs() {
-        const vector<std::string> &get_available_variable_names() override {
+        const std::vector<std::string> &get_available_variable_names() override {
             if (is_model_initialized() && available_forcings.empty()) {
                 for (const std::string &output_var_name : get_bmi_model()->GetOutputVarNames()) {
                     available_forcings.push_back(output_var_name);
@@ -97,7 +97,7 @@ namespace realization {
          */
         time_t get_variable_time_begin(const std::string &variable_name) {
             // TODO: come back and implement if actually necessary for this type; for now don't use
-            throw runtime_error("Bmi_Modular_Formulation does not yet implement get_variable_time_begin");
+            throw std::runtime_error("Bmi_Modular_Formulation does not yet implement get_variable_time_begin");
         }
 
         /**
@@ -126,16 +126,16 @@ namespace realization {
         //time_t get_forcing_output_time_end(const std::string &output_name) {
         time_t get_variable_time_end(const std::string &varibale_name) {
             // TODO: come back and implement if actually necessary for this type; for now don't use
-            throw runtime_error("Bmi_Module_Formulation does not yet implement get_variable_time_end");
+            throw std::runtime_error("Bmi_Module_Formulation does not yet implement get_variable_time_end");
         }
 
         long get_data_stop_time() override {
             // TODO: come back and implement if actually necessary for this type; for now don't use
-            throw runtime_error("Bmi_Module_Formulation does not yet implement get_data_stop_time");
+            throw std::runtime_error("Bmi_Module_Formulation does not yet implement get_data_stop_time");
         }
 
         long record_duration() override {
-            throw runtime_error("Bmi_Module_Formulation does not yet implement record_duration");
+            throw std::runtime_error("Bmi_Module_Formulation does not yet implement record_duration");
         }
 
         /**
@@ -156,7 +156,7 @@ namespace realization {
             return get_bmi_model()->GetEndTime();
         }
 
-        const vector<std::string> &get_required_parameters() override {
+        const std::vector<std::string> &get_required_parameters() override {
             return REQUIRED_PARAMETERS;
         }
 
@@ -197,7 +197,7 @@ namespace realization {
          */
         size_t get_ts_index_for_time(const time_t &epoch_time) override {
             // TODO: come back and implement if actually necessary for this type; for now don't use
-            throw runtime_error("Bmi_Singular_Formulation does not yet implement get_ts_index_for_time");
+            throw std::runtime_error("Bmi_Singular_Formulation does not yet implement get_ts_index_for_time");
         }
 
         /**
@@ -222,7 +222,7 @@ namespace realization {
             //const std::vector<std::string> forcing_outputs = get_available_forcing_outputs();
             const std::vector<std::string> forcing_outputs = get_available_variable_names();
             if (std::find(forcing_outputs.begin(), forcing_outputs.end(), output_name) == forcing_outputs.end()) {
-                throw runtime_error(get_formulation_type() + " received invalid output forcing name " + output_name);
+                throw std::runtime_error(get_formulation_type() + " received invalid output forcing name " + output_name);
             }
             // TODO: do this, or something better, later; right now, just assume anything using this as a provider is
             //  consistent with times
@@ -291,7 +291,7 @@ namespace realization {
             //const std::vector<std::string> forcing_outputs = get_available_forcing_outputs();
             const std::vector<std::string> forcing_outputs = get_available_variable_names();
             if (std::find(forcing_outputs.begin(), forcing_outputs.end(), output_name) == forcing_outputs.end()) {
-                throw runtime_error(get_formulation_type() + " received invalid output forcing name " + output_name);
+                throw std::runtime_error(get_formulation_type() + " received invalid output forcing name " + output_name);
             }
             // TODO: do this, or something better, later; right now, just assume anything using this as a provider is
             //  consistent with times
@@ -363,11 +363,11 @@ namespace realization {
             return true;
         }
 
-        const vector<string> get_bmi_input_variables() override {
+        const std::vector<std::string> get_bmi_input_variables() override {
             return get_bmi_model()->GetInputVarNames();
         }
 
-        const vector<string> get_bmi_output_variables() override {
+        const std::vector<std::string> get_bmi_output_variables() override {
             return get_bmi_model()->GetOutputVarNames();
         }
 
@@ -449,7 +449,7 @@ namespace realization {
             return allow_model_exceed_end_time;
         }
 
-        const string &get_bmi_init_config() const {
+        const std::string &get_bmi_init_config() const {
             return bmi_init_config;
         }
 
@@ -462,7 +462,7 @@ namespace realization {
             return bmi_model;
         }
 
-        const string &get_forcing_file_path() const override {
+        const std::string &get_forcing_file_path() const override {
             return forcing_file_path;
         }
 
@@ -733,7 +733,7 @@ namespace realization {
             allow_model_exceed_end_time = allow_exceed_end;
         }
 
-        void set_bmi_init_config(const string &init_config) {
+        void set_bmi_init_config(const std::string &init_config) {
             bmi_init_config = init_config;
         }
 
@@ -763,7 +763,7 @@ namespace realization {
             bmi_using_forcing_file = uses_forcing_file;
         }
 
-        void set_forcing_file_path(const string &forcing_path) {
+        void set_forcing_file_path(const std::string &forcing_path) {
             forcing_file_path = forcing_path;
         }
 

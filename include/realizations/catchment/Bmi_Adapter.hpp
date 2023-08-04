@@ -9,8 +9,6 @@
 #include "State_Exception.hpp"
 #include "StreamHandler.hpp"
 
-using namespace std;
-
 namespace models {
     namespace bmi {
         /**
@@ -21,7 +19,7 @@ namespace models {
         class Bmi_Adapter : public ::bmi::Bmi {
         public:
 
-            Bmi_Adapter(string model_name, string bmi_init_config, string forcing_file_path, bool allow_exceed_end,
+            Bmi_Adapter(std::string model_name, std::string bmi_init_config, std::string forcing_file_path, bool allow_exceed_end,
                         bool has_fixed_time_step, utils::StreamHandler output)
                 : model_name(std::move(model_name)),
                   bmi_init_config(std::move(bmi_init_config)),
@@ -37,7 +35,7 @@ namespace models {
                 if (!utils::FileChecker::file_is_readable(this->bmi_init_config)) {
                     init_exception_msg = "Cannot create and initialize " + this->model_name + " using unreadable file '"
                             + this->bmi_init_config + "'";
-                    throw runtime_error(init_exception_msg);
+                    throw std::runtime_error(init_exception_msg);
                 }
             }
 
@@ -93,7 +91,7 @@ namespace models {
              * @param time_convert_factor A reference to set to the determined conversion factor.
              */
             void acquire_time_conversion_factor(double &time_convert_factor) {
-                string time_units = GetTimeUnits();
+                std::string time_units = GetTimeUnits();
                 if (time_units == "s" || time_units == "sec" || time_units == "second" || time_units == "seconds")
                     time_convert_factor = 1.0;
                 else if (time_units == "m" || time_units == "min" || time_units == "minute" ||
@@ -104,7 +102,7 @@ namespace models {
                 else if (time_units == "d" || time_units == "day" || time_units == "days")
                     time_convert_factor = 86400.0;
                 else
-                    throw runtime_error(
+                    throw std::runtime_error(
                             "Invalid model time step units ('" + time_units + "') in " + model_name + ".");
             }
 
@@ -177,7 +175,7 @@ namespace models {
                 // If there was previous init attempt but w/ failure exception, throw runtime error and include previous
                 // message
                 if (model_initialized && !init_exception_msg.empty()) {
-                    throw runtime_error(
+                    throw std::runtime_error(
                             "Previous " + model_name + " init attempt had exception: \n\t" + init_exception_msg);
                 }
                     // If there was previous init attempt w/ (implicitly) no exception on previous attempt, just return
@@ -187,7 +185,7 @@ namespace models {
                 else if (!utils::FileChecker::file_is_readable(bmi_init_config)) {
                     init_exception_msg = "Cannot initialize " + model_name + " using unreadable file '"
                             + bmi_init_config + "'";
-                    throw runtime_error(init_exception_msg);
+                    throw std::runtime_error(init_exception_msg);
                 }
                 else {
                     try {
@@ -198,7 +196,7 @@ namespace models {
                         acquire_time_conversion_factor(bmi_model_time_convert_factor);
                     }
                         // Record the exception message before re-throwing to handle subsequent function calls properly
-                    catch (exception& e) {
+                    catch (std::exception& e) {
                         // Make sure this is set to 'true' after this function call finishes
                         model_initialized = true;
                         throw e;
@@ -224,9 +222,9 @@ namespace models {
              * @throws models::external::State_Exception   If `initialize()` in nested model is not successful.
              * @throws runtime_error If already initialized but using a different file than the passed argument.
              */
-            void Initialize(string config_file) override {
+            void Initialize(std::string config_file) override {
                 if (config_file != bmi_init_config && model_initialized) {
-                    throw runtime_error(
+                    throw std::runtime_error(
                             "Model init previously attempted; cannot change config from " + bmi_init_config + " to "
                             + config_file);
                 }
@@ -243,7 +241,7 @@ namespace models {
                     throw e;
                 }
                 catch (std::exception &e) {
-                    throw runtime_error(e.what());
+                    throw std::runtime_error(e.what());
                 }
             }
 
@@ -270,28 +268,28 @@ namespace models {
             /** Whether model ``Update`` calls are allowed and handled in some way by the backing model. */
             bool allow_model_exceed_end_time = false;
             /** Path (as a string) to the BMI config file for initializing the backing model (empty if none). */
-            string bmi_init_config;
+            std::string bmi_init_config;
             /** Pointer to backing BMI model instance. */
-            shared_ptr<T> bmi_model = nullptr;
+            std::shared_ptr<T> bmi_model = nullptr;
             /** Whether this particular model has a time step size that cannot be changed internally or externally. */
             bool bmi_model_has_fixed_time_step = true;
             /** Conversion factor for converting values for model time in model's unit type to equivalent in seconds. */
             double bmi_model_time_convert_factor;
             /** Pointer to stored time step size value of backing model, if it is fixed and has been retrieved. */
-            shared_ptr<double> bmi_model_time_step_size = nullptr;
+            std::shared_ptr<double> bmi_model_time_step_size = nullptr;
             /** Whether this particular model implementation directly reads input data from the forcing file. */
             bool bmi_model_uses_forcing_file;
-            string forcing_file_path;
+            std::string forcing_file_path;
             /** Message from an exception (if encountered) on the first attempt to initialize the backing model. */
-            string init_exception_msg;
+            std::string init_exception_msg;
             /** Pointer to collection of input variable names for backing model, used by ``GetInputVarNames()``. */
-            shared_ptr<vector<string>> input_var_names;
+            std::shared_ptr<std::vector<std::string>> input_var_names;
             /** Whether the backing model has been initialized yet, which is always initially ``false``. */
             bool model_initialized = false;
-            string model_name;
+            std::string model_name;
             utils::StreamHandler output;
             /** Pointer to collection of output variable names for backing model, used by ``GetOutputVarNames()``. */
-            shared_ptr<vector<string>> output_var_names;
+            std::shared_ptr<std::vector<std::string>> output_var_names;
 
             /**
              * Construct the backing BMI model object, then call its BMI-native ``Initialize()`` function.
