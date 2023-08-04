@@ -3,7 +3,7 @@
 
 using namespace models::bmi;
 
-string Bmi_Fortran_Adapter::GetComponentName() {
+std::string Bmi_Fortran_Adapter::GetComponentName() {
     char component_name[BMI_MAX_COMPONENT_NAME];
     if (get_component_name(&bmi_model->handle, component_name) != BMI_SUCCESS) {
         throw std::runtime_error(model_name + " failed to get model component name.");
@@ -126,7 +126,7 @@ int Bmi_Fortran_Adapter::GetVarGrid(std::string name) {
 std::string Bmi_Fortran_Adapter::GetGridType(int grid_id) {
     char gridtype_c_str[BMI_MAX_TYPE_NAME];
     if (get_grid_type(&bmi_model->handle, &grid_id, gridtype_c_str) != BMI_SUCCESS) {
-        throw std::runtime_error(model_name + " failed to get grid type for grid ID " + to_string(grid_id) + ".");
+        throw std::runtime_error(model_name + " failed to get grid type for grid ID " + std::to_string(grid_id) + ".");
     }
     return std::string(gridtype_c_str);
 }
@@ -134,7 +134,7 @@ std::string Bmi_Fortran_Adapter::GetGridType(int grid_id) {
 int Bmi_Fortran_Adapter::GetGridRank(int grid_id) {
     int gridrank;
     if (get_grid_rank(&bmi_model->handle, &grid_id, &gridrank) != BMI_SUCCESS) {
-        throw std::runtime_error(model_name + " failed to get grid rank for grid ID " + to_string(grid_id) + ".");
+        throw std::runtime_error(model_name + " failed to get grid rank for grid ID " + std::to_string(grid_id) + ".");
     }
     return gridrank;
 }
@@ -142,7 +142,7 @@ int Bmi_Fortran_Adapter::GetGridRank(int grid_id) {
 int Bmi_Fortran_Adapter::GetGridSize(int grid_id) {
     int gridsize;
     if (get_grid_size(&bmi_model->handle, &grid_id, &gridsize) != BMI_SUCCESS) {
-        throw std::runtime_error(model_name + " failed to get grid size for grid ID " + to_string(grid_id) + ".");
+        throw std::runtime_error(model_name + " failed to get grid size for grid ID " + std::to_string(grid_id) + ".");
     }
     return gridsize;
 }
