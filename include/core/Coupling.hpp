@@ -44,9 +44,38 @@ struct DirectCoupling : public Coupling
         if (dynamic_pointer_cast<ModelVariable>(from_) == dynamic_pointer_cast<ModelVariable>(to_))
             return;
 
-        boost::span<double> src = from_->storage(), dst = to_->storage();
+        boost::span<const double> src = from_->storage();
+        boost::span<double> dst = to_->storage();
         for (size_t i = 0; i < src.size(); ++i) {
             dst[i] = scaling_ * src[i];
+        }
+    }
+
+private:
+    shared_ptr<SourceVariable> from_;
+    shared_ptr<SinkVariable> to_;
+    double scaling_ = 1.0;
+};
+
+struct ScalarBroadcastCoupling : public Coupling
+{
+    ScalarBroadcastCoupling(std::shared_ptr<SourceVariable> from,
+                            std::shared_ptr<SinkVariable> to,
+                            double scaling = 1.0)
+        : from_(from)
+        , to_(to)
+        , scaling_(scaling)
+    {
+        assert(from->element_dimensionality() == to->element_dimensionality());
+        assert(std::dynamic_pointer_cast<ScalarDiscretization const>(from->discretization()) != nullptr);
+    }
+
+    void transfer() override {
+        boost::span<const double> src = from_->storage();
+        auto const& v = src[0];
+        boost::span<double> dst = to_->storage();
+        for (size_t i = 0; i < src.size(); ++i) {
+            dst[i] = scaling_ * v;
         }
     }
 
