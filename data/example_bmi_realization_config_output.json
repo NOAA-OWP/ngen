@@ -49,8 +49,7 @@
             }
         ],
         "forcing": {
-            "file_pattern": ".*{{id}}.*..csv",
-            "path": "../data/forcing/",
+            "path": "",
             "provider": "NullForcingProvider"
         }
     },
