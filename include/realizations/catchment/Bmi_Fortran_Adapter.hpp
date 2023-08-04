@@ -25,7 +25,7 @@ namespace models {
 
         public:
 
-            explicit Bmi_Fortran_Adapter(const string &type_name, std::string library_file_path,
+            explicit Bmi_Fortran_Adapter(const std::string &type_name, std::string library_file_path,
                                          std::string forcing_file_path,
                                          bool allow_exceed_end, bool has_fixed_time_step,
                                          const std::string &registration_func, utils::StreamHandler output)
@@ -33,7 +33,7 @@ namespace models {
                                           has_fixed_time_step,
                                           registration_func, output) {}
 
-            Bmi_Fortran_Adapter(const string &type_name, std::string library_file_path, std::string bmi_init_config,
+            Bmi_Fortran_Adapter(const std::string &type_name, std::string library_file_path, std::string bmi_init_config,
                                 std::string forcing_file_path, bool allow_exceed_end, bool has_fixed_time_step,
                                 std::string registration_func,
                                 utils::StreamHandler output) : AbstractCLibBmiAdapter(type_name,
@@ -67,7 +67,7 @@ namespace models {
                     model_initialized = true;
                     throw e;
                 }
-                catch (exception &e) {
+                catch (std::exception &e) {
                     //This will catch any other exception, but the it will be cast to this base type.
                     //This means it looses it any specific type/message information.  So if construct_and_init_backing_model_for_fortran
                     //throws an exception besides runtime_error, catch that type explicitly.
@@ -76,7 +76,7 @@ namespace models {
                 }
             }
 
-            string GetComponentName() override;
+            std::string GetComponentName() override;
 
             /**
              * Get the backing model's current time.
