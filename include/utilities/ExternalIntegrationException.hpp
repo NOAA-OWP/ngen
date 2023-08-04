@@ -15,7 +15,7 @@ namespace external {
 
     public:
 
-        ExternalIntegrationException(char const *const message) noexcept : ExternalIntegrationException(string(message)) {}
+        ExternalIntegrationException(char const *const message) noexcept : ExternalIntegrationException(std::string(message)) {}
 
         ExternalIntegrationException(std::string message) noexcept : std::exception(), what_message(std::move(message)) {}
 
