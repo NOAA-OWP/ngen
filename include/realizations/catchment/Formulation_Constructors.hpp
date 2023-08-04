@@ -16,6 +16,7 @@
 #include "Bmi_Py_Formulation.hpp"
 #include <GenericDataProvider.hpp>
 #include "CsvPerFeatureForcingProvider.hpp"
+#include "NullForcingProvider.hpp"
 #ifdef NETCDF_ACTIVE
     #include "NetCDFPerFeatureDataProvider.hpp"
 #endif
@@ -64,6 +65,9 @@ namespace realization {
             fp = data_access::NetCDFPerFeatureDataProvider::get_shared_provider(forcing_config.path, forcing_config.simulation_start_t, forcing_config.simulation_end_t, output_stream);
         }
 #endif
+        else if (forcing_config.provider == "NullForcingProvider"){
+            fp = std::make_shared<NullForcingProvider>(forcing_config);
+        }
         else { // Some unknown string in the provider field?
             throw std::runtime_error(
                     "Invalid formulation forcing provider configuration! identifier: \"" + identifier +

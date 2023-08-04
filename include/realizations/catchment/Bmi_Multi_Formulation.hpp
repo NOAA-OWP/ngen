@@ -285,6 +285,7 @@ namespace realization {
                 for(std::map<std::string,std::shared_ptr<data_access::GenericDataProvider>>::iterator iter = availableData.begin(); iter != availableData.end(); ++iter)
                 {
                     var_name = iter->first;
+                    //std::cout << "availableData: var_name = " << var_name << std::endl;
                     //TODO: Find a probably more performant way than trial and exception here.
                     try {
                         time_t rv = availableData[var_name]->get_data_stop_time();
