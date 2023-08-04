@@ -27,8 +27,6 @@
 #include "python/HydrofabricSubsetter.hpp"
 #endif // ACTIVATE_PYTHON
 
-using namespace std;
-
 namespace parallel {
 
     /**
@@ -469,8 +467,8 @@ namespace parallel {
      * @param partitionConfigFile The path to distributed processing hydrofabric partitioning config.
      * @return Whether subdividing was successful.
      */
-    bool subdivide_hydrofabric(int mpi_rank, int mpi_num_procs, const string &catchmentDataFile,
-                               const string &nexusDataFile, const string &partitionConfigFile)
+    bool subdivide_hydrofabric(int mpi_rank, int mpi_num_procs, const std::string &catchmentDataFile,
+                               const std::string &nexusDataFile, const std::string &partitionConfigFile)
     {
         // Track whether things are good, meaning ok to continue and, at the end, whether successful
         // Start with a value of true
