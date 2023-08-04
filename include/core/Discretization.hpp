@@ -8,7 +8,16 @@ struct Discretization
 {
     virtual ~Discretization() = default;
 
-    enum GridType { hydrofabric_locations, spatial_structured, spatial_unstructured };
+    // Aligned with the possible results from BMI's get_grid_type
+    enum class GridType {
+        scalar,
+        points,
+        vector,
+        unstructured,
+        structured_quadrilateral,
+        rectilinear,
+        uniform_rectilinear
+    };
     virtual GridType grid_type() = 0;
 
     // Must cover an identified geographic domain
@@ -27,10 +36,49 @@ struct ConcreteDiscretization : public Discretization
     virtual boost::span<PointType> get_points() = 0;
 };
 
-// One point per catchment/nexus/whatever set elements
-struct HydroLocationDiscretization : public ConcreteDiscretization<int>
+struct ScalarDiscretization : public ConcreteDiscretization<std::nullptr_t>
 {
-    GridType grid_type() override { return hydrofabric_locations; }
+    GridType grid_type() override { return GridType::scalar; }
+    GeoDivide divide() override { return 0; }
+    size_t size() override { return 1; }
+    int rank() override { return 1; }
+    boost::span<std::nullptr_t> get_points() override { throw std::logic_error(""); }
+
+    bool equals(Discretization const * const rhs) override {
+        auto cast_rhs = dynamic_cast<ScalarDiscretization const*>(rhs);
+
+        if (cast_rhs == nullptr)
+            return false;
+
+        return true;
+    }
+};
+
+struct VectorDiscretization : public ConcreteDiscretization<std::nullptr_t>
+{
+    GridType grid_type() override { return GridType::vector; }
+    GeoDivide divide() override { return 0; }
+    size_t size() override { return n_; }
+    int rank() override { return 1; }
+    boost::span<std::nullptr_t> get_points() override { throw std::logic_error(""); }
+
+    bool equals(Discretization const * const rhs) override {
+        auto cast_rhs = dynamic_cast<VectorDiscretization const*>(rhs);
+
+        if (cast_rhs == nullptr)
+            return false;
+
+        return true;
+    }
+
+private:
+    size_t n_;
+};
+
+// One point per catchment/nexus/whatever set elements
+struct PointDiscretization : public ConcreteDiscretization<int>
+{
+    GridType grid_type() override { return GridType::points; }
     GeoDivide divide() override { return 0;
     }
     size_t size() override { return 1; }
@@ -38,7 +86,7 @@ struct HydroLocationDiscretization : public ConcreteDiscretization<int>
     boost::span<PointType> get_points() override {  return {}; }
 
     bool equals(Discretization const * const rhs) override {
-        auto cast_rhs = dynamic_cast<HydroLocationDiscretization const*>(rhs);
+        auto cast_rhs = dynamic_cast<PointDiscretization const*>(rhs);
 
         if (cast_rhs == nullptr)
             return false;
@@ -50,7 +98,7 @@ struct HydroLocationDiscretization : public ConcreteDiscretization<int>
 struct CartesianMeshDiscretization : public ConcreteDiscretization<float>
 {
     // coordinate reference, origin, spacing, point count
-    GridType grid_type() override { return spatial_structured; }
+    GridType grid_type() override { return GridType::structured_quadrilateral; }
     GeoDivide divide() override { return 0; }
     size_t size() override { return 1; }
     int rank() override { return 2; }
@@ -66,17 +114,17 @@ struct CartesianMeshDiscretization : public ConcreteDiscretization<float>
     }
 };
 
-struct UnstructuredMeshDiscretization : public ConcreteDiscretization<char>
+struct UnstructuredDiscretization : public ConcreteDiscretization<char>
 {
     // coordinate reference, point count, point coordinates
-    GridType grid_type() override { return spatial_unstructured; }
+    GridType grid_type() override { return GridType::unstructured; }
     GeoDivide divide() override { return 0; }
     size_t size() override { return 1; }
     int rank() override { return 1; }
     boost::span<PointType> get_points() override {  return {}; }
 
     bool equals(Discretization const * const rhs) override {
-        auto cast_rhs = dynamic_cast<UnstructuredMeshDiscretization const*>(rhs);
+        auto cast_rhs = dynamic_cast<UnstructuredDiscretization const*>(rhs);
 
         if (cast_rhs == nullptr)
             return false;
