@@ -7,8 +7,6 @@
 #include <algorithm>
 #include "WrappedDataProvider.hpp"
 
-using namespace std;
-
 namespace data_access {
 
     /**
@@ -41,14 +39,14 @@ namespace data_access {
          *
          * @param providedOutputs The collection of the names of outputs this instance will need to provide.
          */
-        explicit DeferredWrappedProvider(vector<string> providedOutputs) : WrappedDataProvider(nullptr), providedOutputs(std::move(providedOutputs)) { }
+        explicit DeferredWrappedProvider(std::vector<std::string> providedOutputs) : WrappedDataProvider(nullptr), providedOutputs(std::move(providedOutputs)) { }
 
         /**
          * Convenience constructor for when there is only one provided output name.
          *
          * @param outputName The name of the single output this instance will need to provide.
          */
-        explicit DeferredWrappedProvider(const string& outputName) : DeferredWrappedProvider(vector<string>(1)) {
+        explicit DeferredWrappedProvider(const std::string& outputName) : DeferredWrappedProvider(std::vector<std::string>(1)) {
             providedOutputs[0] = outputName;
         }
 
@@ -85,7 +83,7 @@ namespace data_access {
          *
          * @return The message string for the last call to @ref setWrappedProvider.
          */
-        inline const string &getSetMessage() {
+        inline const std::string &getSetMessage() {
             return setMessage;
         }
 
@@ -140,7 +138,7 @@ namespace data_access {
 
             // Confirm this will provide everything needed
             const vector<string> &available = provider->get_available_variable_names();
-            for (const string &requiredName : providedOutputs) {
+            for (const std::string &requiredName : providedOutputs) {
                 if (std::find(available.begin(), available.end(), requiredName) == available.end()) {
                     setMessage = "Given provider does not provide the required " + requiredName;
                     return false;
@@ -155,7 +153,7 @@ namespace data_access {
 
     protected:
         /** The collection of names of the outputs this type can/will be able to provide from its wrapped source. */
-        vector<string> providedOutputs;
+        std::vector<std::string> providedOutputs;
 
         /**
          * A message providing information from the last @ref setWrappedProvider call.
@@ -163,7 +161,7 @@ namespace data_access {
          * The value will be empty if the function returned ``true``.  If it returned ``false``, this will have an
          * info message set explaining more detail on the failure.
          */
-        string setMessage;
+        std::string setMessage;
     };
 
 }

@@ -28,8 +28,6 @@
 
 #include <map>
 
-//using namespace std// causes build error on gcc-12 with boost::geometry
-
 /**
  * @brief forcing_params providing configuration information for forcing time period and source.
  */
