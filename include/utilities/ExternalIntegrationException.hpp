@@ -4,8 +4,6 @@
 #include <exception>
 #include <utility>
 
-using namespace std;
-
 namespace external {
     /**
          * Custom exception indicating a problem when integrating with some external component.
@@ -13,7 +11,7 @@ namespace external {
          * Custom exception for indicating that the framework encountered a problem interoperating with some type of
          * external component with which it should be integrated.
          */
-    class ExternalIntegrationException : public exception {
+    class ExternalIntegrationException : public std::exception {
 
     public:
 
