@@ -5,8 +5,6 @@
 
 #include "DeferredWrappedProvider.hpp"
 
-using namespace std;
-
 namespace data_access {
 
     /**
@@ -55,7 +53,7 @@ namespace data_access {
          * @param providedOuts The collection of the names of outputs this instance will need to provide.
          * @param defaultVals Mapping of some or all provided output defaults, keyed by output name.
          */
-        OptionalWrappedDataProvider(vector<string> providedOuts, map<string, double> defaultVals)
+        OptionalWrappedDataProvider(std::vector<std::string> providedOuts, std::map<std::string, double> defaultVals)
                 : DeferredWrappedProvider(std::move(providedOuts)), defaultValues(std::move(defaultVals))
         {
             // Validate the provided map of default values to ensure there aren't any unrecognized keys, as this
@@ -64,7 +62,7 @@ namespace data_access {
                 for (const auto &def_vals_it : defaultValues) {
                     auto name_it = find(providedOutputs.begin(), providedOutputs.end(), def_vals_it.first);
                     if (name_it == providedOutputs.end()) {
-                        string msg = "Invalid default values for OptionalWrappedDataProvider: default value given for "
+                        std::string msg = "Invalid default values for OptionalWrappedDataProvider: default value given for "
                                      "unknown output with name '" + def_vals_it.first + "' (expected names are ["
                                      + providedOutputs[0];
                         for (int i = 1; i < providedOutputs.size(); ++i) {
@@ -87,8 +85,8 @@ namespace data_access {
          * @param defaultWaits Map of the number of default usages for each provided output that the instance must wait
          *                     before using values from the backing provider.
          */
-        OptionalWrappedDataProvider(vector<string> providedOuts, map<string, double> defaultVals,
-                                map<string, int> defaultWaits)
+        OptionalWrappedDataProvider(std::vector<std::string> providedOuts, std::map<std::string, double> defaultVals,
+                                std::map<std::string, int> defaultWaits)
                 : OptionalWrappedDataProvider(std::move(providedOuts), std::move(defaultVals))
         {
             // Validate that all keys/names in the defaultWaits map have corresponding key in defaultValues
@@ -97,7 +95,7 @@ namespace data_access {
                 for (const auto &wait_it : defaultWaits) {
                     auto def_it = defaultValues.find(wait_it.first);
                     if (def_it == defaultValues.end()) {
-                        string msg = "Invalid default usage waits for OptionalWrappedDataProvider: wait count given for "
+                        std::string msg = "Invalid default usage waits for OptionalWrappedDataProvider: wait count given for "
                                      "non-default output '" + wait_it.first + "' (outputs with defaults set are [";
                         def_it = defaultValues.begin();
                         msg += def_it->first;
@@ -120,15 +118,15 @@ namespace data_access {
          *
          * @param providedOutputs The collection of the names of outputs this instance will need to provide.
          */
-        explicit OptionalWrappedDataProvider(vector<string> providedOutputs)
-            : OptionalWrappedDataProvider(std::move(providedOutputs), map<string, double>()) { }
+        explicit OptionalWrappedDataProvider(std::vector<std::string> providedOutputs)
+            : OptionalWrappedDataProvider(std::move(providedOutputs), std::map<std::string, double>()) { }
 
         /**
          * Convenience constructor for when there is only one provided output name, which does not have a default.
          *
          * @param outputName The name of the single output this instance will need to provide.
          */
-        explicit OptionalWrappedDataProvider(const string& outputName) : OptionalWrappedDataProvider(vector<string>(1)) {
+        explicit OptionalWrappedDataProvider(const std::string& outputName) : OptionalWrappedDataProvider(std::vector<std::string>(1)) {
             providedOutputs[0] = outputName;
         }
 
@@ -145,7 +143,7 @@ namespace data_access {
          * @param defaultUsageWait The number of default usages that the instance must wait before using values from
          *                          the backing provider.
          */
-        OptionalWrappedDataProvider(const string& outputName, double defaultValue, int defaultUsageWait)
+        OptionalWrappedDataProvider(const std::string& outputName, double defaultValue, int defaultUsageWait)
             : OptionalWrappedDataProvider(outputName)
         {
             defaultValues[providedOutputs[0]] = defaultValue;
@@ -160,7 +158,7 @@ namespace data_access {
          * @param outputName The name of the single output this instance will need to provide.
          * @param defaultValue The default to associate with the given output.
          */
-        OptionalWrappedDataProvider(const string& outputName, double defaultValue)
+        OptionalWrappedDataProvider(const std::string& outputName, double defaultValue)
             : OptionalWrappedDataProvider(outputName, defaultValue, 0) { }
 
         /**
@@ -194,10 +192,10 @@ namespace data_access {
          */
         double get_value(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override
         {
-            string output_name = selector.get_variable_name();
+            std::string output_name = selector.get_variable_name();
             time_t init_time = selector.get_init_time();
             const long duration_s = selector.get_duration_secs();
-            const string output_units = selector.get_output_units();
+            const std::string output_units = selector.get_output_units();
             
             // Balk if not in this instance's collection of outputs
             if (find(providedOutputs.begin(), providedOutputs.end(), output_name) == providedOutputs.end()) {
@@ -248,7 +246,7 @@ namespace data_access {
          * @see get_value
          * @see recordUsingDefault
          */
-        bool isDefaultOverride(const string &output_name) {
+        bool isDefaultOverride(const std::string &output_name) {
             // First, there must be a default, and there must be something to override
             if (!isSuppliedWithDefault(output_name) || !isSuppliedByWrappedProvider(output_name)) {
                 return false;
@@ -284,7 +282,7 @@ namespace data_access {
          * @param outputName The output in question.
          * @return Whether a default value is available for this output.
          */
-        inline bool isSuppliedWithDefault(const string &outputName) {
+        inline bool isSuppliedWithDefault(const std::string &outputName) {
             return defaultValues.find(outputName) != defaultValues.end();
         }
 
@@ -323,7 +321,7 @@ namespace data_access {
 
             // Check this provides everything needed, accounting for defaults (and also tallying the outputs provided)
             unsigned short providedByProviderCount = 0;
-            for (const string &requiredName : providedOutputs) {
+            for (const std::string &requiredName : providedOutputs) {
                 // If supplied by the provider, increment our count and continue to the next required output name
                 if (isSuppliedByProvider(requiredName, provider)) {
                     ++providedByProviderCount;
@@ -367,7 +365,7 @@ namespace data_access {
          *
          * @param output_name The name of the output for which a default was used.
          */
-        virtual void recordUsingDefault(const string &output_name) {
+        virtual void recordUsingDefault(const std::string &output_name) {
             // Don't bother doing anything if there aren't waits assigned for this output
             // Also, in this implementation, don't count usages until there is a backing provider that can provide this
             auto waits_it = defaultUsageWaits.find(output_name);
@@ -389,21 +387,21 @@ namespace data_access {
         /**
          * A collection of mapped default values for some or all of the provided outputs.
          */
-        map<string, double> defaultValues;
+        std::map<std::string, double> defaultValues;
         /**
          * The number of times a default value should still be used before beginning to proxy a backing provider value.
          *
          * Note than all elements should have values greater than zero.  Any elements that would have their value
          * reduced to zero should instead be removed.
          */
-        map<string, int> defaultUsageWaits;
+        std::map<std::string, int> defaultUsageWaits;
 
-        static bool isSuppliedByProvider(const string &outputName, GenericDataProvider *provider) {
-            const vector<string> &available = provider->get_available_variable_names();
+        static bool isSuppliedByProvider(const std::string &outputName, GenericDataProvider *provider) {
+            const std::vector<std::string> &available = provider->get_available_variable_names();
             return find(available.begin(), available.end(), outputName) != available.end();
         }
 
-        inline bool isSuppliedByWrappedProvider(const string &outputName) {
+        inline bool isSuppliedByWrappedProvider(const std::string &outputName) {
             return wrapped_provider != nullptr && isSuppliedByProvider(outputName, wrapped_provider);
         }
 
