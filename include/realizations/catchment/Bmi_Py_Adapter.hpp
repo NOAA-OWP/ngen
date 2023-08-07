@@ -389,8 +389,8 @@ namespace models {
              */
             int get_sum_of_grid_nodes_per_face(const int grid) {
                 int grid_node_face_count = GetGridFaceCount(grid);
-                int grid_nodes_per_face[grid_node_face_count];
-                GetGridNodesPerFace(grid, grid_nodes_per_face);
+                std::vector<int> grid_nodes_per_face(grid_node_face_count);
+                GetGridNodesPerFace(grid, grid_nodes_per_face.data());
                 int nodes_per_face_sum = 0;
                 for (int i = 0; i < grid_node_face_count; ++i)
                     nodes_per_face_sum += grid_nodes_per_face[i];
@@ -702,8 +702,8 @@ namespace models {
                 std::string grid_type = GetGridType(grid);
                 if( grid_type == "uniform_rectilinear" || grid_type == "rectilinear"){
                     int rank = GetGridRank(grid);
-                    int shape[rank];
-                    GetGridShape(grid, shape);
+                    std::vector<int> shape(rank);
+                    GetGridShape(grid, shape.data());
                     get_and_copy_grid_array<double>(name, grid, dest, shape[rank-index-1], "float");
                     return;
                 }else{

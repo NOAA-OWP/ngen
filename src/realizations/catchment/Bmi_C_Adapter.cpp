@@ -308,8 +308,7 @@ std::shared_ptr<std::vector<std::string>> Bmi_C_Adapter::inner_get_variable_name
             std::vector<std::string>(variableCount));
 
     // Must get the names from the model as an array of C strings
-    // The array can be on the stack ...
-    char* names_array[variableCount];
+    std::vector<char*> names_array(variableCount);
     // ... but allocate the space for the individual C strings (i.e., the char * elements)
     for (int i = 0; i < variableCount; i++) {
         names_array[i] = static_cast<char *>(malloc(sizeof(char) * BMI_MAX_VAR_NAME));
@@ -318,10 +317,10 @@ std::shared_ptr<std::vector<std::string>> Bmi_C_Adapter::inner_get_variable_name
     // With the necessary char** in hand, get the names from the model
     int names_result;
     if (is_input_variables) {
-        names_result = bmi_model->get_input_var_names(bmi_model.get(), names_array);
+        names_result = bmi_model->get_input_var_names(bmi_model.get(), names_array.data());
     }
     else {
-        names_result = bmi_model->get_output_var_names(bmi_model.get(), names_array);
+        names_result = bmi_model->get_output_var_names(bmi_model.get(), names_array.data());
     }
     if (names_result != BMI_SUCCESS) {
         throw std::runtime_error(model_name + " failed to get array of output variables names.");
