@@ -356,7 +356,7 @@ void TestBmiCpp::read_init_config(std::string config_file)
   if (fp == NULL)
     throw std::runtime_error("Invalid config file \""+config_file+"\"" SOURCE_LOC);
 
-  char config_line[max_config_line_length + 1];
+  std::vector<char> config_line(max_config_line_length + 1);
 
   // TODO: may need to add other variables to track that everything that was required was properly set
 
@@ -365,9 +365,9 @@ void TestBmiCpp::read_init_config(std::string config_file)
 
   for (size_t i = 0; i < config_line_count; i++) {
     char *param_key, *param_value;
-    fgets(config_line, max_config_line_length + 1, fp);
+    fgets(config_line.data(), max_config_line_length + 1, fp);
 
-    char* config_line_ptr = config_line;
+    char* config_line_ptr = config_line.data();
     config_line_ptr = strsep(&config_line_ptr, "\n");
     param_key = strsep(&config_line_ptr, "=");
     param_value = strsep(&config_line_ptr, "=");
