@@ -13,6 +13,7 @@ var classrealization_1_1_formulation___manager =
     [ "end", "classrealization_1_1_formulation___manager.html#a6c5749e590142378b02976f6802407bd", null ],
     [ "get_forcing_params", "classrealization_1_1_formulation___manager.html#ad08f6399a29ed66671b3dd1e6e2f7a39", null ],
     [ "get_formulation", "classrealization_1_1_formulation___manager.html#ab3188606a0077deba49fe03e0ae76c43", null ],
+    [ "get_output_root", "classrealization_1_1_formulation___manager.html#a1a2bb05d7eb2e2a815a05e0c049597bd", null ],
     [ "get_size", "classrealization_1_1_formulation___manager.html#a3d0b2db8f821d4b05502a04fa3f01870", null ],
     [ "get_t_route_config_file_with_path", "classrealization_1_1_formulation___manager.html#af98f0237deac6fe02782231b5ba41ea7", null ],
     [ "get_using_routing", "classrealization_1_1_formulation___manager.html#a599aadb9ffea1e8c28cbd010b3160bd7", null ],

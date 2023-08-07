@@ -1,5 +1,7 @@
 var NAVTREEINDEX20 =
 {
+"functions_vars.html":[21,3,2,0],
+"functions_vars_a.html":[21,3,2,1],
 "functions_vars_b.html":[21,3,2,2],
 "functions_vars_c.html":[21,3,2,3],
 "functions_vars_d.html":[21,3,2,4],
@@ -247,7 +249,5 @@ var NAVTREEINDEX20 =
 "namespacegeojson.html":[20,0,5],
 "namespacegeojson.html#a0575056bcdcce0ccba81e6875591b702":[20,0,5,17],
 "namespacegeojson.html#a0e7f78cfe2859f6b67a1d8165e22a99c":[20,0,5,25],
-"namespacegeojson.html#a0f6ff987f88f0fa9f53225b87dc2d7db":[20,0,5,49],
-"namespacegeojson.html#a1c9774b2c97ea8d59d6d7255ef005c81":[20,0,5,27],
-"namespacegeojson.html#a1e973c44a04c54096fb9877033c21de5":[20,0,5,13]
+"namespacegeojson.html#a0f6ff987f88f0fa9f53225b87dc2d7db":[20,0,5,49]
 };

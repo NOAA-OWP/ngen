@@ -1,5 +1,7 @@
 var NAVTREEINDEX21 =
 {
+"namespacegeojson.html#a1c9774b2c97ea8d59d6d7255ef005c81":[20,0,5,27],
+"namespacegeojson.html#a1e973c44a04c54096fb9877033c21de5":[20,0,5,13],
 "namespacegeojson.html#a24198ccd74c3e63a59b0ec353e126352":[20,0,5,26],
 "namespacegeojson.html#a2801a4aa3be7124530f8d2b8de576993":[20,0,5,22],
 "namespacegeojson.html#a2fd0ff0c76d9798103057ccaf435b714":[20,0,5,40],
@@ -247,7 +249,5 @@ var NAVTREEINDEX21 =
 "structboost_1_1detail_1_1span__data_3_01_t_00_01typename_01std_1_1enable__if_3_01std_1_1is__poin78544bb9d841e85969596fc838b560c1.html":[21,0,1,0,7],
 "structboost_1_1detail_1_1span__data_3_01_t_00_01typename_01std_1_1enable__if_3_01std_1_1is__poin78544bb9d841e85969596fc838b560c1.html":[20,0,1,0,7],
 "structboost_1_1detail_1_1span__data_3_01_t_00_01typename_01std_1_1enable__if_3_01std_1_1is__poin78544bb9d841e85969596fc838b560c1.html#af7670f3892d98eb11d64c78d195e396a":[21,0,1,0,7,0],
-"structboost_1_1detail_1_1span__data_3_01_t_00_01typename_01std_1_1enable__if_3_01std_1_1is__poin78544bb9d841e85969596fc838b560c1.html#af7670f3892d98eb11d64c78d195e396a":[20,0,1,0,7,0],
-"structboost_1_1detail_1_1span__has__data.html":[21,0,1,0,8],
-"structboost_1_1detail_1_1span__has__data.html":[20,0,1,0,8]
+"structboost_1_1detail_1_1span__data_3_01_t_00_01typename_01std_1_1enable__if_3_01std_1_1is__poin78544bb9d841e85969596fc838b560c1.html#af7670f3892d98eb11d64c78d195e396a":[20,0,1,0,7,0]
 };

@@ -15,11 +15,14 @@ The Configuration is a key-value object and must contain these three first level
 * `catchments` 
   *  is a key-value object that must include a list of individual catchments
 
+The configuration may *optionally* contain an `output_root` key with a user-defined root output directory as the key, for nexus and catchment outputs.
+
 ```
 {
    "global": {},
    "time": {},
-   "catchments": {}
+   "catchments": {},
+   "output_root": "/path/to/output/"
 } 
 ```
 
