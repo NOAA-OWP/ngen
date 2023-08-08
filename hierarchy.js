@@ -126,7 +126,6 @@ var hierarchy =
     [ "GM_Object", "class_g_m___object.html", [
       [ "HY_CatchmentArea", "class_h_y___catchment_area.html", [
         [ "realization::Catchment_Formulation", "classrealization_1_1_catchment___formulation.html", [
-          [ "Simple_Lumped_Model_Realization", "class_simple___lumped___model___realization.html", null ],
           [ "realization::Bmi_Formulation", "classrealization_1_1_bmi___formulation.html", null ],
           [ "realization::Tshirt_C_Realization", "classrealization_1_1_tshirt___c___realization.html", null ],
           [ "realization::Tshirt_Realization", "classrealization_1_1_tshirt___realization.html", null ]
@@ -157,10 +156,6 @@ var hierarchy =
     [ "HY_HydroNexus", "class_h_y___hydro_nexus.html", [
       [ "HY_PointHydroNexus", "class_h_y___point_hydro_nexus.html", null ]
     ] ],
-    [ "hymod_fluxes", "structhymod__fluxes.html", null ],
-    [ "hymod_kernel", "classhymod__kernel.html", null ],
-    [ "hymod_params", "structhymod__params.html", null ],
-    [ "hymod_state", "structhymod__state.html", null ],
     [ "intermediate_vars", "structintermediate__vars.html", null ],
     [ "network::Network", "classnetwork_1_1_network.html", null ],
     [ "network::VertexProperty", "structnetwork_1_1_vertex_property.html", null ],
@@ -217,7 +212,6 @@ var hierarchy =
       [ "FeatureCollection_Test", "class_feature_collection___test.html", null ],
       [ "Feature_Test", "class_feature___test.html", null ],
       [ "GIUH_Test", "class_g_i_u_h___test.html", null ],
-      [ "HymodKernelTest", "class_hymod_kernel_test.html", null ],
       [ "JSONGeometry_Test", "class_j_s_o_n_geometry___test.html", null ],
       [ "JSONProperty_Test", "class_j_s_o_n_property___test.html", null ],
       [ "Network_Test2", "class_network___test2.html", null ],

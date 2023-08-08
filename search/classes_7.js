@@ -16,10 +16,5 @@ var searchData=
   ['hy_5fhydronexus_13',['HY_HydroNexus',['../class_h_y___hydro_nexus.html',1,'']]],
   ['hy_5findirectposition_14',['HY_IndirectPosition',['../classhy__features_1_1hydrolocation_1_1_h_y___indirect_position.html',1,'hy_features::hydrolocation']]],
   ['hy_5finteriorcatchment_15',['HY_InteriorCatchment',['../class_h_y___interior_catchment.html',1,'']]],
-  ['hy_5fpointhydronexus_16',['HY_PointHydroNexus',['../class_h_y___point_hydro_nexus.html',1,'']]],
-  ['hymod_5ffluxes_17',['hymod_fluxes',['../structhymod__fluxes.html',1,'']]],
-  ['hymod_5fkernel_18',['hymod_kernel',['../classhymod__kernel.html',1,'']]],
-  ['hymod_5fparams_19',['hymod_params',['../structhymod__params.html',1,'']]],
-  ['hymod_5fstate_20',['hymod_state',['../structhymod__state.html',1,'']]],
-  ['hymodkerneltest_21',['HymodKernelTest',['../class_hymod_kernel_test.html',1,'']]]
+  ['hy_5fpointhydronexus_16',['HY_PointHydroNexus',['../class_h_y___point_hydro_nexus.html',1,'']]]
 ];

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['b_0',['b',['../class_reservoir_1_1_explicit___time_1_1_reservoir___outlet.html#aefa536a323e01869b9d9e19838ab970f',1,'Reservoir::Explicit_Time::Reservoir_Outlet::b()'],['../structhymod__params.html#a40fa36752c2df9195a76310e5b9e5396',1,'hymod_params::b()'],['../class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html#aebc4b10e12bba40bdae0cf1d174311b3',1,'Reservoir::Implicit_Time::Reservoir_Outlet::b()'],['../structtshirt_1_1tshirt__params.html#ad0bcff0f23154f035c79933168b7c6d5',1,'tshirt::tshirt_params::b()']]],
+  ['b_0',['b',['../class_reservoir_1_1_explicit___time_1_1_reservoir___outlet.html#aefa536a323e01869b9d9e19838ab970f',1,'Reservoir::Explicit_Time::Reservoir_Outlet::b()'],['../class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html#aebc4b10e12bba40bdae0cf1d174311b3',1,'Reservoir::Implicit_Time::Reservoir_Outlet::b()'],['../structtshirt_1_1tshirt__params.html#ad0bcff0f23154f035c79933168b7c6d5',1,'tshirt::tshirt_params::b()']]],
   ['back_1',['back',['../classboost_1_1span.html#ad32c041e50bf9671a9eb7eabe607dd82',1,'boost::span']]],
   ['back_5fedge_2',['back_edge',['../structnetwork_1_1preorder__visitor.html#aafa30c5f3851cc919b9609401e238eed',1,'network::preorder_visitor']]],
   ['back_5ffill_3',['BACK_FILL',['../namespacedata__access.html#a46435cb3579215dfdfffedc7833e43f9a64524e829f0c293446b973b486de4681',1,'data_access']]],

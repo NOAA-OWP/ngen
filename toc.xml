@@ -6055,44 +6055,6 @@
         <topic label="total_requests" href="class_h_y___point_hydro_nexus.html#afacdf6716d538d54c3b9be00b30d5d38"/>
         <topic label="upstream_flows" href="class_h_y___point_hydro_nexus.html#a3540aaa4a8d10ce03e5f8a6a7cdd8a2d"/>
       </topic>
-      <topic label="hymod_fluxes" href="structhymod__fluxes.html">
-        <topic label="hymod_fluxes" href="structhymod__fluxes.html#a1eb79e305a4a27ca88039d3aa718a360"/>
-        <topic label="et_loss_meters" href="structhymod__fluxes.html#a32e6b6942ff64b008e7095e13abc3ecf"/>
-        <topic label="runoff_meters_per_second" href="structhymod__fluxes.html#a4f6f135e5106df2e5d4d96432394701f"/>
-        <topic label="slow_flow_meters_per_second" href="structhymod__fluxes.html#a2dab5e4e0344c2e6f422cd4417f7e632"/>
-      </topic>
-      <topic label="hymod_kernel" href="classhymod__kernel.html">
-        <topic label="calc_et" href="classhymod__kernel.html#af3136a2d2c070ef2a604c8f325c35ffd"/>
-        <topic label="mass_check" href="classhymod__kernel.html#aa83a7700116ed89000a4084f0dc78c56"/>
-        <topic label="run" href="classhymod__kernel.html#abd63b727cebb05446b6b2cd8452066f5"/>
-      </topic>
-      <topic label="hymod_params" href="structhymod__params.html">
-        <topic label="a" href="structhymod__params.html#a62b25df619b349718333fbf9389802f2"/>
-        <topic label="activation_threshold_meters_groundwater_reservoir" href="structhymod__params.html#a52bba8095fd09b64cb96d019eb0a6165"/>
-        <topic label="activation_threshold_meters_nash_cascade_reservoir" href="structhymod__params.html#a2d06652af718269df3e038f1f487bbce"/>
-        <topic label="b" href="structhymod__params.html#a40fa36752c2df9195a76310e5b9e5396"/>
-        <topic label="gw_max_storage_meters" href="structhymod__params.html#af361be9463004567a0008e5420fb3957"/>
-        <topic label="Kq" href="structhymod__params.html#a71ee942876366a3ccdb060dd1cfde4c1"/>
-        <topic label="Ks" href="structhymod__params.html#a03965bac9fc6b3104a14aed59690d3cf"/>
-        <topic label="min_storage_meters" href="structhymod__params.html#a77b123144cc1db49782b4af9229da0e1"/>
-        <topic label="n" href="structhymod__params.html#a7fe5a1405feac74038def8d57749b66e"/>
-        <topic label="nash_max_storage_meters" href="structhymod__params.html#aa26a6c0ae23ce7c12e9f3bd7e4071d46"/>
-        <topic label="reservoir_max_velocity_meters_per_second" href="structhymod__params.html#a0d1613252fc6ca89a65ef68a229d4d5f"/>
-        <topic label="smax" href="structhymod__params.html#a098c0564af1ea08a68f321654c3c1bc3"/>
-      </topic>
-      <topic label="hymod_state" href="structhymod__state.html">
-        <topic label="hymod_state" href="structhymod__state.html#a912f50633dbb7a6e00956dc00e0cb171"/>
-        <topic label="groundwater_storage_meters" href="structhymod__state.html#ac9f5f7e48c81c4208a08be3989f87991"/>
-        <topic label="Sr" href="structhymod__state.html#a820e80017a337b20ce054a136036533a"/>
-        <topic label="storage_meters" href="structhymod__state.html#a53391062dfc6871cf6202b2fd0548479"/>
-      </topic>
-      <topic label="HymodKernelTest" href="class_hymod_kernel_test.html">
-        <topic label="HymodKernelTest" href="class_hymod_kernel_test.html#a7c7996404b1242ff4b6b1d343ee6cc60"/>
-        <topic label="~HymodKernelTest" href="class_hymod_kernel_test.html#a7cb22b01bac93c54b086ee15477c5467"/>
-        <topic label="SetUp" href="class_hymod_kernel_test.html#a401ea52be34d0b27898cc6f3127db9da"/>
-        <topic label="setupArbitraryExampleCase" href="class_hymod_kernel_test.html#a57ee3d4db387e6395e16ad1fd0e29fe5"/>
-        <topic label="TearDown" href="class_hymod_kernel_test.html#a6faca91434044486d1a4717149492fb2"/>
-      </topic>
       <topic label="intermediate_vars" href="structintermediate__vars.html">
         <topic label="air_actual_vapor_pressure_Pa" href="structintermediate__vars.html#a69a7acc29553904494675674401af795"/>
         <topic label="air_saturation_vapor_pressure_Pa" href="structintermediate__vars.html#a7adc0954eb7a9f620b7c0c5f4fbee659"/>
@@ -6303,51 +6265,6 @@
         <topic label="SetUp" href="class_schaake_kernel_test.html#af7e241399ef7ea8e37f72314b66dd704"/>
         <topic label="setupArbitraryExampleCase" href="class_schaake_kernel_test.html#a33712d4922a9d839db36f50424d1e1b8"/>
         <topic label="TearDown" href="class_schaake_kernel_test.html#a35af7fcd9ec5571671fee3e14f177ded"/>
-      </topic>
-      <topic label="Simple_Lumped_Model_Realization" href="class_simple___lumped___model___realization.html">
-        <topic label="time_step_t" href="class_simple___lumped___model___realization.html#a50b8afc93d941e658e9a62538e5a3f47"/>
-        <topic label="Simple_Lumped_Model_Realization" href="class_simple___lumped___model___realization.html#a0a0c83b6ecf5b3f88fa101d35335888f"/>
-        <topic label="Simple_Lumped_Model_Realization" href="class_simple___lumped___model___realization.html#ad37e7713d9c381623f8e9285da8a304d"/>
-        <topic label="Simple_Lumped_Model_Realization" href="class_simple___lumped___model___realization.html#a4c6b5f31c1ec0c8ada9fc54a80882118"/>
-        <topic label="Simple_Lumped_Model_Realization" href="class_simple___lumped___model___realization.html#a1fa3e14189d3fb8b1402005fb15eac2d"/>
-        <topic label="Simple_Lumped_Model_Realization" href="class_simple___lumped___model___realization.html#afe66f3b2527c02cca375f71f0e520e23"/>
-        <topic label="~Simple_Lumped_Model_Realization" href="class_simple___lumped___model___realization.html#abaff508bf1b1a09ac4926ce0a6d7c615"/>
-        <topic label="add_time" href="class_simple___lumped___model___realization.html#aea254a605d59c1489dfe0a8af0d5f291"/>
-        <topic label="calc_et" href="class_simple___lumped___model___realization.html#afe77f2e5e89fd90ce73a84303429309f"/>
-        <topic label="config_pattern_substitution" href="class_simple___lumped___model___realization.html#a17f32257b65c7930f8b3570ab43fd58c"/>
-        <topic label="create_formulation" href="class_simple___lumped___model___realization.html#aa14160e9f8563df42947278c8e91cc78"/>
-        <topic label="create_formulation" href="class_simple___lumped___model___realization.html#ae9f9fda457f7564bf53bc9a9785eba7c"/>
-        <topic label="get_catchment_id" href="class_simple___lumped___model___realization.html#a633b7407d447f77910476c0315c8beb6"/>
-        <topic label="get_et_params" href="class_simple___lumped___model___realization.html#ae3eed12472620303be3bd1b2cb3600c6"/>
-        <topic label="get_et_params_ptr" href="class_simple___lumped___model___realization.html#a74fa1d17e6e8d344beecc4f0f38ee29e"/>
-        <topic label="get_formulation_type" href="class_simple___lumped___model___realization.html#a44ec42a333e39a22e3f1056ffdf95773"/>
-        <topic label="get_id" href="class_simple___lumped___model___realization.html#a02267e0cc9fec2e1d883f55c2c12b39d"/>
-        <topic label="get_output_header_line" href="class_simple___lumped___model___realization.html#a12fad75c2e47f5da298e022429243199"/>
-        <topic label="get_output_line_for_timestep" href="class_simple___lumped___model___realization.html#a653d3057d73191c45f0f3749def92486"/>
-        <topic label="get_required_parameters" href="class_simple___lumped___model___realization.html#a28005ff0e92cd3e0f4aebc97906fdef6"/>
-        <topic label="get_response" href="class_simple___lumped___model___realization.html#a65e1e6ce403d39e655c68a5cd321ac63"/>
-        <topic label="interpret_parameters" href="class_simple___lumped___model___realization.html#a65f97b5efe05e786f59d9f5fd1b10209"/>
-        <topic label="is_et_params_set" href="class_simple___lumped___model___realization.html#a490261c3439f205913ac2e77efbd5b6f"/>
-        <topic label="is_et_params_set" href="class_simple___lumped___model___realization.html#a7117db623dafde1f5dfbf286e46aa99e"/>
-        <topic label="set_catchment_id" href="class_simple___lumped___model___realization.html#a2cce2b5b18eaa0ed7e0df10db57da144"/>
-        <topic label="set_et_params" href="class_simple___lumped___model___realization.html#ad4e23441f5a4ceb63262f796c5bb411f"/>
-        <topic label="set_et_params" href="class_simple___lumped___model___realization.html#a8f1338c37773df88268e34e46a1d957e"/>
-        <topic label="set_output_stream" href="class_simple___lumped___model___realization.html#a9d02de255937deb8f6169ef20f5a07d6"/>
-        <topic label="validate_parameters" href="class_simple___lumped___model___realization.html#aceabe9927b36dce61f338919f2af4c1f"/>
-        <topic label="write_output" href="class_simple___lumped___model___realization.html#aa989be0629ecaa29a2410f7588404ff9"/>
-        <topic label="bounds" href="class_simple___lumped___model___realization.html#aaebc4992c38cb5db68e859e0487ad929"/>
-        <topic label="cascade_backing_storage" href="class_simple___lumped___model___realization.html#aa362564a0409107f5f2342140b55b332"/>
-        <topic label="cat_id" href="class_simple___lumped___model___realization.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b"/>
-        <topic label="et_params" href="class_simple___lumped___model___realization.html#a5fab369fc039b378dfd270490ddb9e5c"/>
-        <topic label="fluxes" href="class_simple___lumped___model___realization.html#ac98db05180754f1db41262a205cfbfa2"/>
-        <topic label="forcing" href="class_simple___lumped___model___realization.html#a2010f61d0e7141bb48230923592de215"/>
-        <topic label="id" href="class_simple___lumped___model___realization.html#a8bfec24b0d57240e7ada2493a781db6d"/>
-        <topic label="id_number" href="class_simple___lumped___model___realization.html#af996a3e50eaf51c63865f1fdbe4f8661"/>
-        <topic label="output" href="class_simple___lumped___model___realization.html#a55857dc16551760ff59487991fc525fe"/>
-        <topic label="params" href="class_simple___lumped___model___realization.html#a799f47e36352e7773f64015613257346"/>
-        <topic label="realized_catchment" href="class_simple___lumped___model___realization.html#a7c6de72bd8ebf427d71aacca7baa23c1"/>
-        <topic label="REQUIRED_PARAMETERS" href="class_simple___lumped___model___realization.html#a7f7265139f0ad8485198efb2c5880402"/>
-        <topic label="state" href="class_simple___lumped___model___realization.html#ad6f43918a1a6b73d0fb748c14ce78bad"/>
       </topic>
       <topic label="Simulation_Time" href="class_simulation___time.html">
         <topic label="Simulation_Time" href="class_simulation___time.html#a1b29c199f0fd9e0995f369c40fd7aaa0"/>
@@ -6581,7 +6498,6 @@
       <topic label="GM_Object" href="class_g_m___object.html">
         <topic label="HY_CatchmentArea" href="class_h_y___catchment_area.html">
           <topic label="realization::Catchment_Formulation" href="classrealization_1_1_catchment___formulation.html">
-            <topic label="Simple_Lumped_Model_Realization" href="class_simple___lumped___model___realization.html"/>
             <topic label="realization::Bmi_Formulation" href="classrealization_1_1_bmi___formulation.html"/>
             <topic label="realization::Tshirt_C_Realization" href="classrealization_1_1_tshirt___c___realization.html"/>
             <topic label="realization::Tshirt_Realization" href="classrealization_1_1_tshirt___realization.html"/>
@@ -6612,10 +6528,6 @@
       <topic label="HY_HydroNexus" href="class_h_y___hydro_nexus.html">
         <topic label="HY_PointHydroNexus" href="class_h_y___point_hydro_nexus.html"/>
       </topic>
-      <topic label="hymod_fluxes" href="structhymod__fluxes.html"/>
-      <topic label="hymod_kernel" href="classhymod__kernel.html"/>
-      <topic label="hymod_params" href="structhymod__params.html"/>
-      <topic label="hymod_state" href="structhymod__state.html"/>
       <topic label="intermediate_vars" href="structintermediate__vars.html"/>
       <topic label="network::Network" href="classnetwork_1_1_network.html"/>
       <topic label="network::VertexProperty" href="structnetwork_1_1_vertex_property.html"/>
@@ -6672,7 +6584,6 @@
         <topic label="FeatureCollection_Test" href="class_feature_collection___test.html"/>
         <topic label="Feature_Test" href="class_feature___test.html"/>
         <topic label="GIUH_Test" href="class_g_i_u_h___test.html"/>
-        <topic label="HymodKernelTest" href="class_hymod_kernel_test.html"/>
         <topic label="JSONGeometry_Test" href="class_j_s_o_n_geometry___test.html"/>
         <topic label="JSONProperty_Test" href="class_j_s_o_n_property___test.html"/>
         <topic label="Network_Test2" href="class_network___test2.html"/>

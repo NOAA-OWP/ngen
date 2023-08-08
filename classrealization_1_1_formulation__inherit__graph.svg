@@ -46,7 +46,7 @@ if (edges && edges.length) {
         </defs>
 
 <script type="text/javascript">
-var viewWidth = 668;
+var viewWidth = 686;
 var viewHeight = 2793;
 var sectionId = 'dynsection-0';
 </script>
@@ -58,24 +58,24 @@ var sectionId = 'dynsection-0';
 <g id="node1" class="node">
 <title>Node1</title>
 <g id="a_node1"><a xlink:title=" ">
-<polygon fill="#999999" stroke="#666666" points="444.5,-2674 307.5,-2674 307.5,-2479 444.5,-2479 444.5,-2674"/>
-<text text-anchor="middle" x="376" y="-2662" font-family="Helvetica,sans-Serif" font-size="10.00">{realization::Formulation</text>
-<text text-anchor="start" x="315.5" y="-2651" font-family="Helvetica,sans-Serif" font-size="10.00">|# id</text>
-<text text-anchor="start" x="315.5" y="-2640" font-family="Helvetica,sans-Serif" font-size="10.00">|+ Formulation()</text>
-<text text-anchor="start" x="315.5" y="-2629" font-family="Helvetica,sans-Serif" font-size="10.00">+ ~Formulation()</text>
-<text text-anchor="start" x="315.5" y="-2618" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_formulation_type()</text>
-<text text-anchor="start" x="315.5" y="-2607" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_response()</text>
-<text text-anchor="start" x="315.5" y="-2596" font-family="Helvetica,sans-Serif" font-size="10.00">+ add_time()</text>
-<text text-anchor="start" x="315.5" y="-2585" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_id()</text>
-<text text-anchor="start" x="315.5" y="-2574" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_output_header_line()</text>
-<text text-anchor="start" x="315.5" y="-2563" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_output_line_for</text>
-<text text-anchor="start" x="315.5" y="-2552" font-family="Helvetica,sans-Serif" font-size="10.00">_timestep()</text>
-<text text-anchor="start" x="315.5" y="-2541" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
-<text text-anchor="start" x="315.5" y="-2530" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
-<text text-anchor="start" x="315.5" y="-2519" font-family="Helvetica,sans-Serif" font-size="10.00"># get_required_parameters()</text>
-<text text-anchor="start" x="315.5" y="-2508" font-family="Helvetica,sans-Serif" font-size="10.00"># interpret_parameters()</text>
-<text text-anchor="start" x="315.5" y="-2497" font-family="Helvetica,sans-Serif" font-size="10.00"># validate_parameters()</text>
-<text text-anchor="middle" x="376" y="-2486" font-family="Helvetica,sans-Serif" font-size="10.00">}</text>
+<polygon fill="#999999" stroke="#666666" points="505.5,-2674 368.5,-2674 368.5,-2479 505.5,-2479 505.5,-2674"/>
+<text text-anchor="middle" x="437" y="-2662" font-family="Helvetica,sans-Serif" font-size="10.00">{realization::Formulation</text>
+<text text-anchor="start" x="376.5" y="-2651" font-family="Helvetica,sans-Serif" font-size="10.00">|# id</text>
+<text text-anchor="start" x="376.5" y="-2640" font-family="Helvetica,sans-Serif" font-size="10.00">|+ Formulation()</text>
+<text text-anchor="start" x="376.5" y="-2629" font-family="Helvetica,sans-Serif" font-size="10.00">+ ~Formulation()</text>
+<text text-anchor="start" x="376.5" y="-2618" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_formulation_type()</text>
+<text text-anchor="start" x="376.5" y="-2607" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_response()</text>
+<text text-anchor="start" x="376.5" y="-2596" font-family="Helvetica,sans-Serif" font-size="10.00">+ add_time()</text>
+<text text-anchor="start" x="376.5" y="-2585" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_id()</text>
+<text text-anchor="start" x="376.5" y="-2574" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_output_header_line()</text>
+<text text-anchor="start" x="376.5" y="-2563" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_output_line_for</text>
+<text text-anchor="start" x="376.5" y="-2552" font-family="Helvetica,sans-Serif" font-size="10.00">_timestep()</text>
+<text text-anchor="start" x="376.5" y="-2541" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
+<text text-anchor="start" x="376.5" y="-2530" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
+<text text-anchor="start" x="376.5" y="-2519" font-family="Helvetica,sans-Serif" font-size="10.00"># get_required_parameters()</text>
+<text text-anchor="start" x="376.5" y="-2508" font-family="Helvetica,sans-Serif" font-size="10.00"># interpret_parameters()</text>
+<text text-anchor="start" x="376.5" y="-2497" font-family="Helvetica,sans-Serif" font-size="10.00"># validate_parameters()</text>
+<text text-anchor="middle" x="437" y="-2486" font-family="Helvetica,sans-Serif" font-size="10.00">}</text>
 </a>
 </g>
 </g>
@@ -83,245 +83,202 @@ var sectionId = 'dynsection-0';
 <g id="node3" class="node">
 <title>Node3</title>
 <g id="a_node3"><a xlink:href="classrealization_1_1_catchment___formulation.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="449.5,-2442 302.5,-2442 302.5,-2269 449.5,-2269 449.5,-2442"/>
-<text text-anchor="start" x="310.5" y="-2430" font-family="Helvetica,sans-Serif" font-size="10.00">{realization::Catchment</text>
-<text text-anchor="middle" x="376" y="-2419" font-family="Helvetica,sans-Serif" font-size="10.00">_Formulation</text>
-<text text-anchor="start" x="310.5" y="-2408" font-family="Helvetica,sans-Serif" font-size="10.00">|&#45; cat_id</text>
-<text text-anchor="start" x="310.5" y="-2397" font-family="Helvetica,sans-Serif" font-size="10.00">|+ Catchment_Formulation()</text>
-<text text-anchor="start" x="310.5" y="-2386" font-family="Helvetica,sans-Serif" font-size="10.00">+ Catchment_Formulation()</text>
-<text text-anchor="start" x="310.5" y="-2375" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_output_header_line()</text>
-<text text-anchor="start" x="310.5" y="-2364" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_response()</text>
-<text text-anchor="start" x="310.5" y="-2353" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_required_parameters()</text>
-<text text-anchor="start" x="310.5" y="-2342" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
-<text text-anchor="start" x="310.5" y="-2331" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
-<text text-anchor="start" x="310.5" y="-2320" font-family="Helvetica,sans-Serif" font-size="10.00">+ ~Catchment_Formulation()</text>
-<text text-anchor="start" x="310.5" y="-2309" font-family="Helvetica,sans-Serif" font-size="10.00">+ config_pattern_substitution()</text>
-<text text-anchor="start" x="310.5" y="-2298" font-family="Helvetica,sans-Serif" font-size="10.00"># get_catchment_id()</text>
-<text text-anchor="start" x="310.5" y="-2287" font-family="Helvetica,sans-Serif" font-size="10.00"># set_catchment_id()</text>
-<text text-anchor="middle" x="376" y="-2276" font-family="Helvetica,sans-Serif" font-size="10.00">}</text>
+<polygon fill="white" stroke="#666666" points="510.5,-2442 363.5,-2442 363.5,-2269 510.5,-2269 510.5,-2442"/>
+<text text-anchor="start" x="371.5" y="-2430" font-family="Helvetica,sans-Serif" font-size="10.00">{realization::Catchment</text>
+<text text-anchor="middle" x="437" y="-2419" font-family="Helvetica,sans-Serif" font-size="10.00">_Formulation</text>
+<text text-anchor="start" x="371.5" y="-2408" font-family="Helvetica,sans-Serif" font-size="10.00">|&#45; cat_id</text>
+<text text-anchor="start" x="371.5" y="-2397" font-family="Helvetica,sans-Serif" font-size="10.00">|+ Catchment_Formulation()</text>
+<text text-anchor="start" x="371.5" y="-2386" font-family="Helvetica,sans-Serif" font-size="10.00">+ Catchment_Formulation()</text>
+<text text-anchor="start" x="371.5" y="-2375" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_output_header_line()</text>
+<text text-anchor="start" x="371.5" y="-2364" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_response()</text>
+<text text-anchor="start" x="371.5" y="-2353" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_required_parameters()</text>
+<text text-anchor="start" x="371.5" y="-2342" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
+<text text-anchor="start" x="371.5" y="-2331" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
+<text text-anchor="start" x="371.5" y="-2320" font-family="Helvetica,sans-Serif" font-size="10.00">+ ~Catchment_Formulation()</text>
+<text text-anchor="start" x="371.5" y="-2309" font-family="Helvetica,sans-Serif" font-size="10.00">+ config_pattern_substitution()</text>
+<text text-anchor="start" x="371.5" y="-2298" font-family="Helvetica,sans-Serif" font-size="10.00"># get_catchment_id()</text>
+<text text-anchor="start" x="371.5" y="-2287" font-family="Helvetica,sans-Serif" font-size="10.00"># set_catchment_id()</text>
+<text text-anchor="middle" x="437" y="-2276" font-family="Helvetica,sans-Serif" font-size="10.00">}</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node3 -->
 <g id="edge2" class="edge">
 <title>Node1&#45;&gt;Node3</title>
-<path fill="none" stroke="#63b8ff" d="M376,-2467.38C376,-2458.97 376,-2450.56 376,-2442.34"/>
-<polygon fill="none" stroke="#63b8ff" points="372.5,-2467.29 376,-2477.29 379.5,-2467.29 372.5,-2467.29"/>
+<path fill="none" stroke="#63b8ff" d="M437,-2467.38C437,-2458.97 437,-2450.56 437,-2442.34"/>
+<polygon fill="none" stroke="#63b8ff" points="433.5,-2467.29 437,-2477.29 440.5,-2467.29 433.5,-2467.29"/>
 </g>
 <!-- Node2 -->
 <g id="node2" class="node">
 <title>Node2</title>
 <g id="a_node2"><a xlink:href="classrealization_1_1_et___aware.html" target="_top" xlink:title="Interface for type that is aware of parameters for evapotranspiration in certain calculations,...">
-<polygon fill="white" stroke="#666666" points="431,-2785 321,-2785 321,-2711 431,-2711 431,-2785"/>
-<text text-anchor="middle" x="376" y="-2773" font-family="Helvetica,sans-Serif" font-size="10.00">{realization::Et_Aware</text>
-<text text-anchor="start" x="329" y="-2762" font-family="Helvetica,sans-Serif" font-size="10.00">||+ Et_Aware()</text>
-<text text-anchor="start" x="329" y="-2751" font-family="Helvetica,sans-Serif" font-size="10.00">+ ~Et_Aware()</text>
-<text text-anchor="start" x="329" y="-2740" font-family="Helvetica,sans-Serif" font-size="10.00">+ is_et_params_set()</text>
-<text text-anchor="start" x="329" y="-2729" font-family="Helvetica,sans-Serif" font-size="10.00">+ set_et_params()</text>
-<text text-anchor="middle" x="376" y="-2718" font-family="Helvetica,sans-Serif" font-size="10.00">}</text>
+<polygon fill="white" stroke="#666666" points="492,-2785 382,-2785 382,-2711 492,-2711 492,-2785"/>
+<text text-anchor="middle" x="437" y="-2773" font-family="Helvetica,sans-Serif" font-size="10.00">{realization::Et_Aware</text>
+<text text-anchor="start" x="390" y="-2762" font-family="Helvetica,sans-Serif" font-size="10.00">||+ Et_Aware()</text>
+<text text-anchor="start" x="390" y="-2751" font-family="Helvetica,sans-Serif" font-size="10.00">+ ~Et_Aware()</text>
+<text text-anchor="start" x="390" y="-2740" font-family="Helvetica,sans-Serif" font-size="10.00">+ is_et_params_set()</text>
+<text text-anchor="start" x="390" y="-2729" font-family="Helvetica,sans-Serif" font-size="10.00">+ set_et_params()</text>
+<text text-anchor="middle" x="437" y="-2718" font-family="Helvetica,sans-Serif" font-size="10.00">}</text>
 </a>
 </g>
 </g>
 <!-- Node2&#45;&gt;Node1 -->
 <g id="edge1" class="edge">
 <title>Node2&#45;&gt;Node1</title>
-<path fill="none" stroke="#63b8ff" d="M376,-2699.16C376,-2691.3 376,-2682.92 376,-2674.36"/>
-<polygon fill="none" stroke="#63b8ff" points="372.5,-2699.12 376,-2709.12 379.5,-2699.12 372.5,-2699.12"/>
+<path fill="none" stroke="#63b8ff" d="M437,-2699.16C437,-2691.3 437,-2682.92 437,-2674.36"/>
+<polygon fill="none" stroke="#63b8ff" points="433.5,-2699.12 437,-2709.12 440.5,-2699.12 433.5,-2699.12"/>
 </g>
 <!-- Node4 -->
 <g id="node4" class="node">
 <title>Node4</title>
-<g id="a_node4"><a xlink:href="class_simple___lumped___model___realization.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="155.5,-2144 6.5,-2144 6.5,-1817 155.5,-1817 155.5,-2144"/>
-<text text-anchor="start" x="14.5" y="-2132" font-family="Helvetica,sans-Serif" font-size="10.00">{Simple_Lumped_Model</text>
-<text text-anchor="middle" x="81" y="-2121" font-family="Helvetica,sans-Serif" font-size="10.00">_Realization</text>
-<text text-anchor="start" x="14.5" y="-2110" font-family="Helvetica,sans-Serif" font-size="10.00">|# REQUIRED_PARAMETERS</text>
-<text text-anchor="start" x="14.5" y="-2099" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; state</text>
-<text text-anchor="start" x="14.5" y="-2088" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; fluxes</text>
-<text text-anchor="start" x="14.5" y="-2077" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; cascade_backing_storage</text>
-<text text-anchor="start" x="14.5" y="-2066" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; params</text>
-<text text-anchor="start" x="14.5" y="-2055" font-family="Helvetica,sans-Serif" font-size="10.00">|+ Simple_Lumped_Model</text>
-<text text-anchor="start" x="14.5" y="-2044" font-family="Helvetica,sans-Serif" font-size="10.00">_Realization()</text>
-<text text-anchor="start" x="14.5" y="-2033" font-family="Helvetica,sans-Serif" font-size="10.00">+ Simple_Lumped_Model</text>
-<text text-anchor="start" x="14.5" y="-2022" font-family="Helvetica,sans-Serif" font-size="10.00">_Realization()</text>
-<text text-anchor="start" x="14.5" y="-2011" font-family="Helvetica,sans-Serif" font-size="10.00">+ Simple_Lumped_Model</text>
-<text text-anchor="start" x="14.5" y="-2000" font-family="Helvetica,sans-Serif" font-size="10.00">_Realization()</text>
-<text text-anchor="start" x="14.5" y="-1989" font-family="Helvetica,sans-Serif" font-size="10.00">+ Simple_Lumped_Model</text>
-<text text-anchor="start" x="14.5" y="-1978" font-family="Helvetica,sans-Serif" font-size="10.00">_Realization()</text>
-<text text-anchor="start" x="14.5" y="-1967" font-family="Helvetica,sans-Serif" font-size="10.00">+ Simple_Lumped_Model</text>
-<text text-anchor="start" x="14.5" y="-1956" font-family="Helvetica,sans-Serif" font-size="10.00">_Realization()</text>
-<text text-anchor="start" x="14.5" y="-1945" font-family="Helvetica,sans-Serif" font-size="10.00">+ ~Simple_Lumped_Model</text>
-<text text-anchor="start" x="14.5" y="-1934" font-family="Helvetica,sans-Serif" font-size="10.00">_Realization()</text>
-<text text-anchor="start" x="14.5" y="-1923" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_output_line_for</text>
-<text text-anchor="start" x="14.5" y="-1912" font-family="Helvetica,sans-Serif" font-size="10.00">_timestep()</text>
-<text text-anchor="start" x="14.5" y="-1901" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_response()</text>
-<text text-anchor="start" x="14.5" y="-1890" font-family="Helvetica,sans-Serif" font-size="10.00">+ calc_et()</text>
-<text text-anchor="start" x="14.5" y="-1879" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
-<text text-anchor="start" x="14.5" y="-1868" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
-<text text-anchor="start" x="14.5" y="-1857" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_formulation_type()</text>
-<text text-anchor="start" x="14.5" y="-1846" font-family="Helvetica,sans-Serif" font-size="10.00">+ add_time()</text>
-<text text-anchor="start" x="14.5" y="-1835" font-family="Helvetica,sans-Serif" font-size="10.00"># get_required_parameters()</text>
-<text text-anchor="middle" x="81" y="-1824" font-family="Helvetica,sans-Serif" font-size="10.00">}</text>
+<g id="a_node4"><a xlink:href="classrealization_1_1_bmi___formulation.html" target="_top" xlink:title="Abstraction of formulation with backing model object(s) that implements the BMI.">
+<polygon fill="white" stroke="#666666" points="340,-2188 192,-2188 192,-1773 340,-1773 340,-2188"/>
+<text text-anchor="middle" x="266" y="-2176" font-family="Helvetica,sans-Serif" font-size="10.00">{realization::Bmi_Formulation</text>
+<text text-anchor="start" x="200" y="-2165" font-family="Helvetica,sans-Serif" font-size="10.00">|# output_text_stream</text>
+<text text-anchor="start" x="200" y="-2154" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; bmi_main_output_var</text>
+<text text-anchor="start" x="200" y="-2143" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; model_type_name</text>
+<text text-anchor="start" x="200" y="-2132" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; output_header_fields</text>
+<text text-anchor="start" x="200" y="-2121" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; output_variable_names</text>
+<text text-anchor="start" x="200" y="-2110" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; output_precision</text>
+<text text-anchor="start" x="200" y="-2099" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; OPTIONAL_PARAMETERS</text>
+<text text-anchor="start" x="200" y="-2088" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; REQUIRED_PARAMETERS</text>
+<text text-anchor="start" x="200" y="-2077" font-family="Helvetica,sans-Serif" font-size="10.00">|+ Bmi_Formulation()</text>
+<text text-anchor="start" x="200" y="-2066" font-family="Helvetica,sans-Serif" font-size="10.00">+ ~Bmi_Formulation()</text>
+<text text-anchor="start" x="200" y="-2055" font-family="Helvetica,sans-Serif" font-size="10.00">+ convert_model_time()</text>
+<text text-anchor="start" x="200" y="-2044" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_allow_model_exceed</text>
+<text text-anchor="start" x="200" y="-2033" font-family="Helvetica,sans-Serif" font-size="10.00">_end_time()</text>
+<text text-anchor="start" x="200" y="-2022" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_bmi_input_variables()</text>
+<text text-anchor="start" x="200" y="-2011" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_bmi_main_output</text>
+<text text-anchor="start" x="200" y="-2000" font-family="Helvetica,sans-Serif" font-size="10.00">_var()</text>
+<text text-anchor="start" x="200" y="-1989" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_bmi_model_start</text>
+<text text-anchor="start" x="200" y="-1978" font-family="Helvetica,sans-Serif" font-size="10.00">_time_forcing_offset_s()</text>
+<text text-anchor="start" x="200" y="-1967" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_bmi_output_variables()</text>
+<text text-anchor="start" x="200" y="-1956" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_config_mapped_variable</text>
+<text text-anchor="start" x="200" y="-1945" font-family="Helvetica,sans-Serif" font-size="10.00">_name()</text>
+<text text-anchor="start" x="200" y="-1934" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_model_current_time()</text>
+<text text-anchor="start" x="200" y="-1923" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_model_end_time()</text>
+<text text-anchor="start" x="200" y="-1912" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_forcing_file_path()</text>
+<text text-anchor="start" x="200" y="-1901" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_model_type_name()</text>
+<text text-anchor="start" x="200" y="-1890" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_output_header_fields()</text>
+<text text-anchor="start" x="200" y="-1879" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_output_header_line()</text>
+<text text-anchor="start" x="200" y="-1868" font-family="Helvetica,sans-Serif" font-size="10.00">and 8 more...</text>
+<text text-anchor="start" x="200" y="-1857" font-family="Helvetica,sans-Serif" font-size="10.00"># get_output_precision()</text>
+<text text-anchor="start" x="200" y="-1846" font-family="Helvetica,sans-Serif" font-size="10.00"># set_bmi_main_output</text>
+<text text-anchor="start" x="200" y="-1835" font-family="Helvetica,sans-Serif" font-size="10.00">_var()</text>
+<text text-anchor="start" x="200" y="-1824" font-family="Helvetica,sans-Serif" font-size="10.00"># set_model_type_name()</text>
+<text text-anchor="start" x="200" y="-1813" font-family="Helvetica,sans-Serif" font-size="10.00"># set_output_header_fields()</text>
+<text text-anchor="start" x="200" y="-1802" font-family="Helvetica,sans-Serif" font-size="10.00"># set_output_variable</text>
+<text text-anchor="start" x="200" y="-1791" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
+<text text-anchor="middle" x="266" y="-1780" font-family="Helvetica,sans-Serif" font-size="10.00">}</text>
 </a>
 </g>
 </g>
 <!-- Node3&#45;&gt;Node4 -->
 <g id="edge3" class="edge">
 <title>Node3&#45;&gt;Node4</title>
-<path fill="none" stroke="#63b8ff" d="M291.85,-2322.76C248.59,-2302.63 198.15,-2272.65 165,-2232 144.2,-2206.5 128.46,-2175.61 116.58,-2144.36"/>
-<polygon fill="none" stroke="#63b8ff" points="290.17,-2325.84 300.72,-2326.78 293.06,-2319.47 290.17,-2325.84"/>
+<path fill="none" stroke="#63b8ff" d="M364.31,-2258.97C358.79,-2250.06 353.59,-2240.99 349,-2232 341.87,-2218.02 335.17,-2203.3 328.9,-2188.28"/>
+<polygon fill="none" stroke="#63b8ff" points="361.28,-2260.73 369.61,-2267.28 367.19,-2256.97 361.28,-2260.73"/>
 </g>
-<!-- Node5 -->
-<g id="node5" class="node">
-<title>Node5</title>
-<g id="a_node5"><a xlink:href="classrealization_1_1_bmi___formulation.html" target="_top" xlink:title="Abstraction of formulation with backing model object(s) that implements the BMI.">
-<polygon fill="white" stroke="#666666" points="322,-2188 174,-2188 174,-1773 322,-1773 322,-2188"/>
-<text text-anchor="middle" x="248" y="-2176" font-family="Helvetica,sans-Serif" font-size="10.00">{realization::Bmi_Formulation</text>
-<text text-anchor="start" x="182" y="-2165" font-family="Helvetica,sans-Serif" font-size="10.00">|# output_text_stream</text>
-<text text-anchor="start" x="182" y="-2154" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; bmi_main_output_var</text>
-<text text-anchor="start" x="182" y="-2143" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; model_type_name</text>
-<text text-anchor="start" x="182" y="-2132" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; output_header_fields</text>
-<text text-anchor="start" x="182" y="-2121" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; output_variable_names</text>
-<text text-anchor="start" x="182" y="-2110" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; output_precision</text>
-<text text-anchor="start" x="182" y="-2099" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; OPTIONAL_PARAMETERS</text>
-<text text-anchor="start" x="182" y="-2088" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; REQUIRED_PARAMETERS</text>
-<text text-anchor="start" x="182" y="-2077" font-family="Helvetica,sans-Serif" font-size="10.00">|+ Bmi_Formulation()</text>
-<text text-anchor="start" x="182" y="-2066" font-family="Helvetica,sans-Serif" font-size="10.00">+ ~Bmi_Formulation()</text>
-<text text-anchor="start" x="182" y="-2055" font-family="Helvetica,sans-Serif" font-size="10.00">+ convert_model_time()</text>
-<text text-anchor="start" x="182" y="-2044" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_allow_model_exceed</text>
-<text text-anchor="start" x="182" y="-2033" font-family="Helvetica,sans-Serif" font-size="10.00">_end_time()</text>
-<text text-anchor="start" x="182" y="-2022" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_bmi_input_variables()</text>
-<text text-anchor="start" x="182" y="-2011" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_bmi_main_output</text>
-<text text-anchor="start" x="182" y="-2000" font-family="Helvetica,sans-Serif" font-size="10.00">_var()</text>
-<text text-anchor="start" x="182" y="-1989" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_bmi_model_start</text>
-<text text-anchor="start" x="182" y="-1978" font-family="Helvetica,sans-Serif" font-size="10.00">_time_forcing_offset_s()</text>
-<text text-anchor="start" x="182" y="-1967" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_bmi_output_variables()</text>
-<text text-anchor="start" x="182" y="-1956" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_config_mapped_variable</text>
-<text text-anchor="start" x="182" y="-1945" font-family="Helvetica,sans-Serif" font-size="10.00">_name()</text>
-<text text-anchor="start" x="182" y="-1934" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_model_current_time()</text>
-<text text-anchor="start" x="182" y="-1923" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_model_end_time()</text>
-<text text-anchor="start" x="182" y="-1912" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_forcing_file_path()</text>
-<text text-anchor="start" x="182" y="-1901" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_model_type_name()</text>
-<text text-anchor="start" x="182" y="-1890" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_output_header_fields()</text>
-<text text-anchor="start" x="182" y="-1879" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_output_header_line()</text>
-<text text-anchor="start" x="182" y="-1868" font-family="Helvetica,sans-Serif" font-size="10.00">and 8 more...</text>
-<text text-anchor="start" x="182" y="-1857" font-family="Helvetica,sans-Serif" font-size="10.00"># get_output_precision()</text>
-<text text-anchor="start" x="182" y="-1846" font-family="Helvetica,sans-Serif" font-size="10.00"># set_bmi_main_output</text>
-<text text-anchor="start" x="182" y="-1835" font-family="Helvetica,sans-Serif" font-size="10.00">_var()</text>
-<text text-anchor="start" x="182" y="-1824" font-family="Helvetica,sans-Serif" font-size="10.00"># set_model_type_name()</text>
-<text text-anchor="start" x="182" y="-1813" font-family="Helvetica,sans-Serif" font-size="10.00"># set_output_header_fields()</text>
-<text text-anchor="start" x="182" y="-1802" font-family="Helvetica,sans-Serif" font-size="10.00"># set_output_variable</text>
-<text text-anchor="start" x="182" y="-1791" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
-<text text-anchor="middle" x="248" y="-1780" font-family="Helvetica,sans-Serif" font-size="10.00">}</text>
+<!-- Node11 -->
+<g id="node11" class="node">
+<title>Node11</title>
+<g id="a_node11"><a xlink:href="classrealization_1_1_tshirt___c___realization.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#666666" points="516,-2232 358,-2232 358,-1729 516,-1729 516,-2232"/>
+<text text-anchor="start" x="366" y="-2220" font-family="Helvetica,sans-Serif" font-size="10.00">{realization::Tshirt</text>
+<text text-anchor="middle" x="437" y="-2209" font-family="Helvetica,sans-Serif" font-size="10.00">_C_Realization</text>
+<text text-anchor="start" x="366" y="-2198" font-family="Helvetica,sans-Serif" font-size="10.00">|&#45; catchment_id</text>
+<text text-anchor="start" x="366" y="-2187" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; params</text>
+<text text-anchor="start" x="366" y="-2176" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; c_soil_params</text>
+<text text-anchor="start" x="366" y="-2165" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; giuh_cdf_ordinates</text>
+<text text-anchor="start" x="366" y="-2154" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; giuh_runoff_queue_per</text>
+<text text-anchor="start" x="366" y="-2143" font-family="Helvetica,sans-Serif" font-size="10.00">_timestep</text>
+<text text-anchor="start" x="366" y="-2132" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; nash_storage</text>
+<text text-anchor="start" x="366" y="-2121" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; c_aorc_params</text>
+<text text-anchor="start" x="366" y="-2110" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; fluxes</text>
+<text text-anchor="start" x="366" y="-2099" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; groundwater_conceptual</text>
+<text text-anchor="start" x="366" y="-2088" font-family="Helvetica,sans-Serif" font-size="10.00">_reservoir</text>
+<text text-anchor="start" x="366" y="-2077" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; OUTPUT_VARIABLE_NAMES</text>
+<text text-anchor="start" x="366" y="-2066" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; OUTPUT_HEADER_FIELDS</text>
+<text text-anchor="start" x="366" y="-2055" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; soil_conceptual_reservoir</text>
+<text text-anchor="start" x="366" y="-2044" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; REQUIRED_PARAMETERS</text>
+<text text-anchor="start" x="366" y="-2033" font-family="Helvetica,sans-Serif" font-size="10.00">|+ Tshirt_C_Realization()</text>
+<text text-anchor="start" x="366" y="-2022" font-family="Helvetica,sans-Serif" font-size="10.00">+ Tshirt_C_Realization()</text>
+<text text-anchor="start" x="366" y="-2011" font-family="Helvetica,sans-Serif" font-size="10.00">+ Tshirt_C_Realization()</text>
+<text text-anchor="start" x="366" y="-2000" font-family="Helvetica,sans-Serif" font-size="10.00">+ Tshirt_C_Realization()</text>
+<text text-anchor="start" x="366" y="-1989" font-family="Helvetica,sans-Serif" font-size="10.00">+ Tshirt_C_Realization()</text>
+<text text-anchor="start" x="366" y="-1978" font-family="Helvetica,sans-Serif" font-size="10.00">+ ~Tshirt_C_Realization()</text>
+<text text-anchor="start" x="366" y="-1967" font-family="Helvetica,sans-Serif" font-size="10.00">+ calc_et()</text>
+<text text-anchor="start" x="366" y="-1956" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
+<text text-anchor="start" x="366" y="-1945" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
+<text text-anchor="start" x="366" y="-1934" font-family="Helvetica,sans-Serif" font-size="10.00">+ run_formulation_for</text>
+<text text-anchor="start" x="366" y="-1923" font-family="Helvetica,sans-Serif" font-size="10.00">_timestep()</text>
+<text text-anchor="start" x="366" y="-1912" font-family="Helvetica,sans-Serif" font-size="10.00">+ run_formulation_for</text>
+<text text-anchor="start" x="366" y="-1901" font-family="Helvetica,sans-Serif" font-size="10.00">_timesteps()</text>
+<text text-anchor="start" x="366" y="-1890" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_formulation_type()</text>
+<text text-anchor="start" x="366" y="-1879" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_response()</text>
+<text text-anchor="start" x="366" y="-1868" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_latest_flux_base</text>
+<text text-anchor="start" x="366" y="-1857" font-family="Helvetica,sans-Serif" font-size="10.00">_flow()</text>
+<text text-anchor="start" x="366" y="-1846" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_latest_flux_giuh</text>
+<text text-anchor="start" x="366" y="-1835" font-family="Helvetica,sans-Serif" font-size="10.00">_runoff()</text>
+<text text-anchor="start" x="366" y="-1824" font-family="Helvetica,sans-Serif" font-size="10.00">and 9 more...</text>
+<text text-anchor="start" x="366" y="-1813" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; get_output_var_flux</text>
+<text text-anchor="start" x="366" y="-1802" font-family="Helvetica,sans-Serif" font-size="10.00">_extraction_func()</text>
+<text text-anchor="start" x="366" y="-1791" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; get_required_parameters()</text>
+<text text-anchor="start" x="366" y="-1780" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; init_ground_water_reservoir()</text>
+<text text-anchor="start" x="366" y="-1769" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; init_soil_reservoir()</text>
+<text text-anchor="start" x="366" y="-1758" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; sync_c_storage_params()</text>
+<text text-anchor="start" x="366" y="-1747" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; init_reservoir_storage()</text>
+<text text-anchor="middle" x="437" y="-1736" font-family="Helvetica,sans-Serif" font-size="10.00">}</text>
 </a>
 </g>
 </g>
-<!-- Node3&#45;&gt;Node5 -->
-<g id="edge4" class="edge">
-<title>Node3&#45;&gt;Node5</title>
-<path fill="none" stroke="#63b8ff" d="M340.2,-2257.95C337.06,-2249.19 333.95,-2240.44 331,-2232 326.05,-2217.83 321.01,-2203.19 315.99,-2188.43"/>
-<polygon fill="none" stroke="#63b8ff" points="336.86,-2258.98 343.54,-2267.2 343.44,-2256.6 336.86,-2258.98"/>
+<!-- Node3&#45;&gt;Node11 -->
+<g id="edge12" class="edge">
+<title>Node3&#45;&gt;Node11</title>
+<path fill="none" stroke="#63b8ff" d="M437,-2257.65C437,-2249.53 437,-2241.11 437,-2232.48"/>
+<polygon fill="none" stroke="#63b8ff" points="433.5,-2257.41 437,-2267.41 440.5,-2257.41 433.5,-2257.41"/>
 </g>
 <!-- Node12 -->
 <g id="node12" class="node">
 <title>Node12</title>
-<g id="a_node12"><a xlink:href="classrealization_1_1_tshirt___c___realization.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="498,-2232 340,-2232 340,-1729 498,-1729 498,-2232"/>
-<text text-anchor="start" x="348" y="-2220" font-family="Helvetica,sans-Serif" font-size="10.00">{realization::Tshirt</text>
-<text text-anchor="middle" x="419" y="-2209" font-family="Helvetica,sans-Serif" font-size="10.00">_C_Realization</text>
-<text text-anchor="start" x="348" y="-2198" font-family="Helvetica,sans-Serif" font-size="10.00">|&#45; catchment_id</text>
-<text text-anchor="start" x="348" y="-2187" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; params</text>
-<text text-anchor="start" x="348" y="-2176" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; c_soil_params</text>
-<text text-anchor="start" x="348" y="-2165" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; giuh_cdf_ordinates</text>
-<text text-anchor="start" x="348" y="-2154" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; giuh_runoff_queue_per</text>
-<text text-anchor="start" x="348" y="-2143" font-family="Helvetica,sans-Serif" font-size="10.00">_timestep</text>
-<text text-anchor="start" x="348" y="-2132" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; nash_storage</text>
-<text text-anchor="start" x="348" y="-2121" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; c_aorc_params</text>
-<text text-anchor="start" x="348" y="-2110" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; fluxes</text>
-<text text-anchor="start" x="348" y="-2099" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; groundwater_conceptual</text>
-<text text-anchor="start" x="348" y="-2088" font-family="Helvetica,sans-Serif" font-size="10.00">_reservoir</text>
-<text text-anchor="start" x="348" y="-2077" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; OUTPUT_VARIABLE_NAMES</text>
-<text text-anchor="start" x="348" y="-2066" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; OUTPUT_HEADER_FIELDS</text>
-<text text-anchor="start" x="348" y="-2055" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; soil_conceptual_reservoir</text>
-<text text-anchor="start" x="348" y="-2044" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; REQUIRED_PARAMETERS</text>
-<text text-anchor="start" x="348" y="-2033" font-family="Helvetica,sans-Serif" font-size="10.00">|+ Tshirt_C_Realization()</text>
-<text text-anchor="start" x="348" y="-2022" font-family="Helvetica,sans-Serif" font-size="10.00">+ Tshirt_C_Realization()</text>
-<text text-anchor="start" x="348" y="-2011" font-family="Helvetica,sans-Serif" font-size="10.00">+ Tshirt_C_Realization()</text>
-<text text-anchor="start" x="348" y="-2000" font-family="Helvetica,sans-Serif" font-size="10.00">+ Tshirt_C_Realization()</text>
-<text text-anchor="start" x="348" y="-1989" font-family="Helvetica,sans-Serif" font-size="10.00">+ Tshirt_C_Realization()</text>
-<text text-anchor="start" x="348" y="-1978" font-family="Helvetica,sans-Serif" font-size="10.00">+ ~Tshirt_C_Realization()</text>
-<text text-anchor="start" x="348" y="-1967" font-family="Helvetica,sans-Serif" font-size="10.00">+ calc_et()</text>
-<text text-anchor="start" x="348" y="-1956" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
-<text text-anchor="start" x="348" y="-1945" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
-<text text-anchor="start" x="348" y="-1934" font-family="Helvetica,sans-Serif" font-size="10.00">+ run_formulation_for</text>
-<text text-anchor="start" x="348" y="-1923" font-family="Helvetica,sans-Serif" font-size="10.00">_timestep()</text>
-<text text-anchor="start" x="348" y="-1912" font-family="Helvetica,sans-Serif" font-size="10.00">+ run_formulation_for</text>
-<text text-anchor="start" x="348" y="-1901" font-family="Helvetica,sans-Serif" font-size="10.00">_timesteps()</text>
-<text text-anchor="start" x="348" y="-1890" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_formulation_type()</text>
-<text text-anchor="start" x="348" y="-1879" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_response()</text>
-<text text-anchor="start" x="348" y="-1868" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_latest_flux_base</text>
-<text text-anchor="start" x="348" y="-1857" font-family="Helvetica,sans-Serif" font-size="10.00">_flow()</text>
-<text text-anchor="start" x="348" y="-1846" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_latest_flux_giuh</text>
-<text text-anchor="start" x="348" y="-1835" font-family="Helvetica,sans-Serif" font-size="10.00">_runoff()</text>
-<text text-anchor="start" x="348" y="-1824" font-family="Helvetica,sans-Serif" font-size="10.00">and 9 more...</text>
-<text text-anchor="start" x="348" y="-1813" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; get_output_var_flux</text>
-<text text-anchor="start" x="348" y="-1802" font-family="Helvetica,sans-Serif" font-size="10.00">_extraction_func()</text>
-<text text-anchor="start" x="348" y="-1791" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; get_required_parameters()</text>
-<text text-anchor="start" x="348" y="-1780" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; init_ground_water_reservoir()</text>
-<text text-anchor="start" x="348" y="-1769" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; init_soil_reservoir()</text>
-<text text-anchor="start" x="348" y="-1758" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; sync_c_storage_params()</text>
-<text text-anchor="start" x="348" y="-1747" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; init_reservoir_storage()</text>
-<text text-anchor="middle" x="419" y="-1736" font-family="Helvetica,sans-Serif" font-size="10.00">}</text>
+<g id="a_node12"><a xlink:href="classrealization_1_1_tshirt___realization.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#666666" points="678,-2111 534,-2111 534,-1850 678,-1850 678,-2111"/>
+<text text-anchor="start" x="542" y="-2099" font-family="Helvetica,sans-Serif" font-size="10.00">{realization::Tshirt</text>
+<text text-anchor="middle" x="606" y="-2088" font-family="Helvetica,sans-Serif" font-size="10.00">_Realization</text>
+<text text-anchor="start" x="542" y="-2077" font-family="Helvetica,sans-Serif" font-size="10.00">|&#45; catchment_id</text>
+<text text-anchor="start" x="542" y="-2066" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; state</text>
+<text text-anchor="start" x="542" y="-2055" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; fluxes</text>
+<text text-anchor="start" x="542" y="-2044" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; cascade_backing_storage</text>
+<text text-anchor="start" x="542" y="-2033" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; params</text>
+<text text-anchor="start" x="542" y="-2022" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; model</text>
+<text text-anchor="start" x="542" y="-2011" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; giuh_kernel</text>
+<text text-anchor="start" x="542" y="-2000" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; dt</text>
+<text text-anchor="start" x="542" y="-1989" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; REQUIRED_PARAMETERS</text>
+<text text-anchor="start" x="542" y="-1978" font-family="Helvetica,sans-Serif" font-size="10.00">|+ Tshirt_Realization()</text>
+<text text-anchor="start" x="542" y="-1967" font-family="Helvetica,sans-Serif" font-size="10.00">+ set_giuh_kernel()</text>
+<text text-anchor="start" x="542" y="-1956" font-family="Helvetica,sans-Serif" font-size="10.00">+ ~Tshirt_Realization()</text>
+<text text-anchor="start" x="542" y="-1945" font-family="Helvetica,sans-Serif" font-size="10.00">+ calc_et()</text>
+<text text-anchor="start" x="542" y="-1934" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_response()</text>
+<text text-anchor="start" x="542" y="-1923" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_formulation_type()</text>
+<text text-anchor="start" x="542" y="-1912" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_output_line_for</text>
+<text text-anchor="start" x="542" y="-1901" font-family="Helvetica,sans-Serif" font-size="10.00">_timestep()</text>
+<text text-anchor="start" x="542" y="-1890" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
+<text text-anchor="start" x="542" y="-1879" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
+<text text-anchor="start" x="542" y="-1868" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_required_parameters()</text>
+<text text-anchor="middle" x="606" y="-1857" font-family="Helvetica,sans-Serif" font-size="10.00">}</text>
 </a>
 </g>
 </g>
 <!-- Node3&#45;&gt;Node12 -->
 <g id="edge13" class="edge">
 <title>Node3&#45;&gt;Node12</title>
-<path fill="none" stroke="#63b8ff" d="M387.16,-2257.65C388.1,-2249.53 389.07,-2241.11 390.07,-2232.48"/>
-<polygon fill="none" stroke="#63b8ff" points="383.71,-2257.09 386.04,-2267.42 390.66,-2257.89 383.71,-2257.09"/>
+<path fill="none" stroke="#63b8ff" d="M509.76,-2259C515.27,-2250.09 520.45,-2241.01 525,-2232 544.07,-2194.26 559.93,-2151.09 572.41,-2111.34"/>
+<polygon fill="none" stroke="#63b8ff" points="506.88,-2257.01 504.47,-2267.33 512.79,-2260.76 506.88,-2257.01"/>
 </g>
-<!-- Node13 -->
-<g id="node13" class="node">
-<title>Node13</title>
-<g id="a_node13"><a xlink:href="classrealization_1_1_tshirt___realization.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="660,-2111 516,-2111 516,-1850 660,-1850 660,-2111"/>
-<text text-anchor="start" x="524" y="-2099" font-family="Helvetica,sans-Serif" font-size="10.00">{realization::Tshirt</text>
-<text text-anchor="middle" x="588" y="-2088" font-family="Helvetica,sans-Serif" font-size="10.00">_Realization</text>
-<text text-anchor="start" x="524" y="-2077" font-family="Helvetica,sans-Serif" font-size="10.00">|&#45; catchment_id</text>
-<text text-anchor="start" x="524" y="-2066" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; state</text>
-<text text-anchor="start" x="524" y="-2055" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; fluxes</text>
-<text text-anchor="start" x="524" y="-2044" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; cascade_backing_storage</text>
-<text text-anchor="start" x="524" y="-2033" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; params</text>
-<text text-anchor="start" x="524" y="-2022" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; model</text>
-<text text-anchor="start" x="524" y="-2011" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; giuh_kernel</text>
-<text text-anchor="start" x="524" y="-2000" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; dt</text>
-<text text-anchor="start" x="524" y="-1989" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; REQUIRED_PARAMETERS</text>
-<text text-anchor="start" x="524" y="-1978" font-family="Helvetica,sans-Serif" font-size="10.00">|+ Tshirt_Realization()</text>
-<text text-anchor="start" x="524" y="-1967" font-family="Helvetica,sans-Serif" font-size="10.00">+ set_giuh_kernel()</text>
-<text text-anchor="start" x="524" y="-1956" font-family="Helvetica,sans-Serif" font-size="10.00">+ ~Tshirt_Realization()</text>
-<text text-anchor="start" x="524" y="-1945" font-family="Helvetica,sans-Serif" font-size="10.00">+ calc_et()</text>
-<text text-anchor="start" x="524" y="-1934" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_response()</text>
-<text text-anchor="start" x="524" y="-1923" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_formulation_type()</text>
-<text text-anchor="start" x="524" y="-1912" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_output_line_for</text>
-<text text-anchor="start" x="524" y="-1901" font-family="Helvetica,sans-Serif" font-size="10.00">_timestep()</text>
-<text text-anchor="start" x="524" y="-1890" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
-<text text-anchor="start" x="524" y="-1879" font-family="Helvetica,sans-Serif" font-size="10.00">+ create_formulation()</text>
-<text text-anchor="start" x="524" y="-1868" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_required_parameters()</text>
-<text text-anchor="middle" x="588" y="-1857" font-family="Helvetica,sans-Serif" font-size="10.00">}</text>
-</a>
-</g>
-</g>
-<!-- Node3&#45;&gt;Node13 -->
-<g id="edge14" class="edge">
-<title>Node3&#45;&gt;Node13</title>
-<path fill="none" stroke="#63b8ff" d="M458.12,-2289.8C476.13,-2272.55 493.75,-2252.86 507,-2232 530.16,-2195.54 547.25,-2151.86 559.61,-2111.27"/>
-<polygon fill="none" stroke="#63b8ff" points="455.86,-2287.13 450.94,-2296.52 460.64,-2292.25 455.86,-2287.13"/>
-</g>
-<!-- Node6 -->
-<g id="node6" class="node">
-<title>Node6</title>
-<g id="a_node6"><a xlink:href="classrealization_1_1_bmi___module___formulation.html" target="_top" xlink:title=" ">
+<!-- Node5 -->
+<g id="node5" class="node">
+<title>Node5</title>
+<g id="a_node5"><a xlink:href="classrealization_1_1_bmi___module___formulation.html" target="_top" xlink:title=" ">
 <polygon fill="white" stroke="#666666" points="146,-944 0,-944 0,-243 146,-243 146,-944"/>
 <text text-anchor="start" x="8" y="-932" font-family="Helvetica,sans-Serif" font-size="10.00">{realization::Bmi_Module</text>
 <text text-anchor="start" x="8" y="-921" font-family="Helvetica,sans-Serif" font-size="10.00">_Formulation&lt; models::</text>
@@ -389,16 +346,16 @@ var sectionId = 'dynsection-0';
 </a>
 </g>
 </g>
-<!-- Node5&#45;&gt;Node6 -->
-<g id="edge5" class="edge">
-<title>Node5&#45;&gt;Node6</title>
-<path fill="none" stroke="#63b8ff" d="M184.99,-1762.78C178.62,-1750.98 171.64,-1739.62 164,-1729 148.06,-1706.85 127.63,-1716.19 115,-1692 -4.3,-1463.49 -9.31,-1170.27 12.53,-944.4"/>
-<polygon fill="none" stroke="#63b8ff" points="181.79,-1764.2 189.51,-1771.45 187.99,-1760.97 181.79,-1764.2"/>
+<!-- Node4&#45;&gt;Node5 -->
+<g id="edge4" class="edge">
+<title>Node4&#45;&gt;Node5</title>
+<path fill="none" stroke="#63b8ff" d="M186.12,-1856.79C158.29,-1807.57 130.24,-1749.07 115,-1692 49.85,-1448.02 40.87,-1162.75 47.38,-944.21"/>
+<polygon fill="none" stroke="#63b8ff" points="182.93,-1858.25 190.93,-1865.19 189,-1854.77 182.93,-1858.25"/>
 </g>
-<!-- Node8 -->
-<g id="node8" class="node">
-<title>Node8</title>
-<g id="a_node8"><a xlink:href="classrealization_1_1_bmi___module___formulation.html" target="_top" xlink:title=" ">
+<!-- Node7 -->
+<g id="node7" class="node">
+<title>Node7</title>
+<g id="a_node7"><a xlink:href="classrealization_1_1_bmi___module___formulation.html" target="_top" xlink:title=" ">
 <polygon fill="white" stroke="#666666" points="340,-944 194,-944 194,-243 340,-243 340,-944"/>
 <text text-anchor="start" x="202" y="-932" font-family="Helvetica,sans-Serif" font-size="10.00">{realization::Bmi_Module</text>
 <text text-anchor="start" x="202" y="-921" font-family="Helvetica,sans-Serif" font-size="10.00">_Formulation&lt; models::</text>
@@ -466,16 +423,16 @@ var sectionId = 'dynsection-0';
 </a>
 </g>
 </g>
-<!-- Node5&#45;&gt;Node8 -->
-<g id="edge7" class="edge">
-<title>Node5&#45;&gt;Node8</title>
-<path fill="none" stroke="#63b8ff" d="M273.81,-1761.66C275.9,-1738.17 277.7,-1714.61 279,-1692 297.56,-1368.08 291.5,-1286.37 284,-962 283.86,-956.09 283.71,-950.13 283.55,-944.13"/>
-<polygon fill="none" stroke="#63b8ff" points="270.36,-1761.02 272.94,-1771.3 277.33,-1761.66 270.36,-1761.02"/>
+<!-- Node4&#45;&gt;Node7 -->
+<g id="edge6" class="edge">
+<title>Node4&#45;&gt;Node7</title>
+<path fill="none" stroke="#63b8ff" d="M276.75,-1761.18C277.63,-1737.83 278.41,-1714.43 279,-1692 287.48,-1367.66 291.5,-1286.37 284,-962 283.86,-956.09 283.71,-950.13 283.55,-944.13"/>
+<polygon fill="none" stroke="#63b8ff" points="273.25,-1760.99 276.36,-1771.12 280.24,-1761.27 273.25,-1760.99"/>
 </g>
-<!-- Node10 -->
-<g id="node10" class="node">
-<title>Node10</title>
-<g id="a_node10"><a xlink:href="classrealization_1_1_bmi___module___formulation.html" target="_top" xlink:title="Abstraction of a formulation with a single backing model object that implements the BMI.">
+<!-- Node9 -->
+<g id="node9" class="node">
+<title>Node9</title>
+<g id="a_node9"><a xlink:href="classrealization_1_1_bmi___module___formulation.html" target="_top" xlink:title="Abstraction of a formulation with a single backing model object that implements the BMI.">
 <polygon fill="white" stroke="#666666" points="270,-1692 124,-1692 124,-1002 270,-1002 270,-1692"/>
 <text text-anchor="start" x="132" y="-1680" font-family="Helvetica,sans-Serif" font-size="10.00">{realization::Bmi_Module</text>
 <text text-anchor="middle" x="197" y="-1669" font-family="Helvetica,sans-Serif" font-size="10.00">_Formulation&lt; M &gt;</text>
@@ -542,16 +499,16 @@ var sectionId = 'dynsection-0';
 </a>
 </g>
 </g>
-<!-- Node5&#45;&gt;Node10 -->
-<g id="edge9" class="edge">
-<title>Node5&#45;&gt;Node10</title>
-<path fill="none" stroke="#63b8ff" d="M230.39,-1761.39C228.57,-1738.89 226.69,-1715.66 224.8,-1692.22"/>
-<polygon fill="none" stroke="#63b8ff" points="226.89,-1761.53 231.18,-1771.21 233.86,-1760.97 226.89,-1761.53"/>
+<!-- Node4&#45;&gt;Node9 -->
+<g id="edge8" class="edge">
+<title>Node4&#45;&gt;Node9</title>
+<path fill="none" stroke="#63b8ff" d="M242.17,-1761.39C239.71,-1738.89 237.17,-1715.66 234.61,-1692.22"/>
+<polygon fill="none" stroke="#63b8ff" points="238.68,-1761.66 243.24,-1771.22 245.64,-1760.9 238.68,-1761.66"/>
 </g>
-<!-- Node11 -->
-<g id="node11" class="node">
-<title>Node11</title>
-<g id="a_node11"><a xlink:href="classrealization_1_1_bmi___multi___formulation.html" target="_top" xlink:title="Abstraction of a formulation with multiple backing model object that implements the BMI.">
+<!-- Node10 -->
+<g id="node10" class="node">
+<title>Node10</title>
+<g id="a_node10"><a xlink:href="classrealization_1_1_bmi___multi___formulation.html" target="_top" xlink:title="Abstraction of a formulation with multiple backing model object that implements the BMI.">
 <polygon fill="white" stroke="#666666" points="482,-1604 326,-1604 326,-1090 482,-1090 482,-1604"/>
 <text text-anchor="start" x="334" y="-1592" font-family="Helvetica,sans-Serif" font-size="10.00">{realization::Bmi_Multi</text>
 <text text-anchor="middle" x="404" y="-1581" font-family="Helvetica,sans-Serif" font-size="10.00">_Formulation</text>
@@ -602,16 +559,16 @@ var sectionId = 'dynsection-0';
 </a>
 </g>
 </g>
-<!-- Node5&#45;&gt;Node11 -->
-<g id="edge12" class="edge">
-<title>Node5&#45;&gt;Node11</title>
-<path fill="none" stroke="#63b8ff" d="M301.82,-1761.63C314.34,-1710.95 327.78,-1656.53 340.67,-1604.36"/>
-<polygon fill="none" stroke="#63b8ff" points="298.44,-1760.71 299.44,-1771.25 305.24,-1762.39 298.44,-1760.71"/>
+<!-- Node4&#45;&gt;Node10 -->
+<g id="edge11" class="edge">
+<title>Node4&#45;&gt;Node10</title>
+<path fill="none" stroke="#63b8ff" d="M313.61,-1761.63C324.69,-1710.95 336.58,-1656.53 347.98,-1604.36"/>
+<polygon fill="none" stroke="#63b8ff" points="310.23,-1760.73 311.51,-1771.24 317.06,-1762.22 310.23,-1760.73"/>
 </g>
-<!-- Node7 -->
-<g id="node7" class="node">
-<title>Node7</title>
-<g id="a_node7"><a xlink:href="classrealization_1_1_bmi___c___formulation.html" target="_top" xlink:title=" ">
+<!-- Node6 -->
+<g id="node6" class="node">
+<title>Node6</title>
+<g id="a_node6"><a xlink:href="classrealization_1_1_bmi___c___formulation.html" target="_top" xlink:title=" ">
 <polygon fill="white" stroke="#666666" points="143,-206 3,-206 3,0 143,0 143,-206"/>
 <text text-anchor="start" x="11" y="-194" font-family="Helvetica,sans-Serif" font-size="10.00">{realization::Bmi_C</text>
 <text text-anchor="middle" x="73" y="-183" font-family="Helvetica,sans-Serif" font-size="10.00">_Formulation</text>
@@ -634,16 +591,16 @@ var sectionId = 'dynsection-0';
 </a>
 </g>
 </g>
-<!-- Node6&#45;&gt;Node7 -->
-<g id="edge6" class="edge">
-<title>Node6&#45;&gt;Node7</title>
+<!-- Node5&#45;&gt;Node6 -->
+<g id="edge5" class="edge">
+<title>Node5&#45;&gt;Node6</title>
 <path fill="none" stroke="#63b8ff" d="M73,-231.21C73,-222.6 73,-214.24 73,-206.19"/>
 <polygon fill="none" stroke="#63b8ff" points="69.5,-231.16 73,-241.16 76.5,-231.16 69.5,-231.16"/>
 </g>
-<!-- Node9 -->
-<g id="node9" class="node">
-<title>Node9</title>
-<g id="a_node9"><a xlink:href="classrealization_1_1_bmi___cpp___formulation.html" target="_top" xlink:title="Encapsulates a bmi::Bmi model in C++ such that it can be loaded as a formulation, as such also so tha...">
+<!-- Node8 -->
+<g id="node8" class="node">
+<title>Node8</title>
+<g id="a_node8"><a xlink:href="classrealization_1_1_bmi___cpp___formulation.html" target="_top" xlink:title="Encapsulates a bmi::Bmi model in C++ such that it can be loaded as a formulation, as such also so tha...">
 <polygon fill="white" stroke="#666666" points="337,-206 197,-206 197,0 337,0 337,-206"/>
 <text text-anchor="start" x="205" y="-194" font-family="Helvetica,sans-Serif" font-size="10.00">{realization::Bmi_Cpp</text>
 <text text-anchor="middle" x="267" y="-183" font-family="Helvetica,sans-Serif" font-size="10.00">_Formulation</text>
@@ -666,23 +623,23 @@ var sectionId = 'dynsection-0';
 </a>
 </g>
 </g>
-<!-- Node8&#45;&gt;Node9 -->
-<g id="edge8" class="edge">
-<title>Node8&#45;&gt;Node9</title>
+<!-- Node7&#45;&gt;Node8 -->
+<g id="edge7" class="edge">
+<title>Node7&#45;&gt;Node8</title>
 <path fill="none" stroke="#63b8ff" d="M267,-231.21C267,-222.6 267,-214.24 267,-206.19"/>
 <polygon fill="none" stroke="#63b8ff" points="263.5,-231.16 267,-241.16 270.5,-231.16 263.5,-231.16"/>
 </g>
-<!-- Node10&#45;&gt;Node6 -->
-<g id="edge10" class="edge">
-<title>Node10&#45;&gt;Node6</title>
+<!-- Node9&#45;&gt;Node5 -->
+<g id="edge9" class="edge">
+<title>Node9&#45;&gt;Node5</title>
 <path fill="none" stroke="orange" d="M121.24,-1049.56C116.72,-1027.45 112.57,-1005.42 109,-984 106.83,-971.02 104.79,-957.78 102.86,-944.38"/>
 <polygon fill="orange" stroke="orange" points="117.8,-1050.2 123.25,-1059.29 124.65,-1048.79 117.8,-1050.2"/>
 <text text-anchor="start" x="109" y="-976" font-family="Helvetica,sans-Serif" font-size="10.00"> &lt; models::bmi::Bmi</text>
 <text text-anchor="middle" x="151.5" y="-965" font-family="Helvetica,sans-Serif" font-size="10.00">_C_Adapter &gt;</text>
 </g>
-<!-- Node10&#45;&gt;Node8 -->
-<g id="edge11" class="edge">
-<title>Node10&#45;&gt;Node8</title>
+<!-- Node9&#45;&gt;Node7 -->
+<g id="edge10" class="edge">
+<title>Node9&#45;&gt;Node7</title>
 <path fill="none" stroke="orange" d="M196.62,-990.45C197.32,-980.86 198.12,-971.36 199,-962 199.55,-956.19 200.14,-950.33 200.78,-944.43"/>
 <polygon fill="orange" stroke="orange" points="193.14,-990.01 195.93,-1000.23 200.12,-990.5 193.14,-990.01"/>
 <text text-anchor="start" x="199" y="-976" font-family="Helvetica,sans-Serif" font-size="10.00"> &lt; models::bmi::Bmi</text>
