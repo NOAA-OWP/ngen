@@ -411,62 +411,81 @@ int find_partition_connections(const std::string& nexus, const PartitionVSet& ca
 
 }
 
-int main(int argc, char* argv[])
+void read_arguments(int argc, char* argv[],
+                    std::string& catchmentDataFile,
+                    std::string& nexusDataFile,
+                    std::string& partitionOutFile,
+                    int& numPartitions,
+                    std::vector<std::string>& catchment_subset_ids,
+                    std::vector<std::string>& nexus_subset_ids)
 {
-    using network::Network;
-    std::string catchmentDataFile, nexusDataFile;
-    std::string partitionOutFile;
-    int num_partitions = 0;
-    bool  error;
     if( argc < 7 ){
         std::cout << "Missing required args:" << std::endl;
         std::cout << argv[0] << " <catchment_data_path> <nexus_data_path> <partition_output_name> <number of partitions> <catchment_subset_ids> <nexus_subset_ids> " << std::endl;
         std::cout << "Use empty strings for subset_ids for no subsetting, e.g ''\nUse \'cat-X,cat-Y\', \'nex-X,nex-Y\' to partition only the defined catchment and nexus"<<std::endl;
         std::cout << "Note the use of single quotes, and no spaces between the ids.  (no quotes will also work, but  \"\" will not."<<std::endl;
+        exit(-1);
+    }
+
+    bool error = false;
+    if( !utils::FileChecker::file_is_readable(argv[1]) ) {
+        std::cout << "catchment data path " << argv[1] << " not readable" << std::endl;
+        error = true;
+    } else {
+        catchmentDataFile = argv[1];
+    }
+
+    if( !utils::FileChecker::file_is_readable(argv[2]) ) {
+        std::cout << "nexus data path " << argv[2] << " not readable" << std::endl;
+        error = true;
+    } else {
+        nexusDataFile = argv[2];
+    }
+
+    partitionOutFile = argv[3];
+    if (partitionOutFile.empty()) {
+        std::cout << "Missing output file name " << std::endl;
         error = true;
     }
-    else {
-        error = false;
-        if( !utils::FileChecker::file_is_readable(argv[1]) ) {
-            std::cout<<"catchment data path "<<argv[1]<<" not readable"<<std::endl;
-            error = true;
-        }
-        else{ catchmentDataFile = argv[1]; }
 
-        if( !utils::FileChecker::file_is_readable(argv[2]) ) {
-            std::cout<<"nexus data path "<<argv[2]<<" not readable"<<std::endl;
-            error = true;
-        }
-        else{ nexusDataFile = argv[2]; }
-
-        partitionOutFile = argv[3];
-        if (partitionOutFile == "") {
-            std::cout << "Missing output file name " << std::endl;
-            error = true;
-        }
-    
-        try {
-            num_partitions = boost::lexical_cast<int>(argv[4]);
-            if(num_partitions < 0) throw boost::bad_lexical_cast();
-        }
-        catch(boost::bad_lexical_cast &e) {
-            std::cout<<"number of partitions must be a positive integer."<<std::endl;
-            error = true;
-        }
-        
+    try {
+        numPartitions = boost::lexical_cast<int>(argv[4]);
+        if (numPartitions < 0) throw boost::bad_lexical_cast();
     }
-    if(error) exit(-1);
+    catch(boost::bad_lexical_cast &e) {
+        std::cout << "number of partitions must be a positive integer." << std::endl;
+        error = true;
+    }
 
-    std::vector<std::string> catchment_subset_ids;
-    std::vector<std::string> nexus_subset_ids;
     //split the subset strings into vectors
     boost::split(catchment_subset_ids, argv[5], [](char c){return c == ','; } );
     boost::split(nexus_subset_ids, argv[6], [](char c){return c == ','; } );
 
     //If a single id or no id is passed, the subset vector will have size 1 and be the id or the ""
     //if we get an empty string, pop it from the subset list.
-    if(nexus_subset_ids.size() == 1 && nexus_subset_ids[0] == "") nexus_subset_ids.pop_back();
-    if(catchment_subset_ids.size() == 1 && catchment_subset_ids[0] == "") catchment_subset_ids.pop_back();
+    if(catchment_subset_ids.size() == 1 && catchment_subset_ids[0] == "") {
+        catchment_subset_ids.pop_back();
+    }
+    if(nexus_subset_ids.size() == 1 && nexus_subset_ids[0] == "") {
+        nexus_subset_ids.pop_back();
+    }
+
+    if (error) exit(-1);
+}
+
+int main(int argc, char* argv[])
+{
+    using network::Network;
+    std::string catchmentDataFile, nexusDataFile;
+    std::string partitionOutFile;
+    std::vector<std::string> catchment_subset_ids;
+    std::vector<std::string> nexus_subset_ids;
+    int num_partitions = 0;
+
+    read_arguments(argc, argv,
+                   catchmentDataFile, nexusDataFile, partitionOutFile,
+                   num_partitions,
+                   catchment_subset_ids, nexus_subset_ids);
 
     std::ofstream outFile;
     outFile.open(partitionOutFile, std::ios::trunc);
