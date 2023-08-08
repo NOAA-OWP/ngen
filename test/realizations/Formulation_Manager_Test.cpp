@@ -110,6 +110,23 @@ class Formulation_Manager_Test : public ::testing::Test {
 
     };
 
+    void replace_paths(std::string& input, const std::string& pattern, const std::string& replacement)
+    {
+        std::vector<std::string> v{path_options.size()};
+        for(unsigned int i = 0; i < path_options.size(); i++)
+            v[i] = path_options[i] + replacement;
+        
+        const std::string dir = utils::FileChecker::find_first_readable(v);
+        if (dir == "") {
+            // std::cerr << "Can't find any of:\n";
+            // for (const auto& s : v)
+            //   std::cerr << "  - " << s << '\n';
+            return;
+        }
+
+        boost::replace_all(input, pattern, dir);
+    }
+
     std::string fix_paths(std::string json)
     {
         std::vector<std::string> forcing_paths = {
@@ -129,30 +146,14 @@ class Formulation_Manager_Test : public ::testing::Test {
                 //std::cerr<<"TRYING TO REPLACE DIRECTORY... "<<remove<<" -> "<<replace<<std::endl;
                 boost::replace_all(json, remove , replace);
         }
+      
         //BMI_C_INIT_DIR_PATH
-        v = {};
-        for(unsigned int i = 0; i < path_options.size(); i++){
-            v.push_back( path_options[i] + "data/bmi/test_bmi_c" );
-        }
-        dir = utils::FileChecker::find_first_readable(v);
-        if(dir != ""){
-                std::string remove = "{{BMI_C_INIT_DIR_PATH}}";
-                std::string replace = dir;
-                //std::cerr<<"TRYING TO REPLACE DIRECTORY... "<<remove<<" -> "<<replace<<std::endl;
-                boost::replace_all(json, remove , replace);
-        }
+        replace_paths(json, "{{BMI_C_INIT_DIR_PATH}}", "data/bmi/test_bmi_c");
+        //BMI_CPP_INIT_DIR_PATH
+        replace_paths(json, "{{BMI_CPP_INIT_DIR_PATH}}", "data/bmi/test_bmi_cpp");
         //EXTERN_DIR_PATH
-        v = {};
-        for(unsigned int i = 0; i < path_options.size(); i++){
-            v.push_back( path_options[i] + "extern" );
-        }
-        dir = utils::FileChecker::find_first_readable(v);
-        if(dir != ""){
-                std::string remove = "{{EXTERN_DIR_PATH}}";
-                std::string replace = dir;
-                //std::cerr<<"TRYING TO REPLACE DIRECTORY... "<<remove<<" -> "<<replace<<std::endl;
-                boost::replace_all(json, remove , replace);
-        }
+        replace_paths(json, "{{EXTERN_DIR_PATH}}", "extern");
+        
         for (unsigned int i = 0; i < forcing_paths.size(); i++) {
           if(json.find(forcing_paths[i]) == std::string::npos){
             continue;
@@ -512,21 +513,6 @@ const std::string EXAMPLE_4 = "{ "
     "} "
 "}";
 
-const std::string test_bmi_cpp_lib = utils::FileChecker::find_first_readable({
-  "../../extern/test_bmi_cpp/cmake_build/libtestbmicppmodel.so",
-  "../extern/test_bmi_cpp/cmake_build/libtestbmicppmodel.so",
-  "./extern/test_bmi_cpp/cmake_build/libtestbmicppmodel.so",
-  "../../extern/test_bmi_cpp/build/libtestbmicppmodel.so",
-  "../extern/test_bmi_cpp/build/libtestbmicppmodel.so",
-  "./extern/test_bmi_cpp/build/libtestbmicppmodel.so",
-});
-
-const std::string test_bmi_cpp_cfg = utils::FileChecker::find_first_readable({
-  "../../test/data/bmi/test_bmi_cpp/test_bmi_cpp_config_2.txt",
-  "../test/data/bmi/test_bmi_cpp/test_bmi_cpp_config_2.txt",
-  "./test/data/bmi/test_bmi_cpp/test_bmi_cpp_config_2.txt"
-});
-
 /**
  * Configuration for model_params parsing at levels:
  * - global single-bmi
@@ -541,8 +527,8 @@ const std::string EXAMPLE_5_a =
 "                \"name\": \"bmi_c++\","
 "                \"params\": {"
 "                    \"model_type_name\": \"test_bmi_c++\","
-"                    \"library_file\": \"" + test_bmi_cpp_lib + "\","
-"                    \"init_config\": \"" + test_bmi_cpp_cfg + "\","
+"                    \"library_file\": \"{{EXTERN_DIR_PATH}}/test_bmi_cpp/cmake_build/libtestbmicppmodel.so\","
+"                    \"init_config\": \"{{BMI_CPP_INIT_DIR_PATH}}/test_bmi_cpp_config_2.txt\","
 "                    \"allow_exceed_end_time\": true,"
 "                    \"main_output_variable\": \"OUTPUT_VAR_4\","
 "                    \"uses_forcing_file\": false,"
@@ -580,8 +566,8 @@ const std::string EXAMPLE_5_a =
 "                    \"name\": \"bmi_c++\","
 "                    \"params\": {"
 "                        \"model_type_name\": \"test_bmi_c++\","
-"                        \"library_file\": \"" + test_bmi_cpp_lib + "\","
-"                        \"init_config\": \"" + test_bmi_cpp_cfg + "\","
+"                        \"library_file\": \"{{EXTERN_DIR_PATH}}/test_bmi_cpp/cmake_build/libtestbmicppmodel.so\","
+"                        \"init_config\": \"{{BMI_CPP_INIT_DIR_PATH}}/test_bmi_cpp_config_2.txt\","
 "                        \"allow_exceed_end_time\": true,"
 "                        \"main_output_variable\": \"OUTPUT_VAR_4\","
 "                        \"uses_forcing_file\": false,"
@@ -620,8 +606,8 @@ const std::string EXAMPLE_5_a =
 "                                \"name\": \"bmi_c++\","
 "                                \"params\": {"
 "                                    \"model_type_name\": \"test_bmi_c++\","
-"                                    \"library_file\": \"" + test_bmi_cpp_lib + "\","
-"                                    \"init_config\": \"" + test_bmi_cpp_cfg + "\","
+"                                    \"library_file\": \"{{EXTERN_DIR_PATH}}/test_bmi_cpp/cmake_build/libtestbmicppmodel.so\","
+"                                    \"init_config\": \"{{BMI_CPP_INIT_DIR_PATH}}/test_bmi_cpp_config_2.txt\","
 "                                    \"allow_exceed_end_time\": true,"
 "                                    \"main_output_variable\": \"OUTPUT_VAR_4\","
 "                                    \"uses_forcing_file\": false,"
@@ -673,8 +659,8 @@ const std::string EXAMPLE_5_b =
 "                             \"name\": \"bmi_c++\","
 "                             \"params\": {"
 "                                 \"model_type_name\": \"test_bmi_c++\","
-"                                 \"library_file\": \"" + test_bmi_cpp_lib + "\","
-"                                 \"init_config\": \"" + test_bmi_cpp_cfg + "\","
+"                                  \"library_file\": \"{{EXTERN_DIR_PATH}}/test_bmi_cpp/cmake_build/libtestbmicppmodel.so\","
+"                                  \"init_config\": \"{{BMI_CPP_INIT_DIR_PATH}}/test_bmi_cpp_config_2.txt\","
 "                                 \"allow_exceed_end_time\": true,"
 "                                 \"main_output_variable\": \"OUTPUT_VAR_4\","
 "                                 \"uses_forcing_file\": false,"
