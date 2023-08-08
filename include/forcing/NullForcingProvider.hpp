@@ -104,25 +104,6 @@ class NullForcingProvider : public data_access::GenericDataProvider
         throw std::runtime_error("Called get_values function in NullDataProvider");
     }
 
-
-    /**
-     * Get whether a param's value is an aggregate sum over the entire time step.
-     *
-     * Certain params, like rain fall, are aggregated sums over an entire time step.  Others, such as pressure, are not
-     * such sums and instead something else like an instantaneous reading or an average value over the time step.
-     *
-     * It may be the case that forcing data is needed for some discretization different than the forcing time step.
-     * These values can be calculated (or at least approximated), but doing so requires knowing which values are summed
-     * versus not.
-     *
-     * @param name The name of the forcing param for which the current value is desired.
-     * @throw std::runtime_error as this provider does not knowledge of the forcing variables
-     */
-    //TODO this function doesn't seem being used
-    inline bool is_param_sum_over_time_step(const std::string& name) {
-        throw std::runtime_error("Got request for variable " + name + " but no such variable is provided NullForcingProvider." + SOURCE_LOC);
-    }
-
     /**
      * Get whether a property's per-time-step values are each an aggregate sum over the entire time step.
      *
@@ -137,7 +118,7 @@ class NullForcingProvider : public data_access::GenericDataProvider
      */
     //TODO this one used in Bmi_Module_Formulation.hpp and Bmi_Multi_Formulation.hpp
     inline bool is_property_sum_over_time_step(const std::string& name) override {
-        return is_param_sum_over_time_step(name);
+        throw std::runtime_error("Got request for variable " + name + " but no such variable is provided by NullForcingProvider." + SOURCE_LOC);
     }
 
     const std::vector<std::string> &get_available_variable_names() override {
