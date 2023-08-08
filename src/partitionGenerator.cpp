@@ -48,16 +48,32 @@ void write_remote_connections(const PartitionVSet& catchment_part, const Partiti
     outFile<<"    \"partitions\":["<<std::endl;
 
     auto quote = [] (const std::string& s) { return '"' + s + '"'; };
+    auto quote_remote_conn = [] (const RemoteConnection& remote_conn) {
+        // remote_conn is a tuple of {mpi_rank, nex-id, cat-id}
+        int part_id = std::get<0>(remote_conn);
+        const std::string& nexus_id = std::get<1>(remote_conn);
+        const std::string& catchment_id = std::get<2>(remote_conn);
+        const std::string& catchment_direction = std::get<3>(remote_conn);
+        return std::string("{")
+            + "\"mpi-rank\": " + std::to_string(part_id) + ", "
+            + "\"nex-id\": \"" + nexus_id + "\", "
+            + "\"cat-id\": \"" + catchment_id + "\", "
+            + "\"cat-direction\": \"" + catchment_direction + "\""
+            + "}";
+    };
 
     using boost::algorithm::join;
     using boost::adaptors::transformed;
 
-    int id = 0;
-    // loop over all partitions
     for (int i =0; i < catchment_part.size(); ++i)
     {
+        if (i != 0)
+            outFile << ", " << std::endl;
+
+        outFile << "        {\"id\":" << i << ",\n";
+
         // write catchments
-        outFile << "        {\"id\":" << id <<",\n        \"cat-ids\":[";
+        outFile << "        \"cat-ids\":[";
         outFile << join(catchment_part[i] | transformed(quote), ", ");
         outFile << "],\n";
 
@@ -67,44 +83,11 @@ void write_remote_connections(const PartitionVSet& catchment_part, const Partiti
         outFile << "],\n";
 
         // write remote_connections
-        const RemoteConnectionVec& remote_conn_vec = remote_connections_vec[i];
+        outFile << "        \"remote-connections\":[";
+        outFile << join(remote_connections_vec[i] | transformed(quote_remote_conn), ", ");
+        outFile <<"]";
 
-        outFile<<"        \"remote-connections\":[";
-        int vec_size = remote_conn_vec.size();
-        int set_counter = 0;
-        // loop over elements in remote connection vector of tuples
-        for(auto const &remote_conn : remote_conn_vec)
-        {
-            // remote_conn is a tuple of {mpi_rank, nex-id, cat-id}
-            int part_id = std::get<0>(remote_conn);
-            std::string nexus_id = std::get<1>(remote_conn);
-            std::string catchment_id = std::get<2>(remote_conn);
-            const std::string catchment_direction = std::get<3>(remote_conn);
-            {
-                outFile << "{" << "\"mpi-rank\":" << part_id << ", ";
-                outFile << "\"nex-id\":" << "\""<< nexus_id <<"\"" << ", ";
-                outFile << "\"cat-id\":" << "\""<< catchment_id << "\"" << ", ";
-                outFile << "\"cat-direction\":" << "\""<< catchment_direction << "\"" << "}";
-                if (set_counter == (vec_size-1))
-                {
-                    outFile << "";
-                }
-                else
-                {
-                    outFile << ", ";
-                }
-            }
-            set_counter++;
-        }
-        outFile<<"]";
-
-        if (id != (num_part-1))
-        //if (id != 1)  // for a quick test
-            outFile<<"}," << std::endl;
-        else
-            outFile<<"}" << std::endl;
-
-        id++;
+        outFile << "}";
     }
     outFile<<"    ]"<<std::endl;
     outFile<<"}"<<std::endl;
