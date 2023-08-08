@@ -58,9 +58,6 @@ endfunction()
 set(PROJ_ROOT_INCLUDE_DIR ./include)
 set(PROJ_ROOT_MODELS_DIR ./models)
 
-set(HYMOD_DIR ${PROJ_ROOT_MODELS_DIR}/hymod)
-set(HYMOD_INCLUDE_DIR ${HYMOD_DIR}/include)
-
 # Find the Boost library and configure usage
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
@@ -286,11 +283,6 @@ if(PACKAGE_TESTS)
     include(GoogleTest)
     add_subdirectory(test)
 endif()
-
-#add_library(Hymod ${HYMOD_INCLUDE_DIR}/Hymod.h)
-#set_target_properties(Hymod PROPERTIES LINKER_LANGUAGE CXX)
-
-#target_compile_features(Hymod PUBLIC cxx_std_14)
 
 #set_target_properties(ngen PROPERTIES LINKER_LANGUAGE CXX)
 #
