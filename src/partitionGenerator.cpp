@@ -1,6 +1,8 @@
 #include <network.hpp>
 #include <FileChecker.h>
 #include <boost/lexical_cast.hpp>
+#include <boost/range/functions.hpp>
+#include <boost/algorithm/string/join.hpp>
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -45,32 +47,24 @@ void write_remote_connections(const PartitionVSet& catchment_part, const Partiti
     outFile<<"{"<<std::endl;
     outFile<<"    \"partitions\":["<<std::endl;
 
+    auto quote = [] (const std::string& s) { return '"' + s + '"'; };
+
+    using boost::algorithm::join;
+    using boost::adaptors::transformed;
+
     int id = 0;
-    std::streamoff backspace(2);
     // loop over all partitions
     for (int i =0; i < catchment_part.size(); ++i)
     {
         // write catchments
-        outFile<<"        {\"id\":" << id <<",\n        \"cat-ids\":[";
-        const std::unordered_set<std::string>& cat_set = catchment_part[i];
-        // iterate over elements in catchment set
-        for (auto it = cat_set.begin(); it != cat_set.end(); it++) {
-            std::string catchment_id = *it;
-            outFile <<"\"" << catchment_id <<"\"" << ", ";
-        }
-        outFile.seekp( outFile.tellp() - backspace );
-        outFile<<"],\n";
+        outFile << "        {\"id\":" << id <<",\n        \"cat-ids\":[";
+        outFile << join(catchment_part[i] | transformed(quote), ", ");
+        outFile << "],\n";
 
         // write nexuses
-        outFile<<"        \"nex-ids\":[";
-        const std::unordered_set<std::string>& nex_set = nexus_part[i];
-        // loop over elements in nexus set
-        for (auto it = nex_set.begin(); it != nex_set.end(); it++) {
-            std::string nexus_id = *it;
-            outFile <<"\"" << nexus_id <<"\"" << ", ";
-        }
-        outFile.seekp( outFile.tellp() - backspace );
-        outFile<<"],\n";
+        outFile << "        \"nex-ids\":[";
+        outFile << join(nexus_part[i] | transformed(quote), ", ");
+        outFile << "],\n";
 
         // write remote_connections
         const RemoteConnectionVec& remote_conn_vec = remote_connections_vec[i];
