@@ -37,17 +37,9 @@ var searchData=
   ['get_5fvar_5fnbytes_34',['get_var_nbytes',['../struct_bmi.html#a624abb6d80d665ead8235aea36e1ce3c',1,'Bmi']]],
   ['get_5fvar_5ftype_35',['get_var_type',['../struct_bmi.html#a1f5a94a5b71999141c0cc31cb1d280e2',1,'Bmi']]],
   ['get_5fvar_5funits_36',['get_var_units',['../struct_bmi.html#a8ca6256250e4746f02720c479dbb6c8f',1,'Bmi']]],
-  ['giuh_5fcdf_5fordinates_37',['giuh_cdf_ordinates',['../classrealization_1_1_tshirt___c___realization.html#a45defe72d43cba24cd81af47fe161fe4',1,'realization::Tshirt_C_Realization']]],
-  ['giuh_5fkernel_38',['giuh_kernel',['../classrealization_1_1_tshirt___realization.html#aa910f1ec3966e00ca3698e15c4eb6818',1,'realization::Tshirt_Realization']]],
-  ['giuh_5frunoff_5fm_39',['giuh_runoff_m',['../structtshirt__c__result__fluxes.html#a4a24f52c5fd33bcf18fd1a0b77d090ea',1,'tshirt_c_result_fluxes']]],
-  ['giuh_5frunoff_5fqueue_5fper_5ftimestep_40',['giuh_runoff_queue_per_timestep',['../classrealization_1_1_tshirt___c___realization.html#ad35fadf81a0e146e35d6e5ddd4511ed3',1,'realization::Tshirt_C_Realization']]],
-  ['global_5fforcing_41',['global_forcing',['../classrealization_1_1_formulation___manager.html#aefede1cd4a4aa13bae4e8a8cb58968b1',1,'realization::Formulation_Manager']]],
-  ['global_5fformulation_5fparameters_42',['global_formulation_parameters',['../classrealization_1_1_formulation___manager.html#acd6121b421b707d9cd9459b330443c31',1,'realization::Formulation_Manager']]],
-  ['global_5fformulation_5ftree_43',['global_formulation_tree',['../classrealization_1_1_formulation___manager.html#a3ce2f6a9516aeef300950576148f8334',1,'realization::Formulation_Manager']]],
-  ['graph_44',['graph',['../classnetwork_1_1_network.html#a81433a0d0c450c400051ac4b894d8eb5',1,'network::Network']]],
-  ['ground_5fheat_5fflux_5fw_5fper_5fsq_5fm_45',['ground_heat_flux_W_per_sq_m',['../structevapotranspiration__forcing.html#a87ade068ef3ae979c069a60534f67de1',1,'evapotranspiration_forcing::ground_heat_flux_W_per_sq_m()'],['../structet_1_1evapotranspiration__forcing.html#ac33b8f3a7320051061393299e30650f7',1,'et::evapotranspiration_forcing::ground_heat_flux_W_per_sq_m()']]],
-  ['groundwater_5fconceptual_5freservoir_46',['groundwater_conceptual_reservoir',['../classrealization_1_1_tshirt___c___realization.html#a2437c3c59e9cc834c37fe75e029fd15d',1,'realization::Tshirt_C_Realization']]],
-  ['groundwater_5fflow_5fmeters_5fper_5fsecond_47',['groundwater_flow_meters_per_second',['../structtshirt_1_1tshirt__fluxes.html#a781655218ae76a3825a29fa3416e90f3',1,'tshirt::tshirt_fluxes']]],
-  ['groundwater_5freservoir_48',['groundwater_reservoir',['../classtshirt_1_1tshirt__model.html#a84c41b6f0e824fcbd9fcf311f42be679',1,'tshirt::tshirt_model']]],
-  ['groundwater_5fstorage_5fmeters_49',['groundwater_storage_meters',['../structtshirt_1_1tshirt__state.html#a10d80a125f2b810a501dd204f0e14a4a',1,'tshirt::tshirt_state']]]
+  ['global_5fforcing_37',['global_forcing',['../classrealization_1_1_formulation___manager.html#aefede1cd4a4aa13bae4e8a8cb58968b1',1,'realization::Formulation_Manager']]],
+  ['global_5fformulation_5fparameters_38',['global_formulation_parameters',['../classrealization_1_1_formulation___manager.html#acd6121b421b707d9cd9459b330443c31',1,'realization::Formulation_Manager']]],
+  ['global_5fformulation_5ftree_39',['global_formulation_tree',['../classrealization_1_1_formulation___manager.html#a3ce2f6a9516aeef300950576148f8334',1,'realization::Formulation_Manager']]],
+  ['graph_40',['graph',['../classnetwork_1_1_network.html#a81433a0d0c450c400051ac4b894d8eb5',1,'network::Network']]],
+  ['ground_5fheat_5fflux_5fw_5fper_5fsq_5fm_41',['ground_heat_flux_W_per_sq_m',['../structevapotranspiration__forcing.html#a87ade068ef3ae979c069a60534f67de1',1,'evapotranspiration_forcing::ground_heat_flux_W_per_sq_m()'],['../structet_1_1evapotranspiration__forcing.html#ac33b8f3a7320051061393299e30650f7',1,'et::evapotranspiration_forcing::ground_heat_flux_W_per_sq_m()']]]
 ];

@@ -14,6 +14,5 @@ var namespaces_dup =
     [ "nexus", "namespacenexus.html", "namespacenexus" ],
     [ "realization", "namespacerealization.html", "namespacerealization" ],
     [ "Reservoir", "namespace_reservoir.html", "namespace_reservoir" ],
-    [ "tshirt", "namespacetshirt.html", "namespacetshirt" ],
     [ "utils", "namespaceutils.html", "namespaceutils" ]
 ];

@@ -48,8 +48,5 @@ var searchData=
   ['_7epdm03kerneltest_45',['~Pdm03KernelTest',['../class_pdm03_kernel_test.html#a9c9134f2ad0283a4a1f977128f2998fa',1,'Pdm03KernelTest']]],
   ['_7eschaakekerneltest_46',['~SchaakeKernelTest',['../class_schaake_kernel_test.html#a2f077a3729afb86e31580e55bef63c51',1,'SchaakeKernelTest']]],
   ['_7estreamhandler_47',['~StreamHandler',['../classutils_1_1_stream_handler.html#a9c2a94967e4afa1afe854878dac2c354',1,'utils::StreamHandler']]],
-  ['_7etshirt_5fc_5frealization_48',['~Tshirt_C_Realization',['../classrealization_1_1_tshirt___c___realization.html#a683b7c23e045035e67e9e44d90ea1741',1,'realization::Tshirt_C_Realization']]],
-  ['_7etshirt_5frealization_49',['~Tshirt_Realization',['../classrealization_1_1_tshirt___realization.html#aecc75708eab759706de5b5a918fb0820',1,'realization::Tshirt_Realization']]],
-  ['_7etshirtmodeltest_50',['~TshirtModelTest',['../class_tshirt_model_test.html#a094793f28fb81758c9a0fbc8c1657b03',1,'TshirtModelTest']]],
-  ['_7eunitshelper_5ftest_51',['~UnitsHelper_Test',['../class_units_helper___test.html#ac342c365275e4173691ab84e9b76b5a5',1,'UnitsHelper_Test']]]
+  ['_7eunitshelper_5ftest_48',['~UnitsHelper_Test',['../class_units_helper___test.html#ac342c365275e4173691ab84e9b76b5a5',1,'UnitsHelper_Test']]]
 ];

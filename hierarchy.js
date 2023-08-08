@@ -58,7 +58,6 @@ var hierarchy =
       [ "BMIDataSelector", "class_b_m_i_data_selector.html", null ],
       [ "CSVDataSelector", "class_c_s_v_data_selector.html", null ]
     ] ],
-    [ "conceptual_reservoir", "structconceptual__reservoir.html", null ],
     [ "CSVReader", "class_c_s_v_reader.html", null ],
     [ "data_access::DataProvider< data_type, selection_type >", "classdata__access_1_1_data_provider.html", [
       [ "data_access::AsyncDataProvider< data_type, selection_type >", "classdata__access_1_1_async_data_provider.html", null ]
@@ -126,9 +125,7 @@ var hierarchy =
     [ "GM_Object", "class_g_m___object.html", [
       [ "HY_CatchmentArea", "class_h_y___catchment_area.html", [
         [ "realization::Catchment_Formulation", "classrealization_1_1_catchment___formulation.html", [
-          [ "realization::Bmi_Formulation", "classrealization_1_1_bmi___formulation.html", null ],
-          [ "realization::Tshirt_C_Realization", "classrealization_1_1_tshirt___c___realization.html", null ],
-          [ "realization::Tshirt_Realization", "classrealization_1_1_tshirt___realization.html", null ]
+          [ "realization::Bmi_Formulation", "classrealization_1_1_bmi___formulation.html", null ]
         ] ]
       ] ],
       [ "HY_CatchmentDivide", "class_h_y___catchment_divide.html", null ],
@@ -164,7 +161,6 @@ var hierarchy =
       [ "Network_Test2", "class_network___test2.html", null ]
     ] ],
     [ "nexus::Nexus_Manager", "classnexus_1_1_nexus___manager.html", null ],
-    [ "NWM_soil_parameters", "struct_n_w_m__soil__parameters.html", null ],
     [ "pdm03_struct", "structpdm03__struct.html", null ],
     [ "realization::Et_Aware", "classrealization_1_1_et___aware.html", [
       [ "realization::Et_Accountable", "classrealization_1_1_et___accountable.html", [
@@ -221,17 +217,11 @@ var hierarchy =
       [ "ReservoirKernelTest", "class_reservoir_kernel_test.html", null ],
       [ "ReservoirTimelessKernelTest", "class_reservoir_timeless_kernel_test.html", null ],
       [ "SchaakeKernelTest", "class_schaake_kernel_test.html", null ],
-      [ "TshirtModelTest", "class_tshirt_model_test.html", null ],
       [ "UnitsHelper_Test", "class_units_helper___test.html", null ]
     ] ],
     [ "testing::TestWithParam", null, [
       [ "Network_Test1", "class_network___test1.html", null ]
     ] ],
-    [ "tshirt::tshirt_fluxes", "structtshirt_1_1tshirt__fluxes.html", null ],
-    [ "tshirt::tshirt_model", "classtshirt_1_1tshirt__model.html", null ],
-    [ "tshirt::tshirt_params", "structtshirt_1_1tshirt__params.html", null ],
-    [ "tshirt::tshirt_state", "structtshirt_1_1tshirt__state.html", null ],
-    [ "tshirt_c_result_fluxes", "structtshirt__c__result__fluxes.html", null ],
     [ "UnitsHelper", "class_units_helper.html", null ],
     [ "utils::FileChecker", "classutils_1_1_file_checker.html", null ],
     [ "utils::StreamHandler", "classutils_1_1_stream_handler.html", [

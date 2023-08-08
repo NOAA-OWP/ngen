@@ -118,9 +118,7 @@ var annotated_dup =
       [ "Et_Accountable", "classrealization_1_1_et___accountable.html", "classrealization_1_1_et___accountable" ],
       [ "Et_Aware", "classrealization_1_1_et___aware.html", "classrealization_1_1_et___aware" ],
       [ "Formulation", "classrealization_1_1_formulation.html", "classrealization_1_1_formulation" ],
-      [ "Formulation_Manager", "classrealization_1_1_formulation___manager.html", "classrealization_1_1_formulation___manager" ],
-      [ "Tshirt_C_Realization", "classrealization_1_1_tshirt___c___realization.html", "classrealization_1_1_tshirt___c___realization" ],
-      [ "Tshirt_Realization", "classrealization_1_1_tshirt___realization.html", "classrealization_1_1_tshirt___realization" ]
+      [ "Formulation_Manager", "classrealization_1_1_formulation___manager.html", "classrealization_1_1_formulation___manager" ]
     ] ],
     [ "Reservoir", "namespace_reservoir.html", [
       [ "Explicit_Time", "namespace_reservoir_1_1_explicit___time.html", [
@@ -136,12 +134,6 @@ var annotated_dup =
         [ "Reservoir_Outlet", "class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html", "class_reservoir_1_1_implicit___time_1_1_reservoir___outlet" ]
       ] ]
     ] ],
-    [ "tshirt", "namespacetshirt.html", [
-      [ "tshirt_fluxes", "structtshirt_1_1tshirt__fluxes.html", "structtshirt_1_1tshirt__fluxes" ],
-      [ "tshirt_model", "classtshirt_1_1tshirt__model.html", "classtshirt_1_1tshirt__model" ],
-      [ "tshirt_params", "structtshirt_1_1tshirt__params.html", "structtshirt_1_1tshirt__params" ],
-      [ "tshirt_state", "structtshirt_1_1tshirt__state.html", "structtshirt_1_1tshirt__state" ]
-    ] ],
     [ "utils", "namespaceutils.html", [
       [ "FileChecker", "classutils_1_1_file_checker.html", "classutils_1_1_file_checker" ],
       [ "FileStreamHandler", "classutils_1_1_file_stream_handler.html", "classutils_1_1_file_stream_handler" ],
@@ -154,7 +146,6 @@ var annotated_dup =
     [ "BMIDataSelector", "class_b_m_i_data_selector.html", "class_b_m_i_data_selector" ],
     [ "CatchmentAggrDataSelector", "class_catchment_aggr_data_selector.html", "class_catchment_aggr_data_selector" ],
     [ "completed_time_step", "structcompleted__time__step.html", "structcompleted__time__step" ],
-    [ "conceptual_reservoir", "structconceptual__reservoir.html", "structconceptual__reservoir" ],
     [ "CSVDataSelector", "class_c_s_v_data_selector.html", "class_c_s_v_data_selector" ],
     [ "CsvPerFeatureForcingProvider", "class_csv_per_feature_forcing_provider.html", "class_csv_per_feature_forcing_provider" ],
     [ "CSVReader", "class_c_s_v_reader.html", "class_c_s_v_reader" ],
@@ -190,7 +181,6 @@ var annotated_dup =
     [ "Network_Test2", "class_network___test2.html", "class_network___test2" ],
     [ "Nexus_Remote_Test", "class_nexus___remote___test.html", "class_nexus___remote___test" ],
     [ "Nexus_Test", "class_nexus___test.html", "class_nexus___test" ],
-    [ "NWM_soil_parameters", "struct_n_w_m__soil__parameters.html", "struct_n_w_m__soil__parameters" ],
     [ "pdm03_struct", "structpdm03__struct.html", "structpdm03__struct" ],
     [ "Pdm03KernelTest", "class_pdm03_kernel_test.html", "class_pdm03_kernel_test" ],
     [ "request_from_empty_nexus", "structrequest__from__empty__nexus.html", "structrequest__from__empty__nexus" ],
@@ -208,8 +198,6 @@ var annotated_dup =
     [ "solar_radiation_results", "structsolar__radiation__results.html", "structsolar__radiation__results" ],
     [ "surface_radiation_forcing", "structsurface__radiation__forcing.html", "structsurface__radiation__forcing" ],
     [ "surface_radiation_params", "structsurface__radiation__params.html", "structsurface__radiation__params" ],
-    [ "tshirt_c_result_fluxes", "structtshirt__c__result__fluxes.html", "structtshirt__c__result__fluxes" ],
-    [ "TshirtModelTest", "class_tshirt_model_test.html", "class_tshirt_model_test" ],
     [ "UnitsHelper", "class_units_helper.html", "class_units_helper" ],
     [ "UnitsHelper_Test", "class_units_helper___test.html", "class_units_helper___test" ],
     [ "Visitor", "class_visitor.html", "class_visitor" ]

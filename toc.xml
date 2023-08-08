@@ -2070,7 +2070,6 @@
           <topic label="set_output_variable_names" href="classrealization_1_1_bmi___c___formulation.html#a26ea820cd09a0723381db6f381f5d7e1"/>
           <topic label="validate_parameters" href="classrealization_1_1_bmi___c___formulation.html#aceabe9927b36dce61f338919f2af4c1f"/>
           <topic label="write_output" href="classrealization_1_1_bmi___c___formulation.html#aa989be0629ecaa29a2410f7588404ff9"/>
-          <topic label="::Bmi_C_Cfe_IT" href="classrealization_1_1_bmi___c___formulation.html#a61c175da89028ff89f2b446b3e97d3f0"/>
           <topic label="::Bmi_C_Formulation_Test" href="classrealization_1_1_bmi___c___formulation.html#ab629620cdc1831773640b662bc1615b5"/>
           <topic label="::Bmi_C_Pet_IT" href="classrealization_1_1_bmi___c___formulation.html#a3914d5635678eb8adfe56cedb9a5e255"/>
           <topic label="::Bmi_Formulation_Test" href="classrealization_1_1_bmi___c___formulation.html#a04abbbee1836c2cdfbe44fd9ebb136a4"/>
@@ -2643,121 +2642,6 @@
           <topic label="tree" href="classrealization_1_1_formulation___manager.html#ae34d4f2d7d9bf211e5139eb2b8b09e39"/>
           <topic label="using_routing" href="classrealization_1_1_formulation___manager.html#a0b8bde7896ea9bba31e130cd14ecbf7b"/>
         </topic>
-        <topic label="Tshirt_C_Realization" href="classrealization_1_1_tshirt___c___realization.html">
-          <topic label="time_step_t" href="classrealization_1_1_tshirt___c___realization.html#a5925f6a6942a087e5ce3cc4ae19086b2"/>
-          <topic label="Tshirt_C_Realization" href="classrealization_1_1_tshirt___c___realization.html#a981b2bcfd8fa1052dc1c6ae6d00fb759"/>
-          <topic label="Tshirt_C_Realization" href="classrealization_1_1_tshirt___c___realization.html#ae8ac906d01ebad2ad980b11fdd13666e"/>
-          <topic label="Tshirt_C_Realization" href="classrealization_1_1_tshirt___c___realization.html#a86b5c43ade59ed9d1fa6fe5f2f7236ad"/>
-          <topic label="Tshirt_C_Realization" href="classrealization_1_1_tshirt___c___realization.html#a25874b76d63588d3fcdc58053f4892dc"/>
-          <topic label="Tshirt_C_Realization" href="classrealization_1_1_tshirt___c___realization.html#a3da9cab6a15099523471126536b7a4bc"/>
-          <topic label="~Tshirt_C_Realization" href="classrealization_1_1_tshirt___c___realization.html#a683b7c23e045035e67e9e44d90ea1741"/>
-          <topic label="add_time" href="classrealization_1_1_tshirt___c___realization.html#a248b562be5dc9a21e7afbc014de15114"/>
-          <topic label="calc_et" href="classrealization_1_1_tshirt___c___realization.html#ad03da1ffdbf70d4e23e5aa504c56b14f"/>
-          <topic label="config_pattern_substitution" href="classrealization_1_1_tshirt___c___realization.html#a17f32257b65c7930f8b3570ab43fd58c"/>
-          <topic label="create_formulation" href="classrealization_1_1_tshirt___c___realization.html#a0aec4abbb0c8f724ec23c6047d712c20"/>
-          <topic label="create_formulation" href="classrealization_1_1_tshirt___c___realization.html#a6a47b0f7e4b5ef28a054d5258b1eabe2"/>
-          <topic label="get_catchment_id" href="classrealization_1_1_tshirt___c___realization.html#a633b7407d447f77910476c0315c8beb6"/>
-          <topic label="get_et_params" href="classrealization_1_1_tshirt___c___realization.html#ae3eed12472620303be3bd1b2cb3600c6"/>
-          <topic label="get_et_params_ptr" href="classrealization_1_1_tshirt___c___realization.html#a74fa1d17e6e8d344beecc4f0f38ee29e"/>
-          <topic label="get_formulation_type" href="classrealization_1_1_tshirt___c___realization.html#a62467e5e08120836b6f8f04117ec9de5"/>
-          <topic label="get_id" href="classrealization_1_1_tshirt___c___realization.html#a02267e0cc9fec2e1d883f55c2c12b39d"/>
-          <topic label="get_latest_flux_base_flow" href="classrealization_1_1_tshirt___c___realization.html#ac9c780d0c7efe86e02acf8dabfe7c280"/>
-          <topic label="get_latest_flux_giuh_runoff" href="classrealization_1_1_tshirt___c___realization.html#a58fdfbf4fa2c4271754f1f5efdea6305"/>
-          <topic label="get_latest_flux_lateral_flow" href="classrealization_1_1_tshirt___c___realization.html#a3d9ce4eeefcf96fc466c983b79141990"/>
-          <topic label="get_latest_flux_surface_runoff" href="classrealization_1_1_tshirt___c___realization.html#a1bb7ceb330da1cbe10a53e5d78de8308"/>
-          <topic label="get_latest_flux_total_discharge" href="classrealization_1_1_tshirt___c___realization.html#a738bee8acfb1df73d4acfe8ed25ec00c"/>
-          <topic label="get_output_header_fields" href="classrealization_1_1_tshirt___c___realization.html#a990ebc1add357ed0f764df4cadcff83d"/>
-          <topic label="get_output_header_line" href="classrealization_1_1_tshirt___c___realization.html#a003ae4e7ad85247695914b3921a64870"/>
-          <topic label="get_output_item_count" href="classrealization_1_1_tshirt___c___realization.html#a754f06074f6d5e9d7a416e97bc77f0cf"/>
-          <topic label="get_output_line_for_timestep" href="classrealization_1_1_tshirt___c___realization.html#ad2cc0790995e32a5036fc4276b98d3bf"/>
-          <topic label="get_output_var_flux_extraction_func" href="classrealization_1_1_tshirt___c___realization.html#a49afb6155befdc58d70af41d98df89fb"/>
-          <topic label="get_output_var_names" href="classrealization_1_1_tshirt___c___realization.html#add93e73f63f3fdd45a4474a3f219df5a"/>
-          <topic label="get_required_parameters" href="classrealization_1_1_tshirt___c___realization.html#a627e8e0e0a1d91653e3a92bdbcad4a02"/>
-          <topic label="get_response" href="classrealization_1_1_tshirt___c___realization.html#aeb579caa25422a0eac04c19b27e791e3"/>
-          <topic label="get_value" href="classrealization_1_1_tshirt___c___realization.html#a0eab7570b9bc39b1849b00161037e0b7"/>
-          <topic label="init_ground_water_reservoir" href="classrealization_1_1_tshirt___c___realization.html#a5a1ec1e88febe712bddf3de6e57c0661"/>
-          <topic label="init_reservoir_storage" href="classrealization_1_1_tshirt___c___realization.html#ad56a6caea2bec27ad38d0e5a71c02426"/>
-          <topic label="init_soil_reservoir" href="classrealization_1_1_tshirt___c___realization.html#a247af913ed20e93ab90b9b425b8b12c0"/>
-          <topic label="interpret_parameters" href="classrealization_1_1_tshirt___c___realization.html#a65f97b5efe05e786f59d9f5fd1b10209"/>
-          <topic label="is_et_params_set" href="classrealization_1_1_tshirt___c___realization.html#a490261c3439f205913ac2e77efbd5b6f"/>
-          <topic label="is_et_params_set" href="classrealization_1_1_tshirt___c___realization.html#a7117db623dafde1f5dfbf286e46aa99e"/>
-          <topic label="run_formulation_for_timestep" href="classrealization_1_1_tshirt___c___realization.html#a3a22283e220b7ce45610ec20ba0a7fa1"/>
-          <topic label="run_formulation_for_timesteps" href="classrealization_1_1_tshirt___c___realization.html#ab7cde0b04e137ccdb28b7bbb3e7ebf81"/>
-          <topic label="set_catchment_id" href="classrealization_1_1_tshirt___c___realization.html#a2cce2b5b18eaa0ed7e0df10db57da144"/>
-          <topic label="set_et_params" href="classrealization_1_1_tshirt___c___realization.html#ad4e23441f5a4ceb63262f796c5bb411f"/>
-          <topic label="set_et_params" href="classrealization_1_1_tshirt___c___realization.html#a8f1338c37773df88268e34e46a1d957e"/>
-          <topic label="set_output_stream" href="classrealization_1_1_tshirt___c___realization.html#a9d02de255937deb8f6169ef20f5a07d6"/>
-          <topic label="sync_c_storage_params" href="classrealization_1_1_tshirt___c___realization.html#a546d1a28ec91eb62c6d2e1a82ade5bbd"/>
-          <topic label="validate_parameters" href="classrealization_1_1_tshirt___c___realization.html#aceabe9927b36dce61f338919f2af4c1f"/>
-          <topic label="write_output" href="classrealization_1_1_tshirt___c___realization.html#aa989be0629ecaa29a2410f7588404ff9"/>
-          <topic label="bounds" href="classrealization_1_1_tshirt___c___realization.html#aaebc4992c38cb5db68e859e0487ad929"/>
-          <topic label="c_aorc_params" href="classrealization_1_1_tshirt___c___realization.html#a46866909d877fb66681b25af6e663f1d"/>
-          <topic label="c_soil_params" href="classrealization_1_1_tshirt___c___realization.html#ae2515f0f774e5f1d6add715e90aefea9"/>
-          <topic label="cat_id" href="classrealization_1_1_tshirt___c___realization.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b"/>
-          <topic label="catchment_id" href="classrealization_1_1_tshirt___c___realization.html#aa22d8d4ce831a21fb2ab1ef9a8f01e3f"/>
-          <topic label="et_params" href="classrealization_1_1_tshirt___c___realization.html#a5fab369fc039b378dfd270490ddb9e5c"/>
-          <topic label="fluxes" href="classrealization_1_1_tshirt___c___realization.html#ab6b1f82681faeed2f77992032ac601aa"/>
-          <topic label="forcing" href="classrealization_1_1_tshirt___c___realization.html#a2010f61d0e7141bb48230923592de215"/>
-          <topic label="giuh_cdf_ordinates" href="classrealization_1_1_tshirt___c___realization.html#a45defe72d43cba24cd81af47fe161fe4"/>
-          <topic label="giuh_runoff_queue_per_timestep" href="classrealization_1_1_tshirt___c___realization.html#ad35fadf81a0e146e35d6e5ddd4511ed3"/>
-          <topic label="groundwater_conceptual_reservoir" href="classrealization_1_1_tshirt___c___realization.html#a2437c3c59e9cc834c37fe75e029fd15d"/>
-          <topic label="id" href="classrealization_1_1_tshirt___c___realization.html#a8bfec24b0d57240e7ada2493a781db6d"/>
-          <topic label="id_number" href="classrealization_1_1_tshirt___c___realization.html#af996a3e50eaf51c63865f1fdbe4f8661"/>
-          <topic label="nash_storage" href="classrealization_1_1_tshirt___c___realization.html#a564be46296d61c3bba384ebaf7153d88"/>
-          <topic label="output" href="classrealization_1_1_tshirt___c___realization.html#a55857dc16551760ff59487991fc525fe"/>
-          <topic label="OUTPUT_HEADER_FIELDS" href="classrealization_1_1_tshirt___c___realization.html#a9ccf871277d8933b886f12381307caa8"/>
-          <topic label="OUTPUT_VARIABLE_NAMES" href="classrealization_1_1_tshirt___c___realization.html#af31a6f0bfdd9ff4ffbcc0578fa133229"/>
-          <topic label="params" href="classrealization_1_1_tshirt___c___realization.html#a7a5d45d93d8cf234ba99449fe346546f"/>
-          <topic label="realized_catchment" href="classrealization_1_1_tshirt___c___realization.html#a7c6de72bd8ebf427d71aacca7baa23c1"/>
-          <topic label="REQUIRED_PARAMETERS" href="classrealization_1_1_tshirt___c___realization.html#a3003b91ee5309a6fdfbc2cd8308bb442"/>
-          <topic label="soil_conceptual_reservoir" href="classrealization_1_1_tshirt___c___realization.html#a98a3d23a5bf2335ad5e54ded732d96cc"/>
-        </topic>
-        <topic label="Tshirt_Realization" href="classrealization_1_1_tshirt___realization.html">
-          <topic label="time_step_t" href="classrealization_1_1_tshirt___realization.html#a4068e3ccc1d3d07ddbfd507df773449f"/>
-          <topic label="Tshirt_Realization" href="classrealization_1_1_tshirt___realization.html#a758b13ad8c46973f299dabf2036837eb"/>
-          <topic label="~Tshirt_Realization" href="classrealization_1_1_tshirt___realization.html#aecc75708eab759706de5b5a918fb0820"/>
-          <topic label="add_time" href="classrealization_1_1_tshirt___realization.html#a248b562be5dc9a21e7afbc014de15114"/>
-          <topic label="calc_et" href="classrealization_1_1_tshirt___realization.html#aff217eec7cb3cf1fdaf67f05c30a6ac6"/>
-          <topic label="config_pattern_substitution" href="classrealization_1_1_tshirt___realization.html#a17f32257b65c7930f8b3570ab43fd58c"/>
-          <topic label="create_formulation" href="classrealization_1_1_tshirt___realization.html#a2303335bc613d277d4e16b9fd7619063"/>
-          <topic label="create_formulation" href="classrealization_1_1_tshirt___realization.html#a40e6a3298f4f8c2724ddda7736925909"/>
-          <topic label="get_catchment_id" href="classrealization_1_1_tshirt___realization.html#a633b7407d447f77910476c0315c8beb6"/>
-          <topic label="get_et_params" href="classrealization_1_1_tshirt___realization.html#ae3eed12472620303be3bd1b2cb3600c6"/>
-          <topic label="get_et_params_ptr" href="classrealization_1_1_tshirt___realization.html#a74fa1d17e6e8d344beecc4f0f38ee29e"/>
-          <topic label="get_formulation_type" href="classrealization_1_1_tshirt___realization.html#ab8138d9a7d6c8934fd0a99ff642bb83d"/>
-          <topic label="get_id" href="classrealization_1_1_tshirt___realization.html#a02267e0cc9fec2e1d883f55c2c12b39d"/>
-          <topic label="get_output_header_line" href="classrealization_1_1_tshirt___realization.html#a12fad75c2e47f5da298e022429243199"/>
-          <topic label="get_output_line_for_timestep" href="classrealization_1_1_tshirt___realization.html#a61707fbfe3175ac4d20f0b835c88654e"/>
-          <topic label="get_required_parameters" href="classrealization_1_1_tshirt___realization.html#af08784365c8cb62c65ed862348b9203a"/>
-          <topic label="get_response" href="classrealization_1_1_tshirt___realization.html#aea64b8b1d6f77cde58c4c8b3e767df46"/>
-          <topic label="interpret_parameters" href="classrealization_1_1_tshirt___realization.html#a65f97b5efe05e786f59d9f5fd1b10209"/>
-          <topic label="is_et_params_set" href="classrealization_1_1_tshirt___realization.html#a490261c3439f205913ac2e77efbd5b6f"/>
-          <topic label="is_et_params_set" href="classrealization_1_1_tshirt___realization.html#a7117db623dafde1f5dfbf286e46aa99e"/>
-          <topic label="set_catchment_id" href="classrealization_1_1_tshirt___realization.html#a2cce2b5b18eaa0ed7e0df10db57da144"/>
-          <topic label="set_et_params" href="classrealization_1_1_tshirt___realization.html#ad4e23441f5a4ceb63262f796c5bb411f"/>
-          <topic label="set_et_params" href="classrealization_1_1_tshirt___realization.html#a8f1338c37773df88268e34e46a1d957e"/>
-          <topic label="set_giuh_kernel" href="classrealization_1_1_tshirt___realization.html#a6aef7989593fcb924bf6585c37c794da"/>
-          <topic label="set_output_stream" href="classrealization_1_1_tshirt___realization.html#a9d02de255937deb8f6169ef20f5a07d6"/>
-          <topic label="validate_parameters" href="classrealization_1_1_tshirt___realization.html#aceabe9927b36dce61f338919f2af4c1f"/>
-          <topic label="write_output" href="classrealization_1_1_tshirt___realization.html#aa989be0629ecaa29a2410f7588404ff9"/>
-          <topic label="bounds" href="classrealization_1_1_tshirt___realization.html#aaebc4992c38cb5db68e859e0487ad929"/>
-          <topic label="cascade_backing_storage" href="classrealization_1_1_tshirt___realization.html#a14ec7726c6849eb23e3de6d6c0005c47"/>
-          <topic label="cat_id" href="classrealization_1_1_tshirt___realization.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b"/>
-          <topic label="catchment_id" href="classrealization_1_1_tshirt___realization.html#a12152fda31d618b47b590f9f23b452cf"/>
-          <topic label="dt" href="classrealization_1_1_tshirt___realization.html#ac89d3d992bfc7bd5aa739dc12f9912c4"/>
-          <topic label="et_params" href="classrealization_1_1_tshirt___realization.html#a5fab369fc039b378dfd270490ddb9e5c"/>
-          <topic label="fluxes" href="classrealization_1_1_tshirt___realization.html#a14c7a87a4ab3286f6df7435a28c6a0f0"/>
-          <topic label="forcing" href="classrealization_1_1_tshirt___realization.html#a2010f61d0e7141bb48230923592de215"/>
-          <topic label="giuh_kernel" href="classrealization_1_1_tshirt___realization.html#aa910f1ec3966e00ca3698e15c4eb6818"/>
-          <topic label="id" href="classrealization_1_1_tshirt___realization.html#a8bfec24b0d57240e7ada2493a781db6d"/>
-          <topic label="id_number" href="classrealization_1_1_tshirt___realization.html#af996a3e50eaf51c63865f1fdbe4f8661"/>
-          <topic label="model" href="classrealization_1_1_tshirt___realization.html#aa98523775ceb13139a0844d234930d43"/>
-          <topic label="output" href="classrealization_1_1_tshirt___realization.html#a55857dc16551760ff59487991fc525fe"/>
-          <topic label="params" href="classrealization_1_1_tshirt___realization.html#ac63d4d05a6b221169b51308320940b8a"/>
-          <topic label="realized_catchment" href="classrealization_1_1_tshirt___realization.html#a7c6de72bd8ebf427d71aacca7baa23c1"/>
-          <topic label="REQUIRED_PARAMETERS" href="classrealization_1_1_tshirt___realization.html#afba6da0c11d71de69c9ec9a0befb8fa5"/>
-          <topic label="state" href="classrealization_1_1_tshirt___realization.html#a3d9a12c0a548dc15a02af6dc73997b24"/>
-        </topic>
         <topic label="constructor" href="namespacerealization.html#a74155238e37096cc83faa9a49d444f0c"/>
         <topic label="construct_formulation" href="namespacerealization.html#ab9e82c6743f665511634e0825d3c4be7"/>
         <topic label="create_formulation_constructor" href="namespacerealization.html#a3cd7f3652715fac25a746ef1810a1cff"/>
@@ -2895,76 +2779,6 @@
             <topic label="flux_meters_local" href="class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html#a10e0432e3c1cecb4385d63422be063f9"/>
             <topic label="max_flux_meters" href="class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html#afda352b29e3f69e581c9b83f03ff189c"/>
           </topic>
-        </topic>
-      </topic>
-      <topic label="tshirt" href="namespacetshirt.html">
-        <topic label="tshirt_fluxes" href="structtshirt_1_1tshirt__fluxes.html">
-          <topic label="tshirt_fluxes" href="structtshirt_1_1tshirt__fluxes.html#ad768e2fa875710154ac1c7cdf6b1d985"/>
-          <topic label="et_loss_meters" href="structtshirt_1_1tshirt__fluxes.html#abdf83852bdac281ade82990996cab7e1"/>
-          <topic label="groundwater_flow_meters_per_second" href="structtshirt_1_1tshirt__fluxes.html#a781655218ae76a3825a29fa3416e90f3"/>
-          <topic label="soil_lateral_flow_meters_per_second" href="structtshirt_1_1tshirt__fluxes.html#ac8dc52cfe2047d71c4d02403c1713498"/>
-          <topic label="soil_percolation_flow_meters_per_second" href="structtshirt_1_1tshirt__fluxes.html#a314dedc8cc3daafb527648b1b5c3f2c9"/>
-          <topic label="surface_runoff_meters_per_second" href="structtshirt_1_1tshirt__fluxes.html#a46ce2fe100bc7d781916e7d6da25b684"/>
-        </topic>
-        <topic label="tshirt_model" href="classtshirt_1_1tshirt__model.html">
-          <topic label="tshirt_model" href="classtshirt_1_1tshirt__model.html#adf2f1043a3536cda5effe39a2251131f"/>
-          <topic label="tshirt_model" href="classtshirt_1_1tshirt__model.html#a904198bf2bc3c6b4e452c568bce59899"/>
-          <topic label="calc_evapotranspiration" href="classtshirt_1_1tshirt__model.html#ab5115899dbc787c81320ab837a169dd6"/>
-          <topic label="calc_soil_field_capacity_storage_threshold" href="classtshirt_1_1tshirt__model.html#a5e4f346a5e4b4859b6e89b21dc461401"/>
-          <topic label="check_valid" href="classtshirt_1_1tshirt__model.html#a729c4eac2d7da4ab0d4f9d326093f50a"/>
-          <topic label="get_current_state" href="classtshirt_1_1tshirt__model.html#ac767074c575331e6666eb4087be7023b"/>
-          <topic label="get_fluxes" href="classtshirt_1_1tshirt__model.html#a01cc559478f9b27acaa4a3373efd1c06"/>
-          <topic label="get_mass_check_error_bound" href="classtshirt_1_1tshirt__model.html#a0f9a635da9e9c80b6bc9fe45db7dd368"/>
-          <topic label="initialize_groundwater_reservoir" href="classtshirt_1_1tshirt__model.html#abba45de07fa42d7c2f5911660eb3442a"/>
-          <topic label="initialize_soil_reservoir" href="classtshirt_1_1tshirt__model.html#a07079f4bde4772e31b01c67d414cbd34"/>
-          <topic label="initialize_subsurface_lateral_flow_nash_cascade" href="classtshirt_1_1tshirt__model.html#a3f66e206e0f8d48434f8c369d8e038e9"/>
-          <topic label="manage_state_before_next_time_step_run" href="classtshirt_1_1tshirt__model.html#a079a998a8d6abe012ec9dd5610f36e97"/>
-          <topic label="mass_check" href="classtshirt_1_1tshirt__model.html#ad6fc0c59637000fec073202387c9c14e"/>
-          <topic label="run" href="classtshirt_1_1tshirt__model.html#a1948e12127ca6d7ce398d1b75a9e6adb"/>
-          <topic label="set_mass_check_error_bound" href="classtshirt_1_1tshirt__model.html#a4254d3955dd018adb7beecba9b598b5a"/>
-          <topic label="current_state" href="classtshirt_1_1tshirt__model.html#ab2875e84838016a1aaa8454d97f62d4c"/>
-          <topic label="fluxes" href="classtshirt_1_1tshirt__model.html#a320bf7f30415a8f01a3adb233e0173c2"/>
-          <topic label="groundwater_reservoir" href="classtshirt_1_1tshirt__model.html#a84c41b6f0e824fcbd9fcf311f42be679"/>
-          <topic label="lf_outlet_index" href="classtshirt_1_1tshirt__model.html#ab66e64c802e8b5901d42cae19f82843b"/>
-          <topic label="mass_check_error_bound" href="classtshirt_1_1tshirt__model.html#a0e364d3af4596555d4a1a29cfb07697d"/>
-          <topic label="model_params" href="classtshirt_1_1tshirt__model.html#a358025fe515688796dede4f738da91a9"/>
-          <topic label="perc_outlet_index" href="classtshirt_1_1tshirt__model.html#af9d695d3def14c4e1fc901634b82c280"/>
-          <topic label="previous_state" href="classtshirt_1_1tshirt__model.html#a2d27add128e6e4ffdd5cf746d7da7aec"/>
-          <topic label="soil_field_capacity_storage_threshold" href="classtshirt_1_1tshirt__model.html#a7ea2283d9e380a1ed41668c4281d9b6b"/>
-          <topic label="soil_lf_nash_res" href="classtshirt_1_1tshirt__model.html#aa9f192f9e7b65ad64253d0fa8b05a691"/>
-          <topic label="soil_reservoir" href="classtshirt_1_1tshirt__model.html#a365047af2214956464fbdb8819440875"/>
-        </topic>
-        <topic label="tshirt_params" href="structtshirt_1_1tshirt__params.html">
-          <topic label="tshirt_params" href="structtshirt_1_1tshirt__params.html#a2c7943c19246afb107fb045e4da271a0"/>
-          <topic label="alpha_fc" href="structtshirt_1_1tshirt__params.html#a1131d5def0f6a467fb3dbf4ce16f5905"/>
-          <topic label="b" href="structtshirt_1_1tshirt__params.html#ad0bcff0f23154f035c79933168b7c6d5"/>
-          <topic label="Cgw" href="structtshirt_1_1tshirt__params.html#a397cbad2e2bfa5a0fe3993d7070244e7"/>
-          <topic label="Cschaake" href="structtshirt_1_1tshirt__params.html#a1d5b8c28657e3ef8897dc4fcb4504c92"/>
-          <topic label="depth" href="structtshirt_1_1tshirt__params.html#acdfad9da584fbe8c885b74543b4992ad"/>
-          <topic label="expon" href="structtshirt_1_1tshirt__params.html#ac12e04215a5d9c708f6195f584b05042"/>
-          <topic label="Klf" href="structtshirt_1_1tshirt__params.html#a615c8264be3056dc908cd6f68a4d3cef"/>
-          <topic label="Kn" href="structtshirt_1_1tshirt__params.html#ae5b474a6abdd5530a5655a756b09be30"/>
-          <topic label="max_groundwater_storage_meters" href="structtshirt_1_1tshirt__params.html#a531636881c6936ecd4c34aebca33d8a8"/>
-          <topic label="max_lateral_flow" href="structtshirt_1_1tshirt__params.html#a497cb619c048679b0c596bc680fae12c"/>
-          <topic label="max_soil_storage_meters" href="structtshirt_1_1tshirt__params.html#ac30fca01e4b6dc5bc927a2b11dc75445"/>
-          <topic label="maxsmc" href="structtshirt_1_1tshirt__params.html#a15f51e86b2f33fccdc107869d0f6ec05"/>
-          <topic label="multiplier" href="structtshirt_1_1tshirt__params.html#a963ed75ab16dbe46c9b79c82dc623440"/>
-          <topic label="nash_n" href="structtshirt_1_1tshirt__params.html#a8cd40bac266affd0b910372ba08618c8"/>
-          <topic label="refkdt" href="structtshirt_1_1tshirt__params.html#a3ac79c8845b9b8c9cfc029b8e806355f"/>
-          <topic label="satdk" href="structtshirt_1_1tshirt__params.html#a7a6affc5aa9eafed547aa2b5591bdcb1"/>
-          <topic label="satpsi" href="structtshirt_1_1tshirt__params.html#a92bd22e94175a5f0b83470a4f908e9e2"/>
-          <topic label="slope" href="structtshirt_1_1tshirt__params.html#a493195405e4e464abba37f1cd00e2199"/>
-          <topic label="wltsmc" href="structtshirt_1_1tshirt__params.html#aceb98b8b854ccc5512773cac046d73f1"/>
-        </topic>
-        <topic label="tshirt_state" href="structtshirt_1_1tshirt__state.html">
-          <topic label="tshirt_state" href="structtshirt_1_1tshirt__state.html#a883f2b4ffacd391d7806bc381705d6e4"/>
-          <topic label="groundwater_storage_meters" href="structtshirt_1_1tshirt__state.html#a10d80a125f2b810a501dd204f0e14a4a"/>
-          <topic label="nash_cascade_storeage_meters" href="structtshirt_1_1tshirt__state.html#a6fedbba194981da0de78d3e1ed654b56"/>
-          <topic label="soil_storage_meters" href="structtshirt_1_1tshirt__state.html#a27ff5470fa20ba28c779fae88dfd6f56"/>
-        </topic>
-        <topic label="TshirtErrorCodes" href="namespacetshirt.html#a7dc7642caed059def47ba032f9161eaa">
-          <topic label="TSHIRT_NO_ERROR" href="namespacetshirt.html#a7dc7642caed059def47ba032f9161eaaa01c16c290199138efb3280b916602eac"/>
-          <topic label="TSHIRT_MASS_BALANCE_ERROR" href="namespacetshirt.html#a7dc7642caed059def47ba032f9161eaaa06e5c437eee44b55846caa7fcd10d3c1"/>
         </topic>
       </topic>
       <topic label="utils" href="namespaceutils.html">
@@ -4672,7 +4486,6 @@
           <topic label="set_output_variable_names" href="classrealization_1_1_bmi___c___formulation.html#a26ea820cd09a0723381db6f381f5d7e1"/>
           <topic label="validate_parameters" href="classrealization_1_1_bmi___c___formulation.html#aceabe9927b36dce61f338919f2af4c1f"/>
           <topic label="write_output" href="classrealization_1_1_bmi___c___formulation.html#aa989be0629ecaa29a2410f7588404ff9"/>
-          <topic label="::Bmi_C_Cfe_IT" href="classrealization_1_1_bmi___c___formulation.html#a61c175da89028ff89f2b446b3e97d3f0"/>
           <topic label="::Bmi_C_Formulation_Test" href="classrealization_1_1_bmi___c___formulation.html#ab629620cdc1831773640b662bc1615b5"/>
           <topic label="::Bmi_C_Pet_IT" href="classrealization_1_1_bmi___c___formulation.html#a3914d5635678eb8adfe56cedb9a5e255"/>
           <topic label="::Bmi_Formulation_Test" href="classrealization_1_1_bmi___c___formulation.html#a04abbbee1836c2cdfbe44fd9ebb136a4"/>
@@ -5245,121 +5058,6 @@
           <topic label="tree" href="classrealization_1_1_formulation___manager.html#ae34d4f2d7d9bf211e5139eb2b8b09e39"/>
           <topic label="using_routing" href="classrealization_1_1_formulation___manager.html#a0b8bde7896ea9bba31e130cd14ecbf7b"/>
         </topic>
-        <topic label="Tshirt_C_Realization" href="classrealization_1_1_tshirt___c___realization.html">
-          <topic label="time_step_t" href="classrealization_1_1_tshirt___c___realization.html#a5925f6a6942a087e5ce3cc4ae19086b2"/>
-          <topic label="Tshirt_C_Realization" href="classrealization_1_1_tshirt___c___realization.html#a981b2bcfd8fa1052dc1c6ae6d00fb759"/>
-          <topic label="Tshirt_C_Realization" href="classrealization_1_1_tshirt___c___realization.html#ae8ac906d01ebad2ad980b11fdd13666e"/>
-          <topic label="Tshirt_C_Realization" href="classrealization_1_1_tshirt___c___realization.html#a86b5c43ade59ed9d1fa6fe5f2f7236ad"/>
-          <topic label="Tshirt_C_Realization" href="classrealization_1_1_tshirt___c___realization.html#a25874b76d63588d3fcdc58053f4892dc"/>
-          <topic label="Tshirt_C_Realization" href="classrealization_1_1_tshirt___c___realization.html#a3da9cab6a15099523471126536b7a4bc"/>
-          <topic label="~Tshirt_C_Realization" href="classrealization_1_1_tshirt___c___realization.html#a683b7c23e045035e67e9e44d90ea1741"/>
-          <topic label="add_time" href="classrealization_1_1_tshirt___c___realization.html#a248b562be5dc9a21e7afbc014de15114"/>
-          <topic label="calc_et" href="classrealization_1_1_tshirt___c___realization.html#ad03da1ffdbf70d4e23e5aa504c56b14f"/>
-          <topic label="config_pattern_substitution" href="classrealization_1_1_tshirt___c___realization.html#a17f32257b65c7930f8b3570ab43fd58c"/>
-          <topic label="create_formulation" href="classrealization_1_1_tshirt___c___realization.html#a0aec4abbb0c8f724ec23c6047d712c20"/>
-          <topic label="create_formulation" href="classrealization_1_1_tshirt___c___realization.html#a6a47b0f7e4b5ef28a054d5258b1eabe2"/>
-          <topic label="get_catchment_id" href="classrealization_1_1_tshirt___c___realization.html#a633b7407d447f77910476c0315c8beb6"/>
-          <topic label="get_et_params" href="classrealization_1_1_tshirt___c___realization.html#ae3eed12472620303be3bd1b2cb3600c6"/>
-          <topic label="get_et_params_ptr" href="classrealization_1_1_tshirt___c___realization.html#a74fa1d17e6e8d344beecc4f0f38ee29e"/>
-          <topic label="get_formulation_type" href="classrealization_1_1_tshirt___c___realization.html#a62467e5e08120836b6f8f04117ec9de5"/>
-          <topic label="get_id" href="classrealization_1_1_tshirt___c___realization.html#a02267e0cc9fec2e1d883f55c2c12b39d"/>
-          <topic label="get_latest_flux_base_flow" href="classrealization_1_1_tshirt___c___realization.html#ac9c780d0c7efe86e02acf8dabfe7c280"/>
-          <topic label="get_latest_flux_giuh_runoff" href="classrealization_1_1_tshirt___c___realization.html#a58fdfbf4fa2c4271754f1f5efdea6305"/>
-          <topic label="get_latest_flux_lateral_flow" href="classrealization_1_1_tshirt___c___realization.html#a3d9ce4eeefcf96fc466c983b79141990"/>
-          <topic label="get_latest_flux_surface_runoff" href="classrealization_1_1_tshirt___c___realization.html#a1bb7ceb330da1cbe10a53e5d78de8308"/>
-          <topic label="get_latest_flux_total_discharge" href="classrealization_1_1_tshirt___c___realization.html#a738bee8acfb1df73d4acfe8ed25ec00c"/>
-          <topic label="get_output_header_fields" href="classrealization_1_1_tshirt___c___realization.html#a990ebc1add357ed0f764df4cadcff83d"/>
-          <topic label="get_output_header_line" href="classrealization_1_1_tshirt___c___realization.html#a003ae4e7ad85247695914b3921a64870"/>
-          <topic label="get_output_item_count" href="classrealization_1_1_tshirt___c___realization.html#a754f06074f6d5e9d7a416e97bc77f0cf"/>
-          <topic label="get_output_line_for_timestep" href="classrealization_1_1_tshirt___c___realization.html#ad2cc0790995e32a5036fc4276b98d3bf"/>
-          <topic label="get_output_var_flux_extraction_func" href="classrealization_1_1_tshirt___c___realization.html#a49afb6155befdc58d70af41d98df89fb"/>
-          <topic label="get_output_var_names" href="classrealization_1_1_tshirt___c___realization.html#add93e73f63f3fdd45a4474a3f219df5a"/>
-          <topic label="get_required_parameters" href="classrealization_1_1_tshirt___c___realization.html#a627e8e0e0a1d91653e3a92bdbcad4a02"/>
-          <topic label="get_response" href="classrealization_1_1_tshirt___c___realization.html#aeb579caa25422a0eac04c19b27e791e3"/>
-          <topic label="get_value" href="classrealization_1_1_tshirt___c___realization.html#a0eab7570b9bc39b1849b00161037e0b7"/>
-          <topic label="init_ground_water_reservoir" href="classrealization_1_1_tshirt___c___realization.html#a5a1ec1e88febe712bddf3de6e57c0661"/>
-          <topic label="init_reservoir_storage" href="classrealization_1_1_tshirt___c___realization.html#ad56a6caea2bec27ad38d0e5a71c02426"/>
-          <topic label="init_soil_reservoir" href="classrealization_1_1_tshirt___c___realization.html#a247af913ed20e93ab90b9b425b8b12c0"/>
-          <topic label="interpret_parameters" href="classrealization_1_1_tshirt___c___realization.html#a65f97b5efe05e786f59d9f5fd1b10209"/>
-          <topic label="is_et_params_set" href="classrealization_1_1_tshirt___c___realization.html#a490261c3439f205913ac2e77efbd5b6f"/>
-          <topic label="is_et_params_set" href="classrealization_1_1_tshirt___c___realization.html#a7117db623dafde1f5dfbf286e46aa99e"/>
-          <topic label="run_formulation_for_timestep" href="classrealization_1_1_tshirt___c___realization.html#a3a22283e220b7ce45610ec20ba0a7fa1"/>
-          <topic label="run_formulation_for_timesteps" href="classrealization_1_1_tshirt___c___realization.html#ab7cde0b04e137ccdb28b7bbb3e7ebf81"/>
-          <topic label="set_catchment_id" href="classrealization_1_1_tshirt___c___realization.html#a2cce2b5b18eaa0ed7e0df10db57da144"/>
-          <topic label="set_et_params" href="classrealization_1_1_tshirt___c___realization.html#ad4e23441f5a4ceb63262f796c5bb411f"/>
-          <topic label="set_et_params" href="classrealization_1_1_tshirt___c___realization.html#a8f1338c37773df88268e34e46a1d957e"/>
-          <topic label="set_output_stream" href="classrealization_1_1_tshirt___c___realization.html#a9d02de255937deb8f6169ef20f5a07d6"/>
-          <topic label="sync_c_storage_params" href="classrealization_1_1_tshirt___c___realization.html#a546d1a28ec91eb62c6d2e1a82ade5bbd"/>
-          <topic label="validate_parameters" href="classrealization_1_1_tshirt___c___realization.html#aceabe9927b36dce61f338919f2af4c1f"/>
-          <topic label="write_output" href="classrealization_1_1_tshirt___c___realization.html#aa989be0629ecaa29a2410f7588404ff9"/>
-          <topic label="bounds" href="classrealization_1_1_tshirt___c___realization.html#aaebc4992c38cb5db68e859e0487ad929"/>
-          <topic label="c_aorc_params" href="classrealization_1_1_tshirt___c___realization.html#a46866909d877fb66681b25af6e663f1d"/>
-          <topic label="c_soil_params" href="classrealization_1_1_tshirt___c___realization.html#ae2515f0f774e5f1d6add715e90aefea9"/>
-          <topic label="cat_id" href="classrealization_1_1_tshirt___c___realization.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b"/>
-          <topic label="catchment_id" href="classrealization_1_1_tshirt___c___realization.html#aa22d8d4ce831a21fb2ab1ef9a8f01e3f"/>
-          <topic label="et_params" href="classrealization_1_1_tshirt___c___realization.html#a5fab369fc039b378dfd270490ddb9e5c"/>
-          <topic label="fluxes" href="classrealization_1_1_tshirt___c___realization.html#ab6b1f82681faeed2f77992032ac601aa"/>
-          <topic label="forcing" href="classrealization_1_1_tshirt___c___realization.html#a2010f61d0e7141bb48230923592de215"/>
-          <topic label="giuh_cdf_ordinates" href="classrealization_1_1_tshirt___c___realization.html#a45defe72d43cba24cd81af47fe161fe4"/>
-          <topic label="giuh_runoff_queue_per_timestep" href="classrealization_1_1_tshirt___c___realization.html#ad35fadf81a0e146e35d6e5ddd4511ed3"/>
-          <topic label="groundwater_conceptual_reservoir" href="classrealization_1_1_tshirt___c___realization.html#a2437c3c59e9cc834c37fe75e029fd15d"/>
-          <topic label="id" href="classrealization_1_1_tshirt___c___realization.html#a8bfec24b0d57240e7ada2493a781db6d"/>
-          <topic label="id_number" href="classrealization_1_1_tshirt___c___realization.html#af996a3e50eaf51c63865f1fdbe4f8661"/>
-          <topic label="nash_storage" href="classrealization_1_1_tshirt___c___realization.html#a564be46296d61c3bba384ebaf7153d88"/>
-          <topic label="output" href="classrealization_1_1_tshirt___c___realization.html#a55857dc16551760ff59487991fc525fe"/>
-          <topic label="OUTPUT_HEADER_FIELDS" href="classrealization_1_1_tshirt___c___realization.html#a9ccf871277d8933b886f12381307caa8"/>
-          <topic label="OUTPUT_VARIABLE_NAMES" href="classrealization_1_1_tshirt___c___realization.html#af31a6f0bfdd9ff4ffbcc0578fa133229"/>
-          <topic label="params" href="classrealization_1_1_tshirt___c___realization.html#a7a5d45d93d8cf234ba99449fe346546f"/>
-          <topic label="realized_catchment" href="classrealization_1_1_tshirt___c___realization.html#a7c6de72bd8ebf427d71aacca7baa23c1"/>
-          <topic label="REQUIRED_PARAMETERS" href="classrealization_1_1_tshirt___c___realization.html#a3003b91ee5309a6fdfbc2cd8308bb442"/>
-          <topic label="soil_conceptual_reservoir" href="classrealization_1_1_tshirt___c___realization.html#a98a3d23a5bf2335ad5e54ded732d96cc"/>
-        </topic>
-        <topic label="Tshirt_Realization" href="classrealization_1_1_tshirt___realization.html">
-          <topic label="time_step_t" href="classrealization_1_1_tshirt___realization.html#a4068e3ccc1d3d07ddbfd507df773449f"/>
-          <topic label="Tshirt_Realization" href="classrealization_1_1_tshirt___realization.html#a758b13ad8c46973f299dabf2036837eb"/>
-          <topic label="~Tshirt_Realization" href="classrealization_1_1_tshirt___realization.html#aecc75708eab759706de5b5a918fb0820"/>
-          <topic label="add_time" href="classrealization_1_1_tshirt___realization.html#a248b562be5dc9a21e7afbc014de15114"/>
-          <topic label="calc_et" href="classrealization_1_1_tshirt___realization.html#aff217eec7cb3cf1fdaf67f05c30a6ac6"/>
-          <topic label="config_pattern_substitution" href="classrealization_1_1_tshirt___realization.html#a17f32257b65c7930f8b3570ab43fd58c"/>
-          <topic label="create_formulation" href="classrealization_1_1_tshirt___realization.html#a2303335bc613d277d4e16b9fd7619063"/>
-          <topic label="create_formulation" href="classrealization_1_1_tshirt___realization.html#a40e6a3298f4f8c2724ddda7736925909"/>
-          <topic label="get_catchment_id" href="classrealization_1_1_tshirt___realization.html#a633b7407d447f77910476c0315c8beb6"/>
-          <topic label="get_et_params" href="classrealization_1_1_tshirt___realization.html#ae3eed12472620303be3bd1b2cb3600c6"/>
-          <topic label="get_et_params_ptr" href="classrealization_1_1_tshirt___realization.html#a74fa1d17e6e8d344beecc4f0f38ee29e"/>
-          <topic label="get_formulation_type" href="classrealization_1_1_tshirt___realization.html#ab8138d9a7d6c8934fd0a99ff642bb83d"/>
-          <topic label="get_id" href="classrealization_1_1_tshirt___realization.html#a02267e0cc9fec2e1d883f55c2c12b39d"/>
-          <topic label="get_output_header_line" href="classrealization_1_1_tshirt___realization.html#a12fad75c2e47f5da298e022429243199"/>
-          <topic label="get_output_line_for_timestep" href="classrealization_1_1_tshirt___realization.html#a61707fbfe3175ac4d20f0b835c88654e"/>
-          <topic label="get_required_parameters" href="classrealization_1_1_tshirt___realization.html#af08784365c8cb62c65ed862348b9203a"/>
-          <topic label="get_response" href="classrealization_1_1_tshirt___realization.html#aea64b8b1d6f77cde58c4c8b3e767df46"/>
-          <topic label="interpret_parameters" href="classrealization_1_1_tshirt___realization.html#a65f97b5efe05e786f59d9f5fd1b10209"/>
-          <topic label="is_et_params_set" href="classrealization_1_1_tshirt___realization.html#a490261c3439f205913ac2e77efbd5b6f"/>
-          <topic label="is_et_params_set" href="classrealization_1_1_tshirt___realization.html#a7117db623dafde1f5dfbf286e46aa99e"/>
-          <topic label="set_catchment_id" href="classrealization_1_1_tshirt___realization.html#a2cce2b5b18eaa0ed7e0df10db57da144"/>
-          <topic label="set_et_params" href="classrealization_1_1_tshirt___realization.html#ad4e23441f5a4ceb63262f796c5bb411f"/>
-          <topic label="set_et_params" href="classrealization_1_1_tshirt___realization.html#a8f1338c37773df88268e34e46a1d957e"/>
-          <topic label="set_giuh_kernel" href="classrealization_1_1_tshirt___realization.html#a6aef7989593fcb924bf6585c37c794da"/>
-          <topic label="set_output_stream" href="classrealization_1_1_tshirt___realization.html#a9d02de255937deb8f6169ef20f5a07d6"/>
-          <topic label="validate_parameters" href="classrealization_1_1_tshirt___realization.html#aceabe9927b36dce61f338919f2af4c1f"/>
-          <topic label="write_output" href="classrealization_1_1_tshirt___realization.html#aa989be0629ecaa29a2410f7588404ff9"/>
-          <topic label="bounds" href="classrealization_1_1_tshirt___realization.html#aaebc4992c38cb5db68e859e0487ad929"/>
-          <topic label="cascade_backing_storage" href="classrealization_1_1_tshirt___realization.html#a14ec7726c6849eb23e3de6d6c0005c47"/>
-          <topic label="cat_id" href="classrealization_1_1_tshirt___realization.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b"/>
-          <topic label="catchment_id" href="classrealization_1_1_tshirt___realization.html#a12152fda31d618b47b590f9f23b452cf"/>
-          <topic label="dt" href="classrealization_1_1_tshirt___realization.html#ac89d3d992bfc7bd5aa739dc12f9912c4"/>
-          <topic label="et_params" href="classrealization_1_1_tshirt___realization.html#a5fab369fc039b378dfd270490ddb9e5c"/>
-          <topic label="fluxes" href="classrealization_1_1_tshirt___realization.html#a14c7a87a4ab3286f6df7435a28c6a0f0"/>
-          <topic label="forcing" href="classrealization_1_1_tshirt___realization.html#a2010f61d0e7141bb48230923592de215"/>
-          <topic label="giuh_kernel" href="classrealization_1_1_tshirt___realization.html#aa910f1ec3966e00ca3698e15c4eb6818"/>
-          <topic label="id" href="classrealization_1_1_tshirt___realization.html#a8bfec24b0d57240e7ada2493a781db6d"/>
-          <topic label="id_number" href="classrealization_1_1_tshirt___realization.html#af996a3e50eaf51c63865f1fdbe4f8661"/>
-          <topic label="model" href="classrealization_1_1_tshirt___realization.html#aa98523775ceb13139a0844d234930d43"/>
-          <topic label="output" href="classrealization_1_1_tshirt___realization.html#a55857dc16551760ff59487991fc525fe"/>
-          <topic label="params" href="classrealization_1_1_tshirt___realization.html#ac63d4d05a6b221169b51308320940b8a"/>
-          <topic label="realized_catchment" href="classrealization_1_1_tshirt___realization.html#a7c6de72bd8ebf427d71aacca7baa23c1"/>
-          <topic label="REQUIRED_PARAMETERS" href="classrealization_1_1_tshirt___realization.html#afba6da0c11d71de69c9ec9a0befb8fa5"/>
-          <topic label="state" href="classrealization_1_1_tshirt___realization.html#a3d9a12c0a548dc15a02af6dc73997b24"/>
-        </topic>
       </topic>
       <topic label="Reservoir" href="namespace_reservoir.html">
         <topic label="Explicit_Time" href="namespace_reservoir_1_1_explicit___time.html">
@@ -5491,72 +5189,6 @@
             <topic label="flux_meters_local" href="class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html#a10e0432e3c1cecb4385d63422be063f9"/>
             <topic label="max_flux_meters" href="class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html#afda352b29e3f69e581c9b83f03ff189c"/>
           </topic>
-        </topic>
-      </topic>
-      <topic label="tshirt" href="namespacetshirt.html">
-        <topic label="tshirt_fluxes" href="structtshirt_1_1tshirt__fluxes.html">
-          <topic label="tshirt_fluxes" href="structtshirt_1_1tshirt__fluxes.html#ad768e2fa875710154ac1c7cdf6b1d985"/>
-          <topic label="et_loss_meters" href="structtshirt_1_1tshirt__fluxes.html#abdf83852bdac281ade82990996cab7e1"/>
-          <topic label="groundwater_flow_meters_per_second" href="structtshirt_1_1tshirt__fluxes.html#a781655218ae76a3825a29fa3416e90f3"/>
-          <topic label="soil_lateral_flow_meters_per_second" href="structtshirt_1_1tshirt__fluxes.html#ac8dc52cfe2047d71c4d02403c1713498"/>
-          <topic label="soil_percolation_flow_meters_per_second" href="structtshirt_1_1tshirt__fluxes.html#a314dedc8cc3daafb527648b1b5c3f2c9"/>
-          <topic label="surface_runoff_meters_per_second" href="structtshirt_1_1tshirt__fluxes.html#a46ce2fe100bc7d781916e7d6da25b684"/>
-        </topic>
-        <topic label="tshirt_model" href="classtshirt_1_1tshirt__model.html">
-          <topic label="tshirt_model" href="classtshirt_1_1tshirt__model.html#adf2f1043a3536cda5effe39a2251131f"/>
-          <topic label="tshirt_model" href="classtshirt_1_1tshirt__model.html#a904198bf2bc3c6b4e452c568bce59899"/>
-          <topic label="calc_evapotranspiration" href="classtshirt_1_1tshirt__model.html#ab5115899dbc787c81320ab837a169dd6"/>
-          <topic label="calc_soil_field_capacity_storage_threshold" href="classtshirt_1_1tshirt__model.html#a5e4f346a5e4b4859b6e89b21dc461401"/>
-          <topic label="check_valid" href="classtshirt_1_1tshirt__model.html#a729c4eac2d7da4ab0d4f9d326093f50a"/>
-          <topic label="get_current_state" href="classtshirt_1_1tshirt__model.html#ac767074c575331e6666eb4087be7023b"/>
-          <topic label="get_fluxes" href="classtshirt_1_1tshirt__model.html#a01cc559478f9b27acaa4a3373efd1c06"/>
-          <topic label="get_mass_check_error_bound" href="classtshirt_1_1tshirt__model.html#a0f9a635da9e9c80b6bc9fe45db7dd368"/>
-          <topic label="initialize_groundwater_reservoir" href="classtshirt_1_1tshirt__model.html#abba45de07fa42d7c2f5911660eb3442a"/>
-          <topic label="initialize_soil_reservoir" href="classtshirt_1_1tshirt__model.html#a07079f4bde4772e31b01c67d414cbd34"/>
-          <topic label="initialize_subsurface_lateral_flow_nash_cascade" href="classtshirt_1_1tshirt__model.html#a3f66e206e0f8d48434f8c369d8e038e9"/>
-          <topic label="manage_state_before_next_time_step_run" href="classtshirt_1_1tshirt__model.html#a079a998a8d6abe012ec9dd5610f36e97"/>
-          <topic label="mass_check" href="classtshirt_1_1tshirt__model.html#ad6fc0c59637000fec073202387c9c14e"/>
-          <topic label="run" href="classtshirt_1_1tshirt__model.html#a1948e12127ca6d7ce398d1b75a9e6adb"/>
-          <topic label="set_mass_check_error_bound" href="classtshirt_1_1tshirt__model.html#a4254d3955dd018adb7beecba9b598b5a"/>
-          <topic label="current_state" href="classtshirt_1_1tshirt__model.html#ab2875e84838016a1aaa8454d97f62d4c"/>
-          <topic label="fluxes" href="classtshirt_1_1tshirt__model.html#a320bf7f30415a8f01a3adb233e0173c2"/>
-          <topic label="groundwater_reservoir" href="classtshirt_1_1tshirt__model.html#a84c41b6f0e824fcbd9fcf311f42be679"/>
-          <topic label="lf_outlet_index" href="classtshirt_1_1tshirt__model.html#ab66e64c802e8b5901d42cae19f82843b"/>
-          <topic label="mass_check_error_bound" href="classtshirt_1_1tshirt__model.html#a0e364d3af4596555d4a1a29cfb07697d"/>
-          <topic label="model_params" href="classtshirt_1_1tshirt__model.html#a358025fe515688796dede4f738da91a9"/>
-          <topic label="perc_outlet_index" href="classtshirt_1_1tshirt__model.html#af9d695d3def14c4e1fc901634b82c280"/>
-          <topic label="previous_state" href="classtshirt_1_1tshirt__model.html#a2d27add128e6e4ffdd5cf746d7da7aec"/>
-          <topic label="soil_field_capacity_storage_threshold" href="classtshirt_1_1tshirt__model.html#a7ea2283d9e380a1ed41668c4281d9b6b"/>
-          <topic label="soil_lf_nash_res" href="classtshirt_1_1tshirt__model.html#aa9f192f9e7b65ad64253d0fa8b05a691"/>
-          <topic label="soil_reservoir" href="classtshirt_1_1tshirt__model.html#a365047af2214956464fbdb8819440875"/>
-        </topic>
-        <topic label="tshirt_params" href="structtshirt_1_1tshirt__params.html">
-          <topic label="tshirt_params" href="structtshirt_1_1tshirt__params.html#a2c7943c19246afb107fb045e4da271a0"/>
-          <topic label="alpha_fc" href="structtshirt_1_1tshirt__params.html#a1131d5def0f6a467fb3dbf4ce16f5905"/>
-          <topic label="b" href="structtshirt_1_1tshirt__params.html#ad0bcff0f23154f035c79933168b7c6d5"/>
-          <topic label="Cgw" href="structtshirt_1_1tshirt__params.html#a397cbad2e2bfa5a0fe3993d7070244e7"/>
-          <topic label="Cschaake" href="structtshirt_1_1tshirt__params.html#a1d5b8c28657e3ef8897dc4fcb4504c92"/>
-          <topic label="depth" href="structtshirt_1_1tshirt__params.html#acdfad9da584fbe8c885b74543b4992ad"/>
-          <topic label="expon" href="structtshirt_1_1tshirt__params.html#ac12e04215a5d9c708f6195f584b05042"/>
-          <topic label="Klf" href="structtshirt_1_1tshirt__params.html#a615c8264be3056dc908cd6f68a4d3cef"/>
-          <topic label="Kn" href="structtshirt_1_1tshirt__params.html#ae5b474a6abdd5530a5655a756b09be30"/>
-          <topic label="max_groundwater_storage_meters" href="structtshirt_1_1tshirt__params.html#a531636881c6936ecd4c34aebca33d8a8"/>
-          <topic label="max_lateral_flow" href="structtshirt_1_1tshirt__params.html#a497cb619c048679b0c596bc680fae12c"/>
-          <topic label="max_soil_storage_meters" href="structtshirt_1_1tshirt__params.html#ac30fca01e4b6dc5bc927a2b11dc75445"/>
-          <topic label="maxsmc" href="structtshirt_1_1tshirt__params.html#a15f51e86b2f33fccdc107869d0f6ec05"/>
-          <topic label="multiplier" href="structtshirt_1_1tshirt__params.html#a963ed75ab16dbe46c9b79c82dc623440"/>
-          <topic label="nash_n" href="structtshirt_1_1tshirt__params.html#a8cd40bac266affd0b910372ba08618c8"/>
-          <topic label="refkdt" href="structtshirt_1_1tshirt__params.html#a3ac79c8845b9b8c9cfc029b8e806355f"/>
-          <topic label="satdk" href="structtshirt_1_1tshirt__params.html#a7a6affc5aa9eafed547aa2b5591bdcb1"/>
-          <topic label="satpsi" href="structtshirt_1_1tshirt__params.html#a92bd22e94175a5f0b83470a4f908e9e2"/>
-          <topic label="slope" href="structtshirt_1_1tshirt__params.html#a493195405e4e464abba37f1cd00e2199"/>
-          <topic label="wltsmc" href="structtshirt_1_1tshirt__params.html#aceb98b8b854ccc5512773cac046d73f1"/>
-        </topic>
-        <topic label="tshirt_state" href="structtshirt_1_1tshirt__state.html">
-          <topic label="tshirt_state" href="structtshirt_1_1tshirt__state.html#a883f2b4ffacd391d7806bc381705d6e4"/>
-          <topic label="groundwater_storage_meters" href="structtshirt_1_1tshirt__state.html#a10d80a125f2b810a501dd204f0e14a4a"/>
-          <topic label="nash_cascade_storeage_meters" href="structtshirt_1_1tshirt__state.html#a6fedbba194981da0de78d3e1ed654b56"/>
-          <topic label="soil_storage_meters" href="structtshirt_1_1tshirt__state.html#a27ff5470fa20ba28c779fae88dfd6f56"/>
         </topic>
       </topic>
       <topic label="utils" href="namespaceutils.html">
@@ -5702,17 +5334,6 @@
       </topic>
       <topic label="completed_time_step" href="structcompleted__time__step.html">
         <topic label="what" href="structcompleted__time__step.html#aaf647dee637eab397abc27b17a7c8c55"/>
-      </topic>
-      <topic label="conceptual_reservoir" href="structconceptual__reservoir.html">
-        <topic label="coeff_primary" href="structconceptual__reservoir.html#a908affddb5d4d616449090b020b4d7dd"/>
-        <topic label="coeff_secondary" href="structconceptual__reservoir.html#a597fa41bcb9299e236c85115efd1d44a"/>
-        <topic label="exponent_primary" href="structconceptual__reservoir.html#a9c4be4fa3a1d07d5568b39a5d21e66e8"/>
-        <topic label="exponent_secondary" href="structconceptual__reservoir.html#a07e2f65edc56c9c815fd50b800cae4e7"/>
-        <topic label="is_exponential" href="structconceptual__reservoir.html#adf42a2fed5d3964aa6fc84716e4f8dbe"/>
-        <topic label="storage_m" href="structconceptual__reservoir.html#aa6c1f9b88d3233741eb26d1960b31a6a"/>
-        <topic label="storage_max_m" href="structconceptual__reservoir.html#afacb0a78082aacf59a8ff29df632f941"/>
-        <topic label="storage_threshold_primary_m" href="structconceptual__reservoir.html#a4a245583ed38b270feb3a2688366dd43"/>
-        <topic label="storage_threshold_secondary_m" href="structconceptual__reservoir.html#a8fded9c99002979f31112c4e25318f5a"/>
       </topic>
       <topic label="CSVDataSelector" href="class_c_s_v_data_selector.html">
         <topic label="CSVDataSelector" href="class_c_s_v_data_selector.html#ada51067c6874dbf0fb145c8ebe56b38f"/>
@@ -6138,16 +5759,6 @@
         <topic label="complete_json_file" href="class_nexus___test.html#a141e0165625e2647bbe2af0a005ac59a"/>
         <topic label="id_map_json_file" href="class_nexus___test.html#a70dffa3db4d3de7aa35fd42e7f15164c"/>
       </topic>
-      <topic label="NWM_soil_parameters" href="struct_n_w_m__soil__parameters.html">
-        <topic label="bb" href="struct_n_w_m__soil__parameters.html#aa137398f7aa6664e47d515368c896650"/>
-        <topic label="D" href="struct_n_w_m__soil__parameters.html#a642aa37cd57153f460c7c3a96407d4c3"/>
-        <topic label="mult" href="struct_n_w_m__soil__parameters.html#ab68f1684013e237ca445b9bbe5ec6d04"/>
-        <topic label="satdk" href="struct_n_w_m__soil__parameters.html#ad3f153f2948ea2a7a1a60cc4a4f603c8"/>
-        <topic label="satpsi" href="struct_n_w_m__soil__parameters.html#ad88aedd67ff30b359999eac354b16182"/>
-        <topic label="slop" href="struct_n_w_m__soil__parameters.html#a6b9ca0f3a53003867338abe16a155301"/>
-        <topic label="smcmax" href="struct_n_w_m__soil__parameters.html#a7c334215442a5a385de20ea3382ae12d"/>
-        <topic label="wltsmc" href="struct_n_w_m__soil__parameters.html#a6441f0043fd8b6cfc4a32f21158eaca5"/>
-      </topic>
       <topic label="pdm03_struct" href="structpdm03__struct.html">
         <topic label="actual_et" href="structpdm03__struct.html#af8f8808e20d01a9538110c31e158fe99"/>
         <topic label="final_height_reservoir" href="structpdm03__struct.html#abfcb8820eb9b074ef52aeadbb2cc6f18"/>
@@ -6328,21 +5939,6 @@
         <topic label="surface_longwave_emissivity" href="structsurface__radiation__params.html#aa4506becd3f2dc0b19df56b973fc1cc8"/>
         <topic label="surface_shortwave_albedo" href="structsurface__radiation__params.html#ab0a30d95f03071fab65512df6be0001b"/>
       </topic>
-      <topic label="tshirt_c_result_fluxes" href="structtshirt__c__result__fluxes.html">
-        <topic label="flux_from_deep_gw_to_chan_m" href="structtshirt__c__result__fluxes.html#a690f2e86599cd29d4468d9f8deec08f8"/>
-        <topic label="giuh_runoff_m" href="structtshirt__c__result__fluxes.html#a4a24f52c5fd33bcf18fd1a0b77d090ea"/>
-        <topic label="nash_lateral_runoff_m" href="structtshirt__c__result__fluxes.html#ad16e4d4c85300107782697407e308591"/>
-        <topic label="Qout_m" href="structtshirt__c__result__fluxes.html#af595e38db4d7937780873d24b154aa26"/>
-        <topic label="Schaake_output_runoff_m" href="structtshirt__c__result__fluxes.html#ae868d78517af4e93a94db39cd628a1d8"/>
-        <topic label="timestep_rainfall_input_m" href="structtshirt__c__result__fluxes.html#abe33c153fca00ceef5b19d717d8fbdff"/>
-      </topic>
-      <topic label="TshirtModelTest" href="class_tshirt_model_test.html">
-        <topic label="TshirtModelTest" href="class_tshirt_model_test.html#a5857d4184ea0efd854c1a82aebd27237"/>
-        <topic label="~TshirtModelTest" href="class_tshirt_model_test.html#a094793f28fb81758c9a0fbc8c1657b03"/>
-        <topic label="SetUp" href="class_tshirt_model_test.html#ab07d82abe4d38e3827def96d14c1a893"/>
-        <topic label="setupArbitraryExampleCase" href="class_tshirt_model_test.html#a6bab90cd485a52709f6e825197d4a51d"/>
-        <topic label="TearDown" href="class_tshirt_model_test.html#a305abb1fc17a250c4662e6d2e01f0ec1"/>
-      </topic>
       <topic label="UnitsHelper" href="class_units_helper.html">
         <topic label="convert_values" href="class_units_helper.html#a60789bcaf4c43a12ff3be963454eafca"/>
         <topic label="get_converted_value" href="class_units_helper.html#a0e2dd4070640d0c0425da6aa0828cedd"/>
@@ -6430,7 +6026,6 @@
         <topic label="BMIDataSelector" href="class_b_m_i_data_selector.html"/>
         <topic label="CSVDataSelector" href="class_c_s_v_data_selector.html"/>
       </topic>
-      <topic label="conceptual_reservoir" href="structconceptual__reservoir.html"/>
       <topic label="CSVReader" href="class_c_s_v_reader.html"/>
       <topic label="data_access::DataProvider&lt; data_type, selection_type &gt;" href="classdata__access_1_1_data_provider.html">
         <topic label="data_access::AsyncDataProvider&lt; data_type, selection_type &gt;" href="classdata__access_1_1_async_data_provider.html"/>
@@ -6499,8 +6094,6 @@
         <topic label="HY_CatchmentArea" href="class_h_y___catchment_area.html">
           <topic label="realization::Catchment_Formulation" href="classrealization_1_1_catchment___formulation.html">
             <topic label="realization::Bmi_Formulation" href="classrealization_1_1_bmi___formulation.html"/>
-            <topic label="realization::Tshirt_C_Realization" href="classrealization_1_1_tshirt___c___realization.html"/>
-            <topic label="realization::Tshirt_Realization" href="classrealization_1_1_tshirt___realization.html"/>
           </topic>
         </topic>
         <topic label="HY_CatchmentDivide" href="class_h_y___catchment_divide.html"/>
@@ -6536,7 +6129,6 @@
         <topic label="Network_Test2" href="class_network___test2.html"/>
       </topic>
       <topic label="nexus::Nexus_Manager" href="classnexus_1_1_nexus___manager.html"/>
-      <topic label="NWM_soil_parameters" href="struct_n_w_m__soil__parameters.html"/>
       <topic label="pdm03_struct" href="structpdm03__struct.html"/>
       <topic label="realization::Et_Aware" href="classrealization_1_1_et___aware.html">
         <topic label="realization::Et_Accountable" href="classrealization_1_1_et___accountable.html">
@@ -6593,17 +6185,11 @@
         <topic label="ReservoirKernelTest" href="class_reservoir_kernel_test.html"/>
         <topic label="ReservoirTimelessKernelTest" href="class_reservoir_timeless_kernel_test.html"/>
         <topic label="SchaakeKernelTest" href="class_schaake_kernel_test.html"/>
-        <topic label="TshirtModelTest" href="class_tshirt_model_test.html"/>
         <topic label="UnitsHelper_Test" href="class_units_helper___test.html"/>
       </topic>
       <topic label="testing::TestWithParam">
         <topic label="Network_Test1" href="class_network___test1.html"/>
       </topic>
-      <topic label="tshirt::tshirt_fluxes" href="structtshirt_1_1tshirt__fluxes.html"/>
-      <topic label="tshirt::tshirt_model" href="classtshirt_1_1tshirt__model.html"/>
-      <topic label="tshirt::tshirt_params" href="structtshirt_1_1tshirt__params.html"/>
-      <topic label="tshirt::tshirt_state" href="structtshirt_1_1tshirt__state.html"/>
-      <topic label="tshirt_c_result_fluxes" href="structtshirt__c__result__fluxes.html"/>
       <topic label="UnitsHelper" href="class_units_helper.html"/>
       <topic label="utils::FileChecker" href="classutils_1_1_file_checker.html"/>
       <topic label="utils::StreamHandler" href="classutils_1_1_stream_handler.html">
@@ -6684,7 +6270,6 @@
         <topic label="n" href="functions_vars_n.html"/>
         <topic label="o" href="functions_vars_o.html"/>
         <topic label="p" href="functions_vars_p.html"/>
-        <topic label="q" href="functions_vars_q.html"/>
         <topic label="r" href="functions_vars_r.html"/>
         <topic label="s" href="functions_vars_s.html"/>
         <topic label="t" href="functions_vars_t.html"/>

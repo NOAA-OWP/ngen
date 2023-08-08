@@ -22,8 +22,7 @@ var searchData=
   ['interpolated_5fregularized_5fcdf_19',['interpolated_regularized_cdf',['../classgiuh_1_1giuh__kernel__impl.html#aafb04b11326fcd3a7b730373fd763880',1,'giuh::giuh_kernel_impl']]],
   ['interpolation_5fregularity_5fseconds_20',['interpolation_regularity_seconds',['../classgiuh_1_1giuh__kernel.html#ac8d8754faae060963ca33671f5a22bae',1,'giuh::giuh_kernel']]],
   ['interpolative_21',['interpolative',['../structhy__features_1_1hydrolocation_1_1_h_y___distance_from_referent.html#ad8773fd35ca01511f8e2baed70e8afcf',1,'hy_features::hydrolocation::HY_DistanceFromReferent']]],
-  ['is_5fexponential_22',['is_exponential',['../structconceptual__reservoir.html#adf42a2fed5d3964aa6fc84716e4f8dbe',1,'conceptual_reservoir']]],
-  ['is_5fout_5fvars_5ffrom_5flast_5fmod_23',['is_out_vars_from_last_mod',['../classrealization_1_1_bmi___multi___formulation.html#a2b3b0cb7670a2ab18107ec428ac06fa2',1,'realization::Bmi_Multi_Formulation']]],
-  ['iteration_5ffinished_24',['iteration_finished',['../classgeopackage_1_1sqlite__iter.html#a3dc181bdbc22febf1dfb77c371fa0fb2',1,'geopackage::sqlite_iter']]],
-  ['iteration_5fstep_25',['iteration_step',['../classgeopackage_1_1sqlite__iter.html#a34f525e0e556fb5154cdd296f556c5b8',1,'geopackage::sqlite_iter']]]
+  ['is_5fout_5fvars_5ffrom_5flast_5fmod_22',['is_out_vars_from_last_mod',['../classrealization_1_1_bmi___multi___formulation.html#a2b3b0cb7670a2ab18107ec428ac06fa2',1,'realization::Bmi_Multi_Formulation']]],
+  ['iteration_5ffinished_23',['iteration_finished',['../classgeopackage_1_1sqlite__iter.html#a3dc181bdbc22febf1dfb77c371fa0fb2',1,'geopackage::sqlite_iter']]],
+  ['iteration_5fstep_24',['iteration_step',['../classgeopackage_1_1sqlite__iter.html#a34f525e0e556fb5154cdd296f556c5b8',1,'geopackage::sqlite_iter']]]
 ];
