@@ -23,8 +23,8 @@ using PartitionVSet = std::vector<std::unordered_set<std::string> >;
  * partition-id = partition containing the `nexus-id` and its related `catchment-id`
  * nexus-id = which nexus is participating in the remote connection
  * catchment-id = which catchment is topologically connected to the `nexus-id` involved in the communication
- * topoloy-string = "orig_cat-to-nex" iff `catchment-id` is an origin feature of `nexus-id`
- *                  "nex-to-dest_cat" iff `catchment-id` is a destination feature of `nexus-id`
+ * topology-string = "orig_cat-to-nex" iff `catchment-id` is an origin feature of `nexus-id`
+ *                   "nex-to-dest_cat" iff `catchment-id` is a destination feature of `nexus-id`
  */
 using RemoteConnection = std::tuple<int, std::string, std::string, std::string>;
 using RemoteConnectionVec = std::vector< RemoteConnection >;
@@ -49,7 +49,6 @@ void write_remote_connections(const PartitionVSet& catchment_part, const Partiti
     std::streamoff backspace(2);
     // loop over all partitions
     for (int i =0; i < catchment_part.size(); ++i)
-    //for (int i =0; i < 2; ++i)  // for a quick test
     {
         // write catchments
         outFile<<"        {\"id\":" << id <<",\n        \"cat-ids\":[";
@@ -73,7 +72,7 @@ void write_remote_connections(const PartitionVSet& catchment_part, const Partiti
         outFile.seekp( outFile.tellp() - backspace );
         outFile<<"],\n";
 
-        // wrtie remote_connections
+        // write remote_connections
         const RemoteConnectionVec& remote_conn_vec = remote_connections_vec[i];
 
         outFile<<"        \"remote-connections\":[";
@@ -187,7 +186,7 @@ void generate_partitions(network::Network& network, const int& num_partitions, c
                 //FIXME partitioning shouldn't have to assume dendritic network
                 std::vector<std::string> destinations = network.get_destination_ids(catchment);
                 if(destinations.size() == 0){
-                    std::cerr<<"Error: Catchment "<<catchment<<" has no destinatin nexus.\n";
+                    std::cerr<<"Error: Catchment "<<catchment<<" has no destination nexus.\n";
                     exit(1);
                 }
                 down_nexus = destinations[0];
@@ -235,7 +234,7 @@ void generate_partitions(network::Network& network, const int& num_partitions, c
                 //std::cout<<"\nnexus "<<nexus<<" is remote UP on partition "<<partition<<std::endl;
 
                 //this nexus overlaps partitions
-                //Handeled above by ensure all up/down stream nexuses are recorded 
+                //Handled above by ensure all up/down stream nexuses are recorded
                 //nexus_list.push_back(nexus);
                 up_nexus = down_nexus;
                 //std::cout<<"\nin partition "<<partition<<":"<<std::endl;
@@ -254,7 +253,7 @@ void generate_partitions(network::Network& network, const int& num_partitions, c
     }
     //sort ids
     std::sort(cat_id_vec.begin(), cat_id_vec.end());
-    //create set of uniqe ids
+    //create set of unique ids
     std::set<std::string> unique(cat_id_vec.begin(), cat_id_vec.end());
     std::set<std::string> duplicates;
     //use set difference to identify all duplicates
@@ -390,7 +389,7 @@ int find_partition_connections(const std::string& nexus, const PartitionVSet& ca
                 auto dest_iter = std::find(catchments.begin(), catchments.end(), did);
                 if( dest_iter != catchments.end() )
                 {
-                    //We operate the receving end of this remote nexus for the communiction pair
+                    //We operate the receiving end of this remote nexus for the communication pair
                     // (id -> N) (N -> did)
                     //map that relationship
                     int pos = find_remote_rank(id, catchment_partitions);
@@ -451,7 +450,7 @@ int main(int argc, char* argv[])
             if(num_partitions < 0) throw boost::bad_lexical_cast();
         }
         catch(boost::bad_lexical_cast &e) {
-            std::cout<<"number of partitions must be a postive integer."<<std::endl;
+            std::cout<<"number of partitions must be a positive integer."<<std::endl;
             error = true;
         }
         
@@ -465,14 +464,14 @@ int main(int argc, char* argv[])
     boost::split(nexus_subset_ids, argv[6], [](char c){return c == ','; } );
 
     //If a single id or no id is passed, the subset vector will have size 1 and be the id or the ""
-    //if we get an empy string, pop it from the subset list.
+    //if we get an empty string, pop it from the subset list.
     if(nexus_subset_ids.size() == 1 && nexus_subset_ids[0] == "") nexus_subset_ids.pop_back();
     if(catchment_subset_ids.size() == 1 && catchment_subset_ids[0] == "") catchment_subset_ids.pop_back();
 
     std::ofstream outFile;
     outFile.open(partitionOutFile, std::ios::trunc);
 
-    //Get the feature collecion for the given hydrofabric
+    //Get the feature collection for the given hydrofabric
     geojson::GeoJSON catchment_collection = std::move( geojson::read(catchmentDataFile, catchment_subset_ids) );
     int num_catchments = catchment_collection->get_size();
     std::cout<<"Partitioning "<<num_catchments<<" catchments into "<<num_partitions<<" partitions."<<std::endl;
@@ -538,7 +537,7 @@ int main(int argc, char* argv[])
 
         // make a local network
         Network local_network(local_catchment_collection, &link_key);
-        //NOTE: This doesn't include nexi in the network... if you check, this results in a difference of 1
+        //NOTE: This doesn't include nexuses in the network... if you check, this results in a difference of 1
         // local nexus in roughly half the cases between nexus_part[i] and local_nexuses... this doesn't *seem*
         // to have any practical effect on remote nexus determination, but it's still a mismatch.
         
