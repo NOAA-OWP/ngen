@@ -11,9 +11,9 @@
 <!-- Node0 -->
 <g id="node1" class="node">
 <title>Node0</title>
-<g id="a_node1"><a xlink:href="structgeojson_1_1_object.html" target="_top" xlink:title="Struct wrapping a nested PropertyMap representing a JSON object.">
+<g id="a_node1"><a xlink:href="structrouting__params.html" target="_top" xlink:title="routing_params providing configuration information for routing.">
 <polygon fill="white" stroke="#666666" points="83,-19 0,-19 0,0 83,0 83,-19"/>
-<text text-anchor="middle" x="41.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">geojson::Object</text>
+<text text-anchor="middle" x="41.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">routing_params</text>
 </a>
 </g>
 </g>

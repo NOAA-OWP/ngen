@@ -13,8 +13,6 @@ var classrealization_1_1_formulation =
     [ "get_required_parameters", "classrealization_1_1_formulation.html#a12e690d066ac42ccafeae5b2b708cf21", null ],
     [ "get_response", "classrealization_1_1_formulation.html#ae70ca928c70b08b08c4bfc982ed8e3ca", null ],
     [ "interpret_parameters", "classrealization_1_1_formulation.html#a65f97b5efe05e786f59d9f5fd1b10209", null ],
-    [ "is_et_params_set", "classrealization_1_1_formulation.html#a7117db623dafde1f5dfbf286e46aa99e", null ],
-    [ "set_et_params", "classrealization_1_1_formulation.html#a8f1338c37773df88268e34e46a1d957e", null ],
     [ "validate_parameters", "classrealization_1_1_formulation.html#aceabe9927b36dce61f338919f2af4c1f", null ],
     [ "id", "classrealization_1_1_formulation.html#a8bfec24b0d57240e7ada2493a781db6d", null ]
 ];

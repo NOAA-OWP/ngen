@@ -1,7 +1,6 @@
 var hierarchy =
 [
     [ "AORC_data", "struct_a_o_r_c__data.html", null ],
-    [ "aorc_forcing_data", "structaorc__forcing__data.html", null ],
     [ "Bmi", "struct_bmi.html", null ],
     [ "bmi::Bmi", "classbmi_1_1_bmi.html", [
       [ "models::bmi::Bmi_Adapter< C >", "classmodels_1_1bmi_1_1_bmi___adapter.html", [
@@ -82,20 +81,6 @@ var hierarchy =
         ] ]
       ] ]
     ] ],
-    [ "et::aorc_forcing_data", "structet_1_1aorc__forcing__data.html", null ],
-    [ "et::evapotranspiration_forcing", "structet_1_1evapotranspiration__forcing.html", null ],
-    [ "et::evapotranspiration_options", "structet_1_1evapotranspiration__options.html", null ],
-    [ "et::evapotranspiration_params", "structet_1_1evapotranspiration__params.html", null ],
-    [ "et::intermediate_vars", "structet_1_1intermediate__vars.html", null ],
-    [ "et::solar_radiation_forcing", "structet_1_1solar__radiation__forcing.html", null ],
-    [ "et::solar_radiation_options", "structet_1_1solar__radiation__options.html", null ],
-    [ "et::solar_radiation_parameters", "structet_1_1solar__radiation__parameters.html", null ],
-    [ "et::solar_radiation_results", "structet_1_1solar__radiation__results.html", null ],
-    [ "et::surface_radiation_forcing", "structet_1_1surface__radiation__forcing.html", null ],
-    [ "et::surface_radiation_params", "structet_1_1surface__radiation__params.html", null ],
-    [ "evapotranspiration_forcing", "structevapotranspiration__forcing.html", null ],
-    [ "evapotranspiration_options", "structevapotranspiration__options.html", null ],
-    [ "evapotranspiration_params", "structevapotranspiration__params.html", null ],
     [ "forcing_params", "structforcing__params.html", null ],
     [ "geojson::FeatureBase", "classgeojson_1_1_feature_base.html", [
       [ "geojson::CollectionFeature", "classgeojson_1_1_collection_feature.html", null ],
@@ -148,7 +133,6 @@ var hierarchy =
     [ "HY_HydroNexus", "class_h_y___hydro_nexus.html", [
       [ "HY_PointHydroNexus", "class_h_y___point_hydro_nexus.html", null ]
     ] ],
-    [ "intermediate_vars", "structintermediate__vars.html", null ],
     [ "network::Network", "classnetwork_1_1_network.html", null ],
     [ "network::VertexProperty", "structnetwork_1_1_vertex_property.html", null ],
     [ "Network_Test", "class_network___test.html", [
@@ -156,23 +140,13 @@ var hierarchy =
       [ "Network_Test2", "class_network___test2.html", null ]
     ] ],
     [ "nexus::Nexus_Manager", "classnexus_1_1_nexus___manager.html", null ],
-    [ "pdm03_struct", "structpdm03__struct.html", null ],
-    [ "realization::Et_Aware", "classrealization_1_1_et___aware.html", [
-      [ "realization::Et_Accountable", "classrealization_1_1_et___accountable.html", [
-        [ "realization::Catchment_Formulation", "classrealization_1_1_catchment___formulation.html", null ]
-      ] ],
-      [ "realization::Formulation", "classrealization_1_1_formulation.html", [
-        [ "realization::Catchment_Formulation", "classrealization_1_1_catchment___formulation.html", null ]
-      ] ]
+    [ "realization::Formulation", "classrealization_1_1_formulation.html", [
+      [ "realization::Catchment_Formulation", "classrealization_1_1_catchment___formulation.html", null ]
     ] ],
     [ "realization::Formulation_Manager", "classrealization_1_1_formulation___manager.html", null ],
     [ "routing_params", "structrouting__params.html", null ],
     [ "Simulation_Time", "class_simulation___time.html", null ],
     [ "simulation_time_params", "structsimulation__time__params.html", null ],
-    [ "solar_radiation_forcing", "structsolar__radiation__forcing.html", null ],
-    [ "solar_radiation_options", "structsolar__radiation__options.html", null ],
-    [ "solar_radiation_parameters", "structsolar__radiation__parameters.html", null ],
-    [ "solar_radiation_results", "structsolar__radiation__results.html", null ],
     [ "std::exception", null, [
       [ "add_to_summed_nexus", "structadd__to__summed__nexus.html", null ],
       [ "completed_time_step", "structcompleted__time__step.html", null ],
@@ -183,11 +157,7 @@ var hierarchy =
       [ "realization::ConfigurationException", "classrealization_1_1_configuration_exception.html", null ],
       [ "request_from_empty_nexus", "structrequest__from__empty__nexus.html", null ]
     ] ],
-    [ "surface_radiation_forcing", "structsurface__radiation__forcing.html", null ],
-    [ "surface_radiation_params", "structsurface__radiation__params.html", null ],
     [ "testing::Test", null, [
-      [ "EtCalcKernelTest", "class_et_calc_kernel_test.html", null ],
-      [ "EtCalcKernelTest", "class_et_calc_kernel_test.html", null ],
       [ "FeatureCollection_Test", "class_feature_collection___test.html", null ],
       [ "Feature_Test", "class_feature___test.html", null ],
       [ "JSONGeometry_Test", "class_j_s_o_n_geometry___test.html", null ],
@@ -195,7 +165,6 @@ var hierarchy =
       [ "Network_Test2", "class_network___test2.html", null ],
       [ "Nexus_Remote_Test", "class_nexus___remote___test.html", null ],
       [ "Nexus_Test", "class_nexus___test.html", null ],
-      [ "Pdm03KernelTest", "class_pdm03_kernel_test.html", null ],
       [ "ReservoirKernelTest", "class_reservoir_kernel_test.html", null ],
       [ "ReservoirTimelessKernelTest", "class_reservoir_timeless_kernel_test.html", null ],
       [ "UnitsHelper_Test", "class_units_helper___test.html", null ]

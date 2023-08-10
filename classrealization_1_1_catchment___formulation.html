@@ -153,27 +153,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:adea6ed82d2fa734d87415d34b9c599bd"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation.html#adea6ed82d2fa734d87415d34b9c599bd">get_output_line_for_timestep</a> (int timestep, std::string delimiter=DEFAULT_FORMULATION_OUTPUT_DELIMITER)=0</td></tr>
 <tr class="memdesc:adea6ed82d2fa734d87415d34b9c599bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a formatted line of output values for the given time step as a delimited string.  <a href="classrealization_1_1_formulation.html#adea6ed82d2fa734d87415d34b9c599bd">More...</a><br /></td></tr>
 <tr class="separator:adea6ed82d2fa734d87415d34b9c599bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7117db623dafde1f5dfbf286e46aa99e"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_et___aware.html#a7117db623dafde1f5dfbf286e46aa99e">is_et_params_set</a> ()=0</td></tr>
-<tr class="memdesc:a7117db623dafde1f5dfbf286e46aa99e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test whether ET params have been set.  <a href="classrealization_1_1_et___aware.html#a7117db623dafde1f5dfbf286e46aa99e">More...</a><br /></td></tr>
-<tr class="separator:a7117db623dafde1f5dfbf286e46aa99e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8f1338c37773df88268e34e46a1d957e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_et___aware.html#a8f1338c37773df88268e34e46a1d957e">set_et_params</a> (std::shared_ptr&lt; <a class="el" href="structpdm03__struct.html">pdm03_struct</a> &gt; params)=0</td></tr>
-<tr class="memdesc:a8f1338c37773df88268e34e46a1d957e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accept a reference for an appropriate object for holding ET parameters for use when executing the model calculations, if maintained by the type.  <a href="classrealization_1_1_et___aware.html#a8f1338c37773df88268e34e46a1d957e">More...</a><br /></td></tr>
-<tr class="separator:a8f1338c37773df88268e34e46a1d957e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9d02de255937deb8f6169ef20f5a07d6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_area.html#a9d02de255937deb8f6169ef20f5a07d6">set_output_stream</a> (std::string file_path)</td></tr>
 <tr class="separator:a9d02de255937deb8f6169ef20f5a07d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa989be0629ecaa29a2410f7588404ff9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment_area.html#aa989be0629ecaa29a2410f7588404ff9">write_output</a> (std::string out)</td></tr>
 <tr class="separator:aa989be0629ecaa29a2410f7588404ff9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1af6f5c88bda174c8ba855e796a55439"><td class="memItemLeft" align="right" valign="top">virtual double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_et___accountable.html#a1af6f5c88bda174c8ba855e796a55439">calc_et</a> ()=0</td></tr>
-<tr class="separator:a1af6f5c88bda174c8ba855e796a55439"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae3eed12472620303be3bd1b2cb3600c6"><td class="memItemLeft" align="right" valign="top">virtual const <a class="el" href="structpdm03__struct.html">pdm03_struct</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_et___accountable.html#ae3eed12472620303be3bd1b2cb3600c6">get_et_params</a> ()</td></tr>
-<tr class="memdesc:ae3eed12472620303be3bd1b2cb3600c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a reference to the appropriate object holding ET parameters for use when executing the model calculations.  <a href="classrealization_1_1_et___accountable.html#ae3eed12472620303be3bd1b2cb3600c6">More...</a><br /></td></tr>
-<tr class="separator:ae3eed12472620303be3bd1b2cb3600c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a490261c3439f205913ac2e77efbd5b6f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_et___accountable.html#a490261c3439f205913ac2e77efbd5b6f">is_et_params_set</a> () override</td></tr>
-<tr class="memdesc:a490261c3439f205913ac2e77efbd5b6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test whether ET params have been set.  <a href="classrealization_1_1_et___accountable.html#a490261c3439f205913ac2e77efbd5b6f">More...</a><br /></td></tr>
-<tr class="separator:a490261c3439f205913ac2e77efbd5b6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad4e23441f5a4ceb63262f796c5bb411f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_et___accountable.html#ad4e23441f5a4ceb63262f796c5bb411f">set_et_params</a> (std::shared_ptr&lt; <a class="el" href="structpdm03__struct.html">pdm03_struct</a> &gt; params) override</td></tr>
-<tr class="memdesc:ad4e23441f5a4ceb63262f796c5bb411f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a reference for an appropriate object for holding ET parameters for use when executing the model calculations.  <a href="classrealization_1_1_et___accountable.html#ad4e23441f5a4ceb63262f796c5bb411f">More...</a><br /></td></tr>
-<tr class="separator:ad4e23441f5a4ceb63262f796c5bb411f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -191,8 +174,6 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:a65f97b5efe05e786f59d9f5fd1b10209"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aceabe9927b36dce61f338919f2af4c1f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation.html#aceabe9927b36dce61f338919f2af4c1f">validate_parameters</a> (<a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> options)</td></tr>
 <tr class="separator:aceabe9927b36dce61f338919f2af4c1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a74fa1d17e6e8d344beecc4f0f38ee29e"><td class="memItemLeft" align="right" valign="top">virtual std::shared_ptr&lt; <a class="el" href="structpdm03__struct.html">pdm03_struct</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_et___accountable.html#a74fa1d17e6e8d344beecc4f0f38ee29e">get_et_params_ptr</a> ()</td></tr>
-<tr class="separator:a74fa1d17e6e8d344beecc4f0f38ee29e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -213,8 +194,6 @@ Protected Attributes</h2></td></tr>
 Private Attributes</h2></td></tr>
 <tr class="memitem:a4fe13a1bc94d6c8c0cf47c2248c22f1b"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b">cat_id</a></td></tr>
 <tr class="separator:a4fe13a1bc94d6c8c0cf47c2248c22f1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5fab369fc039b378dfd270490ddb9e5c"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="structpdm03__struct.html">pdm03_struct</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_et___accountable.html#a5fab369fc039b378dfd270490ddb9e5c">et_params</a></td></tr>
-<tr class="separator:a5fab369fc039b378dfd270490ddb9e5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="aee10dc672e5a9e106f49dcbe0080cf7c" name="aee10dc672e5a9e106f49dcbe0080cf7c"></a>
@@ -371,33 +350,6 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-</div>
-</div>
-<a id="a1af6f5c88bda174c8ba855e796a55439" name="a1af6f5c88bda174c8ba855e796a55439"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1af6f5c88bda174c8ba855e796a55439">&#9670;&#160;</a></span>calc_et()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual double realization::Et_Accountable::calc_et </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span><span class="mlabel">inherited</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implemented in <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ad8d9a56ad3614fb821d88f623030defc">realization::Bmi_Module_Formulation&lt; M &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ad8d9a56ad3614fb821d88f623030defc">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ad8d9a56ad3614fb821d88f623030defc">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_Cpp_Adapter &gt;</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a5044c4cf0c139b0c6b5b5a3ce679555b">realization::Bmi_Multi_Formulation</a>.</p>
 
 </div>
 </div>
@@ -566,63 +518,6 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ae3eed12472620303be3bd1b2cb3600c6" name="ae3eed12472620303be3bd1b2cb3600c6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae3eed12472620303be3bd1b2cb3600c6">&#9670;&#160;</a></span>get_et_params()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual const <a class="el" href="structpdm03__struct.html">pdm03_struct</a> &amp; realization::Et_Accountable::get_et_params </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span><span class="mlabel">inherited</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Get a reference to the appropriate object holding ET parameters for use when executing the model calculations. </p>
-<dl class="section return"><dt>Returns</dt><dd>A reference object for model ET parameters. </dd></dl>
-
-<p class="reference">References <a class="el" href="classrealization_1_1_et___accountable.html#a5fab369fc039b378dfd270490ddb9e5c">realization::Et_Accountable::et_params</a>.</p>
-
-</div>
-</div>
-<a id="a74fa1d17e6e8d344beecc4f0f38ee29e" name="a74fa1d17e6e8d344beecc4f0f38ee29e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a74fa1d17e6e8d344beecc4f0f38ee29e">&#9670;&#160;</a></span>get_et_params_ptr()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual std::shared_ptr&lt; <a class="el" href="structpdm03__struct.html">pdm03_struct</a> &gt; realization::Et_Accountable::get_et_params_ptr </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">virtual</span><span class="mlabel">inherited</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="reference">References <a class="el" href="classrealization_1_1_et___accountable.html#a5fab369fc039b378dfd270490ddb9e5c">realization::Et_Accountable::et_params</a>.</p>
-
-</div>
-</div>
 <a id="a2e9d4749500d3f5ea434d77861b03990" name="a2e9d4749500d3f5ea434d77861b03990"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2e9d4749500d3f5ea434d77861b03990">&#9670;&#160;</a></span>get_formulation_type()</h2>
 
@@ -648,7 +543,7 @@ Private Attributes</h2></td></tr>
 
 <p>Implemented in <a class="el" href="classrealization_1_1_bmi___c___formulation.html#adf1873c11226bdff7098f16b717b9183">realization::Bmi_C_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#ac2a7b72c41763e7ef89c5454752d0566">realization::Bmi_Cpp_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#adbe82ffeec39c35a9b2c3ba5ab0a8f6d">realization::Bmi_Multi_Formulation</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#abe650ee8beeb5640c08e21710a2e7ee5">realization::Bmi_Module_Formulation&lt; M &gt;::check_internal_providers()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a84c65a95dc9472520092be8bdcf2c853">realization::Bmi_Module_Formulation&lt; M &gt;::get_value()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#af5fe4a67cdb0eb555ced60e0b6fba6d3">realization::Bmi_Module_Formulation&lt; M &gt;::get_values()</a>, and <a class="el" href="classrealization_1_1_formulation.html#aceabe9927b36dce61f338919f2af4c1f">realization::Formulation::validate_parameters()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a84c65a95dc9472520092be8bdcf2c853">realization::Bmi_Module_Formulation&lt; M &gt;::get_value()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#af5fe4a67cdb0eb555ced60e0b6fba6d3">realization::Bmi_Module_Formulation&lt; M &gt;::get_values()</a>, and <a class="el" href="classrealization_1_1_formulation.html#aceabe9927b36dce61f338919f2af4c1f">realization::Formulation::validate_parameters()</a>.</p>
 
 </div>
 </div>
@@ -884,68 +779,6 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a490261c3439f205913ac2e77efbd5b6f" name="a490261c3439f205913ac2e77efbd5b6f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a490261c3439f205913ac2e77efbd5b6f">&#9670;&#160;</a></span>is_et_params_set() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool realization::Et_Accountable::is_et_params_set </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span><span class="mlabel">inherited</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Test whether ET params have been set. </p>
-<dl class="section return"><dt>Returns</dt><dd>Whether ET params have been set. </dd></dl>
-
-<p>Implements <a class="el" href="classrealization_1_1_et___aware.html#a7117db623dafde1f5dfbf286e46aa99e">realization::Et_Aware</a>.</p>
-
-<p class="reference">References <a class="el" href="classrealization_1_1_et___accountable.html#a5fab369fc039b378dfd270490ddb9e5c">realization::Et_Accountable::et_params</a>.</p>
-
-</div>
-</div>
-<a id="a7117db623dafde1f5dfbf286e46aa99e" name="a7117db623dafde1f5dfbf286e46aa99e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7117db623dafde1f5dfbf286e46aa99e">&#9670;&#160;</a></span>is_et_params_set() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual bool realization::Et_Aware::is_et_params_set </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span><span class="mlabel">inherited</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Test whether ET params have been set. </p>
-<dl class="section return"><dt>Returns</dt><dd>Whether ET params have been set. </dd></dl>
-
-<p>Implemented in <a class="el" href="classrealization_1_1_et___accountable.html#a490261c3439f205913ac2e77efbd5b6f">realization::Et_Accountable</a>.</p>
-
-</div>
-</div>
 <a id="a2cce2b5b18eaa0ed7e0df10db57da144" name="a2cce2b5b18eaa0ed7e0df10db57da144"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2cce2b5b18eaa0ed7e0df10db57da144">&#9670;&#160;</a></span>set_catchment_id()</h2>
 
@@ -975,68 +808,6 @@ Private Attributes</h2></td></tr>
 <p class="reference">References <a class="el" href="classrealization_1_1_catchment___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b">cat_id</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classrealization_1_1_catchment___formulation.html#a0ef879abdc4b2e6a9ecc8b2d5bf2bafb">Catchment_Formulation()</a>.</p>
-
-</div>
-</div>
-<a id="ad4e23441f5a4ceb63262f796c5bb411f" name="ad4e23441f5a4ceb63262f796c5bb411f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad4e23441f5a4ceb63262f796c5bb411f">&#9670;&#160;</a></span>set_et_params() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void realization::Et_Accountable::set_et_params </td>
-          <td>(</td>
-          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="structpdm03__struct.html">pdm03_struct</a> &gt;&#160;</td>
-          <td class="paramname"><em>params</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span><span class="mlabel">inherited</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Set a reference for an appropriate object for holding ET parameters for use when executing the model calculations. </p>
-
-<p>Implements <a class="el" href="classrealization_1_1_et___aware.html#a8f1338c37773df88268e34e46a1d957e">realization::Et_Aware</a>.</p>
-
-<p class="reference">References <a class="el" href="classrealization_1_1_et___accountable.html#a5fab369fc039b378dfd270490ddb9e5c">realization::Et_Accountable::et_params</a>.</p>
-
-</div>
-</div>
-<a id="a8f1338c37773df88268e34e46a1d957e" name="a8f1338c37773df88268e34e46a1d957e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8f1338c37773df88268e34e46a1d957e">&#9670;&#160;</a></span>set_et_params() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void realization::Et_Aware::set_et_params </td>
-          <td>(</td>
-          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="structpdm03__struct.html">pdm03_struct</a> &gt;&#160;</td>
-          <td class="paramname"><em>params</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span><span class="mlabel">inherited</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Accept a reference for an appropriate object for holding ET parameters for use when executing the model calculations, if maintained by the type. </p>
-
-<p>Implemented in <a class="el" href="classrealization_1_1_et___accountable.html#ad4e23441f5a4ceb63262f796c5bb411f">realization::Et_Accountable</a>.</p>
 
 </div>
 </div>
@@ -1173,30 +944,6 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a5fab369fc039b378dfd270490ddb9e5c" name="a5fab369fc039b378dfd270490ddb9e5c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5fab369fc039b378dfd270490ddb9e5c">&#9670;&#160;</a></span>et_params</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::shared_ptr&lt;<a class="el" href="structpdm03__struct.html">pdm03_struct</a>&gt; realization::Et_Accountable::et_params</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span><span class="mlabel">inherited</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a49aa9cfff0958d7e509de7dd5187a0c6">realization::Bmi_Module_Formulation&lt; M &gt;::calc_et()</a>, <a class="el" href="classrealization_1_1_et___accountable.html#ae3eed12472620303be3bd1b2cb3600c6">realization::Et_Accountable::get_et_params()</a>, <a class="el" href="classrealization_1_1_et___accountable.html#a74fa1d17e6e8d344beecc4f0f38ee29e">realization::Et_Accountable::get_et_params_ptr()</a>, <a class="el" href="classrealization_1_1_et___accountable.html#a490261c3439f205913ac2e77efbd5b6f">realization::Et_Accountable::is_et_params_set()</a>, and <a class="el" href="classrealization_1_1_et___accountable.html#ad4e23441f5a4ceb63262f796c5bb411f">realization::Et_Accountable::set_et_params()</a>.</p>
-
-</div>
-</div>
 <a id="a2010f61d0e7141bb48230923592de215" name="a2010f61d0e7141bb48230923592de215"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2010f61d0e7141bb48230923592de215">&#9670;&#160;</a></span>forcing</h2>
 
@@ -1217,7 +964,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ad8d9a56ad3614fb821d88f623030defc">realization::Bmi_Module_Formulation&lt; M &gt;::calc_et()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a8694f5e94f40224efca11a73892da8ff">realization::Bmi_Multi_Formulation::create_multi_formulation()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a39cf248257ea2a34052fa65ad08bf2ba">realization::Bmi_Module_Formulation&lt; M &gt;::determine_model_time_offset()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aa04167ad9a3f4c384673ef1157fb3cb8">realization::Bmi_Module_Formulation&lt; M &gt;::set_model_inputs_prior_to_update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a8694f5e94f40224efca11a73892da8ff">realization::Bmi_Multi_Formulation::create_multi_formulation()</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a39cf248257ea2a34052fa65ad08bf2ba">realization::Bmi_Module_Formulation&lt; M &gt;::determine_model_time_offset()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aa04167ad9a3f4c384673ef1157fb3cb8">realization::Bmi_Module_Formulation&lt; M &gt;::set_model_inputs_prior_to_update()</a>.</p>
 
 </div>
 </div>
@@ -1322,7 +1069,7 @@ Private Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li><li class="navelem"><a class="el" href="classrealization_1_1_catchment___formulation.html">Catchment_Formulation</a></li>
-    <li class="footer">Generated on Thu Aug 10 2023 14:31:46 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
+    <li class="footer">Generated on Thu Aug 10 2023 16:39:12 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
   </ul>
 </div>
 </body>

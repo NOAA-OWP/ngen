@@ -11,10 +11,10 @@
 <!-- Node0 -->
 <g id="node1" class="node">
 <title>Node0</title>
-<g id="a_node1"><a xlink:href="structboost_1_1detail_1_1span__store.html" target="_top" xlink:title=" ">
+<g id="a_node1"><a xlink:href="structboost_1_1detail_1_1span__sub.html" target="_top" xlink:title=" ">
 <polygon fill="white" stroke="#666666" points="94,-30 0,-30 0,0 94,0 94,-30"/>
 <text text-anchor="start" x="8" y="-18" font-family="Helvetica,sans-Serif" font-size="10.00">boost::detail::span</text>
-<text text-anchor="middle" x="47" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">_store&lt; T, E &gt;</text>
+<text text-anchor="middle" x="47" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">_sub&lt; E, O &gt;</text>
 </a>
 </g>
 </g>

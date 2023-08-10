@@ -546,115 +546,6 @@
         </topic>
         <topic label="WellKnownFields" href="namespacedata__access.html#a2dcd647363ddb5cc6803f9d94bd12151"/>
       </topic>
-      <topic label="et" href="namespaceet.html">
-        <topic label="combined" href="namespaceet_1_1combined.html">
-          <topic label="evapotranspiration_combination_method" href="namespaceet_1_1combined.html#acf215ac58a15b404d9c9c537ee67db2b"/>
-        </topic>
-        <topic label="aorc_forcing_data" href="structet_1_1aorc__forcing__data.html">
-          <topic label="air_temperature_2m_K" href="structet_1_1aorc__forcing__data.html#a60217e5158e91556b6af736d10c29547"/>
-          <topic label="incoming_longwave_W_per_m2" href="structet_1_1aorc__forcing__data.html#a71558e2f4f918774a39760d1d0fdf8a6"/>
-          <topic label="incoming_shortwave_W_per_m2" href="structet_1_1aorc__forcing__data.html#ae705d0d95258ec868099c936d01233a1"/>
-          <topic label="latitude" href="structet_1_1aorc__forcing__data.html#a216d69e2b9b92b2d333feee84c18c3ca"/>
-          <topic label="longitude" href="structet_1_1aorc__forcing__data.html#ade8a2708e67b93804e88f0052ddfebf1"/>
-          <topic label="precip_kg_per_m2" href="structet_1_1aorc__forcing__data.html#a1766bf25c4f59c00eff6cb622c216233"/>
-          <topic label="specific_humidity_2m_kg_per_kg" href="structet_1_1aorc__forcing__data.html#a49c47783b4de388a06dac23da5c9b756"/>
-          <topic label="surface_pressure_Pa" href="structet_1_1aorc__forcing__data.html#a722082c1cfe9bcf24243fd5d152839d3"/>
-          <topic label="time" href="structet_1_1aorc__forcing__data.html#a5ba1ad2145f04ad1bdac3190b55ea5fc"/>
-          <topic label="u_wind_speed_10m_m_per_s" href="structet_1_1aorc__forcing__data.html#a59d1a502ebd5a74a8df23b72ae767bce"/>
-          <topic label="v_wind_speed_10m_m_per_s" href="structet_1_1aorc__forcing__data.html#a6d31b420cbd9caa35500ca6c0331751b"/>
-        </topic>
-        <topic label="evapotranspiration_forcing" href="structet_1_1evapotranspiration__forcing.html">
-          <topic label="air_pressure_Pa" href="structet_1_1evapotranspiration__forcing.html#a949fd8df44eaf969b82c051b1d65ecd9"/>
-          <topic label="air_temperature_C" href="structet_1_1evapotranspiration__forcing.html#afb192d068934bb959e99892e0de28c4c"/>
-          <topic label="canopy_resistance_sec_per_m" href="structet_1_1evapotranspiration__forcing.html#a0fd101f844e188373e9a6eb56e6d8014"/>
-          <topic label="ground_heat_flux_W_per_sq_m" href="structet_1_1evapotranspiration__forcing.html#ac33b8f3a7320051061393299e30650f7"/>
-          <topic label="net_radiation_W_per_sq_m" href="structet_1_1evapotranspiration__forcing.html#af8058e5618bb4fc7f04207eb2831d2cc"/>
-          <topic label="relative_humidity_percent" href="structet_1_1evapotranspiration__forcing.html#a7a1b6dc8dbd7155eee5dc62ba5ff39d7"/>
-          <topic label="specific_humidity_2m_kg_per_kg" href="structet_1_1evapotranspiration__forcing.html#a0e44cf46b7385a47afe404b77d6b14bb"/>
-          <topic label="water_temperature_C" href="structet_1_1evapotranspiration__forcing.html#afecbbbe604d22144db92d07aae63c383"/>
-          <topic label="wind_speed_m_per_s" href="structet_1_1evapotranspiration__forcing.html#a75f3eecf49ecf9078df9688cb98036fe"/>
-        </topic>
-        <topic label="evapotranspiration_options" href="structet_1_1evapotranspiration__options.html">
-          <topic label="shortwave_radiation_provided" href="structet_1_1evapotranspiration__options.html#a5b8607a4581ee9b65bcd1ea521e03998"/>
-          <topic label="use_aerodynamic_method" href="structet_1_1evapotranspiration__options.html#a78976e7f0027baae1252c1d1cdec17a0"/>
-          <topic label="use_combination_method" href="structet_1_1evapotranspiration__options.html#aaa9815da68f2b0de5be8e5a0db662d7f"/>
-          <topic label="use_energy_balance_method" href="structet_1_1evapotranspiration__options.html#a22f1800b7d9a578b94ef199e8d63ddba"/>
-          <topic label="use_penman_monteith_method" href="structet_1_1evapotranspiration__options.html#adb0037b78cc05713c964365050150875"/>
-          <topic label="use_priestley_taylor_method" href="structet_1_1evapotranspiration__options.html#a4610db5710cad9322dbc514ae48ad25f"/>
-          <topic label="yes_aorc" href="structet_1_1evapotranspiration__options.html#a80444e1cc009b709fa5b895e68f3931c"/>
-        </topic>
-        <topic label="evapotranspiration_params" href="structet_1_1evapotranspiration__params.html">
-          <topic label="day_of_year" href="structet_1_1evapotranspiration__params.html#a17a6050e0c8fc7d73e9917710543cd6e"/>
-          <topic label="heat_transfer_roughness_length_m" href="structet_1_1evapotranspiration__params.html#af6ac5ebc406f8ea24a41917ea9ab608f"/>
-          <topic label="humidity_measurement_height_m" href="structet_1_1evapotranspiration__params.html#a1a2fc115213ff117ae784ad685d7d5de"/>
-          <topic label="latitude" href="structet_1_1evapotranspiration__params.html#a10005aa21d99391c3fbebe8714af9967"/>
-          <topic label="longitude" href="structet_1_1evapotranspiration__params.html#a72c37426020edacdcc0465ac5148726d"/>
-          <topic label="momentum_transfer_roughness_length_m" href="structet_1_1evapotranspiration__params.html#a137055090c2b512098a0ce0c12e520b3"/>
-          <topic label="vegetation_height_m" href="structet_1_1evapotranspiration__params.html#ad5dfb5842c5322b1680efd04506e2492"/>
-          <topic label="wind_speed_measurement_height_m" href="structet_1_1evapotranspiration__params.html#a3cf23c6104d8561356737dce4713c332"/>
-          <topic label="zero_plane_displacement_height_m" href="structet_1_1evapotranspiration__params.html#a101132cb7c1a8c3a91824bbbe6cedb84"/>
-        </topic>
-        <topic label="intermediate_vars" href="structet_1_1intermediate__vars.html">
-          <topic label="air_actual_vapor_pressure_Pa" href="structet_1_1intermediate__vars.html#a9f4838b2951496c1c7bdbd2ec5307b6d"/>
-          <topic label="air_saturation_vapor_pressure_Pa" href="structet_1_1intermediate__vars.html#a0f115dad3ead6463cfd932045ba91a96"/>
-          <topic label="liquid_water_density_kg_per_m3" href="structet_1_1intermediate__vars.html#a4b7204fc6f7e989fe58587514a8f0764"/>
-          <topic label="moist_air_density_kg_per_m3" href="structet_1_1intermediate__vars.html#aa051aa7caa4bb500798f8985afaf3626"/>
-          <topic label="moist_air_gas_constant_J_per_kg_K" href="structet_1_1intermediate__vars.html#ad072368a8fa58b09ff6048e77310f4c3"/>
-          <topic label="psychrometric_constant_Pa_per_C" href="structet_1_1intermediate__vars.html#afc68b9866a5459502a369f185f164405"/>
-          <topic label="slope_sat_vap_press_curve_Pa_s" href="structet_1_1intermediate__vars.html#ad91644243d20a5c01a45825cbc185551"/>
-          <topic label="vapor_pressure_deficit_Pa" href="structet_1_1intermediate__vars.html#aa12208297f8f1219e1f8879dd51aaf0b"/>
-          <topic label="water_latent_heat_of_vaporization_J_per_kg" href="structet_1_1intermediate__vars.html#ae8dd02cb3e308c8c3289b740397e397e"/>
-        </topic>
-        <topic label="solar_radiation_forcing" href="structet_1_1solar__radiation__forcing.html">
-          <topic label="atmospheric_turbidity_factor" href="structet_1_1solar__radiation__forcing.html#a930bc367052f2dc1645998dd1fddfdf6"/>
-          <topic label="cloud_base_height_m" href="structet_1_1solar__radiation__forcing.html#a2419b3dd04c2cf3d7f5b6bcb3a9f55b8"/>
-          <topic label="cloud_cover_fraction" href="structet_1_1solar__radiation__forcing.html#aa187bbc76adad9db64a3bc40df70e1bd"/>
-          <topic label="day_of_year" href="structet_1_1solar__radiation__forcing.html#a4f56c225946c3d7dc95e071ba9c8e44c"/>
-          <topic label="zulu_time_h" href="structet_1_1solar__radiation__forcing.html#af567b5fe5d650d212fad4583d7de8dd3"/>
-        </topic>
-        <topic label="solar_radiation_options" href="structet_1_1solar__radiation__options.html">
-          <topic label="cloud_base_height_known" href="structet_1_1solar__radiation__options.html#a9b0930d9f56316b40b9e5be99a34a289"/>
-        </topic>
-        <topic label="solar_radiation_parameters" href="structet_1_1solar__radiation__parameters.html">
-          <topic label="latitude_degrees" href="structet_1_1solar__radiation__parameters.html#adb22c2c21adef73c4c3c5c5ad4f60a7d"/>
-          <topic label="longitude_degrees" href="structet_1_1solar__radiation__parameters.html#a27bd65d14e501f028a0de50a4bfc9341"/>
-          <topic label="site_elevation_m" href="structet_1_1solar__radiation__parameters.html#a7918a17526c9a5952da94b3b57d854dc"/>
-        </topic>
-        <topic label="solar_radiation_results" href="structet_1_1solar__radiation__results.html">
-          <topic label="solar_azimuth_angle_degrees" href="structet_1_1solar__radiation__results.html#ae2c565e67fe6e0af61b6ea0ec5b4a3f2"/>
-          <topic label="solar_elevation_angle_degrees" href="structet_1_1solar__radiation__results.html#a513495a4f31d605f38c7a1ab9056bed5"/>
-          <topic label="solar_local_hour_angle_degrees" href="structet_1_1solar__radiation__results.html#a522a93dcb01347cab107b9d6e1cfea5f"/>
-          <topic label="solar_radiation_cloudy_flux_W_per_sq_m" href="structet_1_1solar__radiation__results.html#aced041b82ffa7b5b622e8ec1f03e9d8c"/>
-          <topic label="solar_radiation_flux_W_per_sq_m" href="structet_1_1solar__radiation__results.html#aa392945cc2bc984a40dfa1ce668d1db1"/>
-          <topic label="solar_radiation_horizontal_cloudy_flux_W_per_sq_m" href="structet_1_1solar__radiation__results.html#abb115d6d9b7be0efc542b2432aefdd2e"/>
-          <topic label="solar_radiation_horizontal_flux_W_per_sq_m" href="structet_1_1solar__radiation__results.html#ab68b2b0541fc7059843b5dc14127d25e"/>
-        </topic>
-        <topic label="surface_radiation_forcing" href="structet_1_1surface__radiation__forcing.html">
-          <topic label="air_temperature_C" href="structet_1_1surface__radiation__forcing.html#ac4b64b6097866588185c6652a34b43f7"/>
-          <topic label="ambient_temperature_lapse_rate_deg_C_per_km" href="structet_1_1surface__radiation__forcing.html#a527aa184dbdb02bcab1f76b67ae37fd9"/>
-          <topic label="atmospheric_turbidity_factor" href="structet_1_1surface__radiation__forcing.html#abf6bbc5aab0927cbd716ef13d88d317c"/>
-          <topic label="cloud_base_height_m" href="structet_1_1surface__radiation__forcing.html#ab722ccd020eccce3eee8a1f9f1a5790a"/>
-          <topic label="cloud_cover_fraction" href="structet_1_1surface__radiation__forcing.html#a9e5c7167d8d554cbbcb71fdaa6970a68"/>
-          <topic label="day_of_year" href="structet_1_1surface__radiation__forcing.html#a135a1b078f084e73cf964c0f13c17187"/>
-          <topic label="incoming_longwave_radiation_W_per_sq_m" href="structet_1_1surface__radiation__forcing.html#a594968ae10f296acba3b537169976705"/>
-          <topic label="incoming_shortwave_radiation_W_per_sq_m" href="structet_1_1surface__radiation__forcing.html#a14e38c344ecc7f4a464b82abb93c8b18"/>
-          <topic label="relative_humidity_percent" href="structet_1_1surface__radiation__forcing.html#aa594397c9b943002f43e4ebfc9ab4454"/>
-          <topic label="surface_skin_temperature_C" href="structet_1_1surface__radiation__forcing.html#a122aa44d336ce0dbac118791e8ff218d"/>
-          <topic label="zulu_time" href="structet_1_1surface__radiation__forcing.html#a23d4a04b801dd33e1968beba9c9299f2"/>
-        </topic>
-        <topic label="surface_radiation_params" href="structet_1_1surface__radiation__params.html">
-          <topic label="surface_longwave_emissivity" href="structet_1_1surface__radiation__params.html#a4ee734d86b9bcce418082e4407252868"/>
-          <topic label="surface_shortwave_albedo" href="structet_1_1surface__radiation__params.html#a22804e8f41ad31ea9578fe9f9bb0cb76"/>
-        </topic>
-        <topic label="calc_air_saturation_vapor_pressure_Pa" href="namespaceet.html#a332efda318dd91804afb4615c4d87dcc"/>
-        <topic label="calc_liquid_water_density_kg_per_m3" href="namespaceet.html#a4622421dc217af8688d41a57bddc1814"/>
-        <topic label="calc_slope_of_air_saturation_vapor_pressure_Pa_per_C" href="namespaceet.html#a53fdf7dd0d257648c81229a338174c8e"/>
-        <topic label="calculate_aerodynamic_resistance" href="namespaceet.html#aff202f3e49ae29379b3c2bfe4b6ee7d9"/>
-        <topic label="calculate_intermediate_variables" href="namespaceet.html#a4f1b5eab4231f0f53a9d553bdf0d539f"/>
-        <topic label="calculate_net_radiation_W_per_sq_m" href="namespaceet.html#a2000cbfe1117d7001d52df9ec7e03396"/>
-        <topic label="calculate_solar_radiation" href="namespaceet.html#a437314c68410c1b1c943dcd8e383c144"/>
-        <topic label="is_fabs_less_than_eps" href="namespaceet.html#a0791cd5f17edce31b50dd86e438bb330"/>
-      </topic>
       <topic label="external" href="namespaceexternal.html">
         <topic label="ExternalIntegrationException" href="classexternal_1_1_external_integration_exception.html">
           <topic label="ExternalIntegrationException" href="classexternal_1_1_external_integration_exception.html#a970d7813fb9f3165d97bd75cb4bfe337"/>
@@ -1922,12 +1813,8 @@
           <topic label="Bmi_C_Formulation" href="classrealization_1_1_bmi___c___formulation.html#afb7f4b7f7d8e5b3f636a059181e1a521"/>
           <topic label="add_time" href="classrealization_1_1_bmi___c___formulation.html#a248b562be5dc9a21e7afbc014de15114"/>
           <topic label="as_c_array" href="classrealization_1_1_bmi___c___formulation.html#a30e95c4b73a473da7013f9a73dadee5e"/>
-          <topic label="calc_et" href="classrealization_1_1_bmi___c___formulation.html#ad8d9a56ad3614fb821d88f623030defc"/>
-          <topic label="calc_et" href="classrealization_1_1_bmi___c___formulation.html#a49aa9cfff0958d7e509de7dd5187a0c6"/>
-          <topic label="check_internal_providers" href="classrealization_1_1_bmi___c___formulation.html#abe650ee8beeb5640c08e21710a2e7ee5"/>
           <topic label="config_pattern_substitution" href="classrealization_1_1_bmi___c___formulation.html#a17f32257b65c7930f8b3570ab43fd58c"/>
           <topic label="construct_model" href="classrealization_1_1_bmi___c___formulation.html#a974d1eac6a95751c4e4570a61bad8541"/>
-          <topic label="convert_aorc_structs" href="classrealization_1_1_bmi___c___formulation.html#a1801f902d2246126249c363de2dcb496"/>
           <topic label="convert_model_time" href="classrealization_1_1_bmi___c___formulation.html#a5511312775b6bc3481ff5ec282874e12"/>
           <topic label="create_formulation" href="classrealization_1_1_bmi___c___formulation.html#adc0e525bd28e3b2f72f31680617358d1"/>
           <topic label="create_formulation" href="classrealization_1_1_bmi___c___formulation.html#ac24b58505cb49f6594fd79fec5005014"/>
@@ -1945,8 +1832,6 @@
           <topic label="get_config_mapped_variable_name" href="classrealization_1_1_bmi___c___formulation.html#a054120ab736b626daef5fcd0d2d65c5e"/>
           <topic label="get_data_start_time" href="classrealization_1_1_bmi___c___formulation.html#a2abfd86b2354292e5a8a740a85f8a9de"/>
           <topic label="get_data_stop_time" href="classrealization_1_1_bmi___c___formulation.html#a5c29aca0567d1aeb3966f3c7a9608a53"/>
-          <topic label="get_et_params" href="classrealization_1_1_bmi___c___formulation.html#ae3eed12472620303be3bd1b2cb3600c6"/>
-          <topic label="get_et_params_ptr" href="classrealization_1_1_bmi___c___formulation.html#a74fa1d17e6e8d344beecc4f0f38ee29e"/>
           <topic label="get_forcing_file_path" href="classrealization_1_1_bmi___c___formulation.html#a19ac51f4bdb29b3700a397a026e82746"/>
           <topic label="get_formulation_type" href="classrealization_1_1_bmi___c___formulation.html#adf1873c11226bdff7098f16b717b9183"/>
           <topic label="get_id" href="classrealization_1_1_bmi___c___formulation.html#a02267e0cc9fec2e1d883f55c2c12b39d"/>
@@ -1976,8 +1861,6 @@
           <topic label="is_bmi_model_time_step_fixed" href="classrealization_1_1_bmi___c___formulation.html#a5af40dac52c8e3cbcfe0059fcb0e15c7"/>
           <topic label="is_bmi_output_variable" href="classrealization_1_1_bmi___c___formulation.html#afb5627a4faf940e0f25f58e0226145d4"/>
           <topic label="is_bmi_using_forcing_file" href="classrealization_1_1_bmi___c___formulation.html#ad0c8c26e3216cfc05afcb4e15d1335c6"/>
-          <topic label="is_et_params_set" href="classrealization_1_1_bmi___c___formulation.html#a490261c3439f205913ac2e77efbd5b6f"/>
-          <topic label="is_et_params_set" href="classrealization_1_1_bmi___c___formulation.html#a7117db623dafde1f5dfbf286e46aa99e"/>
           <topic label="is_model_initialized" href="classrealization_1_1_bmi___c___formulation.html#aee9b4fec8bd57a88b56e9e78691fa35d"/>
           <topic label="is_property_sum_over_time_step" href="classrealization_1_1_bmi___c___formulation.html#a9e0008a5794de910fa919ec78be14b9e"/>
           <topic label="is_var_name_in_collection" href="classrealization_1_1_bmi___c___formulation.html#a83194015b9fca43b789352aa90307b24"/>
@@ -1990,8 +1873,6 @@
           <topic label="set_bmi_model_time_step_fixed" href="classrealization_1_1_bmi___c___formulation.html#a8e286bd047936d89fb41c297ff816739"/>
           <topic label="set_bmi_using_forcing_file" href="classrealization_1_1_bmi___c___formulation.html#a26a4f00b25ce7d3858674e4688a8e1c0"/>
           <topic label="set_catchment_id" href="classrealization_1_1_bmi___c___formulation.html#a2cce2b5b18eaa0ed7e0df10db57da144"/>
-          <topic label="set_et_params" href="classrealization_1_1_bmi___c___formulation.html#ad4e23441f5a4ceb63262f796c5bb411f"/>
-          <topic label="set_et_params" href="classrealization_1_1_bmi___c___formulation.html#a8f1338c37773df88268e34e46a1d957e"/>
           <topic label="set_forcing_file_path" href="classrealization_1_1_bmi___c___formulation.html#a051a6ac143f1cad42a3529bd51159ad3"/>
           <topic label="set_initial_bmi_parameters" href="classrealization_1_1_bmi___c___formulation.html#a9c3a2d69dd3610aa37eb6acc94d495de"/>
           <topic label="set_model_initialized" href="classrealization_1_1_bmi___c___formulation.html#ae15a6b5c9e36c2accebf72f2b218d9fe"/>
@@ -2018,7 +1899,6 @@
           <topic label="bmi_var_names_map" href="classrealization_1_1_bmi___c___formulation.html#a66a7020fd4b35a6e3f32348a680e92c1"/>
           <topic label="bounds" href="classrealization_1_1_bmi___c___formulation.html#aaebc4992c38cb5db68e859e0487ad929"/>
           <topic label="cat_id" href="classrealization_1_1_bmi___c___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b"/>
-          <topic label="et_params" href="classrealization_1_1_bmi___c___formulation.html#a5fab369fc039b378dfd270490ddb9e5c"/>
           <topic label="forcing" href="classrealization_1_1_bmi___c___formulation.html#a2010f61d0e7141bb48230923592de215"/>
           <topic label="forcing_file_path" href="classrealization_1_1_bmi___c___formulation.html#ae5e3e2b19dc503516b684311c88df25d"/>
           <topic label="id" href="classrealization_1_1_bmi___c___formulation.html#a8bfec24b0d57240e7ada2493a781db6d"/>
@@ -2043,12 +1923,8 @@
           <topic label="Bmi_Cpp_Formulation" href="classrealization_1_1_bmi___cpp___formulation.html#ac236d280681cc9a31053f505a562d087"/>
           <topic label="add_time" href="classrealization_1_1_bmi___cpp___formulation.html#a248b562be5dc9a21e7afbc014de15114"/>
           <topic label="as_c_array" href="classrealization_1_1_bmi___cpp___formulation.html#a30e95c4b73a473da7013f9a73dadee5e"/>
-          <topic label="calc_et" href="classrealization_1_1_bmi___cpp___formulation.html#ad8d9a56ad3614fb821d88f623030defc"/>
-          <topic label="calc_et" href="classrealization_1_1_bmi___cpp___formulation.html#a49aa9cfff0958d7e509de7dd5187a0c6"/>
-          <topic label="check_internal_providers" href="classrealization_1_1_bmi___cpp___formulation.html#abe650ee8beeb5640c08e21710a2e7ee5"/>
           <topic label="config_pattern_substitution" href="classrealization_1_1_bmi___cpp___formulation.html#a17f32257b65c7930f8b3570ab43fd58c"/>
           <topic label="construct_model" href="classrealization_1_1_bmi___cpp___formulation.html#ab5e164de66bb4639a2f1a6cef4ac9f00"/>
-          <topic label="convert_aorc_structs" href="classrealization_1_1_bmi___cpp___formulation.html#a1801f902d2246126249c363de2dcb496"/>
           <topic label="convert_model_time" href="classrealization_1_1_bmi___cpp___formulation.html#a8e4d6e260deafd604a15865db0cc5a46"/>
           <topic label="create_formulation" href="classrealization_1_1_bmi___cpp___formulation.html#adc0e525bd28e3b2f72f31680617358d1"/>
           <topic label="create_formulation" href="classrealization_1_1_bmi___cpp___formulation.html#ac24b58505cb49f6594fd79fec5005014"/>
@@ -2066,8 +1942,6 @@
           <topic label="get_config_mapped_variable_name" href="classrealization_1_1_bmi___cpp___formulation.html#a054120ab736b626daef5fcd0d2d65c5e"/>
           <topic label="get_data_start_time" href="classrealization_1_1_bmi___cpp___formulation.html#a2abfd86b2354292e5a8a740a85f8a9de"/>
           <topic label="get_data_stop_time" href="classrealization_1_1_bmi___cpp___formulation.html#a5c29aca0567d1aeb3966f3c7a9608a53"/>
-          <topic label="get_et_params" href="classrealization_1_1_bmi___cpp___formulation.html#ae3eed12472620303be3bd1b2cb3600c6"/>
-          <topic label="get_et_params_ptr" href="classrealization_1_1_bmi___cpp___formulation.html#a74fa1d17e6e8d344beecc4f0f38ee29e"/>
           <topic label="get_forcing_file_path" href="classrealization_1_1_bmi___cpp___formulation.html#a19ac51f4bdb29b3700a397a026e82746"/>
           <topic label="get_formulation_type" href="classrealization_1_1_bmi___cpp___formulation.html#ac2a7b72c41763e7ef89c5454752d0566"/>
           <topic label="get_id" href="classrealization_1_1_bmi___cpp___formulation.html#a02267e0cc9fec2e1d883f55c2c12b39d"/>
@@ -2097,8 +1971,6 @@
           <topic label="is_bmi_model_time_step_fixed" href="classrealization_1_1_bmi___cpp___formulation.html#a5af40dac52c8e3cbcfe0059fcb0e15c7"/>
           <topic label="is_bmi_output_variable" href="classrealization_1_1_bmi___cpp___formulation.html#adcd31d4e74a11931598d889355ee2ca1"/>
           <topic label="is_bmi_using_forcing_file" href="classrealization_1_1_bmi___cpp___formulation.html#ad0c8c26e3216cfc05afcb4e15d1335c6"/>
-          <topic label="is_et_params_set" href="classrealization_1_1_bmi___cpp___formulation.html#a490261c3439f205913ac2e77efbd5b6f"/>
-          <topic label="is_et_params_set" href="classrealization_1_1_bmi___cpp___formulation.html#a7117db623dafde1f5dfbf286e46aa99e"/>
           <topic label="is_model_initialized" href="classrealization_1_1_bmi___cpp___formulation.html#aef8ddd7a6fcbb99cff3bc829ffb12f8e"/>
           <topic label="is_property_sum_over_time_step" href="classrealization_1_1_bmi___cpp___formulation.html#a9e0008a5794de910fa919ec78be14b9e"/>
           <topic label="is_var_name_in_collection" href="classrealization_1_1_bmi___cpp___formulation.html#a83194015b9fca43b789352aa90307b24"/>
@@ -2111,8 +1983,6 @@
           <topic label="set_bmi_model_time_step_fixed" href="classrealization_1_1_bmi___cpp___formulation.html#a8e286bd047936d89fb41c297ff816739"/>
           <topic label="set_bmi_using_forcing_file" href="classrealization_1_1_bmi___cpp___formulation.html#a26a4f00b25ce7d3858674e4688a8e1c0"/>
           <topic label="set_catchment_id" href="classrealization_1_1_bmi___cpp___formulation.html#a2cce2b5b18eaa0ed7e0df10db57da144"/>
-          <topic label="set_et_params" href="classrealization_1_1_bmi___cpp___formulation.html#ad4e23441f5a4ceb63262f796c5bb411f"/>
-          <topic label="set_et_params" href="classrealization_1_1_bmi___cpp___formulation.html#a8f1338c37773df88268e34e46a1d957e"/>
           <topic label="set_forcing_file_path" href="classrealization_1_1_bmi___cpp___formulation.html#a051a6ac143f1cad42a3529bd51159ad3"/>
           <topic label="set_initial_bmi_parameters" href="classrealization_1_1_bmi___cpp___formulation.html#a9c3a2d69dd3610aa37eb6acc94d495de"/>
           <topic label="set_model_initialized" href="classrealization_1_1_bmi___cpp___formulation.html#ae15a6b5c9e36c2accebf72f2b218d9fe"/>
@@ -2138,7 +2008,6 @@
           <topic label="bmi_var_names_map" href="classrealization_1_1_bmi___cpp___formulation.html#a66a7020fd4b35a6e3f32348a680e92c1"/>
           <topic label="bounds" href="classrealization_1_1_bmi___cpp___formulation.html#aaebc4992c38cb5db68e859e0487ad929"/>
           <topic label="cat_id" href="classrealization_1_1_bmi___cpp___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b"/>
-          <topic label="et_params" href="classrealization_1_1_bmi___cpp___formulation.html#a5fab369fc039b378dfd270490ddb9e5c"/>
           <topic label="forcing" href="classrealization_1_1_bmi___cpp___formulation.html#a2010f61d0e7141bb48230923592de215"/>
           <topic label="forcing_file_path" href="classrealization_1_1_bmi___cpp___formulation.html#ae5e3e2b19dc503516b684311c88df25d"/>
           <topic label="id" href="classrealization_1_1_bmi___cpp___formulation.html#a8bfec24b0d57240e7ada2493a781db6d"/>
@@ -2163,7 +2032,6 @@
           <topic label="Bmi_Formulation" href="classrealization_1_1_bmi___formulation.html#ad23e2ac461a34855b320e2c81cc1e2f6"/>
           <topic label="~Bmi_Formulation" href="classrealization_1_1_bmi___formulation.html#af04ef53959ce9c63da57f1f767740401"/>
           <topic label="add_time" href="classrealization_1_1_bmi___formulation.html#a248b562be5dc9a21e7afbc014de15114"/>
-          <topic label="calc_et" href="classrealization_1_1_bmi___formulation.html#a1af6f5c88bda174c8ba855e796a55439"/>
           <topic label="config_pattern_substitution" href="classrealization_1_1_bmi___formulation.html#a17f32257b65c7930f8b3570ab43fd58c"/>
           <topic label="convert_model_time" href="classrealization_1_1_bmi___formulation.html#a71539f348de57ae368bfd8bdcd6ef1d5"/>
           <topic label="create_formulation" href="classrealization_1_1_bmi___formulation.html#a4fb8ec9b08820c29d88627ee9781d579"/>
@@ -2178,8 +2046,6 @@
           <topic label="get_config_mapped_variable_name" href="classrealization_1_1_bmi___formulation.html#abc0a0264e156d51f9791837fc8eba004"/>
           <topic label="get_data_start_time" href="classrealization_1_1_bmi___formulation.html#a9a5503cb5da0b2bf8fe25d0500bf33c4"/>
           <topic label="get_data_stop_time" href="classrealization_1_1_bmi___formulation.html#af598b54c03163287adc56400b3e9bdfe"/>
-          <topic label="get_et_params" href="classrealization_1_1_bmi___formulation.html#ae3eed12472620303be3bd1b2cb3600c6"/>
-          <topic label="get_et_params_ptr" href="classrealization_1_1_bmi___formulation.html#a74fa1d17e6e8d344beecc4f0f38ee29e"/>
           <topic label="get_forcing_file_path" href="classrealization_1_1_bmi___formulation.html#aa5e20602dc44ab8ebbd603d892959062"/>
           <topic label="get_formulation_type" href="classrealization_1_1_bmi___formulation.html#a2e9d4749500d3f5ea434d77861b03990"/>
           <topic label="get_id" href="classrealization_1_1_bmi___formulation.html#a02267e0cc9fec2e1d883f55c2c12b39d"/>
@@ -2201,15 +2067,11 @@
           <topic label="is_bmi_model_time_step_fixed" href="classrealization_1_1_bmi___formulation.html#a9d83489e654b1aecfc84d7c08396fa28"/>
           <topic label="is_bmi_output_variable" href="classrealization_1_1_bmi___formulation.html#ae6866e42adf3153cf371e239dc0d6197"/>
           <topic label="is_bmi_using_forcing_file" href="classrealization_1_1_bmi___formulation.html#a62c987fab9e8ad745f1088abd04ab4b9"/>
-          <topic label="is_et_params_set" href="classrealization_1_1_bmi___formulation.html#a490261c3439f205913ac2e77efbd5b6f"/>
-          <topic label="is_et_params_set" href="classrealization_1_1_bmi___formulation.html#a7117db623dafde1f5dfbf286e46aa99e"/>
           <topic label="is_model_initialized" href="classrealization_1_1_bmi___formulation.html#aaa4dcba7e78f634ad0475bf1e3f3a697"/>
           <topic label="is_property_sum_over_time_step" href="classrealization_1_1_bmi___formulation.html#a8254f58e64499bb4ae799ab120fd0934"/>
           <topic label="record_duration" href="classrealization_1_1_bmi___formulation.html#a558af5fd091e84283470af3ca74d24d8"/>
           <topic label="set_bmi_main_output_var" href="classrealization_1_1_bmi___formulation.html#ae137604ca81006a617221733d8d36f62"/>
           <topic label="set_catchment_id" href="classrealization_1_1_bmi___formulation.html#a2cce2b5b18eaa0ed7e0df10db57da144"/>
-          <topic label="set_et_params" href="classrealization_1_1_bmi___formulation.html#ad4e23441f5a4ceb63262f796c5bb411f"/>
-          <topic label="set_et_params" href="classrealization_1_1_bmi___formulation.html#a8f1338c37773df88268e34e46a1d957e"/>
           <topic label="set_model_type_name" href="classrealization_1_1_bmi___formulation.html#a3a59e65e398af534a189f5de2bda67f2"/>
           <topic label="set_output_header_fields" href="classrealization_1_1_bmi___formulation.html#a45dbdc9794b5c97f229150293695f2cc"/>
           <topic label="set_output_precision" href="classrealization_1_1_bmi___formulation.html#a2be85c1e7a58273fc0267c9e99ca38fc"/>
@@ -2222,7 +2084,6 @@
           <topic label="bmi_main_output_var" href="classrealization_1_1_bmi___formulation.html#a494171a1888c373c2a1e03008e00e5d5"/>
           <topic label="bounds" href="classrealization_1_1_bmi___formulation.html#aaebc4992c38cb5db68e859e0487ad929"/>
           <topic label="cat_id" href="classrealization_1_1_bmi___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b"/>
-          <topic label="et_params" href="classrealization_1_1_bmi___formulation.html#a5fab369fc039b378dfd270490ddb9e5c"/>
           <topic label="forcing" href="classrealization_1_1_bmi___formulation.html#a2010f61d0e7141bb48230923592de215"/>
           <topic label="id" href="classrealization_1_1_bmi___formulation.html#a8bfec24b0d57240e7ada2493a781db6d"/>
           <topic label="id_number" href="classrealization_1_1_bmi___formulation.html#af996a3e50eaf51c63865f1fdbe4f8661"/>
@@ -2242,12 +2103,8 @@
           <topic label="~Bmi_Module_Formulation" href="classrealization_1_1_bmi___module___formulation.html#a650f0f48916600d9ee87f88c76c77387"/>
           <topic label="add_time" href="classrealization_1_1_bmi___module___formulation.html#a248b562be5dc9a21e7afbc014de15114"/>
           <topic label="as_c_array" href="classrealization_1_1_bmi___module___formulation.html#a30e95c4b73a473da7013f9a73dadee5e"/>
-          <topic label="calc_et" href="classrealization_1_1_bmi___module___formulation.html#ad8d9a56ad3614fb821d88f623030defc"/>
-          <topic label="calc_et" href="classrealization_1_1_bmi___module___formulation.html#a49aa9cfff0958d7e509de7dd5187a0c6"/>
-          <topic label="check_internal_providers" href="classrealization_1_1_bmi___module___formulation.html#abe650ee8beeb5640c08e21710a2e7ee5"/>
           <topic label="config_pattern_substitution" href="classrealization_1_1_bmi___module___formulation.html#a17f32257b65c7930f8b3570ab43fd58c"/>
           <topic label="construct_model" href="classrealization_1_1_bmi___module___formulation.html#af9c6e1cdcdced6c8baa45b9df9970e45"/>
-          <topic label="convert_aorc_structs" href="classrealization_1_1_bmi___module___formulation.html#a1801f902d2246126249c363de2dcb496"/>
           <topic label="convert_model_time" href="classrealization_1_1_bmi___module___formulation.html#a71539f348de57ae368bfd8bdcd6ef1d5"/>
           <topic label="create_formulation" href="classrealization_1_1_bmi___module___formulation.html#adc0e525bd28e3b2f72f31680617358d1"/>
           <topic label="create_formulation" href="classrealization_1_1_bmi___module___formulation.html#ac24b58505cb49f6594fd79fec5005014"/>
@@ -2265,8 +2122,6 @@
           <topic label="get_config_mapped_variable_name" href="classrealization_1_1_bmi___module___formulation.html#a054120ab736b626daef5fcd0d2d65c5e"/>
           <topic label="get_data_start_time" href="classrealization_1_1_bmi___module___formulation.html#a2abfd86b2354292e5a8a740a85f8a9de"/>
           <topic label="get_data_stop_time" href="classrealization_1_1_bmi___module___formulation.html#a5c29aca0567d1aeb3966f3c7a9608a53"/>
-          <topic label="get_et_params" href="classrealization_1_1_bmi___module___formulation.html#ae3eed12472620303be3bd1b2cb3600c6"/>
-          <topic label="get_et_params_ptr" href="classrealization_1_1_bmi___module___formulation.html#a74fa1d17e6e8d344beecc4f0f38ee29e"/>
           <topic label="get_forcing_file_path" href="classrealization_1_1_bmi___module___formulation.html#a19ac51f4bdb29b3700a397a026e82746"/>
           <topic label="get_formulation_type" href="classrealization_1_1_bmi___module___formulation.html#a2e9d4749500d3f5ea434d77861b03990"/>
           <topic label="get_id" href="classrealization_1_1_bmi___module___formulation.html#a02267e0cc9fec2e1d883f55c2c12b39d"/>
@@ -2295,8 +2150,6 @@
           <topic label="is_bmi_model_time_step_fixed" href="classrealization_1_1_bmi___module___formulation.html#a5af40dac52c8e3cbcfe0059fcb0e15c7"/>
           <topic label="is_bmi_output_variable" href="classrealization_1_1_bmi___module___formulation.html#a8d72af0f3a7f4057d69ec975246061fa"/>
           <topic label="is_bmi_using_forcing_file" href="classrealization_1_1_bmi___module___formulation.html#ad0c8c26e3216cfc05afcb4e15d1335c6"/>
-          <topic label="is_et_params_set" href="classrealization_1_1_bmi___module___formulation.html#a490261c3439f205913ac2e77efbd5b6f"/>
-          <topic label="is_et_params_set" href="classrealization_1_1_bmi___module___formulation.html#a7117db623dafde1f5dfbf286e46aa99e"/>
           <topic label="is_model_initialized" href="classrealization_1_1_bmi___module___formulation.html#a64efe3f64579f72317d04b3504d293dc"/>
           <topic label="is_property_sum_over_time_step" href="classrealization_1_1_bmi___module___formulation.html#a9e0008a5794de910fa919ec78be14b9e"/>
           <topic label="is_var_name_in_collection" href="classrealization_1_1_bmi___module___formulation.html#a83194015b9fca43b789352aa90307b24"/>
@@ -2309,8 +2162,6 @@
           <topic label="set_bmi_model_time_step_fixed" href="classrealization_1_1_bmi___module___formulation.html#a8e286bd047936d89fb41c297ff816739"/>
           <topic label="set_bmi_using_forcing_file" href="classrealization_1_1_bmi___module___formulation.html#a26a4f00b25ce7d3858674e4688a8e1c0"/>
           <topic label="set_catchment_id" href="classrealization_1_1_bmi___module___formulation.html#a2cce2b5b18eaa0ed7e0df10db57da144"/>
-          <topic label="set_et_params" href="classrealization_1_1_bmi___module___formulation.html#ad4e23441f5a4ceb63262f796c5bb411f"/>
-          <topic label="set_et_params" href="classrealization_1_1_bmi___module___formulation.html#a8f1338c37773df88268e34e46a1d957e"/>
           <topic label="set_forcing_file_path" href="classrealization_1_1_bmi___module___formulation.html#a051a6ac143f1cad42a3529bd51159ad3"/>
           <topic label="set_initial_bmi_parameters" href="classrealization_1_1_bmi___module___formulation.html#a9c3a2d69dd3610aa37eb6acc94d495de"/>
           <topic label="set_model_initialized" href="classrealization_1_1_bmi___module___formulation.html#ae15a6b5c9e36c2accebf72f2b218d9fe"/>
@@ -2339,7 +2190,6 @@
           <topic label="bmi_var_names_map" href="classrealization_1_1_bmi___module___formulation.html#a66a7020fd4b35a6e3f32348a680e92c1"/>
           <topic label="bounds" href="classrealization_1_1_bmi___module___formulation.html#aaebc4992c38cb5db68e859e0487ad929"/>
           <topic label="cat_id" href="classrealization_1_1_bmi___module___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b"/>
-          <topic label="et_params" href="classrealization_1_1_bmi___module___formulation.html#a5fab369fc039b378dfd270490ddb9e5c"/>
           <topic label="forcing" href="classrealization_1_1_bmi___module___formulation.html#a2010f61d0e7141bb48230923592de215"/>
           <topic label="forcing_file_path" href="classrealization_1_1_bmi___module___formulation.html#ae5e3e2b19dc503516b684311c88df25d"/>
           <topic label="id" href="classrealization_1_1_bmi___module___formulation.html#a8bfec24b0d57240e7ada2493a781db6d"/>
@@ -2365,14 +2215,12 @@
           <topic label="Bmi_Multi_Formulation" href="classrealization_1_1_bmi___multi___formulation.html#add34061f00ab855e4385d368bd9f61b5"/>
           <topic label="~Bmi_Multi_Formulation" href="classrealization_1_1_bmi___multi___formulation.html#a6ef8f446a1fcece399fb72532e854363"/>
           <topic label="add_time" href="classrealization_1_1_bmi___multi___formulation.html#a248b562be5dc9a21e7afbc014de15114"/>
-          <topic label="calc_et" href="classrealization_1_1_bmi___multi___formulation.html#a5044c4cf0c139b0c6b5b5a3ce679555b"/>
           <topic label="config_pattern_substitution" href="classrealization_1_1_bmi___multi___formulation.html#a17f32257b65c7930f8b3570ab43fd58c"/>
           <topic label="convert_model_time" href="classrealization_1_1_bmi___multi___formulation.html#a5887212a446b23c0e57eba37fdaca073"/>
           <topic label="convert_model_time" href="classrealization_1_1_bmi___multi___formulation.html#ac1e6b155be16a0562d62d16f3b42313d"/>
           <topic label="create_formulation" href="classrealization_1_1_bmi___multi___formulation.html#acb4534a0030f794320625be0313fe825"/>
           <topic label="create_formulation" href="classrealization_1_1_bmi___multi___formulation.html#a87607c1c2b438943c8be0a566e1c59d5"/>
           <topic label="create_multi_formulation" href="classrealization_1_1_bmi___multi___formulation.html#a8694f5e94f40224efca11a73892da8ff"/>
-          <topic label="determine_et_formulation_index" href="classrealization_1_1_bmi___multi___formulation.html#a29c47ff4addf5a687b9cf431c9c33a87"/>
           <topic label="get_allow_model_exceed_end_time" href="classrealization_1_1_bmi___multi___formulation.html#aca4c20aff9b42fa0d184cfe49f3dabde"/>
           <topic label="get_available_variable_names" href="classrealization_1_1_bmi___multi___formulation.html#ae615591447d5fedb40d811f52a2aa95b"/>
           <topic label="get_bmi_input_variables" href="classrealization_1_1_bmi___multi___formulation.html#ad3f57bbaedee15d136af697dc24f2625"/>
@@ -2385,8 +2233,6 @@
           <topic label="get_config_mapped_variable_name" href="classrealization_1_1_bmi___multi___formulation.html#aa70922dc0f76da152452bb39705ce55d"/>
           <topic label="get_data_start_time" href="classrealization_1_1_bmi___multi___formulation.html#ad3b2f3f6294014fde8f6a10b5d3058f8"/>
           <topic label="get_data_stop_time" href="classrealization_1_1_bmi___multi___formulation.html#a4b3db6bb593b3d3261ac5ed2f35684b3"/>
-          <topic label="get_et_params" href="classrealization_1_1_bmi___multi___formulation.html#ae3eed12472620303be3bd1b2cb3600c6"/>
-          <topic label="get_et_params_ptr" href="classrealization_1_1_bmi___multi___formulation.html#a74fa1d17e6e8d344beecc4f0f38ee29e"/>
           <topic label="get_forcing_file_path" href="classrealization_1_1_bmi___multi___formulation.html#ad20b1ed9691e3c7db3d2de14a38ad0f3"/>
           <topic label="get_formulation_type" href="classrealization_1_1_bmi___multi___formulation.html#adbe82ffeec39c35a9b2c3ba5ab0a8f6d"/>
           <topic label="get_id" href="classrealization_1_1_bmi___multi___formulation.html#a02267e0cc9fec2e1d883f55c2c12b39d"/>
@@ -2417,16 +2263,12 @@
           <topic label="is_bmi_model_time_step_fixed" href="classrealization_1_1_bmi___multi___formulation.html#a8ff40396fbb1443543d9ead367e61617"/>
           <topic label="is_bmi_output_variable" href="classrealization_1_1_bmi___multi___formulation.html#a65c8d3825669dffc9c5d68d45fd4bff5"/>
           <topic label="is_bmi_using_forcing_file" href="classrealization_1_1_bmi___multi___formulation.html#a4cdad4c937f0f546da35c69815c95abe"/>
-          <topic label="is_et_params_set" href="classrealization_1_1_bmi___multi___formulation.html#a490261c3439f205913ac2e77efbd5b6f"/>
-          <topic label="is_et_params_set" href="classrealization_1_1_bmi___multi___formulation.html#a7117db623dafde1f5dfbf286e46aa99e"/>
           <topic label="is_model_initialized" href="classrealization_1_1_bmi___multi___formulation.html#aa563a521c8e3e05c8503f5849729de5b"/>
           <topic label="is_property_sum_over_time_step" href="classrealization_1_1_bmi___multi___formulation.html#ac6cf3c9c80cad9d426ebf062ec6629f2"/>
           <topic label="is_time_step_beyond_end_time" href="classrealization_1_1_bmi___multi___formulation.html#a03c5db7806dd83245edcaae1859a687a"/>
           <topic label="record_duration" href="classrealization_1_1_bmi___multi___formulation.html#a7b8ee244748b42fa4740f37ad5d14cc7"/>
           <topic label="set_bmi_main_output_var" href="classrealization_1_1_bmi___multi___formulation.html#ae137604ca81006a617221733d8d36f62"/>
           <topic label="set_catchment_id" href="classrealization_1_1_bmi___multi___formulation.html#a2cce2b5b18eaa0ed7e0df10db57da144"/>
-          <topic label="set_et_params" href="classrealization_1_1_bmi___multi___formulation.html#ad4e23441f5a4ceb63262f796c5bb411f"/>
-          <topic label="set_et_params" href="classrealization_1_1_bmi___multi___formulation.html#a8f1338c37773df88268e34e46a1d957e"/>
           <topic label="set_index_for_primary_module" href="classrealization_1_1_bmi___multi___formulation.html#a33697f092bee233856d4559949f58edf"/>
           <topic label="set_model_type_name" href="classrealization_1_1_bmi___multi___formulation.html#a3a59e65e398af534a189f5de2bda67f2"/>
           <topic label="set_output_header_fields" href="classrealization_1_1_bmi___multi___formulation.html#a45dbdc9794b5c97f229150293695f2cc"/>
@@ -2446,7 +2288,6 @@
           <topic label="default_output_values" href="classrealization_1_1_bmi___multi___formulation.html#aeced5793d29fdac7e6cc53ff1cc0a1e0"/>
           <topic label="deferredProviderModuleIndices" href="classrealization_1_1_bmi___multi___formulation.html#ab12e7a6981776b57f4a562c414947928"/>
           <topic label="deferredProviders" href="classrealization_1_1_bmi___multi___formulation.html#a7247197598940c202373efd042aa5b05"/>
-          <topic label="et_params" href="classrealization_1_1_bmi___multi___formulation.html#a5fab369fc039b378dfd270490ddb9e5c"/>
           <topic label="forcing" href="classrealization_1_1_bmi___multi___formulation.html#a2010f61d0e7141bb48230923592de215"/>
           <topic label="id" href="classrealization_1_1_bmi___multi___formulation.html#a8bfec24b0d57240e7ada2493a781db6d"/>
           <topic label="id_number" href="classrealization_1_1_bmi___multi___formulation.html#af996a3e50eaf51c63865f1fdbe4f8661"/>
@@ -2472,13 +2313,10 @@
           <topic label="Catchment_Formulation" href="classrealization_1_1_catchment___formulation.html#ae20086b1dc436b0a42f149b3d9de1009"/>
           <topic label="~Catchment_Formulation" href="classrealization_1_1_catchment___formulation.html#ab1efe9c78511cf0cc5d9b79dc99e9881"/>
           <topic label="add_time" href="classrealization_1_1_catchment___formulation.html#a248b562be5dc9a21e7afbc014de15114"/>
-          <topic label="calc_et" href="classrealization_1_1_catchment___formulation.html#a1af6f5c88bda174c8ba855e796a55439"/>
           <topic label="config_pattern_substitution" href="classrealization_1_1_catchment___formulation.html#a17f32257b65c7930f8b3570ab43fd58c"/>
           <topic label="create_formulation" href="classrealization_1_1_catchment___formulation.html#a4fb8ec9b08820c29d88627ee9781d579"/>
           <topic label="create_formulation" href="classrealization_1_1_catchment___formulation.html#a2a2ac83503092d24da0ee4e4c6eeaa25"/>
           <topic label="get_catchment_id" href="classrealization_1_1_catchment___formulation.html#a633b7407d447f77910476c0315c8beb6"/>
-          <topic label="get_et_params" href="classrealization_1_1_catchment___formulation.html#ae3eed12472620303be3bd1b2cb3600c6"/>
-          <topic label="get_et_params_ptr" href="classrealization_1_1_catchment___formulation.html#a74fa1d17e6e8d344beecc4f0f38ee29e"/>
           <topic label="get_formulation_type" href="classrealization_1_1_catchment___formulation.html#a2e9d4749500d3f5ea434d77861b03990"/>
           <topic label="get_id" href="classrealization_1_1_catchment___formulation.html#a02267e0cc9fec2e1d883f55c2c12b39d"/>
           <topic label="get_output_header_line" href="classrealization_1_1_catchment___formulation.html#a12fad75c2e47f5da298e022429243199"/>
@@ -2486,17 +2324,12 @@
           <topic label="get_required_parameters" href="classrealization_1_1_catchment___formulation.html#adc0a972f62254d7b807ab5f871209b9f"/>
           <topic label="get_response" href="classrealization_1_1_catchment___formulation.html#adf21a61a7da1e87a200d8391cb3e33ce"/>
           <topic label="interpret_parameters" href="classrealization_1_1_catchment___formulation.html#a65f97b5efe05e786f59d9f5fd1b10209"/>
-          <topic label="is_et_params_set" href="classrealization_1_1_catchment___formulation.html#a490261c3439f205913ac2e77efbd5b6f"/>
-          <topic label="is_et_params_set" href="classrealization_1_1_catchment___formulation.html#a7117db623dafde1f5dfbf286e46aa99e"/>
           <topic label="set_catchment_id" href="classrealization_1_1_catchment___formulation.html#a2cce2b5b18eaa0ed7e0df10db57da144"/>
-          <topic label="set_et_params" href="classrealization_1_1_catchment___formulation.html#ad4e23441f5a4ceb63262f796c5bb411f"/>
-          <topic label="set_et_params" href="classrealization_1_1_catchment___formulation.html#a8f1338c37773df88268e34e46a1d957e"/>
           <topic label="set_output_stream" href="classrealization_1_1_catchment___formulation.html#a9d02de255937deb8f6169ef20f5a07d6"/>
           <topic label="validate_parameters" href="classrealization_1_1_catchment___formulation.html#aceabe9927b36dce61f338919f2af4c1f"/>
           <topic label="write_output" href="classrealization_1_1_catchment___formulation.html#aa989be0629ecaa29a2410f7588404ff9"/>
           <topic label="bounds" href="classrealization_1_1_catchment___formulation.html#aaebc4992c38cb5db68e859e0487ad929"/>
           <topic label="cat_id" href="classrealization_1_1_catchment___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b"/>
-          <topic label="et_params" href="classrealization_1_1_catchment___formulation.html#a5fab369fc039b378dfd270490ddb9e5c"/>
           <topic label="forcing" href="classrealization_1_1_catchment___formulation.html#a2010f61d0e7141bb48230923592de215"/>
           <topic label="id" href="classrealization_1_1_catchment___formulation.html#a8bfec24b0d57240e7ada2493a781db6d"/>
           <topic label="id_number" href="classrealization_1_1_catchment___formulation.html#af996a3e50eaf51c63865f1fdbe4f8661"/>
@@ -2510,22 +2343,6 @@
           <topic label="ConfigurationException" href="classrealization_1_1_configuration_exception.html#ac6eaa536d9cae6b7cde20542ddef11d8"/>
           <topic label="what" href="classrealization_1_1_configuration_exception.html#a50eb4bdbf77dbf1120c6a237fd2e9e1e"/>
           <topic label="what_message" href="classrealization_1_1_configuration_exception.html#a27bcbee434a3d4e75c793c71fd9df74a"/>
-        </topic>
-        <topic label="Et_Accountable" href="classrealization_1_1_et___accountable.html">
-          <topic label="Et_Accountable" href="classrealization_1_1_et___accountable.html#aecbcd97cc55243b6c1f5210471d92b55"/>
-          <topic label="~Et_Accountable" href="classrealization_1_1_et___accountable.html#a786de4d8f78bddb751896ea9865c9a9a"/>
-          <topic label="calc_et" href="classrealization_1_1_et___accountable.html#a1af6f5c88bda174c8ba855e796a55439"/>
-          <topic label="get_et_params" href="classrealization_1_1_et___accountable.html#ae3eed12472620303be3bd1b2cb3600c6"/>
-          <topic label="get_et_params_ptr" href="classrealization_1_1_et___accountable.html#a74fa1d17e6e8d344beecc4f0f38ee29e"/>
-          <topic label="is_et_params_set" href="classrealization_1_1_et___accountable.html#a490261c3439f205913ac2e77efbd5b6f"/>
-          <topic label="set_et_params" href="classrealization_1_1_et___accountable.html#ad4e23441f5a4ceb63262f796c5bb411f"/>
-          <topic label="et_params" href="classrealization_1_1_et___accountable.html#a5fab369fc039b378dfd270490ddb9e5c"/>
-        </topic>
-        <topic label="Et_Aware" href="classrealization_1_1_et___aware.html">
-          <topic label="Et_Aware" href="classrealization_1_1_et___aware.html#a563050d93cd7cd20218952e06ee5fa69"/>
-          <topic label="~Et_Aware" href="classrealization_1_1_et___aware.html#a727883bb8cd1eccd8ab7c6b604b6d718"/>
-          <topic label="is_et_params_set" href="classrealization_1_1_et___aware.html#a7117db623dafde1f5dfbf286e46aa99e"/>
-          <topic label="set_et_params" href="classrealization_1_1_et___aware.html#a8f1338c37773df88268e34e46a1d957e"/>
         </topic>
         <topic label="Formulation" href="classrealization_1_1_formulation.html">
           <topic label="time_step_t" href="classrealization_1_1_formulation.html#aee10dc672e5a9e106f49dcbe0080cf7c"/>
@@ -2541,8 +2358,6 @@
           <topic label="get_required_parameters" href="classrealization_1_1_formulation.html#a12e690d066ac42ccafeae5b2b708cf21"/>
           <topic label="get_response" href="classrealization_1_1_formulation.html#ae70ca928c70b08b08c4bfc982ed8e3ca"/>
           <topic label="interpret_parameters" href="classrealization_1_1_formulation.html#a65f97b5efe05e786f59d9f5fd1b10209"/>
-          <topic label="is_et_params_set" href="classrealization_1_1_formulation.html#a7117db623dafde1f5dfbf286e46aa99e"/>
-          <topic label="set_et_params" href="classrealization_1_1_formulation.html#a8f1338c37773df88268e34e46a1d957e"/>
           <topic label="validate_parameters" href="classrealization_1_1_formulation.html#aceabe9927b36dce61f338919f2af4c1f"/>
           <topic label="id" href="classrealization_1_1_formulation.html#a8bfec24b0d57240e7ada2493a781db6d"/>
         </topic>
@@ -2894,104 +2709,6 @@
           <topic label="is_property_sum_over_time_step" href="classdata__access_1_1_wrapped_data_provider.html#ad9d424c2ab04077e4d82892ae17628ea"/>
           <topic label="record_duration" href="classdata__access_1_1_wrapped_data_provider.html#a9804e6089735525808ea17b385dec117"/>
           <topic label="wrapped_provider" href="classdata__access_1_1_wrapped_data_provider.html#a04271bd600dbe1a97b35240ad13ba044"/>
-        </topic>
-      </topic>
-      <topic label="et" href="namespaceet.html">
-        <topic label="aorc_forcing_data" href="structet_1_1aorc__forcing__data.html">
-          <topic label="air_temperature_2m_K" href="structet_1_1aorc__forcing__data.html#a60217e5158e91556b6af736d10c29547"/>
-          <topic label="incoming_longwave_W_per_m2" href="structet_1_1aorc__forcing__data.html#a71558e2f4f918774a39760d1d0fdf8a6"/>
-          <topic label="incoming_shortwave_W_per_m2" href="structet_1_1aorc__forcing__data.html#ae705d0d95258ec868099c936d01233a1"/>
-          <topic label="latitude" href="structet_1_1aorc__forcing__data.html#a216d69e2b9b92b2d333feee84c18c3ca"/>
-          <topic label="longitude" href="structet_1_1aorc__forcing__data.html#ade8a2708e67b93804e88f0052ddfebf1"/>
-          <topic label="precip_kg_per_m2" href="structet_1_1aorc__forcing__data.html#a1766bf25c4f59c00eff6cb622c216233"/>
-          <topic label="specific_humidity_2m_kg_per_kg" href="structet_1_1aorc__forcing__data.html#a49c47783b4de388a06dac23da5c9b756"/>
-          <topic label="surface_pressure_Pa" href="structet_1_1aorc__forcing__data.html#a722082c1cfe9bcf24243fd5d152839d3"/>
-          <topic label="time" href="structet_1_1aorc__forcing__data.html#a5ba1ad2145f04ad1bdac3190b55ea5fc"/>
-          <topic label="u_wind_speed_10m_m_per_s" href="structet_1_1aorc__forcing__data.html#a59d1a502ebd5a74a8df23b72ae767bce"/>
-          <topic label="v_wind_speed_10m_m_per_s" href="structet_1_1aorc__forcing__data.html#a6d31b420cbd9caa35500ca6c0331751b"/>
-        </topic>
-        <topic label="evapotranspiration_forcing" href="structet_1_1evapotranspiration__forcing.html">
-          <topic label="air_pressure_Pa" href="structet_1_1evapotranspiration__forcing.html#a949fd8df44eaf969b82c051b1d65ecd9"/>
-          <topic label="air_temperature_C" href="structet_1_1evapotranspiration__forcing.html#afb192d068934bb959e99892e0de28c4c"/>
-          <topic label="canopy_resistance_sec_per_m" href="structet_1_1evapotranspiration__forcing.html#a0fd101f844e188373e9a6eb56e6d8014"/>
-          <topic label="ground_heat_flux_W_per_sq_m" href="structet_1_1evapotranspiration__forcing.html#ac33b8f3a7320051061393299e30650f7"/>
-          <topic label="net_radiation_W_per_sq_m" href="structet_1_1evapotranspiration__forcing.html#af8058e5618bb4fc7f04207eb2831d2cc"/>
-          <topic label="relative_humidity_percent" href="structet_1_1evapotranspiration__forcing.html#a7a1b6dc8dbd7155eee5dc62ba5ff39d7"/>
-          <topic label="specific_humidity_2m_kg_per_kg" href="structet_1_1evapotranspiration__forcing.html#a0e44cf46b7385a47afe404b77d6b14bb"/>
-          <topic label="water_temperature_C" href="structet_1_1evapotranspiration__forcing.html#afecbbbe604d22144db92d07aae63c383"/>
-          <topic label="wind_speed_m_per_s" href="structet_1_1evapotranspiration__forcing.html#a75f3eecf49ecf9078df9688cb98036fe"/>
-        </topic>
-        <topic label="evapotranspiration_options" href="structet_1_1evapotranspiration__options.html">
-          <topic label="shortwave_radiation_provided" href="structet_1_1evapotranspiration__options.html#a5b8607a4581ee9b65bcd1ea521e03998"/>
-          <topic label="use_aerodynamic_method" href="structet_1_1evapotranspiration__options.html#a78976e7f0027baae1252c1d1cdec17a0"/>
-          <topic label="use_combination_method" href="structet_1_1evapotranspiration__options.html#aaa9815da68f2b0de5be8e5a0db662d7f"/>
-          <topic label="use_energy_balance_method" href="structet_1_1evapotranspiration__options.html#a22f1800b7d9a578b94ef199e8d63ddba"/>
-          <topic label="use_penman_monteith_method" href="structet_1_1evapotranspiration__options.html#adb0037b78cc05713c964365050150875"/>
-          <topic label="use_priestley_taylor_method" href="structet_1_1evapotranspiration__options.html#a4610db5710cad9322dbc514ae48ad25f"/>
-          <topic label="yes_aorc" href="structet_1_1evapotranspiration__options.html#a80444e1cc009b709fa5b895e68f3931c"/>
-        </topic>
-        <topic label="evapotranspiration_params" href="structet_1_1evapotranspiration__params.html">
-          <topic label="day_of_year" href="structet_1_1evapotranspiration__params.html#a17a6050e0c8fc7d73e9917710543cd6e"/>
-          <topic label="heat_transfer_roughness_length_m" href="structet_1_1evapotranspiration__params.html#af6ac5ebc406f8ea24a41917ea9ab608f"/>
-          <topic label="humidity_measurement_height_m" href="structet_1_1evapotranspiration__params.html#a1a2fc115213ff117ae784ad685d7d5de"/>
-          <topic label="latitude" href="structet_1_1evapotranspiration__params.html#a10005aa21d99391c3fbebe8714af9967"/>
-          <topic label="longitude" href="structet_1_1evapotranspiration__params.html#a72c37426020edacdcc0465ac5148726d"/>
-          <topic label="momentum_transfer_roughness_length_m" href="structet_1_1evapotranspiration__params.html#a137055090c2b512098a0ce0c12e520b3"/>
-          <topic label="vegetation_height_m" href="structet_1_1evapotranspiration__params.html#ad5dfb5842c5322b1680efd04506e2492"/>
-          <topic label="wind_speed_measurement_height_m" href="structet_1_1evapotranspiration__params.html#a3cf23c6104d8561356737dce4713c332"/>
-          <topic label="zero_plane_displacement_height_m" href="structet_1_1evapotranspiration__params.html#a101132cb7c1a8c3a91824bbbe6cedb84"/>
-        </topic>
-        <topic label="intermediate_vars" href="structet_1_1intermediate__vars.html">
-          <topic label="air_actual_vapor_pressure_Pa" href="structet_1_1intermediate__vars.html#a9f4838b2951496c1c7bdbd2ec5307b6d"/>
-          <topic label="air_saturation_vapor_pressure_Pa" href="structet_1_1intermediate__vars.html#a0f115dad3ead6463cfd932045ba91a96"/>
-          <topic label="liquid_water_density_kg_per_m3" href="structet_1_1intermediate__vars.html#a4b7204fc6f7e989fe58587514a8f0764"/>
-          <topic label="moist_air_density_kg_per_m3" href="structet_1_1intermediate__vars.html#aa051aa7caa4bb500798f8985afaf3626"/>
-          <topic label="moist_air_gas_constant_J_per_kg_K" href="structet_1_1intermediate__vars.html#ad072368a8fa58b09ff6048e77310f4c3"/>
-          <topic label="psychrometric_constant_Pa_per_C" href="structet_1_1intermediate__vars.html#afc68b9866a5459502a369f185f164405"/>
-          <topic label="slope_sat_vap_press_curve_Pa_s" href="structet_1_1intermediate__vars.html#ad91644243d20a5c01a45825cbc185551"/>
-          <topic label="vapor_pressure_deficit_Pa" href="structet_1_1intermediate__vars.html#aa12208297f8f1219e1f8879dd51aaf0b"/>
-          <topic label="water_latent_heat_of_vaporization_J_per_kg" href="structet_1_1intermediate__vars.html#ae8dd02cb3e308c8c3289b740397e397e"/>
-        </topic>
-        <topic label="solar_radiation_forcing" href="structet_1_1solar__radiation__forcing.html">
-          <topic label="atmospheric_turbidity_factor" href="structet_1_1solar__radiation__forcing.html#a930bc367052f2dc1645998dd1fddfdf6"/>
-          <topic label="cloud_base_height_m" href="structet_1_1solar__radiation__forcing.html#a2419b3dd04c2cf3d7f5b6bcb3a9f55b8"/>
-          <topic label="cloud_cover_fraction" href="structet_1_1solar__radiation__forcing.html#aa187bbc76adad9db64a3bc40df70e1bd"/>
-          <topic label="day_of_year" href="structet_1_1solar__radiation__forcing.html#a4f56c225946c3d7dc95e071ba9c8e44c"/>
-          <topic label="zulu_time_h" href="structet_1_1solar__radiation__forcing.html#af567b5fe5d650d212fad4583d7de8dd3"/>
-        </topic>
-        <topic label="solar_radiation_options" href="structet_1_1solar__radiation__options.html">
-          <topic label="cloud_base_height_known" href="structet_1_1solar__radiation__options.html#a9b0930d9f56316b40b9e5be99a34a289"/>
-        </topic>
-        <topic label="solar_radiation_parameters" href="structet_1_1solar__radiation__parameters.html">
-          <topic label="latitude_degrees" href="structet_1_1solar__radiation__parameters.html#adb22c2c21adef73c4c3c5c5ad4f60a7d"/>
-          <topic label="longitude_degrees" href="structet_1_1solar__radiation__parameters.html#a27bd65d14e501f028a0de50a4bfc9341"/>
-          <topic label="site_elevation_m" href="structet_1_1solar__radiation__parameters.html#a7918a17526c9a5952da94b3b57d854dc"/>
-        </topic>
-        <topic label="solar_radiation_results" href="structet_1_1solar__radiation__results.html">
-          <topic label="solar_azimuth_angle_degrees" href="structet_1_1solar__radiation__results.html#ae2c565e67fe6e0af61b6ea0ec5b4a3f2"/>
-          <topic label="solar_elevation_angle_degrees" href="structet_1_1solar__radiation__results.html#a513495a4f31d605f38c7a1ab9056bed5"/>
-          <topic label="solar_local_hour_angle_degrees" href="structet_1_1solar__radiation__results.html#a522a93dcb01347cab107b9d6e1cfea5f"/>
-          <topic label="solar_radiation_cloudy_flux_W_per_sq_m" href="structet_1_1solar__radiation__results.html#aced041b82ffa7b5b622e8ec1f03e9d8c"/>
-          <topic label="solar_radiation_flux_W_per_sq_m" href="structet_1_1solar__radiation__results.html#aa392945cc2bc984a40dfa1ce668d1db1"/>
-          <topic label="solar_radiation_horizontal_cloudy_flux_W_per_sq_m" href="structet_1_1solar__radiation__results.html#abb115d6d9b7be0efc542b2432aefdd2e"/>
-          <topic label="solar_radiation_horizontal_flux_W_per_sq_m" href="structet_1_1solar__radiation__results.html#ab68b2b0541fc7059843b5dc14127d25e"/>
-        </topic>
-        <topic label="surface_radiation_forcing" href="structet_1_1surface__radiation__forcing.html">
-          <topic label="air_temperature_C" href="structet_1_1surface__radiation__forcing.html#ac4b64b6097866588185c6652a34b43f7"/>
-          <topic label="ambient_temperature_lapse_rate_deg_C_per_km" href="structet_1_1surface__radiation__forcing.html#a527aa184dbdb02bcab1f76b67ae37fd9"/>
-          <topic label="atmospheric_turbidity_factor" href="structet_1_1surface__radiation__forcing.html#abf6bbc5aab0927cbd716ef13d88d317c"/>
-          <topic label="cloud_base_height_m" href="structet_1_1surface__radiation__forcing.html#ab722ccd020eccce3eee8a1f9f1a5790a"/>
-          <topic label="cloud_cover_fraction" href="structet_1_1surface__radiation__forcing.html#a9e5c7167d8d554cbbcb71fdaa6970a68"/>
-          <topic label="day_of_year" href="structet_1_1surface__radiation__forcing.html#a135a1b078f084e73cf964c0f13c17187"/>
-          <topic label="incoming_longwave_radiation_W_per_sq_m" href="structet_1_1surface__radiation__forcing.html#a594968ae10f296acba3b537169976705"/>
-          <topic label="incoming_shortwave_radiation_W_per_sq_m" href="structet_1_1surface__radiation__forcing.html#a14e38c344ecc7f4a464b82abb93c8b18"/>
-          <topic label="relative_humidity_percent" href="structet_1_1surface__radiation__forcing.html#aa594397c9b943002f43e4ebfc9ab4454"/>
-          <topic label="surface_skin_temperature_C" href="structet_1_1surface__radiation__forcing.html#a122aa44d336ce0dbac118791e8ff218d"/>
-          <topic label="zulu_time" href="structet_1_1surface__radiation__forcing.html#a23d4a04b801dd33e1968beba9c9299f2"/>
-        </topic>
-        <topic label="surface_radiation_params" href="structet_1_1surface__radiation__params.html">
-          <topic label="surface_longwave_emissivity" href="structet_1_1surface__radiation__params.html#a4ee734d86b9bcce418082e4407252868"/>
-          <topic label="surface_shortwave_albedo" href="structet_1_1surface__radiation__params.html#a22804e8f41ad31ea9578fe9f9bb0cb76"/>
         </topic>
       </topic>
       <topic label="external" href="namespaceexternal.html">
@@ -4140,12 +3857,8 @@
           <topic label="Bmi_C_Formulation" href="classrealization_1_1_bmi___c___formulation.html#afb7f4b7f7d8e5b3f636a059181e1a521"/>
           <topic label="add_time" href="classrealization_1_1_bmi___c___formulation.html#a248b562be5dc9a21e7afbc014de15114"/>
           <topic label="as_c_array" href="classrealization_1_1_bmi___c___formulation.html#a30e95c4b73a473da7013f9a73dadee5e"/>
-          <topic label="calc_et" href="classrealization_1_1_bmi___c___formulation.html#ad8d9a56ad3614fb821d88f623030defc"/>
-          <topic label="calc_et" href="classrealization_1_1_bmi___c___formulation.html#a49aa9cfff0958d7e509de7dd5187a0c6"/>
-          <topic label="check_internal_providers" href="classrealization_1_1_bmi___c___formulation.html#abe650ee8beeb5640c08e21710a2e7ee5"/>
           <topic label="config_pattern_substitution" href="classrealization_1_1_bmi___c___formulation.html#a17f32257b65c7930f8b3570ab43fd58c"/>
           <topic label="construct_model" href="classrealization_1_1_bmi___c___formulation.html#a974d1eac6a95751c4e4570a61bad8541"/>
-          <topic label="convert_aorc_structs" href="classrealization_1_1_bmi___c___formulation.html#a1801f902d2246126249c363de2dcb496"/>
           <topic label="convert_model_time" href="classrealization_1_1_bmi___c___formulation.html#a5511312775b6bc3481ff5ec282874e12"/>
           <topic label="create_formulation" href="classrealization_1_1_bmi___c___formulation.html#adc0e525bd28e3b2f72f31680617358d1"/>
           <topic label="create_formulation" href="classrealization_1_1_bmi___c___formulation.html#ac24b58505cb49f6594fd79fec5005014"/>
@@ -4163,8 +3876,6 @@
           <topic label="get_config_mapped_variable_name" href="classrealization_1_1_bmi___c___formulation.html#a054120ab736b626daef5fcd0d2d65c5e"/>
           <topic label="get_data_start_time" href="classrealization_1_1_bmi___c___formulation.html#a2abfd86b2354292e5a8a740a85f8a9de"/>
           <topic label="get_data_stop_time" href="classrealization_1_1_bmi___c___formulation.html#a5c29aca0567d1aeb3966f3c7a9608a53"/>
-          <topic label="get_et_params" href="classrealization_1_1_bmi___c___formulation.html#ae3eed12472620303be3bd1b2cb3600c6"/>
-          <topic label="get_et_params_ptr" href="classrealization_1_1_bmi___c___formulation.html#a74fa1d17e6e8d344beecc4f0f38ee29e"/>
           <topic label="get_forcing_file_path" href="classrealization_1_1_bmi___c___formulation.html#a19ac51f4bdb29b3700a397a026e82746"/>
           <topic label="get_formulation_type" href="classrealization_1_1_bmi___c___formulation.html#adf1873c11226bdff7098f16b717b9183"/>
           <topic label="get_id" href="classrealization_1_1_bmi___c___formulation.html#a02267e0cc9fec2e1d883f55c2c12b39d"/>
@@ -4194,8 +3905,6 @@
           <topic label="is_bmi_model_time_step_fixed" href="classrealization_1_1_bmi___c___formulation.html#a5af40dac52c8e3cbcfe0059fcb0e15c7"/>
           <topic label="is_bmi_output_variable" href="classrealization_1_1_bmi___c___formulation.html#afb5627a4faf940e0f25f58e0226145d4"/>
           <topic label="is_bmi_using_forcing_file" href="classrealization_1_1_bmi___c___formulation.html#ad0c8c26e3216cfc05afcb4e15d1335c6"/>
-          <topic label="is_et_params_set" href="classrealization_1_1_bmi___c___formulation.html#a490261c3439f205913ac2e77efbd5b6f"/>
-          <topic label="is_et_params_set" href="classrealization_1_1_bmi___c___formulation.html#a7117db623dafde1f5dfbf286e46aa99e"/>
           <topic label="is_model_initialized" href="classrealization_1_1_bmi___c___formulation.html#aee9b4fec8bd57a88b56e9e78691fa35d"/>
           <topic label="is_property_sum_over_time_step" href="classrealization_1_1_bmi___c___formulation.html#a9e0008a5794de910fa919ec78be14b9e"/>
           <topic label="is_var_name_in_collection" href="classrealization_1_1_bmi___c___formulation.html#a83194015b9fca43b789352aa90307b24"/>
@@ -4208,8 +3917,6 @@
           <topic label="set_bmi_model_time_step_fixed" href="classrealization_1_1_bmi___c___formulation.html#a8e286bd047936d89fb41c297ff816739"/>
           <topic label="set_bmi_using_forcing_file" href="classrealization_1_1_bmi___c___formulation.html#a26a4f00b25ce7d3858674e4688a8e1c0"/>
           <topic label="set_catchment_id" href="classrealization_1_1_bmi___c___formulation.html#a2cce2b5b18eaa0ed7e0df10db57da144"/>
-          <topic label="set_et_params" href="classrealization_1_1_bmi___c___formulation.html#ad4e23441f5a4ceb63262f796c5bb411f"/>
-          <topic label="set_et_params" href="classrealization_1_1_bmi___c___formulation.html#a8f1338c37773df88268e34e46a1d957e"/>
           <topic label="set_forcing_file_path" href="classrealization_1_1_bmi___c___formulation.html#a051a6ac143f1cad42a3529bd51159ad3"/>
           <topic label="set_initial_bmi_parameters" href="classrealization_1_1_bmi___c___formulation.html#a9c3a2d69dd3610aa37eb6acc94d495de"/>
           <topic label="set_model_initialized" href="classrealization_1_1_bmi___c___formulation.html#ae15a6b5c9e36c2accebf72f2b218d9fe"/>
@@ -4236,7 +3943,6 @@
           <topic label="bmi_var_names_map" href="classrealization_1_1_bmi___c___formulation.html#a66a7020fd4b35a6e3f32348a680e92c1"/>
           <topic label="bounds" href="classrealization_1_1_bmi___c___formulation.html#aaebc4992c38cb5db68e859e0487ad929"/>
           <topic label="cat_id" href="classrealization_1_1_bmi___c___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b"/>
-          <topic label="et_params" href="classrealization_1_1_bmi___c___formulation.html#a5fab369fc039b378dfd270490ddb9e5c"/>
           <topic label="forcing" href="classrealization_1_1_bmi___c___formulation.html#a2010f61d0e7141bb48230923592de215"/>
           <topic label="forcing_file_path" href="classrealization_1_1_bmi___c___formulation.html#ae5e3e2b19dc503516b684311c88df25d"/>
           <topic label="id" href="classrealization_1_1_bmi___c___formulation.html#a8bfec24b0d57240e7ada2493a781db6d"/>
@@ -4261,12 +3967,8 @@
           <topic label="Bmi_Cpp_Formulation" href="classrealization_1_1_bmi___cpp___formulation.html#ac236d280681cc9a31053f505a562d087"/>
           <topic label="add_time" href="classrealization_1_1_bmi___cpp___formulation.html#a248b562be5dc9a21e7afbc014de15114"/>
           <topic label="as_c_array" href="classrealization_1_1_bmi___cpp___formulation.html#a30e95c4b73a473da7013f9a73dadee5e"/>
-          <topic label="calc_et" href="classrealization_1_1_bmi___cpp___formulation.html#ad8d9a56ad3614fb821d88f623030defc"/>
-          <topic label="calc_et" href="classrealization_1_1_bmi___cpp___formulation.html#a49aa9cfff0958d7e509de7dd5187a0c6"/>
-          <topic label="check_internal_providers" href="classrealization_1_1_bmi___cpp___formulation.html#abe650ee8beeb5640c08e21710a2e7ee5"/>
           <topic label="config_pattern_substitution" href="classrealization_1_1_bmi___cpp___formulation.html#a17f32257b65c7930f8b3570ab43fd58c"/>
           <topic label="construct_model" href="classrealization_1_1_bmi___cpp___formulation.html#ab5e164de66bb4639a2f1a6cef4ac9f00"/>
-          <topic label="convert_aorc_structs" href="classrealization_1_1_bmi___cpp___formulation.html#a1801f902d2246126249c363de2dcb496"/>
           <topic label="convert_model_time" href="classrealization_1_1_bmi___cpp___formulation.html#a8e4d6e260deafd604a15865db0cc5a46"/>
           <topic label="create_formulation" href="classrealization_1_1_bmi___cpp___formulation.html#adc0e525bd28e3b2f72f31680617358d1"/>
           <topic label="create_formulation" href="classrealization_1_1_bmi___cpp___formulation.html#ac24b58505cb49f6594fd79fec5005014"/>
@@ -4284,8 +3986,6 @@
           <topic label="get_config_mapped_variable_name" href="classrealization_1_1_bmi___cpp___formulation.html#a054120ab736b626daef5fcd0d2d65c5e"/>
           <topic label="get_data_start_time" href="classrealization_1_1_bmi___cpp___formulation.html#a2abfd86b2354292e5a8a740a85f8a9de"/>
           <topic label="get_data_stop_time" href="classrealization_1_1_bmi___cpp___formulation.html#a5c29aca0567d1aeb3966f3c7a9608a53"/>
-          <topic label="get_et_params" href="classrealization_1_1_bmi___cpp___formulation.html#ae3eed12472620303be3bd1b2cb3600c6"/>
-          <topic label="get_et_params_ptr" href="classrealization_1_1_bmi___cpp___formulation.html#a74fa1d17e6e8d344beecc4f0f38ee29e"/>
           <topic label="get_forcing_file_path" href="classrealization_1_1_bmi___cpp___formulation.html#a19ac51f4bdb29b3700a397a026e82746"/>
           <topic label="get_formulation_type" href="classrealization_1_1_bmi___cpp___formulation.html#ac2a7b72c41763e7ef89c5454752d0566"/>
           <topic label="get_id" href="classrealization_1_1_bmi___cpp___formulation.html#a02267e0cc9fec2e1d883f55c2c12b39d"/>
@@ -4315,8 +4015,6 @@
           <topic label="is_bmi_model_time_step_fixed" href="classrealization_1_1_bmi___cpp___formulation.html#a5af40dac52c8e3cbcfe0059fcb0e15c7"/>
           <topic label="is_bmi_output_variable" href="classrealization_1_1_bmi___cpp___formulation.html#adcd31d4e74a11931598d889355ee2ca1"/>
           <topic label="is_bmi_using_forcing_file" href="classrealization_1_1_bmi___cpp___formulation.html#ad0c8c26e3216cfc05afcb4e15d1335c6"/>
-          <topic label="is_et_params_set" href="classrealization_1_1_bmi___cpp___formulation.html#a490261c3439f205913ac2e77efbd5b6f"/>
-          <topic label="is_et_params_set" href="classrealization_1_1_bmi___cpp___formulation.html#a7117db623dafde1f5dfbf286e46aa99e"/>
           <topic label="is_model_initialized" href="classrealization_1_1_bmi___cpp___formulation.html#aef8ddd7a6fcbb99cff3bc829ffb12f8e"/>
           <topic label="is_property_sum_over_time_step" href="classrealization_1_1_bmi___cpp___formulation.html#a9e0008a5794de910fa919ec78be14b9e"/>
           <topic label="is_var_name_in_collection" href="classrealization_1_1_bmi___cpp___formulation.html#a83194015b9fca43b789352aa90307b24"/>
@@ -4329,8 +4027,6 @@
           <topic label="set_bmi_model_time_step_fixed" href="classrealization_1_1_bmi___cpp___formulation.html#a8e286bd047936d89fb41c297ff816739"/>
           <topic label="set_bmi_using_forcing_file" href="classrealization_1_1_bmi___cpp___formulation.html#a26a4f00b25ce7d3858674e4688a8e1c0"/>
           <topic label="set_catchment_id" href="classrealization_1_1_bmi___cpp___formulation.html#a2cce2b5b18eaa0ed7e0df10db57da144"/>
-          <topic label="set_et_params" href="classrealization_1_1_bmi___cpp___formulation.html#ad4e23441f5a4ceb63262f796c5bb411f"/>
-          <topic label="set_et_params" href="classrealization_1_1_bmi___cpp___formulation.html#a8f1338c37773df88268e34e46a1d957e"/>
           <topic label="set_forcing_file_path" href="classrealization_1_1_bmi___cpp___formulation.html#a051a6ac143f1cad42a3529bd51159ad3"/>
           <topic label="set_initial_bmi_parameters" href="classrealization_1_1_bmi___cpp___formulation.html#a9c3a2d69dd3610aa37eb6acc94d495de"/>
           <topic label="set_model_initialized" href="classrealization_1_1_bmi___cpp___formulation.html#ae15a6b5c9e36c2accebf72f2b218d9fe"/>
@@ -4356,7 +4052,6 @@
           <topic label="bmi_var_names_map" href="classrealization_1_1_bmi___cpp___formulation.html#a66a7020fd4b35a6e3f32348a680e92c1"/>
           <topic label="bounds" href="classrealization_1_1_bmi___cpp___formulation.html#aaebc4992c38cb5db68e859e0487ad929"/>
           <topic label="cat_id" href="classrealization_1_1_bmi___cpp___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b"/>
-          <topic label="et_params" href="classrealization_1_1_bmi___cpp___formulation.html#a5fab369fc039b378dfd270490ddb9e5c"/>
           <topic label="forcing" href="classrealization_1_1_bmi___cpp___formulation.html#a2010f61d0e7141bb48230923592de215"/>
           <topic label="forcing_file_path" href="classrealization_1_1_bmi___cpp___formulation.html#ae5e3e2b19dc503516b684311c88df25d"/>
           <topic label="id" href="classrealization_1_1_bmi___cpp___formulation.html#a8bfec24b0d57240e7ada2493a781db6d"/>
@@ -4381,7 +4076,6 @@
           <topic label="Bmi_Formulation" href="classrealization_1_1_bmi___formulation.html#ad23e2ac461a34855b320e2c81cc1e2f6"/>
           <topic label="~Bmi_Formulation" href="classrealization_1_1_bmi___formulation.html#af04ef53959ce9c63da57f1f767740401"/>
           <topic label="add_time" href="classrealization_1_1_bmi___formulation.html#a248b562be5dc9a21e7afbc014de15114"/>
-          <topic label="calc_et" href="classrealization_1_1_bmi___formulation.html#a1af6f5c88bda174c8ba855e796a55439"/>
           <topic label="config_pattern_substitution" href="classrealization_1_1_bmi___formulation.html#a17f32257b65c7930f8b3570ab43fd58c"/>
           <topic label="convert_model_time" href="classrealization_1_1_bmi___formulation.html#a71539f348de57ae368bfd8bdcd6ef1d5"/>
           <topic label="create_formulation" href="classrealization_1_1_bmi___formulation.html#a4fb8ec9b08820c29d88627ee9781d579"/>
@@ -4396,8 +4090,6 @@
           <topic label="get_config_mapped_variable_name" href="classrealization_1_1_bmi___formulation.html#abc0a0264e156d51f9791837fc8eba004"/>
           <topic label="get_data_start_time" href="classrealization_1_1_bmi___formulation.html#a9a5503cb5da0b2bf8fe25d0500bf33c4"/>
           <topic label="get_data_stop_time" href="classrealization_1_1_bmi___formulation.html#af598b54c03163287adc56400b3e9bdfe"/>
-          <topic label="get_et_params" href="classrealization_1_1_bmi___formulation.html#ae3eed12472620303be3bd1b2cb3600c6"/>
-          <topic label="get_et_params_ptr" href="classrealization_1_1_bmi___formulation.html#a74fa1d17e6e8d344beecc4f0f38ee29e"/>
           <topic label="get_forcing_file_path" href="classrealization_1_1_bmi___formulation.html#aa5e20602dc44ab8ebbd603d892959062"/>
           <topic label="get_formulation_type" href="classrealization_1_1_bmi___formulation.html#a2e9d4749500d3f5ea434d77861b03990"/>
           <topic label="get_id" href="classrealization_1_1_bmi___formulation.html#a02267e0cc9fec2e1d883f55c2c12b39d"/>
@@ -4419,15 +4111,11 @@
           <topic label="is_bmi_model_time_step_fixed" href="classrealization_1_1_bmi___formulation.html#a9d83489e654b1aecfc84d7c08396fa28"/>
           <topic label="is_bmi_output_variable" href="classrealization_1_1_bmi___formulation.html#ae6866e42adf3153cf371e239dc0d6197"/>
           <topic label="is_bmi_using_forcing_file" href="classrealization_1_1_bmi___formulation.html#a62c987fab9e8ad745f1088abd04ab4b9"/>
-          <topic label="is_et_params_set" href="classrealization_1_1_bmi___formulation.html#a490261c3439f205913ac2e77efbd5b6f"/>
-          <topic label="is_et_params_set" href="classrealization_1_1_bmi___formulation.html#a7117db623dafde1f5dfbf286e46aa99e"/>
           <topic label="is_model_initialized" href="classrealization_1_1_bmi___formulation.html#aaa4dcba7e78f634ad0475bf1e3f3a697"/>
           <topic label="is_property_sum_over_time_step" href="classrealization_1_1_bmi___formulation.html#a8254f58e64499bb4ae799ab120fd0934"/>
           <topic label="record_duration" href="classrealization_1_1_bmi___formulation.html#a558af5fd091e84283470af3ca74d24d8"/>
           <topic label="set_bmi_main_output_var" href="classrealization_1_1_bmi___formulation.html#ae137604ca81006a617221733d8d36f62"/>
           <topic label="set_catchment_id" href="classrealization_1_1_bmi___formulation.html#a2cce2b5b18eaa0ed7e0df10db57da144"/>
-          <topic label="set_et_params" href="classrealization_1_1_bmi___formulation.html#ad4e23441f5a4ceb63262f796c5bb411f"/>
-          <topic label="set_et_params" href="classrealization_1_1_bmi___formulation.html#a8f1338c37773df88268e34e46a1d957e"/>
           <topic label="set_model_type_name" href="classrealization_1_1_bmi___formulation.html#a3a59e65e398af534a189f5de2bda67f2"/>
           <topic label="set_output_header_fields" href="classrealization_1_1_bmi___formulation.html#a45dbdc9794b5c97f229150293695f2cc"/>
           <topic label="set_output_precision" href="classrealization_1_1_bmi___formulation.html#a2be85c1e7a58273fc0267c9e99ca38fc"/>
@@ -4440,7 +4128,6 @@
           <topic label="bmi_main_output_var" href="classrealization_1_1_bmi___formulation.html#a494171a1888c373c2a1e03008e00e5d5"/>
           <topic label="bounds" href="classrealization_1_1_bmi___formulation.html#aaebc4992c38cb5db68e859e0487ad929"/>
           <topic label="cat_id" href="classrealization_1_1_bmi___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b"/>
-          <topic label="et_params" href="classrealization_1_1_bmi___formulation.html#a5fab369fc039b378dfd270490ddb9e5c"/>
           <topic label="forcing" href="classrealization_1_1_bmi___formulation.html#a2010f61d0e7141bb48230923592de215"/>
           <topic label="id" href="classrealization_1_1_bmi___formulation.html#a8bfec24b0d57240e7ada2493a781db6d"/>
           <topic label="id_number" href="classrealization_1_1_bmi___formulation.html#af996a3e50eaf51c63865f1fdbe4f8661"/>
@@ -4460,12 +4147,8 @@
           <topic label="~Bmi_Module_Formulation" href="classrealization_1_1_bmi___module___formulation.html#a650f0f48916600d9ee87f88c76c77387"/>
           <topic label="add_time" href="classrealization_1_1_bmi___module___formulation.html#a248b562be5dc9a21e7afbc014de15114"/>
           <topic label="as_c_array" href="classrealization_1_1_bmi___module___formulation.html#a30e95c4b73a473da7013f9a73dadee5e"/>
-          <topic label="calc_et" href="classrealization_1_1_bmi___module___formulation.html#ad8d9a56ad3614fb821d88f623030defc"/>
-          <topic label="calc_et" href="classrealization_1_1_bmi___module___formulation.html#a49aa9cfff0958d7e509de7dd5187a0c6"/>
-          <topic label="check_internal_providers" href="classrealization_1_1_bmi___module___formulation.html#abe650ee8beeb5640c08e21710a2e7ee5"/>
           <topic label="config_pattern_substitution" href="classrealization_1_1_bmi___module___formulation.html#a17f32257b65c7930f8b3570ab43fd58c"/>
           <topic label="construct_model" href="classrealization_1_1_bmi___module___formulation.html#af9c6e1cdcdced6c8baa45b9df9970e45"/>
-          <topic label="convert_aorc_structs" href="classrealization_1_1_bmi___module___formulation.html#a1801f902d2246126249c363de2dcb496"/>
           <topic label="convert_model_time" href="classrealization_1_1_bmi___module___formulation.html#a71539f348de57ae368bfd8bdcd6ef1d5"/>
           <topic label="create_formulation" href="classrealization_1_1_bmi___module___formulation.html#adc0e525bd28e3b2f72f31680617358d1"/>
           <topic label="create_formulation" href="classrealization_1_1_bmi___module___formulation.html#ac24b58505cb49f6594fd79fec5005014"/>
@@ -4483,8 +4166,6 @@
           <topic label="get_config_mapped_variable_name" href="classrealization_1_1_bmi___module___formulation.html#a054120ab736b626daef5fcd0d2d65c5e"/>
           <topic label="get_data_start_time" href="classrealization_1_1_bmi___module___formulation.html#a2abfd86b2354292e5a8a740a85f8a9de"/>
           <topic label="get_data_stop_time" href="classrealization_1_1_bmi___module___formulation.html#a5c29aca0567d1aeb3966f3c7a9608a53"/>
-          <topic label="get_et_params" href="classrealization_1_1_bmi___module___formulation.html#ae3eed12472620303be3bd1b2cb3600c6"/>
-          <topic label="get_et_params_ptr" href="classrealization_1_1_bmi___module___formulation.html#a74fa1d17e6e8d344beecc4f0f38ee29e"/>
           <topic label="get_forcing_file_path" href="classrealization_1_1_bmi___module___formulation.html#a19ac51f4bdb29b3700a397a026e82746"/>
           <topic label="get_formulation_type" href="classrealization_1_1_bmi___module___formulation.html#a2e9d4749500d3f5ea434d77861b03990"/>
           <topic label="get_id" href="classrealization_1_1_bmi___module___formulation.html#a02267e0cc9fec2e1d883f55c2c12b39d"/>
@@ -4513,8 +4194,6 @@
           <topic label="is_bmi_model_time_step_fixed" href="classrealization_1_1_bmi___module___formulation.html#a5af40dac52c8e3cbcfe0059fcb0e15c7"/>
           <topic label="is_bmi_output_variable" href="classrealization_1_1_bmi___module___formulation.html#a8d72af0f3a7f4057d69ec975246061fa"/>
           <topic label="is_bmi_using_forcing_file" href="classrealization_1_1_bmi___module___formulation.html#ad0c8c26e3216cfc05afcb4e15d1335c6"/>
-          <topic label="is_et_params_set" href="classrealization_1_1_bmi___module___formulation.html#a490261c3439f205913ac2e77efbd5b6f"/>
-          <topic label="is_et_params_set" href="classrealization_1_1_bmi___module___formulation.html#a7117db623dafde1f5dfbf286e46aa99e"/>
           <topic label="is_model_initialized" href="classrealization_1_1_bmi___module___formulation.html#a64efe3f64579f72317d04b3504d293dc"/>
           <topic label="is_property_sum_over_time_step" href="classrealization_1_1_bmi___module___formulation.html#a9e0008a5794de910fa919ec78be14b9e"/>
           <topic label="is_var_name_in_collection" href="classrealization_1_1_bmi___module___formulation.html#a83194015b9fca43b789352aa90307b24"/>
@@ -4527,8 +4206,6 @@
           <topic label="set_bmi_model_time_step_fixed" href="classrealization_1_1_bmi___module___formulation.html#a8e286bd047936d89fb41c297ff816739"/>
           <topic label="set_bmi_using_forcing_file" href="classrealization_1_1_bmi___module___formulation.html#a26a4f00b25ce7d3858674e4688a8e1c0"/>
           <topic label="set_catchment_id" href="classrealization_1_1_bmi___module___formulation.html#a2cce2b5b18eaa0ed7e0df10db57da144"/>
-          <topic label="set_et_params" href="classrealization_1_1_bmi___module___formulation.html#ad4e23441f5a4ceb63262f796c5bb411f"/>
-          <topic label="set_et_params" href="classrealization_1_1_bmi___module___formulation.html#a8f1338c37773df88268e34e46a1d957e"/>
           <topic label="set_forcing_file_path" href="classrealization_1_1_bmi___module___formulation.html#a051a6ac143f1cad42a3529bd51159ad3"/>
           <topic label="set_initial_bmi_parameters" href="classrealization_1_1_bmi___module___formulation.html#a9c3a2d69dd3610aa37eb6acc94d495de"/>
           <topic label="set_model_initialized" href="classrealization_1_1_bmi___module___formulation.html#ae15a6b5c9e36c2accebf72f2b218d9fe"/>
@@ -4557,7 +4234,6 @@
           <topic label="bmi_var_names_map" href="classrealization_1_1_bmi___module___formulation.html#a66a7020fd4b35a6e3f32348a680e92c1"/>
           <topic label="bounds" href="classrealization_1_1_bmi___module___formulation.html#aaebc4992c38cb5db68e859e0487ad929"/>
           <topic label="cat_id" href="classrealization_1_1_bmi___module___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b"/>
-          <topic label="et_params" href="classrealization_1_1_bmi___module___formulation.html#a5fab369fc039b378dfd270490ddb9e5c"/>
           <topic label="forcing" href="classrealization_1_1_bmi___module___formulation.html#a2010f61d0e7141bb48230923592de215"/>
           <topic label="forcing_file_path" href="classrealization_1_1_bmi___module___formulation.html#ae5e3e2b19dc503516b684311c88df25d"/>
           <topic label="id" href="classrealization_1_1_bmi___module___formulation.html#a8bfec24b0d57240e7ada2493a781db6d"/>
@@ -4583,14 +4259,12 @@
           <topic label="Bmi_Multi_Formulation" href="classrealization_1_1_bmi___multi___formulation.html#add34061f00ab855e4385d368bd9f61b5"/>
           <topic label="~Bmi_Multi_Formulation" href="classrealization_1_1_bmi___multi___formulation.html#a6ef8f446a1fcece399fb72532e854363"/>
           <topic label="add_time" href="classrealization_1_1_bmi___multi___formulation.html#a248b562be5dc9a21e7afbc014de15114"/>
-          <topic label="calc_et" href="classrealization_1_1_bmi___multi___formulation.html#a5044c4cf0c139b0c6b5b5a3ce679555b"/>
           <topic label="config_pattern_substitution" href="classrealization_1_1_bmi___multi___formulation.html#a17f32257b65c7930f8b3570ab43fd58c"/>
           <topic label="convert_model_time" href="classrealization_1_1_bmi___multi___formulation.html#a5887212a446b23c0e57eba37fdaca073"/>
           <topic label="convert_model_time" href="classrealization_1_1_bmi___multi___formulation.html#ac1e6b155be16a0562d62d16f3b42313d"/>
           <topic label="create_formulation" href="classrealization_1_1_bmi___multi___formulation.html#acb4534a0030f794320625be0313fe825"/>
           <topic label="create_formulation" href="classrealization_1_1_bmi___multi___formulation.html#a87607c1c2b438943c8be0a566e1c59d5"/>
           <topic label="create_multi_formulation" href="classrealization_1_1_bmi___multi___formulation.html#a8694f5e94f40224efca11a73892da8ff"/>
-          <topic label="determine_et_formulation_index" href="classrealization_1_1_bmi___multi___formulation.html#a29c47ff4addf5a687b9cf431c9c33a87"/>
           <topic label="get_allow_model_exceed_end_time" href="classrealization_1_1_bmi___multi___formulation.html#aca4c20aff9b42fa0d184cfe49f3dabde"/>
           <topic label="get_available_variable_names" href="classrealization_1_1_bmi___multi___formulation.html#ae615591447d5fedb40d811f52a2aa95b"/>
           <topic label="get_bmi_input_variables" href="classrealization_1_1_bmi___multi___formulation.html#ad3f57bbaedee15d136af697dc24f2625"/>
@@ -4603,8 +4277,6 @@
           <topic label="get_config_mapped_variable_name" href="classrealization_1_1_bmi___multi___formulation.html#aa70922dc0f76da152452bb39705ce55d"/>
           <topic label="get_data_start_time" href="classrealization_1_1_bmi___multi___formulation.html#ad3b2f3f6294014fde8f6a10b5d3058f8"/>
           <topic label="get_data_stop_time" href="classrealization_1_1_bmi___multi___formulation.html#a4b3db6bb593b3d3261ac5ed2f35684b3"/>
-          <topic label="get_et_params" href="classrealization_1_1_bmi___multi___formulation.html#ae3eed12472620303be3bd1b2cb3600c6"/>
-          <topic label="get_et_params_ptr" href="classrealization_1_1_bmi___multi___formulation.html#a74fa1d17e6e8d344beecc4f0f38ee29e"/>
           <topic label="get_forcing_file_path" href="classrealization_1_1_bmi___multi___formulation.html#ad20b1ed9691e3c7db3d2de14a38ad0f3"/>
           <topic label="get_formulation_type" href="classrealization_1_1_bmi___multi___formulation.html#adbe82ffeec39c35a9b2c3ba5ab0a8f6d"/>
           <topic label="get_id" href="classrealization_1_1_bmi___multi___formulation.html#a02267e0cc9fec2e1d883f55c2c12b39d"/>
@@ -4635,16 +4307,12 @@
           <topic label="is_bmi_model_time_step_fixed" href="classrealization_1_1_bmi___multi___formulation.html#a8ff40396fbb1443543d9ead367e61617"/>
           <topic label="is_bmi_output_variable" href="classrealization_1_1_bmi___multi___formulation.html#a65c8d3825669dffc9c5d68d45fd4bff5"/>
           <topic label="is_bmi_using_forcing_file" href="classrealization_1_1_bmi___multi___formulation.html#a4cdad4c937f0f546da35c69815c95abe"/>
-          <topic label="is_et_params_set" href="classrealization_1_1_bmi___multi___formulation.html#a490261c3439f205913ac2e77efbd5b6f"/>
-          <topic label="is_et_params_set" href="classrealization_1_1_bmi___multi___formulation.html#a7117db623dafde1f5dfbf286e46aa99e"/>
           <topic label="is_model_initialized" href="classrealization_1_1_bmi___multi___formulation.html#aa563a521c8e3e05c8503f5849729de5b"/>
           <topic label="is_property_sum_over_time_step" href="classrealization_1_1_bmi___multi___formulation.html#ac6cf3c9c80cad9d426ebf062ec6629f2"/>
           <topic label="is_time_step_beyond_end_time" href="classrealization_1_1_bmi___multi___formulation.html#a03c5db7806dd83245edcaae1859a687a"/>
           <topic label="record_duration" href="classrealization_1_1_bmi___multi___formulation.html#a7b8ee244748b42fa4740f37ad5d14cc7"/>
           <topic label="set_bmi_main_output_var" href="classrealization_1_1_bmi___multi___formulation.html#ae137604ca81006a617221733d8d36f62"/>
           <topic label="set_catchment_id" href="classrealization_1_1_bmi___multi___formulation.html#a2cce2b5b18eaa0ed7e0df10db57da144"/>
-          <topic label="set_et_params" href="classrealization_1_1_bmi___multi___formulation.html#ad4e23441f5a4ceb63262f796c5bb411f"/>
-          <topic label="set_et_params" href="classrealization_1_1_bmi___multi___formulation.html#a8f1338c37773df88268e34e46a1d957e"/>
           <topic label="set_index_for_primary_module" href="classrealization_1_1_bmi___multi___formulation.html#a33697f092bee233856d4559949f58edf"/>
           <topic label="set_model_type_name" href="classrealization_1_1_bmi___multi___formulation.html#a3a59e65e398af534a189f5de2bda67f2"/>
           <topic label="set_output_header_fields" href="classrealization_1_1_bmi___multi___formulation.html#a45dbdc9794b5c97f229150293695f2cc"/>
@@ -4664,7 +4332,6 @@
           <topic label="default_output_values" href="classrealization_1_1_bmi___multi___formulation.html#aeced5793d29fdac7e6cc53ff1cc0a1e0"/>
           <topic label="deferredProviderModuleIndices" href="classrealization_1_1_bmi___multi___formulation.html#ab12e7a6981776b57f4a562c414947928"/>
           <topic label="deferredProviders" href="classrealization_1_1_bmi___multi___formulation.html#a7247197598940c202373efd042aa5b05"/>
-          <topic label="et_params" href="classrealization_1_1_bmi___multi___formulation.html#a5fab369fc039b378dfd270490ddb9e5c"/>
           <topic label="forcing" href="classrealization_1_1_bmi___multi___formulation.html#a2010f61d0e7141bb48230923592de215"/>
           <topic label="id" href="classrealization_1_1_bmi___multi___formulation.html#a8bfec24b0d57240e7ada2493a781db6d"/>
           <topic label="id_number" href="classrealization_1_1_bmi___multi___formulation.html#af996a3e50eaf51c63865f1fdbe4f8661"/>
@@ -4690,13 +4357,10 @@
           <topic label="Catchment_Formulation" href="classrealization_1_1_catchment___formulation.html#ae20086b1dc436b0a42f149b3d9de1009"/>
           <topic label="~Catchment_Formulation" href="classrealization_1_1_catchment___formulation.html#ab1efe9c78511cf0cc5d9b79dc99e9881"/>
           <topic label="add_time" href="classrealization_1_1_catchment___formulation.html#a248b562be5dc9a21e7afbc014de15114"/>
-          <topic label="calc_et" href="classrealization_1_1_catchment___formulation.html#a1af6f5c88bda174c8ba855e796a55439"/>
           <topic label="config_pattern_substitution" href="classrealization_1_1_catchment___formulation.html#a17f32257b65c7930f8b3570ab43fd58c"/>
           <topic label="create_formulation" href="classrealization_1_1_catchment___formulation.html#a4fb8ec9b08820c29d88627ee9781d579"/>
           <topic label="create_formulation" href="classrealization_1_1_catchment___formulation.html#a2a2ac83503092d24da0ee4e4c6eeaa25"/>
           <topic label="get_catchment_id" href="classrealization_1_1_catchment___formulation.html#a633b7407d447f77910476c0315c8beb6"/>
-          <topic label="get_et_params" href="classrealization_1_1_catchment___formulation.html#ae3eed12472620303be3bd1b2cb3600c6"/>
-          <topic label="get_et_params_ptr" href="classrealization_1_1_catchment___formulation.html#a74fa1d17e6e8d344beecc4f0f38ee29e"/>
           <topic label="get_formulation_type" href="classrealization_1_1_catchment___formulation.html#a2e9d4749500d3f5ea434d77861b03990"/>
           <topic label="get_id" href="classrealization_1_1_catchment___formulation.html#a02267e0cc9fec2e1d883f55c2c12b39d"/>
           <topic label="get_output_header_line" href="classrealization_1_1_catchment___formulation.html#a12fad75c2e47f5da298e022429243199"/>
@@ -4704,17 +4368,12 @@
           <topic label="get_required_parameters" href="classrealization_1_1_catchment___formulation.html#adc0a972f62254d7b807ab5f871209b9f"/>
           <topic label="get_response" href="classrealization_1_1_catchment___formulation.html#adf21a61a7da1e87a200d8391cb3e33ce"/>
           <topic label="interpret_parameters" href="classrealization_1_1_catchment___formulation.html#a65f97b5efe05e786f59d9f5fd1b10209"/>
-          <topic label="is_et_params_set" href="classrealization_1_1_catchment___formulation.html#a490261c3439f205913ac2e77efbd5b6f"/>
-          <topic label="is_et_params_set" href="classrealization_1_1_catchment___formulation.html#a7117db623dafde1f5dfbf286e46aa99e"/>
           <topic label="set_catchment_id" href="classrealization_1_1_catchment___formulation.html#a2cce2b5b18eaa0ed7e0df10db57da144"/>
-          <topic label="set_et_params" href="classrealization_1_1_catchment___formulation.html#ad4e23441f5a4ceb63262f796c5bb411f"/>
-          <topic label="set_et_params" href="classrealization_1_1_catchment___formulation.html#a8f1338c37773df88268e34e46a1d957e"/>
           <topic label="set_output_stream" href="classrealization_1_1_catchment___formulation.html#a9d02de255937deb8f6169ef20f5a07d6"/>
           <topic label="validate_parameters" href="classrealization_1_1_catchment___formulation.html#aceabe9927b36dce61f338919f2af4c1f"/>
           <topic label="write_output" href="classrealization_1_1_catchment___formulation.html#aa989be0629ecaa29a2410f7588404ff9"/>
           <topic label="bounds" href="classrealization_1_1_catchment___formulation.html#aaebc4992c38cb5db68e859e0487ad929"/>
           <topic label="cat_id" href="classrealization_1_1_catchment___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b"/>
-          <topic label="et_params" href="classrealization_1_1_catchment___formulation.html#a5fab369fc039b378dfd270490ddb9e5c"/>
           <topic label="forcing" href="classrealization_1_1_catchment___formulation.html#a2010f61d0e7141bb48230923592de215"/>
           <topic label="id" href="classrealization_1_1_catchment___formulation.html#a8bfec24b0d57240e7ada2493a781db6d"/>
           <topic label="id_number" href="classrealization_1_1_catchment___formulation.html#af996a3e50eaf51c63865f1fdbe4f8661"/>
@@ -4728,22 +4387,6 @@
           <topic label="ConfigurationException" href="classrealization_1_1_configuration_exception.html#ac6eaa536d9cae6b7cde20542ddef11d8"/>
           <topic label="what" href="classrealization_1_1_configuration_exception.html#a50eb4bdbf77dbf1120c6a237fd2e9e1e"/>
           <topic label="what_message" href="classrealization_1_1_configuration_exception.html#a27bcbee434a3d4e75c793c71fd9df74a"/>
-        </topic>
-        <topic label="Et_Accountable" href="classrealization_1_1_et___accountable.html">
-          <topic label="Et_Accountable" href="classrealization_1_1_et___accountable.html#aecbcd97cc55243b6c1f5210471d92b55"/>
-          <topic label="~Et_Accountable" href="classrealization_1_1_et___accountable.html#a786de4d8f78bddb751896ea9865c9a9a"/>
-          <topic label="calc_et" href="classrealization_1_1_et___accountable.html#a1af6f5c88bda174c8ba855e796a55439"/>
-          <topic label="get_et_params" href="classrealization_1_1_et___accountable.html#ae3eed12472620303be3bd1b2cb3600c6"/>
-          <topic label="get_et_params_ptr" href="classrealization_1_1_et___accountable.html#a74fa1d17e6e8d344beecc4f0f38ee29e"/>
-          <topic label="is_et_params_set" href="classrealization_1_1_et___accountable.html#a490261c3439f205913ac2e77efbd5b6f"/>
-          <topic label="set_et_params" href="classrealization_1_1_et___accountable.html#ad4e23441f5a4ceb63262f796c5bb411f"/>
-          <topic label="et_params" href="classrealization_1_1_et___accountable.html#a5fab369fc039b378dfd270490ddb9e5c"/>
-        </topic>
-        <topic label="Et_Aware" href="classrealization_1_1_et___aware.html">
-          <topic label="Et_Aware" href="classrealization_1_1_et___aware.html#a563050d93cd7cd20218952e06ee5fa69"/>
-          <topic label="~Et_Aware" href="classrealization_1_1_et___aware.html#a727883bb8cd1eccd8ab7c6b604b6d718"/>
-          <topic label="is_et_params_set" href="classrealization_1_1_et___aware.html#a7117db623dafde1f5dfbf286e46aa99e"/>
-          <topic label="set_et_params" href="classrealization_1_1_et___aware.html#a8f1338c37773df88268e34e46a1d957e"/>
         </topic>
         <topic label="Formulation" href="classrealization_1_1_formulation.html">
           <topic label="time_step_t" href="classrealization_1_1_formulation.html#aee10dc672e5a9e106f49dcbe0080cf7c"/>
@@ -4759,8 +4402,6 @@
           <topic label="get_required_parameters" href="classrealization_1_1_formulation.html#a12e690d066ac42ccafeae5b2b708cf21"/>
           <topic label="get_response" href="classrealization_1_1_formulation.html#ae70ca928c70b08b08c4bfc982ed8e3ca"/>
           <topic label="interpret_parameters" href="classrealization_1_1_formulation.html#a65f97b5efe05e786f59d9f5fd1b10209"/>
-          <topic label="is_et_params_set" href="classrealization_1_1_formulation.html#a7117db623dafde1f5dfbf286e46aa99e"/>
-          <topic label="set_et_params" href="classrealization_1_1_formulation.html#a8f1338c37773df88268e34e46a1d957e"/>
           <topic label="validate_parameters" href="classrealization_1_1_formulation.html#aceabe9927b36dce61f338919f2af4c1f"/>
           <topic label="id" href="classrealization_1_1_formulation.html#a8bfec24b0d57240e7ada2493a781db6d"/>
         </topic>
@@ -4840,19 +4481,6 @@
         <topic label="TMP_2maboveground_K" href="struct_a_o_r_c__data.html#acbb68a182047e80854628a329ea317db"/>
         <topic label="UGRD_10maboveground_meters_per_second" href="struct_a_o_r_c__data.html#a60a4f68a6fc80445090dabac9a53979d"/>
         <topic label="VGRD_10maboveground_meters_per_second" href="struct_a_o_r_c__data.html#ae4ead5c316f609a2c8884d3a593256e9"/>
-      </topic>
-      <topic label="aorc_forcing_data" href="structaorc__forcing__data.html">
-        <topic label="air_temperature_2m_K" href="structaorc__forcing__data.html#a6ab8ba8bc604ef8a87b74e937a83d73b"/>
-        <topic label="incoming_longwave_W_per_m2" href="structaorc__forcing__data.html#a8f8f52e4e4a2e325768c445a3c7ff962"/>
-        <topic label="incoming_shortwave_W_per_m2" href="structaorc__forcing__data.html#a70ed58ea50fa85f6183a92f7ea668c4a"/>
-        <topic label="latitude" href="structaorc__forcing__data.html#adc1831ec120c416abfeb77e0e0b0f2ac"/>
-        <topic label="longitude" href="structaorc__forcing__data.html#a47d5f3f48603f63174dfe560f47e7508"/>
-        <topic label="precip_kg_per_m2" href="structaorc__forcing__data.html#a591e8641e1d774200494c14e8f9133f6"/>
-        <topic label="specific_humidity_2m_kg_per_kg" href="structaorc__forcing__data.html#a7f11ca581e27b2dc66ee816876db79a6"/>
-        <topic label="surface_pressure_Pa" href="structaorc__forcing__data.html#a6c393b3d8de0e59d5bbb7c87db8f5821"/>
-        <topic label="time" href="structaorc__forcing__data.html#a1f130970a4b28b7665daf9b6114d7e66"/>
-        <topic label="u_wind_speed_10m_m_per_s" href="structaorc__forcing__data.html#a83fa927ea4e4c80ef620375d36fdc685"/>
-        <topic label="v_wind_speed_10m_m_per_s" href="structaorc__forcing__data.html#a6009ec7a09b61cdf27b7fc03d98880ff"/>
       </topic>
       <topic label="Bmi" href="struct_bmi.html">
         <topic label="data" href="struct_bmi.html#a279c56e3794be4b65ef89627f6a7bc93"/>
@@ -4994,49 +4622,6 @@
         <topic label="getData" href="class_c_s_v_reader.html#a2dea725de823f6932ae29552aa05b97d"/>
         <topic label="delimeter" href="class_c_s_v_reader.html#ac5e0e6866e56cfb8c0337940fa848fde"/>
         <topic label="fileName" href="class_c_s_v_reader.html#aad272ffbafdbe83fe50091a18d658b59"/>
-      </topic>
-      <topic label="EtCalcKernelTest" href="class_et_calc_kernel_test.html">
-        <topic label="EtCalcKernelTest" href="class_et_calc_kernel_test.html#aaeecc81d6217dad2b4faf99170636917"/>
-        <topic label="~EtCalcKernelTest" href="class_et_calc_kernel_test.html#a1a784f788ce0fb5f99e3b18493bd3131"/>
-        <topic label="EtCalcKernelTest" href="class_et_calc_kernel_test.html#aaeecc81d6217dad2b4faf99170636917"/>
-        <topic label="~EtCalcKernelTest" href="class_et_calc_kernel_test.html#a1a784f788ce0fb5f99e3b18493bd3131"/>
-        <topic label="SetUp" href="class_et_calc_kernel_test.html#ae7c259e33d997bfc4e68ceb48261de78"/>
-        <topic label="SetUp" href="class_et_calc_kernel_test.html#ae7c259e33d997bfc4e68ceb48261de78"/>
-        <topic label="setupArbitraryExampleCase" href="class_et_calc_kernel_test.html#a5515a5375aaca77548f493cdb899ac38"/>
-        <topic label="setupArbitraryExampleCase" href="class_et_calc_kernel_test.html#a5515a5375aaca77548f493cdb899ac38"/>
-        <topic label="TearDown" href="class_et_calc_kernel_test.html#aa4491b810605b51598f4e975e0c34f3a"/>
-        <topic label="TearDown" href="class_et_calc_kernel_test.html#aa4491b810605b51598f4e975e0c34f3a"/>
-      </topic>
-      <topic label="evapotranspiration_forcing" href="structevapotranspiration__forcing.html">
-        <topic label="air_pressure_Pa" href="structevapotranspiration__forcing.html#acb54d0efcdedd029ce5fe1cbd117f597"/>
-        <topic label="air_temperature_C" href="structevapotranspiration__forcing.html#a23a46b13fdc253a0d48cc2ff4dad18e9"/>
-        <topic label="canopy_resistance_sec_per_m" href="structevapotranspiration__forcing.html#abeb79be91433a419c0bdc01fd8a1a889"/>
-        <topic label="ground_heat_flux_W_per_sq_m" href="structevapotranspiration__forcing.html#a87ade068ef3ae979c069a60534f67de1"/>
-        <topic label="net_radiation_W_per_sq_m" href="structevapotranspiration__forcing.html#a97d62da308c4026eccabd1e18fa084b8"/>
-        <topic label="relative_humidity_percent" href="structevapotranspiration__forcing.html#adf847ccedc5e24c334e7ab1e6f999686"/>
-        <topic label="specific_humidity_2m_kg_per_kg" href="structevapotranspiration__forcing.html#a69483eb78a4fc8769592f4f89c869ddf"/>
-        <topic label="water_temperature_C" href="structevapotranspiration__forcing.html#a8ae1fbbb6b842b5e17eec84023ae0819"/>
-        <topic label="wind_speed_m_per_s" href="structevapotranspiration__forcing.html#a56801e745bf3e2bdba37d78ec27b253c"/>
-      </topic>
-      <topic label="evapotranspiration_options" href="structevapotranspiration__options.html">
-        <topic label="shortwave_radiation_provided" href="structevapotranspiration__options.html#aeb1f228000e8183931248e8c0a480c93"/>
-        <topic label="use_aerodynamic_method" href="structevapotranspiration__options.html#aa4f88596ba9feef06b0531cd4ce28e3c"/>
-        <topic label="use_combination_method" href="structevapotranspiration__options.html#a9d1cef49aae6551a497c919431828ad2"/>
-        <topic label="use_energy_balance_method" href="structevapotranspiration__options.html#a0f23f8b02100abad5b0d693b6639cc19"/>
-        <topic label="use_penman_monteith_method" href="structevapotranspiration__options.html#aa6e7991d4799f2d7e811660c928156c9"/>
-        <topic label="use_priestley_taylor_method" href="structevapotranspiration__options.html#ad36d065230b0e49a15e8a06b58ebe7a8"/>
-        <topic label="yes_aorc" href="structevapotranspiration__options.html#a64964aabce3114695ac5f128640c7430"/>
-      </topic>
-      <topic label="evapotranspiration_params" href="structevapotranspiration__params.html">
-        <topic label="day_of_year" href="structevapotranspiration__params.html#ad2c57a1f95265d4999bd69a367fbb611"/>
-        <topic label="heat_transfer_roughness_length_m" href="structevapotranspiration__params.html#adfbe2ccfd9b542b3c9f4a76cfc42b91e"/>
-        <topic label="humidity_measurement_height_m" href="structevapotranspiration__params.html#a24f50b90048ba21d23d7618a241c78ee"/>
-        <topic label="latitude" href="structevapotranspiration__params.html#a82dafaa659cb10b495725db3cb782921"/>
-        <topic label="longitude" href="structevapotranspiration__params.html#a4c1a2468b8ffa9cbf02e65f6a8f89f07"/>
-        <topic label="momentum_transfer_roughness_length_m" href="structevapotranspiration__params.html#ac89805db5bd3c1407fe86a2977c3b3d3"/>
-        <topic label="vegetation_height_m" href="structevapotranspiration__params.html#aeacdd15a5b134b7aba138ef6007b0667"/>
-        <topic label="wind_speed_measurement_height_m" href="structevapotranspiration__params.html#a23ed50bda718a7362b7811be9afdd2dd"/>
-        <topic label="zero_plane_displacement_height_m" href="structevapotranspiration__params.html#a1ebf6bd8b0eaab47ea8f5befbb2675ca"/>
       </topic>
       <topic label="Feature_Test" href="class_feature___test.html">
         <topic label="Feature_Test" href="class_feature___test.html#a26e229c6772edba3b07f4cbd150ce2ed"/>
@@ -5270,17 +4855,6 @@
         <topic label="total_requests" href="class_h_y___point_hydro_nexus.html#afacdf6716d538d54c3b9be00b30d5d38"/>
         <topic label="upstream_flows" href="class_h_y___point_hydro_nexus.html#a3540aaa4a8d10ce03e5f8a6a7cdd8a2d"/>
       </topic>
-      <topic label="intermediate_vars" href="structintermediate__vars.html">
-        <topic label="air_actual_vapor_pressure_Pa" href="structintermediate__vars.html#a69a7acc29553904494675674401af795"/>
-        <topic label="air_saturation_vapor_pressure_Pa" href="structintermediate__vars.html#a7adc0954eb7a9f620b7c0c5f4fbee659"/>
-        <topic label="liquid_water_density_kg_per_m3" href="structintermediate__vars.html#a80ff491557bd3ee914d5a762438de113"/>
-        <topic label="moist_air_density_kg_per_m3" href="structintermediate__vars.html#aa4e91f7ca336dbae0fdd3041fe906467"/>
-        <topic label="moist_air_gas_constant_J_per_kg_K" href="structintermediate__vars.html#ad49f294a20750a5e935fb3f76a553188"/>
-        <topic label="psychrometric_constant_Pa_per_C" href="structintermediate__vars.html#a99f2587e49496470b65a3795ba9d1efa"/>
-        <topic label="slope_sat_vap_press_curve_Pa_s" href="structintermediate__vars.html#a3a69902fccab1fabf8feb72b95d739f5"/>
-        <topic label="vapor_pressure_deficit_Pa" href="structintermediate__vars.html#a10c83be8b932ca43fc31616ae982a95f"/>
-        <topic label="water_latent_heat_of_vaporization_J_per_kg" href="structintermediate__vars.html#adb2f9cf2eb5f3eb0a65aa8af9ea489ad"/>
-      </topic>
       <topic label="invalid_downstream_request" href="structinvalid__downstream__request.html">
         <topic label="what" href="structinvalid__downstream__request.html#a132dd5df7d9127fd48be878f5deabc99"/>
       </topic>
@@ -5352,26 +4926,6 @@
         <topic label="abridged_json_file" href="class_nexus___test.html#a0c2bd32e3eeb598c2b82455fcb4ab35b"/>
         <topic label="complete_json_file" href="class_nexus___test.html#a141e0165625e2647bbe2af0a005ac59a"/>
         <topic label="id_map_json_file" href="class_nexus___test.html#a70dffa3db4d3de7aa35fd42e7f15164c"/>
-      </topic>
-      <topic label="pdm03_struct" href="structpdm03__struct.html">
-        <topic label="actual_et" href="structpdm03__struct.html#af8f8808e20d01a9538110c31e158fe99"/>
-        <topic label="final_height_reservoir" href="structpdm03__struct.html#abfcb8820eb9b074ef52aeadbb2cc6f18"/>
-        <topic label="final_storage_upper_zone" href="structpdm03__struct.html#afdf4335357bca8e8c6f13911909e740f"/>
-        <topic label="max_height_soil_moisture_storerage_tank" href="structpdm03__struct.html#a2fd24b9a1a9f9b5a6367d6eb5e96278e"/>
-        <topic label="maximum_combined_contents" href="structpdm03__struct.html#a03eb639da6be2c7aaff4c1f152507f5e"/>
-        <topic label="model_time_step" href="structpdm03__struct.html#a67d39e3535c4f2fd95b19d73ae4f0ee0"/>
-        <topic label="potential_et" href="structpdm03__struct.html#a76810991ed3936ba8e3dfd6689b89db4"/>
-        <topic label="precipitation" href="structpdm03__struct.html#a724fdfc48a0801143b0330cba7804599"/>
-        <topic label="scaled_distribution_fn_shape_parameter" href="structpdm03__struct.html#ac32d957d348df6201e212b994b8c820f"/>
-        <topic label="total_effective_rainfall" href="structpdm03__struct.html#a3d640fbab80a6677733c31e5e09d913e"/>
-        <topic label="vegetation_adjustment" href="structpdm03__struct.html#a5dd84f623400d6da5cd6de3945b7c71f"/>
-      </topic>
-      <topic label="Pdm03KernelTest" href="class_pdm03_kernel_test.html">
-        <topic label="Pdm03KernelTest" href="class_pdm03_kernel_test.html#a650d65edf2d29d1ea7fb7da65386ea37"/>
-        <topic label="~Pdm03KernelTest" href="class_pdm03_kernel_test.html#a9c9134f2ad0283a4a1f977128f2998fa"/>
-        <topic label="SetUp" href="class_pdm03_kernel_test.html#afe6db3b59b1eef70092392ead9820b44"/>
-        <topic label="setupArbitraryExampleCase" href="class_pdm03_kernel_test.html#a08b009dba70f339a8ef55c60c33ffc6f"/>
-        <topic label="TearDown" href="class_pdm03_kernel_test.html#ac33149455abc0c0113514a50ca266841"/>
       </topic>
       <topic label="request_from_empty_nexus" href="structrequest__from__empty__nexus.html">
         <topic label="what" href="structrequest__from__empty__nexus.html#abca7c44aaf8b4582bc5067d53930011d"/>
@@ -5478,47 +5032,6 @@
         <topic label="start_t" href="structsimulation__time__params.html#abb9688b08be8e42de0e0105fbe21d7df"/>
         <topic label="start_time" href="structsimulation__time__params.html#a30f16ec426b97d2a8e15751faff8e7f5"/>
       </topic>
-      <topic label="solar_radiation_forcing" href="structsolar__radiation__forcing.html">
-        <topic label="atmospheric_turbidity_factor" href="structsolar__radiation__forcing.html#a1aac1d52879b6c6d3bfab7555a675937"/>
-        <topic label="cloud_base_height_m" href="structsolar__radiation__forcing.html#ad3b0328019aa78661749e49b44d21116"/>
-        <topic label="cloud_cover_fraction" href="structsolar__radiation__forcing.html#ac69d1135c0564c906b38aba939f627f1"/>
-        <topic label="day_of_year" href="structsolar__radiation__forcing.html#a7c02961095c506178dd80b737a9f304c"/>
-        <topic label="zulu_time_h" href="structsolar__radiation__forcing.html#a4a2ef20cd64d5bcc4f7310c299b5be23"/>
-      </topic>
-      <topic label="solar_radiation_options" href="structsolar__radiation__options.html">
-        <topic label="cloud_base_height_known" href="structsolar__radiation__options.html#ac69f14364ec436f79b61ae3926e57e80"/>
-      </topic>
-      <topic label="solar_radiation_parameters" href="structsolar__radiation__parameters.html">
-        <topic label="latitude_degrees" href="structsolar__radiation__parameters.html#aea83a13fac4ed58d872ba7129bb12c47"/>
-        <topic label="longitude_degrees" href="structsolar__radiation__parameters.html#a5a453aaec2a2f02ff5506010b31b1e7c"/>
-        <topic label="site_elevation_m" href="structsolar__radiation__parameters.html#a114701f8f42f9bdacde9074c0e39cacb"/>
-      </topic>
-      <topic label="solar_radiation_results" href="structsolar__radiation__results.html">
-        <topic label="solar_azimuth_angle_degrees" href="structsolar__radiation__results.html#aaf8e630d427ede6d2938b02eb55ebbec"/>
-        <topic label="solar_elevation_angle_degrees" href="structsolar__radiation__results.html#a32b585e85801f2f8d537a7e74af220a3"/>
-        <topic label="solar_local_hour_angle_degrees" href="structsolar__radiation__results.html#af519ebec80c3126303192886c2b584a5"/>
-        <topic label="solar_radiation_cloudy_flux_W_per_sq_m" href="structsolar__radiation__results.html#a7d88801b4c6c0202a0384d68b8f41d06"/>
-        <topic label="solar_radiation_flux_W_per_sq_m" href="structsolar__radiation__results.html#ac8347cf2ca96658b48cd6b7b571b77b1"/>
-        <topic label="solar_radiation_horizontal_cloudy_flux_W_per_sq_m" href="structsolar__radiation__results.html#a4f293014a50e377fd617d9a9da790c1f"/>
-        <topic label="solar_radiation_horizontal_flux_W_per_sq_m" href="structsolar__radiation__results.html#aeb18106e9742c3dd9e41fd5197ea7f69"/>
-      </topic>
-      <topic label="surface_radiation_forcing" href="structsurface__radiation__forcing.html">
-        <topic label="air_temperature_C" href="structsurface__radiation__forcing.html#ad4fabcbfd32c08b6a8d4fd8aba9ccced"/>
-        <topic label="ambient_temperature_lapse_rate_deg_C_per_km" href="structsurface__radiation__forcing.html#a041825dc21828116191cd59944c08769"/>
-        <topic label="atmospheric_turbidity_factor" href="structsurface__radiation__forcing.html#a73c81911bbf820409ac2b5f0590b1f49"/>
-        <topic label="cloud_base_height_m" href="structsurface__radiation__forcing.html#a48259934eba9769b9404a7d1c977d97b"/>
-        <topic label="cloud_cover_fraction" href="structsurface__radiation__forcing.html#a4a3a1bbf5e64c14e28a68bd3e66cef2b"/>
-        <topic label="day_of_year" href="structsurface__radiation__forcing.html#ab2d92803f931162e484419c8803b9e86"/>
-        <topic label="incoming_longwave_radiation_W_per_sq_m" href="structsurface__radiation__forcing.html#a5edb4633179392f16bdc46a83fc12c2a"/>
-        <topic label="incoming_shortwave_radiation_W_per_sq_m" href="structsurface__radiation__forcing.html#ae76effbb2e5909706e845ed860f420c4"/>
-        <topic label="relative_humidity_percent" href="structsurface__radiation__forcing.html#a9775582ee92b8e50208b560d42fda3cd"/>
-        <topic label="surface_skin_temperature_C" href="structsurface__radiation__forcing.html#a7cda613605e64d76e595a847850a0ab6"/>
-        <topic label="zulu_time" href="structsurface__radiation__forcing.html#a875976973997807de45795bc8baf398c"/>
-      </topic>
-      <topic label="surface_radiation_params" href="structsurface__radiation__params.html">
-        <topic label="surface_longwave_emissivity" href="structsurface__radiation__params.html#aa4506becd3f2dc0b19df56b973fc1cc8"/>
-        <topic label="surface_shortwave_albedo" href="structsurface__radiation__params.html#ab0a30d95f03071fab65512df6be0001b"/>
-      </topic>
       <topic label="UnitsHelper" href="class_units_helper.html">
         <topic label="convert_values" href="class_units_helper.html#a60789bcaf4c43a12ff3be963454eafca"/>
         <topic label="get_converted_value" href="class_units_helper.html#a0e2dd4070640d0c0425da6aa0828cedd"/>
@@ -5549,7 +5062,6 @@
     <topic label="Class Index" href="classes.html"/>
     <topic label="Class Hierarchy" href="hierarchy.html">
       <topic label="AORC_data" href="struct_a_o_r_c__data.html"/>
-      <topic label="aorc_forcing_data" href="structaorc__forcing__data.html"/>
       <topic label="Bmi" href="struct_bmi.html"/>
       <topic label="bmi::Bmi" href="classbmi_1_1_bmi.html">
         <topic label="models::bmi::Bmi_Adapter&lt; C &gt;" href="classmodels_1_1bmi_1_1_bmi___adapter.html">
@@ -5630,20 +5142,6 @@
           </topic>
         </topic>
       </topic>
-      <topic label="et::aorc_forcing_data" href="structet_1_1aorc__forcing__data.html"/>
-      <topic label="et::evapotranspiration_forcing" href="structet_1_1evapotranspiration__forcing.html"/>
-      <topic label="et::evapotranspiration_options" href="structet_1_1evapotranspiration__options.html"/>
-      <topic label="et::evapotranspiration_params" href="structet_1_1evapotranspiration__params.html"/>
-      <topic label="et::intermediate_vars" href="structet_1_1intermediate__vars.html"/>
-      <topic label="et::solar_radiation_forcing" href="structet_1_1solar__radiation__forcing.html"/>
-      <topic label="et::solar_radiation_options" href="structet_1_1solar__radiation__options.html"/>
-      <topic label="et::solar_radiation_parameters" href="structet_1_1solar__radiation__parameters.html"/>
-      <topic label="et::solar_radiation_results" href="structet_1_1solar__radiation__results.html"/>
-      <topic label="et::surface_radiation_forcing" href="structet_1_1surface__radiation__forcing.html"/>
-      <topic label="et::surface_radiation_params" href="structet_1_1surface__radiation__params.html"/>
-      <topic label="evapotranspiration_forcing" href="structevapotranspiration__forcing.html"/>
-      <topic label="evapotranspiration_options" href="structevapotranspiration__options.html"/>
-      <topic label="evapotranspiration_params" href="structevapotranspiration__params.html"/>
       <topic label="forcing_params" href="structforcing__params.html"/>
       <topic label="geojson::FeatureBase" href="classgeojson_1_1_feature_base.html">
         <topic label="geojson::CollectionFeature" href="classgeojson_1_1_collection_feature.html"/>
@@ -5696,7 +5194,6 @@
       <topic label="HY_HydroNexus" href="class_h_y___hydro_nexus.html">
         <topic label="HY_PointHydroNexus" href="class_h_y___point_hydro_nexus.html"/>
       </topic>
-      <topic label="intermediate_vars" href="structintermediate__vars.html"/>
       <topic label="network::Network" href="classnetwork_1_1_network.html"/>
       <topic label="network::VertexProperty" href="structnetwork_1_1_vertex_property.html"/>
       <topic label="Network_Test" href="class_network___test.html">
@@ -5704,23 +5201,13 @@
         <topic label="Network_Test2" href="class_network___test2.html"/>
       </topic>
       <topic label="nexus::Nexus_Manager" href="classnexus_1_1_nexus___manager.html"/>
-      <topic label="pdm03_struct" href="structpdm03__struct.html"/>
-      <topic label="realization::Et_Aware" href="classrealization_1_1_et___aware.html">
-        <topic label="realization::Et_Accountable" href="classrealization_1_1_et___accountable.html">
-          <topic label="realization::Catchment_Formulation" href="classrealization_1_1_catchment___formulation.html"/>
-        </topic>
-        <topic label="realization::Formulation" href="classrealization_1_1_formulation.html">
-          <topic label="realization::Catchment_Formulation" href="classrealization_1_1_catchment___formulation.html"/>
-        </topic>
+      <topic label="realization::Formulation" href="classrealization_1_1_formulation.html">
+        <topic label="realization::Catchment_Formulation" href="classrealization_1_1_catchment___formulation.html"/>
       </topic>
       <topic label="realization::Formulation_Manager" href="classrealization_1_1_formulation___manager.html"/>
       <topic label="routing_params" href="structrouting__params.html"/>
       <topic label="Simulation_Time" href="class_simulation___time.html"/>
       <topic label="simulation_time_params" href="structsimulation__time__params.html"/>
-      <topic label="solar_radiation_forcing" href="structsolar__radiation__forcing.html"/>
-      <topic label="solar_radiation_options" href="structsolar__radiation__options.html"/>
-      <topic label="solar_radiation_parameters" href="structsolar__radiation__parameters.html"/>
-      <topic label="solar_radiation_results" href="structsolar__radiation__results.html"/>
       <topic label="std::exception">
         <topic label="add_to_summed_nexus" href="structadd__to__summed__nexus.html"/>
         <topic label="completed_time_step" href="structcompleted__time__step.html"/>
@@ -5731,11 +5218,7 @@
         <topic label="realization::ConfigurationException" href="classrealization_1_1_configuration_exception.html"/>
         <topic label="request_from_empty_nexus" href="structrequest__from__empty__nexus.html"/>
       </topic>
-      <topic label="surface_radiation_forcing" href="structsurface__radiation__forcing.html"/>
-      <topic label="surface_radiation_params" href="structsurface__radiation__params.html"/>
       <topic label="testing::Test">
-        <topic label="EtCalcKernelTest" href="class_et_calc_kernel_test.html"/>
-        <topic label="EtCalcKernelTest" href="class_et_calc_kernel_test.html"/>
         <topic label="FeatureCollection_Test" href="class_feature_collection___test.html"/>
         <topic label="Feature_Test" href="class_feature___test.html"/>
         <topic label="JSONGeometry_Test" href="class_j_s_o_n_geometry___test.html"/>
@@ -5743,7 +5226,6 @@
         <topic label="Network_Test2" href="class_network___test2.html"/>
         <topic label="Nexus_Remote_Test" href="class_nexus___remote___test.html"/>
         <topic label="Nexus_Test" href="class_nexus___test.html"/>
-        <topic label="Pdm03KernelTest" href="class_pdm03_kernel_test.html"/>
         <topic label="ReservoirKernelTest" href="class_reservoir_kernel_test.html"/>
         <topic label="ReservoirTimelessKernelTest" href="class_reservoir_timeless_kernel_test.html"/>
         <topic label="UnitsHelper_Test" href="class_units_helper___test.html"/>
@@ -5784,8 +5266,6 @@
         <topic label="u" href="functions_u.html"/>
         <topic label="v" href="functions_v.html"/>
         <topic label="w" href="functions_w.html"/>
-        <topic label="y" href="functions_y.html"/>
-        <topic label="z" href="functions_z.html"/>
         <topic label="~" href="functions_~.html"/>
       </topic>
       <topic label="Functions" href="functions_func.html">
@@ -5837,8 +5317,6 @@
         <topic label="u" href="functions_vars_u.html"/>
         <topic label="v" href="functions_vars_v.html"/>
         <topic label="w" href="functions_vars_w.html"/>
-        <topic label="y" href="functions_vars_y.html"/>
-        <topic label="z" href="functions_vars_z.html"/>
       </topic>
       <topic label="Typedefs" href="functions_type.html"/>
       <topic label="Related Functions" href="functions_rela.html"/>
