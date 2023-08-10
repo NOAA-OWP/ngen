@@ -117,11 +117,6 @@ var hierarchy =
     [ "geopackage::sqlite_deleter", "structgeopackage_1_1sqlite__deleter.html", null ],
     [ "geopackage::sqlite_iter", "classgeopackage_1_1sqlite__iter.html", null ],
     [ "geopackage::wkb", "structgeopackage_1_1wkb.html", null ],
-    [ "giuh::giuh_carry_over", "structgiuh_1_1giuh__carry__over.html", null ],
-    [ "giuh::giuh_kernel", "classgiuh_1_1giuh__kernel.html", [
-      [ "giuh::giuh_kernel_impl", "classgiuh_1_1giuh__kernel__impl.html", null ]
-    ] ],
-    [ "giuh::GiuhJsonReader", "classgiuh_1_1_giuh_json_reader.html", null ],
     [ "GM_Object", "class_g_m___object.html", [
       [ "HY_CatchmentArea", "class_h_y___catchment_area.html", [
         [ "realization::Catchment_Formulation", "classrealization_1_1_catchment___formulation.html", [
@@ -171,18 +166,6 @@ var hierarchy =
       ] ]
     ] ],
     [ "realization::Formulation_Manager", "classrealization_1_1_formulation___manager.html", null ],
-    [ "Reservoir::Explicit_Time::Reservoir", "class_reservoir_1_1_explicit___time_1_1_reservoir.html", null ],
-    [ "Reservoir::Explicit_Time::Reservoir_Outlet", "class_reservoir_1_1_explicit___time_1_1_reservoir___outlet.html", [
-      [ "Reservoir::Explicit_Time::Reservoir_Exponential_Outlet", "class_reservoir_1_1_explicit___time_1_1_reservoir___exponential___outlet.html", null ],
-      [ "Reservoir::Explicit_Time::Reservoir_Linear_Outlet", "class_reservoir_1_1_explicit___time_1_1_reservoir___linear___outlet.html", null ]
-    ] ],
-    [ "Reservoir::Implicit_Time::Reservoir", "class_reservoir_1_1_implicit___time_1_1_reservoir.html", null ],
-    [ "Reservoir::Implicit_Time::Reservoir_Outlet", "class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html", [
-      [ "Reservoir::Implicit_Time::Reservoir_Exponential_Outlet", "class_reservoir_1_1_implicit___time_1_1_reservoir___exponential___outlet.html", null ],
-      [ "Reservoir::Implicit_Time::Reservoir_Linear_Outlet", "class_reservoir_1_1_implicit___time_1_1_reservoir___linear___outlet.html", null ]
-    ] ],
-    [ "reservoir_parameters", "structreservoir__parameters.html", null ],
-    [ "reservoir_state", "structreservoir__state.html", null ],
     [ "routing_params", "structrouting__params.html", null ],
     [ "Simulation_Time", "class_simulation___time.html", null ],
     [ "simulation_time_params", "structsimulation__time__params.html", null ],
@@ -207,7 +190,6 @@ var hierarchy =
       [ "EtCalcKernelTest", "class_et_calc_kernel_test.html", null ],
       [ "FeatureCollection_Test", "class_feature_collection___test.html", null ],
       [ "Feature_Test", "class_feature___test.html", null ],
-      [ "GIUH_Test", "class_g_i_u_h___test.html", null ],
       [ "JSONGeometry_Test", "class_j_s_o_n_geometry___test.html", null ],
       [ "JSONProperty_Test", "class_j_s_o_n_property___test.html", null ],
       [ "Network_Test2", "class_network___test2.html", null ],
@@ -216,7 +198,6 @@ var hierarchy =
       [ "Pdm03KernelTest", "class_pdm03_kernel_test.html", null ],
       [ "ReservoirKernelTest", "class_reservoir_kernel_test.html", null ],
       [ "ReservoirTimelessKernelTest", "class_reservoir_timeless_kernel_test.html", null ],
-      [ "SchaakeKernelTest", "class_schaake_kernel_test.html", null ],
       [ "UnitsHelper_Test", "class_units_helper___test.html", null ]
     ] ],
     [ "testing::TestWithParam", null, [

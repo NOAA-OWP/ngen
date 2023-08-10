@@ -1416,73 +1416,6 @@
         <topic label="build_properties" href="namespacegeopackage.html#ad83484f3bbaac91d9890c85713c448e3"/>
         <topic label="read" href="namespacegeopackage.html#aaaf5f61e8b5234ef6c840267f06e2134"/>
       </topic>
-      <topic label="giuh" href="namespacegiuh.html">
-        <topic label="giuh_carry_over" href="structgiuh_1_1giuh__carry__over.html">
-          <topic label="giuh_carry_over" href="structgiuh_1_1giuh__carry__over.html#ab10298751abb137f0213527d99a08139"/>
-          <topic label="last_outputted_cdf_index" href="structgiuh_1_1giuh__carry__over.html#ab58faba956f667c19aa1d1651d51f961"/>
-          <topic label="next" href="structgiuh_1_1giuh__carry__over.html#afa08e7a3d4e40548895e9cec7a77c812"/>
-          <topic label="original_input_amount" href="structgiuh_1_1giuh__carry__over.html#a793ef9a1be099e436fa36f2b4443fb43"/>
-        </topic>
-        <topic label="giuh_kernel" href="classgiuh_1_1giuh__kernel.html">
-          <topic label="giuh_kernel" href="classgiuh_1_1giuh__kernel.html#a270e89fa44de1aae523e2a52341aef8c"/>
-          <topic label="giuh_kernel" href="classgiuh_1_1giuh__kernel.html#a5368a14df53c06836c09b6977d0d6744"/>
-          <topic label="calc_giuh_output" href="classgiuh_1_1giuh__kernel.html#aadec4f29e3f98a2cd50f38a7d20efda9"/>
-          <topic label="get_catchment_id" href="classgiuh_1_1giuh__kernel.html#a5df8658fbf52a5ddd602be29158240dd"/>
-          <topic label="get_comid" href="classgiuh_1_1giuh__kernel.html#a939098ab8b08b18e07e2cd232f5fa9e2"/>
-          <topic label="get_interpolated_incremental_runoff" href="classgiuh_1_1giuh__kernel.html#a5bb2e6ec2d8b00478624d36b430b2e0a"/>
-          <topic label="get_interpolated_regularized_cdf" href="classgiuh_1_1giuh__kernel.html#a9f6d0343057c72fd5560628741427f6c"/>
-          <topic label="get_interpolation_regularity_seconds" href="classgiuh_1_1giuh__kernel.html#a4ae93bb56a9c00f8ceb4a32ccf072a92"/>
-          <topic label="get_regularized_times_s" href="classgiuh_1_1giuh__kernel.html#a4de247881ee9ed0154661157d8709b58"/>
-          <topic label="set_interpolation_regularity_seconds" href="classgiuh_1_1giuh__kernel.html#a978415891a4d3ae43cd4b178756ed90c"/>
-          <topic label="catchment_id" href="classgiuh_1_1giuh__kernel.html#a22be4ec0c44f810d04965aef8f6c5b2c"/>
-          <topic label="comid" href="classgiuh_1_1giuh__kernel.html#ab0700f5fc0fcc590994fb5654796f9ea"/>
-          <topic label="interpolation_regularity_seconds" href="classgiuh_1_1giuh__kernel.html#ac8d8754faae060963ca33671f5a22bae"/>
-        </topic>
-        <topic label="giuh_kernel_impl" href="classgiuh_1_1giuh__kernel__impl.html">
-          <topic label="giuh_kernel_impl" href="classgiuh_1_1giuh__kernel__impl.html#a32f61299460b8f2a6462cf21b74d59b7"/>
-          <topic label="giuh_kernel_impl" href="classgiuh_1_1giuh__kernel__impl.html#acb018f3dfa3d2fca5711ef2a8acb5aff"/>
-          <topic label="~giuh_kernel_impl" href="classgiuh_1_1giuh__kernel__impl.html#a086273494b691fae4bcd2d93f5b6d22c"/>
-          <topic label="calc_giuh_output" href="classgiuh_1_1giuh__kernel__impl.html#a8dd4496e30cdeca108beb88161b862e7"/>
-          <topic label="get_catchment_id" href="classgiuh_1_1giuh__kernel__impl.html#a5df8658fbf52a5ddd602be29158240dd"/>
-          <topic label="get_comid" href="classgiuh_1_1giuh__kernel__impl.html#a939098ab8b08b18e07e2cd232f5fa9e2"/>
-          <topic label="get_interpolated_incremental_runoff" href="classgiuh_1_1giuh__kernel__impl.html#a6e9ad0f8144c7368706ae489df271b6f"/>
-          <topic label="get_interpolated_regularized_cdf" href="classgiuh_1_1giuh__kernel__impl.html#a743806dfaf0a26a0373a0092c3f14b4c"/>
-          <topic label="get_interpolation_regularity_seconds" href="classgiuh_1_1giuh__kernel__impl.html#a4ae93bb56a9c00f8ceb4a32ccf072a92"/>
-          <topic label="get_regularized_times_s" href="classgiuh_1_1giuh__kernel__impl.html#ad53664c11dbe1259bc8fb9cf3ea8e5bc"/>
-          <topic label="interpolate_regularized_cdf" href="classgiuh_1_1giuh__kernel__impl.html#a272b269b857a9c388c0b67134865662c"/>
-          <topic label="make_from_incremental_runoffs" href="classgiuh_1_1giuh__kernel__impl.html#abd7d367548f4c374100093edf6259489"/>
-          <topic label="set_interpolation_regularity_seconds" href="classgiuh_1_1giuh__kernel__impl.html#a5c32f00ef5910039e991846e5b847e46"/>
-          <topic label="carry_overs_list_head" href="classgiuh_1_1giuh__kernel__impl.html#a031271c5238bcbcd0156df50f335ded4"/>
-          <topic label="catchment_id" href="classgiuh_1_1giuh__kernel__impl.html#a22be4ec0c44f810d04965aef8f6c5b2c"/>
-          <topic label="cdf_cumulative_freqs" href="classgiuh_1_1giuh__kernel__impl.html#a6616b42e3672ae72144e60ba2e9eaa22"/>
-          <topic label="cdf_times" href="classgiuh_1_1giuh__kernel__impl.html#aa51c59e7a052d3d6d18b1ad80774c9a0"/>
-          <topic label="comid" href="classgiuh_1_1giuh__kernel__impl.html#ab0700f5fc0fcc590994fb5654796f9ea"/>
-          <topic label="interpolated_incremental_runoff" href="classgiuh_1_1giuh__kernel__impl.html#a74eda08da1260ac3f6e21528c5e69e9b"/>
-          <topic label="interpolated_regularized_cdf" href="classgiuh_1_1giuh__kernel__impl.html#aafb04b11326fcd3a7b730373fd763880"/>
-          <topic label="interpolation_regularity_seconds" href="classgiuh_1_1giuh__kernel__impl.html#ac8d8754faae060963ca33671f5a22bae"/>
-          <topic label="regularized_times_s" href="classgiuh_1_1giuh__kernel__impl.html#a2bac13c13b820e92152426972f4297de"/>
-        </topic>
-        <topic label="GiuhJsonReader" href="classgiuh_1_1_giuh_json_reader.html">
-          <topic label="GiuhJsonReader" href="classgiuh_1_1_giuh_json_reader.html#adc94992f19fd2f8a315bfbbad17a4126"/>
-          <topic label="build_giuh_kernel" href="classgiuh_1_1_giuh_json_reader.html#a2a5e47652fd88cd1b2f6c028a01e21cb"/>
-          <topic label="extract_cumulative_frequency_ordinates" href="classgiuh_1_1_giuh_json_reader.html#adc40f6292a6071bef90a16c69a15bf6a"/>
-          <topic label="extract_cumulative_frequency_ordinates" href="classgiuh_1_1_giuh_json_reader.html#a6f3c048943f74b1c81240444d929edfe"/>
-          <topic label="find_data_node_for_comid" href="classgiuh_1_1_giuh_json_reader.html#a0b50c538a048ffa2ff3f807ef5a65a2a"/>
-          <topic label="get_associated_comid" href="classgiuh_1_1_giuh_json_reader.html#aa992d78c802a16c93d02475412aabebd"/>
-          <topic label="get_giuh_kernel_for_id" href="classgiuh_1_1_giuh_json_reader.html#a511a10ed7ce53125da3abab5742530a8"/>
-          <topic label="get_mapped_comid" href="classgiuh_1_1_giuh_json_reader.html#ae7dd771e38b4a8fa2e146ea8868631b3"/>
-          <topic label="is_data_json_file_readable" href="classgiuh_1_1_giuh_json_reader.html#ae73978f0557106fce7098cf2c2255d6a"/>
-          <topic label="is_giuh_kernel_for_id_exists" href="classgiuh_1_1_giuh_json_reader.html#ac4a7f24b0d2925d5881ac20d933ee2dd"/>
-          <topic label="is_id_map_json_file_readable" href="classgiuh_1_1_giuh_json_reader.html#a7a93ecb44b58927d9cd1606cf5c2ed3d"/>
-          <topic label="data_json_file_path" href="classgiuh_1_1_giuh_json_reader.html#aaddc6971ad9b15d3ed734fdb8eaa53c7"/>
-          <topic label="data_json_file_readable" href="classgiuh_1_1_giuh_json_reader.html#aa199ed0d167a51432f61ec075585c053"/>
-          <topic label="data_json_tree" href="classgiuh_1_1_giuh_json_reader.html#a211e8bd6b4fe923f91cfabc7d0ea096e"/>
-          <topic label="id_map" href="classgiuh_1_1_giuh_json_reader.html#a1cb21b8ae193a5675591ead77a583bdf"/>
-          <topic label="id_map_json_file_path" href="classgiuh_1_1_giuh_json_reader.html#ad54e97b4868f8e6772095f36c4fa3cbc"/>
-          <topic label="id_map_json_file_readable" href="classgiuh_1_1_giuh_json_reader.html#aafa06b0d7d35a852f4ed65d8fd374a43"/>
-        </topic>
-        <topic label="ptree" href="namespacegiuh.html#af1db036dc4c64bcd41c2b0eae95a53aa"/>
-      </topic>
       <topic label="hy_features" href="namespacehy__features.html">
         <topic label="hydrolocation" href="namespacehy__features_1_1hydrolocation.html">
           <topic label="HY_DistanceFromReferent" href="structhy__features_1_1hydrolocation_1_1_h_y___distance_from_referent.html">
@@ -2649,138 +2582,6 @@
         <topic label="get_formulation_key" href="namespacerealization.html#a60fd2dcdc052492d4ae87454567f2b61"/>
         <topic label="formulations" href="namespacerealization.html#a8ac5516475ff281154dfa9a6e9292295"/>
       </topic>
-      <topic label="Reservoir" href="namespace_reservoir.html">
-        <topic label="Explicit_Time" href="namespace_reservoir_1_1_explicit___time.html">
-          <topic label="Reservoir" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html">
-            <topic label="outlet_type" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html#a18de56ff5f7ab8133fbe846e4ab9090d"/>
-            <topic label="outlet_vector_type" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html#a835e8204f95de619e23e322863ec4c74"/>
-            <topic label="Reservoir" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html#a084a890e9a5ebcb9421c779246e6afe1"/>
-            <topic label="Reservoir" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html#acd229812c94823482772777902550af0"/>
-            <topic label="Reservoir" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html#a8885410fe5d145148654b48ed39e64a8"/>
-            <topic label="Reservoir" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html#aeeac6aa3e5db99299ec9b6641a3d314f"/>
-            <topic label="add_outlet" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html#ab15d6773c6043a938a12cc12c4cb9f49"/>
-            <topic label="add_outlet" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html#a6e91e2024734874478a437294f5f71cf"/>
-            <topic label="add_outlet" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html#aa2aefa805f204fc0008553e0c8734d6e"/>
-            <topic label="check_highest_outlet_against_max_storage" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html#ae311b36c05cd92119cff9a2d16c202f9"/>
-            <topic label="get_storage_height_meters" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html#abd766dc0f47a77c23c017647570cb95a"/>
-            <topic label="response_meters_per_second" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html#ac6ef733dd084c2f79ea54567dd91113d"/>
-            <topic label="sort_outlets" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html#a874b62a743a2437418e49bc8960d5d7e"/>
-            <topic label="velocity_meters_per_second_for_outlet" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html#ad90572ef1c941c6629f81f5cc9563b75"/>
-            <topic label="outlets" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html#a6a1b423dd1abdb10419ad5bc40784185"/>
-            <topic label="parameters" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html#aeba0516cea71fd7cd00f325b900ee424"/>
-            <topic label="state" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html#ae73c42d7e5f2f82cc3d96240d650804e"/>
-          </topic>
-          <topic label="Reservoir_Exponential_Outlet" href="class_reservoir_1_1_explicit___time_1_1_reservoir___exponential___outlet.html">
-            <topic label="Reservoir_Exponential_Outlet" href="class_reservoir_1_1_explicit___time_1_1_reservoir___exponential___outlet.html#aaf391951142070fb9755e49a05288e0e"/>
-            <topic label="Reservoir_Exponential_Outlet" href="class_reservoir_1_1_explicit___time_1_1_reservoir___exponential___outlet.html#a786255f872d7f556b7e2ee53c32150ae"/>
-            <topic label="adjust_velocity" href="class_reservoir_1_1_explicit___time_1_1_reservoir___exponential___outlet.html#aa283d4d1863c3d67f8e3f7552ef634a1"/>
-            <topic label="calc_velocity_meters_per_second_local" href="class_reservoir_1_1_explicit___time_1_1_reservoir___exponential___outlet.html#a3a493ce72c0c1f78cd3a1167a4f09ccb"/>
-            <topic label="get_activation_threshold_meters" href="class_reservoir_1_1_explicit___time_1_1_reservoir___exponential___outlet.html#a52f4dd49ae39c39e567811c1a4b10c36"/>
-            <topic label="get_previously_calculated_velocity_meters_per_second" href="class_reservoir_1_1_explicit___time_1_1_reservoir___exponential___outlet.html#a03258f7ec9a61b871c3fcd60d4bf1857"/>
-            <topic label="velocity_meters_per_second" href="class_reservoir_1_1_explicit___time_1_1_reservoir___exponential___outlet.html#abc52eb541b21db257224fdfe67125e47"/>
-            <topic label="a" href="class_reservoir_1_1_explicit___time_1_1_reservoir___exponential___outlet.html#ab2b1b7e10493aedf8c15dcb347f72ed3"/>
-            <topic label="activation_threshold_meters" href="class_reservoir_1_1_explicit___time_1_1_reservoir___exponential___outlet.html#aadb588e96db067acad7ca2fcd23917b2"/>
-            <topic label="b" href="class_reservoir_1_1_explicit___time_1_1_reservoir___exponential___outlet.html#aefa536a323e01869b9d9e19838ab970f"/>
-            <topic label="c" href="class_reservoir_1_1_explicit___time_1_1_reservoir___exponential___outlet.html#af139eea4d46b5c9e002aa4d28e9c1ed2"/>
-            <topic label="expon" href="class_reservoir_1_1_explicit___time_1_1_reservoir___exponential___outlet.html#a69836632c8b4221940c82319fe54b2f6"/>
-            <topic label="max_velocity_meters_per_second" href="class_reservoir_1_1_explicit___time_1_1_reservoir___exponential___outlet.html#a14a0ebae2a3acb5f41803663f59f519e"/>
-            <topic label="velocity_meters_per_second_local" href="class_reservoir_1_1_explicit___time_1_1_reservoir___exponential___outlet.html#aeffe8449c5cbe459c2bceedfcbb661e2"/>
-          </topic>
-          <topic label="Reservoir_Linear_Outlet" href="class_reservoir_1_1_explicit___time_1_1_reservoir___linear___outlet.html">
-            <topic label="Reservoir_Linear_Outlet" href="class_reservoir_1_1_explicit___time_1_1_reservoir___linear___outlet.html#a5bf3047729e694952b6f3a0274d6343f"/>
-            <topic label="Reservoir_Linear_Outlet" href="class_reservoir_1_1_explicit___time_1_1_reservoir___linear___outlet.html#a9e4d2fdc6caab0437d06a6aac8516252"/>
-            <topic label="adjust_velocity" href="class_reservoir_1_1_explicit___time_1_1_reservoir___linear___outlet.html#aa283d4d1863c3d67f8e3f7552ef634a1"/>
-            <topic label="calc_velocity_meters_per_second_local" href="class_reservoir_1_1_explicit___time_1_1_reservoir___linear___outlet.html#ad8737d53f7d843425069377f159cb831"/>
-            <topic label="get_activation_threshold_meters" href="class_reservoir_1_1_explicit___time_1_1_reservoir___linear___outlet.html#a52f4dd49ae39c39e567811c1a4b10c36"/>
-            <topic label="get_previously_calculated_velocity_meters_per_second" href="class_reservoir_1_1_explicit___time_1_1_reservoir___linear___outlet.html#a03258f7ec9a61b871c3fcd60d4bf1857"/>
-            <topic label="velocity_meters_per_second" href="class_reservoir_1_1_explicit___time_1_1_reservoir___linear___outlet.html#abc52eb541b21db257224fdfe67125e47"/>
-            <topic label="a" href="class_reservoir_1_1_explicit___time_1_1_reservoir___linear___outlet.html#ab2b1b7e10493aedf8c15dcb347f72ed3"/>
-            <topic label="activation_threshold_meters" href="class_reservoir_1_1_explicit___time_1_1_reservoir___linear___outlet.html#aadb588e96db067acad7ca2fcd23917b2"/>
-            <topic label="b" href="class_reservoir_1_1_explicit___time_1_1_reservoir___linear___outlet.html#aefa536a323e01869b9d9e19838ab970f"/>
-            <topic label="max_velocity_meters_per_second" href="class_reservoir_1_1_explicit___time_1_1_reservoir___linear___outlet.html#a14a0ebae2a3acb5f41803663f59f519e"/>
-            <topic label="velocity_meters_per_second_local" href="class_reservoir_1_1_explicit___time_1_1_reservoir___linear___outlet.html#aeffe8449c5cbe459c2bceedfcbb661e2"/>
-          </topic>
-          <topic label="Reservoir_Outlet" href="class_reservoir_1_1_explicit___time_1_1_reservoir___outlet.html">
-            <topic label="Reservoir_Outlet" href="class_reservoir_1_1_explicit___time_1_1_reservoir___outlet.html#afd4aab9711777474eeb667323563ee0a"/>
-            <topic label="Reservoir_Outlet" href="class_reservoir_1_1_explicit___time_1_1_reservoir___outlet.html#ae697ebd04046e4134046a0c0d11425db"/>
-            <topic label="adjust_velocity" href="class_reservoir_1_1_explicit___time_1_1_reservoir___outlet.html#aa283d4d1863c3d67f8e3f7552ef634a1"/>
-            <topic label="calc_velocity_meters_per_second_local" href="class_reservoir_1_1_explicit___time_1_1_reservoir___outlet.html#aea2f4a7626122faba3e91a1f3f79a30c"/>
-            <topic label="get_activation_threshold_meters" href="class_reservoir_1_1_explicit___time_1_1_reservoir___outlet.html#a52f4dd49ae39c39e567811c1a4b10c36"/>
-            <topic label="get_previously_calculated_velocity_meters_per_second" href="class_reservoir_1_1_explicit___time_1_1_reservoir___outlet.html#a03258f7ec9a61b871c3fcd60d4bf1857"/>
-            <topic label="velocity_meters_per_second" href="class_reservoir_1_1_explicit___time_1_1_reservoir___outlet.html#abc52eb541b21db257224fdfe67125e47"/>
-            <topic label="a" href="class_reservoir_1_1_explicit___time_1_1_reservoir___outlet.html#ab2b1b7e10493aedf8c15dcb347f72ed3"/>
-            <topic label="activation_threshold_meters" href="class_reservoir_1_1_explicit___time_1_1_reservoir___outlet.html#aadb588e96db067acad7ca2fcd23917b2"/>
-            <topic label="b" href="class_reservoir_1_1_explicit___time_1_1_reservoir___outlet.html#aefa536a323e01869b9d9e19838ab970f"/>
-            <topic label="max_velocity_meters_per_second" href="class_reservoir_1_1_explicit___time_1_1_reservoir___outlet.html#a14a0ebae2a3acb5f41803663f59f519e"/>
-            <topic label="velocity_meters_per_second_local" href="class_reservoir_1_1_explicit___time_1_1_reservoir___outlet.html#aeffe8449c5cbe459c2bceedfcbb661e2"/>
-          </topic>
-        </topic>
-        <topic label="Implicit_Time" href="namespace_reservoir_1_1_implicit___time.html">
-          <topic label="Reservoir" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html">
-            <topic label="outlet_type" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html#a478cc310fd19a56e45b7bbcd91f4a89e"/>
-            <topic label="outlet_vector_type" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html#ad565fd3109c9c838c957c09a8498eb78"/>
-            <topic label="Reservoir" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html#a1fb83324f8b65244760a9fccf3959141"/>
-            <topic label="Reservoir" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html#a026a415befab0a81766f38d22d3ba7c9"/>
-            <topic label="Reservoir" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html#af6981ae7cecc7001317e4b087ad7515c"/>
-            <topic label="Reservoir" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html#a214e5ffdae4815d2e8c84c49b4f8c05f"/>
-            <topic label="add_outlet" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html#a61b870cc938bbfbd4cce8e91457d397f"/>
-            <topic label="add_outlet" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html#a8e02c6602355e28205a0ddda048d1902"/>
-            <topic label="add_outlet" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html#aa766f47405db09251855d0aa367147df"/>
-            <topic label="check_highest_outlet_against_max_storage" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html#a375d4714a201cc233cfd8243b2bb2124"/>
-            <topic label="flux_meters_for_outlet" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html#aa7fe13923ff6303eccfe52636a1b9bc1"/>
-            <topic label="get_storage_height_meters" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html#a175d38006a8d97072d1e7b0b649fbd1f"/>
-            <topic label="response_meters" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html#a563294027bb28539b12c9c485235a8bc"/>
-            <topic label="sort_outlets" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html#a0ef64df984ff9a0b9a4d1a7c09334c57"/>
-            <topic label="outlets" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html#aa7a2392a2bfb5ba01449b474d0fba744"/>
-            <topic label="parameters" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html#a4cdb68383a635f8a8095cd95c739046f"/>
-            <topic label="state" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html#aaab7e3cc70dfa22a32ac0d4cca56f3cb"/>
-          </topic>
-          <topic label="Reservoir_Exponential_Outlet" href="class_reservoir_1_1_implicit___time_1_1_reservoir___exponential___outlet.html">
-            <topic label="Reservoir_Exponential_Outlet" href="class_reservoir_1_1_implicit___time_1_1_reservoir___exponential___outlet.html#ac03ebfc1a62d270973791fced6cffe4a"/>
-            <topic label="Reservoir_Exponential_Outlet" href="class_reservoir_1_1_implicit___time_1_1_reservoir___exponential___outlet.html#a87199b17947b2113d3f828298cdabced"/>
-            <topic label="adjust_flux" href="class_reservoir_1_1_implicit___time_1_1_reservoir___exponential___outlet.html#a79272d74ceb6db9a58e615c72eb65000"/>
-            <topic label="calc_flux_meters_local" href="class_reservoir_1_1_implicit___time_1_1_reservoir___exponential___outlet.html#abec6c275677e8de247c598a5c3f8967a"/>
-            <topic label="flux_meters" href="class_reservoir_1_1_implicit___time_1_1_reservoir___exponential___outlet.html#a7e3b4d24c9b1b25de3bb7264b096f460"/>
-            <topic label="get_activation_threshold_meters" href="class_reservoir_1_1_implicit___time_1_1_reservoir___exponential___outlet.html#ac66090cf8b70610a0323520f3595b09c"/>
-            <topic label="get_previously_calculated_flux_meters" href="class_reservoir_1_1_implicit___time_1_1_reservoir___exponential___outlet.html#acdd1b23a7ab90683e9cd4c22174025eb"/>
-            <topic label="a" href="class_reservoir_1_1_implicit___time_1_1_reservoir___exponential___outlet.html#a3c9b22977b1e3bbae37c4c29edf5b59e"/>
-            <topic label="activation_threshold_meters" href="class_reservoir_1_1_implicit___time_1_1_reservoir___exponential___outlet.html#a89e37b57167c51755091e69862c24365"/>
-            <topic label="b" href="class_reservoir_1_1_implicit___time_1_1_reservoir___exponential___outlet.html#aebc4b10e12bba40bdae0cf1d174311b3"/>
-            <topic label="c" href="class_reservoir_1_1_implicit___time_1_1_reservoir___exponential___outlet.html#a0e983c874000c61700b16e1403ac54f2"/>
-            <topic label="expon" href="class_reservoir_1_1_implicit___time_1_1_reservoir___exponential___outlet.html#aa481f74b76b728a06f777ed569e13fc2"/>
-            <topic label="flux_meters_local" href="class_reservoir_1_1_implicit___time_1_1_reservoir___exponential___outlet.html#a10e0432e3c1cecb4385d63422be063f9"/>
-            <topic label="max_flux_meters" href="class_reservoir_1_1_implicit___time_1_1_reservoir___exponential___outlet.html#afda352b29e3f69e581c9b83f03ff189c"/>
-          </topic>
-          <topic label="Reservoir_Linear_Outlet" href="class_reservoir_1_1_implicit___time_1_1_reservoir___linear___outlet.html">
-            <topic label="Reservoir_Linear_Outlet" href="class_reservoir_1_1_implicit___time_1_1_reservoir___linear___outlet.html#a9a1d187a58cf44fc8732df8ee22fd397"/>
-            <topic label="Reservoir_Linear_Outlet" href="class_reservoir_1_1_implicit___time_1_1_reservoir___linear___outlet.html#a892071c38bc23827aed223eb5130d017"/>
-            <topic label="adjust_flux" href="class_reservoir_1_1_implicit___time_1_1_reservoir___linear___outlet.html#a79272d74ceb6db9a58e615c72eb65000"/>
-            <topic label="calc_flux_meters_local" href="class_reservoir_1_1_implicit___time_1_1_reservoir___linear___outlet.html#af36c56a43b5eb5ccb169fd14b521c49c"/>
-            <topic label="flux_meters" href="class_reservoir_1_1_implicit___time_1_1_reservoir___linear___outlet.html#a7e3b4d24c9b1b25de3bb7264b096f460"/>
-            <topic label="get_activation_threshold_meters" href="class_reservoir_1_1_implicit___time_1_1_reservoir___linear___outlet.html#ac66090cf8b70610a0323520f3595b09c"/>
-            <topic label="get_previously_calculated_flux_meters" href="class_reservoir_1_1_implicit___time_1_1_reservoir___linear___outlet.html#acdd1b23a7ab90683e9cd4c22174025eb"/>
-            <topic label="a" href="class_reservoir_1_1_implicit___time_1_1_reservoir___linear___outlet.html#a3c9b22977b1e3bbae37c4c29edf5b59e"/>
-            <topic label="activation_threshold_meters" href="class_reservoir_1_1_implicit___time_1_1_reservoir___linear___outlet.html#a89e37b57167c51755091e69862c24365"/>
-            <topic label="b" href="class_reservoir_1_1_implicit___time_1_1_reservoir___linear___outlet.html#aebc4b10e12bba40bdae0cf1d174311b3"/>
-            <topic label="flux_meters_local" href="class_reservoir_1_1_implicit___time_1_1_reservoir___linear___outlet.html#a10e0432e3c1cecb4385d63422be063f9"/>
-            <topic label="max_flux_meters" href="class_reservoir_1_1_implicit___time_1_1_reservoir___linear___outlet.html#afda352b29e3f69e581c9b83f03ff189c"/>
-          </topic>
-          <topic label="Reservoir_Outlet" href="class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html">
-            <topic label="Reservoir_Outlet" href="class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html#a35f807b07d457cafc7ef241c86d6a32e"/>
-            <topic label="Reservoir_Outlet" href="class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html#a30bb0b7fb2cd13bfbb103cd418634000"/>
-            <topic label="adjust_flux" href="class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html#a79272d74ceb6db9a58e615c72eb65000"/>
-            <topic label="calc_flux_meters_local" href="class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html#a774a7d02cb9189fb7651efe9805a5d1a"/>
-            <topic label="flux_meters" href="class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html#a7e3b4d24c9b1b25de3bb7264b096f460"/>
-            <topic label="get_activation_threshold_meters" href="class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html#ac66090cf8b70610a0323520f3595b09c"/>
-            <topic label="get_previously_calculated_flux_meters" href="class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html#acdd1b23a7ab90683e9cd4c22174025eb"/>
-            <topic label="a" href="class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html#a3c9b22977b1e3bbae37c4c29edf5b59e"/>
-            <topic label="activation_threshold_meters" href="class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html#a89e37b57167c51755091e69862c24365"/>
-            <topic label="b" href="class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html#aebc4b10e12bba40bdae0cf1d174311b3"/>
-            <topic label="flux_meters_local" href="class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html#a10e0432e3c1cecb4385d63422be063f9"/>
-            <topic label="max_flux_meters" href="class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html#afda352b29e3f69e581c9b83f03ff189c"/>
-          </topic>
-        </topic>
-      </topic>
       <topic label="utils" href="namespaceutils.html">
         <topic label="FileChecker" href="classutils_1_1_file_checker.html">
           <topic label="file_can_be_written" href="classutils_1_1_file_checker.html#a24dff5d8fd63c824311f95de1f033f03"/>
@@ -3883,72 +3684,6 @@
           <topic label="read_multipolygon" href="structgeopackage_1_1wkb.html#a122f0f2c64cd4260ab58781e70700cf5"/>
           <topic label="read_point" href="structgeopackage_1_1wkb.html#a27191fd1b3862e21883544a2c21cfd96"/>
           <topic label="read_polygon" href="structgeopackage_1_1wkb.html#a0daa6ad342c5e20093c9578fce2e5c11"/>
-        </topic>
-      </topic>
-      <topic label="giuh" href="namespacegiuh.html">
-        <topic label="giuh_carry_over" href="structgiuh_1_1giuh__carry__over.html">
-          <topic label="giuh_carry_over" href="structgiuh_1_1giuh__carry__over.html#ab10298751abb137f0213527d99a08139"/>
-          <topic label="last_outputted_cdf_index" href="structgiuh_1_1giuh__carry__over.html#ab58faba956f667c19aa1d1651d51f961"/>
-          <topic label="next" href="structgiuh_1_1giuh__carry__over.html#afa08e7a3d4e40548895e9cec7a77c812"/>
-          <topic label="original_input_amount" href="structgiuh_1_1giuh__carry__over.html#a793ef9a1be099e436fa36f2b4443fb43"/>
-        </topic>
-        <topic label="giuh_kernel" href="classgiuh_1_1giuh__kernel.html">
-          <topic label="giuh_kernel" href="classgiuh_1_1giuh__kernel.html#a270e89fa44de1aae523e2a52341aef8c"/>
-          <topic label="giuh_kernel" href="classgiuh_1_1giuh__kernel.html#a5368a14df53c06836c09b6977d0d6744"/>
-          <topic label="calc_giuh_output" href="classgiuh_1_1giuh__kernel.html#aadec4f29e3f98a2cd50f38a7d20efda9"/>
-          <topic label="get_catchment_id" href="classgiuh_1_1giuh__kernel.html#a5df8658fbf52a5ddd602be29158240dd"/>
-          <topic label="get_comid" href="classgiuh_1_1giuh__kernel.html#a939098ab8b08b18e07e2cd232f5fa9e2"/>
-          <topic label="get_interpolated_incremental_runoff" href="classgiuh_1_1giuh__kernel.html#a5bb2e6ec2d8b00478624d36b430b2e0a"/>
-          <topic label="get_interpolated_regularized_cdf" href="classgiuh_1_1giuh__kernel.html#a9f6d0343057c72fd5560628741427f6c"/>
-          <topic label="get_interpolation_regularity_seconds" href="classgiuh_1_1giuh__kernel.html#a4ae93bb56a9c00f8ceb4a32ccf072a92"/>
-          <topic label="get_regularized_times_s" href="classgiuh_1_1giuh__kernel.html#a4de247881ee9ed0154661157d8709b58"/>
-          <topic label="set_interpolation_regularity_seconds" href="classgiuh_1_1giuh__kernel.html#a978415891a4d3ae43cd4b178756ed90c"/>
-          <topic label="catchment_id" href="classgiuh_1_1giuh__kernel.html#a22be4ec0c44f810d04965aef8f6c5b2c"/>
-          <topic label="comid" href="classgiuh_1_1giuh__kernel.html#ab0700f5fc0fcc590994fb5654796f9ea"/>
-          <topic label="interpolation_regularity_seconds" href="classgiuh_1_1giuh__kernel.html#ac8d8754faae060963ca33671f5a22bae"/>
-        </topic>
-        <topic label="giuh_kernel_impl" href="classgiuh_1_1giuh__kernel__impl.html">
-          <topic label="giuh_kernel_impl" href="classgiuh_1_1giuh__kernel__impl.html#a32f61299460b8f2a6462cf21b74d59b7"/>
-          <topic label="giuh_kernel_impl" href="classgiuh_1_1giuh__kernel__impl.html#acb018f3dfa3d2fca5711ef2a8acb5aff"/>
-          <topic label="~giuh_kernel_impl" href="classgiuh_1_1giuh__kernel__impl.html#a086273494b691fae4bcd2d93f5b6d22c"/>
-          <topic label="calc_giuh_output" href="classgiuh_1_1giuh__kernel__impl.html#a8dd4496e30cdeca108beb88161b862e7"/>
-          <topic label="get_catchment_id" href="classgiuh_1_1giuh__kernel__impl.html#a5df8658fbf52a5ddd602be29158240dd"/>
-          <topic label="get_comid" href="classgiuh_1_1giuh__kernel__impl.html#a939098ab8b08b18e07e2cd232f5fa9e2"/>
-          <topic label="get_interpolated_incremental_runoff" href="classgiuh_1_1giuh__kernel__impl.html#a6e9ad0f8144c7368706ae489df271b6f"/>
-          <topic label="get_interpolated_regularized_cdf" href="classgiuh_1_1giuh__kernel__impl.html#a743806dfaf0a26a0373a0092c3f14b4c"/>
-          <topic label="get_interpolation_regularity_seconds" href="classgiuh_1_1giuh__kernel__impl.html#a4ae93bb56a9c00f8ceb4a32ccf072a92"/>
-          <topic label="get_regularized_times_s" href="classgiuh_1_1giuh__kernel__impl.html#ad53664c11dbe1259bc8fb9cf3ea8e5bc"/>
-          <topic label="interpolate_regularized_cdf" href="classgiuh_1_1giuh__kernel__impl.html#a272b269b857a9c388c0b67134865662c"/>
-          <topic label="make_from_incremental_runoffs" href="classgiuh_1_1giuh__kernel__impl.html#abd7d367548f4c374100093edf6259489"/>
-          <topic label="set_interpolation_regularity_seconds" href="classgiuh_1_1giuh__kernel__impl.html#a5c32f00ef5910039e991846e5b847e46"/>
-          <topic label="carry_overs_list_head" href="classgiuh_1_1giuh__kernel__impl.html#a031271c5238bcbcd0156df50f335ded4"/>
-          <topic label="catchment_id" href="classgiuh_1_1giuh__kernel__impl.html#a22be4ec0c44f810d04965aef8f6c5b2c"/>
-          <topic label="cdf_cumulative_freqs" href="classgiuh_1_1giuh__kernel__impl.html#a6616b42e3672ae72144e60ba2e9eaa22"/>
-          <topic label="cdf_times" href="classgiuh_1_1giuh__kernel__impl.html#aa51c59e7a052d3d6d18b1ad80774c9a0"/>
-          <topic label="comid" href="classgiuh_1_1giuh__kernel__impl.html#ab0700f5fc0fcc590994fb5654796f9ea"/>
-          <topic label="interpolated_incremental_runoff" href="classgiuh_1_1giuh__kernel__impl.html#a74eda08da1260ac3f6e21528c5e69e9b"/>
-          <topic label="interpolated_regularized_cdf" href="classgiuh_1_1giuh__kernel__impl.html#aafb04b11326fcd3a7b730373fd763880"/>
-          <topic label="interpolation_regularity_seconds" href="classgiuh_1_1giuh__kernel__impl.html#ac8d8754faae060963ca33671f5a22bae"/>
-          <topic label="regularized_times_s" href="classgiuh_1_1giuh__kernel__impl.html#a2bac13c13b820e92152426972f4297de"/>
-        </topic>
-        <topic label="GiuhJsonReader" href="classgiuh_1_1_giuh_json_reader.html">
-          <topic label="GiuhJsonReader" href="classgiuh_1_1_giuh_json_reader.html#adc94992f19fd2f8a315bfbbad17a4126"/>
-          <topic label="build_giuh_kernel" href="classgiuh_1_1_giuh_json_reader.html#a2a5e47652fd88cd1b2f6c028a01e21cb"/>
-          <topic label="extract_cumulative_frequency_ordinates" href="classgiuh_1_1_giuh_json_reader.html#adc40f6292a6071bef90a16c69a15bf6a"/>
-          <topic label="extract_cumulative_frequency_ordinates" href="classgiuh_1_1_giuh_json_reader.html#a6f3c048943f74b1c81240444d929edfe"/>
-          <topic label="find_data_node_for_comid" href="classgiuh_1_1_giuh_json_reader.html#a0b50c538a048ffa2ff3f807ef5a65a2a"/>
-          <topic label="get_associated_comid" href="classgiuh_1_1_giuh_json_reader.html#aa992d78c802a16c93d02475412aabebd"/>
-          <topic label="get_giuh_kernel_for_id" href="classgiuh_1_1_giuh_json_reader.html#a511a10ed7ce53125da3abab5742530a8"/>
-          <topic label="get_mapped_comid" href="classgiuh_1_1_giuh_json_reader.html#ae7dd771e38b4a8fa2e146ea8868631b3"/>
-          <topic label="is_data_json_file_readable" href="classgiuh_1_1_giuh_json_reader.html#ae73978f0557106fce7098cf2c2255d6a"/>
-          <topic label="is_giuh_kernel_for_id_exists" href="classgiuh_1_1_giuh_json_reader.html#ac4a7f24b0d2925d5881ac20d933ee2dd"/>
-          <topic label="is_id_map_json_file_readable" href="classgiuh_1_1_giuh_json_reader.html#a7a93ecb44b58927d9cd1606cf5c2ed3d"/>
-          <topic label="data_json_file_path" href="classgiuh_1_1_giuh_json_reader.html#aaddc6971ad9b15d3ed734fdb8eaa53c7"/>
-          <topic label="data_json_file_readable" href="classgiuh_1_1_giuh_json_reader.html#aa199ed0d167a51432f61ec075585c053"/>
-          <topic label="data_json_tree" href="classgiuh_1_1_giuh_json_reader.html#a211e8bd6b4fe923f91cfabc7d0ea096e"/>
-          <topic label="id_map" href="classgiuh_1_1_giuh_json_reader.html#a1cb21b8ae193a5675591ead77a583bdf"/>
-          <topic label="id_map_json_file_path" href="classgiuh_1_1_giuh_json_reader.html#ad54e97b4868f8e6772095f36c4fa3cbc"/>
-          <topic label="id_map_json_file_readable" href="classgiuh_1_1_giuh_json_reader.html#aafa06b0d7d35a852f4ed65d8fd374a43"/>
         </topic>
       </topic>
       <topic label="hy_features" href="namespacehy__features.html">
@@ -5059,138 +4794,6 @@
           <topic label="using_routing" href="classrealization_1_1_formulation___manager.html#a0b8bde7896ea9bba31e130cd14ecbf7b"/>
         </topic>
       </topic>
-      <topic label="Reservoir" href="namespace_reservoir.html">
-        <topic label="Explicit_Time" href="namespace_reservoir_1_1_explicit___time.html">
-          <topic label="Reservoir" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html">
-            <topic label="outlet_type" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html#a18de56ff5f7ab8133fbe846e4ab9090d"/>
-            <topic label="outlet_vector_type" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html#a835e8204f95de619e23e322863ec4c74"/>
-            <topic label="Reservoir" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html#a084a890e9a5ebcb9421c779246e6afe1"/>
-            <topic label="Reservoir" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html#acd229812c94823482772777902550af0"/>
-            <topic label="Reservoir" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html#a8885410fe5d145148654b48ed39e64a8"/>
-            <topic label="Reservoir" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html#aeeac6aa3e5db99299ec9b6641a3d314f"/>
-            <topic label="add_outlet" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html#ab15d6773c6043a938a12cc12c4cb9f49"/>
-            <topic label="add_outlet" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html#a6e91e2024734874478a437294f5f71cf"/>
-            <topic label="add_outlet" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html#aa2aefa805f204fc0008553e0c8734d6e"/>
-            <topic label="check_highest_outlet_against_max_storage" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html#ae311b36c05cd92119cff9a2d16c202f9"/>
-            <topic label="get_storage_height_meters" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html#abd766dc0f47a77c23c017647570cb95a"/>
-            <topic label="response_meters_per_second" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html#ac6ef733dd084c2f79ea54567dd91113d"/>
-            <topic label="sort_outlets" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html#a874b62a743a2437418e49bc8960d5d7e"/>
-            <topic label="velocity_meters_per_second_for_outlet" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html#ad90572ef1c941c6629f81f5cc9563b75"/>
-            <topic label="outlets" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html#a6a1b423dd1abdb10419ad5bc40784185"/>
-            <topic label="parameters" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html#aeba0516cea71fd7cd00f325b900ee424"/>
-            <topic label="state" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html#ae73c42d7e5f2f82cc3d96240d650804e"/>
-          </topic>
-          <topic label="Reservoir_Exponential_Outlet" href="class_reservoir_1_1_explicit___time_1_1_reservoir___exponential___outlet.html">
-            <topic label="Reservoir_Exponential_Outlet" href="class_reservoir_1_1_explicit___time_1_1_reservoir___exponential___outlet.html#aaf391951142070fb9755e49a05288e0e"/>
-            <topic label="Reservoir_Exponential_Outlet" href="class_reservoir_1_1_explicit___time_1_1_reservoir___exponential___outlet.html#a786255f872d7f556b7e2ee53c32150ae"/>
-            <topic label="adjust_velocity" href="class_reservoir_1_1_explicit___time_1_1_reservoir___exponential___outlet.html#aa283d4d1863c3d67f8e3f7552ef634a1"/>
-            <topic label="calc_velocity_meters_per_second_local" href="class_reservoir_1_1_explicit___time_1_1_reservoir___exponential___outlet.html#a3a493ce72c0c1f78cd3a1167a4f09ccb"/>
-            <topic label="get_activation_threshold_meters" href="class_reservoir_1_1_explicit___time_1_1_reservoir___exponential___outlet.html#a52f4dd49ae39c39e567811c1a4b10c36"/>
-            <topic label="get_previously_calculated_velocity_meters_per_second" href="class_reservoir_1_1_explicit___time_1_1_reservoir___exponential___outlet.html#a03258f7ec9a61b871c3fcd60d4bf1857"/>
-            <topic label="velocity_meters_per_second" href="class_reservoir_1_1_explicit___time_1_1_reservoir___exponential___outlet.html#abc52eb541b21db257224fdfe67125e47"/>
-            <topic label="a" href="class_reservoir_1_1_explicit___time_1_1_reservoir___exponential___outlet.html#ab2b1b7e10493aedf8c15dcb347f72ed3"/>
-            <topic label="activation_threshold_meters" href="class_reservoir_1_1_explicit___time_1_1_reservoir___exponential___outlet.html#aadb588e96db067acad7ca2fcd23917b2"/>
-            <topic label="b" href="class_reservoir_1_1_explicit___time_1_1_reservoir___exponential___outlet.html#aefa536a323e01869b9d9e19838ab970f"/>
-            <topic label="c" href="class_reservoir_1_1_explicit___time_1_1_reservoir___exponential___outlet.html#af139eea4d46b5c9e002aa4d28e9c1ed2"/>
-            <topic label="expon" href="class_reservoir_1_1_explicit___time_1_1_reservoir___exponential___outlet.html#a69836632c8b4221940c82319fe54b2f6"/>
-            <topic label="max_velocity_meters_per_second" href="class_reservoir_1_1_explicit___time_1_1_reservoir___exponential___outlet.html#a14a0ebae2a3acb5f41803663f59f519e"/>
-            <topic label="velocity_meters_per_second_local" href="class_reservoir_1_1_explicit___time_1_1_reservoir___exponential___outlet.html#aeffe8449c5cbe459c2bceedfcbb661e2"/>
-          </topic>
-          <topic label="Reservoir_Linear_Outlet" href="class_reservoir_1_1_explicit___time_1_1_reservoir___linear___outlet.html">
-            <topic label="Reservoir_Linear_Outlet" href="class_reservoir_1_1_explicit___time_1_1_reservoir___linear___outlet.html#a5bf3047729e694952b6f3a0274d6343f"/>
-            <topic label="Reservoir_Linear_Outlet" href="class_reservoir_1_1_explicit___time_1_1_reservoir___linear___outlet.html#a9e4d2fdc6caab0437d06a6aac8516252"/>
-            <topic label="adjust_velocity" href="class_reservoir_1_1_explicit___time_1_1_reservoir___linear___outlet.html#aa283d4d1863c3d67f8e3f7552ef634a1"/>
-            <topic label="calc_velocity_meters_per_second_local" href="class_reservoir_1_1_explicit___time_1_1_reservoir___linear___outlet.html#ad8737d53f7d843425069377f159cb831"/>
-            <topic label="get_activation_threshold_meters" href="class_reservoir_1_1_explicit___time_1_1_reservoir___linear___outlet.html#a52f4dd49ae39c39e567811c1a4b10c36"/>
-            <topic label="get_previously_calculated_velocity_meters_per_second" href="class_reservoir_1_1_explicit___time_1_1_reservoir___linear___outlet.html#a03258f7ec9a61b871c3fcd60d4bf1857"/>
-            <topic label="velocity_meters_per_second" href="class_reservoir_1_1_explicit___time_1_1_reservoir___linear___outlet.html#abc52eb541b21db257224fdfe67125e47"/>
-            <topic label="a" href="class_reservoir_1_1_explicit___time_1_1_reservoir___linear___outlet.html#ab2b1b7e10493aedf8c15dcb347f72ed3"/>
-            <topic label="activation_threshold_meters" href="class_reservoir_1_1_explicit___time_1_1_reservoir___linear___outlet.html#aadb588e96db067acad7ca2fcd23917b2"/>
-            <topic label="b" href="class_reservoir_1_1_explicit___time_1_1_reservoir___linear___outlet.html#aefa536a323e01869b9d9e19838ab970f"/>
-            <topic label="max_velocity_meters_per_second" href="class_reservoir_1_1_explicit___time_1_1_reservoir___linear___outlet.html#a14a0ebae2a3acb5f41803663f59f519e"/>
-            <topic label="velocity_meters_per_second_local" href="class_reservoir_1_1_explicit___time_1_1_reservoir___linear___outlet.html#aeffe8449c5cbe459c2bceedfcbb661e2"/>
-          </topic>
-          <topic label="Reservoir_Outlet" href="class_reservoir_1_1_explicit___time_1_1_reservoir___outlet.html">
-            <topic label="Reservoir_Outlet" href="class_reservoir_1_1_explicit___time_1_1_reservoir___outlet.html#afd4aab9711777474eeb667323563ee0a"/>
-            <topic label="Reservoir_Outlet" href="class_reservoir_1_1_explicit___time_1_1_reservoir___outlet.html#ae697ebd04046e4134046a0c0d11425db"/>
-            <topic label="adjust_velocity" href="class_reservoir_1_1_explicit___time_1_1_reservoir___outlet.html#aa283d4d1863c3d67f8e3f7552ef634a1"/>
-            <topic label="calc_velocity_meters_per_second_local" href="class_reservoir_1_1_explicit___time_1_1_reservoir___outlet.html#aea2f4a7626122faba3e91a1f3f79a30c"/>
-            <topic label="get_activation_threshold_meters" href="class_reservoir_1_1_explicit___time_1_1_reservoir___outlet.html#a52f4dd49ae39c39e567811c1a4b10c36"/>
-            <topic label="get_previously_calculated_velocity_meters_per_second" href="class_reservoir_1_1_explicit___time_1_1_reservoir___outlet.html#a03258f7ec9a61b871c3fcd60d4bf1857"/>
-            <topic label="velocity_meters_per_second" href="class_reservoir_1_1_explicit___time_1_1_reservoir___outlet.html#abc52eb541b21db257224fdfe67125e47"/>
-            <topic label="a" href="class_reservoir_1_1_explicit___time_1_1_reservoir___outlet.html#ab2b1b7e10493aedf8c15dcb347f72ed3"/>
-            <topic label="activation_threshold_meters" href="class_reservoir_1_1_explicit___time_1_1_reservoir___outlet.html#aadb588e96db067acad7ca2fcd23917b2"/>
-            <topic label="b" href="class_reservoir_1_1_explicit___time_1_1_reservoir___outlet.html#aefa536a323e01869b9d9e19838ab970f"/>
-            <topic label="max_velocity_meters_per_second" href="class_reservoir_1_1_explicit___time_1_1_reservoir___outlet.html#a14a0ebae2a3acb5f41803663f59f519e"/>
-            <topic label="velocity_meters_per_second_local" href="class_reservoir_1_1_explicit___time_1_1_reservoir___outlet.html#aeffe8449c5cbe459c2bceedfcbb661e2"/>
-          </topic>
-        </topic>
-        <topic label="Implicit_Time" href="namespace_reservoir_1_1_implicit___time.html">
-          <topic label="Reservoir" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html">
-            <topic label="outlet_type" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html#a478cc310fd19a56e45b7bbcd91f4a89e"/>
-            <topic label="outlet_vector_type" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html#ad565fd3109c9c838c957c09a8498eb78"/>
-            <topic label="Reservoir" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html#a1fb83324f8b65244760a9fccf3959141"/>
-            <topic label="Reservoir" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html#a026a415befab0a81766f38d22d3ba7c9"/>
-            <topic label="Reservoir" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html#af6981ae7cecc7001317e4b087ad7515c"/>
-            <topic label="Reservoir" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html#a214e5ffdae4815d2e8c84c49b4f8c05f"/>
-            <topic label="add_outlet" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html#a61b870cc938bbfbd4cce8e91457d397f"/>
-            <topic label="add_outlet" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html#a8e02c6602355e28205a0ddda048d1902"/>
-            <topic label="add_outlet" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html#aa766f47405db09251855d0aa367147df"/>
-            <topic label="check_highest_outlet_against_max_storage" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html#a375d4714a201cc233cfd8243b2bb2124"/>
-            <topic label="flux_meters_for_outlet" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html#aa7fe13923ff6303eccfe52636a1b9bc1"/>
-            <topic label="get_storage_height_meters" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html#a175d38006a8d97072d1e7b0b649fbd1f"/>
-            <topic label="response_meters" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html#a563294027bb28539b12c9c485235a8bc"/>
-            <topic label="sort_outlets" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html#a0ef64df984ff9a0b9a4d1a7c09334c57"/>
-            <topic label="outlets" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html#aa7a2392a2bfb5ba01449b474d0fba744"/>
-            <topic label="parameters" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html#a4cdb68383a635f8a8095cd95c739046f"/>
-            <topic label="state" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html#aaab7e3cc70dfa22a32ac0d4cca56f3cb"/>
-          </topic>
-          <topic label="Reservoir_Exponential_Outlet" href="class_reservoir_1_1_implicit___time_1_1_reservoir___exponential___outlet.html">
-            <topic label="Reservoir_Exponential_Outlet" href="class_reservoir_1_1_implicit___time_1_1_reservoir___exponential___outlet.html#ac03ebfc1a62d270973791fced6cffe4a"/>
-            <topic label="Reservoir_Exponential_Outlet" href="class_reservoir_1_1_implicit___time_1_1_reservoir___exponential___outlet.html#a87199b17947b2113d3f828298cdabced"/>
-            <topic label="adjust_flux" href="class_reservoir_1_1_implicit___time_1_1_reservoir___exponential___outlet.html#a79272d74ceb6db9a58e615c72eb65000"/>
-            <topic label="calc_flux_meters_local" href="class_reservoir_1_1_implicit___time_1_1_reservoir___exponential___outlet.html#abec6c275677e8de247c598a5c3f8967a"/>
-            <topic label="flux_meters" href="class_reservoir_1_1_implicit___time_1_1_reservoir___exponential___outlet.html#a7e3b4d24c9b1b25de3bb7264b096f460"/>
-            <topic label="get_activation_threshold_meters" href="class_reservoir_1_1_implicit___time_1_1_reservoir___exponential___outlet.html#ac66090cf8b70610a0323520f3595b09c"/>
-            <topic label="get_previously_calculated_flux_meters" href="class_reservoir_1_1_implicit___time_1_1_reservoir___exponential___outlet.html#acdd1b23a7ab90683e9cd4c22174025eb"/>
-            <topic label="a" href="class_reservoir_1_1_implicit___time_1_1_reservoir___exponential___outlet.html#a3c9b22977b1e3bbae37c4c29edf5b59e"/>
-            <topic label="activation_threshold_meters" href="class_reservoir_1_1_implicit___time_1_1_reservoir___exponential___outlet.html#a89e37b57167c51755091e69862c24365"/>
-            <topic label="b" href="class_reservoir_1_1_implicit___time_1_1_reservoir___exponential___outlet.html#aebc4b10e12bba40bdae0cf1d174311b3"/>
-            <topic label="c" href="class_reservoir_1_1_implicit___time_1_1_reservoir___exponential___outlet.html#a0e983c874000c61700b16e1403ac54f2"/>
-            <topic label="expon" href="class_reservoir_1_1_implicit___time_1_1_reservoir___exponential___outlet.html#aa481f74b76b728a06f777ed569e13fc2"/>
-            <topic label="flux_meters_local" href="class_reservoir_1_1_implicit___time_1_1_reservoir___exponential___outlet.html#a10e0432e3c1cecb4385d63422be063f9"/>
-            <topic label="max_flux_meters" href="class_reservoir_1_1_implicit___time_1_1_reservoir___exponential___outlet.html#afda352b29e3f69e581c9b83f03ff189c"/>
-          </topic>
-          <topic label="Reservoir_Linear_Outlet" href="class_reservoir_1_1_implicit___time_1_1_reservoir___linear___outlet.html">
-            <topic label="Reservoir_Linear_Outlet" href="class_reservoir_1_1_implicit___time_1_1_reservoir___linear___outlet.html#a9a1d187a58cf44fc8732df8ee22fd397"/>
-            <topic label="Reservoir_Linear_Outlet" href="class_reservoir_1_1_implicit___time_1_1_reservoir___linear___outlet.html#a892071c38bc23827aed223eb5130d017"/>
-            <topic label="adjust_flux" href="class_reservoir_1_1_implicit___time_1_1_reservoir___linear___outlet.html#a79272d74ceb6db9a58e615c72eb65000"/>
-            <topic label="calc_flux_meters_local" href="class_reservoir_1_1_implicit___time_1_1_reservoir___linear___outlet.html#af36c56a43b5eb5ccb169fd14b521c49c"/>
-            <topic label="flux_meters" href="class_reservoir_1_1_implicit___time_1_1_reservoir___linear___outlet.html#a7e3b4d24c9b1b25de3bb7264b096f460"/>
-            <topic label="get_activation_threshold_meters" href="class_reservoir_1_1_implicit___time_1_1_reservoir___linear___outlet.html#ac66090cf8b70610a0323520f3595b09c"/>
-            <topic label="get_previously_calculated_flux_meters" href="class_reservoir_1_1_implicit___time_1_1_reservoir___linear___outlet.html#acdd1b23a7ab90683e9cd4c22174025eb"/>
-            <topic label="a" href="class_reservoir_1_1_implicit___time_1_1_reservoir___linear___outlet.html#a3c9b22977b1e3bbae37c4c29edf5b59e"/>
-            <topic label="activation_threshold_meters" href="class_reservoir_1_1_implicit___time_1_1_reservoir___linear___outlet.html#a89e37b57167c51755091e69862c24365"/>
-            <topic label="b" href="class_reservoir_1_1_implicit___time_1_1_reservoir___linear___outlet.html#aebc4b10e12bba40bdae0cf1d174311b3"/>
-            <topic label="flux_meters_local" href="class_reservoir_1_1_implicit___time_1_1_reservoir___linear___outlet.html#a10e0432e3c1cecb4385d63422be063f9"/>
-            <topic label="max_flux_meters" href="class_reservoir_1_1_implicit___time_1_1_reservoir___linear___outlet.html#afda352b29e3f69e581c9b83f03ff189c"/>
-          </topic>
-          <topic label="Reservoir_Outlet" href="class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html">
-            <topic label="Reservoir_Outlet" href="class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html#a35f807b07d457cafc7ef241c86d6a32e"/>
-            <topic label="Reservoir_Outlet" href="class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html#a30bb0b7fb2cd13bfbb103cd418634000"/>
-            <topic label="adjust_flux" href="class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html#a79272d74ceb6db9a58e615c72eb65000"/>
-            <topic label="calc_flux_meters_local" href="class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html#a774a7d02cb9189fb7651efe9805a5d1a"/>
-            <topic label="flux_meters" href="class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html#a7e3b4d24c9b1b25de3bb7264b096f460"/>
-            <topic label="get_activation_threshold_meters" href="class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html#ac66090cf8b70610a0323520f3595b09c"/>
-            <topic label="get_previously_calculated_flux_meters" href="class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html#acdd1b23a7ab90683e9cd4c22174025eb"/>
-            <topic label="a" href="class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html#a3c9b22977b1e3bbae37c4c29edf5b59e"/>
-            <topic label="activation_threshold_meters" href="class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html#a89e37b57167c51755091e69862c24365"/>
-            <topic label="b" href="class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html#aebc4b10e12bba40bdae0cf1d174311b3"/>
-            <topic label="flux_meters_local" href="class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html#a10e0432e3c1cecb4385d63422be063f9"/>
-            <topic label="max_flux_meters" href="class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html#afda352b29e3f69e581c9b83f03ff189c"/>
-          </topic>
-        </topic>
-      </topic>
       <topic label="utils" href="namespaceutils.html">
         <topic label="FileChecker" href="classutils_1_1_file_checker.html">
           <topic label="file_can_be_written" href="classutils_1_1_file_checker.html#a24dff5d8fd63c824311f95de1f033f03"/>
@@ -5456,15 +5059,6 @@
         <topic label="simulation_end_t" href="structforcing__params.html#a3098992c702addcdc43e0a5c735bad25"/>
         <topic label="simulation_start_t" href="structforcing__params.html#a026bcef7a3218df18cff05a9e6d204b9"/>
         <topic label="start_time" href="structforcing__params.html#a86028ec75ffd2fb7ecdb4f4ce56d66ef"/>
-      </topic>
-      <topic label="GIUH_Test" href="class_g_i_u_h___test.html">
-        <topic label="GIUH_Test" href="class_g_i_u_h___test.html#aab42311aeac560aa42946efa76a5b43c"/>
-        <topic label="~GIUH_Test" href="class_g_i_u_h___test.html#af0ae1456b858492a5da66b1a1ae2a14c"/>
-        <topic label="SetUp" href="class_g_i_u_h___test.html#ab22d86ccb58da26c190c17524b300279"/>
-        <topic label="TearDown" href="class_g_i_u_h___test.html#a7f6757be328cab201d41ac414c013920"/>
-        <topic label="abridged_json_file" href="class_g_i_u_h___test.html#a5c0aaf53523b5b664dc4a44792bc50af"/>
-        <topic label="complete_json_file" href="class_g_i_u_h___test.html#a4d45bae536d60a18115572e781433be2"/>
-        <topic label="id_map_json_file" href="class_g_i_u_h___test.html#a9feedea61893c07ee88fe26173df3fe6"/>
       </topic>
       <topic label="GM_Object" href="class_g_m___object.html">
         <topic label="GM_Object" href="class_g_m___object.html#a0dae1c5826639cd1f522bc8922708955"/>
@@ -5782,13 +5376,6 @@
       <topic label="request_from_empty_nexus" href="structrequest__from__empty__nexus.html">
         <topic label="what" href="structrequest__from__empty__nexus.html#abca7c44aaf8b4582bc5067d53930011d"/>
       </topic>
-      <topic label="reservoir_parameters" href="structreservoir__parameters.html">
-        <topic label="maximum_storage_meters" href="structreservoir__parameters.html#a76ccec73d9c510392697627cdf8b5b56"/>
-        <topic label="minimum_storage_meters" href="structreservoir__parameters.html#ae8d00010d4013349c222faa6d18a86fc"/>
-      </topic>
-      <topic label="reservoir_state" href="structreservoir__state.html">
-        <topic label="current_storage_height_meters" href="structreservoir__state.html#a8e5ace81f634e69a85961044f01755a4"/>
-      </topic>
       <topic label="ReservoirKernelTest" href="class_reservoir_kernel_test.html">
         <topic label="SetUp" href="class_reservoir_kernel_test.html#ad0204b493db40f034fc41e054c96f425"/>
         <topic label="setupExponentialOutletReservoir" href="class_reservoir_kernel_test.html#add0437aaa6841365496b5e4cc991def2"/>
@@ -5869,13 +5456,6 @@
         <topic label="routing_params" href="structrouting__params.html#af966a73055663bca37095a4e4feb754d"/>
         <topic label="routing_params" href="structrouting__params.html#ad7665d897b5fea34e7a928db23a4c1f3"/>
         <topic label="t_route_config_file_with_path" href="structrouting__params.html#ab8b3e8f2fc74ca5193fd305d711b3b18"/>
-      </topic>
-      <topic label="SchaakeKernelTest" href="class_schaake_kernel_test.html">
-        <topic label="SchaakeKernelTest" href="class_schaake_kernel_test.html#a66ea4a961ea878e50b8279328eaea72d"/>
-        <topic label="~SchaakeKernelTest" href="class_schaake_kernel_test.html#a2f077a3729afb86e31580e55bef63c51"/>
-        <topic label="SetUp" href="class_schaake_kernel_test.html#af7e241399ef7ea8e37f72314b66dd704"/>
-        <topic label="setupArbitraryExampleCase" href="class_schaake_kernel_test.html#a33712d4922a9d839db36f50424d1e1b8"/>
-        <topic label="TearDown" href="class_schaake_kernel_test.html#a35af7fcd9ec5571671fee3e14f177ded"/>
       </topic>
       <topic label="Simulation_Time" href="class_simulation___time.html">
         <topic label="Simulation_Time" href="class_simulation___time.html#a1b29c199f0fd9e0995f369c40fd7aaa0"/>
@@ -6085,11 +5665,6 @@
       <topic label="geopackage::sqlite_deleter" href="structgeopackage_1_1sqlite__deleter.html"/>
       <topic label="geopackage::sqlite_iter" href="classgeopackage_1_1sqlite__iter.html"/>
       <topic label="geopackage::wkb" href="structgeopackage_1_1wkb.html"/>
-      <topic label="giuh::giuh_carry_over" href="structgiuh_1_1giuh__carry__over.html"/>
-      <topic label="giuh::giuh_kernel" href="classgiuh_1_1giuh__kernel.html">
-        <topic label="giuh::giuh_kernel_impl" href="classgiuh_1_1giuh__kernel__impl.html"/>
-      </topic>
-      <topic label="giuh::GiuhJsonReader" href="classgiuh_1_1_giuh_json_reader.html"/>
       <topic label="GM_Object" href="class_g_m___object.html">
         <topic label="HY_CatchmentArea" href="class_h_y___catchment_area.html">
           <topic label="realization::Catchment_Formulation" href="classrealization_1_1_catchment___formulation.html">
@@ -6139,18 +5714,6 @@
         </topic>
       </topic>
       <topic label="realization::Formulation_Manager" href="classrealization_1_1_formulation___manager.html"/>
-      <topic label="Reservoir::Explicit_Time::Reservoir" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html"/>
-      <topic label="Reservoir::Explicit_Time::Reservoir_Outlet" href="class_reservoir_1_1_explicit___time_1_1_reservoir___outlet.html">
-        <topic label="Reservoir::Explicit_Time::Reservoir_Exponential_Outlet" href="class_reservoir_1_1_explicit___time_1_1_reservoir___exponential___outlet.html"/>
-        <topic label="Reservoir::Explicit_Time::Reservoir_Linear_Outlet" href="class_reservoir_1_1_explicit___time_1_1_reservoir___linear___outlet.html"/>
-      </topic>
-      <topic label="Reservoir::Implicit_Time::Reservoir" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html"/>
-      <topic label="Reservoir::Implicit_Time::Reservoir_Outlet" href="class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html">
-        <topic label="Reservoir::Implicit_Time::Reservoir_Exponential_Outlet" href="class_reservoir_1_1_implicit___time_1_1_reservoir___exponential___outlet.html"/>
-        <topic label="Reservoir::Implicit_Time::Reservoir_Linear_Outlet" href="class_reservoir_1_1_implicit___time_1_1_reservoir___linear___outlet.html"/>
-      </topic>
-      <topic label="reservoir_parameters" href="structreservoir__parameters.html"/>
-      <topic label="reservoir_state" href="structreservoir__state.html"/>
       <topic label="routing_params" href="structrouting__params.html"/>
       <topic label="Simulation_Time" href="class_simulation___time.html"/>
       <topic label="simulation_time_params" href="structsimulation__time__params.html"/>
@@ -6175,7 +5738,6 @@
         <topic label="EtCalcKernelTest" href="class_et_calc_kernel_test.html"/>
         <topic label="FeatureCollection_Test" href="class_feature_collection___test.html"/>
         <topic label="Feature_Test" href="class_feature___test.html"/>
-        <topic label="GIUH_Test" href="class_g_i_u_h___test.html"/>
         <topic label="JSONGeometry_Test" href="class_j_s_o_n_geometry___test.html"/>
         <topic label="JSONProperty_Test" href="class_j_s_o_n_property___test.html"/>
         <topic label="Network_Test2" href="class_network___test2.html"/>
@@ -6184,7 +5746,6 @@
         <topic label="Pdm03KernelTest" href="class_pdm03_kernel_test.html"/>
         <topic label="ReservoirKernelTest" href="class_reservoir_kernel_test.html"/>
         <topic label="ReservoirTimelessKernelTest" href="class_reservoir_timeless_kernel_test.html"/>
-        <topic label="SchaakeKernelTest" href="class_schaake_kernel_test.html"/>
         <topic label="UnitsHelper_Test" href="class_units_helper___test.html"/>
       </topic>
       <topic label="testing::TestWithParam">

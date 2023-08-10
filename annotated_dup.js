@@ -74,12 +74,6 @@ var annotated_dup =
       [ "sqlite_iter", "classgeopackage_1_1sqlite__iter.html", "classgeopackage_1_1sqlite__iter" ],
       [ "wkb", "structgeopackage_1_1wkb.html", "structgeopackage_1_1wkb" ]
     ] ],
-    [ "giuh", "namespacegiuh.html", [
-      [ "giuh_carry_over", "structgiuh_1_1giuh__carry__over.html", "structgiuh_1_1giuh__carry__over" ],
-      [ "giuh_kernel", "classgiuh_1_1giuh__kernel.html", "classgiuh_1_1giuh__kernel" ],
-      [ "giuh_kernel_impl", "classgiuh_1_1giuh__kernel__impl.html", "classgiuh_1_1giuh__kernel__impl" ],
-      [ "GiuhJsonReader", "classgiuh_1_1_giuh_json_reader.html", "classgiuh_1_1_giuh_json_reader" ]
-    ] ],
     [ "hy_features", "namespacehy__features.html", [
       [ "hydrolocation", "namespacehy__features_1_1hydrolocation.html", [
         [ "HY_DistanceFromReferent", "structhy__features_1_1hydrolocation_1_1_h_y___distance_from_referent.html", "structhy__features_1_1hydrolocation_1_1_h_y___distance_from_referent" ],
@@ -120,20 +114,6 @@ var annotated_dup =
       [ "Formulation", "classrealization_1_1_formulation.html", "classrealization_1_1_formulation" ],
       [ "Formulation_Manager", "classrealization_1_1_formulation___manager.html", "classrealization_1_1_formulation___manager" ]
     ] ],
-    [ "Reservoir", "namespace_reservoir.html", [
-      [ "Explicit_Time", "namespace_reservoir_1_1_explicit___time.html", [
-        [ "Reservoir", "class_reservoir_1_1_explicit___time_1_1_reservoir.html", "class_reservoir_1_1_explicit___time_1_1_reservoir" ],
-        [ "Reservoir_Exponential_Outlet", "class_reservoir_1_1_explicit___time_1_1_reservoir___exponential___outlet.html", "class_reservoir_1_1_explicit___time_1_1_reservoir___exponential___outlet" ],
-        [ "Reservoir_Linear_Outlet", "class_reservoir_1_1_explicit___time_1_1_reservoir___linear___outlet.html", "class_reservoir_1_1_explicit___time_1_1_reservoir___linear___outlet" ],
-        [ "Reservoir_Outlet", "class_reservoir_1_1_explicit___time_1_1_reservoir___outlet.html", "class_reservoir_1_1_explicit___time_1_1_reservoir___outlet" ]
-      ] ],
-      [ "Implicit_Time", "namespace_reservoir_1_1_implicit___time.html", [
-        [ "Reservoir", "class_reservoir_1_1_implicit___time_1_1_reservoir.html", "class_reservoir_1_1_implicit___time_1_1_reservoir" ],
-        [ "Reservoir_Exponential_Outlet", "class_reservoir_1_1_implicit___time_1_1_reservoir___exponential___outlet.html", "class_reservoir_1_1_implicit___time_1_1_reservoir___exponential___outlet" ],
-        [ "Reservoir_Linear_Outlet", "class_reservoir_1_1_implicit___time_1_1_reservoir___linear___outlet.html", "class_reservoir_1_1_implicit___time_1_1_reservoir___linear___outlet" ],
-        [ "Reservoir_Outlet", "class_reservoir_1_1_implicit___time_1_1_reservoir___outlet.html", "class_reservoir_1_1_implicit___time_1_1_reservoir___outlet" ]
-      ] ]
-    ] ],
     [ "utils", "namespaceutils.html", [
       [ "FileChecker", "classutils_1_1_file_checker.html", "classutils_1_1_file_checker" ],
       [ "FileStreamHandler", "classutils_1_1_file_stream_handler.html", "classutils_1_1_file_stream_handler" ],
@@ -156,7 +136,6 @@ var annotated_dup =
     [ "Feature_Test", "class_feature___test.html", "class_feature___test" ],
     [ "FeatureCollection_Test", "class_feature_collection___test.html", "class_feature_collection___test" ],
     [ "forcing_params", "structforcing__params.html", "structforcing__params" ],
-    [ "GIUH_Test", "class_g_i_u_h___test.html", "class_g_i_u_h___test" ],
     [ "GM_Object", "class_g_m___object.html", "class_g_m___object" ],
     [ "HY_CartographicRealization", "class_h_y___cartographic_realization.html", "class_h_y___cartographic_realization" ],
     [ "HY_Catchment", "class_h_y___catchment.html", "class_h_y___catchment" ],
@@ -184,12 +163,9 @@ var annotated_dup =
     [ "pdm03_struct", "structpdm03__struct.html", "structpdm03__struct" ],
     [ "Pdm03KernelTest", "class_pdm03_kernel_test.html", "class_pdm03_kernel_test" ],
     [ "request_from_empty_nexus", "structrequest__from__empty__nexus.html", "structrequest__from__empty__nexus" ],
-    [ "reservoir_parameters", "structreservoir__parameters.html", "structreservoir__parameters" ],
-    [ "reservoir_state", "structreservoir__state.html", "structreservoir__state" ],
     [ "ReservoirKernelTest", "class_reservoir_kernel_test.html", "class_reservoir_kernel_test" ],
     [ "ReservoirTimelessKernelTest", "class_reservoir_timeless_kernel_test.html", "class_reservoir_timeless_kernel_test" ],
     [ "routing_params", "structrouting__params.html", "structrouting__params" ],
-    [ "SchaakeKernelTest", "class_schaake_kernel_test.html", "class_schaake_kernel_test" ],
     [ "Simulation_Time", "class_simulation___time.html", "class_simulation___time" ],
     [ "simulation_time_params", "structsimulation__time__params.html", "structsimulation__time__params" ],
     [ "solar_radiation_forcing", "structsolar__radiation__forcing.html", "structsolar__radiation__forcing" ],

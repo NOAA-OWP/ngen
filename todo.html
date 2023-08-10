@@ -115,46 +115,6 @@ $(document).ready(function(){initNavTree('todo.html',''); initResizable(); });
 <dd><a class="anchor" id="_todo000001"></a>converting to UTC can be tricky, especially if thread safety is a concern  </dd>
 <dt>Member <a class="el" href="classrealization_1_1_formulation___manager.html#aab2168aff25e065967c382a2b6cef41a">realization::Formulation_Manager::read</a>  (<a class="el" href="namespacegeojson.html#a0575056bcdcce0ccba81e6875591b702" title="Easy short-hand for a smart pointer to a FeatureCollection.">geojson::GeoJSON</a> fabric, <a class="el" href="classutils_1_1_stream_handler.html" title="This class provides a copyable interface to a std::ostream or std::ostream like object that may not s...">utils::StreamHandler</a> output_stream)</dt>
 <dd><a class="anchor" id="_todo000010"></a>TODO: Separate input_interval from output_interval  </dd>
-<dt>Member <a class="el" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html#ae311b36c05cd92119cff9a2d16c202f9">Reservoir::Explicit_Time::Reservoir::check_highest_outlet_against_max_storage</a>  ()</dt>
-<dd><a class="anchor" id="_todo000020"></a>TODO: Return appropriate error  </dd>
-<dt>Member <a class="el" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html#aeba0516cea71fd7cd00f325b900ee424">Reservoir::Explicit_Time::Reservoir::parameters</a>  </dt>
-<dd><a class="anchor" id="_todo000029"></a>TODO: Potential Additions<ol type="1">
-<li>Local sub-timestep to see if storage level crosses threshold below activation height of an outlet or above top of outlet.</li>
-<li>Correct for water level falling below an activation threshold and return a flag to possibly call another function that calls a partial timestep.</li>
-<li>Return total velocity or individual outlet velocities and these would be multiplied by a watershed area to get discharge in cubic meters per second.  </li>
-</ol>
-</dd>
-<dt>Member <a class="el" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html#a8885410fe5d145148654b48ed39e64a8">Reservoir::Explicit_Time::Reservoir::Reservoir</a>  (double minimum_storage_meters, double maximum_storage_meters, double current_storage_height_meters, double a, double activation_threshold_meters, double max_velocity_meters_per_second)</dt>
-<dd><a class="anchor" id="_todo000016"></a>TODO: Return appropriate error  </dd>
-<dt>Member <a class="el" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html#acd229812c94823482772777902550af0">Reservoir::Explicit_Time::Reservoir::Reservoir</a>  (double minimum_storage_meters, double maximum_storage_meters, double current_storage_height_meters, double a, double b, double activation_threshold_meters, double max_velocity_meters_per_second)</dt>
-<dd><a class="anchor" id="_todo000015"></a>TODO: Return appropriate error  </dd>
-<dt>Member <a class="el" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html#ac6ef733dd084c2f79ea54567dd91113d">Reservoir::Explicit_Time::Reservoir::response_meters_per_second</a>  (double in_flux_meters_per_second, int delta_time_seconds, double &amp;excess_water_meters)</dt>
-<dd><p class="startdd"><a class="anchor" id="_todo000017"></a>TODO: Return appropriate warning </p>
-<p class="interdd"><a class="anchor" id="_todo000018"></a>TODO: Return appropriate warning </p>
-<p class="enddd"><a class="anchor" id="_todo000019"></a>TODO: Return appropriate error  </p>
-</dd>
-<dt>Member <a class="el" href="class_reservoir_1_1_explicit___time_1_1_reservoir.html#ad90572ef1c941c6629f81f5cc9563b75">Reservoir::Explicit_Time::Reservoir::velocity_meters_per_second_for_outlet</a>  (int outlet_index)</dt>
-<dd><a class="anchor" id="_todo000021"></a>: Implement unordered_map outlet_map  </dd>
-<dt>Member <a class="el" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html#a375d4714a201cc233cfd8243b2bb2124">Reservoir::Implicit_Time::Reservoir::check_highest_outlet_against_max_storage</a>  ()</dt>
-<dd><a class="anchor" id="_todo000027"></a>TODO: Return appropriate error  </dd>
-<dt>Member <a class="el" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html#aa7fe13923ff6303eccfe52636a1b9bc1">Reservoir::Implicit_Time::Reservoir::flux_meters_for_outlet</a>  (int outlet_index)</dt>
-<dd><a class="anchor" id="_todo000028"></a>: Implement unordered_map outlet_map  </dd>
-<dt>Member <a class="el" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html#a4cdb68383a635f8a8095cd95c739046f">Reservoir::Implicit_Time::Reservoir::parameters</a>  </dt>
-<dd><a class="anchor" id="_todo000030"></a>TODO: Potential Additions<ol type="1">
-<li>Local sub-timestep to see if storage level crosses threshold below activation height of an outlet or above top of outlet.</li>
-<li>Correct for water level falling below an activation threshold and return a flag to possibly call another function that calls a partial timestep.</li>
-<li>Return total flux or individual outlet fluxes and these would be multiplied by a watershed area to get discharge in cubic meters.  </li>
-</ol>
-</dd>
-<dt>Member <a class="el" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html#a026a415befab0a81766f38d22d3ba7c9">Reservoir::Implicit_Time::Reservoir::Reservoir</a>  (double minimum_storage_meters, double maximum_storage_meters, double current_storage_height_meters, double a, double b, double activation_threshold_meters, double max_flux_meters)</dt>
-<dd><a class="anchor" id="_todo000022"></a>TODO: Return appropriate error  </dd>
-<dt>Member <a class="el" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html#af6981ae7cecc7001317e4b087ad7515c">Reservoir::Implicit_Time::Reservoir::Reservoir</a>  (double minimum_storage_meters, double maximum_storage_meters, double current_storage_height_meters, double a, double activation_threshold_meters, double max_flux_meters)</dt>
-<dd><a class="anchor" id="_todo000023"></a>TODO: Return appropriate error  </dd>
-<dt>Member <a class="el" href="class_reservoir_1_1_implicit___time_1_1_reservoir.html#a563294027bb28539b12c9c485235a8bc">Reservoir::Implicit_Time::Reservoir::response_meters</a>  (double in_flux_meters, double &amp;excess_water_meters)</dt>
-<dd><p class="startdd"><a class="anchor" id="_todo000024"></a>TODO: Return appropriate warning </p>
-<p class="interdd"><a class="anchor" id="_todo000025"></a>TODO: Return appropriate warning </p>
-<p class="enddd"><a class="anchor" id="_todo000026"></a>TODO: Return appropriate error  </p>
-</dd>
 <dt>Member <a class="el" href="structsimulation__time__params.html#af6a484cdc0b1d77405a4507baa3a5f5a">simulation_time_params::simulation_time_params</a>  (std::string start_time, std::string end_time, int output_interval)</dt>
 <dd><a class="anchor" id="_todo000011"></a>converting to UTC can be tricky, especially if thread safety is a concern </dd>
 </dl>
@@ -164,7 +124,7 @@ $(document).ready(function(){initNavTree('todo.html',''); initResizable(); });
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Tue Aug 8 2023 17:23:42 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
+    <li class="footer">Generated on Thu Aug 10 2023 14:31:45 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
   </ul>
 </div>
 </body>

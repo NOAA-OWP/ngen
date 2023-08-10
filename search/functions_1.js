@@ -14,14 +14,13 @@ var searchData=
   ['bmidataselector_11',['BMIDataSelector',['../class_b_m_i_data_selector.html#a69be092238617eb9a3a33a5a03e15801',1,'BMIDataSelector']]],
   ['break_5flinks_12',['break_links',['../classgeojson_1_1_feature_base.html#a30269e3419054d9f3e06e4d1c74b44e0',1,'geojson::FeatureBase']]],
   ['build_5fcollection_13',['build_collection',['../namespacegeojson.html#a6c56f04132a1174ba51a89356713e209',1,'geojson']]],
-  ['build_5ffeature_14',['build_feature',['../namespacegeojson.html#a9c216b34a0daddc5c999f512e06125ed',1,'geojson::build_feature()'],['../namespacegeopackage.html#ad62d7034c9f884e4bb739444c4a9aed7',1,'geopackage::build_feature()']]],
+  ['build_5ffeature_14',['build_feature',['../namespacegeopackage.html#ad62d7034c9f884e4bb739444c4a9aed7',1,'geopackage::build_feature()'],['../namespacegeojson.html#a9c216b34a0daddc5c999f512e06125ed',1,'geojson::build_feature(boost::property_tree::ptree &amp;tree)']]],
   ['build_5fgeometry_15',['build_geometry',['../namespacegeojson.html#a5c82b2a9948b6f057381bf16e197bde4',1,'geojson::build_geometry()'],['../namespacegeopackage.html#af4db1e0223650985023e30ffe06255b6',1,'geopackage::build_geometry()']]],
-  ['build_5fgiuh_5fkernel_16',['build_giuh_kernel',['../classgiuh_1_1_giuh_json_reader.html#a2a5e47652fd88cd1b2f6c028a01e21cb',1,'giuh::GiuhJsonReader']]],
-  ['build_5flinestring_17',['build_linestring',['../namespacegeojson.html#a5da2bcd4b8b0e11f7de4508d134ef244',1,'geojson']]],
-  ['build_5fmultilinestring_18',['build_multilinestring',['../namespacegeojson.html#a560f48c9d84b094ce7add6f590230edc',1,'geojson']]],
-  ['build_5fmultipoint_19',['build_multipoint',['../namespacegeojson.html#a3b174e59b4d874dc2d2214171963f011',1,'geojson']]],
-  ['build_5fmultipolygon_20',['build_multipolygon',['../namespacegeojson.html#a4df542b1d6e6766a0512cc99a47756cc',1,'geojson']]],
-  ['build_5fpoint_21',['build_point',['../namespacegeojson.html#a99613edf8c2f0543dcc2330e275e8f82',1,'geojson']]],
-  ['build_5fpolygon_22',['build_polygon',['../namespacegeojson.html#aadf8e60a78277620cb882e64d6a03284',1,'geojson']]],
-  ['build_5fproperties_23',['build_properties',['../namespacegeopackage.html#ad83484f3bbaac91d9890c85713c448e3',1,'geopackage']]]
+  ['build_5flinestring_16',['build_linestring',['../namespacegeojson.html#a5da2bcd4b8b0e11f7de4508d134ef244',1,'geojson']]],
+  ['build_5fmultilinestring_17',['build_multilinestring',['../namespacegeojson.html#a560f48c9d84b094ce7add6f590230edc',1,'geojson']]],
+  ['build_5fmultipoint_18',['build_multipoint',['../namespacegeojson.html#a3b174e59b4d874dc2d2214171963f011',1,'geojson']]],
+  ['build_5fmultipolygon_19',['build_multipolygon',['../namespacegeojson.html#a4df542b1d6e6766a0512cc99a47756cc',1,'geojson']]],
+  ['build_5fpoint_20',['build_point',['../namespacegeojson.html#a99613edf8c2f0543dcc2330e275e8f82',1,'geojson']]],
+  ['build_5fpolygon_21',['build_polygon',['../namespacegeojson.html#aadf8e60a78277620cb882e64d6a03284',1,'geojson']]],
+  ['build_5fproperties_22',['build_properties',['../namespacegeopackage.html#ad83484f3bbaac91d9890c85713c448e3',1,'geopackage']]]
 ];

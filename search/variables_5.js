@@ -5,6 +5,5 @@ var searchData=
   ['end_5ft_2',['end_t',['../structsimulation__time__params.html#a3b900be67a210b742b2ad09e060cf267',1,'simulation_time_params']]],
   ['end_5ftime_3',['end_time',['../structforcing__params.html#a625b5e1b9db215c9dde0f753b1ec239c',1,'forcing_params::end_time()'],['../structsimulation__time__params.html#ad0213ef131f38e42d126f1f090f87962',1,'simulation_time_params::end_time()']]],
   ['et_5fparams_4',['et_params',['../classrealization_1_1_et___accountable.html#a5fab369fc039b378dfd270490ddb9e5c',1,'realization::Et_Accountable']]],
-  ['expon_5',['expon',['../class_reservoir_1_1_explicit___time_1_1_reservoir___exponential___outlet.html#a69836632c8b4221940c82319fe54b2f6',1,'Reservoir::Explicit_Time::Reservoir_Exponential_Outlet::expon()'],['../class_reservoir_1_1_implicit___time_1_1_reservoir___exponential___outlet.html#aa481f74b76b728a06f777ed569e13fc2',1,'Reservoir::Implicit_Time::Reservoir_Exponential_Outlet::expon()']]],
-  ['extent_6',['extent',['../classboost_1_1span.html#aa52cfdcc1721b57f15a6b625f7116bbd',1,'boost::span']]]
+  ['extent_5',['extent',['../classboost_1_1span.html#aa52cfdcc1721b57f15a6b625f7116bbd',1,'boost::span']]]
 ];

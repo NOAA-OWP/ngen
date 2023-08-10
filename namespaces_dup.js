@@ -7,12 +7,10 @@ var namespaces_dup =
     [ "external", "namespaceexternal.html", "namespaceexternal" ],
     [ "geojson", "namespacegeojson.html", "namespacegeojson" ],
     [ "geopackage", "namespacegeopackage.html", "namespacegeopackage" ],
-    [ "giuh", "namespacegiuh.html", "namespacegiuh" ],
     [ "hy_features", "namespacehy__features.html", "namespacehy__features" ],
     [ "models", "namespacemodels.html", "namespacemodels" ],
     [ "network", "namespacenetwork.html", "namespacenetwork" ],
     [ "nexus", "namespacenexus.html", "namespacenexus" ],
     [ "realization", "namespacerealization.html", "namespacerealization" ],
-    [ "Reservoir", "namespace_reservoir.html", "namespace_reservoir" ],
     [ "utils", "namespaceutils.html", "namespaceutils" ]
 ];
