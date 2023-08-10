@@ -100,15 +100,11 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
             out_vars[i] = out_vars_json_list[i].as_string();
         }
         set_output_variable_names(out_vars);
-        set_glob_bmi_model_type(get_output_variable_names());
-        //set_sub_bmi_model_type(get_output_variable_names());
     }
     // Otherwise, for multi BMI, the BMI output variables of the last nested module should be used.
     else {
         is_out_vars_from_last_mod = true;
         set_output_variable_names(modules.back()->get_output_variable_names());
-        set_glob_bmi_model_type(get_output_variable_names());
-        //set_sub_bmi_model_type(get_output_variable_names());
     }
     // TODO: consider warning if nested module formulations have formulation output variables, as that level of the
     //  config is (at present) going to be ignored (though strictly speaking, this doesn't apply to the last module in
@@ -125,21 +121,15 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
         // Make sure that we have the same number of headers as we have output values
         if (get_output_variable_names().size() == out_headers.size()) {
             set_output_header_fields(out_headers);
-            //set_glob_bmi_model_type(get_output_variable_names());
-            //set_sub_bmi_model_type(get_output_variable_names());
         }
         else {
             std::cerr << "WARN: configured output headers have " << out_headers.size() << " fields, but there are "
                       << get_output_variable_names().size() << " variables in the output" << std::endl;
             set_output_header_fields(get_output_variable_names());
-            //set_glob_bmi_model_type(get_output_variable_names());
-            //set_sub_bmi_model_type(get_output_variable_names());
         }
     }
     else {
         set_output_header_fields(get_output_variable_names());
-        //set_glob_bmi_model_type(get_output_variable_names());
-        //set_sub_bmi_model_type(get_output_variable_names());
     }
 
     // Output precision, if present
@@ -302,11 +292,9 @@ string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, std::st
         throw std::invalid_argument("Only current time step valid when getting multi-module BMI formulation output");
     }
 
+    // check if a requested output variable name is valid, if not, stop the execution
     if (timestep == 0) {
-        //set_glob_bmi_model_type();
-        //set_glob_bmi_model_type(get_output_variable_names());
-        //set_sub_bmi_model_type(get_output_variable_names());
-        get_bmi_model_type();
+        check_output_var_names();
     }
 
     // Start by first checking whether we are NOT just using the last module's values
@@ -319,30 +307,6 @@ string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, std::st
         const std::vector<std::string> &output_var_names = get_output_variable_names();
         // This almost certainly should never happen, but just to be safe ...
         if (output_var_names.empty()) { return ""; }
-
-        /*
-        std::cout << "Multi: timestep = " << timestep << std::endl;
-        for (int i = 0; i < output_var_names.size(); ++i) {
-            std::cout << "Multi: output_var_names," << output_var_names[i] << std::endl;
-        }
-
-        const std::vector<std::string> &avaliable_var_names = get_avaliable_variable_names();
-        for (int i = 0; i < avaliable_var_names.size(); ++i) {
-            std::cout << "Multi: avaliable_var_names," << avaliable_var_names[i] << std::endl;
-        }
-        */
-
-        vector<std::string> output_var_last;
-        for (const nested_module_ptr &module: modules) {
-            int last_index = modules.size();
-            if (module == modules[last_index-1]) {
-                for (const std::string &out_var_name: module->get_bmi_output_variables()) {
-                    std::cout << "Multi: out_var_name," << out_var_name << std::endl;
-                    output_var_last.push_back(module->get_config_mapped_variable_name(out_var_name));
-                    std::cout << "Multi: mapped out_var_name," << module->get_config_mapped_variable_name(out_var_name) << std::endl;
-                }
-            }
-        }
 
         try {
             // Do the first separately, without the leading comma
