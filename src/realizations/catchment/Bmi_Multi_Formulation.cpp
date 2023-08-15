@@ -74,12 +74,12 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
             #endif // ACTIVATE_PYTHON
         }
         if (inactive_type_requested) {
-            throw runtime_error(
+            throw std::runtime_error(
                     get_formulation_type() + " could not initialize sub formulation of type " + type_name +
                     " due to support for this type not being activated.");
         }
         if (module == nullptr) {
-            throw runtime_error(get_formulation_type() + " received unexpected subtype formulation " + type_name);
+            throw std::runtime_error(get_formulation_type() + " received unexpected subtype formulation " + type_name);
         }
         modules[i] = module;
 
@@ -180,7 +180,7 @@ const bool &Bmi_Multi_Formulation::get_allow_model_exceed_end_time() const {
  * @see ForcingProvider
  */
 //const vector<std::string> &Bmi_Multi_Formulation::get_available_forcing_outputs() {
-const vector<std::string> &Bmi_Multi_Formulation::get_available_variable_names() {
+const std::vector<std::string> &Bmi_Multi_Formulation::get_available_variable_names() {
     if (is_model_initialized() && available_forcings.empty()) {
         for (const nested_module_ptr &module: modules) {
             for (const std::string &out_var_name: module->get_bmi_output_variables()) {
@@ -213,17 +213,17 @@ const time_t &Bmi_Multi_Formulation::get_bmi_model_start_time_forcing_offset_s()
  * @return Either the translated equivalent variable name, or the provided name if there is not a mapping entry.
  * @see get_config_mapped_variable_name(string, shared_ptr, shared_ptr)
  */
-const string &Bmi_Multi_Formulation::get_config_mapped_variable_name(const string &model_var_name) {
+const std::string &Bmi_Multi_Formulation::get_config_mapped_variable_name(const std::string &model_var_name) {
     return get_config_mapped_variable_name(model_var_name, true, true);
 }
 
-const string &Bmi_Multi_Formulation::get_config_mapped_variable_name(const string &model_var_name, bool check_first,
+const std::string &Bmi_Multi_Formulation::get_config_mapped_variable_name(const std::string &model_var_name, bool check_first,
                                                                      bool check_last)
 {
     if (check_first) {
         // If an input var in first module, see if we get back a mapping (i.e., not the same thing), and return if so
         if (modules[0]->is_bmi_input_variable(model_var_name)) {
-            const string &mapped_name = modules[0]->get_config_mapped_variable_name(model_var_name);
+            const std::string &mapped_name = modules[0]->get_config_mapped_variable_name(model_var_name);
             if (mapped_name != model_var_name)
                 return mapped_name;
         }
@@ -261,19 +261,19 @@ const string &Bmi_Multi_Formulation::get_config_mapped_variable_name(const strin
  * @param in_module The module needing a translation of ``output_var_name`` to one of its input variable names.
  * @return Either the translated equivalent variable name, or the provided name if there is not a mapping entry.
  */
-const string &Bmi_Multi_Formulation::get_config_mapped_variable_name(const string &output_var_name,
+const std::string &Bmi_Multi_Formulation::get_config_mapped_variable_name(const std::string &output_var_name,
                                                                      const shared_ptr<Bmi_Formulation>& out_module,
                                                                      const shared_ptr<Bmi_Formulation>& in_module)
 {
     if (!out_module->is_bmi_output_variable(output_var_name))
         return output_var_name;
 
-    const string &mapped_output = out_module->get_config_mapped_variable_name(output_var_name);
+    const std::string &mapped_output = out_module->get_config_mapped_variable_name(output_var_name);
     if (in_module->is_bmi_input_variable(mapped_output))
         return mapped_output;
 
-    for (const string &s : in_module->get_bmi_input_variables()) {
-        const string &mapped_s = in_module->get_config_mapped_variable_name(s);
+    for (const std::string &s : in_module->get_bmi_input_variables()) {
+        const std::string &mapped_s = in_module->get_config_mapped_variable_name(s);
         if (mapped_s == output_var_name || mapped_s == mapped_output)
             return mapped_s;
     }
@@ -281,11 +281,11 @@ const string &Bmi_Multi_Formulation::get_config_mapped_variable_name(const strin
 }
 
 // TODO: remove from this level - it belongs (perhaps) as part of the ForcingProvider interface, but is general to it
-const string &Bmi_Multi_Formulation::get_forcing_file_path() const {
+const std::string &Bmi_Multi_Formulation::get_forcing_file_path() const {
     return modules[0]->get_forcing_file_path();
 }
 
-string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, std::string delimiter) {
+std::string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, std::string delimiter) {
     // TODO: have to do some figuring out to make sure this isn't ambiguous (i.e., same output var name from two modules)
     // TODO: need to verify that output variable names are valid, or else warn and return default
 
@@ -412,11 +412,11 @@ double Bmi_Multi_Formulation::get_response(time_step_t t_index, time_step_t t_de
         return get_module_var_value_as_double<Bmi_Py_Formulation>(get_bmi_main_output_var(), modules[index]);
     }
     #endif // ACTIVATE_PYTHON
-    throw runtime_error(get_formulation_type() + " unimplemented type " + module_types[index] +
+    throw std::runtime_error(get_formulation_type() + " unimplemented type " + module_types[index] +
                         " in get_response for main return value");
 }
 
-bool Bmi_Multi_Formulation::is_bmi_input_variable(const string &var_name) {
+bool Bmi_Multi_Formulation::is_bmi_input_variable(const std::string &var_name) {
     return modules[0]->is_bmi_input_variable(var_name);
 }
 
@@ -425,7 +425,7 @@ bool Bmi_Multi_Formulation::is_bmi_model_time_step_fixed() {
                        [](const std::shared_ptr<Bmi_Formulation>& m) { return m->is_bmi_model_time_step_fixed(); });
 }
 
-bool Bmi_Multi_Formulation::is_bmi_output_variable(const string &var_name) {
+bool Bmi_Multi_Formulation::is_bmi_output_variable(const std::string &var_name) {
     return modules.back()->is_bmi_output_variable(var_name);
 }
 
