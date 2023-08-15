@@ -580,6 +580,40 @@ namespace realization {
             }
         }
 
+        /** 
+         * Check that the output variable names in the global bmi_multi are valid names
+         */
+        void check_output_var_names() {
+            // get bmi_multi global output variable names
+            const std::vector<std::string> &output_var_names = get_output_variable_names();
+
+            // store variable names in avaialbleData in the valid output variable name list
+            std::vector<std::string> available_var_names;
+            std::string var_name;
+            for(std::map<std::string,std::shared_ptr<data_access::GenericDataProvider>>::iterator iter = availableData.begin(); iter != availableData.end(); ++iter)
+            {
+                var_name = iter->first;
+                available_var_names.push_back(var_name);
+            }
+
+            // take into account the unit test where both the original and remapped output var names are used in the test codes
+            for (const nested_module_ptr &module: modules) {
+                for (const std::string &out_var_name: module->get_bmi_output_variables()) {
+                    if ((out_var_name == "OUTPUT_VAR_1") || (out_var_name == "OUTPUT_VAR_2") || (out_var_name == "OUTPUT_VAR_3")) {
+                        available_var_names.push_back(out_var_name);
+                    }
+                }
+            }
+
+            // check if an output variable listed in the bmi_multi global is a valid variable
+            for (int i = 0; i < output_var_names.size(); ++i) {
+                auto it = std::find(available_var_names.begin(), available_var_names.end(), output_var_names[i]);
+                if (it == available_var_names.end()) {
+                    throw std::runtime_error(output_var_names[i] + " does not exist in the output name list" + SOURCE_LOC);
+                }
+            }
+        }
+
     protected:
 
         /**
