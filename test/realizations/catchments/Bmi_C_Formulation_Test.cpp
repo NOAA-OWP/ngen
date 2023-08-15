@@ -73,7 +73,7 @@ protected:
         return formulation.get_model_type_name();
     }
 
-    static double get_friend_var_value_as_double(Bmi_C_Formulation& formulation, const string& var_name) {
+    static double get_friend_var_value_as_double(Bmi_C_Formulation& formulation, const std::string& var_name) {
         return formulation.get_var_value_as_double(var_name);
     }
 
