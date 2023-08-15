@@ -1,11 +1,11 @@
 #ifndef NGEN_UTILITIES_QLAT_HANDLER_HPP
 #define NGEN_UTILITIES_QLAT_HANDLER_HPP
 
-#include <iomanip>
-#include <vector>
-#include <memory>
-
 #include <fstream>
+#include <iomanip>
+#include <memory>
+#include <stdexcept>
+#include <vector>
 
 #ifdef NETCDF_ACTIVE
 #include <netcdf>
@@ -116,7 +116,6 @@ struct nexus_netcdf_writer : public nexus_writer
 #ifndef NETCDF_ACTIVE
         NGEN_NETCDF_ERROR;
 #else
-        std::cerr << "writing at " << index_ << '\n';
         it_->get()->getVar("nexus_id").putVar({ index_ }, nexus_id);
         it_->get()->getVar("segment_id").putVar({ index_ }, segment_id);
         it_->get()->getVar("qSfcLatRunoff").putVar({ index_ }, contribution);
