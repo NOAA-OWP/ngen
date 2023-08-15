@@ -457,7 +457,7 @@ $(document).ready(function(){initNavTree('_bmi___fortran___adapter_8hpp_source.h
 <div class="line"><a id="l00675" name="l00675"></a><span class="lineno">  675</span> </div>
 <div class="line"><a id="l00676" name="l00676"></a><span class="lineno">  676</span>                <span class="comment">// Must get the names from the model as an array of C strings</span></div>
 <div class="line"><a id="l00677" name="l00677"></a><span class="lineno">  677</span>                <span class="comment">// The array can be on the stack ...</span></div>
-<div class="line"><a id="l00678" name="l00678"></a><span class="lineno">  678</span>                <span class="keywordtype">char</span>* names_array[variableCount];</div>
+<div class="line"><a id="l00678" name="l00678"></a><span class="lineno">  678</span>                std::vector&lt;char*&gt; names_array(variableCount);</div>
 <div class="line"><a id="l00679" name="l00679"></a><span class="lineno">  679</span>                <span class="comment">// ... but allocate the space for the individual C strings (i.e., the char * elements)</span></div>
 <div class="line"><a id="l00680" name="l00680"></a><span class="lineno">  680</span>                <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; variableCount; i++) {</div>
 <div class="line"><a id="l00681" name="l00681"></a><span class="lineno">  681</span>                    names_array[i] = <span class="keyword">static_cast&lt;</span><span class="keywordtype">char</span> *<span class="keyword">&gt;</span>(malloc(<span class="keyword">sizeof</span>(<span class="keywordtype">char</span>) * BMI_MAX_VAR_NAME));</div>
@@ -466,10 +466,10 @@ $(document).ready(function(){initNavTree('_bmi___fortran___adapter_8hpp_source.h
 <div class="line"><a id="l00684" name="l00684"></a><span class="lineno">  684</span>                <span class="comment">// With the necessary char** in hand, get the names from the model</span></div>
 <div class="line"><a id="l00685" name="l00685"></a><span class="lineno">  685</span>                <span class="keywordtype">int</span> names_result;</div>
 <div class="line"><a id="l00686" name="l00686"></a><span class="lineno">  686</span>                <span class="keywordflow">if</span> (is_input_variables) {</div>
-<div class="line"><a id="l00687" name="l00687"></a><span class="lineno">  687</span>                    names_result = get_input_var_names(bmi_model.get(), names_array);</div>
+<div class="line"><a id="l00687" name="l00687"></a><span class="lineno">  687</span>                    names_result = get_input_var_names(bmi_model.get(), names_array.data());</div>
 <div class="line"><a id="l00688" name="l00688"></a><span class="lineno">  688</span>                }</div>
 <div class="line"><a id="l00689" name="l00689"></a><span class="lineno">  689</span>                <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00690" name="l00690"></a><span class="lineno">  690</span>                    names_result = get_output_var_names(bmi_model.get(), names_array);</div>
+<div class="line"><a id="l00690" name="l00690"></a><span class="lineno">  690</span>                    names_result = get_output_var_names(bmi_model.get(), names_array.data());</div>
 <div class="line"><a id="l00691" name="l00691"></a><span class="lineno">  691</span>                }</div>
 <div class="line"><a id="l00692" name="l00692"></a><span class="lineno">  692</span>                <span class="keywordflow">if</span> (names_result != BMI_SUCCESS) {</div>
 <div class="line"><a id="l00693" name="l00693"></a><span class="lineno">  693</span>                    <span class="keywordflow">throw</span> std::runtime_error(model_name + <span class="stringliteral">&quot; failed to get array of &quot;</span> + varType + <span class="stringliteral">&quot; variables names.&quot;</span>);</div>
@@ -540,7 +540,7 @@ $(document).ready(function(){initNavTree('_bmi___fortran___adapter_8hpp_source.h
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_9058ef7c383dff996c678c5ba80ec03e.html">realizations</a></li><li class="navelem"><a class="el" href="dir_8dbd500a1ae0b3d23deb7285e2980d8b.html">catchment</a></li><li class="navelem"><b>Bmi_Fortran_Adapter.hpp</b></li>
-    <li class="footer">Generated on Thu Aug 10 2023 16:39:10 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
+    <li class="footer">Generated on Tue Aug 15 2023 16:05:01 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
   </ul>
 </div>
 </body>

@@ -399,8 +399,8 @@ $(document).ready(function(){initNavTree('_bmi___py___adapter_8hpp_source.html',
 <div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span> </div>
 <div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>            <span class="keywordtype">int</span> get_sum_of_grid_nodes_per_face(<span class="keyword">const</span> <span class="keywordtype">int</span> grid) {</div>
 <div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>                <span class="keywordtype">int</span> grid_node_face_count = GetGridFaceCount(grid);</div>
-<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>                <span class="keywordtype">int</span> grid_nodes_per_face[grid_node_face_count];</div>
-<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>                GetGridNodesPerFace(grid, grid_nodes_per_face);</div>
+<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>                std::vector&lt;int&gt; grid_nodes_per_face(grid_node_face_count);</div>
+<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>                GetGridNodesPerFace(grid, grid_nodes_per_face.data());</div>
 <div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>                <span class="keywordtype">int</span> nodes_per_face_sum = 0;</div>
 <div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>                <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; grid_node_face_count; ++i)</div>
 <div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>                    nodes_per_face_sum += grid_nodes_per_face[i];</div>
@@ -584,8 +584,8 @@ $(document).ready(function(){initNavTree('_bmi___py___adapter_8hpp_source.html',
 <div class="line"><a id="l00702" name="l00702"></a><span class="lineno">  702</span>                std::string grid_type = GetGridType(grid);</div>
 <div class="line"><a id="l00703" name="l00703"></a><span class="lineno">  703</span>                <span class="keywordflow">if</span>( grid_type == <span class="stringliteral">&quot;uniform_rectilinear&quot;</span> || grid_type == <span class="stringliteral">&quot;rectilinear&quot;</span>){</div>
 <div class="line"><a id="l00704" name="l00704"></a><span class="lineno">  704</span>                    <span class="keywordtype">int</span> rank = GetGridRank(grid);</div>
-<div class="line"><a id="l00705" name="l00705"></a><span class="lineno">  705</span>                    <span class="keywordtype">int</span> shape[rank];</div>
-<div class="line"><a id="l00706" name="l00706"></a><span class="lineno">  706</span>                    GetGridShape(grid, shape);</div>
+<div class="line"><a id="l00705" name="l00705"></a><span class="lineno">  705</span>                    std::vector&lt;int&gt; shape(rank);</div>
+<div class="line"><a id="l00706" name="l00706"></a><span class="lineno">  706</span>                    GetGridShape(grid, shape.data());</div>
 <div class="line"><a id="l00707" name="l00707"></a><span class="lineno">  707</span>                    get_and_copy_grid_array&lt;double&gt;(name, grid, dest, shape[rank-index-1], <span class="stringliteral">&quot;float&quot;</span>);</div>
 <div class="line"><a id="l00708" name="l00708"></a><span class="lineno">  708</span>                    <span class="keywordflow">return</span>;</div>
 <div class="line"><a id="l00709" name="l00709"></a><span class="lineno">  709</span>                }<span class="keywordflow">else</span>{</div>
@@ -652,7 +652,7 @@ $(document).ready(function(){initNavTree('_bmi___py___adapter_8hpp_source.html',
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_9058ef7c383dff996c678c5ba80ec03e.html">realizations</a></li><li class="navelem"><a class="el" href="dir_8dbd500a1ae0b3d23deb7285e2980d8b.html">catchment</a></li><li class="navelem"><b>Bmi_Py_Adapter.hpp</b></li>
-    <li class="footer">Generated on Thu Aug 10 2023 16:39:10 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
+    <li class="footer">Generated on Tue Aug 15 2023 16:05:01 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
   </ul>
 </div>
 </body>
