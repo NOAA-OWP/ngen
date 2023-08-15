@@ -79,8 +79,8 @@ int main(int argc, char *argv[]) {
     //arg 7 is the partition file path
     //arg 8 is an optional flag that driver should, if not already preprocessed this way, subdivided the hydrofabric
 
-    std::vector<string> catchment_subset_ids;
-    std::vector<string> nexus_subset_ids;
+    std::vector<std::string> catchment_subset_ids;
+    std::vector<std::string> nexus_subset_ids;
 
     if( argc < 2) {
         // Usage
@@ -91,8 +91,8 @@ int main(int argc, char *argv[]) {
                   << "Use \"all\" as explicit argument when no subset is needed." << std::endl;
 
         // Build and environment information
-        cout<<std::endl<<"Build Info:"<<std::endl;
-        cout<<"  NGen version: " // This is here mainly so that there will be *some* output if somehow no other options are enabled.
+        std::cout<<std::endl<<"Build Info:"<<std::endl;
+        std::cout<<"  NGen version: " // This is here mainly so that there will be *some* output if somehow no other options are enabled.
           << ngen_VERSION_MAJOR << "."
           << ngen_VERSION_MINOR << "."
           << ngen_VERSION_PATCH << std::endl;
@@ -100,32 +100,32 @@ int main(int argc, char *argv[]) {
         cout<<"  Parallel build"<<std::endl;
         #endif
         #ifdef NETCDF_ACTIVE
-        cout<<"  NetCDF lumped forcing enabled"<<std::endl;
+        std::cout<<"  NetCDF lumped forcing enabled"<<std::endl;
         #endif
         #ifdef NGEN_BMI_FORTRAN_ACTIVE
-        cout<<"  Fortran BMI enabled"<<std::endl;
+        std::cout<<"  Fortran BMI enabled"<<std::endl;
         #endif
         #ifdef NGEN_C_LIB_ACTIVE
         cout<<"  C BMI enabled"<<std::endl;
         #endif
         #ifdef ACTIVATE_PYTHON
-        cout<<"  Python active"<<std::endl;
-        cout<<"    Embedded interpreter version: "<<PY_MAJOR_VERSION<<"."<<PY_MINOR_VERSION<<"."<<PY_MICRO_VERSION<<std::endl;
+        std::cout<<"  Python active"<<std::endl;
+        std::cout<<"    Embedded interpreter version: "<<PY_MAJOR_VERSION<<"."<<PY_MINOR_VERSION<<"."<<PY_MICRO_VERSION<<std::endl;
         #endif
         #ifdef NGEN_ROUTING_ACTIVE
-        cout<<"  Routing active"<<std::endl;
+        std::cout<<"  Routing active"<<std::endl;
         #endif
         #ifdef ACTIVATE_PYTHON
-        cout<<std::endl<<"Python Environment Info:"<<std::endl;
-        cout<<"  VIRTUAL_ENV environment variable: "<<(std::getenv("VIRTUAL_ENV") == nullptr ? "(not set)" : std::getenv("VIRTUAL_ENV"))<<std::endl;
-        cout<<"  Discovered venv: "<<_interp->getDiscoveredVenvPath()<<std::endl;
+        std::cout<<std::endl<<"Python Environment Info:"<<std::endl;
+        std::cout<<"  VIRTUAL_ENV environment variable: "<<(std::getenv("VIRTUAL_ENV") == nullptr ? "(not set)" : std::getenv("VIRTUAL_ENV"))<<std::endl;
+        std::cout<<"  Discovered venv: "<<_interp->getDiscoveredVenvPath()<<std::endl;
         auto paths = _interp->getSystemPath();
-        cout<<"  System paths:"<<std::endl;
+        std::cout<<"  System paths:"<<std::endl;
         for(std::string& path: std::get<1>(paths)){
-          cout<<"    "<<path<<std::endl;
+          std::cout<<"    "<<path<<std::endl;
         }
         #endif
-        cout<<std::endl;
+        std::cout<<std::endl;
         exit(0); // Unsure if this path should have a non-zero exit code?
     } else if( argc < 6) {
         std::cout << "Missing required args:" << std::endl;
@@ -342,7 +342,7 @@ int main(int argc, char *argv[]) {
         //std::cout<<"Running cat "<<id<<std::endl;
         auto r = features.catchment_at(id);
         //TODO redesign to avoid this cast
-        auto r_c = dynamic_pointer_cast<realization::Catchment_Formulation>(r);
+        auto r_c = std::dynamic_pointer_cast<realization::Catchment_Formulation>(r);
         double response = r_c->get_response(output_time_index, 3600.0);
         std::string output = std::to_string(output_time_index)+","+current_timestamp+","+
                              r_c->get_output_line_for_timestep(output_time_index)+"\n";
