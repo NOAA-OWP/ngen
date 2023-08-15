@@ -18,6 +18,8 @@
 #include <FileChecker.h>
 #include <boost/algorithm/string.hpp>
 
+#include <utilities/nexus_writer.hpp>
+
 #ifdef WRITE_PID_FILE_FOR_GDB_SERVER
 #include <unistd.h>
 #endif // WRITE_PID_FILE_FOR_GDB_SERVER
@@ -50,8 +52,6 @@ std::string PARTITION_PATH = "";
 int mpi_rank;
 int mpi_num_procs;
 #endif
-
-std::unordered_map<std::string, std::ofstream> nexus_outfiles;
 
 int main(int argc, char *argv[]) {
     std::cout << "NGen Framework " << ngen_VERSION_MAJOR << "."
@@ -273,6 +273,7 @@ int main(int argc, char *argv[]) {
       catchment_collection = geojson::read(catchmentDataFile, catchment_subset_ids);
     }
     
+    const auto num_nexuses = nexus_collection->get_size();
     for(auto& feature: *catchment_collection)
     {
         //feature->set_id(feature->get_property("ID").as_string());
@@ -318,9 +319,13 @@ int main(int argc, char *argv[]) {
     //TODO don't really need catchment_collection once catchments are added to nexus collection
     //Still using  catchments for geometry at the moment, fix this later
     //catchment_collection.reset();
-    nexus_collection.reset();
+    
+
+    // FIXME: Preventing nexus collection destruction in order to pull flowpath IDs out.
+    // nexus_collection.reset();
 
     //Still hacking nexus output for the moment
+    /**
     for(const auto& id : features.nexuses()) {
         #ifdef NGEN_MPI_ACTIVE
         if (!features.is_remote_sender_nexus(id)) {
@@ -330,14 +335,31 @@ int main(int argc, char *argv[]) {
         nexus_outfiles[id].open(manager->get_output_root() + id + "_output.csv", std::ios::trunc);
         #endif
     }
+    */
 
     std::cout<<"Running Models"<<std::endl;
+
+    // Setup nexus writer
+    std::unique_ptr<ngen::utils::nexus_writer> nexus_output;
+    char* qlat_format_env   = std::getenv("NGEN_QLAT_FORMAT");
+    std::string qlat_format = qlat_format_env ? qlat_format_env : "";
+    boost::algorithm::to_lower(qlat_format);
+    if (qlat_format == "netcdf") {
+      nexus_output = std::make_unique<ngen::utils::nexus_netcdf_writer>();
+    } else {
+      nexus_output = std::make_unique<ngen::utils::nexus_csv_writer>();
+    }
+  
+    nexus_output->init(manager->Simulation_Time_Object->get_total_output_times());
 
     //Now loop some time, iterate catchments, do stuff for total number of output times
     for(int output_time_index = 0; output_time_index < manager->Simulation_Time_Object->get_total_output_times(); output_time_index++) {
       //std::cout<<"Output Time Index: "<<output_time_index<<std::endl;
       if(output_time_index%100 == 0) std::cout<<"Running timestep "<<output_time_index<<std::endl;
       std::string current_timestamp = manager->Simulation_Time_Object->get_timestamp(output_time_index);
+    
+      nexus_output->next(manager->get_output_root() + "qlat_" + current_timestamp, num_nexuses);
+
       for(const auto& id : features.catchments()) {
         //std::cout<<"Running cat "<<id<<std::endl;
         auto r = features.catchment_at(id);
@@ -388,10 +410,15 @@ int main(int argc, char *argv[]) {
             //This is a terminal node, SHOULDN'T be remote, so ID shouldn't matter too much
             cat_id = "terminal";
           }
+
           double contribution_at_t = features.nexus_at(id)->get_downstream_flow(cat_id, output_time_index, 100.0);
-          if(nexus_outfiles[id].is_open()) {
-            nexus_outfiles[id] << output_time_index << ", " << current_timestamp << ", " << contribution_at_t << std::endl;
-          }
+
+          nexus_output->write(
+            nexus_collection->get_feature(id)->get_property("toid").as_string(),
+            id,
+            contribution_at_t 
+          );
+
   #ifdef NGEN_MPI_ACTIVE
         }
   #endif
@@ -401,6 +428,8 @@ int main(int argc, char *argv[]) {
         //If using below, then another single time vector would be needed to hold the timestamp
         //nexus_flows[id].push_back(contribution_at_t); 
       } //done nexuses
+
+      nexus_output->flush();
     } //done time
     std::cout<<"Finished "<<manager->Simulation_Time_Object->get_total_output_times()<<" timesteps."<<std::endl;
 
