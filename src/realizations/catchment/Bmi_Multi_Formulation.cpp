@@ -292,6 +292,11 @@ string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, std::st
         throw std::invalid_argument("Only current time step valid when getting multi-module BMI formulation output");
     }
 
+    // check if a requested output variable name is valid, if not, stop the execution
+    if (timestep == 0) {
+        check_output_var_names();
+    }
+
     // Start by first checking whether we are NOT just using the last module's values
     if (!is_out_vars_from_last_mod) {
 
