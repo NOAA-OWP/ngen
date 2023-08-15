@@ -260,7 +260,7 @@ namespace realization {
                 }
             }
             //This is unlikely (impossible?) to throw since a pre-check on available names is done above. Assert instead?
-            throw runtime_error(get_formulation_type() + " received invalid output forcing name " + output_name);
+            throw std::runtime_error(get_formulation_type() + " received invalid output forcing name " + output_name);
         }
 
         /**
@@ -325,7 +325,7 @@ namespace realization {
             }
 
             //This is unlikely (impossible?) to throw since a pre-check on available names is done above. Assert instead?
-            throw runtime_error(get_formulation_type() + " received invalid output forcing name " + output_name);
+            throw std::runtime_error(get_formulation_type() + " received invalid output forcing name " + output_name);
         }
 
         bool is_bmi_input_variable(const std::string &var_name) override {
