@@ -1,5 +1,7 @@
 var NAVTREEINDEX19 =
 {
+"structgeopackage_1_1wkb_1_1wgs84.html#a50e68739197287afb021b8ec543a6753":[21,0,5,3,0,2],
+"structgeopackage_1_1wkb_1_1wgs84.html#a50e68739197287afb021b8ec543a6753":[20,0,5,3,0,2],
 "structgeopackage_1_1wkb_1_1wgs84.html#a7a6bcad7be082fbe49021b066e8a49e1":[20,0,5,3,0,0],
 "structgeopackage_1_1wkb_1_1wgs84.html#a7a6bcad7be082fbe49021b066e8a49e1":[21,0,5,3,0,0],
 "structgeopackage_1_1wkb_1_1wgs84.html#a82afe394b9dbfcfc96620e99f6f10033":[21,0,5,3,0,4],

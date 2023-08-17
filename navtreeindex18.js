@@ -1,5 +1,7 @@
 var NAVTREEINDEX18 =
 {
+"namespaceutils.html#a0d4e21fbb83912793512c7e9a37403ac":[20,0,11,5],
+"namespaceutils.html#a33d3d5f81f77152b00078923483b601c":[20,0,11,4],
 "namespaceutils.html#a36dea491674f3e0b6b11591f976a88cb":[20,0,11,6],
 "namespaceutils.html#ab26f60f96ec3cf8e061256397c1f501c":[20,0,11,3],
 "pages.html":[],
@@ -247,7 +249,5 @@ var NAVTREEINDEX18 =
 "structgeopackage_1_1wkb_1_1wgs84.html#a18285fad59bab521f86627df61fe189d":[20,0,5,3,0,7],
 "structgeopackage_1_1wkb_1_1wgs84.html#a18285fad59bab521f86627df61fe189d":[21,0,5,3,0,7],
 "structgeopackage_1_1wkb_1_1wgs84.html#a4058dbbc3082162e9e50cbb4a97f56c6":[21,0,5,3,0,3],
-"structgeopackage_1_1wkb_1_1wgs84.html#a4058dbbc3082162e9e50cbb4a97f56c6":[20,0,5,3,0,3],
-"structgeopackage_1_1wkb_1_1wgs84.html#a50e68739197287afb021b8ec543a6753":[21,0,5,3,0,2],
-"structgeopackage_1_1wkb_1_1wgs84.html#a50e68739197287afb021b8ec543a6753":[20,0,5,3,0,2]
+"structgeopackage_1_1wkb_1_1wgs84.html#a4058dbbc3082162e9e50cbb4a97f56c6":[20,0,5,3,0,3]
 };
