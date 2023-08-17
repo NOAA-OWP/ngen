@@ -301,7 +301,7 @@ private:
      */
     inline std::string determineNestedInputAliasValue(const int ex_index, const int nested_index) {
         // For the first two examples (i.e. not 3 or 4), have an input of all but 1st module be an output of a prior
-        if (ex_index < 2) {
+        if (ex_index < 2 || ex_index >= 4) {
             if (nested_index == 0)  return AORC_FIELD_NAME_PRECIP_RATE;
             else                    return "OUTPUT_VAR_1__" + std::to_string(nested_index - 1);
         }
@@ -484,7 +484,7 @@ void Bmi_Multi_Formulation_Test::SetUp() {
 
     // Define this manually to set how many nested modules per example, and implicitly how many examples.
     // This means 2 example scenarios with 2 nested modules
-    example_module_depth = {2, 2, 2, 2};
+    example_module_depth = {2, 2, 2, 2, 2, 2};
 
     // Initialize the members for holding required input and result test data for individual example scenarios
     setupExampleDataCollections();
@@ -520,6 +520,11 @@ void Bmi_Multi_Formulation_Test::SetUp() {
     initializeTestExample(2, "cat-27", {std::string(BMI_FORTRAN_TYPE), std::string(BMI_PYTHON_TYPE)}, {});
 
     initializeTestExample(3, "cat-27", {std::string(BMI_FORTRAN_TYPE), std::string(BMI_PYTHON_TYPE)}, {"OUTPUT_VAR_1__1", "OUTPUT_VAR_2__1", "OUTPUT_VAR_1__0", "OUTPUT_VAR_2__0", "OUTPUT_VAR_3__0", "precip_rate" });
+
+    // Cases 4 and 5 Specifically to test output_variables failure cases...
+    initializeTestExample(4, "cat-27", {std::string(BMI_FORTRAN_TYPE), std::string(BMI_PYTHON_TYPE)}, { "bogus_variable" });
+    initializeTestExample(5, "cat-27", {std::string(BMI_FORTRAN_TYPE), std::string(BMI_PYTHON_TYPE)}, { "OUTPUT_VAR_1" });
+   
 }
 
 /** Simple test to make sure the model config from example 0 initializes. */
@@ -616,6 +621,33 @@ TEST_F(Bmi_Multi_Formulation_Test, Initialize_3_c) {
     for (size_t i = 0; i < deferred.size(); ++i) {
         ASSERT_TRUE(deferred[i]->isWrappedProviderSet());
     }
+}
+
+/** Test to make sure the a non-existent variable name is not allowed in `output_variables` (see issue #535). */
+TEST_F(Bmi_Multi_Formulation_Test, Initialize_4_Fails) {
+    int ex_index = 4;
+
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+
+    EXPECT_THROW({
+        formulation.create_formulation(config_prop_ptree[ex_index]);
+    }, std::runtime_error);
+
+
+}
+
+/** Test to make sure that a remapped variable name is not allowed in `output_variables` (see issue #535)
+ * This is not strictly part of some spec/requirement, but is the current behavior and is here to
+ * document that, and to catch any change in behavior.
+*/
+TEST_F(Bmi_Multi_Formulation_Test, Initialize_5_Fails) {
+    int ex_index = 5;
+
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+
+    EXPECT_THROW({
+        formulation.create_formulation(config_prop_ptree[ex_index]);
+    }, std::runtime_error);
 }
 
 /**

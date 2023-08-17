@@ -306,23 +306,15 @@ std::string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, st
         // This almost certainly should never happen, but just to be safe ...
         if (output_var_names.empty()) { return ""; }
 
-        try {
-            // Do the first separately, without the leading comma
-            auto output_data_provider_iter = availableData.find(output_var_names[0]);
-            *output_text_stream << get_var_value_as_double(output_var_names[0]);
+        // Do the first separately, without the leading comma
+        auto output_data_provider_iter = availableData.find(output_var_names[0]);
+        *output_text_stream << get_var_value_as_double(output_var_names[0]);
 
-            // Do the rest with a leading comma
-            for (int i = 1; i < output_var_names.size(); ++i) {
-                *output_text_stream << "," << get_var_value_as_double(output_var_names[i]);
-            }
-            return output_text_stream->str();
+        // Do the rest with a leading comma
+        for (int i = 1; i < output_var_names.size(); ++i) {
+            *output_text_stream << "," << get_var_value_as_double(output_var_names[i]);
         }
-        catch (const std::exception &e) {
-            std::cerr << "WARN: " << e.what()
-                      << "; reverting to default behavior for multi-BMI formulation type (using last module)";
-            output_text_stream->str(std::string()); // ... clear any output contents being staged ...
-            is_out_vars_from_last_mod = true;          // ... revert to default behavior (just use last nested module)
-        }
+        return output_text_stream->str();
     }
     // Otherwise, use the default behavior, which means we either
     //   - were originally set to use the default of getting the output of the last module
