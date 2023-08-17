@@ -137,6 +137,9 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
     if (out_precision_it != properties.end()) {
         set_output_precision(properties.at(BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION).as_natural_number());
     }
+
+    // check if a requested output variable name is valid, if not, stop the execution
+    check_output_var_names();
 }
 
 /**
@@ -290,11 +293,6 @@ string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, std::st
     // TODO: if such a thing is added, it should probably be configurable to turn it off
     if (timestep != (next_time_step_index - 1)) {
         throw std::invalid_argument("Only current time step valid when getting multi-module BMI formulation output");
-    }
-
-    // check if a requested output variable name is valid, if not, stop the execution
-    if (timestep == 0) {
-        check_output_var_names();
     }
 
     // Start by first checking whether we are NOT just using the last module's values
