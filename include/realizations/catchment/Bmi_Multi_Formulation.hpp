@@ -523,6 +523,11 @@ namespace realization {
          * Check that the output variable names in the global bmi_multi are valid names
          */
         void check_output_var_names() {
+            // variable already checked
+            if (is_out_vars_from_last_mod) {
+                return;
+            }
+
             // get bmi_multi global output variable names
             const std::vector<std::string> &output_var_names = get_output_variable_names();
 
@@ -533,15 +538,6 @@ namespace realization {
             {
                 var_name = iter->first;
                 available_var_names.push_back(var_name);
-            }
-
-            // take into account the unit test where both the original and remapped output var names are used in the test codes
-            for (const nested_module_ptr &module: modules) {
-                for (const std::string &out_var_name: module->get_bmi_output_variables()) {
-                    if ((out_var_name == "OUTPUT_VAR_1") || (out_var_name == "OUTPUT_VAR_2") || (out_var_name == "OUTPUT_VAR_3")) {
-                        available_var_names.push_back(out_var_name);
-                    }
-                }
             }
 
             // check if an output variable listed in the bmi_multi global is a valid variable
