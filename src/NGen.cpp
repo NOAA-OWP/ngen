@@ -337,8 +337,6 @@ int main(int argc, char *argv[]) {
 
     std::cout<<"Running Models"<<std::endl;
 
-    std::shared_ptr<pdm03_struct> pdm_et_data = std::make_shared<pdm03_struct>(get_et_params());
-
     // check the time loops for the existing layers
     ngen::LayerDataStorage& layer_meta_data = manager->get_layer_metadata();
 
@@ -379,11 +377,11 @@ int main(int argc, char *argv[]) {
       for ( std::string id : features.catchments(keys[i]) ) { cat_ids.push_back(id); }
       if (keys[i] != 0 )
       {
-        layers[i] = make_shared<ngen::Layer>(desc, cat_ids, sim_time, features, catchment_collection, pdm_et_data, 0);
+        layers[i] = std::make_shared<ngen::Layer>(desc, cat_ids, sim_time, features, catchment_collection, 0);
       }
       else
       {
-        layers[i] = make_shared<ngen::SurfaceLayer>(desc, cat_ids, sim_time, features, catchment_collection, pdm_et_data, 0, nexus_subset_ids, nexus_outfiles);
+        layers[i] = std::make_shared<ngen::SurfaceLayer>(desc, cat_ids, sim_time, features, catchment_collection, 0, nexus_subset_ids, nexus_outfiles);
       }
 
     }

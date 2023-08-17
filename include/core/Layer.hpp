@@ -10,8 +10,6 @@
 #include "HY_Features.hpp"
 #endif
 
-#include "Pdm03.h"
-
 namespace ngen
 {
 
@@ -31,14 +29,12 @@ namespace ngen
                 const Simulation_Time& s_t, 
                 feature_type& f, 
                 geojson::GeoJSON cd, 
-                std::shared_ptr<pdm03_struct> pdmd,
                 long idx) :
             description(desc),
             processing_units(p_u),
             simulation_time(s_t),
             features(f),
             catchment_data(cd),
-            pdm_et_data(pdmd),
             output_time_index(idx)
         {
 
@@ -96,7 +92,6 @@ namespace ngen
                 auto r = features.catchment_at(id);
                 //TODO redesign to avoid this cast
                 auto r_c = std::dynamic_pointer_cast<realization::Catchment_Formulation>(r);
-                r_c->set_et_params(pdm_et_data);
                 double response = r_c->get_response(output_time_index, description.time_step);
                 std::string output = std::to_string(output_time_index)+","+current_timestamp+","+
                                     r_c->get_output_line_for_timestep(output_time_index)+"\n";
@@ -141,7 +136,6 @@ namespace ngen
         Simulation_Time simulation_time;
         feature_type& features;
         const geojson::GeoJSON catchment_data;
-        std::shared_ptr<pdm03_struct> pdm_et_data;
         long output_time_index;       
 
     };

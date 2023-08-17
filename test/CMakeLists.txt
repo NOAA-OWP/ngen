@@ -174,6 +174,7 @@ ngen_add_test(
            NGen::realizations_catchment
            NGen::core_mediator
            NGen::forcing
+           ${NETCDF_LIBRARIES}
 )
 
 

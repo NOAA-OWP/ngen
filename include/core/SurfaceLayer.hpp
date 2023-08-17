@@ -15,11 +15,10 @@ namespace ngen
                 const Simulation_Time& s_t, 
                 feature_type& f, 
                 geojson::GeoJSON cd, 
-                std::shared_ptr<pdm03_struct> pdmd,
                 long idx,
                 const std::vector<std::string>& n_u,
                 std::unordered_map<std::string, std::ofstream>& output_files) : 
-                    Layer(desc,p_u,s_t,f,cd,pdmd,idx), 
+                    Layer(desc,p_u,s_t,f,cd,idx), 
                     nexus_ids(n_u), 
                     nexus_outfiles(output_files)
         {

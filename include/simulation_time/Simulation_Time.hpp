@@ -4,6 +4,7 @@
 #include <ctime>
 #include <time.h>
 #include <string>
+#include <stdexcept>
 
 /**
  * @brief simulation_time_params providing configuration information for simulation time period.
