@@ -357,8 +357,6 @@ int main(int argc, char *argv[]) {
       //std::cout<<"Output Time Index: "<<output_time_index<<std::endl;
       if(output_time_index%100 == 0) std::cout<<"Running timestep "<<output_time_index<<std::endl;
       std::string current_timestamp = manager->Simulation_Time_Object->get_timestamp(output_time_index);
-    
-      nexus_output->next(manager->get_output_root() + "qlat_" + current_timestamp, num_nexuses);
 
       for(const auto& id : features.catchments()) {
         //std::cout<<"Running cat "<<id<<std::endl;
@@ -393,6 +391,13 @@ int main(int argc, char *argv[]) {
       //At this point, could make an internal routing pass, extracting flows from nexuses and routing
       //across the flowpath to the next nexus.
       //Once everything is updated for this timestep, dump the nexus output
+
+      std::string output_timestamp = current_timestamp;
+      boost::algorithm::erase_all(output_timestamp, "-");
+      boost::algorithm::erase_all(output_timestamp, " ");
+      boost::algorithm::erase_all(output_timestamp, ":");
+      nexus_output->next(manager->get_output_root() + output_timestamp + "NEXOUT", num_nexuses);
+    
       for(const auto& id : features.nexuses()) {
   #ifdef NGEN_MPI_ACTIVE
         if (!features.is_remote_sender_nexus(id)) { //Ensures only one side of the dual sided remote nexus actually doing this...
@@ -412,7 +417,7 @@ int main(int argc, char *argv[]) {
           }
 
           double contribution_at_t = features.nexus_at(id)->get_downstream_flow(cat_id, output_time_index, 100.0);
-
+  
           nexus_output->write(
             nexus_collection->get_feature(id)->get_property("toid").as_string(),
             id,
