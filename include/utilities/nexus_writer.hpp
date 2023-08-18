@@ -16,6 +16,9 @@
 namespace ngen {
 namespace utils {
 
+/**
+ * Abstract nexus output writer
+ */
 struct nexus_writer
 {   
     using size_type = size_t;
@@ -24,12 +27,41 @@ struct nexus_writer
 
     virtual ~nexus_writer() {};
 
-    virtual void init(size_type n) = 0;
+    /**
+     * @brief Initialize this writer
+     * 
+     * @param n Number of time steps
+     */
+    virtual void init(size_type steps) = 0;
+
+    /**
+     * @brief Iterate to the next file.
+     * 
+     * @param file_name File path to create
+     * @param num_nexuses Number of nexuses contained in this output
+     */
     virtual void next(const std::string& file_name, size_type num_nexuses) = 0;
+
+    /**
+     * @brief Write a line to the current file.
+     * 
+     * @param segment_id Flowpath/segment ID
+     * @param nexus_id Nexus ID
+     * @param qlat Lateral streamflow
+     */
     virtual void write(const std::string& segment_id, const std::string& nexus_id, double qlat) = 0;
+
+    /**
+     * @brief Flush current output
+     * 
+     * @note For NetCDF this should close the file.
+     */
     virtual void flush() = 0;
 };
 
+/**
+ * @brief CSV derived nexus writer
+ */
 struct nexus_csv_writer : public nexus_writer
 {
     using size_type = size_t;
@@ -38,9 +70,9 @@ struct nexus_csv_writer : public nexus_writer
 
     ~nexus_csv_writer() override {};
 
-    void init(size_type n) override
+    void init(size_type steps) override
     {
-        outputs_.resize(n);
+        outputs_.resize(steps);
         it_ = outputs_.begin();
         it_--;
     }
@@ -67,6 +99,10 @@ struct nexus_csv_writer : public nexus_writer
     decltype(outputs_)::iterator it_;
 };
 
+/**
+ * @brief NetCDF derived nexus writer
+ * @note If NetCDF is not available, the methods of this struct will throw a std::runtime_error.
+ */
 struct nexus_netcdf_writer : public nexus_writer
 {
     using size_type = size_t;
@@ -75,12 +111,12 @@ struct nexus_netcdf_writer : public nexus_writer
 
     ~nexus_netcdf_writer() override {};
 
-    void init(size_type n) override
+    void init(size_type steps) override
     {
 #ifndef NETCDF_ACTIVE
         NGEN_NETCDF_ERROR;
 #else
-        outputs_.resize(n);
+        outputs_.resize(steps);
         it_ = outputs_.begin();
         it_--;
 #endif
