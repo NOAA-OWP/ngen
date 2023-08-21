@@ -20,7 +20,7 @@ namespace realization {
         public:
             typedef long time_step_t;
 
-            Formulation(std::string id) : id(id) {}
+            Formulation(std::string id) : id(id), last_t_delta(0) {}
             
             virtual ~Formulation(){};
 
@@ -31,8 +31,6 @@ namespace realization {
             //  access functions
 
             // TODO: a reference to the actual time of the initial time step is needed
-
-            // TODO: a reference to the last calculated time step is needed
 
             // TODO: a mapping of previously calculated time steps to the size/delta of each is needed (unless we
             //  introduce a way to enforce immutable time step delta values for an object)
@@ -60,6 +58,22 @@ namespace realization {
 
             std::string get_id() const {
                 return this->id;
+            }
+
+            /**
+             * Store the last timestep delta used on this formulation (i.e. passed to @see{ Formulation::get_response }).
+             * @param t_delta The most recent timestep delta used in this formulation
+            */
+            inline void set_last_t_delta(time_step_t t_delta){
+                this->last_t_delta = t_delta;
+            }
+
+            /**
+             * Retrieve the last timestep delta used on this formulation (i.e. passed to @see{ Formulation::get_response }).
+             * @return The most recent timestep delta used in this formulation 
+            */
+            inline time_step_t get_last_t_delta(){
+                return this->last_t_delta;
             }
 
             /**
@@ -145,6 +159,7 @@ namespace realization {
             }
 
             std::string id;
+            time_step_t last_t_delta;
     };
 
 }

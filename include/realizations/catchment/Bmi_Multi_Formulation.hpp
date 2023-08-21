@@ -319,26 +319,11 @@ namespace realization {
 
         long record_duration() override
         {
-            std::string var_name;
-            for(std::map<std::string,std::shared_ptr<data_access::GenericDataProvider>>::iterator iter = availableData.begin(); iter != availableData.end(); ++iter)
-            {
-                var_name = iter->first;
-                //TODO: Find a probably more performant way than trial and exception here.
-                try {
-                    time_t rv = availableData[var_name]->record_duration();
-                    return rv;
-                }
-                catch (...){
-                    continue;
-                }
-                break;
-            }
-
-            // If not found ...
-            if (availableData.empty() || availableData.find(var_name) == availableData.end()) {
-                throw runtime_error(get_formulation_type() + " cannot get output record duration for unknown \"" + var_name + "\"");
-            }
-            return availableData[var_name]->record_duration();
+            // In theory (at present), all submodules should have the same record_duration, because they are
+            // all being incremented together with the same timestep delta. If this assumption changes somehow,
+            // roll back to checking the different submodules... of course that raises serious quesitons about
+            // what it would mean to return *anything* from this method in such a scenario.
+            return get_last_t_delta();
         }
 
         std::string get_formulation_type() override {

@@ -135,7 +135,7 @@ namespace realization {
         }
 
         long record_duration() override {
-            throw runtime_error("Bmi_Module_Formulation does not yet implement record_duration");
+            return get_last_t_delta();
         }
 
         /**

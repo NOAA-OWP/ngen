@@ -110,6 +110,8 @@ double Bmi_C_Formulation::get_response(time_step_t t_index, time_step_t t_delta)
         throw std::invalid_argument("Getting response of previous time step in BMI C formulation is not allowed.");
     }
 
+    this->set_last_t_delta(t_delta);
+
     // The time step delta size, expressed in the units internally used by the model
     double t_delta_model_units;
     if (next_time_step_index <= t_index) {
