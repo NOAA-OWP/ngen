@@ -121,7 +121,7 @@ int main(int argc, char** argv)
     for(i = 0; i < count; i++){
         names[i] = malloc(sizeof(char)*BMI_MAX_VAR_NAME);
         //names[i] = "Hello World\0";
-        sprintf(names[i], "Hello World %d", i);
+        snprintf(names[i], sizeof(names[i]), "Hello World %d", i);
     }
     status = get_input_var_names(&bmi_handle, names);
     check_status(&status, "get_input_var_names");
@@ -145,7 +145,7 @@ int main(int argc, char** argv)
     for(i = 0; i < count; i++){
         names[i] = malloc(sizeof(char)*BMI_MAX_VAR_NAME);
         //names[i] = "Hello World\0";
-        sprintf(names[i], "Hello World %d", i);
+        snprintf(names[i], sizeof(names[i]), "Hello World %d", i);
     }
     status = get_output_var_names(&bmi_handle, names);
     check_status(&status, "get_output_var_names");
