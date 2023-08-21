@@ -13,6 +13,7 @@ struct mdarray<T>::iterator
     using value_type        = mdarray::value_type;
     using pointer           = mdarray::pointer;
     using reference         = mdarray::reference;
+    using const_reference   = mdarray::const_reference;
 
     iterator(const mdarray& ref, size_type idx)
         : m_ref(ref)

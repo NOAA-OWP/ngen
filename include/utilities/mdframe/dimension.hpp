@@ -2,6 +2,7 @@
 #define NGEN_IO_MDFRAME_DIMENSION_HPP
 
 #include <boost/optional.hpp>
+#include <utility>
 
 namespace ngen {
 
@@ -30,9 +31,15 @@ struct dimension {
         }
     };
 
-    dimension()
-        : m_name()
-        , m_size() {};
+    dimension() = default;
+
+    dimension(const dimension& d) = default;
+    dimension& operator=(const dimension& d) = default;
+    
+    dimension(dimension&& d) = default;
+    dimension& operator=(dimension&& d) = default;
+
+    ~dimension() = default;
 
     dimension(const std::string& name)
         : m_name(name)
@@ -41,26 +48,6 @@ struct dimension {
     dimension(const std::string& name, std::size_t size)
         : m_name(name)
         , m_size(size) {};
-
-    dimension(const dimension& d)
-        : m_name(d.m_name)
-        , m_size(d.m_size) {};
-
-    dimension(dimension&& d)
-        : m_name(std::move(d.m_name))
-        , m_size(std::move(d.m_size)) {};
-
-    dimension& operator=(const dimension& d) {
-        this->m_name = d.m_name;
-        this->m_size = d.m_size;
-        return *this;
-    }
-
-    dimension& operator=(dimension&& d) {
-        this->m_name = std::move(d.m_name);
-        this->m_size = std::move(d.m_size);
-        return *this;
-    }
     
     bool operator==(const dimension& rhs) const
     {  
@@ -81,6 +68,6 @@ struct dimension {
 };
 
 } // namespace detail
-} // namespace io
+} // namespace ngen
 
 #endif // NGEN_IO_MDFRAME_DIMENSION_HPP
