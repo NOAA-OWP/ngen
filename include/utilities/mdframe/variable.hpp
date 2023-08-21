@@ -265,6 +265,6 @@ struct variable {
 
 } // namespace detail
 
-} // namespace io
+} // namespace ngen
 
 #endif // NGEN_IO_MDFRAME_VARIABLE_HPP
