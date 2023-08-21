@@ -199,7 +199,9 @@ class mdarray
      */
     void deindex(size_type idx, boost::span<size_type> n) const
     {
-        // TODO: Need a bounds check?
+        assert(n.size() == this->rank());
+        assert(idx < this->size());
+
         size_type stride = 1;
         for (size_type k = 0; k < this->rank(); k++) {
             n[k] = idx / stride % this->m_shape[k];

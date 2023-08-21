@@ -84,7 +84,7 @@ struct type_list{
     using variant_container = boost::variant<Container<Ts>...>;
 
     /**
-     * Semantically, we define that a type is support if it's
+     * Semantically, we define that a type is supported if it's
      * convertible to (not necessarily the same as) any of the
      * supported types.
      *

@@ -84,7 +84,7 @@ void mdframe::to_csv(const std::string& path, bool header) const
     //
     // i.e. { value(x, t, y) : {2, 1, 3} }
     std::unordered_map<std::string, std::vector<size_type>> vd_index;
-    for (auto var : variable_subset) {
+    for (const auto& var : variable_subset) {
         vd_index[var.name()] = std::vector<size_type>{};
         std::vector<size_type>& variable_index = vd_index[var.name()];
 

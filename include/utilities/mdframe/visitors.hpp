@@ -91,6 +91,6 @@ struct to_string_visitor : public boost::static_visitor<std::string>
 
 } // namespace visitors
 } // namespace detail
-} // namespace io
+} // namespace ngen
 
 #endif // NGEN_IO_MDFRAME_VISITORS_HPP
