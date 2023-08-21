@@ -140,7 +140,7 @@ struct variable {
      */
     bool operator==(const variable& rhs) const
     {
-        return hash{}(*this) == hash{}(rhs);
+        return this->m_name == rhs.m_name;
     }
 
     /**
