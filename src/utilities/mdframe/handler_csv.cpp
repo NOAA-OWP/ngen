@@ -64,6 +64,10 @@ void mdframe::to_csv(const std::string& path, bool header) const
             header_line += pair.first + ",";
     }
 
+    if (variable_subset.empty()) {
+        throw std::runtime_error("cannot output CSV with no output variables");
+    }
+
     // Calculate total number of rows across all subdimensions (not including header)
     size_type rows = 1;
     std::vector<size_type> shape;
