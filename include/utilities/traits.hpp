@@ -104,6 +104,6 @@ struct type_list{
 };
 
 } // namespace traits
-} // namespace io
+} // namespace ngen
 
 #endif // NGEN_IO_TRAITS_HPP
