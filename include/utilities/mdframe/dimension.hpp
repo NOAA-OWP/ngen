@@ -51,7 +51,7 @@ struct dimension {
     
     bool operator==(const dimension& rhs) const
     {  
-        return dimension::hash::apply(*this) == dimension::hash::apply(rhs);
+        return this->m_name == rhs.m_name;
     }
 
     auto size() const noexcept { return this->m_size; }
