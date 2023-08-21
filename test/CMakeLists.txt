@@ -313,7 +313,7 @@ add_test(
 ########################## Primary Combined Unit Test Target
 add_test(
         test_unit
-        13
+        17
         geojson/JSONProperty_Test.cpp
         geojson/JSONGeometry_Test.cpp
         geojson/Feature_Test.cpp
@@ -327,12 +327,18 @@ add_test(
         utils/include/StreamOutputTest.cpp
         realizations/Formulation_Manager_Test.cpp
         utils/Partition_Test.cpp
+        utils/mdarray_Test.cpp
+        utils/mdframe_Test.cpp
+        utils/mdframe_netcdf_Test.cpp
+        utils/mdframe_csv_Test.cpp
         NGen::core
         NGen::core_nexus
         NGen::core_mediator
         NGen::forcing
         NGen::geojson
         NGen::realizations_catchment
+        NGen::mdarray
+        NGen::mdframe
         libudunits2
         testbmicppmodel
         ${NETCDF_LIBRARIES}
@@ -341,7 +347,7 @@ add_test(
 # All automated tests
 add_test(
         test_all
-        12
+        16
         geojson/JSONProperty_Test.cpp
         geojson/JSONGeometry_Test.cpp
         geojson/Feature_Test.cpp
@@ -354,6 +360,10 @@ add_test(
         realizations/Formulation_Manager_Test.cpp
         core/nexus/NexusTests.cpp
         utils/Partition_Test.cpp
+        utils/mdarray_Test.cpp
+        utils/mdframe_Test.cpp
+        utils/mdframe_netcdf_Test.cpp
+        utils/mdframe_csv_Test.cpp
         NGen::core
         gmock
         NGen::core_nexus
@@ -361,6 +371,8 @@ add_test(
         NGen::forcing
         NGen::geojson
         NGen::realizations_catchment
+        NGen::mdarray
+        NGen::mdframe
         libudunits2
         testbmicppmodel
         ${NETCDF_LIBRARIES}
