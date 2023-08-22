@@ -13,6 +13,11 @@
 
 #define NGEN_NETCDF_ERROR throw std::runtime_error("NetCDF is not available")
 
+// Changing these will affect both NetCDF and CSV outputs
+#define NGEN_VARIABLE_NEXUS_ID   "feature_id"
+#define NGEN_VARIABLE_SEGMENT_ID "segment_id"
+#define NGEN_VARIABLE_Q_LATERAL  "q_lateral"
+
 namespace ngen {
 namespace utils {
 
@@ -25,7 +30,7 @@ struct nexus_writer
 
     nexus_writer() = default;
 
-    virtual ~nexus_writer() {};
+    virtual ~nexus_writer() = default;
 
     /**
      * @brief Initialize this writer
@@ -68,7 +73,7 @@ struct nexus_csv_writer : public nexus_writer
 
     nexus_csv_writer() = default;
 
-    ~nexus_csv_writer() override {};
+    ~nexus_csv_writer() override = default;
 
     void init(size_type steps) override
     {
@@ -81,7 +86,7 @@ struct nexus_csv_writer : public nexus_writer
     {
         it_++;
         it_->open(file_name + ".csv");
-        (*it_) << "nexus_id,segment_id,qSfcLatRunoff\n";
+        (*it_) << NGEN_VARIABLE_NEXUS_ID "," NGEN_VARIABLE_SEGMENT_ID "," NGEN_VARIABLE_Q_LATERAL "\n";
     }
 
     void write(const std::string& segment_id, const std::string& nexus_id, double contribution) override
@@ -109,7 +114,7 @@ struct nexus_netcdf_writer : public nexus_writer
 
     nexus_netcdf_writer() = default;
 
-    ~nexus_netcdf_writer() override {};
+    ~nexus_netcdf_writer() override = default;
 
     void init(size_type steps) override
     {
@@ -133,14 +138,14 @@ struct nexus_netcdf_writer : public nexus_writer
         out = std::make_unique<netCDF::NcFile>(file_name + ".nc", netCDF::NcFile::replace);
         const auto& dim_fid = out->addDim("feature_id", num_nexuses);
   
-        const auto& var_nexus_id = out->addVar("nexus_id", netCDF::ncString, dim_fid);
+        const auto& var_nexus_id = out->addVar(NGEN_VARIABLE_NEXUS_ID, netCDF::ncString, dim_fid);
         var_nexus_id.putAtt("description", "Contributing Nexus ID");
         
-        const auto& var_segment_id = out->addVar("segment_id", netCDF::ncString, dim_fid);
+        const auto& var_segment_id = out->addVar(NGEN_VARIABLE_SEGMENT_ID, netCDF::ncString, dim_fid);
         var_segment_id.putAtt("description", "Flowpath ID downstream from the corresponding nexus");
 
-        const auto& var_qlat = out->addVar("qSfcLatRunoff", netCDF::ncDouble, dim_fid);
-        var_qlat.putAtt("description", "Runoff from terrain routing");
+        const auto& var_qlat = out->addVar(NGEN_VARIABLE_Q_LATERAL, netCDF::ncDouble, dim_fid);
+        var_qlat.putAtt("description", "Runoff into channel reach");
         var_qlat.putAtt("units", "m3 s-1");
     
         index_ = 0;
@@ -152,9 +157,9 @@ struct nexus_netcdf_writer : public nexus_writer
 #ifndef NETCDF_ACTIVE
         NGEN_NETCDF_ERROR;
 #else
-        it_->get()->getVar("nexus_id").putVar({ index_ }, nexus_id);
-        it_->get()->getVar("segment_id").putVar({ index_ }, segment_id);
-        it_->get()->getVar("qSfcLatRunoff").putVar({ index_ }, contribution);
+        it_->get()->getVar(NGEN_VARIABLE_NEXUS_ID).putVar({ index_ }, nexus_id);
+        it_->get()->getVar(NGEN_VARIABLE_SEGMENT_ID).putVar({ index_ }, segment_id);
+        it_->get()->getVar(NGEN_VARIABLE_Q_LATERAL).putVar({ index_ }, contribution);
         index_++;
 #endif
     }
@@ -182,3 +187,6 @@ struct nexus_netcdf_writer : public nexus_writer
 #endif // NGEN_UTILITIES_QLAT_HANDLER_HPP
 
 #undef NGEN_NETCDF_ERROR
+#undef NGEN_VARIABLE_NEXUS_ID
+#undef NGEN_VARIABLE_SEGMENT_ID
+#undef NGEN_VARIABLE_Q_LATERAL

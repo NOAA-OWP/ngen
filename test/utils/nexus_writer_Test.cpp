@@ -9,12 +9,12 @@
 class nexus_writer_Test : public ::testing::Test
 {
   protected:
-    ~nexus_writer_Test() override {};
+    ~nexus_writer_Test() override = default;
 
     void TearDown() override
     {
         unlink((tempfile + ".csv").c_str());
-        // unlink((tempfile + ".nc").c_str());
+        unlink((tempfile + ".nc").c_str());
     }
 
     template<typename WriterType>
@@ -49,7 +49,7 @@ TEST_F(nexus_writer_Test, csv_writer)
     
     std::string line;
     stream >> line;
-    ASSERT_EQ(line, "nexus_id,segment_id,qSfcLatRunoff");
+    ASSERT_EQ(line, "feature_id,segment_id,q_lateral");
     stream >> line;
     ASSERT_EQ(line, "nex-1,wb-1,5");
     stream >> line;
@@ -73,11 +73,11 @@ TEST_F(nexus_writer_Test, netcdf_writer)
     ASSERT_FALSE(dim.isNull());
     ASSERT_EQ(dim.getSize(), 2);
     
-    const auto& var_nexus_id = stream.getVar("nexus_id");
+    const auto& var_nexus_id = stream.getVar("feature_id");
     ASSERT_FALSE(var_nexus_id.isNull());
-    char* nex_id_1;
+    char* nex_id_1 = nullptr;
     var_nexus_id.getVar({ 0 }, &nex_id_1);
-    char* nex_id_2;
+    char* nex_id_2 = nullptr;
     var_nexus_id.getVar({ 1 }, &nex_id_2);
     ASSERT_STREQ(nex_id_1, "nex-1");
     ASSERT_STREQ(nex_id_2, "nex-2");
@@ -86,16 +86,16 @@ TEST_F(nexus_writer_Test, netcdf_writer)
 
     const auto& var_segment_id = stream.getVar("segment_id");
     ASSERT_FALSE(var_segment_id.isNull());
-    char* seg_id_1;
+    char* seg_id_1 = nullptr;
     var_segment_id.getVar({ 0 }, &seg_id_1);
-    char* seg_id_2;
+    char* seg_id_2 = nullptr;
     var_segment_id.getVar({ 1 }, &seg_id_2);
     ASSERT_STREQ(seg_id_1, "wb-1");
     ASSERT_STREQ(seg_id_2, "wb-2");
     delete seg_id_1;
     delete seg_id_2;
 
-    const auto& var_qlat = stream.getVar("qSfcLatRunoff");
+    const auto& var_qlat = stream.getVar("q_lateral");
     ASSERT_FALSE(var_qlat.isNull());
     double qlat_1 = 0;
     var_qlat.getVar({ 0 }, &qlat_1);

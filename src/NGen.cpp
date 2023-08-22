@@ -396,6 +396,8 @@ int main(int argc, char *argv[]) {
       boost::algorithm::erase_all(output_timestamp, "-");
       boost::algorithm::erase_all(output_timestamp, " ");
       boost::algorithm::erase_all(output_timestamp, ":");
+      // Remove Seconds
+      output_timestamp = output_timestamp.substr(0, output_timestamp.size() - 2);
       nexus_output->next(manager->get_output_root() + output_timestamp + "NEXOUT", num_nexuses);
     
       for(const auto& id : features.nexuses()) {
