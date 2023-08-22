@@ -483,7 +483,7 @@ void Bmi_Multi_Formulation_Test::SetUp() {
     testing::Test::SetUp();
 
     // Define this manually to set how many nested modules per example, and implicitly how many examples.
-    // This means 2 example scenarios with 2 nested modules
+    // This means example_module_depth.size() example scenarios with example_module_depth[i] nested modules in each scenario.
     example_module_depth = {2, 2, 2, 2, 2, 2};
 
     // Initialize the members for holding required input and result test data for individual example scenarios
@@ -632,8 +632,6 @@ TEST_F(Bmi_Multi_Formulation_Test, Initialize_4_Fails) {
     EXPECT_THROW({
         formulation.create_formulation(config_prop_ptree[ex_index]);
     }, std::runtime_error);
-
-
 }
 
 /** Test to make sure that a remapped variable name is not allowed in `output_variables` (see issue #535)

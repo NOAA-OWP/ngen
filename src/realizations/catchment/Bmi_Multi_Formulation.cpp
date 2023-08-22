@@ -307,7 +307,6 @@ std::string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, st
         if (output_var_names.empty()) { return ""; }
 
         // Do the first separately, without the leading comma
-        auto output_data_provider_iter = availableData.find(output_var_names[0]);
         *output_text_stream << get_var_value_as_double(output_var_names[0]);
 
         // Do the rest with a leading comma
