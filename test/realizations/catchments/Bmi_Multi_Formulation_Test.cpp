@@ -643,8 +643,41 @@ TEST_F(Bmi_Multi_Formulation_Test, GetResponse_0_b) {
     double response;
     for (int i = 0; i < 39; i++) {
         response = formulation.get_response(i, 3600);
+        //std::cout << "i: " << i << "  response: " << response << std::endl;
     }
     double expected = 2.7809780039160068e-08;
+    ASSERT_EQ(expected, response);
+}
+
+/**
+ * Test with non-3600 timestep, smoke test and ensure record_duration reflects valid value.
+ */
+TEST_F(Bmi_Multi_Formulation_Test, GetResponse_0_c) {
+    int ex_index = 0;
+
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+
+    double response = formulation.get_response(0, 1800);
+    ASSERT_EQ(response, 00);
+    ASSERT_EQ(formulation.record_duration(), 1800);
+}
+
+/**
+ * Test with non-3600 timestep in example 0 after several iterations.
+ */
+TEST_F(Bmi_Multi_Formulation_Test, GetResponse_0_d) {
+    int ex_index = 0;
+
+    Bmi_Multi_Formulation formulation(catchment_ids[ex_index], std::make_unique<CsvPerFeatureForcingProvider>(*forcing_params_examples[ex_index]), utils::StreamHandler());
+    formulation.create_formulation(config_prop_ptree[ex_index]);
+
+    double response;
+    for (int i = 0; i < 78; i++) {
+        response = formulation.get_response(i, 1800);
+        //std::cout << "i: " << i << "  response: " << response << std::endl;
+    }
+    double expected = 1.3904890019580034e-08;
     ASSERT_EQ(expected, response);
 }
 
