@@ -1,18 +1,18 @@
 <map id="models::bmi::Bmi_Adapter&lt; T &gt;" name="models::bmi::Bmi_Adapter&lt; T &gt;">
 <area shape="rect" id="node1" title="Abstract adapter interface for C++ classes to interact with the essential aspects of external models ..." alt="" coords="281,957,487,1364"/>
 <area shape="rect" id="node2" href="$classbmi_1_1_bmi.html" title=" " alt="" coords="5,605,168,880"/>
-<area shape="rect" id="node3" title=" " alt="" coords="740,309,823,349"/>
-<area shape="rect" id="node9" title=" " alt="" coords="603,433,743,473"/>
+<area shape="rect" id="node3" title=" " alt="" coords="751,309,833,349"/>
+<area shape="rect" id="node9" title=" " alt="" coords="590,433,754,473"/>
 <area shape="rect" id="node11" href="$classutils_1_1_stream_handler.html" title="This class provides a copyable interface to a std::ostream or std::ostream like object that may not s..." alt="" coords="193,649,335,836"/>
-<area shape="rect" id="node4" title=" " alt="" coords="717,184,845,239"/>
-<area shape="rect" id="node5" title=" " alt="" coords="293,512,464,581"/>
-<area shape="rect" id="node6" title=" " alt="" coords="313,301,455,356"/>
-<area shape="rect" id="node8" title=" " alt="" coords="577,708,735,777"/>
-<area shape="rect" id="node12" title=" " alt="" coords="123,419,263,488"/>
-<area shape="rect" id="node7" title=" " alt="" coords="415,191,454,231"/>
-<area shape="rect" id="node10" title=" " alt="" coords="485,309,601,349"/>
-<area shape="rect" id="node13" title=" " alt="" coords="145,309,242,349"/>
-<area shape="rect" id="node14" title=" " alt="" coords="126,184,261,239"/>
-<area shape="rect" id="node15" title=" " alt="" coords="116,95,271,135"/>
-<area shape="rect" id="node16" title=" " alt="" coords="142,5,245,45"/>
+<area shape="rect" id="node4" title=" " alt="" coords="728,184,856,239"/>
+<area shape="rect" id="node5" title=" " alt="" coords="292,512,463,581"/>
+<area shape="rect" id="node6" title=" " alt="" coords="311,301,452,356"/>
+<area shape="rect" id="node8" title=" " alt="" coords="577,708,730,777"/>
+<area shape="rect" id="node12" title=" " alt="" coords="122,419,262,488"/>
+<area shape="rect" id="node7" title=" " alt="" coords="407,191,446,231"/>
+<area shape="rect" id="node10" title=" " alt="" coords="481,309,597,349"/>
+<area shape="rect" id="node13" title=" " alt="" coords="143,309,241,349"/>
+<area shape="rect" id="node14" title=" " alt="" coords="125,184,259,239"/>
+<area shape="rect" id="node15" title=" " alt="" coords="115,95,269,135"/>
+<area shape="rect" id="node16" title=" " alt="" coords="141,5,243,45"/>
 </map>

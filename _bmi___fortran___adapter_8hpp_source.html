@@ -115,7 +115,7 @@ $(document).ready(function(){initNavTree('_bmi___fortran___adapter_8hpp_source.h
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        <span class="keyword">public</span>:</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>            <span class="keyword">explicit</span> Bmi_Fortran_Adapter(<span class="keyword">const</span> <span class="keywordtype">string</span> &amp;type_name, std::string library_file_path,</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>            <span class="keyword">explicit</span> Bmi_Fortran_Adapter(<span class="keyword">const</span> std::string &amp;type_name, std::string library_file_path,</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>                                         std::string forcing_file_path,</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>                                         <span class="keywordtype">bool</span> allow_exceed_end, <span class="keywordtype">bool</span> has_fixed_time_step,</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>                                         <span class="keyword">const</span> std::string &amp;registration_func, <a class="code hl_class" href="classutils_1_1_stream_handler.html">utils::StreamHandler</a> output)</div>
@@ -123,7 +123,7 @@ $(document).ready(function(){initNavTree('_bmi___fortran___adapter_8hpp_source.h
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>                                          has_fixed_time_step,</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>                                          registration_func, output) {}</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>            Bmi_Fortran_Adapter(<span class="keyword">const</span> <span class="keywordtype">string</span> &amp;type_name, std::string library_file_path, std::string bmi_init_config,</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>            Bmi_Fortran_Adapter(<span class="keyword">const</span> std::string &amp;type_name, std::string library_file_path, std::string bmi_init_config,</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>                                std::string forcing_file_path, <span class="keywordtype">bool</span> allow_exceed_end, <span class="keywordtype">bool</span> has_fixed_time_step,</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>                                std::string registration_func,</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>                                <a class="code hl_class" href="classutils_1_1_stream_handler.html">utils::StreamHandler</a> output) : AbstractCLibBmiAdapter(type_name,</div>
@@ -157,7 +157,7 @@ $(document).ready(function(){initNavTree('_bmi___fortran___adapter_8hpp_source.h
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>                    model_initialized = <span class="keyword">true</span>;</div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>                    <span class="keywordflow">throw</span> e;</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>                }</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>                <span class="keywordflow">catch</span> (exception &amp;e) {</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>                <span class="keywordflow">catch</span> (std::exception &amp;e) {</div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>                    <span class="comment">//This will catch any other exception, but the it will be cast to this base type.</span></div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>                    <span class="comment">//This means it looses it any specific type/message information.  So if construct_and_init_backing_model_for_fortran</span></div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>                    <span class="comment">//throws an exception besides runtime_error, catch that type explicitly.</span></div>
@@ -166,7 +166,7 @@ $(document).ready(function(){initNavTree('_bmi___fortran___adapter_8hpp_source.h
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>                }</div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>            }</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>            <span class="keywordtype">string</span> GetComponentName() <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>            std::string GetComponentName() <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>            <span class="keywordtype">double</span> GetCurrentTime() <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
@@ -528,8 +528,8 @@ $(document).ready(function(){initNavTree('_bmi___fortran___adapter_8hpp_source.h
 <div class="line"><a id="l00806" name="l00806"></a><span class="lineno">  806</span><span class="preprocessor">#endif </span><span class="comment">// NGEN_BMI_FORTRAN_ACTIVE</span></div>
 <div class="line"><a id="l00807" name="l00807"></a><span class="lineno">  807</span> </div>
 <div class="line"><a id="l00808" name="l00808"></a><span class="lineno">  808</span><span class="preprocessor">#endif </span><span class="comment">//NGEN_BMI_FORTRAN_ADAPTER_HPP</span></div>
-<div class="ttc" id="aclassexternal_1_1_external_integration_exception_html"><div class="ttname"><a href="classexternal_1_1_external_integration_exception.html">external::ExternalIntegrationException</a></div><div class="ttdoc">Custom exception indicating a problem when integrating with some external component.</div><div class="ttdef"><b>Definition:</b> ExternalIntegrationException.hpp:16</div></div>
-<div class="ttc" id="aclassmodels_1_1external_1_1_state___exception_html"><div class="ttname"><a href="classmodels_1_1external_1_1_state___exception.html">models::external::State_Exception</a></div><div class="ttdoc">Custom exception indicating bad external model state.</div><div class="ttdef"><b>Definition:</b> State_Exception.hpp:19</div></div>
+<div class="ttc" id="aclassexternal_1_1_external_integration_exception_html"><div class="ttname"><a href="classexternal_1_1_external_integration_exception.html">external::ExternalIntegrationException</a></div><div class="ttdoc">Custom exception indicating a problem when integrating with some external component.</div><div class="ttdef"><b>Definition:</b> ExternalIntegrationException.hpp:14</div></div>
+<div class="ttc" id="aclassmodels_1_1external_1_1_state___exception_html"><div class="ttname"><a href="classmodels_1_1external_1_1_state___exception.html">models::external::State_Exception</a></div><div class="ttdoc">Custom exception indicating bad external model state.</div><div class="ttdef"><b>Definition:</b> State_Exception.hpp:17</div></div>
 <div class="ttc" id="aclassutils_1_1_stream_handler_html"><div class="ttname"><a href="classutils_1_1_stream_handler.html">utils::StreamHandler</a></div><div class="ttdoc">This class provides a copyable interface to a std::ostream or std::ostream like object that may not s...</div><div class="ttdef"><b>Definition:</b> StreamHandler.hpp:14</div></div>
 <div class="ttc" id="anamespacebmi_html"><div class="ttname"><a href="namespacebmi.html">bmi</a></div><div class="ttdef"><b>Definition:</b> bmi.hpp:16</div></div>
 <div class="ttc" id="anamespacemodels_1_1bmi_html_a9a93ff9e1d50a972be5eb3978e5a6c9f"><div class="ttname"><a href="namespacemodels_1_1bmi.html#a9a93ff9e1d50a972be5eb3978e5a6c9f">models::bmi::GetValue</a></div><div class="ttdeci">std::vector&lt; T &gt; GetValue(Bmi_Adapter&lt; A &gt; &amp;model, const std::string &amp;name)</div><div class="ttdoc">Copy values from a BMI model adapter and box them into a vector.</div><div class="ttdef"><b>Definition:</b> bmi_utilities.hpp:41</div></div>
@@ -540,7 +540,7 @@ $(document).ready(function(){initNavTree('_bmi___fortran___adapter_8hpp_source.h
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_9058ef7c383dff996c678c5ba80ec03e.html">realizations</a></li><li class="navelem"><a class="el" href="dir_8dbd500a1ae0b3d23deb7285e2980d8b.html">catchment</a></li><li class="navelem"><b>Bmi_Fortran_Adapter.hpp</b></li>
-    <li class="footer">Generated on Thu Aug 17 2023 17:39:04 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
+    <li class="footer">Generated on Tue Aug 22 2023 13:10:45 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
   </ul>
 </div>
 </body>

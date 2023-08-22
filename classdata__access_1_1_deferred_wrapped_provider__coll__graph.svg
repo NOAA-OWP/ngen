@@ -46,7 +46,7 @@ if (edges && edges.length) {
         </defs>
 
 <script type="text/javascript">
-var viewWidth = 418;
+var viewWidth = 434;
 var viewHeight = 896;
 var sectionId = 'dynsection-1';
 </script>
@@ -58,19 +58,19 @@ var sectionId = 'dynsection-1';
 <g id="node1" class="node">
 <title>Node1</title>
 <g id="a_node1"><a xlink:title="A specialized @WrappedDataProvider that is created without first knowing the backing source it wraps.">
-<polygon fill="#999999" stroke="#666666" points="303,-140 148,-140 148,0 303,0 303,-140"/>
-<text text-anchor="start" x="156" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">{data_access::DeferredWrapped</text>
-<text text-anchor="middle" x="225.5" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">Provider</text>
-<text text-anchor="start" x="156" y="-106" font-family="Helvetica,sans-Serif" font-size="10.00">||+ DeferredWrappedProvider()</text>
-<text text-anchor="start" x="156" y="-95" font-family="Helvetica,sans-Serif" font-size="10.00">+ DeferredWrappedProvider()</text>
-<text text-anchor="start" x="156" y="-84" font-family="Helvetica,sans-Serif" font-size="10.00">+ DeferredWrappedProvider()</text>
-<text text-anchor="start" x="156" y="-73" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_variable</text>
-<text text-anchor="start" x="156" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
-<text text-anchor="start" x="156" y="-51" font-family="Helvetica,sans-Serif" font-size="10.00">+ getSetMessage()</text>
-<text text-anchor="start" x="156" y="-40" font-family="Helvetica,sans-Serif" font-size="10.00">+ isReadyToProvideData()</text>
-<text text-anchor="start" x="156" y="-29" font-family="Helvetica,sans-Serif" font-size="10.00">+ isWrappedProviderSet()</text>
-<text text-anchor="start" x="156" y="-18" font-family="Helvetica,sans-Serif" font-size="10.00">+ setWrappedProvider()</text>
-<text text-anchor="middle" x="225.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">}</text>
+<polygon fill="#999999" stroke="#666666" points="301,-140 146,-140 146,0 301,0 301,-140"/>
+<text text-anchor="start" x="154" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">{data_access::DeferredWrapped</text>
+<text text-anchor="middle" x="223.5" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">Provider</text>
+<text text-anchor="start" x="154" y="-106" font-family="Helvetica,sans-Serif" font-size="10.00">||+ DeferredWrappedProvider()</text>
+<text text-anchor="start" x="154" y="-95" font-family="Helvetica,sans-Serif" font-size="10.00">+ DeferredWrappedProvider()</text>
+<text text-anchor="start" x="154" y="-84" font-family="Helvetica,sans-Serif" font-size="10.00">+ DeferredWrappedProvider()</text>
+<text text-anchor="start" x="154" y="-73" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_variable</text>
+<text text-anchor="start" x="154" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
+<text text-anchor="start" x="154" y="-51" font-family="Helvetica,sans-Serif" font-size="10.00">+ getSetMessage()</text>
+<text text-anchor="start" x="154" y="-40" font-family="Helvetica,sans-Serif" font-size="10.00">+ isReadyToProvideData()</text>
+<text text-anchor="start" x="154" y="-29" font-family="Helvetica,sans-Serif" font-size="10.00">+ isWrappedProviderSet()</text>
+<text text-anchor="start" x="154" y="-18" font-family="Helvetica,sans-Serif" font-size="10.00">+ setWrappedProvider()</text>
+<text text-anchor="middle" x="223.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">}</text>
 </a>
 </g>
 </g>
@@ -78,31 +78,31 @@ var sectionId = 'dynsection-1';
 <g id="node2" class="node">
 <title>Node2</title>
 <g id="a_node2"><a xlink:href="classdata__access_1_1_wrapped_data_provider.html" target="_top" xlink:title="Simple implementation that basically wraps another instance.">
-<polygon fill="white" stroke="#666666" points="189.5,-371 51.5,-371 51.5,-187 189.5,-187 189.5,-371"/>
-<text text-anchor="start" x="59.5" y="-359" font-family="Helvetica,sans-Serif" font-size="10.00">{data_access::WrappedData</text>
-<text text-anchor="middle" x="120.5" y="-348" font-family="Helvetica,sans-Serif" font-size="10.00">Provider</text>
-<text text-anchor="start" x="59.5" y="-337" font-family="Helvetica,sans-Serif" font-size="10.00">||+ WrappedDataProvider()</text>
-<text text-anchor="start" x="59.5" y="-326" font-family="Helvetica,sans-Serif" font-size="10.00">+ WrappedDataProvider()</text>
-<text text-anchor="start" x="59.5" y="-315" font-family="Helvetica,sans-Serif" font-size="10.00">+ WrappedDataProvider()</text>
-<text text-anchor="start" x="59.5" y="-304" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_variable</text>
-<text text-anchor="start" x="59.5" y="-293" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
-<text text-anchor="start" x="59.5" y="-282" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_start_time()</text>
-<text text-anchor="start" x="59.5" y="-271" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_stop_time()</text>
-<text text-anchor="start" x="59.5" y="-260" font-family="Helvetica,sans-Serif" font-size="10.00">+ record_duration()</text>
-<text text-anchor="start" x="59.5" y="-249" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_ts_index_for_time()</text>
-<text text-anchor="start" x="59.5" y="-238" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_value()</text>
-<text text-anchor="start" x="59.5" y="-227" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_values()</text>
-<text text-anchor="start" x="59.5" y="-216" font-family="Helvetica,sans-Serif" font-size="10.00">+ is_property_sum_over</text>
-<text text-anchor="start" x="59.5" y="-205" font-family="Helvetica,sans-Serif" font-size="10.00">_time_step()</text>
-<text text-anchor="middle" x="120.5" y="-194" font-family="Helvetica,sans-Serif" font-size="10.00">}</text>
+<polygon fill="white" stroke="#666666" points="187.5,-371 49.5,-371 49.5,-187 187.5,-187 187.5,-371"/>
+<text text-anchor="start" x="57.5" y="-359" font-family="Helvetica,sans-Serif" font-size="10.00">{data_access::WrappedData</text>
+<text text-anchor="middle" x="118.5" y="-348" font-family="Helvetica,sans-Serif" font-size="10.00">Provider</text>
+<text text-anchor="start" x="57.5" y="-337" font-family="Helvetica,sans-Serif" font-size="10.00">||+ WrappedDataProvider()</text>
+<text text-anchor="start" x="57.5" y="-326" font-family="Helvetica,sans-Serif" font-size="10.00">+ WrappedDataProvider()</text>
+<text text-anchor="start" x="57.5" y="-315" font-family="Helvetica,sans-Serif" font-size="10.00">+ WrappedDataProvider()</text>
+<text text-anchor="start" x="57.5" y="-304" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_variable</text>
+<text text-anchor="start" x="57.5" y="-293" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
+<text text-anchor="start" x="57.5" y="-282" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_start_time()</text>
+<text text-anchor="start" x="57.5" y="-271" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_stop_time()</text>
+<text text-anchor="start" x="57.5" y="-260" font-family="Helvetica,sans-Serif" font-size="10.00">+ record_duration()</text>
+<text text-anchor="start" x="57.5" y="-249" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_ts_index_for_time()</text>
+<text text-anchor="start" x="57.5" y="-238" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_value()</text>
+<text text-anchor="start" x="57.5" y="-227" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_values()</text>
+<text text-anchor="start" x="57.5" y="-216" font-family="Helvetica,sans-Serif" font-size="10.00">+ is_property_sum_over</text>
+<text text-anchor="start" x="57.5" y="-205" font-family="Helvetica,sans-Serif" font-size="10.00">_time_step()</text>
+<text text-anchor="middle" x="118.5" y="-194" font-family="Helvetica,sans-Serif" font-size="10.00">}</text>
 </a>
 </g>
 </g>
 <!-- Node2&#45;&gt;Node1 -->
 <g id="edge1" class="edge">
 <title>Node2&#45;&gt;Node1</title>
-<path fill="none" stroke="#63b8ff" d="M172.03,-176.4C178.21,-164.23 184.4,-152.02 190.27,-140.45"/>
-<polygon fill="none" stroke="#63b8ff" points="168.95,-174.75 167.54,-185.25 175.19,-177.92 168.95,-174.75"/>
+<path fill="none" stroke="#63b8ff" d="M170.03,-176.4C176.21,-164.23 182.4,-152.02 188.27,-140.45"/>
+<polygon fill="none" stroke="#63b8ff" points="166.95,-174.75 165.54,-185.25 173.19,-177.92 166.95,-174.75"/>
 </g>
 <!-- Node3 -->
 <g id="node3" class="node">
@@ -118,15 +118,15 @@ var sectionId = 'dynsection-1';
 <!-- Node3&#45;&gt;Node2 -->
 <g id="edge2" class="edge">
 <title>Node3&#45;&gt;Node2</title>
-<path fill="none" stroke="#63b8ff" d="M100.45,-406.33C102.08,-396.03 104,-383.98 105.98,-371.5"/>
-<polygon fill="none" stroke="#63b8ff" points="97.01,-405.63 98.9,-416.06 103.93,-406.73 97.01,-405.63"/>
+<path fill="none" stroke="#63b8ff" d="M99.99,-406.32C100.82,-400.56 101.69,-394.6 102.5,-389 103.34,-383.23 104.21,-377.28 105.08,-371.29"/>
+<polygon fill="none" stroke="#63b8ff" points="96.53,-405.78 98.57,-416.18 103.46,-406.78 96.53,-405.78"/>
 </g>
 <!-- Node3&#45;&gt;Node2 -->
 <g id="edge5" class="edge">
 <title>Node3&#45;&gt;Node2</title>
-<path fill="none" stroke="#404040" d="M98.68,-417.65C99.59,-411.95 100.59,-405.73 101.5,-400 102.33,-394.79 103.18,-389.44 104.04,-384.05"/>
-<polygon fill="none" stroke="#404040" points="104.02,-384.14 101.01,-377.59 105.9,-372.29 108.91,-378.84 104.02,-384.14"/>
-<text text-anchor="middle" x="146" y="-392" font-family="Helvetica,sans-Serif" font-size="10.00"> #wrapped_provider</text>
+<path fill="none" stroke="#404040" d="M98.41,-417.55C99.75,-408.43 101.44,-396.85 103.27,-384.31"/>
+<polygon fill="none" stroke="#404040" points="103.27,-384.26 100.18,-377.75 105.01,-372.39 108.1,-378.9 103.27,-384.26"/>
+<text text-anchor="middle" x="145" y="-392" font-family="Helvetica,sans-Serif" font-size="10.00"> #wrapped_provider</text>
 </g>
 <!-- Node4 -->
 <g id="node4" class="node">
@@ -190,93 +190,93 @@ var sectionId = 'dynsection-1';
 <g id="node6" class="node">
 <title>Node6</title>
 <g id="a_node6"><a xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="410,-294 305,-294 305,-264 410,-264 410,-294"/>
-<text text-anchor="middle" x="357.5" y="-282" font-family="Helvetica,sans-Serif" font-size="10.00">{std::vector&lt; string &gt;</text>
-<text text-anchor="middle" x="357.5" y="-271" font-family="Helvetica,sans-Serif" font-size="10.00">||}</text>
+<polygon fill="white" stroke="#666666" points="426,-294 303,-294 303,-264 426,-264 426,-294"/>
+<text text-anchor="middle" x="364.5" y="-282" font-family="Helvetica,sans-Serif" font-size="10.00">{std::vector&lt; std::string &gt;</text>
+<text text-anchor="middle" x="364.5" y="-271" font-family="Helvetica,sans-Serif" font-size="10.00">||}</text>
 </a>
 </g>
 </g>
 <!-- Node6&#45;&gt;Node1 -->
 <g id="edge6" class="edge">
 <title>Node6&#45;&gt;Node1</title>
-<path fill="none" stroke="#404040" d="M348.43,-263.77C333.64,-240.58 303.29,-192.99 276.45,-150.89"/>
-<polygon fill="none" stroke="#404040" points="276.47,-150.92 269.87,-148.01 270.01,-140.8 276.61,-143.71 276.47,-150.92"/>
-<text text-anchor="middle" x="328" y="-161" font-family="Helvetica,sans-Serif" font-size="10.00"> #providedOutputs</text>
+<path fill="none" stroke="#404040" d="M354.81,-263.77C338.98,-240.53 306.45,-192.78 277.74,-150.62"/>
+<polygon fill="none" stroke="#404040" points="277.79,-150.71 271.11,-148 271.04,-140.79 277.72,-143.5 277.79,-150.71"/>
+<text text-anchor="middle" x="330" y="-161" font-family="Helvetica,sans-Serif" font-size="10.00"> #providedOutputs</text>
 </g>
 <!-- Node7 -->
 <g id="node7" class="node">
 <title>Node7</title>
 <g id="a_node7"><a xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="293.5,-453.5 231.5,-453.5 231.5,-423.5 293.5,-423.5 293.5,-453.5"/>
-<text text-anchor="middle" x="262.5" y="-441.5" font-family="Helvetica,sans-Serif" font-size="10.00">{std::string</text>
-<text text-anchor="middle" x="262.5" y="-430.5" font-family="Helvetica,sans-Serif" font-size="10.00">||}</text>
+<polygon fill="white" stroke="#666666" points="297.5,-453.5 235.5,-453.5 235.5,-423.5 297.5,-423.5 297.5,-453.5"/>
+<text text-anchor="middle" x="266.5" y="-441.5" font-family="Helvetica,sans-Serif" font-size="10.00">{std::string</text>
+<text text-anchor="middle" x="266.5" y="-430.5" font-family="Helvetica,sans-Serif" font-size="10.00">||}</text>
 </a>
 </g>
 </g>
 <!-- Node7&#45;&gt;Node1 -->
 <g id="edge11" class="edge">
 <title>Node7&#45;&gt;Node1</title>
-<path fill="none" stroke="#404040" d="M254.66,-423.22C247.9,-410.09 238.6,-389.85 234.5,-371 218.76,-298.66 217.72,-214.22 219.91,-153.38"/>
-<polygon fill="none" stroke="#404040" points="219.91,-153.28 216.16,-147.12 220.4,-141.29 224.15,-147.44 219.91,-153.28"/>
-<text text-anchor="middle" x="265" y="-276.5" font-family="Helvetica,sans-Serif" font-size="10.00"> #setMessage</text>
+<path fill="none" stroke="#404040" d="M256.81,-423.2C248.61,-410.22 237.43,-390.22 232.5,-371 214.02,-299.03 213.34,-214.15 216.36,-153.07"/>
+<polygon fill="none" stroke="#404040" points="216.34,-153.3 212.68,-147.09 217,-141.31 220.67,-147.53 216.34,-153.3"/>
+<text text-anchor="middle" x="263" y="-276.5" font-family="Helvetica,sans-Serif" font-size="10.00"> #setMessage</text>
 </g>
 <!-- Node7&#45;&gt;Node6 -->
 <g id="edge7" class="edge">
 <title>Node7&#45;&gt;Node6</title>
-<path fill="none" stroke="#404040" d="M271.1,-423.25C287.21,-396.54 322.12,-338.65 342.29,-305.22"/>
-<polygon fill="none" stroke="#404040" points="342.33,-305.16 342,-297.95 348.52,-294.88 348.85,-302.08 342.33,-305.16"/>
-<text text-anchor="middle" x="316" y="-392" font-family="Helvetica,sans-Serif" font-size="10.00"> +elements</text>
+<path fill="none" stroke="#404040" d="M275.37,-423.25C292.06,-396.42 328.32,-338.15 349.08,-304.78"/>
+<polygon fill="none" stroke="#404040" points="348.91,-305.06 348.68,-297.86 355.24,-294.87 355.47,-302.08 348.91,-305.06"/>
+<text text-anchor="middle" x="320" y="-392" font-family="Helvetica,sans-Serif" font-size="10.00"> +elements</text>
 </g>
 <!-- Node8 -->
 <g id="node8" class="node">
 <title>Node8</title>
 <g id="a_node8"><a xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="310.5,-607.5 214.5,-607.5 214.5,-566.5 310.5,-566.5 310.5,-607.5"/>
-<text text-anchor="start" x="222.5" y="-595.5" font-family="Helvetica,sans-Serif" font-size="10.00">{std::basic_string&lt;</text>
-<text text-anchor="middle" x="262.5" y="-584.5" font-family="Helvetica,sans-Serif" font-size="10.00"> Char &gt;</text>
-<text text-anchor="middle" x="262.5" y="-573.5" font-family="Helvetica,sans-Serif" font-size="10.00">||}</text>
+<polygon fill="white" stroke="#666666" points="314.5,-607.5 218.5,-607.5 218.5,-566.5 314.5,-566.5 314.5,-607.5"/>
+<text text-anchor="start" x="226.5" y="-595.5" font-family="Helvetica,sans-Serif" font-size="10.00">{std::basic_string&lt;</text>
+<text text-anchor="middle" x="266.5" y="-584.5" font-family="Helvetica,sans-Serif" font-size="10.00"> Char &gt;</text>
+<text text-anchor="middle" x="266.5" y="-573.5" font-family="Helvetica,sans-Serif" font-size="10.00">||}</text>
 </a>
 </g>
 </g>
 <!-- Node8&#45;&gt;Node7 -->
 <g id="edge8" class="edge">
 <title>Node8&#45;&gt;Node7</title>
-<path fill="none" stroke="#63b8ff" d="M262.5,-555.12C262.5,-523.88 262.5,-476.98 262.5,-453.68"/>
-<polygon fill="none" stroke="#63b8ff" points="259,-554.73 262.5,-564.73 266,-554.73 259,-554.73"/>
+<path fill="none" stroke="#63b8ff" d="M266.5,-555.12C266.5,-523.88 266.5,-476.98 266.5,-453.68"/>
+<polygon fill="none" stroke="#63b8ff" points="263,-554.73 266.5,-564.73 270,-554.73 263,-554.73"/>
 </g>
 <!-- Node9 -->
 <g id="node9" class="node">
 <title>Node9</title>
 <g id="a_node9"><a xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="401,-453.5 314,-453.5 314,-423.5 401,-423.5 401,-453.5"/>
-<text text-anchor="middle" x="357.5" y="-441.5" font-family="Helvetica,sans-Serif" font-size="10.00">{std::vector&lt; T &gt;</text>
-<text text-anchor="middle" x="357.5" y="-430.5" font-family="Helvetica,sans-Serif" font-size="10.00">||}</text>
+<polygon fill="white" stroke="#666666" points="408,-453.5 321,-453.5 321,-423.5 408,-423.5 408,-453.5"/>
+<text text-anchor="middle" x="364.5" y="-441.5" font-family="Helvetica,sans-Serif" font-size="10.00">{std::vector&lt; T &gt;</text>
+<text text-anchor="middle" x="364.5" y="-430.5" font-family="Helvetica,sans-Serif" font-size="10.00">||}</text>
 </a>
 </g>
 </g>
 <!-- Node9&#45;&gt;Node6 -->
 <g id="edge9" class="edge">
 <title>Node9&#45;&gt;Node6</title>
-<path fill="none" stroke="orange" d="M357.5,-412.1C357.5,-378.57 357.5,-320.7 357.5,-294.11"/>
-<polygon fill="orange" stroke="orange" points="354,-411.73 357.5,-421.73 361,-411.73 354,-411.73"/>
-<text text-anchor="middle" x="379" y="-392" font-family="Helvetica,sans-Serif" font-size="10.00"> &lt; string &gt;</text>
+<path fill="none" stroke="orange" d="M364.5,-412.1C364.5,-378.57 364.5,-320.7 364.5,-294.11"/>
+<polygon fill="orange" stroke="orange" points="361,-411.73 364.5,-421.73 368,-411.73 361,-411.73"/>
+<text text-anchor="middle" x="395" y="-392" font-family="Helvetica,sans-Serif" font-size="10.00"> &lt; std::string &gt;</text>
 </g>
 <!-- Node10 -->
 <g id="node10" class="node">
 <title>Node10</title>
 <g id="a_node10"><a xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="372,-602 343,-602 343,-572 372,-572 372,-602"/>
-<text text-anchor="middle" x="357.5" y="-590" font-family="Helvetica,sans-Serif" font-size="10.00">{T</text>
-<text text-anchor="middle" x="357.5" y="-579" font-family="Helvetica,sans-Serif" font-size="10.00">||}</text>
+<polygon fill="white" stroke="#666666" points="379,-602 350,-602 350,-572 379,-572 379,-602"/>
+<text text-anchor="middle" x="364.5" y="-590" font-family="Helvetica,sans-Serif" font-size="10.00">{T</text>
+<text text-anchor="middle" x="364.5" y="-579" font-family="Helvetica,sans-Serif" font-size="10.00">||}</text>
 </a>
 </g>
 </g>
 <!-- Node10&#45;&gt;Node9 -->
 <g id="edge10" class="edge">
 <title>Node10&#45;&gt;Node9</title>
-<path fill="none" stroke="#404040" d="M357.5,-571.69C357.5,-547.34 357.5,-497.48 357.5,-466.44"/>
-<polygon fill="none" stroke="#404040" points="357.5,-466.56 353.5,-460.56 357.5,-454.56 361.5,-460.56 357.5,-466.56"/>
-<text text-anchor="middle" x="382" y="-480" font-family="Helvetica,sans-Serif" font-size="10.00"> +elements</text>
+<path fill="none" stroke="#404040" d="M364.5,-571.69C364.5,-547.34 364.5,-497.48 364.5,-466.44"/>
+<polygon fill="none" stroke="#404040" points="364.5,-466.56 360.5,-460.56 364.5,-454.56 368.5,-460.56 364.5,-466.56"/>
+<text text-anchor="middle" x="389" y="-480" font-family="Helvetica,sans-Serif" font-size="10.00"> +elements</text>
 </g>
 </g>
 </svg>
