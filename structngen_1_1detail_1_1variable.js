@@ -1,0 +1,26 @@
+var structngen_1_1detail_1_1variable =
+[
+    [ "hash", "structngen_1_1detail_1_1variable_1_1hash.html", "structngen_1_1detail_1_1variable_1_1hash" ],
+    [ "element_type", "structngen_1_1detail_1_1variable.html#a37902b2b20a7a88966c4884145ea14d3", null ],
+    [ "mdarray_variant", "structngen_1_1detail_1_1variable.html#a8ae1eb2e261464214cbb012bee5cefa3", null ],
+    [ "size_type", "structngen_1_1detail_1_1variable.html#aaaf15024f75ec79a1650343c564abc0a", null ],
+    [ "types", "structngen_1_1detail_1_1variable.html#a902fe4daa2e4c4fecf70729905c52280", null ],
+    [ "variable", "structngen_1_1detail_1_1variable.html#a20903d86a57788936c2362b9d1282bce", null ],
+    [ "at", "structngen_1_1detail_1_1variable.html#a097931905f70d5a3d290613297621810", null ],
+    [ "at", "structngen_1_1detail_1_1variable.html#a546b312f40ee218eca56e235bad55870", null ],
+    [ "dimensions", "structngen_1_1detail_1_1variable.html#a590e7d000cbbf6c6ae19a85219d02546", null ],
+    [ "insert", "structngen_1_1detail_1_1variable.html#a259e9cd5e282889c152fb6911bcb973b", null ],
+    [ "make", "structngen_1_1detail_1_1variable.html#a4bf069413cf8ac89a95904c9257cc639", null ],
+    [ "name", "structngen_1_1detail_1_1variable.html#ab18eddf746c1d9b798a73ea94043ab56", null ],
+    [ "operator==", "structngen_1_1detail_1_1variable.html#a2fc7bd4973e1559bc8177688ee5377e7", null ],
+    [ "rank", "structngen_1_1detail_1_1variable.html#abc4e7700c75772074add156b263f8c19", null ],
+    [ "set_data", "structngen_1_1detail_1_1variable.html#a813f35720a31e3f4ce784b8177d0007a", null ],
+    [ "set_data", "structngen_1_1detail_1_1variable.html#a0fc10d638e16d816b09d5bc192978640", null ],
+    [ "shape", "structngen_1_1detail_1_1variable.html#aa43861cdcd851b05f343b34d5b1f2574", null ],
+    [ "size", "structngen_1_1detail_1_1variable.html#a540822e04e6717e64df897991fac3385", null ],
+    [ "values", "structngen_1_1detail_1_1variable.html#a8f5a9a42b332d76d711f5a97575b3df5", null ],
+    [ "values", "structngen_1_1detail_1_1variable.html#abcc852157d8eb508a05ec22d53f610ed", null ],
+    [ "m_data", "structngen_1_1detail_1_1variable.html#aaf856bf0c59512070df75f776d224d94", null ],
+    [ "m_dimensions", "structngen_1_1detail_1_1variable.html#ad147ee29660c53b9efbc468b2cff1375", null ],
+    [ "m_name", "structngen_1_1detail_1_1variable.html#aa305b357d3f9ad340dc2a62554f645ea", null ]
+];

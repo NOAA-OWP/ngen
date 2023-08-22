@@ -1806,6 +1806,169 @@
           <topic label="nexuses" href="classnexus_1_1_nexus___manager.html#ad94a5809892bcc8debed0b8ad6c95d45"/>
         </topic>
       </topic>
+      <topic label="ngen" href="namespacengen.html">
+        <topic label="detail" href="namespacengen_1_1detail.html">
+          <topic label="visitors" href="namespacengen_1_1detail_1_1visitors.html">
+            <topic label="mdarray_at" href="structngen_1_1detail_1_1visitors_1_1mdarray__at.html">
+              <topic label="operator()" href="structngen_1_1detail_1_1visitors_1_1mdarray__at.html#a68020f75bc52cf6df4a2e158ef1db82c"/>
+            </topic>
+            <topic label="mdarray_insert" href="structngen_1_1detail_1_1visitors_1_1mdarray__insert.html">
+              <topic label="operator()" href="structngen_1_1detail_1_1visitors_1_1mdarray__insert.html#a2c563a5d676afd707bf50cd46b89bd7e"/>
+            </topic>
+            <topic label="mdarray_rank" href="structngen_1_1detail_1_1visitors_1_1mdarray__rank.html">
+              <topic label="operator()" href="structngen_1_1detail_1_1visitors_1_1mdarray__rank.html#a6f054a0ab18079b4ac93c8a09c6f2a92"/>
+            </topic>
+            <topic label="mdarray_shape" href="structngen_1_1detail_1_1visitors_1_1mdarray__shape.html">
+              <topic label="operator()" href="structngen_1_1detail_1_1visitors_1_1mdarray__shape.html#ab2d6c08d26b32df574a90c7a432545ca"/>
+            </topic>
+            <topic label="mdarray_size" href="structngen_1_1detail_1_1visitors_1_1mdarray__size.html">
+              <topic label="operator()" href="structngen_1_1detail_1_1visitors_1_1mdarray__size.html#a6a2d37395beabedc1626215bd5957458"/>
+            </topic>
+            <topic label="to_string_visitor" href="structngen_1_1detail_1_1visitors_1_1to__string__visitor.html">
+              <topic label="operator()" href="structngen_1_1detail_1_1visitors_1_1to__string__visitor.html#a5740b72037ecbc532523af0cbc539377"/>
+            </topic>
+          </topic>
+          <topic label="dimension" href="structngen_1_1detail_1_1dimension.html">
+            <topic label="hash" href="structngen_1_1detail_1_1dimension_1_1hash.html">
+              <topic label="apply" href="structngen_1_1detail_1_1dimension_1_1hash.html#a313af7cb5f96ffebe84869b78c8ada28"/>
+              <topic label="operator()" href="structngen_1_1detail_1_1dimension_1_1hash.html#ac603ee78942711b0eb5cbe6b64436c5f"/>
+            </topic>
+            <topic label="dimension" href="structngen_1_1detail_1_1dimension.html#a24a7e4d7cea8b099a23389a0b156a4dd"/>
+            <topic label="dimension" href="structngen_1_1detail_1_1dimension.html#a4f19b463429b37e3cf172e121d4f00bd"/>
+            <topic label="dimension" href="structngen_1_1detail_1_1dimension.html#ad557349aac5ee1eb0222bf0b71a4b74a"/>
+            <topic label="~dimension" href="structngen_1_1detail_1_1dimension.html#a7c3f999242e90c0e8b47d2fb01c94ff9"/>
+            <topic label="dimension" href="structngen_1_1detail_1_1dimension.html#ad6f527bb2955be6111472996d0cb8804"/>
+            <topic label="dimension" href="structngen_1_1detail_1_1dimension.html#a38914c89782b0791f460123843e5b2b7"/>
+            <topic label="name" href="structngen_1_1detail_1_1dimension.html#a8e56cb9c421652f0ecea0b6ab0417c15"/>
+            <topic label="operator=" href="structngen_1_1detail_1_1dimension.html#aebf21ec79670d7f1c0784b62881ccb6b"/>
+            <topic label="operator=" href="structngen_1_1detail_1_1dimension.html#aaba428622ed41e85778e27740297f1c6"/>
+            <topic label="operator==" href="structngen_1_1detail_1_1dimension.html#a89f327abc6cbaf698c3cfc2f41c3f738"/>
+            <topic label="size" href="structngen_1_1detail_1_1dimension.html#a915a07b89b901ca306c7f4afb1c97ec2"/>
+            <topic label="m_name" href="structngen_1_1detail_1_1dimension.html#aef940513344739ced072da3e3c79e02e"/>
+            <topic label="m_size" href="structngen_1_1detail_1_1dimension.html#a45205f681e9ab6a730bdf13bae75f902"/>
+            <topic label="mdframe" href="structngen_1_1detail_1_1dimension.html#a5a2e0eb8890f7b2502eda9f1ad3e135c"/>
+          </topic>
+          <topic label="variable" href="structngen_1_1detail_1_1variable.html">
+            <topic label="hash" href="structngen_1_1detail_1_1variable_1_1hash.html">
+              <topic label="apply" href="structngen_1_1detail_1_1variable_1_1hash.html#a1058a05b54b14b858078ac173173d726"/>
+              <topic label="operator()" href="structngen_1_1detail_1_1variable_1_1hash.html#a976ddf5ac51df0f136a846d3c5b034b0"/>
+            </topic>
+            <topic label="element_type" href="structngen_1_1detail_1_1variable.html#a37902b2b20a7a88966c4884145ea14d3"/>
+            <topic label="mdarray_variant" href="structngen_1_1detail_1_1variable.html#a8ae1eb2e261464214cbb012bee5cefa3"/>
+            <topic label="size_type" href="structngen_1_1detail_1_1variable.html#aaaf15024f75ec79a1650343c564abc0a"/>
+            <topic label="types" href="structngen_1_1detail_1_1variable.html#a902fe4daa2e4c4fecf70729905c52280"/>
+            <topic label="variable" href="structngen_1_1detail_1_1variable.html#a20903d86a57788936c2362b9d1282bce"/>
+            <topic label="at" href="structngen_1_1detail_1_1variable.html#a097931905f70d5a3d290613297621810"/>
+            <topic label="at" href="structngen_1_1detail_1_1variable.html#a546b312f40ee218eca56e235bad55870"/>
+            <topic label="dimensions" href="structngen_1_1detail_1_1variable.html#a590e7d000cbbf6c6ae19a85219d02546"/>
+            <topic label="insert" href="structngen_1_1detail_1_1variable.html#a259e9cd5e282889c152fb6911bcb973b"/>
+            <topic label="make" href="structngen_1_1detail_1_1variable.html#a4bf069413cf8ac89a95904c9257cc639"/>
+            <topic label="name" href="structngen_1_1detail_1_1variable.html#ab18eddf746c1d9b798a73ea94043ab56"/>
+            <topic label="operator==" href="structngen_1_1detail_1_1variable.html#a2fc7bd4973e1559bc8177688ee5377e7"/>
+            <topic label="rank" href="structngen_1_1detail_1_1variable.html#abc4e7700c75772074add156b263f8c19"/>
+            <topic label="set_data" href="structngen_1_1detail_1_1variable.html#a813f35720a31e3f4ce784b8177d0007a"/>
+            <topic label="set_data" href="structngen_1_1detail_1_1variable.html#a0fc10d638e16d816b09d5bc192978640"/>
+            <topic label="shape" href="structngen_1_1detail_1_1variable.html#aa43861cdcd851b05f343b34d5b1f2574"/>
+            <topic label="size" href="structngen_1_1detail_1_1variable.html#a540822e04e6717e64df897991fac3385"/>
+            <topic label="values" href="structngen_1_1detail_1_1variable.html#a8f5a9a42b332d76d711f5a97575b3df5"/>
+            <topic label="values" href="structngen_1_1detail_1_1variable.html#abcc852157d8eb508a05ec22d53f610ed"/>
+            <topic label="m_data" href="structngen_1_1detail_1_1variable.html#aaf856bf0c59512070df75f776d224d94"/>
+            <topic label="m_dimensions" href="structngen_1_1detail_1_1variable.html#ad147ee29660c53b9efbc468b2cff1375"/>
+            <topic label="m_name" href="structngen_1_1detail_1_1variable.html#aa305b357d3f9ad340dc2a62554f645ea"/>
+          </topic>
+        </topic>
+        <topic label="traits" href="namespacengen_1_1traits.html">
+          <topic label="bool_pack" href="structngen_1_1traits_1_1bool__pack.html"/>
+          <topic label="type_list" href="structngen_1_1traits_1_1type__list.html">
+            <topic label="enable_if_supports" href="structngen_1_1traits_1_1type__list.html#ad6517ca709d9362b3050110e805d2fe1"/>
+            <topic label="is_supported" href="structngen_1_1traits_1_1type__list.html#a91117e0c7427bf94c84b444ca3ad44cc"/>
+            <topic label="variant_container" href="structngen_1_1traits_1_1type__list.html#a4a32af846a3acc3dc13aef5efe96149f"/>
+            <topic label="variant_scalar" href="structngen_1_1traits_1_1type__list.html#a3ab33dc8cba769ab4ade2357b3f17429"/>
+          </topic>
+          <topic label="all_is_convertible" href="namespacengen_1_1traits.html#a6f75e89975725de0279d0bc12b61d200"/>
+          <topic label="all_is_same" href="namespacengen_1_1traits.html#aff851b736dde620aadc95565381a6c3a"/>
+          <topic label="bool_constant" href="namespacengen_1_1traits.html#a6d5c98ba4b917c21ef5a187717e0b006"/>
+          <topic label="conjunction" href="namespacengen_1_1traits.html#a247aeb6d1da80c4f183c8753c59b554b"/>
+          <topic label="disjunction" href="namespacengen_1_1traits.html#a362ed882ab0dbafc57aadf70a173fd45"/>
+          <topic label="is_convertible_to_any" href="namespacengen_1_1traits.html#a81e259575eb38d00047a60193f06cc6d"/>
+          <topic label="is_same_to_any" href="namespacengen_1_1traits.html#a27a552792bb5e1225cfedd17f35f6b0f"/>
+        </topic>
+        <topic label="mdarray" href="classngen_1_1mdarray.html">
+          <topic label="iterator" href="structngen_1_1mdarray_1_1iterator.html">
+            <topic label="const_reference" href="structngen_1_1mdarray_1_1iterator.html#ada2e663fbd764b7ec189c9ed52b09f96"/>
+            <topic label="difference_type" href="structngen_1_1mdarray_1_1iterator.html#a27f123a666c60dc12203067c33c05a83"/>
+            <topic label="iterator_category" href="structngen_1_1mdarray_1_1iterator.html#ade572a755c4bdaf14df5a1f4b70f2654"/>
+            <topic label="pointer" href="structngen_1_1mdarray_1_1iterator.html#a5e4537042ad3299aa5b82ffd8dd149a4"/>
+            <topic label="reference" href="structngen_1_1mdarray_1_1iterator.html#a62692dc152fcf6d56be15cc1409d75b1"/>
+            <topic label="value_type" href="structngen_1_1mdarray_1_1iterator.html#a5db9afa727baf8f7159c11df4c4b88f6"/>
+            <topic label="iterator" href="structngen_1_1mdarray_1_1iterator.html#ab6b62ba608647972cb2053b8bcb1c51c"/>
+            <topic label="mdindex" href="structngen_1_1mdarray_1_1iterator.html#ae1c16df1bfc7a4b5f4ffec730b7144d2"/>
+            <topic label="operator*" href="structngen_1_1mdarray_1_1iterator.html#a1e58fbb924aa0f951e629c7bf299d80b"/>
+            <topic label="operator++" href="structngen_1_1mdarray_1_1iterator.html#aeee6e05be4334a3ea1b57d1b1c3971d4"/>
+            <topic label="operator++" href="structngen_1_1mdarray_1_1iterator.html#a68d7f919876c5151f4ae222bd9952ef7"/>
+            <topic label="operator--" href="structngen_1_1mdarray_1_1iterator.html#a8100293ec1fd8ee4a038447223d73a33"/>
+            <topic label="operator--" href="structngen_1_1mdarray_1_1iterator.html#a6412e6d5861ba467233406cfc087fbd0"/>
+            <topic label="operator-&gt;" href="structngen_1_1mdarray_1_1iterator.html#a1a21ed9f25f34d5604d26e54b9043703"/>
+            <topic label="operator!=" href="structngen_1_1mdarray_1_1iterator.html#a55a8ee0e80dad1a7da9d751c25bc0386"/>
+            <topic label="operator==" href="structngen_1_1mdarray_1_1iterator.html#a81d10d7799462c7ca5e7cf19119ca356"/>
+            <topic label="m_idx" href="structngen_1_1mdarray_1_1iterator.html#ae2ec6579aabff17ad33a2ed9b81f35f9"/>
+            <topic label="m_ref" href="structngen_1_1mdarray_1_1iterator.html#afbb8366fc1353328dda3d98afb4aba74"/>
+          </topic>
+          <topic label="const_pointer" href="classngen_1_1mdarray.html#a19f8860cbddacef61e56096a932b77f8"/>
+          <topic label="const_reference" href="classngen_1_1mdarray.html#a462f71bd6b950c1396a67be409a48b60"/>
+          <topic label="container_type" href="classngen_1_1mdarray.html#ae79cddf80281d2c2bcb09fdb3a480165"/>
+          <topic label="difference_type" href="classngen_1_1mdarray.html#ab0d00328029184bbea9ca70cff0636bc"/>
+          <topic label="pointer" href="classngen_1_1mdarray.html#a8b87b5b343f81e7bbf3a21e90da6e3c2"/>
+          <topic label="reference" href="classngen_1_1mdarray.html#a37c587b271a2fefe7d5812dc226eb9bb"/>
+          <topic label="size_type" href="classngen_1_1mdarray.html#a26abcfd8bce1c2dcbbc635b76e7713cd"/>
+          <topic label="value_type" href="classngen_1_1mdarray.html#aff902df16f40f57aaf2bbb26325d68d5"/>
+          <topic label="mdarray" href="classngen_1_1mdarray.html#af2ec673f5a1296d6e7f49e8df795c830"/>
+          <topic label="mdarray" href="classngen_1_1mdarray.html#afa8388cb161948949127ea6926b65d4b"/>
+          <topic label="mdarray" href="classngen_1_1mdarray.html#a597ce23cd9f8243fc3c2a1b590cffc1d"/>
+          <topic label="at" href="classngen_1_1mdarray.html#a2253388edd9a8771cc4e60d1b664b3bf"/>
+          <topic label="at" href="classngen_1_1mdarray.html#a685a94c25fa6cd06b6c15ae1b328dd83"/>
+          <topic label="begin" href="classngen_1_1mdarray.html#aac07778b890ca06ad96b3ad805e6232a"/>
+          <topic label="bounds_check" href="classngen_1_1mdarray.html#a94b690c6eb58edc04a8591ea4d133e80"/>
+          <topic label="deindex" href="classngen_1_1mdarray.html#acade9563d7c5b21795d5d97ff575e5c7"/>
+          <topic label="end" href="classngen_1_1mdarray.html#a197eced76e957bfc1413a1746d4adb50"/>
+          <topic label="index" href="classngen_1_1mdarray.html#aa83a1bb6b90b618cff0b8f4869b16647"/>
+          <topic label="insert" href="classngen_1_1mdarray.html#a65978d1961d8dfd21d8474c2e3aacf3d"/>
+          <topic label="insert" href="classngen_1_1mdarray.html#a3263b6f36590d35ac14989e981dcb273"/>
+          <topic label="max_size" href="classngen_1_1mdarray.html#a7ae2821f3c492b00c1f8861a2eb86d2f"/>
+          <topic label="operator[]" href="classngen_1_1mdarray.html#af1700773ef2f09ec8c31b2d083da6783"/>
+          <topic label="operator[]" href="classngen_1_1mdarray.html#a7192793060ec7a44a9548c47545c2c39"/>
+          <topic label="rank" href="classngen_1_1mdarray.html#a4eecfb11746afc31df721adc1c7398a3"/>
+          <topic label="shape" href="classngen_1_1mdarray.html#ac4ca014c9f78921b0a48f27c9efd9145"/>
+          <topic label="size" href="classngen_1_1mdarray.html#ad6ba0f923eb1429887488ef541ab7da9"/>
+          <topic label="iterator" href="classngen_1_1mdarray.html#a6dacaf116137db31779533d36cef60d9"/>
+          <topic label="m_data" href="classngen_1_1mdarray.html#a69046ccb44242f5e571f1e1739e0cbdc"/>
+          <topic label="m_shape" href="classngen_1_1mdarray.html#a680fbaa3ceadcf41bd24b485ba8ec67a"/>
+        </topic>
+        <topic label="mdframe" href="classngen_1_1mdframe.html">
+          <topic label="dimension" href="classngen_1_1mdframe.html#a61cc9ff245f9b05b442d27a8665b6024"/>
+          <topic label="dimension_set" href="classngen_1_1mdframe.html#a828b7bfa29944c4af78c0fd1173f44dd"/>
+          <topic label="mdarray_variant" href="classngen_1_1mdframe.html#ada50efbed06f97a469246ff175aabde8"/>
+          <topic label="size_type" href="classngen_1_1mdframe.html#af11ab83bb94d049cb81262dd6d860097"/>
+          <topic label="types" href="classngen_1_1mdframe.html#a7aed5347acfeae44c40dfcbced064ff3"/>
+          <topic label="variable" href="classngen_1_1mdframe.html#a1567a0328a49a90ef00b4c562cb2ad6b"/>
+          <topic label="variable_map" href="classngen_1_1mdframe.html#a2e94fd3920e6117f83fac3e2502d996d"/>
+          <topic label="add_dimension" href="classngen_1_1mdframe.html#ae0b2679d585e1714ed899960b943f566"/>
+          <topic label="add_dimension" href="classngen_1_1mdframe.html#a9845bc637ce0a75b6e61c2ec75d94e04"/>
+          <topic label="add_variable" href="classngen_1_1mdframe.html#a983002f0d17009e0329a00426795fc34"/>
+          <topic label="find_dimension" href="classngen_1_1mdframe.html#ae344cbe713611ed90a6f6424ea3e66d9"/>
+          <topic label="find_variable" href="classngen_1_1mdframe.html#aa93768d6954b8ca5255de548d85d4e67"/>
+          <topic label="get_dimension" href="classngen_1_1mdframe.html#ae5a51ac2046d7a0762e0a18a0de6430f"/>
+          <topic label="get_variable" href="classngen_1_1mdframe.html#aa7c0cd9b55389b6091882689b481604e"/>
+          <topic label="has_dimension" href="classngen_1_1mdframe.html#aec76ba6818268c212983e343452f8595"/>
+          <topic label="has_variable" href="classngen_1_1mdframe.html#a5325430ba075edd56a7d833e5be45ad1"/>
+          <topic label="operator[]" href="classngen_1_1mdframe.html#a2bfacbe7fd8dcbb8319b2431d03de743"/>
+          <topic label="to_csv" href="classngen_1_1mdframe.html#ade3c60063140451b4b609319ed52fa23"/>
+          <topic label="m_dimensions" href="classngen_1_1mdframe.html#ac164cdeb2a28669afa33ad1af2beeea5"/>
+          <topic label="m_variables" href="classngen_1_1mdframe.html#a791692f9692232df311ad1bf01f797f3"/>
+        </topic>
+        <topic label="cartesian_indices" href="namespacengen.html#a2058d2d378fb0c46a66cbd95f49c4d6d"/>
+        <topic label="cartesian_indices_recurse" href="namespacengen.html#ad51f53c85438741923d4d083365d6bbf"/>
+      </topic>
       <topic label="realization" href="namespacerealization.html">
         <topic label="Bmi_C_Formulation" href="classrealization_1_1_bmi___c___formulation.html">
           <topic label="time_step_t" href="classrealization_1_1_bmi___c___formulation.html#aee10dc672e5a9e106f49dcbe0080cf7c"/>
@@ -3850,6 +4013,160 @@
           <topic label="nexuses" href="classnexus_1_1_nexus___manager.html#ad94a5809892bcc8debed0b8ad6c95d45"/>
         </topic>
       </topic>
+      <topic label="ngen" href="namespacengen.html">
+        <topic label="detail" href="namespacengen_1_1detail.html">
+          <topic label="visitors" href="namespacengen_1_1detail_1_1visitors.html">
+            <topic label="mdarray_at" href="structngen_1_1detail_1_1visitors_1_1mdarray__at.html">
+              <topic label="operator()" href="structngen_1_1detail_1_1visitors_1_1mdarray__at.html#a68020f75bc52cf6df4a2e158ef1db82c"/>
+            </topic>
+            <topic label="mdarray_insert" href="structngen_1_1detail_1_1visitors_1_1mdarray__insert.html">
+              <topic label="operator()" href="structngen_1_1detail_1_1visitors_1_1mdarray__insert.html#a2c563a5d676afd707bf50cd46b89bd7e"/>
+            </topic>
+            <topic label="mdarray_rank" href="structngen_1_1detail_1_1visitors_1_1mdarray__rank.html">
+              <topic label="operator()" href="structngen_1_1detail_1_1visitors_1_1mdarray__rank.html#a6f054a0ab18079b4ac93c8a09c6f2a92"/>
+            </topic>
+            <topic label="mdarray_shape" href="structngen_1_1detail_1_1visitors_1_1mdarray__shape.html">
+              <topic label="operator()" href="structngen_1_1detail_1_1visitors_1_1mdarray__shape.html#ab2d6c08d26b32df574a90c7a432545ca"/>
+            </topic>
+            <topic label="mdarray_size" href="structngen_1_1detail_1_1visitors_1_1mdarray__size.html">
+              <topic label="operator()" href="structngen_1_1detail_1_1visitors_1_1mdarray__size.html#a6a2d37395beabedc1626215bd5957458"/>
+            </topic>
+            <topic label="to_string_visitor" href="structngen_1_1detail_1_1visitors_1_1to__string__visitor.html">
+              <topic label="operator()" href="structngen_1_1detail_1_1visitors_1_1to__string__visitor.html#a5740b72037ecbc532523af0cbc539377"/>
+            </topic>
+          </topic>
+          <topic label="dimension" href="structngen_1_1detail_1_1dimension.html">
+            <topic label="hash" href="structngen_1_1detail_1_1dimension_1_1hash.html">
+              <topic label="apply" href="structngen_1_1detail_1_1dimension_1_1hash.html#a313af7cb5f96ffebe84869b78c8ada28"/>
+              <topic label="operator()" href="structngen_1_1detail_1_1dimension_1_1hash.html#ac603ee78942711b0eb5cbe6b64436c5f"/>
+            </topic>
+            <topic label="dimension" href="structngen_1_1detail_1_1dimension.html#a24a7e4d7cea8b099a23389a0b156a4dd"/>
+            <topic label="dimension" href="structngen_1_1detail_1_1dimension.html#a4f19b463429b37e3cf172e121d4f00bd"/>
+            <topic label="dimension" href="structngen_1_1detail_1_1dimension.html#ad557349aac5ee1eb0222bf0b71a4b74a"/>
+            <topic label="~dimension" href="structngen_1_1detail_1_1dimension.html#a7c3f999242e90c0e8b47d2fb01c94ff9"/>
+            <topic label="dimension" href="structngen_1_1detail_1_1dimension.html#ad6f527bb2955be6111472996d0cb8804"/>
+            <topic label="dimension" href="structngen_1_1detail_1_1dimension.html#a38914c89782b0791f460123843e5b2b7"/>
+            <topic label="name" href="structngen_1_1detail_1_1dimension.html#a8e56cb9c421652f0ecea0b6ab0417c15"/>
+            <topic label="operator=" href="structngen_1_1detail_1_1dimension.html#aebf21ec79670d7f1c0784b62881ccb6b"/>
+            <topic label="operator=" href="structngen_1_1detail_1_1dimension.html#aaba428622ed41e85778e27740297f1c6"/>
+            <topic label="operator==" href="structngen_1_1detail_1_1dimension.html#a89f327abc6cbaf698c3cfc2f41c3f738"/>
+            <topic label="size" href="structngen_1_1detail_1_1dimension.html#a915a07b89b901ca306c7f4afb1c97ec2"/>
+            <topic label="m_name" href="structngen_1_1detail_1_1dimension.html#aef940513344739ced072da3e3c79e02e"/>
+            <topic label="m_size" href="structngen_1_1detail_1_1dimension.html#a45205f681e9ab6a730bdf13bae75f902"/>
+            <topic label="mdframe" href="structngen_1_1detail_1_1dimension.html#a5a2e0eb8890f7b2502eda9f1ad3e135c"/>
+          </topic>
+          <topic label="variable" href="structngen_1_1detail_1_1variable.html">
+            <topic label="hash" href="structngen_1_1detail_1_1variable_1_1hash.html">
+              <topic label="apply" href="structngen_1_1detail_1_1variable_1_1hash.html#a1058a05b54b14b858078ac173173d726"/>
+              <topic label="operator()" href="structngen_1_1detail_1_1variable_1_1hash.html#a976ddf5ac51df0f136a846d3c5b034b0"/>
+            </topic>
+            <topic label="element_type" href="structngen_1_1detail_1_1variable.html#a37902b2b20a7a88966c4884145ea14d3"/>
+            <topic label="mdarray_variant" href="structngen_1_1detail_1_1variable.html#a8ae1eb2e261464214cbb012bee5cefa3"/>
+            <topic label="size_type" href="structngen_1_1detail_1_1variable.html#aaaf15024f75ec79a1650343c564abc0a"/>
+            <topic label="types" href="structngen_1_1detail_1_1variable.html#a902fe4daa2e4c4fecf70729905c52280"/>
+            <topic label="variable" href="structngen_1_1detail_1_1variable.html#a20903d86a57788936c2362b9d1282bce"/>
+            <topic label="at" href="structngen_1_1detail_1_1variable.html#a097931905f70d5a3d290613297621810"/>
+            <topic label="at" href="structngen_1_1detail_1_1variable.html#a546b312f40ee218eca56e235bad55870"/>
+            <topic label="dimensions" href="structngen_1_1detail_1_1variable.html#a590e7d000cbbf6c6ae19a85219d02546"/>
+            <topic label="insert" href="structngen_1_1detail_1_1variable.html#a259e9cd5e282889c152fb6911bcb973b"/>
+            <topic label="make" href="structngen_1_1detail_1_1variable.html#a4bf069413cf8ac89a95904c9257cc639"/>
+            <topic label="name" href="structngen_1_1detail_1_1variable.html#ab18eddf746c1d9b798a73ea94043ab56"/>
+            <topic label="operator==" href="structngen_1_1detail_1_1variable.html#a2fc7bd4973e1559bc8177688ee5377e7"/>
+            <topic label="rank" href="structngen_1_1detail_1_1variable.html#abc4e7700c75772074add156b263f8c19"/>
+            <topic label="set_data" href="structngen_1_1detail_1_1variable.html#a813f35720a31e3f4ce784b8177d0007a"/>
+            <topic label="set_data" href="structngen_1_1detail_1_1variable.html#a0fc10d638e16d816b09d5bc192978640"/>
+            <topic label="shape" href="structngen_1_1detail_1_1variable.html#aa43861cdcd851b05f343b34d5b1f2574"/>
+            <topic label="size" href="structngen_1_1detail_1_1variable.html#a540822e04e6717e64df897991fac3385"/>
+            <topic label="values" href="structngen_1_1detail_1_1variable.html#a8f5a9a42b332d76d711f5a97575b3df5"/>
+            <topic label="values" href="structngen_1_1detail_1_1variable.html#abcc852157d8eb508a05ec22d53f610ed"/>
+            <topic label="m_data" href="structngen_1_1detail_1_1variable.html#aaf856bf0c59512070df75f776d224d94"/>
+            <topic label="m_dimensions" href="structngen_1_1detail_1_1variable.html#ad147ee29660c53b9efbc468b2cff1375"/>
+            <topic label="m_name" href="structngen_1_1detail_1_1variable.html#aa305b357d3f9ad340dc2a62554f645ea"/>
+          </topic>
+        </topic>
+        <topic label="traits" href="namespacengen_1_1traits.html">
+          <topic label="bool_pack" href="structngen_1_1traits_1_1bool__pack.html"/>
+          <topic label="type_list" href="structngen_1_1traits_1_1type__list.html">
+            <topic label="enable_if_supports" href="structngen_1_1traits_1_1type__list.html#ad6517ca709d9362b3050110e805d2fe1"/>
+            <topic label="is_supported" href="structngen_1_1traits_1_1type__list.html#a91117e0c7427bf94c84b444ca3ad44cc"/>
+            <topic label="variant_container" href="structngen_1_1traits_1_1type__list.html#a4a32af846a3acc3dc13aef5efe96149f"/>
+            <topic label="variant_scalar" href="structngen_1_1traits_1_1type__list.html#a3ab33dc8cba769ab4ade2357b3f17429"/>
+          </topic>
+        </topic>
+        <topic label="mdarray" href="classngen_1_1mdarray.html">
+          <topic label="iterator" href="structngen_1_1mdarray_1_1iterator.html">
+            <topic label="const_reference" href="structngen_1_1mdarray_1_1iterator.html#ada2e663fbd764b7ec189c9ed52b09f96"/>
+            <topic label="difference_type" href="structngen_1_1mdarray_1_1iterator.html#a27f123a666c60dc12203067c33c05a83"/>
+            <topic label="iterator_category" href="structngen_1_1mdarray_1_1iterator.html#ade572a755c4bdaf14df5a1f4b70f2654"/>
+            <topic label="pointer" href="structngen_1_1mdarray_1_1iterator.html#a5e4537042ad3299aa5b82ffd8dd149a4"/>
+            <topic label="reference" href="structngen_1_1mdarray_1_1iterator.html#a62692dc152fcf6d56be15cc1409d75b1"/>
+            <topic label="value_type" href="structngen_1_1mdarray_1_1iterator.html#a5db9afa727baf8f7159c11df4c4b88f6"/>
+            <topic label="iterator" href="structngen_1_1mdarray_1_1iterator.html#ab6b62ba608647972cb2053b8bcb1c51c"/>
+            <topic label="mdindex" href="structngen_1_1mdarray_1_1iterator.html#ae1c16df1bfc7a4b5f4ffec730b7144d2"/>
+            <topic label="operator*" href="structngen_1_1mdarray_1_1iterator.html#a1e58fbb924aa0f951e629c7bf299d80b"/>
+            <topic label="operator++" href="structngen_1_1mdarray_1_1iterator.html#aeee6e05be4334a3ea1b57d1b1c3971d4"/>
+            <topic label="operator++" href="structngen_1_1mdarray_1_1iterator.html#a68d7f919876c5151f4ae222bd9952ef7"/>
+            <topic label="operator--" href="structngen_1_1mdarray_1_1iterator.html#a8100293ec1fd8ee4a038447223d73a33"/>
+            <topic label="operator--" href="structngen_1_1mdarray_1_1iterator.html#a6412e6d5861ba467233406cfc087fbd0"/>
+            <topic label="operator-&gt;" href="structngen_1_1mdarray_1_1iterator.html#a1a21ed9f25f34d5604d26e54b9043703"/>
+            <topic label="operator!=" href="structngen_1_1mdarray_1_1iterator.html#a55a8ee0e80dad1a7da9d751c25bc0386"/>
+            <topic label="operator==" href="structngen_1_1mdarray_1_1iterator.html#a81d10d7799462c7ca5e7cf19119ca356"/>
+            <topic label="m_idx" href="structngen_1_1mdarray_1_1iterator.html#ae2ec6579aabff17ad33a2ed9b81f35f9"/>
+            <topic label="m_ref" href="structngen_1_1mdarray_1_1iterator.html#afbb8366fc1353328dda3d98afb4aba74"/>
+          </topic>
+          <topic label="const_pointer" href="classngen_1_1mdarray.html#a19f8860cbddacef61e56096a932b77f8"/>
+          <topic label="const_reference" href="classngen_1_1mdarray.html#a462f71bd6b950c1396a67be409a48b60"/>
+          <topic label="container_type" href="classngen_1_1mdarray.html#ae79cddf80281d2c2bcb09fdb3a480165"/>
+          <topic label="difference_type" href="classngen_1_1mdarray.html#ab0d00328029184bbea9ca70cff0636bc"/>
+          <topic label="pointer" href="classngen_1_1mdarray.html#a8b87b5b343f81e7bbf3a21e90da6e3c2"/>
+          <topic label="reference" href="classngen_1_1mdarray.html#a37c587b271a2fefe7d5812dc226eb9bb"/>
+          <topic label="size_type" href="classngen_1_1mdarray.html#a26abcfd8bce1c2dcbbc635b76e7713cd"/>
+          <topic label="value_type" href="classngen_1_1mdarray.html#aff902df16f40f57aaf2bbb26325d68d5"/>
+          <topic label="mdarray" href="classngen_1_1mdarray.html#af2ec673f5a1296d6e7f49e8df795c830"/>
+          <topic label="mdarray" href="classngen_1_1mdarray.html#afa8388cb161948949127ea6926b65d4b"/>
+          <topic label="mdarray" href="classngen_1_1mdarray.html#a597ce23cd9f8243fc3c2a1b590cffc1d"/>
+          <topic label="at" href="classngen_1_1mdarray.html#a2253388edd9a8771cc4e60d1b664b3bf"/>
+          <topic label="at" href="classngen_1_1mdarray.html#a685a94c25fa6cd06b6c15ae1b328dd83"/>
+          <topic label="begin" href="classngen_1_1mdarray.html#aac07778b890ca06ad96b3ad805e6232a"/>
+          <topic label="bounds_check" href="classngen_1_1mdarray.html#a94b690c6eb58edc04a8591ea4d133e80"/>
+          <topic label="deindex" href="classngen_1_1mdarray.html#acade9563d7c5b21795d5d97ff575e5c7"/>
+          <topic label="end" href="classngen_1_1mdarray.html#a197eced76e957bfc1413a1746d4adb50"/>
+          <topic label="index" href="classngen_1_1mdarray.html#aa83a1bb6b90b618cff0b8f4869b16647"/>
+          <topic label="insert" href="classngen_1_1mdarray.html#a65978d1961d8dfd21d8474c2e3aacf3d"/>
+          <topic label="insert" href="classngen_1_1mdarray.html#a3263b6f36590d35ac14989e981dcb273"/>
+          <topic label="max_size" href="classngen_1_1mdarray.html#a7ae2821f3c492b00c1f8861a2eb86d2f"/>
+          <topic label="operator[]" href="classngen_1_1mdarray.html#af1700773ef2f09ec8c31b2d083da6783"/>
+          <topic label="operator[]" href="classngen_1_1mdarray.html#a7192793060ec7a44a9548c47545c2c39"/>
+          <topic label="rank" href="classngen_1_1mdarray.html#a4eecfb11746afc31df721adc1c7398a3"/>
+          <topic label="shape" href="classngen_1_1mdarray.html#ac4ca014c9f78921b0a48f27c9efd9145"/>
+          <topic label="size" href="classngen_1_1mdarray.html#ad6ba0f923eb1429887488ef541ab7da9"/>
+          <topic label="iterator" href="classngen_1_1mdarray.html#a6dacaf116137db31779533d36cef60d9"/>
+          <topic label="m_data" href="classngen_1_1mdarray.html#a69046ccb44242f5e571f1e1739e0cbdc"/>
+          <topic label="m_shape" href="classngen_1_1mdarray.html#a680fbaa3ceadcf41bd24b485ba8ec67a"/>
+        </topic>
+        <topic label="mdframe" href="classngen_1_1mdframe.html">
+          <topic label="dimension" href="classngen_1_1mdframe.html#a61cc9ff245f9b05b442d27a8665b6024"/>
+          <topic label="dimension_set" href="classngen_1_1mdframe.html#a828b7bfa29944c4af78c0fd1173f44dd"/>
+          <topic label="mdarray_variant" href="classngen_1_1mdframe.html#ada50efbed06f97a469246ff175aabde8"/>
+          <topic label="size_type" href="classngen_1_1mdframe.html#af11ab83bb94d049cb81262dd6d860097"/>
+          <topic label="types" href="classngen_1_1mdframe.html#a7aed5347acfeae44c40dfcbced064ff3"/>
+          <topic label="variable" href="classngen_1_1mdframe.html#a1567a0328a49a90ef00b4c562cb2ad6b"/>
+          <topic label="variable_map" href="classngen_1_1mdframe.html#a2e94fd3920e6117f83fac3e2502d996d"/>
+          <topic label="add_dimension" href="classngen_1_1mdframe.html#ae0b2679d585e1714ed899960b943f566"/>
+          <topic label="add_dimension" href="classngen_1_1mdframe.html#a9845bc637ce0a75b6e61c2ec75d94e04"/>
+          <topic label="add_variable" href="classngen_1_1mdframe.html#a983002f0d17009e0329a00426795fc34"/>
+          <topic label="find_dimension" href="classngen_1_1mdframe.html#ae344cbe713611ed90a6f6424ea3e66d9"/>
+          <topic label="find_variable" href="classngen_1_1mdframe.html#aa93768d6954b8ca5255de548d85d4e67"/>
+          <topic label="get_dimension" href="classngen_1_1mdframe.html#ae5a51ac2046d7a0762e0a18a0de6430f"/>
+          <topic label="get_variable" href="classngen_1_1mdframe.html#aa7c0cd9b55389b6091882689b481604e"/>
+          <topic label="has_dimension" href="classngen_1_1mdframe.html#aec76ba6818268c212983e343452f8595"/>
+          <topic label="has_variable" href="classngen_1_1mdframe.html#a5325430ba075edd56a7d833e5be45ad1"/>
+          <topic label="operator[]" href="classngen_1_1mdframe.html#a2bfacbe7fd8dcbb8319b2431d03de743"/>
+          <topic label="to_csv" href="classngen_1_1mdframe.html#ade3c60063140451b4b609319ed52fa23"/>
+          <topic label="m_dimensions" href="classngen_1_1mdframe.html#ac164cdeb2a28669afa33ad1af2beeea5"/>
+          <topic label="m_variables" href="classngen_1_1mdframe.html#a791692f9692232df311ad1bf01f797f3"/>
+        </topic>
+      </topic>
       <topic label="realization" href="namespacerealization.html">
         <topic label="Bmi_C_Formulation" href="classrealization_1_1_bmi___c___formulation.html">
           <topic label="time_step_t" href="classrealization_1_1_bmi___c___formulation.html#aee10dc672e5a9e106f49dcbe0080cf7c"/>
@@ -5113,6 +5430,12 @@
       <topic label="boost::static_visitor">
         <topic label="geojson::JSONProperty::AsVectorVisitor&lt; T &gt;" href="structgeojson_1_1_j_s_o_n_property_1_1_as_vector_visitor.html"/>
         <topic label="geopackage::wkb::wgs84" href="structgeopackage_1_1wkb_1_1wgs84.html"/>
+        <topic label="ngen::detail::visitors::mdarray_at&lt; SupportedTypes &gt;" href="structngen_1_1detail_1_1visitors_1_1mdarray__at.html"/>
+        <topic label="ngen::detail::visitors::mdarray_insert" href="structngen_1_1detail_1_1visitors_1_1mdarray__insert.html"/>
+        <topic label="ngen::detail::visitors::mdarray_rank" href="structngen_1_1detail_1_1visitors_1_1mdarray__rank.html"/>
+        <topic label="ngen::detail::visitors::mdarray_shape" href="structngen_1_1detail_1_1visitors_1_1mdarray__shape.html"/>
+        <topic label="ngen::detail::visitors::mdarray_size" href="structngen_1_1detail_1_1visitors_1_1mdarray__size.html"/>
+        <topic label="ngen::detail::visitors::to_string_visitor" href="structngen_1_1detail_1_1visitors_1_1to__string__visitor.html"/>
       </topic>
       <topic label="CatchmentAggrDataSelector" href="class_catchment_aggr_data_selector.html">
         <topic label="BMIDataSelector" href="class_b_m_i_data_selector.html"/>
@@ -5201,6 +5524,15 @@
         <topic label="Network_Test2" href="class_network___test2.html"/>
       </topic>
       <topic label="nexus::Nexus_Manager" href="classnexus_1_1_nexus___manager.html"/>
+      <topic label="ngen::detail::dimension" href="structngen_1_1detail_1_1dimension.html"/>
+      <topic label="ngen::detail::dimension::hash" href="structngen_1_1detail_1_1dimension_1_1hash.html"/>
+      <topic label="ngen::detail::variable&lt; SupportedTypes &gt;" href="structngen_1_1detail_1_1variable.html"/>
+      <topic label="ngen::detail::variable&lt; SupportedTypes &gt;::hash" href="structngen_1_1detail_1_1variable_1_1hash.html"/>
+      <topic label="ngen::mdarray&lt; T &gt;" href="classngen_1_1mdarray.html"/>
+      <topic label="ngen::mdarray&lt; T &gt;::iterator&lt; T &gt;" href="structngen_1_1mdarray_1_1iterator.html"/>
+      <topic label="ngen::mdframe" href="classngen_1_1mdframe.html"/>
+      <topic label="ngen::traits::bool_pack&lt;... &gt;" href="structngen_1_1traits_1_1bool__pack.html"/>
+      <topic label="ngen::traits::type_list&lt; Ts &gt;" href="structngen_1_1traits_1_1type__list.html"/>
       <topic label="realization::Formulation" href="classrealization_1_1_formulation.html">
         <topic label="realization::Catchment_Formulation" href="classrealization_1_1_catchment___formulation.html"/>
       </topic>
@@ -5321,5 +5653,8 @@
       <topic label="Typedefs" href="functions_type.html"/>
       <topic label="Related Functions" href="functions_rela.html"/>
     </topic>
+  </topic>
+  <topic label="Examples" href="examples.html">
+    <topic label="/github/workspace/include/utilities/mdarray/mdarray.hpp" href="_2github_2workspace_2include_2utilities_2mdarray_2mdarray_8hpp-example.html"/>
   </topic>
 </toc>

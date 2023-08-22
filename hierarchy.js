@@ -51,7 +51,13 @@ var hierarchy =
     [ "boost::span< T, E >", "classboost_1_1span.html", null ],
     [ "boost::static_visitor", null, [
       [ "geojson::JSONProperty::AsVectorVisitor< T >", "structgeojson_1_1_j_s_o_n_property_1_1_as_vector_visitor.html", null ],
-      [ "geopackage::wkb::wgs84", "structgeopackage_1_1wkb_1_1wgs84.html", null ]
+      [ "geopackage::wkb::wgs84", "structgeopackage_1_1wkb_1_1wgs84.html", null ],
+      [ "ngen::detail::visitors::mdarray_at< SupportedTypes >", "structngen_1_1detail_1_1visitors_1_1mdarray__at.html", null ],
+      [ "ngen::detail::visitors::mdarray_insert", "structngen_1_1detail_1_1visitors_1_1mdarray__insert.html", null ],
+      [ "ngen::detail::visitors::mdarray_rank", "structngen_1_1detail_1_1visitors_1_1mdarray__rank.html", null ],
+      [ "ngen::detail::visitors::mdarray_shape", "structngen_1_1detail_1_1visitors_1_1mdarray__shape.html", null ],
+      [ "ngen::detail::visitors::mdarray_size", "structngen_1_1detail_1_1visitors_1_1mdarray__size.html", null ],
+      [ "ngen::detail::visitors::to_string_visitor", "structngen_1_1detail_1_1visitors_1_1to__string__visitor.html", null ]
     ] ],
     [ "CatchmentAggrDataSelector", "class_catchment_aggr_data_selector.html", [
       [ "BMIDataSelector", "class_b_m_i_data_selector.html", null ],
@@ -140,6 +146,15 @@ var hierarchy =
       [ "Network_Test2", "class_network___test2.html", null ]
     ] ],
     [ "nexus::Nexus_Manager", "classnexus_1_1_nexus___manager.html", null ],
+    [ "ngen::detail::dimension", "structngen_1_1detail_1_1dimension.html", null ],
+    [ "ngen::detail::dimension::hash", "structngen_1_1detail_1_1dimension_1_1hash.html", null ],
+    [ "ngen::detail::variable< SupportedTypes >", "structngen_1_1detail_1_1variable.html", null ],
+    [ "ngen::detail::variable< SupportedTypes >::hash", "structngen_1_1detail_1_1variable_1_1hash.html", null ],
+    [ "ngen::mdarray< T >", "classngen_1_1mdarray.html", null ],
+    [ "ngen::mdarray< T >::iterator< T >", "structngen_1_1mdarray_1_1iterator.html", null ],
+    [ "ngen::mdframe", "classngen_1_1mdframe.html", null ],
+    [ "ngen::traits::bool_pack<... >", "structngen_1_1traits_1_1bool__pack.html", null ],
+    [ "ngen::traits::type_list< Ts >", "structngen_1_1traits_1_1type__list.html", null ],
     [ "realization::Formulation", "classrealization_1_1_formulation.html", [
       [ "realization::Catchment_Formulation", "classrealization_1_1_catchment___formulation.html", null ]
     ] ],

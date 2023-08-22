@@ -88,6 +88,26 @@ var annotated_dup =
     [ "nexus", "namespacenexus.html", [
       [ "Nexus_Manager", "classnexus_1_1_nexus___manager.html", "classnexus_1_1_nexus___manager" ]
     ] ],
+    [ "ngen", "namespacengen.html", [
+      [ "detail", "namespacengen_1_1detail.html", [
+        [ "visitors", "namespacengen_1_1detail_1_1visitors.html", [
+          [ "mdarray_at", "structngen_1_1detail_1_1visitors_1_1mdarray__at.html", "structngen_1_1detail_1_1visitors_1_1mdarray__at" ],
+          [ "mdarray_insert", "structngen_1_1detail_1_1visitors_1_1mdarray__insert.html", "structngen_1_1detail_1_1visitors_1_1mdarray__insert" ],
+          [ "mdarray_rank", "structngen_1_1detail_1_1visitors_1_1mdarray__rank.html", "structngen_1_1detail_1_1visitors_1_1mdarray__rank" ],
+          [ "mdarray_shape", "structngen_1_1detail_1_1visitors_1_1mdarray__shape.html", "structngen_1_1detail_1_1visitors_1_1mdarray__shape" ],
+          [ "mdarray_size", "structngen_1_1detail_1_1visitors_1_1mdarray__size.html", "structngen_1_1detail_1_1visitors_1_1mdarray__size" ],
+          [ "to_string_visitor", "structngen_1_1detail_1_1visitors_1_1to__string__visitor.html", "structngen_1_1detail_1_1visitors_1_1to__string__visitor" ]
+        ] ],
+        [ "dimension", "structngen_1_1detail_1_1dimension.html", "structngen_1_1detail_1_1dimension" ],
+        [ "variable", "structngen_1_1detail_1_1variable.html", "structngen_1_1detail_1_1variable" ]
+      ] ],
+      [ "traits", "namespacengen_1_1traits.html", [
+        [ "bool_pack", "structngen_1_1traits_1_1bool__pack.html", null ],
+        [ "type_list", "structngen_1_1traits_1_1type__list.html", "structngen_1_1traits_1_1type__list" ]
+      ] ],
+      [ "mdarray", "classngen_1_1mdarray.html", "classngen_1_1mdarray" ],
+      [ "mdframe", "classngen_1_1mdframe.html", "classngen_1_1mdframe" ]
+    ] ],
     [ "realization", "namespacerealization.html", [
       [ "Bmi_C_Formulation", "classrealization_1_1_bmi___c___formulation.html", "classrealization_1_1_bmi___c___formulation" ],
       [ "Bmi_Cpp_Formulation", "classrealization_1_1_bmi___cpp___formulation.html", "classrealization_1_1_bmi___cpp___formulation" ],

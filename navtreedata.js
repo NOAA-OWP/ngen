@@ -285,32 +285,34 @@ var NAVTREE =
         [ "Typedefs", "functions_type.html", null ],
         [ "Related Functions", "functions_rela.html", null ]
       ] ]
-    ] ]
+    ] ],
+    [ "Examples", "examples.html", "examples" ]
   ] ]
 ];
 
 var NAVTREEINDEX =
 [
-"annotated.html",
-"class_h_y___interior_catchment.html",
+"_2github_2workspace_2include_2utilities_2mdarray_2mdarray_8hpp-example.html",
+"class_h_y___hydro_nexus.html#afcd4c4b517599cb265da2cfeb2610c9d",
 "classbmi_1_1_bmi.html#a75725d44cf7432a7f09f1ac403727d64",
 "classdata__access_1_1_optional_wrapped_data_provider.html#a1d914d387e7ae2d933a372d0976ed959",
-"classgeojson_1_1_feature_base.html#a0e329f3a2c6b3989a42756534d1bdf10",
-"classgeojson_1_1_j_s_o_n_property.html#a90c308f94b964f678592ba0c0c76afc4",
-"classgeojson_1_1_multi_line_string_feature.html#adbebd1a45b3feeeb6d2d1d49b9027709",
-"classgeojson_1_1_multi_polygon_feature.html#ae9f41eadb72d21e31e17783fa4fb82a2",
-"classgeopackage_1_1sqlite.html#a4ee831f5791313e431d482c0a3b207e4",
-"classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#ab83ad55377df62c6a9db80c8091858a4",
-"classmodels_1_1bmi_1_1_bmi___c___adapter.html#a5b8ad5070b07816cda74c8a0361aeba5",
-"classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ac396fed0fb99b146a4cfae136ef661db",
-"classrealization_1_1_bmi___c___formulation.html#a9d02de255937deb8f6169ef20f5a07d6",
-"classrealization_1_1_bmi___cpp___formulation.html#ac236d280681cc9a31053f505a562d087",
-"classrealization_1_1_bmi___module___formulation.html#a37a94300d3a9c3d9ead78687cccb3ff6",
-"classrealization_1_1_bmi___multi___formulation.html#a6ef8f446a1fcece399fb72532e854363",
-"classrealization_1_1_formulation___manager.html#acd6121b421b707d9cd9459b330443c31",
-"md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html#autotoc_md85",
-"namespaceutils.html#a36dea491674f3e0b6b11591f976a88cb",
-"structgeopackage_1_1wkb_1_1wgs84.html#a7a6bcad7be082fbe49021b066e8a49e1"
+"classgeojson_1_1_feature_base.html#a099497ede94011cda55f2a8309d7be62",
+"classgeojson_1_1_j_s_o_n_property.html#a8124b60e4f0a5d500d7635205344a158",
+"classgeojson_1_1_multi_line_string_feature.html#ad821415b00bf3b84764ad4c39e978d6d",
+"classgeojson_1_1_multi_polygon_feature.html#ae7fa0192036f7406ebb0af6715d6c3b4",
+"classgeopackage_1_1sqlite.html#a425421fba7b13eea523d63a2225e1bb9",
+"classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#ab59c92e91f3ebe1cf5eaceac16100043",
+"classmodels_1_1bmi_1_1_bmi___c___adapter.html#a590bb56edfa69f5dce5f76820e7c74d6",
+"classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ac1a86e6285c9d8c809d1bd1bdc013215",
+"classrealization_1_1_bmi___c___formulation.html#a2010f61d0e7141bb48230923592de215",
+"classrealization_1_1_bmi___cpp___formulation.html#a39cf248257ea2a34052fa65ad08bf2ba",
+"classrealization_1_1_bmi___formulation.html#aaa4dcba7e78f634ad0475bf1e3f3a697",
+"classrealization_1_1_bmi___module___formulation.html#aec9896208681042a5c7ba24045aa824b",
+"classrealization_1_1_catchment___formulation.html#a8bfec24b0d57240e7ada2493a781db6d",
+"functions_vars_n.html",
+"namespacegeojson.html#a972cd4a487858a36473c775ac360f361a2bd8ab451a35759c5737128e35c8011a",
+"structboost_1_1detail_1_1span__store.html#aa9d5dd14559b28dc87b893be0666b347",
+"structngen_1_1detail_1_1visitors_1_1mdarray__insert.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
