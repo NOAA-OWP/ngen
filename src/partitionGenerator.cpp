@@ -206,19 +206,6 @@ void generate_partitions(network::Network& network, const int& num_partitions, c
             std::cout << "catchment "<<id<<" is duplicated!"<<std::endl;
         }
     }
-    //NJF Replace this O(n^2) duplication check with the above set difference algorithm (which should be O(n log n))
-    // int i, j;
-    // for (i = 0; i < cat_id_vec.size(); ++i) {
-    //     if (i%1000 == 0)
-    //         std::cout << "i = " << i << std::endl;
-    //     for (j = i+1; j < cat_id_vec.size(); ++j) {
-    //         if ( cat_id_vec[i] == cat_id_vec[j] )
-    //         {
-    //             std::cout << "catchment duplication" << std::endl;
-    //             exit(-1);
-    //         }
-    //     }
-    // }
     std::cout << "\nNumber of catchments is: " << cat_id_vec.size();
     std::cout << "\nCatchment validation completed" << std::endl;
 }
