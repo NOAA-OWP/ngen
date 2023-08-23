@@ -430,6 +430,8 @@ int main(int argc, char *argv[]) {
         } //done levels
       } while( layer_min_next_time < next_time );  // rerun the loop until the last layer would pass the master next time
 
+      manager->Simulation_Time_Object->advance_timestep();
+
     } //done time
     std::cout<<"Finished "<<manager->Simulation_Time_Object->get_total_output_times()<<" timesteps."<<std::endl;
 
