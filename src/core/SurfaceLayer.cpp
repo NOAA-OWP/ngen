@@ -34,7 +34,7 @@ void ngen::SurfaceLayer::update_models()
             cat_id = "terminal";
         }
 
-        std::cerr << "Requesting water from nexus, id = " << id << " at time = " <<current_time_index << ",  percent = 100, destination = " << cat_id << std::endl;
+        //std::cerr << "Requesting water from nexus, id = " << id << " at time = " <<current_time_index << ",  percent = 100, destination = " << cat_id << std::endl;
         double contribution_at_t = features.nexus_at(id)->get_downstream_flow(cat_id, current_time_index, 100.0);
         
         if(nexus_outfiles[id].is_open()) {

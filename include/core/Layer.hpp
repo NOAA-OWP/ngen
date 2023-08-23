@@ -117,8 +117,8 @@ namespace ngen
                     //If there is more than one, some form of catchment partitioning will be required.
                     //for now, only contribute to the first one in the list
                     nexus->add_upstream_flow(response_m_h, id, output_time_index);
-                    std::cerr << "Add water to nexus ID = " << nexus->get_id() << " from catchment ID = " << id << " value = "
-                              << response << ", ID = " << id << ", time-index = " << output_time_index << std::endl; 
+                    /*std::cerr << "Add water to nexus ID = " << nexus->get_id() << " from catchment ID = " << id << " value = "
+                              << response << ", ID = " << id << ", time-index = " << output_time_index << std::endl; */
                     break;
                 }
                 
