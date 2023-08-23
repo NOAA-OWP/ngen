@@ -125,7 +125,10 @@ namespace ngen
             } //done catchments   
 
             ++output_time_index;
-            simulation_time.advance_timestep();       
+            if ( output_time_index < simulation_time.get_total_output_times() )
+            {
+                simulation_time.advance_timestep();
+            }       
         }
         
 

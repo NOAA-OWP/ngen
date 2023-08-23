@@ -387,7 +387,8 @@ int main(int argc, char *argv[]) {
     }
 
     //Now loop some time, iterate catchments, do stuff for total number of output times
-    for( int count = 0; count < manager->Simulation_Time_Object->get_total_output_times(); count++) 
+    auto num_times = manager->Simulation_Time_Object->get_total_output_times();
+    for( int count = 0; count < num_times; count++) 
     {
       // The Inner loop will advance all layers unless doing so will break one of two constraints
       // 1) A layer may not proceed ahead of the master simulation object's current time
@@ -430,7 +431,10 @@ int main(int argc, char *argv[]) {
         } //done levels
       } while( layer_min_next_time < next_time );  // rerun the loop until the last layer would pass the master next time
 
-      manager->Simulation_Time_Object->advance_timestep();
+      if (count + 1 < num_times)
+      {
+        manager->Simulation_Time_Object->advance_timestep();
+      }
 
     } //done time
     std::cout<<"Finished "<<manager->Simulation_Time_Object->get_total_output_times()<<" timesteps."<<std::endl;
