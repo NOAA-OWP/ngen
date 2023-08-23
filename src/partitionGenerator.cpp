@@ -124,10 +124,6 @@ void generate_partitions(network::Network& network, const int& num_partitions, c
     catchment_set.reserve(partition_size);
     nexus_set.reserve(partition_size);
     std::string part_id, partition_str;
-    std::vector<std::string> part_ids;
-
-    std::pair<std::string, std::string> remote_up_id, remote_down_id, remote_up_part, remote_down_part;
-    std::vector<std::pair<std::string, std::string> > remote_up, remote_down;
 
     std::string up_nexus;
     std::string down_nexus;
@@ -142,7 +138,6 @@ void generate_partitions(network::Network& network, const int& num_partitions, c
             //list of all required nexus the partition needs to worry about
             for( auto downstream : network.get_destination_ids(catchment) ){
                 nexus_set.emplace(downstream);
-                //nexus_list.push_back(downstream);
             }
             if(nexus_set.size() == 0){
                 std::cerr<<"Error: Catchment "<<catchment<<" has no destination nexus.\n";
@@ -150,7 +145,6 @@ void generate_partitions(network::Network& network, const int& num_partitions, c
             }
             for( auto upstream : network.get_origination_ids(catchment) ){
                 nexus_set.emplace(upstream);
-                //nexus_list.push_back(upstream);
             }
             //std::cout<<catchment<<" -> "<<nexus<<std::endl;
 
@@ -172,39 +166,12 @@ void generate_partitions(network::Network& network, const int& num_partitions, c
                 partition_str = std::to_string(partition);
 
                 //push the catchment_set and nexus_set on to a vector (can be a 1-d vector)
-                part_ids.push_back(part_id);
                 catchment_part.push_back(catchment_set);
                 nexus_part.push_back(nexus_set);
                 catchment_set.clear();
                 nexus_set.clear();
 
-                if (partition == 0)
-                {
-                    remote_up_id = std::make_pair ("id", "\0");
-                    remote_up_part = std::make_pair ("partition", "\0");
-                    remote_up.push_back(remote_up_id);
-                    remote_up.push_back(remote_up_part);
-                }
-                else
-                {
-                    partition_str = std::to_string(partition-1);
-                    remote_up_id = std::make_pair ("id", up_nexus);
-                    remote_up_part = std::make_pair ("partition", partition_str);
-                    remote_up.push_back(remote_up_id);
-                    remote_up.push_back(remote_up_part);
-                }
-
-                partition_str = std::to_string(partition+1);
-                remote_down_id = std::make_pair ("id", down_nexus);
-                remote_down_part = std::make_pair ("partition", partition_str);
-                remote_down.push_back(remote_down_id);
-                remote_down.push_back(remote_down_part);
-
                 partition_str = std::to_string(partition);
-
-                // Clear remote_up and remote_down vectors before next round
-                remote_up.clear();
-                remote_down.clear();
 
                 partition++;
                 counter = 0;
@@ -212,7 +179,6 @@ void generate_partitions(network::Network& network, const int& num_partitions, c
 
                 //this nexus overlaps partitions
                 //Handled above by ensure all up/down stream nexuses are recorded
-                //nexus_list.push_back(nexus);
                 up_nexus = down_nexus;
                 //std::cout<<"\nin partition "<<partition<<":"<<std::endl;
             }
