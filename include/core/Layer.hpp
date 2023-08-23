@@ -20,7 +20,7 @@ namespace ngen
         #ifdef NGEN_MPI_ACTIVE
             using feature_type = hy_features::HY_Features_MPI;
         #else
-            typedef feature_type = hy_features::HY_Features;
+            using feature_type = hy_features::HY_Features;
         #endif
 
         Layer(
