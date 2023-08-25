@@ -1,5 +1,9 @@
 var NAVTREEINDEX18 =
 {
+"namespacegeojson.html#a89dc78a6264929ea729d0911730835b6":[20,0,4,20],
+"namespacegeojson.html#a972cd4a487858a36473c775ac360f361":[20,0,4,30],
+"namespacegeojson.html#a972cd4a487858a36473c775ac360f361a27118326006d3829667a400ad23d5d98":[20,0,4,30,2],
+"namespacegeojson.html#a972cd4a487858a36473c775ac360f361a27226c864bac7454a8504f8edb15d95b":[20,0,4,30,3],
 "namespacegeojson.html#a972cd4a487858a36473c775ac360f361a2bd8ab451a35759c5737128e35c8011a":[20,0,4,30,0],
 "namespacegeojson.html#a972cd4a487858a36473c775ac360f361a497031794414a552435f90151ac3b54b":[20,0,4,30,5],
 "namespacegeojson.html#a972cd4a487858a36473c775ac360f361a4ee29ca12c7d126654bd0e5275de6135":[20,0,4,30,4],
@@ -245,9 +249,5 @@ var NAVTREEINDEX18 =
 "structboost_1_1detail_1_1span__is__span_3_01boost_1_1span_3_01_t_00_01_e_01_4_01_4.html#a3eba60429c33594be8f3263d637ab73f":[21,0,1,0,17,0],
 "structboost_1_1detail_1_1span__is__span_3_01boost_1_1span_3_01_t_00_01_e_01_4_01_4.html#a3eba60429c33594be8f3263d637ab73f":[20,0,1,0,17,0],
 "structboost_1_1detail_1_1span__store.html":[21,0,1,0,18],
-"structboost_1_1detail_1_1span__store.html":[20,0,1,0,18],
-"structboost_1_1detail_1_1span__store.html#a10728ca311bb137a3e6fd83c58f28ea0":[21,0,1,0,18,0],
-"structboost_1_1detail_1_1span__store.html#a10728ca311bb137a3e6fd83c58f28ea0":[20,0,1,0,18,0],
-"structboost_1_1detail_1_1span__store.html#a6b3b388d6857ed1f22ef206b0a11ed41":[21,0,1,0,18,2],
-"structboost_1_1detail_1_1span__store.html#a6b3b388d6857ed1f22ef206b0a11ed41":[20,0,1,0,18,2]
+"structboost_1_1detail_1_1span__store.html":[20,0,1,0,18]
 };

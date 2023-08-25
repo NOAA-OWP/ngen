@@ -2533,7 +2533,7 @@
           <topic label="add_formulation" href="classrealization_1_1_formulation___manager.html#aca754e4a64a79f0b86c0fa7a472aab94"/>
           <topic label="begin" href="classrealization_1_1_formulation___manager.html#a98d50446a65386a5bd0295e6bde56512"/>
           <topic label="construct_formulation_from_tree" href="classrealization_1_1_formulation___manager.html#a89aeed055b9828a8994eee36fbb1ff03"/>
-          <topic label="construct_missing_formulation" href="classrealization_1_1_formulation___manager.html#ad1480dcad2897e10a445f1e53eb9b8af"/>
+          <topic label="construct_missing_formulation" href="classrealization_1_1_formulation___manager.html#a3611f83dade280ed741729e875e0f823"/>
           <topic label="contains" href="classrealization_1_1_formulation___manager.html#ae28572ed2d9c6bf7849331d889b3c51b"/>
           <topic label="end" href="classrealization_1_1_formulation___manager.html#a6c5749e590142378b02976f6802407bd"/>
           <topic label="get_forcing_params" href="classrealization_1_1_formulation___manager.html#ad08f6399a29ed66671b3dd1e6e2f7a39"/>
@@ -2543,6 +2543,8 @@
           <topic label="get_t_route_config_file_with_path" href="classrealization_1_1_formulation___manager.html#af98f0237deac6fe02782231b5ba41ea7"/>
           <topic label="get_using_routing" href="classrealization_1_1_formulation___manager.html#a599aadb9ffea1e8c28cbd010b3160bd7"/>
           <topic label="is_empty" href="classrealization_1_1_formulation___manager.html#ae4048912588864e785ebefab84faa9cc"/>
+          <topic label="parse_external_model_params" href="classrealization_1_1_formulation___manager.html#ade623c87318034b5a90e0133624dbb0f"/>
+          <topic label="parse_external_model_params" href="classrealization_1_1_formulation___manager.html#a2fdd32f683c0952a2adfd69099344ac1"/>
           <topic label="read" href="classrealization_1_1_formulation___manager.html#aab2168aff25e065967c382a2b6cef41a"/>
           <topic label="formulations" href="classrealization_1_1_formulation___manager.html#ae72b9762e8056a1787d69aed79919b9d"/>
           <topic label="global_forcing" href="classrealization_1_1_formulation___manager.html#aefede1cd4a4aa13bae4e8a8cb58968b1"/>
@@ -4731,7 +4733,7 @@
           <topic label="add_formulation" href="classrealization_1_1_formulation___manager.html#aca754e4a64a79f0b86c0fa7a472aab94"/>
           <topic label="begin" href="classrealization_1_1_formulation___manager.html#a98d50446a65386a5bd0295e6bde56512"/>
           <topic label="construct_formulation_from_tree" href="classrealization_1_1_formulation___manager.html#a89aeed055b9828a8994eee36fbb1ff03"/>
-          <topic label="construct_missing_formulation" href="classrealization_1_1_formulation___manager.html#ad1480dcad2897e10a445f1e53eb9b8af"/>
+          <topic label="construct_missing_formulation" href="classrealization_1_1_formulation___manager.html#a3611f83dade280ed741729e875e0f823"/>
           <topic label="contains" href="classrealization_1_1_formulation___manager.html#ae28572ed2d9c6bf7849331d889b3c51b"/>
           <topic label="end" href="classrealization_1_1_formulation___manager.html#a6c5749e590142378b02976f6802407bd"/>
           <topic label="get_forcing_params" href="classrealization_1_1_formulation___manager.html#ad08f6399a29ed66671b3dd1e6e2f7a39"/>
@@ -4741,6 +4743,8 @@
           <topic label="get_t_route_config_file_with_path" href="classrealization_1_1_formulation___manager.html#af98f0237deac6fe02782231b5ba41ea7"/>
           <topic label="get_using_routing" href="classrealization_1_1_formulation___manager.html#a599aadb9ffea1e8c28cbd010b3160bd7"/>
           <topic label="is_empty" href="classrealization_1_1_formulation___manager.html#ae4048912588864e785ebefab84faa9cc"/>
+          <topic label="parse_external_model_params" href="classrealization_1_1_formulation___manager.html#ade623c87318034b5a90e0133624dbb0f"/>
+          <topic label="parse_external_model_params" href="classrealization_1_1_formulation___manager.html#a2fdd32f683c0952a2adfd69099344ac1"/>
           <topic label="read" href="classrealization_1_1_formulation___manager.html#aab2168aff25e065967c382a2b6cef41a"/>
           <topic label="formulations" href="classrealization_1_1_formulation___manager.html#ae72b9762e8056a1787d69aed79919b9d"/>
           <topic label="global_forcing" href="classrealization_1_1_formulation___manager.html#aefede1cd4a4aa13bae4e8a8cb58968b1"/>

@@ -153,10 +153,16 @@ Public Attributes</h2></td></tr>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:a89aeed055b9828a8994eee36fbb1ff03"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classrealization_1_1_catchment___formulation.html">Catchment_Formulation</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation___manager.html#a89aeed055b9828a8994eee36fbb1ff03">construct_formulation_from_tree</a> (<a class="el" href="structsimulation__time__params.html">simulation_time_params</a> &amp;simulation_time_config, std::string identifier, boost::property_tree::ptree &amp;<a class="el" href="classrealization_1_1_formulation___manager.html#ae34d4f2d7d9bf211e5139eb2b8b09e39">tree</a>, const boost::property_tree::ptree &amp;formulation, <a class="el" href="classutils_1_1_stream_handler.html">utils::StreamHandler</a> output_stream)</td></tr>
 <tr class="separator:a89aeed055b9828a8994eee36fbb1ff03"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad1480dcad2897e10a445f1e53eb9b8af"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classrealization_1_1_catchment___formulation.html">Catchment_Formulation</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation___manager.html#ad1480dcad2897e10a445f1e53eb9b8af">construct_missing_formulation</a> (std::string identifier, <a class="el" href="classutils_1_1_stream_handler.html">utils::StreamHandler</a> output_stream, <a class="el" href="structsimulation__time__params.html">simulation_time_params</a> &amp;simulation_time_config)</td></tr>
-<tr class="separator:ad1480dcad2897e10a445f1e53eb9b8af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3611f83dade280ed741729e875e0f823"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classrealization_1_1_catchment___formulation.html">Catchment_Formulation</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation___manager.html#a3611f83dade280ed741729e875e0f823">construct_missing_formulation</a> (<a class="el" href="namespacegeojson.html#ab724970a20dff6100b94e25491292748">geojson::Feature</a> &amp;feature, <a class="el" href="classutils_1_1_stream_handler.html">utils::StreamHandler</a> output_stream, <a class="el" href="structsimulation__time__params.html">simulation_time_params</a> &amp;simulation_time_config)</td></tr>
+<tr class="separator:a3611f83dade280ed741729e875e0f823"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad08f6399a29ed66671b3dd1e6e2f7a39"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structforcing__params.html">forcing_params</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation___manager.html#ad08f6399a29ed66671b3dd1e6e2f7a39">get_forcing_params</a> (<a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> &amp;forcing_prop_map, std::string identifier, <a class="el" href="structsimulation__time__params.html">simulation_time_params</a> &amp;simulation_time_config)</td></tr>
 <tr class="separator:ad08f6399a29ed66671b3dd1e6e2f7a39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade623c87318034b5a90e0133624dbb0f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation___manager.html#ade623c87318034b5a90e0133624dbb0f">parse_external_model_params</a> (boost::property_tree::ptree &amp;model_params, const <a class="el" href="namespacegeojson.html#ab724970a20dff6100b94e25491292748">geojson::Feature</a> catchment_feature)</td></tr>
+<tr class="memdesc:ade623c87318034b5a90e0133624dbb0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse a <code>model_params</code> property tree and replace external parameters with values from a catchment's properties.  <a href="classrealization_1_1_formulation___manager.html#ade623c87318034b5a90e0133624dbb0f">More...</a><br /></td></tr>
+<tr class="separator:ade623c87318034b5a90e0133624dbb0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2fdd32f683c0952a2adfd69099344ac1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation___manager.html#a2fdd32f683c0952a2adfd69099344ac1">parse_external_model_params</a> (<a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> &amp;model_params, const <a class="el" href="namespacegeojson.html#ab724970a20dff6100b94e25491292748">geojson::Feature</a> catchment_feature)</td></tr>
+<tr class="memdesc:a2fdd32f683c0952a2adfd69099344ac1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse a <code>model_params</code> property map and replace external parameters with values from a catchment's properties.  <a href="classrealization_1_1_formulation___manager.html#a2fdd32f683c0952a2adfd69099344ac1">More...</a><br /></td></tr>
+<tr class="separator:a2fdd32f683c0952a2adfd69099344ac1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -429,8 +435,8 @@ Private Types</h2></td></tr>
 
 </div>
 </div>
-<a id="ad1480dcad2897e10a445f1e53eb9b8af" name="ad1480dcad2897e10a445f1e53eb9b8af"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad1480dcad2897e10a445f1e53eb9b8af">&#9670;&#160;</a></span>construct_missing_formulation()</h2>
+<a id="a3611f83dade280ed741729e875e0f823" name="a3611f83dade280ed741729e875e0f823"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3611f83dade280ed741729e875e0f823">&#9670;&#160;</a></span>construct_missing_formulation()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -441,8 +447,8 @@ Private Types</h2></td></tr>
         <tr>
           <td class="memname">std::shared_ptr&lt; <a class="el" href="classrealization_1_1_catchment___formulation.html">Catchment_Formulation</a> &gt; realization::Formulation_Manager::construct_missing_formulation </td>
           <td>(</td>
-          <td class="paramtype">std::string&#160;</td>
-          <td class="paramname"><em>identifier</em>, </td>
+          <td class="paramtype"><a class="el" href="namespacegeojson.html#ab724970a20dff6100b94e25491292748">geojson::Feature</a> &amp;&#160;</td>
+          <td class="paramname"><em>feature</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -469,7 +475,7 @@ Private Types</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classrealization_1_1_catchment___formulation.html#a17f32257b65c7930f8b3570ab43fd58c">realization::Catchment_Formulation::config_pattern_substitution()</a>, <a class="el" href="namespacerealization.html#ab9e82c6743f665511634e0825d3c4be7">realization::construct_formulation()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#ad08f6399a29ed66671b3dd1e6e2f7a39">get_forcing_params()</a>, <a class="el" href="namespacerealization.html#a60fd2dcdc052492d4ae87454567f2b61">realization::get_formulation_key()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#aefede1cd4a4aa13bae4e8a8cb58968b1">global_forcing</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#acd6121b421b707d9cd9459b330443c31">global_formulation_parameters</a>, and <a class="el" href="classrealization_1_1_formulation___manager.html#a3ce2f6a9516aeef300950576148f8334">global_formulation_tree</a>.</p>
+<p class="reference">References <a class="el" href="classrealization_1_1_catchment___formulation.html#a17f32257b65c7930f8b3570ab43fd58c">realization::Catchment_Formulation::config_pattern_substitution()</a>, <a class="el" href="namespacerealization.html#ab9e82c6743f665511634e0825d3c4be7">realization::construct_formulation()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#ad08f6399a29ed66671b3dd1e6e2f7a39">get_forcing_params()</a>, <a class="el" href="namespacerealization.html#a60fd2dcdc052492d4ae87454567f2b61">realization::get_formulation_key()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#aefede1cd4a4aa13bae4e8a8cb58968b1">global_forcing</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#acd6121b421b707d9cd9459b330443c31">global_formulation_parameters</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#a3ce2f6a9516aeef300950576148f8334">global_formulation_tree</a>, and <a class="el" href="classrealization_1_1_formulation___manager.html#ade623c87318034b5a90e0133624dbb0f">parse_external_model_params()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classrealization_1_1_formulation___manager.html#aab2168aff25e065967c382a2b6cef41a">read()</a>.</p>
 
@@ -574,7 +580,7 @@ Private Types</h2></td></tr>
 
 <p class="reference">References <a class="el" href="structsimulation__time__params.html#ad0213ef131f38e42d126f1f090f87962">simulation_time_params::end_time</a>, and <a class="el" href="structsimulation__time__params.html#a30f16ec426b97d2a8e15751faff8e7f5">simulation_time_params::start_time</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_formulation___manager.html#a89aeed055b9828a8994eee36fbb1ff03">construct_formulation_from_tree()</a>, and <a class="el" href="classrealization_1_1_formulation___manager.html#ad1480dcad2897e10a445f1e53eb9b8af">construct_missing_formulation()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_formulation___manager.html#a89aeed055b9828a8994eee36fbb1ff03">construct_formulation_from_tree()</a>, and <a class="el" href="classrealization_1_1_formulation___manager.html#a3611f83dade280ed741729e875e0f823">construct_missing_formulation()</a>.</p>
 
 </div>
 </div>
@@ -755,6 +761,102 @@ Private Types</h2></td></tr>
 
 </div>
 </div>
+<a id="ade623c87318034b5a90e0133624dbb0f" name="ade623c87318034b5a90e0133624dbb0f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ade623c87318034b5a90e0133624dbb0f">&#9670;&#160;</a></span>parse_external_model_params() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void realization::Formulation_Manager::parse_external_model_params </td>
+          <td>(</td>
+          <td class="paramtype">boost::property_tree::ptree &amp;&#160;</td>
+          <td class="paramname"><em>model_params</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="namespacegeojson.html#ab724970a20dff6100b94e25491292748">geojson::Feature</a>&#160;</td>
+          <td class="paramname"><em>catchment_feature</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Parse a <code>model_params</code> property tree and replace external parameters with values from a catchment's properties. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">model_params</td><td>Property tree with root key "model_params" </td></tr>
+    <tr><td class="paramname">catchment_feature</td><td>Associated catchment feature </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a27226c864bac7454a8504f8edb15d95b">geojson::Boolean</a>, <a class="el" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a4ee29ca12c7d126654bd0e5275de6135">geojson::List</a>, <a class="el" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a2bd8ab451a35759c5737128e35c8011a">geojson::Natural</a>, <a class="el" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a497031794414a552435f90151ac3b54b">geojson::Object</a>, <a class="el" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a7f80fcc452c2f1ed2bb51b39d0864df1">geojson::Real</a>, and <a class="el" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a27118326006d3829667a400ad23d5d98">geojson::String</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_formulation___manager.html#a3611f83dade280ed741729e875e0f823">construct_missing_formulation()</a>, and <a class="el" href="classrealization_1_1_formulation___manager.html#aab2168aff25e065967c382a2b6cef41a">read()</a>.</p>
+
+</div>
+</div>
+<a id="a2fdd32f683c0952a2adfd69099344ac1" name="a2fdd32f683c0952a2adfd69099344ac1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2fdd32f683c0952a2adfd69099344ac1">&#9670;&#160;</a></span>parse_external_model_params() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void realization::Formulation_Manager::parse_external_model_params </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a> &amp;&#160;</td>
+          <td class="paramname"><em>model_params</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="namespacegeojson.html#ab724970a20dff6100b94e25491292748">geojson::Feature</a>&#160;</td>
+          <td class="paramname"><em>catchment_feature</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Parse a <code>model_params</code> property map and replace external parameters with values from a catchment's properties. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">model_params</td><td>Property map with root key "model_params" </td></tr>
+    <tr><td class="paramname">catchment_feature</td><td>Associated catchment feature </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a27226c864bac7454a8504f8edb15d95b">geojson::Boolean</a>, <a class="el" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a4ee29ca12c7d126654bd0e5275de6135">geojson::List</a>, <a class="el" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a2bd8ab451a35759c5737128e35c8011a">geojson::Natural</a>, <a class="el" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a497031794414a552435f90151ac3b54b">geojson::Object</a>, <a class="el" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a7f80fcc452c2f1ed2bb51b39d0864df1">geojson::Real</a>, and <a class="el" href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a27118326006d3829667a400ad23d5d98">geojson::String</a>.</p>
+
+</div>
+</div>
 <a id="aab2168aff25e065967c382a2b6cef41a" name="aab2168aff25e065967c382a2b6cef41a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aab2168aff25e065967c382a2b6cef41a">&#9670;&#160;</a></span>read()</h2>
 
@@ -793,7 +895,7 @@ Private Types</h2></td></tr>
 <p >Read routing configurations from configuration file</p>
 <p >Read catchment configurations from configuration file</p>
 
-<p class="reference">References <a class="el" href="classrealization_1_1_formulation___manager.html#aca754e4a64a79f0b86c0fa7a472aab94">add_formulation()</a>, <a class="el" href="classgeojson_1_1_j_s_o_n_property.html#a99b488b0681f98286fe65be25f5cba06">geojson::JSONProperty::as_natural_number()</a>, <a class="el" href="classgeojson_1_1_j_s_o_n_property.html#a512af06cb32ed665a57a80129c84ec9b">geojson::JSONProperty::as_string()</a>, <a class="el" href="classgeojson_1_1_j_s_o_n_property.html#a4a62d9dc46a292bff3c4fd134f5469a7">geojson::JSONProperty::at()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#a89aeed055b9828a8994eee36fbb1ff03">construct_formulation_from_tree()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#ad1480dcad2897e10a445f1e53eb9b8af">construct_missing_formulation()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#ae28572ed2d9c6bf7849331d889b3c51b">contains()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#ae72b9762e8056a1787d69aed79919b9d">formulations</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#aefede1cd4a4aa13bae4e8a8cb58968b1">global_forcing</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#acd6121b421b707d9cd9459b330443c31">global_formulation_parameters</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#a3ce2f6a9516aeef300950576148f8334">global_formulation_tree</a>, <a class="el" href="classgeojson_1_1_j_s_o_n_property.html#afe12f98e6dafc1abb943d3865e601ec1">geojson::JSONProperty::has_key()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#afdd18d85d9a4231e62621be37074320a">routing_config</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#ae34d4f2d7d9bf211e5139eb2b8b09e39">tree</a>, and <a class="el" href="classrealization_1_1_formulation___manager.html#a0b8bde7896ea9bba31e130cd14ecbf7b">using_routing</a>.</p>
+<p class="reference">References <a class="el" href="classrealization_1_1_formulation___manager.html#aca754e4a64a79f0b86c0fa7a472aab94">add_formulation()</a>, <a class="el" href="classgeojson_1_1_j_s_o_n_property.html#a99b488b0681f98286fe65be25f5cba06">geojson::JSONProperty::as_natural_number()</a>, <a class="el" href="classgeojson_1_1_j_s_o_n_property.html#a512af06cb32ed665a57a80129c84ec9b">geojson::JSONProperty::as_string()</a>, <a class="el" href="classgeojson_1_1_j_s_o_n_property.html#a4a62d9dc46a292bff3c4fd134f5469a7">geojson::JSONProperty::at()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#a89aeed055b9828a8994eee36fbb1ff03">construct_formulation_from_tree()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#a3611f83dade280ed741729e875e0f823">construct_missing_formulation()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#ae28572ed2d9c6bf7849331d889b3c51b">contains()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#ae72b9762e8056a1787d69aed79919b9d">formulations</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#aefede1cd4a4aa13bae4e8a8cb58968b1">global_forcing</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#acd6121b421b707d9cd9459b330443c31">global_formulation_parameters</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#a3ce2f6a9516aeef300950576148f8334">global_formulation_tree</a>, <a class="el" href="classgeojson_1_1_j_s_o_n_property.html#afe12f98e6dafc1abb943d3865e601ec1">geojson::JSONProperty::has_key()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#ade623c87318034b5a90e0133624dbb0f">parse_external_model_params()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#afdd18d85d9a4231e62621be37074320a">routing_config</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#ae34d4f2d7d9bf211e5139eb2b8b09e39">tree</a>, and <a class="el" href="classrealization_1_1_formulation___manager.html#a0b8bde7896ea9bba31e130cd14ecbf7b">using_routing</a>.</p>
 
 </div>
 </div>
@@ -842,7 +944,7 @@ Private Types</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_formulation___manager.html#ad1480dcad2897e10a445f1e53eb9b8af">construct_missing_formulation()</a>, and <a class="el" href="classrealization_1_1_formulation___manager.html#aab2168aff25e065967c382a2b6cef41a">read()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_formulation___manager.html#a3611f83dade280ed741729e875e0f823">construct_missing_formulation()</a>, and <a class="el" href="classrealization_1_1_formulation___manager.html#aab2168aff25e065967c382a2b6cef41a">read()</a>.</p>
 
 </div>
 </div>
@@ -866,7 +968,7 @@ Private Types</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_formulation___manager.html#a89aeed055b9828a8994eee36fbb1ff03">construct_formulation_from_tree()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#ad1480dcad2897e10a445f1e53eb9b8af">construct_missing_formulation()</a>, and <a class="el" href="classrealization_1_1_formulation___manager.html#aab2168aff25e065967c382a2b6cef41a">read()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_formulation___manager.html#a89aeed055b9828a8994eee36fbb1ff03">construct_formulation_from_tree()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#a3611f83dade280ed741729e875e0f823">construct_missing_formulation()</a>, and <a class="el" href="classrealization_1_1_formulation___manager.html#aab2168aff25e065967c382a2b6cef41a">read()</a>.</p>
 
 </div>
 </div>
@@ -890,7 +992,7 @@ Private Types</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_formulation___manager.html#ad1480dcad2897e10a445f1e53eb9b8af">construct_missing_formulation()</a>, and <a class="el" href="classrealization_1_1_formulation___manager.html#aab2168aff25e065967c382a2b6cef41a">read()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_formulation___manager.html#a3611f83dade280ed741729e875e0f823">construct_missing_formulation()</a>, and <a class="el" href="classrealization_1_1_formulation___manager.html#aab2168aff25e065967c382a2b6cef41a">read()</a>.</p>
 
 </div>
 </div>
@@ -989,7 +1091,7 @@ Private Types</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li><li class="navelem"><a class="el" href="classrealization_1_1_formulation___manager.html">Formulation_Manager</a></li>
-    <li class="footer">Generated on Fri Aug 25 2023 18:10:07 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
+    <li class="footer">Generated on Fri Aug 25 2023 20:59:27 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
   </ul>
 </div>
 </body>
