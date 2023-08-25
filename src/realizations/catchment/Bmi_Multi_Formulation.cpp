@@ -311,7 +311,7 @@ string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, std::st
 
         // Do the rest with a leading comma
         for (int i = 1; i < output_var_names.size(); ++i) {
-            *output_text_stream << "," << get_var_value_as_double(output_var_names[i]);
+            *output_text_stream << delimiter << get_var_value_as_double(output_var_names[i]);
         }
         return output_text_stream->str();
     }
