@@ -70,7 +70,7 @@ std::string Bmi_Cpp_Formulation::get_output_line_for_timestep(int timestep, std:
  * Get the model response for the provided time step, executing the backing model formulation one or more times as
  * needed.
  *
- * Function assumes the backing model has been fully initialized an that any additional input values have been applied.
+ * Function assumes the backing model has been fully initialized and that any additional input values have been applied.
  *
  * The function throws an error if the index of a previously processed time step is supplied, except if it is the last
  * processed time step.  In that case, the appropriate value is returned as described below, but without executing any
