@@ -60,7 +60,7 @@ namespace hy_features {
         /**
          * @brief Construct a new HY_Features object from a Network and a set of formulations.
          * 
-         * Constructs the HY_Catchment objects for each catchment connecting them with the provided link_key attaches tha formaulation
+         * Constructs the HY_Catchment objects for each catchment connecting them with the provided link_key attaches the formulation
          * associated with the catchment found in the Formulation_Manager.  Also constucts each nexus as a HY_PointHydroNexus.
          * 
          * @param catchments 

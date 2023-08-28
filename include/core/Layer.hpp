@@ -43,13 +43,13 @@ namespace ngen
         virtual ~Layer() {}
 
         /***
-         * @brief Return the next timestep that will be processed by this layer in epoc time units
+         * @brief Return the next timestep that will be processed by this layer in epoch time units
         */
         time_t next_timestep_epoch_time() { return simulation_time.next_timestep_epoch_time(); }
 
 
         /***
-         * @brief Return the last timesteo that was processed by this layer in epoc time units
+         * @brief Return the last timestep that was processed by this layer in epoch time units
         */
         time_t current_timestep_epoch_time() { return simulation_time.get_current_epoch_time(); }
 
@@ -113,7 +113,7 @@ namespace ngen
                 double response_m_h = response_m_s / 3600.0;
                 //update the nexus with this flow
                 for(auto& nexus : features.destination_nexuses(id)) {
-                    //TODO in a DENDRIDIC network, only one destination nexus per catchment
+                    //TODO in a DENDRITIC network, only one destination nexus per catchment
                     //If there is more than one, some form of catchment partitioning will be required.
                     //for now, only contribute to the first one in the list
                     nexus->add_upstream_flow(response_m_h, id, output_time_index);
