@@ -92,7 +92,7 @@ namespace ngen
                 auto r = features.catchment_at(id);
                 //TODO redesign to avoid this cast
                 auto r_c = std::dynamic_pointer_cast<realization::Catchment_Formulation>(r);
-                double response = r_c->get_response(output_time_index, description.time_step);
+                double response = r_c->get_response(output_time_index, simulation_time.get_output_interval_seconds());
                 std::string output = std::to_string(output_time_index)+","+current_timestamp+","+
                                     r_c->get_output_line_for_timestep(output_time_index)+"\n";
                 r_c->write_output(output);
