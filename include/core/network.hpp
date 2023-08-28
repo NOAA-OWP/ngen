@@ -157,7 +157,7 @@ namespace network {
          * @brief Construct a new Network object from features in fabric, creating edges between feature properties defined by link_key
          * 
          * @param features a geojson::GeoJSON collection of features to add as nodes to the graph
-         * @param link_key the property to read from features to determie edge linking, i.e. 'toid'
+         * @param link_key the property to read from features to determine edge linking, i.e. 'toid'
          */
         Network( geojson::GeoJSON features, std::string* link_key);
 
@@ -299,7 +299,7 @@ namespace network {
          */
         NetworkIndexT tailwaters_idx;
 
-        //There are "classes" of tailwater to consider, "Free" "Coastal" "Internal" ect
+        //There are "classes" of tailwater to consider, "Free" "Coastal" "Internal" etc
         //Really the same is true for head waters in the "Free" and "Internal" sense where
         //there are interactions of boundary conditions
         //TODO Distributary network??? Has topological "wildcard"
