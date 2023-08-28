@@ -21,11 +21,11 @@ class nexus_writer_Test : public ::testing::Test
     std::string write_to_file()
     {
         std::unique_ptr<ngen::utils::nexus_writer> writer = std::make_unique<WriterType>();
-
+        
         writer->init(1);
-        writer->next(tempfile, 2);
-        writer->write("wb-1", "nex-1", 5);
-        writer->write("wb-2", "nex-2", 10);
+        writer->next(tempfile, 2, timestamp_);
+        writer->write("nex-1", 5);
+        writer->write("nex-2", 10);
         writer->flush();
 
         return tempfile + (
@@ -34,6 +34,8 @@ class nexus_writer_Test : public ::testing::Test
             : ".csv"
         );
     }
+
+    const std::string timestamp_ = "202308250000";
 
   private:
     std::string tempfile = testing::TempDir() + "/ngen_nexus_writer__test";
@@ -49,11 +51,11 @@ TEST_F(nexus_writer_Test, csv_writer)
     
     std::string line;
     stream >> line;
-    ASSERT_EQ(line, "feature_id,segment_id,q_lateral");
+    ASSERT_EQ(line, "feature_id," + timestamp_);
     stream >> line;
-    ASSERT_EQ(line, "nex-1,wb-1,5");
+    ASSERT_EQ(line, "nex-1,5");
     stream >> line;
-    ASSERT_EQ(line, "nex-2,wb-2,10");
+    ASSERT_EQ(line, "nex-2,10");
     stream.close();
 }
 
@@ -75,25 +77,12 @@ TEST_F(nexus_writer_Test, netcdf_writer)
     
     const auto& var_nexus_id = stream.getVar("feature_id");
     ASSERT_FALSE(var_nexus_id.isNull());
-    char* nex_id_1 = nullptr;
+    std::string nex_id_1(5, ' ');
     var_nexus_id.getVar({ 0 }, &nex_id_1);
-    char* nex_id_2 = nullptr;
+    std::string nex_id_2(5, ' ');
     var_nexus_id.getVar({ 1 }, &nex_id_2);
-    ASSERT_STREQ(nex_id_1, "nex-1");
-    ASSERT_STREQ(nex_id_2, "nex-2");
-    delete nex_id_1;
-    delete nex_id_2;
-
-    const auto& var_segment_id = stream.getVar("segment_id");
-    ASSERT_FALSE(var_segment_id.isNull());
-    char* seg_id_1 = nullptr;
-    var_segment_id.getVar({ 0 }, &seg_id_1);
-    char* seg_id_2 = nullptr;
-    var_segment_id.getVar({ 1 }, &seg_id_2);
-    ASSERT_STREQ(seg_id_1, "wb-1");
-    ASSERT_STREQ(seg_id_2, "wb-2");
-    delete seg_id_1;
-    delete seg_id_2;
+    ASSERT_EQ(nex_id_1, "nex-1");
+    ASSERT_EQ(nex_id_2, "nex-2");
 
     const auto& var_qlat = stream.getVar("q_lateral");
     ASSERT_FALSE(var_qlat.isNull());

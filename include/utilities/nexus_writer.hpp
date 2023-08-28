@@ -15,7 +15,7 @@
 
 // Changing these will affect both NetCDF and CSV outputs
 #define NGEN_VARIABLE_NEXUS_ID   "feature_id"
-#define NGEN_VARIABLE_SEGMENT_ID "segment_id"
+#define NGEN_VARIABLE_TIME "time"
 #define NGEN_VARIABLE_Q_LATERAL  "q_lateral"
 
 namespace ngen {
@@ -44,17 +44,17 @@ struct nexus_writer
      * 
      * @param file_name File path to create
      * @param num_nexuses Number of nexuses contained in this output
+     * @param timestamp String timestamp for the timestep these values occur at
      */
-    virtual void next(const std::string& file_name, size_type num_nexuses) = 0;
+    virtual void next(const std::string& file_name, size_type num_nexuses, const std::string& timestamp) = 0;
 
     /**
      * @brief Write a line to the current file.
      * 
-     * @param segment_id Flowpath/segment ID
      * @param nexus_id Nexus ID
      * @param qlat Lateral streamflow
      */
-    virtual void write(const std::string& segment_id, const std::string& nexus_id, double qlat) = 0;
+    virtual void write(const std::string& nexus_id, double qlat) = 0;
 
     /**
      * @brief Flush current output
@@ -82,16 +82,16 @@ struct nexus_csv_writer : public nexus_writer
         it_--;
     }
 
-    void next(const std::string& file_name, size_type num_nexuses) override
+    void next(const std::string& file_name, size_type num_nexuses, const std::string& timestamp) override
     {
         it_++;
         it_->open(file_name + ".csv");
-        (*it_) << NGEN_VARIABLE_NEXUS_ID "," NGEN_VARIABLE_SEGMENT_ID "," NGEN_VARIABLE_Q_LATERAL "\n";
+        (*it_) << NGEN_VARIABLE_NEXUS_ID "," << timestamp << "\n";
     }
 
-    void write(const std::string& segment_id, const std::string& nexus_id, double contribution) override
+    void write(const std::string& nexus_id, double contribution) override
     {
-        (*it_) << nexus_id << ',' << segment_id << ',' << std::setprecision(14) << contribution << '\n';
+        (*it_) << nexus_id << ',' << std::setprecision(14) << contribution << '\n';
     }
 
     void flush() override
@@ -127,7 +127,7 @@ struct nexus_netcdf_writer : public nexus_writer
 #endif
     }
 
-    void next(const std::string& file_name, size_type num_nexuses) override
+    void next(const std::string& file_name, size_type num_nexuses, const std::string& timestamp) override
     {
 #ifndef NETCDF_ACTIVE
         NGEN_NETCDF_ERROR;
@@ -140,25 +140,28 @@ struct nexus_netcdf_writer : public nexus_writer
   
         const auto& var_nexus_id = out->addVar(NGEN_VARIABLE_NEXUS_ID, netCDF::ncString, dim_fid);
         var_nexus_id.putAtt("description", "Contributing Nexus ID");
-        
-        const auto& var_segment_id = out->addVar(NGEN_VARIABLE_SEGMENT_ID, netCDF::ncString, dim_fid);
-        var_segment_id.putAtt("description", "Flowpath ID downstream from the corresponding nexus");
 
         const auto& var_qlat = out->addVar(NGEN_VARIABLE_Q_LATERAL, netCDF::ncDouble, dim_fid);
         var_qlat.putAtt("description", "Runoff into channel reach");
         var_qlat.putAtt("units", "m3 s-1");
+
+        // TODO: Should be minutes since epoch? (aka netCDF::ncInt)
+        const auto& var_time = out->addVar(NGEN_VARIABLE_TIME, netCDF::ncString);
+        var_time.putAtt("description", "Output timestamp for this contribution");
+        var_time.putAtt("standard_name", "time");
+        var_time.putAtt("format", "%Y%m%s%H%M");
+        var_time.putVar({0}, timestamp);
     
         index_ = 0;
 #endif
     }
 
-    void write(const std::string& segment_id, const std::string& nexus_id, double contribution) override
+    void write(const std::string& nexus_id, double contribution) override
     {
 #ifndef NETCDF_ACTIVE
         NGEN_NETCDF_ERROR;
 #else
         it_->get()->getVar(NGEN_VARIABLE_NEXUS_ID).putVar({ index_ }, nexus_id);
-        it_->get()->getVar(NGEN_VARIABLE_SEGMENT_ID).putVar({ index_ }, segment_id);
         it_->get()->getVar(NGEN_VARIABLE_Q_LATERAL).putVar({ index_ }, contribution);
         index_++;
 #endif
@@ -188,5 +191,5 @@ struct nexus_netcdf_writer : public nexus_writer
 
 #undef NGEN_NETCDF_ERROR
 #undef NGEN_VARIABLE_NEXUS_ID
-#undef NGEN_VARIABLE_SEGMENT_ID
+#undef NGEN_VARIABLE_TIME
 #undef NGEN_VARIABLE_Q_LATERAL

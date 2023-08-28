@@ -398,7 +398,7 @@ int main(int argc, char *argv[]) {
       boost::algorithm::erase_all(output_timestamp, ":");
       // Remove Seconds
       output_timestamp = output_timestamp.substr(0, output_timestamp.size() - 2);
-      nexus_output->next(manager->get_output_root() + output_timestamp + "NEXOUT", num_nexuses);
+      nexus_output->next(manager->get_output_root() + output_timestamp + "NEXOUT", num_nexuses, output_timestamp);
     
       for(const auto& id : features.nexuses()) {
   #ifdef NGEN_MPI_ACTIVE
@@ -420,11 +420,7 @@ int main(int argc, char *argv[]) {
 
           double contribution_at_t = features.nexus_at(id)->get_downstream_flow(cat_id, output_time_index, 100.0);
   
-          nexus_output->write(
-            nexus_collection->get_feature(id)->get_property("toid").as_string(),
-            id,
-            contribution_at_t 
-          );
+          nexus_output->write(id, contribution_at_t);
 
   #ifdef NGEN_MPI_ACTIVE
         }
