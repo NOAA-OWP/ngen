@@ -20,10 +20,6 @@
     #include "NetCDFPerFeatureDataProvider.hpp"
 #endif
 
-#ifdef NGEN_LSTM_TORCH_LIB_ACTIVE
-    #include "LSTM_Realization.hpp"
-#endif
-
 namespace realization {
     typedef std::shared_ptr<Catchment_Formulation> (*constructor)(std::string, shared_ptr<data_access::GenericDataProvider>, utils::StreamHandler);
 
@@ -46,10 +42,6 @@ namespace realization {
 #ifdef ACTIVATE_PYTHON
         {"bmi_python", create_formulation_constructor<Bmi_Py_Formulation>()},
 #endif // ACTIVATE_PYTHON
-#ifdef NGEN_LSTM_TORCH_LIB_ACTIVE
-        ,
-        {"lstm", create_formulation_constructor<LSTM_Realization>()}
-#endif
     };
 
     static bool formulation_exists(std::string formulation_type) {
