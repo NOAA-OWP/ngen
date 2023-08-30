@@ -12,11 +12,12 @@ inline void build_point_bbox(const geojson::geometry& geom, std::vector<double>&
 
 geojson::Feature geopackage::build_feature(
   const sqlite_iter& row,
+  const std::string& id_col,
   const std::string& geom_col
 )
 {
     std::vector<double> bounding_box(4);
-    const auto id                    = row.get<std::string>("id");
+    std::string id                   = row.get<std::string>(id_col);
     geojson::PropertyMap properties  = build_properties(row, geom_col);
     geojson::geometry geometry       = build_geometry(row, geom_col, bounding_box);
 
