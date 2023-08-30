@@ -97,7 +97,7 @@ int main(int argc, char *argv[]) {
           << ngen_VERSION_MINOR << "."
           << ngen_VERSION_PATCH << std::endl;
         #ifdef NGEN_MPI_ACTIVE
-        cout<<"  Parallel build"<<std::endl;
+        std::cout<<"  Parallel build"<<std::endl;
         #endif
         #ifdef NETCDF_ACTIVE
         std::cout<<"  NetCDF lumped forcing enabled"<<std::endl;
