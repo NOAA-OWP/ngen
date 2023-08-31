@@ -245,6 +245,10 @@ namespace realization {
                 for(std::map<std::string,std::shared_ptr<data_access::GenericDataProvider>>::iterator iter = availableData.begin(); iter != availableData.end(); ++iter)
                 {
                     var_name = iter->first;
+                    auto it = std::find(forcing->get_available_variable_names().begin(), forcing->get_available_variable_names().end(), var_name);
+                    if (it == forcing->get_available_variable_names().end()) {
+                        var_name = forcing->get_available_variable_names()[0];
+                    }
                     //TODO: Find a probably more performant way than trial and exception here.
                     try {
                         time_t rv = availableData[var_name]->get_data_start_time();
