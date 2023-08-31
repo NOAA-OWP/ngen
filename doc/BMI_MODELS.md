@@ -125,15 +125,52 @@ There are some special BMI formulation config parameters which are required in c
   the [Bmi_Formulation.hpp](..include/realizations/catchment/Bmi_Formulation.hpp) file has a section where several supported standard names are defined and notes  
   * this can be useful in particular for informing the framework how to provide the input a model needs for execution
   * e.g.,  `"variables_names_map": {"model_variable_name": "standard_variable_name"}`
+* `model_params`
+  * can specify static or dynamic parameters passed to models as model variables.
+  * static parameters are defined inline in the realization config.
+  * dynamic parameters are derived from a given source, such as hydrofabric data.
+  * if specified, must be within the **params** config level, i.e. within a `"formulations": [..., {..., "params": {..., "model_params": {...}, ...}, ...}, ...]` object.
+  * if specified for multi-BMI, must be within the **module-params** config level, i.e. in the **params** config level for a given **module**.
+  * e.g.,
+    ```jsonc
+    // Format: { <variable_name>: <value> }
+    "model_params": {
+      // Static parameter
+      "APCP_Surface": 3.0,
+
+      // Dynamic parameter
+      "areasqkm": {
+        // where this variable is deriving from, only "hydrofabric" is supported currently
+        "source": "hydrofabric",
+        // the property name of this value,
+        // i.e. what property (area_sqkm) in the source (hydrofabric) maps to our variable (areasqkm)?
+        "from": "area_sqkm"
+      }
+    }
+    ```
 * `output_variables`
   * can specify the particular set and order of output variables to include in the realization's `get_output_line_for_timestep()` (and similar) function
   * JSON structure should be a list of strings
   * if not present, defaults to whatever it returned by the model's BMI `get_output_var_names()` function *the first time* it is invoked
+  * if specified, must be at the **root** level of a formulation object.
+  * if specified for multi-BMI, must be within the **module-root** config level, i.e. in the **root** config level for a given **module**.
+  * e.g.,
+    ```jsonc
+    // Example for CFE, which has 13 output variables
+    "output_variables": ["RAIN_RATE", "Q_OUT"]
+    ```
 * `output_header_fields`
   * can specify the header strings to use for the realization's printed output (i.e., the value returned by `get_output_header_line()`)
   * JSON structure should be a list of strings
   * when not present, the literal variable names are used
   * when present, does not do any checking for ordering/correspondence compared to the output ordering of the variable values, so users must take care that ordering is consistent
+  * if specified, must be at the **root** level of a formulation object.
+  * if specified for multi-BMI, must be within the **module-root** config level, i.e. in the **root** config level for a given **module**.
+  * e.g.,
+  ```jsonc
+  // Same as `output_variables` example with CFE, but we want to change the formatting
+  "output_header_fields": ["rain_rate", "Q"]
+  ```
 * `allow_exceed_end_time`
   * boolean value to specify whether a model is allowed to execute `Update` calls that go beyond its end time (or the max forcing data entry)
   * implied to be `false` by default
