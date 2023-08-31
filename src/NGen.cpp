@@ -106,7 +106,7 @@ int main(int argc, char *argv[]) {
         std::cout<<"  Fortran BMI enabled"<<std::endl;
         #endif
         #ifdef NGEN_C_LIB_ACTIVE
-        cout<<"  C BMI enabled"<<std::endl;
+        std::cout<<"  C BMI enabled"<<std::endl;
         #endif
         #ifdef ACTIVATE_PYTHON
         std::cout<<"  Python active"<<std::endl;

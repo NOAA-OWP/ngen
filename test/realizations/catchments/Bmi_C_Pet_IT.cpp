@@ -162,7 +162,7 @@ void Bmi_C_Pet_IT::SetUp() {
                          "}";
         std::stringstream stream;
         stream << config_json[i];
-        //cout << stream.str();
+        //std::cout << stream.str();
         boost::property_tree::ptree loaded_tree;
         boost::property_tree::json_parser::read_json(stream, loaded_tree);
         config_prop_ptree[i] = loaded_tree.get_child("catchments").get_child(catchment_ids[i]).get_child("bmi_c");
