@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.14)
 
+
+# Use `LOCATION` for python lookup strategy
+# https://cmake.org/cmake/help/latest/policy/CMP0094.html
 if(POLICY CMP0094)
     cmake_policy(SET CMP0094 NEW)
 endif()
