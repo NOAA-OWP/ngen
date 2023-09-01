@@ -183,6 +183,7 @@ if (${NGEN_ACTIVATE_PYTHON})
     #message(INFO " the final Py runtime library dirs are ${Python_RUNTIME_LIBRARY_DIRS}")
     #message(INFO " the final Py std lib is ${Python_STDLIB}")
     #message(INFO " the rpath is ${CMAKE_INSTALL_RPATH}")
+    set(PYTHON_EXECUTABLE ${Python_EXECUTABLE}) # Case-sensitive difference
     add_subdirectory(extern/pybind11)
 endif()
 
