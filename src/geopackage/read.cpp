@@ -135,8 +135,12 @@ std::shared_ptr<geojson::FeatureCollection> geopackage::read(
         max_y = bbox[3] > max_y ? bbox[3] : max_y;
     }
 
-    return std::make_shared<geojson::FeatureCollection>(
+    auto fc = std::make_shared<geojson::FeatureCollection>(
         std::move(features),
         std::vector<double>({min_x, min_y, max_x, max_y})
     );
+
+    fc->update_ids();
+
+    return fc;
 }
