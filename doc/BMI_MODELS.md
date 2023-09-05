@@ -153,7 +153,7 @@ There are some special BMI formulation config parameters which are required in c
   * JSON structure should be a list of strings
   * if not present, defaults to whatever it returned by the model's BMI `get_output_var_names()` function *the first time* it is invoked
   * if specified, must be at the **root** level of a formulation object.
-  * if specified for multi-BMI, must be within the **module-root** config level, i.e. in the **root** config level for a given **module**.
+  * if specified for multi-BMI, it should be within the **formulation-root** config level, i.e. in the **root** config level for a given **formulation**.
   * e.g.,
     ```jsonc
     // Example for CFE, which has 13 output variables
@@ -165,7 +165,7 @@ There are some special BMI formulation config parameters which are required in c
   * when not present, the literal variable names are used
   * when present, does not do any checking for ordering/correspondence compared to the output ordering of the variable values, so users must take care that ordering is consistent
   * if specified, must be at the **root** level of a formulation object.
-  * if specified for multi-BMI, must be within the **module-root** config level, i.e. in the **root** config level for a given **module**.
+  * if specified for multi-BMI, it should be within the **formulation-root** config level, i.e. in the **root** config level for a given **formulation**.
   * e.g.,
   ```jsonc
   // Same as `output_variables` example with CFE, but we want to change the formatting
