@@ -98,7 +98,7 @@ cmake --build build --target ngen -- -j 2
 **Running the Model:**
 
 ```shell
-./build/ngen data/catchment_data.geojson "" data/nexus_data.geojson "" data/example_realization_config.json
+./build/ngen data/catchment_data.geojson all data/nexus_data.geojson all data/example_realization_config.json
 ```
 
 ---
