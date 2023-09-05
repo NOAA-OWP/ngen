@@ -34,9 +34,7 @@ class NullForcingProvider : public data_access::GenericDataProvider
                                            end_date_time_epoch(forcing_config.simulation_end_t),
                                            current_date_time_epoch(forcing_config.simulation_start_t),
                                            forcing_vector_index(-1)
-    {
-        set_available_forcings();
-    }
+    {}
 
     // BEGIN DataProvider interface methods
 
@@ -126,15 +124,6 @@ class NullForcingProvider : public data_access::GenericDataProvider
     }
 
     private:
-
-
-    /**
-     * @brief set_available_forcings so that Formulation_Manager has a non-empty variable name to access simulation time
-     */
-    void set_available_forcings()
-    {
-        available_forcings.push_back("dummy");
-    }
 
     std::vector<std::string> available_forcings;
 
