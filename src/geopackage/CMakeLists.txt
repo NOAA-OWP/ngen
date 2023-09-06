@@ -1,6 +1,3 @@
-cmake_minimum_required(VERSION 3.10)
-
-
 string(COMPARE EQUAL "${CMAKE_CXX_COMPILER_ID}" "IntelLLVM" _cmp)
 if (NOT _cmp)
     message(WARNING "[NGen::geopackage] wkb.cpp cannot be optimized with "
