@@ -74,7 +74,7 @@ endif()
 # -----------------------------------------------------------------------------
 # If MPI support is enabled, set the C++ compiler to "mpicxx"
 if(NGEN_WITH_MPI)
-    find_package(MPI REQUIRED QUIET)
+    find_package(MPI REQUIRED)
     add_compile_definitions(NGEN_MPI_ACTIVE)
 endif()
 
@@ -82,7 +82,7 @@ endif()
 # FIXME: Is this needed for icpx? or even icpp? This only enables support for SYCL - Justin
 # https://www.intel.com/content/www/us/en/develop/documentation/oneapi-dpcpp-cpp-compiler-dev-guide-and-reference/top/compiler-setup/use-the-command-line/use-cmake-with-the-compiler.html
 if(INTEL_DPCPP)
-    find_package(IntelDPCPP REQUIRED QUIET)
+    find_package(IntelDPCPP REQUIRED)
 endif()
 
 # -----------------------------------------------------------------------------
@@ -120,6 +120,7 @@ if(NGEN_WITH_UDUNITS)
     find_package(UDUNITS2 REQUIRED)
     add_compile_definitions(NGEN_WITH_UDUNITS)
 
+    # Create UDUNITS2 target
     add_library(udunits2 SHARED IMPORTED)
     target_include_directories(udunits2 INTERFACE "${UDUNITS2_INCLUDE}")
     set_target_properties(udunits2 PROPERTIES IMPORTED_LOCATION "${UDUNITS2_LIBRARY}")
@@ -133,9 +134,13 @@ if(NETCDF_ACTIVE)
     find_package(NetCDF REQUIRED)
     add_compile_definitions(NETCDF_ACTIVE)
     
+    # Create NetCDF target
     add_library(NetCDF SHARED IMPORTED)
     target_include_directories(NetCDF INTERFACE "${NETCDF_INCLUDE_DIR}" "${NETCDF_CXX_INCLUDE_DIR}")
-    set_target_properties(NetCDF PROPERTIES IMPORTED_LOCATION "${NETCDF_LIBRARIES};${NETCDF_CXX_LIBRARY}")
+    set_target_properties(NetCDF
+        PROPERTIES
+            IMPORTED_LOCATION "${NETCDF_LIBRARY}"
+            IMPORTED_LOCATION "${NETCDF_CXX_LIBRARY}")
 endif()
 
 # -----------------------------------------------------------------------------
@@ -157,6 +162,11 @@ if(NGEN_WITH_PYTHON)
     find_package(Python 3.6.8 REQUIRED COMPONENTS Interpreter Development NumPy)
     set(PYTHON_EXECUTABLE ${Python_EXECUTABLE}) # Case-sensitive difference
     add_subdirectory(extern/pybind11)
+endif()
+
+# -----------------------------------------------------------------------------
+if(NGEN_WITH_ROUTING)
+    add_compile_definitions(NGEN_ROUTING_ACTIVE)
 endif()
 
 # -----------------------------------------------------------------------------
@@ -185,25 +195,19 @@ add_subdirectory(${TEST_BMI_CPP_DIR} ${TEST_BMI_CPP_DIR}/cmake_build) # FIXME: W
 # -----------------------------------------------------------------------------
 # Project Targets
 # -----------------------------------------------------------------------------
-
-
 configure_file(include/NGenConfig.h.in include/NGenConfig.h)
 add_executable(ngen "${NGEN_SRC_DIR}/NGen.cpp")
 add_dependencies(ngen testbmicppmodel)
-target_include_directories(ngen PUBLIC "${PROJECT_BINARY_DIR}/include")
+target_include_directories(ngen PUBLIC "${NGEN_INC_DIR}")
 
 add_subdirectory("src/core")
 add_subdirectory("src/geojson")
-
-if(NGEN_WITH_SQLITE3)
-    add_subdirectory("src/geopackage")
-    target_link_libraries(ngen PUBLIC NGen::geopackage)
-endif()
-
+add_subdirectory("src/geopackage")
 add_subdirectory("src/realizations/catchment")
 add_subdirectory("src/forcing")
 add_subdirectory("src/utilities/mdarray")
 add_subdirectory("src/utilities/mdframe")
+add_subdirectory("src/routing")
 
 target_link_libraries(ngen
     PUBLIC
@@ -211,9 +215,11 @@ target_link_libraries(ngen
         NGen::core_catchment
         NGen::core_nexus
         NGen::geojson
+        NGen::geopackage
         NGen::realizations_catchment
         NGen::forcing
         NGen::core_mediator
+        NGen::routing
         udunits2
         NetCDF
 )
@@ -222,15 +228,9 @@ add_executable(partitionGenerator src/partitionGenerator.cpp)
 target_include_directories(partitionGenerator PUBLIC "${PROJECT_BINARY_DIR}/include")
 target_link_libraries(partitionGenerator PUBLIC NGen::core NGen::geojson)
 
-if(NGEN_ACTIVATE_ROUTING)
-    add_compile_definitions(NGEN_ROUTING_ACTIVE)
-    add_subdirectory("src/routing")
-    target_link_libraries(ngen PUBLIC NGen::routing)
-endif()
-
 # For automated testing with Google Test
-if(PACKAGE_TESTS)
-    enable_testing()
+if(NGEN_WITH_TESTS)
+    include(CTest) # calls enable_testing()
     include(GoogleTest)
     add_subdirectory(test)
 endif()
@@ -239,115 +239,94 @@ endif()
 # Build Summary
 # -----------------------------------------------------------------------------
 
-macro(message_if_defined PRINTNAME)
-if(${ARGN})
-message(STATUS "    ${PRINTNAME}: ${${ARGN}}")
+# Syntax: ngen_multiline_message("<message 1>" "<message 2>" ...)
+function(ngen_multiline_message)
+set(messages "${ARGN}")
+foreach(msg IN LISTS messages)
+    message(STATUS "${msg}")
+endforeach()
+endfunction()
+
+# Syntax: ngen_dependent_multiline_message(<variable> "<message 1>" "<message 2>" ...)
+function(ngen_dependent_multiline_message VARIABLE)
+if(${VARIABLE})
+    ngen_multiline_message(${ARGN})
+endif()
+endfunction()
+
+# This is used purely for configuration output,
+# and does not affect the virtual environment used.
+if(DEFINED ENV{VIRTUAL_ENV})
+    set(NGEN_CONFIGURED_VENV "$ENV{VIRTUAL_ENV}")
 else()
-message(STATUS "    ${PRINTNAME}: OFF")
+    set(NGEN_CONFIGURED_VENV "<none>")
 endif()
-endmacro()
 
-message("")
 message(STATUS "---------------------------------------------------------------------")
-message(STATUS "NGen version: ${ngen_VERSION}")
-message(STATUS)
-message(STATUS "Build configuration summary:")
-message(STATUS "  Generator: ${CMAKE_GENERATOR}")
-message(STATUS "  Build type: ${CMAKE_BUILD_TYPE}")
-message(STATUS "  System: ${CMAKE_SYSTEM_NAME}")
-message(STATUS "  C Compiler: ${CMAKE_C_COMPILER}")
-message(STATUS "  CXX Compiler: ${CMAKE_CXX_COMPILER}")
-message(STATUS "  Flags:")
-
-message(STATUS "    NGEN_WITH_MPI: ${NGEN_WITH_MPI}")
-message(STATUS "    NGEN_WITH_NETCDF: ${NGEN_WITH_NETCDF}")
-message(STATUS "    NGEN_WITH_SQLITE: ${NGEN_WITH_SQLITE}")
-message(STATUS "    NGEN_WITH_UDUNITS: ${NGEN_WITH_UDUNITS}")
-message(STATUS "    NGEN_WITH_BMI_FORTRAN: ${NGEN_WITH_BMI_FORTRAN}")
-message(STATUS "    NGEN_WITH_BMI_C: ${NGEN_WITH_BMI_C}")
-message(STATUS "    NGEN_WITH_PYTHON: ${NGEN_WITH_PYTHON}")
-message(STATUS "    NGEN_WITH_ROUTING: ${NGEN_WITH_ROUTING}")
-message(STATUS "    NGEN_WITH_TESTS: ${NGEN_WITH_TESTS}")
-message(STATUS "    NGEN_QUIET: ${NGEN_QUIET}")
-
-message(STATUS)
-
-message(STATUS "Environment summary:")
-message(STATUS)
-
-message(STATUS "  Boost:")
-message(STATUS "    Version: ${Boost_VERSION}")
-message(STATUS "    Include: ${Boost_INCLUDE_DIRS}")
-message(STATUS)
-
-if(INTEL_DPCPP)
-message(STATUS "  Intel DPC++:")
-message(STATUS "    Version: ${SYCL_LANGUAGE_VERSION}")
-message(STATUS "    Include: ${SYCL_INCLUDE_DIR}")
-message(STATUS "    Implmentation: ${SYCL_IMPLEMENTATION_ID}")
-message(STATUS)
-endif()
-
-if(NGEN_WITH_MPI)
-message(STATUS "  MPI (CXX):")
-message(STATUS "    Version: ${MPI_CXX_VERSION}")
-message(STATUS "    Library: ${MPI_CXX_LIBRARIES}")
-message(STATUS "    Include: ${MPI_CXX_INCLUDE_DIRS}")
-message(STATUS)
-endif()
-
-if(NGEN_WITH_NETCDF)
-message(STATUS "  NetCDF:")
-message(STATUS "    Library: ${NETCDF_LIBRARY}")
-message(STATUS "    Library (CXX): ${NETCDF_CXX_LIBRARIES}")
-message(STATUS "    Include: ${NETCDF_INCLUDE_DIR}")
-message(STATUS "    Parallel: ${NETCDF_HAS_PARALLEL}")
-message(STATUS)
-endif()
-
-if(NGEN_WITH_SQLITE)
-message(STATUS "  SQLite:")
-message(STATUS "    Version: ${SQLite3_VERSION}")
-message(STATUS "    Library: ${SQLite3_LIBRARIES}")
-message(STATUS "    Include: ${SQLite3_INCLUDE_DIRS}")
-message(STATUS)
-endif()
-
-if(NGEN_WITH_UDUNITS)
-message(STATUS "  UDUNITS2:")
-message(STATUS "    Library: ${UDUNITS2_LIBRARY}")
-message(STATUS "    Include: ${UDUNITS2_INCLUDE}")
-message(STATUS)
-endif()
-
-if(NGEN_WITH_BMI_FORTRAN)
-message(STATUS "  Fortran:")
-message(STATUS "    Fortran-C BMI Compat Library Path: ${NGEN_ISO_C_FORTRAN_BMI_LIB_PATH}")
-message(STATUS)
-endif()
-
-if(NGEN_WITH_PYTHON)
-    if(DEFINED ENV{VIRTUAL_ENV})
-        set(NGEN_CONFIGURED_VENV "$ENV{VIRTUAL_ENV}")
-    else()
-        set(NGEN_CONFIGURED_VENV "<none>")
-    endif()
-    message(STATUS "  Python:")
-    message(STATUS "    Version: ${Python_VERSION}")
-    message(STATUS "    Virtual Env: ${NGEN_CONFIGURED_VENV}")
-    message(STATUS "    Executable: ${Python_EXECUTABLE}")
-    message(STATUS "    Interpreter Type: ${Python_INTERPRETER_ID}")
-    message(STATUS "    Site Library: ${Python_SITELIB}")
-    message(STATUS "    Include: ${Python_INCLUDE_DIRS}")
-    message(STATUS "    Runtime Library: ${Python_RUNTIME_LIBRARY_DIRS}")
-    message(STATUS "    NumPy Version: ${Python_NumPy_VERSION}")
-    message(STATUS "    NumPy Include: ${Python_NumPy_INCLUDE_DIRS}")
-    if(pybind11_FOUND)
-        message(STATUS "    pybind11:")
-        message(STATUS "      Version: ${pybind11_VERSION}")
-        message(STATUS "      Include: ${pybind11_INCLUDE_DIR}")
-    endif()
-endif()
+ngen_multiline_message(
+"NGen version: ${ngen_VERSION}"
+"Build configuration summary:"
+"  Generator: ${CMAKE_GENERATOR}"
+"  Build type: ${CMAKE_BUILD_TYPE}"
+"  System: ${CMAKE_SYSTEM_NAME}"
+"  C Compiler: ${CMAKE_C_COMPILER}"
+"  CXX Compiler: ${CMAKE_CXX_COMPILER}"
+"  Flags:"
+"    NGEN_WITH_MPI: ${NGEN_WITH_MPI}"
+"    NGEN_WITH_NETCDF: ${NGEN_WITH_NETCDF}"
+"    NGEN_WITH_SQLITE: ${NGEN_WITH_SQLITE}"
+"    NGEN_WITH_UDUNITS: ${NGEN_WITH_UDUNITS}"
+"    NGEN_WITH_BMI_FORTRAN: ${NGEN_WITH_BMI_FORTRAN}"
+"    NGEN_WITH_BMI_C: ${NGEN_WITH_BMI_C}"
+"    NGEN_WITH_PYTHON: ${NGEN_WITH_PYTHON}"
+"    NGEN_WITH_ROUTING: ${NGEN_WITH_ROUTING}"
+"    NGEN_WITH_TESTS: ${NGEN_WITH_TESTS}"
+"    NGEN_QUIET: ${NGEN_QUIET}"
+"Environment summary:"
+"  Boost:"
+"    Version: ${Boost_VERSION}"
+"    Include: ${Boost_INCLUDE_DIRS}")
+ngen_dependent_multiline_message(INTEL_DPCPP
+"  Intel DPC++:"
+"    Version: ${SYCL_LANGUAGE_VERSION}"
+"    Include: ${SYCL_INCLUDE_DIR}"
+"    Implmentation: ${SYCL_IMPLEMENTATION_ID}")
+ngen_dependent_multiline_message(NGEN_WITH_MPI
+"  MPI (CXX):"
+"    Version: ${MPI_CXX_VERSION}"
+"    Library: ${MPI_CXX_LIBRARIES}"
+"    Include: ${MPI_CXX_INCLUDE_DIRS}")
+ngen_dependent_multiline_message(NGEN_WITH_NETCDF
+"  NetCDF:"
+"    Library: ${NETCDF_LIBRARY}"
+"    Library (CXX): ${NETCDF_CXX_LIBRARIES}"
+"    Include: ${NETCDF_INCLUDE_DIR}"
+"    Parallel: ${NETCDF_HAS_PARALLEL}")
+ngen_dependent_multiline_message(NGEN_WITH_SQLITE
+"  SQLite:"
+"    Version: ${SQLite3_VERSION}"
+"    Library: ${SQLite3_LIBRARIES}"
+"    Include: ${SQLite3_INCLUDE_DIRS}")
+ngen_dependent_multiline_message(NGEN_WITH_UDUNITS
+"  UDUNITS2:"
+"    Library: ${UDUNITS2_LIBRARY}"
+"    Include: ${UDUNITS2_INCLUDE}")
+ngen_dependent_multiline_message(NGEN_WITH_BMI_FORTRAN
+"  Fortran:"
+"    Fortran-C BMI Compat Library Path: ${NGEN_ISO_C_FORTRAN_BMI_LIB_PATH}")
+ngen_dependent_multiline_message(NGEN_WITH_PYTHON
+"  Python:"
+"    Version: ${Python_VERSION}"
+"    Virtual Env: ${NGEN_CONFIGURED_VENV}"
+"    Executable: ${Python_EXECUTABLE}"
+"    Interpreter Type: ${Python_INTERPRETER_ID}"
+"    Site Library: ${Python_SITELIB}"
+"    Include: ${Python_INCLUDE_DIRS}"
+"    Runtime Library: ${Python_RUNTIME_LIBRARY_DIRS}"
+"    NumPy Version: ${Python_NumPy_VERSION}"
+"    NumPy Include: ${Python_NumPy_INCLUDE_DIRS}"
+"    pybind11 Version: ${pybind11_VERSION}"
+"    pybind11 Include: ${pybind11_INCLUDE_DIR}")
 message(STATUS "---------------------------------------------------------------------")
 
 #set_target_properties(ngen PROPERTIES LINKER_LANGUAGE CXX)
