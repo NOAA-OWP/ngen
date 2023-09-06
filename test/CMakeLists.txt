@@ -26,13 +26,13 @@ if(NGEN_WITH_NETCDF)
 endif()
 
 #[==[
-ngen_add_test(<test name> SOURCES <source>...
+ngen_add_test(<test name> OBJECTS <source>...
                           LIBRARIES <library>...
                           [REQUIRES <varname>...])
 
 Adds an executable test (i.e. a target) called <test name>.
 
-`SOURCES`
+`OBJECTS`
     Source files containing the test cases/fixtures.
 
 `LIBRARIES`
