@@ -269,10 +269,38 @@ Optional Parameters</h2>
 <li>e.g., <code>"variables_names_map": {"model_variable_name": "standard_variable_name"}</code></li>
 </ul>
 </li>
+<li><code>model_params</code><ul>
+<li>can specify static or dynamic parameters passed to models as model variables.</li>
+<li>static parameters are defined inline in the realization config.</li>
+<li>dynamic parameters are derived from a given source, such as hydrofabric data.</li>
+<li>if specified, must be within the <b>params</b> config level, i.e. within a <code>"formulations": [..., {..., "params": {..., "model_params": {...}, ...}, ...}, ...]</code> object.</li>
+<li>if specified for multi-BMI, must be within the <b>module-params</b> config level, i.e. in the <b>params</b> config level for a given <b>module</b>.</li>
+<li>e.g., <div class="fragment"><div class="line">// Format: { &lt;variable_name&gt;: &lt;value&gt; }</div>
+<div class="line">&quot;model_params&quot;: {</div>
+<div class="line">  // Static parameter</div>
+<div class="line">  &quot;APCP_Surface&quot;: 3.0,</div>
+<div class="line"> </div>
+<div class="line">  // Dynamic parameter</div>
+<div class="line">  &quot;areasqkm&quot;: {</div>
+<div class="line">    // where this variable is deriving from, only &quot;hydrofabric&quot; is supported currently</div>
+<div class="line">    &quot;source&quot;: &quot;hydrofabric&quot;,</div>
+<div class="line">    // the property name of this value,</div>
+<div class="line">    // i.e. what property (area_sqkm) in the source (hydrofabric) maps to our variable (areasqkm)?</div>
+<div class="line">    &quot;from&quot;: &quot;area_sqkm&quot;</div>
+<div class="line">  }</div>
+<div class="line">}</div>
+</div><!-- fragment --></li>
+</ul>
+</li>
 <li><code>output_variables</code><ul>
 <li>can specify the particular set and order of output variables to include in the realization's <code>get_output_line_for_timestep()</code> (and similar) function</li>
 <li>JSON structure should be a list of strings</li>
 <li>if not present, defaults to whatever it returned by the model's BMI <code>get_output_var_names()</code> function <em>the first time</em> it is invoked</li>
+<li>if specified, must be at the <b>root</b> level of a formulation object.</li>
+<li>if specified for multi-BMI, it should be within the <b>formulation-root</b> config level, i.e. in the <b>root</b> config level for a given <b>formulation</b>.</li>
+<li>e.g., <div class="fragment"><div class="line">// Example for CFE, which has 13 output variables</div>
+<div class="line">&quot;output_variables&quot;: [&quot;RAIN_RATE&quot;, &quot;Q_OUT&quot;]</div>
+</div><!-- fragment --></li>
 </ul>
 </li>
 <li><code>output_header_fields</code><ul>
@@ -280,6 +308,11 @@ Optional Parameters</h2>
 <li>JSON structure should be a list of strings</li>
 <li>when not present, the literal variable names are used</li>
 <li>when present, does not do any checking for ordering/correspondence compared to the output ordering of the variable values, so users must take care that ordering is consistent</li>
+<li>if specified, must be at the <b>root</b> level of a formulation object.</li>
+<li>if specified for multi-BMI, it should be within the <b>formulation-root</b> config level, i.e. in the <b>root</b> config level for a given <b>formulation</b>.</li>
+<li>e.g., <div class="fragment"><div class="line">// Same as `output_variables` example with CFE, but we want to change the formatting</div>
+<div class="line">&quot;output_header_fields&quot;: [&quot;rain_rate&quot;, &quot;Q&quot;]</div>
+</div><!-- fragment --></li>
 </ul>
 </li>
 <li><code>allow_exceed_end_time</code><ul>
@@ -537,7 +570,7 @@ Multi-Module BMI Formulations</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Tue Sep 5 2023 15:07:11 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
+    <li class="footer">Generated on Wed Sep 6 2023 18:03:46 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
   </ul>
 </div>
 </body>

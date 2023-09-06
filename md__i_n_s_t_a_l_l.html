@@ -103,10 +103,11 @@ Building and running with docker:</h1>
 <h1><a class="anchor" id="autotoc_md177"></a>
 Building manually:</h1>
 <p ><b>Install the Linux required packages (package names shown for Centos 8.4.2105):</b></p>
-<p >` yum install tar git gcc-c++ gcc make cmake python38 python38-devel python38-numpy bzip2 udunits2-devel texinfo `</p>
-<p ><b>Make a directory to contain all the NGEN items:</b></p>
-<p >` mkdir ngen &amp;&amp; cd ngen `</p>
-<p ><b>Download the Boost Libraries:</b></p>
+<div class="fragment"><div class="line">yum install tar git gcc-c++ gcc make cmake python38 python38-devel python38-numpy bzip2 udunits2-devel texinfo</div>
+</div><!-- fragment --><p ><b>Clone the NGen repository:</b></p>
+<div class="fragment"><div class="line">git clone https://github.com/NOAA-OWP/ngen</div>
+<div class="line">cd ngen</div>
+</div><!-- fragment --><p ><b>Download the Boost Libraries:</b></p>
 <div class="fragment"><div class="line">curl -L -O https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2 \</div>
 <div class="line">    &amp;&amp; tar -xjf boost_1_72_0.tar.bz2 \</div>
 <div class="line">    &amp;&amp; rm boost_1_72_0.tar.bz2</div>
@@ -116,11 +117,46 @@ Building manually:</h1>
 </div><!-- fragment --><p ><b>Get the git submodules:</b></p>
 <div class="fragment"><div class="line">git submodule update --init --recursive -- test/googletest </div>
 <div class="line">git submodule update --init --recursive -- extern/pybind11</div>
-</div><!-- fragment --><p ><b>Build NGEN using cmake:</b></p>
-<div class="fragment"><div class="line">cmake -B /ngen -S . &amp;&amp;</div>
-<div class="line">cmake --build . --target ngen</div>
+</div><!-- fragment --><p ><b>Configure NGen using cmake:</b></p>
+<p >In addition to normal CMake options, the following <code>ngen</code> configuration options are available:</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Option   </th><th class="markdownTableHeadNone">Description    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">NETCDF_ACTIVE   </td><td class="markdownTableBodyNone">Include NetCDF support    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">NGEN_WITH_SQLITE3   </td><td class="markdownTableBodyNone">Include SQLite3 support (GeoPackage support)    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">UDUNITS_ACTIVE   </td><td class="markdownTableBodyNone">Include UDUNITS support    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">MPI_ACTIVE   </td><td class="markdownTableBodyNone">Include MPI (Parallel Execuation) support    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">BMI_FORTRAN_ACTIVE   </td><td class="markdownTableBodyNone">Include Fortran BMI support    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">BMI_C_LIB_ACTIVE   </td><td class="markdownTableBodyNone">Include C BMI support    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">NGEN_ACTIVATE_PYTHON   </td><td class="markdownTableBodyNone">Include Python support    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">NGEN_ACTIVATE_ROUTING   </td><td class="markdownTableBodyNone">Include <code>t-route</code> integration   </td></tr>
+</table>
+<blockquote class="doxtable">
+<p >&zwj;These can be included by adding <code>-D{Option}=[ON/OFF]</code> to the following CMake command. </p>
+</blockquote>
+<blockquote class="doxtable">
+<p >&zwj;<b>Note</b>: if <code>-DNGEN_ACTIVATE_PYTHON=ON</code>, and you are using an <em>activated</em> virtual environment, then CMake will bind its Python configuration to your virtual environment. This means, when you run the <code>ngen</code> executable, your virtual environment must be activated. </p>
+</blockquote>
+<p>The following CMake command will configure the build:</p>
+<div class="fragment"><div class="line">cmake -DCMAKE_CXX_COMPILER=/usr/bin/g++ \</div>
+<div class="line">      -DBOOST_ROOT=boost_1_72_0 \</div>
+<div class="line">      -B /build \</div>
+<div class="line">      -S .</div>
+</div><!-- fragment --><p ><b>Build NGen using cmake:</b></p>
+<div class="fragment"><div class="line">cmake --build build --target ngen</div>
+</div><!-- fragment --><p >If you want to build with multiple jobs (in parallel), then you can run the following instead:</p>
+<div class="fragment"><div class="line"># replace 2 with number of jobs</div>
+<div class="line">cmake --build build --target ngen -- -j 2</div>
 </div><!-- fragment --><p ><b>Running the Model:</b></p>
-<div class="fragment"><div class="line">./ngen data/catchment_data.geojson &quot;&quot; data/nexus_data.geojson &quot;&quot; data/example_realization_config.json</div>
+<div class="fragment"><div class="line">./build/ngen data/catchment_data.geojson all data/nexus_data.geojson all data/example_realization_config.json</div>
 </div><!-- fragment --><hr  />
 <p ><b>Further information on each step:</b></p>
 <p >Make sure all necessary <a class="el" href="md_doc__d_e_p_e_n_d_e_n_c_i_e_s.html">dependencies</a> are installed, and then <a class="el" href="md_doc__b_u_i_l_d_s__a_n_d__c_m_a_k_e.html">build the main ngen target with CMake</a>. Then run the executable, as described <a href="README.md#usage">here for basic use</a> or <a href="doc/DISTRIBUTED_PROCESSING.md#examples">here for distributed execution</a>. </p>
@@ -130,7 +166,7 @@ Building manually:</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Tue Sep 5 2023 15:07:11 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
+    <li class="footer">Generated on Wed Sep 6 2023 18:03:46 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
   </ul>
 </div>
 </body>
