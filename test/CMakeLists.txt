@@ -1,285 +1,313 @@
-project(test)
-
-include(CTest)
 add_subdirectory(googletest)
-include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
-include_directories(${gmock_SOURCE_DIR}/include ${gmock_SOURCE_DIR})
-include_directories(${PROJ_ROOT_INCLUDE_DIR})
+add_compile_definitions(NGEN_BMI_CPP_LIB_TESTS_ACTIVE)
 
-if (NGEN_ACTIVATE_PYTHON)
-    include_directories(${PROJECT_SOURCE_DIR}/extern/pybind11/include)
+if (NGEN_WITH_PYTHON)
     add_compile_definitions(NGEN_BMI_PY_TESTS_ACTIVE)
 endif()
 
-if(MPI_ACTIVE)
+if(NGEN_WITH_MPI)
     add_compile_definitions(NGEN_MPI_TESTS_ACTIVE)
 endif()
 
-add_compile_definitions(NGEN_BMI_CPP_LIB_TESTS_ACTIVE)
-
-if(BMI_C_LIB_ACTIVE)
+if(NGEN_WITH_BMI_C)
     add_compile_definitions(NGEN_BMI_C_LIB_TESTS_ACTIVE)
 endif()
 
-if(BMI_FORTRAN_ACTIVE)
+if(NGEN_WITH_BMI_FORTRAN)
     add_compile_definitions(NGEN_BMI_FORTRAN_LIB_TESTS_ACTIVE)
 endif()
 
-if(NGEN_ACTIVATE_ROUTING)
+if(NGEN_WITH_ROUTING)
     add_compile_definitions(ROUTING_PYBIND_TESTS_ACTIVE)
 endif()
 
-if(NETCDF_ACTIVE)
+if(NGEN_WITH_NETCDF)
     add_compile_definitions(NETCDF_ACTIVE)
 endif()
 
-# Add test source files (e.g., test1.cpp)
-#add_executable(test_hymod models/hymod/include/HymodTest.cpp)
-#target_link_libraries(test_hymod gtest gtest_main)
+#[==[
+ngen_add_test(<test name> SOURCES <source>...
+                          LIBRARIES <library>...
+                          [REQUIRES <varname>...])
 
-function(add_test TESTNAME NUM_FILES)
-    math(EXPR NUM_LINKS "${ARGC} - ${NUM_FILES}")
-    list(SUBLIST ARGN 0 ${NUM_FILES} SOURCE_FILES)
-    list(SUBLIST ARGN ${NUM_FILES} ${NUM_LINKS} LINKED_LIBS)
+Adds an executable test (i.e. a target) called <test name>.
 
-    # Also link these testing libraries for anything
-    # TODO: verify these do not remove current value at i = 0, but instead push it forward
-    list(INSERT LINKED_LIBS 0 gtest gtest_main)
+`SOURCES`
+    Source files containing the test cases/fixtures.
 
-    # Sanity check for duplicates
-    list(REMOVE_DUPLICATES LINKED_LIBS)
+`LIBRARIES`
+    Library targets that this test requires linking to.
 
-    # Create the testing executable target and link the libraries
-    add_executable(${TESTNAME} ${SOURCE_FILES})
-    target_link_libraries(${TESTNAME} ${LINKED_LIBS})
+`REQUIRES`
+    Variable names that this test's creation is dependent on.
+    If a given variable is not defined or is FALSE/OFF/etc. then
+    the corresponding <test name> target is not created.
+#]==]
+function(ngen_add_test TESTNAME)
+    set(multiValueArgs OBJECTS LIBRARIES REQUIRES)
+    cmake_parse_arguments(NGEN_TEST "" "" "${multiValueArgs}" ${ARGN})
 
-    # Perform the final GoogleTest boilerplate steps
-    gtest_discover_tests(${TESTNAME}
+    list(REMOVE_DUPLICATES NGEN_TEST_LIBRARIES)
+
+    set(NGEN_TEST_CREATE ON)
+    foreach(requirement_var IN LISTS NGEN_TEST_REQUIRES)
+        if(NOT ${requirement_var})
+            set(NGEN_TEST_CREATE OFF)
+            break()
+        endif()
+    endforeach()
+
+    if(NGEN_TEST_CREATE)
+        add_executable(${TESTNAME} ${NGEN_TEST_OBJECTS})
+        target_link_libraries(${TESTNAME} gtest gtest_main ${NGEN_TEST_LIBRARIES})
+        set_target_properties(${TESTNAME} PROPERTIES FOLDER test)
+        gtest_discover_tests(
+            ${TESTNAME}
             WORKING_DIRECTORY ${PROJECT_DIR}
-            PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${PROJECT_DIR}"
-            )
-    set_target_properties(${TESTNAME} PROPERTIES FOLDER test)
+            PROPERTIES
+                VS_DEBUGGER_WORKING_DIRECTORY "${PROJECT_DIR}"
+        )
+    endif()
 endfunction()
 
 ########################## Individual tests ##########################
 
 ########################## GeoJSON Unit Tests
-add_test(test_geojson
-        4
+ngen_add_test(
+    test_geojson
+    OBJECTS
         geojson/JSONProperty_Test.cpp
         geojson/JSONGeometry_Test.cpp
         geojson/Feature_Test.cpp
         geojson/FeatureCollection_Test.cpp
+    LIBRARIES
         NGen::geojson
-        )
+)
 
 ########################## GeoPackage Unit Tests
-if(NGEN_WITH_SQLITE3)
-add_test(test_geopackage
-        3
+ngen_add_test(
+    test_geopackage
+    OBJECTS
         geopackage/WKB_Test.cpp
         geopackage/SQLite_Test.cpp
         geopackage/GeoPackage_Test.cpp
-        NGen::geopackage)
-endif()
+    LIBRARIES
+        NGen::geopackage
+    REQUIRES
+        NGEN_WITH_SQLITE
+)
 
 ########################## Realization Config Unit Tests
-add_test(test_realization_config
-        1
+ngen_add_test(
+    test_realization_config
+    OBJECTS
         realizations/Formulation_Manager_Test.cpp
+    LIBRARIES
         NGen::core
         NGen::realizations_catchment
         NGen::core_mediator
         NGen::forcing
         libudunits2
         testbmicppmodel
-        ${NETCDF_LIBRARIES}
+        NetCDF
 )
 
 ########################## Series Unit Tests
-add_test(test_mdarray
-         4
-         utils/mdarray_Test.cpp
-         utils/mdframe_Test.cpp
-         utils/mdframe_netcdf_Test.cpp
-         utils/mdframe_csv_Test.cpp
-         NGen::mdarray
-         NGen::mdframe
-         ${NETCDF_LIBRARIES})
+ngen_add_test(
+    test_mdarray
+    OBJECTS
+        utils/mdarray_Test.cpp
+        utils/mdframe_Test.cpp
+        utils/mdframe_netcdf_Test.cpp
+        utils/mdframe_csv_Test.cpp
+    LIBRARIES
+        NGen::mdarray
+        NGen::mdframe
+        NetCDF
+)
 
 ########################## Nexus Tests
-add_test(
-        test_nexus
-        1
+ngen_add_test(
+    test_nexus
+    OBJECTS
         core/nexus/NexusTests.cpp
+    LIBRARIES
         NGen::core_nexus
 )
 
 ########################## MPI Remote Nexus Tests
-if(MPI_ACTIVE)
-   add_test(
-           test_remote_nexus
-           1
-           core/nexus/NexusRemoteTests.cpp
-           NGen::core_nexus
-   )
-endif()
+ngen_add_test(
+    test_remote_nexus
+    OBJECTS
+        core/nexus/NexusRemoteTests.cpp
+    LIBRARIES
+        NGen::core_nexus
+    REQUIRES
+        NGEN_WITH_MPI
+)
 
 ########################## Partitioning Tests
-#if(MPI_ACTIVE)
-   #TODO this test depends on a "reference hydrofabric" that is rather large
-   #and the path to that reference is absolute in the test code.  Need to rethink this.
-   add_test(
-           test_partition
-           1
-           utils/Partition_Test.cpp
-           NGen::core
-           NGen::geojson
+ngen_add_test(
+    test_partition
+    OBJECTS
+        utils/Partition_Test.cpp
+    LIBRARIES
+        NGen::core
+        NGen::geojson
+    # REQUIRES
+    #   NGEN_WITH_MPI
 )
-#endif()
 
 ########################## BMI C++ Tests
-add_test(
-        test_bmi_cpp
-        2
+ngen_add_test(
+    test_bmi_cpp
+    OBJECTS
         realizations/catchments/Bmi_Cpp_Adapter_Test.cpp
         realizations/catchments/Bmi_Cpp_Formulation_Test.cpp
+    LIBRARIES
         NGen::core
         NGen::realizations_catchment
         NGen::core_mediator
         NGen::forcing
         libudunits2
-        ${NETCDF_LIBRARIES}
+        NetCDF
 )
 
 ########################## BMI C Tests
-if(BMI_C_LIB_ACTIVE)
-    add_test(
-            test_bmi_c
-            2
-            realizations/catchments/Bmi_C_Adapter_Test.cpp
-            realizations/catchments/Bmi_C_Formulation_Test.cpp
-            NGen::core
-            NGen::realizations_catchment
-            NGen::core_mediator
-            NGen::forcing
-            libudunits2
-            ${NETCDF_LIBRARIES}
-    )
-endif()
+ngen_add_test(
+    test_bmi_c
+    OBJECTS
+        realizations/catchments/Bmi_C_Adapter_Test.cpp
+        realizations/catchments/Bmi_C_Formulation_Test.cpp
+    LIBRARIES
+        NGen::core
+        NGen::realizations_catchment
+        NGen::core_mediator
+        NGen::forcing
+        libudunits2
+        NetCDF
+    REQUIRES
+        NGEN_WITH_BMI_C
+)
 
 ########################## BMI Fortran Tests
-if (${BMI_FORTRAN_ACTIVE})
-    add_test(
-            test_bmi_fortran
-            2
-            realizations/catchments/Bmi_Fortran_Adapter_Test.cpp
-            realizations/catchments/Bmi_Fortran_Formulation_Test.cpp
-            NGen::core
-            NGen::realizations_catchment
-            NGen::core_mediator
-            NGen::forcing
-            libudunits2
-            ${NETCDF_LIBRARIES}
-    )
-endif()
+ngen_add_test(
+    test_bmi_fortran
+    OBJECTS
+        realizations/catchments/Bmi_Fortran_Adapter_Test.cpp
+        realizations/catchments/Bmi_Fortran_Formulation_Test.cpp
+    LIBRARIES
+        NGen::core
+        NGen::realizations_catchment
+        NGen::core_mediator
+        NGen::forcing
+        libudunits2
+        NetCDF
+    REQUIRES
+        NGEN_WITH_BMI_FORTRAN
+)
 
 ########################## BMI Python Tests
-if (${NGEN_ACTIVATE_PYTHON})
-    add_test(
-            test_bmi_python
-            2
-            realizations/catchments/Bmi_Py_Adapter_Test.cpp
-            realizations/catchments/Bmi_Py_Formulation_Test.cpp
-            NGen::core
-            NGen::realizations_catchment
-            NGen::core_mediator
-            NGen::forcing
-            libudunits2
-            ${NETCDF_LIBRARIES}
-    )
-endif()
+ngen_add_test(
+    test_bmi_python
+    OBJECTS
+        realizations/catchments/Bmi_Py_Adapter_Test.cpp
+        realizations/catchments/Bmi_Py_Formulation_Test.cpp
+    LIBRARIES
+        NGen::core
+        NGen::realizations_catchment
+        NGen::core_mediator
+        NGen::forcing
+        libudunits2
+        NetCDF
+    REQUIRES
+        NGEN_WITH_PYTHON
+)
 
 ########################## BMI Multi Tests
 add_test(
-        test_bmi_multi
-        2
+    test_bmi_multi
+    OBJECTS
         realizations/catchments/Bmi_Multi_Formulation_Test.cpp
         realizations/catchments/Bmi_Cpp_Multi_Array_Test.cpp
+    LIBRARIES
         NGen::core
         NGen::realizations_catchment
         NGen::core_mediator
         NGen::forcing
         libudunits2
-        ${NETCDF_LIBRARIES}
+        NetCDF
 )
 
 ########################## All BMI Unit Tests
-if(BMI_C_LIB_ACTIVE)
-    if (${BMI_FORTRAN_ACTIVE})
-        if (${NGEN_ACTIVATE_PYTHON})
-            add_test(
-                    test_bmi_unit_all
-                    7
-                    realizations/catchments/Bmi_C_Adapter_Test.cpp
-                    realizations/catchments/Bmi_C_Formulation_Test.cpp
-                    realizations/catchments/Bmi_Fortran_Adapter_Test.cpp
-                    realizations/catchments/Bmi_Fortran_Formulation_Test.cpp
-                    realizations/catchments/Bmi_Py_Adapter_Test.cpp
-                    realizations/catchments/Bmi_Py_Formulation_Test.cpp
-                    realizations/catchments/Bmi_Multi_Formulation_Test.cpp
-                    NGen::core
-                    NGen::realizations_catchment
-                    NGen::core_mediator
-                    NGen::forcing
-                    libudunits2
-                    ${NETCDF_LIBRARIES}
-            )
-        endif()
-    endif()
-endif()
-
-########################## Comparison tests for the BMI PET implementation
-# TODO: this probably needs to be added to integration testing also
-add_test(
-        compare_pet
-        1
-        realizations/catchments/Bmi_C_Pet_IT.cpp
+ngen_add_test(
+    test_bmi_unit_all
+    OBJECTS
+        realizations/catchments/Bmi_C_Adapter_Test.cpp
+        realizations/catchments/Bmi_C_Formulation_Test.cpp
+        realizations/catchments/Bmi_Fortran_Adapter_Test.cpp
+        realizations/catchments/Bmi_Fortran_Formulation_Test.cpp
+        realizations/catchments/Bmi_Py_Adapter_Test.cpp
+        realizations/catchments/Bmi_Py_Formulation_Test.cpp
+        realizations/catchments/Bmi_Multi_Formulation_Test.cpp
+    LIBRARIES
         NGen::core
         NGen::realizations_catchment
         NGen::core_mediator
         NGen::forcing
         libudunits2
-        ${NETCDF_LIBRARIES}
+        NetCDF
+    REQUIRES
+        NGEN_WITH_BMI_C
+        NGEN_WITH_BMI_FORTRAN
+        NGEN_WITH_PYTHON
+)
+
+########################## Comparison tests for the BMI PET implementation
+# TODO: this probably needs to be added to integration testing also
+ngen_add_test(
+    compare_pet
+    OBJECTS
+        realizations/catchments/Bmi_C_Pet_IT.cpp
+    LIBRARIES
+        NGen::core
+        NGen::realizations_catchment
+        NGen::core_mediator
+        NGen::forcing
+        libudunits2
+        NetCDF
 )
 
 ########################## Routing Tests
-if(NGEN_ACTIVATE_ROUTING)
-    add_test(
-            test_routing_pybind
-            1
-            routing/Routing_Py_Bind_Test.cpp
-            NGen::core # for filechecker utility
-            NGen::routing
-            pybind11::embed
-    )
-endif()
+ngen_add_test(
+    test_routing_pybind
+    OBJECTS
+        routing/Routing_Py_Bind_Test.cpp
+    LIBRARIES
+        NGen::core # for filechecker utility
+        NGen::routing
+        pybind11::embed
+    REQUIRES
+        NGEN_WITH_ROUTING
+)
 
 ########################## Network Class Tests
-add_test(
-        test_network
-        1
+ngen_add_test(
+    test_network
+    OBJECTS
         core/NetworkTests.cpp
+    LIBRARIES
         NGen::core
         NGen::geojson
 )
 
 ########################### Netcdf Forcing Tests
 #if(NETCDF_ACTIVE)
-add_test(
-        test_netcdf_forcing
-        1
+ngen_add_test(
+    test_netcdf_forcing
+    OBJECTS
         forcing/NetCDFPerFeatureDataProvider_Test.cpp
+    LIBRARIES
         NGen::core
         NGen::core_nexus
         NGen::core_mediator
@@ -287,14 +315,16 @@ add_test(
         NGen::geojson
         NGen::realizations_catchment
         libudunits2
-        ${NETCDF_LIBRARIES}
+        NetCDF
+    REQUIRES
+        NGEN_WITH_NETCDF
 )
 #endif()
 
 ########################## Primary Combined Unit Test Target
-add_test(
-        test_unit
-        17
+ngen_add_test(
+    test_unit
+    OBJECTS
         geojson/JSONProperty_Test.cpp
         geojson/JSONGeometry_Test.cpp
         geojson/Feature_Test.cpp
@@ -312,6 +342,7 @@ add_test(
         utils/mdframe_Test.cpp
         utils/mdframe_netcdf_Test.cpp
         utils/mdframe_csv_Test.cpp
+    LIBRARIES
         NGen::core
         NGen::core_nexus
         NGen::core_mediator
@@ -322,13 +353,13 @@ add_test(
         NGen::mdframe
         libudunits2
         testbmicppmodel
-        ${NETCDF_LIBRARIES}
+        NetCDF
 )
 
 # All automated tests
-add_test(
-        test_all
-        16
+ngen_add_test(
+    test_all
+    OBJECTS
         geojson/JSONProperty_Test.cpp
         geojson/JSONGeometry_Test.cpp
         geojson/Feature_Test.cpp
@@ -345,6 +376,7 @@ add_test(
         utils/mdframe_Test.cpp
         utils/mdframe_netcdf_Test.cpp
         utils/mdframe_csv_Test.cpp
+    LIBRARIES
         NGen::core
         gmock
         NGen::core_nexus
@@ -356,5 +388,5 @@ add_test(
         NGen::mdframe
         libudunits2
         testbmicppmodel
-        ${NETCDF_LIBRARIES}
+        NetCDF
 )
