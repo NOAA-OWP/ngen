@@ -1,8 +1,3 @@
-cmake_minimum_required(VERSION 3.10)
-#set(CMAKE_CXX_STANDARD 14)
-#set(CMAKE_CXX_STANDARD_REQUIRED True)
-#set(CMAKE_CXX_VISIBILITY_PRESET hidden)
-
 include(${PROJECT_SOURCE_DIR}/cmake/dynamic_sourced_library.cmake)
 dynamic_sourced_cxx_library(forcing "${CMAKE_CURRENT_SOURCE_DIR}")
 
