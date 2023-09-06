@@ -25,7 +25,7 @@ set(NGEN_SRC_DIR  "${NGEN_ROOT_DIR}/src")
 set(NGEN_INC_DIR  "${NGEN_ROOT_DIR}/include")
 set(NGEN_EXT_DIR  "${NGEN_ROOT_DIR}/extern")
 set(NGEN_MOD_DIR  "${NGEN_ROOT_DIR}/cmake")
-list(APPEND CMAKE_MODULE_PATH "${NGEN_MOD_DIR}/modules")
+list(APPEND CMAKE_MODULE_PATH "${NGEN_MOD_DIR}")
 
 # Provides:
 #   (1) finds Git package

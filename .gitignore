@@ -99,6 +99,9 @@ CMakeCache.txt
 /build
 /cmake_build*
 
+# Prevent ignoring cmake modules
+!cmake/**/*.cmake
+
 # Static Headers
 include/bmi.hpp
 
