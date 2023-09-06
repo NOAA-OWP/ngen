@@ -112,7 +112,6 @@ NetCDF_check_interface (F90 netcdf.mod  netcdff)
 list (APPEND NetCDF_libs "${NETCDF_C_LIBRARIES}")
 set (NETCDF_LIBRARIES ${NetCDF_libs})
 set (NETCDF_INCLUDE_DIRS ${NetCDF_includes})
-message("INFO find NETCDF at ${NETCDF_LIBRARIES} and ${NETCDF_INCLUDE_DIRS} in cmake/modules/FindNetCDF.cmake")
 
 # handle the QUIETLY and REQUIRED arguments and set NETCDF_FOUND to TRUE if
 # all listed variables are TRUE
