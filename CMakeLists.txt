@@ -121,9 +121,9 @@ if(NGEN_WITH_UDUNITS)
     add_compile_definitions(NGEN_WITH_UDUNITS)
 
     # Create UDUNITS2 target
-    add_library(udunits2 SHARED IMPORTED)
-    target_include_directories(udunits2 INTERFACE "${UDUNITS2_INCLUDE}")
-    set_target_properties(udunits2 PROPERTIES IMPORTED_LOCATION "${UDUNITS2_LIBRARY}")
+    add_library(libudunits2 SHARED IMPORTED)
+    target_include_directories(libudunits2 INTERFACE "${UDUNITS2_INCLUDE}")
+    set_target_properties(libudunits2 PROPERTIES IMPORTED_LOCATION "${UDUNITS2_LIBRARY}")
 endif()
 
 # -----------------------------------------------------------------------------
@@ -220,7 +220,7 @@ target_link_libraries(ngen
         NGen::forcing
         NGen::core_mediator
         NGen::routing
-        udunits2
+        libudunits2
         NetCDF
 )
 
