@@ -44,6 +44,7 @@ option(NGEN_WITH_BMI_FORTRAN "Build with Fortran BMI support"     ON)
 option(NGEN_WITH_BMI_C       "Build with C BMI support"           ON)
 option(NGEN_WITH_PYTHON      "Build with embedded Python support" ON)
 option(NGEN_WITH_TESTS       "Build with unit tests"              ON)
+option(NGEN_QUIET            "Silence output"                     OFF)
 
 # These options require dependency on some of the above options
 # Syntax: cmake_dependent_option(<option> "<help_text>" <value> <depends> <force>)
@@ -52,6 +53,15 @@ cmake_dependent_option(NGEN_ISO_C_FORTRAN_BMI_LIB_PATH "Path to iso_c_fortran_bm
 cmake_dependent_option(NGEN_UPDATE_GIT_SUBMODULES "Update submodules on configure" ON "GIT_FOUND;NGEN_HAS_GIT_DIR" OFF)
 
 include(DeprecatedOptions)
+deprecated_option(OLD MPI_ACTIVE            NEW NGEN_WITH_MPI     INCLUDE_ENV)
+deprecated_option(OLD UDUNITS_ACTIVE        NEW NGEN_WITH_UDUNITS INCLUDE_ENV)
+deprecated_option(OLD NGEN_ACTIVATE_PYTHON  NEW NGEN_WITH_PYTHON  INCLUDE_ENV)
+deprecated_option(OLD NGEN_ACTIVATE_ROUTING NEW NGEN_WITH_ROUTING)
+deprecated_option(OLD NETCDF_ACTIVE         NEW NGEN_WITH_NETCDF)
+deprecated_option(OLD BMI_C_LIB_ACTIVE      NEW NGEN_WITH_BMI_C)
+deprecated_option(OLD BMI_FORTRAN_ACTIVE    NEW NGEN_WITH_BMI_FORTRAN)
+deprecated_option(OLD QUIET                 NEW NGEN_QUIET)
+deprecated_option(OLD PACKAGE_TESTS         NEW NGEN_WITH_TESTS)
 # Project =====================================================================
 
 # Define project version and use via generated config header

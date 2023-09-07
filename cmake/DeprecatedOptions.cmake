@@ -1,3 +1,14 @@
+#[==[
+deprecated_option(NEW <variable> OLD <variable> [INCLUDE_ENV])
+
+Adds a CMake option that will output a deprecation message on use.
+
+The `NEW` variable is the option that should be used when building.
+
+The `OLD` variable is the deprecated option that corresponds to a new option.
+
+The `INCLUDE_ENV` flag also checks the environment variables for a variable named `OLD`, i.e. ENV{<OLD variable>}.
+#]==]
 macro(deprecated_option)
     set(options INCLUDE_ENV)
     set(oneValueArgs NEW OLD)
@@ -15,5 +26,3 @@ macro(deprecated_option)
         endif()
     endif()
 endmacro()
-
-deprecated_option(OLD MPI_ACTIVE NEW NGEN_WITH_MPI INCLUDE_ENV)
