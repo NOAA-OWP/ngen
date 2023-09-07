@@ -236,7 +236,6 @@ add_subdirectory("src/realizations/catchment")
 add_subdirectory("src/forcing")
 add_subdirectory("src/utilities/mdarray")
 add_subdirectory("src/utilities/mdframe")
-add_subdirectory("src/routing")
 
 target_link_libraries(ngen
     PUBLIC
@@ -248,8 +247,12 @@ target_link_libraries(ngen
         NGen::realizations_catchment
         NGen::forcing
         NGen::core_mediator
-        NGen::routing
 )
+
+if(NGEN_WITH_ROUTING)
+    add_subdirectory("src/routing")
+    target_link_libraries(ngen PUBLIC NGen::routing)
+endif()
 
 add_executable(partitionGenerator src/partitionGenerator.cpp)
 target_include_directories(partitionGenerator PUBLIC "${PROJECT_BINARY_DIR}/include")
