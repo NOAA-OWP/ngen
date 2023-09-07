@@ -5,6 +5,11 @@ add_library(NGen::core_mediator ALIAS core_mediator)
 
 if(NGEN_WITH_UDUNITS)
     target_link_libraries(core_mediator PUBLIC libudunits2)
+
+    # FIXME: workaround for now... there is an issue with macOS linking to
+    #        the shared imported udunits2 target, such that header include
+    #        directories aren't correctly propogated. - Justin
+    target_include_directories(core_mediator PUBLIC "${UDUNITS2_INCLUDE}")
 endif()
 
 find_package(Threads REQUIRED)
