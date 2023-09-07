@@ -36,7 +36,7 @@ include(GitUpdateSubmodules)
 # Options =====================================================================
 include(CMakeDependentOption)
 
-option(NGEN_WITH_MPI         "Build with MPI support"             OFF)
+option(NGEN_WITH_MPI         "Build with MPI support"             ON)
 option(NGEN_WITH_NETCDF      "Build with NetCDF support"          ON)
 option(NGEN_WITH_SQLITE      "Build with SQLite3 support"         ON)
 option(NGEN_WITH_UDUNITS     "Build with UDUNITS2 support"        ON)
@@ -50,19 +50,9 @@ option(NGEN_QUIET            "Silence output"                     OFF)
 # Syntax: cmake_dependent_option(<option> "<help_text>" <value> <depends> <force>)
 cmake_dependent_option(NGEN_WITH_ROUTING "Build with t-route integration" ON "NGEN_WITH_PYTHON" OFF)
 cmake_dependent_option(NGEN_UPDATE_GIT_SUBMODULES "Update submodules on configure" ON "GIT_FOUND;NGEN_HAS_GIT_DIR" OFF)
-cmake_dependent_option(BMI_FORTRAN_ISO_C_LIB_DIR
-    "Directory hint for middleware Fortran shared lib handling iso_c_binding"
-    "${PROJECT_SOURCE_DIR}/extern/iso_c_fortran_bmi/cmake_build"
-    "NGEN_WITH_BMI_FORTRAN"
-    ""
-)
 
-cmake_dependent_option(BMI_FORTRAN_ISO_C_LIB_NAME
-    "Name for middleware Fortran shared lib handling iso_c_binding"
-    "iso_c_bmi"
-    "NGEN_WITH_BMI_FORTRAN"
-    ""
-)
+option(BMI_FORTRAN_ISO_C_LIB_DIR "Directory hint for middleware Fortran shared lib handling iso_c_binding" "${NGEN_ROOT_DIR}/extern/iso_c_fortran_bmi/cmake_build")
+option(BMI_FORTRAN_ISO_C_LIB_NAME "Name for middleware Fortran shared lib handling iso_c_binding" "iso_c_bmi")
 
 include(DeprecatedOptions)
 deprecated_option(OLD MPI_ACTIVE            NEW NGEN_WITH_MPI     INCLUDE_ENV)
@@ -180,8 +170,25 @@ endif()
 # Configure whether Fortran BMI functionality is active
 if(NGEN_WITH_BMI_FORTRAN)
     add_compile_definitions(NGEN_BMI_FORTRAN_ACTIVE)
-    find_library(BMI_FORTRAN_ISO_C_LIB_PATH "${BMI_FORTRAN_ISO_C_LIB_NAME}" PATHS "${BMI_FORTRAN_ISO_C_LIB_DIR}" REQUIRED)
-    message("BMI Fortran: ${BMI_FORTRAN_ISO_C_LIB_PATH}")
+
+    # Searches for ISO C BMI library, defaults to
+    # known development directories in the event the BMI_FORTRAN_ISO_C_*
+    # variables are not set.
+    find_library(BMI_FORTRAN_ISO_C_LIB_PATH
+        NAMES
+            "${BMI_FORTRAN_ISO_C_LIB_NAME}"
+            "iso_c_bmi"
+        HINTS # Searched before paths
+            "${BMI_FORTRAN_ISO_C_LIB_DIR}" 
+        PATHS
+            ENV BMI_FORTRAN_ISO_C_LIB_DIR
+            "${NGEN_ROOT_DIR}/extern/iso_c_fortran_bmi/cmake_build"
+            "${NGEN_ROOT_DIR}/extern/iso_c_fortran_bmi/build"
+        DOC "Path to middleware Fortran shared lib handling iso_c_binding"
+        NO_CACHE
+        REQUIRED
+    )
+    
     add_library(bmi_fortran_compat SHARED IMPORTED)
     set_target_properties(bmi_fortran_compat PROPERTIES IMPORTED_LOCATION "${BMI_FORTRAN_ISO_C_LIB_PATH}")
 endif()
@@ -322,6 +329,11 @@ ngen_dependent_multiline_message(INTEL_DPCPP
 "    Include: ${SYCL_INCLUDE_DIR}"
 "    Implmentation: ${SYCL_IMPLEMENTATION_ID}")
 ngen_dependent_multiline_message(NGEN_WITH_MPI
+"  MPI (C):"
+"    Version: ${MPI_C_VERSION}"
+"    Library: ${MPI_C_LIBRARIES}"
+"    Include: ${MPI_C_INCLUDE_DIRS}")
+ngen_dependent_multiline_message(NGEN_WITH_MPI
 "  MPI (CXX):"
 "    Version: ${MPI_CXX_VERSION}"
 "    Library: ${MPI_CXX_LIBRARIES}"
@@ -343,7 +355,9 @@ ngen_dependent_multiline_message(NGEN_WITH_UDUNITS
 "    Include: ${UDUNITS2_INCLUDE}")
 ngen_dependent_multiline_message(NGEN_WITH_BMI_FORTRAN
 "  Fortran:"
-"    Fortran-C BMI Compat Library Path: ${NGEN_ISO_C_FORTRAN_BMI_LIB_PATH}")
+"    BMI_FORTRAN_ISO_C_LIB_PATH: ${BMI_FORTRAN_ISO_C_LIB_PATH}"
+"    BMI_FORTRAN_ISO_C_LIB_NAME: ${BMI_FORTRAN_ISO_C_LIB_NAME}"
+"    BMI_FORTRAN_ISO_C_LIB_DIR: ${BMI_FORTRAN_ISO_C_LIB_DIR}")
 ngen_dependent_multiline_message(NGEN_WITH_PYTHON
 "  Python:"
 "    Version: ${Python_VERSION}"
