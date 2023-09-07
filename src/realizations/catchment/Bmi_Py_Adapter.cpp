@@ -26,7 +26,7 @@ Bmi_Py_Adapter::Bmi_Py_Adapter(const std::string &type_name, std::string bmi_ini
         construct_and_init_backing_model_for_py_adapter();
         // Make sure this is set to 'true' after this function call finishes
         model_initialized = true;
-        acquire_time_conversion_factor(bmi_model_time_convert_factor);
+        bmi_model_time_convert_factor = get_time_convert_factor();
     }
     catch (std::runtime_error& e){ //Catch specific exception and re-throw so type/message isn't erased
         model_initialized = true;

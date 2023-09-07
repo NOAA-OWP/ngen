@@ -8,6 +8,7 @@
 #include "JSONProperty.hpp"
 #include "State_Exception.hpp"
 #include "StreamHandler.hpp"
+#include <UnitsHelper.hpp>
 
 namespace models {
     namespace bmi {
@@ -81,29 +82,18 @@ namespace models {
 
 
             /**
-             * Determine backing model's time units and set the reference parameter to an appropriate conversion factor.
+             * Determine backing model's time units and return an appropriate conversion factor.
              *
              * A backing BMI model may use arbitrary units for time, but it will expose what those units are via the
-             * BMI ``GetTimeUnits`` function.  This function retrieves (and interprets) its model's units and
-             * sets the given reference parameter to an appropriate factor for converting its internal time values to
-             * equivalent representations within the model, and vice versa.
-             *
-             * @param time_convert_factor A reference to set to the determined conversion factor.
+             * BMI ``GetTimeUnits`` function. This function retrieves (and interprets) its model's units and
+             * return an appropriate factor for converting its internal time values to equivalent representations
+             * within the model, and vice versa. This function coomplies with the BMI get_time_units standard
              */
-            void acquire_time_conversion_factor(double &time_convert_factor) {
-                std::string time_units = GetTimeUnits();
-                if (time_units == "s" || time_units == "sec" || time_units == "second" || time_units == "seconds")
-                    time_convert_factor = 1.0;
-                else if (time_units == "m" || time_units == "min" || time_units == "minute" ||
-                         time_units == "minutes")
-                    time_convert_factor = 60.0;
-                else if (time_units == "h" || time_units == "hr" || time_units == "hour" || time_units == "hours")
-                    time_convert_factor = 3600.0;
-                else if (time_units == "d" || time_units == "day" || time_units == "days")
-                    time_convert_factor = 86400.0;
-                else
-                    throw std::runtime_error(
-                            "Invalid model time step units ('" + time_units + "') in " + model_name + ".");
+            double get_time_convert_factor() {
+                double value = 1.0;
+                std::string input_units = GetTimeUnits();
+                std::string output_units = "s";
+                return UnitsHelper::get_converted_value(input_units, value, output_units);
             }
 
             /**
@@ -193,7 +183,7 @@ namespace models {
                         construct_and_init_backing_model();
                         // Make sure this is set to 'true' after this function call finishes
                         model_initialized = true;
-                        acquire_time_conversion_factor(bmi_model_time_convert_factor);
+                        bmi_model_time_convert_factor = get_time_convert_factor();
                     }
                         // Record the exception message before re-throwing to handle subsequent function calls properly
                     catch (std::exception& e) {
