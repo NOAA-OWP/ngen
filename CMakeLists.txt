@@ -139,12 +139,13 @@ if(NGEN_WITH_UDUNITS)
     add_compile_definitions(NGEN_WITH_UDUNITS)
 
     # Create UDUNITS2 target
-    add_library(libudunits2 SHARED IMPORTED)
-    target_include_directories(libudunits2 SYSTEM INTERFACE "${UDUNITS2_INCLUDE}")
+    # Note: GLOBAL is required here in order to extent the scope of
+    #       included directories.
+    #       see: https://stackoverflow.com/a/46491758/6891484
+    add_library(libudunits2 SHARED IMPORTED GLOBAL)
+    target_include_directories(libudunits2 INTERFACE "${UDUNITS2_INCLUDE}")
     set_target_properties(libudunits2 PROPERTIES IMPORTED_LOCATION "${UDUNITS2_LIBRARY}")
-
     get_target_property(_SUMMARY_UDUNITS_INCLUDE libudunits2 INTERFACE_INCLUDE_DIRECTORIES)
-    get_target_property(_SUMMARY_UDUNITS_SYS_INCLUDE libudunits2 INTERFACE_SYSTEM_INCLUDE_DIRECTORIES)
 endif()
 
 # -----------------------------------------------------------------------------
@@ -156,7 +157,7 @@ if(NGEN_WITH_NETCDF)
     add_compile_definitions(NETCDF_ACTIVE)
     
     # Create NetCDF target
-    add_library(NetCDF SHARED IMPORTED)
+    add_library(NetCDF SHARED IMPORTED GLOBAL)
     target_include_directories(NetCDF INTERFACE "${NETCDF_INCLUDE_DIR}" "${NETCDF_CXX_INCLUDE_DIR}")
     set_target_properties(NetCDF
         PROPERTIES
@@ -361,8 +362,7 @@ ngen_dependent_multiline_message(NGEN_WITH_SQLITE
 ngen_dependent_multiline_message(NGEN_WITH_UDUNITS
 "  UDUNITS2:"
 "    Library: ${UDUNITS2_LIBRARY}"
-"    Include: ${_SUMMARY_UDUNITS_INCLUDE}"
-"    System Include: ${_SUMMARY_UDUNITS_SYS_INCLUDE}")
+"    Include: ${_SUMMARY_UDUNITS_INCLUDE}")
 ngen_dependent_multiline_message(NGEN_WITH_BMI_FORTRAN
 "  Fortran:"
 "    BMI_FORTRAN_ISO_C_LIB_PATH: ${BMI_FORTRAN_ISO_C_LIB_PATH}"
