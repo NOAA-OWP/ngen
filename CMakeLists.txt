@@ -36,13 +36,13 @@ include(GitUpdateSubmodules)
 # Options =====================================================================
 include(CMakeDependentOption)
 
-option(NGEN_WITH_MPI         "Build with MPI support"             ON)
+option(NGEN_WITH_MPI         "Build with MPI support"             OFF)
 option(NGEN_WITH_NETCDF      "Build with NetCDF support"          ON)
 option(NGEN_WITH_SQLITE      "Build with SQLite3 support"         ON)
 option(NGEN_WITH_UDUNITS     "Build with UDUNITS2 support"        ON)
-option(NGEN_WITH_BMI_FORTRAN "Build with Fortran BMI support"     ON)
-option(NGEN_WITH_BMI_C       "Build with C BMI support"           ON)
-option(NGEN_WITH_PYTHON      "Build with embedded Python support" ON)
+option(NGEN_WITH_BMI_FORTRAN "Build with Fortran BMI support"     OFF)
+option(NGEN_WITH_BMI_C       "Build with C BMI support"           OFF)
+option(NGEN_WITH_PYTHON      "Build with embedded Python support" OFF)
 option(NGEN_WITH_TESTS       "Build with unit tests"              ON)
 option(NGEN_QUIET            "Silence output"                     OFF)
 
@@ -68,6 +68,8 @@ deprecated_option(OLD PACKAGE_TESTS         NEW NGEN_WITH_TESTS)
 
 # Define project version and use via generated config header
 project(ngen VERSION 0.1.0)
+
+configure_file("${NGEN_INC_DIR}/NGenConfig.h.in" "${NGEN_INC_DIR}/NGenConfig.h")
 
 add_executable(ngen "${NGEN_SRC_DIR}/NGen.cpp")
 
@@ -232,7 +234,6 @@ add_subdirectory(${TEST_BMI_CPP_DIR} ${TEST_BMI_CPP_DIR}/cmake_build) # FIXME: W
 # -----------------------------------------------------------------------------
 # Project Targets
 # -----------------------------------------------------------------------------
-configure_file(include/NGenConfig.h.in include/NGenConfig.h)
 add_dependencies(ngen testbmicppmodel)
 target_include_directories(ngen PUBLIC "${NGEN_INC_DIR}")
 
