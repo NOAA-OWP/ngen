@@ -216,7 +216,7 @@ ngen_add_test(
 )
 
 ########################## BMI Multi Tests
-add_test(
+ngen_add_test(
     test_bmi_multi
     OBJECTS
         realizations/catchments/Bmi_Multi_Formulation_Test.cpp
