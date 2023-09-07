@@ -19,16 +19,10 @@ target_link_libraries(realizations_catchment PUBLIC
         NGen::geojson
         )
 
-if(NGEN_ACTIVATE_PYTHON)
+if(NGEN_WITH_PYTHON)
    target_link_libraries(realizations_catchment PUBLIC pybind11::embed)
 endif()
 
-##### Logic for Fortran integration
-# Go ahead and set these two cache variables, regardless of whether active currently
-SET(BMI_FORTRAN_ISO_C_LIB_DIR "${PROJECT_SOURCE_DIR}/extern/iso_c_fortran_bmi/cmake_build" CACHE STRING "Directory hint for middleware Fortran shared lib handling iso_c_binding")
-SET(BMI_FORTRAN_ISO_C_LIB_NAME "iso_c_bmi" CACHE STRING "Name for middleware Fortran shared lib handling iso_c_binding")
-# If Fortran is active, include linking to middleware shared library
-if (${BMI_FORTRAN_ACTIVE})
-   find_library(BMI_FORTRAN_ISO_C_LIB_PATH "${BMI_FORTRAN_ISO_C_LIB_NAME}" PATHS "${BMI_FORTRAN_ISO_C_LIB_DIR}")
-   target_link_libraries(realizations_catchment PRIVATE "${BMI_FORTRAN_ISO_C_LIB_PATH}")
+if(NGEN_WITH_BMI_FORTRAN)
+    target_link_libraries(realizations_catchment PUBLIC bmi_fortran_compat)
 endif()

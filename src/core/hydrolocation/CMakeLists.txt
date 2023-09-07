@@ -14,7 +14,3 @@ target_include_directories(core_hydrolocation PUBLIC
 target_link_libraries(core_hydrolocation PUBLIC
         Boost::boost                # Headers-only Boost
         )
-
-if(MPI_ACTIVE)
-    add_compile_definitions(NGEN_MPI_ACTIVE)
-endif()

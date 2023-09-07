@@ -16,6 +16,10 @@ target_include_directories(forcing PUBLIC
 target_link_libraries(forcing PUBLIC
         Boost::boost                # Headers-only Boost
         Threads::Threads
-        )
+)
+
+if(NGEN_WITH_NETCDF)
+    target_link_libraries(forcing PUBLIC NetCDF)
+endif()
 
 #target_compile_options(forcing PUBLIC -std=c++14 -Wall)

@@ -49,8 +49,20 @@ option(NGEN_QUIET            "Silence output"                     OFF)
 # These options require dependency on some of the above options
 # Syntax: cmake_dependent_option(<option> "<help_text>" <value> <depends> <force>)
 cmake_dependent_option(NGEN_WITH_ROUTING "Build with t-route integration" ON "NGEN_WITH_PYTHON" OFF)
-cmake_dependent_option(NGEN_ISO_C_FORTRAN_BMI_LIB_PATH "Path to iso_c_fortran_bmi library" "" "NGEN_WITH_BMI_FORTRAN" "")
 cmake_dependent_option(NGEN_UPDATE_GIT_SUBMODULES "Update submodules on configure" ON "GIT_FOUND;NGEN_HAS_GIT_DIR" OFF)
+cmake_dependent_option(BMI_FORTRAN_ISO_C_LIB_DIR
+    "Directory hint for middleware Fortran shared lib handling iso_c_binding"
+    "${PROJECT_SOURCE_DIR}/extern/iso_c_fortran_bmi/cmake_build"
+    "NGEN_WITH_BMI_FORTRAN"
+    ""
+)
+
+cmake_dependent_option(BMI_FORTRAN_ISO_C_LIB_NAME
+    "Name for middleware Fortran shared lib handling iso_c_binding"
+    "iso_c_bmi"
+    "NGEN_WITH_BMI_FORTRAN"
+    ""
+)
 
 include(DeprecatedOptions)
 deprecated_option(OLD MPI_ACTIVE            NEW NGEN_WITH_MPI     INCLUDE_ENV)
@@ -66,6 +78,8 @@ deprecated_option(OLD PACKAGE_TESTS         NEW NGEN_WITH_TESTS)
 
 # Define project version and use via generated config header
 project(ngen VERSION 0.1.0)
+
+add_executable(ngen "${NGEN_SRC_DIR}/NGen.cpp")
 
 # Dependencies ================================================================
 
@@ -139,7 +153,7 @@ if(NGEN_WITH_UDUNITS)
 endif()
 
 # -----------------------------------------------------------------------------
-if(NETCDF_ACTIVE)
+if(NGEN_WITH_NETCDF)
     set(NETCDF_CXX "YES")
     set(NETCDF_F77 "NO")
     set(NETCDF_F90 "NO")
@@ -166,6 +180,10 @@ endif()
 # Configure whether Fortran BMI functionality is active
 if(NGEN_WITH_BMI_FORTRAN)
     add_compile_definitions(NGEN_BMI_FORTRAN_ACTIVE)
+    find_library(BMI_FORTRAN_ISO_C_LIB_PATH "${BMI_FORTRAN_ISO_C_LIB_NAME}" PATHS "${BMI_FORTRAN_ISO_C_LIB_DIR}" REQUIRED)
+    message("BMI Fortran: ${BMI_FORTRAN_ISO_C_LIB_PATH}")
+    add_library(bmi_fortran_compat SHARED IMPORTED)
+    set_target_properties(bmi_fortran_compat PROPERTIES IMPORTED_LOCATION "${BMI_FORTRAN_ISO_C_LIB_PATH}")
 endif()
 
 # -----------------------------------------------------------------------------
@@ -208,7 +226,6 @@ add_subdirectory(${TEST_BMI_CPP_DIR} ${TEST_BMI_CPP_DIR}/cmake_build) # FIXME: W
 # Project Targets
 # -----------------------------------------------------------------------------
 configure_file(include/NGenConfig.h.in include/NGenConfig.h)
-add_executable(ngen "${NGEN_SRC_DIR}/NGen.cpp")
 add_dependencies(ngen testbmicppmodel)
 target_include_directories(ngen PUBLIC "${NGEN_INC_DIR}")
 
@@ -232,8 +249,6 @@ target_link_libraries(ngen
         NGen::forcing
         NGen::core_mediator
         NGen::routing
-        libudunits2
-        NetCDF
 )
 
 add_executable(partitionGenerator src/partitionGenerator.cpp)

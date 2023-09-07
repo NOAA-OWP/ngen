@@ -15,7 +15,3 @@ target_include_directories(core_nexus PUBLIC
 target_link_libraries(core_nexus PUBLIC
         Boost::boost                # Headers-only Boost
         )
-
-if(MPI_ACTIVE)
-    add_compile_definitions(NGEN_MPI_ACTIVE)
-endif()

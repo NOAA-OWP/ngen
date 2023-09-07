@@ -107,9 +107,8 @@ ngen_add_test(
         NGen::realizations_catchment
         NGen::core_mediator
         NGen::forcing
-        libudunits2
         testbmicppmodel
-        NetCDF
+        
 )
 
 ########################## Series Unit Tests
@@ -123,7 +122,7 @@ ngen_add_test(
     LIBRARIES
         NGen::mdarray
         NGen::mdframe
-        NetCDF
+        
 )
 
 ########################## Nexus Tests
@@ -169,8 +168,6 @@ ngen_add_test(
         NGen::realizations_catchment
         NGen::core_mediator
         NGen::forcing
-        libudunits2
-        NetCDF
 )
 
 ########################## BMI C Tests
@@ -184,8 +181,6 @@ ngen_add_test(
         NGen::realizations_catchment
         NGen::core_mediator
         NGen::forcing
-        libudunits2
-        NetCDF
     REQUIRES
         NGEN_WITH_BMI_C
 )
@@ -201,8 +196,6 @@ ngen_add_test(
         NGen::realizations_catchment
         NGen::core_mediator
         NGen::forcing
-        libudunits2
-        NetCDF
     REQUIRES
         NGEN_WITH_BMI_FORTRAN
 )
@@ -218,8 +211,6 @@ ngen_add_test(
         NGen::realizations_catchment
         NGen::core_mediator
         NGen::forcing
-        libudunits2
-        NetCDF
     REQUIRES
         NGEN_WITH_PYTHON
 )
@@ -235,8 +226,6 @@ add_test(
         NGen::realizations_catchment
         NGen::core_mediator
         NGen::forcing
-        libudunits2
-        NetCDF
 )
 
 ########################## All BMI Unit Tests
@@ -255,8 +244,6 @@ ngen_add_test(
         NGen::realizations_catchment
         NGen::core_mediator
         NGen::forcing
-        libudunits2
-        NetCDF
     REQUIRES
         NGEN_WITH_BMI_C
         NGEN_WITH_BMI_FORTRAN
@@ -274,8 +261,6 @@ ngen_add_test(
         NGen::realizations_catchment
         NGen::core_mediator
         NGen::forcing
-        libudunits2
-        NetCDF
 )
 
 ########################## Routing Tests
@@ -314,8 +299,6 @@ ngen_add_test(
         NGen::forcing
         NGen::geojson
         NGen::realizations_catchment
-        libudunits2
-        NetCDF
     REQUIRES
         NGEN_WITH_NETCDF
 )
@@ -351,9 +334,8 @@ ngen_add_test(
         NGen::realizations_catchment
         NGen::mdarray
         NGen::mdframe
-        libudunits2
         testbmicppmodel
-        NetCDF
+        
 )
 
 # All automated tests
@@ -386,7 +368,5 @@ ngen_add_test(
         NGen::realizations_catchment
         NGen::mdarray
         NGen::mdframe
-        libudunits2
         testbmicppmodel
-        NetCDF
 )
