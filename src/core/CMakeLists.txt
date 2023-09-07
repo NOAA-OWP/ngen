@@ -18,7 +18,7 @@ target_include_directories(core PUBLIC
         ${PROJECT_SOURCE_DIR}/extern/pybind11/include
         )
 
-if (${NGEN_ACTIVATE_PYTHON})
+if (NGEN_WITH_PYTHON)
     target_include_directories(core PUBLIC
             ${PROJECT_SOURCE_DIR}/include
             ${PROJECT_SOURCE_DIR}/include/simulation_time
