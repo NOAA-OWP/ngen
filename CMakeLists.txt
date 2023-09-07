@@ -140,8 +140,11 @@ if(NGEN_WITH_UDUNITS)
 
     # Create UDUNITS2 target
     add_library(libudunits2 SHARED IMPORTED)
-    target_include_directories(libudunits2 INTERFACE "${UDUNITS2_INCLUDE}")
+    target_include_directories(libudunits2 SYSTEM INTERFACE "${UDUNITS2_INCLUDE}")
     set_target_properties(libudunits2 PROPERTIES IMPORTED_LOCATION "${UDUNITS2_LIBRARY}")
+
+    get_target_property(_SUMMARY_UDUNITS_INCLUDE libudunits2 INTERFACE_INCLUDE_DIRECTORIES)
+    get_target_property(_SUMMARY_UDUNITS_SYS_INCLUDE libudunits2 INTERFACE_SYSTEM_INCLUDE_DIRECTORIES)
 endif()
 
 # -----------------------------------------------------------------------------
@@ -187,9 +190,11 @@ if(NGEN_WITH_BMI_FORTRAN)
             "${NGEN_ROOT_DIR}/extern/iso_c_fortran_bmi/cmake_build"
             "${NGEN_ROOT_DIR}/extern/iso_c_fortran_bmi/build"
         DOC "Path to middleware Fortran shared lib handling iso_c_binding"
-        NO_CACHE
-        REQUIRED
     )
+
+    if("${BMI_FORTRAN_ISO_C_LIB_PATH}" STREQUAL "BMI_FORTRAN_ISO_C_LIB_PATH-NOTFOUND")
+        message(FATAL_ERROR "Failed to find BMI_FORTRAN_ISO_C_LIB_PATH:\n  BMI_FORTRAN_ISO_C_LIB_NAME: ${BMI_FORTRAN_ISO_C_LIB_NAME}\n  BMI_FORTRAN_ISO_C_LIB_DIR: ${BMI_FORTRAN_ISO_C_LIB_DIR}")
+    endif()
     
     add_library(bmi_fortran_compat SHARED IMPORTED)
     set_target_properties(bmi_fortran_compat PROPERTIES IMPORTED_LOCATION "${BMI_FORTRAN_ISO_C_LIB_PATH}")
@@ -300,6 +305,9 @@ else()
     set(NGEN_CONFIGURED_VENV "<none>")
 endif()
 
+# MPI CXX libraries output both C and CXX libs
+string(REPLACE ";" "," _MPI_CXX_LIBS "${MPI_CXX_LIBRARIES}")
+
 message(STATUS "---------------------------------------------------------------------")
 ngen_multiline_message(
 "NGen version: ${ngen_VERSION}"
@@ -337,7 +345,7 @@ ngen_dependent_multiline_message(NGEN_WITH_MPI
 ngen_dependent_multiline_message(NGEN_WITH_MPI
 "  MPI (CXX):"
 "    Version: ${MPI_CXX_VERSION}"
-"    Library: ${MPI_CXX_LIBRARIES}"
+"    Library: ${_MPI_CXX_LIBS}"
 "    Include: ${MPI_CXX_INCLUDE_DIRS}")
 ngen_dependent_multiline_message(NGEN_WITH_NETCDF
 "  NetCDF:"
@@ -353,7 +361,8 @@ ngen_dependent_multiline_message(NGEN_WITH_SQLITE
 ngen_dependent_multiline_message(NGEN_WITH_UDUNITS
 "  UDUNITS2:"
 "    Library: ${UDUNITS2_LIBRARY}"
-"    Include: ${UDUNITS2_INCLUDE}")
+"    Include: ${_SUMMARY_UDUNITS_INCLUDE}"
+"    System Include: ${_SUMMARY_UDUNITS_SYS_INCLUDE}")
 ngen_dependent_multiline_message(NGEN_WITH_BMI_FORTRAN
 "  Fortran:"
 "    BMI_FORTRAN_ISO_C_LIB_PATH: ${BMI_FORTRAN_ISO_C_LIB_PATH}"
