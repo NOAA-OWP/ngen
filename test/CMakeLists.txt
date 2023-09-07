@@ -59,7 +59,7 @@ function(ngen_add_test TESTNAME)
 
     if(NGEN_TEST_CREATE)
         add_executable(${TESTNAME} ${NGEN_TEST_OBJECTS})
-        target_link_libraries(${TESTNAME} gtest gtest_main ${NGEN_TEST_LIBRARIES})
+        target_link_libraries(${TESTNAME} PUBLIC gtest gtest_main ${NGEN_TEST_LIBRARIES})
         set_target_properties(${TESTNAME} PROPERTIES FOLDER test)
         gtest_discover_tests(
             ${TESTNAME}
@@ -177,6 +177,7 @@ ngen_add_test(
         realizations/catchments/Bmi_C_Adapter_Test.cpp
         realizations/catchments/Bmi_C_Formulation_Test.cpp
     LIBRARIES
+        gmock
         NGen::core
         NGen::realizations_catchment
         NGen::core_mediator
@@ -326,6 +327,7 @@ ngen_add_test(
         utils/mdframe_netcdf_Test.cpp
         utils/mdframe_csv_Test.cpp
     LIBRARIES
+        gmock
         NGen::core
         NGen::core_nexus
         NGen::core_mediator
