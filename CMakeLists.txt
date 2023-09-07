@@ -48,7 +48,7 @@ option(NGEN_QUIET            "Silence output"                     OFF)
 
 # These options require dependency on some of the above options
 # Syntax: cmake_dependent_option(<option> "<help_text>" <value> <depends> <force>)
-cmake_dependent_option(NGEN_WITH_ROUTING "Build with t-route integration" OFF "NGEN_WITH_PYTHON" OFF)
+cmake_dependent_option(NGEN_WITH_ROUTING "Build with t-route integration" ON "NGEN_WITH_PYTHON" OFF)
 cmake_dependent_option(NGEN_ISO_C_FORTRAN_BMI_LIB_PATH "Path to iso_c_fortran_bmi library" "" "NGEN_WITH_BMI_FORTRAN" "")
 cmake_dependent_option(NGEN_UPDATE_GIT_SUBMODULES "Update submodules on configure" ON "GIT_FOUND;NGEN_HAS_GIT_DIR" OFF)
 
