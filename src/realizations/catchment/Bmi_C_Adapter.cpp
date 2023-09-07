@@ -78,7 +78,7 @@ Bmi_C_Adapter::Bmi_C_Adapter(const std::string &type_name, std::string library_f
             construct_and_init_backing_model_for_type();
             // Make sure this is set to 'true' after this function call finishes
             model_initialized = true;
-            acquire_time_conversion_factor(bmi_model_time_convert_factor);
+            bmi_model_time_convert_factor = get_time_convert_factor();
         }
         // Record the exception message before re-throwing to handle subsequent function calls properly
         catch( models::external::State_Exception& e)
