@@ -245,7 +245,6 @@ target_include_directories(ngen PUBLIC "${NGEN_INC_DIR}")
 
 add_subdirectory("src/core")
 add_subdirectory("src/geojson")
-add_subdirectory("src/geopackage")
 add_subdirectory("src/realizations/catchment")
 add_subdirectory("src/forcing")
 add_subdirectory("src/utilities/mdarray")
@@ -257,11 +256,15 @@ target_link_libraries(ngen
         NGen::core_catchment
         NGen::core_nexus
         NGen::geojson
-        NGen::geopackage
         NGen::realizations_catchment
         NGen::forcing
         NGen::core_mediator
 )
+
+if(NGEN_WITH_SQLITE)
+    add_subdirectory("src/geopackage")
+    target_link_libraries(ngen PUBLIC NGen::geopackage)
+endif()
 
 if(NGEN_WITH_ROUTING)
     add_subdirectory("src/routing")
