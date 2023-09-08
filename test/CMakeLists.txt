@@ -1,6 +1,12 @@
 add_subdirectory(googletest)
 add_compile_definitions(NGEN_BMI_CPP_LIB_TESTS_ACTIVE)
 
+# Natively support BMI C++ modules and pre-compile in the test_bmi_cpp mock/example.
+set(TEST_BMI_CPP_DIR ${NGEN_EXT_DIR}/test_bmi_cpp)
+git_update_submodule(${NGEN_EXT_DIR}/bmi-cxx)
+add_subdirectory(${TEST_BMI_CPP_DIR} ${TEST_BMI_CPP_DIR}/cmake_build)
+add_dependencies(ngen testbmicppmodel)
+
 if (NGEN_WITH_PYTHON)
     add_compile_definitions(NGEN_BMI_PY_TESTS_ACTIVE)
 endif()

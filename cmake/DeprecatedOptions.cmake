@@ -9,7 +9,7 @@ The `OLD` variable is the deprecated option that corresponds to a new option.
 
 The `INCLUDE_ENV` flag also checks the environment variables for a variable named `OLD`, i.e. ENV{<OLD variable>}.
 #]==]
-macro(deprecated_option)
+function(deprecated_option)
     set(options INCLUDE_ENV)
     set(oneValueArgs NEW OLD)
     cmake_parse_arguments(DEPRECATED_OPTION "${options}" "${oneValueArgs}" "" ${ARGN})
@@ -25,4 +25,4 @@ macro(deprecated_option)
             set(${DEPRECATED_OPTION_NEW} $ENV{${DEPRECATED_OPTION_OLD}})
         endif()
     endif()
-endmacro()
+endfunction()
