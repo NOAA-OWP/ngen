@@ -41,7 +41,7 @@ option(NGEN_WITH_NETCDF      "Build with NetCDF support"          ON)
 option(NGEN_WITH_SQLITE      "Build with SQLite3 support"         OFF)
 option(NGEN_WITH_UDUNITS     "Build with UDUNITS2 support"        ON)
 option(NGEN_WITH_BMI_FORTRAN "Build with Fortran BMI support"     OFF)
-option(NGEN_WITH_BMI_C       "Build with C BMI support"           OFF)
+option(NGEN_WITH_BMI_C       "Build with C BMI support"           ON)
 option(NGEN_WITH_PYTHON      "Build with embedded Python support" OFF)
 option(NGEN_WITH_TESTS       "Build with unit tests"              ON)
 option(NGEN_QUIET            "Silence output"                     OFF)
@@ -105,14 +105,14 @@ endif()
 
 # -----------------------------------------------------------------------------
 # Account for different OS and how that impacts shared lib file names
-# FIXME: What is this used for? - Justin
-if("${CMAKE_SYSTEM_NAME}" STREQUAL "Darwin")
-    set(SHARED_LIB_EXTENSION "dylib")
-elseif(WIN32)
-    error("Windows platforms are not currently supported")
+if(WIN32)
+    message(FATAL_ERROR "Windows platforms are not currently supported")
+elseif("${CMAKE_SYSTEM_NAME}" STREQUAL "Darwin")
+    set(NGEN_SHARED_LIB_EXTENSION "dylib")
 else()
-    set(SHARED_LIB_EXTENSION "so")
+    set(NGEN_SHARED_LIB_EXTENSION "so")
 endif()
+add_compile_definitions(NGEN_SHARED_LIB_EXTENSION)
 
 # -----------------------------------------------------------------------------
 # Find the Boost library and configure usage
@@ -217,7 +217,6 @@ endif()
 # -----------------------------------------------------------------------------
 if(NGEN_QUIET)
     set(UDUNITS_QUIET true)
-    set(ET_QUIET true)
     add_compile_definitions(NGEN_QUIET)
 endif()
 
@@ -225,22 +224,10 @@ if(UDUNITS_QUIET)
     add_compile_definitions(UDUNITS_QUIET)
 endif()
 
-# FIXME: I don't think this is needed now? - Justin
-if(ET_QUIET)
-    add_compile_definitions(ET_QUIET)
-endif()
-
-# -----------------------------------------------------------------------------
-
-# Natively support BMI C++ modules and pre-compile in the test_bmi_cpp mock/example.
-set(TEST_BMI_CPP_DIR ${NGEN_EXT_DIR}/test_bmi_cpp)
-git_update_submodule(${NGEN_EXT_DIR}/bmi-cxx)
-add_subdirectory(${TEST_BMI_CPP_DIR} ${TEST_BMI_CPP_DIR}/cmake_build) # FIXME: Why is this here? - Justin
 
 # -----------------------------------------------------------------------------
 # Project Targets
 # -----------------------------------------------------------------------------
-add_dependencies(ngen testbmicppmodel)
 target_include_directories(ngen PUBLIC "${NGEN_INC_DIR}")
 
 add_subdirectory("src/core")
