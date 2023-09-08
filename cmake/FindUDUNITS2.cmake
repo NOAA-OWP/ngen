@@ -20,3 +20,8 @@ endif()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(UDUNITS2 DEFAULT_MSG UDUNITS2_LIBRARY UDUNITS2_INCLUDE)
+
+# Based on: https://stackoverflow.com/questions/26834553/osx-10-10-cmake-3-0-2-and-clang-wont-find-local-headers
+if(UDUNITS2_FOUND)
+    include_directories(${UDUNITS2_INCLUDE})
+endif()
