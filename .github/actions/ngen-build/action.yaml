@@ -181,7 +181,7 @@ runs:
               -DNGEN_ACTIVATE_ROUTING:BOOL=${{ inputs.use_troute }} \
               -DNETCDF_ACTIVE:BOOL=${{ inputs.use_netcdf }} \
               -DNGEN_WITH_SQLITE:BOOL=${{ inputs.use_sqlite }} \
-              -DMPI_ACTIVE:BOOL=${{ inputs.use_mpi }} -S . \
+              -DMPI_ACTIVE:BOOL=${{ inputs.use_mpi }} -S .
             echo "build-dir=$(echo ${{ inputs.build-dir }})" >> $GITHUB_OUTPUT
           shell: bash
 
