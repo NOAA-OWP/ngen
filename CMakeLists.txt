@@ -141,12 +141,9 @@ if(NGEN_WITH_UDUNITS)
     # Create UDUNITS2 target
     # Note: GLOBAL is required here in order to extend the scope of the target.
     #       see: https://stackoverflow.com/a/46491758/6891484
-    add_library(libudunits2::library SHARED IMPORTED GLOBAL)
-    set_target_properties(libudunits2::library PROPERTIES IMPORTED_LOCATION "${UDUNITS2_LIBRARY}")
-
-    add_library(libudunits2 INTERFACE IMPORTED)
+    add_library(libudunits2 SHARED IMPORTED GLOBAL)
+    set_target_properties(libudunits2 PROPERTIES IMPORTED_LOCATION "${UDUNITS2_LIBRARY}")
     target_include_directories(libudunits2 INTERFACE "${UDUNITS2_INCLUDE}")
-    target_link_libraries(libudunits2 INTERFACE libudunits2::library)
         
     get_target_property(_SUMMARY_UDUNITS_INCLUDE libudunits2 INTERFACE_INCLUDE_DIRECTORIES)
 endif()
