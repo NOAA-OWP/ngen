@@ -39,6 +39,10 @@ inputs:
       required: false
       description: 'Activate NetCDF Lumped Forcing Support'
       default: 'ON'
+    use_sqlite:
+      required: false
+      description: 'Activate SQLite3 suppport for GeoPackage'
+      default: 'ON'
     use_troute:
       required: false
       description: 'Enable t-route integration support'
@@ -176,7 +180,8 @@ runs:
               -DBMI_FORTRAN_ACTIVE:BOOL=${{ inputs.bmi_fortran }} \
               -DNGEN_ACTIVATE_ROUTING:BOOL=${{ inputs.use_troute }} \
               -DNETCDF_ACTIVE:BOOL=${{ inputs.use_netcdf }} \
-              -DMPI_ACTIVE:BOOL=${{ inputs.use_mpi }} -S .
+              -DNGEN_WITH_SQLITE:BOOL=${{ inputs.use_sqlite }} \
+              -DMPI_ACTIVE:BOOL=${{ inputs.use_mpi }} -S . \
             echo "build-dir=$(echo ${{ inputs.build-dir }})" >> $GITHUB_OUTPUT
           shell: bash
 

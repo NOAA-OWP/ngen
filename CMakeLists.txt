@@ -382,9 +382,3 @@ ngen_dependent_multiline_message(NGEN_WITH_PYTHON
 "    pybind11 Version: ${pybind11_VERSION}"
 "    pybind11 Include: ${pybind11_INCLUDE_DIR}")
 message(STATUS "---------------------------------------------------------------------")
-
-#set_target_properties(ngen PROPERTIES LINKER_LANGUAGE CXX)
-#
-#target_compile_options(ngen PUBLIC -std=c++14 -Wall)
-#target_compile_features(ngen PUBLIC cxx_std_14)
-#add_subdirectory("src/geojson")
