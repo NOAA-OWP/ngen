@@ -2,15 +2,11 @@
 #define NGEN_NULLFORCING_H
 
 #include <vector>
-#include <set>
 #include <cmath>
 #include <algorithm>
 #include <string>
 #include <fstream>
 #include <iostream>
-#include <unordered_map>
-#include <boost/algorithm/string.hpp>
-#include <boost/lexical_cast.hpp>
 #include <ctime>
 #include <time.h>
 #include <memory>
@@ -18,10 +14,9 @@
 #include "GenericDataProvider.hpp"
 #include "DataProviderSelectors.hpp"
 #include <exception>
-#include <UnitsHelper.hpp>
 
 /**
- * @brief Forcing class providing time-series precipiation forcing data to the model.
+ * @brief This forcing class does not, in fact, provide any forcing data! Thus the name NullForcingProvider.
  */
 class NullForcingProvider : public data_access::GenericDataProvider
 {
