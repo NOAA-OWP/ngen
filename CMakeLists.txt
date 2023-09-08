@@ -66,6 +66,12 @@ deprecated_option(OLD QUIET                 NEW NGEN_QUIET)
 deprecated_option(OLD PACKAGE_TESTS         NEW NGEN_WITH_TESTS)
 # Project =====================================================================
 
+# -----------------------------------------------------------------------------
+# Set global C++ options
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+
 # Define project version and use via generated config header
 project(ngen VERSION 0.1.0)
 
@@ -74,12 +80,6 @@ configure_file("${NGEN_INC_DIR}/NGenConfig.h.in" "${NGEN_INC_DIR}/NGenConfig.h")
 add_executable(ngen "${NGEN_SRC_DIR}/NGen.cpp")
 
 # Dependencies ================================================================
-
-# -----------------------------------------------------------------------------
-# Set global C++ options
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 
 # -----------------------------------------------------------------------------
 # Check if NGen is the main project (e.g. development environment)
