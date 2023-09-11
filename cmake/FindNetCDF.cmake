@@ -133,3 +133,13 @@ endfunction()
 if (NETCDF_INCLUDE_DIR)
   FindNetCDF_get_is_parallel_aware("${NETCDF_INCLUDE_DIR}")
 endif ()
+
+if(NETCDF_FOUND)
+  # Create NetCDF target
+  add_library(NetCDF SHARED IMPORTED GLOBAL)
+  target_include_directories(NetCDF INTERFACE "${NETCDF_INCLUDE_DIR}" "${NETCDF_CXX_INCLUDE_DIR}")
+  set_target_properties(NetCDF
+      PROPERTIES
+          IMPORTED_LOCATION "${NETCDF_LIBRARY}"
+          IMPORTED_LOCATION "${NETCDF_CXX_LIBRARY}")
+endif()

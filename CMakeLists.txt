@@ -137,14 +137,6 @@ endif()
 if(NGEN_WITH_UDUNITS)
     find_package(UDUNITS2 REQUIRED)
     add_compile_definitions(NGEN_WITH_UDUNITS)
-
-    # Create UDUNITS2 target
-    # Note: GLOBAL is required here in order to extend the scope of the target.
-    #       see: https://stackoverflow.com/a/46491758/6891484
-    add_library(libudunits2 SHARED IMPORTED GLOBAL)
-    set_target_properties(libudunits2 PROPERTIES IMPORTED_LOCATION "${UDUNITS2_LIBRARY}")
-    target_include_directories(libudunits2 INTERFACE "${UDUNITS2_INCLUDE}")
-        
     get_target_property(_SUMMARY_UDUNITS_INCLUDE libudunits2 INTERFACE_INCLUDE_DIRECTORIES)
 endif()
 
@@ -155,20 +147,11 @@ if(NGEN_WITH_NETCDF)
     set(NETCDF_F90 "NO")
     find_package(NetCDF REQUIRED)
     add_compile_definitions(NETCDF_ACTIVE)
-    
-    # Create NetCDF target
-    add_library(NetCDF SHARED IMPORTED GLOBAL)
-    target_include_directories(NetCDF INTERFACE "${NETCDF_INCLUDE_DIR}" "${NETCDF_CXX_INCLUDE_DIR}")
-    set_target_properties(NetCDF
-        PROPERTIES
-            IMPORTED_LOCATION "${NETCDF_LIBRARY}"
-            IMPORTED_LOCATION "${NETCDF_CXX_LIBRARY}")
 endif()
 
 # -----------------------------------------------------------------------------
 # Handle several steps for BMI C library logic and dependencies, at top level, if functionality is turned on
 if(NGEN_WITH_BMI_C)
-    # Define associated preprocessor directive
     add_compile_definitions(NGEN_BMI_C_LIB_ACTIVE)
 endif()
 
@@ -176,29 +159,7 @@ endif()
 # Configure whether Fortran BMI functionality is active
 if(NGEN_WITH_BMI_FORTRAN)
     add_compile_definitions(NGEN_BMI_FORTRAN_ACTIVE)
-
-    # Searches for ISO C BMI library, defaults to
-    # known development directories in the event the BMI_FORTRAN_ISO_C_*
-    # variables are not set.
-    find_library(BMI_FORTRAN_ISO_C_LIB_PATH
-        NAMES
-            "${BMI_FORTRAN_ISO_C_LIB_NAME}"
-            "iso_c_bmi"
-        HINTS # Searched before paths
-            "${BMI_FORTRAN_ISO_C_LIB_DIR}" 
-        PATHS
-            ENV BMI_FORTRAN_ISO_C_LIB_DIR
-            "${NGEN_ROOT_DIR}/extern/iso_c_fortran_bmi/cmake_build"
-            "${NGEN_ROOT_DIR}/extern/iso_c_fortran_bmi/build"
-        DOC "Path to middleware Fortran shared lib handling iso_c_binding"
-    )
-
-    if("${BMI_FORTRAN_ISO_C_LIB_PATH}" STREQUAL "BMI_FORTRAN_ISO_C_LIB_PATH-NOTFOUND")
-        message(FATAL_ERROR "Failed to find BMI_FORTRAN_ISO_C_LIB_PATH:\n  BMI_FORTRAN_ISO_C_LIB_NAME: ${BMI_FORTRAN_ISO_C_LIB_NAME}\n  BMI_FORTRAN_ISO_C_LIB_DIR: ${BMI_FORTRAN_ISO_C_LIB_DIR}")
-    endif()
-    
-    add_library(bmi_fortran_compat SHARED IMPORTED)
-    set_target_properties(bmi_fortran_compat PROPERTIES IMPORTED_LOCATION "${BMI_FORTRAN_ISO_C_LIB_PATH}")
+    find_package(BMI_FORTRAN_ISO_C REQUIRED)
 endif()
 
 # -----------------------------------------------------------------------------
