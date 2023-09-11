@@ -44,7 +44,7 @@ std::shared_ptr<geojson::FeatureCollection> geopackage::read(
         throw std::runtime_error(errmsg);
     }
 
-    // Introspect if the layer is divides to ses which ID field is in use
+    // Introspect if the layer is divides to see which ID field is in use
     std::string id_column = "id";
     if(layer == "divides"){
         try {
