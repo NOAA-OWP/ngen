@@ -87,7 +87,7 @@ namespace models {
              * A backing BMI model may use arbitrary units for time, but it will expose what those units are via the
              * BMI ``GetTimeUnits`` function. This function retrieves (and interprets) its model's units and
              * return an appropriate factor for converting its internal time values to equivalent representations
-             * within the model, and vice versa. This function coomplies with the BMI get_time_units standard
+             * within the model, and vice versa. This function complies with the BMI get_time_units standard
              */
             double get_time_convert_factor() {
                 double value = 1.0;
