@@ -1,12 +1,12 @@
 <map id="bmi::Bmi" name="bmi::Bmi">
 <area shape="rect" id="node1" title=" " alt="" coords="294,5,457,280"/>
-<area shape="rect" id="node2" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title=" " alt="" coords="228,923,435,1447"/>
-<area shape="rect" id="node8" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title=" " alt="" coords="5,916,204,1455"/>
-<area shape="rect" id="node9" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title=" " alt="" coords="564,916,763,1455"/>
-<area shape="rect" id="node10" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title="Abstract adapter interface for C++ classes to interact with the essential aspects of external models ..." alt="" coords="345,329,552,853"/>
-<area shape="rect" id="node3" href="$classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html" title=" " alt="" coords="235,1504,427,1764"/>
-<area shape="rect" id="node4" href="$classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html" title=" " alt="" coords="419,1827,611,2087"/>
-<area shape="rect" id="node6" href="$classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html" title=" " alt="" coords="197,1827,389,2087"/>
-<area shape="rect" id="node5" href="$classmodels_1_1bmi_1_1_bmi___c___adapter.html" title="An adapter class to serve as a C++ interface to the essential aspects of external models written in t..." alt="" coords="426,2136,605,2704"/>
-<area shape="rect" id="node7" href="$classmodels_1_1bmi_1_1_bmi___cpp___adapter.html" title="A thin wrapper class to provide convenience functions around raw BMI models written in C++,..." alt="" coords="204,2173,381,2667"/>
+<area shape="rect" id="node2" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title=" " alt="" coords="228,909,435,1418"/>
+<area shape="rect" id="node8" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title=" " alt="" coords="5,901,204,1425"/>
+<area shape="rect" id="node9" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title=" " alt="" coords="564,901,763,1425"/>
+<area shape="rect" id="node10" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title="Abstract adapter interface for C++ classes to interact with the essential aspects of external models ..." alt="" coords="345,329,552,839"/>
+<area shape="rect" id="node3" href="$classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html" title=" " alt="" coords="235,1475,427,1735"/>
+<area shape="rect" id="node4" href="$classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html" title=" " alt="" coords="419,1797,611,2057"/>
+<area shape="rect" id="node6" href="$classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html" title=" " alt="" coords="197,1797,389,2057"/>
+<area shape="rect" id="node5" href="$classmodels_1_1bmi_1_1_bmi___c___adapter.html" title="An adapter class to serve as a C++ interface to the essential aspects of external models written in t..." alt="" coords="426,2107,605,2675"/>
+<area shape="rect" id="node7" href="$classmodels_1_1bmi_1_1_bmi___cpp___adapter.html" title="A thin wrapper class to provide convenience functions around raw BMI models written in C++,..." alt="" coords="204,2143,381,2638"/>
 </map>

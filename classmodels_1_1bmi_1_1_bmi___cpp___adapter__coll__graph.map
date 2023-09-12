@@ -1,14 +1,14 @@
 <map id="models::bmi::Bmi_Cpp_Adapter" name="models::bmi::Bmi_Cpp_Adapter">
-<area shape="rect" id="node1" title="A thin wrapper class to provide convenience functions around raw BMI models written in C++,..." alt="" coords="1547,2485,1724,2936"/>
-<area shape="rect" id="node2" href="$classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html" title=" " alt="" coords="1439,2205,1631,2436"/>
-<area shape="rect" id="node3" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title="Abstract adapter interface for C++ classes to interact with the essential aspects of external models ..." alt="" coords="1101,972,1308,1379"/>
+<area shape="rect" id="node1" title="A thin wrapper class to provide convenience functions around raw BMI models written in C++,..." alt="" coords="1547,2456,1724,2907"/>
+<area shape="rect" id="node2" href="$classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html" title=" " alt="" coords="1439,2176,1631,2407"/>
+<area shape="rect" id="node3" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title="Abstract adapter interface for C++ classes to interact with the essential aspects of external models ..." alt="" coords="1101,972,1308,1364"/>
 <area shape="rect" id="node4" href="$classbmi_1_1_bmi.html" title=" " alt="" coords="1034,605,1197,880"/>
-<area shape="rect" id="node20" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title=" " alt="" coords="467,1471,673,1863"/>
-<area shape="rect" id="node22" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title="Abstract adapter interface for C++ classes to interact with the essential aspects of external models ..." alt="" coords="607,972,813,1379"/>
+<area shape="rect" id="node20" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title=" " alt="" coords="467,1456,673,1833"/>
+<area shape="rect" id="node22" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title="Abstract adapter interface for C++ classes to interact with the essential aspects of external models ..." alt="" coords="607,972,813,1364"/>
 <area shape="rect" id="node5" title=" " alt="" coords="1255,309,1338,349"/>
 <area shape="rect" id="node11" title=" " alt="" coords="476,433,640,473"/>
 <area shape="rect" id="node13" href="$classutils_1_1_stream_handler.html" title="This class provides a copyable interface to a std::ostream or std::ostream like object that may not s..." alt="" coords="681,649,824,836"/>
-<area shape="rect" id="node19" href="$classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html" title=" " alt="" coords="1273,1912,1465,2143"/>
+<area shape="rect" id="node19" href="$classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html" title=" " alt="" coords="1273,1883,1465,2113"/>
 <area shape="rect" id="node6" title=" " alt="" coords="1233,184,1361,239"/>
 <area shape="rect" id="node7" title=" " alt="" coords="218,708,389,777"/>
 <area shape="rect" id="node8" title=" " alt="" coords="234,301,375,356"/>

@@ -138,7 +138,7 @@ $(document).ready(function(){initNavTree('_bmi___fortran___adapter_8hpp_source.h
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>                    construct_and_init_backing_model_for_fortran();</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>                    <span class="comment">// Make sure this is set to &#39;true&#39; after this function call finishes</span></div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>                    model_initialized = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>                    acquire_time_conversion_factor(bmi_model_time_convert_factor);</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>                    bmi_model_time_convert_factor = get_time_convert_factor();</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>                }</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>                    <span class="comment">// Record the exception message before re-throwing to handle subsequent function calls properly</span></div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>                <span class="keywordflow">catch</span>( <a class="code hl_class" href="classmodels_1_1external_1_1_state___exception.html">models::external::State_Exception</a>&amp; e)</div>
@@ -540,7 +540,7 @@ $(document).ready(function(){initNavTree('_bmi___fortran___adapter_8hpp_source.h
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_9058ef7c383dff996c678c5ba80ec03e.html">realizations</a></li><li class="navelem"><a class="el" href="dir_8dbd500a1ae0b3d23deb7285e2980d8b.html">catchment</a></li><li class="navelem"><b>Bmi_Fortran_Adapter.hpp</b></li>
-    <li class="footer">Generated on Wed Sep 6 2023 18:03:46 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
+    <li class="footer">Generated on Tue Sep 12 2023 16:46:30 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
   </ul>
 </div>
 </body>
