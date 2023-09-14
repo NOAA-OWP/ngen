@@ -295,7 +295,7 @@ int main(int argc, char *argv[]) {
     if(manager->get_using_routing()) {
       std::cout<<"Using Routing"<<std::endl;
       std::string t_route_config_file_with_path = manager->get_t_route_config_file_with_path();
-      router = make_unique<routing_py_adapter::Routing_Py_Adapter>(t_route_config_file_with_path);
+      router = std::make_unique<routing_py_adapter::Routing_Py_Adapter>(t_route_config_file_with_path);
     }
     else {
       std::cout<<"Not Using Routing"<<std::endl;
