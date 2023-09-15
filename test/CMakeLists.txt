@@ -248,6 +248,7 @@ ngen_add_test(
         realizations/catchments/Bmi_Py_Formulation_Test.cpp
         realizations/catchments/Bmi_Multi_Formulation_Test.cpp
     LIBRARIES
+        gmock
         NGen::core
         NGen::realizations_catchment
         NGen::core_mediator
