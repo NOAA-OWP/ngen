@@ -138,6 +138,7 @@ if(NETCDF_FOUND)
   # Create NetCDF target
   add_library(NetCDF SHARED IMPORTED GLOBAL)
   target_include_directories(NetCDF INTERFACE "${NETCDF_INCLUDE_DIR}" "${NETCDF_CXX_INCLUDE_DIR}")
+  target_link_libraries(NetCDF INTERFACE "${NETCDF_LIBRARY}" "${NETCDF_CXX_LIBRARY}")
   set_target_properties(NetCDF
       PROPERTIES
           IMPORTED_LOCATION "${NETCDF_LIBRARY}"
