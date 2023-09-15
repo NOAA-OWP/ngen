@@ -13,7 +13,7 @@ cmake_policy(SET CMP0094 NEW)
 # https://cmake.org/cmake/help/latest/policy/CMP0074.html
 cmake_policy(SET CMP0074 NEW)
 
-# find_package() uses upper-case <PACKAGENAME>_ROOT variables.
+# find_package() uses upper-case <PACKAGENAME>_ROOT variables in conjunction with CMP0074.
 # https://cmake.org/cmake/help/latest/policy/CMP0144.html
 if(POLICY CMP0144)
     cmake_policy(SET CMP0144 NEW)
@@ -97,7 +97,7 @@ if(NGEN_WITH_MPI)
 endif()
 
 # -----------------------------------------------------------------------------
-# FIXME: Is this needed for icpx? or even icpp? This only enables support for SYCL - Justin
+# TODO: Used for compatibility on Hera. Refactor this in the future.
 # https://www.intel.com/content/www/us/en/develop/documentation/oneapi-dpcpp-cpp-compiler-dev-guide-and-reference/top/compiler-setup/use-the-command-line/use-cmake-with-the-compiler.html
 if(INTEL_DPCPP)
     find_package(IntelDPCPP REQUIRED)
