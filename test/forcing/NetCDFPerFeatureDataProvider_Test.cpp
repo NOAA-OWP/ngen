@@ -12,7 +12,7 @@
 #include <limits.h>
 #include <ctime>
 #include <time.h>
-
+#include <netcdf>
 
 using data_access::NetCDFPerFeatureDataProvider;
 
