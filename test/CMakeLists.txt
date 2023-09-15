@@ -157,6 +157,7 @@ ngen_add_test(
     OBJECTS
         utils/Partition_Test.cpp
     LIBRARIES
+        gmock
         NGen::core
         NGen::geojson
     # REQUIRES
