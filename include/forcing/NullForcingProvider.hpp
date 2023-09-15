@@ -2,21 +2,17 @@
 #define NGEN_NULLFORCING_H
 
 #include <vector>
-#include <cmath>
-#include <algorithm>
 #include <string>
-#include <fstream>
 #include <iostream>
 #include <ctime>
 #include <time.h>
-#include <memory>
 #include "AorcForcing.hpp"
 #include "GenericDataProvider.hpp"
 #include "DataProviderSelectors.hpp"
 #include <exception>
 
 /**
- * @brief This forcing class does not, in fact, provide any forcing data! Thus the name NullForcingProvider.
+ * @brief Forcing class providing time-series precipiation forcing data to the model.
  */
 class NullForcingProvider : public data_access::GenericDataProvider
 {
