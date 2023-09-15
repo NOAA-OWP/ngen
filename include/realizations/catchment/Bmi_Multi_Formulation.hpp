@@ -277,25 +277,11 @@ namespace realization {
          */
         //time_t get_forcing_output_time_end(const std::string &forcing_name) {
         time_t get_variable_time_end(const std::string &variable_name) {
-            // If not found ...
+            // when unspecified, assume all data is available for the same range.
+            // If no var_name, use forcing ...
             std::string var_name = variable_name;
             if(var_name == "*" || var_name == ""){
-                // when unspecified, assume all data is available for the same range.
-                // Find one that successfully returns...
-                for(std::map<std::string,std::shared_ptr<data_access::GenericDataProvider>>::iterator iter = availableData.begin(); iter != availableData.end(); ++iter)
-                {
-                    var_name = iter->first;
-                    //std::cout << "availableData: var_name = " << var_name << std::endl;
-                    //TODO: Find a probably more performant way than trial and exception here.
-                    try {
-                        time_t rv = availableData[var_name]->get_data_stop_time();
-                        return rv;
-                    }
-                    catch (...){
-                        continue;
-                    }
-                    break;
-                }
+                return forcing->get_data_stop_time();
             }
             // If not found ...
             if (availableData.empty() || availableData.find(var_name) == availableData.end()) {
