@@ -2,7 +2,6 @@
 #define NGEN_UTILITIES_MMAP_ALLOCATOR_HPP
 
 #include <string>
-#include <iostream>
 
 extern "C" {
     
@@ -14,6 +13,12 @@ extern "C" {
 
 namespace ngen {
 
+/**
+ * @brief Memory mapped allocator.
+ * 
+ * @tparam Tp Type that is allocated
+ * @tparam PoolPolicy Backing pool policy; see `ngen::basic_pool`
+ */
 template<typename Tp, typename PoolPolicy>
 struct mmap_allocator
 {
@@ -23,12 +28,30 @@ struct mmap_allocator
     using size_type       = std::size_t;
     using difference_type = std::ptrdiff_t;
 
+    /**
+     * @brief Create a new mmap allocator with the given directory
+     *        as the storage location.
+     * 
+     * @param directory Path to storage location
+     */
     explicit mmap_allocator(std::string directory) noexcept
       : dir_(std::move(directory)){};
 
+    /**
+     * @brief Default construct a mmap allocator.
+     *
+     * @note Uses PoolPolicy::default_directory() as the storage location.
+     * 
+     */
     mmap_allocator() noexcept
         : mmap_allocator(PoolPolicy::default_directory()){};
 
+    /**
+     * @brief Allocate `n` objects of type `Tp`, aka `sizeof(Tp) * n`.
+     * 
+     * @param n Number of elements to allocate
+     * @return pointer 
+     */
     pointer allocate(size_type n)
     {
         const size_type mem_size = sizeof(value_type) * n;
@@ -52,9 +75,15 @@ struct mmap_allocator
         return static_cast<pointer>(ptr);
     }
 
+    /**
+     * @brief Deallocate `n` elements starting at address `p`.
+     * 
+     * @param p Pointer to beginning address
+     * @param n Number of elements to deallocate
+     */
     void deallocate(pointer p, size_type n) noexcept
     {
-        munmap(static_cast<void*>(p), n);
+        munmap(static_cast<void*>(p), sizeof(value_type) * n);
     }
 
     template<typename T, typename U, typename TPool, typename UPool>
@@ -88,6 +117,12 @@ struct mmap_allocator
  * - Or, `/tmp`.
  */
 struct basic_pool {
+    /**
+     * @brief Open a new pool file in `directory`
+     * 
+     * @param directory Storage location
+     * @return int File descriptor
+     */
     static int open(const std::string& directory)
     {
         std::string name = directory;
@@ -100,11 +135,27 @@ struct basic_pool {
         return fd;
     }
 
+    /**
+     * @brief Close the given file descriptor
+     * 
+     * @param fd File descriptor
+     */
     static void close(int fd)
     {
         ::close(fd);
     }
 
+    /**
+     * @brief Get the default directory for this pool.
+     *
+     * @details
+     * Defaults to "/tmp", or the first value set
+     * in the following environment variables:
+     *
+     *     TMPDIR, TMP, TEMP, or TEMPDIR.
+     * 
+     * @return const char* Absolute file path
+     */
     static const char* default_directory() noexcept
     {
         // Per ISO/IEC 9945 (POSIX)
