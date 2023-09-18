@@ -59,6 +59,13 @@ namespace data_access
 
         NetCDFPerFeatureDataProvider(std::string input_path, time_t sim_start, time_t sim_end,  utils::StreamHandler log_s);
 
+        // Default implementation defined in the .cpp file so that
+        // client code doesn't need to have the full definition of
+        // NcFile visible for the compiler to implicitly generate
+        // ~NetCDFPerFeatureDataProvider() = default;
+        // for every file that uses this class
+        ~NetCDFPerFeatureDataProvider();
+
         /** Return the variables that are accessable by this data provider */
         const std::vector<std::string>& get_available_variable_names() override;
 

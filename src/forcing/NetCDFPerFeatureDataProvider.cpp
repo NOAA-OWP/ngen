@@ -260,6 +260,8 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
     sim_to_data_time_offset = sim_start_date_time_epoch - start_time;
 }
 
+NetCDFPerFeatureDataProvider::~NetCDFPerFeatureDataProvider() = default;
+
 const std::vector<std::string>& NetCDFPerFeatureDataProvider::get_available_variable_names()
 {
     return variable_names;
