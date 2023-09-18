@@ -369,6 +369,7 @@ ngen_add_test(
         utils/mdframe_netcdf_Test.cpp
         utils/mdframe_csv_Test.cpp
         utils/logging_Test.cpp
+        utils/mmap_allocator_Test.cpp
     LIBRARIES
         gmock
         NGen::core
@@ -406,6 +407,7 @@ ngen_add_test(
         utils/mdframe_netcdf_Test.cpp
         utils/mdframe_csv_Test.cpp
         utils/logging_Test.cpp
+        utils/mmap_allocator_Test.cpp
     LIBRARIES
         NGen::core
         gmock
