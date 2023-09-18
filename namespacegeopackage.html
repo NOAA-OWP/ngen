@@ -126,9 +126,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ad83484f3bbaac91d9890c85713c448e3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacegeojson.html#a6eabe3c674d580523aa920438fb82d34">geojson::PropertyMap</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegeopackage.html#ad83484f3bbaac91d9890c85713c448e3">build_properties</a> (const <a class="el" href="classgeopackage_1_1sqlite__iter.html">sqlite_iter</a> &amp;row, const std::string &amp;geom_col)</td></tr>
 <tr class="memdesc:ad83484f3bbaac91d9890c85713c448e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build properties from GeoPackage table columns.  <a href="namespacegeopackage.html#ad83484f3bbaac91d9890c85713c448e3">More...</a><br /></td></tr>
 <tr class="separator:ad83484f3bbaac91d9890c85713c448e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad62d7034c9f884e4bb739444c4a9aed7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacegeojson.html#ab724970a20dff6100b94e25491292748">geojson::Feature</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegeopackage.html#ad62d7034c9f884e4bb739444c4a9aed7">build_feature</a> (const <a class="el" href="classgeopackage_1_1sqlite__iter.html">sqlite_iter</a> &amp;row, const std::string &amp;geom_col)</td></tr>
-<tr class="memdesc:ad62d7034c9f884e4bb739444c4a9aed7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build a feature from a GPKG table row.  <a href="namespacegeopackage.html#ad62d7034c9f884e4bb739444c4a9aed7">More...</a><br /></td></tr>
-<tr class="separator:ad62d7034c9f884e4bb739444c4a9aed7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9f5015bf8a7020295cdc1cf15c874d5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacegeojson.html#ab724970a20dff6100b94e25491292748">geojson::Feature</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegeopackage.html#ac9f5015bf8a7020295cdc1cf15c874d5">build_feature</a> (const <a class="el" href="classgeopackage_1_1sqlite__iter.html">sqlite_iter</a> &amp;row, const std::string &amp;id_col, const std::string &amp;geom_col)</td></tr>
+<tr class="memdesc:ac9f5015bf8a7020295cdc1cf15c874d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build a feature from a GPKG table row.  <a href="namespacegeopackage.html#ac9f5015bf8a7020295cdc1cf15c874d5">More...</a><br /></td></tr>
+<tr class="separator:ac9f5015bf8a7020295cdc1cf15c874d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaaf5f61e8b5234ef6c840267f06e2134"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classgeojson_1_1_feature_collection.html">geojson::FeatureCollection</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegeopackage.html#aaaf5f61e8b5234ef6c840267f06e2134">read</a> (const std::string &amp;gpkg_path, const std::string &amp;layer, const std::vector&lt; std::string &gt; &amp;ids)</td></tr>
 <tr class="memdesc:aaaf5f61e8b5234ef6c840267f06e2134"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build a feature collection from a GPKG layer.  <a href="namespacegeopackage.html#aaaf5f61e8b5234ef6c840267f06e2134">More...</a><br /></td></tr>
 <tr class="separator:aaaf5f61e8b5234ef6c840267f06e2134"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -151,8 +151,8 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ad62d7034c9f884e4bb739444c4a9aed7" name="ad62d7034c9f884e4bb739444c4a9aed7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad62d7034c9f884e4bb739444c4a9aed7">&#9670;&#160;</a></span>build_feature()</h2>
+<a id="ac9f5015bf8a7020295cdc1cf15c874d5" name="ac9f5015bf8a7020295cdc1cf15c874d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac9f5015bf8a7020295cdc1cf15c874d5">&#9670;&#160;</a></span>build_feature()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -162,6 +162,12 @@ Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classgeopackage_1_1sqlite__iter.html">sqlite_iter</a> &amp;&#160;</td>
           <td class="paramname"><em>row</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>id_col</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -236,7 +242,7 @@ Functions</h2></td></tr>
 
 <p class="reference">References <a class="el" href="namespaceutils.html#ab26f60f96ec3cf8e061256397c1f501c">utils::copy_from()</a>, and <a class="el" href="classgeopackage_1_1sqlite__iter.html#af85fabea6f897969f3246fc3f911e1f2">geopackage::sqlite_iter::get()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="namespacegeopackage.html#ad62d7034c9f884e4bb739444c4a9aed7">build_feature()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="namespacegeopackage.html#ac9f5015bf8a7020295cdc1cf15c874d5">build_feature()</a>.</p>
 
 </div>
 </div>
@@ -278,7 +284,7 @@ Functions</h2></td></tr>
 
 <p class="reference">References <a class="el" href="classgeopackage_1_1sqlite__iter.html#a2fddc0f7897685ca247c9403ad2574b6">geopackage::sqlite_iter::columns()</a>, and <a class="el" href="classgeopackage_1_1sqlite__iter.html#a14d08815944c48a03e8df4b982fd054e">geopackage::sqlite_iter::types()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="namespacegeopackage.html#ad62d7034c9f884e4bb739444c4a9aed7">build_feature()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="namespacegeopackage.html#ac9f5015bf8a7020295cdc1cf15c874d5">build_feature()</a>.</p>
 
 </div>
 </div>
@@ -333,7 +339,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacegeopackage.html">geopackage</a></li>
-    <li class="footer">Generated on Thu Sep 14 2023 19:07:20 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
+    <li class="footer">Generated on Mon Sep 18 2023 15:15:14 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
   </ul>
 </div>
 </body>
