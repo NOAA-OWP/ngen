@@ -85,8 +85,7 @@
             }
         ],
         "forcing": {
-            "provider": "NullForcingProvider",
-            "path": ""
+            "provider": "NullForcingProvider"
         }
     },
     "time": {

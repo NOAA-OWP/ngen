@@ -414,7 +414,10 @@ namespace realization {
             }
 
             forcing_params get_forcing_params(geojson::PropertyMap &forcing_prop_map, std::string identifier, simulation_time_params &simulation_time_config) {
-                std::string path = forcing_prop_map.at("path").as_string();
+                std::string path = "";
+                if(forcing_prop_map.count("path") != 0){
+                    path = forcing_prop_map.at("path").as_string();
+                }
                 std::string provider = "";
                 if(forcing_prop_map.count("provider") != 0){
                     provider = forcing_prop_map.at("provider").as_string();
