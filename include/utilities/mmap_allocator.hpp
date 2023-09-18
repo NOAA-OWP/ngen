@@ -49,7 +49,7 @@ struct mmap_allocator
             throw std::bad_alloc();
         }
 
-        return pointer{ static_cast<value_type*>(ptr) };
+        return static_cast<pointer>(ptr);
     }
 
     void deallocate(pointer p, size_type n) noexcept
