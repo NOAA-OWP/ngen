@@ -4,20 +4,30 @@
 
 TEST(mdarray_Test, construction)
 {
-    ngen::mdarray<double> s{{{2, 2}}};
+    // Horrible workaround for GCC8 not quite getting initializer list stuff right
+    size_t indices[] = {2, 2};
+
+    ngen::mdarray<double> s{indices};
 
     EXPECT_EQ(s.rank(), 2);
 
-    ASSERT_NO_THROW(s.insert({{0, 0}}, 1));
-    EXPECT_EQ(s.at({{0, 0}}), 1);
+    indices[0] = 0;
+    indices[1] = 0;
+    ASSERT_NO_THROW(s.insert(indices, 1));
+    EXPECT_EQ(s.at(indices), 1);
 
-    ASSERT_NO_THROW(s.insert({{0, 1}}, 2));
-    EXPECT_EQ(s.at({{0, 1}}), 2);
+    indices[1] = 1;
+    ASSERT_NO_THROW(s.insert(indices, 2));
+    EXPECT_EQ(s.at(indices), 2);
 
-    EXPECT_THROW(s.at({{2, 2}}), std::out_of_range);
+    indices[0] = 2;
+    indices[1] = 2;
+    EXPECT_THROW(s.at(indices), std::out_of_range);
 
-    ASSERT_NO_THROW(s.at({{0, 0}}) = 3);
-    EXPECT_EQ(s.at({{0, 0}}), 3);
+    indices[0] = 0;
+    indices[1] = 0;
+    ASSERT_NO_THROW(s.at(indices) = 3);
+    EXPECT_EQ(s.at(indices), 3);
 }
 
 TEST(mdarray_Test, indexing)
@@ -52,39 +62,44 @@ TEST(mdarray_Test, layout)
 {
     ngen::mdarray<int> a{{2, 2, 2, 2, 2}};
 
+    size_t indices0[] = {0, 0, 0, 0, 0};
+    size_t indices1[] = {1, 0, 0, 0, 0};
     ASSERT_EQ(
-        a.index({{0, 0, 0, 0, 0}}) + 1,
-        a.index({{1, 0, 0, 0, 0}})
+        a.index(indices0) + 1,
+        a.index(indices1)
     );
 
+    size_t indices0a[] = {0, 1, 1, 0, 1};
+    size_t indices1a[] = {1, 1, 1, 0, 1};
     ASSERT_EQ(
-        a.index({{0, 1, 1, 0, 1}}) + 1,
-        a.index({{1, 1, 1, 0, 1}})
+        a.index(indices0a) + 1,
+        a.index(indices1a)
     );
 
     ngen::mdarray<int> b{{2, 2, 2}};
 
+    size_t indices0b[] = {0, 0, 0};
+    size_t indices1b[] = {1, 0, 0};
     ASSERT_EQ(
-        b.index({{0, 0, 0}}) + 1,
-        b.index({{1, 0, 0}})
+        b.index(indices0b) + 1,
+        b.index(indices1b)
     );
 
+    size_t indices0c[] = {0, 1, 1};
+    size_t indices1c[] = {1, 1, 1};
     ASSERT_EQ(
-        b.index({{0, 1, 1}}) + 1,
-        b.index({{1, 1, 1}})
+        b.index(indices0c) + 1,
+        b.index(indices1c)
     );
 
     // add `i` to prevent braces around scalar warnings
     std::initializer_list<std::size_t> i = { 2 };
     ngen::mdarray<int> c{i};
 
+    size_t index0[] = {0};
+    size_t index1[] = {1};
     ASSERT_EQ(
-        c.index({{0}}) + 1,
-        c.index({{1}})
-    );
-
-    ASSERT_EQ(
-        c.index({{0}}) + 1,
-        c.index({{1}})
+        c.index(index0) + 1,
+        c.index(index1)
     );
 }
