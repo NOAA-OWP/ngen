@@ -140,6 +140,14 @@ ngen_add_test(
         NGen::logging
 
 )
+########################## Allocator Tests
+ngen_add_test(
+    test_allocator
+    OBJECTS
+        utils/mmap_allocator_Test.cpp
+)
+# TODO: Workaround for now -- only needs header
+target_include_directories(test_allocator PRIVATE ${NGEN_INC_DIR}/utilities)
 
 ########################## Nexus Tests
 ngen_add_test(

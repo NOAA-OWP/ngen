@@ -12,18 +12,16 @@ extern "C" {
 
 }
 
-#include "mmap_pointer.hpp"
-
 namespace ngen {
 
 template<typename Tp, typename PoolPolicy>
 struct mmap_allocator
 {
     using value_type      = Tp;
-    using pointer         = mmap_pointer<Tp>;
-    using const_pointer   = const mmap_pointer<Tp>;
-    using size_type       = typename pointer::size_type;
-    using difference_type = typename pointer::difference_type;
+    using pointer         = value_type*;
+    using const_pointer   = const value_type*;
+    using size_type       = std::size_t;
+    using difference_type = std::ptrdiff_t;
 
     explicit mmap_allocator(std::string directory) noexcept
       : dir_(std::move(directory)){};
@@ -34,8 +32,7 @@ struct mmap_allocator
     pointer allocate(size_type n)
     {
         const size_type mem_size = sizeof(value_type) * n;
-        std::pair<int, std::string> finfo = PoolPolicy::open(dir_);
-        const int fd = finfo.first;
+        const int fd = PoolPolicy::open(dir_);
 
         // Truncate mmap file to allocated size
         if (ftruncate(fd, mem_size) < 0) {
@@ -43,7 +40,7 @@ struct mmap_allocator
         }
 
         // Map file into virtual memory
-        void* ptr = mmap(NULL, mem_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+        void* ptr = mmap(nullptr, mem_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
 
         // Close file descriptor
         PoolPolicy::close(fd);
@@ -52,7 +49,7 @@ struct mmap_allocator
             throw std::bad_alloc();
         }
 
-        return pointer{ static_cast<value_type*>(ptr), std::move(finfo.second) };
+        return pointer{ static_cast<value_type*>(ptr) };
     }
 
     void deallocate(pointer p, size_type n) noexcept
@@ -91,16 +88,16 @@ struct mmap_allocator
  * - Or, `/tmp`.
  */
 struct basic_pool {
-    static std::pair<int, std::string> open(const std::string& directory)
+    static int open(const std::string& directory)
     {
         std::string name = directory;
         name += "/ngen_mmap_XXXXXX";
         mkstemp(&name[0]);
 
         const int fd = ::open(name.c_str(), O_CREAT | O_RDWR | O_TRUNC);
-
+    
         ::unlink(name.c_str());
-        return { fd, name };
+        return fd;
     }
 
     static void close(int fd)
