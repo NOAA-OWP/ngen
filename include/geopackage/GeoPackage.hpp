@@ -41,6 +41,7 @@ geojson::PropertyMap build_properties(
  */
 geojson::Feature build_feature(
     const sqlite_iter& row,
+    const std::string& id_col,
     const std::string& geom_col
 );
 

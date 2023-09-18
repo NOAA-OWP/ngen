@@ -44,6 +44,22 @@ std::shared_ptr<geojson::FeatureCollection> geopackage::read(
         throw std::runtime_error(errmsg);
     }
 
+    // Introspect if the layer is divides to see which ID field is in use
+    std::string id_column = "id";
+    if(layer == "divides"){
+        try {
+            //TODO: A bit primitive. Actually introspect the schema somehow? https://www.sqlite.org/c3ref/funclist.html
+            sqlite_iter query_get_first_row = db.query("SELECT divide_id FROM " + layer + " LIMIT 1");
+            id_column = "divide_id";
+        }
+        catch (const std::exception& e){
+            #ifndef NGEN_QUIET
+            // output debug info on what is read exactly
+            std::cout << "WARN: Using legacy ID column \"id\" in layer " << layer << " is DEPRECATED and may stop working at any time." << std::endl;
+            #endif
+        }
+    }
+
     // Layer exists, getting statement for it
     //
     // this creates a string in the form:
@@ -93,6 +109,7 @@ std::shared_ptr<geojson::FeatureCollection> geopackage::read(
     while(!query_get_layer.done()) {
         geojson::Feature feature = build_feature(
             query_get_layer,
+            id_column,
             layer_geometry_column
         );
 
@@ -118,8 +135,12 @@ std::shared_ptr<geojson::FeatureCollection> geopackage::read(
         max_y = bbox[3] > max_y ? bbox[3] : max_y;
     }
 
-    return std::make_shared<geojson::FeatureCollection>(
+    auto fc = std::make_shared<geojson::FeatureCollection>(
         std::move(features),
         std::vector<double>({min_x, min_y, max_x, max_y})
     );
+
+    fc->update_ids();
+
+    return fc;
 }
