@@ -129,7 +129,7 @@ struct basic_pool {
         name += "/ngen_mmap_XXXXXX";
         mkstemp(&name[0]);
 
-        const int fd = ::open(name.c_str(), O_CREAT | O_RDWR | O_TRUNC);
+        const int fd = ::open(name.c_str(), O_CREAT | O_RDWR | O_TRUNC, S_IRUSR | S_IWUSR);
     
         ::unlink(name.c_str());
         return fd;
