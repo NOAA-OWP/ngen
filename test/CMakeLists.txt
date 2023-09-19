@@ -165,16 +165,18 @@ ngen_add_test(
 )
 
 ########################## MultiLevel Tests
-   add_test(
-           test_multilevel
-           1
-           core/multilayer/MultiLayerParserTest.cpp
-           NGen::core
-           NGen::geojson
-           NGen::realizations_catchment
-           NGen::core_mediator
-           NGen::forcing
-           ${NETCDF_LIBRARIES}
+ngen_add_test(
+    test_multilayer
+    OBJECTS
+        core/multilayer/MultiLayerParserTest.cpp
+    LIBRARIES
+        NGen::core
+        NGen::geojson
+        NGen::realizations_catchment
+        NGen::core_mediator
+        NGen::forcing
+    REQUIRES
+        NGEN_WITH_NETCDF
 )
 
 

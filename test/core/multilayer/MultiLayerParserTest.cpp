@@ -6,9 +6,9 @@ class MultiLayerParserTest : public ::testing::Test {
     protected:
 
         MultiLayerParserTest() : 
-            nexus_data_path("../data/multilayer/nexus_data.geojson"),
-            catchment_data_path("../data/multilayer/nexus_data.geojson"),
-            realization_config_path("../data/multilayer/realization_config.json")
+            nexus_data_path("./data/nexus_data.geojson"),
+            catchment_data_path("./data/catchment_data_multilayer.geojson"),
+            realization_config_path("./data/example_multilevel_realization_config.json")
         {
 
         }
@@ -55,7 +55,7 @@ TEST_F(MultiLayerParserTest, TestInit0)
 TEST_F(MultiLayerParserTest, TestRead0)
 {
     manager = std::make_shared<realization::Formulation_Manager>(realization_config_path.c_str());
-    manager->read(nexus_collection, utils::getStdOut());
+    manager->read(catchment_collection, utils::getStdOut());
 
     ASSERT_TRUE(true);
 }
