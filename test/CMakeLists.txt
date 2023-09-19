@@ -136,9 +136,10 @@ ngen_add_test(
     test_nexus
     OBJECTS
         core/nexus/NexusTests.cpp
+        utils/nexus_writer_Test.cpp
     LIBRARIES
         NGen::core_nexus
-        ${NETCDF_LIBRARIES}
+        NetCDF
 )
 
 ########################## MPI Remote Nexus Tests
