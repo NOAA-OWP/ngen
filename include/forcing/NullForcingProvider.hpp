@@ -18,9 +18,6 @@ class NullForcingProvider : public data_access::GenericDataProvider
 {
     public:
 
-    typedef struct tm time_type;
-
-
     NullForcingProvider(forcing_params forcing_config):start_date_time_epoch(forcing_config.simulation_start_t),
                                            end_date_time_epoch(forcing_config.simulation_end_t),
                                            current_date_time_epoch(forcing_config.simulation_start_t),
