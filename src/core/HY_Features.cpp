@@ -38,19 +38,19 @@ void HY_Features::init()
       //Find upstream nexus ids
       origins = network.get_origination_ids(feat_id);
 
-      // get the catchment level from the hydro fabric
+      // get the catchment layer from the hydro fabric
       const auto& cat_json_node = fabric->get_feature(feat_id);
-      long lv = cat_json_node->has_key("level") ? cat_json_node->get_property("level").as_natural_number() : 0;
+      long lyr = cat_json_node->has_key("layer") ? cat_json_node->get_property("layer").as_natural_number() : 0;
 
-      // add this level to the set of levels if needed
-      if (hf_levels.find(lv) == hf_levels.end() )
+      // add this layer to the set of layers if needed
+      if (hf_layers.find(lyr) == hf_layers.end() )
       {
-          hf_levels.insert(lv);
+          hf_layers.insert(lyr);
       }
 
       //Create the HY_Catchment with the formulation realization
       std::shared_ptr<HY_Catchment> c = std::make_shared<HY_Catchment>(
-          HY_Catchment(feat_id, origins, destinations, formulation, lv)
+          HY_Catchment(feat_id, origins, destinations, formulation, lyr)
         );
 
       _catchments.emplace(feat_id, c);

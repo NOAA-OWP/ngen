@@ -112,15 +112,15 @@ namespace hy_features {
          * 
          * @return auto 
          */
-        inline auto catchments(long lv) {
-            return network.filter("cat",lv);
+        inline auto catchments(long lyr) {
+            return network.filter("cat",lyr);
         }
 
         /**
-         * @brief Return a set of levels that contain a catchment
+         * @brief Return a set of layers that contain a catchment
          */
 
-        inline const auto& levels() { return hf_levels; }
+        inline const auto& layers() { return hf_layers; }
 
         /**
          * @brief An iterator of only the nexus feature ids
@@ -213,9 +213,9 @@ namespace hy_features {
         std::shared_ptr<Formulation_Manager> formulations;
 
         /**
-         *  @brief The set of levels that contain at least one catchment
+         *  @brief The set of layers that contain at least one catchment
         */
-        std::set<long> hf_levels;
+        std::set<long> hf_layers;
 
         geojson::GeoJSON fabric;
 

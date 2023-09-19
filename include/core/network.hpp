@@ -232,28 +232,28 @@ namespace network {
          * @endcode
          * 
          * @param type The type of feature to filter for, i.e. 'cat', 'nex'
-         * @param target_level The level that filtered results should be in
+         * @param target_layer The layer that filtered results should be in
          * @param order What order to return results in
          * @return auto 
          */
-        auto filter(std::string type, int target_level, SortOrder order = SortOrder::Topological)
+        auto filter(std::string type, int target_layer, SortOrder order = SortOrder::Topological)
         {
           //todo need to worry about valivdating input???
           //if type isn't found as a prefix, this iterator range should be empty,
           //which is a reasonable semantic
           return get_sorted_index(order) | boost::adaptors::reversed
                         | boost::adaptors::transformed([this](int const& i) { return get_id(i); })
-                        | boost::adaptors::filtered([this,type,target_level](std::string const& s) { 
+                        | boost::adaptors::filtered([this,type,target_layer](std::string const& s) { 
                           if(type == "nex"){
                             return (s.substr(0,3) == type || s.substr(0,3) == "tnx" || s.substr(0,4) == "tnex") && 
-                                   (this->level_map.find(s) != this->level_map.end() && this->level_map[s] == target_level);
+                                   (this->layer_map.find(s) != this->layer_map.end() && this->layer_map[s] == target_layer);
                           }
                           if(type == "cat"){
                             return (s.substr(0,3) == type || s.substr(0,3) == "agg") && 
-                                   (this->level_map.find(s) != this->level_map.end() && this->level_map[s] == target_level);
+                                   (this->layer_map.find(s) != this->layer_map.end() && this->layer_map[s] == target_layer);
                           }
                           return (s.substr(0,3) == type) && 
-                                  (this->level_map.find(s) != this->level_map.end() && (this->level_map[s] == target_level)); 
+                                  (this->layer_map.find(s) != this->layer_map.end() && (this->layer_map[s] == target_layer)); 
                         });
         }
         /**
@@ -362,10 +362,10 @@ namespace network {
         std::unordered_map<std::string, Graph::vertex_descriptor> descriptor_map;
 
         /**
-         * @brief Mapping of identifier to hydrofabric level
+         * @brief Mapping of identifier to hydrofabric layer
          * 
         */
-        std::unordered_map<std::string, long> level_map;
+        std::unordered_map<std::string, long> layer_map;
         
         /**
          * @brief Get an index of the graph in a particular order.

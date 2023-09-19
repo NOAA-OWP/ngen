@@ -43,19 +43,19 @@ HY_Features_MPI::HY_Features_MPI( PartitionData partition_data, geojson::GeoJSON
           //FIXME why isn't default param working here??? get_output_header_line() fails.
           formulation->write_output("Time Step,""Time,"+formulation->get_output_header_line(",")+"\n");
           
-          // get the catchment level from the hydro fabric
+          // get the catchment layer from the hydro fabric
           const auto& cat_json_node = linked_hydro_fabric->get_feature(feat_id);
-          long lv = cat_json_node->has_key("level") ? cat_json_node->get_property("level").as_natural_number() : 0;
+          long lyr = cat_json_node->has_key("layer") ? cat_json_node->get_property("layer").as_natural_number() : 0;
 
-          // add this level to the set of levels if needed
-          if (hf_levels.find(lv) == hf_levels.end() )
+          // add this layer to the set of layers if needed
+          if (hf_layers.find(lyr) == hf_layers.end() )
           {
-              hf_levels.insert(lv);
+              hf_layers.insert(lyr);
           }
 
           //Create the HY_Catchment with the formulation realization
           std::shared_ptr<HY_Catchment> c = std::make_shared<HY_Catchment>(
-              HY_Catchment(feat_id, origins, destinations, formulation, lv)
+              HY_Catchment(feat_id, origins, destinations, formulation, lyr)
             );
 
           _catchments.emplace(feat_id, c);

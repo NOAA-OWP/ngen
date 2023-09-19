@@ -45,16 +45,16 @@ Network::Network( geojson::GeoJSON fabric ){
       v1 = this->descriptor_map[ feature_id];
     }
 
-    if ( this->level_map.find(feature_id) == this->level_map.end() )
+    if ( this->layer_map.find(feature_id) == this->layer_map.end() )
     {
-      if ( feature->has_property("level") )
+      if ( feature->has_property("layer") )
       {
-        const auto& prop = feature->get_property("level");
-        this->level_map.emplace( feature_id, prop.as_natural_number() );
+        const auto& prop = feature->get_property("layer");
+        this->layer_map.emplace( feature_id, prop.as_natural_number() );
       }
       else
       {
-        this->level_map.emplace( feature_id, DEFAULT_LAYER_ID);
+        this->layer_map.emplace( feature_id, DEFAULT_LAYER_ID);
       }
     }
 

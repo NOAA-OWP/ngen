@@ -34,15 +34,15 @@ namespace hy_features {
             return _nexuses.find(id) != _nexuses.end() && _nexuses[id]->is_remote_sender();
         }
         
-        inline auto catchments(long lv) {
-            return network.filter("cat",lv);
+        inline auto catchments(long lyr) {
+            return network.filter("cat",lyr);
         }
 
         /**
-         * @brief Return a set of levels that contain a catchment
+         * @brief Return a set of layers that contain a catchment
          */
 
-        inline const auto& levels() { return hf_levels; }
+        inline const auto& layers() { return hf_layers; }
 
         inline std::vector<std::shared_ptr<HY_HydroNexus>> destination_nexuses(const std::string& id) {
             std::vector<std::shared_ptr<HY_HydroNexus>> downstream;
@@ -88,7 +88,7 @@ namespace hy_features {
       std::unordered_map<std::string, std::shared_ptr<HY_PointHydroNexusRemote>> _nexuses;
       network::Network network;
       std::shared_ptr<Formulation_Manager> formulations;
-      std::set<long> hf_levels;
+      std::set<long> hf_layers;
       int mpi_rank;
       int mpi_num_procs;
 

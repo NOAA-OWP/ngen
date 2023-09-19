@@ -428,7 +428,7 @@ int main(int argc, char *argv[]) {
           {
             layer_min_next_time = layer_next_time;
           }
-        } //done levels
+        } //done layers
       } while( layer_min_next_time < next_time );  // rerun the loop until the last layer would pass the master next time
 
       if (count + 1 < num_times)

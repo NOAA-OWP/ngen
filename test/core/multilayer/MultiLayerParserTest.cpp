@@ -8,7 +8,7 @@ class MultiLayerParserTest : public ::testing::Test {
         MultiLayerParserTest() : 
             nexus_data_path("./data/nexus_data.geojson"),
             catchment_data_path("./data/catchment_data_multilayer.geojson"),
-            realization_config_path("./data/example_multilevel_realization_config.json")
+            realization_config_path("./data/example_multilayer_realization_config.json")
         {
 
         }

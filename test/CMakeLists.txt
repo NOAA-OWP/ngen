@@ -164,7 +164,7 @@ ngen_add_test(
     #   NGEN_WITH_MPI
 )
 
-########################## MultiLevel Tests
+########################## MultiLayer Tests
 ngen_add_test(
     test_multilayer
     OBJECTS
