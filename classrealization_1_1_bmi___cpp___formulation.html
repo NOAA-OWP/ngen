@@ -1619,7 +1619,7 @@ Friends</h2></td></tr>
 
 <p>Get the model response for a time step. </p>
 <p >Get the model response for the provided time step, executing the backing model formulation one or more times as needed.</p>
-<p >Function assumes the backing model has been fully initialized an that any additional input values have been applied.</p>
+<p >Function assumes the backing model has been fully initialized and that any additional input values have been applied.</p>
 <p >The function throws an error if the index of a previously processed time step is supplied, except if it is the last processed time step. In that case, the appropriate value is returned as described below, but without executing any model update.</p>
 <p >Assuming updating to the implied time is valid for the model, the function executes one or more model updates to process future time steps for the necessary indexes. Multiple time steps updates occur when the given future time step index is not the next time step index to be processed. Regardless, all processed time steps have the size supplied in <code>t_delta</code>.</p>
 <p >However, it is possible to provide <code>t_index</code> and <code>t_delta</code> values that would result in the aggregate updates taking the model's time beyond its <code>end_time</code> value. In such cases, if the formulation config indicates this model is not allow to exceed its set <code>end_time</code>, the function does not update the model and throws an error.</p>
@@ -3802,7 +3802,7 @@ template&lt;class T , class O &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li><li class="navelem"><a class="el" href="classrealization_1_1_bmi___cpp___formulation.html">Bmi_Cpp_Formulation</a></li>
-    <li class="footer">Generated on Mon Sep 18 2023 18:12:19 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
+    <li class="footer">Generated on Tue Sep 19 2023 14:31:45 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
   </ul>
 </div>
 </body>
