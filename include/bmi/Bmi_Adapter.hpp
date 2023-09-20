@@ -16,7 +16,6 @@ namespace models {
          * Abstract adapter interface for C++ classes to interact with the essential aspects of external models that
          * implement the BMI spec but that are written in some other programming language.
          */
-        template <class T>
         class Bmi_Adapter : public ::bmi::Bmi {
         public:
 
