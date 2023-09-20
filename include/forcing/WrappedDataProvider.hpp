@@ -51,7 +51,7 @@ namespace data_access {
          * @return const std::vector<std::string>& the names of available data variables
          */
 
-        const std::vector<std::string> &get_available_variable_names() override {
+        boost::span<const std::string> get_available_variable_names() override {
             return wrapped_provider->get_available_variable_names();
         }
 

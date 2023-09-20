@@ -169,7 +169,7 @@ TEST_F(CsvPerFeatureForcingProviderTest, TestForcingDataUnitConversion)
 ///Test AORC Forcing Object
 TEST_F(CsvPerFeatureForcingProviderTest, TestGetAvailableForcingOutputs)
 {
-    const std::vector<std::string>& afos = Forcing_Object->get_available_variable_names();
+    auto afos = Forcing_Object->get_available_variable_names();
     EXPECT_EQ(afos.size(), 18);
     EXPECT_TRUE(std::find(afos.begin(), afos.end(), "DLWRF_surface") != afos.end());
     EXPECT_TRUE(std::find(afos.begin(), afos.end(), CSDMS_STD_NAME_SOLAR_LONGWAVE) != afos.end());

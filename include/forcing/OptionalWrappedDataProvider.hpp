@@ -397,7 +397,7 @@ namespace data_access {
         std::map<std::string, int> defaultUsageWaits;
 
         static bool isSuppliedByProvider(const std::string &outputName, GenericDataProvider *provider) {
-            const std::vector<std::string> &available = provider->get_available_variable_names();
+            auto available = provider->get_available_variable_names();
             return find(available.begin(), available.end(), outputName) != available.end();
         }
 

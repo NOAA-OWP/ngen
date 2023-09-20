@@ -70,8 +70,7 @@ namespace realization {
          * @return The collection of forcing output property names this instance can provide.
          * @see ForcingProvider
          */
-        //const vector<std::string> &get_available_forcing_outputs() {
-        const std::vector<std::string> &get_available_variable_names() override {
+        boost::span<const std::string> get_available_variable_names() override {
             if (is_model_initialized() && available_forcings.empty()) {
                 for (const std::string &output_var_name : get_bmi_model()->GetOutputVarNames()) {
                     available_forcings.push_back(output_var_name);
@@ -81,10 +80,6 @@ namespace realization {
             }
             return available_forcings;
         }
-
-        //inline const vector<std::string> &get_available_variable_names() override {
-        //    return get_available_forcing_outputs();
-        //}
 
         /**
          * Get the inclusive beginning of the period of time over which this instance can provide data for this forcing.
@@ -219,8 +214,7 @@ namespace realization {
             std::string output_units = selector.get_output_units();
 
             // First make sure this is an available output
-            //const std::vector<std::string> forcing_outputs = get_available_forcing_outputs();
-            const std::vector<std::string> forcing_outputs = get_available_variable_names();
+            auto forcing_outputs = get_available_variable_names();
             if (std::find(forcing_outputs.begin(), forcing_outputs.end(), output_name) == forcing_outputs.end()) {
                 throw std::runtime_error(get_formulation_type() + " received invalid output forcing name " + output_name);
             }
@@ -288,8 +282,7 @@ namespace realization {
             std::string output_units = selector.get_output_units();
 
             // First make sure this is an available output
-            //const std::vector<std::string> forcing_outputs = get_available_forcing_outputs();
-            const std::vector<std::string> forcing_outputs = get_available_variable_names();
+            auto forcing_outputs = get_available_variable_names();
             if (std::find(forcing_outputs.begin(), forcing_outputs.end(), output_name) == forcing_outputs.end()) {
                 throw std::runtime_error(get_formulation_type() + " received invalid output forcing name " + output_name);
             }

@@ -48,7 +48,7 @@ class NullForcingProvider : public data_access::GenericDataProvider
         throw std::runtime_error("Got request for variable " + name + " but no such variable is provided by NullForcingProvider." + SOURCE_LOC);
     }
 
-    const std::vector<std::string> &get_available_variable_names() override {
+    boost::span<const std::string> get_available_variable_names() override {
         return available_forcings;
     }
 

@@ -116,9 +116,7 @@ namespace realization {
          * @return The collection of forcing output property names this instance can provide.
          * @see ForcingProvider
          */
-        //const vector<std::string> &get_available_forcing_outputs();
-        //const vector<std::string> &get_available_variable_names() override { return get_available_forcing_outputs(); }
-        const std::vector<std::string> &get_available_variable_names() override;
+        boost::span <const std::string> get_available_variable_names() override;
 
         /**
         * Get the input variables of 

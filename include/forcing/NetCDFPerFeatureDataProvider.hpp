@@ -67,7 +67,7 @@ namespace data_access
         ~NetCDFPerFeatureDataProvider();
 
         /** Return the variables that are accessable by this data provider */
-        const std::vector<std::string>& get_available_variable_names() override;
+        boost::span<const std::string> get_available_variable_names() override;
 
         /** return a list of ids in the current file */
         const std::vector<std::string>& get_ids() const;
