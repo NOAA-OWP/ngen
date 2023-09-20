@@ -40,46 +40,8 @@ namespace models {
                 }
             }
 
-            /**
-             * Copy constructor.
-             *
-             * @param adapter Base adapter instance to copy.
-             */
-            Bmi_Adapter(Bmi_Adapter &adapter)
-                    : allow_model_exceed_end_time(adapter.allow_model_exceed_end_time),
-                      bmi_init_config(adapter.bmi_init_config),
-                      bmi_model(adapter.bmi_model),
-                      bmi_model_has_fixed_time_step(adapter.bmi_model_has_fixed_time_step),
-                      bmi_model_time_convert_factor(adapter.bmi_model_time_convert_factor),
-                      bmi_model_time_step_size(adapter.bmi_model_time_step_size),
-                      bmi_model_uses_forcing_file(adapter.bmi_model_uses_forcing_file),
-                      forcing_file_path(adapter.forcing_file_path),
-                      init_exception_msg(adapter.init_exception_msg), input_var_names(adapter.input_var_names),
-                      model_initialized(adapter.model_initialized), model_name(adapter.model_name),
-                      output(adapter.output),
-                      output_var_names(adapter.output_var_names) {}
-
-            /**
-             * Move constructor.
-             *
-             * @param adapter Base adapter instance to copy.
-             */
-            Bmi_Adapter(Bmi_Adapter &&adapter)
-                    : allow_model_exceed_end_time(std::move(adapter.allow_model_exceed_end_time)),
-                      bmi_init_config(std::move(adapter.bmi_init_config)),
-                      bmi_model(std::move(adapter.bmi_model)),
-                      bmi_model_has_fixed_time_step(std::move(adapter.bmi_model_has_fixed_time_step)),
-                      bmi_model_time_convert_factor(std::move(adapter.bmi_model_time_convert_factor)),
-                      bmi_model_time_step_size(std::move(adapter.bmi_model_time_step_size)),
-                      bmi_model_uses_forcing_file(std::move(adapter.bmi_model_uses_forcing_file)),
-                      forcing_file_path(std::move(adapter.forcing_file_path)),
-                      init_exception_msg(std::move(adapter.init_exception_msg)),
-                      input_var_names(std::move(adapter.input_var_names)),
-                      model_initialized(std::move(adapter.model_initialized)),
-                      model_name(std::move(adapter.model_name)),
-                      output(std::move(adapter.output)),
-                      output_var_names(std::move(adapter.output_var_names)) {}
-
+            Bmi_Adapter(Bmi_Adapter &) = default;
+            Bmi_Adapter(Bmi_Adapter &&) = default;
 
             /**
              * Determine backing model's time units and return an appropriate conversion factor.
