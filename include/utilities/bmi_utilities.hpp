@@ -37,8 +37,8 @@ namespace models {
          * @param name Bmi variable name to query the model for
          * @return std::vector<T> Copy of data from the BMI model for variable @param name
          */
-        template <typename T, typename A>
-        std::vector<T> GetValue(Bmi_Adapter<A>& model, const std::string& name) {
+        template <typename T>
+        std::vector<T> GetValue(Bmi_Adapter& model, const std::string& name) {
             //TODO make model const ref
             int total_mem = model.GetVarNbytes(name);
             int item_size = model.GetVarItemsize(name);

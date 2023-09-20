@@ -16,7 +16,7 @@ Bmi_Py_Adapter::Bmi_Py_Adapter(const std::string &type_name, std::string bmi_ini
 Bmi_Py_Adapter::Bmi_Py_Adapter(const std::string &type_name, std::string bmi_init_config, const std::string &bmi_python_type,
                                std::string forcing_file_path, bool allow_exceed_end, bool has_fixed_time_step,
                                utils::StreamHandler output)
-        : Bmi_Adapter<py::object>(type_name + " (BMI Py)", std::move(bmi_init_config),
+        : Bmi_Adapter(type_name + " (BMI Py)", std::move(bmi_init_config),
                                   std::move(forcing_file_path), allow_exceed_end, has_fixed_time_step,
                                   output),
           bmi_type_py_full_name(bmi_python_type),

@@ -10,7 +10,7 @@ namespace models {
     namespace bmi {
 
         template <class C>
-        class AbstractCLibBmiAdapter : public Bmi_Adapter<C> {
+        class AbstractCLibBmiAdapter : public Bmi_Adapter {
 
         public:
             /**
@@ -29,13 +29,13 @@ namespace models {
             AbstractCLibBmiAdapter(const std::string &type_name, std::string library_file_path, std::string bmi_init_config,
                                    std::string forcing_file_path, bool allow_exceed_end, bool has_fixed_time_step,
                                    std::string registration_func, utils::StreamHandler output)
-                    : Bmi_Adapter<C>(type_name, std::move(bmi_init_config), std::move(forcing_file_path),
+                    : Bmi_Adapter(type_name, std::move(bmi_init_config), std::move(forcing_file_path),
                                      allow_exceed_end, has_fixed_time_step, output),
                       bmi_lib_file(std::move(library_file_path)),
                       bmi_registration_function(std::move(registration_func)) { }
 
             AbstractCLibBmiAdapter(AbstractCLibBmiAdapter &&adapter) noexcept :
-                    Bmi_Adapter<C>(std::move(adapter)),
+                    Bmi_Adapter(std::move(adapter)),
                     bmi_model(std::move(adapter.bmi_model)),
                     bmi_lib_file(std::move(adapter.bmi_lib_file)),
                     bmi_registration_function(adapter.bmi_registration_function),
