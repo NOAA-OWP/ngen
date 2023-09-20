@@ -262,7 +262,7 @@ NetCDFPerFeatureDataProvider::NetCDFPerFeatureDataProvider(std::string input_pat
 
 NetCDFPerFeatureDataProvider::~NetCDFPerFeatureDataProvider() = default;
 
-const std::vector<std::string>& NetCDFPerFeatureDataProvider::get_available_variable_names()
+boost::span<const std::string> NetCDFPerFeatureDataProvider::get_available_variable_names()
 {
     return variable_names;
 }

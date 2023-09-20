@@ -70,7 +70,7 @@ namespace data_access {
          * @return The names of the outputs for which this instance is (or will be) able to provide values.
          */
 
-        const std::vector<std::string> &get_available_variable_names() {
+        boost::span<const std::string> get_available_variable_names() {
             return providedOutputs;
         }
 
@@ -137,7 +137,7 @@ namespace data_access {
             }
 
             // Confirm this will provide everything needed
-            const std::vector<std::string> &available = provider->get_available_variable_names();
+            const auto available = provider->get_available_variable_names();
             for (const std::string &requiredName : providedOutputs) {
                 if (std::find(available.begin(), available.end(), requiredName) == available.end()) {
                     setMessage = "Given provider does not provide the required " + requiredName;

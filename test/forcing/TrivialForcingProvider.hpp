@@ -23,7 +23,7 @@ namespace data_access {
                 outputs.push_back(OUTPUT_NAME_1);
             }
                                   
-            const std::vector<std::string>& get_available_variable_names() override {
+            boost::span<const std::string> get_available_variable_names() override {
                 return outputs;
             }
 
