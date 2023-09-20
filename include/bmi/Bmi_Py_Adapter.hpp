@@ -767,6 +767,11 @@ namespace models {
 
             // For unit testing
             friend class ::Bmi_Py_Adapter_Test;
+
+        protected:
+            /** Pointer to backing BMI model instance. */
+            std::shared_ptr<py::object> bmi_model = nullptr;
+
         };
 
     }
