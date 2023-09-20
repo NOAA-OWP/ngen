@@ -42,7 +42,7 @@ option(NGEN_WITH_SQLITE      "Build with SQLite3 support"         OFF)
 option(NGEN_WITH_UDUNITS     "Build with UDUNITS2 support"        ON)
 option(NGEN_WITH_BMI_FORTRAN "Build with Fortran BMI support"     OFF)
 option(NGEN_WITH_BMI_C       "Build with C BMI support"           ON)
-option(NGEN_WITH_PYTHON      "Build with embedded Python support" OFF)
+option(NGEN_WITH_PYTHON      "Build with embedded Python support" ON)
 option(NGEN_WITH_TESTS       "Build with unit tests"              ON)
 option(NGEN_QUIET            "Silence output"                     OFF)
 
