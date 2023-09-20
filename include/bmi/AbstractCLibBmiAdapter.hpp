@@ -36,6 +36,7 @@ namespace models {
 
             AbstractCLibBmiAdapter(AbstractCLibBmiAdapter &&adapter) noexcept :
                     Bmi_Adapter<C>(std::move(adapter)),
+                    bmi_model(std::move(adapter.bmi_model)),
                     bmi_lib_file(std::move(adapter.bmi_lib_file)),
                     bmi_registration_function(adapter.bmi_registration_function),
                     dyn_lib_handle(adapter.dyn_lib_handle)
@@ -204,6 +205,10 @@ namespace models {
             inline const void *get_dyn_lib_handle() {
                 return dyn_lib_handle;
             }
+
+        protected:
+            /** Pointer to backing BMI model instance. */
+            std::shared_ptr<C> bmi_model = nullptr;
 
         private:
 

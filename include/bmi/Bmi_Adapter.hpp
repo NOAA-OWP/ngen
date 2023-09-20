@@ -221,8 +221,6 @@ namespace models {
             bool allow_model_exceed_end_time = false;
             /** Path (as a string) to the BMI config file for initializing the backing model (empty if none). */
             std::string bmi_init_config;
-            /** Pointer to backing BMI model instance. */
-            std::shared_ptr<T> bmi_model = nullptr;
             /** Whether this particular model has a time step size that cannot be changed internally or externally. */
             bool bmi_model_has_fixed_time_step = true;
             /** Conversion factor for converting values for model time in model's unit type to equivalent in seconds. */
