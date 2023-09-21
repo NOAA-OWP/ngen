@@ -66,7 +66,7 @@ namespace realization {
         }
 #endif
         else if (forcing_config.provider == "NullForcingProvider"){
-            fp = std::make_shared<NullForcingProvider>(forcing_config);
+            fp = std::make_shared<NullForcingProvider>();
         }
         else { // Some unknown string in the provider field?
             throw std::runtime_error(
