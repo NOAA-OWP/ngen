@@ -49,13 +49,8 @@ class NullForcingProvider : public data_access::GenericDataProvider
     }
 
     boost::span<const std::string> get_available_variable_names() override {
-        return available_forcings;
+        return {};
     }
-
-    private:
-    
-    std::vector<std::string> available_forcings;
-
 };
 
 #endif // NGEN_NULLFORCING_H
