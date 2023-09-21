@@ -5248,6 +5248,18 @@
         <topic label="complete_json_file" href="class_nexus___test.html#a141e0165625e2647bbe2af0a005ac59a"/>
         <topic label="id_map_json_file" href="class_nexus___test.html#a70dffa3db4d3de7aa35fd42e7f15164c"/>
       </topic>
+      <topic label="NullForcingProvider" href="class_null_forcing_provider.html">
+        <topic label="NullForcingProvider" href="class_null_forcing_provider.html#a586f4876aa823dee3c07963f49b2423b"/>
+        <topic label="get_available_variable_names" href="class_null_forcing_provider.html#a67a849ceb6d377dc95fd5d9edb350267"/>
+        <topic label="get_data_start_time" href="class_null_forcing_provider.html#a25565dbc5856f7f79858c7b0e641659e"/>
+        <topic label="get_data_stop_time" href="class_null_forcing_provider.html#a7f50953a40f8d1c4911b91d35e52efda"/>
+        <topic label="get_ts_index_for_time" href="class_null_forcing_provider.html#a6fe63dfccf5fc86d2d4f730df4a806ab"/>
+        <topic label="get_value" href="class_null_forcing_provider.html#a28350a9c2d92fd90578212ce3f8574c8"/>
+        <topic label="get_values" href="class_null_forcing_provider.html#a86b93fe9449bcbe7c321952308217fca"/>
+        <topic label="is_property_sum_over_time_step" href="class_null_forcing_provider.html#a9350efc0423d384f5b5207f9fa46d2f8"/>
+        <topic label="record_duration" href="class_null_forcing_provider.html#ace80c5c208f3bb23005126f011c5ecf9"/>
+        <topic label="available_forcings" href="class_null_forcing_provider.html#aeda33805248363c36f52e07d202f6d7b"/>
+      </topic>
       <topic label="request_from_empty_nexus" href="structrequest__from__empty__nexus.html">
         <topic label="what" href="structrequest__from__empty__nexus.html#abca7c44aaf8b4582bc5067d53930011d"/>
       </topic>
@@ -5452,6 +5464,7 @@
       <topic label="data_access::DataProvider&lt; double, CatchmentAggrDataSelector &gt;" href="classdata__access_1_1_data_provider.html">
         <topic label="data_access::GenericDataProvider" href="classdata__access_1_1_generic_data_provider.html">
           <topic label="CsvPerFeatureForcingProvider" href="class_csv_per_feature_forcing_provider.html"/>
+          <topic label="NullForcingProvider" href="class_null_forcing_provider.html"/>
           <topic label="data_access::WrappedDataProvider" href="classdata__access_1_1_wrapped_data_provider.html">
             <topic label="data_access::DeferredWrappedProvider" href="classdata__access_1_1_deferred_wrapped_provider.html">
               <topic label="data_access::OptionalWrappedDataProvider" href="classdata__access_1_1_optional_wrapped_data_provider.html"/>

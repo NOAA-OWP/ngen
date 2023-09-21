@@ -3,15 +3,16 @@
 <area shape="rect" id="node2" href="$classdata__access_1_1_async_data_provider.html" title=" " alt="" coords="5,365,223,449"/>
 <area shape="rect" id="node3" href="$classdata__access_1_1_data_provider.html" title=" " alt="" coords="247,299,501,515"/>
 <area shape="rect" id="node4" href="$classdata__access_1_1_generic_data_provider.html" title=" " alt="" coords="285,564,463,619"/>
-<area shape="rect" id="node5" href="$class_csv_per_feature_forcing_provider.html" title="Forcing class providing time&#45;series precipiation forcing data to the model." alt="" coords="35,668,257,1251"/>
-<area shape="rect" id="node6" href="$classdata__access_1_1_wrapped_data_provider.html" title="Simple implementation that basically wraps another instance." alt="" coords="282,829,466,1089"/>
-<area shape="rect" id="node9" href="$classrealization_1_1_bmi___formulation.html" title="Abstraction of formulation with backing model object(s) that implements the BMI." alt="" coords="521,683,718,1236"/>
-<area shape="rect" id="node7" href="$classdata__access_1_1_deferred_wrapped_provider.html" title="A specialized @WrappedDataProvider that is created without first knowing the backing source it wraps." alt="" coords="239,1659,445,1875"/>
-<area shape="rect" id="node8" href="$classdata__access_1_1_optional_wrapped_data_provider.html" title="Extension of DeferredWrappedProvider, where default values can be used instead of a backing provider." alt="" coords="233,2635,451,2939"/>
-<area shape="rect" id="node10" href="$classrealization_1_1_bmi___module___formulation.html" title=" " alt="" coords="757,2312,954,3261"/>
-<area shape="rect" id="node12" href="$classrealization_1_1_bmi___module___formulation.html" title=" " alt="" coords="498,2312,695,3261"/>
-<area shape="rect" id="node14" href="$classrealization_1_1_bmi___module___formulation.html" title="Abstraction of a formulation with a single backing model object that implements the BMI." alt="" coords="521,1300,718,2235"/>
-<area shape="rect" id="node15" href="$classrealization_1_1_bmi___multi___formulation.html" title="Abstraction of a formulation with multiple backing model object that implements the BMI." alt="" coords="742,1425,950,2110"/>
-<area shape="rect" id="node11" href="$classrealization_1_1_bmi___c___formulation.html" title=" " alt="" coords="762,3311,949,3585"/>
-<area shape="rect" id="node13" href="$classrealization_1_1_bmi___cpp___formulation.html" title="Encapsulates a bmi::Bmi model in C++ such that it can be loaded as a formulation, as such also so tha..." alt="" coords="503,3311,690,3585"/>
+<area shape="rect" id="node5" href="$class_csv_per_feature_forcing_provider.html" title="Forcing class providing time&#45;series precipiation forcing data to the model." alt="" coords="27,668,249,1251"/>
+<area shape="rect" id="node6" href="$class_null_forcing_provider.html" title="Forcing class that returns no variables to the simulation–use this e.g." alt="" coords="274,851,442,1067"/>
+<area shape="rect" id="node7" href="$classdata__access_1_1_wrapped_data_provider.html" title="Simple implementation that basically wraps another instance." alt="" coords="466,829,650,1089"/>
+<area shape="rect" id="node10" href="$classrealization_1_1_bmi___formulation.html" title="Abstraction of formulation with backing model object(s) that implements the BMI." alt="" coords="705,683,902,1236"/>
+<area shape="rect" id="node8" href="$classdata__access_1_1_deferred_wrapped_provider.html" title="A specialized @WrappedDataProvider that is created without first knowing the backing source it wraps." alt="" coords="423,1659,629,1875"/>
+<area shape="rect" id="node9" href="$classdata__access_1_1_optional_wrapped_data_provider.html" title="Extension of DeferredWrappedProvider, where default values can be used instead of a backing provider." alt="" coords="417,2635,635,2939"/>
+<area shape="rect" id="node11" href="$classrealization_1_1_bmi___module___formulation.html" title=" " alt="" coords="941,2312,1138,3261"/>
+<area shape="rect" id="node13" href="$classrealization_1_1_bmi___module___formulation.html" title=" " alt="" coords="682,2312,879,3261"/>
+<area shape="rect" id="node15" href="$classrealization_1_1_bmi___module___formulation.html" title="Abstraction of a formulation with a single backing model object that implements the BMI." alt="" coords="705,1300,902,2235"/>
+<area shape="rect" id="node16" href="$classrealization_1_1_bmi___multi___formulation.html" title="Abstraction of a formulation with multiple backing model object that implements the BMI." alt="" coords="926,1425,1134,2110"/>
+<area shape="rect" id="node12" href="$classrealization_1_1_bmi___c___formulation.html" title=" " alt="" coords="946,3311,1133,3585"/>
+<area shape="rect" id="node14" href="$classrealization_1_1_bmi___cpp___formulation.html" title="Encapsulates a bmi::Bmi model in C++ such that it can be loaded as a formulation, as such also so tha..." alt="" coords="687,3311,874,3585"/>
 </map>

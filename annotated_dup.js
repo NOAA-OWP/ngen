@@ -159,6 +159,7 @@ var annotated_dup =
     [ "Network_Test2", "class_network___test2.html", "class_network___test2" ],
     [ "Nexus_Remote_Test", "class_nexus___remote___test.html", "class_nexus___remote___test" ],
     [ "Nexus_Test", "class_nexus___test.html", "class_nexus___test" ],
+    [ "NullForcingProvider", "class_null_forcing_provider.html", "class_null_forcing_provider" ],
     [ "request_from_empty_nexus", "structrequest__from__empty__nexus.html", "structrequest__from__empty__nexus" ],
     [ "ReservoirKernelTest", "class_reservoir_kernel_test.html", "class_reservoir_kernel_test" ],
     [ "ReservoirTimelessKernelTest", "class_reservoir_timeless_kernel_test.html", "class_reservoir_timeless_kernel_test" ],
