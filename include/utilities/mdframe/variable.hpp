@@ -5,7 +5,7 @@
 #include "traits.hpp"
 #include "dimension.hpp"
 #include <initializer_list>
-#include <boost/bind.hpp>
+#include <functional>
 
 #include "visitors.hpp"
 
