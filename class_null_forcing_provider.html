@@ -91,7 +91,6 @@ $(document).ready(function(){initNavTree('class_null_forcing_provider.html','');
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="class_null_forcing_provider-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">NullForcingProvider Class Reference</div></div>
 </div><!--header-->
@@ -142,14 +141,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a86b93fe9449bcbe7c321952308217fca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9350efc0423d384f5b5207f9fa46d2f8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_null_forcing_provider.html#a9350efc0423d384f5b5207f9fa46d2f8">is_property_sum_over_time_step</a> (const std::string &amp;name) override</td></tr>
 <tr class="separator:a9350efc0423d384f5b5207f9fa46d2f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a67a849ceb6d377dc95fd5d9edb350267"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; std::string &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_null_forcing_provider.html#a67a849ceb6d377dc95fd5d9edb350267">get_available_variable_names</a> () override</td></tr>
-<tr class="memdesc:a67a849ceb6d377dc95fd5d9edb350267"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the variables that are accessable by this data provider.  <a href="class_null_forcing_provider.html#a67a849ceb6d377dc95fd5d9edb350267">More...</a><br /></td></tr>
-<tr class="separator:a67a849ceb6d377dc95fd5d9edb350267"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
-Private Attributes</h2></td></tr>
-<tr class="memitem:aeda33805248363c36f52e07d202f6d7b"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_null_forcing_provider.html#aeda33805248363c36f52e07d202f6d7b">available_forcings</a></td></tr>
-<tr class="separator:aeda33805248363c36f52e07d202f6d7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4487421e46fcf87995144873402a2d57"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1span.html">boost::span</a>&lt; const std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_null_forcing_provider.html#a4487421e46fcf87995144873402a2d57">get_available_variable_names</a> () override</td></tr>
+<tr class="memdesc:a4487421e46fcf87995144873402a2d57"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the variables that are accessable by this data provider.  <a href="class_null_forcing_provider.html#a4487421e46fcf87995144873402a2d57">More...</a><br /></td></tr>
+<tr class="separator:a4487421e46fcf87995144873402a2d57"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Forcing class that returns no variables to the simulation&ndash;use this e.g. </p>
@@ -181,8 +175,8 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a67a849ceb6d377dc95fd5d9edb350267" name="a67a849ceb6d377dc95fd5d9edb350267"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a67a849ceb6d377dc95fd5d9edb350267">&#9670;&#160;</a></span>get_available_variable_names()</h2>
+<a id="a4487421e46fcf87995144873402a2d57" name="a4487421e46fcf87995144873402a2d57"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4487421e46fcf87995144873402a2d57">&#9670;&#160;</a></span>get_available_variable_names()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -191,7 +185,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const std::vector&lt; std::string &gt; &amp; NullForcingProvider::get_available_variable_names </td>
+          <td class="memname"><a class="el" href="classboost_1_1span.html">boost::span</a>&lt; const std::string &gt; NullForcingProvider::get_available_variable_names </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -206,9 +200,7 @@ Private Attributes</h2></td></tr>
 
 <p>Return the variables that are accessable by this data provider. </p>
 
-<p>Implements <a class="el" href="classdata__access_1_1_data_provider.html#a074f2ad6e6afe3e6edbdbbcf99c8e826">data_access::DataProvider&lt; double, CatchmentAggrDataSelector &gt;</a>.</p>
-
-<p class="reference">References <a class="el" href="class_null_forcing_provider.html#aeda33805248363c36f52e07d202f6d7b">available_forcings</a>.</p>
+<p>Implements <a class="el" href="classdata__access_1_1_data_provider.html#a13ffb91d8fdba4a13ef440f7621d9cfe">data_access::DataProvider&lt; double, CatchmentAggrDataSelector &gt;</a>.</p>
 
 </div>
 </div>
@@ -484,31 +476,6 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<h2 class="groupheader">Member Data Documentation</h2>
-<a id="aeda33805248363c36f52e07d202f6d7b" name="aeda33805248363c36f52e07d202f6d7b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeda33805248363c36f52e07d202f6d7b">&#9670;&#160;</a></span>available_forcings</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt;std::string&gt; NullForcingProvider::available_forcings</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="reference">Referenced by <a class="el" href="class_null_forcing_provider.html#a67a849ceb6d377dc95fd5d9edb350267">get_available_variable_names()</a>.</p>
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>include/forcing/<a class="el" href="_null_forcing_provider_8hpp_source.html">NullForcingProvider.hpp</a></li>
 </ul>
@@ -518,7 +485,7 @@ Private Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_null_forcing_provider.html">NullForcingProvider</a></li>
-    <li class="footer">Generated on Thu Sep 21 2023 16:11:14 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
+    <li class="footer">Generated on Thu Sep 21 2023 16:44:46 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
   </ul>
 </div>
 </body>

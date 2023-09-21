@@ -117,9 +117,9 @@ $(document).ready(function(){initNavTree('classdata__access_1_1_async_data_provi
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a074f2ad6e6afe3e6edbdbbcf99c8e826"><td class="memItemLeft" align="right" valign="top">virtual const std::vector&lt; std::string &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_data_provider.html#a074f2ad6e6afe3e6edbdbbcf99c8e826">get_available_variable_names</a> ()=0</td></tr>
-<tr class="memdesc:a074f2ad6e6afe3e6edbdbbcf99c8e826"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the variables that are accessable by this data provider.  <a href="classdata__access_1_1_data_provider.html#a074f2ad6e6afe3e6edbdbbcf99c8e826">More...</a><br /></td></tr>
-<tr class="separator:a074f2ad6e6afe3e6edbdbbcf99c8e826"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a13ffb91d8fdba4a13ef440f7621d9cfe"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classboost_1_1span.html">boost::span</a>&lt; const std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_data_provider.html#a13ffb91d8fdba4a13ef440f7621d9cfe">get_available_variable_names</a> ()=0</td></tr>
+<tr class="memdesc:a13ffb91d8fdba4a13ef440f7621d9cfe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the variables that are accessable by this data provider.  <a href="classdata__access_1_1_data_provider.html#a13ffb91d8fdba4a13ef440f7621d9cfe">More...</a><br /></td></tr>
+<tr class="separator:a13ffb91d8fdba4a13ef440f7621d9cfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9a5503cb5da0b2bf8fe25d0500bf33c4"><td class="memItemLeft" align="right" valign="top">virtual long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata__access_1_1_data_provider.html#a9a5503cb5da0b2bf8fe25d0500bf33c4">get_data_start_time</a> ()=0</td></tr>
 <tr class="memdesc:a9a5503cb5da0b2bf8fe25d0500bf33c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the first valid time for which data from the request variable can be requested.  <a href="classdata__access_1_1_data_provider.html#a9a5503cb5da0b2bf8fe25d0500bf33c4">More...</a><br /></td></tr>
 <tr class="separator:a9a5503cb5da0b2bf8fe25d0500bf33c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -149,8 +149,8 @@ Private Member Functions</h2></td></tr>
 <tr class="separator:a31d15fd72f35c01c67c790f33f8aa2c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a074f2ad6e6afe3e6edbdbbcf99c8e826" name="a074f2ad6e6afe3e6edbdbbcf99c8e826"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a074f2ad6e6afe3e6edbdbbcf99c8e826">&#9670;&#160;</a></span>get_available_variable_names()</h2>
+<a id="a13ffb91d8fdba4a13ef440f7621d9cfe" name="a13ffb91d8fdba4a13ef440f7621d9cfe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a13ffb91d8fdba4a13ef440f7621d9cfe">&#9670;&#160;</a></span>get_available_variable_names()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -161,7 +161,7 @@ template&lt;class data_type , class selection_type &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual const std::vector&lt; std::string &gt; &amp; <a class="el" href="classdata__access_1_1_data_provider.html">data_access::DataProvider</a>&lt; data_type, selection_type &gt;::get_available_variable_names </td>
+          <td class="memname">virtual <a class="el" href="classboost_1_1span.html">boost::span</a>&lt; const std::string &gt; <a class="el" href="classdata__access_1_1_data_provider.html">data_access::DataProvider</a>&lt; data_type, selection_type &gt;::get_available_variable_names </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -176,9 +176,9 @@ template&lt;class data_type , class selection_type &gt; </div>
 
 <p>Return the variables that are accessable by this data provider. </p>
 
-<p>Implemented in <a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#a135e4030e831f9ca2a2b7883ce4ac0cd">data_access::DeferredWrappedProvider</a>, <a class="el" href="class_csv_per_feature_forcing_provider.html#a513db9f07155777f21ca0554639e4489">CsvPerFeatureForcingProvider</a>, <a class="el" href="class_null_forcing_provider.html#a67a849ceb6d377dc95fd5d9edb350267">NullForcingProvider</a>, <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#ac8e412b3881d5edb3a3c27296cee7a16">data_access::WrappedDataProvider</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9d0994f100fe78193861b81e59f10fbe">realization::Bmi_Module_Formulation&lt; M &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9d0994f100fe78193861b81e59f10fbe">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9d0994f100fe78193861b81e59f10fbe">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_Cpp_Adapter &gt;</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a75b90f0071c039bc13eec964ef19b793">realization::Bmi_Multi_Formulation</a>.</p>
+<p>Implemented in <a class="el" href="class_csv_per_feature_forcing_provider.html#adc16fbddbb172454efb9cf28a21260ef">CsvPerFeatureForcingProvider</a>, <a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#afcff64ec3112c42b80be024fbc923164">data_access::DeferredWrappedProvider</a>, <a class="el" href="class_null_forcing_provider.html#a4487421e46fcf87995144873402a2d57">NullForcingProvider</a>, <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#afb5c4e6fe21de5d77ae3f1544454b021">data_access::WrappedDataProvider</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9649028f372a0fe63d05ebf8cecebd22">realization::Bmi_Module_Formulation&lt; M &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9649028f372a0fe63d05ebf8cecebd22">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a9649028f372a0fe63d05ebf8cecebd22">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_Cpp_Adapter &gt;</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#ad4f1533db60844045d4a969f363f129a">realization::Bmi_Multi_Formulation</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#ac8e412b3881d5edb3a3c27296cee7a16">data_access::WrappedDataProvider::get_available_variable_names()</a>, <a class="el" href="classdata__access_1_1_optional_wrapped_data_provider.html#a6cf15bf9b7178b41092a726e262ee194">data_access::OptionalWrappedDataProvider::isSuppliedByProvider()</a>, and <a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#a5d4c52b6952dd7d209dbfe936f22ce38">data_access::DeferredWrappedProvider::setWrappedProvider()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#afb5c4e6fe21de5d77ae3f1544454b021">data_access::WrappedDataProvider::get_available_variable_names()</a>, <a class="el" href="classdata__access_1_1_optional_wrapped_data_provider.html#a6cf15bf9b7178b41092a726e262ee194">data_access::OptionalWrappedDataProvider::isSuppliedByProvider()</a>, and <a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#a5d4c52b6952dd7d209dbfe936f22ce38">data_access::DeferredWrappedProvider::setWrappedProvider()</a>.</p>
 
 </div>
 </div>
@@ -615,7 +615,7 @@ template&lt;class data_type , class selection_type &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacedata__access.html">data_access</a></li><li class="navelem"><a class="el" href="classdata__access_1_1_async_data_provider.html">AsyncDataProvider</a></li>
-    <li class="footer">Generated on Thu Sep 21 2023 16:11:15 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
+    <li class="footer">Generated on Thu Sep 21 2023 16:44:46 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
   </ul>
 </div>
 </body>

@@ -122,28 +122,27 @@ var sectionId = 'dynsection-0';
 <g id="node5" class="node">
 <title>Node5</title>
 <g id="a_node5"><a xlink:href="class_null_forcing_provider.html" target="_top" xlink:title="Forcing class that returns no variables to the simulation–use this e.g.">
-<polygon fill="white" stroke="#666666" points="311.5,-2050.5 185.5,-2050.5 185.5,-1888.5 311.5,-1888.5 311.5,-2050.5"/>
-<text text-anchor="middle" x="248.5" y="-2038.5" font-family="Helvetica,sans-Serif" font-size="10.00">{NullForcingProvider</text>
-<text text-anchor="start" x="193.5" y="-2027.5" font-family="Helvetica,sans-Serif" font-size="10.00">|&#45; available_forcings</text>
-<text text-anchor="start" x="193.5" y="-2016.5" font-family="Helvetica,sans-Serif" font-size="10.00">|+ NullForcingProvider()</text>
-<text text-anchor="start" x="193.5" y="-2005.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_start_time()</text>
-<text text-anchor="start" x="193.5" y="-1994.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_stop_time()</text>
-<text text-anchor="start" x="193.5" y="-1983.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ record_duration()</text>
-<text text-anchor="start" x="193.5" y="-1972.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_ts_index_for_time()</text>
-<text text-anchor="start" x="193.5" y="-1961.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_value()</text>
-<text text-anchor="start" x="193.5" y="-1950.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_values()</text>
-<text text-anchor="start" x="193.5" y="-1939.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ is_property_sum_over</text>
-<text text-anchor="start" x="193.5" y="-1928.5" font-family="Helvetica,sans-Serif" font-size="10.00">_time_step()</text>
-<text text-anchor="start" x="193.5" y="-1917.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_variable</text>
-<text text-anchor="start" x="193.5" y="-1906.5" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
-<text text-anchor="middle" x="248.5" y="-1895.5" font-family="Helvetica,sans-Serif" font-size="10.00">}</text>
+<polygon fill="white" stroke="#666666" points="311.5,-2045 185.5,-2045 185.5,-1894 311.5,-1894 311.5,-2045"/>
+<text text-anchor="middle" x="248.5" y="-2033" font-family="Helvetica,sans-Serif" font-size="10.00">{NullForcingProvider</text>
+<text text-anchor="start" x="193.5" y="-2022" font-family="Helvetica,sans-Serif" font-size="10.00">||+ NullForcingProvider()</text>
+<text text-anchor="start" x="193.5" y="-2011" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_start_time()</text>
+<text text-anchor="start" x="193.5" y="-2000" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_data_stop_time()</text>
+<text text-anchor="start" x="193.5" y="-1989" font-family="Helvetica,sans-Serif" font-size="10.00">+ record_duration()</text>
+<text text-anchor="start" x="193.5" y="-1978" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_ts_index_for_time()</text>
+<text text-anchor="start" x="193.5" y="-1967" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_value()</text>
+<text text-anchor="start" x="193.5" y="-1956" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_values()</text>
+<text text-anchor="start" x="193.5" y="-1945" font-family="Helvetica,sans-Serif" font-size="10.00">+ is_property_sum_over</text>
+<text text-anchor="start" x="193.5" y="-1934" font-family="Helvetica,sans-Serif" font-size="10.00">_time_step()</text>
+<text text-anchor="start" x="193.5" y="-1923" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_available_variable</text>
+<text text-anchor="start" x="193.5" y="-1912" font-family="Helvetica,sans-Serif" font-size="10.00">_names()</text>
+<text text-anchor="middle" x="248.5" y="-1901" font-family="Helvetica,sans-Serif" font-size="10.00">}</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node5 -->
 <g id="edge4" class="edge">
 <title>Node1&#45;&gt;Node5</title>
-<path fill="none" stroke="#63b8ff" d="M286.66,-2213.64C280.51,-2174.46 269.67,-2105.38 261.11,-2050.85"/>
+<path fill="none" stroke="#63b8ff" d="M286.64,-2213.53C280.28,-2172.99 268.92,-2100.61 260.25,-2045.35"/>
 <polygon fill="none" stroke="#63b8ff" points="283.16,-2213.96 288.17,-2223.3 290.08,-2212.88 283.16,-2213.96"/>
 </g>
 <!-- Node6 -->
