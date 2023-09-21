@@ -165,7 +165,7 @@ namespace models {
              */
             inline void *dynamic_load_symbol(const std::string &symbol_name, bool is_null_valid) {
                 if (dyn_lib_handle == nullptr) {
-                    throw std::runtime_error("Cannot load symbol " + symbol_name + " without handle to shared library");
+                    throw std::runtime_error("Cannot load symbol '" + symbol_name + "' without handle to shared library (bmi_lib_file = '" + bmi_lib_file + "')");
                 }
                 // Call first to ensure any previous error is cleared before trying to load the symbol
                 dlerror();
