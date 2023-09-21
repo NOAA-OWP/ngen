@@ -39,7 +39,7 @@ namespace models {
                 }
             }
 
-            Bmi_Adapter(Bmi_Adapter const&) = default;
+            Bmi_Adapter(Bmi_Adapter const&) = delete;
             Bmi_Adapter(Bmi_Adapter &&) = default;
 
             /**
