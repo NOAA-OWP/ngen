@@ -10,7 +10,7 @@ Strictly speaking, while all functions must have some implementation, *none* of 
 
 BMI modules written in C, Fortran, and C++ *must* be compiled with the exact same header files as those used with ngen itself, and this means the BMI v2.0 header files provided in the CSDMS [`bmi-c`](https://github.com/csdms/bmi-c/blob/e6f9f8a0ab326218831000b4a5571490ebc21ea2/bmi.h), [`bmi-fortran`](https://github.com/csdms/bmi-fortran/blob/e34cd026f57cabd009ef0f662fc672baee66e442/bmi.f90), and [`bmi-cxx`](https://github.com/csdms/bmi-cxx/blob/be631dc510b477b3bc3eb3c8bbecf3d04ec4005c/bmi.hxx) repositories. Python models must inherit from the `Bmi` class in the [`bmipy`](https://pypi.org/project/bmipy/2.0/) package. Python and C++ classes can be subclasses of the standard BMI interface, but such subclasses must inherit from the standard versions listed here.
 
-This means among other things that it is not possible to "extend" the BMI interface simply by adding functions to the base interface or header files. In any case, even with subclassed BMI models in Python and C++ with additional functions, ngen would not call any such additional functions because it does not know that they exist. 
+This means&mdash;among other things&mdash;that it is not possible to "extend" the BMI interface simply by adding functions to the base interface or header files. In any case, even with subclassed BMI models in Python and C++ with additional functions, ngen would not call any such additional functions because it does not know that they exist. 
 
 # Time Control
 
@@ -130,7 +130,7 @@ Note that there is currently no discoverability mechanism for unpublished variab
 
 ## Unknown/unexpected variables passed to `set_value`
 
-Importantly, if an unexpected variable name is passed to `set_value` this *must* not cause an error or instability! Consider the unknown unpublished value to be "offered" and it can be ignored<!-- TODO: " (unless otherwise specified for specific variable names later in this document)"? We might have a required one at some point. -->. Generally, the preferred behavior in the case of an unknown variable is to do nothing and report success (i.e. throw no exception and return `BMI_SUCCESS`).
+Importantly, if an unexpected variable name is passed to `set_value` this *must* not cause an error or instability! Consider the unknown unpublished value to be "offered" and it can be ignored<!-- TODO: " (unless otherwise specified for specific variable names later in this document)"? We might have a required one at some point. -->. Generally, the preferred behavior in the case of an unknown variable is to do nothing (i.e. throw no exception) and return `BMI_FAILURE`&mdash;ngen will interpret this return value as indicating that the variable just set is not supported by the module.
 
 This scenario should be avoided by ngen, but there may be cases where ngen does not yet know whether a module supports an unpublished variable and will try to set it. These attempts can be ignored if the module does not support or understand the variable. (Returning `BMI_SUCCESS` from `set_value` does *not* imply that the module understands/supports the variable, see below section on probing.)
 
@@ -156,7 +156,7 @@ The [BMI best practices](https://bmi.readthedocs.io/en/stable/bmi.best_practices
 
 > BMI functions always use flattened, one-dimensional arrays...It’s the developer’s responsibility to ensure that array information is flattened/redimensionalized in the correct order.
 
-However, strictly speaking, *how* a multi-dimensional array should be flattened into a one-dimensional one is never directly addressed. **For ngen, it is required that flattening happens as if the array was a C array, sometimes referred to as "row major order".** That is, if you create a multi-dimensional array in C (or a C array in C++) it will already be in the appropriate order and layout such that if the data is copied into a 1D array (or the pointer is passed as the result of `get_value_ptr`) it is already in the correct order/layout and will "just work".
+However, strictly speaking, *how* a multi-dimensional array should be flattened into a one-dimensional one is never directly addressed. **For ngen, it is required that flattening happens as if the array was a contiguous C array, sometimes referred to as "row major order".** That is, if you create a contiguous (i.e. not using pointers) multi-dimensional array in C (or a C array in C++) it will already be in the appropriate order and layout such that if the data is copied into a 1D array (or the pointer is passed as the result of `get_value_ptr`) it is already in the correct order/layout and will "just work".
 
 However, if you have a multi-dimensional array in Fortran or in Python/NumPy it may *not* be in the correct order. In Fortran, arrays are created in memory in "column major order"--however if you treat the first (left-most) index as the fastest changing, it is the same thing as C ordering where the C code would treat the last (right-most) index as the fastest changing. In Python, NumPy `ndarray`s are created as contiguous C-ordered blocks by default, but it is possible to create Fortran-ordered arrays, and if you take a view or slice of an array it is no longer a contiguous array and can't be passed without copying.
 
@@ -269,7 +269,7 @@ The BMI documentation for [`get_value_at_indices`]() and [`set_value_at_indices`
 
 > ...the locations specified by the one-dimensional array indices in the `inds` argument...Both `dest` and `inds` are flattened arrays....
 
-However if read perfectly literally, `inds` is by necessity already a one-dimensional array and therefore can't be flattened--rather, the implication is that the indexes in `inds` are *indexes into a flattened representation of the target variable array*. That is, in the example above, an `inds` array containing `[2, 21]` should return `[0.03, 0.22]`. However, if the flatteing is assumed to be done differently by different parts of the system, the wrong values may be retrieved or set.
+However if read perfectly literally, `inds` is by necessity already a one-dimensional array and therefore can't be flattened--rather, the implication is that the indexes in `inds` are *indexes into a flattened representation of the target variable array*. That is, in the example above, an `inds` array containing `[2, 21]` should return `[0.03, 0.22]`. However, if the flattening is assumed to be done differently by different parts of the system, the wrong values may be retrieved or set.
 
 The ngen BMI driver assumes that the documentation implies that `inds` is a zero-based index into a flattened array and that the array is flattened according to C memory ordering as demonstrated above.
 
