@@ -12,9 +12,21 @@ network_topology_parameters:
         geo_file_path: ./test/data/routing/gauge_01073000.gpkg
         mask_file_path: # domain/unit_test_noRS/coastal_subset.txt
         columns:
-            key: id
-            downstream: toid
-            dx: lengthkm
+            key: 'id'
+            downstream: 'toid'
+            dx: 'lengthkm'
+            n: 'n'
+            ncc: 'nCC'
+            s0: 'So'
+            bw: 'BtmWdth'
+            waterbody: 'rl_NHDWaterbodyComID'
+            gages: 'rl_gages'
+            tw: 'TopWdth'
+            twcc: 'TopWdthCC'
+            musk: 'MusK'
+            musx: 'MusX'
+            cs: 'ChSlp'
+            alt: 'alt'
         synthetic_wb_segments:
             #- 4800002
             #- 4800004
