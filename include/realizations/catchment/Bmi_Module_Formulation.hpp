@@ -10,11 +10,10 @@
 #include <DataProvider.hpp>
 #include <UnitsHelper.hpp>
 #include "bmi_utilities.hpp"
-#include "logging_utils.h"
+#include "utilities/logging_utils.h"
 
 using data_access::MEAN;
 using data_access::SUM;
-
 
 // Forward declaration to provide access to protected items in testing
 class Bmi_Formulation_Test;
@@ -255,7 +254,7 @@ namespace realization {
                 }
                 catch (const std::runtime_error& e){
                     #ifndef UDUNITS_QUIET
-                    std::cerr<<"WARN: Unit conversion unsuccessful - Returning unconverted value! (\""<<e.what()<<"\")"<<std::endl;
+                    logging::warning((std::string("WARN: Unit conversion unsuccessful - Returning unconverted value! (\"")+e.what()+"\")\n").c_str());
                     #endif
                     return values;
                 }
@@ -641,8 +640,6 @@ namespace realization {
                     //(and by extension, as_c_array) into the JSONProperty class
                     //then instead of the PropertyVariant visitor filling vectors
                     //it could fill the c-like array and avoid another copy.
-                     std::string logging_msg;
-                     char* log_msg_ptr;
                      switch( param.second.get_type() ){
                         case geojson::PropertyType::Natural:
                             param.second.as_vector(long_vec);
@@ -651,10 +648,6 @@ namespace realization {
                         case geojson::PropertyType::Real:
                             param.second.as_vector(double_vec);
                             value_ptr = get_values_as_type(type, double_vec.begin(), double_vec.end());
-
-                            logging_msg = "case Real: Cannot pass non-numeric lists as a BMI parameter, skipping " + param.first+"\n";
-                            log_msg_ptr = &logging_msg[0];
-                            logging::critical(log_msg_ptr);
                             break;
                         /* Not currently supporting string parameter values
                         case geojson::PropertyType::String:
@@ -672,13 +665,13 @@ namespace realization {
                             //TODO consider some additional introspection/optimization for this?
                             param.second.as_vector(double_vec);
                             if(double_vec.size() == 0){
-                                //std::cout<<"Cannot pass non-numeric lists as a BMI parameter, skipping "<<param.first<<std::endl;
+                                logging::warning(("Cannot pass non-numeric lists as a BMI parameter, skipping "+param.first+"\n").c_str());
                                 continue;
                             }
                             value_ptr = get_values_as_type(type, double_vec.begin(), double_vec.end());
                             break;
                         default:
-                            //std::cout<<"Cannot pass parameter of type "<<geojson::get_propertytype_name(param.second.get_type())<<" as a BMI parameter, skipping "<<param.first<<std::endl;
+                            logging::warning(("Cannot pass parameter of type "+geojson::get_propertytype_name(param.second.get_type())+" as a BMI parameter, skipping "+param.first+"\n").c_str());
                             continue;
                     }
                     try{
@@ -688,22 +681,13 @@ namespace realization {
                     }
                     catch (const std::exception &e)
                     {
-                        std::cerr<<"Exception setting parameter value: "<< e.what()<<std::endl;
-                        //std::cout<<"Skipping parameter: "<<param.first<<std::endl;
-                        std::string logging_msg = "Cannot pass non-numeric lists as a BMI parameter, skipping "+param.first+"\n";
-                        char* log_msg_ptr = &logging_msg[0];
-                        logging::error(log_msg_ptr);
+                        logging::warning((std::string("Exception setting parameter value: ")+e.what()).c_str());
+                        logging::warning(("Skipping parameter: "+param.first+"\n").c_str());
                     }
                     catch (...)
                     {
-                        //std::cout<<"Unknown Exception setting parameter value: "<<std::endl;
-                        //std::cout<<"Skipping parameter: "<<param.first<<std::endl;
-                        std::string logging_msg = "Unknown Exception setting parameter value: \n";
-                        char* log_msg_ptr = &logging_msg[0];
-                        logging::error(log_msg_ptr);
-                        logging_msg = "Skipping parameter: "+param.first+"\n";
-                        log_msg_ptr = &logging_msg[0];
-                        logging::error(log_msg_ptr);
+                        logging::warning((std::string("Unknown Exception setting parameter value: \n")).c_str());
+                        logging::warning(("Skipping parameter: "+param.first+"\n").c_str());
                     }
                     long_vec.clear();
                     double_vec.clear();
