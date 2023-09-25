@@ -23,12 +23,7 @@ network_topology_parameters:
             #----------
             level_pool_waterbody_parameter_file_path: ./test/data/routing/gauge_01073000.gpkg
             # reservoir_parameter_file                : ./test/data/routing/gauge_01073000.gpkg
-        rfc:
-            #----------
-            #reservoir_parameter_file                : domain/reservoir_index_AnA.nc
-            reservoir_rfc_forecasts                 : False
-            #reservoir_rfc_forecasts_time_series_path: rfc_TimeSeries/
-            #reservoir_rfc_forecasts_lookback_hours  : 48
+
 #--------------------------------------------------------------------------------
 compute_parameters:
     #----------
@@ -85,9 +80,16 @@ compute_parameters:
     # Needed to prevent AttributeError
         reservoir_da:
             #----------
-            reservoir_persistence_usgs  : False
-            reservoir_persistence_usace : False
-    #        gage_lakeID_crosswalk_file  : # domain/reservoir_index_AnA.nc
+            reservoir_persistence_da:
+                reservoir_persistence_usgs  : False
+                reservoir_persistence_usace : False
+        #        gage_lakeID_crosswalk_file  : # domain/reservoir_index_AnA.nc
+            reservoir_rfc_da:
+                #----------
+                #reservoir_parameter_file                : domain/reservoir_index_AnA.nc
+                reservoir_rfc_forecasts                 : False
+                #reservoir_rfc_forecasts_time_series_path: rfc_TimeSeries/
+                #reservoir_rfc_forecasts_lookback_hours  : 48
 #--------------------------------------------------------------------------------
 output_parameters:
     #----------
