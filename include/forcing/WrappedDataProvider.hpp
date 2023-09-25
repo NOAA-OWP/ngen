@@ -46,13 +46,13 @@ namespace data_access {
         }
 
         /**
-         * @brief Get the avaliable variable names object
+         * @brief Get the available variable names object
          * 
-         * @return const std::vector<std::string>& the names of avaliable data variables
+         * @return const std::vector<std::string>& the names of available data variables
          */
 
-        const std::vector<std::string> &get_avaliable_variable_names() override {
-            return wrapped_provider->get_avaliable_variable_names();
+        boost::span<const std::string> get_available_variable_names() override {
+            return wrapped_provider->get_available_variable_names();
         }
 
         /**

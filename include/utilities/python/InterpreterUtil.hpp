@@ -32,16 +32,16 @@ namespace utils {
         public:
             static std::shared_ptr<InterpreterUtil> getInstance() {
                 /**
-                 * @brief Singleton instance of embdedded python interpreter.
+                 * @brief Singleton instance of embedded python interpreter.
                  * 
-                 * Note that if no client holds a currernt reference to this singleton, it will get destroyed
+                 * Note that if no client holds a current reference to this singleton, it will get destroyed
                  * and the next call to getInstance will create and initialize a new scoped interpreter
                  * 
                  * This is required for the simple reason that a traditional static singleton instance has no guarantee
-                 * about the destrutction order of resources across multiple compliation units,
+                 * about the destruction order of resources across multiple compilation units,
                  * and this will cause seg faults if the python interpreter is torn down before the destruction of bound modules
                  * (such as this class' Path module).  If the interpreter is not available when those destructors are called,
-                 * a seg fault will occur.  With this implementaiton, the interpreter is guarnateed to exist as long as anything 
+                 * a seg fault will occur.  With this implementation, the interpreter is guaranteed to exist as long as anything
                  * referencing it needs it, and then can cleanly clean up internal references before the `py::scoped_interpreter`
                  * guard is destroyed, removing the python interpreter.
                  * 
@@ -92,6 +92,27 @@ namespace utils {
                 for (auto &opt : venv_package_dirs) {
                     addToPath(std::string(py::str(opt.attr("parent"))));
                     addToPath(std::string(py::str(opt)));
+                }
+
+                py::object python_version_info = importedTopLevelModules["sys"].attr("version_info");
+                py::str runtime_python_version = importedTopLevelModules["sys"].attr("version");
+                int major = py::int_(python_version_info.attr("major"));
+                int minor = py::int_(python_version_info.attr("minor"));
+                int patch = py::int_(python_version_info.attr("micro"));
+                if (major != python_major
+                    || minor != python_minor
+                    || patch != python_patch) {
+                    throw std::runtime_error("Python version mismatch between configure/build ("
+                                             + std::string(python_version)
+                                             + ") and runtime (" + std::string(runtime_python_version) + ")");
+                }
+
+                importTopLevelModule("numpy");
+                py::str runtime_numpy_version = importedTopLevelModules["numpy"].attr("version").attr("version");
+                if(std::string(runtime_numpy_version) != numpy_version) {
+                    throw std::runtime_error("NumPy version mismatch between configure/build ("
+                                             + std::string(numpy_version)
+                                             + ") and runtime (" + std::string(runtime_numpy_version) + ")");
                 }
             }
 
@@ -205,35 +226,6 @@ namespace utils {
         protected:
 
             /**
-             * Search for and return a recognized virtual env directory.
-             *
-             * Both ``.venv`` and ``venv`` will be recognized.  Search locations are the current working directory, one
-             * level up (parent directory), and two levels up, with the first find being return.
-             *
-             * A Python ``None`` object is returned if no existing directory is found in the search locations.
-             *
-             * @return A Python Path object for a found venv dir, or a Python ``None`` object.
-             */
-            py::object searchForVenvDir() {
-                py::object current_dir = Path.attr("cwd")();
-                std::vector<py::object> parent_options = {
-                        current_dir,
-                        current_dir.attr("parent"),
-                        current_dir.attr("parent").attr("parent")
-                };
-                std::vector<std::string> dir_name_options = {".venv", "venv"};
-                for (py::object &parent_option : parent_options) {
-                    for (const std::string &dir_name_option : dir_name_options) {
-                        py::object venv_dir_candidate = parent_option.attr("joinpath")(dir_name_option);
-                        if (py::bool_(venv_dir_candidate.attr("is_dir")())) {
-                            return venv_dir_candidate;
-                        }
-                    }
-                }
-                return py::none();
-            }
-
-            /**
              * Find any virtual environment site packages directory, starting from options under the current directory.
              *
              * @return The absolute path of the site packages directory, as a string.
@@ -241,7 +233,7 @@ namespace utils {
             py::list getVenvPackagesDirOptions() {
                 // Look for a local virtual environment directory also, if there is one
                 const char* env_var_venv = std::getenv("VIRTUAL_ENV");
-                py::object venv_dir = env_var_venv != nullptr ? Path(env_var_venv): searchForVenvDir();
+                py::object venv_dir = env_var_venv != nullptr ? Path(env_var_venv): py::none();
 
                 if (!venv_dir.is_none() && py::bool_(venv_dir.attr("is_dir")())) {
                     // Resolve the full path
@@ -282,18 +274,7 @@ namespace utils {
                     //std::string r(env_var_venv);
                     return std::string(env_var_venv);
                 }
-                py::object venv_dir;
-                venv_dir = searchForVenvDir();
-                if(venv_dir.is_none()){
-                    return std::string("None");
-                }
-                if(py::bool_(venv_dir.attr("is_dir")())) {
-                    // Probably better to not resolve symlinks so you can see where it was found...
-                    //venv_dir = venv_dir.attr("resolve")();
-                    return py::str(venv_dir);
-                }
-                assert("Unexpected value of venv_dir in InterpreterUtil::getDiscoveredVenvPath()!");
-                return ""; // silence warning
+                return std::string("None");
             }
 
         protected:
@@ -331,6 +312,14 @@ namespace utils {
             std::map<std::string, py::object> importedTopLevelModules;
 
             py::object Path;
+
+            static const int python_major;
+            static const int python_minor;
+            static const int python_patch;
+            static const char* python_version;
+
+            // NumPy version is not broken down by CMake
+            static const char* numpy_version;
 
             /**
              * Import a specified top level module.

@@ -1,8 +1,3 @@
-cmake_minimum_required(VERSION 3.10)
-#set(CMAKE_CXX_STANDARD 14)
-#set(CMAKE_CXX_STANDARD_REQUIRED True)
-#set(CMAKE_CXX_VISIBILITY_PRESET hidden)
-
 include(${PROJECT_SOURCE_DIR}/cmake/dynamic_sourced_library.cmake)
 dynamic_sourced_cxx_library(forcing "${CMAKE_CURRENT_SOURCE_DIR}")
 
@@ -21,6 +16,10 @@ target_include_directories(forcing PUBLIC
 target_link_libraries(forcing PUBLIC
         Boost::boost                # Headers-only Boost
         Threads::Threads
-        )
+)
+
+if(NGEN_WITH_NETCDF)
+    target_link_libraries(forcing PUBLIC NetCDF)
+endif()
 
 #target_compile_options(forcing PUBLIC -std=c++14 -Wall)

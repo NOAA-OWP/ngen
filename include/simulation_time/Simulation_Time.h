@@ -4,8 +4,6 @@
 #include <ctime>
 #include <time.h>
 
-using namespace std;
-
 /**
  * @brief simulation_time_params providing configuration information for simulation time period.
  */

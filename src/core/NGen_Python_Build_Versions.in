@@ -1,0 +1,17 @@
+#ifdef ACTIVATE_PYTHON
+
+#include "python/InterpreterUtil.hpp"
+
+namespace utils {
+    namespace ngenPy {
+
+        const int InterpreterUtil::python_major = ${Python_VERSION_MAJOR};
+        const int InterpreterUtil::python_minor = ${Python_VERSION_MINOR};
+        const int InterpreterUtil::python_patch = ${Python_VERSION_PATCH};
+        const char* InterpreterUtil::python_version = "${Python_VERSION}";
+
+        const char* InterpreterUtil::numpy_version = "${Python_NumPy_VERSION}";
+    }
+}
+
+#endif

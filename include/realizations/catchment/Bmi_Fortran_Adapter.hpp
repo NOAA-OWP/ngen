@@ -25,7 +25,7 @@ namespace models {
 
         public:
 
-            explicit Bmi_Fortran_Adapter(const string &type_name, std::string library_file_path,
+            explicit Bmi_Fortran_Adapter(const std::string &type_name, std::string library_file_path,
                                          std::string forcing_file_path,
                                          bool allow_exceed_end, bool has_fixed_time_step,
                                          const std::string &registration_func, utils::StreamHandler output)
@@ -33,7 +33,7 @@ namespace models {
                                           has_fixed_time_step,
                                           registration_func, output) {}
 
-            Bmi_Fortran_Adapter(const string &type_name, std::string library_file_path, std::string bmi_init_config,
+            Bmi_Fortran_Adapter(const std::string &type_name, std::string library_file_path, std::string bmi_init_config,
                                 std::string forcing_file_path, bool allow_exceed_end, bool has_fixed_time_step,
                                 std::string registration_func,
                                 utils::StreamHandler output) : AbstractCLibBmiAdapter(type_name,
@@ -48,7 +48,7 @@ namespace models {
                     construct_and_init_backing_model_for_fortran();
                     // Make sure this is set to 'true' after this function call finishes
                     model_initialized = true;
-                    acquire_time_conversion_factor(bmi_model_time_convert_factor);
+                    bmi_model_time_convert_factor = get_time_convert_factor();
                 }
                     // Record the exception message before re-throwing to handle subsequent function calls properly
                 catch( models::external::State_Exception& e)
@@ -67,7 +67,7 @@ namespace models {
                     model_initialized = true;
                     throw e;
                 }
-                catch (exception &e) {
+                catch (std::exception &e) {
                     //This will catch any other exception, but the it will be cast to this base type.
                     //This means it looses it any specific type/message information.  So if construct_and_init_backing_model_for_fortran
                     //throws an exception besides runtime_error, catch that type explicitly.
@@ -76,7 +76,7 @@ namespace models {
                 }
             }
 
-            string GetComponentName() override;
+            std::string GetComponentName() override;
 
             /**
              * Get the backing model's current time.
@@ -368,7 +368,7 @@ namespace models {
                 if (src.size() != total_bytes / item_size) {
                     throw std::runtime_error(
                             "Cannot set " + name + " variable of " + model_name + " from vector of size " +
-                            std::to_string(src.size) + " (expected size " + std::to_string(total_bytes / item_size) +
+                            std::to_string(src.size()) + " (expected size " + std::to_string(total_bytes / item_size) +
                             ")");
                 }
                 SetValue(std::move(name), static_cast<void *>(src.data()));
@@ -675,7 +675,7 @@ namespace models {
 
                 // Must get the names from the model as an array of C strings
                 // The array can be on the stack ...
-                char* names_array[variableCount];
+                std::vector<char*> names_array(variableCount);
                 // ... but allocate the space for the individual C strings (i.e., the char * elements)
                 for (int i = 0; i < variableCount; i++) {
                     names_array[i] = static_cast<char *>(malloc(sizeof(char) * BMI_MAX_VAR_NAME));
@@ -684,10 +684,10 @@ namespace models {
                 // With the necessary char** in hand, get the names from the model
                 int names_result;
                 if (is_input_variables) {
-                    names_result = get_input_var_names(bmi_model.get(), names_array);
+                    names_result = get_input_var_names(bmi_model.get(), names_array.data());
                 }
                 else {
-                    names_result = get_output_var_names(bmi_model.get(), names_array);
+                    names_result = get_output_var_names(bmi_model.get(), names_array.data());
                 }
                 if (names_result != BMI_SUCCESS) {
                     throw std::runtime_error(model_name + " failed to get array of " + varType + " variables names.");

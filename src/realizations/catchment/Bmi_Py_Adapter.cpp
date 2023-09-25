@@ -6,16 +6,15 @@
 #include "Bmi_Py_Adapter.hpp"
 
 using namespace models::bmi;
-using namespace std;
 using namespace pybind11::literals; // to bring in the `_a` literal for pybind11 keyword args functionality
 
-Bmi_Py_Adapter::Bmi_Py_Adapter(const string &type_name, string bmi_init_config, const string &bmi_python_type,
+Bmi_Py_Adapter::Bmi_Py_Adapter(const std::string &type_name, std::string bmi_init_config, const std::string &bmi_python_type,
                                bool allow_exceed_end, bool has_fixed_time_step, utils::StreamHandler output)
         : Bmi_Py_Adapter(type_name, std::move(bmi_init_config), bmi_python_type, "", allow_exceed_end, has_fixed_time_step,
                          std::move(output)) {}
 
-Bmi_Py_Adapter::Bmi_Py_Adapter(const string &type_name, string bmi_init_config, const string &bmi_python_type,
-                               string forcing_file_path, bool allow_exceed_end, bool has_fixed_time_step,
+Bmi_Py_Adapter::Bmi_Py_Adapter(const std::string &type_name, std::string bmi_init_config, const std::string &bmi_python_type,
+                               std::string forcing_file_path, bool allow_exceed_end, bool has_fixed_time_step,
                                utils::StreamHandler output)
         : Bmi_Adapter<py::object>(type_name + " (BMI Py)", std::move(bmi_init_config),
                                   std::move(forcing_file_path), allow_exceed_end, has_fixed_time_step,
@@ -27,21 +26,21 @@ Bmi_Py_Adapter::Bmi_Py_Adapter(const string &type_name, string bmi_init_config, 
         construct_and_init_backing_model_for_py_adapter();
         // Make sure this is set to 'true' after this function call finishes
         model_initialized = true;
-        acquire_time_conversion_factor(bmi_model_time_convert_factor);
+        bmi_model_time_convert_factor = get_time_convert_factor();
     }
     catch (std::runtime_error& e){ //Catch specific exception and re-throw so type/message isn't erased
         model_initialized = true;
         throw e;
     }
     // Record the exception message before re-throwing to handle subsequent function calls properly
-    catch (exception &e) {
+    catch (std::exception &e) {
         // Make sure this is set to 'true' after this function call finishes
         model_initialized = true;
         throw e;
     }
 }
 
-string Bmi_Py_Adapter::GetComponentName() {
+std::string Bmi_Py_Adapter::GetComponentName() {
     return py::str(bmi_model->attr("get_component_name")());
 }
 
@@ -59,12 +58,12 @@ int Bmi_Py_Adapter::GetInputItemCount() {
     return py::int_(bmi_model->attr("get_input_item_count")());
 }
 
-vector<string> Bmi_Py_Adapter::GetInputVarNames() {
-    vector<string> in_var_names(GetInputItemCount());
+std::vector<std::string> Bmi_Py_Adapter::GetInputVarNames() {
+    std::vector<std::string> in_var_names(GetInputItemCount());
     py::tuple in_var_names_tuple = bmi_model->attr("get_input_var_names")();
     int i = 0;
     for (auto && tuple_item : in_var_names_tuple) {
-        string var_name = py::str(tuple_item);
+        std::string var_name = py::str(tuple_item);
         in_var_names[i++] = var_name;
     }
     return in_var_names;
@@ -74,12 +73,12 @@ int Bmi_Py_Adapter::GetOutputItemCount() {
     return py::int_(bmi_model->attr("get_output_item_count")());
 }
 
-vector<string> Bmi_Py_Adapter::GetOutputVarNames() {
-    vector<string> out_var_names(GetOutputItemCount());
+std::vector<std::string> Bmi_Py_Adapter::GetOutputVarNames() {
+    std::vector<std::string> out_var_names(GetOutputItemCount());
     py::tuple out_var_names_tuple = bmi_model->attr("get_output_var_names")();
     int i = 0;
     for (auto && tuple_item : out_var_names_tuple) {
-        string var_name = py::str(tuple_item);
+        std::string var_name = py::str(tuple_item);
         out_var_names[i++] = var_name;
     }
     return out_var_names;
@@ -90,7 +89,7 @@ double Bmi_Py_Adapter::GetStartTime() {
     return py::float_(bmi_model->attr("get_start_time")());
 }
 
-string Bmi_Py_Adapter::GetTimeUnits() {
+std::string Bmi_Py_Adapter::GetTimeUnits() {
     return py::str(bmi_model->attr("get_time_units")());
 }
 
@@ -98,15 +97,15 @@ double Bmi_Py_Adapter::GetTimeStep() {
     return py::float_(bmi_model->attr("get_time_step")());
 }
 
-void Bmi_Py_Adapter::GetValue(string name, void *dest) {
-    string cxx_type;
+void Bmi_Py_Adapter::GetValue(std::string name, void *dest) {
+    std::string cxx_type;
     try {
         cxx_type = get_analogous_cxx_type(GetVarType(name), GetVarItemsize(name));
     }
-    catch (runtime_error &e) {
-        string msg = "Encountered error getting C++ type during call to GetValue: \n";
+    catch (std::runtime_error &e) {
+        std::string msg = "Encountered error getting C++ type during call to GetValue: \n";
         msg += e.what();
-        throw runtime_error(msg);
+        throw std::runtime_error(msg);
     }
 
     if (cxx_type == "short") {
@@ -124,14 +123,14 @@ void Bmi_Py_Adapter::GetValue(string name, void *dest) {
     } else if (cxx_type == "long double") {
         copy_to_array<long double>(name, (long double *) dest);
     } else {
-        throw runtime_error("Bmi_Py_Adapter can't get value of unsupported type: " + cxx_type);
+        throw std::runtime_error("Bmi_Py_Adapter can't get value of unsupported type: " + cxx_type);
     }
 
 }
 
 void Bmi_Py_Adapter::GetValueAtIndices(std::string name, void *dest, int *inds, int count) {
-    string val_type = GetVarType(name);
-    vector<string> in_v = GetInputVarNames();
+    std::string val_type = GetVarType(name);
+    std::vector<std::string> in_v = GetInputVarNames();
     int var_total_items = GetVarNbytes(name) / GetVarItemsize(name);
     get_value_at_indices(name, dest, inds, count, count == var_total_items);
 }
@@ -149,7 +148,7 @@ int Bmi_Py_Adapter::GetVarItemsize(std::string name) {
     return py::int_(bmi_model->attr("get_var_itemsize")(name));
 }
 
-string Bmi_Py_Adapter::GetVarLocation(std::string name) {
+std::string Bmi_Py_Adapter::GetVarLocation(std::string name) {
     return py::str(bmi_model->attr("get_var_location")(name));
 }
 
@@ -157,11 +156,11 @@ int Bmi_Py_Adapter::GetVarNbytes(std::string name) {
     return py::int_(bmi_model->attr("get_var_nbytes")(name));
 }
 
-string Bmi_Py_Adapter::GetVarType(std::string name) {
+std::string Bmi_Py_Adapter::GetVarType(std::string name) {
     return py::str(bmi_model->attr("get_var_type")(name));
 }
 
-string Bmi_Py_Adapter::GetVarUnits(std::string name) {
+std::string Bmi_Py_Adapter::GetVarUnits(std::string name) {
     return py::str(bmi_model->attr("get_var_units")(name));
 }
 
@@ -191,7 +190,7 @@ std::string Bmi_Py_Adapter::get_bmi_type_simple_name() const {
  * @see set_value_at_indices
  */
 void Bmi_Py_Adapter::SetValueAtIndices(std::string name, int *inds, int count, void *src) {
-    string val_type = GetVarType(name);
+    std::string val_type = GetVarType(name);
     size_t val_item_size = (size_t)GetVarItemsize(name);
 
     // The available types and how they are handled here should match what is in get_value_at_indices
@@ -212,7 +211,7 @@ void Bmi_Py_Adapter::SetValueAtIndices(std::string name, int *inds, int count, v
     } else if (val_type == "float" && val_item_size == sizeof(long double)) {
         set_value_at_indices<long double>(name, inds, count, src, val_type);
     } else {
-        throw runtime_error(
+        throw std::runtime_error(
                 "(Bmi_Py_Adapter) Failed attempt to SET values of BMI variable '" + name + "' from '" +
                 model_name + "' model:  model advertises unsupported combination of type (" + val_type +
                 ") and size (" + std::to_string(val_item_size) + ").");

@@ -30,7 +30,9 @@ RUN git submodule update --init --recursive -- extern/pybind11
 
 WORKDIR /ngen
 
-RUN cmake -B /ngen -S .
+RUN cmake -DNGEN_WITH_NETCDF:BOOL=OFF \
+          -DNGEN_WITH_SQLITE:BOOL=OFF \
+          -B /ngen -S .
 
 RUN cmake --build . --target ngen
 

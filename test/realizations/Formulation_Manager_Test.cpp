@@ -1,3 +1,8 @@
+#include "Bmi_Cpp_Formulation.hpp"
+#include "DataProvider.hpp"
+#include "DataProviderSelectors.hpp"
+#include "FileChecker.h"
+#include "StreamHandler.hpp"
 #include "gtest/gtest.h"
 #include <Formulation_Manager.hpp>
 #include <Catchment_Formulation.hpp>
@@ -13,6 +18,10 @@
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
+#include <boost/algorithm/string.hpp>
+
+#include <AorcForcing.hpp>
+#include <Bmi_Formulation.hpp>
 
 class Formulation_Manager_Test : public ::testing::Test {
 
@@ -67,6 +76,30 @@ class Formulation_Manager_Test : public ::testing::Test {
       fabric->add_feature(feature);
     }
 
+    void add_feature(const std::string& id, geojson::PropertyMap properties)
+    {
+      geojson::three_dimensional_coordinates three_dimensions {
+          {
+              {1.0, 2.0},
+              {3.0, 4.0},
+              {5.0, 6.0}
+          },
+          {
+              {7.0, 8.0},
+              {9.0, 10.0},
+              {11.0, 12.0}
+          }
+      };
+
+      geojson::Feature feature = std::make_shared<geojson::PolygonFeature>(geojson::PolygonFeature(
+        geojson::polygon(three_dimensions),
+        id,
+        properties
+      ));
+
+      fabric->add_feature(feature);
+    }
+
     std::vector<std::string> path_options = {
             "",
             "../",
@@ -76,6 +109,23 @@ class Formulation_Manager_Test : public ::testing::Test {
             "../../test/"
 
     };
+
+    void replace_paths(std::string& input, const std::string& pattern, const std::string& replacement)
+    {
+        std::vector<std::string> v{path_options.size()};
+        for(unsigned int i = 0; i < path_options.size(); i++)
+            v[i] = path_options[i] + replacement;
+        
+        const std::string dir = utils::FileChecker::find_first_readable(v);
+        if (dir == "") {
+            // std::cerr << "Can't find any of:\n";
+            // for (const auto& s : v)
+            //   std::cerr << "  - " << s << '\n';
+            return;
+        }
+
+        boost::replace_all(input, pattern, dir);
+    }
 
     std::string fix_paths(std::string json)
     {
@@ -96,6 +146,14 @@ class Formulation_Manager_Test : public ::testing::Test {
                 //std::cerr<<"TRYING TO REPLACE DIRECTORY... "<<remove<<" -> "<<replace<<std::endl;
                 boost::replace_all(json, remove , replace);
         }
+      
+        //BMI_C_INIT_DIR_PATH
+        replace_paths(json, "{{BMI_C_INIT_DIR_PATH}}", "data/bmi/test_bmi_c");
+        //BMI_CPP_INIT_DIR_PATH
+        replace_paths(json, "{{BMI_CPP_INIT_DIR_PATH}}", "data/bmi/test_bmi_cpp");
+        //EXTERN_DIR_PATH
+        replace_paths(json, "{{EXTERN_DIR_PATH}}", "extern");
+        
         for (unsigned int i = 0; i < forcing_paths.size(); i++) {
           if(json.find(forcing_paths[i]) == std::string::npos){
             continue;
@@ -120,44 +178,25 @@ class Formulation_Manager_Test : public ::testing::Test {
 const double EPSILON = 0.0000001;
 
 const std::string EXAMPLE_1 = "{ "
+    "\"output_root\": \"/tmp/output-dir/\","
     "\"global\": { "
       "\"formulations\": [ "
-            "{"
-              "\"name\": \"tshirt\", "
-              "\"params\": {"
-                  "\"maxsmc\": 0.81, "
-                  "\"wltsmc\": 1.0, "
-                  "\"satdk\": 0.48, "
-                  "\"satpsi\": 0.1, "
-                  "\"slope\": 0.58, "
-                  "\"scaled_distribution_fn_shape_parameter\": 1.3, "
-                  "\"multiplier\": 1.0, "
-                  "\"alpha_fc\": 1.0, "
-                  "\"Klf\": 0.0000672, "
-                  "\"Kn\": 0.1, "
-                  "\"nash_n\": 8, "
-                  "\"Cgw\": 1.08, "
-                  "\"expon\": 6.0, "
-                  "\"max_groundwater_storage_meters\": 16.0, "
-                  "\"nash_storage\": [ "
-                      "1.0, "
-                      "1.0, "
-                      "1.0, "
-                      "1.0, "
-                      "1.0, "
-                      "1.0, "
-                      "1.0, "
-                      "1.0 "
-                  "], "
-                  "\"soil_storage_percentage\": 1.0, "
-                  "\"groundwater_storage_percentage\": 1.0, "
-                  "\"timestep\": 3600, "
-                  "\"giuh\": { "
-                      "\"giuh_path\": \"./test/data/giuh/GIUH.json\", "
-                      "\"crosswalk_path\": \"./data/crosswalk.json\" "
-                  "} "
-              "} "
-            "} "
+        "{"
+          "\"name\":\"bmi_c++\","
+          "\"params\": {"
+            "\"model_type_name\": \"test_bmi_cpp\","
+            "\"library_file\": \"{{EXTERN_DIR_PATH}}/test_bmi_cpp/cmake_build/libtestbmicppmodel.so\","
+            "\"init_config\": \"{{BMI_C_INIT_DIR_PATH}}/test_bmi_c_config_0.txt\","
+            "\"main_output_variable\": \"OUTPUT_VAR_2\","
+            "\"" BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES "\": { "
+              "\"INPUT_VAR_2\": \"" AORC_FIELD_NAME_TEMP_2M_AG  "\","
+              "\"INPUT_VAR_1\": \"" AORC_FIELD_NAME_PRECIP_RATE "\""
+            "},"
+            "\"create_function\": \"bmi_model_create\","
+            "\"destroy_function\": \"bmi_model_destroy\","
+            "\"uses_forcing_file\": false"
+          "} "
+        "} "
       "], "
       "\"forcing\": { "
           "\"file_pattern\": \".*{{id}}.*.csv\", "
@@ -174,25 +213,20 @@ const std::string EXAMPLE_1 = "{ "
         "\"cat-52\": { "
           "\"formulations\": [ "
             "{"
-                "\"name\": \"simple_lumped\", "
-                "\"params\": {"
-                  "\"sr\": [ "
-                      "1.0, "
-                      "1.0, "
-                      "1.0 "
-                  "], "
-                  "\"storage\": 1.0, "
-                  "\"nash_max_storage\": 10.0, "
-                  "\"gw_storage\": 1.0, "
-                  "\"gw_max_storage\": 1.0, "
-                  "\"smax\": 1000.0, "
-                  "\"a\": 1.0, "
-                  "\"b\": 10.0, "
-                  "\"Ks\": 0.1, "
-                  "\"Kq\": 0.01, "
-                  "\"n\": 3, "
-                  "\"t\": 0 "
-                "} "
+              "\"name\":\"bmi_c++\","
+              "\"params\": {"
+                "\"model_type_name\": \"test_bmi_cpp\","
+                "\"library_file\": \"{{EXTERN_DIR_PATH}}/test_bmi_cpp/cmake_build/libtestbmicppmodel.so\","
+                "\"init_config\": \"{{BMI_C_INIT_DIR_PATH}}/test_bmi_c_config_0.txt\","
+                "\"main_output_variable\": \"OUTPUT_VAR_2\","
+                "\"" BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES "\": { "
+                  "\"INPUT_VAR_2\": \"" AORC_FIELD_NAME_TEMP_2M_AG  "\","
+                  "\"INPUT_VAR_1\": \"" AORC_FIELD_NAME_PRECIP_RATE "\""
+                "},"
+                "\"create_function\": \"bmi_model_create\","
+                "\"destroy_function\": \"bmi_model_destroy\","
+                "\"uses_forcing_file\": false"
+              "} "
             "} "
           "], "
           "\"forcing\": { "
@@ -204,39 +238,103 @@ const std::string EXAMPLE_1 = "{ "
         "\"cat-67\": { "
         "\"formulations\": [ "
             "{"
-              "\"name\": \"tshirt\", "
+              "\"name\":\"bmi_c++\","
               "\"params\": {"
-                "\"maxsmc\": 0.81, "
-                "\"wltsmc\": 1.0, "
-                "\"satdk\": 0.48, "
-                "\"satpsi\": 0.1, "
-                "\"slope\": 0.58, "
-                "\"scaled_distribution_fn_shape_parameter\": 1.3, "
-                "\"multiplier\": 1.0, "
-                "\"alpha_fc\": 1.0, "
-                "\"Klf\": 0.0000672, "
-                "\"Kn\": 0.1, "
-                "\"nash_n\": 8, "
-                "\"Cgw\": 1.08, "
-                "\"expon\": 6.0, "
-                "\"max_groundwater_storage_meters\": 16.0, "
-                "\"nash_storage\": [ "
-                "   1.0, "
-                "   1.0, "
-                "   1.0, "
-                "   1.0, "
-                "   1.0, "
-                "   1.0, "
-                "   1.0, "
-                "   1.0 "
-                "], "
-                "\"soil_storage_percentage\": 1.0, "
-                "\"groundwater_storage_percentage\": 1.0, "
-                "\"timestep\": 3600, "
-                "\"giuh\": { "
-                    "\"giuh_path\": \"./test/data/giuh/GIUH.json\", "
-                    "\"crosswalk_path\": \"./data/crosswalk.json\" "
-                "} "
+                "\"model_type_name\": \"test_bmi_cpp\","
+                "\"library_file\": \"{{EXTERN_DIR_PATH}}/test_bmi_cpp/cmake_build/libtestbmicppmodel.so\","
+                "\"init_config\": \"{{BMI_C_INIT_DIR_PATH}}/test_bmi_c_config_0.txt\","
+                "\"main_output_variable\": \"OUTPUT_VAR_2\","
+                "\"" BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES "\": { "
+                  "\"INPUT_VAR_2\": \"" AORC_FIELD_NAME_TEMP_2M_AG  "\","
+                  "\"INPUT_VAR_1\": \"" AORC_FIELD_NAME_PRECIP_RATE "\""
+                "},"
+                "\"create_function\": \"bmi_model_create\","
+                "\"destroy_function\": \"bmi_model_destroy\","
+                "\"uses_forcing_file\": false"
+              "} "
+            "} "
+          "], "
+          "\"forcing\": { "
+              "\"file_pattern\": \".*{{id}}.*.csv\", "
+              "\"path\": \"./data/forcing/\", "
+              "\"provider\": \"CsvPerFeature\" "
+          "} "
+        "} "
+    "} "
+"}";
+const std::string EXAMPLE_2 = "{ "
+    "\"global\": { "
+      "\"formulations\": [ "
+            "{"
+              "\"name\":\"bmi_c++\","
+              "\"params\": {"
+                "\"model_type_name\": \"test_bmi_cpp\","
+                "\"library_file\": \"{{EXTERN_DIR_PATH}}/test_bmi_cpp/cmake_build/libtestbmicppmodel.so\","
+                "\"init_config\": \"{{BMI_C_INIT_DIR_PATH}}/test_bmi_c_config_0.txt\","
+                "\"main_output_variable\": \"OUTPUT_VAR_2\","
+                "\"" BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES "\": { "
+                  "\"INPUT_VAR_2\": \"" AORC_FIELD_NAME_TEMP_2M_AG  "\","
+                  "\"INPUT_VAR_1\": \"" AORC_FIELD_NAME_PRECIP_RATE "\""
+                "},"
+                "\"create_function\": \"bmi_model_create\","
+                "\"destroy_function\": \"bmi_model_destroy\","
+                "\"uses_forcing_file\": false"
+              "} "
+            "} "
+      "], "
+      "\"forcing\": { "
+          "\"file_pattern\": \".*{{ID}}.*.csv\", " // DIFF from Ex.1
+          "\"path\": \"./data/forcing/\", "
+          "\"provider\": \"CsvPerFeature\" "
+      "} "
+    "}, "
+    "\"time\": { "
+        "\"start_time\": \"2015-12-01 00:00:00\", "
+        "\"end_time\": \"2015-12-30 23:00:00\", "
+        "\"output_interval\": 3600 "
+    "}, "
+    "\"catchments\": { "
+        "\"cat-52\": { "
+          "\"formulations\": [ "
+            "{"
+              "\"name\":\"bmi_c++\","
+              "\"params\": {"
+                "\"model_type_name\": \"test_bmi_cpp\","
+                "\"library_file\": \"{{EXTERN_DIR_PATH}}/test_bmi_cpp/cmake_build/libtestbmicppmodel.so\","
+                "\"init_config\": \"{{BMI_C_INIT_DIR_PATH}}/test_bmi_c_config_0.txt\","
+                "\"main_output_variable\": \"OUTPUT_VAR_2\","
+                "\"" BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES "\": { "
+                  "\"INPUT_VAR_2\": \"" AORC_FIELD_NAME_TEMP_2M_AG  "\","
+                  "\"INPUT_VAR_1\": \"" AORC_FIELD_NAME_PRECIP_RATE "\""
+                "},"
+                "\"create_function\": \"bmi_model_create\","
+                "\"destroy_function\": \"bmi_model_destroy\","
+                "\"uses_forcing_file\": false"
+              "} "
+            "} "
+          "], "
+          "\"forcing\": { "
+              "\"file_pattern\": \".*{{id}}.*.csv\", "
+              "\"path\": \"./data/forcing/\", "
+              "\"provider\": \"CsvPerFeature\" "
+          "} "
+        "}, "
+        "\"cat-67\": { "
+          "\"formulations\": [ "
+            "{"
+              "\"name\":\"bmi_c++\","
+              "\"params\": {"
+                "\"model_type_name\": \"test_bmi_cpp\","
+                "\"library_file\": \"{{EXTERN_DIR_PATH}}/test_bmi_cpp/cmake_build/libtestbmicppmodel.so\","
+                "\"init_config\": \"{{BMI_C_INIT_DIR_PATH}}/test_bmi_c_config_0.txt\","
+                "\"main_output_variable\": \"OUTPUT_VAR_2\","
+                "\"" BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES "\": { "
+                  "\"INPUT_VAR_2\": \"" AORC_FIELD_NAME_TEMP_2M_AG  "\","
+                  "\"INPUT_VAR_1\": \"" AORC_FIELD_NAME_PRECIP_RATE "\""
+                "},"
+                "\"create_function\": \"bmi_model_create\","
+                "\"destroy_function\": \"bmi_model_destroy\","
+                "\"uses_forcing_file\": false"
               "} "
             "} "
           "], "
@@ -249,45 +347,25 @@ const std::string EXAMPLE_1 = "{ "
     "} "
 "}";
 
-const std::string EXAMPLE_2 = "{ "
+const std::string EXAMPLE_3 = "{ "
     "\"global\": { "
       "\"formulations\": [ "
-        "{"
-          "\"name\": \"tshirt\", "
-          "\"params\": {"
-            "\"maxsmc\": 0.81, "
-            "\"wltsmc\": 1.0, "
-            "\"satdk\": 0.48, "
-            "\"satpsi\": 0.1, "
-            "\"slope\": 0.58, "
-            "\"scaled_distribution_fn_shape_parameter\": 1.3, "
-            "\"multiplier\": 1.0, "
-            "\"alpha_fc\": 1.0, "
-            "\"Klf\": 0.0000672, "
-            "\"Kn\": 0.1, "
-            "\"nash_n\": 8, "
-            "\"Cgw\": 1.08, "
-            "\"expon\": 6.0, "
-            "\"max_groundwater_storage_meters\": 16.0, "
-            "\"nash_storage\": [ "
-                "1.0, "
-                "1.0, "
-                "1.0, "
-                "1.0, "
-                "1.0, "
-                "1.0, "
-                "1.0, "
-                "1.0 "
-            "], "
-            "\"soil_storage_percentage\": 1.0, "
-            "\"groundwater_storage_percentage\": 1.0, "
-            "\"timestep\": 3600, "
-            "\"giuh\": { "
-                "\"giuh_path\": \"./test/data/giuh/GIUH.json\", "
-                "\"crosswalk_path\": \"./data/crosswalk.json\" "
+            "{"
+              "\"name\":\"bmi_c++\","
+              "\"params\": {"
+                "\"model_type_name\": \"test_bmi_cpp\","
+                "\"library_file\": \"{{EXTERN_DIR_PATH}}/test_bmi_cpp/cmake_build/libtestbmicppmodel.so\","
+                "\"init_config\": \"{{BMI_C_INIT_DIR_PATH}}/test_bmi_c_config_0.txt\","
+                "\"main_output_variable\": \"OUTPUT_VAR_2\","
+                "\"" BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES "\": { "
+                  "\"INPUT_VAR_2\": \"" AORC_FIELD_NAME_TEMP_2M_AG  "\","
+                  "\"INPUT_VAR_1\": \"" AORC_FIELD_NAME_PRECIP_RATE "\""
+                "},"
+                "\"create_function\": \"bmi_model_create\","
+                "\"destroy_function\": \"bmi_model_destroy\","
+                "\"uses_forcing_file\": false"
+              "} "
             "} "
-          "} "
-        "} "
       "], "
       "\"forcing\": { "
           "\"file_pattern\": \".*{{ID}}.*.csv\", "
@@ -302,160 +380,23 @@ const std::string EXAMPLE_2 = "{ "
     "}, "
     "\"catchments\": { "
         "\"cat-52\": { "
-        "\"formulations\": [ "
-          "{"
-            "\"name\": \"simple_lumped\", "
-            "\"params\": {"
-                "\"sr\": [ "
-                    "1.0, "
-                    "1.0, "
-                    "1.0 "
-                "], "
-                "\"storage\": 1.0, "
-                "\"nash_max_storage\": 10.0, "
-                "\"gw_storage\": 1.0, "
-                "\"gw_max_storage\": 1.0, "
-                "\"smax\": 1000.0, "
-                "\"a\": 1.0, "
-                "\"b\": 10.0, "
-                "\"Ks\": 0.1, "
-                "\"Kq\": 0.01, "
-                "\"n\": 3, "
-                "\"t\": 0 "
-            "} "
-          "} "
-        "], "
-          "\"forcing\": { "
-              "\"file_pattern\": \".*{{id}}.*.csv\", "
-              "\"path\": \"./data/forcing/\", "
-              "\"provider\": \"CsvPerFeature\" "
-          "} "
-        "}, "
-        "\"cat-67\": { "
           "\"formulations\": [ "
             "{"
-              "\"name\": \"tshirt\", "
+              "\"name\":\"bmi_c++\","
               "\"params\": {"
-
-                "\"maxsmc\": 0.81, "
-                "\"wltsmc\": 1.0, "
-                "\"satdk\": 0.48, "
-                "\"satpsi\": 0.1, "
-                "\"slope\": 0.58, "
-                "\"scaled_distribution_fn_shape_parameter\": 1.3, "
-                "\"multiplier\": 1.0, "
-                "\"alpha_fc\": 1.0, "
-                "\"Klf\": 0.0000672, "
-                "\"Kn\": 0.1, "
-                "\"nash_n\": 8, "
-                "\"Cgw\": 1.08, "
-                "\"expon\": 6.0, "
-                "\"max_groundwater_storage_meters\": 16.0, "
-                "\"nash_storage\": [ "
-                "   1.0, "
-                "   1.0, "
-                "   1.0, "
-                "   1.0, "
-                "   1.0, "
-                "   1.0, "
-                "   1.0, "
-                "   1.0 "
-                "], "
-                "\"soil_storage_percentage\": 1.0, "
-                "\"groundwater_storage_percentage\": 1.0, "
-                "\"timestep\": 3600, "
-                "\"giuh\": { "
-                    "\"giuh_path\": \"./test/data/giuh/GIUH.json\", "
-                    "\"crosswalk_path\": \"./data/crosswalk.json\" "
-                "} "
-            "} "
-          "}"
-        "],"
-          "\"forcing\": { "
-              "\"file_pattern\": \".*{{id}}.*.csv\", "
-              "\"path\": \"./data/forcing/\", "
-              "\"provider\": \"CsvPerFeature\" "
-          "} "
-        "} "
-    "} "
-"}";
-
-const std::string EXAMPLE_3 = "{ "
-    "\"global\": { "
-      "\"formulations\": [ "
-        "{"
-          "\"name\": \"tshirt\", "
-          "\"params\": {"
-
-            "\"maxsmc\": 0.81, "
-            "\"wltsmc\": 1.0, "
-            "\"satdk\": 0.48, "
-            "\"satpsi\": 0.1, "
-            "\"slope\": 0.58, "
-            "\"scaled_distribution_fn_shape_parameter\": 1.3, "
-            "\"multiplier\": 1.0, "
-            "\"alpha_fc\": 1.0, "
-            "\"Klf\": 0.0000672, "
-            "\"Kn\": 0.1, "
-            "\"nash_n\": 8, "
-            "\"Cgw\": 1.08, "
-            "\"expon\": 6.0, "
-            "\"max_groundwater_storage_meters\": 16.0, "
-            "\"nash_storage\": [ "
-                "1.0, "
-                "1.0, "
-                "1.0, "
-                "1.0, "
-                "1.0, "
-                "1.0, "
-                "1.0, "
-                "1.0 "
-            "], "
-            "\"soil_storage_percentage\": 1.0, "
-            "\"groundwater_storage_percentage\": 1.0, "
-            "\"timestep\": 3600, "
-            "\"giuh\": { "
-                "\"giuh_path\": \"./test/data/giuh/GIUH.json\", "
-                "\"crosswalk_path\": \"./data/crosswalk.json\" "
-            "} "
-        "} "
-      "} "
-    "], "
-      "\"forcing\": { "
-          "\"file_pattern\": \".*{{ID}}.*.csv\", "
-          "\"path\": \"./data/forcing/\", "
-          "\"provider\": \"CsvPerFeature\" "
-      "} "
-    "}, "
-    "\"time\": { "
-        "\"start_time\": \"2015-12-01 00:00:00\", "
-        "\"end_time\": \"2015-12-30 23:00:00\", "
-        "\"output_interval\": 3600 "
-    "}, "
-    "\"catchments\": { "
-        "\"cat-52\": { "
-          "\"formulations\": [ "
-            "{"
-              "\"name\": \"simple_lumped\", "
-              "\"params\": {"
-                  "\"sr\": [ "
-                      "1.0, "
-                      "1.0, "
-                      "1.0 "
-                  "], "
-                  "\"storage\": 1.0, "
-                  "\"nash_max_storage\": 10.0, "
-                  "\"gw_storage\": 1.0, "
-                  "\"gw_max_storage\": 1.0, "
-                  "\"smax\": 1000.0, "
-                  "\"a\": 1.0, "
-                  "\"b\": 10.0, "
-                  "\"Ks\": 0.1, "
-                  "\"Kq\": 0.01, "
-                  "\"n\": 3, "
-                  "\"t\": 0 "
+                "\"model_type_name\": \"test_bmi_cpp\","
+                "\"library_file\": \"{{EXTERN_DIR_PATH}}/test_bmi_cpp/cmake_build/libtestbmicppmodel.so\","
+                "\"init_config\": \"{{BMI_C_INIT_DIR_PATH}}/test_bmi_c_config_0.txt\","
+                "\"main_output_variable\": \"OUTPUT_VAR_2\","
+                "\"" BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES "\": { "
+                  "\"INPUT_VAR_2\": \"" AORC_FIELD_NAME_TEMP_2M_AG  "\","
+                  "\"INPUT_VAR_1\": \"" AORC_FIELD_NAME_PRECIP_RATE "\""
+                "},"
+                "\"create_function\": \"bmi_model_create\","
+                "\"destroy_function\": \"bmi_model_destroy\","
+                "\"uses_forcing_file\": false"
               "} "
-            "}"
+            "} "
           "], "
           "\"forcing\": { "
               "\"file_pattern\": \".*{{id}}.*.csv\", "
@@ -466,41 +407,21 @@ const std::string EXAMPLE_3 = "{ "
         "\"cat-67\": { "
           "\"formulations\": [ "
             "{"
-              "\"name\": \"tshirt_c\", "
+              "\"name\":\"bmi_c++\","
               "\"params\": {"
-
-                "\"maxsmc\": 0.439, "
-                "\"wltsmc\": 0.066, "
-                "\"satdk\": 0.00000338, "
-                "\"satpsi\": 0.355, "
-                "\"slope\": 1.0, "
-                // This is the 'b' (or 'bb') param
-                "\"scaled_distribution_fn_shape_parameter\": 4.05, "
-                "\"multiplier\": 1000.0, "
-                "\"alpha_fc\": 0.33, "
-                "\"Klf\": 1.70352, "
-                "\"Kn\": 0.03, "
-                "\"nash_n\": 2, "
-                "\"Cgw\": 0.01, "
-                "\"expon\": 6.0, "
-                "\"max_groundwater_storage_meters\": 16.0, "
-                "\"nash_storage\": [ "
-                "   0.0, "
-                "   0.0 "
-                "], "
-                "\"soil_storage_percentage\": 0.667, "
-                "\"groundwater_storage_percentage\": 0.5, "
-                "\"giuh\": { "
-                    "\"cdf_ordinates\": ["
-                    "    0.06,"
-                    "    0.51,"
-                    "    0.28,"
-                    "    0.12,"
-                    "    0.03"
-                    "]"
-                "} "
+                "\"model_type_name\": \"test_bmi_cpp\","
+                "\"library_file\": \"{{EXTERN_DIR_PATH}}/test_bmi_cpp/cmake_build/libtestbmicppmodel.so\","
+                "\"init_config\": \"{{BMI_C_INIT_DIR_PATH}}/test_bmi_c_config_0.txt\","
+                "\"main_output_variable\": \"OUTPUT_VAR_2\","
+                "\"" BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES "\": { "
+                  "\"INPUT_VAR_2\": \"" AORC_FIELD_NAME_TEMP_2M_AG  "\","
+                  "\"INPUT_VAR_1\": \"" AORC_FIELD_NAME_PRECIP_RATE "\""
+                "},"
+                "\"create_function\": \"bmi_model_create\","
+                "\"destroy_function\": \"bmi_model_destroy\","
+                "\"uses_forcing_file\": false"
+              "} "
             "} "
-          "} "
         "], "
           "\"forcing\": { "
               "\"file_pattern\": \".*{{id}}.*.csv\", "
@@ -514,43 +435,22 @@ const std::string EXAMPLE_3 = "{ "
 const std::string EXAMPLE_4 = "{ "
     "\"global\": { "
       "\"formulations\": [ "
-        "{"
-          "\"name\": \"tshirt\", "
-          "\"params\": {"
-
-            "\"maxsmc\": 0.81, "
-            "\"wltsmc\": 1.0, "
-            "\"satdk\": 0.48, "
-            "\"satpsi\": 0.1, "
-            "\"slope\": 0.58, "
-            "\"scaled_distribution_fn_shape_parameter\": 1.3, "
-            "\"multiplier\": 1.0, "
-            "\"alpha_fc\": 1.0, "
-            "\"Klf\": 0.0000672, "
-            "\"Kn\": 0.1, "
-            "\"nash_n\": 8, "
-            "\"Cgw\": 1.08, "
-            "\"expon\": 6.0, "
-            "\"max_groundwater_storage_meters\": 16.0, "
-            "\"nash_storage\": [ "
-                "1.0, "
-                "1.0, "
-                "1.0, "
-                "1.0, "
-                "1.0, "
-                "1.0, "
-                "1.0, "
-                "1.0 "
-            "], "
-            "\"soil_storage_percentage\": 1.0, "
-            "\"groundwater_storage_percentage\": 1.0, "
-            "\"timestep\": 3600, "
-            "\"giuh\": { "
-                "\"giuh_path\": \"./test/data/giuh/GIUH.json\", "
-                "\"crosswalk_path\": \"./data/crosswalk.json\" "
+            "{"
+              "\"name\":\"bmi_c++\","
+              "\"params\": {"
+                "\"model_type_name\": \"test_bmi_cpp\","
+                "\"library_file\": \"{{EXTERN_DIR_PATH}}/test_bmi_cpp/cmake_build/libtestbmicppmodel.so\","
+                "\"init_config\": \"{{BMI_C_INIT_DIR_PATH}}/test_bmi_c_config_0.txt\","
+                "\"main_output_variable\": \"OUTPUT_VAR_2\","
+                "\"" BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES "\": { "
+                  "\"INPUT_VAR_2\": \"" AORC_FIELD_NAME_TEMP_2M_AG  "\","
+                  "\"INPUT_VAR_1\": \"" AORC_FIELD_NAME_PRECIP_RATE "\""
+                "},"
+                "\"create_function\": \"bmi_model_create\","
+                "\"destroy_function\": \"bmi_model_destroy\","
+                "\"uses_forcing_file\": false"
+              "} "
             "} "
-        "} "
-      "} "
     "], "
       "\"forcing\": { "
           "\"file_pattern\": \".*{{ID}}.*.csv\", "
@@ -564,78 +464,236 @@ const std::string EXAMPLE_4 = "{ "
         "\"output_interval\": 3600 "
     "}, "
     "\"catchments\": { "
-        "\"cat-27115\": { "
+        "\"cat-27115\": { " // DIFF from Ex.1+2+3
           "\"formulations\": [ "
             "{"
-              "\"name\": \"simple_lumped\", "
+              "\"name\":\"bmi_c++\","
               "\"params\": {"
-                  "\"sr\": [ "
-                      "1.0, "
-                      "1.0, "
-                      "1.0 "
-                  "], "
-                  "\"storage\": 1.0, "
-                  "\"nash_max_storage\": 10.0, "
-                  "\"gw_storage\": 1.0, "
-                  "\"gw_max_storage\": 1.0, "
-                  "\"smax\": 1000.0, "
-                  "\"a\": 1.0, "
-                  "\"b\": 10.0, "
-                  "\"Ks\": 0.1, "
-                  "\"Kq\": 0.01, "
-                  "\"n\": 3, "
-                  "\"t\": 0 "
+                "\"model_type_name\": \"test_bmi_cpp\","
+                "\"library_file\": \"{{EXTERN_DIR_PATH}}/test_bmi_cpp/cmake_build/libtestbmicppmodel.so\","
+                "\"init_config\": \"{{BMI_C_INIT_DIR_PATH}}/test_bmi_c_config_0.txt\","
+                "\"main_output_variable\": \"OUTPUT_VAR_2\","
+                "\"" BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES "\": { "
+                  "\"INPUT_VAR_2\": \"" AORC_FIELD_NAME_TEMP_2M_AG  "\","
+                  "\"INPUT_VAR_1\": \"" AORC_FIELD_NAME_PRECIP_RATE "\""
+                "},"
+                "\"create_function\": \"bmi_model_create\","
+                "\"destroy_function\": \"bmi_model_destroy\","
+                "\"uses_forcing_file\": false"
               "} "
-            "}"
+            "} "
           "], "
-          "\"forcing\": { "
+          "\"forcing\": { " // BLOCK DIFF from Ex.1+2+3
               "\"path\": \"./data/forcing/cat-27115-nwm-aorc-variant-derived-format.csv\" "
           "} "
         "}, "
         "\"cat-67\": { "
           "\"formulations\": [ "
             "{"
-              "\"name\": \"tshirt_c\", "
+              "\"name\":\"bmi_c++\","
               "\"params\": {"
-
-                "\"maxsmc\": 0.439, "
-                "\"wltsmc\": 0.066, "
-                "\"satdk\": 0.00000338, "
-                "\"satpsi\": 0.355, "
-                "\"slope\": 1.0, "
-                // This is the 'b' (or 'bb') param
-                "\"scaled_distribution_fn_shape_parameter\": 4.05, "
-                "\"multiplier\": 1000.0, "
-                "\"alpha_fc\": 0.33, "
-                "\"Klf\": 1.70352, "
-                "\"Kn\": 0.03, "
-                "\"nash_n\": 2, "
-                "\"Cgw\": 0.01, "
-                "\"expon\": 6.0, "
-                "\"max_groundwater_storage_meters\": 16.0, "
-                "\"nash_storage\": [ "
-                "   0.0, "
-                "   0.0 "
-                "], "
-                "\"soil_storage_percentage\": 0.667, "
-                "\"groundwater_storage_percentage\": 0.5, "
-                "\"giuh\": { "
-                    "\"cdf_ordinates\": ["
-                    "    0.06,"
-                    "    0.51,"
-                    "    0.28,"
-                    "    0.12,"
-                    "    0.03"
-                    "]"
-                "} "
+                "\"model_type_name\": \"test_bmi_cpp\","
+                "\"library_file\": \"{{EXTERN_DIR_PATH}}/test_bmi_cpp/cmake_build/libtestbmicppmodel.so\","
+                "\"init_config\": \"{{BMI_C_INIT_DIR_PATH}}/test_bmi_c_config_0.txt\","
+                "\"main_output_variable\": \"OUTPUT_VAR_2\","
+                "\"" BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES "\": { "
+                  "\"INPUT_VAR_2\": \"" AORC_FIELD_NAME_TEMP_2M_AG  "\","
+                  "\"INPUT_VAR_1\": \"" AORC_FIELD_NAME_PRECIP_RATE "\""
+                "},"
+                "\"create_function\": \"bmi_model_create\","
+                "\"destroy_function\": \"bmi_model_destroy\","
+                "\"uses_forcing_file\": false"
+              "} "
             "} "
-          "} "
         "], "
-          "\"forcing\": { "
+          "\"forcing\": { " // BLOCK DIFF from Ex.1+2+3
               "\"path\": \"./data/forcing/cat-67_2015-12-01 00_00_00_2015-12-30 23_00_00.csv\" "
           "} "
         "} "
     "} "
+"}";
+
+/**
+ * Configuration for model_params parsing at levels:
+ * - global single-bmi
+ * - catchment-specific single-bmi
+ * - catchment-specific multi-bmi
+ */
+const std::string EXAMPLE_5_a =
+"{"
+"    \"global\": {"
+"        \"formulations\": ["
+"            {"
+"                \"name\": \"bmi_c++\","
+"                \"params\": {"
+"                    \"model_type_name\": \"test_bmi_c++\","
+"                    \"library_file\": \"{{EXTERN_DIR_PATH}}/test_bmi_cpp/cmake_build/libtestbmicppmodel.so\","
+"                    \"init_config\": \"{{BMI_CPP_INIT_DIR_PATH}}/test_bmi_cpp_config_2.txt\","
+"                    \"allow_exceed_end_time\": true,"
+"                    \"main_output_variable\": \"OUTPUT_VAR_4\","
+"                    \"uses_forcing_file\": false,"
+"                    \"model_params\": {"
+"                        \"MODEL_VAR_1\": {"
+"                            \"source\": \"hydrofabric\","
+"                            \"from\": \"pi\""
+"                        },"
+"                        \"MODEL_VAR_2\": {"
+"                            \"source\": \"hydrofabric\""
+"                        }"
+"                    },"
+"                    \"" BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES "\": {"
+"                        \"INPUT_VAR_1\": \"APCP_surface\","
+"                        \"INPUT_VAR_2\": \"APCP_surface\""
+"                    }"
+"                }"
+"            }"
+"        ],"
+"        \"forcing\": { "
+"            \"file_pattern\": \".*{{id}}.*.csv\","
+"            \"path\": \"./data/forcing/\","
+"            \"provider\": \"CsvPerFeature\""
+"        }"
+"    },"
+"    \"time\": {"
+"        \"start_time\": \"2015-12-01 00:00:00\","
+"        \"end_time\": \"2015-12-30 23:00:00\","
+"        \"output_interval\": 3600"
+"    },"
+"    \"catchments\": {"
+"        \"cat-67\": {"
+"            \"formulations\": ["
+"                {"
+"                    \"name\": \"bmi_c++\","
+"                    \"params\": {"
+"                        \"model_type_name\": \"test_bmi_c++\","
+"                        \"library_file\": \"{{EXTERN_DIR_PATH}}/test_bmi_cpp/cmake_build/libtestbmicppmodel.so\","
+"                        \"init_config\": \"{{BMI_CPP_INIT_DIR_PATH}}/test_bmi_cpp_config_2.txt\","
+"                        \"allow_exceed_end_time\": true,"
+"                        \"main_output_variable\": \"OUTPUT_VAR_4\","
+"                        \"uses_forcing_file\": false,"
+"                        \"model_params\": {"
+"                            \"MODEL_VAR_1\": {"
+"                                \"source\": \"hydrofabric\","
+"                                \"from\": \"n\""
+"                            },"
+"                            \"MODEL_VAR_2\": {"
+"                                \"source\": \"hydrofabric\""
+"                            }"
+"                        },"
+"                        \"" BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES "\": {"
+"                            \"INPUT_VAR_1\": \"APCP_surface\","
+"                            \"INPUT_VAR_2\": \"APCP_surface\""
+"                        }"
+"                    }"
+"                }"
+"            ],"
+"            \"forcing\": {"
+"                \"path\": \"./data/forcing/cat-67_2015-12-01 00_00_00_2015-12-30 23_00_00.csv\""
+"            }"
+"        },"
+"        \"cat-27115\": {"
+"            \"formulations\": ["
+"                {"
+"                    \"name\": \"bmi_multi\","
+"                    \"params\": {"
+"                        \"model_type_name\": \"bmi_multi_c++\","
+"                        \"forcing_file\": \"\","
+"                        \"init_config\": \"\","
+"                        \"allow_exceed_end_time\": true,"
+"                        \"main_output_variable\": \"OUTPUT_VAR_4\","
+"                        \"modules\": ["
+"                            {"
+"                                \"name\": \"bmi_c++\","
+"                                \"params\": {"
+"                                    \"model_type_name\": \"test_bmi_c++\","
+"                                    \"library_file\": \"{{EXTERN_DIR_PATH}}/test_bmi_cpp/cmake_build/libtestbmicppmodel.so\","
+"                                    \"init_config\": \"{{BMI_CPP_INIT_DIR_PATH}}/test_bmi_cpp_config_2.txt\","
+"                                    \"allow_exceed_end_time\": true,"
+"                                    \"main_output_variable\": \"OUTPUT_VAR_4\","
+"                                    \"uses_forcing_file\": false,"
+"                                    \"model_params\": {"
+"                                        \"MODEL_VAR_1\": {"
+"                                            \"source\": \"hydrofabric\","
+"                                            \"from\": \"e\""
+"                                        },"
+"                                        \"MODEL_VAR_2\": {"
+"                                            \"source\": \"hydrofabric\""
+"                                        }"
+"                                    },"
+"                                    \"" BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES "\": {"
+"                                        \"INPUT_VAR_1\": \"Q2D\","
+"                                        \"INPUT_VAR_2\": \"Q2D\""
+"                                    }"
+"                                }"
+"                            }"
+"                        ]"
+"                    }"
+"                }"
+"            ],"
+"            \"forcing\": {"
+"                \"path\": \"./data/forcing/cat-27115-nwm-aorc-variant-derived-format.csv\""
+"            }"
+"        }"
+"    }"
+"}";
+
+/**
+ * Configuration for model_params parsing at level:
+ * - global multi-bmi
+ */
+const std::string EXAMPLE_5_b =
+"{"
+"    \"global\": {"
+"         \"formulations\": ["
+"             {"
+"                 \"name\": \"bmi_multi\","
+"                 \"params\": {"
+"                     \"model_type_name\": \"bmi_multi_c++\","
+"                     \"forcing_file\": \"\","
+"                     \"init_config\": \"\","
+"                     \"allow_exceed_end_time\": true,"
+"                     \"main_output_variable\": \"OUTPUT_VAR_4\","
+"                     \"uses_forcing_file\": false,"
+"                     \"modules\": ["
+"                         {"
+"                             \"name\": \"bmi_c++\","
+"                             \"params\": {"
+"                                 \"model_type_name\": \"test_bmi_c++\","
+"                                  \"library_file\": \"{{EXTERN_DIR_PATH}}/test_bmi_cpp/cmake_build/libtestbmicppmodel.so\","
+"                                  \"init_config\": \"{{BMI_CPP_INIT_DIR_PATH}}/test_bmi_cpp_config_2.txt\","
+"                                 \"allow_exceed_end_time\": true,"
+"                                 \"main_output_variable\": \"OUTPUT_VAR_4\","
+"                                 \"uses_forcing_file\": false,"
+"                                 \"model_params\": {"
+"                                     \"MODEL_VAR_1\": {"
+"                                         \"source\": \"hydrofabric\","
+"                                         \"from\": \"val\""
+"                                     },"
+"                                     \"MODEL_VAR_2\": {"
+"                                         \"source\": \"hydrofabric\""
+"                                     }"
+"                                 },"
+"                                 \"" BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES "\": {"
+"                                     \"INPUT_VAR_1\": \"APCP_surface\","
+"                                     \"INPUT_VAR_2\": \"APCP_surface\""
+"                                 }"
+"                             }"
+"                         }"
+"                     ]"
+"                 }"
+"             }"
+"         ],"
+"        \"forcing\": { "
+"            \"file_pattern\": \".*{{id}}.*.csv\","
+"            \"path\": \"./data/forcing/\","
+"            \"provider\": \"CsvPerFeature\""
+"        }"
+"    },"
+"    \"time\": {"
+"        \"start_time\": \"2015-12-01 00:00:00\","
+"        \"end_time\": \"2015-12-30 23:00:00\","
+"        \"output_interval\": 3600"
+"    }"
 "}";
 
 TEST_F(Formulation_Manager_Test, basic_reading_1) {
@@ -659,6 +717,7 @@ TEST_F(Formulation_Manager_Test, basic_reading_1) {
 
     ASSERT_TRUE(manager.contains("cat-52"));
     ASSERT_TRUE(manager.contains("cat-67"));
+    ASSERT_EQ(manager.get_output_root(), "/tmp/output-dir/");
 }
 
 TEST_F(Formulation_Manager_Test, basic_reading_2) {
@@ -681,6 +740,7 @@ TEST_F(Formulation_Manager_Test, basic_reading_2) {
 
     ASSERT_TRUE(manager.contains("cat-52"));
     ASSERT_TRUE(manager.contains("cat-67"));
+    ASSERT_EQ(manager.get_output_root(), "./");
 }
 
 TEST_F(Formulation_Manager_Test, basic_run_1) {
@@ -701,15 +761,6 @@ TEST_F(Formulation_Manager_Test, basic_run_1) {
 
     std::map<std::string, std::map<long, double>> calculated_results;
 
-    pdm03_struct pdm_et_data;
-    pdm_et_data.scaled_distribution_fn_shape_parameter = 1.3;
-    pdm_et_data.vegetation_adjustment = 0.99;
-    pdm_et_data.model_time_step = 0.0;
-    pdm_et_data.max_height_soil_moisture_storerage_tank = 400.0;
-    pdm_et_data.maximum_combined_contents = pdm_et_data.max_height_soil_moisture_storerage_tank / (1.0+pdm_et_data.scaled_distribution_fn_shape_parameter);
-
-    std::shared_ptr<pdm03_struct> et_params_ptr = std::make_shared<pdm03_struct>(pdm_et_data);
-
     double dt = 3600.0;
 
     for (std::pair<std::string, std::shared_ptr<realization::Formulation>> formulation : manager) {
@@ -718,8 +769,6 @@ TEST_F(Formulation_Manager_Test, basic_run_1) {
         }
 
         double calculation;
-
-        formulation.second->set_et_params(et_params_ptr);
 
         for (long t = 0; t < 4; t++) {
             calculation = formulation.second->get_response(t, dt);
@@ -745,12 +794,11 @@ TEST_F(Formulation_Manager_Test, basic_run_3) {
     ASSERT_EQ(manager.get_size(), 1);
     ASSERT_TRUE(manager.contains("cat-67"));
 
-    std::vector<double> expected_results = {191.106140 / 1000.0, 177.198214 / 1000.0, 165.163302 / 1000.0};
+    std::vector<double> expected_results = {571.4, 570.6, 569.0};
 
     std::vector<double> actual_results(expected_results.size());
 
     for (int i = 0; i < expected_results.size(); i++) {
-        // Remember that for the Tshirt_C_Realization, the timestep sizes are implicit
         actual_results[i] = manager.get_formulation("cat-67")->get_response(i, 3600);
     }
 
@@ -807,17 +855,7 @@ TEST_F(Formulation_Manager_Test, forcing_provider_specification) {
 
     std::vector<double> actual_results(expected_results.size());
 
-    pdm03_struct pdm_et_data;
-    pdm_et_data.scaled_distribution_fn_shape_parameter = 1.3;
-    pdm_et_data.vegetation_adjustment = 0.99;
-    pdm_et_data.model_time_step = 0.0;
-    pdm_et_data.max_height_soil_moisture_storerage_tank = 400.0;
-    pdm_et_data.maximum_combined_contents = pdm_et_data.max_height_soil_moisture_storerage_tank / (1.0+pdm_et_data.scaled_distribution_fn_shape_parameter);
-
-    std::shared_ptr<pdm03_struct> et_params_ptr = std::make_shared<pdm03_struct>(pdm_et_data);
-
     for (std::pair<std::string, std::shared_ptr<realization::Formulation>> formulation : manager) {
-        formulation.second->set_et_params(et_params_ptr);
         formulation.second->get_response(0, 3600);
     }
 
@@ -828,3 +866,99 @@ TEST_F(Formulation_Manager_Test, forcing_provider_specification) {
     }
 }
 
+TEST_F(Formulation_Manager_Test, read_external_attributes) {
+    std::stringstream stream_a;
+    stream_a << fix_paths(EXAMPLE_5_a);
+
+    std::stringstream stream_b;
+    stream_b << fix_paths(EXAMPLE_5_b);
+
+    std::ostream* ptr = &std::cout;
+    std::shared_ptr<std::ostream> s_ptr(ptr, [](void*) {});
+    utils::StreamHandler catchment_output(s_ptr);
+
+    time_step_t ts = 2;
+    std::array<double, 5> values;
+    std::vector<std::string> str_values;
+
+    /**
+     * Lambda to add a feature to the fabric, and then assert that its properties exists.
+     *
+     * Assertions:
+     * - Asserts that the feature with `id` correctly has all properties in `properties`.
+     */
+    auto add_and_check_feature = [&, this](const std::string& id, geojson::PropertyMap properties) {
+      this->add_feature(id, properties);
+      auto feature = this->fabric->get_feature(id);
+      for (auto& pair : properties)
+        ASSERT_TRUE(feature->has_property(pair.first));
+    };
+
+    /**
+     * Lambda to check that formulation values are present in output.
+     * 
+     * Assertions:
+     * - Asserts that the formulation manager contains the given catchment ID.
+     * - Asserts that the expected values are contained within the output line at
+     *   timestep `ts`.
+     *
+     * @note The output line is checked by splitting it along its delimiter,
+     *       and parsing the resulting strings to doubles. Then, `std::find`
+     *       is used to check for the existence of the expected doubles.
+     */
+    auto check_formulation_values = [&](auto fm, const std::string& id, std::initializer_list<double> expected) {
+        ASSERT_TRUE(fm.contains(id));
+        auto formulation = fm.get_formulation(id);
+        formulation->get_response(ts, 3600);
+        boost::algorithm::split(str_values, formulation->get_output_line_for_timestep(ts), [](auto c) -> bool { return c == ','; });
+        auto values_it = values.begin();
+        for (auto& str : str_values) {
+          auto end = &str[0] + str.size();
+          *values_it = strtod(str.c_str(), &end);
+          values_it++;
+        }
+
+        for (auto& expect : expected) {
+            ASSERT_NE(std::find(values.begin(), values.end(), expect), values.end());
+        }
+    };
+
+    auto manager = realization::Formulation_Manager(stream_a);
+  
+    add_and_check_feature("cat-67", geojson::PropertyMap{
+      { "MODEL_VAR_2", geojson::JSONProperty{"MODEL_VAR_2", 10 } },
+      { "n",           geojson::JSONProperty{"n",           1.70352 } }
+    });
+
+    add_and_check_feature("cat-52", geojson::PropertyMap{
+      { "MODEL_VAR_2", geojson::JSONProperty{"MODEL_VAR_2", 15 } },
+      { "pi",           geojson::JSONProperty{"pi",         3.14159 } }
+    });
+
+    add_and_check_feature("cat-27115", geojson::PropertyMap{
+      { "MODEL_VAR_2", geojson::JSONProperty{"MODEL_VAR_2", 20 } },
+      { "e",           geojson::JSONProperty{"e",           2.71828 } }
+    });
+
+    manager.read(this->fabric, catchment_output);
+
+    ASSERT_EQ(manager.get_size(), 3);
+    check_formulation_values(manager, "cat-67",    { 1.70352, 10.0 });
+    check_formulation_values(manager, "cat-52",    { 3.14159, 15.0 });
+    check_formulation_values(manager, "cat-27115", { 2.71828, 20.0 });
+
+    this->fabric->remove_feature_by_id("cat-67");
+    this->fabric->remove_feature_by_id("cat-52");
+    this->fabric->remove_feature_by_id("cat-27115");
+
+    manager = realization::Formulation_Manager(stream_b);
+    
+    add_and_check_feature("cat-67", geojson::PropertyMap{
+      { "MODEL_VAR_2", geojson::JSONProperty{"MODEL_VAR_2", 9231 } },
+      { "val",           geojson::JSONProperty{"val",       7.41722 } }
+    });
+
+    manager.read(this->fabric, catchment_output);
+
+    check_formulation_values(manager, "cat-67", { 7.41722, 9231 });
+}

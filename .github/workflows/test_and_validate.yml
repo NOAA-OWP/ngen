@@ -15,6 +15,7 @@ env:
   # TODO: add something later that can check the runners for hyperthreading
   LINUX_NUM_PROC_CORES: 2
   MACOS_NUM_PROC_CORES: 3
+  ASAN_OPTIONS: detect_leaks=false
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -30,16 +31,24 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     - name: Checkout the commit
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     
     - name: Build Unit Tests
       uses: ./.github/actions/ngen-build
       with:
-        targets: "test_unit"
+        targets: "test_unit test_geopackage"
         build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
 
     - name: Run Tests
       run: ./cmake_build/test/test_unit
+      timeout-minutes: 15
+
+    - name: Run GeoPackage Tests
+      run: |
+        # Container underflow report is a false positive, from a build with instrumentation
+        # disabled in one file where it hangs the compiler (ngen#567)
+        export ASAN_OPTIONS=${ASAN_OPTIONS}:detect_container_overflow=0
+        ./cmake_build/test/test_geopackage
       timeout-minutes: 15
     
     - name: Clean Up
@@ -57,7 +66,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Build PET Submodule
         id: submod_build_5
@@ -91,7 +100,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Build Unit Tests
         uses: ./.github/actions/ngen-build
@@ -120,7 +129,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       #make sure cxx bmi is initialized/ready
       - uses: ./.github/actions/ngen-submod-build
@@ -167,7 +176,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Build Submodules
         id: submod_build
@@ -212,7 +221,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Build Submodules
         id: submod_build_1
@@ -266,7 +275,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out repository under $GITHUB_WORKSPACE, so job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Build Unit Tests
         uses: ./.github/actions/ngen-build
@@ -280,6 +289,7 @@ jobs:
 
       - name: run_bmi_python_tests
         run: |
+          . .venv/bin/activate
           cd ./cmake_build/test/
           ./test_bmi_python
           cd ../../
@@ -300,7 +310,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Build Submodules
         id: submod_build_1
@@ -344,7 +354,9 @@ jobs:
           additional_python_requirements: 'extern/test_bmi_py/requirements.txt'
 
       - name: Run Unit Tests
-        run: ./cmake_build/test/test_bmi_multi
+        run: |
+          . .venv/bin/activate
+          ./cmake_build/test/test_bmi_multi
         timeout-minutes: 15
 
       - name: Clean Up Unit Test Build
@@ -374,7 +386,7 @@ jobs:
 #    # Steps represent a sequence of tasks that will be executed as part of the job
 #    steps:
 #      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-#      - uses: actions/checkout@v2
+#      - uses: actions/checkout@v3
 #
 #      - name: git submodule
 #        run: git submodule update --init --recursive -- test/googletest

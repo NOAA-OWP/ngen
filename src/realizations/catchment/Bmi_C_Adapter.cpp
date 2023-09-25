@@ -19,7 +19,7 @@ using namespace models::bmi;
  * @param registration_func The name for the @see bmi_registration_function.
  * @param output The output stream handler.
  */
-Bmi_C_Adapter::Bmi_C_Adapter(const string &type_name, std::string library_file_path, std::string forcing_file_path,
+Bmi_C_Adapter::Bmi_C_Adapter(const std::string &type_name, std::string library_file_path, std::string forcing_file_path,
                              bool allow_exceed_end, bool has_fixed_time_step,
                              const std::string& registration_func, utils::StreamHandler output)
         : Bmi_C_Adapter(type_name, std::move(library_file_path), "", std::move(forcing_file_path),
@@ -38,7 +38,7 @@ Bmi_C_Adapter::Bmi_C_Adapter(const string &type_name, std::string library_file_p
  * @param registration_func The name for the @see bmi_registration_function.
  * @param output The output stream handler.
  */
-Bmi_C_Adapter::Bmi_C_Adapter(const string &type_name, std::string library_file_path, std::string bmi_init_config,
+Bmi_C_Adapter::Bmi_C_Adapter(const std::string &type_name, std::string library_file_path, std::string bmi_init_config,
                              std::string forcing_file_path, bool allow_exceed_end, bool has_fixed_time_step,
                              std::string registration_func, utils::StreamHandler output)
         : Bmi_C_Adapter(type_name, std::move(library_file_path), std::move(bmi_init_config),
@@ -67,7 +67,7 @@ Bmi_C_Adapter::Bmi_C_Adapter(const string &type_name, std::string library_file_p
  * @param output The output stream handler.
  * @param do_initialization Whether initialization should be performed during construction or deferred.
  */
-Bmi_C_Adapter::Bmi_C_Adapter(const string &type_name, std::string library_file_path, std::string bmi_init_config,
+Bmi_C_Adapter::Bmi_C_Adapter(const std::string &type_name, std::string library_file_path, std::string bmi_init_config,
                              std::string forcing_file_path, bool allow_exceed_end, bool has_fixed_time_step,
                              std::string registration_func, utils::StreamHandler output, bool do_initialization)
                              : AbstractCLibBmiAdapter<C_Bmi>(type_name, library_file_path, std::move(bmi_init_config), std::move(forcing_file_path), allow_exceed_end,
@@ -78,7 +78,7 @@ Bmi_C_Adapter::Bmi_C_Adapter(const string &type_name, std::string library_file_p
             construct_and_init_backing_model_for_type();
             // Make sure this is set to 'true' after this function call finishes
             model_initialized = true;
-            acquire_time_conversion_factor(bmi_model_time_convert_factor);
+            bmi_model_time_convert_factor = get_time_convert_factor();
         }
         // Record the exception message before re-throwing to handle subsequent function calls properly
         catch( models::external::State_Exception& e)
@@ -96,7 +96,7 @@ Bmi_C_Adapter::Bmi_C_Adapter(const string &type_name, std::string library_file_p
             model_initialized = true;
             throw e;
         }
-        catch (exception& e) {
+        catch (std::exception& e) {
             // Make sure this is set to 'true' after this function call finishes
             model_initialized = true;
             throw e;
@@ -135,7 +135,7 @@ Bmi_C_Adapter::Bmi_C_Adapter(Bmi_C_Adapter &adapter) : model_name(adapter.model_
 
 Bmi_C_Adapter::Bmi_C_Adapter(Bmi_C_Adapter &&adapter) noexcept : AbstractCLibBmiAdapter<C_Bmi>(std::move(adapter)) { }
 
-string Bmi_C_Adapter::GetComponentName() {
+std::string Bmi_C_Adapter::GetComponentName() {
     char component_name[BMI_MAX_COMPONENT_NAME];
     if (bmi_model->get_component_name(bmi_model.get(), component_name) != BMI_SUCCESS) {
         throw std::runtime_error(model_name + " failed to get model component name.");
@@ -267,7 +267,7 @@ std::string Bmi_C_Adapter::GetGridType(int grid_id) {
     char gridtype_c_str[BMI_MAX_TYPE_NAME];
     int success = bmi_model->get_grid_type(bmi_model.get(), grid_id, gridtype_c_str);
     if (success != BMI_SUCCESS) {
-        throw std::runtime_error(model_name + " failed to get grid type for grid ID " + to_string(grid_id) + ".");
+        throw std::runtime_error(model_name + " failed to get grid type for grid ID " + std::to_string(grid_id) + ".");
     }
     return std::string(gridtype_c_str);
 }
@@ -276,7 +276,7 @@ int Bmi_C_Adapter::GetGridRank(int grid_id) {
     int gridrank;
     int success = bmi_model->get_grid_rank(bmi_model.get(), grid_id, &gridrank);
     if (success != BMI_SUCCESS) {
-        throw std::runtime_error(model_name + " failed to get grid rank for grid ID " + to_string(grid_id) + ".");
+        throw std::runtime_error(model_name + " failed to get grid rank for grid ID " + std::to_string(grid_id) + ".");
     }
     return gridrank;
 }
@@ -285,7 +285,7 @@ int Bmi_C_Adapter::GetGridSize(int grid_id) {
     int gridsize;
     int success = bmi_model->get_grid_size(bmi_model.get(), grid_id, &gridsize);
     if (success != BMI_SUCCESS) {
-        throw std::runtime_error(model_name + " failed to get grid size for grid ID " + to_string(grid_id) + ".");
+        throw std::runtime_error(model_name + " failed to get grid size for grid ID " + std::to_string(grid_id) + ".");
     }
     return gridsize;
 }
@@ -308,8 +308,7 @@ std::shared_ptr<std::vector<std::string>> Bmi_C_Adapter::inner_get_variable_name
             std::vector<std::string>(variableCount));
 
     // Must get the names from the model as an array of C strings
-    // The array can be on the stack ...
-    char* names_array[variableCount];
+    std::vector<char*> names_array(variableCount);
     // ... but allocate the space for the individual C strings (i.e., the char * elements)
     for (int i = 0; i < variableCount; i++) {
         names_array[i] = static_cast<char *>(malloc(sizeof(char) * BMI_MAX_VAR_NAME));
@@ -318,10 +317,10 @@ std::shared_ptr<std::vector<std::string>> Bmi_C_Adapter::inner_get_variable_name
     // With the necessary char** in hand, get the names from the model
     int names_result;
     if (is_input_variables) {
-        names_result = bmi_model->get_input_var_names(bmi_model.get(), names_array);
+        names_result = bmi_model->get_input_var_names(bmi_model.get(), names_array.data());
     }
     else {
-        names_result = bmi_model->get_output_var_names(bmi_model.get(), names_array);
+        names_result = bmi_model->get_output_var_names(bmi_model.get(), names_array.data());
     }
     if (names_result != BMI_SUCCESS) {
         throw std::runtime_error(model_name + " failed to get array of output variables names.");

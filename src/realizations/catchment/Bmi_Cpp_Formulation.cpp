@@ -70,7 +70,7 @@ std::string Bmi_Cpp_Formulation::get_output_line_for_timestep(int timestep, std:
  * Get the model response for the provided time step, executing the backing model formulation one or more times as
  * needed.
  *
- * Function assumes the backing model has been fully initialized an that any additional input values have been applied.
+ * Function assumes the backing model has been fully initialized and that any additional input values have been applied.
  *
  * The function throws an error if the index of a previously processed time step is supplied, except if it is the last
  * processed time step.  In that case, the appropriate value is returned as described below, but without executing any
@@ -187,7 +187,7 @@ bool Bmi_Cpp_Formulation::is_bmi_input_variable(const std::string &var_name) {
     return std::any_of(names.cbegin(), names.cend(), [var_name](const std::string &s){ return var_name == s; });
 }
 
-bool Bmi_Cpp_Formulation::is_bmi_output_variable(const string &var_name) {
+bool Bmi_Cpp_Formulation::is_bmi_output_variable(const std::string &var_name) {
     const std::vector<std::string> names = get_bmi_model()->GetOutputVarNames();
     return std::any_of(names.cbegin(), names.cend(), [var_name](const std::string &s){ return var_name == s; });
 }

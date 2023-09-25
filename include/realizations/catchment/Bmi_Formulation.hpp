@@ -34,22 +34,12 @@
 #define BMI_REALIZATION_CFG_PARAM_OPT__CPP_CREATE_FUNC_DEFAULT "bmi_model_create"
 #define BMI_REALIZATION_CFG_PARAM_OPT__CPP_DESTROY_FUNC_DEFAULT "bmi_model_destroy"
 
-// Supported Standard Names for BMI variables
-// This is needed to provide a calculated potential ET value back to a BMI model
-#define NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP "potential_evapotranspiration"
-
-// Taken from the CSDMS Standard Names list
-// TODO: need to add these in for anything BMI model input or output variables we need to know how to recognize
-#define CSDMS_STD_NAME_POTENTIAL_ET "water_potential_evaporation_flux"
 /* *************** See also the Forcing.h file for several CSDMS Standard Names definitions *************** */
 
 // Forward declaration to provide access to protected items in testing
 class Bmi_Formulation_Test;
 class Bmi_C_Formulation_Test;
-class Bmi_C_Cfe_IT;
 class Bmi_C_Pet_IT;
-
-using namespace std;
 
 namespace realization {
 
@@ -107,15 +97,15 @@ namespace realization {
          */
         virtual const bool &get_allow_model_exceed_end_time() const = 0;
 
-        virtual const vector<string> get_bmi_input_variables() = 0;
+        virtual const std::vector<std::string> get_bmi_input_variables() = 0;
 
-        const string &get_bmi_main_output_var() const {
+        const std::string &get_bmi_main_output_var() const {
             return bmi_main_output_var;
         }
 
         virtual const time_t &get_bmi_model_start_time_forcing_offset_s() = 0;
 
-        virtual const vector<string> get_bmi_output_variables() = 0;
+        virtual const std::vector<std::string> get_bmi_output_variables() = 0;
 
         /**
          * When possible, translate a variable name for a BMI model to an internally recognized name.
@@ -139,7 +129,7 @@ namespace realization {
          */
         virtual const double get_model_end_time() = 0;
 
-        virtual const string &get_forcing_file_path() const = 0;
+        virtual const std::string &get_forcing_file_path() const = 0;
 
         /**
          * Get the name of the specific type of the backing model object.
@@ -155,7 +145,7 @@ namespace realization {
          *
          * @return The values making up the header line from get_output_header_line() organized as a vector.
          */
-        const vector<std::string> &get_output_header_fields() const {
+        const std::vector<std::string> &get_output_header_fields() const {
             return output_header_fields;
         }
 
@@ -167,7 +157,7 @@ namespace realization {
          *
          * @return An appropriate header line for this type.
          */
-        string get_output_header_line(string delimiter) override {
+        std::string get_output_header_line(std::string delimiter) override {
             return boost::algorithm::join(get_output_header_fields(), delimiter);
         }
 
@@ -180,15 +170,15 @@ namespace realization {
          * @return
          */
         // TODO: rename this function to make it more clear it is FORMULATION output contents, not simply BMI variables
-        const vector<string> &get_output_variable_names() const {
+        const std::vector<std::string> &get_output_variable_names() const {
             return output_variable_names;
         }
 
-        const vector<std::string> &get_required_parameters() override {
+        const std::vector<std::string> &get_required_parameters() override {
             return REQUIRED_PARAMETERS;
         }
 
-        virtual bool is_bmi_input_variable(const string &var_name) = 0;
+        virtual bool is_bmi_input_variable(const std::string &var_name) = 0;
 
         /**
          * Test whether backing model has fixed time step size.
@@ -197,7 +187,7 @@ namespace realization {
          */
         virtual bool is_bmi_model_time_step_fixed() = 0;
 
-        virtual bool is_bmi_output_variable(const string &var_name) = 0;
+        virtual bool is_bmi_output_variable(const std::string &var_name) = 0;
 
         /**
          * Whether the backing model uses/reads the forcing file directly for getting input data.
@@ -234,7 +224,7 @@ namespace realization {
             return output_precision;
         }
 
-        void set_bmi_main_output_var(const string &main_output_var) {
+        void set_bmi_main_output_var(const std::string &main_output_var) {
             bmi_main_output_var = main_output_var;
         }
 
@@ -247,7 +237,7 @@ namespace realization {
             model_type_name = std::move(type_name);
         }
 
-        void set_output_header_fields(const vector<std::string> &output_headers) {
+        void set_output_header_fields(const std::vector<std::string> &output_headers) {
             output_header_fields = output_headers;
         }
 
@@ -259,7 +249,7 @@ namespace realization {
          *
          * @param out_var_names the names of variables in formulation output, in the order they should appear.
          */
-        void set_output_variable_names(const vector<string> &out_var_names) {
+        void set_output_variable_names(const std::vector<std::string> &out_var_names) {
             output_variable_names = out_var_names;
         }
 

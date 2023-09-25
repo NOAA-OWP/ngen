@@ -121,6 +121,12 @@ class CatchmentAggrDataSelector
     std::string id_str; //< the catchment to access data for
 };
 
+
+#if !defined(__APPLE__) && !defined(__llvm__) && defined(__GNUC__) && __GNUC__ < 8
+// Enable a workaround for old GCC versions (but not Clang or Apple's fake-GCC that's actually Clang)
+#define NGEN_SELECTOR_CAST
+#endif
+
 /**
  * @brief This a data selector intended for use with CSV data
  * 
@@ -134,7 +140,7 @@ class CSVDataSelector : public CatchmentAggrDataSelector
         CatchmentAggrDataSelector(std::string(), var, start, dur, units)
     {}
 
-    #if GCC_VERSION < 8 && !defined(__llvm__)
+    #if defined(NGEN_SELECTOR_CAST)
     operator const CatchmentAggrDataSelector&() const { return *this; }
     #endif
 
@@ -149,7 +155,7 @@ class BMIDataSelector : public CatchmentAggrDataSelector
         CatchmentAggrDataSelector(std::string(), var, start, dur, units)
     {}
 
-    #if GCC_VERSION < 8 && !defined(__llvm__)
+    #if defined(NGEN_SELECTOR_CAST)
     operator const CatchmentAggrDataSelector&() const { return *this; }
     #endif
 
@@ -174,12 +180,14 @@ class NetCDFDataSelector : public CatchmentAggrDataSelector
         
     }
 
-    #if GCC_VERSION < 8 && !defined(__llvm__)
+    #if defined(NGEN_SELECTOR_CAST)
     operator const CatchmentAggrDataSelector&() const { return *this; }
     #endif
 
     private: 
 };
-#endif
+#endif // NETCDF_ACTIVE
+
+#undef NGEN_SELECTOR_CAST
 
 #endif

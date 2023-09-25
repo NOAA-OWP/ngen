@@ -39,6 +39,10 @@ inputs:
       required: false
       description: 'Activate NetCDF Lumped Forcing Support'
       default: 'ON'
+    use_sqlite:
+      required: false
+      description: 'Activate SQLite3 suppport for GeoPackage'
+      default: 'ON'
     use_troute:
       required: false
       description: 'Enable t-route integration support'
@@ -83,6 +87,18 @@ runs:
               echo "LIB=$LD_LIBRARY_PATH" >> $GITHUB_ENV
               echo "INCLUDE=/usr/local/include" >> $GITHUB_ENV
               echo "NETCDF=/usr/local" >> $GITHUB_ENV
+            fi
+          shell: bash
+
+        - name: Install UDUNITS
+          run: |
+            if [ ${{ runner.os }} == 'Linux' ]
+            then
+              sudo apt-get update
+              sudo apt-get install -y --fix-missing libudunits2-dev
+            elif [ ${{ runner.os }} == 'macOS' ]
+            then
+              brew install udunits
             fi
           shell: bash
 
@@ -153,13 +169,30 @@ runs:
           id: cmake_init
           run: |
             export BOOST_ROOT="$(pwd)/boost_1_72_0"
+            export CFLAGS="-fsanitize=address -O1 -g -fno-omit-frame-pointer"
+            export CXXFLAGS="-fsanitize=address -O1 -g -fno-omit-frame-pointer -pedantic-errors"
+            . .venv/bin/activate
             [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
-            cmake -B ${{ inputs.build-dir }} -DBMI_C_LIB_ACTIVE:BOOL=${{ inputs.bmi_c }} -DNGEN_ACTIVATE_PYTHON:BOOL=${{ inputs.use_python }} -DUDUNITS_ACTIVE:BOOL=${{ inputs.use_udunits }} -DBMI_FORTRAN_ACTIVE:BOOL=${{ inputs.bmi_fortran }} -DNGEN_ACTIVATE_ROUTING:BOOL=${{ inputs.use_troute }} -DNETCDF_ACTIVE:BOOL=${{ inputs.use_netcdf }} -DMPI_ACTIVE:BOOL=${{ inputs.use_mpi }} -S .
+            cmake -B ${{ inputs.build-dir }} \
+              -DBMI_C_LIB_ACTIVE:BOOL=${{ inputs.bmi_c }} \
+              -DNGEN_ACTIVATE_PYTHON:BOOL=${{ inputs.use_python }} \
+              -DUDUNITS_ACTIVE:BOOL=${{ inputs.use_udunits }} \
+              -DBMI_FORTRAN_ACTIVE:BOOL=${{ inputs.bmi_fortran }} \
+              -DNGEN_ACTIVATE_ROUTING:BOOL=${{ inputs.use_troute }} \
+              -DNETCDF_ACTIVE:BOOL=${{ inputs.use_netcdf }} \
+              -DNGEN_WITH_SQLITE:BOOL=${{ inputs.use_sqlite }} \
+              -DMPI_ACTIVE:BOOL=${{ inputs.use_mpi }} -S .
             echo "build-dir=$(echo ${{ inputs.build-dir }})" >> $GITHUB_OUTPUT
           shell: bash
 
         - name: Build Targets
           #cmake >= 3.15 can build multiple targets
-          run: cmake --build ${{ inputs.build-dir }} --target ${{ inputs.targets }} -- -j  ${{ inputs.build-cores }}
+          run: |
+            # Build Targets
+            # Disable leak detection during test enumeration
+            export ASAN_OPTIONS=detect_leaks=false
+            # Activate venv so that test discovery run during build works
+            . .venv/bin/activate
+            cmake --build ${{ inputs.build-dir }} --target ${{ inputs.targets }} -- -j  ${{ inputs.build-cores }}
           shell: bash
 

@@ -2,34 +2,20 @@
     "global": {
       "formulations": [
         {
-            "name": "tshirt_c",
-            "params": {
-                "maxsmc": 0.439,
-                "wltsmc": 0.066,
-                "satdk": 0.00000338,
-                "satpsi": 0.355,
-                "slope": 1.0,
-                "scaled_distribution_fn_shape_parameter": 4.05,
-                "multiplier": 0.0,
-                "alpha_fc": 0.33,
-                "Klf": 0.01,
-                "Kn": 0.03,
-                "nash_n": 2,
-                "Cgw": 0.01,
-                "expon": 6.0,
-                "max_groundwater_storage_meters": 1.0,
-                "nash_storage": [
-                    0.0,
-                    0.0
-                ],
-                "soil_storage_percentage": 0.667,
-                "groundwater_storage_percentage": 0.5,
-                "timestep": 3600,
-                "giuh": {
-                    "giuh_path": "./test/data/giuh/GIUH.json",
-                    "crosswalk_path": "./data/crosswalk.json"
-                }
-            }
+          "name": "bmi_c++",
+          "params": {
+            "model_type_name": "test_bmi_cpp",
+            "library_file": "./extern/test_bmi_cpp/cmake_build/libtestbmicppmodel.so",
+            "init_config": "./data/bmi/c/test/test_bmi_c_config.ini",
+            "main_output_variable": "OUTPUT_VAR_2",
+            "variables_names_map" : {
+              "INPUT_VAR_2": "TMP_2maboveground",
+              "INPUT_VAR_1": "precip_rate"
+            },
+            "create_function": "bmi_model_create",
+            "destroy_function": "bmi_model_destroy",
+            "uses_forcing_file": false
+          }
         }
       ],
       "forcing": {
@@ -46,70 +32,42 @@
         "cat-27": {
           "formulations": [
             {
-              "name":"tshirt_c",
-                "params": {
-                  "maxsmc": 0.439,
-                  "wltsmc": 0.066,
-                  "satdk": 0.00000338,
-                  "satpsi": 0.355,
-                  "slope": 1.0,
-                  "scaled_distribution_fn_shape_parameter": 4.05,
-                  "multiplier": 0.0,
-                  "alpha_fc": 0.33,
-                  "Klf": 0.01,
-                  "Kn": 0.03,
-                  "nash_n": 2,
-                  "Cgw": 0.01,
-                  "expon": 6.0,
-                  "max_groundwater_storage_meters": 1.0,
-                  "nash_storage": [
-                      0.0,
-                      0.0
-                  ],
-                  "soil_storage_percentage": 0.667,
-                  "groundwater_storage_percentage": 0.5,
-                  "timestep": 3600,
-                  "giuh": {
-                    "giuh_path": "./test/data/giuh/GIUH.json",
-                    "crosswalk_path": "./data/crosswalk.json",
-                    "cdf_ordinates": [
-                              0.1,
-                              0.35,
-                              0.2,
-                              0.14,
-                              0.1,
-                              0.06,
-                              0.05
-                          ]
-                  }
-                }
+              "name": "bmi_c++",
+              "params": {
+                "model_type_name": "test_bmi_cpp",
+                "library_file": "./extern/test_bmi_cpp/cmake_build/libtestbmicppmodel.so",
+                "init_config": "./data/bmi/c/test/test_bmi_c_config.ini",
+                "main_output_variable": "OUTPUT_VAR_2",
+                "variables_names_map" : {
+                  "INPUT_VAR_2": "TMP_2maboveground",
+                  "INPUT_VAR_1": "precip_rate"
+                },
+                "create_function": "bmi_model_create",
+                "destroy_function": "bmi_model_destroy",
+                "uses_forcing_file": false
               }
-            ],
-            "forcing": {
-                "path": "./data/forcing/cat-27_2015-12-01 00_00_00_2015-12-30 23_00_00.csv"
             }
+          ],
+          "forcing": {
+              "path": "./data/forcing/cat-27_2015-12-01 00_00_00_2015-12-30 23_00_00.csv"
+          }
         },
         "cat-52": {
           "formulations": [
             {
-                "name": "simple_lumped",
-                "params": {
-                  "sr": [
-                      1.0,
-                      1.0,
-                      1.0
-                  ],
-                  "storage": 1.0,
-                  "gw_storage": 1.0,
-                  "gw_max_storage": 10.0,
-                  "nash_max_storage": 2.0,
-                  "smax": 5,
-                  "a": 1.0,
-                  "b": 10.0,
-                  "Ks": 0.1,
-                  "Kq": 0.01,
-                  "n": 3,
-                  "t": 0
+              "name": "bmi_c++",
+              "params": {
+                "model_type_name": "test_bmi_cpp",
+                "library_file": "./extern/test_bmi_cpp/cmake_build/libtestbmicppmodel.so",
+                "init_config": "./data/bmi/c/test/test_bmi_c_config.ini",
+                "main_output_variable": "OUTPUT_VAR_2",
+                "variables_names_map" : {
+                  "INPUT_VAR_2": "TMP_2maboveground",
+                  "INPUT_VAR_1": "precip_rate"
+                },
+                "create_function": "bmi_model_create",
+                "destroy_function": "bmi_model_destroy",
+                "uses_forcing_file": false
               }
             }
           ],
@@ -120,42 +78,19 @@
         "cat-67": {
           "formulations": [
             {
-              "name":"tshirt_c",
+              "name": "bmi_c++",
               "params": {
-                "maxsmc": 0.439,
-                "wltsmc": 0.066,
-                "satdk": 0.00000338,
-                "satpsi": 0.355,
-                "slope": 1.0,
-                "scaled_distribution_fn_shape_parameter": 4.05,
-                "multiplier": 0.0,
-                "alpha_fc": 0.33,
-                "Klf": 0.01,
-                "Kn": 0.03,
-                "nash_n": 2,
-                "Cgw": 0.01,
-                "expon": 6.0,
-                "max_groundwater_storage_meters": 1.0,
-                "nash_storage": [
-                    0.0,
-                    0.0
-                ],
-                "soil_storage_percentage": 0.667,
-                "groundwater_storage_percentage": 0.5,
-                "timestep": 3600,
-                "giuh": {
-                    "giuh_path": "./test/data/giuh/GIUH.json",
-                    "crosswalk_path": "./data/crosswalk.json",
-                    "cdf_ordinates": [
-                                0.1,
-                                0.35,
-                                0.2,
-                                0.14,
-                                0.1,
-                                0.06,
-                                0.05
-                            ]
-                }
+                "model_type_name": "test_bmi_cpp",
+                "library_file": "./extern/test_bmi_cpp/cmake_build/libtestbmicppmodel.so",
+                "init_config": "./data/bmi/c/test/test_bmi_c_config.ini",
+                "main_output_variable": "OUTPUT_VAR_2",
+                "variables_names_map" : {
+                  "INPUT_VAR_2": "TMP_2maboveground",
+                  "INPUT_VAR_1": "precip_rate"
+                },
+                "create_function": "bmi_model_create",
+                "destroy_function": "bmi_model_destroy",
+                "uses_forcing_file": false
               }
             }
           ],

@@ -79,7 +79,7 @@ protected:
         return formulation.get_model_type_name();
     }
 
-    static double get_friend_var_value_as_double(Bmi_Py_Formulation& formulation, const string& var_name) {
+    static double get_friend_var_value_as_double(Bmi_Py_Formulation& formulation, const std::string& var_name) {
         return formulation.get_var_value_as_double(var_name);
     }
 
@@ -273,7 +273,7 @@ void Bmi_Py_Formulation_Test::generate_realization_config(int ex_idx) {
               "                \"main_output_variable\": \"" + examples[ex_idx].main_output_variable + "\","
               "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION + "\": 6, "
               "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES + "\": { "
-              "                      \"INPUT_VAR_2\": \"" + NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP + "\","
+              "                      \"INPUT_VAR_2\": \"" + AORC_FIELD_NAME_TEMP_2M_AG + "\","
               "                      \"INPUT_VAR_1\": \"" + AORC_FIELD_NAME_PRECIP_RATE + "\","
               "                      \"GRID_VAR_1\": \""  + AORC_FIELD_NAME_PRECIP_RATE +"\""
               "                },"
@@ -303,7 +303,7 @@ void Bmi_Py_Formulation_Test::generate_realization_config(int ex_idx) {
  * @param file_basename The basename of the desired file.
  * @return The path (as a string) of the first found existing file, or empty string of no existing file was found.
  */
-std::string Bmi_Py_Formulation_Test::file_search(const vector<std::string> &parent_dir_options, const string &file_basename) {
+std::string Bmi_Py_Formulation_Test::file_search(const std::vector<std::string> &parent_dir_options, const std::string &file_basename) {
     // Build vector of paths by building combinations of the path and basename options
     std::vector<std::string> path_possibilities(parent_dir_options.size());
     for (int i = 0; i < parent_dir_options.size(); ++i)
@@ -322,8 +322,8 @@ std::string Bmi_Py_Formulation_Test::file_search(const vector<std::string> &pare
  * @param file_basename The collection of possible basenames for a sought file.
  * @return The path (as a string) of the first found existing file, or empty string of no existing file was found.
  */
-std::string Bmi_Py_Formulation_Test::file_search(const vector<std::string> &parent_dir_options,
-                                                 const vector<std::string> &file_basenames) {
+std::string Bmi_Py_Formulation_Test::file_search(const std::vector<std::string> &parent_dir_options,
+                                                 const std::vector<std::string> &file_basenames) {
     std::string foundPathForBasename;
     for (const std::string &basename : file_basenames) {
         foundPathForBasename = file_search(parent_dir_options, basename);
@@ -441,7 +441,7 @@ TEST_F(Bmi_Py_Formulation_Test, GetOutputLineForTimestep_0_a) {
     double response = examples[ex_index].formulation->get_response(0, 3600);
     std::string output = examples[ex_index].formulation->get_output_line_for_timestep(0, ",");
     //NOTE the last two values are simply the FIRST element of the grid vars
-    ASSERT_EQ(output, "0.000000,0.000000,1.000000,2.000000,3.000000");
+    ASSERT_EQ(output, "0.000000,571.600037,1.000000,2.000000,3.000000");
 }
 
 /**
@@ -457,7 +457,7 @@ TEST_F(Bmi_Py_Formulation_Test, GetOutputLineForTimestep_0_b) {
     double response = examples[ex_index].formulation->get_response(543, 3600);
     std::string output = examples[ex_index].formulation->get_output_line_for_timestep(543, ",");
     //NOTE the last two values are simply the FIRST element of the grid vars
-    std::regex expected ("0.000001,(-?)0.000000,544.000000,2.000001,3.000001");
+    std::regex expected ("0.000001,582.000000,544.000000,2.000001,3.000001");
     ASSERT_TRUE(std::regex_match(output, expected));
 }
 

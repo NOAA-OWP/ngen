@@ -134,7 +134,7 @@ namespace models {
                 finalizeForCppAdapter();
             }
 
-            string GetComponentName() override;
+            std::string GetComponentName() override;
 
             /**
              * Get the backing model's current time.

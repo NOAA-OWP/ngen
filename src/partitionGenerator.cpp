@@ -1,6 +1,8 @@
 #include <network.hpp>
 #include <FileChecker.h>
 #include <boost/lexical_cast.hpp>
+#include <boost/range/functions.hpp>
+#include <boost/algorithm/string/join.hpp>
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -23,8 +25,8 @@ using PartitionVSet = std::vector<std::unordered_set<std::string> >;
  * partition-id = partition containing the `nexus-id` and its related `catchment-id`
  * nexus-id = which nexus is participating in the remote connection
  * catchment-id = which catchment is topologically connected to the `nexus-id` involved in the communication
- * topoloy-string = "orig_cat-to-nex" iff `catchment-id` is an origin feature of `nexus-id`
- *                  "nex-to-dest_cat" iff `catchment-id` is a destination feature of `nexus-id`
+ * topology-string = "orig_cat-to-nex" iff `catchment-id` is an origin feature of `nexus-id`
+ *                   "nex-to-dest_cat" iff `catchment-id` is a destination feature of `nexus-id`
  */
 using RemoteConnection = std::tuple<int, std::string, std::string, std::string>;
 using RemoteConnectionVec = std::vector< RemoteConnection >;
@@ -45,73 +47,47 @@ void write_remote_connections(const PartitionVSet& catchment_part, const Partiti
     outFile<<"{"<<std::endl;
     outFile<<"    \"partitions\":["<<std::endl;
 
-    int id = 0;
-    std::streamoff backspace(2);
-    // loop over all partitions
+    auto quote = [] (const std::string& s) { return '"' + s + '"'; };
+    auto quote_remote_conn = [] (const RemoteConnection& remote_conn) {
+        // remote_conn is a tuple of {mpi_rank, nex-id, cat-id}
+        int part_id = std::get<0>(remote_conn);
+        const std::string& nexus_id = std::get<1>(remote_conn);
+        const std::string& catchment_id = std::get<2>(remote_conn);
+        const std::string& catchment_direction = std::get<3>(remote_conn);
+        return std::string("{")
+            + "\"mpi-rank\": " + std::to_string(part_id) + ", "
+            + "\"nex-id\": \"" + nexus_id + "\", "
+            + "\"cat-id\": \"" + catchment_id + "\", "
+            + "\"cat-direction\": \"" + catchment_direction + "\""
+            + "}";
+    };
+
+    using boost::algorithm::join;
+    using boost::adaptors::transformed;
+
     for (int i =0; i < catchment_part.size(); ++i)
-    //for (int i =0; i < 2; ++i)  // for a quick test
     {
+        if (i != 0)
+            outFile << ", " << std::endl;
+
+        outFile << "        {\"id\":" << i << ",\n";
+
         // write catchments
-        outFile<<"        {\"id\":" << id <<",\n        \"cat-ids\":[";
-        const std::unordered_set<std::string>& cat_set = catchment_part[i];
-        // iterate over elements in catchment set
-        for (auto it = cat_set.begin(); it != cat_set.end(); it++) {
-            std::string catchment_id = *it;
-            outFile <<"\"" << catchment_id <<"\"" << ", ";
-        }
-        outFile.seekp( outFile.tellp() - backspace );
-        outFile<<"],\n";
+        outFile << "        \"cat-ids\":[";
+        outFile << join(catchment_part[i] | transformed(quote), ", ");
+        outFile << "],\n";
 
         // write nexuses
-        outFile<<"        \"nex-ids\":[";
-        const std::unordered_set<std::string>& nex_set = nexus_part[i];
-        // loop over elements in nexus set
-        for (auto it = nex_set.begin(); it != nex_set.end(); it++) {
-            std::string nexus_id = *it;
-            outFile <<"\"" << nexus_id <<"\"" << ", ";
-        }
-        outFile.seekp( outFile.tellp() - backspace );
-        outFile<<"],\n";
+        outFile << "        \"nex-ids\":[";
+        outFile << join(nexus_part[i] | transformed(quote), ", ");
+        outFile << "],\n";
 
-        // wrtie remote_connections
-        const RemoteConnectionVec& remote_conn_vec = remote_connections_vec[i];
+        // write remote_connections
+        outFile << "        \"remote-connections\":[";
+        outFile << join(remote_connections_vec[i] | transformed(quote_remote_conn), ", ");
+        outFile <<"]";
 
-        outFile<<"        \"remote-connections\":[";
-        int vec_size = remote_conn_vec.size();
-        int set_counter = 0;
-        // loop over elements in remote connection vector of tuples
-        for(auto const &remote_conn : remote_conn_vec)
-        {
-            // remote_conn is a tuple of {mpi_rank, nex-id, cat-id}
-            int part_id = std::get<0>(remote_conn);
-            std::string nexus_id = std::get<1>(remote_conn);
-            std::string catchment_id = std::get<2>(remote_conn);
-            const std::string catchment_direction = std::get<3>(remote_conn);
-            {
-                outFile << "{" << "\"mpi-rank\":" << part_id << ", ";
-                outFile << "\"nex-id\":" << "\""<< nexus_id <<"\"" << ", ";
-                outFile << "\"cat-id\":" << "\""<< catchment_id << "\"" << ", ";
-                outFile << "\"cat-direction\":" << "\""<< catchment_direction << "\"" << "}";
-                if (set_counter == (vec_size-1))
-                {
-                    outFile << "";
-                }
-                else
-                {
-                    outFile << ", ";
-                }
-            }
-            set_counter++;
-        }
-        outFile<<"]";
-
-        if (id != (num_part-1))
-        //if (id != 1)  // for a quick test
-            outFile<<"}," << std::endl;
-        else
-            outFile<<"}" << std::endl;
-
-        id++;
+        outFile << "}";
     }
     outFile<<"    ]"<<std::endl;
     outFile<<"}"<<std::endl;
@@ -148,10 +124,6 @@ void generate_partitions(network::Network& network, const int& num_partitions, c
     catchment_set.reserve(partition_size);
     nexus_set.reserve(partition_size);
     std::string part_id, partition_str;
-    std::vector<std::string> part_ids;
-
-    std::pair<std::string, std::string> remote_up_id, remote_down_id, remote_up_part, remote_down_part;
-    std::vector<std::pair<std::string, std::string> > remote_up, remote_down;
 
     std::string up_nexus;
     std::string down_nexus;
@@ -166,7 +138,6 @@ void generate_partitions(network::Network& network, const int& num_partitions, c
             //list of all required nexus the partition needs to worry about
             for( auto downstream : network.get_destination_ids(catchment) ){
                 nexus_set.emplace(downstream);
-                //nexus_list.push_back(downstream);
             }
             if(nexus_set.size() == 0){
                 std::cerr<<"Error: Catchment "<<catchment<<" has no destination nexus.\n";
@@ -174,7 +145,6 @@ void generate_partitions(network::Network& network, const int& num_partitions, c
             }
             for( auto upstream : network.get_origination_ids(catchment) ){
                 nexus_set.emplace(upstream);
-                //nexus_list.push_back(upstream);
             }
             //std::cout<<catchment<<" -> "<<nexus<<std::endl;
 
@@ -187,7 +157,7 @@ void generate_partitions(network::Network& network, const int& num_partitions, c
                 //FIXME partitioning shouldn't have to assume dendritic network
                 std::vector<std::string> destinations = network.get_destination_ids(catchment);
                 if(destinations.size() == 0){
-                    std::cerr<<"Error: Catchment "<<catchment<<" has no destinatin nexus.\n";
+                    std::cerr<<"Error: Catchment "<<catchment<<" has no destination nexus.\n";
                     exit(1);
                 }
                 down_nexus = destinations[0];
@@ -196,47 +166,19 @@ void generate_partitions(network::Network& network, const int& num_partitions, c
                 partition_str = std::to_string(partition);
 
                 //push the catchment_set and nexus_set on to a vector (can be a 1-d vector)
-                part_ids.push_back(part_id);
                 catchment_part.push_back(catchment_set);
                 nexus_part.push_back(nexus_set);
                 catchment_set.clear();
                 nexus_set.clear();
 
-                if (partition == 0)
-                {
-                    remote_up_id = std::make_pair ("id", "\0");
-                    remote_up_part = std::make_pair ("partition", "\0");
-                    remote_up.push_back(remote_up_id);
-                    remote_up.push_back(remote_up_part);
-                }
-                else
-                {
-                    partition_str = std::to_string(partition-1);
-                    remote_up_id = std::make_pair ("id", up_nexus);
-                    remote_up_part = std::make_pair ("partition", partition_str);
-                    remote_up.push_back(remote_up_id);
-                    remote_up.push_back(remote_up_part);
-                }
-
-                partition_str = std::to_string(partition+1);
-                remote_down_id = std::make_pair ("id", down_nexus);
-                remote_down_part = std::make_pair ("partition", partition_str);
-                remote_down.push_back(remote_down_id);
-                remote_down.push_back(remote_down_part);
-
                 partition_str = std::to_string(partition);
-
-                // Clear remote_up and remote_down vectors before next round
-                remote_up.clear();
-                remote_down.clear();
 
                 partition++;
                 counter = 0;
                 //std::cout<<"\nnexus "<<nexus<<" is remote UP on partition "<<partition<<std::endl;
 
                 //this nexus overlaps partitions
-                //Handeled above by ensure all up/down stream nexuses are recorded 
-                //nexus_list.push_back(nexus);
+                //Handled above by ensure all up/down stream nexuses are recorded
                 up_nexus = down_nexus;
                 //std::cout<<"\nin partition "<<partition<<":"<<std::endl;
             }
@@ -254,7 +196,7 @@ void generate_partitions(network::Network& network, const int& num_partitions, c
     }
     //sort ids
     std::sort(cat_id_vec.begin(), cat_id_vec.end());
-    //create set of uniqe ids
+    //create set of unique ids
     std::set<std::string> unique(cat_id_vec.begin(), cat_id_vec.end());
     std::set<std::string> duplicates;
     //use set difference to identify all duplicates
@@ -264,19 +206,6 @@ void generate_partitions(network::Network& network, const int& num_partitions, c
             std::cout << "catchment "<<id<<" is duplicated!"<<std::endl;
         }
     }
-    //NJF Replace this O(n^2) duplication check with the above set difference algorithm (which should be O(n log n))
-    // int i, j;
-    // for (i = 0; i < cat_id_vec.size(); ++i) {
-    //     if (i%1000 == 0)
-    //         std::cout << "i = " << i << std::endl;
-    //     for (j = i+1; j < cat_id_vec.size(); ++j) {
-    //         if ( cat_id_vec[i] == cat_id_vec[j] )
-    //         {
-    //             std::cout << "catchment duplication" << std::endl;
-    //             exit(-1);
-    //         }
-    //     }
-    // }
     std::cout << "\nNumber of catchments is: " << cat_id_vec.size();
     std::cout << "\nCatchment validation completed" << std::endl;
 }
@@ -390,7 +319,7 @@ int find_partition_connections(const std::string& nexus, const PartitionVSet& ca
                 auto dest_iter = std::find(catchments.begin(), catchments.end(), did);
                 if( dest_iter != catchments.end() )
                 {
-                    //We operate the receving end of this remote nexus for the communiction pair
+                    //We operate the receiving end of this remote nexus for the communication pair
                     // (id -> N) (N -> did)
                     //map that relationship
                     int pos = find_remote_rank(id, catchment_partitions);
@@ -412,67 +341,86 @@ int find_partition_connections(const std::string& nexus, const PartitionVSet& ca
 
 }
 
-int main(int argc, char* argv[])
+void read_arguments(int argc, char* argv[],
+                    std::string& catchmentDataFile,
+                    std::string& nexusDataFile,
+                    std::string& partitionOutFile,
+                    int& numPartitions,
+                    std::vector<std::string>& catchment_subset_ids,
+                    std::vector<std::string>& nexus_subset_ids)
 {
-    using network::Network;
-    std::string catchmentDataFile, nexusDataFile;
-    std::string partitionOutFile;
-    int num_partitions = 0;
-    bool  error;
     if( argc < 7 ){
         std::cout << "Missing required args:" << std::endl;
         std::cout << argv[0] << " <catchment_data_path> <nexus_data_path> <partition_output_name> <number of partitions> <catchment_subset_ids> <nexus_subset_ids> " << std::endl;
         std::cout << "Use empty strings for subset_ids for no subsetting, e.g ''\nUse \'cat-X,cat-Y\', \'nex-X,nex-Y\' to partition only the defined catchment and nexus"<<std::endl;
         std::cout << "Note the use of single quotes, and no spaces between the ids.  (no quotes will also work, but  \"\" will not."<<std::endl;
+        exit(-1);
+    }
+
+    bool error = false;
+    if( !utils::FileChecker::file_is_readable(argv[1]) ) {
+        std::cout << "catchment data path " << argv[1] << " not readable" << std::endl;
+        error = true;
+    } else {
+        catchmentDataFile = argv[1];
+    }
+
+    if( !utils::FileChecker::file_is_readable(argv[2]) ) {
+        std::cout << "nexus data path " << argv[2] << " not readable" << std::endl;
+        error = true;
+    } else {
+        nexusDataFile = argv[2];
+    }
+
+    partitionOutFile = argv[3];
+    if (partitionOutFile.empty()) {
+        std::cout << "Missing output file name " << std::endl;
         error = true;
     }
-    else {
-        error = false;
-        if( !utils::FileChecker::file_is_readable(argv[1]) ) {
-            std::cout<<"catchment data path "<<argv[1]<<" not readable"<<std::endl;
-            error = true;
-        }
-        else{ catchmentDataFile = argv[1]; }
 
-        if( !utils::FileChecker::file_is_readable(argv[2]) ) {
-            std::cout<<"nexus data path "<<argv[2]<<" not readable"<<std::endl;
-            error = true;
-        }
-        else{ nexusDataFile = argv[2]; }
-
-        partitionOutFile = argv[3];
-        if (partitionOutFile == "") {
-            std::cout << "Missing output file name " << std::endl;
-            error = true;
-        }
-    
-        try {
-            num_partitions = boost::lexical_cast<int>(argv[4]);
-            if(num_partitions < 0) throw boost::bad_lexical_cast();
-        }
-        catch(boost::bad_lexical_cast &e) {
-            std::cout<<"number of partitions must be a postive integer."<<std::endl;
-            error = true;
-        }
-        
+    try {
+        numPartitions = boost::lexical_cast<int>(argv[4]);
+        if (numPartitions < 0) throw boost::bad_lexical_cast();
     }
-    if(error) exit(-1);
+    catch(boost::bad_lexical_cast &e) {
+        std::cout << "number of partitions must be a positive integer." << std::endl;
+        error = true;
+    }
 
-    std::vector<std::string> catchment_subset_ids;
-    std::vector<std::string> nexus_subset_ids;
     //split the subset strings into vectors
     boost::split(catchment_subset_ids, argv[5], [](char c){return c == ','; } );
     boost::split(nexus_subset_ids, argv[6], [](char c){return c == ','; } );
 
     //If a single id or no id is passed, the subset vector will have size 1 and be the id or the ""
-    //if we get an empy string, pop it from the subset list.
-    if(nexus_subset_ids.size() == 1 && nexus_subset_ids[0] == "") nexus_subset_ids.pop_back();
-    if(catchment_subset_ids.size() == 1 && catchment_subset_ids[0] == "") catchment_subset_ids.pop_back();
+    //if we get an empty string, pop it from the subset list.
+    if(catchment_subset_ids.size() == 1 && catchment_subset_ids[0] == "") {
+        catchment_subset_ids.pop_back();
+    }
+    if(nexus_subset_ids.size() == 1 && nexus_subset_ids[0] == "") {
+        nexus_subset_ids.pop_back();
+    }
+
+    if (error) exit(-1);
+}
+
+int main(int argc, char* argv[])
+{
+    using network::Network;
+    std::string catchmentDataFile, nexusDataFile;
+    std::string partitionOutFile;
+    std::vector<std::string> catchment_subset_ids;
+    std::vector<std::string> nexus_subset_ids;
+    int num_partitions = 0;
+
+    read_arguments(argc, argv,
+                   catchmentDataFile, nexusDataFile, partitionOutFile,
+                   num_partitions,
+                   catchment_subset_ids, nexus_subset_ids);
 
     std::ofstream outFile;
     outFile.open(partitionOutFile, std::ios::trunc);
 
-    //Get the feature collecion for the given hydrofabric
+    //Get the feature collection for the given hydrofabric
     geojson::GeoJSON catchment_collection = std::move( geojson::read(catchmentDataFile, catchment_subset_ids) );
     int num_catchments = catchment_collection->get_size();
     std::cout<<"Partitioning "<<num_catchments<<" catchments into "<<num_partitions<<" partitions."<<std::endl;
@@ -538,7 +486,7 @@ int main(int argc, char* argv[])
 
         // make a local network
         Network local_network(local_catchment_collection, &link_key);
-        //NOTE: This doesn't include nexi in the network... if you check, this results in a difference of 1
+        //NOTE: This doesn't include nexuses in the network... if you check, this results in a difference of 1
         // local nexus in roughly half the cases between nexus_part[i] and local_nexuses... this doesn't *seem*
         // to have any practical effect on remote nexus determination, but it's still a mismatch.
         

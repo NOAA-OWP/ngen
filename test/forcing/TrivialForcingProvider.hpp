@@ -10,7 +10,6 @@
 #define OUTPUT_VALUE_1 42.0
 #define OUTPUT_DEFAULT_1 36.8
 
-using namespace std;
 
 namespace data_access {
     namespace test {
@@ -24,7 +23,7 @@ namespace data_access {
                 outputs.push_back(OUTPUT_NAME_1);
             }
                                   
-            const std::vector<std::string>& get_avaliable_variable_names() override {
+            boost::span<const std::string> get_available_variable_names() override {
                 return outputs;
             }
 
@@ -53,12 +52,12 @@ namespace data_access {
                 return std::vector<double>(1, get_value(selector, m));
             }
 
-            bool is_property_sum_over_time_step(const string &name) override {
+            bool is_property_sum_over_time_step(const std::string &name) override {
                 return true;
             }
 
         private:
-            vector<string> outputs;
+            std::vector<std::string> outputs;
         };
     }
 }

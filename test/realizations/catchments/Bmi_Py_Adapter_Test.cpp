@@ -185,7 +185,7 @@ void Bmi_Py_Adapter_Test::TearDownTestSuite() {
  * @param file_basename The basename of the desired file.
  * @return The path (as a string) of the first found existing file, or empty string of no existing file was found.
  */
-std::string Bmi_Py_Adapter_Test::file_search(const vector<std::string> &parent_dir_options, const string &file_basename) {
+std::string Bmi_Py_Adapter_Test::file_search(const std::vector<std::string> &parent_dir_options, const std::string &file_basename) {
     // Build vector of paths by building combinations of the path and basename options
     std::vector<std::string> path_possibilities(parent_dir_options.size());
     for (int i = 0; i < parent_dir_options.size(); ++i)
@@ -204,8 +204,8 @@ std::string Bmi_Py_Adapter_Test::file_search(const vector<std::string> &parent_d
  * @param file_basename The collection of possible basenames for a sought file.
  * @return The path (as a string) of the first found existing file, or empty string of no existing file was found.
  */
-std::string Bmi_Py_Adapter_Test::file_search(const vector<std::string> &parent_dir_options,
-                                             const vector<std::string> &file_basenames) {
+std::string Bmi_Py_Adapter_Test::file_search(const std::vector<std::string> &parent_dir_options,
+                                             const std::vector<std::string> &file_basenames) {
     std::string foundPathForBasename;
     for (const std::string &basename : file_basenames) {
         foundPathForBasename = file_search(parent_dir_options, basename);
@@ -924,9 +924,9 @@ TEST_F(Bmi_Py_Adapter_Test, GetGridShape_0_a) {
     int rank = examples[ex_index].adapter->GetGridRank(grid_id);
 
     ASSERT_EQ(rank, 0);
-    int grid_shape[rank+1];
+    std::vector<int> grid_shape(rank+1);
 
-    examples[ex_index].adapter->GetGridShape(grid_id, grid_shape);
+    examples[ex_index].adapter->GetGridShape(grid_id, grid_shape.data());
     ASSERT_EQ(grid_shape[0], 0);
 }
 
@@ -948,9 +948,9 @@ TEST_F(Bmi_Py_Adapter_Test, GetGridShape_0_b) {
     int rank = examples[ex_index].adapter->GetGridRank(grid_id);
 
     ASSERT_EQ(rank, 2);
-    int grid_shape[rank];
+    std::vector<int> grid_shape(rank);
 
-    examples[ex_index].adapter->GetGridShape(grid_id, grid_shape);
+    examples[ex_index].adapter->GetGridShape(grid_id, grid_shape.data());
     ASSERT_EQ(grid_shape[0], shape[0]);
     ASSERT_EQ(grid_shape[1], shape[1]);
 }
@@ -968,9 +968,9 @@ TEST_F(Bmi_Py_Adapter_Test, GetGridSpacing_0_a) {
     int rank = examples[ex_index].adapter->GetGridRank(grid_id);
 
     ASSERT_EQ(rank, 0);
-    double grid_spacing[rank+1];
+    std::vector<double> grid_spacing(rank+1);
 
-    examples[ex_index].adapter->GetGridSpacing(grid_id, grid_spacing);
+    examples[ex_index].adapter->GetGridSpacing(grid_id, grid_spacing.data());
     ASSERT_EQ(grid_spacing[0], 0);
 }
 
@@ -987,9 +987,9 @@ TEST_F(Bmi_Py_Adapter_Test, GetGridSpacing_0_b) {
     int rank = examples[ex_index].adapter->GetGridRank(grid_id);
 
     ASSERT_EQ(rank, 2);
-    double grid_spacing[rank];
+    std::vector<double> grid_spacing(rank);
 
-    examples[ex_index].adapter->GetGridSpacing(grid_id, grid_spacing);
+    examples[ex_index].adapter->GetGridSpacing(grid_id, grid_spacing.data());
     for(int i = 0; i < rank; i++){
         ASSERT_EQ(grid_spacing[i], 0);
     }
@@ -1011,9 +1011,9 @@ TEST_F(Bmi_Py_Adapter_Test, GetGridSpacing_0_c) {
     examples[ex_index].adapter->SetValue("grid_1_spacing", spacing.data());
     
     ASSERT_EQ(rank, 2);
-    double grid_spacing[rank];
+    std::vector<double> grid_spacing(rank);
 
-    examples[ex_index].adapter->GetGridSpacing(grid_id, grid_spacing);
+    examples[ex_index].adapter->GetGridSpacing(grid_id, grid_spacing.data());
     for(int i = 0; i < rank; i++){
         ASSERT_EQ(grid_spacing[i], 2.0);
     }
@@ -1034,8 +1034,8 @@ TEST_F(Bmi_Py_Adapter_Test, GetGridSpacing_0_d) {
     std::vector<short> units = {1,1}; //The enum value for `m` or `meters` in bmi_grid.py
     examples[ex_index].adapter->SetValue("grid_1_units", units.data());
 
-    short grid_units[rank];
-    examples[ex_index].adapter->GetValue("grid_1_units", grid_units);
+    std::vector<short> grid_units(rank);
+    examples[ex_index].adapter->GetValue("grid_1_units", grid_units.data());
     for(int i = 0; i < rank; i++){
         ASSERT_EQ(grid_units[i], units[i]);
     }
@@ -1053,9 +1053,9 @@ TEST_F(Bmi_Py_Adapter_Test, GetGridOrigin_0_a) {
     int rank = examples[ex_index].adapter->GetGridRank(grid_id);
 
     ASSERT_EQ(rank, 2);
-    double grid_origin[rank];
+    std::vector<double> grid_origin(rank);
 
-    examples[ex_index].adapter->GetGridSpacing(grid_id, grid_origin);
+    examples[ex_index].adapter->GetGridSpacing(grid_id, grid_origin.data());
     ASSERT_EQ(grid_origin[0], 0);
     ASSERT_EQ(grid_origin[1], 0);
 }
@@ -1073,9 +1073,9 @@ TEST_F(Bmi_Py_Adapter_Test, GetGridOrigin_0_b) {
     int rank = examples[ex_index].adapter->GetGridRank(grid_id);
 
     ASSERT_EQ(rank, 2);
-    double grid_origin[rank];
+    std::vector<double> grid_origin(rank);
 
-    examples[ex_index].adapter->GetGridOrigin(grid_id, grid_origin);
+    examples[ex_index].adapter->GetGridOrigin(grid_id, grid_origin.data());
     for(int i = 0; i < rank; i++){
         ASSERT_EQ(grid_origin[i], 0);
     }
@@ -1097,9 +1097,9 @@ TEST_F(Bmi_Py_Adapter_Test, GetGridOrigin_0_c) {
     examples[ex_index].adapter->SetValue("grid_1_origin", origin.data());
     
     ASSERT_EQ(rank, 2);
-    double grid_origin[rank];
+    std::vector<double> grid_origin(rank);
 
-    examples[ex_index].adapter->GetGridOrigin(grid_id, grid_origin);
+    examples[ex_index].adapter->GetGridOrigin(grid_id, grid_origin.data());
     for(int i = 0; i < rank; i++){
         ASSERT_EQ(grid_origin[i], 42.0);
     }

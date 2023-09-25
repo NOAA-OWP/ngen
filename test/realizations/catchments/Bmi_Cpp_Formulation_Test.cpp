@@ -71,7 +71,7 @@ protected:
         return formulation.get_model_type_name();
     }
 
-    static double get_friend_var_value_as_double(Bmi_Cpp_Formulation& formulation, const string& var_name) {
+    static double get_friend_var_value_as_double(Bmi_Cpp_Formulation& formulation, const std::string& var_name) {
         return formulation.get_var_value_as_double(var_name);
     }
 
@@ -198,7 +198,7 @@ void Bmi_Cpp_Formulation_Test::SetUp() {
                          "                \"init_config\": \"" + init_config[i] + "\","
                          "                \"main_output_variable\": \"" + main_output_variable[i] + "\","
                          "                \"" + BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES + "\": { "
-                         "                      \"INPUT_VAR_2\": \"" + NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP + "\","
+                         "                      \"INPUT_VAR_2\": \"" + AORC_FIELD_NAME_TEMP_2M_AG  + "\","
                          "                      \"INPUT_VAR_1\": \"" + AORC_FIELD_NAME_PRECIP_RATE + "\""
                          "                },"
                          + variables_line + function_names_lines +
@@ -303,7 +303,7 @@ TEST_F(Bmi_Cpp_Formulation_Test, GetOutputLineForTimestep_0_a) {
 
     formulation.get_response(0, 3600);
     std::string output = formulation.get_output_line_for_timestep(0, ",");
-    ASSERT_EQ(output, "0.000000,0.000000");
+    ASSERT_EQ(output, "0.000000,571.600037");
 }
 
 /** Simple test of output with modified variables. */
@@ -319,7 +319,7 @@ TEST_F(Bmi_Cpp_Formulation_Test, GetOutputLineForTimestep_1_a) {
     // OUTPUT_VAR_1 first.
     formulation.get_response(0, 3600);
     std::string output = formulation.get_output_line_for_timestep(0, ",");
-    ASSERT_EQ(output, "0.000000,0.000000");
+    ASSERT_EQ(output, "571.600037,0.000000");
 }
 
 /** Simple test of output with modified variables, picking time step when there was non-zero rain rate. */
@@ -334,7 +334,7 @@ TEST_F(Bmi_Cpp_Formulation_Test, GetOutputLineForTimestep_1_b) {
         formulation.get_response(i++, 3600);
     formulation.get_response(i, 3600);
     std::string output = formulation.get_output_line_for_timestep(i, ",");
-    ASSERT_EQ(output, "0.000000,0.000001");
+    ASSERT_EQ(output, "580.799988,0.000001");
 }
 
 TEST_F(Bmi_Cpp_Formulation_Test, determine_model_time_offset_0_a) {

@@ -13,6 +13,7 @@ env:
   # TODO: add something later that can check the runners for hyperthreading
   LINUX_NUM_PROC_CORES: 2
   MACOS_NUM_PROC_CORES: 3
+  ASAN_OPTIONS: detect_leaks=false
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -28,7 +29,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
     
       - name: Build Surfacebmi
         id: submod_build_1
@@ -89,14 +90,14 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest] # [ubuntu-latest, macos-latest] #TODO: Fix #505
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Build Ngen
         uses: ./.github/actions/ngen-build
@@ -145,7 +146,7 @@ jobs:
           pip install 'pip>=23.0,<23.1'
           pip install -U setuptools
           pip install -r requirements.txt
-          pip install deprecated 'pyarrow!=12.0.0' tables geopandas numpy
+          pip install deprecated 'pyarrow==11.0.0' tables geopandas numpy
           if [ ${{ runner.os }} == 'macOS' ] 
           then
             export LIBRARY_PATH=/usr/local/lib/gcc/11/

@@ -58,7 +58,7 @@ static int Finalize (Bmi *self)
 
 static int Get_component_name (Bmi *self, char * name)
 {
-    strncpy (name, "Testing BMI C Model", BMI_MAX_COMPONENT_NAME);
+    snprintf(name, BMI_MAX_COMPONENT_NAME, "%s", "Testing BMI C Model");
     return BMI_SUCCESS;
 }
 
@@ -178,7 +178,7 @@ static int Get_grid_type (Bmi *self, int grid, char * type)
     int status = BMI_FAILURE;
 
     if (grid == 0) {
-        strncpy(type, "scalar", BMI_MAX_TYPE_NAME);
+        snprintf(type, BMI_MAX_TYPE_NAME, "%s", "scalar");
         status = BMI_SUCCESS;
     }
     else {
@@ -210,7 +210,7 @@ static int Get_grid_z(Bmi *self, int grid, double *z)
 static int Get_input_var_names (Bmi *self, char ** names)
 {
     for (size_t i = 0; i < INPUT_VAR_NAME_COUNT; i++)
-        strncpy (names[i], input_var_names[i], BMI_MAX_VAR_NAME);
+        snprintf(names[i], BMI_MAX_VAR_NAME, "%s", input_var_names[i]);
     return BMI_SUCCESS;
 }
 
@@ -232,7 +232,7 @@ static int Get_output_item_count (Bmi *self, int * count)
 static int Get_output_var_names (Bmi *self, char ** names)
 {
     for (size_t i = 0; i < OUTPUT_VAR_NAME_COUNT; i++)
-        strncpy (names[i], output_var_names[i], BMI_MAX_VAR_NAME);
+        snprintf(names[i], BMI_MAX_VAR_NAME, "%s", output_var_names[i]);
     return BMI_SUCCESS;
 }
 
@@ -274,7 +274,7 @@ static int Get_time_step (Bmi *self, double * dt)
  */
 static int Get_time_units (Bmi *self, char * units)
 {
-    strncpy (units, "s", BMI_MAX_UNITS_NAME);
+    snprintf(units, BMI_MAX_UNITS_NAME, "%s", "s");
     return BMI_SUCCESS;
 }
 
@@ -436,14 +436,14 @@ static int Get_var_location (Bmi *self, const char *name, char * location)
     // Check to see if in output array first
     for (i = 0; i < OUTPUT_VAR_NAME_COUNT; i++) {
         if (strcmp(name, output_var_names[i]) == 0) {
-            strncpy(location, output_var_locations[i], BMI_MAX_LOCATION_NAME);
+            snprintf(location, BMI_MAX_LOCATION_NAME, "%s", output_var_locations[i]);
             return BMI_SUCCESS;
         }
     }
     // Then check to see if in input array
     for (i = 0; i < INPUT_VAR_NAME_COUNT; i++) {
         if (strcmp(name, input_var_names[i]) == 0) {
-            strncpy(location, input_var_locations[i], BMI_MAX_LOCATION_NAME);
+            snprintf(location, BMI_MAX_LOCATION_NAME, "%s", input_var_locations[i]);
             return BMI_SUCCESS;
         }
     }
@@ -497,21 +497,21 @@ static int Get_var_type (Bmi *self, const char *name, char * type)
     // Check to see if in output array first
     for (i = 0; i < OUTPUT_VAR_NAME_COUNT; i++) {
         if (strcmp(name, output_var_names[i]) == 0) {
-            strncpy(type, output_var_types[i], BMI_MAX_TYPE_NAME);
+            snprintf(type, BMI_MAX_TYPE_NAME, "%s", output_var_types[i]);
             return BMI_SUCCESS;
         }
     }
     // Then check to see if in input array
     for (i = 0; i < INPUT_VAR_NAME_COUNT; i++) {
         if (strcmp(name, input_var_names[i]) == 0) {
-            strncpy(type, input_var_types[i], BMI_MAX_TYPE_NAME);
+            snprintf(type, BMI_MAX_TYPE_NAME, "%s", input_var_types[i]);
             return BMI_SUCCESS;
         }
     }
     // Finally check to see if in param array
     for (i = 0; i < PARAM_VAR_NAME_COUNT; i++) {
         if (strcmp(name, param_var_names[i]) == 0) {
-            strncpy(type, param_var_types[i], BMI_MAX_TYPE_NAME);
+            snprintf(type, BMI_MAX_TYPE_NAME, "%s", param_var_types[i]);
             return BMI_SUCCESS;
         }
     }
@@ -527,14 +527,14 @@ static int Get_var_units (Bmi *self, const char *name, char * units)
     // Check to see if in output array first
     for (i = 0; i < OUTPUT_VAR_NAME_COUNT; i++) {
         if (strcmp(name, output_var_names[i]) == 0) {
-            strncpy(units, output_var_units[i], BMI_MAX_UNITS_NAME);
+            snprintf(units, BMI_MAX_UNITS_NAME, "%s", output_var_units[i]);
             return BMI_SUCCESS;
         }
     }
     // Then check to see if in input array
     for (i = 0; i < INPUT_VAR_NAME_COUNT; i++) {
         if (strcmp(name, input_var_names[i]) == 0) {
-            strncpy(units, input_var_units[i], BMI_MAX_UNITS_NAME);
+            snprintf(units, BMI_MAX_UNITS_NAME, "%s", input_var_units[i]);
             return BMI_SUCCESS;
         }
     }

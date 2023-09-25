@@ -36,11 +36,11 @@ time_t realization::Bmi_Py_Formulation::convert_model_time(const double &model_t
     return (time_t) (get_bmi_model()->convert_model_time_to_seconds(model_time));
 }
 
-const vector<string> Bmi_Py_Formulation::get_bmi_input_variables() {
+const std::vector<std::string> Bmi_Py_Formulation::get_bmi_input_variables() {
     return get_bmi_model()->GetInputVarNames();
 }
 
-const vector<string> Bmi_Py_Formulation::get_bmi_output_variables() {
+const std::vector<std::string> Bmi_Py_Formulation::get_bmi_output_variables() {
     return get_bmi_model()->GetOutputVarNames();
 }
 
@@ -48,7 +48,7 @@ std::string Bmi_Py_Formulation::get_formulation_type() {
     return "bmi_py";
 }
 
-string Bmi_Py_Formulation::get_output_line_for_timestep(int timestep, std::string delimiter) {
+std::string Bmi_Py_Formulation::get_output_line_for_timestep(int timestep, std::string delimiter) {
     // TODO: something must be added to store values if more than the current time step is wanted
     // TODO: if such a thing is added, it should probably be configurable to turn it off
     if (timestep != (next_time_step_index - 1)) {
@@ -113,12 +113,12 @@ double Bmi_Py_Formulation::get_response(time_step_t t_index, time_step_t t_delta
     return get_var_value_as_double( get_bmi_main_output_var());
 }
 
-double Bmi_Py_Formulation::get_var_value_as_double(const string &var_name) {
+double Bmi_Py_Formulation::get_var_value_as_double(const std::string &var_name) {
     return get_var_value_as_double(0, var_name);
 }
 
-double Bmi_Py_Formulation::get_var_value_as_double(const int &index, const string &var_name) {
-    string val_type = get_bmi_model()->GetVarType(var_name);
+double Bmi_Py_Formulation::get_var_value_as_double(const int &index, const std::string &var_name) {
+    std::string val_type = get_bmi_model()->GetVarType(var_name);
     size_t val_item_size = (size_t)get_bmi_model()->GetVarItemsize(var_name);
 
     //void *dest;
@@ -168,12 +168,12 @@ double Bmi_Py_Formulation::get_var_value_as_double(const int &index, const strin
     " as double: no logic for converting variable type " + val_type);
 }
 
-bool Bmi_Py_Formulation::is_bmi_input_variable(const string &var_name) {
+bool Bmi_Py_Formulation::is_bmi_input_variable(const std::string &var_name) {
     const std::vector<std::string> names = get_bmi_model()->GetInputVarNames();
     return std::any_of(names.cbegin(), names.cend(), [var_name](const std::string &s){ return var_name == s; });
 }
 
-bool Bmi_Py_Formulation::is_bmi_output_variable(const string &var_name) {
+bool Bmi_Py_Formulation::is_bmi_output_variable(const std::string &var_name) {
     const std::vector<std::string> names = get_bmi_model()->GetOutputVarNames();
     return std::any_of(names.cbegin(), names.cend(), [var_name](const std::string &s){ return var_name == s; });
 }

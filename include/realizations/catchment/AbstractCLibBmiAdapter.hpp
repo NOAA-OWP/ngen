@@ -26,7 +26,7 @@ namespace models {
              * @param registration_func The name for the @see bmi_registration_function.
              * @param output The output stream handler.
              */
-            AbstractCLibBmiAdapter(const string &type_name, std::string library_file_path, std::string bmi_init_config,
+            AbstractCLibBmiAdapter(const std::string &type_name, std::string library_file_path, std::string bmi_init_config,
                                    std::string forcing_file_path, bool allow_exceed_end, bool has_fixed_time_step,
                                    std::string registration_func, utils::StreamHandler output)
                     : Bmi_Adapter<C>(type_name, std::move(bmi_init_config), std::move(forcing_file_path),
@@ -91,6 +91,9 @@ namespace models {
                 if (!utils::FileChecker::file_is_readable(bmi_lib_file)) {
                     //Try alternative extension...
                     size_t idx = bmi_lib_file.rfind(".");
+                    if(idx == std::string::npos){
+                        idx = bmi_lib_file.length()-1;
+                    }
                     std::string alt_bmi_lib_file;  
                     if(bmi_lib_file.length() == 0){
                         this->init_exception_msg =
