@@ -197,6 +197,7 @@ add_subdirectory("src/realizations/catchment")
 add_subdirectory("src/forcing")
 add_subdirectory("src/utilities/mdarray")
 add_subdirectory("src/utilities/mdframe")
+add_subdirectory("src/utilities/logging")
 
 target_link_libraries(ngen
     PUBLIC
@@ -207,6 +208,7 @@ target_link_libraries(ngen
         NGen::realizations_catchment
         NGen::forcing
         NGen::core_mediator
+        NGen::logging
 )
 
 if(NGEN_WITH_SQLITE)

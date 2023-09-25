@@ -17,6 +17,7 @@ target_link_libraries(realizations_catchment PUBLIC
         ${CMAKE_DL_LIBS}
         NGen::core_catchment
         NGen::geojson
+        NGen::logging
         )
 
 if(NGEN_WITH_PYTHON)
