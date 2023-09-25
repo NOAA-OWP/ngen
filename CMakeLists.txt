@@ -37,7 +37,7 @@ include(GitUpdateSubmodules)
 include(CMakeDependentOption)
 
 option(NGEN_WITH_MPI         "Build with MPI support"             OFF)
-option(NGEN_WITH_NETCDF      "Build with NetCDF support"          ON)
+option(NGEN_WITH_NETCDF      "Build with NetCDF support"          OFF)
 option(NGEN_WITH_SQLITE      "Build with SQLite3 support"         OFF)
 option(NGEN_WITH_UDUNITS     "Build with UDUNITS2 support"        ON)
 option(NGEN_WITH_BMI_FORTRAN "Build with Fortran BMI support"     OFF)
