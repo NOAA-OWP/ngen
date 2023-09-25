@@ -54,11 +54,11 @@ First, cd into the outer directory containing the submodule:
 If you want to use Sundials IDA or BE Kinsol, set -DCMAKE_BUILD_TYPE=Sundials_NexGen in the build script.  Then, before summa can be built, Sundials needs to be installed. 
 Download the latest release of IDA solver from SUNDIALS package in https://computing.llnl.gov/projects/sundials/sundials-software
 
-    wget "https://github.com/LLNL/sundials/releases/download/v6.3.0/sundials-6.3.0.tar.gz"
+    wget "https://github.com/LLNL/sundials/releases/download/v6.6.0/sundials-6.6.0.tar.gz"
 
 Extract the corresponding compressed file
 
-    tar -xzf sundials-6.3.0.tar.gz
+    tar -xzf sundials-6.6.0.tar.gz
     
 Enter the buildir and run
 
