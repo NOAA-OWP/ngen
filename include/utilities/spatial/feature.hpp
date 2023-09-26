@@ -3,6 +3,8 @@
 
 #include <unordered_map>
 #include <string>
+
+#include "geometry.hpp"
 #include "property.hpp"
 
 namespace ngen {
@@ -11,6 +13,7 @@ namespace spatial {
 class feature
 {
   private:
+    std::unique_ptr<geometry> geometry_;
     std::unordered_map<std::string, property> properties_;
 };
 

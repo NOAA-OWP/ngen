@@ -3,6 +3,8 @@
 
 #include <memory>
 
+#include "traits.hpp"
+
 namespace ngen {
 namespace spatial {
 
@@ -16,8 +18,6 @@ enum class geometry_type
     multipolygon,
     geometry_collection
 };
-
-namespace pm {
 
 struct geometry
 {
@@ -36,32 +36,45 @@ struct geometry
     virtual ~geometry() noexcept = 0;
 };
 
+template<typename BackendPolicy>
 struct point : public virtual geometry
 {
     using geometry::geometry;
     ~point() noexcept override = 0;
 
-    virtual double x() const noexcept = 0;
-    virtual double y() const noexcept = 0;
-    virtual double z() const noexcept = 0;
-    virtual double m() const noexcept = 0;
+    double x() const noexcept;
+    double y() const noexcept;
+
+  private:
+    using traits = backend_traits<BackendPolicy>;
+    using type   = typename traits::point_type;
+
+    type data_;
 };
 
+template<typename BackendPolicy>
 struct linestring : public virtual geometry
 {
+    using point_type = point<BackendPolicy>;
+
     using geometry::geometry;
     ~linestring() noexcept override = 0;
 
-    virtual double length()      const noexcept = 0;
-    virtual point  start_point() const noexcept = 0;
-    virtual point  end_point()   const noexcept = 0;
-    virtual bool   is_closed()   const noexcept = 0;
-    virtual bool   is_ring()     const noexcept = 0;
-    virtual int    size()        const noexcept = 0;
-    virtual point  at(int n)     const noexcept = 0;
+    virtual double      length()      const noexcept = 0;
+    virtual point_type  start_point() const noexcept = 0;
+    virtual point_type  end_point()   const noexcept = 0;
+    virtual bool        is_closed()   const noexcept = 0;
+    virtual bool        is_ring()     const noexcept = 0;
+    virtual int         size()        const noexcept = 0;
+    virtual point_type  at(int n)     const noexcept = 0;
 };
 
-} // namespace pm
+struct polygon : public virtual geometry
+{
+    using geometry::geometry;
+    ~polygon() noexcept override = 0;
+};
+
 } // namespace spatial
 } // namespace ngen
 
