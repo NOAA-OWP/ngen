@@ -104,10 +104,10 @@ $(document).ready(function(){initNavTree('_bmi___module___formulation_8hpp_sourc
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;DataProvider.hpp&gt;</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;UnitsHelper.hpp&gt;</span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;bmi_utilities.hpp&quot;</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">using </span><a class="code hl_enumvalue" href="namespacedata__access.html#a46435cb3579215dfdfffedc7833e43f9a728d7f64b9f2ae78bcbae00ce35ec276">data_access::MEAN</a>;</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">using </span><a class="code hl_enumvalue" href="namespacedata__access.html#a46435cb3579215dfdfffedc7833e43f9a52f32bc197123b0d24b5291d60af3186">data_access::SUM</a>;</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;utilities/logging_utils.h&quot;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">using </span><a class="code hl_enumvalue" href="namespacedata__access.html#a46435cb3579215dfdfffedc7833e43f9a728d7f64b9f2ae78bcbae00ce35ec276">data_access::MEAN</a>;</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">using </span><a class="code hl_enumvalue" href="namespacedata__access.html#a46435cb3579215dfdfffedc7833e43f9a52f32bc197123b0d24b5291d60af3186">data_access::SUM</a>;</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="comment">// Forward declaration to provide access to protected items in testing</span></div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">class </span>Bmi_Formulation_Test;</div>
@@ -241,7 +241,7 @@ $(document).ready(function(){initNavTree('_bmi___module___formulation_8hpp_sourc
 <div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>                }</div>
 <div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>                <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::runtime_error&amp; e){</div>
 <div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span><span class="preprocessor">                    #ifndef UDUNITS_QUIET</span></div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>                    std::cerr&lt;&lt;<span class="stringliteral">&quot;WARN: Unit conversion unsuccessful - Returning unconverted value! (\&quot;&quot;</span>&lt;&lt;e.what()&lt;&lt;<span class="stringliteral">&quot;\&quot;)&quot;</span>&lt;&lt;std::endl;</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>                    <a class="code hl_function" href="namespacelogging.html#abbe2cbb6dacd04158dd9591797d854b8">logging::warning</a>((std::string(<span class="stringliteral">&quot;WARN: Unit conversion unsuccessful - Returning unconverted value! (\&quot;&quot;</span>)+e.what()+<span class="stringliteral">&quot;\&quot;)\n&quot;</span>).c_str());</div>
 <div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span><span class="preprocessor">                    #endif</span></div>
 <div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>                    <span class="keywordflow">return</span> values;</div>
 <div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>                }</div>
@@ -522,13 +522,13 @@ $(document).ready(function(){initNavTree('_bmi___module___formulation_8hpp_sourc
 <div class="line"><a id="l00658" name="l00658"></a><span class="lineno">  658</span>                            <span class="comment">//TODO consider some additional introspection/optimization for this?</span></div>
 <div class="line"><a id="l00659" name="l00659"></a><span class="lineno">  659</span>                            param.second.as_vector(double_vec);</div>
 <div class="line"><a id="l00660" name="l00660"></a><span class="lineno">  660</span>                            <span class="keywordflow">if</span>(double_vec.size() == 0){</div>
-<div class="line"><a id="l00661" name="l00661"></a><span class="lineno">  661</span>                                std::cout&lt;&lt;<span class="stringliteral">&quot;Cannot pass non-numeric lists as a BMI parameter, skipping &quot;</span>&lt;&lt;param.first&lt;&lt;std::endl;</div>
+<div class="line"><a id="l00661" name="l00661"></a><span class="lineno">  661</span>                                <a class="code hl_function" href="namespacelogging.html#abbe2cbb6dacd04158dd9591797d854b8">logging::warning</a>((<span class="stringliteral">&quot;Cannot pass non-numeric lists as a BMI parameter, skipping &quot;</span>+param.first+<span class="stringliteral">&quot;\n&quot;</span>).c_str());</div>
 <div class="line"><a id="l00662" name="l00662"></a><span class="lineno">  662</span>                                <span class="keywordflow">continue</span>;</div>
 <div class="line"><a id="l00663" name="l00663"></a><span class="lineno">  663</span>                            }</div>
 <div class="line"><a id="l00664" name="l00664"></a><span class="lineno">  664</span>                            value_ptr = <a class="code hl_function" href="classrealization_1_1_bmi___module___formulation.html#a3e6878da7032ba5d43e6b2befbd6fe36">get_values_as_type</a>(type, double_vec.begin(), double_vec.end());</div>
 <div class="line"><a id="l00665" name="l00665"></a><span class="lineno">  665</span>                            <span class="keywordflow">break</span>;</div>
 <div class="line"><a id="l00666" name="l00666"></a><span class="lineno">  666</span>                        <span class="keywordflow">default</span>:</div>
-<div class="line"><a id="l00667" name="l00667"></a><span class="lineno">  667</span>                            std::cout&lt;&lt;<span class="stringliteral">&quot;Cannot pass parameter of type &quot;</span>&lt;&lt;<a class="code hl_function" href="namespacegeojson.html#a51a3ed6d91b88684d46710614638d53b">geojson::get_propertytype_name</a>(param.second.get_type())&lt;&lt;<span class="stringliteral">&quot; as a BMI parameter, skipping &quot;</span>&lt;&lt;param.first&lt;&lt;std::endl;</div>
+<div class="line"><a id="l00667" name="l00667"></a><span class="lineno">  667</span>                            <a class="code hl_function" href="namespacelogging.html#abbe2cbb6dacd04158dd9591797d854b8">logging::warning</a>((<span class="stringliteral">&quot;Cannot pass parameter of type &quot;</span>+<a class="code hl_function" href="namespacegeojson.html#a51a3ed6d91b88684d46710614638d53b">geojson::get_propertytype_name</a>(param.second.get_type())+<span class="stringliteral">&quot; as a BMI parameter, skipping &quot;</span>+param.first+<span class="stringliteral">&quot;\n&quot;</span>).c_str());</div>
 <div class="line"><a id="l00668" name="l00668"></a><span class="lineno">  668</span>                            <span class="keywordflow">continue</span>;</div>
 <div class="line"><a id="l00669" name="l00669"></a><span class="lineno">  669</span>                    }</div>
 <div class="line"><a id="l00670" name="l00670"></a><span class="lineno">  670</span>                    <span class="keywordflow">try</span>{</div>
@@ -538,13 +538,13 @@ $(document).ready(function(){initNavTree('_bmi___module___formulation_8hpp_sourc
 <div class="line"><a id="l00674" name="l00674"></a><span class="lineno">  674</span>                    }</div>
 <div class="line"><a id="l00675" name="l00675"></a><span class="lineno">  675</span>                    <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception &amp;e)</div>
 <div class="line"><a id="l00676" name="l00676"></a><span class="lineno">  676</span>                    {</div>
-<div class="line"><a id="l00677" name="l00677"></a><span class="lineno">  677</span>                        std::cout&lt;&lt;<span class="stringliteral">&quot;Exception setting parameter value: &quot;</span>&lt;&lt; e.what()&lt;&lt;std::endl;</div>
-<div class="line"><a id="l00678" name="l00678"></a><span class="lineno">  678</span>                        std::cout&lt;&lt;<span class="stringliteral">&quot;Skipping parameter: &quot;</span>&lt;&lt;param.first&lt;&lt;std::endl;</div>
+<div class="line"><a id="l00677" name="l00677"></a><span class="lineno">  677</span>                        <a class="code hl_function" href="namespacelogging.html#abbe2cbb6dacd04158dd9591797d854b8">logging::warning</a>((std::string(<span class="stringliteral">&quot;Exception setting parameter value: &quot;</span>)+e.what()).c_str());</div>
+<div class="line"><a id="l00678" name="l00678"></a><span class="lineno">  678</span>                        <a class="code hl_function" href="namespacelogging.html#abbe2cbb6dacd04158dd9591797d854b8">logging::warning</a>((<span class="stringliteral">&quot;Skipping parameter: &quot;</span>+param.first+<span class="stringliteral">&quot;\n&quot;</span>).c_str());</div>
 <div class="line"><a id="l00679" name="l00679"></a><span class="lineno">  679</span>                    }</div>
 <div class="line"><a id="l00680" name="l00680"></a><span class="lineno">  680</span>                    <span class="keywordflow">catch</span> (...)</div>
 <div class="line"><a id="l00681" name="l00681"></a><span class="lineno">  681</span>                    {</div>
-<div class="line"><a id="l00682" name="l00682"></a><span class="lineno">  682</span>                        std::cout&lt;&lt;<span class="stringliteral">&quot;Unknown Exception setting parameter value: &quot;</span>&lt;&lt;std::endl;</div>
-<div class="line"><a id="l00683" name="l00683"></a><span class="lineno">  683</span>                        std::cout&lt;&lt;<span class="stringliteral">&quot;Skipping parameter: &quot;</span>&lt;&lt;param.first&lt;&lt;std::endl;</div>
+<div class="line"><a id="l00682" name="l00682"></a><span class="lineno">  682</span>                        <a class="code hl_function" href="namespacelogging.html#abbe2cbb6dacd04158dd9591797d854b8">logging::warning</a>((std::string(<span class="stringliteral">&quot;Unknown Exception setting parameter value: \n&quot;</span>)).c_str());</div>
+<div class="line"><a id="l00683" name="l00683"></a><span class="lineno">  683</span>                        <a class="code hl_function" href="namespacelogging.html#abbe2cbb6dacd04158dd9591797d854b8">logging::warning</a>((<span class="stringliteral">&quot;Skipping parameter: &quot;</span>+param.first+<span class="stringliteral">&quot;\n&quot;</span>).c_str());</div>
 <div class="line"><a id="l00684" name="l00684"></a><span class="lineno">  684</span>                    }</div>
 <div class="line"><a id="l00685" name="l00685"></a><span class="lineno">  685</span>                    long_vec.clear();</div>
 <div class="line"><a id="l00686" name="l00686"></a><span class="lineno">  686</span>                    double_vec.clear();</div>
@@ -972,6 +972,7 @@ $(document).ready(function(){initNavTree('_bmi___module___formulation_8hpp_sourc
 <div class="ttc" id="anamespacegeojson_html_a972cd4a487858a36473c775ac360f361a2bd8ab451a35759c5737128e35c8011a"><div class="ttname"><a href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a2bd8ab451a35759c5737128e35c8011a">geojson::PropertyType::Natural</a></div><div class="ttdeci">@ Natural</div></div>
 <div class="ttc" id="anamespacegeojson_html_a972cd4a487858a36473c775ac360f361a4ee29ca12c7d126654bd0e5275de6135"><div class="ttname"><a href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a4ee29ca12c7d126654bd0e5275de6135">geojson::PropertyType::List</a></div><div class="ttdeci">@ List</div></div>
 <div class="ttc" id="anamespacegeojson_html_a972cd4a487858a36473c775ac360f361a7f80fcc452c2f1ed2bb51b39d0864df1"><div class="ttname"><a href="namespacegeojson.html#a972cd4a487858a36473c775ac360f361a7f80fcc452c2f1ed2bb51b39d0864df1">geojson::PropertyType::Real</a></div><div class="ttdeci">@ Real</div></div>
+<div class="ttc" id="anamespacelogging_html_abbe2cbb6dacd04158dd9591797d854b8"><div class="ttname"><a href="namespacelogging.html#abbe2cbb6dacd04158dd9591797d854b8">logging::warning</a></div><div class="ttdeci">void warning(const char *msg)</div><div class="ttdoc">Send warning to std::cerr.</div><div class="ttdef"><b>Definition:</b> logging_utils.cpp:26</div></div>
 <div class="ttc" id="anamespacerealization_html"><div class="ttname"><a href="namespacerealization.html">realization</a></div><div class="ttdef"><b>Definition:</b> Bmi_C_Formulation.hpp:11</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
@@ -979,7 +980,7 @@ $(document).ready(function(){initNavTree('_bmi___module___formulation_8hpp_sourc
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_9058ef7c383dff996c678c5ba80ec03e.html">realizations</a></li><li class="navelem"><a class="el" href="dir_8dbd500a1ae0b3d23deb7285e2980d8b.html">catchment</a></li><li class="navelem"><b>Bmi_Module_Formulation.hpp</b></li>
-    <li class="footer">Generated on Tue Sep 26 2023 20:10:55 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
+    <li class="footer">Generated on Wed Sep 27 2023 16:21:51 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
   </ul>
 </div>
 </body>

@@ -7,6 +7,13 @@ var namespaces_dup =
     [ "geojson", "namespacegeojson.html", "namespacegeojson" ],
     [ "geopackage", "namespacegeopackage.html", "namespacegeopackage" ],
     [ "hy_features", "namespacehy__features.html", "namespacehy__features" ],
+    [ "logging", "namespacelogging.html", [
+      [ "critical", "namespacelogging.html#aaa6addcd244d71933234c851ad827383", null ],
+      [ "debug", "namespacelogging.html#ab974964045c6542ec5e35cf12afdbe62", null ],
+      [ "error", "namespacelogging.html#a57fd6163eef35abcd6fd2b225842dc05", null ],
+      [ "info", "namespacelogging.html#ab013f7af1de2527ea402979e0d8e723b", null ],
+      [ "warning", "namespacelogging.html#abbe2cbb6dacd04158dd9591797d854b8", null ]
+    ] ],
     [ "models", "namespacemodels.html", "namespacemodels" ],
     [ "network", "namespacenetwork.html", "namespacenetwork" ],
     [ "nexus", "namespacenexus.html", "namespacenexus" ],

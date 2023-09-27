@@ -1397,6 +1397,13 @@
           <topic label="network" href="classhy__features_1_1_h_y___features.html#aa8443888e3fd904e3b737a752546f674"/>
         </topic>
       </topic>
+      <topic label="logging" href="namespacelogging.html">
+        <topic label="critical" href="namespacelogging.html#aaa6addcd244d71933234c851ad827383"/>
+        <topic label="debug" href="namespacelogging.html#ab974964045c6542ec5e35cf12afdbe62"/>
+        <topic label="error" href="namespacelogging.html#a57fd6163eef35abcd6fd2b225842dc05"/>
+        <topic label="info" href="namespacelogging.html#ab013f7af1de2527ea402979e0d8e723b"/>
+        <topic label="warning" href="namespacelogging.html#abbe2cbb6dacd04158dd9591797d854b8"/>
+      </topic>
       <topic label="models" href="namespacemodels.html">
         <topic label="bmi" href="namespacemodels_1_1bmi.html">
           <topic label="helper" href="namespacemodels_1_1bmi_1_1helper.html">
