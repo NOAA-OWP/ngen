@@ -131,6 +131,16 @@ ngen_add_test(
         
 )
 
+########################## Logging Unit Tests
+ngen_add_test(
+    test_logging
+    OBJECTS
+        utils/logging_Test.cpp
+    LIBRARIES
+        NGen::logging
+
+)
+
 ########################## Nexus Tests
 ngen_add_test(
     test_nexus
@@ -334,6 +344,7 @@ ngen_add_test(
         utils/mdframe_Test.cpp
         utils/mdframe_netcdf_Test.cpp
         utils/mdframe_csv_Test.cpp
+        utils/logging_Test.cpp
     LIBRARIES
         gmock
         NGen::core
@@ -344,6 +355,7 @@ ngen_add_test(
         NGen::realizations_catchment
         NGen::mdarray
         NGen::mdframe
+        NGen::logging
         testbmicppmodel
         
 )
@@ -368,6 +380,7 @@ ngen_add_test(
         utils/mdframe_Test.cpp
         utils/mdframe_netcdf_Test.cpp
         utils/mdframe_csv_Test.cpp
+        utils/logging_Test.cpp
     LIBRARIES
         NGen::core
         gmock
@@ -378,5 +391,6 @@ ngen_add_test(
         NGen::realizations_catchment
         NGen::mdarray
         NGen::mdframe
+        NGen::logging
         testbmicppmodel
 )

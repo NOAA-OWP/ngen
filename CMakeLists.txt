@@ -37,7 +37,7 @@ include(GitUpdateSubmodules)
 include(CMakeDependentOption)
 
 option(NGEN_WITH_MPI         "Build with MPI support"             OFF)
-option(NGEN_WITH_NETCDF      "Build with NetCDF support"          ON)
+option(NGEN_WITH_NETCDF      "Build with NetCDF support"          OFF)
 option(NGEN_WITH_SQLITE      "Build with SQLite3 support"         OFF)
 option(NGEN_WITH_UDUNITS     "Build with UDUNITS2 support"        ON)
 option(NGEN_WITH_BMI_FORTRAN "Build with Fortran BMI support"     OFF)
@@ -197,6 +197,7 @@ add_subdirectory("src/realizations/catchment")
 add_subdirectory("src/forcing")
 add_subdirectory("src/utilities/mdarray")
 add_subdirectory("src/utilities/mdframe")
+add_subdirectory("src/utilities/logging")
 
 target_link_libraries(ngen
     PUBLIC
@@ -207,6 +208,7 @@ target_link_libraries(ngen
         NGen::realizations_catchment
         NGen::forcing
         NGen::core_mediator
+        NGen::logging
 )
 
 if(NGEN_WITH_SQLITE)

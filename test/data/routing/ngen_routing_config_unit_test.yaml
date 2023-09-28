@@ -8,9 +8,25 @@ network_topology_parameters:
     #----------
     supernetwork_parameters:
         #----------
-        geo_file_type: HYFeaturesNetwork 
+        # geo_file_type: HYFeaturesNetwork 
         geo_file_path: ./test/data/routing/gauge_01073000.gpkg
         mask_file_path: # domain/unit_test_noRS/coastal_subset.txt
+        columns:
+            key: 'id'
+            downstream: 'toid'
+            dx: 'lengthkm'
+            n: 'n'
+            ncc: 'nCC'
+            s0: 'So'
+            bw: 'BtmWdth'
+            waterbody: 'rl_NHDWaterbodyComID'
+            gages: 'rl_gages'
+            tw: 'TopWdth'
+            twcc: 'TopWdthCC'
+            musk: 'MusK'
+            musx: 'MusX'
+            cs: 'ChSlp'
+            alt: 'alt'
         synthetic_wb_segments:
             #- 4800002
             #- 4800004
@@ -22,13 +38,8 @@ network_topology_parameters:
         level_pool:
             #----------
             level_pool_waterbody_parameter_file_path: ./test/data/routing/gauge_01073000.gpkg
-            reservoir_parameter_file                : ./test/data/routing/gauge_01073000.gpkg
-        #rfc:
-            #----------
-            #reservoir_parameter_file                : domain/reservoir_index_AnA.nc
-            #reservoir_rfc_forecasts                 : False
-            #reservoir_rfc_forecasts_time_series_path: rfc_TimeSeries/
-            #reservoir_rfc_forecasts_lookback_hours  : 48
+            # reservoir_parameter_file                : ./test/data/routing/gauge_01073000.gpkg
+
 #--------------------------------------------------------------------------------
 compute_parameters:
     #----------
@@ -60,8 +71,8 @@ compute_parameters:
         dt                          : 300 # [sec]
         qlat_input_folder           : ./test/data/routing/
         qlat_file_pattern_filter    : "nex-*"
-        nexus_input_folder          : ./test/data/routing/
-        nexus_file_pattern_filter   : "nex-*" #OR "*NEXOUT.parquet" OR "nex-*"
+        # nexus_input_folder          : ./test/data/routing/
+        # nexus_file_pattern_filter   : "nex-*" #OR "*NEXOUT.parquet" OR "nex-*"
         binary_nexus_file_folder    : ./test/data/routing/ # this is required if nexus_file_pattern_filter="nex-*"
         #coastal_boundary_input_file : channel_forcing/schout_1.nc  
         nts                         : 8640 #288 for 1day
@@ -81,11 +92,20 @@ compute_parameters:
     #        crosswalk_segID_field         : # 'link'
     #        wrf_hydro_lastobs_file        :                
     #        lastobs_output_folder         : lastobs/
-    #    reservoir_da:
-    #        #----------
-    #        reservoir_persistence_usgs  : False
-    #        reservoir_persistence_usace : False
-    #        gage_lakeID_crosswalk_file  : # domain/reservoir_index_AnA.nc
+
+    # Needed to prevent AttributeError
+        reservoir_da:
+            #----------
+            reservoir_persistence_da:
+                reservoir_persistence_usgs  : False
+                reservoir_persistence_usace : False
+        #        gage_lakeID_crosswalk_file  : # domain/reservoir_index_AnA.nc
+            reservoir_rfc_da:
+                #----------
+                #reservoir_parameter_file                : domain/reservoir_index_AnA.nc
+                reservoir_rfc_forecasts                 : False
+                #reservoir_rfc_forecasts_time_series_path: rfc_TimeSeries/
+                #reservoir_rfc_forecasts_lookback_hours  : 48
 #--------------------------------------------------------------------------------
 output_parameters:
     #----------
