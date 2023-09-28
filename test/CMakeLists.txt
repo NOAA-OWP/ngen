@@ -174,6 +174,22 @@ ngen_add_test(
     #   NGEN_WITH_MPI
 )
 
+########################## MultiLayer Tests
+ngen_add_test(
+    test_multilayer
+    OBJECTS
+        core/multilayer/MultiLayerParserTest.cpp
+    LIBRARIES
+        NGen::core
+        NGen::geojson
+        NGen::realizations_catchment
+        NGen::core_mediator
+        NGen::forcing
+    REQUIRES
+        NGEN_WITH_NETCDF
+)
+
+
 ########################## BMI C++ Tests
 ngen_add_test(
     test_bmi_cpp
@@ -375,6 +391,7 @@ ngen_add_test(
         core/mediator/UnitsHelper_Tests.cpp
         realizations/Formulation_Manager_Test.cpp
         core/nexus/NexusTests.cpp
+        core/multilayer/MultiLayerParserTest.cpp
         utils/Partition_Test.cpp
         utils/mdarray_Test.cpp
         utils/mdframe_Test.cpp

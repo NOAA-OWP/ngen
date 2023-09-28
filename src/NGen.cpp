@@ -17,6 +17,7 @@
 
 #include <FileChecker.h>
 #include <boost/algorithm/string.hpp>
+#include <boost/range/algorithm/sort.hpp>
 
 #ifdef WRITE_PID_FILE_FOR_GDB_SERVER
 #include <unistd.h>
@@ -50,6 +51,9 @@ std::string PARTITION_PATH = "";
 int mpi_rank;
 int mpi_num_procs;
 #endif
+
+#include <Layer.hpp>
+#include <SurfaceLayer.hpp>
 
 std::unordered_map<std::string, std::ofstream> nexus_outfiles;
 
@@ -306,11 +310,11 @@ int main(int argc, char *argv[]) {
     #endif //NGEN_ROUTING_ACTIVE
 
     std::string link_key = "toid";
-    #ifdef NGEN_MPI_ACTIVE
     nexus_collection->link_features_from_property(nullptr, &link_key);
+    #ifdef NGEN_MPI_ACTIVE
     hy_features::HY_Features_MPI features = hy_features::HY_Features_MPI(local_data, nexus_collection, manager, mpi_rank, mpi_num_procs);
     #else
-    hy_features::HY_Features features = hy_features::HY_Features(catchment_collection, &link_key, manager);
+    hy_features::HY_Features features = hy_features::HY_Features(nexus_collection, manager);
     #endif
 
     //validate dendritic connections
@@ -333,74 +337,105 @@ int main(int argc, char *argv[]) {
 
     std::cout<<"Running Models"<<std::endl;
 
+    // check the time loops for the existing layers
+    ngen::LayerDataStorage& layer_meta_data = manager->get_layer_metadata();
+
+    // get the keys for the existing layers
+    std::vector<int>& keys = layer_meta_data.get_keys();
+
+    // get the converted time steps for layers
+    double min_time_step;
+    double max_time_step;
+    std::vector<double> time_steps;
+    for(int i = 0; i < keys.size(); ++i)
+    {
+        auto& m_data = layer_meta_data.get_layer(keys[i]);
+        double c_value = UnitsHelper::get_converted_value(m_data.time_step_units,m_data.time_step,"s");
+        time_steps.push_back(c_value);
+    }
+
+    std::vector<int> output_time_index;
+    output_time_index.resize(keys.size());
+    std::fill(output_time_index.begin(), output_time_index.end(),0);
+
+    // now create the layer objects
+
+    // first make sure that the layer are listed in decreasing order
+    boost::range::sort(keys, std::greater<int>());
+
+    std::vector<std::shared_ptr<ngen::Layer> > layers;
+    layers.resize(keys.size());
+
+    for(long i = 0; i < keys.size(); ++i)
+    {
+      auto& desc = layer_meta_data.get_layer(keys[i]);
+      std::vector<std::string> cat_ids;
+
+      // make a new simulation time object with a different output interval
+      Simulation_Time sim_time(*manager->Simulation_Time_Object, time_steps[i]);
+  
+      for ( std::string id : features.catchments(keys[i]) ) { cat_ids.push_back(id); }
+      if (keys[i] != 0 )
+      {
+        layers[i] = std::make_shared<ngen::Layer>(desc, cat_ids, sim_time, features, catchment_collection, 0);
+      }
+      else
+      {
+        layers[i] = std::make_shared<ngen::SurfaceLayer>(desc, cat_ids, sim_time, features, catchment_collection, 0, nexus_subset_ids, nexus_outfiles);
+      }
+
+    }
+
     //Now loop some time, iterate catchments, do stuff for total number of output times
-    for(int output_time_index = 0; output_time_index < manager->Simulation_Time_Object->get_total_output_times(); output_time_index++) {
-      //std::cout<<"Output Time Index: "<<output_time_index<<std::endl;
-      if(output_time_index%100 == 0) std::cout<<"Running timestep "<<output_time_index<<std::endl;
-      std::string current_timestamp = manager->Simulation_Time_Object->get_timestamp(output_time_index);
-      for(const auto& id : features.catchments()) {
-        //std::cout<<"Running cat "<<id<<std::endl;
-        auto r = features.catchment_at(id);
-        //TODO redesign to avoid this cast
-        auto r_c = std::dynamic_pointer_cast<realization::Catchment_Formulation>(r);
-        double response = r_c->get_response(output_time_index, 3600.0);
-        std::string output = std::to_string(output_time_index)+","+current_timestamp+","+
-                             r_c->get_output_line_for_timestep(output_time_index)+"\n";
-        r_c->write_output(output);
-        //TODO put this somewhere else.  For now, just trying to ensure we get m^3/s into nexus output
-        try{
-          response *= (catchment_collection->get_feature(id)->get_property("areasqkm").as_real_number() * 1000000);
-        }catch(std::invalid_argument &e)
+    auto num_times = manager->Simulation_Time_Object->get_total_output_times();
+    for( int count = 0; count < num_times; count++) 
+    {
+      // The Inner loop will advance all layers unless doing so will break one of two constraints
+      // 1) A layer may not proceed ahead of the master simulation object's current time
+      // 2) A layer may not proceed ahead of any layer that is computed before it
+      // The do while loop ensures that all layers are tested at least once while allowing 
+      // layers with small time steps to be updated more than once
+      // If a layer with a large time step is after a layer with a small time step the
+      // layer with the large time step will wait for multiple timesteps from the preceeding
+      // layer.
+      
+      // this is the time that layers are trying to reach (or get as close as possible)
+      auto next_time = manager->Simulation_Time_Object->next_timestep_epoch_time();
+
+      // this is the time that the layer above the current layer is at
+      auto prev_layer_time = next_time;
+
+      // this is the time that the least advanced layer is at
+      auto layer_min_next_time = next_time;
+      do
+      {
+        for ( auto& layer : layers ) 
         {
-          response *= (catchment_collection->get_feature(id)->get_property("area_sqkm").as_real_number() * 1000000);
-        }
-        //TODO put this somewhere else as well, for now, an implicit assumption is that a modules get_response returns
-        //m/timestep
-        //since we are operating on a 1 hour (3600s) dt, we need to scale the output appropriately
-        //so no response is m^2/hr...m^2/hr * 1hr/3600s = m^3/hr
-        response /= 3600.0;
-        //update the nexus with this flow
-        for(auto& nexus : features.destination_nexuses(id)) {
-          //TODO in a dendritic network, only one destination nexus per catchment
-          //If there is more than one, some form of catchment partitioning will be required.
-          //for now, only contribute to the first one in the list
-          nexus->add_upstream_flow(response, id, output_time_index);
-	        break;
-        }
-      } //done catchments
-      //At this point, could make an internal routing pass, extracting flows from nexuses and routing
-      //across the flowpath to the next nexus.
-      //Once everything is updated for this timestep, dump the nexus output
-      for(const auto& id : features.nexuses()) {
-  #ifdef NGEN_MPI_ACTIVE
-        if (!features.is_remote_sender_nexus(id)) { //Ensures only one side of the dual sided remote nexus actually doing this...
-  #endif
+          auto layer_next_time = layer->next_timestep_epoch_time();
 
-          //Get the correct "requesting" id for downstream_flow
-	        const auto& nexus = features.nexus_at(id);
-          const auto& cat_ids = nexus->get_receiving_catchments();
-          std::string cat_id;
-          if( cat_ids.size() > 0 ) {
-            //Assumes dendritic, e.g. only a single downstream...it will consume 100%  of the available flow
-            cat_id = cat_ids[0];
+          // only advance if you would not pass the master next time and the previous layer next time
+          if ( layer_next_time <= next_time && layer_next_time <=  prev_layer_time)
+          {
+            layer->update_models();
+            prev_layer_time = layer_next_time;
           }
-          else {
-            //This is a terminal node, SHOULDN'T be remote, so ID shouldn't matter too much
-            cat_id = "terminal";
+          else
+          {
+            layer_min_next_time = prev_layer_time = layer->current_timestep_epoch_time(); 
           }
-          double contribution_at_t = features.nexus_at(id)->get_downstream_flow(cat_id, output_time_index, 100.0);
-          if(nexus_outfiles[id].is_open()) {
-            nexus_outfiles[id] << output_time_index << ", " << current_timestamp << ", " << contribution_at_t << std::endl;
-          }
-  #ifdef NGEN_MPI_ACTIVE
-        }
-  #endif
-        //std::cout<<"\tNexus "<<id<<" has "<<contribution_at_t<<" m^3/s"<<std::endl;
 
-        //Note: Use below if developing in-memory transfer of nexus flows to routing
-        //If using below, then another single time vector would be needed to hold the timestamp
-        //nexus_flows[id].push_back(contribution_at_t); 
-      } //done nexuses
+          if ( layer_min_next_time > layer_next_time)
+          {
+            layer_min_next_time = layer_next_time;
+          }
+        } //done layers
+      } while( layer_min_next_time < next_time );  // rerun the loop until the last layer would pass the master next time
+
+      if (count + 1 < num_times)
+      {
+        manager->Simulation_Time_Object->advance_timestep();
+      }
+
     } //done time
     std::cout<<"Finished "<<manager->Simulation_Time_Object->get_total_output_times()<<" timesteps."<<std::endl;
 

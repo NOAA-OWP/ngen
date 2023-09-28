@@ -18,6 +18,9 @@
 #include <FeatureBuilder.hpp>
 
 namespace network {
+
+  const static int DEFAULT_LAYER_ID = 0;
+
   /**
    * @brief Selector for using different traversal orders for linear return
    */
@@ -206,11 +209,52 @@ namespace network {
                         | boost::adaptors::transformed([this](int const& i) { return get_id(i); })
                         | boost::adaptors::filtered([type](std::string const& s) { 
                           if(type == "nex"){
-                            return s.substr(0,3) == type || s.substr(0,3) == "tnx";
+                            return s.substr(0,3) == type || s.substr(0,3) == "tnx" || s.substr(0,4) == "tnex";
+                          }
+                          if(type == "cat"){
+                            return s.substr(0,3) == type || s.substr(0,3) == "agg";
                           }
                           return s.substr(0,3) == type; 
                         });
 
+        }
+
+        /**
+         * @brief Provides a boost transform_iterator, filtered by @p type , to the topologically ordered graph vertex string id's
+         * 
+         * This function is useful when only interested in a single type of feature.
+         * It returns the a topologically ordered set of feature ids.  For example, to print all catchments
+         * in the network:
+         * @code {.cpp}
+         * for( auto catchment : network.filter('cat') ){
+         *    std::cout << catchment;
+         * }
+         * @endcode
+         * 
+         * @param type The type of feature to filter for, i.e. 'cat', 'nex'
+         * @param target_layer The layer that filtered results should be in
+         * @param order What order to return results in
+         * @return auto 
+         */
+        auto filter(std::string type, int target_layer, SortOrder order = SortOrder::Topological)
+        {
+          //todo need to worry about valivdating input???
+          //if type isn't found as a prefix, this iterator range should be empty,
+          //which is a reasonable semantic
+          return get_sorted_index(order) | boost::adaptors::reversed
+                        | boost::adaptors::transformed([this](int const& i) { return get_id(i); })
+                        | boost::adaptors::filtered([this,type,target_layer](std::string const& s) { 
+                          if(type == "nex"){
+                            return (s.substr(0,3) == type || s.substr(0,3) == "tnx" || s.substr(0,4) == "tnex") && 
+                                   (this->layer_map.find(s) != this->layer_map.end() && this->layer_map[s] == target_layer);
+                          }
+                          if(type == "cat"){
+                            return (s.substr(0,3) == type || s.substr(0,3) == "agg") && 
+                                   (this->layer_map.find(s) != this->layer_map.end() && this->layer_map[s] == target_layer);
+                          }
+                          return (s.substr(0,3) == type) && 
+                                  (this->layer_map.find(s) != this->layer_map.end() && (this->layer_map[s] == target_layer)); 
+                        });
         }
         /**
          * @brief Get the string id of a given graph vertex_descriptor @p idx
@@ -316,6 +360,12 @@ namespace network {
          * 
          */
         std::unordered_map<std::string, Graph::vertex_descriptor> descriptor_map;
+
+        /**
+         * @brief Mapping of identifier to hydrofabric layer
+         * 
+        */
+        std::unordered_map<std::string, long> layer_map;
         
         /**
          * @brief Get an index of the graph in a particular order.
