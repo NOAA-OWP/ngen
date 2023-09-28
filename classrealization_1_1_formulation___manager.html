@@ -143,6 +143,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1a2bb05d7eb2e2a815a05e0c049597bd"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation___manager.html#a1a2bb05d7eb2e2a815a05e0c049597bd">get_output_root</a> () const noexcept</td></tr>
 <tr class="memdesc:a1a2bb05d7eb2e2a815a05e0c049597bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the formatted output root.  <a href="classrealization_1_1_formulation___manager.html#a1a2bb05d7eb2e2a815a05e0c049597bd">More...</a><br /></td></tr>
 <tr class="separator:a1a2bb05d7eb2e2a815a05e0c049597bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad0fc7e9108d8cd74963053d33986a6ce"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classngen_1_1_layer_data_storage.html">ngen::LayerDataStorage</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation___manager.html#ad0fc7e9108d8cd74963053d33986a6ce">get_layer_metadata</a> ()</td></tr>
+<tr class="memdesc:ad0fc7e9108d8cd74963053d33986a6ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">return the layer storage used for formulations  <a href="classrealization_1_1_formulation___manager.html#ad0fc7e9108d8cd74963053d33986a6ce">More...</a><br /></td></tr>
+<tr class="separator:ad0fc7e9108d8cd74963053d33986a6ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -180,6 +183,8 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:afdd18d85d9a4231e62621be37074320a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b8bde7896ea9bba31e130cd14ecbf7b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation___manager.html#a0b8bde7896ea9bba31e130cd14ecbf7b">using_routing</a> = false</td></tr>
 <tr class="separator:a0b8bde7896ea9bba31e130cd14ecbf7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b50baa59826712652d559531463eefe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classngen_1_1_layer_data_storage.html">ngen::LayerDataStorage</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation___manager.html#a0b50baa59826712652d559531463eefe">layer_storage</a></td></tr>
+<tr class="separator:a0b50baa59826712652d559531463eefe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-types" name="pri-types"></a>
 Private Types</h2></td></tr>
@@ -612,6 +617,36 @@ Private Types</h2></td></tr>
 
 </div>
 </div>
+<a id="ad0fc7e9108d8cd74963053d33986a6ce" name="ad0fc7e9108d8cd74963053d33986a6ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad0fc7e9108d8cd74963053d33986a6ce">&#9670;&#160;</a></span>get_layer_metadata()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classngen_1_1_layer_data_storage.html">ngen::LayerDataStorage</a> &amp; realization::Formulation_Manager::get_layer_metadata </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>return the layer storage used for formulations </p>
+<dl class="section return"><dt>Returns</dt><dd>a reference to the LayerStorageObject </dd></dl>
+
+<p class="reference">References <a class="el" href="classrealization_1_1_formulation___manager.html#a0b50baa59826712652d559531463eefe">layer_storage</a>.</p>
+
+</div>
+</div>
 <a id="a1a2bb05d7eb2e2a815a05e0c049597bd" name="a1a2bb05d7eb2e2a815a05e0c049597bd"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1a2bb05d7eb2e2a815a05e0c049597bd">&#9670;&#160;</a></span>get_output_root()</h2>
 
@@ -892,10 +927,11 @@ Private Types</h2></td></tr>
 </div><div class="memdoc">
 <p >Read simulation time from configuration file /// </p><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000010">Todo:</a></b></dt><dd>TODO: Separate input_interval from output_interval </dd></dl>
 <p >Call constructor to construct a <a class="el" href="class_simulation___time.html" title="Simulation Time class providing time-series variables and methods to the model.">Simulation_Time</a> object</p>
+<p >Read the layer descriptions</p>
 <p >Read routing configurations from configuration file</p>
 <p >Read catchment configurations from configuration file</p>
 
-<p class="reference">References <a class="el" href="classrealization_1_1_formulation___manager.html#aca754e4a64a79f0b86c0fa7a472aab94">add_formulation()</a>, <a class="el" href="classgeojson_1_1_j_s_o_n_property.html#a99b488b0681f98286fe65be25f5cba06">geojson::JSONProperty::as_natural_number()</a>, <a class="el" href="classgeojson_1_1_j_s_o_n_property.html#a512af06cb32ed665a57a80129c84ec9b">geojson::JSONProperty::as_string()</a>, <a class="el" href="classgeojson_1_1_j_s_o_n_property.html#a4a62d9dc46a292bff3c4fd134f5469a7">geojson::JSONProperty::at()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#a89aeed055b9828a8994eee36fbb1ff03">construct_formulation_from_tree()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#a3611f83dade280ed741729e875e0f823">construct_missing_formulation()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#ae28572ed2d9c6bf7849331d889b3c51b">contains()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#ae72b9762e8056a1787d69aed79919b9d">formulations</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#aefede1cd4a4aa13bae4e8a8cb58968b1">global_forcing</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#acd6121b421b707d9cd9459b330443c31">global_formulation_parameters</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#a3ce2f6a9516aeef300950576148f8334">global_formulation_tree</a>, <a class="el" href="classgeojson_1_1_j_s_o_n_property.html#afe12f98e6dafc1abb943d3865e601ec1">geojson::JSONProperty::has_key()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#ade623c87318034b5a90e0133624dbb0f">parse_external_model_params()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#afdd18d85d9a4231e62621be37074320a">routing_config</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#ae34d4f2d7d9bf211e5139eb2b8b09e39">tree</a>, and <a class="el" href="classrealization_1_1_formulation___manager.html#a0b8bde7896ea9bba31e130cd14ecbf7b">using_routing</a>.</p>
+<p class="reference">References <a class="el" href="classrealization_1_1_formulation___manager.html#aca754e4a64a79f0b86c0fa7a472aab94">add_formulation()</a>, <a class="el" href="classgeojson_1_1_j_s_o_n_property.html#a99b488b0681f98286fe65be25f5cba06">geojson::JSONProperty::as_natural_number()</a>, <a class="el" href="classgeojson_1_1_j_s_o_n_property.html#a512af06cb32ed665a57a80129c84ec9b">geojson::JSONProperty::as_string()</a>, <a class="el" href="classgeojson_1_1_j_s_o_n_property.html#a4a62d9dc46a292bff3c4fd134f5469a7">geojson::JSONProperty::at()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#a89aeed055b9828a8994eee36fbb1ff03">construct_formulation_from_tree()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#a3611f83dade280ed741729e875e0f823">construct_missing_formulation()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#ae28572ed2d9c6bf7849331d889b3c51b">contains()</a>, <a class="el" href="classngen_1_1_layer_data_storage.html#af31a9edd9c64279fb37bedcb6734246c">ngen::LayerDataStorage::exists()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#ae72b9762e8056a1787d69aed79919b9d">formulations</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#aefede1cd4a4aa13bae4e8a8cb58968b1">global_forcing</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#acd6121b421b707d9cd9459b330443c31">global_formulation_parameters</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#a3ce2f6a9516aeef300950576148f8334">global_formulation_tree</a>, <a class="el" href="classgeojson_1_1_j_s_o_n_property.html#afe12f98e6dafc1abb943d3865e601ec1">geojson::JSONProperty::has_key()</a>, <a class="el" href="structngen_1_1_layer_description.html#ac2feee450a736e3b64bc466128eaa62a">ngen::LayerDescription::id</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#a0b50baa59826712652d559531463eefe">layer_storage</a>, <a class="el" href="structngen_1_1_layer_description.html#a8d632f5ca6bcbda986fde0f73105ba0e">ngen::LayerDescription::name</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#ade623c87318034b5a90e0133624dbb0f">parse_external_model_params()</a>, <a class="el" href="classngen_1_1_layer_data_storage.html#abd30fa604b8e071d901b6aad7023baf8">ngen::LayerDataStorage::put_layer()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#afdd18d85d9a4231e62621be37074320a">routing_config</a>, <a class="el" href="structngen_1_1_layer_description.html#a8970be92be13b74d2c8362cb35f82df5">ngen::LayerDescription::time_step</a>, <a class="el" href="structngen_1_1_layer_description.html#a4ce3bc73676b15cc43b07c81277b48d6">ngen::LayerDescription::time_step_units</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#ae34d4f2d7d9bf211e5139eb2b8b09e39">tree</a>, and <a class="el" href="classrealization_1_1_formulation___manager.html#a0b8bde7896ea9bba31e130cd14ecbf7b">using_routing</a>.</p>
 
 </div>
 </div>
@@ -996,6 +1032,30 @@ Private Types</h2></td></tr>
 
 </div>
 </div>
+<a id="a0b50baa59826712652d559531463eefe" name="a0b50baa59826712652d559531463eefe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b50baa59826712652d559531463eefe">&#9670;&#160;</a></span>layer_storage</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classngen_1_1_layer_data_storage.html">ngen::LayerDataStorage</a> realization::Formulation_Manager::layer_storage</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_formulation___manager.html#ad0fc7e9108d8cd74963053d33986a6ce">get_layer_metadata()</a>, and <a class="el" href="classrealization_1_1_formulation___manager.html#aab2168aff25e065967c382a2b6cef41a">read()</a>.</p>
+
+</div>
+</div>
 <a id="afdd18d85d9a4231e62621be37074320a" name="afdd18d85d9a4231e62621be37074320a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afdd18d85d9a4231e62621be37074320a">&#9670;&#160;</a></span>routing_config</h2>
 
@@ -1091,7 +1151,7 @@ Private Types</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li><li class="navelem"><a class="el" href="classrealization_1_1_formulation___manager.html">Formulation_Manager</a></li>
-    <li class="footer">Generated on Wed Sep 27 2023 16:21:53 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
+    <li class="footer">Generated on Thu Sep 28 2023 21:30:38 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
   </ul>
 </div>
 </body>

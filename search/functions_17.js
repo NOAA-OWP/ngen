@@ -35,12 +35,15 @@ var searchData=
   ['_7ejsongeometry_5ftest_32',['~JSONGeometry_Test',['../class_j_s_o_n_geometry___test.html#a82a90d0ddf0e80a40b3b3ed540d632f1',1,'JSONGeometry_Test']]],
   ['_7ejsonproperty_33',['~JSONProperty',['../classgeojson_1_1_j_s_o_n_property.html#a9db9c33cbddf921ac9b9475ff82ef09c',1,'geojson::JSONProperty']]],
   ['_7ejsonproperty_5ftest_34',['~JSONProperty_Test',['../class_j_s_o_n_property___test.html#a76946ab993763993ae25fe3fb8a119ad',1,'JSONProperty_Test']]],
-  ['_7enetwork_35',['~Network',['../classnetwork_1_1_network.html#ab967c379911182281978a165cc9d6ef5',1,'network::Network']]],
-  ['_7enetwork_5ftest_36',['~Network_Test',['../class_network___test.html#acc9776629f430beba5e1289d511586e0',1,'Network_Test']]],
-  ['_7enetwork_5ftest1_37',['~Network_Test1',['../class_network___test1.html#ad69e160d0367219743d320cf97bc772b',1,'Network_Test1']]],
-  ['_7enexus_5fmanager_38',['~Nexus_Manager',['../classnexus_1_1_nexus___manager.html#a1a4c6caeb232db5742533f8b7c93a2d9',1,'nexus::Nexus_Manager']]],
-  ['_7enexus_5fremote_5ftest_39',['~Nexus_Remote_Test',['../class_nexus___remote___test.html#a022b70071c3a3871db87f6cb7a45615c',1,'Nexus_Remote_Test']]],
-  ['_7enexus_5ftest_40',['~Nexus_Test',['../class_nexus___test.html#ab052527da35d97d184f6cd5a476efd36',1,'Nexus_Test']]],
-  ['_7estreamhandler_41',['~StreamHandler',['../classutils_1_1_stream_handler.html#a9c2a94967e4afa1afe854878dac2c354',1,'utils::StreamHandler']]],
-  ['_7eunitshelper_5ftest_42',['~UnitsHelper_Test',['../class_units_helper___test.html#ac342c365275e4173691ab84e9b76b5a5',1,'UnitsHelper_Test']]]
+  ['_7elayer_35',['~Layer',['../classngen_1_1_layer.html#a6b87eb0a469e378fb7750f53a4942ba5',1,'ngen::Layer']]],
+  ['_7elayerdatastorage_36',['~LayerDataStorage',['../classngen_1_1_layer_data_storage.html#aee9f22a1dce62147a2eb9404593f5e15',1,'ngen::LayerDataStorage']]],
+  ['_7emultilayerparsertest_37',['~MultiLayerParserTest',['../class_multi_layer_parser_test.html#a87c8ead1d2ffe2a0e2dde4eb4a03df96',1,'MultiLayerParserTest']]],
+  ['_7enetwork_38',['~Network',['../classnetwork_1_1_network.html#ab967c379911182281978a165cc9d6ef5',1,'network::Network']]],
+  ['_7enetwork_5ftest_39',['~Network_Test',['../class_network___test.html#acc9776629f430beba5e1289d511586e0',1,'Network_Test']]],
+  ['_7enetwork_5ftest1_40',['~Network_Test1',['../class_network___test1.html#ad69e160d0367219743d320cf97bc772b',1,'Network_Test1']]],
+  ['_7enexus_5fmanager_41',['~Nexus_Manager',['../classnexus_1_1_nexus___manager.html#a1a4c6caeb232db5742533f8b7c93a2d9',1,'nexus::Nexus_Manager']]],
+  ['_7enexus_5fremote_5ftest_42',['~Nexus_Remote_Test',['../class_nexus___remote___test.html#a022b70071c3a3871db87f6cb7a45615c',1,'Nexus_Remote_Test']]],
+  ['_7enexus_5ftest_43',['~Nexus_Test',['../class_nexus___test.html#ab052527da35d97d184f6cd5a476efd36',1,'Nexus_Test']]],
+  ['_7estreamhandler_44',['~StreamHandler',['../classutils_1_1_stream_handler.html#a9c2a94967e4afa1afe854878dac2c354',1,'utils::StreamHandler']]],
+  ['_7eunitshelper_5ftest_45',['~UnitsHelper_Test',['../class_units_helper___test.html#ac342c365275e4173691ab84e9b76b5a5',1,'UnitsHelper_Test']]]
 ];

@@ -13,5 +13,6 @@ var namespacenetwork =
       [ "TransposedDepthFirstPreorder", "namespacenetwork.html#adc2fe9c9362585aa39e89e4b76468f5aa30276136432af3e6fb237f23d309b4a7", null ]
     ] ],
     [ "df_preorder_sort", "namespacenetwork.html#aa65dee12e1de6f9b22afade4c9eb15a6", null ],
-    [ "df_preorder_sort", "namespacenetwork.html#ac985173c755f102cf1fb27d98c0144cd", null ]
+    [ "df_preorder_sort", "namespacenetwork.html#ac985173c755f102cf1fb27d98c0144cd", null ],
+    [ "DEFAULT_LAYER_ID", "namespacenetwork.html#aec41841634da2459fe57fe16a875d1fc", null ]
 ];

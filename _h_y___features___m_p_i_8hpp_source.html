@@ -98,90 +98,98 @@ $(document).ready(function(){initNavTree('_h_y___features___m_p_i_8hpp_source.ht
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#ifdef NGEN_MPI_ACTIVE</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;unordered_map&gt;</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;HY_Catchment.hpp&gt;</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;HY_PointHydroNexusRemote.hpp&gt;</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;network.hpp&gt;</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;Formulation_Manager.hpp&gt;</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;Partition_Parser.hpp&gt;</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacehy__features.html">hy_features</a> {</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    <span class="keyword">class </span>HY_Features_MPI {</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>      <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>      </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>      <span class="keyword">using </span>Formulation_Manager = <a class="code hl_class" href="classrealization_1_1_formulation___manager.html">realization::Formulation_Manager</a>;</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>      </div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        HY_Features_MPI(PartitionData partition_data, <a class="code hl_typedef" href="namespacegeojson.html#a0575056bcdcce0ccba81e6875591b702">geojson::GeoJSON</a> linked_hydro_fabric,</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>                        std::shared_ptr&lt;Formulation_Manager&gt; formulations, <span class="keywordtype">int</span> mpi_rank, <span class="keywordtype">int</span> mpi_num_procs);</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        std::shared_ptr&lt;HY_CatchmentRealization&gt; catchment_at(std::string <span class="keywordtype">id</span>) {</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>            <span class="keywordflow">return</span> (_catchments.find(<span class="keywordtype">id</span>) != _catchments.end()) ? _catchments[id]-&gt;realization : <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        }</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        <span class="keyword">inline</span> <span class="keyword">auto</span> catchments() {</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>            <span class="keywordflow">return</span> <a class="code hl_namespace" href="namespacenetwork.html">network</a>.filter(<span class="stringliteral">&quot;cat&quot;</span>);</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        }</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        <span class="keyword">inline</span> <span class="keywordtype">bool</span> is_remote_sender_nexus(<span class="keyword">const</span> std::string&amp; <span class="keywordtype">id</span>) {</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>            <span class="keywordflow">return</span> _nexuses.find(<span class="keywordtype">id</span>) != _nexuses.end() &amp;&amp; _nexuses[id]-&gt;is_remote_sender();</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        }</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        <span class="keyword">inline</span> std::vector&lt;std::shared_ptr&lt;HY_HydroNexus&gt;&gt; destination_nexuses(<span class="keyword">const</span> std::string&amp; <span class="keywordtype">id</span>) {</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>            std::vector&lt;std::shared_ptr&lt;HY_HydroNexus&gt;&gt; downstream;</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>            <span class="keywordflow">if</span> (_catchments.find(<span class="keywordtype">id</span>) != _catchments.end()) {</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>                <span class="keywordflow">for</span>(<span class="keyword">const</span> <span class="keyword">auto</span>&amp; nex_id : _catchments[<span class="keywordtype">id</span>]-&gt;get_outflow_nexuses()) {</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>                    downstream.push_back(_nexuses[nex_id]);</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>                }</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>            }</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>            <span class="keywordflow">return</span> downstream;</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        }</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        std::shared_ptr&lt;HY_HydroNexus&gt; nexus_at(<span class="keyword">const</span> std::string&amp; <span class="keywordtype">id</span>) {</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>            <span class="keywordflow">return</span> (_nexuses.find(<span class="keywordtype">id</span>) != _nexuses.end()) ? _nexuses[id] : <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        }</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        <span class="keyword">inline</span> <span class="keyword">auto</span> nexuses() {</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            <span class="keywordflow">return</span> <a class="code hl_namespace" href="namespacenetwork.html">network</a>.filter(<span class="stringliteral">&quot;nex&quot;</span>);</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        }</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        <span class="keywordtype">void</span> validate_dendritic() {</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>            <span class="keywordflow">for</span>(<span class="keyword">const</span> <span class="keyword">auto</span>&amp; <span class="keywordtype">id</span> : catchments()) {</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>                <span class="keyword">auto</span> downstream = <a class="code hl_namespace" href="namespacenetwork.html">network</a>.get_destination_ids(<span class="keywordtype">id</span>);</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>                <span class="keywordflow">if</span>(downstream.size() &gt; 1) {</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>                    std::cerr &lt;&lt; <span class="stringliteral">&quot;Catchment &quot;</span> &lt;&lt; <span class="keywordtype">id</span> &lt;&lt; <span class="stringliteral">&quot; has more than one downstream connection.&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>                    std::cerr &lt;&lt; <span class="stringliteral">&quot;Downstreams are: &quot;</span>;</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>                    <span class="keywordflow">for</span>(<span class="keyword">const</span> <span class="keyword">auto</span>&amp; <span class="keywordtype">id</span> : downstream){</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>                        std::cerr &lt;&lt;<span class="keywordtype">id</span>&lt;&lt;<span class="stringliteral">&quot; &quot;</span>;</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>                    }</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>                    std::cerr &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>                    assert( <span class="keyword">false</span> );</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>                }</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>                <span class="keywordflow">else</span> <span class="keywordflow">if</span> (downstream.size() == 0) {</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>                    std::cerr &lt;&lt; <span class="stringliteral">&quot;Catchment &quot;</span> &lt;&lt; <span class="keywordtype">id</span> &lt;&lt; <span class="stringliteral">&quot; has 0 downstream connections, must have 1.&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>                    assert( <span class="keyword">false</span> );</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>                }</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>            }</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>            std::cout&lt;&lt;<span class="stringliteral">&quot;Catchment topology is dendritic.&quot;</span>&lt;&lt;std::endl;</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        }</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>      <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>      </div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>      std::unordered_map&lt;std::string, std::shared_ptr&lt;HY_Catchment&gt;&gt; _catchments;</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>      std::unordered_map&lt;std::string, std::shared_ptr&lt;HY_PointHydroNexusRemote&gt;&gt; _nexuses;</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>      <a class="code hl_class" href="classnetwork_1_1_network.html">network::Network</a> <a class="code hl_namespace" href="namespacenetwork.html">network</a>;</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>      std::shared_ptr&lt;Formulation_Manager&gt; formulations;</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>      <span class="keywordtype">int</span> mpi_rank;</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>      <span class="keywordtype">int</span> mpi_num_procs;</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    };</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>} </div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span><span class="preprocessor">#endif </span><span class="comment">//NGEN_MPI_ACTIVE</span></div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span><span class="preprocessor">#endif </span><span class="comment">//HY_FEATURES_MPI_H</span></div>
-<div class="ttc" id="aclassnetwork_1_1_network_html"><div class="ttname"><a href="classnetwork_1_1_network.html">network::Network</a></div><div class="ttdoc">A lightweight, graph based index of hydrologic features.</div><div class="ttdef"><b>Definition:</b> network.hpp:141</div></div>
-<div class="ttc" id="aclassrealization_1_1_formulation___manager_html"><div class="ttname"><a href="classrealization_1_1_formulation___manager.html">realization::Formulation_Manager</a></div><div class="ttdef"><b>Definition:</b> Formulation_Manager.hpp:24</div></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;set&gt;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;HY_Catchment.hpp&gt;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;HY_PointHydroNexusRemote.hpp&gt;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;network.hpp&gt;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;Formulation_Manager.hpp&gt;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;Partition_Parser.hpp&gt;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacehy__features.html">hy_features</a> {</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    <span class="keyword">class </span>HY_Features_MPI {</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>      <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>      </div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>      <span class="keyword">using </span>Formulation_Manager = <a class="code hl_class" href="classrealization_1_1_formulation___manager.html">realization::Formulation_Manager</a>;</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>      </div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        HY_Features_MPI(PartitionData partition_data, <a class="code hl_typedef" href="namespacegeojson.html#a0575056bcdcce0ccba81e6875591b702">geojson::GeoJSON</a> linked_hydro_fabric,</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>                        std::shared_ptr&lt;Formulation_Manager&gt; formulations, <span class="keywordtype">int</span> mpi_rank, <span class="keywordtype">int</span> mpi_num_procs);</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>        std::shared_ptr&lt;HY_CatchmentRealization&gt; catchment_at(std::string <span class="keywordtype">id</span>) {</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>            <span class="keywordflow">return</span> (_catchments.find(<span class="keywordtype">id</span>) != _catchments.end()) ? _catchments[id]-&gt;realization : <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        }</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        <span class="keyword">inline</span> <span class="keyword">auto</span> catchments() {</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>            <span class="keywordflow">return</span> <a class="code hl_namespace" href="namespacenetwork.html">network</a>.filter(<span class="stringliteral">&quot;cat&quot;</span>);</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        }</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        <span class="keyword">inline</span> <span class="keywordtype">bool</span> is_remote_sender_nexus(<span class="keyword">const</span> std::string&amp; <span class="keywordtype">id</span>) {</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>            <span class="keywordflow">return</span> _nexuses.find(<span class="keywordtype">id</span>) != _nexuses.end() &amp;&amp; _nexuses[id]-&gt;is_remote_sender();</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        }</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        <span class="keyword">inline</span> <span class="keyword">auto</span> catchments(<span class="keywordtype">long</span> lyr) {</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>            <span class="keywordflow">return</span> <a class="code hl_namespace" href="namespacenetwork.html">network</a>.filter(<span class="stringliteral">&quot;cat&quot;</span>,lyr);</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        }</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        <span class="keyword">inline</span> <span class="keyword">const</span> <span class="keyword">auto</span>&amp; layers() { <span class="keywordflow">return</span> hf_layers; }</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        <span class="keyword">inline</span> std::vector&lt;std::shared_ptr&lt;HY_HydroNexus&gt;&gt; destination_nexuses(<span class="keyword">const</span> std::string&amp; <span class="keywordtype">id</span>) {</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>            std::vector&lt;std::shared_ptr&lt;HY_HydroNexus&gt;&gt; downstream;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>            <span class="keywordflow">if</span> (_catchments.find(<span class="keywordtype">id</span>) != _catchments.end()) {</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>                <span class="keywordflow">for</span>(<span class="keyword">const</span> <span class="keyword">auto</span>&amp; nex_id : _catchments[<span class="keywordtype">id</span>]-&gt;get_outflow_nexuses()) {</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>                    downstream.push_back(_nexuses[nex_id]);</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>                }</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>            }</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>            <span class="keywordflow">return</span> downstream;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        }</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        std::shared_ptr&lt;HY_HydroNexus&gt; nexus_at(<span class="keyword">const</span> std::string&amp; <span class="keywordtype">id</span>) {</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>            <span class="keywordflow">return</span> (_nexuses.find(<span class="keywordtype">id</span>) != _nexuses.end()) ? _nexuses[id] : <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        }</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        <span class="keyword">inline</span> <span class="keyword">auto</span> nexuses() {</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>            <span class="keywordflow">return</span> <a class="code hl_namespace" href="namespacenetwork.html">network</a>.filter(<span class="stringliteral">&quot;nex&quot;</span>);</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        }</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        <span class="keywordtype">void</span> validate_dendritic() {</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>            <span class="keywordflow">for</span>(<span class="keyword">const</span> <span class="keyword">auto</span>&amp; <span class="keywordtype">id</span> : catchments()) {</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>                <span class="keyword">auto</span> downstream = <a class="code hl_namespace" href="namespacenetwork.html">network</a>.get_destination_ids(<span class="keywordtype">id</span>);</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>                <span class="keywordflow">if</span>(downstream.size() &gt; 1) {</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>                    std::cerr &lt;&lt; <span class="stringliteral">&quot;Catchment &quot;</span> &lt;&lt; <span class="keywordtype">id</span> &lt;&lt; <span class="stringliteral">&quot; has more than one downstream connection.&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>                    std::cerr &lt;&lt; <span class="stringliteral">&quot;Downstreams are: &quot;</span>;</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>                    <span class="keywordflow">for</span>(<span class="keyword">const</span> <span class="keyword">auto</span>&amp; <span class="keywordtype">id</span> : downstream){</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>                        std::cerr &lt;&lt;<span class="keywordtype">id</span>&lt;&lt;<span class="stringliteral">&quot; &quot;</span>;</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>                    }</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>                    std::cerr &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>                    assert( <span class="keyword">false</span> );</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>                }</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>                <span class="keywordflow">else</span> <span class="keywordflow">if</span> (downstream.size() == 0) {</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>                    std::cerr &lt;&lt; <span class="stringliteral">&quot;Catchment &quot;</span> &lt;&lt; <span class="keywordtype">id</span> &lt;&lt; <span class="stringliteral">&quot; has 0 downstream connections, must have 1.&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>                    assert( <span class="keyword">false</span> );</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>                }</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>            }</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>            std::cout&lt;&lt;<span class="stringliteral">&quot;Catchment topology is dendritic.&quot;</span>&lt;&lt;std::endl;</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        }</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>      <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>      </div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>      std::unordered_map&lt;std::string, std::shared_ptr&lt;HY_Catchment&gt;&gt; _catchments;</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>      std::unordered_map&lt;std::string, std::shared_ptr&lt;HY_PointHydroNexusRemote&gt;&gt; _nexuses;</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>      <a class="code hl_class" href="classnetwork_1_1_network.html">network::Network</a> <a class="code hl_namespace" href="namespacenetwork.html">network</a>;</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>      std::shared_ptr&lt;Formulation_Manager&gt; formulations;</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>      std::set&lt;long&gt; hf_layers;</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>      <span class="keywordtype">int</span> mpi_rank;</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>      <span class="keywordtype">int</span> mpi_num_procs;</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span> </div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    };</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>} </div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="preprocessor">#endif </span><span class="comment">//NGEN_MPI_ACTIVE</span></div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span><span class="preprocessor">#endif </span><span class="comment">//HY_FEATURES_MPI_H</span></div>
+<div class="ttc" id="aclassnetwork_1_1_network_html"><div class="ttname"><a href="classnetwork_1_1_network.html">network::Network</a></div><div class="ttdoc">A lightweight, graph based index of hydrologic features.</div><div class="ttdef"><b>Definition:</b> network.hpp:144</div></div>
+<div class="ttc" id="aclassrealization_1_1_formulation___manager_html"><div class="ttname"><a href="classrealization_1_1_formulation___manager.html">realization::Formulation_Manager</a></div><div class="ttdef"><b>Definition:</b> Formulation_Manager.hpp:25</div></div>
 <div class="ttc" id="anamespacegeojson_html_a0575056bcdcce0ccba81e6875591b702"><div class="ttname"><a href="namespacegeojson.html#a0575056bcdcce0ccba81e6875591b702">geojson::GeoJSON</a></div><div class="ttdeci">std::shared_ptr&lt; FeatureCollection &gt; GeoJSON</div><div class="ttdoc">Easy short-hand for a smart pointer to a FeatureCollection.</div><div class="ttdef"><b>Definition:</b> FeatureBuilder.hpp:21</div></div>
-<div class="ttc" id="anamespacehy__features_html"><div class="ttname"><a href="namespacehy__features.html">hy_features</a></div><div class="ttdoc">HY_HydroLocation: class representing a hydrologic position.</div><div class="ttdef"><b>Definition:</b> HY_Features.hpp:11</div></div>
+<div class="ttc" id="anamespacehy__features_html"><div class="ttname"><a href="namespacehy__features.html">hy_features</a></div><div class="ttdoc">HY_HydroLocation: class representing a hydrologic position.</div><div class="ttdef"><b>Definition:</b> HY_Features.hpp:12</div></div>
 <div class="ttc" id="anamespacenetwork_html"><div class="ttname"><a href="namespacenetwork.html">network</a></div><div class="ttdef"><b>Definition:</b> network.hpp:20</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
@@ -189,7 +197,7 @@ $(document).ready(function(){initNavTree('_h_y___features___m_p_i_8hpp_source.ht
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_3d69f64eaf81436fe2b22361382717e5.html">core</a></li><li class="navelem"><b>HY_Features_MPI.hpp</b></li>
-    <li class="footer">Generated on Wed Sep 27 2023 16:21:50 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
+    <li class="footer">Generated on Thu Sep 28 2023 21:30:36 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
   </ul>
 </div>
 </body>

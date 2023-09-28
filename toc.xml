@@ -584,7 +584,8 @@
           <topic label="get_number_of_origination_features" href="classgeojson_1_1_collection_feature.html#a07a793b858d72f62d5bde068cc9d7cbe"/>
           <topic label="get_origination_feature" href="classgeojson_1_1_collection_feature.html#a07f9d5726c668a0b45a789ca333028ff"/>
           <topic label="get_origination_length" href="classgeojson_1_1_collection_feature.html#a6fe5ef06ba865510cbfc437377102f4d"/>
-          <topic label="get_properties" href="classgeojson_1_1_collection_feature.html#a81ae3cf3eac8a0100bd0fcd49dc75db9"/>
+          <topic label="get_properties" href="classgeojson_1_1_collection_feature.html#a4f0361c14f9323cdc0441bebabbc677b"/>
+          <topic label="get_properties" href="classgeojson_1_1_collection_feature.html#a96fcb48a0747b8f56d65d3d734464860"/>
           <topic label="get_property" href="classgeojson_1_1_collection_feature.html#a15ae69e7a5b7bb92995a3b52c8f2c51d"/>
           <topic label="get_type" href="classgeojson_1_1_collection_feature.html#a15e8c3693a636453b0af958337cb516f"/>
           <topic label="has_key" href="classgeojson_1_1_collection_feature.html#acc89312542c66882f982168c2ccec094"/>
@@ -657,7 +658,8 @@
           <topic label="get_number_of_origination_features" href="classgeojson_1_1_feature_base.html#a07a793b858d72f62d5bde068cc9d7cbe"/>
           <topic label="get_origination_feature" href="classgeojson_1_1_feature_base.html#a07f9d5726c668a0b45a789ca333028ff"/>
           <topic label="get_origination_length" href="classgeojson_1_1_feature_base.html#a6fe5ef06ba865510cbfc437377102f4d"/>
-          <topic label="get_properties" href="classgeojson_1_1_feature_base.html#a81ae3cf3eac8a0100bd0fcd49dc75db9"/>
+          <topic label="get_properties" href="classgeojson_1_1_feature_base.html#a4f0361c14f9323cdc0441bebabbc677b"/>
+          <topic label="get_properties" href="classgeojson_1_1_feature_base.html#a96fcb48a0747b8f56d65d3d734464860"/>
           <topic label="get_property" href="classgeojson_1_1_feature_base.html#a15ae69e7a5b7bb92995a3b52c8f2c51d"/>
           <topic label="get_type" href="classgeojson_1_1_feature_base.html#a15e8c3693a636453b0af958337cb516f"/>
           <topic label="has_key" href="classgeojson_1_1_feature_base.html#acc89312542c66882f982168c2ccec094"/>
@@ -813,7 +815,8 @@
           <topic label="get_number_of_origination_features" href="classgeojson_1_1_line_string_feature.html#a07a793b858d72f62d5bde068cc9d7cbe"/>
           <topic label="get_origination_feature" href="classgeojson_1_1_line_string_feature.html#a07f9d5726c668a0b45a789ca333028ff"/>
           <topic label="get_origination_length" href="classgeojson_1_1_line_string_feature.html#a6fe5ef06ba865510cbfc437377102f4d"/>
-          <topic label="get_properties" href="classgeojson_1_1_line_string_feature.html#a81ae3cf3eac8a0100bd0fcd49dc75db9"/>
+          <topic label="get_properties" href="classgeojson_1_1_line_string_feature.html#a4f0361c14f9323cdc0441bebabbc677b"/>
+          <topic label="get_properties" href="classgeojson_1_1_line_string_feature.html#a96fcb48a0747b8f56d65d3d734464860"/>
           <topic label="get_property" href="classgeojson_1_1_line_string_feature.html#a15ae69e7a5b7bb92995a3b52c8f2c51d"/>
           <topic label="get_type" href="classgeojson_1_1_line_string_feature.html#a15e8c3693a636453b0af958337cb516f"/>
           <topic label="has_key" href="classgeojson_1_1_line_string_feature.html#acc89312542c66882f982168c2ccec094"/>
@@ -881,7 +884,8 @@
           <topic label="get_number_of_origination_features" href="classgeojson_1_1_multi_line_string_feature.html#a07a793b858d72f62d5bde068cc9d7cbe"/>
           <topic label="get_origination_feature" href="classgeojson_1_1_multi_line_string_feature.html#a07f9d5726c668a0b45a789ca333028ff"/>
           <topic label="get_origination_length" href="classgeojson_1_1_multi_line_string_feature.html#a6fe5ef06ba865510cbfc437377102f4d"/>
-          <topic label="get_properties" href="classgeojson_1_1_multi_line_string_feature.html#a81ae3cf3eac8a0100bd0fcd49dc75db9"/>
+          <topic label="get_properties" href="classgeojson_1_1_multi_line_string_feature.html#a4f0361c14f9323cdc0441bebabbc677b"/>
+          <topic label="get_properties" href="classgeojson_1_1_multi_line_string_feature.html#a96fcb48a0747b8f56d65d3d734464860"/>
           <topic label="get_property" href="classgeojson_1_1_multi_line_string_feature.html#a15ae69e7a5b7bb92995a3b52c8f2c51d"/>
           <topic label="get_type" href="classgeojson_1_1_multi_line_string_feature.html#a15e8c3693a636453b0af958337cb516f"/>
           <topic label="has_key" href="classgeojson_1_1_multi_line_string_feature.html#acc89312542c66882f982168c2ccec094"/>
@@ -941,7 +945,8 @@
           <topic label="get_number_of_origination_features" href="classgeojson_1_1_multi_point_feature.html#a07a793b858d72f62d5bde068cc9d7cbe"/>
           <topic label="get_origination_feature" href="classgeojson_1_1_multi_point_feature.html#a07f9d5726c668a0b45a789ca333028ff"/>
           <topic label="get_origination_length" href="classgeojson_1_1_multi_point_feature.html#a6fe5ef06ba865510cbfc437377102f4d"/>
-          <topic label="get_properties" href="classgeojson_1_1_multi_point_feature.html#a81ae3cf3eac8a0100bd0fcd49dc75db9"/>
+          <topic label="get_properties" href="classgeojson_1_1_multi_point_feature.html#a4f0361c14f9323cdc0441bebabbc677b"/>
+          <topic label="get_properties" href="classgeojson_1_1_multi_point_feature.html#a96fcb48a0747b8f56d65d3d734464860"/>
           <topic label="get_property" href="classgeojson_1_1_multi_point_feature.html#a15ae69e7a5b7bb92995a3b52c8f2c51d"/>
           <topic label="get_type" href="classgeojson_1_1_multi_point_feature.html#a15e8c3693a636453b0af958337cb516f"/>
           <topic label="has_key" href="classgeojson_1_1_multi_point_feature.html#acc89312542c66882f982168c2ccec094"/>
@@ -1001,7 +1006,8 @@
           <topic label="get_number_of_origination_features" href="classgeojson_1_1_multi_polygon_feature.html#a07a793b858d72f62d5bde068cc9d7cbe"/>
           <topic label="get_origination_feature" href="classgeojson_1_1_multi_polygon_feature.html#a07f9d5726c668a0b45a789ca333028ff"/>
           <topic label="get_origination_length" href="classgeojson_1_1_multi_polygon_feature.html#a6fe5ef06ba865510cbfc437377102f4d"/>
-          <topic label="get_properties" href="classgeojson_1_1_multi_polygon_feature.html#a81ae3cf3eac8a0100bd0fcd49dc75db9"/>
+          <topic label="get_properties" href="classgeojson_1_1_multi_polygon_feature.html#a4f0361c14f9323cdc0441bebabbc677b"/>
+          <topic label="get_properties" href="classgeojson_1_1_multi_polygon_feature.html#a96fcb48a0747b8f56d65d3d734464860"/>
           <topic label="get_property" href="classgeojson_1_1_multi_polygon_feature.html#a15ae69e7a5b7bb92995a3b52c8f2c51d"/>
           <topic label="get_type" href="classgeojson_1_1_multi_polygon_feature.html#a15e8c3693a636453b0af958337cb516f"/>
           <topic label="has_key" href="classgeojson_1_1_multi_polygon_feature.html#acc89312542c66882f982168c2ccec094"/>
@@ -1067,7 +1073,8 @@
           <topic label="get_number_of_origination_features" href="classgeojson_1_1_point_feature.html#a07a793b858d72f62d5bde068cc9d7cbe"/>
           <topic label="get_origination_feature" href="classgeojson_1_1_point_feature.html#a07f9d5726c668a0b45a789ca333028ff"/>
           <topic label="get_origination_length" href="classgeojson_1_1_point_feature.html#a6fe5ef06ba865510cbfc437377102f4d"/>
-          <topic label="get_properties" href="classgeojson_1_1_point_feature.html#a81ae3cf3eac8a0100bd0fcd49dc75db9"/>
+          <topic label="get_properties" href="classgeojson_1_1_point_feature.html#a4f0361c14f9323cdc0441bebabbc677b"/>
+          <topic label="get_properties" href="classgeojson_1_1_point_feature.html#a96fcb48a0747b8f56d65d3d734464860"/>
           <topic label="get_property" href="classgeojson_1_1_point_feature.html#a15ae69e7a5b7bb92995a3b52c8f2c51d"/>
           <topic label="get_type" href="classgeojson_1_1_point_feature.html#a15e8c3693a636453b0af958337cb516f"/>
           <topic label="has_key" href="classgeojson_1_1_point_feature.html#acc89312542c66882f982168c2ccec094"/>
@@ -1126,7 +1133,8 @@
           <topic label="get_number_of_origination_features" href="classgeojson_1_1_polygon_feature.html#a07a793b858d72f62d5bde068cc9d7cbe"/>
           <topic label="get_origination_feature" href="classgeojson_1_1_polygon_feature.html#a07f9d5726c668a0b45a789ca333028ff"/>
           <topic label="get_origination_length" href="classgeojson_1_1_polygon_feature.html#a6fe5ef06ba865510cbfc437377102f4d"/>
-          <topic label="get_properties" href="classgeojson_1_1_polygon_feature.html#a81ae3cf3eac8a0100bd0fcd49dc75db9"/>
+          <topic label="get_properties" href="classgeojson_1_1_polygon_feature.html#a4f0361c14f9323cdc0441bebabbc677b"/>
+          <topic label="get_properties" href="classgeojson_1_1_polygon_feature.html#a96fcb48a0747b8f56d65d3d734464860"/>
           <topic label="get_property" href="classgeojson_1_1_polygon_feature.html#a15ae69e7a5b7bb92995a3b52c8f2c51d"/>
           <topic label="get_type" href="classgeojson_1_1_polygon_feature.html#a15e8c3693a636453b0af958337cb516f"/>
           <topic label="has_key" href="classgeojson_1_1_polygon_feature.html#acc89312542c66882f982168c2ccec094"/>
@@ -1382,18 +1390,22 @@
           <topic label="Formulation_Manager" href="classhy__features_1_1_h_y___features.html#ac44839f8580ff47c247053db1784ba30"/>
           <topic label="HY_Features" href="classhy__features_1_1_h_y___features.html#a5a5722f58f16b3070ef6a1c7d88dd86c"/>
           <topic label="HY_Features" href="classhy__features_1_1_h_y___features.html#a4c0d29b9328249f6c7f000ce1b2952c5"/>
-          <topic label="HY_Features" href="classhy__features_1_1_h_y___features.html#a65c99478a149c089ec4bffcc37af00ca"/>
           <topic label="HY_Features" href="classhy__features_1_1_h_y___features.html#ac29a4412391acbb1087f473c68943696"/>
           <topic label="~HY_Features" href="classhy__features_1_1_h_y___features.html#a33bf0ffa721a192dafbd209663e6f54b"/>
           <topic label="catchment_at" href="classhy__features_1_1_h_y___features.html#aad70a7ffe0b57fefeb8328c6b2fd8176"/>
           <topic label="catchments" href="classhy__features_1_1_h_y___features.html#af4f58bd66959ab0a06999ea5b14be0bd"/>
+          <topic label="catchments" href="classhy__features_1_1_h_y___features.html#ae0b25fe358115df54d8b5c44aa3eff4c"/>
           <topic label="destination_nexuses" href="classhy__features_1_1_h_y___features.html#a90cabae67b3e22e7d3801432154cb6e1"/>
+          <topic label="init" href="classhy__features_1_1_h_y___features.html#a7992738417dcf4fbd3400a4b03e1ce32"/>
+          <topic label="layers" href="classhy__features_1_1_h_y___features.html#a69eee85da3897aa0a7a72ba7fdd3a568"/>
           <topic label="nexus_at" href="classhy__features_1_1_h_y___features.html#a4c50d0530c6b158ba3f43bedb941a970"/>
           <topic label="nexuses" href="classhy__features_1_1_h_y___features.html#a133814bb22aa41a0ad1827cb68561037"/>
           <topic label="validate_dendritic" href="classhy__features_1_1_h_y___features.html#a3a28c4767f2f53b70d200148de764d9e"/>
           <topic label="_catchments" href="classhy__features_1_1_h_y___features.html#afc8c857297e0c07979d92c6a864544d1"/>
           <topic label="_nexuses" href="classhy__features_1_1_h_y___features.html#af4e9887f4d592bd84d9d68f027d5725a"/>
+          <topic label="fabric" href="classhy__features_1_1_h_y___features.html#a5f072e888010a37ed5e65f5049abbb82"/>
           <topic label="formulations" href="classhy__features_1_1_h_y___features.html#a44dc3f3c851960bb138e5ddca70c27d0"/>
+          <topic label="hf_layers" href="classhy__features_1_1_h_y___features.html#a069d7cad645e78c4f36d0b9e0956b866"/>
           <topic label="network" href="classhy__features_1_1_h_y___features.html#aa8443888e3fd904e3b737a752546f674"/>
         </topic>
       </topic>
@@ -1759,6 +1771,7 @@
           <topic label="~Network" href="classnetwork_1_1_network.html#ab967c379911182281978a165cc9d6ef5"/>
           <topic label="begin" href="classnetwork_1_1_network.html#a0e945e0b5426233adef95c520957b74c"/>
           <topic label="end" href="classnetwork_1_1_network.html#a1cc30eb92debc1a6ca752df2a33793b4"/>
+          <topic label="filter" href="classnetwork_1_1_network.html#a2b7a21aa2da35dfe4fe1785b4cb01f7a"/>
           <topic label="filter" href="classnetwork_1_1_network.html#a36b9c9b32d814a8b4f1eb689f92af0f3"/>
           <topic label="get_destination_ids" href="classnetwork_1_1_network.html#a620aa0b99a7574fdb19590a3e1df909a"/>
           <topic label="get_id" href="classnetwork_1_1_network.html#a1c14c00f48e05b57e9b0d4161acbc660"/>
@@ -1772,6 +1785,7 @@
           <topic label="descriptor_map" href="classnetwork_1_1_network.html#ad342876420b17b59c22dcd4081305648"/>
           <topic label="graph" href="classnetwork_1_1_network.html#a81433a0d0c450c400051ac4b894d8eb5"/>
           <topic label="headwaters_idx" href="classnetwork_1_1_network.html#a74d2c60846e092e42ec035e11afe527c"/>
+          <topic label="layer_map" href="classnetwork_1_1_network.html#a726c14833714551850ef9537cb64472f"/>
           <topic label="tailwaters_idx" href="classnetwork_1_1_network.html#ae62bcf26a0b422a6e7d73fc8ff2102a1"/>
           <topic label="tdfp_order" href="classnetwork_1_1_network.html#a04dbb9e0615fbb4db09d8c9fb4f68102"/>
           <topic label="topo_order" href="classnetwork_1_1_network.html#a17193c5c4eeebbcbe2eeda9879e22e83"/>
@@ -1796,6 +1810,7 @@
         </topic>
         <topic label="df_preorder_sort" href="namespacenetwork.html#aa65dee12e1de6f9b22afade4c9eb15a6"/>
         <topic label="df_preorder_sort" href="namespacenetwork.html#ac985173c755f102cf1fb27d98c0144cd"/>
+        <topic label="DEFAULT_LAYER_ID" href="namespacenetwork.html#aec41841634da2459fe57fe16a875d1fc"/>
       </topic>
       <topic label="nexus" href="namespacenexus.html">
         <topic label="Nexus_Manager" href="classnexus_1_1_nexus___manager.html">
@@ -1900,6 +1915,40 @@
           <topic label="is_convertible_to_any" href="namespacengen_1_1traits.html#a81e259575eb38d00047a60193f06cc6d"/>
           <topic label="is_same_to_any" href="namespacengen_1_1traits.html#a27a552792bb5e1225cfedd17f35f6b0f"/>
         </topic>
+        <topic label="Layer" href="classngen_1_1_layer.html">
+          <topic label="feature_type" href="classngen_1_1_layer.html#ad1ec52c5a456f72aa02e7a0c5d711449"/>
+          <topic label="Layer" href="classngen_1_1_layer.html#ad4b4ff9abec49c38db975cb1b90eebfb"/>
+          <topic label="~Layer" href="classngen_1_1_layer.html#a6b87eb0a469e378fb7750f53a4942ba5"/>
+          <topic label="current_timestep_epoch_time" href="classngen_1_1_layer.html#a178444ad250c0c8faaefa6c5263c618c"/>
+          <topic label="get_id" href="classngen_1_1_layer.html#acd4f99d80cbcac7f64c4b5211ba58f8c"/>
+          <topic label="get_name" href="classngen_1_1_layer.html#acda7ee56e91a6c395b9c25c74bf0494b"/>
+          <topic label="get_time_step" href="classngen_1_1_layer.html#a07242d4bd693ca8b32fa20134b5bc8e4"/>
+          <topic label="get_time_step_units" href="classngen_1_1_layer.html#a3cda46167a3ae4a09baf0ba36e01161b"/>
+          <topic label="next_timestep_epoch_time" href="classngen_1_1_layer.html#abd1389469be1b1bf1e39001edde2d14f"/>
+          <topic label="update_models" href="classngen_1_1_layer.html#ae9804d4feed2aaf37de65b077ee41aec"/>
+          <topic label="catchment_data" href="classngen_1_1_layer.html#a5689db4f3999584bea58d99aa9ff8b15"/>
+          <topic label="description" href="classngen_1_1_layer.html#a681d5a55c86a8d1f6d6f9f5fc57b6c63"/>
+          <topic label="features" href="classngen_1_1_layer.html#a2529e511bb8f0091ff321652988a3290"/>
+          <topic label="output_time_index" href="classngen_1_1_layer.html#a1d1dbf9050ac23f56ac06e9e3dffc176"/>
+          <topic label="processing_units" href="classngen_1_1_layer.html#a5cb15eea3711606ced64504aa3ea1749"/>
+          <topic label="simulation_time" href="classngen_1_1_layer.html#a96c3fed503f10d2b2f9ab00c229a5b91"/>
+        </topic>
+        <topic label="LayerDataStorage" href="classngen_1_1_layer_data_storage.html">
+          <topic label="LayerDataStorage" href="classngen_1_1_layer_data_storage.html#ad037c68b5860e58b38346673aa676ee7"/>
+          <topic label="~LayerDataStorage" href="classngen_1_1_layer_data_storage.html#aee9f22a1dce62147a2eb9404593f5e15"/>
+          <topic label="exists" href="classngen_1_1_layer_data_storage.html#af31a9edd9c64279fb37bedcb6734246c"/>
+          <topic label="get_keys" href="classngen_1_1_layer_data_storage.html#a193c2bef0ba5fa76ba11bac002457ef4"/>
+          <topic label="get_layer" href="classngen_1_1_layer_data_storage.html#a45b1ba10405a7c91988625f3ee704ecd"/>
+          <topic label="put_layer" href="classngen_1_1_layer_data_storage.html#abd30fa604b8e071d901b6aad7023baf8"/>
+          <topic label="keys" href="classngen_1_1_layer_data_storage.html#a8a998e2b3ad932a14d0e3effd4e49c93"/>
+          <topic label="stored_layers" href="classngen_1_1_layer_data_storage.html#a0f3324ac6b9d03817833b09f754bb351"/>
+        </topic>
+        <topic label="LayerDescription" href="structngen_1_1_layer_description.html">
+          <topic label="id" href="structngen_1_1_layer_description.html#ac2feee450a736e3b64bc466128eaa62a"/>
+          <topic label="name" href="structngen_1_1_layer_description.html#a8d632f5ca6bcbda986fde0f73105ba0e"/>
+          <topic label="time_step" href="structngen_1_1_layer_description.html#a8970be92be13b74d2c8362cb35f82df5"/>
+          <topic label="time_step_units" href="structngen_1_1_layer_description.html#a4ce3bc73676b15cc43b07c81277b48d6"/>
+        </topic>
         <topic label="mdarray" href="classngen_1_1mdarray.html">
           <topic label="iterator" href="structngen_1_1mdarray_1_1iterator.html">
             <topic label="const_reference" href="structngen_1_1mdarray_1_1iterator.html#ada2e663fbd764b7ec189c9ed52b09f96"/>
@@ -1972,6 +2021,25 @@
           <topic label="to_csv" href="classngen_1_1mdframe.html#ade3c60063140451b4b609319ed52fa23"/>
           <topic label="m_dimensions" href="classngen_1_1mdframe.html#ac164cdeb2a28669afa33ad1af2beeea5"/>
           <topic label="m_variables" href="classngen_1_1mdframe.html#a791692f9692232df311ad1bf01f797f3"/>
+        </topic>
+        <topic label="SurfaceLayer" href="classngen_1_1_surface_layer.html">
+          <topic label="feature_type" href="classngen_1_1_surface_layer.html#ad1ec52c5a456f72aa02e7a0c5d711449"/>
+          <topic label="SurfaceLayer" href="classngen_1_1_surface_layer.html#a42888ae2f83cbf8270c225cbda584f9b"/>
+          <topic label="current_timestep_epoch_time" href="classngen_1_1_surface_layer.html#a178444ad250c0c8faaefa6c5263c618c"/>
+          <topic label="get_id" href="classngen_1_1_surface_layer.html#acd4f99d80cbcac7f64c4b5211ba58f8c"/>
+          <topic label="get_name" href="classngen_1_1_surface_layer.html#acda7ee56e91a6c395b9c25c74bf0494b"/>
+          <topic label="get_time_step" href="classngen_1_1_surface_layer.html#a07242d4bd693ca8b32fa20134b5bc8e4"/>
+          <topic label="get_time_step_units" href="classngen_1_1_surface_layer.html#a3cda46167a3ae4a09baf0ba36e01161b"/>
+          <topic label="next_timestep_epoch_time" href="classngen_1_1_surface_layer.html#abd1389469be1b1bf1e39001edde2d14f"/>
+          <topic label="update_models" href="classngen_1_1_surface_layer.html#a6e1fa5b6f015bbb4d83170c5fe102857"/>
+          <topic label="catchment_data" href="classngen_1_1_surface_layer.html#a5689db4f3999584bea58d99aa9ff8b15"/>
+          <topic label="description" href="classngen_1_1_surface_layer.html#a681d5a55c86a8d1f6d6f9f5fc57b6c63"/>
+          <topic label="features" href="classngen_1_1_surface_layer.html#a2529e511bb8f0091ff321652988a3290"/>
+          <topic label="nexus_ids" href="classngen_1_1_surface_layer.html#a24c913d31621f15c52c05ceaeabd2d03"/>
+          <topic label="nexus_outfiles" href="classngen_1_1_surface_layer.html#aff45503ff2aba23f095884a6ab33b37e"/>
+          <topic label="output_time_index" href="classngen_1_1_surface_layer.html#a1d1dbf9050ac23f56ac06e9e3dffc176"/>
+          <topic label="processing_units" href="classngen_1_1_surface_layer.html#a5cb15eea3711606ced64504aa3ea1749"/>
+          <topic label="simulation_time" href="classngen_1_1_surface_layer.html#a96c3fed503f10d2b2f9ab00c229a5b91"/>
         </topic>
         <topic label="cartesian_indices" href="namespacengen.html#a2058d2d378fb0c46a66cbd95f49c4d6d"/>
         <topic label="cartesian_indices_recurse" href="namespacengen.html#ad51f53c85438741923d4d083365d6bbf"/>
@@ -2545,6 +2613,7 @@
           <topic label="end" href="classrealization_1_1_formulation___manager.html#a6c5749e590142378b02976f6802407bd"/>
           <topic label="get_forcing_params" href="classrealization_1_1_formulation___manager.html#ad08f6399a29ed66671b3dd1e6e2f7a39"/>
           <topic label="get_formulation" href="classrealization_1_1_formulation___manager.html#ab3188606a0077deba49fe03e0ae76c43"/>
+          <topic label="get_layer_metadata" href="classrealization_1_1_formulation___manager.html#ad0fc7e9108d8cd74963053d33986a6ce"/>
           <topic label="get_output_root" href="classrealization_1_1_formulation___manager.html#a1a2bb05d7eb2e2a815a05e0c049597bd"/>
           <topic label="get_size" href="classrealization_1_1_formulation___manager.html#a3d0b2db8f821d4b05502a04fa3f01870"/>
           <topic label="get_t_route_config_file_with_path" href="classrealization_1_1_formulation___manager.html#af98f0237deac6fe02782231b5ba41ea7"/>
@@ -2557,6 +2626,7 @@
           <topic label="global_forcing" href="classrealization_1_1_formulation___manager.html#aefede1cd4a4aa13bae4e8a8cb58968b1"/>
           <topic label="global_formulation_parameters" href="classrealization_1_1_formulation___manager.html#acd6121b421b707d9cd9459b330443c31"/>
           <topic label="global_formulation_tree" href="classrealization_1_1_formulation___manager.html#a3ce2f6a9516aeef300950576148f8334"/>
+          <topic label="layer_storage" href="classrealization_1_1_formulation___manager.html#a0b50baa59826712652d559531463eefe"/>
           <topic label="routing_config" href="classrealization_1_1_formulation___manager.html#afdd18d85d9a4231e62621be37074320a"/>
           <topic label="Simulation_Time_Object" href="classrealization_1_1_formulation___manager.html#a79ca23652bcd0704c02b1deec405d680"/>
           <topic label="tree" href="classrealization_1_1_formulation___manager.html#ae34d4f2d7d9bf211e5139eb2b8b09e39"/>
@@ -2921,7 +2991,8 @@
           <topic label="get_number_of_origination_features" href="classgeojson_1_1_collection_feature.html#a07a793b858d72f62d5bde068cc9d7cbe"/>
           <topic label="get_origination_feature" href="classgeojson_1_1_collection_feature.html#a07f9d5726c668a0b45a789ca333028ff"/>
           <topic label="get_origination_length" href="classgeojson_1_1_collection_feature.html#a6fe5ef06ba865510cbfc437377102f4d"/>
-          <topic label="get_properties" href="classgeojson_1_1_collection_feature.html#a81ae3cf3eac8a0100bd0fcd49dc75db9"/>
+          <topic label="get_properties" href="classgeojson_1_1_collection_feature.html#a4f0361c14f9323cdc0441bebabbc677b"/>
+          <topic label="get_properties" href="classgeojson_1_1_collection_feature.html#a96fcb48a0747b8f56d65d3d734464860"/>
           <topic label="get_property" href="classgeojson_1_1_collection_feature.html#a15ae69e7a5b7bb92995a3b52c8f2c51d"/>
           <topic label="get_type" href="classgeojson_1_1_collection_feature.html#a15e8c3693a636453b0af958337cb516f"/>
           <topic label="has_key" href="classgeojson_1_1_collection_feature.html#acc89312542c66882f982168c2ccec094"/>
@@ -2994,7 +3065,8 @@
           <topic label="get_number_of_origination_features" href="classgeojson_1_1_feature_base.html#a07a793b858d72f62d5bde068cc9d7cbe"/>
           <topic label="get_origination_feature" href="classgeojson_1_1_feature_base.html#a07f9d5726c668a0b45a789ca333028ff"/>
           <topic label="get_origination_length" href="classgeojson_1_1_feature_base.html#a6fe5ef06ba865510cbfc437377102f4d"/>
-          <topic label="get_properties" href="classgeojson_1_1_feature_base.html#a81ae3cf3eac8a0100bd0fcd49dc75db9"/>
+          <topic label="get_properties" href="classgeojson_1_1_feature_base.html#a4f0361c14f9323cdc0441bebabbc677b"/>
+          <topic label="get_properties" href="classgeojson_1_1_feature_base.html#a96fcb48a0747b8f56d65d3d734464860"/>
           <topic label="get_property" href="classgeojson_1_1_feature_base.html#a15ae69e7a5b7bb92995a3b52c8f2c51d"/>
           <topic label="get_type" href="classgeojson_1_1_feature_base.html#a15e8c3693a636453b0af958337cb516f"/>
           <topic label="has_key" href="classgeojson_1_1_feature_base.html#acc89312542c66882f982168c2ccec094"/>
@@ -3150,7 +3222,8 @@
           <topic label="get_number_of_origination_features" href="classgeojson_1_1_line_string_feature.html#a07a793b858d72f62d5bde068cc9d7cbe"/>
           <topic label="get_origination_feature" href="classgeojson_1_1_line_string_feature.html#a07f9d5726c668a0b45a789ca333028ff"/>
           <topic label="get_origination_length" href="classgeojson_1_1_line_string_feature.html#a6fe5ef06ba865510cbfc437377102f4d"/>
-          <topic label="get_properties" href="classgeojson_1_1_line_string_feature.html#a81ae3cf3eac8a0100bd0fcd49dc75db9"/>
+          <topic label="get_properties" href="classgeojson_1_1_line_string_feature.html#a4f0361c14f9323cdc0441bebabbc677b"/>
+          <topic label="get_properties" href="classgeojson_1_1_line_string_feature.html#a96fcb48a0747b8f56d65d3d734464860"/>
           <topic label="get_property" href="classgeojson_1_1_line_string_feature.html#a15ae69e7a5b7bb92995a3b52c8f2c51d"/>
           <topic label="get_type" href="classgeojson_1_1_line_string_feature.html#a15e8c3693a636453b0af958337cb516f"/>
           <topic label="has_key" href="classgeojson_1_1_line_string_feature.html#acc89312542c66882f982168c2ccec094"/>
@@ -3218,7 +3291,8 @@
           <topic label="get_number_of_origination_features" href="classgeojson_1_1_multi_line_string_feature.html#a07a793b858d72f62d5bde068cc9d7cbe"/>
           <topic label="get_origination_feature" href="classgeojson_1_1_multi_line_string_feature.html#a07f9d5726c668a0b45a789ca333028ff"/>
           <topic label="get_origination_length" href="classgeojson_1_1_multi_line_string_feature.html#a6fe5ef06ba865510cbfc437377102f4d"/>
-          <topic label="get_properties" href="classgeojson_1_1_multi_line_string_feature.html#a81ae3cf3eac8a0100bd0fcd49dc75db9"/>
+          <topic label="get_properties" href="classgeojson_1_1_multi_line_string_feature.html#a4f0361c14f9323cdc0441bebabbc677b"/>
+          <topic label="get_properties" href="classgeojson_1_1_multi_line_string_feature.html#a96fcb48a0747b8f56d65d3d734464860"/>
           <topic label="get_property" href="classgeojson_1_1_multi_line_string_feature.html#a15ae69e7a5b7bb92995a3b52c8f2c51d"/>
           <topic label="get_type" href="classgeojson_1_1_multi_line_string_feature.html#a15e8c3693a636453b0af958337cb516f"/>
           <topic label="has_key" href="classgeojson_1_1_multi_line_string_feature.html#acc89312542c66882f982168c2ccec094"/>
@@ -3278,7 +3352,8 @@
           <topic label="get_number_of_origination_features" href="classgeojson_1_1_multi_point_feature.html#a07a793b858d72f62d5bde068cc9d7cbe"/>
           <topic label="get_origination_feature" href="classgeojson_1_1_multi_point_feature.html#a07f9d5726c668a0b45a789ca333028ff"/>
           <topic label="get_origination_length" href="classgeojson_1_1_multi_point_feature.html#a6fe5ef06ba865510cbfc437377102f4d"/>
-          <topic label="get_properties" href="classgeojson_1_1_multi_point_feature.html#a81ae3cf3eac8a0100bd0fcd49dc75db9"/>
+          <topic label="get_properties" href="classgeojson_1_1_multi_point_feature.html#a4f0361c14f9323cdc0441bebabbc677b"/>
+          <topic label="get_properties" href="classgeojson_1_1_multi_point_feature.html#a96fcb48a0747b8f56d65d3d734464860"/>
           <topic label="get_property" href="classgeojson_1_1_multi_point_feature.html#a15ae69e7a5b7bb92995a3b52c8f2c51d"/>
           <topic label="get_type" href="classgeojson_1_1_multi_point_feature.html#a15e8c3693a636453b0af958337cb516f"/>
           <topic label="has_key" href="classgeojson_1_1_multi_point_feature.html#acc89312542c66882f982168c2ccec094"/>
@@ -3338,7 +3413,8 @@
           <topic label="get_number_of_origination_features" href="classgeojson_1_1_multi_polygon_feature.html#a07a793b858d72f62d5bde068cc9d7cbe"/>
           <topic label="get_origination_feature" href="classgeojson_1_1_multi_polygon_feature.html#a07f9d5726c668a0b45a789ca333028ff"/>
           <topic label="get_origination_length" href="classgeojson_1_1_multi_polygon_feature.html#a6fe5ef06ba865510cbfc437377102f4d"/>
-          <topic label="get_properties" href="classgeojson_1_1_multi_polygon_feature.html#a81ae3cf3eac8a0100bd0fcd49dc75db9"/>
+          <topic label="get_properties" href="classgeojson_1_1_multi_polygon_feature.html#a4f0361c14f9323cdc0441bebabbc677b"/>
+          <topic label="get_properties" href="classgeojson_1_1_multi_polygon_feature.html#a96fcb48a0747b8f56d65d3d734464860"/>
           <topic label="get_property" href="classgeojson_1_1_multi_polygon_feature.html#a15ae69e7a5b7bb92995a3b52c8f2c51d"/>
           <topic label="get_type" href="classgeojson_1_1_multi_polygon_feature.html#a15e8c3693a636453b0af958337cb516f"/>
           <topic label="has_key" href="classgeojson_1_1_multi_polygon_feature.html#acc89312542c66882f982168c2ccec094"/>
@@ -3404,7 +3480,8 @@
           <topic label="get_number_of_origination_features" href="classgeojson_1_1_point_feature.html#a07a793b858d72f62d5bde068cc9d7cbe"/>
           <topic label="get_origination_feature" href="classgeojson_1_1_point_feature.html#a07f9d5726c668a0b45a789ca333028ff"/>
           <topic label="get_origination_length" href="classgeojson_1_1_point_feature.html#a6fe5ef06ba865510cbfc437377102f4d"/>
-          <topic label="get_properties" href="classgeojson_1_1_point_feature.html#a81ae3cf3eac8a0100bd0fcd49dc75db9"/>
+          <topic label="get_properties" href="classgeojson_1_1_point_feature.html#a4f0361c14f9323cdc0441bebabbc677b"/>
+          <topic label="get_properties" href="classgeojson_1_1_point_feature.html#a96fcb48a0747b8f56d65d3d734464860"/>
           <topic label="get_property" href="classgeojson_1_1_point_feature.html#a15ae69e7a5b7bb92995a3b52c8f2c51d"/>
           <topic label="get_type" href="classgeojson_1_1_point_feature.html#a15e8c3693a636453b0af958337cb516f"/>
           <topic label="has_key" href="classgeojson_1_1_point_feature.html#acc89312542c66882f982168c2ccec094"/>
@@ -3463,7 +3540,8 @@
           <topic label="get_number_of_origination_features" href="classgeojson_1_1_polygon_feature.html#a07a793b858d72f62d5bde068cc9d7cbe"/>
           <topic label="get_origination_feature" href="classgeojson_1_1_polygon_feature.html#a07f9d5726c668a0b45a789ca333028ff"/>
           <topic label="get_origination_length" href="classgeojson_1_1_polygon_feature.html#a6fe5ef06ba865510cbfc437377102f4d"/>
-          <topic label="get_properties" href="classgeojson_1_1_polygon_feature.html#a81ae3cf3eac8a0100bd0fcd49dc75db9"/>
+          <topic label="get_properties" href="classgeojson_1_1_polygon_feature.html#a4f0361c14f9323cdc0441bebabbc677b"/>
+          <topic label="get_properties" href="classgeojson_1_1_polygon_feature.html#a96fcb48a0747b8f56d65d3d734464860"/>
           <topic label="get_property" href="classgeojson_1_1_polygon_feature.html#a15ae69e7a5b7bb92995a3b52c8f2c51d"/>
           <topic label="get_type" href="classgeojson_1_1_polygon_feature.html#a15e8c3693a636453b0af958337cb516f"/>
           <topic label="has_key" href="classgeojson_1_1_polygon_feature.html#acc89312542c66882f982168c2ccec094"/>
@@ -3613,18 +3691,22 @@
           <topic label="Formulation_Manager" href="classhy__features_1_1_h_y___features.html#ac44839f8580ff47c247053db1784ba30"/>
           <topic label="HY_Features" href="classhy__features_1_1_h_y___features.html#a5a5722f58f16b3070ef6a1c7d88dd86c"/>
           <topic label="HY_Features" href="classhy__features_1_1_h_y___features.html#a4c0d29b9328249f6c7f000ce1b2952c5"/>
-          <topic label="HY_Features" href="classhy__features_1_1_h_y___features.html#a65c99478a149c089ec4bffcc37af00ca"/>
           <topic label="HY_Features" href="classhy__features_1_1_h_y___features.html#ac29a4412391acbb1087f473c68943696"/>
           <topic label="~HY_Features" href="classhy__features_1_1_h_y___features.html#a33bf0ffa721a192dafbd209663e6f54b"/>
           <topic label="catchment_at" href="classhy__features_1_1_h_y___features.html#aad70a7ffe0b57fefeb8328c6b2fd8176"/>
           <topic label="catchments" href="classhy__features_1_1_h_y___features.html#af4f58bd66959ab0a06999ea5b14be0bd"/>
+          <topic label="catchments" href="classhy__features_1_1_h_y___features.html#ae0b25fe358115df54d8b5c44aa3eff4c"/>
           <topic label="destination_nexuses" href="classhy__features_1_1_h_y___features.html#a90cabae67b3e22e7d3801432154cb6e1"/>
+          <topic label="init" href="classhy__features_1_1_h_y___features.html#a7992738417dcf4fbd3400a4b03e1ce32"/>
+          <topic label="layers" href="classhy__features_1_1_h_y___features.html#a69eee85da3897aa0a7a72ba7fdd3a568"/>
           <topic label="nexus_at" href="classhy__features_1_1_h_y___features.html#a4c50d0530c6b158ba3f43bedb941a970"/>
           <topic label="nexuses" href="classhy__features_1_1_h_y___features.html#a133814bb22aa41a0ad1827cb68561037"/>
           <topic label="validate_dendritic" href="classhy__features_1_1_h_y___features.html#a3a28c4767f2f53b70d200148de764d9e"/>
           <topic label="_catchments" href="classhy__features_1_1_h_y___features.html#afc8c857297e0c07979d92c6a864544d1"/>
           <topic label="_nexuses" href="classhy__features_1_1_h_y___features.html#af4e9887f4d592bd84d9d68f027d5725a"/>
+          <topic label="fabric" href="classhy__features_1_1_h_y___features.html#a5f072e888010a37ed5e65f5049abbb82"/>
           <topic label="formulations" href="classhy__features_1_1_h_y___features.html#a44dc3f3c851960bb138e5ddca70c27d0"/>
+          <topic label="hf_layers" href="classhy__features_1_1_h_y___features.html#a069d7cad645e78c4f36d0b9e0956b866"/>
           <topic label="network" href="classhy__features_1_1_h_y___features.html#aa8443888e3fd904e3b737a752546f674"/>
         </topic>
       </topic>
@@ -3979,6 +4061,7 @@
           <topic label="~Network" href="classnetwork_1_1_network.html#ab967c379911182281978a165cc9d6ef5"/>
           <topic label="begin" href="classnetwork_1_1_network.html#a0e945e0b5426233adef95c520957b74c"/>
           <topic label="end" href="classnetwork_1_1_network.html#a1cc30eb92debc1a6ca752df2a33793b4"/>
+          <topic label="filter" href="classnetwork_1_1_network.html#a2b7a21aa2da35dfe4fe1785b4cb01f7a"/>
           <topic label="filter" href="classnetwork_1_1_network.html#a36b9c9b32d814a8b4f1eb689f92af0f3"/>
           <topic label="get_destination_ids" href="classnetwork_1_1_network.html#a620aa0b99a7574fdb19590a3e1df909a"/>
           <topic label="get_id" href="classnetwork_1_1_network.html#a1c14c00f48e05b57e9b0d4161acbc660"/>
@@ -3992,6 +4075,7 @@
           <topic label="descriptor_map" href="classnetwork_1_1_network.html#ad342876420b17b59c22dcd4081305648"/>
           <topic label="graph" href="classnetwork_1_1_network.html#a81433a0d0c450c400051ac4b894d8eb5"/>
           <topic label="headwaters_idx" href="classnetwork_1_1_network.html#a74d2c60846e092e42ec035e11afe527c"/>
+          <topic label="layer_map" href="classnetwork_1_1_network.html#a726c14833714551850ef9537cb64472f"/>
           <topic label="tailwaters_idx" href="classnetwork_1_1_network.html#ae62bcf26a0b422a6e7d73fc8ff2102a1"/>
           <topic label="tdfp_order" href="classnetwork_1_1_network.html#a04dbb9e0615fbb4db09d8c9fb4f68102"/>
           <topic label="topo_order" href="classnetwork_1_1_network.html#a17193c5c4eeebbcbe2eeda9879e22e83"/>
@@ -4102,6 +4186,40 @@
             <topic label="variant_scalar" href="structngen_1_1traits_1_1type__list.html#a3ab33dc8cba769ab4ade2357b3f17429"/>
           </topic>
         </topic>
+        <topic label="Layer" href="classngen_1_1_layer.html">
+          <topic label="feature_type" href="classngen_1_1_layer.html#ad1ec52c5a456f72aa02e7a0c5d711449"/>
+          <topic label="Layer" href="classngen_1_1_layer.html#ad4b4ff9abec49c38db975cb1b90eebfb"/>
+          <topic label="~Layer" href="classngen_1_1_layer.html#a6b87eb0a469e378fb7750f53a4942ba5"/>
+          <topic label="current_timestep_epoch_time" href="classngen_1_1_layer.html#a178444ad250c0c8faaefa6c5263c618c"/>
+          <topic label="get_id" href="classngen_1_1_layer.html#acd4f99d80cbcac7f64c4b5211ba58f8c"/>
+          <topic label="get_name" href="classngen_1_1_layer.html#acda7ee56e91a6c395b9c25c74bf0494b"/>
+          <topic label="get_time_step" href="classngen_1_1_layer.html#a07242d4bd693ca8b32fa20134b5bc8e4"/>
+          <topic label="get_time_step_units" href="classngen_1_1_layer.html#a3cda46167a3ae4a09baf0ba36e01161b"/>
+          <topic label="next_timestep_epoch_time" href="classngen_1_1_layer.html#abd1389469be1b1bf1e39001edde2d14f"/>
+          <topic label="update_models" href="classngen_1_1_layer.html#ae9804d4feed2aaf37de65b077ee41aec"/>
+          <topic label="catchment_data" href="classngen_1_1_layer.html#a5689db4f3999584bea58d99aa9ff8b15"/>
+          <topic label="description" href="classngen_1_1_layer.html#a681d5a55c86a8d1f6d6f9f5fc57b6c63"/>
+          <topic label="features" href="classngen_1_1_layer.html#a2529e511bb8f0091ff321652988a3290"/>
+          <topic label="output_time_index" href="classngen_1_1_layer.html#a1d1dbf9050ac23f56ac06e9e3dffc176"/>
+          <topic label="processing_units" href="classngen_1_1_layer.html#a5cb15eea3711606ced64504aa3ea1749"/>
+          <topic label="simulation_time" href="classngen_1_1_layer.html#a96c3fed503f10d2b2f9ab00c229a5b91"/>
+        </topic>
+        <topic label="LayerDataStorage" href="classngen_1_1_layer_data_storage.html">
+          <topic label="LayerDataStorage" href="classngen_1_1_layer_data_storage.html#ad037c68b5860e58b38346673aa676ee7"/>
+          <topic label="~LayerDataStorage" href="classngen_1_1_layer_data_storage.html#aee9f22a1dce62147a2eb9404593f5e15"/>
+          <topic label="exists" href="classngen_1_1_layer_data_storage.html#af31a9edd9c64279fb37bedcb6734246c"/>
+          <topic label="get_keys" href="classngen_1_1_layer_data_storage.html#a193c2bef0ba5fa76ba11bac002457ef4"/>
+          <topic label="get_layer" href="classngen_1_1_layer_data_storage.html#a45b1ba10405a7c91988625f3ee704ecd"/>
+          <topic label="put_layer" href="classngen_1_1_layer_data_storage.html#abd30fa604b8e071d901b6aad7023baf8"/>
+          <topic label="keys" href="classngen_1_1_layer_data_storage.html#a8a998e2b3ad932a14d0e3effd4e49c93"/>
+          <topic label="stored_layers" href="classngen_1_1_layer_data_storage.html#a0f3324ac6b9d03817833b09f754bb351"/>
+        </topic>
+        <topic label="LayerDescription" href="structngen_1_1_layer_description.html">
+          <topic label="id" href="structngen_1_1_layer_description.html#ac2feee450a736e3b64bc466128eaa62a"/>
+          <topic label="name" href="structngen_1_1_layer_description.html#a8d632f5ca6bcbda986fde0f73105ba0e"/>
+          <topic label="time_step" href="structngen_1_1_layer_description.html#a8970be92be13b74d2c8362cb35f82df5"/>
+          <topic label="time_step_units" href="structngen_1_1_layer_description.html#a4ce3bc73676b15cc43b07c81277b48d6"/>
+        </topic>
         <topic label="mdarray" href="classngen_1_1mdarray.html">
           <topic label="iterator" href="structngen_1_1mdarray_1_1iterator.html">
             <topic label="const_reference" href="structngen_1_1mdarray_1_1iterator.html#ada2e663fbd764b7ec189c9ed52b09f96"/>
@@ -4174,6 +4292,25 @@
           <topic label="to_csv" href="classngen_1_1mdframe.html#ade3c60063140451b4b609319ed52fa23"/>
           <topic label="m_dimensions" href="classngen_1_1mdframe.html#ac164cdeb2a28669afa33ad1af2beeea5"/>
           <topic label="m_variables" href="classngen_1_1mdframe.html#a791692f9692232df311ad1bf01f797f3"/>
+        </topic>
+        <topic label="SurfaceLayer" href="classngen_1_1_surface_layer.html">
+          <topic label="feature_type" href="classngen_1_1_surface_layer.html#ad1ec52c5a456f72aa02e7a0c5d711449"/>
+          <topic label="SurfaceLayer" href="classngen_1_1_surface_layer.html#a42888ae2f83cbf8270c225cbda584f9b"/>
+          <topic label="current_timestep_epoch_time" href="classngen_1_1_surface_layer.html#a178444ad250c0c8faaefa6c5263c618c"/>
+          <topic label="get_id" href="classngen_1_1_surface_layer.html#acd4f99d80cbcac7f64c4b5211ba58f8c"/>
+          <topic label="get_name" href="classngen_1_1_surface_layer.html#acda7ee56e91a6c395b9c25c74bf0494b"/>
+          <topic label="get_time_step" href="classngen_1_1_surface_layer.html#a07242d4bd693ca8b32fa20134b5bc8e4"/>
+          <topic label="get_time_step_units" href="classngen_1_1_surface_layer.html#a3cda46167a3ae4a09baf0ba36e01161b"/>
+          <topic label="next_timestep_epoch_time" href="classngen_1_1_surface_layer.html#abd1389469be1b1bf1e39001edde2d14f"/>
+          <topic label="update_models" href="classngen_1_1_surface_layer.html#a6e1fa5b6f015bbb4d83170c5fe102857"/>
+          <topic label="catchment_data" href="classngen_1_1_surface_layer.html#a5689db4f3999584bea58d99aa9ff8b15"/>
+          <topic label="description" href="classngen_1_1_surface_layer.html#a681d5a55c86a8d1f6d6f9f5fc57b6c63"/>
+          <topic label="features" href="classngen_1_1_surface_layer.html#a2529e511bb8f0091ff321652988a3290"/>
+          <topic label="nexus_ids" href="classngen_1_1_surface_layer.html#a24c913d31621f15c52c05ceaeabd2d03"/>
+          <topic label="nexus_outfiles" href="classngen_1_1_surface_layer.html#aff45503ff2aba23f095884a6ab33b37e"/>
+          <topic label="output_time_index" href="classngen_1_1_surface_layer.html#a1d1dbf9050ac23f56ac06e9e3dffc176"/>
+          <topic label="processing_units" href="classngen_1_1_surface_layer.html#a5cb15eea3711606ced64504aa3ea1749"/>
+          <topic label="simulation_time" href="classngen_1_1_surface_layer.html#a96c3fed503f10d2b2f9ab00c229a5b91"/>
         </topic>
       </topic>
       <topic label="realization" href="namespacerealization.html">
@@ -4745,6 +4882,7 @@
           <topic label="end" href="classrealization_1_1_formulation___manager.html#a6c5749e590142378b02976f6802407bd"/>
           <topic label="get_forcing_params" href="classrealization_1_1_formulation___manager.html#ad08f6399a29ed66671b3dd1e6e2f7a39"/>
           <topic label="get_formulation" href="classrealization_1_1_formulation___manager.html#ab3188606a0077deba49fe03e0ae76c43"/>
+          <topic label="get_layer_metadata" href="classrealization_1_1_formulation___manager.html#ad0fc7e9108d8cd74963053d33986a6ce"/>
           <topic label="get_output_root" href="classrealization_1_1_formulation___manager.html#a1a2bb05d7eb2e2a815a05e0c049597bd"/>
           <topic label="get_size" href="classrealization_1_1_formulation___manager.html#a3d0b2db8f821d4b05502a04fa3f01870"/>
           <topic label="get_t_route_config_file_with_path" href="classrealization_1_1_formulation___manager.html#af98f0237deac6fe02782231b5ba41ea7"/>
@@ -4757,6 +4895,7 @@
           <topic label="global_forcing" href="classrealization_1_1_formulation___manager.html#aefede1cd4a4aa13bae4e8a8cb58968b1"/>
           <topic label="global_formulation_parameters" href="classrealization_1_1_formulation___manager.html#acd6121b421b707d9cd9459b330443c31"/>
           <topic label="global_formulation_tree" href="classrealization_1_1_formulation___manager.html#a3ce2f6a9516aeef300950576148f8334"/>
+          <topic label="layer_storage" href="classrealization_1_1_formulation___manager.html#a0b50baa59826712652d559531463eefe"/>
           <topic label="routing_config" href="classrealization_1_1_formulation___manager.html#afdd18d85d9a4231e62621be37074320a"/>
           <topic label="Simulation_Time_Object" href="classrealization_1_1_formulation___manager.html#a79ca23652bcd0704c02b1deec405d680"/>
           <topic label="tree" href="classrealization_1_1_formulation___manager.html#ae34d4f2d7d9bf211e5139eb2b8b09e39"/>
@@ -4993,17 +5132,27 @@
         <topic label="Nexus" href="class_h_y___catchment.html#aac73f82bb962d6234ee2f4d34a0ca279"/>
         <topic label="Nexuses" href="class_h_y___catchment.html#a287e2db7317f88a8ba389ebb12dd3c7f"/>
         <topic label="HY_Catchment" href="class_h_y___catchment.html#ae07739618a32c15b30a16c773827e200"/>
-        <topic label="HY_Catchment" href="class_h_y___catchment.html#add4a0af41919fe60648cfd17d5ed42ee"/>
+        <topic label="HY_Catchment" href="class_h_y___catchment.html#ae9871125bec28e89259d0fa7cb11e8ff"/>
         <topic label="~HY_Catchment" href="class_h_y___catchment.html#a63003e4b1530d83abb38c788c195b935"/>
+        <topic label="get_layer" href="class_h_y___catchment.html#ae49af53a679415965205212a447bec1a"/>
         <topic label="get_outflow_nexuses" href="class_h_y___catchment.html#ad9001b2546e79b586c9e368681ef038a"/>
+        <topic label="set_layer" href="class_h_y___catchment.html#adac39dc3089551c50f3737cb16e6c031"/>
+        <topic label="ATMOSPHERIC_LAYER_HIGH" href="class_h_y___catchment.html#ae7c6633ea379cc6daed8a14dc7164ef0"/>
+        <topic label="ATMOSPHERIC_Layer_LOW" href="class_h_y___catchment.html#a9b443b9306c4f78f436f26e154507963"/>
+        <topic label="CANOPY_LAYER" href="class_h_y___catchment.html#a74d59cfc7b5231d26ef07e09f5aff0c8"/>
         <topic label="conjoint_catchment" href="class_h_y___catchment.html#a079a0321d5069bb15c26c689b5e7ac8c"/>
         <topic label="contained_catchments" href="class_h_y___catchment.html#a4dd4f1031bac54385a3755f60d5b6f87"/>
         <topic label="containing_catchment" href="class_h_y___catchment.html#ab468ea39a19ade8d47b2eb7ca42f3a1e"/>
+        <topic label="GROUND_WATER_DEEP_LAYER" href="class_h_y___catchment.html#aad15ceff27c27396918e8c528f185512"/>
+        <topic label="GROUND_WATER_SHALLOW_LAYER" href="class_h_y___catchment.html#aaa625493796d8cf9079ab2fb98554c07"/>
         <topic label="id" href="class_h_y___catchment.html#a1beb02e996ce5716c30183ab8974fde0"/>
         <topic label="inflows" href="class_h_y___catchment.html#a3a03fa4da4dd40512e8893f945809e0b"/>
+        <topic label="layer" href="class_h_y___catchment.html#aac271547db8cb616aa311607e9c84a00"/>
         <topic label="lower_catchment" href="class_h_y___catchment.html#ac6c37362d4f55aed074b02a0ae6d8a3d"/>
         <topic label="outflows" href="class_h_y___catchment.html#a3b336576b1ce5f7257ea308095feec6b"/>
         <topic label="realization" href="class_h_y___catchment.html#afda183ae0332e0e5085df269a9970474"/>
+        <topic label="SNOW_LAYER" href="class_h_y___catchment.html#ac432e32dfe9b7f402d6186da75762153"/>
+        <topic label="SURFACE_LAYER" href="class_h_y___catchment.html#a55f00d5e5a6283c0051e73079335eaf8"/>
         <topic label="upper_catchment" href="class_h_y___catchment.html#a8420468ac27e8ac940b80ff330683df3"/>
       </topic>
       <topic label="HY_CatchmentAggregate" href="class_h_y___catchment_aggregate.html">
@@ -5013,15 +5162,25 @@
         <topic label="Nexuses" href="class_h_y___catchment_aggregate.html#a287e2db7317f88a8ba389ebb12dd3c7f"/>
         <topic label="HY_CatchmentAggregate" href="class_h_y___catchment_aggregate.html#a88a1c7b7ba002885e0a52282392ff540"/>
         <topic label="~HY_CatchmentAggregate" href="class_h_y___catchment_aggregate.html#ac341546797566a32d5e86d9492eb208e"/>
+        <topic label="get_layer" href="class_h_y___catchment_aggregate.html#ae49af53a679415965205212a447bec1a"/>
         <topic label="get_outflow_nexuses" href="class_h_y___catchment_aggregate.html#ad9001b2546e79b586c9e368681ef038a"/>
+        <topic label="set_layer" href="class_h_y___catchment_aggregate.html#adac39dc3089551c50f3737cb16e6c031"/>
+        <topic label="ATMOSPHERIC_LAYER_HIGH" href="class_h_y___catchment_aggregate.html#ae7c6633ea379cc6daed8a14dc7164ef0"/>
+        <topic label="ATMOSPHERIC_Layer_LOW" href="class_h_y___catchment_aggregate.html#a9b443b9306c4f78f436f26e154507963"/>
+        <topic label="CANOPY_LAYER" href="class_h_y___catchment_aggregate.html#a74d59cfc7b5231d26ef07e09f5aff0c8"/>
         <topic label="conjoint_catchment" href="class_h_y___catchment_aggregate.html#a079a0321d5069bb15c26c689b5e7ac8c"/>
         <topic label="contained_catchments" href="class_h_y___catchment_aggregate.html#a4dd4f1031bac54385a3755f60d5b6f87"/>
         <topic label="containing_catchment" href="class_h_y___catchment_aggregate.html#ab468ea39a19ade8d47b2eb7ca42f3a1e"/>
+        <topic label="GROUND_WATER_DEEP_LAYER" href="class_h_y___catchment_aggregate.html#aad15ceff27c27396918e8c528f185512"/>
+        <topic label="GROUND_WATER_SHALLOW_LAYER" href="class_h_y___catchment_aggregate.html#aaa625493796d8cf9079ab2fb98554c07"/>
         <topic label="id" href="class_h_y___catchment_aggregate.html#a1beb02e996ce5716c30183ab8974fde0"/>
         <topic label="inflows" href="class_h_y___catchment_aggregate.html#a3a03fa4da4dd40512e8893f945809e0b"/>
+        <topic label="layer" href="class_h_y___catchment_aggregate.html#aac271547db8cb616aa311607e9c84a00"/>
         <topic label="lower_catchment" href="class_h_y___catchment_aggregate.html#ac6c37362d4f55aed074b02a0ae6d8a3d"/>
         <topic label="outflows" href="class_h_y___catchment_aggregate.html#a3b336576b1ce5f7257ea308095feec6b"/>
         <topic label="realization" href="class_h_y___catchment_aggregate.html#afda183ae0332e0e5085df269a9970474"/>
+        <topic label="SNOW_LAYER" href="class_h_y___catchment_aggregate.html#ac432e32dfe9b7f402d6186da75762153"/>
+        <topic label="SURFACE_LAYER" href="class_h_y___catchment_aggregate.html#a55f00d5e5a6283c0051e73079335eaf8"/>
         <topic label="upper_catchment" href="class_h_y___catchment_aggregate.html#a8420468ac27e8ac940b80ff330683df3"/>
       </topic>
       <topic label="HY_CatchmentArea" href="class_h_y___catchment_area.html">
@@ -5071,15 +5230,25 @@
         <topic label="Nexuses" href="class_h_y___dendritic_catchment.html#a287e2db7317f88a8ba389ebb12dd3c7f"/>
         <topic label="HY_DendriticCatchment" href="class_h_y___dendritic_catchment.html#aac4ec095a8f5433284b96702a5c7fc12"/>
         <topic label="~HY_DendriticCatchment" href="class_h_y___dendritic_catchment.html#acbce96fad79082db76fd63d3a58ff2c3"/>
+        <topic label="get_layer" href="class_h_y___dendritic_catchment.html#ae49af53a679415965205212a447bec1a"/>
         <topic label="get_outflow_nexuses" href="class_h_y___dendritic_catchment.html#ad9001b2546e79b586c9e368681ef038a"/>
+        <topic label="set_layer" href="class_h_y___dendritic_catchment.html#adac39dc3089551c50f3737cb16e6c031"/>
+        <topic label="ATMOSPHERIC_LAYER_HIGH" href="class_h_y___dendritic_catchment.html#ae7c6633ea379cc6daed8a14dc7164ef0"/>
+        <topic label="ATMOSPHERIC_Layer_LOW" href="class_h_y___dendritic_catchment.html#a9b443b9306c4f78f436f26e154507963"/>
+        <topic label="CANOPY_LAYER" href="class_h_y___dendritic_catchment.html#a74d59cfc7b5231d26ef07e09f5aff0c8"/>
         <topic label="conjoint_catchment" href="class_h_y___dendritic_catchment.html#a079a0321d5069bb15c26c689b5e7ac8c"/>
         <topic label="contained_catchments" href="class_h_y___dendritic_catchment.html#a4dd4f1031bac54385a3755f60d5b6f87"/>
         <topic label="containing_catchment" href="class_h_y___dendritic_catchment.html#ab468ea39a19ade8d47b2eb7ca42f3a1e"/>
+        <topic label="GROUND_WATER_DEEP_LAYER" href="class_h_y___dendritic_catchment.html#aad15ceff27c27396918e8c528f185512"/>
+        <topic label="GROUND_WATER_SHALLOW_LAYER" href="class_h_y___dendritic_catchment.html#aaa625493796d8cf9079ab2fb98554c07"/>
         <topic label="id" href="class_h_y___dendritic_catchment.html#a1beb02e996ce5716c30183ab8974fde0"/>
         <topic label="inflows" href="class_h_y___dendritic_catchment.html#a3a03fa4da4dd40512e8893f945809e0b"/>
+        <topic label="layer" href="class_h_y___dendritic_catchment.html#aac271547db8cb616aa311607e9c84a00"/>
         <topic label="lower_catchment" href="class_h_y___dendritic_catchment.html#ac6c37362d4f55aed074b02a0ae6d8a3d"/>
         <topic label="outflows" href="class_h_y___dendritic_catchment.html#a3b336576b1ce5f7257ea308095feec6b"/>
         <topic label="realization" href="class_h_y___dendritic_catchment.html#afda183ae0332e0e5085df269a9970474"/>
+        <topic label="SNOW_LAYER" href="class_h_y___dendritic_catchment.html#ac432e32dfe9b7f402d6186da75762153"/>
+        <topic label="SURFACE_LAYER" href="class_h_y___dendritic_catchment.html#a55f00d5e5a6283c0051e73079335eaf8"/>
         <topic label="upper_catchment" href="class_h_y___dendritic_catchment.html#a8420468ac27e8ac940b80ff330683df3"/>
       </topic>
       <topic label="HY_FlowPath" href="class_h_y___flow_path.html">
@@ -5142,15 +5311,25 @@
         <topic label="Nexuses" href="class_h_y___interior_catchment.html#a287e2db7317f88a8ba389ebb12dd3c7f"/>
         <topic label="HY_InteriorCatchment" href="class_h_y___interior_catchment.html#a3311e82e9eaed373c2fed90d2f85bcdf"/>
         <topic label="~HY_InteriorCatchment" href="class_h_y___interior_catchment.html#aa79342b39ab40730f0a3773144b7b235"/>
+        <topic label="get_layer" href="class_h_y___interior_catchment.html#ae49af53a679415965205212a447bec1a"/>
         <topic label="get_outflow_nexuses" href="class_h_y___interior_catchment.html#ad9001b2546e79b586c9e368681ef038a"/>
+        <topic label="set_layer" href="class_h_y___interior_catchment.html#adac39dc3089551c50f3737cb16e6c031"/>
+        <topic label="ATMOSPHERIC_LAYER_HIGH" href="class_h_y___interior_catchment.html#ae7c6633ea379cc6daed8a14dc7164ef0"/>
+        <topic label="ATMOSPHERIC_Layer_LOW" href="class_h_y___interior_catchment.html#a9b443b9306c4f78f436f26e154507963"/>
+        <topic label="CANOPY_LAYER" href="class_h_y___interior_catchment.html#a74d59cfc7b5231d26ef07e09f5aff0c8"/>
         <topic label="conjoint_catchment" href="class_h_y___interior_catchment.html#a079a0321d5069bb15c26c689b5e7ac8c"/>
         <topic label="contained_catchments" href="class_h_y___interior_catchment.html#a4dd4f1031bac54385a3755f60d5b6f87"/>
         <topic label="containing_catchment" href="class_h_y___interior_catchment.html#ab468ea39a19ade8d47b2eb7ca42f3a1e"/>
+        <topic label="GROUND_WATER_DEEP_LAYER" href="class_h_y___interior_catchment.html#aad15ceff27c27396918e8c528f185512"/>
+        <topic label="GROUND_WATER_SHALLOW_LAYER" href="class_h_y___interior_catchment.html#aaa625493796d8cf9079ab2fb98554c07"/>
         <topic label="id" href="class_h_y___interior_catchment.html#a1beb02e996ce5716c30183ab8974fde0"/>
         <topic label="inflows" href="class_h_y___interior_catchment.html#a3a03fa4da4dd40512e8893f945809e0b"/>
+        <topic label="layer" href="class_h_y___interior_catchment.html#aac271547db8cb616aa311607e9c84a00"/>
         <topic label="lower_catchment" href="class_h_y___interior_catchment.html#ac6c37362d4f55aed074b02a0ae6d8a3d"/>
         <topic label="outflows" href="class_h_y___interior_catchment.html#a3b336576b1ce5f7257ea308095feec6b"/>
         <topic label="realization" href="class_h_y___interior_catchment.html#afda183ae0332e0e5085df269a9970474"/>
+        <topic label="SNOW_LAYER" href="class_h_y___interior_catchment.html#ac432e32dfe9b7f402d6186da75762153"/>
+        <topic label="SURFACE_LAYER" href="class_h_y___interior_catchment.html#a55f00d5e5a6283c0051e73079335eaf8"/>
         <topic label="upper_catchment" href="class_h_y___interior_catchment.html#a8420468ac27e8ac940b80ff330683df3"/>
       </topic>
       <topic label="HY_PointHydroNexus" href="class_h_y___point_hydro_nexus.html">
@@ -5200,6 +5379,18 @@
         <topic label="~JSONProperty_Test" href="class_j_s_o_n_property___test.html#a76946ab993763993ae25fe3fb8a119ad"/>
         <topic label="SetUp" href="class_j_s_o_n_property___test.html#af4eecd265efb937f1c9cae81dfc4888b"/>
         <topic label="TearDown" href="class_j_s_o_n_property___test.html#a78759a99b0aa69f5157b5a5c4cf8bef7"/>
+      </topic>
+      <topic label="MultiLayerParserTest" href="class_multi_layer_parser_test.html">
+        <topic label="MultiLayerParserTest" href="class_multi_layer_parser_test.html#a3136aa6cef67001890fb06d043de65c3"/>
+        <topic label="~MultiLayerParserTest" href="class_multi_layer_parser_test.html#a87c8ead1d2ffe2a0e2dde4eb4a03df96"/>
+        <topic label="SetUp" href="class_multi_layer_parser_test.html#a6f6275ff135fa103216839e8f8c5b1c3"/>
+        <topic label="TearDown" href="class_multi_layer_parser_test.html#ad82bd8492d53fdc01d2118e2156a3bc6"/>
+        <topic label="catchment_collection" href="class_multi_layer_parser_test.html#ac4a18f7278bf26c6341594763c030cee"/>
+        <topic label="catchment_data_path" href="class_multi_layer_parser_test.html#a2bf4076015e6c95f57f0b1259a7288b3"/>
+        <topic label="manager" href="class_multi_layer_parser_test.html#a1c343b6cd3dca33a859f4e428de81ca8"/>
+        <topic label="nexus_collection" href="class_multi_layer_parser_test.html#ad50a645c562bdf330f0fb3060f68cabb"/>
+        <topic label="nexus_data_path" href="class_multi_layer_parser_test.html#a8ee6190260a9e8fe19abb7feef65e57d"/>
+        <topic label="realization_config_path" href="class_multi_layer_parser_test.html#a048e980081ef92bdcc38a7bb03079d58"/>
       </topic>
       <topic label="Network_Test" href="class_network___test.html">
         <topic label="Network_Test" href="class_network___test.html#af81a274735d5fb4005800ad66b2fb9d0"/>
@@ -5352,9 +5543,17 @@
       </topic>
       <topic label="Simulation_Time" href="class_simulation___time.html">
         <topic label="Simulation_Time" href="class_simulation___time.html#a1b29c199f0fd9e0995f369c40fd7aaa0"/>
+        <topic label="Simulation_Time" href="class_simulation___time.html#a08bb9078f55a6aa12cf040dba5fe03f0"/>
+        <topic label="advance_timestep" href="class_simulation___time.html#a642130d5225e58078097a954aae2a236"/>
+        <topic label="diff" href="class_simulation___time.html#a911c0fba7e18b3f222dcb4a2abb9bb1a"/>
+        <topic label="get_current_epoch_time" href="class_simulation___time.html#aabc3c6c4e26f358ad0b2c0067325b7d2"/>
         <topic label="get_output_interval_seconds" href="class_simulation___time.html#a25ec4421aac064d6173070f552471669"/>
         <topic label="get_timestamp" href="class_simulation___time.html#ac31cb33120a3f3c69d5ac73d6f95a949"/>
         <topic label="get_total_output_times" href="class_simulation___time.html#a52e16cffa6ca3281f06e1c216ec39414"/>
+        <topic label="next_timestep_epoch_time" href="class_simulation___time.html#a0fecf9117a12b85398abe700f84dd9fa"/>
+        <topic label="next_timestep_epoch_time" href="class_simulation___time.html#ac9ad27072ddfbd49298366da43e9478d"/>
+        <topic label="next_timestep_index" href="class_simulation___time.html#ab6d4b6c496bc613be1557ab52dcf52b5"/>
+        <topic label="next_timestep_index" href="class_simulation___time.html#ac5fa7aa8ad4994609c44ce5e57a139a1"/>
         <topic label="current_date_time_epoch" href="class_simulation___time.html#a05ca6222ff0dc9174a2bbfa5e7908541"/>
         <topic label="end_date_time_epoch" href="class_simulation___time.html#a39bd046f4d923057c5ddfc28f5a61530"/>
         <topic label="output_interval_seconds" href="class_simulation___time.html#aca840918d55535a52110f4c3132c4df0"/>
@@ -5551,6 +5750,11 @@
       <topic label="ngen::detail::dimension::hash" href="structngen_1_1detail_1_1dimension_1_1hash.html"/>
       <topic label="ngen::detail::variable&lt; SupportedTypes &gt;" href="structngen_1_1detail_1_1variable.html"/>
       <topic label="ngen::detail::variable&lt; SupportedTypes &gt;::hash" href="structngen_1_1detail_1_1variable_1_1hash.html"/>
+      <topic label="ngen::Layer" href="classngen_1_1_layer.html">
+        <topic label="ngen::SurfaceLayer" href="classngen_1_1_surface_layer.html"/>
+      </topic>
+      <topic label="ngen::LayerDataStorage" href="classngen_1_1_layer_data_storage.html"/>
+      <topic label="ngen::LayerDescription" href="structngen_1_1_layer_description.html"/>
       <topic label="ngen::mdarray&lt; T &gt;" href="classngen_1_1mdarray.html"/>
       <topic label="ngen::mdarray&lt; T &gt;::iterator&lt; T &gt;" href="structngen_1_1mdarray_1_1iterator.html"/>
       <topic label="ngen::mdframe" href="classngen_1_1mdframe.html"/>
@@ -5578,6 +5782,7 @@
         <topic label="Feature_Test" href="class_feature___test.html"/>
         <topic label="JSONGeometry_Test" href="class_j_s_o_n_geometry___test.html"/>
         <topic label="JSONProperty_Test" href="class_j_s_o_n_property___test.html"/>
+        <topic label="MultiLayerParserTest" href="class_multi_layer_parser_test.html"/>
         <topic label="Network_Test2" href="class_network___test2.html"/>
         <topic label="Nexus_Remote_Test" href="class_nexus___remote___test.html"/>
         <topic label="Nexus_Test" href="class_nexus___test.html"/>

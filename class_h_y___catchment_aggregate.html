@@ -105,7 +105,7 @@ $(document).ready(function(){initNavTree('class_h_y___catchment_aggregate.html',
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="class_h_y___catchment_aggregate__inherit__graph.svg" width="207" height="476"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="class_h_y___catchment_aggregate__inherit__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 <div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
@@ -125,11 +125,39 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ac341546797566a32d5e86d9492eb208e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad9001b2546e79b586c9e368681ef038a"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_h_y___catchment.html#a287e2db7317f88a8ba389ebb12dd3c7f">Nexuses</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment.html#ad9001b2546e79b586c9e368681ef038a">get_outflow_nexuses</a> ()</td></tr>
 <tr class="separator:ad9001b2546e79b586c9e368681ef038a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae49af53a679415965205212a447bec1a"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment.html#ae49af53a679415965205212a447bec1a">get_layer</a> ()</td></tr>
+<tr class="memdesc:ae49af53a679415965205212a447bec1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">get the hydrofabric layer of this catchment  <a href="class_h_y___catchment.html#ae49af53a679415965205212a447bec1a">More...</a><br /></td></tr>
+<tr class="separator:ae49af53a679415965205212a447bec1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adac39dc3089551c50f3737cb16e6c031"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment.html#adac39dc3089551c50f3737cb16e6c031">set_layer</a> (long lyr)</td></tr>
+<tr class="memdesc:adac39dc3089551c50f3737cb16e6c031"><td class="mdescLeft">&#160;</td><td class="mdescRight">set the layer of this catchment  <a href="class_h_y___catchment.html#adac39dc3089551c50f3737cb16e6c031">More...</a><br /></td></tr>
+<tr class="separator:adac39dc3089551c50f3737cb16e6c031"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:afda183ae0332e0e5085df269a9970474"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="class_h_y___catchment_realization.html">HY_CatchmentRealization</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment.html#afda183ae0332e0e5085df269a9970474">realization</a></td></tr>
 <tr class="separator:afda183ae0332e0e5085df269a9970474"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7c6633ea379cc6daed8a14dc7164ef0"><td class="memItemLeft" align="right" valign="top">const long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment.html#ae7c6633ea379cc6daed8a14dc7164ef0">ATMOSPHERIC_LAYER_HIGH</a> = 80</td></tr>
+<tr class="memdesc:ae7c6633ea379cc6daed8a14dc7164ef0"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is the catchment layer for high air atmospheric models.  <a href="class_h_y___catchment.html#ae7c6633ea379cc6daed8a14dc7164ef0">More...</a><br /></td></tr>
+<tr class="separator:ae7c6633ea379cc6daed8a14dc7164ef0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b443b9306c4f78f436f26e154507963"><td class="memItemLeft" align="right" valign="top">const long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment.html#a9b443b9306c4f78f436f26e154507963">ATMOSPHERIC_Layer_LOW</a> = 60</td></tr>
+<tr class="memdesc:a9b443b9306c4f78f436f26e154507963"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is the catchment layer for low air atmospheric models.  <a href="class_h_y___catchment.html#a9b443b9306c4f78f436f26e154507963">More...</a><br /></td></tr>
+<tr class="separator:a9b443b9306c4f78f436f26e154507963"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a74d59cfc7b5231d26ef07e09f5aff0c8"><td class="memItemLeft" align="right" valign="top">const long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment.html#a74d59cfc7b5231d26ef07e09f5aff0c8">CANOPY_LAYER</a> = 40</td></tr>
+<tr class="memdesc:a74d59cfc7b5231d26ef07e09f5aff0c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is the catchment layer for canopy layer models.  <a href="class_h_y___catchment.html#a74d59cfc7b5231d26ef07e09f5aff0c8">More...</a><br /></td></tr>
+<tr class="separator:a74d59cfc7b5231d26ef07e09f5aff0c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac432e32dfe9b7f402d6186da75762153"><td class="memItemLeft" align="right" valign="top">const long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment.html#ac432e32dfe9b7f402d6186da75762153">SNOW_LAYER</a> = 20</td></tr>
+<tr class="memdesc:ac432e32dfe9b7f402d6186da75762153"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is the catchment layer for surface snow models.  <a href="class_h_y___catchment.html#ac432e32dfe9b7f402d6186da75762153">More...</a><br /></td></tr>
+<tr class="separator:ac432e32dfe9b7f402d6186da75762153"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a55f00d5e5a6283c0051e73079335eaf8"><td class="memItemLeft" align="right" valign="top">const long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment.html#a55f00d5e5a6283c0051e73079335eaf8">SURFACE_LAYER</a> = 0</td></tr>
+<tr class="memdesc:a55f00d5e5a6283c0051e73079335eaf8"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is the catchment layer for surface water models <br  />
+  <a href="class_h_y___catchment.html#a55f00d5e5a6283c0051e73079335eaf8">More...</a><br /></td></tr>
+<tr class="separator:a55f00d5e5a6283c0051e73079335eaf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa625493796d8cf9079ab2fb98554c07"><td class="memItemLeft" align="right" valign="top">const long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment.html#aaa625493796d8cf9079ab2fb98554c07">GROUND_WATER_SHALLOW_LAYER</a> = -20</td></tr>
+<tr class="memdesc:aaa625493796d8cf9079ab2fb98554c07"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is the catchment layer for shallow groundwater models.  <a href="class_h_y___catchment.html#aaa625493796d8cf9079ab2fb98554c07">More...</a><br /></td></tr>
+<tr class="separator:aaa625493796d8cf9079ab2fb98554c07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad15ceff27c27396918e8c528f185512"><td class="memItemLeft" align="right" valign="top">const long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment.html#aad15ceff27c27396918e8c528f185512">GROUND_WATER_DEEP_LAYER</a> = -40</td></tr>
+<tr class="memdesc:aad15ceff27c27396918e8c528f185512"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is the catchment layer for deep groundwater models.  <a href="class_h_y___catchment.html#aad15ceff27c27396918e8c528f185512">More...</a><br /></td></tr>
+<tr class="separator:aad15ceff27c27396918e8c528f185512"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-types" name="pri-types"></a>
 Private Types</h2></td></tr>
@@ -160,6 +188,8 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a8420468ac27e8ac940b80ff330683df3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac6c37362d4f55aed074b02a0ae6d8a3d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_h_y___catchment.html#ad38c4b9fb588c021744094c1e565e84a">Catchment</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment.html#ac6c37362d4f55aed074b02a0ae6d8a3d">lower_catchment</a></td></tr>
 <tr class="separator:ac6c37362d4f55aed074b02a0ae6d8a3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac271547db8cb616aa311607e9c84a00"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_h_y___catchment.html#aac271547db8cb616aa311607e9c84a00">layer</a></td></tr>
+<tr class="separator:aac271547db8cb616aa311607e9c84a00"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="ad38c4b9fb588c021744094c1e565e84a" name="ad38c4b9fb588c021744094c1e565e84a"></a>
@@ -294,6 +324,36 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="ae49af53a679415965205212a447bec1a" name="ae49af53a679415965205212a447bec1a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae49af53a679415965205212a447bec1a">&#9670;&#160;</a></span>get_layer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">long HY_Catchment::get_layer </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>get the hydrofabric layer of this catchment </p>
+<p >The hydrofabric is divided into multiple layers which are intended to be processed in decreasing numeric order. The current defined layers are: 80 &ndash; Atmospheric Models (high) 60 &ndash; Atmospeheric Models (low) 40 &ndash; Canopy Models 20 &ndash; Snow melt models 0 &ndash; Surface water processes -20 &ndash; Ground Water (Shallow) -40 &ndash; Ground Water (Deep) </p>
+
+<p class="reference">References <a class="el" href="class_h_y___catchment.html#aac271547db8cb616aa311607e9c84a00">HY_Catchment::layer</a>.</p>
+
+</div>
+</div>
 <a id="ad9001b2546e79b586c9e368681ef038a" name="ad9001b2546e79b586c9e368681ef038a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad9001b2546e79b586c9e368681ef038a">&#9670;&#160;</a></span>get_outflow_nexuses()</h2>
 
@@ -321,7 +381,110 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="adac39dc3089551c50f3737cb16e6c031" name="adac39dc3089551c50f3737cb16e6c031"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adac39dc3089551c50f3737cb16e6c031">&#9670;&#160;</a></span>set_layer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void HY_Catchment::set_layer </td>
+          <td>(</td>
+          <td class="paramtype">long&#160;</td>
+          <td class="paramname"><em>lyr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>set the layer of this catchment </p>
+<p >This function changes the layer of a catchment. It should only be used if the type of model being used in the catchment changes. </p>
+
+<p class="reference">References <a class="el" href="class_h_y___catchment.html#aac271547db8cb616aa311607e9c84a00">HY_Catchment::layer</a>.</p>
+
+</div>
+</div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="ae7c6633ea379cc6daed8a14dc7164ef0" name="ae7c6633ea379cc6daed8a14dc7164ef0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7c6633ea379cc6daed8a14dc7164ef0">&#9670;&#160;</a></span>ATMOSPHERIC_LAYER_HIGH</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const long HY_Catchment::ATMOSPHERIC_LAYER_HIGH = 80</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>This is the catchment layer for high air atmospheric models. </p>
+
+</div>
+</div>
+<a id="a9b443b9306c4f78f436f26e154507963" name="a9b443b9306c4f78f436f26e154507963"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b443b9306c4f78f436f26e154507963">&#9670;&#160;</a></span>ATMOSPHERIC_Layer_LOW</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const long HY_Catchment::ATMOSPHERIC_Layer_LOW = 60</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>This is the catchment layer for low air atmospheric models. </p>
+
+</div>
+</div>
+<a id="a74d59cfc7b5231d26ef07e09f5aff0c8" name="a74d59cfc7b5231d26ef07e09f5aff0c8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a74d59cfc7b5231d26ef07e09f5aff0c8">&#9670;&#160;</a></span>CANOPY_LAYER</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const long HY_Catchment::CANOPY_LAYER = 40</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>This is the catchment layer for canopy layer models. </p>
+
+</div>
+</div>
 <a id="a079a0321d5069bb15c26c689b5e7ac8c" name="a079a0321d5069bb15c26c689b5e7ac8c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a079a0321d5069bb15c26c689b5e7ac8c">&#9670;&#160;</a></span>conjoint_catchment</h2>
 
@@ -388,6 +551,54 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="aad15ceff27c27396918e8c528f185512" name="aad15ceff27c27396918e8c528f185512"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aad15ceff27c27396918e8c528f185512">&#9670;&#160;</a></span>GROUND_WATER_DEEP_LAYER</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const long HY_Catchment::GROUND_WATER_DEEP_LAYER = -40</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>This is the catchment layer for deep groundwater models. </p>
+
+</div>
+</div>
+<a id="aaa625493796d8cf9079ab2fb98554c07" name="aaa625493796d8cf9079ab2fb98554c07"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaa625493796d8cf9079ab2fb98554c07">&#9670;&#160;</a></span>GROUND_WATER_SHALLOW_LAYER</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const long HY_Catchment::GROUND_WATER_SHALLOW_LAYER = -20</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>This is the catchment layer for shallow groundwater models. </p>
+
+</div>
+</div>
 <a id="a1beb02e996ce5716c30183ab8974fde0" name="a1beb02e996ce5716c30183ab8974fde0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1beb02e996ce5716c30183ab8974fde0">&#9670;&#160;</a></span>id</h2>
 
@@ -429,6 +640,30 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="aac271547db8cb616aa311607e9c84a00" name="aac271547db8cb616aa311607e9c84a00"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aac271547db8cb616aa311607e9c84a00">&#9670;&#160;</a></span>layer</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">long HY_Catchment::layer</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="class_h_y___catchment.html#ae49af53a679415965205212a447bec1a">HY_Catchment::get_layer()</a>, and <a class="el" href="class_h_y___catchment.html#adac39dc3089551c50f3737cb16e6c031">HY_Catchment::set_layer()</a>.</p>
 
 </div>
 </div>
@@ -500,6 +735,55 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="ac432e32dfe9b7f402d6186da75762153" name="ac432e32dfe9b7f402d6186da75762153"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac432e32dfe9b7f402d6186da75762153">&#9670;&#160;</a></span>SNOW_LAYER</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const long HY_Catchment::SNOW_LAYER = 20</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>This is the catchment layer for surface snow models. </p>
+
+</div>
+</div>
+<a id="a55f00d5e5a6283c0051e73079335eaf8" name="a55f00d5e5a6283c0051e73079335eaf8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a55f00d5e5a6283c0051e73079335eaf8">&#9670;&#160;</a></span>SURFACE_LAYER</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const long HY_Catchment::SURFACE_LAYER = 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>This is the catchment layer for surface water models <br  />
+ </p>
+
+</div>
+</div>
 <a id="a8420468ac27e8ac940b80ff330683df3" name="a8420468ac27e8ac940b80ff330683df3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8420468ac27e8ac940b80ff330683df3">&#9670;&#160;</a></span>upper_catchment</h2>
 
@@ -532,7 +816,7 @@ Private Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_h_y___catchment_aggregate.html">HY_CatchmentAggregate</a></li>
-    <li class="footer">Generated on Wed Sep 27 2023 16:21:51 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
+    <li class="footer">Generated on Thu Sep 28 2023 21:30:37 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
   </ul>
 </div>
 </body>

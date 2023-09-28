@@ -100,13 +100,13 @@ $(document).ready(function(){initNavTree('class_simulation___time.html',''); ini
 <p>Simulation Time class providing time-series variables and methods to the model.  
  <a href="class_simulation___time.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="_simulation___time_8h_source.html">Simulation_Time.h</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="_simulation___time_8hpp_source.html">Simulation_Time.hpp</a>&gt;</code></p>
 <div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="closed.png" alt="+"/> Collaboration diagram for Simulation_Time:</div>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="class_simulation___time__coll__graph.svg" width="186" height="227"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="class_simulation___time__coll__graph.svg" width="191" height="374"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 <table class="memberdecls">
@@ -115,15 +115,33 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1b29c199f0fd9e0995f369c40fd7aaa0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_simulation___time.html#a1b29c199f0fd9e0995f369c40fd7aaa0">Simulation_Time</a> (<a class="el" href="structsimulation__time__params.html">simulation_time_params</a> simulation_time_config)</td></tr>
 <tr class="memdesc:a1b29c199f0fd9e0995f369c40fd7aaa0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor building a Simulation Time object.  <a href="class_simulation___time.html#a1b29c199f0fd9e0995f369c40fd7aaa0">More...</a><br /></td></tr>
 <tr class="separator:a1b29c199f0fd9e0995f369c40fd7aaa0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a08bb9078f55a6aa12cf040dba5fe03f0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_simulation___time.html#a08bb9078f55a6aa12cf040dba5fe03f0">Simulation_Time</a> (const <a class="el" href="class_simulation___time.html">Simulation_Time</a> &amp;t, int interval)</td></tr>
+<tr class="separator:a08bb9078f55a6aa12cf040dba5fe03f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a52e16cffa6ca3281f06e1c216ec39414"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_simulation___time.html#a52e16cffa6ca3281f06e1c216ec39414">get_total_output_times</a> ()</td></tr>
 <tr class="memdesc:a52e16cffa6ca3281f06e1c216ec39414"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accessor to the total number of time steps.  <a href="class_simulation___time.html#a52e16cffa6ca3281f06e1c216ec39414">More...</a><br /></td></tr>
 <tr class="separator:a52e16cffa6ca3281f06e1c216ec39414"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a25ec4421aac064d6173070f552471669"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_simulation___time.html#a25ec4421aac064d6173070f552471669">get_output_interval_seconds</a> ()</td></tr>
 <tr class="memdesc:a25ec4421aac064d6173070f552471669"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accessor to the output_interval_seconds.  <a href="class_simulation___time.html#a25ec4421aac064d6173070f552471669">More...</a><br /></td></tr>
 <tr class="separator:a25ec4421aac064d6173070f552471669"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aabc3c6c4e26f358ad0b2c0067325b7d2"><td class="memItemLeft" align="right" valign="top">time_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_simulation___time.html#aabc3c6c4e26f358ad0b2c0067325b7d2">get_current_epoch_time</a> ()</td></tr>
+<tr class="memdesc:aabc3c6c4e26f358ad0b2c0067325b7d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accessor to the the current simulation time.  <a href="class_simulation___time.html#aabc3c6c4e26f358ad0b2c0067325b7d2">More...</a><br /></td></tr>
+<tr class="separator:aabc3c6c4e26f358ad0b2c0067325b7d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac31cb33120a3f3c69d5ac73d6f95a949"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_simulation___time.html#ac31cb33120a3f3c69d5ac73d6f95a949">get_timestamp</a> (int current_output_time_index)</td></tr>
 <tr class="memdesc:ac31cb33120a3f3c69d5ac73d6f95a949"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accessor to the current timestamp string.  <a href="class_simulation___time.html#ac31cb33120a3f3c69d5ac73d6f95a949">More...</a><br /></td></tr>
 <tr class="separator:ac31cb33120a3f3c69d5ac73d6f95a949"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5fa7aa8ad4994609c44ce5e57a139a1"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_simulation___time.html#ac5fa7aa8ad4994609c44ce5e57a139a1">next_timestep_index</a> (int epoch_time_seconds)</td></tr>
+<tr class="separator:ac5fa7aa8ad4994609c44ce5e57a139a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab6d4b6c496bc613be1557ab52dcf52b5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_simulation___time.html#ab6d4b6c496bc613be1557ab52dcf52b5">next_timestep_index</a> ()</td></tr>
+<tr class="separator:ab6d4b6c496bc613be1557ab52dcf52b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9ad27072ddfbd49298366da43e9478d"><td class="memItemLeft" align="right" valign="top">time_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_simulation___time.html#ac9ad27072ddfbd49298366da43e9478d">next_timestep_epoch_time</a> (int epoch_time_seconds)</td></tr>
+<tr class="separator:ac9ad27072ddfbd49298366da43e9478d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0fecf9117a12b85398abe700f84dd9fa"><td class="memItemLeft" align="right" valign="top">time_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_simulation___time.html#a0fecf9117a12b85398abe700f84dd9fa">next_timestep_epoch_time</a> ()</td></tr>
+<tr class="separator:a0fecf9117a12b85398abe700f84dd9fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a911c0fba7e18b3f222dcb4a2abb9bb1a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_simulation___time.html#a911c0fba7e18b3f222dcb4a2abb9bb1a">diff</a> (const <a class="el" href="class_simulation___time.html">Simulation_Time</a> &amp;other)</td></tr>
+<tr class="separator:a911c0fba7e18b3f222dcb4a2abb9bb1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a642130d5225e58078097a954aae2a236"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_simulation___time.html#a642130d5225e58078097a954aae2a236">advance_timestep</a> ()</td></tr>
+<tr class="memdesc:a642130d5225e58078097a954aae2a236"><td class="mdescLeft">&#160;</td><td class="mdescRight">move this simulation time object to represent the next time step as the current time  <a href="class_simulation___time.html#a642130d5225e58078097a954aae2a236">More...</a><br /></td></tr>
+<tr class="separator:a642130d5225e58078097a954aae2a236"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -144,7 +162,7 @@ Private Attributes</h2></td></tr>
 <div class="textblock"><p >Simulation Time class providing time-series variables and methods to the model. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a1b29c199f0fd9e0995f369c40fd7aaa0" name="a1b29c199f0fd9e0995f369c40fd7aaa0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1b29c199f0fd9e0995f369c40fd7aaa0">&#9670;&#160;</a></span>Simulation_Time()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b29c199f0fd9e0995f369c40fd7aaa0">&#9670;&#160;</a></span>Simulation_Time() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -183,7 +201,136 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a08bb9078f55a6aa12cf040dba5fe03f0" name="a08bb9078f55a6aa12cf040dba5fe03f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a08bb9078f55a6aa12cf040dba5fe03f0">&#9670;&#160;</a></span>Simulation_Time() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Simulation_Time::Simulation_Time </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_simulation___time.html">Simulation_Time</a> &amp;&#160;</td>
+          <td class="paramname"><em>t</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>interval</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="class_simulation___time.html#aca840918d55535a52110f4c3132c4df0">output_interval_seconds</a>, <a class="el" href="class_simulation___time.html#aa720ae4ee56d83dabc9eabd33837eaaa">simulation_total_time_seconds</a>, and <a class="el" href="class_simulation___time.html#a2932772505ed5505173b0cb8208cd748">total_output_times</a>.</p>
+
+</div>
+</div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a642130d5225e58078097a954aae2a236" name="a642130d5225e58078097a954aae2a236"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a642130d5225e58078097a954aae2a236">&#9670;&#160;</a></span>advance_timestep()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Simulation_Time::advance_timestep </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>move this simulation time object to represent the next time step as the current time </p>
+
+<p class="reference">References <a class="el" href="class_simulation___time.html#a05ca6222ff0dc9174a2bbfa5e7908541">current_date_time_epoch</a>, <a class="el" href="class_simulation___time.html#a39bd046f4d923057c5ddfc28f5a61530">end_date_time_epoch</a>, and <a class="el" href="class_simulation___time.html#aca840918d55535a52110f4c3132c4df0">output_interval_seconds</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classngen_1_1_layer.html#ae9804d4feed2aaf37de65b077ee41aec">ngen::Layer::update_models()</a>.</p>
+
+</div>
+</div>
+<a id="a911c0fba7e18b3f222dcb4a2abb9bb1a" name="a911c0fba7e18b3f222dcb4a2abb9bb1a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a911c0fba7e18b3f222dcb4a2abb9bb1a">&#9670;&#160;</a></span>diff()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Simulation_Time::diff </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_simulation___time.html">Simulation_Time</a> &amp;&#160;</td>
+          <td class="paramname"><em>other</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="class_simulation___time.html#a834cd7b87455af43576181ea7c858dc9">start_date_time_epoch</a>.</p>
+
+</div>
+</div>
+<a id="aabc3c6c4e26f358ad0b2c0067325b7d2" name="aabc3c6c4e26f358ad0b2c0067325b7d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aabc3c6c4e26f358ad0b2c0067325b7d2">&#9670;&#160;</a></span>get_current_epoch_time()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">time_t Simulation_Time::get_current_epoch_time </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Accessor to the the current simulation time. </p>
+<dl class="section return"><dt>Returns</dt><dd>current_date_time_epoch </dd></dl>
+
+<p class="reference">References <a class="el" href="class_simulation___time.html#a05ca6222ff0dc9174a2bbfa5e7908541">current_date_time_epoch</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classngen_1_1_layer.html#a178444ad250c0c8faaefa6c5263c618c">ngen::Layer::current_timestep_epoch_time()</a>.</p>
+
+</div>
+</div>
 <a id="a25ec4421aac064d6173070f552471669" name="a25ec4421aac064d6173070f552471669"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a25ec4421aac064d6173070f552471669">&#9670;&#160;</a></span>get_output_interval_seconds()</h2>
 
@@ -211,6 +358,8 @@ Private Attributes</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>output_interval_seconds </dd></dl>
 
 <p class="reference">References <a class="el" href="class_simulation___time.html#aca840918d55535a52110f4c3132c4df0">output_interval_seconds</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classngen_1_1_layer.html#ae9804d4feed2aaf37de65b077ee41aec">ngen::Layer::update_models()</a>.</p>
 
 </div>
 </div>
@@ -243,6 +392,8 @@ Private Attributes</h2></td></tr>
 
 <p class="reference">References <a class="el" href="class_simulation___time.html#a05ca6222ff0dc9174a2bbfa5e7908541">current_date_time_epoch</a>, <a class="el" href="class_simulation___time.html#aca840918d55535a52110f4c3132c4df0">output_interval_seconds</a>, and <a class="el" href="class_simulation___time.html#a834cd7b87455af43576181ea7c858dc9">start_date_time_epoch</a>.</p>
 
+<p class="reference">Referenced by <a class="el" href="classngen_1_1_layer.html#ae9804d4feed2aaf37de65b077ee41aec">ngen::Layer::update_models()</a>, and <a class="el" href="classngen_1_1_surface_layer.html#a6e1fa5b6f015bbb4d83170c5fe102857">ngen::SurfaceLayer::update_models()</a>.</p>
+
 </div>
 </div>
 <a id="a52e16cffa6ca3281f06e1c216ec39414" name="a52e16cffa6ca3281f06e1c216ec39414"></a>
@@ -273,6 +424,126 @@ Private Attributes</h2></td></tr>
 
 <p class="reference">References <a class="el" href="class_simulation___time.html#a2932772505ed5505173b0cb8208cd748">total_output_times</a>.</p>
 
+<p class="reference">Referenced by <a class="el" href="classngen_1_1_layer.html#ae9804d4feed2aaf37de65b077ee41aec">ngen::Layer::update_models()</a>.</p>
+
+</div>
+</div>
+<a id="a0fecf9117a12b85398abe700f84dd9fa" name="a0fecf9117a12b85398abe700f84dd9fa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0fecf9117a12b85398abe700f84dd9fa">&#9670;&#160;</a></span>next_timestep_epoch_time() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">time_t Simulation_Time::next_timestep_epoch_time </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="class_simulation___time.html#a05ca6222ff0dc9174a2bbfa5e7908541">current_date_time_epoch</a>, and <a class="el" href="class_simulation___time.html#a0fecf9117a12b85398abe700f84dd9fa">next_timestep_epoch_time()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="class_simulation___time.html#a0fecf9117a12b85398abe700f84dd9fa">next_timestep_epoch_time()</a>.</p>
+
+</div>
+</div>
+<a id="ac9ad27072ddfbd49298366da43e9478d" name="ac9ad27072ddfbd49298366da43e9478d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac9ad27072ddfbd49298366da43e9478d">&#9670;&#160;</a></span>next_timestep_epoch_time() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">time_t Simulation_Time::next_timestep_epoch_time </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>epoch_time_seconds</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="class_simulation___time.html#ab6d4b6c496bc613be1557ab52dcf52b5">next_timestep_index()</a>, <a class="el" href="class_simulation___time.html#aca840918d55535a52110f4c3132c4df0">output_interval_seconds</a>, and <a class="el" href="class_simulation___time.html#a834cd7b87455af43576181ea7c858dc9">start_date_time_epoch</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classngen_1_1_layer.html#abd1389469be1b1bf1e39001edde2d14f">ngen::Layer::next_timestep_epoch_time()</a>.</p>
+
+</div>
+</div>
+<a id="ab6d4b6c496bc613be1557ab52dcf52b5" name="ab6d4b6c496bc613be1557ab52dcf52b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab6d4b6c496bc613be1557ab52dcf52b5">&#9670;&#160;</a></span>next_timestep_index() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Simulation_Time::next_timestep_index </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="class_simulation___time.html#a05ca6222ff0dc9174a2bbfa5e7908541">current_date_time_epoch</a>, and <a class="el" href="class_simulation___time.html#ab6d4b6c496bc613be1557ab52dcf52b5">next_timestep_index()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="class_simulation___time.html#ac9ad27072ddfbd49298366da43e9478d">next_timestep_epoch_time()</a>, and <a class="el" href="class_simulation___time.html#ab6d4b6c496bc613be1557ab52dcf52b5">next_timestep_index()</a>.</p>
+
+</div>
+</div>
+<a id="ac5fa7aa8ad4994609c44ce5e57a139a1" name="ac5fa7aa8ad4994609c44ce5e57a139a1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac5fa7aa8ad4994609c44ce5e57a139a1">&#9670;&#160;</a></span>next_timestep_index() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Simulation_Time::next_timestep_index </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>epoch_time_seconds</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="class_simulation___time.html#aca840918d55535a52110f4c3132c4df0">output_interval_seconds</a>, and <a class="el" href="class_simulation___time.html#a834cd7b87455af43576181ea7c858dc9">start_date_time_epoch</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classngen_1_1_layer.html#ae9804d4feed2aaf37de65b077ee41aec">ngen::Layer::update_models()</a>.</p>
+
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
@@ -296,7 +567,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="class_simulation___time.html#ac31cb33120a3f3c69d5ac73d6f95a949">get_timestamp()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="class_simulation___time.html#a642130d5225e58078097a954aae2a236">advance_timestep()</a>, <a class="el" href="class_simulation___time.html#aabc3c6c4e26f358ad0b2c0067325b7d2">get_current_epoch_time()</a>, <a class="el" href="class_simulation___time.html#ac31cb33120a3f3c69d5ac73d6f95a949">get_timestamp()</a>, <a class="el" href="class_simulation___time.html#a0fecf9117a12b85398abe700f84dd9fa">next_timestep_epoch_time()</a>, and <a class="el" href="class_simulation___time.html#ab6d4b6c496bc613be1557ab52dcf52b5">next_timestep_index()</a>.</p>
 
 </div>
 </div>
@@ -320,7 +591,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="class_simulation___time.html#a1b29c199f0fd9e0995f369c40fd7aaa0">Simulation_Time()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="class_simulation___time.html#a1b29c199f0fd9e0995f369c40fd7aaa0">Simulation_Time()</a>, and <a class="el" href="class_simulation___time.html#a642130d5225e58078097a954aae2a236">advance_timestep()</a>.</p>
 
 </div>
 </div>
@@ -344,7 +615,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="class_simulation___time.html#a1b29c199f0fd9e0995f369c40fd7aaa0">Simulation_Time()</a>, <a class="el" href="class_simulation___time.html#a25ec4421aac064d6173070f552471669">get_output_interval_seconds()</a>, and <a class="el" href="class_simulation___time.html#ac31cb33120a3f3c69d5ac73d6f95a949">get_timestamp()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="class_simulation___time.html#a1b29c199f0fd9e0995f369c40fd7aaa0">Simulation_Time()</a>, <a class="el" href="class_simulation___time.html#a642130d5225e58078097a954aae2a236">advance_timestep()</a>, <a class="el" href="class_simulation___time.html#a25ec4421aac064d6173070f552471669">get_output_interval_seconds()</a>, <a class="el" href="class_simulation___time.html#ac31cb33120a3f3c69d5ac73d6f95a949">get_timestamp()</a>, <a class="el" href="class_simulation___time.html#ac9ad27072ddfbd49298366da43e9478d">next_timestep_epoch_time()</a>, and <a class="el" href="class_simulation___time.html#ac5fa7aa8ad4994609c44ce5e57a139a1">next_timestep_index()</a>.</p>
 
 </div>
 </div>
@@ -392,7 +663,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="class_simulation___time.html#a1b29c199f0fd9e0995f369c40fd7aaa0">Simulation_Time()</a>, and <a class="el" href="class_simulation___time.html#ac31cb33120a3f3c69d5ac73d6f95a949">get_timestamp()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="class_simulation___time.html#a1b29c199f0fd9e0995f369c40fd7aaa0">Simulation_Time()</a>, <a class="el" href="class_simulation___time.html#a911c0fba7e18b3f222dcb4a2abb9bb1a">diff()</a>, <a class="el" href="class_simulation___time.html#ac31cb33120a3f3c69d5ac73d6f95a949">get_timestamp()</a>, <a class="el" href="class_simulation___time.html#ac9ad27072ddfbd49298366da43e9478d">next_timestep_epoch_time()</a>, and <a class="el" href="class_simulation___time.html#ac5fa7aa8ad4994609c44ce5e57a139a1">next_timestep_index()</a>.</p>
 
 </div>
 </div>
@@ -421,7 +692,7 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>include/simulation_time/<a class="el" href="_simulation___time_8h_source.html">Simulation_Time.h</a></li>
+<li>include/simulation_time/<a class="el" href="_simulation___time_8hpp_source.html">Simulation_Time.hpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -429,7 +700,7 @@ Private Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_simulation___time.html">Simulation_Time</a></li>
-    <li class="footer">Generated on Wed Sep 27 2023 16:21:51 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
+    <li class="footer">Generated on Thu Sep 28 2023 21:30:37 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
   </ul>
 </div>
 </body>

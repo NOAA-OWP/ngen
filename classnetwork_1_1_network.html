@@ -134,6 +134,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a36b9c9b32d814a8b4f1eb689f92af0f3"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1_network.html#a36b9c9b32d814a8b4f1eb689f92af0f3">filter</a> (std::string type, <a class="el" href="namespacenetwork.html#adc2fe9c9362585aa39e89e4b76468f5a">SortOrder</a> order=<a class="el" href="namespacenetwork.html#adc2fe9c9362585aa39e89e4b76468f5aa475b62099bbf816e5a92df29364b210e">SortOrder::Topological</a>)</td></tr>
 <tr class="memdesc:a36b9c9b32d814a8b4f1eb689f92af0f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides a boost transform_iterator, filtered by <code>type</code> , to the topologically ordered graph vertex string id's.  <a href="classnetwork_1_1_network.html#a36b9c9b32d814a8b4f1eb689f92af0f3">More...</a><br /></td></tr>
 <tr class="separator:a36b9c9b32d814a8b4f1eb689f92af0f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b7a21aa2da35dfe4fe1785b4cb01f7a"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1_network.html#a2b7a21aa2da35dfe4fe1785b4cb01f7a">filter</a> (std::string type, int target_layer, <a class="el" href="namespacenetwork.html#adc2fe9c9362585aa39e89e4b76468f5a">SortOrder</a> order=<a class="el" href="namespacenetwork.html#adc2fe9c9362585aa39e89e4b76468f5aa475b62099bbf816e5a92df29364b210e">SortOrder::Topological</a>)</td></tr>
+<tr class="memdesc:a2b7a21aa2da35dfe4fe1785b4cb01f7a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides a boost transform_iterator, filtered by <code>type</code> , to the topologically ordered graph vertex string id's.  <a href="classnetwork_1_1_network.html#a2b7a21aa2da35dfe4fe1785b4cb01f7a">More...</a><br /></td></tr>
+<tr class="separator:a2b7a21aa2da35dfe4fe1785b4cb01f7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1c14c00f48e05b57e9b0d4161acbc660"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1_network.html#a1c14c00f48e05b57e9b0d4161acbc660">get_id</a> (Graph::vertex_descriptor idx)</td></tr>
 <tr class="memdesc:a1c14c00f48e05b57e9b0d4161acbc660"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the string id of a given graph vertex_descriptor <code>idx</code>.  <a href="classnetwork_1_1_network.html#a1c14c00f48e05b57e9b0d4161acbc660">More...</a><br /></td></tr>
 <tr class="separator:a1c14c00f48e05b57e9b0d4161acbc660"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -184,6 +187,9 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:ad342876420b17b59c22dcd4081305648"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; std::string, Graph::vertex_descriptor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1_network.html#ad342876420b17b59c22dcd4081305648">descriptor_map</a></td></tr>
 <tr class="memdesc:ad342876420b17b59c22dcd4081305648"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mapping of identity to graph vertex descriptor.  <a href="classnetwork_1_1_network.html#ad342876420b17b59c22dcd4081305648">More...</a><br /></td></tr>
 <tr class="separator:ad342876420b17b59c22dcd4081305648"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a726c14833714551850ef9537cb64472f"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; std::string, long &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnetwork_1_1_network.html#a726c14833714551850ef9537cb64472f">layer_map</a></td></tr>
+<tr class="memdesc:a726c14833714551850ef9537cb64472f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mapping of identifier to hydrofabric layer.  <a href="classnetwork_1_1_network.html#a726c14833714551850ef9537cb64472f">More...</a><br /></td></tr>
+<tr class="separator:a726c14833714551850ef9537cb64472f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >A lightweight, graph based index of hydrologic features. </p>
@@ -240,7 +246,7 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="reference">References <a class="el" href="classnetwork_1_1_network.html#ad342876420b17b59c22dcd4081305648">descriptor_map</a>, <a class="el" href="classnetwork_1_1_network.html#a81433a0d0c450c400051ac4b894d8eb5">graph</a>, and <a class="el" href="classnetwork_1_1_network.html#a63da3bc2620f058457ff7b23d956e20a">init_indicies()</a>.</p>
+<p class="reference">References <a class="el" href="namespacenetwork.html#aec41841634da2459fe57fe16a875d1fc">network::DEFAULT_LAYER_ID</a>, <a class="el" href="classnetwork_1_1_network.html#ad342876420b17b59c22dcd4081305648">descriptor_map</a>, <a class="el" href="classnetwork_1_1_network.html#a81433a0d0c450c400051ac4b894d8eb5">graph</a>, <a class="el" href="classnetwork_1_1_network.html#a63da3bc2620f058457ff7b23d956e20a">init_indicies()</a>, and <a class="el" href="classnetwork_1_1_network.html#a726c14833714551850ef9537cb64472f">layer_map</a>.</p>
 
 </div>
 </div>
@@ -359,8 +365,67 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a2b7a21aa2da35dfe4fe1785b4cb01f7a" name="a2b7a21aa2da35dfe4fe1785b4cb01f7a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b7a21aa2da35dfe4fe1785b4cb01f7a">&#9670;&#160;</a></span>filter() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto network::Network::filter </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>target_layer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacenetwork.html#adc2fe9c9362585aa39e89e4b76468f5a">SortOrder</a>&#160;</td>
+          <td class="paramname"><em>order</em> = <code><a class="el" href="namespacenetwork.html#adc2fe9c9362585aa39e89e4b76468f5aa475b62099bbf816e5a92df29364b210e">SortOrder::Topological</a></code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Provides a boost transform_iterator, filtered by <code>type</code> , to the topologically ordered graph vertex string id's. </p>
+<p >This function is useful when only interested in a single type of feature. It returns the a topologically ordered set of feature ids. For example, to print all catchments in the network: </p><div class="fragment"><div class="line"><span class="keywordflow">for</span>( <span class="keyword">auto</span> catchment : <a class="code hl_namespace" href="namespacenetwork.html">network</a>.filter(<span class="stringliteral">&#39;cat&#39;</span>) ){</div>
+<div class="line">   std::cout &lt;&lt; catchment;</div>
+<div class="line">}</div>
+<div class="ttc" id="anamespacenetwork_html"><div class="ttname"><a href="namespacenetwork.html">network</a></div><div class="ttdef"><b>Definition:</b> network.hpp:20</div></div>
+</div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">type</td><td>The type of feature to filter for, i.e. 'cat', 'nex' </td></tr>
+    <tr><td class="paramname">target_layer</td><td>The layer that filtered results should be in </td></tr>
+    <tr><td class="paramname">order</td><td>What order to return results in </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>auto </dd></dl>
+
+<p class="reference">References <a class="el" href="classnetwork_1_1_network.html#a1c14c00f48e05b57e9b0d4161acbc660">get_id()</a>, <a class="el" href="classnetwork_1_1_network.html#a964911e2c0bea1579b9b5bd3e197d248">get_sorted_index()</a>, and <a class="el" href="classnetwork_1_1_network.html#a726c14833714551850ef9537cb64472f">layer_map</a>.</p>
+
+</div>
+</div>
 <a id="a36b9c9b32d814a8b4f1eb689f92af0f3" name="a36b9c9b32d814a8b4f1eb689f92af0f3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a36b9c9b32d814a8b4f1eb689f92af0f3">&#9670;&#160;</a></span>filter()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a36b9c9b32d814a8b4f1eb689f92af0f3">&#9670;&#160;</a></span>filter() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -397,7 +462,6 @@ Private Attributes</h2></td></tr>
 <p >This function is useful when only interested in a single type of feature. It returns the a topologically ordered set of feature ids. For example, to print all catchments in the network: </p><div class="fragment"><div class="line"><span class="keywordflow">for</span>( <span class="keyword">auto</span> catchment : <a class="code hl_namespace" href="namespacenetwork.html">network</a>.filter(<span class="stringliteral">&#39;cat&#39;</span>) ){</div>
 <div class="line">   std::cout &lt;&lt; catchment;</div>
 <div class="line">}</div>
-<div class="ttc" id="anamespacenetwork_html"><div class="ttname"><a href="namespacenetwork.html">network</a></div><div class="ttdef"><b>Definition:</b> network.hpp:20</div></div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">type</td><td>The type of feature to filter for, i.e. 'cat', 'nex' </td></tr>
@@ -760,6 +824,32 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a726c14833714551850ef9537cb64472f" name="a726c14833714551850ef9537cb64472f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a726c14833714551850ef9537cb64472f">&#9670;&#160;</a></span>layer_map</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unordered_map&lt;std::string, long&gt; network::Network::layer_map</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Mapping of identifier to hydrofabric layer. </p>
+
+<p class="reference">Referenced by <a class="el" href="classnetwork_1_1_network.html#ad81217c6e3e7e1d64d6067a29ea1c3e3">Network()</a>, and <a class="el" href="classnetwork_1_1_network.html#a2b7a21aa2da35dfe4fe1785b4cb01f7a">filter()</a>.</p>
+
+</div>
+</div>
 <a id="ae62bcf26a0b422a6e7d73fc8ff2102a1" name="ae62bcf26a0b422a6e7d73fc8ff2102a1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae62bcf26a0b422a6e7d73fc8ff2102a1">&#9670;&#160;</a></span>tailwaters_idx</h2>
 
@@ -846,7 +936,7 @@ Private Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacenetwork.html">network</a></li><li class="navelem"><a class="el" href="classnetwork_1_1_network.html">Network</a></li>
-    <li class="footer">Generated on Wed Sep 27 2023 16:21:52 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
+    <li class="footer">Generated on Thu Sep 28 2023 21:30:38 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
   </ul>
 </div>
 </body>

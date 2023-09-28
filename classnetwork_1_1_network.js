@@ -6,6 +6,7 @@ var classnetwork_1_1_network =
     [ "~Network", "classnetwork_1_1_network.html#ab967c379911182281978a165cc9d6ef5", null ],
     [ "begin", "classnetwork_1_1_network.html#a0e945e0b5426233adef95c520957b74c", null ],
     [ "end", "classnetwork_1_1_network.html#a1cc30eb92debc1a6ca752df2a33793b4", null ],
+    [ "filter", "classnetwork_1_1_network.html#a2b7a21aa2da35dfe4fe1785b4cb01f7a", null ],
     [ "filter", "classnetwork_1_1_network.html#a36b9c9b32d814a8b4f1eb689f92af0f3", null ],
     [ "get_destination_ids", "classnetwork_1_1_network.html#a620aa0b99a7574fdb19590a3e1df909a", null ],
     [ "get_id", "classnetwork_1_1_network.html#a1c14c00f48e05b57e9b0d4161acbc660", null ],
@@ -19,6 +20,7 @@ var classnetwork_1_1_network =
     [ "descriptor_map", "classnetwork_1_1_network.html#ad342876420b17b59c22dcd4081305648", null ],
     [ "graph", "classnetwork_1_1_network.html#a81433a0d0c450c400051ac4b894d8eb5", null ],
     [ "headwaters_idx", "classnetwork_1_1_network.html#a74d2c60846e092e42ec035e11afe527c", null ],
+    [ "layer_map", "classnetwork_1_1_network.html#a726c14833714551850ef9537cb64472f", null ],
     [ "tailwaters_idx", "classnetwork_1_1_network.html#ae62bcf26a0b422a6e7d73fc8ff2102a1", null ],
     [ "tdfp_order", "classnetwork_1_1_network.html#a04dbb9e0615fbb4db09d8c9fb4f68102", null ],
     [ "topo_order", "classnetwork_1_1_network.html#a17193c5c4eeebbcbe2eeda9879e22e83", null ]
