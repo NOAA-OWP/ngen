@@ -195,9 +195,7 @@ add_subdirectory("src/core")
 add_subdirectory("src/geojson")
 add_subdirectory("src/realizations/catchment")
 add_subdirectory("src/forcing")
-add_subdirectory("src/utilities/mdarray")
-add_subdirectory("src/utilities/mdframe")
-add_subdirectory("src/utilities/logging")
+add_subdirectory("src/utilities")
 
 target_link_libraries(ngen
     PUBLIC
