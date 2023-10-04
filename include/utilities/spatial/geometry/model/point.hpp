@@ -16,6 +16,8 @@ struct point
     using reference       = typename backend::coord_reference;
     using const_reference = typename backend::const_coord_reference;
 
+    struct proxy;
+
     point(value_type x, value_type y)
       : data_(backend::make_point(x, y)){};
     
@@ -45,6 +47,22 @@ struct point
 
   private:
     typename backend::point_type data_;
+};
+
+template<typename BackendPolicy>
+struct point<BackendPolicy>::proxy : public point<BackendPolicy>
+{
+    using base_type       = point<BackendPolicy>;
+    using backend         = typename base_type::backend;
+
+    explicit proxy(const base_type& ref)
+      : data_(ref.data_){};
+
+    explicit proxy(const typename backend::point_type& ref)
+      : data_(ref){};
+
+  private:
+    typename backend::point_type& data_;
 };
 
 } // namespace spatial

@@ -13,22 +13,24 @@ struct polygon
 {
     using backend         = ngen::spatial::backend<BackendPolicy>;
     using value_type      = typename backend::value_type;
-    using element_type    = typename backend::linestring_type;
     using size_type       = typename backend::size_type;
-    using reference       = element_type&;
-    using const_reference = const element_type&;
+    using element_type    = ngen::spatial::linestring<BackendPolicy>;
+    using reference       = typename element_type::proxy;
+    using const_reference = const typename element_type::proxy;
+
+    struct proxy;
 
     polygon(boost::span<element_type> rings)
       : data_(backend::make_polygon(rings)){};
 
     reference outer() noexcept
     {
-        return backend::get_ring(data_, 0);
+        return reference{backend::get_ring(data_, 0)};
     }
 
     reference at(size_type i)
     {
-        return backend::get_ring(data_, i);
+        return reference{backend::get_ring(data_, i)};
     }
 
     size_type size() const noexcept
@@ -38,6 +40,22 @@ struct polygon
 
   private:
     typename backend::polygon_type data_;
+};
+
+template<typename BackendPolicy>
+struct polygon<BackendPolicy>::proxy : public polygon<BackendPolicy>
+{
+    using base_type = polygon<BackendPolicy>;
+    using backend   = typename base_type::backend;
+
+    explicit proxy(const base_type& ref)
+      : data_(ref.data_){};
+
+    explicit proxy(const typename backend::linestring_type& ref)
+      : data_(ref){};
+
+  private:
+    typename backend::polygon_type& data_;
 };
 
 } // namespace spatial

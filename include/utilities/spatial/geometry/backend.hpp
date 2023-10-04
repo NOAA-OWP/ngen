@@ -6,6 +6,13 @@
 namespace ngen {
 namespace spatial {
 
+/**
+ * Geometry Backend Tag
+ *
+ * Non-instantiatable base class for struct tagging.
+ * All backend tags should inherit from this tag for
+ * use with the backend_traits class.
+ */
 struct backend_tag{backend_tag() = delete;};
 
 /**
@@ -20,6 +27,7 @@ struct backend_tag{backend_tag() = delete;};
  * using const_coord_reference;
  * using point_type;
  * using linestring_type;
+ * using ring_type;
  * using polygon_type;
  *
  * Points ---------------------------------------------------------------------
@@ -30,14 +38,17 @@ struct backend_tag{backend_tag() = delete;};
  *
  * LineStrings ----------------------------------------------------------------
  * linestring_type make_linestring(boost::span<point_type>);
- * point_type&     get_point(linestring_type, size_type);
- * size_type       num_points(linestring_type) noexcept;
+ * ring_type       make_ring(boost::span<point_type>);
+ * point_type&     get_point(linestring_type&, size_type);
+ * size_type       num_points(linestring_type&) noexcept;
+ * point_type&     get_point(ring_type&, size_type);
+ * size_type       num_points(ring_type&) noexcept;
  * ----------------------------------------------------------------------------
  *
  * Polygons -------------------------------------------------------------------
- * polygon_type     make_polygon(boost::span<linestring_type>);
- * linestring_type& get_ring(polygon_type, size_type);
- * size_type        num_rings(polygon_type) noexcept;
+ * polygon_type make_polygon(boost::span<linestring_type>);
+ * ring_type&   get_ring(polygon_type&, size_type);
+ * size_type    num_rings(polygon_type&) noexcept;
  * ----------------------------------------------------------------------------
  */
 template<
@@ -49,7 +60,8 @@ template<
 >
 struct backend
 {
-    using tag = void;
+    using tag       = void;
+    using size_type = std::size_t;
 };
 
 } // namespace spatial
