@@ -425,7 +425,7 @@ int main(int argc, char* argv[])
     outFile.open(partitionOutFile, std::ios::trunc);
 
     //Get the feature collection for the given hydrofabric
-    geojson::GeoJSON catchment_collection = std::move(geojson::read(catchmentDataFile, catchment_subset_ids));
+    geojson::GeoJSON catchment_collection;
     if (boost::algorithm::ends_with(catchmentDataFile, "gpkg"))
     {
         #ifdef NGEN_WITH_SQLITE3
