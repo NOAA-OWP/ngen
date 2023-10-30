@@ -203,6 +203,7 @@ add_subdirectory("src/forcing")
 add_subdirectory("src/utilities/mdarray")
 add_subdirectory("src/utilities/mdframe")
 add_subdirectory("src/utilities/logging")
+add_subdirectory("src/spatial")
 
 target_link_libraries(ngen
     PUBLIC
