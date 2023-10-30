@@ -86,6 +86,17 @@ namespace hy_features {
         }
 
         /**
+         * @brief Construct a new HY_Features object from a Network and a set of formulations.
+         * 
+         * Constructs the HY_Catchment objects for each catchment feature in the network, and attaches tha formaulation
+         * associated with the catchment found in the Formulation_Manager.  Also constucts each nexus as a HY_PointHydroNexus.
+         * 
+         * @param network 
+         * @param formulations 
+        */
+        HY_Features( network::Network network, std::shared_ptr<Formulation_Manager> formulations, geojson::GeoJSON fabric);
+
+        /**
          * @brief Get the HY_HydroNexus pointer identifed by @p id
          * 
          * If no nexus exists for @p id, a nullptr is returned.
@@ -186,8 +197,6 @@ namespace hy_features {
 
       private:
 
-        void init();
-
         /**
          * @brief Internal mapping of catchment id -> HY_Catchment pointer.
          * 
@@ -216,8 +225,6 @@ namespace hy_features {
          *  @brief The set of layers that contain at least one catchment
         */
         std::set<long> hf_layers;
-
-        geojson::GeoJSON fabric;
 
     };
 }
