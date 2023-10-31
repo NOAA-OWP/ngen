@@ -69,7 +69,7 @@ std::shared_ptr<geojson::FeatureCollection> geopackage::read(
     // the IDs together.
     std::string joined_ids = "";
     if (!ids.empty()) {
-        joined_ids = " WHERE id IN (?";
+        joined_ids = " WHERE "+id_column+" IN (?";
         for (size_t i = 1; i < ids.size(); i++) {
             joined_ids += ", ?";
         }
@@ -83,7 +83,7 @@ std::shared_ptr<geojson::FeatureCollection> geopackage::read(
 
     #ifndef NGEN_QUIET
     // output debug info on what is read exactly
-    std::cout << "Reading " << layer_feature_count << " features in layer " << layer;
+    std::cout << "Reading " << layer_feature_count << " features in layer " << layer << " from "<<id_column<<": ";
     if (!ids.empty()) {
         std::cout << " (id subset:";
         for (auto& id : ids) {
