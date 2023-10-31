@@ -117,7 +117,7 @@ namespace hy_features {
          * 
          * @return auto 
          */
-        inline auto catchments(){return network.filter("cat");}
+        inline auto catchments(){return network.filter(hy_features::identifiers::catchment);}
 
         /**
          * @brief An iterator of only the catchment feature ids from only the specified layer
@@ -125,7 +125,7 @@ namespace hy_features {
          * @return auto 
          */
         inline auto catchments(long lyr) {
-            return network.filter("cat",lyr);
+            return network.filter(hy_features::identifiers::catchment,lyr);
         }
 
         /**
@@ -139,7 +139,7 @@ namespace hy_features {
          * 
          * @return auto 
          */
-        inline auto nexuses(){return network.filter("nex");}
+        inline auto nexuses(){return network.filter(hy_features::identifiers::nexus);}
 
         /**
          * @brief Get a vector of destination (downstream) nexus pointers.
