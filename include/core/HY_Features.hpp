@@ -8,6 +8,7 @@
 #include <HY_HydroNexus.hpp>
 #include <network.hpp>
 #include <Formulation_Manager.hpp>
+#include <HY_Features_Ids.hpp>
 
 namespace hy_features {
 
