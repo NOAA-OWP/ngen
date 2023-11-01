@@ -17,6 +17,8 @@
 #include <features/Features.hpp>
 #include <FeatureBuilder.hpp>
 
+#include "HY_Features_Ids.hpp"
+
 namespace network {
 
   const static int DEFAULT_LAYER_ID = 0;
@@ -208,13 +210,18 @@ namespace network {
           return get_sorted_index(order) | boost::adaptors::reversed
                         | boost::adaptors::transformed([this](int const& i) { return get_id(i); })
                         | boost::adaptors::filtered([type](std::string const& s) { 
-                          if(type == "nex"){
-                            return s.substr(0,3) == type || s.substr(0,3) == "tnx" || s.substr(0,4) == "tnex";
+                          //seperate the prefix from the numeric id
+                          std::string id_type = s.substr(0, s.find(hy_features::identifiers::seperator) );
+                          //Allow subtypes, e.g. inx, tnx, cnx, to be pass the filter for a generic nexus type
+                          if(type == hy_features::identifiers::nexus){
+                            return hy_features::identifiers::isNexus(id_type);
                           }
-                          if(type == "cat"){
-                            return s.substr(0,3) == type || s.substr(0,3) == "agg";
+                          //Allow subtypes, e.g. wb to be pass the filter for a generic catchment type
+                          if(type == hy_features::identifiers::catchment){
+                            return hy_features::identifiers::isCatchment(id_type);
                           }
-                          return s.substr(0,3) == type; 
+                          //any other subtype filter gets only exact matches
+                          return id_type == type; 
                         });
 
         }
@@ -244,15 +251,17 @@ namespace network {
           return get_sorted_index(order) | boost::adaptors::reversed
                         | boost::adaptors::transformed([this](int const& i) { return get_id(i); })
                         | boost::adaptors::filtered([this,type,target_layer](std::string const& s) { 
-                          if(type == "nex"){
-                            return (s.substr(0,3) == type || s.substr(0,3) == "tnx" || s.substr(0,4) == "tnex") && 
+                          //seperate the prefix from the numeric id
+                          std::string id_type = s.substr(0, s.find(hy_features::identifiers::seperator) );
+                          if(type == hy_features::identifiers::nexus){
+                            return hy_features::identifiers::isNexus(id_type) && 
                                    (this->layer_map.find(s) != this->layer_map.end() && this->layer_map[s] == target_layer);
                           }
-                          if(type == "cat"){
-                            return (s.substr(0,3) == type || s.substr(0,3) == "agg") && 
+                          if(type == hy_features::identifiers::catchment){
+                            return hy_features::identifiers::isCatchment(id_type) && 
                                    (this->layer_map.find(s) != this->layer_map.end() && this->layer_map[s] == target_layer);
                           }
-                          return (s.substr(0,3) == type) && 
+                          return (id_type == type) && 
                                   (this->layer_map.find(s) != this->layer_map.end() && (this->layer_map[s] == target_layer)); 
                         });
         }

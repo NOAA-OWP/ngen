@@ -25,10 +25,10 @@ HY_Features::HY_Features(network::Network network, std::shared_ptr<Formulation_M
 
       for(const auto& feat_idx : network){
         feat_id = network.get_id(feat_idx);//feature->get_id();
-        feat_type = feat_id.substr(0, 3);
+        feat_type = feat_id.substr(0, feat_id.find(hy_features::identifiers::seperator) );
 
         destinations  = network.get_destination_ids(feat_id);
-        if(feat_type == "cat" || feat_type == "agg")
+        if(hy_features::identifiers::isCatchment(feat_type))
         {
           //Find and prepare formulation
           auto formulation = formulations->get_formulation(feat_id);
@@ -56,7 +56,7 @@ HY_Features::HY_Features(network::Network network, std::shared_ptr<Formulation_M
 
           _catchments.emplace(feat_id, c);
         }
-        else if(feat_type == "nex" || feat_type == "tnx")
+        else if(hy_features::identifiers::isNexus(feat_type))
         {
             _nexuses.emplace(feat_id, std::make_unique<HY_PointHydroNexus>(
                                           HY_PointHydroNexus(feat_id, destinations) ));
