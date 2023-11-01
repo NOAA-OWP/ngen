@@ -480,7 +480,10 @@ int main(int argc, char* argv[])
         global_nexus_collection->add_feature(feature);
         //std::cout<<"Catchment "<<feature->get_id()<<" -> Nexus "<<feature->get_property("toID").as_string()<<std::endl;
     }
-
+    //Update the feature ids for the combined collection, using the alternative property 'id'
+    //to map features to their primary id as well as the alternative property
+    //Do this before linking features so that the alt ids can lookup the correct feature
+    global_nexus_collection->update_ids("id");
     global_nexus_collection->link_features_from_property(nullptr, &link_key);
     // make a global network
     Network global_network(global_nexus_collection);
