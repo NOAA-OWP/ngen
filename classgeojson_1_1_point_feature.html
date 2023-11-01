@@ -195,6 +195,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a4f0361c14f9323cdc0441bebabbc677b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab28e770c32f649fa2b6d342d8b3d55c5"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgeojson_1_1_feature_base.html#ab28e770c32f649fa2b6d342d8b3d55c5">get_id</a> () const</td></tr>
 <tr class="separator:ab28e770c32f649fa2b6d342d8b3d55c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4569552d1767dad95836c54a582658e"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgeojson_1_1_feature_base.html#ae4569552d1767dad95836c54a582658e">get_id</a> (std::string alt_id) const</td></tr>
+<tr class="separator:ae4569552d1767dad95836c54a582658e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a64eb5525c5fe5bbd51d5febd8952a424"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgeojson_1_1_feature_base.html#a64eb5525c5fe5bbd51d5febd8952a424">get_number_of_destination_features</a> ()</td></tr>
 <tr class="separator:a64eb5525c5fe5bbd51d5febd8952a424"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a07a793b858d72f62d5bde068cc9d7cbe"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgeojson_1_1_feature_base.html#a07a793b858d72f62d5bde068cc9d7cbe">get_number_of_origination_features</a> ()</td></tr>
@@ -872,7 +874,7 @@ template&lt;class T &gt; </div>
 </div>
 </div>
 <a id="ab28e770c32f649fa2b6d342d8b3d55c5" name="ab28e770c32f649fa2b6d342d8b3d55c5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab28e770c32f649fa2b6d342d8b3d55c5">&#9670;&#160;</a></span>get_id()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ab28e770c32f649fa2b6d342d8b3d55c5">&#9670;&#160;</a></span>get_id() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -897,6 +899,34 @@ template&lt;class T &gt; </div>
 <p class="reference">References <a class="el" href="classgeojson_1_1_feature_base.html#a0e329f3a2c6b3989a42756534d1bdf10">geojson::FeatureBase::id</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classgeojson_1_1_feature_base.html#ace69fa341400cd2ad96f07c155f486e4">geojson::FeatureBase::FeatureBase()</a>, and <a class="el" href="classgeojson_1_1_feature_base.html#a684df94c7a8a1838d23470a5b166d0a6">geojson::FeatureBase::operator==()</a>.</p>
+
+</div>
+</div>
+<a id="ae4569552d1767dad95836c54a582658e" name="ae4569552d1767dad95836c54a582658e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae4569552d1767dad95836c54a582658e">&#9670;&#160;</a></span>get_id() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string geojson::FeatureBase::get_id </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>alt_id</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classgeojson_1_1_j_s_o_n_property.html#a512af06cb32ed665a57a80129c84ec9b">geojson::JSONProperty::as_string()</a>, <a class="el" href="classgeojson_1_1_feature_base.html#a15ae69e7a5b7bb92995a3b52c8f2c51d">geojson::FeatureBase::get_property()</a>, and <a class="el" href="classgeojson_1_1_feature_base.html#a0e329f3a2c6b3989a42756534d1bdf10">geojson::FeatureBase::id</a>.</p>
 
 </div>
 </div>
@@ -1127,7 +1157,7 @@ template&lt;class T &gt; </div>
 
 <p class="reference">References <a class="el" href="classgeojson_1_1_feature_base.html#a8b5b4e112d4b3559c8876126f1f1412c">geojson::FeatureBase::properties</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classgeojson_1_1_feature_base.html#a684df94c7a8a1838d23470a5b166d0a6">geojson::FeatureBase::operator==()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classgeojson_1_1_feature_base.html#ae4569552d1767dad95836c54a582658e">geojson::FeatureBase::get_id()</a>, and <a class="el" href="classgeojson_1_1_feature_base.html#a684df94c7a8a1838d23470a5b166d0a6">geojson::FeatureBase::operator==()</a>.</p>
 
 </div>
 </div>
@@ -2184,7 +2214,7 @@ template&lt;class T &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacegeojson.html">geojson</a></li><li class="navelem"><a class="el" href="classgeojson_1_1_point_feature.html">PointFeature</a></li>
-    <li class="footer">Generated on Wed Oct 11 2023 20:21:26 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
+    <li class="footer">Generated on Wed Nov 1 2023 20:13:38 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
   </ul>
 </div>
 </body>

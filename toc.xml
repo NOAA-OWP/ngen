@@ -630,6 +630,7 @@
           <topic label="get_destination_length" href="classgeojson_1_1_collection_feature.html#a2e7471a77aedbc2ad61ac7ad8e1891f7"/>
           <topic label="get_geometry_collection" href="classgeojson_1_1_collection_feature.html#a984573e0ad014345634d5e859846ef35"/>
           <topic label="get_id" href="classgeojson_1_1_collection_feature.html#ab28e770c32f649fa2b6d342d8b3d55c5"/>
+          <topic label="get_id" href="classgeojson_1_1_collection_feature.html#ae4569552d1767dad95836c54a582658e"/>
           <topic label="get_number_of_destination_features" href="classgeojson_1_1_collection_feature.html#a64eb5525c5fe5bbd51d5febd8952a424"/>
           <topic label="get_number_of_neighbors" href="classgeojson_1_1_collection_feature.html#a2874f4fa4ef4a40ceb7120f20b4f291b"/>
           <topic label="get_number_of_origination_features" href="classgeojson_1_1_collection_feature.html#a07a793b858d72f62d5bde068cc9d7cbe"/>
@@ -704,6 +705,7 @@
           <topic label="get_destination_length" href="classgeojson_1_1_feature_base.html#a2e7471a77aedbc2ad61ac7ad8e1891f7"/>
           <topic label="get_geometry_collection" href="classgeojson_1_1_feature_base.html#a984573e0ad014345634d5e859846ef35"/>
           <topic label="get_id" href="classgeojson_1_1_feature_base.html#ab28e770c32f649fa2b6d342d8b3d55c5"/>
+          <topic label="get_id" href="classgeojson_1_1_feature_base.html#ae4569552d1767dad95836c54a582658e"/>
           <topic label="get_number_of_destination_features" href="classgeojson_1_1_feature_base.html#a64eb5525c5fe5bbd51d5febd8952a424"/>
           <topic label="get_number_of_neighbors" href="classgeojson_1_1_feature_base.html#a2874f4fa4ef4a40ceb7120f20b4f291b"/>
           <topic label="get_number_of_origination_features" href="classgeojson_1_1_feature_base.html#a07a793b858d72f62d5bde068cc9d7cbe"/>
@@ -780,7 +782,7 @@
           <topic label="set_ids" href="classgeojson_1_1_feature_collection.html#ab23b9f1eef2862b5b86942bcbf7e4c19"/>
           <topic label="set_ids_from_member" href="classgeojson_1_1_feature_collection.html#a5656337957bf07963d414614d964d122"/>
           <topic label="set_ids_from_property" href="classgeojson_1_1_feature_collection.html#aeda04d7482aacc61cefade3c06ee699d"/>
-          <topic label="update_ids" href="classgeojson_1_1_feature_collection.html#abc77a4928e81df6a6cce4e19b6449327"/>
+          <topic label="update_ids" href="classgeojson_1_1_feature_collection.html#aaa6293dc312d4bd7aaccd6d66fe859db"/>
           <topic label="visit_features" href="classgeojson_1_1_feature_collection.html#a53be5cf526c75c62cd2a1f9836ab5532"/>
           <topic label="bounding_box" href="classgeojson_1_1_feature_collection.html#a1670256b5f383cbb26306bd96e7d1bd2"/>
           <topic label="feature_by_id" href="classgeojson_1_1_feature_collection.html#abe473f53db4363c64bbda607822e6552"/>
@@ -861,6 +863,7 @@
           <topic label="get_destination_length" href="classgeojson_1_1_line_string_feature.html#a2e7471a77aedbc2ad61ac7ad8e1891f7"/>
           <topic label="get_geometry_collection" href="classgeojson_1_1_line_string_feature.html#a984573e0ad014345634d5e859846ef35"/>
           <topic label="get_id" href="classgeojson_1_1_line_string_feature.html#ab28e770c32f649fa2b6d342d8b3d55c5"/>
+          <topic label="get_id" href="classgeojson_1_1_line_string_feature.html#ae4569552d1767dad95836c54a582658e"/>
           <topic label="get_number_of_destination_features" href="classgeojson_1_1_line_string_feature.html#a64eb5525c5fe5bbd51d5febd8952a424"/>
           <topic label="get_number_of_neighbors" href="classgeojson_1_1_line_string_feature.html#a2874f4fa4ef4a40ceb7120f20b4f291b"/>
           <topic label="get_number_of_origination_features" href="classgeojson_1_1_line_string_feature.html#a07a793b858d72f62d5bde068cc9d7cbe"/>
@@ -930,6 +933,7 @@
           <topic label="get_destination_length" href="classgeojson_1_1_multi_line_string_feature.html#a2e7471a77aedbc2ad61ac7ad8e1891f7"/>
           <topic label="get_geometry_collection" href="classgeojson_1_1_multi_line_string_feature.html#a984573e0ad014345634d5e859846ef35"/>
           <topic label="get_id" href="classgeojson_1_1_multi_line_string_feature.html#ab28e770c32f649fa2b6d342d8b3d55c5"/>
+          <topic label="get_id" href="classgeojson_1_1_multi_line_string_feature.html#ae4569552d1767dad95836c54a582658e"/>
           <topic label="get_number_of_destination_features" href="classgeojson_1_1_multi_line_string_feature.html#a64eb5525c5fe5bbd51d5febd8952a424"/>
           <topic label="get_number_of_neighbors" href="classgeojson_1_1_multi_line_string_feature.html#a2874f4fa4ef4a40ceb7120f20b4f291b"/>
           <topic label="get_number_of_origination_features" href="classgeojson_1_1_multi_line_string_feature.html#a07a793b858d72f62d5bde068cc9d7cbe"/>
@@ -991,6 +995,7 @@
           <topic label="get_destination_length" href="classgeojson_1_1_multi_point_feature.html#a2e7471a77aedbc2ad61ac7ad8e1891f7"/>
           <topic label="get_geometry_collection" href="classgeojson_1_1_multi_point_feature.html#a984573e0ad014345634d5e859846ef35"/>
           <topic label="get_id" href="classgeojson_1_1_multi_point_feature.html#ab28e770c32f649fa2b6d342d8b3d55c5"/>
+          <topic label="get_id" href="classgeojson_1_1_multi_point_feature.html#ae4569552d1767dad95836c54a582658e"/>
           <topic label="get_number_of_destination_features" href="classgeojson_1_1_multi_point_feature.html#a64eb5525c5fe5bbd51d5febd8952a424"/>
           <topic label="get_number_of_neighbors" href="classgeojson_1_1_multi_point_feature.html#a2874f4fa4ef4a40ceb7120f20b4f291b"/>
           <topic label="get_number_of_origination_features" href="classgeojson_1_1_multi_point_feature.html#a07a793b858d72f62d5bde068cc9d7cbe"/>
@@ -1052,6 +1057,7 @@
           <topic label="get_destination_length" href="classgeojson_1_1_multi_polygon_feature.html#a2e7471a77aedbc2ad61ac7ad8e1891f7"/>
           <topic label="get_geometry_collection" href="classgeojson_1_1_multi_polygon_feature.html#a984573e0ad014345634d5e859846ef35"/>
           <topic label="get_id" href="classgeojson_1_1_multi_polygon_feature.html#ab28e770c32f649fa2b6d342d8b3d55c5"/>
+          <topic label="get_id" href="classgeojson_1_1_multi_polygon_feature.html#ae4569552d1767dad95836c54a582658e"/>
           <topic label="get_number_of_destination_features" href="classgeojson_1_1_multi_polygon_feature.html#a64eb5525c5fe5bbd51d5febd8952a424"/>
           <topic label="get_number_of_neighbors" href="classgeojson_1_1_multi_polygon_feature.html#a2874f4fa4ef4a40ceb7120f20b4f291b"/>
           <topic label="get_number_of_origination_features" href="classgeojson_1_1_multi_polygon_feature.html#a07a793b858d72f62d5bde068cc9d7cbe"/>
@@ -1119,6 +1125,7 @@
           <topic label="get_destination_length" href="classgeojson_1_1_point_feature.html#a2e7471a77aedbc2ad61ac7ad8e1891f7"/>
           <topic label="get_geometry_collection" href="classgeojson_1_1_point_feature.html#a984573e0ad014345634d5e859846ef35"/>
           <topic label="get_id" href="classgeojson_1_1_point_feature.html#ab28e770c32f649fa2b6d342d8b3d55c5"/>
+          <topic label="get_id" href="classgeojson_1_1_point_feature.html#ae4569552d1767dad95836c54a582658e"/>
           <topic label="get_number_of_destination_features" href="classgeojson_1_1_point_feature.html#a64eb5525c5fe5bbd51d5febd8952a424"/>
           <topic label="get_number_of_neighbors" href="classgeojson_1_1_point_feature.html#a2874f4fa4ef4a40ceb7120f20b4f291b"/>
           <topic label="get_number_of_origination_features" href="classgeojson_1_1_point_feature.html#a07a793b858d72f62d5bde068cc9d7cbe"/>
@@ -1179,6 +1186,7 @@
           <topic label="get_destination_length" href="classgeojson_1_1_polygon_feature.html#a2e7471a77aedbc2ad61ac7ad8e1891f7"/>
           <topic label="get_geometry_collection" href="classgeojson_1_1_polygon_feature.html#a984573e0ad014345634d5e859846ef35"/>
           <topic label="get_id" href="classgeojson_1_1_polygon_feature.html#ab28e770c32f649fa2b6d342d8b3d55c5"/>
+          <topic label="get_id" href="classgeojson_1_1_polygon_feature.html#ae4569552d1767dad95836c54a582658e"/>
           <topic label="get_number_of_destination_features" href="classgeojson_1_1_polygon_feature.html#a64eb5525c5fe5bbd51d5febd8952a424"/>
           <topic label="get_number_of_neighbors" href="classgeojson_1_1_polygon_feature.html#a2874f4fa4ef4a40ceb7120f20b4f291b"/>
           <topic label="get_number_of_origination_features" href="classgeojson_1_1_polygon_feature.html#a07a793b858d72f62d5bde068cc9d7cbe"/>
@@ -1437,24 +1445,35 @@
             <topic label="undefined" href="namespacehy__features_1_1hydrolocation.html#a7fcfe40520bcda2cd5be66a5b5bbbc0ba5e543256c480ac577d30f76f9120eb74"/>
           </topic>
         </topic>
+        <topic label="identifiers" href="namespacehy__features_1_1identifiers.html">
+          <topic label="isCatchment" href="namespacehy__features_1_1identifiers.html#a176d1283c69b6a3ad706bd7974b642c2"/>
+          <topic label="isFlowpath" href="namespacehy__features_1_1identifiers.html#a56a7f5d9e5bde39232a37f31dc7ca878"/>
+          <topic label="isNexus" href="namespacehy__features_1_1identifiers.html#ae5d3942f27fcd5ca062f1055001d0e2d"/>
+          <topic label="catchment" href="namespacehy__features_1_1identifiers.html#aedf8312d74d10d30cfed65868e59d6d3"/>
+          <topic label="coastal" href="namespacehy__features_1_1identifiers.html#aa41df7d5d5d4baffe215700861885dc9"/>
+          <topic label="flowpath" href="namespacehy__features_1_1identifiers.html#ab42cf9ae9ac9c6b671487119969250a4"/>
+          <topic label="inland" href="namespacehy__features_1_1identifiers.html#a0bf768e8b20b543cb14aa174eceb9844"/>
+          <topic label="nexus" href="namespacehy__features_1_1identifiers.html#ab5df6247e598cd1aca30116b3aa9dbd3"/>
+          <topic label="seperator" href="namespacehy__features_1_1identifiers.html#a7ef7f5a74b881bed09f88f8c048f773f"/>
+          <topic label="terminal" href="namespacehy__features_1_1identifiers.html#a65cdb974c26c338f2bc3956a84239826"/>
+        </topic>
         <topic label="HY_Features" href="classhy__features_1_1_h_y___features.html">
           <topic label="Formulation_Manager" href="classhy__features_1_1_h_y___features.html#ac44839f8580ff47c247053db1784ba30"/>
           <topic label="HY_Features" href="classhy__features_1_1_h_y___features.html#a5a5722f58f16b3070ef6a1c7d88dd86c"/>
           <topic label="HY_Features" href="classhy__features_1_1_h_y___features.html#a4c0d29b9328249f6c7f000ce1b2952c5"/>
           <topic label="HY_Features" href="classhy__features_1_1_h_y___features.html#ac29a4412391acbb1087f473c68943696"/>
+          <topic label="HY_Features" href="classhy__features_1_1_h_y___features.html#a454546ffe97d110b2a36fab9912e9c79"/>
           <topic label="~HY_Features" href="classhy__features_1_1_h_y___features.html#a33bf0ffa721a192dafbd209663e6f54b"/>
           <topic label="catchment_at" href="classhy__features_1_1_h_y___features.html#aad70a7ffe0b57fefeb8328c6b2fd8176"/>
           <topic label="catchments" href="classhy__features_1_1_h_y___features.html#af4f58bd66959ab0a06999ea5b14be0bd"/>
           <topic label="catchments" href="classhy__features_1_1_h_y___features.html#ae0b25fe358115df54d8b5c44aa3eff4c"/>
           <topic label="destination_nexuses" href="classhy__features_1_1_h_y___features.html#a90cabae67b3e22e7d3801432154cb6e1"/>
-          <topic label="init" href="classhy__features_1_1_h_y___features.html#a7992738417dcf4fbd3400a4b03e1ce32"/>
           <topic label="layers" href="classhy__features_1_1_h_y___features.html#a69eee85da3897aa0a7a72ba7fdd3a568"/>
           <topic label="nexus_at" href="classhy__features_1_1_h_y___features.html#a4c50d0530c6b158ba3f43bedb941a970"/>
           <topic label="nexuses" href="classhy__features_1_1_h_y___features.html#a133814bb22aa41a0ad1827cb68561037"/>
           <topic label="validate_dendritic" href="classhy__features_1_1_h_y___features.html#a3a28c4767f2f53b70d200148de764d9e"/>
           <topic label="_catchments" href="classhy__features_1_1_h_y___features.html#afc8c857297e0c07979d92c6a864544d1"/>
           <topic label="_nexuses" href="classhy__features_1_1_h_y___features.html#af4e9887f4d592bd84d9d68f027d5725a"/>
-          <topic label="fabric" href="classhy__features_1_1_h_y___features.html#a5f072e888010a37ed5e65f5049abbb82"/>
           <topic label="formulations" href="classhy__features_1_1_h_y___features.html#a44dc3f3c851960bb138e5ddca70c27d0"/>
           <topic label="hf_layers" href="classhy__features_1_1_h_y___features.html#a069d7cad645e78c4f36d0b9e0956b866"/>
           <topic label="network" href="classhy__features_1_1_h_y___features.html#aa8443888e3fd904e3b737a752546f674"/>
@@ -3037,6 +3056,7 @@
           <topic label="get_destination_length" href="classgeojson_1_1_collection_feature.html#a2e7471a77aedbc2ad61ac7ad8e1891f7"/>
           <topic label="get_geometry_collection" href="classgeojson_1_1_collection_feature.html#a984573e0ad014345634d5e859846ef35"/>
           <topic label="get_id" href="classgeojson_1_1_collection_feature.html#ab28e770c32f649fa2b6d342d8b3d55c5"/>
+          <topic label="get_id" href="classgeojson_1_1_collection_feature.html#ae4569552d1767dad95836c54a582658e"/>
           <topic label="get_number_of_destination_features" href="classgeojson_1_1_collection_feature.html#a64eb5525c5fe5bbd51d5febd8952a424"/>
           <topic label="get_number_of_neighbors" href="classgeojson_1_1_collection_feature.html#a2874f4fa4ef4a40ceb7120f20b4f291b"/>
           <topic label="get_number_of_origination_features" href="classgeojson_1_1_collection_feature.html#a07a793b858d72f62d5bde068cc9d7cbe"/>
@@ -3111,6 +3131,7 @@
           <topic label="get_destination_length" href="classgeojson_1_1_feature_base.html#a2e7471a77aedbc2ad61ac7ad8e1891f7"/>
           <topic label="get_geometry_collection" href="classgeojson_1_1_feature_base.html#a984573e0ad014345634d5e859846ef35"/>
           <topic label="get_id" href="classgeojson_1_1_feature_base.html#ab28e770c32f649fa2b6d342d8b3d55c5"/>
+          <topic label="get_id" href="classgeojson_1_1_feature_base.html#ae4569552d1767dad95836c54a582658e"/>
           <topic label="get_number_of_destination_features" href="classgeojson_1_1_feature_base.html#a64eb5525c5fe5bbd51d5febd8952a424"/>
           <topic label="get_number_of_neighbors" href="classgeojson_1_1_feature_base.html#a2874f4fa4ef4a40ceb7120f20b4f291b"/>
           <topic label="get_number_of_origination_features" href="classgeojson_1_1_feature_base.html#a07a793b858d72f62d5bde068cc9d7cbe"/>
@@ -3187,7 +3208,7 @@
           <topic label="set_ids" href="classgeojson_1_1_feature_collection.html#ab23b9f1eef2862b5b86942bcbf7e4c19"/>
           <topic label="set_ids_from_member" href="classgeojson_1_1_feature_collection.html#a5656337957bf07963d414614d964d122"/>
           <topic label="set_ids_from_property" href="classgeojson_1_1_feature_collection.html#aeda04d7482aacc61cefade3c06ee699d"/>
-          <topic label="update_ids" href="classgeojson_1_1_feature_collection.html#abc77a4928e81df6a6cce4e19b6449327"/>
+          <topic label="update_ids" href="classgeojson_1_1_feature_collection.html#aaa6293dc312d4bd7aaccd6d66fe859db"/>
           <topic label="visit_features" href="classgeojson_1_1_feature_collection.html#a53be5cf526c75c62cd2a1f9836ab5532"/>
           <topic label="bounding_box" href="classgeojson_1_1_feature_collection.html#a1670256b5f383cbb26306bd96e7d1bd2"/>
           <topic label="feature_by_id" href="classgeojson_1_1_feature_collection.html#abe473f53db4363c64bbda607822e6552"/>
@@ -3268,6 +3289,7 @@
           <topic label="get_destination_length" href="classgeojson_1_1_line_string_feature.html#a2e7471a77aedbc2ad61ac7ad8e1891f7"/>
           <topic label="get_geometry_collection" href="classgeojson_1_1_line_string_feature.html#a984573e0ad014345634d5e859846ef35"/>
           <topic label="get_id" href="classgeojson_1_1_line_string_feature.html#ab28e770c32f649fa2b6d342d8b3d55c5"/>
+          <topic label="get_id" href="classgeojson_1_1_line_string_feature.html#ae4569552d1767dad95836c54a582658e"/>
           <topic label="get_number_of_destination_features" href="classgeojson_1_1_line_string_feature.html#a64eb5525c5fe5bbd51d5febd8952a424"/>
           <topic label="get_number_of_neighbors" href="classgeojson_1_1_line_string_feature.html#a2874f4fa4ef4a40ceb7120f20b4f291b"/>
           <topic label="get_number_of_origination_features" href="classgeojson_1_1_line_string_feature.html#a07a793b858d72f62d5bde068cc9d7cbe"/>
@@ -3337,6 +3359,7 @@
           <topic label="get_destination_length" href="classgeojson_1_1_multi_line_string_feature.html#a2e7471a77aedbc2ad61ac7ad8e1891f7"/>
           <topic label="get_geometry_collection" href="classgeojson_1_1_multi_line_string_feature.html#a984573e0ad014345634d5e859846ef35"/>
           <topic label="get_id" href="classgeojson_1_1_multi_line_string_feature.html#ab28e770c32f649fa2b6d342d8b3d55c5"/>
+          <topic label="get_id" href="classgeojson_1_1_multi_line_string_feature.html#ae4569552d1767dad95836c54a582658e"/>
           <topic label="get_number_of_destination_features" href="classgeojson_1_1_multi_line_string_feature.html#a64eb5525c5fe5bbd51d5febd8952a424"/>
           <topic label="get_number_of_neighbors" href="classgeojson_1_1_multi_line_string_feature.html#a2874f4fa4ef4a40ceb7120f20b4f291b"/>
           <topic label="get_number_of_origination_features" href="classgeojson_1_1_multi_line_string_feature.html#a07a793b858d72f62d5bde068cc9d7cbe"/>
@@ -3398,6 +3421,7 @@
           <topic label="get_destination_length" href="classgeojson_1_1_multi_point_feature.html#a2e7471a77aedbc2ad61ac7ad8e1891f7"/>
           <topic label="get_geometry_collection" href="classgeojson_1_1_multi_point_feature.html#a984573e0ad014345634d5e859846ef35"/>
           <topic label="get_id" href="classgeojson_1_1_multi_point_feature.html#ab28e770c32f649fa2b6d342d8b3d55c5"/>
+          <topic label="get_id" href="classgeojson_1_1_multi_point_feature.html#ae4569552d1767dad95836c54a582658e"/>
           <topic label="get_number_of_destination_features" href="classgeojson_1_1_multi_point_feature.html#a64eb5525c5fe5bbd51d5febd8952a424"/>
           <topic label="get_number_of_neighbors" href="classgeojson_1_1_multi_point_feature.html#a2874f4fa4ef4a40ceb7120f20b4f291b"/>
           <topic label="get_number_of_origination_features" href="classgeojson_1_1_multi_point_feature.html#a07a793b858d72f62d5bde068cc9d7cbe"/>
@@ -3459,6 +3483,7 @@
           <topic label="get_destination_length" href="classgeojson_1_1_multi_polygon_feature.html#a2e7471a77aedbc2ad61ac7ad8e1891f7"/>
           <topic label="get_geometry_collection" href="classgeojson_1_1_multi_polygon_feature.html#a984573e0ad014345634d5e859846ef35"/>
           <topic label="get_id" href="classgeojson_1_1_multi_polygon_feature.html#ab28e770c32f649fa2b6d342d8b3d55c5"/>
+          <topic label="get_id" href="classgeojson_1_1_multi_polygon_feature.html#ae4569552d1767dad95836c54a582658e"/>
           <topic label="get_number_of_destination_features" href="classgeojson_1_1_multi_polygon_feature.html#a64eb5525c5fe5bbd51d5febd8952a424"/>
           <topic label="get_number_of_neighbors" href="classgeojson_1_1_multi_polygon_feature.html#a2874f4fa4ef4a40ceb7120f20b4f291b"/>
           <topic label="get_number_of_origination_features" href="classgeojson_1_1_multi_polygon_feature.html#a07a793b858d72f62d5bde068cc9d7cbe"/>
@@ -3526,6 +3551,7 @@
           <topic label="get_destination_length" href="classgeojson_1_1_point_feature.html#a2e7471a77aedbc2ad61ac7ad8e1891f7"/>
           <topic label="get_geometry_collection" href="classgeojson_1_1_point_feature.html#a984573e0ad014345634d5e859846ef35"/>
           <topic label="get_id" href="classgeojson_1_1_point_feature.html#ab28e770c32f649fa2b6d342d8b3d55c5"/>
+          <topic label="get_id" href="classgeojson_1_1_point_feature.html#ae4569552d1767dad95836c54a582658e"/>
           <topic label="get_number_of_destination_features" href="classgeojson_1_1_point_feature.html#a64eb5525c5fe5bbd51d5febd8952a424"/>
           <topic label="get_number_of_neighbors" href="classgeojson_1_1_point_feature.html#a2874f4fa4ef4a40ceb7120f20b4f291b"/>
           <topic label="get_number_of_origination_features" href="classgeojson_1_1_point_feature.html#a07a793b858d72f62d5bde068cc9d7cbe"/>
@@ -3586,6 +3612,7 @@
           <topic label="get_destination_length" href="classgeojson_1_1_polygon_feature.html#a2e7471a77aedbc2ad61ac7ad8e1891f7"/>
           <topic label="get_geometry_collection" href="classgeojson_1_1_polygon_feature.html#a984573e0ad014345634d5e859846ef35"/>
           <topic label="get_id" href="classgeojson_1_1_polygon_feature.html#ab28e770c32f649fa2b6d342d8b3d55c5"/>
+          <topic label="get_id" href="classgeojson_1_1_polygon_feature.html#ae4569552d1767dad95836c54a582658e"/>
           <topic label="get_number_of_destination_features" href="classgeojson_1_1_polygon_feature.html#a64eb5525c5fe5bbd51d5febd8952a424"/>
           <topic label="get_number_of_neighbors" href="classgeojson_1_1_polygon_feature.html#a2874f4fa4ef4a40ceb7120f20b4f291b"/>
           <topic label="get_number_of_origination_features" href="classgeojson_1_1_polygon_feature.html#a07a793b858d72f62d5bde068cc9d7cbe"/>
@@ -3743,19 +3770,18 @@
           <topic label="HY_Features" href="classhy__features_1_1_h_y___features.html#a5a5722f58f16b3070ef6a1c7d88dd86c"/>
           <topic label="HY_Features" href="classhy__features_1_1_h_y___features.html#a4c0d29b9328249f6c7f000ce1b2952c5"/>
           <topic label="HY_Features" href="classhy__features_1_1_h_y___features.html#ac29a4412391acbb1087f473c68943696"/>
+          <topic label="HY_Features" href="classhy__features_1_1_h_y___features.html#a454546ffe97d110b2a36fab9912e9c79"/>
           <topic label="~HY_Features" href="classhy__features_1_1_h_y___features.html#a33bf0ffa721a192dafbd209663e6f54b"/>
           <topic label="catchment_at" href="classhy__features_1_1_h_y___features.html#aad70a7ffe0b57fefeb8328c6b2fd8176"/>
           <topic label="catchments" href="classhy__features_1_1_h_y___features.html#af4f58bd66959ab0a06999ea5b14be0bd"/>
           <topic label="catchments" href="classhy__features_1_1_h_y___features.html#ae0b25fe358115df54d8b5c44aa3eff4c"/>
           <topic label="destination_nexuses" href="classhy__features_1_1_h_y___features.html#a90cabae67b3e22e7d3801432154cb6e1"/>
-          <topic label="init" href="classhy__features_1_1_h_y___features.html#a7992738417dcf4fbd3400a4b03e1ce32"/>
           <topic label="layers" href="classhy__features_1_1_h_y___features.html#a69eee85da3897aa0a7a72ba7fdd3a568"/>
           <topic label="nexus_at" href="classhy__features_1_1_h_y___features.html#a4c50d0530c6b158ba3f43bedb941a970"/>
           <topic label="nexuses" href="classhy__features_1_1_h_y___features.html#a133814bb22aa41a0ad1827cb68561037"/>
           <topic label="validate_dendritic" href="classhy__features_1_1_h_y___features.html#a3a28c4767f2f53b70d200148de764d9e"/>
           <topic label="_catchments" href="classhy__features_1_1_h_y___features.html#afc8c857297e0c07979d92c6a864544d1"/>
           <topic label="_nexuses" href="classhy__features_1_1_h_y___features.html#af4e9887f4d592bd84d9d68f027d5725a"/>
-          <topic label="fabric" href="classhy__features_1_1_h_y___features.html#a5f072e888010a37ed5e65f5049abbb82"/>
           <topic label="formulations" href="classhy__features_1_1_h_y___features.html#a44dc3f3c851960bb138e5ddca70c27d0"/>
           <topic label="hf_layers" href="classhy__features_1_1_h_y___features.html#a069d7cad645e78c4f36d0b9e0956b866"/>
           <topic label="network" href="classhy__features_1_1_h_y___features.html#aa8443888e3fd904e3b737a752546f674"/>

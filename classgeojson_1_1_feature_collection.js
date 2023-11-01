@@ -32,7 +32,7 @@ var classgeojson_1_1_feature_collection =
     [ "set_ids", "classgeojson_1_1_feature_collection.html#ab23b9f1eef2862b5b86942bcbf7e4c19", null ],
     [ "set_ids_from_member", "classgeojson_1_1_feature_collection.html#a5656337957bf07963d414614d964d122", null ],
     [ "set_ids_from_property", "classgeojson_1_1_feature_collection.html#aeda04d7482aacc61cefade3c06ee699d", null ],
-    [ "update_ids", "classgeojson_1_1_feature_collection.html#abc77a4928e81df6a6cce4e19b6449327", null ],
+    [ "update_ids", "classgeojson_1_1_feature_collection.html#aaa6293dc312d4bd7aaccd6d66fe859db", null ],
     [ "visit_features", "classgeojson_1_1_feature_collection.html#a53be5cf526c75c62cd2a1f9836ab5532", null ],
     [ "bounding_box", "classgeojson_1_1_feature_collection.html#a1670256b5f383cbb26306bd96e7d1bd2", null ],
     [ "feature_by_id", "classgeojson_1_1_feature_collection.html#abe473f53db4363c64bbda607822e6552", null ],

@@ -18,6 +18,7 @@ var classgeojson_1_1_multi_line_string_feature =
     [ "get_destination_length", "classgeojson_1_1_multi_line_string_feature.html#a2e7471a77aedbc2ad61ac7ad8e1891f7", null ],
     [ "get_geometry_collection", "classgeojson_1_1_multi_line_string_feature.html#a984573e0ad014345634d5e859846ef35", null ],
     [ "get_id", "classgeojson_1_1_multi_line_string_feature.html#ab28e770c32f649fa2b6d342d8b3d55c5", null ],
+    [ "get_id", "classgeojson_1_1_multi_line_string_feature.html#ae4569552d1767dad95836c54a582658e", null ],
     [ "get_number_of_destination_features", "classgeojson_1_1_multi_line_string_feature.html#a64eb5525c5fe5bbd51d5febd8952a424", null ],
     [ "get_number_of_neighbors", "classgeojson_1_1_multi_line_string_feature.html#a2874f4fa4ef4a40ceb7120f20b4f291b", null ],
     [ "get_number_of_origination_features", "classgeojson_1_1_multi_line_string_feature.html#a07a793b858d72f62d5bde068cc9d7cbe", null ],
