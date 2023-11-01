@@ -283,6 +283,9 @@ int main(int argc, char *argv[]) {
         nexus_collection->add_feature(feature);
         //std::cout<<"Catchment "<<feature->get_id()<<" -> Nexus "<<feature->get_property("toID").as_string()<<std::endl;
     }
+    //Update the feature ids for the combined collection, using the alternative property 'id'
+    //to map features to their primary id as well as the alternative property
+    nexus_collection->update_ids("id");
 
     std::shared_ptr<realization::Formulation_Manager> manager = std::make_shared<realization::Formulation_Manager>(REALIZATION_CONFIG_PATH);
     manager->read(catchment_collection, utils::getStdOut());
