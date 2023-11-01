@@ -4,6 +4,7 @@
 
 #ifdef NGEN_MPI_ACTIVE
 
+#include <HY_Features_Ids.hpp>
 #include <chrono>
 #include <thread>
 
@@ -196,7 +197,7 @@ void HY_PointHydroNexusRemote::add_upstream_flow(double val, std::string catchme
 
 		    // fill the message buffer
 		    stored_sends.back().buffer->time_step = t;
-		    stored_sends.back().buffer->catchment_id = std::stoi( id.substr(4) );
+		    stored_sends.back().buffer->catchment_id = std::stoi( id.substr( id.find(hy_features::identifiers::seperator)+1 ) );
 
 		    // get the correct amount of flow using the inherted function this means are local bookkeeping is accurate
 		    stored_sends.back().buffer->flow = HY_PointHydroNexus::get_downstream_flow(id, t, 100.0);;

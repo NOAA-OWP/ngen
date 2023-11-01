@@ -4,6 +4,7 @@
 #ifdef NGEN_MPI_ACTIVE
 
 #include <HY_PointHydroNexus.hpp>
+#include <HY_Features_Ids.hpp>
 #include <mpi.h>
 #include <vector>
 
@@ -39,7 +40,7 @@ class HY_PointHydroNexusRemote : public HY_PointHydroNexus
         void add_upstream_flow(double val, std::string catchment_id, time_step_t t);
 
         /** extract a numeric id from the catchment id for use as a mpi tag */
-        static long extract(std::string s) {  return std::stoi(s.substr(4)); }
+        static long extract(std::string s) {  return std::stoi( s.substr( s.find(hy_features::identifiers::seperator)+1 ) ); }
         
         const Catchments& get_local_contributing_catchments(){
             return local_contributers;
