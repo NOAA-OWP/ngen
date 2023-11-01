@@ -182,7 +182,12 @@ namespace geojson {
 
             void set_ids(const std::string& id_field_name = "id");
 
-            void update_ids();
+            /**
+             * Update the collection's feature id mapping
+             * 
+             * @param alt_id Optional, An alternative feature property to also index the feature by
+            */
+            void update_ids(const std::string& alt_id = {});
 
             int link_features_from_property(std::string* from_property = nullptr, std::string* to_property = nullptr);
 

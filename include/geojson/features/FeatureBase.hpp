@@ -396,6 +396,15 @@ namespace geojson {
                 return id;
             }
 
+            std::string get_id(std::string alt_id) const {
+                try{
+                    return get_property(alt_id).as_string();
+                }
+                catch(...){
+                    return id;
+                }
+            }
+
             int get_number_of_destination_features() {
                 return destination.size();
             }

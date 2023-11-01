@@ -242,11 +242,14 @@ void FeatureCollection::set_ids(const std::string& id_field_name) {
     this->update_ids();
 }
 
-void FeatureCollection::update_ids() {
+void FeatureCollection::update_ids(const std::string& alt_id ) {
     feature_by_id.clear();
     for (auto feature : features) {
         if (feature->get_id() != "") {
             feature_by_id.emplace(feature->get_id(), feature);
+            if( !alt_id.empty() && (feature->get_id() != feature->get_id(alt_id)) ){
+                feature_by_id.emplace(feature->get_id(alt_id), feature);
+            }
         }
     }
 }
