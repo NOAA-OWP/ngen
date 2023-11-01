@@ -286,7 +286,7 @@ int main(int argc, char *argv[]) {
     //Update the feature ids for the combined collection, using the alternative property 'id'
     //to map features to their primary id as well as the alternative property
     nexus_collection->update_ids("id");
-
+    std::cout<<"Initializing formulations\n";
     std::shared_ptr<realization::Formulation_Manager> manager = std::make_shared<realization::Formulation_Manager>(REALIZATION_CONFIG_PATH);
     manager->read(catchment_collection, utils::getStdOut());
 
@@ -311,7 +311,7 @@ int main(int argc, char *argv[]) {
     }
     #endif //NGEN_MPI_ACTIVE
     #endif //NGEN_ROUTING_ACTIVE
-
+    std::cout<<"Building Feature Index\n";
     std::string link_key = "toid";
     nexus_collection->link_features_from_property(nullptr, &link_key);
     #ifdef NGEN_MPI_ACTIVE
