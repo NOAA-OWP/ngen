@@ -13,7 +13,7 @@ namespace boost {
 struct boost_polygon : public polygon
 {
     using size_type = polygon::size_type;
-
+    
     ~boost_polygon() override = default;
 
   private:

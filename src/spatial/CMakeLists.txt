@@ -13,4 +13,4 @@ target_sources(spatial
         geometry/backends/boost/boost_point.cpp
         geometry/backends/boost/boost_linestring.cpp
 )
-target_link_libraries(spatial PRIVATE Boost::boost)
+target_link_libraries(spatial PUBLIC Boost::boost)

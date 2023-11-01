@@ -19,7 +19,7 @@ struct boost_point : public point
 
     explicit boost_point(value_type x, value_type y);
 
-    ~boost_point() override = default;
+    ~boost_point() override;
 
     reference x() noexcept override;
     reference y() noexcept override;

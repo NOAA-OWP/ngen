@@ -4,6 +4,11 @@ namespace ngen {
 namespace spatial {
 namespace boost {
 
+boost_point::boost_point(value_type x, value_type y)
+  : x_(x), y_(y){};
+
+boost_point::~boost_point() = default;
+
 auto boost_point::x() noexcept -> reference
 {
     return x_;

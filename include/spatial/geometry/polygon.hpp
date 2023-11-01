@@ -35,7 +35,7 @@ struct polygon : public virtual geometry
     //! @brief Get all of this polygon's inner rings.
     //! @return span of pointers to linestrings, or an empty
     //!         span if the polygon has no inner rings.
-    virtual boost::span<pointer> interior() noexcept = 0;
+    virtual ::boost::span<pointer> interior() noexcept = 0;
 
     //! @copydoc polygon::outer()
     virtual const_pointer outer() const noexcept = 0;
@@ -44,7 +44,7 @@ struct polygon : public virtual geometry
     virtual const_pointer inner(size_type n) const = 0;
 
     //! @copydoc polygon::interior()
-    virtual boost::span<const_pointer> interior() const noexcept = 0;
+    virtual ::boost::span<const_pointer> interior() const noexcept = 0;
 
     //! @brief Get the number of rings in this polygon (outer + inners).
     //! @return total number of rings.
