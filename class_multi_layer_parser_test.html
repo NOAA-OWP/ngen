@@ -92,6 +92,7 @@ $(document).ready(function(){initNavTree('class_multi_layer_parser_test.html',''
   <div class="summary">
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
+<a href="#pri-static-methods">Static Private Member Functions</a> &#124;
 <a href="class_multi_layer_parser_test-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">MultiLayerParserTest Class Reference</div></div>
 </div><!--header-->
@@ -101,7 +102,7 @@ $(document).ready(function(){initNavTree('class_multi_layer_parser_test.html',''
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="class_multi_layer_parser_test__inherit__graph.svg" width="182" height="286"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="class_multi_layer_parser_test__inherit__graph.svg" width="182" height="315"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 <div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
@@ -126,6 +127,8 @@ Protected Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
+<tr class="memitem:ad461e2a8dd304cbd69ea7f4f3b68e8f0"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_multi_layer_parser_test.html#ad461e2a8dd304cbd69ea7f4f3b68e8f0">path_options</a></td></tr>
+<tr class="separator:ad461e2a8dd304cbd69ea7f4f3b68e8f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad50a645c562bdf330f0fb3060f68cabb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacegeojson.html#a0575056bcdcce0ccba81e6875591b702">geojson::GeoJSON</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_multi_layer_parser_test.html#ad50a645c562bdf330f0fb3060f68cabb">nexus_collection</a></td></tr>
 <tr class="separator:ad50a645c562bdf330f0fb3060f68cabb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac4a18f7278bf26c6341594763c030cee"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacegeojson.html#a0575056bcdcce0ccba81e6875591b702">geojson::GeoJSON</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_multi_layer_parser_test.html#ac4a18f7278bf26c6341594763c030cee">catchment_collection</a></td></tr>
@@ -138,6 +141,11 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a2bf4076015e6c95f57f0b1259a7288b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a048e980081ef92bdcc38a7bb03079d58"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_multi_layer_parser_test.html#a048e980081ef92bdcc38a7bb03079d58">realization_config_path</a></td></tr>
 <tr class="separator:a048e980081ef92bdcc38a7bb03079d58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-static-methods" name="pri-static-methods"></a>
+Static Private Member Functions</h2></td></tr>
+<tr class="memitem:aafae839550f5e38fc3a813ee5c01551f"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_multi_layer_parser_test.html#aafae839550f5e38fc3a813ee5c01551f">find_file</a> (std::vector&lt; std::string &gt; dir_opts, const std::string &amp;basename)</td></tr>
+<tr class="separator:aafae839550f5e38fc3a813ee5c01551f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a3136aa6cef67001890fb06d043de65c3" name="a3136aa6cef67001890fb06d043de65c3"></a>
@@ -162,6 +170,8 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="class_multi_layer_parser_test.html#a2bf4076015e6c95f57f0b1259a7288b3">catchment_data_path</a>, <a class="el" href="class_multi_layer_parser_test.html#aafae839550f5e38fc3a813ee5c01551f">find_file()</a>, <a class="el" href="class_multi_layer_parser_test.html#a8ee6190260a9e8fe19abb7feef65e57d">nexus_data_path</a>, <a class="el" href="class_multi_layer_parser_test.html#ad461e2a8dd304cbd69ea7f4f3b68e8f0">path_options</a>, and <a class="el" href="class_multi_layer_parser_test.html#a048e980081ef92bdcc38a7bb03079d58">realization_config_path</a>.</p>
 
 </div>
 </div>
@@ -191,6 +201,46 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="aafae839550f5e38fc3a813ee5c01551f" name="aafae839550f5e38fc3a813ee5c01551f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aafae839550f5e38fc3a813ee5c01551f">&#9670;&#160;</a></span>find_file()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static std::string MultiLayerParserTest::find_file </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; std::string &gt;&#160;</td>
+          <td class="paramname"><em>dir_opts</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>basename</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classutils_1_1_file_checker.html#a2efbb141154cbd238630553706a75b8d">utils::FileChecker::find_first_readable()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="class_multi_layer_parser_test.html#a3136aa6cef67001890fb06d043de65c3">MultiLayerParserTest()</a>.</p>
+
+</div>
+</div>
 <a id="a6f6275ff135fa103216839e8f8c5b1c3" name="a6f6275ff135fa103216839e8f8c5b1c3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6f6275ff135fa103216839e8f8c5b1c3">&#9670;&#160;</a></span>SetUp()</h2>
 
@@ -288,7 +338,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="class_multi_layer_parser_test.html#a6f6275ff135fa103216839e8f8c5b1c3">SetUp()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="class_multi_layer_parser_test.html#a3136aa6cef67001890fb06d043de65c3">MultiLayerParserTest()</a>, and <a class="el" href="class_multi_layer_parser_test.html#a6f6275ff135fa103216839e8f8c5b1c3">SetUp()</a>.</p>
 
 </div>
 </div>
@@ -358,7 +408,39 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="class_multi_layer_parser_test.html#a6f6275ff135fa103216839e8f8c5b1c3">SetUp()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="class_multi_layer_parser_test.html#a3136aa6cef67001890fb06d043de65c3">MultiLayerParserTest()</a>, and <a class="el" href="class_multi_layer_parser_test.html#a6f6275ff135fa103216839e8f8c5b1c3">SetUp()</a>.</p>
+
+</div>
+</div>
+<a id="ad461e2a8dd304cbd69ea7f4f3b68e8f0" name="ad461e2a8dd304cbd69ea7f4f3b68e8f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad461e2a8dd304cbd69ea7f4f3b68e8f0">&#9670;&#160;</a></span>path_options</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;std::string&gt; MultiLayerParserTest::path_options</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= {</div>
+<div class="line">            <span class="stringliteral">&quot;&quot;</span>,</div>
+<div class="line">            <span class="stringliteral">&quot;../&quot;</span>,</div>
+<div class="line">            <span class="stringliteral">&quot;../../&quot;</span>,</div>
+<div class="line">            <span class="stringliteral">&quot;./test/&quot;</span>,</div>
+<div class="line">            <span class="stringliteral">&quot;../test/&quot;</span>,</div>
+<div class="line">            <span class="stringliteral">&quot;../../test/&quot;</span></div>
+<div class="line">        }</div>
+</div><!-- fragment -->
+<p class="reference">Referenced by <a class="el" href="class_multi_layer_parser_test.html#a3136aa6cef67001890fb06d043de65c3">MultiLayerParserTest()</a>.</p>
 
 </div>
 </div>
@@ -382,6 +464,8 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="reference">Referenced by <a class="el" href="class_multi_layer_parser_test.html#a3136aa6cef67001890fb06d043de65c3">MultiLayerParserTest()</a>.</p>
+
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
@@ -393,7 +477,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_multi_layer_parser_test.html">MultiLayerParserTest</a></li>
-    <li class="footer">Generated on Wed Nov 1 2023 20:13:38 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
+    <li class="footer">Generated on Thu Nov 2 2023 14:10:38 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
   </ul>
 </div>
 </body>
