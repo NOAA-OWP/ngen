@@ -33,9 +33,10 @@ namespace models {
             {
                 // This replicates a lot of Initialize, but it's necessary to be able to do it separately to support
                 // "initializing" on construction, given using Initialize requires use of virtual functions
+                errno = 0;
                 if (!utils::FileChecker::file_is_readable(this->bmi_init_config)) {
                     init_exception_msg = "Cannot create and initialize " + this->model_name + " using unreadable file '"
-                            + this->bmi_init_config + "'";
+                            + this->bmi_init_config + "'. Error: "+std::strerror(errno);
                     throw std::runtime_error(init_exception_msg);
                 }
             }
@@ -164,6 +165,7 @@ namespace models {
             void Initialize() {
                 // If there was previous init attempt but w/ failure exception, throw runtime error and include previous
                 // message
+                errno = 0;
                 if (model_initialized && !init_exception_msg.empty()) {
                     throw std::runtime_error(
                             "Previous " + model_name + " init attempt had exception: \n\t" + init_exception_msg);
@@ -174,7 +176,7 @@ namespace models {
                 }
                 else if (!utils::FileChecker::file_is_readable(bmi_init_config)) {
                     init_exception_msg = "Cannot initialize " + model_name + " using unreadable file '"
-                            + bmi_init_config + "'";
+                            + bmi_init_config + "'. Error: "+std::strerror(errno);;
                     throw std::runtime_error(init_exception_msg);
                 }
                 else {
