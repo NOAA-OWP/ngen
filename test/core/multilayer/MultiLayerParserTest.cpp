@@ -1,16 +1,32 @@
 
 #include "gtest/gtest.h"
+#include "FileChecker.h"
 #include <Formulation_Manager.hpp>
 
 class MultiLayerParserTest : public ::testing::Test {
+
+    static std::string find_file(std::vector<std::string> dir_opts, const std::string& basename) {
+        std::vector<std::string> file_opts(dir_opts.size());
+        for (int i = 0; i < dir_opts.size(); ++i)
+            file_opts[i] = dir_opts[i] + basename;
+        return utils::FileChecker::find_first_readable(file_opts);
+    }
     protected:
 
-        MultiLayerParserTest() : 
-            nexus_data_path("./data/nexus_data.geojson"),
-            catchment_data_path("./data/catchment_data_multilayer.geojson"),
-            realization_config_path("./data/example_multilayer_realization_config.json")
-        {
+        std::vector<std::string> path_options = {
+            "",
+            "../",
+            "../../",
+            "./test/",
+            "../test/",
+            "../../test/"
+        };
 
+        MultiLayerParserTest()
+        {
+            nexus_data_path = find_file(path_options, "./data/nexus_data.geojson");
+            catchment_data_path = find_file(path_options, "./data/catchment_data_multilayer.geojson");
+            realization_config_path = find_file(path_options, "./data/example_multilayer_realization_config.json");
         }
 
         ~MultiLayerParserTest() override {
