@@ -17,12 +17,16 @@ struct boost_linestring : public linestring
     using pointer       = boost_point*;
     using const_pointer = const boost_point*;
 
+    boost_linestring(std::initializer_list<boost_point> pts)
+      : data_(pts){};
+
     ~boost_linestring() override = default;
 
-    pointer at(size_type n) override;
+    size_type size() const noexcept override;
+    pointer get(size_type n) override;
+    void    set(size_type n,  ngen::spatial::point* pt) override;
     pointer front() noexcept override;
     pointer back() noexcept override;
-    const_pointer at(size_type n) const override;
     const_pointer front() const noexcept override;
     const_pointer back() const noexcept override;
 

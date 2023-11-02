@@ -1,6 +1,7 @@
 #ifndef NGEN_SPATIAL_GEOMETRY_LINESTRING_HPP
 #define NGEN_SPATIAL_GEOMETRY_LINESTRING_HPP
 
+#include <iterator>
 #include "geometry.hpp"
 #include "point.hpp"
 
@@ -12,16 +13,27 @@ namespace spatial {
 //! Provides a polymorphic interface to backend linestring types.
 struct linestring : public virtual geometry
 {
-    using size_type     = geometry::size_type;
-    using pointer       = point*;
-    using const_pointer = const point*;
+    using size_type      = geometry::size_type;
+    using pointer        = point*;
+    using const_pointer  = const point*;
+    using iterator       = pointer;
+    using const_iterator = const_pointer;
 
     ~linestring() override = default;
+
+    //! @brief Get the number of points in this linestring.
+    //! @return number of points
+    virtual size_type size() const noexcept = 0;
 
     //! @brief Get the Nth point in this linestring.
     //! @param n Index of point to retrieve.
     //! @return pointer to a polymorphic point, or `nullptr` if out of bounds.
-    virtual pointer at(size_type n) = 0;
+    virtual pointer get(size_type n) = 0;
+
+    //! @brief Set the Nth point in this linestring.
+    //! @param n Index of point to retrieve
+    //! @param p Point to set, does not need to be heap-allocated
+    virtual void set(size_type n, pointer p) = 0;
 
     //! @brief Get the starting point for this linestring.
     //! @return pointer to a polymorphic point, or `nullptr` if empty.
@@ -30,9 +42,6 @@ struct linestring : public virtual geometry
     //! @brief Get the ending point for this linestring.
     //! @return pointer to a polymorphic point, or `nullptr` if empty.
     virtual pointer back() noexcept = 0;
-
-    //! @copydoc linestring::at(size_type)
-    virtual const_pointer at(size_type n) const  = 0;
 
     //! @copydoc linestring::front()
     virtual const_pointer front() const noexcept = 0;

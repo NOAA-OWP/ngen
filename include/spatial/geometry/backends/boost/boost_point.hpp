@@ -17,7 +17,7 @@ struct boost_point : public point
     using reference       = point::reference;
     using const_reference = point::const_reference;
 
-    explicit boost_point(value_type x, value_type y);
+    boost_point(value_type x, value_type y);
 
     ~boost_point() override;
 

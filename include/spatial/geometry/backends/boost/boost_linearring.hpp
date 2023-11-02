@@ -19,10 +19,9 @@ struct boost_linearring : public linestring
 
     ~boost_linearring() override = default;
 
-    pointer at(size_type n) override;
+    pointer get(size_type n) override;
     pointer front() noexcept override;
     pointer back() noexcept override;
-    const_pointer at(size_type n) const override;
     const_pointer front() const noexcept override;
     const_pointer back() const noexcept override;
 

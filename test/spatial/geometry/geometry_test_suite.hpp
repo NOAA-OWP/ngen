@@ -7,6 +7,7 @@
 #include <geometry/point.hpp>
 #include <geometry/linestring.hpp>
 #include <geometry/polygon.hpp>
+#include "geometry/backends/boost/boost_point.hpp"
 
 #define NGEN_FORCE_INLINE inline __attribute__((always_inline))
 
@@ -43,7 +44,30 @@ NGEN_FORCE_INLINE void point_tests(ngen::spatial::geometry* geom)
     EXPECT_NEAR(ptr->y(), y, 1e-6);
 }
 
-NGEN_FORCE_INLINE void linestring_tests() {};
+NGEN_FORCE_INLINE void linestring_tests(ngen::spatial::geometry* geom)
+{
+    static testing::internal::Random rng{1234};
+    static auto ptr = dynamic_cast<ngen::spatial::linestring*>(geom);
+
+    ASSERT_EQ(ptr->type(), ngen::spatial::geometry_t::linestring);
+
+    // Test Case: ensure read access
+    double x = 1, y = 2;
+    for (size_t i = 0; i < ptr->size(); i++) {
+        decltype(auto) pt = ptr->get(i);
+        EXPECT_EQ(pt->x(), x);
+        EXPECT_EQ(pt->y(), y);
+        x += 2;
+        y += 2;
+    }
+
+    // Test Case: ensure element assignment
+    boost::boost_point new_pt{9, 10};
+    ptr->set(1, &new_pt);
+    EXPECT_EQ(ptr->get(1)->x(), 9);
+    EXPECT_EQ(ptr->get(1)->y(), 10);
+};
+
 NGEN_FORCE_INLINE void polygon_tests() {};
 
 } // namespace detail
@@ -64,7 +88,7 @@ NGEN_FORCE_INLINE void perform_geometry_tests(ngen::spatial::geometry* geom)
         case geometry_type::point:
             return detail::point_tests(geom);
         case geometry_type::linestring:
-            return detail::linestring_tests();
+            return detail::linestring_tests(geom);
         case geometry_type::polygon:
             return detail::polygon_tests();
 
