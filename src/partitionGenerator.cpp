@@ -14,7 +14,7 @@
 #include <tuple>
 
 #ifdef NGEN_WITH_SQLITE3
-#include <GeoPackage.hpp>
+#include <geopackage.hpp>
 #endif
 
 #include "core/Partition_Parser.hpp"
@@ -429,7 +429,7 @@ int main(int argc, char* argv[])
     if (boost::algorithm::ends_with(catchmentDataFile, "gpkg"))
     {
         #ifdef NGEN_WITH_SQLITE3
-        catchment_collection = std::move( geopackage::read(catchmentDataFile, "divides", catchment_subset_ids) );
+        catchment_collection = std::move( ngen::geopackage::read(catchmentDataFile, "divides", catchment_subset_ids) );
         #else
         throw std::runtime_error("SQLite3 support required to read GeoPackage files.");
         #endif
@@ -461,7 +461,7 @@ int main(int argc, char* argv[])
     if (boost::algorithm::ends_with(nexusDataFile, "gpkg")) 
     {
       #ifdef NGEN_WITH_SQLITE3
-      global_nexus_collection = std::move( geopackage::read(nexusDataFile, "nexus", nexus_subset_ids) );
+      global_nexus_collection = std::move( ngen::geopackage::read(nexusDataFile, "nexus", nexus_subset_ids) );
       #else
       throw std::runtime_error("SQLite3 support required to read GeoPackage files.");
       #endif
