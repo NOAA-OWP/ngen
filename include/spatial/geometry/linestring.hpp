@@ -35,6 +35,11 @@ struct linestring : public virtual geometry
     //! @param p Point to set, does not need to be heap-allocated
     virtual void set(size_type n, pointer p) = 0;
 
+    //! @brief Set the size of this linestring.
+    //! @note If `n` is smaller than the current size, the linestring is truncated.
+    //! @param n Number of points this linestring should be sized to.
+    virtual void resize(size_type n) = 0;
+
     //! @brief Get the starting point for this linestring.
     //! @return pointer to a polymorphic point, or `nullptr` if empty.
     virtual pointer front() noexcept = 0;

@@ -12,5 +12,6 @@ target_sources(spatial
         feature.cpp
         geometry/backends/boost/boost_point.cpp
         geometry/backends/boost/boost_linestring.cpp
+        geometry/backends/boost/boost_linearring.cpp
 )
 target_link_libraries(spatial PUBLIC Boost::boost)

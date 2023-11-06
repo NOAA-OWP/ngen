@@ -1,26 +1,26 @@
-#include <geometry/backends/boost/boost_linestring.hpp>
+#include <geometry/backends/boost/boost_linearring.hpp>
 
 namespace ngen {
 namespace spatial {
 namespace boost {
 
-boost_linestring::boost_linestring(std::initializer_list<boost_point> pts)
+boost_linearring::boost_linearring(std::initializer_list<boost_point> pts)
   : data_(pts){};
 
-auto boost_linestring::size() const noexcept -> size_type
+auto boost_linearring::size() const noexcept -> size_type
 {
     return data_.size();
 }
 
-auto boost_linestring::get(size_type n) -> pointer
+auto boost_linearring::get(size_type n) -> pointer
 {
     return &data_.at(n);
 }
 
-void boost_linestring::set(size_type n, ngen::spatial::point* pt)
+void boost_linearring::set(size_type n, ngen::spatial::point* pt)
 {
     // TODO: This might be expensive
-    auto casted = dynamic_cast<boost_point*>(pt);
+    decltype(auto) casted = dynamic_cast<boost_point*>(pt);
     if (casted == nullptr) {
         // If `pt` is not a boost_point, then
         // we need to copy from the backend into
@@ -32,27 +32,27 @@ void boost_linestring::set(size_type n, ngen::spatial::point* pt)
     data_.at(n) = *casted;
 }
 
-void boost_linestring::resize(size_type n)
+void boost_linearring::resize(size_type n)
 {
     data_.resize(n);
 }
 
-auto boost_linestring::front() noexcept -> pointer
+auto boost_linearring::front() noexcept -> pointer
 {
     return &data_.front();
 }
 
-auto boost_linestring::back() noexcept -> pointer
+auto boost_linearring::back() noexcept -> pointer
 {
     return &data_.back();
 }
 
-auto boost_linestring::front() const noexcept -> const_pointer
+auto boost_linearring::front() const noexcept -> const_pointer
 {
     return &data_.front();
 }
 
-auto boost_linestring::back() const noexcept -> const_pointer
+auto boost_linearring::back() const noexcept -> const_pointer
 {
     return &data_.back();
 }

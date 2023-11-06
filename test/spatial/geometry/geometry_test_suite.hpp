@@ -7,6 +7,7 @@
 #include <geometry/point.hpp>
 #include <geometry/linestring.hpp>
 #include <geometry/polygon.hpp>
+#include <initializer_list>
 #include "geometry/backends/boost/boost_point.hpp"
 
 #define NGEN_FORCE_INLINE inline __attribute__((always_inline))
@@ -23,6 +24,13 @@ namespace tests {
 
 namespace detail {
 
+//! Spatial Features Point Test Suite
+//!
+//! Applies the following tests:
+//! - Reference access for X coordinate
+//! - Reference access for Y coordinate
+//! - Reference assignment for X coordinate
+//! - Reference assignment for Y coordinate
 NGEN_FORCE_INLINE void point_tests(ngen::spatial::geometry* geom)
 {
     static testing::internal::Random rng{1234};
@@ -44,17 +52,35 @@ NGEN_FORCE_INLINE void point_tests(ngen::spatial::geometry* geom)
     EXPECT_NEAR(ptr->y(), y, 1e-6);
 }
 
+//! Spatial Features LineString Test Suite
+//!
+//! Applies the following tests:
+//! - OOP-like access to linestring points
+//! - OOP-like assignment to linestring points
 NGEN_FORCE_INLINE void linestring_tests(ngen::spatial::geometry* geom)
-{
+{   
     static testing::internal::Random rng{1234};
     static auto ptr = dynamic_cast<ngen::spatial::linestring*>(geom);
 
     ASSERT_EQ(ptr->type(), ngen::spatial::geometry_t::linestring);
 
+    ptr->resize(10);
+
+    // Reset contents
+    for (size_t i = 0; i < ptr->size(); i++) {
+        decltype(auto) pt = ptr->get(i);
+        pt->x() = rng.Generate(rng.kMaxRange);
+        pt->y() = rng.Generate(rng.kMaxRange);
+    }
+
     // Test Case: ensure read access
     double x = 1, y = 2;
     for (size_t i = 0; i < ptr->size(); i++) {
         decltype(auto) pt = ptr->get(i);
+        EXPECT_NE(pt->x(), x);
+        EXPECT_NE(pt->y(), y);
+        pt->x() = x;
+        pt->y() = y;
         EXPECT_EQ(pt->x(), x);
         EXPECT_EQ(pt->y(), y);
         x += 2;
@@ -68,10 +94,19 @@ NGEN_FORCE_INLINE void linestring_tests(ngen::spatial::geometry* geom)
     EXPECT_EQ(ptr->get(1)->y(), 10);
 };
 
-NGEN_FORCE_INLINE void polygon_tests() {};
+NGEN_FORCE_INLINE void polygon_tests(ngen::spatial::geometry* geom)
+{
+    static testing::internal::Random rng{1234};
+    static auto ptr = dynamic_cast<ngen::spatial::polygon*>(geom);
+
+    ASSERT_EQ(ptr->type(), ngen::spatial::geometry_t::polygon);
+
+    // TODO:
+};
 
 } // namespace detail
 
+//! Apply test suites to an abstract geometry dependent on its derived type.
 NGEN_FORCE_INLINE void perform_geometry_tests(ngen::spatial::geometry* geom)
 {
     if (geom == nullptr) {
@@ -90,7 +125,7 @@ NGEN_FORCE_INLINE void perform_geometry_tests(ngen::spatial::geometry* geom)
         case geometry_type::linestring:
             return detail::linestring_tests(geom);
         case geometry_type::polygon:
-            return detail::polygon_tests();
+            return detail::polygon_tests(geom);
 
         case geometry_type::geometry_collection:
             typestr = "geometry_collection";

@@ -17,13 +17,18 @@ struct boost_linearring : public linestring
     using pointer       = boost_point*;
     using const_pointer = const boost_point*;
 
+    boost_linearring(std::initializer_list<boost_point> pts);
+
     ~boost_linearring() override = default;
 
-    pointer get(size_type n) override;
-    pointer front() noexcept override;
-    pointer back() noexcept override;
-    const_pointer front() const noexcept override;
-    const_pointer back() const noexcept override;
+    size_type     size()                      const noexcept override;
+    pointer       get(size_type n)                           override;
+    void          set(size_type n, ngen::spatial::point* pt) override;
+    void          resize(size_type n)                        override;
+    pointer       front()                           noexcept override;
+    pointer       back()                            noexcept override;
+    const_pointer front()                     const noexcept override;
+    const_pointer back()                      const noexcept override;
 
   private:
     ::boost::geometry::model::ring<boost_point> data_;
