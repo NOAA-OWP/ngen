@@ -1,19 +1,21 @@
-#include "GeoPackage.hpp"
+#include "geopackage.hpp"
 
 #include <numeric>
 #include <regex>
 
 void check_table_name(const std::string& table)
 {
-    if (boost::algorithm::starts_with(table, "sqlite_"))
+    if (boost::algorithm::starts_with(table, "sqlite_")) {
         throw std::runtime_error("table `" + table + "` is not queryable");
+    }
 
     std::regex allowed("[^-A-Za-z0-9_ ]+");
-    if (std::regex_match(table, allowed))
+    if (std::regex_match(table, allowed)) {
         throw std::runtime_error("table `" + table + "` contains invalid characters");
+    }
 }
 
-std::shared_ptr<geojson::FeatureCollection> geopackage::read(
+std::shared_ptr<geojson::FeatureCollection> ngen::geopackage::read(
     const std::string& gpkg_path,
     const std::string& layer = "",
     const std::vector<std::string>& ids = {}
@@ -22,10 +24,10 @@ std::shared_ptr<geojson::FeatureCollection> geopackage::read(
     // Check for malicious/invalid layer input
     check_table_name(layer);
 
-    sqlite db(gpkg_path);
+    ngen::sqlite::database db{gpkg_path};
 
     // Check if layer exists
-    if (!db.has_table(layer)) {
+    if (!db.contains(layer)) {
         // Since the layer doesn't exist, we need to output some additional
         // debug information with the error. In this case, we add ALL the tables
         // available in the GPKG, so that if the user sees this error, then it
@@ -49,7 +51,7 @@ std::shared_ptr<geojson::FeatureCollection> geopackage::read(
     if(layer == "divides"){
         try {
             //TODO: A bit primitive. Actually introspect the schema somehow? https://www.sqlite.org/c3ref/funclist.html
-            sqlite_iter query_get_first_row = db.query("SELECT divide_id FROM " + layer + " LIMIT 1");
+            auto query_get_first_row = db.query("SELECT divide_id FROM " + layer + " LIMIT 1");
             id_column = "divide_id";
         }
         catch (const std::exception& e){
@@ -77,13 +79,13 @@ std::shared_ptr<geojson::FeatureCollection> geopackage::read(
     }
 
     // Get number of features
-    sqlite_iter query_get_layer_count = db.query("SELECT COUNT(*) FROM " + layer + joined_ids, ids);
+    auto query_get_layer_count = db.query("SELECT COUNT(*) FROM " + layer + joined_ids, ids);
     query_get_layer_count.next();
     const int layer_feature_count = query_get_layer_count.get<int>(0);
 
     #ifndef NGEN_QUIET
     // output debug info on what is read exactly
-    std::cout << "Reading " << layer_feature_count << " features in layer " << layer << " from "<<id_column<<": ";
+    std::cout << "Reading " << layer_feature_count << " features from layer " << layer << " using ID column `"<< id_column << "`";
     if (!ids.empty()) {
         std::cout << " (id subset:";
         for (auto& id : ids) {
@@ -95,12 +97,12 @@ std::shared_ptr<geojson::FeatureCollection> geopackage::read(
     #endif
 
     // Get layer feature metadata (geometry column name + type)
-    sqlite_iter query_get_layer_geom_meta = db.query("SELECT column_name FROM gpkg_geometry_columns WHERE table_name = ?", layer);
+    auto query_get_layer_geom_meta = db.query("SELECT column_name FROM gpkg_geometry_columns WHERE table_name = ?", layer);
     query_get_layer_geom_meta.next();
     const std::string layer_geometry_column = query_get_layer_geom_meta.get<std::string>(0);
 
     // Get layer
-    sqlite_iter query_get_layer = db.query("SELECT * FROM " + layer + joined_ids, ids);
+    auto query_get_layer = db.query("SELECT * FROM " + layer + joined_ids, ids);
     query_get_layer.next();
 
     // build features out of layer query

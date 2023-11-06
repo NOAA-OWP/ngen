@@ -1,9 +1,9 @@
 #include <boost/geometry/core/cs.hpp>
 #include <gtest/gtest.h>
 
-#include <WKB.hpp>
+#include <wkb.hpp>
 
-using namespace geopackage;
+using wkb = ngen::geopackage::wkb;
 
 class WKB_Test : public ::testing::Test
 {

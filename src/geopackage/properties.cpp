@@ -1,24 +1,26 @@
-#include "GeoPackage.hpp"
+#include "geopackage.hpp"
 #include "JSONProperty.hpp"
 
-geojson::JSONProperty get_property(const geopackage::sqlite_iter& row, const std::string& name, int type)
+geojson::JSONProperty get_property(
+    const ngen::sqlite::database::iterator& row,
+    const std::string& name,
+    int type
+)
 {
-    if (type == SQLITE_INTEGER) {
-        auto val = row.get<int>(name);
-        return geojson::JSONProperty(name, val);
-    } else if (type == SQLITE_FLOAT) {
-        auto val = row.get<double>(name);
-        return geojson::JSONProperty(name, val);
-    } else if (type == SQLITE_TEXT) {
-        auto val = row.get<std::string>(name);
-        return geojson::JSONProperty(name, val);
-    } else {
-        return geojson::JSONProperty(name, "null");
+    switch(type) {
+        case SQLITE_INTEGER:
+            return { name, row.get<int>(name)};
+        case SQLITE_FLOAT:
+            return { name, row.get<double>(name)};
+        case SQLITE_TEXT:
+            return { name, row.get<std::string>(name)};
+        default:
+            return { name, "null" };
     }
 }
 
-geojson::PropertyMap geopackage::build_properties(
-    const sqlite_iter& row,
+geojson::PropertyMap ngen::geopackage::build_properties(
+    const ngen::sqlite::database::iterator& row,
     const std::string& geom_col
 )
 {

@@ -8,6 +8,7 @@
 
 namespace bg = boost::geometry;
 
+namespace ngen {
 namespace geopackage {
 
 /**
@@ -112,5 +113,6 @@ struct wkb::wgs84 : public boost::static_visitor<geojson::geometry>
 };
 
 } // namespace geopackage
+} // namespace ngen
 
 #endif // NGEN_GEOPACKAGE_WKB_H
