@@ -1,9 +1,9 @@
-#include "GeoPackage.hpp"
+#include "geopackage.hpp"
 #include "EndianCopy.hpp"
-#include "WKB.hpp"
+#include "wkb.hpp"
 
-geojson::geometry geopackage::build_geometry(
-    const sqlite_iter& row,
+geojson::geometry ngen::geopackage::build_geometry(
+    const ngen::sqlite::database::iterator& row,
     const std::string& geom_col,
     std::vector<double>& bounding_box
 )
@@ -23,7 +23,7 @@ geojson::geometry geopackage::build_geometry(
     index++;
 
     // Read srs_id
-    uint32_t srs_id;
+    uint32_t srs_id = 0;
     utils::copy_from(geometry_blob, index, srs_id, endian);
     
     const auto epsg = wkb::get_prj(srs_id);

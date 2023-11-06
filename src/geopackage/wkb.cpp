@@ -1,6 +1,7 @@
-#include "WKB.hpp"
+#include "wkb.hpp"
 
-using namespace geopackage;
+namespace ngen {
+namespace geopackage {
 
 enum wkb_geom_t {
     geometry            = 0,
@@ -366,3 +367,6 @@ geojson::geometry wkb::wgs84::operator()(multipolygon_t& g)
 
     return h;
 }
+
+} // namespace geopackage
+} // namespace ngen

@@ -2,8 +2,9 @@
 #define NGEN_GEOPACKAGE_H
 
 #include "FeatureCollection.hpp"
-#include "NGen_SQLite.hpp"
+#include "ngen_sqlite.hpp"
 
+namespace ngen {
 namespace geopackage {
 
 /**
@@ -15,7 +16,7 @@ namespace geopackage {
  * @return geojson::geometry GPKG WKB converted and projected to a boost geometry model
  */
 geojson::geometry build_geometry(
-    const sqlite_iter& row,
+    const ngen::sqlite::database::iterator& row,
     const std::string& geom_col,
     std::vector<double>& bounding_box
 );
@@ -28,7 +29,7 @@ geojson::geometry build_geometry(
  * @return geojson::PropertyMap PropertyMap of properties from the given row
  */
 geojson::PropertyMap build_properties(
-    const sqlite_iter& row,
+    const ngen::sqlite::database::iterator& row,
     const std::string& geom_col
 );
 
@@ -40,7 +41,7 @@ geojson::PropertyMap build_properties(
  * @return geojson::Feature Feature containing geometry and properties from the given row
  */
 geojson::Feature build_feature(
-    const sqlite_iter& row,
+    const ngen::sqlite::database::iterator& row,
     const std::string& id_col,
     const std::string& geom_col
 );
@@ -60,4 +61,5 @@ std::shared_ptr<geojson::FeatureCollection> read(
 );
 
 } // namespace geopackage
+} // namespace ngen
 #endif // NGEN_GEOPACKAGE_H
