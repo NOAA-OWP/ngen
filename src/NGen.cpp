@@ -10,7 +10,7 @@
 #include <HY_Features.hpp>
 
 #ifdef NGEN_WITH_SQLITE3
-#include <GeoPackage.hpp>
+#include <geopackage.hpp>
 #endif
 
 #include "NGenConfig.h"
@@ -256,7 +256,7 @@ int main(int argc, char *argv[]) {
     geojson::GeoJSON nexus_collection;
     if (boost::algorithm::ends_with(nexusDataFile, "gpkg")) {
       #ifdef NGEN_WITH_SQLITE3
-      nexus_collection = geopackage::read(nexusDataFile, "nexus", nexus_subset_ids);
+      nexus_collection = ngen::geopackage::read(nexusDataFile, "nexus", nexus_subset_ids);
       #else
       throw std::runtime_error("SQLite3 support required to read GeoPackage files.");
       #endif
@@ -269,7 +269,7 @@ int main(int argc, char *argv[]) {
     geojson::GeoJSON catchment_collection;
     if (boost::algorithm::ends_with(catchmentDataFile, "gpkg")) {
       #ifdef NGEN_WITH_SQLITE3
-      catchment_collection = geopackage::read(catchmentDataFile, "divides", catchment_subset_ids);
+      catchment_collection = ngen::geopackage::read(catchmentDataFile, "divides", catchment_subset_ids);
       #else
       throw std::runtime_error("SQLite3 support required to read GeoPackage files.");
       #endif
