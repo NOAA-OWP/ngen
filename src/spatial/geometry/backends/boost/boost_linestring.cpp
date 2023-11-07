@@ -2,7 +2,7 @@
 
 namespace ngen {
 namespace spatial {
-namespace boost {
+namespace backend {
 
 boost_linestring::boost_linestring(std::initializer_list<boost_point> pts)
   : data_(pts){};
@@ -57,6 +57,6 @@ auto boost_linestring::back() const noexcept -> const_pointer
     return &data_.back();
 }
 
-} // namespace boost
+} // namespace backend
 } // namespace spatial
 } // namespace ngen

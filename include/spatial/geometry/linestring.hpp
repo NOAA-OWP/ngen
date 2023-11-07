@@ -44,12 +44,12 @@ struct linestring : public virtual geometry
     //! @return pointer to a polymorphic point, or `nullptr` if empty.
     virtual pointer front() noexcept = 0;
 
+    //! @copydoc linestring::front()
+    virtual const_pointer front() const noexcept = 0;
+
     //! @brief Get the ending point for this linestring.
     //! @return pointer to a polymorphic point, or `nullptr` if empty.
     virtual pointer back() noexcept = 0;
-
-    //! @copydoc linestring::front()
-    virtual const_pointer front() const noexcept = 0;
 
     //! @copydoc linestring::back()
     virtual const_pointer back() const noexcept  = 0;

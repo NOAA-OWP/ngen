@@ -2,10 +2,13 @@
 
 namespace ngen {
 namespace spatial {
-namespace boost {
+namespace backend {
 
 boost_linearring::boost_linearring(std::initializer_list<boost_point> pts)
   : data_(pts){};
+
+boost_linearring::boost_linearring(::boost::geometry::model::ring<boost_point>& ring)
+  : data_(ring){};
 
 auto boost_linearring::size() const noexcept -> size_type
 {
@@ -57,6 +60,6 @@ auto boost_linearring::back() const noexcept -> const_pointer
     return &data_.back();
 }
 
-} // namespace boost
+} // namespace backend
 } // namespace spatial
 } // namespace ngen

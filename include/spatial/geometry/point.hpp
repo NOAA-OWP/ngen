@@ -21,12 +21,12 @@ struct point : public virtual geometry
     //! @return Reference to the X-coordinate for this point.
     virtual reference x() noexcept = 0;
 
+    //! @copydoc point::x()
+    virtual const_reference x() const noexcept = 0;
+
     //! @brief Get the Y-coordinate
     //! @return Reference to the Y-coordinate for this point.
     virtual reference y() noexcept = 0;
-
-    //! @copydoc point::x()
-    virtual const_reference x() const noexcept = 0;
 
     //! @copydoc point::y()
     virtual const_reference y() const noexcept = 0;

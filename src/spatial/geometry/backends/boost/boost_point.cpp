@@ -2,7 +2,7 @@
 
 namespace ngen {
 namespace spatial {
-namespace boost {
+namespace backend {
 
 boost_point::boost_point(value_type x, value_type y)
   : x_(x), y_(y){};
@@ -29,6 +29,6 @@ auto boost_point::y() const noexcept -> const_reference
     return y_;
 }
 
-} // namespace boost
+} // namespace backend
 } // namespace spatial
 } // namespace ngen

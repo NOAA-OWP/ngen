@@ -9,9 +9,9 @@
 
 namespace ngen {
 namespace spatial {
-namespace boost {
+namespace backend {
 
-struct boost_point : public point
+struct boost_point final : public point
 {
     using value_type      = point::value_type;
     using reference       = point::reference;
@@ -33,12 +33,12 @@ struct boost_point : public point
     value_type y_;
 };
 
-} // namespace boost
+} // namespace backend
 } // namespace spatial
 } // namespace ngen
 
 BOOST_GEOMETRY_REGISTER_POINT_2D(
-  ngen::spatial::boost::boost_point,
+  ngen::spatial::backend::boost_point,
   double,
   boost::geometry::cs::cartesian,
   x(), y()

@@ -9,15 +9,17 @@
 
 namespace ngen {
 namespace spatial {
-namespace boost {
+namespace backend {
 
-struct boost_linearring : public linestring
+struct boost_linearring final : public linestring
 {
     using size_type     = linestring::size_type;
     using pointer       = boost_point*;
     using const_pointer = const boost_point*;
 
     boost_linearring(std::initializer_list<boost_point> pts);
+
+    boost_linearring(::boost::geometry::model::ring<boost_point>& ring);
 
     ~boost_linearring() override = default;
 
@@ -34,10 +36,10 @@ struct boost_linearring : public linestring
     ::boost::geometry::model::ring<boost_point> data_;
 };
 
-} // namespace boost
+} // namespace backend
 } // namespace spatial
 } // namespace ngen
 
-BOOST_GEOMETRY_REGISTER_RING(ngen::spatial::boost::boost_linearring)
+BOOST_GEOMETRY_REGISTER_RING(ngen::spatial::backend::boost_linearring)
 
 #endif // NGEN_SPATIAL_GEOMETRY_BACKENDS_BOOST_BOOST_LINEARRING_HPP

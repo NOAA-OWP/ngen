@@ -9,9 +9,9 @@
 
 namespace ngen {
 namespace spatial {
-namespace boost {
+namespace backend {
 
-struct boost_linestring : public linestring
+struct boost_linestring final : public linestring
 {
     using size_type     = linestring::size_type;
     using pointer       = boost_point*;
@@ -34,10 +34,10 @@ struct boost_linestring : public linestring
     ::boost::geometry::model::linestring<boost_point> data_;
 };
 
-} // namespace boost
+} // namespace backend
 } // namespace spatial
 } // namespace ngen
 
-BOOST_GEOMETRY_REGISTER_LINESTRING(ngen::spatial::boost::boost_linestring)
+BOOST_GEOMETRY_REGISTER_LINESTRING(ngen::spatial::backend::boost_linestring)
 
 #endif // NGEN_SPATIAL_GEOMETRY_BACKENDS_BOOST_BOOST_LINESTRING_HPP
