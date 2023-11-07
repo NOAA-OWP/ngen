@@ -17,17 +17,17 @@ enum class geometry_t
     geometry
 };
 
-/**
- * Spatial Geometry Base Class
- * 
- * Provides a polymorphic interface to geometry types.
- */
+//! @brief Spatial Geometry Base Class
+//! 
+//! Provides a polymorphic interface to geometry types.
 struct geometry
 {
     using size_type = std::size_t;
 
     virtual ~geometry() = default;
 
+    //! @brief Get the type of this geometry.
+    //! @return Geometry type enum
     virtual geometry_t type() noexcept
     {
         return geometry_t::geometry;

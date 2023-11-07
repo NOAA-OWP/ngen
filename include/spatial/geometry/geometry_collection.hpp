@@ -6,6 +6,9 @@
 namespace ngen {
 namespace spatial {
 
+//! @brief Spatial Geometry Collection Base Class
+//!
+//! Provides a polymorphic interface to backend geometry collection types.
 struct geometry_collection : public virtual geometry
 {
     using size_type     = geometry::size_type;
@@ -14,13 +17,27 @@ struct geometry_collection : public virtual geometry
 
     ~geometry_collection() override = default;
 
-    virtual pointer get(size_type n);
+    //! @brief Get the Nth geometry in this collection.
+    //! @param n Index of element to retrieve.
+    //! @return Pointer to a geometry element.
+    virtual pointer get(size_type n) = 0;
 
-    virtual const_pointer get(size_type n) const;
+    //! @copydoc geometry_collection::get(size_type);
+    virtual const_pointer get(size_type n) const = 0;
 
-    virtual void set(size_type n, const_pointer geom);
+    //! @brief Set the Nth geometry in this collection.
+    //! @param n Index of element to set.
+    //! @param geom Geometry object to set.
+    virtual void set(size_type n, const_pointer geom) = 0;
 
-    virtual size_type size() const noexcept;
+    //! @brief Set the size of this collection.
+    //! @note If `n` is smaller than the current size, the collection is truncated.
+    //! @param n Number of geometries to be contained in this collection.
+    virtual void resize(size_type n) = 0;
+
+    //! @brief Get the number of geometries in this collection.
+    //! @return Number of geometries.
+    virtual size_type size() const noexcept = 0;
 
     geometry_t type() noexcept override
     {
