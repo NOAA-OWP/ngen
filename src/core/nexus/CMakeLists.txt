@@ -10,6 +10,8 @@ target_include_directories(core_nexus PUBLIC
         ${PROJECT_SOURCE_DIR}/include/core/catchment
         ${PROJECT_SOURCE_DIR}/include/forcing
         ${PROJECT_SOURCE_DIR}/include/utilities
+        ${PROJECT_SOURCE_DIR}/include/realizations/catchment
+        ${PROJECT_SOURCE_DIR}/include/geojson
         )
 
 target_link_libraries(core_nexus PUBLIC

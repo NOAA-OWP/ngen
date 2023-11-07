@@ -65,6 +65,9 @@ function(ngen_add_test TESTNAME)
 
     if(NGEN_TEST_CREATE)
         add_executable(${TESTNAME} ${NGEN_TEST_OBJECTS})
+        target_include_directories(${TESTNAME} PUBLIC
+            ${CMAKE_CURRENT_LIST_DIR}/bmi
+        )
         target_link_libraries(${TESTNAME} PUBLIC gtest gtest_main ${NGEN_TEST_LIBRARIES})
         set_target_properties(${TESTNAME} PROPERTIES FOLDER test)
         gtest_discover_tests(
@@ -113,6 +116,7 @@ ngen_add_test(
         NGen::realizations_catchment
         NGen::core_mediator
         NGen::forcing
+        NGen::ngen_bmi
         testbmicppmodel
         
 )
@@ -194,20 +198,21 @@ ngen_add_test(
 ngen_add_test(
     test_bmi_cpp
     OBJECTS
-        realizations/catchments/Bmi_Cpp_Adapter_Test.cpp
+        bmi/Bmi_Cpp_Adapter_Test.cpp
         realizations/catchments/Bmi_Cpp_Formulation_Test.cpp
     LIBRARIES
         NGen::core
         NGen::realizations_catchment
         NGen::core_mediator
         NGen::forcing
+        NGen::ngen_bmi
 )
 
 ########################## BMI C Tests
 ngen_add_test(
     test_bmi_c
     OBJECTS
-        realizations/catchments/Bmi_C_Adapter_Test.cpp
+        bmi/Bmi_C_Adapter_Test.cpp
         realizations/catchments/Bmi_C_Formulation_Test.cpp
     LIBRARIES
         gmock
@@ -215,6 +220,7 @@ ngen_add_test(
         NGen::realizations_catchment
         NGen::core_mediator
         NGen::forcing
+        NGen::ngen_bmi
     REQUIRES
         NGEN_WITH_BMI_C
 )
@@ -223,13 +229,14 @@ ngen_add_test(
 ngen_add_test(
     test_bmi_fortran
     OBJECTS
-        realizations/catchments/Bmi_Fortran_Adapter_Test.cpp
+        bmi/Bmi_Fortran_Adapter_Test.cpp
         realizations/catchments/Bmi_Fortran_Formulation_Test.cpp
     LIBRARIES
         NGen::core
         NGen::realizations_catchment
         NGen::core_mediator
         NGen::forcing
+        NGen::ngen_bmi
     REQUIRES
         NGEN_WITH_BMI_FORTRAN
 )
@@ -238,13 +245,14 @@ ngen_add_test(
 ngen_add_test(
     test_bmi_python
     OBJECTS
-        realizations/catchments/Bmi_Py_Adapter_Test.cpp
+        bmi/Bmi_Py_Adapter_Test.cpp
         realizations/catchments/Bmi_Py_Formulation_Test.cpp
     LIBRARIES
         NGen::core
         NGen::realizations_catchment
         NGen::core_mediator
         NGen::forcing
+        NGen::ngen_bmi
     REQUIRES
         NGEN_WITH_PYTHON
 )
@@ -260,17 +268,18 @@ ngen_add_test(
         NGen::realizations_catchment
         NGen::core_mediator
         NGen::forcing
+        NGen::ngen_bmi
 )
 
 ########################## All BMI Unit Tests
 ngen_add_test(
     test_bmi_unit_all
     OBJECTS
-        realizations/catchments/Bmi_C_Adapter_Test.cpp
+        bmi/Bmi_C_Adapter_Test.cpp
         realizations/catchments/Bmi_C_Formulation_Test.cpp
-        realizations/catchments/Bmi_Fortran_Adapter_Test.cpp
+        bmi/Bmi_Fortran_Adapter_Test.cpp
         realizations/catchments/Bmi_Fortran_Formulation_Test.cpp
-        realizations/catchments/Bmi_Py_Adapter_Test.cpp
+        bmi/Bmi_Py_Adapter_Test.cpp
         realizations/catchments/Bmi_Py_Formulation_Test.cpp
         realizations/catchments/Bmi_Multi_Formulation_Test.cpp
     LIBRARIES
@@ -279,6 +288,7 @@ ngen_add_test(
         NGen::realizations_catchment
         NGen::core_mediator
         NGen::forcing
+        NGen::ngen_bmi
     REQUIRES
         NGEN_WITH_BMI_C
         NGEN_WITH_BMI_FORTRAN
@@ -296,6 +306,7 @@ ngen_add_test(
         NGen::realizations_catchment
         NGen::core_mediator
         NGen::forcing
+        NGen::ngen_bmi
 )
 
 ########################## Routing Tests
@@ -372,6 +383,7 @@ ngen_add_test(
         NGen::mdarray
         NGen::mdframe
         NGen::logging
+        NGen::ngen_bmi
         testbmicppmodel
         
 )
@@ -409,5 +421,6 @@ ngen_add_test(
         NGen::mdarray
         NGen::mdframe
         NGen::logging
+        NGen::ngen_bmi
         testbmicppmodel
 )
