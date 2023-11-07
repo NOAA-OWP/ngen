@@ -88,7 +88,7 @@ NGEN_FORCE_INLINE void linestring_tests(ngen::spatial::geometry* geom)
     }
 
     // Test Case: ensure element assignment
-    boost::boost_point new_pt{9, 10};
+    backend::boost_point new_pt{9, 10};
     ptr->set(1, &new_pt);
     EXPECT_EQ(ptr->get(1)->x(), 9);
     EXPECT_EQ(ptr->get(1)->y(), 10);
