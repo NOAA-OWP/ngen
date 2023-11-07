@@ -1,4 +1,4 @@
-#include "catchments/Bmi_Testing_Util.hpp"
+#include "Bmi_Testing_Util.hpp"
 #include "Bmi_Cpp_Formulation.hpp"
 #include "DataProvider.hpp"
 #include "DataProviderSelectors.hpp"

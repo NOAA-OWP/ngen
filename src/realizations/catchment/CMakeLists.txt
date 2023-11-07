@@ -11,6 +11,7 @@ target_include_directories(realizations_catchment PUBLIC
         ${PROJECT_SOURCE_DIR}/include/simulation_time
         ${PROJECT_SOURCE_DIR}/include/utilities
         ${PROJECT_SOURCE_DIR}/include/geojson
+        ${PROJECT_SOURCE_DIR}/include/bmi
         )
         
 target_link_libraries(realizations_catchment PUBLIC
@@ -18,12 +19,6 @@ target_link_libraries(realizations_catchment PUBLIC
         NGen::core_catchment
         NGen::geojson
         NGen::logging
+        NGen::ngen_bmi
         )
 
-if(NGEN_WITH_PYTHON)
-   target_link_libraries(realizations_catchment PUBLIC pybind11::embed)
-endif()
-
-if(NGEN_WITH_BMI_FORTRAN)
-    target_link_libraries(realizations_catchment PUBLIC bmi_fortran_iso_c)
-endif()

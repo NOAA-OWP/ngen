@@ -8,6 +8,7 @@ target_include_directories(core_catchment PUBLIC
         ${PROJECT_SOURCE_DIR}/include/core/catchment
         ${PROJECT_SOURCE_DIR}/include/forcing
         ${PROJECT_SOURCE_DIR}/include/utilities
+        ${PROJECT_SOURCE_DIR}/include/realizations/catchment
         )
 
 target_link_libraries(core_catchment PUBLIC

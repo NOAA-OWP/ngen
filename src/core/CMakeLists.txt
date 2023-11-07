@@ -16,6 +16,8 @@ target_include_directories(core PUBLIC
         ${PROJECT_SOURCE_DIR}/include/forcing
         ${PROJECT_SOURCE_DIR}/include/utilities
         ${PROJECT_SOURCE_DIR}/extern/pybind11/include
+        ${PROJECT_SOURCE_DIR}/include/realizations/catchment
+        ${PROJECT_SOURCE_DIR}/include/bmi
         )
 
 if (NGEN_WITH_PYTHON)
