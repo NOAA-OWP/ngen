@@ -3,7 +3,6 @@
 
 #include "FileChecker.h"
 #include "Bmi_C_Adapter.hpp"
-#include "boost/algorithm/string.hpp"
 
 using namespace models::bmi;
 
