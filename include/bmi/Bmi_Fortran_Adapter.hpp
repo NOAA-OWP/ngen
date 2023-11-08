@@ -498,7 +498,7 @@ namespace models {
             inline void construct_and_init_backing_model_for_fortran() {
                 if (model_initialized)
                     return;
-                bmi_model = std::make_shared<Bmi_Fortran_Handle_Wrapper>(Bmi_Fortran_Handle_Wrapper());
+                bmi_model = std::make_unique<Bmi_Fortran_Handle_Wrapper>(Bmi_Fortran_Handle_Wrapper());
                 dynamic_library_load();
                 execModuleRegistration();
                 int init_result = initialize(&bmi_model->handle, bmi_init_config.c_str());
@@ -805,7 +805,7 @@ namespace models {
 
         private:
             /** Pointer to backing BMI model instance. */
-            std::shared_ptr<Bmi_Fortran_Handle_Wrapper> bmi_model = nullptr;
+            std::unique_ptr<Bmi_Fortran_Handle_Wrapper> bmi_model = nullptr;
 
         };
     }
