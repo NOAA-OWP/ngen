@@ -9,7 +9,6 @@
 namespace models {
     namespace bmi {
 
-        template <class C>
         class AbstractCLibBmiAdapter : public Bmi_Adapter {
 
         public:
