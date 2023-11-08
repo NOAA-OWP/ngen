@@ -6,8 +6,6 @@
 
 using namespace models::bmi;
 
-const std::string Bmi_Cpp_Adapter::model_name = "BMI C++ model";
-
 Bmi_Cpp_Adapter::Bmi_Cpp_Adapter(const std::string& type_name, std::string library_file_path, std::string forcing_file_path,
                              bool allow_exceed_end, bool has_fixed_time_step,
                              std::string creator_func, std::string destroyer_func,
@@ -60,7 +58,7 @@ Bmi_Cpp_Adapter::Bmi_Cpp_Adapter(const std::string& type_name, std::string libra
 //  original object closes the handle for its dynamically loaded lib) it make more sense to remove the copy constructor.
 // TODO: However, it may make sense to bring it back once it is possible to serialize and deserialize the model.
 /*
-Bmi_Cpp_Adapter::Bmi_Cpp_Adapter(Bmi_Cpp_Adapter &adapter) : model_name(adapter.model_name),
+Bmi_Cpp_Adapter::Bmi_Cpp_Adapter(Bmi_Cpp_Adapter &adapter) :
                                                        allow_model_exceed_end_time(adapter.allow_model_exceed_end_time),
                                                        bmi_init_config(adapter.bmi_init_config),
                                                        bmi_lib_file(adapter.bmi_lib_file),
