@@ -132,8 +132,6 @@ Bmi_C_Adapter::Bmi_C_Adapter(Bmi_C_Adapter &adapter) : model_name(adapter.model_
 }
 */
 
-Bmi_C_Adapter::Bmi_C_Adapter(Bmi_C_Adapter &&adapter) noexcept : AbstractCLibBmiAdapter<C_Bmi>(std::move(adapter)) { }
-
 std::string Bmi_C_Adapter::GetComponentName() {
     char component_name[BMI_MAX_COMPONENT_NAME];
     if (bmi_model->get_component_name(bmi_model.get(), component_name) != BMI_SUCCESS) {

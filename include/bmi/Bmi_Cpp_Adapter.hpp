@@ -105,7 +105,7 @@ namespace models {
             //Bmi_Cpp_Adapter(Bmi_Cpp_Adapter &adapter);
 
             // Move constructor
-            Bmi_Cpp_Adapter(Bmi_Cpp_Adapter &&adapter) noexcept;
+            Bmi_Cpp_Adapter(Bmi_Cpp_Adapter &&adapter) noexcept = default;
 
             /**
              * Class destructor.
@@ -470,6 +470,8 @@ namespace models {
             // For unit testing
             friend class ::Bmi_Cpp_Adapter_Test;
 
+            /** Pointer to backing BMI model instance. */
+            std::shared_ptr<Cpp_Bmi> bmi_model = nullptr;
         };
 
     }

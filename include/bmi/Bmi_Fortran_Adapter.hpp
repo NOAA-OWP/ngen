@@ -799,6 +799,11 @@ namespace models {
             }
 
             friend class ::Bmi_Fortran_Adapter_Test;
+
+        private:
+            /** Pointer to backing BMI model instance. */
+            std::shared_ptr<Bmi_Fortran_Handle_Wrapper> bmi_model = nullptr;
+
         };
     }
 }

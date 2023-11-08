@@ -83,11 +83,6 @@ Bmi_Cpp_Adapter::Bmi_Cpp_Adapter(Bmi_Cpp_Adapter &adapter) :
 }
 */
 
-Bmi_Cpp_Adapter::Bmi_Cpp_Adapter(Bmi_Cpp_Adapter &&adapter) noexcept : 
-    AbstractCLibBmiAdapter<Cpp_Bmi>(std::move(adapter)),
-    model_create_fname(std::move(adapter.model_create_fname)),
-    model_destroy_fname(std::move(adapter.model_destroy_fname)) { }
-
 std::string Bmi_Cpp_Adapter::GetComponentName() {
     return bmi_model->GetComponentName();
 }
