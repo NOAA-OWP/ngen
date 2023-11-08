@@ -312,8 +312,6 @@ namespace models {
             void UpdateUntil(double time) override;
 
         protected:
-            // TODO: look at setting this in some other way
-            static const std::string model_name;
 
             /**
              * Construct the backing BMI model object, then call its BMI-native ``Initialize()`` function.
@@ -339,12 +337,12 @@ namespace models {
                 if (get_dyn_lib_handle() == nullptr) {
                     if (model_create_fname.empty()) {
                         this->init_exception_msg =
-                                "Can't init " + this->model_name + "; empty name given for module's create function.";
+                                "Can't init BMI C++ model; empty name given for module's create function.";
                         throw std::runtime_error(this->init_exception_msg);
                     }
                     if (model_destroy_fname.empty()){
                         this->init_exception_msg =
-                                "Can't init " + this->model_name + "; empty name given for module's destroy function.";
+                                "Can't init BMI C++ model; empty name given for module's destroy function.";
                         throw std::runtime_error(this->init_exception_msg);
                     }
                     dynamic_library_load();
