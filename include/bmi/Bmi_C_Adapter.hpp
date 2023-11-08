@@ -92,10 +92,9 @@ namespace models {
             //  once original object closes the handle for its dynamically loaded lib) it make more sense to remove the
             //  copy constructor.
             // TODO: However, it may make sense to bring it back once it's possible to serialize/deserialize the model.
-            //Bmi_C_Adapter(Bmi_C_Adapter &adapter);
+            Bmi_C_Adapter(Bmi_C_Adapter &adapter) = delete;
 
-            // Move constructor
-            Bmi_C_Adapter(Bmi_C_Adapter &&adapter) noexcept = default;
+            Bmi_C_Adapter(Bmi_C_Adapter &&adapter) noexcept = delete;
 
             /**
              * Class destructor.

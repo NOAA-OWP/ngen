@@ -41,6 +41,9 @@ namespace models {
                            std::string forcing_file_path, bool allow_exceed_end, bool has_fixed_time_step,
                            utils::StreamHandler output);
 
+            Bmi_Py_Adapter(Bmi_Py_Adapter const&) = delete;
+            Bmi_Py_Adapter(Bmi_Py_Adapter&&) = delete;
+
             /**
              * Copy the given BMI variable's values from the backing numpy array to a C++ array.
              *

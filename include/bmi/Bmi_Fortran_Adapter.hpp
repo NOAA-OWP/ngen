@@ -76,6 +76,9 @@ namespace models {
                 }
             }
 
+            Bmi_Fortran_Adapter(Bmi_Fortran_Adapter const&) = delete;
+            Bmi_Fortran_Adapter(Bmi_Fortran_Adapter&&) = delete;
+
             std::string GetComponentName() override;
 
             /**
