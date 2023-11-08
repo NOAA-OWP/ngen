@@ -562,7 +562,7 @@ namespace models {
             inline void construct_and_init_backing_model_for_type() {
                 if (model_initialized)
                     return;
-                bmi_model = std::make_shared<C_Bmi>(C_Bmi());
+                bmi_model = std::make_unique<C_Bmi>(C_Bmi());
                 execModuleRegistration();
                 int init_result = bmi_model->initialize(bmi_model.get(), bmi_init_config.c_str());
                 if (init_result != BMI_SUCCESS) {
@@ -643,7 +643,7 @@ namespace models {
             friend class ::Bmi_C_Adapter_Test;
 
             /** Pointer to backing BMI model instance. */
-            std::shared_ptr<C_Bmi> bmi_model = nullptr;
+            std::unique_ptr<C_Bmi> bmi_model = nullptr;
 
         };
 
