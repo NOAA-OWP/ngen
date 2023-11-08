@@ -23,13 +23,12 @@ shared_ptr<Bmi_Py_Adapter> Bmi_Py_Formulation::construct_model(const geojson::Pr
     std::string python_type_name = python_type_name_iter->second.as_string();
 
     return std::make_shared<Bmi_Py_Adapter>(
-            Bmi_Py_Adapter(
                     get_model_type_name(),
                     get_bmi_init_config(),
                     python_type_name,
                     get_allow_model_exceed_end_time(),
                     is_bmi_model_time_step_fixed(),
-                    output));
+                    output);
 }
 
 time_t realization::Bmi_Py_Formulation::convert_model_time(const double &model_time) {
