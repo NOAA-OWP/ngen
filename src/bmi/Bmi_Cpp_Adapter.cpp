@@ -25,7 +25,7 @@ Bmi_Cpp_Adapter::Bmi_Cpp_Adapter(const std::string& type_name, std::string libra
                              std::string forcing_file_path, bool allow_exceed_end, bool has_fixed_time_step,
                              std::string creator_func, std::string destroyer_func,
                              utils::StreamHandler output, bool do_initialization)
-                             : AbstractCLibBmiAdapter<Cpp_Bmi>(type_name, library_file_path, std::move(bmi_init_config), std::move(forcing_file_path), allow_exceed_end,
+                             : AbstractCLibBmiAdapter(type_name, library_file_path, std::move(bmi_init_config), std::move(forcing_file_path), allow_exceed_end,
                              has_fixed_time_step, creator_func, output),
                              model_create_fname(std::move(creator_func)),
                              model_destroy_fname(std::move(destroyer_func))

@@ -24,7 +24,7 @@ namespace models {
          * loaded dynamically from libraries. This is less important than e.g. @see Bmi_C_Adapter but still provides
          * some useful generalized functionality.
          */
-        class Bmi_Cpp_Adapter : public AbstractCLibBmiAdapter<Cpp_Bmi>  {
+        class Bmi_Cpp_Adapter : public AbstractCLibBmiAdapter  {
 
         public:
 
