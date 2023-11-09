@@ -73,7 +73,7 @@ jobs:
           #is this required for this test?
           bmi_c: 'ON'
           bmi_fortran: 'ON'
-        timeout-minutes: 15
+        timeout-minutes: 20
 
       - name: Run surfacebmi plus cfebmi
         run: |
