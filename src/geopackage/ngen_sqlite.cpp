@@ -60,7 +60,23 @@ auto database::iterator::next() -> iterator&
 
         if (code == SQLITE_DONE) {
             done_ = true;
-        } else if (code != SQLITE_ROW) {
+        } else if( code == SQLITE_ROW){
+            // Update column dtypes for the next row
+            // There are a couple ways to do this, each with some nuance:
+            // 1) use sqlite3_column_type upon construction of the iterator and inspect the first row
+            //    then use those column types for all rows
+            // 2) use the sqlite3 table definition schema (i.e. PRAGMA table_info(...);) to get column types
+            // 3) check each row during iteration using sqlite3_column_type
+            // 1 & 2 may not produce consistent results because if the value in a column is NaN, 
+            // then sqlite3_column_type will report that as a 5 or NULL type, even if the schema has a datatype
+            // Using 1, when the first row contains NaN but other rows have valid data, then all types are reported as NULL.
+            // Using 2, any NaN/NULL data will get interperted as the schema type
+            // Using 3 ensures we get a non-null type if there is valid data in the column in that row, and NULL when 
+            // no data is present, with a small bit of additional iterator overhead.
+            for (int i = 0; i < ncol_ && i < types_.size(); i++) {
+                types_[i] = (sqlite3_column_type(ptr_(), i));
+            }
+        } else {
             throw sqlite_error{"sqlite3_step", code};
         }
 
