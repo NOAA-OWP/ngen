@@ -195,6 +195,13 @@ namespace hy_features {
          * 
          */
         virtual ~HY_Features(){}
+      
+      protected:
+        /**
+         * @brief network::Network graph of identities.
+         * 
+         */
+        network::Network network;
 
       private:
 
@@ -209,12 +216,6 @@ namespace hy_features {
          * 
          */
         std::unordered_map<std::string, std::shared_ptr<HY_HydroNexus>> _nexuses;
-
-        /**
-         * @brief network::Network graph of identities.
-         * 
-         */
-        network::Network network;
 
         /**
          * @brief Pointer to the formulation manager used to associate catchment formulations with HY_Catchment objects.
