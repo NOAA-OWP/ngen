@@ -546,7 +546,7 @@ namespace realization {
          * @param var_name
          * @return
          */
-        double get_var_value_as_double(const std::string &var_name) {
+        double get_var_value_as_double(const std::string &var_name) override {
             return get_var_value_as_double(0, var_name);
         }
 
@@ -574,7 +574,7 @@ namespace realization {
          * @param var_name
          * @return
          */
-        double get_var_value_as_double(const int& index, const std::string& var_name) {
+        double get_var_value_as_double(const int& index, const std::string& var_name) override {
             auto data_provider_iter = availableData.find(var_name);
             if (data_provider_iter == availableData.end()) {
                 throw external::ExternalIntegrationException(
