@@ -397,12 +397,16 @@ namespace geojson {
             }
 
             std::string get_id(std::string alt_id) const {
+                std::string tmp = id;
                 try{
-                    return get_property(alt_id).as_string();
+                    tmp = get_property(alt_id).as_string();
+                    //if the property exists, but its value is NaN/null
+                    if(tmp == "null") tmp = id;
                 }
                 catch(...){
-                    return id;
+                    tmp = id;
                 }
+                return tmp;
             }
 
             int get_number_of_destination_features() {
