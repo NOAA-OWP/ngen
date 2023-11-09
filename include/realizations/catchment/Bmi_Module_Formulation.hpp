@@ -462,39 +462,6 @@ namespace realization {
         const time_t &get_bmi_model_start_time_forcing_offset_s() override {
             return bmi_model_start_time_forcing_offset_s;
         }
-
-        /**
-         * Get value for some BMI model variable.
-         *
-         * This function assumes that the given variable, while returned by the model within an array per the BMI spec,
-         * is actual a single, scalar value.  Thus, it returns what is at index 0 of the array reference.
-         *
-         * @param index
-         * @param var_name
-         * @return
-         */
-        virtual double get_var_value_as_double(const std::string& var_name) = 0;
-
-        /**
-         * Get value for some BMI model variable at a specific index.
-         *
-         * Function gets the value for a provided variable, returned from the backing model as an array, and returns the
-         * specific value at the desired index cast as a double type.
-         *
-         * The function makes several assumptions:
-         *
-         *     1. `index` is within array bounds
-         *     2. `var_name` is in the set of valid variable names for the model
-         *     3. the type for output variable allows the value to be cast to a `double` appropriately
-         *
-         * It falls to user (functions) of this function to ensure these assumptions hold before invoking.
-         *
-         * @param index
-         * @param var_name
-         * @return
-         */
-        virtual double get_var_value_as_double(const int& index, const std::string& var_name) = 0;
-
         /**
          * Universal logic applied when creating a BMI-backed formulation from NGen config.
          *
