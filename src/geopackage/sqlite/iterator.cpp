@@ -76,7 +76,13 @@ sqlite_iter& sqlite_iter::next()
         const int returncode = sqlite3_step(this->ptr());
         if (returncode == SQLITE_DONE) {
             this->iteration_finished = true;
-        } else if (returncode != SQLITE_ROW) {
+        }
+        else if( returncode == SQLITE_ROW){
+            //Update column dtypes for the next row
+            for (int i = 0; i < this->column_count && i < column_types.size(); i++) {
+                this->column_types[i] = (sqlite3_column_type(this->ptr(), i));
+            }
+        } else {
             throw sqlite_error("sqlite3_step", returncode);
         }
         this->iteration_step++;
