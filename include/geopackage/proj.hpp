@@ -2,6 +2,7 @@
 #define NGEN_GEOPACKAGE_PROJ_HPP
 
 #include <boost/geometry/srs/projection.hpp>
+#include <unordered_map>
 
 namespace ngen {
 namespace srs {
@@ -21,8 +22,8 @@ struct epsg
     static srs_type get(uint32_t srid);
 
   private:
-    static const srs_type epsg5070_;
-    static const srs_type epsg3857_;
+    using def_type = std::unordered_map<int, srs_type>;
+    static const def_type defs_;
 };
 
 } // namespace srs
