@@ -54,8 +54,6 @@ struct wkb {
      */
     static geometry read(const boost::span<const uint8_t> buffer);
 
-    static bg::srs::dpar::parameters<> get_prj(uint32_t srid);
-
   private:
     /**
      * Read a WKB point into a cartesian model.

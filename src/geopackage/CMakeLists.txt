@@ -9,7 +9,8 @@ if (NOT _cmp)
     set_source_files_properties(wkb.cpp PROPERTIES COMPILE_OPTIONS "-O0;-fno-sanitize=all")
 endif()
 
-add_library(geopackage geometry.cpp
+add_library(geopackage proj.cpp
+                       geometry.cpp
                        properties.cpp
                        feature.cpp
                        read.cpp
