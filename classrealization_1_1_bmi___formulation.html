@@ -190,6 +190,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2be85c1e7a58273fc0267c9e99ca38fc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___formulation.html#a2be85c1e7a58273fc0267c9e99ca38fc">set_output_precision</a> (int precision)</td></tr>
 <tr class="memdesc:a2be85c1e7a58273fc0267c9e99ca38fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the precision of output values when converted to text.  <a href="classrealization_1_1_bmi___formulation.html#a2be85c1e7a58273fc0267c9e99ca38fc">More...</a><br /></td></tr>
 <tr class="separator:a2be85c1e7a58273fc0267c9e99ca38fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe0a0501115ae125d6f417f7c252f0d5"><td class="memItemLeft" align="right" valign="top">virtual double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___formulation.html#afe0a0501115ae125d6f417f7c252f0d5">get_var_value_as_double</a> (const std::string &amp;var_name)=0</td></tr>
+<tr class="memdesc:afe0a0501115ae125d6f417f7c252f0d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get value for some BMI model variable.  <a href="classrealization_1_1_bmi___formulation.html#afe0a0501115ae125d6f417f7c252f0d5">More...</a><br /></td></tr>
+<tr class="separator:afe0a0501115ae125d6f417f7c252f0d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acddd464aa09db2fd381a8c12b7d1e5f7"><td class="memItemLeft" align="right" valign="top">virtual double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_bmi___formulation.html#acddd464aa09db2fd381a8c12b7d1e5f7">get_var_value_as_double</a> (const int &amp;index, const std::string &amp;var_name)=0</td></tr>
+<tr class="memdesc:acddd464aa09db2fd381a8c12b7d1e5f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get value for some BMI model variable at a specific index.  <a href="classrealization_1_1_bmi___formulation.html#acddd464aa09db2fd381a8c12b7d1e5f7">More...</a><br /></td></tr>
+<tr class="separator:acddd464aa09db2fd381a8c12b7d1e5f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf21a61a7da1e87a200d8391cb3e33ce"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_catchment___formulation.html#adf21a61a7da1e87a200d8391cb3e33ce">get_response</a> (<a class="el" href="classrealization_1_1_formulation.html#aee10dc672e5a9e106f49dcbe0080cf7c">time_step_t</a> t_index, <a class="el" href="classrealization_1_1_formulation.html#aee10dc672e5a9e106f49dcbe0080cf7c">time_step_t</a> t_delta) override=0</td></tr>
 <tr class="memdesc:adf21a61a7da1e87a200d8391cb3e33ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute the backing model formulation for the given time step, where it is of the specified size, and return the response output.  <a href="classrealization_1_1_catchment___formulation.html#adf21a61a7da1e87a200d8391cb3e33ce">More...</a><br /></td></tr>
 <tr class="separator:adf21a61a7da1e87a200d8391cb3e33ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -824,7 +830,7 @@ Friends</h2></td></tr>
 
 <p class="reference">References <a class="el" href="classrealization_1_1_catchment___formulation.html#a4fe13a1bc94d6c8c0cf47c2248c22f1b">realization::Catchment_Formulation::cat_id</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a8694f5e94f40224efca11a73892da8ff">realization::Bmi_Multi_Formulation::create_multi_formulation()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#afeffb2218b1c297653d88afe685d7abf">realization::Bmi_Multi_Formulation::get_value()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a31836fab0684d4102fb8c534a4d5cad8">realization::Bmi_Multi_Formulation::get_values()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a2b571eebb80d69deffc140c7eccfa8ea">realization::Bmi_Multi_Formulation::get_var_value_as_double()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aa04167ad9a3f4c384673ef1157fb3cb8">realization::Bmi_Module_Formulation&lt; M &gt;::set_model_inputs_prior_to_update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a8694f5e94f40224efca11a73892da8ff">realization::Bmi_Multi_Formulation::create_multi_formulation()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#afeffb2218b1c297653d88afe685d7abf">realization::Bmi_Multi_Formulation::get_value()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a31836fab0684d4102fb8c534a4d5cad8">realization::Bmi_Multi_Formulation::get_values()</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a7d4f42d90cd209e598af952058ed5f23">realization::Bmi_Multi_Formulation::get_var_value_as_double()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aa04167ad9a3f4c384673ef1157fb3cb8">realization::Bmi_Module_Formulation&lt; M &gt;::set_model_inputs_prior_to_update()</a>.</p>
 
 </div>
 </div>
@@ -1512,6 +1518,100 @@ Friends</h2></td></tr>
 </dl>
 
 <p>Implemented in <a class="el" href="class_csv_per_feature_forcing_provider.html#a14b41560f41e9aea01c604136ea5a55f">CsvPerFeatureForcingProvider</a>, <a class="el" href="class_null_forcing_provider.html#a86b93fe9449bcbe7c321952308217fca">NullForcingProvider</a>, <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a31836fab0684d4102fb8c534a4d5cad8">realization::Bmi_Multi_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#af5fe4a67cdb0eb555ced60e0b6fba6d3">realization::Bmi_Module_Formulation&lt; M &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#af5fe4a67cdb0eb555ced60e0b6fba6d3">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_C_Adapter &gt;</a>, <a class="el" href="classrealization_1_1_bmi___module___formulation.html#af5fe4a67cdb0eb555ced60e0b6fba6d3">realization::Bmi_Module_Formulation&lt; models::bmi::Bmi_Cpp_Adapter &gt;</a>, and <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a37c23079f7163f992ea90fd156a6b4d7">data_access::WrappedDataProvider</a>.</p>
+
+</div>
+</div>
+<a id="acddd464aa09db2fd381a8c12b7d1e5f7" name="acddd464aa09db2fd381a8c12b7d1e5f7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acddd464aa09db2fd381a8c12b7d1e5f7">&#9670;&#160;</a></span>get_var_value_as_double() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual double realization::Bmi_Formulation::get_var_value_as_double </td>
+          <td>(</td>
+          <td class="paramtype">const int &amp;&#160;</td>
+          <td class="paramname"><em>index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>var_name</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get value for some BMI model variable at a specific index. </p>
+<p >Function gets the value for a provided variable, returned from the backing model as an array, and returns the specific value at the desired index cast as a double type.</p>
+<p >The function makes several assumptions: </p><pre class="fragment">1. `index` is within array bounds
+2. `var_name` is in the set of valid variable names for the model
+3. the type for output variable allows the value to be cast to a `double` appropriately
+</pre><p> It falls to user (functions) of this function to ensure these assumptions hold before invoking.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">index</td><td></td></tr>
+    <tr><td class="paramname">var_name</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+<p>Implemented in <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a08e3342f5efce58c578b780cc95c0b5b">realization::Bmi_C_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#ab01f9dad8c3c543595848fd9bc8b887b">realization::Bmi_Cpp_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a7d4f42d90cd209e598af952058ed5f23">realization::Bmi_Multi_Formulation</a>.</p>
+
+</div>
+</div>
+<a id="afe0a0501115ae125d6f417f7c252f0d5" name="afe0a0501115ae125d6f417f7c252f0d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe0a0501115ae125d6f417f7c252f0d5">&#9670;&#160;</a></span>get_var_value_as_double() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual double realization::Bmi_Formulation::get_var_value_as_double </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>var_name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get value for some BMI model variable. </p>
+<p >This function assumes that the given variable, while returned by the model within an array per the BMI spec, is actually a single, scalar value. Thus, it returns what is at index 0 of the array reference.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">index</td><td></td></tr>
+    <tr><td class="paramname">var_name</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+<p>Implemented in <a class="el" href="classrealization_1_1_bmi___c___formulation.html#a24a547b89194c92111a340095e9dc461">realization::Bmi_C_Formulation</a>, <a class="el" href="classrealization_1_1_bmi___cpp___formulation.html#a1015936cf99beaccebbf481af36e5883">realization::Bmi_Cpp_Formulation</a>, and <a class="el" href="classrealization_1_1_bmi___multi___formulation.html#a0c3a48f526450134e54affd1a3d40243">realization::Bmi_Multi_Formulation</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#a84c65a95dc9472520092be8bdcf2c853">realization::Bmi_Module_Formulation&lt; M &gt;::get_value()</a>.</p>
 
 </div>
 </div>
@@ -2481,7 +2581,7 @@ Friends</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li><li class="navelem"><a class="el" href="classrealization_1_1_bmi___formulation.html">Bmi_Formulation</a></li>
-    <li class="footer">Generated on Mon Nov 13 2023 21:33:22 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
+    <li class="footer">Generated on Mon Nov 13 2023 23:12:01 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
   </ul>
 </div>
 </body>

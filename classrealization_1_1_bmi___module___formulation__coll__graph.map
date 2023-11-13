@@ -1,5 +1,5 @@
 <map id="realization::Bmi_Module_Formulation&lt; M &gt;" name="realization::Bmi_Module_Formulation&lt; M &gt;">
-<area shape="rect" id="node1" title="Abstraction of a formulation with a single backing model object that implements the BMI." alt="" coords="1702,2695,1899,3512"/>
+<area shape="rect" id="node1" title="Abstraction of a formulation with a single backing model object that implements the BMI." alt="" coords="1702,2695,1899,3527"/>
 <area shape="rect" id="node2" href="$classrealization_1_1_bmi___formulation.html" title="Abstraction of formulation with backing model object(s) that implements the BMI." alt="" coords="831,2195,1029,2645"/>
 <area shape="rect" id="node3" href="$classrealization_1_1_catchment___formulation.html" title=" " alt="" coords="1295,1929,1491,2145"/>
 <area shape="rect" id="node4" href="$classrealization_1_1_formulation.html" title=" " alt="" coords="1500,1004,1683,1249"/>

@@ -34,6 +34,8 @@ var classrealization_1_1_bmi___formulation =
     [ "get_ts_index_for_time", "classrealization_1_1_bmi___formulation.html#acca503f7d24367b8a3298a2c10e5d75f", null ],
     [ "get_value", "classrealization_1_1_bmi___formulation.html#a2409247d93cc63d0626e623c3a024f1b", null ],
     [ "get_values", "classrealization_1_1_bmi___formulation.html#adcd588f997aa5ec185744d36e801054a", null ],
+    [ "get_var_value_as_double", "classrealization_1_1_bmi___formulation.html#acddd464aa09db2fd381a8c12b7d1e5f7", null ],
+    [ "get_var_value_as_double", "classrealization_1_1_bmi___formulation.html#afe0a0501115ae125d6f417f7c252f0d5", null ],
     [ "interpret_parameters", "classrealization_1_1_bmi___formulation.html#a65f97b5efe05e786f59d9f5fd1b10209", null ],
     [ "is_bmi_input_variable", "classrealization_1_1_bmi___formulation.html#a702a254cfaa9512b6cc4bb4b73b647c0", null ],
     [ "is_bmi_model_time_step_fixed", "classrealization_1_1_bmi___formulation.html#a9d83489e654b1aecfc84d7c08396fa28", null ],

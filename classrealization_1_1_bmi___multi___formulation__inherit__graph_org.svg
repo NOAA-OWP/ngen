@@ -95,7 +95,7 @@
 <text text-anchor="start" x="229.5" y="-679" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_model_type_name()</text>
 <text text-anchor="start" x="229.5" y="-668" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_output_header_fields()</text>
 <text text-anchor="start" x="229.5" y="-657" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_output_header_line()</text>
-<text text-anchor="start" x="229.5" y="-646" font-family="Helvetica,sans-Serif" font-size="10.00">and 8 more...</text>
+<text text-anchor="start" x="229.5" y="-646" font-family="Helvetica,sans-Serif" font-size="10.00">and 10 more...</text>
 <text text-anchor="start" x="229.5" y="-635" font-family="Helvetica,sans-Serif" font-size="10.00"># get_output_precision()</text>
 <text text-anchor="start" x="229.5" y="-624" font-family="Helvetica,sans-Serif" font-size="10.00"># set_bmi_main_output</text>
 <text text-anchor="start" x="229.5" y="-613" font-family="Helvetica,sans-Serif" font-size="10.00">_var()</text>

@@ -126,7 +126,7 @@ var sectionId = 'dynsection-1';
 <text text-anchor="start" x="476" y="-591" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_model_type_name()</text>
 <text text-anchor="start" x="476" y="-580" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_output_header_fields()</text>
 <text text-anchor="start" x="476" y="-569" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_output_header_line()</text>
-<text text-anchor="start" x="476" y="-558" font-family="Helvetica,sans-Serif" font-size="10.00">and 8 more...</text>
+<text text-anchor="start" x="476" y="-558" font-family="Helvetica,sans-Serif" font-size="10.00">and 10 more...</text>
 <text text-anchor="start" x="476" y="-547" font-family="Helvetica,sans-Serif" font-size="10.00"># get_output_precision()</text>
 <text text-anchor="start" x="476" y="-536" font-family="Helvetica,sans-Serif" font-size="10.00"># set_bmi_main_output</text>
 <text text-anchor="start" x="476" y="-525" font-family="Helvetica,sans-Serif" font-size="10.00">_var()</text>
