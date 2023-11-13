@@ -1294,86 +1294,6 @@
         <topic label="read" href="namespacegeojson.html#aa9d243ef2a01cd361aa02917e4151d1d"/>
         <topic label="read" href="namespacegeojson.html#a5c02053ab14ac924a8e8ce067149e084"/>
       </topic>
-      <topic label="geopackage" href="namespacegeopackage.html">
-        <topic label="sqlite" href="classgeopackage_1_1sqlite.html">
-          <topic label="sqlite_t" href="classgeopackage_1_1sqlite.html#a9c53ec837d19c9cbdf72e365ce00a27f"/>
-          <topic label="sqlite" href="classgeopackage_1_1sqlite.html#ab45c3b0eac4bd0950d9d12ab90b11dfa"/>
-          <topic label="sqlite" href="classgeopackage_1_1sqlite.html#ac24a1e4c13026853a6fa7d0c19af6708"/>
-          <topic label="sqlite" href="classgeopackage_1_1sqlite.html#aba0e91f87cc1ae1b7b2c96abb57c1523"/>
-          <topic label="sqlite" href="classgeopackage_1_1sqlite.html#a56fd8bce8f649eb7419686609344b6bf"/>
-          <topic label="connection" href="classgeopackage_1_1sqlite.html#a069126a028d382c51f571dff7126873b"/>
-          <topic label="has_table" href="classgeopackage_1_1sqlite.html#a1b5426d33f3fab055b20410347e75772"/>
-          <topic label="operator=" href="classgeopackage_1_1sqlite.html#a0719b4ced73bb6f664f9206190bee808"/>
-          <topic label="operator=" href="classgeopackage_1_1sqlite.html#a425421fba7b13eea523d63a2225e1bb9"/>
-          <topic label="query" href="classgeopackage_1_1sqlite.html#a9f67d3af2adc308af62babe1c728601c"/>
-          <topic label="query" href="classgeopackage_1_1sqlite.html#a00a40303c0df1390ce90bd194c67939e"/>
-          <topic label="query" href="classgeopackage_1_1sqlite.html#a4ee831f5791313e431d482c0a3b207e4"/>
-          <topic label="conn" href="classgeopackage_1_1sqlite.html#a9efa0f9041e32389f49a87117b84526f"/>
-        </topic>
-        <topic label="sqlite_deleter" href="structgeopackage_1_1sqlite__deleter.html">
-          <topic label="operator()" href="structgeopackage_1_1sqlite__deleter.html#a814e205cd0cce673f1208d0f1459ca61"/>
-          <topic label="operator()" href="structgeopackage_1_1sqlite__deleter.html#a67e61ea6b3aee811011b393edffdb101"/>
-        </topic>
-        <topic label="sqlite_iter" href="classgeopackage_1_1sqlite__iter.html">
-          <topic label="sqlite_iter" href="classgeopackage_1_1sqlite__iter.html#a88ceed4cb6b1a1fdd4819ab500ef71ed"/>
-          <topic label="column_index" href="classgeopackage_1_1sqlite__iter.html#ac4af68ba03773add1249bb5d35564174"/>
-          <topic label="columns" href="classgeopackage_1_1sqlite__iter.html#a2fddc0f7897685ca247c9403ad2574b6"/>
-          <topic label="current_row" href="classgeopackage_1_1sqlite__iter.html#ad09ba45435fee04e91a4e28f7c9c5924"/>
-          <topic label="done" href="classgeopackage_1_1sqlite__iter.html#a3e597483450dc7ecfdd01fefa8237309"/>
-          <topic label="get" href="classgeopackage_1_1sqlite__iter.html#aa8cff8b58c63ae6e347eb33436cd0850"/>
-          <topic label="get" href="classgeopackage_1_1sqlite__iter.html#af85fabea6f897969f3246fc3f911e1f2"/>
-          <topic label="get" href="classgeopackage_1_1sqlite__iter.html#a0a87b44403af8ab17e0c8ccb5939245d"/>
-          <topic label="get" href="classgeopackage_1_1sqlite__iter.html#ab267753b7e6a5fe3db32a938cb7eed1c"/>
-          <topic label="handle_get_index" href="classgeopackage_1_1sqlite__iter.html#a73603e282d82de895727e613ed6ef852"/>
-          <topic label="next" href="classgeopackage_1_1sqlite__iter.html#a1bfb8d4c9c127a4b905108e0c936f57a"/>
-          <topic label="num_columns" href="classgeopackage_1_1sqlite__iter.html#abca2e62dc04b13983484717d14753a66"/>
-          <topic label="ptr" href="classgeopackage_1_1sqlite__iter.html#a213ff3a8f2da8b98ea9431b4633b5d44"/>
-          <topic label="restart" href="classgeopackage_1_1sqlite__iter.html#a47fc1ae821c9f1c7dee3ba64bd1254b1"/>
-          <topic label="types" href="classgeopackage_1_1sqlite__iter.html#a14d08815944c48a03e8df4b982fd054e"/>
-          <topic label="column_count" href="classgeopackage_1_1sqlite__iter.html#a98abed2a88a7c2650a7ff0c38e60731b"/>
-          <topic label="column_names" href="classgeopackage_1_1sqlite__iter.html#aa39e4fbc60151233153b6b4609212454"/>
-          <topic label="column_types" href="classgeopackage_1_1sqlite__iter.html#a8dc8bea17472bb138eaff06c0fb32573"/>
-          <topic label="iteration_finished" href="classgeopackage_1_1sqlite__iter.html#a3dc181bdbc22febf1dfb77c371fa0fb2"/>
-          <topic label="iteration_step" href="classgeopackage_1_1sqlite__iter.html#a34f525e0e556fb5154cdd296f556c5b8"/>
-          <topic label="stmt" href="classgeopackage_1_1sqlite__iter.html#a508e93baad6ec9e0006866955ddad339"/>
-        </topic>
-        <topic label="wkb" href="structgeopackage_1_1wkb.html">
-          <topic label="wgs84" href="structgeopackage_1_1wkb_1_1wgs84.html">
-            <topic label="wgs84" href="structgeopackage_1_1wkb_1_1wgs84.html#a7a6bcad7be082fbe49021b066e8a49e1"/>
-            <topic label="operator()" href="structgeopackage_1_1wkb_1_1wgs84.html#a998c0f3ca6b36ba73167fb90b802383d"/>
-            <topic label="operator()" href="structgeopackage_1_1wkb_1_1wgs84.html#a50e68739197287afb021b8ec543a6753"/>
-            <topic label="operator()" href="structgeopackage_1_1wkb_1_1wgs84.html#a4058dbbc3082162e9e50cbb4a97f56c6"/>
-            <topic label="operator()" href="structgeopackage_1_1wkb_1_1wgs84.html#a82afe394b9dbfcfc96620e99f6f10033"/>
-            <topic label="operator()" href="structgeopackage_1_1wkb_1_1wgs84.html#af505449edf98349d21869aab39d6e8b0"/>
-            <topic label="operator()" href="structgeopackage_1_1wkb_1_1wgs84.html#a9726eac26033a069199ded47bd7aa150"/>
-            <topic label="srs" href="structgeopackage_1_1wkb_1_1wgs84.html#a18285fad59bab521f86627df61fe189d"/>
-            <topic label="tr" href="structgeopackage_1_1wkb_1_1wgs84.html#a124cc393291193ce56fbfd1ff095d387"/>
-          </topic>
-          <topic label="byte_t" href="structgeopackage_1_1wkb.html#abdcf3102008fba49930a175c6f4bc7c3"/>
-          <topic label="byte_vector" href="structgeopackage_1_1wkb.html#a278d5126f235d0b98a230f65bd6949c9"/>
-          <topic label="geometry" href="structgeopackage_1_1wkb.html#a742679979fb2a43cf55b80c6140686f3"/>
-          <topic label="linestring_t" href="structgeopackage_1_1wkb.html#a60fbcaabe34b0cf4ad6fb8e9eec8dc7c"/>
-          <topic label="multilinestring_t" href="structgeopackage_1_1wkb.html#aa29f0fc42b553018d6b9bebf45d15c87"/>
-          <topic label="multipoint_t" href="structgeopackage_1_1wkb.html#a967d3ed34992ce75dd84f8ddd960a4a3"/>
-          <topic label="multipolygon_t" href="structgeopackage_1_1wkb.html#aff13d90fae3ae1b2a1231c0e49fa73c0"/>
-          <topic label="point_t" href="structgeopackage_1_1wkb.html#ac0dd6981be8c69037eca9170a0e72263"/>
-          <topic label="polygon_t" href="structgeopackage_1_1wkb.html#a1bbc89d0d287b934932c0616ce4f2edb"/>
-          <topic label="wkb" href="structgeopackage_1_1wkb.html#ac348023235b7eec07e05d44d508c8857"/>
-          <topic label="get_prj" href="structgeopackage_1_1wkb.html#a479c54c989ff0cbe585074f7d92597e4"/>
-          <topic label="read" href="structgeopackage_1_1wkb.html#ac4bec50cfa18192908b13b244cc2e7a1"/>
-          <topic label="read_linestring" href="structgeopackage_1_1wkb.html#a3e68d2e1dc80c41a6be39ed26eca6fa0"/>
-          <topic label="read_multilinestring" href="structgeopackage_1_1wkb.html#ae6125523143ae1b4f32fe5b676d97430"/>
-          <topic label="read_multipoint" href="structgeopackage_1_1wkb.html#a2dae14b7648b99640f16314afc750df8"/>
-          <topic label="read_multipolygon" href="structgeopackage_1_1wkb.html#a122f0f2c64cd4260ab58781e70700cf5"/>
-          <topic label="read_point" href="structgeopackage_1_1wkb.html#a27191fd1b3862e21883544a2c21cfd96"/>
-          <topic label="read_polygon" href="structgeopackage_1_1wkb.html#a0daa6ad342c5e20093c9578fce2e5c11"/>
-        </topic>
-        <topic label="stmt_t" href="namespacegeopackage.html#a9b052ec7251d73a0a61f5a2c9c17f26b"/>
-        <topic label="build_feature" href="namespacegeopackage.html#ac9f5015bf8a7020295cdc1cf15c874d5"/>
-        <topic label="build_geometry" href="namespacegeopackage.html#af4db1e0223650985023e30ffe06255b6"/>
-        <topic label="build_properties" href="namespacegeopackage.html#ad83484f3bbaac91d9890c85713c448e3"/>
-        <topic label="read" href="namespacegeopackage.html#aaaf5f61e8b5234ef6c840267f06e2134"/>
-      </topic>
       <topic label="hy_features" href="namespacehy__features.html">
         <topic label="hydrolocation" href="namespacehy__features_1_1hydrolocation.html">
           <topic label="HY_DistanceFromReferent" href="structhy__features_1_1hydrolocation_1_1_h_y___distance_from_referent.html">
@@ -1967,6 +1887,113 @@
             <topic label="m_data" href="structngen_1_1detail_1_1variable.html#aaf856bf0c59512070df75f776d224d94"/>
             <topic label="m_dimensions" href="structngen_1_1detail_1_1variable.html#ad147ee29660c53b9efbc468b2cff1375"/>
             <topic label="m_name" href="structngen_1_1detail_1_1variable.html#aa305b357d3f9ad340dc2a62554f645ea"/>
+          </topic>
+        </topic>
+        <topic label="geopackage" href="namespacengen_1_1geopackage.html">
+          <topic label="wkb" href="structngen_1_1geopackage_1_1wkb.html">
+            <topic label="wgs84" href="structngen_1_1geopackage_1_1wkb_1_1wgs84.html">
+              <topic label="wgs84" href="structngen_1_1geopackage_1_1wkb_1_1wgs84.html#a0daeaee8c87b3f663746f7a45c69bb7f"/>
+              <topic label="operator()" href="structngen_1_1geopackage_1_1wkb_1_1wgs84.html#a3f2d6d7f99b671b94ebf4119311f7603"/>
+              <topic label="operator()" href="structngen_1_1geopackage_1_1wkb_1_1wgs84.html#a2e9f96df99f9a7066525c3e51ab24bd0"/>
+              <topic label="operator()" href="structngen_1_1geopackage_1_1wkb_1_1wgs84.html#a21310439bf3c5c09a66f553a833e8dc9"/>
+              <topic label="operator()" href="structngen_1_1geopackage_1_1wkb_1_1wgs84.html#a056028cfa69ed1b412069897c966e301"/>
+              <topic label="operator()" href="structngen_1_1geopackage_1_1wkb_1_1wgs84.html#a4d3eb2e6d7fc9ea08edc7ea06138f8bd"/>
+              <topic label="operator()" href="structngen_1_1geopackage_1_1wkb_1_1wgs84.html#afc08a502504340c65a3e20027d159802"/>
+              <topic label="srs" href="structngen_1_1geopackage_1_1wkb_1_1wgs84.html#af133fb9bad851878eac898aa4132dd95"/>
+              <topic label="tr" href="structngen_1_1geopackage_1_1wkb_1_1wgs84.html#a2530391bf0767dc8d82fdbe9d93e2736"/>
+            </topic>
+            <topic label="byte_t" href="structngen_1_1geopackage_1_1wkb.html#a504e61e04987b401f1af84dd0e229f24"/>
+            <topic label="byte_vector" href="structngen_1_1geopackage_1_1wkb.html#a210bf77d0b6bd3aac2335dcd64ead09c"/>
+            <topic label="geometry" href="structngen_1_1geopackage_1_1wkb.html#a121a9bac1d5a8c224fa41c5b10058c8b"/>
+            <topic label="linestring_t" href="structngen_1_1geopackage_1_1wkb.html#ace2f32b4511a4f8a32c8d73ca0611d23"/>
+            <topic label="multilinestring_t" href="structngen_1_1geopackage_1_1wkb.html#a4be63803ef0860b18ab5a1b3142aaced"/>
+            <topic label="multipoint_t" href="structngen_1_1geopackage_1_1wkb.html#ab5c12c7d154e99e30351c7040abb3c0b"/>
+            <topic label="multipolygon_t" href="structngen_1_1geopackage_1_1wkb.html#a81000c0ce1e93a81fa4e51281c17ce98"/>
+            <topic label="point_t" href="structngen_1_1geopackage_1_1wkb.html#a684ad6f1f2dd1df8b1e9e63624c22a05"/>
+            <topic label="polygon_t" href="structngen_1_1geopackage_1_1wkb.html#af9c40e2e112946d0dca673d22bc43381"/>
+            <topic label="wkb" href="structngen_1_1geopackage_1_1wkb.html#a1d3b18eec7a4bbe9336667303e421e73"/>
+            <topic label="read" href="structngen_1_1geopackage_1_1wkb.html#af7c8a17f82860eb0ff37ba22ddc00b10"/>
+            <topic label="read_linestring" href="structngen_1_1geopackage_1_1wkb.html#aae12173b62f1bd1b5b76a806fda586c5"/>
+            <topic label="read_multilinestring" href="structngen_1_1geopackage_1_1wkb.html#a39728f5ab1a36f8ccd648c2bca43bcc3"/>
+            <topic label="read_multipoint" href="structngen_1_1geopackage_1_1wkb.html#a75cc6298cd2a0901e493194d762c12e5"/>
+            <topic label="read_multipolygon" href="structngen_1_1geopackage_1_1wkb.html#a5fb7fef9ca285ba5cd3aec63e91deeb6"/>
+            <topic label="read_point" href="structngen_1_1geopackage_1_1wkb.html#a1b922431945c519ab6ca371a1fa4e341"/>
+            <topic label="read_polygon" href="structngen_1_1geopackage_1_1wkb.html#a06573240ede5aecaff0a90e7c0418004"/>
+          </topic>
+          <topic label="wkb_geom_t" href="namespacengen_1_1geopackage.html#afd11eef2894e7e6e837c5f7ff4d3286a">
+            <topic label="geometry" href="namespacengen_1_1geopackage.html#afd11eef2894e7e6e837c5f7ff4d3286aa3b07d5a41cf74d44250e1f0e5be0194d"/>
+            <topic label="point" href="namespacengen_1_1geopackage.html#afd11eef2894e7e6e837c5f7ff4d3286aa553605998a40f99701b1ef272df65544"/>
+            <topic label="linestring" href="namespacengen_1_1geopackage.html#afd11eef2894e7e6e837c5f7ff4d3286aacbe84f27feccde644804f78addffaf64"/>
+            <topic label="polygon" href="namespacengen_1_1geopackage.html#afd11eef2894e7e6e837c5f7ff4d3286aab2ce2b0a8dcbab06451a1fb53c734e55"/>
+            <topic label="multipoint" href="namespacengen_1_1geopackage.html#afd11eef2894e7e6e837c5f7ff4d3286aa3bfe07ccc2ff95003971b792f655be22"/>
+            <topic label="multilinestring" href="namespacengen_1_1geopackage.html#afd11eef2894e7e6e837c5f7ff4d3286aa14a8d01c2fce5c652d3329c92a368539"/>
+            <topic label="multipolygon" href="namespacengen_1_1geopackage.html#afd11eef2894e7e6e837c5f7ff4d3286aadc5f0396245168de908f0055c88b5524"/>
+            <topic label="geometry_collection" href="namespacengen_1_1geopackage.html#afd11eef2894e7e6e837c5f7ff4d3286aa989ab867af63c1a5b6e3595867bea9e6"/>
+          </topic>
+          <topic label="build_feature" href="namespacengen_1_1geopackage.html#aed98a1830188ba7fa7725311ec4bb8a2"/>
+          <topic label="build_geometry" href="namespacengen_1_1geopackage.html#a8d202ec339efee024c4ebe82cd46c1bd"/>
+          <topic label="build_properties" href="namespacengen_1_1geopackage.html#a67b01588a1bf9eb4b1d44b839f487dc8"/>
+          <topic label="read" href="namespacengen_1_1geopackage.html#a14730a731d79d792b5b4e6ddafca9f6e"/>
+          <topic label="throw_if_not_type" href="namespacengen_1_1geopackage.html#ac6ff506ab9f5211854c9bc68bfaa2135"/>
+        </topic>
+        <topic label="sqlite" href="namespacengen_1_1sqlite.html">
+          <topic label="database" href="classngen_1_1sqlite_1_1database.html">
+            <topic label="deleter" href="structngen_1_1sqlite_1_1database_1_1deleter.html">
+              <topic label="operator()" href="structngen_1_1sqlite_1_1database_1_1deleter.html#abe5637da23c804d0e963b972373fba44"/>
+              <topic label="operator()" href="structngen_1_1sqlite_1_1database_1_1deleter.html#ab9240f309d8d457d04d4d737ec6ad5ae"/>
+            </topic>
+            <topic label="iterator" href="structngen_1_1sqlite_1_1database_1_1iterator.html">
+              <topic label="iterator" href="structngen_1_1sqlite_1_1database_1_1iterator.html#a651bce7eb2e56732fb3c33dcfc57c70e"/>
+              <topic label="iterator" href="structngen_1_1sqlite_1_1database_1_1iterator.html#aa528d58aeac36df28dd2b36c7a774c49"/>
+              <topic label="columns" href="structngen_1_1sqlite_1_1database_1_1iterator.html#a3bc5442326ea46d3d6a0f4f156c7c21c"/>
+              <topic label="current_row" href="structngen_1_1sqlite_1_1database_1_1iterator.html#a675a7559d402dc2579e006fdbf8a410a"/>
+              <topic label="done" href="structngen_1_1sqlite_1_1database_1_1iterator.html#a414bfb5bcf89420ad2540faf300cf6b6"/>
+              <topic label="find" href="structngen_1_1sqlite_1_1database_1_1iterator.html#a0dcf2ec7c20cec650f3e25a1ed336213"/>
+              <topic label="get" href="structngen_1_1sqlite_1_1database_1_1iterator.html#a0cc44976c6aa6db9b660d5b3ccaa8910"/>
+              <topic label="get" href="structngen_1_1sqlite_1_1database_1_1iterator.html#a90879e8863f92c590b3de551f5fd6b87"/>
+              <topic label="get" href="structngen_1_1sqlite_1_1database_1_1iterator.html#a6264a931fd47e5afa56db2c77a40a232"/>
+              <topic label="handle_get_index_" href="structngen_1_1sqlite_1_1database_1_1iterator.html#abad1875f408ed7e8d13f14378831cc1d"/>
+              <topic label="next" href="structngen_1_1sqlite_1_1database_1_1iterator.html#a6c3b0d6cb4ca0421cc85ce2f20789cb9"/>
+              <topic label="num_columns" href="structngen_1_1sqlite_1_1database_1_1iterator.html#a4472f346fbcef36b735f44b34d71293b"/>
+              <topic label="ptr_" href="structngen_1_1sqlite_1_1database_1_1iterator.html#a61a73e09122670e88122238cce97c75f"/>
+              <topic label="restart" href="structngen_1_1sqlite_1_1database_1_1iterator.html#ac0c8c5139ddae586af2bb8d8d4984a92"/>
+              <topic label="types" href="structngen_1_1sqlite_1_1database_1_1iterator.html#a0346a3c803f1288c2eb75374d5d8299d"/>
+              <topic label="done_" href="structngen_1_1sqlite_1_1database_1_1iterator.html#ab7257f8c15ec524e6646c0b5186ad72f"/>
+              <topic label="names_" href="structngen_1_1sqlite_1_1database_1_1iterator.html#ab17b2f5d88168158db9acf9ca0d2c3ba"/>
+              <topic label="ncol_" href="structngen_1_1sqlite_1_1database_1_1iterator.html#a0b1eab3cd2df38d55e1c8a368d2bd22a"/>
+              <topic label="step_" href="structngen_1_1sqlite_1_1database_1_1iterator.html#ada6e78455231080a81471e9630868c21"/>
+              <topic label="stmt_" href="structngen_1_1sqlite_1_1database_1_1iterator.html#a28564b3455300d38acaba3a70b9f06e6"/>
+              <topic label="types_" href="structngen_1_1sqlite_1_1database_1_1iterator.html#a70d526cc218c9ddd25504b50f3f138cf"/>
+            </topic>
+            <topic label="sqlite_t" href="classngen_1_1sqlite_1_1database.html#aacd197f5b23451791e7f6ea9b882f4b7"/>
+            <topic label="stmt_t" href="classngen_1_1sqlite_1_1database.html#aa9a2e963182dd9b5ca647b82c79cc27f"/>
+            <topic label="database" href="classngen_1_1sqlite_1_1database.html#a2971457caad5a875d83e986122326495"/>
+            <topic label="database" href="classngen_1_1sqlite_1_1database.html#a18134efed36501c1a84d42d75d479094"/>
+            <topic label="database" href="classngen_1_1sqlite_1_1database.html#aad8678974c90e7eb2b09aa41d7e8b12d"/>
+            <topic label="~database" href="classngen_1_1sqlite_1_1database.html#a41766d7ef8d68bcc3699b4ea5f469831"/>
+            <topic label="database" href="classngen_1_1sqlite_1_1database.html#a50ae5603b5f6f112e1bbff19d9153610"/>
+            <topic label="connection" href="classngen_1_1sqlite_1_1database.html#a8cd10bd12661d65dedafdbe33933154f"/>
+            <topic label="contains" href="classngen_1_1sqlite_1_1database.html#a283b83e398e8cdfafa210b743e3ca2f5"/>
+            <topic label="operator=" href="classngen_1_1sqlite_1_1database.html#a7997325bc40b31d1230d5ab0d774c4f6"/>
+            <topic label="operator=" href="classngen_1_1sqlite_1_1database.html#a505594fe0f33b16cc8b410c4cf4a2f57"/>
+            <topic label="query" href="classngen_1_1sqlite_1_1database.html#a212b069545f6eb8c21f86138605adbfd"/>
+            <topic label="query" href="classngen_1_1sqlite_1_1database.html#aaef7b9511fac13e57cc0e728acb3d450"/>
+            <topic label="conn_" href="classngen_1_1sqlite_1_1database.html#ad1f15c4018ecee42964bcaf434dd8a94"/>
+          </topic>
+          <topic label="sqlite_error" href="structngen_1_1sqlite_1_1sqlite__error.html">
+            <topic label="sqlite_error" href="structngen_1_1sqlite_1_1sqlite__error.html#a8be39bd358df483c8858f72666ce5486"/>
+          </topic>
+          <topic label="database::iterator::get&lt; std::string &gt;" href="namespacengen_1_1sqlite.html#aada510c6c97f3cf01684bda8df60f235"/>
+          <topic label="database::iterator::get&lt; std::vector&lt; uint8_t &gt; &gt;" href="namespacengen_1_1sqlite.html#a5ff40a15a45c1534dce85de07f556059"/>
+          <topic label="sqlite_already_done_error" href="namespacengen_1_1sqlite.html#a2fd3e3cc21daf968104cec0c46a73c0e"/>
+          <topic label="sqlite_not_started_error" href="namespacengen_1_1sqlite.html#aed5c2bc6abc7dd6ecf55a731c35fba90"/>
+        </topic>
+        <topic label="srs" href="namespacengen_1_1srs.html">
+          <topic label="epsg" href="structngen_1_1srs_1_1epsg.html">
+            <topic label="def_type" href="structngen_1_1srs_1_1epsg.html#aaa1e04a783cc1fb27c697b48e69f4a67"/>
+            <topic label="srs_type" href="structngen_1_1srs_1_1epsg.html#ae21771f735f35e1b7fb71bd547588f01"/>
+            <topic label="get" href="structngen_1_1srs_1_1epsg.html#ae7b843e2bd508e937187320b40da6ee5"/>
+            <topic label="defs_" href="structngen_1_1srs_1_1epsg.html#a40f9abb4f64257208a2c62b9bfe77c06"/>
           </topic>
         </topic>
         <topic label="traits" href="namespacengen_1_1traits.html">
@@ -3656,81 +3683,6 @@
           <topic label="type" href="classgeojson_1_1_polygon_feature.html#ac2786341bb4e570fa8d60fefe18dbe0f"/>
         </topic>
       </topic>
-      <topic label="geopackage" href="namespacegeopackage.html">
-        <topic label="sqlite" href="classgeopackage_1_1sqlite.html">
-          <topic label="sqlite_t" href="classgeopackage_1_1sqlite.html#a9c53ec837d19c9cbdf72e365ce00a27f"/>
-          <topic label="sqlite" href="classgeopackage_1_1sqlite.html#ab45c3b0eac4bd0950d9d12ab90b11dfa"/>
-          <topic label="sqlite" href="classgeopackage_1_1sqlite.html#ac24a1e4c13026853a6fa7d0c19af6708"/>
-          <topic label="sqlite" href="classgeopackage_1_1sqlite.html#aba0e91f87cc1ae1b7b2c96abb57c1523"/>
-          <topic label="sqlite" href="classgeopackage_1_1sqlite.html#a56fd8bce8f649eb7419686609344b6bf"/>
-          <topic label="connection" href="classgeopackage_1_1sqlite.html#a069126a028d382c51f571dff7126873b"/>
-          <topic label="has_table" href="classgeopackage_1_1sqlite.html#a1b5426d33f3fab055b20410347e75772"/>
-          <topic label="operator=" href="classgeopackage_1_1sqlite.html#a0719b4ced73bb6f664f9206190bee808"/>
-          <topic label="operator=" href="classgeopackage_1_1sqlite.html#a425421fba7b13eea523d63a2225e1bb9"/>
-          <topic label="query" href="classgeopackage_1_1sqlite.html#a9f67d3af2adc308af62babe1c728601c"/>
-          <topic label="query" href="classgeopackage_1_1sqlite.html#a00a40303c0df1390ce90bd194c67939e"/>
-          <topic label="query" href="classgeopackage_1_1sqlite.html#a4ee831f5791313e431d482c0a3b207e4"/>
-          <topic label="conn" href="classgeopackage_1_1sqlite.html#a9efa0f9041e32389f49a87117b84526f"/>
-        </topic>
-        <topic label="sqlite_deleter" href="structgeopackage_1_1sqlite__deleter.html">
-          <topic label="operator()" href="structgeopackage_1_1sqlite__deleter.html#a814e205cd0cce673f1208d0f1459ca61"/>
-          <topic label="operator()" href="structgeopackage_1_1sqlite__deleter.html#a67e61ea6b3aee811011b393edffdb101"/>
-        </topic>
-        <topic label="sqlite_iter" href="classgeopackage_1_1sqlite__iter.html">
-          <topic label="sqlite_iter" href="classgeopackage_1_1sqlite__iter.html#a88ceed4cb6b1a1fdd4819ab500ef71ed"/>
-          <topic label="column_index" href="classgeopackage_1_1sqlite__iter.html#ac4af68ba03773add1249bb5d35564174"/>
-          <topic label="columns" href="classgeopackage_1_1sqlite__iter.html#a2fddc0f7897685ca247c9403ad2574b6"/>
-          <topic label="current_row" href="classgeopackage_1_1sqlite__iter.html#ad09ba45435fee04e91a4e28f7c9c5924"/>
-          <topic label="done" href="classgeopackage_1_1sqlite__iter.html#a3e597483450dc7ecfdd01fefa8237309"/>
-          <topic label="get" href="classgeopackage_1_1sqlite__iter.html#aa8cff8b58c63ae6e347eb33436cd0850"/>
-          <topic label="get" href="classgeopackage_1_1sqlite__iter.html#af85fabea6f897969f3246fc3f911e1f2"/>
-          <topic label="get" href="classgeopackage_1_1sqlite__iter.html#a0a87b44403af8ab17e0c8ccb5939245d"/>
-          <topic label="get" href="classgeopackage_1_1sqlite__iter.html#ab267753b7e6a5fe3db32a938cb7eed1c"/>
-          <topic label="handle_get_index" href="classgeopackage_1_1sqlite__iter.html#a73603e282d82de895727e613ed6ef852"/>
-          <topic label="next" href="classgeopackage_1_1sqlite__iter.html#a1bfb8d4c9c127a4b905108e0c936f57a"/>
-          <topic label="num_columns" href="classgeopackage_1_1sqlite__iter.html#abca2e62dc04b13983484717d14753a66"/>
-          <topic label="ptr" href="classgeopackage_1_1sqlite__iter.html#a213ff3a8f2da8b98ea9431b4633b5d44"/>
-          <topic label="restart" href="classgeopackage_1_1sqlite__iter.html#a47fc1ae821c9f1c7dee3ba64bd1254b1"/>
-          <topic label="types" href="classgeopackage_1_1sqlite__iter.html#a14d08815944c48a03e8df4b982fd054e"/>
-          <topic label="column_count" href="classgeopackage_1_1sqlite__iter.html#a98abed2a88a7c2650a7ff0c38e60731b"/>
-          <topic label="column_names" href="classgeopackage_1_1sqlite__iter.html#aa39e4fbc60151233153b6b4609212454"/>
-          <topic label="column_types" href="classgeopackage_1_1sqlite__iter.html#a8dc8bea17472bb138eaff06c0fb32573"/>
-          <topic label="iteration_finished" href="classgeopackage_1_1sqlite__iter.html#a3dc181bdbc22febf1dfb77c371fa0fb2"/>
-          <topic label="iteration_step" href="classgeopackage_1_1sqlite__iter.html#a34f525e0e556fb5154cdd296f556c5b8"/>
-          <topic label="stmt" href="classgeopackage_1_1sqlite__iter.html#a508e93baad6ec9e0006866955ddad339"/>
-        </topic>
-        <topic label="wkb" href="structgeopackage_1_1wkb.html">
-          <topic label="wgs84" href="structgeopackage_1_1wkb_1_1wgs84.html">
-            <topic label="wgs84" href="structgeopackage_1_1wkb_1_1wgs84.html#a7a6bcad7be082fbe49021b066e8a49e1"/>
-            <topic label="operator()" href="structgeopackage_1_1wkb_1_1wgs84.html#a998c0f3ca6b36ba73167fb90b802383d"/>
-            <topic label="operator()" href="structgeopackage_1_1wkb_1_1wgs84.html#a50e68739197287afb021b8ec543a6753"/>
-            <topic label="operator()" href="structgeopackage_1_1wkb_1_1wgs84.html#a4058dbbc3082162e9e50cbb4a97f56c6"/>
-            <topic label="operator()" href="structgeopackage_1_1wkb_1_1wgs84.html#a82afe394b9dbfcfc96620e99f6f10033"/>
-            <topic label="operator()" href="structgeopackage_1_1wkb_1_1wgs84.html#af505449edf98349d21869aab39d6e8b0"/>
-            <topic label="operator()" href="structgeopackage_1_1wkb_1_1wgs84.html#a9726eac26033a069199ded47bd7aa150"/>
-            <topic label="srs" href="structgeopackage_1_1wkb_1_1wgs84.html#a18285fad59bab521f86627df61fe189d"/>
-            <topic label="tr" href="structgeopackage_1_1wkb_1_1wgs84.html#a124cc393291193ce56fbfd1ff095d387"/>
-          </topic>
-          <topic label="byte_t" href="structgeopackage_1_1wkb.html#abdcf3102008fba49930a175c6f4bc7c3"/>
-          <topic label="byte_vector" href="structgeopackage_1_1wkb.html#a278d5126f235d0b98a230f65bd6949c9"/>
-          <topic label="geometry" href="structgeopackage_1_1wkb.html#a742679979fb2a43cf55b80c6140686f3"/>
-          <topic label="linestring_t" href="structgeopackage_1_1wkb.html#a60fbcaabe34b0cf4ad6fb8e9eec8dc7c"/>
-          <topic label="multilinestring_t" href="structgeopackage_1_1wkb.html#aa29f0fc42b553018d6b9bebf45d15c87"/>
-          <topic label="multipoint_t" href="structgeopackage_1_1wkb.html#a967d3ed34992ce75dd84f8ddd960a4a3"/>
-          <topic label="multipolygon_t" href="structgeopackage_1_1wkb.html#aff13d90fae3ae1b2a1231c0e49fa73c0"/>
-          <topic label="point_t" href="structgeopackage_1_1wkb.html#ac0dd6981be8c69037eca9170a0e72263"/>
-          <topic label="polygon_t" href="structgeopackage_1_1wkb.html#a1bbc89d0d287b934932c0616ce4f2edb"/>
-          <topic label="wkb" href="structgeopackage_1_1wkb.html#ac348023235b7eec07e05d44d508c8857"/>
-          <topic label="get_prj" href="structgeopackage_1_1wkb.html#a479c54c989ff0cbe585074f7d92597e4"/>
-          <topic label="read" href="structgeopackage_1_1wkb.html#ac4bec50cfa18192908b13b244cc2e7a1"/>
-          <topic label="read_linestring" href="structgeopackage_1_1wkb.html#a3e68d2e1dc80c41a6be39ed26eca6fa0"/>
-          <topic label="read_multilinestring" href="structgeopackage_1_1wkb.html#ae6125523143ae1b4f32fe5b676d97430"/>
-          <topic label="read_multipoint" href="structgeopackage_1_1wkb.html#a2dae14b7648b99640f16314afc750df8"/>
-          <topic label="read_multipolygon" href="structgeopackage_1_1wkb.html#a122f0f2c64cd4260ab58781e70700cf5"/>
-          <topic label="read_point" href="structgeopackage_1_1wkb.html#a27191fd1b3862e21883544a2c21cfd96"/>
-          <topic label="read_polygon" href="structgeopackage_1_1wkb.html#a0daa6ad342c5e20093c9578fce2e5c11"/>
-        </topic>
-      </topic>
       <topic label="hy_features" href="namespacehy__features.html">
         <topic label="hydrolocation" href="namespacehy__features_1_1hydrolocation.html">
           <topic label="HY_DistanceFromReferent" href="structhy__features_1_1hydrolocation_1_1_h_y___distance_from_referent.html">
@@ -4252,6 +4204,94 @@
             <topic label="m_data" href="structngen_1_1detail_1_1variable.html#aaf856bf0c59512070df75f776d224d94"/>
             <topic label="m_dimensions" href="structngen_1_1detail_1_1variable.html#ad147ee29660c53b9efbc468b2cff1375"/>
             <topic label="m_name" href="structngen_1_1detail_1_1variable.html#aa305b357d3f9ad340dc2a62554f645ea"/>
+          </topic>
+        </topic>
+        <topic label="geopackage" href="namespacengen_1_1geopackage.html">
+          <topic label="wkb" href="structngen_1_1geopackage_1_1wkb.html">
+            <topic label="wgs84" href="structngen_1_1geopackage_1_1wkb_1_1wgs84.html">
+              <topic label="wgs84" href="structngen_1_1geopackage_1_1wkb_1_1wgs84.html#a0daeaee8c87b3f663746f7a45c69bb7f"/>
+              <topic label="operator()" href="structngen_1_1geopackage_1_1wkb_1_1wgs84.html#a3f2d6d7f99b671b94ebf4119311f7603"/>
+              <topic label="operator()" href="structngen_1_1geopackage_1_1wkb_1_1wgs84.html#a2e9f96df99f9a7066525c3e51ab24bd0"/>
+              <topic label="operator()" href="structngen_1_1geopackage_1_1wkb_1_1wgs84.html#a21310439bf3c5c09a66f553a833e8dc9"/>
+              <topic label="operator()" href="structngen_1_1geopackage_1_1wkb_1_1wgs84.html#a056028cfa69ed1b412069897c966e301"/>
+              <topic label="operator()" href="structngen_1_1geopackage_1_1wkb_1_1wgs84.html#a4d3eb2e6d7fc9ea08edc7ea06138f8bd"/>
+              <topic label="operator()" href="structngen_1_1geopackage_1_1wkb_1_1wgs84.html#afc08a502504340c65a3e20027d159802"/>
+              <topic label="srs" href="structngen_1_1geopackage_1_1wkb_1_1wgs84.html#af133fb9bad851878eac898aa4132dd95"/>
+              <topic label="tr" href="structngen_1_1geopackage_1_1wkb_1_1wgs84.html#a2530391bf0767dc8d82fdbe9d93e2736"/>
+            </topic>
+            <topic label="byte_t" href="structngen_1_1geopackage_1_1wkb.html#a504e61e04987b401f1af84dd0e229f24"/>
+            <topic label="byte_vector" href="structngen_1_1geopackage_1_1wkb.html#a210bf77d0b6bd3aac2335dcd64ead09c"/>
+            <topic label="geometry" href="structngen_1_1geopackage_1_1wkb.html#a121a9bac1d5a8c224fa41c5b10058c8b"/>
+            <topic label="linestring_t" href="structngen_1_1geopackage_1_1wkb.html#ace2f32b4511a4f8a32c8d73ca0611d23"/>
+            <topic label="multilinestring_t" href="structngen_1_1geopackage_1_1wkb.html#a4be63803ef0860b18ab5a1b3142aaced"/>
+            <topic label="multipoint_t" href="structngen_1_1geopackage_1_1wkb.html#ab5c12c7d154e99e30351c7040abb3c0b"/>
+            <topic label="multipolygon_t" href="structngen_1_1geopackage_1_1wkb.html#a81000c0ce1e93a81fa4e51281c17ce98"/>
+            <topic label="point_t" href="structngen_1_1geopackage_1_1wkb.html#a684ad6f1f2dd1df8b1e9e63624c22a05"/>
+            <topic label="polygon_t" href="structngen_1_1geopackage_1_1wkb.html#af9c40e2e112946d0dca673d22bc43381"/>
+            <topic label="wkb" href="structngen_1_1geopackage_1_1wkb.html#a1d3b18eec7a4bbe9336667303e421e73"/>
+            <topic label="read" href="structngen_1_1geopackage_1_1wkb.html#af7c8a17f82860eb0ff37ba22ddc00b10"/>
+            <topic label="read_linestring" href="structngen_1_1geopackage_1_1wkb.html#aae12173b62f1bd1b5b76a806fda586c5"/>
+            <topic label="read_multilinestring" href="structngen_1_1geopackage_1_1wkb.html#a39728f5ab1a36f8ccd648c2bca43bcc3"/>
+            <topic label="read_multipoint" href="structngen_1_1geopackage_1_1wkb.html#a75cc6298cd2a0901e493194d762c12e5"/>
+            <topic label="read_multipolygon" href="structngen_1_1geopackage_1_1wkb.html#a5fb7fef9ca285ba5cd3aec63e91deeb6"/>
+            <topic label="read_point" href="structngen_1_1geopackage_1_1wkb.html#a1b922431945c519ab6ca371a1fa4e341"/>
+            <topic label="read_polygon" href="structngen_1_1geopackage_1_1wkb.html#a06573240ede5aecaff0a90e7c0418004"/>
+          </topic>
+        </topic>
+        <topic label="sqlite" href="namespacengen_1_1sqlite.html">
+          <topic label="database" href="classngen_1_1sqlite_1_1database.html">
+            <topic label="deleter" href="structngen_1_1sqlite_1_1database_1_1deleter.html">
+              <topic label="operator()" href="structngen_1_1sqlite_1_1database_1_1deleter.html#abe5637da23c804d0e963b972373fba44"/>
+              <topic label="operator()" href="structngen_1_1sqlite_1_1database_1_1deleter.html#ab9240f309d8d457d04d4d737ec6ad5ae"/>
+            </topic>
+            <topic label="iterator" href="structngen_1_1sqlite_1_1database_1_1iterator.html">
+              <topic label="iterator" href="structngen_1_1sqlite_1_1database_1_1iterator.html#a651bce7eb2e56732fb3c33dcfc57c70e"/>
+              <topic label="iterator" href="structngen_1_1sqlite_1_1database_1_1iterator.html#aa528d58aeac36df28dd2b36c7a774c49"/>
+              <topic label="columns" href="structngen_1_1sqlite_1_1database_1_1iterator.html#a3bc5442326ea46d3d6a0f4f156c7c21c"/>
+              <topic label="current_row" href="structngen_1_1sqlite_1_1database_1_1iterator.html#a675a7559d402dc2579e006fdbf8a410a"/>
+              <topic label="done" href="structngen_1_1sqlite_1_1database_1_1iterator.html#a414bfb5bcf89420ad2540faf300cf6b6"/>
+              <topic label="find" href="structngen_1_1sqlite_1_1database_1_1iterator.html#a0dcf2ec7c20cec650f3e25a1ed336213"/>
+              <topic label="get" href="structngen_1_1sqlite_1_1database_1_1iterator.html#a0cc44976c6aa6db9b660d5b3ccaa8910"/>
+              <topic label="get" href="structngen_1_1sqlite_1_1database_1_1iterator.html#a90879e8863f92c590b3de551f5fd6b87"/>
+              <topic label="get" href="structngen_1_1sqlite_1_1database_1_1iterator.html#a6264a931fd47e5afa56db2c77a40a232"/>
+              <topic label="handle_get_index_" href="structngen_1_1sqlite_1_1database_1_1iterator.html#abad1875f408ed7e8d13f14378831cc1d"/>
+              <topic label="next" href="structngen_1_1sqlite_1_1database_1_1iterator.html#a6c3b0d6cb4ca0421cc85ce2f20789cb9"/>
+              <topic label="num_columns" href="structngen_1_1sqlite_1_1database_1_1iterator.html#a4472f346fbcef36b735f44b34d71293b"/>
+              <topic label="ptr_" href="structngen_1_1sqlite_1_1database_1_1iterator.html#a61a73e09122670e88122238cce97c75f"/>
+              <topic label="restart" href="structngen_1_1sqlite_1_1database_1_1iterator.html#ac0c8c5139ddae586af2bb8d8d4984a92"/>
+              <topic label="types" href="structngen_1_1sqlite_1_1database_1_1iterator.html#a0346a3c803f1288c2eb75374d5d8299d"/>
+              <topic label="done_" href="structngen_1_1sqlite_1_1database_1_1iterator.html#ab7257f8c15ec524e6646c0b5186ad72f"/>
+              <topic label="names_" href="structngen_1_1sqlite_1_1database_1_1iterator.html#ab17b2f5d88168158db9acf9ca0d2c3ba"/>
+              <topic label="ncol_" href="structngen_1_1sqlite_1_1database_1_1iterator.html#a0b1eab3cd2df38d55e1c8a368d2bd22a"/>
+              <topic label="step_" href="structngen_1_1sqlite_1_1database_1_1iterator.html#ada6e78455231080a81471e9630868c21"/>
+              <topic label="stmt_" href="structngen_1_1sqlite_1_1database_1_1iterator.html#a28564b3455300d38acaba3a70b9f06e6"/>
+              <topic label="types_" href="structngen_1_1sqlite_1_1database_1_1iterator.html#a70d526cc218c9ddd25504b50f3f138cf"/>
+            </topic>
+            <topic label="sqlite_t" href="classngen_1_1sqlite_1_1database.html#aacd197f5b23451791e7f6ea9b882f4b7"/>
+            <topic label="stmt_t" href="classngen_1_1sqlite_1_1database.html#aa9a2e963182dd9b5ca647b82c79cc27f"/>
+            <topic label="database" href="classngen_1_1sqlite_1_1database.html#a2971457caad5a875d83e986122326495"/>
+            <topic label="database" href="classngen_1_1sqlite_1_1database.html#a18134efed36501c1a84d42d75d479094"/>
+            <topic label="database" href="classngen_1_1sqlite_1_1database.html#aad8678974c90e7eb2b09aa41d7e8b12d"/>
+            <topic label="~database" href="classngen_1_1sqlite_1_1database.html#a41766d7ef8d68bcc3699b4ea5f469831"/>
+            <topic label="database" href="classngen_1_1sqlite_1_1database.html#a50ae5603b5f6f112e1bbff19d9153610"/>
+            <topic label="connection" href="classngen_1_1sqlite_1_1database.html#a8cd10bd12661d65dedafdbe33933154f"/>
+            <topic label="contains" href="classngen_1_1sqlite_1_1database.html#a283b83e398e8cdfafa210b743e3ca2f5"/>
+            <topic label="operator=" href="classngen_1_1sqlite_1_1database.html#a7997325bc40b31d1230d5ab0d774c4f6"/>
+            <topic label="operator=" href="classngen_1_1sqlite_1_1database.html#a505594fe0f33b16cc8b410c4cf4a2f57"/>
+            <topic label="query" href="classngen_1_1sqlite_1_1database.html#a212b069545f6eb8c21f86138605adbfd"/>
+            <topic label="query" href="classngen_1_1sqlite_1_1database.html#aaef7b9511fac13e57cc0e728acb3d450"/>
+            <topic label="conn_" href="classngen_1_1sqlite_1_1database.html#ad1f15c4018ecee42964bcaf434dd8a94"/>
+          </topic>
+          <topic label="sqlite_error" href="structngen_1_1sqlite_1_1sqlite__error.html">
+            <topic label="sqlite_error" href="structngen_1_1sqlite_1_1sqlite__error.html#a8be39bd358df483c8858f72666ce5486"/>
+          </topic>
+        </topic>
+        <topic label="srs" href="namespacengen_1_1srs.html">
+          <topic label="epsg" href="structngen_1_1srs_1_1epsg.html">
+            <topic label="def_type" href="structngen_1_1srs_1_1epsg.html#aaa1e04a783cc1fb27c697b48e69f4a67"/>
+            <topic label="srs_type" href="structngen_1_1srs_1_1epsg.html#ae21771f735f35e1b7fb71bd547588f01"/>
+            <topic label="get" href="structngen_1_1srs_1_1epsg.html#ae7b843e2bd508e937187320b40da6ee5"/>
+            <topic label="defs_" href="structngen_1_1srs_1_1epsg.html#a40f9abb4f64257208a2c62b9bfe77c06"/>
           </topic>
         </topic>
         <topic label="traits" href="namespacengen_1_1traits.html">
@@ -5729,13 +5769,13 @@
       <topic label="boost::span&lt; T, E &gt;" href="classboost_1_1span.html"/>
       <topic label="boost::static_visitor">
         <topic label="geojson::JSONProperty::AsVectorVisitor&lt; T &gt;" href="structgeojson_1_1_j_s_o_n_property_1_1_as_vector_visitor.html"/>
-        <topic label="geopackage::wkb::wgs84" href="structgeopackage_1_1wkb_1_1wgs84.html"/>
         <topic label="ngen::detail::visitors::mdarray_at&lt; SupportedTypes &gt;" href="structngen_1_1detail_1_1visitors_1_1mdarray__at.html"/>
         <topic label="ngen::detail::visitors::mdarray_insert" href="structngen_1_1detail_1_1visitors_1_1mdarray__insert.html"/>
         <topic label="ngen::detail::visitors::mdarray_rank" href="structngen_1_1detail_1_1visitors_1_1mdarray__rank.html"/>
         <topic label="ngen::detail::visitors::mdarray_shape" href="structngen_1_1detail_1_1visitors_1_1mdarray__shape.html"/>
         <topic label="ngen::detail::visitors::mdarray_size" href="structngen_1_1detail_1_1visitors_1_1mdarray__size.html"/>
         <topic label="ngen::detail::visitors::to_string_visitor" href="structngen_1_1detail_1_1visitors_1_1to__string__visitor.html"/>
+        <topic label="ngen::geopackage::wkb::wgs84" href="structngen_1_1geopackage_1_1wkb_1_1wgs84.html"/>
       </topic>
       <topic label="CatchmentAggrDataSelector" href="class_catchment_aggr_data_selector.html">
         <topic label="BMIDataSelector" href="class_b_m_i_data_selector.html"/>
@@ -5783,10 +5823,6 @@
       <topic label="geojson::JSONProperty" href="classgeojson_1_1_j_s_o_n_property.html"/>
       <topic label="geojson::List" href="structgeojson_1_1_list.html"/>
       <topic label="geojson::Object" href="structgeojson_1_1_object.html"/>
-      <topic label="geopackage::sqlite" href="classgeopackage_1_1sqlite.html"/>
-      <topic label="geopackage::sqlite_deleter" href="structgeopackage_1_1sqlite__deleter.html"/>
-      <topic label="geopackage::sqlite_iter" href="classgeopackage_1_1sqlite__iter.html"/>
-      <topic label="geopackage::wkb" href="structgeopackage_1_1wkb.html"/>
       <topic label="GM_Object" href="class_g_m___object.html">
         <topic label="HY_CatchmentArea" href="class_h_y___catchment_area.html">
           <topic label="realization::Catchment_Formulation" href="classrealization_1_1_catchment___formulation.html">
@@ -5829,6 +5865,7 @@
       <topic label="ngen::detail::dimension::hash" href="structngen_1_1detail_1_1dimension_1_1hash.html"/>
       <topic label="ngen::detail::variable&lt; SupportedTypes &gt;" href="structngen_1_1detail_1_1variable.html"/>
       <topic label="ngen::detail::variable&lt; SupportedTypes &gt;::hash" href="structngen_1_1detail_1_1variable_1_1hash.html"/>
+      <topic label="ngen::geopackage::wkb" href="structngen_1_1geopackage_1_1wkb.html"/>
       <topic label="ngen::Layer" href="classngen_1_1_layer.html">
         <topic label="ngen::SurfaceLayer" href="classngen_1_1_surface_layer.html"/>
       </topic>
@@ -5837,6 +5874,10 @@
       <topic label="ngen::mdarray&lt; T &gt;" href="classngen_1_1mdarray.html"/>
       <topic label="ngen::mdarray&lt; T &gt;::iterator&lt; T &gt;" href="structngen_1_1mdarray_1_1iterator.html"/>
       <topic label="ngen::mdframe" href="classngen_1_1mdframe.html"/>
+      <topic label="ngen::sqlite::database" href="classngen_1_1sqlite_1_1database.html"/>
+      <topic label="ngen::sqlite::database::deleter" href="structngen_1_1sqlite_1_1database_1_1deleter.html"/>
+      <topic label="ngen::sqlite::database::iterator" href="structngen_1_1sqlite_1_1database_1_1iterator.html"/>
+      <topic label="ngen::srs::epsg" href="structngen_1_1srs_1_1epsg.html"/>
       <topic label="ngen::traits::bool_pack&lt;... &gt;" href="structngen_1_1traits_1_1bool__pack.html"/>
       <topic label="ngen::traits::type_list&lt; Ts &gt;" href="structngen_1_1traits_1_1type__list.html"/>
       <topic label="realization::Formulation" href="classrealization_1_1_formulation.html">
@@ -5855,6 +5896,9 @@
         <topic label="models::external::State_Exception" href="classmodels_1_1external_1_1_state___exception.html"/>
         <topic label="realization::ConfigurationException" href="classrealization_1_1_configuration_exception.html"/>
         <topic label="request_from_empty_nexus" href="structrequest__from__empty__nexus.html"/>
+        <topic label="std::runtime_error">
+          <topic label="ngen::sqlite::sqlite_error" href="structngen_1_1sqlite_1_1sqlite__error.html"/>
+        </topic>
       </topic>
       <topic label="testing::Test">
         <topic label="FeatureCollection_Test" href="class_feature_collection___test.html"/>
@@ -5958,6 +6002,7 @@
         <topic label="w" href="functions_vars_w.html"/>
       </topic>
       <topic label="Typedefs" href="functions_type.html"/>
+      <topic label="Enumerator" href="functions_eval.html"/>
       <topic label="Related Functions" href="functions_rela.html"/>
     </topic>
   </topic>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['query_0',['query',['../classgeopackage_1_1sqlite.html#a9f67d3af2adc308af62babe1c728601c',1,'geopackage::sqlite::query(const std::string &amp;statement)'],['../classgeopackage_1_1sqlite.html#a00a40303c0df1390ce90bd194c67939e',1,'geopackage::sqlite::query(const std::string &amp;statement, const std::vector&lt; std::string &gt; &amp;binds)'],['../classgeopackage_1_1sqlite.html#a4ee831f5791313e431d482c0a3b207e4',1,'geopackage::sqlite::query(const std::string &amp;statement, T const &amp;... params)']]]
+  ['query_0',['query',['../classngen_1_1sqlite_1_1database.html#a212b069545f6eb8c21f86138605adbfd',1,'ngen::sqlite::database::query(const std::string &amp;statement, const boost::span&lt; const std::string &gt; binds={})'],['../classngen_1_1sqlite_1_1database.html#aaef7b9511fac13e57cc0e728acb3d450',1,'ngen::sqlite::database::query(const std::string &amp;statement, const Ts &amp;... params)']]]
 ];

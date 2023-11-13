@@ -24,10 +24,8 @@ var searchData=
   ['span_5fstore_21',['span_store',['../structboost_1_1detail_1_1span__store.html',1,'boost::detail']]],
   ['span_5fstore_3c_20t_2c_20boost_3a_3adynamic_5fextent_20_3e_22',['span_store&lt; T, boost::dynamic_extent &gt;',['../structboost_1_1detail_1_1span__store_3_01_t_00_01boost_1_1dynamic__extent_01_4.html',1,'boost::detail']]],
   ['span_5fsub_23',['span_sub',['../structboost_1_1detail_1_1span__sub.html',1,'boost::detail']]],
-  ['sqlite_24',['sqlite',['../classgeopackage_1_1sqlite.html',1,'geopackage']]],
-  ['sqlite_5fdeleter_25',['sqlite_deleter',['../structgeopackage_1_1sqlite__deleter.html',1,'geopackage']]],
-  ['sqlite_5fiter_26',['sqlite_iter',['../classgeopackage_1_1sqlite__iter.html',1,'geopackage']]],
-  ['state_5fexception_27',['State_Exception',['../classmodels_1_1external_1_1_state___exception.html',1,'models::external']]],
-  ['streamhandler_28',['StreamHandler',['../classutils_1_1_stream_handler.html',1,'utils']]],
-  ['surfacelayer_29',['SurfaceLayer',['../classngen_1_1_surface_layer.html',1,'ngen']]]
+  ['sqlite_5ferror_24',['sqlite_error',['../structngen_1_1sqlite_1_1sqlite__error.html',1,'ngen::sqlite']]],
+  ['state_5fexception_25',['State_Exception',['../classmodels_1_1external_1_1_state___exception.html',1,'models::external']]],
+  ['streamhandler_26',['StreamHandler',['../classutils_1_1_stream_handler.html',1,'utils']]],
+  ['surfacelayer_27',['SurfaceLayer',['../classngen_1_1_surface_layer.html',1,'ngen']]]
 ];

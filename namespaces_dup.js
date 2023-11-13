@@ -5,7 +5,6 @@ var namespaces_dup =
     [ "data_access", "namespacedata__access.html", "namespacedata__access" ],
     [ "external", "namespaceexternal.html", "namespaceexternal" ],
     [ "geojson", "namespacegeojson.html", "namespacegeojson" ],
-    [ "geopackage", "namespacegeopackage.html", "namespacegeopackage" ],
     [ "hy_features", "namespacehy__features.html", "namespacehy__features" ],
     [ "logging", "namespacelogging.html", [
       [ "critical", "namespacelogging.html#aaa6addcd244d71933234c851ad827383", null ],

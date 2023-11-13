@@ -55,12 +55,6 @@ var annotated_dup =
       [ "PointFeature", "classgeojson_1_1_point_feature.html", "classgeojson_1_1_point_feature" ],
       [ "PolygonFeature", "classgeojson_1_1_polygon_feature.html", "classgeojson_1_1_polygon_feature" ]
     ] ],
-    [ "geopackage", "namespacegeopackage.html", [
-      [ "sqlite", "classgeopackage_1_1sqlite.html", "classgeopackage_1_1sqlite" ],
-      [ "sqlite_deleter", "structgeopackage_1_1sqlite__deleter.html", "structgeopackage_1_1sqlite__deleter" ],
-      [ "sqlite_iter", "classgeopackage_1_1sqlite__iter.html", "classgeopackage_1_1sqlite__iter" ],
-      [ "wkb", "structgeopackage_1_1wkb.html", "structgeopackage_1_1wkb" ]
-    ] ],
     [ "hy_features", "namespacehy__features.html", [
       [ "hydrolocation", "namespacehy__features_1_1hydrolocation.html", [
         [ "HY_DistanceFromReferent", "structhy__features_1_1hydrolocation_1_1_h_y___distance_from_referent.html", "structhy__features_1_1hydrolocation_1_1_h_y___distance_from_referent" ],
@@ -100,6 +94,16 @@ var annotated_dup =
         ] ],
         [ "dimension", "structngen_1_1detail_1_1dimension.html", "structngen_1_1detail_1_1dimension" ],
         [ "variable", "structngen_1_1detail_1_1variable.html", "structngen_1_1detail_1_1variable" ]
+      ] ],
+      [ "geopackage", "namespacengen_1_1geopackage.html", [
+        [ "wkb", "structngen_1_1geopackage_1_1wkb.html", "structngen_1_1geopackage_1_1wkb" ]
+      ] ],
+      [ "sqlite", "namespacengen_1_1sqlite.html", [
+        [ "database", "classngen_1_1sqlite_1_1database.html", "classngen_1_1sqlite_1_1database" ],
+        [ "sqlite_error", "structngen_1_1sqlite_1_1sqlite__error.html", "structngen_1_1sqlite_1_1sqlite__error" ]
+      ] ],
+      [ "srs", "namespacengen_1_1srs.html", [
+        [ "epsg", "structngen_1_1srs_1_1epsg.html", "structngen_1_1srs_1_1epsg" ]
       ] ],
       [ "traits", "namespacengen_1_1traits.html", [
         [ "bool_pack", "structngen_1_1traits_1_1bool__pack.html", null ],

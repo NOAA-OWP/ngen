@@ -51,13 +51,13 @@ var hierarchy =
     [ "boost::span< T, E >", "classboost_1_1span.html", null ],
     [ "boost::static_visitor", null, [
       [ "geojson::JSONProperty::AsVectorVisitor< T >", "structgeojson_1_1_j_s_o_n_property_1_1_as_vector_visitor.html", null ],
-      [ "geopackage::wkb::wgs84", "structgeopackage_1_1wkb_1_1wgs84.html", null ],
       [ "ngen::detail::visitors::mdarray_at< SupportedTypes >", "structngen_1_1detail_1_1visitors_1_1mdarray__at.html", null ],
       [ "ngen::detail::visitors::mdarray_insert", "structngen_1_1detail_1_1visitors_1_1mdarray__insert.html", null ],
       [ "ngen::detail::visitors::mdarray_rank", "structngen_1_1detail_1_1visitors_1_1mdarray__rank.html", null ],
       [ "ngen::detail::visitors::mdarray_shape", "structngen_1_1detail_1_1visitors_1_1mdarray__shape.html", null ],
       [ "ngen::detail::visitors::mdarray_size", "structngen_1_1detail_1_1visitors_1_1mdarray__size.html", null ],
-      [ "ngen::detail::visitors::to_string_visitor", "structngen_1_1detail_1_1visitors_1_1to__string__visitor.html", null ]
+      [ "ngen::detail::visitors::to_string_visitor", "structngen_1_1detail_1_1visitors_1_1to__string__visitor.html", null ],
+      [ "ngen::geopackage::wkb::wgs84", "structngen_1_1geopackage_1_1wkb_1_1wgs84.html", null ]
     ] ],
     [ "CatchmentAggrDataSelector", "class_catchment_aggr_data_selector.html", [
       [ "BMIDataSelector", "class_b_m_i_data_selector.html", null ],
@@ -105,10 +105,6 @@ var hierarchy =
     [ "geojson::JSONProperty", "classgeojson_1_1_j_s_o_n_property.html", null ],
     [ "geojson::List", "structgeojson_1_1_list.html", null ],
     [ "geojson::Object", "structgeojson_1_1_object.html", null ],
-    [ "geopackage::sqlite", "classgeopackage_1_1sqlite.html", null ],
-    [ "geopackage::sqlite_deleter", "structgeopackage_1_1sqlite__deleter.html", null ],
-    [ "geopackage::sqlite_iter", "classgeopackage_1_1sqlite__iter.html", null ],
-    [ "geopackage::wkb", "structgeopackage_1_1wkb.html", null ],
     [ "GM_Object", "class_g_m___object.html", [
       [ "HY_CatchmentArea", "class_h_y___catchment_area.html", [
         [ "realization::Catchment_Formulation", "classrealization_1_1_catchment___formulation.html", [
@@ -151,6 +147,7 @@ var hierarchy =
     [ "ngen::detail::dimension::hash", "structngen_1_1detail_1_1dimension_1_1hash.html", null ],
     [ "ngen::detail::variable< SupportedTypes >", "structngen_1_1detail_1_1variable.html", null ],
     [ "ngen::detail::variable< SupportedTypes >::hash", "structngen_1_1detail_1_1variable_1_1hash.html", null ],
+    [ "ngen::geopackage::wkb", "structngen_1_1geopackage_1_1wkb.html", null ],
     [ "ngen::Layer", "classngen_1_1_layer.html", [
       [ "ngen::SurfaceLayer", "classngen_1_1_surface_layer.html", null ]
     ] ],
@@ -159,6 +156,10 @@ var hierarchy =
     [ "ngen::mdarray< T >", "classngen_1_1mdarray.html", null ],
     [ "ngen::mdarray< T >::iterator< T >", "structngen_1_1mdarray_1_1iterator.html", null ],
     [ "ngen::mdframe", "classngen_1_1mdframe.html", null ],
+    [ "ngen::sqlite::database", "classngen_1_1sqlite_1_1database.html", null ],
+    [ "ngen::sqlite::database::deleter", "structngen_1_1sqlite_1_1database_1_1deleter.html", null ],
+    [ "ngen::sqlite::database::iterator", "structngen_1_1sqlite_1_1database_1_1iterator.html", null ],
+    [ "ngen::srs::epsg", "structngen_1_1srs_1_1epsg.html", null ],
     [ "ngen::traits::bool_pack<... >", "structngen_1_1traits_1_1bool__pack.html", null ],
     [ "ngen::traits::type_list< Ts >", "structngen_1_1traits_1_1type__list.html", null ],
     [ "realization::Formulation", "classrealization_1_1_formulation.html", [
@@ -176,7 +177,10 @@ var hierarchy =
       [ "invalid_time_step", "structinvalid__time__step.html", null ],
       [ "models::external::State_Exception", "classmodels_1_1external_1_1_state___exception.html", null ],
       [ "realization::ConfigurationException", "classrealization_1_1_configuration_exception.html", null ],
-      [ "request_from_empty_nexus", "structrequest__from__empty__nexus.html", null ]
+      [ "request_from_empty_nexus", "structrequest__from__empty__nexus.html", null ],
+      [ "std::runtime_error", null, [
+        [ "ngen::sqlite::sqlite_error", "structngen_1_1sqlite_1_1sqlite__error.html", null ]
+      ] ]
     ] ],
     [ "testing::Test", null, [
       [ "FeatureCollection_Test", "class_feature_collection___test.html", null ],
