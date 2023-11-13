@@ -219,7 +219,7 @@ namespace realization {
          * Get value for some BMI model variable.
          *
          * This function assumes that the given variable, while returned by the model within an array per the BMI spec,
-         * is actual a single, scalar value.  Thus, it returns what is at index 0 of the array reference.
+         * is actually a single, scalar value.  Thus, it returns what is at index 0 of the array reference.
          *
          * @param index
          * @param var_name
