@@ -1412,22 +1412,22 @@
             <topic label="make_vector" href="namespacemodels_1_1bmi_1_1helper.html#ae390f681f50fc89690893b76733a88e1"/>
           </topic>
           <topic label="AbstractCLibBmiAdapter" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html">
-            <topic label="AbstractCLibBmiAdapter" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a568f3487f930c7bd8756dc9680e8547b"/>
-            <topic label="AbstractCLibBmiAdapter" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a192bf6263d58c447032caea8a24267a7"/>
-            <topic label="~AbstractCLibBmiAdapter" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a27734fb939aea8464c757f9a3372eab4"/>
-            <topic label="construct_and_init_backing_model" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a290bc05cd237b678486294e188995aaa"/>
-            <topic label="convert_model_time_to_seconds" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a3dc0b3c5060687be87f2c2916a2aa1ce"/>
-            <topic label="convert_seconds_to_model_time" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#ab59c92e91f3ebe1cf5eaceac16100043"/>
-            <topic label="dynamic_library_load" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a4ab2f0638b8426885395d121f44a9f70"/>
-            <topic label="dynamic_load_symbol" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#af36238dd0499b8382e4f3a6d820a012a"/>
-            <topic label="dynamic_load_symbol" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a02190ea63a9d156165cae7a64d83bacc"/>
-            <topic label="Finalize" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a2de8c486290e20a28e876ee62414311e"/>
-            <topic label="finalizeForLibAbstraction" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#aeeaf49b3bd45d89b2a88086d25f328b8"/>
-            <topic label="get_analogous_cxx_type" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a68f635fcef67684ba60e21796b53711e"/>
-            <topic label="get_bmi_registration_function" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#ac1a86e6285c9d8c809d1bd1bdc013215"/>
-            <topic label="get_dyn_lib_handle" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a57d36aeb7ab195f31e59d19812a511b5"/>
-            <topic label="get_model_name" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a29ece37345ba1fc58e578131f728a3b3"/>
-            <topic label="get_time_convert_factor" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a38b9534ee9fa09b45ffc1755e42d8345"/>
+            <topic label="AbstractCLibBmiAdapter" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#afac72323e2bdf05953f6858ea068972c"/>
+            <topic label="AbstractCLibBmiAdapter" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#ad4a8df78a1c6c49278feff40a344cca4"/>
+            <topic label="~AbstractCLibBmiAdapter" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a559a7b2852c033fe2acd46cf0d64041e"/>
+            <topic label="construct_and_init_backing_model" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#aaf11585e4e3852fa9391ad5966af22d2"/>
+            <topic label="convert_model_time_to_seconds" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a6efbfd9ff146bbe3b3c1a82d243f8266"/>
+            <topic label="convert_seconds_to_model_time" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a73ca855d0db45838b87309038fae1fed"/>
+            <topic label="dynamic_library_load" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#aee6c52698d720f8cb2607e3b3409a516"/>
+            <topic label="dynamic_load_symbol" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a0df7997eda128c62aab52d58d6348901"/>
+            <topic label="dynamic_load_symbol" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a8c61e9b9324dff859901309b12037898"/>
+            <topic label="Finalize" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a4d83ca0190339e27eda4b539e05177a6"/>
+            <topic label="finalizeForLibAbstraction" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a6f507602993ebdec7ad1d9ce4f33eb05"/>
+            <topic label="get_analogous_cxx_type" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a8dbc88c821422f043becca2742a9a507"/>
+            <topic label="get_bmi_registration_function" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#abf7c98e446296bd7245a0872fcdba4db"/>
+            <topic label="get_dyn_lib_handle" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#ad273a417c3b0d21e01b09c81d8c00d91"/>
+            <topic label="get_model_name" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a145a63b96ced2bebb1f0fbe37ba5c027"/>
+            <topic label="get_time_convert_factor" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a4b021125add57e1921bb4344d9ccea5f"/>
             <topic label="GetComponentName" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a260433746fad7ef67ace7daf4927ccf8"/>
             <topic label="GetCurrentTime" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#acbbbbfa690e6adb9eb348aa0ecd03e69"/>
             <topic label="GetEndTime" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a05446119c83ed2be8bbf92644d9b5bce"/>
@@ -1463,42 +1463,41 @@
             <topic label="GetVarNbytes" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#ab200d1746bee8806139062040dd06d8f"/>
             <topic label="GetVarType" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a0eff3235819c8c9c793e437a88048a1e"/>
             <topic label="GetVarUnits" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a75725d44cf7432a7f09f1ac403727d64"/>
-            <topic label="Initialize" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a43ba9007b2536787eb95a330167068ff"/>
-            <topic label="Initialize" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a2d206e86d7b81af1017d2cdb7cee260f"/>
-            <topic label="isInitialized" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#ad2f092a3ad436e555199eba325333b0b"/>
+            <topic label="Initialize" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#aeace85bbd89962f2945bec0ca3c76091"/>
+            <topic label="Initialize" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a4a2a8f1fb2442ec5e3a5bd1c7a3b3ef2"/>
+            <topic label="isInitialized" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a31e002ee7effe39ca0f07b7c2f16a453"/>
             <topic label="SetValue" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#ae0e047f16b967e6b6cab77d3285add30"/>
             <topic label="SetValueAtIndices" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a3cecd50be90621a3d47cc811258c5f75"/>
             <topic label="Update" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a0ecdb1dd0c0545908d7debb56e2c10aa"/>
             <topic label="UpdateUntil" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a6bead8b75c803a2fd51f4df6f6f91627"/>
-            <topic label="allow_model_exceed_end_time" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a6af454f82f9e220ac5ab371b1ddf5763"/>
-            <topic label="bmi_init_config" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#ae285c4afcc26386198ce47fd6db32eac"/>
-            <topic label="bmi_lib_file" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a3970e75dab7e66747267b241b7d1d6fe"/>
-            <topic label="bmi_model" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a97f5199d4f6482facc1d574023069147"/>
-            <topic label="bmi_model_has_fixed_time_step" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a5869ff568906db7bff043b98eb559912"/>
-            <topic label="bmi_model_time_convert_factor" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a42119ee6494d26ed80689d1f1c24fa7f"/>
-            <topic label="bmi_model_time_step_size" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a1f2c01b50a964c82cb912b0cce11dbd9"/>
-            <topic label="bmi_model_uses_forcing_file" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a811bd01f2115741d65aba76835113d0b"/>
-            <topic label="bmi_registration_function" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#ae51530115ba4e87818479907344665ff"/>
-            <topic label="dyn_lib_handle" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a8a7a5596d34a9858dfc6754acade23e8"/>
-            <topic label="forcing_file_path" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#acabc60f3482c1bbfb4efe0d111c3e456"/>
-            <topic label="init_exception_msg" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a42eb3450b8edff4524ed2f8856fa7ea7"/>
-            <topic label="input_var_names" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#ac7521734251079aab4c5ca76cfb652f9"/>
-            <topic label="model_initialized" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#aace2ea769ebf53ea0064e770684499e4"/>
-            <topic label="model_name" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#ab2cec90b1f6aa9fa6bb050ec52d6f4fa"/>
-            <topic label="output" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a41834183a37097c68442451e109464f8"/>
-            <topic label="output_var_names" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a10a27243f9d7361a3b46ae3dcdb09c41"/>
+            <topic label="allow_model_exceed_end_time" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#aa7eaecf4ba4b88781f8829e06e81b6b3"/>
+            <topic label="bmi_init_config" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a32725cc98663e54694c90c8740e8e5dd"/>
+            <topic label="bmi_lib_file" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a636d45e305f013644fd8435a464a341d"/>
+            <topic label="bmi_model_has_fixed_time_step" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a97a27219b39d6de5a061e6ea0780711c"/>
+            <topic label="bmi_model_time_convert_factor" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a21ac56d555a07e58fccbef9dc2d867c9"/>
+            <topic label="bmi_model_time_step_size" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#abd1717cf52bec5736e39575af54eea2f"/>
+            <topic label="bmi_model_uses_forcing_file" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a384ff24215e8acfb0744c46cac56183e"/>
+            <topic label="bmi_registration_function" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#ad9c8e724b1cbb9fff6ec68dc1410ca8b"/>
+            <topic label="dyn_lib_handle" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a2bb1cba086a935b90f356f29def46d54"/>
+            <topic label="forcing_file_path" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#ae6d1be4a39ef76547004c3392b95f3e4"/>
+            <topic label="init_exception_msg" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a2698bc13d9ced362e18cb8cf0dab82d7"/>
+            <topic label="input_var_names" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a21e6426f0db58661e3548ba2e9b93058"/>
+            <topic label="model_initialized" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a120a9a8212a5bd857bf119dc90268306"/>
+            <topic label="model_name" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#ac2c1d1c1e279212c200ad6a4be4864d6"/>
+            <topic label="output" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a6bfb2f398f00c3b44b1235d4758f0c91"/>
+            <topic label="output_var_names" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#af9384bd6c9dfa04e5ec29181f6a66ed4"/>
           </topic>
           <topic label="Bmi_Adapter" href="classmodels_1_1bmi_1_1_bmi___adapter.html">
-            <topic label="Bmi_Adapter" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a4484d4b83bb60cfb7cd60a4b5d65bd49"/>
-            <topic label="Bmi_Adapter" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a749dab2cf7fbd0d4687c447db5429f9e"/>
-            <topic label="Bmi_Adapter" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a638ebfd9ad3620aa259653ecd6e23ebf"/>
-            <topic label="construct_and_init_backing_model" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a290bc05cd237b678486294e188995aaa"/>
-            <topic label="convert_model_time_to_seconds" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a3dc0b3c5060687be87f2c2916a2aa1ce"/>
-            <topic label="convert_seconds_to_model_time" href="classmodels_1_1bmi_1_1_bmi___adapter.html#ab59c92e91f3ebe1cf5eaceac16100043"/>
+            <topic label="Bmi_Adapter" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a0c2c4cd3ff3b6fc1050e2d5b878dbc40"/>
+            <topic label="Bmi_Adapter" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a131ad658e150f04fe2a5f1ce7bedbf96"/>
+            <topic label="Bmi_Adapter" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a5d30e5abcdab164d2b0aefbf4becb9e5"/>
+            <topic label="construct_and_init_backing_model" href="classmodels_1_1bmi_1_1_bmi___adapter.html#aaf11585e4e3852fa9391ad5966af22d2"/>
+            <topic label="convert_model_time_to_seconds" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a6efbfd9ff146bbe3b3c1a82d243f8266"/>
+            <topic label="convert_seconds_to_model_time" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a73ca855d0db45838b87309038fae1fed"/>
             <topic label="Finalize" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a50ba4a7a721969d53c269298a1e607a7"/>
-            <topic label="get_analogous_cxx_type" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a68f635fcef67684ba60e21796b53711e"/>
-            <topic label="get_model_name" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a29ece37345ba1fc58e578131f728a3b3"/>
-            <topic label="get_time_convert_factor" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a38b9534ee9fa09b45ffc1755e42d8345"/>
+            <topic label="get_analogous_cxx_type" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a8dbc88c821422f043becca2742a9a507"/>
+            <topic label="get_model_name" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a145a63b96ced2bebb1f0fbe37ba5c027"/>
+            <topic label="get_time_convert_factor" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a4b021125add57e1921bb4344d9ccea5f"/>
             <topic label="GetComponentName" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a260433746fad7ef67ace7daf4927ccf8"/>
             <topic label="GetCurrentTime" href="classmodels_1_1bmi_1_1_bmi___adapter.html#acbbbbfa690e6adb9eb348aa0ecd03e69"/>
             <topic label="GetEndTime" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a05446119c83ed2be8bbf92644d9b5bce"/>
@@ -1534,51 +1533,51 @@
             <topic label="GetVarNbytes" href="classmodels_1_1bmi_1_1_bmi___adapter.html#ab200d1746bee8806139062040dd06d8f"/>
             <topic label="GetVarType" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a0eff3235819c8c9c793e437a88048a1e"/>
             <topic label="GetVarUnits" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a75725d44cf7432a7f09f1ac403727d64"/>
-            <topic label="Initialize" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a43ba9007b2536787eb95a330167068ff"/>
-            <topic label="Initialize" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a2d206e86d7b81af1017d2cdb7cee260f"/>
-            <topic label="isInitialized" href="classmodels_1_1bmi_1_1_bmi___adapter.html#ad2f092a3ad436e555199eba325333b0b"/>
+            <topic label="Initialize" href="classmodels_1_1bmi_1_1_bmi___adapter.html#aeace85bbd89962f2945bec0ca3c76091"/>
+            <topic label="Initialize" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a4a2a8f1fb2442ec5e3a5bd1c7a3b3ef2"/>
+            <topic label="isInitialized" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a31e002ee7effe39ca0f07b7c2f16a453"/>
             <topic label="SetValue" href="classmodels_1_1bmi_1_1_bmi___adapter.html#ae0e047f16b967e6b6cab77d3285add30"/>
             <topic label="SetValueAtIndices" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a3cecd50be90621a3d47cc811258c5f75"/>
             <topic label="Update" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a0ecdb1dd0c0545908d7debb56e2c10aa"/>
             <topic label="UpdateUntil" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a6bead8b75c803a2fd51f4df6f6f91627"/>
-            <topic label="allow_model_exceed_end_time" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a6af454f82f9e220ac5ab371b1ddf5763"/>
-            <topic label="bmi_init_config" href="classmodels_1_1bmi_1_1_bmi___adapter.html#ae285c4afcc26386198ce47fd6db32eac"/>
-            <topic label="bmi_model" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a97f5199d4f6482facc1d574023069147"/>
-            <topic label="bmi_model_has_fixed_time_step" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a5869ff568906db7bff043b98eb559912"/>
-            <topic label="bmi_model_time_convert_factor" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a42119ee6494d26ed80689d1f1c24fa7f"/>
-            <topic label="bmi_model_time_step_size" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a1f2c01b50a964c82cb912b0cce11dbd9"/>
-            <topic label="bmi_model_uses_forcing_file" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a811bd01f2115741d65aba76835113d0b"/>
-            <topic label="forcing_file_path" href="classmodels_1_1bmi_1_1_bmi___adapter.html#acabc60f3482c1bbfb4efe0d111c3e456"/>
-            <topic label="init_exception_msg" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a42eb3450b8edff4524ed2f8856fa7ea7"/>
-            <topic label="input_var_names" href="classmodels_1_1bmi_1_1_bmi___adapter.html#ac7521734251079aab4c5ca76cfb652f9"/>
-            <topic label="model_initialized" href="classmodels_1_1bmi_1_1_bmi___adapter.html#aace2ea769ebf53ea0064e770684499e4"/>
-            <topic label="model_name" href="classmodels_1_1bmi_1_1_bmi___adapter.html#ab2cec90b1f6aa9fa6bb050ec52d6f4fa"/>
-            <topic label="output" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a41834183a37097c68442451e109464f8"/>
-            <topic label="output_var_names" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a10a27243f9d7361a3b46ae3dcdb09c41"/>
+            <topic label="allow_model_exceed_end_time" href="classmodels_1_1bmi_1_1_bmi___adapter.html#aa7eaecf4ba4b88781f8829e06e81b6b3"/>
+            <topic label="bmi_init_config" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a32725cc98663e54694c90c8740e8e5dd"/>
+            <topic label="bmi_model_has_fixed_time_step" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a97a27219b39d6de5a061e6ea0780711c"/>
+            <topic label="bmi_model_time_convert_factor" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a21ac56d555a07e58fccbef9dc2d867c9"/>
+            <topic label="bmi_model_time_step_size" href="classmodels_1_1bmi_1_1_bmi___adapter.html#abd1717cf52bec5736e39575af54eea2f"/>
+            <topic label="bmi_model_uses_forcing_file" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a384ff24215e8acfb0744c46cac56183e"/>
+            <topic label="forcing_file_path" href="classmodels_1_1bmi_1_1_bmi___adapter.html#ae6d1be4a39ef76547004c3392b95f3e4"/>
+            <topic label="init_exception_msg" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a2698bc13d9ced362e18cb8cf0dab82d7"/>
+            <topic label="input_var_names" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a21e6426f0db58661e3548ba2e9b93058"/>
+            <topic label="model_initialized" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a120a9a8212a5bd857bf119dc90268306"/>
+            <topic label="model_name" href="classmodels_1_1bmi_1_1_bmi___adapter.html#ac2c1d1c1e279212c200ad6a4be4864d6"/>
+            <topic label="output" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a6bfb2f398f00c3b44b1235d4758f0c91"/>
+            <topic label="output_var_names" href="classmodels_1_1bmi_1_1_bmi___adapter.html#af9384bd6c9dfa04e5ec29181f6a66ed4"/>
           </topic>
           <topic label="Bmi_C_Adapter" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html">
             <topic label="Bmi_C_Adapter" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a0c421b18deca925ee77dd0008cce3220"/>
             <topic label="Bmi_C_Adapter" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a3022170bba0d65eaefc801c30c07b7ec"/>
             <topic label="Bmi_C_Adapter" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#ad1b2a065afca6374e1a33df8cb86f22c"/>
-            <topic label="Bmi_C_Adapter" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a83e686bd0e5455eb02dbeb5a8bfbf70b"/>
+            <topic label="Bmi_C_Adapter" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a19aa6564ec665e160079276598d046fa"/>
+            <topic label="Bmi_C_Adapter" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#ad535354b96c22665567b45954f4ed31b"/>
             <topic label="~Bmi_C_Adapter" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a7539ca392765713f0fc65c48d21a65b3"/>
             <topic label="construct_and_init_backing_model" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#ae645b8c5636a9a539e25b45f364cb91a"/>
             <topic label="construct_and_init_backing_model_for_type" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a590bb56edfa69f5dce5f76820e7c74d6"/>
-            <topic label="convert_model_time_to_seconds" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a3dc0b3c5060687be87f2c2916a2aa1ce"/>
-            <topic label="convert_seconds_to_model_time" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#ab59c92e91f3ebe1cf5eaceac16100043"/>
-            <topic label="dynamic_library_load" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a4ab2f0638b8426885395d121f44a9f70"/>
-            <topic label="dynamic_load_symbol" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#af36238dd0499b8382e4f3a6d820a012a"/>
-            <topic label="dynamic_load_symbol" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a02190ea63a9d156165cae7a64d83bacc"/>
+            <topic label="convert_model_time_to_seconds" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a6efbfd9ff146bbe3b3c1a82d243f8266"/>
+            <topic label="convert_seconds_to_model_time" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a73ca855d0db45838b87309038fae1fed"/>
+            <topic label="dynamic_library_load" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#aee6c52698d720f8cb2607e3b3409a516"/>
+            <topic label="dynamic_load_symbol" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a0df7997eda128c62aab52d58d6348901"/>
+            <topic label="dynamic_load_symbol" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a8c61e9b9324dff859901309b12037898"/>
             <topic label="execModuleRegistration" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#add6ed35e47cc9a5c34a52bbb3e623b88"/>
             <topic label="Finalize" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#ab96ac3291b659ad70476720eaba62568"/>
             <topic label="finalizeForCAdapter" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a11f9107c47aa791a77799bd08b1e2b93"/>
-            <topic label="finalizeForLibAbstraction" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#aeeaf49b3bd45d89b2a88086d25f328b8"/>
+            <topic label="finalizeForLibAbstraction" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a6f507602993ebdec7ad1d9ce4f33eb05"/>
             <topic label="get_analogous_cxx_type" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#afe1d151a20915c4155640219c21d73b1"/>
             <topic label="get_bmi_model_time_step_size_ptr" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a53eca48ab8aa5e1d5c56dc6c9d00d3af"/>
-            <topic label="get_bmi_registration_function" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#ac1a86e6285c9d8c809d1bd1bdc013215"/>
-            <topic label="get_dyn_lib_handle" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a57d36aeb7ab195f31e59d19812a511b5"/>
-            <topic label="get_model_name" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a29ece37345ba1fc58e578131f728a3b3"/>
-            <topic label="get_time_convert_factor" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a38b9534ee9fa09b45ffc1755e42d8345"/>
+            <topic label="get_bmi_registration_function" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#abf7c98e446296bd7245a0872fcdba4db"/>
+            <topic label="get_dyn_lib_handle" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#ad273a417c3b0d21e01b09c81d8c00d91"/>
+            <topic label="get_model_name" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a145a63b96ced2bebb1f0fbe37ba5c027"/>
+            <topic label="get_time_convert_factor" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a4b021125add57e1921bb4344d9ccea5f"/>
             <topic label="get_value" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#acb41ceded0e5f7fea73f3aa6ce06226c"/>
             <topic label="GetComponentName" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#ac1a395a84c30bdaa00a8f7c7168e8c1a"/>
             <topic label="GetCurrentTime" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a8bde25bf9fad9061daf126e213b8ce07"/>
@@ -1616,13 +1615,13 @@
             <topic label="GetVarNbytes" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a8c5d30d0ca0700e44c3b744e8c2308cb"/>
             <topic label="GetVarType" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a3c386edbfd2f2efaf0a988d4dfe2f8e3"/>
             <topic label="GetVarUnits" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#af9480c18092311e95bc0fb263b906101"/>
-            <topic label="Initialize" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a43ba9007b2536787eb95a330167068ff"/>
-            <topic label="Initialize" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a2d206e86d7b81af1017d2cdb7cee260f"/>
+            <topic label="Initialize" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#aeace85bbd89962f2945bec0ca3c76091"/>
+            <topic label="Initialize" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a4a2a8f1fb2442ec5e3a5bd1c7a3b3ef2"/>
             <topic label="inner_get_input_item_count" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#af842e9fa306ecfa967fe4cee07f4b5fa"/>
             <topic label="inner_get_output_item_count" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a06bbf0b8e0c99f860fc60679152269d5"/>
             <topic label="inner_get_variable_names" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a14970d230345f3fe2002b40e8b708872"/>
             <topic label="is_model_initialized" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a2d711c40806e31b3b47232fe3d8f10ea"/>
-            <topic label="isInitialized" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#ad2f092a3ad436e555199eba325333b0b"/>
+            <topic label="isInitialized" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a31e002ee7effe39ca0f07b7c2f16a453"/>
             <topic label="retrieve_bmi_model_time_step_size" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a5b8ad5070b07816cda74c8a0361aeba5"/>
             <topic label="SetValue" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a67396fbf0b5958cbdd0323359e4be5d8"/>
             <topic label="SetValue" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#ae9c4214f0b7a8f9d24168a2c95aa64f9"/>
@@ -1631,47 +1630,48 @@
             <topic label="Update" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a1064e72bf0bc0d35e9d1b8a9c062c438"/>
             <topic label="UpdateUntil" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#ab2e846514c4e36f6095b2ba84ec28c63"/>
             <topic label="::Bmi_C_Adapter_Test" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a891996798cd3c8a51e8148fd1f306fc2"/>
-            <topic label="allow_model_exceed_end_time" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a6af454f82f9e220ac5ab371b1ddf5763"/>
-            <topic label="bmi_init_config" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#ae285c4afcc26386198ce47fd6db32eac"/>
-            <topic label="bmi_lib_file" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a3970e75dab7e66747267b241b7d1d6fe"/>
-            <topic label="bmi_model" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a97f5199d4f6482facc1d574023069147"/>
-            <topic label="bmi_model_has_fixed_time_step" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a5869ff568906db7bff043b98eb559912"/>
-            <topic label="bmi_model_time_convert_factor" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a42119ee6494d26ed80689d1f1c24fa7f"/>
-            <topic label="bmi_model_time_step_size" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a1f2c01b50a964c82cb912b0cce11dbd9"/>
-            <topic label="bmi_model_uses_forcing_file" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a811bd01f2115741d65aba76835113d0b"/>
-            <topic label="bmi_registration_function" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#ae51530115ba4e87818479907344665ff"/>
-            <topic label="dyn_lib_handle" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a8a7a5596d34a9858dfc6754acade23e8"/>
-            <topic label="forcing_file_path" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#acabc60f3482c1bbfb4efe0d111c3e456"/>
-            <topic label="init_exception_msg" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a42eb3450b8edff4524ed2f8856fa7ea7"/>
-            <topic label="input_var_names" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#ac7521734251079aab4c5ca76cfb652f9"/>
-            <topic label="model_initialized" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#aace2ea769ebf53ea0064e770684499e4"/>
+            <topic label="allow_model_exceed_end_time" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#aa7eaecf4ba4b88781f8829e06e81b6b3"/>
+            <topic label="bmi_init_config" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a32725cc98663e54694c90c8740e8e5dd"/>
+            <topic label="bmi_lib_file" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a636d45e305f013644fd8435a464a341d"/>
+            <topic label="bmi_model" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a1fa6c71c6683a4f49957206d078b2435"/>
+            <topic label="bmi_model_has_fixed_time_step" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a97a27219b39d6de5a061e6ea0780711c"/>
+            <topic label="bmi_model_time_convert_factor" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a21ac56d555a07e58fccbef9dc2d867c9"/>
+            <topic label="bmi_model_time_step_size" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#abd1717cf52bec5736e39575af54eea2f"/>
+            <topic label="bmi_model_uses_forcing_file" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a384ff24215e8acfb0744c46cac56183e"/>
+            <topic label="bmi_registration_function" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#ad9c8e724b1cbb9fff6ec68dc1410ca8b"/>
+            <topic label="dyn_lib_handle" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a2bb1cba086a935b90f356f29def46d54"/>
+            <topic label="forcing_file_path" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#ae6d1be4a39ef76547004c3392b95f3e4"/>
+            <topic label="init_exception_msg" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a2698bc13d9ced362e18cb8cf0dab82d7"/>
+            <topic label="input_var_names" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a21e6426f0db58661e3548ba2e9b93058"/>
+            <topic label="model_initialized" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a120a9a8212a5bd857bf119dc90268306"/>
             <topic label="model_name" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#afe85482a3428013e89e70248af9d8446"/>
-            <topic label="output" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a41834183a37097c68442451e109464f8"/>
-            <topic label="output_var_names" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a10a27243f9d7361a3b46ae3dcdb09c41"/>
+            <topic label="output" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a6bfb2f398f00c3b44b1235d4758f0c91"/>
+            <topic label="output_var_names" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#af9384bd6c9dfa04e5ec29181f6a66ed4"/>
           </topic>
           <topic label="Bmi_Cpp_Adapter" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html">
             <topic label="Bmi_Cpp_Adapter" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ac396fed0fb99b146a4cfae136ef661db"/>
             <topic label="Bmi_Cpp_Adapter" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#afab5abf080fb6a52edc0ac7ee3fbb4be"/>
             <topic label="Bmi_Cpp_Adapter" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a1d12e828bab29517b53cd06cb7226237"/>
-            <topic label="Bmi_Cpp_Adapter" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a09450c4e0f512900440bb1a0c6ba28d1"/>
+            <topic label="Bmi_Cpp_Adapter" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a9b0058de857cb24365c4d2a8a2fd09a2"/>
+            <topic label="Bmi_Cpp_Adapter" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a5ad0335860170d44de17c6567a7efa66"/>
             <topic label="~Bmi_Cpp_Adapter" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a89265a51b3ef4488a428e61c5883056d"/>
             <topic label="construct_and_init_backing_model" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#af954ff0618b7422d2ec45baed9c2ac80"/>
             <topic label="construct_and_init_backing_model_for_type" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#aae261e8942befef9cb10ba47b89199a4"/>
-            <topic label="convert_model_time_to_seconds" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a3dc0b3c5060687be87f2c2916a2aa1ce"/>
-            <topic label="convert_seconds_to_model_time" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ab59c92e91f3ebe1cf5eaceac16100043"/>
-            <topic label="dynamic_library_load" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a4ab2f0638b8426885395d121f44a9f70"/>
-            <topic label="dynamic_load_symbol" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#af36238dd0499b8382e4f3a6d820a012a"/>
-            <topic label="dynamic_load_symbol" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a02190ea63a9d156165cae7a64d83bacc"/>
+            <topic label="convert_model_time_to_seconds" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a6efbfd9ff146bbe3b3c1a82d243f8266"/>
+            <topic label="convert_seconds_to_model_time" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a73ca855d0db45838b87309038fae1fed"/>
+            <topic label="dynamic_library_load" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#aee6c52698d720f8cb2607e3b3409a516"/>
+            <topic label="dynamic_load_symbol" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a0df7997eda128c62aab52d58d6348901"/>
+            <topic label="dynamic_load_symbol" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a8c61e9b9324dff859901309b12037898"/>
             <topic label="execModuleCreation" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a6cf1d96f795492f61873e0669840ee11"/>
             <topic label="Finalize" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ab8647d33bcbae27472974129f4485c1a"/>
             <topic label="finalizeForCppAdapter" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#afabb0ce9324c2c08bab9e836dc612c3b"/>
-            <topic label="finalizeForLibAbstraction" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#aeeaf49b3bd45d89b2a88086d25f328b8"/>
+            <topic label="finalizeForLibAbstraction" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a6f507602993ebdec7ad1d9ce4f33eb05"/>
             <topic label="get_analogous_cxx_type" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a9436b5b458bfbe85f8efc2a0c1f2f90a"/>
             <topic label="get_bmi_model_time_step_size_ptr" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a1bc650f632d74261b80bb57094a04952"/>
-            <topic label="get_bmi_registration_function" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ac1a86e6285c9d8c809d1bd1bdc013215"/>
-            <topic label="get_dyn_lib_handle" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a57d36aeb7ab195f31e59d19812a511b5"/>
-            <topic label="get_model_name" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a29ece37345ba1fc58e578131f728a3b3"/>
-            <topic label="get_time_convert_factor" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a38b9534ee9fa09b45ffc1755e42d8345"/>
+            <topic label="get_bmi_registration_function" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#abf7c98e446296bd7245a0872fcdba4db"/>
+            <topic label="get_dyn_lib_handle" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ad273a417c3b0d21e01b09c81d8c00d91"/>
+            <topic label="get_model_name" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a145a63b96ced2bebb1f0fbe37ba5c027"/>
+            <topic label="get_time_convert_factor" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a4b021125add57e1921bb4344d9ccea5f"/>
             <topic label="GetComponentName" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a525a39465193c8d20339e99ab8bde811"/>
             <topic label="GetCurrentTime" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#aaa7231e53236d33b6fdcd0115593a895"/>
             <topic label="GetEndTime" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a0923801f9d9825c4ef5d3cf72b4f8708"/>
@@ -1708,10 +1708,10 @@
             <topic label="GetVarNbytes" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#af5dafe2165c1195da18a1c95264a1e24"/>
             <topic label="GetVarType" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a6a9f11b324fa7d84303f98636ba8fecf"/>
             <topic label="GetVarUnits" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a841e084e84ba0325b77e1a868c7407d6"/>
-            <topic label="Initialize" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a43ba9007b2536787eb95a330167068ff"/>
-            <topic label="Initialize" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a2d206e86d7b81af1017d2cdb7cee260f"/>
+            <topic label="Initialize" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#aeace85bbd89962f2945bec0ca3c76091"/>
+            <topic label="Initialize" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a4a2a8f1fb2442ec5e3a5bd1c7a3b3ef2"/>
             <topic label="is_model_initialized" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a2902dc0ab6801565909137e72fd1f24a"/>
-            <topic label="isInitialized" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ad2f092a3ad436e555199eba325333b0b"/>
+            <topic label="isInitialized" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a31e002ee7effe39ca0f07b7c2f16a453"/>
             <topic label="retrieve_bmi_model_time_step_size" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#afecf067b64e1c54a6055c7f3f4425d88"/>
             <topic label="SetValue" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a3bfd5449118d6cda3284ae082a9c6f29"/>
             <topic label="SetValue" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ab236c00fa83e76c4f6f61fc0b01e053a"/>
@@ -1720,27 +1720,27 @@
             <topic label="Update" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ae33b5178cf37132e8c0186977612f74b"/>
             <topic label="UpdateUntil" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a89ed729aade1ec00e5aee9f587168ea6"/>
             <topic label="::Bmi_Cpp_Adapter_Test" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a59f2bbbb7077059c32eb241016e536a5"/>
-            <topic label="allow_model_exceed_end_time" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a6af454f82f9e220ac5ab371b1ddf5763"/>
-            <topic label="bmi_init_config" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ae285c4afcc26386198ce47fd6db32eac"/>
-            <topic label="bmi_lib_file" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a3970e75dab7e66747267b241b7d1d6fe"/>
-            <topic label="bmi_model" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a97f5199d4f6482facc1d574023069147"/>
-            <topic label="bmi_model_has_fixed_time_step" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a5869ff568906db7bff043b98eb559912"/>
-            <topic label="bmi_model_time_convert_factor" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a42119ee6494d26ed80689d1f1c24fa7f"/>
-            <topic label="bmi_model_time_step_size" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a1f2c01b50a964c82cb912b0cce11dbd9"/>
-            <topic label="bmi_model_uses_forcing_file" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a811bd01f2115741d65aba76835113d0b"/>
-            <topic label="bmi_registration_function" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ae51530115ba4e87818479907344665ff"/>
-            <topic label="dyn_lib_handle" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a8a7a5596d34a9858dfc6754acade23e8"/>
-            <topic label="forcing_file_path" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#acabc60f3482c1bbfb4efe0d111c3e456"/>
-            <topic label="init_exception_msg" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a42eb3450b8edff4524ed2f8856fa7ea7"/>
-            <topic label="input_var_names" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ac7521734251079aab4c5ca76cfb652f9"/>
+            <topic label="allow_model_exceed_end_time" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#aa7eaecf4ba4b88781f8829e06e81b6b3"/>
+            <topic label="bmi_init_config" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a32725cc98663e54694c90c8740e8e5dd"/>
+            <topic label="bmi_lib_file" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a636d45e305f013644fd8435a464a341d"/>
+            <topic label="bmi_model" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ab816605158ae58a39b799531f8100ee3"/>
+            <topic label="bmi_model_has_fixed_time_step" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a97a27219b39d6de5a061e6ea0780711c"/>
+            <topic label="bmi_model_time_convert_factor" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a21ac56d555a07e58fccbef9dc2d867c9"/>
+            <topic label="bmi_model_time_step_size" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#abd1717cf52bec5736e39575af54eea2f"/>
+            <topic label="bmi_model_uses_forcing_file" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a384ff24215e8acfb0744c46cac56183e"/>
+            <topic label="bmi_registration_function" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ad9c8e724b1cbb9fff6ec68dc1410ca8b"/>
+            <topic label="dyn_lib_handle" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a2bb1cba086a935b90f356f29def46d54"/>
+            <topic label="forcing_file_path" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ae6d1be4a39ef76547004c3392b95f3e4"/>
+            <topic label="init_exception_msg" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a2698bc13d9ced362e18cb8cf0dab82d7"/>
+            <topic label="input_var_names" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a21e6426f0db58661e3548ba2e9b93058"/>
             <topic label="model_create_fname" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a74326d07e1041116764a994d9a03dd63"/>
             <topic label="model_destroy_fname" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a1bee65df774b7417447f2238153d3dd0"/>
-            <topic label="model_initialized" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#aace2ea769ebf53ea0064e770684499e4"/>
-            <topic label="model_name" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a820425820756aaf472621d4b4d5fb9e1"/>
-            <topic label="output" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a41834183a37097c68442451e109464f8"/>
-            <topic label="output_var_names" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a10a27243f9d7361a3b46ae3dcdb09c41"/>
+            <topic label="model_initialized" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a120a9a8212a5bd857bf119dc90268306"/>
+            <topic label="model_name" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ac2c1d1c1e279212c200ad6a4be4864d6"/>
+            <topic label="output" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a6bfb2f398f00c3b44b1235d4758f0c91"/>
+            <topic label="output_var_names" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#af9384bd6c9dfa04e5ec29181f6a66ed4"/>
           </topic>
-          <topic label="GetValue" href="namespacemodels_1_1bmi.html#a9a93ff9e1d50a972be5eb3978e5a6c9f"/>
+          <topic label="GetValue" href="namespacemodels_1_1bmi.html#a023e01b3fa0c71541bcc8e5f804b80ee"/>
         </topic>
         <topic label="external" href="namespacemodels_1_1external.html">
           <topic label="State_Exception" href="classmodels_1_1external_1_1_state___exception.html">
@@ -3742,22 +3742,22 @@
       <topic label="models" href="namespacemodels.html">
         <topic label="bmi" href="namespacemodels_1_1bmi.html">
           <topic label="AbstractCLibBmiAdapter" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html">
-            <topic label="AbstractCLibBmiAdapter" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a568f3487f930c7bd8756dc9680e8547b"/>
-            <topic label="AbstractCLibBmiAdapter" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a192bf6263d58c447032caea8a24267a7"/>
-            <topic label="~AbstractCLibBmiAdapter" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a27734fb939aea8464c757f9a3372eab4"/>
-            <topic label="construct_and_init_backing_model" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a290bc05cd237b678486294e188995aaa"/>
-            <topic label="convert_model_time_to_seconds" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a3dc0b3c5060687be87f2c2916a2aa1ce"/>
-            <topic label="convert_seconds_to_model_time" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#ab59c92e91f3ebe1cf5eaceac16100043"/>
-            <topic label="dynamic_library_load" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a4ab2f0638b8426885395d121f44a9f70"/>
-            <topic label="dynamic_load_symbol" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#af36238dd0499b8382e4f3a6d820a012a"/>
-            <topic label="dynamic_load_symbol" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a02190ea63a9d156165cae7a64d83bacc"/>
-            <topic label="Finalize" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a2de8c486290e20a28e876ee62414311e"/>
-            <topic label="finalizeForLibAbstraction" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#aeeaf49b3bd45d89b2a88086d25f328b8"/>
-            <topic label="get_analogous_cxx_type" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a68f635fcef67684ba60e21796b53711e"/>
-            <topic label="get_bmi_registration_function" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#ac1a86e6285c9d8c809d1bd1bdc013215"/>
-            <topic label="get_dyn_lib_handle" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a57d36aeb7ab195f31e59d19812a511b5"/>
-            <topic label="get_model_name" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a29ece37345ba1fc58e578131f728a3b3"/>
-            <topic label="get_time_convert_factor" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a38b9534ee9fa09b45ffc1755e42d8345"/>
+            <topic label="AbstractCLibBmiAdapter" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#afac72323e2bdf05953f6858ea068972c"/>
+            <topic label="AbstractCLibBmiAdapter" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#ad4a8df78a1c6c49278feff40a344cca4"/>
+            <topic label="~AbstractCLibBmiAdapter" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a559a7b2852c033fe2acd46cf0d64041e"/>
+            <topic label="construct_and_init_backing_model" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#aaf11585e4e3852fa9391ad5966af22d2"/>
+            <topic label="convert_model_time_to_seconds" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a6efbfd9ff146bbe3b3c1a82d243f8266"/>
+            <topic label="convert_seconds_to_model_time" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a73ca855d0db45838b87309038fae1fed"/>
+            <topic label="dynamic_library_load" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#aee6c52698d720f8cb2607e3b3409a516"/>
+            <topic label="dynamic_load_symbol" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a0df7997eda128c62aab52d58d6348901"/>
+            <topic label="dynamic_load_symbol" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a8c61e9b9324dff859901309b12037898"/>
+            <topic label="Finalize" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a4d83ca0190339e27eda4b539e05177a6"/>
+            <topic label="finalizeForLibAbstraction" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a6f507602993ebdec7ad1d9ce4f33eb05"/>
+            <topic label="get_analogous_cxx_type" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a8dbc88c821422f043becca2742a9a507"/>
+            <topic label="get_bmi_registration_function" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#abf7c98e446296bd7245a0872fcdba4db"/>
+            <topic label="get_dyn_lib_handle" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#ad273a417c3b0d21e01b09c81d8c00d91"/>
+            <topic label="get_model_name" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a145a63b96ced2bebb1f0fbe37ba5c027"/>
+            <topic label="get_time_convert_factor" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a4b021125add57e1921bb4344d9ccea5f"/>
             <topic label="GetComponentName" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a260433746fad7ef67ace7daf4927ccf8"/>
             <topic label="GetCurrentTime" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#acbbbbfa690e6adb9eb348aa0ecd03e69"/>
             <topic label="GetEndTime" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a05446119c83ed2be8bbf92644d9b5bce"/>
@@ -3793,42 +3793,41 @@
             <topic label="GetVarNbytes" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#ab200d1746bee8806139062040dd06d8f"/>
             <topic label="GetVarType" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a0eff3235819c8c9c793e437a88048a1e"/>
             <topic label="GetVarUnits" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a75725d44cf7432a7f09f1ac403727d64"/>
-            <topic label="Initialize" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a43ba9007b2536787eb95a330167068ff"/>
-            <topic label="Initialize" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a2d206e86d7b81af1017d2cdb7cee260f"/>
-            <topic label="isInitialized" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#ad2f092a3ad436e555199eba325333b0b"/>
+            <topic label="Initialize" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#aeace85bbd89962f2945bec0ca3c76091"/>
+            <topic label="Initialize" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a4a2a8f1fb2442ec5e3a5bd1c7a3b3ef2"/>
+            <topic label="isInitialized" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a31e002ee7effe39ca0f07b7c2f16a453"/>
             <topic label="SetValue" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#ae0e047f16b967e6b6cab77d3285add30"/>
             <topic label="SetValueAtIndices" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a3cecd50be90621a3d47cc811258c5f75"/>
             <topic label="Update" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a0ecdb1dd0c0545908d7debb56e2c10aa"/>
             <topic label="UpdateUntil" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a6bead8b75c803a2fd51f4df6f6f91627"/>
-            <topic label="allow_model_exceed_end_time" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a6af454f82f9e220ac5ab371b1ddf5763"/>
-            <topic label="bmi_init_config" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#ae285c4afcc26386198ce47fd6db32eac"/>
-            <topic label="bmi_lib_file" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a3970e75dab7e66747267b241b7d1d6fe"/>
-            <topic label="bmi_model" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a97f5199d4f6482facc1d574023069147"/>
-            <topic label="bmi_model_has_fixed_time_step" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a5869ff568906db7bff043b98eb559912"/>
-            <topic label="bmi_model_time_convert_factor" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a42119ee6494d26ed80689d1f1c24fa7f"/>
-            <topic label="bmi_model_time_step_size" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a1f2c01b50a964c82cb912b0cce11dbd9"/>
-            <topic label="bmi_model_uses_forcing_file" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a811bd01f2115741d65aba76835113d0b"/>
-            <topic label="bmi_registration_function" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#ae51530115ba4e87818479907344665ff"/>
-            <topic label="dyn_lib_handle" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a8a7a5596d34a9858dfc6754acade23e8"/>
-            <topic label="forcing_file_path" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#acabc60f3482c1bbfb4efe0d111c3e456"/>
-            <topic label="init_exception_msg" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a42eb3450b8edff4524ed2f8856fa7ea7"/>
-            <topic label="input_var_names" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#ac7521734251079aab4c5ca76cfb652f9"/>
-            <topic label="model_initialized" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#aace2ea769ebf53ea0064e770684499e4"/>
-            <topic label="model_name" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#ab2cec90b1f6aa9fa6bb050ec52d6f4fa"/>
-            <topic label="output" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a41834183a37097c68442451e109464f8"/>
-            <topic label="output_var_names" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a10a27243f9d7361a3b46ae3dcdb09c41"/>
+            <topic label="allow_model_exceed_end_time" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#aa7eaecf4ba4b88781f8829e06e81b6b3"/>
+            <topic label="bmi_init_config" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a32725cc98663e54694c90c8740e8e5dd"/>
+            <topic label="bmi_lib_file" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a636d45e305f013644fd8435a464a341d"/>
+            <topic label="bmi_model_has_fixed_time_step" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a97a27219b39d6de5a061e6ea0780711c"/>
+            <topic label="bmi_model_time_convert_factor" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a21ac56d555a07e58fccbef9dc2d867c9"/>
+            <topic label="bmi_model_time_step_size" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#abd1717cf52bec5736e39575af54eea2f"/>
+            <topic label="bmi_model_uses_forcing_file" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a384ff24215e8acfb0744c46cac56183e"/>
+            <topic label="bmi_registration_function" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#ad9c8e724b1cbb9fff6ec68dc1410ca8b"/>
+            <topic label="dyn_lib_handle" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a2bb1cba086a935b90f356f29def46d54"/>
+            <topic label="forcing_file_path" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#ae6d1be4a39ef76547004c3392b95f3e4"/>
+            <topic label="init_exception_msg" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a2698bc13d9ced362e18cb8cf0dab82d7"/>
+            <topic label="input_var_names" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a21e6426f0db58661e3548ba2e9b93058"/>
+            <topic label="model_initialized" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a120a9a8212a5bd857bf119dc90268306"/>
+            <topic label="model_name" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#ac2c1d1c1e279212c200ad6a4be4864d6"/>
+            <topic label="output" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a6bfb2f398f00c3b44b1235d4758f0c91"/>
+            <topic label="output_var_names" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#af9384bd6c9dfa04e5ec29181f6a66ed4"/>
           </topic>
           <topic label="Bmi_Adapter" href="classmodels_1_1bmi_1_1_bmi___adapter.html">
-            <topic label="Bmi_Adapter" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a4484d4b83bb60cfb7cd60a4b5d65bd49"/>
-            <topic label="Bmi_Adapter" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a749dab2cf7fbd0d4687c447db5429f9e"/>
-            <topic label="Bmi_Adapter" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a638ebfd9ad3620aa259653ecd6e23ebf"/>
-            <topic label="construct_and_init_backing_model" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a290bc05cd237b678486294e188995aaa"/>
-            <topic label="convert_model_time_to_seconds" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a3dc0b3c5060687be87f2c2916a2aa1ce"/>
-            <topic label="convert_seconds_to_model_time" href="classmodels_1_1bmi_1_1_bmi___adapter.html#ab59c92e91f3ebe1cf5eaceac16100043"/>
+            <topic label="Bmi_Adapter" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a0c2c4cd3ff3b6fc1050e2d5b878dbc40"/>
+            <topic label="Bmi_Adapter" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a131ad658e150f04fe2a5f1ce7bedbf96"/>
+            <topic label="Bmi_Adapter" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a5d30e5abcdab164d2b0aefbf4becb9e5"/>
+            <topic label="construct_and_init_backing_model" href="classmodels_1_1bmi_1_1_bmi___adapter.html#aaf11585e4e3852fa9391ad5966af22d2"/>
+            <topic label="convert_model_time_to_seconds" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a6efbfd9ff146bbe3b3c1a82d243f8266"/>
+            <topic label="convert_seconds_to_model_time" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a73ca855d0db45838b87309038fae1fed"/>
             <topic label="Finalize" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a50ba4a7a721969d53c269298a1e607a7"/>
-            <topic label="get_analogous_cxx_type" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a68f635fcef67684ba60e21796b53711e"/>
-            <topic label="get_model_name" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a29ece37345ba1fc58e578131f728a3b3"/>
-            <topic label="get_time_convert_factor" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a38b9534ee9fa09b45ffc1755e42d8345"/>
+            <topic label="get_analogous_cxx_type" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a8dbc88c821422f043becca2742a9a507"/>
+            <topic label="get_model_name" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a145a63b96ced2bebb1f0fbe37ba5c027"/>
+            <topic label="get_time_convert_factor" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a4b021125add57e1921bb4344d9ccea5f"/>
             <topic label="GetComponentName" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a260433746fad7ef67ace7daf4927ccf8"/>
             <topic label="GetCurrentTime" href="classmodels_1_1bmi_1_1_bmi___adapter.html#acbbbbfa690e6adb9eb348aa0ecd03e69"/>
             <topic label="GetEndTime" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a05446119c83ed2be8bbf92644d9b5bce"/>
@@ -3864,51 +3863,51 @@
             <topic label="GetVarNbytes" href="classmodels_1_1bmi_1_1_bmi___adapter.html#ab200d1746bee8806139062040dd06d8f"/>
             <topic label="GetVarType" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a0eff3235819c8c9c793e437a88048a1e"/>
             <topic label="GetVarUnits" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a75725d44cf7432a7f09f1ac403727d64"/>
-            <topic label="Initialize" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a43ba9007b2536787eb95a330167068ff"/>
-            <topic label="Initialize" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a2d206e86d7b81af1017d2cdb7cee260f"/>
-            <topic label="isInitialized" href="classmodels_1_1bmi_1_1_bmi___adapter.html#ad2f092a3ad436e555199eba325333b0b"/>
+            <topic label="Initialize" href="classmodels_1_1bmi_1_1_bmi___adapter.html#aeace85bbd89962f2945bec0ca3c76091"/>
+            <topic label="Initialize" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a4a2a8f1fb2442ec5e3a5bd1c7a3b3ef2"/>
+            <topic label="isInitialized" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a31e002ee7effe39ca0f07b7c2f16a453"/>
             <topic label="SetValue" href="classmodels_1_1bmi_1_1_bmi___adapter.html#ae0e047f16b967e6b6cab77d3285add30"/>
             <topic label="SetValueAtIndices" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a3cecd50be90621a3d47cc811258c5f75"/>
             <topic label="Update" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a0ecdb1dd0c0545908d7debb56e2c10aa"/>
             <topic label="UpdateUntil" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a6bead8b75c803a2fd51f4df6f6f91627"/>
-            <topic label="allow_model_exceed_end_time" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a6af454f82f9e220ac5ab371b1ddf5763"/>
-            <topic label="bmi_init_config" href="classmodels_1_1bmi_1_1_bmi___adapter.html#ae285c4afcc26386198ce47fd6db32eac"/>
-            <topic label="bmi_model" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a97f5199d4f6482facc1d574023069147"/>
-            <topic label="bmi_model_has_fixed_time_step" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a5869ff568906db7bff043b98eb559912"/>
-            <topic label="bmi_model_time_convert_factor" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a42119ee6494d26ed80689d1f1c24fa7f"/>
-            <topic label="bmi_model_time_step_size" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a1f2c01b50a964c82cb912b0cce11dbd9"/>
-            <topic label="bmi_model_uses_forcing_file" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a811bd01f2115741d65aba76835113d0b"/>
-            <topic label="forcing_file_path" href="classmodels_1_1bmi_1_1_bmi___adapter.html#acabc60f3482c1bbfb4efe0d111c3e456"/>
-            <topic label="init_exception_msg" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a42eb3450b8edff4524ed2f8856fa7ea7"/>
-            <topic label="input_var_names" href="classmodels_1_1bmi_1_1_bmi___adapter.html#ac7521734251079aab4c5ca76cfb652f9"/>
-            <topic label="model_initialized" href="classmodels_1_1bmi_1_1_bmi___adapter.html#aace2ea769ebf53ea0064e770684499e4"/>
-            <topic label="model_name" href="classmodels_1_1bmi_1_1_bmi___adapter.html#ab2cec90b1f6aa9fa6bb050ec52d6f4fa"/>
-            <topic label="output" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a41834183a37097c68442451e109464f8"/>
-            <topic label="output_var_names" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a10a27243f9d7361a3b46ae3dcdb09c41"/>
+            <topic label="allow_model_exceed_end_time" href="classmodels_1_1bmi_1_1_bmi___adapter.html#aa7eaecf4ba4b88781f8829e06e81b6b3"/>
+            <topic label="bmi_init_config" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a32725cc98663e54694c90c8740e8e5dd"/>
+            <topic label="bmi_model_has_fixed_time_step" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a97a27219b39d6de5a061e6ea0780711c"/>
+            <topic label="bmi_model_time_convert_factor" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a21ac56d555a07e58fccbef9dc2d867c9"/>
+            <topic label="bmi_model_time_step_size" href="classmodels_1_1bmi_1_1_bmi___adapter.html#abd1717cf52bec5736e39575af54eea2f"/>
+            <topic label="bmi_model_uses_forcing_file" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a384ff24215e8acfb0744c46cac56183e"/>
+            <topic label="forcing_file_path" href="classmodels_1_1bmi_1_1_bmi___adapter.html#ae6d1be4a39ef76547004c3392b95f3e4"/>
+            <topic label="init_exception_msg" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a2698bc13d9ced362e18cb8cf0dab82d7"/>
+            <topic label="input_var_names" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a21e6426f0db58661e3548ba2e9b93058"/>
+            <topic label="model_initialized" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a120a9a8212a5bd857bf119dc90268306"/>
+            <topic label="model_name" href="classmodels_1_1bmi_1_1_bmi___adapter.html#ac2c1d1c1e279212c200ad6a4be4864d6"/>
+            <topic label="output" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a6bfb2f398f00c3b44b1235d4758f0c91"/>
+            <topic label="output_var_names" href="classmodels_1_1bmi_1_1_bmi___adapter.html#af9384bd6c9dfa04e5ec29181f6a66ed4"/>
           </topic>
           <topic label="Bmi_C_Adapter" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html">
             <topic label="Bmi_C_Adapter" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a0c421b18deca925ee77dd0008cce3220"/>
             <topic label="Bmi_C_Adapter" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a3022170bba0d65eaefc801c30c07b7ec"/>
             <topic label="Bmi_C_Adapter" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#ad1b2a065afca6374e1a33df8cb86f22c"/>
-            <topic label="Bmi_C_Adapter" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a83e686bd0e5455eb02dbeb5a8bfbf70b"/>
+            <topic label="Bmi_C_Adapter" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a19aa6564ec665e160079276598d046fa"/>
+            <topic label="Bmi_C_Adapter" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#ad535354b96c22665567b45954f4ed31b"/>
             <topic label="~Bmi_C_Adapter" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a7539ca392765713f0fc65c48d21a65b3"/>
             <topic label="construct_and_init_backing_model" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#ae645b8c5636a9a539e25b45f364cb91a"/>
             <topic label="construct_and_init_backing_model_for_type" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a590bb56edfa69f5dce5f76820e7c74d6"/>
-            <topic label="convert_model_time_to_seconds" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a3dc0b3c5060687be87f2c2916a2aa1ce"/>
-            <topic label="convert_seconds_to_model_time" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#ab59c92e91f3ebe1cf5eaceac16100043"/>
-            <topic label="dynamic_library_load" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a4ab2f0638b8426885395d121f44a9f70"/>
-            <topic label="dynamic_load_symbol" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#af36238dd0499b8382e4f3a6d820a012a"/>
-            <topic label="dynamic_load_symbol" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a02190ea63a9d156165cae7a64d83bacc"/>
+            <topic label="convert_model_time_to_seconds" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a6efbfd9ff146bbe3b3c1a82d243f8266"/>
+            <topic label="convert_seconds_to_model_time" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a73ca855d0db45838b87309038fae1fed"/>
+            <topic label="dynamic_library_load" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#aee6c52698d720f8cb2607e3b3409a516"/>
+            <topic label="dynamic_load_symbol" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a0df7997eda128c62aab52d58d6348901"/>
+            <topic label="dynamic_load_symbol" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a8c61e9b9324dff859901309b12037898"/>
             <topic label="execModuleRegistration" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#add6ed35e47cc9a5c34a52bbb3e623b88"/>
             <topic label="Finalize" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#ab96ac3291b659ad70476720eaba62568"/>
             <topic label="finalizeForCAdapter" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a11f9107c47aa791a77799bd08b1e2b93"/>
-            <topic label="finalizeForLibAbstraction" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#aeeaf49b3bd45d89b2a88086d25f328b8"/>
+            <topic label="finalizeForLibAbstraction" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a6f507602993ebdec7ad1d9ce4f33eb05"/>
             <topic label="get_analogous_cxx_type" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#afe1d151a20915c4155640219c21d73b1"/>
             <topic label="get_bmi_model_time_step_size_ptr" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a53eca48ab8aa5e1d5c56dc6c9d00d3af"/>
-            <topic label="get_bmi_registration_function" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#ac1a86e6285c9d8c809d1bd1bdc013215"/>
-            <topic label="get_dyn_lib_handle" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a57d36aeb7ab195f31e59d19812a511b5"/>
-            <topic label="get_model_name" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a29ece37345ba1fc58e578131f728a3b3"/>
-            <topic label="get_time_convert_factor" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a38b9534ee9fa09b45ffc1755e42d8345"/>
+            <topic label="get_bmi_registration_function" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#abf7c98e446296bd7245a0872fcdba4db"/>
+            <topic label="get_dyn_lib_handle" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#ad273a417c3b0d21e01b09c81d8c00d91"/>
+            <topic label="get_model_name" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a145a63b96ced2bebb1f0fbe37ba5c027"/>
+            <topic label="get_time_convert_factor" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a4b021125add57e1921bb4344d9ccea5f"/>
             <topic label="get_value" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#acb41ceded0e5f7fea73f3aa6ce06226c"/>
             <topic label="GetComponentName" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#ac1a395a84c30bdaa00a8f7c7168e8c1a"/>
             <topic label="GetCurrentTime" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a8bde25bf9fad9061daf126e213b8ce07"/>
@@ -3946,13 +3945,13 @@
             <topic label="GetVarNbytes" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a8c5d30d0ca0700e44c3b744e8c2308cb"/>
             <topic label="GetVarType" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a3c386edbfd2f2efaf0a988d4dfe2f8e3"/>
             <topic label="GetVarUnits" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#af9480c18092311e95bc0fb263b906101"/>
-            <topic label="Initialize" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a43ba9007b2536787eb95a330167068ff"/>
-            <topic label="Initialize" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a2d206e86d7b81af1017d2cdb7cee260f"/>
+            <topic label="Initialize" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#aeace85bbd89962f2945bec0ca3c76091"/>
+            <topic label="Initialize" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a4a2a8f1fb2442ec5e3a5bd1c7a3b3ef2"/>
             <topic label="inner_get_input_item_count" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#af842e9fa306ecfa967fe4cee07f4b5fa"/>
             <topic label="inner_get_output_item_count" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a06bbf0b8e0c99f860fc60679152269d5"/>
             <topic label="inner_get_variable_names" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a14970d230345f3fe2002b40e8b708872"/>
             <topic label="is_model_initialized" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a2d711c40806e31b3b47232fe3d8f10ea"/>
-            <topic label="isInitialized" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#ad2f092a3ad436e555199eba325333b0b"/>
+            <topic label="isInitialized" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a31e002ee7effe39ca0f07b7c2f16a453"/>
             <topic label="retrieve_bmi_model_time_step_size" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a5b8ad5070b07816cda74c8a0361aeba5"/>
             <topic label="SetValue" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a67396fbf0b5958cbdd0323359e4be5d8"/>
             <topic label="SetValue" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#ae9c4214f0b7a8f9d24168a2c95aa64f9"/>
@@ -3961,47 +3960,48 @@
             <topic label="Update" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a1064e72bf0bc0d35e9d1b8a9c062c438"/>
             <topic label="UpdateUntil" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#ab2e846514c4e36f6095b2ba84ec28c63"/>
             <topic label="::Bmi_C_Adapter_Test" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a891996798cd3c8a51e8148fd1f306fc2"/>
-            <topic label="allow_model_exceed_end_time" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a6af454f82f9e220ac5ab371b1ddf5763"/>
-            <topic label="bmi_init_config" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#ae285c4afcc26386198ce47fd6db32eac"/>
-            <topic label="bmi_lib_file" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a3970e75dab7e66747267b241b7d1d6fe"/>
-            <topic label="bmi_model" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a97f5199d4f6482facc1d574023069147"/>
-            <topic label="bmi_model_has_fixed_time_step" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a5869ff568906db7bff043b98eb559912"/>
-            <topic label="bmi_model_time_convert_factor" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a42119ee6494d26ed80689d1f1c24fa7f"/>
-            <topic label="bmi_model_time_step_size" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a1f2c01b50a964c82cb912b0cce11dbd9"/>
-            <topic label="bmi_model_uses_forcing_file" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a811bd01f2115741d65aba76835113d0b"/>
-            <topic label="bmi_registration_function" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#ae51530115ba4e87818479907344665ff"/>
-            <topic label="dyn_lib_handle" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a8a7a5596d34a9858dfc6754acade23e8"/>
-            <topic label="forcing_file_path" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#acabc60f3482c1bbfb4efe0d111c3e456"/>
-            <topic label="init_exception_msg" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a42eb3450b8edff4524ed2f8856fa7ea7"/>
-            <topic label="input_var_names" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#ac7521734251079aab4c5ca76cfb652f9"/>
-            <topic label="model_initialized" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#aace2ea769ebf53ea0064e770684499e4"/>
+            <topic label="allow_model_exceed_end_time" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#aa7eaecf4ba4b88781f8829e06e81b6b3"/>
+            <topic label="bmi_init_config" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a32725cc98663e54694c90c8740e8e5dd"/>
+            <topic label="bmi_lib_file" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a636d45e305f013644fd8435a464a341d"/>
+            <topic label="bmi_model" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a1fa6c71c6683a4f49957206d078b2435"/>
+            <topic label="bmi_model_has_fixed_time_step" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a97a27219b39d6de5a061e6ea0780711c"/>
+            <topic label="bmi_model_time_convert_factor" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a21ac56d555a07e58fccbef9dc2d867c9"/>
+            <topic label="bmi_model_time_step_size" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#abd1717cf52bec5736e39575af54eea2f"/>
+            <topic label="bmi_model_uses_forcing_file" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a384ff24215e8acfb0744c46cac56183e"/>
+            <topic label="bmi_registration_function" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#ad9c8e724b1cbb9fff6ec68dc1410ca8b"/>
+            <topic label="dyn_lib_handle" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a2bb1cba086a935b90f356f29def46d54"/>
+            <topic label="forcing_file_path" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#ae6d1be4a39ef76547004c3392b95f3e4"/>
+            <topic label="init_exception_msg" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a2698bc13d9ced362e18cb8cf0dab82d7"/>
+            <topic label="input_var_names" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a21e6426f0db58661e3548ba2e9b93058"/>
+            <topic label="model_initialized" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a120a9a8212a5bd857bf119dc90268306"/>
             <topic label="model_name" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#afe85482a3428013e89e70248af9d8446"/>
-            <topic label="output" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a41834183a37097c68442451e109464f8"/>
-            <topic label="output_var_names" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a10a27243f9d7361a3b46ae3dcdb09c41"/>
+            <topic label="output" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a6bfb2f398f00c3b44b1235d4758f0c91"/>
+            <topic label="output_var_names" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#af9384bd6c9dfa04e5ec29181f6a66ed4"/>
           </topic>
           <topic label="Bmi_Cpp_Adapter" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html">
             <topic label="Bmi_Cpp_Adapter" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ac396fed0fb99b146a4cfae136ef661db"/>
             <topic label="Bmi_Cpp_Adapter" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#afab5abf080fb6a52edc0ac7ee3fbb4be"/>
             <topic label="Bmi_Cpp_Adapter" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a1d12e828bab29517b53cd06cb7226237"/>
-            <topic label="Bmi_Cpp_Adapter" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a09450c4e0f512900440bb1a0c6ba28d1"/>
+            <topic label="Bmi_Cpp_Adapter" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a9b0058de857cb24365c4d2a8a2fd09a2"/>
+            <topic label="Bmi_Cpp_Adapter" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a5ad0335860170d44de17c6567a7efa66"/>
             <topic label="~Bmi_Cpp_Adapter" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a89265a51b3ef4488a428e61c5883056d"/>
             <topic label="construct_and_init_backing_model" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#af954ff0618b7422d2ec45baed9c2ac80"/>
             <topic label="construct_and_init_backing_model_for_type" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#aae261e8942befef9cb10ba47b89199a4"/>
-            <topic label="convert_model_time_to_seconds" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a3dc0b3c5060687be87f2c2916a2aa1ce"/>
-            <topic label="convert_seconds_to_model_time" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ab59c92e91f3ebe1cf5eaceac16100043"/>
-            <topic label="dynamic_library_load" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a4ab2f0638b8426885395d121f44a9f70"/>
-            <topic label="dynamic_load_symbol" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#af36238dd0499b8382e4f3a6d820a012a"/>
-            <topic label="dynamic_load_symbol" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a02190ea63a9d156165cae7a64d83bacc"/>
+            <topic label="convert_model_time_to_seconds" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a6efbfd9ff146bbe3b3c1a82d243f8266"/>
+            <topic label="convert_seconds_to_model_time" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a73ca855d0db45838b87309038fae1fed"/>
+            <topic label="dynamic_library_load" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#aee6c52698d720f8cb2607e3b3409a516"/>
+            <topic label="dynamic_load_symbol" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a0df7997eda128c62aab52d58d6348901"/>
+            <topic label="dynamic_load_symbol" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a8c61e9b9324dff859901309b12037898"/>
             <topic label="execModuleCreation" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a6cf1d96f795492f61873e0669840ee11"/>
             <topic label="Finalize" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ab8647d33bcbae27472974129f4485c1a"/>
             <topic label="finalizeForCppAdapter" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#afabb0ce9324c2c08bab9e836dc612c3b"/>
-            <topic label="finalizeForLibAbstraction" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#aeeaf49b3bd45d89b2a88086d25f328b8"/>
+            <topic label="finalizeForLibAbstraction" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a6f507602993ebdec7ad1d9ce4f33eb05"/>
             <topic label="get_analogous_cxx_type" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a9436b5b458bfbe85f8efc2a0c1f2f90a"/>
             <topic label="get_bmi_model_time_step_size_ptr" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a1bc650f632d74261b80bb57094a04952"/>
-            <topic label="get_bmi_registration_function" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ac1a86e6285c9d8c809d1bd1bdc013215"/>
-            <topic label="get_dyn_lib_handle" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a57d36aeb7ab195f31e59d19812a511b5"/>
-            <topic label="get_model_name" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a29ece37345ba1fc58e578131f728a3b3"/>
-            <topic label="get_time_convert_factor" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a38b9534ee9fa09b45ffc1755e42d8345"/>
+            <topic label="get_bmi_registration_function" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#abf7c98e446296bd7245a0872fcdba4db"/>
+            <topic label="get_dyn_lib_handle" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ad273a417c3b0d21e01b09c81d8c00d91"/>
+            <topic label="get_model_name" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a145a63b96ced2bebb1f0fbe37ba5c027"/>
+            <topic label="get_time_convert_factor" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a4b021125add57e1921bb4344d9ccea5f"/>
             <topic label="GetComponentName" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a525a39465193c8d20339e99ab8bde811"/>
             <topic label="GetCurrentTime" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#aaa7231e53236d33b6fdcd0115593a895"/>
             <topic label="GetEndTime" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a0923801f9d9825c4ef5d3cf72b4f8708"/>
@@ -4038,10 +4038,10 @@
             <topic label="GetVarNbytes" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#af5dafe2165c1195da18a1c95264a1e24"/>
             <topic label="GetVarType" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a6a9f11b324fa7d84303f98636ba8fecf"/>
             <topic label="GetVarUnits" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a841e084e84ba0325b77e1a868c7407d6"/>
-            <topic label="Initialize" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a43ba9007b2536787eb95a330167068ff"/>
-            <topic label="Initialize" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a2d206e86d7b81af1017d2cdb7cee260f"/>
+            <topic label="Initialize" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#aeace85bbd89962f2945bec0ca3c76091"/>
+            <topic label="Initialize" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a4a2a8f1fb2442ec5e3a5bd1c7a3b3ef2"/>
             <topic label="is_model_initialized" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a2902dc0ab6801565909137e72fd1f24a"/>
-            <topic label="isInitialized" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ad2f092a3ad436e555199eba325333b0b"/>
+            <topic label="isInitialized" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a31e002ee7effe39ca0f07b7c2f16a453"/>
             <topic label="retrieve_bmi_model_time_step_size" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#afecf067b64e1c54a6055c7f3f4425d88"/>
             <topic label="SetValue" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a3bfd5449118d6cda3284ae082a9c6f29"/>
             <topic label="SetValue" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ab236c00fa83e76c4f6f61fc0b01e053a"/>
@@ -4050,25 +4050,25 @@
             <topic label="Update" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ae33b5178cf37132e8c0186977612f74b"/>
             <topic label="UpdateUntil" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a89ed729aade1ec00e5aee9f587168ea6"/>
             <topic label="::Bmi_Cpp_Adapter_Test" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a59f2bbbb7077059c32eb241016e536a5"/>
-            <topic label="allow_model_exceed_end_time" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a6af454f82f9e220ac5ab371b1ddf5763"/>
-            <topic label="bmi_init_config" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ae285c4afcc26386198ce47fd6db32eac"/>
-            <topic label="bmi_lib_file" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a3970e75dab7e66747267b241b7d1d6fe"/>
-            <topic label="bmi_model" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a97f5199d4f6482facc1d574023069147"/>
-            <topic label="bmi_model_has_fixed_time_step" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a5869ff568906db7bff043b98eb559912"/>
-            <topic label="bmi_model_time_convert_factor" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a42119ee6494d26ed80689d1f1c24fa7f"/>
-            <topic label="bmi_model_time_step_size" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a1f2c01b50a964c82cb912b0cce11dbd9"/>
-            <topic label="bmi_model_uses_forcing_file" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a811bd01f2115741d65aba76835113d0b"/>
-            <topic label="bmi_registration_function" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ae51530115ba4e87818479907344665ff"/>
-            <topic label="dyn_lib_handle" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a8a7a5596d34a9858dfc6754acade23e8"/>
-            <topic label="forcing_file_path" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#acabc60f3482c1bbfb4efe0d111c3e456"/>
-            <topic label="init_exception_msg" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a42eb3450b8edff4524ed2f8856fa7ea7"/>
-            <topic label="input_var_names" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ac7521734251079aab4c5ca76cfb652f9"/>
+            <topic label="allow_model_exceed_end_time" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#aa7eaecf4ba4b88781f8829e06e81b6b3"/>
+            <topic label="bmi_init_config" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a32725cc98663e54694c90c8740e8e5dd"/>
+            <topic label="bmi_lib_file" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a636d45e305f013644fd8435a464a341d"/>
+            <topic label="bmi_model" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ab816605158ae58a39b799531f8100ee3"/>
+            <topic label="bmi_model_has_fixed_time_step" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a97a27219b39d6de5a061e6ea0780711c"/>
+            <topic label="bmi_model_time_convert_factor" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a21ac56d555a07e58fccbef9dc2d867c9"/>
+            <topic label="bmi_model_time_step_size" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#abd1717cf52bec5736e39575af54eea2f"/>
+            <topic label="bmi_model_uses_forcing_file" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a384ff24215e8acfb0744c46cac56183e"/>
+            <topic label="bmi_registration_function" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ad9c8e724b1cbb9fff6ec68dc1410ca8b"/>
+            <topic label="dyn_lib_handle" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a2bb1cba086a935b90f356f29def46d54"/>
+            <topic label="forcing_file_path" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ae6d1be4a39ef76547004c3392b95f3e4"/>
+            <topic label="init_exception_msg" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a2698bc13d9ced362e18cb8cf0dab82d7"/>
+            <topic label="input_var_names" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a21e6426f0db58661e3548ba2e9b93058"/>
             <topic label="model_create_fname" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a74326d07e1041116764a994d9a03dd63"/>
             <topic label="model_destroy_fname" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a1bee65df774b7417447f2238153d3dd0"/>
-            <topic label="model_initialized" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#aace2ea769ebf53ea0064e770684499e4"/>
-            <topic label="model_name" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a820425820756aaf472621d4b4d5fb9e1"/>
-            <topic label="output" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a41834183a37097c68442451e109464f8"/>
-            <topic label="output_var_names" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a10a27243f9d7361a3b46ae3dcdb09c41"/>
+            <topic label="model_initialized" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a120a9a8212a5bd857bf119dc90268306"/>
+            <topic label="model_name" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ac2c1d1c1e279212c200ad6a4be4864d6"/>
+            <topic label="output" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a6bfb2f398f00c3b44b1235d4758f0c91"/>
+            <topic label="output_var_names" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#af9384bd6c9dfa04e5ec29181f6a66ed4"/>
           </topic>
         </topic>
         <topic label="external" href="namespacemodels_1_1external.html">
@@ -5721,16 +5721,9 @@
       <topic label="AORC_data" href="struct_a_o_r_c__data.html"/>
       <topic label="Bmi" href="struct_bmi.html"/>
       <topic label="bmi::Bmi" href="classbmi_1_1_bmi.html">
-        <topic label="models::bmi::Bmi_Adapter&lt; C &gt;" href="classmodels_1_1bmi_1_1_bmi___adapter.html">
-          <topic label="models::bmi::AbstractCLibBmiAdapter&lt; C &gt;" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html"/>
-        </topic>
-        <topic label="models::bmi::Bmi_Adapter&lt; C_Bmi &gt;" href="classmodels_1_1bmi_1_1_bmi___adapter.html"/>
-        <topic label="models::bmi::Bmi_Adapter&lt; Cpp_Bmi &gt;" href="classmodels_1_1bmi_1_1_bmi___adapter.html"/>
-        <topic label="models::bmi::Bmi_Adapter&lt; T &gt;" href="classmodels_1_1bmi_1_1_bmi___adapter.html">
-          <topic label="models::bmi::AbstractCLibBmiAdapter&lt; C_Bmi &gt;" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html">
+        <topic label="models::bmi::Bmi_Adapter" href="classmodels_1_1bmi_1_1_bmi___adapter.html">
+          <topic label="models::bmi::AbstractCLibBmiAdapter" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html">
             <topic label="models::bmi::Bmi_C_Adapter" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html"/>
-          </topic>
-          <topic label="models::bmi::AbstractCLibBmiAdapter&lt; Cpp_Bmi &gt;" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html">
             <topic label="models::bmi::Bmi_Cpp_Adapter" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html"/>
           </topic>
         </topic>
