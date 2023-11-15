@@ -13,11 +13,11 @@ namespace spatial {
 //! Provides a polymorphic interface to backend linestring types.
 struct linestring : public virtual geometry
 {
-    using size_type      = geometry::size_type;
-    using pointer        = point*;
-    using const_pointer  = const point*;
-    using iterator       = pointer;
-    using const_iterator = const_pointer;
+    using size_type        = geometry::size_type;
+    using pointer          = point*;
+    using const_pointer    = const point*;
+    using iterator         = pointer;
+    using const_iterator   = const_pointer;
 
     ~linestring() override = default;
 
@@ -30,13 +30,17 @@ struct linestring : public virtual geometry
     //! @return pointer to a polymorphic point, or `nullptr` if out of bounds.
     virtual pointer get(size_type n) = 0;
 
+    //! @copydoc linestring::get(size_type)
+    virtual const_pointer get(size_type n) const = 0;
+
     //! @brief Set the Nth point in this linestring.
     //! @param n Index of point to retrieve
     //! @param p Point to set, does not need to be heap-allocated
-    virtual void set(size_type n, pointer p) = 0;
+    virtual void set(size_type n, const_pointer p) = 0;
 
     //! @brief Set the size of this linestring.
-    //! @note If `n` is smaller than the current size, the linestring is truncated.
+    //! @note If `n` is smaller than the current size, the linestring is
+    //! truncated.
     //! @param n Number of points this linestring should be sized to.
     virtual void resize(size_type n) = 0;
 
@@ -52,12 +56,9 @@ struct linestring : public virtual geometry
     virtual pointer back() noexcept = 0;
 
     //! @copydoc linestring::back()
-    virtual const_pointer back() const noexcept  = 0;
+    virtual const_pointer back() const noexcept = 0;
 
-    geometry_t type() noexcept override
-    {
-        return geometry_t::linestring;
-    }
+    geometry_t            type() noexcept override { return geometry_t::linestring; }
 };
 
 } // namespace spatial

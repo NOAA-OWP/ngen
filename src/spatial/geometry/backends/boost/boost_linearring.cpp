@@ -7,7 +7,9 @@ namespace backend {
 boost_linearring::boost_linearring(std::initializer_list<boost_point> pts)
   : data_(pts){};
 
-boost_linearring::boost_linearring(::boost::geometry::model::ring<boost_point>& ring)
+boost_linearring::boost_linearring(
+  ::boost::geometry::model::ring<boost_point>& ring
+)
   : data_(ring){};
 
 auto boost_linearring::size() const noexcept -> size_type
@@ -20,15 +22,15 @@ auto boost_linearring::get(size_type n) -> pointer
     return &data_.at(n);
 }
 
-void boost_linearring::set(size_type n, ngen::spatial::point* pt)
+void boost_linearring::set(size_type n, const ngen::spatial::point* pt)
 {
     // TODO: This might be expensive
-    decltype(auto) casted = dynamic_cast<boost_point*>(pt);
+    decltype(auto) casted = dynamic_cast<const_pointer>(pt);
     if (casted == nullptr) {
         // If `pt` is not a boost_point, then
         // we need to copy from the backend into
         // this backend.
-        boost_point new_pt {pt->x(), pt->y()};
+        boost_point new_pt{ pt->x(), pt->y() };
         casted = &new_pt;
     }
 

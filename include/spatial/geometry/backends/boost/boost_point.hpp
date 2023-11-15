@@ -17,20 +17,20 @@ struct boost_point final : public point
     using reference       = point::reference;
     using const_reference = point::const_reference;
 
-    boost_point() = default;
+    boost_point()         = default;
 
     boost_point(value_type x, value_type y);
 
     ~boost_point() override;
 
-    reference x() noexcept override;
-    reference y() noexcept override;
+    reference       x() noexcept override;
+    reference       y() noexcept override;
     const_reference x() const noexcept override;
     const_reference y() const noexcept override;
 
   private:
-    value_type x_;
-    value_type y_;
+    value_type x_{};
+    value_type y_{};
 };
 
 } // namespace backend
@@ -41,7 +41,8 @@ BOOST_GEOMETRY_REGISTER_POINT_2D(
   ngen::spatial::backend::boost_point,
   double,
   boost::geometry::cs::cartesian,
-  x(), y()
+  x(),
+  y()
 )
 
 #endif // NGEN_SPATIAL_GEOMETRY_BACKENDS_BOOST_BOOST_POINT_HPP

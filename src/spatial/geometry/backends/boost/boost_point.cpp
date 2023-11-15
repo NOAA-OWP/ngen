@@ -5,7 +5,8 @@ namespace spatial {
 namespace backend {
 
 boost_point::boost_point(value_type x, value_type y)
-  : x_(x), y_(y){};
+  : x_(x)
+  , y_(y){};
 
 boost_point::~boost_point() = default;
 

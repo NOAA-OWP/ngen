@@ -12,9 +12,9 @@ namespace spatial {
 //! Provides a polymorphic interface to backend multipoint types.
 struct multipoint : public virtual geometry_collection
 {
-    using size_type     = geometry_collection::size_type;
-    using pointer       = point*;
-    using const_pointer = const point*;
+    using size_type        = geometry_collection::size_type;
+    using pointer          = point*;
+    using const_pointer    = const point*;
 
     ~multipoint() override = default;
 
@@ -29,12 +29,9 @@ struct multipoint : public virtual geometry_collection
     //! @brief Set the Nth point in this collection.
     //! @param n Index of element to set.
     //! @param geom Geometry object to set.
-    void set(size_type n, geometry_collection::const_pointer geom) override = 0;
+    void       set(size_type n, geometry_collection::const_pointer geom) override = 0;
 
-    geometry_t type() noexcept override
-    {
-        return geometry_t::multipoint;
-    }
+    geometry_t type() noexcept override { return geometry_t::multipoint; }
 };
 
 } // namespace spatial

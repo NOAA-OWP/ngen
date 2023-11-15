@@ -17,15 +17,15 @@ auto boost_linestring::get(size_type n) -> pointer
     return &data_.at(n);
 }
 
-void boost_linestring::set(size_type n, ngen::spatial::point* pt)
+void boost_linestring::set(size_type n, const ngen::spatial::point* pt)
 {
     // TODO: This might be expensive
-    auto casted = dynamic_cast<boost_point*>(pt);
+    auto casted = dynamic_cast<const_pointer>(pt);
     if (casted == nullptr) {
         // If `pt` is not a boost_point, then
         // we need to copy from the backend into
         // this backend.
-        boost_point new_pt {pt->x(), pt->y()};
+        boost_point new_pt{ pt->x(), pt->y() };
         casted = &new_pt;
     }
 

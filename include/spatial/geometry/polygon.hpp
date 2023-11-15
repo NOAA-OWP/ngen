@@ -42,10 +42,7 @@ struct polygon : public virtual geometry
     //! @return total number of rings.
     virtual size_type size() const noexcept = 0;
 
-    geometry_t type() noexcept override
-    {
-        return geometry_t::polygon;
-    }
+    geometry_t        type() noexcept override { return geometry_t::polygon; }
 };
 } // namespace spatial
 } // namespace ngen

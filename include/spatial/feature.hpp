@@ -3,7 +3,7 @@
 
 #include <memory>
 #include "geometry/geometry.hpp"
-// #include "property.hpp"
+#include "property.hpp"
 
 namespace ngen {
 namespace spatial {
@@ -15,7 +15,7 @@ struct feature
 {
   private:
     std::unique_ptr<geometry> geometry_;
-    // property_map              properties_;
+    property_map              properties_;
 };
 
 struct feature_collection;

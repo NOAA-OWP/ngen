@@ -11,9 +11,9 @@ namespace spatial {
 //! Provides a polymorphic interface to backend geometry collection types.
 struct geometry_collection : public virtual geometry
 {
-    using size_type     = geometry::size_type;
-    using pointer       = geometry*;
-    using const_pointer = const geometry*;
+    using size_type                 = geometry::size_type;
+    using pointer                   = geometry*;
+    using const_pointer             = const geometry*;
 
     ~geometry_collection() override = default;
 
@@ -31,7 +31,8 @@ struct geometry_collection : public virtual geometry
     virtual void set(size_type n, const_pointer geom) = 0;
 
     //! @brief Set the size of this collection.
-    //! @note If `n` is smaller than the current size, the collection is truncated.
+    //! @note If `n` is smaller than the current size, the collection is
+    //! truncated.
     //! @param n Number of geometries to be contained in this collection.
     virtual void resize(size_type n) = 0;
 
@@ -39,10 +40,7 @@ struct geometry_collection : public virtual geometry
     //! @return Number of geometries.
     virtual size_type size() const noexcept = 0;
 
-    geometry_t type() noexcept override
-    {
-        return geometry_t::geometry_collection;
-    }
+    geometry_t        type() noexcept override { return geometry_t::geometry_collection; }
 };
 
 } // namespace spatial

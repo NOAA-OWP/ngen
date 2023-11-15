@@ -13,17 +13,17 @@ namespace backend {
 
 struct boost_polygon final : public polygon
 {
-    using size_type     = polygon::size_type;
-    using pointer       = boost_linearring*;
-    using const_pointer = const boost_linearring*;
-  
+    using size_type           = polygon::size_type;
+    using pointer             = boost_linearring*;
+    using const_pointer       = const boost_linearring*;
+
     ~boost_polygon() override = default;
 
-    pointer       outer()                  noexcept override;
-    const_pointer outer()            const noexcept override;
-    pointer       inner(size_type n)                override;
-    const_pointer inner(size_type n) const          override;
-    size_type     size()             const noexcept override;
+    pointer       outer() noexcept override;
+    const_pointer outer() const noexcept override;
+    pointer       inner(size_type n) override;
+    const_pointer inner(size_type n) const override;
+    size_type     size() const noexcept override;
 
   private:
     boost_linearring              outer_;

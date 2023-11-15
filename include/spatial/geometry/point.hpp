@@ -7,7 +7,7 @@ namespace ngen {
 namespace spatial {
 
 //! @brief Spatial Point Base Class
-//! 
+//!
 //! Provides a polymorphic interface to backend point types.
 struct point : public virtual geometry
 {
@@ -15,7 +15,7 @@ struct point : public virtual geometry
     using reference       = value_type&;
     using const_reference = const value_type&;
 
-    ~point() override = default;
+    ~point() override     = default;
 
     //! @brief Get the X-coordinate
     //! @return Reference to the X-coordinate for this point.
@@ -31,10 +31,7 @@ struct point : public virtual geometry
     //! @copydoc point::y()
     virtual const_reference y() const noexcept = 0;
 
-    geometry_t type() noexcept override
-    {
-        return geometry_t::point;
-    }
+    geometry_t              type() noexcept override { return geometry_t::point; }
 };
 
 } // namespace spatial

@@ -21,14 +21,15 @@ struct boost_linestring final : public linestring
 
     ~boost_linestring() override = default;
 
-    size_type     size()                      const noexcept override;
-    pointer       get(size_type n)                           override;
-    void          set(size_type n, ngen::spatial::point* pt) override;
-    void          resize(size_type n)                        override;
-    pointer       front()                           noexcept override;
-    pointer       back()                            noexcept override;
-    const_pointer front()                     const noexcept override;
-    const_pointer back()                      const noexcept override;
+    size_type     size() const noexcept override;
+    pointer       get(size_type n) override;
+    const_pointer get(size_type n) const override;
+    void          set(size_type n, const ngen::spatial::point* pt) override;
+    void          resize(size_type n) override;
+    pointer       front() noexcept override;
+    pointer       back() noexcept override;
+    const_pointer front() const noexcept override;
+    const_pointer back() const noexcept override;
 
   private:
     ::boost::geometry::model::linestring<boost_point> data_;

@@ -12,9 +12,9 @@ namespace spatial {
 //! Provides a polymorphic interface to backend multilinestring types.
 struct multilinestring : public virtual geometry_collection
 {
-    using size_type     = geometry_collection::size_type;
-    using pointer       = linestring*;
-    using const_pointer = const linestring*;
+    using size_type             = geometry_collection::size_type;
+    using pointer               = linestring*;
+    using const_pointer         = const linestring*;
 
     ~multilinestring() override = default;
 
@@ -29,12 +29,9 @@ struct multilinestring : public virtual geometry_collection
     //! @brief Set the Nth linestring in this collection.
     //! @param n Index of element to set.
     //! @param geom Geometry object to set.
-    void set(size_type n, geometry_collection::const_pointer geom) override = 0;
+    void       set(size_type n, geometry_collection::const_pointer geom) override = 0;
 
-    geometry_t type() noexcept override
-    {
-        return geometry_t::multilinestring;
-    }
+    geometry_t type() noexcept override { return geometry_t::multilinestring; }
 };
 
 } // namespace spatial

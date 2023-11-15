@@ -16,10 +16,11 @@ struct boost_multipolygon final : public multipolygon
 
     ~boost_multipolygon() override;
 
-    pointer get(size_type n) override;
+    pointer       get(size_type n) override;
     const_pointer get(size_type n) const override;
-    void set(size_type n, geometry_collection::const_pointer geom) override;
-    size_type size() const noexcept override;
+    void          set(size_type n, geometry_collection::const_pointer geom) override;
+    void          resize(size_type n) override;
+    size_type     size() const noexcept override;
 
   private:
     std::vector<boost_polygon> data_;
