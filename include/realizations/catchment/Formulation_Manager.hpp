@@ -477,11 +477,11 @@ namespace realization {
             }
 
             forcing_params get_forcing_params(geojson::PropertyMap &forcing_prop_map, std::string identifier, simulation_time_params &simulation_time_config) {
-                std::string path = "";
+                std::string path;
                 if(forcing_prop_map.count("path") != 0){
                     path = forcing_prop_map.at("path").as_string();
                 }
-                std::string provider = "";
+                std::string provider;
                 if(forcing_prop_map.count("provider") != 0){
                     provider = forcing_prop_map.at("provider").as_string();
                 }
@@ -492,6 +492,11 @@ namespace realization {
                         simulation_time_config.start_time,
                         simulation_time_config.end_time
                     );
+                }
+
+                if (path.empty()) {
+                    throw std::runtime_error("Error with NGEN config - 'path' in forcing params must be set to a "
+                                             "non-empty parent directory path when 'file_pattern' is used.");
                 }
 
                 // Since we are given a pattern, we need to identify the directory and pull out anything that matches the pattern
