@@ -1,5 +1,7 @@
 #include <iostream>
 #include <fstream>
+#include <pybind11/gil.h>
+#include <pybind11/pytypes.h>
 #include <string>
 #include <unordered_map>
 
@@ -81,7 +83,15 @@ void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept
         auto sysconfig = py::module_::import("sysconfig");
 
         // try catch
-        auto numpy = py::module_::import("numpy");
+        py::module_ numpy;
+        bool imported_numpy = false;
+        const char* err = nullptr;
+        try {
+            numpy = py::module_::import("numpy");
+            imported_numpy = true;
+        } catch(py::error_already_set& e) {
+            err = e.what();
+        }
 
         // Lambda to convert py::dict -> std::unordered_map<std::string, std::string>
         const auto dict_to_map = [](const py::dict& dict) -> std::unordered_map<std::string, std::string> {
@@ -102,8 +112,8 @@ void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept
                << "    Site Library: "    << python_paths.at("purelib")  << "\n"
                << "    Include: "         << python_paths.at("include")  << "\n"
                << "    Runtime Library: " << python_paths.at("stdlib")   << "\n"
-               << "    NumPy Version: "   << numpy.attr("version").attr("version").cast<py::object>() << "\n"
-               << "    NumPy Include: "   << numpy.attr("get_include")().cast<std::string>() << "\n";
+               << "    NumPy Version: "   << (!imported_numpy ? err : numpy.attr("version").attr("version").cast<std::string>()) << "\n"
+               << "    NumPy Include: "   << (!imported_numpy ? err : numpy.attr("get_include")().cast<std::string>()) << "\n";
 
 
 #if NGEN_WITH_ROUTING
