@@ -63,14 +63,9 @@ void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept
     stream << "Runtime configuration summary:\n";
 
 #if NGEN_WITH_MPI
-
-    MPI_Init(nullptr, nullptr);
-    MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &mpi_num_procs);
-
     stream << "  MPI:\n"
+           << "    Rank: " << mpi_rank << "\n"
            << "    Processors: " << mpi_num_procs << "\n";
-    
 #endif // NGEN_WITH_MPI
   
 #if NGEN_WITH_PYTHON // -------------------------------------------------------
@@ -131,14 +126,23 @@ void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept
 
 int main(int argc, char *argv[]) {
 
-    if (argc > 1 && std::string{argv[1]} == "info") {
+    if (argc > 1 && std::string{argv[1]} == "--info") {
+        #if NGEN_WITH_MPI
+        MPI_Init(nullptr, nullptr);
+        MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
+        MPI_Comm_size(MPI_COMM_WORLD, &mpi_num_procs);
+
+        if (mpi_rank == 0) {
+        #endif
+
         std::ostringstream output;
         output << ngen::exec_info::build_summary;
         ngen::exec_info::runtime_summary(output);
-
         std::cout << output.str() << std::endl;
 
         #if NGEN_WITH_MPI
+        } // if (mpi_rank == 0)
+  
         MPI_Finalize();
         #endif
 

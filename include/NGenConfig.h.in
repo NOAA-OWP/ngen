@@ -24,7 +24,7 @@
 
 namespace ngen {
 
-struct exec_info
+namespace exec_info
 {
     // Executable version
 
@@ -45,8 +45,8 @@ struct exec_info
     //! Compile-time build summary
     static constexpr const char* build_summary = R"(@NGEN_CONF_SUMMARY@)";
 
-    static void runtime_summary(std::ostream& stream) noexcept;
-    static void runtime_usage(const std::string& cmd, std::ostream& stream) noexcept;
+    void runtime_summary(std::ostream& stream) noexcept;
+    void runtime_usage(const std::string& cmd, std::ostream& stream) noexcept;
 };
 
 } // namespace ngen
