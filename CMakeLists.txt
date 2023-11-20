@@ -75,8 +75,6 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 # Define project version and use via generated config header
 project(ngen VERSION 0.1.0)
 
-configure_file("${NGEN_INC_DIR}/NGenConfig.h.in" "${NGEN_INC_DIR}/NGenConfig.h")
-
 add_executable(ngen "${NGEN_SRC_DIR}/NGen.cpp")
 
 # Dependencies ================================================================
@@ -245,19 +243,23 @@ endif()
 # -----------------------------------------------------------------------------
 
 # Syntax: ngen_multiline_message("<message 1>" "<message 2>" ...)
-function(ngen_multiline_message)
+macro(ngen_multiline_message)
 set(messages "${ARGN}")
 foreach(msg IN LISTS messages)
+    set(_CONF "${NGEN_CONF_SUMMARY}")
+    string(APPEND _CONF "${msg}\n")
+    set(NGEN_CONF_SUMMARY "${_CONF}")
+
     message(STATUS "${msg}")
 endforeach()
-endfunction()
+endmacro()
 
 # Syntax: ngen_dependent_multiline_message(<variable> "<message 1>" "<message 2>" ...)
-function(ngen_dependent_multiline_message VARIABLE)
+macro(ngen_dependent_multiline_message VARIABLE)
 if(${VARIABLE})
     ngen_multiline_message(${ARGN})
 endif()
-endfunction()
+endmacro()
 
 # This is used purely for configuration output,
 # and does not affect the virtual environment used.
@@ -311,6 +313,7 @@ ngen_dependent_multiline_message(NGEN_WITH_MPI
 "    Include: ${MPI_CXX_INCLUDE_DIRS}")
 ngen_dependent_multiline_message(NGEN_WITH_NETCDF
 "  NetCDF:"
+"    Version: ${NETCDF_VERSION}"
 "    Library: ${NETCDF_LIBRARY}"
 "    Library (CXX): ${NETCDF_CXX_LIBRARIES}"
 "    Include: ${NETCDF_INCLUDE_DIR}"
@@ -343,3 +346,5 @@ ngen_dependent_multiline_message(NGEN_WITH_PYTHON
 "    pybind11 Version: ${pybind11_VERSION}"
 "    pybind11 Include: ${pybind11_INCLUDE_DIR}")
 message(STATUS "---------------------------------------------------------------------")
+
+configure_file("${NGEN_INC_DIR}/NGenConfig.h.in" "${NGEN_INC_DIR}/NGenConfig.h")

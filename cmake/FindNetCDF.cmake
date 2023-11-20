@@ -113,11 +113,27 @@ list (APPEND NetCDF_libs "${NETCDF_C_LIBRARIES}")
 set (NETCDF_LIBRARIES ${NetCDF_libs})
 set (NETCDF_INCLUDE_DIRS ${NetCDF_includes})
 
+if(NETCDF_C_INCLUDE_DIRS)
+  file(STRINGS "${NETCDF_C_INCLUDE_DIRS}/netcdf_meta.h" _netcdf_ver
+    REGEX "#define[ \t]+NC_VERSION_(MAJOR|MINOR|PATCH|NOTE)")
+  
+  string(REGEX REPLACE ".*NC_VERSION_MAJOR *\([0-9]*\).*" "\\1" _netcdf_version_major "${_netcdf_ver}")
+  string(REGEX REPLACE ".*NC_VERSION_MINOR *\([0-9]*\).*" "\\1" _netcdf_version_minor "${_netcdf_ver}")
+  string(REGEX REPLACE ".*NC_VERSION_PATCH *\([0-9]*\).*" "\\1" _netcdf_version_patch "${_netcdf_ver}")
+  string(REGEX REPLACE ".*NC_VERSION_NOTE *\"\([^\"]*\)\".*" "\\1" _netcdf_version_note "${_netcdf_ver}")
+  set(NETCDF_VERSION "${_netcdf_version_major}.${_netcdf_version_minor}.${_netcdf_version_patch}${_netcdf_version_note}")
+  unset(_netcdf_version_major)
+  unset(_netcdf_version_minor)
+  unset(_netcdf_version_patch)
+  unset(_netcdf_version_note)
+  unset(_netcdf_version_lines)
+endif()
+
 # handle the QUIETLY and REQUIRED arguments and set NETCDF_FOUND to TRUE if
 # all listed variables are TRUE
 include (FindPackageHandleStandardArgs)
-find_package_handle_standard_args (NetCDF
-  DEFAULT_MSG NETCDF_LIBRARIES NETCDF_INCLUDE_DIRS NETCDF_HAS_INTERFACES)
+find_package_handle_standard_args(NetCDF
+  DEFAULT_MSG NETCDF_LIBRARIES NETCDF_INCLUDE_DIRS NETCDF_HAS_INTERFACES NETCDF_VERSION)
 
 function(FindNetCDF_get_is_parallel_aware include_dir)
   file(STRINGS "${include_dir}/netcdf_meta.h" _netcdf_lines
