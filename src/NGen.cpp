@@ -1,6 +1,5 @@
 #include <iostream>
 #include <fstream>
-#include <pybind11/embed.h>
 #include <string>
 #include <unordered_map>
 
@@ -25,6 +24,7 @@
 #endif // WRITE_PID_FILE_FOR_GDB_SERVER
 
 #ifdef ACTIVATE_PYTHON
+#include <pybind11/embed.h>
 #include "python/InterpreterUtil.hpp"
 #endif // ACTIVATE_PYTHON
     
