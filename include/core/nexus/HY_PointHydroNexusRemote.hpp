@@ -10,6 +10,7 @@
 
 #include <unordered_map>
 #include <string>
+#include <list>
 
 
 /** This class representa a point nexus that can have both upstream and downstream connections to catments that are

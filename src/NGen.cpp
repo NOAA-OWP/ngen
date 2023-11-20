@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <pybind11/embed.h>
 #include <string>
 #include <unordered_map>
 
@@ -57,7 +58,85 @@ int mpi_num_procs;
 
 std::unordered_map<std::string, std::ofstream> nexus_outfiles;
 
+void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept
+{
+    stream << "Runtime configuration summary:\n";
+
+#if NGEN_WITH_MPI
+
+    MPI_Init(nullptr, nullptr);
+    MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &mpi_num_procs);
+
+    stream << "  MPI:\n"
+           << "    Processors: " << mpi_num_procs << "\n";
+    
+#endif // NGEN_WITH_MPI
+  
+#if NGEN_WITH_PYTHON // -------------------------------------------------------
+    { // START RAII
+        py::scoped_interpreter guard{};
+
+        auto sys       = py::module_::import("sys");
+        auto sysconfig = py::module_::import("sysconfig");
+
+        // try catch
+        auto numpy = py::module_::import("numpy");
+
+        // Lambda to convert py::dict -> std::unordered_map<std::string, std::string>
+        const auto dict_to_map = [](const py::dict& dict) -> std::unordered_map<std::string, std::string> {
+            std::unordered_map<std::string, std::string> map;
+            for (const auto& kv : dict)
+                map[kv.first.cast<std::string>()] = kv.second.cast<std::string>();
+
+            return map;
+        };
+
+        const auto python_paths = dict_to_map(sysconfig.attr("get_paths")().cast<py::dict>());
+        const auto python_venv = std::getenv("VIRTUAL_ENV") == nullptr ? "<none>" : std::getenv("VIRTUAL_ENV");
+      
+        stream << "  Python:\n"
+               << "    Version: "         << sys.attr("version").cast<std::string>() << "\n"
+               << "    Virtual Env: "     << python_venv                 << "\n"
+               << "    Executable: "      << sys.attr("executable").cast<std::string>() << "\n"
+               << "    Site Library: "    << python_paths.at("purelib")  << "\n"
+               << "    Include: "         << python_paths.at("include")  << "\n"
+               << "    Runtime Library: " << python_paths.at("stdlib")   << "\n"
+               << "    NumPy Version: "   << numpy.attr("version").attr("version").cast<py::object>() << "\n"
+               << "    NumPy Include: "   << numpy.attr("get_include")().cast<std::string>() << "\n";
+
+
+#if NGEN_WITH_ROUTING
+
+        // TODO: Maybe hash the package sources?
+        //
+        // In site-packages, the RECORD file for dist contains
+        // hashes generated for all files -- maybe parse this and
+        // pull a combined hash?
+
+#endif // NGEN_WITH_ROUTING
+    } // END RAII
+#endif // NGEN_WITH_PYTHON // -------------------------------------------------
+
+
+} // ngen::exec_info::runtime_summary
+
 int main(int argc, char *argv[]) {
+
+    if (argc > 1 && std::string{argv[1]} == "info") {
+        std::ostringstream output;
+        output << ngen::exec_info::build_summary;
+        ngen::exec_info::runtime_summary(output);
+
+        std::cout << output.str() << std::endl;
+
+        #if NGEN_WITH_MPI
+        MPI_Finalize();
+        #endif
+
+        exit(1);
+    } 
+
     std::cout << "NGen Framework " << ngen_VERSION_MAJOR << "."
               << ngen_VERSION_MINOR << "."
               << ngen_VERSION_PATCH << std::endl;

@@ -1,8 +1,57 @@
 #ifndef NGEN_NGENCONFIG_H
 #define NGEN_NGENCONFIG_H
 
+#define NGEN_STRINGIFY(x) #x
+#define NGEN_STRING(x) NGEN_STRINGIFY(x)
+
 #define ngen_VERSION_MAJOR @ngen_VERSION_MAJOR@
 #define ngen_VERSION_MINOR @ngen_VERSION_MINOR@
 #define ngen_VERSION_PATCH @ngen_VERSION_PATCH@
+#define ngen_VERSION NGEN_STRING(ngen_VERSION_MAJOR.ngen_VERSION_MINOR.ngen_VERSION_PATCH)
+
+#cmakedefine01 NGEN_WITH_MPI
+#cmakedefine01 NGEN_WITH_NETCDF
+#cmakedefine01 NGEN_WITH_SQLITE
+#cmakedefine01 NGEN_WITH_UDUNITS
+#cmakedefine01 NGEN_WITH_BMI_FORTRAN
+#cmakedefine01 NGEN_WITH_BMI_C
+#cmakedefine01 NGEN_WITH_PYTHON
+#cmakedefine01 NGEN_WITH_ROUTING
+#cmakedefine01 NGEN_WITH_TESTS
+#cmakedefine01 NGEN_QUIET
+
+#include <string>
+
+namespace ngen {
+
+struct exec_info
+{
+    // Executable version
+
+    static constexpr const char* version   = ngen_VERSION;
+
+    // Compile-time feature flags
+
+    static constexpr bool with_mpi         = NGEN_WITH_MPI;
+    static constexpr bool with_netcdf      = NGEN_WITH_NETCDF;
+    static constexpr bool with_sqlite      = NGEN_WITH_SQLITE;
+    static constexpr bool with_udunits     = NGEN_WITH_UDUNITS;
+    static constexpr bool with_bmi_fortran = NGEN_WITH_BMI_FORTRAN;
+    static constexpr bool with_bmi_c       = NGEN_WITH_BMI_C;
+    static constexpr bool with_python      = NGEN_WITH_PYTHON;
+    static constexpr bool with_routing     = NGEN_WITH_ROUTING;
+    static constexpr bool with_quiet       = NGEN_QUIET;
+
+    //! Compile-time build summary
+    static constexpr const char* build_summary = R"(@NGEN_CONF_SUMMARY@)";
+
+    static void runtime_summary(std::ostream& stream) noexcept;
+    static void runtime_usage(const std::string& cmd, std::ostream& stream) noexcept;
+};
+
+} // namespace ngen
+
+#undef NGEN_STRING
+#undef NGEN_STRINGIFY
 
 #endif //NGEN_NGENCONFIG_H
