@@ -1,7 +1,5 @@
 #include <iostream>
 #include <fstream>
-#include <pybind11/gil.h>
-#include <pybind11/pytypes.h>
 #include <string>
 #include <unordered_map>
 
