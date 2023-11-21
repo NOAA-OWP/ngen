@@ -78,7 +78,7 @@ void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept
         // try catch
         py::module_ numpy;
         bool imported_numpy = false;
-        const char* err = nullptr;
+        std::string err;
         try {
             numpy = py::module_::import("numpy");
             imported_numpy = true;
@@ -104,11 +104,16 @@ void ngen::exec_info::runtime_summary(std::ostream& stream) noexcept
                << "    Executable: "      << sys.attr("executable").cast<std::string>() << "\n"
                << "    Site Library: "    << python_paths.at("purelib")  << "\n"
                << "    Include: "         << python_paths.at("include")  << "\n"
-               << "    Runtime Library: " << python_paths.at("stdlib")   << "\n"
-               << "    NumPy Version: "   << (!imported_numpy ? err : numpy.attr("version").attr("version").cast<std::string>()) << "\n"
-               << "    NumPy Include: "   << (!imported_numpy ? err : numpy.attr("get_include")().cast<std::string>()) << "\n";
+               << "    Runtime Library: " << python_paths.at("stdlib")   << "\n";
 
-
+        if (imported_numpy) {
+            stream << "    NumPy Version: "   << numpy.attr("version").attr("version").cast<std::string>() << "\n"
+                   << "    NumPy Include: "   << numpy.attr("get_include")().cast<std::string>() << "\n";
+        } else {
+            // Output NumPy import error
+            stream << "    NumPy: " << err << "\n";
+        }
+               
 #if NGEN_WITH_ROUTING
 
         // TODO: Maybe hash the package sources?
@@ -132,17 +137,15 @@ int main(int argc, char *argv[]) {
         MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
         MPI_Comm_size(MPI_COMM_WORLD, &mpi_num_procs);
 
-        if (mpi_rank == 0) {
+        if (mpi_rank == 0)
         #endif
-
-        std::ostringstream output;
-        output << ngen::exec_info::build_summary;
-        ngen::exec_info::runtime_summary(output);
-        std::cout << output.str() << std::endl;
-
-        #if NGEN_WITH_MPI
+        {
+            std::ostringstream output;
+            output << ngen::exec_info::build_summary;
+            ngen::exec_info::runtime_summary(output);
+            std::cout << output.str() << std::endl;
         } // if (mpi_rank == 0)
-  
+        #if NGEN_WITH_MPI
         MPI_Finalize();
         #endif
 
