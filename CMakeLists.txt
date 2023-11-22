@@ -187,6 +187,12 @@ endif()
 # -----------------------------------------------------------------------------
 # Project Targets
 # -----------------------------------------------------------------------------
+
+# Contains NGenConfig.h
+add_library(ngen_config_header INTERFACE)
+add_library(NGen::config_header ALIAS ngen_config_header)
+target_include_directories(ngen_config_header INTERFACE "${CMAKE_CURRENT_BINARY_DIR}/include")
+
 target_include_directories(ngen PUBLIC "${NGEN_INC_DIR}")
 
 add_subdirectory("src/core")
@@ -200,6 +206,7 @@ add_subdirectory("src/utilities/logging")
 
 target_link_libraries(ngen
     PUBLIC
+        NGen::config_header
         NGen::core
         NGen::core_catchment
         NGen::core_nexus
@@ -347,4 +354,4 @@ ngen_dependent_multiline_message(NGEN_WITH_PYTHON
 "    pybind11 Include: ${pybind11_INCLUDE_DIR}")
 message(STATUS "---------------------------------------------------------------------")
 
-configure_file("${NGEN_INC_DIR}/NGenConfig.h.in" "${NGEN_INC_DIR}/NGenConfig.h")
+configure_file("${NGEN_INC_DIR}/NGenConfig.h.in" "${CMAKE_CURRENT_BINARY_DIR}/include/NGenConfig.h")
