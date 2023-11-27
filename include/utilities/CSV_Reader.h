@@ -31,14 +31,18 @@ public:
 */
 inline std::vector<std::vector<std::string> > CSVReader::getData()
 {
+    errno = 0;
     std::ifstream file(fileName);
 
-        if(file.fail()){
-            throw std::runtime_error(
-                    "Errno " + std::to_string(errno) + " (" + strerror(errno) + ") opening " + fileName);
+    if (file.fail()) {
+        throw std::runtime_error(
+                errno == 0
+                    ? "Error: failure opening " + fileName
+                    : "Errno " + std::to_string(errno) + " (" + strerror(errno) + ") opening " + fileName
+        );
 
-            /// \todo Potentially only output warning and fill array with sentinel values.
-        }
+        /// \todo Potentially only output warning and fill array with sentinel values.
+    }
 
     std::vector<std::vector<std::string> > dataList;
 
