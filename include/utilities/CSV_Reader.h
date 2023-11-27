@@ -7,6 +7,7 @@
 #include <string>
 #include <algorithm>
 #include <boost/algorithm/string.hpp>
+#include <cerrno>
 
 /*
  * @brief A class to read data from a csv file.
