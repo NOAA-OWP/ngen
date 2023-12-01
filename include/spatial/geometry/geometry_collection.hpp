@@ -14,21 +14,23 @@ struct geometry_collection : public virtual geometry
     using size_type                 = geometry::size_type;
     using pointer                   = geometry*;
     using const_pointer             = const geometry*;
+    using reference                 = geometry&;
+    using const_reference           = const geometry&;
 
     ~geometry_collection() override = default;
 
     //! @brief Get the Nth geometry in this collection.
     //! @param n Index of element to retrieve.
     //! @return Pointer to a geometry element.
-    virtual pointer get(size_type n) = 0;
+    virtual reference get(size_type n) = 0;
 
     //! @copydoc geometry_collection::get(size_type);
-    virtual const_pointer get(size_type n) const = 0;
+    virtual const_reference get(size_type n) const = 0;
 
     //! @brief Set the Nth geometry in this collection.
     //! @param n Index of element to set.
     //! @param geom Geometry object to set.
-    virtual void set(size_type n, const_pointer geom) = 0;
+    virtual void set(size_type n, const_reference geom) = 0;
 
     //! @brief Set the size of this collection.
     //! @note If `n` is smaller than the current size, the collection is
@@ -40,7 +42,7 @@ struct geometry_collection : public virtual geometry
     //! @return Number of geometries.
     virtual size_type size() const noexcept = 0;
 
-    geometry_t        type() noexcept override { return geometry_t::geometry_collection; }
+    geometry_t type() noexcept override { return geometry_t::geometry_collection; }
 };
 
 } // namespace spatial

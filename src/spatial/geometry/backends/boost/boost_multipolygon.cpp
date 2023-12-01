@@ -4,37 +4,24 @@ namespace ngen {
 namespace spatial {
 namespace backend {
 
+boost_multipolygon::boost_multipolygon() = default;
+
 boost_multipolygon::~boost_multipolygon() = default;
 
-auto boost_multipolygon::get(size_type n) -> pointer
+auto boost_multipolygon::get(size_type n) -> reference
 {
-    return &data_.at(n);
+    return data_.at(n);
 }
 
-auto boost_multipolygon::get(size_type n) const -> const_pointer
+auto boost_multipolygon::get(size_type n) const -> const_reference
 {
-    return &data_.at(n);
+    return data_.at(n);
 }
 
-void boost_multipolygon::set(size_type n, geometry_collection::const_pointer geom)
+void boost_multipolygon::set(size_type n, geometry_collection::const_reference geom)
 {
-    auto poly = dynamic_cast<multipolygon::const_pointer>(geom);
-    if (poly == nullptr) {
-        // Not a point
-        return;
-    }
-
-    auto casted = dynamic_cast<const_pointer>(poly);
-    if (casted == nullptr) {
-        boost_polygon new_polygon{};
-        // TODO: new_polygon.outer() = poly->outer();
-        for (size_t i = 0; i < poly->size() - 1; i++) {
-            // TODO: new_polygon.inner(i) = poly->inner(i);
-        }
-        casted = &new_polygon;
-    }
-
-    data_.at(n) = *casted;
+    auto casted = dynamic_cast<const_reference>(geom);
+    data_.at(n) = casted;
 }
 
 void boost_multipolygon::resize(size_type n)

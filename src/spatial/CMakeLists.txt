@@ -13,5 +13,9 @@ target_sources(spatial
         geometry/backends/boost/boost_point.cpp
         geometry/backends/boost/boost_linestring.cpp
         geometry/backends/boost/boost_linearring.cpp
+        geometry/backends/boost/boost_polygon.cpp
+        geometry/backends/boost/boost_multipoint.cpp
+        geometry/backends/boost/boost_multilinestring.cpp
+        geometry/backends/boost/boost_multipolygon.cpp
 )
 target_link_libraries(spatial PUBLIC Boost::boost)

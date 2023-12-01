@@ -4,24 +4,28 @@ namespace ngen {
 namespace spatial {
 namespace backend {
 
-auto boost_polygon::outer() noexcept -> pointer
+boost_polygon::boost_polygon() = default;
+
+boost_polygon::~boost_polygon() = default;
+
+auto boost_polygon::outer() noexcept -> reference
 {
-    return &outer_;
+    return outer_;
 }
 
-auto boost_polygon::outer() const noexcept -> const_pointer
+auto boost_polygon::outer() const noexcept -> const_reference
 {
-    return &outer_;
+    return outer_;
 }
 
-auto boost_polygon::inner(size_type n) -> pointer
+auto boost_polygon::inner(size_type n) -> reference
 {
-    return &inner_.at(n);
+    return inner_.at(n);
 }
 
-auto boost_polygon::inner(size_type n) const -> const_pointer
+auto boost_polygon::inner(size_type n) const -> const_reference
 {
-    return &inner_.at(n);
+    return inner_.at(n);
 }
 
 auto boost_polygon::size() const noexcept -> size_type

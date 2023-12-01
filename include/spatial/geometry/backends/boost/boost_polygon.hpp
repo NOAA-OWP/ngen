@@ -16,13 +16,17 @@ struct boost_polygon final : public polygon
     using size_type           = polygon::size_type;
     using pointer             = boost_linearring*;
     using const_pointer       = const boost_linearring*;
+    using reference           = boost_linearring&;
+    using const_reference     = const boost_linearring&;
 
-    ~boost_polygon() override = default;
+    boost_polygon();
 
-    pointer       outer() noexcept override;
-    const_pointer outer() const noexcept override;
-    pointer       inner(size_type n) override;
-    const_pointer inner(size_type n) const override;
+    ~boost_polygon() override;
+
+    reference       outer() noexcept override;
+    const_reference outer() const noexcept override;
+    reference       inner(size_type n) override;
+    const_reference inner(size_type n) const override;
     size_type     size() const noexcept override;
 
   private:

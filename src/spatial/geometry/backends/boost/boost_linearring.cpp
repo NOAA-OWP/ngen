@@ -4,6 +4,10 @@ namespace ngen {
 namespace spatial {
 namespace backend {
 
+boost_linearring::boost_linearring() = default;
+
+boost_linearring::~boost_linearring() = default;
+
 boost_linearring::boost_linearring(std::initializer_list<boost_point> pts)
   : data_(pts){};
 
@@ -17,24 +21,20 @@ auto boost_linearring::size() const noexcept -> size_type
     return data_.size();
 }
 
-auto boost_linearring::get(size_type n) -> pointer
+auto boost_linearring::get(size_type n) -> reference
 {
-    return &data_.at(n);
+    return data_.at(n);
 }
 
-void boost_linearring::set(size_type n, const ngen::spatial::point* pt)
+auto boost_linearring::get(size_type n) const -> const_reference
 {
-    // TODO: This might be expensive
-    decltype(auto) casted = dynamic_cast<const_pointer>(pt);
-    if (casted == nullptr) {
-        // If `pt` is not a boost_point, then
-        // we need to copy from the backend into
-        // this backend.
-        boost_point new_pt{ pt->x(), pt->y() };
-        casted = &new_pt;
-    }
+    return data_.at(n);
+}
 
-    data_.at(n) = *casted;
+void boost_linearring::set(size_type n, const ngen::spatial::point& pt)
+{
+    decltype(auto) casted = dynamic_cast<const_reference>(pt);
+    get(n) = casted;
 }
 
 void boost_linearring::resize(size_type n)
@@ -42,24 +42,35 @@ void boost_linearring::resize(size_type n)
     data_.resize(n);
 }
 
-auto boost_linearring::front() noexcept -> pointer
+auto boost_linearring::front() noexcept -> reference
 {
-    return &data_.front();
+    return data_.front();
 }
 
-auto boost_linearring::back() noexcept -> pointer
+auto boost_linearring::back() noexcept -> reference
 {
-    return &data_.back();
+    return data_.back();
 }
 
-auto boost_linearring::front() const noexcept -> const_pointer
+auto boost_linearring::front() const noexcept -> const_reference
 {
-    return &data_.front();
+    return data_.front();
 }
 
-auto boost_linearring::back() const noexcept -> const_pointer
+auto boost_linearring::back() const noexcept -> const_reference
 {
-    return &data_.back();
+    return data_.back();
+}
+
+void boost_linearring::swap(linestring& other) noexcept
+{
+    linestring* ptr = &other;
+
+    auto ring = dynamic_cast<boost_linearring*>(ptr);
+    if (ring != nullptr) {
+        data_.swap(ring->data_);
+        return;
+    }
 }
 
 } // namespace backend

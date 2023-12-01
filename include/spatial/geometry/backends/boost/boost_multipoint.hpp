@@ -12,15 +12,19 @@ namespace backend {
 
 struct boost_multipoint final : public multipoint
 {
-    using size_type     = multipoint::size_type;
-    using pointer       = boost_point*;
-    using const_pointer = const boost_point*;
+    using size_type       = multipoint::size_type;
+    using pointer         = boost_point*;
+    using const_pointer   = const boost_point*;
+    using reference       = boost_point&;
+    using const_reference = const boost_point&;
 
+    boost_multipoint();
+    
     ~boost_multipoint() override;
 
-    pointer       get(size_type n) override;
-    const_pointer get(size_type n) const override;
-    void          set(size_type n, geometry_collection::const_pointer geom) override;
+    reference       get(size_type n) override;
+    const_reference get(size_type n) const override;
+    void          set(size_type n, geometry_collection::const_reference geom) override;
     void          resize(size_type n) override;
     size_type     size() const noexcept override;
 

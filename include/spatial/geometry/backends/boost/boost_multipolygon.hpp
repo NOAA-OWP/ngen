@@ -13,12 +13,16 @@ struct boost_multipolygon final : public multipolygon
     using size_type     = multipolygon::size_type;
     using pointer       = boost_polygon*;
     using const_pointer = const boost_polygon*;
+    using reference     = boost_polygon&;
+    using const_reference = const boost_polygon&;
 
+    boost_multipolygon();
+    
     ~boost_multipolygon() override;
 
-    pointer       get(size_type n) override;
-    const_pointer get(size_type n) const override;
-    void          set(size_type n, geometry_collection::const_pointer geom) override;
+    reference       get(size_type n) override;
+    const_reference get(size_type n) const override;
+    void          set(size_type n, geometry_collection::const_reference geom) override;
     void          resize(size_type n) override;
     size_type     size() const noexcept override;
 

@@ -4,33 +4,24 @@ namespace ngen {
 namespace spatial {
 namespace backend {
 
+boost_multipoint::boost_multipoint() = default;
+
 boost_multipoint::~boost_multipoint() = default;
 
-auto boost_multipoint::get(size_type n) -> pointer
+auto boost_multipoint::get(size_type n) -> reference
 {
-    return &data_.at(n);
+    return data_.at(n);
 }
 
-auto boost_multipoint::get(size_type n) const -> const_pointer
+auto boost_multipoint::get(size_type n) const -> const_reference
 {
-    return &data_.at(n);
+    return data_.at(n);
 }
 
-void boost_multipoint::set(size_type n, geometry_collection::const_pointer geom)
+void boost_multipoint::set(size_type n, geometry_collection::const_reference geom)
 {
-    auto pt = dynamic_cast<multipoint::const_pointer>(geom);
-    if (pt == nullptr) {
-        // Not a point
-        return;
-    }
-
-    auto casted = dynamic_cast<const_pointer>(pt);
-    if (casted == nullptr) {
-        boost_point new_pt{ pt->x(), pt->y() };
-        casted = &new_pt;
-    }
-
-    data_.at(n) = *casted;
+    auto casted = dynamic_cast<const_reference>(geom);
+    data_.at(n) = casted;
 }
 
 void boost_multipoint::resize(size_type n)
