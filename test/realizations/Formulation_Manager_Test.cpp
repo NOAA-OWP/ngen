@@ -602,6 +602,7 @@ const std::string EXAMPLE_5_a =
 "                        \"init_config\": \"\","
 "                        \"allow_exceed_end_time\": true,"
 "                        \"main_output_variable\": \"OUTPUT_VAR_4\","
+"                        \"uses_forcing_file\": false,"
 "                        \"modules\": ["
 "                            {"
 "                                \"name\": \"bmi_c++\","
@@ -920,6 +921,7 @@ TEST_F(Formulation_Manager_Test, read_external_attributes) {
         }
 
         for (auto& expect : expected) {
+            std::cout<<"CHECKING "<<id<<"for "<<expect<<"\n";
             ASSERT_NE(std::find(values.begin(), values.end(), expect), values.end());
         }
     };
@@ -942,7 +944,7 @@ TEST_F(Formulation_Manager_Test, read_external_attributes) {
     });
 
     manager.read(this->fabric, catchment_output);
-
+    std::cout<<"HERERERERE\n";
     ASSERT_EQ(manager.get_size(), 3);
     check_formulation_values(manager, "cat-67",    { 1.70352, 10.0 });
     check_formulation_values(manager, "cat-52",    { 3.14159, 15.0 });

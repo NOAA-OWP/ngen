@@ -9,20 +9,15 @@
  * 
  */
 
-class CatchmentAggrDataSelector
-{
-    public:
+class DataSelector{
 
-    /**
-     * @brief Construct a new Catchment Aggregate Data Selector object with default values
-     * 
-     */
-    CatchmentAggrDataSelector() : 
+  public:
+
+    DataSelector():
         variable_name(), 
         init_time(0), 
         duration_s(1), 
-        output_units(),
-        id_str()
+        output_units()
     {}
 
     /**
@@ -34,8 +29,7 @@ class CatchmentAggrDataSelector
      * @param units The units to output the result in
      * @param id the id of the associated catchment
      */
-    CatchmentAggrDataSelector(std::string id, std::string var, time_t start, long dur, std::string units) : 
-        id_str(id),
+    DataSelector(std::string var, time_t start, long dur, std::string units) : 
         variable_name(var), 
         init_time(start), 
         duration_s(dur), 
@@ -98,6 +92,41 @@ class CatchmentAggrDataSelector
      */
     void set_output_units(std::string units) { output_units = units; }
 
+  private:
+
+    std::string variable_name; //!< The variable name that should be queried
+    time_t init_time; //!< The inital time to query the requested variable
+    long duration_s;  //!< The duration of the query
+    std::string output_units; //!< required units for the result to be return in
+}; 
+
+class CatchmentAggrDataSelector: public DataSelector
+{
+    public:
+
+    /**
+     * @brief Construct a new Catchment Aggregate Data Selector object with default values
+     * 
+     */
+    CatchmentAggrDataSelector() :
+        DataSelector(),
+        id_str()
+    {}
+
+    /**
+     * @brief Construct a new Data Selector object with inital values
+     * 
+     * @param var The variable to be accessed by the selector   
+     * @param start THe start time for this selector
+     * @param dur The duration for this selector   
+     * @param units The units to output the result in
+     * @param id the id of the associated catchment
+     */
+    CatchmentAggrDataSelector(std::string id, std::string var, time_t start, long dur, std::string units) : 
+        DataSelector(var, start, dur, units),
+        id_str(id)
+    {}
+
     /**
      * @brief Get the id string for this NetCDF Data Selector
      * 
@@ -114,10 +143,6 @@ class CatchmentAggrDataSelector
 
     private:
 
-    std::string variable_name; //!< The variable name that should be queried
-    time_t init_time; //!< The inital time to query the requested variable
-    long duration_s;  //!< The duration of the query
-    std::string output_units; //!< required units for the result to be return in
     std::string id_str; //< the catchment to access data for
 };
 

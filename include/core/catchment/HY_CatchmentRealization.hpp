@@ -5,6 +5,7 @@
 #include <string>
 #include <AorcForcing.hpp>
 #include "GenericDataProvider.hpp"
+#include "Formulation.hpp"
 
 using std::shared_ptr;
 
@@ -15,6 +16,7 @@ class HY_Catchment;
 typedef long time_step_t;
 //TODO template<forcing>
 //TODO template<et_datatype>
+// class HY_CatchmentRealization: public realization::Formulation
 class HY_CatchmentRealization
 {
     public:

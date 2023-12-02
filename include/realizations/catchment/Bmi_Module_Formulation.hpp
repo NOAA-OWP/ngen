@@ -898,7 +898,7 @@ namespace realization {
                     if(values.size() == 1){
                         //FIXME this isn't generic broadcasting, but works for scalar implementations
                         #ifndef NGEN_QUIET
-                        std::cerr << "WARN: broadcasting variable '" << var_name << "' from scalar to expected array\n";
+                        //std::cerr << "WARN: broadcasting variable '" << var_name << "' from scalar to expected array\n";
                         #endif
                         values.resize(numItems, values[0]);
                     } else if (values.size() != numItems) {

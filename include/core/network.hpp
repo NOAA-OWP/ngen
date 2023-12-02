@@ -136,7 +136,48 @@ namespace network {
    * 
    */
   using IndexPair = std::pair< NetworkIndexT::const_iterator, NetworkIndexT::const_iterator>;
+struct detect_loops : public boost::dfs_visitor<>
+{
+    using colormap = std::map<Graph::vertex_descriptor, boost::default_color_type>;
+    colormap vertex_coloring;
 
+    using edgeColorMap = std::map<Graph::edge_descriptor, boost::default_color_type>;
+    edgeColorMap  edge_coloring;
+   using vertex_t = Graph::vertex_descriptor;
+
+   template <class Edge, class Graph>
+  void tree_edge(Edge e, const Graph& g) {
+      //std::cout << "tree_edge: " << boost::source(e, g) << " --> " << boost::target(e, g) << std::endl;
+
+    //edgeVisited.push(e);
+    if (vertexVisited.empty()) {
+        vertexVisited.push(boost::source(e, g));
+    }
+    vertexVisited.push(boost::target(e, g));
+  }
+
+   template <class Edge, class Graph>
+   void back_edge(Edge e, const Graph& g) {
+      std::cout << source(e, g)
+        << " -- "
+        << target(e, g) << "\n";
+      std::cout<< get(boost::vertex_name, g)[ source(e, g) ] <<
+        " -- " << get(boost::vertex_name, g)[ target(e,g)  ]<<"\n";
+       vertex_t v2;
+       std::cout << "Cycle end= " << boost::target(e, g) << std::endl;
+       while ( vertexVisited.top() != boost::target(e, g) )
+        {
+            //std::cout << " Cycle middle=" << vertexVisited.top() << std::endl;
+            v2 = vertexVisited.top();
+            vertexVisited.pop();
+        }
+        std::cout << "Cycle starting= " << vertexVisited.top() << std::endl;
+        vertexVisited.push(v2);
+      cycles.push_back(std::make_pair(source(e,g), target(e,g)));
+   }
+  std::stack<Graph::vertex_descriptor> vertexVisited;
+  std::vector<std::pair<Graph::vertex_descriptor, Graph::vertex_descriptor>> cycles;
+};
     /**
      * @brief A lightweight, graph based index of hydrologic features.
      * 

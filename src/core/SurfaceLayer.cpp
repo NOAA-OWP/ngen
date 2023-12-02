@@ -31,7 +31,8 @@ void ngen::SurfaceLayer::update_models()
         }
         else {
             //This is a terminal node, SHOULDN'T be remote, so ID shouldn't matter too much
-            cat_id = "terminal";
+            cat_id = "terminal-fs";
+            //continue;
         }
 
         //std::cerr << "Requesting water from nexus, id = " << id << " at time = " <<current_time_index << ",  percent = 100, destination = " << cat_id << std::endl;

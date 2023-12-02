@@ -51,6 +51,17 @@ namespace ngen
 
         void put_layer(const LayerDescription& desc, int id) 
         {
+            // check to see if this layer was allready defined
+            if ( exists(id) )
+            {
+                std::string message = "A layer with id = ";
+                message += std::to_string(id);
+                message += " was defined more than once";
+
+                std::runtime_error r_error(message);
+                
+                throw r_error;
+            }
              stored_layers[id] = desc;
              keys.push_back(id);
         }

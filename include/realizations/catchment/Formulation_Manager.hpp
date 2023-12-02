@@ -9,17 +9,27 @@
 #include <sys/stat.h>
 #include <regex>
 
-#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/ptree.hpp> //TODO check if needed
 #include <boost/property_tree/json_parser.hpp>
 #include <FeatureBuilder.hpp>
-#include "JSONProperty.hpp"
+#include "JSONProperty.hpp" //TODO check if needed here
 #include "features/Features.hpp"
 #include <FeatureCollection.hpp>
 #include "Formulation_Constructors.hpp"
-#include "Simulation_Time.hpp"
-#include "routing/Routing_Params.h"
-#include "LayerData.hpp"
+#include "Simulation_Time.hpp" //TODO check if needed here
+#include "routing/Routing_Params.h" //TODO check if needed here
+#include "LayerData.hpp" //TODO check if needed here
 
+#include "../config.hpp"
+
+//TODO consider a ngen::forcing namespace
+class ProviderManager{
+  public:
+    ProviderManager(){};
+  
+  private:
+
+};
 namespace realization {
 
     class Formulation_Manager {
@@ -55,79 +65,24 @@ namespace realization {
                 //TODO seperate the parsing of configuration options like time
                 //and routing and other non feature specific tasks from this main function
                 //which has to iterate the entire hydrofabric.
+                
                 auto possible_global_config = tree.get_child_optional("global");
 
                 if (possible_global_config) {
-                    this->global_formulation_tree = *possible_global_config;
-
-                    //get forcing info
-                    for (auto &forcing_parameter : (*possible_global_config).get_child("forcing")) {
-                        this->global_forcing.emplace(
-                            forcing_parameter.first,
-                            geojson::JSONProperty(forcing_parameter.first, forcing_parameter.second)
-                        );
-                      }
-
-                    //get first empty key under formulations (corresponds to first json array element)
-                    auto formulation = (*possible_global_config).get_child("formulations..");
-
-                    for (std::pair<std::string, boost::property_tree::ptree> global_setting : formulation.get_child("params")) {
-                        this->global_formulation_parameters.emplace(
-                            global_setting.first,
-                            geojson::JSONProperty(global_setting.first, global_setting.second)
-                        );
-                    }
+                    global_config = realization::config::Formulation_Config(*possible_global_config);
                 }
 
-                /**
-                 * Read simulation time from configuration file
-                 * /// \todo TODO: Separate input_interval from output_interval
-                 */            
                 auto possible_simulation_time = tree.get_child_optional("time");
 
                 if (!possible_simulation_time) {
                     throw std::runtime_error("ERROR: No simulation time period defined.");
                 }
-
-                geojson::JSONProperty simulation_time_parameters("time", *possible_simulation_time);
-
-                std::vector<std::string> missing_simulation_time_parameters;
-
-                if (!simulation_time_parameters.has_key("start_time")) {
-                    missing_simulation_time_parameters.push_back("start_time");
-                }
-
-                if (!simulation_time_parameters.has_key("end_time")) {
-                    missing_simulation_time_parameters.push_back("end_time");
-                }
-
-                if (!simulation_time_parameters.has_key("output_interval")) {
-                    missing_simulation_time_parameters.push_back("output_interval");
-                }
-
-                if (missing_simulation_time_parameters.size() > 0) {
-                    std::string message = "ERROR: A simulation time parameter cannot be created; the following parameters are missing: ";
-
-                    for (int missing_parameter_index = 0; missing_parameter_index < missing_simulation_time_parameters.size(); missing_parameter_index++) {
-                        message += missing_simulation_time_parameters[missing_parameter_index];
-
-                        if (missing_parameter_index < missing_simulation_time_parameters.size() - 1) {
-                            message += ", ";
-                        }
-                    }
-                    
-                    throw std::runtime_error(message);
-                }
-
-                simulation_time_params simulation_time_config(
-                    simulation_time_parameters.at("start_time").as_string(),
-                    simulation_time_parameters.at("end_time").as_string(),
-                    simulation_time_parameters.at("output_interval").as_natural_number()
-                );
-
+                config::Time time = config::Time(*possible_simulation_time);
+                auto simulation_time_config = time.make_params();
                 /**
                  * Call constructor to construct a Simulation_Time object
-                 */ 
+                 */
+
                 this->Simulation_Time_Object = std::make_shared<Simulation_Time>(simulation_time_config);
 
                 /**
@@ -136,55 +91,61 @@ namespace realization {
 
                 // try to get the json node
                 auto layers_json_array = tree.get_child_optional("layers");
-
+                config::Layer layer;
+                // layer description struct
+                ngen::LayerDescription layer_desc;
+                layer_desc = layer.get_descriptor();
+                // add the default surface layer to storage
+                layer_storage.put_layer(layer_desc, layer_desc.id);
                 // check to see if the node existed
-                if (!layers_json_array) {
-                    // layer description struct
-                        ngen::LayerDescription layer_desc;
-
-                        // extract and store layer data from the json
-                        layer_desc.name = "surface layer";
-                        layer_desc.id = 0;
-                        layer_desc.time_step = 3600;
-                        layer_desc.time_step_units = "s";
-
-                        // add the layer to storage
-                        layer_storage.put_layer(layer_desc, layer_desc.id);
-                }
-                else
-                {
+                // if (!layers_json_array) {
+                //     layer_desc = layer.get_descriptor();
+                //     // add the layer to storage
+                //     layer_storage.put_layer(layer_desc, layer_desc.id);
+                // }
+                // else
+                if(layers_json_array){
+                    std::cout<<"Parsing Layers as Array???\n";
+                    
                     for (std::pair<std::string, boost::property_tree::ptree> layer_config : *layers_json_array) 
                     {
-                        // layer description struct
-                        ngen::LayerDescription layer_desc;
-
-                        // extract and store layer data from the json
-                        layer_desc.name = layer_config.second.get<std::string>("name");
-                        layer_desc.id = layer_config.second.get<int>("id");
-                        layer_desc.time_step = layer_config.second.get<double>("time_step");
-                        boost::optional<std::string> layer_units = layer_config.second.get_optional<std::string>("time_step_units");
-                        if (*layer_units == "") layer_units = "s";
-                        layer_desc.time_step_units = *layer_units;
-
-                        // check to see if this layer was allready defined
-                        if (layer_storage.exists(layer_desc.id) )
-                        {
-                            std::string message = "A layer with id = ";
-                            message += std::to_string(layer_desc.id);
-                            message += " was defined more than once";
-
-                            std::runtime_error r_error(message);
-                            
-                            throw r_error;
-                        }
-
+                        layer = config::Layer(layer_config.second);
+                        layer_desc = layer.get_descriptor();
+                        std::cout<<"key: "<<layer_config.first<<std::endl;
                         // add the layer to storage
                         layer_storage.put_layer(layer_desc, layer_desc.id);
-
                         // debuggin print to see parsed data
                         std::cout << layer_desc.name << ", " << layer_desc.id << ", " << layer_desc.time_step << ", " << layer_desc.time_step_units << "\n";
+                        if(layer.has_formulation() && layer.get_domain()=="catchments"){
+                            std::cout<<"Construct the layer model forulation!\n";
+                            auto formulation = construct_formulation_from_tree(simulation_time_config,
+                            "layer-"+std::to_string(layer_desc.id),
+                            layer_config.second, //FIXME this isn't even used in the func anymore
+                            layer.formulation,
+                            output_stream
+                            );
+                            double c_value = UnitsHelper::get_converted_value(layer_desc.time_step_units,layer_desc.time_step,"s");
+                            // make a new simulation time object with a different output interval
+                            Simulation_Time sim_time(*Simulation_Time_Object, c_value);
+                            //formulation->set_output_stream(get_output_root() + layer_desc.name + "_layer_"+std::to_string(layer_desc.id) + ".csv");
+                            domain_formulations.emplace(
+                                layer_desc.id,
+                                construct_formulation_from_tree(simulation_time_config,
+                                "layer-"+std::to_string(layer_desc.id),
+                                layer_config.second, //FIXME this isn't even used in the func anymore
+                                layer.formulation,
+                                output_stream
+                                )
+                            );
+                            domain_formulations.at(layer_desc.id)->set_output_stream(get_output_root() + layer_desc.name + "_layer_"+std::to_string(layer_desc.id) + ".csv");
+                        }
+
+                        //TODO for each layer, create deferred providers for use by other layers
+                        //VERY SIMILAR TO NESTED MODULE INIT
                     }
                 }
+
+                //TODO use the set of layer providers as input for catchments to lookup from
 
                 /**
                  * Read routing configurations from configuration file
@@ -195,11 +156,7 @@ namespace realization {
                     //Since it is possible to build NGEN without routing support, if we see it in the config
                     //but it isn't enabled in the build, we should at least put up a warning
                 #ifdef NGEN_ROUTING_ACTIVE
-                    geojson::JSONProperty routing_parameters("routing", *possible_routing_configs);
-                    
-                    this->routing_config = std::make_shared<routing_params>(
-                        routing_parameters.at("t_route_config_file_with_path").as_string()
-                    );
+                    this->routing_config = (config::Routing(*possible_routing_configs)).params;
                     using_routing = true;
                 #else
                     using_routing = false;
@@ -207,7 +164,7 @@ namespace realization {
                              <<", but routing support isn't enabled. No routing will occur."<<std::endl;
                 #endif //NGEN_ROUTING_ACTIVE
                  }
-
+                
                 /**
                  * Read catchment configurations from configuration file
                  */      
@@ -225,46 +182,52 @@ namespace realization {
                           #endif
                           continue;
                       }
+                      realization::config::Formulation_Config catchment_formulation(catchment_config.second);
 
-                      decltype(auto) formulations = catchment_config.second.get_child_optional("formulations");
-                      if( !formulations ) {
+                      if(!catchment_formulation.has_formulation()){
                         throw std::runtime_error("ERROR: No formulations defined for "+catchment_config.first+".");
                       }
-
                       // Parse catchment-specific model_params
                       auto catchment_feature = fabric->get_feature(catchment_index);
 
-                      for (auto &formulation: *formulations) {
+                     // for (auto &formulation: catchment_formulation.formulation_tree) {
                           // Handle single-bmi
-                          decltype(auto) model_params = formulation.second.get_child_optional("params.model_params");
-                          if (model_params) {
-                              parse_external_model_params(*model_params, catchment_feature);
-                          }
-
+                        //   decltype(auto) model_params = formulation.second.get_child_optional("params.model_params");
+                        //   if (model_params) {
+                        //       parse_external_model_params(*model_params, catchment_feature);
+                        //   }
+                        // if( catchment_formulation.formulation.parameters.count("model_params") > 0){
+                        //     parse_external_model_params(catchment_formulation.formulation.parameters, catchment_feature);
+                        // }
                           // Handle multi-bmi
                           // FIXME: this will not handle doubly nested multi-BMI configs,
                           //        might need a recursive helper here?
-                          decltype(auto) nested_modules = formulation.second.get_child_optional("params.modules");
-                          if (nested_modules) {
-                            for (decltype(auto) nested_formulation : *nested_modules) {
-                                decltype(auto) nested_model_params = nested_formulation.second.get_child_optional("params.model_params");
-                                if (nested_model_params) {
-                                    parse_external_model_params(*nested_model_params, catchment_feature);
-                                }
-                            }
-                          }
-                        
+                        //   decltype(auto) nested_modules = formulation.second.get_child_optional("params.modules");
+                        //   if (nested_modules) {
+                        //     for (decltype(auto) nested_formulation : *nested_modules) {
+                        //         decltype(auto) nested_model_params = nested_formulation.second.get_child_optional("params.model_params");
+                        //         if (nested_model_params) {
+                        //             parse_external_model_params(*nested_model_params, catchment_feature);
+                        //         }
+                        //     }
+                        //   }
+                        //for(auto& formulation : catchment_formulation.formulation.nested){
+                            //auto params = formulation.get_values();
+                         //   parse_external_model_params(formulation.parameters, catchment_feature);
+                        //}
+                        std::cout<<"READ: Link External\n";
+                        catchment_formulation.formulation.link_external(catchment_feature);
                           this->add_formulation(
                               this->construct_formulation_from_tree(
                                   simulation_time_config,
                                   catchment_config.first,
                                   catchment_config.second,
-                                  formulation.second,
+                                  catchment_formulation,
                                   output_stream
                               )
                           );
-                          break; //only construct one for now FIXME
-                        } //end for formulaitons
+                        //  break; //only construct one for now FIXME
+                       // } //end for formulaitons
                       }//end for catchments
 
 
@@ -286,6 +249,14 @@ namespace realization {
             virtual std::shared_ptr<Catchment_Formulation> get_formulation(std::string id) const {
                 // TODO: Implement on-the-fly formulation creation using global parameters
                 return this->formulations.at(id);
+            }
+
+            virtual std::shared_ptr<Catchment_Formulation> get_domain_formulation(long id) const {
+                return this->domain_formulations.at(id);
+            }
+
+            virtual bool has_domain_formulation(long id) const {
+                return this->domain_formulations.count( id ) > 0;
             }
 
             virtual bool contains(std::string identifier) const {
@@ -371,31 +342,27 @@ namespace realization {
                 simulation_time_params &simulation_time_config,
                 std::string identifier,
                 boost::property_tree::ptree &tree,
-                const boost::property_tree::ptree &formulation,
+                //const boost::property_tree::ptree &formulation,
+                const realization::config::Formulation_Config& catchment_formulation,
                 utils::StreamHandler output_stream
             ) {
-                auto params = formulation.get_child("params");
-                std::string formulation_type_key;
-                try {
-                    formulation_type_key = get_formulation_key(formulation);
+                //Formulation_Config catchment_formulation(tree);
+                std::cout<<"FS: "<<catchment_formulation.formulation.type<<"\n";
+                if(!formulation_exists(catchment_formulation.formulation.type)){
+                    throw std::runtime_error("Catchment " + identifier + " failed initialization: " + 
+                            catchment_formulation.formulation.type + "is not a valid formulation. Options are: "+valid_formulation_keys());
                 }
-                catch(std::exception& e) {
-                    throw std::runtime_error("Catchment " + identifier + " failed initialization: " + e.what());
-                }
-
-                boost::property_tree::ptree formulation_config = formulation.get_child("params");
-
-                auto possible_forcing = tree.get_child_optional("forcing");
-
-                if (!possible_forcing) {
+                // for(const auto & kv : formulation)
+                //     std::cout<<"FUBAR: "<<kv.first<<"\n";
+                // boost::property_tree::ptree formulation_config = formulation.get_child("params");
+                
+                if(catchment_formulation.forcing.parameters.empty()){
                     throw std::runtime_error("No forcing definition was found for " + identifier);
                 }
 
-                geojson::JSONProperty forcing_parameters("forcing", *possible_forcing);
-
                 std::vector<std::string> missing_parameters;
                 
-                if (!forcing_parameters.has_key("path")) {
+                if (!catchment_formulation.forcing.has_key("path")) {
                     missing_parameters.push_back("path");
                 }
 
@@ -413,71 +380,93 @@ namespace realization {
                     throw std::runtime_error(message);
                 }
 
-                geojson::PropertyMap local_forcing;
-                for (auto &forcing_parameter : *possible_forcing) {
-                    local_forcing.emplace(
-                        forcing_parameter.first,
-                        geojson::JSONProperty(forcing_parameter.first, forcing_parameter.second)
-                    );
-                }
-
-                forcing_params forcing_config = this->get_forcing_params(local_forcing, identifier, simulation_time_config);
-
-                std::shared_ptr<Catchment_Formulation> constructed_formulation = construct_formulation(formulation_type_key, identifier, forcing_config, output_stream);
+                forcing_params forcing_config = this->get_forcing_params(catchment_formulation.forcing.parameters, identifier, simulation_time_config);
+                std::cout<<"HERERE: "<<catchment_formulation.formulation.type<<"\n";
+                std::shared_ptr<Catchment_Formulation> constructed_formulation = construct_formulation(catchment_formulation.formulation.type, identifier, forcing_config, output_stream);
                 //, geometry);
-                constructed_formulation->create_formulation(formulation_config, &global_formulation_parameters);
+
+                constructed_formulation->create_formulation(catchment_formulation.formulation.parameters);
+                std::cout<<"CREATED FROM TREE\n";
                 return constructed_formulation;
             }
 
             std::shared_ptr<Catchment_Formulation> construct_missing_formulation(geojson::Feature& feature, utils::StreamHandler output_stream, simulation_time_params &simulation_time_config){
                 const std::string identifier = feature->get_id();
         
-                std::string formulation_type_key = get_formulation_key(global_formulation_tree.get_child("formulations.."));
-
-                forcing_params forcing_config = this->get_forcing_params(this->global_forcing, identifier, simulation_time_config);
-
-                std::shared_ptr<Catchment_Formulation> missing_formulation = construct_formulation(formulation_type_key, identifier, forcing_config, output_stream);
+                //std::string formulation_type_key = get_formulation_key(global_config.formulation_tree);
+                std::cout<<"GETTING GLOBAL FORCING PARAMS\n";
+                auto fubar = global_config.formulation_tree.get_child("forcing");//(global_config.forcing.parameters)
+                geojson::PropertyMap parameters;
+                for (auto &forcing_parameter : fubar) {
+                    parameters.emplace(
+                        forcing_parameter.first,
+                        geojson::JSONProperty(forcing_parameter.first, forcing_parameter.second)
+                    );  
+                }   
+                forcing_params forcing_config = this->get_forcing_params(parameters, identifier, simulation_time_config);
+                std::cout<<"DOING STUFF\n";
+                std::shared_ptr<Catchment_Formulation> missing_formulation = construct_formulation(global_config.formulation.type, identifier, forcing_config, output_stream);
                 // Need to work with a copy, since it is altered in-place
-                geojson::PropertyMap global_properties_copy = global_formulation_parameters;
-                Catchment_Formulation::config_pattern_substitution(global_properties_copy,
+                //geojson::PropertyMap global_properties_copy = global_config.formulation.parameters;
+                
+                // FIXME something isn't getting parsed here correct run the nom_Grid example realization and you can see
+                // only sloth is created/called!!!!!!
+
+                realization::config::Formulation_Config global_copy = global_config;
+                Catchment_Formulation::config_pattern_substitution(global_copy.formulation.parameters,
                                                                    BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG, "{{id}}",
                                                                    identifier);
-                                                            
+                //for(auto& formulation : global_copy.formulation.nested){
+                    // Catchment_Formulation::config_pattern_substitution(formulation.parameters,
+                    //                                                BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG, "{{id}}",
+                    //                                                identifier);
+                //}                                           
                 // parse any external model parameters in this config
 
-                // handle single-bmi
-                if (global_properties_copy.count("model_params") > 0) {
-                    decltype(auto) model_params = global_properties_copy.at("model_params");
-                    geojson::PropertyMap model_params_copy = model_params.get_values();
-                    parse_external_model_params(model_params_copy, feature);
-                    global_properties_copy.at("model_params") = geojson::JSONProperty("model_params", model_params_copy);
-                }
+                // // handle single-bmi
+                // if (global_properties_copy.count("model_params") > 0) {
+                //     decltype(auto) model_params = global_properties_copy.at("model_params");
+                //     geojson::PropertyMap model_params_copy = model_params.get_values();
+                //     parse_external_model_params(model_params_copy, feature);
+                //     global_properties_copy.at("model_params") = geojson::JSONProperty("model_params", model_params_copy);
+                // }
 
-                // handle multi-bmi
-                // FIXME: this seems inefficient -- is there a better way?
-                if (global_properties_copy.count("modules") > 0) {
-                    decltype(auto) nested_modules = global_properties_copy.at("modules").as_list();
-                    for (auto& bmi_module : nested_modules) {
-                        geojson::PropertyMap module_def = bmi_module.get_values();
-                        geojson::PropertyMap module_params = module_def.at("params").get_values();
-                        if (module_params.count("model_params") > 0) {
-                            decltype(auto) model_params = module_params.at("model_params");
-                            geojson::PropertyMap model_params_copy = model_params.get_values();
-                            parse_external_model_params(model_params_copy, feature);
-                            module_params.at("model_params") = geojson::JSONProperty("model_params", model_params_copy);
-                        }
-                        module_def.at("params") = geojson::JSONProperty("params", module_params);
-                        bmi_module = geojson::JSONProperty("", module_def);
-                    }
-                    global_properties_copy.at("modules") = geojson::JSONProperty("", nested_modules);
-                }
-        
-                missing_formulation->create_formulation(global_properties_copy);
+                // // handle multi-bmi
+                // // FIXME: this seems inefficient -- is there a better way?
+                // if (global_properties_copy.count("modules") > 0) {
+                //     decltype(auto) nested_modules = global_properties_copy.at("modules").as_list();
+                //     for (auto& bmi_module : nested_modules) {
+                //         geojson::PropertyMap module_def = bmi_module.get_values();
+                //         geojson::PropertyMap module_params = module_def.at("params").get_values();
+                //         if (module_params.count("model_params") > 0) {
+                //             decltype(auto) model_params = module_params.at("model_params");
+                //             geojson::PropertyMap model_params_copy = model_params.get_values();
+                //             parse_external_model_params(model_params_copy, feature);
+                //             module_params.at("model_params") = geojson::JSONProperty("model_params", model_params_copy);
+                //         }
+                //         module_def.at("params") = geojson::JSONProperty("params", module_params);
+                //         bmi_module = geojson::JSONProperty("", module_def);
+                //     }
+                //     global_properties_copy.at("modules") = geojson::JSONProperty("", nested_modules);
+                // }
+                
+                // if( global_copy.formulation.parameters.count("model_params") > 0){
+                //     parse_external_model_params(global_copy.formulation.parameters, feature);
+                // }
+                // for(auto& formulation : global_copy.formulation.nested){
+                //     //auto params = formulation.get_values();
+                //     parse_external_model_params(formulation.parameters, feature);
+                // }
+                // geojson::JSONProperty::print_property(global_config.formulation.parameters.at("modules"));
+                global_config.formulation.link_external(feature);
+                // geojson::JSONProperty::print_property(global_config.formulation.parameters.at("modules"));
+                missing_formulation->create_formulation(global_config.formulation.parameters);
+
                 return missing_formulation;
             }
 
-            forcing_params get_forcing_params(geojson::PropertyMap &forcing_prop_map, std::string identifier, simulation_time_params &simulation_time_config) {
-                std::string path;
+            forcing_params get_forcing_params(const geojson::PropertyMap &forcing_prop_map, std::string identifier, simulation_time_params &simulation_time_config) {
+                std::string path = "";
                 if(forcing_prop_map.count("path") != 0){
                     path = forcing_prop_map.at("path").as_string();
                 }
@@ -505,7 +494,7 @@ namespace realization {
                 }
 
                 std::string filepattern = forcing_prop_map.at("file_pattern").as_string();
-
+                std::cout<<"FSFSFS: "<<filepattern<<"\n";
                 int id_index = filepattern.find("{{id}}");
 
                 // If an index for '{{id}}' was found, we can count on that being where the id for this realization can be found.
@@ -514,7 +503,7 @@ namespace realization {
                 if (id_index != std::string::npos) {
                     filepattern = filepattern.replace(id_index, sizeof("{{id}}") - 1, identifier);
                 }
-
+                std::cout<<"PATTERN: "<<filepattern<<"\n";
                 // Create a regular expression used to identify proper file names
                 std::regex pattern(filepattern);
 
@@ -742,13 +731,12 @@ namespace realization {
 
             boost::property_tree::ptree tree;
 
-            boost::property_tree::ptree global_formulation_tree;
-
-            geojson::PropertyMap global_formulation_parameters;
-
-            geojson::PropertyMap global_forcing;
+            realization::config::Formulation_Config global_config;
 
             std::map<std::string, std::shared_ptr<Catchment_Formulation>> formulations;
+
+            //Store global layer formulation pointers
+            std::map<int, std::shared_ptr<Catchment_Formulation> > domain_formulations;
 
             std::shared_ptr<routing_params> routing_config;
 

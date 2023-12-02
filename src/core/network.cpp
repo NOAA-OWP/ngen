@@ -3,6 +3,8 @@
 #include <stdexcept>
 #include <boost/graph/reverse_graph.hpp>
 #include <boost/graph/graph_utility.hpp>
+#include <boost/graph/undirected_dfs.hpp>
+#include<boost/graph/properties.hpp>
 
 using namespace network;
 
@@ -95,7 +97,12 @@ void Network::init_indicies(){
       //std::cout<<"TW: "<<*it<<std::endl;
     }
   }
-
+  detect_loops vis;
+  boost::undirected_dfs(this->graph, vis, make_assoc_property_map(vis.vertex_coloring), make_assoc_property_map(vis.edge_coloring));
+  for(auto p : vis.cycles){
+    std::cout<<get_id(p.first)<<" -- "<<get_id(p.second) <<"\n";
+  }
+  
   boost::topological_sort(this->graph, std::back_inserter(this->topo_order),
                    boost::vertex_index_map(get(boost::vertex_index, this->graph)));
 }

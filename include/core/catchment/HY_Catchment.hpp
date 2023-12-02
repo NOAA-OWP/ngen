@@ -7,6 +7,7 @@
 
 #include "HY_CatchmentRealization.hpp"
 #include "HY_HydroFeature.hpp"
+#include "Formulation.hpp"
 
 class HY_HydroNexus;
 
@@ -21,6 +22,7 @@ class HY_Catchment : public HY_HydroFeature
     public:
 
     HY_Catchment();
+    // HY_Catchment(std::string id, Nexuses inflows, Nexuses outflows, std::shared_ptr<realization::Formulation> realization, long lyr = 0):
     HY_Catchment(std::string id, Nexuses inflows, Nexuses outflows, std::shared_ptr<HY_CatchmentRealization> realization, long lyr = 0):
     id(std::move(id)),
     inflows(std::move(inflows)),
@@ -34,6 +36,7 @@ class HY_Catchment : public HY_HydroFeature
     layer(lyr){}
     virtual ~HY_Catchment();
     const Nexuses& get_outflow_nexuses(){ return outflows; }
+    // std::shared_ptr<realization::Formulation> realization;
     std::shared_ptr<HY_CatchmentRealization> realization;
 
     /*! \brief get the hydrofabric layer of this catchment

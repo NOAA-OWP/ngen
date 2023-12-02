@@ -5,7 +5,7 @@
 #include <map>
 #include <vector>
 #include <iostream>
-
+#include <iomanip>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/variant.hpp>
@@ -388,6 +388,10 @@ namespace geojson {
                 }
             }
 
+            JSONProperty(const std::string& value_key, const JSONProperty&original):JSONProperty(original){
+                key = value_key;
+            }
+
             /**
              * A basic destructor
              */
@@ -417,6 +421,46 @@ namespace geojson {
                     values(value)
             {   
                 data = Object( &values );
+            }
+
+            static void print_property(const geojson::JSONProperty& p, int tab=0){
+                
+                switch( p.get_type() ){
+                    case geojson::PropertyType::String:
+                        std::cout<<p.as_string()<<"\n";
+                        break;
+                    case geojson::PropertyType::Real:
+                        std::cout<<p.as_real_number()<<"\n";
+                        break;
+                    case geojson::PropertyType::Natural:
+                        std::cout<<p.as_natural_number()<<"\n";
+                        break;
+                    case geojson::PropertyType::Boolean:
+                        if(p.as_boolean())
+                            std::cout<<"true"<<"\n";
+                        else
+                            std::cout<<"false"<<"\n";
+                        break;   
+                    case geojson::PropertyType::List:
+                        std::cout<<std::setw(tab)<<"[ ";
+                        for( const auto& lp : p.as_list() ){
+                            print_property(lp, tab);
+                            std::cout<<", ";
+                        }
+                        std::cout<<" ]\n";
+                        break;
+                    case geojson::PropertyType::Object:
+                        tab += 5;
+                        std::cout<<"\n"<<std::setw(tab)<<"{\n";
+                        tab += 5;
+                        for( auto pair : p.get_values() ){
+                            std::cout<<std::setw(tab + pair.first.length())<<pair.first<<" : ";
+                            print_property(pair.second, tab);
+                        }
+                        tab -= 5;
+                        std::cout<<std::setw(tab)<<"}\n";
+                        tab -= 5;
+                };
             }
 
             /**

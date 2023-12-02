@@ -9,9 +9,11 @@
 
 namespace realization {
 
+    // class Catchment_Formulation : public Formulation {
     class Catchment_Formulation : public Formulation, public HY_CatchmentArea {
         public:
             Catchment_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing, utils::StreamHandler output_stream)
+                // : Formulation(id) { 
                 : Formulation(id), HY_CatchmentArea(forcing, output_stream) { 
                     // Assume the catchment ID is equal to or embedded in the formulation `id`
                     size_t idx = id.find(".");
@@ -92,11 +94,11 @@ namespace realization {
             virtual ~Catchment_Formulation(){};
 
     protected:
-        std::string get_catchment_id() override {
+        std::string get_catchment_id() {
             return this->cat_id;
         }
 
-        void set_catchment_id(std::string cat_id) override {
+        void set_catchment_id(std::string cat_id) {
             this->cat_id = cat_id;
         }
 

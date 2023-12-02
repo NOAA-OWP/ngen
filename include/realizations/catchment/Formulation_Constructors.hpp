@@ -45,6 +45,14 @@ namespace realization {
 #endif // ACTIVATE_PYTHON
     };
 
+    static std::string valid_formulation_keys(){
+        std::string keys = "";
+        for(const auto& kv : formulations){
+            keys.append(kv.first+" ");
+        }
+        return keys;
+    }
+
     static bool formulation_exists(std::string formulation_type) {
         return formulations.count(formulation_type) > 0;
     }
@@ -55,6 +63,7 @@ namespace realization {
         forcing_params &forcing_config,
         utils::StreamHandler output_stream
     ) {
+        std::cout<<"FORMULATION: "<<formulation_type<<std::endl;
         constructor formulation_constructor = formulations.at(formulation_type);
         std::shared_ptr<data_access::GenericDataProvider> fp;
         if (forcing_config.provider == "CsvPerFeature" || forcing_config.provider == ""){
@@ -83,13 +92,16 @@ namespace realization {
                 return node.first;
             }
         }*/
+        std::cout<<"Getting optional name\n";
         boost::optional<std::string> key = tree.get_optional<std::string>("name");
+        std::cout<<"Got name??? "<<key.is_initialized()<<", "<<*key<<"\n";
         if(key && formulation_exists(*key)){
           return *key;
         }
 
         throw std::runtime_error("No valid formulation for " + *key + " was described in the passed in tree.");
     }
+
 }
 
 #endif // NGEN_FORMULATION_CONSTRUCTORS_H

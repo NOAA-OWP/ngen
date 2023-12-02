@@ -53,7 +53,7 @@ bool JSONProperty::as_boolean() const {
 
 std::vector<JSONProperty> JSONProperty::as_list() const {
     std::vector<JSONProperty> copy;
-
+    std::cout<<"TRYING AS LIST\n";
     if (type == PropertyType::List) {
        for( auto & val : value_list){
             copy.push_back(JSONProperty(val));
@@ -61,6 +61,7 @@ std::vector<JSONProperty> JSONProperty::as_list() const {
        return copy;
     }
     else if (type != PropertyType::Object) {
+        std::cout<<"as_list object\n";
         copy.push_back(JSONProperty(*this));
         return copy;
     }

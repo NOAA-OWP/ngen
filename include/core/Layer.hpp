@@ -40,6 +40,19 @@ namespace ngen
 
         }
 
+        Layer(
+                const LayerDescription& desc, 
+                const Simulation_Time& s_t, 
+                feature_type& f,
+                long idx) :
+            description(desc),
+            simulation_time(s_t),
+            features(f),
+            output_time_index(idx)
+        {
+
+        }
+
         virtual ~Layer() {}
 
         /***

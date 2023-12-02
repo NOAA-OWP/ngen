@@ -8,6 +8,7 @@
 using namespace realization;
 
 void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap properties, bool needs_param_validation) {
+    std::cout<<"CREATING MULTI\n";
     if (needs_param_validation) {
         validate_parameters(properties);
     }
@@ -33,7 +34,9 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
 
     // TODO: go back and set this up properly in required params collection
     auto nested_module_configs_it = properties.find(BMI_REALIZATION_CFG_PARAM_REQ__MODULES);
+    std::cout<<"GOT SMOE VARS\n";
     std::vector<geojson::JSONProperty> nested_module_configs = nested_module_configs_it->second.as_list();
+    std::cout<<"FS LIST\n";
     // By default, have the "primary" module be the last
     primary_module_index = nested_module_configs.size() - 1;
     modules = std::vector<nested_module_ptr>(nested_module_configs.size());
@@ -43,6 +46,7 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
     /* ************************ Begin outer loop: "for sub_formulations_list" ************************ */
     for (size_t i = 0; i < nested_module_configs.size(); ++i) {
         geojson::JSONProperty formulation_config = nested_module_configs[i];
+            std::cout<<"I DONT KNOW ANYMORE\n";
         std::string type_name = formulation_config.at("name").as_string();
         std::string identifier = get_catchment_id() + "." + std::to_string(i);
         nested_module_ptr module = nullptr;

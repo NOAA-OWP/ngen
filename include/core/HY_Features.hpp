@@ -79,6 +79,7 @@ namespace hy_features {
          * @param id 
          * @return std::shared_ptr<HY_CatchmentRealization> 
          */
+        // std::shared_ptr<realization::Formulation> catchment_at(std::string id)
         std::shared_ptr<HY_CatchmentRealization> catchment_at(std::string id)
         {
           if( _catchments.find(id) != _catchments.end() )

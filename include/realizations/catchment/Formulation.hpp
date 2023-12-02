@@ -8,7 +8,9 @@
 #include <vector>
 
 #include "JSONProperty.hpp"
-
+#include "StreamHandler.hpp"
+#include "FileStreamHandler.hpp"
+#include "GenericDataProvider.hpp"
 #include <boost/property_tree/ptree.hpp>
 #include <boost/algorithm/string.hpp>
 
@@ -95,6 +97,8 @@ namespace realization {
             virtual void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr) = 0;
             virtual void create_formulation(geojson::PropertyMap properties) = 0;
 
+            //void set_output_stream(std::string file_path){output = utils::FileStreamHandler(file_path.c_str());}
+            //void write_output(std::string out){ output<<out; }
         protected:
 
             virtual const std::vector<std::string>& get_required_parameters() = 0;
@@ -145,6 +149,8 @@ namespace realization {
             }
 
             std::string id;
+            // std::shared_ptr<data_access::GenericDataProvider> forcing;
+            // utils::StreamHandler output;
     };
 
 }
