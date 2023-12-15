@@ -35,6 +35,7 @@ struct boost_linestring final : public linestring
     const_reference front() const noexcept override;
     const_reference back() const noexcept override;
     void            swap(linestring& other) noexcept override;
+    void            clone(linestring& other) noexcept override;
 
   private:
     ::boost::geometry::model::linestring<boost_point> data_;

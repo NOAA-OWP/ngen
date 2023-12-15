@@ -62,10 +62,26 @@ void boost_linestring::swap(linestring& other) noexcept
 {
     linestring* ptr = &other;
 
-    auto ring = dynamic_cast<boost_linestring*>(ptr);
-    if (ring != nullptr) {
-        data_.swap(ring->data_);
+    auto line = dynamic_cast<boost_linestring*>(ptr);
+    if (line != nullptr) {
+        data_.swap(line->data_);
         return;
+    }
+}
+
+void boost_linestring::clone(linestring& other) noexcept
+{
+    linestring* ptr = &other;
+
+    auto line = dynamic_cast<boost_linestring*>(ptr);
+    if (line != nullptr) {
+        data_ = line->data_;
+    } else {
+        const auto size_ = ptr->size();
+        data_.resize(ptr->size());
+        for (size_type i = 0; i < size_; i++) {
+            set(i, ptr->get(i));
+        }
     }
 }
 

@@ -63,6 +63,10 @@ struct linestring : public virtual geometry
     //! @param other a linestring
     virtual void swap(linestring& other) noexcept = 0;
 
+    //! @brief Clone data from another linestring
+    //! @param other a linestring
+    virtual void clone(linestring& other) noexcept = 0;
+
     geometry_t type() noexcept override { return geometry_t::linestring; }
 };
 

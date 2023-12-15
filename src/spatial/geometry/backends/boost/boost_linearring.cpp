@@ -73,6 +73,22 @@ void boost_linearring::swap(linestring& other) noexcept
     }
 }
 
+void boost_linearring::clone(linestring& other) noexcept
+{
+    linestring* ptr = &other;
+
+    auto ring = dynamic_cast<boost_linearring*>(ptr);
+    if (ring != nullptr) {
+        data_ = ring->data_;
+    } else {
+        const auto size_ = ptr->size();
+        data_.resize(ptr->size());
+        for (size_type i = 0; i < size_; i++) {
+            set(i, ptr->get(i));
+        }
+    }
+}
+
 } // namespace backend
 } // namespace spatial
 } // namespace ngen

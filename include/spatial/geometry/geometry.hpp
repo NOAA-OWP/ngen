@@ -24,7 +24,7 @@ enum class geometry_t
 //! Provides a polymorphic interface to geometry types.
 struct geometry : public std::enable_shared_from_this<geometry>
 {
-    using size_type     = std::size_t;
+    using size_type = std::size_t;
 
     virtual ~geometry() = default;
 

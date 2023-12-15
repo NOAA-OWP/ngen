@@ -1,6 +1,7 @@
 #ifndef NGEN_UTILITIES_PROPERTY_HPP
 #define NGEN_UTILITIES_PROPERTY_HPP
 
+#include <algorithm>
 #include <unordered_map>
 #include <vector>
 #include <cstdint>
@@ -15,13 +16,15 @@ namespace ngen {
 
 namespace detail {
 
+//! Lambda-wrapper that is applicative as
+//! a boost::static_visitor.
 template<typename R, typename... Fs>
 struct functor;
 
 template<typename R, typename F, typename... Fs>
 struct functor<R, F, Fs...>
-    : public functor<R, Fs...>
-    , public F
+  : public functor<R, Fs...>
+  , public F
 {
     using typename boost::static_visitor<R>::result_type;
 
@@ -29,11 +32,15 @@ struct functor<R, F, Fs...>
     using functor<R, Fs...>::operator();
 
     explicit functor(F f, Fs... fs)
-      : F(f), functor<R, Fs...>(fs...){}
+      : F(f)
+      , functor<R, Fs...>(fs...)
+    {}
 };
 
 template<typename R, typename F>
-struct functor<R, F> : public boost::static_visitor<R>, public F
+struct functor<R, F>
+  : public boost::static_visitor<R>
+  , public F
 {
     using typename boost::static_visitor<R>::result_type;
 
@@ -55,7 +62,7 @@ struct functor<R> : public boost::static_visitor<R>
 template<typename R, typename... Fs>
 auto visitor(Fs&&... fs)
 {
-    return detail::functor<R, std::decay_t<Fs>...>{std::forward<Fs>(fs)...};
+    return detail::functor<R, std::decay_t<Fs>...>{ std::forward<Fs>(fs)... };
 }
 
 } // namespace detail
@@ -230,30 +237,31 @@ struct property_map
 };
 
 using property_types = traits::type_list<
-    boost::blank,
-    std::int64_t,
-    double,
-    bool,
-    std::string,
-    boost::recursive_wrapper<property_list>,
-    boost::recursive_wrapper<property_map>
->;
+  boost::blank,
+  std::int64_t,
+  double,
+  bool,
+  std::string,
+  boost::recursive_wrapper<property_list>,
+  boost::recursive_wrapper<property_map>>;
 
 struct property
 {
     using base_type = property_types::variant_scalar;
 
+    property()      = default;
+
     template<typename... Args>
     explicit property(Args&&... args)
       : data_(std::forward<Args>(args)...){};
 
-    template<typename Tp>
+    template<typename Tp, property_types::enable_if_supports<Tp, bool> = true>
     Tp& get()
     {
         return boost::get<Tp>(*this);
     }
 
-    template<typename Tp>
+    template<typename Tp, property_types::enable_if_supports<Tp, bool> = true>
     const Tp& get() const
     {
         return boost::get<Tp>(*this);
@@ -262,7 +270,9 @@ struct property
     template<typename R, typename... Fs>
     auto visit(Fs&&... visitors)
     {
-        return boost::apply_visitor(detail::visitor<R>(std::forward<Fs>(visitors)...), data_);
+        return boost::apply_visitor(
+          detail::visitor<R>(std::forward<Fs>(visitors)...), data_
+        );
     }
 
     template<typename R, typename... Fs>
@@ -273,15 +283,14 @@ struct property
 
     friend std::ostream& operator<<(std::ostream& stream, const property& p) {
         p.visit<void>(
-            [&](boost::blank){ stream << "<blank>"; },
-            [&](const auto& x){ stream << x; }
+          [&](boost::blank) { stream << "<blank>"; }, [&](const auto& x) { stream << x; }
         );
         return stream;
     }
 
   private:
     std::string key_;
-    base_type data_;
+    base_type   data_;
 };
 
 template<typename Tp>
