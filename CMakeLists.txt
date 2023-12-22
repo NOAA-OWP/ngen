@@ -50,6 +50,7 @@ option(NGEN_QUIET            "Silence output"                     OFF)
 # Syntax: cmake_dependent_option(<option> "<help_text>" <value> <depends> <force>)
 cmake_dependent_option(NGEN_WITH_ROUTING "Build with t-route integration" ON "NGEN_WITH_PYTHON" OFF)
 cmake_dependent_option(NGEN_UPDATE_GIT_SUBMODULES "Update submodules on configure" ON "GIT_FOUND;NGEN_HAS_GIT_DIR" OFF)
+cmake_dependent_option(NGEN_WITH_COVERAGE "Build with test coverage" ON "NGEN_WITH_TESTS" OFF)
 
 option(BMI_FORTRAN_ISO_C_LIB_DIR "Directory hint for middleware Fortran shared lib handling iso_c_binding" "${NGEN_ROOT_DIR}/extern/iso_c_fortran_bmi/cmake_build")
 option(BMI_FORTRAN_ISO_C_LIB_NAME "Name for middleware Fortran shared lib handling iso_c_binding" "iso_c_bmi")
@@ -85,6 +86,11 @@ if(PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME)
     set(NGEN_IS_MAIN_PROJECT ON)
 else()
     set(NGEN_IS_MAIN_PROJECT OFF)
+endif()
+
+if(NGEN_WITH_COVERAGE)
+    add_compile_options(--coverage -O0)
+    link_libraries(--coverage)
 endif()
 
 # -----------------------------------------------------------------------------
