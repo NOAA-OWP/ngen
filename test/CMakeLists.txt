@@ -45,6 +45,15 @@ if(NGEN_WITH_NETCDF)
     add_compile_definitions(NETCDF_ACTIVE)
 endif()
 
+# =============================================================================
+
+add_executable(test_all)
+target_link_libraries(test_all PRIVATE gtest gtest_main)
+set_target_properties(test_all PROPERTIES FOLDER test)
+target_include_directories(test_all PRIVATE ${CMAKE_CURRENT_LIST_DIR}/bmi)
+
+# =============================================================================
+
 #[==[
 ngen_add_test(<test name> OBJECTS <source>...
                           LIBRARIES <library>...
@@ -79,10 +88,8 @@ function(ngen_add_test TESTNAME)
 
     if(NGEN_TEST_CREATE)
         add_executable(${TESTNAME} ${NGEN_TEST_OBJECTS})
-        target_include_directories(${TESTNAME} PUBLIC
-            ${CMAKE_CURRENT_LIST_DIR}/bmi
-        )
-        target_link_libraries(${TESTNAME} PUBLIC gtest gtest_main ${NGEN_TEST_LIBRARIES})
+        target_include_directories(${TESTNAME} PRIVATE ${CMAKE_CURRENT_LIST_DIR}/bmi)
+        target_link_libraries(${TESTNAME} PRIVATE gtest gtest_main ${NGEN_TEST_LIBRARIES})
         set_target_properties(${TESTNAME} PROPERTIES FOLDER test)
         gtest_discover_tests(
             ${TESTNAME}
@@ -90,6 +97,11 @@ function(ngen_add_test TESTNAME)
             PROPERTIES
                 VS_DEBUGGER_WORKING_DIRECTORY "${PROJECT_DIR}"
         )
+
+        # ---------------------------------------------------------------------
+        target_sources(test_all PRIVATE ${NGEN_TEST_OBJECTS})
+        target_link_libraries(test_all PRIVATE ${NGEN_TEST_LIBRARIES})
+        # ---------------------------------------------------------------------
     endif()
 endfunction()
 
@@ -402,39 +414,38 @@ ngen_add_test(
         
 )
 
-# All automated tests
-ngen_add_test(
+# Discover for test_all
+gtest_discover_tests(
     test_all
-    OBJECTS
-        geojson/JSONProperty_Test.cpp
-        geojson/JSONGeometry_Test.cpp
-        geojson/Feature_Test.cpp
-        geojson/FeatureCollection_Test.cpp
-        forcing/CsvPerFeatureForcingProvider_Test.cpp
-        forcing/OptionalWrappedDataProvider_Test.cpp
-        forcing/NetCDFPerFeatureDataProvider_Test.cpp
-        simulation_time/Simulation_Time_Test.cpp
-        core/mediator/UnitsHelper_Tests.cpp
-        realizations/Formulation_Manager_Test.cpp
-        core/nexus/NexusTests.cpp
-        core/multilayer/MultiLayerParserTest.cpp
-        utils/Partition_Test.cpp
-        utils/mdarray_Test.cpp
-        utils/mdframe_Test.cpp
-        utils/mdframe_netcdf_Test.cpp
-        utils/mdframe_csv_Test.cpp
-        utils/logging_Test.cpp
-    LIBRARIES
-        NGen::core
-        gmock
-        NGen::core_nexus
-        NGen::core_mediator
-        NGen::forcing
-        NGen::geojson
-        NGen::realizations_catchment
-        NGen::mdarray
-        NGen::mdframe
-        NGen::logging
-        NGen::ngen_bmi
-        testbmicppmodel
+    WORKING_DIRECTORY ${PROJECT_DIR}
+    PROPERTIES
+        VS_DEBUGGER_WORKING_DIRECTORY "${PROJECT_DIR}"
 )
+
+if(NGEN_WITH_COVERAGE)
+    setup_target_for_coverage_gcovr_html(
+        NAME
+            ngen_coverage_html
+        EXECUTABLE
+            test/test_all
+        DEPENDENCIES
+            test_all
+        EXCLUDE
+            "${BOOST_ROOT}"
+            "${CMAKE_CURRENT_LIST_DIR}"
+            "${NGEN_EXT_DIR}"
+    )
+
+    setup_target_for_coverage_gcovr_xml(
+        NAME
+            ngen_coverage_xml
+        EXECUTABLE
+            test/test_all
+        DEPENDENCIES
+            test_all
+        EXCLUDE
+            "${BOOST_ROOT}"
+            "${CMAKE_CURRENT_LIST_DIR}"
+            "${NGEN_EXT_DIR}"
+    )
+endif()
