@@ -87,6 +87,11 @@
 #     - fix append_coverage_compiler_flags_to_target to correctly add flags
 #     - replace "-fprofile-arcs -ftest-coverage" with "--coverage" (equivalent)
 #
+# 2023-12-26, Justin Singh-Mohudpur (NOAA-OWP/ngen)
+#     - Remove lcov and fastcov functions for simplicity
+#     - Add support for llvm-cov with gcov emulation
+#     - Modify gcovr functions to allow generating coverage even if tests fail
+#
 # USAGE:
 #
 # 1. Copy this file into your cmake modules path.
@@ -142,18 +147,22 @@ option(CODE_COVERAGE_VERBOSE "Verbose information" FALSE)
 # Check prereqs
 find_program( GCOV_PATH gcov )
 find_program( LLVM_COV_PATH llvm-cov )
-find_program( LCOV_PATH  NAMES lcov lcov.bat lcov.exe lcov.perl)
-find_program( FASTCOV_PATH NAMES fastcov fastcov.py )
-find_program( GENHTML_PATH NAMES genhtml genhtml.perl genhtml.bat )
 find_program( GCOVR_PATH gcovr PATHS ${CMAKE_SOURCE_DIR}/scripts/test)
-find_program( CPPFILT_PATH NAMES c++filt )
-
-if(NOT GCOV_PATH OR NOT LLVM_COV_PATH)
-    message(FATAL_ERROR "gcov/llvm-cov not found! Aborting...")
-endif() # NOT GCOV_PATH
 
 if(${CMAKE_CXX_COMPILER_ID} MATCHES "LLVM|Clang")
+    # LLVM-based compiler is being used, so we need to set
+    # GCOV_PATH to be the LLVM_COV_PATH executable with gcov emulation
+    # i.e. `llvm-cov gcov`
+    if(NOT LLVM_COV_PATH)
+        message(FATAL_ERROR "llvm-cov not found! Aborting...")
+    endif()
     set(GCOV_PATH "${LLVM_COV_PATH} gcov")
+else()
+    # Current compiler is set to a non-LLVM compiler,
+    # so we assume it's GNU-based, and requires `gcov`.
+    if(NOT GCOV_PATH)
+        message(FATAL_ERROR "gcov not found! Aborting...")
+    endif()
 endif()
 
 # Check supported compiler (Clang, GNU and Flang)
@@ -169,7 +178,7 @@ foreach(LANG ${LANGUAGES})
   endif()
 endforeach()
 
-set(COVERAGE_COMPILER_FLAGS "-g --coverage -O0"
+set(COVERAGE_COMPILER_FLAGS "--coverage -Og"
     CACHE INTERNAL "")
 if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
     include(CheckCXXCompilerFlag)
@@ -291,7 +300,6 @@ function(setup_target_for_coverage_gcovr_xml)
     endif()
 
     add_custom_target(${Coverage_NAME}
-        COMMAND ${GCOVR_XML_EXEC_TESTS_CMD}
         COMMAND ${GCOVR_XML_CMD}
 
         BYPRODUCTS ${Coverage_NAME}.xml
@@ -299,6 +307,17 @@ function(setup_target_for_coverage_gcovr_xml)
         DEPENDS ${Coverage_DEPENDENCIES}
         VERBATIM # Protect arguments to commands
         COMMENT "Running gcovr to produce Cobertura code coverage report."
+    )
+
+    # Run executable separately so we can ignore errors
+    add_custom_command(
+        TARGET ${Coverage_NAME} PRE_BUILD
+
+        COMMAND ${GCOVR_XML_EXEC_TESTS_CMD} || exit 0
+
+        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+        DEPENDS ${Coverage_DEPENDENCIES}
+        COMMENT "Running test executable."
     )
 
     # Show info where to find the report
@@ -391,7 +410,6 @@ function(setup_target_for_coverage_gcovr_html)
     endif()
 
     add_custom_target(${Coverage_NAME}
-        COMMAND ${GCOVR_HTML_EXEC_TESTS_CMD}
         COMMAND ${GCOVR_HTML_FOLDER_CMD}
         COMMAND ${GCOVR_HTML_CMD}
 
@@ -400,6 +418,17 @@ function(setup_target_for_coverage_gcovr_html)
         DEPENDS ${Coverage_DEPENDENCIES}
         VERBATIM # Protect arguments to commands
         COMMENT "Running gcovr to produce HTML code coverage report."
+    )
+
+    # Run executable separately so we can ignore errors
+    add_custom_command(
+        TARGET ${Coverage_NAME} PRE_BUILD
+
+        COMMAND ${GCOVR_HTML_EXEC_TESTS_CMD} || exit 0
+
+        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+        DEPENDS ${Coverage_DEPENDENCIES}
+        COMMENT "Running test executable."
     )
 
     # Show info where to find the report
