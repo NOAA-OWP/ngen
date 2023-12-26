@@ -91,6 +91,7 @@
 #     - Remove lcov and fastcov functions for simplicity
 #     - Add support for llvm-cov with gcov emulation
 #     - Modify gcovr functions to allow generating coverage even if tests fail
+#     - Modify coverage compiler flags from -O0 to -Og
 #
 # USAGE:
 #
