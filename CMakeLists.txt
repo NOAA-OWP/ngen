@@ -88,8 +88,12 @@ else()
     set(NGEN_IS_MAIN_PROJECT OFF)
 endif()
 
+# -----------------------------------------------------------------------------
+# If Coverage is enabled, include coverage module and
+# set compiler flags/linkage to accomodate coverage.
 if(NGEN_WITH_COVERAGE)
-    add_compile_options(--coverage -O0)
+    include(CodeCoverage)
+    append_coverage_compiler_flags()
     link_libraries(--coverage)
 endif()
 
