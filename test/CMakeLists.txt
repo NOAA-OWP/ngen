@@ -7,6 +7,16 @@ git_update_submodule(${NGEN_EXT_DIR}/bmi-cxx)
 add_subdirectory(${TEST_BMI_CPP_DIR} ${TEST_BMI_CPP_DIR}/cmake_build)
 add_dependencies(ngen testbmicppmodel)
 
+# =============================================================================
+
+# Create a symlink between the root data directory in the source tree and the build tree
+file(CREATE_LINK "${NGEN_ROOT_DIR}/data" "${PROJECT_BINARY_DIR}/data" SYMBOLIC)
+
+# Create a symlink between the test data directory in the source tree and the build tree
+file(CREATE_LINK "${CMAKE_CURRENT_LIST_DIR}/data" "${PROJECT_BINARY_DIR}/test/data" SYMBOLIC)
+
+# =============================================================================
+
 if (NGEN_WITH_PYTHON)
     add_compile_definitions(NGEN_BMI_PY_TESTS_ACTIVE)
 endif()
