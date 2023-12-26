@@ -436,6 +436,12 @@ if(NGEN_WITH_COVERAGE)
             "${NGEN_EXT_DIR}"
     )
 
+    add_custom_command(
+        TARGET ngen_coverage_html
+        PRE_BUILD
+        COMMAND 
+    )
+
     setup_target_for_coverage_gcovr_xml(
         NAME
             ngen_coverage_xml
