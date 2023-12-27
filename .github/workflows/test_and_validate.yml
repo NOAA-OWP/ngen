@@ -290,8 +290,8 @@ jobs:
       - name: run_bmi_python_tests
         run: |
           . .venv/bin/activate
-          cd ./cmake_build/test/
-          ./test_bmi_python
+          cd ./cmake_build/
+          ./test/test_bmi_python
           cd ../../
         timeout-minutes: 15
 
