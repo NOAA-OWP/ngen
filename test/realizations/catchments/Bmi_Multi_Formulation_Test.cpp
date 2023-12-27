@@ -467,8 +467,8 @@ std::shared_ptr<InterpreterUtil> Bmi_Multi_Formulation_Test::interperter = Inter
 
 void Bmi_Multi_Formulation_Test::SetUpTestSuite() {
     #ifdef ACTIVATE_PYTHON
-    std::string repo_root = py_find_repo_root();
-    std::string module_directory = repo_root + "/extern/";
+    // std::string repo_root = py_find_repo_root();
+    std::string module_directory = "./extern/";
 
     // Add the extern dir with our test lib to Python system path
     InterpreterUtil::addToPyPath(module_directory);
