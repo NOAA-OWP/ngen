@@ -92,6 +92,11 @@
 #     - Add support for llvm-cov with gcov emulation
 #     - Modify gcovr functions to allow generating coverage even if tests fail
 #     - Modify coverage compiler flags from -O0 to -Og
+#     - Modify append compiler flags function to use CMake functions rather than
+#       modifying variables.
+#     - Include -fdiagnostics-absolute-paths/-fprofile-abs-path in coverage flags
+#       depending on compiler.
+#     - Removed language-specific compiler flags.
 #
 # USAGE:
 #
@@ -178,48 +183,6 @@ foreach(LANG ${LANGUAGES})
     message(FATAL_ERROR "Compiler is not GNU or LLVM! Aborting...")
   endif()
 endforeach()
-
-set(COVERAGE_COMPILER_FLAGS "--coverage -Og"
-    CACHE INTERNAL "")
-if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
-    include(CheckCXXCompilerFlag)
-    check_cxx_compiler_flag(-fprofile-abs-path HAVE_cxx_fprofile_abs_path)
-    if(HAVE_cxx_fprofile_abs_path)
-        set(COVERAGE_CXX_COMPILER_FLAGS "${COVERAGE_COMPILER_FLAGS} -fprofile-abs-path")
-    endif()
-    include(CheckCCompilerFlag)
-    check_c_compiler_flag(-fprofile-abs-path HAVE_c_fprofile_abs_path)
-    if(HAVE_c_fprofile_abs_path)
-        set(COVERAGE_C_COMPILER_FLAGS "${COVERAGE_COMPILER_FLAGS} -fprofile-abs-path")
-    endif()
-endif()
-
-set(CMAKE_Fortran_FLAGS_COVERAGE
-    ${COVERAGE_COMPILER_FLAGS}
-    CACHE STRING "Flags used by the Fortran compiler during coverage builds."
-    FORCE )
-set(CMAKE_CXX_FLAGS_COVERAGE
-    ${COVERAGE_COMPILER_FLAGS}
-    CACHE STRING "Flags used by the C++ compiler during coverage builds."
-    FORCE )
-set(CMAKE_C_FLAGS_COVERAGE
-    ${COVERAGE_COMPILER_FLAGS}
-    CACHE STRING "Flags used by the C compiler during coverage builds."
-    FORCE )
-set(CMAKE_EXE_LINKER_FLAGS_COVERAGE
-    ""
-    CACHE STRING "Flags used for linking binaries during coverage builds."
-    FORCE )
-set(CMAKE_SHARED_LINKER_FLAGS_COVERAGE
-    ""
-    CACHE STRING "Flags used by the shared libraries linker during coverage builds."
-    FORCE )
-mark_as_advanced(
-    CMAKE_Fortran_FLAGS_COVERAGE
-    CMAKE_CXX_FLAGS_COVERAGE
-    CMAKE_C_FLAGS_COVERAGE
-    CMAKE_EXE_LINKER_FLAGS_COVERAGE
-    CMAKE_SHARED_LINKER_FLAGS_COVERAGE )
 
 get_property(GENERATOR_IS_MULTI_CONFIG GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
 if(NOT (CMAKE_BUILD_TYPE STREQUAL "Debug" OR GENERATOR_IS_MULTI_CONFIG))
@@ -440,10 +403,25 @@ function(setup_target_for_coverage_gcovr_html)
 
 endfunction() # setup_target_for_coverage_gcovr_html
 
+# =============================================================================
+
+# _fabs_path_arg will be a flag for the compiler that signals
+# absolute paths should be used in .gcno files. This reduces the
+# chance of issues, since relative paths are used by default.
+if(${CMAKE_CXX_COMPILER_ID} MATCHES "LLVM|Clang")
+    set(_fabs_path_arg "-fdiagnostics-absolute-paths")
+else()
+    set(_fabs_path_arg "-fprofile-abs-path")
+endif()
+
+set(COVERAGE_COMPILER_FLAGS
+    "--coverage -Og ${_fabs_path_arg}"
+    CACHE INTERNAL "")
+
 function(append_coverage_compiler_flags)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${COVERAGE_COMPILER_FLAGS}" PARENT_SCOPE)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COVERAGE_COMPILER_FLAGS}" PARENT_SCOPE)
-    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} ${COVERAGE_COMPILER_FLAGS}" PARENT_SCOPE)
+    separate_arguments(_flag_list NATIVE_COMMAND "${COVERAGE_COMPILER_FLAGS}")
+    add_compile_options(${_flag_list})
+    link_libraries(--coverage)
     message(STATUS "Appending code coverage compiler flags: ${COVERAGE_COMPILER_FLAGS}")
 endfunction() # append_coverage_compiler_flags
 
@@ -451,7 +429,5 @@ endfunction() # append_coverage_compiler_flags
 function(append_coverage_compiler_flags_to_target name)
     separate_arguments(_flag_list NATIVE_COMMAND "${COVERAGE_COMPILER_FLAGS}")
     target_compile_options(${name} PRIVATE ${_flag_list})
-    if(CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
-        target_link_libraries(${name} PRIVATE gcov)
-    endif()
+    target_link_libraries(${name} PRIVATE "--coverage")
 endfunction()
