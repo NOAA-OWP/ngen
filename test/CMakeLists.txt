@@ -20,6 +20,7 @@ if(NOT NGEN_ROOT_DIR STREQUAL PROJECT_BINARY_DIR)
 
     # Create a symlink between the extern directory in the source tree and the build tree
     file(CREATE_LINK "${NGEN_ROOT_DIR}/extern" "${PROJECT_BINARY_DIR}/extern" SYMBOLIC)
+    file(CREATE_LINK "${NGEN_ROOT_DIR}/extern" "${PROJECT_BINARY_DIR}/test/extern" SYMBOLIC)
 endif()
 
 # =============================================================================
