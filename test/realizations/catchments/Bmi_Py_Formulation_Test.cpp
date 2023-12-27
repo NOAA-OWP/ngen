@@ -218,19 +218,9 @@ void Bmi_Py_Formulation_Test::SetUp() {
 }
 
 void Bmi_Py_Formulation_Test::SetUpTestSuite() {
+    // Add the extern dir with our test lib to Python system path
     std::string module_directory = "./extern/";
-
-    #if 0
-    // Add the package dir from a local virtual environment directory also, if there is one
-    std::string venv_dir = py_dir_search({repo_root + "/.venv", repo_root + "/venv"});
-    if (!venv_dir.empty()) {
-        InterpreterUtil::addToPyPath(py_find_venv_site_packages_dir(venv_dir));
-    }
-    #endif
-    // Also add the extern dir with our test lib to Python system path
     InterpreterUtil::addToPyPath(module_directory);
-
-
 }
 
 void Bmi_Py_Formulation_Test::TearDown() {
