@@ -98,7 +98,7 @@ namespace models {
                         this->init_exception_msg =
                                 "Can't init " + this->model_name + "; library file path is empty";
                         throw std::runtime_error(this->init_exception_msg);
-                    }                
+                    }
                     if(bmi_lib_file.substr(idx) == ".so"){
                         alt_bmi_lib_file = bmi_lib_file.substr(0,idx) + ".dylib";
                     } else if(bmi_lib_file.substr(idx) == ".dylib"){
