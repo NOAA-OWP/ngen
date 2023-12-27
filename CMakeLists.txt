@@ -94,7 +94,6 @@ endif()
 if(NGEN_WITH_COVERAGE)
     include(CodeCoverage)
     append_coverage_compiler_flags()
-    link_libraries(--coverage)
 endif()
 
 # -----------------------------------------------------------------------------
