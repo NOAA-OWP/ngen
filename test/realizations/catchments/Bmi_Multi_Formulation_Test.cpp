@@ -403,32 +403,6 @@ private:
                 "formulations").begin()->second.get_child("params");
     }
 
-    /**
-     * Find the repo root directory using Python, starting from the current directory and working upward.
-     *
-     * This will throw a runtime error if Python functionality is not active.
-     *
-     * @return The absolute path of the repo root, as a string.
-     */
-    static std::string py_find_repo_root() {
-        #ifdef ACTIVATE_PYTHON
-        py::object Path = InterpreterUtil::getPyModule(std::vector<std::string> {"pathlib", "Path"});
-        py::object dir = Path(".").attr("resolve")();
-        while (!dir.equal(dir.attr("parent"))) {
-            // If there is a child .git dir and a child .github dir, then dir is the root
-            py::bool_ is_git_dir = py::bool_(dir.attr("joinpath")(".git").attr("is_dir")());
-            py::bool_ is_github_dir = py::bool_(dir.attr("joinpath")(".github").attr("is_dir")());
-            if (is_git_dir && is_github_dir) {
-                return py::str(dir);
-            }
-            dir = dir.attr("parent");
-        }
-        throw std::runtime_error("Can't find repo root starting at " + std::string(py::str(Path(".").attr("resolve")())));
-        #else // (i.e., if not ACTIVATE_PYTHON)
-        throw std::runtime_error("Can't use Python-based test helper function 'py_find_repo_root'; Python not active!");
-        #endif // ACTIVATE_PYTHON
-    }
-
     inline void initializeTestExample(const int ex_index, const std::string &cat_id,
                                       const std::vector<std::string> &nested_types, const std::vector<std::string> &output_variables) {
         catchment_ids[ex_index] = cat_id;
@@ -467,7 +441,6 @@ std::shared_ptr<InterpreterUtil> Bmi_Multi_Formulation_Test::interperter = Inter
 
 void Bmi_Multi_Formulation_Test::SetUpTestSuite() {
     #ifdef ACTIVATE_PYTHON
-    // std::string repo_root = py_find_repo_root();
     std::string module_directory = "./extern/";
 
     // Add the extern dir with our test lib to Python system path
