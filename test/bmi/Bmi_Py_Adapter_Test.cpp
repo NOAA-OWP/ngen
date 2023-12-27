@@ -88,13 +88,6 @@ protected:
     static std::string py_dir_search(const std::vector<std::string> &dir_options);
 
     /**
-     * Find the repo root directory, starting from the current directory and working upward.
-     *
-     * @return The absolute path of the repo root, as a string.
-     */
-    static std::string py_find_repo_root();
-
-    /**
      * Find the virtual environment site packages directory, starting from an assumed valid venv directory.
      *
      * @param venv_dir The virtual environment directory.
@@ -128,9 +121,6 @@ std::shared_ptr<InterpreterUtil> Bmi_Py_Adapter_Test::interperter = InterpreterU
 py::object Bmi_Py_Adapter_Test::Path = InterpreterUtil::getPyModule(std::vector<std::string> {"pathlib", "Path"});
 
 void Bmi_Py_Adapter_Test::SetUp() {
-
-    //std::string repo_root = py_find_repo_root();
-
     example_scenario template_ex_struct;
     // These should be safe for all examples
     template_ex_struct.module_name = "test_bmi_py.bmi_model";
@@ -160,7 +150,6 @@ void Bmi_Py_Adapter_Test::TearDown() {
 }
 
 void Bmi_Py_Adapter_Test::SetUpTestSuite() {
-    //std::string repo_root = py_find_repo_root();
     std::string module_directory = "./extern/";
 
     #if 0
@@ -232,25 +221,6 @@ std::string Bmi_Py_Adapter_Test::py_dir_search(const std::vector<std::string> &d
             return dir;
     }
     return "";
-}
-
-/**
- * Find the repo root directory, starting from the current directory and working upward.
- *
- * @return The absolute path of the repo root, as a string.
- */
-std::string Bmi_Py_Adapter_Test::py_find_repo_root() {
-    py::object dir = Path(".").attr("resolve")();
-    while (!dir.equal(dir.attr("parent"))) {
-        // If there is a child .git dir and a child .github dir, then dir is the root
-        py::bool_ is_git_dir = py::bool_(dir.attr("joinpath")(".git").attr("is_dir")());
-        py::bool_ is_github_dir = py::bool_(dir.attr("joinpath")(".github").attr("is_dir")());
-        if (is_git_dir && is_github_dir) {
-            return py::str(dir);
-        }
-        dir = dir.attr("parent");
-    }
-    throw std::runtime_error("Can't find repo root starting at " + std::string(py::str(Path(".").attr("resolve")())));
 }
 
 /**
