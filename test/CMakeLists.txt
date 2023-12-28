@@ -356,6 +356,8 @@ ngen_add_test(
         NGen::core_mediator
         NGen::forcing
         NGen::ngen_bmi
+    DEPENDS
+        petbmi
 )
 
 ########################## Routing Tests
