@@ -103,8 +103,8 @@ function(ngen_add_test TESTNAME)
         target_link_libraries(${TESTNAME} PRIVATE gtest gtest_main ${NGEN_TEST_LIBRARIES})
         set_target_properties(${TESTNAME} PROPERTIES FOLDER test)
 
-        if(DEPENDS)
-            add_dependencies(${TESTNAME} ${DEPENDS})
+        if(NGEN_TEST_DEPENDS)
+            add_dependencies(${TESTNAME} ${NGEN_TEST_DEPENDS})
         endif()
 
         gtest_discover_tests(
