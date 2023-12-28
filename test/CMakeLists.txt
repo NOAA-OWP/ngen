@@ -107,7 +107,7 @@ function(ngen_add_test TESTNAME)
         # IF the dependency is a target.
         foreach(dependency IN LISTS NGEN_TEST_DEPENDS)
             if(TARGET ${dependency})
-                add_dependencies(${TESTNAME} ${NGEN_TEST_DEPENDS})
+                add_dependencies(${TESTNAME} ${dependency})
             endif()
         endforeach()
 
