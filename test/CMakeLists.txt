@@ -1,12 +1,6 @@
 add_subdirectory(googletest)
 add_compile_definitions(NGEN_BMI_CPP_LIB_TESTS_ACTIVE)
 
-# Natively support BMI C++ modules and pre-compile in the test_bmi_cpp mock/example.
-set(TEST_BMI_CPP_DIR ${NGEN_EXT_DIR}/test_bmi_cpp)
-git_update_submodule(${NGEN_EXT_DIR}/bmi-cxx)
-add_subdirectory(${TEST_BMI_CPP_DIR} ${TEST_BMI_CPP_DIR}/cmake_build)
-add_dependencies(ngen testbmicppmodel)
-
 # =============================================================================
 
 # If ${NGEN_ROOT_DIR} and ${PROJECT_BINARY_DIR} are the same, then we have an in-source build
@@ -25,6 +19,11 @@ endif()
 
 # =============================================================================
 
+add_external_subdirectory(
+    SOURCE "${NGEN_EXT_DIR}/test_bmi_cpp"
+    OUTPUT "${NGEN_EXT_DIR}/test_bmi_cpp/cmake_build"
+)
+
 if (NGEN_WITH_PYTHON)
     add_compile_definitions(NGEN_BMI_PY_TESTS_ACTIVE)
 endif()
@@ -35,10 +34,18 @@ endif()
 
 if(NGEN_WITH_BMI_C)
     add_compile_definitions(NGEN_BMI_C_LIB_TESTS_ACTIVE)
+    add_external_subdirectory(
+        SOURCE "${NGEN_EXT_DIR}/test_bmi_c"
+        OUTPUT "${NGEN_EXT_DIR}/test_bmi_c/cmake_build"
+    )
 endif()
 
 if(NGEN_WITH_BMI_FORTRAN)
     add_compile_definitions(NGEN_BMI_FORTRAN_LIB_TESTS_ACTIVE)
+    add_external_subdirectory(
+        SOURCE "${NGEN_EXT_DIR}/test_bmi_fortran"
+        OUTPUT "${NGEN_EXT_DIR}/test_bmi_fortran/cmake_build"
+    )
 endif()
 
 if(NGEN_WITH_ROUTING)
@@ -77,7 +84,7 @@ Adds an executable test (i.e. a target) called <test name>.
     the corresponding <test name> target is not created.
 #]==]
 function(ngen_add_test TESTNAME)
-    set(multiValueArgs OBJECTS LIBRARIES REQUIRES)
+    set(multiValueArgs OBJECTS LIBRARIES REQUIRES DEPENDS)
     cmake_parse_arguments(NGEN_TEST "" "" "${multiValueArgs}" ${ARGN})
 
     list(REMOVE_DUPLICATES NGEN_TEST_LIBRARIES)
@@ -95,6 +102,11 @@ function(ngen_add_test TESTNAME)
         target_include_directories(${TESTNAME} PRIVATE ${CMAKE_CURRENT_LIST_DIR}/bmi)
         target_link_libraries(${TESTNAME} PRIVATE gtest gtest_main ${NGEN_TEST_LIBRARIES})
         set_target_properties(${TESTNAME} PROPERTIES FOLDER test)
+
+        if(DEPENDS)
+            add_dependencies(${TESTNAME} ${DEPENDS})
+        endif()
+
         gtest_discover_tests(
             ${TESTNAME}
             WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
@@ -148,7 +160,8 @@ ngen_add_test(
         NGen::forcing
         NGen::ngen_bmi
         testbmicppmodel
-        
+    DEPENDS
+        testbmicppmodel
 )
 
 ########################## Series Unit Tests
@@ -236,6 +249,8 @@ ngen_add_test(
         NGen::core_mediator
         NGen::forcing
         NGen::ngen_bmi
+    DEPENDS
+        testbmicppmodel
 )
 
 ########################## BMI C Tests
@@ -253,6 +268,8 @@ ngen_add_test(
         NGen::ngen_bmi
     REQUIRES
         NGEN_WITH_BMI_C
+    DEPENDS
+        testbmicmodel
 )
 
 ########################## BMI Fortran Tests
@@ -269,6 +286,8 @@ ngen_add_test(
         NGen::ngen_bmi
     REQUIRES
         NGEN_WITH_BMI_FORTRAN
+    DEPENDS
+        testbmifortranmodel
 )
 
 ########################## BMI Python Tests

@@ -33,6 +33,11 @@ list(APPEND CMAKE_MODULE_PATH "${NGEN_MOD_DIR}")
 #   (3) Function `git_update_submodule` which updates a given submodule
 include(GitUpdateSubmodules)
 
+# NGen CMake module for automating external subdirectory builds (i.e. testbmicpp)
+# Provides:
+#   (1) add_external_subdirectory(<path>)
+include(ExternalSubdirectory)
+
 # Options =====================================================================
 include(CMakeDependentOption)
 
@@ -65,6 +70,12 @@ deprecated_option(OLD BMI_C_LIB_ACTIVE      NEW NGEN_WITH_BMI_C)
 deprecated_option(OLD BMI_FORTRAN_ACTIVE    NEW NGEN_WITH_BMI_FORTRAN)
 deprecated_option(OLD QUIET                 NEW NGEN_QUIET)
 deprecated_option(OLD PACKAGE_TESTS         NEW NGEN_WITH_TESTS)
+
+# Options to automate building of extern-distributed models
+option(NGEN_WITH_EXTERN_CXX_MODELS                     "Build with extern-distributed C++ models"     ON)
+cmake_dependent_option(NGEN_WITH_EXTERN_FORTRAN_MODELS "Build with extern-distributed Fortran models" ON "NGEN_WITH_BMI_FORTRAN" OFF)
+cmake_dependent_option(NGEN_WITH_EXTERN_C_MODELS       "Build with extern-distributed C models"       ON "NGEN_WITH_BMI_C" OFF)
+
 # Project =====================================================================
 
 # -----------------------------------------------------------------------------
@@ -150,10 +161,37 @@ if(NGEN_WITH_NETCDF)
     add_compile_definitions(NETCDF_ACTIVE)
 endif()
 
+if(NGEN_WITH_EXTERN_CXX_MODELS)
+    # This is set because SLOTH will link to gtest by default,
+    # which causes a configure error.
+    set(PACKAGE_TESTS OFF)
+    add_external_subdirectory(
+        SOURCE "${NGEN_EXT_DIR}/sloth"
+        OUTPUT "${NGEN_EXT_DIR}/sloth/cmake_build"
+    )
+endif()
+
 # -----------------------------------------------------------------------------
 # Handle several steps for BMI C library logic and dependencies, at top level, if functionality is turned on
 if(NGEN_WITH_BMI_C)
     add_compile_definitions(NGEN_BMI_C_LIB_ACTIVE)
+
+    if(NGEN_WITH_EXTERN_C_MODELS)
+        add_external_subdirectory(
+            SOURCE "${NGEN_EXT_DIR}/topmodel"
+            OUTPUT "${NGEN_EXT_DIR}/topmodel/cmake_build"
+        )
+
+        add_external_subdirectory(
+            SOURCE "${NGEN_EXT_DIR}/cfe"
+            OUTPUT "${NGEN_EXT_DIR}/cfe/cmake_build"
+        )
+
+        add_external_subdirectory(
+            SOURCE "${NGEN_EXT_DIR}/evapotranspiration/evapotranspiration"
+            OUTPUT "${NGEN_EXT_DIR}/evapotranspiration/evapotranspiration/cmake_build"
+        )
+    endif()
 endif()
 
 # -----------------------------------------------------------------------------
@@ -161,6 +199,13 @@ endif()
 if(NGEN_WITH_BMI_FORTRAN)
     add_compile_definitions(NGEN_BMI_FORTRAN_ACTIVE)
     find_package(BMI_FORTRAN_ISO_C REQUIRED)
+
+    if(NGEN_WITH_EXTERN_FORTRAN_MODELS)
+        add_external_subdirectory(
+            SOURCE "${NGEN_EXT_DIR}/noah-owp-modular"
+            OUTPUT "${NGEN_EXT_DIR}/noah-owp-modular/cmake_build"
+        )
+    endif()
 endif()
 
 # -----------------------------------------------------------------------------
@@ -195,6 +240,18 @@ endif()
 add_library(ngen_config_header INTERFACE)
 add_library(NGen::config_header ALIAS ngen_config_header)
 target_include_directories(ngen_config_header INTERFACE "${CMAKE_CURRENT_BINARY_DIR}/include")
+
+if(NGEN_WITH_EXTERN_CXX_MODELS)
+    add_dependencies(ngen_config_header slothmodel)
+endif()
+
+if(NGEN_WITH_EXTERN_C_MODELS)
+    add_dependencies(ngen_config_header topmodelbmi cfebmi petbmi)
+endif()
+
+if(NGEN_WITH_EXTERN_FORTRAN_MODELS)
+    add_dependencies(ngen_config_header surfacebmi)
+endif()
 
 target_include_directories(ngen PUBLIC "${NGEN_INC_DIR}")
 
