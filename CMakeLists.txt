@@ -164,7 +164,7 @@ endif()
 if(NGEN_WITH_EXTERN_CXX_MODELS)
     # This is set because SLOTH will link to gtest by default,
     # which causes a configure error.
-    set(PACKAGE_TESTS OFF)
+    set(PACKAGE_TESTS OFF CACHE BOOL "SLoTH testing")
     add_external_subdirectory(
         SOURCE "${NGEN_EXT_DIR}/sloth"
         OUTPUT "${NGEN_EXT_DIR}/sloth/cmake_build"
