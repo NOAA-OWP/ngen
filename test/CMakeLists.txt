@@ -97,9 +97,9 @@ function(ngen_add_test TESTNAME)
         set_target_properties(${TESTNAME} PROPERTIES FOLDER test)
         gtest_discover_tests(
             ${TESTNAME}
-            WORKING_DIRECTORY ${PROJECT_DIR}
+            WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
             PROPERTIES
-                VS_DEBUGGER_WORKING_DIRECTORY "${PROJECT_DIR}"
+                VS_DEBUGGER_WORKING_DIRECTORY "${PROJECT_BINARY_DIR}"
         )
 
         # ---------------------------------------------------------------------
@@ -421,9 +421,9 @@ ngen_add_test(
 # Discover for test_all
 gtest_discover_tests(
     test_all
-    WORKING_DIRECTORY ${PROJECT_DIR}
+    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
     PROPERTIES
-        VS_DEBUGGER_WORKING_DIRECTORY "${PROJECT_DIR}"
+        VS_DEBUGGER_WORKING_DIRECTORY "${PROJECT_BINARY_DIR}"
 )
 
 if(NGEN_WITH_COVERAGE)
