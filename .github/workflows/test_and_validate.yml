@@ -68,13 +68,6 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
-      - name: Build PET Submodule
-        id: submod_build_5
-        uses: ./.github/actions/ngen-submod-build
-        with:
-          mod-dir: "extern/evapotranspiration/evapotranspiration"
-          targets: "petbmi"
-
       - name: Build PET Tests
         uses: ./.github/actions/ngen-build
         with:
