@@ -72,6 +72,7 @@ jobs:
         uses: ./.github/actions/ngen-build
         with:
           targets: "compare_pet"
+          bmi_c: on
           build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
 
       - name: Run Tests

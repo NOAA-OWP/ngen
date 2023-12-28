@@ -103,9 +103,13 @@ function(ngen_add_test TESTNAME)
         target_link_libraries(${TESTNAME} PRIVATE gtest gtest_main ${NGEN_TEST_LIBRARIES})
         set_target_properties(${TESTNAME} PROPERTIES FOLDER test)
 
-        if(NGEN_TEST_DEPENDS)
-            add_dependencies(${TESTNAME} ${NGEN_TEST_DEPENDS})
-        endif()
+        # Iterate over each dependency, and add as a dependency for the test
+        # IF the dependency is a target.
+        foreach(dependency IN LISTS NGEN_TEST_DEPENDS)
+            if(TARGET ${dependency})
+                add_dependencies(${TESTNAME} ${NGEN_TEST_DEPENDS})
+            endif()
+        endforeach()
 
         gtest_discover_tests(
             ${TESTNAME}
@@ -159,7 +163,6 @@ ngen_add_test(
         NGen::core_mediator
         NGen::forcing
         NGen::ngen_bmi
-        testbmicppmodel
     DEPENDS
         testbmicppmodel
 )

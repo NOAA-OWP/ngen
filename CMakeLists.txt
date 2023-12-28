@@ -69,7 +69,9 @@ deprecated_option(OLD NETCDF_ACTIVE         NEW NGEN_WITH_NETCDF)
 deprecated_option(OLD BMI_C_LIB_ACTIVE      NEW NGEN_WITH_BMI_C)
 deprecated_option(OLD BMI_FORTRAN_ACTIVE    NEW NGEN_WITH_BMI_FORTRAN)
 deprecated_option(OLD QUIET                 NEW NGEN_QUIET)
-deprecated_option(OLD PACKAGE_TESTS         NEW NGEN_WITH_TESTS)
+
+# -- Removed
+# deprecated_option(OLD PACKAGE_TESTS         NEW NGEN_WITH_TESTS)
 
 # Options to automate building of extern-distributed models
 option(NGEN_WITH_EXTERN_CXX_MODELS                     "Build with extern-distributed C++ models"     ON)
@@ -358,6 +360,10 @@ ngen_multiline_message(
 "    NGEN_WITH_PYTHON: ${NGEN_WITH_PYTHON}"
 "    NGEN_WITH_ROUTING: ${NGEN_WITH_ROUTING}"
 "    NGEN_WITH_TESTS: ${NGEN_WITH_TESTS}"
+"    NGEN_WITH_COVERAGE: ${NGEN_WITH_COVERAGE}"
+"    NGEN_WITH_EXTERN_CXX_MODELS: ${NGEN_WITH_EXTERN_CXX_MODELS}"
+"    NGEN_WITH_EXTERN_C_MODELS: ${NGEN_WITH_EXTERN_C_MODELS}"
+"    NGEN_WITH_EXTERN_FORTRAN_MODELS: ${NGEN_WITH_EXTERN_FORTRAN_MODELS}"
 "    NGEN_QUIET: ${NGEN_QUIET}"
 "Environment summary:"
 "  Boost:"
