@@ -13,7 +13,7 @@ set_target_properties(testbmifortranmodel
         Fortran_MODULE_DIRECTORY "${_TESTBMIFORTRAN_BINARY_DIR}/mod")
 
 target_sources(testbmifortranmodel PRIVATE ${_TESTBMIFORTRAN_OBJECTS})
-target_compile_options(testbmifortranmodel PRIVATE -cpp)
+target_compile_options(testbmifortranmodel PRIVATE -cpp -ffree-line-length-none)
 target_compile_definitions(testbmifortranmodel PRIVATE NGEN_ACTIVE)
 target_include_directories(testbmifortranmodel INTERFACE "${_TESTBMIFORTRAN_BINARY_DIR}/mod")
 target_link_libraries(testbmifortranmodel PUBLIC iso_c_bmi)
