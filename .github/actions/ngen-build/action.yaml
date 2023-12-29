@@ -1,4 +1,5 @@
 name: 'Checkout and build tests'
+
 description: 'This action checks out the commit, sets up Ngen environemnt.'
 author: 'hellkite500'
 inputs:
@@ -183,6 +184,11 @@ runs:
               -DNGEN_WITH_SQLITE:BOOL=${{ inputs.use_sqlite }} \
               -DMPI_ACTIVE:BOOL=${{ inputs.use_mpi }} -S .
             echo "build-dir=$(echo ${{ inputs.build-dir }})" >> $GITHUB_OUTPUT
+          shell: bash
+
+        - name: Setup Fortran Compiler
+          if: runner.os == 'macOS'
+          run: echo "FC=gfortran-13" >> $GITHUB_ENV
           shell: bash
 
         - name: Build Targets

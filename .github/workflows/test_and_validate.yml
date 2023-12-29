@@ -230,8 +230,6 @@ jobs:
       #     mod-dir: "extern/iso_c_fortran_bmi/"
 
       - name: Build Unit Tests
-        env:
-          FC: gfortran
         uses: ./.github/actions/ngen-build
         with:
           targets: "test_bmi_fortran"
