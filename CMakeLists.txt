@@ -200,7 +200,11 @@ endif()
 # Configure whether Fortran BMI functionality is active
 if(NGEN_WITH_BMI_FORTRAN)
     add_compile_definitions(NGEN_BMI_FORTRAN_ACTIVE)
-    find_package(BMI_FORTRAN_ISO_C REQUIRED)
+
+    add_external_subdirectory(
+        SOURCE "${NGEN_EXT_DIR}/iso_c_fortran_bmi"
+        OUTPUT "${NGEN_EXT_DIR}/iso_c_fortran_bmi/cmake_build"
+    )
 
     if(NGEN_WITH_EXTERN_FORTRAN_MODELS)
         add_external_subdirectory(
