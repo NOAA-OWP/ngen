@@ -230,6 +230,8 @@ jobs:
       #     mod-dir: "extern/iso_c_fortran_bmi/"
 
       - name: Build Unit Tests
+        env:
+          FC: gfortran
         uses: ./.github/actions/ngen-build
         with:
           targets: "test_bmi_fortran"
@@ -305,36 +307,36 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
-      - name: Build Submodules
-        id: submod_build_1
-        uses: ./.github/actions/ngen-submod-build
-        with: 
-          mod-dir: "extern/test_bmi_fortran/"
+      # - name: Build Submodules
+      #   id: submod_build_1
+      #   uses: ./.github/actions/ngen-submod-build
+      #   with: 
+      #     mod-dir: "extern/test_bmi_fortran/"
 
-      - name: Build Submodules
-        id: submod_build_2
-        uses: ./.github/actions/ngen-submod-build
-        with: 
-          mod-dir: "extern/iso_c_fortran_bmi/"
+      # - name: Build Submodules
+      #   id: submod_build_2
+      #   uses: ./.github/actions/ngen-submod-build
+      #   with: 
+      #     mod-dir: "extern/iso_c_fortran_bmi/"
 
-      - name: Build Submodules
-        id: submod_build_3
-        uses: ./.github/actions/ngen-submod-build
-        with: 
-          mod-dir: "extern/test_bmi_c/"
-          targets: "testbmicmodel"
+      # - name: Build Submodules
+      #   id: submod_build_3
+      #   uses: ./.github/actions/ngen-submod-build
+      #   with: 
+      #     mod-dir: "extern/test_bmi_c/"
+      #     targets: "testbmicmodel"
 
       #make sure cxx bmi is initialized/ready
-      - uses: ./.github/actions/ngen-submod-build
-        with: 
-          mod-dir: "extern/bmi-cxx/"
+      # - uses: ./.github/actions/ngen-submod-build
+      #   with: 
+      #     mod-dir: "extern/bmi-cxx/"
 
-      - name: Build Submodules
-        id: submod_build_4
-        uses: ./.github/actions/ngen-submod-build
-        with:
-          mod-dir: "extern/test_bmi_cpp/"
-          targets: "testbmicppmodel"
+      # - name: Build Submodules
+      #   id: submod_build_4
+      #   uses: ./.github/actions/ngen-submod-build
+      #   with:
+      #     mod-dir: "extern/test_bmi_cpp/"
+      #     targets: "testbmicppmodel"
 
       - name: Build Unit Tests
         uses: ./.github/actions/ngen-build
@@ -355,19 +357,19 @@ jobs:
       - name: Clean Up Unit Test Build
         uses: ./.github/actions/clean-build
 
-      - name: Clean Up Submodule Build
-        uses: ./.github/actions/clean-build
-        with:
-          build-dir: ${{ steps.submod_build_1.outputs.build-dir }}
-      - uses: ./.github/actions/clean-build
-        with:
-          build-dir: ${{ steps.submod_build_2.outputs.build-dir }}
-      - uses: ./.github/actions/clean-build
-        with:
-          build-dir: ${{ steps.submod_build_3.outputs.build-dir }}
-      - uses: ./.github/actions/clean-build
-        with:
-          build-dir: ${{ steps.submod_build_4.outputs.build-dir }}
+      # - name: Clean Up Submodule Build
+      #   uses: ./.github/actions/clean-build
+      #   with:
+      #     build-dir: ${{ steps.submod_build_1.outputs.build-dir }}
+      # - uses: ./.github/actions/clean-build
+      #   with:
+      #     build-dir: ${{ steps.submod_build_2.outputs.build-dir }}
+      # - uses: ./.github/actions/clean-build
+      #   with:
+      #     build-dir: ${{ steps.submod_build_3.outputs.build-dir }}
+      # - uses: ./.github/actions/clean-build
+      #   with:
+      #     build-dir: ${{ steps.submod_build_4.outputs.build-dir }}
 
 
   # TODO: fails due to compilation error, at least in large part due to use of POSIX functions not supported on Windows.
