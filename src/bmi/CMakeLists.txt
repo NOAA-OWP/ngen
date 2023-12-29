@@ -21,5 +21,5 @@ if(NGEN_WITH_PYTHON)
 endif()
 
 if(NGEN_WITH_BMI_FORTRAN)
-    target_link_libraries(ngen_bmi PUBLIC bmi_fortran_iso_c)
+    target_link_libraries(ngen_bmi PUBLIC iso_c_bmi)
 endif()
