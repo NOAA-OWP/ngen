@@ -321,6 +321,14 @@ ngen_add_test(
         NGen::core_mediator
         NGen::forcing
         NGen::ngen_bmi
+    REQUIRES
+        NGEN_WITH_BMI_C
+        NGEN_WITH_BMI_FORTRAN
+        NGEN_WITH_PYTHON
+    DEPENDS
+        testbmicppmodel
+        testbmicmodel
+        testbmifortranmodel
 )
 
 ########################## All BMI Unit Tests
