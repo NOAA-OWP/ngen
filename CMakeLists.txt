@@ -171,6 +171,9 @@ if(NGEN_WITH_EXTERN_CXX_MODELS)
         SOURCE "${NGEN_EXT_DIR}/sloth"
         OUTPUT "${NGEN_EXT_DIR}/sloth/cmake_build"
     )
+
+    set_target_properties(slothmodel PROPERTIES
+        CXX_VISIBILITY_PRESET default)
 endif()
 
 # -----------------------------------------------------------------------------
@@ -248,15 +251,15 @@ add_library(NGen::config_header ALIAS ngen_config_header)
 target_include_directories(ngen_config_header INTERFACE "${CMAKE_CURRENT_BINARY_DIR}/include")
 
 if(NGEN_WITH_EXTERN_CXX_MODELS)
-    add_dependencies(ngen_config_header slothmodel)
+    add_dependencies(ngen slothmodel)
 endif()
 
 if(NGEN_WITH_EXTERN_C_MODELS)
-    add_dependencies(ngen_config_header topmodelbmi cfebmi petbmi)
+    add_dependencies(ngen topmodelbmi cfebmi petbmi)
 endif()
 
 if(NGEN_WITH_EXTERN_FORTRAN_MODELS)
-    add_dependencies(ngen_config_header surfacebmi)
+    add_dependencies(ngen surfacebmi)
 endif()
 
 target_include_directories(ngen PUBLIC "${NGEN_INC_DIR}")
