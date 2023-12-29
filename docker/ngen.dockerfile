@@ -17,6 +17,8 @@ RUN export BOOST_ARCHIVE="boost_$(echo ${BOOST_VERSION} | tr '\.' '_').tar.gz" \
 
 COPY . /ngen
 WORKDIR /ngen
+RUN git submodule update --init --recursive -- test/googletest
+RUN git submodule update --init --recursive -- extern/pybind11
 
 RUN cmake -S . \
           -B /ngen_build \
