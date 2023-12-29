@@ -166,6 +166,11 @@ runs:
             deactivate
           shell: bash
 
+        - name: Setup Fortran Compiler
+          if: ${{ inputs.bmi_fortran == 'ON' && runner.os == 'macOS' }}
+          run: echo "FC=gfortran-13" >> $GITHUB_ENV
+          shell: bash
+
         - name: Cmake Initialization
           id: cmake_init
           run: |
@@ -184,11 +189,6 @@ runs:
               -DNGEN_WITH_SQLITE:BOOL=${{ inputs.use_sqlite }} \
               -DMPI_ACTIVE:BOOL=${{ inputs.use_mpi }} -S .
             echo "build-dir=$(echo ${{ inputs.build-dir }})" >> $GITHUB_OUTPUT
-          shell: bash
-
-        - name: Setup Fortran Compiler
-          if: runner.os == 'macOS'
-          run: echo "FC=gfortran-13" >> $GITHUB_ENV
           shell: bash
 
         - name: Build Targets
