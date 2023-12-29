@@ -20,7 +20,7 @@ set_target_properties(iso_c_bmi
         Fortran_MODULE_DIRECTORY "${_ISO_C_BMI_BINARY_DIR}/mod")
 
 target_sources(iso_c_bmi PRIVATE ${_ISO_C_BMI_OBJECTS})
-target_compile_options(iso_c_bmi PUBLIC -cpp -ffree-line-length-none)
+target_compile_options(iso_c_bmi PRIVATE -cpp -ffree-line-length-none)
 target_include_directories(iso_c_bmi INTERFACE "${_ISO_C_BMI_BINARY_DIR}/mod")
 
 unset(_ISO_C_BMI_BINARY_DIR)

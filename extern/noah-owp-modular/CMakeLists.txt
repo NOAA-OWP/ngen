@@ -23,13 +23,13 @@ set_target_properties(surfacebmi
         Fortran_MODULE_DIRECTORY "${_SURFACEBMI_BINARY_DIR}/mod")
 
 target_sources(surfacebmi PRIVATE ${_SURFACEBMI_OBJECTS})
-target_compile_options(surfacebmi PUBLIC -cpp -ffree-line-length-none)
+target_compile_options(surfacebmi PRIVATE -cpp -ffree-line-length-none)
 target_include_directories(surfacebmi INTERFACE "${_SURFACEBMI_BINARY_DIR}/mod")
-target_compile_definitions(surfacebmi PUBLIC BMI_ACTIVE)
+target_compile_definitions(surfacebmi PRIVATE BMI_ACTIVE)
 
 if(NGEN_IS_MAIN_PROJECT)
     target_link_libraries(surfacebmi PUBLIC iso_c_bmi)
-    target_compile_definitions(surfacebmi PUBLIC NGEN_FORCING_ACTIVE NGEN_OUTPUT_ACTIVE NGEN_ACTIVE)
+    target_compile_definitions(surfacebmi PRIVATE NGEN_FORCING_ACTIVE NGEN_OUTPUT_ACTIVE NGEN_ACTIVE)
 else()
     find_path(NETCDF_MODULE_DIR netcdf.mod
         PATHS "${NETCDF_ROOT}/include"
