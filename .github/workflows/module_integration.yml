@@ -31,46 +31,11 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
     
-      - name: Build Surfacebmi
-        id: submod_build_1
-        uses: ./.github/actions/ngen-submod-build
-        with: 
-          mod-dir: " extern/noah-owp-modular/"
-          targets: "surfacebmi"
-      
-      - name: Build ISO C Fortran BMI
-        id: submod_build_2
-        uses: ./.github/actions/ngen-submod-build
-        with: 
-          mod-dir: "extern/iso_c_fortran_bmi/"
-      
-      - name: Build CFE
-        id: submod_build_3
-        uses: ./.github/actions/ngen-submod-build
-        with: 
-          mod-dir: "extern/cfe/"
-          targets: "cfebmi"
-
-      - name: Build PET
-        id: submod_build_5
-        uses: ./.github/actions/ngen-submod-build
-        with:
-          mod-dir: "extern/evapotranspiration/evapotranspiration"
-          targets: "petbmi"
-
-      - name: Build SLoTH
-        id: submod_build_6
-        uses: ./.github/actions/ngen-submod-build
-        with:
-          mod-dir: "extern/sloth/"
-          targets: "slothmodel"
-
-      - name: Build Ngen
+      - name: Build NGen
         uses: ./.github/actions/ngen-build
         with:
           targets: "ngen"
           build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
-          #is this required for this test?
           bmi_c: 'ON'
           bmi_fortran: 'ON'
         timeout-minutes: 15
