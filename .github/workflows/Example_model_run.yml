@@ -9,10 +9,12 @@ jobs:
       steps:
       - name: Checkout the code
         uses: actions/checkout@v3
+
       - name: Build the NGEN image
-        run: docker build . --file ./docker/CENTOS_NGEN_RUN.dockerfile --tag localbuild/ngen:latest      
+        run: docker build --file ./docker/ngen.dockerfile --tag localbuild/ngen:latest .
+  
       - name: Run the NGEN model on example data
-        run: docker run --rm -i localbuild/ngen:latest
-        #Internal command has hardcoded paths to repo-local data      
-        #When running command manually from container use below:
-        #./ngen data/catchment_data.geojson "" data/nexus_data.geojson "" data/refactored_example_realization_config.json
+        run: |
+          docker run --rm -i --mount type=bind,source="$(pwd)"/data,target=/ngen_build/data,readonly \
+          localbuild/ngen:latest \
+          ./ngen data/catchment_data.geojson '' data/nexus_data.geojson '' data/example_realization_config.json

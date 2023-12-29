@@ -1,0 +1,8 @@
+*
+!cmake/
+!extern/
+!include/
+!src/
+!test/
+test/data
+!CMakeLists.txt
