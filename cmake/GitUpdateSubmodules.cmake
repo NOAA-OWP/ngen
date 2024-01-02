@@ -9,7 +9,7 @@ endif()
 function(git_update_submodule PATH)
     if(NGEN_UPDATE_GIT_SUBMODULES)
         message(STATUS "Updating submodule ${PATH}")
-        execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init -- ${PATH}
+        execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive -- ${PATH}
             WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
             RESULT_VARIABLE GIT_SUBMOD_RESULT
             )
