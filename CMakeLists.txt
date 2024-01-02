@@ -170,6 +170,7 @@ if(NGEN_WITH_EXTERN_CXX_MODELS)
     add_external_subdirectory(
         SOURCE "${NGEN_EXT_DIR}/sloth"
         OUTPUT "${NGEN_EXT_DIR}/sloth/cmake_build"
+        GIT_UPDATE "${NGEN_EXT_DIR}/sloth"
     )
 
     set_target_properties(slothmodel PROPERTIES
@@ -185,16 +186,19 @@ if(NGEN_WITH_BMI_C)
         add_external_subdirectory(
             SOURCE "${NGEN_EXT_DIR}/topmodel"
             OUTPUT "${NGEN_EXT_DIR}/topmodel/cmake_build"
+            GIT_UPDATE "${NGEN_EXT_DIR}/topmodel/topmodel"
         )
 
         add_external_subdirectory(
             SOURCE "${NGEN_EXT_DIR}/cfe"
             OUTPUT "${NGEN_EXT_DIR}/cfe/cmake_build"
+            GIT_UPDATE "${NGEN_EXT_DIR}/cfe/cfe"
         )
 
         add_external_subdirectory(
             SOURCE "${NGEN_EXT_DIR}/evapotranspiration/evapotranspiration"
             OUTPUT "${NGEN_EXT_DIR}/evapotranspiration/evapotranspiration/cmake_build"
+            GIT_UPDATE "${NGEN_EXT_DIR}/evapotranspiration/evapotranspiration"
         )
     endif()
 endif()
@@ -213,6 +217,7 @@ if(NGEN_WITH_BMI_FORTRAN)
         add_external_subdirectory(
             SOURCE "${NGEN_EXT_DIR}/noah-owp-modular"
             OUTPUT "${NGEN_EXT_DIR}/noah-owp-modular/cmake_build"
+            GIT_UPDATE "${NGEN_EXT_DIR}/noah-owp-modular/noah-owp-modular"
         )
     endif()
 endif()
