@@ -1,4 +1,6 @@
 *
+!.git/
+!.gitmodules
 !cmake/
 !extern/
 !include/
