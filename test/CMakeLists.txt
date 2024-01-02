@@ -19,6 +19,8 @@ endif()
 
 # =============================================================================
 
+git_update_submodule("${NGEN_EXT_DIR}/bmi-cxx")
+
 add_external_subdirectory(
     SOURCE "${NGEN_EXT_DIR}/test_bmi_cpp"
     OUTPUT "${NGEN_EXT_DIR}/test_bmi_cpp/cmake_build"
