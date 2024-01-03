@@ -20,11 +20,7 @@ function(add_external_subdirectory)
     endif()
 
     if(EXTERNAL_TARGET_IMPORTS STREQUAL "")
-        if(TARGET ${EXTERNAL_TARGET_IMPORTS})
-            set_target_properties(${EXTERNAL_TARGET_IMPORTS}
-                PROPERTIES
-                    CXX_VISIBILITY_PRESET default)
-        else()
+        if(NOT TARGET ${EXTERNAL_TARGET_IMPORTS})
             message(FATAL_ERROR "Target `${EXTERNAL_TARGET_IMPORTS}` could not be found from subdirectory ${EXTERNAL_TARGET_SOURCE}")
         endif()
     endif()
