@@ -51,7 +51,9 @@ bool is_subdivided_hydrofabric_wanted = false;
 std::string PARTITION_PATH = "";
 int mpi_rank;
 int mpi_num_procs;
-#endif
+#else // NGEN_MPI_ACTIVE
+int mpi_rank = 0;
+#endif // NGEN_MPI_ACTIVE
 
 #include <Layer.hpp>
 #include <SurfaceLayer.hpp>
@@ -534,18 +536,24 @@ int main(int argc, char *argv[]) {
       }
 
     } //done time
-    std::cout<<"Finished "<<manager->Simulation_Time_Object->get_total_output_times()<<" timesteps."<<std::endl;
 
-
-  #ifdef NGEN_ROUTING_ACTIVE
-
-  #ifdef NGEN_MPI_ACTIVE
-    //Syncronization here. MPI barrier. If rank == 0, do routing
+#if NGEN_MPI_ACTIVE
     MPI_Barrier(MPI_COMM_WORLD);
-    MPI_Finalize();
-    if( mpi_rank == 0 )
+#endif
+
+    if (mpi_rank == 0)
+    {
+        std::cout << "Finished " << manager->Simulation_Time_Object->get_total_output_times() << " timesteps." << std::endl;
+    }
+
+
+#ifdef NGEN_MPI_ACTIVE
+    MPI_Barrier(MPI_COMM_WORLD);
+#endif
+
+#ifdef NGEN_ROUTING_ACTIVE
+    if (mpi_rank == 0)
     { // Run t-route from single process
-  #endif //NGEN_MPI_ACTIVE
         if(manager->get_using_routing()) {
           //Note: Currently, delta_time is set in the t-route yaml configuration file, and the
           //number_of_timesteps is determined from the total number of nexus outputs in t-route.
@@ -557,13 +565,12 @@ int main(int argc, char *argv[]) {
           
           router->route(number_of_timesteps, delta_time); 
         }
- #ifdef NGEN_MPI_ACTIVE
     }
- #endif //NGEN_MPI_ACTIVE
- #else
- #ifdef NGEN_MPI_ACTIVE
+#endif
+
+#ifdef NGEN_MPI_ACTIVE
     MPI_Finalize();
- #endif //NGEN_MPI_ACTIVE
- #endif // NGEN_ROUTING_ACTIVE
+#endif
+
     return 0;
 }
