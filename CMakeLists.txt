@@ -74,9 +74,11 @@ deprecated_option(OLD QUIET                 NEW NGEN_QUIET)
 # deprecated_option(OLD PACKAGE_TESTS         NEW NGEN_WITH_TESTS)
 
 # Options to automate building of extern-distributed models
-option(NGEN_WITH_EXTERN_CXX_MODELS                     "Build with extern-distributed C++ models"     ON)
-cmake_dependent_option(NGEN_WITH_EXTERN_FORTRAN_MODELS "Build with extern-distributed Fortran models" ON "NGEN_WITH_BMI_FORTRAN" OFF)
-cmake_dependent_option(NGEN_WITH_EXTERN_C_MODELS       "Build with extern-distributed C models"       ON "NGEN_WITH_BMI_C" OFF)
+option(NGEN_WITH_EXTERN_SLOTH                            "Build with extern-distributed SLoTH"            ON)
+cmake_dependent_option(NGEN_WITH_EXTERN_TOPMODEL         "Build with extern-distributed TOPMODEL"         ON "NGEN_WITH_BMI_C"       OFF)
+cmake_dependent_option(NGEN_WITH_EXTERN_CFE              "Build with extern-distributed CFE"              ON "NGEN_WITH_BMI_C"       OFF)
+cmake_dependent_option(NGEN_WITH_EXTERN_PET              "Build with extern-distributed PET"              ON "NGEN_WITH_BMI_C"       OFF)
+cmake_dependent_option(NGEN_WITH_EXTERN_NOAH_OWP_MODULAR "Build with extern-distributed Noah-OWP-Modular" ON "NGEN_WITH_BMI_FORTRAN" OFF)
 
 # Project =====================================================================
 
@@ -163,18 +165,16 @@ if(NGEN_WITH_NETCDF)
     add_compile_definitions(NETCDF_ACTIVE)
 endif()
 
-if(NGEN_WITH_EXTERN_CXX_MODELS)
+if(NGEN_WITH_EXTERN_SLOTH)
     # This is set because SLOTH will link to gtest by default,
     # which causes a configure error.
     set(PACKAGE_TESTS OFF CACHE BOOL "SLoTH testing")
     add_external_subdirectory(
-        SOURCE "${NGEN_EXT_DIR}/sloth"
-        OUTPUT "${NGEN_EXT_DIR}/sloth/cmake_build"
+        SOURCE     "${NGEN_EXT_DIR}/sloth"
+        OUTPUT     "${NGEN_EXT_DIR}/sloth/cmake_build"
         GIT_UPDATE "${NGEN_EXT_DIR}/sloth"
+        IMPORTS    slothmodel
     )
-
-    set_target_properties(slothmodel PROPERTIES
-        CXX_VISIBILITY_PRESET default)
 endif()
 
 # -----------------------------------------------------------------------------
@@ -182,23 +182,30 @@ endif()
 if(NGEN_WITH_BMI_C)
     add_compile_definitions(NGEN_BMI_C_LIB_ACTIVE)
 
-    if(NGEN_WITH_EXTERN_C_MODELS)
+    if(NGEN_WITH_EXTERN_TOPMODEL)
         add_external_subdirectory(
-            SOURCE "${NGEN_EXT_DIR}/topmodel"
-            OUTPUT "${NGEN_EXT_DIR}/topmodel/cmake_build"
+            SOURCE     "${NGEN_EXT_DIR}/topmodel"
+            OUTPUT     "${NGEN_EXT_DIR}/topmodel/cmake_build"
             GIT_UPDATE "${NGEN_EXT_DIR}/topmodel/topmodel"
+            IMPORTS    topmodelbmi
         )
+    endif()
 
+    if(NGEN_WITH_EXTERN_CFE)
         add_external_subdirectory(
-            SOURCE "${NGEN_EXT_DIR}/cfe"
-            OUTPUT "${NGEN_EXT_DIR}/cfe/cmake_build"
+            SOURCE     "${NGEN_EXT_DIR}/cfe"
+            OUTPUT     "${NGEN_EXT_DIR}/cfe/cmake_build"
             GIT_UPDATE "${NGEN_EXT_DIR}/cfe/cfe"
+            IMPORTS    cfebmi     
         )
+    endif()
 
+    if(NGEN_WITH_EXTERN_PET)
         add_external_subdirectory(
             SOURCE "${NGEN_EXT_DIR}/evapotranspiration/evapotranspiration"
             OUTPUT "${NGEN_EXT_DIR}/evapotranspiration/evapotranspiration/cmake_build"
             GIT_UPDATE "${NGEN_EXT_DIR}/evapotranspiration/evapotranspiration"
+            IMPORTS petbmi
         )
     endif()
 endif()
@@ -209,15 +216,17 @@ if(NGEN_WITH_BMI_FORTRAN)
     add_compile_definitions(NGEN_BMI_FORTRAN_ACTIVE)
 
     add_external_subdirectory(
-        SOURCE "${NGEN_EXT_DIR}/iso_c_fortran_bmi"
-        OUTPUT "${NGEN_EXT_DIR}/iso_c_fortran_bmi/cmake_build"
+        SOURCE  "${NGEN_EXT_DIR}/iso_c_fortran_bmi"
+        OUTPUT  "${NGEN_EXT_DIR}/iso_c_fortran_bmi/cmake_build"
+        IMPORTS iso_c_bmi
     )
 
-    if(NGEN_WITH_EXTERN_FORTRAN_MODELS)
+    if(NGEN_WITH_EXTERN_NOAH_OWP_MODULAR)
         add_external_subdirectory(
-            SOURCE "${NGEN_EXT_DIR}/noah-owp-modular"
-            OUTPUT "${NGEN_EXT_DIR}/noah-owp-modular/cmake_build"
+            SOURCE     "${NGEN_EXT_DIR}/noah-owp-modular"
+            OUTPUT     "${NGEN_EXT_DIR}/noah-owp-modular/cmake_build"
             GIT_UPDATE "${NGEN_EXT_DIR}/noah-owp-modular/noah-owp-modular"
+            IMPORTS    surfacebmi
         )
     endif()
 endif()
@@ -255,15 +264,23 @@ add_library(ngen_config_header INTERFACE)
 add_library(NGen::config_header ALIAS ngen_config_header)
 target_include_directories(ngen_config_header INTERFACE "${CMAKE_CURRENT_BINARY_DIR}/include")
 
-if(NGEN_WITH_EXTERN_CXX_MODELS)
+if(NGEN_WITH_EXTERN_SLOTH)
     add_dependencies(ngen slothmodel)
 endif()
 
-if(NGEN_WITH_EXTERN_C_MODELS)
-    add_dependencies(ngen topmodelbmi cfebmi petbmi)
+if(NGEN_WITH_EXTERN_TOPMODEL)
+    add_dependencies(ngen topmodelbmi)
 endif()
 
-if(NGEN_WITH_EXTERN_FORTRAN_MODELS)
+if(NGEN_WITH_EXTERN_CFE)
+    add_dependencies(ngen cfebmi)
+endif()
+
+if(NGEN_WITH_EXTERN_PET)
+    add_dependencies(ngen petbmi)
+endif()
+
+if(NGEN_WITH_EXTERN_NOAH_OWP_MODULAR)
     add_dependencies(ngen surfacebmi)
 endif()
 
@@ -361,7 +378,9 @@ ngen_multiline_message(
 "  Build type: ${CMAKE_BUILD_TYPE}"
 "  System: ${CMAKE_SYSTEM_NAME}"
 "  C Compiler: ${CMAKE_C_COMPILER}"
+"  C Flags: ${CMAKE_C_FLAGS}"
 "  CXX Compiler: ${CMAKE_CXX_COMPILER}"
+"  CXX Flags: ${CMAKE_CXX_FLAGS}"
 "  Flags:"
 "    NGEN_WITH_MPI: ${NGEN_WITH_MPI}"
 "    NGEN_WITH_NETCDF: ${NGEN_WITH_NETCDF}"
@@ -373,10 +392,13 @@ ngen_multiline_message(
 "    NGEN_WITH_ROUTING: ${NGEN_WITH_ROUTING}"
 "    NGEN_WITH_TESTS: ${NGEN_WITH_TESTS}"
 "    NGEN_WITH_COVERAGE: ${NGEN_WITH_COVERAGE}"
-"    NGEN_WITH_EXTERN_CXX_MODELS: ${NGEN_WITH_EXTERN_CXX_MODELS}"
-"    NGEN_WITH_EXTERN_C_MODELS: ${NGEN_WITH_EXTERN_C_MODELS}"
-"    NGEN_WITH_EXTERN_FORTRAN_MODELS: ${NGEN_WITH_EXTERN_FORTRAN_MODELS}"
 "    NGEN_QUIET: ${NGEN_QUIET}"
+"  Extern Models:"
+"    NGEN_WITH_EXTERN_SLOTH: ${NGEN_WITH_EXTERN_SLOTH}"
+"    NGEN_WITH_EXTERN_TOPMODEL: ${NGEN_WITH_EXTERN_TOPMODEL}"
+"    NGEN_WITH_EXTERN_CFE: ${NGEN_WITH_EXTERN_CFE}"
+"    NGEN_WITH_EXTERN_PET: ${NGEN_WITH_EXTERN_PET}"
+"    NGEN_WITH_EXTERN_NOAH_OWP_MODULAR: ${NGEN_WITH_EXTERN_NOAH_OWP_MODULAR}"
 "Environment summary:"
 "  Boost:"
 "    Version: ${Boost_VERSION}"
