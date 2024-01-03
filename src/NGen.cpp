@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <unordered_map>
+#include <chrono>
 
 #include <utilities/span.hpp>
 
@@ -153,6 +154,8 @@ int main(int argc, char *argv[]) {
 
         exit(1);
     } 
+
+    auto time_start = std::chrono::steady_clock::now();
 
     std::cout << "NGen Framework " << ngen_VERSION_MAJOR << "."
               << ngen_VERSION_MINOR << "."
@@ -485,6 +488,9 @@ int main(int argc, char *argv[]) {
 
     }
 
+    auto time_done_init = std::chrono::steady_clock::now();
+    std::chrono::duration<double> time_elapsed_init = time_done_init - time_start;
+
     //Now loop some time, iterate catchments, do stuff for total number of output times
     auto num_times = manager->Simulation_Time_Object->get_total_output_times();
     for( int count = 0; count < num_times; count++) 
@@ -546,6 +552,8 @@ int main(int argc, char *argv[]) {
         std::cout << "Finished " << manager->Simulation_Time_Object->get_total_output_times() << " timesteps." << std::endl;
     }
 
+    auto time_done_simulation = std::chrono::steady_clock::now();
+    std::chrono::duration<double> time_elapsed_simulation = time_done_simulation - time_done_init;
 
 #ifdef NGEN_MPI_ACTIVE
     MPI_Barrier(MPI_COMM_WORLD);
@@ -567,6 +575,20 @@ int main(int argc, char *argv[]) {
         }
     }
 #endif
+
+    auto time_done_routing = std::chrono::steady_clock::now();
+    std::chrono::duration<double> time_elapsed_routing = time_done_routing - time_done_simulation;
+
+    if (mpi_rank == 0)
+    {
+        std::cout << "NGen top-level timings:"
+                  << "\n\tNGen::init: " << time_elapsed_init.count()
+                  << "\n\tNGen::simulation: " << time_elapsed_simulation.count()
+#ifdef NGEN_ROUTING_ACTIVE
+                  << "\n\tNGen::routing: " << time_elapsed_routing.count()
+#endif
+                  << std::endl;
+    }
 
 #ifdef NGEN_MPI_ACTIVE
     MPI_Finalize();
