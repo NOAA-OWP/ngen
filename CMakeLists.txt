@@ -175,6 +175,7 @@ if(NGEN_WITH_EXTERN_SLOTH)
         GIT_UPDATE "${NGEN_EXT_DIR}/sloth"
         IMPORTS    slothmodel
     )
+    set_target_properties(slothmodel PROPERTIES CXX_VISIBILITY_PRESET default)
 endif()
 
 # -----------------------------------------------------------------------------
