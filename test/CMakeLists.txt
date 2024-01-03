@@ -24,6 +24,7 @@ git_update_submodule("${NGEN_EXT_DIR}/bmi-cxx")
 add_external_subdirectory(
     SOURCE "${NGEN_EXT_DIR}/test_bmi_cpp"
     OUTPUT "${NGEN_EXT_DIR}/test_bmi_cpp/cmake_build"
+    IMPORTS testbmicppmodel
 )
 
 if (NGEN_WITH_PYTHON)
@@ -39,6 +40,7 @@ if(NGEN_WITH_BMI_C)
     add_external_subdirectory(
         SOURCE "${NGEN_EXT_DIR}/test_bmi_c"
         OUTPUT "${NGEN_EXT_DIR}/test_bmi_c/cmake_build"
+        IMPORTS testbmicmodel
     )
 endif()
 
@@ -47,6 +49,7 @@ if(NGEN_WITH_BMI_FORTRAN)
     add_external_subdirectory(
         SOURCE "${NGEN_EXT_DIR}/test_bmi_fortran"
         OUTPUT "${NGEN_EXT_DIR}/test_bmi_fortran/cmake_build"
+        IMPORTS testbmifortranmodel
     )
 endif()
 

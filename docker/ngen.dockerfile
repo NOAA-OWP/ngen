@@ -33,7 +33,7 @@ RUN cmake -S . \
           -DNGEN_WITH_PYTHON:BOOL=OFF \
           -DNGEN_WITH_TESTS:BOOL=ON \
           -DNGEN_QUIET:BOOL=ON \
-          -DNGEN_WITH_EXTERN_CXX_MODELS:BOOL=ON
+          -DNGEN_WITH_EXTERN_SLOTH:BOOL=ON
 
 RUN cmake --build /ngen_build \
           --target testbmicppmodel ngen \
