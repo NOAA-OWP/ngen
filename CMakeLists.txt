@@ -80,6 +80,22 @@ cmake_dependent_option(NGEN_WITH_EXTERN_CFE              "Build with extern-dist
 cmake_dependent_option(NGEN_WITH_EXTERN_PET              "Build with extern-distributed PET"              ON "NGEN_WITH_BMI_C"       OFF)
 cmake_dependent_option(NGEN_WITH_EXTERN_NOAH_OWP_MODULAR "Build with extern-distributed Noah-OWP-Modular" ON "NGEN_WITH_BMI_FORTRAN" OFF)
 
+# Allow enabling of all extern models dependent on NGen options given.
+option(NGEN_WITH_EXTERN_ALL OFF)
+if(NGEN_WITH_EXTERN_ALL)
+    set(NGEN_WITH_EXTERN_SLOTH ON)
+
+    if(NGEN_WITH_BMI_C)
+        set(NGEN_WITH_EXTERN_TOPMODEL ON)
+        set(NGEN_WITH_EXTERN_CFE ON)
+        set(NGEN_WITH_EXTERN_PET ON)
+    endif()
+
+    if(NGEN_WITH_BMI_FORTRAN)
+        set(NGEN_WITH_EXTERN_NOAH_OWP_MODULAR ON)
+    endif()
+endif()
+
 # Project =====================================================================
 
 # -----------------------------------------------------------------------------
@@ -395,6 +411,7 @@ ngen_multiline_message(
 "    NGEN_WITH_COVERAGE: ${NGEN_WITH_COVERAGE}"
 "    NGEN_QUIET: ${NGEN_QUIET}"
 "  Extern Models:"
+"    NGEN_WITH_EXTERN_ALL: ${NGEN_WITH_EXTERN_ALL}"
 "    NGEN_WITH_EXTERN_SLOTH: ${NGEN_WITH_EXTERN_SLOTH}"
 "    NGEN_WITH_EXTERN_TOPMODEL: ${NGEN_WITH_EXTERN_TOPMODEL}"
 "    NGEN_WITH_EXTERN_CFE: ${NGEN_WITH_EXTERN_CFE}"
