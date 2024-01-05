@@ -139,15 +139,16 @@ int main(int argc, char *argv[]) {
         MPI_Init(nullptr, nullptr);
         MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
         MPI_Comm_size(MPI_COMM_WORLD, &mpi_num_procs);
+        #endif
 
         if (mpi_rank == 0)
-        #endif
         {
             std::ostringstream output;
             output << ngen::exec_info::build_summary;
             ngen::exec_info::runtime_summary(output);
             std::cout << output.str() << std::endl;
         } // if (mpi_rank == 0)
+
         #if NGEN_WITH_MPI
         MPI_Finalize();
         #endif
@@ -393,11 +394,8 @@ int main(int argc, char *argv[]) {
     //realization collection is created
     #ifdef NGEN_ROUTING_ACTIVE
     std::unique_ptr<routing_py_adapter::Routing_Py_Adapter> router;
-    #ifdef NGEN_MPI_ACTIVE
-    //If rank == 0, do routing
     if( mpi_rank == 0 )
     { // Run t-route from single process
-    #endif //NGEN_MPI_ACTIVE
     if(manager->get_using_routing()) {
       std::cout<<"Using Routing"<<std::endl;
       std::string t_route_config_file_with_path = manager->get_t_route_config_file_with_path();
@@ -406,9 +404,7 @@ int main(int argc, char *argv[]) {
     else {
       std::cout<<"Not Using Routing"<<std::endl;
     }
-    #ifdef NGEN_MPI_ACTIVE
     }
-    #endif //NGEN_MPI_ACTIVE
     #endif //NGEN_ROUTING_ACTIVE
     std::cout<<"Building Feature Index\n";
     std::string link_key = "toid";
