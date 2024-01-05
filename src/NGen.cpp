@@ -38,6 +38,9 @@ std::string nexusDataFile = "";
 std::string REALIZATION_CONFIG_PATH = "";
 bool is_subdivided_hydrofabric_wanted = false;
 
+// Define in the non-MPI case so that we don't need to conditionally compile `if (mpi_rank == 0)`
+int mpi_rank = 0;
+
 #ifdef NGEN_MPI_ACTIVE
 
 #ifndef MPI_HF_SUB_CLI_FLAG
@@ -50,10 +53,7 @@ bool is_subdivided_hydrofabric_wanted = false;
 #include <HY_Features_MPI.hpp>
 
 std::string PARTITION_PATH = "";
-int mpi_rank;
 int mpi_num_procs;
-#else // NGEN_MPI_ACTIVE
-int mpi_rank = 0;
 #endif // NGEN_MPI_ACTIVE
 
 #include <Layer.hpp>
