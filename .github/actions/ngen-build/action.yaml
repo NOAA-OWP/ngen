@@ -106,18 +106,15 @@ runs:
           run: git submodule update --init --recursive
           shell: bash
 
-        - name: Cache Boost Dependency
-          id: cache-boost-dep
-          uses: actions/cache@v3
-          with:
-            path: boost_1_72_0
-            key: unix-boost-dep
-
-        - name: Get Boost Dependency
-          if: steps.cache-boost-dep.outputs.cache-hit != 'true'
+        - name: Install Boost
           run: |
-            curl -L -o boost_1_72_0.tar.bz2 https://sourceforge.net/projects/boost/files/boost/1.72.0/boost_1_72_0.tar.bz2/download
-            tar xjf boost_1_72_0.tar.bz2
+            if [ ${{ runner.os }} == 'Linux' ]
+            then
+              sudo apt-get install -y libboost-dev
+            elif [ ${{ runner.os }} == 'macOS' ]
+            then
+              brew install boost
+            fi
           shell: bash
 
         - name: Cache Python Dependencies
