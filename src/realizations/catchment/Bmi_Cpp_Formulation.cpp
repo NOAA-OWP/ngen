@@ -138,7 +138,7 @@ double Bmi_Cpp_Formulation::get_response(time_step_t t_index, time_step_t t_delt
     return get_var_value_as_double( get_bmi_main_output_var());
 }
 
-std::vector<double> Bmi_Cpp_Formulation::get_var_vec_as_double(time_t t_delta, const string &var_name) {
+std::vector<double> Bmi_Cpp_Formulation::get_var_vec_as_double(time_t t_delta, const std::string &var_name) {
     time_t start_time = convert_model_time(get_bmi_model()->GetCurrentTime()) + get_bmi_model_start_time_forcing_offset_s();
     std::string bmi_var_name;
     Bmi_Module_Formulation::get_bmi_output_var_name(var_name, bmi_var_name);

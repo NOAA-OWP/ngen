@@ -500,7 +500,7 @@ namespace realization {
          */
         virtual double get_var_value_as_double(const int& index, const std::string& var_name) = 0;
 
-        virtual std::vector<double> get_var_vec_as_double(time_t timestep, const string &var_name) = 0;
+        virtual std::vector<double> get_var_vec_as_double(time_t timestep, const std::string &var_name) = 0;
 
         /**
          * Universal logic applied when creating a BMI-backed formulation from NGen config.
@@ -609,8 +609,6 @@ namespace realization {
 
             // Create a reference to this for ET by using a WrappedDataProvider
             std::shared_ptr<data_access::GenericDataProvider> self = std::make_shared<data_access::WrappedDataProvider>(this);
-            input_forcing_providers[NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP] = self;
-            input_forcing_providers[CSDMS_STD_NAME_POTENTIAL_ET] = self;
 
             // Output precision, if present
             auto out_precision_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION);

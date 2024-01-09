@@ -141,7 +141,7 @@ namespace realization {
         /**
          * Get value vector for some BMI model variable.
          */
-        std::vector<double> get_var_vec_as_double(time_t timestep, const string &var_name) override;
+        std::vector<double> get_var_vec_as_double(time_t timestep, const std::string &var_name) override;
 
         /**
          * Get value for some BMI model variable.

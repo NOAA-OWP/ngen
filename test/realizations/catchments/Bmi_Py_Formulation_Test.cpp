@@ -84,7 +84,7 @@ protected:
         return formulation.get_var_value_as_double(var_name);
     }
 
-    static std::vector<double> get_friend_var_vec_as_double(Bmi_Py_Formulation& formulation, time_t timestep, const string& var_name) {
+    static std::vector<double> get_friend_var_vec_as_double(Bmi_Py_Formulation& formulation, time_t timestep, const std::string& var_name) {
         return formulation.get_var_vec_as_double(timestep, var_name);
     }
 

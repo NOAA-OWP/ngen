@@ -153,7 +153,7 @@ namespace realization {
         //const vector<std::string> &get_output_bbox() const {
         //    return output_bbox;
         //}
-        const vector<int> &get_output_bbox() const {
+        const std::vector<int> &get_output_bbox() const {
             return output_bbox;
         }
 
@@ -171,7 +171,7 @@ namespace realization {
 
         /*
         //std::vector<int> get_output_bbox_list(string delimiter) override {
-        string get_output_bbox_list(string delimiter) override {
+        std::string get_output_bbox_list(std::string delimiter) override {
             //return get_output_bbox();
             return boost::algorithm::join(get_output_bbox(), delimiter);
         }
@@ -296,7 +296,7 @@ namespace realization {
         //void set_output_bbox(const vector<std::string> &output_bound_box) {
         //    output_bbox = output_bound_box;
         //}
-        void set_output_bbox(const vector<int> &output_bound_box) {
+        void set_output_bbox(const std::vector<int> &output_bound_box) {
             output_bbox = output_bound_box;
         }
 

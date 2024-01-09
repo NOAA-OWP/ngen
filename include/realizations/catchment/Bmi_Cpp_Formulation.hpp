@@ -46,7 +46,7 @@ namespace realization {
 
         double get_var_value_as_double(const int& index, const std::string& var_name) override;
 
-        std::vector<double> get_var_vec_as_double(time_t timestep, const string &var_name) override;
+        std::vector<double> get_var_vec_as_double(time_t timestep, const std::string &var_name) override;
 
         bool is_model_initialized() override;
 
