@@ -65,6 +65,12 @@ string Bmi_Py_Formulation::get_output_line_for_timestep(int timestep, std::strin
         throw std::invalid_argument("Only current time step valid when getting output for BMI Python formulation");
     }
 
+    const double longitude_start = -130.0;
+    const double latitude_start = 20.0;
+    const double lat_lon_delt = 0.008333;
+    double longitude;
+    double latitude;
+
     // TODO: see Github issue 355: this design (and formulation output handling in general) needs to be reworked
     // Clear anything currently in there
     output_text_stream->str(std::string());
@@ -77,25 +83,33 @@ string Bmi_Py_Formulation::get_output_line_for_timestep(int timestep, std::strin
     time_t t_delta = timestep;
 
     // Loop through the output_var_names for scalar, 1d, and 2d grid output
+    // FIXME Skip the non-gridded output for now and fix it later
+    /*
     for (int i = 0; i < output_var_names.size(); ++i) {
         std::vector<double> var_vector;
         var_vector = get_var_vec_as_double(t_delta, output_var_names[i]);
         int grid_id = get_bmi_model()->GetVarGrid(output_var_names[i]);
         int rank = get_bmi_model()->GetGridRank(grid_id);
+        int shape[rank];
+        get_bmi_model()->GetGridShape(grid_id, shape);
+        int x_dim_len = *(shape+1);
+        std::cout << "x_dim_len = " << x_dim_len << std::endl;
+        int y_dim_len = *shape;
+        std::cout << "y_dim_len = " << y_dim_len << std::endl;
+
         // Do the scalar variables
         if (rank == 0) {
             // Do the first separately, without the leading comma
             //*output_text_stream << get_var_value_as_double(output_var_names[0]);
             if (i == 0) {
-            if ((output_text_stream->str()).empty()) {
-                *output_text_stream << get_var_value_as_double(output_var_names[0]);
-            }
-            else {
-                *output_text_stream << "," << get_var_value_as_double(output_var_names[0]);
-            }
+                if ((output_text_stream->str()).empty()) {
+                    *output_text_stream << get_var_value_as_double(output_var_names[0]);
+                }
+                else {
+                    *output_text_stream << "," << get_var_value_as_double(output_var_names[0]);
+                }
             } else {
-
-            // Do the rest with a leading comma
+                // Do the rest with a leading comma
                 *output_text_stream << "," << get_var_value_as_double(output_var_names[i]);
             }
         }
@@ -104,18 +118,58 @@ string Bmi_Py_Formulation::get_output_line_for_timestep(int timestep, std::strin
         else if (rank > 2) {
             continue;
         }
+        }
+        */
 
+        //if (rank == 2) {
         // Do the grid variables
-        else {
-            std::vector<int> index_array = get_array_indices_for_area();
+        std::vector<int> index_array = get_array_indices_for_area();
 
-            int first_node = index_array[0];
-            for (int j = 0; j < index_array.size(); ++j) {
+        // Get grid shape and dimension
+        std::cout << "output_var_names[0]: " << output_var_names[0] << std::endl;
+        int grid_id = get_bmi_model()->GetVarGrid(output_var_names[0]);
+        int rank = get_bmi_model()->GetGridRank(grid_id);
+        int shape[rank];
+        get_bmi_model()->GetGridShape(grid_id, shape);
+        int x_dim_len = *(shape+1);
+        std::cout << "x_dim_len = " << x_dim_len << std::endl;
+        int y_dim_len = *shape;
+        std::cout << "y_dim_len = " << y_dim_len << std::endl;
+        for (int j = 0; j < index_array.size(); ++j) {
+          for (int i = 0; i < output_var_names.size(); ++i) {
+            /*
+            std::vector<double> var_vector;
+            var_vector = get_var_vec_as_double(t_delta, output_var_names[i]);
+            int grid_id = get_bmi_model()->GetVarGrid(output_var_names[i]);
+            int rank = get_bmi_model()->GetGridRank(grid_id);
+            int shape[rank];
+            get_bmi_model()->GetGridShape(grid_id, shape);
+            int x_dim_len = *(shape+1);
+            std::cout << "x_dim_len = " << x_dim_len << std::endl;
+            int y_dim_len = *shape;
+            std::cout << "y_dim_len = " << y_dim_len << std::endl;
+            std::vector<int> index_array = get_array_indices_for_area();
+            */
+
+            //for (int j = 0; j < index_array.size(); ++j) {
                 int index = index_array[j];
-                *output_text_stream << "," << get_var_vec_as_double(t_delta, output_var_names[i])[index];
+                longitude = (index % x_dim_len) * lat_lon_delt + longitude_start;
+                latitude = (index / x_dim_len) * lat_lon_delt + latitude_start;
+                if (i == 0) {
+                    *output_text_stream << latitude << "," << longitude << "," << get_var_vec_as_double(t_delta, output_var_names[i])[index];
+                    //if ((output_text_stream->str()).empty()) {
+                    //    *output_text_stream << latitude << "," << longitude << "," << get_var_vec_as_double(t_delta, output_var_names[i])[index];
+                    //}
+                    //else {
+                    //    *output_text_stream << "," << latitude << "," << longitude <<"," << get_var_vec_as_double(t_delta, output_var_names[i])[index];
+                    //}
+                } else if (i != (output_var_names.size()-1)) {
+                    *output_text_stream << "," << get_var_vec_as_double(t_delta, output_var_names[i])[index];
+                } else {
+                    *output_text_stream << "," << get_var_vec_as_double(t_delta, output_var_names[i])[index] << std::endl;
+                }
             }
         }
-    }
 
     return output_text_stream->str();
 }
@@ -123,18 +177,35 @@ string Bmi_Py_Formulation::get_output_line_for_timestep(int timestep, std::strin
 std::vector<int> Bmi_Py_Formulation::get_array_indices_for_area() {
 
     const std::vector<std::string> &output_var_names = get_output_variable_names();
+    for (int i = 0; i < output_var_names.size(); ++i) {
+        std::cout << "output_var_names: " << output_var_names[i] << std::endl;
+    }
 
     //TODO Index 3 is chosen for unit test. Need to check for consistency in general use
     int grid_id = get_bmi_model()->GetVarGrid(output_var_names[3]);
+    std::cout << "grid_id = " << grid_id << std::endl;
     int grid_size = get_bmi_model()->GetGridSize(grid_id);
+    std::cout << "grid_size = " << grid_size << std::endl;
     int rank = get_bmi_model()->GetGridRank(grid_id);
+    std::cout << "grid rank = " << rank << std::endl;
     int shape[rank];
     get_bmi_model()->GetGridShape(grid_id, shape);
+    std::cout << "grid_id = " << grid_id << ", shape: " << *shape << std::endl;
+    std::cout << "grid_id = " << grid_id << ", shape: " << *(shape+1) << std::endl;
 
-    int x_dim_len = shape[1];
+    int x_dim_len = *(shape+1);
+    std::cout << "x_dim_len = " << x_dim_len << std::endl;
+    x_dim_len = shape[1];
+    std::cout << "x_dim_len = " << x_dim_len << std::endl;
     int y_dim_len = shape[0];
+    std::cout << "y_dim_len = " << y_dim_len << std::endl;
+    y_dim_len = *shape;
+    std::cout << "y_dim_len = " << y_dim_len << std::endl;
 
     std::vector<int> output_bbox = get_output_bbox_list();
+    for (int i = 0; i < output_bbox.size(); ++i) {
+        std::cout << "output_bbox: " << output_bbox[i] << std::endl;
+    }
     const int node_x_idx = output_bbox[0];
     const int node_y_idx = output_bbox[1];
     const int num_sub_nodes_x = output_bbox[2];
@@ -151,8 +222,8 @@ std::vector<int> Bmi_Py_Formulation::get_array_indices_for_area() {
         // Calculate the index position of the first node of the rectilinear sub-region
         const int first_node_idx = node_x_idx + node_y_idx * x_dim_len;
         // Build array indices for the selected sub-region
-        for (int j = 0; j < num_sub_nodes_y; ++j) {
-            for (int k = 0; k < num_sub_nodes_x; ++k) {
+        for (int j = 0; j < num_sub_nodes_y; j = j+10) {
+            for (int k = 0; k < num_sub_nodes_x; k = k+10) {
                 index = first_node_idx + k +  j * x_dim_len;
                 index_array.push_back(index);
             }
@@ -218,7 +289,7 @@ double Bmi_Py_Formulation::get_response(time_step_t t_index, time_step_t t_delta
     return get_var_vec_as_double(t_index, get_bmi_main_output_var())[0];
 }
 
-std::vector<double> Bmi_Py_Formulation::get_var_vec_as_double(time_t t_delta, const string &var_name) {
+std::vector<double> Bmi_Py_Formulation::get_var_vec_as_double(time_t t_delta, const std::string &var_name) {
     time_t start_time = convert_model_time(get_bmi_model()->GetCurrentTime()) + get_bmi_model_start_time_forcing_offset_s();
     //time_t start_time = convert_model_time(get_bmi_model()->GetCurrentTime());
     std::string bmi_var_name;

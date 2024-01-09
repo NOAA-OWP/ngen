@@ -606,8 +606,6 @@ namespace realization {
 
             // Create a reference to this for ET by using a WrappedDataProvider
             std::shared_ptr<data_access::GenericDataProvider> self = std::make_shared<data_access::WrappedDataProvider>(this);
-            input_forcing_providers[NGEN_STD_NAME_POTENTIAL_ET_FOR_TIME_STEP] = self;
-            input_forcing_providers[CSDMS_STD_NAME_POTENTIAL_ET] = self;
 
             // Output precision, if present
             auto out_precision_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION);
