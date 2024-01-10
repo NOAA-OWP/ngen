@@ -1,6 +1,6 @@
 ﻿# yaml-language-server: $schema=https://json.schemastore.org/clang-format.json
 ---
-BasedOnStyle: Google
+BasedOnStyle: LLVM
 ColumnLimit: 100
 IndentWidth: 4
 UseTab: Never
@@ -26,7 +26,6 @@ AllowAllArgumentsOnNextLine: false
 AllowAllParametersOfDeclarationOnNextLine: false
 AllowShortBlocksOnASingleLine: Empty
 AllowShortFunctionsOnASingleLine: None
-AllowShortIfStatementsOnASingleLine: WithoutElse
 AllowShortLambdasOnASingleLine: All
 AllowShortLoopsOnASingleLine: true
 AlwaysBreakTemplateDeclarations: Yes
