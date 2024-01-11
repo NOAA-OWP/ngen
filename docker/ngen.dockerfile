@@ -9,9 +9,9 @@ RUN dnf update -y \
 
 ARG BOOST_VERSION="1.72.0"
 RUN export BOOST_ARCHIVE="boost_$(echo ${BOOST_VERSION} | tr '\.' '_').tar.gz" \
-    && export BOOST_URL="https://boostorg.jfrog.io/artifactory/main/release/${BOOST_VERSION}/source/${BOOST_ARCHIVE}" \
+    && export BOOST_URL="https://sourceforge.net/projects/boost/files/boost/${BOOST_VERSION}/${BOOST_ARCHIVE}/download" \
     && cd / \
-    && curl -L -O "${BOOST_URL}" \
+    && curl -L -o "${BOOST_ARCHIVE}" "${BOOST_URL}" \
     && tar -xzf "${BOOST_ARCHIVE}" \
     && rm ${BOOST_ARCHIVE}
 
