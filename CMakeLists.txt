@@ -70,9 +70,6 @@ deprecated_option(OLD BMI_C_LIB_ACTIVE      NEW NGEN_WITH_BMI_C)
 deprecated_option(OLD BMI_FORTRAN_ACTIVE    NEW NGEN_WITH_BMI_FORTRAN)
 deprecated_option(OLD QUIET                 NEW NGEN_QUIET)
 
-# -- Removed
-# deprecated_option(OLD PACKAGE_TESTS         NEW NGEN_WITH_TESTS)
-
 # Options to automate building of extern-distributed models
 option(NGEN_WITH_EXTERN_SLOTH                            "Build with extern-distributed SLoTH"            ON)
 cmake_dependent_option(NGEN_WITH_EXTERN_TOPMODEL         "Build with extern-distributed TOPMODEL"         ON "NGEN_WITH_BMI_C"       OFF)
@@ -85,14 +82,25 @@ option(NGEN_WITH_EXTERN_ALL OFF)
 if(NGEN_WITH_EXTERN_ALL)
     set(NGEN_WITH_EXTERN_SLOTH ON)
 
+    # Ensure C support is enabled
     if(NGEN_WITH_BMI_C)
         set(NGEN_WITH_EXTERN_TOPMODEL ON)
         set(NGEN_WITH_EXTERN_CFE ON)
         set(NGEN_WITH_EXTERN_PET ON)
+    else()
+        message(FATAL_ERROR "NGEN_WITH_EXTERN_ALL set to ${NGEN_WITH_EXTERN_ALL}, but NGEN_WITH_BMI_C set to ${NGEN_WITH_BMI_C}")
     endif()
 
+    # Ensure Fortran support is enabled
     if(NGEN_WITH_BMI_FORTRAN)
         set(NGEN_WITH_EXTERN_NOAH_OWP_MODULAR ON)
+    else()
+        message(FATAL_ERROR "NGEN_WITH_EXTERN_ALL set to ${NGEN_WITH_EXTERN_ALL}, but NGEN_WITH_BMI_FORTRAN set to ${NGEN_WITH_BMI_FORTRAN}")
+    endif()
+
+    # Ensure Python support is enabled
+    if(NOT NGEN_WITH_PYTHON)
+        message(FATAL_ERROR "NGEN_WITH_EXTERN_ALL set to ${NGEN_WITH_EXTERN_ALL}, but NGEN_WITH_PYTHON set to ${NGEN_WITH_PYTHON}")
     endif()
 endif()
 
