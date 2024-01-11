@@ -21,7 +21,7 @@
                                 "uses_forcing_file": false,
                                 "model_params": {
 				    "sloth_ice_fraction_schaake(1,double,m,node)": 0.0,
-				    "sloth_ice_fraction_xinan(1,double,1,node)": 0.0,
+				    "sloth_ice_fraction_xinanjiang(1,double,1,node)": 0.0,
 				    "sloth_smp(1,double,1,node)": 0.0
                                 }
 			    }
@@ -68,7 +68,7 @@
                                     "land_surface_radiation~incoming~shortwave__energy_flux": "DSWRF_surface",
                                     "land_surface_air__pressure": "PRES_surface",
 				    "ice_fraction_schaake" : "sloth_ice_fraction_schaake",
-				    "ice_fraction_xinan" : "sloth_ice_fraction_xinan",
+				    "ice_fraction_xinanjiang" : "sloth_ice_fraction_xinanjiang",
 				    "soil_moisture_profile" : "sloth_smp"
                                 },
                                 "uses_forcing_file": false
