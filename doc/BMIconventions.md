@@ -311,3 +311,57 @@ TODO: Thinking we should add `ngen_` to the front of these, BTW...
 
 
 
+# MPI Parallelism in BMI Models
+
+We define a protocol for initializing and using a model that will
+internally use MPI for multi-process parallelism. This protocol aims
+to be a simple as possible for model implementers to adopt, while also
+not overly burdening the framework code with setup, coordination, or
+cross-language ABI issues. Specifically, we provision a set of
+processes in a private MPI communicator dedicated to the model.
+
+We aim to use a BMI model with internal MPI parallelism akin to how
+libraries designed for use by MPI programs are used. Relevant
+functions in the interface are split between *independently*-called
+functions that can be called freely on any process at any time, and
+those that will only be called *collectively* by all involved
+processes. This convention of how the functions are called dictates
+whether it is safe for code in those functions of the MPI-using BMI
+model to make any call to blocking or collective MPI
+routines. Functions called collectively may call such MPI routines,
+while others may not. This constraint is necessary to ensure that
+parallel jobs do not hang or deadlock as a result of a model's
+internal execution of a BMI function blocking in a call to an MPI
+routine whose communications with other processes will not complete.
+
+The BMI's ['Model control
+functions'](https://bmi.readthedocs.io/en/stable/#model-control-functions)
+will all be called collectively. This set of functions comprises
+`initialize`, `finalize`, `update`, and `update_until`. With the
+exception of the communicator setup process described below, all other
+functions may be called independently, at any time, in any sequence,
+without coordination among calling processes. Note that this may
+require the BMI implementation of a model to perform extra
+coordination or setup in order to avoid forbidden MPI calls in
+functions that might be called independently.
+
+## Private Communicator Setup Process
+
+For MPI-parallel BMI models, we modify the model lifecycle relative to
+models that will run within a single process. Specifically, between
+instantiation of the model instance and the call to `initialize`, the
+framework will make a single collective call to `set_value` to
+indicate an MPI Communicator to use. The `name` argument will be
+`bmi_mpi_comm_handle`, and the value will be a single integer of type
+`MPI_Fint`. The model can obtain the associated communicator using the
+C language call `MPI_Comm_f2c` or the mpi4py call `MPI.Comm.f2py`, or
+use it directly in Fortran.
+
+This MPI communicator encompasses the set of processes over which the
+model will run. Thus, the calling framework may instantiate and
+initialize an MPI-using BMI model solely on the processes on which
+that instance will be allowed to run, without coordination with other
+processes. The model can derive and use additional communicators from
+the given communicator, but it may not use any other
+communicators. Specifically, the model should not use `MPI_COMM_WORLD`
+in any fashion.
