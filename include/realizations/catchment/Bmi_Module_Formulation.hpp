@@ -463,8 +463,6 @@ namespace realization {
             return bmi_model_start_time_forcing_offset_s;
         }
 
-        virtual std::vector<double> get_var_vec_as_double(time_t timestep, const std::string &var_name) = 0;
-
         /**
          * Get value for some BMI model variable.
          *
@@ -936,7 +934,6 @@ namespace realization {
                 // TODO: probably need to actually allow this by default and warn, but have config option to activate
                 //  this type of behavior
                 // TODO: account for arrays later
-                int varItemSize = get_bmi_model()->GetVarItemsize(var_name);
                 int nbytes = get_bmi_model()->GetVarNbytes(var_name);
                 int varItemSize = get_bmi_model()->GetVarItemsize(var_name);
                 int numItems = nbytes / varItemSize;

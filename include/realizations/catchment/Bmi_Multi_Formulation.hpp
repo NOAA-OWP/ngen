@@ -539,9 +539,9 @@ namespace realization {
         /**
          * Get value vector for some BMI model variable.
          */
-        double get_var_value_as_double(const int& index, const std::string& var_name) override {
-            return get_var_value_as_double(0, var_name);
-        }
+        //double get_var_value_as_double(const int& index, const std::string& var_name) override {
+        //    return get_var_value_as_double(0, var_name);
+        //}
 
         /**
          * Get value for some BMI model variable at a specific index.
@@ -567,7 +567,8 @@ namespace realization {
          * @param var_name
          * @return
          */
-        std::vector<double> get_var_vec_as_double(const int& index, const std::string& var_name) override {
+        //std::vector<double> get_var_vec_as_double(const int& index, const std::string& var_name) override {
+        std::vector<double> get_var_vec_as_double(const int& index, const std::string& var_name) {
             auto data_provider_iter = availableData.find(var_name);
             if (data_provider_iter == availableData.end()) {
                 throw external::ExternalIntegrationException(

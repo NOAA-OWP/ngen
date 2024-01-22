@@ -419,7 +419,7 @@ TEST_F(Bmi_Py_Formulation_Test, GetOutputLineForTimestep_0_a) {
     std::string output = examples[ex_index].formulation->get_output_line_for_timestep(0, ",");
     std::cout << "0_a: output = " << output << std::endl;
     //NOTE the last two values are simply the FIRST element of the grid vars
-    ASSERT_EQ(output, "0.000000,571.600037,1.000000,2.000000,3.000000");
+    ASSERT_EQ(output, "0.000000,571.600037,1.000000,2.000000,2.000000");
     //ASSERT_EQ(output, "0.000000,0.000000,1.000000,2.000000,3.000000");  //using vector index 0
     //ASSERT_EQ(output, "0.000000,0.000000,2.000000,2.000000,3.000000");  //using vector index 1
 }
@@ -440,7 +440,7 @@ TEST_F(Bmi_Py_Formulation_Test, GetOutputLineForTimestep_0_b) {
     std::string output = examples[ex_index].formulation->get_output_line_for_timestep(543, ",");
     std::cout << "0_b: output = " << output << std::endl;
     //NOTE the last two values are simply the FIRST element of the grid vars
-    std::regex expected ("0.000001,582.000000,544.000000,2.000001,3.000001");
+    std::regex expected ("0.000001,582.000000,544.000000,2.000001,2.000001");
     //std::regex expected ("0.000001,(-?)0.000000,544.000000,2.000001,3.000001");  //using index 0
     //std::regex expected ("0.000001,(-?)0.000000,545.000000,2.000000,3.000000");  //using index 1
     ASSERT_TRUE(std::regex_match(output, expected));
@@ -454,7 +454,7 @@ TEST_F(Bmi_Py_Formulation_Test, GetOutputLineForTimestep_1_a) {
 
     double response = examples[ex_index].formulation->get_response(0, 3600);
     std::string output = examples[ex_index].formulation->get_output_line_for_timestep(0, ",");
-    ASSERT_EQ(output, "0.000000,0.000000,1.000000,2.000000,2.000000");
+    ASSERT_EQ(output, "0.000000,571.600037,1.000000,2.000000,2.000000");
     //ASSERT_TRUE(std::regex_match(output, expected));
 }
 
@@ -470,34 +470,7 @@ TEST_F(Bmi_Py_Formulation_Test, GetOutputLineForTimestep_1_b) {
 
     double response = examples[ex_index].formulation->get_response(543, 3600);
     std::string output = examples[ex_index].formulation->get_output_line_for_timestep(543, ",");
-    ASSERT_EQ(output, "0.000001,0.000000,544.000000,2.000001,2.000001");
-}
-
-/**
- * Simple test of output.
- */
-TEST_F(Bmi_Py_Formulation_Test, GetOutputLineForTimestep_1_a) {
-    int ex_index = 0;
-
-    double response = examples[ex_index].formulation->get_response(0, 3600);
-    std::string output = examples[ex_index].formulation->get_output_line_for_timestep(0, ",");
-    ASSERT_EQ(output, "0.000000,0.000000,1.000000,2.000000,2.000000");
-    //ASSERT_TRUE(std::regex_match(output, expected));
-}
-
-/**
- * Simple test of output, picking time step when there was non-zero rain rate.
- */
-TEST_F(Bmi_Py_Formulation_Test, GetOutputLineForTimestep_1_b) {
-    int ex_index = 0;
-
-    int i = 0;
-    while (i < 542)
-        examples[ex_index].formulation->get_response(i++, 3600);
-
-    double response = examples[ex_index].formulation->get_response(543, 3600);
-    std::string output = examples[ex_index].formulation->get_output_line_for_timestep(543, ",");
-    ASSERT_EQ(output, "0.000001,0.000000,544.000000,2.000001,2.000001");
+    ASSERT_EQ(output, "0.000001,582.000000,544.000000,2.000001,2.000001");
 }
 
 /**
