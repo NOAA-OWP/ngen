@@ -2,7 +2,7 @@
 #define NGEN_ENDIANCOPY_H
 
 #include <boost/endian.hpp>
-#include "span.hpp"
+#include <boost/core/span.hpp>
 
 namespace utils {
 

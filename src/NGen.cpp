@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <chrono>
 
-#include <utilities/span.hpp>
+#include <boost/core/span.hpp>
 
 #include "realizations/catchment/Formulation_Manager.hpp"
 #include <Catchment_Formulation.hpp>

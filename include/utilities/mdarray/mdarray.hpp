@@ -4,7 +4,7 @@
 #include <type_traits>
 #include <vector>
 
-#include <span.hpp>
+#include <boost/core/span.hpp>
 
 namespace ngen {
 

@@ -2,7 +2,7 @@
 
 #include "mdframe/mdframe.hpp"
 
-#include "span.hpp"
+#include <boost/core/span.hpp>
 
 namespace ngen {
 
