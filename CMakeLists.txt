@@ -126,12 +126,6 @@ add_compile_definitions(NGEN_SHARED_LIB_EXTENSION)
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
-if(NOT DEFINED BOOST_ROOT AND NOT DEFINED ENV{BOOST_ROOT})
-    # Look for version-specific Boost directory if available (known from Github Actions VM docs)
-    if(DEFINED ENV{BOOST_ROOT_1_72_0})
-        set(BOOST_ROOT $ENV{BOOST_ROOT_1_72_0})
-    endif()
-endif()
 find_package(Boost 1.72.0 REQUIRED)
 
 # -----------------------------------------------------------------------------
