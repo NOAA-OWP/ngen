@@ -127,7 +127,7 @@ std::vector<int> Bmi_Py_Formulation::get_array_indices_for_area() {
     //TODO Index 3 is chosen for unit test. Need to check for consistency in general use
     int grid_id = get_bmi_model()->GetVarGrid(output_var_names[3]);
     int grid_size = get_bmi_model()->GetGridSize(grid_id);
-    int rank = get_bmi_model()->GetGridRank(grid_id);
+    const int rank = get_bmi_model()->GetGridRank(grid_id);
     int shape[rank];
     get_bmi_model()->GetGridShape(grid_id, shape);
 
