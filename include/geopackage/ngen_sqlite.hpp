@@ -6,7 +6,7 @@
 
 #include <sqlite3.h>
 
-#include "span.hpp"
+#include <boost/core/span.hpp>
 #include "traits.hpp"
 
 namespace ngen {

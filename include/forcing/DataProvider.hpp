@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-#include <span.hpp>
+#include <boost/core/span.hpp>
 
 namespace data_access
 {
