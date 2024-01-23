@@ -10,27 +10,6 @@ var hierarchy =
         ] ]
       ] ]
     ] ],
-    [ "boost::detail::span_bytes< T, E >", "structboost_1_1detail_1_1span__bytes.html", null ],
-    [ "boost::detail::span_bytes< T, boost::dynamic_extent >", "structboost_1_1detail_1_1span__bytes_3_01_t_00_01boost_1_1dynamic__extent_01_4.html", null ],
-    [ "boost::detail::span_capacity< E, N >", "structboost_1_1detail_1_1span__capacity.html", null ],
-    [ "boost::detail::span_compatible< T, E, U, N >", "structboost_1_1detail_1_1span__compatible.html", null ],
-    [ "boost::detail::span_convertible< U, T >", "structboost_1_1detail_1_1span__convertible.html", null ],
-    [ "boost::detail::span_copyable< T, E, U, N >", "structboost_1_1detail_1_1span__copyable.html", null ],
-    [ "boost::detail::span_data< class, class >", "structboost_1_1detail_1_1span__data.html", null ],
-    [ "boost::detail::span_data< T, typename std::enable_if< std::is_pointer< span_ptr< T > >::value >::type >", "structboost_1_1detail_1_1span__data_3_01_t_00_01typename_01std_1_1enable__if_3_01std_1_1is__poin78544bb9d841e85969596fc838b560c1.html", null ],
-    [ "boost::detail::span_has_data< class, class, class >", "structboost_1_1detail_1_1span__has__data.html", null ],
-    [ "boost::detail::span_has_data< R, T, typename std::enable_if< span_convertible< typename span_data< R >::type, T >::value >::type >", "structboost_1_1detail_1_1span__has__data_3_01_r_00_01_t_00_01typename_01std_1_1enable__if_3_01sp388a2003c5c8c3bc5d4e6ff6b6321c39.html", null ],
-    [ "boost::detail::span_has_size< class, class >", "structboost_1_1detail_1_1span__has__size.html", null ],
-    [ "boost::detail::span_has_size< R, typename std::enable_if< std::is_convertible< decltype(std::declval< R & >().size()), std::size_t >::value >::type >", "structboost_1_1detail_1_1span__has__size_3_01_r_00_01typename_01std_1_1enable__if_3_01std_1_1is_895570961d4abb94bb76eb9662c26a69.html", null ],
-    [ "boost::detail::span_implicit< E, N >", "structboost_1_1detail_1_1span__implicit.html", null ],
-    [ "boost::detail::span_is_array< T >", "structboost_1_1detail_1_1span__is__array.html", null ],
-    [ "boost::detail::span_is_array< std::array< T, N > >", "structboost_1_1detail_1_1span__is__array_3_01std_1_1array_3_01_t_00_01_n_01_4_01_4.html", null ],
-    [ "boost::detail::span_is_range< R, T >", "structboost_1_1detail_1_1span__is__range.html", null ],
-    [ "boost::detail::span_is_span< class >", "structboost_1_1detail_1_1span__is__span.html", null ],
-    [ "boost::detail::span_is_span< boost::span< T, E > >", "structboost_1_1detail_1_1span__is__span_3_01boost_1_1span_3_01_t_00_01_e_01_4_01_4.html", null ],
-    [ "boost::detail::span_store< T, E >", "structboost_1_1detail_1_1span__store.html", null ],
-    [ "boost::detail::span_store< T, boost::dynamic_extent >", "structboost_1_1detail_1_1span__store_3_01_t_00_01boost_1_1dynamic__extent_01_4.html", null ],
-    [ "boost::detail::span_sub< E, O >", "structboost_1_1detail_1_1span__sub.html", null ],
     [ "boost::dfs_visitor", null, [
       [ "network::preorder_visitor< OutputIterator >", "structnetwork_1_1preorder__visitor.html", null ]
     ] ],
@@ -41,7 +20,6 @@ var hierarchy =
       [ "invalid_time_step", "structinvalid__time__step.html", null ],
       [ "request_from_empty_nexus", "structrequest__from__empty__nexus.html", null ]
     ] ],
-    [ "boost::span< T, E >", "classboost_1_1span.html", null ],
     [ "boost::static_visitor", null, [
       [ "geojson::JSONProperty::AsVectorVisitor< T >", "structgeojson_1_1_j_s_o_n_property_1_1_as_vector_visitor.html", null ],
       [ "ngen::detail::visitors::mdarray_at< SupportedTypes >", "structngen_1_1detail_1_1visitors_1_1mdarray__at.html", null ],

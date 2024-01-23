@@ -3,7 +3,7 @@
 
 #include "mdarray/mdarray.hpp"
 #include <boost/variant.hpp>
-#include <span.hpp>
+#include <boost/core/span.hpp>
 #include <traits.hpp>
 
 namespace ngen {

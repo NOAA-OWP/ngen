@@ -97,7 +97,7 @@ $(document).ready(function(){initNavTree('visitors_8hpp_source.html',''); initRe
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;mdarray/mdarray.hpp&quot;</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;boost/variant.hpp&gt;</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;span.hpp&gt;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;boost/core/span.hpp&gt;</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;traits.hpp&gt;</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacengen.html">ngen</a> {</div>
@@ -138,7 +138,7 @@ $(document).ready(function(){initNavTree('visitors_8hpp_source.html',''); initRe
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    : <span class="keyword">public</span> boost::static_visitor&lt;void&gt;</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>{</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno"><a class="line" href="structngen_1_1detail_1_1visitors_1_1mdarray__insert.html#a2c563a5d676afd707bf50cd46b89bd7e">   59</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="structngen_1_1detail_1_1visitors_1_1mdarray__insert.html#a2c563a5d676afd707bf50cd46b89bd7e">operator()</a>(T&amp; arr, <a class="code hl_class" href="classboost_1_1span.html">boost::span&lt;const std::size_t&gt;</a> index, <span class="keyword">typename</span> T::value_type value)</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno"><a class="line" href="structngen_1_1detail_1_1visitors_1_1mdarray__insert.html#a2c563a5d676afd707bf50cd46b89bd7e">   59</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="structngen_1_1detail_1_1visitors_1_1mdarray__insert.html#a2c563a5d676afd707bf50cd46b89bd7e">operator()</a>(T&amp; arr, boost::span&lt;const std::size_t&gt; index, <span class="keyword">typename</span> T::value_type value)</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    {</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        arr.insert(index, value);</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    }</div>
@@ -151,7 +151,7 @@ $(document).ready(function(){initNavTree('visitors_8hpp_source.html',''); initRe
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    &gt;</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>{</div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno"><a class="line" href="structngen_1_1detail_1_1visitors_1_1mdarray__at.html#a68020f75bc52cf6df4a2e158ef1db82c">   75</a></span>    <span class="keyword">typename</span> T::value_type <a class="code hl_function" href="structngen_1_1detail_1_1visitors_1_1mdarray__at.html#a68020f75bc52cf6df4a2e158ef1db82c">operator()</a>(<span class="keyword">const</span> T&amp; arr, <span class="keyword">const</span> <a class="code hl_class" href="classboost_1_1span.html">boost::span&lt;const std::size_t&gt;</a> index)<span class="keyword"> const</span></div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno"><a class="line" href="structngen_1_1detail_1_1visitors_1_1mdarray__at.html#a68020f75bc52cf6df4a2e158ef1db82c">   75</a></span>    <span class="keyword">typename</span> T::value_type <a class="code hl_function" href="structngen_1_1detail_1_1visitors_1_1mdarray__at.html#a68020f75bc52cf6df4a2e158ef1db82c">operator()</a>(<span class="keyword">const</span> T&amp; arr, <span class="keyword">const</span> boost::span&lt;const std::size_t&gt; index)<span class="keyword"> const</span></div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="keyword">    </span>{</div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        <span class="keywordflow">return</span> arr.at(index);</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    }</div>
@@ -173,7 +173,6 @@ $(document).ready(function(){initNavTree('visitors_8hpp_source.html',''); initRe
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>} <span class="comment">// namespace ngen</span></div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><span class="preprocessor">#endif </span><span class="comment">// NGEN_IO_MDFRAME_VISITORS_HPP</span></div>
-<div class="ttc" id="aclassboost_1_1span_html"><div class="ttname"><a href="classboost_1_1span.html">boost::span</a></div><div class="ttdef"><b>Definition:</b> span.hpp:169</div></div>
 <div class="ttc" id="aclassngen_1_1mdarray_html"><div class="ttname"><a href="classngen_1_1mdarray.html">ngen::mdarray</a></div><div class="ttdef"><b>Definition:</b> mdarray.hpp:13</div></div>
 <div class="ttc" id="anamespacengen_html"><div class="ttname"><a href="namespacengen.html">ngen</a></div><div class="ttdef"><b>Definition:</b> Layer.hpp:14</div></div>
 <div class="ttc" id="astructngen_1_1detail_1_1visitors_1_1mdarray__at_html"><div class="ttname"><a href="structngen_1_1detail_1_1visitors_1_1mdarray__at.html">ngen::detail::visitors::mdarray_at</a></div><div class="ttdoc">mdarray visitor for indexed access</div><div class="ttdef"><b>Definition:</b> visitors.hpp:73</div></div>
@@ -194,7 +193,7 @@ $(document).ready(function(){initNavTree('visitors_8hpp_source.html',''); initRe
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_52b4106b6168f13dcdf82e33b1d195ee.html">utilities</a></li><li class="navelem"><a class="el" href="dir_e6dddece1f21430723523b5da5f62ed1.html">mdframe</a></li><li class="navelem"><b>visitors.hpp</b></li>
-    <li class="footer">Generated on Wed Jan 17 2024 17:20:40 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
+    <li class="footer">Generated on Tue Jan 23 2024 13:57:13 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
   </ul>
 </div>
 </body>

@@ -1,3 +1,11 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structboost_1_1detail_1_1span__capacity.html" title=" " alt="" coords="5,5,131,45"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,237,140,262"/>
+<area shape="rect" id="node2" href="$structgeojson_1_1_j_s_o_n_property_1_1_as_vector_visitor.html" title="Visitor to filter boost variants by type T into a vector of type T." alt="" coords="213,5,371,45"/>
+<area shape="rect" id="node3" href="$structngen_1_1detail_1_1visitors_1_1mdarray__at.html" title="mdarray visitor for indexed access" alt="" coords="188,69,396,109"/>
+<area shape="rect" id="node4" href="$structngen_1_1detail_1_1visitors_1_1mdarray__insert.html" title="mdarray visitor for inserting a value" alt="" coords="225,133,359,173"/>
+<area shape="rect" id="node5" href="$structngen_1_1detail_1_1visitors_1_1mdarray__rank.html" title="mdarray visitor for retrieving the rank of the mdarray" alt="" coords="225,197,359,237"/>
+<area shape="rect" id="node6" href="$structngen_1_1detail_1_1visitors_1_1mdarray__shape.html" title="mdarray visitor for retrieving the shape of the mdarray" alt="" coords="225,261,359,301"/>
+<area shape="rect" id="node7" href="$structngen_1_1detail_1_1visitors_1_1mdarray__size.html" title="mdarray visitor for retrieving the size of the mdarray" alt="" coords="225,325,359,365"/>
+<area shape="rect" id="node8" href="$structngen_1_1detail_1_1visitors_1_1to__string__visitor.html" title=" " alt="" coords="225,389,359,429"/>
+<area shape="rect" id="node9" href="$structngen_1_1geopackage_1_1wkb_1_1wgs84.html" title=" " alt="" coords="214,453,370,493"/>
 </map>

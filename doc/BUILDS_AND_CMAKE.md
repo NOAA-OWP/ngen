@@ -104,7 +104,7 @@ In some cases - in particular **Google Test** - the build system will need to be
 
 ## Boost ENV Variable
 
-The Boost libraries must be available for the project to compile.  The details are discussed more in the [Dependencies](DEPENDENCIES.md) doc, but as a helpful hint, the **BOOST_ROOT** environmental variable can be set to the path of the applicable [Boost root directory](https://www.boost.org/doc/libs/1_72_0/more/getting_started/unix-variants.html#the-boost-distribution).  The project's [CMakeLists.txt](../CMakeLists.txt) is written to check for this env variable and use it to set the Boost include directory.
+The Boost libraries must be available for the project to compile.  The details are discussed more in the [Dependencies](DEPENDENCIES.md) doc, but as a helpful hint, the **BOOST_ROOT** environmental variable can be set to the path of the applicable [Boost root directory](https://www.boost.org/doc/libs/1_79_0/more/getting_started/unix-variants.html#the-boost-distribution).  The project's [CMakeLists.txt](../CMakeLists.txt) is written to check for this env variable and use it to set the Boost include directory.
 
 Note that if the variable is not set, it may still be possible for CMake to find Boost, although a *status* message will be printed by CMake indicating **BOOST_ROOT** was not set.
 

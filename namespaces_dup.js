@@ -1,7 +1,6 @@
 var namespaces_dup =
 [
     [ "bmi", "namespacebmi.html", "namespacebmi" ],
-    [ "boost", "namespaceboost.html", "namespaceboost" ],
     [ "data_access", "namespacedata__access.html", "namespacedata__access" ],
     [ "external", "namespaceexternal.html", "namespaceexternal" ],
     [ "geojson", "namespacegeojson.html", "namespacegeojson" ],

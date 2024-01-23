@@ -100,7 +100,7 @@ $(document).ready(function(){initNavTree('ngen__sqlite_8hpp_source.html',''); in
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;sqlite3.h&gt;</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &quot;span.hpp&quot;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;boost/core/span.hpp&gt;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;traits.hpp&quot;</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacengen.html">ngen</a> {</div>
@@ -150,9 +150,9 @@ $(document).ready(function(){initNavTree('ngen__sqlite_8hpp_source.html',''); in
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        <span class="keywordtype">int</span> <a class="code hl_function" href="structngen_1_1sqlite_1_1database_1_1iterator.html#a0dcf2ec7c20cec650f3e25a1ed336213">find</a>(const std::<span class="keywordtype">string</span>&amp; name) const noexcept;</div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        const <a class="code hl_namespace" href="namespaceboost.html">boost</a>::span&lt;const std::<span class="keywordtype">string</span>&gt; <a class="code hl_function" href="structngen_1_1sqlite_1_1database_1_1iterator.html#a3bc5442326ea46d3d6a0f4f156c7c21c">columns</a>() const noexcept;</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        const boost::span&lt;const std::<span class="keywordtype">string</span>&gt; <a class="code hl_function" href="structngen_1_1sqlite_1_1database_1_1iterator.html#a3bc5442326ea46d3d6a0f4f156c7c21c">columns</a>() const noexcept;</div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        const <a class="code hl_namespace" href="namespaceboost.html">boost</a>::span&lt;const <span class="keywordtype">int</span>&gt; <a class="code hl_function" href="structngen_1_1sqlite_1_1database_1_1iterator.html#a0346a3c803f1288c2eb75374d5d8299d">types</a>() const noexcept;</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        const boost::span&lt;const <span class="keywordtype">int</span>&gt; <a class="code hl_function" href="structngen_1_1sqlite_1_1database_1_1iterator.html#a0346a3c803f1288c2eb75374d5d8299d">types</a>() const noexcept;</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        template&lt;typename Tp&gt;</div>
@@ -195,7 +195,7 @@ $(document).ready(function(){initNavTree('ngen__sqlite_8hpp_source.html',''); in
 <div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span> </div>
 <div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classngen_1_1sqlite_1_1database.html#a283b83e398e8cdfafa210b743e3ca2f5">contains</a>(const std::<span class="keywordtype">string</span>&amp; table);</div>
 <div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span> </div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>    <a class="code hl_struct" href="structngen_1_1sqlite_1_1database_1_1iterator.html">iterator</a> <a class="code hl_function" href="classngen_1_1sqlite_1_1database.html#a212b069545f6eb8c21f86138605adbfd">query</a>(const std::<span class="keywordtype">string</span>&amp; statement, const <a class="code hl_namespace" href="namespaceboost.html">boost</a>::span&lt;const std::<span class="keywordtype">string</span>&gt; binds = {});</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>    <a class="code hl_struct" href="structngen_1_1sqlite_1_1database_1_1iterator.html">iterator</a> <a class="code hl_function" href="classngen_1_1sqlite_1_1database.html#a212b069545f6eb8c21f86138605adbfd">query</a>(const std::<span class="keywordtype">string</span>&amp; statement, const boost::span&lt;const std::<span class="keywordtype">string</span>&gt; binds = {});</div>
 <div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span> </div>
 <div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>    <span class="keyword">template</span>&lt;</div>
 <div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>        <span class="keyword">typename</span>... Ts,</div>
@@ -226,7 +226,6 @@ $(document).ready(function(){initNavTree('ngen__sqlite_8hpp_source.html',''); in
 <div class="ttc" id="aclassngen_1_1sqlite_1_1database_html_aacd197f5b23451791e7f6ea9b882f4b7"><div class="ttname"><a href="classngen_1_1sqlite_1_1database.html#aacd197f5b23451791e7f6ea9b882f4b7">ngen::sqlite::database::sqlite_t</a></div><div class="ttdeci">std::unique_ptr&lt; sqlite3, deleter &gt; sqlite_t</div><div class="ttdef"><b>Definition:</b> ngen_sqlite.hpp:38</div></div>
 <div class="ttc" id="aclassngen_1_1sqlite_1_1database_html_aaef7b9511fac13e57cc0e728acb3d450"><div class="ttname"><a href="classngen_1_1sqlite_1_1database.html#aaef7b9511fac13e57cc0e728acb3d450">ngen::sqlite::database::query</a></div><div class="ttdeci">iterator query(const std::string &amp;statement, const Ts &amp;... params)</div><div class="ttdoc">Query the SQLite Database with a bound statement and get the result.</div><div class="ttdef"><b>Definition:</b> ngen_sqlite.hpp:168</div></div>
 <div class="ttc" id="aclassngen_1_1sqlite_1_1database_html_ad1f15c4018ecee42964bcaf434dd8a94"><div class="ttname"><a href="classngen_1_1sqlite_1_1database.html#ad1f15c4018ecee42964bcaf434dd8a94">ngen::sqlite::database::conn_</a></div><div class="ttdeci">sqlite_t conn_</div><div class="ttdef"><b>Definition:</b> ngen_sqlite.hpp:175</div></div>
-<div class="ttc" id="anamespaceboost_html"><div class="ttname"><a href="namespaceboost.html">boost</a></div><div class="ttdef"><b>Definition:</b> boostcore_data.hpp:16</div></div>
 <div class="ttc" id="anamespacengen_1_1traits_html_a6f75e89975725de0279d0bc12b61d200"><div class="ttname"><a href="namespacengen_1_1traits.html#a6f75e89975725de0279d0bc12b61d200">ngen::traits::all_is_convertible</a></div><div class="ttdeci">conjunction&lt; std::is_convertible&lt; From, To &gt;::value... &gt; all_is_convertible</div><div class="ttdoc">Checks that all types {From} are convertible to {T}.</div><div class="ttdef"><b>Definition:</b> traits.hpp:41</div></div>
 <div class="ttc" id="anamespacengen_html"><div class="ttname"><a href="namespacengen.html">ngen</a></div><div class="ttdef"><b>Definition:</b> Layer.hpp:14</div></div>
 <div class="ttc" id="astructngen_1_1sqlite_1_1database_1_1deleter_html"><div class="ttname"><a href="structngen_1_1sqlite_1_1database_1_1deleter.html">ngen::sqlite::database::deleter</a></div><div class="ttdoc">Deleter used to provide smart pointer support for sqlite3 structs.</div><div class="ttdef"><b>Definition:</b> ngen_sqlite.hpp:26</div></div>
@@ -258,7 +257,7 @@ $(document).ready(function(){initNavTree('ngen__sqlite_8hpp_source.html',''); in
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_06d176921b42a75382266fc4d2128276.html">geopackage</a></li><li class="navelem"><b>ngen_sqlite.hpp</b></li>
-    <li class="footer">Generated on Wed Jan 17 2024 17:20:40 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
+    <li class="footer">Generated on Tue Jan 23 2024 13:57:13 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
   </ul>
 </div>
 </body>
