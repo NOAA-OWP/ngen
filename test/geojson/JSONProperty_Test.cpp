@@ -27,6 +27,40 @@ class JSONProperty_Test : public ::testing::Test {
 
 };
 
+TEST_F(JSONProperty_Test, print_property_test) {
+    geojson::JSONProperty string_property("string", "test_string");
+    geojson::JSONProperty::print_property(string_property);
+    geojson::JSONProperty natural_property("natural", 4);
+    geojson::JSONProperty::print_property(natural_property);
+    geojson::JSONProperty real_property("real", 3.0);
+    geojson::JSONProperty::print_property(real_property);
+    geojson::JSONProperty boolean_property("boolean", true);
+    geojson::JSONProperty::print_property(boolean_property);
+
+    geojson::PropertyMap object;
+    
+    object.emplace("natural", geojson::JSONProperty("natural", 4));
+    object.emplace("real", geojson::JSONProperty("real", 3.0));
+    object.emplace("string", geojson::JSONProperty("string", "test_string"));
+    object.emplace("boolean", geojson::JSONProperty("boolean", true));
+
+    geojson::JSONProperty object_property("object", object);
+    geojson::JSONProperty::print_property(object_property);
+
+        std::vector<geojson::JSONProperty> properties;
+
+    properties.push_back(geojson::JSONProperty("natural", 4));
+    properties.push_back(geojson::JSONProperty("real", 3.0));
+    properties.push_back(geojson::JSONProperty("string", "test_string"));
+    properties.push_back(geojson::JSONProperty("boolean", true));
+    properties.push_back(object_property);
+
+    geojson::JSONProperty list_property("list_property", properties);
+
+    geojson::JSONProperty::print_property(list_property);
+    
+}
+
 TEST_F(JSONProperty_Test, natural_property_test) {
     geojson::JSONProperty natural_property("natural", 4);
     ASSERT_EQ(natural_property.get_type(), geojson::PropertyType::Natural);
