@@ -389,6 +389,16 @@ namespace geojson {
             }
 
             /**
+             * @brief Copy construct a JSONProperty, but use a new key value for the property
+             * 
+             * @param value_key 
+             * @param original 
+             */
+            JSONProperty(const std::string& value_key, const JSONProperty&original):JSONProperty(original){
+                key = value_key;
+            }
+
+            /**
              * A basic destructor
              */
             virtual ~JSONProperty(){};

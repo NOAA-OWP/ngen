@@ -61,6 +61,14 @@ TEST_F(JSONProperty_Test, print_property_test) {
     
 }
 
+TEST_F(JSONProperty_Test, copy_new_key_test) {
+    geojson::JSONProperty string_property("string", "test_string");
+    geojson::JSONProperty new_key_property("new_string", string_property);
+    ASSERT_EQ(new_key_property.get_type(), geojson::PropertyType::String);
+    ASSERT_EQ(new_key_property.as_string(), string_property.as_string());
+    ASSERT_EQ(new_key_property.get_key(), "new_string");
+}
+
 TEST_F(JSONProperty_Test, natural_property_test) {
     geojson::JSONProperty natural_property("natural", 4);
     ASSERT_EQ(natural_property.get_type(), geojson::PropertyType::Natural);
