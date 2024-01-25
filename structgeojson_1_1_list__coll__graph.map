@@ -1,8 +1,8 @@
 <map id="geojson::List" name="geojson::List">
-<area shape="rect" id="node1" title="Struct wrapping a vector of JSONProperty representing a JSON list." alt="" coords="5,445,109,544"/>
+<area shape="rect" id="node1" title="Struct wrapping a vector of JSONProperty representing a JSON list." alt="" coords="5,453,109,551"/>
 <area shape="rect" id="node2" title=" " alt="" coords="62,225,205,280"/>
-<area shape="rect" id="node3" href="$classgeojson_1_1_j_s_o_n_property.html" title="@TODO: Convert JSONProperty into a variant of the supported types" alt="" coords="146,343,307,647"/>
-<area shape="rect" id="node6" title=" " alt="" coords="267,709,413,764"/>
+<area shape="rect" id="node3" href="$classgeojson_1_1_j_s_o_n_property.html" title="@TODO: Convert JSONProperty into a variant of the supported types" alt="" coords="146,343,307,661"/>
+<area shape="rect" id="node6" title=" " alt="" coords="267,724,413,779"/>
 <area shape="rect" id="node4" title=" " alt="" coords="281,233,364,273"/>
 <area shape="rect" id="node5" title=" " alt="" coords="248,108,376,163"/>
 <area shape="rect" id="node7" title=" " alt="" coords="401,115,522,155"/>

@@ -1,15 +1,15 @@
 <map id="geojson::MultiLineStringFeature" name="geojson::MultiLineStringFeature">
-<area shape="rect" id="node1" title=" " alt="" coords="649,1405,828,1533"/>
-<area shape="rect" id="node2" href="$classgeojson_1_1_feature_base.html" title="Represents an individual feature within a Geojson definition." alt="" coords="437,936,616,1313"/>
-<area shape="rect" id="node14" title=" " alt="" coords="482,1442,625,1497"/>
+<area shape="rect" id="node1" title=" " alt="" coords="649,1420,828,1548"/>
+<area shape="rect" id="node2" href="$classgeojson_1_1_feature_base.html" title="Represents an individual feature within a Geojson definition." alt="" coords="437,951,616,1328"/>
+<area shape="rect" id="node14" title=" " alt="" coords="482,1457,625,1511"/>
 <area shape="rect" id="node3" title=" " alt="" coords="582,304,727,373"/>
 <area shape="rect" id="node4" title=" " alt="" coords="497,115,613,155"/>
 <area shape="rect" id="node10" title=" " alt="" coords="305,225,447,280"/>
-<area shape="rect" id="node13" title=" " alt="" coords="465,725,612,780"/>
+<area shape="rect" id="node13" title=" " alt="" coords="465,740,612,795"/>
 <area shape="rect" id="node5" title=" " alt="" coords="445,5,483,45"/>
 <area shape="rect" id="node11" title=" " alt="" coords="179,115,301,155"/>
-<area shape="rect" id="node6" title=" " alt="" coords="175,804,321,859"/>
-<area shape="rect" id="node9" href="$classgeojson_1_1_j_s_o_n_property.html" title="@TODO: Convert JSONProperty into a variant of the supported types" alt="" coords="263,397,425,701"/>
+<area shape="rect" id="node6" title=" " alt="" coords="175,819,321,873"/>
+<area shape="rect" id="node9" href="$classgeojson_1_1_j_s_o_n_property.html" title="@TODO: Convert JSONProperty into a variant of the supported types" alt="" coords="263,397,425,716"/>
 <area shape="rect" id="node7" title=" " alt="" coords="28,233,111,273"/>
 <area shape="rect" id="node8" title=" " alt="" coords="5,108,133,163"/>
 <area shape="rect" id="node12" title=" " alt="" coords="221,5,259,45"/>

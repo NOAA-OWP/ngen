@@ -1,5 +1,9 @@
 var NAVTREEINDEX18 =
 {
+"md_doc__g_i_t__u_s_a_g_e.html#autotoc_md165":[7,1,1],
+"md_doc__g_i_t__u_s_a_g_e.html#autotoc_md166":[7,1,2],
+"md_doc__g_i_t__u_s_a_g_e.html#autotoc_md167":[7,2],
+"md_doc__g_i_t__u_s_a_g_e.html#autotoc_md168":[7,2,0],
 "md_doc__g_i_t__u_s_a_g_e.html#autotoc_md169":[7,2,1],
 "md_doc__g_i_t__u_s_a_g_e.html#autotoc_md170":[7,2,2],
 "md_doc__g_i_t__u_s_a_g_e.html#autotoc_md171":[7,2,3],
@@ -245,9 +249,5 @@ var NAVTREEINDEX18 =
 "namespacengen_1_1traits.html#a81e259575eb38d00047a60193f06cc6d":[21,0,9,4,7],
 "namespacengen_1_1traits.html#aff851b736dde620aadc95565381a6c3a":[21,0,9,4,3],
 "namespacerealization.html":[21,0,10],
-"namespacerealization.html#a0328960a5fc84440b67f91a6d705f940":[21,0,10,12],
-"namespacerealization.html#a3cd7f3652715fac25a746ef1810a1cff":[21,0,10,11],
-"namespacerealization.html#a60fd2dcdc052492d4ae87454567f2b61":[21,0,10,13],
-"namespacerealization.html#a74155238e37096cc83faa9a49d444f0c":[21,0,10,9],
-"namespacerealization.html#a8ac5516475ff281154dfa9a6e9292295":[21,0,10,14]
+"namespacerealization.html#a0328960a5fc84440b67f91a6d705f940":[21,0,10,12]
 };

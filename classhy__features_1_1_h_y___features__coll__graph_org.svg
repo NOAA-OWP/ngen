@@ -266,27 +266,28 @@
 <g id="node33" class="node">
 <title>Node35</title>
 <g id="a_node33"><a xlink:href="classgeojson_1_1_j_s_o_n_property.html" target="_top" xlink:title="@TODO: Convert JSONProperty into a variant of the supported types">
-<polygon fill="white" stroke="#666666" points="1177.5,-2070 1056.5,-2070 1056.5,-1842 1177.5,-1842 1177.5,-2070"/>
-<text text-anchor="middle" x="1117" y="-2058" font-family="Helvetica,sans-Serif" font-size="10.00">{geojson::JSONProperty</text>
-<text text-anchor="start" x="1064.5" y="-2047" font-family="Helvetica,sans-Serif" font-size="10.00">|&#45; type</text>
-<text text-anchor="start" x="1064.5" y="-2036" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; data</text>
-<text text-anchor="start" x="1064.5" y="-2025" font-family="Helvetica,sans-Serif" font-size="10.00">|+ JSONProperty()</text>
-<text text-anchor="start" x="1064.5" y="-2014" font-family="Helvetica,sans-Serif" font-size="10.00">+ JSONProperty()</text>
-<text text-anchor="start" x="1064.5" y="-2003" font-family="Helvetica,sans-Serif" font-size="10.00">+ JSONProperty()</text>
-<text text-anchor="start" x="1064.5" y="-1992" font-family="Helvetica,sans-Serif" font-size="10.00">+ JSONProperty()</text>
-<text text-anchor="start" x="1064.5" y="-1981" font-family="Helvetica,sans-Serif" font-size="10.00">+ JSONProperty()</text>
-<text text-anchor="start" x="1064.5" y="-1970" font-family="Helvetica,sans-Serif" font-size="10.00">+ JSONProperty()</text>
-<text text-anchor="start" x="1064.5" y="-1959" font-family="Helvetica,sans-Serif" font-size="10.00">+ JSONProperty()</text>
-<text text-anchor="start" x="1064.5" y="-1948" font-family="Helvetica,sans-Serif" font-size="10.00">+ JSONProperty()</text>
-<text text-anchor="start" x="1064.5" y="-1937" font-family="Helvetica,sans-Serif" font-size="10.00">+ JSONProperty()</text>
-<text text-anchor="start" x="1064.5" y="-1926" font-family="Helvetica,sans-Serif" font-size="10.00">+ JSONProperty()</text>
-<text text-anchor="start" x="1064.5" y="-1915" font-family="Helvetica,sans-Serif" font-size="10.00">+ ~JSONProperty()</text>
-<text text-anchor="start" x="1064.5" y="-1904" font-family="Helvetica,sans-Serif" font-size="10.00">+ JSONProperty()</text>
-<text text-anchor="start" x="1064.5" y="-1893" font-family="Helvetica,sans-Serif" font-size="10.00">+ JSONProperty()</text>
-<text text-anchor="start" x="1064.5" y="-1882" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_type()</text>
-<text text-anchor="start" x="1064.5" y="-1871" font-family="Helvetica,sans-Serif" font-size="10.00">+ as_natural_number()</text>
-<text text-anchor="start" x="1064.5" y="-1860" font-family="Helvetica,sans-Serif" font-size="10.00">and 16 more...</text>
-<text text-anchor="middle" x="1117" y="-1849" font-family="Helvetica,sans-Serif" font-size="10.00">}</text>
+<polygon fill="white" stroke="#666666" points="1177.5,-2075.5 1056.5,-2075.5 1056.5,-1836.5 1177.5,-1836.5 1177.5,-2075.5"/>
+<text text-anchor="middle" x="1117" y="-2063.5" font-family="Helvetica,sans-Serif" font-size="10.00">{geojson::JSONProperty</text>
+<text text-anchor="start" x="1064.5" y="-2052.5" font-family="Helvetica,sans-Serif" font-size="10.00">|&#45; type</text>
+<text text-anchor="start" x="1064.5" y="-2041.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; data</text>
+<text text-anchor="start" x="1064.5" y="-2030.5" font-family="Helvetica,sans-Serif" font-size="10.00">|+ JSONProperty()</text>
+<text text-anchor="start" x="1064.5" y="-2019.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ JSONProperty()</text>
+<text text-anchor="start" x="1064.5" y="-2008.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ JSONProperty()</text>
+<text text-anchor="start" x="1064.5" y="-1997.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ JSONProperty()</text>
+<text text-anchor="start" x="1064.5" y="-1986.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ JSONProperty()</text>
+<text text-anchor="start" x="1064.5" y="-1975.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ JSONProperty()</text>
+<text text-anchor="start" x="1064.5" y="-1964.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ JSONProperty()</text>
+<text text-anchor="start" x="1064.5" y="-1953.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ JSONProperty()</text>
+<text text-anchor="start" x="1064.5" y="-1942.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ JSONProperty()</text>
+<text text-anchor="start" x="1064.5" y="-1931.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ JSONProperty()</text>
+<text text-anchor="start" x="1064.5" y="-1920.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ JSONProperty()</text>
+<text text-anchor="start" x="1064.5" y="-1909.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ ~JSONProperty()</text>
+<text text-anchor="start" x="1064.5" y="-1898.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ JSONProperty()</text>
+<text text-anchor="start" x="1064.5" y="-1887.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ JSONProperty()</text>
+<text text-anchor="start" x="1064.5" y="-1876.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ get_type()</text>
+<text text-anchor="start" x="1064.5" y="-1865.5" font-family="Helvetica,sans-Serif" font-size="10.00">and 17 more...</text>
+<text text-anchor="start" x="1064.5" y="-1854.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ print_property()</text>
+<text text-anchor="middle" x="1117" y="-1843.5" font-family="Helvetica,sans-Serif" font-size="10.00">}</text>
 </a>
 </g>
 </g>
@@ -1220,14 +1221,14 @@
 <!-- Node34&#45;&gt;Node35 -->
 <g id="edge57" class="edge">
 <title>Node34&#45;&gt;Node35</title>
-<path fill="none" stroke="#404040" d="M1164.11,-2322.62C1152.31,-2315.38 1141.04,-2305.95 1134,-2294 1113.43,-2259.09 1110.13,-2163.49 1111.44,-2082.99"/>
-<polygon fill="none" stroke="#404040" points="1111.43,-2083.11 1107.55,-2077.03 1111.67,-2071.11 1115.55,-2077.19 1111.43,-2083.11"/>
+<path fill="none" stroke="#404040" d="M1164.11,-2322.62C1152.31,-2315.38 1141.04,-2305.95 1134,-2294 1113.89,-2259.87 1110.28,-2167.72 1111.36,-2088.39"/>
+<polygon fill="none" stroke="#404040" points="1111.35,-2088.68 1107.45,-2082.62 1111.55,-2076.69 1115.45,-2082.75 1111.35,-2088.68"/>
 <text text-anchor="middle" x="1151" y="-2199.5" font-family="Helvetica,sans-Serif" font-size="10.00"> &#45;values</text>
 </g>
 <!-- Node35&#45;&gt;Node34 -->
 <g id="edge55" class="edge">
 <title>Node35&#45;&gt;Node34</title>
-<path fill="none" stroke="#404040" d="M1071.44,-2070.29C1067.57,-2083.5 1064.28,-2096.93 1062,-2110 1054.98,-2150.28 1036.41,-2262.1 1062,-2294 1085.08,-2322.77 1107.96,-2300.49 1143,-2312 1148.11,-2313.68 1153.35,-2315.6 1158.56,-2317.65"/>
+<path fill="none" stroke="#404040" d="M1069.87,-2075.78C1066.68,-2087.21 1063.96,-2098.74 1062,-2110 1054.98,-2150.28 1036.41,-2262.1 1062,-2294 1085.08,-2322.77 1107.96,-2300.49 1143,-2312 1148.11,-2313.68 1153.35,-2315.6 1158.56,-2317.65"/>
 <polygon fill="none" stroke="#404040" points="1158.63,-2317.68 1165.7,-2316.27 1169.72,-2322.26 1162.65,-2323.67 1158.63,-2317.68"/>
 <text text-anchor="middle" x="1086.5" y="-2199.5" font-family="Helvetica,sans-Serif" font-size="10.00"> +elements</text>
 </g>
@@ -1241,8 +1242,8 @@
 <!-- Node36&#45;&gt;Node35 -->
 <g id="edge58" class="edge">
 <title>Node36&#45;&gt;Node35</title>
-<path fill="none" stroke="#404040" d="M1055.92,-1616.81C1066.73,-1628.83 1079.23,-1645.08 1086,-1662 1106.89,-1714.21 1115.55,-1775.61 1118.64,-1828.68"/>
-<polygon fill="none" stroke="#404040" points="1118.64,-1828.75 1122.94,-1834.54 1119.25,-1840.73 1114.95,-1834.94 1118.64,-1828.75"/>
+<path fill="none" stroke="#404040" d="M1055.92,-1616.81C1066.73,-1628.83 1079.23,-1645.08 1086,-1662 1106.19,-1712.46 1114.96,-1771.5 1118.31,-1823.31"/>
+<polygon fill="none" stroke="#404040" points="1118.32,-1823.44 1122.65,-1829.2 1119,-1835.42 1114.66,-1829.66 1118.32,-1823.44"/>
 <text text-anchor="middle" x="1139.5" y="-1729.5" font-family="Helvetica,sans-Serif" font-size="10.00"> &#45;value_list</text>
 </g>
 <!-- Node37&#45;&gt;Node34 -->
