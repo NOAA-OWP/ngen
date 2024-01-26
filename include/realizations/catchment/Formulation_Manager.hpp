@@ -16,9 +16,8 @@
 #include "features/Features.hpp"
 #include <FeatureCollection.hpp>
 #include "Formulation_Constructors.hpp"
-#include "Simulation_Time.hpp"
-#include "routing/Routing_Params.h"
 #include "LayerData.hpp"
+#include "../config/time.hpp"
 
 namespace realization {
 
@@ -88,43 +87,8 @@ namespace realization {
                 if (!possible_simulation_time) {
                     throw std::runtime_error("ERROR: No simulation time period defined.");
                 }
-
-                geojson::JSONProperty simulation_time_parameters("time", *possible_simulation_time);
-
-                std::vector<std::string> missing_simulation_time_parameters;
-
-                if (!simulation_time_parameters.has_key("start_time")) {
-                    missing_simulation_time_parameters.push_back("start_time");
-                }
-
-                if (!simulation_time_parameters.has_key("end_time")) {
-                    missing_simulation_time_parameters.push_back("end_time");
-                }
-
-                if (!simulation_time_parameters.has_key("output_interval")) {
-                    missing_simulation_time_parameters.push_back("output_interval");
-                }
-
-                if (missing_simulation_time_parameters.size() > 0) {
-                    std::string message = "ERROR: A simulation time parameter cannot be created; the following parameters are missing: ";
-
-                    for (int missing_parameter_index = 0; missing_parameter_index < missing_simulation_time_parameters.size(); missing_parameter_index++) {
-                        message += missing_simulation_time_parameters[missing_parameter_index];
-
-                        if (missing_parameter_index < missing_simulation_time_parameters.size() - 1) {
-                            message += ", ";
-                        }
-                    }
-                    
-                    throw std::runtime_error(message);
-                }
-
-                simulation_time_params simulation_time_config(
-                    simulation_time_parameters.at("start_time").as_string(),
-                    simulation_time_parameters.at("end_time").as_string(),
-                    simulation_time_parameters.at("output_interval").as_natural_number()
-                );
-
+                config::Time time = config::Time(*possible_simulation_time);
+                auto simulation_time_config = time.make_params();
                 /**
                  * Call constructor to construct a Simulation_Time object
                  */ 
