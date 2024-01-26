@@ -18,6 +18,7 @@
 #include "Formulation_Constructors.hpp"
 #include "LayerData.hpp"
 #include "../config/time.hpp"
+#include "../config/routing.hpp"
 
 namespace realization {
 
@@ -159,11 +160,7 @@ namespace realization {
                     //Since it is possible to build NGEN without routing support, if we see it in the config
                     //but it isn't enabled in the build, we should at least put up a warning
                 #ifdef NGEN_ROUTING_ACTIVE
-                    geojson::JSONProperty routing_parameters("routing", *possible_routing_configs);
-                    
-                    this->routing_config = std::make_shared<routing_params>(
-                        routing_parameters.at("t_route_config_file_with_path").as_string()
-                    );
+                    this->routing_config = (config::Routing(*possible_routing_configs)).params;
                     using_routing = true;
                 #else
                     using_routing = false;
