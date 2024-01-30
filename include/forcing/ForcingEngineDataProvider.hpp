@@ -1,24 +1,20 @@
-#include "GenericDataProvider.hpp"
+#ifndef NGEN_FORCING_FORCINGENGINE_DATA_PROVIDER_HPP
+#define NGEN_FORCING_FORCINGENGINE_DATA_PROVIDER_HPP
 #include <NGenConfig.h>
 
-#if NGEN_WITH_PYTHON
-#  include "bmi/Bmi_Py_Adapter.hpp"
-#else
-#  error ForcingEngineDataProvider requires Python support.
-#endif
+static_assert(
+    ngen::exec_info::with_python,
+    "ForcingEngineDataProvider requires Python support."
+);
 
-#include <memory>
+#include "GenericDataProvider.hpp"
+#include "bmi/Bmi_Py_Adapter.hpp"
 
 namespace data_access {
 
 struct ForcingEngineDataProvider
   : public GenericDataProvider
 {
-    static_assert(
-        ngen::exec_info::with_python,
-        "ForcingEngineDataProvider requires Python support."
-    );
-
     explicit ForcingEngineDataProvider(const std::string& init);
 
     ~ForcingEngineDataProvider() override;
@@ -50,3 +46,5 @@ struct ForcingEngineDataProvider
 };
 
 } // namespace data_access
+
+#endif // NGEN_FORCING_FORCINGENGINE_DATA_PROVIDER_HPP
