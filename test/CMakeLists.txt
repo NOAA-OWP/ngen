@@ -432,6 +432,18 @@ ngen_add_test(
 )
 #endif()
 
+ngen_add_test(
+    test_bmi_forcing
+    OBJECTS
+        forcing/ForcingEngineDataProvider_Test.cpp
+    LIBRARIES
+        NGen::core
+        NGen::forcing
+        NGen::ngen_bmi
+    REQUIRES
+        NGEN_WITH_PYTHON
+)
+
 ########################## Primary Combined Unit Test Target
 ngen_add_test(
     test_unit

@@ -14,12 +14,17 @@ target_include_directories(forcing PUBLIC
         )
 
 target_link_libraries(forcing PUBLIC
+        NGen::config_header
         Boost::boost                # Headers-only Boost
         Threads::Threads
 )
 
 if(NGEN_WITH_NETCDF)
     target_link_libraries(forcing PUBLIC NetCDF)
+endif()
+
+if(NGEN_WITH_PYTHON)
+    target_link_libraries(forcing PUBLIC pybind11::embed NGen::core)
 endif()
 
 #target_compile_options(forcing PUBLIC -std=c++14 -Wall)
