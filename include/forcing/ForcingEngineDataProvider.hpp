@@ -15,7 +15,8 @@ namespace data_access {
 struct ForcingEngineDataProvider
   : public GenericDataProvider
 {
-    explicit ForcingEngineDataProvider(const std::string& init);
+    explicit ForcingEngineDataProvider(const std::string& init, std::size_t time_start, std::size_t time_end);
+    explicit ForcingEngineDataProvider(const std::string& init, const std::string& time_start, const std::string& time_end, const std::string& fmt = "%Y-%m-%d %H:%M:%S");
 
     ~ForcingEngineDataProvider() override;
 
@@ -41,7 +42,10 @@ struct ForcingEngineDataProvider
       -> std::vector<double> override;
 
   private:
+    using clock_type = std::chrono::system_clock;
     models::bmi::Bmi_Py_Adapter instance_;
+    clock_type::time_point start_;
+    clock_type::time_point end_;
     std::vector<std::string> outputs_;
 };
 

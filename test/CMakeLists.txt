@@ -437,9 +437,7 @@ ngen_add_test(
     OBJECTS
         forcing/ForcingEngineDataProvider_Test.cpp
     LIBRARIES
-        NGen::core
         NGen::forcing
-        NGen::ngen_bmi
     REQUIRES
         NGEN_WITH_PYTHON
 )
