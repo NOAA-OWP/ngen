@@ -20,18 +20,7 @@
 #include "features/Features.hpp"
 #include <FeatureCollection.hpp>
 #include "JSONProperty.hpp"
-
-using Tuple = std::tuple<int, std::string, std::string, std::string>;
-
-//This struct is moved from private section to here so that the unit test function can access it
-struct PartitionData
-{
-    int mpi_world_rank;
-    std::unordered_set<std::string> catchment_ids;
-    std::unordered_set<std::string> nexus_ids;
-    std::vector<Tuple> remote_connections;
-};
-
+#include "Partition_Data.hpp"
 
 class Partitions_Parser {
 
