@@ -32,6 +32,9 @@ class Partition_One {
                 std::string nex_id = feature->get_property("toid").as_string();
                 nexus_ids.emplace(nex_id);
             }
+            partition_data.mpi_world_rank = 0;
+            partition_data.catchment_ids = catchment_ids;
+            partition_data.nexus_ids = nexus_ids;
         }
 
     	virtual ~Partition_One(){};

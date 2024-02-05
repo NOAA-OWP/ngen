@@ -345,7 +345,7 @@ int main(int argc, char *argv[]) {
         partition_parser.parse_partition_file();
 
         std::vector<PartitionData> &partitions = partition_parser.partition_ranks;
-        PartitionData local_data_tmp = partitions[mpi_rank];
+        local_data_tmp = partitions[mpi_rank];
         if (!nexus_subset_ids.empty()) {
             std::cerr << "Warning: CLI provided nexus subset will be ignored when using partition config";
         }
