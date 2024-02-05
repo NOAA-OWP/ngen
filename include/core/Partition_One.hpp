@@ -18,22 +18,25 @@ class Partition_One {
     public:
         Partition_One() {};
 
+        /**
+         * The function that parses geojson::GeoJSON data and build unordered sets of catchment_ids and nexus_ids
+
+         * @param catchment_collection the geojson::GeoJSON data containing all the necessary hydrofabric info
+         */
         void generate_partition(geojson::GeoJSON& catchment_collection)
         {
-            int counter = 0;
             for(auto& feature: *catchment_collection)
             {
                 std::string cat_id = feature->get_id();
                 catchment_ids.emplace(cat_id);
                 std::string nex_id = feature->get_property("toid").as_string();
                 nexus_ids.emplace(nex_id);
-                counter++;
             }
-            std::cout << "counter = " << counter << std::endl;
         }
 
     	virtual ~Partition_One(){};
 
+        //PartitionData is a struct
         PartitionData partition_data;       
 
     private:
