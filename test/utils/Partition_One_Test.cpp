@@ -6,6 +6,10 @@
 #include <boost/lexical_cast.hpp>
 #include <vector>
 
+#ifdef NGEN_WITH_SQLITE3
+#include <geopackage.hpp>
+#endif
+
 //This way we can test the partition, since this doesn't have an explicit MPI dependency
 #define NGEN_MPI_ACTIVE
 #include "core/Partition_One.hpp"
