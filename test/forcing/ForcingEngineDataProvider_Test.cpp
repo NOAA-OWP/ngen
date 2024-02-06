@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "AorcForcing.hpp"
+#include "DataProvider.hpp"
 #include "ForcingEngineDataProvider.hpp"
 
 #include <boost/range/combine.hpp>
@@ -36,8 +37,24 @@ TEST(ForcingEngineDataProviderTest, Initialization) {
     EXPECT_EQ(provider.get_ts_index_for_time(params.simulation_start_t), 0);
     EXPECT_EQ(provider.get_ts_index_for_time(params.simulation_end_t), 5);
 
-    std::cout << provider.get_value(
-        CatchmentAggrDataSelector{"cat-1015786", "RAINRATE_ELEMENT", provider.get_data_start_time(), 3600, "seconds"},
+    const auto selector = CatchmentAggrDataSelector{
+        "cat-1015786",
+        "RAINRATE",
+        provider.get_data_start_time(),
+        static_cast<long>(provider.get_ts_index_for_time(params.simulation_end_t) * 3600),
+        "seconds"
+    };
+
+    const auto result = provider.get_values(
+        selector,
         data_access::ReSampleMethod::SUM
-    ) << '\n';
+    );
+
+    for (const auto& r : result) {
+        EXPECT_NEAR(r, 5.51193e-07, 1e6);
+    }
+
+    const auto lookback = provider.get_value(selector, data_access::ReSampleMethod::SUM);
+    std::cout << "Lookback: " << lookback << '\n';
+    EXPECT_EQ(lookback, std::accumulate(result.begin(), result.end(), 0.0));
 }
