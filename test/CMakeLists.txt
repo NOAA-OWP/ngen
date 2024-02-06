@@ -229,6 +229,17 @@ ngen_add_test(
     #   NGEN_WITH_MPI
 )
 
+########################## Partition_One Tests
+ngen_add_test(
+    test_partition_one
+    OBJECTS
+        utils/Partition_One_Test.cpp
+    LIBRARIES
+        gmock
+        NGen::core
+        NGen::geojson
+)
+
 ########################## MultiLayer Tests
 ngen_add_test(
     test_multilayer
@@ -434,6 +445,7 @@ ngen_add_test(
         utils/include/StreamOutputTest.cpp
         realizations/Formulation_Manager_Test.cpp
         utils/Partition_Test.cpp
+        utils/Partition_One_Test.cpp
         utils/mdarray_Test.cpp
         utils/mdframe_Test.cpp
         utils/mdframe_netcdf_Test.cpp
