@@ -239,8 +239,8 @@ ngen_add_test(
         NGen::core
         NGen::geojson
         NGen::geopackage
-    #REQUIRES
-    #    NGEN_WITH_SQLITE
+    REQUIRES
+        NGEN_WITH_SQLITE
 )
 
 ########################## MultiLayer Tests
