@@ -238,6 +238,9 @@ ngen_add_test(
         gmock
         NGen::core
         NGen::geojson
+        NGen::geopackage
+    #REQUIRES
+    #    NGEN_WITH_SQLITE
 )
 
 ########################## MultiLayer Tests
@@ -458,6 +461,7 @@ ngen_add_test(
         NGen::core_mediator
         NGen::forcing
         NGen::geojson
+        NGen::geopackage
         NGen::realizations_catchment
         NGen::mdarray
         NGen::mdframe
