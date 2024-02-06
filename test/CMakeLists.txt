@@ -468,6 +468,8 @@ ngen_add_test(
         NGen::logging
         NGen::ngen_bmi
         testbmicppmodel
+    REQUIRES
+        NGEN_WITH_SQLITE
         
 )
 
