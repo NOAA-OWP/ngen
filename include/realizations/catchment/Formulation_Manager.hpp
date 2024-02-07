@@ -27,6 +27,9 @@ namespace realization {
 
         public:
 
+            void clear(){
+                formulations.clear();            
+            }
             std::shared_ptr<Simulation_Time> Simulation_Time_Object;
 
             Formulation_Manager(std::stringstream &data) {
