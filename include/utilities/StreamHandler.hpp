@@ -39,7 +39,7 @@ namespace utils
 
             /** Deconstructor for a StreamHandler */
 
-            ~StreamHandler()
+            virtual ~StreamHandler()
             {
 
             }

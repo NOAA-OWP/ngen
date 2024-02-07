@@ -659,7 +659,7 @@ namespace realization {
         template<class T>
         std::shared_ptr<T> init_nested_module(int mod_index, std::string identifier, geojson::PropertyMap properties) {
             std::shared_ptr<data_access::GenericDataProvider> wfp = std::make_shared<data_access::WrappedDataProvider>(this);
-            std::shared_ptr<T> mod = std::make_shared<T>(identifier, wfp, output);
+            std::shared_ptr<T> mod = std::make_shared<T>(identifier, wfp, *output);
 
             // Since this is a nested formulation, support usage of the '{{id}}' syntax for init config file paths.
             Catchment_Formulation::config_pattern_substitution(properties, BMI_REALIZATION_CFG_PARAM_REQ__INIT_CONFIG,

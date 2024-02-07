@@ -42,7 +42,7 @@ std::shared_ptr<Bmi_Cpp_Adapter> Bmi_Cpp_Formulation::construct_model(const geoj
                     is_bmi_model_time_step_fixed(),
                     model_create_fname,
                     model_destroy_fname,
-                    output);
+                    *output);
 }
 
 std::string Bmi_Cpp_Formulation::get_output_header_line(std::string delimiter) {

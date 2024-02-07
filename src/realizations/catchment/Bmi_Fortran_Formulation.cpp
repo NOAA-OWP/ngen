@@ -38,7 +38,7 @@ std::shared_ptr<Bmi_Fortran_Adapter> Bmi_Fortran_Formulation::construct_model(co
             get_allow_model_exceed_end_time(),
             is_bmi_model_time_step_fixed(),
             reg_func,
-            output);
+            *output);
 }
 
 std::string Bmi_Fortran_Formulation::get_formulation_type() {
