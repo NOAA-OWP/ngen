@@ -382,19 +382,16 @@ int main(int argc, char *argv[]) {
     } else {
       catchment_collection = geojson::read(catchmentDataFile, catchment_subset_ids);
     }
-    std::cout << "Building Nexus collection" << std::endl;
     
     for(auto& feature: *catchment_collection)
     {
-        std::cout << "cat feature: " << feature << std::endl;
         //feature->set_id(feature->get_property("id").as_string());
         nexus_collection->add_feature(feature);
-        std::cout<<"Catchment "<<feature->get_id()<<" -> Nexus "<<feature->get_property("toid").as_string()<<std::endl;
+        //std::cout<<"Catchment "<<feature->get_id()<<" -> Nexus "<<feature->get_property("toid").as_string()<<std::endl;
     }
     //Update the feature ids for the combined collection, using the alternative property 'id'
     //to map features to their primary id as well as the alternative property
     nexus_collection->update_ids("id");
-    //std::cout<<"Initializing formulations\n";
     std::cout<<"Initializing formulations" << std::endl;
     std::shared_ptr<realization::Formulation_Manager> manager = std::make_shared<realization::Formulation_Manager>(REALIZATION_CONFIG_PATH);
     manager->read(catchment_collection, utils::getStdOut());
@@ -492,13 +489,6 @@ int main(int argc, char *argv[]) {
       // make a new simulation time object with a different output interval
       Simulation_Time sim_time(*manager->Simulation_Time_Object, time_steps[i]);
   
-      /*
-      for ( std::string id : features.catchments(keys[i]) ) { cat_ids.push_back(id); }
-      if (keys[i] != 0 )
-      {
-        layers[i] = std::make_shared<ngen::Layer>(desc, cat_ids, sim_time, features, catchment_collection, 0);
-      }
-      */
       for ( std::string id : features.catchments(keys[i]) ) { cat_ids.push_back(id); }
       if (keys[i] != 0 )
       {
@@ -506,7 +496,6 @@ int main(int argc, char *argv[]) {
       }
       else
       {
-        //layers[i] = std::make_shared<ngen::SurfaceLayer>(desc, cat_ids, sim_time, features, catchment_collection, 0, nexus_subset_ids, nexus_outfiles);
         layers[i] = std::make_shared<ngen::SurfaceLayer>(desc, cat_ids, sim_time, features, catchment_collection, 0, nexus_subset_ids, nexus_outfiles);
       }
 
