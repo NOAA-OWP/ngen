@@ -25,28 +25,21 @@ class Partition_One {
          */
         void generate_partition(geojson::GeoJSON& catchment_collection)
         {
+            //PartitionData partition_data;
             for(auto& feature: *catchment_collection)
             {
                 std::string cat_id = feature->get_id();
-                catchment_ids.emplace(cat_id);
+                partition_data.catchment_ids.emplace(cat_id);
                 std::string nex_id = feature->get_property("toid").as_string();
-                nexus_ids.emplace(nex_id);
+                partition_data.nexus_ids.emplace(nex_id);
             }
             partition_data.mpi_world_rank = 0;
-            partition_data.catchment_ids = catchment_ids;
-            partition_data.nexus_ids = nexus_ids;
         }
 
     	virtual ~Partition_One(){};
 
         //PartitionData is a struct
         PartitionData partition_data;       
-
-    private:
-        int mpi_world_rank;
-        std::unordered_set<std::string> catchment_ids;
-        std::unordered_set<std::string> nexus_ids;
-        std::vector<Tuple> remote_connections;
 };
 
 #endif // NGEN_MPI_ACTIVE
