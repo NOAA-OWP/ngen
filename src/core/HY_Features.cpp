@@ -16,6 +16,11 @@ HY_Features::HY_Features( geojson::GeoJSON catchments, std::string* link_key, st
     HY_Features(network::Network(catchments, link_key), formulations, catchments){  
 }
 
+void HY_Features::release_formulations(){
+  formulations->clear();
+  _catchments.clear();
+}
+
 HY_Features::HY_Features(network::Network network, std::shared_ptr<Formulation_Manager> formulations, geojson::GeoJSON fabric)
   :network(network), formulations(formulations)
 {
