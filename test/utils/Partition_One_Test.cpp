@@ -31,6 +31,9 @@ class PartitionOneTest: public ::testing::Test {
     std::unordered_set<std::string> catchment_ids;
     std::unordered_set<std::string> nexus_ids;
 
+    Partition_One partition_one;
+    PartitionData partition_data;
+
     PartitionOneTest() {} 
 
     ~PartitionOneTest() override {}
@@ -63,9 +66,9 @@ class PartitionOneTest: public ::testing::Test {
         for(auto& feature: *catchment_collection)
         {
             std::string cat_id = feature->get_id();
-            catchment_ids.emplace(cat_id);
+            partition_data.catchment_ids.emplace(cat_id);
             std::string nex_id = feature->get_property("toid").as_string();
-            nexus_ids.emplace(nex_id);
+            partition_data.nexus_ids.emplace(nex_id);
         }
     }
 
@@ -95,24 +98,10 @@ void PartitionOneTest::setupArbitraryExampleCase() {
     };
 }
 
-TEST_F(PartitionOneTest, TestPartitionOne) 
-{
-    read_file_generate_partition_data();
-
-    // Using the PartitionData struct for validating the Partition_One class result
-    Partition_One partition_one;
-    partition_one.generate_partition(catchment_collection);
-    PartitionData data_struct = partition_one.partition_data;
-
-    ASSERT_TRUE(catchment_ids.size() == data_struct.catchment_ids.size());
-    ASSERT_TRUE(nexus_ids.size() == data_struct.nexus_ids.size());
-}
-
 TEST_F(PartitionOneTest, TestPartitionData_1a)
 {
     read_file_generate_partition_data();
 
-    Partition_One partition_one;
     partition_one.generate_partition(catchment_collection);
     PartitionData data_struct = partition_one.partition_data;
     catchment_ids = data_struct.catchment_ids;
@@ -133,7 +122,6 @@ TEST_F(PartitionOneTest, TestPartitionData_1a)
     std::set_difference(cat_id_vec.begin(), cat_id_vec.end(), unique.begin(), unique.end(), std::inserter(duplicates, duplicates.end()));
     if( duplicates.size() > 0 ){
         for( auto& id: duplicates){
-            std::cout << "catchment "<<id<<" is duplicated!"<<std::endl;
         }
         exit(1);
     }
@@ -145,7 +133,6 @@ TEST_F(PartitionOneTest, TestPartitionData_1b)
 {
     read_file_generate_partition_data();
 
-    Partition_One partition_one;
     partition_one.generate_partition(catchment_collection);
     PartitionData data_struct = partition_one.partition_data;
     nexus_ids = data_struct.nexus_ids;
@@ -166,7 +153,6 @@ TEST_F(PartitionOneTest, TestPartitionData_1b)
     std::set_difference(nex_id_vec.begin(), nex_id_vec.end(), unique.begin(), unique.end(), std::inserter(duplicates, duplicates.end()));
     if( duplicates.size() > 0 ){
         for( auto& id: duplicates){
-            std::cout << "nexus "<<id<<" is duplicated!"<<std::endl;
         }
         exit(1);
     }
