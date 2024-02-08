@@ -1,12 +1,12 @@
+#ifndef NGEN_UNITSHELPER_H
+#define NGEN_UNITSHELPER_H
+
 #include <udunits2.h>
 #include <map>
 #include <memory>
 #include <mutex>
 #include <stdexcept>
 #include "all.h"
-
-#ifndef NGEN_UNITSHELPER_H
-#define NGEN_UNITSHELPER_H
 
 class UnitsHelper {
 

@@ -177,7 +177,6 @@ endif()
 if(NGEN_WITH_UDUNITS)
     find_package(UDUNITS2 REQUIRED)
     add_compile_definitions(NGEN_WITH_UDUNITS)
-    get_target_property(_SUMMARY_UDUNITS_INCLUDE libudunits2 INTERFACE_INCLUDE_DIRECTORIES)
 endif()
 
 # -----------------------------------------------------------------------------
@@ -459,7 +458,7 @@ ngen_dependent_multiline_message(NGEN_WITH_SQLITE
 ngen_dependent_multiline_message(NGEN_WITH_UDUNITS
 "  UDUNITS2:"
 "    Library: ${UDUNITS2_LIBRARY}"
-"    Include: ${_SUMMARY_UDUNITS_INCLUDE}")
+"    Include: ${UDUNITS2_INCLUDE_DIR}")
 ngen_dependent_multiline_message(NGEN_WITH_BMI_FORTRAN
 "  Fortran:"
 "    BMI_FORTRAN_ISO_C_LIB_PATH: ${BMI_FORTRAN_ISO_C_LIB_PATH}"
