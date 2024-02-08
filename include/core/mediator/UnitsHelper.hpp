@@ -1,7 +1,22 @@
 #ifndef NGEN_UNITSHELPER_H
 #define NGEN_UNITSHELPER_H
 
-#include <udunits2.h>
+// FIXME: Workaround to handle UDUNITS2 includes with differing paths.
+//        Not exactly sure why CMake can't handle this, but even with
+//        verifying the search paths, the correct header can't be found.
+//
+//        See PR #725 for context on this issue.
+
+#if defined(__has_include)
+#  if __has_include(<udunits2.h>)
+#    include <udunits2.h>
+#  elif __has_include(<udunits2/udunits2.h>)
+#    include <udunits2/udunits2.h>
+#  endif
+#else
+#  include <udunits2.h>
+#endif
+
 #include <map>
 #include <memory>
 #include <mutex>
