@@ -1,3 +1,30 @@
+#[==[
+Find the NetCDF C library, and optionally, the CXX/Fortran libraries.
+
+  Hints:
+    NETCDF_ROOT - prefix path to NetCDF development files, i.e. `/usr/local`
+
+  Components:
+    CXX     - Require the C++ interface
+    FORTRAN - Require the Fortran interface
+
+  Outputs:
+    NetCDF_FOUND               - TRUE if NetCDF C was found
+    NetCDF_VERSION             - NetCDF C version
+    NetCDF_LIBRARY             - Library path to NetCDF C interface
+    NetCDF_INCLUDE_DIR         - Include directory of C library
+    NetCDF_HAS_PARALLEL        - TRUE if NetCDF C was compiled with ParallelIO support
+    NetCDF_${LANG}_FOUND       - TRUE if component was found or available
+    NetCDF_${LANG}_LIBRARY     - Library path of component
+    NetCDF_${LANG}_INCLUDE_DIR - Include directory of component
+
+  Targets:
+    NetCDF          - INTERFACE target linking to C and component interfaces
+    NetCDF::C       - IMPORTED target for C interface
+    NetCDF::CXX     - IMPORTED target for C++ interface
+    NetCDF::FORTRAN - IMPORTED target for Fortran Interface
+#]==]
+
 # NetCDF C Library ============================================================
 find_path(NetCDF_INCLUDE_DIR
     NAMES netcdf.h
