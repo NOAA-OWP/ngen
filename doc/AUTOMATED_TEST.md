@@ -1,6 +1,7 @@
 # Github Automated Testing
 - [What Is Automated Test and How to Start It](#what-to-do-when-a-test-fail)
 - [What Code Tests Are Performed](#what-code-tests-are-performed)
+- [Local Testing](#local-testing)
 - [What to Do When a Test Fail](#what-to-do-when-a-test-fail)
 
 ## What Is Automated Test and How to Start It
@@ -12,6 +13,21 @@ In **ngen** github repo, we use github actions/workflows to automatically test t
 - Unit tests: this inclodes every set of codes that serves a unique functionality. Unit test eveolves as new codes are added.
 - [BMI](https://bmi.readthedocs.io/en/stable/) (Basical Model Interface) based formulations tests including codes in C, C++, Fortran, and Python.
 - Running **ngen** executable on example hydrofabric with various realistic modules/models, initial condition, and forcing data.
+
+## Local Testing
+We strongly recommend you run all the tests on your local computer before you push up the new codes to the branch in your fork. To be able to run the tests, when building the executables (for `build` with `cmake` see [here](https://github.com/stcui007/ngen/blob/ngen_automated_test/doc/BUILDS_AND_CMAKE.md), you need to set the test option to `ON` by setting:
+
+    `-DNGEN_WITH_TESTS:BOOL=ON`
+
+After `build` complete, suppose your build directory is `cmake_build`, you can check that the `ngen` executable is in `cmake_build` directory, and all `unit test` executables are in `cmake_build/test` directory. To run a unit test, for example, run the following command while in the top project directory:
+
+    `./cmake_build/test/test_unit`
+
+To run a ngen job, using the data set in the `data` directory, and run the following command:
+
+    `./cmake_build/ngen data/catchment_data.geojson '' data/nexus_data.geojson '' data/example_bmi_multi_realization_config.json`
+
+To run a multi-processors job with MPI, please see a complete description in [here](https://github.com/stcui007/ngen/blob/ngen_automated_test/doc/DISTRIBUTED_PROCESSING.md)
 
 ## What to Do When a Test Fail
 
