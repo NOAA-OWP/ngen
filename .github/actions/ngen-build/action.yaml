@@ -86,7 +86,6 @@ runs:
               echo "LD_LIBRARY_PATH=/usr/local/lib/:$LD_LIBRARY_PATH" >> $GITHUB_ENV
               echo "LDFLAGS=-L/usr/local/lib" >> $GITHUB_ENV
               echo "LIB=$LD_LIBRARY_PATH" >> $GITHUB_ENV
-              echo "INCLUDE=/usr/local/include" >> $GITHUB_ENV
               echo "NETCDF=/usr/local" >> $GITHUB_ENV
             fi
           shell: bash
@@ -169,6 +168,13 @@ runs:
         - name: Setup Fortran Compiler
           if: ${{ inputs.bmi_fortran == 'ON' && runner.os == 'macOS' }}
           run: echo "FC=gfortran-13" >> $GITHUB_ENV
+          shell: bash
+
+        - name: Setup macOS Default Compiler Includes
+          if: runner.os == 'macOS'
+          run: |
+            echo "C_INCLUDE_PATH=/usr/local/include" >> $GITHUB_ENV
+            echo "CPLUS_INCLUDE_PATH=/usr/local/include" >> $GITHUB_ENV
           shell: bash
 
         - name: Cmake Initialization
