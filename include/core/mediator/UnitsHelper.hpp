@@ -8,10 +8,10 @@
 //        See PR #725 for context on this issue.
 
 #if defined(__has_include)
-#  if __has_include(<udunits2.h>)
-#    include <udunits2.h>
-#  elif __has_include(<udunits2/udunits2.h>)
+#  if __has_include(<udunits2/udunits2.h>)
 #    include <udunits2/udunits2.h>
+#  else
+#    include <udunits2.h>
 #  endif
 #else
 #  include <udunits2.h>
