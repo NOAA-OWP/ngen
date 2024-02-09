@@ -182,10 +182,7 @@ endif()
 
 # -----------------------------------------------------------------------------
 if(NGEN_WITH_NETCDF)
-    set(NETCDF_CXX "YES")
-    set(NETCDF_F77 "NO")
-    set(NETCDF_F90 "NO")
-    find_package(NetCDF REQUIRED)
+    find_package(NetCDF REQUIRED COMPONENTS CXX)
     add_compile_definitions(NETCDF_ACTIVE)
 endif()
 
@@ -446,11 +443,12 @@ ngen_dependent_multiline_message(NGEN_WITH_MPI
 "    Include: ${MPI_CXX_INCLUDE_DIRS}")
 ngen_dependent_multiline_message(NGEN_WITH_NETCDF
 "  NetCDF:"
-"    Version: ${NETCDF_VERSION}"
-"    Library: ${NETCDF_LIBRARY}"
-"    Library (CXX): ${NETCDF_CXX_LIBRARIES}"
-"    Include: ${NETCDF_INCLUDE_DIR}"
-"    Parallel: ${NETCDF_HAS_PARALLEL}")
+"    Version: ${NetCDF_VERSION}"
+"    Library: ${NetCDF_LIBRARY}"
+"    Library (CXX): ${NetCDF_CXX_LIBRARY}"
+"    Include: ${NetCDF_INCLUDE_DIR}"
+"    Include (CXX): ${NetCDF_CXX_INCLUDE_DIR}"
+"    Parallel: ${NetCDF_HAS_PARALLEL}")
 ngen_dependent_multiline_message(NGEN_WITH_SQLITE
 "  SQLite:"
 "    Version: ${SQLite3_VERSION}"
