@@ -6,7 +6,7 @@
 
 ## What Is Automated Test and How to Start It
 
-In **ngen** github repo, we use github actions/workflows to automatically test the validity of commited codes by developers. The test is triggered when a developer pushes some codes to a branch in his **ngen** fork and creates a `Pull Request`. The successful test is marked by a `green check` mark, a failed test is marked by a `red cross` mark. If a test fails, you have to debug your codes (see [What to Do When a Test Fail](#what-to-do-when-a-test-fail) below) and commit and push to the same branch again and the automatic testing will restart in the `Pull Request`. 
+In **ngen** github repo, we use github actions/workflows (for an online reference, see for [example](https://docs.github.com/en/actions/learn-github-actions) to automatically test the validity of commited codes by developers. The test is triggered when a developer pushes some codes to a branch in his **ngen** fork and creates a `Pull Request`. The successful test is marked by a `green check` mark, a failed test is marked by a `red cross` mark. If a test fails, you have to debug your codes (see [What to Do When a Test Fail](#what-to-do-when-a-test-fail) below) and commit and push to the same branch again and the automatic testing will restart in the `Pull Request`. 
 
 ## What Code Tests Are Performed
 
@@ -15,7 +15,8 @@ In **ngen** github repo, we use github actions/workflows to automatically test t
 - Running **ngen** executable on example hydrofabric with various realistic modules/models, initial condition, and forcing data.
 
 ## Local Testing
-We strongly recommend you run all the tests on your local computer before you push up the new codes to the branch in your fork. To be able to run the tests, when building the executables (for `build` with `cmake` see [here](https://github.com/stcui007/ngen/blob/ngen_automated_test/doc/BUILDS_AND_CMAKE.md), you need to set the test option to `ON` by setting:
+
+We strongly recommend you run all the tests on your local computer before you push up the new codes to the branch in your fork. To be able to run the tests, when building the executables (for `build` with `cmake` see [here](https://github.com/stcui007/ngen/blob/ngen_automated_test/doc/BUILDS_AND_CMAKE.md), you need to set the test option to `ON` using `cmake` option:
 
     `-DNGEN_WITH_TESTS:BOOL=ON`
 
