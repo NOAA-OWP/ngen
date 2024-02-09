@@ -430,6 +430,21 @@ ngen_add_test(
     REQUIRES
         NGEN_WITH_NETCDF
 )
+
+ngen_add_test(
+    test_netcdf_output
+    OBJECTS
+        netcdf/Netcdf_Output_Test.cpp
+    LIBRARIES
+        NGen::core
+        NGen::core_nexus
+        NGen::core_mediator
+        NGen::forcing
+        NGen::geojson
+        NGen::realizations_catchment
+    REQUIRES
+        NGEN_WITH_NETCDF
+)
 #endif()
 
 ########################## Primary Combined Unit Test Target
