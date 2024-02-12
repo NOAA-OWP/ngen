@@ -28,6 +28,16 @@ target_include_directories(surfacebmi INTERFACE "${_SURFACEBMI_BINARY_DIR}/mod")
 target_compile_definitions(surfacebmi PRIVATE BMI_ACTIVE)
 
 if(NGEN_IS_MAIN_PROJECT)
+
+    # This ensures we can build NOAH-OWP-Modular with NGen support, but
+    # separate from NGen.
+    if(NOT TARGET iso_c_bmi)
+        add_subdirectory(
+            "${CMAKE_CURRENT_LIST_DIR}/../iso_c_fortran_bmi"
+            "${CMAKE_CURRENT_BINARY_DIR}/iso_c_fortran_bmi"
+        )
+    endif()
+
     target_link_libraries(surfacebmi PUBLIC iso_c_bmi)
     target_compile_definitions(surfacebmi PRIVATE NGEN_FORCING_ACTIVE NGEN_OUTPUT_ACTIVE NGEN_ACTIVE)
 else()
