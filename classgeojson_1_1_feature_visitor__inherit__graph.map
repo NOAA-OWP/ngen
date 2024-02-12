@@ -1,4 +1,5 @@
 <map id="geojson::FeatureVisitor" name="geojson::FeatureVisitor">
-<area shape="rect" id="node1" title="An abstract class used to operate on the children of FeatureBase." alt="" coords="5,5,164,148"/>
-<area shape="rect" id="node2" href="$class_visitor.html" title=" " alt="" coords="51,196,119,368"/>
+<area shape="rect" id="Node000001" title="An abstract class used to operate on the children of FeatureBase." alt="" coords="5,5,151,191"/>
+<area shape="rect" id="Node000002" href="$class_visitor.html" title=" " alt="" coords="50,239,106,444"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="81,206,81,239,75,239,75,206"/>
 </map>

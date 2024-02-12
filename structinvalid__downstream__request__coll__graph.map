@@ -1,5 +1,7 @@
 <map id="invalid_downstream_request" name="invalid_downstream_request">
-<area shape="rect" id="node1" title=" " alt="" coords="62,93,203,163"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,5,124,45"/>
-<area shape="rect" id="node3" title=" " alt="" coords="148,5,253,45"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="55,119,183,199"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,111,71"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="84,83,102,118,97,120,79,85"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="135,5,227,71"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="160,85,142,120,137,118,155,83"/>
 </map>

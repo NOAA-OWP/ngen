@@ -1,4 +1,5 @@
 <map id="HY_PointHydroNexus" name="HY_PointHydroNexus">
-<area shape="rect" id="node1" title=" " alt="" coords="19,372,200,647"/>
-<area shape="rect" id="node2" href="$class_h_y___hydro_nexus.html" title=" " alt="" coords="5,5,213,324"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="19,448,191,788"/>
+<area shape="rect" id="Node000002" href="$class_h_y___hydro_nexus.html" title=" " alt="" coords="5,5,204,400"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="107,415,107,448,102,448,102,415"/>
 </map>

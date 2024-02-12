@@ -1,6 +1,9 @@
 <map id="ngen::srs::epsg" name="ngen::srs::epsg">
-<area shape="rect" id="node1" title=" " alt="" coords="19,225,131,280"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,108,144,163"/>
-<area shape="rect" id="node3" title=" " alt="" coords="21,5,59,45"/>
-<area shape="rect" id="node4" title=" " alt="" coords="90,5,129,45"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="19,277,117,342"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,134,131,214"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="71,213,71,260,65,260,65,213"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="23,5,44,71"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="34,70,38,109,40,117,35,119,33,110,29,71"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="92,5,113,71"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="97,71,85,118,80,116,92,70"/>
 </map>

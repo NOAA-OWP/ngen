@@ -1,7 +1,12 @@
 <map id="ngen::mdarray&lt; T &gt;" name="ngen::mdarray&lt; T &gt;">
-<area shape="rect" id="node1" title=" " alt="" coords="103,343,239,661"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,218,168,273"/>
-<area shape="rect" id="node3" title=" " alt="" coords="113,108,229,148"/>
-<area shape="rect" id="node5" title=" " alt="" coords="192,211,320,280"/>
-<area shape="rect" id="node4" title=" " alt="" coords="151,5,190,45"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="96,405,219,810"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,269,155,335"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,334,104,388,99,390,85,335"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="106,134,209,199"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="126,212,118,224,95,271,90,268,113,222,121,209"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="179,262,293,342"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="190,210,197,222,219,261,214,264,192,224,185,213"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="147,5,168,71"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="160,70,160,116,155,116,155,70"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="229,342,216,390,211,388,223,341"/>
 </map>

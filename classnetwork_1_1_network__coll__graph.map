@@ -1,12 +1,24 @@
 <map id="network::Network" name="network::Network">
-<area shape="rect" id="node1" title="A lightweight, graph based index of hydrologic features." alt="" coords="181,445,335,749"/>
-<area shape="rect" id="node2" title=" " alt="" coords="10,262,149,331"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,130,121,170"/>
-<area shape="rect" id="node4" title=" " alt="" coords="95,13,133,53"/>
-<area shape="rect" id="node8" title=" " alt="" coords="189,123,327,177"/>
-<area shape="rect" id="node5" title=" " alt="" coords="189,255,327,339"/>
-<area shape="rect" id="node6" title=" " alt="" coords="543,130,626,170"/>
-<area shape="rect" id="node10" title=" " alt="" coords="351,262,490,331"/>
-<area shape="rect" id="node7" title=" " alt="" coords="521,5,649,60"/>
-<area shape="rect" id="node9" title=" " alt="" coords="239,13,277,53"/>
+<area shape="rect" id="Node000001" title="A lightweight, graph based index of hydrologic features." alt="" coords="179,509,323,894"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="12,314,141,394"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,392,174,541,169,544,94,395"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,156,108,221"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="65,235,75,314,69,314,60,236"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="98,13,119,78"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="100,58,81,81,64,110,58,139,53,138,60,108,77,78,96,55"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="189,148,314,228"/>
+<area shape="poly" id="edge9_Node000008_Node000004" title=" " alt="" coords="121,57,184,122,197,135,193,139,180,126,117,60"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="187,306,316,401"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="254,401,254,492,249,492,249,401"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="541,156,610,221"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="557,222,530,259,505,285,482,296,461,301,422,303,382,302,332,309,332,304,381,296,422,298,460,296,480,291,502,280,526,256,553,219"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="341,314,466,394"/>
+<area shape="poly" id="edge11_Node000010_Node000006" title=" " alt="" coords="589,220,592,252,590,269,583,284,563,306,538,323,511,335,483,344,482,339,509,330,536,318,559,302,578,281,585,267,587,252,583,221"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="518,5,633,85"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="578,100,578,156,573,156,573,100"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="254,243,254,307,249,307,249,243"/>
+<area shape="poly" id="edge12_Node000010_Node000008" title=" " alt="" coords="328,217,351,232,371,251,389,281,400,313,394,315,384,283,367,254,348,236,326,222"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="241,13,262,78"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="254,78,254,132,249,132,249,78"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="392,394,355,486,333,536,328,534,350,484,387,392"/>
 </map>

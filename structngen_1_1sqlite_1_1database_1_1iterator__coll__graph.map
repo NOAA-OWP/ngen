@@ -1,11 +1,21 @@
 <map id="ngen::sqlite::database::iterator" name="ngen::sqlite::database::iterator">
-<area shape="rect" id="node1" title=" " alt="" coords="176,387,327,705"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,240,164,324"/>
-<area shape="rect" id="node3" title=" " alt="" coords="21,123,161,177"/>
-<area shape="rect" id="node4" title=" " alt="" coords="148,13,187,53"/>
-<area shape="rect" id="node8" title=" " alt="" coords="196,130,312,170"/>
-<area shape="rect" id="node5" title=" " alt="" coords="337,262,501,302"/>
-<area shape="rect" id="node6" title=" " alt="" coords="395,130,478,170"/>
-<area shape="rect" id="node7" title=" " alt="" coords="373,5,501,60"/>
-<area shape="rect" id="node9" title=" " alt="" coords="190,255,313,309"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="166,420,305,820"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,277,151,357"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,355,161,470,156,473,96,358"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="21,148,148,214"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="85,229,83,277,77,277,80,228"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="151,13,173,78"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="154,66,114,135,109,133,149,63"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="189,148,292,214"/>
+<area shape="poly" id="edge8_Node000008_Node000004" title=" " alt="" coords="175,63,216,133,211,135,170,66"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="315,284,465,349"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="376,350,315,470,310,467,372,348"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="387,148,457,214"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="417,214,404,268,399,267,412,213"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="365,5,479,85"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="425,100,425,148,419,148,419,100"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="289,221,357,282,353,286,285,225"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="181,284,290,349"/>
+<area shape="poly" id="edge10_Node000009_Node000008" title=" " alt="" coords="241,228,239,284,234,284,236,228"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="238,349,238,403,233,403,233,349"/>
 </map>

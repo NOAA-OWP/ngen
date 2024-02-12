@@ -1,6 +1,9 @@
 <map id="realization::ConfigurationException" name="realization::ConfigurationException">
-<area shape="rect" id="node1" title="Custom exception indicating a problem when integrating with the provided realization configuration." alt="" coords="5,212,184,340"/>
-<area shape="rect" id="node2" title=" " alt="" coords="21,109,126,149"/>
-<area shape="rect" id="node3" title=" " alt="" coords="151,109,233,149"/>
-<area shape="rect" id="node4" title=" " alt="" coords="128,5,256,60"/>
+<area shape="rect" id="Node000001" title="Custom exception indicating a problem when integrating with the provided realization configuration." alt="" coords="5,263,168,423"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="19,135,111,200"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,215,80,263,74,263,68,215"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="136,135,205,200"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="158,201,135,249,130,247,153,199"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="113,5,228,85"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="173,100,173,135,168,135,168,100"/>
 </map>

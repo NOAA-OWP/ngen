@@ -1,5 +1,7 @@
 <map id="HY_InteriorCatchment" name="HY_InteriorCatchment">
-<area shape="rect" id="node1" title=" " alt="" coords="34,563,211,632"/>
-<area shape="rect" id="node2" href="$class_h_y___catchment.html" title=" " alt="" coords="5,123,240,515"/>
-<area shape="rect" id="node3" href="$class_h_y___hydro_feature.html" title=" " alt="" coords="47,5,199,75"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="34,687,202,772"/>
+<area shape="rect" id="Node000002" href="$class_h_y___catchment.html" title=" " alt="" coords="5,139,231,639"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="121,654,121,687,115,687,115,654"/>
+<area shape="rect" id="Node000003" href="$class_h_y___hydro_feature.html" title=" " alt="" coords="47,5,189,91"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="121,106,121,139,115,139,115,106"/>
 </map>

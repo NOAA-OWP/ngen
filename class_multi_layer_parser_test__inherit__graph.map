@@ -1,4 +1,5 @@
 <map id="MultiLayerParserTest" name="MultiLayerParserTest">
-<area shape="rect" id="node1" title=" " alt="" coords="5,93,176,309"/>
-<area shape="rect" id="node2" title=" " alt="" coords="42,5,139,45"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,119,167,384"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="44,5,128,71"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,86,89,119,83,119,83,86"/>
 </map>

@@ -1,4 +1,5 @@
 <map id="hy_features::hydrolocation::HY_HydroLocation" name="hy_features::hydrolocation::HY_HydroLocation">
-<area shape="rect" id="node1" title=" " alt="" coords="5,123,180,383"/>
-<area shape="rect" id="node2" href="$class_g_m___object.html" title=" " alt="" coords="35,5,150,75"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,139,167,459"/>
+<area shape="rect" id="Node000002" href="$class_g_m___object.html" title=" " alt="" coords="34,5,138,91"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,105,89,139,83,139,83,105"/>
 </map>

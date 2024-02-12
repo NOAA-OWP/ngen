@@ -1,4 +1,5 @@
 <map id="Nexus_Remote_Test" name="Nexus_Remote_Test">
-<area shape="rect" id="node1" title=" " alt="" coords="5,93,175,265"/>
-<area shape="rect" id="node2" title=" " alt="" coords="41,5,139,45"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,119,164,324"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="43,5,127,71"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="87,86,87,119,82,119,82,86"/>
 </map>

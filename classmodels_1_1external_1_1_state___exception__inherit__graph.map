@@ -1,4 +1,5 @@
 <map id="models::external::State_Exception" name="models::external::State_Exception">
-<area shape="rect" id="node1" title="Custom exception indicating bad external model state." alt="" coords="5,93,161,236"/>
-<area shape="rect" id="node2" title=" " alt="" coords="31,5,136,45"/>
+<area shape="rect" id="Node000001" title="Custom exception indicating bad external model state." alt="" coords="5,119,148,279"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="31,5,123,71"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="79,86,79,119,74,119,74,86"/>
 </map>

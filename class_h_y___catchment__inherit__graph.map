@@ -1,7 +1,11 @@
 <map id="HY_Catchment" name="HY_Catchment">
-<area shape="rect" id="node1" title=" " alt="" coords="202,123,437,515"/>
-<area shape="rect" id="node3" href="$class_h_y___catchment_aggregate.html" title=" " alt="" coords="5,563,201,632"/>
-<area shape="rect" id="node4" href="$class_h_y___dendritic_catchment.html" title=" " alt="" coords="225,563,413,632"/>
-<area shape="rect" id="node5" href="$class_h_y___interior_catchment.html" title=" " alt="" coords="437,563,615,632"/>
-<area shape="rect" id="node2" href="$class_h_y___hydro_feature.html" title=" " alt="" coords="243,5,395,75"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="193,139,418,639"/>
+<area shape="rect" id="Node000003" href="$class_h_y___catchment_aggregate.html" title=" " alt="" coords="5,687,192,772"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="187,588,126,689,121,686,183,585"/>
+<area shape="rect" id="Node000004" href="$class_h_y___dendritic_catchment.html" title=" " alt="" coords="216,687,395,772"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="308,654,308,687,303,687,303,654"/>
+<area shape="rect" id="Node000005" href="$class_h_y___interior_catchment.html" title=" " alt="" coords="419,687,587,772"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="428,594,481,686,476,688,423,597"/>
+<area shape="rect" id="Node000002" href="$class_h_y___hydro_feature.html" title=" " alt="" coords="234,5,377,91"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="308,106,308,139,303,139,303,106"/>
 </map>

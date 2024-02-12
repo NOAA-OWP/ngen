@@ -1,6 +1,9 @@
 <map id="ngen::sqlite::database" name="ngen::sqlite::database">
-<area shape="rect" id="node1" title=" " alt="" coords="11,372,162,573"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,225,168,309"/>
-<area shape="rect" id="node3" title=" " alt="" coords="17,108,157,163"/>
-<area shape="rect" id="node4" title=" " alt="" coords="67,5,106,45"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="11,405,149,670"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,262,155,342"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="83,342,83,388,77,388,77,342"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="17,134,143,199"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="83,214,83,262,77,262,77,214"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="69,5,91,71"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="83,70,83,116,77,116,77,70"/>
 </map>

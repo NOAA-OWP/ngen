@@ -1,6 +1,9 @@
 <map id="Nexus_Test" name="Nexus_Test">
-<area shape="rect" id="node1" title=" " alt="" coords="17,241,134,340"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,109,103,149"/>
-<area shape="rect" id="node3" title=" " alt="" coords="127,109,210,149"/>
-<area shape="rect" id="node4" title=" " alt="" coords="105,5,233,60"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="15,293,122,418"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,135,89,200"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="55,214,64,293,59,293,50,215"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="114,135,183,200"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="138,201,104,278,99,276,133,199"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="91,5,206,85"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="151,100,151,135,146,135,146,100"/>
 </map>

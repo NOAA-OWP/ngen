@@ -1,6 +1,9 @@
 <map id="geojson::Object" name="geojson::Object">
-<area shape="rect" id="node1" title="Struct wrapping a nested PropertyMap representing a JSON object." alt="" coords="9,211,123,280"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,108,127,148"/>
-<area shape="rect" id="node3" title=" " alt="" coords="12,5,51,45"/>
-<area shape="rect" id="node4" title=" " alt="" coords="81,5,120,45"/>
+<area shape="rect" id="Node000001" title="Struct wrapping a nested PropertyMap representing a JSON object." alt="" coords="9,262,110,347"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,134,113,199"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="62,199,62,245,57,245,57,199"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="14,5,35,71"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="25,70,29,109,32,118,27,120,24,110,20,71"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="83,5,105,71"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="88,71,75,118,70,117,83,70"/>
 </map>

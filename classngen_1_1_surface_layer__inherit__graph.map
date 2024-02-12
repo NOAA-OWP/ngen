@@ -1,4 +1,5 @@
 <map id="ngen::SurfaceLayer" name="ngen::SurfaceLayer">
-<area shape="rect" id="node1" title=" " alt="" coords="23,343,160,441"/>
-<area shape="rect" id="node2" href="$classngen_1_1_layer.html" title=" " alt="" coords="5,5,177,295"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="25,408,149,513"/>
+<area shape="rect" id="Node000002" href="$classngen_1_1_layer.html" title=" " alt="" coords="5,5,168,360"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,375,89,408,84,408,84,375"/>
 </map>

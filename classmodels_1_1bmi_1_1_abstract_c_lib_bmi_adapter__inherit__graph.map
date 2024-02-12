@@ -1,7 +1,11 @@
 <map id="models::bmi::AbstractCLibBmiAdapter" name="models::bmi::AbstractCLibBmiAdapter">
-<area shape="rect" id="node1" title=" " alt="" coords="100,871,292,1131"/>
-<area shape="rect" id="node4" href="$classmodels_1_1bmi_1_1_bmi___c___adapter.html" title="An adapter class to serve as a C++ interface to the essential aspects of external models written in t..." alt="" coords="5,1179,184,1761"/>
-<area shape="rect" id="node5" href="$classmodels_1_1bmi_1_1_bmi___cpp___adapter.html" title="A thin wrapper class to provide convenience functions around raw BMI models written in C++,..." alt="" coords="209,1223,386,1717"/>
-<area shape="rect" id="node2" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title="Abstract adapter interface for C++ classes to interact with the essential aspects of external models ..." alt="" coords="97,328,295,823"/>
-<area shape="rect" id="node3" href="$classbmi_1_1_bmi.html" title=" " alt="" coords="115,5,277,280"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="105,1080,287,1395"/>
+<area shape="rect" id="Node000004" href="$classmodels_1_1bmi_1_1_bmi___c___adapter.html" title="An adapter class to serve as a C++ interface to the essential aspects of external models written in t..." alt="" coords="5,1443,184,2165"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="168,1410,162,1443,157,1442,163,1409"/>
+<area shape="rect" id="Node000005" href="$classmodels_1_1bmi_1_1_bmi___cpp___adapter.html" title="A thin wrapper class to provide convenience functions around raw BMI models written in C++,..." alt="" coords="208,1495,387,2113"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="229,1409,245,1494,239,1495,224,1410"/>
+<area shape="rect" id="Node000002" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title="Abstract adapter interface for C++ classes to interact with the essential aspects of external models ..." alt="" coords="101,419,291,1032"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="199,1047,199,1080,193,1080,193,1047"/>
+<area shape="rect" id="Node000003" href="$classbmi_1_1_bmi.html" title=" " alt="" coords="119,5,273,371"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="199,386,199,419,193,419,193,386"/>
 </map>

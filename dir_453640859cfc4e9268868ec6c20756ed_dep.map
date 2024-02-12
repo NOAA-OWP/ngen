@@ -1,7 +1,7 @@
 <map id="test/core" name="test/core">
-<area shape="rect" id="node2" href="dir_bbec9111c9aa9e6b087277fe2118a922.html" title="mediator" alt="" coords="219,63,291,88"/>
-<area shape="rect" id="node3" href="dir_b47d70aee2f50874297b06a49059126a.html" title="multilayer" alt="" coords="117,63,195,88"/>
-<area shape="rect" id="node4" href="dir_84b1212f0fba800e0394fab1e2815654.html" title="nexus" alt="" coords="37,63,93,88"/>
-<area shape="rect" id="clust2" href="dir_453640859cfc4e9268868ec6c20756ed.html" alt="" coords="27,52,373,99"/>
-<area shape="rect" id="clust1" href="dir_13e138d54eb8818da29c3992edef070a.html" title="test" alt="" coords="16,16,384,109"/>
+<area shape="rect" id="node2" href="dir_bbec9111c9aa9e6b087277fe2118a922.html" title="mediator" alt="" coords="216,63,288,89"/>
+<area shape="rect" id="node3" href="dir_b47d70aee2f50874297b06a49059126a.html" title="multilayer" alt="" coords="117,63,193,89"/>
+<area shape="rect" id="node4" href="dir_84b1212f0fba800e0394fab1e2815654.html" title="nexus" alt="" coords="38,63,93,89"/>
+<area shape="rect" id="clust2" href="dir_453640859cfc4e9268868ec6c20756ed.html" alt="" coords="27,52,368,99"/>
+<area shape="rect" id="clust1" href="dir_13e138d54eb8818da29c3992edef070a.html" title="test" alt="" coords="16,16,379,110"/>
 </map>
