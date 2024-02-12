@@ -1,6 +1,4 @@
-include(${PROJECT_SOURCE_DIR}/cmake/dynamic_sourced_library.cmake)
-dynamic_sourced_cxx_library(forcing "${CMAKE_CURRENT_SOURCE_DIR}")
-
+add_library(forcing)
 add_library(NGen::forcing ALIAS forcing)
 
 find_package(Threads REQUIRED)
@@ -21,10 +19,12 @@ target_link_libraries(forcing PUBLIC
 )
 
 if(NGEN_WITH_NETCDF)
+    target_sources(forcing PRIVATE "${CMAKE_CURRENT_LIST_DIR}/NetCDFPerFeatureDataProvider.cpp")
     target_link_libraries(forcing PUBLIC NetCDF)
 endif()
 
 if(NGEN_WITH_PYTHON)
+    target_sources(forcing PRIVATE "${CMAKE_CURRENT_LIST_DIR}/ForcingsEngineDataProvider.cpp")
     target_link_libraries(forcing PUBLIC pybind11::embed NGen::ngen_bmi)
 endif()
 
