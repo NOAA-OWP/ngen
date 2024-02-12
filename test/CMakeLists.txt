@@ -435,7 +435,7 @@ ngen_add_test(
 ngen_add_test(
     test_bmi_forcing
     OBJECTS
-        forcing/ForcingEngineDataProvider_Test.cpp
+        forcing/ForcingsEngineDataProvider_Test.cpp
     LIBRARIES
         NGen::forcing
     REQUIRES

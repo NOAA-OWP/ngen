@@ -1,5 +1,5 @@
-#ifndef NGEN_FORCING_FORCINGENGINE_DATA_PROVIDER_HPP
-#define NGEN_FORCING_FORCINGENGINE_DATA_PROVIDER_HPP
+#ifndef NGEN_FORCING_FORCINGS_ENGINE_DATA_PROVIDER_HPP
+#define NGEN_FORCING_FORCINGS_ENGINE_DATA_PROVIDER_HPP
 #include <NGenConfig.h>
 
 static_assert(
@@ -12,13 +12,13 @@ static_assert(
 
 namespace data_access {
 
-struct ForcingEngineDataProvider
+struct ForcingsEngineDataProvider
   : public GenericDataProvider
 {
-    explicit ForcingEngineDataProvider(const std::string& init, std::size_t time_start, std::size_t time_end);
-    explicit ForcingEngineDataProvider(const std::string& init, const std::string& time_start, const std::string& time_end, const std::string& fmt = "%Y-%m-%d %H:%M:%S");
+    explicit ForcingsEngineDataProvider(const std::string& init, std::size_t time_start, std::size_t time_end);
+    explicit ForcingsEngineDataProvider(const std::string& init, const std::string& time_start, const std::string& time_end, const std::string& fmt = "%Y-%m-%d %H:%M:%S");
 
-    ~ForcingEngineDataProvider() override;
+    ~ForcingsEngineDataProvider() override;
 
     auto get_available_variable_names()
       -> boost::span<const std::string> override;
@@ -51,4 +51,4 @@ struct ForcingEngineDataProvider
 
 } // namespace data_access
 
-#endif // NGEN_FORCING_FORCINGENGINE_DATA_PROVIDER_HPP
+#endif // NGEN_FORCING_FORCINGS_ENGINE_DATA_PROVIDER_HPP
