@@ -37,6 +37,12 @@ ForcingsEngineDataProvider::ForcingsEngineDataProvider(const std::string& init, 
 
 ForcingsEngineDataProvider::~ForcingsEngineDataProvider() = default;
 
+void ForcingsEngineDataProvider::set_communicator(int handle)
+{
+    int idx = 0;
+    instance_.set_value_at_indices<int>("bmi_mpi_comm_handle", &idx, 1, &handle, "int");
+}
+
 auto ForcingsEngineDataProvider::get_available_variable_names()
   -> boost::span<const std::string>
 {

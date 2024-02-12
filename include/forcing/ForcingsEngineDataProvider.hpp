@@ -15,10 +15,33 @@ namespace data_access {
 struct ForcingsEngineDataProvider
   : public GenericDataProvider
 {
+    /**
+     * @brief Construct a new Forcings Engine Data Provider instance
+     * 
+     * @param init Path to initialization config
+     * @param time_start start time for module as a unix epoch
+     * @param time_end end time for module as a unix epoch
+     */
     explicit ForcingsEngineDataProvider(const std::string& init, std::size_t time_start, std::size_t time_end);
+
+    /**
+     * @brief Construct a new Forcings Engine Data Provider instance
+     * 
+     * @param init Path to initialization config
+     * @param time_start start time for module as a string timestamp
+     * @param time_end end time for module as a string timestamp
+     * @param fmt format of timestamps
+     */
     explicit ForcingsEngineDataProvider(const std::string& init, const std::string& time_start, const std::string& time_end, const std::string& fmt = "%Y-%m-%d %H:%M:%S");
 
     ~ForcingsEngineDataProvider() override;
+
+    /**
+     * @brief Set the MPI communicator that the Forcings Engine should use.
+     * 
+     * @param handle int representing a communicator handle.
+     */
+    void set_communicator(int handle);
 
     auto get_available_variable_names()
       -> boost::span<const std::string> override;
