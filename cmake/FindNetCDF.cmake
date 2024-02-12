@@ -2,7 +2,12 @@
 Find the NetCDF C library, and optionally, the CXX/Fortran libraries.
 
   Hints:
-    NETCDF_ROOT - prefix path to NetCDF development files, i.e. `/usr/local`
+    NetCDF_ROOT      - prefix path to NetCDF development files, i.e. `/usr/local`*
+    NETCDF_ROOT      - same as above*
+    ENV{NetCDF_ROOT} - same as above*
+    ENV{NETCDF_ROOT} - same as above*
+
+    * see CMP0074: https://cmake.org/cmake/help/latest/policy/CMP0074.html#policy:CMP0074
 
   Components:
     CXX     - Require the C++ interface
@@ -26,15 +31,10 @@ Find the NetCDF C library, and optionally, the CXX/Fortran libraries.
 #]==]
 
 # NetCDF C Library ============================================================
-find_path(NetCDF_INCLUDE_DIR
-    NAMES netcdf.h
-    PATHS "${NETCDF_ROOT}/include")
+find_path(NetCDF_INCLUDE_DIR NAMES netcdf.h)
 mark_as_advanced(NetCDF_C_INCLUDE_DIR)
 
-find_library(NetCDF_LIBRARY
-    NAMES netcdf
-    PATHS "${NETCDF_ROOT}/lib"
-    HINTS "${NetCDF_INCLUDE_DIR}/../lib")
+find_library(NetCDF_LIBRARY NAMES netcdf)
 mark_as_advanced(NetCDF_LIBRARY)
 
 if(NetCDF_INCLUDE_DIR)
@@ -62,15 +62,10 @@ endif()
 
 # NetCDF CXX Library ==========================================================
 if("CXX" IN_LIST NetCDF_FIND_COMPONENTS)
-    find_path(NetCDF_CXX_INCLUDE_DIR
-        NAMES netcdf
-        PATHS "${NETCDF_ROOT}/include")
+    find_path(NetCDF_CXX_INCLUDE_DIR NAMES netcdf)
     mark_as_advanced(NetCDF_CXX_INCLUDE_DIR)
 
-    find_library(NetCDF_CXX_LIBRARY
-        NAMES netcdf-cxx4 netcdf_c++4
-        PATHS "${NETCDF_ROOT}/lib"
-        HINTS "${NetCDF_CXX_INCLUDE_DIR}/../lib")
+    find_library(NetCDF_CXX_LIBRARY NAMES netcdf-cxx4 netcdf_c++4)
     mark_as_advanced(NetCDF_CXX_LIBRARY)
 endif()
 
@@ -82,15 +77,10 @@ endif()
 
 # NetCDF Fortran Library ======================================================
 if("FORTRAN" IN_LIST NetCDF_FIND_COMPONENTS)
-    find_path(NetCDF_FORTRAN_INCLUDE_DIR
-        NAMES netcdf.inc netcdf.mod
-        PATHS "${NETCDF_ROOT}/include")
+    find_path(NetCDF_FORTRAN_INCLUDE_DIR NAMES netcdf.inc netcdf.mod)
     mark_as_advanced(NetCDF_FORTRAN_INCLUDE_DIR)
 
-    find_library(NetCDF_FORTRAN_LIBRARY
-        NAMES netcdff
-        PATHS "${NETCDF_ROOT}/lib"
-        HINTS "${NetCDF_FORTRAN_INCLUDE_DIR}/../lib")
+    find_library(NetCDF_FORTRAN_LIBRARY NAMES netcdff)
     mark_as_advanced(NetCDF_FORTRAN_LIBRARY)
 endif()
 
@@ -116,7 +106,7 @@ if(NetCDF_FOUND)
     add_library(NetCDF INTERFACE)
     add_library(NetCDF::NetCDF ALIAS NetCDF)
 
-    add_library(NetCDF_C UNKNOWN IMPORTED)
+    add_library(NetCDF_C UNKNOWN IMPORTED GLOBAL)
     add_library(NetCDF::C ALIAS NetCDF_C)
     set_target_properties(NetCDF_C
         PROPERTIES
@@ -125,7 +115,7 @@ if(NetCDF_FOUND)
     target_link_libraries(NetCDF INTERFACE NetCDF::C)
 
     if("CXX" IN_LIST NetCDF_FIND_COMPONENTS)
-        add_library(NetCDF_CXX UNKNOWN IMPORTED)
+        add_library(NetCDF_CXX UNKNOWN IMPORTED GLOBAL)
         add_library(NetCDF::CXX ALIAS NetCDF_CXX)
         set_target_properties(NetCDF_CXX
             PROPERTIES
@@ -135,7 +125,7 @@ if(NetCDF_FOUND)
     endif()
 
     if("FORTRAN" IN_LIST NetCDF_FIND_COMPONENTS)
-        add_library(NetCDF_FORTRAN UNKNOWN IMPORTED)
+        add_library(NetCDF_FORTRAN UNKNOWN IMPORTED GLOBAL)
         add_library(NetCDF::FORTRAN ALIAS NetCDF_FORTRAN)
         set_target_properties(NetCDF_FORTRAN
             PROPERTIES
