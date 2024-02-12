@@ -2,14 +2,14 @@
 
 #include "AorcForcing.hpp"
 #include "DataProvider.hpp"
-#include "ForcingEngineDataProvider.hpp"
+#include "ForcingsEngineDataProvider.hpp"
 
 #include <boost/range/combine.hpp>
 
-TEST(ForcingEngineDataProviderTest, Initialization) {
+TEST(ForcingsEngineDataProviderTest, Initialization) {
     auto interp_ = utils::ngenPy::InterpreterUtil::getInstance();
 
-    data_access::ForcingEngineDataProvider provider{
+    data_access::ForcingsEngineDataProvider provider{
         "extern/ngen-forcing/NextGen_Forcings_Engine_BMI/NextGen_Forcings_Engine/config.yml",
         "2024-01-17 01:00:00",
         "2024-01-17 06:00:00"  

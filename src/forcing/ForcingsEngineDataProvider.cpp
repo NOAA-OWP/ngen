@@ -1,4 +1,4 @@
-#include "ForcingEngineDataProvider.hpp"
+#include "ForcingsEngineDataProvider.hpp"
 
 #include <boost/core/span.hpp>
 #include <stdexcept>
@@ -15,7 +15,7 @@ auto parse_time(const std::string& time, const std::string& fmt)
     return timegm(&tm_);
 }
 
-ForcingEngineDataProvider::ForcingEngineDataProvider(const std::string& init, std::size_t time_start, std::size_t time_end)
+ForcingsEngineDataProvider::ForcingsEngineDataProvider(const std::string& init, std::size_t time_start, std::size_t time_end)
   : instance_(
       "ForcingEngine",
       init,
@@ -31,37 +31,37 @@ ForcingEngineDataProvider::ForcingEngineDataProvider(const std::string& init, st
     instance_.Initialize();
 };
 
-ForcingEngineDataProvider::ForcingEngineDataProvider(const std::string& init, const std::string& time_start, const std::string& time_end, const std::string& fmt)
-  : ForcingEngineDataProvider(init, parse_time(time_start, fmt), parse_time(time_end, fmt))
+ForcingsEngineDataProvider::ForcingsEngineDataProvider(const std::string& init, const std::string& time_start, const std::string& time_end, const std::string& fmt)
+  : ForcingsEngineDataProvider(init, parse_time(time_start, fmt), parse_time(time_end, fmt))
 {};
 
-ForcingEngineDataProvider::~ForcingEngineDataProvider() = default;
+ForcingsEngineDataProvider::~ForcingsEngineDataProvider() = default;
 
-auto ForcingEngineDataProvider::get_available_variable_names()
+auto ForcingsEngineDataProvider::get_available_variable_names()
   -> boost::span<const std::string>
 {
     return outputs_;
 }
 
-auto ForcingEngineDataProvider::get_data_start_time()
+auto ForcingsEngineDataProvider::get_data_start_time()
   -> long
 {
     return clock_type::to_time_t(start_);
 }
 
-auto ForcingEngineDataProvider::get_data_stop_time()
+auto ForcingsEngineDataProvider::get_data_stop_time()
   -> long
 {
     return clock_type::to_time_t(end_);
 }
 
-auto ForcingEngineDataProvider::record_duration()
+auto ForcingsEngineDataProvider::record_duration()
   -> long
 {
     return static_cast<long>(instance_.GetTimeStep());
 }
 
-auto ForcingEngineDataProvider::get_ts_index_for_time(const time_t& epoch_time)
+auto ForcingsEngineDataProvider::get_ts_index_for_time(const time_t& epoch_time)
   -> size_t
 {
     const auto epoch = clock_type::from_time_t(epoch_time);
@@ -81,7 +81,7 @@ auto ForcingEngineDataProvider::get_ts_index_for_time(const time_t& epoch_time)
     return std::chrono::duration_cast<std::chrono::seconds>(epoch - start_).count() / record_duration();
 }
 
-auto ForcingEngineDataProvider::get_value(const CatchmentAggrDataSelector& selector, ReSampleMethod m)
+auto ForcingsEngineDataProvider::get_value(const CatchmentAggrDataSelector& selector, ReSampleMethod m)
   -> double
 {  
     const auto values = get_values(selector, m);
@@ -100,7 +100,7 @@ auto ForcingEngineDataProvider::get_value(const CatchmentAggrDataSelector& selec
     }
 }
 
-auto ForcingEngineDataProvider::get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m)
+auto ForcingsEngineDataProvider::get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m)
   -> std::vector<double>
 {
     // Ensure requested variable is an available variable
