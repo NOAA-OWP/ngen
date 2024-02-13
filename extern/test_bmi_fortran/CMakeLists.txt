@@ -16,7 +16,22 @@ target_sources(testbmifortranmodel PRIVATE ${_TESTBMIFORTRAN_OBJECTS})
 target_compile_options(testbmifortranmodel PRIVATE -cpp -ffree-line-length-none)
 target_compile_definitions(testbmifortranmodel PRIVATE NGEN_ACTIVE)
 target_include_directories(testbmifortranmodel INTERFACE "${_TESTBMIFORTRAN_BINARY_DIR}/mod")
-target_link_libraries(testbmifortranmodel PUBLIC iso_c_bmi)
+
+if(NGEN_IS_MAIN_PROJECT)
+
+    # This ensures we can build NOAH-OWP-Modular with NGen support, but
+    # separate from NGen.
+    if(NOT TARGET iso_c_bmi)
+        add_subdirectory(
+            "${CMAKE_CURRENT_LIST_DIR}/../iso_c_fortran_bmi"
+            "${CMAKE_CURRENT_BINARY_DIR}/iso_c_fortran_bmi"
+        )
+    endif()
+
+    #target_link_libraries(surfacebmi PUBLIC iso_c_bmi)
+    target_link_libraries(testbmifortranmodel PUBLIC iso_c_bmi)
+    #target_compile_definitions(surfacebmi PRIVATE NGEN_FORCING_ACTIVE NGEN_OUTPUT_ACTIVE NGEN_ACTIVE)
+endif()
 
 unset(_TESTBMIFORTRAN_BINARY_DIR)
 unset(_TESTBMIFORTRAN_OBJECTS)
