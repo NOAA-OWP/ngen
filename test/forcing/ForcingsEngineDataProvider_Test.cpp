@@ -6,17 +6,48 @@
 
 #include <boost/range/combine.hpp>
 
-TEST(ForcingsEngineDataProviderTest, Initialization) {
-    auto interp_ = utils::ngenPy::InterpreterUtil::getInstance();
+#if NGEN_WITH_MPI
+#include <mpi.h>
+#endif
 
-    data_access::ForcingsEngineDataProvider provider{
-        "extern/ngen-forcing/NextGen_Forcings_Engine_BMI/NextGen_Forcings_Engine/config.yml",
-        "2024-01-17 01:00:00",
-        "2024-01-17 06:00:00"  
-    };
+class ForcingsEngineDataProviderTest : public testing::Test
+{
+  protected:
+    // Compile-time data
+    static constexpr const char* config_file = "extern/ngen-forcing/NextGen_Forcings_Engine_BMI/NextGen_Forcings_Engine/config.yml";
 
-    const auto outputs_test = provider.get_available_variable_names();
-    const auto outputs_expected = {
+    std::shared_ptr<utils::ngenPy::InterpreterUtil> gil_ = nullptr;
+    int mpi_size = 1;
+    int mpi_rank = 0;
+
+  public:
+
+    // Members
+    ForcingsEngineDataProviderTest()
+      : gil_(utils::ngenPy::InterpreterUtil::getInstance())
+      , provider(config_file, "2024-01-17 01:00:00", "2024-01-17 06:00:00")
+      , params("", "ForcingsEngine", "2024-01-17 01:00:00", "2024-01-17 06:00:00")
+    {};
+
+    data_access::ForcingsEngineDataProvider provider;
+    forcing_params                          params;
+};
+
+// Tests that the forcings engine data provider correctly indexes epochs
+// to unitless indices along its given temporal domain.
+TEST_F(ForcingsEngineDataProviderTest, Timestepping)
+{
+    EXPECT_EQ(this->provider.get_ts_index_for_time(this->params.simulation_start_t), 0);
+    EXPECT_EQ(this->provider.get_ts_index_for_time(this->params.simulation_end_t), 5);
+}
+
+// Tests that the forcings engine correctly initializes and performs
+// a call to `get_values`.
+TEST_F(ForcingsEngineDataProviderTest, Initialization)
+{
+    const auto outputs_test = this->provider.get_available_variable_names();
+
+    constexpr std::array<const char*, 9> expected_variables = {
         "CAT-ID",
         "U2D_ELEMENT",
         "V2D_ELEMENT",
@@ -28,24 +59,19 @@ TEST(ForcingsEngineDataProviderTest, Initialization) {
         "RAINRATE_ELEMENT"
     };
     
-    for (decltype(auto) output : boost::combine(outputs_test, outputs_expected)) {
+    for (decltype(auto) output : boost::combine(outputs_test, expected_variables)) {
         EXPECT_EQ(output.get<0>(), output.get<1>());
     }
-
-    forcing_params params{"", "ForcingsEngine", "2024-01-17 01:00:00", "2024-01-17 06:00:00"};
-
-    EXPECT_EQ(provider.get_ts_index_for_time(params.simulation_start_t), 0);
-    EXPECT_EQ(provider.get_ts_index_for_time(params.simulation_end_t), 5);
 
     const auto selector = CatchmentAggrDataSelector{
         "cat-1015786",
         "RAINRATE",
-        provider.get_data_start_time(),
-        static_cast<long>(provider.get_ts_index_for_time(params.simulation_end_t) * 3600),
+        this->provider.get_data_start_time(), // start time
+        static_cast<long>(this->provider.get_ts_index_for_time(this->params.simulation_end_t) * 3600), // duration
         "seconds"
     };
 
-    const auto result = provider.get_values(
+    const auto result = this->provider.get_values(
         selector,
         data_access::ReSampleMethod::SUM
     );
@@ -53,8 +79,62 @@ TEST(ForcingsEngineDataProviderTest, Initialization) {
     for (const auto& r : result) {
         EXPECT_NEAR(r, 5.51193e-07, 1e6);
     }
+}
 
-    const auto lookback = provider.get_value(selector, data_access::ReSampleMethod::SUM);
-    std::cout << "Lookback: " << lookback << '\n';
-    EXPECT_EQ(lookback, std::accumulate(result.begin(), result.end(), 0.0));
+TEST_F(ForcingsEngineDataProviderTest, Lookback)
+{
+    // Both selectors encompass the entire temporal domain,
+    // and since they're AOIs, they should have different values.
+    // This means, to test lookback, we can evaluate one selector,
+    // then attempt to use the second selector. If the values match
+    // then lookback did not work correctly. Otherwise, lookback worked.
+    //
+    // Note that this assumes the variable values are different for the SAME variable.
+
+    const auto first_selector = CatchmentAggrDataSelector{
+        "cat-1015786",
+        "RAINRATE",
+        this->provider.get_data_start_time(),
+        static_cast<long>(this->provider.get_ts_index_for_time(this->params.simulation_end_t) * 3600),
+        "seconds"
+    };
+
+    const auto second_selector = CatchmentAggrDataSelector{
+        "cat-1015785",
+        "RAINRATE",
+        this->provider.get_data_start_time(),
+        static_cast<long>(this->provider.get_ts_index_for_time(this->params.simulation_end_t) * 3600),
+        "seconds"
+    };
+
+    const auto first_result = this->provider.get_value(first_selector, data_access::ReSampleMethod::SUM);
+    const auto second_result = this->provider.get_value(second_selector, data_access::ReSampleMethod::SUM);
+
+    if (std::fabs(first_result - second_result) < 1e-6) {
+        FAIL() << std::to_string(first_result) << " == " << std::to_string(second_result) << " within 1e-6 epsilon.";
+    }
+
+    SUCCEED();
+}
+
+TEST_F(ForcingsEngineDataProviderTest, MPICommunicators) {
+#if !NGEN_WITH_MPI
+    GTEST_SKIP() << "Test is not MPI-enabled, or only has 1 process";
+#else
+    MPI_Init(nullptr, nullptr);
+    MPI_Comm_size(MPI_COMM_WORLD, &this->mpi_size);
+    MPI_Comm_rank(MPI_COMM_WORLD, &this->mpi_rank);
+
+    if (this->mpi_rank == 0) {
+        provider.set_communicator(MPI_Comm_c2f(MPI_COMM_SELF));
+    }
+    // ------------------------------------------------------------------------
+    // Further calls to the provider should only use rank 0.
+
+    // ------------------------------------------------------------------------
+    // If this test gets called before other tests, let's reset back to MPI_COMM_WORLD
+    if (this->mpi_rank == 0) {
+        provider.set_communicator(MPI_Comm_c2f(MPI_COMM_WORLD));
+    }
+#endif
 }
