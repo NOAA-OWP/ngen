@@ -19,6 +19,8 @@ target_include_directories(testbmifortranmodel INTERFACE "${_TESTBMIFORTRAN_BINA
 
 if(NGEN_IS_MAIN_PROJECT)
 
+    # This ensures we can build testbmifortranmodel with NGen support, but
+    # separate from NGen.
     if(NOT TARGET iso_c_bmi)
         add_subdirectory(
             "${CMAKE_CURRENT_LIST_DIR}/../iso_c_fortran_bmi"
@@ -26,9 +28,7 @@ if(NGEN_IS_MAIN_PROJECT)
         )
     endif()
 
-    #target_link_libraries(surfacebmi PUBLIC iso_c_bmi)
     target_link_libraries(testbmifortranmodel PUBLIC iso_c_bmi)
-    #target_compile_definitions(surfacebmi PRIVATE NGEN_FORCING_ACTIVE NGEN_OUTPUT_ACTIVE NGEN_ACTIVE)
 endif()
 
 unset(_TESTBMIFORTRAN_BINARY_DIR)
