@@ -19,8 +19,6 @@ target_include_directories(testbmifortranmodel INTERFACE "${_TESTBMIFORTRAN_BINA
 
 if(NGEN_IS_MAIN_PROJECT)
 
-    # This ensures we can build test_bmi_fortran with NGen support, but
-    # separate from NGen.
     if(NOT TARGET iso_c_bmi)
         add_subdirectory(
             "${CMAKE_CURRENT_LIST_DIR}/../iso_c_fortran_bmi"
