@@ -2,10 +2,7 @@
 #define NGEN_FORCING_FORCINGS_ENGINE_DATA_PROVIDER_HPP
 #include <NGenConfig.h>
 
-static_assert(
-    ngen::exec_info::with_python,
-    "ForcingEngineDataProvider requires Python support."
-);
+#if NGEN_WITH_PYTHON
 
 #include "GenericDataProvider.hpp"
 #include "bmi/Bmi_Py_Adapter.hpp"
@@ -66,12 +63,15 @@ struct ForcingsEngineDataProvider
 
   private:
     using clock_type = std::chrono::system_clock;
+  
     models::bmi::Bmi_Py_Adapter instance_;
-    clock_type::time_point start_;
-    clock_type::time_point end_;
-    std::vector<std::string> outputs_;
+    clock_type::time_point      start_;
+    clock_type::time_point      end_;
+    std::vector<std::string>    outputs_;
 };
 
 } // namespace data_access
+
+#endif // if NGEN_WITH_PYTHON
 
 #endif // NGEN_FORCING_FORCINGS_ENGINE_DATA_PROVIDER_HPP

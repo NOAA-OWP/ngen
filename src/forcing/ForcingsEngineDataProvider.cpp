@@ -5,6 +5,8 @@
 
 namespace data_access {
 
+constexpr double NaN = std::numeric_limits<double>::quiet_NaN();
+
 auto parse_time(const std::string& time, const std::string& fmt)
   -> time_t
 {
