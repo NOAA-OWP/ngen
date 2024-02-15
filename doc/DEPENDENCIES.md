@@ -225,5 +225,5 @@ source venv/bin/activate
 
 ### Setup
 
-First, check if your compute system already have a version that is up to date, usually in the sub-directories (include/ and lib64/) under /usr. If not, you will have to install your own version. For instructions on how to install netCDF, here are some [reference](https://docs.unidata.ucar.edu/nug/current/getting_and_building_netcdf.html) and [more](https://docs.geoserver.org/main/en/user/extensions/netcdf-out/nc4.html), not necessarily the best.
+First, check if your compute system already have a version that is up to date, usually in the sub-directories (include/ and lib64/) under /usr. If not, you will have to install your own version. For instructions on how to install netCDF, some randomly selected references are [here](https://docs.unidata.ucar.edu/nug/current/getting_and_building_netcdf.html) and [here](https://docs.geoserver.org/main/en/user/extensions/netcdf-out/nc4.html).
 
