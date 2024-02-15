@@ -14,7 +14,8 @@
 | [pybind11](#pybind11) | submodule | `v2.6.0` | Can be [excluded](#overriding-pybind11-dependency). |
 | [dmod.subsetservice](#the-dmodsubsetservice-package) | external | `>= 0.3.0` | Only required to perform integrated [hydrofabric file subdividing](DISTRIBUTED_PROCESSING.md#subdivided-hydrofabric) for distributed processing . |
 | [t-route](#t-route) | submodule | see below | Module required to enable channel-routing.  Requires pybind11 to enable |
-
+| [NetCDF Libraries](#netcdf-libraries) | external | \> `4.7.4` | Enables NetCDF I/O support |
+| [SQLite3](https://www.sqlite.org/cintro.html) | external | \> `3.7.17` | Enables GeoPackage reading support |
 # Details
 
 ## Google Test
@@ -219,3 +220,10 @@ Be sure to build ngen with Python and Routing support as discussed there, and if
 ```sh
 source venv/bin/activate
 ```
+
+## NetCDF Libraries
+
+### Setup
+
+First, check if your compute system already have a version that is up to date, usually in the sub-directories (include/ and lib64/) under /usr. If not, you will have to install your own version. For instructions on how to install netCDF, here are some [reference](https://docs.unidata.ucar.edu/nug/current/getting_and_building_netcdf.html) and [more](https://docs.geoserver.org/main/en/user/extensions/netcdf-out/nc4.html), not necessarily the best.
+

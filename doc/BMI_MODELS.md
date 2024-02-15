@@ -188,7 +188,7 @@ There are some special BMI formulation config parameters which are required in c
 
 For **C** models, the model must be packaged as a pre-compiled shared library.  A CMake cache variables can be configured for controlling whether the framework functionality for working with BMI C libraries is activated.  This is found in, or must be added to, the _CMakeCache.txt_ file in the build system directory:
 
-* `BMI_C_LIB_ACTIVE`
+* `NGEN_WITH_BMI_C`
   * type: `BOOL`
   * must be set to `ON` (or equivalent in CMake) for BMI C shared library functionality to be compiled and active
 
@@ -213,9 +213,9 @@ An example implementation for an appropriate BMI model as a **C** shared library
 
 #### BMI C Activate/Deactivation Required in CMake Build
 
-BMI C functionality will not work (i.e., will not be compiled or executable) unless set to be active in the CMake build.  This requires setting the `BMI_C_LIB_ACTIVE` CMake cache variable to `ON` or `TRUE` (or equivalent).
+BMI C functionality will not work (i.e., will not be compiled or executable) unless set to be active in the CMake build.  This requires setting the `NGEN_WITH_BMI_C` CMake cache variable to `ON`.
 
-Conversely, built executables (and perhaps certain build targets) may not function as expected if `BMI_C_LIB_ACTIVE` is `ON` but the configured shared library is not available.
+Conversely, built executables (and perhaps certain build targets) may not function as expected if `NGEN_WITH_BMI_C` is `ON` but the configured shared library is not available.
 
 #### Additional Bootstrapping Function Needed
 
@@ -359,7 +359,7 @@ An example implementation for an appropriate BMI model as a **Python** class is 
 
 ### Enabling Fortran Integration
 
-To enable Fortran integration functionality, the CMake build system has to be [generated](BUILDS_AND_CMAKE.md#generating-a-build-system) with the `NGEN_BMI_FORTRAN_ACTIVE` CMake variable set to `ON`.
+To enable Fortran integration functionality, the CMake build system has to be [generated](BUILDS_AND_CMAKE.md#generating-a-build-system) with the `NGEN_WITH_BMI_FORTRAN` CMake variable set to `ON`.
 
 ### ISO C Binding Middleware
 Nextgen takes advantage of the Fortran `iso_c_binding` module to achieve interoperability with Fortran modules.  In short, this works through use of an intermediate middleware module maintained within Nextgen.  This module handles the ([majority of the](#required-additional-fortran-registration-function)) binding through proxy functions that make use of the actual external BMI Fortran module.  
