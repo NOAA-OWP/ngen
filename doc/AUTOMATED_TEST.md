@@ -18,16 +18,16 @@ In **ngen** github repo, we use github actions/workflows (for an online referenc
 
 We strongly recommend you run all the tests on your local computer before you push up the new codes to the branch in your fork. To be able to run the tests, when building the executables (for `build` with `cmake` see [here](https://github.com/stcui007/ngen/blob/ngen_automated_test/doc/BUILDS_AND_CMAKE.md)), you need to set the test option to `ON` using `cmake` option:
 
-    `-DNGEN_WITH_TESTS:BOOL=ON`
+    -DNGEN_WITH_TESTS:BOOL=ON
 
 After `build` completes, assuming your build directory is `cmake_build`, you can check that the `ngen` executable is in `cmake_build` directory, and all `unit test` executables are in `cmake_build/test` directory. To run a unit test, for example, run the following command while in the top project directory:
 
-    `./cmake_build/test/test_unit`
+    ./cmake_build/test/test_unit
 
 There are many other unit test executables you need to run for a complete test.
 To run a ngen test job, for example, using the data set in the `data` directory, and run the following command:
 
-    `./cmake_build/ngen data/catchment_data.geojson '' data/nexus_data.geojson '' data/example_bmi_multi_realization_config.json`
+    ./cmake_build/ngen data/catchment_data.geojson '' data/nexus_data.geojson '' data/example_bmi_multi_realization_config.json
 
 To run a multi-processors job with MPI, please see a complete description in [here](https://github.com/stcui007/ngen/blob/ngen_automated_test/doc/DISTRIBUTED_PROCESSING.md)
 
