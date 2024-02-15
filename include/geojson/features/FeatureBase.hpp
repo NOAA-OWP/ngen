@@ -384,12 +384,29 @@ namespace geojson {
                 return bounding_box;
             }
 
-            PropertyMap get_properties() const {
+            const PropertyMap& get_properties() const {
+                return properties;
+            }
+
+            PropertyMap& get_properties() {
                 return properties;
             }
 
             std::string get_id() const {
                 return id;
+            }
+
+            std::string get_id(std::string alt_id) const {
+                std::string tmp = id;
+                try{
+                    tmp = get_property(alt_id).as_string();
+                    //if the property exists, but its value is NaN/null
+                    if(tmp == "null") tmp = id;
+                }
+                catch(...){
+                    tmp = id;
+                }
+                return tmp;
             }
 
             int get_number_of_destination_features() {

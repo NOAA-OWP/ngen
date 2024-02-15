@@ -98,6 +98,7 @@ CMakeCache.txt
 /cmake_build
 /build
 /cmake_build*
+compile_commands.json
 
 # Prevent ignoring cmake modules
 !cmake/**/*.cmake

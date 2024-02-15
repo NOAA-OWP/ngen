@@ -34,7 +34,7 @@ HY_Features_MPI::HY_Features_MPI( PartitionData partition_data, geojson::GeoJSON
         destinations  = network.get_destination_ids(feat_id);
         //Find upstream ids
         origins = network.get_origination_ids(feat_id);
-        if(feat_type == "cat")
+        if(hy_features::identifiers::isCatchment(feat_type))
         {
           //Find and prepare formulation
           auto formulation = formulations->get_formulation(feat_id);
@@ -42,14 +42,25 @@ HY_Features_MPI::HY_Features_MPI( PartitionData partition_data, geojson::GeoJSON
           // TODO: add command line or config option to have this be omitted
           //FIXME why isn't default param working here??? get_output_header_line() fails.
           formulation->write_output("Time Step,""Time,"+formulation->get_output_header_line(",")+"\n");
+          
+          // get the catchment layer from the hydro fabric
+          const auto& cat_json_node = linked_hydro_fabric->get_feature(feat_id);
+          long lyr = cat_json_node->has_key("layer") ? cat_json_node->get_property("layer").as_natural_number() : 0;
+
+          // add this layer to the set of layers if needed
+          if (hf_layers.find(lyr) == hf_layers.end() )
+          {
+              hf_layers.insert(lyr);
+          }
+
           //Create the HY_Catchment with the formulation realization
           std::shared_ptr<HY_Catchment> c = std::make_shared<HY_Catchment>(
-              HY_Catchment(feat_id, origins, destinations, formulation)
+              HY_Catchment(feat_id, origins, destinations, formulation, lyr)
             );
 
           _catchments.emplace(feat_id, c);
         }
-        else if(feat_type == "nex" || feat_type == "tnx")
+        else if(hy_features::identifiers::isNexus(feat_type))
         {   //origins only contains LOCAL origin features (catchments) as read from
             //the geojson/partition subset.  We need to make sure `origins` passed to remote nexus
             //contain IDS of ALL upstream features, including those in remote partitions

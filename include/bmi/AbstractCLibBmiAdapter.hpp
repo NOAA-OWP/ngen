@@ -9,8 +9,7 @@
 namespace models {
     namespace bmi {
 
-        template <class C>
-        class AbstractCLibBmiAdapter : public Bmi_Adapter<C> {
+        class AbstractCLibBmiAdapter : public Bmi_Adapter {
 
         public:
             /**
@@ -29,13 +28,13 @@ namespace models {
             AbstractCLibBmiAdapter(const std::string &type_name, std::string library_file_path, std::string bmi_init_config,
                                    std::string forcing_file_path, bool allow_exceed_end, bool has_fixed_time_step,
                                    std::string registration_func, utils::StreamHandler output)
-                    : Bmi_Adapter<C>(type_name, std::move(bmi_init_config), std::move(forcing_file_path),
+                    : Bmi_Adapter(type_name, std::move(bmi_init_config), std::move(forcing_file_path),
                                      allow_exceed_end, has_fixed_time_step, output),
                       bmi_lib_file(std::move(library_file_path)),
                       bmi_registration_function(std::move(registration_func)) { }
 
             AbstractCLibBmiAdapter(AbstractCLibBmiAdapter &&adapter) noexcept :
-                    Bmi_Adapter<C>(std::move(adapter)),
+                    Bmi_Adapter(std::move(adapter)),
                     bmi_lib_file(std::move(adapter.bmi_lib_file)),
                     bmi_registration_function(adapter.bmi_registration_function),
                     dyn_lib_handle(adapter.dyn_lib_handle)
@@ -99,7 +98,7 @@ namespace models {
                         this->init_exception_msg =
                                 "Can't init " + this->model_name + "; library file path is empty";
                         throw std::runtime_error(this->init_exception_msg);
-                    }                
+                    }
                     if(bmi_lib_file.substr(idx) == ".so"){
                         alt_bmi_lib_file = bmi_lib_file.substr(0,idx) + ".dylib";
                     } else if(bmi_lib_file.substr(idx) == ".dylib"){
@@ -164,7 +163,7 @@ namespace models {
              */
             inline void *dynamic_load_symbol(const std::string &symbol_name, bool is_null_valid) {
                 if (dyn_lib_handle == nullptr) {
-                    throw std::runtime_error("Cannot load symbol " + symbol_name + " without handle to shared library");
+                    throw std::runtime_error("Cannot load symbol '" + symbol_name + "' without handle to shared library (bmi_lib_file = '" + bmi_lib_file + "')");
                 }
                 // Call first to ensure any previous error is cleared before trying to load the symbol
                 dlerror();

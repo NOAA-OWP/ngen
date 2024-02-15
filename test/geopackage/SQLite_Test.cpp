@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 
-#include "NGen_SQLite.hpp"
-#include "FileChecker.h"
+#include <string>
 
-using namespace geopackage;
+#include "ngen_sqlite.hpp"
+#include "FileChecker.h"
 
 class SQLite_Test : public ::testing::Test
 {
@@ -29,15 +29,15 @@ class SQLite_Test : public ::testing::Test
 
 TEST_F(SQLite_Test, sqlite_access_test)
 {
-    sqlite db {this->path};
+    ngen::sqlite::database db {this->path};
     // user wants metadata
-    EXPECT_TRUE(db.has_table("gpkg_contents"));
-    EXPECT_FALSE(db.has_table("some_fake_table"));
+    EXPECT_TRUE(db.contains("gpkg_contents"));
+    EXPECT_FALSE(db.contains("some_fake_table"));
 }
 
 TEST_F(SQLite_Test, sqlite_query_test)
 {
-    sqlite db {this->path};
+    ngen::sqlite::database db {this->path};
 
     if (db.connection() == nullptr) {
         FAIL() << "database is not loaded";
@@ -45,10 +45,11 @@ TEST_F(SQLite_Test, sqlite_query_test)
 
     // user provides a query
     const std::string query = "SELECT * FROM gpkg_contents WHERE table_name = 'flowpaths' LIMIT 1";
-    sqlite_iter iter = db.query(query);
+    ngen::sqlite::database::iterator iter = db.query(query);
 
     EXPECT_EQ(iter.num_columns(), 10);
-    EXPECT_EQ(iter.columns(), std::vector<std::string>({
+
+    std::vector<std::string> expected_columns = {
         "table_name",
         "data_type",
         "identifier",
@@ -59,7 +60,11 @@ TEST_F(SQLite_Test, sqlite_query_test)
         "max_x",
         "max_y",
         "srs_id"
-    }));
+    };
+
+    for (size_t i = 0; i < expected_columns.size(); i++) {
+        EXPECT_EQ(iter.columns()[i], expected_columns[i]);
+    }
 
     // user iterates over row
     ASSERT_NO_THROW(iter.next());

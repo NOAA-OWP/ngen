@@ -33,6 +33,7 @@ Network::Network( geojson::GeoJSON fabric ){
   for(auto& feature: *fabric)
   {
     feature_id = feature->get_id();
+
     if( this->descriptor_map.find( feature_id ) == this->descriptor_map.end() )
     {
       //Haven't visited this feature yet, add it to graph
@@ -43,6 +44,20 @@ Network::Network( geojson::GeoJSON fabric ){
     else{
       v1 = this->descriptor_map[ feature_id];
     }
+
+    if ( this->layer_map.find(feature_id) == this->layer_map.end() )
+    {
+      if ( feature->has_property("layer") )
+      {
+        const auto& prop = feature->get_property("layer");
+        this->layer_map.emplace( feature_id, prop.as_natural_number() );
+      }
+      else
+      {
+        this->layer_map.emplace( feature_id, DEFAULT_LAYER_ID);
+      }
+    }
+
     //Add the downstream features/edges
     for( auto& downstream: feature->destination_features() )
     {

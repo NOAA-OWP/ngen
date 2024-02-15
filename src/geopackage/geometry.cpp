@@ -1,9 +1,10 @@
-#include "GeoPackage.hpp"
+#include "geopackage.hpp"
 #include "EndianCopy.hpp"
-#include "WKB.hpp"
+#include "wkb.hpp"
+#include "proj.hpp"
 
-geojson::geometry geopackage::build_geometry(
-    const sqlite_iter& row,
+geojson::geometry ngen::geopackage::build_geometry(
+    const ngen::sqlite::database::iterator& row,
     const std::string& geom_col,
     std::vector<double>& bounding_box
 )
@@ -23,11 +24,11 @@ geojson::geometry geopackage::build_geometry(
     index++;
 
     // Read srs_id
-    uint32_t srs_id;
+    uint32_t srs_id = 0;
     utils::copy_from(geometry_blob, index, srs_id, endian);
     
-    const auto epsg = wkb::get_prj(srs_id);
-    const bg::srs::transformation<> prj{epsg, wkb::get_prj(4326)};
+    const auto epsg = ngen::srs::epsg::get(srs_id);
+    const bg::srs::transformation<> prj{epsg, ngen::srs::epsg::get(ngen::srs::epsg::wgs84)};
     wkb::wgs84 pvisitor{srs_id, prj};
     
     if (indicator > 0 & indicator < 5) {
@@ -50,7 +51,7 @@ geojson::geometry geopackage::build_geometry(
         geojson::coordinate_t min_prj{};
 
         // project the raw bounding box
-        if (srs_id == 4326) {
+        if (srs_id == srs::epsg::wgs84) {
             max_prj = geojson::coordinate_t{max.get<0>(), max.get<1>()};
             min_prj = geojson::coordinate_t{min.get<0>(), min.get<1>()};
         } else {

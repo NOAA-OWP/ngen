@@ -88,13 +88,6 @@ protected:
     static std::string py_dir_search(const std::vector<std::string> &dir_options);
 
     /**
-     * Find the repo root directory, starting from the current directory and working upward.
-     *
-     * @return The absolute path of the repo root, as a string.
-     */
-    static std::string py_find_repo_root();
-
-    /**
      * Find the virtual environment site packages directory, starting from an assumed valid venv directory.
      *
      * @param venv_dir The virtual environment directory.
@@ -128,13 +121,10 @@ std::shared_ptr<InterpreterUtil> Bmi_Py_Adapter_Test::interperter = InterpreterU
 py::object Bmi_Py_Adapter_Test::Path = InterpreterUtil::getPyModule(std::vector<std::string> {"pathlib", "Path"});
 
 void Bmi_Py_Adapter_Test::SetUp() {
-
-    std::string repo_root = py_find_repo_root();
-
     example_scenario template_ex_struct;
     // These should be safe for all examples
     template_ex_struct.module_name = "test_bmi_py.bmi_model";
-    template_ex_struct.module_directory = repo_root + "/extern/";
+    template_ex_struct.module_directory = "./extern/";
 
     // Now generate the examples vector based on the above template example
     size_t num_example_scenarios = 1;
@@ -143,11 +133,11 @@ void Bmi_Py_Adapter_Test::SetUp() {
         examples[i] = template_ex_struct;
     }
 
-    examples[0].forcing_file = repo_root + "/data/forcing/cat-27_2015-12-01 00_00_00_2015-12-30 23_00_00.csv";
+    examples[0].forcing_file = "./data/forcing/cat-27_2015-12-01 00_00_00_2015-12-30 23_00_00.csv";
 
     // We can handle setting the right init config and initializing the adapter in a loop
     for (int i = 0; i < examples.size(); ++i) {
-        examples[i].bmi_init_config = repo_root + "/test/data/bmi/test_bmi_python/test_bmi_python_config_"
+        examples[i].bmi_init_config = "./test/data/bmi/test_bmi_python/test_bmi_python_config_"
                 + std::to_string(i) + ".yml";
 
         examples[i].adapter = std::make_shared<Bmi_Py_Adapter>(examples[i].module_name, examples[i].bmi_init_config,
@@ -160,15 +150,8 @@ void Bmi_Py_Adapter_Test::TearDown() {
 }
 
 void Bmi_Py_Adapter_Test::SetUpTestSuite() {
-    std::string repo_root = py_find_repo_root();
-    std::string module_directory = repo_root + "/extern/";
-
-    // Add the package dir from a local virtual environment directory also, if there is one
-    std::string venv_dir = py_dir_search({repo_root + "/.venv", repo_root + "/venv"});
-    if (!venv_dir.empty()) {
-        InterpreterUtil::addToPyPath(py_find_venv_site_packages_dir(venv_dir));
-    }
-    // Also add the extern dir with our test lib to Python system path
+    // Add the extern dir with our test lib to Python system path
+    std::string module_directory = "./extern/";
     InterpreterUtil::addToPyPath(module_directory);
 }
 
@@ -230,25 +213,6 @@ std::string Bmi_Py_Adapter_Test::py_dir_search(const std::vector<std::string> &d
             return dir;
     }
     return "";
-}
-
-/**
- * Find the repo root directory, starting from the current directory and working upward.
- *
- * @return The absolute path of the repo root, as a string.
- */
-std::string Bmi_Py_Adapter_Test::py_find_repo_root() {
-    py::object dir = Path(".").attr("resolve")();
-    while (!dir.equal(dir.attr("parent"))) {
-        // If there is a child .git dir and a child .github dir, then dir is the root
-        py::bool_ is_git_dir = py::bool_(dir.attr("joinpath")(".git").attr("is_dir")());
-        py::bool_ is_github_dir = py::bool_(dir.attr("joinpath")(".github").attr("is_dir")());
-        if (is_git_dir && is_github_dir) {
-            return py::str(dir);
-        }
-        dir = dir.attr("parent");
-    }
-    throw std::runtime_error("Can't find repo root starting at " + std::string(py::str(Path(".").attr("resolve")())));
 }
 
 /**

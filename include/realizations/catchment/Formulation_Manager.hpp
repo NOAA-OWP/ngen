@@ -16,8 +16,9 @@
 #include "features/Features.hpp"
 #include <FeatureCollection.hpp>
 #include "Formulation_Constructors.hpp"
-#include "Simulation_Time.h"
+#include "Simulation_Time.hpp"
 #include "routing/Routing_Params.h"
+#include "LayerData.hpp"
 
 namespace realization {
 
@@ -128,6 +129,62 @@ namespace realization {
                  * Call constructor to construct a Simulation_Time object
                  */ 
                 this->Simulation_Time_Object = std::make_shared<Simulation_Time>(simulation_time_config);
+
+                /**
+                 * Read the layer descriptions
+                */
+
+                // try to get the json node
+                auto layers_json_array = tree.get_child_optional("layers");
+
+                // check to see if the node existed
+                if (!layers_json_array) {
+                    // layer description struct
+                        ngen::LayerDescription layer_desc;
+
+                        // extract and store layer data from the json
+                        layer_desc.name = "surface layer";
+                        layer_desc.id = 0;
+                        layer_desc.time_step = 3600;
+                        layer_desc.time_step_units = "s";
+
+                        // add the layer to storage
+                        layer_storage.put_layer(layer_desc, layer_desc.id);
+                }
+                else
+                {
+                    for (std::pair<std::string, boost::property_tree::ptree> layer_config : *layers_json_array) 
+                    {
+                        // layer description struct
+                        ngen::LayerDescription layer_desc;
+
+                        // extract and store layer data from the json
+                        layer_desc.name = layer_config.second.get<std::string>("name");
+                        layer_desc.id = layer_config.second.get<int>("id");
+                        layer_desc.time_step = layer_config.second.get<double>("time_step");
+                        boost::optional<std::string> layer_units = layer_config.second.get_optional<std::string>("time_step_units");
+                        if (*layer_units == "") layer_units = "s";
+                        layer_desc.time_step_units = *layer_units;
+
+                        // check to see if this layer was allready defined
+                        if (layer_storage.exists(layer_desc.id) )
+                        {
+                            std::string message = "A layer with id = ";
+                            message += std::to_string(layer_desc.id);
+                            message += " was defined more than once";
+
+                            std::runtime_error r_error(message);
+                            
+                            throw r_error;
+                        }
+
+                        // add the layer to storage
+                        layer_storage.put_layer(layer_desc, layer_desc.id);
+
+                        // debuggin print to see parsed data
+                        std::cout << layer_desc.name << ", " << layer_desc.id << ", " << layer_desc.time_step << ", " << layer_desc.time_step_units << "\n";
+                    }
+                }
 
                 /**
                  * Read routing configurations from configuration file
@@ -302,6 +359,12 @@ namespace realization {
                 return "./";
             }
 
+            /**
+             * @brief return the layer storage used for formulations
+             * @return a reference to the LayerStorageObject
+             */
+            ngen::LayerDataStorage& get_layer_metadata() { return layer_storage; }
+
 
         protected:
             std::shared_ptr<Catchment_Formulation> construct_formulation_from_tree(
@@ -414,11 +477,11 @@ namespace realization {
             }
 
             forcing_params get_forcing_params(geojson::PropertyMap &forcing_prop_map, std::string identifier, simulation_time_params &simulation_time_config) {
-                std::string path = "";
+                std::string path;
                 if(forcing_prop_map.count("path") != 0){
                     path = forcing_prop_map.at("path").as_string();
                 }
-                std::string provider = "";
+                std::string provider;
                 if(forcing_prop_map.count("provider") != 0){
                     provider = forcing_prop_map.at("provider").as_string();
                 }
@@ -429,6 +492,11 @@ namespace realization {
                         simulation_time_config.start_time,
                         simulation_time_config.end_time
                     );
+                }
+
+                if (path.empty()) {
+                    throw std::runtime_error("Error with NGEN config - 'path' in forcing params must be set to a "
+                                             "non-empty parent directory path when 'file_pattern' is used.");
                 }
 
                 // Since we are given a pattern, we need to identify the directory and pull out anything that matches the pattern
@@ -685,6 +753,8 @@ namespace realization {
             std::shared_ptr<routing_params> routing_config;
 
             bool using_routing = false;
+
+            ngen::LayerDataStorage layer_storage;
     };
 }
 #endif // NGEN_FORMULATION_MANAGER_H

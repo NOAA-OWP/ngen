@@ -1,6 +1,8 @@
-#include "WKB.hpp"
+#include "wkb.hpp"
+#include "proj.hpp"
 
-using namespace geopackage;
+namespace ngen {
+namespace geopackage {
 
 enum wkb_geom_t {
     geometry            = 0,
@@ -196,51 +198,9 @@ typename wkb::geometry wkb::read(const boost::span<const uint8_t> buffer)
 // WKB Projection Visitor
 // ----------------------------------------------------------------------------
 
-bg::srs::dpar::parameters<> wkb::get_prj(uint32_t srid) {
-    /**
-     * EPSG 5070 and 3857 projection definitions for use with boost::geometry.
-     *
-     * @note these are required because boost 1.72.0 does not
-     *       have an EPSG definition for 5070 or 3857 in boost::srs::epsg.
-     */
-    const static auto epsg5070 = bg::srs::dpar::parameters<>
-        (bg::srs::dpar::proj_aea)
-        (bg::srs::dpar::ellps_grs80)
-        (bg::srs::dpar::towgs84, {0,0,0,0,0,0,0})
-        (bg::srs::dpar::lat_0, 23)
-        (bg::srs::dpar::lon_0, -96)
-        (bg::srs::dpar::lat_1, 29.5)
-        (bg::srs::dpar::lat_2, 45.5)
-        (bg::srs::dpar::x_0, 0)
-        (bg::srs::dpar::y_0, 0);
-
-    const static auto epsg3857 = bg::srs::dpar::parameters<>
-        (bg::srs::dpar::proj_merc)
-        (bg::srs::dpar::units_m)
-        (bg::srs::dpar::no_defs)
-        (bg::srs::dpar::a, 6378137)
-        (bg::srs::dpar::b, 6378137)
-        (bg::srs::dpar::lat_ts, 0)
-        (bg::srs::dpar::lon_0, 0)
-        (bg::srs::dpar::x_0, 0)
-        (bg::srs::dpar::y_0, 0)
-        (bg::srs::dpar::k, 1);
-
-    switch(srid) {
-        case 5070:
-            return epsg5070;
-        case 3857:
-            return epsg3857;
-        default:
-            return bg::projections::detail::epsg_to_parameters(srid);
-    }
-}
-
-// ----------------------------------------------------------------------------
-
 geojson::geometry wkb::wgs84::operator()(point_t& g)
 {
-    if (this->srs == 4326) {
+    if (this->srs == ngen::srs::epsg::wgs84) {
         return geojson::coordinate_t(g.get<0>(), g.get<1>());
     }
 
@@ -255,7 +215,7 @@ geojson::geometry wkb::wgs84::operator()(linestring_t& g)
 {
     geojson::linestring_t h;
 
-    if (this->srs == 4326) {
+    if (this->srs == ngen::srs::epsg::wgs84) {
         h.reserve(g.size());
         for (auto&& gg : g) {
             h.emplace_back(
@@ -275,7 +235,7 @@ geojson::geometry wkb::wgs84::operator()(polygon_t& g)
 {
     geojson::polygon_t h;
 
-    if(this->srs == 4326) {
+    if(this->srs == ngen::srs::epsg::wgs84) {
         h.outer().reserve(g.outer().size());
         for (auto&& gg : g.outer()) {
             h.outer().emplace_back(
@@ -308,7 +268,7 @@ geojson::geometry wkb::wgs84::operator()(multipoint_t& g)
 {
     geojson::multipoint_t h;
 
-    if (this->srs == 4326) {
+    if (this->srs == ngen::srs::epsg::wgs84) {
         h.reserve(g.size());
         for (auto&& gg : g) {
             h.emplace_back(
@@ -329,7 +289,7 @@ geojson::geometry wkb::wgs84::operator()(multilinestring_t& g)
 {
     geojson::multilinestring_t h;
 
-    if (this->srs == 4326) {
+    if (this->srs == ngen::srs::epsg::wgs84) {
         h.resize(g.size());
         auto&& line_g = g.begin();
         auto&& line_h = h.begin();
@@ -351,7 +311,7 @@ geojson::geometry wkb::wgs84::operator()(multipolygon_t& g)
 {
     geojson::multipolygon_t h;
 
-    if (this->srs == 4326) {
+    if (this->srs == ngen::srs::epsg::wgs84) {
         h.resize(g.size());
         auto&& polygon_g = g.begin();
         auto&& polygon_h = h.begin();
@@ -366,3 +326,6 @@ geojson::geometry wkb::wgs84::operator()(multipolygon_t& g)
 
     return h;
 }
+
+} // namespace geopackage
+} // namespace ngen

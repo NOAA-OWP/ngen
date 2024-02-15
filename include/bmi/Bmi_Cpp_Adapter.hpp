@@ -1,26 +1,30 @@
-#ifndef NGEN_BMI_C_ADAPTER_H
-#define NGEN_BMI_C_ADAPTER_H
+#ifndef NGEN_BMI_CPP_ADAPTER_H
+#define NGEN_BMI_CPP_ADAPTER_H
 
 #include <memory>
 #include <string>
 #include "AbstractCLibBmiAdapter.hpp"
-#include "bmi.h"
+#include "bmi.hpp"
 #include "JSONProperty.hpp"
 #include "StreamHandler.hpp"
 
 // Forward declaration to provide access to protected items in testing
-class Bmi_C_Adapter_Test;
+class Bmi_Cpp_Adapter_Test;
 
-using C_Bmi = ::Bmi;
+using Cpp_Bmi = bmi::Bmi;
+
+using ModelCreator = Cpp_Bmi* (*)();
+using ModelDestroyer = void (*)(Cpp_Bmi*);
 
 namespace models {
     namespace bmi {
 
         /**
-         * An adapter class to serve as a C++ interface to the essential aspects of external models written in the C
-         * language that implement the BMI.
+         * A thin wrapper class to provide convenience functions around raw BMI models written in C++, especially those
+         * loaded dynamically from libraries. This is less important than e.g. @see Bmi_C_Adapter but still provides
+         * some useful generalized functionality.
          */
-        class Bmi_C_Adapter : public AbstractCLibBmiAdapter<C_Bmi> {
+        class Bmi_Cpp_Adapter : public AbstractCLibBmiAdapter  {
 
         public:
 
@@ -33,12 +37,14 @@ namespace models {
              *                          use one directly.
              * @param allow_exceed_end Whether the backing model is allowed to execute beyond its advertised end_time.
              * @param has_fixed_time_step Whether the model has a fixed time step size.
-             * @param registration_func The name for the @see bmi_registration_function.
+             * @param creator_func The name for the @see creator_function .
+             * @param destoryer_func The name for the @see destroyer_function .
              * @param output The output stream handler.
              */
-            explicit Bmi_C_Adapter(const std::string &type_name, std::string library_file_path, std::string forcing_file_path,
+            explicit Bmi_Cpp_Adapter(const std::string &type_name, std::string library_file_path, std::string forcing_file_path,
                                    bool allow_exceed_end, bool has_fixed_time_step,
-                                   const std::string& registration_func, utils::StreamHandler output);
+                                   std::string creator_func, std::string destroyer_func,
+                                   utils::StreamHandler output);
 
             /**
              * Main public constructor.
@@ -50,12 +56,14 @@ namespace models {
              *                          use one directly.
              * @param allow_exceed_end Whether the backing model is allowed to execute beyond its advertised end_time.
              * @param has_fixed_time_step Whether the model has a fixed time step size.
-             * @param registration_func The name for the @see bmi_registration_function.
+             * @param creator_func The name for the @see creator_function .
+             * @param destoryer_func The name for the @see destroyer_function .
              * @param output The output stream handler.
              */
-            Bmi_C_Adapter(const std::string &type_name, std::string library_file_path, std::string bmi_init_config,
+            Bmi_Cpp_Adapter(const std::string& type_name, std::string library_file_path, std::string bmi_init_config,
                           std::string forcing_file_path, bool allow_exceed_end, bool has_fixed_time_step,
-                          std::string registration_func, utils::StreamHandler output);
+                          std::string creator_func, std::string destroyer_func,
+                          utils::StreamHandler output);
 
         protected:
 
@@ -77,13 +85,15 @@ namespace models {
              *                          use one directly.
              * @param allow_exceed_end Whether the backing model is allowed to execute beyond its advertised end_time.
              * @param has_fixed_time_step Whether the model has a fixed time step size.
-             * @param registration_func The name for the @see bmi_registration_function.
+             * @param creator_func The name for the @see creator_function .
+             * @param destoryer_func The name for the @see destroyer_function .
              * @param output The output stream handler.
              * @param do_initialization Whether initialization should be performed during construction or deferred.
              */
-            Bmi_C_Adapter(const std::string &type_name, std::string library_file_path, std::string bmi_init_config,
+            Bmi_Cpp_Adapter(const std::string& type_name, std::string library_file_path, std::string bmi_init_config,
                           std::string forcing_file_path, bool allow_exceed_end, bool has_fixed_time_step,
-                          std::string registration_func, utils::StreamHandler output, bool do_initialization);
+                          std::string creator_func, std::string destroyer_func,
+                          utils::StreamHandler output, bool do_initialization);
 
         public:
 
@@ -92,18 +102,18 @@ namespace models {
             //  once original object closes the handle for its dynamically loaded lib) it make more sense to remove the
             //  copy constructor.
             // TODO: However, it may make sense to bring it back once it's possible to serialize/deserialize the model.
-            //Bmi_C_Adapter(Bmi_C_Adapter &adapter);
+            Bmi_Cpp_Adapter(Bmi_Cpp_Adapter &adapter) = delete;
 
             // Move constructor
-            Bmi_C_Adapter(Bmi_C_Adapter &&adapter) noexcept;
+            Bmi_Cpp_Adapter(Bmi_Cpp_Adapter &&adapter) noexcept = delete;
 
             /**
              * Class destructor.
              *
              * Note that this calls the `Finalize()` function for cleaning up this object and its backing BMI model.
              */
-            virtual ~Bmi_C_Adapter() {
-                finalizeForCAdapter();
+            virtual ~Bmi_Cpp_Adapter() {
+                finalizeForCppAdapter();
             }
 
             /**
@@ -121,7 +131,7 @@ namespace models {
              * @throws models::external::State_Exception Thrown if nested model `finalize()` call is not successful.
              */
             void Finalize() override {
-                finalizeForCAdapter();
+                finalizeForCppAdapter();
             }
 
             std::string GetComponentName() override;
@@ -205,7 +215,7 @@ namespace models {
              * @see get_value
              */
             void GetValue(std::string name, void *dest) override {
-                get_value(name, dest);
+                return bmi_model->GetValue(name, dest);
             }
 
             void GetValueAtIndices(std::string name, void *dest, int *inds, int count) override;
@@ -237,129 +247,39 @@ namespace models {
             void GetGridNodesPerFace(const int grid, int *nodes_per_face) override;
 
             void *GetValuePtr(std::string name) override {
-                void *dest;
-                if (bmi_model->get_value_ptr(bmi_model.get(), name.c_str(), &dest) != BMI_SUCCESS) {
-                    throw std::runtime_error(model_name + " failed to get pointer for BMI variable " + name + ".");
-                }
-                return dest;
+                return bmi_model->GetValuePtr(name);
             }
 
-            /**
-             * Get a reference to the value(s) of a given variable.
-             *
-             * This function gets and returns the reference (i.e., pointer) to the backing model's variable with the
-             * given name.  Unlike what is returned by `GetValue()`, this will point to the current value(s) of the
-             * variable, even if the model's state has changed.
-             *
-             * Because of how C-based BMI models are implemented, raw pointers are returned.  The pointers are "owned"
-             * by the model implementation, though, so there should be no risk of memory leaks (i.e., strictly as a
-             * result of obtaining a reference via this function.)
-             *
-             * @tparam T   The type of the variable to which a reference will be returned.
-             * @param name The name of the variable to which a reference will be returned.
-             * @return A reference to the value(s) of a given variable
-             */
-            template<class T>
-            T *GetValuePtr(const std::string &name) {
-                int nbytes;
-                if (bmi_model->get_var_nbytes(bmi_model.get(), name.c_str(), &nbytes) != BMI_SUCCESS)
-                    throw std::runtime_error(model_name + " failed to get pointer for BMI variable " + name + ".");
-                void *dest = GetValuePtr(name);
-                T *ptr = (T *) dest;
-                return ptr;
-            }
-
-            /**
-             * Get the size (in bytes) of one item of a variable.
-             *
-             * @param name
-             * @return
-             */
             int GetVarItemsize(std::string name) override;
 
-            /**
-             * Get the total size (in bytes) of a variable.
-             *
-             * This function provides the total amount of memory used to store a variable; i.e., the number of items
-             * multiplied by the size of each item.
-             *
-             * @param name
-             * @return
-             */
             int GetVarNbytes(std::string name) override;
 
-            /**
-             * Get the data type of a variable.
-             *
-             * @param name
-             * @return
-             */
             int GetVarGrid(std::string name) override;
 
-            /**
-             * Get the grid (id) of a variable.
-             *
-             * @param name
-             * @return
-             */
             std::string GetVarType(std::string name) override;
 
-            /**
-             * Get the units for a variable.
-             *
-             * @param name
-             * @return
-             */
             std::string GetVarUnits(std::string name) override;
 
-            /**
-             * Get location for a variable.
-             *
-             * @param name
-             * @return
-             */
             std::string GetVarLocation(std::string name) override;
 
-            /**
-             * Get grid type for a grid-id.
-             *
-             * @param name
-             * @return
-             */
             std::string GetGridType(int grid_id) override;
 
-            /**
-             * Get grid rank for a grid-id.
-             *
-             * @param name
-             * @return
-             */
             int GetGridRank(int grid_id) override;
 
-            /**
-             * Get grid size for a grid-id.
-             *
-             * @param name
-             * @return
-             */
             int GetGridSize(int grid_id) override;
 
+            template<class T>
+            T *GetValuePtr(const std::string &name){
+                return (T*) bmi_model->GetValuePtr(name);
+            }
+
             /**
-             * Get the name string for the C++ type analogous to the described type in the backing model.
-             *
-             * The supported languages for BMI modules support different types than C++ in general, so it is necessary
-             * to map "external" types to the appropriate C++ type for certain interactions; e.g., setting a variable
-             * value.
-             *
-             * However, for C language models, the types in C can be used directly, so this simply returns the original
+             * This is totally redundant for C++ models, so this simply returns the original
              * string for the external name.
              *
-             * Note that the size of an individual item is also required, as this can vary in certain situations
-             * depending on the implementation language of a backing model.
-             *
-             * @param external_type_name The string name of some C type.
+             * @param external_type_name The string name of a C++ type.
              * @param item_size The particular size in bytes for items of the involved analogous types.
-             * @return The name string for the analogous C++ type, which is the same as given arg for C modules.
+             * @return The name string for the analogous C++ type, which is exactly what was passed in.
              */
             const std::string
             get_analogous_cxx_type(const std::string &external_type_name, const size_t item_size) override {
@@ -377,80 +297,21 @@ namespace models {
 
             template<class T>
             void SetValue(std::string name, std::vector<T> src) {
-                size_t item_size;
-                try {
-                    item_size = (size_t) GetVarItemsize(name);
-                }
-                catch (std::runtime_error &e) {
-                    throw std::runtime_error("Cannot set " + name + " variable of " + model_name +
-                                             "; unable to test item sizes are equal (does variable exist for model?)");
-                }
-                if (item_size != sizeof(src[0])) {
-                    throw std::runtime_error("Cannot set " + name + " variable of " + model_name +
-                                             " with values of different item size");
-                }
-                SetValue(std::move(name), static_cast<void *>(src.data()));
+                bmi_model->SetValue(name, src);
             }
 
             void SetValueAtIndices(std::string name, int *inds, int count, void *src) override;
 
-            /**
-             *
-             * @tparam T
-             * @param name
-             * @param inds Collection of indexes within the model for which this variable should have a value set.
-             * @param src Values that should be set for this variable at the corresponding index in `inds`.
-             */
-
             template<class T>
             void SetValueAtIndices(const std::string &name, std::vector<int> inds, std::vector<T> src) {
-                if (inds.size() != src.size()) {
-                    throw std::runtime_error("Cannot set specified indexes for " + name + " variable of " + model_name +
-                                             " when index collection is different size than collection of values.");
-                }
-                if (inds.empty()) {
-                    return;
-                }
-                size_t item_size;
-                try {
-                    item_size = (size_t) GetVarItemsize(name);
-                }
-                catch (std::runtime_error &e) {
-                    throw std::runtime_error("Cannot set specified indexes for " + name + " variable of " + model_name +
-                                             "; unable to test item sizes are equal (does variable exist for model?)");
-                }
-                if (item_size != sizeof(src[0])) {
-                    throw std::runtime_error("Cannot set specified indexes for " + name + " variable of " + model_name +
-                                             " with values of different item size");
-                }
-                SetValueAtIndices(name, inds.data(), inds.size(), static_cast<void *>(src.data()));
+                bmi_model->SetValueAtIndices(name, inds, src);
             }
 
-            /**
-             * Have the backing model update to next time step.
-             *
-             * Have the backing BMI model perform an update to the next time step according to its own internal time
-             * keeping.
-             */
             void Update() override;
 
-            /**
-             * Have the backing BMI model update to the specified time.
-             *
-             * Update the backing BMI model to some desired model time, specified either explicitly or implicitly as a
-             * non-integral multiple of time steps.  Note that the former is supported, but not required, by the BMI
-             * specification.  The same is true for negative argument values.
-             *
-             * This function does not attempt to determine whether the particular backing model will consider the
-             * provided parameter valid.
-             *
-             * @param time Time to update model to, either as literal model time or non-integral multiple of time steps.
-             */
             void UpdateUntil(double time) override;
 
         protected:
-            // TODO: look at setting this in some other way
-            std::string model_name = "BMI C model";
 
             /**
              * Construct the backing BMI model object, then call its BMI-native ``Initialize()`` function.
@@ -466,30 +327,61 @@ namespace models {
             }
 
             /**
-             * Load and execute the "registration" function for the backing BMI module.
+             * Load and execute the creator function for the backing BMI module.
              *
-             * Integrated BMI module libraries are expected to provide an additional ``register_bmi`` function. This
-             * essentially works like a constructor (or factory) for the model struct.  It accepts a pointer to a BMI C
-             * struct and then sets the appropriate function pointer member values of the struct.
+             * Integrated BMI module libraries are expected to provide an additional ``bmi_model_create`` function. This
+             * works like a constructor (or factory) for the model object and returns a pointer to the allocated model
+             * instance.
              */
-            inline void execModuleRegistration() {
+            inline void execModuleCreation() {
                 if (get_dyn_lib_handle() == nullptr) {
+                    if (model_create_fname.empty()) {
+                        this->init_exception_msg =
+                                "Can't init BMI C++ model; empty name given for module's create function.";
+                        throw std::runtime_error(this->init_exception_msg);
+                    }
+                    if (model_destroy_fname.empty()){
+                        this->init_exception_msg =
+                                "Can't init BMI C++ model; empty name given for module's destroy function.";
+                        throw std::runtime_error(this->init_exception_msg);
+                    }
                     dynamic_library_load();
                 }
                 void *symbol;
-                C_Bmi *(*dynamic_register_bmi)(C_Bmi *model);
+                //Cpp_Bmi *(*dynamic_create_bmi)(Cpp_Bmi *model);
+                ModelCreator dynamic_creator;
 
                 try {
-                    // Acquire the BMI struct func pointer registration function
-                    symbol = dynamic_load_symbol(get_bmi_registration_function());
-                    dynamic_register_bmi = (C_Bmi *(*)(C_Bmi *)) symbol;
-                    // Call registration function, which (for C libs) sets up object's pointed-to member BMI struct
-                    dynamic_register_bmi(bmi_model.get());
+                    // Acquire the BMI creator function
+                    symbol = dynamic_load_symbol(model_create_fname);
+                    dynamic_creator = (ModelCreator) symbol;
+                    bmi_model = std::shared_ptr<Cpp_Bmi>(
+                        dynamic_creator(),
+                        [](Cpp_Bmi* p) {
+                            // DO NOTHING.
+                            /* The best practice pattern for using C++ objects with dlopen is to declare a creator function
+                             * AND a destroyer function. It is not wise to create the object in the library and destroy it
+                             * in the calling environment because reasons (https://stackoverflow.com/a/40109212). Originally
+                             * here I had a call to the destroyer function, but that blew up because in our implementation
+                             * dlclose() gets called before this shared_ptr gets decremented to zero, so segfault happens
+                             * when calling the library-resident destroyer function. It would probably be simpler to skip
+                             * shared_ptr entirely and just keep a raw pointer to the object, but that makes it look like 
+                             * we're being ignorant of smart pointers...so this is left here as an explicit NO-OP and the
+                             * destroyer is called in Finalize() above, which occurs in the right sequence. Better ideas?
+                             * 
+                             * Note also that the creator function is called in our *constructor*, not in Initialize(), so
+                             * this is somewhat asymmetric...however, BMI's documentation only stipulates that Initialize()
+                             * "should perform all tasks that are to take place before entering the model’s time loop," so
+                             * it seems legal to e.g. call GetInputVarNames() before Initialize()--which would require the
+                             * backing model to already exist--so creating it in Initialize() is not an option.
+                             */
+                        }
+                    );
                 }
                 catch (const ::external::ExternalIntegrationException &e) {
                     // "Override" the default message in this case
                     this->init_exception_msg =
-                            "Cannot init " + this->model_name + " without valid library registration function: " +
+                            "Cannot init " + this->model_name + ", failed to acquire creator and/or destroyer functions: " +
                             this->init_exception_msg;
                     throw ::external::ExternalIntegrationException(this->init_exception_msg);
                 }
@@ -517,21 +409,6 @@ namespace models {
             }
 
             /**
-             * Internal implementation of logic used for @see GetValue.
-             *
-             * Essentially, function exists as inner implementation.  This allows it to be inlined, which may lead to
-             * optimization in certain situations.
-             *
-             * @param name The name of the variable for which to get values.
-             * @param dest An array pointer into which the values will be written.
-             */
-            inline void get_value(const std::string& name, void *dest) {
-                if (bmi_model->get_value(bmi_model.get(), name.c_str(), dest) != BMI_SUCCESS) {
-                    throw std::runtime_error(model_name + " failed to get values for variable " + name + ".");
-                }
-            }
-
-            /**
              * Retrieve time step size directly from model.
              *
              * Retrieve the time step size from the backing model and return in a shared pointer.
@@ -539,15 +416,13 @@ namespace models {
              * @return Shared pointer to just-retrieved time step size
              */
             inline std::shared_ptr<double> retrieve_bmi_model_time_step_size() {
-                double ts;
-                int result = bmi_model->get_time_step(bmi_model.get(), &ts);
-                if (result != BMI_SUCCESS) {
-                    throw std::runtime_error(model_name + " failed to read time step from model.");
-                }
-                return std::make_shared<double>(ts);
+                return std::make_shared<double>(bmi_model->GetTimeStep());
             }
 
         private:
+
+            std::string model_create_fname;
+            std::string model_destroy_fname;
 
             /**
              * Construct the backing BMI model object, then call its BMI-native ``Initialize()`` function.
@@ -563,13 +438,8 @@ namespace models {
             inline void construct_and_init_backing_model_for_type() {
                 if (model_initialized)
                     return;
-                bmi_model = std::make_shared<C_Bmi>(C_Bmi());
-                execModuleRegistration();
-                int init_result = bmi_model->initialize(bmi_model.get(), bmi_init_config.c_str());
-                if (init_result != BMI_SUCCESS) {
-                    init_exception_msg = "Failure when attempting to initialize " + model_name;
-                    throw models::external::State_Exception(init_exception_msg);
-                }
+                execModuleCreation();
+                bmi_model->Initialize(bmi_init_config.c_str());
             }
 
             /**
@@ -581,71 +451,31 @@ namespace models {
              * Primarily, this exists to contain the functionality appropriate for @see Finalize in a function that is
              * non-virtual, and can therefore be called by a destructor.
              */
-            void finalizeForCAdapter() {
+            void finalizeForCppAdapter() {
                 if (bmi_model != nullptr && model_initialized) {
                     model_initialized = false;
-                    int result = bmi_model->finalize(bmi_model.get());
-                    if (result != BMI_SUCCESS) {
-                        throw models::external::State_Exception("Failure attempting to finalize BMI C model " + model_name);
-                    }
-                }
-            }
 
-            /**
-             * Internal implementation of logic used for @see GetInputItemCount.
-             *
-             * "Inner" functions such as this should not contain nested function calls to any other member functions for
-             * the type.
-             *
-             * @return The count of input BMI variables.
-             * @see GetInputItemCount
-             */
-            inline int inner_get_input_item_count() {
-                int item_count;
-                if (bmi_model->get_input_item_count(bmi_model.get(), &item_count) != BMI_SUCCESS) {
-                    throw std::runtime_error(model_name + " failed to get model input item count.");
-                }
-                return item_count;
-            }
+                    //C++ Models should throw their own exceptions...do we want to wrap in State_Exception? 
+                    // It looks like the Python adapter just marshals native exceptions, so guessing not.
+                    bmi_model->Finalize();
 
-            /**
-             * Internal implementation of logic used for @see GetOutputItemCount.
-             *
-             * "Inner" functions such as this should not contain nested function calls to any other member functions for
-             * the type.
-             *
-             * @return The count of output BMI variables.
-             * @see GetOutputItemCount
-             */
-            inline int inner_get_output_item_count() {
-                int item_count;
-                if (bmi_model->get_output_item_count(bmi_model.get(), &item_count) != BMI_SUCCESS) {
-                    throw std::runtime_error(model_name + " failed to get model output item count.");
+                    // Acquire and call the BMI destroyer function
+                    ModelDestroyer dynamic_destroyer;
+                    void* symbol = dynamic_load_symbol(model_destroy_fname);
+                    dynamic_destroyer = (ModelDestroyer) symbol;
+                    dynamic_destroyer(this->bmi_model.get());
                 }
-                return item_count;
-            }
-
-            /**
-             * Helper method for getting either input or output variable names.
-             *
-             * "Inner" functions such as this should not contain nested function calls to any other member functions for
-             * the type.
-             *
-             * This should be used for @see GetInputVarNames and @see GetOutputVarNames.
-             *
-             * @param is_input_variable Whether input variable names should be retrieved (as opposed to output).
-             * @return A shared pointer to a vector of input or output variable name strings.
-             * @see GetInputVarNames
-             * @see GetOutputVarNames
-             */
-            std::shared_ptr<std::vector<std::string>> inner_get_variable_names(bool is_input_variables);
+           }
 
             // For unit testing
-            friend class ::Bmi_C_Adapter_Test;
+            friend class ::Bmi_Cpp_Adapter_Test;
 
+            /** Pointer to backing BMI model instance. */
+            std::shared_ptr<Cpp_Bmi> bmi_model = nullptr;
         };
 
     }
 }
 
-#endif //NGEN_BMI_C_ADAPTER_H
+
+#endif //NGEN_BMI_CPP_ADAPTER_H

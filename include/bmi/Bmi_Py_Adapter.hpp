@@ -30,7 +30,7 @@ namespace models {
          * An adapter class to serve as a C++ interface to the aspects of external models written in the Python
          * language that implement the BMI.
          */
-        class Bmi_Py_Adapter : public Bmi_Adapter<py::object> {
+        class Bmi_Py_Adapter : public Bmi_Adapter {
 
         public:
 
@@ -40,6 +40,9 @@ namespace models {
             Bmi_Py_Adapter(const std::string &type_name, std::string bmi_init_config, const std::string &bmi_python_type,
                            std::string forcing_file_path, bool allow_exceed_end, bool has_fixed_time_step,
                            utils::StreamHandler output);
+
+            Bmi_Py_Adapter(Bmi_Py_Adapter const&) = delete;
+            Bmi_Py_Adapter(Bmi_Py_Adapter&&) = delete;
 
             /**
              * Copy the given BMI variable's values from the backing numpy array to a C++ array.
@@ -767,6 +770,11 @@ namespace models {
 
             // For unit testing
             friend class ::Bmi_Py_Adapter_Test;
+
+        protected:
+            /** Pointer to backing BMI model instance. */
+            std::shared_ptr<py::object> bmi_model = nullptr;
+
         };
 
     }

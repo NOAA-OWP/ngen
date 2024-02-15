@@ -2,11 +2,13 @@
 #define HY_FEATURES_H
 
 #include <unordered_map>
+#include <set>
 
 #include <HY_Catchment.hpp>
 #include <HY_HydroNexus.hpp>
 #include <network.hpp>
 #include <Formulation_Manager.hpp>
+#include <HY_Features_Ids.hpp>
 
 namespace hy_features {
 
@@ -59,24 +61,14 @@ namespace hy_features {
         /**
          * @brief Construct a new HY_Features object from a Network and a set of formulations.
          * 
-         * Constructs the HY_Catchment objects for each catchment feature in the network, and attaches tha formaulation
+         * Constructs the HY_Catchment objects for each catchment connecting them with the provided link_key attaches the formulation
          * associated with the catchment found in the Formulation_Manager.  Also constucts each nexus as a HY_PointHydroNexus.
          * 
-         * @param network 
-         * @param formulations 
-         */
-        HY_Features( network::Network network, std::shared_ptr<Formulation_Manager> formulations);
-
-        /**
-         * @brief Construct a new HY_Features object From a GeoJSON feature collection and a set of formulations.
-         * 
-         * Constructs the network::Network index from the GeoJSON feature collection and link_key and then
-         * \copydetails HY_Features::HY_Features(network::Network,std::shared_ptr<Formulation_Manager>)
-         * 
          * @param catchments 
-         * @param link_key 
+         * @param link_key
          * @param formulations 
          */
+
         HY_Features( geojson::GeoJSON catchments, std::string* link_key, std::shared_ptr<Formulation_Manager> formulations);
 
         /**
@@ -93,6 +85,17 @@ namespace hy_features {
             return _catchments[id]->realization;
           return nullptr;
         }
+
+        /**
+         * @brief Construct a new HY_Features object from a Network and a set of formulations.
+         * 
+         * Constructs the HY_Catchment objects for each catchment feature in the network, and attaches tha formaulation
+         * associated with the catchment found in the Formulation_Manager.  Also constucts each nexus as a HY_PointHydroNexus.
+         * 
+         * @param network 
+         * @param formulations 
+        */
+        HY_Features( network::Network network, std::shared_ptr<Formulation_Manager> formulations, geojson::GeoJSON fabric);
 
         /**
          * @brief Get the HY_HydroNexus pointer identifed by @p id
@@ -114,14 +117,29 @@ namespace hy_features {
          * 
          * @return auto 
          */
-        inline auto catchments(){return network.filter("cat");}
+        inline auto catchments(){return network.filter(hy_features::identifiers::catchment);}
+
+        /**
+         * @brief An iterator of only the catchment feature ids from only the specified layer
+         * 
+         * @return auto 
+         */
+        inline auto catchments(long lyr) {
+            return network.filter(hy_features::identifiers::catchment,lyr);
+        }
+
+        /**
+         * @brief Return a set of layers that contain a catchment
+         */
+
+        inline const auto& layers() { return hf_layers; }
 
         /**
          * @brief An iterator of only the nexus feature ids
          * 
          * @return auto 
          */
-        inline auto nexuses(){return network.filter("nex");}
+        inline auto nexuses(){return network.filter(hy_features::identifiers::nexus);}
 
         /**
          * @brief Get a vector of destination (downstream) nexus pointers.
@@ -203,6 +221,11 @@ namespace hy_features {
          * 
          */
         std::shared_ptr<Formulation_Manager> formulations;
+
+        /**
+         *  @brief The set of layers that contain at least one catchment
+        */
+        std::set<long> hf_layers;
 
     };
 }

@@ -25,7 +25,6 @@ std::shared_ptr<Bmi_C_Adapter> Bmi_C_Formulation::construct_model(const geojson:
     std::string reg_func =
             reg_func_itr == properties.end() ? BMI_C_DEFAULT_REGISTRATION_FUNC : reg_func_itr->second.as_string();
     return std::make_shared<Bmi_C_Adapter>(
-            Bmi_C_Adapter(
                     get_model_type_name(),
                     lib_file,
                     get_bmi_init_config(),
@@ -33,7 +32,7 @@ std::shared_ptr<Bmi_C_Adapter> Bmi_C_Formulation::construct_model(const geojson:
                     get_allow_model_exceed_end_time(),
                     is_bmi_model_time_step_fixed(),
                     reg_func,
-                    output));
+                    output);
 }
 
 std::string Bmi_C_Formulation::get_output_header_line(std::string delimiter) {

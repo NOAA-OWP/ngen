@@ -8,6 +8,7 @@
 
 namespace bg = boost::geometry;
 
+namespace ngen {
 namespace geopackage {
 
 /**
@@ -52,8 +53,6 @@ struct wkb {
      * @return geometry wkb::geometry struct containing the geometry data from the buffer
      */
     static geometry read(const boost::span<const uint8_t> buffer);
-
-    static bg::srs::dpar::parameters<> get_prj(uint32_t srid);
 
   private:
     /**
@@ -112,5 +111,6 @@ struct wkb::wgs84 : public boost::static_visitor<geojson::geometry>
 };
 
 } // namespace geopackage
+} // namespace ngen
 
 #endif // NGEN_GEOPACKAGE_WKB_H

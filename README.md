@@ -41,7 +41,8 @@ See [INSTALL](INSTALL.md).
 
 ## Configuration
 
-If the software is configurable, describe it in detail, either here or in other documentation to which you link.
+To view the compile-time configuration of an pre-compiled NextGen binary use the `--info` flag, as in `ngen --info`.
+for more info see: https://github.com/NOAA-OWP/ngen/pull/679
 
 ## Usage
 

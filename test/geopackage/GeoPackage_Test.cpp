@@ -1,7 +1,7 @@
 #include <boost/geometry/io/wkt/write.hpp>
 #include <gtest/gtest.h>
 
-#include "GeoPackage.hpp"
+#include "geopackage.hpp"
 #include "FileChecker.h"
 
 class GeoPackage_Test : public ::testing::Test
@@ -38,7 +38,7 @@ class GeoPackage_Test : public ::testing::Test
 
 TEST_F(GeoPackage_Test, geopackage_read_test)
 {
-    const auto gpkg = geopackage::read(this->path, "test", {});
+    const auto gpkg = ngen::geopackage::read(this->path, "test", {});
     EXPECT_NE(gpkg->find("First"), -1);
     EXPECT_NE(gpkg->find("Second"), -1);
     const auto bbox = gpkg->get_bounding_box();
@@ -62,7 +62,7 @@ TEST_F(GeoPackage_Test, geopackage_read_test)
 
 TEST_F(GeoPackage_Test, geopackage_idsubset_test)
 {
-    const auto gpkg = geopackage::read(this->path, "test", { "First" });
+    const auto gpkg = ngen::geopackage::read(this->path, "test", { "First" });
     EXPECT_NE(gpkg->find("First"), -1);
     EXPECT_EQ(gpkg->find("Second"), -1);
 
@@ -79,7 +79,7 @@ TEST_F(GeoPackage_Test, geopackage_idsubset_test)
 // are stored in EPSG:3857. When read in, they should convert to EPSG:4326.
 TEST_F(GeoPackage_Test, geopackage_projection_test)
 {
-    const auto gpkg = geopackage::read(this->path2, "example_3857", {});
+    const auto gpkg = ngen::geopackage::read(this->path2, "example_3857", {});
     EXPECT_NE(gpkg->find("First"), -1);
     EXPECT_NE(gpkg->find("Second"), -1);
     const auto bbox = gpkg->get_bounding_box();

@@ -3,6 +3,8 @@
 
 #include <ctime>
 #include <time.h>
+#include <string>
+#include <stdexcept>
 
 /**
  * @brief simulation_time_params providing configuration information for simulation time period.
@@ -66,6 +68,12 @@ class Simulation_Time
         total_output_times = simulation_total_time_seconds / output_interval_seconds + 1;
     }
 
+    Simulation_Time(const Simulation_Time& t, int interval) : Simulation_Time(t)
+    {
+        output_interval_seconds = interval;
+        total_output_times = simulation_total_time_seconds / output_interval_seconds + 1;
+    }
+
     /**
      * @brief Accessor to the total number of time steps
      * @return total_output_times
@@ -85,11 +93,22 @@ class Simulation_Time
     }
 
     /**
+     * @brief Accessor to the the current simulation time
+     * @return current_date_time_epoch
+    */
+
+    time_t get_current_epoch_time()
+    {
+        return current_date_time_epoch;
+    }   
+
+    /**
      * @brief Accessor to the current timestamp string
      * @return current_timestamp
      */ 
     std::string get_timestamp(int current_output_time_index)
     {
+        // "get" method mutates state!
         current_date_time_epoch = start_date_time_epoch + current_output_time_index * output_interval_seconds;
             
         struct tm *temp_gmtime_struct;
@@ -106,6 +125,42 @@ class Simulation_Time
 
         return current_timestamp;
     }
+
+    inline int next_timestep_index(int epoch_time_seconds)
+    {
+        return int(epoch_time_seconds - start_date_time_epoch) / output_interval_seconds;
+    }
+
+    inline int next_timestep_index()
+    {
+        return next_timestep_index(current_date_time_epoch);
+    }
+
+    inline time_t next_timestep_epoch_time(int epoch_time_seconds){
+        return start_date_time_epoch + ( next_timestep_index(epoch_time_seconds) * output_interval_seconds );
+    }
+
+    inline time_t next_timestep_epoch_time(){
+        return next_timestep_epoch_time(current_date_time_epoch);
+    }
+
+    inline int diff(const Simulation_Time& other){
+        return start_date_time_epoch - other.start_date_time_epoch;
+    }
+
+    /**
+     * @brief move this simulation time object to represent the next time step as the current time
+    */
+
+    inline void advance_timestep(){
+        current_date_time_epoch += output_interval_seconds;
+
+        if (current_date_time_epoch > end_date_time_epoch)
+        {
+            throw std::runtime_error("Simulation time objects current time exceeded the end_date_time_epoch value for that object");
+        }
+    }
+
 
     private:
 

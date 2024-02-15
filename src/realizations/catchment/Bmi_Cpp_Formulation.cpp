@@ -34,7 +34,6 @@ std::shared_ptr<Bmi_Cpp_Adapter> Bmi_Cpp_Formulation::construct_model(const geoj
             json_prop_itr == properties.end() ? BMI_REALIZATION_CFG_PARAM_OPT__CPP_DESTROY_FUNC_DEFAULT : json_prop_itr->second.as_string();
 
     return std::make_shared<Bmi_Cpp_Adapter>(
-            Bmi_Cpp_Adapter(
                     get_model_type_name(),
                     lib_file,
                     get_bmi_init_config(),
@@ -43,7 +42,7 @@ std::shared_ptr<Bmi_Cpp_Adapter> Bmi_Cpp_Formulation::construct_model(const geoj
                     is_bmi_model_time_step_fixed(),
                     model_create_fname,
                     model_destroy_fname,
-                    output));
+                    output);
 }
 
 std::string Bmi_Cpp_Formulation::get_output_header_line(std::string delimiter) {

@@ -21,7 +21,7 @@ namespace models {
          * An adapter class to serve as a C++ interface to the essential aspects of external models written in the
          * Fortran language that implement the BMI.
          */
-        class Bmi_Fortran_Adapter : public AbstractCLibBmiAdapter<Bmi_Fortran_Handle_Wrapper> {
+        class Bmi_Fortran_Adapter : public AbstractCLibBmiAdapter {
 
         public:
 
@@ -75,6 +75,9 @@ namespace models {
                     throw e;
                 }
             }
+
+            Bmi_Fortran_Adapter(Bmi_Fortran_Adapter const&) = delete;
+            Bmi_Fortran_Adapter(Bmi_Fortran_Adapter&&) = delete;
 
             std::string GetComponentName() override;
 
@@ -495,7 +498,7 @@ namespace models {
             inline void construct_and_init_backing_model_for_fortran() {
                 if (model_initialized)
                     return;
-                bmi_model = std::make_shared<Bmi_Fortran_Handle_Wrapper>(Bmi_Fortran_Handle_Wrapper());
+                bmi_model = std::make_unique<Bmi_Fortran_Handle_Wrapper>(Bmi_Fortran_Handle_Wrapper());
                 dynamic_library_load();
                 execModuleRegistration();
                 int init_result = initialize(&bmi_model->handle, bmi_init_config.c_str());
@@ -799,6 +802,11 @@ namespace models {
             }
 
             friend class ::Bmi_Fortran_Adapter_Test;
+
+        private:
+            /** Pointer to backing BMI model instance. */
+            std::unique_ptr<Bmi_Fortran_Handle_Wrapper> bmi_model = nullptr;
+
         };
     }
 }

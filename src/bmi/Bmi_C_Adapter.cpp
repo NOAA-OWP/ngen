@@ -3,7 +3,6 @@
 
 #include "FileChecker.h"
 #include "Bmi_C_Adapter.hpp"
-#include "boost/algorithm/string.hpp"
 
 using namespace models::bmi;
 
@@ -70,7 +69,7 @@ Bmi_C_Adapter::Bmi_C_Adapter(const std::string &type_name, std::string library_f
 Bmi_C_Adapter::Bmi_C_Adapter(const std::string &type_name, std::string library_file_path, std::string bmi_init_config,
                              std::string forcing_file_path, bool allow_exceed_end, bool has_fixed_time_step,
                              std::string registration_func, utils::StreamHandler output, bool do_initialization)
-                             : AbstractCLibBmiAdapter<C_Bmi>(type_name, library_file_path, std::move(bmi_init_config), std::move(forcing_file_path), allow_exceed_end,
+                             : AbstractCLibBmiAdapter(type_name, library_file_path, std::move(bmi_init_config), std::move(forcing_file_path), allow_exceed_end,
                              has_fixed_time_step, registration_func, output)
 {
     if (do_initialization) {
@@ -132,8 +131,6 @@ Bmi_C_Adapter::Bmi_C_Adapter(Bmi_C_Adapter &adapter) : model_name(adapter.model_
          involve serialization/deserialization.
 }
 */
-
-Bmi_C_Adapter::Bmi_C_Adapter(Bmi_C_Adapter &&adapter) noexcept : AbstractCLibBmiAdapter<C_Bmi>(std::move(adapter)) { }
 
 std::string Bmi_C_Adapter::GetComponentName() {
     char component_name[BMI_MAX_COMPONENT_NAME];

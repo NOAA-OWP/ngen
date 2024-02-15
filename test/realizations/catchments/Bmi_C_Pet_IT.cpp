@@ -89,7 +89,8 @@ void Bmi_C_Pet_IT::SetUp() {
 
     forcing_dir_opts = {"./data/forcing/", "../data/forcing/", "../../data/forcing/"};
     bmi_init_cfg_dir_opts = {"./data/bmi/c/pet/", "../data/bmi/c/pet/", "../../data/bmi/c/pet/"};
-    lib_dir_opts = {"./extern/evapotranspiration/evapotranspiration/cmake_build/", "../extern/evapotranspiration/evapotranspiration/cmake_build/", "../../extern/evapotranspiration/evapotranspiration/cmake_build/"};
+    lib_dir_opts = {"./extern/evapotranspiration/evapotranspiration/cmake_build/", "../extern/evapotranspiration/evapotranspiration/cmake_build/", "../../extern/evapotranspiration/evapotranspiration/cmake_build/"
+                    "./extern/evapotranspiration/cmake_build/", "../extern/evapotranspiration/cmake_build/", "../../extern/evapotranspiration/cmake_build/"};
 
     config_json = std::vector<std::string>(EX_COUNT);
     catchment_ids = std::vector<std::string>(EX_COUNT);

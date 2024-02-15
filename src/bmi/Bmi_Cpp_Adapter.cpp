@@ -3,11 +3,8 @@
 
 #include "FileChecker.h"
 #include "Bmi_Cpp_Adapter.hpp"
-#include "boost/algorithm/string.hpp"
 
 using namespace models::bmi;
-
-const std::string Bmi_Cpp_Adapter::model_name = "BMI C++ model";
 
 Bmi_Cpp_Adapter::Bmi_Cpp_Adapter(const std::string& type_name, std::string library_file_path, std::string forcing_file_path,
                              bool allow_exceed_end, bool has_fixed_time_step,
@@ -28,7 +25,7 @@ Bmi_Cpp_Adapter::Bmi_Cpp_Adapter(const std::string& type_name, std::string libra
                              std::string forcing_file_path, bool allow_exceed_end, bool has_fixed_time_step,
                              std::string creator_func, std::string destroyer_func,
                              utils::StreamHandler output, bool do_initialization)
-                             : AbstractCLibBmiAdapter<Cpp_Bmi>(type_name, library_file_path, std::move(bmi_init_config), std::move(forcing_file_path), allow_exceed_end,
+                             : AbstractCLibBmiAdapter(type_name, library_file_path, std::move(bmi_init_config), std::move(forcing_file_path), allow_exceed_end,
                              has_fixed_time_step, creator_func, output),
                              model_create_fname(std::move(creator_func)),
                              model_destroy_fname(std::move(destroyer_func))
@@ -61,7 +58,7 @@ Bmi_Cpp_Adapter::Bmi_Cpp_Adapter(const std::string& type_name, std::string libra
 //  original object closes the handle for its dynamically loaded lib) it make more sense to remove the copy constructor.
 // TODO: However, it may make sense to bring it back once it is possible to serialize and deserialize the model.
 /*
-Bmi_Cpp_Adapter::Bmi_Cpp_Adapter(Bmi_Cpp_Adapter &adapter) : model_name(adapter.model_name),
+Bmi_Cpp_Adapter::Bmi_Cpp_Adapter(Bmi_Cpp_Adapter &adapter) :
                                                        allow_model_exceed_end_time(adapter.allow_model_exceed_end_time),
                                                        bmi_init_config(adapter.bmi_init_config),
                                                        bmi_lib_file(adapter.bmi_lib_file),
@@ -85,11 +82,6 @@ Bmi_Cpp_Adapter::Bmi_Cpp_Adapter(Bmi_Cpp_Adapter &adapter) : model_name(adapter.
          involve serialization/deserialization.
 }
 */
-
-Bmi_Cpp_Adapter::Bmi_Cpp_Adapter(Bmi_Cpp_Adapter &&adapter) noexcept : 
-    AbstractCLibBmiAdapter<Cpp_Bmi>(std::move(adapter)),
-    model_create_fname(std::move(adapter.model_create_fname)),
-    model_destroy_fname(std::move(adapter.model_destroy_fname)) { }
 
 std::string Bmi_Cpp_Adapter::GetComponentName() {
     return bmi_model->GetComponentName();
