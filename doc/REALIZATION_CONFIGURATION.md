@@ -6,7 +6,7 @@ A Realization Configuration needs to be in [JSON format (JavaScript Object Notat
 
 The Configuration is a key-value object and must contain these three first level object keys:
 * `global` 
-  * is a key-value object that must include an object key for `formulations` that defines the default formulation(s) and also an object key for `forcing` that defines the default forcing file name pattern and path for any catchment that is not defined in `catchments`
+  * is a key-value object that must include an object key for `formulations` that defines the default formulation(s) and also an object key for `forcing` that defines the default forcing file name pattern, path, and provider for any catchment that is not defined in `catchments`
   * Note: `global` can be omitted only if every catchment is assigned a formulation 
         
 * `time`
@@ -32,7 +32,7 @@ The `global` key-value object must contain the following two object keys:
   * Note: future versions could support breaking up `params` into additional key-value subobjects for `options` and `initial_conditions`
   * `params` must be a list that holds key-value pairs
 * `forcing`
-  * key-value object with keys for `file_pattern` and `path` that define the default CSV file pattern and path for the input forcings relative to the executable directory
+  * key-value object with keys for `file_pattern` and `path` that define the default CSV file pattern and path for the input forcings relative to the executable directory. More recently, `ngen` developed capability to handle forcing data in different format. Thus, a `provider` value parameter can be used to explicitly define the format of the forcing data, such as NetCDF format, in the form "provider": "NetCDF".
 
 ```
 "global": {
