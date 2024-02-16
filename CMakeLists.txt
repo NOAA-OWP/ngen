@@ -182,7 +182,22 @@ endif()
 
 # -----------------------------------------------------------------------------
 if(NGEN_WITH_NETCDF)
-    find_package(NetCDF REQUIRED COMPONENTS CXX)
+    find_package(NetCDF COMPONENTS CXX)
+
+    if(NOT NetCDF_CXX_FOUND)
+        find_package(NetCDF REQUIRED)
+        message(INFO " Using internal copy of netcdf-cxx4")
+        add_external_subdirectory(
+            SOURCE "${NGEN_EXT_DIR}/netcdf-cxx4"
+            OUTPUT "${PROJECT_BINARY_DIR}/extern-libs/netcdf-cxx4"
+            GIT_UPDATE "${NGEN_EXT_DIR}/netcdf-cxx4/netcdf-cxx4"
+	    IMPORTS netcdf-cxx4
+        )
+        set(NetCDF_CXX_INCLUDE_DIR "${NGEN_EXT_DIR}/netcdf-cxx4/netcdf-cxx4/cxx4")
+        set(NetCDF_CXX_LIBRARY "${PROJECT_BINARY_DIR}/extern-libs/netcdf-cxx4/libnetcdf-cxx4.a")
+        target_link_libraries(NetCDF INTERFACE netcdf-cxx4)
+    endif()
+
     add_compile_definitions(NETCDF_ACTIVE)
 endif()
 
