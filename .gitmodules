@@ -40,3 +40,6 @@
 	path = extern/sloth
 	url = https://github.com/noaa-owp/SLoTH
 	branch = latest
+[submodule "extern/netcdf-cxx4"]
+	path = extern/netcdf-cxx4
+	url = https://github.com/Unidata/netcdf-cxx4/
