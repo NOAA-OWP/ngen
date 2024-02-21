@@ -72,7 +72,7 @@ else()
     if(CMAKE_BUILD_TYPE MATCHES Actors)
         message("\nUsing Actors Framework, should have been installed previously")
         add_compile_definitions(ACTORS_ACTIVE)
-
+        add_compile_definitions(V4_ACTIVE)
         project(summaactors DESCRIPTION "Summa-Sundials-BE Actors")
 
         include(FortranCInterface)
@@ -101,17 +101,18 @@ endif()
 #=========================================================================================
 
 # Set compiler flags
+set(FLAGS_OPT $ENV{FLAGS_OPT}) # get optional user-specified flags from environment variables
 if(CMAKE_BUILD_TYPE MATCHES Debug)
     message("\nSetting Debug Options")
     add_compile_definitions(DEBUG)
-    set(FLAGS_NOAH -g -O0 -ffree-form -ffree-line-length-none -fmax-errors=0 -fPIC -Wfatal-errors)
-    set(FLAGS_ALL  -g -O0 -ffree-line-length-none -fmax-errors=0 -fPIC -Wfatal-errors -cpp)
-    set(FLAGS_CXX  -g -O0 -Wfatal-errors -std=c++17)
+    set(FLAGS_NOAH -g -O0 -fbacktrace -fbounds-check -ffree-form -ffree-line-length-none -fmax-errors=0 -fPIC -Wfatal-errors ${FLAGS_OPT})
+    set(FLAGS_ALL  -g -O0 -fbacktrace -fbounds-check -ffree-line-length-none -fmax-errors=0 -fPIC -Wfatal-errors -cpp ${FLAGS_OPT})
+    set(FLAGS_CXX  -g -O0 -fbacktrace -fbounds-check -Wfatal-errors -std=c++17 ${FLAGS_OPT})
 else()
     message("\nSetting Release Options")
-    set(FLAGS_NOAH -O3 -ffree-form -ffree-line-length-none -fmax-errors=0 -fPIC -Wfatal-errors)
-    set(FLAGS_ALL  -O3 -ffree-line-length-none -fmax-errors=0 -fPIC -Wfatal-errors -cpp)
-    set(FLAGS_CXX  -O3 -Wfatal-errors -std=c++17)
+    set(FLAGS_NOAH -O3 -ffree-form -ffree-line-length-none -fmax-errors=0 -fPIC -Wfatal-errors ${FLAGS_OPT})
+    set(FLAGS_ALL  -O3 -ffree-line-length-none -fmax-errors=0 -fPIC -Wfatal-errors -cpp ${FLAGS_OPT})
+    set(FLAGS_CXX  -O3 -Wfatal-errors -std=c++17 ${FLAGS_OPT})
 endif()
 
 # Find Sundials if exists, add path here if FATAL_ERROR "Did not find Sundials directory"
@@ -122,6 +123,7 @@ if(CMAKE_BUILD_TYPE MATCHES Sundials)
         "${PARENT_DIR}../sundials/instdir"
         "${F_MASTER}../../SummaSundials/sundials/instdir"
         "${PARENT_DIR}../../SummaSundials/sundials/instdir"
+        $ENV{SUNDIALS_PATH}
         "../../../../SummaSundials/sundials/instdir") #look in same head directory as summa or up to another installation
         if(EXISTS ${dir})
             set(DIR_SUNDIALS ${dir})
@@ -142,7 +144,6 @@ if(CMAKE_BUILD_TYPE MATCHES Cluster)
     set(BLA_VENDOR OpenBLAS)
 
     # Packages that are required
-    #find_package(NetCDF REQUIRED)
     find_package(LAPACK REQUIRED)
 
     # Set include directories
@@ -157,18 +158,27 @@ if(CMAKE_BUILD_TYPE MATCHES Cluster)
 
     if(CMAKE_BUILD_TYPE MATCHES Actors)
         find_package(CAF REQUIRED)
-        set(INC_ACTORS ${CAF_INCLUDES} ${PARENT_DIR}/build/includes/global ${PARENT_DIR}/build/includes/summa_actor ${PARENT_DIR}/build/includes/gru_actor ${PARENT_DIR}/build/includes/job_actor ${PARENT_DIR}/build/includes/file_access_actor ${PARENT_DIR}/build/includes/hru_actor)
+        set(INC_ACTORS ${CAF_INCLUDES} ${PARENT_DIR}/build/includes/global ${PARENT_DIR}/build/includes/summa_actor ${PARENT_DIR}/build/includes/job_actor ${PARENT_DIR}/build/includes/file_access_actor ${PARENT_DIR}/build/includes/hru_actor)
         set(LIB_ACTORS ${CAF_LIBRARIES} -lcaf_core -lcaf_io)
     endif()
 
 else()
     message("\nBuilding for personal computer")
 
-    set(SDKROOT "$(xcrun --show-sdk-path)")
+    #set(SDKROOT "$(xcrun --show-sdk-path)") # appears to be unused and specifically for MacOS so commented out
 
-    link_directories(/opt/local/lib)
-    set(INCLUDES /opt/local/include /opt/local/lib)
-    set(LIBRARIES SUMMA_NOAHMP -llapack -lgfortran -lnetcdff -lnetcdf)
+    ## Original Block -- possibly for MacOS -- attempted to generalize things for additional platforms in the next block
+    #link_directories(/opt/local/lib)
+    #set(INCLUDES /opt/local/include /opt/local/lib)
+    #set(LIBRARIES SUMMA_NOAHMP -llapack -lgfortran -lnetcdff -lnetcdf)
+
+    # Set Links and Libraries using Environment Variables
+    set(LINK_DIRS $ENV{LINK_DIRS})         # set link directories from environment variable
+    set(INCLUDES_DIRS $ENV{INCLUDES_DIRS}) # set directories for INCLUDES from environment variable
+    set(LIBRARY_LINKS $ENV{LIBRARY_LINKS}) # set list of library links from environment variable
+    link_directories(${LINK_DIRS})
+    set(INCLUDES ${INCLUDES_DIRS})
+    set(LIBRARIES SUMMA_NOAHMP ${LIBRARY_LINKS})
 
     if(CMAKE_BUILD_TYPE MATCHES Sundials)
         link_directories(${DIR_SUNDIALS}/lib)
@@ -176,7 +186,7 @@ else()
         set(INC_SUNDIALS ${DIR_SUNDIALS}/include ${DIR_SUNDIALS}/fortran)
     endif()
 
-    # Actors is on Cluster, if using on personal computer might need to link directory-- not working on Mac right now
+    # If using on personal computer need to link directory-- not working on Mac right now to compile with Actors
     if(CMAKE_BUILD_TYPE MATCHES Actors)
         set(DIR_ACTORS "")
         foreach(dir IN ITEMS
@@ -184,9 +194,10 @@ else()
             "${PARENT_DIR}../actor-framework/install"
             "${F_MASTER}../../SummaActors/actor-framework/install"
             "${PARENT_DIR}../../SummaActors/actor-framework/install"
+            $ENV{ACTOR_FRAMEWORK_PATH}
             "../../../../SummaActors/actor-framework/install") #look in same head directory as summa or up to another installation
             if(EXISTS ${dir})
-                set(DIR_SUNDIALS ${dir})
+                set(DIR_ACTORS ${dir})
                 message("\nFound Actors directory at ${DIR_ACTORS}")
                 break()
             endif()
@@ -195,8 +206,13 @@ else()
             message(FATAL_ERROR "Did not find Actors directory, edit CMakeLists.txt to add path")
         endif()
         link_directories(${DIR_ACTORS}/lib)
-        set(INC_ACTORS ${CAF_INCLUDES} ${PARENT_DIR}/build/includes/global ${PARENT_DIR}/build/includes/summa_actor ${PARENT_DIR}/build/includes/gru_actor ${PARENT_DIR}/build/includes/job_actor ${PARENT_DIR}/build/includes/file_access_actor ${PARENT_DIR}/build/includes/hru_actor)
-       set(LIB_ACTORS ${CAF_LIBRARIES} -lcaf_core -lcaf_io)
+        set(INC_ACTORS ${DIR_ACTORS}/include
+                       ${PARENT_DIR}/build/includes/global
+                       ${PARENT_DIR}/build/includes/summa_actor
+                       ${PARENT_DIR}/build/includes/job_actor
+                       ${PARENT_DIR}/build/includes/file_access_actor
+                       ${PARENT_DIR}/build/includes/hru_actor)
+        set(LIB_ACTORS ${DIR_ACTORS}/lib -lcaf_core -lcaf_io)
     endif()
 
 endif()
@@ -227,21 +243,18 @@ set(HOOKUP_DIR ${F_MASTER}/build/source/hookup)
 set(NETCDF_DIR ${F_MASTER}/build/source/netcdf)
 set(NOAHMP_DIR ${F_MASTER}/build/source/noah-mp)
 
-# Define directories for source files that might be replaced by actors (identical if not using actors)
-set(SUB_DRIVER_DIR ${PARENT_DIR}/build/source/driver)
-set(SUB_DSHARE_DIR ${PARENT_DIR}/build/source/dshare)
-set(SUB_ENGINE_DIR ${PARENT_DIR}/build/source/engine)
-set(SUB_HOOKUP_DIR ${PARENT_DIR}/build/source/hookup)
-set(SUB_NETCDF_DIR ${PARENT_DIR}/build/source/netcdf)
-
 # Define Actors specific directories
 set(ACTORS_DIR ${PARENT_DIR}/build/source/actors)
 set(FILE_ACCESS_DIR ${ACTORS_DIR}/file_access_actor)
 set(JOB_ACTOR_DIR   ${ACTORS_DIR}/job_actor)
 set(HRU_ACTOR_DIR   ${ACTORS_DIR}/hru_actor)
-set(GRU_ACTOR_DIR   ${ACTORS_DIR}/gru_actor)
 
-
+if(CMAKE_BUILD_TYPE MATCHES Actors)
+    # Define directories for source files that might be replaced by actors (identical if not using actors)
+    set(SUB_ENGINE_DIR ${FILE_ACCESS_DIR})
+else()
+    set(SUB_ENGINE_DIR ${PARENT_DIR}/build/source/engine)
+endif()
 #=========================================================================================
 # COMPILE PART 2: Assemble all of the SUMMA sub-routines
 #=========================================================================================
@@ -262,16 +275,17 @@ set(NRUTIL
 # Free versions of numerical recipes procedures for SUMMA modules
 set(NRPROC
     ${ENGINE_DIR}/expIntegral.f90
-    ${ENGINE_DIR}/spline_int.f90)
+    ${ENGINE_DIR}/spline_int.f90
+    ${ENGINE_DIR}/hyp_2F1.f90)
 
 # Hook-up modules
 set(HOOKUP
     ${HOOKUP_DIR}/ascii_util.f90
-    ${SUB_HOOKUP_DIR}/summaFileManager.f90)
+    ${HOOKUP_DIR}/summaFileManager.f90)
 
 # Data modules
 set(DATAMS
-    ${SUB_DSHARE_DIR}/data_types.f90
+    ${DSHARE_DIR}/data_types.f90
     ${DSHARE_DIR}/flxMapping.f90
     ${DSHARE_DIR}/get_ixname.f90
     ${DSHARE_DIR}/globalData.f90
@@ -282,6 +296,8 @@ set(DATAMS
 set(DATAMS_SUNDIALS
     ${DSHARE_DIR}/type4ida.f90
     ${DSHARE_DIR}/type4kinsol.f90)
+set(DATAMS_ACTORS
+    ${ACTORS_DIR}/global/actor_data_types.f90)
 
 # Utility modules
 set(UTILMS
@@ -297,34 +313,31 @@ set(UTILMS_SUNDIALS
 
 # NetCDF routines
 set(NETCDF
-    ${SUB_NETCDF_DIR}/def_output.f90
-    ${SUB_NETCDF_DIR}/modelwrite.f90
+    ${NETCDF_DIR}/def_output.f90
+    ${NETCDF_DIR}/modelwrite.f90
     ${NETCDF_DIR}/netcdf_util.f90
-    ${SUB_NETCDF_DIR}/read_icond.f90)
+    ${NETCDF_DIR}/read_icond.f90)
 
 # Preliminary modules
 set(PRELIM
-    ${SUB_ENGINE_DIR}/allocspace.f90
-    ${SUB_ENGINE_DIR}/check_icond.f90
+    ${ENGINE_DIR}/allocspace.f90
+    ${ENGINE_DIR}/check_icond.f90
     ${ENGINE_DIR}/checkStruc.f90
     ${ENGINE_DIR}/childStruc.f90
     ${ENGINE_DIR}/conv_funcs.f90
-    ${ENGINE_DIR}/convE2Temp.f90
     ${SUB_ENGINE_DIR}/ffile_info.f90
     ${ENGINE_DIR}/read_pinit.f90
-    ${SUB_ENGINE_DIR}/read_attrb.f90
+    ${ENGINE_DIR}/read_attrb.f90
     ${ENGINE_DIR}/paramCheck.f90
     ${ENGINE_DIR}/pOverwrite.f90
-    ${ENGINE_DIR}/sunGeomtry.f90)
-set(PRELIM_NOT_ACTORS
+    ${ENGINE_DIR}/sunGeomtry.f90
     ${ENGINE_DIR}/read_param.f90)
-set(PRELIM_ACTORS
-    ${SUB_ENGINE_DIR}/alloc_fileAccess.f90)
 
 # Model run support modules
 set(MODRUN
     ${ENGINE_DIR}/canopySnow.f90
     ${ENGINE_DIR}/derivforce.f90
+    ${ENGINE_DIR}/enthalpyTemp.f90
     ${ENGINE_DIR}/getVectorz.f90
     ${ENGINE_DIR}/indexState.f90
     ${ENGINE_DIR}/layerMerge.f90
@@ -332,7 +345,6 @@ set(MODRUN
     ${ENGINE_DIR}/qTimeDelay.f90
     ${ENGINE_DIR}/snowAlbedo.f90
     ${ENGINE_DIR}/snwCompact.f90
-    ${ENGINE_DIR}/t2enthalpy.f90
     ${ENGINE_DIR}/tempAdjust.f90
     ${ENGINE_DIR}/updateVars.f90
     ${ENGINE_DIR}/var_derive.f90
@@ -346,7 +358,6 @@ set(MODRUN_SUNDIALS
 # Solver main modules
 set(SOLVER
     ${ENGINE_DIR}/bigAquifer.f90
-    ${ENGINE_DIR}/computEnthalpy.f90
     ${ENGINE_DIR}/computFlux.f90
     ${ENGINE_DIR}/computHeatCap.f90
     ${ENGINE_DIR}/computJacob.f90
@@ -382,10 +393,10 @@ set(SOLVER_SUNDIALS
 # Driver support modules
 set(DRIVER
     ${DRIVER_DIR}/summa_alarms.f90
-    ${SUB_DRIVER_DIR}/summa_globalData.f90
-    ${SUB_DRIVER_DIR}/summa_type.f90
-    ${SUB_DRIVER_DIR}/summa_util.f90)
+    ${DRIVER_DIR}/summa_globalData.f90)
 set(DRIVER_NOT_ACTORS
+    ${DRIVER_DIR}/summa_util.f90
+    ${DRIVER_DIR}/summa_type.f90
     ${DRIVER_DIR}/summa_defineOutput.f90
     ${DRIVER_DIR}/summa_init.f90
     ${DRIVER_DIR}/summa_forcing.f90
@@ -402,26 +413,17 @@ set(INTERFACE
     ${ACTORS_DIR}/global/cppwrap_datatypes.f90
     ${ACTORS_DIR}/global/cppwrap_metadata.f90)
 set(FILE_ACCESS_INTERFACE
-    ${FILE_ACCESS_DIR}/fortran_code/cppwrap_fileAccess.f90
-    ${FILE_ACCESS_DIR}/fortran_code/output_structure.f90
-    ${FILE_ACCESS_DIR}/fortran_code/read_attrb.f90
-    ${FILE_ACCESS_DIR}/fortran_code/read_force.f90
-    ${FILE_ACCESS_DIR}/fortran_code/read_icondFromStructure.f90
-    ${FILE_ACCESS_DIR}/fortran_code/read_param.f90
-    ${FILE_ACCESS_DIR}/fortran_code/write_to_netcdf.f90
-    ${FILE_ACCESS_DIR}/fortran_code/writeOutputFromOutputStructure.f90)
+    ${FILE_ACCESS_DIR}/cppwrap_fileAccess.f90
+    ${FILE_ACCESS_DIR}/output_structure.f90
+    ${FILE_ACCESS_DIR}/read_force.f90
+    ${FILE_ACCESS_DIR}/fileAccess_writeOutput.f90)
 set(JOB_INTERFACE
     ${JOB_ACTOR_DIR}/job_actor.f90)
-set(GRU_INTERFACE
-    ${GRU_ACTOR_DIR}/gru_actor.f90)
 set(HRU_INTERFACE
-    ${HRU_ACTOR_DIR}/fortran_code/hru_actor.f90
-    ${HRU_ACTOR_DIR}/fortran_code/hru_init.f90
-    ${HRU_ACTOR_DIR}/fortran_code/hru_modelRun.f90
-    ${HRU_ACTOR_DIR}/fortran_code/hru_modelwrite.f90
-    ${HRU_ACTOR_DIR}/fortran_code/hru_restart.f90
-    ${HRU_ACTOR_DIR}/fortran_code/hru_setup.f90
-    ${HRU_ACTOR_DIR}/fortran_code/hru_writeOutput.f90)
+    ${HRU_ACTOR_DIR}/hru_init.f90
+    ${HRU_ACTOR_DIR}/hru_read.f90
+    ${HRU_ACTOR_DIR}/hru_modelRun.f90
+    ${HRU_ACTOR_DIR}/hru_writeOutput.f90)
 
 # Actors actual actor modules
 set(ACTORS_GLOBAL
@@ -431,25 +433,23 @@ set(ACTORS_GLOBAL
     ${ACTORS_DIR}/global/settings_functions.cpp
     ${ACTORS_DIR}/global/timing_info.cpp)
 set(SUMMA_ACTOR
-    ${ACTORS_DIR}/summa_actor/batch/batch.cpp
-    ${ACTORS_DIR}/summa_actor/batch/batch_container.cpp
-    ${ACTORS_DIR}/summa_actor/client/client.cpp
-    ${ACTORS_DIR}/summa_actor/client/client_container.cpp
+    ${ACTORS_DIR}/summa_actor/batch.cpp
+    ${ACTORS_DIR}/summa_actor/batch_container.cpp
+    ${ACTORS_DIR}/summa_actor/client.cpp
+    ${ACTORS_DIR}/summa_actor/client_container.cpp
     ${ACTORS_DIR}/summa_actor/summa_actor.cpp
     ${ACTORS_DIR}/summa_actor/summa_backup_server.cpp
     ${ACTORS_DIR}/summa_actor/summa_client.cpp
     ${ACTORS_DIR}/summa_actor/summa_server.cpp)
 set(FILE_ACCESS_ACTOR
-    ${ACTORS_DIR}/file_access_actor/cpp_code/file_access_actor.cpp
-    ${ACTORS_DIR}/file_access_actor/cpp_code/forcing_file_info.cpp
-    ${ACTORS_DIR}/file_access_actor/cpp_code/output_container.cpp)
+    ${ACTORS_DIR}/file_access_actor/file_access_actor.cpp
+    ${ACTORS_DIR}/file_access_actor/forcing_file_info.cpp
+    ${ACTORS_DIR}/file_access_actor/output_container.cpp)
 set(JOB_ACTOR
     ${ACTORS_DIR}/job_actor/GRU.cpp
     ${ACTORS_DIR}/job_actor/job_actor.cpp)
-set(GRU_ACTOR
-    ${ACTORS_DIR}/gru_actor/gru_actor.cpp)
 set(HRU_ACTOR
-    ${ACTORS_DIR}/hru_actor/cpp_code/hru_actor.cpp)
+    ${ACTORS_DIR}/hru_actor/hru_actor.cpp)
 
 
 #=========================================================================================
@@ -462,13 +462,10 @@ set(COMM_ALL
     ${DATAMS}
     ${UTILMS})
 if(CMAKE_BUILD_TYPE MATCHES Actors)
-    set(COMM_ALL ${COMM_ALL}
-        ${INTERFACE})
+    set(COMM_ALL ${COMM_ALL} ${DATAMS_ACTORS} ${INTERFACE})
 endif()
 if(CMAKE_BUILD_TYPE MATCHES Sundials)
-    set(COMM_ALL ${COMM_ALL}
-        ${DATAMS_SUNDIALS}
-        ${UTILMS_SUNDIALS})
+    set(COMM_ALL ${COMM_ALL} ${DATAMS_SUNDIALS} ${UTILMS_SUNDIALS})
 endif()
 
 set(SUMMA_ALL
@@ -480,11 +477,9 @@ set(SUMMA_ALL
 
 if(CMAKE_BUILD_TYPE MATCHES Actors)
     set(SUMMA_ALL ${SUMMA_ALL}
-        ${PRELIM_ACTORS}
-        ${FILE_ACCESS_INTERFACE}
-        ${JOB_INTERFACE}
-        ${GRU_INTERFACE}
-        ${HRU_INTERFACE})
+                  ${FILE_ACCESS_INTERFACE}
+                  ${JOB_INTERFACE}
+                  ${HRU_INTERFACE})
 else()
     set(SUMMA_ALL ${SUMMA_ALL}
         ${PRELIM_NOT_ACTORS}
@@ -525,15 +520,15 @@ file(APPEND ${VERSIONFILE} "character(len=64), parameter     :: buildTime = ''\n
 file(APPEND ${VERSIONFILE} "character(len=64), parameter     :: gitBranch = '${GITBRCH}'\n")
 file(APPEND ${VERSIONFILE} "character(len=64), parameter     :: gitHash = '${GITHASH}'")
 
-# Build NOAH_MP Object
+# Build SUMMA_NOAHMP Object
 add_library(SUMMA_NOAHMP OBJECT ${NOAHMP} ${NRUTIL})
 target_compile_options(SUMMA_NOAHMP PRIVATE ${FLAGS_NOAH})
 
 # Build SUMMA_COMM Object
 add_library(SUMMA_COMM OBJECT ${COMM_ALL})
 target_compile_options(SUMMA_COMM PRIVATE ${FLAGS_ALL})
-target_link_options(SUMMA_COMM PRIVATE ${FLAGS_ALL})
 target_include_directories(SUMMA_COMM PRIVATE ${INCLUDES})
+target_link_libraries(SUMMA_COMM PUBLIC SUMMA_NOAHMP ${FLAGS_ALL}) # added flags to the link step
 
 # For NexGen, build SUMMA Shared Library and add the outside BMI libraries
 if(CMAKE_BUILD_TYPE MATCHES NexGen)
@@ -544,12 +539,12 @@ if(CMAKE_BUILD_TYPE MATCHES NexGen)
     endif()
     target_compile_options(summabmi PRIVATE ${FLAGS_ALL})
 
-    if(CMAKE_BUILD_TYPE MATCHES Kinsol OR CMAKE_BUILD_TYPE MATCHES IDA)
+    if(CMAKE_BUILD_TYPE MATCHES Sundials)
         target_include_directories(summabmi PUBLIC ${INCLUDES} ${INC_SUNDIALS})
-        target_link_libraries(summabmi PUBLIC ${LIBRARIES} ${LIB_SUNDIALS} SUMMA_COMM)
+        target_link_libraries(summabmi PUBLIC ${LIBRARIES} ${LIB_SUNDIALS} SUMMA_NOAHMP SUMMA_COMM)
     else()
         target_include_directories(summabmi PUBLIC ${INCLUDES})
-        target_link_libraries(summabmi PUBLIC ${LIBRARIES} SUMMA_COMM)
+        target_link_libraries(summabmi PUBLIC ${LIBRARIES} SUMMA_NOAHMP SUMMA_COMM)
     endif()
     target_link_libraries(summabmi PUBLIC iso_c_bmi)
     set_target_properties(summabmi PROPERTIES VERSION ${PROJECT_VERSION})
@@ -568,17 +563,16 @@ elseif(CMAKE_BUILD_TYPE MATCHES Actors)
 
     if(CMAKE_BUILD_TYPE MATCHES Sundials)
         target_include_directories(summaactors PUBLIC ${INCLUDES} ${INC_SUNDIALS})
-        target_link_libraries(summaactors PUBLIC ${LIBRARIES} ${LIB_SUNDIALS} SUMMA_COMM)
+        target_link_libraries(summaactors PUBLIC ${LIBRARIES} ${LIB_SUNDIALS} SUMMA_NOAHMP SUMMA_COMM)
     else()
         target_include_directories(summaactors PUBLIC ${INCLUDES})
-        target_link_libraries(summaactors PUBLIC ${LIBRARIES} SUMMA_COMM)
+        target_link_libraries(summaactors PUBLIC ${LIBRARIES} SUMMA_NOAHMP SUMMA_COMM)
     endif()
 
     add_executable(${EXEC_NAME} ${MAIN_ACTOR}
         ${ACTORS_GLOBAL}
         ${FILE_ACCESS_ACTOR}
         ${JOB_ACTOR}
-        ${GRU_ACTOR}
         ${HRU_ACTOR}
         ${SUMMA_ACTOR}
         ${SUMMA_CLIENT}
@@ -595,13 +589,13 @@ else()
 
     if(CMAKE_BUILD_TYPE MATCHES Sundials)
         target_include_directories(summa PUBLIC ${INCLUDES} ${INC_SUNDIALS})
-        target_link_libraries(summa PUBLIC ${LIBRARIES} ${LIB_SUNDIALS} SUMMA_COMM)
+        target_link_libraries(summa PUBLIC ${LIBRARIES} ${LIB_SUNDIALS} SUMMA_NOAHMP SUMMA_COMM)
     else()
         target_include_directories(summa PUBLIC ${INCLUDES})
-        target_link_libraries(summa PUBLIC ${LIBRARIES} SUMMA_COMM)
+	target_link_libraries(summa PUBLIC ${LIBRARIES} SUMMA_NOAHMP SUMMA_COMM ${FLAGS_ALL}) # added flags to the link step
     endif()
 
     add_executable(${EXEC_NAME} ${MAIN_SUMMA})
     set_property(TARGET ${EXEC_NAME} PROPERTY LINKER_LANGUAGE Fortran)
-    target_link_libraries(${EXEC_NAME} summa)
+    target_link_libraries(${EXEC_NAME} summa ${FLAGS_ALL}) # added flags to the link step
 endif()
