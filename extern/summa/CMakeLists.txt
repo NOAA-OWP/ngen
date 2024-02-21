@@ -165,13 +165,6 @@ if(CMAKE_BUILD_TYPE MATCHES Cluster)
 else()
     message("\nBuilding for personal computer")
 
-    #set(SDKROOT "$(xcrun --show-sdk-path)") # appears to be unused and specifically for MacOS so commented out
-
-    ## Original Block -- possibly for MacOS -- attempted to generalize things for additional platforms in the next block
-    #link_directories(/opt/local/lib)
-    #set(INCLUDES /opt/local/include /opt/local/lib)
-    #set(LIBRARIES SUMMA_NOAHMP -llapack -lgfortran -lnetcdff -lnetcdf)
-
     # Set Links and Libraries using Environment Variables
     set(LINK_DIRS $ENV{LINK_DIRS})         # set link directories from environment variable
     set(INCLUDES_DIRS $ENV{INCLUDES_DIRS}) # set directories for INCLUDES from environment variable
