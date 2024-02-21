@@ -68,6 +68,8 @@ NGEN_WITH_BMI_FORTRAN | Include Fortran BMI support
 NGEN_WITH_BMI_C       | Include C BMI support
 NGEN_WITH_PYTHON      | Include Python support
 NGEN_WITH_ROUTING     | Include `t-route` integration
+NGEN_WITH_TESTS       | Include unit and integration tests
+NGEN_QUIET            | Include suppressing unwanted message output
 
 > These can be included by adding `-D{Option:BOOL}=[ON/OFF]` to the following CMake command.
 

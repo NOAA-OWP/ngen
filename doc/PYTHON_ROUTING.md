@@ -54,14 +54,14 @@ The `compiler.sh` script will install the Python modules with `-e`. On macOS, yo
 ## Using t-route with ngen
   * Create the build directory including the options to activate Python and Routing: 
 
-      * Activate Python flag with `-DNGEN_ACTIVATE_PYTHON:BOOL=ON`
+      * Activate Python flag with `-DNGEN_WITH_PYTHON:BOOL=ON`
 
-      * Activate Routing flag with `-DNGEN_ACTIVATE_ROUTING:BOOL=ON.`  
+      * Activate Routing flag with `-DNGEN_WITH_ROUTING:BOOL=ON.`  
 
       * An example create build directory command with the above two options activated:
 
     ```sh
-      cmake -B cmake_build -DNGEN_ACTIVATE_PYTHON:BOOL=ON -DNGEN_ACTIVATE_ROUTING:BOOL=ON .
+      cmake -B cmake_build -DNGEN_WITH_PYTHON:BOOL=ON -DNGEN_WITH_ROUTING:BOOL=ON -DNGEN_WITH_TESTS:BOOL=ON .
     ```  
   
   * Unit tests for the Routing_Py_Adapter class can then be built and run from the main directory with the following two commands:
