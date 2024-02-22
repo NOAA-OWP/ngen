@@ -112,6 +112,15 @@ TEST_F(NetcdfOuputTest, TestNetcdfWrite) {
     
     NetcdfOutputWriter output_file("netcdf-write-test-1.nc",dimension_discription, variable_discription);
 
+    std::vector<float> data_vec(1000);
+
+    for( std::size_t i = 0; i < data_vec.size(); ++i)
+    {
+        data_vec[i] = i * 0.1f;
+    }
+
+    output_file["output2"] << nc_offset(0,0) << nc_stride(1,1000) << data_vec;
+
     SUCCEED();
 }
 
