@@ -1,9 +1,279 @@
 #include "ForcingsEngineDataProvider.hpp"
 
-#include <boost/core/span.hpp>
-#include <stdexcept>
+#include <boost/property_tree/ptree_fwd.hpp>
+#include <chrono>
+#include <memory>
+
+#include "Bmi_Py_Adapter.hpp"
+#include "mdarray.hpp"
 
 namespace data_access {
+
+struct ForcingsEngine
+{
+    using size_type                 = std::size_t;
+    using clock_type                = std::chrono::system_clock;
+    static constexpr auto bad_index = static_cast<size_type>(-1);
+
+    auto outputs() const noexcept
+      -> boost::span<const std::string>;
+
+    auto time_begin() const noexcept
+      -> const clock_type::time_point&;
+
+    auto time_end() const noexcept
+      -> const clock_type::time_point&;
+
+    auto time_step() const noexcept
+      -> const clock_type::duration&;
+
+    auto time_index(time_t ctime) const noexcept
+      -> size_type;
+
+    auto divide_index(const std::string& divide_id) const noexcept
+      -> size_type;
+
+    auto variable_index(const std::string& variable) const noexcept
+      -> size_type;
+
+    auto at(
+        const time_t& raw_time,
+        const std::string& divide_id,
+        const std::string& variable
+    ) -> double;
+
+    /**
+     * Get an instance of the Forcings Engine
+     * 
+     * @param init Path to initialization file
+     * @param time_start Starting time
+     * @param time_end Ending time
+     * @return ForcingsEngine& Instance of the Forcings Engine
+     *                         that will destruct at program
+     *                         termination.
+     */
+    static ForcingsEngine& instance(
+        const std::string& init,
+        std::size_t time_start,
+        std::size_t time_end
+    ) noexcept
+    {
+        static ForcingsEngine inst_{init, time_start, time_end};
+        return inst_;
+    }
+
+  private:
+    ForcingsEngine() = default;
+
+    ForcingsEngine(const std::string& init, size_type time_start, size_type time_end)
+      : bmi_(std::make_unique<models::bmi::Bmi_Py_Adapter>(
+            "ForcingsEngine",
+            init,
+            "NextGen_Forcings_Engine.BMIForcingsEngine",
+            true,
+            true,
+            utils::getStdOut()
+        ))
+      , time_start_(std::chrono::seconds{time_start})
+      , time_end_(std::chrono::seconds{time_end})
+      , time_step_(std::chrono::seconds{static_cast<int64_t>(bmi_->GetTimeStep())})
+      , time_current_index_(0)
+      , var_outputs_(bmi_->GetOutputVarNames())
+    {
+        // Erase "CAT-ID" from outputs
+        var_outputs_.erase(var_outputs_.begin());
+        const auto time_dim = static_cast<size_type>((time_end_ - time_start_) / time_step_);
+        const auto id_dim   = static_cast<size_type>(bmi_->GetVarNbytes("CAT-ID") / bmi_->GetVarItemsize("CAT-ID"));
+        const auto var_dim  = var_outputs_.size();
+
+        bmi_->Update();
+        time_current_index_++;
+        
+        const auto* ptr = static_cast<int*>(bmi_->GetValuePtr("CAT-ID"));
+        var_divides_ = std::vector<int>(ptr, ptr + id_dim);
+        var_cache_ = decltype(var_cache_){{ time_dim, id_dim, var_dim }};
+
+        // Cache initial iteration
+        const auto size = var_divides_.size();
+        for (size_type vi = 0; vi < var_outputs_.size(); vi++) {
+            // Get current values for each variable
+            const auto var_span = boost::span<const double>{
+                static_cast<double*>(bmi_->GetValuePtr(var_outputs_[vi])),
+                size
+            };
+
+            for (size_type di = 0; di < size; di++) {
+                // Set current variable value for each divide
+                var_cache_.at({{time_current_index_, di, vi}}) = var_span[di];
+            }
+        }
+    
+        time_current_index_++;
+    };
+
+    std::unique_ptr<models::bmi::Bmi_Py_Adapter> bmi_;
+    clock_type::time_point                       time_start_;
+    clock_type::time_point                       time_end_;
+    clock_type::duration                         time_step_;
+    size_type                                    time_current_index_;
+    std::vector<std::string>                     var_outputs_;
+    std::vector<int>                             var_divides_;
+
+    /**
+     * Flat value cache vector.
+     * 
+     * Values are stored indexed on (timestep, divide_id, variable),
+     * such that the structure can be visualized as:
+     *
+     *   Timestep  : || T0       |          || T1  ...
+     *   Divide ID : || D0       | D1       || D0  ...
+     *   Variable  : || V1 V2 V3 | V1 V2 V3 || V1  ...
+     *   Value     : ||  9 11 31 |  3  4  5 || 10  ...
+     *
+     * Some notes for future reference:
+     * - Time complexity to update is approximately O(T*V*D),
+     *   where T = T2 - T1 is the number of timesteps between
+     *   two time points, V is the number of variables
+     *   and D is the number of divides. In general, D will dominate;
+     *   T will usually be 1, if updated at each time event; and, V will be
+     *   some small constant amount. Meaning, we should have about O(V*D).
+     */
+    ngen::mdarray<double> var_cache_;
+};
+
+auto ForcingsEngine::outputs() const noexcept
+    -> boost::span<const std::string>
+{
+    return var_outputs_;
+}
+
+auto ForcingsEngine::time_begin() const noexcept
+    -> const clock_type::time_point&
+{
+    return time_start_;
+}
+
+auto ForcingsEngine::time_end() const noexcept
+    -> const clock_type::time_point&
+{
+    return time_end_;
+}
+
+auto ForcingsEngine::time_step() const noexcept
+    -> const clock_type::duration&
+{
+    return time_step_;
+}
+
+auto ForcingsEngine::time_index(time_t ctime) const noexcept
+    -> size_type
+{
+    const auto epoch = clock_type::from_time_t(ctime);
+
+    if (epoch < time_begin() || epoch > time_end()) {
+        return bad_index;
+    }
+
+    const auto offset = (epoch - time_begin()) / time_step();
+    return offset;
+}
+
+auto ForcingsEngine::divide_index(const std::string& divide_id) const noexcept
+    -> size_type
+{
+
+    const auto  id_sep   = divide_id.find('-');
+    const char* id_split = id_sep == std::string::npos
+                           ? divide_id.data()
+                           : &divide_id[id_sep + 1];
+    const int   id_int   = std::atoi(id_split);
+
+    const auto pos = std::lower_bound(var_divides_.begin(), var_divides_.end(), id_int);
+    if (pos == var_divides_.end() || *pos != id_int) {
+        return bad_index;
+    }
+
+    // implicit cast to unsigned
+    return std::distance(var_divides_.begin(), pos);
+}
+
+auto ForcingsEngine::variable_index(const std::string& variable) const noexcept
+    -> size_type
+{
+    const auto vars = outputs();
+    const auto* pos = std::find_if(vars.begin(), vars.end(), [&](const std::string& x) -> bool {
+        return x == variable || x == (variable + "_ELEMENT");
+    });
+    
+    if (pos == vars.end()) {
+        return bad_index;
+    }
+
+    // implicit cast to unsigned
+    return std::distance(vars.begin(), pos);
+}
+
+auto ForcingsEngine::at(
+    const time_t& raw_time,
+    const std::string& divide_id,
+    const std::string& variable
+) -> double
+{
+    const auto t_idx = time_index(raw_time);
+    const auto i_idx = divide_index(divide_id);
+    const auto v_idx = variable_index(variable);
+    
+    if (t_idx == bad_index || i_idx == bad_index || v_idx == bad_index) {
+        const auto shape = var_cache_.shape();
+        const auto shape_str = std::to_string(shape[0]) + ", " +
+                               std::to_string(shape[1]) + ", " +
+                               std::to_string(shape[2]);
+
+        const auto index_str = (t_idx == bad_index ? "?" : std::to_string(t_idx)) + ", " +
+                               (i_idx == bad_index ? "?" : std::to_string(i_idx)) + ", " +
+                               (v_idx == bad_index ? "?" : std::to_string(v_idx));
+
+        std::string time_str = std::ctime(&raw_time);
+        time_str.pop_back();
+
+        throw std::out_of_range{
+            "Failed to get ForcingsEngine value at index {" + index_str + "}" +
+            "\n  Shape    : {" + shape_str + "}" +
+            "\n  Time     : `" + time_str  + "`" +
+            "\n  Divide   : `" + divide_id + "`" +
+            "\n  Variable : `" + variable  + "`"
+        };
+    }
+
+    // If time index is past current index, 
+    // update until new index and cache values.
+    // Otherwise, return from cache.
+    while(time_current_index_ < t_idx) {
+        time_current_index_++;
+
+        bmi_->UpdateUntil(
+            static_cast<double>(time_current_index_ * time_step().count())
+        );
+
+        const auto size = var_divides_.size();
+        for (size_type vi = 0; vi < var_outputs_.size(); vi++) {
+            // Get current values for each variable
+            const auto var_span = boost::span<const double>{
+                static_cast<double*>(bmi_->GetValuePtr(var_outputs_[vi])),
+                size
+            };
+
+            for (size_type di = 0; di < size; di++) {
+                // Set current variable value for each divide
+                var_cache_.at({{time_current_index_, di, vi}}) = var_span[di];
+            }
+        }
+    }
+    
+    return var_cache_.at({{t_idx, i_idx, v_idx}});
+}
+
+// ============================================================================
 
 constexpr double NaN = std::numeric_limits<double>::quiet_NaN();
 
@@ -17,81 +287,60 @@ auto parse_time(const std::string& time, const std::string& fmt)
     return timegm(&tm_);
 }
 
-ForcingsEngineDataProvider::ForcingsEngineDataProvider(const std::string& init, std::size_t time_start, std::size_t time_end)
-  : instance_(
-      "ForcingEngine",
-      init,
-      "NextGen_Forcings_Engine.BMIForcingsEngine",
-      true,
-      true,
-      utils::getStdOut()
-    )
-  , start_(std::chrono::seconds(time_start))
-  , end_(std::chrono::seconds(time_end))
-  , outputs_(instance_.GetOutputVarNames())
-{
-    instance_.Initialize();
-};
+ForcingsEngineDataProvider::ForcingsEngineDataProvider(
+    const std::string& init,
+    std::size_t time_start,
+    std::size_t time_end
+) : engine_(
+    &ForcingsEngine::instance(init, time_start, time_end)
+){};
 
-ForcingsEngineDataProvider::ForcingsEngineDataProvider(const std::string& init, const std::string& time_start, const std::string& time_end, const std::string& fmt)
-  : ForcingsEngineDataProvider(init, parse_time(time_start, fmt), parse_time(time_end, fmt))
-{};
+ForcingsEngineDataProvider::ForcingsEngineDataProvider(
+    const std::string& init,
+    const std::string& time_start,
+    const std::string& time_end,
+    const std::string& time_fmt
+) : ForcingsEngineDataProvider(
+    init,
+    parse_time(time_start, time_fmt),
+    parse_time(time_end, time_fmt)
+){};
 
 ForcingsEngineDataProvider::~ForcingsEngineDataProvider() = default;
-
-void ForcingsEngineDataProvider::set_communicator(int handle)
-{
-    int idx = 0;
-    instance_.set_value_at_indices<int>("bmi_mpi_comm_handle", &idx, 1, &handle, "int");
-}
 
 auto ForcingsEngineDataProvider::get_available_variable_names()
   -> boost::span<const std::string>
 {
-    return outputs_;
+    return engine_->outputs();
 }
 
 auto ForcingsEngineDataProvider::get_data_start_time()
   -> long
 {
-    return clock_type::to_time_t(start_);
+    return ForcingsEngine::clock_type::to_time_t(engine_->time_begin());
 }
 
 auto ForcingsEngineDataProvider::get_data_stop_time()
   -> long
 {
-    return clock_type::to_time_t(end_);
+    return ForcingsEngine::clock_type::to_time_t(engine_->time_end());
 }
 
 auto ForcingsEngineDataProvider::record_duration()
   -> long
 {
-    return static_cast<long>(instance_.GetTimeStep());
+    return engine_->time_step().count();
 }
 
 auto ForcingsEngineDataProvider::get_ts_index_for_time(const time_t& epoch_time)
   -> size_t
 {
-    const auto epoch = clock_type::from_time_t(epoch_time);
-
-    if (epoch < start_ || epoch > end_) {
-        auto start = clock_type::to_time_t(start_);
-        auto end = clock_type::to_time_t(end_);
-        throw std::runtime_error{
-          "Epoch " + std::to_string(epoch_time) + " is not within the interval " +
-          "[" +
-            std::ctime(&start) + " (" + std::to_string(start) + "), " +
-            std::ctime(&end) + " (" + std::to_string(end)  + ")" +
-          "]"
-        };
-    }
-
-    return std::chrono::duration_cast<std::chrono::seconds>(epoch - start_).count() / record_duration();
+    return engine_->time_index(epoch_time);
 }
 
 auto ForcingsEngineDataProvider::get_value(const CatchmentAggrDataSelector& selector, ReSampleMethod m)
   -> double
-{  
+{
     const auto values = get_values(selector, m);
 
     switch (m) {
@@ -108,68 +357,18 @@ auto ForcingsEngineDataProvider::get_value(const CatchmentAggrDataSelector& sele
     }
 }
 
-auto ForcingsEngineDataProvider::get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m)
+auto ForcingsEngineDataProvider::get_values(const CatchmentAggrDataSelector& selector, ReSampleMethod m)
   -> std::vector<double>
 {
-    // Ensure requested variable is an available variable
-    std::string var_name;
-    const std::string requested_var_name = selector.get_variable_name();
-    const boost::span<const std::string> var_names = get_available_variable_names();
-
-    // Find requested variable, or the element variation
-    for (const auto& forcing_name : var_names) {
-        if (forcing_name == requested_var_name || forcing_name == (requested_var_name + "_ELEMENT")) {
-            var_name = forcing_name;
-            break;
-        }
-    }
-    // If variable is not found, throw an exception
-    if (var_name.empty()) {
-        std::string err{"`" + requested_var_name + "` not found in forcing engine outputs. ("};
-        for (const auto& name : var_names) {
-            err += name + ", ";
-        }
-
-        err.pop_back();
-        err.pop_back();
-        err.push_back(')');
-        throw std::runtime_error{err};
-    }
-
-    // Get a span over the catchment IDs and find the request ID
-    const std::size_t count         = instance_.GetVarNbytes("CAT-ID") / instance_.GetVarItemsize("CAT-ID");
-    const std::string divide_id     = selector.get_id();
-    const auto        divide_id_sep = divide_id.find('-');
-    const char*       divide_id_pos = divide_id_sep == std::string::npos ? divide_id.data() : &divide_id[divide_id_sep + 1];
-    const int         divide_int_id = std::atoi(divide_id_pos);
-
-    // Update forcings engine to the request time index
-    const auto start_time  = clock_type::from_time_t(selector.get_init_time());
-    const auto duration    = std::chrono::seconds{selector.get_duration_secs()};
-    const auto start_index = get_ts_index_for_time(clock_type::to_time_t(start_time));
-    const auto end_index   = get_ts_index_for_time(clock_type::to_time_t(start_time + duration));
+    const auto start = ForcingsEngine::clock_type::from_time_t(selector.get_init_time());
+    const auto end   = std::chrono::seconds{selector.get_duration_secs()} + start;
 
     std::vector<double> values;
-    values.reserve(end_index - start_index);
-    for (auto i = start_index; i < end_index; ++i) {
-        // TODO: Is this off-by-one? Forcings engine output suggests no, but might need additional unit testing
-        instance_.UpdateUntil((start_index + 1) * duration.count());
-
-        // Since catchment IDs are ordered (ascending), we can use binary search
-        const auto  ids = boost::span<const int>{static_cast<int*>(instance_.GetValuePtr("CAT-ID")), count};
-        const auto* pos = std::lower_bound(ids.cbegin(), ids.cend(), divide_int_id);
-        if (pos == std::end(ids) || *pos != divide_int_id) {
-            throw std::runtime_error("Failed to find divide ID: `" + std::to_string(divide_int_id) + "`");
-        }
-
-        // Get the value based on the index of the requested ID
-        const auto result_index = static_cast<int>(std::distance(ids.cbegin(), pos));
-        const auto values_span = boost::span<const double>{
-          static_cast<double*>(instance_.GetValuePtr(var_name)),
-          static_cast<std::size_t>(instance_.GetVarNbytes(var_name) / instance_.GetVarItemsize(var_name))
-        };
-
-        values.push_back(values_span[result_index]);
+    for (auto i = start; i < end; i += engine_->time_step()) {
+        const auto current_time = ForcingsEngine::clock_type::to_time_t(i);
+        values.push_back(
+            engine_->at(current_time, selector.get_id(), selector.get_variable_name())
+        );
     }
 
     return values;
