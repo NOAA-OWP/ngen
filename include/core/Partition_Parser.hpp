@@ -52,7 +52,6 @@ class Partitions_Parser {
             std::string remote_nex_id;
             std::string remote_cat_id;
             std::string direction;
-            //Tuple tmp_tuple;
             PartitionData::Tuple tmp_tuple;
             std::vector<PartitionData::Tuple> remote_conn_vec;
             int part_counter = 0;

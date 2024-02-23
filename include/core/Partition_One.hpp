@@ -25,7 +25,6 @@ class Partition_One {
          */
         void generate_partition(geojson::GeoJSON& catchment_collection)
         {
-            //PartitionData partition_data;
             for(auto& feature: *catchment_collection)
             {
                 std::string cat_id = feature->get_id();
@@ -38,7 +37,6 @@ class Partition_One {
 
     	virtual ~Partition_One(){};
 
-        //PartitionData is a struct
         PartitionData partition_data;       
 };
 
