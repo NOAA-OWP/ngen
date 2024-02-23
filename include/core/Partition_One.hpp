@@ -16,8 +16,6 @@
 class Partition_One {
 
     public:
-        Partition_One() {};
-
         /**
          * The function that parses geojson::GeoJSON data and build unordered sets of catchment_ids and nexus_ids
 
@@ -34,8 +32,6 @@ class Partition_One {
             }
             partition_data.mpi_world_rank = 0;
         }
-
-    	virtual ~Partition_One(){};
 
         PartitionData partition_data;       
 };
