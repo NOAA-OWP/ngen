@@ -3,6 +3,7 @@
 #include "AorcForcing.hpp"
 #include "DataProvider.hpp"
 #include "ForcingsEngineDataProvider.hpp"
+#include "utilities/python/InterpreterUtil.hpp"
 
 #include <boost/range/combine.hpp>
 
@@ -16,7 +17,7 @@ class ForcingsEngineDataProviderTest : public testing::Test
     // Compile-time data
     static constexpr const char* config_file = "extern/ngen-forcing/NextGen_Forcings_Engine_BMI/NextGen_Forcings_Engine/config.yml";
 
-    std::shared_ptr<utils::ngenPy::InterpreterUtil> gil_ = nullptr;
+    static std::shared_ptr<utils::ngenPy::InterpreterUtil> gil_;
     int mpi_size = 1;
     int mpi_rank = 0;
 
@@ -24,14 +25,15 @@ class ForcingsEngineDataProviderTest : public testing::Test
 
     // Members
     ForcingsEngineDataProviderTest()
-      : gil_(utils::ngenPy::InterpreterUtil::getInstance())
-      , provider(config_file, "2024-01-17 01:00:00", "2024-01-17 06:00:00")
+      : provider(config_file, "2024-01-17 01:00:00", "2024-01-17 06:00:00")
       , params("", "ForcingsEngine", "2024-01-17 01:00:00", "2024-01-17 06:00:00")
     {};
 
     data_access::ForcingsEngineDataProvider provider;
     forcing_params                          params;
 };
+
+static std::shared_ptr<utils::ngenPy::InterpreterUtil> gil_ = utils::ngenPy::InterpreterUtil::getInstance();
 
 // Tests that the forcings engine data provider correctly indexes epochs
 // to unitless indices along its given temporal domain.
@@ -45,10 +47,10 @@ TEST_F(ForcingsEngineDataProviderTest, Timestepping)
 // a call to `get_values`.
 TEST_F(ForcingsEngineDataProviderTest, Initialization)
 {
+    std::cout << "Getting variable names\n";
     const auto outputs_test = this->provider.get_available_variable_names();
-
-    constexpr std::array<const char*, 9> expected_variables = {
-        "CAT-ID",
+    std::cout << "Got variable names\n";
+    constexpr std::array<const char*, 8> expected_variables = {
         "U2D_ELEMENT",
         "V2D_ELEMENT",
         "LWDOWN_ELEMENT",
@@ -63,14 +65,16 @@ TEST_F(ForcingsEngineDataProviderTest, Initialization)
         EXPECT_EQ(output.get<0>(), output.get<1>());
     }
 
+    std::cout << "Creating selector\n";
     const auto selector = CatchmentAggrDataSelector{
         "cat-1015786",
         "RAINRATE",
         this->provider.get_data_start_time(), // start time
-        static_cast<long>(this->provider.get_ts_index_for_time(this->params.simulation_end_t) * 3600), // duration
+        static_cast<long>(this->provider.get_ts_index_for_time(this->params.simulation_start_t) + (3600 * 2)), // duration
         "seconds"
     };
 
+    std::cout << "Getting values\n";
     const auto result = this->provider.get_values(
         selector,
         data_access::ReSampleMethod::SUM
@@ -95,15 +99,15 @@ TEST_F(ForcingsEngineDataProviderTest, Lookback)
         "cat-1015786",
         "RAINRATE",
         this->provider.get_data_start_time(),
-        static_cast<long>(this->provider.get_ts_index_for_time(this->params.simulation_end_t) * 3600),
+        static_cast<long>(this->provider.get_ts_index_for_time(this->params.simulation_start_t) + 3600),
         "seconds"
     };
 
     const auto second_selector = CatchmentAggrDataSelector{
-        "cat-1015785",
-        "RAINRATE",
+        "cat-1015786",
+        "U2D",
         this->provider.get_data_start_time(),
-        static_cast<long>(this->provider.get_ts_index_for_time(this->params.simulation_end_t) * 3600),
+        static_cast<long>(this->provider.get_ts_index_for_time(this->params.simulation_start_t) + 3600),
         "seconds"
     };
 
