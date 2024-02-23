@@ -49,6 +49,11 @@ FC=mpif90 ./compiler.sh
 
 The `compiler.sh` script will install the Python modules with `-e`. On macOS, you may need to re-install the modules in t-route's `src` directory directly after running `compiler.sh`.
 
+### Some tips on installation if you run into issues
+[On install mpi4py](https://github.com/Unidata/netcdf4-python/issues/1296)
+[On pip version](https://github.com/NOAA-OWP/t-route/issues/621)
+[On NetCDF version](https://github.com/NOAA-OWP/t-route/issues/705)
+
 [Additional documentation for configuration and dependencies of t-route](https://github.com/NOAA-OWP/t-route#configuration-and-dependencies).
  
 ## Using t-route with ngen
