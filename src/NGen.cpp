@@ -338,24 +338,23 @@ int main(int argc, char *argv[]) {
     std::cout << "Building Nexus collection" << std::endl;
     
     #ifdef NGEN_MPI_ACTIVE
-    PartitionData local_data_tmp;
+    PartitionData local_data;
     if (mpi_num_procs > 1) {
         Partitions_Parser partition_parser(PARTITION_PATH);
         // TODO: add something here to make sure this step worked for every rank, and maybe to checksum the file
         partition_parser.parse_partition_file();
 
         std::vector<PartitionData> &partitions = partition_parser.partition_ranks;
-        local_data_tmp = partitions[mpi_rank];
+        local_data = std::move(partitions[mpi_rank]);
         if (!nexus_subset_ids.empty()) {
             std::cerr << "Warning: CLI provided nexus subset will be ignored when using partition config";
         }
         if (!catchment_subset_ids.empty()) {
             std::cerr << "Warning: CLI provided catchment subset will be ignored when using partition config";
         }
-        nexus_subset_ids = std::vector<std::string>(local_data_tmp.nexus_ids.begin(), local_data_tmp.nexus_ids.end());
-        catchment_subset_ids = std::vector<std::string>(local_data_tmp.catchment_ids.begin(), local_data_tmp.catchment_ids.end());
+        nexus_subset_ids = std::vector<std::string>(local_data.nexus_ids.begin(), local_data.nexus_ids.end());
+        catchment_subset_ids = std::vector<std::string>(local_data.catchment_ids.begin(), local_data.catchment_ids.end());
     }
-    PartitionData& local_data = local_data_tmp;
     #endif // NGEN_MPI_ACTIVE
 
     // TODO: Instead of iterating through a collection of FeatureBase objects mapping to nexi, we instead want to iterate through HY_HydroLocation objects
@@ -417,11 +416,11 @@ int main(int argc, char *argv[]) {
     nexus_collection->link_features_from_property(nullptr, &link_key);
 
     #ifdef NGEN_MPI_ACTIVE
-    Partition_One partition_one;
     //mpirun with one processor without partition file
     if (mpi_num_procs == 1) {
+        Partition_One partition_one;
         partition_one.generate_partition(catchment_collection);
-        local_data = partition_one.partition_data;
+        local_data = std::move(partition_one.partition_data);
     }
     hy_features::HY_Features_MPI features = hy_features::HY_Features_MPI(local_data, nexus_collection, manager, mpi_rank, mpi_num_procs);
     #else
