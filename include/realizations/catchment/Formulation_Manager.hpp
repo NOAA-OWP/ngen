@@ -19,6 +19,7 @@
 #include "LayerData.hpp"
 #include "realizations/config/time.hpp"
 #include "realizations/config/routing.hpp"
+#include "realizations/config/config.hpp"
 
 namespace realization {
 
@@ -58,31 +59,9 @@ namespace realization {
                 auto possible_global_config = tree.get_child_optional("global");
 
                 if (possible_global_config) {
-                    this->global_formulation_tree = *possible_global_config;
-
-                    //get forcing info
-                    for (auto &forcing_parameter : (*possible_global_config).get_child("forcing")) {
-                        this->global_forcing.emplace(
-                            forcing_parameter.first,
-                            geojson::JSONProperty(forcing_parameter.first, forcing_parameter.second)
-                        );
-                      }
-
-                    //get first empty key under formulations (corresponds to first json array element)
-                    auto formulation = (*possible_global_config).get_child("formulations..");
-
-                    for (std::pair<std::string, boost::property_tree::ptree> global_setting : formulation.get_child("params")) {
-                        this->global_formulation_parameters.emplace(
-                            global_setting.first,
-                            geojson::JSONProperty(global_setting.first, global_setting.second)
-                        );
-                    }
+                    global_config = realization::config::Config(*possible_global_config);
                 }
 
-                /**
-                 * Read simulation time from configuration file
-                 * /// \todo TODO: Separate input_interval from output_interval
-                 */            
                 auto possible_simulation_time = tree.get_child_optional("time");
 
                 if (!possible_simulation_time) {
@@ -703,11 +682,7 @@ namespace realization {
 
             boost::property_tree::ptree tree;
 
-            boost::property_tree::ptree global_formulation_tree;
-
-            geojson::PropertyMap global_formulation_parameters;
-
-            geojson::PropertyMap global_forcing;
+            realization::config::Config global_config;
 
             std::map<std::string, std::shared_ptr<Catchment_Formulation>> formulations;
 
