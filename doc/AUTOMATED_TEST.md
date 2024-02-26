@@ -1,17 +1,17 @@
 # Github Automated Testing
-- [What Is Automated Test and How to Start It](#what-to-do-when-a-test-fail)
+- [What Are Automated Tests and How to Start Them](#what-are-automated-tests-and-how-to-start-them)
 - [What Code Tests Are Performed](#what-code-tests-are-performed)
 - [Local Testing](#local-testing)
 - [What to Do When a Test Fail](#what-to-do-when-a-test-fail)
 
-## What Is Automated Test and How to Start It
+## What Are Automated Tests and How to Start Them
 
-In **ngen** github repo, we use github actions/workflows (for an online reference, see for [example](https://docs.github.com/en/actions/learn-github-actions)) to automatically test the validity of commited codes by developers. The test is triggered when a developer pushes some codes to a branch in his **ngen** fork and creates a `Pull Request`. The successful test is marked by a `green check` mark, a failed test is marked by a `red cross` mark. If a test fails, you have to debug your codes (see [What to Do When a Test Fail](#what-to-do-when-a-test-fail) below) and commit and push to the same branch again and the automatic testing will restart in the `Pull Request`. 
+In the **ngen** github repo, we use github actions/workflows (for an online reference, see for [example](https://docs.github.com/en/actions/learn-github-actions)) to automatically test validity of committed codes by developers. The test is triggered when a developer pushes some code to a branch in their **ngen** fork and creates a `Pull Request`. The successful test is marked by a `green check` mark, a failed test is marked by a `red cross` mark. If a test fails, you have to debug your code (see [What to Do When a Test Fail](#what-to-do-when-a-test-fail) below) and commit/push to the same branch again. The automatic testing will restart in the `Pull Request`.
 
 ## What Code Tests Are Performed
 
-- Unit tests: this includes every set of codes that serves a unique functionality. Unit test eveolves as new codes are added.
-- [BMI](https://bmi.readthedocs.io/en/stable/) (Basical Model Interface) based formulations tests including codes in C, C++, Fortran, and Python.
+- Unit tests: this includes every set of codes that serves a unique functionality. Unit test evolve as new codes are added.
+- [BMI](https://bmi.readthedocs.io/en/stable/) (Basic Model Interface) based formulation tests for C, C++, Fortran, and Python.
 - Running **ngen** executable on example hydrofabric with various realistic modules/models, initial condition, and forcing data.
 
 ## Local Testing
@@ -25,7 +25,7 @@ After `build` completes, assuming your build directory is `cmake_build`, you can
     ./cmake_build/test/test_unit
 
 There are many other unit test executables you need to run for a complete test.
-To run a ngen test job, for example, using the data set in the `data` directory, and run the following command:
+For example, to run an **ngen** test job using the data set in the `data` directory, use the following command:
 
     ./cmake_build/ngen data/catchment_data.geojson '' data/nexus_data.geojson '' data/example_bmi_multi_realization_config.json
 
@@ -37,4 +37,4 @@ To run a multi-processors job with MPI, please see a complete description in [he
 
 - Sometimes, some tests may fail even they have passed tests on local computer. If that happens, you have to look into details why they failed. To do that, click on the word `Details` in blue on the right for a particular test. This will open a window with detailed information for that particular test, the error information are usually near the bottom. You can scroll up and down the side bar for more information. you can also search by key workds in `Search logs` menu entry at the upper right corner.
 
-- Othertimes, if you are lucky (or unlucky depending on your perspective), the test may have failed due to time out or some unknown reasons, in that cases, you may rerun the test by placing the cursor on the test name, a cycling icon will appear and you can rerun your test by clicking on the icon. In any case, you may manually rerun any failed test by following procedure described above. But it is strongly recommended that you carefully examine the fail error first.
+- Otherwise, if you are lucky (or unlucky depending on your perspective), the test may have failed due to time out or some unknown reasons, in those cases, you may rerun the test by placing the cursor on the test name, a cycling icon will appear and you can rerun your test by clicking on the icon. In any case, you may manually rerun any failed test by following procedure described above. But it is strongly recommended that you carefully examine the fail error first.
