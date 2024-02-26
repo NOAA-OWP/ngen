@@ -6,8 +6,6 @@
 #include "formulation.hpp"
 #include "forcing.hpp"
 
-#include<iostream>
-
 namespace realization{
   namespace config{
 
@@ -28,7 +26,7 @@ namespace realization{
          * 
          * @param tree 
          */
-        Config(const boost::property_tree::ptree& tree):formulation_tree(tree){
+        Config(const boost::property_tree::ptree& tree){
         
             auto possible_forcing = tree.get_child_optional("forcing");
 
@@ -53,7 +51,6 @@ namespace realization{
         }
 
         Formulation formulation;
-        boost::property_tree::ptree formulation_tree;
         Forcing forcing;
     };
 
