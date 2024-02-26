@@ -1,0 +1,15 @@
+<map id="realization::config::Routing" name="realization::config::Routing">
+<area shape="rect" id="Node000001" title=" " alt="" coords="83,569,194,649"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="65,426,213,506"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="141,506,141,553,136,553,136,506"/>
+<area shape="rect" id="Node000003" href="$structrouting__params.html" title="routing_params providing configuration information for routing." alt="" coords="5,278,125,363"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="89,362,113,410,109,412,84,364"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="31,135,100,200"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="68,200,68,261,63,261,63,200"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="8,5,123,85"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="68,100,68,135,63,135,63,100"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="149,288,277,353"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="193,368,161,428,156,425,188,365"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="203,135,224,200"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="216,200,216,271,211,271,211,200"/>
+</map>

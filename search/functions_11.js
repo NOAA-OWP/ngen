@@ -21,5 +21,6 @@ var searchData=
   ['request_5fvalue_18',['request_value',['../classdata__access_1_1_async_data_provider.html#a31d15fd72f35c01c67c790f33f8aa2c1',1,'data_access::AsyncDataProvider']]],
   ['restart_19',['restart',['../structngen_1_1sqlite_1_1database_1_1iterator.html#ac0c8c5139ddae586af2bb8d8d4984a92',1,'ngen::sqlite::database::iterator']]],
   ['retrieve_5fbmi_5fmodel_5ftime_5fstep_5fsize_20',['retrieve_bmi_model_time_step_size',['../classmodels_1_1bmi_1_1_bmi___c___adapter.html#a5b8ad5070b07816cda74c8a0361aeba5',1,'models::bmi::Bmi_C_Adapter::retrieve_bmi_model_time_step_size()'],['../classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#afecf067b64e1c54a6055c7f3f4425d88',1,'models::bmi::Bmi_Cpp_Adapter::retrieve_bmi_model_time_step_size()']]],
-  ['routing_5fparams_21',['routing_params',['../structrouting__params.html#af966a73055663bca37095a4e4feb754d',1,'routing_params::routing_params()'],['../structrouting__params.html#ad7665d897b5fea34e7a928db23a4c1f3',1,'routing_params::routing_params(std::string t_route_config_file_with_path)']]]
+  ['routing_21',['Routing',['../structrealization_1_1config_1_1_routing.html#acfb4b78887fb5fc3f413c5c87ad1d865',1,'realization::config::Routing']]],
+  ['routing_5fparams_22',['routing_params',['../structrouting__params.html#af966a73055663bca37095a4e4feb754d',1,'routing_params::routing_params()'],['../structrouting__params.html#ad7665d897b5fea34e7a928db23a4c1f3',1,'routing_params::routing_params(std::string t_route_config_file_with_path)']]]
 ];

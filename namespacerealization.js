@@ -1,5 +1,6 @@
 var namespacerealization =
 [
+    [ "config", "namespacerealization_1_1config.html", "namespacerealization_1_1config" ],
     [ "Bmi_C_Formulation", "classrealization_1_1_bmi___c___formulation.html", "classrealization_1_1_bmi___c___formulation" ],
     [ "Bmi_Cpp_Formulation", "classrealization_1_1_bmi___cpp___formulation.html", "classrealization_1_1_bmi___cpp___formulation" ],
     [ "Bmi_Formulation", "classrealization_1_1_bmi___formulation.html", "classrealization_1_1_bmi___formulation" ],

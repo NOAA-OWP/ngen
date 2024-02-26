@@ -91,6 +91,10 @@ var annotated_dup =
       [ "SurfaceLayer", "classngen_1_1_surface_layer.html", "classngen_1_1_surface_layer" ]
     ] ],
     [ "realization", "namespacerealization.html", [
+      [ "config", "namespacerealization_1_1config.html", [
+        [ "Routing", "structrealization_1_1config_1_1_routing.html", "structrealization_1_1config_1_1_routing" ],
+        [ "Time", "structrealization_1_1config_1_1_time.html", "structrealization_1_1config_1_1_time" ]
+      ] ],
       [ "Bmi_C_Formulation", "classrealization_1_1_bmi___c___formulation.html", "classrealization_1_1_bmi___c___formulation" ],
       [ "Bmi_Cpp_Formulation", "classrealization_1_1_bmi___cpp___formulation.html", "classrealization_1_1_bmi___cpp___formulation" ],
       [ "Bmi_Formulation", "classrealization_1_1_bmi___formulation.html", "classrealization_1_1_bmi___formulation" ],

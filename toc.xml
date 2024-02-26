@@ -2018,6 +2018,20 @@
         <topic label="cartesian_indices_recurse" href="namespacengen.html#ad51f53c85438741923d4d083365d6bbf"/>
       </topic>
       <topic label="realization" href="namespacerealization.html">
+        <topic label="config" href="namespacerealization_1_1config.html">
+          <topic label="Routing" href="structrealization_1_1config_1_1_routing.html">
+            <topic label="Routing" href="structrealization_1_1config_1_1_routing.html#acfb4b78887fb5fc3f413c5c87ad1d865"/>
+            <topic label="params" href="structrealization_1_1config_1_1_routing.html#a39078491a8c6e29753e66ad7b41baa14"/>
+          </topic>
+          <topic label="Time" href="structrealization_1_1config_1_1_time.html">
+            <topic label="Time" href="structrealization_1_1config_1_1_time.html#a93a2e197f8841d39081be3caeedba65c"/>
+            <topic label="make_params" href="structrealization_1_1config_1_1_time.html#a705be678ff0ecb1bd445f9cca01d6fd6"/>
+            <topic label="end_time" href="structrealization_1_1config_1_1_time.html#adb5e58203090d963abeddd95104148fa"/>
+            <topic label="output_interval" href="structrealization_1_1config_1_1_time.html#aa1c533a9094a1ffb9802c50628ef8c3a"/>
+            <topic label="start_time" href="structrealization_1_1config_1_1_time.html#a1e06af95b8bf9a71d9886ad00a3cd8c3"/>
+          </topic>
+          <topic label="ROUTING_CONFIG_KEY" href="namespacerealization_1_1config.html#a4b47cec0634b4cbc2d53aeffb122c169"/>
+        </topic>
         <topic label="Bmi_C_Formulation" href="classrealization_1_1_bmi___c___formulation.html">
           <topic label="time_step_t" href="classrealization_1_1_bmi___c___formulation.html#aee10dc672e5a9e106f49dcbe0080cf7c"/>
           <topic label="Bmi_C_Formulation" href="classrealization_1_1_bmi___c___formulation.html#afb7f4b7f7d8e5b3f636a059181e1a521"/>
@@ -4192,6 +4206,19 @@
         </topic>
       </topic>
       <topic label="realization" href="namespacerealization.html">
+        <topic label="config" href="namespacerealization_1_1config.html">
+          <topic label="Routing" href="structrealization_1_1config_1_1_routing.html">
+            <topic label="Routing" href="structrealization_1_1config_1_1_routing.html#acfb4b78887fb5fc3f413c5c87ad1d865"/>
+            <topic label="params" href="structrealization_1_1config_1_1_routing.html#a39078491a8c6e29753e66ad7b41baa14"/>
+          </topic>
+          <topic label="Time" href="structrealization_1_1config_1_1_time.html">
+            <topic label="Time" href="structrealization_1_1config_1_1_time.html#a93a2e197f8841d39081be3caeedba65c"/>
+            <topic label="make_params" href="structrealization_1_1config_1_1_time.html#a705be678ff0ecb1bd445f9cca01d6fd6"/>
+            <topic label="end_time" href="structrealization_1_1config_1_1_time.html#adb5e58203090d963abeddd95104148fa"/>
+            <topic label="output_interval" href="structrealization_1_1config_1_1_time.html#aa1c533a9094a1ffb9802c50628ef8c3a"/>
+            <topic label="start_time" href="structrealization_1_1config_1_1_time.html#a1e06af95b8bf9a71d9886ad00a3cd8c3"/>
+          </topic>
+        </topic>
         <topic label="Bmi_C_Formulation" href="classrealization_1_1_bmi___c___formulation.html">
           <topic label="time_step_t" href="classrealization_1_1_bmi___c___formulation.html#aee10dc672e5a9e106f49dcbe0080cf7c"/>
           <topic label="Bmi_C_Formulation" href="classrealization_1_1_bmi___c___formulation.html#afb7f4b7f7d8e5b3f636a059181e1a521"/>
@@ -5614,6 +5641,8 @@
       <topic label="ngen::srs::epsg" href="structngen_1_1srs_1_1epsg.html"/>
       <topic label="ngen::traits::bool_pack&lt;... &gt;" href="structngen_1_1traits_1_1bool__pack.html"/>
       <topic label="ngen::traits::type_list&lt; Ts &gt;" href="structngen_1_1traits_1_1type__list.html"/>
+      <topic label="realization::config::Routing" href="structrealization_1_1config_1_1_routing.html"/>
+      <topic label="realization::config::Time" href="structrealization_1_1config_1_1_time.html"/>
       <topic label="realization::Formulation" href="classrealization_1_1_formulation.html">
         <topic label="realization::Catchment_Formulation" href="classrealization_1_1_catchment___formulation.html"/>
       </topic>

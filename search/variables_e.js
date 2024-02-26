@@ -7,7 +7,7 @@ var searchData=
   ['outflows_4',['outflows',['../class_h_y___catchment.html#a3b336576b1ce5f7257ea308095feec6b',1,'HY_Catchment']]],
   ['output_5',['output',['../classmodels_1_1bmi_1_1_bmi___adapter.html#a6bfb2f398f00c3b44b1235d4758f0c91',1,'models::bmi::Bmi_Adapter::output'],['../class_h_y___catchment_area.html#a55857dc16551760ff59487991fc525fe',1,'HY_CatchmentArea::output']]],
   ['output_5fheader_5ffields_6',['output_header_fields',['../classrealization_1_1_bmi___formulation.html#abfae59b61178df50d71b4d505a31488a',1,'realization::Bmi_Formulation']]],
-  ['output_5finterval_7',['output_interval',['../structsimulation__time__params.html#a07f1ef40713f5e1da6a1fe9900e59607',1,'simulation_time_params']]],
+  ['output_5finterval_7',['output_interval',['../structrealization_1_1config_1_1_time.html#aa1c533a9094a1ffb9802c50628ef8c3a',1,'realization::config::Time::output_interval'],['../structsimulation__time__params.html#a07f1ef40713f5e1da6a1fe9900e59607',1,'simulation_time_params::output_interval']]],
   ['output_5finterval_5fseconds_8',['output_interval_seconds',['../class_simulation___time.html#aca840918d55535a52110f4c3132c4df0',1,'Simulation_Time']]],
   ['output_5fprecision_9',['output_precision',['../classrealization_1_1_bmi___formulation.html#a8ff42a69cf6c735578692c37e20a584c',1,'realization::Bmi_Formulation']]],
   ['output_5fstream_10',['output_stream',['../classutils_1_1_stream_handler.html#a18d8a5d7ca89a77d60ed7e231c9eb798',1,'utils::StreamHandler']]],

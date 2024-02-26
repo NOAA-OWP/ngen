@@ -1,0 +1,7 @@
+<map id="realization::config::Time" name="realization::config::Time">
+<area shape="rect" id="Node000001" title="Simple structure for holding time bounds and output interval (seconds)" alt="" coords="6,278,119,378"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="28,135,97,200"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="65,200,65,261,60,261,60,200"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,5,120,85"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="65,100,65,135,60,135,60,100"/>
+</map>
