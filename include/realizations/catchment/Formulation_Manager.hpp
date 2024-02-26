@@ -165,46 +165,25 @@ namespace realization {
                           #endif
                           continue;
                       }
+                      realization::config::Config catchment_formulation(catchment_config.second);
 
-                      decltype(auto) formulations = catchment_config.second.get_child_optional("formulations");
-                      if( !formulations ) {
+                      if(!catchment_formulation.has_formulation()){
                         throw std::runtime_error("ERROR: No formulations defined for "+catchment_config.first+".");
                       }
-
                       // Parse catchment-specific model_params
                       auto catchment_feature = fabric->get_feature(catchment_index);
-
-                      for (auto &formulation: *formulations) {
-                          // Handle single-bmi
-                          decltype(auto) model_params = formulation.second.get_child_optional("params.model_params");
-                          if (model_params) {
-                              parse_external_model_params(*model_params, catchment_feature);
-                          }
-
-                          // Handle multi-bmi
-                          // FIXME: this will not handle doubly nested multi-BMI configs,
-                          //        might need a recursive helper here?
-                          decltype(auto) nested_modules = formulation.second.get_child_optional("params.modules");
-                          if (nested_modules) {
-                            for (decltype(auto) nested_formulation : *nested_modules) {
-                                decltype(auto) nested_model_params = nested_formulation.second.get_child_optional("params.model_params");
-                                if (nested_model_params) {
-                                    parse_external_model_params(*nested_model_params, catchment_feature);
-                                }
-                            }
-                          }
-                        
-                          this->add_formulation(
-                              this->construct_formulation_from_tree(
-                                  simulation_time_config,
-                                  catchment_config.first,
-                                  catchment_config.second,
-                                  formulation.second,
-                                  output_stream
-                              )
-                          );
-                          break; //only construct one for now FIXME
-                        } //end for formulaitons
+                      catchment_formulation.formulation.link_external(catchment_feature);
+                      this->add_formulation(
+                        this->construct_formulation_from_tree(
+                            simulation_time_config,
+                            catchment_config.first,
+                            catchment_config.second,
+                            catchment_formulation,
+                            output_stream
+                        )
+                      );
+                        //  break; //only construct one for now FIXME
+                       // } //end for formulaitons
                       }//end for catchments
 
 
