@@ -16,7 +16,6 @@ class ForcingsEngineDataProviderTest : public testing::Test
   protected:
     // Compile-time data
     static constexpr const char* config_file = "extern/ngen-forcing/NextGen_Forcings_Engine_BMI/NextGen_Forcings_Engine/config.yml";
-
     static std::shared_ptr<utils::ngenPy::InterpreterUtil> gil_;
     int mpi_size = 1;
     int mpi_rank = 0;
@@ -29,11 +28,12 @@ class ForcingsEngineDataProviderTest : public testing::Test
       , params("", "ForcingsEngine", "2024-01-17 01:00:00", "2024-01-17 06:00:00")
     {};
 
-    data_access::ForcingsEngineDataProvider provider;
-    forcing_params                          params;
+    data_access::ForcingsEngineDataProvider         provider;
+    forcing_params                                  params;
+    
 };
 
-static std::shared_ptr<utils::ngenPy::InterpreterUtil> gil_ = utils::ngenPy::InterpreterUtil::getInstance();
+std::shared_ptr<utils::ngenPy::InterpreterUtil> ForcingsEngineDataProviderTest::gil_ = utils::ngenPy::InterpreterUtil::getInstance();
 
 // Tests that the forcings engine data provider correctly indexes epochs
 // to unitless indices along its given temporal domain.
@@ -99,7 +99,7 @@ TEST_F(ForcingsEngineDataProviderTest, Lookback)
         "cat-1015786",
         "RAINRATE",
         this->provider.get_data_start_time(),
-        static_cast<long>(this->provider.get_ts_index_for_time(this->params.simulation_start_t) + 3600),
+        static_cast<long>(this->provider.get_ts_index_for_time(this->params.simulation_start_t) + (3600 * 2)),
         "seconds"
     };
 
@@ -107,7 +107,7 @@ TEST_F(ForcingsEngineDataProviderTest, Lookback)
         "cat-1015786",
         "U2D",
         this->provider.get_data_start_time(),
-        static_cast<long>(this->provider.get_ts_index_for_time(this->params.simulation_start_t) + 3600),
+        static_cast<long>(this->provider.get_ts_index_for_time(this->params.simulation_start_t) + (3600 * 2)),
         "seconds"
     };
 

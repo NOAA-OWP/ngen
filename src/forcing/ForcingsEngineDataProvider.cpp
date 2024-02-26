@@ -1,8 +1,8 @@
 #include "ForcingsEngineDataProvider.hpp"
 
-#include <boost/property_tree/ptree_fwd.hpp>
 #include <chrono>
 #include <memory>
+#include <stdexcept>
 
 #include "Bmi_Py_Adapter.hpp"
 #include "mdarray.hpp"
@@ -56,68 +56,22 @@ struct ForcingsEngine
         const std::string& init,
         std::size_t time_start,
         std::size_t time_end
-    ) noexcept
-    {
-        static ForcingsEngine inst_{init, time_start, time_end};
-        return inst_;
-    }
+    );
 
   private:
+
+    static void check_runtime_requirements();
+
     ForcingsEngine() = default;
+    ForcingsEngine(const std::string& init, size_type time_start, size_type time_end);
 
-    ForcingsEngine(const std::string& init, size_type time_start, size_type time_end)
-      : bmi_(std::make_unique<models::bmi::Bmi_Py_Adapter>(
-            "ForcingsEngine",
-            init,
-            "NextGen_Forcings_Engine.BMIForcingsEngine",
-            true,
-            true,
-            utils::getStdOut()
-        ))
-      , time_start_(std::chrono::seconds{time_start})
-      , time_end_(std::chrono::seconds{time_end})
-      , time_step_(std::chrono::seconds{static_cast<int64_t>(bmi_->GetTimeStep())})
-      , time_current_index_(0)
-      , var_outputs_(bmi_->GetOutputVarNames())
-    {
-        // Erase "CAT-ID" from outputs
-        var_outputs_.erase(var_outputs_.begin());
-        const auto time_dim = static_cast<size_type>((time_end_ - time_start_) / time_step_);
-        const auto id_dim   = static_cast<size_type>(bmi_->GetVarNbytes("CAT-ID") / bmi_->GetVarItemsize("CAT-ID"));
-        const auto var_dim  = var_outputs_.size();
-
-        bmi_->Update();
-        time_current_index_++;
-        
-        const auto* ptr = static_cast<int*>(bmi_->GetValuePtr("CAT-ID"));
-        var_divides_ = std::vector<int>(ptr, ptr + id_dim);
-        var_cache_ = decltype(var_cache_){{ time_dim, id_dim, var_dim }};
-
-        // Cache initial iteration
-        const auto size = var_divides_.size();
-        for (size_type vi = 0; vi < var_outputs_.size(); vi++) {
-            // Get current values for each variable
-            const auto var_span = boost::span<const double>{
-                static_cast<double*>(bmi_->GetValuePtr(var_outputs_[vi])),
-                size
-            };
-
-            for (size_type di = 0; di < size; di++) {
-                // Set current variable value for each divide
-                var_cache_.at({{time_current_index_, di, vi}}) = var_span[di];
-            }
-        }
-    
-        time_current_index_++;
-    };
-
-    std::unique_ptr<models::bmi::Bmi_Py_Adapter> bmi_;
-    clock_type::time_point                       time_start_;
-    clock_type::time_point                       time_end_;
-    clock_type::duration                         time_step_;
-    size_type                                    time_current_index_;
-    std::vector<std::string>                     var_outputs_;
-    std::vector<int>                             var_divides_;
+    std::unique_ptr<models::bmi::Bmi_Py_Adapter> bmi_ = nullptr;
+    clock_type::time_point                       time_start_{};
+    clock_type::time_point                       time_end_{};
+    clock_type::duration                         time_step_{};
+    size_type                                    time_current_index_{};
+    std::vector<std::string>                     var_outputs_{};
+    std::vector<int>                             var_divides_{};
 
     /**
      * Flat value cache vector.
@@ -138,8 +92,90 @@ struct ForcingsEngine
      *   T will usually be 1, if updated at each time event; and, V will be
      *   some small constant amount. Meaning, we should have about O(V*D).
      */
-    ngen::mdarray<double> var_cache_;
+    ngen::mdarray<double> var_cache_{};
 };
+
+ForcingsEngine::ForcingsEngine(const std::string& init, size_type time_start, size_type time_end)
+  : time_start_(std::chrono::seconds{time_start})
+  , time_end_(std::chrono::seconds{time_end})
+{
+    check_runtime_requirements();
+
+    bmi_ = std::make_unique<models::bmi::Bmi_Py_Adapter>(
+        "ForcingsEngine",
+        init,
+        "NextGen_Forcings_Engine.BMIForcingsEngine",
+        true,
+        true,
+        utils::getStdOut()
+    );
+    
+    time_step_ = std::chrono::seconds{static_cast<int64_t>(bmi_->GetTimeStep())};
+    var_outputs_ = bmi_->GetOutputVarNames();
+    var_outputs_.erase(var_outputs_.begin()); // Erase "CAT-ID" from outputs
+    const auto time_dim = static_cast<size_type>((time_end_ - time_start_) / time_step_);
+    const auto id_dim   = static_cast<size_type>(bmi_->GetVarNbytes("CAT-ID") / bmi_->GetVarItemsize("CAT-ID"));
+    const auto var_dim  = var_outputs_.size();
+
+    bmi_->Update();
+    time_current_index_++;
+    
+    const auto* ptr = static_cast<int*>(bmi_->GetValuePtr("CAT-ID"));
+    var_divides_ = std::vector<int>(ptr, ptr + id_dim);
+    var_cache_ = decltype(var_cache_){{ time_dim, id_dim, var_dim }};
+
+    // Cache initial iteration
+    const auto size = var_divides_.size();
+    for (size_type vi = 0; vi < var_outputs_.size(); vi++) {
+        // Get current values for each variable
+        const auto var_span = boost::span<const double>{
+            static_cast<double*>(bmi_->GetValuePtr(var_outputs_[vi])),
+            size
+        };
+
+        for (size_type di = 0; di < size; di++) {
+            // Set current variable value for each divide
+            var_cache_.at({{time_current_index_, di, vi}}) = var_span[di];
+        }
+    }
+
+    time_current_index_++;
+};
+
+ForcingsEngine& ForcingsEngine::instance(
+    const std::string& init,
+    std::size_t time_start,
+    std::size_t time_end
+)
+{
+    static ForcingsEngine inst_{init, time_start, time_end};
+    return inst_;
+}
+
+void ForcingsEngine::check_runtime_requirements()
+{
+    
+    // Check that the python module is installed.
+    {
+        auto interpreter_ = utils::ngenPy::InterpreterUtil::getInstance();
+        try {
+            auto mod = interpreter_->getModule("NextGen_Forcings_Engine");
+            auto cls = mod.attr("BMIForcingsEngine").cast<py::object>();
+        } catch(std::exception& e) {
+            throw std::runtime_error{
+                "Failed to initialize ForcingsEngine: ForcingsEngine python module is not installed or is not properly configured. (" + std::string{e.what()} + ")"
+            };
+        }
+    }
+
+    // Check that the WGRIB2 environment variable is defined
+    {
+        const auto* wgrib2_exec = std::getenv("WGRIB2");
+        if (wgrib2_exec == nullptr) {
+            throw std::runtime_error{"Failed to initialize ForcingsEngine: $WGRIB2 is not defined"};
+        }
+    }
+}
 
 auto ForcingsEngine::outputs() const noexcept
     -> boost::span<const std::string>
@@ -201,8 +237,8 @@ auto ForcingsEngine::variable_index(const std::string& variable) const noexcept
     -> size_type
 {
     const auto vars = outputs();
-    const auto* pos = std::find_if(vars.begin(), vars.end(), [&](const std::string& x) -> bool {
-        return x == variable || x == (variable + "_ELEMENT");
+    const auto* pos = std::find_if(vars.begin(), vars.end(), [&](const std::string& var) -> bool {
+        return var == variable || var == (variable + "_ELEMENT");
     });
     
     if (pos == vars.end()) {
