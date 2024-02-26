@@ -45,6 +45,14 @@ namespace realization {
 #endif // ACTIVATE_PYTHON
     };
 
+    static std::string valid_formulation_keys(){
+        std::string keys = "";
+        for(const auto& kv : formulations){
+            keys.append(kv.first+" ");
+        }
+        return keys;
+    }
+
     static bool formulation_exists(std::string formulation_type) {
         return formulations.count(formulation_type) > 0;
     }
