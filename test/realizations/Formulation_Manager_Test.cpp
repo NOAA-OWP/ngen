@@ -602,6 +602,7 @@ const std::string EXAMPLE_5_a =
 "                        \"init_config\": \"\","
 "                        \"allow_exceed_end_time\": true,"
 "                        \"main_output_variable\": \"OUTPUT_VAR_4\","
+"                        \"uses_forcing_file\": false,"
 "                        \"modules\": ["
 "                            {"
 "                                \"name\": \"bmi_c++\","
