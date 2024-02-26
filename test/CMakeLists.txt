@@ -448,7 +448,6 @@ ngen_add_test(
         utils/include/StreamOutputTest.cpp
         realizations/Formulation_Manager_Test.cpp
         utils/Partition_Test.cpp
-        utils/Partition_One_Test.cpp
         utils/mdarray_Test.cpp
         utils/mdframe_Test.cpp
         utils/mdframe_netcdf_Test.cpp
@@ -461,16 +460,12 @@ ngen_add_test(
         NGen::core_mediator
         NGen::forcing
         NGen::geojson
-        NGen::geopackage
         NGen::realizations_catchment
         NGen::mdarray
         NGen::mdframe
         NGen::logging
         NGen::ngen_bmi
         testbmicppmodel
-    REQUIRES
-        NGEN_WITH_SQLITE
-        
 )
 
 # Discover for test_all
