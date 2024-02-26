@@ -120,13 +120,14 @@ TEST_F(PartitionOneTest, TestPartitionData_1a)
     std::set<std::string> duplicates;
     //use set difference to identify all duplicates
     std::set_difference(cat_id_vec.begin(), cat_id_vec.end(), unique.begin(), unique.end(), std::inserter(duplicates, duplicates.end()));
-    if( duplicates.size() > 0 ){
-        for( auto& id: duplicates){
-        }
-        exit(1);
-    }
 
-    ASSERT_TRUE(true);
+    for( auto& id: duplicates){
+        if (!id.empty()) {
+            std::cout << "duplicates string set is not empty" << std::endl;
+            break;
+        }
+    }
+    ASSERT_EQ(duplicates.size(), 0);
 }
 
 TEST_F(PartitionOneTest, TestPartitionData_1b)
@@ -151,12 +152,14 @@ TEST_F(PartitionOneTest, TestPartitionData_1b)
     std::set<std::string> duplicates;
     //use set difference to identify all duplicates
     std::set_difference(nex_id_vec.begin(), nex_id_vec.end(), unique.begin(), unique.end(), std::inserter(duplicates, duplicates.end()));
-    if( duplicates.size() > 0 ){
-        for( auto& id: duplicates){
+
+    for( auto& id: duplicates){
+        if (!id.empty()) {
+            std::cout << "duplicates string set is not empty" << std::endl;
+            break;
         }
-        exit(1);
     }
-    ASSERT_TRUE(true);
+    ASSERT_EQ(duplicates.size(), 0);
 }
 
 #undef NGEN_MPI_ACTIVE
