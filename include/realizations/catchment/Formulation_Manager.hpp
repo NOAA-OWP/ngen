@@ -174,10 +174,9 @@ namespace realization {
                       auto catchment_feature = fabric->get_feature(catchment_index);
                       catchment_formulation.formulation.link_external(catchment_feature);
                       this->add_formulation(
-                        this->construct_formulation_from_tree(
+                        this->construct_formulation_from_config(
                             simulation_time_config,
                             catchment_config.first,
-                            catchment_config.second,
                             catchment_formulation,
                             output_stream
                         )
@@ -286,35 +285,24 @@ namespace realization {
 
 
         protected:
-            std::shared_ptr<Catchment_Formulation> construct_formulation_from_tree(
+            std::shared_ptr<Catchment_Formulation> construct_formulation_from_config(
                 simulation_time_params &simulation_time_config,
                 std::string identifier,
-                boost::property_tree::ptree &tree,
-                const boost::property_tree::ptree &formulation,
+                const realization::config::Config& catchment_formulation,
                 utils::StreamHandler output_stream
             ) {
-                auto params = formulation.get_child("params");
-                std::string formulation_type_key;
-                try {
-                    formulation_type_key = get_formulation_key(formulation);
-                }
-                catch(std::exception& e) {
-                    throw std::runtime_error("Catchment " + identifier + " failed initialization: " + e.what());
+                if(!formulation_exists(catchment_formulation.formulation.type)){
+                    throw std::runtime_error("Catchment " + identifier + " failed initialization: " + 
+                            catchment_formulation.formulation.type + "is not a valid formulation. Options are: "+valid_formulation_keys());
                 }
 
-                boost::property_tree::ptree formulation_config = formulation.get_child("params");
-
-                auto possible_forcing = tree.get_child_optional("forcing");
-
-                if (!possible_forcing) {
+                if(catchment_formulation.forcing.parameters.empty()){
                     throw std::runtime_error("No forcing definition was found for " + identifier);
                 }
 
-                geojson::JSONProperty forcing_parameters("forcing", *possible_forcing);
-
                 std::vector<std::string> missing_parameters;
                 
-                if (!forcing_parameters.has_key("path")) {
+                if (!catchment_formulation.forcing.has_key("path")) {
                     missing_parameters.push_back("path");
                 }
 
@@ -332,19 +320,11 @@ namespace realization {
                     throw std::runtime_error(message);
                 }
 
-                geojson::PropertyMap local_forcing;
-                for (auto &forcing_parameter : *possible_forcing) {
-                    local_forcing.emplace(
-                        forcing_parameter.first,
-                        geojson::JSONProperty(forcing_parameter.first, forcing_parameter.second)
-                    );
-                }
-
-                forcing_params forcing_config = this->get_forcing_params(local_forcing, identifier, simulation_time_config);
-
-                std::shared_ptr<Catchment_Formulation> constructed_formulation = construct_formulation(formulation_type_key, identifier, forcing_config, output_stream);
+                forcing_params forcing_config = this->get_forcing_params(catchment_formulation.forcing.parameters, identifier, simulation_time_config);
+                std::shared_ptr<Catchment_Formulation> constructed_formulation = construct_formulation(catchment_formulation.formulation.type, identifier, forcing_config, output_stream);
                 //, geometry);
-                constructed_formulation->create_formulation(formulation_config, &global_formulation_parameters);
+
+                constructed_formulation->create_formulation(catchment_formulation.formulation.parameters);
                 return constructed_formulation;
             }
 
@@ -395,8 +375,8 @@ namespace realization {
                 return missing_formulation;
             }
 
-            forcing_params get_forcing_params(geojson::PropertyMap &forcing_prop_map, std::string identifier, simulation_time_params &simulation_time_config) {
-                std::string path;
+            forcing_params get_forcing_params(const geojson::PropertyMap &forcing_prop_map, std::string identifier, simulation_time_params &simulation_time_config) {
+                std::string path = "";
                 if(forcing_prop_map.count("path") != 0){
                     path = forcing_prop_map.at("path").as_string();
                 }
