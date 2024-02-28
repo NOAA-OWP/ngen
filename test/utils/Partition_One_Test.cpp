@@ -6,11 +6,7 @@
 #include <boost/lexical_cast.hpp>
 #include <vector>
 
-#ifdef NGEN_WITH_SQLITE3
-#include <geopackage.hpp>
-#endif
-
-//This way we can test the partition, since this doesn't have an explicit MPI dependency
+//This way we can test the partition_one, since this doesn't have an explicit MPI dependency
 #define NGEN_MPI_ACTIVE
 #include "core/Partition_One.hpp"
 #include "FileChecker.h"
@@ -53,15 +49,7 @@ class PartitionOneTest: public ::testing::Test {
     void read_file_generate_partition_data()
     {
         const std::string file_path = file_search(hydro_fabric_paths, "catchment_data.geojson");
-        if (boost::algorithm::ends_with(catchmentDataFile, "gpkg")) {
-          #ifdef NGEN_WITH_SQLITE3
-          catchment_collection = ngen::geopackage::read(catchmentDataFile, "divides", catchment_subset_ids);
-          #else
-          throw std::runtime_error("SQLite3 support required to read GeoPackage files.");
-          #endif
-        } else {
-          catchment_collection = geojson::read(file_path, catchment_subset_ids);
-        }
+        catchment_collection = geojson::read(file_path, catchment_subset_ids);
 
         for(auto& feature: *catchment_collection)
         {
