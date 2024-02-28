@@ -92,8 +92,8 @@ $(document).ready(function(){initNavTree('md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html'
   <div class="headertitle"><div class="title">Project Dependencies</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md114"></a> </p>
-<h1><a class="anchor" id="autotoc_md115"></a>
+<div class="textblock"><p><a class="anchor" id="autotoc_md119"></a> </p>
+<h1><a class="anchor" id="autotoc_md120"></a>
 Summary</h1>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -119,135 +119,135 @@ Summary</h1>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">t-route   </td><td class="markdownTableBodyLeft">submodule   </td><td class="markdownTableBodyCenter">see below   </td><td class="markdownTableBodyCenter">Module required to enable channel-routing. Requires pybind11 to enable   </td></tr>
 </table>
-<h1><a class="anchor" id="autotoc_md116"></a>
+<h1><a class="anchor" id="autotoc_md121"></a>
 Details</h1>
-<h2><a class="anchor" id="autotoc_md117"></a>
+<h2><a class="anchor" id="autotoc_md122"></a>
 Google Test</h2>
 <p><a href="https://github.com/google/googletest">Google Test</a> is an external framework used for writing automated tests, as described in the <a class="el" href="md_test_2_r_e_a_d_m_e.html">testing README</a>.</p>
-<h3><a class="anchor" id="autotoc_md118"></a>
+<h3><a class="anchor" id="autotoc_md123"></a>
 Setup</h3>
 <p>The dependency is handled as a Git Submodule, located at <code>test/googletest/</code>. To initialize the submodule after cloning the repo: </p><pre class="fragment">git submodule update --init --recursive -- test/googletest
 </pre><p> Note that initializing the submodule will require the CMake build system be <a href="BUILDS_AND_CMAKE.md#build-system-regeneration">regenerated</a> if it had already been generated, in order for test targets to work.</p>
-<h3><a class="anchor" id="autotoc_md119"></a>
+<h3><a class="anchor" id="autotoc_md124"></a>
 Version Requirements</h3>
 <p>The version used is automatically handled by submodule config. This can be synced by re-running the initialization command above.</p>
 <p>As of project version <code>0.1.0</code>, this was the <b>Google Test</b> tag <code>release-1.10.0</code>.</p>
-<h2><a class="anchor" id="autotoc_md120"></a>
+<h2><a class="anchor" id="autotoc_md125"></a>
 C and C++ Compiler</h2>
 <p>At present, <a href="(https://gcc.gnu.org/)">GCC</a> and <a href="https://clang.llvm.org/">Clang</a> are officially supported, though this is expected to change/expand in the near future.</p>
-<h3><a class="anchor" id="autotoc_md121"></a>
+<h3><a class="anchor" id="autotoc_md126"></a>
 Setup</h3>
 <p>This dependency itself is handled externally. To used within the project, CMake just needs to know the path to each compiler. CMake is often able to handle this automatically when <a href="BUILDS_AND_CMAKE.md#generating-a-build-system">generating the build system</a>.</p>
 <p>If CMake is unable to find a compiler automatically, the CMake <code>CMAKE_C_COMPILER</code> and/or <code>CMAKE_CXX_COMPILER</code> variables will need to be explicitly set. This can be done from the command line when running CMake, or by setting the standard <code>CC</code> and <code>CXX</code> environment variables.</p>
-<h3><a class="anchor" id="autotoc_md122"></a>
+<h3><a class="anchor" id="autotoc_md127"></a>
 Version Requirements</h3>
 <p>Project C++ code needs to be compliant with the C++ 14 standard. Supported compilers need to be of a recent enough version to be compatible. <br  />
 </p>
 <p>Additionally, C++ compilers needs to be compatible (ideally officially <em>tested</em> as such) with other project C++ dependencies.</p>
-<h4><a class="anchor" id="autotoc_md123"></a>
+<h4><a class="anchor" id="autotoc_md128"></a>
 GCC</h4>
 <p>Based on <a href="https://gcc.gnu.org/projects/cxx-status.html#cxx14">this page</a>, the C++ 14 support requirement probably equates to a version of GCC &gt;= version <code>5.0.0</code>.</p>
-<h4><a class="anchor" id="autotoc_md124"></a>
+<h4><a class="anchor" id="autotoc_md129"></a>
 Clang</h4>
 <p>The Clang versioning scheme is a little convoluted. Using the official scheme, Clang 3.4 and later should support all C++ 14 features.</p>
 <p>However, Apple likes to apply their own versioning to Clang and LLVM. The <code>Apple LLVM version 10.0.1 (clang-1001.0.46.4)</code> version released with MacOS 10.14.x should do fine. Recent, earlier version likely will as well, but YMMV.</p>
-<h2><a class="anchor" id="autotoc_md125"></a>
+<h2><a class="anchor" id="autotoc_md130"></a>
 CMake</h2>
 <p>The <a href="https://gitlab.kitware.com/cmake/cmake">CMake</a> utility facilitates defining and running project builds. More details on CMake and builds have been documented <a class="el" href="md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k_e.html">here</a>.</p>
-<h3><a class="anchor" id="autotoc_md126"></a>
+<h3><a class="anchor" id="autotoc_md131"></a>
 Setup</h3>
 <p>This dependency itself is handled externally. No special steps are required to use CMake within the project.</p>
 <p>However, a <a href="BUILDS_AND_CMAKE.md#generating-a-build-system">CMake build system</a> must be generated for the project before CMake builds can be run and executable artifacts can be created.</p>
-<h3><a class="anchor" id="autotoc_md127"></a>
+<h3><a class="anchor" id="autotoc_md132"></a>
 Version Requirements</h3>
 <p>Currently, a version of CMake &gt;= <code>3.14.0</code> is required.</p>
-<h2><a class="anchor" id="autotoc_md128"></a>
+<h2><a class="anchor" id="autotoc_md133"></a>
 Boost (Headers Only)</h2>
 <p>Boost libraries are used by this project. In particular, <a href="https://www.boost.org/doc/libs/1_79_0/libs/geometry/doc/html/geometry/compilation.html">Boost.Geometry</a> is used, but others are also.</p>
 <p>Currently, only headers-only Boost libraries are utilized. As such, they are not exhaustively listed here since getting one essentially gets them all.</p>
-<h3><a class="anchor" id="autotoc_md129"></a>
+<h3><a class="anchor" id="autotoc_md134"></a>
 Setup</h3>
 <p>Since only headers-only libraries are needed, the Boost headers simply need to be available on the local machine at a location the build process can find.</p>
 <p>There are a variety of different ways to get the Boost headers locally. Various OS may have packages specifically to install them, though one should take note of whether such packages provide a version of Boost that meets this project's requirements. <br  />
 </p>
 <p>Alternatively, the Boost distribution itself can be manually downloaded and unpacked, as described for both <a href="https://www.boost.org/doc/libs/1_79_0/more/getting_started/unix-variants.html">Unix-variants</a> and <a href="https://www.boost.org/doc/libs/1_79_0/more/getting_started/windows.html">Windows</a> on the Boost website.</p>
-<h4><a class="anchor" id="autotoc_md130"></a>
+<h4><a class="anchor" id="autotoc_md135"></a>
 Setting &lt;strong&gt;BOOST_ROOT&lt;/strong&gt;</h4>
 <p>If necessary, the project's CMake config is able to use the value of the <b>BOOST_ROOT</b> environment variable to help it find Boost, assuming the variable is set. It is not always required, as CMake may be able to find Boost without this, depending on how Boost was "installed."</p>
 <p>However, it will often be necessary to set <b>BOOST_ROOT</b> if Boost was manually set up by downloading the distribution.</p>
 <p>The variable should be set to the value of the <b>boost root directory</b>, which is something like <code>&lt;some_path&gt;/boost_1_79_0</code>.</p>
-<h3><a class="anchor" id="autotoc_md131"></a>
+<h3><a class="anchor" id="autotoc_md136"></a>
 Version Requirements</h3>
 <p>At present, a version &gt;= <code>1.79.0</code> is required.</p>
-<h2><a class="anchor" id="autotoc_md132"></a>
+<h2><a class="anchor" id="autotoc_md137"></a>
 Udunits</h2>
 <p><a href="https://www.unidata.ucar.edu/software/udunits">Udunits</a> is a C library and associated command line tool for converting between compatible units. Only the C library is a required dependency, though these frequently get bundled together. The library and needed development files can be installed via typical package managing tools.</p>
-<h4><a class="anchor" id="autotoc_md133"></a>
+<h4><a class="anchor" id="autotoc_md138"></a>
 Package Manager Install</h4>
 <p>The Udunits library and development files can be installed via standard OS package management tools. The ngen project will automatically detect and use these. Note that both the library itself and development files must be installed, which are typically two separate, similarly named packages.</p>
 <p>The ngen build will automatically search for these, so no additional steps are required to configure the build or the environment once they are installed. Installation can be done using the typical OS package manager, like <code>yum</code> or <code>apt</code>. Different distributions like to call the packages different things (e.g., <em>udunits2-dev</em>, <em>udunits2-devel</em>, <em>libudunits2-dev</em>, etc.), so you may need to do some searching. <a href="https://pkgs.org/search/?q=udunits2">This page</a> also provide details on package names for various Linux distros. <br  />
 </p>
 <p>Also, for CentOS in particular, you'll need <a href="https://docs.fedoraproject.org/en-US/epel/">the EPEL repo enabled</a></p>
 <p>Packages for both the <em>library</em> and <em>development files</em> are needed. Package managers usually make this easy, but just make sure to pay attention to it if things do not work as expected.</p>
-<p><a class="anchor" id="autotoc_md134"></a> </p><h5>Example Install Commands</h5>
+<p><a class="anchor" id="autotoc_md139"></a> </p><h5>Example Install Commands</h5>
 <h6>Ubuntu</h6>
 <p><code>apt-get install libudunits2-dev</code></p>
 <h6>CentOS</h6>
 <p><code>yum install udunits2-devel</code></p>
 <p>As mentioned before, you may need to <a href="https://docs.fedoraproject.org/en-US/epel/">enable the EPEL repo first</a> first, if yum can't find the package.</p>
-<h3><a class="anchor" id="autotoc_md135"></a>
+<h3><a class="anchor" id="autotoc_md140"></a>
 Version Requirements</h3>
 <p>Any version greater &gt;= 2.0 (i.e., <em>udunits2</em> or <em>libudunits2</em>).</p>
-<h2><a class="anchor" id="autotoc_md136"></a>
+<h2><a class="anchor" id="autotoc_md141"></a>
 Python 3 Libraries</h2>
 <p>In order to interact with external models written in Python, the Python libraries must be made available. <br  />
 </p>
 <p>Further, the Python environment must have NumPy and a few other libraries installed. Several Python BMI function calls utilize <code>numpy</code> arrays, making <code>numpy</code> a necessity for using external Python models implementing BMI.</p>
-<h4><a class="anchor" id="autotoc_md137"></a>
+<h4><a class="anchor" id="autotoc_md142"></a>
 Overriding Python Dependency</h4>
 <p>It is possible to run the build, build artifacts, etc. in a way that excludes Python-related functionality, thereby relieving this as a dependency. This may be useful in runtime environments that will not interact with a Python external model, and/or installing Python is prohibitively difficult.</p>
 <p>To do this, set either the <code>NGEN_ACTIVATE_PYTHON</code> environment variable to <code>false</code> or include the <code>-DNGEN_ACTIVATE_PYTHON:BOOL=false</code> option when running the <code>cmake</code> build on the command line to generate the build system.</p>
-<h3><a class="anchor" id="autotoc_md138"></a>
+<h3><a class="anchor" id="autotoc_md143"></a>
 Setup</h3>
 <p>The first step is to make sure Python is installed. NGen's CMake will use its <a href="https://cmake.org/cmake/help/v3.19/module/FindPython.html#module:FindPython">FindPython</a> functionality to locate the Python installation.</p>
 <p>We recommend creating a Python 'virtual environment', and having it activated when configuring, building, testing, and running <code>ngen</code>. Necessary libraries can be installed in that environment without affecting the surrounding system.</p>
 <p>Otherwise, CMake can be guided to use a particular Python installation according to <a href="https://cmake.org/cmake/help/latest/module/FindPython.html">its documentation</a>.</p>
 <p>The Python installation found by CMake needs to have the relevant libraries installed. These libraries can be installed with </p><pre class="fragment">pip install numpy pandas pyyaml bmipy
 </pre><p> or an equivalent command if using a different Python package manager.</p>
-<h3><a class="anchor" id="autotoc_md139"></a>
+<h3><a class="anchor" id="autotoc_md144"></a>
 Version Requirements</h3>
 <p>A version of Python 3 &gt;= <code>3.6.8</code> is required. There are no specific version requirements for <code>numpy</code> currently.</p>
-<h2><a class="anchor" id="autotoc_md140"></a>
+<h2><a class="anchor" id="autotoc_md145"></a>
 pybind11</h2>
 <p>The <code>pybind11</code> dependency is a header-only library that allows for exposing Python types, etc. within C++ code. It is necessary to work with externally maintained, modular Python models.</p>
-<h4><a class="anchor" id="autotoc_md141"></a>
+<h4><a class="anchor" id="autotoc_md146"></a>
 Overriding pybind11 Dependency</h4>
 <p>This dependency can be overridden and disabled if the Python dependency is configured as such, as described here.</p>
-<h3><a class="anchor" id="autotoc_md142"></a>
+<h3><a class="anchor" id="autotoc_md147"></a>
 Setup</h3>
 <p>The dependency is handled as a Git Submodule, located at <code>extern/pybind11</code>. To initialize the submodule after cloning the repo: </p><pre class="fragment">git submodule update --init extern/pybind11
 </pre><p> Git <em>should</em> take care of checking out the commit for the required version automatically (assuming latest upstream changes have been fetched), so it should be possible to also use the command above to sync future updates to the required version.</p>
 <p>However, to verify the checked out version, examine the output of: </p><pre class="fragment">git submodule status
 </pre><p> If the above <code>update</code> command does not check out the expected version, this can be done manually. Below is an example of how to do this for the version tagged <code>v2.6.0</code>: </p><pre class="fragment">cd extern/pybind11
 git checkout v2.6.0
-</pre> <h3><a class="anchor" id="autotoc_md143"></a>
+</pre> <h3><a class="anchor" id="autotoc_md148"></a>
 Version Requirements</h3>
 <p>The version used is automatically handled by submodule config. This can be synced by re-running the initialization command above.</p>
 <p>As of project version <code>0.1.0</code>, the required version is tag <code>v2.6.0</code>.</p>
-<h2><a class="anchor" id="autotoc_md144"></a>
+<h2><a class="anchor" id="autotoc_md149"></a>
 The &lt;tt&gt;dmod.subsetservice&lt;/tt&gt; Package</h2>
 <p>This is an optional package available via the <a href="https://github.com/NOAA-OWP/DMOD">OWP DMOD tool</a>. It only is required to enable the driver to generate partition-specific subdivided hydrofabric files from the complete hydrofabric file, as is conditionally required for <a class="el" href="md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.html">distributed processing</a>. Further, its use is only attempted when such files are needed for distributed processing <em>and</em> are not already created.</p>
 <p>As such, this dependency is ignored unless both Python support and MPI support are enabled and built into the <em>ngen</em> driver.</p>
-<h3><a class="anchor" id="autotoc_md145"></a>
+<h3><a class="anchor" id="autotoc_md150"></a>
 Setup</h3>
 <p>This must be installed in the active Python environment at the time the <code>ngen</code> executable is called. This is usually best done via a virtual environment, especially if one is already set up as described for the Numpy dependency. However, all that matters is that the Python environment available to the ngen driver has this package installed.</p>
 <p>If installing to a virtual env as suggested above, the installation steps are similar to what is described in the <a href="https://github.com/NOAA-OWP/DMOD/tree/master/doc/SUBSETTING_CLI_TOOL.md">DMOD project document for the subsetting CLI tool</a>. The difference is just to create and/or source a virtual environment locate here first, and then change to the DMOD project directory. All the example commands after the step of sourcing the virtual environment can then be followed as described on that page.</p>
-<h3><a class="anchor" id="autotoc_md146"></a>
+<h3><a class="anchor" id="autotoc_md151"></a>
 Version Requirements</h3>
 <p>Version <code>0.3.0</code> or greater must be installed.</p>
-<h2><a class="anchor" id="autotoc_md147"></a>
+<h2><a class="anchor" id="autotoc_md152"></a>
 t-route</h2>
-<h3><a class="anchor" id="autotoc_md148"></a>
+<h3><a class="anchor" id="autotoc_md153"></a>
 Setup</h3>
 <p>See the <a href="PYTHON_ROUTING.md#installing-t-route">installing t-route section</a> for more details.</p>
 <p>Be sure to build ngen with Python and Routing support as discussed there, and if using a virtual environment, make sure it is activated when running ngen, e.g.:</p>
@@ -258,7 +258,7 @@ Setup</h3>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Feb 26 2024 17:15:16 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Wed Feb 28 2024 00:17:37 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

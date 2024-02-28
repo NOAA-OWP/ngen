@@ -92,9 +92,9 @@ $(document).ready(function(){initNavTree('md_doc_2_b_u_i_l_d_s___a_n_d___c_m_a_k
   <div class="headertitle"><div class="title">Project Builds</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md94"></a> The project uses the <a href="https://gitlab.kitware.com/cmake/cmake">CMake</a> tool to manage the building of project artifacts. A complete understanding of CMake is not necessary, but some level of familiarity is, at least to perform certain contribution tasks.</p>
+<div class="textblock"><p><a class="anchor" id="autotoc_md99"></a> The project uses the <a href="https://gitlab.kitware.com/cmake/cmake">CMake</a> tool to manage the building of project artifacts. A complete understanding of CMake is not necessary, but some level of familiarity is, at least to perform certain contribution tasks.</p>
 <p>This document briefly discusses a few of the essential aspects as they relate to the project.</p>
-<h1><a class="anchor" id="autotoc_md95"></a>
+<h1><a class="anchor" id="autotoc_md100"></a>
 The TL;DR</h1>
 <ul>
 <li>The project needs a (or multiple) CMake-base build system (or buildsystem) to compile code, build artifacts, and perform other project meta-tasks frequently referred to as "builds."</li>
@@ -109,10 +109,10 @@ The TL;DR</h1>
 <li>Ensure dependencies are available and that the build system is updated or regenerated appropriately when dependencies' statuses change</li>
 <li>The project build structure is designed using collections of nested libraries, configured at the directory level by multiple <code>CMakeLists.txt</code> files</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md96"></a>
+<h1><a class="anchor" id="autotoc_md101"></a>
 Generating a Build System</h1>
 <p>Details on CMake-based build systems can be found <a href="https://cmake.org/cmake/help/latest/manual/cmake-buildsystem.7.html">here</a>, but basically a build system is a bunch of organized <em>targets</em> for building useful artifacts.</p>
-<h2><a class="anchor" id="autotoc_md97"></a>
+<h2><a class="anchor" id="autotoc_md102"></a>
 Out-of-Source Building</h2>
 <p>Before generating, it is important to understanding that build systems come in two basic varieties:</p>
 <ul>
@@ -120,27 +120,27 @@ Out-of-Source Building</h2>
 <li><em>out-of-source</em> : CMake generated files and compiled artifacts get created in a separate build directory</li>
 </ul>
 <p>Since the project doesn't need artifacts or other derivative files cluttering up the source tree (or the git repo), <em>out-of-source</em> builds should be used. This impacts the way a build system should be generated.</p>
-<h2><a class="anchor" id="autotoc_md98"></a>
+<h2><a class="anchor" id="autotoc_md103"></a>
 Ignoring the Build Directory</h2>
 <p>As suggested, the repo should not include anything from the build system. The <a href="../.gitignore">.gitignore</a> file has already been configured with an entry <code>/cmake-build-*/</code>, so a directory name following this pattern would be a good choice when generating a local build system. Regardless, it is highly recommended that build directories be ignored, either based on the existing config or future changes, to avoid accidentally adding build system files or artifacts to the repo.</p>
-<h2><a class="anchor" id="autotoc_md99"></a>
+<h2><a class="anchor" id="autotoc_md104"></a>
 Generation Commands</h2>
 <p>Even for <em>out-of-source</em> builds, there are (at least) two ways to generate the build system:</p>
 <ul>
 <li>from within the build system directory (or build directory), by specifying the source directory</li>
 <li>from outside the build directory (typically the source directory), by specifying the build and source directories</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md100"></a>
+<h3><a class="anchor" id="autotoc_md105"></a>
 Generating from Build Directory</h3>
 <p>Starting from the project root, here is an example of creating a CMake build system in an arbitrary directory (here, <code>cmake-build-dir/</code>). </p><pre class="fragment">mkdir cmake-build-dir
 cd cmake-build-dir
 cmake ..
-</pre> <h3><a class="anchor" id="autotoc_md101"></a>
+</pre> <h3><a class="anchor" id="autotoc_md106"></a>
 Generating from Project Root</h3>
 <p>Alternatively, it is also possible to generate a build directory in one command without changing directories. Again, from the project root: </p><pre class="fragment">cmake -B cmake-build-dir -S .
 </pre><p> This will create the necessary build directory as well if it did not already exist.</p>
 <p>Note both the <code>-B</code> flag before the build directory and the explicit <code>-S</code> flag before the source directory (here <code>./</code>).</p>
-<h3><a class="anchor" id="autotoc_md102"></a>
+<h3><a class="anchor" id="autotoc_md107"></a>
 Optional: Specifying Project Build Config Type</h3>
 <p>For development builds, it can also be useful to add the <code>-DCMAKE_BUILD_TYPE</code> flag to the CMake generation command to specify a particular configuration for that build directory. E.g., depending which generation method above was used, </p><pre class="fragment">cd cmake-build-dir
 cmake -DCMAKE_BUILD_TYPE=Debug ..
@@ -148,40 +148,40 @@ cmake -DCMAKE_BUILD_TYPE=Debug ..
 </pre><p> As illustrated, it is a good practice to use a build directory name that reflects the configuration type. <br  />
 </p>
 <p>See the CMake docs and full help for more on this.</p>
-<h2><a class="anchor" id="autotoc_md103"></a>
+<h2><a class="anchor" id="autotoc_md108"></a>
 Regenerating</h2>
 <p>The simplest way to freshly regenerate a build system is by creating a new one, which usually implies deleting the old one. A previous build directory can simply be deleted and recreated, or have its contents fully deleted, and then the previous generation commands can be re-run to create a new build system there.</p>
-<h1><a class="anchor" id="autotoc_md104"></a>
+<h1><a class="anchor" id="autotoc_md109"></a>
 Building Targets</h1>
 <p>CMake <em>targets</em> get defined in the various <code>CMakeLists.txt</code> files in the repo. The primary target to build a runnable program (as of <code>0.1.0</code>) is the <code>ngen</code> target. There are also several testing targets defined for generating test executables, as <a href="../test/README.md#test-targets-and-executables">detailed here</a>.</p>
-<h2><a class="anchor" id="autotoc_md105"></a>
+<h2><a class="anchor" id="autotoc_md110"></a>
 Building From Build Directory</h2>
 <p>E.g., </p><pre class="fragment">cd cmake-build-debug
 make test_unit -j 4
-</pre> <h2><a class="anchor" id="autotoc_md106"></a>
+</pre> <h2><a class="anchor" id="autotoc_md111"></a>
 Building From Source Directory</h2>
 <p>To build without leaving the source directory, use CMake to build the target and specifying the build directory using the <code>--build</code> flag. Build tool (i.e., <code>make</code>) options can also be passed after a <code>--</code> at the end of the CMake command. E.g. </p><pre class="fragment">cmake --build cmake-build-debug --target test_unit -- -j 4
-</pre> <h1><a class="anchor" id="autotoc_md107"></a>
+</pre> <h1><a class="anchor" id="autotoc_md112"></a>
 Dependencies</h1>
 <p>The project has several dependencies, as discussed in more detail in the <a class="el" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html">Dependencies</a> doc. Typically, dependency problems are obvious, but there are a few subtle things related to builds that are worth mentioning here.</p>
-<h2><a class="anchor" id="autotoc_md108"></a>
+<h2><a class="anchor" id="autotoc_md113"></a>
 Build System Regeneration</h2>
 <p>In some cases - in particular <b>Google Test</b> - the build system will need to be generated or regenerated after the dependency is available. If it is not, several build targets may either fail or simply not be available.</p>
-<h2><a class="anchor" id="autotoc_md109"></a>
+<h2><a class="anchor" id="autotoc_md114"></a>
 Boost ENV Variable</h2>
 <p>The Boost libraries must be available for the project to compile. The details are discussed more in the <a class="el" href="md_doc_2_d_e_p_e_n_d_e_n_c_i_e_s.html">Dependencies</a> doc, but as a helpful hint, the <b>BOOST_ROOT</b> environmental variable can be set to the path of the applicable <a href="https://www.boost.org/doc/libs/1_79_0/more/getting_started/unix-variants.html#the-boost-distribution">Boost root directory</a>. The project's <a href="../CMakeLists.txt">CMakeLists.txt</a> is written to check for this env variable and use it to set the Boost include directory.</p>
 <p>Note that if the variable is not set, it may still be possible for CMake to find Boost, although a <em>status</em> message will be printed by CMake indicating <b>BOOST_ROOT</b> was not set.</p>
-<h1><a class="anchor" id="autotoc_md110"></a>
+<h1><a class="anchor" id="autotoc_md115"></a>
 Build Design</h1>
-<h2><a class="anchor" id="autotoc_md111"></a>
+<h2><a class="anchor" id="autotoc_md116"></a>
 Library-Based Structure</h2>
 <p>The general design of the CMake configuration is to have each of the various subdirectories containing source files have its own <code>CMakeLists.txt</code> file, creating a library for the sources of that directory. This creates a nested structure of libraries for source files, essentially mirroring the directory structure.</p>
 <p>To incorporate these libraries into the main project, the top-level source directories are added within <a href="../CMakeLists.txt">CMakeLists.txt</a> in the project root. These get added first with <code>add_subdirectory</code>, and then the appropriate libraries being linked to targets as needed with <code>target_link_libraries</code>. The sub-directory <code>CMakeLists.txt</code> files follow a similar setup to nest their child directories and libraries.</p>
-<h2><a class="anchor" id="autotoc_md112"></a>
+<h2><a class="anchor" id="autotoc_md117"></a>
 Handling Changes</h2>
 <p>In general, existing <code>CMakeLists.txt</code> do not necessarily have to be modified to handle code changes, include the addition of a new source file. A custom CMake function within <a href="../cmake/dynamic_sourced_library.cmake">cmake/dynamic_sourced_library.cmake</a> allows for the libraries to dynamically determine the source files to use, in particular using any <code>*.cpp</code> files in the library's directory.</p>
 <p>However, this assumes includes and dependencies for the library aren't affected. If the nature of a code change results in a change to the library's dependency or required include directories, that will have to be reflected in the <code>CMakeLists.txt</code>.</p>
-<h3><a class="anchor" id="autotoc_md113"></a>
+<h3><a class="anchor" id="autotoc_md118"></a>
 Adding New Subdirectories</h3>
 <p>To add a new directory and library, follow a similar convention as an existing directory. Ensure the necessary include directories are set for the library, and that any libraries it depends on are available first by setting them as dependencies.</p>
 <p>Also, keep in mind adding a new directory and library will require an adjustment to the <code>CMakeLists.txt</code> file handling the parent directory/library, within which the addition is nested. </p>
@@ -191,7 +191,7 @@ Adding New Subdirectories</h3>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Feb 26 2024 17:15:16 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Wed Feb 28 2024 00:17:37 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
