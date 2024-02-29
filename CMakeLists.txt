@@ -50,6 +50,7 @@ option(NGEN_WITH_BMI_C       "Build with C BMI support"           ON)
 option(NGEN_WITH_PYTHON      "Build with embedded Python support" ON)
 option(NGEN_WITH_TESTS       "Build with unit tests"              ON)
 option(NGEN_QUIET            "Silence output"                     OFF)
+option(NGEN_WITH_UNITY_BUILD "Perform a unity build"              ON)
 
 # These options require dependency on some of the above options
 # Syntax: cmake_dependent_option(<option> "<help_text>" <value> <depends> <force>)
@@ -118,6 +119,9 @@ project(ngen VERSION 0.1.0)
 add_executable(ngen "${NGEN_SRC_DIR}/NGen.cpp")
 
 # Dependencies ================================================================
+if(NGEN_WITH_UNITY_BUILD)
+    set(CMAKE_UNITY_BUILD ON)
+endif()
 
 # -----------------------------------------------------------------------------
 # Check if NGen is the main project (e.g. development environment)
@@ -418,6 +422,7 @@ ngen_multiline_message(
 "  C Flags: ${CMAKE_C_FLAGS}"
 "  CXX Compiler: ${CMAKE_CXX_COMPILER}"
 "  CXX Flags: ${CMAKE_CXX_FLAGS}"
+"  Linker: ${CMAKE_LINKER}"
 "  Flags:"
 "    NGEN_WITH_MPI: ${NGEN_WITH_MPI}"
 "    NGEN_WITH_NETCDF: ${NGEN_WITH_NETCDF}"
