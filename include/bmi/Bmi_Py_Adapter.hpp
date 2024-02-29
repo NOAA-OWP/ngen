@@ -7,14 +7,15 @@
 #include <exception>
 #include <memory>
 #include <string>
+
 #include "pybind11/pybind11.h"
 #include "pybind11/pytypes.h"
 #include "pybind11/numpy.h"
-#include "JSONProperty.hpp"
-#include "StreamHandler.hpp"
-#include "boost/algorithm/string.hpp"
+
 #include "Bmi_Adapter.hpp"
-#include "python/InterpreterUtil.hpp"
+
+#include "utilities/StreamHandler.hpp"
+#include "utilities/python/InterpreterUtil.hpp"
 
 // Forward declaration to provide access to protected items in testing
 class Bmi_Py_Adapter_Test;

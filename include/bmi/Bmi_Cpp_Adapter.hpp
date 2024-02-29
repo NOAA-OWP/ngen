@@ -3,10 +3,10 @@
 
 #include <memory>
 #include <string>
-#include "AbstractCLibBmiAdapter.hpp"
+
 #include "bmi.hpp"
-#include "JSONProperty.hpp"
-#include "StreamHandler.hpp"
+#include "AbstractCLibBmiAdapter.hpp"
+#include "utilities/StreamHandler.hpp"
 
 // Forward declaration to provide access to protected items in testing
 class Bmi_Cpp_Adapter_Test;

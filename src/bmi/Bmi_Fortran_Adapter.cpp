@@ -1,5 +1,5 @@
 #ifdef NGEN_BMI_FORTRAN_ACTIVE
-#include "Bmi_Fortran_Adapter.hpp"
+#include "bmi/Bmi_Fortran_Adapter.hpp"
 
 using namespace models::bmi;
 

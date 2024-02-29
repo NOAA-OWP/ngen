@@ -2,8 +2,8 @@
 
 #include <exception>
 #include <utility>
-#include "pybind11/numpy.h"
-#include "Bmi_Py_Adapter.hpp"
+
+#include "bmi/Bmi_Py_Adapter.hpp"
 
 using namespace models::bmi;
 using namespace pybind11::literals; // to bring in the `_a` literal for pybind11 keyword args functionality
