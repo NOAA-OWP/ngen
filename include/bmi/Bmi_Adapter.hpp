@@ -3,12 +3,14 @@
 
 #include <string>
 #include <vector>
+
 #include "bmi.hpp"
-#include "FileChecker.h"
-#include "JSONProperty.hpp"
+
 #include "State_Exception.hpp"
-#include "StreamHandler.hpp"
-#include <UnitsHelper.hpp>
+
+#include "core/mediator/UnitsHelper.hpp"
+#include "utilities/StreamHandler.hpp"
+#include "utilities/FileChecker.h"
 
 namespace models {
     namespace bmi {

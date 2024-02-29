@@ -2,9 +2,10 @@
 #define NGEN_ABSTRACTCLIBBMIADAPTER_HPP
 
 #include <dlfcn.h>
+
 #include "Bmi_Adapter.hpp"
-#include "ExternalIntegrationException.hpp"
-#include "State_Exception.hpp"
+
+#include "utilities/ExternalIntegrationException.hpp"
 
 namespace models {
     namespace bmi {
