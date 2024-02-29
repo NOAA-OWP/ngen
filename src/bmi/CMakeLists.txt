@@ -1,25 +1,35 @@
-include(${PROJECT_SOURCE_DIR}/cmake/dynamic_sourced_library.cmake)
-dynamic_sourced_cxx_library(ngen_bmi "${CMAKE_CURRENT_SOURCE_DIR}")
-
+add_library(ngen_bmi)
 add_library(NGen::ngen_bmi ALIAS ngen_bmi)
 
-target_include_directories(ngen_bmi PUBLIC
-        ${PROJECT_SOURCE_DIR}/include/
-        ${PROJECT_SOURCE_DIR}/include/bmi
-        )
-        
-target_link_libraries(ngen_bmi PUBLIC
-        ${CMAKE_DL_LIBS}
-        Boost::boost                # Headers-only Boost
-        NGen::logging
-        NGen::geojson
-        NGen::core_mediator
-        )
+target_include_directories(ngen_bmi
+  PUBLIC
+    ${NGEN_INC_DIR}
+)
+
+target_link_libraries(ngen_bmi
+  PUBLIC
+    ${CMAKE_DL_LIBS}
+    Boost::boost # Headers-only Boost
+    NGen::logging
+    NGen::geojson
+    NGen::core_mediator
+)
+
+target_sources(ngen_bmi
+  PRIVATE
+    "${CMAKE_CURRENT_LIST_DIR}/Bmi_Cpp_Adapter.cpp"
+)
+
+if(NGEN_WITH_BMI_C)
+    target_sources(ngen_bmi PRIVATE "${CMAKE_CURRENT_LIST_DIR}/Bmi_C_Adapter.cpp")
+endif()
 
 if(NGEN_WITH_PYTHON)
-   target_link_libraries(ngen_bmi PUBLIC pybind11::embed)
+    target_sources(ngen_bmi PRIVATE "${CMAKE_CURRENT_LIST_DIR}/Bmi_Py_Adapter.cpp")
+    target_link_libraries(ngen_bmi PUBLIC pybind11::embed)
 endif()
 
 if(NGEN_WITH_BMI_FORTRAN)
+    target_sources(ngen_bmi PRIVATE "${CMAKE_CURRENT_LIST_DIR}/Bmi_Fortran_Adapter.cpp")
     target_link_libraries(ngen_bmi PUBLIC iso_c_bmi)
 endif()
