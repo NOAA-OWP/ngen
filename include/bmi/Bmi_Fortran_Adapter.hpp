@@ -6,6 +6,8 @@
 #include "AbstractCLibBmiAdapter.hpp"
 #include "Bmi_Fortran_Common.h"
 #include "bmi.h"
+#include "State_Exception.hpp"
+#include "utilities/ExternalIntegrationException.hpp"
 
 // Forward declaration to provide access to protected items in testing
 class Bmi_Fortran_Adapter_Test;

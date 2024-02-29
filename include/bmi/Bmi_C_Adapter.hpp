@@ -6,7 +6,10 @@
 
 #include "bmi.h"
 #include "AbstractCLibBmiAdapter.hpp"
+#include "State_Exception.hpp"
 #include "utilities/StreamHandler.hpp"
+#include "utilities/ExternalIntegrationException.hpp"
+
 
 // Forward declaration to provide access to protected items in testing
 class Bmi_C_Adapter_Test;

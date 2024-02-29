@@ -3,6 +3,7 @@
 #include <exception>
 #include <utility>
 
+
 using namespace models::bmi;
 
 Bmi_Cpp_Adapter::Bmi_Cpp_Adapter(const std::string& type_name, std::string library_file_path, std::string forcing_file_path,

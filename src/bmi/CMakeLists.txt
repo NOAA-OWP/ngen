@@ -4,7 +4,6 @@ add_library(NGen::ngen_bmi ALIAS ngen_bmi)
 target_include_directories(ngen_bmi
   PUBLIC
     ${NGEN_INC_DIR}
-    ${NGEN_INC_DIR}/bmi
 )
 
 target_link_libraries(ngen_bmi
@@ -18,6 +17,8 @@ target_link_libraries(ngen_bmi
 
 target_sources(ngen_bmi
   PRIVATE
+    "${CMAKE_CURRENT_LIST_DIR}/Bmi_Adapter.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/AbstractCLibBmiAdapter.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/Bmi_Cpp_Adapter.cpp"
 )
 

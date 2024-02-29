@@ -6,11 +6,9 @@
 
 #include "bmi.hpp"
 
-#include "State_Exception.hpp"
-
 #include "core/mediator/UnitsHelper.hpp"
 #include "utilities/StreamHandler.hpp"
-#include "utilities/FileChecker.h"
+
 
 namespace models {
     namespace bmi {
@@ -22,30 +20,12 @@ namespace models {
         public:
 
             Bmi_Adapter(std::string model_name, std::string bmi_init_config, std::string forcing_file_path, bool allow_exceed_end,
-                        bool has_fixed_time_step, utils::StreamHandler output)
-                : model_name(std::move(model_name)),
-                  bmi_init_config(std::move(bmi_init_config)),
-                  bmi_model_uses_forcing_file(!forcing_file_path.empty()),
-                  forcing_file_path(std::move(forcing_file_path)),
-                  bmi_model_has_fixed_time_step(has_fixed_time_step),
-                  allow_model_exceed_end_time(allow_exceed_end),
-                  output(std::move(output)),
-                  bmi_model_time_convert_factor(1.0)
-            {
-                // This replicates a lot of Initialize, but it's necessary to be able to do it separately to support
-                // "initializing" on construction, given using Initialize requires use of virtual functions
-                errno = 0;
-                if (!utils::FileChecker::file_is_readable(this->bmi_init_config)) {
-                    init_exception_msg = "Cannot create and initialize " + this->model_name + " using unreadable file '"
-                            + this->bmi_init_config + "'. Error: "+std::strerror(errno);
-                    throw std::runtime_error(init_exception_msg);
-                }
-            }
+                        bool has_fixed_time_step, utils::StreamHandler output);
 
             Bmi_Adapter(Bmi_Adapter const&) = delete;
             Bmi_Adapter(Bmi_Adapter &&) = default;
 
-            virtual ~Bmi_Adapter() = 0;
+            virtual ~Bmi_Adapter() = default;
 
             /**
              * Whether the backing model has been initialized yet.
@@ -62,12 +42,7 @@ namespace models {
              * return an appropriate factor for converting its internal time values to equivalent representations
              * within the model, and vice versa. This function complies with the BMI get_time_units standard
              */
-            double get_time_convert_factor() {
-                double value = 1.0;
-                std::string input_units = GetTimeUnits();
-                std::string output_units = "s";
-                return UnitsHelper::get_converted_value(input_units, value, output_units);
-            }
+            double get_time_convert_factor();
 
             /**
              * Convert model time value to value in seconds.
@@ -78,9 +53,7 @@ namespace models {
              * @param model_time_val Arbitrary model time value in units provided by `GetTimeUnits()`
              * @return Equivalent model time value to value in seconds.
              */
-            double convert_model_time_to_seconds(const double& model_time_val) {
-                return model_time_val * bmi_model_time_convert_factor;
-            }
+            double convert_model_time_to_seconds(const double& model_time_val);
 
             /**
              * Convert a given number of seconds to equivalent in model time units.
@@ -88,9 +61,7 @@ namespace models {
              * @param seconds_val
              * @return
              */
-            double convert_seconds_to_model_time(const double& seconds_val) {
-                return seconds_val / bmi_model_time_convert_factor;
-            }
+            double convert_seconds_to_model_time(const double& seconds_val);
 
             /**
              * Get the name string for the C++ type analogous to the described type in the backing model.
@@ -134,39 +105,7 @@ namespace models {
              *                             config file could not be read.
              * @throws models::external::State_Exception   If `initialize()` in nested model does not return successful.
              */
-            void Initialize() {
-                // If there was previous init attempt but w/ failure exception, throw runtime error and include previous
-                // message
-                errno = 0;
-                if (model_initialized && !init_exception_msg.empty()) {
-                    throw std::runtime_error(
-                            "Previous " + model_name + " init attempt had exception: \n\t" + init_exception_msg);
-                }
-                    // If there was previous init attempt w/ (implicitly) no exception on previous attempt, just return
-                else if (model_initialized) {
-                    return;
-                }
-                else if (!utils::FileChecker::file_is_readable(bmi_init_config)) {
-                    init_exception_msg = "Cannot initialize " + model_name + " using unreadable file '"
-                            + bmi_init_config + "'. Error: "+std::strerror(errno);;
-                    throw std::runtime_error(init_exception_msg);
-                }
-                else {
-                    try {
-                        // TODO: make this same name as used with other testing (adjust name in docstring above also)
-                        construct_and_init_backing_model();
-                        // Make sure this is set to 'true' after this function call finishes
-                        model_initialized = true;
-                        bmi_model_time_convert_factor = get_time_convert_factor();
-                    }
-                        // Record the exception message before re-throwing to handle subsequent function calls properly
-                    catch (std::exception& e) {
-                        // Make sure this is set to 'true' after this function call finishes
-                        model_initialized = true;
-                        throw e;
-                    }
-                }
-            }
+            void Initialize();
 
             /**
              * Initialize the wrapped BMI model object using the given config file and the object's ``Initialize``
@@ -186,37 +125,14 @@ namespace models {
              * @throws models::external::State_Exception   If `initialize()` in nested model is not successful.
              * @throws runtime_error If already initialized but using a different file than the passed argument.
              */
-            void Initialize(std::string config_file) override {
-                if (config_file != bmi_init_config && model_initialized) {
-                    throw std::runtime_error(
-                            "Model init previously attempted; cannot change config from " + bmi_init_config + " to "
-                            + config_file);
-                }
-
-                if (config_file != bmi_init_config && !model_initialized) {
-                    output.put("Warning: initialization call changes model config from " + bmi_init_config + " to "
-                                + config_file);
-                    bmi_init_config = config_file;
-                }
-                try {
-                    Initialize();
-                }
-                catch (models::external::State_Exception &e) {
-                    throw e;
-                }
-                catch (std::exception &e) {
-                    throw std::runtime_error(e.what());
-                }
-            }
+            void Initialize(std::string config_file) override;
 
             /**
              * Get whether this instance has been initialized properly.
              *
              * @return Whether this instance has been initialized properly.
              */
-            inline bool isInitialized() {
-                return model_initialized;
-            }
+            bool isInitialized();
 
             /**
              * @brief Get the model name.
@@ -224,9 +140,7 @@ namespace models {
              * @return The name of the model connected to the adapter.
              * 
              */
-            inline std::string get_model_name(){
-                return model_name;
-            }
+            std::string get_model_name();
 
         protected:
             /** Whether model ``Update`` calls are allowed and handled in some way by the backing model. */

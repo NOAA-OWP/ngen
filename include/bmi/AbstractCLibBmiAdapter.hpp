@@ -5,8 +5,6 @@
 
 #include "Bmi_Adapter.hpp"
 
-#include "utilities/ExternalIntegrationException.hpp"
-
 namespace models {
     namespace bmi {
 
@@ -28,21 +26,9 @@ namespace models {
              */
             AbstractCLibBmiAdapter(const std::string &type_name, std::string library_file_path, std::string bmi_init_config,
                                    std::string forcing_file_path, bool allow_exceed_end, bool has_fixed_time_step,
-                                   std::string registration_func, utils::StreamHandler output)
-                    : Bmi_Adapter(type_name, std::move(bmi_init_config), std::move(forcing_file_path),
-                                     allow_exceed_end, has_fixed_time_step, output),
-                      bmi_lib_file(std::move(library_file_path)),
-                      bmi_registration_function(std::move(registration_func)) { }
+                                   std::string registration_func, utils::StreamHandler output);
 
-            AbstractCLibBmiAdapter(AbstractCLibBmiAdapter &&adapter) noexcept :
-                    Bmi_Adapter(std::move(adapter)),
-                    bmi_lib_file(std::move(adapter.bmi_lib_file)),
-                    bmi_registration_function(adapter.bmi_registration_function),
-                    dyn_lib_handle(adapter.dyn_lib_handle)
-            {
-                // Have to make sure to do this after "moving" so the original does not close the dynamically loaded library handle
-                adapter.dyn_lib_handle = nullptr;
-            }
+            AbstractCLibBmiAdapter(AbstractCLibBmiAdapter &&adapter) noexcept;
 
             /**
              * Class destructor.
@@ -50,9 +36,7 @@ namespace models {
              * Note that this performs the logic in the `Finalize()` function for cleaning up this object and its
              * backing BMI model.
              */
-            ~AbstractCLibBmiAdapter() override {
-                finalizeForLibAbstraction();
-            }
+            ~AbstractCLibBmiAdapter() override;
 
             /**
              * Perform tear-down task for this object and its backing model.
@@ -68,77 +52,14 @@ namespace models {
              *
              * @throws models::external::State_Exception Thrown if nested model `finalize()` call is not successful.
              */
-            void Finalize() override {
-                finalizeForLibAbstraction();
-            }
+            void Finalize() override;
 
         protected:
 
             /**
              * Dynamically load and obtain this instance's handle to the shared library.
              */
-            inline void dynamic_library_load() {
-                if (bmi_registration_function.empty()) {
-                    this->init_exception_msg =
-                            "Can't init " + this->model_name + "; empty name given for library's registration function.";
-                    throw std::runtime_error(this->init_exception_msg);
-                }
-                if (dyn_lib_handle != nullptr) {
-                    this->output.put("WARNING: ignoring attempt to reload dynamic shared library '" + bmi_lib_file +
-                    "' for " + this->model_name);
-                    return;
-                }
-                if (!utils::FileChecker::file_is_readable(bmi_lib_file)) {
-                    //Try alternative extension...
-                    size_t idx = bmi_lib_file.rfind(".");
-                    if(idx == std::string::npos){
-                        idx = bmi_lib_file.length()-1;
-                    }
-                    std::string alt_bmi_lib_file;  
-                    if(bmi_lib_file.length() == 0){
-                        this->init_exception_msg =
-                                "Can't init " + this->model_name + "; library file path is empty";
-                        throw std::runtime_error(this->init_exception_msg);
-                    }
-                    if(bmi_lib_file.substr(idx) == ".so"){
-                        alt_bmi_lib_file = bmi_lib_file.substr(0,idx) + ".dylib";
-                    } else if(bmi_lib_file.substr(idx) == ".dylib"){
-                        alt_bmi_lib_file = bmi_lib_file.substr(0,idx) + ".so";
-                    } else {
-                        // Try appending instead of replacing...
-                        #ifdef __APPLE__
-                        alt_bmi_lib_file = bmi_lib_file + ".dylib";
-                        #else
-                        #ifdef __GNUC__
-                        alt_bmi_lib_file = bmi_lib_file + ".so";
-                        #endif // __GNUC__
-                        #endif // __APPLE__
-                    }
-                    //TODO: Try looking in e.g. /usr/lib, /usr/local/lib, $LD_LIBRARY_PATH... try pre-pending "lib"...
-                    if (utils::FileChecker::file_is_readable(alt_bmi_lib_file)) {
-                        bmi_lib_file = alt_bmi_lib_file;
-                    } else {
-                        this->init_exception_msg =
-                                "Can't init " + this->model_name + "; unreadable shared library file '" + bmi_lib_file + "'";
-                        throw std::runtime_error(this->init_exception_msg);
-                    }
-
-                }
-
-                // Call first to ensure any previous error is cleared before trying to load the symbol
-                dlerror();
-                // Load up the necessary library dynamically
-                dyn_lib_handle = dlopen(bmi_lib_file.c_str(), RTLD_NOW | RTLD_LOCAL);
-                // Now call again to see if there was an error (if there was, this will not be null)
-                char *err_message = dlerror();
-                if (dyn_lib_handle == nullptr && err_message != nullptr) {
-                    this->init_exception_msg = "Cannot load shared lib '" + bmi_lib_file + "' for model " + this->model_name;
-                    if (err_message != nullptr) {
-                        this->init_exception_msg += " (" + std::string(err_message) + ")";
-                    }
-                    throw ::external::ExternalIntegrationException(this->init_exception_msg);
-                }
-            }
+            void dynamic_library_load();
 
             /**
              * Load and return the address of the given symbol from the loaded dynamic model shared library.
@@ -162,24 +83,7 @@ namespace models {
              * @throws ``std::runtime_error`` If there is not a valid handle already to the shared library.
              * @throws ``::external::ExternalIntegrationException`` If symbol could not be found for the shared library.
              */
-            inline void *dynamic_load_symbol(const std::string &symbol_name, bool is_null_valid) {
-                if (dyn_lib_handle == nullptr) {
-                    throw std::runtime_error("Cannot load symbol '" + symbol_name + "' without handle to shared library (bmi_lib_file = '" + bmi_lib_file + "')");
-                }
-                // Call first to ensure any previous error is cleared before trying to load the symbol
-                dlerror();
-                void *symbol = dlsym(dyn_lib_handle, symbol_name.c_str());
-                // Now call again to see if there was an error (if there was, this will not be null)
-                char *err_message = dlerror();
-                if (symbol == nullptr && (err_message != nullptr || !is_null_valid)) {
-                    this->init_exception_msg = "Cannot load shared lib symbol '" + symbol_name + "' for model " + this->model_name;
-                    if (err_message != nullptr) {
-                        this->init_exception_msg += " (" + std::string(err_message) + ")";
-                    }
-                    throw ::external::ExternalIntegrationException(this->init_exception_msg);
-                }
-                return symbol;
-            }
+            void *dynamic_load_symbol(const std::string &symbol_name, bool is_null_valid);
 
             /**
              * Convenience for @see dynamic_load_symbol(std::string, bool) where the symbol address must be found.
@@ -193,24 +97,18 @@ namespace models {
              * @throws ``::external::ExternalIntegrationException`` If symbol could not be found for the shared library.
              * @see dynamic_load_symbol(std::string, bool)
              */
-            inline void *dynamic_load_symbol(const std::string &symbol_name) {
-                return dynamic_load_symbol(symbol_name, false);
-            }
+            void *dynamic_load_symbol(const std::string &symbol_name);
 
-            inline const std::string &get_bmi_registration_function() {
-                return bmi_registration_function;
-            }
+            const std::string &get_bmi_registration_function();
 
-            inline const void *get_dyn_lib_handle() {
-                return dyn_lib_handle;
-            }
+            const void *get_dyn_lib_handle();
 
         private:
 
             /** Path to the BMI shared library file, for dynamic linking. */
             std::string bmi_lib_file;
             /** Name of the function that registers BMI struct's function pointers to the right module functions. */
-            const std::string bmi_registration_function;
+            std::string bmi_registration_function;
             /** Handle for dynamically loaded library file. */
             void *dyn_lib_handle = nullptr;
 
@@ -223,12 +121,7 @@ namespace models {
              * Primarily, this exists to contain the functionality appropriate for @see Finalize in a function that is
              * non-virtual, and can therefore be called by a destructor.
              */
-            void finalizeForLibAbstraction() {
-                //  close the dynamically loaded library
-                if (dyn_lib_handle != nullptr) {
-                    dlclose(dyn_lib_handle);
-                }
-            }
+            void finalizeForLibAbstraction();
         };
 
     }

@@ -12,6 +12,8 @@
 #include "pybind11/pytypes.h"
 #include "pybind11/numpy.h"
 
+#include "boost/algorithm/string/join.hpp"
+
 #include "Bmi_Adapter.hpp"
 
 #include "utilities/StreamHandler.hpp"
