@@ -36,7 +36,7 @@ namespace models {
              * Note that this performs the logic in the `Finalize()` function for cleaning up this object and its
              * backing BMI model.
              */
-            ~AbstractCLibBmiAdapter() override;
+            ~AbstractCLibBmiAdapter() noexcept override;
 
             /**
              * Perform tear-down task for this object and its backing model.
