@@ -12,6 +12,8 @@ namespace py = pybind11;
 
 #include "Bmi_Py_Adapter.hpp"
 
+#include "utilities/FileChecker.h"
+
 using namespace models::bmi;
 using namespace utils::ngenPy;
 using namespace pybind11::literals; // to bring in the `_a` literal for pybind11 keyword args functionality
