@@ -49,7 +49,7 @@ namespace models {
              * Note that this performs the logic in the `Finalize()` function for cleaning up this object and its
              * backing BMI model.
              */
-            virtual ~AbstractCLibBmiAdapter() {
+            ~AbstractCLibBmiAdapter() override {
                 finalizeForLibAbstraction();
             }
 

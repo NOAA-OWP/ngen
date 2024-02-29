@@ -112,7 +112,7 @@ namespace models {
              *
              * Note that this calls the `Finalize()` function for cleaning up this object and its backing BMI model.
              */
-            virtual ~Bmi_Cpp_Adapter() {
+            ~Bmi_Cpp_Adapter() override {
                 finalizeForCppAdapter();
             }
 

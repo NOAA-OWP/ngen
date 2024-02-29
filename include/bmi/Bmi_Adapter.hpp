@@ -43,6 +43,8 @@ namespace models {
             Bmi_Adapter(Bmi_Adapter const&) = delete;
             Bmi_Adapter(Bmi_Adapter &&) = default;
 
+            virtual ~Bmi_Adapter() = 0;
+
             /**
              * Whether the backing model has been initialized yet.
              *

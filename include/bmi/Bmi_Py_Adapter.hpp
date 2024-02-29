@@ -44,6 +44,10 @@ namespace models {
             Bmi_Py_Adapter(Bmi_Py_Adapter const&) = delete;
             Bmi_Py_Adapter(Bmi_Py_Adapter&&) = delete;
 
+            ~Bmi_Py_Adapter() override {
+                Finalize();
+            }
+
             /**
              * Copy the given BMI variable's values from the backing numpy array to a C++ array.
              *

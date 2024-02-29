@@ -101,7 +101,7 @@ namespace models {
              *
              * Note that this calls the `Finalize()` function for cleaning up this object and its backing BMI model.
              */
-            virtual ~Bmi_C_Adapter() {
+            ~Bmi_C_Adapter() override {
                 finalizeForCAdapter();
             }
 
