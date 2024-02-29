@@ -27,8 +27,6 @@ AbstractCLibBmiAdapter::AbstractCLibBmiAdapter(
     , bmi_lib_file(std::move(library_file_path))
     , bmi_registration_function(std::move(registration_func)){};
 
-AbstractCLibBmiAdapter::AbstractCLibBmiAdapter(AbstractCLibBmiAdapter&& adapter) noexcept = default;
-
 AbstractCLibBmiAdapter::~AbstractCLibBmiAdapter() {
     finalizeForLibAbstraction();
 }
