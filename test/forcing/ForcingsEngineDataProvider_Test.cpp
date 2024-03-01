@@ -7,9 +7,12 @@
 
 #include <boost/range/combine.hpp>
 
+#include "NGenConfig.h"
 #if NGEN_WITH_MPI
 #include <mpi.h>
 #endif
+
+static int mpi_init = 0, mpi_final = 0;
 
 class ForcingsEngineDataProviderTest : public testing::Test
 {
@@ -17,23 +20,56 @@ class ForcingsEngineDataProviderTest : public testing::Test
     // Compile-time data
     static constexpr const char* config_file = "extern/ngen-forcing/NextGen_Forcings_Engine_BMI/NextGen_Forcings_Engine/config.yml";
     static std::shared_ptr<utils::ngenPy::InterpreterUtil> gil_;
-    int mpi_size = 1;
-    int mpi_rank = 0;
+    static data_access::ForcingsEngineDataProvider         provider;
+    forcing_params                                         params;
+    int                                                    mpi_size = 1;
+    int                                                    mpi_rank = 0;
 
   public:
-
     // Members
     ForcingsEngineDataProviderTest()
-      : provider(config_file, "2024-01-17 01:00:00", "2024-01-17 06:00:00")
-      , params("", "ForcingsEngine", "2024-01-17 01:00:00", "2024-01-17 06:00:00")
-    {};
+      : params("", "ForcingsEngine", "2024-01-17 01:00:00", "2024-01-17 06:00:00")
+    {
+        std::cout << "ForcingsEngineDataProviderTest::ForcingsEngineDataProviderTest()" << '\n';
+        #if NGEN_WITH_MPI
+        MPI_Comm_size(MPI_COMM_WORLD, &mpi_size);
+        MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
+        #endif
+    };
 
-    data_access::ForcingsEngineDataProvider         provider;
-    forcing_params                                  params;
-    
+    ~ForcingsEngineDataProviderTest() override {
+        std::cout << "ForcingsEngineDataProviderTest::~ForcingsEngineDataProviderTest()" << '\n';
+    }
+
+    static void SetUpTestSuite()
+    {
+        std::cout << "ForcingsEngineDataProviderTest::SetUpTestSuite()" << '\n';
+        #if NGEN_WITH_MPI
+        MPI_Initialized(&mpi_init);
+        if (mpi_init == 0) {
+            MPI_Init(nullptr, nullptr);
+        }
+        #endif
+
+        ForcingsEngineDataProviderTest::gil_ = utils::ngenPy::InterpreterUtil::getInstance();
+        ForcingsEngineDataProviderTest::provider = { config_file, "2024-01-17 01:00:00", "2024-01-17 06:00:00" };
+    }
+
+    static void TearDownTestSuite()
+    {
+        std::cout << "ForcingsEngineDataProviderTest::TearDownTestSuite() 1" << '\n';
+        #if NGEN_WITH_MPI
+        MPI_Finalized(&mpi_final);
+        if (mpi_final == 0) {
+            MPI_Finalize();
+        }
+        #endif
+        std::cout << "ForcingsEngineDataProviderTest::TearDownTestSuite() 2" << '\n';
+    }    
 };
 
-std::shared_ptr<utils::ngenPy::InterpreterUtil> ForcingsEngineDataProviderTest::gil_ = utils::ngenPy::InterpreterUtil::getInstance();
+std::shared_ptr<utils::ngenPy::InterpreterUtil> ForcingsEngineDataProviderTest::gil_{};
+data_access::ForcingsEngineDataProvider ForcingsEngineDataProviderTest::provider{};
 
 // Tests that the forcings engine data provider correctly indexes epochs
 // to unitless indices along its given temporal domain.
@@ -125,12 +161,8 @@ TEST_F(ForcingsEngineDataProviderTest, MPICommunicators) {
 #if !NGEN_WITH_MPI
     GTEST_SKIP() << "Test is not MPI-enabled, or only has 1 process";
 #else
-    MPI_Init(nullptr, nullptr);
-    MPI_Comm_size(MPI_COMM_WORLD, &this->mpi_size);
-    MPI_Comm_rank(MPI_COMM_WORLD, &this->mpi_rank);
-
     if (this->mpi_rank == 0) {
-        provider.set_communicator(MPI_Comm_c2f(MPI_COMM_SELF));
+        // provider.set_communicator(MPI_Comm_c2f(MPI_COMM_SELF));
     }
     // ------------------------------------------------------------------------
     // Further calls to the provider should only use rank 0.
@@ -138,7 +170,7 @@ TEST_F(ForcingsEngineDataProviderTest, MPICommunicators) {
     // ------------------------------------------------------------------------
     // If this test gets called before other tests, let's reset back to MPI_COMM_WORLD
     if (this->mpi_rank == 0) {
-        provider.set_communicator(MPI_Comm_c2f(MPI_COMM_WORLD));
+        // provider.set_communicator(MPI_Comm_c2f(MPI_COMM_WORLD));
     }
 #endif
 }
