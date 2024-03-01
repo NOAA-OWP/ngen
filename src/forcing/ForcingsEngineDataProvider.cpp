@@ -15,6 +15,8 @@ struct ForcingsEngine
     using clock_type                = std::chrono::system_clock;
     static constexpr auto bad_index = static_cast<size_type>(-1);
 
+    void set_communicator(int handle);
+
     auto outputs() const noexcept
       -> boost::span<const std::string>;
 
@@ -175,6 +177,11 @@ void ForcingsEngine::check_runtime_requirements()
             throw std::runtime_error{"Failed to initialize ForcingsEngine: $WGRIB2 is not defined"};
         }
     }
+}
+
+void ForcingsEngine::set_communicator(int handle)
+{
+    bmi_->set_value<int>("bmi_mpi_comm_handle", { handle });
 }
 
 auto ForcingsEngine::outputs() const noexcept
@@ -343,6 +350,10 @@ ForcingsEngineDataProvider::ForcingsEngineDataProvider(
 ){};
 
 ForcingsEngineDataProvider::~ForcingsEngineDataProvider() = default;
+
+void ForcingsEngineDataProvider::set_communicator(int handle) {
+    this->engine_->set_communicator(handle);
+}
 
 auto ForcingsEngineDataProvider::get_available_variable_names()
   -> boost::span<const std::string>

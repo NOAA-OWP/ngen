@@ -11,6 +11,8 @@ struct ForcingsEngineDataProvider
   : public GenericDataProvider
 {
 
+    ForcingsEngineDataProvider() = default;
+
     ForcingsEngineDataProvider(
         const std::string& init,
         std::size_t time_start,
