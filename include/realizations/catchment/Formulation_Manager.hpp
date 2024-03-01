@@ -12,9 +12,7 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <FeatureBuilder.hpp>
-#include "JSONProperty.hpp"
 #include "features/Features.hpp"
-#include <FeatureCollection.hpp>
 #include "Formulation_Constructors.hpp"
 #include "LayerData.hpp"
 #include "realizations/config/time.hpp"
@@ -120,11 +118,12 @@ namespace realization {
                             );
                             domain_formulations.at(layer_desc.id)->set_output_stream(get_output_root() + layer_desc.name + "_layer_"+std::to_string(layer_desc.id) + ".csv");
                         }
-
-                        // debuggin print to see parsed data
-                        std::cout << layer_desc.name << ", " << layer_desc.id << ", " << layer_desc.time_step << ", " << layer_desc.time_step_units << "\n";
+                        //TODO for each layer, create deferred providers for use by other layers
+                        //VERY SIMILAR TO NESTED MODULE INIT
                     }
                 }
+
+                //TODO use the set of layer providers as input for catchments to lookup from
 
                 /**
                  * Read routing configurations from configuration file
