@@ -98,6 +98,28 @@ namespace realization {
 
                         // add the layer to storage
                         layer_storage.put_layer(layer_desc, layer_desc.id);
+                        // debuggin print to see parsed data
+                        //std::cout << layer_desc.name << ", " << layer_desc.id << ", " << layer_desc.time_step << ", " << layer_desc.time_step_units << "\n";
+                        if(layer.has_formulation() && layer.get_domain()=="catchments"){
+                            auto formulation = construct_formulation_from_config(simulation_time_config,
+                            "layer-"+std::to_string(layer_desc.id),
+                            layer.formulation,
+                            output_stream
+                            );
+                            double c_value = UnitsHelper::get_converted_value(layer_desc.time_step_units,layer_desc.time_step,"s");
+                            // make a new simulation time object with a different output interval
+                            Simulation_Time sim_time(*Simulation_Time_Object, c_value);
+                            //formulation->set_output_stream(get_output_root() + layer_desc.name + "_layer_"+std::to_string(layer_desc.id) + ".csv");
+                            domain_formulations.emplace(
+                                layer_desc.id,
+                                construct_formulation_from_config(simulation_time_config,
+                                "layer-"+std::to_string(layer_desc.id),
+                                layer.formulation,
+                                output_stream
+                                )
+                            );
+                            domain_formulations.at(layer_desc.id)->set_output_stream(get_output_root() + layer_desc.name + "_layer_"+std::to_string(layer_desc.id) + ".csv");
+                        }
 
                         // debuggin print to see parsed data
                         std::cout << layer_desc.name << ", " << layer_desc.id << ", " << layer_desc.time_step << ", " << layer_desc.time_step_units << "\n";
@@ -178,6 +200,14 @@ namespace realization {
             virtual std::shared_ptr<Catchment_Formulation> get_formulation(std::string id) const {
                 // TODO: Implement on-the-fly formulation creation using global parameters
                 return this->formulations.at(id);
+            }
+
+            virtual std::shared_ptr<Catchment_Formulation> get_domain_formulation(long id) const {
+                return this->domain_formulations.at(id);
+            }
+
+            virtual bool has_domain_formulation(int id) const {
+                return this->domain_formulations.count( id ) > 0;
             }
 
             virtual bool contains(std::string identifier) const {
@@ -592,6 +622,9 @@ namespace realization {
             realization::config::Config global_config;
 
             std::map<std::string, std::shared_ptr<Catchment_Formulation>> formulations;
+
+            //Store global layer formulation pointers
+            std::map<int, std::shared_ptr<Catchment_Formulation> > domain_formulations;
 
             std::shared_ptr<routing_params> routing_config;
 
