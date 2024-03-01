@@ -40,6 +40,27 @@ namespace ngen
 
         }
 
+        /**
+         * @brief Construct a minimum layer object
+         * 
+         * @param desc 
+         * @param s_t 
+         * @param f 
+         * @param idx 
+         */
+        Layer(
+                const LayerDescription& desc, 
+                const Simulation_Time& s_t, 
+                feature_type& f,
+                long idx) :
+            description(desc),
+            simulation_time(s_t),
+            features(f),
+            output_time_index(idx)
+        {
+
+        }
+
         virtual ~Layer() {}
 
         /***
@@ -138,9 +159,12 @@ namespace ngen
         protected:
 
         const LayerDescription description;
+        //TODO is this really required at the top level?
+        //See "mimimum" constuctor above used for DomainLayer impl...
         const std::vector<std::string> processing_units;
         Simulation_Time simulation_time;
         feature_type& features;
+        //TODO is this really required at the top level? or can this be moved to SurfaceLayer?
         const geojson::GeoJSON catchment_data;
         long output_time_index;       
 
