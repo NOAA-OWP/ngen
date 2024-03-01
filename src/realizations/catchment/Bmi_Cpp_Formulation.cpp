@@ -52,6 +52,8 @@ std::string Bmi_Cpp_Formulation::get_output_header_line(std::string delimiter) {
 std::string Bmi_Cpp_Formulation::get_output_line_for_timestep(int timestep, std::string delimiter) {
     // TODO: something must be added to store values if more than the current time step is wanted
     // TODO: if such a thing is added, it should probably be configurable to turn it off
+    std::string output_header = get_output_header_line(",");
+
     if (timestep != (next_time_step_index - 1)) {
         throw std::invalid_argument("Only current time step valid when getting output for BMI C++ formulation");
     }
@@ -134,6 +136,15 @@ double Bmi_Cpp_Formulation::get_response(time_step_t t_index, time_step_t t_delt
         next_time_step_index++;
     }
     return get_var_value_as_double( get_bmi_main_output_var());
+}
+
+std::vector<double> Bmi_Cpp_Formulation::get_var_vec_as_double(time_t t_delta, const std::string &var_name) {
+    time_t start_time = convert_model_time(get_bmi_model()->GetCurrentTime()) + get_bmi_model_start_time_forcing_offset_s();
+    std::string bmi_var_name;
+    Bmi_Module_Formulation::get_bmi_output_var_name(var_name, bmi_var_name);
+    auto selector = CatchmentAggrDataSelector(std::string(),bmi_var_name,start_time,t_delta,"1");
+    std::vector<double> value_vec = get_values(selector);
+    return value_vec;
 }
 
 double Bmi_Cpp_Formulation::get_var_value_as_double(const std::string& var_name) {

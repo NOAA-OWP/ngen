@@ -132,6 +132,20 @@ void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap proper
         set_output_header_fields(get_output_variable_names());
     }
 
+    // Output bound box, if present
+    auto out_bbox_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_BBOX);
+    if (out_bbox_it != properties.end()) {
+        std::vector<geojson::JSONProperty> out_bbox_json_list = out_bbox_it->second.as_list();
+        std::vector<int> out_bbox(out_bbox_json_list.size());
+        for (int i = 0; i < out_bbox_json_list.size(); ++i) {
+            out_bbox[i] = out_bbox_json_list[i].as_natural_number();
+        }
+        set_output_bbox(out_bbox);
+    }
+    //else {
+    //    throw std::runtime_error("Can't create Multi formulation: output bound box cannot be set");
+    //}
+
     // Output precision, if present
     auto out_precision_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION);
     if (out_precision_it != properties.end()) {
@@ -296,7 +310,6 @@ std::string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, st
 
     // Start by first checking whether we are NOT just using the last module's values
     if (!is_out_vars_from_last_mod) {
-
         // TODO: see Github issue 355: this design (and formulation output handling in general) needs to be reworked
         // Clear anything currently in the multi formulation's stream buffer
         output_text_stream->str(std::string());
@@ -305,12 +318,35 @@ std::string Bmi_Multi_Formulation::get_output_line_for_timestep(int timestep, st
         // This almost certainly should never happen, but just to be safe ...
         if (output_var_names.empty()) { return ""; }
 
-        // Do the first separately, without the leading comma
-        *output_text_stream << get_var_value_as_double(output_var_names[0]);
+        try {
+            time_t t_delta = timestep;
+            // Do the first separately, without the leading comma
+            auto output_data_provider_iter = availableData.find(output_var_names[0]);
 
-        // Do the rest with a leading comma
-        for (int i = 1; i < output_var_names.size(); ++i) {
-            *output_text_stream << delimiter << get_var_value_as_double(output_var_names[i]);
+            // Do the first without the leading comma
+            std::vector<double> vector_var_0;
+            //vector_var_0 = get_var_vec_as_double(0, output_var_names[0])[0];
+            vector_var_0 = get_var_vec_as_double(t_delta, output_var_names[0]);
+
+            for (int j = 0; j < vector_var_0.size(); ++j) {
+                *output_text_stream << ((output_text_stream->str()).empty() ? "" : ",") + std::to_string(vector_var_0[j]);
+            }
+
+            // Do the rest with a leading comma
+            std::vector<double> vector_var;
+            for (int i = 1; i < output_var_names.size(); ++i) {
+                vector_var = get_var_vec_as_double(t_delta, output_var_names[i]);
+                for (int j = 0; j < vector_var.size(); ++j) {
+                    *output_text_stream << ((output_text_stream->str()).empty() ? "" : ",") + std::to_string(vector_var[j]);
+                }
+            }
+            return output_text_stream->str();
+        }
+        catch (const std::exception &e) {
+            std::cerr << "WARN: " << e.what()
+                      << "; reverting to default behavior for multi-BMI formulation type (using last module)";
+            output_text_stream->str(std::string()); // ... clear any output contents being staged ...
+            is_out_vars_from_last_mod = true;          // ... revert to default behavior (just use last nested module)
         }
         return output_text_stream->str();
     }

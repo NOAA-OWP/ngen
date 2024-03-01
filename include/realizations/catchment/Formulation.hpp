@@ -72,6 +72,9 @@ namespace realization {
              */
             virtual std::string get_output_header_line(std::string delimiter=DEFAULT_FORMULATION_OUTPUT_DELIMITER) =0;
 
+            virtual std::vector<int> get_output_bbox_list() = 0;
+            //virtual std::string get_output_bbox_list(std::string delimiter=DEFAULT_FORMULATION_OUTPUT_DELIMITER) =0;
+
             /**
              * Get a formatted line of output values for the given time step as a delimited string.
              *

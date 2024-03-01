@@ -42,26 +42,17 @@ std::string Bmi_C_Formulation::get_output_header_line(std::string delimiter) {
 std::string Bmi_C_Formulation::get_output_line_for_timestep(int timestep, std::string delimiter) {
     // TODO: something must be added to store values if more than the current time step is wanted
     // TODO: if such a thing is added, it should probably be configurable to turn it off
+    std::string output_header = get_output_header_line(",");
+
     if (timestep != (next_time_step_index - 1)) {
-        throw std::invalid_argument("Only current time step valid when getting output for BMI C formulation");
+        throw std::invalid_argument("Only current time step valid when getting output for BMI C++ formulation");
     }
+    std::string output_str;
 
-    // TODO: see Github issue 355: this design (and formulation output handling in general) needs to be reworked
-    // Clear anything currently in there
-    output_text_stream->str(std::string());
-
-    const std::vector<std::string> &output_var_names = get_output_variable_names();
-    // This probably should never happen, but just to be safe ...
-    if (output_var_names.empty()) { return ""; }
-
-    // Do the first separately, without the leading comma
-    *output_text_stream << get_var_value_as_double(output_var_names[0]);
-
-    // Do the rest with a leading comma
-    for (int i = 1; i < output_var_names.size(); ++i) {
-        *output_text_stream << "," << get_var_value_as_double(output_var_names[i]);
+    for (const std::string& name : get_output_variable_names()) {
+        output_str += (output_str.empty() ? "" : ",") + std::to_string(get_var_value_as_double(name));
     }
-    return output_text_stream->str();
+    return output_str;
 }
 
 /**
@@ -135,6 +126,15 @@ double Bmi_C_Formulation::get_response(time_step_t t_index, time_step_t t_delta)
         next_time_step_index++;
     }
     return get_var_value_as_double( get_bmi_main_output_var());
+}
+
+std::vector<double> Bmi_C_Formulation::get_var_vec_as_double(time_t t_delta, const std::string &var_name) {
+    time_t start_time = convert_model_time(get_bmi_model()->GetCurrentTime()) + get_bmi_model_start_time_forcing_offset_s();
+    std::string bmi_var_name;
+    Bmi_Module_Formulation::get_bmi_output_var_name(var_name, bmi_var_name);
+    auto selector = CatchmentAggrDataSelector(std::string(),bmi_var_name,start_time,t_delta,"1");
+    std::vector<double> value_vec = get_values(selector);
+    return value_vec;
 }
 
 double Bmi_C_Formulation::get_var_value_as_double(const std::string& var_name) {

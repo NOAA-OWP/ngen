@@ -462,6 +462,41 @@ namespace realization {
         const time_t &get_bmi_model_start_time_forcing_offset_s() override {
             return bmi_model_start_time_forcing_offset_s;
         }
+
+        /**
+         * Get value for some BMI model variable.
+         *
+         * This function assumes that the given variable, while returned by the model within an array per the BMI spec,
+         * is actual a single, scalar value.  Thus, it returns what is at index 0 of the array reference.
+         *
+         * @param index
+         * @param var_name
+         * @return
+         */
+        virtual double get_var_value_as_double(const std::string& var_name) = 0;
+
+        /**
+         * Get value for some BMI model variable at a specific index.
+         *
+         * Function gets the value for a provided variable, returned from the backing model as an array, and returns the
+         * specific value at the desired index cast as a double type.
+         *
+         * The function makes several assumptions:
+         *
+         *     1. `index` is within array bounds
+         *     2. `var_name` is in the set of valid variable names for the model
+         *     3. the type for output variable allows the value to be cast to a `double` appropriately
+         *
+         * It falls to user (functions) of this function to ensure these assumptions hold before invoking.
+         *
+         * @param index
+         * @param var_name
+         * @return
+         */
+        virtual double get_var_value_as_double(const int& index, const std::string& var_name) = 0;
+
+        virtual std::vector<double> get_var_vec_as_double(time_t timestep, const std::string &var_name) = 0;
+
         /**
          * Universal logic applied when creating a BMI-backed formulation from NGen config.
          *
@@ -549,6 +584,26 @@ namespace realization {
             else {
                 set_output_header_fields(get_output_variable_names());
             }
+
+            // Output bound box, if present
+            auto out_bbox_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_BBOX);
+            if (out_bbox_it != properties.end()) {
+                std::vector<geojson::JSONProperty> out_bbox_json_list = out_bbox_it->second.as_list();
+                std::vector<int> out_bbox(out_bbox_json_list.size());
+                //std::vector<std::string> out_bbox(out_bbox_json_list.size());
+                std::cout << "out_bbox size: " << out_bbox_json_list.size() << std::endl;
+                for (int i = 0; i < out_bbox_json_list.size(); ++i) {
+                    out_bbox[i] = out_bbox_json_list[i].as_natural_number();
+                    //out_bbox[i] = out_bbox_json_list[i].as_string();
+                }
+                set_output_bbox(out_bbox);
+            }
+            //else {
+            //    throw std::runtime_error("Can't create BMI formulation: output bound box cannot be set");
+            //}
+
+            // Create a reference to this for ET by using a WrappedDataProvider
+            std::shared_ptr<data_access::GenericDataProvider> self = std::make_shared<data_access::WrappedDataProvider>(this);
 
             // Output precision, if present
             auto out_precision_it = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION);
@@ -963,6 +1018,7 @@ namespace realization {
                 BMI_REALIZATION_CFG_PARAM_OPT__VAR_STD_NAMES,
                 BMI_REALIZATION_CFG_PARAM_OPT__OUT_VARS,
                 BMI_REALIZATION_CFG_PARAM_OPT__OUT_HEADER_FIELDS,
+                BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_BBOX,
                 BMI_REALIZATION_CFG_PARAM_OPT__OUTPUT_PRECISION,
                 BMI_REALIZATION_CFG_PARAM_OPT__ALLOW_EXCEED_END,
                 BMI_REALIZATION_CFG_PARAM_OPT__FIXED_TIME_STEP,
