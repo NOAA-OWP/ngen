@@ -60,6 +60,7 @@ int mpi_num_procs;
 
 #include <Layer.hpp>
 #include <SurfaceLayer.hpp>
+#include <DomainLayer.hpp>
 
 std::unordered_map<std::string, std::ofstream> nexus_outfiles;
 
@@ -457,9 +458,7 @@ int main(int argc, char *argv[]) {
     // get the keys for the existing layers
     std::vector<int>& keys = layer_meta_data.get_keys();
 
-    // get the converted time steps for layers
-    double min_time_step;
-    double max_time_step;
+    //FIXME refactor the layer building to avoid this mess
     std::vector<double> time_steps;
     for(int i = 0; i < keys.size(); ++i)
     {
@@ -467,10 +466,6 @@ int main(int argc, char *argv[]) {
         double c_value = UnitsHelper::get_converted_value(m_data.time_step_units,m_data.time_step,"s");
         time_steps.push_back(c_value);
     }
-
-    std::vector<int> output_time_index;
-    output_time_index.resize(keys.size());
-    std::fill(output_time_index.begin(), output_time_index.end(),0);
 
     // now create the layer objects
 
@@ -487,15 +482,21 @@ int main(int argc, char *argv[]) {
 
       // make a new simulation time object with a different output interval
       Simulation_Time sim_time(*manager->Simulation_Time_Object, time_steps[i]);
-  
-      for ( std::string id : features.catchments(keys[i]) ) { cat_ids.push_back(id); }
-      if (keys[i] != 0 )
-      {
-        layers[i] = std::make_shared<ngen::Layer>(desc, cat_ids, sim_time, features, catchment_collection, 0);
+      if( manager->has_domain_formulation(keys[i])){
+        //create a domain wide layer
+        auto formulation = manager->get_domain_formulation(keys[i]);
+        layers[i] = std::make_shared<ngen::DomainLayer>(desc, sim_time, features, 0, formulation);
       }
-      else
-      {
-        layers[i] = std::make_shared<ngen::SurfaceLayer>(desc, cat_ids, sim_time, features, catchment_collection, 0, nexus_subset_ids, nexus_outfiles);
+      else{
+        for ( std::string id : features.catchments(keys[i]) ) { cat_ids.push_back(id); }
+        if (keys[i] != 0 )
+        {
+          layers[i] = std::make_shared<ngen::Layer>(desc, cat_ids, sim_time, features, catchment_collection, 0);
+        }
+        else
+        {
+          layers[i] = std::make_shared<ngen::SurfaceLayer>(desc, cat_ids, sim_time, features, catchment_collection, 0, nexus_subset_ids, nexus_outfiles);
+        }
       }
 
     }
@@ -533,7 +534,8 @@ int main(int argc, char *argv[]) {
           // only advance if you would not pass the master next time and the previous layer next time
           if ( layer_next_time <= next_time && layer_next_time <=  prev_layer_time)
           {
-            layer->update_models();
+            if(count%100==0) std::cout<<"Updating layer: "<<layer->get_name()<<"\n";
+            layer->update_models(); //assume update_models() calls time->advance_timestep()
             prev_layer_time = layer_next_time;
           }
           else
