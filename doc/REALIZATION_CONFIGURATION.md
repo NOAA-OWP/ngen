@@ -32,7 +32,7 @@ The `global` key-value object must contain the following two object keys:
   * Note: future versions could support breaking up `params` into additional key-value subobjects for `options` and `initial_conditions`
   * `params` must be a list that holds key-value pairs
 * `forcing`
-  * key-value object with keys for `file_pattern` and `path` that define the default CSV file pattern and path for the input forcings relative to the executable directory. More recently, `ngen` developed capability to handle forcing data in different format. Thus, a `provider` value parameter can be used to explicitly define the format of the forcing data, such as NetCDF format, in the form "provider": "NetCDF".
+  * key-value object with keys for `file_pattern` and `path` that define the default CSV file pattern and path for the input forcings relative to the executable directory. More recently, `ngen` developed the capability to handle forcing data in different formats. Thus, a `provider` value parameter can be used to explicitly define the format of the forcing data, such as NetCDF format, in the form "provider": "NetCDF".
 
 ```
 "global": {
