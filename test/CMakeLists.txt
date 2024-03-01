@@ -433,7 +433,7 @@ ngen_add_test(
 #endif()
 
 ngen_add_test(
-    test_bmi_forcing
+    test_forcings_engine
     OBJECTS
         forcing/ForcingsEngineDataProvider_Test.cpp
     LIBRARIES
