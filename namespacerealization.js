@@ -15,5 +15,6 @@ var namespacerealization =
     [ "create_formulation_constructor", "namespacerealization.html#a3cd7f3652715fac25a746ef1810a1cff", null ],
     [ "formulation_exists", "namespacerealization.html#a0328960a5fc84440b67f91a6d705f940", null ],
     [ "get_formulation_key", "namespacerealization.html#a60fd2dcdc052492d4ae87454567f2b61", null ],
+    [ "valid_formulation_keys", "namespacerealization.html#a6b6d6d33a273c0a3de61473e05881ef6", null ],
     [ "formulations", "namespacerealization.html#a8ac5516475ff281154dfa9a6e9292295", null ]
 ];

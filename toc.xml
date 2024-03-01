@@ -2025,6 +2025,28 @@
       </topic>
       <topic label="realization" href="namespacerealization.html">
         <topic label="config" href="namespacerealization_1_1config.html">
+          <topic label="Config" href="structrealization_1_1config_1_1_config.html">
+            <topic label="Config" href="structrealization_1_1config_1_1_config.html#a4c01c942c0d30cca1f9eb5beb41930de"/>
+            <topic label="Config" href="structrealization_1_1config_1_1_config.html#aceb0dab13241b783588dc9aea04f76cf"/>
+            <topic label="has_formulation" href="structrealization_1_1config_1_1_config.html#a23d056dab8408cc9e6b0d4f6546294eb"/>
+            <topic label="forcing" href="structrealization_1_1config_1_1_config.html#a29d482956c7e7e363b37ad9cbab7f72c"/>
+            <topic label="formulation" href="structrealization_1_1config_1_1_config.html#aa26f215e393f521357b655021b3f1119"/>
+          </topic>
+          <topic label="Forcing" href="structrealization_1_1config_1_1_forcing.html">
+            <topic label="Forcing" href="structrealization_1_1config_1_1_forcing.html#aaf2f95813e6e5db7228393ecc6c6c5dd"/>
+            <topic label="Forcing" href="structrealization_1_1config_1_1_forcing.html#ab6559c1c83861674fbb1ca6105ee78db"/>
+            <topic label="has_key" href="structrealization_1_1config_1_1_forcing.html#a13bc79d9ebaeced7519910cb6ba33156"/>
+            <topic label="parameters" href="structrealization_1_1config_1_1_forcing.html#a393e96a8db52ddc1840b9f9341739290"/>
+          </topic>
+          <topic label="Formulation" href="structrealization_1_1config_1_1_formulation.html">
+            <topic label="Formulation" href="structrealization_1_1config_1_1_formulation.html#a7aca3aa4e382671fdbb6d2aeeb64b75e"/>
+            <topic label="Formulation" href="structrealization_1_1config_1_1_formulation.html#a8d589c35031a3fdd4f94fadf380a3366"/>
+            <topic label="Formulation" href="structrealization_1_1config_1_1_formulation.html#aa075775d5cf1f86aa0f7fdff43e76404"/>
+            <topic label="link_external" href="structrealization_1_1config_1_1_formulation.html#af01e9a5f8eaaf29e45d4bdf4304383e1"/>
+            <topic label="nested" href="structrealization_1_1config_1_1_formulation.html#ac5771714000e91b553dfdb6fae15a090"/>
+            <topic label="parameters" href="structrealization_1_1config_1_1_formulation.html#a5c3aeb5ef66146128167fea250bbd431"/>
+            <topic label="type" href="structrealization_1_1config_1_1_formulation.html#a69273e7abbfc0a8c974d4c075c9fc18c"/>
+          </topic>
           <topic label="Routing" href="structrealization_1_1config_1_1_routing.html">
             <topic label="Routing" href="structrealization_1_1config_1_1_routing.html#acfb4b78887fb5fc3f413c5c87ad1d865"/>
             <topic label="params" href="structrealization_1_1config_1_1_routing.html#a39078491a8c6e29753e66ad7b41baa14"/>
@@ -2602,11 +2624,11 @@
           <topic label="~Formulation_Manager" href="classrealization_1_1_formulation___manager.html#ae7753b416b56cdef7d55d8ba8290c6ff"/>
           <topic label="add_formulation" href="classrealization_1_1_formulation___manager.html#aca754e4a64a79f0b86c0fa7a472aab94"/>
           <topic label="begin" href="classrealization_1_1_formulation___manager.html#a98d50446a65386a5bd0295e6bde56512"/>
-          <topic label="construct_formulation_from_tree" href="classrealization_1_1_formulation___manager.html#a89aeed055b9828a8994eee36fbb1ff03"/>
+          <topic label="construct_formulation_from_config" href="classrealization_1_1_formulation___manager.html#a4f21958f41bb6ef3dfe4fc82ac9c192d"/>
           <topic label="construct_missing_formulation" href="classrealization_1_1_formulation___manager.html#a3611f83dade280ed741729e875e0f823"/>
           <topic label="contains" href="classrealization_1_1_formulation___manager.html#ae28572ed2d9c6bf7849331d889b3c51b"/>
           <topic label="end" href="classrealization_1_1_formulation___manager.html#a6c5749e590142378b02976f6802407bd"/>
-          <topic label="get_forcing_params" href="classrealization_1_1_formulation___manager.html#ad08f6399a29ed66671b3dd1e6e2f7a39"/>
+          <topic label="get_forcing_params" href="classrealization_1_1_formulation___manager.html#a2ba4cf155d0e4ddfc9e37b6b377deed1"/>
           <topic label="get_formulation" href="classrealization_1_1_formulation___manager.html#ab3188606a0077deba49fe03e0ae76c43"/>
           <topic label="get_layer_metadata" href="classrealization_1_1_formulation___manager.html#ad0fc7e9108d8cd74963053d33986a6ce"/>
           <topic label="get_output_root" href="classrealization_1_1_formulation___manager.html#a1a2bb05d7eb2e2a815a05e0c049597bd"/>
@@ -2618,9 +2640,7 @@
           <topic label="parse_external_model_params" href="classrealization_1_1_formulation___manager.html#a2fdd32f683c0952a2adfd69099344ac1"/>
           <topic label="read" href="classrealization_1_1_formulation___manager.html#aab2168aff25e065967c382a2b6cef41a"/>
           <topic label="formulations" href="classrealization_1_1_formulation___manager.html#ae72b9762e8056a1787d69aed79919b9d"/>
-          <topic label="global_forcing" href="classrealization_1_1_formulation___manager.html#aefede1cd4a4aa13bae4e8a8cb58968b1"/>
-          <topic label="global_formulation_parameters" href="classrealization_1_1_formulation___manager.html#acd6121b421b707d9cd9459b330443c31"/>
-          <topic label="global_formulation_tree" href="classrealization_1_1_formulation___manager.html#a3ce2f6a9516aeef300950576148f8334"/>
+          <topic label="global_config" href="classrealization_1_1_formulation___manager.html#a158bc03a7f3200c6246f067b45af5546"/>
           <topic label="layer_storage" href="classrealization_1_1_formulation___manager.html#a0b50baa59826712652d559531463eefe"/>
           <topic label="routing_config" href="classrealization_1_1_formulation___manager.html#afdd18d85d9a4231e62621be37074320a"/>
           <topic label="Simulation_Time_Object" href="classrealization_1_1_formulation___manager.html#a79ca23652bcd0704c02b1deec405d680"/>
@@ -2632,6 +2652,7 @@
         <topic label="create_formulation_constructor" href="namespacerealization.html#a3cd7f3652715fac25a746ef1810a1cff"/>
         <topic label="formulation_exists" href="namespacerealization.html#a0328960a5fc84440b67f91a6d705f940"/>
         <topic label="get_formulation_key" href="namespacerealization.html#a60fd2dcdc052492d4ae87454567f2b61"/>
+        <topic label="valid_formulation_keys" href="namespacerealization.html#a6b6d6d33a273c0a3de61473e05881ef6"/>
         <topic label="formulations" href="namespacerealization.html#a8ac5516475ff281154dfa9a6e9292295"/>
       </topic>
       <topic label="utils" href="namespaceutils.html">
@@ -4213,6 +4234,28 @@
       </topic>
       <topic label="realization" href="namespacerealization.html">
         <topic label="config" href="namespacerealization_1_1config.html">
+          <topic label="Config" href="structrealization_1_1config_1_1_config.html">
+            <topic label="Config" href="structrealization_1_1config_1_1_config.html#a4c01c942c0d30cca1f9eb5beb41930de"/>
+            <topic label="Config" href="structrealization_1_1config_1_1_config.html#aceb0dab13241b783588dc9aea04f76cf"/>
+            <topic label="has_formulation" href="structrealization_1_1config_1_1_config.html#a23d056dab8408cc9e6b0d4f6546294eb"/>
+            <topic label="forcing" href="structrealization_1_1config_1_1_config.html#a29d482956c7e7e363b37ad9cbab7f72c"/>
+            <topic label="formulation" href="structrealization_1_1config_1_1_config.html#aa26f215e393f521357b655021b3f1119"/>
+          </topic>
+          <topic label="Forcing" href="structrealization_1_1config_1_1_forcing.html">
+            <topic label="Forcing" href="structrealization_1_1config_1_1_forcing.html#aaf2f95813e6e5db7228393ecc6c6c5dd"/>
+            <topic label="Forcing" href="structrealization_1_1config_1_1_forcing.html#ab6559c1c83861674fbb1ca6105ee78db"/>
+            <topic label="has_key" href="structrealization_1_1config_1_1_forcing.html#a13bc79d9ebaeced7519910cb6ba33156"/>
+            <topic label="parameters" href="structrealization_1_1config_1_1_forcing.html#a393e96a8db52ddc1840b9f9341739290"/>
+          </topic>
+          <topic label="Formulation" href="structrealization_1_1config_1_1_formulation.html">
+            <topic label="Formulation" href="structrealization_1_1config_1_1_formulation.html#a7aca3aa4e382671fdbb6d2aeeb64b75e"/>
+            <topic label="Formulation" href="structrealization_1_1config_1_1_formulation.html#a8d589c35031a3fdd4f94fadf380a3366"/>
+            <topic label="Formulation" href="structrealization_1_1config_1_1_formulation.html#aa075775d5cf1f86aa0f7fdff43e76404"/>
+            <topic label="link_external" href="structrealization_1_1config_1_1_formulation.html#af01e9a5f8eaaf29e45d4bdf4304383e1"/>
+            <topic label="nested" href="structrealization_1_1config_1_1_formulation.html#ac5771714000e91b553dfdb6fae15a090"/>
+            <topic label="parameters" href="structrealization_1_1config_1_1_formulation.html#a5c3aeb5ef66146128167fea250bbd431"/>
+            <topic label="type" href="structrealization_1_1config_1_1_formulation.html#a69273e7abbfc0a8c974d4c075c9fc18c"/>
+          </topic>
           <topic label="Routing" href="structrealization_1_1config_1_1_routing.html">
             <topic label="Routing" href="structrealization_1_1config_1_1_routing.html#acfb4b78887fb5fc3f413c5c87ad1d865"/>
             <topic label="params" href="structrealization_1_1config_1_1_routing.html#a39078491a8c6e29753e66ad7b41baa14"/>
@@ -4789,11 +4832,11 @@
           <topic label="~Formulation_Manager" href="classrealization_1_1_formulation___manager.html#ae7753b416b56cdef7d55d8ba8290c6ff"/>
           <topic label="add_formulation" href="classrealization_1_1_formulation___manager.html#aca754e4a64a79f0b86c0fa7a472aab94"/>
           <topic label="begin" href="classrealization_1_1_formulation___manager.html#a98d50446a65386a5bd0295e6bde56512"/>
-          <topic label="construct_formulation_from_tree" href="classrealization_1_1_formulation___manager.html#a89aeed055b9828a8994eee36fbb1ff03"/>
+          <topic label="construct_formulation_from_config" href="classrealization_1_1_formulation___manager.html#a4f21958f41bb6ef3dfe4fc82ac9c192d"/>
           <topic label="construct_missing_formulation" href="classrealization_1_1_formulation___manager.html#a3611f83dade280ed741729e875e0f823"/>
           <topic label="contains" href="classrealization_1_1_formulation___manager.html#ae28572ed2d9c6bf7849331d889b3c51b"/>
           <topic label="end" href="classrealization_1_1_formulation___manager.html#a6c5749e590142378b02976f6802407bd"/>
-          <topic label="get_forcing_params" href="classrealization_1_1_formulation___manager.html#ad08f6399a29ed66671b3dd1e6e2f7a39"/>
+          <topic label="get_forcing_params" href="classrealization_1_1_formulation___manager.html#a2ba4cf155d0e4ddfc9e37b6b377deed1"/>
           <topic label="get_formulation" href="classrealization_1_1_formulation___manager.html#ab3188606a0077deba49fe03e0ae76c43"/>
           <topic label="get_layer_metadata" href="classrealization_1_1_formulation___manager.html#ad0fc7e9108d8cd74963053d33986a6ce"/>
           <topic label="get_output_root" href="classrealization_1_1_formulation___manager.html#a1a2bb05d7eb2e2a815a05e0c049597bd"/>
@@ -4805,9 +4848,7 @@
           <topic label="parse_external_model_params" href="classrealization_1_1_formulation___manager.html#a2fdd32f683c0952a2adfd69099344ac1"/>
           <topic label="read" href="classrealization_1_1_formulation___manager.html#aab2168aff25e065967c382a2b6cef41a"/>
           <topic label="formulations" href="classrealization_1_1_formulation___manager.html#ae72b9762e8056a1787d69aed79919b9d"/>
-          <topic label="global_forcing" href="classrealization_1_1_formulation___manager.html#aefede1cd4a4aa13bae4e8a8cb58968b1"/>
-          <topic label="global_formulation_parameters" href="classrealization_1_1_formulation___manager.html#acd6121b421b707d9cd9459b330443c31"/>
-          <topic label="global_formulation_tree" href="classrealization_1_1_formulation___manager.html#a3ce2f6a9516aeef300950576148f8334"/>
+          <topic label="global_config" href="classrealization_1_1_formulation___manager.html#a158bc03a7f3200c6246f067b45af5546"/>
           <topic label="layer_storage" href="classrealization_1_1_formulation___manager.html#a0b50baa59826712652d559531463eefe"/>
           <topic label="routing_config" href="classrealization_1_1_formulation___manager.html#afdd18d85d9a4231e62621be37074320a"/>
           <topic label="Simulation_Time_Object" href="classrealization_1_1_formulation___manager.html#a79ca23652bcd0704c02b1deec405d680"/>
@@ -5647,6 +5688,9 @@
       <topic label="ngen::srs::epsg" href="structngen_1_1srs_1_1epsg.html"/>
       <topic label="ngen::traits::bool_pack&lt;... &gt;" href="structngen_1_1traits_1_1bool__pack.html"/>
       <topic label="ngen::traits::type_list&lt; Ts &gt;" href="structngen_1_1traits_1_1type__list.html"/>
+      <topic label="realization::config::Config" href="structrealization_1_1config_1_1_config.html"/>
+      <topic label="realization::config::Forcing" href="structrealization_1_1config_1_1_forcing.html"/>
+      <topic label="realization::config::Formulation" href="structrealization_1_1config_1_1_formulation.html"/>
       <topic label="realization::config::Routing" href="structrealization_1_1config_1_1_routing.html"/>
       <topic label="realization::config::Time" href="structrealization_1_1config_1_1_time.html"/>
       <topic label="realization::Formulation" href="classrealization_1_1_formulation.html">

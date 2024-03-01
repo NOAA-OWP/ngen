@@ -37,10 +37,8 @@ var searchData=
   ['get_5fvar_5fnbytes_34',['get_var_nbytes',['../struct_bmi.html#a624abb6d80d665ead8235aea36e1ce3c',1,'Bmi']]],
   ['get_5fvar_5ftype_35',['get_var_type',['../struct_bmi.html#a1f5a94a5b71999141c0cc31cb1d280e2',1,'Bmi']]],
   ['get_5fvar_5funits_36',['get_var_units',['../struct_bmi.html#a8ca6256250e4746f02720c479dbb6c8f',1,'Bmi']]],
-  ['global_5fforcing_37',['global_forcing',['../classrealization_1_1_formulation___manager.html#aefede1cd4a4aa13bae4e8a8cb58968b1',1,'realization::Formulation_Manager']]],
-  ['global_5fformulation_5fparameters_38',['global_formulation_parameters',['../classrealization_1_1_formulation___manager.html#acd6121b421b707d9cd9459b330443c31',1,'realization::Formulation_Manager']]],
-  ['global_5fformulation_5ftree_39',['global_formulation_tree',['../classrealization_1_1_formulation___manager.html#a3ce2f6a9516aeef300950576148f8334',1,'realization::Formulation_Manager']]],
-  ['graph_40',['graph',['../classnetwork_1_1_network.html#a81433a0d0c450c400051ac4b894d8eb5',1,'network::Network']]],
-  ['ground_5fwater_5fdeep_5flayer_41',['GROUND_WATER_DEEP_LAYER',['../class_h_y___catchment.html#aad15ceff27c27396918e8c528f185512',1,'HY_Catchment']]],
-  ['ground_5fwater_5fshallow_5flayer_42',['GROUND_WATER_SHALLOW_LAYER',['../class_h_y___catchment.html#aaa625493796d8cf9079ab2fb98554c07',1,'HY_Catchment']]]
+  ['global_5fconfig_37',['global_config',['../classrealization_1_1_formulation___manager.html#a158bc03a7f3200c6246f067b45af5546',1,'realization::Formulation_Manager']]],
+  ['graph_38',['graph',['../classnetwork_1_1_network.html#a81433a0d0c450c400051ac4b894d8eb5',1,'network::Network']]],
+  ['ground_5fwater_5fdeep_5flayer_39',['GROUND_WATER_DEEP_LAYER',['../class_h_y___catchment.html#aad15ceff27c27396918e8c528f185512',1,'HY_Catchment']]],
+  ['ground_5fwater_5fshallow_5flayer_40',['GROUND_WATER_SHALLOW_LAYER',['../class_h_y___catchment.html#aaa625493796d8cf9079ab2fb98554c07',1,'HY_Catchment']]]
 ];
