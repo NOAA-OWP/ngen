@@ -21,7 +21,7 @@ namespace realization{
      * 
      * Default objects have an "" type and and empty property map.
      */
-    Formulation():type(std::string()), parameters(geojson::PropertyMap()){}
+    Formulation() = default;
 
     /**
      * @brief Construct a new Formulation object
@@ -29,7 +29,7 @@ namespace realization{
      * @param type formulation type represented
      * @param params formulation parameter mapping
      */
-    Formulation(std::string& type, geojson::PropertyMap params):type(std::move(type)), parameters(params){}
+    Formulation(std::string type, geojson::PropertyMap params):type(std::move(type)), parameters(params){}
 
     /**
      * @brief Construct a new Formulation object from a boost property tree
