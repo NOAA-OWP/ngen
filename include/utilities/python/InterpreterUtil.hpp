@@ -146,7 +146,11 @@ namespace utils {
                 py::object requestedDirPath = Path(directoryPath);
                 if (py::bool_(requestedDirPath.attr("is_dir")())) {
                     if (std::find(sys_path_vector.begin(), sys_path_vector.end(), directoryPath) == sys_path_vector.end()) {
+#ifdef __APPLE__
+                        sys_path.attr("insert")(1, py::str(directoryPath));
+#else
                         sys_path.attr("insert")(sys_path_vector.size(), py::str(directoryPath));
+#endif
                     }
                 }
                 else {
