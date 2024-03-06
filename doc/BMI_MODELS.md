@@ -122,7 +122,9 @@ There are some special BMI formulation config parameters which are required in c
 ### Optional Parameters
 * `variables_names_map`
   * can specify a mapping of model variable names (input or output) to supported standard names
-  the [Bmi_Formulation.hpp](..include/realizations/catchment/Bmi_Formulation.hpp) file has a section where several supported standard names are defined and notes  
+  the [Bmi_Formulation.hpp](..include/realizations/catchment/Bmi_Formulation.hpp) file has a section where several supported standard names are defined and notes
+  * name mappings assigned to a module's input variables are one-to-one. meaning you cannot assign multiple aliases to given input.
+  * name mappings assigned to a module's output variables are many-to-one. meaning you can assign multiple aliases to a given output.
   * this can be useful in particular for informing the framework how to provide the input a model needs for execution
   * e.g.,  `"variables_names_map": {"model_variable_name": "standard_variable_name"}`
 * `model_params`
@@ -410,9 +412,10 @@ A few other items of note:
 
 * there are some constraints on input and output variables of the sub-modules of a multi-module formulation
   * output variables must be uniquely traceable
-    * there must not be any output variable from a sub-module for which there is another output variable in a different sub-module that has the same config-mapped alias
-    * when nothing is set for a variable in ``variables_names_map``, its alias is equal to its name
+    * no two output variables from different sub-modules can share the same `variables_names_map`ped alias
+    * when nothing is set for a variable in `variables_names_map`, its alias is equal to its name
     * when this doesn't hold, a unique mapped alias must be configured for one of the two (i.e., either an alias added, or changed to something different)
+      * if a sub-module does not add an alias and a sub-module requests data using the shared name, the module without the alias will provide the data no matter the sub-module order
   * input variables must have previously-identified data providers
     * every input variable must have its alias match a property from an output data source 
     * one way this works is if the alias is equal to the name of an externally available forcing property (e.g., AORC read from file) defined before the sub-module 
