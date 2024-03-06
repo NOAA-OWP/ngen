@@ -12,9 +12,9 @@ namespace data_access {
     /**
      * A specialized @WrappedDataProvider that is created without first knowing the backing source it wraps.
      *
-     * This type wraps another @ref ForcingProvider, similarly to its parent.  This is "optimistic," however, in that it
-     * is constructed without the backing data source it will wrap.  It only requires the data output names it expects
-     * to eventually be able to provide.
+     * This type wraps another @ref GenericDataProvider, similarly to its parent.  This is "optimistic," however, in
+     * that it is constructed without the backing data source it will wrap.  It only requires the data output names it
+     * expects to eventually be able to provide.
      *
      * This type allows for deferring reconciling of whether a provider for some data output is available.  This is
      * useful for situations when a required provider is not currently known, but is expected, and there will be ample
@@ -91,6 +91,10 @@ namespace data_access {
          * Get whether the instance is initialized such that it can handle requests to provide data.
          *
          * For this type, this is equivalent to whether the wrapped provider member has been set.
+         *
+         * Note that readiness is subject only to the result of @ref isWrappedProviderSet, which for this type (and
+         * generally) does not reflect the readiness state of the inner, wrapped provider. This effectively assumes it
+         * is ready prior to or immediately upon being set.
          *
          * @return Whether the instance is initialized such that it can handle requests to provide data.
          */
