@@ -114,7 +114,7 @@ namespace models {
             /** Path to the BMI shared library file, for dynamic linking. */
             std::string bmi_lib_file;
             /** Name of the function that registers BMI struct's function pointers to the right module functions. */
-            std::string bmi_registration_function;
+            const std::string bmi_registration_function;
             /** Handle for dynamically loaded library file. */
             void *dyn_lib_handle = nullptr;
 
