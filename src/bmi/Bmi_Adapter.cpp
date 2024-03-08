@@ -33,6 +33,8 @@ Bmi_Adapter::Bmi_Adapter(
     }
 }
 
+Bmi_Adapter::~Bmi_Adapter() = default;
+
 double Bmi_Adapter::get_time_convert_factor() {
     double value             = 1.0;
     std::string input_units  = GetTimeUnits();
