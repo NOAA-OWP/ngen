@@ -110,10 +110,7 @@ TEST_F(PartitionOneTest, TestPartitionData_1a)
     std::set_difference(cat_id_vec.begin(), cat_id_vec.end(), unique.begin(), unique.end(), std::inserter(duplicates, duplicates.end()));
 
     for( auto& id: duplicates){
-        if (!id.empty()) {
-            std::cout << "duplicates string set is not empty" << std::endl;
-            break;
-        }
+        std::cout << "duplicates string set contains " << id << std::endl;
     }
     ASSERT_EQ(duplicates.size(), 0);
 }
@@ -142,10 +139,7 @@ TEST_F(PartitionOneTest, TestPartitionData_1b)
     std::set_difference(nex_id_vec.begin(), nex_id_vec.end(), unique.begin(), unique.end(), std::inserter(duplicates, duplicates.end()));
 
     for( auto& id: duplicates){
-        if (!id.empty()) {
-            std::cout << "duplicates string set is not empty" << std::endl;
-            break;
-        }
+        std::cout << "duplicates string set contains " << id << std::endl;
     }
     ASSERT_EQ(duplicates.size(), 0);
 }
