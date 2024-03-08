@@ -511,6 +511,10 @@ This introduces a special case for when there is no previous time step.  Not eve
 > [!NOTE]
 > Currently only `double` default values are supported.
 
+##### Example Look-Back Config
+
+Below is a partial config example illustrating a look-back setup involving CFE and SoilMoistureProfile (SMP).  CFE relies upon the soil moisture profile value from SMP (mapped in both as `soil_moisture_profile__smp_output__cfe_input`) that was calculated in the previous time step.  Because SMP wasn't implemented to have its own default values for variables, a default value is supplied in the configuration that CFE will use in the first time step.
+
 ```javascript
 {
   "global": {
@@ -525,11 +529,46 @@ This introduces a special case for when there is no previous time step.  Not eve
           "main_output_variable": "Q_OUT",
           "default_output_values": [
             {
-              "name": "QINSUR",
-              "value": 42.0
+              "name": "soil_moisture_profile__smp_output__cfe_input",
+              "value": 1.2345
             }
           ],
           "modules": [
+            {
+              "name": "bmi_c",
+              "params": {
+                "model_type_name": "bmi_c_cfe",
+                "library_file": "./ngen/extern/cfe/cmake_build/libcfebmi",
+                "forcing_file": "",
+                "init_config": "./configs/cfe/cat-20521.txt",
+                "allow_exceed_end_time": true,
+                "main_output_variable": "Q_OUT",
+                "registration_function": "register_bmi_cfe",
+                "variables_names_map": {
+                  "soil_moisture_profile": "soil_moisture_profile__smp_output__cfe_input"
+                  "SOIL_STORAGE": "soil_storage__cfe_output__smp_input",
+                  "SOIL_STORAGE_CHANGE": "soil_storage__cfe_output__smp_input",
+                },
+                "uses_forcing_file": false
+              }
+            },
+            {
+              "name": "bmi_c++",
+              "params": {
+                "model_type_name": "bmi_smp",
+                "library_file": "./ngen/extern/SoilMoistureProfiles/cmake_build/libsmpbmi",
+                "init_config": "./configs/smp_cfe/cat-20521.txt",
+                "allow_exceed_end_time": true,
+                "main_output_variable": "soil_water_table",
+                "variables_names_map" : {
+                  "soil_storage" : "soil_storage__cfe_output__smp_input",
+                  "soil_storage_change" : "soil_storage__cfe_output__smp_input",
+                  "soil_moisture_profile": "soil_moisture_profile__smp_output__cfe_input"
+                },
+                "uses_forcing_file": false
+              }
+            }
+          ]
 ...
 ```
 
