@@ -127,18 +127,6 @@ void* AbstractCLibBmiAdapter::dynamic_load_symbol(
     return symbol;
 }
 
-void* AbstractCLibBmiAdapter::dynamic_load_symbol(const std::string& symbol_name) {
-    return dynamic_load_symbol(symbol_name, false);
-}
-
-const std::string& AbstractCLibBmiAdapter::get_bmi_registration_function() {
-    return bmi_registration_function;
-}
-
-const void* AbstractCLibBmiAdapter::get_dyn_lib_handle() {
-    return dyn_lib_handle;
-}
-
 void AbstractCLibBmiAdapter::finalizeForLibAbstraction() {
     //  close the dynamically loaded library
     if (dyn_lib_handle != nullptr) {

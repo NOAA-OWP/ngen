@@ -97,11 +97,17 @@ namespace models {
              * @throws ``::external::ExternalIntegrationException`` If symbol could not be found for the shared library.
              * @see dynamic_load_symbol(std::string, bool)
              */
-            void *dynamic_load_symbol(const std::string &symbol_name);
+            inline void *dynamic_load_symbol(const std::string& symbol_name) {
+                return dynamic_load_symbol(symbol_name, false);
+            }
 
-            const std::string &get_bmi_registration_function();
+            inline const std::string& get_bmi_registration_function() {
+                return bmi_registration_function;
+            }
 
-            const void *get_dyn_lib_handle();
+            inline const void *get_dyn_lib_handle() {
+                return dyn_lib_handle;
+            }
 
         private:
 
