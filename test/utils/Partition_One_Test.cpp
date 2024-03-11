@@ -19,7 +19,7 @@ class PartitionOneTest: public ::testing::Test {
     std::vector<std::string> hydro_fabric_paths;
 
     std::string catchmentDataFile;
-    geojson::GeoJSON catchment_collection;
+    geojson::GeoJSON catchment_collection, nexus_collection;
 
     std::vector<std::string> catchment_subset_ids;
     std::vector<std::string> nexus_subset_ids;
@@ -58,6 +58,12 @@ class PartitionOneTest: public ::testing::Test {
             std::string nex_id = feature->get_property("toid").as_string();
             partition_data.nexus_ids.emplace(nex_id);
         }
+    }
+
+    void read_file_nexus_data()
+    {
+        const std::string file_path = file_search(hydro_fabric_paths, "nexus_data.geojson");
+        nexus_collection = geojson::read(file_path, nexus_subset_ids);
     }
 
     void SetUp() override;
@@ -112,12 +118,33 @@ TEST_F(PartitionOneTest, TestPartitionData_1a)
     for( auto& id: duplicates){
         std::cout << "duplicates string set contains " << id << std::endl;
     }
+
+    //process the original read in data
+    std::vector<std::string> input_cat_ids;
+    for(auto& feature: *catchment_collection)
+    {
+        std::string cat_id = feature->get_id();
+        input_cat_ids.push_back(cat_id);
+    }
+    std::sort(input_cat_ids.begin(), input_cat_ids.end());
+    
+    for (int i = 0; i < input_cat_ids.size(); ++i) {
+        if (input_cat_ids[i] != cat_id_vec[i]) {
+            std::cout << "Input cat_id: " << input_cat_ids[i] << " differs from patition cat_id: " << cat_id_vec[i] << std::endl;
+        }
+    }
+
+    //get input number of catchments
+    int num_catchments = catchment_collection->get_size();
+
+    ASSERT_EQ(catchment_ids.size(), num_catchments);
     ASSERT_EQ(duplicates.size(), 0);
 }
 
 TEST_F(PartitionOneTest, TestPartitionData_1b)
 {
     read_file_generate_partition_data();
+    read_file_nexus_data();
 
     partition_one.generate_partition(catchment_collection);
     PartitionData data_struct = partition_one.partition_data;
@@ -141,6 +168,26 @@ TEST_F(PartitionOneTest, TestPartitionData_1b)
     for( auto& id: duplicates){
         std::cout << "duplicates string set contains " << id << std::endl;
     }
+
+    //process the original read in data
+    std::vector<std::string> input_nex_ids;
+    for(auto& feature: *nexus_collection)
+    {
+        std::string nex_id = feature->get_id();
+        input_nex_ids.push_back(nex_id);
+    }
+    std::sort(input_nex_ids.begin(), input_nex_ids.end());
+
+    for (int i = 0; i < input_nex_ids.size(); ++i) {
+        if (input_nex_ids[i] != nex_id_vec[i]) {
+            std::cout << "Input nex_id: " << input_nex_ids[i] << " differs from patition nex_id: " << nex_id_vec[i] << std::endl;
+        }
+    }
+
+    //get input number of nexus
+    int num_nexus = nexus_collection->get_size();
+
+    ASSERT_EQ(nexus_ids.size(), num_nexus);
     ASSERT_EQ(duplicates.size(), 0);
 }
 
