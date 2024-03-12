@@ -147,7 +147,14 @@ $(document).ready(function(){initNavTree('md_doc_2_b_m_i___m_o_d_e_l_s.html','')
 <li>BMI Python Example</li>
 </ul>
 </li>
-<li>Multi-Module BMI Formulations</li>
+<li>Multi-Module BMI Formulations<ul>
+<li>Passing Variables Between Nested Formulations<ul>
+<li>How Values Are Orchestrated</li>
+<li>Look-back and Default Values</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -217,8 +224,11 @@ Parameter Details:</h4>
 </ul>
 </li>
 <li><code>main_output_variable</code><ul>
-<li>the string value of the primary output variable</li>
-<li>this is the value that returned by the realization's <code>get_response()</code></li>
+<li>the name of the BMI variable returned by the catchment formulation's <code>get_response()</code> function</li>
+<li>this is colloquially referred to as the "main" output from the formulation, but is not directly related to catchment output files<ul>
+<li>see details on the optional <code>output_variables</code> config parameter for configuring output</li>
+</ul>
+</li>
 <li>the string must match an item return by the relevant variant of the BMI <code>get_output_var_names()</code> function</li>
 </ul>
 </li>
@@ -263,10 +273,17 @@ Semi-Optional Parameters</h2>
 Optional Parameters</h2>
 <ul>
 <li><code>variables_names_map</code><ul>
-<li>can specify a mapping of model variable names (input or output) to supported standard names the <a href="..include/realizations/catchment/Bmi_Formulation.hpp">Bmi_Formulation.hpp</a> file has a section where several supported standard names are defined and notes <br  />
+<li>can specify a mapping of one or more model variable names (input or output) to aliases used as a recognizable identifiers for those variables within the framework<ul>
+<li>e.g., <code>"variables_names_map": {"bmi_var_name_1": "framework_alias_1", "bmi_var_name_2": "framework_alias_2"}</code></li>
+</ul>
 </li>
-<li>this can be useful in particular for informing the framework how to provide the input a model needs for execution</li>
-<li>e.g., <code>"variables_names_map": {"model_variable_name": "standard_variable_name"}</code></li>
+<li>commonly, this is used to map a module's BMI variable names to standard names<ul>
+<li>this kind of mapping is often necessary to inform the framework how to provide an input - e.g., a forcings value - that a BMI module needs for execution</li>
+<li>the <a href="../include/forcing/AorcForcing.hpp">AorcForcing.hpp</a> file has a section where several supported standard names are defined and notes <br  />
+</li>
+<li>these typically conform to <a href="https://csdms.colorado.edu/wiki/CSDMS_Standard_Names">CSDMS Standard Names</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><code>model_params</code><ul>
@@ -507,33 +524,112 @@ Required Additional Fortran Registration Function</h3>
 <div class="line">    <span class="keyword">end function </span>register_bmi</div>
 </div><!-- fragment --><h1><a class="anchor" id="autotoc_md58"></a>
 Multi-Module BMI Formulations</h1>
-<p>It is possible to configure a formulation to be a combination of several different individual BMI module components. This is the <code>bmi_multi</code> formulation type.</p>
+<p>It is possible to configure a formulation to be a combination of several different individual BMI module components. This is the <code>bmi_multi</code> formulation type. At each time step, formulations of this type proceed through each nested module <em>in configured order</em> and call either the BMI <code>update()</code> or <code>update_until()</code> function for each.</p>
+<details >
+<summary >
+Click here for <code>bmi_multi</code> example</summary>
+<p></p>
+<div class="fragment"><div class="line">&quot;formulations&quot;: [</div>
+<div class="line">    {</div>
+<div class="line">        &quot;name&quot;: &quot;bmi_multi&quot;,</div>
+<div class="line">        &quot;params&quot;: {</div>
+<div class="line">            &quot;model_type_name&quot;: &quot;bmi_multi_pet_cfe&quot;,</div>
+<div class="line">            &quot;forcing_file&quot;: &quot;&quot;,</div>
+<div class="line">            &quot;init_config&quot;: &quot;&quot;,</div>
+<div class="line">            &quot;allow_exceed_end_time&quot;: true,</div>
+<div class="line">            &quot;main_output_variable&quot;: &quot;Q_OUT&quot;,</div>
+<div class="line">            &quot;modules&quot;: [</div>
+<div class="line">                {</div>
+<div class="line">                    &quot;name&quot;: &quot;bmi_c&quot;,</div>
+<div class="line">                    &quot;params&quot;: {</div>
+<div class="line">                        &quot;model_type_name&quot;: &quot;PET&quot;,</div>
+<div class="line">                        &quot;library_file&quot;: &quot;bmi_module_libs/libpetbmi.so&quot;,</div>
+<div class="line">                        &quot;forcing_file&quot;: &quot;&quot;,</div>
+<div class="line">                        &quot;init_config&quot;: &quot;config_dir/cat-10_pet_config.txt&quot;,</div>
+<div class="line">                        &quot;allow_exceed_end_time&quot;: true,</div>
+<div class="line">                        &quot;main_output_variable&quot;: &quot;water_potential_evaporation_flux&quot;,</div>
+<div class="line">                        &quot;registration_function&quot;:&quot;register_bmi_pet&quot;,</div>
+<div class="line">                        &quot;variables_names_map&quot;: {</div>
+<div class="line">                            &quot;water_potential_evaporation_flux&quot;: &quot;EVAPOTRANS&quot;</div>
+<div class="line">                        },</div>
+<div class="line">                        &quot;uses_forcing_file&quot;: false</div>
+<div class="line">                    }</div>
+<div class="line">                },</div>
+<div class="line">                {</div>
+<div class="line">                    &quot;name&quot;: &quot;bmi_c&quot;,</div>
+<div class="line">                    &quot;params&quot;: {</div>
+<div class="line">                        &quot;model_type_name&quot;: &quot;CFE&quot;,</div>
+<div class="line">                        &quot;library_file&quot;: &quot;bmi_module_libs/libcfebmi.so&quot;,</div>
+<div class="line">                        &quot;forcing_file&quot;: &quot;&quot;, </div>
+<div class="line">                        &quot;init_config&quot;: &quot;config_dir/cat-10_bmi_config_cfe_pass.txt&quot;,</div>
+<div class="line">                        &quot;allow_exceed_end_time&quot;: true,</div>
+<div class="line">                        &quot;main_output_variable&quot;: &quot;Q_OUT&quot;,</div>
+<div class="line">                        &quot;registration_function&quot;: &quot;register_bmi_cfe&quot;,</div>
+<div class="line">                        &quot;variables_names_map&quot;: {</div>
+<div class="line">                            &quot;atmosphere_water__liquid_equivalent_precipitation_rate&quot;: &quot;RAINRATE&quot;,</div>
+<div class="line">                            &quot;water_potential_evaporation_flux&quot;: &quot;EVAPOTRANS&quot;,</div>
+<div class="line">                            &quot;ice_fraction_schaake&quot;: &quot;sloth_ice_fraction_schaake&quot;,</div>
+<div class="line">                            &quot;ice_fraction_xinan&quot;: &quot;sloth_ice_fraction_xinan&quot;,</div>
+<div class="line">                            &quot;soil_moisture_profile&quot;: &quot;sloth_smp&quot;</div>
+<div class="line">                        },  </div>
+<div class="line">                        &quot;uses_forcing_file&quot;: false</div>
+<div class="line">                    }   </div>
+<div class="line">                }, </div>
+<div class="line">                    {</div>
+<div class="line">                        &quot;name&quot;: &quot;bmi_c++&quot;,</div>
+<div class="line">                        &quot;params&quot;: {</div>
+<div class="line">                            &quot;name&quot;: &quot;bmi_c++&quot;,</div>
+<div class="line">                            &quot;model_type_name&quot;: &quot;SLOTH&quot;,</div>
+<div class="line">                            &quot;main_output_variable&quot;: &quot;z&quot;,</div>
+<div class="line">                            &quot;library_file&quot;: &quot;bmi_module_libs/libslothmodel.so&quot;,</div>
+<div class="line">                            &quot;init_config&quot;: &quot;/dev/null&quot;,</div>
+<div class="line">                            &quot;allow_exceed_end_time&quot;: true,</div>
+<div class="line">                            &quot;fixed_time_step&quot;: false,</div>
+<div class="line">                            &quot;uses_forcing_file&quot;: false,</div>
+<div class="line">                            &quot;model_params&quot;: {</div>
+<div class="line">                            &quot;sloth_ice_fraction_schaake(1,double,m,node)&quot;: 0.0,</div>
+<div class="line">                            &quot;sloth_ice_fraction_xinan(1,double,1,node)&quot;: 0.0,</div>
+<div class="line">                            &quot;sloth_smp(1,double,1,node)&quot;: 0.0</div>
+<div class="line">                        }</div>
+<div class="line">                    }</div>
+<div class="line">                }</div>
+<div class="line">            ],</div>
+</div><!-- fragment --> </details>
 <p>As described in Required Parameters, a BMI <code>init_config</code> does not need to be specified for this formulation type, but a nested list of sub-formulation configs (in <code>modules</code>) does. Execution of a formulation time step update proceeds through each module in list order.</p>
-<p>A few other items of note:</p>
+<h2><a class="anchor" id="autotoc_md59"></a>
+Passing Variables Between Nested Formulations</h2>
+<p>In addition to using framework-supplied forcings as module inputs, a <code>bmi_multi</code> formulation orchestrate the output variable values of one nested module for use as the input variable values of another. This imposes some extra conditions and requirements on the configuration.</p>
+<h3><a class="anchor" id="autotoc_md60"></a>
+How Values Are Orchestrated</h3>
+<p>The <code>bmi_multi</code> formulation orchestrates values by pairing all nested module input variables with some nested module or framework-provided output variable. Paring is done by examining the identifiers for the variables - either a variable's alias configured via <code>variables_names_map</code> (see here) or, if the former wasn't provided, its name - and providing each input with values from an output with a matching identifier. <br  />
+</p>
+<p>E.g., if <em>module_1</em> has an output variable with either a name or configured alias of <em>et</em>, and <em>module_2</em> has an input variable with a name or an alias of <em>et</em>, then the formulation will know to use <em>module_1.et</em> at each time step to set <em>module_2.et</em>.</p>
+<p>This imposes several constraints on the configuration:</p>
 <ul>
-<li>there are some constraints on input and output variables of the sub-modules of a multi-module formulation<ul>
-<li>output variables must be uniquely traceable<ul>
-<li>there must not be any output variable from a sub-module for which there is another output variable in a different sub-module that has the same config-mapped alias</li>
-<li>when nothing is set for a variable in <code>variables_names_map</code>, its alias is equal to its name</li>
-<li>when this doesn't hold, a unique mapped alias must be configured for one of the two (i.e., either an alias added, or changed to something different)</li>
+<li>each nested module output variable identifier must be unique among available outputs in the formulation<ul>
+<li>i.e., there cannot be two nested modules that have an output variable with the same identifier</li>
+<li>a variable's name is its default identifier</li>
+<li>if two nest modules both have an output variable with the same name, a mapped alias must be configured for at least one of them via <code>variables_names_map</code> (see here)</li>
+<li>an alias is also needed if an output name matches a framework-provided forcing value</li>
 </ul>
 </li>
-<li>input variables must have previously-identified data providers<ul>
-<li>every input variable must have its alias match a property from an output data source</li>
-<li>one way this works is if the alias is equal to the name of an externally available forcing property (e.g., AORC read from file) defined before the sub-module</li>
-<li>another way is if the input variable's alias matches the alias of an output variable from an earlier sub-module<ul>
-<li>in this case, one sub-module's output serve as a later sub-modules input for each multi-module formulation update</li>
-<li>since modules get executed in order of configuration, "earlier" and "later" are with respect to the order they are defined in the <code>modules</code> config list</li>
+<li>each input variable identifier must match some output identifier<ul>
+<li>inputs do not require configured aliases, though it is possible to configure an alias to match with the appropriate output identifier (especially for framework-provided forcings)</li>
 </ul>
 </li>
 </ul>
-</li>
-</ul>
-</li>
-<li>the framework allows independent configuration of the <code>uses_forcing_file</code> property among the individual sub-formulations, although this is not generally recommended</li>
-<li>configuration of <code>variables_names_map</code> maps a given variable to a variable name of the directly</li>
-<li>it is now possible to have an earlier nested module use as a provider (for one of its inputs) a later nested module, as long as a default value is configured<ul>
-<li>a collection of variable default values can be given in the formulation config at the top level by providing an entry in <code>default_output_values</code> with the variable's mapped configuration alias (or just variable name if it is unique) and the default value: <div class="fragment"><div class="line">{</div>
+<h3><a class="anchor" id="autotoc_md61"></a>
+Look-back and Default Values</h3>
+<p>Any nested module, regardless of its position in the configured order of the modules, may have its provided outputs used as the input values for any other nested module in that formulation. Because modules are updated in order, configuring an earlier module - e.g., <em>module_1</em> - to receive an input value from an output variable of a later module - e.g., <em>module_2</em> - induces a "look-back" capability. At the time <em>module_1</em> needs its input for the current time step, <em>module_2</em> will have not yet processed the current time step. As such, <em>module_2</em>'s output variable values will be those from the previous time step.</p>
+<p>This introduces a special case for when there is no previous time step. Not every BMI module used in this kind of "look-back" scenario will be able to provide a valid output value before processing the first time step. To account for this, an optional default value can be configured for output variables, associated via the identifier (i.e., mapped alias or variable name). <br  />
+</p>
+<blockquote class="doxtable">
+<p>&zwj;[!NOTE] Currently only <code>double</code> default values are supported. </p>
+</blockquote>
+<h4><a class="anchor" id="autotoc_md62"></a>
+Example Look-Back Config</h4>
+<p>Below is a partial config example illustrating a look-back setup involving CFE and SoilMoistureProfile (SMP). CFE relies upon the soil moisture profile value from SMP (mapped in both as <code>soil_moisture_profile__smp_output__cfe_input</code>) that was calculated in the previous time step. Because SMP wasn't implemented to have its own default values for variables, a default value is supplied in the configuration that CFE will use in the first time step.</p>
+<div class="fragment"><div class="line">{</div>
 <div class="line">  &quot;global&quot;: {</div>
 <div class="line">    &quot;formulations&quot;: [</div>
 <div class="line">      {</div>
@@ -546,23 +642,63 @@ Multi-Module BMI Formulations</h1>
 <div class="line">          &quot;main_output_variable&quot;: &quot;Q_OUT&quot;,</div>
 <div class="line">          &quot;default_output_values&quot;: [</div>
 <div class="line">            {</div>
-<div class="line">              &quot;name&quot;: &quot;QINSUR&quot;,</div>
-<div class="line">              &quot;value&quot;: 42.0</div>
+<div class="line">              &quot;name&quot;: &quot;soil_moisture_profile__smp_output__cfe_input&quot;,</div>
+<div class="line">              &quot;value&quot;: 1.2345</div>
 <div class="line">            }</div>
 <div class="line">          ],</div>
 <div class="line">          &quot;modules&quot;: [</div>
+<div class="line">            {</div>
+<div class="line">              &quot;name&quot;: &quot;bmi_c&quot;,</div>
+<div class="line">              &quot;params&quot;: {</div>
+<div class="line">                &quot;model_type_name&quot;: &quot;bmi_c_cfe&quot;,</div>
+<div class="line">                &quot;library_file&quot;: &quot;./ngen/extern/cfe/cmake_build/libcfebmi&quot;,</div>
+<div class="line">                &quot;forcing_file&quot;: &quot;&quot;,</div>
+<div class="line">                &quot;init_config&quot;: &quot;./configs/cfe/cat-20521.txt&quot;,</div>
+<div class="line">                &quot;allow_exceed_end_time&quot;: true,</div>
+<div class="line">                &quot;main_output_variable&quot;: &quot;Q_OUT&quot;,</div>
+<div class="line">                &quot;registration_function&quot;: &quot;register_bmi_cfe&quot;,</div>
+<div class="line">                &quot;variables_names_map&quot;: {</div>
+<div class="line">                  &quot;soil_moisture_profile&quot;: &quot;soil_moisture_profile__smp_output__cfe_input&quot;</div>
+<div class="line">                  &quot;SOIL_STORAGE&quot;: &quot;soil_storage__cfe_output__smp_input&quot;,</div>
+<div class="line">                  &quot;SOIL_STORAGE_CHANGE&quot;: &quot;soil_storage__cfe_output__smp_input&quot;,</div>
+<div class="line">                },</div>
+<div class="line">                &quot;uses_forcing_file&quot;: false</div>
+<div class="line">              }</div>
+<div class="line">            },</div>
+<div class="line">            {</div>
+<div class="line">              &quot;name&quot;: &quot;bmi_c++&quot;,</div>
+<div class="line">              &quot;params&quot;: {</div>
+<div class="line">                &quot;model_type_name&quot;: &quot;bmi_smp&quot;,</div>
+<div class="line">                &quot;library_file&quot;: &quot;./ngen/extern/SoilMoistureProfiles/cmake_build/libsmpbmi&quot;,</div>
+<div class="line">                &quot;init_config&quot;: &quot;./configs/smp_cfe/cat-20521.txt&quot;,</div>
+<div class="line">                &quot;allow_exceed_end_time&quot;: true,</div>
+<div class="line">                &quot;main_output_variable&quot;: &quot;soil_water_table&quot;,</div>
+<div class="line">                &quot;variables_names_map&quot; : {</div>
+<div class="line">                  &quot;soil_storage&quot; : &quot;soil_storage__cfe_output__smp_input&quot;,</div>
+<div class="line">                  &quot;soil_storage_change&quot; : &quot;soil_storage__cfe_output__smp_input&quot;,</div>
+<div class="line">                  &quot;soil_moisture_profile&quot;: &quot;soil_moisture_profile__smp_output__cfe_input&quot;</div>
+<div class="line">                },</div>
+<div class="line">                &quot;uses_forcing_file&quot;: false</div>
+<div class="line">              }</div>
+<div class="line">            }</div>
+<div class="line">          ]</div>
 <div class="line">...</div>
-</div><!-- fragment --> </li>
-</ul>
-</li>
-</ul>
+</div><!-- fragment --><blockquote class="doxtable">
+<p>&zwj;[!IMPORTANT] As mentioned, even for such look-back scenarios, default output values are not strictly required.</p>
+<p>The BMI specification does not restrict when values for a variable may be available, except to say that the <code>initialize()</code> function may need to be called first. In other words, some modules may be able to provide their own appropriate default variable values, before the first time step update.</p>
+<p>To provide general support, <code>bmi_multi</code> formulation must allow for this scenario, although users should be very careful to not accidentally omit configuring default values for a module that does not supply them on its own. </p>
+</blockquote>
+<blockquote class="doxtable">
+<p>&zwj;[!WARNING] <br  />
+ Users should not assume that the error-free execution of a configuration with nested module look-back and without default values implies that the module was designed to provided <em>correct</em> default values. </p>
+</blockquote>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri Mar 1 2024 18:09:35 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Tue Mar 12 2024 15:18:43 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

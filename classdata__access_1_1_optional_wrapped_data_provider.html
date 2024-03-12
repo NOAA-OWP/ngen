@@ -953,7 +953,8 @@ When The Default Is Used</h1>
 </div><div class="memdoc">
 
 <p>Get whether the instance is initialized such that it can handle requests to provide data. </p>
-<p>For this type, this is true if either the wrapped provider member has been set, or if there are default values set up for all outputs that must be provided.</p>
+<p>For this type, return whether the instance is ready to provide data. The primary satisfying condition is when the wrapped provider member has been set, as determined by <a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#a1d914d387e7ae2d933a372d0976ed959">isWrappedProviderSet</a>. Secondarily, "readiness" is also satisfied if there are default values set up for all outputs that must be provided.</p>
+<p>Note that the primary condition is subject only to the result of <a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#a1d914d387e7ae2d933a372d0976ed959">isWrappedProviderSet</a>, which for this type (and generally) does not reflect the readiness state of the inner, wrapped provider. This effectively assumes it is ready prior to or immediately upon being set.</p>
 <dl class="section return"><dt>Returns</dt><dd>Whether the instance is initialized such that it can handle requests to provide data. </dd></dl>
 
 <p>Reimplemented from <a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#abfedf77bdf3e834efd4365942bc6db56">data_access::DeferredWrappedProvider</a>.</p>
@@ -1365,7 +1366,7 @@ When The Default Is Used</h1>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacedata__access.html">data_access</a></li><li class="navelem"><a class="el" href="classdata__access_1_1_optional_wrapped_data_provider.html">OptionalWrappedDataProvider</a></li>
-    <li class="footer">Generated on Fri Mar 1 2024 18:09:35 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Tue Mar 12 2024 15:18:44 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

@@ -177,7 +177,7 @@ Protected Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A specialized @WrappedDataProvider that is created without first knowing the backing source it wraps. </p>
-<p>This type wraps another ForcingProvider, similarly to its parent. This is "optimistic," however, in that it is constructed without the backing data source it will wrap. It only requires the data output names it expects to eventually be able to provide.</p>
+<p>This type wraps another <a class="el" href="classdata__access_1_1_generic_data_provider.html">GenericDataProvider</a>, similarly to its parent. This is "optimistic," however, in that it is constructed without the backing data source it will wrap. It only requires the data output names it expects to eventually be able to provide.</p>
 <p>This type allows for deferring reconciling of whether a provider for some data output is available. This is useful for situations when a required provider is not currently known, but is expected, and there will be ample time to validate the expectation and make the necessary associations before the data must be provided.</p>
 <p>The runtime behavior of inherited functions depends on the type of the wrapped object. I.e., nested calls to the analogous function of the wrapped provider object are made, with those results returned. The one exception to this is get_available_forcing_outputs. A particular effect of this is that the type of the wrapped provider object will dictate how an instance behaves in cases when an unrecognized output name is supplied as a parameter to <a class="el" href="classdata__access_1_1_wrapped_data_provider.html#a428b42c9cdf72b63c2a0ac23b0bba4d4">get_value</a>.</p>
 <p>As noted above, the get_available_forcing_outputs virtual function is overridden here. Instead of directly returning results from a nested call to the wrapped provider, this type's implementation ensures only the outputs set as provideable in this instance (i.e., the outer wrapper) are returned. </p>
@@ -648,6 +648,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Get whether the instance is initialized such that it can handle requests to provide data. </p>
 <p>For this type, this is equivalent to whether the wrapped provider member has been set.</p>
+<p>Note that readiness is subject only to the result of <a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html#a1d914d387e7ae2d933a372d0976ed959">isWrappedProviderSet</a>, which for this type (and generally) does not reflect the readiness state of the inner, wrapped provider. This effectively assumes it is ready prior to or immediately upon being set.</p>
 <dl class="section return"><dt>Returns</dt><dd>Whether the instance is initialized such that it can handle requests to provide data. </dd></dl>
 
 <p>Reimplemented in <a class="el" href="classdata__access_1_1_optional_wrapped_data_provider.html#a81d7bf8944e42cfd906d35aab1a054ff">data_access::OptionalWrappedDataProvider</a>.</p>
@@ -852,7 +853,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacedata__access.html">data_access</a></li><li class="navelem"><a class="el" href="classdata__access_1_1_deferred_wrapped_provider.html">DeferredWrappedProvider</a></li>
-    <li class="footer">Generated on Fri Mar 1 2024 18:09:35 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Tue Mar 12 2024 15:18:44 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

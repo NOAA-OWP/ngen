@@ -92,18 +92,18 @@ $(document).ready(function(){initNavTree('md_doc_2_b_m_iconventions.html',''); i
   <div class="headertitle"><div class="title">BMI Conventions</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md59"></a> The <a href="https://bmi.readthedocs.io/en/stable/">BMI Documentation</a> enumerates all of the functions in the BMI specification and the <a href="https://bmi.readthedocs.io/en/stable/bmi.best_practices.html#best-practices">BMI Best Practices</a> page goes into additional detail about how the interface should be used, but in many cases BMI is not prescriptive about behavior, leaving choices up to model and tool developers. For instance, the Best Practices document states,</p>
+<div class="textblock"><p><a class="anchor" id="autotoc_md63"></a> The <a href="https://bmi.readthedocs.io/en/stable/">BMI Documentation</a> enumerates all of the functions in the BMI specification and the <a href="https://bmi.readthedocs.io/en/stable/bmi.best_practices.html#best-practices">BMI Best Practices</a> page goes into additional detail about how the interface should be used, but in many cases BMI is not prescriptive about behavior, leaving choices up to model and tool developers. For instance, the Best Practices document states,</p>
 <blockquote class="doxtable">
 <p>&zwj;All functions in the BMI must be implemented. For example, even if a model operates on a <a href="https://bmi.readthedocs.io/en/stable/model_grids.html#uniform-rectilinear">uniform rectilinear</a> grid, a <a href="https://bmi.readthedocs.io/en/stable/index.html#get-grid-x">get_grid_x</a> function has to be written. This function can be empty and simply return the BMI_FAILURE status code or raise a NotImplemented exception, depending on the language. </p>
 </blockquote>
 <p>Strictly speaking, while all functions must have some implementation, <em>none</em> of the functions in the interface are specifically called out as required to do anything other than return a failure&ndash;though that would not be a very useful model. So, in these and other cases, we must specify if any of the BMI functions are required to behave in a certain way to function properly with the NextGen Water Resources Modeling Framework's Model Engine (hereafter "ngen" the executable name), and these requirements are what this document aims to spell out.</p>
-<h1><a class="anchor" id="autotoc_md60"></a>
+<h1><a class="anchor" id="autotoc_md64"></a>
 Compliance with the BMI v2.0 Standard</h1>
 <p>BMI modules written in C, Fortran, and C++ <em>must</em> be compiled with the exact same header files as those used with ngen itself, and this means the BMI v2.0 header files provided in the CSDMS <a href="https://github.com/csdms/bmi-c/blob/e6f9f8a0ab326218831000b4a5571490ebc21ea2/bmi.h"><code>bmi-c</code></a>, <a href="https://github.com/csdms/bmi-fortran/blob/e34cd026f57cabd009ef0f662fc672baee66e442/bmi.f90"><code>bmi-fortran</code></a>, and <a href="https://github.com/csdms/bmi-cxx/blob/be631dc510b477b3bc3eb3c8bbecf3d04ec4005c/bmi.hxx"><code>bmi-cxx</code></a> repositories. Python models must inherit from the <code><a class="el" href="struct_bmi.html">Bmi</a></code> class in the <a href="https://pypi.org/project/bmipy/2.0/"><code>bmipy</code></a> package. Python and C++ classes can be subclasses of the standard BMI interface, but such subclasses must inherit from the standard versions listed here.</p>
 <p>This means&mdash;among other things&mdash;that it is not possible to "extend" the BMI interface simply by adding functions to the base interface or header files. In any case, even with subclassed BMI models in Python and C++ with additional functions, ngen would not call any such additional functions because it does not know that they exist.</p>
-<h1><a class="anchor" id="autotoc_md61"></a>
+<h1><a class="anchor" id="autotoc_md65"></a>
 Time Control</h1>
-<h2><a class="anchor" id="autotoc_md62"></a>
+<h2><a class="anchor" id="autotoc_md66"></a>
 Set and Get Values Per Timestep</h2>
 <p>Importantly, for your model to work in ngen, all input values and output values pertain to the processing to be done <em>in a single engine timestep</em>. Put another way, a model running in ngen should always follow this general execution pattern:</p>
 <ul>
@@ -116,22 +116,22 @@ Set and Get Values Per Timestep</h2>
 </li>
 </ul>
 <p>Other patterns may be allowed by the BMI without being prescriptive, such as passing a whole time series of inputs as an array to <code>set_value(...)</code> but this is not supported by ngen. Passing of arrays as input is supported but is applicable in cases where the whole array applies to one timestep (e.g. soil moisture profile or snow layer information for multiple depths).</p>
-<h2><a class="anchor" id="autotoc_md63"></a>
+<h2><a class="anchor" id="autotoc_md67"></a>
 &lt;tt&gt;update&lt;/tt&gt; vs. &lt;tt&gt;update_until&lt;/tt&gt;</h2>
 <p>For the foreseeable future, ngen will always call <code>update_until(...)</code> and will not call a model's <code>update()</code> method. Per the <a href="https://bmi.readthedocs.io/en/stable/#update-until">BMI documentation</a> for <code>update_until</code>, an absolute time is passed as the argument, not an incremental time; i.e., if the model start time is <code>0.0</code> and ngen is incrementing timesteps by 3600 seconds, the first three iterations will call <code>update_until</code> with the values <code>3600.0</code>, <code>7200.0</code>, and <code>10800.0</code>.</p>
 <p>At present, ngen will always pass a value greater than the previous value passed to <code>update_until</code> to any model instance (it will move only forward in time).</p>
-<h2><a class="anchor" id="autotoc_md64"></a>
+<h2><a class="anchor" id="autotoc_md68"></a>
 Time Units</h2>
 <p>At present, all BMI modules must use seconds as the time units. The output of <code>get_time_units()</code> should be <code>seconds</code> and the value passed to <code>update_until(...)</code> should be interpreted as seconds past time <code>0</code> (see below). This is something that we intend to make more flexible in the future.</p>
-<h2><a class="anchor" id="autotoc_md65"></a>
+<h2><a class="anchor" id="autotoc_md69"></a>
 Model time begin</h2>
 <p>At present, all BMI models <em>must</em> use <code>0.0</code> as their start time. The result of <code>get_start_time()</code> should be <code>0.0</code>. This is something that we intend to make more flexible in the future.</p>
-<h2><a class="anchor" id="autotoc_md66"></a>
+<h2><a class="anchor" id="autotoc_md70"></a>
 Model time end</h2>
 <p>Usually, models should not need to provide an end time and should be able to compute results for any range that ngen provides input values for. Unless your model has some specific maximum time, you should return the system's double/float max value (probably about <code>1.79769e+308</code>) as the result of <code>get_end_time()</code>.</p>
-<h1><a class="anchor" id="autotoc_md67"></a>
+<h1><a class="anchor" id="autotoc_md71"></a>
 Metadata</h1>
-<h2><a class="anchor" id="autotoc_md68"></a>
+<h2><a class="anchor" id="autotoc_md72"></a>
 Variable Units</h2>
 <p>Models should implement <code>get_var_units(...)</code> for <em>all</em> supported variables, including all names returned by <code>get_input_var_names(...)</code> and <code>get_output_var_names(...)</code> or other names that may be used with <code>get_var(...)</code> and <code>set_var(...)</code> (see below). Unit strings should be parsable and convertible by the UDUNITS2 library using its <a href="https://ncics.org/portfolio/other-resources/udunits2/">provided units library</a>.</p>
 <blockquote class="doxtable">
@@ -145,7 +145,7 @@ Variable Units</h2>
 <p>We prefer <code>1</code> for dimensionless units.</p>
 <p>If units are <em>not</em> provided (i.e. <code>get_var_units(...)</code> returns <code>BMI_FAILURE</code> or throws an exception) or the unit string is not parsable, this will not prevent the use of the model in ngen, but ngen will report a large number of warning messages and <b>the values will be passed to other parts of the system without any unit conversion</b>. The same will happen if you configure ngen to couple any pair of quantities whose units are not convertible.</p>
 <p>Note that the <code>get_var_units(...)</code> function will be called regardless and that there is a fast-passthrough optimization for cases where the unit conversion strings are exactly the same, so there is effectively no downside to providing units in every case, and doing so is <b>strongly encouraged</b>.</p>
-<h2><a class="anchor" id="autotoc_md69"></a>
+<h2><a class="anchor" id="autotoc_md73"></a>
 Variable Types and Sizes</h2>
 <p>Models <em>must</em> implement <a href="https://bmi.readthedocs.io/en/stable/#get-var-itemsize"><code>get_var_itemsize(...)</code></a>, <a href="https://bmi.readthedocs.io/en/stable/#get-var-nbytes"><code>get_var_nbytes(...)</code></a>, and <a href="https://bmi.readthedocs.io/en/stable/#get-var-type"><code>get_var_type(...)</code></a> for <em>all</em> supported variables, including all names returned by <code>get_input_var_names(...)</code> and <code>get_output_var_names(...)</code> or other names that may be used with <code>get_var(...)</code> and <code>set_var(...)</code> (see below).</p>
 <p>Since the [BMI Documentation] simply states that, "Use of native language type names is encouraged...", the values you return for this function will depend on the language of the model <em>module</em>. However, ngen (written in C++) has to recognize each type. Currently the following data type identifiers are supported:</p>
@@ -172,30 +172,30 @@ Variable Types and Sizes</h2>
 </ul>
 </li>
 </ul>
-<h1><a class="anchor" id="autotoc_md70"></a>
+<h1><a class="anchor" id="autotoc_md74"></a>
 Input and output published variables</h1>
 <p>The BMI documentation says that input variables should be declared for a model by returning the list of inputs via <code>get_input_var_names</code>, and outputs likewise via <code>get_output_var_names</code>. However, it does not specify any difference in behavior for variables published by these functions. In practice this has few technical implications&ndash;for instance, it is not explicitly forbidden to call <code>get_value</code> on an input variable, nor even to call <code>set_value</code> on an output variable.</p>
 <p>Also, it is not forbidden to call <code>get_value</code> and <code>set_value</code> for variable names that appear in neither returned list. In the remainder of this document, such variables will be referred to as "unpublished" variables, and variables appearing in either <code>get_*_var_names</code> list as "published".</p>
 <p>The openness of the BMI in these areas both adds some danger and some flexibility, which ngen will mitigate and leverage with the conventions defined below.</p>
-<h2><a class="anchor" id="autotoc_md71"></a>
+<h2><a class="anchor" id="autotoc_md75"></a>
 Input/output variables and the time loop</h2>
 <p>Variables published via <code>get_input_var_names</code> and <code>get_output_var_names</code> are assumed to be part of the function of the time loop execution of the simulation, e.g. forcing inputs or model quantity outputs. Other types of variables (configuration settings, file names, a version identifier, etc.) should not be published in these functions. See below for impacts of this assumption and potential pitfalls.</p>
-<h2><a class="anchor" id="autotoc_md72"></a>
+<h2><a class="anchor" id="autotoc_md76"></a>
 Validation of formulations for input variables</h2>
 <p>For all model variables returned from <code>get_input_var_names</code>, a realization configuration <em>must</em> provide inputs for those variables (either by implicit name matching or explicit name mapping). If a module in a realization publishes a variable name as an input requirement, and an input source to provide the value cannot be found, validation will fail and the simulation will not run.</p>
-<h2><a class="anchor" id="autotoc_md73"></a>
+<h2><a class="anchor" id="autotoc_md77"></a>
 Validation of formulations for output variables</h2>
 <p>Unlike input variables, variables with the names returned from <code>get_output_var_names</code> are not required to be consumed by another module or output writer, and an unused/unconnected output variable will not cause a validation failure. However, if a variable from a module is consumed in the realization config (by another module or an output writer), that variable <em>must</em> be listed in <code>get_output_var_names</code>&ndash;otherwise validation will fail <em>even if the source module could respond to a request for it via</em> <code>get_value</code>. In other words, you cannot use an unpublished variable as input to another module or to be captured as output.</p>
-<h2><a class="anchor" id="autotoc_md74"></a>
+<h2><a class="anchor" id="autotoc_md78"></a>
 Calling &lt;tt&gt;set_value&lt;/tt&gt; on output variables</h2>
 <p>The ngen process should not call <code>set_value</code> on an output variable. Attempting to create a formulation that connects forcing or another module's output to an input name that is in <code>get_output_var_names</code> risks undefined behavior.</p>
-<h2><a class="anchor" id="autotoc_md75"></a>
+<h2><a class="anchor" id="autotoc_md79"></a>
 Calling &lt;tt&gt;get_value&lt;/tt&gt; on input variables</h2>
 <p>The ngen process <em>may</em> call <code>get_value</code> on a variable that is returned from <code>get_input_var_names</code>. A model <em>should</em> return the last value provided to the input variable, unmodified, in this case. At a minimum, a model <em>must</em> not crash if this occurs, and should return some reasonable value, rather than throwing an exception or returning BMI_FAILURE (throwing an exception or returning BMI_FAILURE <em>is</em> however an appropriate and preferred response if no value has yet been set for the variable).</p>
-<h2><a class="anchor" id="autotoc_md76"></a>
+<h2><a class="anchor" id="autotoc_md80"></a>
 Input and output with the same name not permitted</h2>
 <p>A single variable name cannot be published in both <code>get_var_input_names</code> and <code>get_var_output_names</code>&ndash;this will cause a validation error. Furthermore, it is not presently possible to work around this situation with variable name mapping, because a variable name mapping does not specify whether it is an input or output variable and could therefore not map only one or the other.</p>
-<h1><a class="anchor" id="autotoc_md77"></a>
+<h1><a class="anchor" id="autotoc_md81"></a>
 Unpublished variables</h1>
 <p>As discussed above, it is not defined by the BMI specification that you may <em>only</em> call <code>get_value</code> and <code>set_value</code> on variable names returned by either <code>get_input_var_names</code> or <code>get_output_var_names</code>. We refer to variables that appear in neither list&ndash;but are understood by a BMI module&ndash;as "unpublished" variables. Because ngen uses the input and output variable listings to validate formulations, there are many use cases for such variables, for instance:</p>
 <ul>
@@ -206,24 +206,24 @@ Unpublished variables</h1>
 </ul>
 <p>These and other uses may be applied by ngen. Specifically, ngen will make use of specified, reserved unpublished variables enumerated later in this document. Therefore, a module should be able to communicate via unpublished variables or at least not malfunction in the case of unpublished variables being used, as described below.</p>
 <p>Note that there is currently no discoverability mechanism for unpublished variables, they must be described in documentation (such as this document or a module's documentation) and often manually implemented or configured for use (such as in a realization config file).</p>
-<h2><a class="anchor" id="autotoc_md78"></a>
+<h2><a class="anchor" id="autotoc_md82"></a>
 Unknown/unexpected variables passed to &lt;tt&gt;set_value&lt;/tt&gt;</h2>
 <p>Importantly, if an unexpected variable name is passed to <code>set_value</code> this <em>must</em> not cause an error or instability! Consider the unknown unpublished value to be "offered" and it can be ignored. Generally, the preferred behavior in the case of an unknown variable is to do nothing (i.e. throw no exception) and return <code>BMI_FAILURE</code>&mdash;ngen will interpret this return value as indicating that the variable just set is not supported by the module.</p>
 <p>This scenario should be avoided by ngen, but there may be cases where ngen does not yet know whether a module supports an unpublished variable and will try to set it. These attempts can be ignored if the module does not support or understand the variable. (Returning <code>BMI_SUCCESS</code> from <code>set_value</code> does <em>not</em> imply that the module understands/supports the variable, see below section on probing.)</p>
-<h2><a class="anchor" id="autotoc_md79"></a>
+<h2><a class="anchor" id="autotoc_md83"></a>
 Must support variable metadata functions</h2>
 <p>If a module <em>does</em> support an unpublished variable, it is not sufficient to <em>only</em> implenent it in <code>set_value</code>&ndash;as described above, the variable metadata functions (<code>get_var_type</code>, <code>get_var_itemsize</code>, <code>get_var_nbytes</code>) <em>must</em> be implemented and return correct values for the variable. Implementation of <code>get_var_units</code> is also strongly encouraged.</p>
-<h1><a class="anchor" id="autotoc_md80"></a>
+<h1><a class="anchor" id="autotoc_md84"></a>
 Array representation</h1>
-<h2><a class="anchor" id="autotoc_md81"></a>
+<h2><a class="anchor" id="autotoc_md85"></a>
 Contiguousness</h2>
 <p>In order to pass arrays back and forth between modules and ngen (and indrectly from BMI modules to other BMI modules), it is necessary that the arrays being passed are stored in contiguous memory blocks in a known layout. This does not necessarily require that this is how data is stored in memory and used for computation within the model, but when passing data through BMI functions array data must conform to this constraint.</p>
-<h2><a class="anchor" id="autotoc_md82"></a>
+<h2><a class="anchor" id="autotoc_md86"></a>
 Zero-Indexing</h2>
 <p>Arrays should be zero-indexed (the index of the first item is 0, not 1 or some other number) and indexes appearing in the BMI functions (e.g. <a href="https://bmi.readthedocs.io/en/stable/#get-value-at-indices"><code>get_value_at_indices</code></a>) must be treated as zero-based indices. Of the supported languages, this mainly affects Fortran developers, as Fortran uses 1-based indices by default.</p>
-<h2><a class="anchor" id="autotoc_md83"></a>
+<h2><a class="anchor" id="autotoc_md87"></a>
 Layout and Flattening</h2>
-<h3><a class="anchor" id="autotoc_md84"></a>
+<h3><a class="anchor" id="autotoc_md88"></a>
 C ordering required</h3>
 <p>The <a href="https://bmi.readthedocs.io/en/stable/bmi.best_practices.html">BMI best practices</a> document states:</p>
 <blockquote class="doxtable">
@@ -231,7 +231,7 @@ C ordering required</h3>
 </blockquote>
 <p>However, strictly speaking, <em>how</em> a multi-dimensional array should be flattened into a one-dimensional one is never directly addressed. <b>For ngen, it is required that flattening happens as if the array was a contiguous C array, sometimes referred to as "row major order".</b> That is, if you create a contiguous (i.e. not using pointers) multi-dimensional array in C (or a C array in C++) it will already be in the appropriate order and layout such that if the data is copied into a 1D array (or the pointer is passed as the result of <code>get_value_ptr</code>) it is already in the correct order/layout and will "just work".</p>
 <p>However, if you have a multi-dimensional array in Fortran or in Python/NumPy it may <em>not</em> be in the correct order. In Fortran, arrays are created in memory in "column major order"&ndash;however if you treat the first (left-most) index as the fastest changing, it is the same thing as C ordering where the C code would treat the last (right-most) index as the fastest changing. In Python, NumPy <code>ndarray</code>s are created as contiguous C-ordered blocks by default, but it is possible to create Fortran-ordered arrays, and if you take a view or slice of an array it is no longer a contiguous array and can't be passed without copying.</p>
-<h3><a class="anchor" id="autotoc_md85"></a>
+<h3><a class="anchor" id="autotoc_md89"></a>
 Proper ordering example</h3>
 <p>The simplest way to explain the proper ordering is by example. Consider a <code>float</code> array with dimensions X = 4, Y = 3, and Z = 2. Such an array could be created and populated with the same values in the correct ordering and layout in the following ways:</p>
 <p>(See also <a href="https://www.visitusers.org/index.php?title=C_vs_Fortran_memory_order">https://www.visitusers.org/index.php?title=C_vs_Fortran_memory_order</a> )</p>
@@ -295,12 +295,12 @@ Proper ordering example</h3>
 </table>
 <p>Notably, the BMI <a href="https://bmi.readthedocs.io/en/stable/#get-grid-shape"><code>get_grid_shape</code></a> result for this structure should be: </p><div class="fragment"><div class="line">2, 3, 4</div>
 </div><!-- fragment --><p> Which is consistent with the C and NumPy array shapes.</p>
-<h3><a class="anchor" id="autotoc_md86"></a>
+<h3><a class="anchor" id="autotoc_md90"></a>
 When this matters</h3>
-<h4><a class="anchor" id="autotoc_md87"></a>
+<h4><a class="anchor" id="autotoc_md91"></a>
 Fortran models using z,y,x index ordering</h4>
 <p>If you have a Fortran model and are using <code>(y,x)</code> or <code>(z,y,x)</code> ordering for your array indices, then the flattened, linear contiguous memory representation of your array is not the same as C ordering. In this case, the BMI interface layer in your module will have to copy/reorganize the memory in the array to be in C order whenever responding to BMI functions&ndash;essentially, recopy <code>(z,y,x)</code> arrays to be in <code>(x,y,z)</code> order. This is necessary when exposing an array outside of your model module because other models and ngen will assume that the <code>get_value_at_index</code> and <code>set_value_at_index</code> operations work a certain way on the memory representation and that the array is in a specific layout when it represents spatial data. See below for details on both of these scenarios.</p>
-<h4><a class="anchor" id="autotoc_md88"></a>
+<h4><a class="anchor" id="autotoc_md92"></a>
 Clarification for &lt;tt&gt;get_value_at_indices&lt;/tt&gt; and &lt;tt&gt;set_value_at_indices&lt;/tt&gt;</h4>
 <p>The BMI documentation for [<code>get_value_at_indices</code>]() and [<code>set_value_at_indices</code>]() states that the <code>inds</code> parameter designates:</p>
 <blockquote class="doxtable">
@@ -308,7 +308,7 @@ Clarification for &lt;tt&gt;get_value_at_indices&lt;/tt&gt; and &lt;tt&gt;set_va
 </blockquote>
 <p>However if read perfectly literally, <code>inds</code> is by necessity already a one-dimensional array and therefore can't be flattened&ndash;rather, the implication is that the indexes in <code>inds</code> are <em>indexes into a flattened representation of the target variable array</em>. That is, in the example above, an <code>inds</code> array containing <code>[2, 21]</code> should return <code>[0.03, 0.22]</code>. However, if the flattening is assumed to be done differently by different parts of the system, the wrong values may be retrieved or set.</p>
 <p>The ngen BMI driver assumes that the documentation implies that <code>inds</code> is a zero-based index into a flattened array and that the array is flattened according to C memory ordering as demonstrated above.</p>
-<h4><a class="anchor" id="autotoc_md89"></a>
+<h4><a class="anchor" id="autotoc_md93"></a>
 Spatial data arrays for structured grids</h4>
 <p>The BMI documentation for <a href="https://bmi.readthedocs.io/en/stable/#get-grid-shape"><code>get_grid_shape</code></a> specifies:</p>
 <blockquote class="doxtable">
@@ -316,27 +316,27 @@ Spatial data arrays for structured grids</h4>
 </blockquote>
 <p>This matches the C and NumPy examples above, with a shape of <code>(2,3,4)</code>, and clarifies that the last shape ordinate is the X dimension.</p>
 <p>Importantly, besides needing to pass multidimentional array data (spatial or otherwise) between BMI modules in a known flattened form, ngen will perform some spatial operations&ndash;such as grid data aggregation or re-gridding&ndash;on array data from modules if it represents spatial data. Since all BMI arrays are flattened, the flattening order must be consistent, or ngen will perform the spatial operations incorrectly.</p>
-<h1><a class="anchor" id="autotoc_md90"></a>
+<h1><a class="anchor" id="autotoc_md94"></a>
 Grid metadata functions</h1>
 <p>TODO</p>
-<h2><a class="anchor" id="autotoc_md91"></a>
+<h2><a class="anchor" id="autotoc_md95"></a>
 Required metadata functions</h2>
-<h2><a class="anchor" id="autotoc_md92"></a>
+<h2><a class="anchor" id="autotoc_md96"></a>
 Ranks and sizes for scalar values</h2>
-<h1><a class="anchor" id="autotoc_md93"></a>
+<h1><a class="anchor" id="autotoc_md97"></a>
 Specific ngen uses of unpublished variables</h1>
 <p>TODO</p>
-<h2><a class="anchor" id="autotoc_md94"></a>
+<h2><a class="anchor" id="autotoc_md98"></a>
 The &lt;tt&gt;model_params&lt;/tt&gt; list</h2>
 <p>TODO</p>
-<h2><a class="anchor" id="autotoc_md95"></a>
+<h2><a class="anchor" id="autotoc_md99"></a>
 Grid sizing parameters</h2>
 <p>TODO: Thinking we should add <code>ngen_</code> to the front of these, BTW...</p>
-<h3><a class="anchor" id="autotoc_md96"></a>
+<h3><a class="anchor" id="autotoc_md100"></a>
 &lt;tt&gt;ngen_grid_N_shape&lt;/tt&gt;</h3>
-<h3><a class="anchor" id="autotoc_md97"></a>
+<h3><a class="anchor" id="autotoc_md101"></a>
 &lt;tt&gt;ngen_grid_N_spacing&lt;/tt&gt;</h3>
-<h3><a class="anchor" id="autotoc_md98"></a>
+<h3><a class="anchor" id="autotoc_md102"></a>
 &lt;tt&gt;ngen_grid_N_origin&lt;/tt&gt;</h3>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
@@ -344,7 +344,7 @@ Grid sizing parameters</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri Mar 1 2024 18:09:35 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Tue Mar 12 2024 15:18:43 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
