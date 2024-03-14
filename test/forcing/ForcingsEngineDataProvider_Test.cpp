@@ -1,5 +1,10 @@
 #include <gtest/gtest.h>
 
+#include "NGenConfig.h"
+#if NGEN_WITH_MPI
+#include <mpi.h>
+#endif
+
 #include "AorcForcing.hpp"
 #include "DataProvider.hpp"
 #include "ForcingsEngineDataProvider.hpp"
@@ -7,12 +12,12 @@
 
 #include <boost/range/combine.hpp>
 
-#include "NGenConfig.h"
-#if NGEN_WITH_MPI
-#include <mpi.h>
-#endif
-
-static int mpi_init = 0, mpi_final = 0;
+struct mpi_info {
+    int initialized = 0;
+    int finalized   = 0;
+    int size        = 1;
+    int rank        = 0;
+};
 
 class ForcingsEngineDataProviderTest : public testing::Test
 {
@@ -21,32 +26,25 @@ class ForcingsEngineDataProviderTest : public testing::Test
     static constexpr const char* config_file = "extern/ngen-forcing/NextGen_Forcings_Engine_BMI/NextGen_Forcings_Engine/config.yml";
     static std::shared_ptr<utils::ngenPy::InterpreterUtil> gil_;
     static data_access::ForcingsEngineDataProvider         provider;
+    static mpi_info                                        mpi;
     forcing_params                                         params;
-    int                                                    mpi_size = 1;
-    int                                                    mpi_rank = 0;
 
   public:
     // Members
     ForcingsEngineDataProviderTest()
       : params("", "ForcingsEngine", "2024-01-17 01:00:00", "2024-01-17 06:00:00")
     {
-        std::cout << "ForcingsEngineDataProviderTest::ForcingsEngineDataProviderTest()" << '\n';
         #if NGEN_WITH_MPI
-        MPI_Comm_size(MPI_COMM_WORLD, &mpi_size);
-        MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
+        MPI_Comm_size(MPI_COMM_WORLD, &mpi.size);
+        MPI_Comm_rank(MPI_COMM_WORLD, &mpi.rank);
         #endif
     };
 
-    ~ForcingsEngineDataProviderTest() override {
-        std::cout << "ForcingsEngineDataProviderTest::~ForcingsEngineDataProviderTest()" << '\n';
-    }
-
     static void SetUpTestSuite()
     {
-        std::cout << "ForcingsEngineDataProviderTest::SetUpTestSuite()" << '\n';
         #if NGEN_WITH_MPI
-        MPI_Initialized(&mpi_init);
-        if (mpi_init == 0) {
+        MPI_Initialized(&mpi.initialized);
+        if (mpi.initialized == 0) {
             MPI_Init(nullptr, nullptr);
         }
         #endif
@@ -57,19 +55,24 @@ class ForcingsEngineDataProviderTest : public testing::Test
 
     static void TearDownTestSuite()
     {
-        std::cout << "ForcingsEngineDataProviderTest::TearDownTestSuite() 1" << '\n';
+        // FIXME: Unfortunate workaround to handle ESMF finalization.
+        //        See issue #748 for more info, keeping this temporarily
+        //        until ESMF implements a way to keep MPI initialized on
+        //        ESMF finalization through ESMPy.
+        gil_->getModule("atexit").attr("_run_exitfuncs")();
+
         #if NGEN_WITH_MPI
-        MPI_Finalized(&mpi_final);
-        if (mpi_final == 0) {
+        MPI_Finalized(&mpi.finalized);
+        if (mpi.finalized == 0) {
             MPI_Finalize();
         }
         #endif
-        std::cout << "ForcingsEngineDataProviderTest::TearDownTestSuite() 2" << '\n';
     }    
 };
 
 std::shared_ptr<utils::ngenPy::InterpreterUtil> ForcingsEngineDataProviderTest::gil_{};
 data_access::ForcingsEngineDataProvider ForcingsEngineDataProviderTest::provider{};
+mpi_info ForcingsEngineDataProviderTest::mpi{};
 
 // Tests that the forcings engine data provider correctly indexes epochs
 // to unitless indices along its given temporal domain.
@@ -157,11 +160,12 @@ TEST_F(ForcingsEngineDataProviderTest, Lookback)
     SUCCEED();
 }
 
-TEST_F(ForcingsEngineDataProviderTest, MPICommunicators) {
+// Disabled -- revisit when BMI parallel proposal is closer to finalizing.
+TEST_F(ForcingsEngineDataProviderTest, MPICommunicators_DISABLED) {
 #if !NGEN_WITH_MPI
     GTEST_SKIP() << "Test is not MPI-enabled, or only has 1 process";
 #else
-    if (this->mpi_rank == 0) {
+    if (mpi.rank == 0) {
         // provider.set_communicator(MPI_Comm_c2f(MPI_COMM_SELF));
     }
     // ------------------------------------------------------------------------
@@ -169,7 +173,7 @@ TEST_F(ForcingsEngineDataProviderTest, MPICommunicators) {
 
     // ------------------------------------------------------------------------
     // If this test gets called before other tests, let's reset back to MPI_COMM_WORLD
-    if (this->mpi_rank == 0) {
+    if (mpi.rank == 0) {
         // provider.set_communicator(MPI_Comm_c2f(MPI_COMM_WORLD));
     }
 #endif

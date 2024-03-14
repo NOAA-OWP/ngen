@@ -67,6 +67,10 @@ struct ForcingsEngine
     ForcingsEngine() = default;
     ForcingsEngine(const std::string& init, size_type time_start, size_type time_end);
 
+    ~ForcingsEngine() {
+        bmi_->Finalize();
+    }
+
     std::unique_ptr<models::bmi::Bmi_Py_Adapter> bmi_ = nullptr;
     clock_type::time_point                       time_start_{};
     clock_type::time_point                       time_end_{};
