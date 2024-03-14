@@ -23,7 +23,7 @@ namespace models {
                         bool has_fixed_time_step, utils::StreamHandler output);
 
             Bmi_Adapter(Bmi_Adapter const&) = delete;
-            Bmi_Adapter(Bmi_Adapter &&) = default;
+            Bmi_Adapter(Bmi_Adapter &&) = delete;
 
             virtual ~Bmi_Adapter() = 0;
 

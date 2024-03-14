@@ -28,8 +28,6 @@ namespace models {
                                    std::string forcing_file_path, bool allow_exceed_end, bool has_fixed_time_step,
                                    std::string registration_func, utils::StreamHandler output);
 
-            AbstractCLibBmiAdapter(AbstractCLibBmiAdapter &&adapter) noexcept = default;
-
             /**
              * Class destructor.
              *
