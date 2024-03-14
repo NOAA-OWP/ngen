@@ -23,7 +23,7 @@ namespace models {
          * An adapter class to serve as a C++ interface to the essential aspects of external models written in the C
          * language that implement the BMI.
          */
-        class Bmi_C_Adapter : public AbstractCLibBmiAdapter {
+        class Bmi_C_Adapter final : public AbstractCLibBmiAdapter {
 
         public:
 

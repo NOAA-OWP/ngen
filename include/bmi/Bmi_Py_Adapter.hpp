@@ -33,7 +33,7 @@ namespace models {
          * An adapter class to serve as a C++ interface to the aspects of external models written in the Python
          * language that implement the BMI.
          */
-        class Bmi_Py_Adapter : public Bmi_Adapter {
+        class Bmi_Py_Adapter final : public Bmi_Adapter {
 
         public:
 

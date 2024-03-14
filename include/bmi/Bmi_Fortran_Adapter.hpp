@@ -23,7 +23,7 @@ namespace models {
          * An adapter class to serve as a C++ interface to the essential aspects of external models written in the
          * Fortran language that implement the BMI.
          */
-        class Bmi_Fortran_Adapter : public AbstractCLibBmiAdapter {
+        class Bmi_Fortran_Adapter final : public AbstractCLibBmiAdapter {
 
         public:
 
