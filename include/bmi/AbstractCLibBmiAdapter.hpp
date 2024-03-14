@@ -1,8 +1,6 @@
 #ifndef NGEN_ABSTRACTCLIBBMIADAPTER_HPP
 #define NGEN_ABSTRACTCLIBBMIADAPTER_HPP
 
-#include <dlfcn.h>
-
 #include "Bmi_Adapter.hpp"
 
 namespace models {

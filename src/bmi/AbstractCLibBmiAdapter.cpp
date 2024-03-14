@@ -3,6 +3,8 @@
 #include "utilities/FileChecker.h"
 #include "utilities/ExternalIntegrationException.hpp"
 
+#include <dlfcn.h>
+
 namespace models {
 namespace bmi {
 
