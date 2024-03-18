@@ -59,13 +59,16 @@ class ForcingsEngineDataProviderTest : public testing::Test
         //        See issue #748 for more info, keeping this temporarily
         //        until ESMF implements a way to keep MPI initialized on
         //        ESMF finalization through ESMPy.
-        gil_->getModule("atexit").attr("_run_exitfuncs")();
+        // gil_->getModule("atexit").attr("_run_exitfuncs")();
+
+        data_access::ForcingsEngine::inst_.reset();
+        gil_.reset();
 
         #if NGEN_WITH_MPI
-        MPI_Finalized(&mpi.finalized);
-        if (mpi.finalized == 0) {
-            MPI_Finalize();
-        }
+        // MPI_Finalized(&mpi.finalized);
+        // if (mpi.finalized == 0) {
+        PMPI_Finalize();
+        // }
         #endif
     }    
 };
