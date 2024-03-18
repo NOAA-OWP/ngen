@@ -64,7 +64,7 @@ Feature FeatureCollection::remove_feature_by_id(std::string ID) {
 
 int FeatureCollection::get_size() {
     return features.size();
-};
+}
 
 bool FeatureCollection::is_empty() {
     return features.size() == 0;

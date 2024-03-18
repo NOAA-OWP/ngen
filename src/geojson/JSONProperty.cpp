@@ -18,7 +18,7 @@ long JSONProperty::as_natural_number() const {
     // Throw an exception since this can't be considered a natural number
     std::string message = key + " is a " + get_propertytype_name(get_type()) + " and cannot be converted into a natural number.";
     throw std::runtime_error(message);
-};
+}
 
 /**
  * Get the type of the property (Natural, Real, String, etc)
@@ -27,7 +27,7 @@ long JSONProperty::as_natural_number() const {
  */
 PropertyType JSONProperty::get_type() const {
     return type;
-};
+}
 
 
 double JSONProperty::as_real_number() const {
@@ -40,7 +40,7 @@ double JSONProperty::as_real_number() const {
 
     std::string message = key + " is a " + get_propertytype_name(get_type()) + " and cannot be converted into a real number.";
     throw std::runtime_error(message);
-};
+}
 
 bool JSONProperty::as_boolean() const {
     if (type == PropertyType::Boolean) {
@@ -49,7 +49,7 @@ bool JSONProperty::as_boolean() const {
 
     std::string message = key + " is a " + get_propertytype_name(get_type()) + " and cannot be converted into a boolean.";
     throw std::runtime_error(message);
-};
+}
 
 std::vector<JSONProperty> JSONProperty::as_list() const {
     std::vector<JSONProperty> copy;
@@ -131,7 +131,7 @@ std::string JSONProperty::as_string() const {
 
     std::string message = key + " is a " + get_propertytype_name(get_type()) + " and cannot be converted into a string.";
     throw std::runtime_error(message);
-};
+}
 
 JSONProperty JSONProperty::at(std::string key) const {
     if (type == PropertyType::Object) {
