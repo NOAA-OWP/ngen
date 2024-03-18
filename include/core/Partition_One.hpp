@@ -1,8 +1,6 @@
 #ifndef PARTITION_ONE_H
 #define PARTITION_ONE_H
 
-#ifdef NGEN_MPI_ACTIVE
-
 #include <iostream>
 #include <memory>
 #include <string>
@@ -36,5 +34,4 @@ class Partition_One {
         PartitionData partition_data;       
 };
 
-#endif // NGEN_MPI_ACTIVE
 #endif // PARTITION_ONE_H
