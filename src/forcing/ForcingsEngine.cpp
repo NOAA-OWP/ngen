@@ -51,8 +51,9 @@ ForcingsEngine::ForcingsEngine(const std::string& init, size_type time_start, si
     time_current_index_++;
 };
 
-ForcingsEngine::~ForcingsEngine() {
-    bmi_->Finalize();
+ForcingsEngine::~ForcingsEngine()
+{
+    finalize();
 }
 
 ForcingsEngine& ForcingsEngine::instance(
@@ -222,6 +223,17 @@ double ForcingsEngine::at(
     }
     
     return var_cache_.at({{t_idx, i_idx, v_idx}});
+}
+
+void ForcingsEngine::finalize()
+{
+    bmi_->Finalize();
+}
+
+
+void ForcingsEngine::finalize_all()
+{
+    instances_.clear();
 }
 
 } // namespace data_access
