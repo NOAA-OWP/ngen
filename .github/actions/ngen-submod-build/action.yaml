@@ -17,6 +17,10 @@ inputs:
     mod-dir:
       required: true
       description: 'Path to the submodule with CMakeLists.txt to build'
+    is_main_project:
+      required: false
+      description: 'A required Noah-OWP-Modular build flag'
+      default: 'OFF'
 outputs:
   build-dir:
     description: "Directory build was performed in"
@@ -39,7 +43,9 @@ runs:
         - name: Cmake Initialization
           id: cmake_init
           run: |
-            cmake -B ${{ inputs.mod-dir}}/${{ inputs.build-dir }} -S ${{ inputs.mod-dir }}
+            cmake -B ${{ inputs.mod-dir}}/${{ inputs.build-dir }} \
+            -DNGEN_IS_MAIN_PROJECT:BOOL=${{ inputs.is_main_project }} \
+            -S ${{ inputs.mod-dir }}
             echo "build-dir=$(echo ${{ inputs.mod-dir}}/${{ inputs.build-dir }})" >> $GITHUB_OUTPUT
           shell: bash
 
