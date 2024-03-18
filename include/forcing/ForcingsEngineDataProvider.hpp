@@ -2,10 +2,9 @@
 #define NGEN_FORCING_FE_PER_FEATURE_DATA_PROVDER_HPP
 
 #include "GenericDataProvider.hpp"
+#include "ForcingsEngine.hpp"
 
 namespace data_access {
-
-struct ForcingsEngine;
 
 struct ForcingsEngineDataProvider
   : public GenericDataProvider
