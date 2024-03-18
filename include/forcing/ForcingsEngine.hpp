@@ -16,34 +16,82 @@ struct ForcingsEngine
     using clock_type                = std::chrono::system_clock;
     static constexpr auto bad_index = static_cast<size_type>(-1);
 
-    void set_communicator(int handle);
+    ForcingsEngine(const std::string& init, size_type time_start, size_type time_end);
 
-    auto outputs() const noexcept
-      -> boost::span<const std::string>;
+    ~ForcingsEngine();
 
-    auto time_begin() const noexcept
-      -> const clock_type::time_point&;
+    /**
+     * @brief Get the output variables associated with this instance of the
+     *        Forcings Engine
+     * 
+     * @return boost::span<const std::string> 
+     */
+    boost::span<const std::string> outputs() const noexcept;
 
-    auto time_end() const noexcept
-      -> const clock_type::time_point&;
+    /**
+     * @brief Get the beginning time point for this instance of the
+     *        Forcings Engine
+     * 
+     * @return const clock_type::time_point& 
+     */
+    const clock_type::time_point& time_begin() const noexcept;
 
-    auto time_step() const noexcept
-      -> const clock_type::duration&;
+    /**
+     * @brief Get the ending time point for this instance of the
+     *        Forcings Engine
+     * 
+     * @return const clock_type::time_point& 
+     */
+    const clock_type::time_point& time_end() const noexcept;
 
-    auto time_index(time_t ctime) const noexcept
-      -> size_type;
+    /**
+     * @brief Get the stride/time step this instance of the
+     *        Forcings Engine follows.
+     * 
+     * @return const clock_type::duration& 
+     */
+    const clock_type::duration& time_step() const noexcept;
 
-    auto divide_index(const std::string& divide_id) const noexcept
-      -> size_type;
+    /**
+     * @brief Get the index for a C-style epoch within this instance of the
+     *        Forcings Engine's temporal domain.
+     * 
+     * @param ctime C-style epoch
+     * @return size_type, where the index represents a point between time_begin() and time_end() by time_step().
+     */
+    size_type time_index(time_t ctime) const noexcept;
 
-    auto variable_index(const std::string& variable) const noexcept
-      -> size_type;
+    /**
+     * @brief Get the index in `CAT-ID` for a given divide in the instance cache.
+     * @note The `CAT-ID` output variable uses integer values instead of strings.
+     * 
+     * @param divide_id A hydrofabric divide ID, i.e. "cat-*"
+     * @return size_type 
+     */
+    size_type divide_index(const std::string& divide_id) const noexcept;
 
-    auto at(
+    /**
+     * @brief Get the index of a variable in the instance cache.
+     * 
+     * @param variable 
+     * @return size_type 
+     */
+    size_type variable_index(const std::string& variable) const noexcept;
+
+    /**
+     * @brief Get a forcing value from the instance cache, or update the instance
+     *        and its cache.
+     * 
+     * @param raw_time C-style epoch for the time to get
+     * @param divide_id Divide ID to index at
+     * @param variable Forcings variable to get
+     * @return double 
+     */
+    double at(
         const time_t& raw_time,
         const std::string& divide_id,
         const std::string& variable
-    ) -> double;
+    );
 
     /**
      * Get an instance of the Forcings Engine
@@ -61,19 +109,25 @@ struct ForcingsEngine
         std::size_t time_end
     );
 
-    ForcingsEngine(const std::string& init, size_type time_start, size_type time_end);
-
-    static std::unique_ptr<ForcingsEngine> inst_;
-
-    ~ForcingsEngine() {
-        bmi_->Finalize();
-    }
-
   private:
 
+    /**
+     * @brief Checks that the $WGRIB2 environment variable is set and
+     *        that the NWM Forcings Engine python module is loadable.
+     *
+     * @note By loading the python module, this also checks for an
+     *       installation of ESMF (since it's imported at load).
+     */
     static void check_runtime_requirements();
 
     ForcingsEngine() = default;
+
+    // Available instances of Forcings Engines. This will vary
+    // if multiple instance types are used, i.e. hydrofabric, unstructured, or gridded.
+    static std::unordered_map<
+        std::string,
+        std::unique_ptr<ForcingsEngine>
+    > instances_;
 
     std::unique_ptr<models::bmi::Bmi_Py_Adapter> bmi_ = nullptr;
     clock_type::time_point                       time_start_{};
