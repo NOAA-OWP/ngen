@@ -6,8 +6,6 @@
 #include <boost/lexical_cast.hpp>
 #include <vector>
 
-//This way we can test the partition_one, since this doesn't have an explicit MPI dependency
-#define NGEN_MPI_ACTIVE
 #include "core/Partition_One.hpp"
 #include "FileChecker.h"
 
@@ -190,5 +188,3 @@ TEST_F(PartitionOneTest, TestPartitionData_1b)
     ASSERT_EQ(nexus_ids.size(), num_nexus);
     ASSERT_EQ(duplicates.size(), 0);
 }
-
-#undef NGEN_MPI_ACTIVE
