@@ -47,7 +47,7 @@ namespace exec_info
 
     void runtime_summary(std::ostream& stream) noexcept;
     void runtime_usage(const std::string& cmd, std::ostream& stream) noexcept;
-};
+}
 
 } // namespace ngen
 

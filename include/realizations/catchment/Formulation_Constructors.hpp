@@ -29,7 +29,7 @@ namespace realization {
         return [](std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing_provider, utils::StreamHandler output_stream) -> std::shared_ptr<Catchment_Formulation>{
             return std::make_shared<T>(id, forcing_provider, output_stream);
         };
-    };
+    }
 
     static std::map<std::string, constructor> formulations = {
         {"bmi_c++", create_formulation_constructor<Bmi_Cpp_Formulation>()},
@@ -83,7 +83,7 @@ namespace realization {
                     "\", provider: \"" + forcing_config.provider + "\"");
         }
         return formulation_constructor(identifier, fp, output_stream);
-    };
+    }
 
     static std::string get_formulation_key(const boost::property_tree::ptree &tree) {
         /*for (auto &node : tree) {

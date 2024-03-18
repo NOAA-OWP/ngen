@@ -32,7 +32,7 @@ Routing_Py_Adapter::Routing_Py_Adapter(std::string t_route_config_file_with_path
 void Routing_Py_Adapter::route(int number_of_timesteps, int delta_time,
                           const std::vector<double> &flow_vector){
   throw "Routing_Py_Adapter::route overload with flow_vector unimplemented.";
-};
+}
 
 void Routing_Py_Adapter::route(int number_of_timesteps, int delta_time)
 {
