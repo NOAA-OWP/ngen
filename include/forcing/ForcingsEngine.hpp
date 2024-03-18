@@ -94,6 +94,16 @@ struct ForcingsEngine
     );
 
     /**
+     * @brief Finalize a given Forcings Engine instance.
+     */
+    void finalize();
+
+    /**
+     * @brief Finalize all Forcings Engine instances.
+     */
+    static void finalize_all();
+
+    /**
      * Get an instance of the Forcings Engine
      * 
      * @param init Path to initialization file

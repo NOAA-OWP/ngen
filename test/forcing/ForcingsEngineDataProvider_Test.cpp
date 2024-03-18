@@ -61,7 +61,7 @@ class ForcingsEngineDataProviderTest : public testing::Test
         //        ESMF finalization through ESMPy.
         // gil_->getModule("atexit").attr("_run_exitfuncs")();
 
-        data_access::ForcingsEngine::inst_.reset();
+        data_access::ForcingsEngine::finalize_all();
         gil_.reset();
 
         #if NGEN_WITH_MPI
