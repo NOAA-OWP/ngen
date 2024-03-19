@@ -150,6 +150,8 @@ var annotated_dup =
     [ "Nexus_Remote_Test", "class_nexus___remote___test.html", "class_nexus___remote___test" ],
     [ "Nexus_Test", "class_nexus___test.html", "class_nexus___test" ],
     [ "NullForcingProvider", "class_null_forcing_provider.html", "class_null_forcing_provider" ],
+    [ "Partition_One", "class_partition___one.html", "class_partition___one" ],
+    [ "PartitionData", "struct_partition_data.html", "struct_partition_data" ],
     [ "request_from_empty_nexus", "structrequest__from__empty__nexus.html", "structrequest__from__empty__nexus" ],
     [ "ReservoirKernelTest", "class_reservoir_kernel_test.html", "class_reservoir_kernel_test" ],
     [ "ReservoirTimelessKernelTest", "class_reservoir_timeless_kernel_test.html", "class_reservoir_timeless_kernel_test" ],

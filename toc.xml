@@ -5420,6 +5420,17 @@
         <topic label="is_property_sum_over_time_step" href="class_null_forcing_provider.html#a9350efc0423d384f5b5207f9fa46d2f8"/>
         <topic label="record_duration" href="class_null_forcing_provider.html#ace80c5c208f3bb23005126f011c5ecf9"/>
       </topic>
+      <topic label="Partition_One" href="class_partition___one.html">
+        <topic label="generate_partition" href="class_partition___one.html#a86279cd21fe01f9001805f46af67107e"/>
+        <topic label="partition_data" href="class_partition___one.html#a8c496bb6b6294877ac2fa7d5f54f3c9f"/>
+      </topic>
+      <topic label="PartitionData" href="struct_partition_data.html">
+        <topic label="Tuple" href="struct_partition_data.html#aba7bce4b0d2c21869d566e6192048f43"/>
+        <topic label="catchment_ids" href="struct_partition_data.html#aa3afc6bc9ece49dd9c25c502b5720a94"/>
+        <topic label="mpi_world_rank" href="struct_partition_data.html#a9183691f0b869d2b170a5f932c77f87b"/>
+        <topic label="nexus_ids" href="struct_partition_data.html#ace7481bdd629019f1f88b883932e69c9"/>
+        <topic label="remote_connections" href="struct_partition_data.html#ab6b6b1f8ce6428004510e2ed6512ec9a"/>
+      </topic>
       <topic label="request_from_empty_nexus" href="structrequest__from__empty__nexus.html">
         <topic label="what" href="structrequest__from__empty__nexus.html#abca7c44aaf8b4582bc5067d53930011d"/>
       </topic>
@@ -5695,6 +5706,8 @@
       <topic label="ngen::srs::epsg" href="structngen_1_1srs_1_1epsg.html"/>
       <topic label="ngen::traits::bool_pack&lt;... &gt;" href="structngen_1_1traits_1_1bool__pack.html"/>
       <topic label="ngen::traits::type_list&lt; Ts &gt;" href="structngen_1_1traits_1_1type__list.html"/>
+      <topic label="Partition_One" href="class_partition___one.html"/>
+      <topic label="PartitionData" href="struct_partition_data.html"/>
       <topic label="realization::config::Config" href="structrealization_1_1config_1_1_config.html"/>
       <topic label="realization::config::Forcing" href="structrealization_1_1config_1_1_forcing.html"/>
       <topic label="realization::config::Formulation" href="structrealization_1_1config_1_1_formulation.html"/>

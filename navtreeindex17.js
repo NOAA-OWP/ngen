@@ -1,9 +1,12 @@
 var NAVTREEINDEX17 =
 {
-"classutils_1_1_stream_handler.html#ad7c8ad75f2c18c680d4cbfad2a1416ab":[23,0,10,2,1],
+"classutils_1_1_stream_handler.html#a94fc95b39ccee186539087dcad20f43b":[22,0,11,2,11],
+"classutils_1_1_stream_handler.html#a9c2a94967e4afa1afe854878dac2c354":[22,0,11,2,4],
+"classutils_1_1_stream_handler.html#a9c2a94967e4afa1afe854878dac2c354":[23,0,10,2,4],
 "classutils_1_1_stream_handler.html#ad7c8ad75f2c18c680d4cbfad2a1416ab":[22,0,11,2,1],
-"classutils_1_1_stream_handler.html#af36b00975146c10b0e8714daae7c7239":[23,0,10,2,5],
+"classutils_1_1_stream_handler.html#ad7c8ad75f2c18c680d4cbfad2a1416ab":[23,0,10,2,1],
 "classutils_1_1_stream_handler.html#af36b00975146c10b0e8714daae7c7239":[22,0,11,2,5],
+"classutils_1_1_stream_handler.html#af36b00975146c10b0e8714daae7c7239":[23,0,10,2,5],
 "classutils_1_1_stream_handler.html#af7f3b5a4929b997eb4c1618dbdbaec2f":[23,0,10,2,3],
 "classutils_1_1_stream_handler.html#af7f3b5a4929b997eb4c1618dbdbaec2f":[22,0,11,2,3],
 "examples.html":[24],
@@ -17,8 +20,8 @@ var NAVTREEINDEX17 =
 "functions_e.html":[23,3,0,6],
 "functions_eval.html":[23,3,4],
 "functions_f.html":[23,3,0,7],
-"functions_func.html":[23,3,1],
 "functions_func.html":[23,3,1,0],
+"functions_func.html":[23,3,1],
 "functions_func_b.html":[23,3,1,1],
 "functions_func_c.html":[23,3,1,2],
 "functions_func_d.html":[23,3,1,3],
@@ -60,8 +63,8 @@ var NAVTREEINDEX17 =
 "functions_type.html":[23,3,3],
 "functions_u.html":[23,3,0,22],
 "functions_v.html":[23,3,0,23],
-"functions_vars.html":[23,3,2,0],
 "functions_vars.html":[23,3,2],
+"functions_vars.html":[23,3,2,0],
 "functions_vars_a.html":[23,3,2,1],
 "functions_vars_b.html":[23,3,2,2],
 "functions_vars_c.html":[23,3,2,3],
@@ -246,8 +249,5 @@ var NAVTREEINDEX17 =
 "md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.html#autotoc_md162":[7,2,0],
 "md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.html#autotoc_md163":[7,2,0,0],
 "md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.html#autotoc_md164":[7,2,0,1],
-"md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.html#autotoc_md165":[7,2,0,2],
-"md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.html#autotoc_md166":[7,2,1],
-"md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.html#autotoc_md167":[7,2,1,0],
-"md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.html#autotoc_md168":[7,2,1,1]
+"md_doc_2_d_i_s_t_r_i_b_u_t_e_d___p_r_o_c_e_s_s_i_n_g.html#autotoc_md165":[7,2,0,2]
 };

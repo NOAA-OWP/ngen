@@ -12,7 +12,7 @@ var searchData=
   ['nexus_9',['nexus',['../namespacehy__features_1_1identifiers.html#ab5df6247e598cd1aca30116b3aa9dbd3',1,'hy_features::identifiers']]],
   ['nexus_5fcollection_10',['nexus_collection',['../class_multi_layer_parser_test.html#ad50a645c562bdf330f0fb3060f68cabb',1,'MultiLayerParserTest']]],
   ['nexus_5fdata_5fpath_11',['nexus_data_path',['../class_multi_layer_parser_test.html#a8ee6190260a9e8fe19abb7feef65e57d',1,'MultiLayerParserTest']]],
-  ['nexus_5fids_12',['nexus_ids',['../classngen_1_1_surface_layer.html#a24c913d31621f15c52c05ceaeabd2d03',1,'ngen::SurfaceLayer']]],
+  ['nexus_5fids_12',['nexus_ids',['../struct_partition_data.html#ace7481bdd629019f1f88b883932e69c9',1,'PartitionData::nexus_ids'],['../classngen_1_1_surface_layer.html#a24c913d31621f15c52c05ceaeabd2d03',1,'ngen::SurfaceLayer::nexus_ids']]],
   ['nexus_5foutfiles_13',['nexus_outfiles',['../classngen_1_1_surface_layer.html#aff45503ff2aba23f095884a6ab33b37e',1,'ngen::SurfaceLayer']]],
   ['nexuses_14',['nexuses',['../classnexus_1_1_nexus___manager.html#ad94a5809892bcc8debed0b8ad6c95d45',1,'nexus::Nexus_Manager::nexuses'],['../class_network___test.html#ae789eeaf0218215360e2c2b7f3f60d8d',1,'Network_Test::nexuses']]],
   ['nooutletreservoir_15',['nooutletreservoir',['../class_reservoir_kernel_test.html#a7c15ea06536a086b52fe2556832885f0',1,'ReservoirKernelTest::NoOutletReservoir'],['../class_reservoir_timeless_kernel_test.html#af4bafdd80667fac7872bbe8481619ebb',1,'ReservoirTimelessKernelTest::NoOutletReservoir']]],

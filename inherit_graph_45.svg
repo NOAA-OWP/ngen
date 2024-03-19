@@ -11,10 +11,10 @@
 <!-- Node0 -->
 <g id="Node000000" class="node">
 <title>Node0</title>
-<g id="a_Node000000"><a xlink:href="structrealization_1_1config_1_1_formulation.html" target="_top" xlink:title=" ">
+<g id="a_Node000000"><a xlink:href="structrealization_1_1config_1_1_config.html" target="_top" xlink:title="Structure representing the configuration for a general Formulation.">
 <polygon fill="white" stroke="#666666" points="89.5,-30.5 0,-30.5 0,0 89.5,0 89.5,-30.5"/>
 <text text-anchor="start" x="8" y="-17" font-family="Helvetica,sans-Serif" font-size="10.00">realization::config</text>
-<text text-anchor="middle" x="44.75" y="-5.75" font-family="Helvetica,sans-Serif" font-size="10.00">::Formulation</text>
+<text text-anchor="middle" x="44.75" y="-5.75" font-family="Helvetica,sans-Serif" font-size="10.00">::Config</text>
 </a>
 </g>
 </g>

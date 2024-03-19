@@ -133,6 +133,8 @@ var hierarchy =
     [ "ngen::srs::epsg", "structngen_1_1srs_1_1epsg.html", null ],
     [ "ngen::traits::bool_pack<... >", "structngen_1_1traits_1_1bool__pack.html", null ],
     [ "ngen::traits::type_list< Ts >", "structngen_1_1traits_1_1type__list.html", null ],
+    [ "Partition_One", "class_partition___one.html", null ],
+    [ "PartitionData", "struct_partition_data.html", null ],
     [ "realization::config::Config", "structrealization_1_1config_1_1_config.html", null ],
     [ "realization::config::Forcing", "structrealization_1_1config_1_1_forcing.html", null ],
     [ "realization::config::Formulation", "structrealization_1_1config_1_1_formulation.html", null ],
