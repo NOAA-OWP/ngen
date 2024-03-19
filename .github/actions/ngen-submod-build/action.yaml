@@ -17,6 +17,14 @@ inputs:
     mod-dir:
       required: true
       description: 'Path to the submodule with CMakeLists.txt to build'
+    initialize:
+      description: 'Initialize the ngen submodule, default'
+      required: false
+      default: 'true'
+    cmake-flags:
+      desciption: 'Options to pass to the cmake build configuration, e.g. -D<var> defines'
+      required: false
+      default: ''
 outputs:
   build-dir:
     description: "Directory build was performed in"
@@ -26,6 +34,7 @@ runs:
     steps:
         #This may be redundant
         - name: Init Submodules
+          if: ${{ inputs.initialize == 'true' }} #not true is false, don't init
           run: git submodule update --init --recursive -- ${{ inputs.mod-dir }}
           shell: bash
 
@@ -39,7 +48,7 @@ runs:
         - name: Cmake Initialization
           id: cmake_init
           run: |
-            cmake -B ${{ inputs.mod-dir}}/${{ inputs.build-dir }} -S ${{ inputs.mod-dir }}
+            cmake -B ${{ inputs.mod-dir}}/${{ inputs.build-dir }} -S ${{ inputs.mod-dir }} ${{ inputs.cmake-flags }}
             echo "build-dir=$(echo ${{ inputs.mod-dir}}/${{ inputs.build-dir }})" >> $GITHUB_OUTPUT
           shell: bash
 
