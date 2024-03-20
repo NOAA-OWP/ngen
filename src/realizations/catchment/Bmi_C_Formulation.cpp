@@ -39,31 +39,6 @@ std::string Bmi_C_Formulation::get_output_header_line(std::string delimiter) {
     return boost::algorithm::join(get_output_header_fields(), delimiter);
 }
 
-std::string Bmi_C_Formulation::get_output_line_for_timestep(int timestep, std::string delimiter) {
-    // TODO: something must be added to store values if more than the current time step is wanted
-    // TODO: if such a thing is added, it should probably be configurable to turn it off
-    if (timestep != (next_time_step_index - 1)) {
-        throw std::invalid_argument("Only current time step valid when getting output for BMI C formulation");
-    }
-
-    // TODO: see Github issue 355: this design (and formulation output handling in general) needs to be reworked
-    // Clear anything currently in there
-    output_text_stream->str(std::string());
-
-    const std::vector<std::string> &output_var_names = get_output_variable_names();
-    // This probably should never happen, but just to be safe ...
-    if (output_var_names.empty()) { return ""; }
-
-    // Do the first separately, without the leading comma
-    *output_text_stream << get_var_value_as_double(output_var_names[0]);
-
-    // Do the rest with a leading comma
-    for (int i = 1; i < output_var_names.size(); ++i) {
-        *output_text_stream << "," << get_var_value_as_double(output_var_names[i]);
-    }
-    return output_text_stream->str();
-}
-
 /**
  * Get the model response for a time step.
  *
