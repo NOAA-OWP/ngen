@@ -20,8 +20,6 @@ namespace realization {
 
         std::string get_output_header_line(std::string delimiter) override;
 
-        std::string get_output_line_for_timestep(int timestep, std::string delimiter) override;
-
         double get_response(time_step_t t_index, time_step_t t_delta) override;
 
         bool is_bmi_input_variable(const std::string &var_name) override;
@@ -55,11 +53,6 @@ namespace realization {
         // Unit test access
         friend class ::Bmi_Formulation_Test;
         friend class ::Bmi_Cpp_Formulation_Test;
-
-    private:
-
-        int next_time_step_index = 0;
-
     };
 
 }

@@ -49,20 +49,6 @@ std::string Bmi_Cpp_Formulation::get_output_header_line(std::string delimiter) {
     return boost::algorithm::join(get_output_header_fields(), delimiter);
 }
 
-std::string Bmi_Cpp_Formulation::get_output_line_for_timestep(int timestep, std::string delimiter) {
-    // TODO: something must be added to store values if more than the current time step is wanted
-    // TODO: if such a thing is added, it should probably be configurable to turn it off
-    if (timestep != (next_time_step_index - 1)) {
-        throw std::invalid_argument("Only current time step valid when getting output for BMI C++ formulation");
-    }
-    std::string output_str;
-
-    for (const std::string& name : get_output_variable_names()) {
-        output_str += (output_str.empty() ? "" : ",") + std::to_string(get_var_value_as_double(name));
-    }
-    return output_str;
-}
-
 /**
  * Get the model response for a time step.
  *
