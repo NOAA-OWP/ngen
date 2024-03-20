@@ -19,16 +19,6 @@ namespace realization {
         std::string get_formulation_type() override;
 
         /**
-         * Get a header line appropriate for a file made up of entries from this type's implementation of
-         * ``get_output_line_for_timestep``.
-         *
-         * Note that like the output generating function, this line does not include anything for time step.
-         *
-         * @return An appropriate header line for this type.
-         */
-        std::string get_output_header_line(std::string delimiter) override;
-
-        /**
          * Get the model response for a time step.
          *
          * Get the model response for the provided time step, executing the backing model formulation one or more times

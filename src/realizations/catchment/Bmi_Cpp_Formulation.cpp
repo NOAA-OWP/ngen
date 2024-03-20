@@ -45,10 +45,6 @@ std::shared_ptr<Bmi_Cpp_Adapter> Bmi_Cpp_Formulation::construct_model(const geoj
                     output);
 }
 
-std::string Bmi_Cpp_Formulation::get_output_header_line(std::string delimiter) {
-    return boost::algorithm::join(get_output_header_fields(), delimiter);
-}
-
 /**
  * Get the model response for a time step.
  *

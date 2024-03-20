@@ -18,8 +18,6 @@ namespace realization {
 
         std::string get_formulation_type() override;
 
-        std::string get_output_header_line(std::string delimiter) override;
-
         double get_response(time_step_t t_index, time_step_t t_delta) override;
 
         bool is_bmi_input_variable(const std::string &var_name) override;
