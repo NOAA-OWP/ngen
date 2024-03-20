@@ -9,6 +9,7 @@
 #include <vector>
 #include "gtest/gtest.h"
 #include "Bmi_Multi_Formulation.hpp"
+#include "Bmi_Cpp_Formulation.hpp"
 #include "Bmi_Module_Formulation.hpp"
 #include "CsvPerFeatureForcingProvider.hpp"
 #include "ConfigurationException.hpp"
