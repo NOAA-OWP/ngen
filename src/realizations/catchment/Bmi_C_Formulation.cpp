@@ -35,10 +35,6 @@ std::shared_ptr<Bmi_C_Adapter> Bmi_C_Formulation::construct_model(const geojson:
                     output);
 }
 
-std::string Bmi_C_Formulation::get_output_header_line(std::string delimiter) {
-    return boost::algorithm::join(get_output_header_fields(), delimiter);
-}
-
 /**
  * Get the model response for a time step.
  *
