@@ -9,11 +9,7 @@
 #include <boost/optional.hpp>
 
 // Formulations
-#include "Bmi_Cpp_Formulation.hpp"
-#include "Bmi_C_Formulation.hpp"
-#include "Bmi_Fortran_Formulation.hpp"
-#include "Bmi_Multi_Formulation.hpp"
-#include "Bmi_Py_Formulation.hpp"
+#include "Bmi_Formulation.hpp"
 #include <GenericDataProvider.hpp>
 #include "CsvPerFeatureForcingProvider.hpp"
 #include "NullForcingProvider.hpp"
@@ -22,28 +18,9 @@
 #endif
 
 namespace realization {
-    typedef std::shared_ptr<Catchment_Formulation> (*constructor)(std::string, shared_ptr<data_access::GenericDataProvider>, utils::StreamHandler);
+    using constructor = std::shared_ptr<Catchment_Formulation> (*)(std::string, shared_ptr<data_access::GenericDataProvider>, utils::StreamHandler);
 
-    template<class T>
-    static constructor create_formulation_constructor() {
-        return [](std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing_provider, utils::StreamHandler output_stream) -> std::shared_ptr<Catchment_Formulation>{
-            return std::make_shared<T>(id, forcing_provider, output_stream);
-        };
-    }
-
-    static std::map<std::string, constructor> formulations = {
-        {"bmi_c++", create_formulation_constructor<Bmi_Cpp_Formulation>()},
-#ifdef NGEN_BMI_C_LIB_ACTIVE
-        {"bmi_c", create_formulation_constructor<Bmi_C_Formulation>()},
-#endif // NGEN_BMI_C_LIB_ACTIVE
-#ifdef NGEN_BMI_FORTRAN_ACTIVE
-        {"bmi_fortran", create_formulation_constructor<Bmi_Fortran_Formulation>()},
-#endif // NGEN_BMI_FORTRAN_ACTIVE
-        {"bmi_multi", create_formulation_constructor<Bmi_Multi_Formulation>()},
-#ifdef ACTIVATE_PYTHON
-        {"bmi_python", create_formulation_constructor<Bmi_Py_Formulation>()},
-#endif // ACTIVATE_PYTHON
-    };
+    extern std::map<std::string, constructor> formulations;
 
     static std::string valid_formulation_keys(){
         std::string keys = "";

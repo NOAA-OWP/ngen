@@ -5,6 +5,11 @@
 #include "Bmi_Py_Formulation.hpp"
 #include <WrappedDataProvider.hpp>
 
+#include "Bmi_Cpp_Formulation.hpp"
+#include "Bmi_C_Formulation.hpp"
+#include "Bmi_Fortran_Formulation.hpp"
+#include "Bmi_Py_Formulation.hpp"
+
 using namespace realization;
 
 void Bmi_Multi_Formulation::create_multi_formulation(geojson::PropertyMap properties, bool needs_param_validation) {
