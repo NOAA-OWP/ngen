@@ -9,6 +9,7 @@
 #include "GenericDataProvider.hpp"
 #include "OptionalWrappedDataProvider.hpp"
 #include "ConfigurationException.hpp"
+#include "ExternalIntegrationException.hpp"
 
 #define BMI_REALIZATION_CFG_PARAM_REQ__MODULES "modules"
 #define BMI_REALIZATION_CFG_PARAM_OPT__DEFAULT_OUT_VALS "default_output_values"

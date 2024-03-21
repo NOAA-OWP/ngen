@@ -4,9 +4,7 @@
 #include <utility>
 #include <memory>
 #include "Bmi_Formulation.hpp"
-#include "WrappedDataProvider.hpp"
-#include "Bmi_C_Adapter.hpp"
-#include <AorcForcing.hpp>
+#include "Bmi_Adapter.hpp"
 #include <DataProvider.hpp>
 #include <UnitsHelper.hpp>
 #include "bmi_utilities.hpp"
