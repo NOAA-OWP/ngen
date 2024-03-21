@@ -332,6 +332,10 @@ add_subdirectory("src/utilities/mdframe")
 add_subdirectory("src/utilities/logging")
 add_subdirectory("src/utilities/mpi")
 
+if(NGEN_WITH_MPI)
+    target_link_libraries(ngen PUBLIC NGen::MPI_Detour)
+endif()
+
 target_link_libraries(ngen
     PUBLIC
         NGen::config_header
@@ -344,10 +348,6 @@ target_link_libraries(ngen
         NGen::core_mediator
         NGen::logging
 )
-
-if(NGEN_WITH_MPI)
-    target_link_libraries(ngen PUBLIC NGen::MPI_Detour)
-endif()
 
 if(NGEN_WITH_SQLITE)
     add_subdirectory("src/geopackage")
