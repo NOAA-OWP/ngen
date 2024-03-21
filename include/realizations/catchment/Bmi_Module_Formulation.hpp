@@ -41,18 +41,12 @@ namespace realization {
          * @param output_stream
          */
         Bmi_Module_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing_provider, utils::StreamHandler output_stream)
-                : Bmi_Formulation(std::move(id), forcing_provider, output_stream) { };
+                : Bmi_Formulation(std::move(id), forcing_provider, output_stream) { }
 
-        virtual ~Bmi_Module_Formulation() {};
+        virtual ~Bmi_Module_Formulation() = default;
 
-        void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr) override {
-            geojson::PropertyMap options = this->interpret_parameters(config, global);
-            inner_create_formulation(options, false);
-        }
-
-        void create_formulation(geojson::PropertyMap properties) override {
-            inner_create_formulation(properties, true);
-        }
+        void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr) override;
+        void create_formulation(geojson::PropertyMap properties) override;
 
         /**
          * Get the collection of forcing output property names this instance can provide.
@@ -67,16 +61,7 @@ namespace realization {
          * @return The collection of forcing output property names this instance can provide.
          * @see ForcingProvider
          */
-        boost::span<const std::string> get_available_variable_names() override {
-            if (is_model_initialized() && available_forcings.empty()) {
-                for (const std::string &output_var_name : get_bmi_model()->GetOutputVarNames()) {
-                    available_forcings.push_back(output_var_name);
-                    if (bmi_var_names_map.find(output_var_name) != bmi_var_names_map.end())
-                        available_forcings.push_back(bmi_var_names_map[output_var_name]);
-                }
-            }
-            return available_forcings;
-        }
+        boost::span<const std::string> get_available_variable_names() override;
 
         /**
          * Get a delimited string with all the output variable values for the given time step.
@@ -100,19 +85,7 @@ namespace realization {
          * @param timestep The time step for which data is desired.
          * @return A delimited string with all the output variable values for the given time step.
          */
-        std::string get_output_line_for_timestep(int timestep, std::string delimiter) override {
-            // TODO: something must be added to store values if more than the current time step is wanted
-            // TODO: if such a thing is added, it should probably be configurable to turn it off
-            if (timestep != (next_time_step_index - 1)) {
-                throw std::invalid_argument("Only current time step valid when getting output for BMI C++ formulation");
-            }
-            std::string output_str;
-
-            for (const std::string& name : get_output_variable_names()) {
-                output_str += (output_str.empty() ? "" : ",") + std::to_string(get_var_value_as_double(name));
-            }
-            return output_str;
-        }
+        std::string get_output_line_for_timestep(int timestep, std::string delimiter) override;
 
         /**
          * Get the inclusive beginning of the period of time over which this instance can provide data for this forcing.
@@ -123,10 +96,7 @@ namespace realization {
          *
          * @return The inclusive beginning of the period of time over which this instance can provide this data.
          */
-        time_t get_variable_time_begin(const std::string &variable_name) {
-            // TODO: come back and implement if actually necessary for this type; for now don't use
-            throw std::runtime_error("Bmi_Modular_Formulation does not yet implement get_variable_time_begin");
-        }
+        time_t get_variable_time_begin(const std::string &variable_name);
 
         /**
          * Get the inclusive beginning of the period of time over which this instance can provide data for this forcing.
@@ -137,56 +107,27 @@ namespace realization {
          *
          * @return The inclusive beginning of the period of time over which this instance can provide this data.
          */
-        long get_data_start_time() override
-        {
-            return this->get_bmi_model()->GetStartTime();
-        }
+        long get_data_start_time() override;
 
-        /**
-         * Get the exclusive ending of the period of time over which this instance can provide data for this forcing.
-         *
-         * This is part of the @ref ForcingProvider interface.  This interface must be implemented for items of this
-         * type to be usable as "forcing" providers for situations when some other object needs to receive as an input
-         * (i.e., one of its forcings) a data property output from this object.
-         *
-         * @return The exclusive ending of the period of time over which this instance can provide this data.
-         */
-        //time_t get_forcing_output_time_end(const std::string &output_name) {
-        time_t get_variable_time_end(const std::string &varibale_name) {
-            // TODO: come back and implement if actually necessary for this type; for now don't use
-            throw std::runtime_error("Bmi_Module_Formulation does not yet implement get_variable_time_end");
-        }
+        long get_data_stop_time() override;
 
-        long get_data_stop_time() override {
-            // TODO: come back and implement if actually necessary for this type; for now don't use
-            throw std::runtime_error("Bmi_Module_Formulation does not yet implement get_data_stop_time");
-        }
-
-        long record_duration() override {
-            throw std::runtime_error("Bmi_Module_Formulation does not yet implement record_duration");
-        }
+        long record_duration() override;
 
         /**
          * Get the current time for the backing BMI model in its native format and units.
          *
          * @return The current time for the backing BMI model in its native format and units.
          */
-        const double get_model_current_time() override {
-            return get_bmi_model()->GetCurrentTime();
-        }
+        const double get_model_current_time() override;
 
         /**
          * Get the end time for the backing BMI model in its native format and units.
          *
          * @return The end time for the backing BMI model in its native format and units.
          */
-        const double get_model_end_time() override {
-            return get_bmi_model()->GetEndTime();
-        }
+        const double get_model_end_time() override;
 
-        const std::vector<std::string> &get_required_parameters() override {
-            return REQUIRED_PARAMETERS;
-        }
+        const std::vector<std::string> &get_required_parameters() override;
 
         /**
          * When possible, translate a variable name for a BMI model to an internally recognized name.
@@ -202,13 +143,7 @@ namespace realization {
          * @param model_var_name The BMI variable name to translate so its purpose is recognized internally.
          * @return Either the internal equivalent variable name, or the provided name if there is not a mapping entry.
          */
-        const std::string &get_config_mapped_variable_name(const std::string &model_var_name) override {
-            // TODO: need to introduce validation elsewhere that all mapped names are valid AORC field constants.
-            if (bmi_var_names_map.find(model_var_name) != bmi_var_names_map.end())
-                return bmi_var_names_map[model_var_name];
-            else
-                return model_var_name;
-        }
+        const std::string &get_config_mapped_variable_name(const std::string &model_var_name) override;
 
         /**
          * Get the index of the forcing time step that contains the given point in time.
@@ -223,10 +158,7 @@ namespace realization {
          * @return The index of the forcing time step that contains the given point in time.
          * @throws std::out_of_range If the given point is not in any time step.
          */
-        size_t get_ts_index_for_time(const time_t &epoch_time) override {
-            // TODO: come back and implement if actually necessary for this type; for now don't use
-            throw std::runtime_error("Bmi_Singular_Formulation does not yet implement get_ts_index_for_time");
-        }
+        size_t get_ts_index_for_time(const time_t &epoch_time) override;
 
         /**
          * @brief Get the 1D values of a forcing property for an arbitrary time period, converting units if needed.
@@ -239,56 +171,7 @@ namespace realization {
          * @throws std::out_of_range If data for the time period is not available.
          * @throws std::runtime_error output_name is not one of the available outputs of this provider instance.
          */
-        std::vector<double> get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m=SUM) override
-        {
-            std::string output_name = selector.get_variable_name();
-            time_t init_time = selector.get_init_time();
-            long duration_s = selector.get_duration_secs();
-            std::string output_units = selector.get_output_units();
-
-            // First make sure this is an available output
-            auto forcing_outputs = get_available_variable_names();
-            if (std::find(forcing_outputs.begin(), forcing_outputs.end(), output_name) == forcing_outputs.end()) {
-                throw std::runtime_error(get_formulation_type() + " received invalid output forcing name " + output_name);
-            }
-            // TODO: do this, or something better, later; right now, just assume anything using this as a provider is
-            //  consistent with times
-            /*
-            if (last_model_response_delta == 0 && last_model_response_start_time == 0) {
-                throw runtime_error(get_formulation_type() + " does not properly set output time validity ranges "
-                                                             "needed to provide outputs as forcings");
-            }
-            */
-
-            // check if output is available from BMI
-            std::string bmi_var_name;
-            get_bmi_output_var_name(output_name, bmi_var_name);
-
-            if( !bmi_var_name.empty() )
-            {
-                auto model = get_bmi_model().get();
-                //Get vector of double values for variable
-                //The return type of the vector here dependent on what
-                //needs to use it.  For other BMI moudles, that is runtime dependent
-                //on the type of the requesting module 
-                auto values = models::bmi::GetValue<double>(*model, bmi_var_name);
-
-                // Convert units
-                std::string native_units = get_bmi_model()->GetVarUnits(bmi_var_name);
-                try {
-                    UnitsHelper::convert_values(native_units, values.data(), output_units, values.data(), values.size());
-                    return values;
-                }
-                catch (const std::runtime_error& e){
-                    #ifndef UDUNITS_QUIET
-                    logging::warning((std::string("WARN: Unit conversion unsuccessful - Returning unconverted value! (\"")+e.what()+"\")\n").c_str());
-                    #endif
-                    return values;
-                }
-            }
-            //This is unlikely (impossible?) to throw since a pre-check on available names is done above. Assert instead?
-            throw std::runtime_error(get_formulation_type() + " received invalid output forcing name " + output_name);
-        }
+        std::vector<double> get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m=SUM) override;
 
         /**
          * Get the value of a forcing property for an arbitrary time period, converting units if needed.
@@ -307,64 +190,10 @@ namespace realization {
          * @throws std::out_of_range If data for the time period is not available.
          * @see ForcingProvider::get_value
          */
-        double get_value(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override
-        {
-            std::string output_name = selector.get_variable_name();
-            time_t init_time = selector.get_init_time();
-            long duration_s = selector.get_duration_secs();
-            std::string output_units = selector.get_output_units();
+        double get_value(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override;
 
-            // First make sure this is an available output
-            auto forcing_outputs = get_available_variable_names();
-            if (std::find(forcing_outputs.begin(), forcing_outputs.end(), output_name) == forcing_outputs.end()) {
-                throw std::runtime_error(get_formulation_type() + " received invalid output forcing name " + output_name);
-            }
-            // TODO: do this, or something better, later; right now, just assume anything using this as a provider is
-            //  consistent with times
-            /*
-            if (last_model_response_delta == 0 && last_model_response_start_time == 0) {
-                throw runtime_error(get_formulation_type() + " does not properly set output time validity ranges "
-                                                             "needed to provide outputs as forcings");
-            }
-            */
-
-            // check if output is available from BMI
-            std::string bmi_var_name;
-            get_bmi_output_var_name(output_name, bmi_var_name);
-            
-            if( !bmi_var_name.empty() )
-            {
-                //Get forcing value from BMI variable
-                double value = get_var_value_as_double(bmi_var_name);
-
-                // Convert units
-                std::string native_units = get_bmi_model()->GetVarUnits(bmi_var_name);
-                try {
-                    return UnitsHelper::get_converted_value(native_units, value, output_units);
-                }
-                catch (const std::runtime_error& e){
-                    #ifndef UDUNITS_QUIET
-                    std::cerr<<"WARN: Unit conversion unsuccessful - Returning unconverted value! (\""<<e.what()<<"\")"<<std::endl;
-                    #endif
-                    return value;
-                }
-            }
-
-            //This is unlikely (impossible?) to throw since a pre-check on available names is done above. Assert instead?
-            throw std::runtime_error(get_formulation_type() + " received invalid output forcing name " + output_name);
-        }
-
-        bool is_bmi_input_variable(const std::string &var_name) override {
-           return is_var_name_in_collection(get_bmi_input_variables(), var_name);
-        }
-
-        bool is_bmi_output_variable(const std::string &var_name) override {
-            return is_var_name_in_collection(get_bmi_output_variables(), var_name);
-        }
-
-        inline bool is_var_name_in_collection(const std::vector<std::string> &all_names, const std::string &var_name) {
-            return std::count(all_names.begin(), all_names.end(), var_name) > 0;
-        }
+        bool is_bmi_input_variable(const std::string &var_name) override;
+        bool is_bmi_output_variable(const std::string &var_name) override;
 
         /**
          * Get whether a property's per-time-step values are each an aggregate sum over the entire time step.
@@ -384,18 +213,10 @@ namespace realization {
          * @param name The name of the forcing property for which the current value is desired.
          * @return Whether the property's value is an aggregate sum, which is always ``true`` for this type.
          */
-        bool is_property_sum_over_time_step(const std::string& name) override {
-            // TODO: verify with some kind of proof that "always true" is appropriate
-            return true;
-        }
+        bool is_property_sum_over_time_step(const std::string& name) override;
 
-        const std::vector<std::string> get_bmi_input_variables() override {
-            return get_bmi_model()->GetInputVarNames();
-        }
-
-        const std::vector<std::string> get_bmi_output_variables() override {
-            return get_bmi_model()->GetOutputVarNames();
-        }
+        const std::vector<std::string> get_bmi_input_variables() override;
+        const std::vector<std::string> get_bmi_output_variables() override;
 
     protected:
 
