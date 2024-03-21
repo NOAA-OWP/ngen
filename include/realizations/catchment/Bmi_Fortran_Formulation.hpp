@@ -16,7 +16,7 @@ using namespace models::bmi;
 
 namespace realization {
 
-    class Bmi_Fortran_Formulation : public Bmi_Module_Formulation<Bmi_Fortran_Adapter> {
+    class Bmi_Fortran_Formulation : public Bmi_Module_Formulation {
 
     public:
 
@@ -72,7 +72,7 @@ namespace realization {
          * @param properties Configuration properties for the formulation.
          * @return A shared pointer to a newly constructed model adapter object.
          */
-        std::shared_ptr<Bmi_Fortran_Adapter> construct_model(const geojson::PropertyMap& properties) override;
+        std::shared_ptr<Bmi_Adapter> construct_model(const geojson::PropertyMap& properties) override;
 
         time_t convert_model_time(const double &model_time) override {
             return (time_t) (get_bmi_model()->convert_model_time_to_seconds(model_time));

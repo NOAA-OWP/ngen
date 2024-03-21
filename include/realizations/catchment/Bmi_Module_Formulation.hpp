@@ -27,10 +27,7 @@ namespace realization {
 
     /**
      * Abstraction of a formulation with a single backing model object that implements the BMI.
-     *
-     * @tparam M The type for the backing BMI model object.
      */
-    template <class M>
     class Bmi_Module_Formulation : public Bmi_Formulation {
 
     public:
@@ -443,7 +440,7 @@ namespace realization {
          *                   variables
          * @return A shared pointer to a newly constructed model object
          */
-        virtual std::shared_ptr<M> construct_model(const geojson::PropertyMap& properties) = 0;
+        virtual std::shared_ptr<models::bmi::Bmi_Adapter> construct_model(const geojson::PropertyMap& properties) = 0;
 
         /**
          * Determine and set the offset time of the model in seconds, compared to forcing data.
@@ -487,7 +484,7 @@ namespace realization {
          *
          * @return Shared pointer to the backing model object that implements the BMI.
          */
-        std::shared_ptr<M> get_bmi_model() {
+        std::shared_ptr<models::bmi::Bmi_Adapter> get_bmi_model() {
             return bmi_model;
         }
 
@@ -738,7 +735,7 @@ namespace realization {
          *
          * @param model Shared pointer to the BMI model.
          */
-        void set_bmi_model(std::shared_ptr<M> model) {
+        void set_bmi_model(std::shared_ptr<models::bmi::Bmi_Adapter> model) {
             bmi_model = model;
         }
 
@@ -1000,7 +997,7 @@ namespace realization {
         /** The set of available "forcings" (output variables, plus their mapped aliases) that the model can provide. */
         std::vector<std::string> available_forcings;
         std::string bmi_init_config;
-        std::shared_ptr<M> bmi_model;
+        std::shared_ptr<models::bmi::Bmi_Adapter> bmi_model;
         /** Whether backing model has fixed time step size. */
         bool bmi_model_time_step_fixed = true;
         /**

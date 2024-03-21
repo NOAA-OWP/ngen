@@ -52,7 +52,7 @@ protected:
     }
 
     static std::shared_ptr<models::bmi::Bmi_Py_Adapter> get_friend_bmi_model(Bmi_Py_Formulation& formulation) {
-        return formulation.get_bmi_model();
+        return std::dynamic_pointer_cast<models::bmi::Bmi_Py_Adapter>(formulation.get_bmi_model());
     }
 
     static time_t get_friend_bmi_model_start_time_forcing_offset_s(Bmi_Py_Formulation& formulation) {

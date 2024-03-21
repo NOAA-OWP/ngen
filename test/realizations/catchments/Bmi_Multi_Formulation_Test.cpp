@@ -90,7 +90,7 @@ protected:
 
     template<class M, class N>
     static std::shared_ptr<N> get_friend_bmi_adapter(const Bmi_Multi_Formulation& formulation, const int mod_index) {
-        std::shared_ptr<N> nested = std::static_pointer_cast<M>(formulation.modules[mod_index])->get_bmi_model();
+        std::shared_ptr<N> nested = std::dynamic_pointer_cast<N>(std::static_pointer_cast<M>(formulation.modules[mod_index])->get_bmi_model());
         return nested;
     }
 
