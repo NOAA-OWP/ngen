@@ -10,7 +10,7 @@ namespace realization {
      * @brief Encapsulates a bmi::Bmi model in C++ such that it can be loaded as a formulation, as such also so that it can be dynamically loaded from a shared library file.
      * 
      */
-    class Bmi_Cpp_Formulation : public Bmi_Module_Formulation<models::bmi::Bmi_Cpp_Adapter> {
+    class Bmi_Cpp_Formulation : public Bmi_Module_Formulation {
 
     public:
 
@@ -26,7 +26,7 @@ namespace realization {
 
     protected:
 
-        std::shared_ptr<models::bmi::Bmi_Cpp_Adapter> construct_model(const geojson::PropertyMap& properties) override;
+        std::shared_ptr<models::bmi::Bmi_Adapter> construct_model(const geojson::PropertyMap& properties) override;
 
         time_t convert_model_time(const double &model_time) override {
             return (time_t) (get_bmi_model()->convert_model_time_to_seconds(model_time));

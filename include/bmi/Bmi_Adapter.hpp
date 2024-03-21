@@ -44,6 +44,13 @@ namespace models {
             Bmi_Adapter(Bmi_Adapter &&) = default;
 
             /**
+             * Whether the backing model has been initialized yet.
+             *
+             * @return Whether the backing model has been initialized yet.
+             */
+            virtual bool is_model_initialized() = 0;
+
+            /**
              * Determine backing model's time units and return an appropriate conversion factor.
              *
              * A backing BMI model may use arbitrary units for time, but it will expose what those units are via the

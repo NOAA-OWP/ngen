@@ -17,7 +17,7 @@ class Bmi_Py_Formulation_Test;
 
 namespace realization {
 
-    class Bmi_Py_Formulation : public Bmi_Module_Formulation<models::bmi::Bmi_Py_Adapter> {
+    class Bmi_Py_Formulation : public Bmi_Module_Formulation {
 
     public:
 
@@ -71,7 +71,7 @@ namespace realization {
 
     protected:
 
-        std::shared_ptr<models::bmi::Bmi_Py_Adapter> construct_model(const geojson::PropertyMap &properties) override;
+        std::shared_ptr<models::bmi::Bmi_Adapter> construct_model(const geojson::PropertyMap &properties) override;
 
         time_t convert_model_time(const double &model_time) override;
 

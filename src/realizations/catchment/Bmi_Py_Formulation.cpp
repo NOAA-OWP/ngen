@@ -8,9 +8,9 @@ using namespace models::bmi;
 using namespace pybind11::literals;
 
 Bmi_Py_Formulation::Bmi_Py_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing, utils::StreamHandler output_stream)
-: Bmi_Module_Formulation<models::bmi::Bmi_Py_Adapter>(id, std::move(forcing), output_stream) { }
+: Bmi_Module_Formulation(id, std::move(forcing), output_stream) { }
 
-shared_ptr<Bmi_Py_Adapter> Bmi_Py_Formulation::construct_model(const geojson::PropertyMap &properties) {
+shared_ptr<Bmi_Adapter> Bmi_Py_Formulation::construct_model(const geojson::PropertyMap &properties) {
     auto python_type_name_iter = properties.find(BMI_REALIZATION_CFG_PARAM_OPT__PYTHON_TYPE_NAME);
     if (python_type_name_iter == properties.end()) {
         throw std::runtime_error("BMI Python formulation requires Python model class type, but none given in config");
@@ -92,8 +92,10 @@ double Bmi_Py_Formulation::get_var_value_as_double(const std::string &var_name) 
 }
 
 double Bmi_Py_Formulation::get_var_value_as_double(const int &index, const std::string &var_name) {
-    std::string val_type = get_bmi_model()->GetVarType(var_name);
-    size_t val_item_size = (size_t)get_bmi_model()->GetVarItemsize(var_name);
+    auto model = std::dynamic_pointer_cast<models::bmi::Bmi_Py_Adapter>(get_bmi_model());
+
+    std::string val_type = model->GetVarType(var_name);
+    size_t val_item_size = (size_t)model->GetVarItemsize(var_name);
 
     //void *dest;
     int indices[1];
@@ -102,38 +104,38 @@ double Bmi_Py_Formulation::get_var_value_as_double(const int &index, const std::
     // The available types and how they are handled here should match what is in SetValueAtIndices
     if (val_type == "int" && val_item_size == sizeof(short)) {
         short dest;
-        get_bmi_model()->get_value_at_indices(var_name, &dest, indices, 1, false);
+        model->get_value_at_indices(var_name, &dest, indices, 1, false);
         return (double)dest;
     }
     if (val_type == "int" && val_item_size == sizeof(int)) {
         int dest;
-        get_bmi_model()->get_value_at_indices(var_name, &dest, indices, 1, false);
+        model->get_value_at_indices(var_name, &dest, indices, 1, false);
         return (double)dest;
     }
     if (val_type == "int" && val_item_size == sizeof(long)) {
         long dest;
-        get_bmi_model()->get_value_at_indices(var_name, &dest, indices, 1, false);
+        model->get_value_at_indices(var_name, &dest, indices, 1, false);
         return (double)dest;
     }
     if (val_type == "int" && val_item_size == sizeof(long long)) {
         long long dest;
-        get_bmi_model()->get_value_at_indices(var_name, &dest, indices, 1, false);
+        model->get_value_at_indices(var_name, &dest, indices, 1, false);
         return (double)dest;
     }
     if (val_type == "float" || val_type == "float16" || val_type == "float32" || val_type == "float64") {
         if (val_item_size == sizeof(float)) {
             float dest;
-            get_bmi_model()->get_value_at_indices(var_name, &dest, indices, 1, false);
+            model->get_value_at_indices(var_name, &dest, indices, 1, false);
             return (double) dest;
         }
         if (val_item_size == sizeof(double)) {
             double dest;
-            get_bmi_model()->get_value_at_indices(var_name, &dest, indices, 1, false);
+            model->get_value_at_indices(var_name, &dest, indices, 1, false);
             return dest;
         }
         if (val_item_size == sizeof(long double)) {
             long double dest;
-            get_bmi_model()->get_value_at_indices(var_name, &dest, indices, 1, false);
+            model->get_value_at_indices(var_name, &dest, indices, 1, false);
             return (double) dest;
         }
     }
