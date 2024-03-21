@@ -39,7 +39,7 @@ namespace realization {
         Bmi_Module_Formulation(std::string id, std::shared_ptr<data_access::GenericDataProvider> forcing_provider, utils::StreamHandler output_stream)
                 : Bmi_Formulation(std::move(id), forcing_provider, output_stream) { }
 
-        virtual ~Bmi_Module_Formulation() = default;
+        ~Bmi_Module_Formulation() override = default;
 
         void create_formulation(boost::property_tree::ptree &config, geojson::PropertyMap *global = nullptr) override;
         void create_formulation(geojson::PropertyMap properties) override;
