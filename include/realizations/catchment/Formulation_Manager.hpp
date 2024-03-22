@@ -19,6 +19,7 @@
 #include "realizations/config/routing.hpp"
 #include "realizations/config/config.hpp"
 #include "realizations/config/layer.hpp"
+#include "NetcdfOutputWriter.hpp"
 
 namespace realization {
 
@@ -61,15 +62,11 @@ namespace realization {
                     global_config = realization::config::Config(*possible_global_config);
                 }
 
-<<<<<<< HEAD
-                auto possible_simulation_time = tree.get_child_optional("time");
-=======
                 /**
                  * Read simulation time from configuration file
                  * /// \todo TODO: Separate input_interval from output_interval
                  */            
                 auto possible_simulation_time = config_ptree.get_child_optional("time");
->>>>>>> Rename variable 'tree' to 'config_ptree' in FormulationManager for clarity.
 
                 if (!possible_simulation_time) {
                     throw std::runtime_error("ERROR: No simulation time period defined.");
@@ -86,7 +83,6 @@ namespace realization {
                 */
 
                 // try to get the json node
-<<<<<<< HEAD
                 auto layers_json_array = tree.get_child_optional("layers");
                 //Create the default surface layer
                 config::Layer layer;
@@ -98,26 +94,6 @@ namespace realization {
 
                 if(layers_json_array){
                     
-=======
-                auto layers_json_array = config_ptree.get_child_optional("layers");
-
-                // check to see if the node existed
-                if (!layers_json_array) {
-                    // layer description struct
-                        ngen::LayerDescription layer_desc;
-
-                        // extract and store layer data from the json
-                        layer_desc.name = "surface layer";
-                        layer_desc.id = 0;
-                        layer_desc.time_step = 3600;
-                        layer_desc.time_step_units = "s";
-
-                        // add the layer to storage
-                        layer_storage.put_layer(layer_desc, layer_desc.id);
-                }
-                else
-                {
->>>>>>> Rename variable 'tree' to 'config_ptree' in FormulationManager for clarity.
                     for (std::pair<std::string, boost::property_tree::ptree> layer_config : *layers_json_array) 
                     {
                         layer = config::Layer(layer_config.second);
@@ -144,25 +120,55 @@ namespace realization {
                     }
                 }
 
-<<<<<<< HEAD
                 //TODO use the set of layer providers as input for catchments to lookup from
-=======
                 // try to get the json node
-                auto outputs_json_array = config_ptree.get_child_optional("outputs");
+                auto outputs_container = config_ptree.get_child_optional("outputs");
 
                 //Check to see if custom outputs have been defined
-                if (!outputs_json_array) 
+                if (!outputs_container) 
                 {
-                    for (std::pair<std::string, boost::property_tree::ptree> layer_config : *outputs_json_array) 
+                    for (std::pair<std::string, boost::property_tree::ptree> output_pair : *outputs_container)
                     {
+                        auto output_json_array = output_pair.second;
+                        for (std::pair<std::string, boost::property_tree::ptree> output_pair : *output_json_array) 
+                        {
+                            if (boost::to_lower(output_pair.fiset) == "dim" )
+                            {
+                                data_output::NetcdfDimensionDiscription nc_dim_des(
+                                    output_par.second.get<std::string>("name"), 
+                                    output_par.second.get<int>("size"));
+                            }
+                            else if (boost::to_lower(output_pair.fiset) == "var" )
+                            {
+                                std::vector< std::string > dimension_names;
 
+                                auto dimension_array = output_par.second.get_child_optional("dimension")
+                                if ( dimension_array )
+                                {
+                                    for(std::pair<std::string, boost::property_tree::ptree> dim_name_pair : *dimension_array )
+                                    {
+                                        dimension_names.push_back(dim_name_pair.second);
+                                    }
+                                }
+                                
+                                data_output::NetcdfVariableDiscription nc_var_des(
+                                    output_par.second.get<std::string>("name"),
+                                    output_par.second.get<std::string>("name"), 
+                                    dimension_names;)
+
+
+                                // TODO now use the variables and dimensions to make the file
+                            }
+                        }
                     }
+
+                }
+                    
                 }
                 else // setup default output of streamflow from nexus nodes
                 {
 
                 }
->>>>>>> Rename variable 'tree' to 'config_ptree' in FormulationManager for clarity.
 
                 /**
                  * Read routing configurations from configuration file
