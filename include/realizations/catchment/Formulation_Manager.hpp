@@ -32,17 +32,17 @@ namespace realization {
             Formulation_Manager(std::stringstream &data) {
                 boost::property_tree::ptree loaded_tree;
                 boost::property_tree::json_parser::read_json(data, loaded_tree);
-                this->tree = loaded_tree;
+                this->config_ptree = loaded_tree;
             }
 
             Formulation_Manager(const std::string &file_path) {
                 boost::property_tree::ptree loaded_tree;
                 boost::property_tree::json_parser::read_json(file_path, loaded_tree);
-                this->tree = loaded_tree;
+                this->config_ptree = loaded_tree;
             }
 
             Formulation_Manager(boost::property_tree::ptree &loaded_tree) {
-                this->tree = loaded_tree;
+                this->config_ptree = loaded_tree;
             }
 
             virtual ~Formulation_Manager(){
@@ -51,17 +51,25 @@ namespace realization {
 #endif
             };
 
-            virtual void read(geojson::GeoJSON fabric, utils::StreamHandler output_stream) {
+            virtual void read(geojson::GeoJSON catchment_json, utils::StreamHandler output_stream) {
                 //TODO seperate the parsing of configuration options like time
                 //and routing and other non feature specific tasks from this main function
                 //which has to iterate the entire hydrofabric.
-                auto possible_global_config = tree.get_child_optional("global");
+                auto possible_global_config = config_ptree.get_child_optional("global");
 
                 if (possible_global_config) {
                     global_config = realization::config::Config(*possible_global_config);
                 }
 
+<<<<<<< HEAD
                 auto possible_simulation_time = tree.get_child_optional("time");
+=======
+                /**
+                 * Read simulation time from configuration file
+                 * /// \todo TODO: Separate input_interval from output_interval
+                 */            
+                auto possible_simulation_time = config_ptree.get_child_optional("time");
+>>>>>>> Rename variable 'tree' to 'config_ptree' in FormulationManager for clarity.
 
                 if (!possible_simulation_time) {
                     throw std::runtime_error("ERROR: No simulation time period defined.");
@@ -78,6 +86,7 @@ namespace realization {
                 */
 
                 // try to get the json node
+<<<<<<< HEAD
                 auto layers_json_array = tree.get_child_optional("layers");
                 //Create the default surface layer
                 config::Layer layer;
@@ -89,6 +98,26 @@ namespace realization {
 
                 if(layers_json_array){
                     
+=======
+                auto layers_json_array = config_ptree.get_child_optional("layers");
+
+                // check to see if the node existed
+                if (!layers_json_array) {
+                    // layer description struct
+                        ngen::LayerDescription layer_desc;
+
+                        // extract and store layer data from the json
+                        layer_desc.name = "surface layer";
+                        layer_desc.id = 0;
+                        layer_desc.time_step = 3600;
+                        layer_desc.time_step_units = "s";
+
+                        // add the layer to storage
+                        layer_storage.put_layer(layer_desc, layer_desc.id);
+                }
+                else
+                {
+>>>>>>> Rename variable 'tree' to 'config_ptree' in FormulationManager for clarity.
                     for (std::pair<std::string, boost::property_tree::ptree> layer_config : *layers_json_array) 
                     {
                         layer = config::Layer(layer_config.second);
@@ -115,12 +144,30 @@ namespace realization {
                     }
                 }
 
+<<<<<<< HEAD
                 //TODO use the set of layer providers as input for catchments to lookup from
+=======
+                // try to get the json node
+                auto outputs_json_array = config_ptree.get_child_optional("outputs");
+
+                //Check to see if custom outputs have been defined
+                if (!outputs_json_array) 
+                {
+                    for (std::pair<std::string, boost::property_tree::ptree> layer_config : *outputs_json_array) 
+                    {
+
+                    }
+                }
+                else // setup default output of streamflow from nexus nodes
+                {
+
+                }
+>>>>>>> Rename variable 'tree' to 'config_ptree' in FormulationManager for clarity.
 
                 /**
                  * Read routing configurations from configuration file
                  */      
-                auto possible_routing_configs = tree.get_child_optional("routing");
+                auto possible_routing_configs = config_ptree.get_child_optional("routing");
                 
                 if (possible_routing_configs) {
                     //Since it is possible to build NGEN without routing support, if we see it in the config
@@ -138,11 +185,11 @@ namespace realization {
                 /**
                  * Read catchment configurations from configuration file
                  */      
-                auto possible_catchment_configs = tree.get_child_optional("catchments");
+                auto possible_catchment_configs = config_ptree.get_child_optional("catchments");
 
                 if (possible_catchment_configs) {
                     for (std::pair<std::string, boost::property_tree::ptree> catchment_config : *possible_catchment_configs) {
-                      int catchment_index = fabric->find(catchment_config.first);
+                      int catchment_index = catchment_json->find(catchment_config.first);
                       if( catchment_index == -1 )
                       {
                           #ifndef NGEN_QUIET
@@ -175,7 +222,7 @@ namespace realization {
 
                 }//end if possible_catchment_configs
 
-                for (geojson::Feature location : *fabric) {
+                for (geojson::Feature location : *catchment_json) {
                     if (not this->contains(location->get_id())) {
                         std::shared_ptr<Catchment_Formulation> missing_formulation = this->construct_missing_formulation(
                           location, output_stream, simulation_time_config);
@@ -260,7 +307,7 @@ namespace realization {
              * @return std::string of the output root directory
              */
             std::string get_output_root() const noexcept {
-                const auto output_root = this->tree.get_optional<std::string>("output_root");
+                const auto output_root = this->config_ptree.get_optional<std::string>("output_root");
                 if (output_root != boost::none && *output_root != "") {
                     // Check if the path ends with a trailing slash,
                     // otherwise add it.
@@ -608,7 +655,7 @@ namespace realization {
                 model_params.swap(attr);
             }
 
-            boost::property_tree::ptree tree;
+            boost::property_tree::ptree config_ptree;
 
             realization::config::Config global_config;
 
