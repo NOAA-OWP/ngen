@@ -108,7 +108,7 @@ runs:
 
         - name: Cache Boost Dependency
           id: cache-boost-dep
-          uses: actions/cache@v3
+          uses: actions/cache@v4
           with:
             path: boost_1_79_0
             key: unix-boost-dep
