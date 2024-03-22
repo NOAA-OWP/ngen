@@ -1,0 +1,44 @@
+{
+    "global": {
+        "formulations": [
+            {
+                "name": "bmi_multi",
+                "params": {
+                    "model_type_name": "bmi_multi_sloth",
+                    "forcing_file": "",
+                    "init_config": "",
+                    "allow_exceed_end_time": true,
+                    "main_output_variable": "z",
+                    "modules": [
+			{
+			    "name": "bmi_c++",
+			    "params": {
+                                "model_type_name": "bmi_c++_sloth",
+                                "library_file": "./extern/sloth/cmake_build/libslothmodel",
+                                "init_config": "/dev/null",
+                                "allow_exceed_end_time": true,
+                                "main_output_variable": "z",
+                                "uses_forcing_file": false,
+                                "model_params": {
+				    "sloth_ice_fraction_schaake(1,double,m,node)": 0.0,
+				    "sloth_ice_fraction_xinanjiang(1,double,1,node)": 0.0,
+				    "sloth_smp(1,double,1,node)": 0.0
+                                }
+			    }
+                        }
+                    ],
+                    "uses_forcing_file": false
+                }
+            }
+        ],
+        "forcing": {
+            "path": "./NextGen_forcing_2016010100.nc",
+            "provider": "NetCDF"
+        }
+    },
+    "time": {
+        "start_time": "2016-01-01 00:00:00",
+        "end_time": "2016-01-10 23:00:00",
+        "output_interval": 3600
+    }
+}
