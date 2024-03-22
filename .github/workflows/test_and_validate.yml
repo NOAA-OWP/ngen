@@ -66,7 +66,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Build PET Tests
         uses: ./.github/actions/ngen-build
@@ -94,7 +94,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Build Unit Tests
         uses: ./.github/actions/ngen-build
@@ -123,7 +123,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       #make sure cxx bmi is initialized/ready
       - uses: ./.github/actions/ngen-submod-build
@@ -158,7 +158,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Build Unit Tests
         uses: ./.github/actions/ngen-build
@@ -191,7 +191,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Build Unit Tests
         uses: ./.github/actions/ngen-build
@@ -224,7 +224,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out repository under $GITHUB_WORKSPACE, so job can access it
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Build Unit Tests
         uses: ./.github/actions/ngen-build
@@ -259,7 +259,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Build Unit Tests
         uses: ./.github/actions/ngen-build
