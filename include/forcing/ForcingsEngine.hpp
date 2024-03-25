@@ -62,6 +62,15 @@ struct ForcingsEngine
     size_type time_index(time_t ctime) const noexcept;
 
     /**
+     * @brief Get the index for a std::chrono::time_point within this instance of the
+     *        Forcings Engine's temporal domain.
+     * 
+     * @param epoch std::chrono::time_point
+     * @return size_type, where the index represents a point between time_begin() and time_end() by time_step().
+     */
+    size_type time_index(clock_type::time_point epoch) const noexcept;
+
+    /**
      * @brief Get the index in `CAT-ID` for a given divide in the instance cache.
      * @note The `CAT-ID` output variable uses integer values instead of strings.
      * 
@@ -79,18 +88,31 @@ struct ForcingsEngine
     size_type variable_index(const std::string& variable) const noexcept;
 
     /**
-     * @brief Get a forcing value from the instance cache, or update the instance
-     *        and its cache.
+     * @brief Get a forcing value from the instance
      * 
-     * @param raw_time C-style epoch for the time to get
+     * @param raw_time Epoch for the time to get
      * @param divide_id Divide ID to index at
      * @param variable Forcings variable to get
      * @return double 
      */
     double at(
-        const time_t& raw_time,
+        const clock_type::time_point& raw_time,
         const std::string& divide_id,
         const std::string& variable
+    );
+
+    /**
+     * @brief Get a forcing value from the instance
+     * 
+     * @param time_index Time index
+     * @param divide_index Divide index
+     * @param variable_index Variable index
+     * @return double 
+     */
+    double at(
+        size_type time_idx,
+        size_type divide_idx,
+        size_type variable_idx
     );
 
     /**
