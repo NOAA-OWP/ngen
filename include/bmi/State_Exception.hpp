@@ -3,6 +3,7 @@
 
 #include <exception>
 #include <utility>
+#include <string>
 
 namespace models {
     namespace external {

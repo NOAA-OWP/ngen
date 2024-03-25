@@ -3,10 +3,13 @@
 
 #include <memory>
 #include <string>
-#include "AbstractCLibBmiAdapter.hpp"
+
 #include "bmi.h"
-#include "JSONProperty.hpp"
-#include "StreamHandler.hpp"
+#include "AbstractCLibBmiAdapter.hpp"
+#include "State_Exception.hpp"
+#include "utilities/StreamHandler.hpp"
+#include "utilities/ExternalIntegrationException.hpp"
+
 
 // Forward declaration to provide access to protected items in testing
 class Bmi_C_Adapter_Test;
@@ -20,7 +23,7 @@ namespace models {
          * An adapter class to serve as a C++ interface to the essential aspects of external models written in the C
          * language that implement the BMI.
          */
-        class Bmi_C_Adapter : public AbstractCLibBmiAdapter {
+        class Bmi_C_Adapter final : public AbstractCLibBmiAdapter {
 
         public:
 
@@ -101,7 +104,7 @@ namespace models {
              *
              * Note that this calls the `Finalize()` function for cleaning up this object and its backing BMI model.
              */
-            virtual ~Bmi_C_Adapter() {
+            ~Bmi_C_Adapter() override {
                 finalizeForCAdapter();
             }
 

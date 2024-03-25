@@ -13,6 +13,7 @@
 #include "Bmi_Py_Formulation.hpp"
 #include "python/InterpreterUtil.hpp"
 #include <CsvPerFeatureForcingProvider.hpp>
+#include "utilities/FileChecker.h"
 
 namespace py = pybind11;
 using namespace pybind11::literals; // to bring in the `_a` literal for pybind11 keyword args functionality
