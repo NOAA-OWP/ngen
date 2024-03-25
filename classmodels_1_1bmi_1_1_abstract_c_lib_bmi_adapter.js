@@ -53,6 +53,7 @@ var classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter =
     [ "GetVarUnits", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a75725d44cf7432a7f09f1ac403727d64", null ],
     [ "Initialize", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#aeace85bbd89962f2945bec0ca3c76091", null ],
     [ "Initialize", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a4a2a8f1fb2442ec5e3a5bd1c7a3b3ef2", null ],
+    [ "is_model_initialized", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a833fd44ca84e9b77b876f75e23215776", null ],
     [ "isInitialized", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a31e002ee7effe39ca0f07b7c2f16a453", null ],
     [ "SetValue", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#ae0e047f16b967e6b6cab77d3285add30", null ],
     [ "SetValueAtIndices", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a3cecd50be90621a3d47cc811258c5f75", null ],

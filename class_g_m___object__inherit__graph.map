@@ -1,31 +1,25 @@
 <map id="GM_Object" name="GM_Object">
-<area shape="rect" id="Node000001" title=" " alt="" coords="662,5,766,91"/>
-<area shape="rect" id="Node000002" href="$class_h_y___catchment_area.html" title=" " alt="" coords="286,217,441,383"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="648,61,602,72,551,89,500,111,454,142,422,178,397,219,392,216,418,174,451,138,497,107,549,84,600,67,647,56"/>
-<area shape="rect" id="Node000011" href="$class_h_y___catchment_divide.html" title=" " alt="" coords="465,237,629,363"/>
-<area shape="poly" id="edge12_Node000001_Node000011" title=" " alt="" coords="672,104,644,142,583,239,579,236,640,138,668,101"/>
-<area shape="rect" id="Node000012" href="$class_h_y___flow_path.html" title=" " alt="" coords="654,257,774,343"/>
-<area shape="poly" id="edge13_Node000001_Node000012" title=" " alt="" coords="717,105,717,257,711,257,711,105"/>
-<area shape="rect" id="Node000013" href="$class_h_y___hydro_network.html" title=" " alt="" coords="799,227,947,373"/>
-<area shape="poly" id="edge14_Node000001_Node000013" title=" " alt="" coords="761,101,788,139,840,226,835,229,784,141,756,104"/>
-<area shape="rect" id="Node000014" href="$classhy__features_1_1hydrolocation_1_1_h_y___hydro_location.html" title=" " alt="" coords="971,140,1132,460"/>
-<area shape="poly" id="edge15_Node000001_Node000014" title=" " alt="" coords="781,59,824,70,871,87,917,109,960,138,973,150,969,154,956,142,915,114,869,92,823,75,780,64"/>
-<area shape="rect" id="Node000003" href="$classrealization_1_1_catchment___formulation.html" title=" " alt="" coords="270,509,457,789"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="366,398,366,510,361,510,361,398"/>
-<area shape="rect" id="Node000004" href="$classrealization_1_1_bmi___formulation.html" title="Abstraction of formulation with backing model object(s) that implements the BMI." alt="" coords="269,839,457,1532"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="366,804,366,839,361,839,361,804"/>
-<area shape="rect" id="Node000005" href="$classrealization_1_1_bmi___module___formulation.html" title=" " alt="" coords="5,2845,193,4045"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="264,1343,206,1458,180,1519,161,1582,125,1739,97,1901,76,2065,62,2229,53,2392,50,2550,54,2845,49,2845,44,2550,48,2391,57,2229,71,2065,91,1900,119,1738,155,1581,175,1518,201,1455,260,1341"/>
-<area shape="rect" id="Node000007" href="$classrealization_1_1_bmi___module___formulation.html" title=" " alt="" coords="260,2845,448,4045"/>
-<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="372,1547,373,1581,383,2201,385,2472,381,2821,380,2845,375,2845,375,2821,379,2472,378,2201,367,1581,367,1547"/>
-<area shape="rect" id="Node000009" href="$classrealization_1_1_bmi___module___formulation.html" title="Abstraction of a formulation with a single backing model object that implements the BMI." alt="" coords="171,1581,359,2767"/>
-<area shape="poly" id="edge8_Node000004_Node000009" title=" " alt="" coords="330,1547,326,1582,321,1581,325,1547"/>
-<area shape="rect" id="Node000010" href="$classrealization_1_1_bmi___multi___formulation.html" title="Abstraction of a formulation with multiple backing model object that implements the BMI." alt="" coords="434,1745,637,2603"/>
-<area shape="poly" id="edge11_Node000004_Node000010" title=" " alt="" coords="429,1546,463,1745,458,1746,424,1547"/>
-<area shape="rect" id="Node000006" href="$classrealization_1_1_bmi___c___formulation.html" title=" " alt="" coords="10,4094,189,4429"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="102,4060,102,4094,97,4094,97,4060"/>
-<area shape="rect" id="Node000008" href="$classrealization_1_1_bmi___cpp___formulation.html" title="Encapsulates a bmi::Bmi model in C++ such that it can be loaded as a formulation, as such also so tha..." alt="" coords="265,4094,443,4429"/>
-<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="357,4060,357,4094,351,4094,351,4060"/>
-<area shape="poly" id="edge9_Node000009_Node000005" title=" " alt="" coords="171,2660,151,2791,145,2845,139,2845,146,2790,166,2659"/>
-<area shape="poly" id="edge10_Node000009_Node000007" title=" " alt="" coords="266,2781,269,2820,270,2845,265,2845,263,2821,261,2781"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="604,5,708,91"/>
+<area shape="rect" id="Node000002" href="$class_h_y___catchment_area.html" title=" " alt="" coords="228,216,383,381"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="590,61,544,72,493,88,443,111,398,141,365,176,340,218,335,215,361,173,394,137,440,106,491,83,542,67,589,56"/>
+<area shape="rect" id="Node000009" href="$class_h_y___catchment_divide.html" title=" " alt="" coords="407,236,571,361"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="613,104,586,140,525,238,521,235,582,137,609,101"/>
+<area shape="rect" id="Node000010" href="$class_h_y___flow_path.html" title=" " alt="" coords="596,256,716,341"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="659,105,659,256,653,256,653,105"/>
+<area shape="rect" id="Node000011" href="$class_h_y___hydro_network.html" title=" " alt="" coords="741,226,889,371"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="703,101,730,137,782,225,777,228,726,140,699,104"/>
+<area shape="rect" id="Node000012" href="$classhy__features_1_1hydrolocation_1_1_h_y___hydro_location.html" title=" " alt="" coords="913,139,1074,459"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="723,58,766,69,814,85,860,108,903,137,915,147,911,151,900,141,858,112,812,90,765,74,722,63"/>
+<area shape="rect" id="Node000003" href="$classrealization_1_1_catchment___formulation.html" title=" " alt="" coords="212,507,399,787"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="308,396,308,507,303,507,303,396"/>
+<area shape="rect" id="Node000004" href="$classrealization_1_1_bmi___formulation.html" title="Abstraction of formulation with backing model object(s) that implements the BMI." alt="" coords="211,835,399,1528"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="308,802,308,835,303,835,303,802"/>
+<area shape="rect" id="Node000005" href="$classrealization_1_1_bmi___module___formulation.html" title="Abstraction of a formulation with a single backing model object that implements the BMI." alt="" coords="102,1576,290,3109"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="274,1543,271,1577,266,1576,269,1543"/>
+<area shape="rect" id="Node000008" href="$classrealization_1_1_bmi___multi___formulation.html" title="Abstraction of a formulation with multiple backing model object that implements the BMI." alt="" coords="315,1914,517,2771"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="342,1543,378,1914,373,1915,337,1543"/>
+<area shape="rect" id="Node000006" href="$classrealization_1_1_bmi___c___formulation.html" title=" " alt="" coords="5,3157,184,3437"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="116,3124,112,3158,107,3157,110,3124"/>
+<area shape="rect" id="Node000007" href="$classrealization_1_1_bmi___cpp___formulation.html" title="Encapsulates a bmi::Bmi model in C++ such that it can be loaded as a formulation, as such also so tha..." alt="" coords="208,3157,387,3437"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="282,3124,285,3157,280,3158,276,3124"/>
 </map>

@@ -12,24 +12,18 @@
 <area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="357,766,348,1038,342,1038,352,766"/>
 <area shape="rect" id="Node000007" href="$classdata__access_1_1_wrapped_data_provider.html" title="Simple implementation that basically wraps another instance." alt="" coords="445,1010,615,1319"/>
 <area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="408,761,434,799,457,850,477,904,506,1009,501,1011,472,905,452,852,429,802,403,764"/>
-<area shape="rect" id="Node000010" href="$classrealization_1_1_bmi___formulation.html" title="Abstraction of formulation with backing model object(s) that implements the BMI." alt="" coords="671,818,859,1511"/>
-<area shape="poly" id="edge9_Node000004_Node000010" title=" " alt="" coords="455,721,499,731,545,747,590,769,629,799,673,851,669,855,625,803,587,774,543,752,498,736,453,726"/>
-<area shape="rect" id="Node000008" href="$classdata__access_1_1_deferred_wrapped_provider.html" title="A specialized @WrappedDataProvider that is created without first knowing the backing source it wraps." alt="" coords="401,2043,595,2298"/>
-<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="527,1334,505,2044,499,2043,522,1334"/>
-<area shape="rect" id="Node000009" href="$classdata__access_1_1_optional_wrapped_data_provider.html" title="Extension of DeferredWrappedProvider, where default values can be used instead of a backing provider." alt="" coords="395,3251,601,3631"/>
-<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="501,2313,501,3252,495,3252,495,2313"/>
-<area shape="rect" id="Node000011" href="$classrealization_1_1_bmi___module___formulation.html" title=" " alt="" coords="896,2841,1084,4041"/>
-<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="871,1255,934,1319,999,1396,1057,1483,1081,1530,1101,1577,1131,1675,1156,1775,1175,1877,1188,1980,1196,2084,1200,2188,1196,2395,1179,2595,1153,2785,1121,2959,1087,3113,1081,3112,1116,2958,1148,2784,1174,2595,1191,2395,1195,2189,1191,2085,1183,1981,1169,1878,1151,1776,1126,1676,1095,1579,1076,1532,1052,1486,995,1400,930,1323,868,1258"/>
-<area shape="rect" id="Node000013" href="$classrealization_1_1_bmi___module___formulation.html" title=" " alt="" coords="648,2841,836,4041"/>
-<area shape="poly" id="edge12_Node000010_Node000013" title=" " alt="" coords="671,1515,661,1578,644,1738,634,1901,629,2066,630,2230,642,2548,666,2841,660,2842,637,2549,625,2230,624,2066,629,1901,639,1738,655,1578,665,1514"/>
-<area shape="rect" id="Node000015" href="$classrealization_1_1_bmi___module___formulation.html" title="Abstraction of a formulation with a single backing model object that implements the BMI." alt="" coords="671,1578,859,2763"/>
-<area shape="poly" id="edge14_Node000010_Node000015" title=" " alt="" coords="767,1526,767,1578,762,1578,762,1526"/>
-<area shape="rect" id="Node000016" href="$classrealization_1_1_bmi___multi___formulation.html" title="Abstraction of a formulation with multiple backing model object that implements the BMI." alt="" coords="883,1742,1086,2599"/>
-<area shape="poly" id="edge17_Node000010_Node000016" title=" " alt="" coords="861,1525,873,1577,908,1742,902,1743,867,1579,855,1527"/>
-<area shape="rect" id="Node000012" href="$classrealization_1_1_bmi___c___formulation.html" title=" " alt="" coords="901,4091,1079,4425"/>
-<area shape="poly" id="edge11_Node000011_Node000012" title=" " alt="" coords="993,4056,993,4091,987,4091,987,4056"/>
-<area shape="rect" id="Node000014" href="$classrealization_1_1_bmi___cpp___formulation.html" title="Encapsulates a bmi::Bmi model in C++ such that it can be loaded as a formulation, as such also so tha..." alt="" coords="653,4091,831,4425"/>
-<area shape="poly" id="edge13_Node000013_Node000014" title=" " alt="" coords="745,4056,745,4091,739,4091,739,4056"/>
-<area shape="poly" id="edge15_Node000015_Node000011" title=" " alt="" coords="864,2715,899,2911,893,2912,859,2716"/>
-<area shape="poly" id="edge16_Node000015_Node000013" title=" " alt="" coords="756,2779,755,2841,750,2841,751,2778"/>
+<area shape="rect" id="Node000010" href="$classrealization_1_1_bmi___formulation.html" title="Abstraction of formulation with backing model object(s) that implements the BMI." alt="" coords="645,818,833,1511"/>
+<area shape="poly" id="edge9_Node000004_Node000010" title=" " alt="" coords="455,719,500,730,546,746,591,768,629,799,647,819,643,823,625,803,588,773,544,750,499,735,454,725"/>
+<area shape="rect" id="Node000008" href="$classdata__access_1_1_deferred_wrapped_provider.html" title="A specialized @WrappedDataProvider that is created without first knowing the backing source it wraps." alt="" coords="428,2217,621,2472"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="532,1334,528,2218,523,2218,527,1334"/>
+<area shape="rect" id="Node000009" href="$classdata__access_1_1_optional_wrapped_data_provider.html" title="Extension of DeferredWrappedProvider, where default values can be used instead of a backing provider." alt="" coords="421,3161,626,3541"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="527,2487,526,3161,521,3161,522,2487"/>
+<area shape="rect" id="Node000011" href="$classrealization_1_1_bmi___module___formulation.html" title="Abstraction of a formulation with a single backing model object that implements the BMI." alt="" coords="645,1578,833,3111"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="742,1526,742,1578,737,1578,737,1526"/>
+<area shape="rect" id="Node000014" href="$classrealization_1_1_bmi___multi___formulation.html" title="Abstraction of a formulation with multiple backing model object that implements the BMI." alt="" coords="858,1916,1061,2773"/>
+<area shape="poly" id="edge13_Node000010_Node000014" title=" " alt="" coords="836,1525,847,1577,879,1746,906,1916,901,1917,873,1747,842,1579,831,1526"/>
+<area shape="rect" id="Node000012" href="$classrealization_1_1_bmi___c___formulation.html" title=" " alt="" coords="650,3211,829,3491"/>
+<area shape="poly" id="edge11_Node000011_Node000012" title=" " alt="" coords="742,3126,742,3211,737,3211,737,3126"/>
+<area shape="rect" id="Node000013" href="$classrealization_1_1_bmi___cpp___formulation.html" title="Encapsulates a bmi::Bmi model in C++ such that it can be loaded as a formulation, as such also so tha..." alt="" coords="853,3211,1031,3491"/>
+<area shape="poly" id="edge12_Node000011_Node000013" title=" " alt="" coords="839,3075,849,3111,882,3210,877,3212,843,3112,834,3076"/>
 </map>

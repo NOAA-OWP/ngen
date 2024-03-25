@@ -1,15 +1,15 @@
 <map id="models::bmi::Bmi_C_Adapter" name="models::bmi::Bmi_C_Adapter">
-<area shape="rect" id="Node000001" title="An adapter class to serve as a C++ interface to the essential aspects of external models written in t..." alt="" coords="981,2269,1159,2972"/>
-<area shape="rect" id="Node000002" href="$classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html" title=" " alt="" coords="979,1945,1161,2220"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1073,2235,1073,2270,1067,2270,1067,2235"/>
-<area shape="rect" id="Node000003" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title="Abstract adapter interface for C++ classes to interact with the essential aspects of external models ..." alt="" coords="716,1443,907,1896"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="917,1833,987,1944,982,1947,912,1836"/>
+<area shape="rect" id="Node000001" title="An adapter class to serve as a C++ interface to the essential aspects of external models written in t..." alt="" coords="981,2289,1159,2992"/>
+<area shape="rect" id="Node000002" href="$classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html" title=" " alt="" coords="979,1965,1161,2240"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1073,2255,1073,2290,1067,2290,1067,2255"/>
+<area shape="rect" id="Node000003" href="$classmodels_1_1bmi_1_1_bmi___adapter.html" title="Abstract adapter interface for C++ classes to interact with the essential aspects of external models ..." alt="" coords="716,1443,907,1916"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="917,1847,989,1964,984,1967,912,1849"/>
 <area shape="rect" id="Node000004" href="$classbmi_1_1_bmi.html" title=" " alt="" coords="803,999,956,1365"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="854,1380,846,1443,840,1442,849,1379"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="855,1380,846,1443,841,1442,850,1379"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="959,528,1029,593"/>
-<area shape="poly" id="edge24_Node000001_Node000005" title=" " alt="" coords="1030,575,1098,613,1137,640,1176,672,1212,708,1241,749,1261,795,1269,844,1269,2084,1266,2132,1260,2181,1237,2277,1206,2368,1169,2450,1164,2448,1201,2366,1232,2275,1255,2180,1261,2132,1263,2084,1263,845,1256,796,1237,752,1208,712,1173,676,1134,644,1095,617,1027,580"/>
-<area shape="poly" id="edge23_Node000002_Node000005" title=" " alt="" coords="1023,591,1058,637,1094,698,1123,769,1132,807,1135,845,1135,1671,1133,1737,1127,1804,1107,1929,1102,1929,1121,1803,1128,1736,1130,1671,1130,845,1127,807,1118,771,1090,701,1053,640,1019,594"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="996,593,990,1002,982,1232,977,1316,970,1365,947,1435,917,1501,912,1499,942,1433,965,1364,971,1315,977,1231,985,1002,991,593"/>
+<area shape="poly" id="edge24_Node000001_Node000005" title=" " alt="" coords="1030,575,1098,613,1137,640,1176,672,1212,708,1241,749,1261,795,1269,844,1269,2104,1266,2152,1260,2201,1237,2297,1206,2388,1169,2470,1164,2468,1201,2386,1232,2295,1255,2200,1261,2152,1263,2104,1263,845,1256,796,1237,752,1208,712,1173,676,1134,644,1095,617,1027,580"/>
+<area shape="poly" id="edge23_Node000002_Node000005" title=" " alt="" coords="1023,591,1058,637,1094,698,1123,769,1132,807,1135,845,1135,1681,1133,1749,1126,1819,1106,1949,1101,1949,1121,1818,1128,1749,1130,1681,1130,845,1127,807,1118,771,1090,701,1053,640,1019,594"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="996,593,990,1002,982,1232,977,1316,970,1365,947,1437,917,1505,912,1503,942,1435,965,1364,971,1315,977,1231,985,1002,991,593"/>
 <area shape="rect" id="Node000011" title=" " alt="" coords="805,813,956,879"/>
 <area shape="poly" id="edge11_Node000011_Node000005" title=" " alt="" coords="984,594,914,768,902,799,897,797,909,766,979,592"/>
 <area shape="rect" id="Node000013" href="$classutils_1_1_stream_handler.html" title="This class provides a copyable interface to a std::ostream or std::ostream like object that may not s..." alt="" coords="480,1059,609,1305"/>
@@ -17,7 +17,7 @@
 <area shape="rect" id="Node000006" title=" " alt="" coords="937,235,1051,315"/>
 <area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="997,329,997,528,991,528,991,329"/>
 <area shape="rect" id="Node000007" title=" " alt="" coords="290,910,447,975"/>
-<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="321,977,303,1001,291,1034,283,1078,275,1183,276,1237,281,1288,290,1331,303,1363,339,1416,383,1463,433,1504,487,1540,543,1571,598,1597,700,1635,699,1640,596,1602,540,1576,484,1545,430,1508,380,1467,335,1419,298,1366,285,1332,276,1289,271,1238,269,1183,277,1077,286,1032,298,998,317,974"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="321,977,303,1001,291,1034,283,1078,275,1183,281,1288,290,1331,303,1363,339,1417,383,1465,433,1507,488,1544,543,1576,599,1603,701,1643,699,1648,597,1608,541,1581,485,1549,430,1511,380,1469,335,1420,298,1366,285,1332,276,1288,270,1183,277,1077,286,1032,298,998,317,974"/>
 <area shape="rect" id="Node000008" title=" " alt="" coords="445,528,573,593"/>
 <area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="494,607,467,673,434,744,419,768,393,844,377,911,372,910,388,842,414,766,429,742,463,671,489,605"/>
 <area shape="rect" id="Node000010" title=" " alt="" coords="634,1142,778,1222"/>
@@ -30,10 +30,10 @@
 <area shape="poly" id="edge13_Node000012_Node000009" title=" " alt="" coords="521,286,553,325,587,376,618,446,639,511,634,513,613,448,582,379,549,328,517,289"/>
 <area shape="rect" id="Node000021" title=" " alt="" coords="293,528,420,593"/>
 <area shape="poly" id="edge28_Node000021_Node000009" title=" " alt="" coords="500,290,469,328,435,379,401,448,375,513,370,511,396,446,430,376,465,325,496,286"/>
-<area shape="poly" id="edge9_Node000003_Node000010" title=" " alt="" coords="710,1221,716,1312,732,1418,734,1426,728,1427,727,1419,711,1312,705,1222"/>
+<area shape="poly" id="edge9_Node000003_Node000010" title=" " alt="" coords="710,1221,717,1312,732,1418,734,1426,728,1427,727,1419,711,1312,705,1222"/>
 <area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="863,880,792,1001,732,1128,727,1125,788,998,859,877"/>
 <area shape="poly" id="edge12_Node000011_Node000012" title=" " alt="" coords="682,603,745,687,822,780,851,812,847,815,818,784,741,690,678,606"/>
-<area shape="poly" id="edge15_Node000003_Node000013" title=" " alt="" coords="596,1303,624,1363,709,1510,705,1513,620,1366,591,1306"/>
+<area shape="poly" id="edge15_Node000003_Node000013" title=" " alt="" coords="596,1303,624,1363,710,1514,705,1517,620,1366,591,1306"/>
 <area shape="poly" id="edge16_Node000013_Node000014" title=" " alt="" coords="485,886,486,929,490,975,504,1043,499,1044,485,976,481,929,480,886"/>
 <area shape="rect" id="Node000015" title=" " alt="" coords="185,528,269,593"/>
 <area shape="poly" id="edge17_Node000014_Node000015" title=" " alt="" coords="234,592,250,663,264,703,283,742,307,771,337,794,371,812,405,825,403,830,368,817,334,798,303,775,278,744,259,705,245,664,229,593"/>
@@ -44,7 +44,7 @@
 <area shape="rect" id="Node000018" title=" " alt="" coords="183,5,272,71"/>
 <area shape="poly" id="edge20_Node000017_Node000018" title=" " alt="" coords="230,86,230,120,225,120,225,86"/>
 <area shape="rect" id="Node000019" title=" " alt="" coords="157,813,298,879"/>
-<area shape="poly" id="edge25_Node000001_Node000019" title=" " alt="" coords="230,879,230,1181,230,2084,236,2146,252,2203,278,2255,313,2303,354,2347,402,2387,455,2423,512,2455,632,2509,754,2550,868,2580,964,2600,963,2606,867,2585,753,2555,630,2514,510,2460,452,2427,399,2391,351,2351,309,2307,274,2258,247,2205,230,2147,225,2084,225,1181,225,879"/>
+<area shape="poly" id="edge25_Node000001_Node000019" title=" " alt="" coords="230,879,230,1181,230,2104,236,2166,252,2223,278,2275,313,2323,354,2367,402,2407,455,2443,512,2475,632,2529,754,2570,868,2600,964,2620,963,2626,867,2605,753,2575,630,2534,510,2480,452,2447,399,2411,351,2371,309,2327,274,2278,247,2225,230,2167,225,2104,225,1181,225,879"/>
 <area shape="rect" id="Node000020" href="$struct_bmi.html" title=" " alt="" coords="5,378,161,743"/>
 <area shape="poly" id="edge26_Node000019_Node000020" title=" " alt="" coords="164,719,175,742,204,797,200,800,170,744,159,722"/>
 <area shape="poly" id="edge27_Node000019_Node000021" title=" " alt="" coords="349,608,325,677,306,713,283,745,270,754,259,757,248,760,239,769,230,790,227,814,222,813,225,789,234,765,245,755,257,752,268,749,279,741,302,710,320,675,344,607"/>

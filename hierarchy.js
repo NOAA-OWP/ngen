@@ -48,13 +48,10 @@ var hierarchy =
           ] ]
         ] ],
         [ "realization::Bmi_Formulation", "classrealization_1_1_bmi___formulation.html", [
-          [ "realization::Bmi_Module_Formulation< models::bmi::Bmi_C_Adapter >", "classrealization_1_1_bmi___module___formulation.html", [
-            [ "realization::Bmi_C_Formulation", "classrealization_1_1_bmi___c___formulation.html", null ]
-          ] ],
-          [ "realization::Bmi_Module_Formulation< models::bmi::Bmi_Cpp_Adapter >", "classrealization_1_1_bmi___module___formulation.html", [
+          [ "realization::Bmi_Module_Formulation", "classrealization_1_1_bmi___module___formulation.html", [
+            [ "realization::Bmi_C_Formulation", "classrealization_1_1_bmi___c___formulation.html", null ],
             [ "realization::Bmi_Cpp_Formulation", "classrealization_1_1_bmi___cpp___formulation.html", null ]
           ] ],
-          [ "realization::Bmi_Module_Formulation< M >", "classrealization_1_1_bmi___module___formulation.html", null ],
           [ "realization::Bmi_Multi_Formulation", "classrealization_1_1_bmi___multi___formulation.html", null ]
         ] ]
       ] ]

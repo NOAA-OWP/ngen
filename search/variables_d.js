@@ -8,7 +8,7 @@ var searchData=
   ['nested_5',['nested',['../structrealization_1_1config_1_1_formulation.html#ac5771714000e91b553dfdb6fae15a090',1,'realization::config::Formulation']]],
   ['network_6',['network',['../classhy__features_1_1_h_y___features.html#aa8443888e3fd904e3b737a752546f674',1,'hy_features::HY_Features']]],
   ['network_5fdivides_7',['network_divides',['../class_h_y___hydro_network.html#a49451f6a3dedb88b8b222954461f2c43',1,'HY_HydroNetwork']]],
-  ['next_5ftime_5fstep_5findex_8',['next_time_step_index',['../classrealization_1_1_bmi___c___formulation.html#ae1511b7095bf219a0139e999642cb573',1,'realization::Bmi_C_Formulation::next_time_step_index'],['../classrealization_1_1_bmi___cpp___formulation.html#ac96032fca42092ad95727dcbf1d02a7b',1,'realization::Bmi_Cpp_Formulation::next_time_step_index'],['../classrealization_1_1_bmi___multi___formulation.html#a196e75e8ddd4a4a4dcde69ef6afe76b4',1,'realization::Bmi_Multi_Formulation::next_time_step_index']]],
+  ['next_5ftime_5fstep_5findex_8',['next_time_step_index',['../classrealization_1_1_bmi___module___formulation.html#a6bc0ba27e103c821f269a1f56dc906a5',1,'realization::Bmi_Module_Formulation::next_time_step_index'],['../classrealization_1_1_bmi___multi___formulation.html#a196e75e8ddd4a4a4dcde69ef6afe76b4',1,'realization::Bmi_Multi_Formulation::next_time_step_index']]],
   ['nexus_9',['nexus',['../namespacehy__features_1_1identifiers.html#ab5df6247e598cd1aca30116b3aa9dbd3',1,'hy_features::identifiers']]],
   ['nexus_5fcollection_10',['nexus_collection',['../class_multi_layer_parser_test.html#ad50a645c562bdf330f0fb3060f68cabb',1,'MultiLayerParserTest']]],
   ['nexus_5fdata_5fpath_11',['nexus_data_path',['../class_multi_layer_parser_test.html#a8ee6190260a9e8fe19abb7feef65e57d',1,'MultiLayerParserTest']]],

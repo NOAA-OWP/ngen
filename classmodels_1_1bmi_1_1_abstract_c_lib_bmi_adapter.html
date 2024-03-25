@@ -129,6 +129,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4d83ca0190339e27eda4b539e05177a6" id="r_a4d83ca0190339e27eda4b539e05177a6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a4d83ca0190339e27eda4b539e05177a6">Finalize</a> () override</td></tr>
 <tr class="memdesc:a4d83ca0190339e27eda4b539e05177a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform tear-down task for this object and its backing model.  <br /></td></tr>
 <tr class="separator:a4d83ca0190339e27eda4b539e05177a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a833fd44ca84e9b77b876f75e23215776" id="r_a833fd44ca84e9b77b876f75e23215776"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a833fd44ca84e9b77b876f75e23215776">is_model_initialized</a> ()=0</td></tr>
+<tr class="memdesc:a833fd44ca84e9b77b876f75e23215776"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the backing model has been initialized yet.  <br /></td></tr>
+<tr class="separator:a833fd44ca84e9b77b876f75e23215776"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4b021125add57e1921bb4344d9ccea5f" id="r_a4b021125add57e1921bb4344d9ccea5f"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a4b021125add57e1921bb4344d9ccea5f">get_time_convert_factor</a> ()</td></tr>
 <tr class="memdesc:a4b021125add57e1921bb4344d9ccea5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine backing model's time units and return an appropriate conversion factor.  <br /></td></tr>
 <tr class="separator:a4b021125add57e1921bb4344d9ccea5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -2165,6 +2168,36 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a833fd44ca84e9b77b876f75e23215776" name="a833fd44ca84e9b77b876f75e23215776"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a833fd44ca84e9b77b876f75e23215776">&#9670;&#160;</a></span>is_model_initialized()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool models::bmi::Bmi_Adapter::is_model_initialized </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Whether the backing model has been initialized yet. </p>
+<dl class="section return"><dt>Returns</dt><dd>Whether the backing model has been initialized yet. </dd></dl>
+
+<p>Implemented in <a class="el" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a2d711c40806e31b3b47232fe3d8f10ea">models::bmi::Bmi_C_Adapter</a>, and <a class="el" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a2902dc0ab6801565909137e72fd1f24a">models::bmi::Bmi_Cpp_Adapter</a>.</p>
+
+</div>
+</div>
 <a id="a31e002ee7effe39ca0f07b7c2f16a453" name="a31e002ee7effe39ca0f07b7c2f16a453"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a31e002ee7effe39ca0f07b7c2f16a453">&#9670;&#160;</a></span>isInitialized()</h2>
 
@@ -2752,7 +2785,7 @@ Private Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacemodels.html">models</a></li><li class="navelem"><a class="el" href="namespacemodels_1_1bmi.html">bmi</a></li><li class="navelem"><a class="el" href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html">AbstractCLibBmiAdapter</a></li>
-    <li class="footer">Generated on Fri Mar 22 2024 02:55:46 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon Mar 25 2024 15:10:07 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

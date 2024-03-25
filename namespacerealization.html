@@ -132,14 +132,11 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:a74155238e37096cc83faa9a49d444f0c" id="r_a74155238e37096cc83faa9a49d444f0c"><td class="memItemLeft" align="right" valign="top">typedef std::shared_ptr&lt; <a class="el" href="classrealization_1_1_catchment___formulation.html">Catchment_Formulation</a> &gt;(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacerealization.html#a74155238e37096cc83faa9a49d444f0c">constructor</a>) (std::string, shared_ptr&lt; <a class="el" href="classdata__access_1_1_generic_data_provider.html">data_access::GenericDataProvider</a> &gt;, <a class="el" href="classutils_1_1_stream_handler.html">utils::StreamHandler</a>)</td></tr>
-<tr class="separator:a74155238e37096cc83faa9a49d444f0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0cefd53aaddcd7bed9bf62c0b8b8285a" id="r_a0cefd53aaddcd7bed9bf62c0b8b8285a"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacerealization.html#a0cefd53aaddcd7bed9bf62c0b8b8285a">constructor</a> = std::shared_ptr&lt; <a class="el" href="classrealization_1_1_catchment___formulation.html">Catchment_Formulation</a> &gt;(*)(std::string, shared_ptr&lt; <a class="el" href="classdata__access_1_1_generic_data_provider.html">data_access::GenericDataProvider</a> &gt;, <a class="el" href="classutils_1_1_stream_handler.html">utils::StreamHandler</a>)</td></tr>
+<tr class="separator:a0cefd53aaddcd7bed9bf62c0b8b8285a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a3cd7f3652715fac25a746ef1810a1cff" id="r_a3cd7f3652715fac25a746ef1810a1cff"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
-<tr class="memitem:a3cd7f3652715fac25a746ef1810a1cff"><td class="memTemplItemLeft" align="right" valign="top">static <a class="el" href="namespacerealization.html#a74155238e37096cc83faa9a49d444f0c">constructor</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacerealization.html#a3cd7f3652715fac25a746ef1810a1cff">create_formulation_constructor</a> ()</td></tr>
-<tr class="separator:a3cd7f3652715fac25a746ef1810a1cff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6b6d6d33a273c0a3de61473e05881ef6" id="r_a6b6d6d33a273c0a3de61473e05881ef6"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacerealization.html#a6b6d6d33a273c0a3de61473e05881ef6">valid_formulation_keys</a> ()</td></tr>
 <tr class="separator:a6b6d6d33a273c0a3de61473e05881ef6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0328960a5fc84440b67f91a6d705f940" id="r_a0328960a5fc84440b67f91a6d705f940"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacerealization.html#a0328960a5fc84440b67f91a6d705f940">formulation_exists</a> (std::string formulation_type)</td></tr>
@@ -148,21 +145,37 @@ Functions</h2></td></tr>
 <tr class="separator:ab9e82c6743f665511634e0825d3c4be7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a60fd2dcdc052492d4ae87454567f2b61" id="r_a60fd2dcdc052492d4ae87454567f2b61"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacerealization.html#a60fd2dcdc052492d4ae87454567f2b61">get_formulation_key</a> (const boost::property_tree::ptree &amp;tree)</td></tr>
 <tr class="separator:a60fd2dcdc052492d4ae87454567f2b61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0dcefe582566b875b127ff489f423300" id="r_a0dcefe582566b875b127ff489f423300"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacerealization.html#a0dcefe582566b875b127ff489f423300">is_var_name_in_collection</a> (const std::vector&lt; std::string &gt; &amp;all_names, const std::string &amp;var_name)</td></tr>
+<tr class="separator:a0dcefe582566b875b127ff489f423300"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5a3c0c1080741658e77e7468b9b35dc" id="r_ac5a3c0c1080741658e77e7468b9b35dc"><td class="memTemplParams" colspan="2">template&lt;typename T , typename Iterator &gt; </td></tr>
+<tr class="memitem:ac5a3c0c1080741658e77e7468b9b35dc"><td class="memTemplItemLeft" align="right" valign="top">std::shared_ptr&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacerealization.html#ac5a3c0c1080741658e77e7468b9b35dc">as_c_array</a> (Iterator begin, Iterator end)</td></tr>
+<tr class="memdesc:ac5a3c0c1080741658e77e7468b9b35dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Template function for copying iterator range into contiguous array.  <br /></td></tr>
+<tr class="separator:ac5a3c0c1080741658e77e7468b9b35dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b923a22dda92a7191b3f277e754884d" id="r_a4b923a22dda92a7191b3f277e754884d"><td class="memTemplParams" colspan="2">template&lt;typename Iterator &gt; </td></tr>
+<tr class="memitem:a4b923a22dda92a7191b3f277e754884d"><td class="memTemplItemLeft" align="right" valign="top">std::shared_ptr&lt; void &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacerealization.html#a4b923a22dda92a7191b3f277e754884d">get_values_as_type</a> (std::string type, Iterator begin, Iterator end)</td></tr>
+<tr class="memdesc:a4b923a22dda92a7191b3f277e754884d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets values in iterator range, casted based on <code>type</code> then returned as typeless (void) pointer.  <br /></td></tr>
+<tr class="separator:a4b923a22dda92a7191b3f277e754884d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93cc4172ef61ac110470c47ca86667ae" id="r_a93cc4172ef61ac110470c47ca86667ae"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a93cc4172ef61ac110470c47ca86667ae"><td class="memTemplItemLeft" align="right" valign="top">std::shared_ptr&lt; void &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacerealization.html#a93cc4172ef61ac110470c47ca86667ae">get_value_as_type</a> (std::string type, T value)</td></tr>
+<tr class="separator:a93cc4172ef61ac110470c47ca86667ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3cd7f3652715fac25a746ef1810a1cff" id="r_a3cd7f3652715fac25a746ef1810a1cff"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:a3cd7f3652715fac25a746ef1810a1cff"><td class="memTemplItemLeft" align="right" valign="top">static <a class="el" href="namespacerealization.html#a0cefd53aaddcd7bed9bf62c0b8b8285a">constructor</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacerealization.html#a3cd7f3652715fac25a746ef1810a1cff">create_formulation_constructor</a> ()</td></tr>
+<tr class="separator:a3cd7f3652715fac25a746ef1810a1cff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a8ac5516475ff281154dfa9a6e9292295" id="r_a8ac5516475ff281154dfa9a6e9292295"><td class="memItemLeft" align="right" valign="top">static std::map&lt; std::string, <a class="el" href="namespacerealization.html#a74155238e37096cc83faa9a49d444f0c">constructor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacerealization.html#a8ac5516475ff281154dfa9a6e9292295">formulations</a></td></tr>
-<tr class="separator:a8ac5516475ff281154dfa9a6e9292295"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a64fd571493f5bc103daa302fcfbd30f9" id="r_a64fd571493f5bc103daa302fcfbd30f9"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::string, <a class="el" href="namespacerealization.html#a0cefd53aaddcd7bed9bf62c0b8b8285a">constructor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacerealization.html#a64fd571493f5bc103daa302fcfbd30f9">formulations</a></td></tr>
+<tr class="separator:a64fd571493f5bc103daa302fcfbd30f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
-<a id="a74155238e37096cc83faa9a49d444f0c" name="a74155238e37096cc83faa9a49d444f0c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a74155238e37096cc83faa9a49d444f0c">&#9670;&#160;</a></span>constructor</h2>
+<a id="a0cefd53aaddcd7bed9bf62c0b8b8285a" name="a0cefd53aaddcd7bed9bf62c0b8b8285a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0cefd53aaddcd7bed9bf62c0b8b8285a">&#9670;&#160;</a></span>constructor</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef std::shared_ptr&lt; <a class="el" href="classrealization_1_1_catchment___formulation.html">Catchment_Formulation</a> &gt;(* realization::constructor) (std::string, shared_ptr&lt; <a class="el" href="classdata__access_1_1_generic_data_provider.html">data_access::GenericDataProvider</a> &gt;, <a class="el" href="classutils_1_1_stream_handler.html">utils::StreamHandler</a>)</td>
+          <td class="memname">using <a class="el" href="namespacerealization.html#a0cefd53aaddcd7bed9bf62c0b8b8285a">realization::constructor</a> = typedef std::shared_ptr&lt;<a class="el" href="classrealization_1_1_catchment___formulation.html">Catchment_Formulation</a>&gt; (*)(std::string, shared_ptr&lt;<a class="el" href="classdata__access_1_1_generic_data_provider.html">data_access::GenericDataProvider</a>&gt;, <a class="el" href="classutils_1_1_stream_handler.html">utils::StreamHandler</a>)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -170,6 +183,54 @@ Variables</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="ac5a3c0c1080741658e77e7468b9b35dc" name="ac5a3c0c1080741658e77e7468b9b35dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac5a3c0c1080741658e77e7468b9b35dc">&#9670;&#160;</a></span>as_c_array()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , typename Iterator &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; T &gt; realization::as_c_array </td>
+          <td>(</td>
+          <td class="paramtype">Iterator&#160;</td>
+          <td class="paramname"><em>begin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Iterator&#160;</td>
+          <td class="paramname"><em>end</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Template function for copying iterator range into contiguous array. </p>
+<p>This function will iterate the range and cast the iterator value to type T and copy that value into a C-like array of contiguous, dynamically allocated memory. This array is stored in a smart pointer with a custom array deleter.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td></td></tr>
+    <tr><td class="paramname">Iterator</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">begin</td><td></td></tr>
+    <tr><td class="paramname">end</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>std::shared_ptr&lt;T&gt; </dd></dl>
+
+</div>
+</div>
 <a id="ab9e82c6743f665511634e0825d3c4be7" name="ab9e82c6743f665511634e0825d3c4be7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab9e82c6743f665511634e0825d3c4be7">&#9670;&#160;</a></span>construct_formulation()</h2>
 
@@ -216,7 +277,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="namespacerealization.html#a8ac5516475ff281154dfa9a6e9292295">formulations</a>, <a class="el" href="structforcing__params.html#a2f43abdd38531314c220ef34b5ee0037">forcing_params::path</a>, <a class="el" href="structforcing__params.html#ade4fb727ea0eac594b7d1c84aedd9b5a">forcing_params::provider</a>, <a class="el" href="structforcing__params.html#a3098992c702addcdc43e0a5c735bad25">forcing_params::simulation_end_t</a>, and <a class="el" href="structforcing__params.html#a026bcef7a3218df18cff05a9e6d204b9">forcing_params::simulation_start_t</a>.</p>
+<p class="reference">References <a class="el" href="namespacerealization.html#a64fd571493f5bc103daa302fcfbd30f9">formulations</a>, <a class="el" href="structforcing__params.html#a2f43abdd38531314c220ef34b5ee0037">forcing_params::path</a>, <a class="el" href="structforcing__params.html#ade4fb727ea0eac594b7d1c84aedd9b5a">forcing_params::provider</a>, <a class="el" href="structforcing__params.html#a3098992c702addcdc43e0a5c735bad25">forcing_params::simulation_end_t</a>, and <a class="el" href="structforcing__params.html#a026bcef7a3218df18cff05a9e6d204b9">forcing_params::simulation_start_t</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classrealization_1_1_formulation___manager.html#a4f21958f41bb6ef3dfe4fc82ac9c192d">realization::Formulation_Manager::construct_formulation_from_config()</a>, and <a class="el" href="classrealization_1_1_formulation___manager.html#a3611f83dade280ed741729e875e0f823">realization::Formulation_Manager::construct_missing_formulation()</a>.</p>
 
@@ -234,7 +295,7 @@ template&lt;class T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static <a class="el" href="namespacerealization.html#a74155238e37096cc83faa9a49d444f0c">constructor</a> realization::create_formulation_constructor </td>
+          <td class="memname">static <a class="el" href="namespacerealization.html#a0cefd53aaddcd7bed9bf62c0b8b8285a">constructor</a> realization::create_formulation_constructor </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -273,7 +334,7 @@ template&lt;class T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="namespacerealization.html#a8ac5516475ff281154dfa9a6e9292295">formulations</a>.</p>
+<p class="reference">References <a class="el" href="namespacerealization.html#a64fd571493f5bc103daa302fcfbd30f9">formulations</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classrealization_1_1_formulation___manager.html#a4f21958f41bb6ef3dfe4fc82ac9c192d">realization::Formulation_Manager::construct_formulation_from_config()</a>, and <a class="el" href="namespacerealization.html#a60fd2dcdc052492d4ae87454567f2b61">get_formulation_key()</a>.</p>
 
@@ -307,6 +368,131 @@ template&lt;class T &gt; </div>
 
 </div>
 </div>
+<a id="a93cc4172ef61ac110470c47ca86667ae" name="a93cc4172ef61ac110470c47ca86667ae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a93cc4172ef61ac110470c47ca86667ae">&#9670;&#160;</a></span>get_value_as_type()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; void &gt; realization::get_value_as_type </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aef30be5d6ae1ef746a5717c1f2badc77">realization::Bmi_Module_Formulation::set_model_inputs_prior_to_update()</a>.</p>
+
+</div>
+</div>
+<a id="a4b923a22dda92a7191b3f277e754884d" name="a4b923a22dda92a7191b3f277e754884d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4b923a22dda92a7191b3f277e754884d">&#9670;&#160;</a></span>get_values_as_type()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Iterator &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; void &gt; realization::get_values_as_type </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Iterator&#160;</td>
+          <td class="paramname"><em>begin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Iterator&#160;</td>
+          <td class="paramname"><em>end</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets values in iterator range, casted based on <code>type</code> then returned as typeless (void) pointer. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Iterator</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">type</td><td></td></tr>
+    <tr><td class="paramname">begin</td><td></td></tr>
+    <tr><td class="paramname">end</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>std::shared_ptr&lt;void&gt; </dd></dl>
+
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#ab4acbd230e09c1dc4b0151c301bbe966">realization::Bmi_Module_Formulation::set_initial_bmi_parameters()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aef30be5d6ae1ef746a5717c1f2badc77">realization::Bmi_Module_Formulation::set_model_inputs_prior_to_update()</a>.</p>
+
+</div>
+</div>
+<a id="a0dcefe582566b875b127ff489f423300" name="a0dcefe582566b875b127ff489f423300"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0dcefe582566b875b127ff489f423300">&#9670;&#160;</a></span>is_var_name_in_collection()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static bool realization::is_var_name_in_collection </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; std::string &gt; &amp;&#160;</td>
+          <td class="paramname"><em>all_names</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>var_name</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_bmi___module___formulation.html#aa6847fcf7ed4f48db60614ae5e6c625d">realization::Bmi_Module_Formulation::is_bmi_input_variable()</a>, and <a class="el" href="classrealization_1_1_bmi___module___formulation.html#acf38a8ff1ce51c4683a60475a95c2bfb">realization::Bmi_Module_Formulation::is_bmi_output_variable()</a>.</p>
+
+</div>
+</div>
 <a id="a6b6d6d33a273c0a3de61473e05881ef6" name="a6b6d6d33a273c0a3de61473e05881ef6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6b6d6d33a273c0a3de61473e05881ef6">&#9670;&#160;</a></span>valid_formulation_keys()</h2>
 
@@ -330,31 +516,23 @@ template&lt;class T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="namespacerealization.html#a8ac5516475ff281154dfa9a6e9292295">formulations</a>.</p>
+<p class="reference">References <a class="el" href="namespacerealization.html#a64fd571493f5bc103daa302fcfbd30f9">formulations</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classrealization_1_1_formulation___manager.html#a4f21958f41bb6ef3dfe4fc82ac9c192d">realization::Formulation_Manager::construct_formulation_from_config()</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>
-<a id="a8ac5516475ff281154dfa9a6e9292295" name="a8ac5516475ff281154dfa9a6e9292295"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8ac5516475ff281154dfa9a6e9292295">&#9670;&#160;</a></span>formulations</h2>
+<a id="a64fd571493f5bc103daa302fcfbd30f9" name="a64fd571493f5bc103daa302fcfbd30f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a64fd571493f5bc103daa302fcfbd30f9">&#9670;&#160;</a></span>formulations</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::map&lt;std::string, <a class="el" href="namespacerealization.html#a74155238e37096cc83faa9a49d444f0c">constructor</a>&gt; realization::formulations</td>
+          <td class="memname">std::map&lt; std::string, <a class="el" href="namespacerealization.html#a0cefd53aaddcd7bed9bf62c0b8b8285a">constructor</a> &gt; realization::formulations</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
 <div class="line">        {<span class="stringliteral">&quot;bmi_c++&quot;</span>, create_formulation_constructor&lt;Bmi_Cpp_Formulation&gt;()},</div>
@@ -380,7 +558,7 @@ template&lt;class T &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li>
-    <li class="footer">Generated on Fri Mar 22 2024 02:55:46 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon Mar 25 2024 15:10:08 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
