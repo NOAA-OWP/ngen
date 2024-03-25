@@ -90,8 +90,8 @@ auto ForcingsEngineDataProvider::get_values(const CatchmentAggrDataSelector& sel
     const auto end   = std::chrono::seconds{selector.get_duration_secs()} + start;
 
     std::vector<double> values;
-    for (auto i = start; i < end; i += engine_->time_step()) {
-        const auto current_time = ForcingsEngine::clock_type::to_time_t(i);
+    for (auto current_time = start; current_time < end; current_time += engine_->time_step()) {
+        
         values.push_back(
             engine_->at(current_time, selector.get_id(), selector.get_variable_name())
         );

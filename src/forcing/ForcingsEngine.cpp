@@ -21,7 +21,17 @@ ForcingsEngine::ForcingsEngine(const std::string& init, size_type time_start, si
     
     time_step_ = std::chrono::seconds{static_cast<int64_t>(bmi_->GetTimeStep())};
     var_outputs_ = bmi_->GetOutputVarNames();
-    var_outputs_.erase(var_outputs_.begin()); // Erase "CAT-ID" from outputs
+
+    auto cat_var_pos = std::find(var_outputs_.begin(), var_outputs_.end(), "CAT-ID");
+    if (cat_var_pos == var_outputs_.end()) {
+        throw std::runtime_error{
+            "Failed to initialize ForcingsEngine: `CAT-ID` is not an output variable of the forcings engine."
+            " Is it running with `GRID_TYPE` set to 'hydrofabric'?"
+        };
+    }
+    var_outputs_.erase(cat_var_pos); // Erase "CAT-ID" from outputs
+
+
     const auto time_dim = static_cast<size_type>((time_end_ - time_start_) / time_step_);
     const auto id_dim   = static_cast<size_type>(bmi_->GetVarNbytes("CAT-ID") / bmi_->GetVarItemsize("CAT-ID"));
     const auto var_dim  = var_outputs_.size();
@@ -121,7 +131,12 @@ auto ForcingsEngine::time_index(time_t ctime) const noexcept
   -> size_type
 {
     const auto epoch = clock_type::from_time_t(ctime);
+    return time_index(epoch);
+}
 
+auto ForcingsEngine::time_index(clock_type::time_point epoch) const noexcept
+  -> size_type
+{
     if (epoch < time_begin() || epoch > time_end()) {
         return bad_index;
     }
@@ -136,12 +151,12 @@ auto ForcingsEngine::divide_index(const std::string& divide_id) const noexcept
 
     const auto  id_sep   = divide_id.find('-');
     const char* id_split = id_sep == std::string::npos
-                           ? divide_id.data()
+                           ? &divide_id[0]
                            : &divide_id[id_sep + 1];
     const int   id_int   = std::atoi(id_split);
 
-    const auto pos = std::lower_bound(var_divides_.begin(), var_divides_.end(), id_int);
-    if (pos == var_divides_.end() || *pos != id_int) {
+    const auto pos = std::find(var_divides_.begin(), var_divides_.end(), id_int);
+    if (pos == var_divides_.end()) {
         return bad_index;
     }
 
@@ -154,6 +169,8 @@ auto ForcingsEngine::variable_index(const std::string& variable) const noexcept
 {
     const auto vars = outputs();
     const auto* pos = std::find_if(vars.begin(), vars.end(), [&](const std::string& var) -> bool {
+        // Checks for a variable name, plus the case where only the prefix is given, i.e.
+        // both variable_index("U2D") and variable_index("U2D_ELEMENT") will work.
         return var == variable || var == (variable + "_ELEMENT");
     });
     
@@ -166,27 +183,28 @@ auto ForcingsEngine::variable_index(const std::string& variable) const noexcept
 }
 
 double ForcingsEngine::at(
-    const time_t& raw_time,
+    const clock_type::time_point& raw_time,
     const std::string& divide_id,
     const std::string& variable
 )
 {
     const auto t_idx = time_index(raw_time);
-    const auto i_idx = divide_index(divide_id);
+    const auto d_idx = divide_index(divide_id);
     const auto v_idx = variable_index(variable);
-    
-    if (t_idx == bad_index || i_idx == bad_index || v_idx == bad_index) {
+
+    if (t_idx == bad_index || d_idx == bad_index || v_idx == bad_index) {
         const auto shape = var_cache_.shape();
         const auto shape_str = std::to_string(shape[0]) + ", " +
                                std::to_string(shape[1]) + ", " +
                                std::to_string(shape[2]);
 
         const auto index_str = (t_idx == bad_index ? "?" : std::to_string(t_idx)) + ", " +
-                               (i_idx == bad_index ? "?" : std::to_string(i_idx)) + ", " +
+                               (d_idx == bad_index ? "?" : std::to_string(d_idx)) + ", " +
                                (v_idx == bad_index ? "?" : std::to_string(v_idx));
 
-        std::string time_str = std::ctime(&raw_time);
-        time_str.pop_back();
+        time_t c_time = clock_type::to_time_t(raw_time);
+        std::string time_str = std::ctime(&c_time);
+        time_str.pop_back(); // remove the \n from the return of ctime
 
         throw std::out_of_range{
             "Failed to get ForcingsEngine value at index {" + index_str + "}" +
@@ -197,10 +215,35 @@ double ForcingsEngine::at(
         };
     }
 
+    return at(t_idx, d_idx, v_idx);
+}
+
+double ForcingsEngine::at(
+    size_type time_idx,
+    size_type divide_idx,
+    size_type variable_idx
+)
+{
+    if (time_idx == bad_index || divide_idx == bad_index || variable_idx == bad_index) {
+        const auto shape = var_cache_.shape();
+        const auto shape_str = std::to_string(shape[0]) + ", " +
+                               std::to_string(shape[1]) + ", " +
+                               std::to_string(shape[2]);
+
+        const auto index_str = (time_idx == bad_index ? "?" : std::to_string(time_idx)) + ", " +
+                               (divide_idx == bad_index ? "?" : std::to_string(divide_idx)) + ", " +
+                               (variable_idx == bad_index ? "?" : std::to_string(variable_idx));
+
+        throw std::out_of_range{
+            "Failed to get ForcingsEngine value at index {" + index_str + "}" +
+            "\n  Shape          : {" + shape_str + "}"
+        };
+    }
+
     // If time index is past current index, 
     // update until new index and cache values.
     // Otherwise, return from cache.
-    while(time_current_index_ < t_idx) {
+    while(time_current_index_ < time_idx) {
         time_current_index_++;
 
         bmi_->UpdateUntil(
@@ -222,7 +265,7 @@ double ForcingsEngine::at(
         }
     }
     
-    return var_cache_.at({{t_idx, i_idx, v_idx}});
+    return var_cache_.at({{time_idx, divide_idx, variable_idx}});
 }
 
 void ForcingsEngine::finalize()
