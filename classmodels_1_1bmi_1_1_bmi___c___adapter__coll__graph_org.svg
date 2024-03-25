@@ -86,13 +86,11 @@
 <g id="Node000002" class="node">
 <title>Node2</title>
 <g id="a_Node000002"><a xlink:href="classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="none" points="867,-770 730,-770 730,-564 867,-564 867,-770"/>
-<text text-anchor="start" x="741.88" y="-756.5" font-family="Helvetica,sans-Serif" font-size="10.00">models::bmi::AbstractCLib</text>
-<text text-anchor="start" x="773" y="-745.25" font-family="Helvetica,sans-Serif" font-size="10.00">BmiAdapter</text>
-<text text-anchor="start" x="735.5" y="-730.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45;</text>
-<text text-anchor="start" x="744" y="-730.5" font-family="Helvetica,sans-Serif" font-size="10.00">dyn_lib_handle</text>
-<text text-anchor="start" x="734" y="-715.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="744" y="-715.5" font-family="Helvetica,sans-Serif" font-size="10.00">AbstractCLibBmiAdapter()</text>
+<polygon fill="white" stroke="none" points="867,-755 730,-755 730,-564 867,-564 867,-755"/>
+<text text-anchor="start" x="741.88" y="-741.5" font-family="Helvetica,sans-Serif" font-size="10.00">models::bmi::AbstractCLib</text>
+<text text-anchor="start" x="773" y="-730.25" font-family="Helvetica,sans-Serif" font-size="10.00">BmiAdapter</text>
+<text text-anchor="start" x="735.5" y="-715.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45;</text>
+<text text-anchor="start" x="744" y="-715.5" font-family="Helvetica,sans-Serif" font-size="10.00">dyn_lib_handle</text>
 <text text-anchor="start" x="734" y="-700.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="744" y="-700.5" font-family="Helvetica,sans-Serif" font-size="10.00">AbstractCLibBmiAdapter()</text>
 <text text-anchor="start" x="734" y="-685.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
@@ -112,10 +110,10 @@
 <text text-anchor="start" x="744" y="-584.5" font-family="Helvetica,sans-Serif" font-size="10.00">get_dyn_lib_handle()</text>
 <text text-anchor="start" x="735.5" y="-569.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45;</text>
 <text text-anchor="start" x="744" y="-569.5" font-family="Helvetica,sans-Serif" font-size="10.00">finalizeForLibAbstraction()</text>
-<polygon fill="#666666" stroke="#666666" points="730,-742 730,-742 867,-742 867,-742 730,-742"/>
-<polygon fill="#666666" stroke="#666666" points="730,-727 730,-727 742,-727 742,-727 730,-727"/>
-<polygon fill="#666666" stroke="#666666" points="742,-727 742,-727 867,-727 867,-727 742,-727"/>
-<polygon fill="none" stroke="#666666" points="730,-564 730,-770 867,-770 867,-564 730,-564"/>
+<polygon fill="#666666" stroke="#666666" points="730,-727 730,-727 867,-727 867,-727 730,-727"/>
+<polygon fill="#666666" stroke="#666666" points="730,-712 730,-712 742,-712 742,-712 730,-712"/>
+<polygon fill="#666666" stroke="#666666" points="742,-712 742,-712 867,-712 867,-712 742,-712"/>
+<polygon fill="none" stroke="#666666" points="730,-564 730,-755 867,-755 867,-564 730,-564"/>
 </a>
 </g>
 </g>
@@ -123,8 +121,8 @@
 <g id="edge1_Node000001_Node000002" class="edge">
 <title>Node2&#45;&gt;Node1</title>
 <g id="a_edge1_Node000001_Node000002"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M798.5,-552.77C798.5,-544.3 798.5,-535.56 798.5,-526.64"/>
-<polygon fill="none" stroke="#63b8ff" points="795,-552.65 798.5,-562.65 802,-552.65 795,-552.65"/>
+<path fill="none" stroke="#63b8ff" d="M798.5,-552.84C798.5,-544.42 798.5,-535.72 798.5,-526.82"/>
+<polygon fill="none" stroke="#63b8ff" points="795,-552.61 798.5,-562.61 802,-552.61 795,-552.61"/>
 </a>
 </g>
 </g>
@@ -132,7 +130,7 @@
 <g id="Node000003" class="node">
 <title>Node3</title>
 <g id="a_Node000003"><a xlink:href="classmodels_1_1bmi_1_1_bmi___adapter.html" target="_top" xlink:title="Abstract adapter interface for C++ classes to interact with the essential aspects of external models ...">
-<polygon fill="white" stroke="none" points="676,-1162 533,-1162 533,-807 676,-807 676,-1162"/>
+<polygon fill="white" stroke="none" points="676,-1162 533,-1162 533,-792 676,-792 676,-1162"/>
 <text text-anchor="start" x="548.25" y="-1148.5" font-family="Helvetica,sans-Serif" font-size="10.00">models::bmi::Bmi_Adapter</text>
 <text text-anchor="start" x="537.38" y="-1133.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
 <text text-anchor="start" x="547" y="-1133.5" font-family="Helvetica,sans-Serif" font-size="10.00">allow_model_exceed</text>
@@ -154,32 +152,34 @@
 <text text-anchor="start" x="537" y="-995.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="547" y="-995.5" font-family="Helvetica,sans-Serif" font-size="10.00">Bmi_Adapter()</text>
 <text text-anchor="start" x="537" y="-980.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="547" y="-980.5" font-family="Helvetica,sans-Serif" font-size="10.00">is_model_initialized()</text>
+<text text-anchor="start" x="547" y="-980.5" font-family="Helvetica,sans-Serif" font-size="10.00">~Bmi_Adapter()</text>
 <text text-anchor="start" x="537" y="-965.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="547" y="-965.5" font-family="Helvetica,sans-Serif" font-size="10.00">get_time_convert_factor()</text>
+<text text-anchor="start" x="547" y="-965.5" font-family="Helvetica,sans-Serif" font-size="10.00">is_model_initialized()</text>
 <text text-anchor="start" x="537" y="-950.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="547" y="-950.5" font-family="Helvetica,sans-Serif" font-size="10.00">convert_model_time</text>
-<text text-anchor="start" x="547" y="-939.25" font-family="Helvetica,sans-Serif" font-size="10.00">_to_seconds()</text>
-<text text-anchor="start" x="537" y="-924.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="547" y="-924.5" font-family="Helvetica,sans-Serif" font-size="10.00">convert_seconds_to</text>
-<text text-anchor="start" x="547" y="-913.25" font-family="Helvetica,sans-Serif" font-size="10.00">_model_time()</text>
-<text text-anchor="start" x="537" y="-898.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="547" y="-898.5" font-family="Helvetica,sans-Serif" font-size="10.00">get_analogous_cxx_type()</text>
+<text text-anchor="start" x="547" y="-950.5" font-family="Helvetica,sans-Serif" font-size="10.00">get_time_convert_factor()</text>
+<text text-anchor="start" x="537" y="-935.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="547" y="-935.5" font-family="Helvetica,sans-Serif" font-size="10.00">convert_model_time</text>
+<text text-anchor="start" x="547" y="-924.25" font-family="Helvetica,sans-Serif" font-size="10.00">_to_seconds()</text>
+<text text-anchor="start" x="537" y="-909.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="547" y="-909.5" font-family="Helvetica,sans-Serif" font-size="10.00">convert_seconds_to</text>
+<text text-anchor="start" x="547" y="-898.25" font-family="Helvetica,sans-Serif" font-size="10.00">_model_time()</text>
 <text text-anchor="start" x="537" y="-883.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="547" y="-883.5" font-family="Helvetica,sans-Serif" font-size="10.00">Initialize()</text>
+<text text-anchor="start" x="547" y="-883.5" font-family="Helvetica,sans-Serif" font-size="10.00">get_analogous_cxx_type()</text>
 <text text-anchor="start" x="537" y="-868.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="547" y="-868.5" font-family="Helvetica,sans-Serif" font-size="10.00">Initialize()</text>
 <text text-anchor="start" x="537" y="-853.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="547" y="-853.5" font-family="Helvetica,sans-Serif" font-size="10.00">isInitialized()</text>
+<text text-anchor="start" x="547" y="-853.5" font-family="Helvetica,sans-Serif" font-size="10.00">Initialize()</text>
 <text text-anchor="start" x="537" y="-838.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="547" y="-838.5" font-family="Helvetica,sans-Serif" font-size="10.00">get_model_name()</text>
-<text text-anchor="start" x="537.38" y="-823.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="547" y="-823.5" font-family="Helvetica,sans-Serif" font-size="10.00">construct_and_init</text>
-<text text-anchor="start" x="547" y="-812.25" font-family="Helvetica,sans-Serif" font-size="10.00">_backing_model()</text>
+<text text-anchor="start" x="547" y="-838.5" font-family="Helvetica,sans-Serif" font-size="10.00">isInitialized()</text>
+<text text-anchor="start" x="537" y="-823.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="547" y="-823.5" font-family="Helvetica,sans-Serif" font-size="10.00">get_model_name()</text>
+<text text-anchor="start" x="537.38" y="-808.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="547" y="-808.5" font-family="Helvetica,sans-Serif" font-size="10.00">construct_and_init</text>
+<text text-anchor="start" x="547" y="-797.25" font-family="Helvetica,sans-Serif" font-size="10.00">_backing_model()</text>
 <polygon fill="#666666" stroke="#666666" points="533,-1145 533,-1145 676,-1145 676,-1145 533,-1145"/>
 <polygon fill="#666666" stroke="#666666" points="533,-1037 533,-1037 545,-1037 545,-1037 533,-1037"/>
 <polygon fill="#666666" stroke="#666666" points="545,-1037 545,-1037 676,-1037 676,-1037 545,-1037"/>
-<polygon fill="none" stroke="#666666" points="533,-807 533,-1162 676,-1162 676,-807 533,-807"/>
+<polygon fill="none" stroke="#666666" points="533,-792 533,-1162 676,-1162 676,-792 533,-792"/>
 </a>
 </g>
 </g>
@@ -187,8 +187,8 @@
 <g id="edge2_Node000002_Node000003" class="edge">
 <title>Node3&#45;&gt;Node2</title>
 <g id="a_edge2_Node000002_Node000003"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M681.71,-857.93C699.69,-828.69 718.62,-797.91 735.87,-769.85"/>
-<polygon fill="none" stroke="#63b8ff" points="678.96,-855.72 676.7,-866.07 684.92,-859.39 678.96,-855.72"/>
+<path fill="none" stroke="#63b8ff" d="M681.93,-850.08C701.43,-818.37 722.03,-784.86 740.41,-754.98"/>
+<polygon fill="none" stroke="#63b8ff" points="678.96,-848.22 676.7,-858.57 684.92,-851.89 678.96,-848.22"/>
 </a>
 </g>
 </g>
@@ -240,8 +240,8 @@
 <g id="edge3_Node000003_Node000004" class="edge">
 <title>Node4&#45;&gt;Node3</title>
 <g id="a_edge3_Node000003_Node000004"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M635.28,-1209.43C633.14,-1193.82 630.94,-1177.82 628.75,-1161.92"/>
-<polygon fill="none" stroke="#63b8ff" points="631.8,-1209.79 636.63,-1219.22 638.73,-1208.84 631.8,-1209.79"/>
+<path fill="none" stroke="#63b8ff" d="M635.68,-1209.39C633.58,-1193.81 631.43,-1177.83 629.28,-1161.91"/>
+<polygon fill="none" stroke="#63b8ff" points="632.19,-1209.71 636.99,-1219.15 639.13,-1208.78 632.19,-1209.71"/>
 </a>
 </g>
 </g>
@@ -263,8 +263,8 @@
 <g id="edge24_Node000001_Node000005" class="edge">
 <title>Node5&#45;&gt;Node1</title>
 <g id="a_edge24_Node000001_Node000005"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M767.34,-1811C822.23,-1784.05 945.5,-1712.21 945.5,-1610.5 945.5,-1610.5 945.5,-1610.5 945.5,-666 945.5,-570.15 908.1,-468.85 871.03,-391.98"/>
-<polygon fill="none" stroke="#63b8ff" points="871.01,-391.93 864.78,-388.3 865.73,-381.15 871.96,-384.78 871.01,-391.93"/>
+<path fill="none" stroke="#63b8ff" d="M767.34,-1811C822.23,-1784.05 945.5,-1712.21 945.5,-1610.5 945.5,-1610.5 945.5,-1610.5 945.5,-658.5 945.5,-564.23 908.1,-464.82 871.03,-389.44"/>
+<polygon fill="none" stroke="#63b8ff" points="871.1,-389.57 864.84,-385.99 865.74,-378.83 872,-382.41 871.1,-389.57"/>
 </a>
 </g>
 <text text-anchor="middle" x="977" y="-1187.38" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> #model_name</text>
@@ -273,8 +273,8 @@
 <g id="edge23_Node000002_Node000005" class="edge">
 <title>Node5&#45;&gt;Node2</title>
 <g id="a_edge23_Node000002_Node000005"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M761.8,-1799.44C792.07,-1762.2 845.5,-1685.8 845.5,-1610.5 845.5,-1610.5 845.5,-1610.5 845.5,-983.5 845.5,-916.29 834.94,-841.89 823.82,-782.23"/>
-<polygon fill="none" stroke="#63b8ff" points="823.86,-782.41 818.81,-777.26 821.62,-770.62 826.67,-775.77 823.86,-782.41"/>
+<path fill="none" stroke="#63b8ff" d="M761.8,-1799.44C792.07,-1762.2 845.5,-1685.8 845.5,-1610.5 845.5,-1610.5 845.5,-1610.5 845.5,-976 845.5,-906.07 834.07,-828.37 822.48,-767.58"/>
+<polygon fill="none" stroke="#63b8ff" points="822.47,-767.53 817.4,-762.41 820.18,-755.76 825.25,-760.88 822.47,-767.53"/>
 </a>
 </g>
 <text text-anchor="middle" x="881.5" y="-1364.88" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> &#45;bmi_lib_file</text>
@@ -285,8 +285,8 @@
 <g id="edge4_Node000003_Node000005" class="edge">
 <title>Node5&#45;&gt;Node3</title>
 <g id="a_edge4_Node000003_Node000005"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M741.31,-1799.53C740.4,-1695.8 735.86,-1277.3 721.5,-1220.5 712.56,-1185.12 697.77,-1148.89 681.66,-1115.8"/>
-<polygon fill="none" stroke="#63b8ff" points="681.65,-1115.78 675.4,-1112.19 676.31,-1105.04 682.57,-1108.63 681.65,-1115.78"/>
+<path fill="none" stroke="#63b8ff" d="M741.3,-1799.54C740.31,-1695.82 735.5,-1277.39 721.5,-1220.5 712.52,-1184 697.63,-1146.51 681.44,-1112.24"/>
+<polygon fill="none" stroke="#63b8ff" points="681.51,-1112.38 675.3,-1108.71 676.3,-1101.56 682.51,-1105.23 681.51,-1112.38"/>
 </a>
 </g>
 <text text-anchor="middle" x="782.75" y="-1550" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> #bmi_init_config</text>
@@ -406,8 +406,8 @@
 <g id="edge6_Node000003_Node000007" class="edge">
 <title>Node7&#45;&gt;Node3</title>
 <g id="a_edge6_Node000003_Node000007"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M235.09,-1512.62C229.49,-1507.38 224.5,-1501.32 221.25,-1494.5 195.04,-1439.54 191.51,-1273.63 221.25,-1220.5 285.01,-1106.6 429.03,-1041.23 521.23,-1009.59"/>
-<polygon fill="none" stroke="#63b8ff" points="521.09,-1009.63 525.51,-1003.93 532.47,-1005.81 528.05,-1011.51 521.09,-1009.63"/>
+<path fill="none" stroke="#63b8ff" d="M235.09,-1512.62C229.49,-1507.38 224.5,-1501.32 221.25,-1494.5 195.04,-1439.54 191.88,-1273.84 221.25,-1220.5 284.77,-1105.15 428.86,-1037.02 521.14,-1003.64"/>
+<polygon fill="none" stroke="#63b8ff" points="521.08,-1003.66 525.4,-997.89 532.4,-999.65 528.07,-1005.43 521.08,-1003.66"/>
 </a>
 </g>
 <text text-anchor="middle" x="284.12" y="-1353.62" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> #bmi_model_time_step_size</text>
@@ -567,12 +567,12 @@
 <g id="edge9_Node000003_Node000010" class="edge">
 <title>Node10&#45;&gt;Node3</title>
 <g id="a_edge9_Node000003_Node000010"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M526.52,-1327.8C528.18,-1292.64 532.44,-1231.43 543,-1180 543.38,-1178.13 543.78,-1176.25 544.18,-1174.37"/>
-<polygon fill="none" stroke="#63b8ff" points="544.17,-1174.44 541.59,-1167.71 546.81,-1162.73 549.39,-1169.47 544.17,-1174.44"/>
+<path fill="none" stroke="#63b8ff" d="M526.88,-1327.51C528.93,-1292.34 533.71,-1231.36 544,-1180 544.38,-1178.12 544.76,-1176.23 545.16,-1174.34"/>
+<polygon fill="none" stroke="#63b8ff" points="545.15,-1174.37 542.52,-1167.66 547.71,-1162.65 550.34,-1169.36 545.15,-1174.37"/>
 </a>
 </g>
-<text text-anchor="middle" x="586.25" y="-1193" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> #input_var_names</text>
-<text text-anchor="middle" x="586.25" y="-1181.75" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey">#output_var_names</text>
+<text text-anchor="middle" x="587.25" y="-1193" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> #input_var_names</text>
+<text text-anchor="middle" x="587.25" y="-1181.75" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey">#output_var_names</text>
 </g>
 <!-- Node11&#45;&gt;Node10 -->
 <g id="edge10_Node000010_Node000011" class="edge">
@@ -598,11 +598,11 @@
 <g id="edge15_Node000003_Node000013" class="edge">
 <title>Node13&#45;&gt;Node3</title>
 <g id="a_edge15_Node000003_Node000013"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M441.12,-1265.7C447.87,-1250.44 455.13,-1234.89 462.5,-1220.5 481.75,-1182.92 504.68,-1143.2 526.44,-1107.33"/>
-<polygon fill="none" stroke="#63b8ff" points="526.43,-1107.35 526.14,-1100.14 532.68,-1097.1 532.97,-1104.31 526.43,-1107.35"/>
+<path fill="none" stroke="#63b8ff" d="M441.29,-1265.78C448.02,-1250.52 455.23,-1234.94 462.5,-1220.5 481.92,-1181.93 504.89,-1141.04 526.62,-1104.05"/>
+<polygon fill="none" stroke="#63b8ff" points="526.46,-1104.32 526.07,-1097.12 532.56,-1093.99 532.96,-1101.19 526.46,-1104.32"/>
 </a>
 </g>
-<text text-anchor="middle" x="501.75" y="-1187.38" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> #output</text>
+<text text-anchor="middle" x="497.75" y="-1187.38" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> #output</text>
 </g>
 <!-- Node14&#45;&gt;Node13 -->
 <g id="edge16_Node000013_Node000014" class="edge">
@@ -727,11 +727,11 @@
 <g id="edge25_Node000001_Node000019" class="edge">
 <title>Node19&#45;&gt;Node1</title>
 <g id="a_edge25_Node000001_Node000019"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M166.5,-1585.06C166.5,-1540.79 166.5,-1441.83 166.5,-1358.5 166.5,-1358.5 166.5,-1358.5 166.5,-666 166.5,-407.08 549.11,-308.01 718.93,-276.79"/>
-<polygon fill="none" stroke="#63b8ff" points="719.06,-276.77 724.26,-271.77 730.87,-274.65 725.68,-279.64 719.06,-276.77"/>
+<path fill="none" stroke="#63b8ff" d="M166.5,-1585.06C166.5,-1540.79 166.5,-1441.83 166.5,-1358.5 166.5,-1358.5 166.5,-1358.5 166.5,-658.5 166.5,-400.96 549.11,-305.66 718.93,-276.05"/>
+<polygon fill="none" stroke="#63b8ff" points="719.04,-276.03 724.29,-271.08 730.87,-274.02 725.63,-278.97 719.04,-276.03"/>
 </a>
 </g>
-<text text-anchor="middle" x="192.75" y="-980.62" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> &#45;bmi_model</text>
+<text text-anchor="middle" x="192.75" y="-973.12" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> &#45;bmi_model</text>
 </g>
 <!-- Node20 -->
 <g id="Node000020" class="node">

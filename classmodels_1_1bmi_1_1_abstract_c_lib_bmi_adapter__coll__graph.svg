@@ -58,13 +58,11 @@ var sectionId = 'dynsection-1';
 <g id="Node000001" class="node">
 <title>Node1</title>
 <g id="a_Node000001"><a xlink:title=" ">
-<polygon fill="#999999" stroke="none" points="137,-206 0,-206 0,0 137,0 137,-206"/>
-<text text-anchor="start" x="11.88" y="-192.5" font-family="Helvetica,sans-Serif" font-size="10.00">models::bmi::AbstractCLib</text>
-<text text-anchor="start" x="43" y="-181.25" font-family="Helvetica,sans-Serif" font-size="10.00">BmiAdapter</text>
-<text text-anchor="start" x="5.5" y="-166.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45;</text>
-<text text-anchor="start" x="14" y="-166.5" font-family="Helvetica,sans-Serif" font-size="10.00">dyn_lib_handle</text>
-<text text-anchor="start" x="4" y="-151.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="14" y="-151.5" font-family="Helvetica,sans-Serif" font-size="10.00">AbstractCLibBmiAdapter()</text>
+<polygon fill="#999999" stroke="none" points="137,-191 0,-191 0,0 137,0 137,-191"/>
+<text text-anchor="start" x="11.88" y="-177.5" font-family="Helvetica,sans-Serif" font-size="10.00">models::bmi::AbstractCLib</text>
+<text text-anchor="start" x="43" y="-166.25" font-family="Helvetica,sans-Serif" font-size="10.00">BmiAdapter</text>
+<text text-anchor="start" x="5.5" y="-151.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45;</text>
+<text text-anchor="start" x="14" y="-151.5" font-family="Helvetica,sans-Serif" font-size="10.00">dyn_lib_handle</text>
 <text text-anchor="start" x="4" y="-136.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="14" y="-136.5" font-family="Helvetica,sans-Serif" font-size="10.00">AbstractCLibBmiAdapter()</text>
 <text text-anchor="start" x="4" y="-121.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
@@ -84,10 +82,10 @@ var sectionId = 'dynsection-1';
 <text text-anchor="start" x="14" y="-20.5" font-family="Helvetica,sans-Serif" font-size="10.00">get_dyn_lib_handle()</text>
 <text text-anchor="start" x="5.5" y="-5.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45;</text>
 <text text-anchor="start" x="14" y="-5.5" font-family="Helvetica,sans-Serif" font-size="10.00">finalizeForLibAbstraction()</text>
-<polygon fill="#666666" stroke="#666666" points="0,-178 0,-178 137,-178 137,-178 0,-178"/>
-<polygon fill="#666666" stroke="#666666" points="0,-163 0,-163 12,-163 12,-163 0,-163"/>
-<polygon fill="#666666" stroke="#666666" points="12,-163 12,-163 137,-163 137,-163 12,-163"/>
-<polygon fill="none" stroke="#666666" points="0,0 0,-206 137,-206 137,0 0,0"/>
+<polygon fill="#666666" stroke="#666666" points="0,-163 0,-163 137,-163 137,-163 0,-163"/>
+<polygon fill="#666666" stroke="#666666" points="0,-148 0,-148 12,-148 12,-148 0,-148"/>
+<polygon fill="#666666" stroke="#666666" points="12,-148 12,-148 137,-148 137,-148 12,-148"/>
+<polygon fill="none" stroke="#666666" points="0,0 0,-191 137,-191 137,0 0,0"/>
 </a>
 </g>
 </g>
@@ -95,7 +93,7 @@ var sectionId = 'dynsection-1';
 <g id="Node000002" class="node">
 <title>Node2</title>
 <g id="a_Node000002"><a xlink:href="classmodels_1_1bmi_1_1_bmi___adapter.html" target="_top" xlink:title="Abstract adapter interface for C++ classes to interact with the essential aspects of external models ...">
-<polygon fill="white" stroke="none" points="353,-598 210,-598 210,-243 353,-243 353,-598"/>
+<polygon fill="white" stroke="none" points="353,-598 210,-598 210,-228 353,-228 353,-598"/>
 <text text-anchor="start" x="225.25" y="-584.5" font-family="Helvetica,sans-Serif" font-size="10.00">models::bmi::Bmi_Adapter</text>
 <text text-anchor="start" x="214.38" y="-569.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
 <text text-anchor="start" x="224" y="-569.5" font-family="Helvetica,sans-Serif" font-size="10.00">allow_model_exceed</text>
@@ -117,32 +115,34 @@ var sectionId = 'dynsection-1';
 <text text-anchor="start" x="214" y="-431.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="224" y="-431.5" font-family="Helvetica,sans-Serif" font-size="10.00">Bmi_Adapter()</text>
 <text text-anchor="start" x="214" y="-416.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="224" y="-416.5" font-family="Helvetica,sans-Serif" font-size="10.00">is_model_initialized()</text>
+<text text-anchor="start" x="224" y="-416.5" font-family="Helvetica,sans-Serif" font-size="10.00">~Bmi_Adapter()</text>
 <text text-anchor="start" x="214" y="-401.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="224" y="-401.5" font-family="Helvetica,sans-Serif" font-size="10.00">get_time_convert_factor()</text>
+<text text-anchor="start" x="224" y="-401.5" font-family="Helvetica,sans-Serif" font-size="10.00">is_model_initialized()</text>
 <text text-anchor="start" x="214" y="-386.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="224" y="-386.5" font-family="Helvetica,sans-Serif" font-size="10.00">convert_model_time</text>
-<text text-anchor="start" x="224" y="-375.25" font-family="Helvetica,sans-Serif" font-size="10.00">_to_seconds()</text>
-<text text-anchor="start" x="214" y="-360.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="224" y="-360.5" font-family="Helvetica,sans-Serif" font-size="10.00">convert_seconds_to</text>
-<text text-anchor="start" x="224" y="-349.25" font-family="Helvetica,sans-Serif" font-size="10.00">_model_time()</text>
-<text text-anchor="start" x="214" y="-334.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="224" y="-334.5" font-family="Helvetica,sans-Serif" font-size="10.00">get_analogous_cxx_type()</text>
+<text text-anchor="start" x="224" y="-386.5" font-family="Helvetica,sans-Serif" font-size="10.00">get_time_convert_factor()</text>
+<text text-anchor="start" x="214" y="-371.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="224" y="-371.5" font-family="Helvetica,sans-Serif" font-size="10.00">convert_model_time</text>
+<text text-anchor="start" x="224" y="-360.25" font-family="Helvetica,sans-Serif" font-size="10.00">_to_seconds()</text>
+<text text-anchor="start" x="214" y="-345.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="224" y="-345.5" font-family="Helvetica,sans-Serif" font-size="10.00">convert_seconds_to</text>
+<text text-anchor="start" x="224" y="-334.25" font-family="Helvetica,sans-Serif" font-size="10.00">_model_time()</text>
 <text text-anchor="start" x="214" y="-319.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="224" y="-319.5" font-family="Helvetica,sans-Serif" font-size="10.00">Initialize()</text>
+<text text-anchor="start" x="224" y="-319.5" font-family="Helvetica,sans-Serif" font-size="10.00">get_analogous_cxx_type()</text>
 <text text-anchor="start" x="214" y="-304.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="224" y="-304.5" font-family="Helvetica,sans-Serif" font-size="10.00">Initialize()</text>
 <text text-anchor="start" x="214" y="-289.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="224" y="-289.5" font-family="Helvetica,sans-Serif" font-size="10.00">isInitialized()</text>
+<text text-anchor="start" x="224" y="-289.5" font-family="Helvetica,sans-Serif" font-size="10.00">Initialize()</text>
 <text text-anchor="start" x="214" y="-274.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="224" y="-274.5" font-family="Helvetica,sans-Serif" font-size="10.00">get_model_name()</text>
-<text text-anchor="start" x="214.38" y="-259.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="224" y="-259.5" font-family="Helvetica,sans-Serif" font-size="10.00">construct_and_init</text>
-<text text-anchor="start" x="224" y="-248.25" font-family="Helvetica,sans-Serif" font-size="10.00">_backing_model()</text>
+<text text-anchor="start" x="224" y="-274.5" font-family="Helvetica,sans-Serif" font-size="10.00">isInitialized()</text>
+<text text-anchor="start" x="214" y="-259.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="224" y="-259.5" font-family="Helvetica,sans-Serif" font-size="10.00">get_model_name()</text>
+<text text-anchor="start" x="214.38" y="-244.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="224" y="-244.5" font-family="Helvetica,sans-Serif" font-size="10.00">construct_and_init</text>
+<text text-anchor="start" x="224" y="-233.25" font-family="Helvetica,sans-Serif" font-size="10.00">_backing_model()</text>
 <polygon fill="#666666" stroke="#666666" points="210,-581 210,-581 353,-581 353,-581 210,-581"/>
 <polygon fill="#666666" stroke="#666666" points="210,-473 210,-473 222,-473 222,-473 210,-473"/>
 <polygon fill="#666666" stroke="#666666" points="222,-473 222,-473 353,-473 353,-473 222,-473"/>
-<polygon fill="none" stroke="#666666" points="210,-243 210,-598 353,-598 353,-243 210,-243"/>
+<polygon fill="none" stroke="#666666" points="210,-228 210,-598 353,-598 353,-228 210,-228"/>
 </a>
 </g>
 </g>
@@ -150,8 +150,8 @@ var sectionId = 'dynsection-1';
 <g id="edge1_Node000001_Node000002" class="edge">
 <title>Node2&#45;&gt;Node1</title>
 <g id="a_edge1_Node000001_Node000002"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M203.85,-304.48C181.94,-272.03 158.27,-236.97 136.95,-205.38"/>
-<polygon fill="none" stroke="#63b8ff" points="200.93,-306.42 209.43,-312.75 206.74,-302.5 200.93,-306.42"/>
+<path fill="none" stroke="#63b8ff" d="M204,-297.21C180.39,-262.23 154.72,-224.21 132.13,-190.76"/>
+<polygon fill="none" stroke="#63b8ff" points="200.93,-298.92 209.43,-305.25 206.74,-295 200.93,-298.92"/>
 </a>
 </g>
 </g>
@@ -203,8 +203,8 @@ var sectionId = 'dynsection-1';
 <g id="edge2_Node000002_Node000003" class="edge">
 <title>Node3&#45;&gt;Node2</title>
 <g id="a_edge2_Node000002_Node000003"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M257.96,-645.43C259.6,-629.82 261.28,-613.82 262.95,-597.92"/>
-<polygon fill="none" stroke="#63b8ff" points="254.5,-644.91 256.93,-655.22 261.46,-645.64 254.5,-644.91"/>
+<path fill="none" stroke="#63b8ff" d="M257.66,-645.39C259.26,-629.81 260.91,-613.83 262.55,-597.91"/>
+<polygon fill="none" stroke="#63b8ff" points="254.2,-644.84 256.65,-655.15 261.16,-645.56 254.2,-644.84"/>
 </a>
 </g>
 </g>
@@ -226,8 +226,8 @@ var sectionId = 'dynsection-1';
 <g id="edge22_Node000001_Node000004" class="edge">
 <title>Node4&#45;&gt;Node1</title>
 <g id="a_edge22_Node000001_Node000004"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M165.79,-1139.84C126.62,-1128.34 56.5,-1100.27 56.5,-1046.5 56.5,-1046.5 56.5,-1046.5 56.5,-419.5 56.5,-352.99 59.2,-278.64 62.03,-218.83"/>
-<polygon fill="none" stroke="#63b8ff" points="62.03,-218.8 58.33,-212.61 62.61,-206.81 66.32,-213 62.03,-218.8"/>
+<path fill="none" stroke="#63b8ff" d="M165.79,-1139.84C126.62,-1128.34 56.5,-1100.27 56.5,-1046.5 56.5,-1046.5 56.5,-1046.5 56.5,-412 56.5,-342.53 59.44,-264.52 62.41,-203.45"/>
+<polygon fill="none" stroke="#63b8ff" points="62.41,-203.57 58.71,-197.38 63,-191.59 66.7,-197.78 62.41,-203.57"/>
 </a>
 </g>
 <text text-anchor="middle" x="92.5" y="-800.88" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> &#45;bmi_lib_file</text>
@@ -238,8 +238,8 @@ var sectionId = 'dynsection-1';
 <g id="edge3_Node000002_Node000004" class="edge">
 <title>Node4&#45;&gt;Node2</title>
 <g id="a_edge3_Node000002_Node000004"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M183.7,-1122.89C174.46,-1093.88 159.61,-1042.7 154,-997.5 141.78,-899.02 132.73,-824.95 175.5,-656.5 182.78,-627.84 193.35,-598.32 205.05,-570.3"/>
-<polygon fill="none" stroke="#63b8ff" points="205.07,-570.26 203.74,-563.17 209.77,-559.22 211.1,-566.31 205.07,-570.26"/>
+<path fill="none" stroke="#63b8ff" d="M183.7,-1122.89C174.46,-1093.88 159.61,-1042.7 154,-997.5 141.84,-899.49 133.08,-827.76 175.5,-656.5 182.81,-627 193.41,-596.56 205.12,-567.63"/>
+<polygon fill="none" stroke="#63b8ff" points="205.1,-567.69 203.69,-560.62 209.68,-556.6 211.09,-563.67 205.1,-567.69"/>
 </a>
 </g>
 <text text-anchor="middle" x="198.75" y="-986" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> #bmi_init_config</text>
@@ -359,8 +359,8 @@ var sectionId = 'dynsection-1';
 <g id="edge5_Node000002_Node000006" class="edge">
 <title>Node6&#45;&gt;Node2</title>
 <g id="a_edge5_Node000002_Node000006"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M617.46,-948.83C616.38,-894.08 607.78,-754.04 550.5,-656.5 504.95,-578.94 424.67,-513.83 363.63,-471.96"/>
-<polygon fill="none" stroke="#63b8ff" points="363.54,-471.9 356.33,-471.85 353.6,-465.18 360.81,-465.23 363.54,-471.9"/>
+<path fill="none" stroke="#63b8ff" d="M617.36,-948.89C616.06,-894.27 607.02,-754.48 550.5,-656.5 504.84,-577.34 424.32,-509.9 363.24,-466.39"/>
+<polygon fill="none" stroke="#63b8ff" points="363.4,-466.5 356.19,-466.32 353.58,-459.6 360.79,-459.78 363.4,-466.5"/>
 </a>
 </g>
 <text text-anchor="middle" x="679.12" y="-789.62" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> #bmi_model_time_step_size</text>
@@ -495,8 +495,8 @@ var sectionId = 'dynsection-1';
 <g id="edge8_Node000002_Node000009" class="edge">
 <title>Node9&#45;&gt;Node2</title>
 <g id="a_edge8_Node000002_Node000009"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M475.27,-763.65C463.2,-735.8 443.8,-692.66 424.5,-656.5 404.63,-619.27 381.44,-579.75 359.59,-543.94"/>
-<polygon fill="none" stroke="#63b8ff" points="359.6,-543.96 353.06,-540.93 353.33,-533.73 359.88,-536.75 359.6,-543.96"/>
+<path fill="none" stroke="#63b8ff" d="M475.16,-763.71C463,-735.9 443.55,-692.79 424.5,-656.5 404.45,-618.29 381.22,-577.6 359.39,-540.67"/>
+<polygon fill="none" stroke="#63b8ff" points="359.55,-540.95 353.05,-537.83 353.43,-530.63 359.93,-533.75 359.55,-540.95"/>
 </a>
 </g>
 <text text-anchor="middle" x="456.25" y="-629" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> #input_var_names</text>
@@ -526,11 +526,11 @@ var sectionId = 'dynsection-1';
 <g id="edge14_Node000002_Node000012" class="edge">
 <title>Node12&#45;&gt;Node2</title>
 <g id="a_edge14_Node000002_Node000012"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M345.71,-701.74C339.35,-674 332.11,-642.39 324.83,-610.64"/>
-<polygon fill="none" stroke="#63b8ff" points="324.82,-610.57 319.58,-605.62 322.14,-598.87 327.38,-603.83 324.82,-610.57"/>
+<path fill="none" stroke="#63b8ff" d="M346.14,-701.84C339.92,-674.13 332.82,-642.52 325.65,-610.62"/>
+<polygon fill="none" stroke="#63b8ff" points="325.63,-610.5 320.41,-605.52 323,-598.79 328.22,-603.77 325.63,-610.5"/>
 </a>
 </g>
-<text text-anchor="middle" x="346.75" y="-623.38" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> #output</text>
+<text text-anchor="middle" x="349.75" y="-623.38" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> #output</text>
 </g>
 <!-- Node13&#45;&gt;Node12 -->
 <g id="edge15_Node000012_Node000013" class="edge">

@@ -5,7 +5,7 @@ var classmodels_1_1bmi_1_1_bmi___cpp___adapter =
     [ "Bmi_Cpp_Adapter", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a1d12e828bab29517b53cd06cb7226237", null ],
     [ "Bmi_Cpp_Adapter", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a9b0058de857cb24365c4d2a8a2fd09a2", null ],
     [ "Bmi_Cpp_Adapter", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a5ad0335860170d44de17c6567a7efa66", null ],
-    [ "~Bmi_Cpp_Adapter", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a89265a51b3ef4488a428e61c5883056d", null ],
+    [ "~Bmi_Cpp_Adapter", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a064c762f01d72e93819ddda43a045241", null ],
     [ "construct_and_init_backing_model", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#af954ff0618b7422d2ec45baed9c2ac80", null ],
     [ "construct_and_init_backing_model_for_type", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#aae261e8942befef9cb10ba47b89199a4", null ],
     [ "convert_model_time_to_seconds", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a6efbfd9ff146bbe3b3c1a82d243f8266", null ],

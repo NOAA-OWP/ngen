@@ -1,8 +1,7 @@
 var classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter =
 [
     [ "AbstractCLibBmiAdapter", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#afac72323e2bdf05953f6858ea068972c", null ],
-    [ "AbstractCLibBmiAdapter", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#ad4a8df78a1c6c49278feff40a344cca4", null ],
-    [ "~AbstractCLibBmiAdapter", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a559a7b2852c033fe2acd46cf0d64041e", null ],
+    [ "~AbstractCLibBmiAdapter", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a2acdb60b764e84ddcb0426a5aa4c82e6", null ],
     [ "construct_and_init_backing_model", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#aaf11585e4e3852fa9391ad5966af22d2", null ],
     [ "convert_model_time_to_seconds", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a6efbfd9ff146bbe3b3c1a82d243f8266", null ],
     [ "convert_seconds_to_model_time", "classmodels_1_1bmi_1_1_abstract_c_lib_bmi_adapter.html#a73ca855d0db45838b87309038fae1fed", null ],
