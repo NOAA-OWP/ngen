@@ -28,6 +28,7 @@ namespace realization{
      * @param tree 
      */
     Layer(const boost::property_tree::ptree& tree):formulation(tree){
+        std::vector<std::string> missing_keys;
         auto name = tree.get_optional<std::string>("name");
         if(!name) missing_keys.push_back("name");
         auto unit = tree.get<std::string>("time_step_units", "s");
@@ -43,7 +44,16 @@ namespace realization{
             descriptor = {*name, unit, *id, *ts};// ngen::LayerDescription(  );
         }
         else{
-            //FIXME then what?
+            std::string message = "ERROR: Layer cannot be created; the following parameters are missing or invalid: ";
+
+            for (const auto& missing : missing_keys) {
+                message += missing;
+                message += ", ";
+            }
+            //pop off the extra ", "
+            message.pop_back();
+            message.pop_back();
+            throw std::runtime_error(message);
         }
     }
 
@@ -53,24 +63,11 @@ namespace realization{
      * @return const ngen::LayerDescription& 
      */
     const ngen::LayerDescription& get_descriptor(){
-        if(!missing_keys.empty()){
-            std::string message = "ERROR: Layer cannot be created; the following parameters are missing or invalid: ";
-
-            for (int missing_parameter_index = 0; missing_parameter_index < missing_keys.size(); missing_parameter_index++) {
-                message += missing_keys[missing_parameter_index];
-
-                if (missing_parameter_index < missing_keys.size() - 1) {
-                    message += ", ";
-                }
-            }
-            
-            throw std::runtime_error(message);
-        }
         return descriptor;
     }
 
     /**
-     * @brief Determins if the layer has a valid configured formulation
+     * @brief Determines if the layer has a valid configured formulation
      * 
      * @return true 
      * @return false 
@@ -94,7 +91,6 @@ namespace realization{
     private:
     std::string domain;
     ngen::LayerDescription descriptor;
-    std::vector<std::string> missing_keys;
 
   };
 
