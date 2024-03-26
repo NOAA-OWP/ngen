@@ -14,8 +14,8 @@ ForcingsEngine::ForcingsEngine(const std::string& init, size_type time_start, si
         "ForcingsEngine",
         init,
         "NextGen_Forcings_Engine.BMIForcingsEngine",
-        true,
-        true,
+        true, /* allow_exceed_end */
+        true, /* has_fixed_time_step */
         utils::getStdOut()
     );
     
@@ -137,7 +137,7 @@ auto ForcingsEngine::time_index(time_t ctime) const noexcept
 auto ForcingsEngine::time_index(clock_type::time_point epoch) const noexcept
   -> size_type
 {
-    if (epoch < time_begin() || epoch > time_end()) {
+    if (epoch < time_begin() || epoch >= time_end()) {
         return bad_index;
     }
 

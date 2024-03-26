@@ -126,6 +126,13 @@ struct ForcingsEngine
     static void finalize_all();
 
     /**
+     * @brief Set the MPI communicator that the Forcings Engine should use.
+     *
+     * @param handle int representing a communicator handle.
+     */
+    // void set_communicator(int handle);
+
+    /**
      * Get an instance of the Forcings Engine
      * 
      * @param init Path to initialization file
