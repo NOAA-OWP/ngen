@@ -96,18 +96,10 @@ namespace realization {
 
                         // add the layer to storage
                         layer_storage.put_layer(layer_desc, layer_desc.id);
-                        // debuggin print to see parsed data
-                        //std::cout << layer_desc.name << ", " << layer_desc.id << ", " << layer_desc.time_step << ", " << layer_desc.time_step_units << "\n";
                         if(layer.has_formulation() && layer.get_domain()=="catchments"){
-                            auto formulation = construct_formulation_from_config(simulation_time_config,
-                            "layer-"+std::to_string(layer_desc.id),
-                            layer.formulation,
-                            output_stream
-                            );
                             double c_value = UnitsHelper::get_converted_value(layer_desc.time_step_units,layer_desc.time_step,"s");
                             // make a new simulation time object with a different output interval
                             Simulation_Time sim_time(*Simulation_Time_Object, c_value);
-                            //formulation->set_output_stream(get_output_root() + layer_desc.name + "_layer_"+std::to_string(layer_desc.id) + ".csv");
                             domain_formulations.emplace(
                                 layer_desc.id,
                                 construct_formulation_from_config(simulation_time_config,
