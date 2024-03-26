@@ -11,7 +11,22 @@ namespace ngen
         public:
         DomainLayer() = delete;
         /**
-         * @brief Construct a new Domain Layer object
+         * @brief Construct a new Domain Layer object.
+         * 
+         * Unlike HY_Features types, the feature relationship with a DomainLayer is
+         * indirect.  The @p features collection defines features assoicated
+         * (e.g. overlapping) with the Domain.  The domain must be further queried
+         * in order to provide specific information at a particular feature,
+         * e.g. a catchment which this domain overlaps with, or a nexus location
+         * the domain may contribute to directly/indirectly via the catchment.
+         * 
+         * A domain layer assoicated with a set of catchment features will need to have
+         * outputs of the domain reasmpled/aggregegated to the catchment.
+         * 
+         * Currently unsupported, but a future extension of the DomainLayer is interactions
+         * beetween two or more generic DomainLayers, perhaps each with its own internal grid,
+         * and resampling between the layers would be required similarly to resampling from
+         * a DomainLayer to the HY_Features catchment domain.
          * 
          * @param desc LayerDescription for the domain layer
          * @param s_t Simulation_Time object associated with the domain layer
@@ -32,6 +47,13 @@ namespace ngen
 
         /***
          * @brief Run one simulation timestep for this model associated with the domain
+         * 
+         * A domain layer update simply advances the attached domain formulation(s) in time and records
+         * the BMI accessible outputs of the domain formulation. Since this is NOT a HY_Features
+         * concept/class, it doesn't directly associate with HY_Features types (e.g. catchments, nexus, ect) 
+         * 
+         * Any required connection to other components, e.g. providing inputs to a catchment feature,
+         * is not yet implemented in this class.
         */
         void update_models() override{
             formulation->get_response(output_time_index, simulation_time.get_output_interval_seconds());
