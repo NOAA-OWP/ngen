@@ -27,33 +27,19 @@ struct ForcingsEngineDataProvider
 
     ~ForcingsEngineDataProvider() override;
 
-    /**
-     * @brief Set the MPI communicator that the Forcings Engine should use.
-     *
-     * @param handle int representing a communicator handle.
-     */
-    void set_communicator(int handle);
+    boost::span<const std::string> get_available_variable_names() override;
 
-    auto get_available_variable_names()
-      -> boost::span<const std::string> override;
+    long get_data_start_time() override;
 
-    auto get_data_start_time()
-      -> long override;
+    long get_data_stop_time() override;
 
-    auto get_data_stop_time()
-      -> long override;
+    long record_duration() override;
 
-    auto record_duration()
-      -> long override;
+    size_t get_ts_index_for_time(const time_t& epoch_time) override;
 
-    auto get_ts_index_for_time(const time_t& epoch_time)
-      -> size_t override;
+    double get_value(const CatchmentAggrDataSelector& selector, ReSampleMethod m) override;
 
-    auto get_value(const CatchmentAggrDataSelector& selector, ReSampleMethod m)
-      -> double override;
-
-    auto get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m)
-      -> std::vector<double> override;
+    std::vector<double> get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override;
 
   private:
     ForcingsEngine* engine_;

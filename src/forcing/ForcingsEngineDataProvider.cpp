@@ -1,12 +1,14 @@
 #include "ForcingsEngineDataProvider.hpp"
 
+#include <iomanip>
+
 namespace data_access {
 
-auto parse_time(const std::string& time, const std::string& fmt)
-  -> time_t
+time_t parse_time(const std::string& time, const std::string& fmt)
 {
-    std::tm tm_ = {};
-    std::stringstream{time} >> std::get_time(&tm_, fmt.c_str());
+    std::tm tm_ = {0};
+    std::stringstream tmstr{time};
+    tmstr >> std::get_time(&tm_, fmt.c_str());
 
     // Note: `timegm` is available for Linux and BSD (aka macOS) via time.h, but not Windows.
     return timegm(&tm_);
@@ -34,38 +36,32 @@ ForcingsEngineDataProvider::ForcingsEngineDataProvider(
 ForcingsEngineDataProvider::~ForcingsEngineDataProvider() = default;
 
 
-auto ForcingsEngineDataProvider::get_available_variable_names()
-  -> boost::span<const std::string>
+boost::span<const std::string> ForcingsEngineDataProvider::get_available_variable_names()
 {
     return engine_->outputs();
 }
 
-auto ForcingsEngineDataProvider::get_data_start_time()
-  -> long
+long ForcingsEngineDataProvider::get_data_start_time()
 {
     return ForcingsEngine::clock_type::to_time_t(engine_->time_begin());
 }
 
-auto ForcingsEngineDataProvider::get_data_stop_time()
-  -> long
+long ForcingsEngineDataProvider::get_data_stop_time()
 {
     return ForcingsEngine::clock_type::to_time_t(engine_->time_end());
 }
 
-auto ForcingsEngineDataProvider::record_duration()
-  -> long
+long ForcingsEngineDataProvider::record_duration()
 {
     return engine_->time_step().count();
 }
 
-auto ForcingsEngineDataProvider::get_ts_index_for_time(const time_t& epoch_time)
-  -> size_t
+size_t ForcingsEngineDataProvider::get_ts_index_for_time(const time_t& epoch_time)
 {
     return engine_->time_index(epoch_time);
 }
 
-auto ForcingsEngineDataProvider::get_value(const CatchmentAggrDataSelector& selector, ReSampleMethod m)
-  -> double
+double ForcingsEngineDataProvider::get_value(const CatchmentAggrDataSelector& selector, ReSampleMethod m)
 {
     const auto values = get_values(selector, m);
 
@@ -83,8 +79,7 @@ auto ForcingsEngineDataProvider::get_value(const CatchmentAggrDataSelector& sele
     }
 }
 
-auto ForcingsEngineDataProvider::get_values(const CatchmentAggrDataSelector& selector, ReSampleMethod m)
-  -> std::vector<double>
+std::vector<double> ForcingsEngineDataProvider::get_values(const CatchmentAggrDataSelector& selector, ReSampleMethod m)
 {
     const auto start = ForcingsEngine::clock_type::from_time_t(selector.get_init_time());
     const auto end   = std::chrono::seconds{selector.get_duration_secs()} + start;
