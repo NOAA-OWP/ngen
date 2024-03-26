@@ -18,7 +18,7 @@ ForcingsEngineDataProvider::ForcingsEngineDataProvider(
     std::size_t time_end
 ) : engine_(
     &ForcingsEngine::instance(init, time_start, time_end)
-){};
+){}
 
 ForcingsEngineDataProvider::ForcingsEngineDataProvider(
     const std::string& init,
@@ -29,7 +29,7 @@ ForcingsEngineDataProvider::ForcingsEngineDataProvider(
     init,
     parse_time(time_start, time_fmt),
     parse_time(time_end, time_fmt)
-){};
+){}
 
 ForcingsEngineDataProvider::~ForcingsEngineDataProvider() = default;
 

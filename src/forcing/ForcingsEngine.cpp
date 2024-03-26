@@ -59,7 +59,7 @@ ForcingsEngine::ForcingsEngine(const std::string& init, size_type time_start, si
     }
 
     time_current_index_++;
-};
+}
 
 ForcingsEngine::~ForcingsEngine()
 {
