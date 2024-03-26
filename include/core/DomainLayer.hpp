@@ -1,5 +1,5 @@
-#ifndef __NGEN_DOMAIN_LAYER__
-#define __NGEN_DOMAIN_LAYER__
+#ifndef NGEN_DOMAIN_LAYER
+#define NGEN_DOMAIN_LAYER
 
 #include "Catchment_Formulation.hpp"
 #include "Layer.hpp"
@@ -52,4 +52,4 @@ namespace ngen
     };
 }
 
-#endif
+#endif // NGEN_DOMAIN_LAYER
