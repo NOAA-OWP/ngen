@@ -3,6 +3,7 @@
 
 #include "LayerData.hpp"
 #include "Simulation_Time.hpp"
+#include "State_Exception.hpp"
 
 #ifdef NGEN_MPI_ACTIVE
 #include "HY_Features_MPI.hpp"
@@ -92,7 +93,17 @@ namespace ngen
                 auto r = features.catchment_at(id);
                 //TODO redesign to avoid this cast
                 auto r_c = std::dynamic_pointer_cast<realization::Catchment_Formulation>(r);
-                double response = r_c->get_response(output_time_index, simulation_time.get_output_interval_seconds());
+                double response(0.0);
+                try{
+                    response = r_c->get_response(output_time_index, simulation_time.get_output_interval_seconds());
+                }
+                catch(models::external::State_Exception& e){
+                    std::string msg = e.what();
+                    msg = msg+" at timestep "+std::to_string(output_time_index)
+                             +" ("+current_timestamp+")"
+                             +" at feature id "+id;
+                    throw models::external::State_Exception(msg);
+                }
                 std::string output = std::to_string(output_time_index)+","+current_timestamp+","+
                                     r_c->get_output_line_for_timestep(output_time_index)+"\n";
                 r_c->write_output(output);
