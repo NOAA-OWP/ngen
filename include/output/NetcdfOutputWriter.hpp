@@ -42,6 +42,10 @@ namespace data_output
         unsigned long size;             // use size zero for scalar 
     };
 
+    /*** \breif this function returns NcType objects from string type names if the name is not know ncType() is returned. */
+    NcType strtonctype(const std::string& s);
+   
+
     /** \brief This class provides a discription of a netcdf variable including variable type and dimensions */
 
     struct NetcdfVariableDiscription
@@ -227,7 +231,7 @@ namespace data_output
 
             /** \brief process streamed data of type <NetcdfOutputWriterOffset> this changes the current offset position. */
 
-            NetcdfOutputWriterHelper& operator<<(NetcdfOutputWriterOffset& new_offset)
+            NetcdfOutputWriterHelper& operator<<(NetcdfOutputWriterOffset new_offset)
             {
                 offset.swap(new_offset.data());
 
@@ -236,7 +240,7 @@ namespace data_output
 
             /** \brief process streamed data of type <NetcdfOutputWriterStride> this changes the current stride size and dimensions. */
 
-            NetcdfOutputWriterHelper& operator<<(NetcdfOutputWriterStride& new_stride)
+            NetcdfOutputWriterHelper& operator<<(NetcdfOutputWriterStride new_stride)
             {
                 stride.swap(new_stride.data());
 

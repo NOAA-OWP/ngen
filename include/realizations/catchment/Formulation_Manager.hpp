@@ -129,32 +129,32 @@ namespace realization {
                 {
                     for (std::pair<std::string, boost::property_tree::ptree> output_pair : *outputs_container)
                     {
-                        auto output_json_array = output_pair.second;
-                        for (std::pair<std::string, boost::property_tree::ptree> output_pair : *output_json_array) 
+                        auto& output_json_array = output_pair.second;
+                        for (std::pair<std::string, boost::property_tree::ptree> output_pair : output_json_array) 
                         {
-                            if (boost::to_lower(output_pair.fiset) == "dim" )
+                            if (boost::to_lower_copy(output_pair.first) == "dim" )
                             {
                                 data_output::NetcdfDimensionDiscription nc_dim_des(
-                                    output_par.second.get<std::string>("name"), 
-                                    output_par.second.get<int>("size"));
+                                    output_pair.second.get<std::string>("name"), 
+                                    output_pair.second.get<int>("size"));
                             }
-                            else if (boost::to_lower(output_pair.fiset) == "var" )
+                            else if (boost::to_lower_copy(output_pair.first) == "var" )
                             {
                                 std::vector< std::string > dimension_names;
 
-                                auto dimension_array = output_par.second.get_child_optional("dimension")
+                                auto dimension_array = output_pair.second.get_child_optional("dimension");
                                 if ( dimension_array )
                                 {
                                     for(std::pair<std::string, boost::property_tree::ptree> dim_name_pair : *dimension_array )
                                     {
-                                        dimension_names.push_back(dim_name_pair.second);
+                                        dimension_names.push_back(dim_name_pair.first);
                                     }
                                 }
                                 
                                 data_output::NetcdfVariableDiscription nc_var_des(
-                                    output_par.second.get<std::string>("name"),
-                                    output_par.second.get<std::string>("name"), 
-                                    dimension_names;)
+                                    output_pair.second.get<std::string>("name"),
+                                    data_output::strtonctype(output_pair.second.get<std::string>("type")), 
+                                    dimension_names);
 
 
                                 // TODO now use the variables and dimensions to make the file
@@ -162,8 +162,6 @@ namespace realization {
                         }
                     }
 
-                }
-                    
                 }
                 else // setup default output of streamflow from nexus nodes
                 {

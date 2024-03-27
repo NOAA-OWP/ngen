@@ -168,6 +168,7 @@ ngen_add_test(
         NGen::core_mediator
         NGen::forcing
         NGen::ngen_bmi
+        NGen::output
     DEPENDS
         testbmicppmodel
 )
@@ -254,6 +255,7 @@ ngen_add_test(
         NGen::realizations_catchment
         NGen::core_mediator
         NGen::forcing
+        NGen::output
     REQUIRES
         NGEN_WITH_NETCDF
         NGEN_WITH_BMI_FORTRAN
@@ -435,6 +437,7 @@ ngen_add_test(
     test_netcdf_output
     OBJECTS
         netcdf/Netcdf_Output_Test.cpp
+        netcdf/Netcdf_Output_Integration_Test.cpp
     LIBRARIES
         NGen::core
         NGen::core_nexus
@@ -442,6 +445,7 @@ ngen_add_test(
         NGen::forcing
         NGen::geojson
         NGen::realizations_catchment
+        NGen::output      
     REQUIRES
         NGEN_WITH_NETCDF
 )
@@ -481,6 +485,7 @@ ngen_add_test(
         NGen::mdframe
         NGen::logging
         NGen::ngen_bmi
+        NGen::output
         testbmicppmodel
 )
 
