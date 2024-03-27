@@ -119,7 +119,8 @@ TEST_F(NetcdfOuputTest, TestNetcdfWrite) {
         data_vec[i] = i * 0.1f;
     }
 
-    output_file["output2"] << nc_offset(0,0) << nc_stride(1,1000) << data_vec;
+    auto s = output_file["output2"];
+    s << nc_offset(0,0) << nc_stride(1,1000) << data_vec;
 
     SUCCEED();
 }

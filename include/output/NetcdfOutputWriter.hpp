@@ -224,7 +224,12 @@ namespace data_output
 
             /** \brief Bind a writer object and variable name to create the helper object. */
 
-            NetcdfOutputWriterHelper(NetcdfOutputWriter& w, const std::string s) : writer(w), var(s) 
+            NetcdfOutputWriterHelper(NetcdfOutputWriter& w, const std::string s) : writer(&w), var(s) 
+            {
+                
+            }
+
+            NetcdfOutputWriterHelper(const NetcdfOutputWriterHelper& src) : writer(src.writer), var(src.var) 
             {
                 
             }
@@ -252,7 +257,7 @@ namespace data_output
             template <class T> NetcdfOutputWriterHelper& operator<<(const T* d)
             {
 
-                writer.netcdfVars[var].putVar(offset, stride, d);
+                writer->netcdfVars[var].putVar(offset, stride, d);
 
                 return *this;
             }
@@ -262,15 +267,15 @@ namespace data_output
             template <class T> NetcdfOutputWriterHelper& operator<<(std::vector<T>& d)
             {
 
-                writer.netcdfVars[var].putVar(offset, stride, &d[0]);
+                writer->netcdfVars[var].putVar(offset, stride, &d[0]);
 
                 return *this;
             }
 
             private:
 
-            NetcdfOutputWriter& writer;             //!< the writer object
-            const std::string& var;                 //!< the variable where data will be written
+            NetcdfOutputWriter* writer;             //!< the writer object
+            const std::string var;                 //!< the variable where data will be written
             std::vector<std::size_t> offset;        //!< the current offset to be used durring writing
             std::vector<std::size_t> stride;        //!< the current stride for the next data write
         };
@@ -280,9 +285,10 @@ namespace data_output
 
         /** \brief construct a helper object to access the requested variable */
 
-        NetcdfOutputWriterHelper operator[](const std::string var)
+        NetcdfOutputWriterHelper operator[](const std::string& var)
         {
-            return NetcdfOutputWriterHelper(*this,var);
+            NetcdfOutputWriterHelper helper(*this,var);
+            return helper;
         }
 
         protected:
