@@ -47,11 +47,10 @@
           "inflitration_excess" : {
             "type" : "float",
             "dimensions" : "X, Y"
-            },
+          },
            "soil_moisture_content" : {
             "type" : "float",
             "dimensions" : "X, Y"
-            }
           }
         }
       },
@@ -90,7 +89,6 @@
             "dimensions" : "D4"
           }      
         }
-
       }
     },
     "catchments": {
