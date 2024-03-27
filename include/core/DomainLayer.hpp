@@ -3,6 +3,7 @@
 
 #include "Catchment_Formulation.hpp"
 #include "Layer.hpp"
+#include "State_Exception.hpp"
 
 namespace ngen
 {
@@ -56,8 +57,18 @@ namespace ngen
          * is not yet implemented in this class.
         */
         void update_models() override{
-            formulation->get_response(output_time_index, simulation_time.get_output_interval_seconds());
             std::string current_timestamp = simulation_time.get_timestamp(output_time_index);
+            try{
+                formulation->get_response(output_time_index, simulation_time.get_output_interval_seconds());
+            }
+            catch(models::external::State_Exception& e){
+                std::string msg = e.what();
+                msg = msg+" at timestep "+std::to_string(output_time_index)
+                            +" ("+current_timestamp+")"
+                            +" at domain layer "+description.name
+                            +" (layer id: "+std::to_string(description.id)+")";
+                throw models::external::State_Exception(msg);
+            } 
             std::string output = std::to_string(output_time_index)+","+current_timestamp+","+
             formulation->get_output_line_for_timestep(output_time_index)+"\n";
             formulation->write_output(output);
