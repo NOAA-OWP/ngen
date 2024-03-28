@@ -293,7 +293,7 @@ namespace models {
              *
              * @return Whether the backing model has been initialized yet.
              */
-            bool is_model_initialized();
+            bool is_model_initialized() override;
 
             void SetValue(std::string name, void *src) override;
 

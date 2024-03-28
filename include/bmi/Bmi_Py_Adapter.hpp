@@ -513,7 +513,7 @@ namespace models {
              *
              * @return Whether the backing model has been initialized yet.
              */
-            inline bool is_model_initialized() {
+            inline bool is_model_initialized() override {
                 return model_initialized;
             }
 
