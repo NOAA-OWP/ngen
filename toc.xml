@@ -1511,7 +1511,7 @@
             <topic label="inner_get_input_item_count" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#af842e9fa306ecfa967fe4cee07f4b5fa"/>
             <topic label="inner_get_output_item_count" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a06bbf0b8e0c99f860fc60679152269d5"/>
             <topic label="inner_get_variable_names" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a14970d230345f3fe2002b40e8b708872"/>
-            <topic label="is_model_initialized" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a2d711c40806e31b3b47232fe3d8f10ea"/>
+            <topic label="is_model_initialized" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#acce88ed28003ec80328eb35596ae15b8"/>
             <topic label="isInitialized" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a31e002ee7effe39ca0f07b7c2f16a453"/>
             <topic label="retrieve_bmi_model_time_step_size" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a5b8ad5070b07816cda74c8a0361aeba5"/>
             <topic label="SetValue" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a67396fbf0b5958cbdd0323359e4be5d8"/>
@@ -1601,7 +1601,7 @@
             <topic label="GetVarUnits" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a841e084e84ba0325b77e1a868c7407d6"/>
             <topic label="Initialize" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#aeace85bbd89962f2945bec0ca3c76091"/>
             <topic label="Initialize" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a4a2a8f1fb2442ec5e3a5bd1c7a3b3ef2"/>
-            <topic label="is_model_initialized" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a2902dc0ab6801565909137e72fd1f24a"/>
+            <topic label="is_model_initialized" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a4fb64f09d9e675f4da58e9a9fa08b550"/>
             <topic label="isInitialized" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a31e002ee7effe39ca0f07b7c2f16a453"/>
             <topic label="retrieve_bmi_model_time_step_size" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#afecf067b64e1c54a6055c7f3f4425d88"/>
             <topic label="SetValue" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a3bfd5449118d6cda3284ae082a9c6f29"/>
@@ -3753,7 +3753,7 @@
             <topic label="inner_get_input_item_count" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#af842e9fa306ecfa967fe4cee07f4b5fa"/>
             <topic label="inner_get_output_item_count" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a06bbf0b8e0c99f860fc60679152269d5"/>
             <topic label="inner_get_variable_names" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a14970d230345f3fe2002b40e8b708872"/>
-            <topic label="is_model_initialized" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a2d711c40806e31b3b47232fe3d8f10ea"/>
+            <topic label="is_model_initialized" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#acce88ed28003ec80328eb35596ae15b8"/>
             <topic label="isInitialized" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a31e002ee7effe39ca0f07b7c2f16a453"/>
             <topic label="retrieve_bmi_model_time_step_size" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a5b8ad5070b07816cda74c8a0361aeba5"/>
             <topic label="SetValue" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a67396fbf0b5958cbdd0323359e4be5d8"/>
@@ -3843,7 +3843,7 @@
             <topic label="GetVarUnits" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a841e084e84ba0325b77e1a868c7407d6"/>
             <topic label="Initialize" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#aeace85bbd89962f2945bec0ca3c76091"/>
             <topic label="Initialize" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a4a2a8f1fb2442ec5e3a5bd1c7a3b3ef2"/>
-            <topic label="is_model_initialized" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a2902dc0ab6801565909137e72fd1f24a"/>
+            <topic label="is_model_initialized" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a4fb64f09d9e675f4da58e9a9fa08b550"/>
             <topic label="isInitialized" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a31e002ee7effe39ca0f07b7c2f16a453"/>
             <topic label="retrieve_bmi_model_time_step_size" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#afecf067b64e1c54a6055c7f3f4425d88"/>
             <topic label="SetValue" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a3bfd5449118d6cda3284ae082a9c6f29"/>

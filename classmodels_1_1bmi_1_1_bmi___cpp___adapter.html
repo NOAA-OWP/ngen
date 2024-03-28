@@ -221,9 +221,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9436b5b458bfbe85f8efc2a0c1f2f90a" id="r_a9436b5b458bfbe85f8efc2a0c1f2f90a"><td class="memItemLeft" align="right" valign="top">const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a9436b5b458bfbe85f8efc2a0c1f2f90a">get_analogous_cxx_type</a> (const std::string &amp;external_type_name, const size_t item_size) override</td></tr>
 <tr class="memdesc:a9436b5b458bfbe85f8efc2a0c1f2f90a"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is totally redundant for C++ models, so this simply returns the original string for the external name.  <br /></td></tr>
 <tr class="separator:a9436b5b458bfbe85f8efc2a0c1f2f90a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2902dc0ab6801565909137e72fd1f24a" id="r_a2902dc0ab6801565909137e72fd1f24a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a2902dc0ab6801565909137e72fd1f24a">is_model_initialized</a> ()</td></tr>
-<tr class="memdesc:a2902dc0ab6801565909137e72fd1f24a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the backing model has been initialized yet.  <br /></td></tr>
-<tr class="separator:a2902dc0ab6801565909137e72fd1f24a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4fb64f09d9e675f4da58e9a9fa08b550" id="r_a4fb64f09d9e675f4da58e9a9fa08b550"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a4fb64f09d9e675f4da58e9a9fa08b550">is_model_initialized</a> () override</td></tr>
+<tr class="memdesc:a4fb64f09d9e675f4da58e9a9fa08b550"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the backing model has been initialized yet.  <br /></td></tr>
+<tr class="separator:a4fb64f09d9e675f4da58e9a9fa08b550"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab236c00fa83e76c4f6f61fc0b01e053a" id="r_ab236c00fa83e76c4f6f61fc0b01e053a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#ab236c00fa83e76c4f6f61fc0b01e053a">SetValue</a> (std::string name, void *src) override</td></tr>
 <tr class="separator:ab236c00fa83e76c4f6f61fc0b01e053a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3bfd5449118d6cda3284ae082a9c6f29" id="r_a3bfd5449118d6cda3284ae082a9c6f29"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
@@ -2721,8 +2721,8 @@ template&lt;class T &gt; </div>
 
 </div>
 </div>
-<a id="a2902dc0ab6801565909137e72fd1f24a" name="a2902dc0ab6801565909137e72fd1f24a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2902dc0ab6801565909137e72fd1f24a">&#9670;&#160;</a></span>is_model_initialized()</h2>
+<a id="a4fb64f09d9e675f4da58e9a9fa08b550" name="a4fb64f09d9e675f4da58e9a9fa08b550"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4fb64f09d9e675f4da58e9a9fa08b550">&#9670;&#160;</a></span>is_model_initialized()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2739,7 +2739,7 @@ template&lt;class T &gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -3477,7 +3477,7 @@ template&lt;class T &gt; </div>
 
 <p>Whether the backing model has been initialized yet, which is always initially <code>false</code>. </p>
 
-<p class="reference">Referenced by <a class="el" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#ad1b2a065afca6374e1a33df8cb86f22c">models::bmi::Bmi_C_Adapter::Bmi_C_Adapter()</a>, <a class="el" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a1d12e828bab29517b53cd06cb7226237">Bmi_Cpp_Adapter()</a>, <a class="el" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a590bb56edfa69f5dce5f76820e7c74d6">models::bmi::Bmi_C_Adapter::construct_and_init_backing_model_for_type()</a>, <a class="el" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#aae261e8942befef9cb10ba47b89199a4">construct_and_init_backing_model_for_type()</a>, <a class="el" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a11f9107c47aa791a77799bd08b1e2b93">models::bmi::Bmi_C_Adapter::finalizeForCAdapter()</a>, <a class="el" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#afabb0ce9324c2c08bab9e836dc612c3b">finalizeForCppAdapter()</a>, <a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html#aeace85bbd89962f2945bec0ca3c76091">models::bmi::Bmi_Adapter::Initialize()</a>, <a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a4a2a8f1fb2442ec5e3a5bd1c7a3b3ef2">models::bmi::Bmi_Adapter::Initialize()</a>, <a class="el" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a2d711c40806e31b3b47232fe3d8f10ea">models::bmi::Bmi_C_Adapter::is_model_initialized()</a>, <a class="el" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a2902dc0ab6801565909137e72fd1f24a">is_model_initialized()</a>, and <a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a31e002ee7effe39ca0f07b7c2f16a453">models::bmi::Bmi_Adapter::isInitialized()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#ad1b2a065afca6374e1a33df8cb86f22c">models::bmi::Bmi_C_Adapter::Bmi_C_Adapter()</a>, <a class="el" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a1d12e828bab29517b53cd06cb7226237">Bmi_Cpp_Adapter()</a>, <a class="el" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a590bb56edfa69f5dce5f76820e7c74d6">models::bmi::Bmi_C_Adapter::construct_and_init_backing_model_for_type()</a>, <a class="el" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#aae261e8942befef9cb10ba47b89199a4">construct_and_init_backing_model_for_type()</a>, <a class="el" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#a11f9107c47aa791a77799bd08b1e2b93">models::bmi::Bmi_C_Adapter::finalizeForCAdapter()</a>, <a class="el" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#afabb0ce9324c2c08bab9e836dc612c3b">finalizeForCppAdapter()</a>, <a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html#aeace85bbd89962f2945bec0ca3c76091">models::bmi::Bmi_Adapter::Initialize()</a>, <a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a4a2a8f1fb2442ec5e3a5bd1c7a3b3ef2">models::bmi::Bmi_Adapter::Initialize()</a>, <a class="el" href="classmodels_1_1bmi_1_1_bmi___c___adapter.html#acce88ed28003ec80328eb35596ae15b8">models::bmi::Bmi_C_Adapter::is_model_initialized()</a>, <a class="el" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a4fb64f09d9e675f4da58e9a9fa08b550">is_model_initialized()</a>, and <a class="el" href="classmodels_1_1bmi_1_1_bmi___adapter.html#a31e002ee7effe39ca0f07b7c2f16a453">models::bmi::Bmi_Adapter::isInitialized()</a>.</p>
 
 </div>
 </div>
@@ -3565,7 +3565,7 @@ template&lt;class T &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacemodels.html">models</a></li><li class="navelem"><a class="el" href="namespacemodels_1_1bmi.html">bmi</a></li><li class="navelem"><a class="el" href="classmodels_1_1bmi_1_1_bmi___cpp___adapter.html">Bmi_Cpp_Adapter</a></li>
-    <li class="footer">Generated on Wed Mar 27 2024 22:30:30 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Thu Mar 28 2024 19:14:28 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

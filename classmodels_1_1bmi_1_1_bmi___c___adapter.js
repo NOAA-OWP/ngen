@@ -65,7 +65,7 @@ var classmodels_1_1bmi_1_1_bmi___c___adapter =
     [ "inner_get_input_item_count", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#af842e9fa306ecfa967fe4cee07f4b5fa", null ],
     [ "inner_get_output_item_count", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#a06bbf0b8e0c99f860fc60679152269d5", null ],
     [ "inner_get_variable_names", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#a14970d230345f3fe2002b40e8b708872", null ],
-    [ "is_model_initialized", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#a2d711c40806e31b3b47232fe3d8f10ea", null ],
+    [ "is_model_initialized", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#acce88ed28003ec80328eb35596ae15b8", null ],
     [ "isInitialized", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#a31e002ee7effe39ca0f07b7c2f16a453", null ],
     [ "retrieve_bmi_model_time_step_size", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#a5b8ad5070b07816cda74c8a0361aeba5", null ],
     [ "SetValue", "classmodels_1_1bmi_1_1_bmi___c___adapter.html#a67396fbf0b5958cbdd0323359e4be5d8", null ],

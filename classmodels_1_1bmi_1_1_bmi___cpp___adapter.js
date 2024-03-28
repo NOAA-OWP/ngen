@@ -61,7 +61,7 @@ var classmodels_1_1bmi_1_1_bmi___cpp___adapter =
     [ "GetVarUnits", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a841e084e84ba0325b77e1a868c7407d6", null ],
     [ "Initialize", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#aeace85bbd89962f2945bec0ca3c76091", null ],
     [ "Initialize", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a4a2a8f1fb2442ec5e3a5bd1c7a3b3ef2", null ],
-    [ "is_model_initialized", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a2902dc0ab6801565909137e72fd1f24a", null ],
+    [ "is_model_initialized", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a4fb64f09d9e675f4da58e9a9fa08b550", null ],
     [ "isInitialized", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a31e002ee7effe39ca0f07b7c2f16a453", null ],
     [ "retrieve_bmi_model_time_step_size", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#afecf067b64e1c54a6055c7f3f4425d88", null ],
     [ "SetValue", "classmodels_1_1bmi_1_1_bmi___cpp___adapter.html#a3bfd5449118d6cda3284ae082a9c6f29", null ],
