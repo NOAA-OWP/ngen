@@ -292,8 +292,8 @@ namespace realization {
                 utils::StreamHandler output_stream
             ) {
                 if(!formulation_exists(catchment_formulation.formulation.type)){
-                    throw std::runtime_error("Catchment " + identifier + " failed initialization: " + 
-                            catchment_formulation.formulation.type + " is not a valid formulation. Options are: "+valid_formulation_keys());
+                    throw std::runtime_error("Catchment " + identifier + " failed initialization: '" +
+                            catchment_formulation.formulation.type + "' is not a valid formulation. Options are: "+valid_formulation_keys());
                 }
 
                 if(catchment_formulation.forcing.parameters.empty()){
