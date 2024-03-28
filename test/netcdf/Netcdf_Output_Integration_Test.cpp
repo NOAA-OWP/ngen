@@ -26,7 +26,7 @@ class NetcdfOutputParserTest : public ::testing::Test {
         {
             nexus_data_path = find_file(path_options, "./data/nexus_data.geojson");
             catchment_data_path = find_file(path_options, "./data/catchment_data.geojson");
-            realization_config_path = find_file(path_options, "./data/example_multilayer_realization_config.json");
+            realization_config_path = find_file(path_options, "./data/example_ncout_realization_config.json");
         }
 
         ~NetcdfOutputParserTest() override {

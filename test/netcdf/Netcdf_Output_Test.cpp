@@ -42,11 +42,11 @@ TEST_F(NetcdfOuputTest, TestNetcdfCreation) {
     dimension_discription.push_back(data_output::NetcdfDimensionDiscription("lon",100));
     dimension_discription.push_back(data_output::NetcdfDimensionDiscription("cat-id",1000));
 
-    variable_discription.push_back(data_output::NetcdfVariableDiscription("Ngen-Framework-Version", NC_STRING));
-    variable_discription.push_back(data_output::NetcdfVariableDiscription("lat", NC_FLOAT,"lat"));
-    variable_discription.push_back(data_output::NetcdfVariableDiscription("lon", NC_FLOAT, "lon"));
-    variable_discription.push_back(data_output::NetcdfVariableDiscription("RAINRATE", NC_FLOAT, std::vector<std::string>{"time","lat","lon"}));
-    variable_discription.push_back(data_output::NetcdfVariableDiscription("discharge", NC_FLOAT, std::vector<std::string>{"time","cat-id"}));
+    variable_discription.push_back(data_output::NetcdfVariableDiscription("Ngen-Framework-Version", "string"));
+    variable_discription.push_back(data_output::NetcdfVariableDiscription("lat", "float","lat"));
+    variable_discription.push_back(data_output::NetcdfVariableDiscription("lon", "float", "lon"));
+    variable_discription.push_back(data_output::NetcdfVariableDiscription("RAINRATE", "float", std::vector<std::string>{"time","lat","lon"}));
+    variable_discription.push_back(data_output::NetcdfVariableDiscription("discharge", "float", std::vector<std::string>{"time","cat-id"}));
 
     // make the output file
     NetcdfOutputWriter output_file("netcdf-output-test.nc",dimension_discription,variable_discription);
@@ -104,11 +104,11 @@ TEST_F(NetcdfOuputTest, TestNetcdfWrite) {
     dimension_discription.push_back(data_output::NetcdfDimensionDiscription("y",100));
     dimension_discription.push_back(data_output::NetcdfDimensionDiscription("id",1000));
 
-    variable_discription.push_back(data_output::NetcdfVariableDiscription("version", NC_STRING));
-    variable_discription.push_back(data_output::NetcdfVariableDiscription("x", NC_FLOAT,"x"));
-    variable_discription.push_back(data_output::NetcdfVariableDiscription("y", NC_FLOAT, "y"));
-    variable_discription.push_back(data_output::NetcdfVariableDiscription("output1", NC_FLOAT, std::vector<std::string>{"time","x","y"}));
-    variable_discription.push_back(data_output::NetcdfVariableDiscription("output2", NC_FLOAT, std::vector<std::string>{"time","id"}));
+    variable_discription.push_back(data_output::NetcdfVariableDiscription("version", "string"));
+    variable_discription.push_back(data_output::NetcdfVariableDiscription("x", "float:","x"));
+    variable_discription.push_back(data_output::NetcdfVariableDiscription("y", "float", "y"));
+    variable_discription.push_back(data_output::NetcdfVariableDiscription("output1", "float", std::vector<std::string>{"time","x","y"}));
+    variable_discription.push_back(data_output::NetcdfVariableDiscription("output2", "float", std::vector<std::string>{"time","id"}));
     
     NetcdfOutputWriter output_file("netcdf-write-test-1.nc",dimension_discription, variable_discription);
 
@@ -119,8 +119,7 @@ TEST_F(NetcdfOuputTest, TestNetcdfWrite) {
         data_vec[i] = i * 0.1f;
     }
 
-    auto s = output_file["output2"];
-    s << nc_offset(0,0) << nc_stride(1,1000) << data_vec;
+    output_file["output2"] << nc_offset(0,0) << nc_stride(1,1000) << data_vec;
 
     SUCCEED();
 }

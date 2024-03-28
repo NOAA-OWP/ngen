@@ -51,13 +51,22 @@ namespace data_output
     struct NetcdfVariableDiscription
     {
         NetcdfVariableDiscription() {}
-        NetcdfVariableDiscription(const std::string& n, const NcType& t) : name(n), type(t), dim_names() {}
-        NetcdfVariableDiscription(const std::string& n, const NcType& t, const std::string& d_n ) : name(n), type(t), dim_names() { dim_names.push_back(d_n); }
-        NetcdfVariableDiscription(const std::string& n, const NcType& t, const std::vector<std::string>& d_n ) : name(n), type(t), dim_names(d_n) {}
+        NetcdfVariableDiscription(const std::string& n, const std::string& t) : name(n), type(t), dim_names() {}
+        NetcdfVariableDiscription(const std::string& n, const std::string& t, const std::string& d_n ) : name(n), type(t), dim_names() { dim_names.push_back(d_n); }
+        NetcdfVariableDiscription(const std::string& n, const std::string& t, const std::vector<std::string>& d_n ) : name(n), type(t), dim_names(d_n) {}
+
+        NetcdfVariableDiscription(const NetcdfVariableDiscription& src) : name(src.name), type(src.type), dim_names(src.dim_names) {}
+        NetcdfVariableDiscription& operator=(const NetcdfVariableDiscription& src)
+        {
+            name = src.name;
+            type = src.type;
+            dim_names = src.dim_names;
+            return *this;
+        }
 
         
         std::string name;
-        NcType type;
+        std::string type;
         std::vector<std::string> dim_names;
     };
 
@@ -188,11 +197,11 @@ namespace data_output
                         var_dims.push_back(netcdfDims[name]);
                     }
 
-                    netcdfVars[var.name] = netcdfFile->addVar(var.name, var.type, var_dims);
+                    netcdfVars[var.name] = netcdfFile->addVar(var.name, data_output::strtonctype(var.type), var_dims);
                 }
                 else
                 {
-                    netcdfVars[var.name] = netcdfFile->addVar(var.name, var.type);
+                    netcdfVars[var.name] = netcdfFile->addVar(var.name, data_output::strtonctype(var.type));
                 } 
             }            
         }
