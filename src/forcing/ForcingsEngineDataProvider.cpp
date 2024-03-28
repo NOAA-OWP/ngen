@@ -1,4 +1,5 @@
 #include "ForcingsEngineDataProvider.hpp"
+#include "DataProvider.hpp"
 
 #include <iomanip>
 
@@ -6,7 +7,7 @@ namespace data_access {
 
 time_t parse_time(const std::string& time, const std::string& fmt)
 {
-    std::tm tm_ = {0};
+    std::tm tm_ = {};
     std::stringstream tmstr{time};
     tmstr >> std::get_time(&tm_, fmt.c_str());
 
@@ -63,33 +64,39 @@ size_t ForcingsEngineDataProvider::get_ts_index_for_time(const time_t& epoch_tim
 
 double ForcingsEngineDataProvider::get_value(const CatchmentAggrDataSelector& selector, ReSampleMethod m)
 {
-    const auto values = get_values(selector, m);
+    const auto start = ForcingsEngine::clock_type::from_time_t(selector.get_init_time());
+    const auto end = std::chrono::seconds{selector.get_duration_secs()} + start;
+    const std::string id = selector.get_id();
+    const std::string var = selector.get_variable_name();
 
-    switch (m) {
-      case ReSampleMethod::SUM:
-        return std::accumulate(values.begin(), values.end(), 0.0);
+    if (m == ReSampleMethod::SUM || m == ReSampleMethod::MEAN) {
+        double acc = 0.0;
+        for (auto current_time = start; current_time < end; current_time += engine_->time_step()) {
+            acc += engine_->at(current_time, id, var);
+        }
 
-      case ReSampleMethod::MEAN:
-        return std::accumulate(values.begin(), values.end(), 0.0) / static_cast<double>(values.size());
+        if (m == ReSampleMethod::MEAN) {
+            acc /= static_cast<double>(
+                selector.get_duration_secs() / std::chrono::duration_cast<std::chrono::seconds>(engine_->time_step()).count()
+            );
+        }
 
-      case ReSampleMethod::FRONT_FILL:
-      case ReSampleMethod::BACK_FILL:
-      default:
-        throw std::runtime_error{"Given ReSampleMethod " + std::to_string(m) + " not implemented."};
+        return acc;
     }
+
+    throw std::runtime_error{"Given ReSampleMethod " + std::to_string(m) + " not implemented."};
 }
 
 std::vector<double> ForcingsEngineDataProvider::get_values(const CatchmentAggrDataSelector& selector, ReSampleMethod m)
 {
     const auto start = ForcingsEngine::clock_type::from_time_t(selector.get_init_time());
     const auto end   = std::chrono::seconds{selector.get_duration_secs()} + start;
+    const std::string id = selector.get_id();
+    const std::string var = selector.get_variable_name();
 
     std::vector<double> values;
     for (auto current_time = start; current_time < end; current_time += engine_->time_step()) {
-        
-        values.push_back(
-            engine_->at(current_time, selector.get_id(), selector.get_variable_name())
-        );
+        values.push_back(engine_->at(current_time, id, var));
     }
 
     return values;

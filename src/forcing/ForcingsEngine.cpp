@@ -137,7 +137,7 @@ auto ForcingsEngine::time_index(time_t ctime) const noexcept
 auto ForcingsEngine::time_index(clock_type::time_point epoch) const noexcept
   -> size_type
 {
-    if (epoch < time_begin() || epoch >= time_end()) {
+    if (epoch < time_begin() || epoch > time_end()) {
         return bad_index;
     }
 

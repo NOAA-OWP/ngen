@@ -43,10 +43,7 @@ class ForcingsEngineDataProviderTest : public testing::Test
     static void SetUpTestSuite()
     {
         #if NGEN_WITH_MPI
-        MPI_Initialized(&mpi.initialized);
-        if (mpi.initialized == 0) {
-            MPI_Init(nullptr, nullptr);
-        }
+        MPI_Init(nullptr, nullptr);
         #endif
 
         ForcingsEngineDataProviderTest::gil_ = utils::ngenPy::InterpreterUtil::getInstance();
@@ -55,20 +52,11 @@ class ForcingsEngineDataProviderTest : public testing::Test
 
     static void TearDownTestSuite()
     {
-        // FIXME: Unfortunate workaround to handle ESMF finalization.
-        //        See issue #748 for more info, keeping this temporarily
-        //        until ESMF implements a way to keep MPI initialized on
-        //        ESMF finalization through ESMPy.
-        // gil_->getModule("atexit").attr("_run_exitfuncs")();
-
         data_access::ForcingsEngine::finalize_all();
         gil_.reset();
 
         #if NGEN_WITH_MPI
-        // MPI_Finalized(&mpi.finalized);
-        // if (mpi.finalized == 0) {
         PMPI_Finalize();
-        // }
         #endif
     }    
 };
@@ -164,7 +152,7 @@ TEST_F(ForcingsEngineDataProviderTest, Lookback)
 }
 
 // Disabled -- revisit when BMI parallel proposal is closer to finalizing.
-TEST_F(ForcingsEngineDataProviderTest, MPICommunicators_DISABLED) {
+TEST_F(ForcingsEngineDataProviderTest, DISABLED_MPICommunicators) {
 #if !NGEN_WITH_MPI
     GTEST_SKIP() << "Test is not MPI-enabled, or only has 1 process";
 #else
