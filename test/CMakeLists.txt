@@ -256,6 +256,7 @@ ngen_add_test(
         NGen::forcing
     REQUIRES
         NGEN_WITH_NETCDF
+        NGEN_WITH_BMI_FORTRAN
 )
 
 
