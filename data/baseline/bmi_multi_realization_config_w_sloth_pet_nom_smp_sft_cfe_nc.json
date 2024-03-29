@@ -24,6 +24,8 @@
                                     "soil_thickness_layered(1,double,1,node)": 0.0,
                                     "soil_depth_wetting_fronts(1,double,1,node)": 0.0,
                                     "num_wetting_fronts(1,int,1,node)": 1.0,
+                                    "Qb_topmodel(1,double,1,node)": 0.0,
+                                    "Qv_topmodel(1,double,1,node)": 0.0,
                                     "global_deficit(1,double,1,node)": 0.0,
                                     "sloth_SOIL_STORAGE(1,double,m,node)": 0.8,
                                     "sloth_SOIL_STORAGE_CHANGE(1,double,m,node)": -0.000472,
@@ -40,7 +42,7 @@
                                 "model_type_name": "bmi_c_pet",
                                 "library_file": "./extern/evapotranspiration/evapotranspiration/cmake_build/libpetbmi",
                                 "forcing_file": "",
-                                "init_config": "./extern/SoilFreezeThaw/SoilFreezeThaw/configs/extern/laramie_config_pet.txt",
+                                "init_config": "./conus_config/PET_{{id}}.ini",
                                 "allow_exceed_end_time": true,
                                 "main_output_variable": "water_potential_evaporation_flux",
                                 "registration_function":"register_bmi_pet",
@@ -53,7 +55,7 @@
                                 "model_type_name": "bmi_fortran_noahowp",
                                 "library_file": "./extern/noah-owp-modular/cmake_build/libsurfacebmi",
                                 "forcing_file": "",
-                                "init_config": "./data/bmi/fortran/noah-owp-modular-init-{{id}}.namelist.input",
+                                "init_config": "./conus_config/NoahOWP_{{id}}.namelist",
                                 "allow_exceed_end_time": true,
                                 "main_output_variable": "QINSUR",
                                 "variables_names_map": {
@@ -74,7 +76,7 @@
                             "params": {
                                 "model_type_name": "bmi_smp",
                                 "library_file": "./extern/SoilMoistureProfiles/SoilMoistureProfiles/cmake_build/libsmpbmi",
-                                "init_config": "./extern/SoilFreezeThaw/SoilFreezeThaw/configs/extern/laramie_config_smp.txt",
+                                "init_config": "./conus_smp_configs/SoilMoistureProfile_{{id}}.ini",
                                 "allow_exceed_end_time": true,
                                 "main_output_variable": "soil_water_table",
                                 "variables_names_map" : {
@@ -89,7 +91,7 @@
                             "params": {
                                 "model_type_name": "bmi_sft",
                                 "library_file": "./extern/SoilFreezeThaw/SoilFreezeThaw/cmake_build/libsftbmi",
-                                "init_config": "./extern/SoilFreezeThaw/SoilFreezeThaw/configs/extern/laramie_config_sft.txt",
+                                "init_config": "./conus_sft_configs/SoilFreezeThaw_{{id}}.ini",
                                 "allow_exceed_end_time": true,
                                 "main_output_variable": "num_cells",
                                 "variables_names_map" : {
@@ -104,7 +106,7 @@
                                 "model_type_name": "bmi_c_cfe",
                                 "library_file": "./extern/cfe/cmake_build/libcfebmi",
                                 "forcing_file": "",
-                                "init_config": "./extern/SoilFreezeThaw/SoilFreezeThaw/configs/extern/laramie_config_cfe.txt",
+                                "init_config": "./conus_config/CFE_{{id}}.ini",
                                 "allow_exceed_end_time": true,
                                 "main_output_variable": "Q_OUT",
                                 "registration_function": "register_bmi_cfe",
