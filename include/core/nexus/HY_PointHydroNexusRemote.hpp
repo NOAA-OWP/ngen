@@ -11,6 +11,7 @@
 #include <unordered_map>
 #include <string>
 #include <list>
+#include <exception>
 
 
 /** This class representa a point nexus that can have both upstream and downstream connections to catments that are
@@ -157,6 +158,7 @@ namespace std
 			return std::string("sender_receiver");
 			break;
 		}
+		throw std::runtime_error("Unhandled value of communication_type");
 	}
 }
 
