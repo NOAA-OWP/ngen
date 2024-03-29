@@ -794,7 +794,9 @@ int read_init_config(const char* config_file, test_bmi_c_model* model)
 
     for (size_t i = 0; i < config_line_count; i++) {
         char *param_key, *param_value;
-        fgets(config_line, max_config_line_length + 1, fp);
+        char *ret = fgets(config_line, max_config_line_length + 1, fp);
+        if (ret == NULL)
+            return BMI_FAILURE;
 
         char* config_line_ptr = config_line;
         config_line_ptr = strsep(&config_line_ptr, "\n");
