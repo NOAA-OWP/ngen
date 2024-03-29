@@ -13,8 +13,7 @@
 #include <list>
 #include <exception>
 
-
-/** This class representa a point nexus that can have both upstream and downstream connections to catments that are
+/** This class represents a point nexus that can have both upstream and downstream connections to catchments that are
 *   in seperate MPI processes.
 *
 *   When attempting to add upstream flows from a remote catchment a MPI_Irecv call will be generated
