@@ -181,7 +181,7 @@ runs:
           id: cmake_init
           run: |
             export BOOST_ROOT="$(pwd)/boost_1_79_0"
-            export CFLAGS="-fsanitize=address -O1 -g -fno-omit-frame-pointer"
+            export CFLAGS="-fsanitize=address -O1 -g -fno-omit-frame-pointer -Werror"
             export CXXFLAGS="-fsanitize=address -O1 -g -fno-omit-frame-pointer -pedantic-errors -Werror"
             . .venv/bin/activate
             [ ! -d "$BOOST_ROOT" ] && echo "Error: no Boost root found at $BOOST_ROOT" && exit 1
