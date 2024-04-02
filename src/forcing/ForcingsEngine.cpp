@@ -44,20 +44,7 @@ ForcingsEngine::ForcingsEngine(const std::string& init, size_type time_start, si
     var_cache_ = decltype(var_cache_){{ time_dim, id_dim, var_dim }};
 
     // Cache initial iteration
-    const auto size = var_divides_.size();
-    for (size_type vi = 0; vi < var_outputs_.size(); vi++) {
-        // Get current values for each variable
-        const auto var_span = boost::span<const double>{
-            static_cast<double*>(bmi_->GetValuePtr(var_outputs_[vi])),
-            size
-        };
-
-        for (size_type di = 0; di < size; di++) {
-            // Set current variable value for each divide
-            var_cache_.at({{time_current_index_, di, vi}}) = var_span[di];
-        }
-    }
-
+    update_value_storage_(time_current_index_);
     time_current_index_++;
 }
 
@@ -100,6 +87,23 @@ void ForcingsEngine::check_runtime_requirements()
         const auto* wgrib2_exec = std::getenv("WGRIB2");
         if (wgrib2_exec == nullptr) {
             throw std::runtime_error{"Failed to initialize ForcingsEngine: $WGRIB2 is not defined"};
+        }
+    }
+}
+
+void ForcingsEngine::update_value_storage_(size_type index)
+{
+    const auto size = var_divides_.size();
+    for (size_type vi = 0; vi < var_outputs_.size(); vi++) {
+        // Get current values for each variable
+        const auto var_span = boost::span<const double>{
+            static_cast<double*>(bmi_->GetValuePtr(var_outputs_[vi])),
+            size
+        };
+
+        for (size_type di = 0; di < size; di++) {
+            // Set current variable value for each divide
+            var_cache_.at({{index, di, vi}}) = var_span[di];
         }
     }
 }
@@ -250,19 +254,7 @@ double ForcingsEngine::at(
             static_cast<double>(time_current_index_ * time_step().count())
         );
 
-        const auto size = var_divides_.size();
-        for (size_type vi = 0; vi < var_outputs_.size(); vi++) {
-            // Get current values for each variable
-            const auto var_span = boost::span<const double>{
-                static_cast<double*>(bmi_->GetValuePtr(var_outputs_[vi])),
-                size
-            };
-
-            for (size_type di = 0; di < size; di++) {
-                // Set current variable value for each divide
-                var_cache_.at({{time_current_index_, di, vi}}) = var_span[di];
-            }
-        }
+        update_value_storage_(time_current_index_);
     }
     
     return var_cache_.at({{time_idx, divide_idx, variable_idx}});
