@@ -77,7 +77,8 @@ double ForcingsEngineDataProvider::get_value(const CatchmentAggrDataSelector& se
 
         if (m == ReSampleMethod::MEAN) {
             const auto time_step_seconds = std::chrono::duration_cast<std::chrono::seconds>(engine_->time_step()).count();
-            acc /= selector.get_duration_secs() / time_step_seconds;
+            const auto num_time_steps = selector.get_duration_secs() / time_step_seconds;
+            acc /= num_time_steps;
         }
 
         return acc;
