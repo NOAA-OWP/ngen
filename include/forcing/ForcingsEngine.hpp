@@ -159,6 +159,13 @@ struct ForcingsEngine
      */
     static void check_runtime_requirements();
 
+    /**
+     * @brief Update the value storage for the given time index.
+     * 
+     * @param index Time index to assign variables' current value to.
+     */
+    void update_value_storage_(size_type index);
+
     ForcingsEngine() = default;
 
     // Available instances of Forcings Engines. This will vary
