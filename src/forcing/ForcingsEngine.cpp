@@ -59,11 +59,14 @@ ForcingsEngine& ForcingsEngine::instance(
     std::size_t time_end
 )
 {
-    if (instances_[init] == nullptr) {
-        instances_[init] = std::make_unique<ForcingsEngine>(init, time_start, time_end);
+    std::unique_ptr<ForcingsEngine>& inst = instances_[init];
+    if (inst == nullptr) {
+        inst = std::make_unique<ForcingsEngine>(init, time_start, time_end);
     }
 
-    return *instances_[init];
+    assert(inst->time_start_ == std::chrono::seconds{time_start});
+    assert(inst->time_end_ == std::chrono::seconds{time_end});
+    return *inst;
 }
 
 void ForcingsEngine::check_runtime_requirements()
