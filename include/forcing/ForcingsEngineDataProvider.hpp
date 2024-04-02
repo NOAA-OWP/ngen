@@ -37,7 +37,7 @@ struct ForcingsEngineDataProvider
 
     size_t get_ts_index_for_time(const time_t& epoch_time) override;
 
-    double get_value(const CatchmentAggrDataSelector& selector, ReSampleMethod m) override;
+    double get_value(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override;
 
     std::vector<double> get_values(const CatchmentAggrDataSelector& selector, data_access::ReSampleMethod m) override;
 
