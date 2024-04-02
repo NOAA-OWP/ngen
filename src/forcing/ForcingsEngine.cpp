@@ -64,8 +64,8 @@ ForcingsEngine& ForcingsEngine::instance(
         inst = std::make_unique<ForcingsEngine>(init, time_start, time_end);
     }
 
-    assert(inst->time_start_ == std::chrono::seconds{time_start});
-    assert(inst->time_end_ == std::chrono::seconds{time_end});
+    assert(inst->time_start_ == ForcingsEngine::clock_type::time_point{std::chrono::seconds{time_start}});
+    assert(inst->time_end_ == ForcingsEngine::clock_type::time_point{std::chrono::seconds{time_end}});
     return *inst;
 }
 
