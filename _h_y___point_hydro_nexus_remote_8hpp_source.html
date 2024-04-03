@@ -110,7 +110,7 @@ $(document).ready(function(){initNavTree('_h_y___point_hydro_nexus_remote_8hpp_s
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;unordered_map&gt;</span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;list&gt;</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;exception&gt;</span></div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keyword">class </span>HY_PointHydroNexusRemote : <span class="keyword">public</span> <a class="code hl_class" href="class_h_y___point_hydro_nexus.html">HY_PointHydroNexus</a></div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>{</div>
@@ -218,11 +218,12 @@ $(document).ready(function(){initNavTree('_h_y___point_hydro_nexus_remote_8hpp_s
 <div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>            <span class="keywordflow">return</span> std::string(<span class="stringliteral">&quot;sender_receiver&quot;</span>);</div>
 <div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>            <span class="keywordflow">break</span>;</div>
 <div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>        }</div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>    }</div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>}</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span> </div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span><span class="preprocessor">#endif </span><span class="comment">// NGEN_MPI_ACTIVE</span></div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span><span class="preprocessor">#endif </span><span class="comment">// HY_POINTHYDRONEXUSREMOTEDOWNSTREAM_H</span></div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>        <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Unhandled value of communication_type&quot;</span>);</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>    }</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>}</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span> </div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span><span class="preprocessor">#endif </span><span class="comment">// NGEN_MPI_ACTIVE</span></div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span><span class="preprocessor">#endif </span><span class="comment">// HY_POINTHYDRONEXUSREMOTEDOWNSTREAM_H</span></div>
 <div class="ttc" id="aclass_h_y___point_hydro_nexus_html"><div class="ttname"><a href="class_h_y___point_hydro_nexus.html">HY_PointHydroNexus</a></div><div class="ttdef"><b>Definition</b> HY_PointHydroNexus.hpp:10</div></div>
 <div class="ttc" id="aclass_h_y___point_hydro_nexus_html_a3582f14abc7e68e9aa35a01a70609ac9"><div class="ttname"><a href="class_h_y___point_hydro_nexus.html#a3582f14abc7e68e9aa35a01a70609ac9">HY_PointHydroNexus::add_upstream_flow</a></div><div class="ttdeci">void add_upstream_flow(double val, std::string catchment_id, time_step_t t)</div><div class="ttdoc">add flow to this nexus for timestep t.</div><div class="ttdef"><b>Definition</b> HY_PointHydroNexus.cpp:135</div></div>
 <div class="ttc" id="aclass_h_y___point_hydro_nexus_html_afa2d0caa7e461973609494edd195023a"><div class="ttname"><a href="class_h_y___point_hydro_nexus.html#afa2d0caa7e461973609494edd195023a">HY_PointHydroNexus::get_downstream_flow</a></div><div class="ttdeci">double get_downstream_flow(std::string catchment_id, time_step_t t, double percent_flow)</div><div class="ttdoc">get the request percentage of downstream flow through this nexus at timestep t.</div><div class="ttdef"><b>Definition</b> HY_PointHydroNexus.cpp:47</div></div>
@@ -233,7 +234,7 @@ $(document).ready(function(){initNavTree('_h_y___point_hydro_nexus_remote_8hpp_s
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_3d69f64eaf81436fe2b22361382717e5.html">core</a></li><li class="navelem"><a class="el" href="dir_102bca72b497334c3b5bafded849df31.html">nexus</a></li><li class="navelem"><b>HY_PointHydroNexusRemote.hpp</b></li>
-    <li class="footer">Generated on Mon Apr 1 2024 14:16:10 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Wed Apr 3 2024 16:02:09 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
