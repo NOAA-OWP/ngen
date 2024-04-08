@@ -100,7 +100,7 @@ void Network::init_indicies(){
                    boost::vertex_index_map(get(boost::vertex_index, this->graph)));
 }
 
-Network::Network( geojson::GeoJSON features, std::string* link_key = nullptr ){
+Network::Network( geojson::GeoJSON features, std::string* link_key ){
 
   std::string feature_id, downstream_id;
   Graph::vertex_descriptor v1, v2;
