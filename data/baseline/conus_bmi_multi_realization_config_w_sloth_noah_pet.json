@@ -4,11 +4,11 @@
             {
                 "name": "bmi_multi",
                 "params": {
-                    "model_type_name": "bmi_multi_noahowp_cfe",
+                    "model_type_name": "bmi_multi_noahowp_pet",
                     "forcing_file": "",
                     "init_config": "",
                     "allow_exceed_end_time": true,
-                    "main_output_variable": "QINSUR",
+                    "main_output_variable": "water_potential_evaporation_flux",
                     "modules": [
 			{
 			    "name": "bmi_c++",
@@ -20,31 +20,11 @@
                                 "main_output_variable": "z",
                                 "uses_forcing_file": false,
                                 "model_params": {
-                                    "soil_moisture_wetting_fronts(1,double,1,node)": 0.0,
-                                    "soil_thickness_layered(1,double,1,node)": 0.0,
-                                    "soil_depth_wetting_fronts(1,double,1,node)": 0.0,
-                                    "num_wetting_fronts(1,int,1,node)": 1.0,
-                                    "Qb_topmodel(1,double,1,node)": 0.0,
-                                    "Qv_topmodel(1,double,1,node)": 0.0,
-                                    "global_deficit(1,double,1,node)": 0.0,
-                                    "sloth_SOIL_STORAGE(1,double,m,node)": 0.8,
-                                    "sloth_SOIL_STORAGE_CHANGE(1,double,m,node)": -0.000472,
-                                    "soil_moisture_layered(1,double,1,node)": 0.0
+				    "sloth_ice_fraction_schaake(1,double,m,node)": 0.0,
+				    "sloth_ice_fraction_xinanjiang(1,double,1,node)": 0.0,
+				    "sloth_smp(1,double,1,node)": 0.0
                                 }
 			    }
-                        },
-                        {
-                            "name": "bmi_c",
-                            "params": {
-                                "model_type_name": "bmi_c_pet",
-                                "library_file": "./extern/evapotranspiration/evapotranspiration/cmake_build/libpetbmi",
-                                "forcing_file": "",
-                                "init_config": "./conus_config/PET_{{id}}.ini",
-                                "allow_exceed_end_time": true,
-                                "main_output_variable": "water_potential_evaporation_flux",
-                                "registration_function":"register_bmi_pet",
-                                "uses_forcing_file": false
-                            }
                         },
                         {
                             "name": "bmi_fortran",
@@ -52,7 +32,7 @@
                                 "model_type_name": "bmi_fortran_noahowp",
                                 "library_file": "./extern/noah-owp-modular/cmake_build/libsurfacebmi",
                                 "forcing_file": "",
-                                "init_config": "./conus_config/NoahOWP_{{id}}.namelist",
+                                "init_config": "./data/bmi/fortran/noah-owp-modular-init-{{id}}.namelist.input",
                                 "allow_exceed_end_time": true,
                                 "main_output_variable": "QINSUR",
                                 "variables_names_map": {
@@ -69,16 +49,17 @@
                             }
                         },
                         {
-                            "name": "bmi_c++",
+                            "name": "bmi_c",
                             "params": {
-                                "model_type_name": "bmi_smp",
-                                "library_file": "./extern/SoilMoistureProfiles/SoilMoistureProfiles/cmake_build/libsmpbmi",
-                                "init_config": "./conus_smp_configs/SoilMoistureProfile_{{id}}.ini",
+                                "model_type_name": "bmi_c_pet",
+                                "library_file": "./extern/evapotranspiration/evapotranspiration/cmake_build/libpetbmi",
+                                "forcing_file": "",
+                                "init_config": "./conus_config/PET_{{id}}.ini",
                                 "allow_exceed_end_time": true,
-                                "main_output_variable": "soil_water_table",
-                                "variables_names_map" : {
-                                    "soil_storage" : "sloth_SOIL_STORAGE",
-                                    "soil_storage_change" : "sloth_SOIL_STORAGE_CHANGE"
+                                "main_output_variable": "water_potential_evaporation_flux",
+                                "registration_function": "register_bmi_pet",
+                                "variables_names_map": {
+                                    "water_potential_evaporation_flux": "potential_evapotranspiration"
                                 },
                                 "uses_forcing_file": false
                             }
