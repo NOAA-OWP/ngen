@@ -87,14 +87,20 @@ struct ForcingsEngine
      */
     size_type variable_index(const std::string& variable) const noexcept;
 
+    /**
+     * @brief Update to next timestep.
+     * 
+     * @return true
+     * @return false 
+     */
     bool next();
 
     /**
      * @brief Get a forcing value from the instance
      * 
-     * @param raw_time Epoch for the time to get
      * @param divide_id Divide ID to index at
      * @param variable Forcings variable to get
+     * @param previous If true, return the previous timestep values.
      * @return double 
      */
     double at(
@@ -106,9 +112,9 @@ struct ForcingsEngine
     /**
      * @brief Get a forcing value from the instance
      * 
-     * @param time_index Time index
      * @param divide_index Divide index
      * @param variable_index Variable index
+     * @param previous If true, return the previous timestep values.
      * @return double 
      */
     double at(
