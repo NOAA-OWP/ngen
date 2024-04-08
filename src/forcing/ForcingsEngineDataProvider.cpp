@@ -71,13 +71,20 @@ double ForcingsEngineDataProvider::get_value(const CatchmentAggrDataSelector& se
 
     if (m == ReSampleMethod::SUM || m == ReSampleMethod::MEAN) {
         double acc = 0.0;
-        for (auto current_time = start; current_time < end; current_time += engine_->time_step()) {
-            acc += engine_->at(current_time, id, var);
+        auto current_time = start;
+        while (current_time < end) {
+            if (!engine_->next()) {
+                break;
+            }
+
+            acc += engine_->at(id, var);
+            current_time += engine_->time_step();
         }
 
         if (m == ReSampleMethod::MEAN) {
             const auto time_step_seconds = std::chrono::duration_cast<std::chrono::seconds>(engine_->time_step()).count();
-            const auto num_time_steps = selector.get_duration_secs() / time_step_seconds;
+            const auto time_duration = std::chrono::duration_cast<std::chrono::seconds>(current_time.time_since_epoch()).count();
+            const auto num_time_steps = time_duration / time_step_seconds;
             acc /= num_time_steps;
         }
 
@@ -96,7 +103,7 @@ std::vector<double> ForcingsEngineDataProvider::get_values(const CatchmentAggrDa
 
     std::vector<double> values;
     for (auto current_time = start; current_time < end; current_time += engine_->time_step()) {
-        values.push_back(engine_->at(current_time, id, var));
+        values.push_back(engine_->at(id, var));
     }
 
     return values;
