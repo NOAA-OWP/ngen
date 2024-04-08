@@ -2,6 +2,7 @@ var classngen_1_1_layer =
 [
     [ "feature_type", "classngen_1_1_layer.html#ad1ec52c5a456f72aa02e7a0c5d711449", null ],
     [ "Layer", "classngen_1_1_layer.html#ad4b4ff9abec49c38db975cb1b90eebfb", null ],
+    [ "Layer", "classngen_1_1_layer.html#a250d88206804be37469eb5d2e288d6ac", null ],
     [ "~Layer", "classngen_1_1_layer.html#a6b87eb0a469e378fb7750f53a4942ba5", null ],
     [ "current_timestep_epoch_time", "classngen_1_1_layer.html#a178444ad250c0c8faaefa6c5263c618c", null ],
     [ "get_id", "classngen_1_1_layer.html#acd4f99d80cbcac7f64c4b5211ba58f8c", null ],

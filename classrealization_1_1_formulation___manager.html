@@ -125,6 +125,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aca754e4a64a79f0b86c0fa7a472aab94"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3188606a0077deba49fe03e0ae76c43" id="r_ab3188606a0077deba49fe03e0ae76c43"><td class="memItemLeft" align="right" valign="top">virtual std::shared_ptr&lt; <a class="el" href="classrealization_1_1_catchment___formulation.html">Catchment_Formulation</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation___manager.html#ab3188606a0077deba49fe03e0ae76c43">get_formulation</a> (std::string id) const</td></tr>
 <tr class="separator:ab3188606a0077deba49fe03e0ae76c43"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a612d70ddbe4cb9347254dfe0c0f335ad" id="r_a612d70ddbe4cb9347254dfe0c0f335ad"><td class="memItemLeft" align="right" valign="top">virtual std::shared_ptr&lt; <a class="el" href="classrealization_1_1_catchment___formulation.html">Catchment_Formulation</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation___manager.html#a612d70ddbe4cb9347254dfe0c0f335ad">get_domain_formulation</a> (long id) const</td></tr>
+<tr class="separator:a612d70ddbe4cb9347254dfe0c0f335ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60aa290c47417f057c9db3ea7f5e2fa9" id="r_a60aa290c47417f057c9db3ea7f5e2fa9"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation___manager.html#a60aa290c47417f057c9db3ea7f5e2fa9">has_domain_formulation</a> (int id) const</td></tr>
+<tr class="separator:a60aa290c47417f057c9db3ea7f5e2fa9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae28572ed2d9c6bf7849331d889b3c51b" id="r_ae28572ed2d9c6bf7849331d889b3c51b"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation___manager.html#ae28572ed2d9c6bf7849331d889b3c51b">contains</a> (std::string identifier) const</td></tr>
 <tr class="separator:ae28572ed2d9c6bf7849331d889b3c51b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3d0b2db8f821d4b05502a04fa3f01870" id="r_a3d0b2db8f821d4b05502a04fa3f01870"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation___manager.html#a3d0b2db8f821d4b05502a04fa3f01870">get_size</a> ()</td></tr>
@@ -174,6 +178,8 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a158bc03a7f3200c6246f067b45af5546"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae72b9762e8056a1787d69aed79919b9d" id="r_ae72b9762e8056a1787d69aed79919b9d"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::string, std::shared_ptr&lt; <a class="el" href="classrealization_1_1_catchment___formulation.html">Catchment_Formulation</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation___manager.html#ae72b9762e8056a1787d69aed79919b9d">formulations</a></td></tr>
 <tr class="separator:ae72b9762e8056a1787d69aed79919b9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5dde983c552aa9515e962b251c030187" id="r_a5dde983c552aa9515e962b251c030187"><td class="memItemLeft" align="right" valign="top">std::map&lt; int, std::shared_ptr&lt; <a class="el" href="classrealization_1_1_catchment___formulation.html">Catchment_Formulation</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation___manager.html#a5dde983c552aa9515e962b251c030187">domain_formulations</a></td></tr>
+<tr class="separator:a5dde983c552aa9515e962b251c030187"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afdd18d85d9a4231e62621be37074320a" id="r_afdd18d85d9a4231e62621be37074320a"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="structrouting__params.html">routing_params</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation___manager.html#afdd18d85d9a4231e62621be37074320a">routing_config</a></td></tr>
 <tr class="separator:afdd18d85d9a4231e62621be37074320a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b8bde7896ea9bba31e130cd14ecbf7b" id="r_a0b8bde7896ea9bba31e130cd14ecbf7b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrealization_1_1_formulation___manager.html#a0b8bde7896ea9bba31e130cd14ecbf7b">using_routing</a> = false</td></tr>
@@ -532,6 +538,34 @@ Private Types</h2></td></tr>
 
 </div>
 </div>
+<a id="a612d70ddbe4cb9347254dfe0c0f335ad" name="a612d70ddbe4cb9347254dfe0c0f335ad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a612d70ddbe4cb9347254dfe0c0f335ad">&#9670;&#160;</a></span>get_domain_formulation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual std::shared_ptr&lt; <a class="el" href="classrealization_1_1_catchment___formulation.html">Catchment_Formulation</a> &gt; realization::Formulation_Manager::get_domain_formulation </td>
+          <td>(</td>
+          <td class="paramtype">long&#160;</td>
+          <td class="paramname"><em>id</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classrealization_1_1_formulation___manager.html#a5dde983c552aa9515e962b251c030187">domain_formulations</a>.</p>
+
+</div>
+</div>
 <a id="a2ba4cf155d0e4ddfc9e37b6b377deed1" name="a2ba4cf155d0e4ddfc9e37b6b377deed1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2ba4cf155d0e4ddfc9e37b6b377deed1">&#9670;&#160;</a></span>get_forcing_params()</h2>
 
@@ -671,6 +705,8 @@ Private Types</h2></td></tr>
 
 <p class="reference">References <a class="el" href="classrealization_1_1_formulation___manager.html#ae34d4f2d7d9bf211e5139eb2b8b09e39">tree</a>.</p>
 
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_formulation___manager.html#aab2168aff25e065967c382a2b6cef41a">read()</a>.</p>
+
 </div>
 </div>
 <a id="a3d0b2db8f821d4b05502a04fa3f01870" name="a3d0b2db8f821d4b05502a04fa3f01870"></a>
@@ -754,6 +790,34 @@ Private Types</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>Whether or not using routing </dd></dl>
 
 <p class="reference">References <a class="el" href="classrealization_1_1_formulation___manager.html#a0b8bde7896ea9bba31e130cd14ecbf7b">using_routing</a>.</p>
+
+</div>
+</div>
+<a id="a60aa290c47417f057c9db3ea7f5e2fa9" name="a60aa290c47417f057c9db3ea7f5e2fa9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a60aa290c47417f057c9db3ea7f5e2fa9">&#9670;&#160;</a></span>has_domain_formulation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool realization::Formulation_Manager::has_domain_formulation </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>id</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classrealization_1_1_formulation___manager.html#a5dde983c552aa9515e962b251c030187">domain_formulations</a>.</p>
 
 </div>
 </div>
@@ -917,11 +981,35 @@ Private Types</h2></td></tr>
 <p>Read routing configurations from configuration file</p>
 <p>Read catchment configurations from configuration file</p>
 
-<p class="reference">References <a class="el" href="classrealization_1_1_formulation___manager.html#aca754e4a64a79f0b86c0fa7a472aab94">add_formulation()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#a4f21958f41bb6ef3dfe4fc82ac9c192d">construct_formulation_from_config()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#a3611f83dade280ed741729e875e0f823">construct_missing_formulation()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#ae28572ed2d9c6bf7849331d889b3c51b">contains()</a>, <a class="el" href="classngen_1_1_layer_data_storage.html#af31a9edd9c64279fb37bedcb6734246c">ngen::LayerDataStorage::exists()</a>, <a class="el" href="structrealization_1_1config_1_1_config.html#aa26f215e393f521357b655021b3f1119">realization::config::Config::formulation</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#a158bc03a7f3200c6246f067b45af5546">global_config</a>, <a class="el" href="structrealization_1_1config_1_1_config.html#a23d056dab8408cc9e6b0d4f6546294eb">realization::config::Config::has_formulation()</a>, <a class="el" href="structngen_1_1_layer_description.html#ac2feee450a736e3b64bc466128eaa62a">ngen::LayerDescription::id</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#a0b50baa59826712652d559531463eefe">layer_storage</a>, <a class="el" href="structrealization_1_1config_1_1_formulation.html#af01e9a5f8eaaf29e45d4bdf4304383e1">realization::config::Formulation::link_external()</a>, <a class="el" href="structrealization_1_1config_1_1_time.html#a705be678ff0ecb1bd445f9cca01d6fd6">realization::config::Time::make_params()</a>, <a class="el" href="structngen_1_1_layer_description.html#a8d632f5ca6bcbda986fde0f73105ba0e">ngen::LayerDescription::name</a>, <a class="el" href="classngen_1_1_layer_data_storage.html#abd30fa604b8e071d901b6aad7023baf8">ngen::LayerDataStorage::put_layer()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#afdd18d85d9a4231e62621be37074320a">routing_config</a>, <a class="el" href="structngen_1_1_layer_description.html#a8970be92be13b74d2c8362cb35f82df5">ngen::LayerDescription::time_step</a>, <a class="el" href="structngen_1_1_layer_description.html#a4ce3bc73676b15cc43b07c81277b48d6">ngen::LayerDescription::time_step_units</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#ae34d4f2d7d9bf211e5139eb2b8b09e39">tree</a>, and <a class="el" href="classrealization_1_1_formulation___manager.html#a0b8bde7896ea9bba31e130cd14ecbf7b">using_routing</a>.</p>
+<p class="reference">References <a class="el" href="classrealization_1_1_formulation___manager.html#aca754e4a64a79f0b86c0fa7a472aab94">add_formulation()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#a4f21958f41bb6ef3dfe4fc82ac9c192d">construct_formulation_from_config()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#a3611f83dade280ed741729e875e0f823">construct_missing_formulation()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#ae28572ed2d9c6bf7849331d889b3c51b">contains()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#a5dde983c552aa9515e962b251c030187">domain_formulations</a>, <a class="el" href="structrealization_1_1config_1_1_config.html#aa26f215e393f521357b655021b3f1119">realization::config::Config::formulation</a>, <a class="el" href="structrealization_1_1config_1_1_layer.html#ac0acb7199a410ad6cefa85177a62a1da">realization::config::Layer::formulation</a>, <a class="el" href="class_units_helper.html#a0e2dd4070640d0c0425da6aa0828cedd">UnitsHelper::get_converted_value()</a>, <a class="el" href="structrealization_1_1config_1_1_layer.html#a885b417883f7424c815b6e0cbf0dad04">realization::config::Layer::get_descriptor()</a>, <a class="el" href="structrealization_1_1config_1_1_layer.html#a4f13c6328c7fbff19f3fe0a7ddfa37a5">realization::config::Layer::get_domain()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#a1a2bb05d7eb2e2a815a05e0c049597bd">get_output_root()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#a158bc03a7f3200c6246f067b45af5546">global_config</a>, <a class="el" href="structrealization_1_1config_1_1_config.html#a23d056dab8408cc9e6b0d4f6546294eb">realization::config::Config::has_formulation()</a>, <a class="el" href="structrealization_1_1config_1_1_layer.html#ad095c5d4069a6d53afa6a2f00509c48b">realization::config::Layer::has_formulation()</a>, <a class="el" href="structngen_1_1_layer_description.html#ac2feee450a736e3b64bc466128eaa62a">ngen::LayerDescription::id</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#a0b50baa59826712652d559531463eefe">layer_storage</a>, <a class="el" href="structrealization_1_1config_1_1_formulation.html#af01e9a5f8eaaf29e45d4bdf4304383e1">realization::config::Formulation::link_external()</a>, <a class="el" href="structrealization_1_1config_1_1_time.html#a705be678ff0ecb1bd445f9cca01d6fd6">realization::config::Time::make_params()</a>, <a class="el" href="structngen_1_1_layer_description.html#a8d632f5ca6bcbda986fde0f73105ba0e">ngen::LayerDescription::name</a>, <a class="el" href="classngen_1_1_layer_data_storage.html#abd30fa604b8e071d901b6aad7023baf8">ngen::LayerDataStorage::put_layer()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#afdd18d85d9a4231e62621be37074320a">routing_config</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#a79ca23652bcd0704c02b1deec405d680">Simulation_Time_Object</a>, <a class="el" href="structngen_1_1_layer_description.html#a8970be92be13b74d2c8362cb35f82df5">ngen::LayerDescription::time_step</a>, <a class="el" href="structngen_1_1_layer_description.html#a4ce3bc73676b15cc43b07c81277b48d6">ngen::LayerDescription::time_step_units</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#ae34d4f2d7d9bf211e5139eb2b8b09e39">tree</a>, and <a class="el" href="classrealization_1_1_formulation___manager.html#a0b8bde7896ea9bba31e130cd14ecbf7b">using_routing</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="a5dde983c552aa9515e962b251c030187" name="a5dde983c552aa9515e962b251c030187"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5dde983c552aa9515e962b251c030187">&#9670;&#160;</a></span>domain_formulations</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::map&lt;int, std::shared_ptr&lt;<a class="el" href="classrealization_1_1_catchment___formulation.html">Catchment_Formulation</a>&gt; &gt; realization::Formulation_Manager::domain_formulations</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_formulation___manager.html#a612d70ddbe4cb9347254dfe0c0f335ad">get_domain_formulation()</a>, <a class="el" href="classrealization_1_1_formulation___manager.html#a60aa290c47417f057c9db3ea7f5e2fa9">has_domain_formulation()</a>, and <a class="el" href="classrealization_1_1_formulation___manager.html#aab2168aff25e065967c382a2b6cef41a">read()</a>.</p>
+
+</div>
+</div>
 <a id="ae72b9762e8056a1787d69aed79919b9d" name="ae72b9762e8056a1787d69aed79919b9d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae72b9762e8056a1787d69aed79919b9d">&#9670;&#160;</a></span>formulations</h2>
 
@@ -1030,6 +1118,8 @@ Private Types</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p class="reference">Referenced by <a class="el" href="classrealization_1_1_formulation___manager.html#aab2168aff25e065967c382a2b6cef41a">read()</a>.</p>
+
 </div>
 </div>
 <a id="ae34d4f2d7d9bf211e5139eb2b8b09e39" name="ae34d4f2d7d9bf211e5139eb2b8b09e39"></a>
@@ -1089,7 +1179,7 @@ Private Types</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacerealization.html">realization</a></li><li class="navelem"><a class="el" href="classrealization_1_1_formulation___manager.html">Formulation_Manager</a></li>
-    <li class="footer">Generated on Wed Apr 3 2024 16:02:11 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon Apr 8 2024 15:17:22 for NGen by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

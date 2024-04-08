@@ -117,6 +117,7 @@ var hierarchy =
     [ "ngen::detail::variable< SupportedTypes >::hash", "structngen_1_1detail_1_1variable_1_1hash.html", null ],
     [ "ngen::geopackage::wkb", "structngen_1_1geopackage_1_1wkb.html", null ],
     [ "ngen::Layer", "classngen_1_1_layer.html", [
+      [ "ngen::DomainLayer", "classngen_1_1_domain_layer.html", null ],
       [ "ngen::SurfaceLayer", "classngen_1_1_surface_layer.html", null ]
     ] ],
     [ "ngen::LayerDataStorage", "classngen_1_1_layer_data_storage.html", null ],
@@ -135,6 +136,7 @@ var hierarchy =
     [ "realization::config::Config", "structrealization_1_1config_1_1_config.html", null ],
     [ "realization::config::Forcing", "structrealization_1_1config_1_1_forcing.html", null ],
     [ "realization::config::Formulation", "structrealization_1_1config_1_1_formulation.html", null ],
+    [ "realization::config::Layer", "structrealization_1_1config_1_1_layer.html", null ],
     [ "realization::config::Routing", "structrealization_1_1config_1_1_routing.html", null ],
     [ "realization::config::Time", "structrealization_1_1config_1_1_time.html", null ],
     [ "realization::Formulation", "classrealization_1_1_formulation.html", [

@@ -83,6 +83,7 @@ var annotated_dup =
         [ "bool_pack", "structngen_1_1traits_1_1bool__pack.html", null ],
         [ "type_list", "structngen_1_1traits_1_1type__list.html", "structngen_1_1traits_1_1type__list" ]
       ] ],
+      [ "DomainLayer", "classngen_1_1_domain_layer.html", "classngen_1_1_domain_layer" ],
       [ "Layer", "classngen_1_1_layer.html", "classngen_1_1_layer" ],
       [ "LayerDataStorage", "classngen_1_1_layer_data_storage.html", "classngen_1_1_layer_data_storage" ],
       [ "LayerDescription", "structngen_1_1_layer_description.html", "structngen_1_1_layer_description" ],
@@ -95,6 +96,7 @@ var annotated_dup =
         [ "Config", "structrealization_1_1config_1_1_config.html", "structrealization_1_1config_1_1_config" ],
         [ "Forcing", "structrealization_1_1config_1_1_forcing.html", "structrealization_1_1config_1_1_forcing" ],
         [ "Formulation", "structrealization_1_1config_1_1_formulation.html", "structrealization_1_1config_1_1_formulation" ],
+        [ "Layer", "structrealization_1_1config_1_1_layer.html", "structrealization_1_1config_1_1_layer" ],
         [ "Routing", "structrealization_1_1config_1_1_routing.html", "structrealization_1_1config_1_1_routing" ],
         [ "Time", "structrealization_1_1config_1_1_time.html", "structrealization_1_1config_1_1_time" ]
       ] ],

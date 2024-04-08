@@ -1903,9 +1903,29 @@
           <topic label="is_convertible_to_any" href="namespacengen_1_1traits.html#a81e259575eb38d00047a60193f06cc6d"/>
           <topic label="is_same_to_any" href="namespacengen_1_1traits.html#a27a552792bb5e1225cfedd17f35f6b0f"/>
         </topic>
+        <topic label="DomainLayer" href="classngen_1_1_domain_layer.html">
+          <topic label="feature_type" href="classngen_1_1_domain_layer.html#ad1ec52c5a456f72aa02e7a0c5d711449"/>
+          <topic label="DomainLayer" href="classngen_1_1_domain_layer.html#aea02b036ecd9721e90456feb60edf1b9"/>
+          <topic label="DomainLayer" href="classngen_1_1_domain_layer.html#a4bad59ecfd5dfade771b6ea708a7f10e"/>
+          <topic label="current_timestep_epoch_time" href="classngen_1_1_domain_layer.html#a178444ad250c0c8faaefa6c5263c618c"/>
+          <topic label="get_id" href="classngen_1_1_domain_layer.html#acd4f99d80cbcac7f64c4b5211ba58f8c"/>
+          <topic label="get_name" href="classngen_1_1_domain_layer.html#acda7ee56e91a6c395b9c25c74bf0494b"/>
+          <topic label="get_time_step" href="classngen_1_1_domain_layer.html#a07242d4bd693ca8b32fa20134b5bc8e4"/>
+          <topic label="get_time_step_units" href="classngen_1_1_domain_layer.html#a3cda46167a3ae4a09baf0ba36e01161b"/>
+          <topic label="next_timestep_epoch_time" href="classngen_1_1_domain_layer.html#abd1389469be1b1bf1e39001edde2d14f"/>
+          <topic label="update_models" href="classngen_1_1_domain_layer.html#ad07ca7f0d57c4a1857b1dec91c1cae48"/>
+          <topic label="catchment_data" href="classngen_1_1_domain_layer.html#a5689db4f3999584bea58d99aa9ff8b15"/>
+          <topic label="description" href="classngen_1_1_domain_layer.html#a681d5a55c86a8d1f6d6f9f5fc57b6c63"/>
+          <topic label="features" href="classngen_1_1_domain_layer.html#a2529e511bb8f0091ff321652988a3290"/>
+          <topic label="formulation" href="classngen_1_1_domain_layer.html#a0ad7858964a7b9f9b7190b0ebad7fa4c"/>
+          <topic label="output_time_index" href="classngen_1_1_domain_layer.html#a1d1dbf9050ac23f56ac06e9e3dffc176"/>
+          <topic label="processing_units" href="classngen_1_1_domain_layer.html#a5cb15eea3711606ced64504aa3ea1749"/>
+          <topic label="simulation_time" href="classngen_1_1_domain_layer.html#a96c3fed503f10d2b2f9ab00c229a5b91"/>
+        </topic>
         <topic label="Layer" href="classngen_1_1_layer.html">
           <topic label="feature_type" href="classngen_1_1_layer.html#ad1ec52c5a456f72aa02e7a0c5d711449"/>
           <topic label="Layer" href="classngen_1_1_layer.html#ad4b4ff9abec49c38db975cb1b90eebfb"/>
+          <topic label="Layer" href="classngen_1_1_layer.html#a250d88206804be37469eb5d2e288d6ac"/>
           <topic label="~Layer" href="classngen_1_1_layer.html#a6b87eb0a469e378fb7750f53a4942ba5"/>
           <topic label="current_timestep_epoch_time" href="classngen_1_1_layer.html#a178444ad250c0c8faaefa6c5263c618c"/>
           <topic label="get_id" href="classngen_1_1_layer.html#acd4f99d80cbcac7f64c4b5211ba58f8c"/>
@@ -2055,6 +2075,16 @@
             <topic label="nested" href="structrealization_1_1config_1_1_formulation.html#ac5771714000e91b553dfdb6fae15a090"/>
             <topic label="parameters" href="structrealization_1_1config_1_1_formulation.html#a5c3aeb5ef66146128167fea250bbd431"/>
             <topic label="type" href="structrealization_1_1config_1_1_formulation.html#a69273e7abbfc0a8c974d4c075c9fc18c"/>
+          </topic>
+          <topic label="Layer" href="structrealization_1_1config_1_1_layer.html">
+            <topic label="Layer" href="structrealization_1_1config_1_1_layer.html#a0c017d7407ddf736524059788e583bbc"/>
+            <topic label="Layer" href="structrealization_1_1config_1_1_layer.html#a5b01ee126238a029fa900a9a96ba0829"/>
+            <topic label="get_descriptor" href="structrealization_1_1config_1_1_layer.html#a885b417883f7424c815b6e0cbf0dad04"/>
+            <topic label="get_domain" href="structrealization_1_1config_1_1_layer.html#a4f13c6328c7fbff19f3fe0a7ddfa37a5"/>
+            <topic label="has_formulation" href="structrealization_1_1config_1_1_layer.html#ad095c5d4069a6d53afa6a2f00509c48b"/>
+            <topic label="descriptor" href="structrealization_1_1config_1_1_layer.html#a3b4f31d87f03734453c59aaa39326232"/>
+            <topic label="domain" href="structrealization_1_1config_1_1_layer.html#adee41d12034b16adef962b960453b9f1"/>
+            <topic label="formulation" href="structrealization_1_1config_1_1_layer.html#ac0acb7199a410ad6cefa85177a62a1da"/>
           </topic>
           <topic label="Routing" href="structrealization_1_1config_1_1_routing.html">
             <topic label="Routing" href="structrealization_1_1config_1_1_routing.html#acfb4b78887fb5fc3f413c5c87ad1d865"/>
@@ -2623,6 +2653,7 @@
           <topic label="construct_missing_formulation" href="classrealization_1_1_formulation___manager.html#a3611f83dade280ed741729e875e0f823"/>
           <topic label="contains" href="classrealization_1_1_formulation___manager.html#ae28572ed2d9c6bf7849331d889b3c51b"/>
           <topic label="end" href="classrealization_1_1_formulation___manager.html#a6c5749e590142378b02976f6802407bd"/>
+          <topic label="get_domain_formulation" href="classrealization_1_1_formulation___manager.html#a612d70ddbe4cb9347254dfe0c0f335ad"/>
           <topic label="get_forcing_params" href="classrealization_1_1_formulation___manager.html#a2ba4cf155d0e4ddfc9e37b6b377deed1"/>
           <topic label="get_formulation" href="classrealization_1_1_formulation___manager.html#ab3188606a0077deba49fe03e0ae76c43"/>
           <topic label="get_layer_metadata" href="classrealization_1_1_formulation___manager.html#ad0fc7e9108d8cd74963053d33986a6ce"/>
@@ -2630,10 +2661,12 @@
           <topic label="get_size" href="classrealization_1_1_formulation___manager.html#a3d0b2db8f821d4b05502a04fa3f01870"/>
           <topic label="get_t_route_config_file_with_path" href="classrealization_1_1_formulation___manager.html#af98f0237deac6fe02782231b5ba41ea7"/>
           <topic label="get_using_routing" href="classrealization_1_1_formulation___manager.html#a599aadb9ffea1e8c28cbd010b3160bd7"/>
+          <topic label="has_domain_formulation" href="classrealization_1_1_formulation___manager.html#a60aa290c47417f057c9db3ea7f5e2fa9"/>
           <topic label="is_empty" href="classrealization_1_1_formulation___manager.html#ae4048912588864e785ebefab84faa9cc"/>
           <topic label="parse_external_model_params" href="classrealization_1_1_formulation___manager.html#ade623c87318034b5a90e0133624dbb0f"/>
           <topic label="parse_external_model_params" href="classrealization_1_1_formulation___manager.html#a2fdd32f683c0952a2adfd69099344ac1"/>
           <topic label="read" href="classrealization_1_1_formulation___manager.html#aab2168aff25e065967c382a2b6cef41a"/>
+          <topic label="domain_formulations" href="classrealization_1_1_formulation___manager.html#a5dde983c552aa9515e962b251c030187"/>
           <topic label="formulations" href="classrealization_1_1_formulation___manager.html#ae72b9762e8056a1787d69aed79919b9d"/>
           <topic label="global_config" href="classrealization_1_1_formulation___manager.html#a158bc03a7f3200c6246f067b45af5546"/>
           <topic label="layer_storage" href="classrealization_1_1_formulation___manager.html#a0b50baa59826712652d559531463eefe"/>
@@ -4106,9 +4139,29 @@
             <topic label="variant_scalar" href="structngen_1_1traits_1_1type__list.html#a3ab33dc8cba769ab4ade2357b3f17429"/>
           </topic>
         </topic>
+        <topic label="DomainLayer" href="classngen_1_1_domain_layer.html">
+          <topic label="feature_type" href="classngen_1_1_domain_layer.html#ad1ec52c5a456f72aa02e7a0c5d711449"/>
+          <topic label="DomainLayer" href="classngen_1_1_domain_layer.html#aea02b036ecd9721e90456feb60edf1b9"/>
+          <topic label="DomainLayer" href="classngen_1_1_domain_layer.html#a4bad59ecfd5dfade771b6ea708a7f10e"/>
+          <topic label="current_timestep_epoch_time" href="classngen_1_1_domain_layer.html#a178444ad250c0c8faaefa6c5263c618c"/>
+          <topic label="get_id" href="classngen_1_1_domain_layer.html#acd4f99d80cbcac7f64c4b5211ba58f8c"/>
+          <topic label="get_name" href="classngen_1_1_domain_layer.html#acda7ee56e91a6c395b9c25c74bf0494b"/>
+          <topic label="get_time_step" href="classngen_1_1_domain_layer.html#a07242d4bd693ca8b32fa20134b5bc8e4"/>
+          <topic label="get_time_step_units" href="classngen_1_1_domain_layer.html#a3cda46167a3ae4a09baf0ba36e01161b"/>
+          <topic label="next_timestep_epoch_time" href="classngen_1_1_domain_layer.html#abd1389469be1b1bf1e39001edde2d14f"/>
+          <topic label="update_models" href="classngen_1_1_domain_layer.html#ad07ca7f0d57c4a1857b1dec91c1cae48"/>
+          <topic label="catchment_data" href="classngen_1_1_domain_layer.html#a5689db4f3999584bea58d99aa9ff8b15"/>
+          <topic label="description" href="classngen_1_1_domain_layer.html#a681d5a55c86a8d1f6d6f9f5fc57b6c63"/>
+          <topic label="features" href="classngen_1_1_domain_layer.html#a2529e511bb8f0091ff321652988a3290"/>
+          <topic label="formulation" href="classngen_1_1_domain_layer.html#a0ad7858964a7b9f9b7190b0ebad7fa4c"/>
+          <topic label="output_time_index" href="classngen_1_1_domain_layer.html#a1d1dbf9050ac23f56ac06e9e3dffc176"/>
+          <topic label="processing_units" href="classngen_1_1_domain_layer.html#a5cb15eea3711606ced64504aa3ea1749"/>
+          <topic label="simulation_time" href="classngen_1_1_domain_layer.html#a96c3fed503f10d2b2f9ab00c229a5b91"/>
+        </topic>
         <topic label="Layer" href="classngen_1_1_layer.html">
           <topic label="feature_type" href="classngen_1_1_layer.html#ad1ec52c5a456f72aa02e7a0c5d711449"/>
           <topic label="Layer" href="classngen_1_1_layer.html#ad4b4ff9abec49c38db975cb1b90eebfb"/>
+          <topic label="Layer" href="classngen_1_1_layer.html#a250d88206804be37469eb5d2e288d6ac"/>
           <topic label="~Layer" href="classngen_1_1_layer.html#a6b87eb0a469e378fb7750f53a4942ba5"/>
           <topic label="current_timestep_epoch_time" href="classngen_1_1_layer.html#a178444ad250c0c8faaefa6c5263c618c"/>
           <topic label="get_id" href="classngen_1_1_layer.html#acd4f99d80cbcac7f64c4b5211ba58f8c"/>
@@ -4256,6 +4309,16 @@
             <topic label="nested" href="structrealization_1_1config_1_1_formulation.html#ac5771714000e91b553dfdb6fae15a090"/>
             <topic label="parameters" href="structrealization_1_1config_1_1_formulation.html#a5c3aeb5ef66146128167fea250bbd431"/>
             <topic label="type" href="structrealization_1_1config_1_1_formulation.html#a69273e7abbfc0a8c974d4c075c9fc18c"/>
+          </topic>
+          <topic label="Layer" href="structrealization_1_1config_1_1_layer.html">
+            <topic label="Layer" href="structrealization_1_1config_1_1_layer.html#a0c017d7407ddf736524059788e583bbc"/>
+            <topic label="Layer" href="structrealization_1_1config_1_1_layer.html#a5b01ee126238a029fa900a9a96ba0829"/>
+            <topic label="get_descriptor" href="structrealization_1_1config_1_1_layer.html#a885b417883f7424c815b6e0cbf0dad04"/>
+            <topic label="get_domain" href="structrealization_1_1config_1_1_layer.html#a4f13c6328c7fbff19f3fe0a7ddfa37a5"/>
+            <topic label="has_formulation" href="structrealization_1_1config_1_1_layer.html#ad095c5d4069a6d53afa6a2f00509c48b"/>
+            <topic label="descriptor" href="structrealization_1_1config_1_1_layer.html#a3b4f31d87f03734453c59aaa39326232"/>
+            <topic label="domain" href="structrealization_1_1config_1_1_layer.html#adee41d12034b16adef962b960453b9f1"/>
+            <topic label="formulation" href="structrealization_1_1config_1_1_layer.html#ac0acb7199a410ad6cefa85177a62a1da"/>
           </topic>
           <topic label="Routing" href="structrealization_1_1config_1_1_routing.html">
             <topic label="Routing" href="structrealization_1_1config_1_1_routing.html#acfb4b78887fb5fc3f413c5c87ad1d865"/>
@@ -4823,6 +4886,7 @@
           <topic label="construct_missing_formulation" href="classrealization_1_1_formulation___manager.html#a3611f83dade280ed741729e875e0f823"/>
           <topic label="contains" href="classrealization_1_1_formulation___manager.html#ae28572ed2d9c6bf7849331d889b3c51b"/>
           <topic label="end" href="classrealization_1_1_formulation___manager.html#a6c5749e590142378b02976f6802407bd"/>
+          <topic label="get_domain_formulation" href="classrealization_1_1_formulation___manager.html#a612d70ddbe4cb9347254dfe0c0f335ad"/>
           <topic label="get_forcing_params" href="classrealization_1_1_formulation___manager.html#a2ba4cf155d0e4ddfc9e37b6b377deed1"/>
           <topic label="get_formulation" href="classrealization_1_1_formulation___manager.html#ab3188606a0077deba49fe03e0ae76c43"/>
           <topic label="get_layer_metadata" href="classrealization_1_1_formulation___manager.html#ad0fc7e9108d8cd74963053d33986a6ce"/>
@@ -4830,10 +4894,12 @@
           <topic label="get_size" href="classrealization_1_1_formulation___manager.html#a3d0b2db8f821d4b05502a04fa3f01870"/>
           <topic label="get_t_route_config_file_with_path" href="classrealization_1_1_formulation___manager.html#af98f0237deac6fe02782231b5ba41ea7"/>
           <topic label="get_using_routing" href="classrealization_1_1_formulation___manager.html#a599aadb9ffea1e8c28cbd010b3160bd7"/>
+          <topic label="has_domain_formulation" href="classrealization_1_1_formulation___manager.html#a60aa290c47417f057c9db3ea7f5e2fa9"/>
           <topic label="is_empty" href="classrealization_1_1_formulation___manager.html#ae4048912588864e785ebefab84faa9cc"/>
           <topic label="parse_external_model_params" href="classrealization_1_1_formulation___manager.html#ade623c87318034b5a90e0133624dbb0f"/>
           <topic label="parse_external_model_params" href="classrealization_1_1_formulation___manager.html#a2fdd32f683c0952a2adfd69099344ac1"/>
           <topic label="read" href="classrealization_1_1_formulation___manager.html#aab2168aff25e065967c382a2b6cef41a"/>
+          <topic label="domain_formulations" href="classrealization_1_1_formulation___manager.html#a5dde983c552aa9515e962b251c030187"/>
           <topic label="formulations" href="classrealization_1_1_formulation___manager.html#ae72b9762e8056a1787d69aed79919b9d"/>
           <topic label="global_config" href="classrealization_1_1_formulation___manager.html#a158bc03a7f3200c6246f067b45af5546"/>
           <topic label="layer_storage" href="classrealization_1_1_formulation___manager.html#a0b50baa59826712652d559531463eefe"/>
@@ -5670,6 +5736,7 @@
       <topic label="ngen::detail::variable&lt; SupportedTypes &gt;::hash" href="structngen_1_1detail_1_1variable_1_1hash.html"/>
       <topic label="ngen::geopackage::wkb" href="structngen_1_1geopackage_1_1wkb.html"/>
       <topic label="ngen::Layer" href="classngen_1_1_layer.html">
+        <topic label="ngen::DomainLayer" href="classngen_1_1_domain_layer.html"/>
         <topic label="ngen::SurfaceLayer" href="classngen_1_1_surface_layer.html"/>
       </topic>
       <topic label="ngen::LayerDataStorage" href="classngen_1_1_layer_data_storage.html"/>
@@ -5688,6 +5755,7 @@
       <topic label="realization::config::Config" href="structrealization_1_1config_1_1_config.html"/>
       <topic label="realization::config::Forcing" href="structrealization_1_1config_1_1_forcing.html"/>
       <topic label="realization::config::Formulation" href="structrealization_1_1config_1_1_formulation.html"/>
+      <topic label="realization::config::Layer" href="structrealization_1_1config_1_1_layer.html"/>
       <topic label="realization::config::Routing" href="structrealization_1_1config_1_1_routing.html"/>
       <topic label="realization::config::Time" href="structrealization_1_1config_1_1_time.html"/>
       <topic label="realization::Formulation" href="classrealization_1_1_formulation.html">
