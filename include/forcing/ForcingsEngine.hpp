@@ -87,6 +87,8 @@ struct ForcingsEngine
      */
     size_type variable_index(const std::string& variable) const noexcept;
 
+    bool next();
+
     /**
      * @brief Get a forcing value from the instance
      * 
@@ -96,9 +98,9 @@ struct ForcingsEngine
      * @return double 
      */
     double at(
-        const clock_type::time_point& raw_time,
         const std::string& divide_id,
-        const std::string& variable
+        const std::string& variable,
+        bool previous = false
     );
 
     /**
@@ -110,9 +112,9 @@ struct ForcingsEngine
      * @return double 
      */
     double at(
-        size_type time_idx,
         size_type divide_idx,
-        size_type variable_idx
+        size_type variable_idx,
+        bool previous = false
     );
 
     /**
@@ -148,8 +150,6 @@ struct ForcingsEngine
         std::size_t time_end
     );
 
-  private:
-
     /**
      * @brief Checks that the $WGRIB2 environment variable is set and
      *        that the NWM Forcings Engine python module is loadable.
@@ -159,12 +159,12 @@ struct ForcingsEngine
      */
     static void check_runtime_requirements();
 
+  private:
+
     /**
-     * @brief Update the value storage for the given time index.
-     * 
-     * @param index Time index to assign variables' current value to.
+     * @brief Update the value storage.
      */
-    void update_value_storage_(size_type index);
+    void update_value_storage_();
 
     ForcingsEngine() = default;
 
@@ -186,21 +186,17 @@ struct ForcingsEngine
     /**
      * Flat value cache vector.
      * 
-     * Values are stored indexed on (timestep, divide_id, variable),
+     * Values are stored indexed on (2, divide_id, variable),
      * such that the structure can be visualized as:
      *
-     *   Timestep  : || T0       |          || T1  ...
      *   Divide ID : || D0       | D1       || D0  ...
      *   Variable  : || V1 V2 V3 | V1 V2 V3 || V1  ...
      *   Value     : ||  9 11 31 |  3  4  5 || 10  ...
      *
      * Some notes for future reference:
-     * - Time complexity to update is approximately O(T*V*D),
-     *   where T = T2 - T1 is the number of timesteps between
-     *   two time points, V is the number of variables
-     *   and D is the number of divides. In general, D will dominate;
-     *   T will usually be 1, if updated at each time event; and, V will be
-     *   some small constant amount. Meaning, we should have about O(V*D).
+     * - Time complexity to update is approximately O(2*V*D) = O(V*D),
+     *   where V is the number of variables and D is the number of divides.
+     *   In general, D will dominate and, V will be some small constant amount.
      */
     ngen::mdarray<double> var_cache_{};
 };

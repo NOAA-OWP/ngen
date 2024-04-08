@@ -8,8 +8,6 @@ ForcingsEngine::ForcingsEngine(const std::string& init, size_type time_start, si
   : time_start_(std::chrono::seconds{time_start})
   , time_end_(std::chrono::seconds{time_end})
 {
-    check_runtime_requirements();
-
     bmi_ = std::make_unique<models::bmi::Bmi_Py_Adapter>(
         "ForcingsEngine",
         init,
@@ -41,10 +39,10 @@ ForcingsEngine::ForcingsEngine(const std::string& init, size_type time_start, si
     
     const auto* ptr = static_cast<int*>(bmi_->GetValuePtr("CAT-ID"));
     var_divides_ = std::vector<int>(ptr, ptr + id_dim);
-    var_cache_ = decltype(var_cache_){{ time_dim, id_dim, var_dim }};
+    var_cache_ = decltype(var_cache_){{ 2, id_dim, var_dim }};
 
     // Cache initial iteration
-    update_value_storage_(time_current_index_);
+    update_value_storage_();
     time_current_index_++;
 }
 
@@ -94,7 +92,7 @@ void ForcingsEngine::check_runtime_requirements()
     }
 }
 
-void ForcingsEngine::update_value_storage_(size_type index)
+void ForcingsEngine::update_value_storage_()
 {
     const auto size = var_divides_.size();
     for (size_type vi = 0; vi < var_outputs_.size(); vi++) {
@@ -105,8 +103,10 @@ void ForcingsEngine::update_value_storage_(size_type index)
         };
 
         for (size_type di = 0; di < size; di++) {
-            // Set current variable value for each divide
-            var_cache_.at({{index, di, vi}}) = var_span[di];
+            // Move 0 time (current) to 1 (previous), and set the
+            // current values from var_span
+            var_cache_.at({{1, di, vi}}) = var_cache_.at({{0, di, vi}});
+            var_cache_.at({{0, di, vi}}) = var_span[di];
         }
     }
 }
@@ -189,56 +189,56 @@ auto ForcingsEngine::variable_index(const std::string& variable) const noexcept
     return std::distance(vars.begin(), pos);
 }
 
+bool ForcingsEngine::next()
+{
+    bmi_->Update();
+    time_current_index_++;
+    update_value_storage_();
+    return true;
+}
+
 double ForcingsEngine::at(
-    const clock_type::time_point& raw_time,
     const std::string& divide_id,
-    const std::string& variable
+    const std::string& variable,
+    bool               previous
 )
 {
-    const auto t_idx = time_index(raw_time);
     const auto d_idx = divide_index(divide_id);
     const auto v_idx = variable_index(variable);
 
-    if (t_idx == bad_index || d_idx == bad_index || v_idx == bad_index) {
+    if (d_idx == bad_index || v_idx == bad_index) {
         const auto shape = var_cache_.shape();
         const auto shape_str = std::to_string(shape[0]) + ", " +
                                std::to_string(shape[1]) + ", " +
                                std::to_string(shape[2]);
 
-        const auto index_str = (t_idx == bad_index ? "?" : std::to_string(t_idx)) + ", " +
-                               (d_idx == bad_index ? "?" : std::to_string(d_idx)) + ", " +
+        const auto index_str = (d_idx == bad_index ? "?" : std::to_string(d_idx)) + ", " +
                                (v_idx == bad_index ? "?" : std::to_string(v_idx));
-
-        time_t c_time = clock_type::to_time_t(raw_time);
-        std::string time_str = std::ctime(&c_time);
-        time_str.pop_back(); // remove the \n from the return of ctime
 
         throw std::out_of_range{
             "Failed to get ForcingsEngine value at index {" + index_str + "}" +
             "\n  Shape    : {" + shape_str + "}" +
-            "\n  Time     : `" + time_str  + "`" +
             "\n  Divide   : `" + divide_id + "`" +
             "\n  Variable : `" + variable  + "`"
         };
     }
 
-    return at(t_idx, d_idx, v_idx);
+    return at(d_idx, v_idx, previous);
 }
 
 double ForcingsEngine::at(
-    size_type time_idx,
     size_type divide_idx,
-    size_type variable_idx
+    size_type variable_idx,
+    bool      previous
 )
 {
-    if (time_idx == bad_index || divide_idx == bad_index || variable_idx == bad_index) {
+    if (divide_idx == bad_index || variable_idx == bad_index) {
         const auto shape = var_cache_.shape();
         const auto shape_str = std::to_string(shape[0]) + ", " +
                                std::to_string(shape[1]) + ", " +
                                std::to_string(shape[2]);
 
-        const auto index_str = (time_idx == bad_index ? "?" : std::to_string(time_idx)) + ", " +
-                               (divide_idx == bad_index ? "?" : std::to_string(divide_idx)) + ", " +
+        const auto index_str = (divide_idx == bad_index ? "?" : std::to_string(divide_idx)) + ", " +
                                (variable_idx == bad_index ? "?" : std::to_string(variable_idx));
 
         throw std::out_of_range{
@@ -246,21 +246,8 @@ double ForcingsEngine::at(
             "\n  Shape          : {" + shape_str + "}"
         };
     }
-
-    // If time index is past current index, 
-    // update until new index and cache values.
-    // Otherwise, return from cache.
-    while(time_current_index_ < time_idx) {
-        time_current_index_++;
-
-        bmi_->UpdateUntil(
-            static_cast<double>(time_current_index_ * time_step().count())
-        );
-
-        update_value_storage_(time_current_index_);
-    }
     
-    return var_cache_.at({{time_idx, divide_idx, variable_idx}});
+    return var_cache_.at({{previous ? 1U : 0U, divide_idx, variable_idx}});
 }
 
 void ForcingsEngine::finalize()

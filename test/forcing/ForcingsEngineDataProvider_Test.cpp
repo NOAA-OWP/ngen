@@ -48,6 +48,8 @@ class ForcingsEngineDataProviderTest : public testing::Test
 
         ForcingsEngineDataProviderTest::gil_ = utils::ngenPy::InterpreterUtil::getInstance();
         ForcingsEngineDataProviderTest::provider = { config_file, "2024-01-17 01:00:00", "2024-01-17 06:00:00" };
+
+        data_access::ForcingsEngine::check_runtime_requirements();
     }
 
     static void TearDownTestSuite()
@@ -65,6 +67,22 @@ std::shared_ptr<utils::ngenPy::InterpreterUtil> ForcingsEngineDataProviderTest::
 data_access::ForcingsEngineDataProvider ForcingsEngineDataProviderTest::provider{};
 mpi_info ForcingsEngineDataProviderTest::mpi{};
 
+TEST_F(ForcingsEngineDataProviderTest, Engine)
+{
+    std::cout << "Getting instance\n";
+    auto& inst = data_access::ForcingsEngine::instance(
+        config_file,
+        provider.get_data_start_time(),
+        provider.get_data_stop_time()
+    );
+    std::cout << "Got instance\n";
+
+    EXPECT_EQ(inst.variable_index("U2D_ELEMENT"), 0);
+    EXPECT_EQ(inst.variable_index("Q2D_ELEMENT"), 5);
+    EXPECT_EQ(inst.divide_index("cat-1015786"), 13868);
+    EXPECT_EQ(inst.time_step(), std::chrono::seconds{3600});
+}
+
 // Tests that the forcings engine data provider correctly indexes epochs
 // to unitless indices along its given temporal domain.
 TEST_F(ForcingsEngineDataProviderTest, Timestepping)
@@ -75,11 +93,9 @@ TEST_F(ForcingsEngineDataProviderTest, Timestepping)
 
 // Tests that the forcings engine correctly initializes and performs
 // a call to `get_values`.
-TEST_F(ForcingsEngineDataProviderTest, Initialization)
+TEST_F(ForcingsEngineDataProviderTest, HydrofabricGridType)
 {
-    std::cout << "Getting variable names\n";
-    const auto outputs_test = this->provider.get_available_variable_names();
-    std::cout << "Got variable names\n";
+    const auto outputs_test = provider.get_available_variable_names();
     constexpr std::array<const char*, 8> expected_variables = {
         "U2D_ELEMENT",
         "V2D_ELEMENT",
@@ -95,17 +111,16 @@ TEST_F(ForcingsEngineDataProviderTest, Initialization)
         EXPECT_EQ(output.get<0>(), output.get<1>());
     }
 
-    std::cout << "Creating selector\n";
+    const long duration = provider.get_ts_index_for_time(params.simulation_start_t) + (3600 * 2);
     const auto selector = CatchmentAggrDataSelector{
         "cat-1015786",
         "RAINRATE",
-        this->provider.get_data_start_time(), // start time
-        static_cast<long>(this->provider.get_ts_index_for_time(this->params.simulation_start_t) + (3600 * 2)), // duration
+        provider.get_data_start_time(), // start time
+        duration, // duration
         "seconds"
     };
 
-    std::cout << "Getting values\n";
-    const auto result = this->provider.get_values(
+    const auto result = provider.get_values(
         selector,
         data_access::ReSampleMethod::SUM
     );
