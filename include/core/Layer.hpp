@@ -160,7 +160,7 @@ namespace ngen
 
         const LayerDescription description;
         //TODO is this really required at the top level?
-        //See "mimimum" constuctor above used for DomainLayer impl...
+        //See "minimum" constructor above used for DomainLayer impl...
         const std::vector<std::string> processing_units;
         Simulation_Time simulation_time;
         feature_type& features;

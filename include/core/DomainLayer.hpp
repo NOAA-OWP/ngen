@@ -15,14 +15,14 @@ namespace ngen
          * @brief Construct a new Domain Layer object.
          * 
          * Unlike HY_Features types, the feature relationship with a DomainLayer is
-         * indirect.  The @p features collection defines features assoicated
+         * indirect.  The @p features collection defines features associated
          * (e.g. overlapping) with the Domain.  The domain must be further queried
          * in order to provide specific information at a particular feature,
          * e.g. a catchment which this domain overlaps with, or a nexus location
          * the domain may contribute to directly/indirectly via the catchment.
          * 
-         * A domain layer assoicated with a set of catchment features will need to have
-         * outputs of the domain reasmpled/aggregegated to the catchment.
+         * A domain layer associated with a set of catchment features will need to have
+         * outputs of the domain resampled/aggregated to the catchment.
          * 
          * Currently unsupported, but a future extension of the DomainLayer is interactions
          * beetween two or more generic DomainLayers, perhaps each with its own internal grid,
